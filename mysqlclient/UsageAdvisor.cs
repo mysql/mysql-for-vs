@@ -33,6 +33,18 @@ namespace MySql.Data.MySqlClient
 			LogUAWarning(cmdText, "Using a bad index.");
 		}
 
+		public void AbortingSequentialAccess(MySqlField[] fields, int startIndex)
+		{
+			if (! conn.Settings.UseUsageAdvisor) return;
+			LogUAHeader(null);
+			Trace.WriteLine("");
+			Trace.WriteLine("A rowset that was being accessed using SequentialAccess had to load " +
+				"all of its remaining columns.  This can cause performance problems.  This is most " +
+				"likely due to calling Prepare() on a command before reading all the columns of a " +
+				"rowset that is being accessed with SequentialAccess");
+			LogUAFooter();
+		}
+
 		public void ReadPartialRowSet(string cmdText, bool[] uaFieldsUsed, MySqlField[] fields)
 		{
 			LogUAHeader(cmdText);
@@ -56,7 +68,8 @@ namespace MySql.Data.MySqlClient
 		{
 			Trace.WriteLine("USAGE ADVISOR WARNING -------------");
 			Trace.WriteLine("Host: " + conn.Settings.Server);
-			Trace.WriteLine("Command Text:  " + cmdText);
+			if (cmdText != null && cmdText.Length > 0)
+				Trace.WriteLine("Command Text:  " + cmdText);
 		}
 
 		private void LogUAFooter() 

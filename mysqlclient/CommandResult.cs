@@ -108,6 +108,10 @@ namespace MySql.Data.MySqlClient
 			if (! usingSequentialAccess) return;
 
 			usingSequentialAccess = false;
+
+			if ((seqColumn+1) < ((int)fieldCount-1))
+				driver.Connection.UsageAdvisor.AbortingSequentialAccess(fields, seqColumn+1);
+
 			for (int i=seqColumn+1; i < (int)fieldCount; i++)
 				values[i] = driver.ReadFieldValue( i, fields[i], values[i] );
 		}

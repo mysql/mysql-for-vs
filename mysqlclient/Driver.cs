@@ -55,6 +55,11 @@ namespace MySql.Data.MySqlClient
 
 		#region Properties
 
+		public MySqlConnection Connection 
+		{
+			get { return connection; }
+		}
+
 		public int ThreadID 
 		{
 			get { return threadId; }
