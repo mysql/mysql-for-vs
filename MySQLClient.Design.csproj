@@ -1,0 +1,241 @@
+<VisualStudioProject>
+    <CSHARP
+        ProjectType = "Local"
+        ProductVersion = "7.10.3077"
+        SchemaVersion = "2.0"
+        ProjectGuid = "{049E48EE-71F0-436E-A6A2-DBEE16B3CA51}"
+    >
+        <Build>
+            <Settings
+                ApplicationIcon = ""
+                AssemblyKeyContainerName = ""
+                AssemblyName = "MySQL.Data.Design"
+                AssemblyOriginatorKeyFile = "..\..\cnet.snk"
+                DefaultClientScript = "JScript"
+                DefaultHTMLPageLayout = "Grid"
+                DefaultTargetSchema = "IE50"
+                DelaySign = "false"
+                OutputType = "Library"
+                PreBuildEvent = ""
+                PostBuildEvent = ""
+                RootNamespace = "MySQL.Data.Design"
+                RunPostBuildEvent = "OnBuildSuccess"
+                StartupObject = ""
+            >
+                <Config
+                    Name = "Debug"
+                    AllowUnsafeBlocks = "false"
+                    BaseAddress = "285212672"
+                    CheckForOverflowUnderflow = "false"
+                    ConfigurationOverrideFile = ""
+                    DefineConstants = "DEBUG;TRACE"
+                    DocumentationFile = ""
+                    DebugSymbols = "true"
+                    FileAlignment = "4096"
+                    IncrementalBuild = "false"
+                    NoStdLib = "false"
+                    NoWarn = ""
+                    Optimize = "false"
+                    OutputPath = "bin\Debug\"
+                    RegisterForComInterop = "true"
+                    RemoveIntegerChecks = "false"
+                    TreatWarningsAsErrors = "false"
+                    WarningLevel = "4"
+                />
+                <Config
+                    Name = "Release"
+                    AllowUnsafeBlocks = "false"
+                    BaseAddress = "285212672"
+                    CheckForOverflowUnderflow = "false"
+                    ConfigurationOverrideFile = ""
+                    DefineConstants = "TRACE"
+                    DocumentationFile = ""
+                    DebugSymbols = "false"
+                    FileAlignment = "4096"
+                    IncrementalBuild = "false"
+                    NoStdLib = "false"
+                    NoWarn = ""
+                    Optimize = "true"
+                    OutputPath = "bin\Release\"
+                    RegisterForComInterop = "false"
+                    RemoveIntegerChecks = "false"
+                    TreatWarningsAsErrors = "false"
+                    WarningLevel = "4"
+                />
+            </Settings>
+            <References>
+                <Reference
+                    Name = "System"
+                    AssemblyName = "System"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
+                />
+                <Reference
+                    Name = "System.Data"
+                    AssemblyName = "System.Data"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
+                />
+                <Reference
+                    Name = "System.XML"
+                    AssemblyName = "System.Xml"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
+                />
+                <Reference
+                    Name = "System.Windows.Forms"
+                    AssemblyName = "System.Windows.Forms"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Windows.Forms.dll"
+                />
+                <Reference
+                    Name = "System.Design"
+                    AssemblyName = "System.Design"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Design.dll"
+                />
+                <Reference
+                    Name = "System.Drawing"
+                    AssemblyName = "System.Drawing"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Drawing.dll"
+                />
+                <Reference
+                    Name = "extensibility"
+                    AssemblyName = "Extensibility"
+                    HintPath = "..\..\Program Files\Microsoft Visual Studio .NET 2003\Common7\IDE\PublicAssemblies\extensibility.dll"
+                    AssemblyFolderKey = "hklm\publicassemblies"
+                />
+                <Reference
+                    Name = "envdte"
+                    AssemblyName = "EnvDTE"
+                    HintPath = "..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\envdte.dll"
+                />
+                <Reference
+                    Name = "office"
+                    AssemblyName = "Office"
+                    HintPath = "..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\office.dll"
+                />
+            </References>
+        </Build>
+        <Files>
+            <Include>
+                <File
+                    RelPath = "Common\Platform.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MySqlClient.Design\AssemblyInfo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MySqlClient.Design\Connect.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MySqlClient.Design\ConnectDatabaseDlg.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MySqlClient.Design\ConnectDatabaseDlg.resx"
+                    DependentUpon = "ConnectDatabaseDlg.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "MySqlClient.Design\ConnectionStringTypeEditor.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MySqlClient.Design\ConnectServerDlg.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MySqlClient.Design\ConnectServerDlg.resx"
+                    DependentUpon = "ConnectServerDlg.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "MySqlClient.Design\CreateDatabaseDlg.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MySqlClient.Design\CreateDatabaseDlg.resx"
+                    DependentUpon = "CreateDatabaseDlg.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "MySqlClient.Design\DatabaseTypeEditor.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MySqlClient.Design\DataGridComboBoxColumn.cs"
+                    SubType = "Component"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MySqlClient.Design\EditConnectionString.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MySqlClient.Design\EditConnectionString.resx"
+                    DependentUpon = "EditConnectionString.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "MySqlClient.Design\MySqlDataAdapterDesigner.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MySqlClient.Design\PreviewDataDlg.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MySqlClient.Design\PreviewDataDlg.resx"
+                    DependentUpon = "PreviewDataDlg.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "MySqlClient.Design\ServerExplorer.cs"
+                    SubType = "UserControl"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MySqlClient.Design\ServerExplorer.resx"
+                    DependentUpon = "ServerExplorer.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "MySqlClient.Design\TableDesigner.cs"
+                    SubType = "UserControl"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MySqlClient.Design\TableDesigner.resx"
+                    DependentUpon = "TableDesigner.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "MySqlClient.Design\TableViewer.cs"
+                    SubType = "UserControl"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MySqlClient.Design\TableViewer.resx"
+                    DependentUpon = "TableViewer.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "MySqlClient.Design\UserData.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+            </Include>
+        </Files>
+    </CSHARP>
+</VisualStudioProject>
+

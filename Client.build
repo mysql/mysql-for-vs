@@ -1,0 +1,174 @@
+<project name="MySqlClient" default="allframeworks" xmlns="http://nant.sf.net/schemas/nant-0.84.win32.net-1.0.xsd">
+	<description>MySQLClient Managed Provider for MySQL</description>
+
+	<!-- sets where we can expect to find NUnit on your system -->
+	<property name="nunit" value="d:\program files\NUnit 2.2\bin"/>
+
+	<!-- filesets -->
+	<fileset id="Source">
+		<include name="mysqlclient/common/*.cs"/>
+		<include name="mysqlclient/Types/*.cs"/>
+		<include name="mysqlclient/*.cs"/>
+	</fileset>
+	
+	<if test="${not property::exists('debug')}">
+		<property name="defines" value=""/>
+	</if>
+	
+	<if test="${not property::exists('debug')}">
+		<property name="debug" value="false"/>
+		<property name="opt" value="true"/>
+		<property name="buildType" value="release"/>
+	</if>
+
+    <if test="${(debug)}">
+		<property name="opt" value="false"/>
+		<property name="buildType" value="debug"/>
+	</if>
+	
+    <if test="${not property::exists('build.dir')}">
+		<property name="build.dir" value="."/>
+	</if>
+
+	<!-- builds the client on all supported frameworks -->
+	<target name="allframeworks">
+		<property name="framework" value="net-1.0"/>
+		<call target="client"/>
+		<property name="framework" value="net-1.1"/>
+		<call target="client"/>
+		<call target="Docs"/>
+	</target>
+
+	<!-- core managed driver target -->	
+	<target name="client" description="Core client target">
+		<property name="nant.settings.currentframework" value="${framework}"/>
+		<mkdir dir="bin/${framework}/${buildType}" failonerror="false"/>
+		<csc define="${defines}" output="bin/${framework}/${buildType}/MySql.Data.dll" target="library" 
+			debug="${debug}" optimize="${opt}" 
+			doc="bin/${framework}/${buildType}/MySql.Data.xml">
+			<arg value="/nowarn:0679"/>
+			<references>
+				<include name="ICSharpCode.SharpZipLib.dll"/>
+			</references>
+			<sources refid="Source"/>
+		</csc>
+		<csc output="bin/${framework}/${buildType}/MySql.Data.Tests.dll" target="library" debug="${debug}" optimize="${opt}">
+			<arg value="/nowarn:0679"/>
+			<sources>
+				<include name="TestSuite/*.cs"/>
+			</sources>
+			<references>
+				<include name="bin/${framework}/${buildType}/MySql.Data.dll"/>
+				<include name="${nunit}/nunit.framework.dll"/>
+			</references>
+		</csc>
+	</target>
+
+	<!-- core managed driver target 1.0 -->	
+	<target name="net-1.0" description="1.0 .NET target">
+		<property name="framework" value="net-1.0"/>
+		<call target="client"/>
+	</target>
+	
+	<!-- core managed driver target 1.1 -->
+	<target name="net-1.1" description="1.1 .NET target">
+		<property name="framework" value="net-1.1"/>
+		<call target="client"/>
+	</target>
+	
+
+	<!-- testing targets -->
+	<target name="alltests" depends="test-net-1.1, test-net-1.0">
+	</target>
+	
+	<target name="test-net-1.1" depends="net-1.1">
+		<property name="framework" value="net-1.1"/>
+		<call target="testclient"/>
+	</target>
+
+	<target name="test-net-1.0" depends="net-1.0">
+		<property name="framework" value="net-1.0"/>
+		<call target="testclient"/>
+	</target>
+
+    <!-- target to run the test suite -->
+	<target name="testclient" description="Target to run NUnit tests">
+		<echo message="Stopping all services"/>
+		<servicecontroller action="Stop" service="MySql4.0"/>
+		<servicecontroller action="Stop" service="MySql4.1"/>
+		<servicecontroller action="Stop" service="MySql5.0"/>
+		
+		<echo message="Testing MySQL 4.0"/>
+		<servicecontroller action="Start" service="MySql4.0"/>
+		<call target="testdb"/>
+
+		<echo message="Testing MySQL 4.1"/>
+		<servicecontroller action="Stop" service="MySql4.0"/>
+		<servicecontroller action="Start" service="MySql4.1"/>
+		<call target="testdb"/>
+
+		<echo message="Testing MySQL 5.0"/>
+		<servicecontroller action="Stop" service="MySql4.1"/>
+		<servicecontroller action="Start" service="MySql5.0"/>
+		<call target="testdb"/>
+	</target>
+
+	<target name="testdb" description="Target to test a database with all possible configurations">
+		<nunit2 verbose="true">
+			<formatter type="Plain" />
+			<test assemblyname="bin/${framework}/${buildType}/MySql.Data.Tests.dll"
+				appconfig="testsuite/MySql.Data.Tests.dll.config"  />
+		</nunit2>
+	</target>
+	
+	<!-- documentation target -->
+	<target name="Docs" description="Documentation">
+		<ndoc>
+			<assemblies basedir="bin/${framework}/${buildType}">
+				<include name="MySQL.Data.dll" />
+			</assemblies>
+			<summaries>
+				<include name="${build.dir}/mysqlclient/docs/namespace.xml"/>
+			</summaries>
+			<documenters>
+				<documenter name="MSDN">
+					<property name="OutputDirectory" value="${build.dir}/bin/${framework}/${buildType}/doc/VS.Net" />
+                    <property name="HtmlHelpName" value="MySql.Data" />
+                    <property name="HtmlHelpCompilerFilename" value="hhc.exe" />
+                    <property name="IncludeFavorites" value="False" />
+                    <property name="Title" value="MySQL ADO.Net Data Provider" />
+                    <property name="SplitTOCs" value="False" />
+                    <property name="DefaulTOC" value="" />
+                    <property name="ShowVisualBasic" value="True" />
+                    <property name="ShowMissingSummaries" value="False" />
+                    <property name="ShowMissingRemarks" value="False" />
+                    <property name="ShowMissingParams" value="False" />
+                    <property name="ShowMissingReturns" value="False" />
+                    <property name="ShowMissingValues" value="False" />
+                    <property name="DocumentInternals" value="False" />
+                    <property name="DocumentProtected" value="True" />
+                    <property name="DocumentPrivates" value="False" />
+                    <property name="DocumentEmptyNamespaces" value="False" />
+                    <property name="IncludeAssemblyVersion" value="False" />
+                    <property name="CopyrightText" value="Copyright MySQL AB 2004" />
+                    <property name="CopyrightHref" value="http://www.mysql.com" />
+				</documenter>
+			</documenters>
+		</ndoc>
+		
+		<!-- now copy the generated docs to the doc folder -->
+		<mkdir dir="doc"/>
+		<copy file="bin/${framework}/${buildType}/doc/VS.Net/MySql.Data.chm" todir="doc"/>
+		<delete dir="bin/${framework}/${buildType}/doc" failonerror="false"/>
+	</target>
+	
+	<!-- Remove all generated files target -->
+	<target name="clean" description="Remove all generated files">
+		<delete failonerror="false">
+			<fileset>
+				<include name="bin\*.*" />
+            </fileset>
+        </delete>
+    </target>
+    
+</project>
