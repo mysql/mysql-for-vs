@@ -1,6 +1,7 @@
 - Version 1.1.0
 	Bug #6214  	CommandText: Question mark in comment line is being parsed as a parameter [fixed]
     Implemented intial usage advisor
+    Merged cursor support in
     	
 1-20-05 - Version 1.0.4  
 

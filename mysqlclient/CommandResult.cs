@@ -43,6 +43,7 @@ namespace MySql.Data.MySqlClient
 		private bool				dataRowOpen;
 		private bool				usingSequentialAccess;
 		private int					seqColumn;
+		private int					statementId;
 
 		public CommandResult( Driver d, bool isBinary )
 		{
@@ -50,6 +51,7 @@ namespace MySql.Data.MySqlClient
 			this.isBinary = isBinary;
 			dataRowOpen = false;
 			ReadNextResult(true);
+			statementId = 0;
 		}
 
 		public CommandResult( Driver d )
@@ -93,7 +95,22 @@ namespace MySql.Data.MySqlClient
 			set { affectedRows = value; }
 		}
 
+		public int StatementId 
+		{
+			get { return statementId; }
+			set { statementId = value; }
+		}
+
 		#endregion
+
+		internal void ReadRemainingColumns() 
+		{
+			if (! usingSequentialAccess) return;
+
+			usingSequentialAccess = false;
+			for (int i=seqColumn+1; i < (int)fieldCount; i++)
+				values[i] = driver.ReadFieldValue( i, fields[i], values[i] );
+		}
 
 		public MySqlValue ReadColumnValue(int index)
 		{
@@ -149,7 +166,7 @@ namespace MySql.Data.MySqlClient
 				for (int i=0; i < fields.Length; i++) 
 					values[i] = fields[i].GetValueObject();
 
-				if (! driver.OpenDataRow(fields.Length, isBinary)) 
+				if (! driver.OpenDataRow(fields.Length, isBinary, statementId)) 
 				{
 					readRows = true;
 					return false;
@@ -177,7 +194,7 @@ namespace MySql.Data.MySqlClient
 			seqColumn = -1;
 			if (! dataRowOpen) 
 			{
-				if (! driver.OpenDataRow(fields.Length, isBinary) ) 
+				if (! driver.OpenDataRow(fields.Length, isBinary, statementId) ) 
 				{
 					readRows = true;
 					return false;
@@ -213,7 +230,7 @@ namespace MySql.Data.MySqlClient
 
 			if (! readRows) 
 			{
-				while (driver.OpenDataRow( 0, false )) 
+				while (driver.OpenDataRow( 0, false, statementId )) 
 				{
 					if (! retVal) retVal = true;
 				}  

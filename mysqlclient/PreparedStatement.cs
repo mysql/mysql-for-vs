@@ -61,7 +61,7 @@ namespace MySql.Data.MySqlClient
 
 		#endregion
 
-		public CommandResult Execute( MySqlParameterCollection parameters )
+		public CommandResult Execute( MySqlParameterCollection parameters, int cursorPageSize )
 		{
 			if (parameters.Count < paramList.Length)
 				throw new MySqlException( "Invalid number of parameters for statement execute" );
@@ -82,7 +82,7 @@ namespace MySql.Data.MySqlClient
 
 			// start constructing our packet
 			packet.WriteInteger( StatementId, 4 );
-			packet.WriteByte( 0 );          // flags; always 0 for 4.1
+			packet.WriteByte( (byte)cursorPageSize );          // flags; always 0 for 4.1
 			packet.WriteInteger( 1, 4 );    // interation count; 1 for 4.1
 			packet.Write( nullMapBytes );
 			if (parameters != null && parameters.Count > 0)
@@ -110,7 +110,9 @@ namespace MySql.Data.MySqlClient
 
 //			executionCount ++;
 			// send the data packet and return the CommandResult
-			return driver.ExecuteStatement( ((System.IO.MemoryStream)packet.Stream).ToArray() );
+			CommandResult result = driver.ExecuteStatement( 
+				((System.IO.MemoryStream)packet.Stream).ToArray(), StatementId, cursorPageSize );
+			return result;
 		}
 
 	}

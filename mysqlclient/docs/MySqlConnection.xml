@@ -827,16 +827,6 @@ Recognized values are <B>true</B>, <B>false</B>, <B>yes</B>, and <B>no</B>.</td>
 			use the new '?' parameter marker.</note>
 			</td>
 		</tr>
-		<tr>
-			<td>useUsageAdvisor<para>  -or-  </para>Usage Advisor</td>
-			<td>false</td>
-			<td>
-			Enables the new usage advisor.  The usage advisor will write messages out to any registered
-			trace listeners warning you of potential SQL problems such as not reading all fields in a rowset
-			or not reading all rows in a resultset.  The advisor also reports executing a query without an
-			index.
-			</td>
-		</tr>
 		</table>
 		</div>
 	<para>

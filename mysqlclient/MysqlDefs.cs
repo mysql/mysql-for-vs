@@ -56,7 +56,9 @@ namespace MySql.Data.MySqlClient
 		MoreResults = 4,						// More results on server
 		AnotherQuery = 8,						// Multi query - next query exists
 		BadIndex = 16,
-		NoIndex = 32
+		NoIndex = 32,
+		CursorExists = 64,
+		LastRowSent = 128
 	}
 
 
@@ -92,7 +94,8 @@ namespace MySql.Data.MySqlClient
 		LONG_DATA		= 24,
 		CLOSE_STMT		= 25,
 		RESET_STMT		= 26,
-		SET_OPTION		= 27
+		SET_OPTION		= 27,
+		FETCH			= 28
 	}
 
 	/// <summary>
