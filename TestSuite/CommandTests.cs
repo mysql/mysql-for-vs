@@ -162,5 +162,27 @@ namespace MySql.Data.MySqlClient.Tests
 			IDbCommand cmd = new MySqlCommand();
 			IDbCommand cmd2 = ((ICloneable)cmd).Clone() as IDbCommand;
 		}
+
+		[Test]
+		public void CommentsInSQL() 
+		{
+			string sql = "INSERT INTO Test /* my table */ VALUES (1 /* this is the id */, 'Test' );" +
+				"/* These next inserts are just for testing \r\n" +
+				"   comments */\r\n" +
+				"INSERT INTO \r\n" +
+				"  # This table is bogus\r\n" +
+				"test VALUES (2, 'Test2')";
+			MySqlCommand cmd = new MySqlCommand( sql, conn );
+			cmd.ExecuteNonQuery();
+			
+			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
+			DataTable table = new DataTable();
+			da.Fill(table);
+			Assert.AreEqual( 1, table.Rows[0]["id"] );
+			Assert.AreEqual( "Test", table.Rows[0]["name"] );
+			Assert.AreEqual( 2, table.Rows.Count );
+			Assert.AreEqual( 2, table.Rows[1]["id"] );
+			Assert.AreEqual( "Test2", table.Rows[1]["name"] );
+		}
 	}
 }

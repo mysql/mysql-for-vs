@@ -382,6 +382,33 @@ namespace MySql.Data.MySqlClient.Tests
 			execSQL( "DROP TABLE IF EXISTS foo");
 		}
 
+		[Test]
+		public void BitAndDecimal() 
+		{
+			execSQL("DROP TABLE IF EXISTS test");
+			execSQL("CREATE TABLE test (bt1 BIT, bt4 BIT(4), bt8 BIT(8), bt32 BIT(32))");
+			execSQL("INSERT INTO test VALUES (12, 2, 120, 1000)");
+
+			MySqlCommand cmd = new MySqlCommand("SELECT * FROM test", conn);
+			MySqlDataReader reader = null;
+			try 
+			{
+				reader = cmd.ExecuteReader();
+				Assert.IsTrue(reader.Read());
+				Assert.AreEqual( 1, reader.GetInt32(0));
+				Assert.AreEqual( 2, reader.GetInt32(1));
+				Assert.AreEqual( 120, reader.GetInt32(2));
+				Assert.AreEqual( 1000, reader.GetInt32(3));
+			}
+			catch (Exception ex) 
+			{
+				Assert.Fail(ex.Message);
+			}
+			finally 
+			{
+				if (reader != null) reader.Close();
+			}
+		}
 
 	}
 }

@@ -183,6 +183,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "MemoryTraceListener.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "ParameterTests.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -214,6 +219,11 @@
                 />
                 <File
                     RelPath = "Transactions.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "UsageAdvisor.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

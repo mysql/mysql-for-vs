@@ -28,7 +28,7 @@
                     BaseAddress = "285212672"
                     CheckForOverflowUnderflow = "false"
                     ConfigurationOverrideFile = ""
-                    DefineConstants = "DEBUG;TRACE;WINDOWS"
+                    DefineConstants = "DEBUG;TRACE;WINDOWS;FINAL"
                     DocumentationFile = "doc.xml"
                     DebugSymbols = "true"
                     FileAlignment = "4096"
@@ -249,6 +249,11 @@
                 />
                 <File
                     RelPath = "MySqlClient\transaction.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MySqlClient\UsageAdvisor.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

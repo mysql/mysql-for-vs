@@ -199,11 +199,12 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// 
 		/// </summary>
-		public void Consume()
+		public bool Consume()
 		{
 			// if we are not a resultset, then we are done
-			if (! IsResultSet) return;
+			if (! IsResultSet) return false;
 
+			bool retVal = false;
 			if (! readSchema)
 			{
 				driver.ReadFieldMetadata( (int)fieldCount, ref fields );
@@ -212,9 +213,13 @@ namespace MySql.Data.MySqlClient
 
 			if (! readRows) 
 			{
-				while (driver.OpenDataRow( 0, false )) {}  
+				while (driver.OpenDataRow( 0, false )) 
+				{
+					if (! retVal) retVal = true;
+				}  
 				readRows = true;
 			}
+			return retVal;
 		}
 	}
 }

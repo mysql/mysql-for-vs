@@ -1,20 +1,16 @@
 Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Data", "MySql.Data.csproj", "{5EAEFBC4-8389-4120-BAB3-9B27174F6F6F}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Design", "Design\MySql.Design.csproj", "{049E48EE-71F0-436E-A6A2-DBEE16B3CA51}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5EAEFBC4-8389-4120-BAB3-9B27174F6F6F} = {5EAEFBC4-8389-4120-BAB3-9B27174F6F6F}
+	EndProjectSection
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Data.Tests", "TestSuite\MySql.Data.Tests.csproj", "{92CB29DF-61DE-4277-8DC6-D3587C7311EE}"
 	ProjectSection(ProjectDependencies) = postProject
 		{5EAEFBC4-8389-4120-BAB3-9B27174F6F6F} = {5EAEFBC4-8389-4120-BAB3-9B27174F6F6F}
-	EndProjectSection
-EndProject
-Project("{20D4826A-C6FA-45DB-90F4-C717570B9F32}") = "MySqlCeClient", "MySqlCeClient\MySqlCeClient.csdproj", "{C20B9BA2-7F07-4E9F-B4D2-449A91F9A112}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsApplication1", "..\WindowsApplication1\WindowsApplication1.csproj", "{BB7D4210-F5D7-43A2-BEC0-AF142A48E766}"
-	ProjectSection(ProjectDependencies) = postProject
-		{5EAEFBC4-8389-4120-BAB3-9B27174F6F6F} = {5EAEFBC4-8389-4120-BAB3-9B27174F6F6F}
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Data", "MySql.Data.csproj", "{5EAEFBC4-8389-4120-BAB3-9B27174F6F6F}"
-	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
 Global
@@ -23,24 +19,18 @@ Global
 		Release = Release
 	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
-		{92CB29DF-61DE-4277-8DC6-D3587C7311EE}.Debug.ActiveCfg = Debug|.NET
-		{92CB29DF-61DE-4277-8DC6-D3587C7311EE}.Debug.Build.0 = Debug|.NET
-		{92CB29DF-61DE-4277-8DC6-D3587C7311EE}.Release.ActiveCfg = Release|.NET
-		{92CB29DF-61DE-4277-8DC6-D3587C7311EE}.Release.Build.0 = Release|.NET
-		{C20B9BA2-7F07-4E9F-B4D2-449A91F9A112}.Debug.ActiveCfg = Debug|Pocket PC
-		{C20B9BA2-7F07-4E9F-B4D2-449A91F9A112}.Debug.Build.0 = Debug|Pocket PC
-		{C20B9BA2-7F07-4E9F-B4D2-449A91F9A112}.Debug.Deploy.0 = Debug|Pocket PC
-		{C20B9BA2-7F07-4E9F-B4D2-449A91F9A112}.Release.ActiveCfg = Release|Pocket PC
-		{C20B9BA2-7F07-4E9F-B4D2-449A91F9A112}.Release.Build.0 = Release|Pocket PC
-		{C20B9BA2-7F07-4E9F-B4D2-449A91F9A112}.Release.Deploy.0 = Release|Pocket PC
-		{BB7D4210-F5D7-43A2-BEC0-AF142A48E766}.Debug.ActiveCfg = Debug|.NET
-		{BB7D4210-F5D7-43A2-BEC0-AF142A48E766}.Debug.Build.0 = Debug|.NET
-		{BB7D4210-F5D7-43A2-BEC0-AF142A48E766}.Release.ActiveCfg = Release|.NET
-		{BB7D4210-F5D7-43A2-BEC0-AF142A48E766}.Release.Build.0 = Release|.NET
 		{5EAEFBC4-8389-4120-BAB3-9B27174F6F6F}.Debug.ActiveCfg = Debug|.NET
 		{5EAEFBC4-8389-4120-BAB3-9B27174F6F6F}.Debug.Build.0 = Debug|.NET
 		{5EAEFBC4-8389-4120-BAB3-9B27174F6F6F}.Release.ActiveCfg = Release|.NET
 		{5EAEFBC4-8389-4120-BAB3-9B27174F6F6F}.Release.Build.0 = Release|.NET
+		{049E48EE-71F0-436E-A6A2-DBEE16B3CA51}.Debug.ActiveCfg = Debug|.NET
+		{049E48EE-71F0-436E-A6A2-DBEE16B3CA51}.Debug.Build.0 = Debug|.NET
+		{049E48EE-71F0-436E-A6A2-DBEE16B3CA51}.Release.ActiveCfg = Release|.NET
+		{049E48EE-71F0-436E-A6A2-DBEE16B3CA51}.Release.Build.0 = Release|.NET
+		{92CB29DF-61DE-4277-8DC6-D3587C7311EE}.Debug.ActiveCfg = Debug|.NET
+		{92CB29DF-61DE-4277-8DC6-D3587C7311EE}.Debug.Build.0 = Debug|.NET
+		{92CB29DF-61DE-4277-8DC6-D3587C7311EE}.Release.ActiveCfg = Release|.NET
+		{92CB29DF-61DE-4277-8DC6-D3587C7311EE}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

@@ -249,6 +249,15 @@ namespace MySql.Data.MySqlClient
 			set { keyValues["charset"] = value; }
 		}
 
+		[Category("Other")]
+		[Description("Logs inefficient database operations")]
+		[DefaultValue(false)]
+		public bool UseUsageAdvisor 
+		{
+			get { return GetBool("usageAdvisor"); }
+			set { keyValues["usageAdvisor"] = value; }
+		}
+
 		#endregion
 
 		/// <summary>
@@ -331,6 +340,7 @@ namespace MySql.Data.MySqlClient
 				defaults["pipeName"] = "MySQL";
 				defaults["memname"] = "MYSQL";
 				defaults["allowzerodatetime"] = false;
+				defaults["usageAdvisor"] = false;
 			}
 			return (Hashtable)defaults.Clone();
 		}
@@ -339,6 +349,11 @@ namespace MySql.Data.MySqlClient
 		{
 			switch (key.ToLower()) 
 			{
+				case "usage advisor":
+				case "useUsageAdvisor":
+					hash["usageAdvisor"] = value.ToLower() == "yes" || value.ToLower() == "true";
+					return true;
+
 				case "character set":
 				case "charset":
 					hash["charset"] = value;

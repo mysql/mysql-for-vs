@@ -43,6 +43,7 @@ namespace MySql.Data.MySqlClient
 		private bool			hasRows;
 		private CommandResult	currentResult;
 		private int				readCount;
+		private bool[]			uaFieldsUsed;
 
 		/* 
 		 * Keep track of the connection in order to implement the
@@ -123,8 +124,7 @@ namespace MySql.Data.MySqlClient
 			if (! isOpen) return;
 
 			// finish any current command
-			if (currentResult != null)
-				currentResult.Consume();
+			ConsumeCurrentResultset();
 
 			connection.Reader = null;
 			command.Consume();
@@ -614,14 +614,23 @@ namespace MySql.Data.MySqlClient
 				throw new MySqlException("Invalid attempt to NextResult when reader is closed.");
 
 			// clear any rows that have not been read from the last rowset
-			if (currentResult != null)
-				currentResult.Consume();
+			ConsumeCurrentResultset();
 
 			// tell our command to continue execution of the SQL batch until it its
 			// another resultset
 			try 
 			{
 				currentResult = command.GetNextResultSet(this);
+
+				// issue any requested UA warnings
+				if (connection.Settings.UseUsageAdvisor) 
+				{
+					if ((connection.driver.ServerStatus & ServerStatusFlags.NoIndex) != 0)
+						connection.UsageAdvisor.UsingNoIndex( command.CommandText );
+					if ((connection.driver.ServerStatus & ServerStatusFlags.BadIndex) != 0)
+						connection.UsageAdvisor.UsingBadIndex( command.CommandText );
+				}
+
 				readCount = 0;
 			}
 			catch (MySqlException ex) 
@@ -648,6 +657,7 @@ namespace MySql.Data.MySqlClient
 			{
 				canRead = hasRows = currentResult.Load();
 				fields = currentResult.Fields;
+				uaFieldsUsed = new bool[fields.Length];
 				return true;
 			}
 			catch (MySqlException ex) 
@@ -718,6 +728,9 @@ namespace MySql.Data.MySqlClient
 			if (index < 0 || index >= fields.Length) 
 				throw new ArgumentException( "You have specified an invalid column ordinal." );
 
+			// keep count of how many columns we have left to access
+			this.uaFieldsUsed[index] = true;
+
 			MySqlValue val = currentResult.ReadColumnValue(index);
 			if ( readCount == 0 )
 				throw new MySqlException("Invalid attempt to access a field before calling Read()");
@@ -734,6 +747,25 @@ namespace MySql.Data.MySqlClient
 			return 0;
 		}
 
+		private void ConsumeCurrentResultset() 
+		{
+			if (currentResult == null) return;
+
+			bool hadData = currentResult.Consume();
+
+			if (!connection.Settings.UseUsageAdvisor) return;
+
+			// we were asked to run the usage advisor so report if the resultset
+			// was not entirely read.
+			if (hadData)
+				connection.UsageAdvisor.ReadPartialResultSet(command.CommandText);
+
+			bool readAll = true;
+			foreach (bool b in this.uaFieldsUsed)
+				readAll &= b;
+			if (! readAll)
+				connection.UsageAdvisor.ReadPartialRowSet(command.CommandText, uaFieldsUsed, fields);
+		}
 
 		#region IEnumerator
 		IEnumerator	IEnumerable.GetEnumerator()

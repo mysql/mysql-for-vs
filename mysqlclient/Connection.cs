@@ -38,6 +38,7 @@ namespace MySql.Data.MySqlClient
 		internal Driver						driver;
 		private  MySqlDataReader			dataReader;
 		private  MySqlConnectionString		settings;
+		private  UsageAdvisor				advisor;
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/StateChange/*'/>
 		public event StateChangeEventHandler		StateChange;
@@ -51,12 +52,14 @@ namespace MySql.Data.MySqlClient
 		{
 			//TODO: add event data to StateChange docs
 			settings = new MySqlConnectionString();
+			advisor = new UsageAdvisor( this );
 		}
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/Ctor1/*'/>
 		public MySqlConnection(string connectionString)
 		{
 			settings = new MySqlConnectionString(connectionString);
+			advisor = new UsageAdvisor( this );
 		}
 
 		#region Interal Methods & Properties
@@ -88,6 +91,12 @@ namespace MySql.Data.MySqlClient
 		#endregion
 
 		#region Properties
+
+		[Browsable(false)]
+		internal UsageAdvisor UsageAdvisor 
+		{
+			get { return advisor; }
+		}
 
 		/// <summary>
 		/// Returns the id of the server thread this connection is executing on
