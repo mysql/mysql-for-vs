@@ -1,0 +1,51 @@
+<html dir="LTR">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+    <meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5" />
+    <title>Installing into Visual Studio .NET</title>
+    <xml>
+    </xml>
+    <link rel="stylesheet" type="text/css" href="MSDN.css" />
+  </head>
+  <body id="bodyID" class="dtBODY">
+    <div id="nsbanner">
+      <div id="bannerrow1">
+        <table class="bannerparthead" cellspacing="0">
+          <tr id="hdr">
+            <td class="runninghead">MySQL Connector/Net</td>
+            <td class="product">
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div id="TitleRow">
+        <h1 class="dtH1">Installing into Visual Studio .NET</h1>
+      </div>
+    </div>
+    <div id="nstext">
+
+      <p>
+      The installer for Connector/Net does not currently register the components into the Visual Studio .NET 
+      toolbox.  To complete this process, you must following the steps below.  Future versions of the installer 
+      will perform these steps during the installation process.
+      </p>
+      <p><b>Note</b> Installation steps for Visual Studio .NET 2002 and 2003 are identical.</p>
+      <p>
+      <ul>
+		<li>With Visual Studio .NET running, right click on the toolbox to bring up the properties menu.</li>
+		<li>Select Add Tab...  and enter Connector/Net as the name.</li>
+		<li>Now, with the Connector/Net tab open, right click on the toolbox again and select Add/Remove Items... 
+		The Customize Toolbox dialog will appear.</li>
+		<li>On the .NET Framework Components tab, click the Browse button and locate the MySql.Data.dll assembly you just
+		installed.</li>
+		<li>Once selected, the components that can be added to the toolbox will appear highlighted and with their checkboxes
+		checked.</li>
+		<li>Click OK to add the MySqlConnection, MySqlCommand, and MySqlDataAdapter components to your toolbox.</li>
+      </ul>
+      </p>
+   	  <br/><br/><br/>      
+      <hr>
+      &copy 2004-2005 MySQL Inc.  All rights reserved.
+    </div>
+  </body>
+</html>
