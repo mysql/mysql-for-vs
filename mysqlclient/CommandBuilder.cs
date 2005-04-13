@@ -26,8 +26,10 @@ using System.Text;
 namespace MySql.Data.MySqlClient
 {
 	/// <include file='docs/MySqlCommandBuilder.xml' path='docs/class/*'/>
+#if DESIGN
 	[ToolboxItem(false)]
 	[System.ComponentModel.DesignerCategory("Code")]
+#endif
 	public sealed class MySqlCommandBuilder : Component
 	{
 		private MySqlDataAdapter	_adapter;
