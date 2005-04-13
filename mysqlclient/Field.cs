@@ -20,7 +20,6 @@
 
 using System;
 using System.Data;
-using System.Data.SqlTypes;
 using System.Globalization;
 using System.Text;
 using MySql.Data.Common;
@@ -151,13 +150,47 @@ namespace MySql.Data.MySqlClient
 
 #endregion
 
-		public MySqlValue GetValueObject() 
+		public IMySqlValue GetValueObject() 
 		{
-			MySqlValue valueObject = MySqlValue.GetMySqlValue( mySqlDbType, IsUnsigned, IsBinary );
-			return valueObject;
+			return GetIMySqlValue(Type, IsBinary);
 		}
 
-
+		public static IMySqlValue GetIMySqlValue(MySqlDbType type, bool binary) 
+		{
+			switch (type) 
+			{
+				case MySqlDbType.Byte: 
+					return new MySqlByte();
+				case MySqlDbType.UByte: return new MySqlUByte();
+				case MySqlDbType.Int16: return new MySqlInt16();
+				case MySqlDbType.UInt16: return new MySqlUInt16();
+				case MySqlDbType.Int24:
+				case MySqlDbType.Int32: 
+				case MySqlDbType.Year: return new MySqlInt32(type, true);
+				case MySqlDbType.UInt24:
+				case MySqlDbType.UInt32: return new MySqlUInt32(type, true);
+				case MySqlDbType.Int64: return new MySqlInt64();
+				case MySqlDbType.UInt64: return new MySqlUInt64();
+				case MySqlDbType.Time: return new MySqlTimeSpan();
+				case MySqlDbType.Date:
+				case MySqlDbType.Datetime:
+				case MySqlDbType.Newdate:
+				case MySqlDbType.Timestamp: return new MySqlDateTime(type, true);
+				case MySqlDbType.Decimal: return new MySqlDecimal();
+				case MySqlDbType.Float: return new MySqlSingle();
+				case MySqlDbType.Double: return new MySqlDouble();
+				case MySqlDbType.Set:
+				case MySqlDbType.Enum:
+				case MySqlDbType.String:
+				case MySqlDbType.VarChar: return new MySqlString(type, true);
+				case MySqlDbType.Blob:
+				case MySqlDbType.MediumBlob:
+				case MySqlDbType.LongBlob:
+				default:
+					if (binary) return new MySqlBinary(type, true);
+					return new MySqlString(type, true);
+			}
+		}
 	}
 
 }
