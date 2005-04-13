@@ -25,6 +25,7 @@ using System.IO;
 
 namespace MySql.Data.MySqlClient
 {
+#if !CF
 	/// <summary>
 	/// Summary description for SharedMemoryStream.
 	/// </summary>
@@ -151,7 +152,7 @@ namespace MySql.Data.MySqlClient
 		{
 			try 
 			{
-				dataView = MapViewOfFile( dataMap, FILE_MAP_WRITE, 0, 0, (UIntPtr)BUFFERLENGTH );
+				dataView = MapViewOfFile(dataMap, FILE_MAP_WRITE, 0, 0, (UIntPtr)BUFFERLENGTH);
 				if (dataView == IntPtr.Zero) return true;
 				return false;
 			}
@@ -251,7 +252,6 @@ namespace MySql.Data.MySqlClient
 #endregion
 
 
-
-
 	}
+#endif
 }
