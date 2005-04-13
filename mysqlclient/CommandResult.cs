@@ -32,14 +32,14 @@ namespace MySql.Data.MySqlClient
 		private Driver				driver;
 
 		private ulong				affectedRows;
-		private ulong				fieldCount;
+		private long				fieldCount;
 		private long				lastInsertId;
 
 		private bool				readSchema;
 		private bool				readRows;
 		private bool				isBinary;
 		private MySqlField[]		fields;
-		private MySqlValue[]		values;
+		private IMySqlValue[]		values;
 		private bool				dataRowOpen;
 		private bool				usingSequentialAccess;
 		private int					seqColumn;
@@ -61,7 +61,7 @@ namespace MySql.Data.MySqlClient
 
 		#region Properties
 
-		public MySqlValue this[int index] 
+		public IMySqlValue this[int index] 
 		{
 			get { return values[index]; }
 			set { values[index] = value; }
@@ -83,7 +83,7 @@ namespace MySql.Data.MySqlClient
 			set { lastInsertId = value; }
 		}
 
-		public ulong FieldCount 
+		public long FieldCount 
 		{
 			get { return fieldCount; }
 			set { fieldCount = value; }
@@ -116,7 +116,7 @@ namespace MySql.Data.MySqlClient
 				values[i] = driver.ReadFieldValue( i, fields[i], values[i] );
 		}
 
-		public MySqlValue ReadColumnValue(int index)
+		public IMySqlValue ReadColumnValue(int index)
 		{
 			if (! usingSequentialAccess || seqColumn == index) 
 				return this[index];
@@ -141,12 +141,14 @@ namespace MySql.Data.MySqlClient
 			readSchema = false;
 			readRows = false;
 
-			while ( (driver.ServerStatus & (ServerStatusFlags.MoreResults | ServerStatusFlags.AnotherQuery )) != 0 ||
-				    isFirst)
+			while (driver.ReadResult( ref fieldCount, ref rows, ref lastInsertId ))
 			{
-				fieldCount = (ulong)driver.ReadResult( ref rows, ref lastInsertId );
+//
+//			while ( driver.HasMoreResults || isFirst ) 
+//			{
+//				fieldCount = (ulong)driver.ReadResult( ref rows, ref lastInsertId );
 				affectedRows += rows;
-				if (isFirst) isFirst = false;
+//				if (isFirst) isFirst = false;
 
 				if (IsResultSet) return true;
 			} 
@@ -166,7 +168,7 @@ namespace MySql.Data.MySqlClient
 				driver.ReadFieldMetadata( (int)fieldCount, ref fields );
 				readSchema = true;
 
-				values = new MySqlValue[ fields.Length ];
+				values = new IMySqlValue[ fields.Length ];
 				for (int i=0; i < fields.Length; i++) 
 					values[i] = fields[i].GetValueObject();
 
