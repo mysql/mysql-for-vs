@@ -24,7 +24,7 @@ using System.Data;
 namespace MySql.Data.MySqlClient
 {
 	/// <include file='docs/MySqlTransaction.xml' path='docs/Class/*'/>
-	public sealed class MySqlTransaction : IDbTransaction
+	public sealed class MySqlTransaction : MarshalByRefObject, IDbTransaction, IDisposable
 	{
 		private IsolationLevel	level;
 		private MySqlConnection	conn;
@@ -117,5 +117,5 @@ namespace MySql.Data.MySqlClient
 				throw;
 			}
 		}
-	}
+		}
 }
