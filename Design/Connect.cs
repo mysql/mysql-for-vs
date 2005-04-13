@@ -117,8 +117,8 @@ namespace MySql.Design
 
 			string mysqlPro = "{80BF7F79-0CBB-4be3-8AB2-2BF48BCB276A}";
 			windowToolWindow = applicationObject.Windows.CreateToolWindow (addInInstance, "MySql.Design.ServerExplorer", "Connector/.NET", mysqlPro, ref objTemp);
+			SetTabPicture();
 			windowToolWindow.Visible = true;
-			//windowToolWindow.SetTabPicture(
 			ServerExplorer se = (ServerExplorer)objTemp;
 			se.ConnectClass = this;
 
@@ -150,6 +150,20 @@ namespace MySql.Design
 				}
 			}
 			
+		}
+
+		private void SetTabPicture() 
+		{
+			Assembly myAssembly = Assembly.GetExecutingAssembly();
+			System.IO.Stream myStream = myAssembly.GetManifestResourceStream("MySql.Design.resources.tabPicture.bmp");
+			System.Drawing.Bitmap image = new System.Drawing.Bitmap(myStream);
+
+			Guid IPicture = new Guid("7BF80980-BF32-101A-8BBB-00AA00300CAB");
+			PICTDESCBmp bmp = new PICTDESCBmp(image);
+			stdole.IPictureDisp ipic = null;
+
+			NativeMethods.OleCreatePictureIndirect(ref bmp, ref IPicture, true, out ipic);
+			windowToolWindow.SetTabPicture(ipic);
 		}
 
 		/// <summary>
@@ -286,4 +300,5 @@ namespace MySql.Design
 			//editor.Visible = true;
 		}
 	}
+
 }
