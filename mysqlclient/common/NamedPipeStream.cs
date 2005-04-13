@@ -132,9 +132,9 @@ namespace MySql.Data.Common
 			if (buffer.Length < (offset + count))
 				throw new ArgumentException("Buffer is not large enough to hold requested data", "buffer");
 			if (offset < 0) 
-				throw new ArgumentOutOfRangeException("offset", offset, "Offset cannot be negative");
+				throw new ArgumentOutOfRangeException("Offset cannot be negative");
 			if (count < 0)
-				throw new ArgumentOutOfRangeException("count", count, "Count cannot be negative");
+				throw new ArgumentOutOfRangeException("Count cannot be negative");
 			if (! CanRead)
 				throw new NotSupportedException("The stream does not support reading");
 			if (pipeHandle == 0)
@@ -181,9 +181,9 @@ namespace MySql.Data.Common
 			if (buffer.Length < (offset + count))
 				throw new ArgumentException("Buffer does not contain amount of requested data", "buffer");
 			if (offset < 0) 
-				throw new ArgumentOutOfRangeException("offset", offset, "Offset cannot be negative");
+				throw new ArgumentOutOfRangeException("Offset cannot be negative");
 			if (count < 0)
-				throw new ArgumentOutOfRangeException("count", count, "Count cannot be negative");
+				throw new ArgumentOutOfRangeException("Count cannot be negative");
 			if (! CanWrite)
 				throw new NotSupportedException("The stream does not support writing");
 			if (pipeHandle == 0)
