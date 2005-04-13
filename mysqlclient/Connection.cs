@@ -29,10 +29,12 @@ using MySql.Data.Common;
 namespace MySql.Data.MySqlClient
 {
 	/// <include file='docs/MySqlConnection.xml' path='docs/ClassSummary/*'/>
+#if DESIGN
 	[System.Drawing.ToolboxBitmap( typeof(MySqlConnection), "MySqlClient.resources.connection.bmp")]
 	[System.ComponentModel.DesignerCategory("Code")]
 	[ToolboxItem(true)]
-	public sealed class MySqlConnection : Component, IDbConnection, ICloneable
+#endif
+	public sealed class MySqlConnection : Component, IDbConnection, ICloneable, IDisposable
 	{
 		internal ConnectionState			state;
 		internal Driver						driver;
@@ -92,7 +94,9 @@ namespace MySql.Data.MySqlClient
 
 		#region Properties
 
+#if DESIGN
 		[Browsable(false)]
+#endif
 		internal UsageAdvisor UsageAdvisor 
 		{
 			get { return advisor; }
@@ -101,7 +105,9 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// Returns the id of the server thread this connection is executing on
 		/// </summary>
+#if DESIGN
 		[Browsable(false)] 
+#endif
 		public int ServerThread 
 		{
 			get { return driver.ThreadID; }
@@ -110,21 +116,27 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// Gets the name of the MySQL server to which to connect.
 		/// </summary>
+#if DESIGN
 		[Browsable(true)]
+#endif
 		public string DataSource
 		{
 			get { return settings.Server; }
 		}
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/ConnectionTimeout/*'/>
+#if DESIGN
 		[Browsable(true)]
+#endif
 		public int ConnectionTimeout
 		{
 			get { return settings.ConnectionTimeout; }
 		}
 		
 		/// <include file='docs/MySqlConnection.xml' path='docs/Database/*'/>
+#if DESIGN
 		[Browsable(true)]
+#endif
 		public string Database
 		{
 			get	{ return settings.Database; }
@@ -133,21 +145,27 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// Indicates if this connection should use compression when communicating with the server.
 		/// </summary>
+#if DESIGN
 		[Browsable(false)]
+#endif
 		public bool UseCompression
 		{
 			get { return settings.UseCompression; }
 		}
 		
 		/// <include file='docs/MySqlConnection.xml' path='docs/State/*'/>
+#if DESIGN
 		[Browsable(false)]
+#endif
 		public ConnectionState State
 		{
 			get { return state; }
 		}
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/ServerVersion/*'/>
+#if DESIGN
 		[Browsable(false)]
+#endif
 		public string ServerVersion 
 		{
 			get { return  driver.Version.ToString(); }
@@ -166,12 +184,12 @@ namespace MySql.Data.MySqlClient
 
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/ConnectionString/*'/>
-#if WINDOWS
+#if DESIGN
 		[Editor("MySql.Data.MySqlClient.Design.ConnectionStringTypeEditor,MySqlClient.Design", typeof(System.Drawing.Design.UITypeEditor))]
-#endif
 		[Browsable(true)]
 		[Category("Data")]
 		[Description("Information used to connect to a DataSource, such as 'Server=xxx;UserId=yyy;Password=zzz;Database=dbdb'.")]
+#endif
 		public string ConnectionString
 		{
 			get
@@ -295,7 +313,7 @@ namespace MySql.Data.MySqlClient
 					driver = Driver.Create( settings );
 				}
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
 				SetState( ConnectionState.Closed );
 				throw;
@@ -357,17 +375,24 @@ namespace MySql.Data.MySqlClient
 		#endregion
 
 		#region IDisposeable
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing && State == ConnectionState.Open)
+				Close();
+			base.Dispose(disposing);
+		}
+
 		/// <summary>
 		/// Releases the resources used by the MySqlConnection.
 		/// </summary>
-		public new void Dispose() 
+		void System.IDisposable.Dispose()
 		{
-			if (State == ConnectionState.Open)
-				Close();
-			base.Dispose();
+			Dispose(true);
 		}
+
 		#endregion
-  }
+	}
 
 	/// <summary>
 	/// Represents the method that will handle the <see cref="MySqlConnection.InfoMessage"/> event of a 
