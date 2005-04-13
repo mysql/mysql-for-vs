@@ -18,6 +18,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using System;
 using System.Data;
 using System.Data.Common;
 using System.ComponentModel;
@@ -25,25 +26,27 @@ using System.ComponentModel;
 namespace MySql.Data.MySqlClient
 {
 	/// <include file='docs/MySqlDataAdapter.xml' path='docs/class/*'/>
+#if DESIGN
 	[System.Drawing.ToolboxBitmap( typeof(MySqlDataAdapter), "MySqlClient.resources.dataadapter.bmp")]
 	[System.ComponentModel.DesignerCategory("Code")]
 	[Designer("MySql.Data.MySqlClient.Design.MySqlDataAdapterDesigner,MySqlClient.Design")]
-	public sealed class MySqlDataAdapter : DbDataAdapter, IDbDataAdapter
+#endif
+	public sealed class MySqlDataAdapter : DbDataAdapter, IDbDataAdapter, IDataAdapter, ICloneable
 	{
 		private MySqlCommand m_selectCommand;
 		private MySqlCommand m_insertCommand;
 		private MySqlCommand m_updateCommand;
 		private MySqlCommand m_deleteCommand;
 
-		/*
-			* Inherit from Component through DbDataAdapter. The event
-			* mechanism is designed to work with the Component.Events
-			* property. These variables are the keys used to find the
-			* events in the components list of events.
-			*/
-		static private readonly object EventRowUpdated = new object(); 
-		static private readonly object EventRowUpdating = new object(); 
+		/// <summary>
+		/// Occurs during Update before a command is executed against the data source. The attempt to update is made, so the event fires.
+		/// </summary>
+		public event MySqlRowUpdatingEventHandler RowUpdating;
 
+		/// <summary>
+		/// Occurs during Update after a command is executed against the data source. The attempt to update is made, so the event fires.
+		/// </summary>
+		public event MySqlRowUpdatedEventHandler RowUpdated;
 
 		/// <include file='docs/MySqlDataAdapter.xml' path='docs/Ctor/*'/>
 		public MySqlDataAdapter()
@@ -72,7 +75,9 @@ namespace MySql.Data.MySqlClient
 		#region Properties
 
 		/// <include file='docs/MySqlDataAdapter.xml' path='docs/DeleteCommand/*'/>
+#if DESIGN
 		[Description("Used during Update for deleted rows in Dataset.")]
+#endif
 		public MySqlCommand DeleteCommand 
 		{
 			get { return m_deleteCommand; }
@@ -86,7 +91,9 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/MySqlDataAdapter.xml' path='docs/InsertCommand/*'/>
+#if DESIGN
 		[Description("Used during Update for new rows in Dataset.")]
+#endif
 		public MySqlCommand InsertCommand 
 		{
 			get { return m_insertCommand; }
@@ -100,8 +107,10 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/MySqlDataAdapter.xml' path='docs/SelectCommand/*'/>
+#if DESIGN
 		[Description("Used during Fill/FillSchema")]
 		[Category("Fill")]
+#endif
 		public MySqlCommand SelectCommand 
 		{
 			get { return m_selectCommand; }
@@ -115,7 +124,9 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/MySqlDataAdapter.xml' path='docs/UpdateCommand/*'/>
+#if DESIGN
 		[Description("Used during Update for modified rows in Dataset.")]
+#endif
 		public MySqlCommand UpdateCommand 
 		{
 			get { return m_updateCommand; }
@@ -165,11 +176,8 @@ namespace MySql.Data.MySqlClient
 		/// <param name="value">A MySqlRowUpdatingEventArgs that contains the event data.</param>
 		override protected void OnRowUpdating(RowUpdatingEventArgs value)
 		{
-			MySqlRowUpdatingEventHandler handler = (MySqlRowUpdatingEventHandler) Events[EventRowUpdating];
-			if ((null != handler) && (value is MySqlRowUpdatingEventArgs)) 
-			{
-				handler(this, (MySqlRowUpdatingEventArgs) value);
-			}
+			if (RowUpdating != null)
+				RowUpdating(this, (MySqlRowUpdatingEventArgs)value);
 		}
 
 		/// <summary>
@@ -178,29 +186,8 @@ namespace MySql.Data.MySqlClient
 		/// <param name="value">A MySqlRowUpdatedEventArgs that contains the event data. </param>
 		override protected void OnRowUpdated(RowUpdatedEventArgs value)
 		{
-			MySqlRowUpdatedEventHandler handler = (MySqlRowUpdatedEventHandler) Events[EventRowUpdated];
-			if ((null != handler) && (value is MySqlRowUpdatedEventArgs)) 
-			{
-				handler(this, (MySqlRowUpdatedEventArgs) value);
-			}
-		}
-
-		/// <summary>
-		/// Occurs during Update before a command is executed against the data source. The attempt to update is made, so the event fires.
-		/// </summary>
-		public event MySqlRowUpdatingEventHandler RowUpdating
-		{
-			add { Events.AddHandler(EventRowUpdating, value); }
-			remove { Events.RemoveHandler(EventRowUpdating, value); }
-		}
-
-		/// <summary>
-		/// Occurs during Update after a command is executed against the data source. The attempt to update is made, so the event fires.
-		/// </summary>
-		public event MySqlRowUpdatedEventHandler RowUpdated
-		{
-			add { Events.AddHandler(EventRowUpdated, value); }
-			remove { Events.RemoveHandler(EventRowUpdated, value); }
+			if (RowUpdated != null)
+				RowUpdated(this, (MySqlRowUpdatedEventArgs)value);
 		}
 	}
 
