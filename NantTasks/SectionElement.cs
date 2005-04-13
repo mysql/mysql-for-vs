@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using System.IO;
 using NAnt.Core;
 using NAnt.Core.Attributes;
@@ -62,7 +63,15 @@ namespace MyTasks
 		private string LoadFile(string file) 
 		{
 			StreamReader sr = new StreamReader(file);
-			string contents = sr.ReadToEnd();
+			StringBuilder sb = new StringBuilder();
+			string line = sr.ReadLine();
+			while (line != null) 
+			{
+				sb.Append(line);
+				sb.Append(Environment.NewLine);
+				line = sr.ReadLine();
+			}
+			string contents = sb.ToString();
 			sr.Close();
 			return contents;
 		}

@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using System.IO;
 using NAnt.Core;
 using NAnt.Core.Types;
@@ -41,7 +42,15 @@ namespace MyTasks
 			foreach (string name in files.FileNames)
 			{
 				StreamReader sr = new StreamReader( name );
-				string contents = sr.ReadToEnd();
+				StringBuilder sb = new StringBuilder();
+				string line = sr.ReadLine();
+				while (line != null) 
+				{
+					sb.Append(line);
+					sb.Append(Environment.NewLine);
+					line = sr.ReadLine();
+				}
+				string contents = sb.ToString();
 				sr.Close();
 
 				foreach (SectionElement se in sections) 

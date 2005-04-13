@@ -76,13 +76,13 @@
                 />
                 <Reference
                     Name = "System.XML"
-                    AssemblyName = "System.XML"
+                    AssemblyName = "System.Xml"
                     HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
                     Name = "NAnt.Core"
                     AssemblyName = "NAnt.Core"
-                    HintPath = "C:\Program Files\.NET Tools\Nant\bin\NAnt.Core.dll"
+                    HintPath = "C:\Program Files\Nant\bin\NAnt.Core.dll"
                 />
             </References>
         </Build>
