@@ -134,7 +134,7 @@ namespace MySql.Data.MySqlClient
 			{
 				string fieldName = reader.GetName(i);
 				fieldName = marker + fieldName.Remove(0, hash.Length+1);
-				reader.CurrentResult[i] = parameters[fieldName].GetValueObject();
+				reader.CurrentResult[i] = MySqlField.GetIMySqlValue(parameters[fieldName].MySqlDbType, true);
 			}
 
 			reader.Read();
