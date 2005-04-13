@@ -26,6 +26,29 @@ namespace MySql.Data.Common
 {
 	internal class Utility
 	{
+
+		public static int ContextSubstring(string src, string target, string contextMarkers)
+		{
+			char contextMarker = Char.MinValue;
+			bool escaped = false;
+			int  targetLength = target.Length;
+
+			for (int i=0; i < src.Length; i++)
+			{
+				char c = src[i];
+
+				if (c == '\\')
+					escaped = !escaped;
+				else if (c == contextMarker && !escaped)
+					contextMarker = Char.MinValue;
+				else if (contextMarkers.IndexOf(c) != -1 && !escaped && contextMarker == Char.MinValue)
+					contextMarker = c;
+				else if (c == target[0] && !escaped && contextMarker == Char.MinValue)
+					if (src.IndexOf(target, i, targetLength) != -1) return i;
+			}
+			return -1;
+		}
+
 		public static string[] ContextSplit( string src, string delimiters, string contextMarkers )
 		{
 			ArrayList parts = new ArrayList();
