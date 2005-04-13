@@ -674,5 +674,13 @@ namespace MySql.Data.MySqlClient
 		}
 		#endregion
 
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			base.Dispose(true);
+		}
+
+		#endregion
 	}
 }
