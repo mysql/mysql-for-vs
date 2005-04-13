@@ -19,10 +19,12 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
+using System.IO;
 using System.Collections;
 
 namespace MySql.Data.MySqlClient
 {
+
 	/// <summary>
 	/// Summary description for PreparedStatement.
 	/// </summary>
@@ -66,8 +68,7 @@ namespace MySql.Data.MySqlClient
 			if (parameters.Count < paramList.Length)
 				throw new MySqlException( "Invalid number of parameters for statement execute" );
 
-			PacketWriter packet = new PacketWriter();
-			packet.Driver = (NativeDriver)driver;
+			MySqlStreamWriter writer = new MySqlStreamWriter(new MemoryStream(), driver.Encoding);
 
 			//TODO: support long data here
 			// create our null bitmap
@@ -81,21 +82,21 @@ namespace MySql.Data.MySqlClient
 			nullMap.CopyTo( nullMapBytes, 0 );
 
 			// start constructing our packet
-			packet.WriteInteger( StatementId, 4 );
-			packet.WriteByte( (byte)cursorPageSize );          // flags; always 0 for 4.1
-			packet.WriteInteger( 1, 4 );    // interation count; 1 for 4.1
-			packet.Write( nullMapBytes );
+			writer.WriteInteger( StatementId, 4 );
+			writer.WriteByte( (byte)cursorPageSize );          // flags; always 0 for 4.1
+			writer.WriteInteger( 1, 4 );    // interation count; 1 for 4.1
+			writer.Write( nullMapBytes );
 			if (parameters != null && parameters.Count > 0)
-				packet.WriteByte( 1 );			// rebound flag
+				writer.WriteByte( 1 );			// rebound flag
 			else
-				packet.WriteByte( 0 );
+				writer.WriteByte( 0 );
 			//TODO:  only send rebound if parms change
 
 			// write out the parameter types
 			foreach ( MySqlField param in paramList )
 			{
 				MySqlParameter parm = parameters[ param.ColumnName ];
-				packet.WriteInteger( (long)parm.MySqlDbType, 2 ); 
+				writer.WriteInteger( (long)parm.MySqlDbType, 2 ); 
 			}
 
 			// now write out all non-null values
@@ -104,14 +105,14 @@ namespace MySql.Data.MySqlClient
 				MySqlParameter parm = parameters[ param.ColumnName ];
 				if (parm.Value == DBNull.Value) continue;
 
-				packet.Encoding = param.Encoding;
-				parm.Serialize( packet, true );
+				writer.Encoding = param.Encoding;
+				parm.Serialize(writer, true);
 			}
 
 //			executionCount ++;
 			// send the data packet and return the CommandResult
-			CommandResult result = driver.ExecuteStatement( 
-				((System.IO.MemoryStream)packet.Stream).ToArray(), StatementId, cursorPageSize );
+			CommandResult result = driver.ExecuteStatement(
+				((System.IO.MemoryStream)writer.Stream).ToArray(), StatementId, cursorPageSize );
 			return result;
 		}
 
