@@ -27,7 +27,9 @@ namespace MySql.Data.MySqlClient
 	/// The exception that is thrown when MySQL returns an error. This class cannot be inherited.
 	/// </summary>
 	/// <include file='docs/MySqlException.xml' path='MyDocs/MyMembers[@name="Class"]/*'/>
+#if DESIGN
 	[Serializable]
+#endif
 	public sealed class MySqlException : ApplicationException
 	{
 		private int		errorCode;
@@ -55,10 +57,12 @@ namespace MySql.Data.MySqlClient
 			errorCode = errno;	
 		}
 
+#if DESIGN
 		internal MySqlException(SerializationInfo info,
 					StreamingContext context) : base(info, context)
 		{
 		}
+#endif
 
 		/// <summary>
 		/// Gets a number that identifies the type of error.
