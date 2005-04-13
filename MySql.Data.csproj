@@ -118,13 +118,23 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "MySqlClient\command.cs"
+                    RelPath = "MySqlClient\ClientAPI.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "MySqlClient\CommandBuilder.cs"
+                    RelPath = "MySqlClient\ClientDriver.cs"
                     SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MySqlClient\command.cs"
+                    SubType = "Component"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MySqlClient\CommandBuilder.cs"
+                    SubType = "Component"
                     BuildAction = "Compile"
                 />
                 <File
@@ -139,7 +149,7 @@
                 />
                 <File
                     RelPath = "MySqlClient\Connection.cs"
-                    SubType = "Code"
+                    SubType = "Component"
                     BuildAction = "Compile"
                 />
                 <File
@@ -154,7 +164,7 @@
                 />
                 <File
                     RelPath = "MySqlClient\dataadapter.cs"
-                    SubType = "Code"
+                    SubType = "Component"
                     BuildAction = "Compile"
                 />
                 <File
@@ -208,17 +218,22 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "MySqlClient\MySqlStream.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MySqlClient\MySqlStreamReader.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MySqlClient\MySqlStreamWriter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "MySqlClient\NativeDriver.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySqlClient\PacketReader.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySqlClient\PacketWriter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -414,6 +429,11 @@
                 />
                 <File
                     RelPath = "MySqlClient\Types\MySqlValue.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MySqlClient\Types\NumberFormat.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
