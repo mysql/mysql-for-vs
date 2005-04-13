@@ -24,6 +24,107 @@ using MySql.Data.MySqlClient;
 
 namespace MySql.Data.Types
 {
+
+	internal struct MySqlDecimal : IMySqlValue
+	{
+		private byte	precision;
+		private byte	scale;
+		private Decimal	mValue;
+		private	bool	isNull;
+
+		public MySqlDecimal(bool isNull)
+		{
+			this.isNull = isNull;
+			mValue = 0;
+			precision = scale = 0;
+		}
+
+		public MySqlDecimal(decimal val)
+		{
+			this.isNull = false;
+			precision = scale = 0;
+			mValue = val;
+		}
+
+		#region IMySqlValue Members
+
+		public bool IsNull
+		{
+			get { return isNull; }
+		}
+
+		public MySql.Data.MySqlClient.MySqlDbType MySqlDbType
+		{
+			get	{ return MySqlDbType.Decimal; }
+		}
+
+		public byte Precision 
+		{
+			get { return precision; }
+			set { precision = value; }
+		}
+
+		public byte Scale 
+		{
+			get { return scale; }
+			set { scale = value; }
+		}
+
+
+		public System.Data.DbType DbType
+		{
+			get	{ return DbType.Decimal; }
+		}
+
+		object IMySqlValue.Value 
+		{
+			get { return mValue; }
+		}
+
+		public decimal Value
+		{
+			get { return mValue; }
+		}
+
+		public Type SystemType
+		{
+			get	{ return typeof(decimal); }
+		}
+
+		public string MySqlTypeName
+		{
+			get	{ return "DECIMAL"; }
+		}
+
+		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, object val, int length)
+		{
+			decimal v = Convert.ToDecimal( val );
+			if (binary) 
+				writer.WriteLenString(v.ToString(NumberFormat.MySql().NumberFormatInfo));
+			else 
+				writer.WriteLenString(v.ToString(NumberFormat.MySql().NumberFormatInfo));
+		}
+
+		IMySqlValue IMySqlValue.ReadValue(MySqlStreamReader reader, long length, bool nullVal)
+		{
+			if (nullVal) return new MySqlDecimal(true);
+
+			if (length == -1) 
+				return new MySqlDecimal( Decimal.Parse(reader.ReadLenString()));
+			else 
+				return new MySqlDecimal( Decimal.Parse(reader.ReadLenString()));
+		}
+
+		void IMySqlValue.SkipValue(MySqlStreamReader reader)
+		{
+			long len = reader.GetFieldLength();
+			reader.SkipBytes((int)len);
+		}
+
+		#endregion
+
+	}
+/*
 	/// <summary>
 	/// Summary description for MySqlDecimal.
 	/// </summary>
@@ -102,5 +203,5 @@ namespace MySql.Data.Types
 			reader.Skip( len );
 		}
 		
-	}
+	}*/
 }

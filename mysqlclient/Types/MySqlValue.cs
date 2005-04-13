@@ -25,6 +25,22 @@ using MySql.Data.MySqlClient;
 
 namespace MySql.Data.Types
 {
+	internal interface IMySqlValue 
+	{
+		bool		IsNull			{ get; }
+		MySqlDbType	MySqlDbType		{ get; }
+		DbType		DbType			{ get; }
+		object		Value			{ get; /*set;*/ }
+		Type		SystemType		{ get; }
+		string		MySqlTypeName	{ get; }
+
+		void		WriteValue(MySqlStreamWriter writer, bool binary, object value, int length);
+		IMySqlValue	ReadValue(MySqlStreamReader reader, long length, bool isNull);
+		void		SkipValue(MySqlStreamReader reader);
+	}
+
+
+/*
 	/// <summary>
 	/// 
 	/// </summary>
@@ -161,5 +177,5 @@ namespace MySql.Data.Types
 
 
 	}
-
+*/
 }

@@ -24,14 +24,105 @@ using MySql.Data.MySqlClient;
 
 namespace MySql.Data.Types
 {
+	internal struct MySqlInt32 : IMySqlValue
+	{
+		private int		mValue;
+		private	bool	isNull;
+		private bool	is24Bit;
+
+		private MySqlInt32(MySqlDbType type) 
+		{
+			is24Bit = type == MySqlDbType.Int24 ? true : false;
+			isNull = true;
+			mValue = 0;
+		}
+
+		public MySqlInt32(MySqlDbType type, bool isNull) : this(type)
+		{
+			this.isNull = isNull;
+		}
+
+		public MySqlInt32(MySqlDbType type, int val) : this(type)
+		{
+			this.isNull = false;
+			mValue = val;
+		}
+
+		#region IMySqlValue Members
+
+		public bool IsNull
+		{
+			get { return isNull; }
+		}
+
+		public MySql.Data.MySqlClient.MySqlDbType MySqlDbType
+		{
+			get	{ return MySqlDbType.Int32; }
+		}
+
+		public System.Data.DbType DbType
+		{
+			get	{ return DbType.Int32; }
+		}
+
+		object IMySqlValue.Value 
+		{
+			get { return mValue; }
+		}
+
+		public int Value
+		{
+			get { return mValue; }
+		}
+
+		public Type SystemType
+		{
+			get	{ return typeof(Int32); }
+		}
+
+		public string MySqlTypeName
+		{
+			get	{ return is24Bit ? "MEDIUMINT" : "INT"; }
+		}
+
+		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, object val, int length)
+		{
+			int v = Convert.ToInt32( val );
+			if (binary)
+				writer.Write( BitConverter.GetBytes(v));
+			else
+				writer.WriteStringNoNull(v.ToString());		
+		}
+
+		IMySqlValue IMySqlValue.ReadValue(MySqlStreamReader reader, long length, bool nullVal)
+		{
+			if (nullVal) return new MySqlInt32(MySqlDbType, true);
+
+			if (length == -1) 
+				return new MySqlInt32(MySqlDbType, reader.ReadInteger(is24Bit ? 3 : 4));
+			else 
+				return new MySqlInt32(MySqlDbType, Int32.Parse(reader.ReadString( length )));
+		}
+
+		void IMySqlValue.SkipValue(MySqlStreamReader reader)
+		{
+			reader.SkipBytes(4);
+		}
+
+		#endregion
+
+	}
+
+/*
+
 	/// <summary>
 	/// Summary description for MySqlInt32.
 	/// </summary>
-	internal class MySqlInt32 : MySqlValue
+	public class MySqlInt32Old : MySqlValue
 	{
 		private int	mValue;
 
-		public MySqlInt32(MySqlDbType type) : base()
+		public MySqlInt32Old(MySqlDbType type) : base()
 		{
 			dbType = DbType.Int32;
 			mySqlDbType = type;
@@ -85,5 +176,5 @@ namespace MySql.Data.Types
 		{
 			reader.Skip( 4 );
 		}
-	}
+	}*/
 }

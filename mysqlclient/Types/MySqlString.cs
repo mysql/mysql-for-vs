@@ -25,6 +25,110 @@ using MySql.Data.MySqlClient;
 
 namespace MySql.Data.Types
 {
+
+	internal struct MySqlString : IMySqlValue
+	{
+		private string		mValue;
+		private	bool		isNull;
+		private MySqlDbType	type;
+
+		public MySqlString(MySqlDbType type, bool isNull)
+		{
+			this.type = type;
+			this.isNull = isNull;
+			mValue = String.Empty;
+		}
+
+		public MySqlString(MySqlDbType type, string val)
+		{
+			this.type = type;
+			this.isNull = false;
+			mValue = val;
+		}
+
+		#region IMySqlValue Members
+
+		public bool IsNull
+		{
+			get { return isNull; }
+		}
+
+		public MySql.Data.MySqlClient.MySqlDbType MySqlDbType
+		{
+			get	{ return type; }
+		}
+
+		public System.Data.DbType DbType
+		{
+			get	{ return DbType.String; }
+		}
+
+		object IMySqlValue.Value 
+		{
+			get { return mValue; }
+		}
+
+		public string Value
+		{
+			get { return mValue; }
+		}
+
+		public Type SystemType
+		{
+			get	{ return typeof(string); }
+		}
+
+		public string MySqlTypeName
+		{
+			get	{ return type == MySqlDbType.Set ? "SET" : type == MySqlDbType.Enum ? "ENUM" : "VARCHAR"; }
+		}
+
+		private string EscapeString( string s )
+		{
+			s = s.Replace("\\", "\\\\");
+			s = s.Replace("\'", "\\\'");
+			s = s.Replace("\"", "\\\"");
+			s = s.Replace("`", "\\`");
+			s = s.Replace("´", "\\´");
+			s = s.Replace("’", "\\’");
+			s = s.Replace("‘", "\\‘");
+			return s;
+		}
+
+		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, object val, int length)
+		{
+			string v = val.ToString();
+			if (length > 0)
+				v = v.Substring(0, length);
+
+			if (binary)
+				writer.WriteLenString(v);
+			else
+				writer.WriteStringNoNull("'" + EscapeString(v) + "'");
+		}
+
+		IMySqlValue IMySqlValue.ReadValue(MySqlStreamReader reader, long length, bool nullVal)
+		{
+			if (nullVal) return new MySqlString(type, true);
+
+			string s = String.Empty;
+			if (length == -1)
+				s = reader.ReadLenString();
+			else
+				s = reader.ReadString(length);
+			return new MySqlString(type, s);
+		}
+
+		void IMySqlValue.SkipValue(MySqlStreamReader reader)
+		{
+			long len = reader.GetFieldLength();
+			reader.SkipBytes((int)len);
+		}
+
+		#endregion
+
+	}
+/*
 	/// <summary>
 	/// Summary description for MySqlString.
 	/// </summary>
@@ -111,5 +215,5 @@ namespace MySql.Data.Types
 			reader.Skip( len );
 		}
 
-	}
+	}*/
 }

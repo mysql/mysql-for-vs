@@ -25,19 +25,25 @@ using MySql.Data.MySqlClient;
 
 namespace MySql.Data.Types
 {
+
 	/// <summary>
-	/// Summary description for MySqlDateTime.
+	/// 
 	/// </summary>
-	public class MySqlDateTime : MySqlValue, IConvertible, IComparable
+	public struct MySqlDateTime : IMySqlValue, IConvertible, IComparable
 	{
+		private	bool			isNull;
+		private MySqlDbType		type;
 		private	DateTime		comparingDate;
-		private int	year, month, day, hour, minute, second;
+		private int				year, month, day, hour, minute, second;
 		private static string	fullPattern;
 		private static string	shortPattern;
 
-		internal MySqlDateTime( int year, int month, int day, int hour, int minute, 
-			int second, MySqlDbType type ) : this(type)
+
+		internal MySqlDateTime(MySqlDbType type, int year, int month, int day, int hour, int minute, 
+			int second)
 		{
+			this.isNull = false;
+			this.type = type;
 			this.year = year;
 			this.month = month;
 			this.day = day;
@@ -56,14 +62,14 @@ namespace MySql.Data.Types
 				ComposePatterns();
 		}
 
-		internal MySqlDateTime( MySqlDbType type ) 
+		internal MySqlDateTime(MySqlDbType type, bool isNull) : this(type, 0, 0, 0, 0, 0, 0)
 		{
-			mySqlDbType = type;
-			objectValue = this;
+			this.isNull = isNull;
 		}
 
-		internal MySqlDateTime(DateTime val, MySqlDbType type) : this(type)
+		internal MySqlDateTime(MySqlDbType type, DateTime val) : this(type, 0, 0, 0, 0, 0, 0)
 		{
+			this.isNull = false;
 			year = val.Year;
 			month = val.Month;
 			day = val.Day;
@@ -129,11 +135,66 @@ namespace MySql.Data.Types
 
 		#endregion
 
-		private void SerializeText( PacketWriter writer, DateTime value ) 
+		#region IMySqlValue Members
+
+		/// <summary>
+		/// Returns true if this datetime object has a null value
+		/// </summary>
+		public bool IsNull
+		{
+			get { return isNull; }
+		}
+
+		public MySql.Data.MySqlClient.MySqlDbType MySqlDbType
+		{
+			get	{ return type; }
+		}
+
+		public System.Data.DbType DbType
+		{
+			get	
+			{ 
+				if (type == MySqlDbType.Date || type == MySqlDbType.Newdate)
+					return DbType.Date;
+				return DbType.DateTime;
+			}
+		}
+
+		object IMySqlValue.Value 
+		{
+			get { return GetDateTime(); }
+		}
+
+		public DateTime Value
+		{
+			get { return GetDateTime(); }
+		}
+
+		public Type SystemType
+		{
+			get	{ return typeof(DateTime); }
+		}
+
+		public string MySqlTypeName
+		{
+			get	
+			{
+				switch (type) 
+				{
+					case MySqlDbType.Date: return "DATE";
+					case MySqlDbType.Newdate: return "NEWDATE";
+					case MySqlDbType.Timestamp: return "TIMESTAMP";
+				}
+				return "DATETIME";
+			}
+		}
+
+
+		private void SerializeText(MySqlStreamWriter writer, DateTime value) 
 		{
 			string val = String.Empty;
 
-			if (mySqlDbType == MySqlDbType.Timestamp && !writer.Version.isAtLeast(4,1,0))
+			if (type == MySqlDbType.Timestamp && !writer.Version.isAtLeast(4,1,0))
 				val = String.Format("{0:0000}{1:00}{2:00}{3:00}{4:00}{5:00}",
 					value.Year, value.Month, value.Day, value.Hour, value.Minute, value.Second );
 			else 
@@ -144,23 +205,22 @@ namespace MySql.Data.Types
 			writer.WriteStringNoNull( "'" + val + "'" );
 		}
 
-
-		internal override void Serialize(PacketWriter writer, bool binary, object value, int length)
+		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, object val, int length)
 		{
-			if (value is MySqlDateTime)
-				value = (value as MySqlDateTime).GetDateTime();
+			if (val is MySqlDateTime)
+				val = ((MySqlDateTime)val).GetDateTime();
 
-			if (! (value is DateTime))
+			if (! (val is DateTime))
 				throw new MySqlException( "Only DateTime objects can be serialized by MySqlDateTime" );
 
-			DateTime dtValue = (DateTime)value;
+			DateTime dtValue = (DateTime)val;
 			if (! binary)
 			{
 				SerializeText( writer, dtValue );
 				return;
 			}
 
-			if (mySqlDbType == MySqlDbType.Timestamp)
+			if (type == MySqlDbType.Timestamp)
 				writer.WriteByte( 11 );
 			else
 				writer.WriteByte( 7 );
@@ -168,7 +228,7 @@ namespace MySql.Data.Types
 			writer.WriteInteger( dtValue.Year, 2 );
 			writer.WriteByte( (byte)dtValue.Month );
 			writer.WriteByte( (byte)dtValue.Day );
-			if (mySqlDbType == MySqlDbType.Date) 
+			if (type == MySqlDbType.Date) 
 			{
 				writer.WriteByte( 0 );
 				writer.WriteByte( 0 );
@@ -181,42 +241,8 @@ namespace MySql.Data.Types
 				writer.WriteByte( (byte)dtValue.Second );
 			}
 			
-			if (mySqlDbType == MySqlDbType.Timestamp)
+			if (type == MySqlDbType.Timestamp)
 				writer.WriteInteger( dtValue.Millisecond, 4 );
-		}
-
-		internal override DbType DbType 
-		{
-			get 
-			{ 
-				switch (mySqlDbType) 
-				{
-					case MySqlDbType.Date:			
-					case MySqlDbType.Newdate:
-						return DbType.Date;
-				}
-				return DbType.DateTime;
-			}
-		}
-
-		internal override string GetMySqlTypeName()
-		{
-			switch (mySqlDbType) 
-			{
-				case MySqlDbType.Date: return "DATE";
-				case MySqlDbType.Newdate: return "NEWDATE";
-				case MySqlDbType.Timestamp: return "TIMESTAMP";
-			}
-			return "DATETIME";
-		}
-
-		/// <summary>Returns this value as a DateTime</summary>
-		public DateTime GetDateTime()
-		{
-			if (! IsValidDateTime)
-				throw new MySqlConversionException("Unable to convert MySQL date/time value to System.DateTime");			
-
-			return new DateTime( year, month, day, hour, minute, second );
 		}
 
 		private MySqlDateTime Parse40Timestamp( string s ) 
@@ -239,12 +265,13 @@ namespace MySql.Data.Types
 				}
 				index++;
 			}
-			return new MySqlDateTime( vals[0], vals[1], vals[2], vals[3], vals[4], vals[5], mySqlDbType );			
+
+			return new MySqlDateTime(type, vals[0], vals[1], vals[2], vals[3], vals[4], vals[5]);			
 		}
 
-		internal MySqlDateTime ParseMySql( string s, bool is41 ) 
+		private MySqlDateTime ParseMySql( string s, bool is41 ) 
 		{
-			if (mySqlDbType == MySqlDbType.Timestamp && ! is41)
+			if (type == MySqlDbType.Timestamp && ! is41)
 				return Parse40Timestamp(s);
 
 			string[] parts = s.Split( '-', ' ', ':' );
@@ -261,16 +288,13 @@ namespace MySql.Data.Types
 				second = int.Parse( parts[5] );
 			}
 
-			return new MySqlDateTime( year, month, day, hour, minute, second, mySqlDbType );
+			return new MySqlDateTime(type, year, month, day, hour, minute, second);
 		}
 
-		internal override Type SystemType
+		IMySqlValue IMySqlValue.ReadValue(MySqlStreamReader reader, long length, bool nullVal)
 		{
-			get { return typeof(MySqlDateTime); }
-		}
+			if (nullVal) return new MySqlDateTime(type,true);
 
-		internal override MySqlValue ReadValue(PacketReader reader, long length)
-		{
 			if (length >= 0) 
 			{
 				string value = reader.ReadString( length );
@@ -294,13 +318,24 @@ namespace MySql.Data.Types
 			if (bufLength > 7)
 				reader.ReadInteger(4);
 		
-			return new MySqlDateTime( year, month, day, hour, minute, second, mySqlDbType );
+			return new MySqlDateTime(type, year, month, day, hour, minute, second);
 		}
 
-		internal override void Skip(PacketReader reader)
+		void IMySqlValue.SkipValue(MySqlStreamReader reader)
 		{
 			long len = reader.ReadByte();
-			reader.Skip( len );
+			reader.SkipBytes((int)len);
+		}
+
+		#endregion
+
+		/// <summary>Returns this value as a DateTime</summary>
+		public DateTime GetDateTime()
+		{
+			if (! IsValidDateTime)
+				throw new MySqlConversionException("Unable to convert MySQL date/time value to System.DateTime");			
+
+			return new DateTime( year, month, day, hour, minute, second );
 		}
 
 		/// <summary>Returns a MySQL specific string representation of this value</summary>
@@ -309,10 +344,10 @@ namespace MySql.Data.Types
 			if (this.IsValidDateTime) 
 			{
 				DateTime d = new DateTime( year, month, day, hour, minute, second );
-				return (mySqlDbType == MySqlDbType.Date) ? d.ToString("d") : d.ToString();
+				return (type == MySqlDbType.Date) ? d.ToString("d") : d.ToString();
 			}
 
-			if (mySqlDbType == MySqlDbType.Date)
+			if (type == MySqlDbType.Date)
 				return String.Format( shortPattern, year, month, day);
 
 			if (hour >= 12)
@@ -357,6 +392,7 @@ namespace MySql.Data.Types
 			else
 				shortPattern = shortPattern.Replace("3", "{2}" );
 		}
+
 
 		/// <summary></summary>
 		/// <param name="val"></param>
@@ -477,5 +513,6 @@ namespace MySql.Data.Types
 		}
 
 		#endregion
+
 	}
 }

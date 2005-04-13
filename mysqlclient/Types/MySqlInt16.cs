@@ -24,6 +24,90 @@ using MySql.Data.MySqlClient;
 
 namespace MySql.Data.Types
 {
+
+
+	internal struct MySqlInt16 : IMySqlValue
+	{
+		private short	mValue;
+		private	bool	isNull;
+
+		public MySqlInt16(bool isNull)
+		{
+			this.isNull = isNull;
+			mValue = 0;
+		}
+
+		public MySqlInt16(short val)
+		{
+			this.isNull = false;
+			mValue = val;
+		}
+
+		#region IMySqlValue Members
+
+		public bool IsNull
+		{
+			get { return isNull; }
+		}
+
+		public MySql.Data.MySqlClient.MySqlDbType MySqlDbType
+		{
+			get	{ return MySqlDbType.Int16; }
+		}
+
+		public System.Data.DbType DbType
+		{
+			get	{ return DbType.Int16; }
+		}
+
+		object IMySqlValue.Value 
+		{
+			get { return mValue; }
+		}
+
+		public short Value
+		{
+			get { return mValue; }
+		}
+
+		public Type SystemType
+		{
+			get	{ return typeof(short); }
+		}
+
+		public string MySqlTypeName
+		{
+			get	{ return "SMALLINT"; }
+		}
+
+		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, object val, int length)
+		{
+			int v = Convert.ToInt32( val );
+			if (binary)
+				writer.Write( BitConverter.GetBytes(v));
+			else
+				writer.WriteStringNoNull(v.ToString());		
+		}
+
+		IMySqlValue IMySqlValue.ReadValue(MySqlStreamReader reader, long length, bool nullVal)
+		{
+			if (nullVal) return new MySqlInt16(true);
+
+			if (length == -1) 
+				return new MySqlInt16((short)reader.ReadInteger(2));
+			else 
+				return new MySqlInt16(Int16.Parse(reader.ReadString( length )));
+		}
+
+		void IMySqlValue.SkipValue(MySqlStreamReader reader)
+		{
+			reader.SkipBytes(2);
+		}
+
+		#endregion
+
+	}
+/*
 	/// <summary>
 	/// Summary description for MySqlInt16.
 	/// </summary>
@@ -81,5 +165,5 @@ namespace MySql.Data.Types
 		{
 			reader.Skip( 2 );
 		}
-	}
+	}*/
 }

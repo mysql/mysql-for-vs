@@ -24,6 +24,89 @@ using MySql.Data.MySqlClient;
 
 namespace MySql.Data.Types
 {
+
+	internal struct MySqlInt64 : IMySqlValue
+	{
+		private long	mValue;
+		private	bool	isNull;
+
+		public MySqlInt64(bool isNull)
+		{
+			this.isNull = isNull;
+			mValue = 0;
+		}
+
+		public MySqlInt64(long val)
+		{
+			this.isNull = false;
+			mValue = val;
+		}
+
+		#region IMySqlValue Members
+
+		public bool IsNull
+		{
+			get { return isNull; }
+		}
+
+		public MySql.Data.MySqlClient.MySqlDbType MySqlDbType
+		{
+			get	{ return MySqlDbType.Int64; }
+		}
+
+		public System.Data.DbType DbType
+		{
+			get	{ return DbType.Int64; }
+		}
+
+		object IMySqlValue.Value 
+		{
+			get { return mValue; }
+		}
+
+		public long Value
+		{
+			get { return mValue; }
+		}
+
+		public Type SystemType
+		{
+			get	{ return typeof(long); }
+		}
+
+		public string MySqlTypeName
+		{
+			get	{ return "BIGINT"; }
+		}
+
+		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, object val, int length)
+		{
+			long v = Convert.ToInt64( val );
+			if (binary)
+				writer.Write( BitConverter.GetBytes(v));
+			else
+				writer.WriteStringNoNull(v.ToString());		
+		}
+
+		IMySqlValue IMySqlValue.ReadValue(MySqlStreamReader reader, long length, bool nullVal)
+		{
+			if (nullVal) return new MySqlInt64(true);
+
+			if (length == -1) 
+				return new MySqlInt64((long)reader.ReadLong(8));
+			else 
+				return new MySqlInt64(Int64.Parse(reader.ReadString( length )));
+		}
+
+		void IMySqlValue.SkipValue(MySqlStreamReader reader)
+		{
+			reader.SkipBytes(8);
+		}
+
+		#endregion
+
+	}
+/*
 	/// <summary>
 	/// Summary description for MySqlInt64.
 	/// </summary>
@@ -90,5 +173,5 @@ namespace MySql.Data.Types
 			return 0;
 		}
 		#endregion
-	}
+	}*/
 }

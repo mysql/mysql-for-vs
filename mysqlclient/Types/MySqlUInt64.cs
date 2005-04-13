@@ -24,6 +24,89 @@ using MySql.Data.MySqlClient;
 
 namespace MySql.Data.Types
 {
+
+	internal struct MySqlUInt64 : IMySqlValue
+	{
+		private ulong	mValue;
+		private	bool	isNull;
+
+		public MySqlUInt64(bool isNull)
+		{
+			this.isNull = isNull;
+			mValue = 0;
+		}
+
+		public MySqlUInt64(ulong val)
+		{
+			this.isNull = false;
+			mValue = val;
+		}
+
+		#region IMySqlValue Members
+
+		public bool IsNull
+		{
+			get { return isNull; }
+		}
+
+		public MySql.Data.MySqlClient.MySqlDbType MySqlDbType
+		{
+			get	{ return MySqlDbType.UInt64; }
+		}
+
+		public System.Data.DbType DbType
+		{
+			get	{ return DbType.UInt64; }
+		}
+
+		object IMySqlValue.Value 
+		{
+			get { return mValue; }
+		}
+
+		public ulong Value
+		{
+			get { return mValue; }
+		}
+
+		public Type SystemType
+		{
+			get	{ return typeof(ulong); }
+		}
+
+		public string MySqlTypeName
+		{
+			get	{ return "BIGINT"; }
+		}
+
+		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, object val, int length)
+		{
+			ulong v = Convert.ToUInt64( val );
+			if (binary)
+				writer.Write( BitConverter.GetBytes(v));
+			else
+				writer.WriteStringNoNull(v.ToString());		
+		}
+
+		IMySqlValue IMySqlValue.ReadValue(MySqlStreamReader reader, long length, bool nullVal)
+		{
+			if (nullVal) return new MySqlUInt64(true);
+
+			if (length == -1) 
+				return new MySqlUInt64((ulong)reader.ReadLong(8));
+			else 
+				return new MySqlUInt64(UInt16.Parse(reader.ReadString( length )));
+		}
+
+		void IMySqlValue.SkipValue(MySqlStreamReader reader)
+		{
+			reader.SkipBytes(8);
+		}
+
+		#endregion
+
+	}
+/*
 	/// <summary>
 	/// Summary description for MySqlUInt64.
 	/// </summary>
@@ -80,5 +163,5 @@ namespace MySql.Data.Types
 		{
 			reader.Skip(8);
 		}
-	}
+	}*/
 }

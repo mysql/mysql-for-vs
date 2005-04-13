@@ -24,6 +24,89 @@ using MySql.Data.MySqlClient;
 
 namespace MySql.Data.Types
 {
+
+	internal struct MySqlUByte : IMySqlValue
+	{
+		private byte	mValue;
+		private	bool	isNull;
+
+		public MySqlUByte(bool isNull)
+		{
+			this.isNull = isNull;
+			mValue = 0;
+		}
+
+		public MySqlUByte(byte val)
+		{
+			this.isNull = false;
+			mValue = val;
+		}
+
+		#region IMySqlValue Members
+
+		public bool IsNull
+		{
+			get { return isNull; }
+		}
+
+		public MySql.Data.MySqlClient.MySqlDbType MySqlDbType
+		{
+			get	{ return MySqlDbType.UByte; }
+		}
+
+		public System.Data.DbType DbType
+		{
+			get	{ return DbType.Byte; }
+		}
+
+		object IMySqlValue.Value 
+		{
+			get { return mValue; }
+		}
+
+		public byte Value
+		{
+			get { return mValue; }
+		}
+
+		public Type SystemType
+		{
+			get	{ return typeof(byte); }
+		}
+
+		public string MySqlTypeName
+		{
+			get	{ return "TINYINT"; }
+		}
+
+		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, object val, int length)
+		{
+			sbyte v = ((IConvertible)val).ToSByte(null); 
+			if (binary)
+				writer.Write( BitConverter.GetBytes(v));
+			else
+				writer.WriteStringNoNull(v.ToString());		
+		}
+
+		IMySqlValue IMySqlValue.ReadValue(MySqlStreamReader reader, long length, bool nullVal)
+		{
+			if (nullVal) return new MySqlUByte(true);
+
+			if (length == -1) 
+				return new MySqlUByte((byte)reader.ReadByte());
+			else 
+				return new MySqlUByte(Byte.Parse(reader.ReadString(length)));
+		}
+
+		void IMySqlValue.SkipValue(MySqlStreamReader reader)
+		{
+			reader.ReadByte();
+		}
+
+		#endregion
+
+	}
+/*
 	/// <summary>
 	/// Summary description for MySqlByte.
 	/// </summary>
@@ -77,5 +160,5 @@ namespace MySql.Data.Types
 		{
 			reader.ReadByte();
 		}
-	}
+	}*/
 }

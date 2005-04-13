@@ -24,6 +24,146 @@ using MySql.Data.MySqlClient;
 
 namespace MySql.Data.Types
 {
+
+	internal struct MySqlTimeSpan : IMySqlValue
+	{
+		private TimeSpan	mValue;
+		private	bool		isNull;
+
+		public MySqlTimeSpan(bool isNull)
+		{
+			this.isNull = isNull;
+			mValue = TimeSpan.MinValue;
+		}
+
+		public MySqlTimeSpan(TimeSpan val)
+		{
+			this.isNull = false;
+			mValue = val;
+		}
+
+		#region IMySqlValue Members
+
+		public bool IsNull
+		{
+			get { return isNull; }
+		}
+
+		public MySql.Data.MySqlClient.MySqlDbType MySqlDbType
+		{
+			get	{ return MySqlDbType.Time; }
+		}
+
+		public System.Data.DbType DbType
+		{
+			get	{ return DbType.Time; }
+		}
+
+		object IMySqlValue.Value 
+		{
+			get { return mValue; }
+		}
+
+		public TimeSpan Value
+		{
+			get { return mValue; }
+		}
+
+		public Type SystemType
+		{
+			get	{ return typeof(TimeSpan); }
+		}
+
+		public string MySqlTypeName
+		{
+			get	{ return "TIME"; }
+		}
+
+		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, object val, int length)
+		{
+			if (! (val is TimeSpan))
+				throw new MySqlException("Only TimeSpan objects can be serialized by MySqlTimeSpan");
+
+			TimeSpan ts = (TimeSpan)val;
+			if (binary) 
+			{			
+				writer.WriteByte( 8 );
+				writer.WriteByte( (byte)(ts.TotalSeconds < 0 ? 1 : 0 ));
+				writer.WriteInteger( ts.Days, 4 );
+				writer.WriteByte( (byte)ts.Hours );
+				writer.WriteByte( (byte)ts.Minutes );
+				writer.WriteByte( (byte)ts.Seconds );
+			}
+			else 
+			{
+				writer.WriteStringNoNull( String.Format("'{0} {1:00}:{2:00}:{3:00}.{4}'", 
+					ts.Days, ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds ) );
+			}
+		}
+
+
+		IMySqlValue IMySqlValue.ReadValue(MySqlStreamReader reader, long length, bool nullVal)
+		{
+			if (nullVal) return new MySqlTimeSpan(true);
+
+			if (length >= 0) 
+			{
+				string value = reader.ReadString( length );
+				ParseMySql(value, reader.Version.isAtLeast(4,1,0));
+				return this;
+			}
+
+			long bufLength = reader.ReadByte();
+			int negate = 0;
+			if (bufLength > 0)
+				negate = reader.ReadByte();
+
+			isNull = false;
+			if (bufLength == 0)
+				isNull = true;
+			else if (bufLength == 5)
+				mValue = new TimeSpan( reader.ReadInteger( 4 ), 0, 0, 0 );
+			else if (bufLength == 8)
+				mValue = new TimeSpan( reader.ReadInteger(4), 
+					reader.ReadByte(), reader.ReadByte(), reader.ReadByte() );
+			else 
+				mValue = new TimeSpan( reader.ReadInteger(4), 
+					reader.ReadByte(), reader.ReadByte(), reader.ReadByte(),
+					reader.ReadInteger(4) / 1000000 );
+
+			if (negate == 1)
+				mValue = mValue.Negate();
+			return this;
+		}
+
+		void IMySqlValue.SkipValue(MySqlStreamReader reader)
+		{
+			int len = reader.ReadByte();
+			reader.SkipBytes(len);
+		}
+
+		#endregion
+
+		public override string ToString()
+		{
+			return String.Format("{0} {1:00}:{2:00}:{3:00}.{4}", 
+				mValue.Days, mValue.Hours, mValue.Minutes, mValue.Seconds, mValue.Milliseconds );
+		}
+
+		private void ParseMySql( string s, bool is41 ) 
+		{
+			string[] parts = s.Split(':');
+			int hours = Int32.Parse( parts[0] );
+			int mins = Int32.Parse( parts[1] );
+			int secs = Int32.Parse( parts[2] );
+			int days = hours / 24;
+			hours = hours - (days * 24);
+			mValue = new TimeSpan( days, hours, mins, secs, 0 );
+			isNull = false;
+		}
+	}
+/*
+
 	/// <summary>
 	/// Summary description for MySqlDateTime.
 	/// </summary>
@@ -141,5 +281,5 @@ namespace MySql.Data.Types
 			reader.Skip( len );
 		}
 
-	}
+	}*/
 }

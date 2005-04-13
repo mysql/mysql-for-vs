@@ -24,6 +24,92 @@ using MySql.Data.MySqlClient;
 
 namespace MySql.Data.Types
 {
+
+	internal struct MySqlSingle : IMySqlValue
+	{
+		private float	mValue;
+		private	bool	isNull;
+
+		public MySqlSingle(bool isNull)
+		{
+			this.isNull = isNull;
+			mValue = 0.0f;
+		}
+
+		public MySqlSingle(float val)
+		{
+			this.isNull = false;
+			mValue = val;
+		}
+
+		#region IMySqlValue Members
+
+		public bool IsNull
+		{
+			get { return isNull; }
+		}
+
+		public MySql.Data.MySqlClient.MySqlDbType MySqlDbType
+		{
+			get	{ return MySqlDbType.Float; }
+		}
+
+		public System.Data.DbType DbType
+		{
+			get	{ return DbType.Single; }
+		}
+
+		object IMySqlValue.Value 
+		{
+			get { return mValue; }
+		}
+
+		public float Value
+		{
+			get { return mValue; }
+		}
+
+		public Type SystemType
+		{
+			get	{ return typeof(float); }
+		}
+
+		public string MySqlTypeName
+		{
+			get	{ return "FLOAT"; }
+		}
+
+		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, object val, int length)
+		{
+			double v = Convert.ToSingle( val );
+			if (binary)
+				writer.Write( BitConverter.GetBytes(v));
+			else
+				writer.WriteStringNoNull(v.ToString(NumberFormat.MySql().NumberFormatInfo));		
+		}
+
+		IMySqlValue IMySqlValue.ReadValue(MySqlStreamReader reader, long length, bool nullVal)
+		{
+			if (nullVal) return new MySqlSingle(true);
+
+			if (length == -1) 
+			{
+				byte[] b = new byte[4];
+				reader.Read(b, 0, 4);
+				return new MySqlSingle(BitConverter.ToSingle( b, 0 ));
+			}
+			return new MySqlSingle(Single.Parse(reader.ReadString(length), NumberFormat.MySql().NumberFormatInfo));
+		}
+
+		void IMySqlValue.SkipValue(MySqlStreamReader reader)
+		{
+			reader.SkipBytes(4);
+		}
+
+		#endregion
+
+	}
+/*
 	/// <summary>
 	/// Summary description for MySqlSingle.
 	/// </summary>
@@ -83,5 +169,5 @@ namespace MySql.Data.Types
 			reader.Skip(4);
 		}
 
-	}
+	}*/
 }

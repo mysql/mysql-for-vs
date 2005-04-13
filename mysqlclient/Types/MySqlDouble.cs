@@ -24,6 +24,92 @@ using MySql.Data.MySqlClient;
 
 namespace MySql.Data.Types
 {
+
+	internal struct MySqlDouble : IMySqlValue
+	{
+		private double	mValue;
+		private	bool	isNull;
+
+		public MySqlDouble(bool isNull)
+		{
+			this.isNull = isNull;
+			mValue = 0.0;
+		}
+
+		public MySqlDouble(double val)
+		{
+			this.isNull = false;
+			mValue = val;
+		}
+
+		#region IMySqlValue Members
+
+		public bool IsNull
+		{
+			get { return isNull; }
+		}
+
+		public MySql.Data.MySqlClient.MySqlDbType MySqlDbType
+		{
+			get	{ return MySqlDbType.Double; }
+		}
+
+		public System.Data.DbType DbType
+		{
+			get	{ return DbType.Double; }
+		}
+
+		object IMySqlValue.Value 
+		{
+			get { return mValue; }
+		}
+
+		public double Value
+		{
+			get { return mValue; }
+		}
+
+		public Type SystemType
+		{
+			get	{ return typeof(double); }
+		}
+
+		public string MySqlTypeName
+		{
+			get	{ return "DOUBLE"; }
+		}
+
+		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, object val, int length)
+		{
+			double v = Convert.ToDouble( val );
+			if (binary)
+				writer.Write( BitConverter.GetBytes(v));
+			else
+				writer.WriteStringNoNull(v.ToString(NumberFormat.MySql().NumberFormatInfo));		
+		}
+
+		IMySqlValue IMySqlValue.ReadValue(MySqlStreamReader reader, long length, bool nullVal)
+		{
+			if (nullVal) return new MySqlDouble(true);
+
+			if (length == -1) 
+			{
+				byte[] b = new byte[8];
+				reader.Read(b, 0, 8);
+				return new MySqlDouble(BitConverter.ToDouble( b, 0 ));
+			}
+			return new MySqlDouble(Double.Parse(reader.ReadString(length), NumberFormat.MySql().NumberFormatInfo));
+		}
+
+		void IMySqlValue.SkipValue(MySqlStreamReader reader)
+		{
+			reader.SkipBytes(8);
+		}
+
+		#endregion
+
+	}
+/*
 	/// <summary>
 	/// Summary description for MySqlDouble.
 	/// </summary>
@@ -83,5 +169,5 @@ namespace MySql.Data.Types
 		{
 			reader.Skip( 8 );
 		}
-	}
+	}*/
 }
