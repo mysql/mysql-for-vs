@@ -98,13 +98,14 @@ namespace MySql.Data.MySqlClient
 		FETCH			= 28
 	}
 
+
 	/// <summary>
 	/// Specifies MySQL specific data type of a field, property, for use in a <see cref="MySqlParameter"/>.
 	/// </summary>
 	public enum MySqlDbType
 	{
 		/// <summary> <see cref="Decimal"/><para>A fixed precision and scale numeric value between -1038 -1 and 10 38 -1.</para></summary>
-		Decimal		=   0,  
+		Decimal	=   0,  
 		/// <summary> <see cref="Byte"/><para>The signed range is -128 to 127. The unsigned range is 0 to 255.</para></summary>
 		Byte		=   1,  
 		/// <summary><see cref="Int16"/><para>A 16-bit signed integer. The signed range is -32768 to 32767. The unsigned range is 0 to 65535</para></summary>
@@ -150,7 +151,17 @@ namespace MySql.Data.MySqlClient
 		/// <summary><b>Obsolete</b>  Use VarChar type</summary>
 		String      = 254,
 		/// <summary></summary>
-		Geometry	= 255
+		Geometry	= 255,
+		/// <summary></summary>
+		UByte		= 1024,
+		/// <summary></summary>
+		UInt16		= 1025,
+		/// <summary></summary>
+		UInt24		= 1026,
+		/// <summary></summary>
+		UInt32		= 1027,
+		/// <summary></summary>
+		UInt64		= 1028
 	};
 
 
