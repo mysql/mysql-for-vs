@@ -39,7 +39,8 @@ namespace MySql.Data.MySqlClient
 		protected ClientFlags			serverCaps;
 		protected bool					isOpen;
 		protected DateTime				creationTime;
-		protected int					serverLanguage;
+		protected string				serverCharSet;
+		protected int					serverCharSetIndex;
 		protected Hashtable				serverProps;
 		protected MySqlConnection		connection;
 		protected bool					processing;
@@ -51,6 +52,7 @@ namespace MySql.Data.MySqlClient
 			connectionString = settings;
 			processing = false;
 			threadId = -1;
+			serverCharSetIndex = -1;
 		}
 
 		#region Properties
@@ -93,6 +95,8 @@ namespace MySql.Data.MySqlClient
 			get { return serverStatus; }
 		}
 
+		public abstract bool HasMoreResults { get; }
+
 		#endregion
 
 		public bool IsTooOld() 
@@ -105,11 +109,14 @@ namespace MySql.Data.MySqlClient
 
 		public static Driver Create( MySqlConnectionString settings ) 
 		{
-			Driver d;
-//			if (settings.Protocol == ConnectionProtocol.Client)
-//				d = new ClientDriver( settings );
-//			else
+			Driver d = null;
+			if (settings.DriverType == DriverType.Native)
 				d = new NativeDriver( settings );
+#if !CF
+			else
+				d = new ClientDriver( settings );
+#endif
+
 			d.Open();
 			return d;
 		}
@@ -168,8 +175,10 @@ namespace MySql.Data.MySqlClient
 				}
 				else 
 				{
-					charSet = (string)charSets[ serverLanguage ];
-
+					if (serverCharSetIndex >= 0)
+						charSet = (string)charSets[serverCharSetIndex];
+					else
+						charSet = serverCharSet;
 				}
 			}
 
@@ -263,11 +272,11 @@ namespace MySql.Data.MySqlClient
 		public abstract PreparedStatement Prepare( string sql, string[] names ); 
 		public abstract void Reset();
 		public abstract CommandResult SendQuery( byte[] bytes, int length, bool consume );
-		public abstract long ReadResult( ref ulong affectedRows, ref long lastInsertId );
+		public abstract bool ReadResult( ref long fieldCount, ref ulong affectedRows, ref long lastInsertId );
 		public abstract bool OpenDataRow(int fieldCount, bool isBinary, int statementId);
-		public abstract MySqlValue ReadFieldValue( int index, MySqlField field, MySqlValue value ); 
+		public abstract IMySqlValue ReadFieldValue( int index, MySqlField field, IMySqlValue value ); 
 		public abstract CommandResult ExecuteStatement( byte[] bytes, int statementId, int cursorPageSize );
-		public abstract void SkipField(MySqlValue valObject );
+		public abstract void SkipField(IMySqlValue valObject );
 
 		public abstract void ReadFieldMetadata( int count, ref MySqlField[] fields );
 		public abstract bool Ping();
