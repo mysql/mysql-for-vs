@@ -70,6 +70,18 @@ namespace MySql.Design
 		private System.Windows.Forms.MenuItem serverMenuDelete;
 		private ServerCollection	serverCollection;
 		#endregion
+		private System.Windows.Forms.ContextMenu sprocsMenu;
+		private System.Windows.Forms.ContextMenu sprocMenu;
+		private System.Windows.Forms.MenuItem sprocsNewProcMenu;
+		private System.Windows.Forms.MenuItem sprocsRefresh;
+		private System.Windows.Forms.MenuItem sprocEdit;
+		private System.Windows.Forms.MenuItem sprocNew;
+		private System.Windows.Forms.MenuItem sprocRefresh;
+		private System.Windows.Forms.MenuItem menuItem5;
+		private System.Windows.Forms.MenuItem sprocCopy;
+		private System.Windows.Forms.MenuItem menuItem7;
+		private System.Windows.Forms.MenuItem sprocDelete;
+		private System.Windows.Forms.MenuItem sprocGenerate;
 
 		internal event NodeDoubleClickDelegate NodeDoubleClick;
 		private Connect connectClass;
@@ -173,6 +185,18 @@ namespace MySql.Design
 			this.menuItem12 = new System.Windows.Forms.MenuItem();
 			this.menuItem13 = new System.Windows.Forms.MenuItem();
 			this.menuItem14 = new System.Windows.Forms.MenuItem();
+			this.sprocsMenu = new System.Windows.Forms.ContextMenu();
+			this.sprocMenu = new System.Windows.Forms.ContextMenu();
+			this.sprocsNewProcMenu = new System.Windows.Forms.MenuItem();
+			this.sprocsRefresh = new System.Windows.Forms.MenuItem();
+			this.sprocEdit = new System.Windows.Forms.MenuItem();
+			this.sprocNew = new System.Windows.Forms.MenuItem();
+			this.sprocRefresh = new System.Windows.Forms.MenuItem();
+			this.menuItem5 = new System.Windows.Forms.MenuItem();
+			this.sprocCopy = new System.Windows.Forms.MenuItem();
+			this.menuItem7 = new System.Windows.Forms.MenuItem();
+			this.sprocDelete = new System.Windows.Forms.MenuItem();
+			this.sprocGenerate = new System.Windows.Forms.MenuItem();
 			this.SuspendLayout();
 			// 
 			// serverTree
@@ -336,6 +360,75 @@ namespace MySql.Design
 			this.menuItem14.Index = 6;
 			this.menuItem14.Text = "E&xport Data...";
 			// 
+			// sprocsMenu
+			// 
+			this.sprocsMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+																					   this.sprocsNewProcMenu,
+																					   this.sprocsRefresh});
+			// 
+			// sprocMenu
+			// 
+			this.sprocMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+																					  this.sprocEdit,
+																					  this.sprocNew,
+																					  this.sprocRefresh,
+																					  this.menuItem5,
+																					  this.sprocCopy,
+																					  this.menuItem7,
+																					  this.sprocDelete,
+																					  this.sprocGenerate});
+			// 
+			// sprocsNewProcMenu
+			// 
+			this.sprocsNewProcMenu.Index = 0;
+			this.sprocsNewProcMenu.Text = "New Stored &Procedure";
+			// 
+			// sprocsRefresh
+			// 
+			this.sprocsRefresh.Index = 1;
+			this.sprocsRefresh.Text = "Refres&h";
+			// 
+			// sprocEdit
+			// 
+			this.sprocEdit.Index = 0;
+			this.sprocEdit.Text = "&Edit Stored Procedure";
+			// 
+			// sprocNew
+			// 
+			this.sprocNew.Index = 1;
+			this.sprocNew.Text = "New Stored &Procedure";
+			// 
+			// sprocRefresh
+			// 
+			this.sprocRefresh.Index = 2;
+			this.sprocRefresh.Text = "Refres&h";
+			// 
+			// menuItem5
+			// 
+			this.menuItem5.Index = 3;
+			this.menuItem5.Text = "-";
+			// 
+			// sprocCopy
+			// 
+			this.sprocCopy.Enabled = false;
+			this.sprocCopy.Index = 4;
+			this.sprocCopy.Text = "Cop&y";
+			// 
+			// menuItem7
+			// 
+			this.menuItem7.Index = 5;
+			this.menuItem7.Text = "-";
+			// 
+			// sprocDelete
+			// 
+			this.sprocDelete.Index = 6;
+			this.sprocDelete.Text = "&Delete";
+			// 
+			// sprocGenerate
+			// 
+			this.sprocGenerate.Index = 7;
+			this.sprocGenerate.Text = "&Generate Create Script...";
+			// 
 			// ServerExplorer
 			// 
 			this.Controls.Add(this.serverTree);
@@ -429,6 +522,8 @@ namespace MySql.Design
 				reader = cmd.ExecuteReader();
 				while (reader.Read()) 
 				{
+					string dbName = reader.GetString(0);
+					if (dbName.ToLower() == "information_schema") continue;
 					TreeNode newNode = new TreeNode( reader.GetString(0), 4, 4 );
 
 					bool isThere = false;
@@ -485,48 +580,42 @@ namespace MySql.Design
 			}
 		}
 
-		private void PopulateNode( TreeNode node, MySqlConnection conn, NodeType type )
+		private void PopulateNode( TreeNode node, MySqlConnection conn, NodeType nodeType )
 		{
 			string[] nodeNames = new string[5] { "", "Tables", "UDF", "Views", "Stored Procedures" };
 			int[] images = new int[5] { 0, 7, 0, 8, 9 };
+			int[] itemNodeImages = new int[5] { 0, 5, 0, 8, 9 };
 
 			string oldDb = conn.Database;
 
-			// if we are getting UDF, views, or SP then we need to be in the mysql db
-			if (type != NodeType.Table) 
-				conn.ChangeDatabase("mysql");
-
 			string sql = "SHOW TABLES";
-			if (type == NodeType.UDF)
+			if (nodeType == NodeType.UDF && oldDb.ToLower() == "mysql")
 				sql = "SELECT * FROM func";
-			else if (type == NodeType.View)
+			else if (nodeType == NodeType.View)
 				sql = "";
-			else if (type == NodeType.StoredProcedure)
-				sql = "SELECT name FROM proc WHERE db ='" + oldDb + "'";
+			else if (nodeType == NodeType.StoredProcedure) 
+				sql = "SELECT name FROM mysql.proc WHERE db ='" + oldDb + "'";
 
 			// add the node to hold the tables
-			TreeNode newNode = node.Nodes.Add( nodeNames[ (int)type ] );
-			newNode.ImageIndex = images[ (int)type ];
-			newNode.SelectedImageIndex = images[ (int)type ];
+			TreeNode newNode = node.Nodes.Add( nodeNames[ (int)nodeType ] );
+			newNode.ImageIndex = images[ (int)nodeType ];
+			newNode.SelectedImageIndex = images[ (int)nodeType ];
 
 			MySqlDataReader reader = null;
 			try 
 			{
-				if (type == NodeType.Table) 
+				MySqlCommand cmd = new MySqlCommand( sql, conn );
+				reader = cmd.ExecuteReader();
+				while (reader.Read()) 
 				{
-					MySqlCommand cmd = new MySqlCommand( sql, conn );
-					reader = cmd.ExecuteReader();
-					while (reader.Read()) 
-					{
-						TreeNode tableNode = newNode.Nodes.Add( reader.GetString(0) );
-						tableNode.ImageIndex = 5;
-						tableNode.SelectedImageIndex = 5;
-						tableNode.Tag = NodeType.Table;
-					}
-					reader.Close();
-					if (node.Nodes[0].Text == "dummy")
-						node.Nodes.RemoveAt(0);
+					TreeNode itemNode = newNode.Nodes.Add( reader.GetString(0) );
+					itemNode.ImageIndex = itemNodeImages[(int)nodeType];
+					itemNode.SelectedImageIndex = itemNodeImages[(int)nodeType];
+					itemNode.Tag = nodeType;
 				}
+				reader.Close();
+				if (node.Nodes[0].Text == "dummy")
+					node.Nodes.RemoveAt(0);
 			}
 			catch (Exception) 
 			{
@@ -594,6 +683,8 @@ namespace MySql.Design
 				serverTree.ContextMenu = tablesMenu;
 			else if (node.Tag is NodeType && (NodeType)node.Tag == NodeType.Table)
 				serverTree.ContextMenu = tableMenu;
+			else if (node.Tag is NodeType && (NodeType)node.Tag == NodeType.StoredProcedure)
+				serverTree.ContextMenu = sprocMenu;
 		}
 
 		private void HitTestTreeNodes( TreeNodeCollection nodes, int x, int y )
