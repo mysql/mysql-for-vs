@@ -20,20 +20,20 @@
 
 using System;
 using System.Data;
-using System.ComponentModel;
 using System.IO;
 using System.Collections;
 using System.Text;
 using MySql.Data.Common;
+using System.ComponentModel;
 
 namespace MySql.Data.MySqlClient
 {
 	/// <include file='docs/mysqlcommand.xml' path='docs/ClassSummary/*'/>
-#if WINDOWS
+#if DESIGN
 	[System.Drawing.ToolboxBitmap( typeof(MySqlCommand), "MySqlClient.resources.command.bmp")]
-#endif
 	[System.ComponentModel.DesignerCategory("Code")]
-	public sealed class MySqlCommand : Component, IDbCommand, ICloneable
+#endif
+	public sealed class MySqlCommand : Component, IDbCommand, ICloneable, IDisposable
 	{
 		MySqlConnection				connection;
 		MySqlTransaction			curTransaction;
@@ -65,12 +65,6 @@ namespace MySql.Data.MySqlClient
 			CommandText = cmdText;
 		}
 
-		MySqlCommand(System.ComponentModel.IContainer container) : this()
-		{
-			// Required for Windows.Forms Class Composition Designer support
-			container.Add(this);
-		}
-
 		/// <include file='docs/mysqlcommand.xml' path='docs/ctor3/*'/>
 		public MySqlCommand(string cmdText, MySqlConnection connection) : this(cmdText)
 		{
@@ -89,9 +83,9 @@ namespace MySql.Data.MySqlClient
 		#region Properties
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/CommandText/*'/>
+#if DESIGN
 		[Category("Data")]
 		[Description("Command text to execute")]
-#if WINDOWS
 		[Editor("MySql.Data.Common.Design.SqlCommandTextEditor,MySqlClient.Design", typeof(System.Drawing.Design.UITypeEditor))]
 #endif
 		public string CommandText
@@ -106,8 +100,10 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/CommandTimeout/*'/>
+#if DESIGN
 		[Category("Misc")]
 		[Description("Time to wait for command to execute")]
+#endif
 		public int CommandTimeout
 		{
 			// TODO: support this
@@ -116,7 +112,9 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/CommandType/*'/>
+#if DESIGN
 		[Category("Data")]
+#endif
 		public CommandType CommandType
 		{
 			get { return cmdType; }
@@ -124,7 +122,9 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/IsPrepared/*'/>
+#if DESIGN
 		[Browsable(false)]
+#endif
 		public bool IsPrepared 
 		{
 			get { return preparedStatement != null; }
@@ -137,8 +137,10 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/Connection/*'/>
+#if DESIGN
 		[Category("Behavior")]
 		[Description("Connection used by the command")]
+#endif
 		public MySqlConnection Connection
 		{
 			get { return connection;  }
@@ -159,9 +161,11 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/Parameters/*'/>
+#if DESIGN
 		[Category("Data")]
 		[Description("The parameters collection")]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+#endif
 		public MySqlParameterCollection Parameters
 		{
 			get  { return parameters; }
@@ -180,7 +184,9 @@ namespace MySql.Data.MySqlClient
 
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/Transaction/*'/>
+#if DESIGN
 		[Browsable(false)]
+#endif
 		public MySqlTransaction Transaction
 		{
 			get { return curTransaction; }
@@ -188,7 +194,9 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/UpdatedRowSource/*'/>
+#if DESIGN
 		[Category("Behavior")]
+#endif
 		public UpdateRowSource UpdatedRowSource
 		{
 			get 
@@ -462,7 +470,7 @@ namespace MySql.Data.MySqlClient
 		/// </para>
 		/// </remarks>
 		/// <returns>True if the parameter was successfully serialized, false otherwise.</returns>
-		private bool SerializeParameter( PacketWriter writer, string parmName )
+		private bool SerializeParameter(MySqlStreamWriter writer, string parmName)
 		{
 			if (! parameters.Contains( parmName )) 
 			{
@@ -472,7 +480,7 @@ namespace MySql.Data.MySqlClient
 				throw new MySqlException("Parameter '" + parmName + "' must be defined");
 			}
 			MySqlParameter parameter = parameters[parmName];
-			parameter.Serialize( writer, false );
+			parameter.Serialize(writer, false);
 			return true;
 		}
 
@@ -492,8 +500,7 @@ namespace MySql.Data.MySqlClient
 		private ArrayList PrepareSqlBuffers(string sql)
 		{
 			ArrayList buffers = new ArrayList();
-			PacketWriter writer = new PacketWriter();
-			writer.Encoding = connection.Encoding;
+			MySqlStreamWriter writer = new MySqlStreamWriter(new MemoryStream(), connection.Encoding);
 			writer.Version = connection.driver.Version;
 
 			// if we are executing as a stored procedure, then we need to add the call
@@ -518,18 +525,17 @@ namespace MySql.Data.MySqlClient
 					if (ms.Length > 0)
 						buffers.Add( ms );
 
-					writer = new PacketWriter();
-					writer.Encoding = connection.Encoding;
+					writer = new MySqlStreamWriter(new MemoryStream(), connection.Encoding);
 					writer.Version = connection.driver.Version;
 					continue;
 				}
 				else if (token[0] == parameters.ParameterMarker) 
 				{
-					if (SerializeParameter( writer, token )) continue;
+					if (SerializeParameter(writer, token)) continue;
 				}
 
 				// our fall through case is to write the token to the byte stream
-				writer.WriteStringNoNull( token );
+				writer.WriteStringNoNull(token);
 			}
 
 			// capture any buffer that is left over
@@ -667,5 +673,6 @@ namespace MySql.Data.MySqlClient
 			return clone;
 		}
 		#endregion
+
 	}
 }
