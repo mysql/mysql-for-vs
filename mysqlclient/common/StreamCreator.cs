@@ -36,12 +36,12 @@ namespace MySql.Data.Common
 	internal class StreamCreator
 	{
 		string				hostList;
-		int					port;
+		uint				port;
 		string				pipeName;
 		int					timeOut;
 		ManualResetEvent	evnt;
 
-		public StreamCreator( string hosts, int port, string pipeName)
+		public StreamCreator( string hosts, uint port, string pipeName)
 		{
 			hostList = hosts;
 			if (hostList == null || hostList == String.Empty)
@@ -141,7 +141,7 @@ namespace MySql.Data.Common
 			}
 		}
 
-		private Stream CreateSocketStream( IPAddress ip, int port ) 
+		private Stream CreateSocketStream( IPAddress ip, uint port ) 
 		{
 			Socket socket = new Socket(AddressFamily.InterNetwork, 
 				SocketType.Stream, ProtocolType.Tcp);
@@ -150,7 +150,7 @@ namespace MySql.Data.Common
 			{
 				//
 				// Lets try to connect
-				IPEndPoint endPoint	= new IPEndPoint( ip, port);
+				IPEndPoint endPoint	= new IPEndPoint( ip, (int)port);
 
 				evnt.Reset();
 				IAsyncResult iar = socket.BeginConnect( endPoint, 
