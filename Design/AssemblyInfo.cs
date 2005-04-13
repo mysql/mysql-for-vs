@@ -54,5 +54,5 @@ using System.Runtime.CompilerServices;
 //       documentation for more information on this.
 //
 [assembly: AssemblyDelaySign(false)]
-[assembly: AssemblyKeyFile(@"..\..\..\cnet.snk")]
+[assembly: AssemblyKeyFile(@"..\..\..\..\cnet.snk")]
 [assembly: AssemblyKeyName("")]
