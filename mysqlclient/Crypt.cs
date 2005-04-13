@@ -21,6 +21,9 @@
 using System;
 using System.IO;
 using System.Security.Cryptography;
+#if CF
+using OpenNETCF.Security.Cryptography;
+#endif
 
 namespace MySql.Data.MySqlClient
 {
@@ -99,11 +102,10 @@ namespace MySql.Data.MySqlClient
 			byte[] passBytes = System.Text.Encoding.Default.GetBytes( password );
 			byte[] firstPass = sha.ComputeHash( passBytes );
 
-			CryptoStream cs = new CryptoStream(Stream.Null, sha, CryptoStreamMode.Write);
-			cs.Write( seedBytes, 0, 4 );
-			cs.Write( firstPass, 0, 20 );
-			cs.Close();
-			byte[] secondPass = sha.Hash;
+			byte[] input = new byte[24];
+			Array.Copy(seedBytes, 0, input, 0, 4);
+			Array.Copy(firstPass, 0, input, 4, 20);
+			byte[] secondPass = sha.ComputeHash(input);
 
 			byte[] scrambledBuff = new byte[20];
 			XorScramble( seedBytes, 4, scrambledBuff, 0, secondPass, 20 );
@@ -144,12 +146,14 @@ namespace MySql.Data.MySqlClient
 				offset += 4;
 			}
 			SHA1 sha = new SHA1CryptoServiceProvider(); 
-			byte[] binaryHash = sha.ComputeHash( binaryPassword, 0, 8 );
+			byte[] temp = new byte[8];
+			Buffer.BlockCopy(binaryPassword, 0, temp, 0, 8);
+			byte[] binaryHash = sha.ComputeHash(temp);
 
 			byte[] scrambledBuff = new byte[20];
-			XorScramble( seedBytes, 4, scrambledBuff, 0, binaryHash, 20 );
+			XorScramble(seedBytes, 4, scrambledBuff, 0, binaryHash, 20);
 
-			string scrambleString = System.Text.Encoding.Default.GetString( scrambledBuff ).Substring(0,8);
+			string scrambleString = System.Text.Encoding.Default.GetString(scrambledBuff, 0, scrambledBuff.Length).Substring(0,8);
 
 			long[] hashPass = Hash(password);
 			long[] hashMessage = Hash(scrambleString);
@@ -192,14 +196,14 @@ namespace MySql.Data.MySqlClient
 			byte[] secondHash = sha.ComputeHash( firstHash );
 			byte[] seedBytes = System.Text.Encoding.Default.GetBytes( seed );
 
-			CryptoStream cs = new CryptoStream(Stream.Null, sha, CryptoStreamMode.Write);
-			cs.Write( seedBytes, 0, seedBytes.Length );
-			cs.Write( secondHash, 0, secondHash.Length );
-			cs.Close();
+			byte[] input = new byte[seedBytes.Length+secondHash.Length];
+			Array.Copy(seedBytes, 0, input, 0, seedBytes.Length);
+			Array.Copy(secondHash, 0, input, seedBytes.Length, secondHash.Length);
+			byte[] thirdHash = sha.ComputeHash(input);			
 
-			byte[] finalHash = new byte[sha.Hash.Length + 1];
+			byte[] finalHash = new byte[thirdHash.Length + 1];
 			finalHash[0] = 0x14;
-			sha.Hash.CopyTo( finalHash, 1 );
+			Array.Copy(thirdHash, 0, finalHash, 1, thirdHash.Length);
 
 			for (int i=1; i < finalHash.Length; i++)
 				finalHash[i] = (byte)(finalHash[i] ^ firstHash[i-1]);
