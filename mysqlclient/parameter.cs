@@ -21,21 +21,25 @@
 using System;
 using System.Data;
 using System.Text;
-using System.ComponentModel;
-using System.ComponentModel.Design.Serialization;
 using System.Reflection;
 using MySql.Data.Types;
+#if DESIGN
+using System.ComponentModel;
+using System.ComponentModel.Design.Serialization;
+#endif
 
 namespace MySql.Data.MySqlClient
 {
 	/// <summary>
 	/// Represents a parameter to a <see cref="MySqlCommand"/>, and optionally, its mapping to <see cref="DataSet"/> columns. This class cannot be inherited.
 	/// </summary>
+#if DESIGN
 	[TypeConverter(typeof(MySqlParameter.MySqlParameterConverter))]
+#endif
 	public sealed class MySqlParameter : MarshalByRefObject, IDataParameter, IDbDataParameter, ICloneable
 	{
 		private object				paramValue;
-		private MySqlValue			valueObject;
+//		private IMySqlValue			valueObject;
 		private ParameterDirection	direction = ParameterDirection.Input;
 		private bool				isNullable  = false;
 		private string				paramName;
@@ -43,7 +47,6 @@ namespace MySql.Data.MySqlClient
 		private DataRowVersion		sourceVersion = DataRowVersion.Current;
 		private int					size;
 		private byte				precision;
-		private bool				isUnsigned;
 		private byte				scale;
 		private MySqlDbType			mySqlDbType;
 		private DbType				dbType;
@@ -155,24 +158,13 @@ namespace MySql.Data.MySqlClient
 			set { SetDbType( value ); }
 		}
 
-		/// <summary></summary>
-		public bool IsUnsigned 
-		{
-			get { return isUnsigned; }
-			set 
-			{ 
-				if (isUnsigned != value) 
-					valueObject = null; 
-				isUnsigned = value; 
-				SetMySqlDbType( mySqlDbType ); 
-			}
-		}
-
 		/// <summary>
 		/// Gets or sets a value indicating whether the parameter is input-only, output-only, bidirectional, or a stored procedure return value parameter.
 		/// As of MySql version 4.1 and earlier, input-only is the only valid choice.
 		/// </summary>
+#if DESIGN
 		[Category("Data")]
+#endif
 		public ParameterDirection Direction 
 		{
 			get { return direction; }
@@ -182,7 +174,9 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// Gets or sets a value indicating whether the parameter accepts null values.
 		/// </summary>
+#if DESIGN
 		[Browsable(false)]
+#endif
 		public Boolean IsNullable 
 		{
 			get { return isNullable; }
@@ -192,7 +186,9 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// Gets or sets the MySqlDbType of the parameter.
 		/// </summary>
+#if DESIGN
 		[Category("Data")]
+#endif
 		public MySqlDbType MySqlDbType 
 		{
 			get { return mySqlDbType; }
@@ -202,7 +198,9 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// Gets or sets the name of the MySqlParameter.
 		/// </summary>
+#if DESIGN
 		[Category("Misc")]
+#endif
 		public String ParameterName 
 		{
 			get { return paramName; }
@@ -217,7 +215,9 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// Gets or sets the maximum number of digits used to represent the <see cref="Value"/> property.
 		/// </summary>
+#if DESIGN
 		[Category("Data")]
+#endif
 		public byte Precision 
 		{
 			get { return precision; }
@@ -227,7 +227,9 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// Gets or sets the number of decimal places to which <see cref="Value"/> is resolved.
 		/// </summary>
+#if DESIGN
 		[Category("Data")]
+#endif
 		public byte Scale 
 		{
 			get { return scale; }
@@ -237,7 +239,9 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// Gets or sets the maximum size, in bytes, of the data within the column.
 		/// </summary>
+#if DESIGN
 		[Category("Data")]
+#endif
 		public int Size 
 		{
 			get { return size; }
@@ -247,7 +251,9 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// Gets or sets the name of the source column that is mapped to the <see cref="DataSet"/> and used for loading or returning the <see cref="Value"/>.
 		/// </summary>
+#if DESIGN
 		[Category("Data")]
+#endif
 		public String SourceColumn 
 		{
 			get { return sourceColumn; }
@@ -257,7 +263,9 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// Gets or sets the <see cref="DataRowVersion"/> to use when loading <see cref="Value"/>.
 		/// </summary>
+#if DESIGN
 		[Category("Data")]
+#endif
 		public DataRowVersion SourceVersion 
 		{
 			get { return sourceVersion; }
@@ -267,8 +275,10 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// Gets or sets the value of the parameter.
 		/// </summary>
+#if DESIGN
 		[TypeConverter(typeof(StringConverter))]
 		[Category("Data")]
+#endif
 		public object Value 
 		{
 			get	{ return paramValue; }
@@ -293,7 +303,7 @@ namespace MySql.Data.MySqlClient
 			return paramName;
 		}
 
-		internal MySqlValue GetValueObject() 
+/*		internal MySqlValue GetValueObject() 
 		{
 			if (valueObject == null)
 			{
@@ -308,51 +318,49 @@ namespace MySql.Data.MySqlClient
 			}
 			return valueObject;
 		}
-
-		internal void Serialize( PacketWriter writer, bool binary ) 
+*/
+		internal void Serialize(MySqlStreamWriter writer, bool binary) 
 		{
-			GetValueObject();
+			IMySqlValue v = MySqlField.GetIMySqlValue(mySqlDbType, true);
+			//GetValueObject();
 
 			if (!binary && (paramValue == null || paramValue == DBNull.Value))
 				writer.WriteStringNoNull("NULL");
 			else
-				valueObject.Serialize( writer, binary, paramValue, size );
+				v.WriteValue(writer, binary, paramValue, size);
 		}
 
 		private void SetMySqlDbType( MySqlDbType mySqlDbType ) 
 		{
-			if (this.mySqlDbType != mySqlDbType)
-				valueObject = null;
 			this.mySqlDbType = mySqlDbType;
 			switch (mySqlDbType) 
 			{
 				case MySqlDbType.Decimal: dbType = DbType.Decimal; break;
-				case MySqlDbType.Byte: dbType = isUnsigned ? DbType.Byte : DbType.SByte; break;
-				case MySqlDbType.Int16: dbType = isUnsigned ? DbType.UInt16 : DbType.Int16; break;
-				case MySqlDbType.Int24: dbType = isUnsigned ? DbType.UInt32 : DbType.Int32; break;
-				case MySqlDbType.Int32: dbType = isUnsigned ? DbType.UInt32 : DbType.Int32; break;
-				case MySqlDbType.Int64: dbType = isUnsigned ? DbType.UInt64 : DbType.Int64; break;
+				case MySqlDbType.Byte: dbType = DbType.SByte; break;
+				case MySqlDbType.UByte: dbType = DbType.Byte; break;
+				case MySqlDbType.Int16: dbType = DbType.Int16; break;
+				case MySqlDbType.UInt16: dbType = DbType.UInt16; break;
+				case MySqlDbType.Int24: 
+				case MySqlDbType.Int32: dbType = DbType.Int32; break;
+				case MySqlDbType.UInt24:
+				case MySqlDbType.UInt32: dbType = DbType.UInt32; break;
+				case MySqlDbType.Int64: dbType = DbType.Int64; break;
+				case MySqlDbType.UInt64: dbType = DbType.UInt64; break;
 				case MySqlDbType.Float: dbType = DbType.Single; break;
 				case MySqlDbType.Double: dbType = DbType.Double; break;
-
 				case MySqlDbType.Timestamp:
 				case MySqlDbType.Datetime: dbType = DbType.DateTime; break;
-
 				case MySqlDbType.Date:
 				case MySqlDbType.Newdate:
 				case MySqlDbType.Year: dbType = DbType.Date; break;
-				
 				case MySqlDbType.Time: dbType = DbType.Time; break;
-				
 				case MySqlDbType.Enum:
 				case MySqlDbType.Set:
 				case MySqlDbType.VarChar: dbType = DbType.String;  break;
-
 				case MySqlDbType.TinyBlob:
 				case MySqlDbType.MediumBlob:
 				case MySqlDbType.LongBlob:
 				case MySqlDbType.Blob: dbType = DbType.Object; break;
-
 				case MySqlDbType.String: dbType = DbType.StringFixedLength; break;
 			}
 		}
@@ -372,10 +380,10 @@ namespace MySql.Data.MySqlClient
 
 				case DbType.Boolean:
 				case DbType.Byte: 
+					mySqlDbType = MySqlDbType.UByte; break;
+
 				case DbType.SByte:
-					mySqlDbType = MySqlDbType.Byte; 
-					isUnsigned = dbType == DbType.Byte;
-					break;
+					mySqlDbType = MySqlDbType.Byte; break;
 
 				case DbType.Date: mySqlDbType = MySqlDbType.Date; break;
 				case DbType.DateTime: mySqlDbType = MySqlDbType.Datetime; break;
@@ -384,23 +392,14 @@ namespace MySql.Data.MySqlClient
 				case DbType.Single: mySqlDbType = MySqlDbType.Float; break;
 				case DbType.Double: mySqlDbType = MySqlDbType.Double; break;
 
-				case DbType.Int16: 
-				case DbType.UInt16:
-					mySqlDbType = MySqlDbType.Int16; 
-					isUnsigned = dbType == DbType.UInt16;
-					break;
+				case DbType.Int16: mySqlDbType = MySqlDbType.Int16; break;
+				case DbType.UInt16:	mySqlDbType = MySqlDbType.UInt16; break;
 
-				case DbType.Int32: 
-				case DbType.UInt32:
-					mySqlDbType = MySqlDbType.Int32; 
-					isUnsigned = dbType == DbType.UInt32;
-					break;
+				case DbType.Int32: mySqlDbType = MySqlDbType.Int32; break;
+				case DbType.UInt32: mySqlDbType = MySqlDbType.UInt32; break;
 
-				case DbType.Int64: 
-				case DbType.UInt64:
-					mySqlDbType = MySqlDbType.Int64; 
-					isUnsigned = dbType == DbType.UInt64;
-					break;
+				case DbType.Int64: mySqlDbType = MySqlDbType.Int64; break;
+				case DbType.UInt64: mySqlDbType = MySqlDbType.Int64; break;
 
 				case DbType.Decimal:
 				case DbType.Currency: mySqlDbType = MySqlDbType.Decimal; break;
@@ -456,6 +455,7 @@ namespace MySql.Data.MySqlClient
 		}
 		#endregion
 
+#if DESIGN
 		internal class MySqlParameterConverter : TypeConverter
 		{
 			public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
@@ -488,5 +488,6 @@ namespace MySql.Data.MySqlClient
 				return base.ConvertTo(context, culture, value, destinationType);
 			}
 		}
+#endif
 	}
 }
