@@ -54,7 +54,7 @@ namespace MySql.Data.Common
 
 			start = index+1;
 			int i = start;
-			while (i < versionString.Length && Char.IsDigit( versionString, i ))
+			while (i < versionString.Length && Char.IsDigit(versionString[i]))
 				i++;
 			int build = Convert.ToInt32( versionString.Substring(start, i-start).Trim());
 
