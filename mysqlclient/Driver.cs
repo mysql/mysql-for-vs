@@ -48,11 +48,12 @@ namespace MySql.Data.MySqlClient
 
 		public Driver(MySqlConnectionString settings)
 		{
-			encoding = System.Text.Encoding.GetEncoding("latin1");
+			encoding = System.Text.Encoding.GetEncoding(1252);
 			connectionString = settings;
 			processing = false;
 			threadId = -1;
 			serverCharSetIndex = -1;
+			serverCharSet = null;
 		}
 
 		#region Properties
