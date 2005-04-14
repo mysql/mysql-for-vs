@@ -39,7 +39,6 @@ namespace MySql.Data.Common
 		uint				port;
 		string				pipeName;
 		int					timeOut;
-		ManualResetEvent	evnt;
 
 		public StreamCreator( string hosts, uint port, string pipeName)
 		{
@@ -48,7 +47,6 @@ namespace MySql.Data.Common
 				hostList = "localhost";
 			this.port = port;
 			this.pipeName = pipeName;
-			evnt = new ManualResetEvent(false);
 		}
 
 		public Stream GetStream(int timeOut) 
@@ -128,7 +126,6 @@ namespace MySql.Data.Common
 
 		private void ConnectSocketCallback( IAsyncResult iar )
 		{
-			evnt.Set();
 			Socket socket = (Socket)iar.AsyncState;
 			try 
 			{
@@ -152,11 +149,17 @@ namespace MySql.Data.Common
 				// Lets try to connect
 				IPEndPoint endPoint	= new IPEndPoint( ip, (int)port);
 
-				evnt.Reset();
 				IAsyncResult iar = socket.BeginConnect( endPoint, 
 					new AsyncCallback(ConnectSocketCallback), socket );
-				evnt.WaitOne( this.timeOut * 1000, false );
+
+				int timeLeft = this.timeOut*1000;
+				while (! socket.Connected && timeLeft > 0) 
+				{
+					Thread.Sleep(100);
+					timeLeft -= 100;
+				}
 				if (! socket.Connected) return null;
+				
 
 				socket.SetSocketOption( SocketOptionLevel.Tcp, SocketOptionName.NoDelay, 1 );
 				return new NetworkStream( socket, true );
