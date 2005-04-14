@@ -1,0 +1,55 @@
+<VisualStudioProject>
+    <ECSHARP>
+        <Build>
+            <Settings
+                DeploymentDevice = "Pocket PC 2003 Emulator"
+                ReferencePath = "D:\Work\Connector-Net\trunk\bin\net-1.0\release\;D:\Work\Connector-Net\trunk\bin\net-1.1\Debug\;D:\Work\Connector-Net\trunk\bin\net-cf1.0\Debug\;C:\Program Files\Microsoft Visual Studio .NET 2003\CompactFrameworkSDK\v1.0.5000\Windows CE\Designer\"
+            >
+                <Platform Name = "Windows CE" />
+                <Config
+                    Name = "Debug|Windows CE"
+                    EnableASPDebugging = "false"
+                    EnableASPXDebugging = "false"
+                    EnableUnmanagedDebugging = "false"
+                    EnableSQLServerDebugging = "false"
+                    RemoteDebugEnabled = "true"
+                    RemoteDebugMachine = ""
+                    StartAction = "Project"
+                    StartArguments = ""
+                    StartPage = ""
+                    StartProgram = ""
+                    StartURL = ""
+                    StartWorkingDirectory = ""
+                    StartWithIE = "false"
+                    SelectedDevice = "Pocket PC 2003 Emulator"
+                    DeploymentPlatform = "Pocket PC"
+                />
+                <Config
+                    Name = "Release|Windows CE"
+                    EnableASPDebugging = "false"
+                    EnableASPXDebugging = "false"
+                    EnableUnmanagedDebugging = "false"
+                    EnableSQLServerDebugging = "false"
+                    RemoteDebugEnabled = "true"
+                    RemoteDebugMachine = ""
+                    StartAction = "Project"
+                    StartArguments = ""
+                    StartPage = ""
+                    StartProgram = ""
+                    StartURL = ""
+                    StartWorkingDirectory = ""
+                    StartWithIE = "true"
+                    SelectedDevice = "Windows CE Emulator"
+                    DeploymentPlatform = "Windows CE"
+                />
+            </Settings>
+        </Build>
+        <OtherProjectSettings
+            CopyProjectDestinationFolder = ""
+            CopyProjectUncPath = ""
+            CopyProjectOption = "0"
+            ProjectView = "ProjectFiles"
+        />
+    </ECSHARP>
+</VisualStudioProject>
+
