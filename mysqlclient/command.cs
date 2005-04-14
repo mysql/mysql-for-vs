@@ -48,6 +48,7 @@ namespace MySql.Data.MySqlClient
 		private StoredProcedure		storedProcedure;
 		private CommandResult		lastResult;
 		private int					cursorPageSize;
+		private IAsyncResult		asyncResult;
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ctor1/*'/>
 		public MySqlCommand()
@@ -455,6 +456,32 @@ namespace MySql.Data.MySqlClient
 			// ask our connection to send the prepare command
 			preparedStatement = connection.driver.Prepare( strippedSQL, (string[])parameterMap.ToArray(typeof(string)) );
 		}
+		#endregion
+
+		#region Async Methods
+
+		internal delegate void AsyncExecuteNonQueryDelegate();
+
+		private void AsyncExecuteNonQuery() 
+		{
+			ExecuteNonQuery();
+		}
+
+		public IAsyncResult BeginExecuteNonQuery() 
+		{
+			AsyncExecuteNonQueryDelegate del = 
+				new AsyncExecuteNonQueryDelegate(AsyncExecuteNonQuery);
+			asyncResult = del.BeginInvoke(null, null);
+			return asyncResult;
+		}
+
+		public int EndExecuteNonQuery(IAsyncResult result)
+		{
+			while (! result.IsCompleted)
+				System.Threading.Thread.Sleep(100);
+			return (int)updateCount;
+		}
+
 		#endregion
 
 		#region Private Methods
