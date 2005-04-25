@@ -1,0 +1,287 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>8.0.50215</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5EAEFBC4-8389-4120-BAB3-9B27174F6F6F}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>MySQL.Data</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>MySQL.Data.MySQLClient</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\net-1.1\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>DEBUG;TRACE;WINDOWS;FINAL</DefineConstants>
+    <DocumentationFile>doc.xml</DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\net-1.1\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE;WINDOWS</DefineConstants>
+    <DocumentationFile>doc.xml</DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <Name>ICSharpCode.SharpZipLib</Name>
+      <HintPath>ICSharpCode.SharpZipLib.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Design">
+      <Name>System.Design</Name>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CHANGES" />
+    <None Include="README" />
+    <Compile Include="MySqlClient\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\CharSetMap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\ClientAPI.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\ClientDriver.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\command.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\CommandBuilder.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\CommandResult.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\common\DBConnectionString.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\common\NamedPipeStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\common\Platform.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\common\StreamCreator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\common\Utility.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\common\Version.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\common\Win32.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\CompressedStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\Connection.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\ConnectionString.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\Crypt.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\dataadapter.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\datareader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\Driver.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\Exception.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\Field.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\Logger.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\MysqlDefs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\MySqlError.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\MySqlHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\MySqlPool.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\MySqlPoolManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\MySqlStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\MySqlStreamReader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\MySqlStreamWriter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\NativeDriver.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\parameter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\parameter_collection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\PreparedStatement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\SharedMemoryStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\StoredProcedure.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\transaction.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\Types\MySqlBinary.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\Types\MySqlByte.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\Types\MySqlConversionException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\Types\MySqlDateTime.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\Types\MySqlDecimal.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\Types\MySqlDouble.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\Types\MySqlInt16.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\Types\MySqlInt32.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\Types\MySqlInt64.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\Types\MySqlSingle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\Types\MySqlString.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\Types\MySqlTime.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\Types\MySqlUByte.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\Types\MySqlUInt16.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\Types\MySqlUInt32.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\Types\MySqlUInt64.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\Types\MySqlValue.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\Types\NumberFormat.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MySqlClient\UsageAdvisor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Content Include="MySqlClient\docs\MySqlCommand.xml" />
+    <Content Include="MySqlClient\docs\MySqlCommandBuilder.xml" />
+    <Content Include="MySqlClient\docs\MySqlConnection.xml" />
+    <Content Include="MySqlClient\docs\MySqlDataAdapter.xml" />
+    <Content Include="MySqlClient\docs\MySqlDataReader.xml" />
+    <Content Include="MySqlClient\docs\MySqlException.xml" />
+    <Content Include="MySqlClient\docs\MySqlHelper.xml" />
+    <Content Include="MySqlClient\docs\MySqlParameter.xml" />
+    <Content Include="MySqlClient\docs\MySqlParameterCollection.xml" />
+    <Content Include="MySqlClient\docs\MySqlTransaction.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>
