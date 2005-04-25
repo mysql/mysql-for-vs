@@ -112,6 +112,45 @@ namespace MySql.Design
 				AddServer(sc);
 		}
 
+		private void PopulateServerNode(TreeNode node) 
+		{
+			ServerConfig sc = (ServerConfig)node.Tag;
+			string connString = sc.GetConnectString(true);
+			MySqlConnection conn = new MySqlConnection(connString);
+			try 
+			{
+				conn.Open();
+
+				PopulateDatabases(conn, node);
+				PopulateUDF(conn, node);
+//				PopulateUsers(conn, node);
+
+				conn.Close();
+			}
+			catch (Exception ex) 
+			{
+				MessageBox.Show("Server population failed: " + ex.Message);
+			}
+			finally 
+			{
+				if (conn != null) conn.Close();
+			}
+		}
+
+		private void PopulateUDF(MySqlConnection conn, TreeNode node) 
+		{
+			TreeNode udfNode = node.Nodes.Add("User-defined Functions");
+
+			MySqlCommand cmd = new MySqlCommand("SELECT * FROM mysql.func", conn);
+			using (MySqlDataReader reader = cmd.ExecuteReader()) 
+			{
+				while (reader.Read()) 
+				{
+					udfNode.Nodes.Add(reader.GetString(0));
+				}
+			}
+		}
+
 		private void AddServer( ServerConfig sc )
 		{
 			TreeNode node = serverTree.Nodes[0].Nodes.Add( sc.name );
@@ -119,8 +158,10 @@ namespace MySql.Design
 			node.SelectedImageIndex = 2;
 			node.Tag = sc;
 
+			PopulateServerNode(node);
+
    			// if we have a database selected, then we go ahead and add that node
-			if (sc.database != null && sc.database != String.Empty)
+/*			if (sc.database != null && sc.database != String.Empty)
 			{
 				TreeNode dbNode = node.Nodes.Add( sc.database );
 				dbNode.ImageIndex = 4;
@@ -131,7 +172,7 @@ namespace MySql.Design
 
 			// we add a dummy node so we get the turndown.
 			// we populate when the user opens us up
-			node.Nodes.Add( "dummy" );
+			node.Nodes.Add( "dummy" ); */
 			node.Collapse();
 		}
 
@@ -186,9 +227,9 @@ namespace MySql.Design
 			this.menuItem13 = new System.Windows.Forms.MenuItem();
 			this.menuItem14 = new System.Windows.Forms.MenuItem();
 			this.sprocsMenu = new System.Windows.Forms.ContextMenu();
-			this.sprocMenu = new System.Windows.Forms.ContextMenu();
 			this.sprocsNewProcMenu = new System.Windows.Forms.MenuItem();
 			this.sprocsRefresh = new System.Windows.Forms.MenuItem();
+			this.sprocMenu = new System.Windows.Forms.ContextMenu();
 			this.sprocEdit = new System.Windows.Forms.MenuItem();
 			this.sprocNew = new System.Windows.Forms.MenuItem();
 			this.sprocRefresh = new System.Windows.Forms.MenuItem();
@@ -366,6 +407,16 @@ namespace MySql.Design
 																					   this.sprocsNewProcMenu,
 																					   this.sprocsRefresh});
 			// 
+			// sprocsNewProcMenu
+			// 
+			this.sprocsNewProcMenu.Index = 0;
+			this.sprocsNewProcMenu.Text = "New Stored &Procedure";
+			// 
+			// sprocsRefresh
+			// 
+			this.sprocsRefresh.Index = 1;
+			this.sprocsRefresh.Text = "Refres&h";
+			// 
 			// sprocMenu
 			// 
 			this.sprocMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
@@ -378,20 +429,11 @@ namespace MySql.Design
 																					  this.sprocDelete,
 																					  this.sprocGenerate});
 			// 
-			// sprocsNewProcMenu
-			// 
-			this.sprocsNewProcMenu.Index = 0;
-			this.sprocsNewProcMenu.Text = "New Stored &Procedure";
-			// 
-			// sprocsRefresh
-			// 
-			this.sprocsRefresh.Index = 1;
-			this.sprocsRefresh.Text = "Refres&h";
-			// 
 			// sprocEdit
 			// 
 			this.sprocEdit.Index = 0;
 			this.sprocEdit.Text = "&Edit Stored Procedure";
+			this.sprocEdit.Click += new System.EventHandler(this.sprocEdit_Click);
 			// 
 			// sprocNew
 			// 
@@ -489,7 +531,7 @@ namespace MySql.Design
 
 		private void serverTree_BeforeExpand(object sender, System.Windows.Forms.TreeViewCancelEventArgs e)
 		{
-			TreeNode node = e.Node;
+/*			TreeNode node = e.Node;
 
 			// if we have already populated this node, then return
 			if (node.Nodes.Count != 1 || node.Nodes[0].Text != "dummy") return;
@@ -498,86 +540,105 @@ namespace MySql.Design
 			// first we find out if we are the database node or the server node
 			try 
 			{
-				if (node.Parent.Parent == null)
+				if (node.Tag is ServerConfig)
 					PopulateServerNode( node );
-				else
-					PopulateDatabaseNode( node, null );
+				else if ((NodeType)node.Tag == NodeType.DatabaseCollection)
+					PopulateDatabases( node, null );
 			}
 			catch (Exception) 
 			{
 				e.Cancel = true;
-			}
+			}*/
 		}
 
-		private void PopulateServerNode( TreeNode node ) 
+		private void PopulateDatabases(MySqlConnection conn, TreeNode node) 
 		{
-			ServerConfig sc = (ServerConfig)node.Tag;
-			string connString = sc.GetConnectString(true);
-			MySqlConnection conn = new MySqlConnection( connString );
-			MySqlDataReader reader = null;
-			try 
+			TreeNode dbNode = node.Nodes.Add("Databases");
+			dbNode.Tag = NodeType.DatabaseCollection;
+
+			MySqlCommand cmd = new MySqlCommand("SHOW DATABASES", conn);
+			using (MySqlDataReader reader = cmd.ExecuteReader()) 
 			{
-				conn.Open();
-				MySqlCommand cmd = new MySqlCommand("SHOW DATABASES", conn);
-				reader = cmd.ExecuteReader();
+				while (reader.Read()) 
+				{	
+					string name = reader.GetString(0);
+					if (name.ToLower() == "information_schema") continue;
+					TreeNode newNode = dbNode.Nodes.Add(name);
+					newNode.Tag = NodeType.Database;
+				}
+			}
+
+			foreach (TreeNode n in dbNode.Nodes) 
+				PopulateDatabaseNode(conn, n);
+		}
+
+		private void PopulateDatabaseNode(MySqlConnection conn, TreeNode dbNode) 
+		{
+			conn.ChangeDatabase(dbNode.Text);
+
+			// first do tables
+			TreeNode tablesNode = dbNode.Nodes.Add("Tables");
+			tablesNode.Tag = NodeType.TableCollection;
+			tablesNode.ImageIndex = 7;
+			tablesNode.SelectedImageIndex = 7;
+			PopulateTables(conn, tablesNode);
+
+			if (!conn.ServerVersion.StartsWith("5")) return;
+
+			TreeNode sprocsNode = dbNode.Nodes.Add("Stored Procedures");
+			sprocsNode.Tag = NodeType.StoredProcedureCollection;
+			sprocsNode.ImageIndex = 9;
+			sprocsNode.SelectedImageIndex = 9;
+			PopulateStoredProcedures(conn, sprocsNode);
+
+			TreeNode viewsNode = dbNode.Nodes.Add("Views");
+			viewsNode.Tag = NodeType.ViewCollection;
+			PopulateViews(conn, viewsNode);
+		}
+
+		private void PopulateTables(MySqlConnection conn, TreeNode tablesNode)
+		{
+			MySqlCommand cmd = new MySqlCommand("SHOW TABLES", conn);
+			using (MySqlDataReader reader = cmd.ExecuteReader()) 
+			{
 				while (reader.Read()) 
 				{
-					string dbName = reader.GetString(0);
-					if (dbName.ToLower() == "information_schema") continue;
-					TreeNode newNode = new TreeNode( reader.GetString(0), 4, 4 );
-
-					bool isThere = false;
-					foreach (TreeNode oldNode in node.Nodes)
-						if (oldNode.Text == newNode.Text) 
-						{
-							isThere = true;
-							break;
-						}
-
-					if (isThere) continue;
-
-					newNode.Tag = NodeType.Database;
-					node.Nodes.Add( newNode );
+					TreeNode tableNode = tablesNode.Nodes.Add(reader.GetString(0));
+					tableNode.Tag = NodeType.Table;
+					tableNode.ImageIndex = 5;
+					tableNode.SelectedImageIndex = 5;
 				}
-				reader.Close();
-				if (node.Nodes[0].Text == "dummy")
-					node.Nodes.RemoveAt( 0 );
-				foreach (TreeNode dbNode in node.Nodes)
-					PopulateDatabaseNode( dbNode, conn );
-			}
-			catch (Exception ex) 
-			{
-				MessageBox.Show("Error retrieving database list: " + ex.Message);
-				throw;
-			}
-			finally 
-			{
-				if (reader != null) reader.Close();
-				conn.Close();
 			}
 		}
 
-		private void PopulateDatabaseNode( TreeNode node, MySqlConnection existingConn ) 
+		private void PopulateStoredProcedures(MySqlConnection conn, TreeNode node)
 		{
-			ServerConfig sc = (ServerConfig)node.Parent.Tag;
-			string connString = sc.GetConnectString(true);
-
-			MySqlConnection conn = existingConn;
-			if (conn == null)
-				conn = new MySqlConnection( connString );
-
-			// if existingConn is not null, then we are being called from PopulateServerNode
-			// and so we need to append the database name
-			if (existingConn != null) 
-				conn.ChangeDatabase( node.Text );
-
-			PopulateNode( node, conn, NodeType.Table );
-			PopulateNode( node, conn, NodeType.UDF );
-			if (conn.ServerVersion.StartsWith("5")) 
+			string dbName = node.Parent.Text;
+			MySqlCommand cmd = new MySqlCommand("SELECT name FROM mysql.proc WHERE db ='" + dbName + "'", conn);
+			using (MySqlDataReader reader = cmd.ExecuteReader()) 
 			{
-				PopulateNode( node, conn, NodeType.View );
-				PopulateNode( node, conn, NodeType.StoredProcedure );
+				while (reader.Read()) 
+				{
+					TreeNode sprocNode = node.Nodes.Add(reader.GetString(0));
+					sprocNode.Tag = NodeType.StoredProcedure;
+					sprocNode.ImageIndex = 9;
+					sprocNode.SelectedImageIndex = 9;
+				}
 			}
+		}
+
+		private void PopulateViews(MySqlConnection conn, TreeNode node)
+		{
+/*			string dbName = node.Parent.Text;
+			MySqlCommand cmd = new MySqlCommand("SELECT name FROM mysql.proc WHERE db ='" + dbName + "'"", conn);
+				using (MySqlDataReader reader = cmd.ExecuteReader()) 
+				{
+					while (reader.Read()) 
+					{
+						TreeNode tableNode = tablesNode.Nodes.Add(reader.GetString(0));
+						tableNode.Tag = NodeType.StoredProcedure;
+					}
+				}*/
 		}
 
 		private void PopulateNode( TreeNode node, MySqlConnection conn, NodeType nodeType )
@@ -639,12 +700,12 @@ namespace MySql.Design
 			ServerConfig sc = null;
 			if (type == NodeType.Table)
 			{
-				sc = ((ServerConfig)node.Parent.Parent.Parent.Tag).Clone();
+				sc = ((ServerConfig)node.Parent.Parent.Parent.Parent.Tag).Clone();
 				sc.database = node.Parent.Parent.Text;
 			}
 			if (type == NodeType.Database)
 			{
-				sc = ((ServerConfig)node.Parent.Tag).Clone();
+				sc = ((ServerConfig)node.Parent.Parent.Tag).Clone();
 				sc.database = node.Text;
 			}
 			return sc;
@@ -656,13 +717,18 @@ namespace MySql.Design
 
 			if (! (selNode.Tag is NodeType)) return;
 
-			NodeEventArgs args = new NodeEventArgs();
-			args.nodeName = selNode.Text;
-			args.nodeType = (NodeType)selNode.Tag;
-			args.config = GetNodeConfig( selNode );
+			if ((NodeType)selNode.Tag == NodeType.Table)
+				queryTableMenuItem_Click(null,null);
+			else if ((NodeType)selNode.Tag == NodeType.StoredProcedure)
+				sprocEdit_Click(null,null);
 
-			if (NodeDoubleClick != null)
-				NodeDoubleClick( this, args );
+//			NodeEventArgs args = new NodeEventArgs();
+//			args.nodeName = selNode.Text;
+//			args.nodeType = (NodeType)selNode.Tag;
+//			args.config = GetNodeConfig( selNode );
+
+//			if (NodeDoubleClick != null)
+//				NodeDoubleClick( this, args );
 		}
 
 		private void serverTree_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -674,17 +740,20 @@ namespace MySql.Design
 			TreeNode node = serverTree.SelectedNode;
 			if (node == serverTree.Nodes[0])
 				serverTree.ContextMenu = serversMenu;
-			else if (node.Parent == serverTree.Nodes[0])
+			else if (node.Tag is ServerConfig)
 				serverTree.ContextMenu = serverMenu;
-			else if (node.Tag is NodeType && (NodeType)node.Tag == NodeType.Database)
+			else if ((NodeType)node.Tag == NodeType.DatabaseCollection)
 				serverTree.ContextMenu = dbMenu;
-			else if (node.Parent.Tag is NodeType && 
-				(NodeType)node.Parent.Tag == NodeType.Database)
-				serverTree.ContextMenu = tablesMenu;
-			else if (node.Tag is NodeType && (NodeType)node.Tag == NodeType.Table)
-				serverTree.ContextMenu = tableMenu;
-			else if (node.Tag is NodeType && (NodeType)node.Tag == NodeType.StoredProcedure)
+			else if ((NodeType)node.Tag == NodeType.Database)
+				serverTree.ContextMenu = dbMenu;
+			else if ((NodeType)node.Tag == NodeType.StoredProcedureCollection)
+				serverTree.ContextMenu = sprocsMenu;
+			else if ((NodeType)node.Tag == NodeType.StoredProcedure)
 				serverTree.ContextMenu = sprocMenu;
+			else if ((NodeType)node.Tag == NodeType.TableCollection)
+				serverTree.ContextMenu = tablesMenu;
+			else if ((NodeType)node.Tag == NodeType.Table)
+				serverTree.ContextMenu = tableMenu;
 		}
 
 		private void HitTestTreeNodes( TreeNodeCollection nodes, int x, int y )
@@ -703,7 +772,11 @@ namespace MySql.Design
 
 		private void queryTableMenuItem_Click(object sender, System.EventArgs e)
 		{
-			serverTree_DoubleClick( this, e );
+			TreeNode tableNode = serverTree.SelectedNode;
+			TableViewer v = (TableViewer)connectClass.CreateToolWindow("MySql.Design.TableViewer", tableNode.Text);
+			ServerConfig sc = GetNodeConfig(tableNode);
+			v.Populate(tableNode.Text, sc);
+			(v.Tag as EnvDTE.Window).Visible = true;
 		}
 
 		private void tableMenuDelete_Click(object sender, System.EventArgs e)
@@ -796,6 +869,17 @@ namespace MySql.Design
 		{
 			TableDesigner td = (TableDesigner)connectClass.CreateToolWindow( "MySql.Design.TableDesigner", "New Table" );
 			(td.Tag as EnvDTE.Window).Visible = true;
+		}
+
+		private void sprocEdit_Click(object sender, System.EventArgs e)
+		{
+			TreeNode node = serverTree.SelectedNode;
+			StoredProcedureEditor editor = (StoredProcedureEditor)
+				connectClass.CreateToolWindow("MySql.Design.StoredProcedureEditor", node.Text);
+			string db = node.Parent.Parent.Text;
+			ServerConfig sc = (node.Parent.Parent.Parent.Parent.Tag as ServerConfig);
+			editor.Edit(node.Text, db, sc);
+			(editor.Tag as EnvDTE.Window).Visible = true;
 		}
 
 
@@ -910,7 +994,18 @@ namespace MySql.Design
 
 	internal delegate void NodeDoubleClickDelegate( object sender, NodeEventArgs args );
 
-	internal enum NodeType { Database, Table, UDF, View, StoredProcedure };
+	internal enum NodeType { 
+		DatabaseCollection, 
+		Database, 
+		TableCollection, 
+		Table, 
+		UDFCollection, 
+		UDF, 
+		ViewCollection, 
+		View,
+		StoredProcedureCollection,
+		StoredProcedure 
+	};
 
 	internal class NodeEventArgs
 	{
