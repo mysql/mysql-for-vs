@@ -95,7 +95,7 @@ namespace MySql.Data.Common
 
 		private Stream CreateUnixSocketStream() 
 		{
-#if __MonoCS__ && !WINDOWS
+#if! __MonoCS__ && !WINDOWS
 
 			Socket socket = new Socket (AddressFamily.Unix, SocketType.Stream, ProtocolType.IP);
 
