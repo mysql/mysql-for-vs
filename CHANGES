@@ -2,6 +2,10 @@
 	Bug #6214  	CommandText: Question mark in comment line is being parsed as a parameter [fixed]
     Implemented intial usage advisor
     Merged cursor support in
+    Added Begin/EndExecuteNonQuery
+    Added compact framework support
+    Reimplemented PacketReader/PacketWriter support into MySqlStream* classes
+    Embedded server is now working (libmysqld.dll)
     	
 1-20-05 - Version 1.0.4  
 
