@@ -30,7 +30,7 @@ namespace MySql.Data.MySqlClient
 		private MySqlConnection	conn;
 		private bool			open;
 
-		internal MySqlTransaction( MySqlConnection c, IsolationLevel il) 
+		internal MySqlTransaction(MySqlConnection c, IsolationLevel il) 
 		{
 			conn = c;
 			level = il;

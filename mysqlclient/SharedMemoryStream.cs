@@ -76,7 +76,7 @@ namespace MySql.Data.MySqlClient
 			IntPtr connectFileMap = OpenFileMapping( FILE_MAP_WRITE, false,
 				memoryName + "_" + "CONNECT_DATA" );
 			IntPtr connectView = MapViewOfFile( connectFileMap, FILE_MAP_WRITE,
-				0, 0, (UIntPtr)4 );
+				0, 0, (IntPtr)4 );
 
 			// now start the connection
 			if (! connectRequest.Set())
@@ -92,7 +92,7 @@ namespace MySql.Data.MySqlClient
 			string dataMemoryName = memoryName + "_" + connectNumber;
 			dataMap = OpenFileMapping( FILE_MAP_WRITE, false, 
 				dataMemoryName + "_DATA" );
-			dataView = MapViewOfFile( dataMap, FILE_MAP_WRITE, 0, 0, (UIntPtr)BUFFERLENGTH );
+			dataView = (IntPtr)MapViewOfFile( dataMap, FILE_MAP_WRITE, 0, 0, (IntPtr)(int)BUFFERLENGTH );
 
 			serverWrote = new AutoResetEvent(false);
 			serverWrote.Handle = OpenEvent( EVENT_ALL_ACCESS, false, 
@@ -152,7 +152,7 @@ namespace MySql.Data.MySqlClient
 		{
 			try 
 			{
-				dataView = MapViewOfFile(dataMap, FILE_MAP_WRITE, 0, 0, (UIntPtr)BUFFERLENGTH);
+				dataView = (IntPtr)MapViewOfFile(dataMap, FILE_MAP_WRITE, 0, 0, (IntPtr)(int)BUFFERLENGTH);
 				if (dataView == IntPtr.Zero) return true;
 				return false;
 			}
@@ -238,7 +238,7 @@ namespace MySql.Data.MySqlClient
 		[DllImport("kernel32.dll")]
 		static extern IntPtr MapViewOfFile(IntPtr hFileMappingObject, uint
 			dwDesiredAccess, uint dwFileOffsetHigh, uint dwFileOffsetLow,
-			UIntPtr dwNumberOfBytesToMap);
+			IntPtr dwNumberOfBytesToMap);
 
 		[DllImport("kernel32.dll")]
 		static extern bool UnmapViewOfFile(IntPtr lpBaseAddress);

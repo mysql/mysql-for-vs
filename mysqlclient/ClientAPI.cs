@@ -115,6 +115,9 @@ namespace MySql.Data.MySqlClient
 		[DllImport("libmysql.dll", EntryPoint="mysql_next_result")]
 		public static extern int NextResult(IntPtr mysql);
 
+		[DllImport("libmysql.dll", EntryPoint="mysql_free_result")]
+		public static extern void FreeResult(IntPtr result);
+
 		[DllImport("libmysql.dll", EntryPoint="mysql_field_count")]
 		public static extern int FieldCount(IntPtr resultSet);
 

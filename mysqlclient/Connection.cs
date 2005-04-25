@@ -216,7 +216,7 @@ namespace MySql.Data.MySqlClient
 		/// <include file='docs/MySqlConnection.xml' path='docs/BeginTransaction/*'/>
 		public MySqlTransaction BeginTransaction()
 		{
-			return this.BeginTransaction( IsolationLevel.RepeatableRead );
+			return this.BeginTransaction(IsolationLevel.RepeatableRead);
 		}
 
 		IDbTransaction IDbConnection.BeginTransaction()

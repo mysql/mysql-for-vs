@@ -198,6 +198,12 @@ namespace MySql.Data.MySqlClient
 			set { keyValues["driver"] = value; }
 		}
 
+		public string OptionFile 
+		{
+			get { return keyValues["option_file"] as string; }
+			set { keyValues["option_file"] = value; }
+		}
+
 		#endregion
 
 		#region Authentication Properties
@@ -412,6 +418,7 @@ namespace MySql.Data.MySqlClient
 				defaults["allowzerodatetime"] = false;
 				defaults["usageAdvisor"] = false;
 				defaults["driver"] = DriverType.Native;
+				defaults["option_file"] = null;
 			}
 			return (Hashtable)defaults.Clone();
 		}
@@ -420,6 +427,10 @@ namespace MySql.Data.MySqlClient
 		{
 			switch (key.ToLower()) 
 			{
+				case "option file":
+					hash["option_file"] = value;
+					return true;
+
 				case "driver":
 					string d = value.ToLower();
 					if (d == "native")

@@ -32,13 +32,14 @@ namespace MySql.Data.MySqlClient
 	{
 		private IntPtr	mysql;
 		private IntPtr	resultSet;
-		private int		fieldCount;
 		private IntPtr	currentRow;
 		private uint[]	currentLengths;
+		private	int		resultsCount;
 
 		public ClientDriver(MySqlConnectionString settings) : base(settings)
 		{
-			fieldCount = -1;
+			resultSet = IntPtr.Zero;
+			resultsCount = 0;
 		}
 
 		#region Properties
@@ -48,10 +49,10 @@ namespace MySql.Data.MySqlClient
 			get	{ return true;	}
 		}
 
-		public override bool HasMoreResults
-		{
-			get	{ return fieldCount > 0; }
-		}
+//		public override bool HasMoreResults
+//		{
+//			get	{ return fieldCount > 0; }
+//		}
 
 
 		#endregion
@@ -60,7 +61,7 @@ namespace MySql.Data.MySqlClient
 		{
 			base.Open ();
 
-			mysql = ClientAPI.Init(mysql);
+			mysql = Init(mysql);
 
 			ClientFlags flags = ClientFlags.FOUND_ROWS | ClientFlags.MULTI_RESULTS | 
 				ClientFlags.MULTI_STATEMENTS | ClientFlags.LOCAL_FILES;
@@ -70,26 +71,26 @@ namespace MySql.Data.MySqlClient
 				flags |= ClientFlags.SSL;
 
 			object timeout = connectionString.ConnectionTimeout;
-			ClientAPI.SetOptions(mysql, ClientAPIOption.MYSQL_OPT_CONNECT_TIMEOUT, 
+			SetOptions(mysql, ClientAPIOption.MYSQL_OPT_CONNECT_TIMEOUT, 
 				ref timeout);
 
 			//TODO: support charset, shared memory, named pipes
 
-			IntPtr result = ClientAPI.Connect(mysql, connectionString.Server, connectionString.UserId,
+			IntPtr result = Connect(mysql, connectionString.Server, connectionString.UserId,
 				connectionString.Password, connectionString.Database, connectionString.Port, 
 				null, (uint)flags);
 			if (result == IntPtr.Zero)
 			{
-				throw new MySqlException(ClientAPI.ErrorMsg(mysql), ClientAPI.ErrorNumber(mysql));
+				throw new MySqlException(ErrorMsg(mysql), ErrorNumber(mysql));
 			}
 
-			version = MySql.Data.Common.DBVersion.Parse(ClientAPI.VersionString(mysql));
-			serverCharSet = ClientAPI.CharacterSetName(mysql);
+			version = MySql.Data.Common.DBVersion.Parse(VersionString(mysql));
+			serverCharSet = CharacterSetName(mysql);
 		}
 
 		public override void Close()
 		{
-			ClientAPI.Close(mysql);
+			Close(mysql);
 			mysql = IntPtr.Zero;
 
 			base.Close ();
@@ -97,7 +98,7 @@ namespace MySql.Data.MySqlClient
 
 		public override bool Ping()
 		{
-			int val = ClientAPI.Ping(mysql);
+			int val = Ping(mysql);
 			if (val == 0) return true;
 			isOpen = false;
 			return false;
@@ -106,29 +107,21 @@ namespace MySql.Data.MySqlClient
 		public override CommandResult SendQuery(byte[] bytes, int length, bool consume)
 		{
 			string s = encoding.GetString(bytes, 0, bytes.Length);
-			int result = ClientAPI.Query(mysql, bytes, (uint)length);
+			int result = Query(mysql, bytes, (uint)length);
 			if (result != 0)
-				throw new MySqlException(ClientAPI.ErrorMsg(mysql), ClientAPI.ErrorNumber(mysql));
+				throw new MySqlException(ErrorMsg(mysql), ErrorNumber(mysql));
 
-			fieldCount = ClientAPI.FieldCount(mysql);
-			if (fieldCount > 0) 
-			{
-				// tell the client library we will be processing the results row by row
-				resultSet = ClientAPI.UseResult(mysql);
-				if (resultSet == IntPtr.Zero)
-					throw new MySqlException(ClientAPI.ErrorMsg(mysql), ClientAPI.ErrorNumber(mysql));
-			}
-
+			resultsCount = 0;
 			return new CommandResult(this, false);
 		}
 
 		public override void SetDatabase(string dbName)
 		{
-			int result = ClientAPI.SelectDatabase(mysql, dbName);
+			int result = SelectDatabase(mysql, dbName);
 			if (result == 0) return;
 
 			MySqlException e = new MySqlException(
-				ClientAPI.ErrorMsg(mysql), ClientAPI.ErrorNumber(mysql));
+				ErrorMsg(mysql), ErrorNumber(mysql));
 			Logger.LogException(e);
 			throw e;
 		}
@@ -146,30 +139,43 @@ namespace MySql.Data.MySqlClient
 
 		public override bool ReadResult(ref long numfields, ref ulong affectedRows, ref long lastInsertId)
 		{
-			if (fieldCount == -1)
+			if (resultSet != IntPtr.Zero) 
 			{
+				FreeResult(resultSet);
+				resultSet = IntPtr.Zero;
 				if (! version.isAtLeast(4,1,0)) return false;
-				int result = ClientAPI.NextResult(mysql);
-				if (result == -1) return false;
-				if (result > 0)
-					throw new MySqlException( ClientAPI.ErrorMsg(mysql), ClientAPI.ErrorNumber(mysql));
-
-				fieldCount = ClientAPI.FieldCount(resultSet);
-				if (fieldCount > 0) 
-				{
-					// now we use the resultset
-					resultSet = ClientAPI.UseResult(mysql);
-					if (resultSet == IntPtr.Zero)
-						throw new MySqlException(ClientAPI.ErrorMsg(mysql), ClientAPI.ErrorNumber(mysql));
-				}
 			}
 
-			affectedRows = 0;
-			if (fieldCount == 0)
-				affectedRows = ClientAPI.AffectedRows(mysql);
-			lastInsertId = (long)ClientAPI.LastInsertId(mysql);
-			numfields = fieldCount;
-			fieldCount = -1;
+			if (version.isAtLeast(4,1,0)) 
+			{
+				if (resultsCount > 0) 
+				{
+					int result = NextResult(mysql);
+					if (result == -1) return false;
+					if (result > 0)
+						throw new MySqlException( ErrorMsg(mysql), ErrorNumber(mysql));
+				}
+			}
+			else 
+			{
+				if (resultsCount > 0) return false;
+			}
+
+			numfields = GetFieldCount(mysql);
+			if (numfields > 0) 
+			{
+				// now we use the resultset
+				resultSet = UseResult(mysql);
+				if (resultSet == IntPtr.Zero)
+					throw new MySqlException(ErrorMsg(mysql), ErrorNumber(mysql));
+			}
+
+			if (numfields == 0) 
+			{
+				affectedRows = AffectedRows(mysql);
+				lastInsertId = (long)LastInsertId(mysql);
+			}
+			resultsCount++;
 			return true;
 		}
 
@@ -202,7 +208,7 @@ namespace MySql.Data.MySqlClient
 
 			for (int i=0; i < count; i++)
 			{
-				ClientField fieldDef = ClientAPI.FetchField(resultSet);
+				ClientField fieldDef = FetchField(resultSet);
 				fields[i] = new MySqlField(this.Version);
 				fields[i].CatalogName = fieldDef.catalog;
 				fields[i].ColumnName = fieldDef.name;
@@ -213,6 +219,11 @@ namespace MySql.Data.MySqlClient
 				fields[i].Flags = (ColumnFlags)fieldDef.flags;
 				fields[i].ColumnLength = (int)fieldDef.length;
 				fields[i].Precision = (byte)fieldDef.decimals;
+				if (charSets != null && charSets.Count > 0) 
+				{
+					string charSetName = (string)charSets[(int)fieldDef.charset];
+					fields[i].Encoding = CharSetMap.GetEncoding(version, charSetName);
+				}
 			}
 
 			currentLengths = new uint[count];
@@ -221,21 +232,26 @@ namespace MySql.Data.MySqlClient
 
 		public override bool OpenDataRow(int fieldCount, bool isBinary, int statementId)
 		{
-			currentRow = ClientAPI.FetchRow(resultSet);
+			currentRow = FetchRow(resultSet);
+			if (currentRow == IntPtr.Zero) 
+			{
+				int err = ErrorNumber(mysql);
+				if (err == 0) 
+				{
+					//FreeResult(resultSet);
+					resultSet = IntPtr.Zero;
+					return false;
+				}
+				throw new MySqlException(ErrorMsg(mysql), err);
+			}
 
-			IntPtr lengths = ClientAPI.FetchLengths(resultSet);
+			IntPtr lengths = FetchLengths(resultSet);
 			for (int i=0; i < fieldCount; i++)
 			{
 				currentLengths[i] = (uint)Marshal.ReadInt32(lengths);
 				lengths = (IntPtr)((int)lengths + 4);
 			}
 			
-			if (currentRow == IntPtr.Zero)
-			{
-				int err = ClientAPI.ErrorNumber(mysql);
-				if (err == 0) return false;
-				throw new MySqlException(ClientAPI.ErrorMsg(mysql), err);
-			}
 			return true;
 		}
 
@@ -243,6 +259,116 @@ namespace MySql.Data.MySqlClient
 		{
 			return null;
 		}
+
+		#region Interface methods
+
+		protected virtual IntPtr Init(IntPtr mysql) 
+		{
+			return ClientAPI.Init(mysql);
+		}
+
+		protected virtual IntPtr Connect(IntPtr mysql, string host, string user,
+			string password, string db, uint port, string unix_socket, uint flag)
+		{
+			return ClientAPI.Connect(mysql, host, user, password, db, port, unix_socket, flag);
+		}
+
+		protected virtual int SetOptions(IntPtr mysql, ClientAPIOption option, ref object optionValue)
+		{
+			return ClientAPI.SetOptions(mysql, option, ref optionValue);
+		}
+
+		protected virtual void Close(IntPtr mysql) 
+		{
+			ClientAPI.Close(mysql);
+		}
+
+		protected virtual int SelectDatabase(IntPtr mysql, string dbName) 
+		{
+			return ClientAPI.SelectDatabase(mysql, dbName);
+		}
+
+		protected virtual int Query(IntPtr mysql, byte[] query, uint len) 
+		{
+			return ClientAPI.Query(mysql, query, len);
+		}
+
+		protected virtual string ErrorMsg(IntPtr mysql)
+		{
+			return ClientAPI.ErrorMsg(mysql);
+		}
+
+		protected virtual int ErrorNumber(IntPtr mysql) 
+		{
+			return ClientAPI.ErrorNumber(mysql);
+		}
+
+		protected virtual IntPtr UseResult(IntPtr mysql)
+		{
+			return ClientAPI.UseResult(mysql);
+		}
+
+		protected virtual bool MoreResults(IntPtr mysql)
+		{
+			return ClientAPI.MoreResults(mysql);
+		}
+
+		protected virtual int NextResult(IntPtr mysql)
+		{
+			return ClientAPI.NextResult(mysql);
+		}
+
+		protected virtual void FreeResult(IntPtr resultSet) 
+		{
+			ClientAPI.FreeResult(resultSet);
+		}
+
+		protected virtual int GetFieldCount(IntPtr resultSet) 
+		{
+			return ClientAPI.FieldCount(resultSet);
+		}
+
+		protected virtual ulong AffectedRows(IntPtr mysql)
+		{
+			return ClientAPI.AffectedRows(mysql);
+		}
+
+		protected virtual ulong LastInsertId(IntPtr mysql)
+		{
+			return ClientAPI.LastInsertId(mysql);
+		}
+
+		protected virtual ClientField FetchField(IntPtr resultSet)
+		{
+			return ClientAPI.FetchField(resultSet);
+		}
+
+		protected virtual IntPtr FetchRow(IntPtr resultSet)
+		{
+			return ClientAPI.FetchRow(resultSet);
+		}
+		
+		protected virtual IntPtr FetchLengths(IntPtr resultSet)
+		{
+			return ClientAPI.FetchLengths(resultSet);
+		}
+
+		protected virtual int Ping(IntPtr mysql)
+		{
+			return ClientAPI.Ping(mysql);
+		}
+
+		protected virtual string VersionString(IntPtr mysql)
+		{
+			return ClientAPI.VersionString(mysql);
+		}
+
+		protected virtual string CharacterSetName(IntPtr mysql)
+		{
+			return ClientAPI.CharacterSetName(mysql);
+		}
+
+		#endregion
 
 	}
 #endif
