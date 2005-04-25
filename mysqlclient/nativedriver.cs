@@ -66,12 +66,6 @@ namespace MySql.Data.MySqlClient
 			get { return connectionFlags; }
 		}
 
-//		public byte SequenceByte 
-//		{
-//			set { packetSeq = value; }
-//			get { return packetSeq; }
-//		}
-
 		public long MaxPacketSize 
 		{
 			get { return maxPacketSize; }
@@ -82,12 +76,6 @@ namespace MySql.Data.MySqlClient
 		{ 
 			get { return commandResults; }
 		}
-
-		public override bool HasMoreResults
-		{
-			get { return (ServerStatus & (ServerStatusFlags.MoreResults | ServerStatusFlags.AnotherQuery )) != 0; }
-		}
-
 
 		/// <summary>
 		/// Returns true if this connection can handle batch SQL natively
@@ -120,7 +108,6 @@ namespace MySql.Data.MySqlClient
 
 		private void ExecuteCommand( DBCmd cmd, byte[] bytes, int length ) 
 		{
-			//SequenceByte = 0;
 			int len = 1;
 			if (bytes != null)
 				len += length;
@@ -378,7 +365,6 @@ namespace MySql.Data.MySqlClient
 
 		public override void Reset()
 		{
-//			SequenceByte = 0;
 			writer.StartPacket(0, true);
 			writer.WriteByte( (byte)DBCmd.CHANGE_USER );
 			Authenticate();
@@ -753,7 +739,6 @@ namespace MySql.Data.MySqlClient
 			if ( (serverStatus & ServerStatusFlags.LastRowSent) != 0)
 				return false;
 
-//			SequenceByte = 0;
 			writer.StartPacket(9, true);
 			writer.WriteByte((byte)DBCmd.FETCH);
 			writer.WriteInteger(statementId, 4);

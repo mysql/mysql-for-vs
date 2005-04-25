@@ -96,8 +96,6 @@ namespace MySql.Data.MySqlClient
 			get { return serverStatus; }
 		}
 
-		public abstract bool HasMoreResults { get; }
-
 		#endregion
 
 		public bool IsTooOld() 
@@ -112,10 +110,12 @@ namespace MySql.Data.MySqlClient
 		{
 			Driver d = null;
 			if (settings.DriverType == DriverType.Native)
-				d = new NativeDriver( settings );
+				d = new NativeDriver(settings);
 #if !CF
+			else if (settings.DriverType == DriverType.Client)
+				d = new ClientDriver(settings);
 			else
-				d = new ClientDriver( settings );
+				d = new EmbeddedDriver(settings);
 #endif
 
 			d.Open();
