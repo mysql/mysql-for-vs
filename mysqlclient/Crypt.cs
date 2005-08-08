@@ -20,10 +20,11 @@
 
 using System;
 using System.IO;
-using System.Security.Cryptography;
-#if CF
-using OpenNETCF.Security.Cryptography;
-#endif
+using MySql.Data.Common;
+//using System.Security.Cryptography;
+//#if CF
+//using OpenNETCF.Security.Cryptography;
+//#endif
 
 namespace MySql.Data.MySqlClient
 {
@@ -95,12 +96,13 @@ namespace MySql.Data.MySqlClient
 		/// <returns>Array of bytes containing the scrambled password</returns>
 		public static byte[] Get410Password( string password, byte[] seedBytes )
 		{
-			SHA1 sha = new SHA1CryptoServiceProvider(); 
+			SHA1Hash sha = new SHA1Hash();
+			//SHA1 sha = new SHA1CryptoServiceProvider(); 
 
 			// clean it and then digest it
 			password = password.Replace(" ","").Replace("\t","");
 			byte[] passBytes = System.Text.Encoding.Default.GetBytes( password );
-			byte[] firstPass = sha.ComputeHash( passBytes );
+			byte[] firstPass = sha.ComputeHash(passBytes);
 
 			byte[] input = new byte[24];
 			Array.Copy(seedBytes, 0, input, 0, 4);
@@ -145,7 +147,9 @@ namespace MySql.Data.MySqlClient
 
 				offset += 4;
 			}
-			SHA1 sha = new SHA1CryptoServiceProvider(); 
+
+			//SHA1 sha = new SHA1CryptoServiceProvider(); 
+			SHA1Hash sha = new SHA1Hash();
 			byte[] temp = new byte[8];
 			Buffer.BlockCopy(binaryPassword, 0, temp, 0, 8);
 			byte[] binaryHash = sha.ComputeHash(temp);
@@ -190,7 +194,8 @@ namespace MySql.Data.MySqlClient
 			// if we have no password, then we just return 1 zero byte
 			if (password.Length == 0) return new byte[1];
 
-			SHA1 sha = new SHA1CryptoServiceProvider(); 
+			//SHA1 sha = new SHA1CryptoServiceProvider(); 
+			SHA1Hash sha = new SHA1Hash();
 
 			byte[] firstHash = sha.ComputeHash( System.Text.Encoding.Default.GetBytes( password ) );
 			byte[] secondHash = sha.ComputeHash( firstHash );

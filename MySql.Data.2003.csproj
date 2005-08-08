@@ -129,7 +129,7 @@
                 />
                 <File
                     RelPath = "MySqlClient\command.cs"
-                    SubType = "Component"
+                    SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
@@ -149,7 +149,7 @@
                 />
                 <File
                     RelPath = "MySqlClient\Connection.cs"
-                    SubType = "Component"
+                    SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
@@ -284,6 +284,11 @@
                 />
                 <File
                     RelPath = "MySqlClient\common\Platform.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MySqlClient\common\SHA1.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

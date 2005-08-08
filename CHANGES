@@ -6,6 +6,7 @@
     Added compact framework support
     Reimplemented PacketReader/PacketWriter support into MySqlStream* classes
     Embedded server is now working (libmysqld.dll)
+	Added internal implemention of SHA1 so we don't have to distribute the OpenNetCF on mobile devices    	
     	
 1-20-05 - Version 1.0.4  
 
