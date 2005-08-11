@@ -323,6 +323,7 @@ namespace MobileExplorer
 			activeConfig = (ServerConfig)servers[serverList.SelectedIndex];
 			server.ConnectionString = "server=" + activeConfig.host + ";uid=" + activeConfig.uid + 
 				";pwd=" + activeConfig.pwd + ";pooling=false;database=mysql";
+			MessageBox.Show(server.ConnectionString, "connstr");
 			objectList.Items.Clear();
 			activeServer.Text = activeConfig.name;
 
