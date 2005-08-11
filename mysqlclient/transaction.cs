@@ -20,11 +20,12 @@
 
 using System;
 using System.Data;
+using System.Data.Common;
 
 namespace MySql.Data.MySqlClient
 {
 	/// <include file='docs/MySqlTransaction.xml' path='docs/Class/*'/>
-	public sealed class MySqlTransaction : MarshalByRefObject, IDbTransaction, IDisposable
+	public sealed class MySqlTransaction : DbTransaction
 	{
 		private IsolationLevel	level;
 		private MySqlConnection	conn;
@@ -38,11 +39,6 @@ namespace MySql.Data.MySqlClient
 		}
 
 		#region Properties
-
-		IDbConnection IDbTransaction.Connection 
-		{
-			get { return (MySqlConnection)Connection; }
-		}
 
 		/// <summary>
 		/// Gets the <see cref="MySqlConnection"/> object associated with the transaction, or a null reference (Nothing in Visual Basic) if the transaction is no longer valid.
@@ -69,19 +65,20 @@ namespace MySql.Data.MySqlClient
 		/// Parallel transactions are not supported. Therefore, the IsolationLevel 
 		/// applies to the entire transaction.
 		/// </remarks>
-		public IsolationLevel IsolationLevel 
+		public override IsolationLevel IsolationLevel 
 		{
 			get { return level; }
 		}
 
+        protected override DbConnection DbConnection
+        {
+            get { return conn; }
+        }
+
 		#endregion
 
-		void System.IDisposable.Dispose() 
-		{
-		}
-
 		/// <include file='docs/MySqlTransaction.xml' path='docs/Commit/*'/>
-		public void Commit()
+		public override void Commit()
 		{
 			if (conn == null || conn.State != ConnectionState.Open)
 				throw new InvalidOperationException("Connection must be valid and open to commit transaction");
@@ -100,7 +97,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/MySqlTransaction.xml' path='docs/Rollback/*'/>
-		public void Rollback()
+		public override void Rollback()
 		{
 			if (conn == null || conn.State != ConnectionState.Open)
 				throw new InvalidOperationException("Connection must be valid and open to commit transaction");
@@ -117,5 +114,9 @@ namespace MySql.Data.MySqlClient
 				throw;
 			}
 		}
-		}
+
+        public override void Dispose()
+        {
+        }
+}
 }

@@ -30,7 +30,7 @@ namespace MySql.Data.MySqlClient
 	/// Provides a means of reading a forward-only stream of rows from a MySQL database. This class cannot be inherited.
 	/// </summary>
 	/// <include file='docs/MySqlDataReader.xml' path='docs/ClassSummary/*'/>
-	public sealed class MySqlDataReader : MarshalByRefObject, IEnumerable, IDataReader, IDisposable, IDataRecord
+	public sealed class MySqlDataReader : DbDataReader, IDataReader, IDisposable, IDataRecord
 	{
 		// The DataReader should always be open when returned to the user.
 		private bool			isOpen = true;
@@ -63,18 +63,11 @@ namespace MySql.Data.MySqlClient
 			this.command = cmd;
 			connection = (MySqlConnection)command.Connection;
 			commandBehavior = behavior;
-		}
+        }
 
-		/// <summary>
-		/// Gets a value indicating the depth of nesting for the current row.  This method is not 
-		/// supported currently and always returns 0.
-		/// </summary>
-		public int Depth 
-		{
-			get { return 0;  }
-		}
+        #region Properties
 
-		internal CommandBehavior Behavior 
+        internal CommandBehavior Behavior 
 		{
 			get { return commandBehavior; }
 		}
@@ -84,43 +77,90 @@ namespace MySql.Data.MySqlClient
 			get { return currentResult; }
 		}
 
-		/// <summary>
+        /// <summary>
+        /// Gets a value indicating the depth of nesting for the current row.  This method is not 
+        /// supported currently and always returns 0.
+        /// </summary>
+        public override int Depth
+        {
+            get { return 0; }
+        }
+
+        /// <summary>
+        /// Gets the number of columns in the current row.
+        /// </summary>
+        public override int FieldCount
+        {
+            // Return the count of the number of columns, which in
+            // this case is the size of the column metadata
+            // array.
+            get
+            {
+                if (fields != null)
+                    return fields.Length;
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the MySqlDataReader contains one or more rows.
+        /// </summary>
+        public override bool HasRows
+        {
+            get { return hasRows; }
+        }
+
+        /// <summary>
 		/// Gets a value indicating whether the data reader is closed.
 		/// </summary>
-		public bool IsClosed
+		public override bool IsClosed
 		{
 			get  { return ! isOpen; }
 		}
 
-		void IDisposable.Dispose() 
+        /// <summary>
+        /// Gets the number of rows changed, inserted, or deleted by execution of the SQL statement.
+        /// </summary>
+        public override int RecordsAffected
+        {
+            // RecordsAffected returns the number of rows affected in batch
+            // statments from insert/delete/update statments.  This property
+            // is not completely accurate until .Close() has been called.
+            get { return command.UpdateCount; }
+        }
+
+        /// <summary>
+        /// Overloaded. Gets the value of a column in its native format.
+        /// In C#, this property is the indexer for the MySqlDataReader class.
+        /// </summary>
+        public override object this[int i]
+        {
+            get { return GetValue(i); }
+        }
+
+        /// <summary>
+        /// Gets the value of a column in its native format.
+        ///	[C#] In C#, this property is the indexer for the MySqlDataReader class.
+        /// </summary>
+        public override object this[String name]
+        {
+            // Look up the ordinal and return 
+            // the value at that position.
+            get { return this[GetOrdinal(name)]; }
+        }
+
+        #endregion
+
+        public override void Dispose() 
 		{
 			if (isOpen)
 				Close();
 		}
 
 		/// <summary>
-		/// Gets the number of rows changed, inserted, or deleted by execution of the SQL statement.
-		/// </summary>
-		public int RecordsAffected 
-		{
-			// RecordsAffected returns the number of rows affected in batch
-			// statments from insert/delete/update statments.  This property
-			// is not completely accurate until .Close() has been called.
-			get { return command.UpdateCount; }
-		}
-
-		/// <summary>
-		/// Gets a value indicating whether the MySqlDataReader contains one or more rows.
-		/// </summary>
-		public bool HasRows
-		{
-			get { return hasRows; }
-		}
-
-		/// <summary>
 		/// Closes the MySqlDataReader object.
 		/// </summary>
-		public void Close()
+		public override void Close()
 		{
 			if (! isOpen) return;
 
@@ -136,52 +176,13 @@ namespace MySql.Data.MySqlClient
 			isOpen = false;
 		}
 
-
-
-
-		/// <summary>
-		/// Gets the number of columns in the current row.
-		/// </summary>
-		public int FieldCount
-		{
-			// Return the count of the number of columns, which in
-			// this case is the size of the column metadata
-			// array.
-			get 
-			{ 
-				if (fields != null)
-					return fields.Length;
-				return 0;
-			}
-		}
-
-		/// <summary>
-		/// Overloaded. Gets the value of a column in its native format.
-		/// In C#, this property is the indexer for the MySqlDataReader class.
-		/// </summary>
-		public object this [ int i ]
-		{
-			get { return GetValue(i); }
-		}
-
-		/// <summary>
-		/// Gets the value of a column in its native format.
-		///	[C#] In C#, this property is the indexer for the MySqlDataReader class.
-		/// </summary>
-		public object this [ String name ]
-		{
-			// Look up the ordinal and return 
-			// the value at that position.
-			get { return this[GetOrdinal(name)]; }
-		}
-
 		#region TypeSafe Accessors
 		/// <summary>
 		/// Gets the value of the specified column as a Boolean.
 		/// </summary>
 		/// <param name="i"></param>
 		/// <returns></returns>
-		public bool GetBoolean(int i)
+		public override bool GetBoolean(int i)
 		{
 			return Convert.ToBoolean(GetValue(i));
 		}
@@ -191,7 +192,7 @@ namespace MySql.Data.MySqlClient
 		/// </summary>
 		/// <param name="i"></param>
 		/// <returns></returns>
-		public byte GetByte(int i)
+		public override byte GetByte(int i)
 		{
 			IMySqlValue v = GetFieldValue(i);
 			if (v is MySqlUByte)
@@ -210,7 +211,7 @@ namespace MySql.Data.MySqlClient
 		/// <param name="length">The maximum length to copy into the buffer. </param>
 		/// <returns>The actual number of bytes read.</returns>
 		/// <include file='docs/MySqlDataReader.xml' path='MyDocs/MyMembers[@name="GetBytes"]/*'/>
-		public long GetBytes(int i, long dataIndex, byte[] buffer, int bufferIndex, int length)
+		public override long GetBytes(int i, long dataIndex, byte[] buffer, int bufferIndex, int length)
 		{
 			if (i >= fields.Length) 
 				throw new IndexOutOfRangeException();
@@ -250,7 +251,7 @@ namespace MySql.Data.MySqlClient
 		/// </summary>
 		/// <param name="i"></param>
 		/// <returns></returns>
-		public char GetChar(int i)
+		public override char GetChar(int i)
 		{
 			string s = GetString(i);
 			return s[0];
@@ -265,7 +266,7 @@ namespace MySql.Data.MySqlClient
 		/// <param name="bufferoffset"></param>
 		/// <param name="length"></param>
 		/// <returns></returns>
-		public long GetChars(int i, long fieldOffset, char[] buffer, int bufferoffset, int length)
+		public override long GetChars(int i, long fieldOffset, char[] buffer, int bufferoffset, int length)
 		{
 			if (i >= fields.Length) 
 				throw new IndexOutOfRangeException();
@@ -292,7 +293,7 @@ namespace MySql.Data.MySqlClient
 		/// </summary>
 		/// <param name="i"></param>
 		/// <returns></returns>
-		public String GetDataTypeName(int i)
+		public override String GetDataTypeName(int i)
 		{
 			if (! isOpen) throw new Exception("No current query in data reader");
 			if (i >= fields.Length) throw new IndexOutOfRangeException();
@@ -308,14 +309,14 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetDateTime/*'/>
-		public DateTime GetDateTime(int index)
+		public override DateTime GetDateTime(int index)
 		{
 			MySqlDateTime val = (MySqlDateTime)GetFieldValue(index); //IMySqlValue val = GetFieldValue(index);
 			return val.Value;
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetDecimal/*'/>
-		public Decimal GetDecimal(int index)
+		public override Decimal GetDecimal(int index)
 		{
 			IMySqlValue v = GetFieldValue(index);
 			if (v is MySqlDecimal)
@@ -324,7 +325,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetDouble/*'/>
-		public double GetDouble(int index)
+		public override double GetDouble(int index)
 		{
 			IMySqlValue v = GetFieldValue(index);
 			if (v is MySqlDouble)
@@ -337,7 +338,7 @@ namespace MySql.Data.MySqlClient
 		/// </summary>
 		/// <param name="i"></param>
 		/// <returns></returns>
-		public Type GetFieldType(int i)
+		public override Type GetFieldType(int i)
 		{
 			if (! isOpen) throw new Exception("No current query in data reader");
 			if (i >= fields.Length) throw new IndexOutOfRangeException();
@@ -348,7 +349,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetFloat/*'/>
-		public float GetFloat(int index)
+		public override float GetFloat(int index)
 		{
 			IMySqlValue v = GetFieldValue(index);
 			if (v is MySqlSingle)
@@ -357,13 +358,13 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetGuid/*'/>
-		public Guid GetGuid(int index)
+		public override Guid GetGuid(int index)
 		{
 			return new Guid( GetString(index) );
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetInt16/*'/>
-		public Int16 GetInt16(int index)
+		public override Int16 GetInt16(int index)
 		{
 			IMySqlValue v = GetFieldValue(index);
 			if (v is MySqlInt16)
@@ -372,7 +373,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetInt32/*'/>
-		public Int32 GetInt32(int index)
+		public override Int32 GetInt32(int index)
 		{
 			IMySqlValue v = GetFieldValue(index);
 			if (v is MySqlInt32)
@@ -381,7 +382,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetInt64/*'/>
-		public Int64 GetInt64(int index)
+		public override Int64 GetInt64(int index)
 		{
 			IMySqlValue v = GetFieldValue(index);
 			if (v is MySqlInt64)
@@ -394,7 +395,7 @@ namespace MySql.Data.MySqlClient
 		/// </summary>
 		/// <param name="i"></param>
 		/// <returns></returns>
-		public String GetName(int i)
+		public override String GetName(int i)
 		{
 			return fields[i].ColumnName;
 		}
@@ -404,7 +405,7 @@ namespace MySql.Data.MySqlClient
 		/// </summary>
 		/// <param name="name"></param>
 		/// <returns></returns>
-		public int GetOrdinal(string name)
+		public override int GetOrdinal(string name)
 		{
 			if (! isOpen)
 				throw new Exception("No current query in data reader");
@@ -423,7 +424,7 @@ namespace MySql.Data.MySqlClient
 		/// Returns a DataTable that describes the column metadata of the MySqlDataReader.
 		/// </summary>
 		/// <returns></returns>
-		public DataTable GetSchemaTable()
+		public override DataTable GetSchemaTable()
 		{
 			// Only Results from SQL SELECT Queries 
 			// get a DataTable for schema of the result
@@ -492,7 +493,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetString/*'/>
-		public String GetString(int index)
+		public override String GetString(int index)
 		{
 			IMySqlValue val = GetFieldValue(index);
 
@@ -517,7 +518,7 @@ namespace MySql.Data.MySqlClient
 		/// </summary>
 		/// <param name="i"></param>
 		/// <returns></returns>
-		public object GetValue(int i)
+		public override object GetValue(int i)
 		{
 			if (! isOpen) throw new Exception("No current query in data reader");
 			if (i >= fields.Length) throw new IndexOutOfRangeException();
@@ -543,7 +544,7 @@ namespace MySql.Data.MySqlClient
 		/// </summary>
 		/// <param name="values"></param>
 		/// <returns></returns>
-		public int GetValues(object[] values)
+		public override int GetValues(object[] values)
 		{
 			if (values == null) return 0;
 			int numCols = Math.Min( values.Length, fields.Length );
@@ -593,7 +594,7 @@ namespace MySql.Data.MySqlClient
 		/// </summary>
 		/// <param name="i"></param>
 		/// <returns></returns>
-		public bool IsDBNull(int i)
+		public override bool IsDBNull(int i)
 		{
 			return DBNull.Value == GetValue(i);
 		}
@@ -602,7 +603,7 @@ namespace MySql.Data.MySqlClient
 		/// Advances the data reader to the next result, when reading the results of batch SQL statements.
 		/// </summary>
 		/// <returns></returns>
-		public bool NextResult()
+		public override bool NextResult()
 		{
 			if (! isOpen)
 				throw new MySqlException("Invalid attempt to NextResult when reader is closed.");
@@ -673,7 +674,7 @@ namespace MySql.Data.MySqlClient
 		/// Advances the MySqlDataReader to the next record.
 		/// </summary>
 		/// <returns></returns>
-		public bool Read()
+		public override bool Read()
 		{
 			if (! isOpen)
 				throw new MySqlException("Invalid attempt to Read when reader is closed.");
@@ -762,10 +763,12 @@ namespace MySql.Data.MySqlClient
 		}
 
 		#region IEnumerator
-		IEnumerator	IEnumerable.GetEnumerator()
+
+		public override IEnumerator	GetEnumerator()
 		{
 			return new DbEnumerator(this);
 		}
+
 		#endregion
 	}
 }

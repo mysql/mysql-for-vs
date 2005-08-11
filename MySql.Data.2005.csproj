@@ -3,7 +3,7 @@
     <ProjectType>Local</ProjectType>
     <ProductVersion>8.0.50215</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{5EAEFBC4-8389-4120-BAB3-9B27174F6F6F}</ProjectGuid>
+    <ProjectGuid>{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ApplicationIcon>
@@ -28,13 +28,13 @@
     </UpgradeBackupLocation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>bin\net-1.1\Debug\</OutputPath>
+    <OutputPath>bin\net-2.0\Debug\</OutputPath>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
-    <DefineConstants>DEBUG;TRACE;WINDOWS;FINAL</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;WINDOWS</DefineConstants>
     <DocumentationFile>doc.xml</DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
@@ -48,7 +48,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>bin\net-1.1\Release\</OutputPath>
+    <OutputPath>bin\net-2.0\Release\</OutputPath>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
@@ -95,6 +95,18 @@
     <Compile Include="MySqlClient\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <None Include="MySqlClient\base\DbCommand.cs">
+      <SubType>Component</SubType>
+    </None>
+    <None Include="MySqlClient\base\DbConnection.cs">
+      <SubType>Component</SubType>
+    </None>
+    <None Include="MySqlClient\base\DbTransaction.cs" />
+    <None Include="MySqlClient\base\DbParameter.cs" />
+    <None Include="MySqlClient\base\DbDataReader.cs" />
+    <None Include="MySqlClient\base\DbCommandBuilder.cs">
+      <SubType>Component</SubType>
+    </None>
     <Compile Include="MySqlClient\CharSetMap.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -122,6 +134,7 @@
     <Compile Include="MySqlClient\common\Platform.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MySqlClient\common\SHA1.cs" />
     <Compile Include="MySqlClient\common\StreamCreator.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -155,6 +168,8 @@
     <Compile Include="MySqlClient\Driver.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MySqlClient\EmbeddedAPI.cs" />
+    <Compile Include="MySqlClient\EmbeddedDriver.cs" />
     <Compile Include="MySqlClient\Exception.cs">
       <SubType>Code</SubType>
     </Compile>

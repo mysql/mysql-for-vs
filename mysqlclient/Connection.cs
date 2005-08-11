@@ -20,6 +20,7 @@
 
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Collections.Specialized;
 using System.Text;
 using System.ComponentModel;
@@ -34,7 +35,7 @@ namespace MySql.Data.MySqlClient
 	[System.ComponentModel.DesignerCategory("Code")]
 	[ToolboxItem(true)]
 #endif
-	public sealed class MySqlConnection : Component, IDbConnection, ICloneable, IDisposable
+	public sealed class MySqlConnection : DbConnection, ICloneable
 	{
 		internal ConnectionState			state;
 		internal Driver						driver;
@@ -43,7 +44,7 @@ namespace MySql.Data.MySqlClient
 		private  UsageAdvisor				advisor;
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/StateChange/*'/>
-		public event StateChangeEventHandler		StateChange;
+        public override event StateChangeEventHandler StateChange;
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/InfoMessage/*'/>
 		public event MySqlInfoMessageEventHandler	InfoMessage;
@@ -119,7 +120,7 @@ namespace MySql.Data.MySqlClient
 #if DESIGN
 		[Browsable(true)]
 #endif
-		public string DataSource
+		public override string DataSource
 		{
 			get { return settings.Server; }
 		}
@@ -128,7 +129,7 @@ namespace MySql.Data.MySqlClient
 #if DESIGN
 		[Browsable(true)]
 #endif
-		public int ConnectionTimeout
+		public override int ConnectionTimeout
 		{
 			get { return settings.ConnectionTimeout; }
 		}
@@ -137,7 +138,7 @@ namespace MySql.Data.MySqlClient
 #if DESIGN
 		[Browsable(true)]
 #endif
-		public string Database
+		public override string Database
 		{
 			get	{ return settings.Database; }
 		}
@@ -157,7 +158,7 @@ namespace MySql.Data.MySqlClient
 #if DESIGN
 		[Browsable(false)]
 #endif
-		public ConnectionState State
+		public override ConnectionState State
 		{
 			get { return state; }
 		}
@@ -166,7 +167,7 @@ namespace MySql.Data.MySqlClient
 #if DESIGN
 		[Browsable(false)]
 #endif
-		public string ServerVersion 
+		public override string ServerVersion 
 		{
 			get { return  driver.Version.ToString(); }
 		}
@@ -190,7 +191,7 @@ namespace MySql.Data.MySqlClient
 		[Category("Data")]
 		[Description("Information used to connect to a DataSource, such as 'Server=xxx;UserId=yyy;Password=zzz;Database=dbdb'.")]
 #endif
-		public string ConnectionString
+		public override string ConnectionString
 		{
 			get
 			{
@@ -217,11 +218,6 @@ namespace MySql.Data.MySqlClient
 		public MySqlTransaction BeginTransaction()
 		{
 			return this.BeginTransaction(IsolationLevel.RepeatableRead);
-		}
-
-		IDbTransaction IDbConnection.BeginTransaction()
-		{
-			return BeginTransaction();
 		}
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/BeginTransaction1/*'/>
@@ -258,14 +254,10 @@ namespace MySql.Data.MySqlClient
 			return t;
 		}
 
-		IDbTransaction IDbConnection.BeginTransaction(IsolationLevel level)
-		{
-			return BeginTransaction(level);
-		}
 		#endregion
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/ChangeDatabase/*'/>
-		public void ChangeDatabase(string database)
+		public override void ChangeDatabase(string database)
 		{
 			if (database == null || database.Trim().Length == 0)
 				throw new ArgumentException( "Database parameter is invalid", "database" );
@@ -295,7 +287,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/Open/*'/>
-		public void Open()
+		public override void Open()
 		{
 			if (state == ConnectionState.Open)
 				throw new MySqlException("error connecting: The connection is already Open (state=Open).");
@@ -327,28 +319,6 @@ namespace MySql.Data.MySqlClient
 			driver.Configure( this );
 			if (settings.Database != null && settings.Database != String.Empty)
 				ChangeDatabase( settings.Database );
-		}
-
-		/// <include file='docs/MySqlConnection.xml' path='docs/Close/*'/>
-		public void Close()
-		{
-			//TODO: rollback any pending transaction
-			if (state == ConnectionState.Closed) return;
-
-			if (dataReader != null)
-				dataReader.Close();
-
-			if (settings.Pooling)
-				MySqlPoolManager.ReleaseConnection( driver );
-			else
-				driver.Close();
-
-			SetState( ConnectionState.Closed );
-		}
-
-		IDbCommand IDbConnection.CreateCommand()
-		{
-			return CreateCommand();
 		}
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/CreateCommand/*'/>
@@ -383,16 +353,36 @@ namespace MySql.Data.MySqlClient
 			base.Dispose(disposing);
 		}
 
-		/// <summary>
-		/// Releases the resources used by the MySqlConnection.
-		/// </summary>
-		void System.IDisposable.Dispose()
-		{
-			Dispose(true);
-		}
-
 		#endregion
-	}
+
+        protected override DbTransaction BeginDbTransaction(IsolationLevel isolationLevel)
+        {
+            return BeginTransaction(isolationLevel);
+        }
+
+        protected override DbCommand CreateDbCommand()
+        {
+            return CreateCommand();
+        }
+
+        /// <include file='docs/MySqlConnection.xml' path='docs/Close/*'/>
+        public override void Close()
+        {
+            //TODO: rollback any pending transaction
+            if (state == ConnectionState.Closed) return;
+
+            if (dataReader != null)
+                dataReader.Close();
+
+            if (settings.Pooling)
+                MySqlPoolManager.ReleaseConnection(driver);
+            else
+                driver.Close();
+
+            SetState(ConnectionState.Closed);
+        }
+
+}
 
 	/// <summary>
 	/// Represents the method that will handle the <see cref="MySqlConnection.InfoMessage"/> event of a 

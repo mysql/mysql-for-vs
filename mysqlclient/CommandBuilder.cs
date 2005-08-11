@@ -20,6 +20,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Data.Common;
 using System.Data;
 using System.Text;
 
@@ -30,7 +31,7 @@ namespace MySql.Data.MySqlClient
 	[ToolboxItem(false)]
 	[System.ComponentModel.DesignerCategory("Code")]
 #endif
-	public sealed class MySqlCommandBuilder : Component
+	public sealed class MySqlCommandBuilder : DbCommandBuilder
 	{
 		private MySqlDataAdapter	_adapter;
 		private string				_QuotePrefix;
@@ -195,7 +196,7 @@ namespace MySql.Data.MySqlClient
 			return _QuotePrefix + table_or_column + _QuoteSuffix;
 		}
 
-		private string GetParameterName( string columnName )
+		protected override string GetParameterName(string columnName)
 		{
 			string colName = columnName.Replace(" ", "");
 			return colName;
@@ -440,5 +441,25 @@ namespace MySql.Data.MySqlClient
 		}
 		#endregion
 
-	}
+
+        protected override void ApplyParameterInfo(DbParameter parameter, DataRow row, StatementType statementType, bool whereClause)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        protected override string GetParameterName(int parameterOrdinal)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        protected override string GetParameterPlaceholder(int parameterOrdinal)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        protected override void SetRowUpdatingHandler(DbDataAdapter adapter)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+}
 }

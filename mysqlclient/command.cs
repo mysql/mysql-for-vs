@@ -20,6 +20,7 @@
 
 using System;
 using System.Data;
+using System.Data.Common;
 using System.IO;
 using System.Collections;
 using System.Text;
@@ -33,7 +34,7 @@ namespace MySql.Data.MySqlClient
 	[System.Drawing.ToolboxBitmap( typeof(MySqlCommand), "MySqlClient.resources.command.bmp")]
 	[System.ComponentModel.DesignerCategory("Code")]
 #endif
-	public sealed class MySqlCommand : Component, IDbCommand, ICloneable, IDisposable
+	public sealed class MySqlCommand : DbCommand, ICloneable
 	{
 		MySqlConnection				connection;
 		MySqlTransaction			curTransaction;
@@ -49,10 +50,12 @@ namespace MySql.Data.MySqlClient
 		private CommandResult		lastResult;
 		private int					cursorPageSize;
 		private IAsyncResult		asyncResult;
+        private bool                designTimeVisible;
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ctor1/*'/>
 		public MySqlCommand()
 		{
+            designTimeVisible = true;
 			cmdType = CommandType.Text;
 			parameterMap = new ArrayList();
 			parameters = new MySqlParameterCollection();
@@ -89,7 +92,7 @@ namespace MySql.Data.MySqlClient
 		[Description("Command text to execute")]
 		[Editor("MySql.Data.Common.Design.SqlCommandTextEditor,MySqlClient.Design", typeof(System.Drawing.Design.UITypeEditor))]
 #endif
-		public string CommandText
+		public override string CommandText
 		{
 			get { return cmdText; }
 			set { cmdText = value;  this.preparedStatement=null; }
@@ -105,7 +108,7 @@ namespace MySql.Data.MySqlClient
 		[Category("Misc")]
 		[Description("Time to wait for command to execute")]
 #endif
-		public int CommandTimeout
+		public override int CommandTimeout
 		{
 			// TODO: support this
 			get  { return 0; }
@@ -116,7 +119,7 @@ namespace MySql.Data.MySqlClient
 #if DESIGN
 		[Category("Data")]
 #endif
-		public CommandType CommandType
+		public override CommandType CommandType
 		{
 			get { return cmdType; }
 			set { cmdType = value; }
@@ -129,12 +132,6 @@ namespace MySql.Data.MySqlClient
 		public bool IsPrepared 
 		{
 			get { return preparedStatement != null; }
-		}
-
-		IDbConnection IDbCommand.Connection 
-		{
-			get { return connection; }
-			set { Connection = (MySqlConnection)value; }
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/Connection/*'/>
@@ -172,17 +169,6 @@ namespace MySql.Data.MySqlClient
 			get  { return parameters; }
 		}
 
-		IDataParameterCollection IDbCommand.Parameters
-		{
-			get  { return parameters; }
-		}
-
-		IDbTransaction IDbCommand.Transaction 
-		{
-			get { return Transaction; }
-			set { Transaction = (MySqlTransaction)value; }
-		}
-
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/Transaction/*'/>
 #if DESIGN
@@ -198,7 +184,7 @@ namespace MySql.Data.MySqlClient
 #if DESIGN
 		[Category("Behavior")]
 #endif
-		public UpdateRowSource UpdatedRowSource
+		public override UpdateRowSource UpdatedRowSource
 		{
 			get 
 			{ 
@@ -220,7 +206,7 @@ namespace MySql.Data.MySqlClient
 		/// Cancelling an executing command is currently not supported on any version of MySQL.
 		/// </remarks>
 		/// <exception cref="NotSupportedException">This operation is not supported.</exception>
-		public void Cancel()
+		public override void Cancel()
 		{
 			throw new NotSupportedException();
 		}
@@ -236,11 +222,6 @@ namespace MySql.Data.MySqlClient
 		public MySqlParameter CreateParameter()
 		{
 			return new MySqlParameter();
-		}
-
-		IDbDataParameter IDbCommand.CreateParameter()
-		{
-			return CreateParameter();
 		}
 
 		/// <summary>
@@ -348,7 +329,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ExecuteNonQuery/*'/>
-		public int ExecuteNonQuery()
+		public override int ExecuteNonQuery()
 		{
 			CheckState();
 
@@ -368,16 +349,6 @@ namespace MySql.Data.MySqlClient
 			}
 
 			return (int)updateCount;
-		}
-
-		IDataReader IDbCommand.ExecuteReader ()
-		{
-			return ExecuteReader ();
-		}
-
-		IDataReader IDbCommand.ExecuteReader (CommandBehavior behavior)
-		{
-			return ExecuteReader (behavior);
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ExecuteReader/*'/>
@@ -416,7 +387,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ExecuteScalar/*'/>
-		public object ExecuteScalar()
+		public override object ExecuteScalar()
 		{
 			// ExecuteReader will check out state
 
@@ -441,7 +412,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/Prepare/*'/>
-		public void Prepare()
+		public override void Prepare()
 		{
 			if (connection == null)
 				throw new InvalidOperationException("The connection property has not been set.");
@@ -709,5 +680,38 @@ namespace MySql.Data.MySqlClient
 		}
 
 		#endregion
-	}
+
+        public override bool DesignTimeVisible
+        {
+            get { return designTimeVisible; }
+            set { designTimeVisible = value; }
+        }
+
+        protected override DbParameter CreateDbParameter()
+        {
+            return this.CreateParameter();
+        }
+
+        protected override DbConnection DbConnection
+        {
+            get { return this.Connection; }
+            set { this.Connection = (MySqlConnection)value; }
+        }
+
+        protected override DbParameterCollection DbParameterCollection
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        protected override DbTransaction DbTransaction
+        {
+            get { return this.Transaction; }
+            set { this.Transaction = (MySqlTransaction)value; }
+        }
+
+        protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior)
+        {
+            return this.ExecuteReader(behavior);
+        }
+    }
 }

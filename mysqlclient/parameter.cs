@@ -20,9 +20,11 @@
 
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Text;
 using System.Reflection;
 using MySql.Data.Types;
+using MySql.Data.Common;
 #if DESIGN
 using System.ComponentModel;
 using System.ComponentModel.Design.Serialization;
@@ -36,7 +38,7 @@ namespace MySql.Data.MySqlClient
 #if DESIGN
 	[TypeConverter(typeof(MySqlParameter.MySqlParameterConverter))]
 #endif
-	public sealed class MySqlParameter : MarshalByRefObject, IDataParameter, IDbDataParameter, ICloneable
+	public sealed class MySqlParameter : DbParameter, IDataParameter, IDbDataParameter, ICloneable
 	{
 		private object				paramValue;
 //		private IMySqlValue			valueObject;
@@ -152,7 +154,7 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// Gets or sets the <see cref="DbType"/> of the parameter.
 		/// </summary>
-		public DbType DbType 
+		public override DbType DbType 
 		{
 			get { return dbType; }
 			set { SetDbType( value ); }
@@ -165,7 +167,7 @@ namespace MySql.Data.MySqlClient
 #if DESIGN
 		[Category("Data")]
 #endif
-		public ParameterDirection Direction 
+		public override ParameterDirection Direction 
 		{
 			get { return direction; }
 			set { direction = value; }
@@ -177,7 +179,7 @@ namespace MySql.Data.MySqlClient
 #if DESIGN
 		[Browsable(false)]
 #endif
-		public Boolean IsNullable 
+		public override Boolean IsNullable 
 		{
 			get { return isNullable; }
 			set { isNullable = value; }
@@ -201,7 +203,7 @@ namespace MySql.Data.MySqlClient
 #if DESIGN
 		[Category("Misc")]
 #endif
-		public String ParameterName 
+		public override String ParameterName 
 		{
 			get { return paramName; }
 			set 
@@ -242,7 +244,7 @@ namespace MySql.Data.MySqlClient
 #if DESIGN
 		[Category("Data")]
 #endif
-		public int Size 
+		public override int Size 
 		{
 			get { return size; }
 			set { size = value; }
@@ -254,7 +256,7 @@ namespace MySql.Data.MySqlClient
 #if DESIGN
 		[Category("Data")]
 #endif
-		public String SourceColumn 
+		public override String SourceColumn 
 		{
 			get { return sourceColumn; }
 			set { sourceColumn = value; }
@@ -266,7 +268,7 @@ namespace MySql.Data.MySqlClient
 #if DESIGN
 		[Category("Data")]
 #endif
-		public DataRowVersion SourceVersion 
+		public override DataRowVersion SourceVersion 
 		{
 			get { return sourceVersion; }
 			set { sourceVersion = value; }
@@ -279,7 +281,7 @@ namespace MySql.Data.MySqlClient
 		[TypeConverter(typeof(StringConverter))]
 		[Category("Data")]
 #endif
-		public object Value 
+		public override object Value 
 		{
 			get	{ return paramValue; }
 			set	
@@ -489,5 +491,34 @@ namespace MySql.Data.MySqlClient
 			}
 		}
 #endif
-	}
+
+        public override int Offset
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public override void ResetDbType()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public override bool SourceColumnNullMapping
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+}
 }
