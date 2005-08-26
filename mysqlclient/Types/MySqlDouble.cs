@@ -20,6 +20,7 @@
 
 using System;
 using System.Data;
+using System.Globalization;
 using MySql.Data.MySqlClient;
 
 namespace MySql.Data.Types
@@ -128,10 +129,19 @@ namespace MySql.Data.Types
 			double v = Convert.ToDouble(value);
 			if (binary)
 				writer.Write( BitConverter.GetBytes( v ) );
-			else
-				writer.WriteStringNoNull( v.ToString(numberFormat) );
+			else 
+				writer.WriteStringNoNull( v.ToString("R", numberFormat) );
 		}
 
+		public static double MaxValue 
+		{
+			get { return double.Parse(double.MaxValue.ToString("R")); }
+		}
+
+		public static double MinValue 
+		{
+			get { return double.Parse(double.MinValue.ToString("R")); }
+		}
 
 		public double Value
 		{
@@ -160,9 +170,22 @@ namespace MySql.Data.Types
 			else 
 			{
 				string value = reader.ReadString( length );
-				Value = Double.Parse( value, numberFormat );
+				Value = Parse(value);
 			}
 			return this;
+		}
+
+		private double Parse(string s) 
+		{
+			double result = 0;
+			if (Double.TryParse(s, NumberStyles.Float|NumberStyles.AllowThousands, numberFormat, out result))
+				return result;
+			s = s.ToLower();
+			bool isNeg = s.StartsWith(numberFormat.NegativeSign);
+
+			if (s.IndexOf("e+") != -1)
+				return isNeg ? MinValue : MaxValue;
+			return 0;
 		}
 
 		internal override void Skip(PacketReader reader)

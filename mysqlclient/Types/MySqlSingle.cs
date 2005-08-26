@@ -111,13 +111,13 @@ namespace MySql.Data.Types
 	}
 /*
 	/// <summary>
-	/// Summary description for MySqlSingle.
+	/// Summary description for MySqlFloat.
 	/// </summary>
-	internal class MySqlSingle : MySqlValue
+	internal class MySqlFloat : MySqlValue
 	{
 		private Single	mValue;
 
-		public MySqlSingle() : base()
+		public MySqlFloat() : base()
 		{
 			dbType = DbType.Single;
 			mySqlDbType = MySqlDbType.Float;
@@ -136,6 +136,16 @@ namespace MySql.Data.Types
 		{
 			get { return mValue; }
 			set { mValue = value; objectValue = value; }
+		}
+
+		public static float MaxValue 
+		{
+			get { return float.Parse(float.MaxValue.ToString("R")); }
+		}
+
+		public static float MinValue 
+		{
+			get { return float.Parse(float.MinValue.ToString("R")); }
 		}
 
 		internal override Type SystemType
@@ -159,7 +169,7 @@ namespace MySql.Data.Types
 			else 
 			{
 				string value = reader.ReadString( length );
-				Value = Single.Parse( value, numberFormat );
+				Value = Parse(value);
 			}
 			return this;
 		}
@@ -169,5 +179,6 @@ namespace MySql.Data.Types
 			reader.Skip(4);
 		}
 
+<<<<<<< .working
 	}*/
 }

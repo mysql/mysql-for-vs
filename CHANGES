@@ -9,14 +9,14 @@
 	Added internal implemention of SHA1 so we don't have to distribute the OpenNetCF on mobile devices    	
     	
 - Version 1.0.5
+	Bugs fixed or addressed
+	-------------------------
 	Bug #8667  	OUT parameters are not being valued [fixed]
 	Bug #8574  	MySQLCommandBuilder unable to support inline functions [fixed]
 	Bug #8509  	MySqlDataAdapter.FillSchema does not interpret unsigned integer	[fixed]
 	Bug #8630  	Executing a query with the SchemaOnly option reads the entire resultset	[fixed]
 	Bug #7398  	MySqlParameterCollection doesn't allow parameters without filled in names [fixed]
-	Fixed problem parsing stored procedure parameter defs such as OUT val INT  UNSIGNED
 	Bug #7623  	Adding MySqlParameter causes error if MySqlDbType is Decimal [fixed]
-	Now supports the new decimal type introduced in 5.0.3
 	Bug #8929  	Timestamp values with a date > 10/29/9997 cause problems [fixed]
 	Bug #8514  	CURRENT_TIMESTAMP default not respected [fixed]
 	Bug #9237  	MySqlDataReader.AffectedRecords not set to -1 [fixed]
@@ -27,32 +27,37 @@
 	Bug #9722   Connector does not recognize parameters separated by a linefeed 
 	Bug #10281  Clone issue with MySqlConnection 
 	Bug #11450  Connector/Net, current database and stored procedures
-	Fixed bug where adding parameter objects that had been independently constructed did not work right.
-	Bug #11490  certain incorrect queries trigger connection must be valid and open message
+	BugÂ #11490  certain incorrect queries trigger connection must be valid and open message
 	Bug #8228  	turkish character set causing the error [fixed]
 	Bug #8387  	Connecting with NAMES and character_set_results can be up to 18 times slower.
 				Improved this by only issuing a SET NAMES if character_set_client or 
 				character_set_connection is different than what we are wanting.
-				
 	Bug #8382  	Commandbuilder does not handle queries to other databases than the default one-
 				fixed this one with the help of a patch from Henrik Johnson.
-						
 	Bug #10637 	Fail connect to specified MySql Hosts							
 				The problem was that we were  using BeginConnect/EndConnect to implement connect
 				timeout. Each one of these uses a worker thread from the .NET thread pool.  This
 				thread pool only has a default of 25 threads so on a very heavily loaded system,
 				it's possible it could run out.  Connect has now been recoded to not use a 
 				worker thread.
-					
 	Bug #11542  Call to Stored Procedure throws exception when SP has no arguments [fixed]
+	Bug #11550  Adding decimal parameters problem						[fixed]
+	Bug #10152	syntax error using decimal parameter in where clause	[fixed]
+	Bug #10486	MySqlDataAdapter.Update error for decimal column		[fixed]
+				All three of these bugs were related to the same problem					
+	Bug #11873 	Invalid timestamp in query produces incorrect reader exception [added test case, already fixed]
+	Bug #10454	incorrect return type documented for parameter collection Add methods [fixed]	
+    Bug #12163  Insert using prepared statement causes double insert	
+	
+	Other changes
+	-------------
+	Fixed problem parsing stored procedure parameter defs such as OUT val INT  UNSIGNED
+	Now supports the new decimal type introduced in 5.0.3
+	Fixed bug where adding parameter objects that had been independently constructed did not work right.
+	Changed internal class MySqlSingle to MySqlFloat
+    Implemented new BIT data type						
+    Implemented Convert Zero DateTime connection option.							
 							
-	Bug #11294	Wrong data type getting values from grouping functions on integers 
-				with mysql-5 [this was fixed with earlier bug]
-							
-	Bug #11621 	connector does not support charset cp1250 [fixed]
-							
-	Bug #11550  	Adding decimal parameters problem [fixed]
-
 1-20-05 - Version 1.0.4  
 
 	Bug #7243 calling prepare causing exception [fixed]
@@ -183,8 +188,8 @@
 	- Fixed persist security info case problem
 	- Fixed GetBool so that 1, true, "true", and "yes" all count as trueWL# 2024 Make parameter mark configurable 
 	- Added the "old syntax" connection string parameter to allow use of @ parameter marker
-	- Fixed Bug #4658	 MySqlCommandBuilder
-	- Fixed Bug #4864	 ByteFX.MySqlClient caches passwords if 'Persist Security Info' is false
+	- Fixed BugÂ #4658	 MySqlCommandBuilder
+	- Fixed BugÂ #4864	 ByteFX.MySqlClient caches passwords if 'Persist Security Info' is false
 	- Updated license banner in all source files to include FLOSS exception
 	- Added new .Types namespace and implementations for most current MySql types
 	- Added MySqlField41 as a subclass of MySqlField
@@ -640,7 +645,7 @@ Note that this build has not been checked out with Mono.
 * Update connection string designer to support Use Compression flag
 
 2/15/2003
-* Fixed string encoding so that European characters like ä will work correctly
+* Fixed string encoding so that European characters like Ã¤ will work correctly
 
 2/9/2003
 * Creating base classes to aid in building new data providers

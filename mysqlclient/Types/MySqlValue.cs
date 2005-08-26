@@ -143,8 +143,12 @@ namespace MySql.Data.Types
 					if (unsigned) return new MySqlUInt32(type);
 					return new MySqlInt32(type);
 
+				case MySqlDbType.Bit:
+					return new MySqlBit();
+
 				case MySqlDbType.Int64: 
-					if (unsigned) return new MySqlUInt64();
+					if (unsigned)
+						return new MySqlUInt64();
 					return new MySqlInt64();
 
 				case MySqlDbType.Time:
@@ -157,14 +161,15 @@ namespace MySql.Data.Types
 
 				case MySqlDbType.Decimal: return new MySqlDecimal();
 
-				case MySqlDbType.Float: return new MySqlSingle();
+				case MySqlDbType.Float: return new MySqlFloat();
 
 				case MySqlDbType.Double: return new MySqlDouble();
 
 				case MySqlDbType.Set:
 				case MySqlDbType.Enum:
 				case MySqlDbType.String:
-				case MySqlDbType.VarChar: return new MySqlString(null, type);
+				case MySqlDbType.VarChar: 
+					return new MySqlString(null, type);
 
 				case MySqlDbType.Blob:
 				case MySqlDbType.MediumBlob:

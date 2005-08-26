@@ -554,4 +554,42 @@ namespace MySql.Data.MySqlClient.Tests
             }
         }
     }
+
+		[Test]
+		public void Bit()
+		{
+			execSQL("DROP TABLE IF EXISTS test");
+			execSQL("CREATE TABLE test (bit1 BIT, bit2 BIT(5), bit3 BIT(10))");
+
+			MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES (?b1, ?b2, ?b3)", conn);
+			cmd.Parameters.Add(new MySqlParameter("?b1", MySqlDbType.Bit));
+			cmd.Parameters.Add(new MySqlParameter("?b2", MySqlDbType.Bit));
+			cmd.Parameters.Add(new MySqlParameter("?b3", MySqlDbType.Bit));
+			cmd.Prepare();
+			cmd.Parameters[0].Value = 1;
+			cmd.Parameters[1].Value = 15;
+			cmd.Parameters[2].Value = 500;
+			cmd.ExecuteNonQuery();
+
+			MySqlDataReader reader = null;
+			try 
+			{
+				cmd.CommandText = "SELECT * FROM test";
+				cmd.Prepare();
+				reader = cmd.ExecuteReader();
+				Assert.IsTrue(reader.Read());
+				Assert.AreEqual(1, reader[0]);
+				Assert.AreEqual(15, reader[1]);
+				Assert.AreEqual(500, reader[2]);
+			}
+			catch (Exception ex)
+			{
+				Assert.Fail(ex.Message);
+			}
+			finally 
+			{
+				if (reader != null) reader.Close();
+			}
+		}
+	}
 }

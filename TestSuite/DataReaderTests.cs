@@ -698,5 +698,83 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
+		/// <summary>
+		/// Bug #8630  	Executing a query with the SchemaOnly option reads the entire resultset
+		/// </summary>
+		[Test]
+		public void SchemaOnly() 
+		{
+			execSQL("INSERT INTO Test (id,name) VALUES(1,'test1')");
+			execSQL("INSERT INTO Test (id,name) VALUES(2,'test2')");
+			execSQL("INSERT INTO Test (id,name) VALUES(3,'test3')");
+
+			MySqlCommand cmd = new MySqlCommand("SELECT * FROM test", conn);
+			MySqlDataReader reader = null;
+			try 
+			{
+				reader = cmd.ExecuteReader(CommandBehavior.SchemaOnly);
+				DataTable table = reader.GetSchemaTable();
+				Assert.AreEqual(5, table.Rows.Count);
+				Assert.AreEqual(22, table.Columns.Count);
+				Assert.IsFalse(reader.Read());
+			}
+			catch (Exception ex) 
+			{
+				Assert.Fail(ex.Message);
+			}
+			finally 
+			{
+				if (reader != null) reader.Close();
+			}
+		}
+
+		/// <summary>
+		/// Bug #9237  	MySqlDataReader.AffectedRecords not set to -1
+		/// </summary>
+		[Test]
+		public void AffectedRows()
+		{
+			MySqlCommand cmd = new MySqlCommand("SHOW TABLES", conn);
+			try 
+			{
+				using (MySqlDataReader reader = cmd.ExecuteReader()) 
+				{
+					reader.Read();
+					reader.Close();
+					Assert.AreEqual(-1, reader.RecordsAffected);
+				}
+			}
+			catch (Exception ex) 
+			{
+				Assert.Fail(ex.Message);
+			}
+		}
+
+		/// <summary>
+		/// Bug #11873  	Invalid timestamp in query produces incorrect reader exception
+		/// </summary>
+		[Test]
+		public void InvalidTimestamp() 
+		{
+			execSQL("DROP TABLE IF EXISTS test");
+			execSQL("CREATE TABLE test (tm TIMESTAMP)");
+			execSQL("INSERT INTO test VALUES (NULL)");
+
+			MySqlCommand cmd = new MySqlCommand("SELECT * FROM test WHERE tm = '7/1/2005 12:00:00 AM'", conn); 
+			MySqlDataReader reader = null;
+			try 
+			{
+				reader = cmd.ExecuteReader();
+			}
+			catch (Exception ex) 
+			{
+				Assert.Fail(ex.Message);
+			}
+			finally 
+			{
+				if (reader != null) reader.Close();
+			}
+		}
+
 	}
 }

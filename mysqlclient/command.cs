@@ -263,7 +263,7 @@ namespace MySql.Data.MySqlClient
 
 			// if we haven't prepared a statement and don't have any sql buffers
 			// to execute, we are done
-			if (preparedStatement == null && sqlBuffers.Count == 0)
+			if (preparedStatement == null && (sqlBuffers == null || sqlBuffers.Count == 0))
 				return null;
 
 			// if we have a prepared statement, we execute it instead
@@ -277,6 +277,7 @@ namespace MySql.Data.MySqlClient
                 {
 				    if (updateCount == -1) updateCount = 0;
 				    updateCount += (long)result.AffectedRows;
+                    preparedStatement = null;
                 }
 			}
 			else while (sqlBuffers.Count > 0)
@@ -341,6 +342,7 @@ namespace MySql.Data.MySqlClient
 				Consume();
 			}
 			catch (MySqlException ex) 
+<<<<<<< .working
 			{
 				if (ex.IsFatal) connection.Close();
 				throw;
@@ -505,7 +507,7 @@ namespace MySql.Data.MySqlClient
 			if (CommandType == CommandType.StoredProcedure)
 			{
 				if (storedProcedure == null)
-					storedProcedure = new StoredProcedure(connection);
+					storedProcedure = new StoredProcedure(this);
 				sql = storedProcedure.Prepare( CommandText );
 			}
 

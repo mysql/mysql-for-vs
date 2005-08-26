@@ -314,6 +314,15 @@ namespace MySql.Data.MySqlClient
 
 #if DESIGN
 		[Category("Other")]
+		[Description("Should illegal datetime values be converted to DateTime.MinValue")]
+		[DefaultValue(false)]
+		public bool ConvertZeroDateTime 
+		{
+			get { return GetBool("convertzerodatetime"); }
+			set { keyValues["convertzerodatetime"] = value; }
+		}
+
+		[Category("Other")]
 		[Description("Character set this connection should use")]
 		[DefaultValue(null)]
 #endif
@@ -420,12 +429,15 @@ namespace MySql.Data.MySqlClient
 				defaults["usageAdvisor"] = false;
 				defaults["driver"] = DriverType.Native;
 				defaults["option_file"] = null;
+				defaults["convertzerodatetime"] = false;
 			}
 			return (Hashtable)defaults.Clone();
 		}
 
 		protected override bool ConnectionParameterParsed(Hashtable hash, string key, string value)
 		{
+			bool boolVal = value.ToLower() == "yes" || value.ToLower() == "true";
+
 			switch (key.ToLower()) 
 			{
 				case "option file":
@@ -456,8 +468,7 @@ namespace MySql.Data.MySqlClient
 
 				case "use compression":
 				case "compress":
-					hash["compress"] = 
-						value.ToLower() == "yes" || value.ToLower() == "true";
+					hash["compress"] = boolVal;
 					return true;
 
 				case "protocol":
@@ -477,11 +488,11 @@ namespace MySql.Data.MySqlClient
 					return true;
 
 				case "allow batch":
-					hash["allow batch"] = value.ToLower() == "yes" || value.ToLower() == "true";
+					hash["allow batch"] = boolVal;
 					return true;
 
 				case "logging":
-					hash["logging"] = value.ToLower() == "yes" || value.ToLower() == "true";
+					hash["logging"] = boolVal;
 					return true;
 
 				case "shared memory name":
@@ -490,12 +501,17 @@ namespace MySql.Data.MySqlClient
 
 				case "old syntax":
 				case "oldsyntax":
-					hash["oldsyntax"] = value.ToLower() == "yes" || value.ToLower() == "true";
+					hash["oldsyntax"] = boolVal;
+					return true;
+
+				case "convert zero datetime":
+				case "convertzerodatetime":
+					hash["convertzerodatetime"] = boolVal;
 					return true;
 
 				case "allow zero datetime":
 				case "allowzerodatetime":
-					hash["allowzerodatetime"] = value.ToLower() == "yes" || value.ToLower() == "true";
+					hash["allowzerodatetime"] = boolVal;
 					return true;
 			}
 

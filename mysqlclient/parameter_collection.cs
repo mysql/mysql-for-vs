@@ -272,7 +272,7 @@ namespace MySql.Data.MySqlClient
 		/// Adds the specified <see cref="MySqlParameter"/> object to the <see cref="MySqlParameterCollection"/>.
 		/// </summary>
 		/// <param name="value">The <see cref="MySqlParameter"/> to add to the collection.</param>
-		/// <returns>The index of the new <see cref="MySqlParameter"/> object.</returns>
+		/// <returns>The newly added <see cref="MySqlParameter"/> object.</returns>
 		public MySqlParameter Add(MySqlParameter value)
 		{
 			if (value == null) 
@@ -289,7 +289,7 @@ namespace MySql.Data.MySqlClient
 		/// </summary>
 		/// <param name="parameterName">The name of the parameter.</param>
 		/// <param name="value">The <see cref="MySqlParameter.Value"/> of the <see cref="MySqlParameter"/> to add to the collection.</param>
-		/// <returns>The index of the new <see cref="MySqlParameter"/> object.</returns>
+		/// <returns>The newly added <see cref="MySqlParameter"/> object.</returns>
 		public MySqlParameter Add( string parameterName, object value )
 		{
 			return Add( new MySqlParameter( parameterName, value ) );
@@ -300,7 +300,7 @@ namespace MySql.Data.MySqlClient
 		/// </summary>
 		/// <param name="parameterName">The name of the parameter.</param>
 		/// <param name="dbType">One of the <see cref="MySqlDbType"/> values. </param>
-		/// <returns>The index of the new <see cref="MySqlParameter"/> object.</returns>
+		/// <returns>The newly added <see cref="MySqlParameter"/> object.</returns>
 		public MySqlParameter Add(string parameterName, MySqlDbType dbType)
 		{
 			return Add(new MySqlParameter(parameterName, dbType));
@@ -312,7 +312,7 @@ namespace MySql.Data.MySqlClient
 		/// <param name="parameterName">The name of the parameter.</param>
 		/// <param name="dbType">One of the <see cref="MySqlDbType"/> values. </param>
 		/// <param name="size">The length of the column.</param>
-		/// <returns>The index of the new <see cref="MySqlParameter"/> object.</returns>
+		/// <returns>The newly added <see cref="MySqlParameter"/> object.</returns>
 		public MySqlParameter Add(string parameterName, MySqlDbType dbType, int size)
 		{
 			return Add(new MySqlParameter(parameterName, dbType, size ));
@@ -325,7 +325,7 @@ namespace MySql.Data.MySqlClient
 		/// <param name="dbType">One of the <see cref="MySqlDbType"/> values. </param>
 		/// <param name="size">The length of the column.</param>
 		/// <param name="sourceColumn">The name of the source column.</param>
-		/// <returns>The index of the new <see cref="MySqlParameter"/> object.</returns>
+		/// <returns>The newly added <see cref="MySqlParameter"/> object.</returns>
 		public MySqlParameter Add(string parameterName, MySqlDbType dbType, int size, string sourceColumn)
 		{
 			return Add(new MySqlParameter(parameterName, dbType, size, sourceColumn));

@@ -818,6 +818,12 @@ Recognized values are <B>true</B>, <B>false</B>, <B>yes</B>, and <B>no</B>.</td>
 			False will cause a DateTime object to be returned for legal values and an exception will be thrown for illegal values.</td>
 		</tr>
 		<tr>
+			<td>Convert Zero Datetime</td>
+			<td>false</td>
+			<td>True to have MySqlDataReader.GetValue() and MySqlDataReader.GetDateTime()
+			return DateTime.MinValue for date or datetime columns that have illegal values.</td>
+		</tr>
+		<tr>
 			<td>Old Syntax<para>  -or-  </para>OldSyntax</td>
 			<td>false</td>
 			<td>

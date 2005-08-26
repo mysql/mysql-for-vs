@@ -354,6 +354,7 @@ namespace MySql.Data.MySqlClient
 				case MySqlDbType.UInt32: dbType = DbType.UInt32; break;
 				case MySqlDbType.Int64: dbType = DbType.Int64; break;
 				case MySqlDbType.UInt64: dbType = DbType.UInt64; break;
+				case MySqlDbType.Bit : dbType = DbType.UInt64; break;
 				case MySqlDbType.Float: dbType = DbType.Single; break;
 				case MySqlDbType.Double: dbType = DbType.Double; break;
 				case MySqlDbType.Timestamp:
