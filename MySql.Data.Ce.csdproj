@@ -87,11 +87,6 @@
                 />
                 <Reference
                     Platform = "Windows CE"
-                    Name = "System.Data.Common"
-                    AssemblyName = "System.Data.Common"
-                />
-                <Reference
-                    Platform = "Windows CE"
                     Name = "OpenNETCF"
                     AssemblyName = "OpenNETCF"
                 />
@@ -99,6 +94,11 @@
                     Platform = "Windows CE"
                     Name = "System.Data.SqlClient"
                     AssemblyName = "System.Data.SqlClient"
+                />
+                <Reference
+                    Platform = "Windows CE"
+                    Name = "System.Data.Common"
+                    AssemblyName = "System.Data.Common"
                 />
                 <Reference
                     Platform = "Windows CE-Designer"
@@ -280,11 +280,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "mysqlclient\SharedMemoryStream.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "mysqlclient\StoredProcedure.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -331,6 +326,11 @@
                 />
                 <File
                     RelPath = "mysqlclient\common\Win32.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "mysqlclient\common\WinCE.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

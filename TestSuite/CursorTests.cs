@@ -50,7 +50,7 @@ namespace MySql.Data.MySqlClient.Tests
 			Close();
 		}
 
-		[Test]
+/*		[Test]
 		public void NestedCursors() 
 		{
 			execSQL("INSERT INTO Test VALUES (1, 'Test1')");
@@ -111,8 +111,8 @@ namespace MySql.Data.MySqlClient.Tests
 				if (reader != null) reader.Close();
 			}
 		}
-
-		[Test]
+*/
+/*		[Test]
 		public void SimpleCursors() 
 		{
 			execSQL("INSERT INTO Test VALUES (1, 'Test1')");
@@ -153,7 +153,7 @@ namespace MySql.Data.MySqlClient.Tests
 			{
 				if (reader != null) reader.Close();
 			}
-		}
+		}*/
 
 	}
 }
