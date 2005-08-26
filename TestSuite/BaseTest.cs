@@ -38,10 +38,20 @@ namespace MySql.Data.MySqlClient.Tests
 		protected string			user;
 		protected string			password;
 		protected string			nopassuser;
+		protected string			otherkeys;
 
 		public BaseTest() 
 		{
 			csAdditions = ";pooling=false";
+		}
+
+		protected string GetConnectionString(bool includedb)
+		{
+			if (includedb)
+				return String.Format("server={0};user id={1};password={2};database=test;" +
+					"persist security info=true;{3}{4}", host, user, password, otherkeys, csAdditions );
+			return String.Format("server={0};user id={1};password={2};" +
+				"persist security info=true;{3}{4}", host, user, password, otherkeys, csAdditions );
 		}
 
 		protected void Open()
@@ -52,10 +62,8 @@ namespace MySql.Data.MySqlClient.Tests
 				user = ConfigurationSettings.AppSettings["user"];
 				password = ConfigurationSettings.AppSettings["password"];
 				nopassuser = ConfigurationSettings.AppSettings["nopassuser"];
-				string other = ConfigurationSettings.AppSettings["otherkeys"];
-				string connString = String.Format("server={0};user id={1};password={2};database=test;persist security info=true;{3}",
-					host, user, password, other );
-				connString += csAdditions;
+				otherkeys = ConfigurationSettings.AppSettings["otherkeys"];
+				string connString = GetConnectionString(true);
 				conn = new MySqlConnection( connString );
 				conn.Open();
 			}

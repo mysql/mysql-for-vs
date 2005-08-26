@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB
+// Copyright (C) 2004-2005 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -388,8 +388,8 @@ namespace MySql.Data.MySqlClient
 			if (isOpen)
 				ExecuteCommand( DBCmd.QUIT, null, 0 );
 
+			writer.Close();
 			reader.Close();
-			writer.Stream.Close();
 
 			base.Close();
 		}
@@ -445,7 +445,6 @@ namespace MySql.Data.MySqlClient
 				{
 					string serverMessage = reader.ReadLenString();
 				}
-				ShowWarnings( warningCount );
 			}
 			return true;
 		}
@@ -659,7 +658,6 @@ namespace MySql.Data.MySqlClient
 			{
 				int warningCount = reader.ReadInteger(2);
 				serverStatus = (ServerStatusFlags)reader.ReadInteger(2);
-				ShowWarnings(warningCount);
 
 				// if we are at the end of this cursor based resultset, then we remove
 				// the last row sent status flag so our next fetch doesn't abort early

@@ -206,7 +206,34 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void Sum()
 		{
-			execSQL("DROP TABLE IF EXISTS Test");
+			execSQL("DROP TABLE IF EXISTS test");
+
+			execSQL("CREATE TABLE test (field1 mediumint(9) default '0', field2 float(9,3) " +
+				"default '0.000', field3 double(15,3) default '0.000') engine=innodb " +
+				"default charset=utf8");
+			execSQL("INSERT INTO test values (1,1,1)");
+
+			MySqlDataReader reader = null;
+
+			MySqlCommand cmd2 = new MySqlCommand("SELECT sum(field2) FROM test", conn);
+			try 
+			{
+				reader = cmd2.ExecuteReader();
+				reader.Read();
+				object o = reader[0];
+				Assert.AreEqual(1, o);
+			}
+			catch (Exception ex) 
+			{
+				Assert.Fail(ex.Message);
+			}
+			finally 
+			{
+				if (reader != null) reader.Close();
+				reader = null;
+			}
+
+			execSQL("DROP TABLE IF EXISTS test");
 			execSQL("CREATE TABLE Test (id int, count int)");
 			execSQL("INSERT INTO Test VALUES (1, 21)");
 			execSQL("INSERT INTO Test VALUES (1, 33)");
@@ -214,7 +241,6 @@ namespace MySql.Data.MySqlClient.Tests
 			execSQL("INSERT INTO Test VALUES (1, 40)");
 
 			MySqlCommand cmd = new MySqlCommand("SELECT id, SUM(count) FROM Test GROUP BY id", conn);
-			MySqlDataReader reader = null;
 			try 
 			{
 				reader = cmd.ExecuteReader();

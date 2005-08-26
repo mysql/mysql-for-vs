@@ -382,7 +382,8 @@ namespace MySql.Data.MySqlClient
 
 			foreach (string key in values.Keys)
 			{
-				if (!values[key].Equals( defaultValues[key]))
+				if (values[key] != null && defaultValues[key] != null &&
+					!values[key].Equals( defaultValues[key]))
 					cStr += key + "=" + values[key] + ";";
 			}
 

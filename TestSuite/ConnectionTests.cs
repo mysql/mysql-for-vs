@@ -19,6 +19,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
+using System.Data;
 using MySql.Data.MySqlClient;
 using NUnit.Framework;
 using System.Configuration;
@@ -147,6 +148,7 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 			MySqlConnection c = new MySqlConnection( conn.ConnectionString + ";pooling=false" );
 			c.Open();
+			Assert.IsTrue(c.State == ConnectionState.Open);
 
 			Assert.AreEqual( "test", c.Database.ToLower() );
 
@@ -213,6 +215,15 @@ namespace MySql.Data.MySqlClient.Tests
 			{
 				Assert.Fail( ex.Message );
 			}
+		}
+		/// <summary>
+		/// Bug #10281 Clone issue with MySqlConnection 
+		/// </summary>
+		[Test()]
+		public void TestConnectionClone()
+		{
+			MySqlConnection c = new MySqlConnection();
+			MySqlConnection clone = (MySqlConnection) ((ICloneable)c).Clone();
 		}
 	}
 }

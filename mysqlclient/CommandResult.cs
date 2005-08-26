@@ -31,7 +31,7 @@ namespace MySql.Data.MySqlClient
 	{
 		private Driver				driver;
 
-		private ulong				affectedRows;
+		private long				affectedRows;
 		private long				fieldCount;
 		private long				lastInsertId;
 
@@ -50,6 +50,7 @@ namespace MySql.Data.MySqlClient
 			driver = d;
 			this.isBinary = isBinary;
 			dataRowOpen = false;
+			affectedRows = -1;
 			ReadNextResult(true);
 			statementId = 0;
 		}
@@ -89,7 +90,7 @@ namespace MySql.Data.MySqlClient
 			set { fieldCount = value; }
 		}
 
-		public ulong AffectedRows
+		public long AffectedRows
 		{
 			get { return affectedRows; }
 			set { affectedRows = value; }
@@ -137,9 +138,7 @@ namespace MySql.Data.MySqlClient
 
 		public bool ReadNextResult(bool isFirst) 
 		{
-			ulong rows = 0;
-			readSchema = false;
-			readRows = false;
+			long rows = 0;
 
 			while (driver.ReadResult( ref fieldCount, ref rows, ref lastInsertId ))
 			{
@@ -147,11 +146,24 @@ namespace MySql.Data.MySqlClient
 //			while ( driver.HasMoreResults || isFirst ) 
 //			{
 //				fieldCount = (ulong)driver.ReadResult( ref rows, ref lastInsertId );
-				affectedRows += rows;
+				if (rows != -1)
+				{
+					if (affectedRows == -1) affectedRows = 0;
+					affectedRows += rows;
+				}
 //				if (isFirst) isFirst = false;
 
-				if (IsResultSet) return true;
+				if (IsResultSet) 
+				{
+					readSchema = false;
+					readRows = false;
+					return true;
+				}
 			} 
+
+			// if our batch resulted in warnings, then report them now
+			if (driver.HasWarnings)
+				driver.ReportWarnings();
 
 			driver.IsProcessing = false;
 			return false;

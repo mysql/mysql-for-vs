@@ -45,6 +45,7 @@ namespace MySql.Data.MySqlClient
 		protected MySqlConnection		connection;
 		protected bool					processing;
 		protected Hashtable				charSets;
+		protected bool					hasWarnings;
 
 		public Driver(MySqlConnectionString settings)
 		{
@@ -54,6 +55,7 @@ namespace MySql.Data.MySqlClient
 			threadId = -1;
 			serverCharSetIndex = -1;
 			serverCharSet = null;
+			hasWarnings = false;
 		}
 
 		#region Properties
@@ -94,6 +96,11 @@ namespace MySql.Data.MySqlClient
 		public ServerStatusFlags ServerStatus 
 		{
 			get { return serverStatus; }
+		}
+
+		public bool HasWarnings 
+		{
+			get { return hasWarnings; }
 		}
 
 		#endregion
@@ -187,7 +194,14 @@ namespace MySql.Data.MySqlClient
 			// want results in
 			if (version.isAtLeast(4,1,0)) 
 			{
-				cmd.CommandText = "SET NAMES " + charSet + "; SET character_set_results=NULL";
+				cmd.CommandText = "SET character_set_results=NULL";
+				string clientCharSet = (string)serverProps["character_set_client"];
+				string connCharSet = (string)serverProps["character_set_connection"];
+				if ((clientCharSet != null && clientCharSet != charSet) ||
+					(connCharSet != null && connCharSet != charSet))
+				{
+					cmd.CommandText = "SET NAMES " + charSet + ";" + cmd.CommandText;
+				}
 				cmd.ExecuteNonQuery();
 			}
 
@@ -215,7 +229,8 @@ namespace MySql.Data.MySqlClient
 				charSets = new Hashtable();
 				while (reader.Read()) 
 				{
-					charSets[ Convert.ToInt32(reader["id"]) ] = reader["charset"];
+					charSets[ Convert.ToInt32(reader["id"]) ] = 
+						reader.GetString(reader.GetOrdinal("charset"));
 				}
 			}
 			catch (Exception ex) 
@@ -229,29 +244,29 @@ namespace MySql.Data.MySqlClient
 			}
 		}
 
-		public void ShowWarnings(int count) 
+		public void ReportWarnings() 
 		{
-			if (count == 0 || 
-				(serverStatus & (ServerStatusFlags.MoreResults | ServerStatusFlags.AnotherQuery )) != 0 ) return;
-
-			MySqlError[] errors = new MySqlError[count];
+			ArrayList errors = new ArrayList();
 
 			MySqlCommand cmd = new MySqlCommand("SHOW WARNINGS", connection);
 			MySqlDataReader reader = null;
 			try 
 			{
 				reader = cmd.ExecuteReader();
-				int i = 0;
 				while (reader.Read()) 
 				{
-					errors[i++] = new MySqlError( reader.GetString(0), reader.GetUInt32(1), reader.GetString(2) );
+					errors.Add(new MySqlError(reader.GetString(0), 
+						reader.GetUInt32(1), reader.GetString(2)));
 				}
 				reader.Close();
-				if (i == 0) return;  // MySQL resets warnings before each statement, so a batch could indicate
-									// warnings when there aren't any
+
+				hasWarnings = false;
+				// MySQL resets warnings before each statement, so a batch could indicate
+				// warnings when there aren't any
+				if (errors.Count == 0) return;   
 
 				MySqlInfoMessageEventArgs args = new MySqlInfoMessageEventArgs();
-				args.errors = errors;
+				args.errors = (MySqlError[])errors.ToArray(typeof(MySqlError));
 				if (connection != null)
 					connection.OnInfoMessage( args );
 			
@@ -273,12 +288,11 @@ namespace MySql.Data.MySqlClient
 		public abstract PreparedStatement Prepare( string sql, string[] names ); 
 		public abstract void Reset();
 		public abstract CommandResult SendQuery( byte[] bytes, int length, bool consume );
-		public abstract bool ReadResult( ref long fieldCount, ref ulong affectedRows, ref long lastInsertId );
-		public abstract bool OpenDataRow(int fieldCount, bool isBinary, int statementId);
-		public abstract IMySqlValue ReadFieldValue( int index, MySqlField field, IMySqlValue value ); 
-		public abstract CommandResult ExecuteStatement( byte[] bytes, int statementId, int cursorPageSize );
-		public abstract void SkipField(IMySqlValue valObject );
-
+		public abstract long ReadResult( ref long affectedRows, ref long lastInsertId );
+		public abstract bool OpenDataRow(int fieldCount, bool isBinary);
+		public abstract MySqlValue ReadFieldValue( int index, MySqlField field, MySqlValue value ); 
+		public abstract CommandResult ExecuteStatement( byte[] bytes );
+		public abstract void SkipField(MySqlValue valObject );
 		public abstract void ReadFieldMetadata( int count, ref MySqlField[] fields );
 		public abstract bool Ping();
 		#endregion

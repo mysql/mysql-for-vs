@@ -236,6 +236,33 @@ namespace MySql.Data.MySqlClient.Tests
 			cmd.Parameters.Add( null );
 		}
 
+		/// <summary>
+		/// Bug #7398  	MySqlParameterCollection doesn't allow parameters without filled in names
+		/// </summary>
+		[Test]
+		public void AllowUnnamedParameters() 
+		{
+			MySqlCommand cmd = new MySqlCommand("INSERT INTO test (id,name) VALUES (?id, ?name)", conn);
+
+			MySqlParameter p = new MySqlParameter();
+			p.ParameterName = "?id";
+			p.Value = 1;
+			cmd.Parameters.Add(p);
+
+			p = new MySqlParameter();
+			p.ParameterName = "?name";
+			p.Value = "test";
+			cmd.Parameters.Add(p);
+
+			cmd.ExecuteNonQuery();
+
+			cmd.CommandText = "SELECT id FROM test";
+			Assert.AreEqual(1, cmd.ExecuteScalar());
+
+			cmd.CommandText = "SELECT name FROM test";
+			Assert.AreEqual( "test", cmd.ExecuteScalar());
+		}
+
 		[Test()]
 		public void NullParameterValue() 
 		{

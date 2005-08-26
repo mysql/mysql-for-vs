@@ -45,6 +45,14 @@ namespace MySql.Data.MySqlClient
 			set { paramMarker = value; }
 		}
 
+		private int InternalIndexOf(string name)
+		{
+			int index = IndexOf(name);
+			if (index != -1) return index;
+			throw new MySqlException("A MySqlParameter with ParameterName '" + name + 
+				"' is not contained by this MySqlParameterCollection.");
+		}
+
 		#region ICollection support
 
 		/// <summary>
@@ -186,13 +194,7 @@ namespace MySql.Data.MySqlClient
 		/// <returns>true if the collection contains the parameter; otherwise, false.</returns>
 		public bool Contains(string name)
 		{
-			if (name[0] == paramMarker)
-				name = name.Substring(1, name.Length-1);
-			foreach (MySqlParameter p in _parms)
-			{
-				if (p.ParameterName.ToLower().Equals( name.ToLower() )) return true;
-			}
-			return false;
+			return IndexOf(name) != -1;
 		}
 
 		/// <summary>
@@ -200,26 +202,29 @@ namespace MySql.Data.MySqlClient
 		/// </summary>
 		/// <param name="parameterName">The name of the <see cref="MySqlParameter"/> object to retrieve. </param>
 		/// <returns>The zero-based location of the <see cref="MySqlParameter"/> in the collection.</returns>
-		public int IndexOf( string parameterName )
+		public int IndexOf(string parameterName)
 		{
 			if (parameterName[0] == paramMarker)
 				parameterName = parameterName.Substring(1, parameterName.Length-1);
+			parameterName = parameterName.ToLower();
 			for (int x=0; x < _parms.Count; x++) 
 			{
 				MySqlParameter p = (MySqlParameter)_parms[x];
-				if (p.ParameterName.ToLower().Equals( parameterName.ToLower() )) return x;
+				string listName = p.ParameterName;
+				if (listName[0] == paramMarker)
+					listName = listName.Substring(1, listName.Length-1);
+				if (listName.ToLower() == parameterName) return x;
 			}
-			throw new MySqlException("Parameter '" + parameterName + "' not found in collection");
+			return -1;
 		}
 
 		/// <summary>
 		/// Removes the specified <see cref="MySqlParameter"/> from the collection using the parameter name.
 		/// </summary>
 		/// <param name="name">The name of the <see cref="MySqlParameter"/> object to retrieve. </param>
-		public void RemoveAt( string name )
+		public void RemoveAt(string name)
 		{
-			int index = IndexOf( name );
-			_parms.RemoveAt(index);
+			_parms.RemoveAt(InternalIndexOf(name));
 		}
 
 		object IDataParameterCollection.this[string name]
@@ -259,8 +264,8 @@ namespace MySql.Data.MySqlClient
 		/// </summary>
 		public MySqlParameter this[string name]
 		{
-			get { return (MySqlParameter)_parms[ IndexOf( name ) ]; }
-			set { _parms[ IndexOf( name ) ] = value; }
+			get { return (MySqlParameter)_parms[ InternalIndexOf( name ) ]; }
+			set { _parms[ InternalIndexOf( name ) ] = value; }
 		}
 
 		/// <summary>

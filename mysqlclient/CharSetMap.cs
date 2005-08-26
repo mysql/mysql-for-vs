@@ -76,21 +76,22 @@ namespace MySql.Data.MySqlClient
 		{
 			mapping = new Hashtable();
 
-			mapping.Add( "big5", "big5" );		// Traditional Chinese
-			mapping.Add( "sjis", "sjis" );		// Shift-JIS
-			mapping.Add( "gb2312", "gb2312" );
-			mapping.Add( "latin1", "latin1" );
-			mapping.Add( "latin2", "latin2" );
-			mapping.Add( "latin3", "latin3" );
-			mapping.Add( "latin4", "latin4" );
-			mapping.Add( "latin5", "latin5" );
-			mapping.Add( "greek", "greek" );
-			mapping.Add( "hebrew", "hebrew" );
-			mapping.Add( "utf8", "utf-8" );
-			mapping.Add( "ucs2", "UTF-16BE" );
-			mapping.Add( "cp1251", 1251 );
-			mapping.Add( "tis620", 874 );
-			mapping.Add( "binary", "latin1" );
+			mapping.Add("big5", "big5");		// Traditional Chinese
+			mapping.Add("sjis", "sjis");		// Shift-JIS
+			mapping.Add("gb2312", "gb2312");
+			mapping.Add("latin1", "latin1");
+			mapping.Add("latin2", "latin2");
+			mapping.Add("latin3", "latin3");
+			mapping.Add("latin4", "latin4");
+			mapping.Add("latin5", "latin5");
+			mapping.Add("greek", "greek");
+			mapping.Add("hebrew", "hebrew");
+			mapping.Add("utf8", "utf-8");
+			mapping.Add("ucs2", "UTF-16BE");
+			mapping.Add("cp1251", 1251);
+			mapping.Add("tis620", 874);
+			mapping.Add("binary", "latin1");
+			mapping.Add("cp1250", 1250);
 
 			// relatively sure about
 /*			mapping.Add( "default", 0 );

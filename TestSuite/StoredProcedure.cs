@@ -237,6 +237,7 @@ namespace MySql.Data.MySqlClient.Tests
 				"BEGIN  SELECT * FROM mysql.db; END" );
 
 			MySqlCommand cmd = new MySqlCommand("spTest", conn);
+			cmd.Parameters.Add("?a", 3);
 			cmd.CommandType = CommandType.StoredProcedure;
 			MySqlDataReader reader = cmd.ExecuteReader();
 			Assert.AreEqual( true, reader.Read() );
@@ -353,12 +354,29 @@ namespace MySql.Data.MySqlClient.Tests
 		}
 
 		[Test]
+		public void ExecuteWithCreate() 
+		{
+			if (! Is50) return;
+			
+			// create our procedure
+			string sql = "CREATE PROCEDURE spTest(IN var INT) BEGIN  SELECT var; END; call spTest(?v)";
+
+			MySqlCommand cmd = new MySqlCommand(sql, conn);
+			cmd.Parameters.Add(new MySqlParameter("?v", 33));
+			object val = cmd.ExecuteScalar();
+			Assert.AreEqual( 33, val );
+		}
+
+		/// <summary>
+		/// Bug #9722 Connector does not recognize parameters separated by a linefeed 
+		/// </summary>
+		[Test]
 		public void OtherProcSigs() 
 		{
 			if (! Is50) return;
 			
 			// create our procedure
-			execSQL( "CREATE PROCEDURE spTest( IN   	valin   	DECIMAL(10,2), IN val2 INT ) BEGIN  SELECT valin; END" );
+			execSQL( "CREATE PROCEDURE spTest(IN \r\nvalin DECIMAL(10,2),\nIN val2 INT) BEGIN  SELECT valin; END" );
 
 			MySqlCommand cmd = new MySqlCommand("spTest", conn);
 			cmd.CommandType = CommandType.StoredProcedure;
@@ -366,7 +384,76 @@ namespace MySql.Data.MySqlClient.Tests
 			cmd.Parameters.Add( "?val2", 4 );
 			object val = cmd.ExecuteScalar();
 			Assert.AreEqual( 20.4, val );
+
+			// create our second procedure
+			execSQL("DROP PROCEDURE spTest");
+			execSQL("CREATE PROCEDURE spTest( \r\n) BEGIN  SELECT 4; END" );
+			cmd.Parameters.Clear();
+			val = cmd.ExecuteScalar();
+			Assert.AreEqual(4, val);
 		}
 
+
+		/// <summary>
+		/// Bug #10644 Cannot call a stored function directly from Connector/Net 
+		/// </summary>
+		[Test]
+		public void CallingStoredFunctionasProcedure()
+		{
+			if (! Is50) return;
+
+			execSQL("DROP FUNCTION IF EXISTS spFunc");
+			execSQL("CREATE FUNCTION spFunc(valin int) RETURNS INT BEGIN return valin * 2; END");
+			MySqlCommand cmd = new MySqlCommand("spFunc", conn);
+			cmd.CommandType = CommandType.StoredProcedure;
+			cmd.Parameters.Add("?valin", 22);
+			cmd.Parameters.Add("retval", MySqlDbType.Int32);
+			cmd.Parameters[1].Direction = ParameterDirection.ReturnValue;
+			cmd.ExecuteNonQuery();
+			Assert.AreEqual(44, cmd.Parameters[1].Value);
+		}
+
+		/// <summary>
+		/// Bug #11450  	Connector/Net, current database and stored procedures
+		/// </summary>
+		[Test]
+		public void NoDefaultDatabase()
+		{
+			if (! Is50) return;
+			
+			// create our procedure
+			execSQL("DROP PROCEDURE IF EXISTS spTest");
+			execSQL("CREATE PROCEDURE spTest() BEGIN  SELECT 4; END" );
+
+			string newConnStr = GetConnectionString(false);
+			MySqlConnection c = new MySqlConnection(newConnStr);
+			try 
+			{
+				c.Open();
+				MySqlCommand cmd2 = new MySqlCommand("use test", c);
+				cmd2.ExecuteNonQuery();
+
+				MySqlCommand cmd = new MySqlCommand("spTest", c);
+				cmd.CommandType = CommandType.StoredProcedure;
+				object val = cmd.ExecuteScalar();
+				Assert.AreEqual(4, val);
+
+				cmd2.CommandText = "use mysql";
+				cmd2.ExecuteNonQuery();
+
+				cmd.CommandText = "test.spTest";
+				val = cmd.ExecuteScalar();
+				Assert.AreEqual(4, val);
+			}
+			catch (Exception ex)
+			{
+				Assert.Fail(ex.Message);
+			}
+			finally 
+			{
+				c.Close();
+			}
+				
+		}
 	}
 }

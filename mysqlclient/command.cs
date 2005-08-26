@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB
+// Copyright (C) 2004-2005 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -186,14 +186,8 @@ namespace MySql.Data.MySqlClient
 #endif
 		public override UpdateRowSource UpdatedRowSource
 		{
-			get 
-			{ 
-				return updatedRowSource;  
-			}
-			set 
-			{ 
-				updatedRowSource = value; 
-			}
+			get { return updatedRowSource;  }
+			set { updatedRowSource = value; }
 		}
 		#endregion
 
@@ -279,8 +273,11 @@ namespace MySql.Data.MySqlClient
 //				if (preparedStatement.ExecutionCount != 0) return null;
 				result = preparedStatement.Execute( parameters, cursorPageSize );
 
-				if (updateCount == -1) updateCount = 0;
-				updateCount += (long)result.AffectedRows;
+                if (! result.IsResultSet)
+                {
+				    if (updateCount == -1) updateCount = 0;
+				    updateCount += (long)result.AffectedRows;
+                }
 			}
 			else while (sqlBuffers.Count > 0)
 			{
@@ -292,12 +289,13 @@ namespace MySql.Data.MySqlClient
 					sqlBuffers.RemoveAt( 0 );
 				}
 
-				if (updateCount == -1) 
-					updateCount = 0;
+                if (result.AffectedRows != -1)
+                {
+				    if (updateCount == -1) 
+					    updateCount = 0;
 
-				updateCount += (long)result.AffectedRows;
-
-				if (result.IsResultSet) break;
+				    updateCount += (long)result.AffectedRows;
+                }
 			}
 
 			if (result.IsResultSet) 
@@ -367,6 +365,7 @@ namespace MySql.Data.MySqlClient
 
 			if (0 != (behavior & CommandBehavior.SchemaOnly))
 			{
+                sql = String.Format("SET SQL_SELECT_LIMIT=0;{0};SET sql_select_limit=-1;", cmdText);
 			}
 
 			if (0 != (behavior & CommandBehavior.SingleRow))
@@ -715,3 +714,4 @@ namespace MySql.Data.MySqlClient
         }
     }
 }
+

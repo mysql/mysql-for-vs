@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB
+// Copyright (C) 2004-2005 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -311,8 +311,16 @@ namespace MySql.Data.MySqlClient
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetDateTime/*'/>
 		public override DateTime GetDateTime(int index)
 		{
-			MySqlDateTime val = (MySqlDateTime)GetFieldValue(index); //IMySqlValue val = GetFieldValue(index);
-			return val.Value;
+			IMySqlValue val = GetFieldValue(index);
+            if (val is MySqlDateTime)
+			    return (val as MySqlDateTime).Value;
+            else if (val is MySqlString)
+            {
+				MySqlDateTime d = new MySqlDateTime( MySqlDbType.Datetime );
+				d = d.ParseMySql( (val as MySqlString).Value, true );
+				return d.GetDateTime();
+            }
+			throw new NotSupportedException( "Unable to convert from type " + val.GetType().ToString() + " to DateTime" );
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetDecimal/*'/>
@@ -410,9 +418,10 @@ namespace MySql.Data.MySqlClient
 			if (! isOpen)
 				throw new Exception("No current query in data reader");
 
+			name = name.ToLower(System.Globalization.CultureInfo.InvariantCulture);
 			for (int i=0; i < fields.Length; i ++) 
 			{
-				if (fields[i].ColumnName.ToLower().Equals(name.ToLower()))
+				if (fields[i].ColumnName.ToLower(System.Globalization.CultureInfo.InvariantCulture) == name)
 					return i;
 			}
 
@@ -426,6 +435,8 @@ namespace MySql.Data.MySqlClient
 		/// <returns></returns>
 		public override DataTable GetSchemaTable()
 		{
+			if (schemaTable != null) return schemaTable;
+
 			// Only Results from SQL SELECT Queries 
 			// get a DataTable for schema of the result
 			// otherwise, DataTable is null reference
@@ -481,14 +492,15 @@ namespace MySql.Data.MySqlClient
 				r["IsUnique"] = f.IsUnique || f.IsPrimaryKey;
 				r["IsKey"] = f.IsPrimaryKey;
 				r["IsAutoIncrement"] = f.IsAutoIncrement;
-				r["BaseSchemaName"] = null;
-				r["BaseCatalogName"] = null;
-				r["BaseTableName"] = f.TableName;
-				r["BaseColumnName"] = f.ColumnName;
+				r["BaseSchemaName"] = f.DatabaseName;
+				r["BaseCatalogName"] = f.DatabaseName;
+				r["BaseTableName"] = f.RealTableName;
+				r["BaseColumnName"] = f.OriginalColumnName;
 
 				dataTableSchema.Rows.Add( r );
 			}
 
+            SchemaTableColumn = dataTableSchema;
 			return dataTableSchema;
 		}
 
@@ -640,6 +652,8 @@ namespace MySql.Data.MySqlClient
 				canRead = false;
 				return false;
 			}
+
+            SchemaTableColumn = null;
 
 			// When executing query statements, the result byte that is returned
 			// from MySql is the column count.  That is why we reference the LastResult

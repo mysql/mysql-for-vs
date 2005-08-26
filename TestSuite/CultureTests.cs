@@ -100,6 +100,30 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
+		/// <summary>
+		/// Bug #8228  	turkish character set causing the error
+		/// </summary>
+		[Test]
+		public void Turkish() 
+		{
+			CultureInfo curCulture = Thread.CurrentThread.CurrentCulture;
+			CultureInfo curUICulture = Thread.CurrentThread.CurrentUICulture;
+			CultureInfo c = new CultureInfo("tr-TR");
+			Thread.CurrentThread.CurrentCulture = c;
+			Thread.CurrentThread.CurrentUICulture = c;
 
+			try 
+			{
+				MySqlConnection newConn = new MySqlConnection(GetConnectionString(true));
+				newConn.Open();
+			}
+			catch (Exception ex)
+			{
+				Assert.Fail(ex.Message);
+			}
+
+			Thread.CurrentThread.CurrentCulture = c;
+			Thread.CurrentThread.CurrentUICulture = c;
+		}
 	}
 }

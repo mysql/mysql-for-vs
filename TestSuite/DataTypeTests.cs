@@ -310,20 +310,65 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual( MySqlDbType.Int16, p.MySqlDbType );
 		}
 
+		/// <summary>
+		/// Bug #7951 - Error reading timestamp column
+		/// </summary>
 		[Test]
 		public void Timestamp() 
 		{
 			execSQL("DROP TABLE IF EXISTS test");
-			execSQL("CREATE TABLE test (id int, ts TIMESTAMP)");
-			execSQL("INSERT INTO test (id) VALUES (1)");
+			execSQL("CREATE TABLE test (id int, dt DATETIME, ts2 TIMESTAMP(2), ts4 TIMESTAMP(4), " + 
+				"ts6 TIMESTAMP(6), ts8 TIMESTAMP(8), ts10 TIMESTAMP(10), ts12 TIMESTAMP(12), " +
+				"ts14 TIMESTAMP(14))");
+			execSQL("INSERT INTO test (id, dt, ts2, ts4, ts6, ts8, ts10, ts12, ts14) " +
+				"VALUES (1, Now(), Now(), Now(), Now(), Now(), Now(), Now(), Now())");
 
-			DateTime now = DateTime.Now;
 			MySqlDataAdapter da = new MySqlDataAdapter( "SELECT * FROM test", conn);
 			DataTable dt = new DataTable();
 			da.Fill(dt);
 
+			DateTime now = (DateTime)dt.Rows[0]["dt"];
 			Assert.AreEqual( 1, dt.Rows[0]["id"] );
-			Assert.AreEqual( now.Date, ((DateTime)dt.Rows[0]["ts"]).Date );
+
+			DateTime ts2 = (DateTime)dt.Rows[0]["ts2"];
+			Assert.AreEqual( now.Year, ts2.Year );
+
+			DateTime ts4 = (DateTime)dt.Rows[0]["ts4"];
+			Assert.AreEqual( now.Year, ts4.Year );
+			Assert.AreEqual( now.Month, ts4.Month );
+
+			DateTime ts6 = (DateTime)dt.Rows[0]["ts6"];
+			Assert.AreEqual( now.Year, ts6.Year );
+			Assert.AreEqual( now.Month, ts6.Month );
+			Assert.AreEqual( now.Day, ts6.Day );
+
+			DateTime ts8 = (DateTime)dt.Rows[0]["ts8"];
+			Assert.AreEqual( now.Year, ts8.Year );
+			Assert.AreEqual( now.Month, ts8.Month );
+			Assert.AreEqual( now.Day, ts8.Day );
+
+			DateTime ts10 = (DateTime)dt.Rows[0]["ts10"];
+			Assert.AreEqual( now.Year, ts10.Year );
+			Assert.AreEqual( now.Month, ts10.Month );
+			Assert.AreEqual( now.Day, ts10.Day );
+			Assert.AreEqual( now.Hour, ts10.Hour );
+			Assert.AreEqual( now.Minute, ts10.Minute );
+
+			DateTime ts12 = (DateTime)dt.Rows[0]["ts12"];
+			Assert.AreEqual( now.Year, ts12.Year );
+			Assert.AreEqual( now.Month, ts12.Month );
+			Assert.AreEqual( now.Day, ts12.Day );
+			Assert.AreEqual( now.Hour, ts12.Hour );
+			Assert.AreEqual( now.Minute, ts12.Minute );
+			Assert.AreEqual( now.Second, ts12.Second );
+
+			DateTime ts14 = (DateTime)dt.Rows[0]["ts14"];
+			Assert.AreEqual( now.Year, ts14.Year );
+			Assert.AreEqual( now.Month, ts14.Month );
+			Assert.AreEqual( now.Day, ts14.Day );
+			Assert.AreEqual( now.Hour, ts14.Hour );
+			Assert.AreEqual( now.Minute, ts14.Minute );
+			Assert.AreEqual( now.Second, ts14.Second );
 		}
 
 
@@ -382,6 +427,39 @@ namespace MySql.Data.MySqlClient.Tests
 			execSQL( "DROP TABLE IF EXISTS foo");
 		}
 
+/*		[Test]
+		public void TypeBoundaries() 
+		{
+			execSQL("DROP TABLE IF EXISTS Test");
+			execSQL("CREATE TABLE Test ( MaxDouble DOUBLE, MinDouble DOUBLE, MaxFloat FLOAT, MinFloat FLOAT )");
+
+			MySqlCommand cmd = new MySqlCommand(
+				"INSERT Test (MaxDouble, MinDouble, MaxFloat, MinFloat) VALUES " +
+				"(?maxDouble, ?minDouble, ?maxFloat, ?minFloat)", conn);
+			cmd.Parameters.Add("?maxDouble", MySqlDouble.MaxValue);
+			cmd.Parameters.Add("?minDouble", MySqlDouble.MinValue);
+			cmd.Parameters.Add("?maxFloat", MySqlFloat.MaxValue);
+			cmd.Parameters.Add("?minFloat", MySqlFloat.MinValue);
+			cmd.ExecuteNonQuery();
+
+			cmd.CommandText = "SELECT * FROM Test";
+			try 
+			{
+				using (MySqlDataReader reader = cmd.ExecuteReader()) 
+				{
+					reader.Read();
+					Assert.AreEqual(MySqlDouble.MaxValue, reader.GetDouble(0));
+					Assert.AreEqual(MySqlDouble.MinValue, reader.GetDouble(1));
+					Assert.AreEqual(MySqlFloat.MaxValue, reader.GetFloat(2));
+					Assert.AreEqual(MySqlFloat.MinValue, reader.GetFloat(3));
+				}
+			}
+			catch (Exception ex) 
+			{
+				Assert.Fail(ex.Message);
+			}
+		}*/
+
 		[Test]
 		public void BitAndDecimal() 
 		{
@@ -410,5 +488,70 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-	}
+        /// <summary>
+        /// Bug #10486 MySqlDataAdapter.Update error for decimal column 
+        /// </summary>
+        [Test]
+        public void UpdateDecimalColumns()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test (id int not null auto_increment primary key, " +
+                "dec1 decimal(10,1))");
+
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
+            MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            DataRow row = dt.NewRow();
+            row["id"] = DBNull.Value;
+            row["dec1"] = 23.4;
+            dt.Rows.Add(row);
+            da.Update(dt);
+
+            dt.Clear();
+            da.Fill(dt);
+            Assert.AreEqual(1, dt.Rows.Count);
+            Assert.AreEqual(1, dt.Rows[0]["id"]);
+            Assert.AreEqual(23.4, dt.Rows[0]["dec1"]);
+        }
+
+        [Test]
+        public void DecimalTests()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test (val decimal(10,1))");
+
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES(?dec)", conn);
+            cmd.Parameters.Add("?dec", (decimal)2.4);
+            Assert.AreEqual(1, cmd.ExecuteNonQuery());
+
+            cmd.Prepare();
+            Assert.AreEqual(1, cmd.ExecuteNonQuery());
+
+            cmd.CommandText = "SELECT * FROM test";
+            MySqlDataReader reader = null;
+            try
+            {
+                reader = cmd.ExecuteReader();
+                Assert.IsTrue(reader.Read());
+                Assert.IsTrue(reader[0] is Decimal);
+                Assert.AreEqual(2.4, reader[0]);
+
+                Assert.IsTrue(reader.Read());
+                Assert.IsTrue(reader[0] is Decimal);
+                Assert.AreEqual(2.4, reader[0]);
+
+                Assert.IsFalse(reader.Read());
+                Assert.IsFalse(reader.NextResult());
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                if (reader != null) reader.Close();
+            }
+        }
+    }
 }

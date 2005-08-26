@@ -247,9 +247,7 @@ namespace MySql.Data.Types
 
 		private MySqlDateTime Parse40Timestamp( string s ) 
 		{
-			int[] vals = new int[6];
-			int pos = 0;
-			int index = 0;
+			string format = "yy";
 
 			while (s.Length > pos) 
 			{

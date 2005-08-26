@@ -161,7 +161,7 @@ namespace MySql.Data.Types
 			}
 			else 
 			{
-				writer.WriteLenString( v.ToString(numberFormat) );
+				writer.WriteStringNoNull(v.ToString(numberFormat));
 			}
 		}
 

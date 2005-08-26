@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB
+// Copyright (C) 2004-2005 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -35,10 +35,12 @@ namespace MySql.Data.Common
 	/// </summary>
 	internal class StreamCreator
 	{
+		private const uint FIONBIO = 0x8004667e;
 		string				hostList;
 		uint				port;
 		string				pipeName;
 		int					timeOut;
+		ManualResetEvent	evnt;
 
 		public StreamCreator( string hosts, uint port, string pipeName)
 		{
@@ -47,6 +49,7 @@ namespace MySql.Data.Common
 				hostList = "localhost";
 			this.port = port;
 			this.pipeName = pipeName;
+			evnt = new ManualResetEvent(false);
 		}
 
 		public Stream GetStream(int timeOut) 
@@ -54,7 +57,7 @@ namespace MySql.Data.Common
 			this.timeOut = timeOut;
 
 			if (hostList.StartsWith("/"))
-				return CreateUnixSocketStream();
+				return CreateSocketStream(null, 0, true);
 
 			string [] dnsHosts = hostList.Split('&');
 			ArrayList ipAddresses = new ArrayList();
@@ -83,7 +86,7 @@ namespace MySql.Data.Common
 				if ( pipeName != null )
 					stream = CreateNamedPipeStream( (string)hostNames[index] );
 				else
-					stream = CreateSocketStream( (IPAddress)ipAddresses[index], port );
+					stream = CreateSocketStream( (IPAddress)ipAddresses[index], port, false );
 				if (stream != null) return stream;
 
 				index++;
@@ -91,27 +94,6 @@ namespace MySql.Data.Common
 			}
 
 			return stream;
-		}
-
-		private Stream CreateUnixSocketStream() 
-		{
-#if! __MonoCS__ && !WINDOWS
-
-			Socket socket = new Socket (AddressFamily.Unix, SocketType.Stream, ProtocolType.IP);
-
-			try
-			{
-				UnixEndPoint endPoint = new UnixEndPoint (hostList[0]);
-				socket.Connect (endPoint);
-				return new NetworkStream (socket, true);
-			}
-			catch (Exception ex)
-			{
-				return null;
-			}
-#else
-			throw new PlatformNotSupportedException ("Unix sockets are only supported on this platform");
-#endif		
 		}
 
 		private Stream CreateNamedPipeStream( string hostname ) 
@@ -138,32 +120,30 @@ namespace MySql.Data.Common
 			}
 		}
 
-		private Stream CreateSocketStream( IPAddress ip, uint port ) 
+		private Stream CreateSocketStream( IPAddress ip, uint port, bool unix ) 
 		{
-			Socket socket = new Socket(AddressFamily.InterNetwork, 
-				SocketType.Stream, ProtocolType.Tcp);
-
 			try
 			{
 				//
 				// Lets try to connect
-				IPEndPoint endPoint	= new IPEndPoint( ip, (int)port);
+                EndPoint endPoint;
+#if __MonoCS__ && !WINDOWS
+                if (unix)
+                    endPoint = new UnixEndPoint(hostList[0]);
+                else
+#else
+                    endPoint = new IPEndPoint(ip, port);
+                if (unix)
+                    throw new PlatformNotSupportedException ("Unix sockets are not supported on Windows.");
+#endif
 
-				IAsyncResult iar = socket.BeginConnect( endPoint, 
-					new AsyncCallback(ConnectSocketCallback), socket );
-
-				int timeLeft = this.timeOut*1000;
-				while (! socket.Connected && timeLeft > 0) 
-				{
-					Thread.Sleep(100);
-					timeLeft -= 100;
-				}
-				if (! socket.Connected) return null;
-				
-
-				socket.SetSocketOption( SocketOptionLevel.Tcp, SocketOptionName.NoDelay, 1 );
-				return new NetworkStream( socket, true );
-			}
+                SocketStream ss = unix ? 
+                    new SocketStream(AddressFamily.Unix, SocketType.Stream, ProtocolType.IP) :
+                    new new SocketStream(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                ss.Connect(endPoint, timeOut);
+                ss.Socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, 1);
+                return ss;
+            }
 			catch (Exception)
 			{
 				return null;

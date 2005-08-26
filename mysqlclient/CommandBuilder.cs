@@ -37,7 +37,8 @@ namespace MySql.Data.MySqlClient
 		private string				_QuotePrefix;
 		private string				_QuoteSuffix;
 		private DataTable			_schema;
-		private string				_tableName;
+		private string				tableName;
+		private string				schemaName;
 
 		private	MySqlCommand		_updateCmd;
 		private MySqlCommand		_insertCmd;
@@ -107,6 +108,16 @@ namespace MySql.Data.MySqlClient
 			set { _QuoteSuffix = value; }
 		}
 
+		private string TableName 
+		{
+			get 
+			{
+				if (schemaName != null)
+					return Quote(schemaName) + "." + Quote(tableName);
+				return Quote(tableName);
+			}
+		}
+
 		#endregion
 
 		#region Public Methods
@@ -152,7 +163,8 @@ namespace MySql.Data.MySqlClient
 			_insertCmd = null;
 			_deleteCmd = null;
 			_updateCmd = null;
-			this._tableName = null;
+			tableName = null;
+			schemaName = null;
 		}
 		#endregion
 
@@ -178,12 +190,21 @@ namespace MySql.Data.MySqlClient
 
 			foreach (DataRow row in _schema.Rows)
 			{
+				string rowTableName = (string)row["BaseTableName"];
+				string rowSchemaName = (string)row["BaseSchemaName"];
+
 				if (true == (bool)row["IsKey"] || true == (bool)row["IsUnique"])
 					hasKeyOrUnique=true;
-				if (_tableName == null)
-					_tableName = (string)row["BaseTableName"];
-				else if (_tableName != (string)row["BaseTableName"])
+
+				if (tableName == null)
+				{
+					schemaName = (string)row["BaseSchemaName"];
+					tableName = (string)row["BaseTableName"];
+				}
+				else if (tableName != rowTableName && rowTableName != null && rowTableName.Length > 0)
 					throw new InvalidOperationException("MySqlCommandBuilder does not support multi-table statements");
+				else if (schemaName != rowSchemaName && rowSchemaName != null && rowSchemaName.Length > 0)
+					throw new InvalidOperationException("MySqlCommandBuilder does not support multi-schema statements");
 			}
 			if (! hasKeyOrUnique)
 				throw new InvalidOperationException("MySqlCommandBuilder cannot operate on tables with no unique or key columns");
@@ -232,7 +253,7 @@ namespace MySql.Data.MySqlClient
 
 			MySqlCommand cmd = CreateBaseCommand();
 
-			cmd.CommandText = "DELETE FROM " + Quote(_tableName) + 
+			cmd.CommandText = "DELETE FROM " + TableName + 
 				" WHERE " + CreateOriginalWhere(cmd);
 
 			_deleteCmd = cmd;
@@ -269,7 +290,7 @@ namespace MySql.Data.MySqlClient
 				}
 				where.Append(")");
 			}
-			return "SELECT " + sel.ToString() + " FROM " + Quote(_tableName) +
+			return "SELECT " + sel.ToString() + " FROM " + TableName +
 				" WHERE " + where.ToString();
 		}
 
@@ -326,7 +347,7 @@ namespace MySql.Data.MySqlClient
 				setstr.Append( colname + "=" + marker + p.ParameterName );
 			}
 
-			cmd.CommandText = "UPDATE " + Quote(_tableName) + " SET " + setstr.ToString() + 
+			cmd.CommandText = "UPDATE " + TableName + " SET " + setstr.ToString() + 
 				" WHERE " + CreateOriginalWhere(cmd);
 			cmd.CommandText += "; " + CreateFinalSelect(false);
 
@@ -361,7 +382,7 @@ namespace MySql.Data.MySqlClient
 				valstr.Append( marker + p.ParameterName );
 			}
 
-			cmd.CommandText = "INSERT INTO " + Quote(_tableName) + " (" + setstr.ToString() + ") " +
+			cmd.CommandText = "INSERT INTO " + TableName + " (" + setstr.ToString() + ") " +
 				" VALUES (" + valstr.ToString() + ")";
 			cmd.CommandText += "; " + CreateFinalSelect(true);
 

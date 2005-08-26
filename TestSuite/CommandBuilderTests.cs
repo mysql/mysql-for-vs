@@ -118,5 +118,31 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual( "Test2", dt.Rows[0]["name"] );			
 		}
 
+		/// <summary>
+		/// Bug #8382  	Commandbuilder does not handle queries to other databases than the default one-
+		/// </summary>
+		[Test]
+		public void DifferentDatabase()
+		{
+			execSQL("INSERT INTO test (id, name) VALUES (1,'test1')");
+			execSQL("INSERT INTO test (id, name) VALUES (2,'test2')");
+			execSQL("INSERT INTO test (id, name) VALUES (3,'test3')");
+
+			conn.ChangeDatabase("mysql");
+
+			MySqlDataAdapter da = new MySqlDataAdapter("SELECT id, name FROM test.test", conn);
+			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
+			DataSet ds = new DataSet();
+			da.Fill(ds);
+
+			ds.Tables[0].Rows[0]["id"] = 4;
+			DataSet changes = ds.GetChanges();
+			da.Update(changes);
+			ds.Merge( changes );
+			ds.AcceptChanges();
+			
+			conn.ChangeDatabase("test");
+		}
+
 	}
 }
