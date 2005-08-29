@@ -49,17 +49,16 @@ namespace MySql.Data.MySqlClient
 		{
 			driver = d;
 			this.isBinary = isBinary;
-			dataRowOpen = false;
 			affectedRows = -1;
 			ReadNextResult(true);
 			statementId = 0;
 		}
 
-		public CommandResult( Driver d )
+/*		public CommandResult( Driver d )
 		{
 			driver = d;
 		}
-
+*/
 		#region Properties
 
 		public IMySqlValue this[int index] 
@@ -78,22 +77,23 @@ namespace MySql.Data.MySqlClient
 			get { return fieldCount > 0; }
 		}
 
-		public long LastInsertId 
+/*		public long LastInsertId 
 		{
 			get { return lastInsertId; }
 			set { lastInsertId = value; }
 		}
-
-		public long FieldCount 
+*/
+		//TODO: remove comment
+/*		public ulong FieldCount 
 		{
-			get { return fieldCount; }
-			set { fieldCount = value; }
+//			get { return fieldCount; }
+//			set { fieldCount = value; }
 		}
-
+*/
 		public long AffectedRows
 		{
 			get { return affectedRows; }
-			set { affectedRows = value; }
+//			set { affectedRows = value; }
 		}
 
 		public int StatementId 

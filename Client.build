@@ -1,8 +1,10 @@
 <project name="MySqlClient" default="allframeworks" xmlns="http://nant.sf.net/schemas/nant-0.84.win32.net-1.0.xsd">
 	<description>MySQLClient Managed Provider for MySQL</description>
 
-	<!-- sets where we can expect to find NUnit on your system -->
-	<property name="nunit" value="d:\program files\NUnit 2.2\bin"/>
+	<property name="ncover.executable" value="c:\program files\ncover\ncover.console.exe"/>
+	<property name="fxcop.executable" value="c:\program files\fxcop\fxcopcmd.exe"/>
+	<property name="nunit.executable" value="c:\program files\nunit 2.2\bin\nunit-console.exe"/>
+	<property name="nunit" value="c:\program files\nunit 2.2\bin" />
 
 	<!-- filesets -->
 	<fileset id="Source">
@@ -10,20 +12,22 @@
 		<include name="mysqlclient/Types/*.cs"/>
 		<include name="mysqlclient/*.cs"/>
 	</fileset>
-	
-	<if test="${not property::exists('debug')}">
-		<property name="defines" value=""/>
-	</if>
-	
+
 	<if test="${not property::exists('debug')}">
 		<property name="debug" value="false"/>
-		<property name="opt" value="true"/>
-		<property name="buildType" value="release"/>
 	</if>
+	
+	<!-- we default to optimized release binaries -->
+	<property name="opt" value="true"/>
+	<property name="buildType" value="release"/>
 
     <if test="${(debug)}">
 		<property name="opt" value="false"/>
 		<property name="buildType" value="debug"/>
+	</if>
+
+	<if test="${not property::exists('defines')}">
+		<property name="defines" value=""/>
 	</if>
 	
     <if test="${not property::exists('build.dir')}">
@@ -42,23 +46,29 @@
 	<!-- core managed driver target -->	
 	<target name="client" description="Core client target">
 		<property name="nant.settings.currentframework" value="${framework}"/>
-		<mkdir dir="bin/${framework}/${buildType}" failonerror="false"/>
-		<csc define="${defines}" output="bin/${framework}/${buildType}/MySql.Data.dll" target="library" 
-			debug="${debug}" optimize="${opt}" 
-			doc="bin/${framework}/${buildType}/MySql.Data.xml">
+		<property name="outdir" value="bin/${framework}/${buildType}"/>
+		
+		<mkdir dir="${outdir}" failonerror="false"/>
+		<resgen input="mysqlclient/Strings.resx" output="${outdir}/Strings.resources"/>
+		<csc output="${outdir}/MySql.Data.dll" target="library" 
+			define="${defines}" debug="${debug}" optimize="${opt}" 
+			doc="${outdir}/MySql.Data.xml">
 			<arg value="/nowarn:0679"/>
+			<resources>
+				<include name="${outdir}/*.resources"/>
+			</resources>
 			<references>
 				<include name="ICSharpCode.SharpZipLib.dll"/>
 			</references>
 			<sources refid="Source"/>
 		</csc>
-		<csc output="bin/${framework}/${buildType}/MySql.Data.Tests.dll" target="library" debug="${debug}" optimize="${opt}">
-			<arg value="/nowarn:0679"/>
+		<csc output="${outdir}/MySql.Data.Tests.dll" target="library" 
+			debug="${debug}" optimize="${opt}"> <arg value="/nowarn:0679"/>
 			<sources>
-				<include name="TestSuite/*.cs"/>
+				<include name="TestSuite/*.cs" />
 			</sources>
 			<references>
-				<include name="bin/${framework}/${buildType}/MySql.Data.dll"/>
+				<include name="${outdir}/MySql.Data.dll"/>
 				<include name="${nunit}/nunit.framework.dll"/>
 			</references>
 		</csc>
@@ -84,6 +94,7 @@
 	<target name="test-net-1.1" depends="net-1.1">
 		<property name="framework" value="net-1.1"/>
 		<call target="testclient"/>
+		<call target="fxcop"/>
 	</target>
 
 	<target name="test-net-1.0" depends="net-1.0">
@@ -91,34 +102,71 @@
 		<call target="testclient"/>
 	</target>
 
-    <!-- target to run the test suite -->
+	<!-- This target will call the testdb target for each supported config. -->
+	<target name="test_all_configs">
+<!--		<property name="config" value="tcp"/>
+		<call target="testdb"/>  
+		<property name="config" value="tcp_compressed"/>
+		<call target="testdb"/>  -->
+		<property name="config" value="pipe"/>
+		<call target="testdb"/>  
+		<property name="config" value="pipe_compressed"/>
+		<call target="testdb"/>  
+	</target>
+
+    <!-- 
+    Target to run the test suite.  This target will run through all the 
+    supported versions of MySQL, stopping the services, and then starting
+    them one by one and running all supported configs on each database
+    -->
 	<target name="testclient" description="Target to run NUnit tests">
+		<mkdir dir="results"/>
 		<echo message="Stopping all services"/>
+		<property name="doCoverage" value="false"/>
 		<servicecontroller action="Stop" service="MySql4.0"/>
 		<servicecontroller action="Stop" service="MySql4.1"/>
 		<servicecontroller action="Stop" service="MySql5.0"/>
-		
+
+		<!-- test 4.0 -->		
 		<echo message="Testing MySQL 4.0"/>
+		<property name="excludes" value="4.1,5.0,NotWorking"/>
 		<servicecontroller action="Start" service="MySql4.0"/>
-		<call target="testdb"/>
+		<call target="test_all_configs"/>
 
 		<echo message="Testing MySQL 4.1"/>
 		<servicecontroller action="Stop" service="MySql4.0"/>
 		<servicecontroller action="Start" service="MySql4.1"/>
-		<call target="testdb"/>
+		<property name="excludes" value="5.0,NotWorking"/>
+		<call target="test_all_configs"/>
 
 		<echo message="Testing MySQL 5.0"/>
 		<servicecontroller action="Stop" service="MySql4.1"/>
 		<servicecontroller action="Start" service="MySql5.0"/>
-		<call target="testdb"/>
+		<property name="excludes" value="NotWorking"/>
+		<property name="doCoverage" value="true"/>
+		<call target="test_all_configs"/>
 	</target>
 
+	<!-- 
+	execute the test suite against a single database instance, possibly using
+	coverage
+	-->
 	<target name="testdb" description="Target to test a database with all possible configurations">
-		<nunit2 verbose="true">
-			<formatter type="Plain" />
-			<test assemblyname="bin/${framework}/${buildType}/MySql.Data.Tests.dll"
-				appconfig="testsuite/MySql.Data.Tests.dll.config"  />
-		</nunit2>
+		<copy file="testsuite/configs/${config}.config" tofile="bin/${framework}/${buildType}/MySql.Data.Tests.dll.config"/>
+		
+		<exec unless="${doCoverage}" program="${nunit.executable}"
+		      commandline="/exclude=${excludes} /xml=../../../results/nunit-${framework}-${buildType}.xml bin/${framework}/${buildType}/MySql.Data.Tests.dll"
+		      failonerror="true"/>
+		<exec if="${doCoverage}" program="${ncover.executable}"
+		      commandline="/c &quot;${nunit.executable}&quot; &quot;bin/${framework}/${buildType}/MySql.Data.Tests.dll /exclude=${excludes} /xml=../../../results/nunit-${framework}-${buildType}.xml&quot; /a MySql.Data /o results/ncover-${framework}-${config}.xml"
+		      failonerror="true"/>
+	</target>
+
+	<!-- Run fxcop on the current build -->	
+	<target name="fxcop" description="Runs FXCop">
+		<exec program="${fxcop.executable}" 
+			commandline="/o:results/fxcop-${framework}-${buildType}.xml /c /f:bin/${framework}/${buildType}/MySql.Data.dll /s"
+			failonerror="false"/>
 	</target>
 	
 	<!-- documentation target -->
@@ -150,7 +198,7 @@
                     <property name="DocumentPrivates" value="False" />
                     <property name="DocumentEmptyNamespaces" value="False" />
                     <property name="IncludeAssemblyVersion" value="False" />
-                    <property name="CopyrightText" value="Copyright MySQL AB 2004" />
+                    <property name="CopyrightText" value="Copyright MySQL AB 2004-2005" />
                     <property name="CopyrightHref" value="http://www.mysql.com" />
 				</documenter>
 			</documenters>
@@ -166,7 +214,7 @@
 	<target name="clean" description="Remove all generated files">
 		<delete failonerror="false">
 			<fileset>
-				<include name="bin\*.*" />
+				<include name="bin/**" />
             </fileset>
         </delete>
     </target>

@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB
+// Copyright (C) 2004-2005 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -49,7 +49,7 @@ namespace MySql.Data.MySqlClient.Tests
 		}
 
 
-		[Test()]
+		[Test]
 		public void TestFill()
 		{
 			FillImpl( false );
@@ -84,7 +84,7 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual( String.Empty, ds.Tables[0].Rows[2]["name"] );
 		}
 
-		[Test()]
+		[Test]
 		public void TestUpdate()
 		{
 			MySqlCommand cmd = new MySqlCommand("TRUNCATE TABLE Test", conn);
@@ -135,7 +135,7 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual( 0, dt.Rows.Count, "checking row count" );
 		}
 
-		[Test()]
+		[Test]
 		public void OriginalInName()
 		{
 			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
@@ -158,7 +158,7 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual( 2, dt.Rows[0]["OriginalId"] );
 		}
 
-		[Test()]
+		[Test]
 		public void UseAdapterPropertyOfCommandBuilder() 
 		{
 			execSQL("INSERT INTO Test (id, id2, name) VALUES (NULL, 1, 'Test')");
@@ -182,7 +182,7 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual( "Test Update", dt.Rows[0]["name"] );
 		}
 
-		[Test()]
+		[Test]
 		public void UpdateNullTextFieldToEmptyString() 
 		{
 			execSQL("INSERT INTO Test (id, id2, name) VALUES (1, 1, NULL)");
@@ -212,7 +212,7 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-		[Test()]
+		[Test]
 		public void UpdateExtendedTextFields() 
 		{
 			execSQL("DROP TABLE IF EXISTS Test");
@@ -232,7 +232,7 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual( "This is my new note", dt.Rows[0]["notes"]);
 		}
 
-		[Test()]
+		[Test]
 		public void SelectMoreThan252Rows() 
 		{
 			for (int i=0; i < 500; i++) 
@@ -245,8 +245,8 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual( 500, dt.Rows.Count );
 		}
 
-		[Test()]
-		[NUnit.Framework.Explicit()]
+/*		[Test]
+		[Explicit]
 		public void UpdateManyRows() 
 		{
 			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
@@ -267,9 +267,9 @@ namespace MySql.Data.MySqlClient.Tests
 
 			dt.Clear();
 			da.Fill(dt);
-			Assert.AreEqual( 100000, dt.Rows.Count );
+			Assert.AreEqual(100000, dt.Rows.Count);
 		}
-
+*/
 		[Test]
 		public void DiscreteValues() 
 		{
@@ -346,5 +346,134 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual( 1, ds.Tables[0].Rows[0]["key"] );
 			Assert.AreEqual( 1, ds.Tables[1].Rows[0]["key"] );
 		}
+
+		/// <summary>
+		/// Bug #8509 - MySqlDataAdapter.FillSchema does not interpret unsigned integer
+		/// </summary>
+		[Test]
+		public void AutoIncrementColumns() 
+		{
+			execSQL("DROP TABLE IF EXISTS test");
+			execSQL("CREATE TABLE test (id int(10) unsigned NOT NULL auto_increment primary key)");
+			execSQL("INSERT INTO test VALUES(NULL)");
+
+			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
+			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
+			DataSet ds = new DataSet();
+			da.Fill(ds);
+			Assert.AreEqual(1, ds.Tables[0].Rows[0]["id"]);
+			ds.Tables[0].Rows[0]["id"] = 2;
+			DataRow row = ds.Tables[0].NewRow();
+			row["id"] = 4;
+			ds.Tables[0].Rows.Add(row);
+
+			// add a null id.  This should be auto'ed to 5
+			row = ds.Tables[0].NewRow();
+			row["id"] = DBNull.Value;
+			ds.Tables[0].Rows.Add(row);
+
+			try 
+			{
+				da.Update(ds);
+			}
+			catch (Exception ex)
+			{
+				Assert.Fail(ex.Message);
+			}
+
+			ds.Clear();
+			da.Fill(ds);
+			Assert.AreEqual(2, ds.Tables[0].Rows[0]["id"]);
+			Assert.AreEqual(4, ds.Tables[0].Rows[1]["id"]);
+			Assert.AreEqual(5, ds.Tables[0].Rows[2]["id"]);
+		}
+
+		/// <summary>
+		/// Bug #8292  	GROUP BY / WITH ROLLUP with DataSet causes System.Data.ConstraintException
+		/// </summary>
+		[Test]
+		[Category("4.1")]
+		public void Rollup() 
+		{
+			execSQL("DROP TABLE IF EXISTS test");
+			execSQL("CREATE TABLE test ( id INT NOT NULL, amount INT )");
+			execSQL("INSERT INTO test VALUES (1, 44)");
+			execSQL("INSERT INTO test VALUES (2, 88)");
+
+			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test GROUP BY id WITH ROLLUP", conn);
+			DataSet ds = new DataSet();
+			da.Fill(ds);
+
+			Assert.AreEqual(1, ds.Tables.Count);
+			Assert.AreEqual(3, ds.Tables[0].Rows.Count);
+			Assert.AreEqual(88, ds.Tables[0].Rows[2]["amount"]);
+			Assert.AreEqual(DBNull.Value, ds.Tables[0].Rows[2]["id"]);
+		}
+
+		/// <summary>
+		/// Bug #8514  	CURRENT_TIMESTAMP default not respected
+		/// </summary>
+		[Test]
+		[Category("NotWorking")]
+		public void DefaultValues() 
+		{
+			execSQL("DROP TABLE IF EXISTS test");
+			execSQL("CREATE TABLE test (id int, name VARCHAR(20) NOT NULL DEFAULT 'abc', dt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)");
+			
+			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
+			MySqlCommand insCmd = new MySqlCommand("INSERT INTO test VALUES (?id, ?name, ?dt)", conn);
+			insCmd.Parameters.Add("?id", MySqlDbType.Int32, 0, "id");
+			insCmd.Parameters.Add("?name", MySqlDbType.VarChar, 20, "name");
+			insCmd.Parameters.Add("?dt", MySqlDbType.Datetime, 0, "dt");
+			da.InsertCommand = insCmd;
+
+			DataTable dt = new DataTable();
+
+			//da.FillSchema(ds, SchemaType.Source);//, "test");
+			da.MissingSchemaAction = MissingSchemaAction.AddWithKey;
+			try 
+			{
+				da.Fill(dt);
+			}
+			catch (Exception ex) 
+			{
+				Console.WriteLine(ex.Message);
+			}
+
+
+			DataRow row = dt.NewRow();
+			row["id"] = 1;
+			row["name"] = "xyz";
+			dt.Rows.Add(row);
+
+			DataRow row2 = dt.NewRow();
+			row2["id"] = 2;
+			row2["name"] = DBNull.Value;
+			dt.Rows.Add(row2);
+
+			da.Update(dt);
+
+			MySqlCommand cmd = new MySqlCommand("SELECT * FROM test", conn);
+			try 
+			{
+				using (MySqlDataReader reader = cmd.ExecuteReader()) 
+				{
+					Assert.IsTrue(reader.Read());
+					Assert.AreEqual(1, reader["id"]);
+					Assert.AreEqual("xyz", reader["name"]);
+					Assert.AreEqual(DateTime.Now.Year, reader.GetDateTime(2).Year);
+					Assert.IsTrue(reader.Read());
+					Assert.AreEqual(2, reader["id"]);
+					Assert.AreEqual("abc", reader["name"]);
+					Assert.AreEqual(DateTime.Now.Year, reader.GetDateTime(2).Year);
+					Assert.IsFalse(reader.Read());
+				}
+			}
+			catch (Exception ex) 
+			{
+				Assert.Fail(ex.Message);
+			}
+		}
+
 	}
 }

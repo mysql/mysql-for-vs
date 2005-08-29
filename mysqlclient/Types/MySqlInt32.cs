@@ -130,11 +130,11 @@ namespace MySql.Data.Types
 
 		internal override void Serialize(PacketWriter writer, bool binary, object value, int length)
 		{
-			int v = Convert.ToInt32( value );
+			int v = Convert.ToInt32(value);
 			if (binary)
-				writer.Write( BitConverter.GetBytes( v ) );
+				writer.Write(BitConverter.GetBytes(v));
 			else
-				writer.WriteStringNoNull( v.ToString() );
+				writer.WriteStringNoNull(v.ToString(numberFormat));
 		}
 
 		public int Value
@@ -160,14 +160,14 @@ namespace MySql.Data.Types
 			if (length == -1) 
 			{
 				if (mySqlDbType == MySqlDbType.Int24)
-					Value = reader.ReadInteger( 3 );
+					Value = reader.ReadInteger(3);
 				else
-					Value = (int)reader.ReadLong( 4  );
+					Value = (int)reader.ReadLong(4);
 			}
 			else 
 			{
-				string value = reader.ReadString( length );
-				Value = Int32.Parse( value );
+				string value = reader.ReadString(length);
+				Value = Int32.Parse(value, numberFormat);
 			}
 			return this;
 		}

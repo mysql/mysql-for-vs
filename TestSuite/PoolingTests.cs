@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB
+// Copyright (C) 2004-2005 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -17,7 +17,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
-
 using System;
 using System.Data;
 using System.Threading;
@@ -63,7 +62,9 @@ namespace MySql.Data.MySqlClient.Tests
 				c.Close();
 			}
 
-			KillConnection( c );
+			c.Open();
+			KillConnection(c);
+			c.Close();
 
 			connStr += ";Min Pool Size=10";
 			MySqlConnection[] connArray = new MySqlConnection[10];
@@ -86,8 +87,8 @@ namespace MySql.Data.MySqlClient.Tests
 			for (int i=0; i < connArray.Length; i++)
 			{
 				int id = connArray[i].ServerThread;
+				KillConnection(connArray[i]);
 				connArray[i].Close();
-				KillConnection( connArray[i] );
 			}
 		}
 
@@ -96,23 +97,26 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 			try 
 			{
-				MySqlConnection c = new MySqlConnection( conn.ConnectionString + ";pooling=true" );
+				string connStr = conn.ConnectionString + ";pooling=true";
+				MySqlConnection c = new MySqlConnection(connStr);
 				c.Open();
 				int threadId = c.ServerThread;
-				c.Close();
-
 				// thread gets killed right here
 				KillConnection(c);
-
-				c.Open();
-				threadId = c.ServerThread;
 				c.Close();
-				KillConnection(c);
 
+				c.Dispose();
+
+				c = new MySqlConnection(connStr);
+				c.Open();
+				int secondThreadId = c.ServerThread;
+				KillConnection(c);
+				c.Close();
+				Assert.IsFalse(threadId == secondThreadId);
 			}
 			catch (Exception ex)
 			{
-				Assert.Fail( ex.Message );
+				Assert.Fail(ex.Message);
 			}
 		}
 
@@ -148,7 +152,7 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 			catch (Exception ex) 
 			{ 
-				Assert.Fail( ex.Message );
+				Assert.Fail( ex.Message);
 			}
 		}
 

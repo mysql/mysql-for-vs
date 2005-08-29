@@ -122,11 +122,11 @@ namespace MySql.Data.Types
 
 		internal override void Serialize(PacketWriter writer, bool binary, object value, int length)
 		{
-			long v = Convert.ToInt64( value );
+			long v = Convert.ToInt64(value);
 			if (binary)
-				writer.Write( BitConverter.GetBytes( v ) );
+				writer.Write(BitConverter.GetBytes(v));
 			else
-				writer.WriteStringNoNull( v.ToString() );
+				writer.WriteStringNoNull(v.ToString(numberFormat));
 		}
 
 
@@ -150,12 +150,12 @@ namespace MySql.Data.Types
 		{
 			if (length == -1) 
 			{
-				Value = (long)reader.ReadLong( 8 );
+				Value = (long)reader.ReadLong(8);
 			}
 			else 
 			{
-				string value = reader.ReadString( length );
-				Value = Int64.Parse( value );
+				string value = reader.ReadString(length);
+				Value = Int64.Parse(value, numberFormat);
 			}
 			return this;
 		}
@@ -165,13 +165,5 @@ namespace MySql.Data.Types
 			reader.Skip(8);
 		}
 
-
-		#region Operators
-		public static implicit operator Int32( MySqlInt64 val ) 
-		{
-//			if (val.Value <= Int32.MaxValue && val.Value < 
-			return 0;
-		}
-		#endregion
 	}*/
 }

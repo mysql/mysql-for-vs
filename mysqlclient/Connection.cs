@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB
+// Copyright (C) 2004-2005 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -42,6 +42,7 @@ namespace MySql.Data.MySqlClient
 		private  MySqlDataReader			dataReader;
 		private  MySqlConnectionString		settings;
 		private  UsageAdvisor				advisor;
+		private  bool						hasBeenOpen;
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/StateChange/*'/>
         public override event StateChangeEventHandler StateChange;
@@ -55,14 +56,14 @@ namespace MySql.Data.MySqlClient
 		{
 			//TODO: add event data to StateChange docs
 			settings = new MySqlConnectionString();
+			settings.LoadDefaultValues();
 			advisor = new UsageAdvisor( this );
 		}
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/Ctor1/*'/>
-		public MySqlConnection(string connectionString)
+		public MySqlConnection(string connectionString) : this()
 		{
-			settings = new MySqlConnectionString(connectionString);
-			advisor = new UsageAdvisor( this );
+            ConnectionString = connectionString;
 		}
 
 		#region Interal Methods & Properties
@@ -197,7 +198,7 @@ namespace MySql.Data.MySqlClient
 			{
 				// Always return exactly what the user set.
 				// Security-sensitive information may be removed.
-				return settings.GetConnectionString();
+				return settings.GetConnectionString(!hasBeenOpen);
 			}
 			set
 			{
@@ -225,7 +226,7 @@ namespace MySql.Data.MySqlClient
 		{
 			//TODO: check note in help
 			if (state != ConnectionState.Open)
-				throw new MySqlException("Invalid operation: The connection is closed");
+				throw new InvalidOperationException(Resources.GetString("ConnectionNotOpen"));
 
 			MySqlTransaction t = new MySqlTransaction(this, iso);
 
@@ -243,7 +244,7 @@ namespace MySql.Data.MySqlClient
 				case IsolationLevel.Serializable:
 					cmd.CommandText += "SERIALIZABLE"; break;
 				case IsolationLevel.Chaos:
-					throw new NotSupportedException("Chaos isolation level is not supported");
+					throw new NotSupportedException(Resources.GetString("ChaosNotSupported"));
 			}
 
 			cmd.ExecuteNonQuery();
@@ -260,10 +261,12 @@ namespace MySql.Data.MySqlClient
 		public override void ChangeDatabase(string database)
 		{
 			if (database == null || database.Trim().Length == 0)
-				throw new ArgumentException( "Database parameter is invalid", "database" );
+				throw new ArgumentException(
+					Resources.GetString("ParameterIsInvalid"), "database");
 
 			if (state != ConnectionState.Open)
-				throw new InvalidOperationException("Connection must be open to change database");
+				throw new InvalidOperationException(
+					Resources.GetString("ConnectionNotOpen"));
 
 			driver.SetDatabase( database );
 			settings.Database = database;
@@ -290,7 +293,8 @@ namespace MySql.Data.MySqlClient
 		public override void Open()
 		{
 			if (state == ConnectionState.Open)
-				throw new MySqlException("error connecting: The connection is already Open (state=Open).");
+				throw new InvalidOperationException(
+					Resources.GetString("ConnectionAlreadyOpen"));
 
 			SetState( ConnectionState.Connecting );
 
@@ -319,6 +323,7 @@ namespace MySql.Data.MySqlClient
 			driver.Configure( this );
 			if (settings.Database != null && settings.Database != String.Empty)
 				ChangeDatabase( settings.Database );
+			hasBeenOpen = true;
 		}
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/CreateCommand/*'/>
@@ -393,7 +398,7 @@ namespace MySql.Data.MySqlClient
 	/// <summary>
 	/// Provides data for the InfoMessage event. This class cannot be inherited.
 	/// </summary>
-	public class MySqlInfoMessageEventArgs 
+	public class MySqlInfoMessageEventArgs : EventArgs
 	{
 		/// <summary>
 		/// 

@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB
+// Copyright (C) 2004-2005 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -184,7 +184,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 		}
 
-		[Test()]
+		[Test]
 		public void TestSingleResultSetBehavior()
 		{
 			execSQL("INSERT INTO Test (id, name, b1) VALUES (1, 'Test1', NULL)");
@@ -201,7 +201,7 @@ namespace MySql.Data.MySqlClient.Tests
 			reader.Close();
 		}
 
-		[Test()]
+		[Test]
 		public void GetSchema() 
 		{
 			string sql = "CREATE TABLE test2( " +
@@ -237,7 +237,7 @@ namespace MySql.Data.MySqlClient.Tests
 			execSQL("DROP TABLE IF EXISTS test2");
 		}
 
-		[Test()]
+		[Test]
 		public void CloseConnectionBehavior() 
 		{
 			execSQL("INSERT INTO Test(id,name) VALUES(1,'test')");
@@ -264,7 +264,7 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-		[Test()]
+		[Test]
 		public void SingleRowBehavior() 
 		{
 			execSQL("INSERT INTO Test(id,name) VALUES(1,'test1')");
@@ -280,6 +280,15 @@ namespace MySql.Data.MySqlClient.Tests
 				Assert.IsFalse( reader.Read(), "Second read" );
 				Assert.IsFalse( reader.NextResult(), "Trying NextResult" );
 				reader.Close();
+
+				cmd.CommandText = "SELECT * FROM test where id=1";
+				reader = cmd.ExecuteReader(CommandBehavior.SingleRow);
+				Assert.IsTrue(reader.Read());
+				Assert.AreEqual("test1", reader.GetString(1));
+				Assert.IsFalse(reader.Read());
+				Assert.IsFalse(reader.NextResult());
+				reader.Close();
+
 				reader = null;
 			}
 			catch (Exception ex) 
@@ -292,7 +301,7 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-		[Test()]
+		[Test]
 		public void SingleRowBehaviorWithLimit() 
 		{
 			execSQL("INSERT INTO Test(id,name) VALUES(1,'test1')");
@@ -331,7 +340,7 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-		[Test()]
+		[Test]
 		public void SimpleSingleRow() 
 		{
 			execSQL("INSERT INTO Test(id,name) VALUES(1,'test1')");
@@ -357,7 +366,7 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-		[Test()]
+		[Test]
 		public void ConsecutiveNulls() 
 		{
 			execSQL("INSERT INTO Test (id, name) VALUES (1, 'Test')");
@@ -395,7 +404,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 		}
 
-		[Test()]
+		[Test]
 		public void HungDataReader() 
 		{
 			MySqlCommand cmd = new MySqlCommand("USE test; SHOW TABLES", conn);
@@ -418,7 +427,7 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-		[Test()]
+		[Test]
 		public void SequentialAccessBehavior() 
 		{
 			execSQL("INSERT INTO Test(id,name) VALUES(1,'test1')");
@@ -541,7 +550,7 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-		[Test()]
+		[Test]
 		public void TestManyDifferentResultsets()
 		{
 			MySqlDataReader reader =null;

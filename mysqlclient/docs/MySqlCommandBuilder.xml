@@ -34,7 +34,20 @@
 	their previous values.</para>
 
 	<para>If you call <i>Dispose</i>, the <B>MySqlCommandBuilder</B> is disassociated 
-	from the <B>MySqlDataAdapter</B>, and the generated commands are no longer used.</para>
+	from the <B>MySqlDataAdapter</B>, and the generated commands are no longer used.
+	</para>
+	
+	<note>
+	Caution must be used when using MySqlCOmmandBuilder on MySql 4.0 systems.  With MySql 4.0, 
+	database/schema information is not provided to the connector for a query.  This means that
+	a query that pulls columns from two identically named tables in two or more different databases
+	will not cause an exception to be thrown but will not work correctly.  Even more dangerous
+	is the situation where your select statement references database X but is executed in 
+	database Y and both databases have tables with similar layouts.  This situation can cause
+	unwanted changes or deletes.
+	This note does not apply to MySQL versions 4.1 and later.
+	</note>
+	
 	</remarks>
 
 	<example>

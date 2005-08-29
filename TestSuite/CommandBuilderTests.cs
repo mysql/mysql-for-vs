@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB
+// Copyright (C) 2004-2005 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -97,8 +97,8 @@ namespace MySql.Data.MySqlClient.Tests
 			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
 			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
 			DataTable dt = new DataTable();
-			da.Fill( dt );
-			Assert.AreEqual( 1, dt.Rows.Count );
+			da.Fill(dt);
+			Assert.AreEqual(1, dt.Rows.Count);
 
 			execSQL("UPDATE Test SET name='Test2' WHERE id=1");
 
@@ -122,6 +122,7 @@ namespace MySql.Data.MySqlClient.Tests
 		/// Bug #8382  	Commandbuilder does not handle queries to other databases than the default one-
 		/// </summary>
 		[Test]
+		[Category("4.1")]
 		public void DifferentDatabase()
 		{
 			execSQL("INSERT INTO test (id, name) VALUES (1,'test1')");

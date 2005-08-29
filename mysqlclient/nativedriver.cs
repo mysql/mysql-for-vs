@@ -695,6 +695,11 @@ namespace MySql.Data.MySqlClient
 			{
 				ReadFieldMetadata( numParams, ref parameters );
 
+				// we set the encoding for each parameter back to our connection encoding
+				// since we can't trust what is coming back from the server
+				for (int i=0; i < parameters.Length; i++)
+					parameters[i].Encoding = encoding;
+
 				if (parmNames.Length != parameters.Length)
 					throw new MySqlException("Incorrect number of parameters received for prepared statement");
 

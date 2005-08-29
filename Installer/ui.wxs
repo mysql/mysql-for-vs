@@ -822,10 +822,10 @@
         </Control>
       </Dialog>
       
-      <RadioGroup Property="IAgree">
-        <RadioButton Text="{\DlgFont8}I &amp;accept the terms in the License Agreement" X="5" Y="0" Width="250" Height="15">Yes</RadioButton>
-        <RadioButton Text="{\DlgFont8}I &amp;do not accept the terms in the License Agreement" X="5" Y="20" Width="250" Height="15">No</RadioButton>
-      </RadioGroup>
+      <RadioButtonGroup Property="IAgree">
+        <RadioButton Text="{\DlgFont8}I &amp;accept the terms in the License Agreement" X="5" Y="0" Width="250" Height="15" Value="Yes"></RadioButton>
+        <RadioButton Text="{\DlgFont8}I &amp;do not accept the terms in the License Agreement" X="5" Y="20" Width="250" Height="15" Value="No"></RadioButton>
+      </RadioButtonGroup>
       <TextStyle Id="DlgFont8" FaceName="Tahoma" Size="8" />
       <TextStyle Id="DlgFontBold8" FaceName="Tahoma" Size="8" Bold="yes" />
       <TextStyle Id="VerdanaBold13" FaceName="Verdana" Size="13" Bold="yes" />

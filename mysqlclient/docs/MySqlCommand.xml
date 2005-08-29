@@ -277,7 +277,7 @@ public void CreateMySqlCommand()
 	<param name="connection">A <see cref="MySqlConnection"/> that represents the 
 		connection to an instance of SQL Server.
 	</param>
-	<param name="txn">The <see cref="MySqlTransaction"/> in which the <see cref="MySqlCommand"/> executes.</param>
+	<param name="transaction">The <see cref="MySqlTransaction"/> in which the <see cref="MySqlCommand"/> executes.</param>
 	<remarks>
 		When an instance of <see cref="MySqlCommand"/> is created, 
 		the following read/write properties are set to initial values.		

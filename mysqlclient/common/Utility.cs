@@ -26,6 +26,10 @@ namespace MySql.Data.Common
 {
 	internal class Utility
 	{
+		// Create a private ctor so the compiler doesn't give us a default one
+		private Utility()
+		{
+		}
 
 		public static int ContextSubstring(string src, string target, string contextMarkers)
 		{

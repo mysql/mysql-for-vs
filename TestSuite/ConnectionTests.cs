@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB
+// Copyright (C) 2004-2005 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -80,10 +80,12 @@ namespace MySql.Data.MySqlClient.Tests
 
 		[Test()]
 		[ExpectedException(typeof(MySqlException))]
-		[Explicit]
 		public void TestConnectingSocketBadUserName()
 		{
 			string host = ConfigurationSettings.AppSettings["host"];
+
+			execSQL("DELETE FROM mysql.user WHERE length(user) = 0");
+			execSQL("FLUSH PRIVILEGES");
 
 			string connStr = "server={0};user id=dummy;password=;database=Test";
 			MySqlConnection c = new MySqlConnection(
@@ -97,12 +99,11 @@ namespace MySql.Data.MySqlClient.Tests
 		public void TestConnectingSocketBadDbName()
 		{
 			string host = ConfigurationSettings.AppSettings["host"];
-			string userid = ConfigurationSettings.AppSettings["userid"];
-			string password = ConfigurationSettings.AppSettings["password"];
 
-			string connStr = "server={0};user id={1};password={2};database=dummy; pooling=false";
+			string connStr = "server={0};user id={1};password={2};database=dummy; " +
+				"pooling=false";
 			MySqlConnection c = new MySqlConnection(
-				String.Format(connStr, host, userid, password));
+				String.Format(connStr, host, this.user, this.password));
 			c.Open();
 			c.Close();
 		}
@@ -111,18 +112,16 @@ namespace MySql.Data.MySqlClient.Tests
 		public void TestPersistSecurityInfoCachingPasswords() 
 		{
 			string host = ConfigurationSettings.AppSettings["host"];
-			string uid = ConfigurationSettings.AppSettings["user"];
-			string pwd = ConfigurationSettings.AppSettings["password"];
 
 			string connStr = String.Format("database=test;server={0};user id={1};Password={2}; pooling=false",
-				host, uid, pwd );
+				host, this.user, this.password );
 			MySqlConnection c = new MySqlConnection( connStr );
 			c.Open();
 			c.Close();
 
 			// this shouldn't work
 			connStr = String.Format("database=test;server={0};user id={1};Password={2}; pooling=false",
-				host, uid, "bad_password" );
+				host, this.user, "bad_password" );
 			c = new MySqlConnection( connStr );
 			try 
 			{
@@ -137,7 +136,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 			// this should work
 			connStr = String.Format("database=test;server={0};user id={1};Password={2}; pooling=false",
-				host, uid, pwd );
+				host, this.user, this.password);
 			c = new MySqlConnection( connStr );
 			c.Open();
 			c.Close();
@@ -190,6 +189,9 @@ namespace MySql.Data.MySqlClient.Tests
 				c.Open();
 				c.Close();
 
+				execSQL("GRANT ALL ON *.* to ''@'localhost'");
+				execSQL("FLUSH PRIVILEGES");
+
 				// connect with all defaults
 				if (connStr.IndexOf("localhost") != -1) 
 				{
@@ -198,10 +200,12 @@ namespace MySql.Data.MySqlClient.Tests
 					c.Close();
 				}
 
+				execSQL("GRANT ALL ON *.* to 'nopass'@'localhost'");
+				execSQL("FLUSH PRIVILEGES");
+
 				// connect with no password
 				string host = System.Configuration.ConfigurationSettings.AppSettings["host"];
-				string user = System.Configuration.ConfigurationSettings.AppSettings["nopassuser"];
-				connStr2 = "server=" + host + ";user id=" + user;
+				connStr2 = "server=" + host + ";user id=nopass";
 				c = new MySqlConnection( connStr2 );
 				c.Open();
 				c.Close();
@@ -215,11 +219,64 @@ namespace MySql.Data.MySqlClient.Tests
 			{
 				Assert.Fail( ex.Message );
 			}
+			finally 
+			{
+				execSQL("DELETE FROM mysql.user WHERE length(user) = 0");
+				execSQL("DELETE FROM mysql.user WHERE user='nopass'");
+				execSQL("FLUSH PRIVILEGES");
+			}
 		}
+
+		[Test]
+		[Category("4.1")]
+		public void ConnectingAsUTF8()
+		{
+			execSQL("CREATE Database IF NOT EXISTS test2 DEFAULT CHARACTER SET utf8");
+
+			string connStr = String.Format("server={0};user id={1}; password={2}; database=test2;pooling=false;charset=utf8",
+				host, user, password);
+			MySqlConnection c = new MySqlConnection(connStr);
+			c.Open();
+
+			MySqlCommand cmd = new MySqlCommand("DROP TABLE IF EXISTS test;CREATE TABLE test (id varbinary(16), active bit)", c);
+			cmd.ExecuteNonQuery();
+			cmd.CommandText = "INSERT INTO test (id, active) VALUES (CAST(0x1234567890 AS Binary), true)";
+			cmd.ExecuteNonQuery();
+			cmd.CommandText = "INSERT INTO test (id, active) VALUES (CAST(0x123456789a AS Binary), true)";
+			cmd.ExecuteNonQuery();
+			cmd.CommandText = "INSERT INTO test (id, active) VALUES (CAST(0x123456789b AS Binary), true)";
+			cmd.ExecuteNonQuery();
+			c.Close();
+
+			MySqlConnection d = new MySqlConnection(connStr);
+			d.Open();
+
+			MySqlCommand cmd2 = new MySqlCommand( "SELECT id, active FROM test", d);
+			MySqlDataReader reader = null;
+			try 
+			{
+				reader = cmd2.ExecuteReader();
+				Assert.IsTrue(reader.Read());
+				Assert.IsTrue(reader.GetBoolean(1));
+			}
+			catch (Exception ex) 
+			{
+				Assert.Fail(ex.Message);
+			}
+			finally 
+			{
+				if (reader != null) reader.Close();
+			}
+			
+			d.Close();
+
+			execSQL("DROP DATABASE IF EXISTS test2");
+		}
+
 		/// <summary>
 		/// Bug #10281 Clone issue with MySqlConnection 
 		/// </summary>
-		[Test()]
+		[Test]
 		public void TestConnectionClone()
 		{
 			MySqlConnection c = new MySqlConnection();

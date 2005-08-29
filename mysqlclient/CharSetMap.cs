@@ -32,6 +32,11 @@ namespace MySql.Data.MySqlClient
 	{
 		private static Hashtable	mapping;
 
+		// Declare a private ctor so a default one won't be made by the compiler
+		private CharSetMap() 
+		{
+		}
+
 		/// <summary>
 		/// Returns the text encoding for a given MySQL character set name
 		/// </summary>

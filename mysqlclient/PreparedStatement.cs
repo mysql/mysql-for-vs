@@ -59,6 +59,7 @@ namespace MySql.Data.MySqlClient
 		public int ExecutionCount 
 		{
 			get { return executionCount; }
+			set { executionCount = value; }
 		}
 
 		#endregion
@@ -75,7 +76,8 @@ namespace MySql.Data.MySqlClient
 			BitArray nullMap = new BitArray( parameters.Count ); //metaData.Length );
 			for (int x=0; x < parameters.Count; x++)
 			{
-				if (parameters[x].Value == DBNull.Value)
+				if (parameters[x].Value == DBNull.Value ||
+					parameters[x].Value == null)
 					nullMap[x] = true;
 			}
 			byte[] nullMapBytes = new byte[ (parameters.Count + 7)/8 ];
@@ -86,10 +88,10 @@ namespace MySql.Data.MySqlClient
 			writer.WriteByte( (byte)cursorPageSize );          // flags; always 0 for 4.1
 			writer.WriteInteger( 1, 4 );    // interation count; 1 for 4.1
 			writer.Write( nullMapBytes );
-			if (parameters != null && parameters.Count > 0)
+			//if (parameters != null && parameters.Count > 0)
 				writer.WriteByte( 1 );			// rebound flag
-			else
-				writer.WriteByte( 0 );
+			//else
+			//	packet.WriteByte( 0 );
 			//TODO:  only send rebound if parms change
 
 			// write out the parameter types
@@ -103,13 +105,13 @@ namespace MySql.Data.MySqlClient
 			foreach ( MySqlField param in paramList )
 			{
 				MySqlParameter parm = parameters[ param.ColumnName ];
-				if (parm.Value == DBNull.Value) continue;
+				if (parm.Value == DBNull.Value || parm.Value == null) continue;
 
 				writer.Encoding = param.Encoding;
 				parm.Serialize(writer, true);
 			}
 
-//			executionCount ++;
+			executionCount ++;
 			// send the data packet and return the CommandResult
 			CommandResult result = driver.ExecuteStatement(
 				((System.IO.MemoryStream)writer.Stream).ToArray(), StatementId, cursorPageSize );

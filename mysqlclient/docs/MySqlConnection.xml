@@ -454,7 +454,7 @@ public void RunTransaction(string myConnString)
 
 <ChangeDatabase>
 	<summary>Changes the current database for an open MySqlConnection.</summary>
-	<param name="database">The name of the database to use.</param>
+	<param name="databaseName">The name of the database to use.</param>
 	<remarks>
 		<para>The value supplied in the <I>database</I> parameter must be a valid database 
 		name. The <I>database</I> parameter cannot contain a null value, an empty 

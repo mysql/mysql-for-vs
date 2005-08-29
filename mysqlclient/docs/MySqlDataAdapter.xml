@@ -1,4 +1,4 @@
-<docs>
+﻿<docs>
 <class>
 	<summary>
 	Represents a set of data commands and a database connection that are used to fill a dataset and update a MySQL database. This class cannot be inherited.
@@ -32,6 +32,11 @@
 	are set to initial values. For a list of these values, see the <B>MySQLDataAdapter</B> 
 	constructor.
 	</para>
+	<note>
+	Please be aware that the <see cref="DataColumn"/> class in .NET 1.0 and 1.1 does not allow columns
+	with type of UInt16, UInt32, or UInt64 to be autoincrement columns.  If you plan to use autoincremement
+	columns with MySQL, you should consider using signed integer columns.
+	</note>
 </remarks>
 
 <example>
@@ -233,7 +238,7 @@ public static void CreateSqlDataAdapter()
 	A <b>String</b> that is a SQL SELECT statement or stored procedure to be used by 
 	the <see cref="SelectCommand"/> property of the <see cref="MySqlDataAdapter"/>. 
 	</param>
-	<param name="conn">A <see cref="MySqlConnection"/> that represents the connection.</param>
+	<param name="connection">A <see cref="MySqlConnection"/> that represents the connection.</param>
 	<remarks>
 	<para>
 	This implementation of the <see cref="MySqlDataAdapter"/> opens and closes a <see cref="MySqlConnection"/>

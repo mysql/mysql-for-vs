@@ -28,23 +28,47 @@ namespace MySql.Data.MySqlClient
 	public class MySqlError
 	{
 		/// <summary></summary>
-		public string	level;
+		private string	level;
 
 		/// <summary></summary>
-		public uint		code;
+		private uint	code;
 
 		/// <summary></summary>
-		public string	message;
+		private string	message;
 
 		/// <summary></summary>
 		/// <param name="level"></param>
 		/// <param name="code"></param>
 		/// <param name="message"></param>
-		public MySqlError( string level, uint code, string message ) 
+		public MySqlError(string level, uint code, string message) 
 		{
 			this.level = level;
 			this.code = code;
 			this.message = message;
+		}
+
+		/// <summary>
+		/// Error level
+		/// </summary>
+		public string	Level 
+		{
+			get { return level; }
+		}
+
+		/// <summary>
+		/// Error code
+		/// </summary>
+		public uint Code 
+		{
+			get { return code; }
+		}
+
+		/// <summary>
+		/// Error message
+		/// </summary>
+		public string Message 
+		{
+			get { return message; }
 		}
 
 /*		ER_HASHCHK=1000,
@@ -71,7 +95,7 @@ namespace MySql.Data.MySqlClient
 		ER_DISK_FULL 1021
 		*/
 		/// <summary>Duplicate key was found</summary>
-		public static int DuplicateKey = 1022;
+		public const int DuplicateKey = 1022;
 
 /*		ER_ERROR_ON_CLOSE 1023
 		ER_ERROR_ON_READ 1024
@@ -83,7 +107,7 @@ namespace MySql.Data.MySqlClient
 		ER_GET_ERRNO 1030
 		ER_ILLEGAL_HA 1031*/
 		/// <summary>Key was not found</summary>
-		public static int KeyNotFound = 1032;
+		public const int KeyNotFound = 1032;
 /*		ER_NOT_FORM_FILE 1033
 		ER_NOT_KEYFILE 1034
 		ER_OLD_KEYFILE 1035
@@ -113,10 +137,10 @@ namespace MySql.Data.MySqlClient
 		ER_TOO_LONG_IDENT 1059
 		ER_DUP_FIELDNAME 1060*/
 		/// <summary>Duplicate key name</summary>
-		public static int DuplicateKeyName = 1061;
+		public const int DuplicateKeyName = 1061;
 
 		/// <summary>Duplicate key entry</summary>
-		public static int DuplicateKeyEntry = 1062;
+		public const int DuplicateKeyEntry = 1062;
 
 		/*		ER_WRONG_FIELD_SPEC 1063
 		ER_PARSE_ERROR 1064
@@ -187,16 +211,16 @@ namespace MySql.Data.MySqlClient
 		ER_HOST_IS_BLOCKED 1129
 		*/
 		/// <summary>Host not privileged</summary>
-		public static int HostNotPrivileged = 1130;
+		public const int HostNotPrivileged = 1130;
 
 		/// <summary>Not sure</summary>
-		public static int AnonymousUser = 1131;
+		public const int AnonymousUser = 1131;
 
 		/// <summary>Passwords are not allowed on this account</summary>
-		public static int PasswordNotAllowed = 1132;
+		public const int PasswordNotAllowed = 1132;
 
 		/// <summary>Passwords do not match</summary>
-		public static int PasswordNoMatch = 1133;
+		public const int PasswordNoMatch = 1133;
 /*		ER_UPDATE_INFO 1134
 		ER_CANT_CREATE_THREAD 1135
 		ER_WRONG_VALUE_COUNT_ON_ROW 1136

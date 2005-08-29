@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB
+// Copyright (C) 2004-2005 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -61,12 +61,13 @@ namespace MySql.Data.MySqlClient
 		}
 
 		#region Server Properties
-		public string Name 
+
+/*		public string Name 
 		{
 			get { return connectionName; }
 			set { connectionName = value; }
 		}
-
+*/
 
 #if DESIGN
 		[Category("Connection")]
@@ -75,7 +76,7 @@ namespace MySql.Data.MySqlClient
 		public string Server 
 		{
 			get { return GetString("host"); }
-			set { keyValues["host"] = value; }
+//			set { keyValues["host"] = value; }
 		}
 
 #if DESIGN
@@ -86,7 +87,7 @@ namespace MySql.Data.MySqlClient
 		public uint Port 
 		{
 			get { return (uint)GetInt("port"); }
-			set { keyValues["port"] = value; }
+//			set { keyValues["port"] = value; }
 		}
 
 #if DESIGN
@@ -97,7 +98,7 @@ namespace MySql.Data.MySqlClient
 		public ConnectionProtocol Protocol
 		{
 			get { return (ConnectionProtocol)keyValues["protocol"]; }
-			set { keyValues["protocol"] = value; }
+//			set { keyValues["protocol"] = value; }
 		}
 
 #if DESIGN
@@ -107,7 +108,7 @@ namespace MySql.Data.MySqlClient
 		public string PipeName 
 		{
 			get { return GetString("pipeName"); }
-			set { keyValues["pipeName"] = value; }
+//			set { keyValues["pipeName"] = value; }
 		}
 
 #if DESIGN
@@ -118,7 +119,7 @@ namespace MySql.Data.MySqlClient
 		public bool UseCompression 
 		{
 			get { return GetBool("compress"); }
-			set { keyValues["compress"] = value; }
+//			set { keyValues["compress"] = value; }
 		}
 
 #if DESIGN
@@ -129,7 +130,7 @@ namespace MySql.Data.MySqlClient
 		public string Database
 		{
 			get { return GetString("database"); }
-			set { keyValues["database"] = value; }
+//			set { keyValues["database"] = value; }
 		}
 
 #if DESIGN
@@ -140,7 +141,7 @@ namespace MySql.Data.MySqlClient
 		public int ConnectionTimeout
 		{
 			get { return GetInt("connect timeout"); }
-			set { keyValues["connect timeout"] = value; }
+//			set { keyValues["connect timeout"] = value; }
 		}
 
 #if DESIGN
@@ -151,7 +152,7 @@ namespace MySql.Data.MySqlClient
 		public bool AllowBatch 
 		{
 			get { return GetBool("allow batch"); }
-			set { keyValues["allow batch"] = value; }
+//			set { keyValues["allow batch"] = value; }
 		}
 
 #if DESIGN
@@ -162,7 +163,7 @@ namespace MySql.Data.MySqlClient
 		public bool Logging
 		{
 			get { return GetBool("logging"); }
-			set { keyValues["logging"] = value; }
+//			set { keyValues["logging"] = value; }
 		}
 
 #if DESIGN
@@ -173,7 +174,7 @@ namespace MySql.Data.MySqlClient
 		public string SharedMemoryName 
 		{
 			get { return GetString("memname"); }
-			set { keyValues["memname"] = value; }
+//			set { keyValues["memname"] = value; }
 		}
 
 #if DESIGN
@@ -184,7 +185,7 @@ namespace MySql.Data.MySqlClient
 		public bool UseOldSyntax 
 		{
 			get { return GetBool("oldsyntax"); }
-			set { keyValues["oldsyntax"] = value; }
+//			set { keyValues["oldsyntax"] = value; }
 		}
 
 #if DESIGN
@@ -195,13 +196,13 @@ namespace MySql.Data.MySqlClient
 		public DriverType DriverType
 		{
 			get { return (DriverType)keyValues["driver"]; }
-			set { keyValues["driver"] = value; }
+//			set { keyValues["driver"] = value; }
 		}
 
 		public string OptionFile 
 		{
 			get { return keyValues["option_file"] as string; }
-			set { keyValues["option_file"] = value; }
+//			set { keyValues["option_file"] = value; }
 		}
 
 		#endregion
@@ -215,7 +216,7 @@ namespace MySql.Data.MySqlClient
 		public string UserId 
 		{
 			get { return GetString("user id"); }
-			set { keyValues["user id"] = value; }
+//			set { keyValues["user id"] = value; }
 		}
 
 #if DESIGN
@@ -225,7 +226,7 @@ namespace MySql.Data.MySqlClient
 		public string Password 
 		{
 			get { return GetString("password"); }
-			set { keyValues["password"] = value; }
+//			set { keyValues["password"] = value; }
 		}
 
 #if DESIGN
@@ -236,7 +237,7 @@ namespace MySql.Data.MySqlClient
 		public bool UseSSL
 		{
 			get { return GetBool("useSSL"); }
-			set { keyValues["useSSL"] = value; }
+//			set { keyValues["useSSL"] = value; }
 		}
 
 #if DESIGN
@@ -247,7 +248,7 @@ namespace MySql.Data.MySqlClient
 		public bool PersistSecurityInfo 
 		{
 			get { return GetBool("persist security info"); }
-			set { keyValues["persist security info"] = value; }
+//			set { keyValues["persist security info"] = value; }
 		}
 		#endregion
 
@@ -261,7 +262,7 @@ namespace MySql.Data.MySqlClient
 		public bool Pooling 
 		{
 			get { return GetBool("pooling"); }
-			set { keyValues["pooling"] = value; }
+//			set { keyValues["pooling"] = value; }
 		}
 
 #if DESIGN
@@ -272,7 +273,7 @@ namespace MySql.Data.MySqlClient
 		public int MinPoolSize 
 		{
 			get { return GetInt("min pool size"); }
-			set { keyValues["min pool size"] = value; }
+//			set { keyValues["min pool size"] = value; }
 		}
 
 #if DESIGN
@@ -283,7 +284,7 @@ namespace MySql.Data.MySqlClient
 		public int MaxPoolSize 
 		{
 			get { return GetInt("max pool size"); }
-			set { keyValues["max pool size"] = value; }
+//			set { keyValues["max pool size"] = value; }
 		}
 
 #if DESIGN
@@ -294,7 +295,7 @@ namespace MySql.Data.MySqlClient
 		public int ConnectionLifetime 
 		{
 			get { return GetInt("connect lifetime"); }
-			set { keyValues["connect lifetime"] = value; }
+//			set { keyValues["connect lifetime"] = value; }
 		}
 
 		#endregion
@@ -309,19 +310,21 @@ namespace MySql.Data.MySqlClient
 		public bool AllowZeroDateTime 
 		{
 			get { return GetBool("allowzerodatetime"); }
-			set { keyValues["alllowzerodatetime"] = value; }
+//			set { keyValues["alllowzerodatetime"] = value; }
 		}
 
 #if DESIGN
 		[Category("Other")]
 		[Description("Should illegal datetime values be converted to DateTime.MinValue")]
 		[DefaultValue(false)]
+#endif
 		public bool ConvertZeroDateTime 
 		{
 			get { return GetBool("convertzerodatetime"); }
-			set { keyValues["convertzerodatetime"] = value; }
+//			set { keyValues["convertzerodatetime"] = value; }
 		}
 
+#if DESIGN
 		[Category("Other")]
 		[Description("Character set this connection should use")]
 		[DefaultValue(null)]
@@ -329,7 +332,7 @@ namespace MySql.Data.MySqlClient
 		public string CharacterSet 
 		{
 			get { return GetString("charset"); }
-			set { keyValues["charset"] = value; }
+//			set { keyValues["charset"] = value; }
 		}
 
 #if DESIGN
@@ -340,7 +343,7 @@ namespace MySql.Data.MySqlClient
 		public bool UseUsageAdvisor 
 		{
 			get { return GetBool("usageAdvisor"); }
-			set { keyValues["usageAdvisor"] = value; }
+//			set { keyValues["usageAdvisor"] = value; }
 		}
 
 		#endregion
@@ -352,21 +355,18 @@ namespace MySql.Data.MySqlClient
 		/// <returns></returns>
 		public string GetConnectionString()
 		{
-			if (connectString == null) return CreateConnectionString();
+			if (connectString == null) return String.Empty;
 
-			StringBuilder str = new StringBuilder();
-			Hashtable ht = ParseKeyValuePairs( connectString );
+			string connStr = connectString;
+			if (! PersistSecurityInfo && !includePass)
+				connStr = RemovePassword(connStr);
 
-			if (! PersistSecurityInfo) 
-				ht.Remove("password");
+			return connStr;
+		}
 
-			foreach( string key in ht.Keys)
-				str.AppendFormat(null, "{0}={1};", key, ht[key]);
-
-			if (str.Length > 0)
-				str.Remove( str.Length-1, 1 );
-
-			return str.ToString();
+		private string RemovePassword(string connStr)
+		{
+			return RemoveKeys(connStr, new string[2] { "password", "pwd" });
 		}
 
 		/// <summary>
@@ -374,7 +374,7 @@ namespace MySql.Data.MySqlClient
 		/// connection string
 		/// </summary>
 		/// <returns></returns>
-		public string CreateConnectionString()
+/*		public string CreateConnectionString()
 		{
 			string cStr = String.Empty;
 
@@ -398,13 +398,14 @@ namespace MySql.Data.MySqlClient
 
 			return cStr;
 		}
-
+*/
 		protected override Hashtable GetDefaultValues()
 		{
 			defaults = base.GetDefaultValues();
 			if (defaults == null)
 			{
-				defaults = new Hashtable();
+				defaults = new Hashtable(new CaseInsensitiveHashCodeProvider(), 
+					new CaseInsensitiveComparer());
 				defaults["host"] = String.Empty;
 				defaults["connect lifetime"] = 0;
 				defaults["user id"] = String.Empty;
@@ -436,9 +437,11 @@ namespace MySql.Data.MySqlClient
 
 		protected override bool ConnectionParameterParsed(Hashtable hash, string key, string value)
 		{
-			bool boolVal = value.ToLower() == "yes" || value.ToLower() == "true";
+			string lowerCaseKey = key.ToLower();
+			string lowerCaseValue = value.Trim().ToLower();
+			bool boolVal = lowerCaseValue == "yes" || lowerCaseValue == "true";
 
-			switch (key.ToLower()) 
+			switch (lowerCaseKey)
 			{
 				case "option file":
 					hash["option_file"] = value;
@@ -458,7 +461,7 @@ namespace MySql.Data.MySqlClient
 
 				case "usage advisor":
 				case "useusageadvisor":
-					hash["usageAdvisor"] = value.ToLower() == "yes" || value.ToLower() == "true";
+					hash["usageAdvisor"] = boolval;
 					return true;
 
 				case "character set":

@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB
+// Copyright (C) 2004-2005 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -101,7 +101,7 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// Creates the proper command text for executing the given stored procedure
 		/// </summary>
-		/// <param name="spName"></param>
+		/// <param name="cmd"></param>
 		/// <returns></returns>
 		public string Prepare(MySqlCommand cmd)
 		{
@@ -123,7 +123,7 @@ namespace MySql.Data.MySqlClient
 					string[] paramDefs = Utility.ContextSplit( param_list, ",", "()" );
 					foreach (string paramDef in paramDefs) 
 					{
-						string[] parts = Utility.ContextSplit( paramDef.ToLower(), " \t\r\n", "");
+						string[] parts = Utility.ContextSplit(paramDef.ToLower(), " \t\r\n", "");
 						if (parts.Length == 0) continue;
 						string direction = parts.Length == 3 ? parts[0] : "in";
 						string vName = parts.Length == 3 ? parts[1] : parts[0];
@@ -131,7 +131,7 @@ namespace MySql.Data.MySqlClient
 						string pName = connection.ParameterMarker + vName;
 						vName = "@" + hash + vName;
 
-						if (direction == "in")
+						if (direction.Equals("in"))
 							sqlStr += pName + ", ";
 						else if (direction == "out") 
 						{

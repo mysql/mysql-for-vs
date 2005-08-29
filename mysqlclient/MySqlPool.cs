@@ -104,7 +104,7 @@ namespace MySql.Data.MySqlClient
 					}
 					else 
 					{
-						driver.Close();
+						driver.SafeClose();
 						idlePool.RemoveAt(i);
 						driver = null;
 					}

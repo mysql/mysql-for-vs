@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB
+// Copyright (C) 2004-2005 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -45,43 +45,37 @@ namespace MySql.Data.MySqlClient.Tests
 		}
 
 
-		[Test()]
-		[Explicit]
-		public void TimeoutDuringRead() 
+		[Test]
+		public void Timeout() 
 		{
-			execSQL( "SET @@global.wait_timeout=15" );
-			execSQL( "SET @@local.wait_timeout=28800" );
-
 			for (int i=1; i < 2000; i++)
-				execSQL( "INSERT INTO Test VALUES (" + i + ", 'This is a long text string that I am inserting')" );
+				execSQL("INSERT INTO Test VALUES (" + i + ", 'This is a long text string that I am inserting')");
 
-			MySqlConnection c2 = new MySqlConnection( conn.ConnectionString );
+			// we create a new connection so our base one is not closed
+			MySqlConnection c2 = new MySqlConnection(conn.ConnectionString);
 			c2.Open();
 
-			MySqlCommand cmd = new MySqlCommand( "SELECT * FROM Test", c2 );
+			KillConnection(c2);
+			MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test", c2);
 			MySqlDataReader reader = null;
 
 			try 
 			{
 				reader = cmd.ExecuteReader();
-				Thread.Sleep( 20000 );
-				while (reader.Read()) 
-				{
-				}
+				reader.Read();
+				reader.Read();
 				reader.Close();
 				Assert.Fail("We should not reach this code");
 			}
-			catch (MySqlException ex)
+			catch (Exception)
 			{
-				Assert.IsTrue( ex.IsFatal );
-				Assert.AreEqual( ConnectionState.Closed, c2.State );
+				Assert.AreEqual(ConnectionState.Closed, c2.State);
 			}
 			finally 
 			{
 				if (reader != null) reader.Close();
+				c2.Close();
 			}
-
-			execSQL( "SET @@global.wait_timeout=28800" );
 		}
 	}
 }

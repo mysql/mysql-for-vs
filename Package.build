@@ -1,0 +1,178 @@
+<?xml version="1.0" ?>
+<project name="MySqlPackage" default="all" xmlns="http://nant.sf.net/schemas/nant-0.85.win32.net-1.0.xsd">
+	<description>Package script for MySQLClient Managed Provider for MySQL</description>
+
+	<include buildfile="client.build"/>
+
+	<!-- filesets -->
+	<fileset id="BaseSource">
+		<include name="mysqlclient/**"/>
+		<include name="testsuite/**"/>
+		<include name="client.build"/>
+		<include name="CHANGES"/>
+		<include name="README"/>
+		<include name="MySql.Data.csproj"/>
+		<include name="Samples/**" />
+		<include name="ICSharpCode.SharpZipLib.dll"/>
+	</fileset>
+
+	<fileset id="SourceGPL">
+		<include name="COPYING"/>
+		<include name="EXCEPTIONS"/>
+	</fileset>
+
+	<fileset id="SourceCommercial">
+		<include name="MySqlEULA.txt"/>
+	</fileset>
+
+	<!-- first remove all previous packages -->
+	<delete dir="packages" failonerror="false"/>
+	<mkdir dir="packages"/>
+
+
+
+	<!-- packaging targets -->
+	<target name="all" depends="GPL, Commercial"/>
+
+<!--	<target name="AuthNoSSL">
+		<property name="defines" value="FINAL,AUTHENTICATED" />
+		<property name="IsGPL" value="false"/>
+		<property name="postfix" value="-com-auth"/>
+		<call target="package"/>
+	</target>-->
+	
+	<target name="Commercial">
+		<property name="defines" value="FINAL" />
+		<property name="IsGPL" value="false"/>
+		<property name="postfix" value="-com"/>
+		<call target="package"/>
+	</target>
+
+	<target name="GPL">
+		<property name="defines" value="FINAL" />
+		<property name="IsGPL" value="true"/>
+		<property name="postfix" value="" />
+		<call target="package"/>
+	</target>
+
+    <!-- GPL package target -->
+    <target name="package" description="Package target for a single edition">
+		<delete dir="staging" failonerror="false"/>
+		<mkdir dir="staging"/>
+		
+		<copy todir="staging"><fileset refid="BaseSource"/></copy>
+		<copy if="${IsGPL}" todir="staging"><fileset refid="SourceGPL"/></copy>
+		<copy unless="${IsGPL}" todir="staging"><fileset refid="SourceCommercial"/></copy>
+		
+		<copy todir="staging">
+			<fileset>
+				<include name="Installer/main.wxs"/>
+				<include name="Installer/ui.wxs"/>
+				<include name="Installer/binary/*.*"/>
+			</fileset>
+		</copy>
+		
+		<!-- if we are not doing GPL, then we need to replace license text -->
+		<if test="true" unless="${IsGPL}">
+			<replacetext>
+				<section fromfile="gpl-banner.txt" tofile="commercial-banner.txt"/>
+				<files basedir="staging">
+					<include name="./**/*.cs"/>
+				</files>
+			</replacetext>
+		</if>
+		
+		<!-- build all client targets -->
+		<property name="debug" value="false"/>
+		<property name="build.dir" value="staging" />
+		
+		<nant buildfile="staging/client.build" target="allframeworks"/>
+		
+		<!-- now build the WIX installer -->
+		<exec workingdir="staging/Installer" program="candle" commandline="-dIsGPL=${IsGPL} -dbuild=release main.wxs"/>
+		<exec workingdir="staging/Installer" program="candle" commandline="ui.wxs"/>
+		<exec workingdir="staging/Installer" program="light" 
+			commandline="-out MySql.Data.msi main.wixobj ui.wixobj"/>
+
+		<zip zipfile="packages/mysql-connector-net-${ver}${postfix}.zip">
+			<fileset basedir="staging/Installer"><include name="MySql.Data.msi"/></fileset>
+		</zip>
+
+		<delete dir="staging/Installer" failonerror="false"/>
+		
+		<!-- zip the package up -->
+		<zip zipfile="packages/mysql-connector-net-${ver}${postfix}-noinstall.zip">
+			<fileset basedir="staging/">
+				<include name="./**"/>
+			</fileset>
+		</zip>
+
+		<!-- now add the MD5 sig -->
+        <checksum algorithm="MD5" fileext="MD5">
+            <fileset>
+                <include name="packages/mysql-connector-net-${ver}${postfix}.zip"/>
+                <include name="packages/mysql-connector-net-${ver}${postfix}-noinstall.zip"/>
+            </fileset>
+        </checksum>
+
+    </target>
+    
+    <!-- verification targets -->
+	<target name="VerifyAll" depends="all">
+		<property name="licenseFile" value="gpl-banner.txt"/>
+		<property name="package" value="mysql-connector-net-${ver}"/>
+		<call target="VerifyPackage"/>
+		
+		<property name="licenseFile" value="commercial-banner.txt"/>
+		<property name="package" value="mysql-connector-net-${ver}-com"/>
+		<call target="VerifyPackage"/>
+	</target>
+	
+	<target name="VerifyPackage">
+		<call target="VerifyInstaller"/>
+		<call target="VerifyNonInstaller"/>
+	</target>
+
+	<target name="VerifyDirectory">
+		<!-- now build for all frameworks -->
+		<property name="debug" value="false"/>
+		<nant buildfile="${build.dir}/client.build" target="alltests"/>
+		
+		<!-- now verify that the files do not include wrong license text -->
+		<foreach item="File" property="filename">
+			<in>
+				<items>
+					<include name="packages\temp\src\**\*.cs"/>
+					<include name="packages\temp\src\**\*.vb"/>
+				</items>
+			</in>
+			<do>
+				<checklicense filetocheck="${filename}" licensefile="${licenseFile}"/>
+			</do>
+		</foreach>
+	</target>
+	
+	<target name="VerifyInstaller">
+		<!-- first unzip the package into a temp dir and install it-->
+		<unzip todir="packages/temp" zipfile="packages/${package}.zip"/>		
+		<exec program="msiexec" commandline="/i ${nant.project.basedir}\packages\temp\MySql.Data.msi /norestart /quiet InstallMode=Complete SetInstallLevel=1000 TARGETDIR=${nant.project.basedir}\packages\temp" />
+		
+		<property name="build.dir" value="packages/temp/src" />
+		<call target="VerifyDirectory"/>
+		
+		<!-- now uninstall the package and delete the directory-->
+		<exec program="msiexec" commandline="/x ${nant.project.basedir}\packages\temp\MySql.Data.msi /norestart /quiet"/>
+		<delete dir="packages/temp" failonerror="false"/>
+	</target>
+	
+	<target name="VerifyNonInstaller">
+		<!-- first unzip the package into a temp dir -->
+		<unzip todir="packages/temp" zipfile="packages/${package}-noinstall.zip"/>		
+		<property name="build.dir" value="packages/temp" />
+		<call target="VerifyDirectory"/>
+		<delete dir="packages/temp" failonerror="false"/>
+	</target>
+
+    
+    
+</project>

@@ -22,6 +22,7 @@ using System;
 using System.IO;
 using ICSharpCode.SharpZipLib.Zip.Compression;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
+using MySql.Data.Common;
 
 namespace MySql.Data.MySqlClient
 {
@@ -45,16 +46,17 @@ namespace MySql.Data.MySqlClient
 			this.baseStream = baseStream;
 			cache = new MemoryStream();
 
-			index = 0;
 			buffer = new byte[0];
 		}
 
 		#region Properties
-		public Stream BaseStream 
+
+		//TODO: remove comment
+/*		public Stream BaseStream 
 		{
 			get { return baseStream; }
 		}
-
+*/
 		public override bool CanRead
 		{
 			get	{ return baseStream.CanRead; }
@@ -90,7 +92,7 @@ namespace MySql.Data.MySqlClient
 
 		public override void SetLength(long value)
 		{
-			throw new NotSupportedException("SetLength is not a valid operation on CompressedStream");
+			throw new NotSupportedException(Resources.GetString("CSNoSetLength"));
 		}
 
 		public override int ReadByte()
@@ -103,15 +105,18 @@ namespace MySql.Data.MySqlClient
 		public override int Read(byte[] buffer, int offset, int count)
 		{
 			if (buffer == null)
-				throw new ArgumentNullException( "buffer", "Buffer must not be null" );
+				throw new ArgumentNullException("buffer", 
+					Resources.GetString("BufferCannotBeNull"));
 			if (offset < 0 || offset >= buffer.Length)
-				throw new ArgumentOutOfRangeException( "Offset must be a valid position in buffer" );
+				throw new ArgumentOutOfRangeException("offset", 
+					Resources.GetString("OffsetMustBeValid"));
 			if ((offset + count) > buffer.Length)
-				throw new ArgumentException( "Buffer is not large enough to complete operation" );
+				throw new ArgumentException(Resources.GetString("BufferNotLargeEnough"),
+					"buffer");
 
-			EnsureData( count );
+			EnsureData(count);
 
-			Array.Copy( this.buffer, index, buffer, offset, count );
+			Array.Copy(this.buffer, index, buffer, offset, count);
 			index += count;
 
 			return count;
@@ -220,11 +225,11 @@ namespace MySql.Data.MySqlClient
 			return baseStream.Seek( offset, origin );
 		}
 
-		private void ReadBuffer( Stream s, byte[] buf, int offset, int length )
+		private static void ReadBuffer(Stream s, byte[] buf, int offset, int length)
 		{
 			while (length > 0)
 			{
-				int amountRead = s.Read( buf, offset, length );
+				int amountRead = s.Read(buf, offset, length);
 				if (amountRead == 0)
 				throw new MySqlException("Unexpected end of data encountered");
 				length -= amountRead;

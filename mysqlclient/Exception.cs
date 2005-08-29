@@ -30,7 +30,7 @@ namespace MySql.Data.MySqlClient
 #if DESIGN
 	[Serializable]
 #endif
-	public sealed class MySqlException : ApplicationException
+	public sealed class MySqlException : SystemException
 	{
 		private int		errorCode;
 		private bool	isFatal;
@@ -39,7 +39,7 @@ namespace MySql.Data.MySqlClient
 		{
 		}
 		
-		internal MySqlException( string msg, Exception ex ) : base(msg, ex)
+		internal MySqlException(string msg, Exception ex) : base(msg, ex)
 		{
 		}
 
@@ -47,19 +47,18 @@ namespace MySql.Data.MySqlClient
 		{
 		}
 
-		internal MySqlException( string msg, bool isFatal, Exception inner ) : base (msg, inner)
+		internal MySqlException(string msg, bool isFatal, Exception inner) : base (msg, inner)
 		{
 			this.isFatal = isFatal;
 		}
 
-		internal MySqlException(string msg, int errno) : base(msg)
+		internal MySqlException(string msg, int errno) : this(msg)
 		{
 			errorCode = errno;	
 		}
 
 #if DESIGN
-		internal MySqlException(SerializationInfo info,
-					StreamingContext context) : base(info, context)
+		private MySqlException(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
 		}
 #endif

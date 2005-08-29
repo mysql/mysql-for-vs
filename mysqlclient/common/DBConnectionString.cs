@@ -29,18 +29,24 @@ namespace MySql.Data.Common
 	/// </summary>
 	internal abstract class DBConnectionString
 	{
-		protected Hashtable	keyValues = new Hashtable();
+		protected Hashtable	keyValues;
 		protected string	connectionName = String.Empty;
 		protected string	connectString;
 
 		public DBConnectionString()
 		{	
+			keyValues = new Hashtable(new CaseInsensitiveHashCodeProvider(), 
+				new CaseInsensitiveComparer());
+		}
+
+		public void LoadDefaultValues()
+		{
 			keyValues = GetDefaultValues();
 		}
 
 		public void SetConnectionString(string value)
 		{
-			Hashtable ht = Parse( value );			
+			Hashtable ht = Parse(value);			
 			connectString = value;
 			keyValues = ht;
 		}
@@ -54,7 +60,7 @@ namespace MySql.Data.Common
 
 		protected int GetInt( string name ) 
 		{
-			return Convert.ToInt32(keyValues[name]);
+			return Convert.ToInt32(keyValues[name], System.Globalization.NumberFormatInfo.InvariantInfo);
 		}
 
 		protected bool GetBool( string name ) 
@@ -65,9 +71,27 @@ namespace MySql.Data.Common
 			return false;
 		}
 
+		protected string RemoveKeys(string value, string[] keys)
+		{
+			System.Text.StringBuilder sb = new System.Text.StringBuilder();
+			string[] pairs = Utility.ContextSplit(value, ";", "\"'");
+			foreach (string keyvalue in pairs)
+			{
+				string test = keyvalue.Trim().ToLower();
+				if (test.StartsWith("pwd") || test.StartsWith("password"))
+					continue;
+				sb.Append(keyvalue);
+				sb.Append(";");
+			}
+			sb.Remove(sb.Length-1, 1);  // remove the trailing ;
+			return sb.ToString();
+		}
+
 		protected virtual bool ConnectionParameterParsed(Hashtable hash, string key, string value)
 		{
-			switch (key.ToLower()) 
+			string lowerKey =  key.ToLower(System.Globalization.CultureInfo.InvariantCulture);
+
+			switch (lowerKey)
 			{
 				case "persist security info":
 					hash["persist security info"] = value;
@@ -103,11 +127,11 @@ namespace MySql.Data.Common
 
 				case "connection timeout":
 				case "connect timeout":
-					hash["connect timeout"] = Int32.Parse( value );
+					hash["connect timeout"] = Int32.Parse(value, System.Globalization.NumberFormatInfo.InvariantInfo);
 					return true;
 
 				case "port":
-					hash["port"] = Int32.Parse( value );
+					hash["port"] = Int32.Parse(value, System.Globalization.NumberFormatInfo.InvariantInfo);
 					return true;
 
 				case "pooling":
@@ -116,15 +140,15 @@ namespace MySql.Data.Common
 					return true;
 
 				case "min pool size":
-					hash["min pool size"] = Int32.Parse(value);
+					hash["min pool size"] = Int32.Parse(value, System.Globalization.NumberFormatInfo.InvariantInfo);
 					return true;
 
 				case "max pool size":
-					hash["max pool size"] = Int32.Parse(value);
+					hash["max pool size"] = Int32.Parse(value, System.Globalization.NumberFormatInfo.InvariantInfo);
 					return true;
 
 				case "connection lifetime":
-					hash["connect lifetime"] = Int32.Parse(value);
+					hash["connect lifetime"] = Int32.Parse(value, System.Globalization.NumberFormatInfo.InvariantInfo);
 					return true;
 			}
 			return false;
@@ -135,9 +159,9 @@ namespace MySql.Data.Common
 			return null;
 		}
 
-		protected Hashtable ParseKeyValuePairs( string src )
+		protected static Hashtable ParseKeyValuePairs(string src)
 		{
-			String[] keyvalues = src.Split( ';' );
+			String[] keyvalues = src.Split(';');
 			String[] newkeyvalues = new String[keyvalues.Length];
 			int		 x = 0;
 
@@ -165,7 +189,7 @@ namespace MySql.Data.Common
 			// now we run through our normalized key-values, splitting on equals
 			for (int y=0; y < x; y++) 
 			{
-				String[] parts = newkeyvalues[y].Split( '=' );
+				String[] parts = newkeyvalues[y].Split('=');
 
 				// first trim off any space and lowercase the key
 				parts[0] = parts[0].Trim().ToLower();
@@ -175,7 +199,7 @@ namespace MySql.Data.Common
 				parts[0] = parts[0].Trim('\'', '"');
 				parts[1] = parts[1].Trim('\'', '"');
 
-				hash[ parts[0] ] = parts[1];
+				hash[parts[0]] = parts[1];
 			}
 			return hash;
 		}

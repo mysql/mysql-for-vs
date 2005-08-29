@@ -88,11 +88,20 @@ namespace MySql.Data.MySqlClient
 		}
 
 		public bool IsProcessing 
+<<<<<<< .working
 		{ 
 			get { return processing; }
 			set { processing = value; }
 		}
 
+=======
+		{ 
+			//TODO: remove comment
+		//	get { return processing; }
+			set { processing = value; }
+		}
+
+>>>>>>> .merge-right.r170
 		public ServerStatusFlags ServerStatus 
 		{
 			get { return serverStatus; }
@@ -134,6 +143,15 @@ namespace MySql.Data.MySqlClient
 			creationTime = DateTime.Now;
 		}
 
+		public virtual void SafeClose()
+		{
+			try 
+			{
+				Close();
+			}
+			catch (Exception) { }
+		}
+
 		public virtual void Close() 
 		{
 			isOpen = false;
@@ -156,7 +174,7 @@ namespace MySql.Data.MySqlClient
 			{
 				MySqlDataReader reader = cmd.ExecuteReader();
 				while (reader.Read()) 
-					serverProps[ reader.GetValue(0) ] = reader.GetString(1);
+					serverProps[reader.GetValue(0)] = reader.GetString(1);
 				reader.Close();
 			}
 			catch (Exception ex)
@@ -174,7 +192,7 @@ namespace MySql.Data.MySqlClient
 			LoadCharacterSets();
 
 			string charSet = connectionString.CharacterSet;
-			if (charSet == null || charSet == String.Empty) 
+			if (charSet == null || charSet.Length == 0)
 			{
 				if (! version.isAtLeast(4,1,0))
 				{
@@ -229,7 +247,7 @@ namespace MySql.Data.MySqlClient
 				charSets = new Hashtable();
 				while (reader.Read()) 
 				{
-					charSets[ Convert.ToInt32(reader["id"]) ] = 
+					charSets[ Convert.ToInt32(reader["id"], System.Globalization.NumberFormatInfo.InvariantInfo) ] = 
 						reader.GetString(reader.GetOrdinal("charset"));
 				}
 			}

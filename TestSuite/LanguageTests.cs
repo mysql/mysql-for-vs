@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB
+// Copyright (C) 2004-2005 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -133,6 +133,78 @@ namespace MySql.Data.MySqlClient.Tests
 				Assert.AreEqual( "þðüçöÝÞÐÜÇÖ", reader.GetString(1) );
 				reader.Read();
 				Assert.AreEqual( "ฅๆษ", reader.GetString(1) );
+			}
+			catch (Exception ex) 
+			{
+				Assert.Fail( ex.Message );
+			}
+			finally 
+			{
+				if (reader != null) reader.Close();
+				c.Close();
+			}
+		}
+
+		[Test()]
+		public void UTF8PreparedAndUsingParameters() 
+		{
+			if (!Is41 && !Is50) return;
+
+			execSQL("DROP TABLE IF EXISTS Test");
+			execSQL("CREATE TABLE Test (name VARCHAR(200) CHAR SET utf8)");
+
+			MySqlConnection c = new MySqlConnection( conn.ConnectionString + ";charset=utf8" );
+			c.Open();
+			
+			MySqlCommand cmd = new MySqlCommand( "INSERT INTO Test VALUES(?val)", c); 
+			cmd.Parameters.Add("?val", MySqlDbType.VarChar);
+			cmd.Prepare();
+
+			cmd.Parameters[0].Value = "ЁЄЉҖҚ";			// Russian
+			cmd.ExecuteNonQuery();
+
+			cmd.Parameters[0].Value = "兣冘凥凷冋";		// simplified Chinese
+			cmd.ExecuteNonQuery();
+
+			cmd.Parameters[0].Value = "困巫忘否役";		// traditional Chinese
+			cmd.ExecuteNonQuery();
+
+			cmd.Parameters[0].Value = "涯割晦叶角";		// Japanese
+			cmd.ExecuteNonQuery();
+
+			cmd.Parameters[0].Value = "ברחפע";			// Hebrew
+			cmd.ExecuteNonQuery();
+
+			cmd.Parameters[0].Value = "ψόβΩΞ";			// Greek
+			cmd.ExecuteNonQuery();
+
+			cmd.Parameters[0].Value = "þðüçöÝÞÐÜÇÖ";	// Turkish
+			cmd.ExecuteNonQuery();
+
+			cmd.Parameters[0].Value = "ฅๆษ";				// Thai
+			cmd.ExecuteNonQuery();
+			
+			cmd.CommandText = "SELECT * FROM Test";
+			MySqlDataReader reader = null;
+			try 
+			{
+				reader = cmd.ExecuteReader();
+				reader.Read();
+				Assert.AreEqual("ЁЄЉҖҚ", reader.GetString(0));
+				reader.Read();
+				Assert.AreEqual("兣冘凥凷冋", reader.GetString(0));
+				reader.Read();
+				Assert.AreEqual("困巫忘否役", reader.GetString(0));
+				reader.Read();
+				Assert.AreEqual("涯割晦叶角", reader.GetString(0));
+				reader.Read();
+				Assert.AreEqual("ברחפע", reader.GetString(0));
+				reader.Read();
+				Assert.AreEqual("ψόβΩΞ", reader.GetString(0));
+				reader.Read();
+				Assert.AreEqual("þðüçöÝÞÐÜÇÖ", reader.GetString(0));
+				reader.Read();
+				Assert.AreEqual("ฅๆษ", reader.GetString(0));
 			}
 			catch (Exception ex) 
 			{

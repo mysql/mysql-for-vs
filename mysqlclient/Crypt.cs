@@ -25,6 +25,7 @@ using MySql.Data.Common;
 //#if CF
 //using OpenNETCF.Security.Cryptography;
 //#endif
+using MySql.Data.Common;
 
 namespace MySql.Data.MySqlClient
 {
@@ -33,6 +34,11 @@ namespace MySql.Data.MySqlClient
 	/// </summary>
 	internal class Crypt
 	{
+		// private ctor to prevent creating a default one
+		private Crypt()
+		{
+		}
+
 /*		private void Create41Password( string password )
 		{
 			SHA1 sha = new SHA1CryptoServiceProvider(); 
@@ -70,18 +76,21 @@ namespace MySql.Data.MySqlClient
 		{
 			// make sure we were called properly
 			if (fromIndex < 0 || fromIndex >= from.Length)
-				throw new ArgumentException( "From index must be a valid index inside the from buffer", "FromIndex" );
+				throw new ArgumentException(Resources.GetString("IndexMustBeValid"), "fromIndex");
 			if ((fromIndex + length) > from.Length)
-				throw new ArgumentException( "From index and length use more bytes than from contains", "FromIndex" );
-			if (from == null) throw new ArgumentException("From buffer must not be null", "From" );
-			if (to == null) throw new ArgumentException( "To buffer must not be null", "To" );
+				throw new ArgumentException(Resources.GetString("FromAndLengthTooBig"), "fromIndex" );
+			if (from == null) 
+				throw new ArgumentException(Resources.GetString("BufferCannotBeNull"), "from");
+			if (to == null) 
+				throw new ArgumentException(Resources.GetString("BufferCannotBeNull"), "to");
 			if (toIndex < 0 || toIndex >= to.Length)
-				throw new ArgumentException( "To index must be a valid index inside the to buffer", "ToIndex" );
+				throw new ArgumentException(Resources.GetString("IndexMustBeValid"), "toIndex" );
 			if ((toIndex + length) > to.Length)
-				throw new ArgumentException( "To index and length use more bytes than to contains", "ToIndex" );
+				throw new ArgumentException(Resources.GetString("IndexAndLengthTooBig"), "toIndex" );
 			if (password == null || password.Length < length) 
-				throw new ArgumentException("Password must be valid and contain length characters", "password" );
-			if (length < 0) throw new ArgumentException("Length must be a postive number");
+				throw new ArgumentException(Resources.GetString("PasswordMustHaveLegalChars"), "password");
+			if (length < 0) 
+				throw new ArgumentException(Resources.GetString("ParameterCannotBeNegative"), "count");
 
 			// now perform the work
 			for (int i=0; i < length; i++)
@@ -128,7 +137,8 @@ namespace MySql.Data.MySqlClient
 		public static byte[] GetOld410Password( string password, byte[] seedBytes )
 		{
 			long[] passwordHash = Hash(password);
-			string passHex = String.Format("{0,8:X}{1,8:X}", passwordHash[0], passwordHash[1] );
+			string passHex = String.Format(System.Globalization.CultureInfo.InvariantCulture, 
+				"{0,8:X}{1,8:X}", passwordHash[0], passwordHash[1] );
 
 			int[] salt = getSaltFromPassword(passHex);
 

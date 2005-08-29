@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB
+// Copyright (C) 2004-2005 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -144,11 +144,11 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-        [Test]
-        public void CtorTest()
-        {
-            MySqlTransaction txn = conn.BeginTransaction();
-            MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test", conn);
+		[Test]
+		public void CtorTest() 
+		{
+			MySqlTransaction txn = conn.BeginTransaction();
+			MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test", conn);
 
             MySqlCommand clone = new MySqlCommand(cmd.CommandText, (MySqlConnection)cmd.Connection,
                 (MySqlTransaction)cmd.Transaction);
@@ -224,6 +224,38 @@ namespace MySql.Data.MySqlClient.Tests
 		}
 
 		/// <summary>
+		/// Bug #12245  	using Prepare() on an insert command causes null parameters to convert to "0"
+		/// </summary>
+		[Test]
+		public void InsertingPreparedNulls()
+		{
+			execSQL("TRUNCATE TABLE test");
+			MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES(1, ?str)", conn);
+			cmd.Parameters.Add("?str", MySqlDbType.VarChar);
+			cmd.Prepare();
+
+			cmd.Parameters[0].Value = null;
+			cmd.ExecuteNonQuery();
+
+			cmd.CommandText = "SELECT * FROM test";
+			MySqlDataReader reader = null;
+			try 
+			{
+				reader = cmd.ExecuteReader();
+				Assert.IsTrue(reader.Read());
+				Assert.AreEqual(DBNull.Value, reader[1]);
+			}
+			catch (Exception ex)
+			{
+				Assert.Fail(ex.Message);
+			}
+			finally 
+			{
+				if (reader != null) reader.Close();
+			}
+		}
+
+		/// <summary>
 		/// MySQL Bugs: #12163: Insert using prepared statement causes double insert
 		/// </summary>
 		[Test]
@@ -236,11 +268,22 @@ namespace MySql.Data.MySqlClient.Tests
 			reader.Close();
 
 			cmd.CommandText = "SELECT * FROM test";
-			reader = cmd.ExecuteReader();
-			Assert.IsTrue(reader.Read());
-			Assert.IsFalse(reader.Read());
-			Assert.IsFalse(reader.NextResult());
-			reader.Close();
+			reader = null;
+			try 
+			{
+				reader = cmd.ExecuteReader();
+				Assert.IsTrue(reader.Read());
+				Assert.IsFalse(reader.Read());
+				Assert.IsFalse(reader.NextResult());
+			}
+			catch (Exception ex)
+			{
+				Assert.Fail(ex.Message);
+			}
+			finally 
+			{
+				if (reader != null) reader.Close();
+			}
 		}
 
         /// <summary>
@@ -283,27 +326,27 @@ namespace MySql.Data.MySqlClient.Tests
 
         }
 
-		[Test]
-		public void CommentsInSQL() 
-		{
-			string sql = "INSERT INTO Test /* my table */ VALUES (1 /* this is the id */, 'Test' );" +
-				"/* These next inserts are just for testing \r\n" +
-				"   comments */\r\n" +
-				"INSERT INTO \r\n" +
-				"  # This table is bogus\r\n" +
-				"test VALUES (2, 'Test2')";
-			MySqlCommand cmd = new MySqlCommand( sql, conn );
-			cmd.ExecuteNonQuery();
-			
-			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
-			DataTable table = new DataTable();
-			da.Fill(table);
-			Assert.AreEqual( 1, table.Rows[0]["id"] );
-			Assert.AreEqual( "Test", table.Rows[0]["name"] );
-			Assert.AreEqual( 2, table.Rows.Count );
-			Assert.AreEqual( 2, table.Rows[1]["id"] );
-			Assert.AreEqual( "Test2", table.Rows[1]["name"] );
-		}
+        [Test]
+        public void CommentsInSQL()
+        {
+            string sql = "INSERT INTO Test /* my table */ VALUES (1 /* this is the id */, 'Test' );" +
+                "/* These next inserts are just for testing \r\n" +
+                "   comments */\r\n" +
+                "INSERT INTO \r\n" +
+                "  # This table is bogus\r\n" +
+                "test VALUES (2, 'Test2')";
+            MySqlCommand cmd = new MySqlCommand(sql, conn);
+            cmd.ExecuteNonQuery();
+
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
+            DataTable table = new DataTable();
+            da.Fill(table);
+            Assert.AreEqual(1, table.Rows[0]["id"]);
+            Assert.AreEqual("Test", table.Rows[0]["name"]);
+            Assert.AreEqual(2, table.Rows.Count);
+            Assert.AreEqual(2, table.Rows[1]["id"]);
+            Assert.AreEqual("Test2", table.Rows[1]["name"]);
+        }
 
 	}
 }

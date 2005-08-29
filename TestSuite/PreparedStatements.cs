@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB
+// Copyright (C) 2004-2005 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -39,8 +39,6 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test()]
 		public void Simple() 
 		{
-			if (! Is41 && ! Is50) return;
-
 			execSQL("DROP TABLE IF EXISTS Test");
 			execSQL("CREATE TABLE Test (id INT, dec1 DECIMAL(5,2), name VARCHAR(100))");
 			execSQL("INSERT INTO Test VALUES (1, 345.12, 'abcd')");
@@ -74,8 +72,6 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test()]
 		public void SimplePrepareBeforeParms() 
 		{
-			if (! Is41 && ! Is50) return;
-
 			execSQL("DROP TABLE IF EXISTS Test");
 			execSQL("CREATE TABLE Test (one INTEGER, two INTEGER)");
 			execSQL("INSERT INTO Test VALUES (1, 2)");
@@ -87,7 +83,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 			// create the parameter
 			IDbDataParameter p1 = cmd.CreateParameter();
-			p1.ParameterName = "@p1";
+			p1.ParameterName = "?p1";
 			p1.DbType = DbType.Int32;
 			p1.Precision = (byte)10;
 			p1.Scale = (byte)0;
@@ -104,8 +100,8 @@ namespace MySql.Data.MySqlClient.Tests
 				// Fetch the first record
 				reader.Read();
 
-				Assert.AreEqual( 1, reader.GetInt32(0) );
-				Assert.AreEqual( 2, reader.GetInt32(1) );
+				Assert.AreEqual(1, reader.GetInt32(0));
+				Assert.AreEqual(2, reader.GetInt32(1));
 			}
 			catch (Exception ex) 
 			{
@@ -120,8 +116,6 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test()]
 		public void DateAndTimes() 
 		{
-			if (! Is41 && ! Is50) return;
-
 			execSQL("DROP TABLE IF EXISTS Test");
 			execSQL("CREATE TABLE Test (id INT NOT NULL, d DATE, dt DATETIME, tm TIME, ts TIMESTAMP, PRIMARY KEY(id))");
 
@@ -221,8 +215,6 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test()]
 		public void Blobs() 
 		{
-			if (! Is41 && ! Is50) return;
-
 			execSQL("DROP TABLE IF EXISTS Test");
 			execSQL("CREATE TABLE Test (id INT, blob1 LONGBLOB, text1 LONGTEXT)");
 
@@ -302,10 +294,9 @@ namespace MySql.Data.MySqlClient.Tests
 		}
 
 		[Test]
+		[Category("4.1")]
 		public void Bug6271() 
 		{
-			if (! Is41 && ! Is50) return;
-
 			execSQL("DROP TABLE IF EXISTS Test2");
 
 			// Create the table again

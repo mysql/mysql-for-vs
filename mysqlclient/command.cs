@@ -342,7 +342,6 @@ namespace MySql.Data.MySqlClient
 				Consume();
 			}
 			catch (MySqlException ex) 
-<<<<<<< .working
 			{
 				if (ex.IsFatal) connection.Close();
 				throw;
@@ -471,16 +470,18 @@ namespace MySql.Data.MySqlClient
 		/// <returns>True if the parameter was successfully serialized, false otherwise.</returns>
 		private bool SerializeParameter(MySqlStreamWriter writer, string parmName)
 		{
-			if (! parameters.Contains( parmName )) 
+			int index = parameters.IndexOf(parmName);
+			if (index == -1)
 			{
 				// if we are using old syntax, we can't throw exceptions for parameters
 				// not defined.
 				if (connection.Settings.UseOldSyntax) return false;
 				throw new MySqlException("Parameter '" + parmName + "' must be defined");
 			}
-			MySqlParameter parameter = parameters[parmName];
-			parameter.Serialize(writer, false);
+			MySqlParameter parameter = parameters[index];
+			parameter.Serialize( writer, false );
 			return true;
+
 		}
 
 

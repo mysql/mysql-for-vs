@@ -58,7 +58,7 @@ namespace MySql.Data.MySqlClient
 		 * DataReader object, the constructors are
 		 * marked as internal.
 		 */
-		internal MySqlDataReader( MySqlCommand cmd, CommandBehavior behavior)
+		internal MySqlDataReader(MySqlCommand cmd, CommandBehavior behavior)
 		{
 			this.command = cmd;
 			connection = (MySqlConnection)command.Connection;
@@ -313,8 +313,6 @@ namespace MySql.Data.MySqlClient
 		{
 			IMySqlValue val = GetFieldValue(index);
             if (val is MySqlDateTime)
-			    return (val as MySqlDateTime).Value;
-            else if (val is MySqlString)
             {
 				MySqlDateTime dt = (MySqlDateTime)val;
 				if (connection.Settings.ConvertZeroDateTime && !dt.IsValidDateTime)
@@ -680,7 +678,7 @@ namespace MySql.Data.MySqlClient
 				uaFieldsUsed = new bool[fields.Length];
 				return true;
 			}
-			catch (MySqlException ex) 
+			catch (Exception ex) 
 			{
 				if (ex.IsFatal) 
 					connection.Close();
@@ -756,15 +754,6 @@ namespace MySql.Data.MySqlClient
 				throw new MySqlException("Invalid attempt to access a field before calling Read()");
 
 			return val;
-		}
-
-		/*
-		* Implementation specific methods.
-		*/
-		private int _cultureAwareCompare(string strA, string strB)
-		{
-			//      return CultureInfo.CurrentCulture.CompareInfo.Compare(strA, strB, CompareOptions.IgnoreKanaType | CompareOptions.IgnoreWidth | CompareOptions.IgnoreCase);
-			return 0;
 		}
 
 		private void ConsumeCurrentResultset() 

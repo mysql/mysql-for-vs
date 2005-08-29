@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB
+// Copyright (C) 2004-2005 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -44,7 +44,7 @@ namespace MySql.Data.MySqlClient.Tests
 			Close();
 		}
 
-		[Test()]
+		[Test]
 		public void TestUserVariables()
 		{
 			MySqlCommand cmd = new MySqlCommand("SET @myvar = 'test'", conn);
@@ -67,7 +67,7 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-		[Test()]
+		[Test]
 		public void TestQuoting()
 		{
 			MySqlCommand cmd = new MySqlCommand("", conn);
@@ -118,7 +118,7 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-		[Test()]
+		[Test]
 		public void TestDateTimeParameter()
 		{
 			MySqlCommand cmd = new MySqlCommand("", conn);
@@ -171,7 +171,7 @@ namespace MySql.Data.MySqlClient.Tests
 			cmd.ExecuteNonQuery();
 		}
 
-		[Test()]
+		[Test]
 		public void NestedQuoting() 
 		{
 			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id, name) VALUES(1, 'this is ?\"my value\"')", conn);
@@ -179,7 +179,7 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual( 1, count );
 		}
 
-		[Test()]
+		[Test]
 		public void SetDbType() 
 		{
 			try 
@@ -196,7 +196,7 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-		[Test()]
+		[Test]
 		public void UseOldSyntax() 
 		{
 			string connStr = conn.ConnectionString + ";old syntax=yes;pooling=false";
@@ -228,7 +228,7 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-		[Test()]
+		[Test]
 		[ExpectedException(typeof(ArgumentException))]
 		public void NullParameterObject() 
 		{
@@ -263,7 +263,7 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual( "test", cmd.ExecuteScalar());
 		}
 
-		[Test()]
+		[Test]
 		public void NullParameterValue() 
 		{
 			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id, name) VALUES (1, ?name)", conn);
@@ -275,7 +275,21 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual( DBNull.Value, name );
 		}
 
-		[Test()]
+		/// <summary>
+		/// Bug #12646  	Parameters are defaulted to Decimal
+		/// </summary>
+		[Test]
+		public void DefaultType()
+		{
+			IDbCommand cmd = conn.CreateCommand();
+			IDbDataParameter p = cmd.CreateParameter();
+			p.ParameterName = "?boo";
+			p.Value = "test";
+			MySqlParameter mp = (MySqlParameter)p;
+			Assert.AreEqual(MySqlDbType.VarChar, mp.MySqlDbType);
+		}
+
+		[Test]
 		public void OddCharsInParameterNames() 
 		{
 			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id, name) VALUES (1, ?nam$es)", conn);

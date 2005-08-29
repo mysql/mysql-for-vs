@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB
+// Copyright (C) 2004-2005 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -19,29 +19,20 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
+using System.Resources;
 
 namespace MySql.Data.Common
 {
-	internal class Platform
+	internal class Resources
 	{
-		/// <summary>
-		/// By creating a private ctor, we keep the compiler from creating a default ctor
-		/// </summary>
-		private Platform()
-		{
-		}
+		private static ResourceManager rm = null;
 
-		public static bool IsWindows() 
+		public static string GetString(string name)
 		{
-			OperatingSystem os = Environment.OSVersion;
-			switch (os.Platform)
-			{
-				case PlatformID.Win32NT:
-				case PlatformID.Win32S:
-				case PlatformID.Win32Windows:
-					return true;
-			}
-				return false;
+			if (rm == null)
+				rm = new ResourceManager("MySql.Data.MySqlClient.MySqlClient.Strings", 
+					System.Reflection.Assembly.GetCallingAssembly());
+			return rm.GetString (name);
 		}
 	}
 }

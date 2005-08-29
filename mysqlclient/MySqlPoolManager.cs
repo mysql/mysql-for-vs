@@ -43,13 +43,13 @@ namespace MySql.Data.MySqlClient
 			pools = new Hashtable();
 		}
 
-		public static Driver GetConnection( MySqlConnectionString settings ) 
+		public static Driver GetConnection(MySqlConnectionString settings) 
 		{
 			// make sure the manager is initialized
 			if (MySqlPoolManager.pools == null)
 				MySqlPoolManager.Initialize();
 
-			string text = settings.GetConnectionString();
+			string text = settings.GetConnectionString(true);
 
 			lock( pools.SyncRoot ) 
 			{
@@ -73,7 +73,7 @@ namespace MySql.Data.MySqlClient
 		{
 			lock (pools.SyncRoot) 
 			{
-				string key = driver.Settings.GetConnectionString();
+				string key = driver.Settings.GetConnectionString(true);
 				MySqlPool pool = (MySqlPool)pools[ key ];
 				if (pool == null)
 					throw new MySqlException("Pooling exception: Unable to find original pool for connection");

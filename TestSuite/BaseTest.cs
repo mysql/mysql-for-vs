@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB
+// Copyright (C) 2004-2005 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -37,7 +37,7 @@ namespace MySql.Data.MySqlClient.Tests
 		protected string			host;
 		protected string			user;
 		protected string			password;
-		protected string			nopassuser;
+		//protected string			nopassuser;
 		protected string			otherkeys;
 
 		public BaseTest() 
@@ -59,9 +59,8 @@ namespace MySql.Data.MySqlClient.Tests
 			try 
 			{
 				host = ConfigurationSettings.AppSettings["host"];
-				user = ConfigurationSettings.AppSettings["user"];
-				password = ConfigurationSettings.AppSettings["password"];
-				nopassuser = ConfigurationSettings.AppSettings["nopassuser"];
+				user = "root";
+				password = "";
 				otherkeys = ConfigurationSettings.AppSettings["otherkeys"];
 				string connString = GetConnectionString(true);
 				conn = new MySqlConnection( connString );
@@ -132,9 +131,11 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 		}
 
-		protected void KillConnection( MySqlConnection c ) 
+		protected void KillConnection(MySqlConnection c) 
 		{
-			execSQL( "KILL " + c.ServerThread );
+			int threadId = c.ServerThread;
+			MySqlCommand cmd = new MySqlCommand("KILL " + threadId, c);
+			cmd.ExecuteNonQuery();
 			c.Ping();  // this final ping will cause MySQL to clean up the killed thread
 		}
 
