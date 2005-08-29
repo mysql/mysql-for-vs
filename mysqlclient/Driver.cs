@@ -88,20 +88,12 @@ namespace MySql.Data.MySqlClient
 		}
 
 		public bool IsProcessing 
-<<<<<<< .working
-		{ 
-			get { return processing; }
-			set { processing = value; }
-		}
-
-=======
 		{ 
 			//TODO: remove comment
 		//	get { return processing; }
 			set { processing = value; }
 		}
 
->>>>>>> .merge-right.r170
 		public ServerStatusFlags ServerStatus 
 		{
 			get { return serverStatus; }
@@ -308,9 +300,9 @@ namespace MySql.Data.MySqlClient
 		public abstract CommandResult SendQuery( byte[] bytes, int length, bool consume );
 		public abstract long ReadResult( ref long affectedRows, ref long lastInsertId );
 		public abstract bool OpenDataRow(int fieldCount, bool isBinary);
-		public abstract MySqlValue ReadFieldValue( int index, MySqlField field, MySqlValue value ); 
+		public abstract IMySqlValue ReadFieldValue( int index, MySqlField field, IMySqlValue value ); 
 		public abstract CommandResult ExecuteStatement( byte[] bytes );
-		public abstract void SkipField(MySqlValue valObject );
+		public abstract void SkipField(IMySqlValue valObject );
 		public abstract void ReadFieldMetadata( int count, ref MySqlField[] fields );
 		public abstract bool Ping();
 		#endregion

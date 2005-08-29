@@ -131,10 +131,13 @@
     <Compile Include="MySqlClient\common\NamedPipeStream.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MySqlClient\common\NativeMethods.cs" />
     <Compile Include="MySqlClient\common\Platform.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MySqlClient\common\Resources.cs" />
     <Compile Include="MySqlClient\common\SHA1.cs" />
+    <Compile Include="MySqlClient\common\SocketStream.cs" />
     <Compile Include="MySqlClient\common\StreamCreator.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -142,9 +145,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MySqlClient\common\Version.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MySqlClient\common\Win32.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MySqlClient\CompressedStream.cs">
@@ -291,6 +291,9 @@
     <Content Include="MySqlClient\docs\MySqlParameter.xml" />
     <Content Include="MySqlClient\docs\MySqlParameterCollection.xml" />
     <Content Include="MySqlClient\docs\MySqlTransaction.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MySqlClient\Strings.resx" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

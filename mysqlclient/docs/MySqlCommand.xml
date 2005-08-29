@@ -1,4 +1,4 @@
-<docs>
+﻿<docs>
 <ClassSummary>
 	<summary>Represents a SQL statement to execute against a MySQL database. This class cannot be inherited.</summary>
 	<remarks>

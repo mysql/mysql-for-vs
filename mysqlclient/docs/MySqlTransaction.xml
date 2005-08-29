@@ -1,4 +1,4 @@
-<docs>
+﻿<docs>
 <Class>
 	<summary>
 	Represents a SQL transaction to be made in a MySQL database. This class cannot be inherited.

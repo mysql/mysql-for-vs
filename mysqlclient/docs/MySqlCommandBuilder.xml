@@ -1,4 +1,4 @@
-<docs>
+﻿<docs>
 <class>
 	<summary>
 	Automatically generates single-table commands used to reconcile changes made to a DataSet with the associated MySQL database. This class cannot be inherited.
