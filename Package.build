@@ -2,13 +2,13 @@
 <project name="MySqlPackage" default="all" xmlns="http://nant.sf.net/schemas/nant-0.85.win32.net-1.0.xsd">
 	<description>Package script for MySQLClient Managed Provider for MySQL</description>
 
-	<include buildfile="client.build"/>
+	<include buildfile="Client.build"/>
 
 	<!-- filesets -->
 	<fileset id="BaseSource">
 		<include name="mysqlclient/**"/>
 		<include name="testsuite/**"/>
-		<include name="client.build"/>
+		<include name="Client.build"/>
 		<include name="CHANGES"/>
 		<include name="README"/>
 		<include name="MySql.Data.csproj"/>
@@ -86,7 +86,7 @@
 		<property name="debug" value="false"/>
 		<property name="build.dir" value="staging" />
 		
-		<nant buildfile="staging/client.build" target="allframeworks"/>
+		<nant buildfile="staging/Client.build" target="allframeworks"/>
 		
 		<!-- now build the WIX installer -->
 		<exec workingdir="staging/Installer" program="candle" commandline="-dIsGPL=${IsGPL} -dbuild=release main.wxs"/>
@@ -136,7 +136,7 @@
 	<target name="VerifyDirectory">
 		<!-- now build for all frameworks -->
 		<property name="debug" value="false"/>
-		<nant buildfile="${build.dir}/client.build" target="alltests"/>
+		<nant buildfile="${build.dir}/Client.build" target="alltests"/>
 		
 		<!-- now verify that the files do not include wrong license text -->
 		<foreach item="File" property="filename">
