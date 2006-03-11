@@ -1,0 +1,223 @@
+﻿//
+// This is the file that defines the actual layout and type of the commands.
+// It is divided in different sections (e.g. command definition, command
+// placement, ...), with each defining a specific set of properties.
+// See the comment before each section for more details about how to
+// use it.
+//
+
+// The CTC compiler (the tool that translates this file into the binary
+// format that VisualStudio will consume) has the ability to run a preprocessor
+// on the ctc file; this preprocessor is (usually) the C++ preprocessor, so
+// it is possible to define includes and macros with the same syntax used
+// in C++ files. Using this ability of the compiler here, we include some files
+// defining some of the constants that we will use inside the file.
+
+#include "stdidcmd.h"      // This is the file that defines the IDs for all the
+                           // commands exposed by VisualStudio.
+
+#include "vsshlids.h"      // This header contains the command ids for the menus
+                           // provided by the shell.
+
+#include "msobtnid.h"      // Definition of some CTC specific constants. In this sample
+                           // we use it for the IDs inside the guidOfficeIcon group.
+
+#include "PkgCmdId.h"      // Definition of the IDs of the commands and CTC elements
+                           // specific for this sample.
+
+#include "Resource.h"      // Definition of the IDs of the resources used by this package;
+                           // Here it is used to include the bitmap with the images used for
+                           // the commands.
+
+#define _CTC_GUIDS_
+#include "Guids.h"         // This is the file with the definition of the Guid
+                           // specific for this sample.
+
+// shorthand macros for a more compact and manageable table
+#define OI_NOID         guidOfficeIcon:msotcidNoIcon
+#define DIS_DEF         DEFAULTDISABLED | DEFAULTINVISIBLE | DYNAMICVISIBILITY
+#define VIS_DEF         COMMANDWELLONLY
+
+
+// The CMDS_SECTION section is where we the commands, menus and menu groups are defined. 
+// This section uses a Guid to identify the package that provides the command defined 
+// inside it.
+CMDS_SECTION guidMyVSToolsPkg
+
+  // Inside this section we have different sub-sections: one for the menus, another 
+  // for the menu groups, one for the buttons (the actual commands), one for the combos
+  // and the last one for the bitmaps used. Each element is identified by a command id that 
+  // is a unique pair of guid and numeric identifier; the guid part of the identifier is usually 
+  // called "command set" and is used to group different command inside a logically related 
+  // group; your package should define its own command set in order to avoid collisions 
+  // with command ids defined by other packages.
+
+  // This is the sub-section that defines the menus and toolbars.
+  MENUS_BEGIN
+    // To define an element in this group you need an ID, a parent group, a display priority,
+    // a menu type, a name and a default text.
+
+	  // NewMenu                              Relative to Group                       Priority    Type        Name                    Text
+    guidMyVSToolsCmdSet:MyToolbar, guidMyVSToolsCmdSet:MyToolbar, 0x0000, TOOLWINDOWTOOLBAR, "My Toolbar";
+    guidMyVSToolsCmdSet:ServerCtxtMenu, guidMyVSToolsCmdSet:0, 0x0000, CONTEXT|ALWAYSCREATE|NOCUSTOMIZE, "ServerContextMenu";
+    guidMyVSToolsCmdSet:DatabaseCtxtMenu, guidMyVSToolsCmdSet:0, 0x0000, CONTEXT|ALWAYSCREATE|NOCUSTOMIZE, "DatabaseContextMenu";
+    guidMyVSToolsCmdSet:TablesCtxtMenu, guidMyVSToolsCmdSet:0, 0x0000, CONTEXT|ALWAYSCREATE|NOCUSTOMIZE, "TablesContextMenu";
+    guidMyVSToolsCmdSet:ViewsCtxtMenu, guidMyVSToolsCmdSet:0, 0x0000, CONTEXT|ALWAYSCREATE|NOCUSTOMIZE, "ViewsContextMenu";
+    guidMyVSToolsCmdSet:ProceduresCtxtMenu, guidMyVSToolsCmdSet:0, 0x0000, CONTEXT|ALWAYSCREATE|NOCUSTOMIZE, "ProceduresContextMenu";
+    guidMyVSToolsCmdSet:FunctionsCtxtMenu, guidMyVSToolsCmdSet:0, 0x0000, CONTEXT|ALWAYSCREATE|NOCUSTOMIZE, "FunctionsContextMenu";
+
+    guidMyVSToolsCmdSet:ProcedureCtxtMenu, guidMyVSToolsCmdSet:0, 0x0000, CONTEXT|ALWAYSCREATE|NOCUSTOMIZE, "ProcedureContextMenu";
+    guidMyVSToolsCmdSet:TableCtxtMenu, guidMyVSToolsCmdSet:0, 0x0000, CONTEXT|ALWAYSCREATE|NOCUSTOMIZE, "TableContextMenu";
+    guidMyVSToolsCmdSet:ViewCtxtMenu, guidMyVSToolsCmdSet:0, 0x0000, CONTEXT|ALWAYSCREATE|NOCUSTOMIZE, "ViewContextMenu";
+    guidMyVSToolsCmdSet:FunctionCtxtMenu, guidMyVSToolsCmdSet:0, 0x0000, CONTEXT|ALWAYSCREATE|NOCUSTOMIZE, "FunctionContextMenu";
+  MENUS_END
+
+  // In this section you can define new menu groups. A menu group is a container for
+  // other menus or buttons (commands); from a visual point of view you can see the
+  // group as the part of a menu contained between two lines. The parent of a group
+  // must be a menu.
+  NEWGROUPS_BEGIN
+    // NewGroup                              Parent Group                            Priority
+    guidMyVSToolsCmdSet:MyMenuGroup,    guidSHLMainMenu:IDM_VS_MENU_TOOLS, 0x0600;
+    guidMyVSToolsCmdSet:MyToolbarGroup,    guidMyVSToolsCmdSet:MyToolbar, 0x0000;
+    guidMyVSToolsCmdSet:ConnectionGroup, guidMyVSToolsCmdSet:ServerCtxtMenu, 0x1000;
+    guidMyVSToolsCmdSet:DeleteGroup, guidMyVSToolsCmdSet:ServerCtxtMenu, 0x1001;
+    guidMyVSToolsCmdSet:PropertiesGroup, guidMyVSToolsCmdSet:ServerCtxtMenu, 0x1002;
+    guidMyVSToolsCmdSet:TablesGroup, guidMyVSToolsCmdSet:TablesCtxtMenu, 0x1000;
+    guidMyVSToolsCmdSet:ViewsGroup, guidMyVSToolsCmdSet:ViewsCtxtMenu, 0x1000;
+    guidMyVSToolsCmdSet:ProceduresGroup, guidMyVSToolsCmdSet:ProceduresCtxtMenu, 0x1000;
+    guidMyVSToolsCmdSet:FunctionsGroup, guidMyVSToolsCmdSet:FunctionsCtxtMenu, 0x1000;
+
+    guidMyVSToolsCmdSet:ProcedureGroup, guidMyVSToolsCmdSet:ProcedureCtxtMenu, 0x1000;
+    guidMyVSToolsCmdSet:TableGroup, guidMyVSToolsCmdSet:TableCtxtMenu, 0x1000;
+    guidMyVSToolsCmdSet:ViewGroup, guidMyVSToolsCmdSet:ViewCtxtMenu, 0x1000;
+    guidMyVSToolsCmdSet:FunctionGroup, guidMyVSToolsCmdSet:FunctionCtxtMenu, 0x1000;
+  NEWGROUPS_END
+
+  // Button section.
+  // This section defines the elements the user can interact with, like a menu command or a button 
+  // or combo box in a toolbar.
+  BUTTONS_BEGIN
+    // To define a menu group you have to specify its ID, the parent menu and its display priority.
+
+	// Those commands are not defined as shared command, so they use our package CLSID
+    // as the command set GUID. Also, by specifying blank for the FLAGS, this command is
+    // default visible and enabled. Other valid values for FLAGS are the following:
+    //    DEFAULTDISABLED, DEFAULTINVISIBLE, DYNAMICVISIBILITY, TEXTCHANGES
+    // These values for FLAGS can be or'ed together, e.g. "DEFAULTINVISIBLE | DYNAMICVISIBILITY"
+    // If you do not want an image next to your command, set the image to "guidOfficeIcon:msotcidNoIcon"
+
+    // Command                    Parent Group                Priority    Image            Type    Visibility        
+    guidMyVSToolsCmdSet:cmdidRefresh,    guidMyVSToolsCmdSet:MyToolbarGroup,    0x0100,        guidMyVSToolsCmdSet:bmpPicRefresh,    BUTTON,    ,            "Refresh";
+    guidMyVSToolsCmdSet:cmdidMyCommand,    guidMyVSToolsCmdSet:MyMenuGroup,    0x0100,        guidMyVSToolsCmdSet:bmpPic1,    BUTTON,    ,            "Connect to MySQL Server...";
+    guidMyVSToolsCmdSet:cmdidMyExplorerWindow,    guidSHLMainMenu:IDG_VS_WNDO_OTRWNDWS1,    0x0100,        guidMyVSToolsCmdSet:bmpPic2,    BUTTON,    ,            "MySQL Explorer";
+
+    guidMyVSToolsCmdSet:cmdidModifyConnection, guidMyVSToolsCmdSet:ConnectionGroup, 0x0101, guidMyVSToolsCmdSet:0, BUTTON, ,"Modify Connection...";
+    guidMyVSToolsCmdSet:cmdidDelete, guidMyVSToolsCmdSet:DeleteGroup, 0x100, guidMyVSToolsCmdSet:bmpPicDelete, BUTTON, , "Delete";
+//    guidMyVSToolsCmdSet:cmdidRename, guidMyVSToolsCmdSet:DeleteGroup, 0x101, guidMyVSToolsCmdSet:0, BUTTON, , "Rename";
+    guidMyVSToolsCmdSet:cmdidProperties, guidMyVSToolsCmdSet:PropertiesGroup, 0x100, guidMyVSToolsCmdSet:bmpPicProperties, BUTTON, , "Properties";
+    
+    // Table menus
+   guidMyVSToolsCmdSet:cmdidAddNewTable, guidMyVSToolsCmdSet:TablesGroup, 0x1000, guidMyVSToolsCmdSet:0, BUTTON, , "Add New &Table";
+   guidMyVSToolsCmdSet:cmdidAddNewTrigger, guidMyVSToolsCmdSet:TableGroup, 0x1001, guidMyVSToolsCmdSet:0, BUTTON, , "Add New Tr&igger";
+   guidMyVSToolsCmdSet:cmdidOpenTableDef, guidMyVSToolsCmdSet:TableGroup, 0x1002, guidMyVSToolsCmdSet:0, BUTTON, , "&Open Table Definition";
+   guidMyVSToolsCmdSet:cmdidShowTableData, guidMyVSToolsCmdSet:TableGroup, 0x1003, guidMyVSToolsCmdSet:0, BUTTON, , "&Show Table Data";
+   
+   // Views menu
+   guidMyVSToolsCmdSet:cmdidAddNewView, guidMyVSToolsCmdSet:ViewsGroup, 0x1000, guidMyVSToolsCmdSet:0, BUTTON, , "Add New &View";
+   
+   // Procedure menus
+   guidMyVSToolsCmdSet:cmdidAddNewProcedure, guidMyVSToolsCmdSet:ProceduresGroup, 0x100, guidMyVSToolsCmdSet:0, BUTTON, , "Add New Stored &Procedure";
+   guidMyVSToolsCmdSet:cmdidOpen, guidMyVSToolsCmdSet:ProcedureGroup, 0x1001, guidMyVSToolsCmdSet:bmpPicOpen, BUTTON, , "Open";
+   guidMyVSToolsCmdSet:cmdidClone, guidMyVSToolsCmdSet:DeleteGroup, 0x103, guidMyVSToolsCmdSet:bmpPicClone, BUTTON, , "Clone";
+
+   // Functions menus
+   guidMyVSToolsCmdSet:cmdidAddNewFunction, guidMyVSToolsCmdSet:FunctionsGroup, 0x100, guidMyVSToolsCmdSet:0, BUTTON, , "Add New &Function";
+  BUTTONS_END
+
+  // The bitmaps section is used to define the bitmaps that are used for the commands.
+  BITMAPS_BEGIN
+    // The bitmap id is defined in a way that is a little bit different from the others:
+    // the declaration starts with a guid for the bitmap strip, then there is the resource id of the
+    // bitmap strip containing the bitmaps and then there are the numeric ids of the elements used
+    // inside a button definition. An important aspect of this declaration is that the element id
+    // must be the actual index (1-based) of the bitmap inside the bitmap strip.
+
+	  // Bitmap                          Bitmap Index, Bitmap Index, ...
+    guidMyVSToolsCmdSet:IDB_MENU_IMAGES,    bmpPic1, bmpPic2, bmpPicSmile, bmpPicX, bmpPicArrows, bmpPicRefresh, bmpPicDelete, bmpPicProperties, bmpPicOpen, bmpPicClone;
+  BITMAPS_END
+
+CMDS_END
+
+// Within this section you can specify the set of commands defined somewhere else that your 
+// packages uses; for instance if your package uses the standard ‘Copy’ command, you don’t 
+// need to define it, because it is defined by the shell, but you have to use this section 
+// of the CTC file to notify the shell that your package uses it using this section.
+CMDUSED_SECTION
+CMDUSED_END
+
+// Inside this section, we have the ability to place menu groups inside some other menu or
+// menu / commands inside other groups.
+// For instance, it is possible to place one of VisualStudio's menus or commands inside one of our 
+// groups or one of our groups inside a menu defined somewhere else.
+CMDPLACEMENT_SECTION
+  guidMyVSToolsCmdSet:cmdidMyCommand, guidMyVSToolsCmdSet:MyToolbarGroup, 0x200;
+  guidMyVSToolsCmdSet:PropertiesGroup, guidMyVSToolsCmdSet:TablesCtxtMenu, 0x1001;
+
+  guidMyVSToolsCmdSet:cmdidDelete, guidMyVSToolsCmdSet:DatabaseCtxtMenu, 0x1004;
+  guidMyVSToolsCmdSet:PropertiesGroup, guidMyVSToolsCmdSet:DatabaseCtxtMenu, 0x1005;
+
+  // Procedure menu
+  guidMyVSToolsCmdSet:cmdidAddNewProcedure, guidMyVSToolsCmdSet:ProcedureGroup, 0x1000;
+  guidMyVSToolsCmdSet:DeleteGroup, guidMyVSToolsCmdSet:ProcedureCtxtMenu, 0x1001;
+  guidMyVSToolsCmdSet:PropertiesGroup, guidMyVSToolsCmdSet:ProcedureCtxtMenu, 0x1003;
+
+  // Table menu
+  guidMyVSToolsCmdSet:cmdidAddNewTable, guidMyVSToolsCmdSet:TableGroup, 0x1000;
+  guidMyVSToolsCmdSet:DeleteGroup, guidMyVSToolsCmdSet:TableCtxtMenu, 0x1001;
+  guidMyVSToolsCmdSet:PropertiesGroup, guidMyVSToolsCmdSet:TableCtxtMenu, 0x1002;
+
+  // View menu
+  guidMyVSToolsCmdSet:cmdidAddNewView, guidMyVSToolsCmdSet:ViewGroup, 0x1000;
+  guidMyVSToolsCmdSet:cmdidOpen, guidMyVSToolsCmdSet:ViewGroup, 0x1001;
+  guidMyVSToolsCmdSet:DeleteGroup, guidMyVSToolsCmdSet:ViewCtxtMenu, 0x1001;
+  guidMyVSToolsCmdSet:PropertiesGroup, guidMyVSToolsCmdSet:ViewCtxtMenu, 0x1002;
+
+  // Function menu
+  guidMyVSToolsCmdSet:cmdidAddNewFunction, guidMyVSToolsCmdSet:FunctionGroup, 0x1000;
+  guidMyVSToolsCmdSet:cmdidOpen, guidMyVSToolsCmdSet:FunctionGroup, 0x1001;
+  guidMyVSToolsCmdSet:DeleteGroup, guidMyVSToolsCmdSet:FunctionCtxtMenu, 0x1001;
+  guidMyVSToolsCmdSet:PropertiesGroup, guidMyVSToolsCmdSet:FunctionCtxtMenu, 0x1002;
+
+  guidMyVSToolsCmdSet:PropertiesGroup, guidMyVSToolsCmdSet:ProceduresCtxtMenu, 0x1002;
+
+  guidMyVSToolsCmdSet:PropertiesGroup, guidMyVSToolsCmdSet:FunctionsCtxtMenu, 0x1002;
+CMDPLACEMENT_END
+
+
+VISIBILITY_SECTION
+    // Command                          GUID when visible
+VISIBILITY_END
+
+// This section is where you can associate a command with a keyboard shortcut; this association is 
+// valid within a specific UI context, that is when the shell is inside a specific mode, e.g. during 
+// debugging, editing a file or when the user is using a specific designer.
+KEYBINDINGS_SECTION
+  // To define a binding, you have to specify the sequence of keys to press to activate the command 
+  // (keystate); the syntax to use is <key>[:<special keys>] where the special keys section can be 
+  // empty. The accepted special keys and their representation are:
+  //   Alt - A
+  //   Control - C
+  //   Shift - S
+  //   Windows Key - W
+  // For example, if you want to define a binding for <Control>C the definition will be 'C':C; if the 
+  // binding is <Control><Alt>C, then the keybinding is 'C':AC.
+  //
+  // Notice that Visual Studio has a lot of components and commands, so it can be difficult to find a 
+  // key binding not used by somebody else; if the key bindings are conflicting only one will be used
+  // and one problem is that the shell will not inform the user that a conflict was found. The only 
+  // way to detect the problem is to start Visual Studio under debugger, try to execute any command 
+  // and look if there is a message in the output window about a duplicated accelerator found.
+
+  // Command                        when available          emulation               keystate
+KEYBINDINGS_END
