@@ -25,7 +25,7 @@ using NUnit.Framework;
 
 namespace MySql.Data.MySqlClient.Tests
 {
-	[TestFixture()]
+	[TestFixture]
 	public class PreparedStatements : BaseTest
 	{
 		[TestFixtureSetUp]
@@ -36,7 +36,7 @@ namespace MySql.Data.MySqlClient.Tests
 			execSQL("DROP TABLE IF EXISTS Test");
 		}
 
-		[Test()]
+		[Test]
 		public void Simple() 
 		{
 			execSQL("DROP TABLE IF EXISTS Test");
@@ -53,14 +53,14 @@ namespace MySql.Data.MySqlClient.Tests
 			try 
 			{
 				reader = cmd.ExecuteReader();
-				Assert.IsTrue( reader.Read() );
-				Assert.AreEqual( 1, reader.GetInt32(0) );
-				Assert.AreEqual( 345.12, reader.GetDecimal(1) );
-				Assert.AreEqual( "abcd", reader.GetString(2) );
+				Assert.IsTrue(reader.Read());
+				Assert.AreEqual(1, reader.GetInt32(0));
+				Assert.AreEqual(345.12, reader.GetDecimal(1));
+				Assert.AreEqual("abcd", reader.GetString(2));
 			}
 			catch (Exception ex) 
 			{
-				Assert.Fail( ex.Message );
+				Assert.Fail(ex.Message);
 			}
 			finally 
 			{
@@ -69,7 +69,7 @@ namespace MySql.Data.MySqlClient.Tests
 		}
 
 
-		[Test()]
+		[Test]
 		public void SimplePrepareBeforeParms() 
 		{
 			execSQL("DROP TABLE IF EXISTS Test");
@@ -113,7 +113,7 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-		[Test()]
+		[Test]
 		public void DateAndTimes() 
 		{
 			execSQL("DROP TABLE IF EXISTS Test");
@@ -169,7 +169,7 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-		[Test()]
+		[Test]
 		public void ResetCommandText() 
 		{
 			execSQL("DROP TABLE IF EXISTS Test"); 
@@ -188,7 +188,7 @@ namespace MySql.Data.MySqlClient.Tests
 			
 		}
 
-		[Test()]
+		[Test]
 		public void DifferentParameterOrder() 
 		{
 			execSQL("DROP TABLE IF EXISTS Test"); 
@@ -212,7 +212,7 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual( "Name", cmd.ExecuteScalar() );
 		}
 
-		[Test()]
+		[Test]
 		public void Blobs() 
 		{
 			execSQL("DROP TABLE IF EXISTS Test");

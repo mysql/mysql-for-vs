@@ -179,22 +179,31 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual( 1, count );
 		}
 
-		[Test]
-		public void SetDbType() 
-		{
-			try 
-			{
-				IDbConnection conn2 = (IDbConnection)conn;
-				IDbCommand cmd = conn.CreateCommand();
-				IDbDataParameter prm = cmd.CreateParameter();
-				prm.DbType = DbType.Int32;
-				Assert.AreEqual( DbType.Int32, prm.DbType );
-			}
-			catch (Exception ex) 
-			{
-				Assert.Fail( ex.Message );
-			}
-		}
+        [Test]
+        public void SetDbType()
+        {
+            try
+            {
+                IDbConnection conn2 = (IDbConnection)conn;
+                IDbCommand cmd = conn.CreateCommand();
+                IDbDataParameter prm = cmd.CreateParameter();
+                prm.DbType = DbType.Int64;
+                Assert.AreEqual(DbType.Int64, prm.DbType);
+                prm.Value = 3;
+                Assert.AreEqual(DbType.Int64, prm.DbType);
+
+                MySqlParameter p = new MySqlParameter("name", MySqlDbType.Int64);
+                Assert.AreEqual(DbType.Int64, p.DbType);
+                Assert.AreEqual(MySqlDbType.Int64, p.MySqlDbType);
+                p.Value = 3;
+                Assert.AreEqual(DbType.Int64, p.DbType);
+                Assert.AreEqual(MySqlDbType.Int64, p.MySqlDbType);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
 
 		[Test]
 		public void UseOldSyntax() 

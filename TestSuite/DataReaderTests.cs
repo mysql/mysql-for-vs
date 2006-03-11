@@ -21,7 +21,6 @@
 using System;
 using System.Data;
 using MySql.Data.MySqlClient;
-using MySql.Data.Types;
 using NUnit.Framework;
 
 namespace MySql.Data.MySqlClient.Tests
@@ -102,7 +101,7 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-		[Test()]
+		[Test]
 		public void TestNotReadingResultset()
 		{
 			for (int x=0; x < 10; x++)
@@ -121,7 +120,7 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-		[Test()]
+		[Test]
 		public void GetBytes()
 		{
 			int len = 50000;
@@ -191,12 +190,12 @@ namespace MySql.Data.MySqlClient.Tests
 			execSQL("INSERT INTO Test (id, name, b1) VALUES (2, 'Test1', NULL)");
 
 			MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test WHERE id=1; SELECT * FROM Test WHERE id=2", conn);
-			MySqlDataReader reader = cmd.ExecuteReader( CommandBehavior.SingleResult );
+			MySqlDataReader reader = cmd.ExecuteReader(CommandBehavior.SingleResult);
 			bool result = reader.Read();
-			Assert.AreEqual( true, result );
+			Assert.AreEqual(true, result);
 
 			result = reader.NextResult();
-			Assert.AreEqual( false, result );
+			Assert.AreEqual(false, result);
 
 			reader.Close();
 		}
@@ -275,10 +274,10 @@ namespace MySql.Data.MySqlClient.Tests
 			MySqlDataReader reader = null;
 			try 
 			{
-				reader = cmd.ExecuteReader( CommandBehavior.SingleRow );
-				Assert.IsTrue( reader.Read(), "First read" );
-				Assert.IsFalse( reader.Read(), "Second read" );
-				Assert.IsFalse( reader.NextResult(), "Trying NextResult" );
+				reader = cmd.ExecuteReader(CommandBehavior.SingleRow);
+				Assert.IsTrue(reader.Read(), "First read");
+				Assert.IsFalse(reader.Read(), "Second read");
+				Assert.IsFalse(reader.NextResult(), "Trying NextResult");
 				reader.Close();
 
 				cmd.CommandText = "SELECT * FROM test where id=1";
@@ -385,7 +384,6 @@ namespace MySql.Data.MySqlClient.Tests
 				reader.Read();
 				Assert.AreEqual( 2, reader.GetValue(0) );
 				Assert.AreEqual( DBNull.Value, reader.GetValue(1) );
-				Assert.AreEqual( null, reader.GetString(1) );
 				reader.Read();
 				Assert.AreEqual( 3, reader.GetValue(0) );
 				Assert.AreEqual( "Test2", reader.GetValue(1) );

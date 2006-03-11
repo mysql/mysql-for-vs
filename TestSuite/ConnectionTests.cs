@@ -44,7 +44,7 @@ namespace MySql.Data.MySqlClient.Tests
 			Close();
 		}
 
-		[Test()]
+		[Test]
 		public void TestConnectionStrings()
 		{
 			MySqlConnection c = new MySqlConnection();
@@ -78,7 +78,7 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual( System.Data.ConnectionState.Closed, c.State, "State" );
 		}
 
-		[Test()]
+		[Test]
 		[ExpectedException(typeof(MySqlException))]
 		public void TestConnectingSocketBadUserName()
 		{
@@ -94,7 +94,7 @@ namespace MySql.Data.MySqlClient.Tests
 			c.Close();
 		}
 
-		[Test()]
+		[Test]
 		[ExpectedException(typeof(MySqlException))]
 		public void TestConnectingSocketBadDbName()
 		{
@@ -108,7 +108,7 @@ namespace MySql.Data.MySqlClient.Tests
 			c.Close();
 		}
 
-		[Test()]
+		[Test]
 		public void TestPersistSecurityInfoCachingPasswords() 
 		{
 			string host = ConfigurationSettings.AppSettings["host"];
@@ -142,7 +142,7 @@ namespace MySql.Data.MySqlClient.Tests
 			c.Close();
 		}
 
-		[Test()]
+		[Test]
 		public void ChangeDatabase() 
 		{
 			MySqlConnection c = new MySqlConnection( conn.ConnectionString + ";pooling=false" );
@@ -158,7 +158,7 @@ namespace MySql.Data.MySqlClient.Tests
 			c.Close();
 		}
 
-		[Test()]
+		[Test]
 		public void ConnectionTimeout() 
 		{
 
@@ -251,7 +251,7 @@ namespace MySql.Data.MySqlClient.Tests
 			MySqlConnection d = new MySqlConnection(connStr);
 			d.Open();
 
-			MySqlCommand cmd2 = new MySqlCommand( "SELECT id, active FROM test", d);
+			MySqlCommand cmd2 = new MySqlCommand("SELECT id, active FROM test", d);
 			MySqlDataReader reader = null;
 			try 
 			{
@@ -282,5 +282,31 @@ namespace MySql.Data.MySqlClient.Tests
 			MySqlConnection c = new MySqlConnection();
 			MySqlConnection clone = (MySqlConnection) ((ICloneable)c).Clone();
 		}
+
+        /// <summary>
+        /// Bug #13321  	Persist security info does not woek
+        /// </summary>
+        [Test]
+        public void PersistSecurityInfo()
+        {
+            string s = GetConnectionString(true).ToLower();
+            int start = s.IndexOf("persist security info");
+            int end = s.IndexOf(";", start);
+            string newConnStr = s.Substring(0, start);
+            newConnStr += s.Substring(end, s.Length - (end));
+            newConnStr += ";persist security info=false";
+
+            MySqlConnection conn2 = new MySqlConnection(newConnStr);
+            string p = "password";
+            if (conn2.ConnectionString.IndexOf("pwd") != -1)
+                p = "pwd";
+            else if (conn2.ConnectionString.IndexOf("passwd") != -1)
+                p = "passwd";
+
+            Assert.IsTrue(conn2.ConnectionString.IndexOf(p) != -1);
+            conn2.Open();
+            conn2.Close();
+            Assert.IsTrue(conn2.ConnectionString.IndexOf(p) == -1);
+        }
 	}
 }

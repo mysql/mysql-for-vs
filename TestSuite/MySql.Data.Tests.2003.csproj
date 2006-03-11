@@ -149,25 +149,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "DataSetTest.xsd"
-                    BuildAction = "Content"
-                    Generator = "MSDataSetGenerator"
-                    LastGenOutput = "DataSetTest.cs"
-                />
-                <File
-                    RelPath = "DataSetTest.cs"
-                    DependentUpon = "DataSetTest.xsd"
-                    SubType = "code"
-                    BuildAction = "Compile"
-                    DesignTime = "True"
-                    AutoGen = "True"
-                />
-                <File
-                    RelPath = "DataSetTest.xsx"
-                    DependentUpon = "DataSetTest.xsd"
-                    BuildAction = "None"
-                />
-                <File
                     RelPath = "DataTypeTests.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

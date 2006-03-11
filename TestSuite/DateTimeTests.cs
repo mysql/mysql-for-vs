@@ -23,9 +23,9 @@ using System.Data;
 using System.Data.Common;
 using System.Threading;
 using MySql.Data.MySqlClient;
-using MySql.Data.Types;
 using System.Globalization;
 using NUnit.Framework;
+using MySql.Data.Types;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -262,10 +262,33 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-		[Test()]
+		[Test]
 		public void TestZeroDateTimeException() 
 		{
 			execSQL("INSERT INTO Test (id, d, dt) VALUES (1, '0000-00-00', '0000-00-00 00:00:00')");
+
+            MySqlDataReader reader = null;
+            try
+            {
+                MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test", conn);
+                reader = cmd.ExecuteReader();
+                reader.Read();
+                reader.GetDateTime(2);
+                Assert.Fail("Should throw an exception");
+            }
+            catch (MySqlConversionException)
+            {
+            }
+            catch (MySqlException ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                if (reader != null) reader.Close();
+            }
+        }
+
 		/// <summary>
 		/// Bug #8929  	Timestamp values with a date > 10/29/9997 cause problems
 		/// </summary>

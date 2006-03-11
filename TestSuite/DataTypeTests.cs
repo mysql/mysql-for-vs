@@ -20,7 +20,6 @@
 
 using System;
 using MySql.Data.MySqlClient;
-using MySql.Data.Types;
 using System.Data;
 using NUnit.Framework;
 
@@ -464,8 +463,8 @@ namespace MySql.Data.MySqlClient.Tests
 		public void BitAndDecimal() 
 		{
 			execSQL("DROP TABLE IF EXISTS test");
-			execSQL("CREATE TABLE test (bt1 BIT, bt4 BIT(4), bt8 BIT(8), bt32 BIT(32))");
-			execSQL("INSERT INTO test VALUES (12, 2, 120, 1000)");
+			execSQL("CREATE TABLE test (bt1 BIT, bt4 BIT(4), bt11 BIT(11), bt23 BIT(23), bt32 BIT(32)) engine=myisam");
+			execSQL("INSERT INTO test VALUES (12, 2, 120, 240, 1000)");
 
 			MySqlCommand cmd = new MySqlCommand("SELECT * FROM test", conn);
 			MySqlDataReader reader = null;
@@ -486,6 +485,30 @@ namespace MySql.Data.MySqlClient.Tests
 			{
 				if (reader != null) reader.Close();
 			}
+
+            execSQL("CREATE TABLE test (bt1 BIT, bt4 BIT(4), bt8 BIT(8), bt32 BIT(32)) engine=myisam");
+            execSQL("INSERT INTO test VALUES (12, 2, 120, 1000)");
+            cmd.CommandText = "SELECT * FROM test";
+            reader = null;
+            try
+            {
+                reader = cmd.ExecuteReader();
+                Assert.IsTrue(reader.Read());
+                Assert.AreEqual(1, reader.GetInt32(0));
+                Assert.AreEqual(2, reader.GetInt32(1));
+                Assert.AreEqual(120, reader.GetInt32(2));
+                Assert.AreEqual(1000, reader.GetInt32(3));
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                execSQL("DROP TABLE IF EXISTS test2");
+                if (reader != null) reader.Close();
+            }
+
 		}
 
         /// <summary>
@@ -553,8 +576,7 @@ namespace MySql.Data.MySqlClient.Tests
                 if (reader != null) reader.Close();
             }
         }
-    }
-
+    
 		[Test]
 		[Category("5.0")]
 		public void Bit()
