@@ -129,12 +129,12 @@
                 />
                 <File
                     RelPath = "MySqlClient\command.cs"
-                    SubType = "Code"
+                    SubType = "Component"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "MySqlClient\CommandBuilder.cs"
-                    SubType = "Component"
+                    SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
@@ -149,7 +149,7 @@
                 />
                 <File
                     RelPath = "MySqlClient\Connection.cs"
-                    SubType = "Code"
+                    SubType = "Component"
                     BuildAction = "Compile"
                 />
                 <File
@@ -258,6 +258,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "MySqlClient\Statement.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "MySqlClient\StoredProcedure.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -269,6 +274,46 @@
                 />
                 <File
                     RelPath = "MySqlClient\UsageAdvisor.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MySqlClient\base\DbCommand.cs"
+                    SubType = "Component"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MySqlClient\base\DbCommandBuilder.cs"
+                    SubType = "Component"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MySqlClient\base\DbConnection.cs"
+                    SubType = "Component"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MySqlClient\base\DbConnection.resx"
+                    DependentUpon = "DbConnection.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "MySqlClient\base\DbDataReader.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MySqlClient\base\DbParameter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MySqlClient\base\DbParameterCollection.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MySqlClient\base\DbTransaction.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -304,11 +349,6 @@
                 />
                 <File
                     RelPath = "MySqlClient\common\Version.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "MySqlClient\common\Win32.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

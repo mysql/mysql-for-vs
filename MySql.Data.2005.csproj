@@ -1,7 +1,7 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>8.0.50215</ProductVersion>
+    <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -11,8 +11,7 @@
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
     <AssemblyName>MySQL.Data</AssemblyName>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>cnet.snk</AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
@@ -26,6 +25,7 @@
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\net-2.0\Debug\</OutputPath>
@@ -91,6 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CHANGES" />
+    <None Include="cnet.snk" />
     <None Include="README" />
     <Compile Include="MySqlClient\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -107,6 +108,7 @@
     <None Include="MySqlClient\base\DbCommandBuilder.cs">
       <SubType>Component</SubType>
     </None>
+    <None Include="MySqlClient\base\DbParameterCollection.cs" />
     <Compile Include="MySqlClient\CharSetMap.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -121,9 +123,6 @@
     </Compile>
     <Compile Include="MySqlClient\CommandBuilder.cs">
       <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="MySqlClient\CommandResult.cs">
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="MySqlClient\common\DBConnectionString.cs">
       <SubType>Code</SubType>
@@ -215,9 +214,11 @@
     <Compile Include="MySqlClient\PreparedStatement.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MySqlClient\SchemaProvider.cs" />
     <Compile Include="MySqlClient\SharedMemoryStream.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MySqlClient\Statement.cs" />
     <Compile Include="MySqlClient\StoredProcedure.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -227,6 +228,7 @@
     <Compile Include="MySqlClient\Types\MySqlBinary.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MySqlClient\Types\MySqlBit.cs" />
     <Compile Include="MySqlClient\Types\MySqlByte.cs">
       <SubType>Code</SubType>
     </Compile>
