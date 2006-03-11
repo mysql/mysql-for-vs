@@ -220,8 +220,17 @@ namespace MySql.Data.MySqlClient
 
 		protected override string GetParameterName(string columnName)
 		{
-			string colName = columnName.Replace(" ", "");
-			return colName;
+			StringBuilder sb = new StringBuilder(columnName);
+			sb.Replace(" ", "");
+			sb.Replace("/", "_per_");
+			sb.Replace("-", "_");
+			sb.Replace(")", "_cb_");
+			sb.Replace("(", "_ob_");
+			sb.Replace("%", "_pct_");
+			sb.Replace("<", "_lt_");
+			sb.Replace(">", "_gt_");
+			sb.Replace(".", "_pt_");
+			return sb.ToString();
 		}
 
 		private MySqlParameter CreateParameter(DataRow row, bool Original)

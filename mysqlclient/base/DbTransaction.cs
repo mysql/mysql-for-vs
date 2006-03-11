@@ -1,14 +1,13 @@
 using System;
 using System.Data;
 using System.Data.Common;
-using System.Collections.Generic;
 using System.Text;
 
 namespace MySql.Data.MySqlClient
 {
     public abstract class DbTransaction : MarshalByRefObject, IDbTransaction, IDisposable 
 	{
-        protected DbTransaction2()
+        protected DbTransaction()
         {
         }
 
@@ -17,12 +16,16 @@ namespace MySql.Data.MySqlClient
 
         IDbConnection IDbTransaction.Connection
         {
-            get { return this.Connection; }
+            get { return this.DbConnection; }
         }
+
+		public DbConnection Connection 
+		{
+			get { return this.DbConnection; }
+		}
 
         public abstract IsolationLevel IsolationLevel { get; }
         protected abstract DbConnection DbConnection { get; }
-
         public abstract void Commit();
         public abstract void Rollback();
 
@@ -30,7 +33,14 @@ namespace MySql.Data.MySqlClient
 
         #region IDisposable Members
 
-        public abstract void Dispose();
+		public void Dispose()
+		{
+			this.Dispose(true);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+		}
 
         #endregion
 

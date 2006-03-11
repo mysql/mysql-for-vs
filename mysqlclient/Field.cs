@@ -69,6 +69,8 @@ namespace MySql.Data.MySqlClient
 		protected	MySqlDbType	mySqlDbType;
 		protected	DBVersion	connVersion;
 
+        protected IMySqlValue rowValue;
+
 		#endregion
 
 		public MySqlField( DBVersion connVersion ) 
@@ -169,7 +171,9 @@ namespace MySql.Data.MySqlClient
 				case MySqlDbType.Year: return new MySqlInt32(type, true);
 				case MySqlDbType.UInt24:
 				case MySqlDbType.UInt32: return new MySqlUInt32(type, true);
-				case MySqlDbType.Int64: return new MySqlInt64();
+                case MySqlDbType.Bit: return new MySqlBit();
+				case MySqlDbType.Int64: 
+                    return new MySqlInt64();
 				case MySqlDbType.UInt64: return new MySqlUInt64();
 				case MySqlDbType.Time: return new MySqlTimeSpan();
 				case MySqlDbType.Date:

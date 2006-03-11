@@ -5,147 +5,109 @@ using System.ComponentModel;
 
 namespace MySql.Data.MySqlClient
 {
-    public abstract class DbCommand2 : Component, IDbCommand, IDisposable
+    public abstract class DbCommand : Component, IDbCommand, IDisposable
     {
-        #region Abstract Properties
-        public abstract DbConnection DbConnection { get; set; }
-        public abstract DbTransaction DbTransaction { get; set; }
-        #endregion
+        #region Abstract Properties 
+
+		//public abstract UpdateRowSource UpdatedRowSource { get; set; }
+		protected abstract DbConnection DbConnection { get; set; }
+        protected abstract DbTransaction DbTransaction { get; set; }
+		protected abstract DbParameterCollection DbParameterCollection { get; }
+		//public abstract UpdateRowSource UpdatedRowSource { get; set; }
+
+		#endregion
 
         #region Abstract Methods
-        public abstract DbDataReader ExecuteDbDataReader(CommandBehavior behavior);
-        public abstract DbParameter CreateParameter();
+
+        protected abstract DbDataReader ExecuteDbDataReader(CommandBehavior behavior);
+        protected abstract DbParameter CreateDbParameter();
+		public abstract int ExecuteNonQuery();
+		public abstract object ExecuteScalar();
+		public abstract void Prepare();
+
         #endregion
 
-        #region IDbCommand Members
+		public abstract void Cancel();
+		public abstract string CommandText { get; set; }
+		public abstract int CommandTimeout { get; set; }
+		public abstract CommandType CommandType { get; set; }
 
-        public void Cancel()
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public string CommandText
-        {
-            get
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-            set
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-        }
-
-        public int CommandTimeout
-        {
-            get
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-            set
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-        }
-
-        public CommandType CommandType
-        {
-            get
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-            set
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-        }
+		#region IDbCommand Members
 
         IDbConnection IDbCommand.Connection
         {
-            get { return DbConnection; }
-            set { DbConnection = value; }
+            get { return this.DbConnection; }
+            set { this.DbConnection = (DbConnection)value; }
         }
 
+		IDbTransaction IDbCommand.Transaction
+		{
+			get { return this.DbTransaction; }
+			set { this.DbTransaction = (DbTransaction)value; }
+		}
 
-        public IDbConnection Connection
-        {
-            get
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-            set
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-        }
+		IDataParameterCollection IDbCommand.Parameters
+		{
+			get { return this.DbParameterCollection; }
+		}
 
-        IDbDataParameter IDbCommand.CreateParameter()
-        {
-            return this.CreateParameter();
-        }
+		IDbDataParameter IDbCommand.CreateParameter()
+		{
+			return this.CreateParameter();
+		}
+
+		IDataReader IDbCommand.ExecuteReader()
+		{
+			return this.ExecuteDbDataReader(CommandBehavior.Default);
+		}
+
+		IDataReader IDbCommand.ExecuteReader(CommandBehavior behavior)
+		{
+			return this.ExecuteDbDataReader(behavior);
+		}
+
+		#endregion
+
+		#region Properties
+
+		[Browsable(false)]
+		public DbConnection Connection 
+		{
+			get { return this.DbConnection; }
+			set { this.DbConnection = (DbConnection)value; }
+		}
+
+		[Browsable(false)]
+		public DbTransaction Transaction 
+		{
+			get { return this.DbTransaction; }
+			set { this.DbTransaction = (DbTransaction)value; }
+		}
+
+		[Browsable(false)]
+		public DbParameterCollection Parameters 
+		{
+			get { return this.DbParameterCollection; }
+		}
+
+		#endregion
+
+		UpdateRowSource IDbCommand.UpdatedRowSource
+		{
+			get { return UpdateRowSource.Both; }
+			set { }
+		}
 
 
-        public int ExecuteNonQuery()
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public IDataReader ExecuteReader(CommandBehavior behavior)
+        public DbDataReader ExecuteReader(CommandBehavior behavior)
         {
             return this.ExecuteDbDataReader(behavior);
         }
 
-        IDataReader IDbCommand.ExecuteReader()
-        {
-            return ExecuteReader();
-        }
+		public DbDataReader ExecuteReader()
+		{
+			return this.ExecuteDbDataReader(CommandBehavior);
+		}
 
-        public IDataReader ExecuteReader()
-        {
-            return this.ExecuteDbDataReader(CommandBehavior);
-        }
-
-        public object ExecuteScalar()
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        IDataParameterCollection IDbCommand.Parameters
-        {
-            get { return DbParameterCollection; }
-        }
-
-
-        public void Prepare()
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        IDbTransaction IDbCommand.Transaction
-        {
-            get { return Transaction; }
-            set { Transaction = (MySqlTransaction)value; }
-        }
-
-
-        public IDbTransaction Transaction
-        {
-            get { return DbTransaction; }
-            set { DbTransaction = Value; }
-        }
-
-        public UpdateRowSource UpdatedRowSource
-        {
-            get
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-            set
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-        }
-
-        #endregion
-}
+	}
 }

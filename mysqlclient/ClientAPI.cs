@@ -71,75 +71,114 @@ namespace MySql.Data.MySqlClient
 		public MySqlDbType	type;				// Type of field. See mysql_com.h for types
 	}
 
+	[StructLayout(LayoutKind.Sequential)]
+    internal class MySqlBind
+    {
+        IntPtr  length;     // output length pointer
+        IntPtr  is_null;    // Pointer to null indicator
+        byte[]  buffer;             // buffer to get/put data
+        // set this if you want to track data truncations happened during fetch
+        IntPtr  error;
+        Int32   buffer_type;	/* buffer type */
+        /* output buffer length, must be set when fetching str/binary */
+        uint    buffer_length;
+        byte[]  row_ptr;         /* for the current data position */
+        uint    offset;           /* offset position for char/binary fetch */
+        uint	length_value;     /* Used if length is 0 */
+        uint    param_number;	  /* For null count and error messages */
+        uint    pack_length;	  /* Internal length for packed data */
+        bool    error_value;      /* used if error is 0 */
+        bool    is_unsigned;      /* set if integer type is unsigned */
+        bool	long_data_used;	  /* If used with mysql_send_long_data */
+        bool	is_null_value;    /* Used if is_null is 0 */
+        IntPtr  store_param_func;
+        IntPtr  fetch_result;
+        IntPtr  skip_result;
+    }
 
 	/// <summary>
 	/// Summary description for ClientAPI.
 	/// </summary>
 	internal class ClientAPI
 	{
-		[DllImport("libmysql.dll", EntryPoint="mysql_init")]
+		[DllImport("libmysql", EntryPoint="mysql_init")]
 		public static extern IntPtr Init(IntPtr mysql);
 
-		[DllImport("libmysql.dll", EntryPoint="mysql_real_connect")]
-		public static extern IntPtr Connect( IntPtr mysql,
+		[DllImport("libmysql", EntryPoint="mysql_real_connect")]
+		public static extern IntPtr Connect(IntPtr mysql,
 			string host, string user, string password, string db, uint port,
-			string unix_socket, uint flag );
+			string unix_socket, uint flag);
 
-		[DllImport("libmysql.dll", EntryPoint="mysql_close")]
+		[DllImport("libmysql", EntryPoint="mysql_close")]
 		public static extern void Close(IntPtr mysql);
 		
-		[DllImport("libmysql.dll", EntryPoint="mysql_ping")]
+		[DllImport("libmysql", EntryPoint="mysql_ping")]
 		public static extern int Ping(IntPtr mysql);
 
-		[DllImport("libmysql.dll", EntryPoint="mysql_select_db")]
+		[DllImport("libmysql", EntryPoint="mysql_select_db")]
 		public static extern int SelectDatabase(IntPtr mysql, string dbName);
 
-		[DllImport("libmysql.dll", EntryPoint="mysql_real_query")]
+		[DllImport("libmysql", EntryPoint="mysql_real_query")]
 		public static extern int Query(IntPtr mysql, byte[] query, uint len);
 
-		[DllImport("libmysql.dll", EntryPoint="mysql_error")]
+		[DllImport("libmysql", EntryPoint="mysql_error")]
 		public static extern string ErrorMsg(IntPtr mysql);
 
-		[DllImport("libmysql.dll", EntryPoint="mysql_errno")]
+		[DllImport("libmysql", EntryPoint="mysql_errno")]
 		public static extern int ErrorNumber(IntPtr mysql);
 
-		[DllImport("libmysql.dll", EntryPoint="mysql_options")]
+		[DllImport("libmysql", EntryPoint="mysql_options")]
 		public static extern int SetOptions(IntPtr mysql, ClientAPIOption option, ref object optionValue);
 
-		[DllImport("libmysql.dll", EntryPoint="mysql_use_result")]
+		[DllImport("libmysql", EntryPoint="mysql_use_result")]
 		public static extern IntPtr UseResult(IntPtr mysql);
 
-		[DllImport("libmysql.dll", EntryPoint="mysql_more_results")]
+		[DllImport("libmysql", EntryPoint="mysql_more_results")]
 		public static extern bool MoreResults(IntPtr mysql);
 
-		[DllImport("libmysql.dll", EntryPoint="mysql_next_result")]
+		[DllImport("libmysql", EntryPoint="mysql_next_result")]
 		public static extern int NextResult(IntPtr mysql);
 
-		[DllImport("libmysql.dll", EntryPoint="mysql_free_result")]
+		[DllImport("libmysql", EntryPoint="mysql_free_result")]
 		public static extern void FreeResult(IntPtr result);
 
-		[DllImport("libmysql.dll", EntryPoint="mysql_field_count")]
+		[DllImport("libmysql", EntryPoint="mysql_field_count")]
 		public static extern int FieldCount(IntPtr resultSet);
 
-		[DllImport("libmysql.dll", EntryPoint="mysql_affected_rows")]
+		[DllImport("libmysql", EntryPoint="mysql_affected_rows")]
 		public static extern ulong AffectedRows(IntPtr mysql);
 
-		[DllImport("libmysql.dll", EntryPoint="mysql_insert_id")]
+		[DllImport("libmysql", EntryPoint="mysql_insert_id")]
 		public static extern ulong LastInsertId(IntPtr mysql);
 
-		[DllImport("libmysql.dll", EntryPoint="mysql_fetch_field")]
+		[DllImport("libmysql", EntryPoint="mysql_fetch_field")]
 		public static extern ClientField FetchField(IntPtr resultSet);
 
-		[DllImport("libmysql.dll", EntryPoint="mysql_fetch_row")]
+		[DllImport("libmysql", EntryPoint="mysql_fetch_row")]
 		public static extern IntPtr FetchRow(IntPtr resultSet);
 		
-		[DllImport("libmysql.dll", EntryPoint="mysql_fetch_lengths")]
+		[DllImport("libmysql", EntryPoint="mysql_fetch_lengths")]
 		public static extern IntPtr FetchLengths(IntPtr resultSet);
 
-		[DllImport("libmysql.dll", EntryPoint="mysql_get_server_info")]
+		[DllImport("libmysql", EntryPoint="mysql_get_server_info")]
 		public static extern string VersionString(IntPtr mysql);
 
-		[DllImport("libmysql.dll", EntryPoint="mysql_character_set_name")]
+		[DllImport("libmysql", EntryPoint="mysql_character_set_name")]
 		public static extern string CharacterSetName(IntPtr mysql);
-	}
+
+        [DllImport("libmysql", EntryPoint = "mysql_stmt_init")]
+        public static extern IntPtr StatementInit(IntPtr mysql);
+
+        [DllImport("libmysql", EntryPoint = "mysql_stmt_prepare")]
+        public static extern int StatementPrepare(IntPtr mysql_statement, string query, uint length);
+
+        [DllImport("libmysql", EntryPoint = "mysql_stmt_close")]
+        public static extern bool StatementClose(IntPtr mysql_statement);
+
+        [DllImport("libmysql", EntryPoint = "mysql_stmt_fetch")]
+        public static extern int StatementFetch(IntPtr mysql_statement);
+
+        [DllImport("libmysql", EntryPoint = "mysql_stmt_error")]
+        public static extern string StatementError(IntPtr mysql_statement);
+    }
 }

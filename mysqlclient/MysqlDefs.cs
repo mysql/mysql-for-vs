@@ -137,6 +137,7 @@ namespace MySql.Data.MySqlClient
 		/// <summary>Bit-field data type</summary>
 		Bit = 16,
 		/// <summary>New Decimal</summary>
+        NewDecimal = 246,
 		/// <summary>An enumeration. A string object that can have only one value, chosen from the list of values 'value1', 'value2', ..., NULL or the special "" error value. An ENUM can have a maximum of 65535 distinct values</summary>
 		Enum        = 247,
 		/// <summary>A set. A string object that can have zero or more values, each of which must be chosen from the list of values 'value1', 'value2', ... A SET can have a maximum of 64 members.</summary>

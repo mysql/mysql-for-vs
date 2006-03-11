@@ -19,6 +19,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
+using System.Text;
 using System.IO;
 using System.Collections;
 
@@ -28,28 +29,19 @@ namespace MySql.Data.MySqlClient
 	/// <summary>
 	/// Summary description for PreparedStatement.
 	/// </summary>
-	internal class PreparedStatement
+	internal class PreparedStatement : Statement
 	{
-		private Driver				driver;
-		private int					statementId;
-		private MySqlField[]		paramList;
-		private int					executionCount;
+		private MySqlField[] paramList;
+		private int executionCount;
+        private int pageSize;
 
-		public PreparedStatement(Driver driver, int statementId, MySqlField[] paramList )
-		{
-			this.paramList = new MySqlField[0];
-			this.driver = driver;
-			this.statementId = statementId;
-			this.paramList = paramList;
-			executionCount = 0;
-		}
+        public PreparedStatement(MySqlConnection connection, string text, int pageSize)
+            : base(connection, text)
+        {
+            this.pageSize = pageSize;
+        }
 
 		#region Properties
-
-		public int StatementId 
-		{
-			get { return statementId; }
-		}
 
 		public int NumParameters 
 		{
@@ -64,16 +56,28 @@ namespace MySql.Data.MySqlClient
 
 		#endregion
 
-		public CommandResult Execute( MySqlParameterCollection parameters, int cursorPageSize )
-		{
-			if (parameters.Count < paramList.Length)
-				throw new MySqlException( "Invalid number of parameters for statement execute" );
+        public void Prepare()
+        {
+            // strip out names from parameter markers
+            string text;
+            ArrayList parameter_names = PrepareCommandText(out text);
 
+            // ask our connection to send the prepare command
+            statementId = driver.PrepareStatement(text, ref paramList);
+
+            // now we need to assign our field names since we stripped them out
+            // for the prepare
+            for (int i=0; i < parameter_names.Count; i++)
+                paramList[i].ColumnName = (string)parameter_names[i];
+        }
+
+		public override void Execute(MySqlParameterCollection parameters)
+		{
 			MySqlStreamWriter writer = new MySqlStreamWriter(new MemoryStream(), driver.Encoding);
 
 			//TODO: support long data here
 			// create our null bitmap
-			BitArray nullMap = new BitArray( parameters.Count ); //metaData.Length );
+			BitArray nullMap = new BitArray(parameters.Count); //metaData.Length );
 			for (int x=0; x < parameters.Count; x++)
 			{
 				if (parameters[x].Value == DBNull.Value ||
@@ -81,42 +85,81 @@ namespace MySql.Data.MySqlClient
 					nullMap[x] = true;
 			}
 			byte[] nullMapBytes = new byte[ (parameters.Count + 7)/8 ];
-			nullMap.CopyTo( nullMapBytes, 0 );
+			nullMap.CopyTo(nullMapBytes, 0);
 
 			// start constructing our packet
-			writer.WriteInteger( StatementId, 4 );
-			writer.WriteByte( (byte)cursorPageSize );          // flags; always 0 for 4.1
-			writer.WriteInteger( 1, 4 );    // interation count; 1 for 4.1
-			writer.Write( nullMapBytes );
+			writer.WriteInteger(Id, 4);
+			writer.WriteByte((byte)pageSize);          // flags; always 0 for 4.1
+			writer.WriteInteger(1, 4);    // interation count; 1 for 4.1
+			writer.Write(nullMapBytes);
 			//if (parameters != null && parameters.Count > 0)
-				writer.WriteByte( 1 );			// rebound flag
+				writer.WriteByte(1);			// rebound flag
 			//else
 			//	packet.WriteByte( 0 );
 			//TODO:  only send rebound if parms change
 
 			// write out the parameter types
-			foreach ( MySqlField param in paramList )
-			{
-				MySqlParameter parm = parameters[ param.ColumnName ];
-				writer.WriteInteger( (long)parm.MySqlDbType, 2 ); 
-			}
+            if (paramList != null)
+            {
+                foreach (MySqlField param in paramList)
+                {
+                    MySqlParameter parm = parameters[param.ColumnName];
+                    writer.WriteInteger((long)parm.MySqlDbType, 2);
+                }
 
-			// now write out all non-null values
-			foreach ( MySqlField param in paramList )
-			{
-				MySqlParameter parm = parameters[ param.ColumnName ];
-				if (parm.Value == DBNull.Value || parm.Value == null) continue;
+                // now write out all non-null values
+                foreach (MySqlField param in paramList)
+                {
+                    MySqlParameter parm = parameters[param.ColumnName];
+                    if (parm.Value == DBNull.Value || parm.Value == null) continue;
 
-				writer.Encoding = param.Encoding;
-				parm.Serialize(writer, true);
-			}
+                    writer.Encoding = param.Encoding;
+                    parm.Serialize(writer, true);
+                }
+            }
 
 			executionCount ++;
-			// send the data packet and return the CommandResult
-			CommandResult result = driver.ExecuteStatement(
-				((System.IO.MemoryStream)writer.Stream).ToArray(), StatementId, cursorPageSize );
-			return result;
+
+            driver.ExecuteStatement(((System.IO.MemoryStream)writer.Stream).ToArray());
 		}
 
+        public override bool ExecuteNext()
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// Prepares CommandText for use with the Prepare method
+        /// </summary>
+        /// <returns>Command text stripped of all paramter names</returns>
+        /// <remarks>
+        /// Takes the output of TokenizeSql and creates a single string of SQL
+        /// that only contains '?' markers for each parameter.  It also creates
+        /// the parameterMap array list that includes all the paramter names in the
+        /// order they appeared in the SQL
+        /// </remarks>
+        private ArrayList PrepareCommandText(out string stripped_sql)
+        {
+            StringBuilder	newSQL = new StringBuilder();
+            ArrayList parameterMap = new ArrayList();
+
+            // tokenize the sql first
+            ArrayList tokens = TokenizeSql(commandText);
+            parameterMap.Clear();
+
+            foreach (string token in tokens)
+            {
+                if ( token[0] != connection.ParameterMarker)
+                    newSQL.Append( token );
+                else
+                {
+                    parameterMap.Add( token );
+                    newSQL.Append(connection.ParameterMarker);
+                }
+            }
+
+            stripped_sql = newSQL.ToString();
+            return parameterMap;
+        }
 	}
 }

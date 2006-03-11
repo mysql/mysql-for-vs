@@ -81,9 +81,9 @@ namespace MySql.Data.Types
 
 		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, object val, int length)
 		{
-			long v = Convert.ToInt64( val );
+			long v = Convert.ToInt64(val);
 			if (binary)
-				writer.Write( BitConverter.GetBytes(v));
+				writer.Write(BitConverter.GetBytes(v));
 			else
 				writer.WriteStringNoNull(v.ToString());		
 		}
@@ -95,7 +95,7 @@ namespace MySql.Data.Types
 			if (length == -1) 
 				return new MySqlInt64((long)reader.ReadLong(8));
 			else 
-				return new MySqlInt64(Int64.Parse(reader.ReadString( length )));
+				return new MySqlInt64(Int64.Parse(reader.ReadString(length)));
 		}
 
 		void IMySqlValue.SkipValue(MySqlStreamReader reader)

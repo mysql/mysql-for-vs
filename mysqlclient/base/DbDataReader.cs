@@ -5,46 +5,56 @@ using System.Data.Common;
 
 namespace MySql.Data.MySqlClient
 {
-	class DbDataReader : MarshalByRefObject, IDataReader, IDisposable, IDataRecord, IEnumerable
+	public abstract class DbDataReader : MarshalByRefObject, IDataReader, IDisposable, IDataRecord, IEnumerable
 	{
-        #region IDataReader Members
+		protected DbDataReader()
+		{
+		}
 
-        public void Close()
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
+		#region Abstract Methods
 
-        public int Depth
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
+		public abstract void Close();
+		public abstract bool GetBoolean(int index);
+		public abstract byte GetByte(int i);
+		public abstract long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferoffset, int length);
+		public abstract char GetChar(int i);
+		public abstract long GetChars(int i, long fieldoffset, char[] buffer, int bufferoffset, int length);
 
-        public DataTable GetSchemaTable()
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
+		public abstract string GetDataTypeName(int i);
+		public abstract DateTime GetDateTime(int i);
 
-        public bool IsClosed
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
+		public abstract decimal GetDecimal(int i);
+		public abstract double GetDouble(int i);
 
-        public bool NextResult()
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
+		public abstract Type GetFieldType(int i);
+		public abstract float GetFloat(int i);
+		public abstract Guid GetGuid(int i);
+		public abstract short GetInt16(int i);
+		public abstract int GetInt32(int i);
+		public abstract long GetInt64(int i);
+		public abstract string GetName(int i);
+		public abstract int GetOrdinal(string name);
+		public abstract DataTable GetSchemaTable();
+		public abstract string GetString(int i);
+		public abstract object GetValue(int i);
+		public abstract int GetValues(object[] values);
+		public abstract bool IsDBNull(int i);
+		public abstract bool NextResult();
+		public abstract bool Read();
+		#endregion
 
-        public bool Read()
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
+		#region Abstract Properties
 
-        public int RecordsAffected
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
+		public abstract int Depth { get; }
+		public abstract int FieldCount { get; }
+		public abstract bool HasRows { get; }
+		public abstract bool IsClosed { get; }
+		public abstract object this[string name] { get; }
+		public abstract object this[int i] { get; }
+		public abstract int RecordsAffected { get; }
+		//TODO: check viability of VisibleFieldCount
 
-        #endregion
+		#endregion
 
         #region IDisposable Members
 
@@ -53,144 +63,28 @@ namespace MySql.Data.MySqlClient
             throw new Exception("The method or operation is not implemented.");
         }
 
-        #endregion
-
-        #region IDataRecord Members
-
-        public int FieldCount
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        public bool GetBoolean(int i)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public byte GetByte(int i)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferoffset, int length)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public char GetChar(int i)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public long GetChars(int i, long fieldoffset, char[] buffer, int bufferoffset, int length)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public IDataReader GetData(int i)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public string GetDataTypeName(int i)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public DateTime GetDateTime(int i)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public decimal GetDecimal(int i)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public double GetDouble(int i)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public Type GetFieldType(int i)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public float GetFloat(int i)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public Guid GetGuid(int i)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public short GetInt16(int i)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public int GetInt32(int i)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public long GetInt64(int i)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public string GetName(int i)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public int GetOrdinal(string name)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public string GetString(int i)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public object GetValue(int i)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public int GetValues(object[] values)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public bool IsDBNull(int i)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public object this[string name]
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        public object this[int i]
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+				this.Close();
+		}
 
         #endregion
+
+		IDataReader IDataRecord.GetData(int i)
+		{
+			throw new NotSupportedException("GetData not supported.");
+		}
+
+        public DbDataReader GetData(int i)
+        {
+			throw new NotSupportedException("GetData not supported.");
+		}
 
         #region IEnumerable Members
 
-        public IEnumerator GetEnumerator()
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
+        public abstract IEnumerator GetEnumerator();
 
         #endregion
-}
+	}
 }

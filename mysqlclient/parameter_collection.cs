@@ -20,6 +20,7 @@
 
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Collections;
 using System.ComponentModel;
 
@@ -33,11 +34,11 @@ namespace MySql.Data.MySqlClient
 	[Editor("MySql.Data.MySqlClient.Design.DBParametersEditor,MySql.Design", typeof(System.Drawing.Design.UITypeEditor))]
 	[ListBindable(true)]
 #endif
-	public sealed class MySqlParameterCollection : MarshalByRefObject, IDataParameterCollection, 
-		IList, ICollection, IEnumerable
+	public sealed class MySqlParameterCollection : DbParameterCollection
 	{
-		private ArrayList	_parms = new ArrayList();
+		private ArrayList	items = new ArrayList();
 		private char		paramMarker = '?';
+        private bool changed;
 
 		internal char ParameterMarker 
 		{
@@ -53,197 +54,6 @@ namespace MySql.Data.MySqlClient
 				"' is not contained by this MySqlParameterCollection.");
 		}
 
-		#region ICollection support
-
-		/// <summary>
-		/// Gets the number of MySqlParameter objects in the collection.
-		/// </summary>
-		public int Count 
-		{
-			get { return _parms.Count; }
-		}
-
-		/// <summary>
-		/// Copies MySqlParameter objects from the MySqlParameterCollection to the specified array.
-		/// </summary>
-		/// <param name="array"></param>
-		/// <param name="index"></param>
-		public void CopyTo( Array array, int index ) 
-		{
-			_parms.CopyTo(array, index);
-		}
-
-		bool ICollection.IsSynchronized
-		{
-			get { return _parms.IsSynchronized; }
-		}
-
-		object ICollection.SyncRoot
-		{
-			get { return _parms.SyncRoot; }
-		}
-		#endregion
-
-		#region IList
-
-		/// <summary>
-		/// Removes all items from the collection.
-		/// </summary>
-		public void Clear()
-		{
-			_parms.Clear();
-		}
-
-		/// <summary>
-		/// Gets a value indicating whether a MySqlParameter exists in the collection.
-		/// </summary>
-		/// <param name="value">The value of the <see cref="MySqlParameter"/> object to find. </param>
-		/// <returns>true if the collection contains the <see cref="MySqlParameter"/> object; otherwise, false.</returns>
-		/// <overloads>Gets a value indicating whether a <see cref="MySqlParameter"/> exists in the collection.</overloads>
-		public bool Contains(object value)
-		{
-			return _parms.Contains(value);
-		}
-
-		/// <summary>
-		/// Gets the location of a <see cref="MySqlParameter"/> in the collection.
-		/// </summary>
-		/// <param name="value">The <see cref="MySqlParameter"/> object to locate. </param>
-		/// <returns>The zero-based location of the <see cref="MySqlParameter"/> in the collection.</returns>
-		/// <overloads>Gets the location of a <see cref="MySqlParameter"/> in the collection.</overloads>
-		public int IndexOf(object value)
-		{
-			return _parms.IndexOf(value);
-		}
-
-		/// <summary>
-		/// Inserts a MySqlParameter into the collection at the specified index.
-		/// </summary>
-		/// <param name="index"></param>
-		/// <param name="value"></param>
-		public void Insert(int index, object value)
-		{
-			_parms.Insert( index, value );
-		}
-
-		bool IList.IsFixedSize
-		{
-			get { return _parms.IsFixedSize; }
-		}
-
-		bool IList.IsReadOnly
-		{
-			get { return _parms.IsReadOnly; }
-		}
-
-		/// <summary>
-		/// Removes the specified MySqlParameter from the collection.
-		/// </summary>
-		/// <param name="value"></param>
-		public void Remove( object value )
-		{
-			_parms.Remove( value );
-		}
-
-		/// <summary>
-		/// Removes the specified <see cref="MySqlParameter"/> from the collection using a specific index.
-		/// </summary>
-		/// <param name="index">The zero-based index of the parameter. </param>
-		/// <overloads>Removes the specified <see cref="MySqlParameter"/> from the collection.</overloads>
-		public void RemoveAt( int index )
-		{
-			_parms.RemoveAt( index );
-		}
-
-		object IList.this[int index] 
-		{
-			get { return this[index]; }
-			set 
-			{ 
-				if (! (value is MySqlParameter)) throw new MySqlException("Only MySqlParameter objects may be stored");
-				this[index] = (MySqlParameter)value; 
-			}
-		}
-
-		/// <summary>
-		/// Adds the specified <see cref="MySqlParameter"/> object to the <see cref="MySqlParameterCollection"/>.
-		/// </summary>
-		/// <param name="value">The <see cref="MySqlParameter"/> to add to the collection.</param>
-		/// <returns>The index of the new <see cref="MySqlParameter"/> object.</returns>
-		public int Add( object value )
-		{
-			if (! (value is MySqlParameter)) 
-				throw new MySqlException("Only MySqlParameter objects may be stored");
-
-			MySqlParameter p = (MySqlParameter)value;
-
-			if (p.ParameterName == null || p.ParameterName == String.Empty)
-				throw new MySqlException("Parameters must be named");
-
-			return _parms.Add(value);
-		}
-
-		#endregion
-
-		#region IDataParameterCollection
-
-		/// <summary>
-		/// Gets a value indicating whether a <see cref="MySqlParameter"/> with the specified parameter name exists in the collection.
-		/// </summary>
-		/// <param name="name">The name of the <see cref="MySqlParameter"/> object to find.</param>
-		/// <returns>true if the collection contains the parameter; otherwise, false.</returns>
-		public bool Contains(string name)
-		{
-			return IndexOf(name) != -1;
-		}
-
-		/// <summary>
-		/// Gets the location of the <see cref="MySqlParameter"/> in the collection with a specific parameter name.
-		/// </summary>
-		/// <param name="parameterName">The name of the <see cref="MySqlParameter"/> object to retrieve. </param>
-		/// <returns>The zero-based location of the <see cref="MySqlParameter"/> in the collection.</returns>
-		public int IndexOf(string parameterName)
-		{
-			if (parameterName[0] == paramMarker)
-				parameterName = parameterName.Substring(1, parameterName.Length-1);
-			parameterName = parameterName.ToLower();
-			for (int x=0; x < _parms.Count; x++) 
-			{
-				MySqlParameter p = (MySqlParameter)_parms[x];
-				string listName = p.ParameterName;
-				if (listName[0] == paramMarker)
-					listName = listName.Substring(1, listName.Length-1);
-				if (listName.ToLower() == parameterName) return x;
-			}
-			return -1;
-		}
-
-		/// <summary>
-		/// Removes the specified <see cref="MySqlParameter"/> from the collection using the parameter name.
-		/// </summary>
-		/// <param name="name">The name of the <see cref="MySqlParameter"/> object to retrieve. </param>
-		public void RemoveAt(string name)
-		{
-			_parms.RemoveAt(InternalIndexOf(name));
-		}
-
-		object IDataParameterCollection.this[string name]
-		{
-			get { return this[name]; }
-			set 
-			{ 
-				if (! (value is MySqlParameter)) throw new MySqlException("Only MySqlParameter objects may be stored");
-				this[name] = (MySqlParameter)value;
-			}
-		}
-		#endregion
-
-		#region IEnumerable
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return ((IEnumerable)_parms).GetEnumerator();
-		}
-		#endregion
 
 		#region Public Methods
 
@@ -253,19 +63,19 @@ namespace MySql.Data.MySqlClient
 		/// <overloads>Gets the <see cref="MySqlParameter"/> with a specified attribute.
 		/// [C#] In C#, this property is the indexer for the <see cref="MySqlParameterCollection"/> class.
 		/// </overloads>
-		public MySqlParameter this[int index]
+		public new MySqlParameter this[int index]
 		{
-			get { return (MySqlParameter)_parms[index]; }
-			set { _parms[index] = value; }
+			get { return (MySqlParameter)GetParameter(index); }
+			set { SetParameter(index, value); }
 		}
 
 		/// <summary>
 		/// Gets the <see cref="MySqlParameter"/> with the specified name.
 		/// </summary>
-		public MySqlParameter this[string name]
+		public new MySqlParameter this[string name]
 		{
-			get { return (MySqlParameter)_parms[ InternalIndexOf( name ) ]; }
-			set { _parms[ InternalIndexOf( name ) ] = value; }
+			get { return (MySqlParameter)GetParameter(name); }
+			set { SetParameter(name, value); }
 		}
 
 		/// <summary>
@@ -280,7 +90,7 @@ namespace MySql.Data.MySqlClient
 
 			if ( value.ParameterName == null ) throw new ArgumentException("parameter must be named");
 
-			_parms.Add(value);
+			items.Add(value);
 			return value;
 		}
 
@@ -333,5 +143,211 @@ namespace MySql.Data.MySqlClient
 
 		#endregion
 
-	}
+        #region DbParameterCollection Implementation
+
+        public override void AddRange(Array values)
+        {
+            foreach (DbParameter p in values)
+                Add(p);
+        }
+
+		void CheckIndex(int index)
+		{
+			if (index < 0 || index >= items.Count)
+				throw new IndexOutOfRangeException("Parameter index is out of range.");
+		}
+
+		protected override DbParameter GetParameter(string parameterName)
+        {
+			int index = this.IndexOf(parameterName);
+			if (index < 0)
+				throw new ArgumentException("Parameter '" + parameterName + "' not found in the collection.");
+            return (DbParameter)items[index];
+        }
+
+        protected override DbParameter GetParameter(int index)
+        {
+			CheckIndex(index);
+            return (DbParameter)items[index];
+        }
+
+        protected override void SetParameter(string parameterName, DbParameter value)
+        {
+			int index = this.IndexOf(parameterName);
+			if (index < 0)
+				throw new ArgumentException("Parameter '" + parameterName + "' not found in the collection.");
+			changed = true;
+			items[index] = (MySqlParameter)value;
+        }
+
+        protected override void SetParameter(int index, DbParameter value)
+        {
+			CheckIndex(index);
+			changed = true;
+			items[index] = (MySqlParameter)value;
+        }
+
+        /// <summary>
+        /// Adds the specified <see cref="MySqlParameter"/> object to the <see cref="MySqlParameterCollection"/>.
+        /// </summary>
+        /// <param name="value">The <see cref="MySqlParameter"/> to add to the collection.</param>
+        /// <returns>The index of the new <see cref="MySqlParameter"/> object.</returns>
+        public override int Add(object value)
+        {
+            if (!(value is MySqlParameter))
+                throw new MySqlException("Only MySqlParameter objects may be stored");
+
+            MySqlParameter p = (MySqlParameter)value;
+
+            if (p.ParameterName == null || p.ParameterName == String.Empty)
+                throw new MySqlException("Parameters must be named");
+
+            return items.Add(value);
+        }
+
+        /// <summary>
+        /// Removes all items from the collection.
+        /// </summary>
+        public override void Clear()
+        {
+            items.Clear();
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether a <see cref="MySqlParameter"/> with the specified parameter name exists in the collection.
+        /// </summary>
+        /// <param name="value">The name of the <see cref="MySqlParameter"/> object to find.</param>
+        /// <returns>true if the collection contains the parameter; otherwise, false.</returns>
+        public override bool Contains(string value)
+        {
+            return IndexOf(value) != -1;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether a MySqlParameter exists in the collection.
+        /// </summary>
+        /// <param name="value">The value of the <see cref="MySqlParameter"/> object to find. </param>
+        /// <returns>true if the collection contains the <see cref="MySqlParameter"/> object; otherwise, false.</returns>
+        /// <overloads>Gets a value indicating whether a <see cref="MySqlParameter"/> exists in the collection.</overloads>
+        public override bool Contains(object value)
+        {
+            return items.Contains(value);
+        }
+
+        /// <summary>
+        /// Copies MySqlParameter objects from the MySqlParameterCollection to the specified array.
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="index"></param>
+        public override void CopyTo(Array array, int index)
+        {
+            items.CopyTo(array, index);
+        }
+
+        /// <summary>
+        /// Gets the number of MySqlParameter objects in the collection.
+        /// </summary>
+        public override int Count
+        {
+            get { return items.Count; }
+        }
+
+        public override IEnumerator GetEnumerator()
+        {
+            return ((IEnumerable)items).GetEnumerator();
+        }
+
+        /// <summary>
+        /// Gets the location of the <see cref="MySqlParameter"/> in the collection with a specific parameter name.
+        /// </summary>
+        /// <param name="parameterName">The name of the <see cref="MySqlParameter"/> object to retrieve. </param>
+        /// <returns>The zero-based location of the <see cref="MySqlParameter"/> in the collection.</returns>
+        public override int IndexOf(string parameterName)
+        {
+            if (parameterName[0] == paramMarker)
+                parameterName = parameterName.Substring(1, parameterName.Length - 1);
+            parameterName = parameterName.ToLower();
+            for (int x = 0; x < items.Count; x++)
+            {
+                MySqlParameter p = (MySqlParameter)items[x];
+                string listName = p.ParameterName;
+                if (listName[0] == paramMarker)
+                    listName = listName.Substring(1, listName.Length - 1);
+                if (listName.ToLower() == parameterName) return x;
+            }
+            return -1;
+        }
+
+        /// <summary>
+        /// Gets the location of a <see cref="MySqlParameter"/> in the collection.
+        /// </summary>
+        /// <param name="value">The <see cref="MySqlParameter"/> object to locate. </param>
+        /// <returns>The zero-based location of the <see cref="MySqlParameter"/> in the collection.</returns>
+        /// <overloads>Gets the location of a <see cref="MySqlParameter"/> in the collection.</overloads>
+        public override int IndexOf(object value)
+        {
+            return items.IndexOf(value);
+        }
+
+        /// <summary>
+        /// Inserts a MySqlParameter into the collection at the specified index.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="value"></param>
+        public override void Insert(int index, object value)
+        {
+            items.Insert(index, value);
+        }
+
+        public override bool IsFixedSize
+        {
+            get { return items.IsFixedSize; }
+        }
+
+        public override bool IsReadOnly
+        {
+            get { return items.IsReadOnly; }
+        }
+
+        public override bool IsSynchronized
+        {
+            get { return items.IsSynchronized; }
+        }
+
+        /// <summary>
+        /// Removes the specified MySqlParameter from the collection.
+        /// </summary>
+        /// <param name="value"></param>
+        public override void Remove(object value)
+        {
+            items.Remove(value);
+        }
+
+        /// <summary>
+        /// Removes the specified <see cref="MySqlParameter"/> from the collection using the parameter name.
+        /// </summary>
+        /// <param name="name">The name of the <see cref="MySqlParameter"/> object to retrieve. </param>
+        public override void RemoveAt(string parameterName)
+        {
+            items.RemoveAt(InternalIndexOf(parameterName));
+        }
+
+        /// <summary>
+        /// Removes the specified <see cref="MySqlParameter"/> from the collection using a specific index.
+        /// </summary>
+        /// <param name="index">The zero-based index of the parameter. </param>
+        /// <overloads>Removes the specified <see cref="MySqlParameter"/> from the collection.</overloads>
+        public override void RemoveAt(int index)
+        {
+            items.RemoveAt(index);
+        }
+
+        public override object SyncRoot
+        {
+            get { return items.SyncRoot; }
+        }
+
+        #endregion
+
+    }
 }

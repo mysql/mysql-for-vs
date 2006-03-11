@@ -130,7 +130,7 @@ namespace MySql.Data.MySqlClient
 		public string Database
 		{
 			get { return GetString("database"); }
-//			set { keyValues["database"] = value; }
+			set { keyValues["database"] = value; }
 		}
 
 #if DESIGN
@@ -353,7 +353,7 @@ namespace MySql.Data.MySqlClient
 		/// stripping out the password info
 		/// </summary>
 		/// <returns></returns>
-		public string GetConnectionString()
+		public string GetConnectionString(bool includePass)
 		{
 			if (connectString == null) return String.Empty;
 
@@ -456,12 +456,12 @@ namespace MySql.Data.MySqlClient
 					else if (d == "embedded")
 						hash["driver"] = DriverType.Emebedded;
 					else
-						throw new MySqlException("Unknown driver type: " + value);
+						throw new ArgumentException("Unknown driver type: " + value);
 					return true;
 
 				case "usage advisor":
 				case "useusageadvisor":
-					hash["usageAdvisor"] = boolval;
+					hash["usageAdvisor"] = boolVal;
 					return true;
 
 				case "character set":

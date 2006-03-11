@@ -21,6 +21,7 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using MySql.Data.Types;
 
 namespace MySql.Data.MySqlClient
 {
@@ -104,15 +105,13 @@ namespace MySql.Data.MySqlClient
 			return false;
 		}
 
-		public override CommandResult SendQuery(byte[] bytes, int length, bool consume)
+		public override void Query(byte[] bytes, int length)
 		{
-			string s = encoding.GetString(bytes, 0, bytes.Length);
 			int result = Query(mysql, bytes, (uint)length);
 			if (result != 0)
 				throw new MySqlException(ErrorMsg(mysql), ErrorNumber(mysql));
 
 			resultsCount = 0;
-			return new CommandResult(this, false);
 		}
 
 		public override void SetDatabase(string dbName)
@@ -132,18 +131,24 @@ namespace MySql.Data.MySqlClient
 		}
 
 
-		public override PreparedStatement Prepare(string sql, string[] names)
+		public override int PrepareStatement(string sql, ref MySqlField[] parameters)
 		{
-			return null;
+            IntPtr mysql_statement = StatementInit(mysql);
+            if (mysql_statement == IntPtr.Zero)
+                throw new MySqlException("Error initializing prepared statement");
+            int result = StatementPrepare(mysql_statement, sql, (uint)sql.Length);
+            if (result != 0)
+                throw new MySqlException(StatementError(mysql_statement), result);
+            return (int)mysql_statement;
 		}
 
-		public override bool ReadResult(ref long numfields, ref ulong affectedRows, ref long lastInsertId)
+		public override long ReadResult(ref ulong affectedRows, ref long lastInsertId)
 		{
 			if (resultSet != IntPtr.Zero) 
 			{
 				FreeResult(resultSet);
 				resultSet = IntPtr.Zero;
-				if (! version.isAtLeast(4,1,0)) return false;
+				if (! version.isAtLeast(4,1,0)) return -1;
 			}
 
 			if (version.isAtLeast(4,1,0)) 
@@ -151,17 +156,17 @@ namespace MySql.Data.MySqlClient
 				if (resultsCount > 0) 
 				{
 					int result = NextResult(mysql);
-					if (result == -1) return false;
+					if (result == -1) return -1;
 					if (result > 0)
 						throw new MySqlException( ErrorMsg(mysql), ErrorNumber(mysql));
 				}
 			}
 			else 
 			{
-				if (resultsCount > 0) return false;
+				if (resultsCount > 0) return 0;
 			}
 
-			numfields = GetFieldCount(mysql);
+			long numfields = GetFieldCount(mysql);
 			if (numfields > 0) 
 			{
 				// now we use the resultset
@@ -176,15 +181,15 @@ namespace MySql.Data.MySqlClient
 				lastInsertId = (long)LastInsertId(mysql);
 			}
 			resultsCount++;
-			return true;
+			return numfields;
 		}
 
-		public override void SkipField(MySql.Data.Types.IMySqlValue valObject)
+		public override void SkipColumnValue(MySql.Data.Types.IMySqlValue valObject)
 		{
 			
 		}
 
-		public override MySql.Data.Types.IMySqlValue ReadFieldValue(int index, MySqlField field, MySql.Data.Types.IMySqlValue value)
+		public override IMySqlValue ReadColumnValue(int index, MySqlField field, IMySqlValue value)
 		{
 			int dataPtr = (int)currentRow;
 			for (int i=0; i < index; i++)
@@ -202,9 +207,9 @@ namespace MySql.Data.MySqlClient
 			return value.ReadValue(reader, currentLengths[index], fieldPtr == IntPtr.Zero); 
 		}
 
-		public override void ReadFieldMetadata(int count, ref MySqlField[] fields)
+		public override MySqlField[] ReadColumnMetadata(int count)
 		{
-			fields = new MySqlField[count];
+			MySqlField[] fields = new MySqlField[count];
 
 			for (int i=0; i < count; i++)
 			{
@@ -227,11 +232,21 @@ namespace MySql.Data.MySqlClient
 			}
 
 			currentLengths = new uint[count];
+            return fields;
 		}
 
+//        public override bool ReadDataRow(int statementId, MySqlField[] fields, bool seq)
+  //      {
+    //        return false;
+      //  }
 
-		public override bool OpenDataRow(int fieldCount, bool isBinary, int statementId)
-		{
+        public override bool SkipDataRow()
+        {
+            return false;
+        }
+
+        public override bool FetchDataRow(int statementId, int pageSize, int columns)
+        {
 			currentRow = FetchRow(resultSet);
 			if (currentRow == IntPtr.Zero) 
 			{
@@ -246,7 +261,7 @@ namespace MySql.Data.MySqlClient
 			}
 
 			IntPtr lengths = FetchLengths(resultSet);
-			for (int i=0; i < fieldCount; i++)
+			for (int i=0; i < columns; i++)
 			{
 				currentLengths[i] = (uint)Marshal.ReadInt32(lengths);
 				lengths = (IntPtr)((int)lengths + 4);
@@ -255,9 +270,10 @@ namespace MySql.Data.MySqlClient
 			return true;
 		}
 
-		public override CommandResult ExecuteStatement(byte[] bytes, int statementId, int cursorPageSize)
+		public override void ExecuteStatement(byte[] bytes)
 		{
-			return null;
+
+            //TODO
 		}
 
 		#region Interface methods
@@ -357,6 +373,26 @@ namespace MySql.Data.MySqlClient
 		{
 			return ClientAPI.Ping(mysql);
 		}
+
+        protected virtual IntPtr StatementInit(IntPtr mysql)
+        {
+            return ClientAPI.StatementInit(mysql);
+        }
+
+        protected virtual int StatementPrepare(IntPtr mysql_statement, string query, uint length)
+        {
+            return ClientAPI.StatementPrepare(mysql_statement, query, length);
+        }
+
+        protected virtual bool StatementClose(IntPtr mysql_statement)
+        {
+            return ClientAPI.StatementClose(mysql_statement);
+        }
+
+        protected virtual string StatementError(IntPtr mysql_statement)
+        {
+            return ClientAPI.StatementError(mysql_statement);
+        }
 
 		protected virtual string VersionString(IntPtr mysql)
 		{

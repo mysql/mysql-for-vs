@@ -37,15 +37,12 @@ namespace MySql.Data.MySqlClient
 #endif
 	public sealed class MySqlConnection : DbConnection, ICloneable
 	{
-		internal ConnectionState			state;
-		internal Driver						driver;
-		private  MySqlDataReader			dataReader;
-		private  MySqlConnectionString		settings;
-		private  UsageAdvisor				advisor;
-		private  bool						hasBeenOpen;
-
-		/// <include file='docs/MySqlConnection.xml' path='docs/StateChange/*'/>
-        public override event StateChangeEventHandler StateChange;
+		internal ConnectionState connectionState;
+		internal Driver driver;
+		private  MySqlDataReader dataReader;
+		private  MySqlConnectionString settings;
+		private  UsageAdvisor advisor;
+		private  bool hasBeenOpen;
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/InfoMessage/*'/>
 		public event MySqlInfoMessageEventHandler	InfoMessage;
@@ -161,7 +158,7 @@ namespace MySql.Data.MySqlClient
 #endif
 		public override ConnectionState State
 		{
-			get { return state; }
+			get { return connectionState; }
 		}
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/ServerVersion/*'/>
@@ -216,16 +213,16 @@ namespace MySql.Data.MySqlClient
 		#region Transactions
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/BeginTransaction/*'/>
-		public MySqlTransaction BeginTransaction()
+		public new MySqlTransaction BeginTransaction()
 		{
 			return this.BeginTransaction(IsolationLevel.RepeatableRead);
 		}
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/BeginTransaction1/*'/>
-		public MySqlTransaction BeginTransaction(IsolationLevel iso)
+		public new MySqlTransaction BeginTransaction(IsolationLevel iso)
 		{
 			//TODO: check note in help
-			if (state != ConnectionState.Open)
+			if (State != ConnectionState.Open)
 				throw new InvalidOperationException(Resources.GetString("ConnectionNotOpen"));
 
 			MySqlTransaction t = new MySqlTransaction(this, iso);
@@ -264,7 +261,7 @@ namespace MySql.Data.MySqlClient
 				throw new ArgumentException(
 					Resources.GetString("ParameterIsInvalid"), "database");
 
-			if (state != ConnectionState.Open)
+			if (State != ConnectionState.Open)
 				throw new InvalidOperationException(
 					Resources.GetString("ConnectionNotOpen"));
 
@@ -272,12 +269,13 @@ namespace MySql.Data.MySqlClient
 			settings.Database = database;
 		}
 
-		internal void SetState( ConnectionState newState ) 
+		internal void SetState(ConnectionState newConnectionState) 
 		{
-			ConnectionState oldState = state;
-			state = newState;
-			if (this.StateChange != null)
-				StateChange(this, new StateChangeEventArgs( oldState, newState ));
+            if (newConnectionState == this.connectionState) 
+                return;
+            ConnectionState oldConnectionState = this.connectionState;
+            this.connectionState = newConnectionState;
+            this.OnStateChange(new StateChangeEventArgs(oldConnectionState, this.connectionState));
 		}
 
 		/// <summary>
@@ -292,7 +290,7 @@ namespace MySql.Data.MySqlClient
 		/// <include file='docs/MySqlConnection.xml' path='docs/Open/*'/>
 		public override void Open()
 		{
-			if (state == ConnectionState.Open)
+			if (State == ConnectionState.Open)
 				throw new InvalidOperationException(
 					Resources.GetString("ConnectionAlreadyOpen"));
 
@@ -327,7 +325,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/CreateCommand/*'/>
-		public MySqlCommand CreateCommand()
+		public new MySqlCommand CreateCommand()
 		{
 			// Return a new instance of a command object.
 			MySqlCommand c = new MySqlCommand();
@@ -370,11 +368,16 @@ namespace MySql.Data.MySqlClient
             return CreateCommand();
         }
 
+        internal void Abort()
+        {
+            //TODO: implement me
+        }
+
         /// <include file='docs/MySqlConnection.xml' path='docs/Close/*'/>
         public override void Close()
         {
             //TODO: rollback any pending transaction
-            if (state == ConnectionState.Closed) return;
+            if (State == ConnectionState.Closed) return;
 
             if (dataReader != null)
                 dataReader.Close();
@@ -387,7 +390,28 @@ namespace MySql.Data.MySqlClient
             SetState(ConnectionState.Closed);
         }
 
-}
+        #region GetSchema Support
+
+        public override DataTable GetSchema()
+        {
+            return null;
+        }
+
+        public override DataTable GetSchema(string collectionName)
+        {
+            SchemaProvider sp = new SchemaProvider(this);
+            return sp.GetSchema(collectionName, null);
+        }
+
+        public override DataTable GetSchema(string collectionName, string[] restrictionValues)
+        {
+            SchemaProvider sp = new SchemaProvider(this);
+            return sp.GetSchema(collectionName, restrictionValues);
+        }
+
+        #endregion
+
+    }
 
 	/// <summary>
 	/// Represents the method that will handle the <see cref="MySqlConnection.InfoMessage"/> event of a 

@@ -116,7 +116,9 @@ namespace MySql.Data.Types
 				s = reader.ReadLenString();
 			else
 				s = reader.ReadString(length);
-			return new MySqlString(type, s);
+            MySqlString str = new MySqlString(type, s);
+            return str;
+			//return new MySqlString(type, s);
 		}
 
 		void IMySqlValue.SkipValue(MySqlStreamReader reader)

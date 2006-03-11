@@ -82,8 +82,8 @@ namespace MySql.Data.MySqlClient
 		/// <param name="dbType">One of the <see cref="MySqlDbType"/> values. </param>
 		public MySqlParameter( string parameterName, MySqlDbType dbType) : this (parameterName, null)
 		{
-			SetMySqlDbType( dbType );
-		}
+            MySqlDbType = dbType;
+        }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="MySqlParameter"/> class with the parameter name, the <see cref="MySqlDbType"/>, and the size.
@@ -498,18 +498,6 @@ namespace MySql.Data.MySqlClient
 			}
 		}
 #endif
-
-        public override int Offset
-        {
-            get
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-            set
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-        }
 
         public override void ResetDbType()
         {

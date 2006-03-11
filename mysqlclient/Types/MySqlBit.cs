@@ -27,45 +27,62 @@ namespace MySql.Data.Types
 	/// <summary>
 	/// Summary description for MySqlUInt64.
 	/// </summary>
-	internal class MySqlBit : MySqlValue
+	internal struct MySqlBit : IMySqlValue
 	{
-		private ulong	mValue;
-		private byte[]	buffer;
+        private ulong mValue;
+        private bool isNull;
+        private byte[] buffer;
 
-		public MySqlBit() : base()
+		public MySqlBit(bool isnull)
 		{
-			buffer = new byte[8];
-			dbType = DbType.UInt64;
-			mySqlDbType = MySqlDbType.Bit;
+            mValue = 0;
+            isNull = isnull;
+            buffer = new byte[8];
 		}
 
-		internal override void Serialize(PacketWriter writer, bool binary, object value, int length)
-		{
-			ulong v = Convert.ToUInt64( value );
+        public bool IsNull
+        {
+            get { return isNull; }
+        }
+
+        public MySqlDbType MySqlDbType
+        {
+            get { return MySqlDbType.Bit; }
+        }
+
+        public DbType DbType
+        {
+            get { return DbType.UInt64; }
+        }
+
+        object IMySqlValue.Value
+        {
+            get { return mValue; }
+        }
+
+        Type IMySqlValue.SystemType
+        {
+            get { return typeof(UInt64); }
+        }
+
+        public string MySqlTypeName
+        {
+            get { return "BIT"; }
+        }
+
+        public void WriteValue(MySqlStreamWriter writer, bool binary, object value, int length)
+        {
+			ulong v = Convert.ToUInt64(value);
 			if (binary)
-				writer.Write( BitConverter.GetBytes( v ) );
+				writer.Write(BitConverter.GetBytes(v));
 			else
-				writer.WriteStringNoNull( v.ToString() );
-		}
+				writer.WriteStringNoNull(v.ToString());
+        }
 
-		public ulong Value
-		{
-			get { return mValue; }
-			set { mValue = value; objectValue = value; }
-		}
-
-		internal override Type SystemType
-		{
-			get { return typeof(UInt64); }
-		}
-
-		internal override string GetMySqlTypeName()
-		{
-			return "BIT";
-		}
-
-		internal override MySqlValue ReadValue( PacketReader reader, long length )
-		{
+        public IMySqlValue ReadValue(MySqlStreamReader reader, long length, bool isNull)
+        {
+            if (buffer == null)
+                buffer = new byte[8];
 			if (length == -1) 
 			{
 				length = reader.GetFieldLength();
@@ -73,14 +90,15 @@ namespace MySql.Data.Types
 			Array.Clear(buffer, 0, buffer.Length);
 			for (long i=length-1; i >= 0; i--)
 				buffer[i] = (byte)reader.ReadByte();
-			Value = BitConverter.ToUInt64(buffer, 0);
+			mValue = BitConverter.ToUInt64(buffer, 0);
 			return this;
-		}
+        }
 
-		internal override void Skip(PacketReader reader)
-		{
+        public void SkipValue(MySqlStreamReader reader)
+        {
 			long len = reader.GetFieldLength();
-			reader.Skip(len);
-		}
-	}
+            reader.SkipBytes((int)len);
+        }
+
+    }
 }

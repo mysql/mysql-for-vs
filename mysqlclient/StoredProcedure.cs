@@ -27,17 +27,16 @@ namespace MySql.Data.MySqlClient
 	/// <summary>
 	/// Summary description for StoredProcedure.
 	/// </summary>
-	internal class StoredProcedure
+	internal class StoredProcedure : Statement
 	{
 		private string			hash;
-		private MySqlConnection	connection;
 		private string			outSelect;
 
-		public StoredProcedure(MySqlConnection conn)
+		public StoredProcedure(MySqlConnection connection, string text) : base(connection, text)
 		{
 			uint code = (uint)DateTime.Now.GetHashCode();
 			hash = code.ToString();
-			connection = conn;
+            this.connection = connection;
 		}
 
 		private string GetParameterList(string spName, bool isProc) 
@@ -97,6 +96,11 @@ namespace MySql.Data.MySqlClient
 		{
 			return null;
 		}
+
+        public override bool ExecuteNext()
+        {
+            return false;
+        }
 
 		/// <summary>
 		/// Creates the proper command text for executing the given stored procedure
@@ -174,13 +178,14 @@ namespace MySql.Data.MySqlClient
 			MySqlCommand cmd = new MySqlCommand("SELECT " + outSelect, connection);
 			MySqlDataReader reader = cmd.ExecuteReader();
 
-			for (int i=0; i < reader.FieldCount; i++) 
+/*			for (int i=0; i < reader.FieldCount; i++) 
 			{
 				string fieldName = reader.GetName(i);
 				fieldName = marker + fieldName.Remove(0, hash.Length+1);
-				reader.CurrentResult[i] = MySqlField.GetIMySqlValue(parameters[fieldName].MySqlDbType, true);
+				reader.GetField(i) = MySqlField.GetIMySqlValue(parameters[fieldName].MySqlDbType, true);
+                reader.fi
 			}
-
+*/
 			reader.Read();
 			for (int i=0; i < reader.FieldCount; i++)
 			{

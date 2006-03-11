@@ -245,8 +245,13 @@ namespace MySql.Data.MySqlClient
 				System.Diagnostics.Debug.Assert(ms != null);
 
 			byte[] tempBuf = new byte[1024];
-			while (ms.HasMoreData)
-				ms.Read(tempBuf, 0, tempBuf.Length);
+            long left = ms.Length - ms.Position;
+            while (left > 0)
+            {
+                long toRead = Math.Min(left, tempBuf.LongLength);
+                ms.Read(tempBuf, 0, (int)toRead);
+                left -= toRead;
+            }
 		}
 
 		#endregion

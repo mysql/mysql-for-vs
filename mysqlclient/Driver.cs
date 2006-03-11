@@ -43,7 +43,6 @@ namespace MySql.Data.MySqlClient
 		protected int					serverCharSetIndex;
 		protected Hashtable				serverProps;
 		protected MySqlConnection		connection;
-		protected bool					processing;
 		protected Hashtable				charSets;
 		protected bool					hasWarnings;
 
@@ -51,7 +50,6 @@ namespace MySql.Data.MySqlClient
 		{
 			encoding = System.Text.Encoding.GetEncoding(1252);
 			connectionString = settings;
-			processing = false;
 			threadId = -1;
 			serverCharSetIndex = -1;
 			serverCharSet = null;
@@ -87,13 +85,6 @@ namespace MySql.Data.MySqlClient
 			set { encoding = value; }
 		}
 
-		public bool IsProcessing 
-		{ 
-			//TODO: remove comment
-		//	get { return processing; }
-			set { processing = value; }
-		}
-
 		public ServerStatusFlags ServerStatus 
 		{
 			get { return serverStatus; }
@@ -119,7 +110,7 @@ namespace MySql.Data.MySqlClient
 			Driver d = null;
 			if (settings.DriverType == DriverType.Native)
 				d = new NativeDriver(settings);
-#if !CF
+#if !COMPACT_FRAMEWORK
 			else if (settings.DriverType == DriverType.Client)
 				d = new ClientDriver(settings);
 			else
@@ -293,18 +284,20 @@ namespace MySql.Data.MySqlClient
 
 		#region Abstract Methods
 
-		public abstract bool SupportsBatch { get; }
-		public abstract void SetDatabase( string dbName );
-		public abstract PreparedStatement Prepare( string sql, string[] names ); 
-		public abstract void Reset();
-		public abstract CommandResult SendQuery( byte[] bytes, int length, bool consume );
-		public abstract long ReadResult( ref long affectedRows, ref long lastInsertId );
-		public abstract bool OpenDataRow(int fieldCount, bool isBinary);
-		public abstract IMySqlValue ReadFieldValue( int index, MySqlField field, IMySqlValue value ); 
-		public abstract CommandResult ExecuteStatement( byte[] bytes );
-		public abstract void SkipField(IMySqlValue valObject );
-		public abstract void ReadFieldMetadata( int count, ref MySqlField[] fields );
-		public abstract bool Ping();
+        public abstract bool SupportsBatch { get; }
+        public abstract void SetDatabase(string dbName);
+        public abstract int PrepareStatement(string sql, ref MySqlField[] parameters);
+        public abstract void Reset();
+        public abstract void Query(byte[] bytes, int length);
+        public abstract long ReadResult(ref ulong affectedRows, ref long lastInsertId);
+        public abstract bool FetchDataRow(int statementId, int pageSize, int columns);
+        public abstract bool SkipDataRow();
+        public abstract IMySqlValue ReadColumnValue(int index, MySqlField field, IMySqlValue value);
+        public abstract void ExecuteStatement(byte[] bytes);
+        public abstract void SkipColumnValue(IMySqlValue valObject);
+        public abstract MySqlField[] ReadColumnMetadata(int count);
+        public abstract bool Ping();
+
 		#endregion
 
 	}

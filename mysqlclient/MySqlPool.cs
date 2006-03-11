@@ -97,9 +97,9 @@ namespace MySql.Data.MySqlClient
 					{
 						lock (inUsePool) 
 						{
-							inUsePool.Add( driver );
+							inUsePool.Add(driver);
 						}
-						idlePool.RemoveAt( i );
+						idlePool.RemoveAt(i);
 						break;
 					}
 					else 
@@ -147,13 +147,13 @@ namespace MySql.Data.MySqlClient
 					// first we check if we are allowed to create another
 					if ((inUsePool.Count + idlePool.Count) == maxSize) return null;
 
-					Driver driver = Driver.Create( settings );
-					idlePool.Add( driver );
+					Driver driver = Driver.Create(settings);
+					idlePool.Add(driver);
 					return driver;
 				}
 		}
 
-		public void ReleaseConnection( Driver driver )
+		public void ReleaseConnection(Driver driver)
 		{
 			lock (idlePool.SyncRoot)
 				lock (inUsePool.SyncRoot) 

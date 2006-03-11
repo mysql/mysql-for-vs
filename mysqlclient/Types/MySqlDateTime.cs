@@ -211,7 +211,7 @@ namespace MySql.Data.Types
 				val = ((MySqlDateTime)val).GetDateTime();
 
 			if (! (val is DateTime))
-				throw new MySqlException( "Only DateTime objects can be serialized by MySqlDateTime" );
+				throw new MySqlException("Only DateTime objects can be serialized by MySqlDateTime");
 
 			DateTime dtValue = (DateTime)val;
 			if (! binary)
@@ -245,7 +245,7 @@ namespace MySql.Data.Types
 				writer.WriteInteger( dtValue.Millisecond, 4 );
 		}
 
-		private MySqlDateTime Parse40Timestamp( string s ) 
+		private MySqlDateTime Parse40Timestamp(string s) 
 		{
 			int pos = 0;
 			year = month = day = 1;
@@ -285,11 +285,17 @@ namespace MySql.Data.Types
 			if (s.Length > 10)
 				second = int.Parse(s.Substring(pos, 2));
 
-			return new MySqlDateTime(year, month, day, hour, minute, 
-				                     second, mySqlDbType );
+			return new MySqlDateTime(MySqlDbType.Datetime, year, month, day, hour, 
+                minute, second);
 		}
 
-		private MySqlDateTime ParseMySql( string s, bool is41 ) 
+        static internal MySqlDateTime Parse(string s, Common.DBVersion version)
+        {
+            //TODO: fix this
+            return new MySqlDateTime();
+        }
+
+		private MySqlDateTime ParseMySql(string s, bool is41) 
 		{
 			if (type == MySqlDbType.Timestamp && ! is41)
 				return Parse40Timestamp(s);

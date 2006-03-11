@@ -3,127 +3,43 @@ using System.Data;
 
 namespace MySql.Data.MySqlClient
 {
-	class DbParameter : MarshalByRefObject, IDbDataParameter, IDataParameter
+	public abstract class DbParameter : MarshalByRefObject, IDbDataParameter, IDataParameter
 	{
+		protected DbParameter()
+		{
+		}
+
+		public abstract void ResetDbType();
+
         #region IDbDataParameter Members
 
-        public byte Precision
+        byte IDbDataParameter.Precision
         {
-            get
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-            set
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
+			get { return 0; }
+			set { }
         }
 
-        public byte Scale
+        byte IDbDataParameter.Scale
         {
-            get
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-            set
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
+			get { return 0; }
+			set { }
         }
 
-        public int Size
-        {
-            get
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-            set
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-        }
+		public abstract int Size { get; set; }
 
         #endregion
 
         #region IDataParameter Members
 
-        public DbType DbType
-        {
-            get
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-            set
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-        }
-
-        public ParameterDirection Direction
-        {
-            get
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-            set
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-        }
-
-        public bool IsNullable
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        public string ParameterName
-        {
-            get
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-            set
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-        }
-
-        public string SourceColumn
-        {
-            get
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-            set
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-        }
-
-        public DataRowVersion SourceVersion
-        {
-            get
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-            set
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-        }
-
-        public object Value
-        {
-            get
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-            set
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-        }
+		public abstract DbType DbType { get; set; }
+		public abstract ParameterDirection Direction { get; set; }
+		public abstract bool IsNullable { get; set; }
+		public abstract string ParameterName { get; set; }
+		public abstract string SourceColumn { get; set; }
+		public abstract bool SourceColumnNullMapping { get; set; }
+		public abstract DataRowVersion SourceVersion { get; set; }
+		public abstract object Value { get; set; }
 
         #endregion
-}
+	}
 }

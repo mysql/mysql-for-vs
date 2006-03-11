@@ -50,7 +50,7 @@ namespace MySql.Data.MySqlClient
 		/// determine the connection object associated with a particular 
 		/// transaction created by <see cref="MySqlConnection.BeginTransaction"/>.
 		/// </remarks>
-		public MySqlConnection Connection
+		public new MySqlConnection Connection
 		{
 			get { return conn;	} 
 		}
@@ -115,8 +115,5 @@ namespace MySql.Data.MySqlClient
 			}
 		}
 
-        public override void Dispose()
-        {
-        }
-}
+    }
 }

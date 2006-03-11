@@ -37,14 +37,21 @@ namespace MySql.Data.MySqlClient
 
 		// Keep track of the results and position
 		// within the resultset (starts prior to first record).
-		private MySqlField[]	fields;
+		private MySqlField[] fields;
+        private IMySqlValue[] values;
 		private CommandBehavior	commandBehavior;
-		private MySqlCommand	command;
-		private bool			canRead;
-		private bool			hasRows;
-		private CommandResult	currentResult;
-		private int				readCount;
-		private bool[]			uaFieldsUsed;
+		private MySqlCommand command;
+		private bool canRead;
+		private bool hasRows;
+        private long affectedRows;
+		private bool[] uaFieldsUsed;
+        private Driver driver;
+        private DataTable schemaTable;
+        private long lastInsertId;
+        private Statement statement;
+        private int seqIndex;
+        private bool hasRead;
+//        private ServerStatusFlags serverFlags;
 
 		/* 
 		 * Keep track of the connection in order to implement the
@@ -58,11 +65,14 @@ namespace MySql.Data.MySqlClient
 		 * DataReader object, the constructors are
 		 * marked as internal.
 		 */
-		internal MySqlDataReader(MySqlCommand cmd, CommandBehavior behavior)
+		internal MySqlDataReader(MySqlCommand cmd, Statement statement, CommandBehavior behavior)
 		{
 			this.command = cmd;
 			connection = (MySqlConnection)command.Connection;
 			commandBehavior = behavior;
+            driver = connection.driver;
+            affectedRows = -1;
+            this.statement = statement;
         }
 
         #region Properties
@@ -70,11 +80,6 @@ namespace MySql.Data.MySqlClient
         internal CommandBehavior Behavior 
 		{
 			get { return commandBehavior; }
-		}
-
-		internal CommandResult CurrentResult 
-		{
-			get { return currentResult; }
 		}
 
         /// <summary>
@@ -126,7 +131,7 @@ namespace MySql.Data.MySqlClient
             // RecordsAffected returns the number of rows affected in batch
             // statments from insert/delete/update statments.  This property
             // is not completely accurate until .Close() has been called.
-            get { return command.UpdateCount; }
+            get { return (affectedRows >= 0) ? (int)(affectedRows + 1) : -1; }
         }
 
         /// <summary>
@@ -151,12 +156,6 @@ namespace MySql.Data.MySqlClient
 
         #endregion
 
-        public override void Dispose() 
-		{
-			if (isOpen)
-				Close();
-		}
-
 		/// <summary>
 		/// Closes the MySqlDataReader object.
 		/// </summary>
@@ -164,13 +163,13 @@ namespace MySql.Data.MySqlClient
 		{
 			if (! isOpen) return;
 
-			// finish any current command
-			ConsumeCurrentResultset();
-
+            bool shouldCloseConnection = (commandBehavior & CommandBehavior.CloseConnection) != 0;
+            commandBehavior = CommandBehavior.Default;
 			connection.Reader = null;
-			command.Consume();
 
-			if (0 != (commandBehavior & CommandBehavior.CloseConnection))
+            while (NextResult()) { }
+
+            if (shouldCloseConnection)
 				connection.Close();
 
 			isOpen = false;
@@ -299,7 +298,7 @@ namespace MySql.Data.MySqlClient
 			if (i >= fields.Length) throw new IndexOutOfRangeException();
 
 			// return the name of the type used on the backend
-			return currentResult[i].MySqlTypeName;
+			return values[i].MySqlTypeName;
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetMySqlDateTime/*'/>
@@ -317,16 +316,18 @@ namespace MySql.Data.MySqlClient
 				MySqlDateTime dt = (MySqlDateTime)val;
 				if (connection.Settings.ConvertZeroDateTime && !dt.IsValidDateTime)
 					return DateTime.MinValue;
-				else
-					return dt.GetDateTime();
+//				else
+//					return dt.GetDateTime();
 			}
 			else if (val is MySqlString)
 			{
-				MySqlDateTime d = new MySqlDateTime( MySqlDbType.Datetime );
-				d = d.ParseMySql( (val as MySqlString).Value, true );
-				return d.GetDateTime();
+                MySqlDateTime dt = MySqlDateTime.Parse(val.ToString(), this.connection.driver.Version);
+                val = dt;
+//				MySqlDateTime d = new MySqlDateTime(MySqlDbType.Datetime);
+//				d = d.ParseMySql( (val as MySqlString).Value, true );
+//				return d.GetDateTime();
             }
-			throw new NotSupportedException( "Unable to convert from type " + val.GetType().ToString() + " to DateTime" );
+            return Convert.ToDateTime(val);
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetDecimal/*'/>
@@ -356,10 +357,10 @@ namespace MySql.Data.MySqlClient
 		{
 			if (! isOpen) throw new Exception("No current query in data reader");
 			if (i >= fields.Length) throw new IndexOutOfRangeException();
-			
-			if (currentResult[i] is MySqlDateTime && !connection.Settings.AllowZeroDateTime)
+
+			if (values[i] is MySqlDateTime && !connection.Settings.AllowZeroDateTime)
 				return typeof(DateTime);
-			return currentResult[i].SystemType;
+			return values[i].SystemType;
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetFloat/*'/>
@@ -506,7 +507,7 @@ namespace MySql.Data.MySqlClient
 				dataTableSchema.Rows.Add( r );
 			}
 
-            SchemaTableColumn = dataTableSchema;
+            //SchemaTableColumn = dataTableSchema;
 			return dataTableSchema;
 		}
 
@@ -567,7 +568,7 @@ namespace MySql.Data.MySqlClient
 		/// <returns></returns>
 		public override int GetValues(object[] values)
 		{
-			if (values == null) return 0;
+			if (! hasRead) return 0;
 			int numCols = Math.Min( values.Length, fields.Length );
 			for (int i=0; i < numCols; i ++) 
 				values[i] = GetValue(i);
@@ -607,7 +608,7 @@ namespace MySql.Data.MySqlClient
 
 		IDataReader IDataRecord.GetData(int i)
 		{
-			throw new NotSupportedException("GetData not supported.");
+			return base.GetData(i);
 		}
 
 		/// <summary>
@@ -620,6 +621,30 @@ namespace MySql.Data.MySqlClient
 			return DBNull.Value == GetValue(i);
 		}
 
+        /// <summary>
+        /// GetResultSet is the core resultset processing method.  It gets called by NextResult
+        /// and will loop until it finds a select resultset at which point it will return the 
+        /// number of columns in that result.  It will _not_ return for non-select resultsets instead
+        /// just updating the internal lastInsertId and affectedRows variables.  
+        /// </summary>
+        /// <returns>-1 if no more results exist, >= 0 for select results</returns>
+        private long GetResultSet()
+        {
+            while (true)
+            {
+                ulong affectedRowsTemp = 0;
+                long fieldCount = driver.ReadResult(ref affectedRowsTemp, ref lastInsertId);
+                if (fieldCount > 0)
+                    return fieldCount;
+                else if (fieldCount == 0)
+                    affectedRows += (long)affectedRowsTemp;
+                else if (fieldCount == -1)
+                    if (!statement.ExecuteNext())
+                        break;
+            }
+            return -1;
+        }
+
 		/// <summary>
 		/// Advances the data reader to the next result, when reading the results of batch SQL statements.
 		/// </summary>
@@ -629,14 +654,25 @@ namespace MySql.Data.MySqlClient
 			if (! isOpen)
 				throw new MySqlException("Invalid attempt to NextResult when reader is closed.");
 
-			// clear any rows that have not been read from the last rowset
-			ConsumeCurrentResultset();
+            bool firstResult = fields == null;
+            if (fields != null)
+            {
+                ClearCurrentResultset();
+                fields = null;
+            }
+
+            // single result means we only return a single resultset.  If we have already
+            // returned one, then we return false;
+            if (!firstResult && (commandBehavior & CommandBehavior.SingleResult) != 0)
+                return false;
 
 			// tell our command to continue execution of the SQL batch until it its
 			// another resultset
 			try 
 			{
-				currentResult = command.GetNextResultSet(this);
+                long fieldCount = GetResultSet();
+                if (fieldCount == -1)
+                    return false;
 
 				// issue any requested UA warnings
 				if (connection.Settings.UseUsageAdvisor) 
@@ -647,52 +683,68 @@ namespace MySql.Data.MySqlClient
 						connection.UsageAdvisor.UsingBadIndex( command.CommandText );
 				}
 
-				readCount = 0;
-			}
+                fields = driver.ReadColumnMetadata((int)fieldCount);
+                values = new IMySqlValue[fields.Length];
+                for (int i = 0; i < fields.Length; i++)
+                    values[i] = fields[i].GetValueObject();
+                hasRead = false;
+
+                uaFieldsUsed = new bool[fields.Length];
+                hasRows = canRead = driver.FetchDataRow(statement.Id, 0, fields.Length);
+                return true;
+            }
 			catch (MySqlException ex) 
 			{
-				if (ex.IsFatal) connection.Close();
+				if (ex.IsFatal) 
+                    connection.Abort();
 				throw;
 			}
 
 			// if there was no more resultsets, then signal done
-			if (currentResult == null) 
-			{
-				canRead = false;
-				return false;
-			}
+//			if (currentResult == null) 
+//			{
+//				canRead = false;
+//				return false;
+//			}
 
-            SchemaTableColumn = null;
+//            SchemaTableColumn = null;
 
 			// When executing query statements, the result byte that is returned
 			// from MySql is the column count.  That is why we reference the LastResult
 			// property here to dimension our field array
-			connection.SetState( ConnectionState.Fetching );
+			//connection.SetState( ConnectionState.Fetching );
 
 			// load in our field defs and set our internal variables so we know
 			// what we can do (canRead, hasRows)
-			try 
-			{
-				canRead = hasRows = currentResult.Load();
-				fields = currentResult.Fields;
-				uaFieldsUsed = new bool[fields.Length];
-				return true;
-			}
-			catch (Exception ex) 
-			{
-				if (ex.IsFatal) 
-					connection.Close();
-				else
-					connection.SetState( ConnectionState.Open );
-				throw;
-			}
-			finally 
-			{
-				if (connection.State != ConnectionState.Closed && connection.State != ConnectionState.Open)
-					connection.SetState( ConnectionState.Open );
-			}
+//			try 
+//			{
+//				canRead = hasRows = currentResult.Load();
+//				fields = currentResult.Fields;
+//				return true;
+//			}
+//			catch (Exception ex) 
+//			{
+//				if (ex.IsFatal) 
+//					connection.Close();
+//				else
+//					connection.SetState( ConnectionState.Open );
+//				throw;
+//			}
+//			finally 
+//			{
+//				if (connection.State != ConnectionState.Closed && connection.State != ConnectionState.Open)
+//					connection.SetState( ConnectionState.Open );
+//			}
 		}
 
+/*        private void ReadDataRow()
+        {
+            System.Diagnostics.Debug.Assert(data == null, "Column data array should be null");
+            data = new IMySqlValue[FieldCount];
+            if ((commandBehavior & CommandBehavior.SequentialAccess) == 0)
+                connection.driver.ReadDataRow(fields, data);
+        }
+        */
 		/// <summary>
 		/// Advances the MySqlDataReader to the next record.
 		/// </summary>
@@ -702,42 +754,32 @@ namespace MySql.Data.MySqlClient
 			if (! isOpen)
 				throw new MySqlException("Invalid attempt to Read when reader is closed.");
 
-			if (! canRead) return false;
-			readCount ++;
+			if (! canRead) 
+                return false;
 
-			connection.SetState( ConnectionState.Fetching );
+            if (Behavior == CommandBehavior.SingleRow && hasRead)
+                return false;
 
-			try 
+            try 
 			{
-				try 
-				{
-					if ( (Behavior & CommandBehavior.SequentialAccess) != 0)
-						canRead = currentResult.ReadDataRow( false );
-					else
-						canRead = currentResult.ReadDataRow( true );
-					if ( ! canRead) return false;
-				}
-				catch (MySqlException ex) 
-				{
-					if (ex.IsFatal) connection.Close();
-					throw;
-				}
+				bool isSequential = (Behavior & CommandBehavior.SequentialAccess) != 0;
+                seqIndex = -1;
+                if (hasRead)
+                    canRead = driver.FetchDataRow(statement.Id, 0, fields.Length);
+                hasRead = true;
+                if (canRead && !isSequential)
+                    for (int i = 0; i < fields.Length; i++)
+                        values[i] = driver.ReadColumnValue(i, fields[i], values[i]);
 
-				// if we are in SingleRow mode, then set canRead to false so we'll
-				// fail next time.
-				if (Behavior == CommandBehavior.SingleRow)
-					canRead = false;
+                return canRead;
 			}
-			catch (Exception ex)
+			catch (MySqlException ex) 
 			{
 				Logger.WriteLine("MySql error: " + ex.Message);
+				if (ex.IsFatal) 
+                    connection.Abort();
 				throw;
 			}
-			finally 
-			{
-				connection.SetState( ConnectionState.Open );
-			}
-			return true;
 		}
 
 
@@ -746,27 +788,38 @@ namespace MySql.Data.MySqlClient
 			if (index < 0 || index >= fields.Length) 
 				throw new ArgumentException( "You have specified an invalid column ordinal." );
 
+			if (! hasRead)
+				throw new MySqlException("Invalid attempt to access a field before calling Read()");
+
 			// keep count of how many columns we have left to access
 			this.uaFieldsUsed[index] = true;
 
-			IMySqlValue val = currentResult.ReadColumnValue(index);
-			if ( readCount == 0 )
-				throw new MySqlException("Invalid attempt to access a field before calling Read()");
+            if ((this.commandBehavior & CommandBehavior.SequentialAccess) != 0 && 
+                index != seqIndex)
+            {
+                if (index < seqIndex)
+                    throw new MySqlException("Invalid attempt to read a prior column using SequentialAccess");
+                while (seqIndex < (index-1))
+                    driver.SkipColumnValue(values[++seqIndex]);
+                values[index] = driver.ReadColumnValue(index, fields[index], values[index]);
+                seqIndex = index;
+            }
 
-			return val;
+            return values[index];
 		}
 
-		private void ConsumeCurrentResultset() 
+		private void ClearCurrentResultset() 
 		{
-			if (currentResult == null) return;
-
-			bool hadData = currentResult.Consume();
+            if (!canRead) return;
+            while (driver.SkipDataRow())
+            {
+            }
 
 			if (!connection.Settings.UseUsageAdvisor) return;
 
 			// we were asked to run the usage advisor so report if the resultset
 			// was not entirely read.
-			if (hadData)
+			if (canRead)
 				connection.UsageAdvisor.ReadPartialResultSet(command.CommandText);
 
 			bool readAll = true;

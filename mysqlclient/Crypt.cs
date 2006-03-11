@@ -25,7 +25,6 @@ using MySql.Data.Common;
 //#if CF
 //using OpenNETCF.Security.Cryptography;
 //#endif
-using MySql.Data.Common;
 
 namespace MySql.Data.MySqlClient
 {

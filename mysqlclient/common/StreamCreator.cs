@@ -25,9 +25,7 @@ using System.Net.Sockets;
 using System.Collections;
 using System.Threading;
 using MySql.Data.MySqlClient;
-#if __MonoCS__ 
-using Mono.Posix;
-#endif
+using System.Reflection;
 
 namespace MySql.Data.Common
 {
@@ -104,6 +102,18 @@ namespace MySql.Data.Common
 				pipePath = String.Format(@"\\{0}\pipe\{1}", hostname.ToString(), pipeName);
 			return new NamedPipeStream(pipePath, FileAccess.ReadWrite);
 		}
+		
+		private EndPoint CreateUnixEndPoint(string host)
+		{
+			// first we need to load the Mono.posix assembly
+			Assembly a = Assembly.LoadWithPartialName("Mono.Posix");
+
+			// then we need to construct a UnixEndPoint object
+			EndPoint ep = (EndPoint)a.CreateInstance("Mono.Posix.UnixEndPoint", 
+				false, BindingFlags.CreateInstance, null, 
+				new object[1] { host }, null, null);
+			return ep;
+		}
 
 		private Stream CreateSocketStream( IPAddress ip, uint port, bool unix ) 
 		{
@@ -113,15 +123,11 @@ namespace MySql.Data.Common
 				//
 				// Lets try to connect
                 EndPoint endPoint;
-#if __MonoCS__ && !WINDOWS
-                if (unix)
-                    endPoint = new UnixEndPoint(hostList[0]);
-                else
-#else
-                    endPoint = new IPEndPoint(ip, port);
-                if (unix)
-                    throw new PlatformNotSupportedException ("Unix sockets are not supported on Windows.");
-#endif
+                
+				if (!Platform.IsWindows() && unix)
+					endPoint = CreateUnixEndPoint(hostList);
+				else
+					endPoint = 	new IPEndPoint(ip, (int)port);
 
                 ss = unix ? 
                     new SocketStream(AddressFamily.Unix, SocketType.Stream, ProtocolType.IP) :

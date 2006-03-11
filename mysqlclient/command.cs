@@ -40,17 +40,19 @@ namespace MySql.Data.MySqlClient
 		MySqlTransaction			curTransaction;
 		string						cmdText;
 		CommandType					cmdType;
-		long						updateCount;
+		long						updatedRowCount;
 		UpdateRowSource				updatedRowSource;
 		MySqlParameterCollection	parameters;
 		private ArrayList			sqlBuffers;
-		private PreparedStatement	preparedStatement;
+//		private PreparedStatement	preparedStatement;
 		private ArrayList			parameterMap;
-		private StoredProcedure		storedProcedure;
-		private CommandResult		lastResult;
+//		private StoredProcedure		storedProcedure;
+//		private CommandResult		lastResult;
 		private int					cursorPageSize;
 		private IAsyncResult		asyncResult;
         private bool                designTimeVisible;
+        private Int64 lastInsertedId;
+        private Statement statement;
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ctor1/*'/>
 		public MySqlCommand()
@@ -95,13 +97,23 @@ namespace MySql.Data.MySqlClient
 		public override string CommandText
 		{
 			get { return cmdText; }
-			set { cmdText = value;  this.preparedStatement=null; }
+			set { cmdText = value;  statement=null; }
 		}
 
 		internal int UpdateCount 
 		{
-			get { return (int)updateCount; }
+			get { return (int)updatedRowCount; }
 		}
+
+/*        internal int StatementId
+        {
+            get
+            {
+                if (this.preparedStatement == null)
+                    return -1;
+                return (preparedStatement.StatementId);
+            }
+        }*/
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/CommandTimeout/*'/>
 #if DESIGN
@@ -131,15 +143,15 @@ namespace MySql.Data.MySqlClient
 #endif
 		public bool IsPrepared 
 		{
-			get { return preparedStatement != null; }
+            get { return statement != null && statement is PreparedStatement; }
 		}
 
-		/// <include file='docs/mysqlcommand.xml' path='docs/Connection/*'/>
+			/// <include file='docs/mysqlcommand.xml' path='docs/Connection/*'/>
 #if DESIGN
 		[Category("Behavior")]
 		[Description("Connection used by the command")]
 #endif
-		public MySqlConnection Connection
+		public new MySqlConnection Connection
 		{
 			get { return connection;  }
 			set
@@ -164,7 +176,7 @@ namespace MySql.Data.MySqlClient
 		[Description("The parameters collection")]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
 #endif
-		public MySqlParameterCollection Parameters
+		public new MySqlParameterCollection Parameters
 		{
 			get  { return parameters; }
 		}
@@ -174,13 +186,13 @@ namespace MySql.Data.MySqlClient
 #if DESIGN
 		[Browsable(false)]
 #endif
-		public MySqlTransaction Transaction
+		public new MySqlTransaction Transaction
 		{
 			get { return curTransaction; }
 			set { curTransaction = (MySqlTransaction)value; }
 		}
 
-		/// <include file='docs/mysqlcommand.xml' path='docs/UpdatedRowSource/*'/>
+/*		/// <include file='docs/mysqlcommand.xml' path='docs/UpdatedRowSource/*'/>
 #if DESIGN
 		[Category("Behavior")]
 #endif
@@ -188,7 +200,7 @@ namespace MySql.Data.MySqlClient
 		{
 			get { return updatedRowSource;  }
 			set { updatedRowSource = value; }
-		}
+		}*/
 		#endregion
 
 		#region Methods
@@ -221,7 +233,7 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// Executes all remaining command buffers
 		/// </summary>
-		internal void Consume()
+/*		internal void Consume()
 		{
 			// if we are using prepared statements, then nothing to clean up
 			//if (preparedStatement != null) return;
@@ -235,16 +247,17 @@ namespace MySql.Data.MySqlClient
 
 			// if we were executing a stored procedure and we are out of sql buffers to execute, 
 			// then we need to perform some additional work to get our inout and out parameters
+            //TODO: fix this
 			if (storedProcedure != null && sqlBuffers.Count == 0)
 				storedProcedure.UpdateParameters(Parameters);
 		}
-
+*/
 		/// <summary>
 		/// Executes command buffers until we hit the next resultset
 		/// </summary>
 		/// <returns>CommandResult containing the next resultset when hit
 		/// or null if no more resultsets were found</returns>
-		internal CommandResult GetNextResultSet(MySqlDataReader reader)
+/*		internal CommandResult GetNextResultSet(MySqlDataReader reader)
 		{
 			// if  we are supposed to return only a single resultset and our reader
 			// is calling us back again, then return null
@@ -306,7 +319,7 @@ namespace MySql.Data.MySqlClient
 			}
 			return null;
 		}
-
+*/
 		/// <summary>
 		/// Check the connection to make sure
 		///		- it is open
@@ -327,43 +340,132 @@ namespace MySql.Data.MySqlClient
 				throw new MySqlException( "Stored procedures are not supported on this version of MySQL" );
 		}
 
+        /// <summary>
+        /// Executes the next statement in our array of statements, updating affected row count
+        /// and last inserted id.
+        /// </summary>
+        /// <returns>True if a statement was executed</returns>
+/*        internal bool ExecuteInternal()
+        {
+            if (statements.Count == 0)
+                return false;
+
+            Statement st = statements[0];
+            st.Execute(parameters);
+            statements.Remove(st);*/
+
+/*            if (preparedStatement != null)
+            {
+                if (!preparedStatement.ExecutionCount > 0)
+                    return false;
+                preparedStatement.Execute(parameters, cursorPageSize);
+            }
+            else 
+            {
+                if (sqlBuffers.Count == 0) return false;
+				MemoryStream sqlStream = (MemoryStream)sqlBuffers[0];
+
+				using (sqlStream) 
+				{
+					connection.driver.SendQuery(sqlStream.GetBuffer());
+                    sqlBuffers.RemoveAt(0);
+                }
+            }*/
+//            return true;
+  //      }
+
+        /// <summary>
+        /// NextResult will attempt to read the next result from the active driver.  If there is no current
+        /// result, then it will call ExecuteInternal to execute the next statement (if any)
+        /// </summary>
+        /// <returns>0 when no more statements/results are left to parse.  > 0 if a resultset is available</returns>
+/*        internal Statement GetNextResultset()
+        {
+            // execute the statement
+//            ulong affectedRows;
+  //          long fieldCount;
+
+            if (Driver.HasMoreResults(StatementId))
+                return true;
+
+            while (statements.Count > 0)
+            {
+                Statement statement = (Statement)statements[0];
+                // if this is a prepared statement and we have already executed it,
+                // then break out of the loop
+                if (statement is PreparedStatement &&
+                    (statement as PreparedStatement).ExecutionCount > 0) break;
+                statement.Execute(parameters);
+                if (statement.HasRows)
+                    return statement;
+                RecordsAffected += statement.RecordsAffected;
+            }
+            return null;*/
+/*
+            while (true)
+            {
+                bool hasResults = connection.driver.ReadResult(ref fieldCount, ref affectedRows, ref lastInsertedId);
+                if (hasResults)
+                {
+                    if (fieldCount > 0)
+                        return fieldCount;
+                    if (updatedRowCount == -1)
+                        updatedRowCount = 0;
+                    updatedRowCount += affectedRows;
+                }
+                else
+                {
+                    if (!ExecuteInternal())
+                        return 0;
+                }
+            }*/
+//        }
+
 		/// <include file='docs/mysqlcommand.xml' path='docs/ExecuteNonQuery/*'/>
 		public override int ExecuteNonQuery()
 		{
-			CheckState();
+            MySqlDataReader reader = ExecuteReader();
+            reader.Close();
+            return reader.RecordsAffected;
+/*			CheckState();
 
-			updateCount = 0;
+//			updatedRowsCount = -1;
 
-			if (preparedStatement == null)
-				sqlBuffers = PrepareSqlBuffers(CommandText);
+//			if (preparedStatement == null)
+//				sqlBuffers = PrepareSqlBuffers(CommandText);
 
-			try 
-			{
-				Consume();
-			}
-			catch (MySqlException ex) 
-			{
-				if (ex.IsFatal) connection.Close();
-				throw;
-			}
+            try
+            {
+//                ExecuteInternal();
+                MySqlDataReader reader = new MySqlDataReader(this, statement, CommandBehavior.Default);
+                reader.NextResult();
+                reader.Close();
+            }
+            catch (MySqlException ex)
+            {
+                //TODO: fix this
+                //connection.Abort();
+                throw;
+            }
 
-			return (int)updateCount;
-		}
+            return (int)this.updatedRowCount;*/
+        }
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ExecuteReader/*'/>
-		public MySqlDataReader ExecuteReader()
+		public new MySqlDataReader ExecuteReader()
 		{
 			return ExecuteReader(CommandBehavior.Default);
 		}
 
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ExecuteReader1/*'/>
-		public MySqlDataReader ExecuteReader(CommandBehavior behavior)
+		public new MySqlDataReader ExecuteReader(CommandBehavior behavior)
 		{
 			CheckState();
 
 			string sql = cmdText;
 
+            //TODO: make these work with prepared statements and stored procedures
 			if (0 != (behavior & CommandBehavior.SchemaOnly))
 			{
                 sql = String.Format("SET SQL_SELECT_LIMIT=0;{0};SET sql_select_limit=-1;", cmdText);
@@ -373,13 +475,21 @@ namespace MySql.Data.MySqlClient
 			{
 				sql = String.Format("SET SQL_SELECT_LIMIT=1;{0};SET sql_select_limit=-1;", cmdText);
 			}
+            
+            if (statement == null)
+            {
+                if (CommandType == CommandType.StoredProcedure)
+                    statement = new StoredProcedure(this.Connection, sql);
+                else
+                    statement = new Statement(this.Connection, sql);
+            }
 
-			updateCount = -1;
-			MySqlDataReader reader = new MySqlDataReader(this, behavior);
+			updatedRowCount = -1;
 
-			// if we don't have a prepared statement, then prepare our sql for execution
-			if (preparedStatement == null)
-				sqlBuffers = PrepareSqlBuffers(sql);
+			MySqlDataReader reader = new MySqlDataReader(this, statement, behavior);
+
+            // execute the statement
+            statement.Execute(Parameters);
 
 			reader.NextResult();
 			connection.Reader = reader;
@@ -390,8 +500,7 @@ namespace MySql.Data.MySqlClient
 		public override object ExecuteScalar()
 		{
 			// ExecuteReader will check out state
-
-			updateCount = -1;
+//			updateCount = -1;
 
 			object val = null;
 			MySqlDataReader reader = ExecuteReader();
@@ -403,12 +512,14 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/Prepare2/*'/>
-		public void Prepare(int cursorPageSize) 
+		private void Prepare(int cursorPageSize) 
 		{
-			if (! connection.driver.Version.isAtLeast(5,0,0))
+			if (! connection.driver.Version.isAtLeast(5,0,0) && cursorPageSize > 0)
 				throw new InvalidOperationException("Nested commands are only supported on MySQL 5.0 and later");
-			this.cursorPageSize = cursorPageSize;
-			Prepare();
+
+            PreparedStatement ps = new PreparedStatement(connection, CommandText, cursorPageSize);
+            ps.Prepare();
+            statement = ps;
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/Prepare/*'/>
@@ -418,14 +529,10 @@ namespace MySql.Data.MySqlClient
 				throw new InvalidOperationException("The connection property has not been set.");
 			if (connection.State != ConnectionState.Open)
 				throw new InvalidOperationException("The connection is not open.");
-			if (! connection.driver.Version.isAtLeast( 4,1,0)) return;
-				//throw new InvalidOperationException("Prepared statements are not supported with MySQL 4.0 and earlier.");
+			if (! connection.driver.Version.isAtLeast( 4,1,0)) 
+                return;
 
-			// strip out names from parameter markers
-			string strippedSQL = PrepareCommandText();
-
-			// ask our connection to send the prepare command
-			preparedStatement = connection.driver.Prepare( strippedSQL, (string[])parameterMap.ToArray(typeof(string)) );
+            Prepare(0);
 		}
 		#endregion
 
@@ -450,40 +557,12 @@ namespace MySql.Data.MySqlClient
 		{
 			while (! result.IsCompleted)
 				System.Threading.Thread.Sleep(100);
-			return (int)updateCount;
+			return (int)updatedRowCount;
 		}
 
 		#endregion
 
 		#region Private Methods
-
-		/// <summary>
-		/// Serializes the given parameter to the given memory stream
-		/// </summary>
-		/// <param name="writer">PacketWriter to stream parameter data to</param>
-		/// <param name="parmName">Name of the parameter to serialize</param>
-		/// <remarks>
-		/// <para>This method is called by PrepareSqlBuffers to convert the given
-		/// parameter to bytes and write those bytes to the given memory stream.
-		/// </para>
-		/// </remarks>
-		/// <returns>True if the parameter was successfully serialized, false otherwise.</returns>
-		private bool SerializeParameter(MySqlStreamWriter writer, string parmName)
-		{
-			int index = parameters.IndexOf(parmName);
-			if (index == -1)
-			{
-				// if we are using old syntax, we can't throw exceptions for parameters
-				// not defined.
-				if (connection.Settings.UseOldSyntax) return false;
-				throw new MySqlException("Parameter '" + parmName + "' must be defined");
-			}
-			MySqlParameter parameter = parameters[index];
-			parameter.Serialize( writer, false );
-			return true;
-
-		}
-
 
 		/// <summary>
 		/// Prepares the necessary byte buffers from the given CommandText
@@ -497,7 +576,7 @@ namespace MySql.Data.MySqlClient
 		/// is created for each SQL command (as separated by ';').
 		/// The SQL text is converted to bytes using the active encoding for the server.
 		/// </remarks>
-		private ArrayList PrepareSqlBuffers(string sql)
+/*		private ArrayList PrepareSqlBuffers(string sql)
 		{
 			ArrayList buffers = new ArrayList();
 			MySqlStreamWriter writer = new MySqlStreamWriter(new MemoryStream(), connection.Encoding);
@@ -544,117 +623,9 @@ namespace MySql.Data.MySqlClient
 				buffers.Add( mStream );
 
 			return buffers;
-		}
+		}*/
 
-		/// <summary>
-		/// Prepares CommandText for use with the Prepare method
-		/// </summary>
-		/// <returns>Command text stripped of all paramter names</returns>
-		/// <remarks>
-		/// Takes the output of TokenizeSql and creates a single string of SQL
-		/// that only contains '?' markers for each parameter.  It also creates
-		/// the parameterMap array list that includes all the paramter names in the
-		/// order they appeared in the SQL
-		/// </remarks>
-		private string PrepareCommandText()
-		{
-			StringBuilder	newSQL = new StringBuilder();
 
-			// tokenize the sql first
-			ArrayList tokens = TokenizeSql( CommandText );
-			parameterMap.Clear();
-
-			foreach (string token in tokens)
-			{
-				if ( token[0] != parameters.ParameterMarker )
-					newSQL.Append( token );
-				else
-				{
-					parameterMap.Add( token );
-					newSQL.Append( parameters.ParameterMarker );
-				}
-			}
-
-			return newSQL.ToString();
-		}
-
-		/// <summary>
-		/// Breaks the given SQL up into 'tokens' that are easier to output
-		/// into another form (bytes, preparedText, etc).
-		/// </summary>
-		/// <param name="sql">SQL to be tokenized</param>
-		/// <returns>Array of tokens</returns>
-		/// <remarks>The SQL is tokenized at parameter markers ('?') and at 
-		/// (';') sql end markers if the server doesn't support batching.
-		/// </remarks>
-		private ArrayList TokenizeSql( string sql )
-		{
-			char			delim = Char.MinValue;
-			StringBuilder	sqlPart = new StringBuilder();
-			bool			escaped = false;
-			bool			inLineComment = false;
-			bool			inComment = false;
-			ArrayList		tokens = new ArrayList();
-
-			for (int i=0; i < sql.Length; i++)
-			{
-				char c = sql[i];
-				if (escaped)
-					escaped = !escaped;
-				else if (c == delim) 
-					delim = Char.MinValue;
-				else if (c == '#' && delim == Char.MinValue)
-				{
-					inLineComment = true;
-					continue;
-				}
-				else if (c == '\n' && inLineComment == true)
-				{
-					inLineComment = false;
-					continue; 
-				}
-				else if (c == '/') 
-				{
-					if ( sql.Length > (i+1) && sql[i+1] == '*' && delim==Char.MinValue)
-					{
-						inComment = true; continue;
-					}
-					else if (inComment && delim == Char.MinValue && i != 0 && sql[i-1] == '*')
-					{
-						inComment = false; continue; 
-					}
-				}
-				else if (inLineComment || inComment)
-					continue;
-				else if (c == ';' && !escaped && delim == Char.MinValue && 
-					!connection.driver.SupportsBatch)
-				{
-					tokens.Add( sqlPart.ToString() );
-					tokens.Add( ";" );
-					sqlPart.Remove( 0, sqlPart.Length ); 
-					continue;
-				}
-				else if ((c == '\'' || c == '\"') & ! escaped & delim == Char.MinValue)
-					delim=c;
-				else if (c == '\\') 
-					escaped = ! escaped;
-				else if (c == parameters.ParameterMarker && delim == Char.MinValue && ! escaped) 
-				{
-					tokens.Add( sqlPart.ToString() );
-					sqlPart.Remove( 0, sqlPart.Length ); 
-				}
-				else if (sqlPart.Length > 0 && sqlPart[0] == parameters.ParameterMarker && 
-					! Char.IsLetterOrDigit(c) && c != '_' && c != '.' && c != '$')
-				{
-					tokens.Add( sqlPart.ToString() );
-					sqlPart.Remove( 0, sqlPart.Length ); 
-				}
-
-				sqlPart.Append(c);
-			}
-			tokens.Add( sqlPart.ToString() );
-			return tokens;
-		}
 		#endregion
 
 		#region ICloneable
@@ -676,17 +647,36 @@ namespace MySql.Data.MySqlClient
 
 		#region IDisposable Members
 
-		public void Dispose()
+		public new void Dispose()
 		{
 			base.Dispose(true);
 		}
 
 		#endregion
 
+        [Browsable(false)]
         public override bool DesignTimeVisible
         {
-            get { return designTimeVisible; }
-            set { designTimeVisible = value; }
+            get
+            {
+                return this.designTimeVisible; 
+            }
+            set
+            {
+                this.designTimeVisible = value;
+            }
+        }
+
+        public override UpdateRowSource UpdatedRowSource
+        {
+            get
+            {
+                return this.updatedRowSource;
+            }
+            set
+            {
+                this.updatedRowSource = value;
+            }
         }
 
         protected override DbParameter CreateDbParameter()
@@ -702,7 +692,7 @@ namespace MySql.Data.MySqlClient
 
         protected override DbParameterCollection DbParameterCollection
         {
-            get { throw new Exception("The method or operation is not implemented."); }
+            get { return this.Parameters; }
         }
 
         protected override DbTransaction DbTransaction

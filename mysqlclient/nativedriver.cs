@@ -49,16 +49,17 @@ namespace MySql.Data.MySqlClient
 		protected MySqlStreamWriter		writer;
 		private   BitArray				nullMap;
 
-		private		int					lastCommandResult;
-		private		Hashtable			commandResults;
+//		private	int lastCommandResult;
+//		private	Hashtable commandResults;
+        private int warningCount;
 
 		public NativeDriver(MySqlConnectionString settings) : base(settings)
 		{
 			packetSeq = 0;
 			isOpen = false;
 			maxPacketSize = 1047552;
-			lastCommandResult = 0;
-			commandResults = new Hashtable();
+//			lastCommandResult = 0;
+//			commandResults = new Hashtable();
 		}
 
 		public ClientFlags Flags
@@ -72,10 +73,10 @@ namespace MySql.Data.MySqlClient
 			set { maxPacketSize = value; }
 		}
 
-		internal Hashtable CommandResults 
-		{ 
-			get { return commandResults; }
-		}
+//		internal Hashtable CommandResults 
+//		{ 
+//			get { return commandResults; }
+//		}
 
 		/// <summary>
 		/// Returns true if this connection can handle batch SQL natively
@@ -106,15 +107,23 @@ namespace MySql.Data.MySqlClient
 				maxPacketSize = Convert.ToInt64( serverProps["max_allowed_packet"] );
 		}
 
-		private void ExecuteCommand( DBCmd cmd, byte[] bytes, int length ) 
+
+        /// <summary>
+        /// ExecuteCommand does the work of writing the actual command bytes to the writer
+        /// We break it out into a function since it is used in several places besides query
+        /// </summary>
+        /// <param name="cmd">The cmd that we are sending</param>
+        /// <param name="bytes">The bytes of the command, can be null</param>
+        /// <param name="length">The number of bytes to send</param>
+		private void ExecuteCommand(DBCmd cmd, byte[] bytes, int length) 
 		{
 			int len = 1;
 			if (bytes != null)
 				len += length;
 			writer.StartPacket(len, true);
-			writer.WriteByte( (byte)cmd );
+			writer.WriteByte((byte)cmd);
 			if (bytes != null)
-				writer.Write( bytes, 0, length );
+				writer.Write(bytes, 0, length);
 			writer.Flush();
 		}
 
@@ -143,7 +152,7 @@ namespace MySql.Data.MySqlClient
 		/// Sets the current database for the this connection
 		/// </summary>
 		/// <param name="dbName"></param>
-		public override void SetDatabase( string dbName )
+		public override void SetDatabase(string dbName)
 		{
 			byte[] dbNameBytes = Encoding.GetBytes( dbName );
 			ExecuteCommand( DBCmd.INIT_DB, dbNameBytes, dbNameBytes.Length );
@@ -366,21 +375,37 @@ namespace MySql.Data.MySqlClient
 		public override void Reset()
 		{
 			writer.StartPacket(0, true);
-			writer.WriteByte( (byte)DBCmd.CHANGE_USER );
+			writer.WriteByte((byte)DBCmd.CHANGE_USER);
 			Authenticate();
 		}
 
-		public override CommandResult SendQuery( byte[] bytes, int length, bool consume ) 
+        /// <summary>
+        /// Query is the method that is called to send all queries to the server
+        /// </summary>
+        /// <param name="bytes">The query to send</param>
+        /// <param name="length">The length of the query to send</param>
+        /// <returns>
+        /// -1 for non select queries
+        /// >= 0 for select queries
+        /// </returns>
+		public override void Query(byte[] bytes, int length)
 		{
-			IsProcessing = true;
-
 			if (Settings.Logging)
-				Logger.LogCommand( DBCmd.QUERY, encoding.GetString( bytes, 0, length ) );
+				Logger.LogCommand(DBCmd.QUERY, encoding.GetString(bytes, 0, length));
 
-			ExecuteCommand( DBCmd.QUERY, bytes, length );
+            // send the command to the server
+			ExecuteCommand(DBCmd.QUERY, bytes, length);
+
+            // the server will respond in one of several ways with the first byte indicating
+            // the type of response.
+            // 0 == ok packet.  This indicates non-select queries
+            // 0xff == error packet.  This is handled in reader.OpenPacket
+            // > 0 = number of columns in select query
+            // We don't actually read the result here since a single query can generate
+            // multiple resultsets and we don't want to duplicate code.  See ReadResult
+            // Instead we set our internal server status flag to indicate that we have a query waiting.
+            // This flag will be maintained by ReadResult
 			serverStatus |= ServerStatusFlags.AnotherQuery;
-			CommandResult rs = new CommandResult( this, false );
-			return rs;
 		}
 
 		public override void Close() 
@@ -388,7 +413,7 @@ namespace MySql.Data.MySqlClient
 			if (isOpen)
 				ExecuteCommand( DBCmd.QUIT, null, 0 );
 
-			writer.Close();
+			writer.Stream.Close();
 			reader.Close();
 
 			base.Close();
@@ -399,10 +424,6 @@ namespace MySql.Data.MySqlClient
 		{
 			try 
 			{
-				// if we are processing a command, we can't send a command since MySQL doesn't 
-				// support interleaved commands
-				if (processing) return true;
-
 				ExecuteCommand( DBCmd.PING, null, 0 ); 
 				ReadOk(true);
 				return true;
@@ -415,24 +436,32 @@ namespace MySql.Data.MySqlClient
 			}
 		}
 
-		public override bool ReadResult( ref long fieldCount, ref ulong affectedRows, ref long lastInsertId )
+        /// <summary>
+        /// ReadResult will attempt to read a single result from the server.  Note that it is not 
+        /// reading all the rows of the result set but simple determining what type of result it is
+        /// and returning values appropriately.
+        /// </summary>
+        /// <param name="affectedRows">Set to the number of rows affected in this result, 0 for selects</param>
+        /// <param name="lastInsertId">Set to the id of the row inserted by this result, 0 for non-inserts</param>
+        /// <returns>Number of columns in the resultset, 0 for non-selects, -1 for no more resultsets</returns>
+		public override long ReadResult(ref ulong affectedRows, ref long lastInsertId)
 		{
-			if ((ServerStatus & 
-				(ServerStatusFlags.MoreResults | ServerStatusFlags.AnotherQuery)) == 0)
-				return false;
+            // if there is not another query or resultset, then return -1
+            if ((serverStatus & (ServerStatusFlags.AnotherQuery | ServerStatusFlags.MoreResults)) == 0)
+                return -1;
 
 			reader.OpenPacket();
 
-			fieldCount = reader.GetFieldLength();
-			if (fieldCount > 0) return true;
+			long fieldCount = reader.GetFieldLength();
+            if (fieldCount > 0)
+                return fieldCount;
 
 			if (-1 == fieldCount)
 			{
 				string filename = reader.ReadString();
-				SendFileToServer( filename );
+				SendFileToServer(filename);
 
-				reader.OpenPacket();
-				fieldCount = reader.GetFieldLength();
+                return ReadResult(ref affectedRows, ref lastInsertId);
 			}
 
 			affectedRows = (ulong)reader.GetFieldLength();
@@ -440,13 +469,13 @@ namespace MySql.Data.MySqlClient
 			if ( version.isAtLeast(4,1,0) ) 
 			{
 				serverStatus = (ServerStatusFlags)reader.ReadInteger(2);
-				int warningCount = reader.ReadInteger(2);
+				warningCount = reader.ReadInteger(2);
 				if (reader.HasMoreData) 
 				{
 					string serverMessage = reader.ReadLenString();
 				}
 			}
-			return true;
+            return fieldCount;
 		}
 
 		/// <summary>
@@ -490,26 +519,15 @@ namespace MySql.Data.MySqlClient
 			}
 		}
 
-		public override bool OpenDataRow(int fieldCount, bool isBinary, int statementId) 
-		{
-			if (statementId > 0)
-				return FetchDataRow( statementId, fieldCount );
-
-			reader.OpenPacket();
-
-			if (reader.IsLastPacket)
-			{
-				ReadEOF(false);
-				return false;
-			}
-
-			// if we are binary, then we need to load in our null bitmap
-			nullMap = null;
-			if (isBinary) 
-				ReadNullMap( fieldCount );
-
-			return true;
-		}
+        public override bool SkipDataRow()
+        {
+            bool result = true;
+            if (!reader.HasMoreData)
+                result = FetchDataRow(-1, 0, 0);
+            if (result)
+                reader.SkipPacket();
+            return result;
+        }
 
 		private void ReadNullMap( int fieldCount ) 
 		{
@@ -521,7 +539,7 @@ namespace MySql.Data.MySqlClient
 			nullMap = new BitArray( nullMapBytes );
 		}
 
-		public override IMySqlValue ReadFieldValue( int index, MySqlField field, IMySqlValue valObject ) 
+		public override IMySqlValue ReadColumnValue(int index, MySqlField field, IMySqlValue valObject) 
 		{
 			long length = -1;
 			bool isNull = false;
@@ -540,7 +558,7 @@ namespace MySql.Data.MySqlClient
 			return valObject.ReadValue(reader, length, isNull);
 		}
 
-		public override void SkipField(IMySqlValue valObject)
+		public override void SkipColumnValue(IMySqlValue valObject)
 		{
 			long length = -1;
 			if (nullMap == null)
@@ -554,15 +572,15 @@ namespace MySql.Data.MySqlClient
 				valObject.SkipValue(reader);				
 		}
 
-		public override void ReadFieldMetadata( int count, ref MySqlField[] fields )
+		public override MySqlField[] ReadColumnMetadata(int count)
 		{
-			fields = new MySqlField[count];
+			MySqlField[] fields = new MySqlField[count];
 
 			for (int i=0; i < count; i++)
-			{
 				fields[i] = GetFieldMetaData();
-			}
-			ReadEOF(true);
+
+			ReadEOF();
+            return fields;
 		}
 
 
@@ -632,52 +650,48 @@ namespace MySql.Data.MySqlClient
 		}
 
 
-		public override CommandResult ExecuteStatement( byte[] bytes, int statementId, int cursorPageSize )
+		public override void ExecuteStatement(byte[] bytes)
 		{
-			ExecuteCommand( DBCmd.EXECUTE, bytes, bytes.Length );
-			CommandResult result = new CommandResult( this, true );
-			if (cursorPageSize > 0)
-			{
-				result.StatementId = statementId;
-				commandResults.Add( statementId, result);
-			}
-			return result;
+			ExecuteCommand(DBCmd.EXECUTE, bytes, bytes.Length);
+            serverStatus |= ServerStatusFlags.AnotherQuery;
+        }
+
+        private void CheckEOF()
+        {
+            if (!reader.IsLastPacket)
+                throw new MySqlException("Expected end of data packet");
+
+            reader.ReadByte();  // read off the 254
+
+            if (reader.HasMoreData && version.isAtLeast(4, 1, 0))
+            {
+                warningCount = reader.ReadInteger(2);
+                serverStatus = (ServerStatusFlags)reader.ReadInteger(2);
+
+                // if we are at the end of this cursor based resultset, then we remove
+                // the last row sent status flag so our next fetch doesn't abort early
+                // and we remove this command result from our list of active CommandResult objects.
+//                if ((serverStatus & ServerStatusFlags.LastRowSent) != 0)
+  //              {
+    //                serverStatus &= ~ServerStatusFlags.LastRowSent;
+      //              commandResults.Remove(lastCommandResult);
+        //        }
+            }
+        }
+
+        private void ReadEOF() 
+		{
+			reader.OpenPacket();
+            CheckEOF();
 		}
 
-		private void ReadEOF( bool readPacket ) 
+		public override int PrepareStatement(string sql, ref MySqlField[] parameters) 
 		{
-			if (readPacket)
-				reader.OpenPacket();
+            //TODO: check this
+			//ClearFetchedRow();
 
-			if (! reader.IsLastPacket)
-				throw new MySqlException( "Expected end of data packet" );
-
-			reader.ReadByte();  // read off the 254
-
-			if (reader.HasMoreData && version.isAtLeast(4,1,0)) 
-			{
-				int warningCount = reader.ReadInteger(2);
-				serverStatus = (ServerStatusFlags)reader.ReadInteger(2);
-
-				// if we are at the end of this cursor based resultset, then we remove
-				// the last row sent status flag so our next fetch doesn't abort early
-				// and we remove this command result from our list of active CommandResult objects.
-				if ((serverStatus & ServerStatusFlags.LastRowSent) != 0)
-				{
-					serverStatus &= ~ServerStatusFlags.LastRowSent;
-					commandResults.Remove(lastCommandResult);
-				}
-			}
-
-		}
-
-		public override PreparedStatement Prepare( string sql, string[] parmNames ) 
-		{
-			ClearFetchedRow();
-
-			byte[] bytes = encoding.GetBytes( sql );
-
-			ExecuteCommand( DBCmd.PREPARE, bytes, bytes.Length );
+			byte[] bytes = encoding.GetBytes(sql);
+			ExecuteCommand(DBCmd.PREPARE, bytes, bytes.Length);
 
 			reader.OpenPacket();
 
@@ -689,40 +703,36 @@ namespace MySql.Data.MySqlClient
 			int numCols = reader.ReadInteger(2);
 			int numParams = reader.ReadInteger(2);
 
-			MySqlField[] parameters = new MySqlField[ numParams ];
-
 			if (numParams > 0)
 			{
-				ReadFieldMetadata( numParams, ref parameters );
+				parameters = ReadColumnMetadata(numParams);
 
 				// we set the encoding for each parameter back to our connection encoding
 				// since we can't trust what is coming back from the server
 				for (int i=0; i < parameters.Length; i++)
 					parameters[i].Encoding = encoding;
-
-				if (parmNames.Length != parameters.Length)
-					throw new MySqlException("Incorrect number of parameters received for prepared statement");
-
-				for (int i=0; i < parmNames.Length; i++)
-					parameters[i].ColumnName = parmNames[i];
 			}
 
 			if (numCols > 0) 
 			{
-				while (numCols-- > 0) 
-					reader.SkipPacket();
+                while (numCols-- > 0)
+                {
+                    reader.OpenPacket();
+                    reader.SkipPacket();
+                }
 
-				ReadEOF( true );
+				ReadEOF();
 			}
 
-			return new PreparedStatement( this, statementId, parameters );
+			return statementId;
 		}
 
-		private void ClearFetchedRow() 
-		{
-			if (lastCommandResult == 0) return;
+//		private void ClearFetchedRow() 
+//		{
+//			if (lastCommandResult == 0) return;
 
-			CommandResult result = (CommandResult)commandResults[lastCommandResult];
+            //TODO
+/*			CommandResult result = (CommandResult)commandResults[lastCommandResult];
 			result.ReadRemainingColumns();
 
 			reader.OpenPacket();
@@ -730,12 +740,20 @@ namespace MySql.Data.MySqlClient
 				throw new MySqlException("Cursor reading out of sync");
 
 			ReadEOF(false);
-			lastCommandResult = 0;
-		}
+			lastCommandResult = 0;*/
+//		}
 
-		private bool FetchDataRow(int statementId, int fieldCount)
+        /// <summary>
+        /// FetchDataRow is the method that the data reader calls to see if there is another 
+        /// row to fetch.  In the non-prepared mode, it will simply read the next data packet.
+        /// In the prepared mode (statementId > 0), it will 
+        /// </summary>
+        /// <param name="statementId"></param>
+        /// <param name="fieldCount"></param>
+        /// <returns></returns>
+		public override bool FetchDataRow(int statementId, int pageSize, int columns)
 		{
-			ClearFetchedRow();
+/*			ClearFetchedRow();
 
 			if (!commandResults.ContainsKey(statementId)) return false;
 
@@ -749,18 +767,19 @@ namespace MySql.Data.MySqlClient
 			writer.Flush();
 
 			lastCommandResult = statementId;
-
+            */
 			reader.OpenPacket();
 			if (reader.IsLastPacket)
 			{
-				ReadEOF(false);
-				lastCommandResult = 0;
+				CheckEOF();
 				return false;
 			}
+            nullMap = null;
+            if (statementId > 0)
+                ReadNullMap(columns);
 
-			ReadNullMap(fieldCount);
 			return true;
 		}
 
-	}
+    }
 }

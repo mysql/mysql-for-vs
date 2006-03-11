@@ -254,15 +254,18 @@ namespace MySql.Data.MySqlClient
 		/// <param name="value">A MySqlRowUpdatingEventArgs that contains the event data.</param>
 		override protected void OnRowUpdating(RowUpdatingEventArgs value)
 		{
-			MySqlRowUpdatingEventArgs margs = (value as MySqlRowUpdatingEventArgs);
+	//		MySqlRowUpdatingEventArgs args = (value as MySqlRowUpdatingEventArgs);
 			//			if (args.StatementType == StatementType.Insert)
 //				FixupStatementDefaults(args);
 
-			MySqlRowUpdatingEventHandler handler = (MySqlRowUpdatingEventHandler) Events[EventRowUpdating];
-			if ((null != handler) && (margs != null)) 
-			{
-				handler(this, margs);
-			}
+            if (RowUpdating != null)
+                RowUpdating(this, (value as MySqlRowUpdatingEventArgs));
+
+//			MySqlRowUpdatingEventHandler handler = (MySqlRowUpdatingEventHandler) Events[EventRowUpdating];
+//			if ((null != handler) && (margs != null)) 
+//			{
+//				handler(this, margs);
+//			}
 		}
 
 		/// <summary>
@@ -271,14 +274,17 @@ namespace MySql.Data.MySqlClient
 		/// <param name="value">A MySqlRowUpdatedEventArgs that contains the event data. </param>
 		override protected void OnRowUpdated(RowUpdatedEventArgs value)
 		{
-			MySqlRowUpdatedEventArgs margs = (value as MySqlRowUpdatedEventArgs);
+//			MySqlRowUpdatedEventArgs margs = (value as MySqlRowUpdatedEventArgs);
 			//args.Command.CommandText = savedSql;
 
-			MySqlRowUpdatedEventHandler handler = (MySqlRowUpdatedEventHandler) Events[EventRowUpdated];
-			if ((null != handler) && (margs != null))
-			{
-				handler(this, margs);
-			}
+            if (RowUpdated != null)
+                RowUpdated(this, (value as MySqlRowUpdatedEventArgs));
+
+  //          MySqlRowUpdatedEventHandler handler = (MySqlRowUpdatedEventHandler)Events[EventRowUpdated];
+	//		if ((null != handler) && (margs != null))
+	//		{
+	//			handler(this, margs);
+	//		}
 		}
 	}
 

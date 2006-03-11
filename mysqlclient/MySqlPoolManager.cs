@@ -69,7 +69,7 @@ namespace MySql.Data.MySqlClient
 			}
 		}
 
-		public static void ReleaseConnection( Driver driver )
+		public static void ReleaseConnection(Driver driver)
 		{
 			lock (pools.SyncRoot) 
 			{

@@ -28,75 +28,75 @@ namespace MySql.Data.MySqlClient
 	/// </summary>
 	internal class EmbeddedAPI
 	{
-		[DllImport("libmysqld.dll", EntryPoint="mysql_init")]
+		[DllImport("libmysqld", EntryPoint="mysql_init")]
 		public static extern IntPtr Init(IntPtr mysql);
 
-		[DllImport("libmysqld.dll", EntryPoint="mysql_server_init")]
+		[DllImport("libmysqld", EntryPoint="mysql_server_init")]
 		public static extern int ServerInit(int argc, string[] argv, string[] groups);
 
-		[DllImport("libmysqld.dll", EntryPoint="mysql_server_end")]
+		[DllImport("libmysqld", EntryPoint="mysql_server_end")]
 		public static extern void ServerEnd();
 
-		[DllImport("libmysqld.dll", EntryPoint="mysql_real_connect")]
+		[DllImport("libmysqld", EntryPoint="mysql_real_connect")]
 		public static extern IntPtr Connect( IntPtr mysql,
 			string host, string user, string password, string db, uint port,
 			string unix_socket, uint flag );
 
-		[DllImport("libmysqld.dll", EntryPoint="mysql_close")]
+		[DllImport("libmysqld", EntryPoint="mysql_close")]
 		public static extern void Close(IntPtr mysql);
 		
-		[DllImport("libmysqld.dll", EntryPoint="mysql_ping")]
+		[DllImport("libmysqld", EntryPoint="mysql_ping")]
 		public static extern int Ping(IntPtr mysql);
 
-		[DllImport("libmysqld.dll", EntryPoint="mysql_select_db")]
+		[DllImport("libmysqld", EntryPoint="mysql_select_db")]
 		public static extern int SelectDatabase(IntPtr mysql, string dbName);
 
-		[DllImport("libmysqld.dll", EntryPoint="mysql_real_query")]
+		[DllImport("libmysqld", EntryPoint="mysql_real_query")]
 		public static extern int Query(IntPtr mysql, byte[] query, uint len);
 
-		[DllImport("libmysqld.dll", EntryPoint="mysql_error")]
+		[DllImport("libmysqld", EntryPoint="mysql_error")]
 		public static extern string ErrorMsg(IntPtr mysql);
 
-		[DllImport("libmysqld.dll", EntryPoint="mysql_errno")]
+		[DllImport("libmysqld", EntryPoint="mysql_errno")]
 		public static extern int ErrorNumber(IntPtr mysql);
 
-		[DllImport("libmysqld.dll", EntryPoint="mysql_options")]
+		[DllImport("libmysqld", EntryPoint="mysql_options")]
 		public static extern int SetOptions(IntPtr mysql, ClientAPIOption option, ref object optionValue);
 
-		[DllImport("libmysqld.dll", EntryPoint="mysql_use_result")]
+		[DllImport("libmysqld", EntryPoint="mysql_use_result")]
 		public static extern IntPtr UseResult(IntPtr mysql);
 
-		[DllImport("libmysqld.dll", EntryPoint="mysql_more_results")]
+		[DllImport("libmysqld", EntryPoint="mysql_more_results")]
 		public static extern bool MoreResults(IntPtr mysql);
 
-		[DllImport("libmysqld.dll", EntryPoint="mysql_next_result")]
+		[DllImport("libmysqld", EntryPoint="mysql_next_result")]
 		public static extern int NextResult(IntPtr mysql);
 
-		[DllImport("libmysqld.dll", EntryPoint="mysql_free_result")]
+		[DllImport("libmysqld", EntryPoint="mysql_free_result")]
 		public static extern void FreeResult(IntPtr result);
 
-		[DllImport("libmysqld.dll", EntryPoint="mysql_field_count")]
+		[DllImport("libmysqld", EntryPoint="mysql_field_count")]
 		public static extern int FieldCount(IntPtr resultSet);
 
-		[DllImport("libmysqld.dll", EntryPoint="mysql_affected_rows")]
+		[DllImport("libmysqld", EntryPoint="mysql_affected_rows")]
 		public static extern ulong AffectedRows(IntPtr mysql);
 
-		[DllImport("libmysqld.dll", EntryPoint="mysql_insert_id")]
+		[DllImport("libmysqld", EntryPoint="mysql_insert_id")]
 		public static extern ulong LastInsertId(IntPtr mysql);
 
-		[DllImport("libmysqld.dll", EntryPoint="mysql_fetch_field")]
+		[DllImport("libmysqld", EntryPoint="mysql_fetch_field")]
 		public static extern ClientField FetchField(IntPtr resultSet);
 
-		[DllImport("libmysqld.dll", EntryPoint="mysql_fetch_row")]
+		[DllImport("libmysqld", EntryPoint="mysql_fetch_row")]
 		public static extern IntPtr FetchRow(IntPtr resultSet);
 		
-		[DllImport("libmysqld.dll", EntryPoint="mysql_fetch_lengths")]
+		[DllImport("libmysqld", EntryPoint="mysql_fetch_lengths")]
 		public static extern IntPtr FetchLengths(IntPtr resultSet);
 
-		[DllImport("libmysqld.dll", EntryPoint="mysql_get_server_info")]
+		[DllImport("libmysqld", EntryPoint="mysql_get_server_info")]
 		public static extern string VersionString(IntPtr mysql);
 
-		[DllImport("libmysqld.dll", EntryPoint="mysql_character_set_name")]
+		[DllImport("libmysqld", EntryPoint="mysql_character_set_name")]
 		public static extern string CharacterSetName(IntPtr mysql);
 	}
 }
