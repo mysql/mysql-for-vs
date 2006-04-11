@@ -384,6 +384,9 @@ namespace MySql.Data.MySqlClient
 			IMySqlValue v = GetFieldValue(index);
 			if (v is MySqlInt16)
 				return ((MySqlInt16)v).Value;
+            
+            connection.UsageAdvisor.Converting(command.CommandText,
+                fields[index].ColumnName, v.MySqlTypeName, "Int16");
 			return ((IConvertible)v.Value).ToInt16(null);
 		}
 
@@ -393,7 +396,10 @@ namespace MySql.Data.MySqlClient
 			IMySqlValue v = GetFieldValue(index);
 			if (v is MySqlInt32)
 				return ((MySqlInt32)v).Value;
-			return ((IConvertible)v.Value).ToInt32(null); 
+            
+            connection.UsageAdvisor.Converting(command.CommandText,
+                fields[index].ColumnName, v.MySqlTypeName, "Int32");
+            return ((IConvertible)v.Value).ToInt32(null); 
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetInt64/*'/>
@@ -402,7 +408,10 @@ namespace MySql.Data.MySqlClient
 			IMySqlValue v = GetFieldValue(index);
 			if (v is MySqlInt64)
 				return ((MySqlInt64)v).Value;
-			return ((IConvertible)v.Value).ToInt64(null); 
+
+            connection.UsageAdvisor.Converting(command.CommandText,
+                fields[index].ColumnName, v.MySqlTypeName, "Int64");
+            return ((IConvertible)v.Value).ToInt64(null); 
 		}
 
 		/// <summary>
@@ -577,30 +586,39 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetUInt16/*'/>
-		public UInt16 GetUInt16( int index )
+		public UInt16 GetUInt16(int index)
 		{
 			IMySqlValue v = GetFieldValue(index);
 			if (v is MySqlUInt16)
 				return ((MySqlUInt16)v).Value;
-			return Convert.ToUInt16(v.Value);
+
+            connection.UsageAdvisor.Converting(command.CommandText,
+                fields[index].ColumnName, v.MySqlTypeName, "UInt16");
+            return Convert.ToUInt16(v.Value);
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetUInt32/*'/>
-		public UInt32 GetUInt32( int index )
+		public UInt32 GetUInt32(int index)
 		{
 			IMySqlValue v = GetFieldValue(index);
 			if (v is MySqlUInt32)
 				return ((MySqlUInt32)v).Value;
-			return Convert.ToUInt32(v.Value);
+
+            connection.UsageAdvisor.Converting(command.CommandText,
+                fields[index].ColumnName, v.MySqlTypeName, "UInt32");
+            return Convert.ToUInt32(v.Value);
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetUInt64/*'/>
-		public UInt64 GetUInt64( int index )
+		public UInt64 GetUInt64(int index)
 		{
 			IMySqlValue v = GetFieldValue(index);
 			if (v is MySqlUInt64)
 				return ((MySqlUInt64)v).Value;
-			return Convert.ToUInt64(v.Value);
+
+            connection.UsageAdvisor.Converting(command.CommandText,
+                fields[index].ColumnName, v.MySqlTypeName, "UInt64");
+            return Convert.ToUInt64(v.Value);
 		}
 
 

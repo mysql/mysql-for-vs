@@ -57,6 +57,16 @@ namespace MySql.Data.MySqlClient
 			LogUAFooter();
 		}
 
+        public void Converting(string cmdText, string columnName, 
+                               string fromType, string toType)
+        {
+			LogUAHeader(cmdText);
+			Logger.WriteLine("Reason: Performing unnecessary conversion on field " 
+                             + columnName + ".");
+			Logger.WriteLine("From: " + fromType + " to " + toType);
+			LogUAFooter();
+        }
+
 		private void LogUAWarning(string cmdText, string reason) 
 		{
 			LogUAHeader(cmdText);
