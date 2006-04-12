@@ -19,8 +19,6 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
-using System.Collections;
-using System.Text;
 
 namespace MySql.Data.Common
 {
@@ -29,47 +27,150 @@ namespace MySql.Data.Common
 	/// </summary>
 	internal abstract class DBConnectionString
 	{
-		protected Hashtable	keyValues;
-		protected string	connectionName = String.Empty;
-		protected string	connectString;
+		protected string connectString;
+        protected bool persistSecurityInfo;
+        protected string userId;
+        protected string password;
+        protected string host;
+        protected string database;
+        protected int connectionTimeout;
+        protected uint port;
+        protected bool pooling;
+        protected int minPoolSize;
+        protected int maxPoolSize;
+        protected int poolLifeTime;
 
 		public DBConnectionString()
 		{	
-			keyValues = new Hashtable(new CaseInsensitiveHashCodeProvider(), 
-				new CaseInsensitiveComparer());
-		}
+            persistSecurityInfo = false;
+            connectionTimeout = 15;
+            pooling = true;
+            minPoolSize = 0;
+            maxPoolSize = 100;
+            port = 3306;
+        }
 
-		public void LoadDefaultValues()
-		{
-			keyValues = GetDefaultValues();
-		}
+        public DBConnectionString(string connectString) : this()
+        {
+            this.connectString = connectString;
+        }
 
-		public void SetConnectionString(string value)
-		{
-			Hashtable ht = Parse(value);			
-			connectString = value;
-			keyValues = ht;
-		}
+        #region Base Connection Properties
 
-		protected string GetString(string name) 
-		{
-			if (! keyValues.ContainsKey(name)) return String.Empty;
-			if (keyValues[name] == null) return String.Empty;
-			return (keyValues[name] as string);
-		}
+#if DESIGN
+		[Category("Connection")]
+		[Description("The name or IP address of the server to use")]
+#endif
+        public string Server
+        {
+            get { return host; }
+        }
 
-		protected int GetInt( string name ) 
-		{
-			return Convert.ToInt32(keyValues[name], System.Globalization.NumberFormatInfo.InvariantInfo);
-		}
+#if DESIGN
+		[Category("Connection")]
+		[Description("Port to use when connecting with sockets")]
+		[DefaultValue(3306)]
+#endif
+        public uint Port
+        {
+            get { return port; }
+        }
 
-		protected bool GetBool( string name ) 
-		{
-			object val = keyValues[name];
-			if (val.Equals(true) || val.Equals("true") || val.Equals("yes") || val.Equals(1))
-				return true;
-			return false;
-		}
+#if DESIGN
+		[Category("Connection")]
+		[Description("Database to use initially")]
+		[Editor("MySql.Data.MySqlClient.Design.DatabaseTypeEditor,MySqlClient.Design", typeof(System.Drawing.Design.UITypeEditor))]
+#endif
+        public string Database
+        {
+            get { return database; }
+            set { database = value; }
+        }
+
+#if DESIGN
+		[Category("Connection")]
+		[Description("Number of seconds to wait for the connection to succeed")]
+		[DefaultValue(15)]
+#endif
+        public int ConnectionTimeout
+        {
+            get { return connectionTimeout; }
+        }
+
+#if DESIGN
+		[Category("Authentication")]
+		[Description("Show user password in connection string")]
+		[DefaultValue(false)]
+#endif
+        public bool PersistSecurityInfo
+        {
+            get { return persistSecurityInfo; }
+        }
+
+#if DESIGN
+		[Category("Authentication")]
+		[Description("The username to connect as")]
+#endif
+        public string UserId
+        {
+            get { return userId; }
+        }
+
+#if DESIGN
+		[Category("Authentication")]
+		[Description("The password to use for authentication")]
+#endif
+        public string Password
+        {
+            get { return password; }
+        }
+
+
+#endregion
+
+        #region Pooling Properties
+
+#if DESIGN
+		[Category("Pooling")]
+		[Description("Should the connection support pooling")]
+		[DefaultValue(true)]
+#endif
+        public bool Pooling
+        {
+            get { return pooling; }
+        }
+
+#if DESIGN
+		[Category("Pooling")]
+		[Description("Minimum number of connections to have in this pool")]
+		[DefaultValue(0)]
+#endif
+        public int MinPoolSize
+        {
+            get { return minPoolSize; }
+        }
+
+#if DESIGN
+		[Category("Pooling")]
+		[Description("Maximum number of connections to have in this pool")]
+		[DefaultValue(100)]
+#endif
+        public int MaxPoolSize
+        {
+            get { return maxPoolSize; }
+        }
+
+#if DESIGN
+		[Category("Pooling")]
+		[Description("Maximum number of seconds a connection should live.  This is checked when a connection is returned to the pool.")]
+		[DefaultValue(0)]
+#endif
+        public int ConnectionLifetime
+        {
+            get { return poolLifeTime; }
+        }
+
+        #endregion
 
 		protected string RemoveKeys(string value, string[] keys)
 		{
@@ -87,14 +188,14 @@ namespace MySql.Data.Common
 			return sb.ToString();
 		}
 
-		protected virtual bool ConnectionParameterParsed(Hashtable hash, string key, string value)
+		protected virtual bool ConnectionParameterParsed(string key, string value)
 		{
 			string lowerKey =  key.ToLower(System.Globalization.CultureInfo.InvariantCulture);
 
 			switch (lowerKey)
 			{
 				case "persist security info":
-					hash["persist security info"] = value;
+                    persistSecurityInfo = value.ToLower() == "yes" || value.ToLower() == "true";
 					return true;
 
 				case "uid":
@@ -102,12 +203,12 @@ namespace MySql.Data.Common
 				case "user id":
 				case "user name": 
 				case "userid":
-					hash["user id"] = value;
+                    userId = value;
 					return true;
 
 				case "password": 
 				case "pwd":
-					hash["password"] = value;
+                    password = value; 
 					return true;
 
 				case "host":
@@ -117,103 +218,88 @@ namespace MySql.Data.Common
 				case "address":
 				case "addr":
 				case "network address":
-					hash["host"] = value;
+                    host = value;
 					return true;
 				
 				case "initial catalog":
 				case "database":
-					hash["database"] = value;
+                    database = value;
 					return true;
 
 				case "connection timeout":
 				case "connect timeout":
-					hash["connect timeout"] = Int32.Parse(value, System.Globalization.NumberFormatInfo.InvariantInfo);
+                    connectionTimeout = Int32.Parse(value, 
+                        System.Globalization.NumberFormatInfo.InvariantInfo);
 					return true;
 
 				case "port":
-					hash["port"] = Int32.Parse(value, System.Globalization.NumberFormatInfo.InvariantInfo);
+                    port = UInt32.Parse(value, 
+                        System.Globalization.NumberFormatInfo.InvariantInfo);
 					return true;
 
 				case "pooling":
-					hash["pooling"] = 
-						value.ToLower() == "yes" || value.ToLower() == "true";
+					pooling = value.ToLower() == "yes" || value.ToLower() == "true";
 					return true;
 
 				case "min pool size":
-					hash["min pool size"] = Int32.Parse(value, System.Globalization.NumberFormatInfo.InvariantInfo);
+                    minPoolSize = Int32.Parse(value, 
+                        System.Globalization.NumberFormatInfo.InvariantInfo);
 					return true;
 
 				case "max pool size":
-					hash["max pool size"] = Int32.Parse(value, System.Globalization.NumberFormatInfo.InvariantInfo);
+					maxPoolSize = Int32.Parse(value, 
+                        System.Globalization.NumberFormatInfo.InvariantInfo);
 					return true;
 
 				case "connection lifetime":
-					hash["connect lifetime"] = Int32.Parse(value, System.Globalization.NumberFormatInfo.InvariantInfo);
+					poolLifeTime = Int32.Parse(value, 
+                        System.Globalization.NumberFormatInfo.InvariantInfo);
 					return true;
 			}
 			return false;
 		}
 
-		protected virtual Hashtable GetDefaultValues()
+		protected virtual void Parse() 
 		{
-			return null;
-		}
+            String[] keyvalues = connectString.Split(';');
+            String[] newkeyvalues = new String[keyvalues.Length];
+            int x = 0;
 
-		protected static Hashtable ParseKeyValuePairs(string src)
-		{
-			String[] keyvalues = src.Split(';');
-			String[] newkeyvalues = new String[keyvalues.Length];
-			int		 x = 0;
+            // first run through the array and check for any keys that
+            // have ; in their value
+            foreach (String keyvalue in keyvalues)
+            {
+                // check for trailing ; at the end of the connection string
+                if (keyvalue.Length == 0) continue;
 
-			// first run through the array and check for any keys that
-			// have ; in their value
-			foreach (String keyvalue in keyvalues) 
-			{
-				// check for trailing ; at the end of the connection string
-				if (keyvalue.Length == 0) continue;
+                // this value has an '=' sign so we are ok
+                if (keyvalue.IndexOf('=') >= 0)
+                {
+                    newkeyvalues[x++] = keyvalue;
+                }
+                else
+                {
+                    newkeyvalues[x - 1] += ";";
+                    newkeyvalues[x - 1] += keyvalue;
+                }
+            }
 
-				// this value has an '=' sign so we are ok
-				if (keyvalue.IndexOf('=') >= 0) 
-				{
-					newkeyvalues[x++] = keyvalue;
-				}
-				else 
-				{
-					newkeyvalues[x-1] += ";";
-					newkeyvalues[x-1] += keyvalue;
-				}
-			}
+            // now we run through our normalized key-values, splitting on equals
+            for (int y = 0; y < x; y++)
+            {
+                String[] parts = newkeyvalues[y].Split('=');
 
-			Hashtable hash = new Hashtable();
+                // first trim off any space and lowercase the key
+                parts[0] = parts[0].Trim().ToLower();
+                parts[1] = parts[1].Trim();
 
-			// now we run through our normalized key-values, splitting on equals
-			for (int y=0; y < x; y++) 
-			{
-				String[] parts = newkeyvalues[y].Split('=');
+                // we also want to clear off any quotes
+                parts[0] = parts[0].Trim('\'', '"');
+                parts[1] = parts[1].Trim('\'', '"');
 
-				// first trim off any space and lowercase the key
-				parts[0] = parts[0].Trim().ToLower();
-				parts[1] = parts[1].Trim();
-
-				// we also want to clear off any quotes
-				parts[0] = parts[0].Trim('\'', '"');
-				parts[1] = parts[1].Trim('\'', '"');
-
-				hash[parts[0]] = parts[1];
-			}
-			return hash;
-		}
-
-		protected virtual Hashtable Parse(string newConnectString) 
-		{
-			Hashtable hash = ParseKeyValuePairs( newConnectString );
-			Hashtable newHash = GetDefaultValues();
-
-			foreach (object key in hash.Keys)
-				ConnectionParameterParsed( newHash, (string)key, (string)hash[key] );
-			return newHash;
-		}
-
+                ConnectionParameterParsed(parts[0], parts[1]);
+            }
+        }
 
 	}
 }

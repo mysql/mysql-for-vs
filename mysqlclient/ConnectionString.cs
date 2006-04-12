@@ -49,46 +49,45 @@ namespace MySql.Data.MySqlClient
 	/// </summary>
 	internal sealed class MySqlConnectionString : DBConnectionString
 	{
-		private Hashtable	defaults;
+        private bool useUsageAdvisor;
+        private int procedureCacheSize;
+        private string charSet;
+        private ConnectionProtocol protocol;
+        private bool compress;
+        private string pipeName;
+        private bool allowBatch;
+        private bool logging;
+        private string sharedMemoryName;
+        private bool supportOldSyntax;
+        private string optionFile;
+        private bool useSSL;
+        private DriverType driverType;
+        private bool allowZeroDateTime;
+        private bool convertZeroDateTime;
 
 		public MySqlConnectionString() : base()
 		{
+            useUsageAdvisor = false;
+            procedureCacheSize = 25;
+            protocol = ConnectionProtocol.Sockets;
+            compress = false;
+            allowBatch = true;
+            pipeName = "MYSQL";
+            logging = false;
+            sharedMemoryName = "MYSQL";
+            supportOldSyntax = false;
+            useSSL = false;
+            driverType = DriverType.Native;
+            allowZeroDateTime = true;
+            convertZeroDateTime = true;
 		}
 
-		public MySqlConnectionString(string connectString) : this()
+		public MySqlConnectionString(string connectString) : base(connectString)
 		{
-			SetConnectionString( connectString );
+            Parse();
 		}
 
 		#region Server Properties
-
-/*		public string Name 
-		{
-			get { return connectionName; }
-			set { connectionName = value; }
-		}
-*/
-
-#if DESIGN
-		[Category("Connection")]
-		[Description("The name or IP address of the server to use")]
-#endif
-		public string Server 
-		{
-			get { return GetString("host"); }
-//			set { keyValues["host"] = value; }
-		}
-
-#if DESIGN
-		[Category("Connection")]
-		[Description("Port to use when connecting with sockets")]
-		[DefaultValue(3306)]
-#endif
-		public uint Port 
-		{
-			get { return (uint)GetInt("port"); }
-//			set { keyValues["port"] = value; }
-		}
 
 #if DESIGN
 		[Category("Connection")]
@@ -97,8 +96,7 @@ namespace MySql.Data.MySqlClient
 #endif
 		public ConnectionProtocol Protocol
 		{
-			get { return (ConnectionProtocol)keyValues["protocol"]; }
-//			set { keyValues["protocol"] = value; }
+			get { return protocol; }
 		}
 
 #if DESIGN
@@ -107,8 +105,7 @@ namespace MySql.Data.MySqlClient
 #endif
 		public string PipeName 
 		{
-			get { return GetString("pipeName"); }
-//			set { keyValues["pipeName"] = value; }
+			get { return pipeName; }
 		}
 
 #if DESIGN
@@ -118,31 +115,10 @@ namespace MySql.Data.MySqlClient
 #endif
 		public bool UseCompression 
 		{
-			get { return GetBool("compress"); }
-//			set { keyValues["compress"] = value; }
+			get { return compress; }
 		}
 
-#if DESIGN
-		[Category("Connection")]
-		[Description("Database to use initially")]
-		[Editor("MySql.Data.MySqlClient.Design.DatabaseTypeEditor,MySqlClient.Design", typeof(System.Drawing.Design.UITypeEditor))]
-#endif
-		public string Database
-		{
-			get { return GetString("database"); }
-			set { keyValues["database"] = value; }
-		}
 
-#if DESIGN
-		[Category("Connection")]
-		[Description("Number of seconds to wait for the connection to succeed")]
-		[DefaultValue(15)]
-#endif
-		public int ConnectionTimeout
-		{
-			get { return GetInt("connect timeout"); }
-//			set { keyValues["connect timeout"] = value; }
-		}
 
 #if DESIGN
 		[Category("Connection")]
@@ -151,8 +127,7 @@ namespace MySql.Data.MySqlClient
 #endif
 		public bool AllowBatch 
 		{
-			get { return GetBool("allow batch"); }
-//			set { keyValues["allow batch"] = value; }
+			get { return allowBatch; }
 		}
 
 #if DESIGN
@@ -162,8 +137,7 @@ namespace MySql.Data.MySqlClient
 #endif
 		public bool Logging
 		{
-			get { return GetBool("logging"); }
-//			set { keyValues["logging"] = value; }
+			get { return logging; }
 		}
 
 #if DESIGN
@@ -173,8 +147,7 @@ namespace MySql.Data.MySqlClient
 #endif
 		public string SharedMemoryName 
 		{
-			get { return GetString("memname"); }
-//			set { keyValues["memname"] = value; }
+			get { return sharedMemoryName; }
 		}
 
 #if DESIGN
@@ -184,8 +157,7 @@ namespace MySql.Data.MySqlClient
 #endif
 		public bool UseOldSyntax 
 		{
-			get { return GetBool("oldsyntax"); }
-//			set { keyValues["oldsyntax"] = value; }
+			get { return supportOldSyntax; }
 		}
 
 #if DESIGN
@@ -195,14 +167,12 @@ namespace MySql.Data.MySqlClient
 #endif
 		public DriverType DriverType
 		{
-			get { return (DriverType)keyValues["driver"]; }
-//			set { keyValues["driver"] = value; }
+			get { return driverType; }
 		}
 
 		public string OptionFile 
 		{
-			get { return keyValues["option_file"] as string; }
-//			set { keyValues["option_file"] = value; }
+			get { return optionFile; }
 		}
 
 		#endregion
@@ -211,91 +181,12 @@ namespace MySql.Data.MySqlClient
 
 #if DESIGN
 		[Category("Authentication")]
-		[Description("The username to connect as")]
-#endif
-		public string UserId 
-		{
-			get { return GetString("user id"); }
-//			set { keyValues["user id"] = value; }
-		}
-
-#if DESIGN
-		[Category("Authentication")]
-		[Description("The password to use for authentication")]
-#endif
-		public string Password 
-		{
-			get { return GetString("password"); }
-//			set { keyValues["password"] = value; }
-		}
-
-#if DESIGN
-		[Category("Authentication")]
 		[Description("Should the connection use SSL.  This currently has no effect.")]
 		[DefaultValue(false)]
 #endif
 		public bool UseSSL
 		{
-			get { return GetBool("useSSL"); }
-//			set { keyValues["useSSL"] = value; }
-		}
-
-#if DESIGN
-		[Category("Authentication")]
-		[Description("Show user password in connection string")]
-		[DefaultValue(false)]
-#endif
-		public bool PersistSecurityInfo 
-		{
-			get { return GetBool("persist security info"); }
-//			set { keyValues["persist security info"] = value; }
-		}
-		#endregion
-
-		#region Pooling Properties
-
-#if DESIGN
-		[Category("Pooling")]
-		[Description("Should the connection support pooling")]
-		[DefaultValue(true)]
-#endif
-		public bool Pooling 
-		{
-			get { return GetBool("pooling"); }
-//			set { keyValues["pooling"] = value; }
-		}
-
-#if DESIGN
-		[Category("Pooling")]
-		[Description("Minimum number of connections to have in this pool")]
-		[DefaultValue(0)]
-#endif
-		public int MinPoolSize 
-		{
-			get { return GetInt("min pool size"); }
-//			set { keyValues["min pool size"] = value; }
-		}
-
-#if DESIGN
-		[Category("Pooling")]
-		[Description("Maximum number of connections to have in this pool")]
-		[DefaultValue(100)]
-#endif
-		public int MaxPoolSize 
-		{
-			get { return GetInt("max pool size"); }
-//			set { keyValues["max pool size"] = value; }
-		}
-
-#if DESIGN
-		[Category("Pooling")]
-		[Description("Maximum number of seconds a connection should live.  This is checked when a connection is returned to the pool.")]
-		[DefaultValue(0)]
-#endif
-		public int ConnectionLifetime 
-		{
-			get { return GetInt("connect lifetime"); }
-//			set { keyValues["connect lifetime"] = value; }
+			get { return useSSL; }
 		}
 
 		#endregion
@@ -309,8 +200,7 @@ namespace MySql.Data.MySqlClient
 #endif
 		public bool AllowZeroDateTime 
 		{
-			get { return GetBool("allowzerodatetime"); }
-//			set { keyValues["alllowzerodatetime"] = value; }
+			get { return allowZeroDateTime; }
 		}
 
 #if DESIGN
@@ -320,8 +210,7 @@ namespace MySql.Data.MySqlClient
 #endif
 		public bool ConvertZeroDateTime 
 		{
-			get { return GetBool("convertzerodatetime"); }
-//			set { keyValues["convertzerodatetime"] = value; }
+			get { return convertZeroDateTime; }
 		}
 
 #if DESIGN
@@ -331,8 +220,7 @@ namespace MySql.Data.MySqlClient
 #endif
 		public string CharacterSet 
 		{
-			get { return GetString("charset"); }
-//			set { keyValues["charset"] = value; }
+            get { return charSet; }
 		}
 
 #if DESIGN
@@ -342,9 +230,18 @@ namespace MySql.Data.MySqlClient
 #endif
 		public bool UseUsageAdvisor 
 		{
-			get { return GetBool("usageAdvisor"); }
-//			set { keyValues["usageAdvisor"] = value; }
+			get { return useUsageAdvisor; }
 		}
+
+#if DESIGN
+		[Category("Other")]
+		[Description("Number of stored procedures to cache.  0 to disable.")]
+		[DefaultValue(25)]
+#endif
+        public int ProcedureCacheSize
+        {
+            get { return procedureCacheSize; }
+        }
 
 		#endregion
 
@@ -369,73 +266,7 @@ namespace MySql.Data.MySqlClient
 			return RemoveKeys(connStr, new string[2] { "password", "pwd" });
 		}
 
-		/// <summary>
-		/// Uses the values in the keyValues hash to create a
-		/// connection string
-		/// </summary>
-		/// <returns></returns>
-/*		public string CreateConnectionString()
-		{
-			string cStr = String.Empty;
-
-			Hashtable values = (Hashtable)keyValues.Clone();
-			Hashtable defaultValues = GetDefaultValues();
-
-			if (!PersistSecurityInfo && values.Contains("password") )
-				values.Remove( "password" );
-
-			// we always return the server key.  It's not needed but 
-			// seems weird for it not to be there.
-			cStr = "server=" + values["host"] + ";";
-			values.Remove("server");
-
-			foreach (string key in values.Keys)
-			{
-				if (values[key] != null && defaultValues[key] != null &&
-					!values[key].Equals( defaultValues[key]))
-					cStr += key + "=" + values[key] + ";";
-			}
-
-			return cStr;
-		}
-*/
-		protected override Hashtable GetDefaultValues()
-		{
-			defaults = base.GetDefaultValues();
-			if (defaults == null)
-			{
-				defaults = new Hashtable(new CaseInsensitiveHashCodeProvider(), 
-					new CaseInsensitiveComparer());
-				defaults["host"] = String.Empty;
-				defaults["connect lifetime"] = 0;
-				defaults["user id"] = String.Empty;
-				defaults["password"] = String.Empty;
-				defaults["database"] = null;
-				defaults["charset"] = null;
-				defaults["pooling"] = true;
-				defaults["min pool size"] = 0;
-				defaults["protocol"] = ConnectionProtocol.Sockets;
-				defaults["max pool size"] = 100;
-				defaults["connect timeout"] = 15;
-				defaults["port"] = 3306;
-				defaults["useSSL"] = false;
-				defaults["compress"] = false;
-				defaults["persist security info"] = false;
-				defaults["allow batch"] = true;
-				defaults["logging"] = false;
-				defaults["oldsyntax"] = false;
-				defaults["pipeName"] = "MySQL";
-				defaults["memname"] = "MYSQL";
-				defaults["allowzerodatetime"] = false;
-				defaults["usageAdvisor"] = false;
-				defaults["driver"] = DriverType.Native;
-				defaults["option_file"] = null;
-				defaults["convertzerodatetime"] = false;
-			}
-			return (Hashtable)defaults.Clone();
-		}
-
-		protected override bool ConnectionParameterParsed(Hashtable hash, string key, string value)
+		protected override bool ConnectionParameterParsed(string key, string value)
 		{
 			string lowerCaseKey = key.ToLower();
 			string lowerCaseValue = value.Trim().ToLower();
@@ -444,81 +275,88 @@ namespace MySql.Data.MySqlClient
 			switch (lowerCaseKey)
 			{
 				case "option file":
-					hash["option_file"] = value;
+                    optionFile = value;
 					return true;
 
 				case "driver":
 					string d = value.ToLower();
 					if (d == "native")
-						hash["driver"] = DriverType.Native;
+						driverType = DriverType.Native;
 					else if (d == "client")
-						hash["driver"] = DriverType.Client;
+						driverType = DriverType.Client;
 					else if (d == "embedded")
-						hash["driver"] = DriverType.Emebedded;
+						driverType = DriverType.Emebedded;
 					else
 						throw new ArgumentException("Unknown driver type: " + value);
 					return true;
 
 				case "usage advisor":
 				case "useusageadvisor":
-					hash["usageAdvisor"] = boolVal;
+                    useUsageAdvisor = boolVal;
 					return true;
 
 				case "character set":
 				case "charset":
-					hash["charset"] = value;
+					charSet = value;
 					return true;
 
 				case "use compression":
 				case "compress":
-					hash["compress"] = boolVal;
+					compress = boolVal;
 					return true;
 
 				case "protocol":
 					if (value == "socket" || value == "tcp")
-						hash["protocol"] = ConnectionProtocol.Sockets;
+						protocol = ConnectionProtocol.Sockets;
 					else if (value == "pipe")
-						hash["protocol"] = ConnectionProtocol.NamedPipe;
+						protocol = ConnectionProtocol.NamedPipe;
 					else if (value == "unix")
-						hash["protocol"] = ConnectionProtocol.UnixSocket;
+						protocol = ConnectionProtocol.UnixSocket;
 					else if (value == "memory")
-						hash["protocol"] = ConnectionProtocol.SharedMemory;
+						protocol = ConnectionProtocol.SharedMemory;
 					return true;
 
 				case "pipe name":
 				case "pipe":
-					hash["pipeName"] = value;
+					pipeName = value;
 					return true;
 
 				case "allow batch":
-					hash["allow batch"] = boolVal;
+					allowBatch = boolVal;
 					return true;
 
 				case "logging":
-					hash["logging"] = boolVal;
+					logging = boolVal;
 					return true;
 
 				case "shared memory name":
-					hash["memname"] = value;
+					sharedMemoryName = value;
 					return true;
 
 				case "old syntax":
 				case "oldsyntax":
-					hash["oldsyntax"] = boolVal;
+					supportOldSyntax = boolVal;
 					return true;
 
 				case "convert zero datetime":
 				case "convertzerodatetime":
-					hash["convertzerodatetime"] = boolVal;
+					convertZeroDateTime = boolVal;
 					return true;
 
 				case "allow zero datetime":
 				case "allowzerodatetime":
-					hash["allowzerodatetime"] = boolVal;
+					allowZeroDateTime = boolVal;
 					return true;
+
+                case "procedure cache size":
+                case "procedurecachesize":
+                case "procedure cache":
+                case "procedurecache":
+                    procedureCacheSize = Int32.Parse(value);
+                    return true;
 			}
 
-			if (! base.ConnectionParameterParsed(hash, key, value))
+			if (! base.ConnectionParameterParsed(key, value))
 				throw new ArgumentException("Keyword not supported: '" + key + "'");
 			return true;
 		}

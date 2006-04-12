@@ -1,4 +1,4 @@
-﻿- Version 1.1.0
+﻿- Version 5.0
 	Bug #6214  	CommandText: Question mark in comment line is being parsed as a parameter [fixed]
     Implemented intial usage advisor
     Merged cursor support in
@@ -7,6 +7,8 @@
     Reimplemented PacketReader/PacketWriter support into MySqlStream* classes
     Embedded server is now working (libmysqld.dll)
 	Added internal implemention of SHA1 so we don't have to distribute the OpenNetCF on mobile devices    	
+    Added usage advisor warnings for requesting column values by the wrong type
+    Reworked connection string classes to be simpler and faster
     	
 8-24-05 - Version 1.0.5
 

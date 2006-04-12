@@ -43,6 +43,8 @@ namespace MySql.Data.MySqlClient
 		private  MySqlConnectionString settings;
 		private  UsageAdvisor advisor;
 		private  bool hasBeenOpen;
+        private SchemaProvider schemaProvider;
+        private ProcedureCache procedureCache;
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/InfoMessage/*'/>
 		public event MySqlInfoMessageEventHandler	InfoMessage;
@@ -53,7 +55,6 @@ namespace MySql.Data.MySqlClient
 		{
 			//TODO: add event data to StateChange docs
 			settings = new MySqlConnectionString();
-			settings.LoadDefaultValues();
 			advisor = new UsageAdvisor( this );
 		}
 
@@ -64,6 +65,11 @@ namespace MySql.Data.MySqlClient
 		}
 
 		#region Interal Methods & Properties
+
+        internal ProcedureCache ProcedureCache
+        {
+            get { return procedureCache; }
+        }
 
 		internal MySqlConnectionString Settings 
 		{
@@ -202,9 +208,17 @@ namespace MySql.Data.MySqlClient
 				if (this.State != ConnectionState.Closed)
 					throw new MySqlException("Not allowed to change the 'ConnectionString' property while the connection (state=" + State + ").");
 
-				settings.SetConnectionString(value);
-				if ( driver != null)
-					driver.Settings = settings;
+                try
+                {
+                    MySqlConnectionString newSettings = new MySqlConnectionString(value);
+                    settings = newSettings;
+                    if (driver != null)
+                        driver.Settings = newSettings;
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
 			}
 		}
 
@@ -294,22 +308,25 @@ namespace MySql.Data.MySqlClient
 				throw new InvalidOperationException(
 					Resources.GetString("ConnectionAlreadyOpen"));
 
-			SetState( ConnectionState.Connecting );
+			SetState(ConnectionState.Connecting);
 
 			try 
 			{
 				if (settings.Pooling) 
 				{
-					driver = MySqlPoolManager.GetConnection( settings );
+                    MySqlPool pool = MySqlPoolManager.GetPool(settings);
+                    driver = pool.GetConnection();
+                    procedureCache = pool.ProcedureCache;
 				}
 				else
 				{
-					driver = Driver.Create( settings );
+					driver = Driver.Create(settings);
+                    procedureCache = new ProcedureCache(settings.ProcedureCacheSize);
 				}
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
-				SetState( ConnectionState.Closed );
+				SetState(ConnectionState.Closed);
 				throw;
 			}
 
@@ -317,10 +334,10 @@ namespace MySql.Data.MySqlClient
 			if ( driver.Settings.UseOldSyntax)
 				Logger.LogWarning("You are using old syntax that will be removed in future versions");
 
-			SetState( ConnectionState.Open );
-			driver.Configure( this );
+			SetState(ConnectionState.Open);
+			driver.Configure(this);
 			if (settings.Database != null && settings.Database != String.Empty)
-				ChangeDatabase( settings.Database );
+				ChangeDatabase(settings.Database);
 			hasBeenOpen = true;
 		}
 
@@ -399,14 +416,12 @@ namespace MySql.Data.MySqlClient
 
         public override DataTable GetSchema(string collectionName)
         {
-            SchemaProvider sp = new SchemaProvider(this);
-            return sp.GetSchema(collectionName, null);
+            return schemaProvider.GetSchema(collectionName, null);
         }
 
         public override DataTable GetSchema(string collectionName, string[] restrictionValues)
         {
-            SchemaProvider sp = new SchemaProvider(this);
-            return sp.GetSchema(collectionName, restrictionValues);
+            return schemaProvider.GetSchema(collectionName, restrictionValues);
         }
 
         #endregion
