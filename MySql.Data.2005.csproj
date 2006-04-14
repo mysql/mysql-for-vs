@@ -91,6 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CHANGES" />
+    <None Include="ClassDiagram1.cd" />
     <None Include="cnet.snk" />
     <None Include="README" />
     <Compile Include="MySqlClient\AssemblyInfo.cs">

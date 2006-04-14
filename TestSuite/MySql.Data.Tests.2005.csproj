@@ -47,6 +47,7 @@
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\net-2.0\Release\</OutputPath>
@@ -111,6 +112,7 @@
     <Compile Include="ConnectionTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MicroPerfTests.cs" />
     <Compile Include="CultureTests.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -147,6 +149,9 @@
     </Compile>
     <Compile Include="PreparedStatements.cs">
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="SchemaTests.cs">
+      <SubType>code</SubType>
     </Compile>
     <Compile Include="StoredProcedure.cs">
       <SubType>Code</SubType>

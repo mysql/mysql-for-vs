@@ -338,7 +338,14 @@ namespace MySql.Data.MySqlClient
 			driver.Configure(this);
 			if (settings.Database != null && settings.Database != String.Empty)
 				ChangeDatabase(settings.Database);
-			hasBeenOpen = true;
+
+            // setup our schema provider
+            if (driver.Version.isAtLeast(5, 0, 0))
+                schemaProvider = new ISSchemaProvider(this);
+            else
+                schemaProvider = new NonISSchemaProvider(this);
+
+            hasBeenOpen = true;
 		}
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/CreateCommand/*'/>
