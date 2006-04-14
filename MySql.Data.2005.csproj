@@ -135,7 +135,6 @@
     <Compile Include="MySqlClient\common\Platform.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MySqlClient\common\ProcedureCache.cs" />
     <Compile Include="MySqlClient\common\Resources.cs" />
     <Compile Include="MySqlClient\common\SHA1.cs" />
     <Compile Include="MySqlClient\common\SocketStream.cs" />
@@ -214,10 +213,12 @@
     <Compile Include="MySqlClient\parameter_collection.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MySqlClient\PerformanceMonitor.cs" />
     <Compile Include="MySqlClient\PreparedStatement.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MySqlClient\ISSchemaProvider.cs" />
+    <Compile Include="MySqlClient\ProcedureCache.cs" />
     <Compile Include="MySqlClient\SchemaProvider.cs" />
     <Compile Include="MySqlClient\SharedMemoryStream.cs">
       <SubType>Code</SubType>

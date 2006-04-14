@@ -21,6 +21,7 @@
 using System;
 using System.Data;
 using MySql.Data.Common;
+using System.Text;
 
 namespace MySql.Data.MySqlClient
 {
@@ -32,61 +33,17 @@ namespace MySql.Data.MySqlClient
 		private string			hash;
 		private string			outSelect;
 
-		public StoredProcedure(MySqlConnection connection, string text) : base(connection, text)
+		public StoredProcedure(MySqlConnection connection, string text) : 
+            base(connection, text)
 		{
 			uint code = (uint)DateTime.Now.GetHashCode();
 			hash = code.ToString();
             this.connection = connection;
 		}
 
-		private string GetParameterList(string spName, bool isProc) 
+		private string GetReturnParameter()
 		{
-			MySqlCommand cmd = new MySqlCommand();
-			cmd.Connection = connection;
-
-			int dotIndex = spName.IndexOf(".");
-			// query the mysql.proc table for the procedure parameter list
-			// if our spname as a dot in it, then we assume the first part is the 
-			// database name.  If there is no dot, then we use database() as 
-			// the current database.
-			if (dotIndex == -1)
-				cmd.CommandText = "SELECT param_list FROM mysql.proc WHERE db=database() ";
-			else
-			{
-				string db = spName.Substring(0, dotIndex);
-				cmd.Parameters.Add("db", db);
-				spName = spName.Substring(dotIndex+1, spName.Length - dotIndex-1);
-				cmd.CommandText = String.Format("SELECT param_list FROM mysql.proc " + 
-					"WHERE db=_latin1 {0}db ", connection.ParameterMarker);
-			}
-
-			cmd.CommandText += String.Format("AND name=_latin1 {0}name AND type='{1}'",
-				connection.ParameterMarker, isProc ? "PROCEDURE" : "FUNCTION");
-
-			//cmd.Parameters.Add("db", connection.Database);
-			cmd.Parameters.Add("name", spName);
-			MySqlDataReader reader = null;
-
-			try 
-			{
-				reader = cmd.ExecuteReader();
-				if (!reader.Read()) return null;
-				return reader.GetString(0);
-			}
-			catch (Exception ex) 
-			{
-				Logger.LogException( ex );
-				throw;
-			}
-			finally 
-			{
-				if (reader != null) reader.Close();
-			}
-		}
-
-		private string GetReturnParameter(MySqlCommand cmd)
-		{
-			foreach (MySqlParameter p in cmd.Parameters)
+			foreach (MySqlParameter p in parameters)
 				if (p.Direction == ParameterDirection.ReturnValue)
 					return hash + p.ParameterName;
 			return null;
@@ -99,77 +56,65 @@ namespace MySql.Data.MySqlClient
 
         public override bool ExecuteNext()
         {
-            return false;
+            bool returnVal = base.ExecuteNext();
+            if (!returnVal)
+                UpdateParameters();
+            return returnVal;
         }
 
-		/// <summary>
-		/// Creates the proper command text for executing the given stored procedure
-		/// </summary>
-		/// <param name="cmd"></param>
-		/// <returns></returns>
-		public string Prepare(MySqlCommand cmd)
-		{
-			// if we have a return value paramter, then we treat it as a 
-			// stored function
-			string retParm = GetReturnParameter(cmd);
-			bool isProc = retParm == null;
+        protected override void BindParameters()
+        {
+            // first retrieve the procedure definition from our
+            // procedure cache
+            string spName = commandText;
+            if (spName.IndexOf(".") == -1)
+                spName = connection.Database + "." + spName;
+            DataSet ds = connection.ProcedureCache.GetProcedure(connection, spName);
 
-			string setStr = String.Empty;
-			string sqlStr = String.Empty;
-			
-			outSelect = String.Empty;
-			try 
+            DataTable procTable = ds.Tables["procedures"];
+            DataTable paramTable = ds.Tables["procedure parameters"];
+
+            string sqlStr = String.Empty;
+            string setStr = String.Empty;
+
+            string retParm = GetReturnParameter();
+            foreach (DataRow param in paramTable.Rows)
+            {
+                if (param["ordinal_position"].Equals(0)) continue;
+                string mode = (string)param["parameter_mode"];
+                string name = (string)param["parameter_name"];
+                string pName = connection.ParameterMarker + name;
+                string vName = "@" + hash + name;
+
+                sqlStr += pName + ", ";
+                if (mode == "OUT")
+				    outSelect += vName + ", ";
+                else
+                {
+                    setStr += "SET " + vName + "=" + pName + ";";
+                    outSelect += vName + ", ";
+                }
+
+            }
+
+			sqlStr = sqlStr.TrimEnd(' ', ',');
+			outSelect = outSelect.TrimEnd(' ', ',');
+			if (procTable.Rows[0]["ROUTINE_TYPE"].Equals("PROCEDURE"))
+				sqlStr = "call " + commandText + "(" + sqlStr + ")";
+			else
 			{
-				string param_list = GetParameterList(cmd.CommandText, isProc);
-
-				if (param_list != null && param_list.Length > 0)
-				{
-					string[] paramDefs = Utility.ContextSplit( param_list, ",", "()" );
-					foreach (string paramDef in paramDefs) 
-					{
-						string[] parts = Utility.ContextSplit(paramDef.ToLower(), " \t\r\n", "");
-						if (parts.Length == 0) continue;
-						string direction = parts.Length == 3 ? parts[0] : "in";
-						string vName = parts.Length == 3 ? parts[1] : parts[0];
-
-						string pName = connection.ParameterMarker + vName;
-						vName = "@" + hash + vName;
-
-						if (direction.Equals("in"))
-							sqlStr += pName + ", ";
-						else if (direction == "out") 
-						{
-							sqlStr += vName + ", ";
-							outSelect += vName + ", ";
-						}
-						else if (direction == "inout")
-						{
-							setStr += "set " + vName + "=" + pName + ";";
-							sqlStr += vName + ", ";
-							outSelect += vName + ", ";
-						}
-					}
-				}
-				sqlStr = sqlStr.TrimEnd(' ', ',');
-				outSelect = outSelect.TrimEnd(' ', ',');
-				if (isProc)
-					sqlStr = "call " + cmd.CommandText + "(" + sqlStr + ")";
-				else
-				{
-					sqlStr = "set @" + retParm + "=" + cmd.CommandText + "(" + sqlStr + ")";
-					outSelect = "@" + retParm;
-				}
-				if (setStr.Length > 0)
-					sqlStr = setStr + sqlStr;
-				return sqlStr;
+				sqlStr = "set @" + retParm + "=" + commandText + "(" + sqlStr + ")";
+				outSelect = "@" + retParm;
 			}
-			catch (Exception ex)
-			{
-				throw new MySqlException("Exception trying to retrieve parameter info for " + cmd.CommandText + ": " + ex.Message, ex);
-			}
+			if (setStr.Length > 0)
+				sqlStr = setStr + sqlStr;
+            commandText = sqlStr;
+
+            // now call our base version
+            base.BindParameters();
 		}
 
-		public void UpdateParameters(MySqlParameterCollection parameters)
+		public void UpdateParameters()
 		{
 			if (outSelect.Length == 0) return;
 

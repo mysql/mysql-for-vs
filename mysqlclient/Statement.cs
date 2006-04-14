@@ -32,6 +32,7 @@ namespace MySql.Data.MySqlClient
         protected string commandText;
         private ArrayList buffers;
         protected int statementId;
+        protected MySqlParameterCollection parameters;
 
         private Statement(MySqlConnection connection)
         {
@@ -53,7 +54,9 @@ namespace MySql.Data.MySqlClient
 
         public virtual void Execute(MySqlParameterCollection parameters)
         {
-            BindParameters(parameters);
+            // we keep a reference to this until we are done
+            this.parameters = parameters;
+            BindParameters();
             ExecuteNext();
         }
 
@@ -68,12 +71,13 @@ namespace MySql.Data.MySqlClient
             return true;
         }
 
-        protected void BindParameters(MySqlParameterCollection parameters)
+        protected virtual void BindParameters()
         {
             // tokenize the sql
             ArrayList tokenArray = TokenizeSql(commandText);
 
-            MySqlStreamWriter writer = new MySqlStreamWriter(new MemoryStream(), driver.Encoding);
+            MySqlStreamWriter writer = new MySqlStreamWriter(new MemoryStream(), 
+                driver.Encoding);
             writer.Version = driver.Version;
 
             // make sure our token array ends with a ;

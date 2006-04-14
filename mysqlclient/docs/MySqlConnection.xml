@@ -833,7 +833,25 @@ Recognized values are <B>true</B>, <B>false</B>, <B>yes</B>, and <B>no</B>.</td>
 			use the new '?' parameter marker.</note>
 			</td>
 		</tr>
-		</table>
+    <tr>
+      <td>
+        Use Performance Monitor<para>  -or-  </para>UsePerformanceMonitor
+      </td>
+      <td>false</td>
+      <td>
+        Posts performance data that can be tracked using perfmon
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Procedure Cache Size
+      </td>
+      <td>25</td>
+      <td>
+        How many stored procedure definitions can be held in the cache
+      </td>
+    </tr>
+  </table>
 		</div>
 	<para>
 	The following table lists the valid names for connection pooling values within 

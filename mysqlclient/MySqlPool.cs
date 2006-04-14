@@ -34,6 +34,7 @@ namespace MySql.Data.MySqlClient
 		private MySqlConnectionString	settings;
 		private int						minSize;
 		private int						maxSize;
+        private ProcedureCache procedureCache;
 
 		public MySqlPool(MySqlConnectionString settings)
 		{
@@ -46,6 +47,8 @@ namespace MySql.Data.MySqlClient
 			// prepopulate the idle pool to minSize
 			for (int i=0; i < minSize; i++) 
 				CreateNewPooledConnection();
+
+            procedureCache = new ProcedureCache(settings.ProcedureCacheSize);
 		}
 
 		public MySqlConnectionString	Settings 
@@ -53,6 +56,11 @@ namespace MySql.Data.MySqlClient
 			get { return settings; }
 			set { settings = value; }
 		}
+
+        public ProcedureCache ProcedureCache
+        {
+            get { return procedureCache; }
+        }
 
 		private int CheckConnections() 
 		{

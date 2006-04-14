@@ -64,6 +64,7 @@ namespace MySql.Data.MySqlClient
         private DriverType driverType;
         private bool allowZeroDateTime;
         private bool convertZeroDateTime;
+        private bool usePerformanceMonitor;
 
 		public MySqlConnectionString() : base()
 		{
@@ -80,10 +81,12 @@ namespace MySql.Data.MySqlClient
             driverType = DriverType.Native;
             allowZeroDateTime = true;
             convertZeroDateTime = true;
+            usePerformanceMonitor = false;
 		}
 
-		public MySqlConnectionString(string connectString) : base(connectString)
+		public MySqlConnectionString(string connectString) : this()
 		{
+            this.connectString = connectString;
             Parse();
 		}
 
@@ -243,6 +246,16 @@ namespace MySql.Data.MySqlClient
             get { return procedureCacheSize; }
         }
 
+#if DESIGN
+		[Category("Other")]
+		[Description("Should performance metrics be generated.")]
+		[DefaultValue(false)]
+#endif
+        public bool UsePerformanceMonitor
+        {
+            get { return usePerformanceMonitor; }
+        }
+
 		#endregion
 
 		/// <summary>
@@ -353,6 +366,11 @@ namespace MySql.Data.MySqlClient
                 case "procedure cache":
                 case "procedurecache":
                     procedureCacheSize = Int32.Parse(value);
+                    return true;
+
+                case "useperformancemonitor":
+                case "use performance monitor":
+                    usePerformanceMonitor = boolVal;
                     return true;
 			}
 

@@ -62,7 +62,6 @@ namespace MySql.Data.MySqlClient.Tests
 				user = "root";
 				password = "";
 				otherkeys = ConfigurationSettings.AppSettings["otherkeys"];
-                otherkeys += ";driver=client";
 				string connString = GetConnectionString(true);
 				conn = new MySqlConnection( connString );
 				conn.Open();

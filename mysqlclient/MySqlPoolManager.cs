@@ -43,7 +43,7 @@ namespace MySql.Data.MySqlClient
 			pools = new Hashtable();
 		}
 
-		public static Driver GetConnection(MySqlConnectionString settings) 
+		public static MySqlPool GetPool(MySqlConnectionString settings) 
 		{
 			// make sure the manager is initialized
 			if (MySqlPoolManager.pools == null)
@@ -51,13 +51,13 @@ namespace MySql.Data.MySqlClient
 
 			string text = settings.GetConnectionString(true);
 
-			lock( pools.SyncRoot ) 
+			lock(pools.SyncRoot) 
 			{
 				MySqlPool pool;
-				if (!pools.Contains( text )) 
+				if (!pools.Contains(text)) 
 				{
-					pool = new MySqlPool( settings );
-					pools.Add( text, pool );
+					pool = new MySqlPool(settings);
+					pools.Add(text, pool);
 				}
 				else 
 				{
@@ -65,7 +65,7 @@ namespace MySql.Data.MySqlClient
 					pool.Settings = settings;
 				}
 
-				return pool.GetConnection();
+                return pool;
 			}
 		}
 
@@ -74,10 +74,10 @@ namespace MySql.Data.MySqlClient
 			lock (pools.SyncRoot) 
 			{
 				string key = driver.Settings.GetConnectionString(true);
-				MySqlPool pool = (MySqlPool)pools[ key ];
+				MySqlPool pool = (MySqlPool)pools[key];
 				if (pool == null)
 					throw new MySqlException("Pooling exception: Unable to find original pool for connection");
-				pool.ReleaseConnection( driver );
+				pool.ReleaseConnection(driver);
 			}
 		}
 	}

@@ -144,6 +144,7 @@
     <Compile Include="ParameterTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="PerfMonTests.cs" />
     <Compile Include="PoolingTests.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -113,7 +113,7 @@ namespace MySql.Data.Common
 				false, BindingFlags.CreateInstance, null, 
 				new object[1] { host }, null, null);
 			return ep;
-		}
+        }
 
 		private Stream CreateSocketStream( IPAddress ip, uint port, bool unix ) 
 		{
@@ -158,5 +158,6 @@ namespace MySql.Data.Common
 			}
 			return ss;
 		}
+ 
 	}
 }

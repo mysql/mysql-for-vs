@@ -33,7 +33,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("MySQL AB")]
 [assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("Copyright 2004-2005, MySQL AB")]
+[assembly: AssemblyCopyright("Copyright 2004-2006, MySQL AB")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
@@ -50,7 +50,7 @@ using System.Runtime.CompilerServices;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("1.0.5.*")]
+[assembly: AssemblyVersion("5.0.0.*")]
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 

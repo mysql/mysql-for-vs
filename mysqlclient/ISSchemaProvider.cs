@@ -113,7 +113,9 @@ namespace MySql.Data.MySqlClient
                 query.Append(" WHERE ");
                 query.Append(where);
             }
-            return GetTable(query.ToString());
+            DataTable table = GetTable(query.ToString());
+            table.TableName = "Procedures";
+            return table;
         }
 
         /// <summary>
@@ -229,7 +231,7 @@ namespace MySql.Data.MySqlClient
 
         private DataTable CreateParametersTable()
         {
-            DataTable dt = new DataTable("ProcedureParameters");
+            DataTable dt = new DataTable("Procedure Parameters");
             dt.Columns.Add("specific_schema", typeof(string));
             dt.Columns.Add("specific_name", typeof(string));
             dt.Columns.Add("parameter_name", typeof(string));

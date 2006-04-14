@@ -35,7 +35,7 @@ namespace MySql.Data.MySqlClient.Tests
 		[TestFixtureSetUp]
 		public void FixtureSetup()
 		{
-			csAdditions = ";pooling=false";
+			csAdditions = ";logging=true;pooling=false";
 			Open();
 			execSQL("DROP TABLE IF EXISTS Test; CREATE TABLE Test (id INT, name VARCHAR(100))");
 		}
@@ -66,7 +66,7 @@ namespace MySql.Data.MySqlClient.Tests
 				p.Value = 21;
 
 				object id = cmd.ExecuteScalar();
-				Assert.AreEqual( 21, id );
+				Assert.AreEqual(21, id);
 			}
 		}
 

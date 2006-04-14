@@ -45,6 +45,7 @@ namespace MySql.Data.MySqlClient
 		private  bool hasBeenOpen;
         private SchemaProvider schemaProvider;
         private ProcedureCache procedureCache;
+        private PerformanceMonitor perfMonitor;
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/InfoMessage/*'/>
 		public event MySqlInfoMessageEventHandler	InfoMessage;
@@ -94,6 +95,11 @@ namespace MySql.Data.MySqlClient
 				InfoMessage( this, args );
 			}
 		}
+
+        internal PerformanceMonitor PerfMonitor
+        {
+            get { return perfMonitor; }
+        }
 
 		#endregion
 
@@ -344,6 +350,7 @@ namespace MySql.Data.MySqlClient
                 schemaProvider = new ISSchemaProvider(this);
             else
                 schemaProvider = new NonISSchemaProvider(this);
+            perfMonitor = new PerformanceMonitor(this);
 
             hasBeenOpen = true;
 		}
