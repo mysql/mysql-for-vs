@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio;
 using System.Runtime.InteropServices;
 
-namespace Vsip.MyVSTools
+namespace MySql.VSTools
 {
 	/// <summary>
 	/// Summary description for StoredProcedureEditor.

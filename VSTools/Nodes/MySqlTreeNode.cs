@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using System.Data.Common;
 using System.Data;
 
-namespace Vsip.MyVSTools
+namespace MySql.VSTools
 {
     internal class MySqlTreeNode : TreeNode
     {

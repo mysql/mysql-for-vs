@@ -22,7 +22,7 @@ using System;
 using System.ComponentModel;
 using System.Collections;
 
-namespace Vsip.MyVSTools
+namespace MySql.VSTools
 {
 	/// <summary>
 	/// Summary description for TableDesignerColumnCollection.

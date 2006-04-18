@@ -8,7 +8,7 @@ using System.Globalization;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.Shell;
 
-namespace Vsip.MyVSTools
+namespace MySql.VSTools
 {
     public class BaseEditor : UserControl, IVsPersistDocData, IPersistFileFormat,
                               IVsDocDataFileChangeControl, IOleCommandTarget,

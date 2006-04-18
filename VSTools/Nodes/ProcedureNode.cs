@@ -5,7 +5,7 @@ using System.Data.Common;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 
-namespace Vsip.MyVSTools
+namespace MySql.VSTools
 {
     internal class ProcedureNode : ExplorerNode
     {

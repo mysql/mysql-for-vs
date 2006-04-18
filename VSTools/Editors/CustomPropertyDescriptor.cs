@@ -21,7 +21,7 @@
 using System;
 using System.ComponentModel;
 
-namespace Vsip.MyVSTools
+namespace MySql.VSTools
 {
 	public class CustomPropertyDescriptor : PropertyDescriptor
 	{

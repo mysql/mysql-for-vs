@@ -22,7 +22,7 @@ using System;
 using System.Windows.Forms;
 using System.Drawing;
 
-namespace Vsip.MyVSTools
+namespace MySql.VSTools
 {
 	/// <summary>
 	/// Summary description for DataGridComboBoxColumn.

@@ -3,7 +3,7 @@
 using System;
 using Microsoft.VisualStudio.Shell;
 
-namespace Vsip.MyVSTools
+namespace MySql.VSTools
 {
     static class PackageSingleton
     {

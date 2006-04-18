@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using System.Data;
 using System.Data.Common;
 
-namespace Vsip.MyVSTools
+namespace MySql.VSTools
 {
     internal class FunctionsNode : ExplorerNode
     {

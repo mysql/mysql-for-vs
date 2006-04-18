@@ -22,7 +22,7 @@ using System;
 using System.ComponentModel;
 using System.Collections;
 
-namespace Vsip.MyVSTools
+namespace MySql.VSTools
 {
 	public enum ColumnType 
 	{

@@ -7,7 +7,7 @@ using System.Data.Common;
 using MySql.Data.MySqlClient;
 using Microsoft.VisualStudio;
 
-namespace Vsip.MyVSTools
+namespace MySql.VSTools
 {
     internal class ServerNode : HierNode
     {

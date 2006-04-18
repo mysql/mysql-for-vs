@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.Shell;
 
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
-namespace Vsip.MyVSTools
+namespace MySql.VSTools
 {
     /// <summary>
     /// Factory for creating our editors

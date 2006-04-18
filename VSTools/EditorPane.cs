@@ -17,7 +17,7 @@ using IServiceProvider = System.IServiceProvider;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 using VSStd97CmdID = Microsoft.VisualStudio.VSConstants.VSStd97CmdID;
 
-namespace Vsip.MyVSTools
+namespace MySql.VSTools
 {
     /// <summary>
     /// This control host the editor (an extended RichTextBox) and is responsible for
@@ -192,7 +192,7 @@ namespace Vsip.MyVSTools
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.textBox1 = new Vsip.MyVSTools.MyEditor();
+            this.textBox1 = new MyEditor();
             this.reloadTimer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 

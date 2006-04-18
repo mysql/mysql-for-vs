@@ -14,7 +14,7 @@ using System.Windows.Forms;
 
 [assembly:ComVisible(true)]
 
-namespace Vsip.MyVSTools
+namespace MySql.VSTools
 {
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.

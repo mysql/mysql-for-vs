@@ -11,7 +11,7 @@ using System.Reflection;
 using System.Globalization;
 using System.Security.Policy;
 
-namespace Vsip.MyVSTools
+namespace MySql.VSTools
 {
     internal abstract class ExplorerNode
     {

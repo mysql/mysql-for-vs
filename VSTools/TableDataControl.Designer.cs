@@ -1,4 +1,4 @@
-namespace Vsip.MyVSTools
+namespace MySql.VSTools
 {
     partial class TableDataControl
     {

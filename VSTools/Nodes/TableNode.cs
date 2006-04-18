@@ -4,7 +4,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Data;
 
-namespace Vsip.MyVSTools
+namespace MySql.VSTools
 {
     internal class TableNode : ExplorerNode
     {

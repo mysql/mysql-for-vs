@@ -2,7 +2,7 @@
 // MUST match PkgCmdID.h (for the satellite DLL)
 using System;
 
-namespace Vsip.MyVSTools
+namespace MySql.VSTools
 {
     static class PkgCmdIDList
     {

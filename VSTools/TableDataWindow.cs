@@ -10,7 +10,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell;
 using System.ComponentModel.Design;
 
-namespace Vsip.MyVSTools
+namespace MySql.VSTools
 {
     /// <summary>
     /// This class implements the tool window exposed by this package and hosts a user control.

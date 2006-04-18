@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell.Interop;
 
-namespace Vsip.MyVSTools
+namespace MySql.VSTools
 {
     /// <summary>
     /// Extension of a RichTextBox

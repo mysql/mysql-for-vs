@@ -7,7 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 
-namespace Vsip.MyVSTools
+namespace MySql.VSTools
 {
     public partial class ConnectionDlg : System.Windows.Forms.Form
     {

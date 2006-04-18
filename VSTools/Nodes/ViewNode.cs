@@ -6,7 +6,7 @@ using System.Data;
 using System.Data.Common;
 using System.Data;
 
-namespace Vsip.MyVSTools
+namespace MySql.VSTools
 {
     internal class ViewNode : ExplorerNode
     {

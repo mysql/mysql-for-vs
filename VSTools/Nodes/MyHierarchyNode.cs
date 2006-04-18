@@ -10,7 +10,7 @@ using Microsoft.VisualStudio.Shell;
 using System.Runtime.InteropServices;
 using System.ComponentModel.Design;
 
-namespace Vsip.MyVSTools
+namespace MySql.VSTools
 {
     internal abstract class HierNode : ExplorerNode, IVsUIHierarchy, IVsPersistHierarchyItem2
     {

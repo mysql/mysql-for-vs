@@ -23,7 +23,7 @@ using System.Windows.Forms;
 using System.Text.RegularExpressions;
 
 
-namespace Vsip.MyVSTools
+namespace MySql.VSTools
 {
 	/// <summary>
 	/// Summary description for TableDesigner.
