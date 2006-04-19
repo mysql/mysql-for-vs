@@ -13,9 +13,10 @@ namespace MySql.Data.MySqlClient
         }
 
 
-        private DataTable Query(string table_name, string[] keys, string[] values)
+        private DataTable Query(string table_name, string initial_where, 
+            string[] keys, string[] values)
         {
-            StringBuilder where = new StringBuilder();
+            StringBuilder where = new StringBuilder(initial_where);
             StringBuilder query = new StringBuilder("SELECT * FROM INFORMATION_SCHEMA.");
             query.Append(table_name);
 
@@ -76,7 +77,7 @@ namespace MySql.Data.MySqlClient
             keys[1] = "TABLE_sCHEMA";
             keys[2] = "TABLE_NAME";
             keys[3] = "TABLE_TYPE";
-            return Query("TABLES", keys, restrictions);
+            return Query("TABLES", "TABLE_TYPE != 'VIEW'", keys, restrictions);
         }
 
         public override DataTable GetColumns(string[] restrictions)
@@ -86,12 +87,16 @@ namespace MySql.Data.MySqlClient
             keys[1] = "TABLE_sCHEMA";
             keys[2] = "TABLE_NAME";
             keys[3] = "COLUMN_NAME";
-            return Query("COLUMNS", keys, restrictions);
+            return Query("COLUMNS", null, keys, restrictions);
         }
 
         public override DataTable GetViews(string[] restrictions)
         {
-            return Query("VIEWS", null, restrictions);
+            string[] keys = new string[3];
+            keys[0] = "TABLE_CATALOG";
+            keys[1] = "TABLE_sCHEMA";
+            keys[2] = "TABLE_NAME";
+            return Query("VIEWS", null, keys, restrictions);
         }
 
         public override DataTable GetTriggers(string[] restrictions)
@@ -101,7 +106,7 @@ namespace MySql.Data.MySqlClient
             keys[1] = "TRIGGER_sCHEMA";
             keys[2] = "TRIGGER_NAME";
             keys[3] = "EVENT_OBJECT_TABLE";
-            return Query("TRIGGERS", keys, restrictions);
+            return Query("TRIGGERS", null, keys, restrictions);
         }
 
         /// <summary>
@@ -113,31 +118,12 @@ namespace MySql.Data.MySqlClient
         /// <returns></returns>
         public override DataTable GetProcedures(string[] restrictions)
         {
-            StringBuilder where = new StringBuilder("");
-            StringBuilder query = new StringBuilder("SELECT * FROM INFORMATION_SCHEMA.ROUTINES");
-
-            if (restrictions[1] != null && restrictions[1].Length != 0)
-                where.AppendFormat("ROUTINE_SCHEMA='{0}'", restrictions[1]);
-            if (restrictions[2] != null && restrictions[2].Length != 0)
-            {
-                if (where.Length > 0)
-                    where.Append(" AND ");
-                where.AppendFormat("ROUTINE_NAME='{0}'", restrictions[2]);
-            }
-            if (restrictions[3] != null && restrictions[3].Length != 0)
-            {
-                if (where.Length > 0)
-                    where.AppendLine(" AND ");
-                where.AppendFormat("ROUTINE_TYPE='{0}'", restrictions[3]);
-            }
-            if (where.Length > 0)
-            {
-                query.Append(" WHERE ");
-                query.Append(where);
-            }
-            DataTable table = GetTable(query.ToString());
-            table.TableName = "Procedures";
-            return table;
+            string[] keys = new string[4];
+            keys[0] = "ROUTINE_CATALOG";
+            keys[1] = "ROUTINE_sCHEMA";
+            keys[2] = "ROUTINE_NAME";
+            keys[3] = "ROUTINE_TYPE";
+            return Query("ROUTINES", null, keys, restrictions);
         }
 
         /// <summary>

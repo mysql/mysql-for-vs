@@ -85,7 +85,7 @@ namespace MySql.VSTools
         {
             IEnumerator sinkEnum = (sinks as IEnumerable).GetEnumerator();
             while (sinkEnum.MoveNext())
-                (sinkEnum.Current as IVsHierarchyEvents).OnInvalidateItems(itemId);
+                (sinkEnum.Current as IVsHierarchyEvents).OnInvalidateItems(VSConstants.VSITEMID_ROOT);
         }
 
         public void ItemDeleted(uint itemId)

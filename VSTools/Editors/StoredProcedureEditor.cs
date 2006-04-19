@@ -14,9 +14,9 @@ namespace MySql.VSTools
 	/// <summary>
 	/// Summary description for StoredProcedureEditor.
 	/// </summary>
-	public class StoredProcedureEditor : BaseEditor 
+	public class SqlTextEditor : BaseEditor 
 	{
-		private System.Windows.Forms.RichTextBox procText;
+		private System.Windows.Forms.RichTextBox sqlText;
 		/// <summary> 
 		/// Required designer variable.
 		/// </summary>
@@ -28,14 +28,14 @@ namespace MySql.VSTools
         private bool changed;
         private EnvDTE.DTE dte;
 
-        public StoredProcedureEditor(string name, string database, string body,
+        public SqlTextEditor(string name, string database, string body,
             DbConnection conn)
         {
             // This call is required by the Windows.Forms Form Designer.
             InitializeComponent();
             spName = name;
             dbName = database;
-            procText.Text = body;
+            sqlText.Text = body;
 
             // set text editor font
             if (dte == null)
@@ -43,7 +43,7 @@ namespace MySql.VSTools
             EnvDTE.Properties props = dte.get_Properties("FontsAndColors", "TextEditor");
             EnvDTE.Property family = props.Item("FontFamily");
             EnvDTE.Property size = props.Item("FontSize");
-            procText.Font = new Font(family.Value.ToString(), 
+            sqlText.Font = new Font(family.Value.ToString(), 
                 float.Parse(size.Value.ToString()));
         }
 		
@@ -60,22 +60,22 @@ namespace MySql.VSTools
 
         protected override bool CanCopyAndCut
         {
-            get { return procText.SelectedText.Length > 0; }
+            get { return sqlText.SelectedText.Length > 0; }
         }
 
         protected override bool CanPaste
         {
-            get { return procText.CanPaste(DataFormats.GetFormat(DataFormats.Text)); }
+            get { return sqlText.CanPaste(DataFormats.GetFormat(DataFormats.Text)); }
         }
 
         protected override bool CanRedo
         {
-            get { return procText.CanRedo; }
+            get { return sqlText.CanRedo; }
         }
 
         protected override bool CanUndo
         {
-            get { return procText.CanUndo; }
+            get { return sqlText.CanUndo; }
         }
 
 		/*public void Edit(string spName, string db, ServerConfig sc) 
@@ -95,7 +95,7 @@ namespace MySql.VSTools
 					reader.Read();
 					string body = reader.GetString(2);
 					body = body.Replace("\n", "\r\n");
-					procText.Text = body;
+					sqlText.Text = body;
 				}
 			}
 			catch (Exception ex) 
@@ -131,23 +131,23 @@ namespace MySql.VSTools
 		/// </summary>
 		private void InitializeComponent()
 		{
-            this.procText = new System.Windows.Forms.RichTextBox();
+            this.sqlText = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
-            // procText
+            // sqlText
             // 
-            this.procText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.procText.Location = new System.Drawing.Point(2, 2);
-            this.procText.Margin = new System.Windows.Forms.Padding(0);
-            this.procText.Name = "procText";
-            this.procText.Size = new System.Drawing.Size(436, 308);
-            this.procText.TabIndex = 0;
-            this.procText.Text = "";
-            this.procText.TextChanged += new System.EventHandler(this.procText_TextChanged);
+            this.sqlText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.sqlText.Location = new System.Drawing.Point(2, 2);
+            this.sqlText.Margin = new System.Windows.Forms.Padding(0);
+            this.sqlText.Name = "sqlText";
+            this.sqlText.Size = new System.Drawing.Size(436, 308);
+            this.sqlText.TabIndex = 0;
+            this.sqlText.Text = "";
+            this.sqlText.TextChanged += new System.EventHandler(this.sqlText_TextChanged);
             // 
             // StoredProcedureEditor
             // 
-            this.Controls.Add(this.procText);
+            this.Controls.Add(this.sqlText);
             this.Name = "StoredProcedureEditor";
             this.Padding = new System.Windows.Forms.Padding(2);
             this.Size = new System.Drawing.Size(440, 312);
@@ -157,7 +157,7 @@ namespace MySql.VSTools
 
 		#endregion
 
-        private void procText_TextChanged(object sender, EventArgs e)
+        private void sqlText_TextChanged(object sender, EventArgs e)
         {
             if (!IsDirty)
                 IsDirty = true;
@@ -168,7 +168,7 @@ namespace MySql.VSTools
             base.PostCreateInit();
 
             if (!CanEdit())
-                procText.ReadOnly = true;
+                sqlText.ReadOnly = true;
         }
         */
 /*		private void saveBtn_Click(object sender, System.EventArgs e)
@@ -179,7 +179,7 @@ namespace MySql.VSTools
 			{
 				conn.Open();
 				conn.ChangeDatabase(dbName);
-				string sql = "DROP PROCEDURE IF EXISTS " + spName + "; " + procText.Text;
+				string sql = "DROP PROCEDURE IF EXISTS " + spName + "; " + sqlText.Text;
 				MySqlCommand cmd = new MySqlCommand(sql, conn);
 				cmd.ExecuteNonQuery();
 			}

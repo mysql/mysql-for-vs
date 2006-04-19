@@ -77,8 +77,10 @@ namespace MySql.VSTools
 
             try
             {
-                DataTable table = c.GetSchema("Procedures",
-                    new string[] { null, Parent.Caption, null, null });
+                string[] restrictions = new string[4];
+                restrictions[1] = GetDatabaseNode().Caption;
+                restrictions[3] = "PROCEDURE";
+                DataTable table = c.GetSchema("Procedures", restrictions);
 
                 foreach (DataRow row in table.Rows)
                     AddChild(new ProcedureNode(this, row["ROUTINE_NAME"].ToString(), row));

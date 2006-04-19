@@ -9,11 +9,13 @@ namespace MySql.VSTools
     internal class TriggerNode : ExplorerNode
     {
         private DataRow triggerDef;
+        private string body;
 
         public TriggerNode(ExplorerNode parent, DataRow row)
             : base(parent, row["TRIGGER_NAME"].ToString())
         {
             triggerDef = row;
+            body = triggerDef["ACTION_STATEMENT"].ToString();
         }
 
         public override uint MenuId
@@ -38,6 +40,9 @@ namespace MySql.VSTools
                 case PkgCmdIDList.cmdidDelete:
                     Delete();
                     break;
+                case PkgCmdIDList.cmdidOpen:
+                    Open();
+                    break;
                 default:
                     base.DoCommand(commandId);
                     break;
@@ -46,6 +51,13 @@ namespace MySql.VSTools
 
         private void Delete()
         {
+        }
+
+        internal void Open()
+        {
+            SqlTextEditor editor = new SqlTextEditor(
+                Caption, GetDatabaseNode().Caption, body, GetOpenConnection());
+            OpenEditor(editor);
         }
 
     }

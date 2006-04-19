@@ -44,6 +44,7 @@ namespace MySql.VSTools
 
                 foreach (DataRow row in table.Rows)
                     AddChild(new ViewNode(this, row["TABLE_NAME"].ToString(), row));
+                populated = true;
             }
             catch (Exception ex)
             {

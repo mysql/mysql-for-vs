@@ -91,7 +91,7 @@ namespace MySql.VSTools
 
         internal void Open()
         {
-            StoredProcedureEditor editor = new StoredProcedureEditor(
+            SqlTextEditor editor = new SqlTextEditor(
                 Caption, GetDatabaseNode().Caption, body, GetOpenConnection());
             OpenEditor(editor);
         }

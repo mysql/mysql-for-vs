@@ -38,7 +38,7 @@ namespace MySql.VSTools
 
         private void Open()
         {
-            StoredProcedureEditor editor = new StoredProcedureEditor(
+            SqlTextEditor editor = new SqlTextEditor(
                 Caption, funcDef["ROUTINE_SCHEMA"].ToString(),
                 funcDef["ROUTINE_DEFINITION"].ToString(),
                 GetOpenConnection());
