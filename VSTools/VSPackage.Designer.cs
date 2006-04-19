@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Vsip.MyVSTools {
+namespace MySql.VSTools {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Vsip.MyVSTools {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Vsip.MyVSTools.VSPackage", typeof(VSPackage).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MySql.VSTools.VSPackage", typeof(VSPackage).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -105,6 +105,13 @@ namespace Vsip.MyVSTools {
         internal static string CanNotCreateWindow {
             get {
                 return ResourceManager.GetString("CanNotCreateWindow", resourceCulture);
+            }
+        }
+        
+        internal static System.Drawing.Bitmap column {
+            get {
+                object obj = ResourceManager.GetObject("column", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -210,6 +217,13 @@ namespace Vsip.MyVSTools {
         internal static string ToolWindowTitle {
             get {
                 return ResourceManager.GetString("ToolWindowTitle", resourceCulture);
+            }
+        }
+        
+        internal static System.Drawing.Bitmap trigger {
+            get {
+                object obj = ResourceManager.GetObject("trigger", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

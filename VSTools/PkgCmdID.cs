@@ -21,6 +21,8 @@ namespace MySql.VSTools
         public const uint FunctionsCtxtMenu = 0x1008;
         public const uint ViewCtxtMenu = 0x1009;
         public const uint FunctionCtxtMenu = 0x1010;
+        public const uint TriggerCtxtMenu = 0x1011;
+        public const uint ColumnCtxtMenu = 0x1012;
 
         // commands
         public const int cmdidRefresh = 0x102;

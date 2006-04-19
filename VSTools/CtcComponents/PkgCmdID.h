@@ -19,6 +19,8 @@
 #define FunctionsCtxtMenu           0x1008
 #define ViewCtxtMenu                0x1009
 #define FunctionCtxtMenu            0x1010
+#define TriggerCtxtMenu             0x1011
+#define ColumnCtxtMenu              0x1012
 
 ///////////////////////////////////////////////////////////////////////////////
 // Menu Group IDs
@@ -36,6 +38,7 @@
 #define FunctionsGroup              0x1059
 #define ViewGroup                   0x1060
 #define FunctionGroup               0x1061
+#define TriggerGroup                0x1062
 
 ///////////////////////////////////////////////////////////////////////////////
 // Command IDs

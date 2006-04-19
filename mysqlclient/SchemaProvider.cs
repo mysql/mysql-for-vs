@@ -24,21 +24,27 @@ namespace MySql.Data.MySqlClient
                     return GetDatabases();
                 case "tables":
                     return GetTables(restrictions);
+                case "columns":
+                    return GetColumns(restrictions);
                 case "views":
                     return GetViews(restrictions);
                 case "procedures":
                     return GetProcedures(restrictions);
                 case "procedure parameters":
                     return GetProcedureParameters(restrictions);
+                case "triggers":
+                    return GetTriggers(restrictions);
             }
             return HelpCollection();
         }
 
         public abstract DataTable GetDatabases();
         public abstract DataTable GetTables(string[] restrictions);
+        public abstract DataTable GetColumns(string[] restrictions);
         public abstract DataTable GetProcedures(string[] restrictions);
         public abstract DataTable GetProcedureParameters(string[] restrictions);
         public abstract DataTable GetViews(string[] restrictions);
+        public abstract DataTable GetTriggers(string[] restrictions);
         public abstract DataTable HelpCollection();
     }
 }

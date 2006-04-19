@@ -13,27 +13,24 @@ namespace MySql.Data.MySqlClient
         }
 
 
-        private DataTable Query(string table_name, string where, string[] restrictions)
+        private DataTable Query(string table_name, string[] keys, string[] values)
         {
-            string sql = "SELECT * FROM INFORMATION_SCHEMA." + table_name;
-            bool routines = table_name.ToLower(System.Globalization.CultureInfo.CurrentCulture)
-                == "routines";
-            string schema_key = routines ? "ROUTINE_SCHEMA" : "TABLE_SCHEMA";
+            StringBuilder where = new StringBuilder();
+            StringBuilder query = new StringBuilder("SELECT * FROM INFORMATION_SCHEMA.");
+            query.Append(table_name);
 
-            string whereClause = where;
-            if (whereClause == null)
-                whereClause = String.Empty;
-
-            if (restrictions[0] != null)
+            for (int i=0; i < values.Length; i++)
             {
-                if (whereClause.Length > 0)
-                    whereClause += " AND ";
-                whereClause += schema_key + "='" + restrictions[0] + "'";
+                if (values[i] == null || values[i] == String.Empty) continue;
+                if (where.Length > 0)
+                    where.Append(" AND ");
+                where.AppendFormat("{0}='{1}'", keys[i], values[i]);
             }
-            if (whereClause.Length > 0)
-                sql += " WHERE " + whereClause;
 
-            return GetTable(sql);
+            if (where.Length > 0)
+                query.AppendFormat(" WHERE {0}", where.ToString());
+
+            return GetTable(query.ToString());
         }
 
         private DataTable GetTable(string sql)
@@ -74,12 +71,37 @@ namespace MySql.Data.MySqlClient
 
         public override DataTable GetTables(string[] restrictions)
         {
-            return Query("TABLES", null, restrictions);
+            string[] keys = new string[4];
+            keys[0] = "TABLE_CATALOG";
+            keys[1] = "TABLE_sCHEMA";
+            keys[2] = "TABLE_NAME";
+            keys[3] = "TABLE_TYPE";
+            return Query("TABLES", keys, restrictions);
+        }
+
+        public override DataTable GetColumns(string[] restrictions)
+        {
+            string[] keys = new string[4];
+            keys[0] = "TABLE_CATALOG";
+            keys[1] = "TABLE_sCHEMA";
+            keys[2] = "TABLE_NAME";
+            keys[3] = "COLUMN_NAME";
+            return Query("COLUMNS", keys, restrictions);
         }
 
         public override DataTable GetViews(string[] restrictions)
         {
             return Query("VIEWS", null, restrictions);
+        }
+
+        public override DataTable GetTriggers(string[] restrictions)
+        {
+            string[] keys = new string[4];
+            keys[0] = "TRIGGER_CATALOG";
+            keys[1] = "TRIGGER_sCHEMA";
+            keys[2] = "TRIGGER_NAME";
+            keys[3] = "EVENT_OBJECT_TABLE";
+            return Query("TRIGGERS", keys, restrictions);
         }
 
         /// <summary>

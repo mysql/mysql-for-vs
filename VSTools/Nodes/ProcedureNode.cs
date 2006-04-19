@@ -9,13 +9,24 @@ namespace MySql.VSTools
 {
     internal class ProcedureNode : ExplorerNode
     {
-        private DataRow procDef;
+        private string body;
+        private string schema;
 
         public ProcedureNode(ExplorerNode parent, string caption, DataRow row)
             : base(parent, caption)
         {
-            procDef = row;
+            schema = row["ROUTINE_SCHEMA"].ToString();
+            body = row["ROUTINE_DEFINITION"].ToString();
         }
+
+        public ProcedureNode(ExplorerNode parent, string caption, string body)
+            : base(parent, caption)
+        {
+            this.body = body;
+            schema = GetDatabaseNode().Caption;
+            ItemId = VSConstants.VSITEMID_NIL;
+        }
+
 
         public override uint MenuId
         {
@@ -40,9 +51,9 @@ namespace MySql.VSTools
         {
             switch (commandId)
             {
-//                case PkgCmdIDList.cmdidDelete:
-  //                  Delete();
-    //                break;
+                case PkgCmdIDList.cmdidDelete:
+                    Delete();
+                    break;
                 case PkgCmdIDList.cmdidOpen:
                     Open();
                     break;
@@ -52,43 +63,36 @@ namespace MySql.VSTools
             }
         }
 
-/*        private void Delete()
+        private void Delete()
         {
             // first make sure the user is sure
-            if (MessageBox.Show(TreeView.Parent,
+            if (MessageBox.Show(
                 String.Format(MyVSTools.GetResourceString("DeleteConfirm"),
-                procDef["ROUTINE_NAME"]),
+                Caption),
                 MyVSTools.GetResourceString("DeleteConfirmTitle"),
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question) == DialogResult.No)
                 return;
 
-            System.Data.Common.DbConnection conn;
-            conn = GetOpenConnection();
-            System.Data.Common.DbCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "DROP PROCEDURE " + procDef["ROUTINE_SCHEMA"] + "." +
-                procDef["ROUTINE_NAME"];
+            string sql = String.Format("DROP PROCEDURE {0}.{1}", schema, Caption);
             try
             {
-                cmd.ExecuteNonQuery();
+                ExecuteNonQuery(sql);
                 //delete was successful, remove this node
-                this.Remove();
+                Parent.RemoveChild(this);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, 
                     String.Format(MyVSTools.GetResourceString("UnableToDeleteTitle"),
-                    procDef["ROUTINE_NAME"]),
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Caption), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        */
-        private void Open()
+
+        internal void Open()
         {
             StoredProcedureEditor editor = new StoredProcedureEditor(
-                Caption, procDef["ROUTINE_SCHEMA"].ToString(), 
-                procDef["ROUTINE_DEFINITION"].ToString(), 
-                GetOpenConnection());
+                Caption, GetDatabaseNode().Caption, body, GetOpenConnection());
             OpenEditor(editor);
         }
     }

@@ -15,8 +15,8 @@ namespace MySql.VSTools
                               IVsWindowPane 
     {
         protected bool isDirty;
-        private IVsRunningDocumentTable rdt;
-        private IVsUIShell vsUIShell;
+        private static IVsRunningDocumentTable rdt;
+        private static IVsUIShell vsUIShell;
         protected uint cookie;
         protected IVsHierarchy hierarchy;
         protected uint itemID;
@@ -27,10 +27,13 @@ namespace MySql.VSTools
         public BaseEditor()
             : base()
         {
-//            rdt = (IVsRunningDocumentTable)PackageSingleton.Package.GetMyService(
-  //              typeof(SVsRunningDocumentTable));
-    //        vsUIShell = (IVsUIShell)PackageSingleton.Package.GetMyService(
-      //          typeof(SVsUIShell));
+            if (rdt == null)
+            {
+                rdt = (IVsRunningDocumentTable)PackageSingleton.Package.GetMyService(
+                    typeof(SVsRunningDocumentTable));
+                vsUIShell = (IVsUIShell)PackageSingleton.Package.GetMyService(
+                    typeof(SVsUIShell));
+            }
         }
 
         protected virtual Guid EditorGuid

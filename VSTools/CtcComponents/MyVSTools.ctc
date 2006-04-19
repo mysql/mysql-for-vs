@@ -70,6 +70,8 @@ CMDS_SECTION guidMyVSToolsPkg
     guidMyVSToolsCmdSet:TableCtxtMenu, guidMyVSToolsCmdSet:0, 0x0000, CONTEXT|ALWAYSCREATE|NOCUSTOMIZE, "TableContextMenu";
     guidMyVSToolsCmdSet:ViewCtxtMenu, guidMyVSToolsCmdSet:0, 0x0000, CONTEXT|ALWAYSCREATE|NOCUSTOMIZE, "ViewContextMenu";
     guidMyVSToolsCmdSet:FunctionCtxtMenu, guidMyVSToolsCmdSet:0, 0x0000, CONTEXT|ALWAYSCREATE|NOCUSTOMIZE, "FunctionContextMenu";
+    guidMyVSToolsCmdSet:TriggerCtxtMenu, guidMyVSToolsCmdSet:0, 0x0000, CONTEXT|ALWAYSCREATE|NOCUSTOMIZE, "TriggerContextMenu";
+    guidMyVSToolsCmdSet:ColumnCtxtMenu, guidMyVSToolsCmdSet:0, 0x0000, CONTEXT|ALWAYSCREATE|NOCUSTOMIZE, "ColumnContextMenu";
   MENUS_END
 
   // In this section you can define new menu groups. A menu group is a container for
@@ -92,6 +94,7 @@ CMDS_SECTION guidMyVSToolsPkg
     guidMyVSToolsCmdSet:TableGroup, guidMyVSToolsCmdSet:TableCtxtMenu, 0x1000;
     guidMyVSToolsCmdSet:ViewGroup, guidMyVSToolsCmdSet:ViewCtxtMenu, 0x1000;
     guidMyVSToolsCmdSet:FunctionGroup, guidMyVSToolsCmdSet:FunctionCtxtMenu, 0x1000;
+    guidMyVSToolsCmdSet:TriggerGroup, guidMyVSToolsCmdSet:TriggerCtxtMenu, 0x1000;
   NEWGROUPS_END
 
   // Button section.
@@ -133,6 +136,9 @@ CMDS_SECTION guidMyVSToolsPkg
 
    // Functions menus
    guidMyVSToolsCmdSet:cmdidAddNewFunction, guidMyVSToolsCmdSet:FunctionsGroup, 0x100, guidMyVSToolsCmdSet:0, BUTTON, , "Add New &Function";
+
+   // Trigger menus
+   guidMyVSToolsCmdSet:cmdidAddNewTrigger, guidMyVSToolsCmdSet:TriggerGroup, 0x100, guidMyVSToolsCmdSet:0, BUTTON, , "Add New &Trigger";
   BUTTONS_END
 
   // The bitmaps section is used to define the bitmaps that are used for the commands.
@@ -189,9 +195,16 @@ CMDPLACEMENT_SECTION
   guidMyVSToolsCmdSet:DeleteGroup, guidMyVSToolsCmdSet:FunctionCtxtMenu, 0x1001;
   guidMyVSToolsCmdSet:PropertiesGroup, guidMyVSToolsCmdSet:FunctionCtxtMenu, 0x1002;
 
+  // Trigger menu
+  guidMyVSToolsCmdSet:cmdidOpen, guidMyVSToolsCmdSet:TriggerGroup, 0x1001;
+  guidMyVSToolsCmdSet:DeleteGroup, guidMyVSToolsCmdSet:TriggerCtxtMenu, 0x1001;
+  guidMyVSToolsCmdSet:PropertiesGroup, guidMyVSToolsCmdSet:TriggerCtxtMenu, 0x1002;
+
   guidMyVSToolsCmdSet:PropertiesGroup, guidMyVSToolsCmdSet:ProceduresCtxtMenu, 0x1002;
 
   guidMyVSToolsCmdSet:PropertiesGroup, guidMyVSToolsCmdSet:FunctionsCtxtMenu, 0x1002;
+
+  guidMyVSToolsCmdSet:PropertiesGroup, guidMyVSToolsCmdSet:ColumnCtxtMenu, 0x1002;
 CMDPLACEMENT_END
 
 

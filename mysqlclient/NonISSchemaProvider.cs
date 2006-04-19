@@ -20,6 +20,11 @@ namespace MySql.Data.MySqlClient
             throw new Exception("The method or operation is not implemented.");
         }
 
+        public override DataTable GetColumns(string[] restrictions)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
         public override DataTable HelpCollection()
         {
             throw new Exception("The method or operation is not implemented.");
@@ -38,6 +43,11 @@ namespace MySql.Data.MySqlClient
         public override DataTable GetViews(string[] restrictions)
         {
             throw new MySqlException("The VIEWS collection is only supported on MySQL version 5.0 and later");
+        }
+
+        public override DataTable GetTriggers(string[] restrictions)
+        {
+            throw new MySqlException("The TRIGGERS collection is only supported on MySQL version 5.0 and later");
         }
     }
 }

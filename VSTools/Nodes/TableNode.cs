@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.Data;
+using System.Data.Common;
 
 namespace MySql.VSTools
 {
@@ -101,6 +102,27 @@ namespace MySql.VSTools
 
         public override void Populate()
         {
+            if (populated) return;
+            DbConnection conn = GetOpenConnection();
+            string[] restrictions = new string[4];
+            restrictions[1] = GetDatabaseNode().Caption;
+            restrictions[2] = Caption;
+            DataTable columns = conn.GetSchema("columns", restrictions);
+            foreach (DataRow column in columns.Rows)
+                AddChild(new ColumnNode(this, column));
+            populated = true;
+            try
+            {
+                restrictions[2] = null;
+                restrictions[3] = Caption;
+                DataTable triggers = conn.GetSchema("triggers", restrictions);
+                foreach (DataRow trigger in triggers.Rows)
+                    AddChild(new TriggerNode(this, trigger));
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

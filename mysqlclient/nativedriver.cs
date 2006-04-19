@@ -49,8 +49,6 @@ namespace MySql.Data.MySqlClient
 		protected MySqlStreamWriter		writer;
 		private   BitArray				nullMap;
 
-//		private	int lastCommandResult;
-//		private	Hashtable commandResults;
         private int warningCount;
 
 		public NativeDriver(MySqlConnectionString settings) : base(settings)
@@ -58,8 +56,6 @@ namespace MySql.Data.MySqlClient
 			packetSeq = 0;
 			isOpen = false;
 			maxPacketSize = 1047552;
-//			lastCommandResult = 0;
-//			commandResults = new Hashtable();
 		}
 
 		public ClientFlags Flags
@@ -72,11 +68,6 @@ namespace MySql.Data.MySqlClient
 			get { return maxPacketSize; }
 			set { maxPacketSize = value; }
 		}
-
-//		internal Hashtable CommandResults 
-//		{ 
-//			get { return commandResults; }
-//		}
 
 		/// <summary>
 		/// Returns true if this connection can handle batch SQL natively

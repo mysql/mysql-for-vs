@@ -61,10 +61,10 @@ namespace MySql.VSTools
                 "()" + Environment.NewLine +
                 "BEGIN" + Environment.NewLine + "END" +
                 Environment.NewLine;
-            StoredProcedureEditor editor = new StoredProcedureEditor(name,
-                Parent.Caption, defaultBody, GetOpenConnection());
-            OpenEditor(editor);
-        }
+            ProcedureNode node = new ProcedureNode(this, name, defaultBody);
+            IndexChild(node);
+            node.Open();
+       }
 
 
 

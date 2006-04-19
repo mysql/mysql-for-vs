@@ -12,19 +12,23 @@ using System.ComponentModel.Design;
 
 namespace MySql.VSTools
 {
-    internal abstract class HierNode : ExplorerNode, IVsUIHierarchy, IVsPersistHierarchyItem2
+    internal abstract class HierNode : ExplorerNode, 
+        IVsUIHierarchy, 
+        IVsPersistHierarchyItem2
     {
         private static ImageList imageList;
         private EventSinkCollection nodes;
         private ExplorerNode activeNode;
+        private EventSinkCollection sinks;
 
         public HierNode(HierNode parent, string name) : base(parent, name)
         {
             nodes = new EventSinkCollection();
+            sinks = new EventSinkCollection();
 
             if (imageList == null)
             {
-                ResourceManager rm = new ResourceManager("Vsip.MyVSTools.VSPackage",
+                ResourceManager rm = new ResourceManager("MySql.VSTools.VSPackage",
                     Assembly.GetExecutingAssembly());
 
                 imageList = new ImageList();
@@ -37,6 +41,8 @@ namespace MySql.VSTools
                 imageList.Images.Add((Image)rm.GetObject("procedure"));
                 imageList.Images.Add((Image)rm.GetObject("function"));
                 imageList.Images.Add((Image)rm.GetObject("view"));
+                imageList.Images.Add((Image)rm.GetObject("trigger"));
+                imageList.Images.Add((Image)rm.GetObject("column"));
             }
 
 /*                    System.ComponentModel.ComponentResourceManager resources = 
@@ -65,9 +71,28 @@ namespace MySql.VSTools
             return nodes.Add(node);
         }
 
+        public void UnindexNode(ExplorerNode node)
+        {
+            nodes.Remove(node);
+        }
+
         public ExplorerNode ActiveNode
         {
             get { return activeNode; }
+        }
+
+        public void RefreshItem(uint itemId)
+        {
+            IEnumerator sinkEnum = (sinks as IEnumerable).GetEnumerator();
+            while (sinkEnum.MoveNext())
+                (sinkEnum.Current as IVsHierarchyEvents).OnInvalidateItems(itemId);
+        }
+
+        public void ItemDeleted(uint itemId)
+        {
+            IEnumerator sinkEnum = (sinks as IEnumerable).GetEnumerator();
+            while (sinkEnum.MoveNext())
+                (sinkEnum.Current as IVsHierarchyEvents).OnItemDeleted(itemId);
         }
 
         public ExplorerNode NodeFromId(uint itemId)
@@ -109,8 +134,7 @@ namespace MySql.VSTools
 
         public int AdviseHierarchyEvents(IVsHierarchyEvents pEventSink, out uint pdwCookie)
         {
-            pdwCookie = 0;
-            //TODO: fix this
+            pdwCookie = sinks.Add(pEventSink);
             return VSConstants.S_OK;
         }
 
@@ -315,6 +339,7 @@ namespace MySql.VSTools
 
         public int UnadviseHierarchyEvents(uint dwCookie)
         {
+            sinks.RemoveAt(dwCookie);
             return VSConstants.S_OK;
         }
 

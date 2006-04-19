@@ -48,6 +48,7 @@ namespace MySql.Data.Common
             minPoolSize = 0;
             maxPoolSize = 100;
             port = 3306;
+            password = String.Empty;
         }
 
         public DBConnectionString(string connectString) : this()

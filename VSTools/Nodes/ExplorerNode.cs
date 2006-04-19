@@ -68,18 +68,23 @@ namespace MySql.VSTools
 
         public abstract uint IconIndex { get; }
         public abstract bool Expandable { get; }
-        public abstract void Populate();
+        public virtual void Populate()
+        {
+        }
 
         public virtual uint MenuId
         {
             get { return 0; }
         }
 
-        protected void AddChild(ExplorerNode node)
+        protected void IndexChild(ExplorerNode node)
         {
             HierNode hierNode = GetHierNode();
             node.ItemId = hierNode.IndexNode(node);
+        }
 
+        protected void LinkChild(ExplorerNode node)
+        {
             if (firstChild == null)
                 firstChild = node;
             else
@@ -89,17 +94,34 @@ namespace MySql.VSTools
                     nodeIter = nodeIter.NextSibling;
                 nodeIter.NextSibling = node;
             }
+        }
 
-            //children.Add(node);
+        protected void AddChild(ExplorerNode node)
+        {
+            IndexChild(node);
+            LinkChild(node);
+        }
 
+        public void RemoveChild(ExplorerNode node)
+        {
+            HierNode hierNode = GetHierNode();
+            // first remove it from the item id index
+            hierNode.UnindexNode(node);
 
-/*            node.ItemId = (uint)childId++;
-            if (lastChild != null)
-                lastChild.NextSibling = node;
-            node.NextSibling = null;
-            lastChild = node;
-            if (firstChild == null)
-                firstChild = lastChild;*/
+            // now we unlink it
+            ExplorerNode prevNode = null;
+            ExplorerNode nodeIter = firstChild;
+            while (nodeIter != node)
+            {
+                prevNode = nodeIter;
+                nodeIter = nodeIter.NextSibling;
+            }
+            if (prevNode == null)
+                firstChild = nodeIter.NextSibling;
+            else
+                prevNode.NextSibling = nodeIter.NextSibling;
+
+            hierNode.RefreshItem(itemId);
         }
 
         protected DbConnection GetOpenConnection()
@@ -138,6 +160,16 @@ namespace MySql.VSTools
             return hierNode;
         }
 
+        protected DatabaseNode GetDatabaseNode()
+        {
+            ExplorerNode node = this;
+            while (node != null && !(node is DatabaseNode))
+            {
+                node = node.Parent;
+            }
+            return (node as DatabaseNode);
+        }
+
         protected void OpenEditor(BaseEditor editorObj)
         {
             IVsUIShellOpenDocument openDoc = (IVsUIShellOpenDocument)
@@ -163,27 +195,45 @@ namespace MySql.VSTools
                 //IntPtr.Zero, PackageSingleton.Package, out winFrame);*/
 
             IntPtr viewAndDataPunk = Marshal.GetIUnknownForObject(editorObj);
-            int result = openDoc.InitializeEditorInstance(0, viewAndDataPunk, viewAndDataPunk,
+            int result = openDoc.InitializeEditorInstance(0,
+                viewAndDataPunk, viewAndDataPunk,
                 editorObj.Filename, ref editor, null, ref editor, editorObj.Filename,
                 null, GetHierNode(), ItemId, IntPtr.Zero,
                 PackageSingleton.Package, ref cmdGui, out winFrame);
             ErrorHandler.ThrowOnFailure(result);
 
             result = uiShell.CreateDocumentWindow(0, editorObj.Filename,
-                GetHierNode(), this.ItemId, viewAndDataPunk, 
+                GetHierNode(), ItemId, viewAndDataPunk, 
                 viewAndDataPunk, ref editor, null, ref cmdGui, PackageSingleton.Package, 
                 editorObj.Filename, null, null, out winFrame);
 
-            if (winFrame != null)
-                winFrame.Show();
+  /*          System.Diagnostics.Trace.WriteLine("starting editor on item = " + this.ItemId);
             
-/*            System.Diagnostics.Trace.WriteLine("starting editor on item = " + this.ItemId);
-            Guid logicalView = VSConstants.LOGVIEWID_Primary;
-            result = openDoc.OpenSpecificEditor((uint)__VSOSPEFLAGS.OSPE_OpenAsNewFile,
-                ".cpp", ref editorGuid, null, ref logicalView,
-                Caption, GetHierNode(), this.ItemId, IntPtr.Zero,
-                PackageSingleton.Package, out winFrame);
-            MessageBox.Show("result = " + result);*/
+               Guid logicalView = VSConstants.LOGVIEWID_Primary;
+                int result = openDoc.OpenSpecificEditor(
+                    (uint)__VSOSPEFLAGS.OSPE_OpenAsNewFile,
+                    editorObj.Filename, ref editor, null, ref logicalView,
+                    Caption, GetHierNode(), this.ItemId, IntPtr.Zero,
+                    PackageSingleton.Package, out winFrame);
+*/     
+                if (winFrame != null)
+                    winFrame.Show();
+        }
+
+        protected void ExecuteNonQuery(string sql)
+        {
+            DbConnection connection = GetOpenConnection();
+            DbCommand cmd = connection.CreateCommand();
+            cmd.CommandText = sql;
+            cmd.CommandType = CommandType.Text;
+            try
+            {
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         public virtual void DoCommand(int commandId)
