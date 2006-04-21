@@ -41,5 +41,10 @@ namespace MySql.VSTools
         {
         }
 
+        internal override BaseEditor GetEditor()
+        {
+            return new SqlTextEditor(Caption, "db", "body", GetOpenConnection());
+        }
+
     }
 }

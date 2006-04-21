@@ -107,11 +107,14 @@
     <Compile Include="Editors\StoredProcedureEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Editors\TableDesignerColumn.cs" />
+    <Compile Include="Editors\TableDesignerColumnCollection.cs" />
     <Compile Include="Editors\TableEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Editors\TableDesignerColumn.cs" />
-    <Compile Include="Editors\TableDesignerColumnCollection.cs" />
+    <Compile Include="Editors\TableEditor.Designer.cs">
+      <DependentUpon>TableEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Nodes\ColumnNode.cs" />
     <Compile Include="Nodes\ExplorerNode.cs" />
     <Compile Include="Nodes\MyHierarchyNode.cs" />

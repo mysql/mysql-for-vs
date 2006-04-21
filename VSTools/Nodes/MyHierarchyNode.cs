@@ -134,18 +134,21 @@ namespace MySql.VSTools
 
         public int AdviseHierarchyEvents(IVsHierarchyEvents pEventSink, out uint pdwCookie)
         {
+            DebugTrace.Trace("IVsUIHierarchy::AdviseHierarchyEvents");
             pdwCookie = sinks.Add(pEventSink);
             return VSConstants.S_OK;
         }
 
         public int Close()
         {
+            DebugTrace.Trace("IVsUIHierarchy::Close");
             return VSConstants.S_OK;
         }
 
         public int ExecCommand(uint itemid, ref Guid pguidCmdGroup, uint nCmdID, 
             uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
         {
+            DebugTrace.Trace("IVsUIHierarchy::ExecCommand");
             //MessageBox.Show("guid = " + pguidCmdGroup.ToString() + ";cmdid=" + nCmdID);
             if (pguidCmdGroup == VsMenus.guidVsUIHierarchyWindowCmds)
             {
@@ -171,12 +174,14 @@ namespace MySql.VSTools
 
         public int GetCanonicalName(uint itemid, out string pbstrName)
         {
+            DebugTrace.Trace("IVsUIHierarchy::GetCanonicalName");
             pbstrName = "Dummy name";
             return VSConstants.S_OK;
         }
 
         public int GetGuidProperty(uint itemid, int propid, out Guid pguid)
         {
+            DebugTrace.Trace("IVsUIHierarchy::GetGuidProperty");
             //2016
             //2054
             pguid = Guid.NewGuid();
@@ -187,6 +192,7 @@ namespace MySql.VSTools
                                       out IntPtr ppHierarchyNested, 
                                       out uint pitemidNested)
         {
+            DebugTrace.Trace("IVsUIHierarchy::GetNestHierarchy");
             ppHierarchyNested = IntPtr.Zero;
             pitemidNested = 0;
             // If itemid is not a nested hierarchy we must return E_FAIL.
@@ -198,8 +204,12 @@ namespace MySql.VSTools
             result = null;
             ExplorerNode node = NodeFromId(itemid);
 
+            DebugTrace.Trace("IVsUIHierarchy::GetProperty");
             string propname = Enum.GetName(typeof(__VSHPROPID),
                 (__VSHPROPID)propid);
+            if (propname == null || propname == String.Empty)
+                propname = Enum.GetName(typeof(__VSHPROPID2),
+                (__VSHPROPID2)propid);
             System.Diagnostics.Trace.WriteLine("prop = " + propname + "; itemid=" + itemid);
 
             __VSHPROPID propVal = (__VSHPROPID)propid;
@@ -281,6 +291,7 @@ namespace MySql.VSTools
 
         public int GetSite(out Microsoft.VisualStudio.OLE.Interop.IServiceProvider ppSP)
         {
+            DebugTrace.Trace("IVsUIHierarchy::GetSite");
             ppSP = PackageSingleton.Package.GetMyService(typeof(
                 Microsoft.VisualStudio.OLE.Interop.IServiceProvider)) as
                 Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
@@ -289,28 +300,33 @@ namespace MySql.VSTools
 
         public int ParseCanonicalName(string pszName, out uint pitemid)
         {
+            DebugTrace.Trace("IVsUIHierarchy::ParseCanonicalName");
             pitemid = 1;
             return VSConstants.S_OK;
         }
 
         public int QueryClose(out int pfCanClose)
         {
+            DebugTrace.Trace("IVsUIHierarchy::QueryClose");
             pfCanClose = 1;
             return VSConstants.S_OK;
         }
 
         public int QueryStatusCommand(uint itemid, ref Guid pguidCmdGroup, uint cCmds, Microsoft.VisualStudio.OLE.Interop.OLECMD[] prgCmds, IntPtr pCmdText)
         {
+            DebugTrace.Trace("IVsUIHierarchy::QueryStatusCommand");
             return VSConstants.S_OK;
         }
 
         public int SetGuidProperty(uint itemid, int propid, ref Guid rguid)
         {
+            DebugTrace.Trace("IVsUIHierarchy::SetGuidProperty");
             return VSConstants.S_OK;
         }
 
         public int SetProperty(uint itemid, int propid, object value)
         {
+            DebugTrace.Trace("IVsUIHierarchy::SetProperty");
             __VSHPROPID id = (__VSHPROPID)propid;
             ExplorerNode node = NodeFromId(itemid);
 
@@ -334,37 +350,44 @@ namespace MySql.VSTools
 
         public int SetSite(Microsoft.VisualStudio.OLE.Interop.IServiceProvider psp)
         {
+            DebugTrace.Trace("IVsUIHierarchy::SetSite");
             return VSConstants.E_NOTIMPL;
         }
 
         public int UnadviseHierarchyEvents(uint dwCookie)
         {
+            DebugTrace.Trace("IVsUIHierarchy::UnadviseHierarchyEvents");
             sinks.RemoveAt(dwCookie);
             return VSConstants.S_OK;
         }
 
         public int Unused0()
         {
+            DebugTrace.Trace("IVsUIHierarchy::Unused0");
             return VSConstants.E_NOTIMPL;
         }
 
         public int Unused1()
         {
+            DebugTrace.Trace("IVsUIHierarchy::Unused1");
             return VSConstants.E_NOTIMPL;
         }
 
         public int Unused2()
         {
+            DebugTrace.Trace("IVsUIHierarchy::Unused2");
             return VSConstants.E_NOTIMPL;
         }
 
         public int Unused3()
         {
+            DebugTrace.Trace("IVsUIHierarchy::Unused3");
             return VSConstants.E_NOTIMPL;
         }
 
         public int Unused4()
         {
+            DebugTrace.Trace("IVsUIHierarchy::Unused4");
             return VSConstants.E_NOTIMPL;
         }
 
@@ -374,11 +397,13 @@ namespace MySql.VSTools
 
         public int IgnoreItemFileChanges(uint itemid, int fIgnore)
         {
+            DebugTrace.Trace("IVsPersistHierarchyItem2::IgnoreItemFileChanges");
             return VSConstants.S_OK;
         }
 
         public int IsItemDirty(uint itemid, IntPtr punkDocData, out int pfDirty)
         {
+            DebugTrace.Trace("IVsPersistHierarchyItem2::IsItemDirty");
             IVsPersistDocData docData = (IVsPersistDocData)
                 Marshal.GetObjectForIUnknown(punkDocData);
             return ErrorHandler.ThrowOnFailure(docData.IsDocDataDirty(out pfDirty));
@@ -386,21 +411,26 @@ namespace MySql.VSTools
 
         public int IsItemReloadable(uint itemid, out int pfReloadable)
         {
+            DebugTrace.Trace("IVsPersistHierarchyItem2::IsItemReloadable");
             pfReloadable = 0;
             return VSConstants.S_OK;
         }
 
         public int ReloadItem(uint itemid, uint dwReserved)
         {
+            DebugTrace.Trace("IVsPersistHierarchyItem2::ReloadItem");
             return VSConstants.S_OK;
         }
 
         public int SaveItem(VSSAVEFLAGS dwSave, string pszSilentSaveAsName, uint itemid, IntPtr punkDocData, out int pfCanceled)
         {
-            pfCanceled = 0;
+            DebugTrace.Trace("IVsPersistHierarchyItem2::SaveItem");
+            ExplorerNode node = NodeFromId(itemid);
+            pfCanceled = node.Save() ? 0 : 1;
             return VSConstants.S_OK;
         }
 
         #endregion
+
     }
 }

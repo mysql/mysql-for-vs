@@ -16,6 +16,40 @@ namespace MySql.VSTools
             columnDef = row;
         }
 
+        #region Properties
+
+        public string Typename
+        {
+            get { return columnDef["DATA_TYPE"].ToString().ToUpper(); }
+        }
+
+        public string LengthAsString
+        {
+            get
+            {
+                string len = columnDef["CHARACTER_MAXIMUM_LENGTH"].ToString();
+                if (len == "NULL") return String.Empty;
+                return len;
+            }
+        }
+
+        public bool CanBeNull
+        {
+            get { return columnDef["IS_NULLABLE"].Equals("YES"); }
+        }
+
+        public bool IsBinary
+        {
+            get { return columnDef["EXTRA"].ToString().IndexOf("binary") != -1; }
+        }
+
+        public bool ZeroFill
+        {
+            get { return columnDef["EXTRA"].ToString().IndexOf("zero") != -1; }
+        }
+
+        #endregion
+
         public override uint MenuId
         {
             get { return PkgCmdIDList.ColumnCtxtMenu; }

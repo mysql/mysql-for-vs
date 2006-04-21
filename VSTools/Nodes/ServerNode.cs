@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.Common;
 using MySql.Data.MySqlClient;
 using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Shell.Interop;
 
 namespace MySql.VSTools
 {
@@ -39,18 +40,36 @@ namespace MySql.VSTools
         {
             get { return PkgCmdIDList.ServerCtxtMenu; }
         }
-        /*
-        public override bool DoCommand(int commandId)
+        
+        public override void DoCommand(int commandId)
         {
             switch (commandId)
             {
-                case PkgCmdIDList.cmdidModifyConnection:
-                    Modify();
-                    return true;
+//                case PkgCmdIDList.cmdidModifyConnection:
+  //                  Modify();
+    //                break;
+                case PkgCmdIDList.cmdidNewQuery :
+                    OpenNewQuery();
+                    break;
             }
-            return base.DoCommand(commandId);
         }
-*/
+
+        private void OpenNewQuery()
+        {
+            Microsoft.VisualStudio.Shell.ToolWindowPane pane =
+                PackageSingleton.Package.FindToolWindow(typeof(QueryToolWindow),
+                PackageSingleton.ToolWindowId, true);
+            if ((null == pane) || (null == pane.Frame))
+            {
+                throw new System.Runtime.InteropServices.COMException(
+                    MyVSTools.GetResourceString("CanNotCreateQueryWindow"));
+            }
+            pane.Caption = Caption + " [Query]";
+            (pane.Window as QueryControl).Connection = GetOpenConnection();
+            IVsWindowFrame windowFrame = (IVsWindowFrame)pane.Frame;
+            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
+        }
+
         public override void Populate()
         {
             if (populated) return;

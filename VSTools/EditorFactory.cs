@@ -121,8 +121,8 @@ namespace MySql.VSTools
 
             // Create the Document (editor)
             ServerNode parent = (pvHier as ServerNode);
-            ProcedureNode pn = (ProcedureNode)parent.NodeFromId(itemid);
-            BaseEditor newEditor = pn.GetEditor();
+            ExplorerNode node = (ExplorerNode)parent.NodeFromId(itemid);
+            BaseEditor newEditor = node.GetEditor();
             ppunkDocView = Marshal.GetIUnknownForObject(newEditor);
             ppunkDocData = Marshal.GetIUnknownForObject(newEditor);
             pbstrEditorCaption = "";

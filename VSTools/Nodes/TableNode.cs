@@ -4,6 +4,8 @@ using System.Text;
 using System.Windows.Forms;
 using System.Data;
 using System.Data.Common;
+using System.Collections;
+using System.ComponentModel;
 
 namespace MySql.VSTools
 {
@@ -15,6 +17,82 @@ namespace MySql.VSTools
             : base(parent, name)
         {
             tableDef = row;
+        }
+
+        #region Properties
+
+        public string Schema
+        {
+            get { return tableDef["TABLE_SCHEMA"].ToString(); }
+        }
+
+        public string TypeName
+        {
+            get { return tableDef["ENGINE"].ToString(); }
+        }
+
+        public string DataDirectory
+        {
+            get { return String.Empty; }
+        }
+
+        public string IndexDirectory
+        {
+            get { return String.Empty; }
+        }
+
+        public string RowFormat
+        {
+            get { return tableDef["ROW_FORMAT"].ToString(); }
+        }
+
+        public bool UseChecksum
+        {
+            get { return false; }
+        }
+
+        public int MinimumRowCount
+        {
+            get { return 0; }
+        }
+
+        public int MaximumRowCount
+        {
+            get { return 0; }
+        }
+
+        [Category("Row Options")]
+        [Description("Defines how the rows in MyISAM tables should be stored.  The option " +
+                      "ValueType can be FIXED or DYNAMIC for static or variable-length row " +
+                      "format.  The utility myisampack can be used to set the type to " +
+                      "COMPRESSED.")]
+        public string Password
+        {
+            get { return "mypass"; }
+        }
+
+        [Category("Row Options")]
+        [Description("An approximation of the average row length for your table.  You " +
+                     "need to set this only for large tables with variable-sized records.")]
+        public int AverageRowLength
+        {
+            get { return Int32.Parse(tableDef["AVG_ROW_LENGTH"].ToString()); }
+        }
+
+
+        #endregion
+
+        public ArrayList GetColumns()
+        {
+            ArrayList cols = new ArrayList();
+            ExplorerNode col = FirstChild;
+            while (col != null)
+            {
+                if (col is ColumnNode)
+                    cols.Add(col);
+                col = col.NextSibling;
+            }
+            return cols;
         }
 
         public override uint MenuId
@@ -40,7 +118,7 @@ namespace MySql.VSTools
                     Delete();
                     break;
                 case PkgCmdIDList.cmdidOpenTableDef:
-                    EditTable();
+                    OpenEditor();
                     break;
                 case PkgCmdIDList.cmdidShowTableData:
                     ShowTableData();
@@ -51,10 +129,10 @@ namespace MySql.VSTools
             }
         }
 
-        private void EditTable()
+        internal override BaseEditor GetEditor()
         {
-            TableEditor te = new TableEditor();
-            OpenEditor(te);
+            TableEditor editor = new TableEditor(this);
+            return editor;
         }
 
         private void Delete()
