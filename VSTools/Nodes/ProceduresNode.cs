@@ -63,7 +63,7 @@ namespace MySql.VSTools
                 Environment.NewLine;
             ProcedureNode node = new ProcedureNode(this, name, defaultBody);
             IndexChild(node);
-            node.Open();
+            node.OpenEditor();
        }
 
 

@@ -68,8 +68,19 @@ namespace MySql.VSTools
 
         public abstract uint IconIndex { get; }
         public abstract bool Expandable { get; }
+
+        internal virtual BaseEditor GetEditor()
+        {
+            return null;
+        }
+
         public virtual void Populate()
         {
+        }
+
+        public virtual bool Save()
+        {
+            return false;
         }
 
         public virtual uint MenuId
@@ -170,7 +181,8 @@ namespace MySql.VSTools
             return (node as DatabaseNode);
         }
 
-        protected void OpenEditor(BaseEditor editorObj)
+
+        public void OpenEditor()
         {
             IVsUIShellOpenDocument openDoc = (IVsUIShellOpenDocument)
                 PackageSingleton.Package.GetMyService(typeof(SVsUIShellOpenDocument));
@@ -184,7 +196,7 @@ namespace MySql.VSTools
             Guid editor = Guid.Empty;
             Guid cmdGui = Guid.Empty;
 
-      //      Guid ed = GuidList.guidEditorFactory;
+            Guid ed = GuidList.guidEditorFactory;
   //          Guid view = VSConstants.LOGVIEWID_Primary;
     //        uint rdtflags = (uint)__VSOSPEFLAGS.OSPE_RDTFLAGS_MASK | 
         //        (uint)_VSRDTFLAGS.RDT_NonCreatable | 
@@ -194,9 +206,9 @@ namespace MySql.VSTools
                 //null, ref view, "caption", GetHierNode(), ItemId,
                 //IntPtr.Zero, PackageSingleton.Package, out winFrame);*/
 
-            IntPtr viewAndDataPunk = Marshal.GetIUnknownForObject(editorObj);
+/*            IntPtr viewAndDataPunk = Marshal.GetIUnknownForObject(editorObj);
             int result = openDoc.InitializeEditorInstance(0,
-                viewAndDataPunk, viewAndDataPunk,
+                viewAndDactaPunk, viewAndDataPunk,
                 editorObj.Filename, ref editor, null, ref editor, editorObj.Filename,
                 null, GetHierNode(), ItemId, IntPtr.Zero,
                 PackageSingleton.Package, ref cmdGui, out winFrame);
@@ -206,16 +218,17 @@ namespace MySql.VSTools
                 GetHierNode(), ItemId, viewAndDataPunk, 
                 viewAndDataPunk, ref editor, null, ref cmdGui, PackageSingleton.Package, 
                 editorObj.Filename, null, null, out winFrame);
+            */
+            DebugTrace.Trace("starting editor on item = " + this.ItemId);
 
-  /*          System.Diagnostics.Trace.WriteLine("starting editor on item = " + this.ItemId);
-            
+            string filename = GetDatabaseNode().Caption + "." + Caption;
+            editor = GuidList.guidProcedureEditor;
                Guid logicalView = VSConstants.LOGVIEWID_Primary;
-                int result = openDoc.OpenSpecificEditor(
-                    (uint)__VSOSPEFLAGS.OSPE_OpenAsNewFile,
-                    editorObj.Filename, ref editor, null, ref logicalView,
-                    Caption, GetHierNode(), this.ItemId, IntPtr.Zero,
+                int result = openDoc.OpenSpecificEditor(0,
+                    filename, ref ed, null, ref logicalView,
+                    Caption, GetHierNode(), ItemId, IntPtr.Zero,
                     PackageSingleton.Package, out winFrame);
-*/     
+     
                 if (winFrame != null)
                     winFrame.Show();
         }

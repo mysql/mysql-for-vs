@@ -100,15 +100,9 @@
     <Compile Include="Editors\BaseEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Editors\CustomPropertyDescriptor.cs" />
-    <Compile Include="Editors\DataGridComboBoxColumn.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Editors\StoredProcedureEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Editors\TableDesignerColumn.cs" />
-    <Compile Include="Editors\TableDesignerColumnCollection.cs" />
     <Compile Include="Editors\TableEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -218,6 +212,8 @@
     <None Include="Resources\Function.16x16.bmp" />
     <None Include="Resources\db.Trigger.16x16.png" />
     <None Include="Resources\db.Column.16x16.png" />
+    <None Include="Resources\bullet.png" />
+    <None Include="Resources\key.png" />
     <Content Include="Resources\Package.ico" />
     <None Include="Resources\View.16x16.bmp" />
     <None Include="Resources\Table.16x16.bmp" />

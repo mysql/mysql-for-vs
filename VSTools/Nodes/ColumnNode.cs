@@ -33,6 +33,11 @@ namespace MySql.VSTools
             }
         }
 
+        public bool IsPrimary
+        {
+            get { return columnDef["COLUMN_KEY"].ToString().IndexOf("PRI") != -1; }
+        }
+
         public bool CanBeNull
         {
             get { return columnDef["IS_NULLABLE"].Equals("YES"); }
@@ -46,6 +51,16 @@ namespace MySql.VSTools
         public bool ZeroFill
         {
             get { return columnDef["EXTRA"].ToString().IndexOf("zero") != -1; }
+        }
+
+        public string CharacterSet
+        {
+            get { return columnDef["CHARACTER_SET_NAME"].ToString(); }
+        }
+
+        public string Collation
+        {
+            get { return columnDef["COLLATION_NAME"].ToString(); }
         }
 
         #endregion

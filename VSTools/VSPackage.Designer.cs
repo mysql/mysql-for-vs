@@ -99,6 +99,13 @@ namespace MySql.VSTools {
             }
         }
         
+        internal static System.Drawing.Bitmap bullet {
+            get {
+                object obj = ResourceManager.GetObject("bullet", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Unable to create new query window.
         /// </summary>
@@ -178,6 +185,13 @@ namespace MySql.VSTools {
         internal static string FunctionsNodeTitle {
             get {
                 return ResourceManager.GetString("FunctionsNodeTitle", resourceCulture);
+            }
+        }
+        
+        internal static System.Drawing.Bitmap key {
+            get {
+                object obj = ResourceManager.GetObject("key", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

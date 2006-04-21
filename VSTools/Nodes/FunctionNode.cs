@@ -36,7 +36,7 @@ namespace MySql.VSTools
         {
         }
 
-        private void Open()
+/*        private void Open()
         {
             SqlTextEditor editor = new SqlTextEditor(
                 Caption, funcDef["ROUTINE_SCHEMA"].ToString(),
@@ -44,6 +44,6 @@ namespace MySql.VSTools
                 GetOpenConnection());
             OpenEditor(editor);
         }
-
+        */
     }
 }

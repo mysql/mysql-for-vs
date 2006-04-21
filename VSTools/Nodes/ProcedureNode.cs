@@ -11,6 +11,7 @@ namespace MySql.VSTools
     {
         private string body;
         private string schema;
+        private SqlTextEditor editor;
 
         public ProcedureNode(ExplorerNode parent, string caption, DataRow row)
             : base(parent, caption)
@@ -55,11 +56,25 @@ namespace MySql.VSTools
                     Delete();
                     break;
                 case PkgCmdIDList.cmdidOpen:
-                    Open();
+                    OpenEditor();
                     break;
                 default:
                     base.DoCommand(commandId);
                     break;
+            }
+        }
+
+        public override bool Save()
+        {
+            try
+            {
+                ExecuteNonQuery(editor.SqlText);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return false;
             }
         }
 
@@ -89,11 +104,12 @@ namespace MySql.VSTools
             }
         }
 
-        internal void Open()
+        internal override BaseEditor GetEditor()
         {
-            SqlTextEditor editor = new SqlTextEditor(
+            editor = new SqlTextEditor(
                 Caption, GetDatabaseNode().Caption, body, GetOpenConnection());
-            OpenEditor(editor);
+            return editor;
         }
+
     }
 }

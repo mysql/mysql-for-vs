@@ -42,6 +42,8 @@ namespace MySql.VSTools
             this.allowNull = new System.Windows.Forms.ColumnHeader();
             this.binary = new System.Windows.Forms.ColumnHeader();
             this.zero = new System.Windows.Forms.ColumnHeader();
+            this.characterSet = new System.Windows.Forms.ColumnHeader();
+            this.collation = new System.Windows.Forms.ColumnHeader();
             this.constraintsPage = new System.Windows.Forms.TabPage();
             this.indexesPage = new System.Windows.Forms.TabPage();
             this.optionsPage = new System.Windows.Forms.TabPage();
@@ -111,7 +113,7 @@ namespace MySql.VSTools
             this.tabControl1.Location = new System.Drawing.Point(7, 69);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(640, 403);
+            this.tabControl1.Size = new System.Drawing.Size(640, 269);
             this.tabControl1.TabIndex = 3;
             // 
             // columnsPage
@@ -122,7 +124,7 @@ namespace MySql.VSTools
             this.columnsPage.Location = new System.Drawing.Point(4, 22);
             this.columnsPage.Name = "columnsPage";
             this.columnsPage.Padding = new System.Windows.Forms.Padding(3);
-            this.columnsPage.Size = new System.Drawing.Size(632, 377);
+            this.columnsPage.Size = new System.Drawing.Size(632, 243);
             this.columnsPage.TabIndex = 0;
             this.columnsPage.Text = "Columns";
             this.columnsPage.UseVisualStyleBackColor = true;
@@ -130,7 +132,7 @@ namespace MySql.VSTools
             // removeButton
             // 
             this.removeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.removeButton.Location = new System.Drawing.Point(91, 229);
+            this.removeButton.Location = new System.Drawing.Point(87, 213);
             this.removeButton.Name = "removeButton";
             this.removeButton.Size = new System.Drawing.Size(75, 23);
             this.removeButton.TabIndex = 5;
@@ -140,7 +142,7 @@ namespace MySql.VSTools
             // addColumn
             // 
             this.addColumn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.addColumn.Location = new System.Drawing.Point(10, 230);
+            this.addColumn.Location = new System.Drawing.Point(6, 214);
             this.addColumn.Name = "addColumn";
             this.addColumn.Size = new System.Drawing.Size(75, 23);
             this.addColumn.TabIndex = 3;
@@ -158,14 +160,18 @@ namespace MySql.VSTools
             this.lengthColumn,
             this.allowNull,
             this.binary,
-            this.zero});
+            this.zero,
+            this.characterSet,
+            this.collation});
+            this.columnList.FullRowSelect = true;
             this.columnList.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.columnList.Location = new System.Drawing.Point(6, 6);
             this.columnList.Name = "columnList";
-            this.columnList.Size = new System.Drawing.Size(620, 217);
+            this.columnList.Size = new System.Drawing.Size(620, 201);
             this.columnList.TabIndex = 0;
             this.columnList.UseCompatibleStateImageBehavior = false;
             this.columnList.View = System.Windows.Forms.View.Details;
+            this.columnList.DoubleClick += new System.EventHandler(this.columnList_DoubleClick);
             this.columnList.SizeChanged += new System.EventHandler(this.columnList_SizeChanged);
             // 
             // nameColumn
@@ -183,18 +189,31 @@ namespace MySql.VSTools
             // 
             // allowNull
             // 
-            this.allowNull.Text = "Null";
-            this.allowNull.Width = 34;
+            this.allowNull.Text = "Allow Null";
+            this.allowNull.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.allowNull.Width = 75;
             // 
             // binary
             // 
             this.binary.Text = "Binary";
-            this.binary.Width = 45;
+            this.binary.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.binary.Width = 50;
             // 
             // zero
             // 
-            this.zero.Text = "Zero";
-            this.zero.Width = 46;
+            this.zero.Text = "Zero Fill";
+            this.zero.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.zero.Width = 65;
+            // 
+            // characterSet
+            // 
+            this.characterSet.Text = "Character Set";
+            this.characterSet.Width = 100;
+            // 
+            // collation
+            // 
+            this.collation.Text = "Collation";
+            this.collation.Width = 80;
             // 
             // constraintsPage
             // 
@@ -226,7 +245,6 @@ namespace MySql.VSTools
             this.optionsPage.TabIndex = 3;
             this.optionsPage.Text = "Options";
             this.optionsPage.UseVisualStyleBackColor = true;
-            this.optionsPage.Click += new System.EventHandler(this.optionsPage_Click);
             // 
             // groupBox2
             // 
@@ -450,7 +468,7 @@ namespace MySql.VSTools
             this.Controls.Add(this.label1);
             this.Name = "TableEditor";
             this.Padding = new System.Windows.Forms.Padding(3);
-            this.Size = new System.Drawing.Size(650, 475);
+            this.Size = new System.Drawing.Size(650, 341);
             this.tabControl1.ResumeLayout(false);
             this.columnsPage.ResumeLayout(false);
             this.optionsPage.ResumeLayout(false);
@@ -503,5 +521,7 @@ namespace MySql.VSTools
         private System.Windows.Forms.TextBox maxRows;
         private System.Windows.Forms.TextBox avgRowLen;
         private System.Windows.Forms.TextBox minRows;
+        private System.Windows.Forms.ColumnHeader characterSet;
+        private System.Windows.Forms.ColumnHeader collation;
     }
 }

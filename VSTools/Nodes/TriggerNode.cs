@@ -40,9 +40,9 @@ namespace MySql.VSTools
                 case PkgCmdIDList.cmdidDelete:
                     Delete();
                     break;
-                case PkgCmdIDList.cmdidOpen:
-                    Open();
-                    break;
+//                case PkgCmdIDList.cmdidOpen:
+  //                  Open();
+    //                break;
                 default:
                     base.DoCommand(commandId);
                     break;
@@ -53,12 +53,12 @@ namespace MySql.VSTools
         {
         }
 
-        internal void Open()
+/*        internal void Open()
         {
             SqlTextEditor editor = new SqlTextEditor(
                 Caption, GetDatabaseNode().Caption, body, GetOpenConnection());
             OpenEditor(editor);
         }
-
+        */
     }
 }
