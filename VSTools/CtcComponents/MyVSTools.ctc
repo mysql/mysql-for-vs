@@ -59,6 +59,7 @@ CMDS_SECTION guidMyVSToolsPkg
 
 	  // NewMenu                              Relative to Group                       Priority    Type        Name                    Text
     guidMyVSToolsCmdSet:MyToolbar, guidMyVSToolsCmdSet:MyToolbar, 0x0000, TOOLWINDOWTOOLBAR, "My Toolbar";
+    guidMyVSToolsCmdSet:QueryToolbar, guidMyVSToolsCmdSet:QueryToolbar, 0x0000, TOOLWINDOWTOOLBAR, "Query Toolbar";
     guidMyVSToolsCmdSet:ServerCtxtMenu, guidMyVSToolsCmdSet:0, 0x0000, CONTEXT|ALWAYSCREATE|NOCUSTOMIZE, "ServerContextMenu";
     guidMyVSToolsCmdSet:DatabaseCtxtMenu, guidMyVSToolsCmdSet:0, 0x0000, CONTEXT|ALWAYSCREATE|NOCUSTOMIZE, "DatabaseContextMenu";
     guidMyVSToolsCmdSet:TablesCtxtMenu, guidMyVSToolsCmdSet:0, 0x0000, CONTEXT|ALWAYSCREATE|NOCUSTOMIZE, "TablesContextMenu";
@@ -82,6 +83,8 @@ CMDS_SECTION guidMyVSToolsPkg
     // NewGroup                              Parent Group                            Priority
     guidMyVSToolsCmdSet:MyMenuGroup,    guidSHLMainMenu:IDM_VS_MENU_TOOLS, 0x0600;
     guidMyVSToolsCmdSet:MyToolbarGroup,    guidMyVSToolsCmdSet:MyToolbar, 0x0000;
+    guidMyVSToolsCmdSet:QueryToolbarGroup, guidMyVSToolsCmdSet:QueryToolbar, 0x0000;
+    guidMyVSToolsCmdSet:QueryResultsGroup, guidMyVSToolsCmdSet:QueryToolbar, 0x0001;
     guidMyVSToolsCmdSet:ConnectionGroup, guidMyVSToolsCmdSet:ServerCtxtMenu, 0x1000;
     guidMyVSToolsCmdSet:DeleteGroup, guidMyVSToolsCmdSet:ServerCtxtMenu, 0x1001;
     guidMyVSToolsCmdSet:PropertiesGroup, guidMyVSToolsCmdSet:ServerCtxtMenu, 0x1002;
@@ -116,6 +119,7 @@ CMDS_SECTION guidMyVSToolsPkg
     guidMyVSToolsCmdSet:cmdidMyExplorerWindow,    guidSHLMainMenu:IDG_VS_WNDO_OTRWNDWS1,    0x0100,        guidMyVSToolsCmdSet:bmpPic2,    BUTTON,    ,            "MySQL Explorer";
 
     guidMyVSToolsCmdSet:cmdidModifyConnection, guidMyVSToolsCmdSet:ConnectionGroup, 0x0101, guidMyVSToolsCmdSet:0, BUTTON, ,"Modify Connection...";
+    guidMyVSToolsCmdSet:cmdidNewQuery, guidMyVSToolsCmdSet:ConnectionGroup, 0x102, guidMyVSToolsCmdSet:bmpPicNewQuery, BUTTON, "New Query";
     guidMyVSToolsCmdSet:cmdidDelete, guidMyVSToolsCmdSet:DeleteGroup, 0x100, guidMyVSToolsCmdSet:bmpPicDelete, BUTTON, , "Delete";
 //    guidMyVSToolsCmdSet:cmdidRename, guidMyVSToolsCmdSet:DeleteGroup, 0x101, guidMyVSToolsCmdSet:0, BUTTON, , "Rename";
     guidMyVSToolsCmdSet:cmdidProperties, guidMyVSToolsCmdSet:PropertiesGroup, 0x100, guidMyVSToolsCmdSet:bmpPicProperties, BUTTON, , "Properties";
@@ -139,6 +143,12 @@ CMDS_SECTION guidMyVSToolsPkg
 
    // Trigger menus
    guidMyVSToolsCmdSet:cmdidAddNewTrigger, guidMyVSToolsCmdSet:TriggerGroup, 0x100, guidMyVSToolsCmdSet:0, BUTTON, , "Add New &Trigger";
+
+   // Query toolbar
+   guidMyVSToolsCmdSet:cmdidExecuteQuery, guidMyVSToolsCmdSet:QueryToolbarGroup, 0x100, guidMyVSToolsCmdSet:bmpPicExecQuery, BUTTON, "Execute Query";
+   guidMyVSToolsCmdSet:cmdidShowSQL, guidMyVSToolsCmdSet:QueryResultsGroup, 0x100, guidMyVSToolsCmdSet:bmpPicSql, BUTTON "Show SQL";
+   guidMyVSToolsCmdSet:cmdidShowGrid, guidMyVSToolsCmdSet:QueryResultsGroup, 0x101, guidMyVSToolsCmdSet:bmpPicGrid, BUTTON "Show results as grid";
+   guidMyVSToolsCmdSet:cmdidShowText, guidMyVSToolsCmdSet:QueryResultsGroup, 0x102, guidMyVSToolsCmdSet:bmpPicText, BUTTON "Show results as text";
   BUTTONS_END
 
   // The bitmaps section is used to define the bitmaps that are used for the commands.
@@ -150,7 +160,7 @@ CMDS_SECTION guidMyVSToolsPkg
     // must be the actual index (1-based) of the bitmap inside the bitmap strip.
 
 	  // Bitmap                          Bitmap Index, Bitmap Index, ...
-    guidMyVSToolsCmdSet:IDB_MENU_IMAGES,    bmpPic1, bmpPic2, bmpPicSmile, bmpPicX, bmpPicArrows, bmpPicRefresh, bmpPicDelete, bmpPicProperties, bmpPicOpen, bmpPicClone;
+    guidMyVSToolsCmdSet:IDB_MENU_IMAGES,    bmpPic1, bmpPic2, bmpPicSmile, bmpPicX, bmpPicArrows, bmpPicRefresh, bmpPicDelete, bmpPicProperties, bmpPicOpen, bmpPicClone, bmpPicExecQuery, bmpPicSql, bmpPicGrid, bmpPicText, bmpPicNewQuery;
   BITMAPS_END
 
 CMDS_END

@@ -120,10 +120,12 @@ namespace MySql.VSTools
             }
 
             // Create the Document (editor)
-//            DummyEditor newEditor = new DummyEditor();
-  //          ppunkDocView = Marshal.GetIUnknownForObject(newEditor);
-    //        ppunkDocData = Marshal.GetIUnknownForObject(newEditor);
-      //      pbstrEditorCaption = "";
+            ServerNode parent = (pvHier as ServerNode);
+            ProcedureNode pn = (ProcedureNode)parent.NodeFromId(itemid);
+            BaseEditor newEditor = pn.GetEditor();
+            ppunkDocView = Marshal.GetIUnknownForObject(newEditor);
+            ppunkDocData = Marshal.GetIUnknownForObject(newEditor);
+            pbstrEditorCaption = "";
 
             return VSConstants.S_OK;
         }

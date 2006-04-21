@@ -46,7 +46,11 @@ namespace MySql.VSTools
             sqlText.Font = new Font(family.Value.ToString(), 
                 float.Parse(size.Value.ToString()));
         }
-		
+
+        public string SqlText
+        {
+            get { return sqlText.Text; }
+        }
 
         protected override Guid EditorGuid
         {

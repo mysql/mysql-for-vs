@@ -23,6 +23,7 @@ namespace MySql.VSTools
         public const uint FunctionCtxtMenu = 0x1010;
         public const uint TriggerCtxtMenu = 0x1011;
         public const uint ColumnCtxtMenu = 0x1012;
+        public const uint QueryToolbar = 0x1013;
 
         // commands
         public const int cmdidRefresh = 0x102;
@@ -39,5 +40,10 @@ namespace MySql.VSTools
         public const int cmdidShowTableData = 0x113;
         public const int cmdidAddNewView = 0x114;
         public const int cmdidAddNewFunction = 0x115;
+        public const int cmdidNewQuery = 0x116;
+        public const int cmdidExecuteQuery = 0x117;
+        public const int cmdidShowSQL = 0x118;
+        public const int cmdidShowGrid = 0x119;
+        public const int cmdidShowText = 0x120;
     };
 }

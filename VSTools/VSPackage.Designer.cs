@@ -100,6 +100,15 @@ namespace MySql.VSTools {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to create new query window.
+        /// </summary>
+        internal static string CanNotCreateQueryWindow {
+            get {
+                return ResourceManager.GetString("CanNotCreateQueryWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Can not create tool window..
         /// </summary>
         internal static string CanNotCreateWindow {
@@ -185,6 +194,15 @@ namespace MySql.VSTools {
         internal static string ProceduresNodeTitle {
             get {
                 return ResourceManager.GetString("ProceduresNodeTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to QueryWindow Title.
+        /// </summary>
+        internal static string QueryWindowTitle {
+            get {
+                return ResourceManager.GetString("QueryWindowTitle", resourceCulture);
             }
         }
         

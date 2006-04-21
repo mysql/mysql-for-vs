@@ -419,6 +419,16 @@ namespace MySql.VSTools
 
         int IVsWindowPane.ClosePane()
         {
+/*            string filename2;
+            uint flags, readLocks, editLocks, itemId;
+            IVsHierarchy pHeir;
+            IntPtr punkData;
+            int result = rdt.GetDocumentInfo(cookie, out flags, out readLocks, out editLocks,
+                out filename2, out pHeir, out itemId, out punkData);
+            result = rdt.UnlockDocument((uint)_VSRDTFLAGS.RDT_Unlock_PromptSave,
+                Cookie);
+            result = rdt.GetDocumentInfo(cookie, out flags, out readLocks, out editLocks,
+                out filename2, out pHeir, out itemId, out punkData);*/
             this.Dispose(true);
             return VSConstants.S_OK;
         }

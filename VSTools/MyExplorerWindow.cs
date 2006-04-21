@@ -28,7 +28,6 @@ namespace MySql.VSTools
         // using the Window property. Note that, even if this class implements IDispose, we are
         // not calling Dispose on this object. This is because ToolWindowPane calls Dispose on 
         // the object returned by the Window property.
-//        private ExplorerControl control;
         private ITrackSelection trackSel;
         private SelectionContainer selectContainer;
         private List<ServerNode> serverList;
@@ -51,7 +50,7 @@ namespace MySql.VSTools
             // The resource ID correspond to the one defined in the resx file
             // while the Index is the offset in the bitmap strip. Each image in
             // the strip being 16x16.
-            this.BitmapResourceID = 301;
+            this.BitmapResourceID = 300;
             this.BitmapIndex = 1;
 
 
@@ -182,6 +181,7 @@ namespace MySql.VSTools
                 AddCommand(mcs, PkgCmdIDList.cmdidAddNewFunction);
                 AddCommand(mcs, PkgCmdIDList.cmdidAddNewView);
                 AddCommand(mcs, PkgCmdIDList.cmdidOpenTableDef);
+                AddCommand(mcs, PkgCmdIDList.cmdidNewQuery);
             }
         }
 

@@ -46,7 +46,8 @@ namespace MySql.VSTools
     [ProvideMenuResource(1000, 1)]
     // This attribute registers a tool window exposed by this package.
     [ProvideToolWindow(typeof(MyToolWindow))]
-    [ProvideToolWindow(typeof(TableDataWindow), Style=Microsoft.VisualStudio.Shell.VsDockStyle.MDI)]
+    [ProvideToolWindow(typeof(QueryToolWindow), Style = Microsoft.VisualStudio.Shell.VsDockStyle.MDI)]
+    [ProvideToolWindow(typeof(TableDataWindow), Style = Microsoft.VisualStudio.Shell.VsDockStyle.MDI)]
     [ProvideEditorLogicalView(typeof(EditorFactory), "{7651a703-06e5-11d1-8ebd-00a0c90f26ea}")]
     [Guid("5ceb61c4-7111-44f8-b7f2-ac049b81ad32")]
     public sealed class MyVSTools : Package

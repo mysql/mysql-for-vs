@@ -21,6 +21,7 @@
 #define FunctionCtxtMenu            0x1010
 #define TriggerCtxtMenu             0x1011
 #define ColumnCtxtMenu              0x1012
+#define QueryToolbar                0x1013
 
 ///////////////////////////////////////////////////////////////////////////////
 // Menu Group IDs
@@ -39,6 +40,8 @@
 #define ViewGroup                   0x1060
 #define FunctionGroup               0x1061
 #define TriggerGroup                0x1062
+#define QueryToolbarGroup           0x1063
+#define QueryResultsGroup           0x1064
 
 ///////////////////////////////////////////////////////////////////////////////
 // Command IDs
@@ -59,6 +62,11 @@
 #define cmdidShowTableData    0x113
 #define cmdidAddNewView       0x114
 #define cmdidAddNewFunction   0x115
+#define cmdidNewQuery         0x116
+#define cmdidExecuteQuery     0x117
+#define cmdidShowSQL          0x118
+#define cmdidShowGrid         0x119
+#define cmdidShowText         0x120
 
 ///////////////////////////////////////////////////////////////////////////////
 // Bitmap IDs
@@ -72,6 +80,10 @@
 #define bmpPicProperties 8
 #define bmpPicOpen       9
 #define bmpPicClone      10
-
+#define bmpPicExecQuery  11
+#define bmpPicSql        12
+#define bmpPicGrid       13
+#define bmpPicText       14
+#define bmpPicNewQuery   15
 
 #endif // __PKGCMDID_H_
