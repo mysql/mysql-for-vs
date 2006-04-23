@@ -27,9 +27,10 @@ namespace MySql.VSTools
         public BaseEditor()
             : base()
         {
-            //return;
-            if (DesignMode) return;
+        }
 
+        protected void Init()
+        {
             if (rdt == null)
             {
                 rdt = (IVsRunningDocumentTable)PackageSingleton.Package.GetMyService(

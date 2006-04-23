@@ -21,6 +21,9 @@ namespace MySql.VSTools
         {
             InitializeComponent();
 
+            if (DesignMode) return;
+            base.Init();
+
             this.table = table;
             tableName.Text = table.Caption;
             tableSchema.Text = table.Schema;

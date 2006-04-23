@@ -33,6 +33,10 @@ namespace MySql.VSTools
         {
             // This call is required by the Windows.Forms Form Designer.
             InitializeComponent();
+
+            if (DesignMode) return;
+            base.Init();
+
             spName = name;
             dbName = database;
             sqlText.Text = body;
