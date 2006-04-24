@@ -9,13 +9,20 @@ namespace MySql.VSTools
 {
     internal class FunctionNode : ExplorerNode
     {
-        DataRow funcDef;
+        private string body;
 
         public FunctionNode(ExplorerNode parent, string name, DataRow row)
             : base(parent, name)
         {
-            funcDef = row;
+            if (row != null)
+                body = String.Format("DROP FUNCTION {0}.{1}; {2}",
+                    Schema, Caption, row["ROUTINE_DEFINITION"].ToString());
+            else
+                body = String.Format("CREATE FUNCTION {0}.{1} RETURNS /*INT*/ AS\r\nBEGIN\r\nEND",
+                    Schema, Caption);
         }
+
+        #region Properties
 
         public override bool Expandable
         {
@@ -31,19 +38,42 @@ namespace MySql.VSTools
         {
             get { return 5; }
         }
-        
-        public override void Populate()
+
+        #endregion
+
+        public override void DoCommand(int commandId)
         {
+            switch (commandId)
+            {
+                case PkgCmdIDList.cmdidOpen:
+                    OpenEditor();
+                    break;
+            }
         }
 
-/*        private void Open()
+        protected override string GetDeleteSql()
         {
-            SqlTextEditor editor = new SqlTextEditor(
-                Caption, funcDef["ROUTINE_SCHEMA"].ToString(),
-                funcDef["ROUTINE_DEFINITION"].ToString(),
-                GetOpenConnection());
-            OpenEditor(editor);
+            return String.Format("DROP FUNCTION {0}.{1}", Schema, Caption);
         }
-        */
+
+        public override bool Save()
+        {
+            try
+            {
+                ExecuteNonQuery((activeEditor as SqlTextEditor).SqlText);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return false;
+            }
+        }
+
+        internal override BaseEditor GetEditor()
+        {
+            activeEditor = new SqlTextEditor(this, body);
+            return activeEditor;
+        }
     }
 }

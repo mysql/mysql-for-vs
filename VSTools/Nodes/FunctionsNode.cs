@@ -14,6 +14,8 @@ namespace MySql.VSTools
         {
         }
 
+        #region Properties
+
         public override uint IconIndex
         {
             get { return 1; }
@@ -27,6 +29,29 @@ namespace MySql.VSTools
         public override uint MenuId
         {
             get { return PkgCmdIDList.FunctionsCtxtMenu; }
+        }
+
+        #endregion
+
+        public override void DoCommand(int commandId)
+        {
+            switch (commandId)
+            {
+                case PkgCmdIDList.cmdidAddNewFunction:
+                    AddNewFunction();
+                    break;
+                default:
+                    base.DoCommand(commandId);
+                    break;
+            }
+        }
+
+        private void AddNewFunction()
+        {
+            string newName = GetDefaultName("Function");
+            FunctionNode node = new FunctionNode(this, newName, null);
+            IndexChild(node);
+            node.OpenEditor();
         }
 
         public override void Populate()

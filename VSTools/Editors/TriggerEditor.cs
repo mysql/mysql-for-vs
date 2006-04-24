@@ -10,21 +10,18 @@ namespace MySql.VSTools
 {
     internal partial class TriggerEditor : BaseEditor
     {
-        private TriggerNode triggerNode;
-
-        public TriggerEditor(TriggerNode node)
+        public TriggerEditor(TriggerNode node) : base(node)
         {
             InitializeComponent();
             if (DesignMode) return;
             base.Init();
 
-            triggerNode = node;
-            if (triggerNode == null) return;
-            sql.Text = triggerNode.Body;
-            triggername.Text = triggerNode.Caption;
-            schema.Text = triggerNode.Schema;
-            when.SelectedItem = triggerNode.ActionTime;
-            action.SelectedItem = triggerNode.Action;
+            if (node == null) return;
+            sql.Text = node.Body;
+            triggername.Text = node.Caption;
+            schema.Text = node.Schema;
+            when.SelectedItem = node.ActionTime;
+            action.SelectedItem = node.Action;
             IsDirty = false;
         }
 

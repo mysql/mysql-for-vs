@@ -14,6 +14,8 @@ namespace MySql.VSTools
         {
         }
 
+        #region Properties
+
         public override uint IconIndex
         {
             get { return 1; }
@@ -29,6 +31,8 @@ namespace MySql.VSTools
             get { return PkgCmdIDList.ProceduresCtxtMenu; }
         }
 
+        #endregion
+
         public override void DoCommand(int commandId)
         {
             switch (commandId)
@@ -36,32 +40,16 @@ namespace MySql.VSTools
                 case PkgCmdIDList.cmdidAddNewProcedure:
                     AddNewProcedure();
                     break;
+                default:
+                    base.DoCommand(commandId);
+                    break;
             }
         }
 
         private void AddNewProcedure()
         {
-
-            int i = 1;
-            while (true)
-            {
-                string nameToCheck = "StoredProdedure" + i;
-                ExplorerNode proc = FirstChild;
-                while (proc != null)
-                {
-                    if (proc.Caption == nameToCheck) break;
-                    proc = proc.NextSibling;
-                }
-                if (proc == null) break;
-                i++;
-            }
-
-            string name = "StoredProcedure" + i;
-            string defaultBody = "CREATE PROCEDURE " + name +
-                "()" + Environment.NewLine +
-                "BEGIN" + Environment.NewLine + "END" +
-                Environment.NewLine;
-            ProcedureNode node = new ProcedureNode(this, name, defaultBody);
+            string newName = GetDefaultName("Procedure");
+            ProcedureNode node = new ProcedureNode(this, newName, null);
             IndexChild(node);
             node.OpenEditor();
        }

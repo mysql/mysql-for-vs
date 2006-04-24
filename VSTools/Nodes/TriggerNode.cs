@@ -115,9 +115,28 @@ namespace MySql.VSTools
 
         private void Delete()
         {
-            ExecuteNonQuery(String.Format("DROP TRIGGER {0}.{1}",
-                GetDatabaseNode().Caption, Caption));
-            Parent.RemoveChild(this);
+            // first make sure the user is sure
+            if (MessageBox.Show(
+                String.Format(MyVSTools.GetResourceString("DeleteConfirm"),
+                Caption),
+                MyVSTools.GetResourceString("DeleteConfirmTitle"),
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question) == DialogResult.No)
+                return;
+
+            string sql = String.Format("DROP TRIGGER {0}.{1}", Schema, Caption);
+            try
+            {
+                ExecuteNonQuery(sql);
+                //delete was successful, remove this node
+                Parent.RemoveChild(this);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message,
+                    String.Format(MyVSTools.GetResourceString("UnableToDeleteTitle"),
+                    Caption), MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         internal override BaseEditor GetEditor()

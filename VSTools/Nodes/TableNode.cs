@@ -80,22 +80,6 @@ namespace MySql.VSTools
             get { return Int32.Parse(tableDef["AVG_ROW_LENGTH"].ToString()); }
         }
 
-
-        #endregion
-
-        public ArrayList GetColumns()
-        {
-            ArrayList cols = new ArrayList();
-            ExplorerNode col = FirstChild;
-            while (col != null)
-            {
-                if (col is ColumnNode)
-                    cols.Add(col);
-                col = col.NextSibling;
-            }
-            return cols;
-        }
-
         public override uint MenuId
         {
             get { return PkgCmdIDList.TableCtxtMenu; }
@@ -111,13 +95,29 @@ namespace MySql.VSTools
             get { return true; }
         }
 
+        #endregion
+
+        public ArrayList GetColumns()
+        {
+            if (!populated)
+                Populate();
+
+            ArrayList cols = new ArrayList();
+            ExplorerNode col = FirstChild;
+            while (col != null)
+            {
+                if (col is ColumnNode)
+                    cols.Add(col);
+                col = col.NextSibling;
+            }
+            return cols;
+        }
+
+
         public override void DoCommand(int commandId)
         {
             switch (commandId)
             {
-                case PkgCmdIDList.cmdidDelete:
-                    Delete();
-                    break;
                 case PkgCmdIDList.cmdidOpenTableDef:
                     OpenEditor();
                     break;

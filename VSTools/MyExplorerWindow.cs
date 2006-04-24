@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell;
 using System.ComponentModel.Design;
+using Microsoft.VisualStudio;
 
 namespace MySql.VSTools
 {
@@ -40,7 +41,7 @@ namespace MySql.VSTools
         public MyToolWindow() :
             base(null)
         {
-            this.ToolClsid = Microsoft.VisualStudio.VSConstants.CLSID_VsUIHierarchyWindow;
+            this.ToolClsid = VSConstants.CLSID_VsUIHierarchyWindow;
             this.ToolBar = new CommandID(GuidList.guidMyVSToolsCmdSet, PkgCmdIDList.cmdidMyExplorerToolbar);
 
             // Set the window title reading it from the resources.
@@ -142,7 +143,8 @@ namespace MySql.VSTools
                 (int)(__UIHWINFLAGS.UIHWF_ForceSingleSelect |
                 __UIHWINFLAGS.UIHWF_DoNotSortRootNodes |
                 __UIHWINFLAGS.UIHWF_SupportToolWindowToolbars |
-                __UIHWINFLAGS.UIHWF_LinesAtRoot),
+                __UIHWINFLAGS.UIHWF_LinesAtRoot |
+                __UIHWINFLAGS.UIHWF_RouteCmdidDelete),
                 out tmpClientFrame);
             (this.Frame as IVsWindowFrame).Show();
 

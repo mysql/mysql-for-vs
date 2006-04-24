@@ -29,6 +29,26 @@ namespace MySql.VSTools
             get { return PkgCmdIDList.ViewsCtxtMenu; }
         }
 
+        public override void DoCommand(int commandId)
+        {
+            switch (commandId) 
+            {
+                case PkgCmdIDList.cmdidAddNewView:
+                    AddNewView();
+                    break;
+            }
+        }
+
+        public void AddNewView()
+        {
+            string newName = GetDefaultName("View");
+
+            ViewNode newNode = new ViewNode(this, newName, null);
+            newNodes.Add(newNode);
+            IndexChild(newNode);
+            newNode.OpenEditor();
+        }
+
         public override void Populate()
         {
             if (populated) return;

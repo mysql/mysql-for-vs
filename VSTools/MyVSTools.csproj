@@ -89,10 +89,10 @@
     <Compile Include="..\\mysqlclient\\common\\dbConnectionString.cs" />
     <Compile Include="..\\mysqlclient\\common\\utility.cs" />
     <Compile Include="DebugTrace.cs" />
-    <Compile Include="EditColumnDialog.cs">
+    <Compile Include="Editors\EditColumnDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EditColumnDialog.Designer.cs">
+    <Compile Include="Editors\EditColumnDialog.Designer.cs">
       <DependentUpon>EditColumnDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Editor.cs">
@@ -171,7 +171,7 @@
       <SubType>Designer</SubType>
       <DependentUpon>ConnectionDlg.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="EditColumnDialog.resx">
+    <EmbeddedResource Include="Editors\EditColumnDialog.resx">
       <SubType>Designer</SubType>
       <DependentUpon>EditColumnDialog.cs</DependentUpon>
     </EmbeddedResource>

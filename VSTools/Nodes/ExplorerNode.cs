@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Reflection;
 using System.Globalization;
 using System.Security.Policy;
+using System.Collections;
 
 namespace MySql.VSTools
 {
@@ -17,7 +18,7 @@ namespace MySql.VSTools
     {
         private HierNode hierNode;
         private ExplorerNode parent;
-        private string caption;
+        protected string caption;
         private uint itemId;
         private bool isExpanded;
         private ExplorerNode nextSibling;
@@ -25,6 +26,7 @@ namespace MySql.VSTools
         protected bool populated;
         protected BaseEditor activeEditor;
         protected bool isNew;
+        protected ArrayList newNodes;
 
         public ExplorerNode(ExplorerNode parent, string caption)
         {
@@ -32,11 +34,18 @@ namespace MySql.VSTools
             this.caption = caption;
             isExpanded = false;
             populated = false;
+            newNodes = new ArrayList();
         }
 
         public virtual string Caption
         {
             get { return caption; }
+            set { caption = value; }
+        }
+
+        public virtual string Schema
+        {
+            get { return GetDatabaseNode().Caption; }
         }
 
         public ExplorerNode Parent
@@ -70,6 +79,11 @@ namespace MySql.VSTools
 
         public abstract uint IconIndex { get; }
         public abstract bool Expandable { get; }
+
+        protected virtual string GetDeleteSql()
+        {
+            return String.Empty;
+        }
 
         internal virtual BaseEditor GetEditor()
         {
@@ -116,6 +130,12 @@ namespace MySql.VSTools
 
         public void AddChild(ExplorerNode node)
         {
+            for (int i=0; i < newNodes.Count; i++)
+            {
+                if (newNodes[i] != node) continue;
+                newNodes.RemoveAt(i);
+                break;
+            }
             IndexChild(node);
             LinkChild(node);
         }
@@ -176,6 +196,32 @@ namespace MySql.VSTools
                 hierNode = (HierNode)node;
             }
             return hierNode;
+        }
+
+        protected void Delete()
+        {
+            // first make sure the user is sure
+            if (MessageBox.Show(
+                String.Format(MyVSTools.GetResourceString("DeleteConfirm"),
+                Caption),
+                MyVSTools.GetResourceString("DeleteConfirmTitle"),
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question) == DialogResult.No)
+                return;
+
+            string sql = GetDeleteSql();
+            try
+            {
+                ExecuteNonQuery(sql);
+                //delete was successful, remove this node
+                Parent.RemoveChild(this);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message,
+                    String.Format(MyVSTools.GetResourceString("UnableToDeleteTitle"),
+                    Caption), MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         protected DatabaseNode GetDatabaseNode()
@@ -240,6 +286,24 @@ namespace MySql.VSTools
                     winFrame.Show();
         }
 
+        protected string GetDefaultName(string baseName)
+        {
+            // first determine a default name
+            int num = 1;
+            string name = String.Format("{0}{1}", baseName, num).ToLower(CultureInfo.InvariantCulture);
+            ExplorerNode node = FirstChild;
+            int i = 0;
+            while (node != null)
+            {
+                if (node.Caption.ToLower(CultureInfo.InvariantCulture) == name)
+                    name = String.Format("{0}{1}", baseName, ++num).ToLower(CultureInfo.InvariantCulture);
+                node = node.NextSibling;
+                if (node == null && i < newNodes.Count)
+                    node = (ExplorerNode)newNodes[i++];
+            }
+            return name;
+        }
+
         protected void ExecuteNonQuery(string sql)
         {
             DbConnection connection = GetOpenConnection();
@@ -258,6 +322,28 @@ namespace MySql.VSTools
 
         public virtual void DoCommand(int commandId)
         {
+            switch (commandId)
+            {
+                case PkgCmdIDList.cmdidRefresh:
+                    Refresh();
+                    break;
+                case PkgCmdIDList.cmdidDelete:
+                    Delete();
+                    break;
+            }
+        }
+
+        protected virtual void Refresh()
+        {
+            populated = false;
+            while (firstChild != null)
+                RemoveChild(firstChild);
+            Populate();
+        }
+
+        public void CloseEditor()
+        {
+            activeEditor = null;
         }
     }
 }

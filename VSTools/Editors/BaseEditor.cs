@@ -10,7 +10,7 @@ using Microsoft.VisualStudio.Shell;
 
 namespace MySql.VSTools
 {
-    public class BaseEditor : UserControl, IVsPersistDocData, IPersistFileFormat,
+    internal class BaseEditor : UserControl, IVsPersistDocData, IPersistFileFormat,
                               IVsDocDataFileChangeControl, IOleCommandTarget,
                               IVsWindowPane 
     {
@@ -21,12 +21,14 @@ namespace MySql.VSTools
         protected IVsHierarchy hierarchy;
         protected uint itemID;
         private bool guard;
+        protected ExplorerNode editingNode;
         private ServiceProvider vsServiceProvider = null;
 
 
-        public BaseEditor()
+        public BaseEditor(ExplorerNode node)
             : base()
         {
+            editingNode = node;
         }
 
         protected void Init()
@@ -50,7 +52,7 @@ namespace MySql.VSTools
             get { return cookie; }
         }
 
-        protected bool IsDirty
+        public bool IsDirty
         {
             get { return isDirty; }
             set { isDirty = value; }
@@ -423,16 +425,7 @@ namespace MySql.VSTools
 
         int IVsWindowPane.ClosePane()
         {
-/*            string filename2;
-            uint flags, readLocks, editLocks, itemId;
-            IVsHierarchy pHeir;
-            IntPtr punkData;
-            int result = rdt.GetDocumentInfo(cookie, out flags, out readLocks, out editLocks,
-                out filename2, out pHeir, out itemId, out punkData);
-            result = rdt.UnlockDocument((uint)_VSRDTFLAGS.RDT_Unlock_PromptSave,
-                Cookie);
-            result = rdt.GetDocumentInfo(cookie, out flags, out readLocks, out editLocks,
-                out filename2, out pHeir, out itemId, out punkData);*/
+            editingNode.CloseEditor();
             this.Dispose(true);
             return VSConstants.S_OK;
         }

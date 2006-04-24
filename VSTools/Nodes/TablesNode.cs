@@ -14,6 +14,8 @@ namespace MySql.VSTools
         {
         }
 
+        #region Properties
+
         public override uint IconIndex
         {
             get { return 1; }
@@ -29,18 +31,22 @@ namespace MySql.VSTools
             get { return PkgCmdIDList.TablesCtxtMenu; }
         }
 
+        #endregion
+
         public override void DoCommand(int commandId)
         {
             switch (commandId)
             {
                 case PkgCmdIDList.cmdidAddNewTable:
-                    OpenNewTableEditor();
-                    return;
+                    AddNewTable();
+                    break;
+                default:
+                    base.DoCommand(commandId);
+                    break;
             }
-            base.DoCommand(commandId);
         }
 
-        public void OpenNewTableEditor()
+        private void AddNewTable()
         {
             //OpenEditor(typeof(EditorPane));
         }
@@ -64,7 +70,6 @@ namespace MySql.VSTools
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-        //        return false;
             }
         }
 

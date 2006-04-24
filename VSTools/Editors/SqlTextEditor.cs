@@ -14,7 +14,7 @@ namespace MySql.VSTools
 	/// <summary>
 	/// Summary description for StoredProcedureEditor.
 	/// </summary>
-	public class SqlTextEditor : BaseEditor 
+	internal class SqlTextEditor : BaseEditor 
 	{
 		private System.Windows.Forms.RichTextBox sqlText;
 		/// <summary> 
@@ -22,14 +22,11 @@ namespace MySql.VSTools
 		/// </summary>
 		private System.ComponentModel.Container components = null;
 
-		//private ServerConfig	config;
 		private string			spName;
 		private string			dbName;
-        private bool changed;
         private EnvDTE.DTE dte;
 
-        public SqlTextEditor(string name, string database, string body,
-            DbConnection conn)
+        public SqlTextEditor(ExplorerNode node, string body) : base(node)
         {
             // This call is required by the Windows.Forms Form Designer.
             InitializeComponent();
@@ -37,8 +34,8 @@ namespace MySql.VSTools
             if (DesignMode) return;
             base.Init();
 
-            spName = name;
-            dbName = database;
+            spName = node.Caption;
+            dbName = node.Schema;
             sqlText.Text = body;
 
             // set text editor font
@@ -170,37 +167,6 @@ namespace MySql.VSTools
             if (!IsDirty)
                 IsDirty = true;
         }
-
-/*        protected override void PostCreateInit()
-        {
-            base.PostCreateInit();
-
-            if (!CanEdit())
-                sqlText.ReadOnly = true;
-        }
-        */
-/*		private void saveBtn_Click(object sender, System.EventArgs e)
-		{
-			//string connStr = config.GetConnectString(false);
-			MySqlConnection conn = new MySqlConnection(connStr);
-			try 
-			{
-				conn.Open();
-				conn.ChangeDatabase(dbName);
-				string sql = "DROP PROCEDURE IF EXISTS " + spName + "; " + sqlText.Text;
-				MySqlCommand cmd = new MySqlCommand(sql, conn);
-				cmd.ExecuteNonQuery();
-			}
-			catch (Exception ex) 
-			{
-				MessageBox.Show("Error creating stored procedure: " + ex.Message);
-			}
-			finally 
-			{
-				if (conn != null)
-					conn.Close();
-			}
-		}*/
 
     }
 }

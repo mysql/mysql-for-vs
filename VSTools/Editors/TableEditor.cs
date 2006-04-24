@@ -18,7 +18,7 @@ namespace MySql.VSTools
         private Font wingDingFont;
         private ArrayList columns;
 
-        public TableEditor(TableNode table)
+        public TableEditor(TableNode table) : base(table)
         {
             InitializeComponent();
 
@@ -70,15 +70,16 @@ namespace MySql.VSTools
                     item.ImageIndex = 0;
                 item.UseItemStyleForSubItems = false;
                 item.SubItems.Add(node.Typename);
-                item.SubItems.Add(node.LengthAsString);
+                item.SubItems.Add(node.CharacterMaxLength == -1 ? String.Empty :
+                    node.CharacterMaxLength.ToString());
                 ListViewItem.ListViewSubItem sub = item.SubItems.Add(
-                    node.CanBeNull ? "u" : "");
+                    node.AllowNulls ? "u" : "");
                 sub.ForeColor = Color.DarkBlue;
                 sub.Font = wingDingFont;
                 sub = item.SubItems.Add(node.IsBinary ? "u" : "");
                 sub.ForeColor = Color.DarkBlue;
                 sub.Font = wingDingFont;
-                sub = item.SubItems.Add(node.ZeroFill ? "u" : "");
+                sub = item.SubItems.Add(node.IsZeroFill ? "u" : "");
                 sub.Font = wingDingFont;
                 sub.ForeColor = Color.DarkBlue;
                 sub = item.SubItems.Add(node.CharacterSet);
@@ -94,10 +95,30 @@ namespace MySql.VSTools
         void columnList_DoubleClick(object sender, System.EventArgs e)
         {
             if (columnList.SelectedIndices.Count == 0) return;
-            ColumnNode selectedNode = (ColumnNode)columns[columnList.SelectedIndices[0]];
-            EditColumnDialog dlg = new EditColumnDialog(selectedNode);
+            int selIndex = columnList.SelectedIndices[0];
+            ListViewItem selItem = columnList.Items[selIndex];
+            ColumnNode selNode = (ColumnNode)columns[selIndex];
+            EditColumnDialog dlg = new EditColumnDialog(selNode);
+
+            // if the user canceled the operation, then return
             if (DialogResult.Cancel == dlg.ShowDialog())
                 return;
+
+            // if the user didn't change anything, then just return
+            if (!selNode.IsDirty) return;
+
+            // update the list item
+            selItem.Text = selNode.Caption;
+            if (selNode.IsPrimary)
+                selItem.ImageIndex = 0;
+            selItem.SubItems[1].Text = selNode.Typename;
+            selItem.SubItems[2].Text = selNode.CharacterMaxLength == -1 ? String.Empty :
+                selNode.CharacterMaxLength.ToString();
+            selItem.SubItems[3].Text = selNode.AllowNulls ? "u" : "";
+            selItem.SubItems[4].Text = selNode.IsBinary ? "u" : "";
+            selItem.SubItems[5].Text = selNode.IsZeroFill ? "u" : "";
+            selItem.SubItems[6].Text = selNode.CharacterSet;
+            selItem.SubItems[7].Text = selNode.Collation;
         }
 
 
