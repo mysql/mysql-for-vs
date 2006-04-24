@@ -16,6 +16,7 @@ namespace MySql.VSTools
         private TableNode table;
         private ImageList listImages;
         private Font wingDingFont;
+        private ArrayList columns;
 
         public TableEditor(TableNode table)
         {
@@ -61,8 +62,8 @@ namespace MySql.VSTools
         {
             columnList.Items.Clear();
 
-            ArrayList cols = table.GetColumns();
-            foreach (ColumnNode node in cols)
+            columns = table.GetColumns();
+            foreach (ColumnNode node in columns)
             {
                 ListViewItem item = columnList.Items.Add(node.Caption);
                 if (node.IsPrimary)
@@ -92,8 +93,11 @@ namespace MySql.VSTools
 
         void columnList_DoubleClick(object sender, System.EventArgs e)
         {
-
-            throw new System.Exception("The method or operation is not implemented.");
+            if (columnList.SelectedIndices.Count == 0) return;
+            ColumnNode selectedNode = (ColumnNode)columns[columnList.SelectedIndices[0]];
+            EditColumnDialog dlg = new EditColumnDialog(selectedNode);
+            if (DialogResult.Cancel == dlg.ShowDialog())
+                return;
         }
 
 

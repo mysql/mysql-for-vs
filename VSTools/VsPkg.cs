@@ -49,6 +49,7 @@ namespace MySql.VSTools
     [ProvideToolWindow(typeof(QueryToolWindow), Style = Microsoft.VisualStudio.Shell.VsDockStyle.MDI)]
     [ProvideToolWindow(typeof(TableDataWindow), Style = Microsoft.VisualStudio.Shell.VsDockStyle.MDI)]
     [ProvideEditorLogicalView(typeof(EditorFactory), "{7651a703-06e5-11d1-8ebd-00a0c90f26ea}")]
+    [RegisterEditorExtension(typeof(EditorFactory), ".xxx", 1)]
     [Guid("5ceb61c4-7111-44f8-b7f2-ac049b81ad32")]
     public sealed class MyVSTools : Package
     {
@@ -132,7 +133,15 @@ namespace MySql.VSTools
 
             //Create Editor Factory
             editorFactory = new EditorFactory(this);
-            base.RegisterEditorFactory(editorFactory);
+            try
+            {
+                base.RegisterEditorFactory(editorFactory);
+            }
+            catch (Exception ex)
+            {
+                string t = ex.GetType().ToString();
+                Console.WriteLine(ex.Message);
+            }
 
             // Add our command handlers for menu (commands must exist in the .ctc file)
             OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;

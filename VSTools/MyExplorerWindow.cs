@@ -182,6 +182,7 @@ namespace MySql.VSTools
                 AddCommand(mcs, PkgCmdIDList.cmdidAddNewView);
                 AddCommand(mcs, PkgCmdIDList.cmdidOpenTableDef);
                 AddCommand(mcs, PkgCmdIDList.cmdidNewQuery);
+                AddCommand(mcs, PkgCmdIDList.cmdidAddNewTrigger);
             }
         }
 

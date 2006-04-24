@@ -23,6 +23,8 @@ namespace MySql.VSTools
         private ExplorerNode nextSibling;
         private ExplorerNode firstChild;
         protected bool populated;
+        protected BaseEditor activeEditor;
+        protected bool isNew;
 
         public ExplorerNode(ExplorerNode parent, string caption)
         {
@@ -96,18 +98,23 @@ namespace MySql.VSTools
 
         protected void LinkChild(ExplorerNode node)
         {
+            ExplorerNode nodeIter = null;
             if (firstChild == null)
                 firstChild = node;
             else
             {
-                ExplorerNode nodeIter = firstChild;
+                nodeIter = firstChild;
                 while (nodeIter.NextSibling != null)
                     nodeIter = nodeIter.NextSibling;
                 nodeIter.NextSibling = node;
             }
+            // notify our hierarchy node that we have linked in an item
+            GetHierNode().ItemAdded(ItemId, 
+                nodeIter == null ? VSConstants.VSITEMID_NIL : nodeIter.ItemId, 
+                node.ItemId);
         }
 
-        protected void AddChild(ExplorerNode node)
+        public void AddChild(ExplorerNode node)
         {
             IndexChild(node);
             LinkChild(node);
@@ -132,7 +139,7 @@ namespace MySql.VSTools
             else
                 prevNode.NextSibling = nodeIter.NextSibling;
 
-            hierNode.RefreshItem(itemId);
+            hierNode.ItemDeleted(itemId);
         }
 
         protected DbConnection GetOpenConnection()
@@ -222,7 +229,7 @@ namespace MySql.VSTools
             DebugTrace.Trace("starting editor on item = " + this.ItemId);
 
             string filename = GetDatabaseNode().Caption + "." + Caption;
-            editor = GuidList.guidProcedureEditor;
+            //editor = GuidList.guidProcedureEditor;
                Guid logicalView = VSConstants.LOGVIEWID_Primary;
                 int result = openDoc.OpenSpecificEditor(0,
                     filename, ref ed, null, ref logicalView,

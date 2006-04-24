@@ -95,6 +95,13 @@ namespace MySql.VSTools
                 (sinkEnum.Current as IVsHierarchyEvents).OnItemDeleted(itemId);
         }
 
+        public void ItemAdded(uint parentId, uint prevId, uint itemId)
+        {
+            IEnumerator sinkEnum = (sinks as IEnumerable).GetEnumerator();
+            while (sinkEnum.MoveNext())
+                (sinkEnum.Current as IVsHierarchyEvents).OnItemAdded(parentId, prevId, itemId);
+        }
+
         public ExplorerNode NodeFromId(uint itemId)
         {
             if (itemId == VSConstants.VSITEMID_ROOT)

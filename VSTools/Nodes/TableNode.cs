@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.Common;
 using System.Collections;
 using System.ComponentModel;
+using System.Globalization;
 
 namespace MySql.VSTools
 {
@@ -123,10 +124,30 @@ namespace MySql.VSTools
                 case PkgCmdIDList.cmdidShowTableData:
                     ShowTableData();
                     break;
+                case PkgCmdIDList.cmdidAddNewTrigger:
+                    AddNewTrigger();
+                    break;
                 default:
                     base.DoCommand(commandId);
                     break;
             }
+        }
+
+        internal void AddNewTrigger()
+        {
+            // first determine a default name
+            int num = 1;
+            string name = String.Format("trigger{0}", num);
+            ExplorerNode node = FirstChild;
+            while (node != null)
+            {
+                if (node.Caption.ToLower(CultureInfo.InvariantCulture) == name)
+                    name = String.Format("trigger{0}", ++num);
+                node = node.NextSibling;
+            }
+            TriggerNode newTrigger = new TriggerNode(this, name);
+            IndexChild(newTrigger);
+            newTrigger.Open();
         }
 
         internal override BaseEditor GetEditor()
