@@ -37,6 +37,8 @@ namespace MySql.VSTools
             newNodes = new ArrayList();
         }
 
+        #region Properties
+
         public virtual string Caption
         {
             get { return caption; }
@@ -80,9 +82,21 @@ namespace MySql.VSTools
         public abstract uint IconIndex { get; }
         public abstract bool Expandable { get; }
 
+        #endregion
+
         protected virtual string GetDeleteSql()
         {
             return String.Empty;
+        }
+
+        public virtual void DoubleClick()
+        {
+            DoCommand(PkgCmdIDList.cmdidOpen);
+        }
+
+        public virtual void Select()
+        {
+            (GetHierNode() as ServerNode).SelectChild(this);
         }
 
         internal virtual BaseEditor GetEditor()

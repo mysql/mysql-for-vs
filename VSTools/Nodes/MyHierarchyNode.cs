@@ -14,12 +14,14 @@ namespace MySql.VSTools
 {
     internal abstract class HierNode : ExplorerNode, 
         IVsUIHierarchy, 
-        IVsPersistHierarchyItem2
+        IVsPersistHierarchyItem2,
+        IVsHierarchyDeleteHandler
     {
         private static ImageList imageList;
         private EventSinkCollection nodes;
         private ExplorerNode activeNode;
         private EventSinkCollection sinks;
+        Microsoft.VisualStudio.OLE.Interop.IServiceProvider serviceProvider;
 
         public HierNode(HierNode parent, string name) : base(parent, name)
         {
@@ -65,6 +67,10 @@ namespace MySql.VSTools
             imageList.Images.SetKeyName(13, "db.View.many_16x16.png");*/
         }
 
+        public Microsoft.VisualStudio.OLE.Interop.IServiceProvider SP
+        {
+            get { return serviceProvider; }
+        }
 
         public uint IndexNode(ExplorerNode node)
         {
@@ -155,15 +161,22 @@ namespace MySql.VSTools
         public int ExecCommand(uint itemid, ref Guid pguidCmdGroup, uint nCmdID, 
             uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
         {
-            DebugTrace.Trace("IVsUIHierarchy::ExecCommand");
-            //MessageBox.Show("guid = " + pguidCmdGroup.ToString() + ";cmdid=" + nCmdID);
+            DebugTrace.Trace("IVsUIHierarchy::ExecCommand guid=" +
+                pguidCmdGroup.ToString() + ";cmdid=" + nCmdID);
             if (pguidCmdGroup == VsMenus.guidVsUIHierarchyWindowCmds)
             {
-                if (nCmdID == (uint)VSConstants.VsUIHierarchyWindowCmdIds.UIHWCMDID_RightClick)
+                activeNode = NodeFromId(itemid);
+                switch (nCmdID)
                 {
-                    activeNode = NodeFromId(itemid);
-                    if (activeNode.MenuId != 0)
-                        ShowContextMenu(activeNode.MenuId, pvaIn);
+                    case (uint)VSConstants.VsUIHierarchyWindowCmdIds.UIHWCMDID_RightClick:
+                        if (activeNode.MenuId != 0)
+                            ShowContextMenu(activeNode.MenuId, pvaIn);
+                        break;
+                    case (uint)VSConstants.VsUIHierarchyWindowCmdIds.UIHWCMDID_EnterKey:
+                        break;
+                    case (uint)VSConstants.VsUIHierarchyWindowCmdIds.UIHWCMDID_DoubleClick:
+                        activeNode.DoubleClick();
+                        break;
                 }
 //#define UIHWCMDID_DoubleClick 2 
 
@@ -260,6 +273,7 @@ namespace MySql.VSTools
       //              break;
                 case __VSHPROPID.VSHPROPID_ItemDocCookie:
                     result = ItemId;
+                    node.Select();
                     break;
                     //2072
                     //2084
@@ -321,7 +335,7 @@ namespace MySql.VSTools
 
         public int QueryStatusCommand(uint itemid, ref Guid pguidCmdGroup, uint cCmds, Microsoft.VisualStudio.OLE.Interop.OLECMD[] prgCmds, IntPtr pCmdText)
         {
-            DebugTrace.Trace("IVsUIHierarchy::QueryStatusCommand");
+            //DebugTrace.Trace("IVsUIHierarchy::QueryStatusCommand");
             return VSConstants.S_OK;
         }
 
@@ -358,7 +372,8 @@ namespace MySql.VSTools
         public int SetSite(Microsoft.VisualStudio.OLE.Interop.IServiceProvider psp)
         {
             DebugTrace.Trace("IVsUIHierarchy::SetSite");
-            return VSConstants.E_NOTIMPL;
+            serviceProvider = psp;
+            return VSConstants.S_OK;
         }
 
         public int UnadviseHierarchyEvents(uint dwCookie)
@@ -434,6 +449,22 @@ namespace MySql.VSTools
             DebugTrace.Trace("IVsPersistHierarchyItem2::SaveItem");
             ExplorerNode node = NodeFromId(itemid);
             pfCanceled = node.Save() ? 0 : 1;
+            return VSConstants.S_OK;
+        }
+
+        #endregion
+
+
+        #region IVsHierarchyDeleteHandler Members
+
+        public int DeleteItem(uint dwDelItemOp, uint itemid)
+        {
+            return VSConstants.S_OK;
+        }
+
+        public int QueryDeleteItem(uint dwDelItemOp, uint itemid, out int pfCanDelete)
+        {
+            pfCanDelete = 1;
             return VSConstants.S_OK;
         }
 

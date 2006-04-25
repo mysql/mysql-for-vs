@@ -29,6 +29,7 @@ namespace MySql.VSTools
         // using the Window property. Note that, even if this class implements IDispose, we are
         // not calling Dispose on this object. This is because ToolWindowPane calls Dispose on 
         // the object returned by the Window property.
+//        private IVsTrackSelectionEx trackSel;
         private ITrackSelection trackSel;
         private SelectionContainer selectContainer;
         private List<ServerNode> serverList;
@@ -78,11 +79,18 @@ namespace MySql.VSTools
         internal void AddServer(string name, string connectString)
         {
             ServerNode node = new ServerNode(name, connectString);
+            node.ChildNodeSelected += 
+                new ChildNodeSelectedEventHandler(node_ChildNodeSelected);
             node.Populate();
 
             hierarchyWindow.AddUIHierarchy(node, 
                 (int)__VSADDHIEROPTIONS.ADDHIEROPT_DontSelectNewHierarchy);
             serverList.Add(node);
+        }
+
+        void node_ChildNodeSelected(object sender, ExplorerNode node)
+        {
+            UpdateSelection(node);
         }
 
         private void LoadServers()
@@ -107,17 +115,40 @@ namespace MySql.VSTools
             }
         }
 
-
         private ITrackSelection TrackSelection
         {
             get
             {
-                if (trackSel == null)
-                    trackSel = GetService(typeof(STrackSelection)) as ITrackSelection;
+                if (trackSel != null)
+                    return trackSel;
+                object spObj;
+                IVsWindowFrame wf = (this.Frame as IVsWindowFrame);
+                wf.GetProperty((int)__VSFPROPID.VSFPROPID_SPFrame, out spObj);
+                Microsoft.VisualStudio.OLE.Interop.IServiceProvider sp =
+                    (Microsoft.VisualStudio.OLE.Interop.IServiceProvider)spObj;
+                trackSel = (ITrackSelection)GetMyService(
+                    sp, typeof(STrackSelection), typeof(ITrackSelection));
                 return trackSel;
             }
         }
 
+/*        private IVsTrackSelectionEx TrackSelection
+        {
+            get
+            {
+                if (trackSel != null)
+                    return trackSel;
+                object frameServiceProvider;
+                (this.Frame as IVsWindowFrame).GetProperty(
+                    (int)__VSFPROPID.VSFPROPID_SPFrame,
+                    out frameServiceProvider);
+                IServiceProvider frameSp = (frameServiceProvider as IServiceProvider);
+                trackSel = frameSp.GetService(typeof(SVsTrackSelectionEx))
+                    as IVsTrackSelectionEx;
+                return trackSel;
+            }
+        }
+        */
         public void UpdateSelection(Object o)
         {
             if (selectContainer == null)
@@ -159,6 +190,28 @@ namespace MySql.VSTools
             LoadServers();
             SetupCommandHandlers();
             selectContainer = new SelectionContainer(true, true);
+        }
+
+        private object GetMyService(Microsoft.VisualStudio.OLE.Interop.IServiceProvider sp,
+            Type service, Type iface)
+        {
+            IntPtr pUnk = IntPtr.Zero;
+            Guid serviceGuid = service.GUID;
+            Guid ifaceGuid = iface.GUID;
+            int hr = sp.QueryService
+                (ref serviceGuid, ref ifaceGuid, out pUnk);
+            if (hr >= 0 && IntPtr.Zero != pUnk) 
+            {
+                try 
+                {
+                    return Marshal.GetObjectForIUnknown(pUnk);
+                }
+                finally 
+                {
+                    Marshal.Release(pUnk);
+                }
+            }
+            return null;
         }
 
         private void AddCommand(OleMenuCommandService mcs, int cmd)

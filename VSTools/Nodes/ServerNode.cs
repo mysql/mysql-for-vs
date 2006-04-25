@@ -10,9 +10,12 @@ using Microsoft.VisualStudio.Shell.Interop;
 
 namespace MySql.VSTools
 {
+    public delegate void ChildNodeSelectedEventHandler(object sender, ExplorerNode selectedNode);
+
     internal class ServerNode : HierNode
     {
         private MySqlConnection conn;
+        public event ChildNodeSelectedEventHandler ChildNodeSelected;
 
         public ServerNode(string name, string connectString)
             : base(null, name)
@@ -20,6 +23,8 @@ namespace MySql.VSTools
             conn = new MySqlConnection(connectString);
             ItemId = VSConstants.VSITEMID_ROOT;
         }
+
+        #region Properties
 
         public MySqlConnection Connection
         {
@@ -40,7 +45,9 @@ namespace MySql.VSTools
         {
             get { return PkgCmdIDList.ServerCtxtMenu; }
         }
-        
+
+        #endregion
+
         public override void DoCommand(int commandId)
         {
             switch (commandId)
@@ -50,6 +57,9 @@ namespace MySql.VSTools
     //                break;
                 case PkgCmdIDList.cmdidNewQuery :
                     OpenNewQuery();
+                    break;
+                default:
+                    base.DoCommand(commandId);
                     break;
             }
         }
@@ -104,6 +114,10 @@ namespace MySql.VSTools
             (this.TreeView.Parent as ExplorerControl).SaveServers();
         }
 */
-
+        public void SelectChild(ExplorerNode node)
+        {
+            if (ChildNodeSelected != null)
+                ChildNodeSelected(this, node);
+        }
     }
 }
