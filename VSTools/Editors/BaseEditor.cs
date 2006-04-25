@@ -24,6 +24,9 @@ namespace MySql.VSTools
         protected ExplorerNode editingNode;
         private ServiceProvider vsServiceProvider = null;
 
+        public BaseEditor()
+        {
+        }
 
         public BaseEditor(ExplorerNode node)
             : base()

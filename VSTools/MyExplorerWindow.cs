@@ -32,7 +32,6 @@ namespace MySql.VSTools
         private ITrackSelection trackSel;
         private SelectionContainer selectContainer;
         private List<ServerNode> serverList;
-        private object clientFrame;
         private IVsUIHierarchyWindow hierarchyWindow;
 
         /// <summary>
@@ -54,8 +53,6 @@ namespace MySql.VSTools
             this.BitmapResourceID = 300;
             this.BitmapIndex = 1;
 
-
-            //control = new ExplorerControl(this);
             serverList = new List<ServerNode>();
         }
 
@@ -121,8 +118,13 @@ namespace MySql.VSTools
             }
         }
 
-        public void UpdateSelection()
+        public void UpdateSelection(Object o)
         {
+            if (selectContainer == null)
+                selectContainer = new SelectionContainer();
+            ArrayList selObjects = new ArrayList();
+            selObjects.Add(o);
+            selectContainer.SelectedObjects = selObjects;
             ITrackSelection track = TrackSelection;
             if (track != null)
                 track.OnSelectChange((ISelectionContainer)selectContainer);

@@ -156,35 +156,9 @@ namespace MySql.VSTools
             return editor;
         }
 
-        private void Delete()
+        protected override string GetDeleteSql()
         {
-            // first make sure the user is sure
-            if (MessageBox.Show(String.Format(MyVSTools.GetResourceString("DeleteConfirm"),
-                tableDef["TABLE_NAME"]),
-                MyVSTools.GetResourceString("DeleteConfirmTitle"),
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question) == DialogResult.No)
-                return;
-
-            System.Data.Common.DbConnection conn;
-            conn = GetOpenConnection();
-            System.Data.Common.DbCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "DROP TABLE " + tableDef["TABLE_SCHEMA"] + "." +
-                tableDef["TABLE_NAME"];
-            try
-            {
-                cmd.ExecuteNonQuery();
-                //delete was successful, remove this node
-            //    this.Remove();  
-                //TODO: do the remove
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message,
-                    String.Format(MyVSTools.GetResourceString("UnableToDeleteTitle"),
-                    tableDef["TABLE_NAME"]),
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            return String.Format("DROP TABLE {0}.{1}", Schema, Caption);
         }
 
         private void ShowTableData()

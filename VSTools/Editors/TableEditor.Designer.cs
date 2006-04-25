@@ -90,6 +90,7 @@ namespace MySql.VSTools
             this.tableName.Name = "tableName";
             this.tableName.Size = new System.Drawing.Size(247, 20);
             this.tableName.TabIndex = 1;
+            this.tableName.TextChanged += new System.EventHandler(this.common_changed);
             // 
             // label2
             // 
@@ -220,7 +221,7 @@ namespace MySql.VSTools
             this.constraintsPage.Location = new System.Drawing.Point(4, 22);
             this.constraintsPage.Name = "constraintsPage";
             this.constraintsPage.Padding = new System.Windows.Forms.Padding(3);
-            this.constraintsPage.Size = new System.Drawing.Size(632, 377);
+            this.constraintsPage.Size = new System.Drawing.Size(632, 243);
             this.constraintsPage.TabIndex = 1;
             this.constraintsPage.Text = "Constraints";
             this.constraintsPage.UseVisualStyleBackColor = true;
@@ -229,7 +230,7 @@ namespace MySql.VSTools
             // 
             this.indexesPage.Location = new System.Drawing.Point(4, 22);
             this.indexesPage.Name = "indexesPage";
-            this.indexesPage.Size = new System.Drawing.Size(632, 377);
+            this.indexesPage.Size = new System.Drawing.Size(632, 243);
             this.indexesPage.TabIndex = 2;
             this.indexesPage.Text = "Indexes";
             this.indexesPage.UseVisualStyleBackColor = true;
@@ -241,7 +242,7 @@ namespace MySql.VSTools
             this.optionsPage.Location = new System.Drawing.Point(4, 22);
             this.optionsPage.Name = "optionsPage";
             this.optionsPage.Padding = new System.Windows.Forms.Padding(3);
-            this.optionsPage.Size = new System.Drawing.Size(632, 377);
+            this.optionsPage.Size = new System.Drawing.Size(632, 243);
             this.optionsPage.TabIndex = 3;
             this.optionsPage.Text = "Options";
             this.optionsPage.UseVisualStyleBackColor = true;
@@ -272,6 +273,7 @@ namespace MySql.VSTools
             this.maxRows.Name = "maxRows";
             this.maxRows.Size = new System.Drawing.Size(120, 20);
             this.maxRows.TabIndex = 11;
+            this.maxRows.TextChanged += new System.EventHandler(this.common_changed);
             // 
             // avgRowLen
             // 
@@ -279,6 +281,7 @@ namespace MySql.VSTools
             this.avgRowLen.Name = "avgRowLen";
             this.avgRowLen.Size = new System.Drawing.Size(120, 20);
             this.avgRowLen.TabIndex = 10;
+            this.avgRowLen.TextChanged += new System.EventHandler(this.common_changed);
             // 
             // minRows
             // 
@@ -286,6 +289,7 @@ namespace MySql.VSTools
             this.minRows.Name = "minRows";
             this.minRows.Size = new System.Drawing.Size(120, 20);
             this.minRows.TabIndex = 9;
+            this.minRows.TextChanged += new System.EventHandler(this.common_changed);
             // 
             // useChecksum
             // 
@@ -339,6 +343,7 @@ namespace MySql.VSTools
             this.rowFormat.Name = "rowFormat";
             this.rowFormat.Size = new System.Drawing.Size(121, 21);
             this.rowFormat.TabIndex = 1;
+            this.rowFormat.SelectedIndexChanged += new System.EventHandler(this.common_changed);
             // 
             // label6
             // 
@@ -375,6 +380,7 @@ namespace MySql.VSTools
             this.indexDirectory.Name = "indexDirectory";
             this.indexDirectory.Size = new System.Drawing.Size(517, 20);
             this.indexDirectory.TabIndex = 5;
+            this.indexDirectory.TextChanged += new System.EventHandler(this.common_changed);
             // 
             // dataDirectory
             // 
@@ -384,6 +390,7 @@ namespace MySql.VSTools
             this.dataDirectory.Name = "dataDirectory";
             this.dataDirectory.Size = new System.Drawing.Size(517, 20);
             this.dataDirectory.TabIndex = 4;
+            this.dataDirectory.TextChanged += new System.EventHandler(this.common_changed);
             // 
             // label5
             // 
@@ -428,6 +435,7 @@ namespace MySql.VSTools
             this.tableType.Name = "tableType";
             this.tableType.Size = new System.Drawing.Size(176, 21);
             this.tableType.TabIndex = 1;
+            this.tableType.SelectedIndexChanged += new System.EventHandler(this.common_changed);
             // 
             // sqlPage
             // 
@@ -435,7 +443,7 @@ namespace MySql.VSTools
             this.sqlPage.Location = new System.Drawing.Point(4, 22);
             this.sqlPage.Name = "sqlPage";
             this.sqlPage.Padding = new System.Windows.Forms.Padding(3);
-            this.sqlPage.Size = new System.Drawing.Size(632, 377);
+            this.sqlPage.Size = new System.Drawing.Size(632, 243);
             this.sqlPage.TabIndex = 4;
             this.sqlPage.Text = "SQL";
             this.sqlPage.UseVisualStyleBackColor = true;
@@ -445,7 +453,7 @@ namespace MySql.VSTools
             this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.richTextBox1.Location = new System.Drawing.Point(3, 3);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(626, 371);
+            this.richTextBox1.Size = new System.Drawing.Size(626, 237);
             this.richTextBox1.TabIndex = 0;
             this.richTextBox1.Text = "";
             // 

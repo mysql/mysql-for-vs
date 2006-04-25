@@ -18,14 +18,17 @@ namespace MySql.Data.MySqlClient
             if (categoryName == null)
             {
                 categoryName = ".NET Data Provider for MySQL";
-                if (PerformanceCounterCategory.CounterExists("HardProcedureQueries",
-                    categoryName))
-                    procedureHardQueries = new PerformanceCounter(categoryName,
-                        "HardProcedureQueries", false);
-                if (PerformanceCounterCategory.CounterExists("SoftProcedureQueries",
-                    categoryName))
-                    procedureSoftQueries = new PerformanceCounter(categoryName,
-                        "SoftProcedureQueries", false);
+                if (PerformanceCounterCategory.Exists(categoryName))
+                {
+                    if (PerformanceCounterCategory.CounterExists("HardProcedureQueries",
+                        categoryName))
+                        procedureHardQueries = new PerformanceCounter(categoryName,
+                            "HardProcedureQueries", false);
+                    if (PerformanceCounterCategory.CounterExists("SoftProcedureQueries",
+                        categoryName))
+                        procedureSoftQueries = new PerformanceCounter(categoryName,
+                            "SoftProcedureQueries", false);
+                }
             }
         }
 

@@ -48,6 +48,9 @@ namespace MySql.VSTools
                 case PkgCmdIDList.cmdidOpen:
                     OpenEditor();
                     break;
+                default:
+                    base.DoCommand(commandId);
+                    break;
             }
         }
 

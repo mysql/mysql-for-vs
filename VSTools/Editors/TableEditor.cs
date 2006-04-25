@@ -18,6 +18,13 @@ namespace MySql.VSTools
         private Font wingDingFont;
         private ArrayList columns;
 
+        public TableEditor()
+        {
+            InitializeComponent();
+
+            if (DesignMode) return;
+        }
+
         public TableEditor(TableNode table) : base(table)
         {
             InitializeComponent();
@@ -119,6 +126,11 @@ namespace MySql.VSTools
             selItem.SubItems[5].Text = selNode.IsZeroFill ? "u" : "";
             selItem.SubItems[6].Text = selNode.CharacterSet;
             selItem.SubItems[7].Text = selNode.Collation;
+        }
+
+        private void common_changed(object sender, EventArgs e)
+        {
+
         }
 
 
