@@ -34,7 +34,7 @@ namespace MySql.VSTools
             if (DesignMode) return;
             base.Init();
 
-            spName = node.Caption;
+            spName = node.Name;
             dbName = node.Schema;
             sqlText.Text = body;
 

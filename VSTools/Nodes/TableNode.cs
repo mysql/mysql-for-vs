@@ -22,59 +22,60 @@ namespace MySql.VSTools
 
         #region Properties
 
-        public string Schema
-        {
-            get { return tableDef["TABLE_SCHEMA"].ToString(); }
-        }
-
-        public string TypeName
+        [Category("Storage")]
+        [Description("MySQL engine this table is using")]
+        public string Engine
         {
             get { return tableDef["ENGINE"].ToString(); }
         }
 
+        [Category("Storage")]
+        [Description("Where the data files are stored")]
+        [DisplayName("Data Directory")]
         public string DataDirectory
         {
             get { return String.Empty; }
         }
 
+        [Category("Storage")]
+        [Description("Where the index files are stored")]
+        [DisplayName("Index Directory")]
         public string IndexDirectory
         {
             get { return String.Empty; }
         }
 
+        [Browsable(false)]
         public string RowFormat
         {
             get { return tableDef["ROW_FORMAT"].ToString(); }
         }
 
+        [Browsable(false)]
         public bool UseChecksum
         {
             get { return false; }
         }
 
+        [Browsable(false)]
         public int MinimumRowCount
         {
             get { return 0; }
         }
 
+        [Browsable(false)]
         public int MaximumRowCount
         {
             get { return 0; }
         }
 
-        [Category("Row Options")]
-        [Description("Defines how the rows in MyISAM tables should be stored.  The option " +
-                      "ValueType can be FIXED or DYNAMIC for static or variable-length row " +
-                      "format.  The utility myisampack can be used to set the type to " +
-                      "COMPRESSED.")]
+        [Browsable(false)]
         public string Password
         {
             get { return "mypass"; }
         }
 
-        [Category("Row Options")]
-        [Description("An approximation of the average row length for your table.  You " +
-                     "need to set this only for large tables with variable-sized records.")]
+        [Browsable(false)]
         public int AverageRowLength
         {
             get { return Int32.Parse(tableDef["AVG_ROW_LENGTH"].ToString()); }
@@ -141,7 +142,7 @@ namespace MySql.VSTools
             ExplorerNode node = FirstChild;
             while (node != null)
             {
-                if (node.Caption.ToLower(CultureInfo.InvariantCulture) == name)
+                if (node.Name.ToLower(CultureInfo.InvariantCulture) == name)
                     name = String.Format("trigger{0}", ++num);
                 node = node.NextSibling;
             }
@@ -158,7 +159,7 @@ namespace MySql.VSTools
 
         protected override string GetDeleteSql()
         {
-            return String.Format("DROP TABLE {0}.{1}", Schema, Caption);
+            return String.Format("DROP TABLE {0}.{1}", Schema, Name);
         }
 
         private void ShowTableData()
@@ -178,8 +179,8 @@ namespace MySql.VSTools
             if (populated) return;
             DbConnection conn = GetOpenConnection();
             string[] restrictions = new string[4];
-            restrictions[1] = GetDatabaseNode().Caption;
-            restrictions[2] = Caption;
+            restrictions[1] = Schema;
+            restrictions[2] = Name;
             DataTable columns = conn.GetSchema("columns", restrictions);
             foreach (DataRow column in columns.Rows)
                 AddChild(new ColumnNode(this, column));
@@ -187,7 +188,7 @@ namespace MySql.VSTools
             try
             {
                 restrictions[2] = null;
-                restrictions[3] = Caption;
+                restrictions[3] = Name;
                 DataTable triggers = conn.GetSchema("triggers", restrictions);
                 foreach (DataRow trigger in triggers.Rows)
                     AddChild(new TriggerNode(this, trigger));

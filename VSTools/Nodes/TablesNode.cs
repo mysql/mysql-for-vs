@@ -61,7 +61,7 @@ namespace MySql.VSTools
             try
             {
                 DataTable table = c.GetSchema("Tables", 
-                    new string[] { null, Parent.Caption, null, null });
+                    new string[] { null, Parent.Name, null, null });
 
                 foreach (DataRow row in table.Rows)
                     AddChild(new TableNode(this, row["table_name"].ToString(), row));

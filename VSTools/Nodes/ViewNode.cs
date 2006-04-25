@@ -17,10 +17,10 @@ namespace MySql.VSTools
         {
             if (row != null)
                 body = String.Format("ALTER VIEW {0}.{1} AS {2}",
-                    Schema, Caption, row["VIEW_DEFINITION"].ToString());
+                    Schema, Name, row["VIEW_DEFINITION"].ToString());
             else
                 body = String.Format("CREATE VIEW {0}.{1} AS ",
-                    Schema, Caption);
+                    Schema, Name);
             isNew = row == null ? true : false;
         }
 
@@ -69,13 +69,13 @@ namespace MySql.VSTools
             // first make sure the user is sure
             if (MessageBox.Show(
                 String.Format(MyVSTools.GetResourceString("DeleteConfirm"),
-                Caption),
+                Name),
                 MyVSTools.GetResourceString("DeleteConfirmTitle"),
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question) == DialogResult.No)
                 return;
 
-            string sql = String.Format("DROP VIEW {0}.{1}", Schema, Caption);
+            string sql = String.Format("DROP VIEW {0}.{1}", Schema, Name);
             try
             {
                 ExecuteNonQuery(sql);
@@ -86,7 +86,7 @@ namespace MySql.VSTools
             {
                 MessageBox.Show(ex.Message,
                     String.Format(MyVSTools.GetResourceString("UnableToDeleteTitle"),
-                    Caption), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Name), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -125,7 +125,7 @@ namespace MySql.VSTools
             DbConnection conn = GetOpenConnection();
             string[] restrictions = new string[4];
             restrictions[1] = Schema;
-            restrictions[2] = Caption;
+            restrictions[2] = Name;
             DataTable columns = conn.GetSchema("columns", restrictions);
             foreach (DataRow column in columns.Rows)
                 AddChild(new ColumnNode(this, column));
@@ -133,7 +133,7 @@ namespace MySql.VSTools
             try
             {
                 restrictions[2] = null;
-                restrictions[3] = Caption;
+                restrictions[3] = Name;
                 DataTable triggers = conn.GetSchema("triggers", restrictions);
                 foreach (DataRow trigger in triggers.Rows)
                     AddChild(new TriggerNode(this, trigger));

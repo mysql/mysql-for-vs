@@ -53,10 +53,10 @@ namespace MySql.VSTools
             set { isDirty = value; }
         }
 
-        public override string Caption
+        public override string Name
         {
-            get { return caption; }
-            set { isDirty |= (value != caption); caption = value; }
+            get { return name; }
+            set { isDirty |= (value != name); name = value; }
         }
 
         public string Typename

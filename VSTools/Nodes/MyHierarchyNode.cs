@@ -241,7 +241,7 @@ namespace MySql.VSTools
 
                 case __VSHPROPID.VSHPROPID_Caption:
                 case __VSHPROPID.VSHPROPID_Name:
-                    result = node.Caption;
+                    result = node.Name;
                     break;
 
                 case __VSHPROPID.VSHPROPID_OpenFolderIconIndex:

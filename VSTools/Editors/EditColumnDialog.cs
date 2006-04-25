@@ -17,7 +17,7 @@ namespace MySql.VSTools
             node = nodeToEdit;
             InitializeComponent();
 
-            columnName.Text = node.Caption;
+            columnName.Text = node.Name;
             columnType.SelectedItem = node.Typename;
             charSet.SelectedItem = node.CharacterSet;
             collation.SelectedItem = node.Collation;
@@ -31,7 +31,7 @@ namespace MySql.VSTools
 
         private void okbtn_Click(object sender, EventArgs e)
         {
-            node.Caption = columnName.Text;
+            node.Name = columnName.Text;
             if (columnType.SelectedIndex != -1)
                 node.Typename = columnType.SelectedItem.ToString();
             if (charSet.SelectedIndex != -1)

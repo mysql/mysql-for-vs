@@ -39,7 +39,7 @@ namespace MySql.VSTools
 
         public string Schema
         {
-            get { return GetDatabaseNode().Caption; }
+            get { return GetDatabaseNode().Name; }
         }
 
         public string ActionTime
@@ -75,10 +75,10 @@ namespace MySql.VSTools
             StringBuilder sql = new StringBuilder();
             TableNode parentTable = (Parent as TableNode);
             if (!isNew)
-                sql.AppendFormat("DROP TRIGGER {0}.{1};", Schema, Caption);
+                sql.AppendFormat("DROP TRIGGER {0}.{1};", Schema, Name);
             sql.AppendFormat("CREATE TRIGGER {0} {1} {2} ON {3}.{4} FOR EACH ROW {5}",
                 editor.TriggerName, editor.ActionTiming, editor.Action,
-                parentTable.Schema, parentTable.Caption, editor.Body);
+                parentTable.Schema, parentTable.Name, editor.Body);
             try
             {
                 ExecuteNonQuery(sql.ToString());
@@ -118,13 +118,13 @@ namespace MySql.VSTools
             // first make sure the user is sure
             if (MessageBox.Show(
                 String.Format(MyVSTools.GetResourceString("DeleteConfirm"),
-                Caption),
+                Name),
                 MyVSTools.GetResourceString("DeleteConfirmTitle"),
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question) == DialogResult.No)
                 return;
 
-            string sql = String.Format("DROP TRIGGER {0}.{1}", Schema, Caption);
+            string sql = String.Format("DROP TRIGGER {0}.{1}", Schema, Name);
             try
             {
                 ExecuteNonQuery(sql);
@@ -135,7 +135,7 @@ namespace MySql.VSTools
             {
                 MessageBox.Show(ex.Message,
                     String.Format(MyVSTools.GetResourceString("UnableToDeleteTitle"),
-                    Caption), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Name), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

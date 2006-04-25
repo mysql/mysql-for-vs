@@ -60,7 +60,7 @@ namespace MySql.VSTools
             try
             {
                 DataTable table = c.GetSchema("Views",
-                    new string[] { null, Parent.Caption, null, null }); 
+                    new string[] { null, Parent.Name, null, null }); 
 
                 foreach (DataRow row in table.Rows)
                     AddChild(new ViewNode(this, row["TABLE_NAME"].ToString(), row));

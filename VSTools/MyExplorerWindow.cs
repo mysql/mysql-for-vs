@@ -29,7 +29,6 @@ namespace MySql.VSTools
         // using the Window property. Note that, even if this class implements IDispose, we are
         // not calling Dispose on this object. This is because ToolWindowPane calls Dispose on 
         // the object returned by the Window property.
-//        private IVsTrackSelectionEx trackSel;
         private ITrackSelection trackSel;
         private SelectionContainer selectContainer;
         private List<ServerNode> serverList;
@@ -132,29 +131,15 @@ namespace MySql.VSTools
             }
         }
 
-/*        private IVsTrackSelectionEx TrackSelection
-        {
-            get
-            {
-                if (trackSel != null)
-                    return trackSel;
-                object frameServiceProvider;
-                (this.Frame as IVsWindowFrame).GetProperty(
-                    (int)__VSFPROPID.VSFPROPID_SPFrame,
-                    out frameServiceProvider);
-                IServiceProvider frameSp = (frameServiceProvider as IServiceProvider);
-                trackSel = frameSp.GetService(typeof(SVsTrackSelectionEx))
-                    as IVsTrackSelectionEx;
-                return trackSel;
-            }
-        }
-        */
         public void UpdateSelection(Object o)
         {
+            ExplorerNode node = (o as ExplorerNode);
             if (selectContainer == null)
-                selectContainer = new SelectionContainer();
+                selectContainer = new SelectionContainer(false, false);
             ArrayList selObjects = new ArrayList();
-            selObjects.Add(o);
+            if (node.IconIndex != 1)
+                selObjects.Add(o);
+            selectContainer.SelectableObjects = selObjects;
             selectContainer.SelectedObjects = selObjects;
             ITrackSelection track = TrackSelection;
             if (track != null)

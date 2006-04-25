@@ -18,7 +18,7 @@ namespace MySql.VSTools
 
             if (node == null) return;
             sql.Text = node.Body;
-            triggername.Text = node.Caption;
+            triggername.Text = node.Name;
             schema.Text = node.Schema;
             when.SelectedItem = node.ActionTime;
             action.SelectedItem = node.Action;

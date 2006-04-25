@@ -66,7 +66,7 @@ namespace MySql.VSTools
             try
             {
                 string[] restrictions = new string[4];
-                restrictions[1] = GetDatabaseNode().Caption;
+                restrictions[1] = Schema;
                 restrictions[3] = "PROCEDURE";
                 DataTable table = c.GetSchema("Procedures", restrictions);
 

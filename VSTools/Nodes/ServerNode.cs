@@ -74,7 +74,7 @@ namespace MySql.VSTools
                 throw new System.Runtime.InteropServices.COMException(
                     MyVSTools.GetResourceString("CanNotCreateQueryWindow"));
             }
-            pane.Caption = Caption + " [Query]";
+            pane.Caption = Name + " [Query]";
             (pane.Window as QueryControl).Connection = GetOpenConnection();
             IVsWindowFrame windowFrame = (IVsWindowFrame)pane.Frame;
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());

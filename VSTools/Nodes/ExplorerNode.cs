@@ -11,6 +11,7 @@ using System.Reflection;
 using System.Globalization;
 using System.Security.Policy;
 using System.Collections;
+using System.ComponentModel;
 
 namespace MySql.VSTools
 {
@@ -18,7 +19,7 @@ namespace MySql.VSTools
     {
         private HierNode hierNode;
         private ExplorerNode parent;
-        protected string caption;
+        protected string name;
         private uint itemId;
         private bool isExpanded;
         private ExplorerNode nextSibling;
@@ -28,10 +29,10 @@ namespace MySql.VSTools
         protected bool isNew;
         protected ArrayList newNodes;
 
-        public ExplorerNode(ExplorerNode parent, string caption)
+        public ExplorerNode(ExplorerNode parent, string name)
         {
             this.parent = parent;
-            this.caption = caption;
+            this.name = name;
             isExpanded = false;
             populated = false;
             newNodes = new ArrayList();
@@ -39,47 +40,65 @@ namespace MySql.VSTools
 
         #region Properties
 
-        public virtual string Caption
+        [Category("Identity")]
+        [ReadOnly(true)]
+        public virtual string Name
         {
-            get { return caption; }
-            set { caption = value; }
+            get { return name; }
+            set { name = value; }
         }
 
+        [Category("Identity")]
+        [Description("The database schema that owns this object.")]
         public virtual string Schema
         {
-            get { return GetDatabaseNode().Caption; }
+            get { return GetDatabaseNode().Name; }
         }
 
+        [Browsable(false)]
         public ExplorerNode Parent
         {
             get { return parent; }
         }
 
+        [Browsable(false)]
         public uint ItemId
         {
             get { return itemId; }
             set { itemId = value; }
         }
 
+        [Browsable(false)]
         public bool IsExpanded
         {
             get { return isExpanded; }
             set { isExpanded = value; }
         }
 
+        [Browsable(false)]
         public ExplorerNode FirstChild
         {
             get { Populate();  return firstChild; }
             set { firstChild = value; }
         }
 
+        [Browsable(false)]
         public ExplorerNode NextSibling
         {
             get { return nextSibling; }
             set { nextSibling = value; }
         }
 
+        [Browsable(false)]
+        public virtual uint MenuId
+        {
+            get { return 0; }
+        }
+
+        [Browsable(false)]
         public abstract uint IconIndex { get; }
+
+        [Browsable(false)]
         public abstract bool Expandable { get; }
 
         #endregion
@@ -111,11 +130,6 @@ namespace MySql.VSTools
         public virtual bool Save()
         {
             return false;
-        }
-
-        public virtual uint MenuId
-        {
-            get { return 0; }
         }
 
         protected void IndexChild(ExplorerNode node)
@@ -217,7 +231,7 @@ namespace MySql.VSTools
             // first make sure the user is sure
             if (MessageBox.Show(
                 String.Format(MyVSTools.GetResourceString("DeleteConfirm"),
-                Caption),
+                Name),
                 MyVSTools.GetResourceString("DeleteConfirmTitle"),
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question) == DialogResult.No)
@@ -234,7 +248,7 @@ namespace MySql.VSTools
             {
                 MessageBox.Show(ex.Message,
                     String.Format(MyVSTools.GetResourceString("UnableToDeleteTitle"),
-                    Caption), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Name), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -288,12 +302,12 @@ namespace MySql.VSTools
             */
             DebugTrace.Trace("starting editor on item = " + this.ItemId);
 
-            string filename = GetDatabaseNode().Caption + "." + Caption;
+            string filename = Schema + "." + Name;
             //editor = GuidList.guidProcedureEditor;
                Guid logicalView = VSConstants.LOGVIEWID_Primary;
                 int result = openDoc.OpenSpecificEditor(0,
                     filename, ref ed, null, ref logicalView,
-                    Caption, GetHierNode(), ItemId, IntPtr.Zero,
+                    Name, GetHierNode(), ItemId, IntPtr.Zero,
                     PackageSingleton.Package, out winFrame);
      
                 if (winFrame != null)
@@ -309,7 +323,7 @@ namespace MySql.VSTools
             int i = 0;
             while (node != null)
             {
-                if (node.Caption.ToLower(CultureInfo.InvariantCulture) == name)
+                if (node.Name.ToLower(CultureInfo.InvariantCulture) == name)
                     name = String.Format("{0}{1}", baseName, ++num).ToLower(CultureInfo.InvariantCulture);
                 node = node.NextSibling;
                 if (node == null && i < newNodes.Count)

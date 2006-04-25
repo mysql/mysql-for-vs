@@ -33,10 +33,9 @@ namespace MySql.VSTools
             base.Init();
 
             this.table = table;
-            tableName.Text = table.Caption;
+            tableName.Text = table.Name;
             tableSchema.Text = table.Schema;
-            tableType.SelectedItem = table.TypeName;
-            tableType.SelectedText = table.TypeName;
+            tableType.SelectedItem = table.Engine;
             dataDirectory.Text = table.DataDirectory;
             indexDirectory.Text = table.IndexDirectory;
             rowFormat.SelectedItem = table.RowFormat;
@@ -72,7 +71,7 @@ namespace MySql.VSTools
             columns = table.GetColumns();
             foreach (ColumnNode node in columns)
             {
-                ListViewItem item = columnList.Items.Add(node.Caption);
+                ListViewItem item = columnList.Items.Add(node.Name);
                 if (node.IsPrimary)
                     item.ImageIndex = 0;
                 item.UseItemStyleForSubItems = false;
@@ -115,7 +114,7 @@ namespace MySql.VSTools
             if (!selNode.IsDirty) return;
 
             // update the list item
-            selItem.Text = selNode.Caption;
+            selItem.Text = selNode.Name;
             if (selNode.IsPrimary)
                 selItem.ImageIndex = 0;
             selItem.SubItems[1].Text = selNode.Typename;

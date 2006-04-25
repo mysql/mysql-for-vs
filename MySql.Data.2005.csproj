@@ -299,7 +299,9 @@
     <Content Include="MySqlClient\docs\MySqlTransaction.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MySqlClient\Strings.resx" />
+    <EmbeddedResource Include="MySqlClient\Strings.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

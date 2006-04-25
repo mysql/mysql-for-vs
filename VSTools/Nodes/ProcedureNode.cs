@@ -16,10 +16,10 @@ namespace MySql.VSTools
         {
             if (row != null)
                 body = String.Format("DROP PROCEDURE {0}.{1}; {2}",
-                    Schema, Caption, row["ROUTINE_DEFINITION"].ToString());
+                    Schema, Name, row["ROUTINE_DEFINITION"].ToString());
             else
                 body = String.Format("CREATE PROCEDURE {0}.{1} AS\r\nBEGIN\r\nEND",
-                    Schema, Caption);
+                    Schema, Name);
         }
 
         #region Properties
@@ -76,7 +76,7 @@ namespace MySql.VSTools
 
         protected override string GetDeleteSql()
         {
-            return String.Format("DROP PROCEDURE {0}.{1}", Schema, Caption);
+            return String.Format("DROP PROCEDURE {0}.{1}", Schema, Name);
         }
     }
 }
