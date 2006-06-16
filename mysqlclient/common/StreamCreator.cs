@@ -38,7 +38,7 @@ namespace MySql.Data.Common
 		string				hostList;
 		uint				port;
 		string				pipeName;
-		int					timeOut;
+		uint				timeOut;
 
 		public StreamCreator( string hosts, uint port, string pipeName)
 		{
@@ -49,7 +49,7 @@ namespace MySql.Data.Common
 			this.pipeName = pipeName;
 		}
 
-		public Stream GetStream(int timeOut) 
+		public Stream GetStream(uint timeOut) 
 		{
 			this.timeOut = timeOut;
 
@@ -132,7 +132,7 @@ namespace MySql.Data.Common
                 ss = unix ? 
                     new SocketStream(AddressFamily.Unix, SocketType.Stream, ProtocolType.IP) :
                     new SocketStream(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                ss.Connect(endPoint, timeOut);
+                ss.Connect(endPoint, (int)timeOut);
                 ss.Socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, 1);
                 return ss;
             }

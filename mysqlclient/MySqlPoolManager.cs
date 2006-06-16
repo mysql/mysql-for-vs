@@ -43,7 +43,7 @@ namespace MySql.Data.MySqlClient
 			pools = new Hashtable();
 		}
 
-		public static MySqlPool GetPool(MySqlConnectionString settings) 
+		public static MySqlPool GetPool(MySqlConnectionStringBuilder settings) 
 		{
 			// make sure the manager is initialized
 			if (MySqlPoolManager.pools == null)

@@ -37,7 +37,7 @@ namespace MySql.Data.MySqlClient
 		private uint[]	currentLengths;
 		private	int		resultsCount;
 
-		public ClientDriver(MySqlConnectionString settings) : base(settings)
+		public ClientDriver(MySqlConnectionStringBuilder settings) : base(settings)
 		{
 			resultSet = IntPtr.Zero;
 			resultsCount = 0;
@@ -77,7 +77,7 @@ namespace MySql.Data.MySqlClient
 
 			//TODO: support charset, shared memory, named pipes
 
-			IntPtr result = Connect(mysql, connectionString.Server, connectionString.UserId,
+			IntPtr result = Connect(mysql, connectionString.Server, connectionString.UserID,
 				connectionString.Password, connectionString.Database, connectionString.Port, 
 				null, (uint)flags);
 			if (result == IntPtr.Zero)

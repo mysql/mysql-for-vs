@@ -51,7 +51,7 @@ namespace MySql.Data.MySqlClient
 			memoryName = memName;
 		}
 
-		public void Open(int timeOut)
+		public void Open(uint timeOut)
 		{
 			GetConnectNumber(timeOut);
 			SetupEvents();
@@ -63,7 +63,7 @@ namespace MySql.Data.MySqlClient
 			CloseHandle( dataMap );
 		}
 
-		private void GetConnectNumber(int timeOut)
+		private void GetConnectNumber(uint timeOut)
 		{
 			AutoResetEvent connectRequest = new AutoResetEvent(false);
 			connectRequest.Handle = OpenEvent( EVENT_ALL_ACCESS, false, 
@@ -82,7 +82,7 @@ namespace MySql.Data.MySqlClient
 			if (! connectRequest.Set())
 				throw new MySqlException( "Failed to open shared memory connection " );
 
-			connectAnswer.WaitOne( timeOut*1000, false );
+			connectAnswer.WaitOne((int)(timeOut*1000), false );
 
 			connectNumber = Marshal.ReadInt32( connectView );
 		}

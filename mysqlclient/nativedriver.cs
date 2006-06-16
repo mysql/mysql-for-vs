@@ -51,7 +51,7 @@ namespace MySql.Data.MySqlClient
 
         private int warningCount;
 
-		public NativeDriver(MySqlConnectionString settings) : base(settings)
+		public NativeDriver(MySqlConnectionStringBuilder settings) : base(settings)
 		{
 			packetSeq = 0;
 			isOpen = false;
@@ -170,7 +170,7 @@ namespace MySql.Data.MySqlClient
 			try 
 			{
 #if !CF
-				if (Settings.Protocol == ConnectionProtocol.SharedMemory)
+				if (Settings.ConnectionProtocol == MySqlConnectionProtocol.SharedMemory)
 				{
 					SharedMemoryStream str = new SharedMemoryStream(Settings.SharedMemoryName);
 					str.Open(Settings.ConnectionTimeout);
@@ -180,7 +180,7 @@ namespace MySql.Data.MySqlClient
 				{
 #endif
 					string pipeName = Settings.PipeName;
-					if (Settings.Protocol != ConnectionProtocol.NamedPipe)
+					if (Settings.ConnectionProtocol != MySqlConnectionProtocol.NamedPipe)
 						pipeName = null;
 					StreamCreator sc = new StreamCreator(Settings.Server, Settings.Port, pipeName);
 					stream = sc.GetStream(Settings.ConnectionTimeout);
@@ -355,7 +355,7 @@ namespace MySql.Data.MySqlClient
 		public void Authenticate()
 		{
 			// write the user id to the auth packet
-			writer.WriteString( connectionString.UserId ); 
+			writer.WriteString( connectionString.UserID ); 
 
 			if ( version.isAtLeast(4,1,1) )
 				Authenticate411();

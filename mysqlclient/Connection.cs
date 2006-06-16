@@ -40,7 +40,7 @@ namespace MySql.Data.MySqlClient
 		internal ConnectionState connectionState;
 		internal Driver driver;
 		private  MySqlDataReader dataReader;
-		private  MySqlConnectionString settings;
+		private  MySqlConnectionStringBuilder settings;
 		private  UsageAdvisor advisor;
 		private  bool hasBeenOpen;
         private SchemaProvider schemaProvider;
@@ -55,8 +55,8 @@ namespace MySql.Data.MySqlClient
 		public MySqlConnection()
 		{
 			//TODO: add event data to StateChange docs
-			settings = new MySqlConnectionString();
-			advisor = new UsageAdvisor( this );
+			settings = new MySqlConnectionStringBuilder();
+			advisor = new UsageAdvisor(this);
 		}
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/Ctor1/*'/>
@@ -72,7 +72,7 @@ namespace MySql.Data.MySqlClient
             get { return procedureCache; }
         }
 
-		internal MySqlConnectionString Settings 
+		internal MySqlConnectionStringBuilder Settings 
 		{
 			get { return settings; }
 		}
@@ -141,7 +141,7 @@ namespace MySql.Data.MySqlClient
 #endif
 		public override int ConnectionTimeout
 		{
-			get { return settings.ConnectionTimeout; }
+			get { return (int)settings.ConnectionTimeout; }
 		}
 		
 		/// <include file='docs/MySqlConnection.xml' path='docs/Database/*'/>
@@ -216,10 +216,12 @@ namespace MySql.Data.MySqlClient
 
                 try
                 {
-                    MySqlConnectionString newSettings = new MySqlConnectionString(value);
+                    MySqlConnectionStringBuilder newSettings = 
+                        new MySqlConnectionStringBuilder(value);
                     settings = newSettings;
                     if (driver != null)
                         driver.Settings = newSettings;
+                    //TODO: what happens if we are in a pool
                 }
                 catch (Exception)
                 {

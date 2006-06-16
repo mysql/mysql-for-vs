@@ -35,7 +35,7 @@ namespace MySql.Data.MySqlClient
 		protected DBVersion				version;
 		protected Encoding				encoding;
 		protected ServerStatusFlags		serverStatus;
-		protected MySqlConnectionString	connectionString;
+		protected MySqlConnectionStringBuilder	connectionString;
 		protected ClientFlags			serverCaps;
 		protected bool					isOpen;
 		protected DateTime				creationTime;
@@ -46,7 +46,7 @@ namespace MySql.Data.MySqlClient
 		protected Hashtable				charSets;
 		protected bool					hasWarnings;
 
-		public Driver(MySqlConnectionString settings)
+		public Driver(MySqlConnectionStringBuilder settings)
 		{
 			encoding = System.Text.Encoding.GetEncoding(1252);
 			connectionString = settings;
@@ -73,7 +73,7 @@ namespace MySql.Data.MySqlClient
 			get { return version; }
 		}
 
-		public MySqlConnectionString Settings 
+		public MySqlConnectionStringBuilder Settings 
 		{
 			get { return connectionString; }
 			set { connectionString = value; }
@@ -100,18 +100,18 @@ namespace MySql.Data.MySqlClient
 		public bool IsTooOld() 
 		{
 			TimeSpan ts = DateTime.Now.Subtract( creationTime );
-			if (ts.Seconds > Settings.ConnectionLifetime)
+			if (ts.Seconds > Settings.ConnectionLifeTime)
 				return true;
 			return false;
 		}
 
-		public static Driver Create( MySqlConnectionString settings ) 
+		public static Driver Create(MySqlConnectionStringBuilder settings) 
 		{
 			Driver d = null;
-			if (settings.DriverType == DriverType.Native)
+			if (settings.DriverType == MySqlDriverType.Native)
 				d = new NativeDriver(settings);
 #if !COMPACT_FRAMEWORK
-			else if (settings.DriverType == DriverType.Client)
+			else if (settings.DriverType == MySqlDriverType.Client)
 				d = new ClientDriver(settings);
 			else
 				d = new EmbeddedDriver(settings);

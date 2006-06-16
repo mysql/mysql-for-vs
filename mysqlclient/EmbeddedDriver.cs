@@ -11,7 +11,7 @@ namespace MySql.Data.MySqlClient
 	{
 		string[] options;
 
-		public EmbeddedDriver(MySqlConnectionString settings) : base(settings)
+		public EmbeddedDriver(MySqlConnectionStringBuilder settings) : base(settings)
 		{
 			options = new string[2];
 		}

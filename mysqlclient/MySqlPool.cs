@@ -29,20 +29,20 @@ namespace MySql.Data.MySqlClient
 	/// </summary>
 	internal sealed class MySqlPool
 	{
-		private ArrayList				inUsePool;
-		private ArrayList				idlePool;
-		private MySqlConnectionString	settings;
-		private int						minSize;
-		private int						maxSize;
+		private ArrayList				        inUsePool;
+		private ArrayList				        idlePool;
+		private MySqlConnectionStringBuilder	settings;
+		private uint					        minSize;
+		private uint					        maxSize;
         private ProcedureCache procedureCache;
 
-		public MySqlPool(MySqlConnectionString settings)
+		public MySqlPool(MySqlConnectionStringBuilder settings)
 		{
-			minSize = settings.MinPoolSize;
-			maxSize = settings.MaxPoolSize;
+			minSize = settings.MinimumPoolSize;
+			maxSize = settings.MaximumPoolSize;
 			this.settings = settings;
 			inUsePool =new ArrayList();
-			idlePool = new ArrayList( settings.MinPoolSize );
+			idlePool = new ArrayList((int)settings.MinimumPoolSize);
 
 			// prepopulate the idle pool to minSize
 			for (int i=0; i < minSize; i++) 
@@ -51,7 +51,7 @@ namespace MySql.Data.MySqlClient
             procedureCache = new ProcedureCache(settings.ProcedureCacheSize);
 		}
 
-		public MySqlConnectionString	Settings 
+		public MySqlConnectionStringBuilder	Settings 
 		{
 			get { return settings; }
 			set { settings = value; }
@@ -167,7 +167,7 @@ namespace MySql.Data.MySqlClient
 				lock (inUsePool.SyncRoot) 
 				{
 					inUsePool.Remove( driver );
-					if (driver.Settings.ConnectionLifetime != 0 && driver.IsTooOld())
+					if (driver.Settings.ConnectionLifeTime != 0 && driver.IsTooOld())
 						driver.Close();
 					else
 						idlePool.Add( driver );
@@ -179,7 +179,7 @@ namespace MySql.Data.MySqlClient
 			Driver driver = null;
 
 			int start = Environment.TickCount;
-			int ticks = settings.ConnectionTimeout * 1000;
+			uint ticks = settings.ConnectionTimeout * 1000;
 
 			// wait timeOut seconds at most to get a connection
 			while (driver == null && (Environment.TickCount - start) < ticks)
