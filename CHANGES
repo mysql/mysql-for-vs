@@ -11,6 +11,7 @@
     Reworked connection string classes to be simpler and faster
     Added cache for stored procedure definitions
     Added perfmon hooks for stored procedure cache hits and misses    	
+    Implemented MySqlConnectionBuilder class
     	
 8-24-05 - Version 1.0.5
 

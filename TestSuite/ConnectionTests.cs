@@ -44,38 +44,106 @@ namespace MySql.Data.MySqlClient.Tests
 			Close();
 		}
 
+        [Test]
+        public void ConnectionStringBuilder()
+        {
+            MySqlConnectionStringBuilder sb = null;
+            try
+            {
+                sb = new MySqlConnectionStringBuilder();
+                sb.ConnectionString = "server=localhost;uid=reggie;pwd=pass;port=1111;" +
+                    "connection timeout=23; pooling=true; min pool size=33; " +
+                    "max pool size=66";
+            }
+            catch (ArgumentException ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            Assert.AreEqual("localhost", sb.Server);
+            Assert.AreEqual("reggie", sb.UserID);
+            Assert.AreEqual("pass", sb.Password);
+            Assert.AreEqual(1111, sb.Port);
+            Assert.AreEqual(23, sb.ConnectionTimeout);
+            Assert.IsTrue(sb.Pooling);
+            Assert.AreEqual(33, sb.MinimumPoolSize);
+            Assert.AreEqual(66, sb.MaximumPoolSize);
+            string s = sb.ConnectionString;
+
+            try
+            {
+                sb.ConnectionString = "server=localhost;badkey=badvalue";
+                Assert.Fail("This should not work");
+            }
+            catch (ArgumentException)
+            {
+            }
+            catch (Exception)
+            {
+                Assert.Fail("Wrong exception type");
+            }
+
+            sb.Clear();
+            Assert.AreEqual(15, sb.ConnectionTimeout);
+            Assert.AreEqual(true, sb.Pooling);
+            Assert.AreEqual(3306, sb.Port);
+            Assert.AreEqual("localhost", sb.Server);
+            Assert.AreEqual(false, sb.PersistSecurityInfo);
+            Assert.AreEqual(0, sb.ConnectionLifeTime);
+            Assert.AreEqual(true, sb.ConnectionReset);
+            Assert.AreEqual(0, sb.MinimumPoolSize);
+            Assert.AreEqual(100, sb.MaximumPoolSize);
+            Assert.AreEqual("", sb.UserID);
+            Assert.AreEqual("", sb.Password);
+            Assert.AreEqual(false, sb.UseUsageAdvisor);
+            Assert.AreEqual("", sb.CharacterSet);
+            Assert.AreEqual(false, sb.UseCompression);
+            Assert.AreEqual("MYSQL", sb.PipeName);
+            Assert.IsFalse(sb.Logging);
+            Assert.IsFalse(sb.UseOldSyntax);
+            Assert.IsTrue(sb.AllowBatch);
+            Assert.IsFalse(sb.ConvertZeroDateTime);
+            Assert.AreEqual("MYSQL", sb.SharedMemoryName);
+            Assert.AreEqual("", sb.Database);
+            Assert.AreEqual(MySqlDriverType.Native, sb.DriverType);
+            Assert.AreEqual(MySqlConnectionProtocol.Sockets, sb.ConnectionProtocol);
+            Assert.IsFalse(sb.AllowZeroDateTime);
+            Assert.IsFalse(sb.UsePerformanceMonitor);
+            Assert.AreEqual(25, sb.ProcedureCacheSize);
+            Assert.IsFalse(sb.CacheServerConfig);
+        }
+
 		[Test]
 		public void TestConnectionStrings()
 		{
 			MySqlConnection c = new MySqlConnection();
 
 			// public properties
-			Assert.AreEqual( 15, c.ConnectionTimeout, "ConnectionTimeout" );
-			Assert.AreEqual( "", c.Database, "Database" );
-			Assert.AreEqual( String.Empty, c.DataSource, "DataSource" );
-			Assert.AreEqual( false, c.UseCompression, "Use Compression" );
-			Assert.AreEqual( System.Data.ConnectionState.Closed, c.State, "State" );
+			Assert.AreEqual(15, c.ConnectionTimeout, "ConnectionTimeout");
+			Assert.AreEqual("", c.Database, "Database");
+			Assert.AreEqual(String.Empty, c.DataSource, "DataSource");
+			Assert.AreEqual(false, c.UseCompression, "Use Compression");
+			Assert.AreEqual(System.Data.ConnectionState.Closed, c.State, "State");
 
 			c = new MySqlConnection("connection timeout=25; user id=myuser; " +
 				"password=mypass; database=Test;server=myserver; use compression=true; " +
 				"pooling=false;min pool size=5; max pool size=101");
 			// public properties
-			Assert.AreEqual( 25, c.ConnectionTimeout, "ConnectionTimeout" );
-			Assert.AreEqual( "Test", c.Database, "Database" );
-			Assert.AreEqual( "myserver", c.DataSource, "DataSource" );
-			Assert.AreEqual( true, c.UseCompression, "Use Compression" );
-			Assert.AreEqual( System.Data.ConnectionState.Closed, c.State, "State" );
+			Assert.AreEqual(25, c.ConnectionTimeout, "ConnectionTimeout");
+			Assert.AreEqual("Test", c.Database, "Database");
+			Assert.AreEqual("myserver", c.DataSource, "DataSource");
+			Assert.AreEqual(true, c.UseCompression, "Use Compression");
+			Assert.AreEqual(System.Data.ConnectionState.Closed, c.State, "State");
 
 			c.ConnectionString = "connection timeout=15; user id=newuser; " +
 				"password=newpass; port=3308; database=mydb; data source=myserver2; " + 
 				"use compression=true; pooling=true; min pool size=3; max pool size=76";
 
 			// public properties
-			Assert.AreEqual( 15, c.ConnectionTimeout, "ConnectionTimeout" );
-			Assert.AreEqual( "mydb", c.Database, "Database" );
-			Assert.AreEqual( "myserver2", c.DataSource, "DataSource" );
-			Assert.AreEqual( true, c.UseCompression, "Use Compression" );
-			Assert.AreEqual( System.Data.ConnectionState.Closed, c.State, "State" );
+			Assert.AreEqual(15, c.ConnectionTimeout, "ConnectionTimeout");
+			Assert.AreEqual("mydb", c.Database, "Database");
+			Assert.AreEqual("myserver2", c.DataSource, "DataSource");
+			Assert.AreEqual(true, c.UseCompression, "Use Compression");
+			Assert.AreEqual(System.Data.ConnectionState.Closed, c.State, "State");
 		}
 
 		[Test]

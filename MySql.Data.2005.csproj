@@ -34,7 +34,7 @@
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
-    <DefineConstants>TRACE;DEBUG;WINDOWS</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;WINDOWS NET20</DefineConstants>
     <DocumentationFile>doc.xml</DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
@@ -54,7 +54,7 @@
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
-    <DefineConstants>TRACE;WINDOWS</DefineConstants>
+    <DefineConstants>TRACE;WINDOWS NET20</DefineConstants>
     <DocumentationFile>doc.xml</DocumentationFile>
     <DebugSymbols>false</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
@@ -124,9 +124,6 @@
     <Compile Include="MySqlClient\CommandBuilder.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="MySqlClient\common\DBConnectionString.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="MySqlClient\common\NamedPipeStream.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -152,9 +149,6 @@
     <Compile Include="MySqlClient\Connection.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="MySqlClient\ConnectionString.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="MySqlClient\Crypt.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -178,6 +172,8 @@
     <Compile Include="MySqlClient\Logger.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MySqlClient\MySqlClientFactory.cs" />
+    <Compile Include="MySqlClient\MySqlConnectionStringBuilder.cs" />
     <Compile Include="MySqlClient\MysqlDefs.cs">
       <SubType>Code</SubType>
     </Compile>

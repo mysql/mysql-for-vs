@@ -71,7 +71,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MySQL.Data, Version=1.0.5.22172, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="MySQL.Data, Version=5.0.0.19317, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\bin\net-2.0\Debug\MySQL.Data.dll</HintPath>
     </Reference>
