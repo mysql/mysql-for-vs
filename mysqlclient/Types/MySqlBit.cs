@@ -100,5 +100,36 @@ namespace MySql.Data.Types
             reader.SkipBytes((int)len);
         }
 
+        public static void SetDSInfo(DataTable dsTable)
+        {
+            // we use name indexing because this method will only be called
+            // when GetSchema is called for the DataSourceInformation 
+            // collection and then it wil be cached.
+            DataRow row = dsTable.NewRow();
+            row["TypeName"] = "BIT";
+            row["ProviderDbType"] = MySqlDbType.Bit;
+            row["ColumnSize"] = 64;
+            row["CreateFormat"] = "BIT";
+            row["CreateParameters"] = null;
+            row["DataType"] = "UInt64";
+            row["IsAutoincrementable"] = false;
+            row["IsBestMatch"] = true;
+            row["IsCaseSensitive"] = false;
+            row["IsFixedLength"] = false;
+            row["IsFixedPrecisionScale"] = true;
+            row["IsLong"] = false;
+            row["IsNullable"] = true;
+            row["IsSearchable"] = true;
+            row["IsSearchableWithLike"] = false;
+            row["IsUnsigned"] = false;
+            row["MaximumScale"] = 0;
+            row["MinimumScale"] = 0;
+            row["IsConcurrencyType"] = DBNull.Value;
+            row["IsLiteralsSupported"] = false;
+            row["LiteralPrefix"] = null;
+            row["LiteralSuffix"] = null;
+            row["NativeDataType"] = null;
+            dsTable.Rows.Add(row);
+        }
     }
 }

@@ -111,7 +111,45 @@ namespace MySql.Data.Types
 
 		#endregion
 
-	}
+        internal static void SetDSInfo(DataTable dsTable)
+        {
+            string[] types = new string[] { "INT", "YEAR", "MEDIUMINT" };
+            MySqlDbType[] dbtype = new MySqlDbType[] { MySqlDbType.Int32, 
+                MySqlDbType.Year, MySqlDbType.Int24 };
+
+            // we use name indexing because this method will only be called
+            // when GetSchema is called for the DataSourceInformation 
+            // collection and then it wil be cached.
+            for (int x = 0; x < types.Length; x++)
+            {
+                DataRow row = dsTable.NewRow();
+                row["TypeName"] = types[x];
+                row["ProviderDbType"] = dbtype[x];
+                row["ColumnSize"] = 0;
+                row["CreateFormat"] = types[x];
+                row["CreateParameters"] = null;
+                row["DataType"] = "System.Int32";
+                row["IsAutoincrementable"] = dbtype[x] == MySqlDbType.Year ? false : true;
+                row["IsBestMatch"] = true;
+                row["IsCaseSensitive"] = false;
+                row["IsFixedLength"] = true;
+                row["IsFixedPrecisionScale"] = true;
+                row["IsLong"] = false;
+                row["IsNullable"] = true;
+                row["IsSearchable"] = true;
+                row["IsSearchableWithLike"] = false;
+                row["IsUnsigned"] = false;
+                row["MaximumScale"] = 0;
+                row["MinimumScale"] = 0;
+                row["IsConcurrencyType"] = DBNull.Value;
+                row["IsLiteralsSupported"] = false;
+                row["LiteralPrefix"] = null;
+                row["LiteralSuffix"] = null;
+                row["NativeDataType"] = null;
+                dsTable.Rows.Add(row);
+            }
+        }
+    }
 
 /*
 

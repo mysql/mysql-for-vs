@@ -4,20 +4,18 @@ using System.Text;
 
 namespace MySql.Data.MySqlClient
 {
-    class NonISSchemaProvider : SchemaProvider
+    class BaseSchemaProvider : SchemaProvider
     {
-        public NonISSchemaProvider(MySqlConnection connection) : base(connection)
+        public BaseSchemaProvider(MySqlConnection connection) : base(connection)
         {
         }
 
-        public override DataTable GetDatabases()
+        public override DataTable GetDatabases(string[] restrictions)
         {
-            throw new Exception("The method or operation is not implemented.");
         }
 
         public override DataTable GetTables(string[] restrictions)
         {
-            throw new Exception("The method or operation is not implemented.");
         }
 
         public override DataTable GetColumns(string[] restrictions)

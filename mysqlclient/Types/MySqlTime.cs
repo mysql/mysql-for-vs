@@ -144,7 +144,39 @@ namespace MySql.Data.Types
 
 		#endregion
 
-		public override string ToString()
+        internal static void SetDSInfo(DataTable dsTable)
+        {
+            // we use name indexing because this method will only be called
+            // when GetSchema is called for the DataSourceInformation 
+            // collection and then it wil be cached.
+            DataRow row = dsTable.NewRow();
+            row["TypeName"] = "TIME";
+            row["ProviderDbType"] = MySqlDbType.Time;
+            row["ColumnSize"] = 0;
+            row["CreateFormat"] = "TIME";
+            row["CreateParameters"] = null;
+            row["DataType"] = "System.TimeSpan";
+            row["IsAutoincrementable"] = false;
+            row["IsBestMatch"] = true;
+            row["IsCaseSensitive"] = false;
+            row["IsFixedLength"] = true;
+            row["IsFixedPrecisionScale"] = true;
+            row["IsLong"] = false;
+            row["IsNullable"] = true;
+            row["IsSearchable"] = true;
+            row["IsSearchableWithLike"] = false;
+            row["IsUnsigned"] = false;
+            row["MaximumScale"] = 0;
+            row["MinimumScale"] = 0;
+            row["IsConcurrencyType"] = DBNull.Value;
+            row["IsLiteralsSupported"] = false;
+            row["LiteralPrefix"] = null;
+            row["LiteralSuffix"] = null;
+            row["NativeDataType"] = null;
+            dsTable.Rows.Add(row);
+        }
+
+        public override string ToString()
 		{
 			return String.Format("{0} {1:00}:{2:00}:{3:00}.{4}", 
 				mValue.Days, mValue.Hours, mValue.Minutes, mValue.Seconds, mValue.Milliseconds );
