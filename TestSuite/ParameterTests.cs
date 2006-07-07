@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2005 MySQL AB
+// Copyright (C) 2004-2006 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -326,6 +326,35 @@ namespace MySql.Data.MySqlClient.Tests
 			cmd.CommandText = "SELECT name FROM Test WHERE id=3";
 			name = cmd.ExecuteScalar();
 			Assert.AreEqual( "Test3", name );
+		}
+
+		/// <summary>
+		/// Bug #13276  	Exception on serialize after inserting null value
+		/// </summary>
+		[Test]
+		public void InsertValueAfterNull()
+		{
+			execSQL("DROP TABLE IF EXISTS test");
+			execSQL("CREATE TABLE test (id int auto_increment primary key, foo int)");
+
+			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
+			MySqlCommand c = new MySqlCommand("INSERT INTO test (foo) values (?foo)", conn);
+			c.Parameters.Add("foo", MySqlDbType.Int32, 0, "foo");
+
+			da.InsertCommand = c;
+			DataTable dt = new DataTable();
+			da.Fill(dt);
+			DataRow row = dt.NewRow();
+			dt.Rows.Add(row);
+			row = dt.NewRow();
+			row["foo"] = 2;
+			dt.Rows.Add(row);
+			da.Update(dt);
+
+			dt.Clear();
+			da.Fill(dt);
+			Assert.AreEqual(2, dt.Rows.Count);
+			Assert.AreEqual(2, dt.Rows[1]["foo"]);
 		}
 	}
 }

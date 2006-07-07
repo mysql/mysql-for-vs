@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB
+// Copyright (C) 2004-2006 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -40,6 +40,21 @@ namespace MySql.Data.Common
 			this.build = build;
 			srcString = s;
 		}
+
+        public int Major
+        {
+            get { return major; }
+        }
+
+        public int Minor
+        {
+            get { return minor; }
+        }
+
+        public int Build
+        {
+            get { return build; }
+        }
 
 		public static DBVersion Parse( string versionString )
 		{

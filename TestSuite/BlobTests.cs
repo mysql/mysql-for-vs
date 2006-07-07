@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2005 MySQL AB
+// Copyright (C) 2004-2006 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -53,6 +53,12 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 			int lenIn = 400000;
 			byte[] dataIn = Utils.CreateBlob(lenIn);
+
+
+			MySqlCommand cmd2 = new MySqlCommand("SELECT * FROM test", conn);
+			MySqlDataReader reader2 = cmd2.ExecuteReader();
+			reader2.Read();
+			reader2.Close();
 
 			MySqlCommand cmd = new MySqlCommand("TRUNCATE TABLE Test", conn);
 			cmd.ExecuteNonQuery();
@@ -250,6 +256,7 @@ namespace MySql.Data.MySqlClient.Tests
 			{
 				MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
 				MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
+				cb.ToString();
 				DataTable dt = new DataTable();
 				da.Fill(dt);
 
@@ -303,5 +310,47 @@ namespace MySql.Data.MySqlClient.Tests
 				if (reader != null) reader.Close();
 			}
 		}
+
+        [Test]
+        public void MediumIntBlobSize()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test (id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT, " +
+                "image MEDIUMBLOB NOT NULL, imageSize MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT 0, " +
+                "PRIMARY KEY (id)) DEFAULT CHARSET=latin1");
+
+            byte[] image = new byte[2048];
+            for (int x = 0; x < image.Length; x++)
+                image[x] = (byte)(x % 47);
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES(NULL, ?image, ?size)", conn);
+            cmd.Parameters.Add("?image", image);
+            cmd.Parameters.Add("?size", image.Length);
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "SELECT imageSize, image FROM test WHERE id=?id";
+            cmd.Parameters.Add("?id", 1);
+            cmd.Prepare();
+
+            MySqlDataReader reader = null;
+            try
+            {
+                reader = cmd.ExecuteReader();
+                reader.Read();
+                uint size = reader.GetUInt32(reader.GetOrdinal("imageSize"));
+                byte[] outImage = new byte[size];
+                long len = reader.GetBytes(reader.GetOrdinal("image"), 0, outImage, 0, (int)size);
+                Assert.AreEqual(image.Length, size);
+                Assert.AreEqual(image.Length, len);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                if (reader != null)
+                    reader.Close();
+            }
+        }
 	}
 }

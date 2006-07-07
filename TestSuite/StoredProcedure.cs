@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2005 MySQL AB
+// Copyright (C) 2004-2006 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -35,7 +35,7 @@ namespace MySql.Data.MySqlClient.Tests
 		[TestFixtureSetUp]
 		public void FixtureSetup()
 		{
-			csAdditions = ";logging=true;pooling=false";
+			csAdditions = ";pooling=false;procedure cache size=0";
 			Open();
 			execSQL("DROP TABLE IF EXISTS Test; CREATE TABLE Test (id INT, name VARCHAR(100))");
 		}
@@ -65,7 +65,7 @@ namespace MySql.Data.MySqlClient.Tests
 				p.Scale = 3;
 				p.Value = 21;
 
-				object id = cmd.ExecuteScalar();
+				decimal id = (decimal)cmd.ExecuteScalar();
 				Assert.AreEqual(21, id);
 			}
 		}
@@ -106,32 +106,49 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-		[Test()]
+        /// <summary>
+        /// Bug #17814  	Stored procedure fails unless DbType set explicitly
+        /// </summary>
+		[Test]
 		[Category("5.0")]
 		public void OutputParameters()
 		{
 			// create our procedure
 			execSQL( "DROP PROCEDURE IF EXISTS spCount" );
-			execSQL( "CREATE PROCEDURE spCount( out value VARCHAR(50), OUT intVal INT, OUT dateVal TIMESTAMP, OUT floatVal FLOAT ) " + 
-				"BEGIN  SET value='42';  SET intVal=33; SET dateVal='2004-06-05 07:58:09'; SET floatVal = 1.2; END" );
+			execSQL( "CREATE PROCEDURE spCount(out value VARCHAR(50), OUT intVal INT, " +
+                "OUT dateVal TIMESTAMP, OUT floatVal FLOAT, OUT noTypeVarChar VARCHAR(20), " +
+                "OUT noTypeInt INT) " + 
+				"BEGIN  SET value='42';  SET intVal=33; SET dateVal='2004-06-05 07:58:09'; " +
+                "SET floatVal = 1.2; SET noTypeVarChar='test'; SET noTypeInt=66; END" );
 
 			MySqlCommand cmd = new MySqlCommand("spCount", conn);
 			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add( new MySqlParameter("?value", MySqlDbType.VarChar));
-			cmd.Parameters.Add( new MySqlParameter( "?intVal", MySqlDbType.Int32 ) );
-			cmd.Parameters.Add( new MySqlParameter( "?dateVal", MySqlDbType.Datetime ) );
-			cmd.Parameters.Add( new MySqlParameter( "?floatVal", MySqlDbType.Float ) );
-			cmd.Parameters[0].Direction = ParameterDirection.Output;
+			cmd.Parameters.Add(new MySqlParameter("?value", MySqlDbType.VarChar));
+			cmd.Parameters.Add(new MySqlParameter("?intVal", MySqlDbType.Int32));
+			cmd.Parameters.Add(new MySqlParameter("?dateVal", MySqlDbType.Datetime));
+			cmd.Parameters.Add(new MySqlParameter("?floatVal", MySqlDbType.Float));
+            MySqlParameter vcP = new MySqlParameter();
+            vcP.ParameterName = "noTypeVarChar";
+            vcP.Direction = ParameterDirection.Output;
+            cmd.Parameters.Add(vcP);
+            MySqlParameter vcI = new MySqlParameter();
+            vcI.ParameterName = "noTypeInt";
+            vcI.Direction = ParameterDirection.Output;
+            cmd.Parameters.Add(vcI);
+            cmd.Parameters[0].Direction = ParameterDirection.Output;
 			cmd.Parameters[1].Direction = ParameterDirection.Output;
 			cmd.Parameters[2].Direction = ParameterDirection.Output;
 			cmd.Parameters[3].Direction = ParameterDirection.Output;
 			int rowsAffected = cmd.ExecuteNonQuery();
 
-			Assert.AreEqual( 0, rowsAffected );
-			Assert.AreEqual( "42", cmd.Parameters[0].Value );
-			Assert.AreEqual( 33, cmd.Parameters[1].Value );
-			Assert.AreEqual( new DateTime(2004, 6, 5, 7, 58, 9), Convert.ToDateTime(cmd.Parameters[2].Value) );
-			Assert.AreEqual( 1.2, cmd.Parameters[3].Value );
+			Assert.AreEqual(0, rowsAffected);
+			Assert.AreEqual("42", cmd.Parameters[0].Value);
+			Assert.AreEqual(33, cmd.Parameters[1].Value);
+			Assert.AreEqual(new DateTime(2004, 6, 5, 7, 58, 9), 
+                Convert.ToDateTime(cmd.Parameters[2].Value));
+			Assert.AreEqual(1.2, cmd.Parameters[3].Value);
+            Assert.AreEqual("test", cmd.Parameters[4].Value);
+            Assert.AreEqual(66, cmd.Parameters[5].Value);
 
 			execSQL("DROP PROCEDURE spCount");
 		}
@@ -161,7 +178,7 @@ namespace MySql.Data.MySqlClient.Tests
 				MySqlCommand cmd = new MySqlCommand("spTest", conn);
 				cmd.CommandType = CommandType.StoredProcedure;
 				cmd.Parameters.Add( "?p2", 1 );
-				int rowsAffected = cmd.ExecuteNonQuery();
+				cmd.ExecuteNonQuery();
 				Assert.Fail("Should have thrown an exception");
 			}
 			catch (MySqlException) 
@@ -220,7 +237,7 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-		[Test()]
+		[Test]
 		[Category("5.0")]
 		public void ExecuteScalar() 
 		{
@@ -237,6 +254,24 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual( "Test", result );
 			Assert.AreEqual( "valuein", cmd.Parameters[1].Value );
 		}
+
+        /// <summary>
+        /// Bug #13590  	ExecuteScalar returns only Int64 regardless of actual SQL type
+        /// </summary>
+        [Test]
+        [Category("5.0")]
+        public void ExecuteScalar2()
+        {
+            // create our procedure
+            execSQL("CREATE PROCEDURE spTest() " +
+                "BEGIN  DECLARE myVar1 INT; SET myVar1 := 1; SELECT myVar1; END");
+
+            MySqlCommand cmd = new MySqlCommand("spTest", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            object result = cmd.ExecuteScalar();
+            Assert.AreEqual(1, result);
+            Assert.IsTrue(result is Int32);
+        }
 
 		[Test()]
 		[Category("5.0")]
@@ -313,8 +348,6 @@ namespace MySql.Data.MySqlClient.Tests
 			cmd.CommandType = CommandType.Text;
 			object result = cmd.ExecuteScalar();
 			Assert.AreEqual( "Test", result );
-
-			execSQL("DROP FUNCTION fnTest");
 		}
 
 		[Test()]
@@ -328,8 +361,6 @@ namespace MySql.Data.MySqlClient.Tests
 			cmd.CommandType = CommandType.Text;
 			object result = cmd.ExecuteScalar();
 			Assert.AreEqual( 26, result);
-
-			execSQL("DROP FUNCTION fnTest");
 		}
 
 		[Test()]
@@ -380,17 +411,19 @@ namespace MySql.Data.MySqlClient.Tests
 
 			MySqlCommand cmd = new MySqlCommand("spTest", conn);
 			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add( "?valin", 20.4 );
-			cmd.Parameters.Add( "?val2", 4 );
-			object val = cmd.ExecuteScalar();
-			Assert.AreEqual( 20.4, val );
+			cmd.Parameters.Add("?valin", 20.4);
+			cmd.Parameters.Add("?val2", 4);
+			decimal val = (decimal)cmd.ExecuteScalar();
+            Decimal d = new Decimal(20.4);
+            Assert.AreEqual(d, val);
 
 			// create our second procedure
-			execSQL("DROP PROCEDURE spTest");
+			execSQL("DROP PROCEDURE IF EXISTS spTest");
 			execSQL("CREATE PROCEDURE spTest( \r\n) BEGIN  SELECT 4; END" );
 			cmd.Parameters.Clear();
-			val = cmd.ExecuteScalar();
-			Assert.AreEqual(4, val);
+			object val1 = cmd.ExecuteScalar();
+			Assert.AreEqual(4, val1);
+            execSQL("DROP PROCEDURE IF EXISTS spTest");
 		}
 
 
@@ -401,9 +434,8 @@ namespace MySql.Data.MySqlClient.Tests
 		[Category("5.0")]
 		public void CallingStoredFunctionasProcedure()
 		{
-			execSQL("DROP FUNCTION IF EXISTS spFunc");
-			execSQL("CREATE FUNCTION spFunc(valin int) RETURNS INT BEGIN return valin * 2; END");
-			MySqlCommand cmd = new MySqlCommand("spFunc", conn);
+			execSQL("CREATE FUNCTION fnTest(valin int) RETURNS INT BEGIN return valin * 2; END");
+			MySqlCommand cmd = new MySqlCommand("fnTest", conn);
 			cmd.CommandType = CommandType.StoredProcedure;
 			cmd.Parameters.Add("?valin", 22);
 			cmd.Parameters.Add("retval", MySqlDbType.Int32);
@@ -450,7 +482,348 @@ namespace MySql.Data.MySqlClient.Tests
 			{
 				c.Close();
 			}
-				
 		}
-	}
+
+		/// <summary>
+		/// Bug #13590  	ExecuteScalar returns only Int64 regardless of actual SQL type
+		/// </summary>
+		[Category("NotWorking")]
+		[Test]
+		public void TestSelectingInts()
+		{
+			execSQL("CREATE PROCEDURE spTest() BEGIN DECLARE myVar INT; " +
+				"SET MyVar := 1; SELECT CAST(myVar as INT); END");
+			
+			MySqlCommand cmd = new MySqlCommand("spTest", conn);
+			cmd.CommandType = CommandType.StoredProcedure;
+			object val = cmd.ExecuteScalar();
+			Assert.AreEqual(1, val, "Checking value");
+			Assert.IsTrue(val is System.Int32, "Checking type");
+		}
+
+		/// <summary>
+		/// Bug #13632  	the MySQLCommandBuilder.deriveparameters has not been updated for MySQL 5
+        /// Bug #15077  	Error MySqlCommandBuilder.DeriveParameters for sp without parameters.
+        /// Bug #19515  	DiscoverParameters fails on numeric datatype
+		/// </summary>
+		[Category("5.0")]
+		[Test]
+		public void DeriveParameters()
+		{
+			execSQL("DROP TABLE IF EXISTS test2");
+			execSQL("CREATE TABLE test2 (c CHAR(20))");
+			execSQL("INSERT INTO test2 values ( 'xxxx')");
+			MySqlCommand cmd2 = new MySqlCommand("SELECT * FROM test2", conn);
+			MySqlDataReader reader =cmd2.ExecuteReader();
+			reader.Close();
+
+			execSQL("CREATE PROCEDURE spTest(IN \r\nvalin DECIMAL(10,2), " +
+				"\nIN val2 INT, INOUT val3 FLOAT, OUT val4 DOUBLE, INOUT val5 BIT, " +
+				"val6 VARCHAR(155), val7 SET('a','b'), val8 CHAR, val9 NUMERIC(10,2)) " +
+                "BEGIN SELECT 1; END");
+
+			MySqlCommand cmd = new MySqlCommand("spTest", conn);
+			cmd.CommandType = CommandType.StoredProcedure;
+			MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+			MySqlCommandBuilder.DeriveParameters(cmd);
+
+			Assert.AreEqual(9, cmd.Parameters.Count);
+			Assert.AreEqual("valin", cmd.Parameters[0].ParameterName);
+			Assert.AreEqual(ParameterDirection.Input, cmd.Parameters[0].Direction);
+			Assert.AreEqual(MySqlDbType.NewDecimal, cmd.Parameters[0].MySqlDbType);
+
+			Assert.AreEqual("val2", cmd.Parameters[1].ParameterName);
+			Assert.AreEqual(ParameterDirection.Input, cmd.Parameters[1].Direction);
+			Assert.AreEqual(MySqlDbType.Int32, cmd.Parameters[1].MySqlDbType);
+
+			Assert.AreEqual("val3", cmd.Parameters[2].ParameterName);
+			Assert.AreEqual(ParameterDirection.InputOutput, cmd.Parameters[2].Direction);
+			Assert.AreEqual(MySqlDbType.Float, cmd.Parameters[2].MySqlDbType);
+
+			Assert.AreEqual("val4", cmd.Parameters[3].ParameterName);
+			Assert.AreEqual(ParameterDirection.Output, cmd.Parameters[3].Direction);
+			Assert.AreEqual(MySqlDbType.Double, cmd.Parameters[3].MySqlDbType);
+
+			Assert.AreEqual("val5", cmd.Parameters[4].ParameterName);
+			Assert.AreEqual(ParameterDirection.InputOutput, cmd.Parameters[4].Direction);
+			Assert.AreEqual(MySqlDbType.Bit, cmd.Parameters[4].MySqlDbType);
+
+			Assert.AreEqual("val6", cmd.Parameters[5].ParameterName);
+			Assert.AreEqual(ParameterDirection.Input, cmd.Parameters[5].Direction);
+			Assert.AreEqual(MySqlDbType.VarChar, cmd.Parameters[5].MySqlDbType);
+
+			Assert.AreEqual("val7", cmd.Parameters[6].ParameterName);
+			Assert.AreEqual(ParameterDirection.Input, cmd.Parameters[6].Direction);
+			Assert.AreEqual(MySqlDbType.Set, cmd.Parameters[6].MySqlDbType);
+
+			Assert.AreEqual("val8", cmd.Parameters[7].ParameterName);
+			Assert.AreEqual(ParameterDirection.Input, cmd.Parameters[7].Direction);
+			Assert.AreEqual(MySqlDbType.Char, cmd.Parameters[7].MySqlDbType);
+
+            Assert.AreEqual("val9", cmd.Parameters[8].ParameterName);
+            Assert.AreEqual(ParameterDirection.Input, cmd.Parameters[8].Direction);
+            Assert.AreEqual(MySqlDbType.NewDecimal, cmd.Parameters[8].MySqlDbType);
+
+            execSQL("DROP PROCEDURE spTest");
+            execSQL("CREATE PROCEDURE spTest() BEGIN END");
+            cmd.CommandText = "spTest";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Clear();
+            da = new MySqlDataAdapter(cmd);
+            MySqlCommandBuilder.DeriveParameters(cmd);
+            Assert.AreEqual(0, cmd.Parameters.Count);
+        }
+
+		/// <summary>
+		/// Bug #13632  	the MySQLCommandBuilder.deriveparameters has not been updated for MySQL 5
+		/// </summary>
+		[Category("5.0")]
+		[Test]
+		public void DeriveParametersForFunction()
+		{
+			try 
+			{
+				execSQL("CREATE FUNCTION fnTest(v1 DATETIME) RETURNS INT " +
+					" BEGIN RETURN 1; END");
+
+				MySqlCommand cmd = new MySqlCommand("fnTest", conn);
+				cmd.CommandType = CommandType.StoredProcedure;
+				MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+				MySqlCommandBuilder.DeriveParameters(cmd);
+
+				Assert.AreEqual(2, cmd.Parameters.Count);
+				Assert.AreEqual("v1", cmd.Parameters[0].ParameterName);
+				Assert.AreEqual(ParameterDirection.Input, cmd.Parameters[0].Direction);
+				Assert.AreEqual(MySqlDbType.Datetime, cmd.Parameters[0].MySqlDbType);
+
+				Assert.AreEqual(ParameterDirection.ReturnValue, cmd.Parameters[1].Direction);
+				Assert.AreEqual(MySqlDbType.Int32, cmd.Parameters[1].MySqlDbType);
+			}
+			catch (Exception ex)
+			{
+				Assert.Fail(ex.Message);
+			}
+		}
+
+		/// <summary>
+		/// Bug #11386  	Numeric parameters with Precision and Scale not taken into account by Connector
+		/// </summary>
+		[Test]
+		[Category("5.0")]
+		public void DecimalAsParameter()
+		{
+			execSQL("CREATE PROCEDURE spTest(IN d DECIMAL(19,4)) BEGIN SELECT d; END");
+
+			MySqlCommand cmd = new MySqlCommand("spTest", conn);
+			cmd.CommandType = CommandType.StoredProcedure;
+			cmd.Parameters.Add("?d", 21);
+			decimal d = (decimal)cmd.ExecuteScalar();
+			Assert.AreEqual(21, d);
+		}
+
+		/// <summary>
+		/// Bug #6902  	Errors in parsing stored procedure parameters
+		/// </summary>
+		[Test]
+		[Category("5.0")]
+		public void ParmWithCharacterSet()
+		{
+			execSQL("CREATE PROCEDURE spTest(P longtext character set utf8) " +
+				"BEGIN SELECT P; END");
+
+			MySqlCommand cmd = new MySqlCommand("spTest", conn);
+			cmd.CommandType = CommandType.StoredProcedure;
+			cmd.Parameters.Add("?P", "This is my value");
+			string p = (string)cmd.ExecuteScalar();
+			Assert.AreEqual("This is my value", p);
+		}
+
+		/// <summary>
+		/// Bug #13753  	Exception calling stored procedure with special characters in parameters
+		/// </summary>
+		[Test]
+		[Category("5.0")]
+		public void SpecialCharacters()
+		{
+			execSQL("SET sql_mode=ANSI_QUOTES");
+			try 
+			{
+				execSQL("CREATE PROCEDURE spTest(\"@Param1\" text) BEGIN SELECT \"@Param1\"; END");
+
+				MySqlCommand cmd = new MySqlCommand("spTest", conn);
+				cmd.Parameters.Add("@Param1", "This is my value");
+				cmd.CommandType = CommandType.StoredProcedure;
+
+				string val = (string)cmd.ExecuteScalar();
+				Assert.AreEqual("This is my value", val);
+			}
+			catch (Exception ex)
+			{
+				Assert.Fail(ex.Message);
+			}
+			finally 
+			{
+				execSQL("SET sql_mode=\"\"");
+			}
+		}
+
+		[Test]
+		[Category("NotWorking")]
+		public void CallingSPWithPrepare()
+		{
+			execSQL("DROP PROCEDURE IF EXISTS spTest");
+			execSQL("CREATE PROCEDURE spTest(P int) BEGIN SELECT P; END");
+
+			MySqlCommand cmd = new MySqlCommand("spTest", conn);
+			cmd.CommandType = CommandType.StoredProcedure;
+			cmd.Parameters.Add("?P", 33);
+			cmd.Prepare();
+
+			int p = (int)cmd.ExecuteScalar();
+			Assert.AreEqual(33, p);
+		}
+
+		/// <summary>
+		/// Bug #13927  	Multiple Records to same Table in Transaction Problem
+		/// </summary>
+		[Test]
+		[Category("5.0")]
+		public void MultileRecords()
+		{
+			execSQL("DROP PROCEDURE IF EXISTS spTest");
+			execSQL("CREATE PROCEDURE spTest(id int, str VARCHAR(45)) BEGIN INSERT INTO test VALUES(id, str); END");
+
+			MySqlCommand cmd = new MySqlCommand("spTest", conn);
+			cmd.CommandType = CommandType.StoredProcedure;
+
+			cmd.Parameters.Add("?id", 1);
+			cmd.Parameters.Add("?str", "First record");
+			cmd.ExecuteNonQuery();
+
+			cmd.Parameters.Add("?id", 2);
+			cmd.Parameters.Add("?str", "Second record");
+			cmd.ExecuteNonQuery();
+
+			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
+			DataTable dt = new DataTable();
+			da.Fill(dt);
+
+			Assert.AreEqual(1, dt.Rows[0]["id"]);
+			Assert.AreEqual(2, dt.Rows[1]["id"]);
+			Assert.AreEqual("First record", dt.Rows[0]["name"]);
+			Assert.AreEqual("Second record", dt.Rows[1]["name"]);
+		}
+
+		/// <summary>
+		/// Bug #16788 Only byte arrays and strings can be serialized by MySqlBinary 
+		/// </summary>
+		[Test]
+		[Category("5.0")]
+		public void Bug16788()
+		{
+			execSQL("DROP TABLE IF EXISTS Test");
+			execSQL("CREATE TABLE Test (id integer(9), state varchar(2))");
+			execSQL("CREATE PROCEDURE spTest(IN p1 integer(9), IN p2 varchar(2)) " +
+				"BEGIN " +
+				"INSERT INTO test (id, state) VALUES (p1, p2); " +
+				"END");
+			
+			MySqlCommand cmd = conn.CreateCommand();
+			cmd.CommandType = CommandType.StoredProcedure;
+			cmd.CommandText = "spTest";
+			cmd.Parameters.Add("p1", MySqlDbType.UInt16, 9);
+			cmd.Parameters["p1"].Value = 44;
+			cmd.Parameters.Add("p2", MySqlDbType.VarChar, 2);
+			cmd.Parameters["p2"].Value = "ss";
+			try
+			{
+				cmd.ExecuteNonQuery();
+			}
+			catch(Exception ex)
+			{
+				Assert.Fail(ex.Message);
+			}
+		}
+
+        [Test]
+        [Category("5.0")]
+        public void ReturningEmptyResultSet()
+        {
+            execSQL("DROP PROCEDURE IF EXISTS spTest");
+            execSQL("DROP TABLE IF EXISTS test1");
+            execSQL("DROP TABLE IF EXISTS test2");
+            execSQL("CREATE TABLE test1 (id int AUTO_INCREMENT NOT NULL, " +
+                "Name VARCHAR(100) NOT NULL, PRIMARY KEY(id))");
+            execSQL("CREATE TABLE test2 (id int AUTO_INCREMENT NOT NULL, " +
+                "id1 INT NOT NULL, id2 INT NOT NULL, PRIMARY KEY(id))");
+            
+            execSQL("INSERT INTO test1 (Id, Name) VALUES (1, 'Item1')");
+            execSQL("INSERT INTO test1 (Id, Name) VALUES (2, 'Item2')");
+            execSQL("INSERT INTO test2 (Id, Id1, Id2) VALUES (1, 1, 1)");
+            execSQL("INSERT INTO test2 (Id, Id1, Id2) VALUES (2, 2, 1)");
+
+            execSQL("CREATE PROCEDURE spTest(Name VARCHAR(100), OUT Table1Id INT) " +
+                "BEGIN SELECT t1.Id INTO Table1Id FROM test1 t1 WHERE t1.Name LIKE Name; " +
+                "SELECT t3.Id2 FROM test2 t3 WHERE t3.Id1 = Table1Id; END");
+
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "spTest";
+            cmd.Parameters.Add("Name", "Item3");
+            cmd.Parameters.Add("Table1Id", MySqlDbType.Int32);
+            cmd.Parameters["Table1Id"].Direction = ParameterDirection.Output;
+
+            DataSet ds = new DataSet();
+            MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+            da.Fill(ds);
+        }
+
+        [Category("5.0")]
+        [Test]
+        public void ProcedureCache()
+        {
+            // open a new connection using a procedure cache
+            string connStr = GetConnectionString(true);
+            connStr += ";procedure cache size=25;logging=true";
+            MySqlConnection c = new MySqlConnection(connStr);
+            try
+            {
+                c.Open();
+
+                // install our custom trace listener
+                GenericListener myListener = new GenericListener();
+                System.Diagnostics.Trace.Listeners.Add(myListener);
+
+                for (int x = 0; x < 10; x++)
+                {
+                    execSQL("DROP PROCEDURE IF EXISTS spTest" + x);
+                    execSQL("CREATE PROCEDURE spTest" + x + "() BEGIN SELECT 1; END");
+                    MySqlCommand cmd = new MySqlCommand("spTest" + x, c);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    for (int y = 0; y < 20; y++)
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                // remove our custom trace listener
+                System.Diagnostics.Trace.Listeners.Remove(myListener);
+
+                // now see how many times our listener recorded a cache hit
+                Assert.AreEqual(190, myListener.Find("from procedure cache"));
+                Assert.AreEqual(10, myListener.Find("from server"));
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                if (c != null)
+                    c.Close();
+                for (int x = 0; x < 10; x++)
+                    execSQL("DROP PROCEDURE IF EXISTS spTest" + x);
+            }
+        }
+    }
 }

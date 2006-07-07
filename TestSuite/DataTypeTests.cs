@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2005 MySQL AB
+// Copyright (C) 2004-2006 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -392,8 +392,8 @@ namespace MySql.Data.MySqlClient.Tests
 				reader = cmd.ExecuteReader();
 				while (reader.Read())
 				{
-					long field1 = reader.GetInt64(0);
-					int field2 = reader.GetInt32(1); // <--- aint... this succeeds
+					reader.GetInt64(0);
+					reader.GetInt32(1); // <--- aint... this succeeds
 				}
 			}
 			catch (Exception ex) 
@@ -411,8 +411,8 @@ namespace MySql.Data.MySqlClient.Tests
 				reader = cmd.ExecuteReader();
 				while (reader.Read())
 				{
-					long field1 = reader.GetInt64(0);
-					long field2 = reader.GetInt64(1); // <--- max(aint)... this fails
+					reader.GetInt64(0);
+					reader.GetInt64(1); // <--- max(aint)... this fails
 				}
 			}
 			catch (Exception ex) 
@@ -466,7 +466,37 @@ namespace MySql.Data.MySqlClient.Tests
 			execSQL("CREATE TABLE test (bt1 BIT, bt4 BIT(4), bt11 BIT(11), bt23 BIT(23), bt32 BIT(32)) engine=myisam");
 			execSQL("INSERT INTO test VALUES (12, 2, 120, 240, 1000)");
 
-			MySqlCommand cmd = new MySqlCommand("SELECT * FROM test", conn);
+			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
+			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
+			DataTable dt = new DataTable();
+			da.Fill(dt);
+			DataRow row = dt.NewRow();
+			row["id"] = DBNull.Value;
+			row["dec1"] = 23.4;
+			dt.Rows.Add(row);
+			da.Update(dt);
+
+			dt.Clear();
+			da.Fill(dt);
+			Assert.AreEqual(1, dt.Rows.Count);
+			Assert.AreEqual(1, dt.Rows[0]["id"]);
+			Assert.AreEqual(23.4, dt.Rows[0]["dec1"]);
+		}
+
+		[Test]
+		public void DecimalTests() 
+		{
+			execSQL("DROP TABLE IF EXISTS test");
+			execSQL("CREATE TABLE test (val decimal(10,1))");
+
+			MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES(?dec)", conn);
+			cmd.Parameters.Add("?dec", (decimal)2.4);
+			Assert.AreEqual(1, cmd.ExecuteNonQuery());
+
+			cmd.Prepare();
+			Assert.AreEqual(1, cmd.ExecuteNonQuery());
+
+			cmd.CommandText = "SELECT * FROM test";
 			MySqlDataReader reader = null;
 			try 
 			{
@@ -590,8 +620,8 @@ namespace MySql.Data.MySqlClient.Tests
 			cmd.Parameters.Add(new MySqlParameter("?b3", MySqlDbType.Bit));
 			cmd.Prepare();
 			cmd.Parameters[0].Value = 1;
-			cmd.Parameters[1].Value = 15;
-			cmd.Parameters[2].Value = 500;
+			cmd.Parameters[1].Value = 2;
+			cmd.Parameters[2].Value = 3;
 			cmd.ExecuteNonQuery();
 
 			MySqlDataReader reader = null;
@@ -602,8 +632,8 @@ namespace MySql.Data.MySqlClient.Tests
 				reader = cmd.ExecuteReader();
 				Assert.IsTrue(reader.Read());
 				Assert.AreEqual(1, reader[0]);
-				Assert.AreEqual(15, reader[1]);
-				Assert.AreEqual(500, reader[2]);
+				Assert.AreEqual(2, reader[1]);
+				Assert.AreEqual(3, reader[2]);
 			}
 			catch (Exception ex)
 			{
@@ -613,6 +643,58 @@ namespace MySql.Data.MySqlClient.Tests
 			{
 				if (reader != null) reader.Close();
 			}
+		}
+
+		/// <summary>
+		/// Bug #17375 CommandBuilder ignores Unsigned flag at Parameter creation 
+        /// Bug #15274 Use MySqlDbType.UInt32, throwed exception 'Only byte arrays can be serialize' 
+		/// </summary>
+		[Test]
+		public void UnsignedTypes()
+		{
+			execSQL("DROP TABLE IF EXISTS Test");
+			execSQL("CREATE TABLE Test (b TINYINT UNSIGNED PRIMARY KEY)");
+			
+			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
+			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
+
+			DataTable dt = new DataTable();
+			da.Fill(dt);
+
+			DataView dv = new DataView(dt);
+			DataRowView row;
+
+			row = dv.AddNew();
+			row["b"] = 120;
+			row.EndEdit();
+			da.Update(dv.Table);
+
+			row = dv.AddNew();
+			row["b"] = 135;
+			row.EndEdit();
+			da.Update(dv.Table);
+
+			execSQL("DROP TABLE IF EXISTS Test");
+			execSQL("CREATE TABLE Test (b MEDIUMINT UNSIGNED PRIMARY KEY)");
+            execSQL("INSERT INTO test VALUES(20)");
+            MySqlCommand cmd = new MySqlCommand("SELECT * FROM test WHERE (b > ?id)", conn);
+            cmd.Parameters.Add("?id", MySqlDbType.UInt16).Value = 10;
+            MySqlDataReader dr = null;
+            try
+            {
+                dr = cmd.ExecuteReader();
+                dr.Read();
+                Assert.AreEqual(20, dr.GetUInt16(0));
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                if (dr != null)
+                    dr.Close();
+            }
 		}
 	}
 }

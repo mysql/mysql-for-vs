@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB
+// Copyright (C) 2004-2006 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -88,19 +88,50 @@ namespace MySql.Data.MySqlClient
 			if (value == null) 
 				throw new ArgumentException("The MySqlParameterCollection only accepts non-null MySqlParameter type objects.", "value");
 
-			if ( value.ParameterName == null ) throw new ArgumentException("parameter must be named");
+            if (value.Direction == ParameterDirection.ReturnValue)
+                return AddReturnParameter(value);
 
-			items.Add(value);
+			string inComingName = value.ParameterName.ToLower();
+			if (inComingName[0] == paramMarker)
+				inComingName = inComingName.Substring(1, inComingName.Length-1);
+
+			for (int i=0; i < _parms.Count; i++)
+			{
+				MySqlParameter p = (MySqlParameter)_parms[i];
+				string name = p.ParameterName.ToLower();
+				if (name[0] == paramMarker)
+					name = name.Substring(1, name.Length-1);
+				if (name == inComingName)
+				{
+					_parms[i] = value;
+					return value;
+				}
+			}
+
+			_parms.Add(value);
 			return value;
 		}
 
-		/// <summary>
-		/// Adds a <see cref="MySqlParameter"/> to the <see cref="MySqlParameterCollection"/> given the specified parameter name and value.
-		/// </summary>
-		/// <param name="parameterName">The name of the parameter.</param>
-		/// <param name="value">The <see cref="MySqlParameter.Value"/> of the <see cref="MySqlParameter"/> to add to the collection.</param>
-		/// <returns>The newly added <see cref="MySqlParameter"/> object.</returns>
-		public MySqlParameter Add( string parameterName, object value )
+        private MySqlParameter AddReturnParameter(MySqlParameter value)
+        {
+            for (int i = 0; i < _parms.Count; i++)
+            {
+                MySqlParameter p = (MySqlParameter)_parms[i];
+                if (p.Direction != ParameterDirection.ReturnValue) continue;
+                _parms[i] = value;
+                return value;
+            }
+            _parms.Add(value);
+            return value;
+        }
+
+        /// <summary>
+        /// Adds a <see cref="MySqlParameter"/> to the <see cref="MySqlParameterCollection"/> given the specified parameter name and value.
+        /// </summary>
+        /// <param name="parameterName">The name of the parameter.</param>
+        /// <param name="value">The <see cref="MySqlParameter.Value"/> of the <see cref="MySqlParameter"/> to add to the collection.</param>
+        /// <returns>The newly added <see cref="MySqlParameter"/> object.</returns>
+        public MySqlParameter Add(string parameterName, object value)
 		{
 			return Add( new MySqlParameter( parameterName, value ) );
 		}

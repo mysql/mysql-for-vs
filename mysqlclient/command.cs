@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2005 MySQL AB
+// Copyright (C) 2004-2006 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -463,7 +463,7 @@ namespace MySql.Data.MySqlClient
 		{
 			CheckState();
 
-			string sql = cmdText;
+			string sql = TrimSemicolons(cmdText);
 
             //TODO: make these work with prepared statements and stored procedures
 			if (0 != (behavior & CommandBehavior.SchemaOnly))
@@ -540,6 +540,18 @@ namespace MySql.Data.MySqlClient
 
 		internal delegate void AsyncExecuteNonQueryDelegate();
 
+		private string TrimSemicolons(string sql)
+		{
+			System.Text.StringBuilder sb = new System.Text.StringBuilder(sql);
+			int start = 0;
+			while (sb[start] == ';')
+				start++;
+
+			int end = sb.Length-1;
+			while (sb[end] == ';')
+				end--;
+			return sb.ToString(start, end-start+1);
+		}
 		private void AsyncExecuteNonQuery() 
 		{
 			ExecuteNonQuery();

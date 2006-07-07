@@ -3,8 +3,6 @@
 
 	<property name="ncover.executable" value="c:\program files\ncover\ncover.console.exe"/>
 	<property name="fxcop.executable" value="c:\program files\fxcop\fxcopcmd.exe"/>
-	<property name="nunit.executable" value="c:\program files\nunit 2.2\bin\nunit-console.exe"/>
-	<property name="nunit" value="c:\program files\nunit 2.2\bin" />
 
 	<!-- filesets -->
 	<fileset id="Source">
@@ -35,11 +33,7 @@
 	</if>
 
 	<!-- builds the client on all supported frameworks -->
-	<target name="allframeworks">
-		<property name="framework" value="net-1.0"/>
-		<call target="client"/>
-		<property name="framework" value="net-1.1"/>
-		<call target="client"/>
+	<target name="allframeworks" depends="net-1.0, net-1.1, net-2.0, mono-1.0">
 		<call target="Docs"/>
 	</target>
 
@@ -49,16 +43,18 @@
 		<property name="outdir" value="bin/${framework}/${buildType}"/>
 		
 		<mkdir dir="${outdir}" failonerror="false"/>
-		<resgen input="mysqlclient/Strings.resx" output="${outdir}/Strings.resources"/>
+		<resgen input="mysqlclient/Strings.resx" output="mysqlclient/Strings.resources"/>
 		<csc output="${outdir}/MySql.Data.dll" target="library" 
-			define="${defines}" debug="${debug}" optimize="${opt}" 
+			define="${defines}" debug="${debug}" optimize="${opt}"
 			doc="${outdir}/MySql.Data.xml">
 			<arg value="/nowarn:0679"/>
-			<resources>
-				<include name="${outdir}/*.resources"/>
+			<resources prefix="MySql.Data.MySqlClient" dynamicprefix="true">
+				<include name="mysqlclient/Strings.resources"/>
 			</resources>
 			<references>
 				<include name="ICSharpCode.SharpZipLib.dll"/>
+				<include name="System.Data.dll"/>		
+				<include name="System.Drawing.dll"/>
 			</references>
 			<sources refid="Source"/>
 		</csc>
@@ -69,26 +65,43 @@
 			</sources>
 			<references>
 				<include name="${outdir}/MySql.Data.dll"/>
-				<include name="${nunit}/nunit.framework.dll"/>
+				<include name="System.Data.dll"/>		
+				<include name="System.Drawing.dll"/>
+				<include name="${nunit-lib}/nunit.framework.dll"/>
 			</references>
 		</csc>
 	</target>
 
 	<!-- core managed driver target 1.0 -->	
 	<target name="net-1.0" description="1.0 .NET target">
+		<property name="nunit-lib" value="${nunit}/bin"/>
 		<property name="framework" value="net-1.0"/>
 		<call target="client"/>
 	</target>
 	
 	<!-- core managed driver target 1.1 -->
 	<target name="net-1.1" description="1.1 .NET target">
+		<property name="nunit-lib" value="${nunit}/bin"/>
 		<property name="framework" value="net-1.1"/>
 		<call target="client"/>
 	</target>
+
+	<!-- core managed driver target 2.0 -->
+	<target name="net-2.0" description="2.0 .NET target">
+		<property name="nunit-lib" value="${nunit}/bin"/>
+		<property name="framework" value="net-2.0"/>
+		<call target="client"/>
+	</target>
 	
+	<!-- core managed driver target mono 1.0 -->
+	<target name="mono-1.0" description="Mono 1.0 Target">
+        <property name="nunit-lib" value="${framework::get-assembly-directory('mono-1.0')}"/>
+		<property name="framework" value="mono-1.0"/>
+		<call target="client"/>
+	</target>
 
 	<!-- testing targets -->
-	<target name="alltests" depends="test-net-1.1, test-net-1.0">
+	<target name="alltests" depends="test-net-2.0, test-net-1.1, test-net-1.0">
 	</target>
 	
 	<target name="test-net-1.1" depends="net-1.1">
@@ -97,21 +110,32 @@
 		<call target="fxcop"/>
 	</target>
 
+	<target name="test-net-2.0" depends="net-2.0">
+		<property name="framework" value="net-2.0"/>
+		<call target="testclient"/>
+	</target>
+
 	<target name="test-net-1.0" depends="net-1.0">
 		<property name="framework" value="net-1.0"/>
 		<call target="testclient"/>
 	</target>
 
+	<target name="test-mono-1.0" depends="mono-1.0">
+        <property name="nunit" value="${nunit-mono}"/>
+		<property name="framework" value="mono-1.0"/>
+		<call target="testclient"/>
+	</target>
+
 	<!-- This target will call the testdb target for each supported config. -->
 	<target name="test_all_configs">
-<!--		<property name="config" value="tcp"/>
+		<property name="config" value="tcp"/>
 		<call target="testdb"/>  
 		<property name="config" value="tcp_compressed"/>
-		<call target="testdb"/>  -->
-		<property name="config" value="pipe"/>
+		<call target="testdb"/> 
+<!--		<property name="config" value="pipe"/>
 		<call target="testdb"/>  
 		<property name="config" value="pipe_compressed"/>
-		<call target="testdb"/>  
+		<call target="testdb"/>-->
 	</target>
 
     <!-- 
@@ -143,8 +167,9 @@
 		<servicecontroller action="Stop" service="MySql4.1"/>
 		<servicecontroller action="Start" service="MySql5.0"/>
 		<property name="excludes" value="NotWorking"/>
-		<property name="doCoverage" value="true"/>
+		<!--<property name="doCoverage" value="true"/>-->
 		<call target="test_all_configs"/>
+		
 	</target>
 
 	<!-- 
@@ -154,11 +179,14 @@
 	<target name="testdb" description="Target to test a database with all possible configurations">
 		<copy file="testsuite/configs/${config}.config" tofile="bin/${framework}/${buildType}/MySql.Data.Tests.dll.config"/>
 		
-		<exec unless="${doCoverage}" program="${nunit.executable}"
+		<property name="nunit-exe" value="${nunit}/bin/nunit-console.exe"/>
+		<property name="nunit-exe" value="${nunit}/mono/bin/nunit-console.exe" if="${string::contains(framework, 'mono')}"/>
+		
+		<exec unless="${doCoverage}" program="${nunit-exe}"
 		      commandline="/exclude=${excludes} /xml=../../../results/nunit-${framework}-${buildType}.xml bin/${framework}/${buildType}/MySql.Data.Tests.dll"
 		      failonerror="true"/>
 		<exec if="${doCoverage}" program="${ncover.executable}"
-		      commandline="/c &quot;${nunit.executable}&quot; &quot;bin/${framework}/${buildType}/MySql.Data.Tests.dll /exclude=${excludes} /xml=../../../results/nunit-${framework}-${buildType}.xml&quot; /a MySql.Data /o results/ncover-${framework}-${config}.xml"
+		      commandline="/c &quot;${nunit-exe}&quot; &quot;bin/${framework}/${buildType}/MySql.Data.Tests.dll /exclude=${excludes} /xml=../../../results/nunit-${framework}-${buildType}.xml&quot; /a MySql.Data /o results/ncover-${framework}-${config}.xml"
 		      failonerror="true"/>
 	</target>
 

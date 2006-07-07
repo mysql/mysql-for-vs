@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2005 MySQL AB
+// Copyright (C) 2004-2006 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -77,7 +77,33 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-		[Test()]
+		/// <summary>
+		/// Bug #13806  	Does not support Code Page 932
+		/// </summary>
+		[Test]
+		public void CP932()
+		{
+			MySqlConnection c = new MySqlConnection(GetConnectionString(true) + ";charset=cp932");
+			c.Open();
+
+			try 
+			{
+				MySqlCommand cmd = new MySqlCommand("SELECT '涯割晦叶角'", c);
+				string s = (string)cmd.ExecuteScalar();
+				Assert.AreEqual("涯割晦叶角", s);
+			}
+			catch (Exception ex) 
+			{
+				Assert.Fail(ex.Message);
+			}
+			finally 
+			{
+				if (c != null)
+					c.Close();
+			}
+		}
+
+		[Test]
 		public void UTF8() 
 		{
 			if (!Is41 && !Is50) return;
@@ -331,7 +357,7 @@ namespace MySql.Data.MySqlClient.Tests
 			try 
 			{
 				MySqlCommand cmd = new MySqlCommand("SELECT test FROM test_tbl", conn);
-				object o = cmd.ExecuteScalar();
+				cmd.ExecuteScalar();
 			}
 			catch (Exception ex) 
 			{

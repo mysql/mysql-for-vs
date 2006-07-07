@@ -306,5 +306,24 @@ namespace MySql.Data.MySqlClient.Tests
 			catch (Exception ex) { Assert.Fail( ex.Message); }
 		}
 
+		/// <summary>
+		/// Bug #16645 FOUND_ROWS() Bug 
+		/// </summary>
+		[Test]
+		public void FoundRows()
+		{
+			execSQL("DROP TABLE IF EXISTS test");
+			execSQL("CREATE TABLE test (testID int(11) NOT NULL auto_increment, testName varchar(100) default '', " +
+				    "PRIMARY KEY  (testID)) ENGINE=InnoDB DEFAULT CHARSET=latin1");
+			MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES (NULL, 'test')", conn);
+			for (int i=0; i < 1000; i++)
+				cmd.ExecuteNonQuery();
+			cmd.CommandText = "SELECT SQL_CALC_FOUND_ROWS * FROM test LIMIT 0, 10";
+			cmd.ExecuteNonQuery();
+			cmd.CommandText = "SELECT FOUND_ROWS()";
+			object cnt = cmd.ExecuteScalar();
+			Assert.AreEqual(1000, cnt);
+		}
+
 	}
 }

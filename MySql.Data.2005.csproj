@@ -85,6 +85,7 @@
     <Reference Include="System.Drawing">
       <Name>System.Drawing</Name>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
@@ -112,18 +113,13 @@
     <Compile Include="MySqlClient\CharSetMap.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MySqlClient\ClientAPI.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MySqlClient\ClientDriver.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="MySqlClient\command.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="MySqlClient\CommandBuilder.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="MySqlClient\common\ContextString.cs" />
     <Compile Include="MySqlClient\common\NamedPipeStream.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -135,9 +131,6 @@
     <Compile Include="MySqlClient\common\SHA1.cs" />
     <Compile Include="MySqlClient\common\SocketStream.cs" />
     <Compile Include="MySqlClient\common\StreamCreator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MySqlClient\common\Utility.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MySqlClient\common\Version.cs">
@@ -161,8 +154,6 @@
     <Compile Include="MySqlClient\Driver.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MySqlClient\EmbeddedAPI.cs" />
-    <Compile Include="MySqlClient\EmbeddedDriver.cs" />
     <Compile Include="MySqlClient\Exception.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -201,7 +192,6 @@
     <Compile Include="MySqlClient\NativeDriver.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MySqlClient\NonISSchemaProvider.cs" />
     <Compile Include="MySqlClient\parameter.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -293,6 +283,7 @@
     <Content Include="MySqlClient\docs\MySqlParameter.xml" />
     <Content Include="MySqlClient\docs\MySqlParameterCollection.xml" />
     <Content Include="MySqlClient\docs\MySqlTransaction.xml" />
+    <EmbeddedResource Include="MySqlClient\ReservedWords.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MySqlClient\Strings.resx">

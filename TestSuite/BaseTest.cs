@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2005 MySQL AB
+// Copyright (C) 2004-2006 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -37,17 +37,20 @@ namespace MySql.Data.MySqlClient.Tests
 		protected string			host;
 		protected string			user;
 		protected string			password;
-		//protected string			nopassuser;
 		protected string			otherkeys;
 
 		public BaseTest() 
 		{
 			csAdditions = ";pooling=false";
-		}
+            user = "root";
+            password = "";
+            otherkeys = ConfigurationSettings.AppSettings["otherkeys"];
+        }
 
 		protected string GetConnectionString(bool includedb)
 		{
-			if (includedb)
+            host = ConfigurationSettings.AppSettings["host"];
+            if (includedb)
 				return String.Format("server={0};user id={1};password={2};database=test;" +
 					"persist security info=true;{3}{4}", host, user, password, otherkeys, csAdditions );
 			return String.Format("server={0};user id={1};password={2};" +
@@ -58,10 +61,6 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 			try 
 			{
-				host = ConfigurationSettings.AppSettings["host"];
-				user = "root";
-				password = "";
-				otherkeys = ConfigurationSettings.AppSettings["otherkeys"];
 				string connString = GetConnectionString(true);
 				conn = new MySqlConnection( connString );
 				conn.Open();
@@ -127,9 +126,14 @@ namespace MySql.Data.MySqlClient.Tests
 		}
 
 		[TearDown]
-		protected void Teardown()
+		protected virtual void Teardown()
 		{
-		}
+            if (Is50)
+            {
+                execSQL("DROP PROCEDURE IF EXISTS spTest");
+                execSQL("DROP FUNCTION IF EXISTS fnTest");
+            }
+        }
 
 		protected void KillConnection(MySqlConnection c) 
 		{

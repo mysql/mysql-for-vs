@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB
+// Copyright (C) 2004-2006 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -32,10 +32,12 @@ namespace MySql.Data.MySqlClient
 	{
 		private static Hashtable	mapping;
 
-		// Declare a private ctor so a default one won't be made by the compiler
-		private CharSetMap() 
+        // we use a static constructor here since we only want to init
+        // the mapping once
+		static CharSetMap() 
 		{
-		}
+            InitializeMapping();
+        }
 
 		/// <summary>
 		/// Returns the text encoding for a given MySQL character set name
@@ -45,8 +47,6 @@ namespace MySql.Data.MySqlClient
 		/// <returns>Encoding object for the given character set name</returns>
 		public static Encoding GetEncoding( DBVersion version, string CharSetName ) 
 		{
-			if (mapping == null )
-				InitializeMapping();
 			try 
 			{
 				if (! mapping.Contains( CharSetName ))
@@ -74,6 +74,7 @@ namespace MySql.Data.MySqlClient
 		/// </summary>
 		private static void InitializeMapping()
 		{
+            Logger.LogInformation("Initializing character set mapping array");
 			LoadCharsetMap();
 		}
 
@@ -97,6 +98,7 @@ namespace MySql.Data.MySqlClient
 			mapping.Add("tis620", 874);
 			mapping.Add("binary", "latin1");
 			mapping.Add("cp1250", 1250);
+			mapping.Add("cp932", 932);
 
 			// relatively sure about
 /*			mapping.Add( "default", 0 );

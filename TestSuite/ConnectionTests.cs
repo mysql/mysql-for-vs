@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2005 MySQL AB
+// Copyright (C) 2004-2006 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -349,32 +349,67 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 			MySqlConnection c = new MySqlConnection();
 			MySqlConnection clone = (MySqlConnection) ((ICloneable)c).Clone();
+			clone.ToString();
 		}
 
-        /// <summary>
-        /// Bug #13321  	Persist security info does not woek
-        /// </summary>
-        [Test]
-        public void PersistSecurityInfo()
-        {
-            string s = GetConnectionString(true).ToLower();
-            int start = s.IndexOf("persist security info");
-            int end = s.IndexOf(";", start);
-            string newConnStr = s.Substring(0, start);
-            newConnStr += s.Substring(end, s.Length - (end));
-            newConnStr += ";persist security info=false";
+		/// <summary>
+		/// Bug #13321  	Persist security info does not woek
+		/// </summary>
+		[Test]
+		public void PersistSecurityInfo()
+		{
+			string s = GetConnectionString(true).ToLower();
+			int start = s.IndexOf("persist security info");
+			int end = s.IndexOf(";", start);
+			string newConnStr = s.Substring(0, start);
+			newConnStr += s.Substring(end, s.Length - (end));
+			newConnStr += ";persist security info=false";
 
-            MySqlConnection conn2 = new MySqlConnection(newConnStr);
-            string p = "password";
-            if (conn2.ConnectionString.IndexOf("pwd") != -1)
-                p = "pwd";
-            else if (conn2.ConnectionString.IndexOf("passwd") != -1)
-                p = "passwd";
+			MySqlConnection conn2 = new MySqlConnection(newConnStr);
+			string p = "password";
+			if (conn2.ConnectionString.IndexOf("pwd") != -1)
+				p = "pwd";
+			else if (conn2.ConnectionString.IndexOf("passwd") != -1)
+				p = "passwd";
 
-            Assert.IsTrue(conn2.ConnectionString.IndexOf(p) != -1);
-            conn2.Open();
-            conn2.Close();
-            Assert.IsTrue(conn2.ConnectionString.IndexOf(p) == -1);
-        }
+			Assert.IsTrue(conn2.ConnectionString.IndexOf(p) != -1);
+			conn2.Open();
+			conn2.Close();
+			Assert.IsTrue(conn2.ConnectionString.IndexOf(p) == -1);
+		}
+
+		/// <summary>
+		/// Bug #13658  	connection.state does not update on Ping()
+		/// </summary>
+		[Test]
+		public void PingUpdatesState()
+		{
+			MySqlConnection conn2 = new MySqlConnection(GetConnectionString(true));
+			conn2.Open();
+			KillConnection(conn2);
+			Assert.IsFalse(conn2.Ping());
+			Assert.IsTrue(conn2.State == ConnectionState.Closed);
+		}
+
+		/// <summary>
+		/// Bug #16659  	Can't use double quotation marks(") as password access server by Connector/NET
+		/// </summary>
+		[Test]
+		public void ConnectWithQuotePassword()
+		{
+			execSQL("GRANT ALL ON *.* to 'test'@'localhost' IDENTIFIED BY '\"'");
+			string host = ConfigurationSettings.AppSettings["host"];
+			MySqlConnection c = new MySqlConnection("server=" + host + ";uid=test;pwd='\"';pooling=false");
+			try 
+			{
+				c.Open();
+				c.Close();
+			}
+			catch (Exception ex) 
+			{
+				Assert.Fail(ex.Message);
+			}
+			execSQL("DELETE FROM mysql.user WHERE user='test'");
+		}
 	}
 }

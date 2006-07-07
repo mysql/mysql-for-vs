@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB
+// Copyright (C) 2004-2006 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -210,8 +210,12 @@ namespace MySql.Data.Types
 			if (val is MySqlDateTime)
 				val = ((MySqlDateTime)val).GetDateTime();
 
-			if (! (val is DateTime))
-				throw new MySqlException("Only DateTime objects can be serialized by MySqlDateTime");
+			if (value is string)
+				value = DateTime.Parse((string)value, 
+					System.Globalization.CultureInfo.CurrentCulture);
+
+			if (! (value is DateTime))
+				throw new MySqlException( "Only DateTime objects can be serialized by MySqlDateTime" );
 
 			DateTime dtValue = (DateTime)val;
 			if (! binary)
@@ -328,11 +332,15 @@ namespace MySql.Data.Types
 			}
 
 			long bufLength = reader.ReadByte();
-
-			int year = reader.ReadInteger(2);
-			int month = reader.ReadByte();
-			int day = reader.ReadByte();
-			int hour = 0, minute = 0, second = 0;
+            int year = 0, month = 0, day = 0;
+            int hour = 0, minute = 0, second = 0;
+            
+            if (bufLength >= 4)
+            {
+                year = reader.ReadInteger(2);
+                month = reader.ReadByte();
+                day = reader.ReadByte();
+            }
 
 			if (bufLength > 4) 
 			{

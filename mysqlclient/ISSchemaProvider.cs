@@ -3,6 +3,8 @@ using System.Data;
 using System.Text;
 using MySql.Data.Common;
 using System.Globalization;
+using System.Diagnostics;
+using System.Collections;
 
 namespace MySql.Data.MySqlClient
 {
@@ -164,24 +166,29 @@ namespace MySql.Data.MySqlClient
         public virtual DataTable GetProcedureParameters(string[] restrictions)
         {
             DataTable dt = new DataTable("Procedure Parameters");
-            dt.Columns.Add("specific_schema", typeof(string));
-            dt.Columns.Add("specific_name", typeof(string));
-            dt.Columns.Add("parameter_name", typeof(string));
-            dt.Columns.Add("ordinal_position", typeof(Int32));
-            dt.Columns.Add("parameter_mode", typeof(string));
-            dt.Columns.Add("is_result", typeof(string));
-            dt.Columns.Add("data_type", typeof(string));
-            dt.Columns.Add("length", typeof(string));
+            dt.Columns.Add("ROUTINE_CATALOG", typeof(string));
+            dt.Columns.Add("ROUTINE_SCHEMA", typeof(string));
+            dt.Columns.Add("ROUTINE_NAME", typeof(string));
+            dt.Columns.Add("PARAMETER_NAME", typeof(string));
+            dt.Columns.Add("ORDINAL_POSITION", typeof(Int32));
+            dt.Columns.Add("PARAMETER_MODE", typeof(string));
+            dt.Columns.Add("IS_RESULT", typeof(string));
+            dt.Columns.Add("DATA_TYPE", typeof(string));
+            dt.Columns.Add("CHARACTER_SET", typeof(string));
+            dt.Columns.Add("CHARACTER_MAXIMUM_LENGTH", typeof(int32));
+            dt.Columns.Add("NUMERIC_PRECISION", typeof(byte));
+            dt.Columns.Add("NUMERIC_SCALE", typeof(int32));
+
 
             // first try and get parameter information from mysql.proc
             // since that will be faster.
             // Fall back to show create since that requires lesser privs
             try
             {
-                GetParametersFromMySqlProc(dt, restrictions);
-            }
-            catch (MySqlException)
-            {
+//                GetParametersFromMySqlProc(dt, restrictions);
+    //        }
+      //      catch (MySqlException)
+        //    {
                 GetParametersFromShowCreate(dt, restrictions);
             }
             catch (Exception)
@@ -314,10 +321,14 @@ namespace MySql.Data.MySqlClient
                 cmd.CommandText = showCreateSql;
                 try
                 {
+                    string nameToRestrict = null;
+                    if (restrictions != null && restrictions.Length == 4 &&
+                        restrictions[3] != null)
+                        nameToRestrict = restrictions[3];
                     reader = cmd.ExecuteReader();
                     reader.Read();
                     ParseProcedureBody(parametersTable, reader.GetString(2),
-                        routine);
+                        routine, nameToRestrict);
                 }
                 catch (Exception)
                 {
@@ -331,10 +342,176 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-        private void ParseProcedureBody(DataTable parametersTable, string body,
-            DataRow row)
+        private int FindRightParen(string body, string quotePattern)
         {
+            int pos = 0;
+            bool left = false;
+            char quote = Char.MinValue;
 
+            foreach (char c in body)
+            {
+                if (c == ')')
+                {
+                    if (left)
+                        left = false;
+                    else if (quote == Char.MinValue)
+                        break;
+                }
+                else if (c == '(' && quote == Char.MinValue)
+                    left = true;
+                else
+                {
+                    int quoteIndex = quotePattern.IndexOf(c);
+                    if (quoteIndex > -1)
+                        if (quote == Char.MinValue)
+                            quote = c;
+                        else if (quote == c)
+                            quote = Char.MinValue;
+                }
+
+                pos++;
+            }
+            return pos;
+        }
+
+        private void ParseProcedureBody(DataTable parametersTable, string body,
+            DataRow row, string nameToRestrict)
+        {
+            string sqlMode = row["SQL_MODE"].ToString();
+            bool ansiQuotes = sqlMode.IndexOf("ANSI_QUOTES") != -1;
+            bool noBackslash = sqlMode.IndexOf("NO_BACKSLASH_ESCAPES") != -1;
+            string quotePattern = ansiQuotes ? "``\"\"" : "``";
+
+            ContextString cs = new ContextString(quotePattern, !noBackslash);
+
+            int leftParen = cs.IndexOf(body, '(');
+            Debug.Assert(leftParen != -1);
+
+            // trim off the first part
+            body = body.Substring(leftParen + 1);
+
+            int rightParen = FindRightParen(body, quotePattern);
+            Debug.Assert(rightParen != -1);
+            string parms = body.Substring(0, rightParen).Trim();
+
+            quotePattern += "()";
+            string[] paramDefs = cs.Split(parms, ",");
+            ArrayList parmArray = new ArrayList(paramDefs);
+            body = body.Substring(rightParen + 1).Trim().ToLower(CultureInfo.InvariantCulture);
+            if (body.StartsWith("returns"))
+                parmArray.Add(body);
+            int pos = 1;
+            foreach (string def in paramDefs)
+            {
+                DataRow parmRow = parametersTable.NewRow();
+                parmRow["ROUTINE_CATALOG"] = null;
+                parmRow["ROUTINE_SCHEMA"] = row["ROUTINE_SCHEMA"];
+                parmRow["ROUTINE_NAME"] = row["ROUTINE_NAME"];
+                parmRow["ORDINAL_POSITION"] = pos++;
+                ParseParameter(def, cs, sqlMode, parmRow);
+                if (parmRow["IS_RESULT"].Equals("YES"))
+                    parmRow["ORDINAL_POSITION"] = 0;
+                else
+                    parmRow["ORDINAL_POSITION"] = pos++;
+                if (nameToRestrict == null ||
+                    parmRow["PARAMETER_NAME"].ToString().ToLower() ==
+                    nameToRestrict)
+                    parametersTable.Rows.Add(parmRow);
+            }
+        }
+
+        private MySqlParameter ParseParameter(string parmDef, ContextString cs,
+            string sqlMode, DataRow parmRow)
+        {
+            parmDef = parmDef.Trim();
+            string lowerDef = parmDef.ToLower(CultureInfo.InvariantCulture);
+
+            parmRow["IS_RESULT"] = "NO";
+            if (lowerDef.StartsWith("inout "))
+            {
+                parmRow["PARAMETER_MODE"] = "INOUT";
+                parmDef = parmDef.Substring(6);
+            }
+            else if (lowerDef.StartsWith("in "))
+            {
+                parmRow["PARAMETER_MODE"] = "IN";
+                parmDef = parmDef.Substring(3);
+            }
+            else if (lowerDef.StartsWith("out "))
+            {
+                parmRow["PARAMETER_MODE"] = "OUT";
+                parmDef = parmDef.Substring(4);
+            }
+            else if (lowerDef.StartsWith("returns "))
+            {
+                parmRow["PARAMETER_MODE"] = "OUT";
+                parmRow["IS_RESULT"] = "YES";
+                parmDef = parmDef.Substring(8);
+            }
+            parmDef = parmDef.Trim();
+
+            string[] split = cs.Split(parmDef, " \t\r\n");
+            if (p.Direction != ParameterDirection.ReturnValue)
+            {
+                parmRow["PARAMETER_NAME"] = CleanParameterName(split[0]);
+                parmDef = parmDef.Substring(split[0].Length);
+            }
+
+            ParseType(parmDef, sqlMode, parmRow);
+        }
+
+        private string CleanParameterName(string parameter)
+        {
+            char c = parameter[0];
+            if (c == '`' || c == '\'' || c == '"')
+                return parameter.Substring(1, parameter.Length - 2);
+            return parameter;
+        }
+
+        private void ParseType(string type, string sql_mode, DataRow parmRow)
+        {
+            string typeName, flags = String.Empty, size;
+            int end;
+            string rest = null;
+
+            type = type.ToLower(CultureInfo.InvariantCulture).Trim();
+            int start = type.IndexOf("(");
+            if (start != -1)
+                end = type.IndexOf(')', start + 1);
+            else
+                end = start = type.IndexOf(' ');
+            if (start == -1)
+                start = type.Length;
+
+            typeName = type.Substring(0, start);
+            rest = type.Substring(end).Trim();
+
+            if (end != -1)
+                flags = type.Substring(end + 1);
+            bool unsigned = flags.IndexOf("unsigned") != -1;
+            bool real_as_float = sql_mode.IndexOf("REAL_AS_FLOAT") != -1;
+
+            parmRow["DATA_TYPE"] = typeName;
+
+            if (end > start && typeName != "set")
+            {
+                size = type.Substring(start + 1, end - (start + 1));
+                string[] parts = size.Split(new char[] { ',' });
+                if (typeName == "varchar" || typeName == "char")
+                    parmRow["CHARACTER_MAXIMUM_LENGTH"] = Int32.Parse(parts[0]);
+                else
+                {
+                    parmRow["NUMERIC_PRECISION"] = Byte.Parse(parts[0]);
+                    if (parts.Length > 1)
+                        parmRow["NUMERIC_SCALE"] = Int32.Parse(parts[1]);
+                }
+            }
+            if (rest.StartsWith("character set"))
+            {
+                rest = rest.Substring(14);
+                start = rest.IndexOf(' ');
+                parmRow["CHARACTER_SET"] = rest.Substring(0, start);
+            }
         }
 
         private void ProcessParameterList(DataTable parametersTable, string db,

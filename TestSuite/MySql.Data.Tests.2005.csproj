@@ -112,6 +112,7 @@
     <Compile Include="ConnectionTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DataReaderTests.cs" />
     <Compile Include="MicroPerfTests.cs" />
     <Compile Include="CultureTests.cs">
       <SubType>Code</SubType>
@@ -120,9 +121,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DataAdapterTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DataReaderTests.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DataSetTest.cs" />

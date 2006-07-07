@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2005 MySQL AB
+// Copyright (C) 2004-2006 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -47,6 +47,7 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
 			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
+			cb.ToString();
 			DataTable dt = new DataTable();
 			da.Fill(dt);
 
@@ -74,6 +75,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
 			MySqlCommandBuilder cb = new MySqlCommandBuilder(da, true);
+			cb.ToString();  // keep the compiler happy
 			DataTable dt = new DataTable();
 			da.Fill( dt );
 			Assert.AreEqual( 1, dt.Rows.Count );
@@ -96,6 +98,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
 			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
+			cb.ToString();  // keep the compiler happy
 			DataTable dt = new DataTable();
 			da.Fill(dt);
 			Assert.AreEqual(1, dt.Rows.Count);
@@ -105,7 +108,7 @@ namespace MySql.Data.MySqlClient.Tests
 			try 
 			{
 				dt.Rows[0]["name"] = "Test3";
-				int cnt = da.Update( dt );
+				da.Update( dt );
 				Assert.Fail("This should not work");
 			}
 			catch (DBConcurrencyException) 
@@ -116,6 +119,46 @@ namespace MySql.Data.MySqlClient.Tests
 			da.Fill( dt );
 			Assert.AreEqual( 1, dt.Rows.Count );
 			Assert.AreEqual( "Test2", dt.Rows[0]["name"] );			
+		}
+
+		/// <summary>
+		/// Bug #8574 - MySqlCommandBuilder unable to support sub-queries
+		/// Bug #11947 - MySQLCommandBuilder mishandling CONCAT() aliased column
+		/// </summary>
+		[Test]
+		public void UsingFunctions() 
+		{
+			execSQL("INSERT INTO test (id, name) VALUES (1,'test1')");
+			execSQL("INSERT INTO test (id, name) VALUES (2,'test2')");
+			execSQL("INSERT INTO test (id, name) VALUES (3,'test3')");
+
+			MySqlDataAdapter da = new MySqlDataAdapter("SELECT id, name, now() as ServerTime FROM test", conn);
+			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
+			DataTable dt = new DataTable();
+			da.Fill(dt);
+
+			dt.Rows[0]["id"] = 4;
+			da.Update(dt);
+			
+			da.SelectCommand.CommandText = "SELECT id, name, CONCAT(name, '  boo') as newname from test where id=4";
+			dt.Clear();
+			da.Fill(dt);
+			Assert.AreEqual(1, dt.Rows.Count);
+			Assert.AreEqual("test1", dt.Rows[0]["name"]);
+			Assert.AreEqual("test1  boo", dt.Rows[0]["newname"]);
+
+			dt.Rows[0]["id"] = 5;
+			da.Update(dt);
+
+			dt.Clear();
+			da.SelectCommand.CommandText = "SELECT * FROM test WHERE id=5";
+			da.Fill(dt);
+			Assert.AreEqual(1, dt.Rows.Count);
+			Assert.AreEqual("test1", dt.Rows[0]["name"]);
+
+			da.SelectCommand.CommandText = "SELECT *, now() as stime FROM test WHERE id<4";
+			cb = new MySqlCommandBuilder(da, true);
+			da.InsertCommand = cb.GetInsertCommand();
 		}
 
 		/// <summary>
@@ -133,6 +176,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 			MySqlDataAdapter da = new MySqlDataAdapter("SELECT id, name FROM test.test", conn);
 			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
+			cb.ToString();  // keep the compiler happy
 			DataSet ds = new DataSet();
 			da.Fill(ds);
 
@@ -156,6 +200,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
 			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
+			cb.ToString();  // keep the compiler happy
 			DataTable dt = new DataTable();
 			da.Fill(dt);
 			DataRow row = dt.NewRow();
@@ -165,6 +210,29 @@ namespace MySql.Data.MySqlClient.Tests
 			row[3] = 4;
 			dt.Rows.Add(row);
 			da.Update(dt);
+		}
+
+		/// <summary>
+		/// Bug #14631  	"#42000Query was empty"
+		/// </summary>
+		[Test]
+		public void SemicolonAtEndOfSQL()
+		{
+			execSQL("DROP TABLE IF EXISTS test");
+			execSQL("CREATE TABLE test (id INT NOT NULL, name VARCHAR(100), PRIMARY KEY(id))");
+			execSQL("INSERT INTO test VALUES(1, 'Data')");
+
+			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test;", conn);
+			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
+			DataTable dt = new DataTable();
+			da.Fill(dt);
+			dt.Rows[0]["id"] = 2;
+			da.Update(dt);
+
+			dt.Clear();
+			da.Fill(dt);
+			Assert.AreEqual(1, dt.Rows.Count);
+			Assert.AreEqual(2, dt.Rows[0]["id"]);
 		}
 	}
 }

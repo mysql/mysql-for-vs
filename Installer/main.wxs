@@ -1,15 +1,15 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <?define ProductVersion="5.0.0"?>
 <?define ProductName="MySQL Connector Net $(var.ProductVersion)"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
-	<Product Id="832f75d5-390b-4d00-ac52-a321ea39b98c" Name="$(var.ProductName)" Manufacturer="MySQL" Version="1.0.4" Language="1033">
+	<Product Id="D9AF91B0-BC20-48b7-AA61-6B8AD33579BC" Name="$(var.ProductName)" Manufacturer="MySQL" Version="$(var.ProductVersion)" Language="1033">
 
 		<Package Id="????????-????-????-????-????????????" Compressed="yes" InstallerVersion="200" Languages="1033" SummaryCodepage="1252" />
 		
 		<Media Id="1" EmbedCab="yes" Cabinet="ConnectorNet.cab" CompressionLevel="high" />
 		
 		<Directory Id="TARGETDIR" Name="SourceDir">
-			<Component Id="BaseComponents" Guid="81f21eae-3342-43bf-9e26-45cf54c427de">
+			<Component Id="BaseComponents" Guid="d2192cc7-7915-46a5-bf36-383e432fb79e">
 				<File Id="ChangeLog" Name="CLog" LongName="CHANGES" src="..\CHANGES" DiskId="1"/>
 				<?if $(var.IsGPL) = true ?>
 				<File Id="EXCEPTIONS" Name="EXC" LongName="EXCEPTIONS" src="..\EXCEPTIONS" DiskId="1"/>
@@ -22,23 +22,33 @@
 					
 			<!-- binaries folder -->
 			<Directory Id="BinFolder" Name="bin">
+				<Directory Id="Bin20" Name="NET20" LongName=".NET 2.0">
+					<Component Id="Net20" Guid="5e1cc5ab-ccba-4dff-82ce-c39d78901d30">
+						<File Id="CoreBin20" Name="MD20" LongName="MySql.Data.dll" src="..\bin\net-2.0\$(var.build)\mysql.data.dll" DiskId="1"  />
+					</Component>
+				</Directory>
 				<Directory Id="Bin11" Name="NET11" LongName=".NET 1.1">
-					<Component Id="Net11" Guid="77e80230-2238-49be-a4ed-49b5213c9a3a">
+					<Component Id="Net11" Guid="b586a8a2-e933-4a34-a93f-8a3918a9f3b8">
 						<File Id="CoreBin11" Name="MD11" LongName="MySql.Data.dll" src="..\bin\net-1.1\$(var.build)\mysql.data.dll" DiskId="1"  />
-						<Registry Id="vs71registry" Root="HKLM" Key="Software\Microsoft\VisualStudio\7.1\AssemblyFolders\MySQL Connector Net 1.0.2" Type="string" KeyPath="yes" Value="[TARGETDIR]\bin\NET 1.1\" />
+						<Registry Id="vs71registry" Root="HKLM" Key="Software\Microsoft\VisualStudio\7.1\AssemblyFolders\MySQL Connector Net $(var.ProductVersion)" Type="string" KeyPath="yes" Value="[TARGETDIR]bin\.NET 1.1\" />
 					</Component>
 				</Directory>
 				<Directory Id="Bin10" Name="NET10" LongName=".NET 1.0">
-					<Component Id="Net10" Guid="b18df028-1dfb-4577-95f6-2c504df41040">
+					<Component Id="Net10" Guid="02c6b4a1-fdb8-4735-a97e-31e751499b27">
 						<File Id="CoreBin10" Name="MD10" LongName="MySql.Data.dll" src="..\bin\net-1.0\$(var.build)\mysql.data.dll" DiskId="1" />
-						<Registry Id="vs70registry" Root="HKLM" Key="Software\Microsoft\VisualStudio\7.0\AssemblyFolders\MySQL Connector Net 1.0.2" Type="string" KeyPath="yes" Value="[TARGETDIR]\bin\NET 1.0\" />
+						<Registry Id="vs70registry" Root="HKLM" Key="Software\Microsoft\VisualStudio\7.0\AssemblyFolders\MySQL Connector Net $(var.ProductVersion)" Type="string" KeyPath="yes" Value="[TARGETDIR]bin\.NET 1.0\" />
 					</Component>
 				</Directory>
-				<Component Id="GACFiles11" Guid="9c4a7297-2b9a-4013-8bdd-6c28fe041948">
+				<Directory Id="Mono10" Name="MONO10" LongName="Mono 1.0">
+					<Component Id="Mono10" Guid="a81f6e9c-9b66-4ff6-94c1-563304bf7d8f">
+						<File Id="CoreMono10" Name="MOD10" LongName="MySql.Data.dll" src="..\bin\mono-1.0\$(var.build)\mysql.data.dll" DiskId="1" />
+					</Component>
+				</Directory>
+				<Component Id="GACFiles11" Guid="61a90246-01e8-449a-a59c-afc16938b49f">
 					<Condition><![CDATA[REGISTERGAC="1"]]></Condition>
 					<File Id="CoreBin11GAC" Name="MD11" LongName="MySql.Data.dll" src="..\bin\net-1.1\$(var.build)\mysql.data.dll" DiskId="1" Assembly=".net" KeyPath="yes" />
 				</Component>
-				<Component Id="GACFiles10" Guid="8d3237f4-3aa5-4828-8915-9ae5074327b5">
+				<Component Id="GACFiles10" Guid="6d61f371-4558-44b0-98ef-f12d2cf14746">
 					<Condition><![CDATA[REGISTERGAC="1"]]></Condition>
 					<File Id="CoreBin10GAC" Name="MD10" LongName="MySql.Data.dll" src="..\bin\net-1.0\$(var.build)\mysql.data.dll" DiskId="1" Assembly=".net" KeyPath="yes" />
 				</Component>
@@ -48,7 +58,7 @@
 			<Directory Id="SamplesFolder" Name="samples">
 				<Directory Id="TableEditor" Name="teditor" LongName="Table Editor">
 					<Directory Id="teCS" Name="cs">
-						<Component Id="teCS" Guid="25fd217d-6f31-4d05-a9f7-98f3cfc85085">
+						<Component Id="teCS" Guid="2e90e9af-dd31-4861-96a3-4149724fba72">
 							<File Id="teCS1" Name="App.ico" src="..\Samples\TableEditor\cs\App.ico" DiskId="1"/>
 							<File Id="teCS2" Name="AssInfo.cs" LongName="AssemblyInfo.cs" src="..\Samples\TableEditor\cs\AssemblyInfo.cs" DiskId="1"/>
 							<File Id="teCS3" Name="Form1.cs" src="..\Samples\TableEditor\cs\Form1.cs" DiskId="1"/>
@@ -59,7 +69,7 @@
 						</Component>
 					</Directory>
 					<Directory Id="teVB" Name="vb">
-						<Component Id="teVB" Guid="78dd8f10-98b3-4ec4-acb8-0cb230c1e4da">
+						<Component Id="teVB" Guid="d6dd1858-ea06-4b70-ab08-4e43e3ccc0b0">
 							<File Id="teVB2" Name="AssInfo.vb" LongName="AssemblyInfo.vb" src="..\Samples\TableEditor\vb\AssemblyInfo.vb" DiskId="1"/>
 							<File Id="teVB3" Name="Form1.vb" src="..\Samples\TableEditor\vb\Form1.vb" DiskId="1"/>
 							<File Id="teVB4" Name="Form1.res" LongName="Form1.resx" src="..\Samples\TableEditor\vb\Form1.resx" DiskId="1"/>
@@ -73,14 +83,14 @@
 					
 			<!-- docs folder -->
 			<Directory Id="DocsFolder" Name="docs">
-				<Component Id="Docs" Guid="ecfe8b67-1945-46fc-9b23-2f81573eb41e">
+				<Component Id="Docs" Guid="08ccbb43-3cbe-4a4c-8ef7-f33d296a91aa">
 					<File Id="CoreCHM" Name="Docs" LongName="MySql.Data.chm" src="..\doc\MySql.Data.chm" DiskId="1" />
 				</Component>
 			</Directory>
 					
 			<!-- sources folder -->
 			<Directory Id="srcFolder" Name="src">
-				<Component Id="TopLevelSrc" Guid="2a92274d-acc4-434c-abc6-60c6868d2f94">
+				<Component Id="TopLevelSrc" Guid="70a33e6c-33ff-40fa-b9fa-80191173a8bf">
 					<File Id="nantFile" Name="client.bld" LongName="client.build" src="..\client.build" DiskId="1"/>
 					<File Id="projFile" Name="client.csp" LongName="MySql.Data.csproj" src="..\MySql.Data.csproj" DiskId="1"/>
 					<File Id="CHANGES" Name="CHANGES" src="..\CHANGES" DiskId="1"/>
@@ -134,7 +144,7 @@
 						</Component>
 					</Directory>
 					<Directory Id="docSrcFolder" Name="Docs">
-						<Component Id="DocsSrc" Guid="dc75e254-2f3a-4c03-8d59-f5f66f765ebe">
+						<Component Id="DocsSrc" Guid="2c9da4e2-036d-4972-8d2d-0fe91ce3f691">
 							<File Id="docsFile1" Name="cmd.xml" LongName="MySqlCommand.xml" src="..\MySqlClient\docs\MySqlCommand.xml" DiskId="1"/>
 							<File Id="docsFile2" Name="cb.xml" LongName="MySqlCommandBuilder.xml" src="..\MySqlClient\docs\MySqlCommandBuilder.xml" DiskId="1"/>
 							<File Id="docsFile3" Name="conn.xml" LongName="MySqlConnection.xml" src="..\MySqlClient\docs\MySqlConnection.xml" DiskId="1"/>
@@ -205,7 +215,7 @@
 
 			<Directory Id="ProgramMenuFolder" Name="PMFolder">
 				<Directory Id="ShortCutDir" Name="SCutDir" LongName="$(var.ProductName)"/>
-					<Component Id="StartMenuComponent" Guid="bec3f125-a4b7-4a43-ae76-fbca0debf9b8">
+					<Component Id="StartMenuComponent" Guid="97adb8f9-e6dc-4d84-a08a-6d8ecfe3f001">
 						<Condition><![CDATA[CREATESTARTMENU="1"]]></Condition>
 						<Shortcut Id="SCToDocs" Name="Docs" LongName="Documentation" 
 							Description="Complete documentation for the connector" 
@@ -221,8 +231,10 @@
 		<Feature Id="CoreComponents" Level="1" Title="Core Components" Description="Core connector assemblies" 
 			ConfigurableDirectory="TARGETDIR">
 			<ComponentRef Id="BaseComponents"/>
+			<ComponentRef Id="Net20"/>
 			<ComponentRef Id="Net11"/>
 			<ComponentRef Id="Net10"/>
+			<ComponentRef Id="Mono10"/>
 			<ComponentRef Id="StartMenuComponent"/>
 			<ComponentRef Id="GACFiles11"/>
 			<ComponentRef Id="GACFiles10"/>

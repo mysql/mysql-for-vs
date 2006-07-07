@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB
+// Copyright (C) 2004-2006 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -228,8 +228,8 @@ namespace MySql.Data.MySqlClient
 		static extern IntPtr OpenEvent(uint dwDesiredAccess, bool bInheritHandle,
 			string lpName);
 
-		[DllImport("kernel32.dll")]
-		static extern bool SetEvent(IntPtr hEvent);
+//		[DllImport("kernel32.dll")]
+//		static extern bool SetEvent(IntPtr hEvent);
 
 		[DllImport("kernel32.dll")]
 		static extern IntPtr OpenFileMapping(uint dwDesiredAccess, bool bInheritHandle,

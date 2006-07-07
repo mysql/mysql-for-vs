@@ -235,6 +235,31 @@ namespace MySql.Data.MySqlClient
             dt.Columns.Add("UNIQUE", typeof(bool));
             dt.Columns.Add("PRIMARY", typeof(bool));
 
+            DataTable tables = GetTables(restrictions);
+            foreach (DataRow table in tables.Rows)
+            {
+                string sql = String.Format("SHOW INDEX FROM {0}.{1}", table["TABLE_SCHEMA"],
+                    table["TABLE_NAME"]);
+                MySqlDataAdapter da = new MySqlDataAdapter(sql, connection);
+                DataTable indexes = new DataTable();
+                da.Fill(indexes);
+                foreach (DataRow index in indexes.Rows)
+                {
+                    if (!index["SEQ_IN_INDEX"].Equals(1)) continue;
+                    if (restrictions != null && restrictions.Length == 4 &&
+                        restrictions[3] != null &&
+                        !index["KEY_NAME"].Equals(restrictions[3])) continue;
+                    DataRow row = dt.NewRow();
+                    row["INDEX_CATALOG"] = null;
+                    row["INDEX_SCHEMA"] = table["TABLE_SCHEMA"];
+                    row["INDEX_NAME"] = index["KEY_NAME"];
+                    row["TABLE_NAME"] = index["TABLE"];
+                    row["UNIQUE"] = index["NON_UNIQUE"].Equals(0);
+                    row["PRIMARY"] = index["KEY_NAME"].Equals("PRIMARY");
+                    dt.Rows.Add(row);
+                }
+            }
+
             return dt;
         }
 
@@ -247,6 +272,35 @@ namespace MySql.Data.MySqlClient
             dt.Columns.Add("TABLE_NAME", typeof(string));
             dt.Columns.Add("COLUMN_NAME", typeof(string));
             dt.Columns.Add("ORDINAL_POSITION", typeof(int));
+
+            DataTable tables = GetTables(restrictions);
+            foreach (DataRow table in tables.Rows)
+            {
+                string sql = String.Format("SHOW INDEX FROM {0}.{1}", table["TABLE_SCHEMA"],
+                    table["TABLE_NAME"]);
+                MySqlDataAdapter da = new MySqlDataAdapter(sql, connection);
+                DataTable indexes = new DataTable();
+                da.Fill(indexes);
+                foreach (DataRow index in indexes.Rows)
+                {
+                    if (!index["SEQ_IN_INDEX"].Equals(1)) continue;
+                    if (restrictions != null)
+                    {
+                        if (restrictions.Length == 4 && restrictions[3] != null &&
+                        !index["KEY_NAME"].Equals(restrictions[3])) continue;
+                        if (restrictions.Length == 5 && restrictions[4] != null &&
+                            !index["COLUMN_NAME"].Equals(restrictions[4])) continue;
+                    }
+                    DataRow row = dt.NewRow();
+                    row["INDEX_CATALOG"] = null;
+                    row["INDEX_SCHEMA"] = table["TABLE_SCHEMA"];
+                    row["INDEX_NAME"] = index["KEY_NAME"];
+                    row["TABLE_NAME"] = index["TABLE"];
+                    row["COLUMN_NAME"] = index["COLUMN_NAME"];
+                    row["ORDINAL_POSITION"] = index["SEQ_IN_INDEX"];
+                    dt.Rows.Add(row);
+                }
+            }
 
             return dt;
         }
@@ -422,20 +476,20 @@ namespace MySql.Data.MySqlClient
                 {"Columns", "Owner", "", 1},
                 {"Columns", "Table", "", 2},
                 {"Columns", "Column", "", 3},          
+                {"Indexes", "Catalog", "", 0},
+                {"Indexes", "Owner", "", 1},
+                {"Indexes", "Table", "", 2},
+                {"Indexes", "Name", "", 3},
+                {"IndexColumns", "Catalog", "", 0},
+                {"IndexColumns", "Owner", "", 1},
+                {"IndexColumns", "Table", "", 2},
+                {"IndexColumns", "ConstraintName", "", 3},
+                {"IndexColumns", "Column", "", 4},
 
-                {"IndexColumns", "Catalog", "", "db_name()"},
-                {"IndexColumns", "Owner", "", "user_name()"},
-                {"IndexColumns", "Table", "", "o.name"},
-                {"IndexColumns", "ConstraintName", "", "x.name"},
-                {"IndexColumns", "Column", "", "c.name"},
-                {"Indexes", "Catalog", "", "db_name()"},
-                {"Indexes", "Owner", "", "user_name()"},
-                {"Indexes", "Table", "", "o.name"},
-                {"Indexes", "Name", "", "x.name"},
-                {"ForeignKeys", "Catalog", "", "CONSTRAINT_CATALOG"},
-                {"ForeignKeys", "Owner", "", "CONSTRAINT_SCHEMA"},
-                {"ForeignKeys", "Table", "", "TABLE_NAME"},
-                {"ForeignKeys", "Name", "", "CONSTAINT_NAME"},
+//                {"ForeignKeys", "Catalog", "", "CONSTRAINT_CATALOG"},
+  //              {"ForeignKeys", "Owner", "", "CONSTRAINT_SCHEMA"},
+    //            {"ForeignKeys", "Table", "", "TABLE_NAME"},
+      //          {"ForeignKeys", "Name", "", "CONSTAINT_NAME"},
             };
 
             DataTable dt = new DataTable("Restrictions");
@@ -544,8 +598,8 @@ namespace MySql.Data.MySqlClient
                     return GetIndexes(restrictions);
                 case "indexcolumns":
                     return GetIndexColumns(restrictions);
-                case "foreign keys":
-                    return GetForeignKeys(restrictions);
+//                case "foreign keys":
+  //                  return GetForeignKeys(restrictions);
             }
             return null;
         }

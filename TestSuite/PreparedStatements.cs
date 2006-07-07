@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2005 MySQL AB
+// Copyright (C) 2004-2006 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -192,24 +192,64 @@ namespace MySql.Data.MySqlClient.Tests
 		public void DifferentParameterOrder() 
 		{
 			execSQL("DROP TABLE IF EXISTS Test"); 
-			execSQL("CREATE TABLE Test (id int, name varchar(100))");
+			execSQL("CREATE TABLE Test (id int NOT NULL AUTO_INCREMENT, " +
+                    "id2 int NOT NULL, name varchar(50) DEFAULT NULL, " +
+                    "id3 int DEFAULT NULL, PRIMARY KEY (id))");
 
-			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (name,id) VALUES(?name,?id)", conn);
-			cmd.Prepare();
+			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id, id2, name, id3) " +
+                                                "VALUES(?id, ?id2, ?name,?id3)", conn);
 
-			cmd.Parameters.Add( "?name", "Name" );
-			cmd.Parameters.Add( "?id", 1 );
-			Assert.AreEqual( 1, cmd.ExecuteNonQuery() );
+            MySqlParameter id = new MySqlParameter();
+            id.ParameterName = "?id";
+            id.DbType = DbType.Int32;
+            id.Value = DBNull.Value;
 
-			cmd.Parameters[0].Value = "Name 2";
-			cmd.Parameters[1].Value = 2;
-			Assert.AreEqual( 1, cmd.ExecuteNonQuery() );
+            MySqlParameter id2 = new MySqlParameter();
+            id2.ParameterName = "?id2";
+            id2.DbType = DbType.Int32;
+            id2.Value = 2;
 
-			cmd.CommandText = "SELECT id FROM Test";
-			Assert.AreEqual( 1, cmd.ExecuteScalar() );
+            MySqlParameter name = new MySqlParameter();
+            name.ParameterName = "?name";
+            name.DbType = DbType.String;
+            name.Value = "Test";
 
-			cmd.CommandText = "SELECT name FROM Test";
-			Assert.AreEqual( "Name", cmd.ExecuteScalar() );
+            MySqlParameter id3 = new MySqlParameter();
+            id3.ParameterName = "?id3";
+            id3.DbType = DbType.Int32;
+            id3.Value = 3;
+
+            try
+            {
+                cmd.Parameters.Add(id);
+                cmd.Parameters.Add(id2);
+                cmd.Parameters.Add(name);
+                cmd.Parameters.Add(id3);
+                cmd.Prepare();
+                Assert.AreEqual(1, cmd.ExecuteNonQuery());
+
+                cmd.Parameters.Clear();
+
+                id3.Value = DBNull.Value;
+                name.Value = DBNull.Value;
+                cmd.Parameters.Add(id);
+                cmd.Parameters.Add(id2);
+                cmd.Parameters.Add(id3);
+                cmd.Parameters.Add(name);
+
+                cmd.Prepare();
+                Assert.AreEqual(1, cmd.ExecuteNonQuery());
+
+                cmd.CommandText = "SELECT id3 FROM Test WHERE id=1";
+                Assert.AreEqual(3, cmd.ExecuteScalar());
+
+                cmd.CommandText = "SELECT name FROM Test WHERE id=2";
+                Assert.AreEqual(DBNull.Value, cmd.ExecuteScalar());
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
 		}
 
 		[Test]
@@ -389,5 +429,240 @@ namespace MySql.Data.MySqlClient.Tests
 				if (reader != null) reader.Close();
 			}
 		}
+
+		/// <summary>
+		/// Bug #13662  	Prepare() truncates accented character input
+		/// </summary>
+		[Test]
+		[Category("4.1")]
+		public void InsertAccentedCharacters()
+		{
+			execSQL("DROP TABLE IF EXISTS test");
+			execSQL("CREATE TABLE test (id INT UNSIGNED NOT NULL PRIMARY KEY " +
+				"AUTO_INCREMENT, input TEXT NOT NULL) CHARACTER SET UTF8");
+				// COLLATE " +
+				//"utf8_bin");
+			MySqlConnection conn2 = new MySqlConnection(GetConnectionString(true) + 
+				";charset=utf8");
+			try 
+			{
+				conn2.Open();
+
+				MySqlCommand cmd = new MySqlCommand("INSERT INTO test(input) " +
+					"VALUES (?input) ON DUPLICATE KEY UPDATE " +
+					"id=LAST_INSERT_ID(id)", conn2);
+				cmd.Parameters.Add(new MySqlParameter("?input", ""));
+				cmd.Prepare();
+				cmd.Parameters[0].Value = "irache martínez@yahoo.es aol.com";
+				cmd.ExecuteNonQuery();
+
+				MySqlCommand cmd2 = new MySqlCommand("SELECT input FROM test", conn2);
+				Assert.AreEqual("irache martínez@yahoo.es aol.com",
+					cmd2.ExecuteScalar());
+			}
+			catch (Exception ex)
+			{
+				Assert.Fail(ex.Message);
+			}
+			finally 
+			{
+				conn2.Close();
+			}
+		}
+
+		/// <summary>
+		/// Bug #13541  	Prepare breaks if a parameter is used more than once
+		/// </summary>
+		[Test]
+		[Category("4.1")]
+		public void UsingParametersTwice()
+		{
+			execSQL("DROP TABLE IF EXISTS test");
+			execSQL("CREATE TABLE IF NOT EXISTS test (input TEXT NOT NULL, " +
+				"UNIQUE (input(100)), state INT NOT NULL, score INT NOT NULL)");
+
+			MySqlCommand cmd = new MySqlCommand("Insert into test (input, " +
+				"state, score) VALUES (?input, ?st, ?sc) ON DUPLICATE KEY " +
+				"UPDATE state=state|?st;", conn);
+			cmd.Parameters.Add (new MySqlParameter("?input", ""));
+			cmd.Parameters.Add (new MySqlParameter("?st", Convert.ToInt32(0)));
+			cmd.Parameters.Add (new MySqlParameter("?sc", Convert.ToInt32 (0)));
+			cmd.Prepare();
+
+			cmd.Parameters["input"].Value = "test";
+			cmd.Parameters["st"].Value = 1;
+			cmd.Parameters["sc"].Value = 42;
+			int result = cmd.ExecuteNonQuery();
+			Assert.AreEqual(1, result);
+
+			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
+			DataTable dt = new DataTable();
+			da.Fill(dt);
+			Assert.AreEqual(1, dt.Rows.Count);
+			Assert.AreEqual("test", dt.Rows[0]["input"]);
+			Assert.AreEqual(1, dt.Rows[0]["state"]);
+			Assert.AreEqual(42, dt.Rows[0]["score"]);
+		}
+
+        /// <summary>
+        /// Bug #19261  	Supplying Input Parameters
+        /// </summary>
+        [Test]
+        [Category("4.1")]
+        public void MoreParametersOutOfOrder()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE `test` (`BlackListID` int(11) NOT NULL auto_increment, " +
+                    "`SubscriberID` int(11) NOT NULL, `Phone` varchar(50) default NULL, " +
+                    "`ContactID` int(11) default NULL, " +
+                    "`AdminJunk` tinyint(1) NOT NULL default '0', " +
+                    "PRIMARY KEY  (`BlackListID`), KEY `SubscriberID` (`SubscriberID`))");
+
+            IDbCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "INSERT INTO `test`(`SubscriberID`,`Phone`,`ContactID`, " +
+                "`AdminJunk`) VALUES (?SubscriberID,?Phone,?ContactID, ?AdminJunk);";
+
+            MySqlParameter oParameterSubscriberID = new MySqlParameter();
+            oParameterSubscriberID.ParameterName = "?SubscriberID";
+            oParameterSubscriberID.DbType = DbType.Int32;
+            oParameterSubscriberID.Value = 1;
+
+            MySqlParameter oParameterPhone = new MySqlParameter();
+            oParameterPhone.ParameterName = "?Phone";
+            oParameterPhone.DbType = DbType.String;
+            oParameterPhone.Value = DBNull.Value;
+
+            MySqlParameter oParameterContactID = new MySqlParameter();
+            oParameterContactID.ParameterName = "?ContactID";
+            oParameterContactID.DbType = DbType.Int32;
+            oParameterContactID.Value = DBNull.Value;
+
+            MySqlParameter oParameterAdminJunk = new MySqlParameter();
+            oParameterAdminJunk.ParameterName = "?AdminJunk";
+            oParameterAdminJunk.DbType = DbType.Boolean;
+            oParameterAdminJunk.Value = true;
+
+            cmd.Parameters.Add(oParameterSubscriberID);
+            cmd.Parameters.Add(oParameterPhone);
+            cmd.Parameters.Add(oParameterAdminJunk);
+            cmd.Parameters.Add(oParameterContactID);
+
+            cmd.Prepare();
+            int cnt = cmd.ExecuteNonQuery();
+            Assert.AreEqual(1, cnt);
+        }
+
+		/// <summary>
+		/// Bug #16627 Index and length must refer to a location within the string." when executing c
+		/// </summary>
+		[Test]
+		[Category("4.1")]
+		public void ParameterLengths()
+		{
+			execSQL("CREATE TABLE test (id int, name VARCHAR(255))");
+
+			MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES (?id, ?name)", conn);
+			cmd.Parameters.Add("?id", MySqlDbType.Int32);
+			cmd.Parameters.Add("?name", MySqlDbType.VarChar);
+			cmd.Parameters[1].Size = 255;
+			cmd.Prepare();
+
+			cmd.Parameters[0].Value = 1;
+			cmd.Parameters[1].Value = "short string";
+			cmd.ExecuteNonQuery();
+
+			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
+			DataTable dt = new DataTable();
+			da.Fill(dt);
+			Assert.AreEqual(1, dt.Rows.Count);
+			Assert.AreEqual(1, dt.Rows[0]["id"]);
+			Assert.AreEqual("short string", dt.Rows[0]["name"]);
+		}
+
+        /// <summary>
+        /// Bug #18570  	Unsigned tinyint (NET byte) incorrectly determined param type from param val
+        /// </summary>
+        [Test]
+        [Category("4.1")]
+        public void UnsignedTinyInt()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test(ID TINYINT UNSIGNED NOT NULL, " +
+	            "Name VARCHAR(50) NOT NULL,	PRIMARY KEY (ID), UNIQUE (ID), " +
+                "UNIQUE (Name))");
+            execSQL("INSERT INTO test VALUES ('127', 'name1')");
+            execSQL("INSERT INTO test VALUES ('128', 'name2')");
+            execSQL("INSERT INTO test VALUES ('255', 'name3')");
+
+            string sql = " SELECT count(*) FROM TEST WHERE ID = ?id";
+
+            MySqlCommand command = new MySqlCommand();
+            command.CommandText = sql;
+            command.CommandType = CommandType.Text;
+            command.Connection = (MySqlConnection)conn;
+            command.Prepare();
+
+            command.Parameters.Add("?id", (byte)127);
+            object count = command.ExecuteScalar();
+            Assert.AreEqual(1, count);
+
+            command.Parameters.Add("?id", (byte)128);
+            count = command.ExecuteScalar();
+            Assert.AreEqual(1, count);
+
+            command.Parameters.Add("?id", (byte)255);
+            count = command.ExecuteScalar();
+            Assert.AreEqual(1, count);
+
+            command.Parameters.Add("?id", "255");
+            count = command.ExecuteScalar();
+            Assert.AreEqual(1, count);
+        }
+
+        /// <summary>
+        /// Bug #16934 Unsigned values > 2^63 (UInt64) cannot be used in prepared statements
+        /// </summary>
+        [Test]
+        [Category("4.1")]
+        public void UnsignedValues()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test (ulVal BIGINT UNSIGNED, lVal INT UNSIGNED, " +
+                "mVal MEDIUMINT UNSIGNED, sVal SMALLINT UNSIGNED)");
+
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES (?ulVal, " +
+                "?lVal, ?mVal, ?sVal)", conn);
+            cmd.Parameters.Add("?ulVal", MySqlDbType.UInt64);
+            cmd.Parameters.Add("?lVal", MySqlDbType.UInt32);
+            cmd.Parameters.Add("?mVal", MySqlDbType.UInt24);
+            cmd.Parameters.Add("?sVal", MySqlDbType.UInt16);
+            cmd.Prepare();
+            cmd.Parameters[0].Value = UInt64.MaxValue;
+            cmd.Parameters[1].Value = UInt32.MaxValue;
+            cmd.Parameters[2].Value = 16777215;
+            cmd.Parameters[3].Value = UInt16.MaxValue;
+            Assert.AreEqual(1, cmd.ExecuteNonQuery());
+            cmd.CommandText = "SELECT * FROM test";
+            cmd.CommandType = CommandType.Text;
+            MySqlDataReader reader = null;
+            try
+            {
+                reader = cmd.ExecuteReader();
+                reader.Read();
+                Assert.AreEqual(UInt64.MaxValue, reader.GetUInt64(0));
+                Assert.AreEqual(UInt32.MaxValue, reader.GetUInt32(1));
+                Assert.AreEqual(16777215, reader.GetUInt32(2));
+                Assert.AreEqual(UInt16.MaxValue, reader.GetUInt16(3));
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                if (reader != null)
+                    reader.Close();
+            }
+        }
 	}
 }

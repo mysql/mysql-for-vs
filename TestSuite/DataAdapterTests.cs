@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2005 MySQL AB
+// Copyright (C) 2004-2006 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -51,8 +51,8 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void TestFill()
 		{
-			FillImpl( false );
-			if (Is41 || Is50) FillImpl(true);
+			FillImpl(false);
+			FillImpl(true);
 		}
 
 		private void FillImpl(bool prepare)
@@ -65,22 +65,18 @@ namespace MySql.Data.MySqlClient.Tests
 			MySqlDataAdapter da = new MySqlDataAdapter("select * from Test", conn);
 			if (prepare) da.SelectCommand.Prepare();
 			DataSet ds = new DataSet();
-			da.Fill( ds, "Test" );
+			da.Fill(ds, "Test");
 
-			Assert.AreEqual( 1, ds.Tables.Count );
-			Assert.AreEqual( 3, ds.Tables[0].Rows.Count );
+			Assert.AreEqual(1, ds.Tables.Count);
+			Assert.AreEqual(3, ds.Tables[0].Rows.Count);
 
-			Assert.AreEqual( 1, ds.Tables[0].Rows[0]["id"] );
-			Assert.AreEqual( 2, ds.Tables[0].Rows[1]["id"] );
-			Assert.AreEqual( 3, ds.Tables[0].Rows[2]["id"] );
+			Assert.AreEqual(1, ds.Tables[0].Rows[0]["id2"]);
+			Assert.AreEqual(2, ds.Tables[0].Rows[1]["id2"]);
+			Assert.AreEqual(3, ds.Tables[0].Rows[2]["id2"]);
 
-			Assert.AreEqual( 1, ds.Tables[0].Rows[0]["id2"] );
-			Assert.AreEqual( 2, ds.Tables[0].Rows[1]["id2"] );
-			Assert.AreEqual( 3, ds.Tables[0].Rows[2]["id2"] );
-
-			Assert.AreEqual( "Name 1", ds.Tables[0].Rows[0]["name"] );
-			Assert.AreEqual( DBNull.Value, ds.Tables[0].Rows[1]["name"] );
-			Assert.AreEqual( String.Empty, ds.Tables[0].Rows[2]["name"] );
+			Assert.AreEqual("Name 1", ds.Tables[0].Rows[0]["name"]);
+			Assert.AreEqual(DBNull.Value, ds.Tables[0].Rows[1]["name"]);
+			Assert.AreEqual(String.Empty, ds.Tables[0].Rows[2]["name"]);
 		}
 
 		[Test]
@@ -91,6 +87,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
 			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
+			cb.ToString();  // keep the compiler happy
 			DataTable dt = new DataTable();
 			da.Fill(dt);
 
@@ -139,6 +136,7 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
 			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
+			cb.ToString();  // keep the compiler happy
 			DataTable dt = new DataTable();
 			da.Fill(dt);
 
@@ -190,6 +188,7 @@ namespace MySql.Data.MySqlClient.Tests
 			{
 				MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
 				MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
+				cb.ToString();  // keep the compiler happy
 
 				DataTable dt = new DataTable();
 				da.Fill(dt);
@@ -220,6 +219,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
 			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
+			cb.ToString();  // keep the compiler happy
 			DataTable dt = new DataTable();
 			da.Fill(dt);
 
@@ -298,6 +298,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
 			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
+			cb.ToString();  // keep the compiler happy
 			DataTable dt = new DataTable();
 			da.Fill( dt );
 
@@ -321,9 +322,9 @@ namespace MySql.Data.MySqlClient.Tests
 			execSQL("INSERT INTO Test VALUES (3, 'Test3')");
 			execSQL("INSERT INTO Test VALUES (4, 'Test4')");
 
-			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
-			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
-			DataTable dt = new DataTable();
+//			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
+//			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
+//			DataTable dt = new DataTable();
 		}
 
 		[Test]
@@ -358,6 +359,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
 			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
+			cb.ToString();  // keep the compiler happy
 			DataSet ds = new DataSet();
 			da.Fill(ds);
 			Assert.AreEqual(1, ds.Tables[0].Rows[0]["id"]);

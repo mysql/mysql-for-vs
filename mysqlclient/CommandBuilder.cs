@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2005 MySQL AB
+// Copyright (C) 2004-2006 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -24,6 +24,7 @@ using System.Data.Common;
 using System.Data;
 using System.Text;
 using MySql.Data.Common;
+using System.Collections;
 
 namespace MySql.Data.MySqlClient
 {
@@ -123,15 +124,36 @@ namespace MySql.Data.MySqlClient
 
 		#region Public Methods
 		/// <summary>
-		/// Retrieves parameter information from the stored procedure specified in the MySqlCommand and populates the Parameters collection of the specified MySqlCommand object.
-		/// This method is not currently supported since stored procedures are not available in MySql.
+		/// Retrieves parameter information from the stored procedure specified 
+		/// in the MySqlCommand and populates the Parameters collection of the 
+		/// specified MySqlCommand object.
+		/// This method is not currently supported since stored procedures are 
+		/// not available in MySql.
 		/// </summary>
-		/// <param name="command">The MySqlCommand referencing the stored procedure from which the parameter information is to be derived. The derived parameters are added to the Parameters collection of the MySqlCommand.</param>
-		/// <exception cref="InvalidOperationException">The command text is not a valid stored procedure name.</exception>
+		/// <param name="command">The MySqlCommand referencing the stored 
+		/// procedure from which the parameter information is to be derived. 
+		/// The derived parameters are added to the Parameters collection of the 
+		/// MySqlCommand.</param>
+		/// <exception cref="InvalidOperationException">The command text is not 
+		/// a valid stored procedure name.</exception>
 		public static void DeriveParameters(MySqlCommand command)
 		{
-			throw new MySqlException("DeriveParameters is not supported (due to MySql not supporting SP)");
-		}
+			if (!command.Connection.driver.Version.isAtLeast(5,0,0))
+				throw new MySqlException("DeriveParameters is not supported on versions " +
+					"prior to 5.0");
+			StoredProcedure sp = new StoredProcedure(command.Connection);
+
+            string spName = command.CommandText;
+            int dotIndex = spName.IndexOf('.');
+            if (dotIndex == -1)
+                spName = command.Connection.Database + "." + spName;
+
+            ArrayList parameters = sp.DiscoverParameters(spName);
+
+            command.Parameters.Clear();
+            foreach (MySqlParameter p in parameters)
+                command.Parameters.Add(p);
+        }
 
 		/// <include file='docs/MySqlCommandBuilder.xml' path='docs/GetDeleteCommand/*'/>
 		public MySqlCommand GetDeleteCommand()

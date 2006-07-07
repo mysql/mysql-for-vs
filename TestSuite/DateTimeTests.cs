@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2005 MySQL AB
+// Copyright (C) 2004-2006 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -26,6 +26,7 @@ using MySql.Data.MySqlClient;
 using System.Globalization;
 using NUnit.Framework;
 using MySql.Data.Types;
+using System.Text;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -47,7 +48,7 @@ namespace MySql.Data.MySqlClient.Tests
 			Close();
 		}
 
-		[Test()]
+		[Test]
 		public void ConvertZeroDateTime()
 		{
 			execSQL("INSERT INTO Test VALUES(1, '0000-00-00', '0000-00-00', '00:00:00', NULL)");
@@ -80,7 +81,7 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-		[Test()]
+		[Test]
 		public void TestNotAllowZerDateAndTime() 
 		{
 			execSQL("INSERT INTO Test VALUES(1, 'Test', '0000-00-00', '0000-00-00', '00:00:00')");
@@ -94,12 +95,12 @@ namespace MySql.Data.MySqlClient.Tests
 				Assert.IsTrue(reader.Read());
 
 				MySqlDateTime testDate = reader.GetMySqlDateTime(2);
-				Assert.IsFalse( reader.GetMySqlDateTime(2).IsValidDateTime, "IsZero is false" );
+                Assert.IsFalse(testDate.IsValidDateTime, "IsZero is false");
 
 				try 
 				{
-					DateTime dt = (DateTime)reader.GetValue(2);
-					Assert.Fail( "This should not work" );
+                    reader.GetValue(2);
+                    Assert.Fail("This should not work");
 				}
 				catch (MySqlConversionException) { }
 
@@ -171,8 +172,8 @@ namespace MySql.Data.MySqlClient.Tests
 
 				try 
 				{
-					DateTime dt = reader.GetDateTime(1);
-					Assert.Fail( "This should not succeed" );
+					reader.GetDateTime(1);
+					Assert.Fail("This should not succeed");
 				}
 				catch (MySqlConversionException) {}
 
@@ -192,12 +193,14 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void InsertDateTimeValue()
 		{
-			MySqlConnection c = new MySqlConnection( conn.ConnectionString + ";allow zero datetime=yes");
+			MySqlConnection c = new MySqlConnection( conn.ConnectionString + 
+                ";allow zero datetime=yes");
 			try 
 			{
 				c.Open();
 				MySqlDataAdapter da = new MySqlDataAdapter("SELECT id, dt FROM Test", c);
 				MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
+				cb.ToString();  // keep the compiler happy
 
 				DataTable dt = new DataTable();
 				dt.Columns.Add(new DataColumn("id", typeof(int)));
@@ -267,29 +270,29 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 			execSQL("INSERT INTO Test (id, d, dt) VALUES (1, '0000-00-00', '0000-00-00 00:00:00')");
 
-            MySqlDataReader reader = null;
-            try
-            {
-                MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test", conn);
-                reader = cmd.ExecuteReader();
-                reader.Read();
-                reader.GetDateTime(2);
-                Assert.Fail("Should throw an exception");
-            }
-            catch (MySqlConversionException)
-            {
-            }
-            catch (MySqlException ex)
-            {
-                Assert.Fail(ex.Message);
-            }
-            finally
-            {
-                if (reader != null) reader.Close();
-            }
-        }
+			MySqlDataReader reader = null;
+			try 
+			{
+				MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test", conn);
+				reader = cmd.ExecuteReader();
+				reader.Read();
+				reader.GetDateTime(2);
+				Assert.Fail("Should throw an exception");
+			}
+			catch (MySqlConversionException) 
+			{
+			}
+			catch (MySqlException ex) 
+			{
+				Assert.Fail( ex.Message );
+			}
+			finally 
+			{
+				if (reader != null) reader.Close();
+			}
+		}
 
-		/// <summary>
+        /// <summary>
 		/// Bug #8929  	Timestamp values with a date > 10/29/9997 cause problems
 		/// </summary>
 		[Test]
@@ -321,7 +324,7 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void UsingDatesAsStrings()
 		{
-			MySqlCommand cmd = new MySqlCommand("INSERT INTO test (dt) VALUES (?dt)", conn);
+			MySqlCommand cmd = new MySqlCommand("INSERT INTO test (id, dt) VALUES (1, ?dt)", conn);
 			cmd.Parameters.Add("?dt", MySqlDbType.Date);
 			cmd.Parameters[0].Value = "2005-03-04";
 			cmd.ExecuteNonQuery();
@@ -336,6 +339,71 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual(4, date.Day);
 		}
 
+        /// <summary>
+        /// Bug #19481 Where clause with datetime throws exception [any warning causes the exception]
+        /// </summary>
+        [Test]
+        public void Bug19481()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test(ID INT NOT NULL AUTO_INCREMENT, " +
+                "SATELLITEID VARCHAR(3) NOT NULL, ANTENNAID INT, AOS_TIMESTAMP DATETIME NOT NULL, " +
+                "TEL_TIMESTAMP DATETIME, LOS_TIMESTAMP DATETIME, PRIMARY KEY (ID))");
+            execSQL("INSERT INTO test VALUES (NULL,'224','0','2005-07-24 00:00:00'," +
+                "'2005-07-24 00:02:00','2005-07-24 00:22:00')");
+            execSQL("INSERT INTO test VALUES (NULL,'155','24','2005-07-24 03:00:00'," +
+                "'2005-07-24 03:02:30','2005-07-24 03:20:00')");
+            execSQL("INSERT INTO test VALUES (NULL,'094','34','2005-07-24 09:00:00'," +
+                "'2005-07-24 09:00:30','2005-07-24 09:15:00')");
+            execSQL("INSERT INTO test VALUES (NULL,'224','54','2005-07-24 12:00:00'," +
+                "'2005-07-24 12:01:00','2005-07-24 12:33:00')");
+            execSQL("INSERT INTO test VALUES (NULL,'155','25','2005-07-24 15:00:00'," +
+                "'2005-07-24 15:02:00','2005-07-24 15:22:00')");
+            execSQL("INSERT INTO test VALUES (NULL,'094','0','2005-07-24 17:00:00'," +
+                "'2005-07-24 17:02:12','2005-07-24 17:20:00')");
+            execSQL("INSERT INTO test VALUES (NULL,'224','24','2005-07-24 19:00:00'," +
+                "'2005-07-24 19:02:00','2005-07-24 19:27:00')");
+            execSQL("INSERT INTO test VALUES (NULL,'155','34','2005-07-24 21:00:00'," +
+                "'2005-07-24 21:02:33','2005-07-24 21:22:55')");
+            execSQL("INSERT INTO test VALUES (NULL,'094','55','2005-07-24 23:00:00'," +
+                "'2005-07-24 23:00:45','2005-07-24 23:22:23')");
+
+            DateTime date = DateTime.Parse("7/24/2005");
+            StringBuilder sql = new StringBuilder();
+            sql.AppendFormat("SELECT ID, ANTENNAID, TEL_TIMESTAMP, LOS_TIMESTAMP FROM test " +
+                "WHERE TEL_TIMESTAMP >= '{0}'", date.ToString("u"));
+            MySqlDataAdapter da = new MySqlDataAdapter(sql.ToString(), conn);
+            DataSet dataSet = new DataSet();
+            da.Fill(dataSet);
+        }
+
+        /// <summary>
+        /// Bug #17736 Selecting a row with with empty date '0000-00-00' results in Read() hanging. 
+        /// </summary>
+        [Category("4.1")]
+        [Test]
+        public void PreparedZeroDateTime()
+        {
+            execSQL("INSERT INTO test VALUES(1, Now(), '0000-00-00', NULL, NULL)");
+            MySqlCommand cmd = new MySqlCommand("SELECT d FROM test WHERE id=?id", conn);
+            cmd.Parameters.Add("?id", 1);
+            cmd.Prepare();
+            MySqlDataReader reader = null;
+            try
+            {
+                reader = cmd.ExecuteReader();
+                reader.Read();
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                if (reader != null)
+                    reader.Close();
+            }
+        }
 	}
 
 }

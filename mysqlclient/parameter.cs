@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB
+// Copyright (C) 2004-2006 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -40,6 +40,7 @@ namespace MySql.Data.MySqlClient
 #endif
 	public sealed class MySqlParameter : DbParameter, IDataParameter, IDbDataParameter, ICloneable
 	{
+        private const int UNSIGNED_MASK = 0x8000;
 		private object				paramValue;
 //		private IMySqlValue			valueObject;
 		private ParameterDirection	direction = ParameterDirection.Input;
@@ -151,6 +152,11 @@ namespace MySql.Data.MySqlClient
 		#endregion
 
 		#region Properties
+
+        internal bool TypeHasBeenSet
+        {
+            get { return inferType == false; }
+        }
 
 		/// <summary>
 		/// Gets or sets the <see cref="DbType"/> of the parameter.
@@ -315,7 +321,7 @@ namespace MySql.Data.MySqlClient
 		{
 			if (valueObject == null)
 			{
-				valueObject = MySqlValue.GetMySqlValue( mySqlDbType, IsUnsigned, true );
+				valueObject = MySqlValue.GetMySqlValue( mySqlDbType, true );
 
 				MySqlDecimal dec = (valueObject as MySqlDecimal);
 				if (dec != null) 
@@ -327,7 +333,28 @@ namespace MySql.Data.MySqlClient
 			return valueObject;
 		}
 */
-		internal void Serialize(MySqlStreamWriter writer, bool binary) 
+		internal int GetPSType()
+		{
+            switch (mySqlDbType)
+            {
+                case MySqlDbType.Bit:
+                    return (int)MySqlDbType.Int64 | UNSIGNED_MASK;
+                case MySqlDbType.UByte:
+                    return (int)MySqlDbType.Byte | UNSIGNED_MASK;
+                case MySqlDbType.UInt64:
+                    return (int)MySqlDbType.Int64 | UNSIGNED_MASK;
+                case MySqlDbType.UInt32:
+                    return (int)MySqlDbType.Int32 | UNSIGNED_MASK;
+                case MySqlDbType.UInt24:
+                    return (int)MySqlDbType.Int32 | UNSIGNED_MASK;
+                case MySqlDbType.UInt16:
+                    return (int)MySqlDbType.Int16 | UNSIGNED_MASK;
+                default:
+                    return (int)this.mySqlDbType;
+            }
+		}
+
+		internal void Serialize( PacketWriter writer, bool binary ) 
 		{
 			IMySqlValue v = MySqlField.GetIMySqlValue(mySqlDbType, true);
 			//GetValueObject();
@@ -370,7 +397,7 @@ namespace MySql.Data.MySqlClient
 				case MySqlDbType.MediumBlob:
 				case MySqlDbType.LongBlob:
 				case MySqlDbType.Blob: dbType = DbType.Object; break;
-				case MySqlDbType.String: dbType = DbType.StringFixedLength; break;
+				case MySqlDbType.Char: dbType = DbType.StringFixedLength; break;
 			}
 		}
 
@@ -385,10 +412,10 @@ namespace MySql.Data.MySqlClient
 				case DbType.String: mySqlDbType = MySqlDbType.VarChar; break;
 
 				case DbType.AnsiStringFixedLength:
-				case DbType.StringFixedLength: mySqlDbType = MySqlDbType.String; break;
+				case DbType.StringFixedLength: mySqlDbType = MySqlDbType.Char; break;
 
 				case DbType.Boolean:
-				case DbType.Byte: 
+				case DbType.Byte:
 					mySqlDbType = MySqlDbType.UByte; break;
 
 				case DbType.SByte:
@@ -426,30 +453,33 @@ namespace MySql.Data.MySqlClient
 		{
 			if (paramValue == null) return;
 
-			if (paramValue is Guid) SetDbType( DbType.String );
-			else if (paramValue is TimeSpan) SetDbType( DbType.Time );
-			else if (paramValue is bool) SetDbType( DbType.Byte );
+			if (paramValue is Guid) 
+                DbType = DbType.String;
+			else if (paramValue is TimeSpan) 
+                DbType = DbType.Time;
+			else if (paramValue is bool) 
+                DbType = DbType.Byte;
 			else 
 			{
 
 				TypeCode tc = Type.GetTypeCode( paramValue.GetType() );
 				switch (tc) 
 				{
-					case TypeCode.SByte: SetDbType( DbType.SByte ); break;
-					case TypeCode.Byte: SetDbType( DbType.Byte ); break;
-					case TypeCode.Int16: SetDbType( DbType.Int16 ); break;
-					case TypeCode.UInt16: SetDbType( DbType.UInt16 ); break;
-					case TypeCode.Int32: SetDbType( DbType.Int32 ); break;
-					case TypeCode.UInt32: SetDbType( DbType.UInt32 ); break;
-					case TypeCode.Int64: SetDbType( DbType.Int64 ); break;
-					case TypeCode.UInt64: SetDbType( DbType.UInt64 ); break;
-					case TypeCode.DateTime: SetDbType( DbType.DateTime ); break;
-					case TypeCode.String: SetDbType( DbType.String ); break;
-					case TypeCode.Single: SetDbType( DbType.Single ); break;
-					case TypeCode.Double: SetDbType( DbType.Double ); break;
-					case TypeCode.Decimal: SetDbType( DbType.Decimal); break;
+					case TypeCode.SByte: DbType = DbType.SByte; break;
+					case TypeCode.Byte: DbType = DbType.Byte; break;
+					case TypeCode.Int16: DbType = DbType.Int16; break;
+					case TypeCode.UInt16: DbType = DbType.UInt16; break;
+					case TypeCode.Int32: DbType = DbType.Int32; break;
+					case TypeCode.UInt32: DbType = DbType.UInt32; break;
+					case TypeCode.Int64: DbType = DbType.Int64; break;
+					case TypeCode.UInt64: DbType = DbType.UInt64; break;
+					case TypeCode.DateTime: DbType = DbType.DateTime; break;
+					case TypeCode.String: DbType = DbType.String; break;
+					case TypeCode.Single: DbType = DbType.Single; break;
+					case TypeCode.Double: DbType = DbType.Double; break;
+                    case TypeCode.Decimal: DbType = DbType.Decimal; break;
 					case TypeCode.Object: 
-					default: SetDbType( DbType.Object ); break;
+					default: DbType = DbType.Object; break;
 				}
 			}
 		}

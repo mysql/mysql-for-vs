@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB
+// Copyright (C) 2004-2006 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -32,18 +32,18 @@ namespace MySql.Data.MySqlClient
 #endif
 	public sealed class MySqlException : SystemException
 	{
-		private int		errorCode;
-		private bool	isFatal;
+		private int			errorCode;
+		private bool		isFatal;
+
+		internal MySqlException() 
+		{
+		}
 
 		internal MySqlException(string msg) : base(msg)
 		{
 		}
-		
-		internal MySqlException(string msg, Exception ex) : base(msg, ex)
-		{
-		}
 
-		internal MySqlException() 
+		internal MySqlException(string msg, Exception ex) : base(msg, ex)
 		{
 		}
 
@@ -54,7 +54,7 @@ namespace MySql.Data.MySqlClient
 
 		internal MySqlException(string msg, int errno) : this(msg)
 		{
-			errorCode = errno;	
+			errorCode = errno;
 		}
 
 #if DESIGN
@@ -68,14 +68,13 @@ namespace MySql.Data.MySqlClient
 		/// </summary>
 		public int Number 
 		{
-			get { return errorCode; }
+			get { return errorCode; } 
 		}
-
 
 		/// <summary>
 		/// True if this exception was fatal and cause the closing of the connection, false otherwise.
 		/// </summary>
-		public bool IsFatal 
+		internal bool IsFatal 
 		{
 			get { return isFatal; }
 		}

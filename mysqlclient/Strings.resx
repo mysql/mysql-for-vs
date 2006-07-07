@@ -228,4 +228,10 @@
   <data name="ReadFromStreamFailed" xml:space="preserve">
     <value>Reading from the stream has failed.</value>
   </data>
+  <data name="QueryTooLarge" xml:space="preserve">
+    <value>Packets larger than max_allowed_packet are not allowed.</value>
+  </data>
+  <data name="UnableToExecuteSP" xml:space="preserve">
+    <value>Unable to execute stored procedure '{0}'.</value>
+  </data>
 </root>

@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB
+// Copyright (C) 2004-2006 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -78,10 +78,15 @@ namespace MySql.Data.MySqlClient
 			//TODO: support long data here
 			// create our null bitmap
 			BitArray nullMap = new BitArray(parameters.Count); //metaData.Length );
-			for (int x=0; x < parameters.Count; x++)
+
+            // now we run through the parameters that PREPARE sent back and use
+            // those names to index into the parameters the user gave us.
+            // if the user set that parameter to NULL, then we set the null map
+            // accordingly
+            for (int x=0; x < paramList.Length; x++)
 			{
-				if (parameters[x].Value == DBNull.Value ||
-					parameters[x].Value == null)
+                MySqlParameter p = parameters[paramList[x].ColumnName];
+				if (p.Value == DBNull.Value || p.Value == null)
 					nullMap[x] = true;
 			}
 			byte[] nullMapBytes = new byte[ (parameters.Count + 7)/8 ];
@@ -104,14 +109,18 @@ namespace MySql.Data.MySqlClient
                 foreach (MySqlField param in paramList)
                 {
                     MySqlParameter parm = parameters[param.ColumnName];
-                    writer.WriteInteger((long)parm.MySqlDbType, 2);
+                    writer.WriteInteger((long)parm.GetPSType(), 2);
                 }
 
-                // now write out all non-null values
-                foreach (MySqlField param in paramList)
-                {
-                    MySqlParameter parm = parameters[param.ColumnName];
-                    if (parm.Value == DBNull.Value || parm.Value == null) continue;
+			// now write out all non-null values
+			foreach ( MySqlField param in paramList )
+			{
+				int index = parameters.IndexOf(param.ColumnName);
+				if (index == -1)
+					throw new MySqlException("Parameter '" + param.ColumnName +
+						"' is not defined.");
+				MySqlParameter parm = parameters[index];
+				if (parm.Value == DBNull.Value || parm.Value == null) continue;
 
                     writer.Encoding = param.Encoding;
                     parm.Serialize(writer, true);

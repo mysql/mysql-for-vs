@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2005 MySQL AB
+// Copyright (C) 2004-2006 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -26,6 +26,7 @@ using System.Text;
 using System.ComponentModel;
 using System.Globalization;
 using MySql.Data.Common;
+using System.Diagnostics;
 
 namespace MySql.Data.MySqlClient
 {
@@ -46,14 +47,16 @@ namespace MySql.Data.MySqlClient
         private SchemaProvider schemaProvider;
         private ProcedureCache procedureCache;
         private PerformanceMonitor perfMonitor;
+        private ProcedureCache procedureCache;
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/InfoMessage/*'/>
 		public event MySqlInfoMessageEventHandler	InfoMessage;
 
-
 		/// <include file='docs/MySqlConnection.xml' path='docs/DefaultCtor/*'/>
 		public MySqlConnection()
 		{
+            System.Diagnostics.Trace.Listeners.Add(
+                new TextWriterTraceListener("c:\\output.log"));
 			//TODO: add event data to StateChange docs
 			settings = new MySqlConnectionStringBuilder();
 			advisor = new UsageAdvisor(this);
@@ -279,7 +282,8 @@ namespace MySql.Data.MySqlClient
 		/// <include file='docs/MySqlConnection.xml' path='docs/ChangeDatabase/*'/>
 		public override void ChangeDatabase(string database)
 		{
-			if (database == null || database.Trim().Length == 0)
+            Logger.WriteLine("MySqlConnection::ChangeDatabase");
+            if (database == null || database.Trim().Length == 0)
 				throw new ArgumentException(
 					Resources.GetString("ParameterIsInvalid"), "database");
 
@@ -306,33 +310,37 @@ namespace MySql.Data.MySqlClient
 		/// <returns></returns>
 		public bool Ping() 
 		{
-			return driver.Ping();
+			bool result = driver.Ping();
+			if (! result)
+				Terminate();
+			return result;
 		}
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/Open/*'/>
 		public override void Open()
 		{
-			if (State == ConnectionState.Open)
+            Logger.WriteLine("MySqlConnection::Open");
+            if (State == ConnectionState.Open)
 				throw new InvalidOperationException(
 					Resources.GetString("ConnectionAlreadyOpen"));
 
 			SetState(ConnectionState.Connecting);
 
-			try 
-			{
-				if (settings.Pooling) 
-				{
+            try
+            {
+                if (settings.Pooling)
+                {
                     MySqlPool pool = MySqlPoolManager.GetPool(settings);
                     driver = pool.GetConnection();
                     procedureCache = pool.ProcedureCache;
-				}
-				else
-				{
-					driver = Driver.Create(settings);
+                }
+                else
+                {
+                    driver = Driver.Create(settings);
                     procedureCache = new ProcedureCache(settings.ProcedureCacheSize);
-				}
-			}
-			catch (Exception)
+                }
+            }
+            catch (Exception)
 			{
 				SetState(ConnectionState.Closed);
 				throw;
@@ -351,7 +359,7 @@ namespace MySql.Data.MySqlClient
             if (driver.Version.isAtLeast(5, 0, 0))
                 schemaProvider = new ISSchemaProvider(this);
             else
-                schemaProvider = new NonISSchemaProvider(this);
+                schemaProvider = new SchemaProvider(this);
             perfMonitor = new PerformanceMonitor(this);
 
             hasBeenOpen = true;
@@ -360,7 +368,8 @@ namespace MySql.Data.MySqlClient
 		/// <include file='docs/MySqlConnection.xml' path='docs/CreateCommand/*'/>
 		public new MySqlCommand CreateCommand()
 		{
-			// Return a new instance of a command object.
+            Logger.WriteLine("MySqlConnection::CreateCommand");
+            // Return a new instance of a command object.
 			MySqlCommand c = new MySqlCommand();
 			c.Connection = this;
 			return c;
@@ -409,6 +418,7 @@ namespace MySql.Data.MySqlClient
         /// <include file='docs/MySqlConnection.xml' path='docs/Close/*'/>
         public override void Close()
         {
+            Logger.WriteLine("MySqlConnection::Close");
             //TODO: rollback any pending transaction
             if (State == ConnectionState.Closed) return;
 

@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB
+// Copyright (C) 2004-2006 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -153,7 +153,7 @@ namespace MySql.Data.MySqlClient
 		/// <summary>A variable-length string containing 0 to 255 characters</summary>
 		VarChar     = 253,
 		/// <summary><b>Obsolete</b>  Use VarChar type</summary>
-		String      = 254,
+		Char        = 254,
 		/// <summary></summary>
 		Geometry	= 255,
 		/// <summary></summary>

@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB
+// Copyright (C) 2004-2006 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -45,6 +45,7 @@ namespace MySql.Data.MySqlClient
 		protected MySqlConnection		connection;
 		protected Hashtable				charSets;
 		protected bool					hasWarnings;
+		protected long					maxPacketSize;
 
 		public Driver(MySqlConnectionStringBuilder settings)
 		{
@@ -97,6 +98,11 @@ namespace MySql.Data.MySqlClient
 
 		#endregion
 
+		public string Property(string key)
+		{
+			return (string)serverProps[key];
+		}
+
 		public bool IsTooOld() 
 		{
 			TimeSpan ts = DateTime.Now.Subtract( creationTime );
@@ -110,13 +116,6 @@ namespace MySql.Data.MySqlClient
 			Driver d = null;
 			if (settings.DriverType == MySqlDriverType.Native)
 				d = new NativeDriver(settings);
-#if !COMPACT_FRAMEWORK
-			else if (settings.DriverType == MySqlDriverType.Client)
-				d = new ClientDriver(settings);
-			else
-				d = new EmbeddedDriver(settings);
-#endif
-
 			d.Open();
 			return d;
 		}
@@ -149,6 +148,11 @@ namespace MySql.Data.MySqlClient
 		{
 			this.connection = connection;
 			
+			// if we have already configured this driver and we are supposed
+			// to cache server config, then exit
+			if (serverProps != null && connectionString.CacheServerConfig)
+				return;
+
 			// load server properties
 			serverProps = new Hashtable();
 			MySqlCommand cmd = new MySqlCommand("SHOW VARIABLES", connection);
@@ -165,6 +169,9 @@ namespace MySql.Data.MySqlClient
 				Logger.LogException( ex );
 				throw;
 			}
+
+			if (serverProps.Contains( "max_allowed_packet"))
+				maxPacketSize = Convert.ToInt64(serverProps["max_allowed_packet"]);
 
 #if AUTHENTICATED
 			string licenseType = serverProps["license"];
@@ -257,7 +264,7 @@ namespace MySql.Data.MySqlClient
 				while (reader.Read()) 
 				{
 					errors.Add(new MySqlError(reader.GetString(0), 
-						reader.GetUInt32(1), reader.GetString(2)));
+						reader.GetInt32(1), reader.GetString(2)));
 				}
 				reader.Close();
 

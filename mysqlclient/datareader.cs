@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2005 MySQL AB
+// Copyright (C) 2004-2006 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -23,6 +23,7 @@ using System.Data;
 using System.Data.Common;
 using System.Collections;
 using MySql.Data.Types;
+using System.Data.SqlTypes;
 
 namespace MySql.Data.MySqlClient
 {
@@ -500,7 +501,7 @@ namespace MySql.Data.MySqlClient
 				if (pscale != -1)
 					r["NumericScale"] = (short)pscale;
 				r["DataType"] = GetFieldType(i);
-				r["ProviderType"] = (int)f.Type;
+				r["ProviderType"] = (int)f.ProviderType();
 				r["IsLong"] = f.IsBlob && f.ColumnLength > 255;
 				r["AllowDBNull"] = f.AllowsNull;
 				r["IsReadOnly"] = false;
@@ -524,6 +525,8 @@ namespace MySql.Data.MySqlClient
 		public override String GetString(int index)
 		{
 			IMySqlValue val = GetFieldValue(index);
+            if (val.IsNull)
+                throw new SqlNullValueException();
 
 			if (val is MySqlBinary)
 			{

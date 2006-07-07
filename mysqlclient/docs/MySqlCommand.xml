@@ -1,4 +1,4 @@
-﻿<docs>
+<docs>
 <ClassSummary>
 	<summary>Represents a SQL statement to execute against a MySQL database. This class cannot be inherited.</summary>
 	<remarks>
@@ -49,7 +49,7 @@
 		statement.
 		<code lang="Visual Basic">
 	Public Sub InsertRow(myConnectionString As String)
-		' If the connection string is null, use a default.
+		&quot; If the connection string is null, use a default.
 		If myConnectionString = "" Then
 			myConnectionString = "Database=Test;Data Source=localhost;User Id=username;Password=pass"
 		End If

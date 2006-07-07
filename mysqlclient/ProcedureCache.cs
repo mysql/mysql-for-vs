@@ -1,25 +1,55 @@
+// Copyright (C) 2004-2006 MySQL AB
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License version 2 as published by
+// the Free Software Foundation
+//
+// There are special exceptions to the terms and conditions of the GPL 
+// as it is applied to this software. View the full text of the 
+// exception in file EXCEPTIONS in the directory of this software 
+// distribution.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+
 using MySql.Data.MySqlClient;
 using System.Data;
-using System.Collections.Generic;
 using System.Collections;
+using MySql.Data.Common;
+using System.Diagnostics;
+using System;
+using System.Globalization;
+#if NET20
+using System.Collections.Generic;
+#endif
 
 namespace MySql.Data.MySqlClient
 {
     class ProcedureCache
     {
         private Hashtable procHash;
+#if NET20
         private Queue<int> hashQueue;
-        private uint maxSize;
+#else
+        private Queue hashQueue;
+#endif
+        private int maxSize;
 
-        public ProcedureCache(uint size)
+        public ProcedureCache(int size)
         {
             maxSize = size;
 #if NET20
-            hashQueue = new Queue<int>((int)maxSize);
+            hashQueue = new Queue<int>(maxSize);
 #else
             hashQueue = new Queue(maxSize);
 #endif
-            procHash = new Hashtable((int)maxSize);
+            procHash = new Hashtable(maxSize);
         }
 
         public DataSet GetProcedure(MySqlConnection conn, string spName)
@@ -52,7 +82,11 @@ namespace MySql.Data.MySqlClient
 
         private void TrimHash()
         {
+#if NET20
             int oldestHash = hashQueue.Dequeue();
+#else
+            int oldestHash = (int)hashQueue.Dequeue();
+#endif
             procHash.Remove(oldestHash);
         }
 
@@ -60,7 +94,7 @@ namespace MySql.Data.MySqlClient
         {
             int dotIndex = spName.IndexOf(".");
             string schema = spName.Substring(0, dotIndex);
-            string name = spName.Substring(dotIndex+1, spName.Length-dotIndex-1);
+            string name = spName.Substring(dotIndex + 1, spName.Length - dotIndex - 1);
 
             string[] restrictions = new string[4];
             restrictions[1] = schema;
@@ -75,7 +109,5 @@ namespace MySql.Data.MySqlClient
             ds.Tables.Add(parametersTable);
             return ds;
         }
-
-
     }
 }

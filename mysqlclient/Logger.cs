@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB
+// Copyright (C) 2004-2006 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -45,6 +45,11 @@ namespace MySql.Data.MySqlClient
 			WriteLine( msg );
 		}
 
+        static public void LogInformation(string msg)
+        {
+            Trace.WriteLine(msg);
+        }
+
 		static public void LogException( Exception ex )
 		{
 			string msg = String.Format("EXCEPTION: " + ex.Message);
@@ -66,7 +71,8 @@ namespace MySql.Data.MySqlClient
 		static public void WriteLine(string s) 
 		{
 #if !CF
-			Trace.WriteLine(s);
+            Trace.WriteLine(String.Format("[{0}] - {1}",
+                DateTime.Now, s));
 #endif
 		}
 	}

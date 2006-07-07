@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2005 MySQL AB
+// Copyright (C) 2004-2006 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -39,7 +39,6 @@ namespace MySql.Data.MySqlClient
 	{
 		public    int					MaxSinglePacket = 255 * 255 * 255;
 		protected byte					packetSeq;
-		protected long					maxPacketSize;
 
 		protected int					protocol;
 		protected String				encryptionSeed;
@@ -63,12 +62,6 @@ namespace MySql.Data.MySqlClient
 			get { return connectionFlags; }
 		}
 
-		public long MaxPacketSize 
-		{
-			get { return maxPacketSize; }
-			set { maxPacketSize = value; }
-		}
-
 		/// <summary>
 		/// Returns true if this connection can handle batch SQL natively
 		/// This means MySQL 4.1.1 or later.
@@ -88,14 +81,6 @@ namespace MySql.Data.MySqlClient
 				}
 				return false;
 			}
-		}
-
-		public override void Configure( MySqlConnection connection )
-		{
-			base.Configure( connection );
-
-			if ( serverProps.Contains( "max_allowed_packet" ))
-				maxPacketSize = Convert.ToInt64( serverProps["max_allowed_packet"] );
 		}
 
 
@@ -165,8 +150,8 @@ namespace MySql.Data.MySqlClient
 		{
 			base.Open();
 
-			Stream stream = null;
 			// connect to one of our specified hosts
+			Stream stream;
 			try 
 			{
 #if !CF
@@ -415,7 +400,7 @@ namespace MySql.Data.MySqlClient
 		{
 			try 
 			{
-				ExecuteCommand( DBCmd.PING, null, 0 ); 
+				ExecuteCommand(DBCmd.PING, null, 0); 
 				ReadOk(true);
 				return true;
 			}
@@ -463,7 +448,7 @@ namespace MySql.Data.MySqlClient
 				warningCount = reader.ReadInteger(2);
 				if (reader.HasMoreData) 
 				{
-					string serverMessage = reader.ReadLenString();
+					reader.ReadLenString();  //TODO: server message
 				}
 			}
             return fieldCount;

@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2005 MySQL AB
+// Copyright (C) 2004-2006 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -31,6 +31,11 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture]
 	public class PoolingTests : BaseTest
 	{
+		public PoolingTests() : base()
+		{
+			csAdditions = ";pooling=true";
+		}
+
 		[TestFixtureSetUp]
 		public void FixtureSetup()
 		{
@@ -86,7 +91,6 @@ namespace MySql.Data.MySqlClient.Tests
 
 			for (int i=0; i < connArray.Length; i++)
 			{
-				int id = connArray[i].ServerThread;
 				KillConnection(connArray[i]);
 				connArray[i].Close();
 			}
@@ -140,8 +144,16 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 			catch (Exception) { }
 
-			// we now kill the first connection
-			execSQL("KILL " + c.ServerThread);
+			// we now kill the first connection to simulate a server stoppage
+			base.KillConnection(c);
+
+			// now we do something on the first connection
+			try 
+			{
+				c.ChangeDatabase("mysql");
+				Assert.Fail("This change database should not work");
+			}
+			catch (Exception) { }
 
 			// Opening a connection now should work
 			try 
@@ -168,8 +180,47 @@ namespace MySql.Data.MySqlClient.Tests
 			conn.Open();
 			object var2 = cmd.ExecuteScalar();
 			Assert.AreEqual( DBNull.Value, var2 );
-			conn.Close();
 		}
 
+		[Test]
+		public void ExceedMaxAllowedPacket()
+		{
+			MySqlConnection c = null;
+
+			execSQL("set @@global.max_allowed_packet=1000000");		
+			execSQL("DROP TABLE IF EXISTS test");
+			try 
+			{
+				execSQL("CREATE TABLE test (b1 LONGBLOB)");
+
+				string connStr = GetConnectionString(true) + ";max pool size=1";
+				c = new MySqlConnection(connStr);
+				c.Open();
+
+				byte[] b1 = new byte[2500000];
+				MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES (?b1)", c);
+				cmd.Parameters.Add("?b1", b1);
+				cmd.ExecuteNonQuery();
+			}
+			catch (Exception)
+			{
+				Assert.IsTrue(c.State == ConnectionState.Closed);
+
+				try 
+				{
+					c.Open();
+					c.ChangeDatabase("mysql");
+				}
+				catch (Exception ex2)
+				{
+					Assert.Fail(ex2.Message);
+				}
+			}
+			finally 
+			{
+				if (c != null)
+					c.Close();
+			}
+		}
 	}
 }

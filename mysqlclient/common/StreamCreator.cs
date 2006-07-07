@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2005 MySQL AB
+// Copyright (C) 2004-2006 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -24,8 +24,8 @@ using System.Net;
 using System.Net.Sockets;
 using System.Collections;
 using System.Threading;
-using MySql.Data.MySqlClient;
 using System.Reflection;
+using MySql.Data.MySqlClient;
 
 namespace MySql.Data.Common
 {
@@ -34,7 +34,6 @@ namespace MySql.Data.Common
 	/// </summary>
 	internal class StreamCreator
 	{
-		private const uint FIONBIO = 0x8004667e;
 		string				hostList;
 		uint				port;
 		string				pipeName;
@@ -80,7 +79,7 @@ namespace MySql.Data.Common
 			Stream stream = null;
 			for (int i=0; i < ipAddresses.Count; i++)
 			{
-				if ( pipeName != null )
+				if (usePipe)
 					stream = CreateNamedPipeStream( (string)hostNames[index] );
 				else
 					stream = CreateSocketStream( (IPAddress)ipAddresses[index], port, false );

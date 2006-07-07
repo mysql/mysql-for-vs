@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB
+// Copyright (C) 2004-2006 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -125,30 +125,36 @@ namespace MySql.Data.Types
 			return ValueAsObject.ToString();
 		}
 
-		internal static MySqlValue GetMySqlValue( MySqlDbType type, bool unsigned, bool binary )
+		internal static MySqlValue GetMySqlValue( MySqlDbType type, bool binary )
 		{
 			switch (type) 
 			{
+				case MySqlDbType.UByte:
+					return new MySqlUByte();
 				case MySqlDbType.Byte: 
-					if (unsigned) return new MySqlUByte();
 					return new MySqlByte();
 
+				case MySqlDbType.UInt16:
+					return new MySqlUInt16();
 				case MySqlDbType.Int16: 
-					if (unsigned) return new MySqlUInt16();
 					return new MySqlInt16();
+
+				case MySqlDbType.UInt24:
+				case MySqlDbType.UInt32:
+					return new MySqlUInt32(type);
 
 				case MySqlDbType.Int24:
 				case MySqlDbType.Int32: 
 				case MySqlDbType.Year:
-					if (unsigned) return new MySqlUInt32(type);
 					return new MySqlInt32(type);
 
 				case MySqlDbType.Bit:
 					return new MySqlBit();
 
+				case MySqlDbType.UInt64:
+					return new MySqlUInt64();
+
 				case MySqlDbType.Int64: 
-					if (unsigned)
-						return new MySqlUInt64();
 					return new MySqlInt64();
 
 				case MySqlDbType.Time:
@@ -167,7 +173,7 @@ namespace MySql.Data.Types
 
 				case MySqlDbType.Set:
 				case MySqlDbType.Enum:
-				case MySqlDbType.String:
+				case MySqlDbType.Char:
 				case MySqlDbType.VarChar: 
 					return new MySqlString(null, type);
 
