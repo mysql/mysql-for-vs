@@ -36,8 +36,8 @@ namespace MySql.Data.MySqlClient
 #endif
 	public sealed class MySqlParameterCollection : DbParameterCollection
 	{
-		private ArrayList	items = new ArrayList();
-		private char		paramMarker = '?';
+		private ArrayList items = new ArrayList();
+		private char paramMarker = '?';
         private bool changed;
 
 		internal char ParameterMarker 
@@ -95,33 +95,33 @@ namespace MySql.Data.MySqlClient
 			if (inComingName[0] == paramMarker)
 				inComingName = inComingName.Substring(1, inComingName.Length-1);
 
-			for (int i=0; i < _parms.Count; i++)
+			for (int i=0; i < items.Count; i++)
 			{
-				MySqlParameter p = (MySqlParameter)_parms[i];
+				MySqlParameter p = (MySqlParameter)items[i];
 				string name = p.ParameterName.ToLower();
 				if (name[0] == paramMarker)
 					name = name.Substring(1, name.Length-1);
 				if (name == inComingName)
 				{
-					_parms[i] = value;
+					items[i] = value;
 					return value;
 				}
 			}
 
-			_parms.Add(value);
+			items.Add(value);
 			return value;
 		}
 
         private MySqlParameter AddReturnParameter(MySqlParameter value)
         {
-            for (int i = 0; i < _parms.Count; i++)
+            for (int i = 0; i < items.Count; i++)
             {
-                MySqlParameter p = (MySqlParameter)_parms[i];
+                MySqlParameter p = (MySqlParameter)items[i];
                 if (p.Direction != ParameterDirection.ReturnValue) continue;
-                _parms[i] = value;
+                items[i] = value;
                 return value;
             }
-            _parms.Add(value);
+            items.Add(value);
             return value;
         }
 
@@ -233,7 +233,7 @@ namespace MySql.Data.MySqlClient
             if (p.ParameterName == null || p.ParameterName == String.Empty)
                 throw new MySqlException("Parameters must be named");
 
-            return items.Add(value);
+            return items.Add((MySqlParameter)value);
         }
 
         /// <summary>

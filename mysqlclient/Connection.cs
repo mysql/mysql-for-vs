@@ -47,7 +47,6 @@ namespace MySql.Data.MySqlClient
         private SchemaProvider schemaProvider;
         private ProcedureCache procedureCache;
         private PerformanceMonitor perfMonitor;
-        private ProcedureCache procedureCache;
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/InfoMessage/*'/>
 		public event MySqlInfoMessageEventHandler	InfoMessage;
@@ -311,8 +310,6 @@ namespace MySql.Data.MySqlClient
 		public bool Ping() 
 		{
 			bool result = driver.Ping();
-			if (! result)
-				Terminate();
 			return result;
 		}
 
@@ -350,8 +347,8 @@ namespace MySql.Data.MySqlClient
 			if ( driver.Settings.UseOldSyntax)
 				Logger.LogWarning("You are using old syntax that will be removed in future versions");
 
-			SetState(ConnectionState.Open);
-			driver.Configure(this);
+            driver.Configure(this);
+            SetState(ConnectionState.Open);
 			if (settings.Database != null && settings.Database != String.Empty)
 				ChangeDatabase(settings.Database);
 

@@ -44,15 +44,13 @@ namespace MySql.Data.MySqlClient
 		UpdateRowSource				updatedRowSource;
 		MySqlParameterCollection	parameters;
 		private ArrayList			sqlBuffers;
-//		private PreparedStatement	preparedStatement;
 		private ArrayList			parameterMap;
-//		private StoredProcedure		storedProcedure;
-//		private CommandResult		lastResult;
 		private int					cursorPageSize;
 		private IAsyncResult		asyncResult;
         private bool                designTimeVisible;
         private Int64 lastInsertedId;
         private Statement statement;
+        private MySqlCommandType mysqlCmdType;
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ctor1/*'/>
 		public MySqlCommand()
@@ -100,6 +98,12 @@ namespace MySql.Data.MySqlClient
 			set { cmdText = value;  statement=null; }
 		}
 
+        public MySqlCommandType MySqlCommandType
+        {
+            get { return mysqlCmdType; }
+            set { mysqlCmdType = value; SyncCommandType(false); }
+        }
+
 		internal int UpdateCount 
 		{
 			get { return (int)updatedRowCount; }
@@ -134,7 +138,7 @@ namespace MySql.Data.MySqlClient
 		public override CommandType CommandType
 		{
 			get { return cmdType; }
-			set { cmdType = value; }
+            set { cmdType = value; SyncCommandType(true);  }
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/IsPrepared/*'/>
@@ -575,6 +579,11 @@ namespace MySql.Data.MySqlClient
 		#endregion
 
 		#region Private Methods
+
+        private void SyncCommandType(bool cmdTypeSet)
+        {
+            int i = (int)CommandType;
+        }
 
 		/// <summary>
 		/// Prepares the necessary byte buffers from the given CommandText

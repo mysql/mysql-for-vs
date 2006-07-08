@@ -558,7 +558,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 			Assert.AreEqual("val8", cmd.Parameters[7].ParameterName);
 			Assert.AreEqual(ParameterDirection.Input, cmd.Parameters[7].Direction);
-			Assert.AreEqual(MySqlDbType.Char, cmd.Parameters[7].MySqlDbType);
+			Assert.AreEqual(MySqlDbType.String, cmd.Parameters[7].MySqlDbType);
 
             Assert.AreEqual("val9", cmd.Parameters[8].ParameterName);
             Assert.AreEqual(ParameterDirection.Input, cmd.Parameters[8].Direction);

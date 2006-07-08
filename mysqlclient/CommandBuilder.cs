@@ -25,6 +25,7 @@ using System.Data;
 using System.Text;
 using MySql.Data.Common;
 using System.Collections;
+using MySql.Data.Types;
 
 namespace MySql.Data.MySqlClient
 {
@@ -141,18 +142,56 @@ namespace MySql.Data.MySqlClient
 			if (!command.Connection.driver.Version.isAtLeast(5,0,0))
 				throw new MySqlException("DeriveParameters is not supported on versions " +
 					"prior to 5.0");
-			StoredProcedure sp = new StoredProcedure(command.Connection);
+            StoredProcedure sp = new StoredProcedure(command.Connection, "");
 
+            string spType = "PROCEDURE";
+            string schema = command.Connection.Database;
+            if (command.MySqlCommandType == MySqlCommandType.StoredFunction)
+                spType = "FUNCTION";
             string spName = command.CommandText;
             int dotIndex = spName.IndexOf('.');
-            if (dotIndex == -1)
-                spName = command.Connection.Database + "." + spName;
+            if (dotIndex != -1)
+            {
+                schema = spName.Substring(0, dotIndex);
+                spName = spName.Substring(dotIndex + 1);
+            }
 
-            ArrayList parameters = sp.DiscoverParameters(spName);
+            // now retrieve the paramters using GetSchema
+            string[] restrictions = new string[5];
+            restrictions[1] = schema;
+            restrictions[2] = spName;
+            restrictions[3] = spType;
+            DataTable parameters = command.Connection.GetSchema(
+                "procedure parameters", restrictions);
 
             command.Parameters.Clear();
-            foreach (MySqlParameter p in parameters)
+            foreach (DataRow row in parameters.Rows)
+            {
+                MySqlParameter p = new MySqlParameter();
+                p.ParameterName = row["PARAMETER_NAME"].ToString();
+                p.Direction = GetDirection(row["PARAMETER_MODE"].ToString(),
+                    row["IS_RESULT"].ToString());
+                p.MySqlDbType = MetaData.NameToType(row["DATA_TYPE"].ToString(),
+                    false, false, command.Connection);
+                if (row["CHARACTER_MAXIMUM_LENGTH"] != null)
+                    p.Size = (int)row["CHARACTER_MAXIMUM_LENGTH"];
+                if (row["NUMERIC_PRECISION"] != null)
+                    p.Precision = (byte)(int)row["NUMERIC_PRECISION"];
+                if (row["NUMERIC_SCALE"] != null)
+                    p.Scale = (byte)row["NUMERIC_SCALE"];
                 command.Parameters.Add(p);
+            }
+        }
+
+        private static ParameterDirection GetDirection(string direction, string is_result)
+        {
+            if (is_result == "YES")
+                return ParameterDirection.ReturnValue;
+            else if (direction == "IN")
+                return ParameterDirection.Input;
+            else if (direction == "OUT")
+                return ParameterDirection.Output;
+            return ParameterDirection.InputOutput;
         }
 
 		/// <include file='docs/MySqlCommandBuilder.xml' path='docs/GetDeleteCommand/*'/>

@@ -501,7 +501,7 @@ namespace MySql.Data.MySqlClient
 				if (pscale != -1)
 					r["NumericScale"] = (short)pscale;
 				r["DataType"] = GetFieldType(i);
-				r["ProviderType"] = (int)f.ProviderType();
+                r["ProviderType"] = (int)f.Type;
 				r["IsLong"] = f.IsBlob && f.ColumnLength > 255;
 				r["AllowDBNull"] = f.AllowsNull;
 				r["IsReadOnly"] = false;

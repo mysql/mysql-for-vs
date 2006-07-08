@@ -175,9 +175,9 @@ namespace MySql.Data.MySqlClient
             dt.Columns.Add("IS_RESULT", typeof(string));
             dt.Columns.Add("DATA_TYPE", typeof(string));
             dt.Columns.Add("CHARACTER_SET", typeof(string));
-            dt.Columns.Add("CHARACTER_MAXIMUM_LENGTH", typeof(int32));
+            dt.Columns.Add("CHARACTER_MAXIMUM_LENGTH", typeof(Int32));
             dt.Columns.Add("NUMERIC_PRECISION", typeof(byte));
-            dt.Columns.Add("NUMERIC_SCALE", typeof(int32));
+            dt.Columns.Add("NUMERIC_SCALE", typeof(Int32));
 
 
             // first try and get parameter information from mysql.proc
@@ -259,7 +259,7 @@ namespace MySql.Data.MySqlClient
 
         #region Procedures Support Rouines
 
-        private void GetParametersFromMySqlProc(DataTable parametersTable,
+/*        private void GetParametersFromMySqlProc(DataTable parametersTable,
             string[] restrictions)
         {
             StringBuilder baseQuery = new StringBuilder(
@@ -304,7 +304,7 @@ namespace MySql.Data.MySqlClient
                     reader.Close();
             }
         }
-
+        */
         private void GetParametersFromShowCreate(DataTable parametersTable,
             string[] restrictions)
         {
@@ -420,7 +420,7 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-        private MySqlParameter ParseParameter(string parmDef, ContextString cs,
+        private void ParseParameter(string parmDef, ContextString cs,
             string sqlMode, DataRow parmRow)
         {
             parmDef = parmDef.Trim();
@@ -451,7 +451,7 @@ namespace MySql.Data.MySqlClient
             parmDef = parmDef.Trim();
 
             string[] split = cs.Split(parmDef, " \t\r\n");
-            if (p.Direction != ParameterDirection.ReturnValue)
+            if (parmRow["IS_RESULT"].Equals("NO"))
             {
                 parmRow["PARAMETER_NAME"] = CleanParameterName(split[0]);
                 parmDef = parmDef.Substring(split[0].Length);
@@ -514,7 +514,7 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-        private void ProcessParameterList(DataTable parametersTable, string db,
+/*        private void ProcessParameterList(DataTable parametersTable, string db,
             string procName, string paramList, string returns)
         {
             string[] paramDefs = Utility.ContextSplit(paramList, ",", "()");
@@ -548,7 +548,7 @@ namespace MySql.Data.MySqlClient
                 parametersTable.Rows.Add(row);
             }
         }
-
+        */
         #endregion
 
     }

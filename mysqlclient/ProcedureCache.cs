@@ -39,17 +39,17 @@ namespace MySql.Data.MySqlClient
 #else
         private Queue hashQueue;
 #endif
-        private int maxSize;
+        private uint maxSize;
 
-        public ProcedureCache(int size)
+        public ProcedureCache(uint size)
         {
             maxSize = size;
 #if NET20
-            hashQueue = new Queue<int>(maxSize);
+            hashQueue = new Queue<int>((int)maxSize);
 #else
             hashQueue = new Queue(maxSize);
 #endif
-            procHash = new Hashtable(maxSize);
+            procHash = new Hashtable((int)maxSize);
         }
 
         public DataSet GetProcedure(MySqlConnection conn, string spName)

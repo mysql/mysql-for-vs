@@ -109,7 +109,7 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.IsFalse(sb.AllowZeroDateTime);
             Assert.IsFalse(sb.UsePerformanceMonitor);
             Assert.AreEqual(25, sb.ProcedureCacheSize);
-            Assert.IsFalse(sb.CacheServerConfig);
+            Assert.IsFalse(sb.ConnectionReset);
         }
 
 		[Test]

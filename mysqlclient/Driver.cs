@@ -147,11 +147,10 @@ namespace MySql.Data.MySqlClient
 		public virtual void Configure(MySqlConnection connection)
 		{
 			this.connection = connection;
-			
-			// if we have already configured this driver and we are supposed
-			// to cache server config, then exit
-			if (serverProps != null && connectionString.CacheServerConfig)
-				return;
+
+            // check if we are already configured
+            if (serverProps != null)
+                return;
 
 			// load server properties
 			serverProps = new Hashtable();

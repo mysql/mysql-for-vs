@@ -21,6 +21,7 @@
 using System;
 using MySql.Data.Common;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace MySql.Data.MySqlClient
 {
@@ -29,11 +30,16 @@ namespace MySql.Data.MySqlClient
 	/// </summary>
 	internal sealed class MySqlPool
 	{
-		private ArrayList				inUsePool;
-		private Queue					idlePool;
-		private MySqlConnectionString	settings;
-		private int						minSize;
-		private int						maxSize;
+#if NET20
+        private List<Driver> inUsePool;
+        private Queue<Driver> idlePool;
+#else
+		private ArrayList inUsePool;
+		private Queue idlePool;
+#endif
+		private MySqlConnectionStringBuilder settings;
+		private uint minSize;
+		private uint maxSize;
         private ProcedureCache procedureCache;
 
 		public MySqlPool(MySqlConnectionStringBuilder settings)
@@ -41,8 +47,13 @@ namespace MySql.Data.MySqlClient
 			minSize = settings.MinimumPoolSize;
 			maxSize = settings.MaximumPoolSize;
 			this.settings = settings;
+#if NET20
+            inUsePool = new List<Driver>((int)maxSize);
+            idlePool = new Queue<Driver>((int)maxSize);
+#else
 			inUsePool =new ArrayList(maxSize);
 			idlePool = new Queue(maxSize);
+#endif
 
 			// prepopulate the idle pool to minSize
 			for (int i=0; i < minSize; i++) 
@@ -82,14 +93,14 @@ namespace MySql.Data.MySqlClient
 */
 		private Driver CheckoutConnection()
 		{
-			lock(idlePool.SyncRoot)
+			lock((idlePool as ICollection).SyncRoot)
 			{
 				if (idlePool.Count == 0) return null;
 				Driver driver = (Driver)idlePool.Dequeue();
 
 				// if the user asks us to ping/reset pooled connections
 				// do so now
-				if (settings.ResetPooledConnections)
+				if (settings.ConnectionReset)
 				{
 					if (!driver.Ping())
 					{
@@ -99,8 +110,8 @@ namespace MySql.Data.MySqlClient
 					driver.Reset();
 				}
 
-				lock (inUsePool.SyncRoot)
-				{
+                lock ((inUsePool as ICollection).SyncRoot)
+                {
 					inUsePool.Add(driver);
 				}
 				return driver;
@@ -124,9 +135,9 @@ namespace MySql.Data.MySqlClient
 
 		private void CreateNewPooledConnection()
 		{
-			lock(idlePool.SyncRoot) 
-				lock (inUsePool.SyncRoot)
-				{
+            lock ((idlePool as ICollection).SyncRoot)
+                lock ((inUsePool as ICollection).SyncRoot)
+                {
 					// first we check if we are allowed to create another
 					if ((inUsePool.Count + idlePool.Count) == maxSize)
 						return;
@@ -139,9 +150,9 @@ namespace MySql.Data.MySqlClient
 
 		public void ReleaseConnection(Driver driver)
 		{
-			lock (idlePool.SyncRoot)
-				lock (inUsePool.SyncRoot) 
-				{
+            lock ((idlePool as ICollection).SyncRoot)
+                lock ((inUsePool as ICollection).SyncRoot)
+                {
 					inUsePool.Remove(driver);
 					if (driver.Settings.ConnectionLifeTime != 0 && driver.IsTooOld())
 						driver.Close();

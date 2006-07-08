@@ -215,6 +215,7 @@
     <Compile Include="MySqlClient\transaction.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MySqlClient\Types\MetaData.cs" />
     <Compile Include="MySqlClient\Types\MySqlBinary.cs">
       <SubType>Code</SubType>
     </Compile>

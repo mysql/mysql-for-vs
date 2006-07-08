@@ -161,6 +161,7 @@
     <Compile Include="Syntax.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Threading.cs" />
     <Compile Include="Transactions.cs">
       <SubType>Code</SubType>
     </Compile>

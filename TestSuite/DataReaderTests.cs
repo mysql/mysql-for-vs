@@ -431,7 +431,7 @@ namespace MySql.Data.MySqlClient.Tests
 
  		/// <summary>
  		/// Added test for IsDBNull from bug# 7399
--		/// </summary>
+		/// </summary>
 		[Test]
 		public void SequentialAccessBehavior() 
 		{

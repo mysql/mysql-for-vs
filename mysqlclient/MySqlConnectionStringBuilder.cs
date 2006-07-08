@@ -36,7 +36,7 @@ namespace MySql.Data.MySqlClient
         MySqlDriverType driverType;
         bool compress, connectionReset, allowBatch, logging;
         bool oldSyntax, persistSI, usePerfMon, pooling;
-        bool cacheServerConfig, allowZeroDatetime, convertZeroDatetime;
+        bool allowZeroDatetime, convertZeroDatetime;
         bool useUsageAdvisor, useSSL;
 
         public MySqlConnectionStringBuilder()
@@ -244,12 +244,6 @@ namespace MySql.Data.MySqlClient
         #endregion
 
         #region Other Properties
-
-        public bool CacheServerConfig
-        {
-            get { return cacheServerConfig; }
-            set { base["Cache Server Config"] = value; cacheServerConfig = value; }
-        }
 
 #if !CF
 		[Category("Advanced")]
@@ -507,11 +501,10 @@ namespace MySql.Data.MySqlClient
             allowZeroDatetime = false;
             usePerfMon = false;
             procCacheSize = 25;
-            cacheServerConfig = false;
             useSSL = false;
         }
 
-        private string RemovePassword(string connStr)
+/*        private string RemovePassword(string connStr)
         {
             return RemoveKeys(connStr, new string[2] { "password", "pwd" });
         }
@@ -519,6 +512,7 @@ namespace MySql.Data.MySqlClient
         private string RemoveKeys(string value, string[] keys)
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            ContextString cs = new ContextString(
             string[] pairs = Utility.ContextSplit(value, ";", "\"'");
             foreach (string keyvalue in pairs)
             {
@@ -531,7 +525,7 @@ namespace MySql.Data.MySqlClient
             sb.Remove(sb.Length - 1, 1);  // remove the trailing ;
             return sb.ToString();
         }
-
+        */
         #endregion
 
         /// <summary>
@@ -541,11 +535,12 @@ namespace MySql.Data.MySqlClient
         /// <returns></returns>
         public string GetConnectionString(bool includePass)
         {
-            string connStr = originalConnectionString;
-            if (!PersistSecurityInfo && !includePass)
-                connStr = RemovePassword(connStr);
+            // TODO: fix this
+//            string connStr = originalConnectionString;
+  //          if (!PersistSecurityInfo && !includePass)
+    //            connStr = RemovePassword(connStr);
 
-            return connStr;
+            return null; // connStr;
         }
 
         public override void Clear()
@@ -653,7 +648,6 @@ namespace MySql.Data.MySqlClient
                 case Keyword.ProcedureCacheSize: return ProcedureCacheSize;
                 case Keyword.AllowZeroDatetime: return AllowZeroDateTime;
                 case Keyword.UsePerformanceMonitor: return UsePerformanceMonitor;
-                case Keyword.CacheServerConfig: return CacheServerConfig;
                 default: return null;  /* this will never happen */
             }
         }
@@ -688,7 +682,6 @@ namespace MySql.Data.MySqlClient
                 case Keyword.UsePerformanceMonitor: UsePerformanceMonitor = ConvertToBool(value); break;
                 case Keyword.AllowZeroDatetime: AllowZeroDateTime = ConvertToBool(value); break;
                 case Keyword.ProcedureCacheSize: ProcedureCacheSize = ConvertToUInt(value); break;
-                case Keyword.CacheServerConfig: CacheServerConfig = ConvertToBool(value); break;
             }
         }
 
@@ -734,7 +727,6 @@ namespace MySql.Data.MySqlClient
         ConnectionReset,
         AllowZeroDatetime,
         UsePerformanceMonitor,
-        ProcedureCacheSize,
-        CacheServerConfig
+        ProcedureCacheSize
     }
 }

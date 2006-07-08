@@ -354,18 +354,18 @@ namespace MySql.Data.MySqlClient
             }
 		}
 
-		internal void Serialize( PacketWriter writer, bool binary ) 
-		{
-			IMySqlValue v = MySqlField.GetIMySqlValue(mySqlDbType, true);
-			//GetValueObject();
+        internal void Serialize(MySqlStreamWriter writer, bool binary)
+        {
+            IMySqlValue v = MySqlField.GetIMySqlValue(mySqlDbType, true);
+            //GetValueObject();
 
-			if (!binary && (paramValue == null || paramValue == DBNull.Value))
-				writer.WriteStringNoNull("NULL");
-			else
-				v.WriteValue(writer, binary, paramValue, size);
-		}
+            if (!binary && (paramValue == null || paramValue == DBNull.Value))
+                writer.WriteStringNoNull("NULL");
+            else
+                v.WriteValue(writer, binary, paramValue, size);
+        }
 
-		private void SetMySqlDbType( MySqlDbType mySqlDbType ) 
+		private void SetMySqlDbType(MySqlDbType mySqlDbType) 
 		{
 			this.mySqlDbType = mySqlDbType;
 			switch (mySqlDbType) 
@@ -397,12 +397,12 @@ namespace MySql.Data.MySqlClient
 				case MySqlDbType.MediumBlob:
 				case MySqlDbType.LongBlob:
 				case MySqlDbType.Blob: dbType = DbType.Object; break;
-				case MySqlDbType.Char: dbType = DbType.StringFixedLength; break;
+				case MySqlDbType.String: dbType = DbType.StringFixedLength; break;
 			}
 		}
 
 
-		private void SetDbType( DbType dbType ) 
+		private void SetDbType(DbType dbType) 
 		{
 			this.dbType = dbType;
 			switch (dbType) 
@@ -412,7 +412,7 @@ namespace MySql.Data.MySqlClient
 				case DbType.String: mySqlDbType = MySqlDbType.VarChar; break;
 
 				case DbType.AnsiStringFixedLength:
-				case DbType.StringFixedLength: mySqlDbType = MySqlDbType.Char; break;
+				case DbType.StringFixedLength: mySqlDbType = MySqlDbType.String; break;
 
 				case DbType.Boolean:
 				case DbType.Byte:
@@ -462,7 +462,7 @@ namespace MySql.Data.MySqlClient
 			else 
 			{
 
-				TypeCode tc = Type.GetTypeCode( paramValue.GetType() );
+				TypeCode tc = Type.GetTypeCode(paramValue.GetType());
 				switch (tc) 
 				{
 					case TypeCode.SByte: DbType = DbType.SByte; break;
@@ -483,7 +483,6 @@ namespace MySql.Data.MySqlClient
 				}
 			}
 		}
-
 
 		#region ICloneable
 		object System.ICloneable.Clone() 

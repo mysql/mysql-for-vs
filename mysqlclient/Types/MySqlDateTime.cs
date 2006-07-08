@@ -205,10 +205,11 @@ namespace MySql.Data.Types
 			writer.WriteStringNoNull( "'" + val + "'" );
 		}
 
-		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, object val, int length)
+		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, 
+            object value, int length)
 		{
-			if (val is MySqlDateTime)
-				val = ((MySqlDateTime)val).GetDateTime();
+			if (value is MySqlDateTime)
+				value = ((MySqlDateTime)value).GetDateTime();
 
 			if (value is string)
 				value = DateTime.Parse((string)value, 
@@ -217,7 +218,7 @@ namespace MySql.Data.Types
 			if (! (value is DateTime))
 				throw new MySqlException( "Only DateTime objects can be serialized by MySqlDateTime" );
 
-			DateTime dtValue = (DateTime)val;
+			DateTime dtValue = (DateTime)value;
 			if (! binary)
 			{
 				SerializeText( writer, dtValue );

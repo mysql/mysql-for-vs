@@ -569,7 +569,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
 
         [Test]
-        public void DecimalTests()
+        public void DecimalTests2()
         {
             execSQL("DROP TABLE IF EXISTS test");
             execSQL("CREATE TABLE test (val decimal(10,1))");
