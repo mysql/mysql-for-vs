@@ -74,6 +74,11 @@ namespace MySql.Data.MySqlClient
 
         #region Properties
 
+        internal long InsertedId
+        {
+            get { return this.lastInsertId; }
+        }
+
         internal CommandBehavior Behavior 
 		{
 			get { return commandBehavior; }
@@ -651,7 +656,10 @@ namespace MySql.Data.MySqlClient
                 if (fieldCount > 0)
                     return fieldCount;
                 else if (fieldCount == 0)
+                {
+                    command.lastInsertedId = lastInsertId;
                     affectedRows += (long)affectedRowsTemp;
+                }
                 else if (fieldCount == -1)
                     if (!statement.ExecuteNext())
                         break;

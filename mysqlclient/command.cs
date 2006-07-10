@@ -47,7 +47,7 @@ namespace MySql.Data.MySqlClient
 		private int					cursorPageSize;
 		private IAsyncResult		asyncResult;
         private bool                designTimeVisible;
-        //private Int64 lastInsertedId;
+        internal Int64 lastInsertedId;
         private Statement statement;
         private MySqlCommandType mysqlCmdType;
 
@@ -85,6 +85,16 @@ namespace MySql.Data.MySqlClient
 		} 
 
 		#region Properties
+
+
+        /// <include file='docs/mysqlcommand.xml' path='docs/LastInseredId/*'/>
+#if DESIGN
+		[Browsable(false)]
+#endif
+        public Int64 LastInsertedId
+        {
+            get { return lastInsertedId; }
+        }
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/CommandText/*'/>
 #if DESIGN
@@ -410,8 +420,10 @@ namespace MySql.Data.MySqlClient
 		/// <include file='docs/mysqlcommand.xml' path='docs/ExecuteNonQuery/*'/>
 		public override int ExecuteNonQuery()
 		{
+            lastInsertedId = -1;
             MySqlDataReader reader = ExecuteReader();
             reader.Close();
+            lastInsertedId = reader.InsertedId;
             return reader.RecordsAffected;
 /*			CheckState();
 
@@ -447,6 +459,7 @@ namespace MySql.Data.MySqlClient
 		/// <include file='docs/mysqlcommand.xml' path='docs/ExecuteReader1/*'/>
 		public new MySqlDataReader ExecuteReader(CommandBehavior behavior)
 		{
+            lastInsertedId = -1;
 			CheckState();
 
 			string sql = TrimSemicolons(cmdText);
@@ -485,14 +498,13 @@ namespace MySql.Data.MySqlClient
 		/// <include file='docs/mysqlcommand.xml' path='docs/ExecuteScalar/*'/>
 		public override object ExecuteScalar()
 		{
-			// ExecuteReader will check out state
-//			updateCount = -1;
-
+            lastInsertedId = -1;
 			object val = null;
 			MySqlDataReader reader = ExecuteReader();
 			if (reader.Read())
 				val = reader.GetValue(0);
 			reader.Close();
+            lastInsertedId = reader.InsertedId;
 
 			return val;
 		}

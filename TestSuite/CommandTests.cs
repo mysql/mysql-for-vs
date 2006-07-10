@@ -349,5 +349,36 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("Test2", table.Rows[1]["name"]);
         }
 
+        [Test]
+        public void LastInsertid()
+        {
+            execSQL("DROP TABLE test");
+            execSQL("CREATE TABLE test(id int auto_increment, name varchar(20))");
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES(NULL, 'test')", conn);
+            cmd.ExecuteNonQuery();
+            Assert.AreEqual(1, cmd.LastInsertedId);
+
+            MySqlDataReader reader = null;
+            try
+            {
+                reader = cmd.ExecuteReader();
+                reader.Read();
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                if (reader != null)
+                    reader.Close();
+            }
+            Assert.AreEqual(2, cmd.LastInsertedId);
+
+            cmd.CommandText = "SELECT id FROM test";
+            cmd.ExecuteScalar();
+            Assert.AreEqual(-1, cmd.LastInsertedId);
+        }
+
 	}
 }

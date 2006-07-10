@@ -698,7 +698,21 @@ public void CreateMySqlCommand()
 <IsPrepared>
 </IsPrepared>
 
-
+  <LastInsertedId>
+    <summary>Provides the id of the last inserted row.</summary>
+    <value>
+      Id of the last inserted row.  -1 if none exists.
+    </value>
+    <remarks>
+      An important point to remember is that this property can be used
+      in batch SQL scenarios but it's important to remember that it will
+      only reflect the insert id from the last insert statement in the batch.
+      
+      This property can also be used when the batch includes select statements
+      and ExecuteReader is used.  This property can be consulted during result set
+      processing.
+    </remarks>
+  </LastInsertedId>
 
 <Parameters>
 	<summary>Get the <see cref="MySqlParameterCollection"/></summary>
