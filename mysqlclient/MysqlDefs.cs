@@ -104,67 +104,151 @@ namespace MySql.Data.MySqlClient
 	/// </summary>
 	public enum MySqlDbType
 	{
-		/// <summary> <see cref="Decimal"/><para>A fixed precision and scale numeric value between -1038 -1 and 10 38 -1.</para></summary>
+		/// <summary>
+        /// <see cref="Decimal"/>
+        /// <para>A fixed precision and scale numeric value between -1038 
+        /// -1 and 10 38 -1.</para>
+        /// </summary>
 		Decimal	=   0,  
-		/// <summary> <see cref="Byte"/><para>The signed range is -128 to 127. The unsigned range is 0 to 255.</para></summary>
+		/// <summary>
+        /// <see cref="Byte"/><para>The signed range is -128 to 127. The unsigned 
+        /// range is 0 to 255.</para>
+        /// </summary>
 		Byte		=   1,  
-		/// <summary><see cref="Int16"/><para>A 16-bit signed integer. The signed range is -32768 to 32767. The unsigned range is 0 to 65535</para></summary>
+		/// <summary>
+        /// <see cref="Int16"/><para>A 16-bit signed integer. The signed range is 
+        /// -32768 to 32767. The unsigned range is 0 to 65535</para>
+        /// </summary>
 		Int16       =   2,
-		/// <summary>Specifies a 24 (3 byte) signed or unsigned value.</summary>
+		/// <summary>
+        /// Specifies a 24 (3 byte) signed or unsigned value.
+        /// </summary>
 		Int24       =   9,
-		/// <summary><see cref="Int32"/><para>A 32-bit signed integer</para></summary>
+		/// <summary>
+        /// <see cref="Int32"/><para>A 32-bit signed integer</para>
+        /// </summary>
 		Int32       =   3,
-		/// <summary><see cref="Int64"/><para>A 64-bit signed integer.</para></summary>
+		/// <summary>
+        /// <see cref="Int64"/><para>A 64-bit signed integer.</para>
+        /// </summary>
 		Int64       =   8,
-		/// <summary><see cref="Single"/><para>A small (single-precision) floating-point number. Allowable values are -3.402823466E+38 to -1.175494351E-38, 0, and 1.175494351E-38 to 3.402823466E+38.</para></summary>
+		/// <summary>
+        /// <see cref="Single"/><para>A small (single-precision) floating-point 
+        /// number. Allowable values are -3.402823466E+38 to -1.175494351E-38, 
+        /// 0, and 1.175494351E-38 to 3.402823466E+38.</para>
+        /// </summary>
 		Float       =   4,
-		/// <summary><see cref="Double"/><para>A normal-size (double-precision) floating-point number. Allowable values are -1.7976931348623157E+308 to -2.2250738585072014E-308, 0, and 2.2250738585072014E-308 to 1.7976931348623157E+308.</para></summary>
+		/// <summary>
+        /// <see cref="Double"/><para>A normal-size (double-precision) 
+        /// floating-point number. Allowable values are -1.7976931348623157E+308 
+        /// to -2.2250738585072014E-308, 0, and 2.2250738585072014E-308 to 
+        /// 1.7976931348623157E+308.</para>
+        /// </summary>
 		Double      =   5,
-		/// <summary>A timestamp. The range is '1970-01-01 00:00:00' to sometime in the year 2037</summary>
+		/// <summary>
+        /// A timestamp. The range is '1970-01-01 00:00:00' to sometime in the 
+        /// year 2037
+        /// </summary>
 		Timestamp   =   7,
-		///<summary>Date The supported range is '1000-01-01' to '9999-12-31'.</summary>
+		///<summary>
+        ///Date The supported range is '1000-01-01' to '9999-12-31'.
+        ///</summary>
 		Date        =  10,
-		/// <summary> Time <para>The range is '-838:59:59' to '838:59:59'.</para></summary>
+		/// <summary>
+        /// Time <para>The range is '-838:59:59' to '838:59:59'.</para>
+        /// </summary>
 		Time        =  11,
-		///<summary>DateTime The supported range is '1000-01-01 00:00:00' to '9999-12-31 23:59:59'.</summary>
+		///<summary>
+        ///DateTime The supported range is '1000-01-01 00:00:00' to 
+        ///'9999-12-31 23:59:59'.
+        ///</summary>
 		Datetime    =  12,  
-		/// <summary>A year in 2- or 4-digit format (default is 4-digit). The allowable values are 1901 to 2155, 0000 in the 4-digit year format, and 1970-2069 if you use the 2-digit format (70-69)</summary>
+		/// <summary>
+        /// A year in 2- or 4-digit format (default is 4-digit). The 
+        /// allowable values are 1901 to 2155, 0000 in the 4-digit year 
+        /// format, and 1970-2069 if you use the 2-digit format (70-69).
+        /// </summary>
 		Year        =  13,
-		/// <summary><b>Obsolete</b>  Use Datetime or Date type</summary>
+		/// <summary>
+        /// <b>Obsolete</b>  Use Datetime or Date type
+        /// </summary>
 		Newdate     =  14,
-		/// <summary>A variable-length string containing 0 to 65535 characters</summary>
+		/// <summary>
+        /// A variable-length string containing 0 to 65535 characters
+        /// </summary>
 		VarString = 15,
-		/// <summary>Bit-field data type</summary>
+		/// <summary>
+        /// Bit-field data type
+        /// </summary>
 		Bit = 16,
-		/// <summary>New Decimal</summary>
+		/// <summary>
+        /// New Decimal
+        /// </summary>
         NewDecimal = 246,
-		/// <summary>An enumeration. A string object that can have only one value, chosen from the list of values 'value1', 'value2', ..., NULL or the special "" error value. An ENUM can have a maximum of 65535 distinct values</summary>
+		/// <summary>
+        /// An enumeration. A string object that can have only one value, 
+        /// chosen from the list of values 'value1', 'value2', ..., NULL 
+        /// or the special "" error value. An ENUM can have a maximum of 
+        /// 65535 distinct values
+        /// </summary>
 		Enum        = 247,
-		/// <summary>A set. A string object that can have zero or more values, each of which must be chosen from the list of values 'value1', 'value2', ... A SET can have a maximum of 64 members.</summary>
+		/// <summary>
+        /// A set. A string object that can have zero or more values, each 
+        /// of which must be chosen from the list of values 'value1', 'value2', 
+        /// ... A SET can have a maximum of 64 members.
+        /// </summary>
 		Set         = 248,
-		/// <summary>A BLOB or TEXT column with a maximum length of 255 (2^8 - 1) characters</summary>
+		/// <summary>
+        /// A BLOB or TEXT column with a maximum length of 255 (2^8 - 1) 
+        /// characters
+        /// </summary>
 		TinyBlob    = 249,
-		/// <summary>A BLOB or TEXT column with a maximum length of 16777215 (2^24 - 1) characters</summary>
+		/// <summary>
+        /// A BLOB or TEXT column with a maximum length of 16777215 (2^24 - 1) 
+        /// characters
+        /// </summary>
 		MediumBlob  = 250,
-		/// <summary>A BLOB or TEXT column with a maximum length of 4294967295 or 4G (2^32 - 1) characters</summary>
+		/// <summary>
+        /// A BLOB or TEXT column with a maximum length of 4294967295 or 
+        /// 4G (2^32 - 1) characters.
+        /// </summary>
 		LongBlob    = 251,
-		/// <summary>A BLOB or TEXT column with a maximum length of 65535 (2^16 - 1) characters</summary>
+		/// <summary>
+        /// A BLOB or TEXT column with a maximum length of 65535 (2^16 - 1) 
+        /// characters.
+        /// </summary>
 		Blob        = 252,
-		/// <summary>A variable-length string containing 0 to 255 characters</summary>
+		/// <summary>
+        /// A variable-length string containing 0 to 255 characters.
+        /// </summary>
 		VarChar     = 253,
-		/// <summary><b>Obsolete</b>  Use VarChar type</summary>
+		/// <summary>
+        /// A fixed-length string.
+        /// </summary>
 		String      = 254,
-		/// <summary></summary>
+		/// <summary>
+        /// Geometric (GIS) data type.
+        /// </summary>
 		Geometry	= 255,
-		/// <summary></summary>
+		/// <summary>
+        /// Unsigned 8-bit value.
+        /// </summary>
 		UByte		= 1024,
-		/// <summary></summary>
+		/// <summary>
+        /// Unsigned 16-bit value.
+        /// </summary>
 		UInt16		= 1025,
-		/// <summary></summary>
+		/// <summary>
+        /// Unsigned 24-bit value.
+        /// </summary>
 		UInt24		= 1026,
-		/// <summary></summary>
+		/// <summary>
+        /// Unsigned 32-bit value.
+        /// </summary>
 		UInt32		= 1027,
-		/// <summary></summary>
+		/// <summary>
+        /// Unsigned 64-bit value.
+        /// </summary>
 		UInt64		= 1028
 	};
 
@@ -196,10 +280,65 @@ namespace MySql.Data.MySqlClient
 		STRING					=254,
 	}
 
+    /// <summary>
+    /// Allows the user to specify the type of connection that should
+    /// be used.
+    /// </summary>
+    public enum MySqlConnectionProtocol
+    {
+        /// <summary>
+        /// TCP/IP style connection.  Works everywhere.
+        /// </summary>
+        Sockets, 
+        /// <summary>
+        /// Named pipe connection.  Works only on Windows systems.
+        /// </summary>
+        NamedPipe, 
+        /// <summary>
+        /// Unix domain socket connection.  Works only with Unix systems.
+        /// </summary>
+        UnixSocket, 
+        /// <summary>
+        /// Shared memory connection.  Currently works only with Windows systems.
+        /// </summary>
+        SharedMemory
+    }
+
+    /// <summary>
+    /// Specifies the connection types supported
+    /// </summary>
+    public enum MySqlDriverType
+    {
+        /// <summary>
+        /// Use TCP/IP sockets.
+        /// </summary>
+        Native,
+        /// <summary>
+        /// Use client library.
+        /// </summary>
+        Client,
+        /// <summary>
+        /// Use MySQL embedded server.
+        /// </summary>
+        Embedded
+    }
+
+    /// <summary>
+    /// Specifies command types that are specific to MySQL.
+    /// </summary>
     public enum MySqlCommandType
     {
+        /// <summary>
+        /// Direct SQL execution.
+        /// </summary>
         Text,
+        /// <summary>
+        /// Used to execute a stored procedure.
+        /// </summary>
         StoredProcedure,
+        /// <summary>
+        ///  Use to execute a stored function.
+        /// </summary>
         StoredFunction
     }
 }

@@ -27,9 +27,6 @@ using System.Data.SqlTypes;
 
 namespace MySql.Data.MySqlClient
 {
-	/// <summary>
-	/// Provides a means of reading a forward-only stream of rows from a MySQL database. This class cannot be inherited.
-	/// </summary>
 	/// <include file='docs/MySqlDataReader.xml' path='docs/ClassSummary/*'/>
 	public sealed class MySqlDataReader : DbDataReader, IDataReader, IDisposable, IDataRecord
 	{
@@ -47,7 +44,6 @@ namespace MySql.Data.MySqlClient
         private long affectedRows;
 		private bool[] uaFieldsUsed;
         private Driver driver;
-        private DataTable schemaTable;
         private long lastInsertId;
         private Statement statement;
         private int seqIndex;
@@ -452,8 +448,6 @@ namespace MySql.Data.MySqlClient
 		/// <returns></returns>
 		public override DataTable GetSchemaTable()
 		{
-			if (schemaTable != null) return schemaTable;
-
 			// Only Results from SQL SELECT Queries 
 			// get a DataTable for schema of the result
 			// otherwise, DataTable is null reference
@@ -517,7 +511,6 @@ namespace MySql.Data.MySqlClient
 				dataTableSchema.Rows.Add( r );
 			}
 
-            //SchemaTableColumn = dataTableSchema;
 			return dataTableSchema;
 		}
 
@@ -796,7 +789,6 @@ namespace MySql.Data.MySqlClient
 			}
 			catch (MySqlException ex) 
 			{
-				Logger.WriteLine("MySql error: " + ex.Message);
 				if (ex.IsFatal) 
                     connection.Abort();
 				throw;

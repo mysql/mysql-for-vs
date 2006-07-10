@@ -811,7 +811,7 @@ namespace MySql.Data.MySqlClient.Tests
                 string s = reader.GetString(reader.GetOrdinal("Sub_part"));
                 Assert.Fail("We should not get here");
             }
-            catch (System.Data.SqlTypes.SqlNullValueException ex1)
+            catch (System.Data.SqlTypes.SqlNullValueException)
             {
             }
             catch (Exception ex)

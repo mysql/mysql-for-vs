@@ -89,7 +89,7 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("localhost", sb.Server);
             Assert.AreEqual(false, sb.PersistSecurityInfo);
             Assert.AreEqual(0, sb.ConnectionLifeTime);
-            Assert.AreEqual(true, sb.ConnectionReset);
+            Assert.IsFalse(sb.ConnectionReset);
             Assert.AreEqual(0, sb.MinimumPoolSize);
             Assert.AreEqual(100, sb.MaximumPoolSize);
             Assert.AreEqual("", sb.UserID);
@@ -109,7 +109,6 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.IsFalse(sb.AllowZeroDateTime);
             Assert.IsFalse(sb.UsePerformanceMonitor);
             Assert.AreEqual(25, sb.ProcedureCacheSize);
-            Assert.IsFalse(sb.ConnectionReset);
         }
 
 		[Test]
@@ -150,12 +149,10 @@ namespace MySql.Data.MySqlClient.Tests
 		[ExpectedException(typeof(MySqlException))]
 		public void TestConnectingSocketBadUserName()
 		{
-			string host = ConfigurationSettings.AppSettings["host"];
-
 			execSQL("DELETE FROM mysql.user WHERE length(user) = 0");
 			execSQL("FLUSH PRIVILEGES");
 
-			string connStr = "server={0};user id=dummy;password=;database=Test";
+			string connStr = "server={0};user id=dummy;password=;database=Test;pooling=false";
 			MySqlConnection c = new MySqlConnection(
 				String.Format(connStr, host));
 			c.Open();
@@ -166,8 +163,6 @@ namespace MySql.Data.MySqlClient.Tests
 		[ExpectedException(typeof(MySqlException))]
 		public void TestConnectingSocketBadDbName()
 		{
-			string host = ConfigurationSettings.AppSettings["host"];
-
 			string connStr = "server={0};user id={1};password={2};database=dummy; " +
 				"pooling=false";
 			MySqlConnection c = new MySqlConnection(
@@ -179,8 +174,6 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void TestPersistSecurityInfoCachingPasswords() 
 		{
-			string host = ConfigurationSettings.AppSettings["host"];
-
 			string connStr = String.Format("database=test;server={0};user id={1};Password={2}; pooling=false",
 				host, this.user, this.password );
 			MySqlConnection c = new MySqlConnection( connStr );
@@ -213,15 +206,16 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void ChangeDatabase() 
 		{
-			MySqlConnection c = new MySqlConnection( conn.ConnectionString + ";pooling=false" );
+            string connStr = GetConnectionString(true);
+			MySqlConnection c = new MySqlConnection(connStr + ";pooling=false");
 			c.Open();
 			Assert.IsTrue(c.State == ConnectionState.Open);
 
-			Assert.AreEqual( "test", c.Database.ToLower() );
+			Assert.AreEqual("test", c.Database.ToLower());
 
-			c.ChangeDatabase( "mysql" );
+			c.ChangeDatabase("mysql");
 
-			Assert.AreEqual( "mysql", c.Database.ToLower() );
+			Assert.AreEqual("mysql", c.Database.ToLower());
 
 			c.Close();
 		}
@@ -229,9 +223,9 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void ConnectionTimeout() 
 		{
-
 			MySqlConnection c = new MySqlConnection( 
-				"server=1.1.1.1;user id=bogus;pwd=bogus;Connection timeout=5;pooling=false" );
+				"server=1.1.1.1;user id=bogus;pwd=bogus;Connection timeout=5;" +
+                "pooling=false");
 			DateTime start = DateTime.Now;
 			try 
 			{
@@ -239,8 +233,8 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 			catch (Exception) 
 			{
-				TimeSpan diff = DateTime.Now.Subtract( start );
-				Assert.IsTrue( diff.TotalSeconds < 6, "Timeout exceeded" );
+				TimeSpan diff = DateTime.Now.Subtract(start);
+				Assert.IsTrue(diff.TotalSeconds < 6, "Timeout exceeded");
 			}
 		}
 
@@ -272,7 +266,6 @@ namespace MySql.Data.MySqlClient.Tests
 				execSQL("FLUSH PRIVILEGES");
 
 				// connect with no password
-				string host = System.Configuration.ConfigurationSettings.AppSettings["host"];
 				connStr2 = "server=" + host + ";user id=nopass";
 				c = new MySqlConnection( connStr2 );
 				c.Open();
@@ -398,7 +391,6 @@ namespace MySql.Data.MySqlClient.Tests
 		public void ConnectWithQuotePassword()
 		{
 			execSQL("GRANT ALL ON *.* to 'test'@'localhost' IDENTIFIED BY '\"'");
-			string host = ConfigurationSettings.AppSettings["host"];
 			MySqlConnection c = new MySqlConnection("server=" + host + ";uid=test;pwd='\"';pooling=false");
 			try 
 			{

@@ -43,12 +43,11 @@ namespace MySql.Data.MySqlClient
 		long						updatedRowCount;
 		UpdateRowSource				updatedRowSource;
 		MySqlParameterCollection	parameters;
-		private ArrayList			sqlBuffers;
 		private ArrayList			parameterMap;
 		private int					cursorPageSize;
 		private IAsyncResult		asyncResult;
         private bool                designTimeVisible;
-        private Int64 lastInsertedId;
+        //private Int64 lastInsertedId;
         private Statement statement;
         private MySqlCommandType mysqlCmdType;
 
@@ -78,10 +77,11 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ctor4/*'/>
-		public MySqlCommand(string cmdText, MySqlConnection connection, MySqlTransaction txn) : 
+		public MySqlCommand(string cmdText, MySqlConnection connection, 
+            MySqlTransaction transaction) : 
 			this(cmdText, connection)
 		{
-			curTransaction	= txn;
+			curTransaction	= transaction;
 		} 
 
 		#region Properties
@@ -229,14 +229,11 @@ namespace MySql.Data.MySqlClient
 		/// </remarks>
 		/// <returns>A <see cref="MySqlParameter"/> object.</returns>
 		/// 
-		public MySqlParameter CreateParameter()
+		public new MySqlParameter CreateParameter()
 		{
-			return new MySqlParameter();
+            return (MySqlParameter)CreateDbParameter();
 		}
 
-		/// <summary>
-		/// Executes all remaining command buffers
-		/// </summary>
 /*		internal void Consume()
 		{
 			// if we are using prepared statements, then nothing to clean up
@@ -256,11 +253,6 @@ namespace MySql.Data.MySqlClient
 				storedProcedure.UpdateParameters(Parameters);
 		}
 */
-		/// <summary>
-		/// Executes command buffers until we hit the next resultset
-		/// </summary>
-		/// <returns>CommandResult containing the next resultset when hit
-		/// or null if no more resultsets were found</returns>
 /*		internal CommandResult GetNextResultSet(MySqlDataReader reader)
 		{
 			// if  we are supposed to return only a single resultset and our reader
@@ -344,11 +336,6 @@ namespace MySql.Data.MySqlClient
 				throw new MySqlException( "Stored procedures are not supported on this version of MySQL" );
 		}
 
-        /// <summary>
-        /// Executes the next statement in our array of statements, updating affected row count
-        /// and last inserted id.
-        /// </summary>
-        /// <returns>True if a statement was executed</returns>
 /*        internal bool ExecuteInternal()
         {
             if (statements.Count == 0)
@@ -378,11 +365,6 @@ namespace MySql.Data.MySqlClient
 //            return true;
   //      }
 
-        /// <summary>
-        /// NextResult will attempt to read the next result from the active driver.  If there is no current
-        /// result, then it will call ExecuteInternal to execute the next statement (if any)
-        /// </summary>
-        /// <returns>0 when no more statements/results are left to parse.  > 0 if a resultset is available</returns>
 /*        internal Statement GetNextResultset()
         {
             // execute the statement
@@ -585,18 +567,6 @@ namespace MySql.Data.MySqlClient
             int i = (int)CommandType;
         }
 
-		/// <summary>
-		/// Prepares the necessary byte buffers from the given CommandText
-		/// </summary>
-		/// <returns>Array of byte buffers, one for each SQL command</returns>
-		/// <remarks>
-		/// Converts the CommandText into an array of tokens 
-		/// using TokenizeSql and then into one or more byte buffers that can be
-		/// sent to the server.  If the server supports batching (and we  have enabled it),
-		/// then all commands result in a single byte array, otherwise a single buffer
-		/// is created for each SQL command (as separated by ';').
-		/// The SQL text is converted to bytes using the active encoding for the server.
-		/// </remarks>
 /*		private ArrayList PrepareSqlBuffers(string sql)
 		{
 			ArrayList buffers = new ArrayList();
@@ -702,7 +672,7 @@ namespace MySql.Data.MySqlClient
 
         protected override DbParameter CreateDbParameter()
         {
-            return this.CreateParameter();
+            return new MySqlParameter();
         }
 
         protected override DbConnection DbConnection

@@ -7,8 +7,8 @@
 	<para>
 	The <B>MySQLDataAdapter</B>, serves as a bridge between a <see cref="System.Data.DataSet"/>
 	and MySQL for retrieving and saving data. The <B>MySQLDataAdapter</B> provides this 
-	bridge by mapping <see cref="DbDataAdapter.Fill"/>, which changes the data in the 
-	<B>DataSet</B> to match the data in the data source, and <see cref="DbDataAdapter.Update"/>, 
+	bridge by mapping <see cref="DbDataAdapter.Fill(DataSet)"/>, which changes the data in the 
+	<B>DataSet</B> to match the data in the data source, and <see cref="System.Data.Common.DbDataAdapter.Update(System.Data.DataSet)"/>, 
 	which changes the data in the data source to match the data in the <B>DataSet</B>, 
 	using the appropriate SQL statements against the data source.
 	</para>
@@ -18,7 +18,7 @@
 	key information will not be included in the implicitly created schema unless the 
 	<see cref="System.Data.MissingSchemaAction"/> property is set to <see cref="System.Data.MissingSchemaAction.AddWithKey"/>. 
 	You may also have the <B>MySQLDataAdapter</B> create the schema of the <B>DataSet</B>, 
-	including primary key information, before filling it with data using <see cref="System.Data.Common.DbDataAdapter.FillSchema"/>. 
+	including primary key information, before filling it with data using <see cref="System.Data.Common.DbDataAdapter.FillSchema(DataTable, SchemaType)"/>. 
 	</para>
 	<para><B>MySQLDataAdapter</B> is used in conjunction with <see cref="MySqlConnection"/>
 	and <see cref="MySqlCommand"/> to increase performance when connecting to a MySQL database.
@@ -243,7 +243,7 @@ public static void CreateSqlDataAdapter()
 	<para>
 	This implementation of the <see cref="MySqlDataAdapter"/> opens and closes a <see cref="MySqlConnection"/>
 	if it is not already open. This can be useful in a an application that must call the 
-	<see cref="DbDataAdapter.Fill"/> method for two or more <B>MySqlDataAdapter</B> objects. 
+	<see cref="DbDataAdapter.Fill(DataSet)"/> method for two or more <B>MySqlDataAdapter</B> objects. 
 	If the <B>MySqlConnection</B> is already open, you must explicitly call 
 	<see cref="MySqlConnection.Close"/> or <see cref="MySqlConnection.Dispose"/> to close it.
 	</para>
@@ -396,11 +396,11 @@ public static void CreateSqlDataAdapter()
 	Gets or sets a SQL statement or stored procedure used to delete records from the data set.
 	</summary>
 	<value>
-	A <see cref="MySqlCommand"/> used during <see cref="System.Data.Common.DataAdapter.Update"/> to delete records in the 
+	A <see cref="MySqlCommand"/> used during <see cref="System.Data.Common.DbDataAdapter.Update(System.Data.DataSet)"/> to delete records in the 
 	database that correspond to deleted rows in the <see cref="DataSet"/>.
 	</value>
 	<remarks>
-	<para>During <see cref="System.Data.Common.DataAdapter.Update"/>, if this property is not set and primary key information 
+	<para>During <see cref="System.Data.Common.DbDataAdapter.Update(System.Data.DataSet)"/>, if this property is not set and primary key information 
 	is present in the <see cref="DataSet"/>, the <B>DeleteCommand</B> can be generated 
 	automatically if you set the <see cref="SelectCommand"/> property and use the 
 	<see cref="MySqlCommandBuilder"/>.  Then, any additional commands that you do not set are 
@@ -477,11 +477,11 @@ public static MySqlDataAdapter CreateCustomerAdapter(MySqlConnection conn)
 	Gets or sets a SQL statement or stored procedure used to insert records into the data set.
 	</summary>
 	<value>
-	A <see cref="MySqlCommand"/> used during <see cref="System.Data.Common.DataAdapter.Update"/> to insert records into the 
+	A <see cref="MySqlCommand"/> used during <see cref="System.Data.Common.DbDataAdapter.Update(System.Data.DataSet)"/> to insert records into the 
 	database that correspond to new rows in the <see cref="DataSet"/>.
 	</value>
 	<remarks>
-	<para>During <see cref="System.Data.Common.DataAdapter.Update"/>, if this property is not set and primary key information 
+	<para>During <see cref="System.Data.Common.DbDataAdapter.Update(System.Data.DataSet)"/>, if this property is not set and primary key information 
 	is present in the <see cref="DataSet"/>, the <B>InsertCommand</B> can be generated 
 	automatically if you set the <see cref="SelectCommand"/> property and use the 
 	<see cref="MySqlCommandBuilder"/>.  Then, any additional commands that you do not set are 
@@ -560,11 +560,11 @@ public static MySqlDataAdapter CreateCustomerAdapter(MySqlConnection conn)
 	Gets or sets a SQL statement or stored procedure used to updated records in the data source.
 	</summary>
 	<value>
-	A <see cref="MySqlCommand"/> used during <see cref="System.Data.Common.DataAdapter.Update"/> to update records in the 
+	A <see cref="MySqlCommand"/> used during <see cref="System.Data.Common.DbDataAdapter.Update(System.Data.DataSet)"/> to update records in the 
 	database with data from the <see cref="DataSet"/>.
 	</value>
 	<remarks>
-	<para>During <see cref="System.Data.Common.DataAdapter.Update"/>, if this property is not set and primary key information 
+	<para>During <see cref="System.Data.Common.DbDataAdapter.Update(System.Data.DataSet)"/>, if this property is not set and primary key information 
 	is present in the <see cref="DataSet"/>, the <B>UpdateCommand</B> can be generated 
 	automatically if you set the <see cref="SelectCommand"/> property and use the 
 	<see cref="MySqlCommandBuilder"/>.  Then, any additional commands that you do not set are 
@@ -650,7 +650,7 @@ public static MySqlDataAdapter CreateCustomerAdapter(MySqlConnection conn)
 	Gets or sets a SQL statement or stored procedure used to select records in the data source.
 	</summary>
 	<value>
-	A <see cref="MySqlCommand"/> used during <see cref="System.Data.Common.DbDataAdapter.Fill"/> to select records from the 
+	A <see cref="MySqlCommand"/> used during <see cref="System.Data.Common.DbDataAdapter.Fill(DataSet)"/> to select records from the 
 	database for placement in the <see cref="DataSet"/>.
 	</value>
 	<remarks>

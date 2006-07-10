@@ -32,43 +32,36 @@ namespace MySql.Data.MySqlClient
 
         static MySqlClientFactory()
         {
-            Logger.WriteLine("MySqlClientFactory::ctor");
             Instance = new MySqlClientFactory();
         }
 
         public override DbCommandBuilder CreateCommandBuilder()
         {
-            Logger.WriteLine("MySqlClientFactory::CreateCommandBuilder");
             return new MySqlCommandBuilder();
         }
 
         public override DbCommand CreateCommand()
         {
-            Logger.WriteLine("MySqlClientFactory::CreateCommand");
             return new MySqlCommand();
         }
 
         public override DbConnection CreateConnection()
         {
-            Logger.WriteLine("MySqlClientFactory::CreateConnection");
             return new MySqlConnection();
         }
 
         public override DbDataAdapter CreateDataAdapter()
         {
-            Logger.WriteLine("MySqlClientFactory::CreateDataAdapter");
             return new MySqlDataAdapter();
         }
 
         public override DbParameter CreateParameter()
         {
-            Logger.WriteLine("MySqlClientFactory::CreateParameter");
             return new MySqlParameter();
         }
 
         public override DbConnectionStringBuilder CreateConnectionStringBuilder()
         {
-            Logger.WriteLine("MySqlClientFactory::CreateConnectionString");
             return new MySqlConnectionStringBuilder();
         }
 

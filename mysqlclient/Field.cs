@@ -69,7 +69,7 @@ namespace MySql.Data.MySqlClient
 		protected	MySqlDbType	mySqlDbType;
 		protected	DBVersion	connVersion;
 
-        protected IMySqlValue rowValue;
+        //protected IMySqlValue rowValue;
 
 		#endregion
 

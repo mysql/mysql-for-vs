@@ -724,9 +724,6 @@ namespace MySql.Data.MySqlClient
         /// row to fetch.  In the non-prepared mode, it will simply read the next data packet.
         /// In the prepared mode (statementId > 0), it will 
         /// </summary>
-        /// <param name="statementId"></param>
-        /// <param name="fieldCount"></param>
-        /// <returns></returns>
 		public override bool FetchDataRow(int statementId, int pageSize, int columns)
 		{
 /*			ClearFetchedRow();

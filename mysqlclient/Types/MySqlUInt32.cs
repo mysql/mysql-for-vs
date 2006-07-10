@@ -153,9 +153,6 @@ namespace MySql.Data.Types
     }
 
 
-	/// <summary>
-	/// Summary description for MySqlInt32.
-	/// </summary>
 /*	internal class MySqlUInt32Old : MySqlValue
 	{
 		private uint	mValue;

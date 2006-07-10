@@ -109,15 +109,14 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Serializes the given parameter to the given memory stream
         /// </summary>
-        /// <param name="writer">PacketWriter to stream parameter data to</param>
-        /// <param name="parmName">Name of the parameter to serialize</param>
         /// <remarks>
         /// <para>This method is called by PrepareSqlBuffers to convert the given
         /// parameter to bytes and write those bytes to the given memory stream.
         /// </para>
         /// </remarks>
         /// <returns>True if the parameter was successfully serialized, false otherwise.</returns>
-        private bool SerializeParameter(MySqlParameterCollection parameters, MySqlStreamWriter writer, string parmName)
+        private bool SerializeParameter(MySqlParameterCollection parameters, 
+            MySqlStreamWriter writer, string parmName)
         {
             int index = parameters.IndexOf(parmName);
             if (index == -1)

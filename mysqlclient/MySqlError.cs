@@ -67,6 +67,9 @@ namespace MySql.Data.MySqlClient
 		}
 	};
 
+    /// <summary>
+    /// Provides a reference to error codes returned by MySQL.
+    /// </summary>
 	public enum MySqlErrorCode 
 	{
 /*		ER_HASHCHK=1000,
@@ -92,6 +95,9 @@ namespace MySql.Data.MySqlClient
 		ER_CHECKREAD 1020
 		ER_DISK_FULL 1021
 				*/
+        /// <summary>
+        /// There is already a key with the given values.
+        /// </summary>
 		DuplicateKey = 1022,
 
 	/*		ER_ERROR_ON_CLOSE 1023
@@ -103,6 +109,9 @@ namespace MySql.Data.MySqlClient
 			ER_FORM_NOT_FOUND 1029
 			ER_GET_ERRNO 1030
 			ER_ILLEGAL_HA 1031*/
+        /// <summary>
+        /// The specified key was not found.
+        /// </summary>
 		KeyNotFound = 1032,
 	/*		ER_NOT_FORM_FILE 1033
 			ER_NOT_KEYFILE 1034
@@ -132,7 +141,13 @@ namespace MySql.Data.MySqlClient
 			ER_WRONG_VALUE_COUNT 1058
 			ER_TOO_LONG_IDENT 1059
 			ER_DUP_FIELDNAME 1060*/
+        /// <summary>
+        /// Duplicate Key Name
+        /// </summary>
 		DuplicateKeyName = 1061,
+        /// <summary>
+        /// Duplicate Key Entry
+        /// </summary>
 		DuplicateKeyEntry = 1062,
 
 	/*		ER_WRONG_FIELD_SPEC 1063
@@ -203,9 +218,21 @@ namespace MySql.Data.MySqlClient
 		ER_FUNCTION_NOT_DEFINED 1128
 		ER_HOST_IS_BLOCKED 1129
 		*/
+        /// <summary>
+        /// The given host is not allowed to connect
+        /// </summary>
 		HostNotPrivileged = 1130,
+        /// <summary>
+        /// The anonymous user is not allowed to connect
+        /// </summary>
 		AnonymousUser = 1131,
+        /// <summary>
+        /// The given password is not allowed
+        /// </summary>
 		PasswordNotAllowed = 1132,
+        /// <summary>
+        /// The given password does not match
+        /// </summary>
 		PasswordNoMatch = 1133,
 	/*		ER_UPDATE_INFO 1134
 			ER_CANT_CREATE_THREAD 1135
@@ -227,6 +254,10 @@ namespace MySql.Data.MySqlClient
 			ER_TOO_MANY_DELAYED_THREADS 1151
 			ER_ABORTING_CONNECTION 1152
 	*/		
+        /// <summary>
+        /// An attempt was made to send or receive a packet larger than
+        /// max_allowed_packet_size
+        /// </summary>
 		PacketTooLarge=1153
 	/*
 			ER_NET_READ_ERROR_FROM_PIPE 1154

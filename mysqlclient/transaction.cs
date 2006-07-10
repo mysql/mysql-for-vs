@@ -48,7 +48,7 @@ namespace MySql.Data.MySqlClient
 		/// A single application may have multiple database connections, each 
 		/// with zero or more transactions. This property enables you to 
 		/// determine the connection object associated with a particular 
-		/// transaction created by <see cref="MySqlConnection.BeginTransaction"/>.
+		/// transaction created by <see cref="MySqlConnection.BeginTransaction()"/>.
 		/// </remarks>
 		public new MySqlConnection Connection
 		{

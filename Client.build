@@ -1,6 +1,7 @@
 <project name="MySqlClient" default="allframeworks" xmlns="http://nant.sf.net/schemas/nant-0.84.win32.net-1.0.xsd">
 	<description>MySQLClient Managed Provider for MySQL</description>
 
+	<property name="nunit" value="C:\Program Files\NUnit"/>
 	<property name="ncover.executable" value="c:\program files\ncover\ncover.console.exe"/>
 	<property name="fxcop.executable" value="c:\program files\fxcop\fxcopcmd.exe"/>
 
@@ -47,7 +48,7 @@
 		<csc output="${outdir}/MySql.Data.dll" target="library" 
 			define="${defines}" debug="${debug}" optimize="${opt}"
 			doc="${outdir}/MySql.Data.xml">
-			<arg value="/nowarn:0679"/>
+			<arg value="/nowarn:0679,1591"/>
 			<resources prefix="MySql.Data.MySqlClient" dynamicprefix="true">
 				<include name="mysqlclient/Strings.resources"/>
 			</resources>
@@ -59,13 +60,14 @@
 			<sources refid="Source"/>
 		</csc>
 		<csc output="${outdir}/MySql.Data.Tests.dll" target="library" 
-			debug="${debug}" optimize="${opt}"> <arg value="/nowarn:0679"/>
+			define="${defines}" debug="${debug}" optimize="${opt}"> <arg value="/nowarn:0679"/>
 			<sources>
 				<include name="TestSuite/*.cs" />
 			</sources>
 			<references>
 				<include name="${outdir}/MySql.Data.dll"/>
 				<include name="System.Data.dll"/>		
+				<include name="System.Configuration.dll"/>
 				<include name="System.Drawing.dll"/>
 				<include name="${nunit-lib}/nunit.framework.dll"/>
 			</references>
@@ -90,6 +92,7 @@
 	<target name="net-2.0" description="2.0 .NET target">
 		<property name="nunit-lib" value="${nunit}/bin"/>
 		<property name="framework" value="net-2.0"/>
+		<property name="defines" value="NET20"/>
 		<call target="client"/>
 	</target>
 	

@@ -38,7 +38,7 @@ namespace MySql.Data.MySqlClient
 	{
 		private ArrayList items = new ArrayList();
 		private char paramMarker = '?';
-        private bool changed;
+        //private bool changed;
 
 		internal char ParameterMarker 
 		{
@@ -207,14 +207,14 @@ namespace MySql.Data.MySqlClient
 			int index = this.IndexOf(parameterName);
 			if (index < 0)
 				throw new ArgumentException("Parameter '" + parameterName + "' not found in the collection.");
-			changed = true;
+			//changed = true;
 			items[index] = (MySqlParameter)value;
         }
 
         protected override void SetParameter(int index, DbParameter value)
         {
 			CheckIndex(index);
-			changed = true;
+			//changed = true;
 			items[index] = (MySqlParameter)value;
         }
 
@@ -358,9 +358,9 @@ namespace MySql.Data.MySqlClient
         /// Removes the specified <see cref="MySqlParameter"/> from the collection using the parameter name.
         /// </summary>
         /// <param name="name">The name of the <see cref="MySqlParameter"/> object to retrieve. </param>
-        public override void RemoveAt(string parameterName)
+        public override void RemoveAt(string name)
         {
-            items.RemoveAt(InternalIndexOf(parameterName));
+            items.RemoveAt(InternalIndexOf(name));
         }
 
         /// <summary>

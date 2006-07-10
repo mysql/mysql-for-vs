@@ -5,7 +5,7 @@
 	</summary>
 
 <remarks>
-	The application creates a <B>MySqlTransaction</B> object by calling <see cref="MySqlConnection.BeginTransaction"/>
+	The application creates a <B>MySqlTransaction</B> object by calling <see cref="MySqlConnection.BeginTransaction()"/>
 	on the <see cref="MySqlConnection"/> object. All subsequent operations associated with the 
 	transaction (for example, committing or aborting the transaction), are performed on the 
 	<B>MySqlTransaction</B> object.
@@ -13,7 +13,7 @@
 
 <example>
 	The following example creates a <see cref="MySqlConnection"/> and a <B>MySqlTransaction</B>. 
-	It also demonstrates how to use the <see cref="MySqlConnection.BeginTransaction"/>, 
+	It also demonstrates how to use the <see cref="MySqlConnection.BeginTransaction()"/>, 
 	<see cref="MySqlTransaction.Commit"/>, and <see cref="MySqlTransaction.Rollback"/> methods.
 	<code lang="Visual Basic">
 Public Sub RunTransaction(myConnString As String)
@@ -121,9 +121,9 @@ public void RunTransaction(string myConnString)
 	called).
 	</remarks>
 	<example>
-The following example creates <see cref="MySqlConnection"/> and a 
+The following example creates a <see cref="MySqlConnection"/> and a 
 <see cref="MySqlTransaction"/>. It also demonstrates how to use the 
-<see cref="MySqlConnection.BeginTransaction"/>, <see cref="Commit"/>, and <B>Rollback</B> 
+<see cref="MySqlConnection.BeginTransaction()"/>, <see cref="Commit"/>, and <B>Rollback</B> 
 methods.
 <code lang="Visual Basic">
 Public Sub RunSqlTransaction(myConnString As String)
@@ -228,9 +228,9 @@ public void RunSqlTransaction(string myConnString)
 	COMMIT.
 	</remarks>
 	<example>
-The following example creates <see cref="MySqlConnection"/> and a 
+The following example creates a <see cref="MySqlConnection"/> and a 
 <see cref="MySqlTransaction"/>. It also demonstrates how to use the 
-<see cref="MySqlConnection.BeginTransaction"/>, <see cref="Commit"/>, and <B>Rollback</B> 
+<see cref="MySqlConnection.BeginTransaction()"/>, <see cref="Commit"/>, and <B>Rollback</B> 
 methods.
 <code lang="Visual Basic">
 Public Sub RunSqlTransaction(myConnString As String)

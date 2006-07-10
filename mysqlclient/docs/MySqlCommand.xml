@@ -326,7 +326,6 @@ public void CreateMySqlCommand()
 
 
 <ExecuteNonQuery>
-
 	<summary>
 		Executes a SQL statement against the connection and returns the number of rows affected.
 	</summary>
@@ -520,7 +519,7 @@ public void CreateMySqlDataReader(string mySelectQuery, MySqlConnection myConnec
 	<remarks>
 	<para>Use the <B>ExecuteScalar</B> method to retrieve a single value (for example, 
 	an aggregate value) from a database. This requires less code than using the 
-	<see cref="ExecuteReader"/> method, and then performing the operations necessary 
+	<see cref="ExecuteReader()"/> method, and then performing the operations necessary 
 	to generate the single value using the data returned by a <see cref="MySqlDataReader"/>
 	</para>
 	<para>A typical <B>ExecuteScalar</B> query can be formatted as in the following C# 

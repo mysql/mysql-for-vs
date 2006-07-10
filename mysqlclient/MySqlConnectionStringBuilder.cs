@@ -3,33 +3,18 @@ using System.ComponentModel;
 using System.Data.Common;
 using MySql.Data.Common;
 using System.Globalization;
+using System.Text;
 
 namespace MySql.Data.MySqlClient
 {
-    public enum MySqlConnectionProtocol
-    {
-        Sockets, NamedPipe, UnixSocket, SharedMemory
-    }
-
-    /// <summary>
-    /// Specifies the connection types supported
-    /// </summary>
-    public enum MySqlDriverType
-    {
-        /// <summary>Use TCP/IP sockets</summary>
-        Native,
-        /// <summary>Use client library</summary>
-        Client,
-        /// <summary>Use MySQL embedded server</summary>
-        Embedded
-    }
-
+    /// <include file='docs/MySqlConnectionStringBuilder.xml' path='docs/Class/*'/>
     public sealed class MySqlConnectionStringBuilder : DbConnectionStringBuilder
     {
         string userId, password, server;
         string database, sharedMemName, pipeName, charSet;
         string optionFile;
         string originalConnectionString;
+        StringBuilder persistConnString;
         uint port, connectionTimeout, minPoolSize, maxPoolSize;
         uint procCacheSize, connectionLifetime;
         MySqlConnectionProtocol protocol;
@@ -41,18 +26,19 @@ namespace MySql.Data.MySqlClient
 
         public MySqlConnectionStringBuilder()
         {
-            Logger.WriteLine("MySqlConnectionStringBuilder::ctor1");
+            persistConnString = new StringBuilder();
             Clear();
         }
 
         public MySqlConnectionStringBuilder(string connstr) : base()
         {
-            Logger.WriteLine("MySqlConnectionStringBuilder::ctor2");
             originalConnectionString = connstr;
+            persistConnString = new StringBuilder();
             ConnectionString = connstr;
         }
 
         #region Server Properties
+
 
 #if !CF
         [Category("Connection")]
@@ -478,10 +464,10 @@ namespace MySql.Data.MySqlClient
             connectionTimeout = 15;
             pooling = true;
             port = 3306;
-            server = "localhost";
+            server = String.Empty;
             persistSI = false;
             connectionLifetime = 0;
-            connectionReset = true;
+            connectionReset = false;
             minPoolSize = 0;
             maxPoolSize = 100;
             userId = "";
@@ -504,28 +490,6 @@ namespace MySql.Data.MySqlClient
             useSSL = false;
         }
 
-/*        private string RemovePassword(string connStr)
-        {
-            return RemoveKeys(connStr, new string[2] { "password", "pwd" });
-        }
-
-        private string RemoveKeys(string value, string[] keys)
-        {
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            ContextString cs = new ContextString(
-            string[] pairs = Utility.ContextSplit(value, ";", "\"'");
-            foreach (string keyvalue in pairs)
-            {
-                string test = keyvalue.Trim().ToLower();
-                if (test.StartsWith("pwd") || test.StartsWith("password"))
-                    continue;
-                sb.Append(keyvalue);
-                sb.Append(";");
-            }
-            sb.Remove(sb.Length - 1, 1);  // remove the trailing ;
-            return sb.ToString();
-        }
-        */
         #endregion
 
         /// <summary>
@@ -535,17 +499,16 @@ namespace MySql.Data.MySqlClient
         /// <returns></returns>
         public string GetConnectionString(bool includePass)
         {
-            // TODO: fix this
-//            string connStr = originalConnectionString;
-  //          if (!PersistSecurityInfo && !includePass)
-    //            connStr = RemovePassword(connStr);
-
-            return null; // connStr;
+            if (includePass)
+                return originalConnectionString;
+            string connStr = persistConnString.ToString();
+            return connStr.Remove(connStr.Length - 1, 1);
         }
 
         public override void Clear()
         {
             base.Clear();
+            persistConnString.Remove(0, persistConnString.Length);
             Reset();
         }
 
@@ -695,6 +658,8 @@ namespace MySql.Data.MySqlClient
             set 
             {
                 Keyword kw = GetKey(key);
+                if (kw != Keyword.Password)
+                    persistConnString.AppendFormat("{0}={1};", key, value);
                 SetValue(kw, value);
             }
         }

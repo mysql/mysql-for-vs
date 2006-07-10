@@ -44,12 +44,17 @@ namespace MySql.Data.MySqlClient.Tests
 			csAdditions = ";pooling=false";
             user = "root";
             password = "";
+#if NET20
+            otherkeys = ConfigurationManager.AppSettings["otherkeys"];
+            host = ConfigurationManager.AppSettings["host"];
+#else
             otherkeys = ConfigurationSettings.AppSettings["otherkeys"];
+            host = ConfigurationSettings.AppSettings["host"];
+#endif
         }
 
 		protected string GetConnectionString(bool includedb)
 		{
-            host = ConfigurationSettings.AppSettings["host"];
             if (includedb)
 				return String.Format("server={0};user id={1};password={2};database=test;" +
 					"persist security info=true;{3}{4}", host, user, password, otherkeys, csAdditions );

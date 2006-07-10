@@ -36,9 +36,9 @@ namespace MySql.Data.MySqlClient
 #endif
 	public sealed class MySqlCommandBuilder : DbCommandBuilder
 	{
-		private MySqlDataAdapter	_adapter;
-		private string				_QuotePrefix;
-		private string				_QuoteSuffix;
+//		private MySqlDataAdapter	_adapter;
+//		private string				_QuotePrefix;
+//		private string				_QuoteSuffix;
 		private DataTable			_schema;
 		private string				tableName;
 		private string				schemaName;
@@ -55,7 +55,7 @@ namespace MySql.Data.MySqlClient
 		/// <include file='docs/MySqlCommandBuilder.xml' path='docs/Ctor/*'/>
 		public MySqlCommandBuilder()
 		{
-			_QuotePrefix = _QuoteSuffix = "`";
+			QuotePrefix = QuoteSuffix = "`";
 		}
 
 		/// <include file='docs/MySqlCommandBuilder.xml' path='docs/Ctor1/*'/>
@@ -81,24 +81,14 @@ namespace MySql.Data.MySqlClient
 		#region Properties
 
 		/// <include file='docs/mysqlcommandBuilder.xml' path='docs/DataAdapter/*'/>
-		public MySqlDataAdapter DataAdapter 
-		{
-			get { return _adapter; }
-			set 
-			{ 
-				if (_adapter != null) 
-				{
-					_adapter.RowUpdating -= new MySqlRowUpdatingEventHandler(OnRowUpdating);
-				}
-                if (value == null)
-				    throw new ArgumentException(Resources.GetString("ParameterCannotBeNull"), "value");
-				_adapter = value;
-				_adapter.RowUpdating += new MySqlRowUpdatingEventHandler( OnRowUpdating );
-			}
-		}
+        public new MySqlDataAdapter DataAdapter
+        {
+            get { return (MySqlDataAdapter)base.DataAdapter; }
+            set { base.DataAdapter = value; }
+        }
 
-		/// <include file='docs/MySqlCommandBuilder.xml' path='docs/QuotePrefix/*'/>
-		public string QuotePrefix 
+/*		/// <include file='docs/MySqlCommandBuilder.xml' path='docs/QuotePrefix/*'/>
+		public override string QuotePrefix 
 		{
 			get { return _QuotePrefix; }
 			set { _QuotePrefix = value; }
@@ -110,7 +100,7 @@ namespace MySql.Data.MySqlClient
 			get { return _QuoteSuffix; }
 			set { _QuoteSuffix = value; }
 		}
-
+*/
 		private string TableName 
 		{
 			get 
@@ -195,7 +185,7 @@ namespace MySql.Data.MySqlClient
         }
 
 		/// <include file='docs/MySqlCommandBuilder.xml' path='docs/GetDeleteCommand/*'/>
-		public MySqlCommand GetDeleteCommand()
+		public new MySqlCommand GetDeleteCommand()
 		{
 			if (_schema == null)
 				GenerateSchema();
@@ -203,7 +193,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/MySqlCommandBuilder.xml' path='docs/GetInsertCommand/*'/>
-		public MySqlCommand GetInsertCommand()
+		public new MySqlCommand GetInsertCommand()
 		{
 			if (_schema == null)
 				GenerateSchema();
@@ -211,7 +201,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/MySqlCommandBuilder.xml' path='docs/GetUpdateCommand/*'/>
-		public MySqlCommand GetUpdateCommand() 
+		public new MySqlCommand GetUpdateCommand() 
 		{
 			if (_schema == null)
 				GenerateSchema();
@@ -219,7 +209,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/MySqlCommandBuilder.xml' path='docs/RefreshSchema/*'/>
-		public void RefreshSchema()
+		public override void RefreshSchema()
 		{
 			_schema = null;
 			_insertCmd = null;
@@ -234,16 +224,16 @@ namespace MySql.Data.MySqlClient
 
 		private void GenerateSchema()
 		{
-			// set the parameter marker
-			MySqlConnection conn = (MySqlConnection)_adapter.SelectCommand.Connection;
-			marker = conn.ParameterMarker;
-
-			if (_adapter == null)
+            if (DataAdapter == null)
 				throw new MySqlException(Resources.GetString("AdapterIsNull"));
-			if (_adapter.SelectCommand == null)
+            if (DataAdapter.SelectCommand == null)
 				throw new MySqlException(Resources.GetString("AdapterSelectIsNull"));
 
-			MySqlDataReader dr = _adapter.SelectCommand.ExecuteReader(CommandBehavior.SchemaOnly | CommandBehavior.KeyInfo);
+            // set the parameter marker
+            MySqlConnection conn = (MySqlConnection)DataAdapter.SelectCommand.Connection;
+            marker = conn.ParameterMarker;
+
+            MySqlDataReader dr = DataAdapter.SelectCommand.ExecuteReader(CommandBehavior.SchemaOnly | CommandBehavior.KeyInfo);
 			_schema = dr.GetSchemaTable();
 			dr.Close();
 
@@ -274,11 +264,16 @@ namespace MySql.Data.MySqlClient
 
 		private string Quote(string table_or_column)
 		{
-			if (_QuotePrefix == null || _QuoteSuffix == null)
+			if (QuotePrefix == null || QuoteSuffix == null)
 				return table_or_column;
-			return _QuotePrefix + table_or_column + _QuoteSuffix;
+			return QuotePrefix + table_or_column + QuoteSuffix;
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="columnName"></param>
+        /// <returns></returns>
 		protected override string GetParameterName(string columnName)
 		{
 			StringBuilder sb = new StringBuilder(columnName);
@@ -312,9 +307,9 @@ namespace MySql.Data.MySqlClient
 		private MySqlCommand CreateBaseCommand()
 		{
 			MySqlCommand cmd = new MySqlCommand();
-			cmd.Connection = _adapter.SelectCommand.Connection;
-			cmd.CommandTimeout = _adapter.SelectCommand.CommandTimeout;
-			cmd.Transaction = _adapter.SelectCommand.Transaction;
+			cmd.Connection = DataAdapter.SelectCommand.Connection;
+			cmd.CommandTimeout = DataAdapter.SelectCommand.CommandTimeout;
+			cmd.Transaction = DataAdapter.SelectCommand.Transaction;
 			return cmd;
 		}
 

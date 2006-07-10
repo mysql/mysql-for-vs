@@ -37,7 +37,7 @@ namespace MySql.Data.Common
         private ulong   length;                        // Message length in bits
         private uint[]  intermediateHash;              // Message Digest
         private bool    computed;                      // Is the digest computed?
-        private bool    corrupted;                     // Is the message digest corrupted?
+//        private bool    corrupted;                     // Is the message digest corrupted?
         private short   messageBlockIndex;             // Index into message block array
         private byte[]  messageBlock;                  // 512-bit message blocks
  
@@ -65,7 +65,7 @@ namespace MySql.Data.Common
 			intermediateHash[4] = sha_const_key[4];
 
 			computed = false;
-			corrupted  = false;
+//			corrupted  = false;
         }
 
 		public byte[] ComputeHash(byte[] buffer)

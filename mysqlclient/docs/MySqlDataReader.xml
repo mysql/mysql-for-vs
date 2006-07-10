@@ -1,27 +1,30 @@
 <docs>
 <ClassSummary>
-<remarks>
-	<para>To create a <B>MySQLDataReader</B>, you must call the <see cref="MySqlCommand.ExecuteReader"/>
-	method of the <see cref="MySqlCommand"/> object, rather than directly using a constructor.
-	</para>
-	<para>While the <B>MySqlDataReader</B> is in use, the associated <see cref="MySqlConnection"/>
-	 is busy serving the <B>MySqlDataReader</B>, and no other operations can be performed 
-	 on the <B>MySqlConnection</B> other than closing it. This is the case until the 
-	 <see cref="MySqlDataReader.Close"/> method of the <B>MySqlDataReader</B> is called. 
-	 </para>
-	<para><see cref="MySqlDataReader.IsClosed"/> and <see cref="MySqlDataReader.RecordsAffected"/> 
-	are the only properties that you can call after the <B>MySqlDataReader</B> is 
-	closed. Though the <B>RecordsAffected</B> property may be accessed at any time 
-	while the <B>MySqlDataReader</B> exists, always call <B>Close</B> before returning 
-	the value of <B>RecordsAffected</B> to ensure an accurate return value.
-	</para>
-	<para>For optimal performance, <B>MySqlDataReader</B> avoids creating 
-	unnecessary objects or making unnecessary copies of data. As a result, multiple calls 
-	to methods such as <see cref="MySqlDataReader.GetValue"/> return a reference to the 
-	same object. Use caution if you are modifying the underlying value of the objects 
-	returned by methods such as <B>GetValue</B>.
-	</para>
-</remarks>
+  <summary>
+	  Provides a means of reading a forward-only stream of rows from a MySQL database. This class cannot be inherited.
+	</summary>
+  <remarks>
+    <para>To create a <B>MySQLDataReader</B>, you must call the <see cref="MySqlCommand.ExecuteReader()"/>
+	  method of the <see cref="MySqlCommand"/> object, rather than directly using a constructor.
+	  </para>
+	  <para>While the <B>MySqlDataReader</B> is in use, the associated <see cref="MySqlConnection"/>
+	   is busy serving the <B>MySqlDataReader</B>, and no other operations can be performed 
+	   on the <B>MySqlConnection</B> other than closing it. This is the case until the 
+	   <see cref="MySqlDataReader.Close"/> method of the <B>MySqlDataReader</B> is called. 
+	   </para>
+	  <para><see cref="MySqlDataReader.IsClosed"/> and <see cref="MySqlDataReader.RecordsAffected"/> 
+	  are the only properties that you can call after the <B>MySqlDataReader</B> is 
+	  closed. Though the <B>RecordsAffected</B> property may be accessed at any time 
+	  while the <B>MySqlDataReader</B> exists, always call <B>Close</B> before returning 
+	  the value of <B>RecordsAffected</B> to ensure an accurate return value.
+	  </para>
+	  <para>For optimal performance, <B>MySqlDataReader</B> avoids creating 
+	  unnecessary objects or making unnecessary copies of data. As a result, multiple calls 
+	  to methods such as <see cref="MySqlDataReader.GetValue"/> return a reference to the 
+	  same object. Use caution if you are modifying the underlying value of the objects 
+	  returned by methods such as <B>GetValue</B>.
+	  </para>
+  </remarks>
 
 <example>
 	The following example creates a <see cref="MySqlConnection"/>, 

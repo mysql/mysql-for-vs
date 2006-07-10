@@ -281,7 +281,6 @@ namespace MySql.Data.MySqlClient
 		/// <include file='docs/MySqlConnection.xml' path='docs/ChangeDatabase/*'/>
 		public override void ChangeDatabase(string database)
 		{
-            Logger.WriteLine("MySqlConnection::ChangeDatabase");
             if (database == null || database.Trim().Length == 0)
 				throw new ArgumentException(
 					Resources.GetString("ParameterIsInvalid"), "database");
@@ -316,7 +315,6 @@ namespace MySql.Data.MySqlClient
 		/// <include file='docs/MySqlConnection.xml' path='docs/Open/*'/>
 		public override void Open()
 		{
-            Logger.WriteLine("MySqlConnection::Open");
             if (State == ConnectionState.Open)
 				throw new InvalidOperationException(
 					Resources.GetString("ConnectionAlreadyOpen"));
@@ -347,9 +345,9 @@ namespace MySql.Data.MySqlClient
 			if ( driver.Settings.UseOldSyntax)
 				Logger.LogWarning("You are using old syntax that will be removed in future versions");
 
-            driver.Configure(this);
             SetState(ConnectionState.Open);
-			if (settings.Database != null && settings.Database != String.Empty)
+            driver.Configure(this);
+            if (settings.Database != null && settings.Database != String.Empty)
 				ChangeDatabase(settings.Database);
 
             // setup our schema provider
@@ -365,7 +363,6 @@ namespace MySql.Data.MySqlClient
 		/// <include file='docs/MySqlConnection.xml' path='docs/CreateCommand/*'/>
 		public new MySqlCommand CreateCommand()
 		{
-            Logger.WriteLine("MySqlConnection::CreateCommand");
             // Return a new instance of a command object.
 			MySqlCommand c = new MySqlCommand();
 			c.Connection = this;
@@ -415,7 +412,6 @@ namespace MySql.Data.MySqlClient
         /// <include file='docs/MySqlConnection.xml' path='docs/Close/*'/>
         public override void Close()
         {
-            Logger.WriteLine("MySqlConnection::Close");
             //TODO: rollback any pending transaction
             if (State == ConnectionState.Closed) return;
 

@@ -242,7 +242,7 @@ public void CreateMySqlConnection(string myConnString)
 		<para>You must explicitly commit or roll back the transaction using the <see cref="MySqlTransaction.Commit"/> or 
 		<see cref="MySqlTransaction.Rollback"/> method.
 		<note>If you do not specify an isolation level, the default isolation level is used. To specify an isolation 
-		level with the <see cref="BeginTransaction"/> method, use the overload that takes the <I>iso</I> parameter.
+		level with the <see cref="BeginTransaction()"/> method, use the overload that takes the <I>iso</I> parameter.
 		</note></para>
 	</remarks>
 	<example>
@@ -352,7 +352,7 @@ public void RunTransaction(string myConnString)
 		<para>You must explicitly commit or roll back the transaction using the <see cref="MySqlTransaction.Commit"/> or 
 		<see cref="MySqlTransaction.Rollback"/> method.
 		<note>If you do not specify an isolation level, the default isolation level is used. To specify an isolation 
-		level with the <see cref="BeginTransaction"/> method, use the overload that takes the <I>iso</I> parameter.
+		level with the <see cref="BeginTransaction()"/> method, use the overload that takes the <I>iso</I> parameter.
 		</note></para>
 	</remarks>
 	<example>
@@ -454,7 +454,7 @@ public void RunTransaction(string myConnString)
 
 <ChangeDatabase>
 	<summary>Changes the current database for an open MySqlConnection.</summary>
-	<param name="databaseName">The name of the database to use.</param>
+	<param name="database">The name of the database to use.</param>
 	<remarks>
 		<para>The value supplied in the <I>database</I> parameter must be a valid database 
 		name. The <I>database</I> parameter cannot contain a null value, an empty 
@@ -897,23 +897,13 @@ pool, or if necessary, is created and added to the appropriate pool. Recognized
 values are <B>true</B>, <B>false</B>, <B>yes</B>, and <B>no</B>.</td>
 		</tr>
 		<tr>
-			<td>Reset Pooled Connections<para>  -or-  </para>
-			    ResetConnections<para>  -or-  </para>
-			    ResetPooledConnections</td>
-			<td>true</td>
-			<td>Specifies whether a ping and a reset should be sent to the server
-			before a pooled connection is returned.  Not resetting will yeild faster
-			connection opens but also will not clear out session items such as
-			temp tables.</td>
-		</tr>
-		<tr>
-			<td>Cache Server Configuration<para>  -or-  </para>
-			    CacheServerConfiguration<para>  -or-  </para>
-			    CacheServerConfig</td>
+			<td>Connection Reset</td>
 			<td>false</td>
-			<td>Specifies whether server variables should be updated when a pooled
-			connection is returned.  Turning this one will yeild faster opens but
-			will also not catch any server changes made by other connections.</td>
+			<td>Specifies whether the database connection should be reset when being
+      drawn from the pool.  Leaving this as <b>false</b> will yeild much faster
+      connection opens but the user should understand the side effects
+      of doing this such as temporary tables and user variables from the previous
+      session not being cleared out.</td>
 		</tr>
 	</table></div>
 <para>When setting keyword or connection pooling values that require a Boolean 

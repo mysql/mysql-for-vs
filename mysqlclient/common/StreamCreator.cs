@@ -64,7 +64,11 @@ namespace MySql.Data.Common
 			// Lets look at the DNS entries for each host name
 			foreach (string h in dnsHosts)
 			{
+#if NET20
+                IPHostEntry hostAddress = Dns.GetHostEntry(h);
+#else
 				IPHostEntry hostAddress = Dns.GetHostByName(h);
+#endif
 				foreach (IPAddress addr in hostAddress.AddressList)
 				{
 					ipAddresses.Add( addr );
@@ -105,7 +109,11 @@ namespace MySql.Data.Common
 		private EndPoint CreateUnixEndPoint(string host)
 		{
 			// first we need to load the Mono.posix assembly
+#if NET20
+            Assembly a = Assembly.Load("Mono.Posix");
+#else
 			Assembly a = Assembly.LoadWithPartialName("Mono.Posix");
+#endif
 
 			// then we need to construct a UnixEndPoint object
 			EndPoint ep = (EndPoint)a.CreateInstance("Mono.Posix.UnixEndPoint", 

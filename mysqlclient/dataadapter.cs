@@ -33,10 +33,10 @@ namespace MySql.Data.MySqlClient
 #endif
 	public sealed class MySqlDataAdapter : DbDataAdapter, IDbDataAdapter, IDataAdapter, ICloneable
 	{
-		private MySqlCommand	m_selectCommand;
-		private MySqlCommand	m_insertCommand;
-		private MySqlCommand	m_updateCommand;
-		private MySqlCommand	m_deleteCommand;
+//		private MySqlCommand	m_selectCommand;
+//		private MySqlCommand	m_insertCommand;
+//		private MySqlCommand	m_updateCommand;
+//		private MySqlCommand	m_deleteCommand;
 //		private string			savedSql;
 		private bool			loadingDefaults;
 //		private bool			mayUseDefault;
@@ -82,32 +82,20 @@ namespace MySql.Data.MySqlClient
 #if DESIGN
 		[Description("Used during Update for deleted rows in Dataset.")]
 #endif
-		public MySqlCommand DeleteCommand 
+		public new MySqlCommand DeleteCommand 
 		{
-			get { return m_deleteCommand; }
-			set { m_deleteCommand = value; }
-		}
-
-		IDbCommand IDbDataAdapter.DeleteCommand 
-		{
-			get { return m_deleteCommand; }
-			set { m_deleteCommand = (MySqlCommand)value; }
+			get { return (MySqlCommand)base.DeleteCommand; }
+			set { base.DeleteCommand = value; }
 		}
 
 		/// <include file='docs/MySqlDataAdapter.xml' path='docs/InsertCommand/*'/>
 #if DESIGN
 		[Description("Used during Update for new rows in Dataset.")]
 #endif
-		public MySqlCommand InsertCommand 
+		public new MySqlCommand InsertCommand 
 		{
-			get { return m_insertCommand; }
-			set { m_insertCommand = value; }
-		}
-
-		IDbCommand IDbDataAdapter.InsertCommand 
-		{
-			get { return m_insertCommand; }
-			set { m_insertCommand = (MySqlCommand)value; }
+			get { return (MySqlCommand)base.InsertCommand; }
+			set { base.InsertCommand = value; }
 		}
 
 		/// <include file='docs/MySqlDataAdapter.xml' path='docs/SelectCommand/*'/>
@@ -115,32 +103,20 @@ namespace MySql.Data.MySqlClient
 		[Description("Used during Fill/FillSchema")]
 		[Category("Fill")]
 #endif
-		public MySqlCommand SelectCommand 
+		public new MySqlCommand SelectCommand 
 		{
-			get { return m_selectCommand; }
-			set { m_selectCommand = value; }
-		}
-
-		IDbCommand IDbDataAdapter.SelectCommand 
-		{
-			get { return m_selectCommand; }
-			set { m_selectCommand = (MySqlCommand)value; }
+			get { return (MySqlCommand)base.SelectCommand; }
+            set { base.SelectCommand = value; }
 		}
 
 		/// <include file='docs/MySqlDataAdapter.xml' path='docs/UpdateCommand/*'/>
 #if DESIGN
 		[Description("Used during Update for modified rows in Dataset.")]
 #endif
-		public MySqlCommand UpdateCommand 
+		public new MySqlCommand UpdateCommand 
 		{
-			get { return m_updateCommand; }
-			set { m_updateCommand = value; }
-		}
-
-		IDbCommand IDbDataAdapter.UpdateCommand 
-		{
-			get { return m_updateCommand; }
-			set { m_updateCommand = (MySqlCommand)value; }
+			get { return (MySqlCommand)base.UpdateCommand; }
+			set { base.UpdateCommand = value; }
 		}
 
 		internal bool LoadDefaults 
@@ -306,10 +282,11 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// Initializes a new instance of the MySqlRowUpdatingEventArgs class.
 		/// </summary>
-		/// <param name="row">The <see cref="DataRow"/> to <see cref="DbDataAdapter.Update"/>.</param>
-		/// <param name="command">The <see cref="IDbCommand"/> to execute during <see cref="DbDataAdapter.Update"/>.</param>
+		/// <param name="row">The <see cref="DataRow"/> to 
+        /// <see cref="DbDataAdapter.Update(DataSet)"/>.</param>
+		/// <param name="command">The <see cref="IDbCommand"/> to execute during <see cref="DbDataAdapter.Update(DataSet)"/>.</param>
 		/// <param name="statementType">One of the <see cref="StatementType"/> values that specifies the type of query executed.</param>
-		/// <param name="tableMapping">The <see cref="DataTableMapping"/> sent through an <see cref="DbDataAdapter.Update"/>.</param>
+		/// <param name="tableMapping">The <see cref="DataTableMapping"/> sent through an <see cref="DbDataAdapter.Update(DataSet)"/>.</param>
 		public MySqlRowUpdatingEventArgs(DataRow row, IDbCommand command, StatementType statementType, DataTableMapping tableMapping) 
 			: base(row, command, statementType, tableMapping) 
 		{
@@ -333,10 +310,10 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// Initializes a new instance of the MySqlRowUpdatedEventArgs class.
 		/// </summary>
-		/// <param name="row">The <see cref="DataRow"/> sent through an <see cref="DbDataAdapter.Update"/>.</param>
-		/// <param name="command">The <see cref="IDbCommand"/> executed when <see cref="DbDataAdapter.Update"/> is called.</param>
+		/// <param name="row">The <see cref="DataRow"/> sent through an <see cref="DbDataAdapter.Update(DataSet)"/>.</param>
+		/// <param name="command">The <see cref="IDbCommand"/> executed when <see cref="DbDataAdapter.Update(DataSet)"/> is called.</param>
 		/// <param name="statementType">One of the <see cref="StatementType"/> values that specifies the type of query executed.</param>
-		/// <param name="tableMapping">The <see cref="DataTableMapping"/> sent through an <see cref="DbDataAdapter.Update"/>.</param>
+		/// <param name="tableMapping">The <see cref="DataTableMapping"/> sent through an <see cref="DbDataAdapter.Update(DataSet)"/>.</param>
 		public MySqlRowUpdatedEventArgs(DataRow row, IDbCommand command, StatementType statementType, DataTableMapping tableMapping)
 			: base(row, command, statementType, tableMapping) 
 		{

@@ -49,8 +49,16 @@ namespace MySql.Data.MySqlClient.Tests
                     "SoftProcedureQueries", "Number of stored procedure metadata queries that are handled by cache",
                     PerformanceCounterType.NumberOfItems32);
                 ccd.Add(procSoftQuery);
-
-                PerformanceCounterCategory.Create(categoryName, "Performance counters for the .NET provider for MySQL", ccd);
+#if NET20
+                PerformanceCounterCategory.Create(categoryName,
+                    "Performance counters for the .NET provider for MySQL", 
+                    PerformanceCounterCategoryType.SingleInstance,
+                    ccd);
+#else
+                PerformanceCounterCategory.Create(categoryName,
+                    "Performance counters for the .NET provider for MySQL", 
+                    ccd);
+#endif
             }
             catch (Exception ex)
             {
