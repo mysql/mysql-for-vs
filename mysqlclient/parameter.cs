@@ -54,6 +54,7 @@ namespace MySql.Data.MySqlClient
 		private MySqlDbType			mySqlDbType;
 		private DbType				dbType;
 		private bool				inferType;
+        private bool sourceColumnNullMapping;
 
 		#region Constructors
 
@@ -530,19 +531,13 @@ namespace MySql.Data.MySqlClient
 
         public override void ResetDbType()
         {
-            throw new Exception("The method or operation is not implemented.");
+            this.inferType = true;
         }
 
         public override bool SourceColumnNullMapping
         {
-            get
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-            set
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
+            get { return sourceColumnNullMapping; }
+            set { sourceColumnNullMapping = value; }
         }
 }
 }

@@ -30,6 +30,7 @@ namespace MySql.Data.MySqlClient.Tests
 		[TestFixtureSetUp]
 		public void FixtureSetup()
 		{
+            csAdditions += ";logging=true";
 			Open();
 
 			execSQL("DROP TABLE IF EXISTS Test");
@@ -45,27 +46,33 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void MultiWord()
 		{
-			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
-			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
-			cb.ToString();
-			DataTable dt = new DataTable();
-			da.Fill(dt);
+            try
+            {
+                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
+                MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
 
-			DataRow row = dt.NewRow();
-			row["id"] = 1;
-			row["name"] = "Name";
-			row["dt"] = DBNull.Value;
-			row["tm"] = DBNull.Value;
-			row["multi word"] = 2;
-			dt.Rows.Add( row );
-			da.Update( dt );
-			Assert.AreEqual( 1, dt.Rows.Count );
-			Assert.AreEqual( 2, dt.Rows[0]["multi word"] );
+                DataRow row = dt.NewRow();
+                row["id"] = 1;
+                row["name"] = "Name";
+                row["dt"] = DBNull.Value;
+                row["tm"] = DBNull.Value;
+                row["multi word"] = 2;
+                dt.Rows.Add(row);
+                da.Update(dt);
+                Assert.AreEqual(1, dt.Rows.Count);
+                Assert.AreEqual(2, dt.Rows[0]["multi word"]);
 
-			dt.Rows[0]["multi word"] = 3;
-			da.Update( dt );
-			Assert.AreEqual( 1, dt.Rows.Count );
-			Assert.AreEqual( 3, dt.Rows[0]["multi word"] );
+                dt.Rows[0]["multi word"] = 3;
+                da.Update(dt);
+                Assert.AreEqual(1, dt.Rows.Count);
+                Assert.AreEqual(3, dt.Rows[0]["multi word"]);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
 		}
 
 		[Test]
@@ -75,7 +82,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
 			MySqlCommandBuilder cb = new MySqlCommandBuilder(da, true);
-			cb.ToString();  // keep the compiler happy
+            cb.ConflictOption = ConflictOption.OverwriteChanges;
 			DataTable dt = new DataTable();
 			da.Fill( dt );
 			Assert.AreEqual( 1, dt.Rows.Count );
@@ -98,7 +105,6 @@ namespace MySql.Data.MySqlClient.Tests
 
 			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
 			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
-			cb.ToString();  // keep the compiler happy
 			DataTable dt = new DataTable();
 			da.Fill(dt);
 			Assert.AreEqual(1, dt.Rows.Count);

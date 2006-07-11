@@ -509,7 +509,7 @@ namespace MySql.Data.MySqlClient
 				r["IsKey"] = f.IsPrimaryKey;
 				r["IsAutoIncrement"] = f.IsAutoIncrement;
 				r["BaseSchemaName"] = f.DatabaseName;
-				r["BaseCatalogName"] = f.DatabaseName;
+                r["BaseCatalogName"] = null;
 				r["BaseTableName"] = f.RealTableName;
 				r["BaseColumnName"] = f.OriginalColumnName;
 

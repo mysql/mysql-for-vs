@@ -26,6 +26,7 @@ using System.Text;
 using MySql.Data.Common;
 using System.Collections;
 using MySql.Data.Types;
+using System.Globalization;
 
 namespace MySql.Data.MySqlClient
 {
@@ -36,9 +37,6 @@ namespace MySql.Data.MySqlClient
 #endif
 	public sealed class MySqlCommandBuilder : DbCommandBuilder
 	{
-//		private MySqlDataAdapter	_adapter;
-//		private string				_QuotePrefix;
-//		private string				_QuoteSuffix;
 		private DataTable			_schema;
 		private string				tableName;
 		private string				schemaName;
@@ -65,13 +63,14 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/MySqlCommandBuilder.xml' path='docs/Ctor2/*'/>
-		public MySqlCommandBuilder( MySqlDataAdapter adapter ) : this()
+		public MySqlCommandBuilder(MySqlDataAdapter adapter) : this()
 		{
 			DataAdapter = adapter;
 		}
 
 		/// <include file='docs/MySqlCommandBuilder.xml' path='docs/Ctor3/*'/>
-		public MySqlCommandBuilder( MySqlDataAdapter adapter, bool lastOneWins ) : this(lastOneWins)
+		public MySqlCommandBuilder(MySqlDataAdapter adapter, bool lastOneWins) : 
+            this(lastOneWins)
 		{
 			DataAdapter = adapter;
 		}
@@ -184,7 +183,22 @@ namespace MySql.Data.MySqlClient
             return ParameterDirection.InputOutput;
         }
 
-		/// <include file='docs/MySqlCommandBuilder.xml' path='docs/GetDeleteCommand/*'/>
+        public new MySqlCommand GetDeleteCommand()
+        {
+            return (MySqlCommand)base.GetDeleteCommand();
+        }
+
+        public new MySqlCommand GetUpdateCommand()
+        {
+            return (MySqlCommand)base.GetUpdateCommand();
+        }
+
+        public new MySqlCommand GetInsertCommand()
+        {
+            return (MySqlCommand)base.GetInsertCommand();
+        }
+
+/*		/// <include file='docs/MySqlCommandBuilder.xml' path='docs/GetDeleteCommand/*'/>
 		public new MySqlCommand GetDeleteCommand()
 		{
 			if (_schema == null)
@@ -207,7 +221,7 @@ namespace MySql.Data.MySqlClient
 				GenerateSchema();
 			return CreateUpdateCommand();
 		}
-
+*/
 		/// <include file='docs/MySqlCommandBuilder.xml' path='docs/RefreshSchema/*'/>
 		public override void RefreshSchema()
 		{
@@ -548,25 +562,79 @@ namespace MySql.Data.MySqlClient
 		}
 		#endregion
 
-
-        protected override void ApplyParameterInfo(DbParameter parameter, DataRow row, StatementType statementType, bool whereClause)
+        protected override DbCommand InitializeCommand(DbCommand command)
         {
-            throw new Exception("The method or operation is not implemented.");
+            return base.InitializeCommand(command);
+        }
+
+        protected override DataTable GetSchemaTable(DbCommand sourceCommand)
+        {
+            marker = (sourceCommand.Connection as MySqlConnection).ParameterMarker;
+
+            DataTable schema;
+            using (MySqlDataReader reader = (MySqlDataReader)sourceCommand.ExecuteReader(
+                CommandBehavior.KeyInfo | CommandBehavior.SchemaOnly)) 
+            {
+                schema = reader.GetSchemaTable();
+            }
+
+            return schema;
+            // make sure we got at least one unique or key field and count base table names
+/*            bool hasKeyOrUnique = false;
+
+            foreach (DataRow row in _schema.Rows)
+            {
+                string rowTableName = row["BaseTableName"].ToString();
+                string rowSchemaName = row["BaseSchemaName"].ToString();
+
+                if (true == (bool)row["IsKey"] || true == (bool)row["IsUnique"])
+                    hasKeyOrUnique = true;
+
+                if (tableName == null)
+                {
+                    schemaName = rowSchemaName;
+                    tableName = rowTableName;
+                }
+                else if (tableName != rowTableName && rowTableName != null && rowTableName.Length > 0)
+                    throw new InvalidOperationException(Resources.GetString("CBMultiTableNotSupported"));
+                else if (schemaName != rowSchemaName && rowSchemaName != null && rowSchemaName.Length > 0)
+                    throw new InvalidOperationException(Resources.GetString("CBMultiTableNotSupported"));
+            }
+            if (!hasKeyOrUnique)
+                throw new InvalidOperationException(Resources.GetString("CBNoKeyColumn"));
+ * */
+        }
+
+        protected override void ApplyParameterInfo(DbParameter parameter, DataRow row, 
+            StatementType statementType, bool whereClause)
+        {
+            ((MySqlParameter)parameter).MySqlDbType = (MySqlDbType)row["ProviderType"];
         }
 
         protected override string GetParameterName(int parameterOrdinal)
         {
-            throw new Exception("The method or operation is not implemented.");
+            return String.Format("{0}p{1}", marker,
+                parameterOrdinal.ToString(CultureInfo.InvariantCulture));
         }
 
         protected override string GetParameterPlaceholder(int parameterOrdinal)
         {
-            throw new Exception("The method or operation is not implemented.");
+            return String.Format("{0}p{1}", marker,
+                parameterOrdinal.ToString(CultureInfo.InvariantCulture));
         }
 
         protected override void SetRowUpdatingHandler(DbDataAdapter adapter)
         {
-            throw new Exception("The method or operation is not implemented.");
+            if (adapter != base.DataAdapter)
+                ((MySqlDataAdapter)adapter).RowUpdating += new MySqlRowUpdatingEventHandler(RowUpdating);
+            else
+                ((MySqlDataAdapter)adapter).RowUpdating -= new MySqlRowUpdatingEventHandler(RowUpdating);
         }
+
+        private void RowUpdating(object sender, MySqlRowUpdatingEventArgs args)
+        {
+            base.RowUpdatingHandler(args);
+        }
+
     }
 }
