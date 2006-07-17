@@ -1,3 +1,23 @@
+// Copyright (C) 2004-2006 MySQL AB
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License version 2 as published by
+// the Free Software Foundation
+//
+// There are special exceptions to the terms and conditions of the GPL 
+// as it is applied to this software. View the full text of the 
+// exception in file EXCEPTIONS in the directory of this software 
+// distribution.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+
 using System.Data;
 using System;
 using System.Data.Common;
@@ -14,6 +34,7 @@ namespace MySql.Data.MySqlClient
     internal class SchemaProvider
     {
         protected MySqlConnection connection;
+        public static string MetaCollection = "MetaDataCollections";
 
         public SchemaProvider(MySqlConnection connectionToUse)
         {
@@ -341,19 +362,19 @@ namespace MySql.Data.MySqlClient
 
         protected virtual DataTable GetCollections()
         {
-            object[,] collections = new object[,] {
-                {"MetaDataCollections", 0, 0},
-                {"DataSourceInformation", 0, 0},
-                {"DataTypes", 0, 0},
-                {"Restrictions", 0, 0},
-                {"ReservedWords", 0, 0},
-                {"Databases", 1, 1},
-                {"Tables", 4, 2},
-                {"Columns", 4, 4}, 
-                {"Users", 1, 1},
-                {"Foreign Keys", 4, 3},
-                {"IndexColumns", 5, 4},
-                {"Indexes", 4, 3}
+            object[][] collections = new object[][] {
+                new object[] {"MetaDataCollections", 0, 0},
+                new object[] {"DataSourceInformation", 0, 0},
+                new object[] {"DataTypes", 0, 0},
+                new object[] {"Restrictions", 0, 0},
+                new object[] {"ReservedWords", 0, 0},
+                new object[] {"Databases", 1, 1},
+                new object[] {"Tables", 4, 2},
+                new object[] {"Columns", 4, 4}, 
+                new object[] {"Users", 1, 1},
+                new object[] {"Foreign Keys", 4, 3},
+                new object[] {"IndexColumns", 5, 4},
+                new object[] {"Indexes", 4, 3}
             };
 
             DataTable dt = new DataTable("MetaDataCollections");
@@ -464,27 +485,27 @@ namespace MySql.Data.MySqlClient
 
         protected virtual DataTable GetRestrictions()
         {
-            object[,] restrictions = new object[,] 
+            object[][] restrictions = new object[][] 
             {
-                {"Users", "Name", "", 0},
-                {"Databases", "Name", "", 0},
-                {"Tables", "Catalog", "", 0},
-                {"Tables", "Owner", "", 1},
-                {"Tables", "Table", "", 2},
-                {"Tables", "TableType", "", 3},
-                {"Columns", "Catalog", "", 0},
-                {"Columns", "Owner", "", 1},
-                {"Columns", "Table", "", 2},
-                {"Columns", "Column", "", 3},          
-                {"Indexes", "Catalog", "", 0},
-                {"Indexes", "Owner", "", 1},
-                {"Indexes", "Table", "", 2},
-                {"Indexes", "Name", "", 3},
-                {"IndexColumns", "Catalog", "", 0},
-                {"IndexColumns", "Owner", "", 1},
-                {"IndexColumns", "Table", "", 2},
-                {"IndexColumns", "ConstraintName", "", 3},
-                {"IndexColumns", "Column", "", 4},
+                new object[] {"Users", "Name", "", 0},
+                new object[] {"Databases", "Name", "", 0},
+                new object[] {"Tables", "Catalog", "", 0},
+                new object[] {"Tables", "Owner", "", 1},
+                new object[] {"Tables", "Table", "", 2},
+                new object[] {"Tables", "TableType", "", 3},
+                new object[] {"Columns", "Catalog", "", 0},
+                new object[] {"Columns", "Owner", "", 1},
+                new object[] {"Columns", "Table", "", 2},
+                new object[] {"Columns", "Column", "", 3},          
+                new object[] {"Indexes", "Catalog", "", 0},
+                new object[] {"Indexes", "Owner", "", 1},
+                new object[] {"Indexes", "Table", "", 2},
+                new object[] {"Indexes", "Name", "", 3},
+                new object[] {"IndexColumns", "Catalog", "", 0},
+                new object[] {"IndexColumns", "Owner", "", 1},
+                new object[] {"IndexColumns", "Table", "", 2},
+                new object[] {"IndexColumns", "ConstraintName", "", 3},
+                new object[] {"IndexColumns", "Column", "", 4},
 
 //                {"ForeignKeys", "Catalog", "", "CONSTRAINT_CATALOG"},
   //              {"ForeignKeys", "Owner", "", "CONSTRAINT_SCHEMA"},
@@ -529,13 +550,14 @@ namespace MySql.Data.MySqlClient
             return dt;
         }
 
-        protected void FillTable(DataTable dt, object[,] data)
+        protected void FillTable(DataTable dt, object[][] data)
         {
             foreach (object[] dataItem in data)
             {
                 DataRow row = dt.NewRow();
                 for (int i = 0; i < dataItem.Length; i++)
                     row[i] = dataItem[i];
+                dt.Rows.Add(row);
             }
         }
 

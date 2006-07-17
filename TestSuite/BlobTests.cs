@@ -249,8 +249,9 @@ namespace MySql.Data.MySqlClient.Tests
 		[Category("4.0")]
 		public void UpdateDataSet() 
 		{
-			execSQL("TRUNCATE TABLE Test");
-			execSQL("INSERT INTO Test VALUES( 1, NULL, 'Text field' )");
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id INT NOT NULL, blob1 LONGBLOB, text1 LONGTEXT, PRIMARY KEY(id))");
+            execSQL("INSERT INTO Test VALUES( 1, NULL, 'Text field' )");
 
 			try 
 			{
@@ -317,7 +318,7 @@ namespace MySql.Data.MySqlClient.Tests
             execSQL("DROP TABLE IF EXISTS test");
             execSQL("CREATE TABLE test (id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT, " +
                 "image MEDIUMBLOB NOT NULL, imageSize MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT 0, " +
-                "PRIMARY KEY (id)) DEFAULT CHARSET=latin1");
+                "PRIMARY KEY (id))");
 
             byte[] image = new byte[2048];
             for (int x = 0; x < image.Length; x++)

@@ -113,6 +113,9 @@
     <Compile Include="ConnectionTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="AsyncTests.cs" />
+    <Compile Include="InterfaceTests.cs" />
+    <Compile Include="GetSchemaTests.cs" />
     <Compile Include="DataReaderTests.cs" />
     <Compile Include="MicroPerfTests.cs" />
     <Compile Include="CultureTests.cs">
@@ -124,20 +127,16 @@
     <Compile Include="DataAdapterTests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DataSetTest.cs" />
     <Compile Include="DataTypeTests.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DateTimeTests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Exceptions.cs">
+    <Compile Include="ExceptionTests.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="LanguageTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MemoryTraceListener.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ParameterTests.cs">

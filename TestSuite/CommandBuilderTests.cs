@@ -25,7 +25,7 @@ using NUnit.Framework;
 namespace MySql.Data.MySqlClient.Tests
 {
 	[TestFixture]
-	public class CommandBuilderTest : BaseTest
+	public class CommandBuilderTests : BaseTest
 	{
 		[TestFixtureSetUp]
 		public void FixtureSetup()

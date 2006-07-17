@@ -82,14 +82,16 @@ namespace MySql.Data.Types
 
 		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, object val, int length)
 		{
-			double v = Convert.ToDouble( val );
+			double v = Convert.ToDouble(val);
 			if (binary)
-				writer.Write( BitConverter.GetBytes(v));
+				writer.Write(BitConverter.GetBytes(v));
 			else
-				writer.WriteStringNoNull(v.ToString(NumberFormat.MySql().NumberFormatInfo));		
+				writer.WriteStringNoNull(v.ToString(
+                    CultureInfo.InvariantCulture));		
 		}
 
-		IMySqlValue IMySqlValue.ReadValue(MySqlStreamReader reader, long length, bool nullVal)
+		IMySqlValue IMySqlValue.ReadValue(MySqlStreamReader reader, long length, 
+            bool nullVal)
 		{
 			if (nullVal) return new MySqlDouble(true);
 
@@ -97,9 +99,10 @@ namespace MySql.Data.Types
 			{
 				byte[] b = new byte[8];
 				reader.Read(b, 0, 8);
-				return new MySqlDouble(BitConverter.ToDouble( b, 0 ));
+				return new MySqlDouble(BitConverter.ToDouble(b, 0));
 			}
-			return new MySqlDouble(Double.Parse(reader.ReadString(length), NumberFormat.MySql().NumberFormatInfo));
+			return new MySqlDouble(Double.Parse(reader.ReadString(length), 
+                CultureInfo.InvariantCulture));
 		}
 
 		void IMySqlValue.SkipValue(MySqlStreamReader reader)

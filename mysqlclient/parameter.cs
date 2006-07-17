@@ -358,7 +358,6 @@ namespace MySql.Data.MySqlClient
         internal void Serialize(MySqlStreamWriter writer, bool binary)
         {
             IMySqlValue v = MySqlField.GetIMySqlValue(mySqlDbType, true);
-            //GetValueObject();
 
             if (!binary && (paramValue == null || paramValue == DBNull.Value))
                 writer.WriteStringNoNull("NULL");

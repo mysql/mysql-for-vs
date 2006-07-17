@@ -25,16 +25,19 @@ using NUnit.Framework;
 using System.Threading;
 using System.Collections;
 using System.Diagnostics;
+using System.Text;
 
 namespace MySql.Data.MySqlClient.Tests
 {
     class GenericListener : TraceListener
     {
         System.Collections.Specialized.StringCollection strings;
+        StringBuilder partial;
 
         public GenericListener()
         {
             strings = new System.Collections.Specialized.StringCollection();
+            partial = new StringBuilder();
         }
 
         public int Find(string sToFind)
@@ -46,14 +49,22 @@ namespace MySql.Data.MySqlClient.Tests
             return count;
         }
 
+        public void Clear()
+        {
+            partial.Remove(0, partial.Length);
+            strings.Clear();
+        }
+
         public override void Write(string message)
         {
-            strings.Add(message);
+            partial.Append(message);
         }
 
         public override void WriteLine(string message)
         {
-            strings.Add(message);
+            Write(message);
+            strings.Add(partial.ToString());
+            partial.Remove(0, partial.Length);
         }
     }
 

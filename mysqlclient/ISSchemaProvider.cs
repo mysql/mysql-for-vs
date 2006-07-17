@@ -1,3 +1,23 @@
+// Copyright (C) 2004-2006 MySQL AB
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License version 2 as published by
+// the Free Software Foundation
+//
+// There are special exceptions to the terms and conditions of the GPL 
+// as it is applied to this software. View the full text of the 
+// exception in file EXCEPTIONS in the directory of this software 
+// distribution.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+
 using System;
 using System.Data;
 using System.Text;
@@ -18,13 +38,13 @@ namespace MySql.Data.MySqlClient
         {
            DataTable dt = base.GetCollections();
 
-           object[,] collections = new object[,] 
+           object[][] collections = new object[][] 
             {
-                {"Views", 2, 3},
-                {"ViewColumns", 3, 4},
-                {"ProcedureParameters", 4, 1},
-                {"Procedures", 4, 3},
-                {"Triggers", 2, 4}
+                new object[] {"Views", 2, 3},
+                new object[] {"ViewColumns", 3, 4},
+                new object[] {"ProcedureParameters", 4, 1},
+                new object[] {"Procedures", 4, 3},
+                new object[] {"Triggers", 2, 4}
             };
 
             FillTable(dt, collections);
@@ -35,27 +55,27 @@ namespace MySql.Data.MySqlClient
         {
             DataTable dt = base.GetRestrictions();
 
-            object[,] restrictions = new object[,] 
+            object[][] restrictions = new object[][] 
             {
-                {"ProcedureParameters", "Catalog", "", 0},
-                {"ProcedureParameters", "Owner", "", 1},
-                {"ProcedureParameters", "Name", "", 2},
-                {"ProcedureParameters", "Parameter", "", 3},
-                {"Procedures", "Catalog", "", 0},
-                {"Procedures", "Owner", "", 1},
-                {"Procedures", "Name", "", 2},
-                {"Procedures", "Type", "", 3},
-                {"Views", "Catalog", "", 0},
-                {"Views", "Owner", "", 1},
-                {"Views", "Table", "", 2},
-                {"ViewColumns", "Catalog", "", 0},
-                {"ViewColumns", "Owner", "", 1},
-                {"ViewColumns", "Table", "", 2},
-                {"ViewColumns", "Column", "", 3},
-                {"Triggers", "Catalog", "", 0},
-                {"Triggers", "Schema", "", 1},
-                {"Triggers", "Name", "", 2},
-                {"Triggers", "EventObjectTable", "", 3},
+                new object[] {"ProcedureParameters", "Catalog", "", 0},
+                new object[] {"ProcedureParameters", "Owner", "", 1},
+                new object[] {"ProcedureParameters", "Name", "", 2},
+                new object[] {"ProcedureParameters", "Parameter", "", 3},
+                new object[] {"Procedures", "Catalog", "", 0},
+                new object[] {"Procedures", "Owner", "", 1},
+                new object[] {"Procedures", "Name", "", 2},
+                new object[] {"Procedures", "Type", "", 3},
+                new object[] {"Views", "Catalog", "", 0},
+                new object[] {"Views", "Owner", "", 1},
+                new object[] {"Views", "Table", "", 2},
+                new object[] {"ViewColumns", "Catalog", "", 0},
+                new object[] {"ViewColumns", "Owner", "", 1},
+                new object[] {"ViewColumns", "Table", "", 2},
+                new object[] {"ViewColumns", "Column", "", 3},
+                new object[] {"Triggers", "Catalog", "", 0},
+                new object[] {"Triggers", "Schema", "", 1},
+                new object[] {"Triggers", "Name", "", 2},
+                new object[] {"Triggers", "EventObjectTable", "", 3},
             };
             FillTable(dt, restrictions);
             return dt;

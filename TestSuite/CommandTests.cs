@@ -88,35 +88,35 @@ namespace MySql.Data.MySqlClient.Tests
 				// do the update
 				MySqlCommand cmd = new MySqlCommand("UPDATE Test SET name='Test3' WHERE id=10 OR id=11", conn);
 				MySqlConnection c = cmd.Connection;
-				Assert.AreEqual( conn, c );
+				Assert.AreEqual(conn, c);
 				int cnt = cmd.ExecuteNonQuery();
-				Assert.AreEqual( 2, cnt );
+				Assert.AreEqual(2, cnt);
 
 				// make sure we get the right value back out
 				cmd.CommandText = "SELECT name FROM Test WHERE id=10";
 				string name = (string)cmd.ExecuteScalar();
-				Assert.AreEqual( "Test3", name );
+				Assert.AreEqual("Test3", name);
 			
 				cmd.CommandText = "SELECT name FROM Test WHERE id=11";
 				name = (string)cmd.ExecuteScalar();
-				Assert.AreEqual( "Test3", name );
+				Assert.AreEqual("Test3", name);
 
 				// now do the update with parameters
 				cmd.CommandText = "UPDATE Test SET name=?name WHERE id=?id";
 				cmd.Parameters.Add( new MySqlParameter("?id", 11));
 				cmd.Parameters.Add( new MySqlParameter("?name", "Test5"));
 				cnt = cmd.ExecuteNonQuery();
-				Assert.AreEqual( 1, cnt, "Update with Parameters Count" );
+				Assert.AreEqual(1, cnt, "Update with Parameters Count");
 
 				// make sure we get the right value back out
 				cmd.Parameters.Clear();
 				cmd.CommandText = "SELECT name FROM Test WHERE id=11";
 				name = (string)cmd.ExecuteScalar();
-				Assert.AreEqual( "Test5", name );
+				Assert.AreEqual("Test5", name);
 			}
 			catch (Exception ex)
 			{
-				Assert.Fail( ex.Message );
+				Assert.Fail(ex.Message);
 			}
 		}
 
@@ -299,7 +299,7 @@ namespace MySql.Data.MySqlClient.Tests
                 sql.Append("DROP TABLE IF EXISTS idx" + i + ";CREATE TABLE idx" + i + "(aa int not null auto_increment primary key, a int, b varchar(50), c int);");
 
             int c = 0;
-            for (int z = 0; z < 600; z++)
+            for (int z = 0; z < 100; z++) 
                 for (int x = 0; x < 10; x++, c++)
                 {
                     string s = String.Format("INSERT INTO idx{0} (a, b, c) values ({1}, 'field{1}', {2});",
@@ -316,7 +316,7 @@ namespace MySql.Data.MySqlClient.Tests
                 {
                     cmd.CommandText = "SELECT COUNT(*) FROM idx" + i;
                     object count = cmd.ExecuteScalar();
-                    Assert.AreEqual(600, count);
+                    Assert.AreEqual(100, count);
                     execSQL("DROP TABLE IF EXISTS idx" + i);
                 }
             }
@@ -353,7 +353,7 @@ namespace MySql.Data.MySqlClient.Tests
         public void LastInsertid()
         {
             execSQL("DROP TABLE test");
-            execSQL("CREATE TABLE test(id int auto_increment, name varchar(20))");
+            execSQL("CREATE TABLE test(id int auto_increment, name varchar(20), primary key(id))");
             MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES(NULL, 'test')", conn);
             cmd.ExecuteNonQuery();
             Assert.AreEqual(1, cmd.LastInsertedId);

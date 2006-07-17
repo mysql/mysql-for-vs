@@ -430,16 +430,20 @@ namespace MySql.Data.MySqlClient
 
         public override DataTable GetSchema()
         {
-            return null;
+            return GetSchema(null);
         }
 
         public override DataTable GetSchema(string collectionName)
         {
+            if (collectionName == null)
+                collectionName = SchemaProvider.MetaCollection;
             return schemaProvider.GetSchema(collectionName, null);
         }
 
         public override DataTable GetSchema(string collectionName, string[] restrictionValues)
         {
+            if (collectionName == null)
+                collectionName = SchemaProvider.MetaCollection;
             return schemaProvider.GetSchema(collectionName, restrictionValues);
         }
 

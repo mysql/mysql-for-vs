@@ -190,7 +190,7 @@ namespace MySql.Data.MySqlClient
 			reader.OpenPacket();
 			protocol = reader.ReadByte();
 			string versionString = reader.ReadString();
-			version = DBVersion.Parse( versionString );
+			version = DBVersion.Parse(versionString);
 			threadId = (int)reader.ReadInteger(4);
 			encryptionSeed = reader.ReadString();
 
@@ -207,22 +207,27 @@ namespace MySql.Data.MySqlClient
 			SetConnectionFlags();
 
 			writer.StartPacket(0, false);
-			writer.WriteInteger( (int)connectionFlags, version.isAtLeast(4,1,0) ? 4 : 2 );
-			writer.WriteInteger( MaxSinglePacket, version.isAtLeast(4,1,0) ? 4 : 3 );
+			writer.WriteInteger((int)connectionFlags, 
+                version.isAtLeast(4,1,0) ? 4 : 2);
+			writer.WriteInteger(MaxSinglePacket, 
+                version.isAtLeast(4,1,0) ? 4 : 3);
 
 			// 4.1.1 included some new server status info
-			if ( version.isAtLeast(4,1,1))
+			if (reader.HasMoreData) 
 			{
 				/* New protocol with 16 bytes to describe server characteristics */
 				serverCharSetIndex = reader.ReadInteger(1);
 
 				serverStatus = (ServerStatusFlags)reader.ReadInteger(2);
-				reader.SkipBytes( 13 );
+				reader.SkipBytes(13);
+            }
 
-				string seedPart2 = reader.ReadString();
-				encryptionSeed += seedPart2;
+            if (version.isAtLeast(4,1,1))
+            {
+                string seedPart2 = reader.ReadString();
+                encryptionSeed += seedPart2;
 
-				writer.WriteByte( 8 );
+                writer.WriteByte(8);
 				writer.Write( new byte[23], 0, 23 );
 			}
 
@@ -255,7 +260,7 @@ namespace MySql.Data.MySqlClient
 		{
 			ClientFlags flags = ClientFlags.FOUND_ROWS;
 
-			if ( version.isAtLeast(4,1,1) )
+			if (version.isAtLeast(4,1,1))
 			{
 				flags |= ClientFlags.PROTOCOL_41;
 				// Need this to get server status values
@@ -268,7 +273,7 @@ namespace MySql.Data.MySqlClient
 				// We always allow multiple result sets
 				flags |= ClientFlags.MULTI_RESULTS;
 			}
-			else if ( version.isAtLeast( 4, 1, 0 ) )
+			else if ( version.isAtLeast(4, 1, 0 ))
 				flags |= ClientFlags.RESERVED;
 			
 			// if the server allows it, tell it that we want long column info
@@ -279,7 +284,7 @@ namespace MySql.Data.MySqlClient
 			if ((serverCaps & ClientFlags.COMPRESS) != 0 && connectionString.UseCompression)
 				flags |= ClientFlags.COMPRESS;
 
-			if ( protocol > 9 )
+			if (protocol > 9)
 				flags |= ClientFlags.LONG_PASSWORD; // for long passwords
 			else 
 				flags &= ~ClientFlags.LONG_PASSWORD;
@@ -426,6 +431,11 @@ namespace MySql.Data.MySqlClient
             if ((serverStatus & (ServerStatusFlags.AnotherQuery | ServerStatusFlags.MoreResults)) == 0)
                 return -1;
 
+            lastInsertId = -1;
+            // the code to read last packet will set these server status vars 
+            // again if necessary.
+            serverStatus &= ~(ServerStatusFlags.AnotherQuery |
+                    ServerStatusFlags.MoreResults);
 			reader.OpenPacket();
 
 			long fieldCount = reader.GetFieldLength();
@@ -678,8 +688,9 @@ namespace MySql.Data.MySqlClient
 			int statementId = reader.ReadInteger(4);
 			int numCols = reader.ReadInteger(2);
 			int numParams = reader.ReadInteger(2);
-
-			if (numParams > 0)
+            //TODO: find out what this is needed for
+            reader.ReadInteger(3);
+            if (numParams > 0)
 			{
 				parameters = ReadColumnMetadata(numParams);
 

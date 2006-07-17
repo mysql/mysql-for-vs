@@ -83,13 +83,14 @@ namespace MySql.Data.MySqlClient
             // those names to index into the parameters the user gave us.
             // if the user set that parameter to NULL, then we set the null map
             // accordingly
-            for (int x=0; x < paramList.Length; x++)
-			{
-                MySqlParameter p = parameters[paramList[x].ColumnName];
-				if (p.Value == DBNull.Value || p.Value == null)
-					nullMap[x] = true;
-			}
-			byte[] nullMapBytes = new byte[ (parameters.Count + 7)/8 ];
+            if (paramList != null)
+                for (int x=0; x < paramList.Length; x++)
+			    {
+                    MySqlParameter p = parameters[paramList[x].ColumnName];
+				    if (p.Value == DBNull.Value || p.Value == null)
+					    nullMap[x] = true;
+			    }
+			byte[] nullMapBytes = new byte[(parameters.Count + 7)/8];
 			nullMap.CopyTo(nullMapBytes, 0);
 
 			// start constructing our packet
@@ -112,15 +113,16 @@ namespace MySql.Data.MySqlClient
                     writer.WriteInteger((long)parm.GetPSType(), 2);
                 }
 
-			// now write out all non-null values
-			foreach ( MySqlField param in paramList )
-			{
-				int index = parameters.IndexOf(param.ColumnName);
-				if (index == -1)
-					throw new MySqlException("Parameter '" + param.ColumnName +
-						"' is not defined.");
-				MySqlParameter parm = parameters[index];
-				if (parm.Value == DBNull.Value || parm.Value == null) continue;
+                // now write out all non-null values
+                foreach (MySqlField param in paramList)
+                {
+                    int index = parameters.IndexOf(param.ColumnName);
+                    if (index == -1)
+                        throw new MySqlException("Parameter '" + param.ColumnName +
+                            "' is not defined.");
+                    MySqlParameter parm = parameters[index];
+                    if (parm.Value == DBNull.Value || parm.Value == null)
+                        continue;
 
                     writer.Encoding = param.Encoding;
                     parm.Serialize(writer, true);

@@ -21,6 +21,7 @@
 using System;
 using System.Data;
 using MySql.Data.MySqlClient;
+using System.Globalization;
 
 namespace MySql.Data.Types
 {
@@ -98,21 +99,24 @@ namespace MySql.Data.Types
 
 		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, object val, int length)
 		{
-			decimal v = Convert.ToDecimal( val );
-			if (binary) 
-				writer.WriteLenString(v.ToString(NumberFormat.MySql().NumberFormatInfo));
-			else 
-				writer.WriteLenString(v.ToString(NumberFormat.MySql().NumberFormatInfo));
+			decimal v = Convert.ToDecimal(val);
+			if (binary)
+                writer.WriteLenString(v.ToString(
+                    CultureInfo.InvariantCulture));
+			else
+                writer.WriteStringNoNull(v.ToString(
+                    CultureInfo.InvariantCulture));
 		}
 
 		IMySqlValue IMySqlValue.ReadValue(MySqlStreamReader reader, long length, bool nullVal)
 		{
 			if (nullVal) return new MySqlDecimal(true);
 
-			if (length == -1) 
-				return new MySqlDecimal( Decimal.Parse(reader.ReadLenString()));
-			else 
-				return new MySqlDecimal( Decimal.Parse(reader.ReadLenString()));
+            if (length == -1)
+                return new MySqlDecimal(Decimal.Parse(reader.ReadLenString()));
+            else
+                return new MySqlDecimal(Decimal.Parse(reader.ReadString(),
+                    CultureInfo.InvariantCulture));
 		}
 
 		void IMySqlValue.SkipValue(MySqlStreamReader reader)

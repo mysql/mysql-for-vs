@@ -180,7 +180,9 @@ namespace MySql.Data.MySqlClient
 				case MySqlDbType.Datetime:
 				case MySqlDbType.Newdate:
 				case MySqlDbType.Timestamp: return new MySqlDateTime(type, true);
-				case MySqlDbType.Decimal: return new MySqlDecimal();
+				case MySqlDbType.Decimal:
+                case MySqlDbType.NewDecimal:
+                    return new MySqlDecimal();
 				case MySqlDbType.Float: return new MySqlSingle();
 				case MySqlDbType.Double: return new MySqlDouble();
 				case MySqlDbType.Set:

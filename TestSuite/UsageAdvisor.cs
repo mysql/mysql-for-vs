@@ -27,7 +27,6 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture()]
 	public class UsageAdvisorTests : BaseTest
 	{
-		private MemoryTraceListener listener;
 
 		[TestFixtureSetUp]
 		public void FixtureSetup()
@@ -37,15 +36,11 @@ namespace MySql.Data.MySqlClient.Tests
 
 			execSQL("DROP TABLE IF EXISTS Test");
 			createTable( "CREATE TABLE Test (id int, name VARCHAR(200))", "INNODB" );
-
-			listener = new MemoryTraceListener();
-			Trace.Listeners.Add(listener);
 		}
 
 		[TestFixtureTearDown]
 		public void FixtureTeardown()
 		{
-			Trace.Listeners.Remove(listener);
 			Close();
 		}
 
@@ -57,7 +52,11 @@ namespace MySql.Data.MySqlClient.Tests
 			execSQL("INSERT INTO Test VALUES (3, 'Test3')");
 			execSQL("INSERT INTO Test VALUES (4, 'Test4')");
 
-			MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test; SELECT * FROM Test WHERE id > 2", conn);
+            Trace.Listeners.Clear();
+            GenericListener listener = new GenericListener();
+            Trace.Listeners.Add(listener);
+
+            MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test; SELECT * FROM Test WHERE id > 2", conn);
 			MySqlDataReader reader = null;
 			try 
 			{
@@ -66,16 +65,15 @@ namespace MySql.Data.MySqlClient.Tests
 				int id = reader.GetInt32(0);
 				reader.Read();
 
-				listener.Clear();
-				Assert.IsTrue( reader.NextResult() );
-				Assert.IsTrue(VerifyFieldsNotRead("name"));
+				Assert.IsTrue(reader.NextResult());
+                Assert.IsTrue(listener.Find("Fields not accessed:  name") != 0);
 
 				reader.Read();
 				listener.Clear();
 
-				Assert.AreEqual( "Test3", reader.GetString(1) );
-				Assert.IsFalse( reader.NextResult() );
-				Assert.IsTrue(VerifyFieldsNotRead("id"));
+				Assert.AreEqual("Test3", reader.GetString(1));
+				Assert.IsFalse(reader.NextResult());
+                Assert.IsTrue(listener.Find("Fields not accessed:  id") > 0);
 			}
 			catch (Exception ex) 
 			{
@@ -96,7 +94,11 @@ namespace MySql.Data.MySqlClient.Tests
 			execSQL("INSERT INTO Test VALUES (3, 'Test3')");
 			execSQL("INSERT INTO Test VALUES (4, 'Test4')");
 
-			MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test; SELECT * FROM Test WHERE id > 2", conn);
+            Trace.Listeners.Clear();
+            GenericListener listener = new GenericListener();
+            Trace.Listeners.Add(listener);
+
+            MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test; SELECT * FROM Test WHERE id > 2", conn);
 			MySqlDataReader reader = null;
 			try 
 			{
@@ -105,15 +107,15 @@ namespace MySql.Data.MySqlClient.Tests
 				reader.Read();
 
 				listener.Clear();
-				Assert.IsTrue( reader.NextResult() );
-				Assert.IsTrue(DidNotReadAllRows());
+				Assert.IsTrue(reader.NextResult());
+                Assert.IsTrue(listener.Find("Reason: Not all rows in resultset were read.") > 0);
 
 				reader.Read();
 				reader.Read();
 				listener.Clear();
 
 				Assert.IsFalse(reader.NextResult());
-				Assert.IsFalse(DidNotReadAllRows());
+                Assert.IsTrue(listener.Find("Reason: Not all rows in resultset were read.") > 0);
 			}
 			catch (Exception ex) 
 			{
@@ -126,31 +128,5 @@ namespace MySql.Data.MySqlClient.Tests
 
 		}
 
-		private string GetMessage() 
-		{
-			string message = String.Empty;
-
-			string line = listener.ReadLine();
-			while (line != null)
-			{
-				message += line;
-				line = listener.ReadLine();
-			}
-			return message;
-		}
-
-		private bool VerifyFieldsNotRead(string fieldNames) 
-		{
-			string msg = GetMessage();			
-			int index = msg.IndexOf( "Fields not accessed:  " + fieldNames );
-			return index != -1;
-		}
-
-		private bool DidNotReadAllRows() 
-		{
-			string msg = GetMessage();
-			int index = msg.IndexOf("Not all rows in resultset were read");
-			return index != -1;
-		}
 	}
 }

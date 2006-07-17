@@ -86,16 +86,16 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(15, sb.ConnectionTimeout);
             Assert.AreEqual(true, sb.Pooling);
             Assert.AreEqual(3306, sb.Port);
-            Assert.AreEqual("localhost", sb.Server);
+            Assert.AreEqual(String.Empty, sb.Server);
             Assert.AreEqual(false, sb.PersistSecurityInfo);
             Assert.AreEqual(0, sb.ConnectionLifeTime);
             Assert.IsFalse(sb.ConnectionReset);
             Assert.AreEqual(0, sb.MinimumPoolSize);
             Assert.AreEqual(100, sb.MaximumPoolSize);
-            Assert.AreEqual("", sb.UserID);
-            Assert.AreEqual("", sb.Password);
+            Assert.AreEqual(String.Empty, sb.UserID);
+            Assert.AreEqual(String.Empty, sb.Password);
             Assert.AreEqual(false, sb.UseUsageAdvisor);
-            Assert.AreEqual("", sb.CharacterSet);
+            Assert.AreEqual(String.Empty, sb.CharacterSet);
             Assert.AreEqual(false, sb.UseCompression);
             Assert.AreEqual("MYSQL", sb.PipeName);
             Assert.IsFalse(sb.Logging);
@@ -103,7 +103,7 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.IsTrue(sb.AllowBatch);
             Assert.IsFalse(sb.ConvertZeroDateTime);
             Assert.AreEqual("MYSQL", sb.SharedMemoryName);
-            Assert.AreEqual("", sb.Database);
+            Assert.AreEqual(String.Empty, sb.Database);
             Assert.AreEqual(MySqlDriverType.Native, sb.DriverType);
             Assert.AreEqual(MySqlConnectionProtocol.Sockets, sb.ConnectionProtocol);
             Assert.IsFalse(sb.AllowZeroDateTime);
@@ -251,13 +251,13 @@ namespace MySql.Data.MySqlClient.Tests
 				c.Open();
 				c.Close();
 
-				execSQL("GRANT ALL ON *.* to ''@'localhost'");
-				execSQL("FLUSH PRIVILEGES");
+                // TODO: make anonymous login work
+                execSQL("CREATE USER ''");
 
 				// connect with all defaults
 				if (connStr.IndexOf("localhost") != -1) 
 				{
-					c = new MySqlConnection( String.Empty );
+					c = new MySqlConnection(String.Empty);
 					c.Open();
 					c.Close();
 				}
@@ -272,7 +272,7 @@ namespace MySql.Data.MySqlClient.Tests
 				c.Close();
 
 				connStr2 += ";password=;";
-				c = new MySqlConnection( connStr2 );
+				c = new MySqlConnection(connStr2);
 				c.Open();
 				c.Close();
 			}
