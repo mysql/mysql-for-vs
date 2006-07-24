@@ -22,8 +22,10 @@ using System;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.IO;
+using MySql.Data.MySqlClient;
+using Microsoft.Win32.SafeHandles;
 
-namespace MySql.Data.MySqlClient
+namespace MySql.Data.Common
 {
 #if !CF
 	/// <summary>
@@ -59,56 +61,87 @@ namespace MySql.Data.MySqlClient
 
 		public override void Close() 
 		{
-			UnmapViewOfFile( dataView );
-			CloseHandle( dataMap );
+			UnmapViewOfFile(dataView);
+			CloseHandle(dataMap);
 		}
 
 		private void GetConnectNumber(uint timeOut)
 		{
 			AutoResetEvent connectRequest = new AutoResetEvent(false);
-			connectRequest.Handle = OpenEvent( EVENT_ALL_ACCESS, false, 
-				memoryName + "_" + "CONNECT_REQUEST" );
+            IntPtr handle = OpenEvent(EVENT_ALL_ACCESS, false, 
+				memoryName + "_" + "CONNECT_REQUEST");
+#if NET20
+            connectRequest.SafeWaitHandle = new SafeWaitHandle(handle, true);
+#else
+			connectRequest.Handle = handle;
+#endif
 
 			AutoResetEvent connectAnswer = new AutoResetEvent(false);
-			connectAnswer.Handle = OpenEvent( EVENT_ALL_ACCESS, false, 
-				memoryName + "_" + "CONNECT_ANSWER" );
+			handle = OpenEvent(EVENT_ALL_ACCESS, false, 
+				memoryName + "_" + "CONNECT_ANSWER");
+#if NET20
+            connectAnswer.SafeWaitHandle = new SafeWaitHandle(handle, true);
+#else
+			connectAnswer.Handle = handle;
+#endif
 
-			IntPtr connectFileMap = OpenFileMapping( FILE_MAP_WRITE, false,
-				memoryName + "_" + "CONNECT_DATA" );
-			IntPtr connectView = MapViewOfFile( connectFileMap, FILE_MAP_WRITE,
-				0, 0, (IntPtr)4 );
+			IntPtr connectFileMap = OpenFileMapping(FILE_MAP_WRITE, false,
+				memoryName + "_" + "CONNECT_DATA");
+			IntPtr connectView = MapViewOfFile(connectFileMap, FILE_MAP_WRITE,
+				0, 0, (IntPtr)4);
 
 			// now start the connection
 			if (! connectRequest.Set())
-				throw new MySqlException( "Failed to open shared memory connection " );
+				throw new MySqlException("Failed to open shared memory connection");
 
-			connectAnswer.WaitOne((int)(timeOut*1000), false );
+			connectAnswer.WaitOne((int)(timeOut*1000), false);
 
-			connectNumber = Marshal.ReadInt32( connectView );
+			connectNumber = Marshal.ReadInt32(connectView);
 		}
 
 		private void SetupEvents()
 		{
 			string dataMemoryName = memoryName + "_" + connectNumber;
-			dataMap = OpenFileMapping( FILE_MAP_WRITE, false, 
-				dataMemoryName + "_DATA" );
-			dataView = (IntPtr)MapViewOfFile( dataMap, FILE_MAP_WRITE, 0, 0, (IntPtr)(int)BUFFERLENGTH );
+			dataMap = OpenFileMapping(FILE_MAP_WRITE, false, 
+				dataMemoryName + "_DATA");
+			dataView = (IntPtr)MapViewOfFile(dataMap, FILE_MAP_WRITE, 
+                0, 0, (IntPtr)(int)BUFFERLENGTH);
 
 			serverWrote = new AutoResetEvent(false);
-			serverWrote.Handle = OpenEvent( EVENT_ALL_ACCESS, false, 
-				dataMemoryName + "_SERVER_WROTE" );
+            IntPtr handle = OpenEvent(EVENT_ALL_ACCESS, false,
+                dataMemoryName + "_SERVER_WROTE");
+#if NET20
+            serverWrote.SafeWaitHandle = new SafeWaitHandle(handle, true);
+#else
+			serverWrote.Handle = handle;
+#endif
 
 			serverRead = new AutoResetEvent(false);
-			serverRead.Handle = OpenEvent( EVENT_ALL_ACCESS, false, 
-				dataMemoryName + "_SERVER_READ" );
+			handle = OpenEvent(EVENT_ALL_ACCESS, false, 
+				dataMemoryName + "_SERVER_READ");
+#if NET20
+            serverRead.SafeWaitHandle = new SafeWaitHandle(handle, true);
+#else
+			serverRead.Handle = handle;
+#endif
 
 			clientWrote = new AutoResetEvent(false);
-			clientWrote.Handle = OpenEvent( EVENT_ALL_ACCESS, false, 
-				dataMemoryName + "_CLIENT_WROTE" );
+			handle = OpenEvent(EVENT_ALL_ACCESS, false, 
+				dataMemoryName + "_CLIENT_WROTE");
+#if NET20
+            clientWrote.SafeWaitHandle = new SafeWaitHandle(handle, true);
+#else
+			clientWrote.Handle = handle;
+#endif
 
 			clientRead = new AutoResetEvent(false);
-			clientRead.Handle = OpenEvent( EVENT_ALL_ACCESS, false, 
-				dataMemoryName + "_CLIENT_READ" );
+			handle = OpenEvent(EVENT_ALL_ACCESS, false, 
+				dataMemoryName + "_CLIENT_READ");
+#if NET20
+            clientRead.SafeWaitHandle = new SafeWaitHandle(handle, true);
+#else
+			clientRead.Handle = handle;
+#endif
 
 			// tell the server we are ready
 			serverRead.Set();
@@ -145,7 +178,7 @@ namespace MySql.Data.MySqlClient
 
 		public override void Flush()
 		{
-			FlushViewOfFile( dataView, 0 );
+			FlushViewOfFile(dataView, 0);
 		}
 
 		public bool IsClosed() 
@@ -171,19 +204,19 @@ namespace MySql.Data.MySqlClient
 					if (IsClosed()) return 0;
 				}
 
-				bytesLeft = Marshal.ReadInt32( dataView );
+				bytesLeft = Marshal.ReadInt32(dataView);
 				position = 4;
 			}
 
-			int len = Math.Min( count, bytesLeft );
+			int len = Math.Min(count, bytesLeft);
 			long baseMem = dataView.ToInt64() + position;
 
 			for (int i=0; i < len; i++, position++)
-				buffer[offset+i] = Marshal.ReadByte( (IntPtr)( baseMem + i ) );
+				buffer[offset+i] = Marshal.ReadByte((IntPtr)( baseMem + i ));
 
 			bytesLeft -= len;
 
-			if ( bytesLeft == 0)
+			if (bytesLeft == 0)
 				clientRead.Set();
 
 			return len;
@@ -204,12 +237,12 @@ namespace MySql.Data.MySqlClient
 				if (! serverRead.WaitOne()) 
 					throw new MySqlException("Writing to shared memory failed");
 
-				int bytesToDo = Math.Min( leftToDo, BUFFERLENGTH );
+				int bytesToDo = Math.Min(leftToDo, BUFFERLENGTH);
 
 				long baseMem = dataView.ToInt64() + 4;
-				Marshal.WriteInt32( dataView, bytesToDo );
+				Marshal.WriteInt32(dataView, bytesToDo);
 				for (int i=0; i < bytesToDo; i++, buffPos++)
-					Marshal.WriteByte( (IntPtr)(baseMem + i), buffer[ buffPos ] );
+					Marshal.WriteByte( (IntPtr)(baseMem + i), buffer[ buffPos ]);
 				leftToDo -= bytesToDo;
 				if (! clientWrote.Set())
 					throw new MySqlException("Writing to shared memory failed");
