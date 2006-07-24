@@ -44,7 +44,7 @@
 		<property name="outdir" value="bin/${framework}/${buildType}"/>
 		
 		<mkdir dir="${outdir}" failonerror="false"/>
-		<resgen input="mysqlclient/Strings.resx" output="mysqlclient/Strings.resources"/>
+		<resgen input="mysqlclient/Resources.resx" output="mysqlclient/Resources.resources"/>
 		<csc output="${outdir}/MySql.Data.dll" target="library" 
 			define="${defines}" debug="${debug}" optimize="${opt}"
 			doc="${outdir}/MySql.Data.xml">
