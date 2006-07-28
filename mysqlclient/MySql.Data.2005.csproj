@@ -1,0 +1,206 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>MySql.Data</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>MySql.Data.MySqlClient</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\net-2.0\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE;DEBUG;WINDOWS NET20</DefineConstants>
+    <DocumentationFile>doc.xml</DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\net-2.0\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE;WINDOWS NET20</DefineConstants>
+    <DocumentationFile>doc.xml</DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.81.0.1407, Culture=neutral, PublicKeyToken=1b03e6acf1164f73">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Design">
+      <Name>System.Design</Name>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\CHANGES" />
+    <None Include="..\README" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="CharSetMap.cs" />
+    <Compile Include="command.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CommandBuilder.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="common\ContextString.cs" />
+    <Compile Include="common\NamedPipeStream.cs" />
+    <Compile Include="common\NativeMethods.cs" />
+    <Compile Include="common\Platform.cs" />
+    <Compile Include="common\Resources.cs" />
+    <Compile Include="common\SHA1.cs" />
+    <Compile Include="common\SharedMemoryStream.cs" />
+    <Compile Include="common\SocketStream.cs" />
+    <Compile Include="common\StreamCreator.cs" />
+    <Compile Include="common\Version.cs" />
+    <Compile Include="common\WinCE.cs" />
+    <Compile Include="CompressedStream.cs" />
+    <Compile Include="Connection.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Crypt.cs" />
+    <Compile Include="dataadapter.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="datareader.cs" />
+    <Compile Include="Driver.cs" />
+    <Compile Include="Exception.cs" />
+    <Compile Include="Field.cs" />
+    <Compile Include="ISSchemaProvider.cs" />
+    <Compile Include="Logger.cs" />
+    <Compile Include="MySqlClientFactory.cs" />
+    <Compile Include="MySqlConnectionStringBuilder.cs" />
+    <Compile Include="MysqlDefs.cs" />
+    <Compile Include="MySqlError.cs" />
+    <Compile Include="MySqlHelper.cs" />
+    <Compile Include="MySqlPool.cs" />
+    <Compile Include="MySqlPoolManager.cs" />
+    <Compile Include="MySqlStream.cs" />
+    <Compile Include="MySqlStreamReader.cs" />
+    <Compile Include="MySqlStreamWriter.cs" />
+    <Compile Include="NativeDriver.cs" />
+    <Compile Include="parameter.cs" />
+    <Compile Include="parameter_collection.cs" />
+    <Compile Include="PerformanceMonitor.cs" />
+    <Compile Include="PreparedStatement.cs" />
+    <Compile Include="ProcedureCache.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="SchemaProvider.cs" />
+    <Compile Include="Statement.cs" />
+    <Compile Include="StoredProcedure.cs" />
+    <Compile Include="transaction.cs" />
+    <Compile Include="Types\MetaData.cs" />
+    <Compile Include="Types\MySqlBinary.cs" />
+    <Compile Include="Types\MySqlBit.cs" />
+    <Compile Include="Types\MySqlByte.cs" />
+    <Compile Include="Types\MySqlConversionException.cs" />
+    <Compile Include="Types\MySqlDateTime.cs" />
+    <Compile Include="Types\MySqlDecimal.cs" />
+    <Compile Include="Types\MySqlDouble.cs" />
+    <Compile Include="Types\MySqlInt16.cs" />
+    <Compile Include="Types\MySqlInt32.cs" />
+    <Compile Include="Types\MySqlInt64.cs" />
+    <Compile Include="Types\MySqlSingle.cs" />
+    <Compile Include="Types\MySqlString.cs" />
+    <Compile Include="Types\MySqlTime.cs" />
+    <Compile Include="Types\MySqlUByte.cs" />
+    <Compile Include="Types\MySqlUInt16.cs" />
+    <Compile Include="Types\MySqlUInt32.cs" />
+    <Compile Include="Types\MySqlUInt64.cs" />
+    <Compile Include="Types\MySqlValue.cs" />
+    <Compile Include="Types\NumberFormat.cs" />
+    <Compile Include="UsageAdvisor.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="docs\MySqlCommand.xml" />
+    <Content Include="docs\MySqlCommandBuilder.xml" />
+    <Content Include="docs\MySqlConnection.xml" />
+    <Content Include="docs\MySqlConnectionStringBuilder.xml" />
+    <Content Include="docs\MySqlDataAdapter.xml" />
+    <Content Include="docs\MySqlDataReader.xml" />
+    <Content Include="docs\MySqlException.xml" />
+    <Content Include="docs\MySqlHelper.xml" />
+    <Content Include="docs\MySqlParameter.xml" />
+    <Content Include="docs\MySqlParameterCollection.xml" />
+    <Content Include="docs\MySqlTransaction.xml" />
+    <Content Include="ReservedWords.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>
