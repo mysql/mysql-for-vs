@@ -75,21 +75,21 @@ namespace MySql.Data.MySqlClient
 		{
 			// make sure we were called properly
 			if (fromIndex < 0 || fromIndex >= from.Length)
-				throw new ArgumentException(Resources.GetString("IndexMustBeValid"), "fromIndex");
+				throw new ArgumentException(Resources.IndexMustBeValid, "fromIndex");
 			if ((fromIndex + length) > from.Length)
-				throw new ArgumentException(Resources.GetString("FromAndLengthTooBig"), "fromIndex" );
+				throw new ArgumentException(Resources.FromAndLengthTooBig, "fromIndex" );
 			if (from == null) 
-				throw new ArgumentException(Resources.GetString("BufferCannotBeNull"), "from");
+				throw new ArgumentException(Resources.BufferCannotBeNull, "from");
 			if (to == null) 
-				throw new ArgumentException(Resources.GetString("BufferCannotBeNull"), "to");
+				throw new ArgumentException(Resources.BufferCannotBeNull, "to");
 			if (toIndex < 0 || toIndex >= to.Length)
-				throw new ArgumentException(Resources.GetString("IndexMustBeValid"), "toIndex" );
+				throw new ArgumentException(Resources.IndexMustBeValid, "toIndex" );
 			if ((toIndex + length) > to.Length)
-				throw new ArgumentException(Resources.GetString("IndexAndLengthTooBig"), "toIndex" );
+				throw new ArgumentException(Resources.IndexAndLengthTooBig, "toIndex" );
 			if (password == null || password.Length < length) 
-				throw new ArgumentException(Resources.GetString("PasswordMustHaveLegalChars"), "password");
+				throw new ArgumentException(Resources.PasswordMustHaveLegalChars, "password");
 			if (length < 0) 
-				throw new ArgumentException(Resources.GetString("ParameterCannotBeNegative"), "count");
+				throw new ArgumentException(Resources.ParameterCannotBeNegative, "count");
 
 			// now perform the work
 			for (int i=0; i < length; i++)

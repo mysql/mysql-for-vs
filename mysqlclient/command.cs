@@ -49,7 +49,6 @@ namespace MySql.Data.MySqlClient
         private bool                designTimeVisible;
         internal Int64 lastInsertedId;
         private Statement statement;
-        private MySqlCommandType mysqlCmdType;
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ctor1/*'/>
 		public MySqlCommand()
@@ -105,14 +104,18 @@ namespace MySql.Data.MySqlClient
 		public override string CommandText
 		{
 			get { return cmdText; }
-			set { cmdText = value;  statement=null; }
-		}
+			set 
+            { 
+                cmdText = value;  
+                statement=null;
+                if (cmdText.EndsWith("DEFAULT VALUES"))
+                {
+                    cmdText = cmdText.Substring(0, cmdText.Length - 14);
+                    cmdText = cmdText + "() VALUES ()";
+                }
 
-        public MySqlCommandType MySqlCommandType
-        {
-            get { return mysqlCmdType; }
-            set { mysqlCmdType = value; SyncCommandType(false); }
-        }
+            }
+		}
 
 		internal int UpdateCount 
 		{
@@ -447,6 +450,12 @@ namespace MySql.Data.MySqlClient
             }
 
             return (int)this.updatedRowCount;*/
+        }
+
+        internal void Close()
+        {
+            if (statement != null)
+                statement.Close();
         }
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ExecuteReader/*'/>

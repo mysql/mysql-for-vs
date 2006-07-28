@@ -36,6 +36,12 @@ namespace MySql.Data.Common
             this.escapeBackslash = escapeBackslash;
 		}
 
+        public string ContextMarkers
+        {
+            get { return contextMarkers; }
+            set { contextMarkers = value; }
+        }
+
         public int IndexOf(string src, char target)
         {
             char contextMarker = Char.MinValue;
@@ -91,16 +97,26 @@ namespace MySql.Data.Common
 				else 
 				{
 					int contextIndex = contextMarkers.IndexOf(c);
-                    if (contextIndex > -1 && contextMarker != Char.MinValue)
-                        contextIndex++;
-
-					// if we have found the closing marker for our open marker, then close the context
-					if ((contextIndex % 2) == 1 && contextMarker == contextMarkers[contextIndex-1] && !escaped)
-						contextMarker = Char.MinValue;
-
-					// if we have found a context marker and we are not in a context yet, then start one
-					else if (contextMarker == Char.MinValue && (contextMarkers.IndexOf(c) % 2 == 0) && !escaped)
-						contextMarker = c;
+                    if (!escaped && contextIndex != -1)
+                    {
+                        // if we have found the closing marker for our open 
+                        // marker, then close the context
+                        if ((contextIndex % 2) == 1)
+                        {
+                            if (contextMarker == contextMarkers[contextIndex - 1])
+                                contextMarker = Char.MinValue;
+                        }
+                        else
+                        {
+                            // if the opening and closing context markers are 
+                            // the same then we will always find the opening
+                            // marker.
+                            if (contextMarker == contextMarkers[contextIndex + 1])
+                                contextMarker = Char.MinValue;
+                            else if (contextMarker == Char.MinValue)
+                                contextMarker = c;
+                        }
+                    }
 
 					sb.Append( c );
 				}

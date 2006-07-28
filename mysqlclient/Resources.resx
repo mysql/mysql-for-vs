@@ -234,4 +234,22 @@
   <data name="UnableToExecuteSP" xml:space="preserve">
     <value>Unable to execute stored procedure '{0}'.</value>
   </data>
+  <data name="ProcAndFuncSameName" xml:space="preserve">
+    <value>same name are not supported.</value>
+  </data>
+  <data name="KeywordNoNull" xml:space="preserve">
+    <value>Keyword does not allow null values.</value>
+  </data>
+  <data name="ImproperValueFormat" xml:space="preserve">
+    <value>Value has an unsupported format.</value>
+  </data>
+  <data name="InvalidProcName" xml:space="preserve">
+    <value>Procedure or function '{0}' cannot be found in database '{1}'.</value>
+  </data>
+  <data name="HardProcQuery" xml:space="preserve">
+    <value>Retrieving procedure metadata for {0} from server.</value>
+  </data>
+  <data name="SoftProcQuery" xml:space="preserve">
+    <value>Retrieving procedure metadata for {0} from procedure cache.</value>
+  </data>
 </root>

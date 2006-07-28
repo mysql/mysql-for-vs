@@ -133,10 +133,7 @@ namespace MySql.Data.MySqlClient
 					"prior to 5.0");
             StoredProcedure sp = new StoredProcedure(command.Connection, "");
 
-            string spType = "PROCEDURE";
             string schema = command.Connection.Database;
-            if (command.MySqlCommandType == MySqlCommandType.StoredFunction)
-                spType = "FUNCTION";
             string spName = command.CommandText;
             int dotIndex = spName.IndexOf('.');
             if (dotIndex != -1)
@@ -149,7 +146,6 @@ namespace MySql.Data.MySqlClient
             string[] restrictions = new string[5];
             restrictions[1] = schema;
             restrictions[2] = spName;
-            restrictions[3] = spType;
             DataTable parameters = command.Connection.GetSchema(
                 "procedure parameters", restrictions);
 
@@ -162,12 +158,12 @@ namespace MySql.Data.MySqlClient
                     row["IS_RESULT"].ToString());
                 p.MySqlDbType = MetaData.NameToType(row["DATA_TYPE"].ToString(),
                     false, false, command.Connection);
-                if (row["CHARACTER_MAXIMUM_LENGTH"] != null)
+                if (!row["CHARACTER_MAXIMUM_LENGTH"].Equals(DBNull.Value))
                     p.Size = (int)row["CHARACTER_MAXIMUM_LENGTH"];
-                if (row["NUMERIC_PRECISION"] != null)
-                    p.Precision = (byte)(int)row["NUMERIC_PRECISION"];
-                if (row["NUMERIC_SCALE"] != null)
-                    p.Scale = (byte)row["NUMERIC_SCALE"];
+                if (!row["NUMERIC_PRECISION"].Equals(DBNull.Value))
+                    p.Precision = (byte)row["NUMERIC_PRECISION"];
+                if (!row["NUMERIC_SCALE"].Equals(DBNull.Value))
+                    p.Scale = (byte)(int)row["NUMERIC_SCALE"];
                 command.Parameters.Add(p);
             }
         }
@@ -195,7 +191,7 @@ namespace MySql.Data.MySqlClient
 
         public new MySqlCommand GetInsertCommand()
         {
-            return (MySqlCommand)base.GetInsertCommand();
+            return (MySqlCommand)GetInsertCommand(false);
         }
 
 /*		/// <include file='docs/MySqlCommandBuilder.xml' path='docs/GetDeleteCommand/*'/>
@@ -239,9 +235,9 @@ namespace MySql.Data.MySqlClient
 		private void GenerateSchema()
 		{
             if (DataAdapter == null)
-				throw new MySqlException(Resources.GetString("AdapterIsNull"));
+				throw new MySqlException(Resources.AdapterIsNull);
             if (DataAdapter.SelectCommand == null)
-				throw new MySqlException(Resources.GetString("AdapterSelectIsNull"));
+				throw new MySqlException(Resources.AdapterSelectIsNull);
 
             // set the parameter marker
             MySqlConnection conn = (MySqlConnection)DataAdapter.SelectCommand.Connection;
@@ -268,12 +264,12 @@ namespace MySql.Data.MySqlClient
 					tableName = rowTableName;
 				}
 				else if (tableName != rowTableName && rowTableName != null && rowTableName.Length > 0)
-					throw new InvalidOperationException(Resources.GetString("CBMultiTableNotSupported"));
+					throw new InvalidOperationException(Resources.CBMultiTableNotSupported);
 				else if (schemaName != rowSchemaName && rowSchemaName != null && rowSchemaName.Length > 0)
-					throw new InvalidOperationException(Resources.GetString("CBMultiTableNotSupported"));
+					throw new InvalidOperationException(Resources.CBMultiTableNotSupported);
 			}
 			if (! hasKeyOrUnique)
-				throw new InvalidOperationException(Resources.GetString("CBNoKeyColumn"));
+				throw new InvalidOperationException(Resources.CBNoKeyColumn);
 		}
 
 		private string Quote(string table_or_column)

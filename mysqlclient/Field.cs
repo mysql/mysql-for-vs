@@ -69,8 +69,6 @@ namespace MySql.Data.MySqlClient
 		protected	MySqlDbType	mySqlDbType;
 		protected	DBVersion	connVersion;
 
-        //protected IMySqlValue rowValue;
-
 		#endregion
 
 		public MySqlField( DBVersion connVersion ) 
@@ -89,7 +87,6 @@ namespace MySql.Data.MySqlClient
 		public MySqlDbType	Type 
 		{
 			get { return mySqlDbType; }
-			set { mySqlDbType = value; }
 		}
 
 		public byte Precision
@@ -107,7 +104,6 @@ namespace MySql.Data.MySqlClient
 		public ColumnFlags Flags 
 		{ 
 			get { return colFlags; }
-			set { colFlags = value; }
 		}
 
 		public bool IsAutoIncrement
@@ -151,6 +147,27 @@ namespace MySql.Data.MySqlClient
 		}
 
 #endregion
+
+        public void SetTypeAndFlags(MySqlDbType type, ColumnFlags flags)
+        {
+            colFlags = flags;
+            mySqlDbType = type;
+            if (!IsUnsigned) return;
+
+            switch (type)
+            {
+                case MySqlDbType.Byte:
+                    mySqlDbType = MySqlDbType.UByte; break;
+                case MySqlDbType.Int16:
+                    mySqlDbType = MySqlDbType.UInt16; break;
+                case MySqlDbType.Int24:
+                    mySqlDbType = MySqlDbType.UInt24; break;
+                case MySqlDbType.Int32:
+                    mySqlDbType = MySqlDbType.UInt32; break;
+                case MySqlDbType.Int64:
+                    mySqlDbType = MySqlDbType.UInt64; break;
+            }
+        }
 
 		public IMySqlValue GetValueObject() 
 		{

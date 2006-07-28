@@ -92,7 +92,7 @@ namespace MySql.Data.MySqlClient
 
 		public override void SetLength(long value)
 		{
-			throw new NotSupportedException(Resources.GetString("CSNoSetLength"));
+			throw new NotSupportedException(Resources.CSNoSetLength);
 		}
 
 		public override int ReadByte()
@@ -105,14 +105,11 @@ namespace MySql.Data.MySqlClient
 		public override int Read(byte[] buffer, int offset, int count)
 		{
 			if (buffer == null)
-				throw new ArgumentNullException("buffer", 
-					Resources.GetString("BufferCannotBeNull"));
+				throw new ArgumentNullException("buffer", Resources.BufferCannotBeNull);
 			if (offset < 0 || offset >= buffer.Length)
-				throw new ArgumentOutOfRangeException("offset", 
-					Resources.GetString("OffsetMustBeValid"));
+				throw new ArgumentOutOfRangeException("offset", Resources.OffsetMustBeValid);
 			if ((offset + count) > buffer.Length)
-				throw new ArgumentException(Resources.GetString("BufferNotLargeEnough"),
-					"buffer");
+				throw new ArgumentException(Resources.BufferNotLargeEnough, "buffer");
 
 			EnsureData(count);
 

@@ -52,6 +52,10 @@ namespace MySql.Data.MySqlClient
             get { return statementId; }
         }
 
+        public virtual void Close()
+        {
+        }
+
         public virtual void Execute(MySqlParameterCollection parameters)
         {
             // we keep a reference to this until we are done
@@ -199,7 +203,9 @@ namespace MySql.Data.MySqlClient
                     sqlPart.Remove(0, sqlPart.Length);
                 }
                 else if (sqlPart.Length > 0 && sqlPart[0] == connection.ParameterMarker &&
-                    !Char.IsLetterOrDigit(c) && c != '_' && c != '.' && c != '$')
+                    !Char.IsLetterOrDigit(c) && c != '_' && c != '.' && c != '$' &&
+                    ((c != '@' && c != connection.ParameterMarker) &&
+                     (c != '?' && c != connection.ParameterMarker)))
                 {
                     tokens.Add(sqlPart.ToString());
                     sqlPart.Remove(0, sqlPart.Length);

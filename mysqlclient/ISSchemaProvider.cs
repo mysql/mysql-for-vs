@@ -87,6 +87,7 @@ namespace MySql.Data.MySqlClient
             keys[0] = "SCHEMA_NAME";
             DataTable dt = Query("SCHEMATA", "", keys, restrictions);
             dt.Columns[1].ColumnName = "database_name";
+            dt.TableName = "Databases";
             return dt;
         }
 
@@ -97,7 +98,9 @@ namespace MySql.Data.MySqlClient
             keys[1] = "TABLE_SCHEMA";
             keys[2] = "TABLE_NAME";
             keys[3] = "TABLE_TYPE";
-            return Query("TABLES", "TABLE_TYPE != 'VIEW'", keys, restrictions);
+            DataTable dt = Query("TABLES", "TABLE_TYPE != 'VIEW'", keys, restrictions);
+            dt.TableName = "Tables";
+            return dt;
         }
 
         public override DataTable GetColumns(string[] restrictions)
@@ -109,6 +112,7 @@ namespace MySql.Data.MySqlClient
             keys[3] = "COLUMN_NAME";
             DataTable dt = Query("COLUMNS", null, keys, restrictions);
             dt.Columns.Remove("CHARACTER_OCTET_LENGTH");
+            dt.TableName = "Columns";
             return dt;
         }
 
@@ -118,7 +122,8 @@ namespace MySql.Data.MySqlClient
             keys[0] = "TABLE_CATALOG";
             keys[1] = "TABLE_SCHEMA";
             keys[2] = "TABLE_NAME";
-            return Query("VIEWS", null, keys, restrictions);
+            DataTable dt = Query("VIEWS", null, keys, restrictions);
+            return dt;
         }
 
         private DataTable GetViewColumns(string[] restrictions)
@@ -156,7 +161,8 @@ namespace MySql.Data.MySqlClient
             keys[1] = "TRIGGER_SCHEMA";
             keys[2] = "TRIGGER_NAME";
             keys[3] = "EVENT_OBJECT_TABLE";
-            return Query("TRIGGERS", null, keys, restrictions);
+            DataTable dt = Query("TRIGGERS", null, keys, restrictions);
+            return dt;
         }
 
         /// <summary>
@@ -173,7 +179,9 @@ namespace MySql.Data.MySqlClient
             keys[1] = "ROUTINE_SCHEMA";
             keys[2] = "ROUTINE_NAME";
             keys[3] = "ROUTINE_TYPE";
-            return Query("ROUTINES", null, keys, restrictions);
+            DataTable dt = Query("ROUTINES", null, keys, restrictions);
+            dt.TableName = "Procedures";
+            return dt;
         }
 
         /// <summary>
@@ -181,9 +189,8 @@ namespace MySql.Data.MySqlClient
         /// Restrictions supported are:
         /// schema, name, type, parameter name
         /// </summary>
-        /// <param name="restrictions"></param>
-        /// <returns></returns>
-        public virtual DataTable GetProcedureParameters(string[] restrictions)
+        public virtual DataTable GetProcedureParameters(string[] restrictions,
+            DataTable routines)
         {
             DataTable dt = new DataTable("Procedure Parameters");
             dt.Columns.Add("ROUTINE_CATALOG", typeof(string));
@@ -194,22 +201,15 @@ namespace MySql.Data.MySqlClient
             dt.Columns.Add("PARAMETER_MODE", typeof(string));
             dt.Columns.Add("IS_RESULT", typeof(string));
             dt.Columns.Add("DATA_TYPE", typeof(string));
+            dt.Columns.Add("FLAGS", typeof(string));
             dt.Columns.Add("CHARACTER_SET", typeof(string));
             dt.Columns.Add("CHARACTER_MAXIMUM_LENGTH", typeof(Int32));
             dt.Columns.Add("NUMERIC_PRECISION", typeof(byte));
             dt.Columns.Add("NUMERIC_SCALE", typeof(Int32));
 
-
-            // first try and get parameter information from mysql.proc
-            // since that will be faster.
-            // Fall back to show create since that requires lesser privs
             try
             {
-//                GetParametersFromMySqlProc(dt, restrictions);
-    //        }
-      //      catch (MySqlException)
-        //    {
-                GetParametersFromShowCreate(dt, restrictions);
+                GetParametersFromShowCreate(dt, restrictions, routines);
             }
             catch (Exception)
             {
@@ -232,7 +232,7 @@ namespace MySql.Data.MySqlClient
                 case "procedures":
                     return GetProcedures(restrictions);
                 case "procedure parameters":
-                    return GetProcedureParameters(restrictions);
+                    return GetProcedureParameters(restrictions, null);
                 case "triggers":
                     return GetTriggers(restrictions);
                 case "viewcolumns":
@@ -248,13 +248,14 @@ namespace MySql.Data.MySqlClient
             StringBuilder query = new StringBuilder("SELECT * FROM INFORMATION_SCHEMA.");
             query.Append(table_name);
 
-            for (int i = 0; i < values.Length; i++)
-            {
-                if (values[i] == null || values[i] == String.Empty) continue;
-                if (where.Length > 0)
-                    where.Append(" AND ");
-                where.AppendFormat("{0}='{1}'", keys[i], values[i]);
-            }
+            if (values != null)
+                for (int i = 0; i < values.Length; i++)
+                {
+                    if (values[i] == null || values[i] == String.Empty) continue;
+                    if (where.Length > 0)
+                        where.Append(" AND ");
+                    where.AppendFormat("{0}='{1}'", keys[i], values[i]);
+                }
 
             if (where.Length > 0)
                 query.AppendFormat(" WHERE {0}", where.ToString());
@@ -325,10 +326,14 @@ namespace MySql.Data.MySqlClient
             }
         }
         */
-        private void GetParametersFromShowCreate(DataTable parametersTable,
-            string[] restrictions)
+        internal void GetParametersFromShowCreate(DataTable parametersTable,
+            string[] restrictions, DataTable routines)
         {
-            DataTable routines = GetSchema("procedures", restrictions);
+            // this allows us to pass in a pre-populated routines table
+            // and avoid the querying for them again.
+            // we use this when calling a procedure or function
+            if (routines == null)
+                routines = GetSchema("procedures", restrictions);
 
             MySqlCommand cmd = connection.CreateCommand();
             MySqlDataReader reader = null;
@@ -415,19 +420,19 @@ namespace MySql.Data.MySqlClient
             string parms = body.Substring(0, rightParen).Trim();
 
             quotePattern += "()";
+            cs.ContextMarkers = quotePattern;
             string[] paramDefs = cs.Split(parms, ",");
             ArrayList parmArray = new ArrayList(paramDefs);
             body = body.Substring(rightParen + 1).Trim().ToLower(CultureInfo.InvariantCulture);
             if (body.StartsWith("returns"))
                 parmArray.Add(body);
             int pos = 1;
-            foreach (string def in paramDefs)
+            foreach (string def in parmArray)
             {
                 DataRow parmRow = parametersTable.NewRow();
                 parmRow["ROUTINE_CATALOG"] = null;
                 parmRow["ROUTINE_SCHEMA"] = row["ROUTINE_SCHEMA"];
                 parmRow["ROUTINE_NAME"] = row["ROUTINE_NAME"];
-                parmRow["ORDINAL_POSITION"] = pos++;
                 ParseParameter(def, cs, sqlMode, parmRow);
                 if (parmRow["IS_RESULT"].Equals("YES"))
                     parmRow["ORDINAL_POSITION"] = 0;
@@ -447,15 +452,11 @@ namespace MySql.Data.MySqlClient
             string lowerDef = parmDef.ToLower(CultureInfo.InvariantCulture);
 
             parmRow["IS_RESULT"] = "NO";
+            parmRow["PARAMETER_MODE"] = "IN";
             if (lowerDef.StartsWith("inout "))
             {
                 parmRow["PARAMETER_MODE"] = "INOUT";
                 parmDef = parmDef.Substring(6);
-            }
-            else if (lowerDef.StartsWith("in "))
-            {
-                parmRow["PARAMETER_MODE"] = "IN";
-                parmDef = parmDef.Substring(3);
             }
             else if (lowerDef.StartsWith("out "))
             {
@@ -468,6 +469,8 @@ namespace MySql.Data.MySqlClient
                 parmRow["IS_RESULT"] = "YES";
                 parmDef = parmDef.Substring(8);
             }
+            else if (lowerDef.StartsWith("in "))
+                parmDef = parmDef.Substring(3);
             parmDef = parmDef.Trim();
 
             string[] split = cs.Split(parmDef, " \t\r\n");
@@ -491,31 +494,36 @@ namespace MySql.Data.MySqlClient
         private void ParseType(string type, string sql_mode, DataRow parmRow)
         {
             string typeName, flags = String.Empty, size;
-            int end;
+            int endExtra;
             string rest = null;
 
             type = type.ToLower(CultureInfo.InvariantCulture).Trim();
-            int start = type.IndexOf("(");
-            if (start != -1)
-                end = type.IndexOf(')', start + 1);
+            int startExtra = type.IndexOf("(");
+            if (startExtra != -1)
+                endExtra = type.IndexOf(')', startExtra + 1);
             else
-                end = start = type.IndexOf(' ');
-            if (start == -1)
-                start = type.Length;
+                endExtra = startExtra = type.IndexOf(' ');
+            if (startExtra == -1)
+                startExtra = type.Length;
+            if (endExtra == -1)
+                endExtra = type.Length;
 
-            typeName = type.Substring(0, start);
-            rest = type.Substring(end).Trim();
+            typeName = type.Substring(0, startExtra);
+            rest = type.Substring(endExtra).Trim();
 
-            if (end != -1)
-                flags = type.Substring(end + 1);
-            bool unsigned = flags.IndexOf("unsigned") != -1;
+            if (type.Length > endExtra)
+            {
+                flags = type.Substring(endExtra + 1);
+                if (flags.IndexOf("unsigned") != -1)
+                    parmRow["FLAGS"] = "UNSIGNED";
+            }
             bool real_as_float = sql_mode.IndexOf("REAL_AS_FLOAT") != -1;
 
             parmRow["DATA_TYPE"] = typeName;
 
-            if (end > start && typeName != "set")
+            if (endExtra > startExtra && typeName != "set")
             {
-                size = type.Substring(start + 1, end - (start + 1));
+                size = type.Substring(startExtra + 1, endExtra - (startExtra + 1));
                 string[] parts = size.Split(new char[] { ',' });
                 if (typeName == "varchar" || typeName == "char")
                     parmRow["CHARACTER_MAXIMUM_LENGTH"] = Int32.Parse(parts[0]);
@@ -529,8 +537,10 @@ namespace MySql.Data.MySqlClient
             if (rest.StartsWith("character set"))
             {
                 rest = rest.Substring(14);
-                start = rest.IndexOf(' ');
-                parmRow["CHARACTER_SET"] = rest.Substring(0, start);
+                startExtra = rest.IndexOf(' ');
+                if (startExtra == -1)
+                    startExtra = rest.Length;
+                parmRow["CHARACTER_SET"] = rest.Substring(0, startExtra);
             }
         }
 

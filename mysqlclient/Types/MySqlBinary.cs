@@ -101,18 +101,22 @@ namespace MySql.Data.Types
 				buffToWrite = (byte[])val;
 			else if (val is String) 
 			{
-				string s = (val as string).Substring(0, length);
+                string s = (val as string);
+                if (length == 0)
+                    length = s.Length;
+                else
+				    s = s.Substring(0, length);
 				buffToWrite = writer.Encoding.GetBytes(s);
-				length = buffToWrite.Length;
 			}
 			else if (val is Char[]) 
-			{
 				buffToWrite = writer.Encoding.GetBytes(val as char[]);
-				length = buffToWrite.Length;
-			}
 
-			if ( buffToWrite == null )
-				throw new MySqlException( "Only byte arrays and strings can be serialized by MySqlBinary" );
+            // we assume zero length means write all of the value
+            if (length == 0)
+                length = buffToWrite.Length;
+
+			if (buffToWrite == null)
+				throw new MySqlException("Only byte arrays and strings can be serialized by MySqlBinary");
 
 			if (binary) 
 			{
@@ -122,10 +126,10 @@ namespace MySql.Data.Types
 			else 
 			{
 				if (writer.Version.isAtLeast(4,1,0))
-					writer.WriteStringNoNull( "_binary " );
+					writer.WriteStringNoNull("_binary ");
 
-				writer.WriteByte( (byte)'\'');
-				EscapeByteArray( buffToWrite, length, writer );
+				writer.WriteByte((byte)'\'');
+				EscapeByteArray(buffToWrite, length, writer);
 				writer.WriteByte((byte)'\'');
 			}	
 		}

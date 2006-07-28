@@ -395,8 +395,7 @@ namespace MySql.Data.MySqlClient
         private void CheckNullAndSet(string keyword, object value)
         {
             if (value == null)
-                throw new ArgumentException(
-                    Resources.GetString("KeywordNoNull"), keyword);
+                throw new ArgumentException(Resources.KeywordNoNull, keyword);
             base[keyword] = value;
         }
 
@@ -409,8 +408,7 @@ namespace MySql.Data.MySqlClient
             }
             catch (InvalidCastException)
             {
-                throw new ArgumentException(
-                    Resources.GetString("UnableToConvertValueToUInt"), value.ToString());
+                throw new ArgumentException(Resources.ImproperValueFormat, value.ToString());
             }
         }
 
@@ -421,8 +419,7 @@ namespace MySql.Data.MySqlClient
                 string s = value.ToString().ToLower();
                 if (s == "yes" || s == "true") return true;
                 if (s == "no" || s == "false") return false;
-                throw new ArgumentException(
-                    Resources.GetString("UnableToConvertValueToBool"), (string)value);
+                throw new ArgumentException(Resources.ImproperValueFormat, (string)value);
             }
             else
             {
@@ -433,8 +430,7 @@ namespace MySql.Data.MySqlClient
                 }
                 catch (InvalidCastException)
                 {
-                    throw new ArgumentException(
-                        Resources.GetString("UnableToConvertValueToBool"), value.ToString());
+                    throw new ArgumentException(Resources.ImproperValueFormat, value.ToString());
                 }
             }
         }
@@ -462,8 +458,7 @@ namespace MySql.Data.MySqlClient
                         return MySqlConnectionProtocol.SharedMemory;
                 }
             }
-            throw new ArgumentException(
-                Resources.GetString("UnableToConvertToProtocol"), value.ToString());
+            throw new ArgumentException(Resources.ImproperValueFormat, value.ToString());
         }
 
         private MySqlDriverType ConvertToDriverType(object value)
@@ -471,8 +466,7 @@ namespace MySql.Data.MySqlClient
             if (value is string)
                 return (MySqlDriverType)Enum.Parse(
                     typeof(MySqlDriverType), (value as string), true);
-            throw new ArgumentException(
-                Resources.GetString("UnableToConvertToDriverType"), value.ToString());
+            throw new ArgumentException(Resources.ImproperValueFormat, value.ToString());
         }
 
         #endregion
@@ -597,8 +591,7 @@ namespace MySql.Data.MySqlClient
                 case "connection reset":
                     return Keyword.ConnectionReset;
             }
-            throw new ArgumentException(Resources.GetString("KeywordNotSupported"),
-                key);
+            throw new ArgumentException(Resources.KeywordNotSupported, key);
         }
 
         private object GetValue(Keyword kw)

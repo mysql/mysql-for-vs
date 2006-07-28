@@ -60,9 +60,15 @@ namespace MySql.Data.MySqlClient
             {
                 ds = AddNew(conn, spName);
                 conn.PerfMonitor.AddHardProcedureQuery();
+                Logger.LogInformation(String.Format(
+                    Resources.HardProcQuery, spName));
             }
             else
+            {
                 conn.PerfMonitor.AddSoftProcedureQuery();
+                Logger.LogInformation(String.Format(
+                    Resources.SoftProcQuery, spName));
+            }
             return ds;
         }
 
@@ -100,9 +106,18 @@ namespace MySql.Data.MySqlClient
             restrictions[1] = schema;
             restrictions[2] = name;
             DataTable procTable = connection.GetSchema("procedures", restrictions);
+            if (procTable.Rows.Count > 1)
+                throw new InvalidOperationException(Resources.ProcAndFuncSameName);
+            if (procTable.Rows.Count == 0)
+                throw new InvalidOperationException(
+                    String.Format(Resources.InvalidProcName, name, schema));
 
-            DataTable parametersTable = connection.GetSchema("procedure parameters",
-                restrictions);
+            // we don't use GetSchema here because that would cause another
+            // query of procedures and we don't need that since we already
+            // know the procedure we care about.
+            ISSchemaProvider isp = new ISSchemaProvider(connection);
+            DataTable parametersTable = isp.GetProcedureParameters(
+                restrictions, procTable);
 
             DataSet ds = new DataSet();
             ds.Tables.Add(procTable);

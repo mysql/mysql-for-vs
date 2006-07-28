@@ -21,6 +21,7 @@
 using System;
 using System.Data;
 using MySql.Data.MySqlClient;
+using System.Globalization;
 
 namespace MySql.Data.Types
 {
@@ -91,10 +92,13 @@ namespace MySql.Data.Types
 		{
 			if (nullVal) return new MySqlByte(true);
 
-			if (length == -1) 
-				return new MySqlByte((sbyte)reader.ReadByte());
-			else 
-				return new MySqlByte(SByte.Parse(reader.ReadString(length)));
+            if (length == -1)
+                return new MySqlByte((sbyte)reader.ReadByte());
+            else
+            {
+                string s = reader.ReadString(length);
+                return new MySqlByte(SByte.Parse(s, CultureInfo.InvariantCulture));
+            }
 		}
 
 		void IMySqlValue.SkipValue(MySqlStreamReader reader)

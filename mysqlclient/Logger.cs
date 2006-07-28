@@ -36,7 +36,7 @@ namespace MySql.Data.MySqlClient
 		static public void LogCommand( DBCmd cmd, string text)
 		{
 			if (text.Length > 300)
-				text = text.Substring( 0, 300 );
+				text = text.Substring(0, 300);
 
 			string msg = String.Format("Executing command {0} with text ='{1}'",
 				cmd.ToString(), text);
@@ -50,10 +50,10 @@ namespace MySql.Data.MySqlClient
             Trace.WriteLine(msg);
         }
 
-		static public void LogException( Exception ex )
+		static public void LogException(Exception ex)
 		{
 			string msg = String.Format("EXCEPTION: " + ex.Message);
-			WriteLine( msg );
+			WriteLine(msg);
 		}
 
 		static public void LogWarning(string s)

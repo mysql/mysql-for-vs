@@ -247,7 +247,7 @@ namespace MySql.Data.MySqlClient
 		{
 			//TODO: check note in help
 			if (State != ConnectionState.Open)
-				throw new InvalidOperationException(Resources.GetString("ConnectionNotOpen"));
+				throw new InvalidOperationException(Resources.ConnectionNotOpen);
 
 			MySqlTransaction t = new MySqlTransaction(this, iso);
 
@@ -265,7 +265,7 @@ namespace MySql.Data.MySqlClient
 				case IsolationLevel.Serializable:
 					cmd.CommandText += "SERIALIZABLE"; break;
 				case IsolationLevel.Chaos:
-					throw new NotSupportedException(Resources.GetString("ChaosNotSupported"));
+					throw new NotSupportedException(Resources.ChaosNotSupported);
 			}
 
 			cmd.ExecuteNonQuery();
@@ -282,12 +282,10 @@ namespace MySql.Data.MySqlClient
 		public override void ChangeDatabase(string database)
 		{
             if (database == null || database.Trim().Length == 0)
-				throw new ArgumentException(
-					Resources.GetString("ParameterIsInvalid"), "database");
+				throw new ArgumentException(Resources.ParameterIsInvalid, "database");
 
 			if (State != ConnectionState.Open)
-				throw new InvalidOperationException(
-					Resources.GetString("ConnectionNotOpen"));
+				throw new InvalidOperationException(Resources.ConnectionNotOpen);
 
 			driver.SetDatabase( database );
 			settings.Database = database;
@@ -309,6 +307,8 @@ namespace MySql.Data.MySqlClient
 		public bool Ping() 
 		{
 			bool result = driver.Ping();
+            if (!result)
+                SetState(ConnectionState.Closed);
 			return result;
 		}
 
@@ -316,8 +316,7 @@ namespace MySql.Data.MySqlClient
 		public override void Open()
 		{
             if (State == ConnectionState.Open)
-				throw new InvalidOperationException(
-					Resources.GetString("ConnectionAlreadyOpen"));
+				throw new InvalidOperationException(Resources.ConnectionAlreadyOpen);
 
 			SetState(ConnectionState.Connecting);
 

@@ -1,7 +1,7 @@
 <project name="MySqlClient" default="allframeworks" xmlns="http://nant.sf.net/schemas/nant-0.84.win32.net-1.0.xsd">
 	<description>MySQLClient Managed Provider for MySQL</description>
 
-	<property name="nunit" value="C:\Program Files\NUnit"/>
+	<property name="nunit" value="C:\Program Files (x86)\NUnit"/>
 	<property name="ncover.executable" value="c:\program files\ncover\ncover.console.exe"/>
 	<property name="fxcop.executable" value="c:\program files\fxcop\fxcopcmd.exe"/>
 
@@ -41,7 +41,7 @@
 	<!-- core managed driver target -->	
 	<target name="client" description="Core client target">
 		<property name="nant.settings.currentframework" value="${framework}"/>
-		<property name="outdir" value="bin/${framework}/${buildType}"/>
+		<property name="outdir" value="mysqlclient/bin/${framework}/${buildType}"/>
 		
 		<mkdir dir="${outdir}" failonerror="false"/>
 		<resgen input="mysqlclient/Resources.resx" output="mysqlclient/Resources.resources"/>
@@ -49,8 +49,8 @@
 			define="${defines}" debug="${debug}" optimize="${opt}"
 			doc="${outdir}/MySql.Data.xml">
 			<arg value="/nowarn:0679,1591"/>
-			<resources prefix="MySql.Data.MySqlClient" dynamicprefix="true">
-				<include name="mysqlclient/Strings.resources"/>
+			<resources prefix="MySql.Data.MySqlClient" dynamicprefix="false">
+				<include name="mysqlclient/Resources.resources"/>
 			</resources>
 			<references>
 				<include name="ICSharpCode.SharpZipLib.dll"/>
@@ -69,6 +69,7 @@
 				<include name="System.Data.dll"/>		
 				<include name="System.Configuration.dll"/>
 				<include name="System.Drawing.dll"/>
+				<include name="System.Windows.Forms.dll"/>
 				<include name="${nunit-lib}/nunit.framework.dll"/>
 			</references>
 		</csc>

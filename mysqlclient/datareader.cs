@@ -36,7 +36,7 @@ namespace MySql.Data.MySqlClient
 		// Keep track of the results and position
 		// within the resultset (starts prior to first record).
 		private MySqlField[] fields;
-        private IMySqlValue[] values;
+        internal IMySqlValue[] values;
 		private CommandBehavior	commandBehavior;
 		private MySqlCommand command;
 		private bool canRead;
@@ -48,7 +48,7 @@ namespace MySql.Data.MySqlClient
         private Statement statement;
         private int seqIndex;
         private bool hasRead;
-//        private ServerStatusFlags serverFlags;
+        private bool nextResultDone;
 
 		/* 
 		 * Keep track of the connection in order to implement the
@@ -70,6 +70,7 @@ namespace MySql.Data.MySqlClient
             driver = connection.driver;
             affectedRows = -1;
             this.statement = statement;
+            nextResultDone = false;
         }
 
         #region Properties
@@ -133,7 +134,7 @@ namespace MySql.Data.MySqlClient
             // RecordsAffected returns the number of rows affected in batch
             // statments from insert/delete/update statments.  This property
             // is not completely accurate until .Close() has been called.
-            get { return (affectedRows >= 0) ? (int)(affectedRows + 1) : -1; }
+            get { return (int)affectedRows; }
         }
 
         /// <summary>
@@ -169,7 +170,16 @@ namespace MySql.Data.MySqlClient
             commandBehavior = CommandBehavior.Default;
 			connection.Reader = null;
 
-            while (NextResult()) { }
+            // we set the nextResultDone var to true inside NextResult when
+            // it returns false.  This allows us to avoid calling NextResult
+            // here unnecessarily.  Calling NextResult here will work but this
+            // is just an optimization.
+            if (!nextResultDone)
+                while (NextResult()) { }
+
+            // we now give the command a chance to terminate.  In the case of
+            // stored procedures it needs to update out and inout parameters
+            command.Close();
 
             if (shouldCloseConnection)
 				connection.Close();
@@ -313,23 +323,21 @@ namespace MySql.Data.MySqlClient
 		public override DateTime GetDateTime(int index)
 		{
 			IMySqlValue val = GetFieldValue(index);
-            if (val is MySqlDateTime)
+            MySqlDateTime dt;
+
+            // we need to do this because functions like date_add return string
+            if (val is MySqlString)
             {
-				MySqlDateTime dt = (MySqlDateTime)val;
-				if (connection.Settings.ConvertZeroDateTime && !dt.IsValidDateTime)
-					return DateTime.MinValue;
-//				else
-//					return dt.GetDateTime();
-			}
-			else if (val is MySqlString)
-			{
-                MySqlDateTime dt = MySqlDateTime.Parse(val.ToString(), this.connection.driver.Version);
-                val = dt;
-//				MySqlDateTime d = new MySqlDateTime(MySqlDbType.Datetime);
-//				d = d.ParseMySql( (val as MySqlString).Value, true );
-//				return d.GetDateTime();
+                string s = ((MySqlString)val).Value;
+                dt = MySqlDateTime.Parse(s, this.connection.driver.Version);
             }
-            return Convert.ToDateTime(val);
+            else
+                dt = (MySqlDateTime)val;
+
+			if (connection.Settings.ConvertZeroDateTime && !dt.IsValidDateTime)
+				return DateTime.MinValue;
+			else
+				return dt.GetDateTime();
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetDecimal/*'/>
@@ -658,7 +666,10 @@ namespace MySql.Data.MySqlClient
                 else if (fieldCount == 0)
                 {
                     command.lastInsertedId = lastInsertId;
-                    affectedRows += (long)affectedRowsTemp;
+                    if (affectedRows == -1)
+                        affectedRows = (long)affectedRowsTemp;
+                    else
+                        affectedRows += (long)affectedRowsTemp;
                 }
                 else if (fieldCount == -1)
                     if (!statement.ExecuteNext())
@@ -694,7 +705,11 @@ namespace MySql.Data.MySqlClient
 			{
                 long fieldCount = GetResultSet();
                 if (fieldCount == -1)
+                {
+                    nextResultDone = true;
+                    hasRows = canRead = false;
                     return false;
+                }
 
 				// issue any requested UA warnings
 				if (connection.Settings.UseUsageAdvisor) 
