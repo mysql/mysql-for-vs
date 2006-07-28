@@ -83,10 +83,10 @@ namespace MySql.Data.Types
 		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, object val, int length)
 		{
 			double v = Convert.ToDouble(val);
-			if (binary)
-				writer.Write(BitConverter.GetBytes(v));
-			else
-				writer.WriteStringNoNull(v.ToString(
+            if (binary)
+                writer.Write(BitConverter.GetBytes(v));
+            else
+                writer.WriteStringNoNull(v.ToString(
                     CultureInfo.InvariantCulture));		
 		}
 

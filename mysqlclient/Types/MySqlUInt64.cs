@@ -95,7 +95,7 @@ namespace MySql.Data.Types
 			if (length == -1) 
 				return new MySqlUInt64((ulong)reader.ReadLong(8));
 			else 
-				return new MySqlUInt64(UInt16.Parse(reader.ReadString( length )));
+				return new MySqlUInt64(UInt64.Parse(reader.ReadString(length)));
 		}
 
 		void IMySqlValue.SkipValue(MySqlStreamReader reader)

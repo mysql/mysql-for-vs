@@ -252,4 +252,7 @@
   <data name="SoftProcQuery" xml:space="preserve">
     <value>Retrieving procedure metadata for {0} from procedure cache.</value>
   </data>
+  <data name="ConnectionBroken" xml:space="preserve">
+    <value>Connection unexpectedly terminated.</value>
+  </data>
 </root>

@@ -81,7 +81,7 @@ namespace MySql.Data.Types
 
 		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, object val, int length)
 		{
-			sbyte v = ((IConvertible)val).ToSByte(null); 
+			byte v = ((IConvertible)val).ToByte(null); 
 			if (binary)
 				writer.Write( BitConverter.GetBytes(v));
 			else

@@ -100,12 +100,11 @@ namespace MySql.Data.Types
 		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, object val, int length)
 		{
 			decimal v = Convert.ToDecimal(val);
+            string valStr = v.ToString(CultureInfo.InvariantCulture);
 			if (binary)
-                writer.WriteLenString(v.ToString(
-                    CultureInfo.InvariantCulture));
+                writer.WriteLenString(valStr);
 			else
-                writer.WriteStringNoNull(v.ToString(
-                    CultureInfo.InvariantCulture));
+                writer.WriteStringNoNull(valStr);
 		}
 
 		IMySqlValue IMySqlValue.ReadValue(MySqlStreamReader reader, long length, bool nullVal)
@@ -113,10 +112,17 @@ namespace MySql.Data.Types
 			if (nullVal) return new MySqlDecimal(true);
 
             if (length == -1)
-                return new MySqlDecimal(Decimal.Parse(reader.ReadLenString()));
-            else
-                return new MySqlDecimal(Decimal.Parse(reader.ReadString(),
+            {
+                string s = reader.ReadLenString();
+                return new MySqlDecimal(Decimal.Parse(s,
                     CultureInfo.InvariantCulture));
+            }
+            else
+            {
+                string s = reader.ReadString();
+                return new MySqlDecimal(Decimal.Parse(s,
+                    CultureInfo.InvariantCulture));
+            }
 		}
 
 		void IMySqlValue.SkipValue(MySqlStreamReader reader)

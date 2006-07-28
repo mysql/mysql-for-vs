@@ -82,7 +82,7 @@ namespace MySql.Data.Types
 
 		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, object val, int length)
 		{
-			double v = Convert.ToSingle(val);
+			Single v = Convert.ToSingle(val);
 			if (binary)
 				writer.Write(BitConverter.GetBytes(v));
 			else

@@ -33,7 +33,6 @@ namespace MySql.Data.Types
 	{
 		private	bool			isNull;
 		private MySqlDbType		type;
-		private	DateTime		comparingDate;
 		private int				year, month, day, hour, minute, second;
 		private static string	fullPattern;
 		private static string	shortPattern;
@@ -51,14 +50,7 @@ namespace MySql.Data.Types
 			this.minute = minute;
 			this.second = second;
 
-			// we construct a date that is guaranteed not have zeros in the date part
-			// we do this for comparison 
-			DateTime d = DateTime.MinValue;
-			d = d.AddYears(year+1).AddMonths(month+1).AddDays(day+1).AddHours(hour);
-			d = d.AddMinutes(minute).AddSeconds(second);
-			comparingDate = d;
-
-			if (fullPattern == null)
+            if (fullPattern == null)
 				ComposePatterns();
 		}
 
@@ -296,8 +288,8 @@ namespace MySql.Data.Types
 
         static internal MySqlDateTime Parse(string s, Common.DBVersion version)
         {
-            //TODO: fix this
-            return new MySqlDateTime();
+            MySqlDateTime dt = new MySqlDateTime();
+            return dt.ParseMySql(s, version.isAtLeast(4, 1, 0));
         }
 
 		private MySqlDateTime ParseMySql(string s, bool is41) 
@@ -307,16 +299,16 @@ namespace MySql.Data.Types
 
 			string[] parts = s.Split( '-', ' ', ':' );
 			
-			int year = int.Parse( parts[0] );
-			int month = int.Parse( parts[1] );
-			int day = int.Parse( parts[2] );
+			int year = int.Parse(parts[0]);
+			int month = int.Parse(parts[1]);
+			int day = int.Parse(parts[2]);
 
 			int hour = 0, minute = 0, second = 0;
 			if (parts.Length > 3) 
 			{
-				hour = int.Parse( parts[3] );
-				minute = int.Parse( parts[4] );
-				second = int.Parse( parts[5] );
+				hour = int.Parse(parts[3]);
+				minute = int.Parse(parts[4]);
+				second = int.Parse(parts[5]);
 			}
 
 			return new MySqlDateTime(type, year, month, day, hour, minute, second);
@@ -329,7 +321,7 @@ namespace MySql.Data.Types
 			if (length >= 0) 
 			{
 				string value = reader.ReadString( length );
-				return ParseMySql( value, reader.Version.isAtLeast(4,1,0) );
+				return ParseMySql(value, reader.Version.isAtLeast(4,1,0));
 			}
 
 			long bufLength = reader.ReadByte();
@@ -581,9 +573,27 @@ namespace MySql.Data.Types
 
 		int IComparable.CompareTo(object obj)
 		{
-			MySqlDateTime other = (MySqlDateTime)obj;
+            MySqlDateTime otherDate = (MySqlDateTime)obj;
 
-			return comparingDate.CompareTo( other.comparingDate );
+            if (Year < otherDate.Year) return -1;
+            else if (Year > otherDate.Year) return 1;
+
+            if (Month < otherDate.Month) return -1;
+            else if (Month > otherDate.Month) return 1;
+
+            if (Day < otherDate.Day) return -1;
+            else if (Day > otherDate.Day) return 1;
+
+            if (Hour < otherDate.Hour) return -1;
+            else if (Hour > otherDate.Hour) return 1;
+
+            if (Minute < otherDate.Minute) return -1;
+            else if (Minute > otherDate.Minute) return 1;
+
+            if (Second < otherDate.Second) return -1;
+            else if (Second > otherDate.Second) return 1;
+
+            return 0;
 		}
 
 		#endregion

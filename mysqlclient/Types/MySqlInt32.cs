@@ -99,7 +99,7 @@ namespace MySql.Data.Types
 			if (nullVal) return new MySqlInt32(MySqlDbType, true);
 
 			if (length == -1) 
-				return new MySqlInt32(MySqlDbType, reader.ReadInteger(is24Bit ? 3 : 4));
+				return new MySqlInt32(MySqlDbType, reader.ReadInteger(4));
 			else 
 				return new MySqlInt32(MySqlDbType, Int32.Parse(reader.ReadString( length )));
 		}

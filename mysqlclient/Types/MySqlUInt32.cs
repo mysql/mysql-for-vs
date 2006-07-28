@@ -88,11 +88,11 @@ namespace MySql.Data.Types
 
 		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, object v, int length)
 		{
-			uint val = Convert.ToUInt32( v );
+			uint val = Convert.ToUInt32(v);
 			if (binary)
-				writer.Write( BitConverter.GetBytes( val ) );
+				writer.Write(BitConverter.GetBytes(val));
 			else
-				writer.WriteStringNoNull( val.ToString() );		
+				writer.WriteStringNoNull(val.ToString());		
 		}
 
 		IMySqlValue IMySqlValue.ReadValue(MySqlStreamReader reader, long length, bool nullVal)
@@ -100,7 +100,7 @@ namespace MySql.Data.Types
 			if (nullVal) return new MySqlUInt32(MySqlDbType, true);
 
 			if (length == -1) 
-				return new MySqlUInt32(MySqlDbType, (uint)reader.ReadInteger(is24Bit ? 3 : 4));
+				return new MySqlUInt32(MySqlDbType, (uint)reader.ReadInteger(4));
 			else 
 				return new MySqlUInt32(MySqlDbType, UInt32.Parse(reader.ReadString( length )));
 		}
