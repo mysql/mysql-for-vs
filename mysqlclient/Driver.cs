@@ -159,8 +159,12 @@ namespace MySql.Data.MySqlClient
 			try 
 			{
 				MySqlDataReader reader = cmd.ExecuteReader();
-				while (reader.Read()) 
-					serverProps[reader.GetValue(0)] = reader.GetString(1);
+                while (reader.Read())
+                {
+                    string key = reader.GetString(0);
+                    string value = reader.GetString(1);
+                    serverProps[key] = value;
+                }
 				reader.Close();
 			}
 			catch (Exception ex)

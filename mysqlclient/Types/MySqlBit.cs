@@ -70,34 +70,34 @@ namespace MySql.Data.Types
             get { return "BIT"; }
         }
 
-        public void WriteValue(MySqlStreamWriter writer, bool binary, object value, int length)
+        public void WriteValue(MySqlStream stream, bool binary, object value, int length)
         {
 			ulong v = Convert.ToUInt64(value);
 			if (binary)
-				writer.Write(BitConverter.GetBytes(v));
+				stream.Write(BitConverter.GetBytes(v));
 			else
-				writer.WriteStringNoNull(v.ToString());
+				stream.WriteStringNoNull(v.ToString());
         }
 
-        public IMySqlValue ReadValue(MySqlStreamReader reader, long length, bool isNull)
+        public IMySqlValue ReadValue(MySqlStream stream, long length, bool isNull)
         {
             if (buffer == null)
                 buffer = new byte[8];
 			if (length == -1) 
 			{
-				length = reader.GetFieldLength();
+				length = stream.ReadFieldLength();
 			}
 			Array.Clear(buffer, 0, buffer.Length);
 			for (long i=length-1; i >= 0; i--)
-				buffer[i] = (byte)reader.ReadByte();
+				buffer[i] = (byte)stream.ReadByte();
 			mValue = BitConverter.ToUInt64(buffer, 0);
 			return this;
         }
 
-        public void SkipValue(MySqlStreamReader reader)
+        public void SkipValue(MySqlStream stream)
         {
-			long len = reader.GetFieldLength();
-            reader.SkipBytes((int)len);
+			long len = stream.ReadFieldLength();
+            stream.SkipBytes((int)len);
         }
 
         public static void SetDSInfo(DataTable dsTable)

@@ -79,31 +79,32 @@ namespace MySql.Data.Types
 			get	{ return "TINYINT"; }
 		}
 
-		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, object val, int length)
+		void IMySqlValue.WriteValue(MySqlStream stream, bool binary, object val, int length)
 		{
 			sbyte v = ((IConvertible)val).ToSByte(null);
 			if (binary)
-				writer.Write( BitConverter.GetBytes(v));
+				stream.Write(BitConverter.GetBytes(v));
 			else
-				writer.WriteStringNoNull(v.ToString());		
+				stream.WriteStringNoNull(v.ToString());		
 		}
 
-		IMySqlValue IMySqlValue.ReadValue(MySqlStreamReader reader, long length, bool nullVal)
+		IMySqlValue IMySqlValue.ReadValue(MySqlStream stream, long length, bool nullVal)
 		{
-			if (nullVal) return new MySqlByte(true);
+			if (nullVal) 
+                return new MySqlByte(true);
 
             if (length == -1)
-                return new MySqlByte((sbyte)reader.ReadByte());
+                return new MySqlByte((sbyte)stream.ReadByte());
             else
             {
-                string s = reader.ReadString(length);
+                string s = stream.ReadString(length);
                 return new MySqlByte(SByte.Parse(s, CultureInfo.InvariantCulture));
             }
 		}
 
-		void IMySqlValue.SkipValue(MySqlStreamReader reader)
+		void IMySqlValue.SkipValue(MySqlStream stream)
 		{
-			reader.ReadByte();
+			stream.ReadByte();
 		}
 
 		#endregion
@@ -158,9 +159,9 @@ namespace MySql.Data.Types
 		{
 			sbyte v = Convert.ToSByte( value );
 			if (binary)
-				writer.WriteByte( (byte)v );
+				stream.WriteByte( (byte)v );
 			else
-				writer.WriteStringNoNull( v.ToString() );
+				stream.WriteStringNoNull( v.ToString() );
 		}
 
 
@@ -183,15 +184,15 @@ namespace MySql.Data.Types
 		internal override MySqlValue ReadValue(PacketReader reader, long length)
 		{
 			if (length == -1)
-				Value = (sbyte)reader.ReadByte();
+				Value = (sbyte)stream.ReadByte();
 			else 
-				Value = SByte.Parse( reader.ReadString( length ) );
+				Value = SByte.Parse( stream.ReadString( length ) );
 			return this;
 		}
 
 		internal override void Skip(PacketReader reader)
 		{
-			reader.ReadByte();
+			stream.ReadByte();
 		}
 */
 

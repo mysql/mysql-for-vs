@@ -95,36 +95,36 @@ namespace MySql.Data.Types
 			return s;
 		}
 
-		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, object val, int length)
+		void IMySqlValue.WriteValue(MySqlStream stream, bool binary, object val, int length)
 		{
 			string v = val.ToString();
 			if (length > 0)
 				v = v.Substring(0, length);
 
 			if (binary)
-				writer.WriteLenString(v);
+				stream.WriteLenString(v);
 			else
-				writer.WriteStringNoNull("'" + EscapeString(v) + "'");
+				stream.WriteStringNoNull("'" + EscapeString(v) + "'");
 		}
 
-		IMySqlValue IMySqlValue.ReadValue(MySqlStreamReader reader, long length, bool nullVal)
+		IMySqlValue IMySqlValue.ReadValue(MySqlStream stream, long length, bool nullVal)
 		{
-			if (nullVal) return new MySqlString(type, true);
+			if (nullVal) 
+                return new MySqlString(type, true);
 
 			string s = String.Empty;
 			if (length == -1)
-				s = reader.ReadLenString();
+				s = stream.ReadLenString();
 			else
-				s = reader.ReadString(length);
+				s = stream.ReadString(length);
             MySqlString str = new MySqlString(type, s);
             return str;
-			//return new MySqlString(type, s);
 		}
 
-		void IMySqlValue.SkipValue(MySqlStreamReader reader)
+		void IMySqlValue.SkipValue(MySqlStream stream)
 		{
-			long len = reader.GetFieldLength();
-			reader.SkipBytes((int)len);
+			long len = stream.ReadFieldLength();
+			stream.SkipBytes((int)len);
 		}
 
 		#endregion
@@ -201,9 +201,9 @@ namespace MySql.Data.Types
 				v = v.Substring(0, length);
 
 			if (binary)
-				writer.WriteLenString( v );
+				stream.WriteLenString( v );
 			else
-				writer.WriteStringNoNull( "'" + EscapeString(v) + "'" );
+				stream.WriteStringNoNull( "'" + EscapeString(v) + "'" );
 		}
 
 		public byte[] ToBytes( System.Text.Encoding encoding ) 
@@ -244,16 +244,16 @@ namespace MySql.Data.Types
 		{
 			string s = String.Empty;
 			if (length == -1)
-				s = reader.ReadLenString();
+				s = stream.ReadLenString();
 			else
-				s = reader.ReadString( length );
+				s = stream.ReadString( length );
 			return new MySqlString( s, mySqlDbType );
 		}
 
 		internal override void Skip(PacketReader reader)
 		{
-			long len = reader.GetFieldLength();
-			reader.Skip( len );
+			long len = stream.GetFieldLength();
+			stream.Skip( len );
 		}
 
 	}*/

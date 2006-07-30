@@ -255,4 +255,7 @@
   <data name="ConnectionBroken" xml:space="preserve">
     <value>Connection unexpectedly terminated.</value>
   </data>
+  <data name="IncorrectTransmission" xml:space="preserve">
+    <value>An incorrect response was received from the server.</value>
+  </data>
 </root>

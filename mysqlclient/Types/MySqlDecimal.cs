@@ -97,38 +97,39 @@ namespace MySql.Data.Types
 			get	{ return "DECIMAL"; }
 		}
 
-		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, object val, int length)
+		void IMySqlValue.WriteValue(MySqlStream stream, bool binary, object val, int length)
 		{
 			decimal v = Convert.ToDecimal(val);
             string valStr = v.ToString(CultureInfo.InvariantCulture);
 			if (binary)
-                writer.WriteLenString(valStr);
+                stream.WriteLenString(valStr);
 			else
-                writer.WriteStringNoNull(valStr);
+                stream.WriteStringNoNull(valStr);
 		}
 
-		IMySqlValue IMySqlValue.ReadValue(MySqlStreamReader reader, long length, bool nullVal)
+		IMySqlValue IMySqlValue.ReadValue(MySqlStream stream, long length, bool nullVal)
 		{
-			if (nullVal) return new MySqlDecimal(true);
+			if (nullVal) 
+                return new MySqlDecimal(true);
 
             if (length == -1)
             {
-                string s = reader.ReadLenString();
+                string s = stream.ReadLenString();
                 return new MySqlDecimal(Decimal.Parse(s,
                     CultureInfo.InvariantCulture));
             }
             else
             {
-                string s = reader.ReadString();
+                string s = stream.ReadString();
                 return new MySqlDecimal(Decimal.Parse(s,
                     CultureInfo.InvariantCulture));
             }
 		}
 
-		void IMySqlValue.SkipValue(MySqlStreamReader reader)
+		void IMySqlValue.SkipValue(MySqlStream stream)
 		{
-			long len = reader.GetFieldLength();
-			reader.SkipBytes((int)len);
+			long len = stream.ReadFieldLength();
+			stream.SkipBytes((int)len);
 		}
 
 		#endregion
@@ -198,11 +199,11 @@ namespace MySql.Data.Types
 			Decimal v = Convert.ToDecimal( value );
 			if (binary) 
 			{
-				writer.WriteLenString( v.ToString(numberFormat) );
+				stream.WriteLenString( v.ToString(numberFormat) );
 			}
 			else 
 			{
-				writer.WriteStringNoNull(v.ToString(numberFormat));
+				stream.WriteStringNoNull(v.ToString(numberFormat));
 			}
 		}
 
@@ -227,12 +228,12 @@ namespace MySql.Data.Types
 		{
 			if (length == -1) 
 			{
-				string value = reader.ReadLenString();
+				string value = stream.ReadLenString();
 				Value = Decimal.Parse( value, numberFormat );
 			}
 			else 
 			{
-				string value = reader.ReadString( length );
+				string value = stream.ReadString( length );
 				Value = Decimal.Parse( value, numberFormat );
 			}
 			return this;
@@ -240,8 +241,8 @@ namespace MySql.Data.Types
 
 		internal override void Skip(PacketReader reader)
 		{
-			long len = reader.GetFieldLength();
-			reader.Skip( len );
+			long len = stream.GetFieldLength();
+			stream.Skip( len );
 		}
 		
 	}*/

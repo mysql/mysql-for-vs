@@ -73,11 +73,11 @@ namespace MySql.Data.MySqlClient
 
 		public override void Execute(MySqlParameterCollection parameters)
 		{
-			MySqlStreamWriter writer = new MySqlStreamWriter(new MemoryStream(), driver.Encoding);
+			MySqlStream stream = new MySqlStream(driver.Encoding);
 
 			//TODO: support long data here
 			// create our null bitmap
-			BitArray nullMap = new BitArray(parameters.Count); //metaData.Length );
+			BitArray nullMap = new BitArray(parameters.Count);
 
             // now we run through the parameters that PREPARE sent back and use
             // those names to index into the parameters the user gave us.
@@ -94,12 +94,12 @@ namespace MySql.Data.MySqlClient
 			nullMap.CopyTo(nullMapBytes, 0);
 
 			// start constructing our packet
-			writer.WriteInteger(Id, 4);
-			writer.WriteByte((byte)pageSize);          // flags; always 0 for 4.1
-			writer.WriteInteger(1, 4);    // interation count; 1 for 4.1
-			writer.Write(nullMapBytes);
+			stream.WriteInteger(Id, 4);
+            stream.WriteByte((byte)pageSize);          // flags; always 0 for 4.1
+            stream.WriteInteger(1, 4);    // interation count; 1 for 4.1
+            stream.Write(nullMapBytes);
 			//if (parameters != null && parameters.Count > 0)
-				writer.WriteByte(1);			// rebound flag
+            stream.WriteByte(1);			// rebound flag
 			//else
 			//	packet.WriteByte( 0 );
 			//TODO:  only send rebound if parms change
@@ -110,7 +110,7 @@ namespace MySql.Data.MySqlClient
                 foreach (MySqlField param in paramList)
                 {
                     MySqlParameter parm = parameters[param.ColumnName];
-                    writer.WriteInteger((long)parm.GetPSType(), 2);
+                    stream.WriteInteger((long)parm.GetPSType(), 2);
                 }
 
                 // now write out all non-null values
@@ -124,14 +124,14 @@ namespace MySql.Data.MySqlClient
                     if (parm.Value == DBNull.Value || parm.Value == null)
                         continue;
 
-                    writer.Encoding = param.Encoding;
-                    parm.Serialize(writer, true);
+                    stream.Encoding = param.Encoding;
+                    parm.Serialize(stream, true);
                 }
             }
 
 			executionCount ++;
 
-            driver.ExecuteStatement(((System.IO.MemoryStream)writer.Stream).ToArray());
+            driver.ExecuteStatement(stream.InternalBuffer.ToArray());
 		}
 
         public override bool ExecuteNext()

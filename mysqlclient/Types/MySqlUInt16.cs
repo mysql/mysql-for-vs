@@ -79,28 +79,29 @@ namespace MySql.Data.Types
 			get	{ return "SMALLINT"; }
 		}
 
-		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, object val, int length)
+		void IMySqlValue.WriteValue(MySqlStream stream, bool binary, object val, int length)
 		{
 			int v = Convert.ToUInt16( val );
 			if (binary)
-				writer.Write( BitConverter.GetBytes(v));
+				stream.Write(BitConverter.GetBytes(v));
 			else
-				writer.WriteStringNoNull(v.ToString());		
+				stream.WriteStringNoNull(v.ToString());		
 		}
 
-		IMySqlValue IMySqlValue.ReadValue(MySqlStreamReader reader, long length, bool nullVal)
+		IMySqlValue IMySqlValue.ReadValue(MySqlStream stream, long length, bool nullVal)
 		{
-			if (nullVal) return new MySqlUInt16(true);
+			if (nullVal) 
+                return new MySqlUInt16(true);
 
 			if (length == -1) 
-				return new MySqlUInt16((ushort)reader.ReadInteger(2));
+				return new MySqlUInt16((ushort)stream.ReadInteger(2));
 			else 
-				return new MySqlUInt16(UInt16.Parse(reader.ReadString( length )));
+				return new MySqlUInt16(UInt16.Parse(stream.ReadString(length)));
 		}
 
-		void IMySqlValue.SkipValue(MySqlStreamReader reader)
+		void IMySqlValue.SkipValue(MySqlStream stream)
 		{
-			reader.SkipBytes(2);
+			stream.SkipBytes(2);
 		}
 
 		#endregion
@@ -160,9 +161,9 @@ namespace MySql.Data.Types
 		{
 			ushort v = Convert.ToUInt16( value );
 			if (binary)
-				writer.Write( BitConverter.GetBytes( v ) );
+				stream.Write( BitConverter.GetBytes( v ) );
 			else
-				writer.WriteStringNoNull( v.ToString() );
+				stream.WriteStringNoNull( v.ToString() );
 		}
 
 		public ushort Value
@@ -185,11 +186,11 @@ namespace MySql.Data.Types
 		{
 			if (length == -1) 
 			{
-				Value = (ushort)reader.ReadInteger(2);
+				Value = (ushort)stream.ReadInteger(2);
 			}
 			else 
 			{
-				string value = reader.ReadString( length );
+				string value = stream.ReadString( length );
 				Value = UInt16.Parse( value );
 			}
 			return this;
@@ -197,7 +198,7 @@ namespace MySql.Data.Types
 
 		internal override void Skip(PacketReader reader)
 		{
-			reader.Skip(2);
+			stream.Skip(2);
 		}
 
 	}*/

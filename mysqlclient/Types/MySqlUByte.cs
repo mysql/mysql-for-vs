@@ -79,28 +79,29 @@ namespace MySql.Data.Types
 			get	{ return "TINYINT"; }
 		}
 
-		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, object val, int length)
+		void IMySqlValue.WriteValue(MySqlStream stream, bool binary, object val, int length)
 		{
 			byte v = ((IConvertible)val).ToByte(null); 
 			if (binary)
-				writer.Write( BitConverter.GetBytes(v));
+				stream.Write( BitConverter.GetBytes(v));
 			else
-				writer.WriteStringNoNull(v.ToString());		
+				stream.WriteStringNoNull(v.ToString());		
 		}
 
-		IMySqlValue IMySqlValue.ReadValue(MySqlStreamReader reader, long length, bool nullVal)
+		IMySqlValue IMySqlValue.ReadValue(MySqlStream stream, long length, bool nullVal)
 		{
-			if (nullVal) return new MySqlUByte(true);
+			if (nullVal) 
+                return new MySqlUByte(true);
 
 			if (length == -1) 
-				return new MySqlUByte((byte)reader.ReadByte());
+				return new MySqlUByte((byte)stream.ReadByte());
 			else 
-				return new MySqlUByte(Byte.Parse(reader.ReadString(length)));
+				return new MySqlUByte(Byte.Parse(stream.ReadString(length)));
 		}
 
-		void IMySqlValue.SkipValue(MySqlStreamReader reader)
+		void IMySqlValue.SkipValue(MySqlStream stream)
 		{
-			reader.ReadByte();
+			stream.ReadByte();
 		}
 
 		#endregion
@@ -155,9 +156,9 @@ namespace MySql.Data.Types
 		{	
 			byte v = Convert.ToByte( value );
 			if (binary)
-				writer.WriteByte( v );
+				stream.WriteByte( v );
 			else
-				writer.WriteStringNoNull( v.ToString() );
+				stream.WriteStringNoNull( v.ToString() );
 		}
 
 		public byte Value
@@ -181,15 +182,15 @@ namespace MySql.Data.Types
 		internal override MySqlValue ReadValue(PacketReader reader, long length)
 		{
 			if (length == -1)
-				Value = (byte)reader.ReadByte();
+				Value = (byte)stream.ReadByte();
 			else
-				Value = Byte.Parse( reader.ReadString(length));
+				Value = Byte.Parse( stream.ReadString(length));
 			return this;
 		}
 
 		internal override void Skip(PacketReader reader)
 		{
-			reader.ReadByte();
+			stream.ReadByte();
 		}
 	}*/
 }

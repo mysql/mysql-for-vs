@@ -38,6 +38,7 @@ namespace MySql.Data.Common
 		uint				port;
 		string				pipeName;
 		uint				timeOut;
+        ManualResetEvent    waitHandle;        
 
 		public StreamCreator( string hosts, uint port, string pipeName)
 		{
@@ -46,7 +47,8 @@ namespace MySql.Data.Common
 				hostList = "localhost";
 			this.port = port;
 			this.pipeName = pipeName;
-		}
+            waitHandle = new ManualResetEvent(false);
+        }
 
 		public Stream GetStream(uint timeOut) 
 		{
@@ -122,9 +124,15 @@ namespace MySql.Data.Common
 			return ep;
         }
 
+        private void ConnectCallback(IAsyncResult ias)
+        {
+            Socket s = (ias.AsyncState as Socket);
+            s.EndConnect(ias);
+            waitHandle.Set();
+        }
+
 		private Stream CreateSocketStream( IPAddress ip, uint port, bool unix ) 
 		{
-            SocketStream ss = null;
 			try
 			{
 				//
@@ -136,34 +144,37 @@ namespace MySql.Data.Common
 				else
 					endPoint = 	new IPEndPoint(ip, (int)port);
 
-                ss = unix ? 
-                    new SocketStream(AddressFamily.Unix, SocketType.Stream, ProtocolType.IP) :
-                    new SocketStream(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                ss.Connect(endPoint, (int)timeOut);
-                ss.Socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, 1);
-                return ss;
+                waitHandle.Reset();
+                Socket s = unix ?
+                    new Socket(AddressFamily.Unix, SocketType.Stream, ProtocolType.IP) :
+                    new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                IAsyncResult ias = s.BeginConnect(endPoint, 
+                    new AsyncCallback(ConnectCallback), s);
+
+                if (ias.CompletedSynchronously || 
+                    waitHandle.WaitOne((int)timeOut * 1000, false))
+                    return new NetworkStream(s);
+                else 
+                {
+                    s.EndConnect(ias);
+                    return null;
+                }
             }
-			catch (ArgumentOutOfRangeException are)
+			catch (ArgumentNullException are)
 			{
 				Logger.LogException(are);
-				ss = null;
+                return null;
 			}
 			catch (SocketException se) 
 			{
 				Logger.LogException(se);
-				ss = null;
+                return null;
 			}
 			catch (ObjectDisposedException ode) 
 			{
 				Logger.LogException(ode);
-				ss = null;
+				return null;
 			}
-			catch (MySqlException me)
-			{
-				Logger.LogException(me);
-				ss = null;
-			}
-			return ss;
 		}
  
 	}

@@ -80,28 +80,29 @@ namespace MySql.Data.Types
 			get	{ return "SMALLINT"; }
 		}
 
-		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, object val, int length)
+		void IMySqlValue.WriteValue(MySqlStream stream, bool binary, object val, int length)
 		{
 			int v = Convert.ToInt32( val );
 			if (binary)
-				writer.Write( BitConverter.GetBytes(v));
+				stream.Write( BitConverter.GetBytes(v));
 			else
-				writer.WriteStringNoNull(v.ToString());		
+				stream.WriteStringNoNull(v.ToString());		
 		}
 
-		IMySqlValue IMySqlValue.ReadValue(MySqlStreamReader reader, long length, bool nullVal)
+		IMySqlValue IMySqlValue.ReadValue(MySqlStream stream, long length, bool nullVal)
 		{
-			if (nullVal) return new MySqlInt16(true);
+			if (nullVal) 
+                return new MySqlInt16(true);
 
 			if (length == -1) 
-				return new MySqlInt16((short)reader.ReadInteger(2));
+				return new MySqlInt16((short)stream.ReadInteger(2));
 			else 
-				return new MySqlInt16(Int16.Parse(reader.ReadString( length )));
+				return new MySqlInt16(Int16.Parse(stream.ReadString(length)));
 		}
 
-		void IMySqlValue.SkipValue(MySqlStreamReader reader)
+		void IMySqlValue.SkipValue(MySqlStream stream)
 		{
-			reader.SkipBytes(2);
+			stream.SkipBytes(2);
 		}
 
 		#endregion
@@ -156,9 +157,9 @@ namespace MySql.Data.Types
 		{
 			short v = Convert.ToInt16(value);
 			if (binary)
-				writer.Write(BitConverter.GetBytes(v));
+				stream.Write(BitConverter.GetBytes(v));
 			else
-				writer.WriteStringNoNull(v.ToString(numberFormat));
+				stream.WriteStringNoNull(v.ToString(numberFormat));
 		}
 
 
@@ -182,11 +183,11 @@ namespace MySql.Data.Types
 		{
 			if (length == -1) 
 			{
-				Value = (short)reader.ReadInteger(2);
+				Value = (short)stream.ReadInteger(2);
 			}
 			else 
 			{
-				string value = reader.ReadString(length);
+				string value = stream.ReadString(length);
 				Value = Int16.Parse(value, numberFormat);
 			}
 			return this;
@@ -194,7 +195,7 @@ namespace MySql.Data.Types
 
 		internal override void Skip(PacketReader reader)
 		{
-			reader.Skip( 2 );
+			stream.Skip( 2 );
 		}
 	}*/
 }

@@ -86,28 +86,29 @@ namespace MySql.Data.Types
 			get	{ return is24Bit ? "MEDIUMINT" : "INT"; }
 		}
 
-		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, object v, int length)
+		void IMySqlValue.WriteValue(MySqlStream stream, bool binary, object v, int length)
 		{
 			uint val = Convert.ToUInt32(v);
 			if (binary)
-				writer.Write(BitConverter.GetBytes(val));
+				stream.Write(BitConverter.GetBytes(val));
 			else
-				writer.WriteStringNoNull(val.ToString());		
+				stream.WriteStringNoNull(val.ToString());		
 		}
 
-		IMySqlValue IMySqlValue.ReadValue(MySqlStreamReader reader, long length, bool nullVal)
+		IMySqlValue IMySqlValue.ReadValue(MySqlStream stream, long length, bool nullVal)
 		{
 			if (nullVal) return new MySqlUInt32(MySqlDbType, true);
 
 			if (length == -1) 
-				return new MySqlUInt32(MySqlDbType, (uint)reader.ReadInteger(4));
+				return new MySqlUInt32(MySqlDbType, (uint)stream.ReadInteger(4));
 			else 
-				return new MySqlUInt32(MySqlDbType, UInt32.Parse(reader.ReadString( length )));
+				return new MySqlUInt32(MySqlDbType, UInt32.Parse(
+                    stream.ReadString(length)));
 		}
 
-		void IMySqlValue.SkipValue(MySqlStreamReader reader)
+		void IMySqlValue.SkipValue(MySqlStream stream)
 		{
-			reader.SkipBytes(4);
+			stream.SkipBytes(4);
 		}
 
 		#endregion
@@ -166,9 +167,9 @@ namespace MySql.Data.Types
 		{
 			uint v = Convert.ToUInt32( value );
 			if (binary)
-				writer.Write( BitConverter.GetBytes( v ) );
+				stream.Write( BitConverter.GetBytes( v ) );
 			else
-				writer.WriteStringNoNull( v.ToString() );
+				stream.WriteStringNoNull( v.ToString() );
 		}
 
 		public uint Value
@@ -192,13 +193,13 @@ namespace MySql.Data.Types
 			if (length == -1) 
 			{
 				if (mySqlDbType == MySqlDbType.Int24)
-					Value = (uint)reader.ReadInteger( 3 );
+					Value = (uint)stream.ReadInteger( 3 );
 				else
-					Value = (uint)reader.ReadLong( 4  );
+					Value = (uint)stream.ReadLong( 4  );
 			}
 			else 
 			{
-				string value = reader.ReadString( length );
+				string value = stream.ReadString( length );
 				Value = UInt32.Parse( value );
 			}
 			return this;
@@ -206,7 +207,7 @@ namespace MySql.Data.Types
 
 		internal override void Skip(PacketReader reader)
 		{
-			reader.Skip(4);
+			stream.Skip(4);
 		}
 	}*/
 }

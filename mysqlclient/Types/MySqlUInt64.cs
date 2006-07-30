@@ -79,28 +79,29 @@ namespace MySql.Data.Types
 			get	{ return "BIGINT"; }
 		}
 
-		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, object val, int length)
+		void IMySqlValue.WriteValue(MySqlStream stream, bool binary, object val, int length)
 		{
-			ulong v = Convert.ToUInt64( val );
+			ulong v = Convert.ToUInt64(val);
 			if (binary)
-				writer.Write( BitConverter.GetBytes(v));
+				stream.Write(BitConverter.GetBytes(v));
 			else
-				writer.WriteStringNoNull(v.ToString());		
+				stream.WriteStringNoNull(v.ToString());		
 		}
 
-		IMySqlValue IMySqlValue.ReadValue(MySqlStreamReader reader, long length, bool nullVal)
+		IMySqlValue IMySqlValue.ReadValue(MySqlStream stream, long length, bool nullVal)
 		{
-			if (nullVal) return new MySqlUInt64(true);
+			if (nullVal) 
+                return new MySqlUInt64(true);
 
 			if (length == -1) 
-				return new MySqlUInt64((ulong)reader.ReadLong(8));
+				return new MySqlUInt64((ulong)stream.ReadLong(8));
 			else 
-				return new MySqlUInt64(UInt64.Parse(reader.ReadString(length)));
+				return new MySqlUInt64(UInt64.Parse(stream.ReadString(length)));
 		}
 
-		void IMySqlValue.SkipValue(MySqlStreamReader reader)
+		void IMySqlValue.SkipValue(MySqlStream stream)
 		{
-			reader.SkipBytes(8);
+			stream.SkipBytes(8);
 		}
 
 		#endregion
@@ -155,9 +156,9 @@ namespace MySql.Data.Types
 		{
 			ulong v = Convert.ToUInt64( value );
 			if (binary)
-				writer.Write( BitConverter.GetBytes( v ) );
+				stream.Write( BitConverter.GetBytes( v ) );
 			else
-				writer.WriteStringNoNull( v.ToString() );
+				stream.WriteStringNoNull( v.ToString() );
 		}
 
 		public ulong Value
@@ -180,11 +181,11 @@ namespace MySql.Data.Types
 		{
 			if (length == -1) 
 			{
-				Value = reader.ReadLong( 8 );
+				Value = stream.ReadLong( 8 );
 			}
 			else 
 			{
-				string value = reader.ReadString( length );
+				string value = stream.ReadString( length );
 				Value = UInt64.Parse( value );
 			}
 			return this;
@@ -192,7 +193,7 @@ namespace MySql.Data.Types
 
 		internal override void Skip(PacketReader reader)
 		{
-			reader.Skip(8);
+			stream.Skip(8);
 		}
 	}*/
 }

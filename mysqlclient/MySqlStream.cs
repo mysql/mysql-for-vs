@@ -20,38 +20,85 @@
 
 using System;
 using System.IO;
+using System.Diagnostics;
+using System.Text;
+using MySql.Data.Common;
 
 namespace MySql.Data.MySqlClient
 {
 	/// <summary>
 	/// Summary description for MySqlStream.
 	/// </summary>
-	internal class MySqlStream : Stream
+	internal class MySqlStream
 	{
-		private Stream	baseStream;
-		private long	maxSinglePacket;
-		private long	readLength;
-		private long	readPos;
-		private long	writePos;
-		private long	writeLength;
 		private	byte	sequenceByte;
 		private int		peekByte;
-		private int		leftInChunk;
-		private byte[]	buffer;
-		private int		bufferPos;
-		private int		bufferLength;
+        private Encoding encoding;
+        private DBVersion version;
 
-		public MySqlStream(Stream baseStr)
+        private MemoryStream bufferStream;
+
+        private int maxBlockSize;
+
+        private BufferedStream inStream;
+        private ulong inLength;
+        private ulong inPos;
+
+        private Stream outStream;
+        private ulong outLength;
+        private ulong outPos;
+        private bool isLastPacket;
+        private byte[] byteBuffer;
+
+        public MySqlStream(Encoding encoding)
+        {
+            this.encoding = encoding;
+            bufferStream = new MemoryStream();
+            byteBuffer = new byte[1];
+            peekByte = -1;
+        }
+
+		public MySqlStream(Stream baseStr, Encoding encoding) : this(encoding)
 		{
-			baseStream = baseStr;
-			maxSinglePacket = 255*255*255;
-			leftInChunk = 0;
-			peekByte = -1;
-			bufferLength = 0x1000;
-			buffer = new byte[bufferLength];
+            outStream = new BufferedStream(baseStr);
+            inStream = new BufferedStream(baseStr);
 		}
 
+        public void Close()
+        {
+            inStream.Close();
+            outStream.Close();
+        }
+
 		#region Properties
+
+        public bool IsLastPacket
+        {
+            get { return isLastPacket; }
+        }
+
+        public int MaxBlockLength
+        {
+            get { return maxBlockSize; }
+            set { maxBlockSize = value; }
+        }
+
+        public DBVersion Version
+        {
+            get { return version; }
+            set { version = value; }
+        }
+
+        public Encoding Encoding
+        {
+            get { return encoding; }
+            set { encoding = value; }
+        }
+
+        public MemoryStream InternalBuffer
+        {
+            get { return bufferStream; }
+        }
 
 		public byte SequenceByte 
 		{
@@ -61,180 +108,420 @@ namespace MySql.Data.MySqlClient
 
 		public bool HasMoreData 
 		{
-			get { return (readLength == maxSinglePacket || readPos < readLength); }
+			get 
+            { 
+                return inLength > 0 &&
+                       (inLength == (ulong)maxBlockSize || inPos < inLength); 
+            }
 		}
 
-		public long MaxSinglePacket 
+		public int MaxSinglePacket 
 		{
-			get { return maxSinglePacket; }
-			set { maxSinglePacket = value; }
-		}
-
-		public override bool CanRead
-		{
-			get	{ return true; }
-		}
-
-		public override bool CanWrite
-		{
-			get	{ return true;	}
-		}
-
-		public override bool CanSeek
-		{
-			get	{ return false;	}
-		}
-
-		public override long Length
-		{
-			get	{ return readLength;	}
-		}
-
-		public override long Position
-		{
-			get	{ return readPos;	}
-			set	{	}
+			get { return maxBlockSize; }
+			set { maxBlockSize = value; }
 		}
 
 		#endregion
 
-		public override void Flush()
+        #region Packet methods
+
+        /// <summary>
+        /// OpenPacket is called by NativeDriver to start reading the next
+        /// packet on the stream.
+        /// </summary>
+        public void OpenPacket()
+        {
+            // make sure we have read all the data from the previous packet
+            Debug.Assert(HasMoreData == false, "HasMoreData is true in OpenPacket");
+
+            LoadPacket();
+
+            int peek = PeekByte();
+            if (peek == 0xff)
+            {
+                int code = ReadInteger(2);
+                string msg = ReadString();
+                throw new MySqlException(msg, code);
+            }
+            isLastPacket = (peek == 0xfe && (inLength < 9));
+        }
+
+        /// <summary>
+        /// LoadPacket loads up and decodes the header of the incoming packet.
+        /// </summary>
+        public void LoadPacket()
+        {
+            int b1 = inStream.ReadByte();
+            int b2 = inStream.ReadByte();
+            int b3 = inStream.ReadByte();
+            int seqByte = inStream.ReadByte();
+
+            if (b1 == -1 || b2 == -1 || b3 == -1 || seqByte == -1)
+                throw new MySqlException(
+                    Resources.ConnectionBroken, true, null);
+
+            sequenceByte = (byte)++seqByte;
+            inLength = (ulong)(b1 + (b2 << 8) + (b3 << 16));
+            inPos = 0;
+        }
+
+        /// <summary>
+        /// SkipPacket will read the remaining bytes of a packet into a small
+        /// local buffer and discard them.
+        /// </summary>
+        public void SkipPacket()
+        {
+            byte[] tempBuf = new byte[1024];
+            while (inPos < inLength)
+            {
+                int toRead = (int)Math.Min((ulong)tempBuf.Length, inLength);
+                Read(tempBuf, 0, toRead);
+                inPos += (ulong)toRead;
+            }
+        }
+
+        /// <summary>
+        /// StartOutput is used to reset the write state of the stream.
+        /// </summary>
+        public void StartOutput(ulong length, bool resetSequence)
+        {
+            outLength = outPos = 0;
+            if (length > 0)
+                outLength = length;
+
+            if (resetSequence)
+                sequenceByte = 0;
+        }
+
+        /// <summary>
+        /// Writes out the header that is used at the start of a transmission
+        /// and at the beginning of every packet when multipacket is used.
+        /// </summary>
+        private void WriteHeader()
+        {
+            int len = (int)Math.Min((outLength - outPos), (ulong)maxBlockSize);
+
+            outStream.WriteByte((byte)(len & 0xff));
+            outStream.WriteByte((byte)((len >> 8) & 0xff));
+            outStream.WriteByte((byte)((len >> 16) & 0xff));
+            outStream.WriteByte((byte)sequenceByte++);
+        }
+
+        #endregion
+
+        #region Byte methods
+
+        public int ReadNBytes()
+        {
+            byte c = (byte)ReadByte();
+            if (c < 1 || c > 4) 
+                throw new MySqlException(Resources.IncorrectTransmission);
+            return ReadInteger((int)c);
+        }
+
+        public void SkipBytes(int len)
+        {
+            while (len-- > 0)
+                ReadByte();
+        }
+
+        /// <summary>
+        /// Reads the next byte from the incoming stream
+        /// </summary>
+        /// <returns></returns>
+		public int ReadByte()
 		{
-			FlushWrite();
-			baseStream.Flush();
+            int b;
+            if (peekByte != -1)
+            {
+                b = PeekByte();
+                peekByte = -1;
+                inPos++;   // we only do this here since Read will also do it
+            }
+            else
+            {
+                // we read the byte this way because we might cross over a 
+                // multipacket boundary
+                Read(byteBuffer, 0, 1);
+                b = byteBuffer[0];
+            }
+            return b;
 		}
 
-		public int PeekByte() 
+        /// <summary>
+        /// Reads a block of bytes from the input stream into the given buffer.
+        /// </summary>
+        /// <returns>The number of bytes read.</returns>
+		public int Read(byte[] buffer, int offset, int count)
 		{
-			if (peekByte == -1)  
-			{
-				peekByte = ReadByte();
-				readPos--;
-			}
-			return peekByte;
-		}
+            // we use asserts here because this is internal code
+            // and we should be calling it correctly in all cases
+            Debug.Assert(buffer != null);
+            Debug.Assert(offset >= 0 && offset < buffer.Length);
+            Debug.Assert(count >= 0);
+            Debug.Assert((offset + count) <= buffer.Length);
 
-		public override int ReadByte()
-		{
-			byte[] buf = new byte[1];
-			int cnt = Read(buf, 0, 1);
-			if (cnt == 0) return -1;
-			return (int)buf[0];
-		}
-
-
-		public override int Read(byte[] buffer, int offset, int count)
-		{
 			int totalRead = 0;
 
 			while (count > 0) 
 			{
-				int read = 0;
+                // if we have peeked at a byte, then read it off first.
+                if (peekByte != -1)
+                {
+                    buffer[offset] = (byte)ReadByte();
+                    count--;
+                    continue;
+                }
 
-				if (peekByte != -1) 
+                // check if we are reading multipacket and are done with the
+                // last packet
+				if (inPos == inLength) 
 				{
-					buffer[offset] = (byte)peekByte;
-					peekByte = -1;
-					read++;
-				}
-				else 
-				{
-					if (readPos == readLength) 
-					{
-						if (readPos == MaxSinglePacket)
-							LoadPacket();
-						else
-							break;
-					}
-
-					int lenToRead = Math.Min(count, (int)(readLength-readPos));
-					read = baseStream.Read(buffer, offset, lenToRead);
+                    // at this point, we better be reading multipacket
+                    Debug.Assert(inLength == (ulong)maxBlockSize);
+					LoadPacket();
 				}
 
-				if (read == 0) break;
+				int lenToRead = Math.Min(count, (int)(inLength - inPos));
+				int read = inStream.Read(buffer, offset, lenToRead);
+
+                // we don't throw an exception here even though this probably
+                // indicates a broken connection.  We leave that to the 
+                // caller.
+                if (read == 0)
+                    break;
+
 				count -= read;
 				offset += read;
 				totalRead += read;
-				readPos += read;
+				inPos += (ulong)read;
 			}
 
 			return totalRead;
-		}
+        }
 
-		public override long Seek(long offset, SeekOrigin origin)
-		{
-			return 0;
-		}
+        /// <summary>
+        /// Peek at the next byte off the stream
+        /// </summary>
+        /// <returns>The next byte off the stream</returns>
+        public int PeekByte()
+        {
+            if (peekByte == -1)
+            {
+                peekByte = ReadByte();
+                // ReadByte will advance inPos so we need to back it up since
+                // we are not really reading the byte
+                inPos--;
+            }
+            return peekByte;
+        }
 
-		public override void SetLength(long value)
-		{
-			writeLength = value;
-			writePos = 0;
-			WriteHeader();
-		}
+        /// <summary>
+        /// Writes a single byte to the output stream.
+        /// </summary>
+        public void WriteByte(byte value)
+        {
+            byteBuffer[0] = value;
+            Write(byteBuffer, 0, 1);
+        }
 
-		private void WriteHeader() 
-		{
-			int tempLeft = (int)Math.Min((long)maxSinglePacket, writeLength);
-			WriteByte((byte)(tempLeft & 0xff));
-			WriteByte((byte)((tempLeft >> 8) & 0xff));
-			WriteByte((byte)((tempLeft >> 16) & 0xff));
-			WriteByte((byte)sequenceByte++);
-			leftInChunk = tempLeft;
-		}
+        public void Write(byte[] buffer, int offset, int count)
+        {
+            Debug.Assert(buffer != null && offset >= 0 && count >= 0);
 
-		private void FlushWrite() 
-		{
-			baseStream.Write(buffer, 0, bufferPos);
-			bufferPos = 0;
-		}
+            // if we are buffering, then just write it to the buffer
+            if (outLength == 0)
+            {
+                bufferStream.Write(buffer, offset, count);
+                return;
+            }
 
-		public override void WriteByte(byte value)
-		{
-			if (bufferPos == bufferLength)
-				FlushWrite();
-			buffer[bufferPos++] = value;
-			leftInChunk--;
-			writePos++;
-		}
+            // make sure the inputs to the method make sense
+            Debug.Assert(outLength > 0 && (outPos + (ulong)count) <= outLength);
 
-		public override void Write(byte[] src, int offset, int count)
-		{
-			while (count > 0)
-			{
-				if (bufferPos == bufferLength)
-					FlushWrite();
+            int pos = 0;
+            // if we get here, we are not buffering.  
+            // outLength is the total amount of data we are going to send
+            // This means that multiple calls to write could be combined.
+            while (count > 0)
+            {
+                int cntToWrite = (int)Math.Min((outLength - outPos), (ulong)count);
+                cntToWrite = (int)Math.Min(
+                    maxBlockSize - (int)(outPos % (ulong)maxBlockSize), cntToWrite);
 
-				System.Diagnostics.Debug.Assert(leftInChunk > 0 || writeLength > 0);
-				if (leftInChunk == 0 && writeLength > 0)
-					WriteHeader();
+                // if we are at a block border, then we need to send a new header
+                if ((outPos % (ulong)maxBlockSize) == 0)
+                    WriteHeader();
 
-				int toWrite = Math.Min(count, leftInChunk);
-				toWrite = Math.Min(toWrite, bufferLength-bufferPos);
-				Buffer.BlockCopy(src, offset, buffer, bufferPos, toWrite);
-				offset += toWrite;
-				bufferPos += toWrite;
-				count -= toWrite;
-				leftInChunk -= toWrite;
-				writePos += toWrite;
-			}
+                outStream.Write(buffer, pos, cntToWrite);
 
-		}
+                outPos += (ulong)cntToWrite;
+                pos += cntToWrite;
+                count -= cntToWrite;
+            }
+        }
 
-		public void LoadPacket() 
-		{
-			int b1 = baseStream.ReadByte();
-			int b2 = baseStream.ReadByte();
-			int b3 = baseStream.ReadByte();
-			int seqByte = baseStream.ReadByte();
+        public void Write(byte[] buffer)
+        {
+            Write(buffer, 0, buffer.Length);
+        }
 
-			if (b1 == -1 || b2 == -1 || b3 == -1 || seqByte == -1)
-				throw new MySqlException( "Connection unexpectedly terminated", true, null );
+        public void Flush()
+        {
+            if (outLength == 0)
+            {
+                if (bufferStream.Length > 0)
+                {
+                    byte[] bytes = bufferStream.GetBuffer();
+                    StartOutput((ulong)bufferStream.Length, false);
+                    Write(bytes, 0, (int)bufferStream.Length);
+                }
+                bufferStream.SetLength(0);
+                bufferStream.Position = 0;
+            }
+            outStream.Flush();
+        }
 
-			sequenceByte = (byte)++seqByte;
-			readLength = b1 + (b2 << 8) + (b3 << 16);
-			readPos = 0;
-		}
+        #endregion
 
-	}
+        #region Integer methods
+
+        public long ReadFieldLength()
+        {
+            byte c = (byte)ReadByte();
+
+            switch (c)
+            {
+                case 251: return (long)-1;
+                case 252: return (long)ReadInteger(2);
+                case 253: return (long)ReadInteger(3);
+                case 254: return (long)ReadInteger(8);
+                default: return c;
+            }
+        }
+
+        public ulong ReadLong(int numbytes)
+        {
+            ulong val = 0;
+            int raise = 1;
+            for (int x = 0; x < numbytes; x++)
+            {
+                int b = ReadByte();
+                val += (ulong)(b * raise);
+                raise *= 256;
+            }
+            return val;
+        }
+
+        public int ReadInteger(int numbytes)
+        {
+            return (int)ReadLong(numbytes);
+        }
+
+        /// <summary>
+        /// WriteInteger
+        /// </summary>
+        /// <param name="v"></param>
+        /// <param name="numbytes"></param>
+        public void WriteInteger(long v, int numbytes)
+        {
+            long val = v;
+
+            Debug.Assert(numbytes > 0 && numbytes < 5);
+
+            for (int x = 0; x < numbytes; x++)
+            {
+                WriteByte((byte)(val & 0xff));
+                val >>= 8;
+            }
+        }
+
+        public int ReadPackedInteger()
+        {
+            byte c = (byte)ReadByte();
+
+            switch (c)
+            {
+                case 251: return -1;
+                case 252: return ReadInteger(2);
+                case 253: return ReadInteger(3);
+                case 254: return ReadInteger(4);
+                default: return c;
+            }
+        }
+
+        public void WriteLength(long length)
+        {
+            if (length < 251)
+                WriteByte((byte)length);
+            else if (length < 65536L)
+            {
+                WriteByte(252);
+                WriteInteger(length, 2);
+            }
+            else if (length < 16777216L)
+            {
+                WriteByte(253);
+                WriteInteger(length, 3);
+            }
+            else
+            {
+                WriteByte(254);
+                WriteInteger(length, 4);
+            }
+        }
+
+        #endregion
+
+        #region String methods
+
+        public void WriteLenString(string s)
+        {
+            byte[] bytes = encoding.GetBytes(s);
+            WriteLength(bytes.Length);
+            Write(bytes, 0, bytes.Length);
+        }
+
+        public void WriteStringNoNull(string v)
+        {
+            byte[] bytes = encoding.GetBytes(v);
+            Write(bytes, 0, bytes.Length);
+        }
+
+        public void WriteString(string v)
+        {
+            WriteStringNoNull(v);
+            WriteByte(0);
+        }
+
+        public string ReadLenString()
+        {
+            long len = ReadPackedInteger();
+            return ReadString(len);
+        }
+
+        public string ReadString(long length)
+        {
+            byte[] buf = new byte[length];
+            Read(buf, 0, (int)length);
+            return encoding.GetString(buf, 0, buf.Length);
+        }
+
+        public string ReadString()
+        {
+            MemoryStream ms = new MemoryStream();
+
+            int b = ReadByte();
+            while (b != 0 && b != -1)
+            {
+                ms.WriteByte((byte)b);
+                b = ReadByte();
+            }
+
+            return encoding.GetString(ms.GetBuffer(), 0, (int)ms.Length);
+        }
+
+        #endregion
+
+    }
 }

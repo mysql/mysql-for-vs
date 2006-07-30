@@ -355,14 +355,14 @@ namespace MySql.Data.MySqlClient
             }
 		}
 
-        internal void Serialize(MySqlStreamWriter writer, bool binary)
+        internal void Serialize(MySqlStream stream, bool binary)
         {
             IMySqlValue v = MySqlField.GetIMySqlValue(mySqlDbType, true);
 
             if (!binary && (paramValue == null || paramValue == DBNull.Value))
-                writer.WriteStringNoNull("NULL");
+                stream.WriteStringNoNull("NULL");
             else
-                v.WriteValue(writer, binary, paramValue, size);
+                v.WriteValue(stream, binary, paramValue, size);
         }
 
 		private void SetMySqlDbType(MySqlDbType mySqlDbType) 

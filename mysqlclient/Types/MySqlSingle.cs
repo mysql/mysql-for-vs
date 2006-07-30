@@ -80,33 +80,34 @@ namespace MySql.Data.Types
 			get	{ return "FLOAT"; }
 		}
 
-		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, object val, int length)
+		void IMySqlValue.WriteValue(MySqlStream stream, bool binary, object val, int length)
 		{
 			Single v = Convert.ToSingle(val);
 			if (binary)
-				writer.Write(BitConverter.GetBytes(v));
+				stream.Write(BitConverter.GetBytes(v));
 			else
-                writer.WriteStringNoNull(v.ToString(
+                stream.WriteStringNoNull(v.ToString(
                     CultureInfo.InvariantCulture));		
 		}
 
-		IMySqlValue IMySqlValue.ReadValue(MySqlStreamReader reader, long length, bool nullVal)
+		IMySqlValue IMySqlValue.ReadValue(MySqlStream stream, long length, bool nullVal)
 		{
-			if (nullVal) return new MySqlSingle(true);
+			if (nullVal) 
+                return new MySqlSingle(true);
 
 			if (length == -1) 
 			{
 				byte[] b = new byte[4];
-				reader.Read(b, 0, 4);
+				stream.Read(b, 0, 4);
 				return new MySqlSingle(BitConverter.ToSingle( b, 0 ));
 			}
-			return new MySqlSingle(Single.Parse(reader.ReadString(length), 
+			return new MySqlSingle(Single.Parse(stream.ReadString(length), 
                 CultureInfo.InvariantCulture));
 		}
 
-		void IMySqlValue.SkipValue(MySqlStreamReader reader)
+		void IMySqlValue.SkipValue(MySqlStream stream)
 		{
-			reader.SkipBytes(4);
+			stream.SkipBytes(4);
 		}
 
 		#endregion
@@ -161,9 +162,9 @@ namespace MySql.Data.Types
 		{
 			Single v = Convert.ToSingle( value );
 			if (binary)
-				writer.Write( BitConverter.GetBytes( v ) );
+				stream.Write( BitConverter.GetBytes( v ) );
 			else
-				writer.WriteStringNoNull( v.ToString(numberFormat) );
+				stream.WriteStringNoNull( v.ToString(numberFormat) );
 		}
 
 		public Single Value
@@ -197,12 +198,12 @@ namespace MySql.Data.Types
 			if (length == -1) 
 			{
 				byte[] b = new byte[4];
-				reader.Read( ref b, 0, 4 );
+				stream.Read( ref b, 0, 4 );
 				Value = BitConverter.ToSingle( b, 0 );
 			}
 			else 
 			{
-				string value = reader.ReadString( length );
+				string value = stream.ReadString( length );
 				Value = Parse(value);
 			}
 			return this;
@@ -210,7 +211,7 @@ namespace MySql.Data.Types
 
 		internal override void Skip(PacketReader reader)
 		{
-			reader.Skip(4);
+			stream.Skip(4);
 		}
 
 <<<<<<< .working

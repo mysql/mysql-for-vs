@@ -110,7 +110,6 @@
     <Compile Include="common\Resources.cs" />
     <Compile Include="common\SHA1.cs" />
     <Compile Include="common\SharedMemoryStream.cs" />
-    <Compile Include="common\SocketStream.cs" />
     <Compile Include="common\StreamCreator.cs" />
     <Compile Include="common\Version.cs" />
     <Compile Include="common\WinCE.cs" />
@@ -136,8 +135,6 @@
     <Compile Include="MySqlPool.cs" />
     <Compile Include="MySqlPoolManager.cs" />
     <Compile Include="MySqlStream.cs" />
-    <Compile Include="MySqlStreamReader.cs" />
-    <Compile Include="MySqlStreamWriter.cs" />
     <Compile Include="NativeDriver.cs" />
     <Compile Include="parameter.cs" />
     <Compile Include="parameter_collection.cs" />

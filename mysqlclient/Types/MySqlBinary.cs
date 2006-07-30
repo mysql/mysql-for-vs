@@ -93,7 +93,7 @@ namespace MySql.Data.Types
 			}
 		}
 
-		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, object val, int length)
+		void IMySqlValue.WriteValue(MySqlStream stream, bool binary, object val, int length)
 		{
 			byte[] buffToWrite = null;
 
@@ -106,10 +106,10 @@ namespace MySql.Data.Types
                     length = s.Length;
                 else
 				    s = s.Substring(0, length);
-				buffToWrite = writer.Encoding.GetBytes(s);
+				buffToWrite = stream.Encoding.GetBytes(s);
 			}
 			else if (val is Char[]) 
-				buffToWrite = writer.Encoding.GetBytes(val as char[]);
+				buffToWrite = stream.Encoding.GetBytes(val as char[]);
 
             // we assume zero length means write all of the value
             if (length == 0)
@@ -120,60 +120,61 @@ namespace MySql.Data.Types
 
 			if (binary) 
 			{
-				writer.WriteLength(length);
-				writer.Write(buffToWrite, 0, length);
+				stream.WriteLength(length);
+				stream.Write(buffToWrite, 0, length);
 			}
 			else 
 			{
-				if (writer.Version.isAtLeast(4,1,0))
-					writer.WriteStringNoNull("_binary ");
+				if (stream.Version.isAtLeast(4,1,0))
+					stream.WriteStringNoNull("_binary ");
 
-				writer.WriteByte((byte)'\'');
-				EscapeByteArray(buffToWrite, length, writer);
-				writer.WriteByte((byte)'\'');
+				stream.WriteByte((byte)'\'');
+				EscapeByteArray(buffToWrite, length, stream);
+				stream.WriteByte((byte)'\'');
 			}	
 		}
 
-		private void EscapeByteArray( byte[] bytes, int length, MySqlStreamWriter writer )
+		private void EscapeByteArray(byte[] bytes, int length, MySqlStream stream)
 		{
-			System.IO.MemoryStream ms = (System.IO.MemoryStream)writer.Stream;
-			ms.Capacity += (length * 2);
+		//	System.IO.MemoryStream ms = (System.IO.MemoryStream)stream.Stream;
+		//	ms.Capacity += (length * 2);
 
 			for (int x=0; x < length; x++)
 			{
 				byte b = bytes[x];
 				if (b == '\0') 
 				{
-					writer.WriteByte( (byte)'\\' );
-					writer.WriteByte( (byte)'0' );
+					stream.WriteByte( (byte)'\\' );
+					stream.WriteByte( (byte)'0' );
 				}
 				
 				else if (b == '\\' || b == '\'' || b == '\"')
 				{
-					writer.WriteByte( (byte)'\\' );
-					writer.WriteByte( b );
+					stream.WriteByte( (byte)'\\' );
+					stream.WriteByte( b );
 				}
 				else
-					writer.WriteByte( b );
+					stream.WriteByte( b );
 			}
 		}
 
-		IMySqlValue IMySqlValue.ReadValue(MySqlStreamReader reader, long length, bool nullVal)
+		IMySqlValue IMySqlValue.ReadValue(MySqlStream stream, long length, bool nullVal)
 		{
-			if (nullVal) return new MySqlBinary(type, true);
+			if (nullVal) 
+                return new MySqlBinary(type, true);
 
 			if (length == -1)
-				length = (long)reader.GetFieldLength();
+				length = (long)stream.ReadFieldLength();
 
 			byte[] newBuff = new byte[length];
-			reader.Read(newBuff, 0, (int)length);
+			stream.Read(newBuff, 0, (int)length);
 			return new MySqlBinary(type, newBuff);
 		}
 
-		void IMySqlValue.SkipValue(MySqlStreamReader reader)
+		void IMySqlValue.SkipValue(MySqlStream stream)
 		{
-			long len = reader.GetFieldLength();
-			reader.SkipBytes((int)len);
+			long len = stream.ReadFieldLength();
+			stream.SkipBytes((int)len);
 		}
 
 		#endregion
@@ -247,12 +248,12 @@ namespace MySql.Data.Types
 			else if (ourValue is String) 
 			{
 				string s = (ourValue as string).Substring(0, length);
-				buffToWrite = writer.Encoding.GetBytes(s);
+				buffToWrite = stream.Encoding.GetBytes(s);
 				length = buffToWrite.Length;
 			}
 			else if (ourValue is Char[]) 
 			{
-				buffToWrite = writer.Encoding.GetBytes( (ourValue as char[]) );
+				buffToWrite = stream.Encoding.GetBytes( (ourValue as char[]) );
 				length = buffToWrite.Length;
 			}
 
@@ -261,17 +262,17 @@ namespace MySql.Data.Types
 
 			if (binary) 
 			{
-				writer.WriteLength( length );
-				writer.Write( buffToWrite, 0, length );
+				stream.WriteLength( length );
+				stream.Write( buffToWrite, 0, length );
 			}
 			else 
 			{
-				if ( writer.Version.isAtLeast(4,1,0))
-					writer.WriteStringNoNull( "_binary " );
+				if ( stream.Version.isAtLeast(4,1,0))
+					stream.WriteStringNoNull( "_binary " );
 
-				writer.WriteByte( (byte)'\'');
+				stream.WriteByte( (byte)'\'');
 				EscapeByteArray( buffToWrite, length, writer );
-				writer.WriteByte((byte)'\'');
+				stream.WriteByte((byte)'\'');
 			}
 		}
 
@@ -289,7 +290,7 @@ namespace MySql.Data.Types
 
 		private void EscapeByteArray( byte[] bytes, int length, PacketWriter writer )
 		{
-			System.IO.MemoryStream ms = (System.IO.MemoryStream)writer.Stream;
+			System.IO.MemoryStream ms = (System.IO.MemoryStream)stream.Stream;
 			ms.Capacity += (length * 2);
 
 			for (int x=0; x < length; x++)
@@ -297,17 +298,17 @@ namespace MySql.Data.Types
 				byte b = bytes[x];
 				if (b == '\0') 
 				{
-					writer.WriteByte( (byte)'\\' );
-					writer.WriteByte( (byte)'0' );
+					stream.WriteByte( (byte)'\\' );
+					stream.WriteByte( (byte)'0' );
 				}
 				
 				else if (b == '\\' || b == '\'' || b == '\"')
 				{
-					writer.WriteByte( (byte)'\\' );
-					writer.WriteByte( b );
+					stream.WriteByte( (byte)'\\' );
+					stream.WriteByte( b );
 				}
 				else
-					writer.WriteByte( b );
+					stream.WriteByte( b );
 			}
 		}
 
@@ -343,17 +344,17 @@ namespace MySql.Data.Types
 		internal override MySqlValue ReadValue(PacketReader reader, long length)
 		{
 			if (length == -1)
-				length = (long)reader.GetFieldLength();
+				length = (long)stream.GetFieldLength();
 
 			byte[] newBuff = new byte[length];
-			reader.Read( ref newBuff, 0, length );
+			stream.Read( ref newBuff, 0, length );
 			return new MySqlBinary( newBuff, mySqlDbType );
 		}
 
 		internal override void Skip(PacketReader reader)
 		{
-			long len = reader.GetFieldLength();
-			reader.Skip( len );
+			long len = stream.GetFieldLength();
+			stream.Skip( len );
 		}
 
 	}*/

@@ -142,6 +142,15 @@ namespace MySql.Data.MySqlClient {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Connection unexpectedly terminated..
+        /// </summary>
+        internal static string ConnectionBroken {
+            get {
+                return ResourceManager.GetString("ConnectionBroken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Connection must be valid and open.
         /// </summary>
         internal static string ConnectionMustBeOpen {
@@ -237,6 +246,15 @@ namespace MySql.Data.MySqlClient {
         internal static string ImproperValueFormat {
             get {
                 return ResourceManager.GetString("ImproperValueFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An incorrect response was received from the server..
+        /// </summary>
+        internal static string IncorrectTransmission {
+            get {
+                return ResourceManager.GetString("IncorrectTransmission", resourceCulture);
             }
         }
         

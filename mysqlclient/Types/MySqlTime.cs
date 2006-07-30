@@ -79,7 +79,7 @@ namespace MySql.Data.Types
 			get	{ return "TIME"; }
 		}
 
-		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, object val, int length)
+		void IMySqlValue.WriteValue(MySqlStream stream, bool binary, object val, int length)
 		{
 			if (! (val is TimeSpan))
 				throw new MySqlException("Only TimeSpan objects can be serialized by MySqlTimeSpan");
@@ -87,59 +87,59 @@ namespace MySql.Data.Types
 			TimeSpan ts = (TimeSpan)val;
 			if (binary) 
 			{			
-				writer.WriteByte( 8 );
-				writer.WriteByte( (byte)(ts.TotalSeconds < 0 ? 1 : 0 ));
-				writer.WriteInteger( ts.Days, 4 );
-				writer.WriteByte( (byte)ts.Hours );
-				writer.WriteByte( (byte)ts.Minutes );
-				writer.WriteByte( (byte)ts.Seconds );
+				stream.WriteByte(8);
+                stream.WriteByte((byte)(ts.TotalSeconds < 0 ? 1 : 0));
+                stream.WriteInteger(ts.Days, 4);
+                stream.WriteByte((byte)ts.Hours);
+                stream.WriteByte((byte)ts.Minutes);
+                stream.WriteByte((byte)ts.Seconds);
 			}
 			else 
 			{
-				writer.WriteStringNoNull( String.Format("'{0} {1:00}:{2:00}:{3:00}.{4}'", 
+                stream.WriteStringNoNull(String.Format("'{0} {1:00}:{2:00}:{3:00}.{4}'", 
 					ts.Days, ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds ) );
 			}
 		}
 
 
-		IMySqlValue IMySqlValue.ReadValue(MySqlStreamReader reader, long length, bool nullVal)
+		IMySqlValue IMySqlValue.ReadValue(MySqlStream stream, long length, bool nullVal)
 		{
 			if (nullVal) return new MySqlTimeSpan(true);
 
 			if (length >= 0) 
 			{
-				string value = reader.ReadString( length );
-				ParseMySql(value, reader.Version.isAtLeast(4,1,0));
+                string value = stream.ReadString(length);
+                ParseMySql(value, stream.Version.isAtLeast(4, 1, 0));
 				return this;
 			}
 
-			long bufLength = reader.ReadByte();
+            long bufLength = stream.ReadByte();
 			int negate = 0;
 			if (bufLength > 0)
-				negate = reader.ReadByte();
+                negate = stream.ReadByte();
 
 			isNull = false;
 			if (bufLength == 0)
 				isNull = true;
 			else if (bufLength == 5)
-				mValue = new TimeSpan( reader.ReadInteger( 4 ), 0, 0, 0 );
+                mValue = new TimeSpan(stream.ReadInteger(4), 0, 0, 0);
 			else if (bufLength == 8)
-				mValue = new TimeSpan( reader.ReadInteger(4), 
-					reader.ReadByte(), reader.ReadByte(), reader.ReadByte() );
-			else 
-				mValue = new TimeSpan( reader.ReadInteger(4), 
-					reader.ReadByte(), reader.ReadByte(), reader.ReadByte(),
-					reader.ReadInteger(4) / 1000000 );
+                mValue = new TimeSpan(stream.ReadInteger(4),
+                    stream.ReadByte(), stream.ReadByte(), stream.ReadByte());
+			else
+                mValue = new TimeSpan(stream.ReadInteger(4),
+                    stream.ReadByte(), stream.ReadByte(), stream.ReadByte(),
+                    stream.ReadInteger(4) / 1000000);
 
 			if (negate == 1)
 				mValue = mValue.Negate();
 			return this;
 		}
 
-		void IMySqlValue.SkipValue(MySqlStreamReader reader)
+		void IMySqlValue.SkipValue(MySqlStream stream)
 		{
-			int len = reader.ReadByte();
-			reader.SkipBytes(len);
+			int len = stream.ReadByte();
+			stream.SkipBytes(len);
 		}
 
 		#endregion
@@ -222,16 +222,16 @@ namespace MySql.Data.Types
 			TimeSpan ts = (TimeSpan)value;
 			if (binary) 
 			{			
-				writer.WriteByte( 8 );
-				writer.WriteByte( (byte)(ts.TotalSeconds < 0 ? 1 : 0 ));
-				writer.WriteInteger( ts.Days, 4 );
-				writer.WriteByte( (byte)ts.Hours );
-				writer.WriteByte( (byte)ts.Minutes );
-				writer.WriteByte( (byte)ts.Seconds );
+				stream.WriteByte( 8 );
+				stream.WriteByte( (byte)(ts.TotalSeconds < 0 ? 1 : 0 ));
+				stream.WriteInteger( ts.Days, 4 );
+				stream.WriteByte( (byte)ts.Hours );
+				stream.WriteByte( (byte)ts.Minutes );
+				stream.WriteByte( (byte)ts.Seconds );
 			}
 			else 
 			{
-				writer.WriteStringNoNull( String.Format("'{0} {1:00}:{2:00}:{3:00}.{4}'", 
+				stream.WriteStringNoNull( String.Format("'{0} {1:00}:{2:00}:{3:00}.{4}'", 
 					ts.Days, ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds ) );
 			}
 		}
@@ -275,27 +275,27 @@ namespace MySql.Data.Types
 		{
 			if (length >= 0) 
 			{
-				string value = reader.ReadString( length );
-				ParseMySql( value, reader.Version.isAtLeast(4,1,0));
+				string value = stream.ReadString( length );
+				ParseMySql( value, stream.Version.isAtLeast(4,1,0));
 				return this;
 			}
 
-			long bufLength = reader.ReadByte();
+			long bufLength = stream.ReadByte();
 			int negate = 0;
 			if (bufLength > 0)
-				negate = reader.ReadByte();
+				negate = stream.ReadByte();
 
 			if (bufLength == 0)
 				IsNull = true;
 			else if (bufLength == 5)
-				Value = new TimeSpan( reader.ReadInteger( 4 ), 0, 0, 0 );
+				Value = new TimeSpan( stream.ReadInteger( 4 ), 0, 0, 0 );
 			else if (bufLength == 8)
-				Value = new TimeSpan( reader.ReadInteger(4), 
-					reader.ReadByte(), reader.ReadByte(), reader.ReadByte() );
+				Value = new TimeSpan( stream.ReadInteger(4), 
+					stream.ReadByte(), stream.ReadByte(), stream.ReadByte() );
 			else 
-				Value = new TimeSpan( reader.ReadInteger(4), 
-					reader.ReadByte(), reader.ReadByte(), reader.ReadByte(),
-					reader.ReadInteger(4) / 1000000 );
+				Value = new TimeSpan( stream.ReadInteger(4), 
+					stream.ReadByte(), stream.ReadByte(), stream.ReadByte(),
+					stream.ReadInteger(4) / 1000000 );
 
 			if (negate == 1)
 				Value = mValue.Negate();
@@ -309,8 +309,8 @@ namespace MySql.Data.Types
 
 		internal override void Skip(PacketReader reader)
 		{
-			long len = (long)reader.ReadByte();
-			reader.Skip( len );
+			long len = (long)stream.ReadByte();
+			stream.Skip( len );
 		}
 
 	}*/

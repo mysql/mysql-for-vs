@@ -80,34 +80,35 @@ namespace MySql.Data.Types
 			get	{ return "DOUBLE"; }
 		}
 
-		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, object val, int length)
+		void IMySqlValue.WriteValue(MySqlStream stream, bool binary, object val, int length)
 		{
 			double v = Convert.ToDouble(val);
             if (binary)
-                writer.Write(BitConverter.GetBytes(v));
+                stream.Write(BitConverter.GetBytes(v));
             else
-                writer.WriteStringNoNull(v.ToString(
+                stream.WriteStringNoNull(v.ToString(
                     CultureInfo.InvariantCulture));		
 		}
 
-		IMySqlValue IMySqlValue.ReadValue(MySqlStreamReader reader, long length, 
+		IMySqlValue IMySqlValue.ReadValue(MySqlStream stream, long length, 
             bool nullVal)
 		{
-			if (nullVal) return new MySqlDouble(true);
+			if (nullVal) 
+                return new MySqlDouble(true);
 
 			if (length == -1) 
 			{
 				byte[] b = new byte[8];
-				reader.Read(b, 0, 8);
+				stream.Read(b, 0, 8);
 				return new MySqlDouble(BitConverter.ToDouble(b, 0));
 			}
-			return new MySqlDouble(Double.Parse(reader.ReadString(length), 
+			return new MySqlDouble(Double.Parse(stream.ReadString(length), 
                 CultureInfo.InvariantCulture));
 		}
 
-		void IMySqlValue.SkipValue(MySqlStreamReader reader)
+		void IMySqlValue.SkipValue(MySqlStream stream)
 		{
-			reader.SkipBytes(8);
+			stream.SkipBytes(8);
 		}
 
 		#endregion
@@ -163,9 +164,9 @@ namespace MySql.Data.Types
 		{
 			double v = Convert.ToDouble(value);
 			if (binary)
-				writer.Write( BitConverter.GetBytes( v ) );
+				stream.Write( BitConverter.GetBytes( v ) );
 			else 
-				writer.WriteStringNoNull( v.ToString("R", numberFormat) );
+				stream.WriteStringNoNull( v.ToString("R", numberFormat) );
 		}
 
 		public static double MaxValue 
@@ -199,12 +200,12 @@ namespace MySql.Data.Types
 			if (length == -1) 
 			{
 				byte[] b = new byte[8];
-				reader.Read( ref b, 0, 8 );
+				stream.Read( ref b, 0, 8 );
 				Value = BitConverter.ToDouble( b, 0 );
 			}
 			else 
 			{
-				string value = reader.ReadString( length );
+				string value = stream.ReadString( length );
 				Value = Parse(value);
 			}
 			return this;
@@ -225,7 +226,7 @@ namespace MySql.Data.Types
 
 		internal override void Skip(PacketReader reader)
 		{
-			reader.Skip( 8 );
+			stream.Skip( 8 );
 		}
 	}*/
 }

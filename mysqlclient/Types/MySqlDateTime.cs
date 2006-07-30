@@ -182,11 +182,11 @@ namespace MySql.Data.Types
 		}
 
 
-		private void SerializeText(MySqlStreamWriter writer, DateTime value) 
+		private void SerializeText(MySqlStream stream, DateTime value) 
 		{
 			string val = String.Empty;
 
-			if (type == MySqlDbType.Timestamp && !writer.Version.isAtLeast(4,1,0))
+			if (type == MySqlDbType.Timestamp && !stream.Version.isAtLeast(4,1,0))
 				val = String.Format("{0:0000}{1:00}{2:00}{3:00}{4:00}{5:00}",
 					value.Year, value.Month, value.Day, value.Hour, value.Minute, value.Second );
 			else 
@@ -194,10 +194,10 @@ namespace MySql.Data.Types
 				val = String.Format("{0:0000}-{1:00}-{2:00} {3:00}:{4:00}:{5:00}", value.Year, value.Month, 
 					value.Day, value.Hour, value.Minute, value.Second );
 			}
-			writer.WriteStringNoNull( "'" + val + "'" );
+			stream.WriteStringNoNull( "'" + val + "'" );
 		}
 
-		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, 
+		void IMySqlValue.WriteValue(MySqlStream stream, bool binary, 
             object value, int length)
 		{
 			if (value is MySqlDateTime)
@@ -213,33 +213,33 @@ namespace MySql.Data.Types
 			DateTime dtValue = (DateTime)value;
 			if (! binary)
 			{
-				SerializeText( writer, dtValue );
+				SerializeText(stream, dtValue);
 				return;
 			}
 
 			if (type == MySqlDbType.Timestamp)
-				writer.WriteByte( 11 );
+				stream.WriteByte(11);
 			else
-				writer.WriteByte( 7 );
+				stream.WriteByte(7);
 
-			writer.WriteInteger( dtValue.Year, 2 );
-			writer.WriteByte( (byte)dtValue.Month );
-			writer.WriteByte( (byte)dtValue.Day );
+			stream.WriteInteger( dtValue.Year, 2 );
+			stream.WriteByte( (byte)dtValue.Month );
+			stream.WriteByte( (byte)dtValue.Day );
 			if (type == MySqlDbType.Date) 
 			{
-				writer.WriteByte( 0 );
-				writer.WriteByte( 0 );
-				writer.WriteByte( 0 );
+				stream.WriteByte( 0 );
+				stream.WriteByte( 0 );
+				stream.WriteByte( 0 );
 			}
 			else 
 			{
-				writer.WriteByte( (byte)dtValue.Hour );
-				writer.WriteByte( (byte)dtValue.Minute  );
-				writer.WriteByte( (byte)dtValue.Second );
+				stream.WriteByte( (byte)dtValue.Hour );
+				stream.WriteByte( (byte)dtValue.Minute  );
+				stream.WriteByte( (byte)dtValue.Second );
 			}
 			
 			if (type == MySqlDbType.Timestamp)
-				writer.WriteInteger( dtValue.Millisecond, 4 );
+				stream.WriteInteger( dtValue.Millisecond, 4 );
 		}
 
 		private MySqlDateTime Parse40Timestamp(string s) 
@@ -314,44 +314,44 @@ namespace MySql.Data.Types
 			return new MySqlDateTime(type, year, month, day, hour, minute, second);
 		}
 
-		IMySqlValue IMySqlValue.ReadValue(MySqlStreamReader reader, long length, bool nullVal)
+		IMySqlValue IMySqlValue.ReadValue(MySqlStream stream, long length, bool nullVal)
 		{
 			if (nullVal) return new MySqlDateTime(type,true);
 
 			if (length >= 0) 
 			{
-				string value = reader.ReadString( length );
-				return ParseMySql(value, reader.Version.isAtLeast(4,1,0));
+				string value = stream.ReadString( length );
+				return ParseMySql(value, stream.Version.isAtLeast(4,1,0));
 			}
 
-			long bufLength = reader.ReadByte();
+			long bufLength = stream.ReadByte();
             int year = 0, month = 0, day = 0;
             int hour = 0, minute = 0, second = 0;
             
             if (bufLength >= 4)
             {
-                year = reader.ReadInteger(2);
-                month = reader.ReadByte();
-                day = reader.ReadByte();
+                year = stream.ReadInteger(2);
+                month = stream.ReadByte();
+                day = stream.ReadByte();
             }
 
 			if (bufLength > 4) 
 			{
-				hour = reader.ReadByte();
-				minute = reader.ReadByte();
-				second = reader.ReadByte();
+				hour = stream.ReadByte();
+				minute = stream.ReadByte();
+				second = stream.ReadByte();
 			}
 		
 			if (bufLength > 7)
-				reader.ReadInteger(4);
+				stream.ReadInteger(4);
 		
 			return new MySqlDateTime(type, year, month, day, hour, minute, second);
 		}
 
-		void IMySqlValue.SkipValue(MySqlStreamReader reader)
+		void IMySqlValue.SkipValue(MySqlStream stream)
 		{
-			long len = reader.ReadByte();
-			reader.SkipBytes((int)len);
+			long len = stream.ReadByte();
+			stream.SkipBytes((int)len);
 		}
 
 		#endregion

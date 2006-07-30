@@ -80,9 +80,8 @@ namespace MySql.Data.MySqlClient
             // tokenize the sql
             ArrayList tokenArray = TokenizeSql(commandText);
 
-            MySqlStreamWriter writer = new MySqlStreamWriter(new MemoryStream(), 
-                driver.Encoding);
-            writer.Version = driver.Version;
+            MySqlStream stream = new MySqlStream(driver.Encoding);
+            stream.Version = driver.Version;
 
             // make sure our token array ends with a ;
             string lastToken = (string)tokenArray[tokenArray.Count - 1];
@@ -95,18 +94,18 @@ namespace MySql.Data.MySqlClient
                     continue;
                 if (token == ";")
                 {
-                    buffers.Add(writer.Stream);
-                    writer = new MySqlStreamWriter(new MemoryStream(), driver.Encoding);
+                    buffers.Add(stream.InternalBuffer);
+                    stream = new MySqlStream(driver.Encoding);
                     continue;
                 }
                 if (token[0] == parameters.ParameterMarker)
                 {
-                    if (SerializeParameter(parameters, writer, token))
+                    if (SerializeParameter(parameters, stream, token))
                         continue;
                 }
  
                 // our fall through case is to write the token to the byte stream
-                writer.WriteStringNoNull(token);
+                stream.WriteStringNoNull(token);
             }
         }
 
@@ -120,7 +119,7 @@ namespace MySql.Data.MySqlClient
         /// </remarks>
         /// <returns>True if the parameter was successfully serialized, false otherwise.</returns>
         private bool SerializeParameter(MySqlParameterCollection parameters, 
-            MySqlStreamWriter writer, string parmName)
+            MySqlStream stream, string parmName)
         {
             int index = parameters.IndexOf(parmName);
             if (index == -1)
@@ -132,7 +131,7 @@ namespace MySql.Data.MySqlClient
                 throw new MySqlException("Parameter '" + parmName + "' must be defined");
             }
             MySqlParameter parameter = parameters[index];
-            parameter.Serialize(writer, false);
+            parameter.Serialize(stream, false);
             return true;
         }
 

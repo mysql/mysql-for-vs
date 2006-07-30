@@ -29,6 +29,7 @@ using MySql.Data.Common;
 using System.Collections;
 using System.Text;
 using MySql.Data.Types;
+using System.Diagnostics;
 
 namespace MySql.Data.MySqlClient
 {
@@ -44,8 +45,7 @@ namespace MySql.Data.MySqlClient
 		protected String				encryptionSeed;
 		protected ClientFlags			connectionFlags;
 
-		protected MySqlStreamReader		reader;
-		protected MySqlStreamWriter		writer;
+		protected MySqlStream		stream;
 		private   BitArray				nullMap;
 
         private int warningCount;
@@ -93,33 +93,32 @@ namespace MySql.Data.MySqlClient
         /// <param name="length">The number of bytes to send</param>
 		private void ExecuteCommand(DBCmd cmd, byte[] bytes, int length) 
 		{
-			int len = 1;
-			if (bytes != null)
-				len += length;
-			writer.StartPacket(len, true);
-			writer.WriteByte((byte)cmd);
-			if (bytes != null)
-				writer.Write(bytes, 0, length);
-			writer.Flush();
+            Debug.Assert(length == 0 || bytes != null);
+
+            stream.StartOutput((ulong)length + 1, true);
+            stream.WriteByte((byte)cmd);
+            if (length > 0)
+                stream.Write(bytes, 0, length);
+            stream.Flush();
 		}
 
 		private void ReadOk(bool read) 
 		{
 			if (read)
-				reader.OpenPacket();
-			byte marker = reader.ReadByte();
+				stream.OpenPacket();
+			byte marker = (byte)stream.ReadByte();
 			if (marker != 0)
 				throw new MySqlException("Out of sync with server", true, null);
 
-			long affectedRows = reader.GetFieldLength();
-			long lastInsertId = reader.GetFieldLength();
-			if (reader.HasMoreData)
+			long affectedRows = stream.ReadFieldLength();
+			long lastInsertId = stream.ReadFieldLength();
+			if (stream.HasMoreData)
 			{
-				serverStatus = (ServerStatusFlags)reader.ReadInteger(2);
-				int warningCount = reader.ReadInteger(2);
-				if (reader.HasMoreData)
+				serverStatus = (ServerStatusFlags)stream.ReadInteger(2);
+				int warningCount = stream.ReadInteger(2);
+				if (stream.HasMoreData)
 				{
-					string msg = reader.ReadLenString();
+					string msg = stream.ReadLenString();
 				}
 			}
 		}
@@ -151,7 +150,7 @@ namespace MySql.Data.MySqlClient
 			base.Open();
 
 			// connect to one of our specified hosts
-			Stream stream;
+			Stream baseStream;
 			try 
 			{
 #if !CF
@@ -159,7 +158,7 @@ namespace MySql.Data.MySqlClient
 				{
 					SharedMemoryStream str = new SharedMemoryStream(Settings.SharedMemoryName);
 					str.Open(Settings.ConnectionTimeout);
-					stream = str;
+					baseStream = str;
 				}
 				else 
 				{
@@ -168,7 +167,7 @@ namespace MySql.Data.MySqlClient
 					if (Settings.ConnectionProtocol != MySqlConnectionProtocol.NamedPipe)
 						pipeName = null;
 					StreamCreator sc = new StreamCreator(Settings.Server, Settings.Port, pipeName);
-					stream = sc.GetStream(Settings.ConnectionTimeout);
+					baseStream = sc.GetStream(Settings.ConnectionTimeout);
 #if !CF
 				}
 #endif
@@ -179,20 +178,18 @@ namespace MySql.Data.MySqlClient
 			}
 
 
-			if (stream == null) 
+			if (baseStream == null) 
 				throw new MySqlException("Unable to connect to any of the specified MySQL hosts");
-			MySqlStream myStream = new MySqlStream(stream);
 
-			reader = new MySqlStreamReader(myStream, encoding);
-			writer = new MySqlStreamWriter(myStream, encoding);
-
+            stream = new MySqlStream(baseStream, encoding);
+            
 			// read off the welcome packet and parse out it's values
-			reader.OpenPacket();
-			protocol = reader.ReadByte();
-			string versionString = reader.ReadString();
+			stream.OpenPacket();
+			protocol = stream.ReadByte();
+			string versionString = stream.ReadString();
 			version = DBVersion.Parse(versionString);
-			threadId = (int)reader.ReadInteger(4);
-			encryptionSeed = reader.ReadString();
+			threadId = (int)stream.ReadInteger(4);
+			encryptionSeed = stream.ReadString();
 
 			// starting with 4.0.8, maxSinglePacket should be 0xffffff
 			if ( version.isAtLeast(4,0,8))
@@ -200,54 +197,50 @@ namespace MySql.Data.MySqlClient
 
 			// read in Server capabilities if they are provided
 			serverCaps = 0;
-			if (reader.HasMoreData)
-				serverCaps = (ClientFlags)reader.ReadInteger(2);
+			if (stream.HasMoreData)
+				serverCaps = (ClientFlags)stream.ReadInteger(2);
 
 			// based on our settings, set our connection flags
 			SetConnectionFlags();
 
-			writer.StartPacket(0, false);
-			writer.WriteInteger((int)connectionFlags, 
+			stream.StartOutput(0, false);
+			stream.WriteInteger((int)connectionFlags, 
                 version.isAtLeast(4,1,0) ? 4 : 2);
-			writer.WriteInteger(MaxSinglePacket, 
+			stream.WriteInteger(MaxSinglePacket, 
                 version.isAtLeast(4,1,0) ? 4 : 3);
 
 			// 4.1.1 included some new server status info
-			if (reader.HasMoreData) 
+			if (stream.HasMoreData) 
 			{
 				/* New protocol with 16 bytes to describe server characteristics */
-				serverCharSetIndex = reader.ReadInteger(1);
+				serverCharSetIndex = stream.ReadInteger(1);
 
-				serverStatus = (ServerStatusFlags)reader.ReadInteger(2);
-				reader.SkipBytes(13);
+				serverStatus = (ServerStatusFlags)stream.ReadInteger(2);
+				stream.SkipBytes(13);
             }
 
             if (version.isAtLeast(4,1,1))
             {
-                string seedPart2 = reader.ReadString();
+                string seedPart2 = stream.ReadString();
                 encryptionSeed += seedPart2;
 
-                writer.WriteByte(8);
-				writer.Write( new byte[23], 0, 23 );
+                stream.WriteByte(8);
+				stream.Write(new byte[23]);
 			}
 
-			Authenticate();
+            stream.MaxBlockLength = MaxSinglePacket;
+
+            Authenticate();
 
 			// if we are using compression, then we use our CompressedStream class
 			// to hide the ugliness of managing the compression
 			if ((connectionFlags & ClientFlags.COMPRESS) != 0)
-			{
-				MySqlStream compStream = new MySqlStream(new CompressedStream(stream));
-				reader = new MySqlStreamReader(compStream, encoding);
-				writer = new MySqlStreamWriter(compStream, encoding);
-			}
+				stream = new MySqlStream(new CompressedStream(baseStream),encoding);
 
-			((MySqlStream)reader.Stream).MaxSinglePacket = MaxSinglePacket;
-			((MySqlStream)writer.Stream).MaxSinglePacket = MaxSinglePacket;
-
-			// give our reader the server version we are connected to.  Our reader may have some fields
-			// that are read differently based on the version of the server we are connected to.
-			reader.Version = writer.Version = this.version;
+			// give our stream the server version we are connected to.  
+            // We may have some fields that are read differently based 
+            // on the version of the server we are connected to.
+			stream.Version = this.version;
 
 			isOpen = true;
 		}
@@ -305,27 +298,28 @@ namespace MySql.Data.MySqlClient
 			connectionFlags = flags;
 		}
 
-
-		/// <summary>Perform an authentication against a 4.1.1 server</summary>
+		/// <summary>
+        /// Perform an authentication against a 4.1.1 server
+        /// </summary>
 		private void Authenticate411()
 		{
-			if ( (connectionFlags & ClientFlags.SECURE_CONNECTION) == 0)
+			if ((connectionFlags & ClientFlags.SECURE_CONNECTION) == 0)
 				AuthenticateOld();
 
-			writer.Write( Crypt.Get411Password( connectionString.Password, this.encryptionSeed ));
+			stream.Write( Crypt.Get411Password( connectionString.Password, this.encryptionSeed ));
 			if ( (connectionFlags & ClientFlags.CONNECT_WITH_DB) != 0 && connectionString.Database != null)
-				writer.WriteString( connectionString.Database );
-			writer.Flush();
+				stream.WriteString(connectionString.Database);
+			stream.Flush();
 
 			// this result means the server wants us to send the password using
 			// old encryption
-			reader.OpenPacket();
-			if (reader.IsLastPacket)
+			stream.OpenPacket();
+			if (stream.IsLastPacket)
 			{
-				writer.StartPacket(0, false);
-				writer.WriteString( Crypt.EncryptPassword( 
-					connectionString.Password, this.encryptionSeed.Substring(0,8), true ) );
-				writer.Flush();
+				stream.StartOutput(0, false);
+				stream.WriteString(Crypt.EncryptPassword( 
+					connectionString.Password, this.encryptionSeed.Substring(0,8), true ));
+				stream.Flush();
 				ReadOk(true);
 			}
 			else 
@@ -334,20 +328,20 @@ namespace MySql.Data.MySqlClient
 
 		private void AuthenticateOld()
 		{
-			writer.WriteString( Crypt.EncryptPassword( 
+			stream.WriteString( Crypt.EncryptPassword( 
 				connectionString.Password, encryptionSeed, protocol > 9));
-			if ( (connectionFlags & ClientFlags.CONNECT_WITH_DB) != 0 && connectionString.Database != null)
-				writer.WriteString( connectionString.Database );
-			writer.Flush();
+			if ((connectionFlags & ClientFlags.CONNECT_WITH_DB) != 0 && connectionString.Database != null)
+				stream.WriteString(connectionString.Database);
+			stream.Flush();
 			ReadOk(true);
 		}
 
 		public void Authenticate()
 		{
 			// write the user id to the auth packet
-			writer.WriteString( connectionString.UserID ); 
+			stream.WriteString(connectionString.UserID); 
 
-			if ( version.isAtLeast(4,1,1) )
+			if (version.isAtLeast(4,1,1))
 				Authenticate411();
 			else
 				AuthenticateOld();
@@ -355,8 +349,8 @@ namespace MySql.Data.MySqlClient
 
 		public override void Reset()
 		{
-			writer.StartPacket(0, true);
-			writer.WriteByte((byte)DBCmd.CHANGE_USER);
+            stream.StartOutput(0, true);
+			stream.WriteByte((byte)DBCmd.CHANGE_USER);
 			Authenticate();
 		}
 
@@ -380,7 +374,7 @@ namespace MySql.Data.MySqlClient
             // the server will respond in one of several ways with the first byte indicating
             // the type of response.
             // 0 == ok packet.  This indicates non-select queries
-            // 0xff == error packet.  This is handled in reader.OpenPacket
+            // 0xff == error packet.  This is handled in stream.OpenPacket
             // > 0 = number of columns in select query
             // We don't actually read the result here since a single query can generate
             // multiple resultsets and we don't want to duplicate code.  See ReadResult
@@ -392,11 +386,9 @@ namespace MySql.Data.MySqlClient
 		public override void Close() 
 		{
 			if (isOpen)
-				ExecuteCommand( DBCmd.QUIT, null, 0 );
+				ExecuteCommand(DBCmd.QUIT, null, 0);
 
-			writer.Stream.Close();
-			reader.Close();
-
+			stream.Close();
 			base.Close();
 		}
 
@@ -436,29 +428,29 @@ namespace MySql.Data.MySqlClient
             // again if necessary.
             serverStatus &= ~(ServerStatusFlags.AnotherQuery |
                     ServerStatusFlags.MoreResults);
-			reader.OpenPacket();
+			stream.OpenPacket();
 
-			long fieldCount = reader.GetFieldLength();
+			long fieldCount = stream.ReadFieldLength();
             if (fieldCount > 0)
                 return fieldCount;
 
 			if (-1 == fieldCount)
 			{
-				string filename = reader.ReadString();
+				string filename = stream.ReadString();
 				SendFileToServer(filename);
 
                 return ReadResult(ref affectedRows, ref lastInsertId);
 			}
 
-			affectedRows = (ulong)reader.GetFieldLength();
-			lastInsertId = (long)reader.GetFieldLength();
+			affectedRows = (ulong)stream.ReadFieldLength();
+			lastInsertId = (long)stream.ReadFieldLength();
 			if ( version.isAtLeast(4,1,0) ) 
 			{
-				serverStatus = (ServerStatusFlags)reader.ReadInteger(2);
-				warningCount = reader.ReadInteger(2);
-				if (reader.HasMoreData) 
+				serverStatus = (ServerStatusFlags)stream.ReadInteger(2);
+				warningCount = stream.ReadInteger(2);
+				if (stream.HasMoreData) 
 				{
-					reader.ReadLenString();  //TODO: server message
+					stream.ReadLenString();  //TODO: server message
 				}
 			}
             return fieldCount;
@@ -478,22 +470,22 @@ namespace MySql.Data.MySqlClient
 			try 
 			{
 				fs = new FileStream(filename, FileMode.Open);
-				writer.StartPacket(fs.Length, true);
+//				stream.StartPacket(fs.Length, true);
 
 				long len = fs.Length;
 				while (len > 0) 
 				{
 					int count = fs.Read( buffer, 0, 4092 );
-					writer.Write( buffer, 0, count );
+					//stream.Write(buffer, 0, count);
 					len -= count;
 				}
-				writer.Flush();
+				stream.Flush();
 
 				// write the terminating packet
 				//TODO: fix this
-//				writer.WriteInteger(0, 3);
-//				writer.WriteByte(this.SequenceByte ++);
-//				writer.Flush();
+//				stream.WriteInteger(0, 3);
+//				stream.WriteByte(this.SequenceByte ++);
+//				stream.Flush();
 			}
 			catch (Exception ex)
 			{
@@ -508,10 +500,10 @@ namespace MySql.Data.MySqlClient
         public override bool SkipDataRow()
         {
             bool result = true;
-            if (!reader.HasMoreData)
+            if (!stream.HasMoreData)
                 result = FetchDataRow(-1, 0, 0);
             if (result)
-                reader.SkipPacket();
+                stream.SkipPacket();
             return result;
         }
 
@@ -520,8 +512,8 @@ namespace MySql.Data.MySqlClient
 			// if we are binary, then we need to load in our null bitmap
 			nullMap = null;
 			byte[] nullMapBytes = new byte[ (fieldCount+9)/8 ];
-			reader.ReadByte();
-			reader.Read(nullMapBytes, 0, nullMapBytes.Length);
+			stream.ReadByte();
+			stream.Read(nullMapBytes, 0, nullMapBytes.Length);
 			nullMap = new BitArray( nullMapBytes );
 		}
 
@@ -534,14 +526,12 @@ namespace MySql.Data.MySqlClient
 				isNull = nullMap [index+2];
 			else
 			{
-				length = reader.GetFieldLength();
+				length = stream.ReadFieldLength();
 				isNull = length == -1;
 			}
 
-//			if (valObject.IsNull) return valObject;
-
-			reader.Encoding = field.Encoding;
-			return valObject.ReadValue(reader, length, isNull);
+			stream.Encoding = field.Encoding;
+			return valObject.ReadValue(stream, length, isNull);
 		}
 
 		public override void SkipColumnValue(IMySqlValue valObject)
@@ -549,13 +539,13 @@ namespace MySql.Data.MySqlClient
 			long length = -1;
 			if (nullMap == null)
 			{
-				length = reader.GetFieldLength();
+				length = stream.ReadFieldLength();
 				if (length == -1) return;
 			}
 			if (length > -1)
-				reader.SkipBytes( (int)length);
+				stream.SkipBytes( (int)length);
 			else
-				valObject.SkipValue(reader);				
+				valObject.SkipValue(stream);				
 		}
 
 		public override MySqlField[] ReadColumnMetadata(int count)
@@ -578,23 +568,23 @@ namespace MySql.Data.MySqlClient
 				field = GetFieldMetaData41();
 			else 
 			{
-				reader.OpenPacket();
+				stream.OpenPacket();
 				field = new MySqlField( this.Version );
 
 				field.Encoding = encoding;
-				field.TableName = reader.ReadLenString();
-				field.ColumnName = reader.ReadLenString();
-				field.ColumnLength = reader.ReadNBytes();
-				MySqlDbType type = (MySqlDbType)reader.ReadNBytes();
-				reader.ReadByte();
+				field.TableName = stream.ReadLenString();
+				field.ColumnName = stream.ReadLenString();
+				field.ColumnLength = stream.ReadNBytes();
+				MySqlDbType type = (MySqlDbType)stream.ReadNBytes();
+				stream.ReadByte();
                 ColumnFlags colFlags;
 				if ((Flags & ClientFlags.LONG_FLAG) != 0)
-					colFlags = (ColumnFlags)reader.ReadInteger(2);
+					colFlags = (ColumnFlags)stream.ReadInteger(2);
 				else 
-					colFlags = (ColumnFlags)reader.ReadByte();
+					colFlags = (ColumnFlags)stream.ReadByte();
                 field.SetTypeAndFlags(type, colFlags);
 
-				field.Scale = (byte)reader.ReadByte();
+				field.Scale = (byte)stream.ReadByte();
 				if ( !version.isAtLeast(3,23,15) && version.isAtLeast(3,23,0))
 					field.Scale++;
 			}
@@ -604,31 +594,31 @@ namespace MySql.Data.MySqlClient
 
 		private MySqlField GetFieldMetaData41() 
 		{
-			MySqlField field = new MySqlField( this.Version );
+			MySqlField field = new MySqlField(this.Version);
 
-			reader.OpenPacket();
+			stream.OpenPacket();
 			field.Encoding = encoding;
-			field.CatalogName = reader.ReadLenString();
-			field.DatabaseName = reader.ReadLenString();
-			field.TableName = reader.ReadLenString();
-			field.RealTableName = reader.ReadLenString();
-			field.ColumnName = reader.ReadLenString();
-			field.OriginalColumnName = reader.ReadLenString();
-			reader.ReadByte();
-			field.CharactetSetIndex = reader.ReadInteger(2);
-			field.ColumnLength = reader.ReadInteger(4);
-			MySqlDbType type = (MySqlDbType)reader.ReadByte();
+			field.CatalogName = stream.ReadLenString();
+			field.DatabaseName = stream.ReadLenString();
+			field.TableName = stream.ReadLenString();
+			field.RealTableName = stream.ReadLenString();
+			field.ColumnName = stream.ReadLenString();
+			field.OriginalColumnName = stream.ReadLenString();
+			stream.ReadByte();
+			field.CharactetSetIndex = stream.ReadInteger(2);
+			field.ColumnLength = stream.ReadInteger(4);
+			MySqlDbType type = (MySqlDbType)stream.ReadByte();
             ColumnFlags colFlags;
 			if ((Flags & ClientFlags.LONG_FLAG) != 0)
-				colFlags = (ColumnFlags)reader.ReadInteger(2);
+				colFlags = (ColumnFlags)stream.ReadInteger(2);
 			else 
-				colFlags = (ColumnFlags)reader.ReadByte();
+				colFlags = (ColumnFlags)stream.ReadByte();
             field.SetTypeAndFlags(type, colFlags);
 
-			field.Scale = (byte)reader.ReadByte();
+			field.Scale = (byte)stream.ReadByte();
 
-			if (reader.HasMoreData)
-				reader.ReadInteger(2);	// reserved
+			if (stream.HasMoreData)
+				stream.ReadInteger(2);	// reserved
 
 			if (charSets != null)
 				field.Encoding = CharSetMap.GetEncoding(this.version, (string)charSets[field.CharactetSetIndex]);
@@ -645,15 +635,15 @@ namespace MySql.Data.MySqlClient
 
         private void CheckEOF()
         {
-            if (!reader.IsLastPacket)
+            if (!stream.IsLastPacket)
                 throw new MySqlException("Expected end of data packet");
 
-            reader.ReadByte();  // read off the 254
+            stream.ReadByte();  // read off the 254
 
-            if (reader.HasMoreData && version.isAtLeast(4, 1, 0))
+            if (stream.HasMoreData && version.isAtLeast(4, 1, 0))
             {
-                warningCount = reader.ReadInteger(2);
-                serverStatus = (ServerStatusFlags)reader.ReadInteger(2);
+                warningCount = stream.ReadInteger(2);
+                serverStatus = (ServerStatusFlags)stream.ReadInteger(2);
 
                 // if we are at the end of this cursor based resultset, then we remove
                 // the last row sent status flag so our next fetch doesn't abort early
@@ -668,7 +658,7 @@ namespace MySql.Data.MySqlClient
 
         private void ReadEOF() 
 		{
-			reader.OpenPacket();
+			stream.OpenPacket();
             CheckEOF();
 		}
 
@@ -680,17 +670,17 @@ namespace MySql.Data.MySqlClient
 			byte[] bytes = encoding.GetBytes(sql);
 			ExecuteCommand(DBCmd.PREPARE, bytes, bytes.Length);
 
-			reader.OpenPacket();
+			stream.OpenPacket();
 
-			int marker = reader.ReadByte();
+			int marker = stream.ReadByte();
 			if (marker != 0)
 				throw new MySqlException("Expected prepared statement marker");
 
-			int statementId = reader.ReadInteger(4);
-			int numCols = reader.ReadInteger(2);
-			int numParams = reader.ReadInteger(2);
+			int statementId = stream.ReadInteger(4);
+			int numCols = stream.ReadInteger(2);
+			int numParams = stream.ReadInteger(2);
             //TODO: find out what this is needed for
-            reader.ReadInteger(3);
+            stream.ReadInteger(3);
             if (numParams > 0)
 			{
 				parameters = ReadColumnMetadata(numParams);
@@ -705,8 +695,8 @@ namespace MySql.Data.MySqlClient
 			{
                 while (numCols-- > 0)
                 {
-                    reader.OpenPacket();
-                    reader.SkipPacket();
+                    stream.OpenPacket();
+                    stream.SkipPacket();
                 }
 
 				ReadEOF();
@@ -723,8 +713,8 @@ namespace MySql.Data.MySqlClient
 /*			CommandResult result = (CommandResult)commandResults[lastCommandResult];
 			result.ReadRemainingColumns();
 
-			reader.OpenPacket();
-			if (! reader.IsLastPacket)
+			stream.OpenPacket();
+			if (! stream.IsLastPacket)
 				throw new MySqlException("Cursor reading out of sync");
 
 			ReadEOF(false);
@@ -745,16 +735,16 @@ namespace MySql.Data.MySqlClient
 			if ( (serverStatus & ServerStatusFlags.LastRowSent) != 0)
 				return false;
 
-			writer.StartPacket(9, true);
-			writer.WriteByte((byte)DBCmd.FETCH);
-			writer.WriteInteger(statementId, 4);
-			writer.WriteInteger(1, 4);
-			writer.Flush();
+			stream.StartPacket(9, true);
+			stream.WriteByte((byte)DBCmd.FETCH);
+			stream.WriteInteger(statementId, 4);
+			stream.WriteInteger(1, 4);
+			stream.Flush();
 
 			lastCommandResult = statementId;
             */
-			reader.OpenPacket();
-			if (reader.IsLastPacket)
+			stream.OpenPacket();
+			if (stream.IsLastPacket)
 			{
 				CheckEOF();
 				return false;

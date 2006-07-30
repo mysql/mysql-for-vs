@@ -79,28 +79,29 @@ namespace MySql.Data.Types
 			get	{ return "BIGINT"; }
 		}
 
-		void IMySqlValue.WriteValue(MySqlStreamWriter writer, bool binary, object val, int length)
+		void IMySqlValue.WriteValue(MySqlStream stream, bool binary, object val, int length)
 		{
 			long v = Convert.ToInt64(val);
 			if (binary)
-				writer.Write(BitConverter.GetBytes(v));
+				stream.Write(BitConverter.GetBytes(v));
 			else
-				writer.WriteStringNoNull(v.ToString());		
+				stream.WriteStringNoNull(v.ToString());		
 		}
 
-		IMySqlValue IMySqlValue.ReadValue(MySqlStreamReader reader, long length, bool nullVal)
+		IMySqlValue IMySqlValue.ReadValue(MySqlStream stream, long length, bool nullVal)
 		{
-			if (nullVal) return new MySqlInt64(true);
+			if (nullVal) 
+                return new MySqlInt64(true);
 
 			if (length == -1) 
-				return new MySqlInt64((long)reader.ReadLong(8));
+				return new MySqlInt64((long)stream.ReadLong(8));
 			else 
-				return new MySqlInt64(Int64.Parse(reader.ReadString(length)));
+				return new MySqlInt64(Int64.Parse(stream.ReadString(length)));
 		}
 
-		void IMySqlValue.SkipValue(MySqlStreamReader reader)
+		void IMySqlValue.SkipValue(MySqlStream stream)
 		{
-			reader.SkipBytes(8);
+			stream.SkipBytes(8);
 		}
 
 		#endregion
@@ -155,9 +156,9 @@ namespace MySql.Data.Types
 		{
 			long v = Convert.ToInt64(value);
 			if (binary)
-				writer.Write(BitConverter.GetBytes(v));
+				stream.Write(BitConverter.GetBytes(v));
 			else
-				writer.WriteStringNoNull(v.ToString(numberFormat));
+				stream.WriteStringNoNull(v.ToString(numberFormat));
 		}
 
 
@@ -181,11 +182,11 @@ namespace MySql.Data.Types
 		{
 			if (length == -1) 
 			{
-				Value = (long)reader.ReadLong(8);
+				Value = (long)stream.ReadLong(8);
 			}
 			else 
 			{
-				string value = reader.ReadString(length);
+				string value = stream.ReadString(length);
 				Value = Int64.Parse(value, numberFormat);
 			}
 			return this;
@@ -193,7 +194,7 @@ namespace MySql.Data.Types
 
 		internal override void Skip(PacketReader reader)
 		{
-			reader.Skip(8);
+			stream.Skip(8);
 		}
 
 	}*/
