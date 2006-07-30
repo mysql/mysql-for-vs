@@ -666,4 +666,49 @@ namespace MySql.Data.MySqlClient.Tests
             }
         }
 	}
+
+    #region Configs
+
+    public class PreparedStatementsSocketCompressed : PreparedStatements
+    {
+        protected override string GetConnectionInfo()
+        {
+            return ";port=3306;compress=true";
+        }
+    }
+
+    public class PreparedStatementsPipe : PreparedStatements
+    {
+        protected override string GetConnectionInfo()
+        {
+            return ";protocol=pipe";
+        }
+    }
+
+    public class PreparedStatementsPipeCompressed : PreparedStatements
+    {
+        protected override string GetConnectionInfo()
+        {
+            return ";protocol=pipe;compress=true";
+        }
+    }
+
+    public class PreparedStatementsSharedMemory : PreparedStatements
+    {
+        protected override string GetConnectionInfo()
+        {
+            return ";protocol=memory";
+        }
+    }
+
+    public class PreparedStatementsSharedMemoryCompressed : PreparedStatements
+    {
+        protected override string GetConnectionInfo()
+        {
+            return ";protocol=memory;compress=true";
+        }
+    }
+
+    #endregion
+
 }

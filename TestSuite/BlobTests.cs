@@ -47,11 +47,6 @@ namespace MySql.Data.MySqlClient.Tests
 			Close();
 		}
 
-        protected override string GetConnectionInfo()
-        {
-            return ";port=3306";
-        }
-
 		[Test]
 		[Category("4.0")]
 		public void InsertBinary() 

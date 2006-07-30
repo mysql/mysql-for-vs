@@ -42,7 +42,7 @@ namespace MySql.Data.MySqlClient
             {
                 new object[] {"Views", 2, 3},
                 new object[] {"ViewColumns", 3, 4},
-                new object[] {"ProcedureParameters", 4, 1},
+                new object[] {"Procedure Parameters", 4, 1},
                 new object[] {"Procedures", 4, 3},
                 new object[] {"Triggers", 2, 4}
             };
@@ -57,10 +57,10 @@ namespace MySql.Data.MySqlClient
 
             object[][] restrictions = new object[][] 
             {
-                new object[] {"ProcedureParameters", "Catalog", "", 0},
-                new object[] {"ProcedureParameters", "Owner", "", 1},
-                new object[] {"ProcedureParameters", "Name", "", 2},
-                new object[] {"ProcedureParameters", "Parameter", "", 3},
+                new object[] {"Procedure Parameters", "Catalog", "", 0},
+                new object[] {"Procedure Parameters", "Owner", "", 1},
+                new object[] {"Procedure Parameters", "Name", "", 2},
+                new object[] {"Procedure Parameters", "Parameter", "", 3},
                 new object[] {"Procedures", "Catalog", "", 0},
                 new object[] {"Procedures", "Owner", "", 1},
                 new object[] {"Procedures", "Name", "", 2},

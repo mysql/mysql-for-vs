@@ -381,4 +381,49 @@ namespace MySql.Data.MySqlClient.Tests
         }
 
 	}
+
+    #region Configs
+
+    public class CommandTestsSocketCompressed : CommandTests
+    {
+        protected override string GetConnectionInfo()
+        {
+            return ";port=3306;compress=true";
+        }
+    }
+
+    public class CommandTestsPipe : CommandTests
+    {
+        protected override string GetConnectionInfo()
+        {
+            return ";protocol=pipe";
+        }
+    }
+
+    public class CommandTestsPipeCompressed : CommandTests
+    {
+        protected override string GetConnectionInfo()
+        {
+            return ";protocol=pipe;compress=true";
+        }
+    }
+
+    public class CommandTestsSharedMemory : CommandTests
+    {
+        protected override string GetConnectionInfo()
+        {
+            return ";protocol=memory";
+        }
+    }
+
+    public class CommandTestsSharedMemoryCompressed : CommandTests
+    {
+        protected override string GetConnectionInfo()
+        {
+            return ";protocol=memory;compress=true";
+        }
+    }
+
+    #endregion
+
 }
