@@ -20,8 +20,12 @@
 
 using System;
 using System.IO;
+#if NET20
+using System.IO.Compression;
+#else
 using ICSharpCode.SharpZipLib.Zip.Compression;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
+#endif
 using MySql.Data.Common;
 
 namespace MySql.Data.MySqlClient
@@ -82,6 +86,7 @@ namespace MySql.Data.MySqlClient
 			get	{ return baseStream.Position; }
 			set	{ baseStream.Position = value; }
 		}
+
 		#endregion
 
 		public override void Close()
@@ -122,24 +127,23 @@ namespace MySql.Data.MySqlClient
 		private byte[] CompressData( byte[] buff, int offset, int count )
 		{
 			MemoryStream ms = new MemoryStream();
-			DeflaterOutputStream	deflater;
-			deflater = new DeflaterOutputStream( ms );
+            DeflateStream deflater = new DeflateStream(ms, CompressionMode.Compress);
 
 			byte[] cacheBuff = cache.GetBuffer();
 
 			byte seq = cacheBuff[3];
 			cacheBuff[3] = 0;
 
-			deflater.Write( cacheBuff, 0, (int)cache.Length );
+			deflater.Write(cacheBuff, 0, (int)cache.Length);
 			if ( count > 0 )
-				deflater.Write( buff, offset, count );
-			deflater.Finish();
+				deflater.Write(buff, offset, count);
+            deflater.Flush();
 
 			cacheBuff[3] = seq;
 
 			long unCompLen = cache.Length + count;
 
-			if ( ms.Length >= unCompLen )
+			if (ms.Length >= unCompLen)
 				return null;
 			return ms.ToArray();
 		}
@@ -234,13 +238,10 @@ namespace MySql.Data.MySqlClient
 			}
 		}
 
-		private void ReadCompressedBuffer( byte[] buf, int index, int compLen, int unCompLen )
+		private void ReadCompressedBuffer(byte[] buf, int index, int compLen, int unCompLen)
 		{
-			byte[] compBuf = new byte[ compLen ];
-			ReadBuffer( baseStream, compBuf, 0, compLen );
-			Inflater i = new Inflater();
-			i.SetInput( compBuf, 0, compLen );
-			i.Inflate( buf, index, unCompLen );
+            DeflateStream stream = new DeflateStream(baseStream, CompressionMode.Decompress, true);
+            stream.Read(buf, index, unCompLen);
 		}
 
 		private void ReadNextPacket()

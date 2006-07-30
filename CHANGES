@@ -1,4 +1,4 @@
-- Version 5.0
+Version 5.0.0.0 (Alpha)
 
     Bugs fixed
     ----------
@@ -6,19 +6,21 @@
 
     Other changes
     -------------
-    Implemented intial usage advisor
-    Added Async methods
-    Reimplemented PacketReader/PacketWriter support into MySqlStream* classes
+    Implemented Usage Advisor
+    Added Async query methods
+    Reimplemented PacketReader/PacketWriter support into MySqlStream class
     Added internal implemention of SHA1 so we don't have to distribute the OpenNetCF on mobile devices    	
     Added usage advisor warnings for requesting column values by the wrong type
     Reworked connection string classes to be simpler and faster
-    Added cache for stored procedure definitions
+    Added procedure metadata caching
     Added perfmon hooks for stored procedure cache hits and misses    	
     Implemented MySqlConnectionBuilder class
     Implemented MySqlClientFactory class
-    Implemented necessary classes and interfaces for ADO.Net 2.0 support
+    Implemented classes and interfaces for ADO.Net 2.0 support
+    Replaced use of ICSharpCode with .NET 2.0 internal deflate support
+    Refactored test suite to test all protocols in a single pass	
     	
-x-xx-06 - Version 1.0.8
+<unreleased> - Version 1.0.8
 
     Other changes
     -------------
@@ -47,7 +49,7 @@ x-xx-06 - Version 1.0.8
     Bug #17106 MySql.Data.MySqlClient.CharSetMap.GetEncoding thread synchronization issue [fixed]
     Bug #17736 Selecting a row with with empty date '0000-00-00' results in Read() hanging. [fixed]
     
-x-xx-05 - Version 1.0.7
+Version 1.0.7
 
     Bugs fixed or addressed
     -------------------------
@@ -69,7 +71,7 @@ x-xx-05 - Version 1.0.7
 	Failure to provide parameters for out and inout values is now detected
 	Changed pooling code to remove issue of skipping Ping() on bogus connnections
     
-9-27-05 - Version 1.0.6
+Version 1.0.6
  
     Bugs fixed or addressed
     -------------------------
@@ -85,7 +87,7 @@ x-xx-05 - Version 1.0.7
     Added options to not reset and reconfigure connections pulled from the pool
     Connections pulled from the pool that are not reset are also not pinged
 
-8-24-05 - Version 1.0.5
+Version 1.0.5
 
 	Bugs fixed or addressed
 	-------------------------
@@ -141,7 +143,7 @@ x-xx-05 - Version 1.0.7
     Implemented new BIT data type						
     Implemented Convert Zero DateTime connection option.							
 							
-1-20-05 - Version 1.0.4  
+Version 1.0.4  
 
 	Bug #7243 calling prepare causing exception [fixed]
 	Fixed another small problem with prepared statements
@@ -157,7 +159,7 @@ x-xx-05 - Version 1.0.7
 	Bug #7436  	Problem with Multiple resultsets... [fixed]
 	Added or filled out several more topics in the API reference documentation
 	
-12-10-04 - Version 1.0.3-gamma
+Version 1.0.3-gamma
 
 	- Made MySQL the default named pipe name
 	- Now SHOW COLLATION is used upon connection to retrieve the full list of charset ids
@@ -181,7 +183,7 @@ x-xx-05 - Version 1.0.7
 	- Added Ping method to MySqlConnection
 	- Changed the name of the test suite to MySql.Data.Tests.dll
 	
-11-15-04 - Version 1.0.2-gamma
+Version 1.0.2-gamma
 
 	- Fixed problem with MySqlBinary where string values could not be used to update extended text columns
 	- Fixed Installation directory ignored using custom installation (Bug #6329)
@@ -198,7 +200,7 @@ x-xx-05 - Version 1.0.7
 	- Fixed Objects not being disposed	(Bug #6649)
 	- Provider is now using character set specified by server as default 
 	
-10-27-04 - Version 1.0.1-beta 2
+Version 1.0.1-beta 2
 
     - Fixed BUG #5602 Possible bug in MySqlParameter(string, object) constructor
     - Fixed BUG #5458 Calling GetChars on a longtext column throws an exception
@@ -239,7 +241,7 @@ x-xx-05 - Version 1.0.7
 	- Fixed IndexOutOfBounds when reading BLOB with DataReader with GetString(index) (Bug #6230)
 	
 	
-09-01-04 - Version 1.0.0-beta [released]
+Version 1.0.0-beta [released]
 	- Fixed BUG# 3889 Thai encoding not correctly supported
 	- Updated many of the test cases
 	- Fixed problem with using compression
@@ -248,7 +250,7 @@ x-xx-05 - Version 1.0.7
 	- Removed all of the XML comment warnings (I'll clean them up better later)
 	- Removed some last references to ByteFX
   
-08-30-04 - Version 0.9.0
+Version 0.9.0
 
 	- Added test fixture for prepared statements
 	- All type classes now implement a SerializeBinary method for sending their data to a PacketWriter
