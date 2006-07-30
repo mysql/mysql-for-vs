@@ -169,7 +169,6 @@
     <Compile Include="Types\MySqlUInt32.cs" />
     <Compile Include="Types\MySqlUInt64.cs" />
     <Compile Include="Types\MySqlValue.cs" />
-    <Compile Include="Types\NumberFormat.cs" />
     <Compile Include="UsageAdvisor.cs" />
   </ItemGroup>
   <ItemGroup>

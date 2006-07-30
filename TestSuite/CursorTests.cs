@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB
+// Copyright (C) 2004-2006 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -29,7 +29,7 @@ namespace MySql.Data.MySqlClient.Tests
 	/// <summary>
 	/// Summary description for BlobTests.
 	/// </summary>
-	[NUnit.Framework.TestFixture]
+	[TestFixture]
 	public class CursorTests : BaseTest
 	{
 		[TestFixtureSetUp]
