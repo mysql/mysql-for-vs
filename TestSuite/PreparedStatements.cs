@@ -559,6 +559,7 @@ namespace MySql.Data.MySqlClient.Tests
 		[Category("4.1")]
 		public void ParameterLengths()
 		{
+            execSQL("DROP TABLE test");
 			execSQL("CREATE TABLE test (id int, name VARCHAR(255))");
 
 			MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES (?id, ?name)", conn);

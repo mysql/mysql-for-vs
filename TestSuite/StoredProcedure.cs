@@ -37,7 +37,6 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 			csAdditions = ";pooling=false;procedure cache size=0";
 			Open();
-			execSQL("DROP TABLE IF EXISTS Test; CREATE TABLE Test (id INT, name VARCHAR(100))");
 		}
 
 		[TestFixtureTearDown]
@@ -45,6 +44,13 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 			Close();
 		}
+
+        protected override void Setup()
+        {
+           base.Setup();
+           execSQL("DROP TABLE IF EXISTS Test");
+           execSQL("CREATE TABLE Test (id INT, name VARCHAR(100))");
+       }
 
 		/// <summary>
 		/// Bug #7623  	Adding MySqlParameter causes error if MySqlDbType is Decimal
@@ -54,7 +60,7 @@ namespace MySql.Data.MySqlClient.Tests
 		public void ReturningResultset() 
 		{
 			// create our procedure
-			execSQL( "CREATE PROCEDURE spTest(val decimal(10,3)) begin select val; end");
+			execSQL("CREATE PROCEDURE spTest(val decimal(10,3)) begin select val; end");
 			
 			using (MySqlCommand cmd = new MySqlCommand("spTest", conn))
 			{
@@ -114,12 +120,12 @@ namespace MySql.Data.MySqlClient.Tests
 		public void OutputParameters()
 		{
 			// create our procedure
-			execSQL( "DROP PROCEDURE IF EXISTS spCount" );
-			execSQL( "CREATE PROCEDURE spCount(out value VARCHAR(50), OUT intVal INT, " +
+			execSQL("DROP PROCEDURE IF EXISTS spCount");
+			execSQL("CREATE PROCEDURE spCount(out value VARCHAR(50), OUT intVal INT, " +
                 "OUT dateVal TIMESTAMP, OUT floatVal FLOAT, OUT noTypeVarChar VARCHAR(20), " +
                 "OUT noTypeInt INT) " + 
 				"BEGIN  SET value='42';  SET intVal=33; SET dateVal='2004-06-05 07:58:09'; " +
-                "SET floatVal = 1.2; SET noTypeVarChar='test'; SET noTypeInt=66; END" );
+                "SET floatVal = 1.2; SET noTypeVarChar='test'; SET noTypeInt=66; END");
 
 			MySqlCommand cmd = new MySqlCommand("spCount", conn);
 			cmd.CommandType = CommandType.StoredProcedure;
@@ -153,7 +159,7 @@ namespace MySql.Data.MySqlClient.Tests
 			execSQL("DROP PROCEDURE spCount");
 		}
 
-		[Test()]
+		[Test]
 		[Category("5.0")]
 		public void NoBatch()
 		{
@@ -164,26 +170,27 @@ namespace MySql.Data.MySqlClient.Tests
 				cmd.ExecuteNonQuery();
 				Assert.Fail("Should have thrown an exception");
 			}
-			catch (MySqlException) 
+			catch (Exception) 
 			{
 			}
 		}
 
-		[Test()]
+		[Test]
 		[Category("5.0")]
 		public void WrongParameters()
 		{
-			try 
-			{
-				MySqlCommand cmd = new MySqlCommand("spTest", conn);
-				cmd.CommandType = CommandType.StoredProcedure;
-				cmd.Parameters.Add( "?p2", 1 );
-				cmd.ExecuteNonQuery();
-				Assert.Fail("Should have thrown an exception");
-			}
-			catch (MySqlException) 
-			{
-			}
+            execSQL("CREATE PROCEDURE spTest(p1 INT) BEGIN SELECT 1; END");
+            try
+            {
+                MySqlCommand cmd = new MySqlCommand("spTest", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("?p2", 1);
+                cmd.ExecuteNonQuery();
+                Assert.Fail("Should have thrown an exception");
+            }
+            catch (Exception)
+            {
+            }
 		}
 
 		[Test]
@@ -285,9 +292,9 @@ namespace MySql.Data.MySqlClient.Tests
 			cmd.Parameters.Add("?a", 3);
 			cmd.CommandType = CommandType.StoredProcedure;
 			MySqlDataReader reader = cmd.ExecuteReader();
-			Assert.AreEqual( true, reader.Read() );
-			Assert.AreEqual( false, reader.NextResult() );
-			Assert.AreEqual( false, reader.Read() );
+			Assert.AreEqual(true, reader.Read());
+			Assert.AreEqual(false, reader.NextResult());
+			Assert.AreEqual(false, reader.Read());
 			reader.Close();
 		}
 
@@ -406,8 +413,8 @@ namespace MySql.Data.MySqlClient.Tests
 		public void OtherProcSigs() 
 		{
 			// create our procedure
-			execSQL( "CREATE PROCEDURE spTest(IN \r\nvalin DECIMAL(10,2),\nIN val2 INT) " +
-				"SQL SECURITY INVOKER BEGIN  SELECT valin; END" );
+			execSQL("CREATE PROCEDURE spTest(IN \r\nvalin DECIMAL(10,2),\nIN val2 INT) " +
+				"SQL SECURITY INVOKER BEGIN  SELECT valin; END");
 
 			MySqlCommand cmd = new MySqlCommand("spTest", conn);
 			cmd.CommandType = CommandType.StoredProcedure;
@@ -436,7 +443,7 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 			execSQL("CREATE FUNCTION fnTest(valin int) RETURNS INT BEGIN return valin * 2; END");
 			MySqlCommand cmd = new MySqlCommand("fnTest", conn);
-			cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandType = CommandType.StoredProcedure;
 			cmd.Parameters.Add("?valin", 22);
 			cmd.Parameters.Add("retval", MySqlDbType.Int32);
 			cmd.Parameters[1].Direction = ParameterDirection.ReturnValue;
@@ -688,10 +695,11 @@ namespace MySql.Data.MySqlClient.Tests
 		/// </summary>
 		[Test]
 		[Category("5.0")]
-		public void MultileRecords()
+		public void MultipleRecords()
 		{
 			execSQL("DROP PROCEDURE IF EXISTS spTest");
-			execSQL("CREATE PROCEDURE spTest(id int, str VARCHAR(45)) BEGIN INSERT INTO test VALUES(id, str); END");
+			execSQL("CREATE PROCEDURE spTest(id int, str VARCHAR(45)) " +
+                "BEGIN INSERT INTO test VALUES(id, str); END");
 
 			MySqlCommand cmd = new MySqlCommand("spTest", conn);
 			cmd.CommandType = CommandType.StoredProcedure;

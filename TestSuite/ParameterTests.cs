@@ -35,7 +35,6 @@ namespace MySql.Data.MySqlClient.Tests
 		public void SetUp()
 		{
 			Open();
-			execSQL("DROP TABLE IF EXISTS Test; CREATE TABLE Test (id INT NOT NULL, name VARCHAR(100), dt DATETIME, tm TIME, ts TIMESTAMP, PRIMARY KEY(id))");
 		}
 
 		[TestFixtureTearDown]
@@ -43,6 +42,13 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 			Close();
 		}
+
+        protected override void Setup()
+        {
+            base.Setup();
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(100), dt DATETIME, tm TIME, ts TIMESTAMP, PRIMARY KEY(id))");
+        }
 
 		[Test]
 		public void TestUserVariables()
@@ -174,9 +180,10 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void NestedQuoting() 
 		{
-			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id, name) VALUES(1, 'this is ?\"my value\"')", conn);
+			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id, name) " +
+                "VALUES(1, 'this is ?\"my value\"')", conn);
 			int count = cmd.ExecuteNonQuery();
-			Assert.AreEqual( 1, count );
+			Assert.AreEqual(1, count);
 		}
 
         [Test]

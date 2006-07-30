@@ -52,15 +52,26 @@ namespace MySql.Data.MySqlClient.Tests
         {
             DataTable dt = conn.GetSchema("Databases");
             Assert.IsTrue(dt.Rows.Count >= 3);
+            Assert.AreEqual("Databases", dt.TableName);
 
             dt = conn.GetSchema("Databases", new string[1] { "mysql" });
             Assert.AreEqual(1, dt.Rows.Count);
-            Assert.AreEqual("mysql", dt.Rows[0][0].ToString().ToLower());
+            Assert.AreEqual("mysql", dt.Rows[0][1].ToString().ToLower());
         }
 
         [Test]
         public void Tables()
         {
+            execSQL("DROP TABLE IF EXISTS test1");
+            execSQL("CREATE TABLE test1 (id int)");
+
+            string[] restrictions = new string[4];
+            restrictions[1] = "test";
+            restrictions[2] = "test1";
+            DataTable dt = conn.GetSchema("Tables", restrictions);
+            Assert.IsTrue(dt.Rows.Count == 1);
+            Assert.AreEqual("Tables", dt.TableName);
+            Assert.AreEqual("test1", dt.Rows[0][2]);
         }
 
         [Test]
@@ -71,6 +82,16 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void Procedures()
         {
+            execSQL("DROP PROCEDURE IF EXISTS spTest");
+            execSQL("CREATE PROCEDURE spTest (id int) BEGIN SELECT 1; END");
+
+            string[] restrictions = new string[4];
+            restrictions[1] = "test";
+            restrictions[2] = "spTest";
+            DataTable dt = conn.GetSchema("Procedures", restrictions);
+            Assert.IsTrue(dt.Rows.Count == 1);
+            Assert.AreEqual("Procedures", dt.TableName);
+            Assert.AreEqual("spTest", dt.Rows[0][3]);
         }
 
         [Test]

@@ -117,7 +117,7 @@ namespace MySql.Data.MySqlClient.Tests
 				bool exists = reader.Read();
 				reader.Close();
 				if (exists)
-					execSQL( "TRUNCATE TABLE Test" );
+					execSQL("TRUNCATE TABLE Test");
 				if (Is50) 
 				{
 					execSQL("DROP PROCEDURE IF EXISTS spTest");
@@ -126,7 +126,7 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 			catch (Exception ex) 
 			{
-				Assert.Fail( ex.Message );
+				Assert.Fail(ex.Message);
 			}
 		}
 
@@ -143,8 +143,15 @@ namespace MySql.Data.MySqlClient.Tests
 		protected void KillConnection(MySqlConnection c) 
 		{
 			int threadId = c.ServerThread;
-			MySqlCommand cmd = new MySqlCommand("KILL " + threadId, c);
-			cmd.ExecuteNonQuery();
+			MySqlCommand cmd = new MySqlCommand("KILL " + threadId, conn);
+            try
+            {
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
 			c.Ping();  // this final ping will cause MySQL to clean up the killed thread
 		}
 

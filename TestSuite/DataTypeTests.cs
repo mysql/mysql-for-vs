@@ -55,17 +55,22 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void BytesAndBooleans() 
 		{
-			InternalBytesAndBooleans( false );
-			if (! Is41 && ! Is50) return;
-			InternalBytesAndBooleans( true );
+			InternalBytesAndBooleans(false);
+        }
+
+        [Category("4.1")]
+        [Test]
+        public void BytesAndBooleansPrepared()
+        {
+			InternalBytesAndBooleans(true);
 		}
 
 		private void InternalBytesAndBooleans( bool prepare ) 
 		{
-			execSQL( "DROP TABLE IF EXISTS Test" );
-			execSQL( "CREATE TABLE Test (id TINYINT, idu TINYINT UNSIGNED, i INT UNSIGNED)" );
-			execSQL( "INSERT INTO Test VALUES (-98, 140, 20)" );
-			execSQL( "INSERT INTO Test VALUES (0, 0, 0)" );
+			execSQL("DROP TABLE IF EXISTS Test");
+			execSQL("CREATE TABLE Test (id TINYINT, idu TINYINT UNSIGNED, i INT UNSIGNED)");
+			execSQL("INSERT INTO Test VALUES (-98, 140, 20)");
+			execSQL("INSERT INTO Test VALUES (0, 0, 0)");
 
 			MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test", conn);
 			if (prepare) cmd.Prepare();
@@ -73,23 +78,23 @@ namespace MySql.Data.MySqlClient.Tests
 			try 
 			{
 				reader = cmd.ExecuteReader();
-				Assert.IsTrue( reader.Read() );
-				Assert.AreEqual( -98, (sbyte)reader.GetByte(0) );
-				Assert.AreEqual( 140, reader.GetByte(1) );
-				Assert.IsTrue( reader.GetBoolean(1) );
-				Assert.AreEqual( 20, reader.GetUInt32(2) );
-				Assert.AreEqual( 20, reader.GetInt32(2) );
+				Assert.IsTrue(reader.Read());
+				Assert.AreEqual(-98, (sbyte)reader.GetByte(0));
+				Assert.AreEqual(140, reader.GetByte(1));
+				Assert.IsTrue(reader.GetBoolean(1));
+				Assert.AreEqual(20, reader.GetUInt32(2));
+				Assert.AreEqual(20, reader.GetInt32(2));
 
-				Assert.IsTrue( reader.Read() );
-				Assert.AreEqual( 0, reader.GetByte(0) );
-				Assert.AreEqual( 0, reader.GetByte(1) );
-				Assert.IsFalse( reader.GetBoolean(1) );
+				Assert.IsTrue(reader.Read());
+				Assert.AreEqual(0, reader.GetByte(0));
+				Assert.AreEqual(0, reader.GetByte(1));
+				Assert.IsFalse(reader.GetBoolean(1));
 
-				Assert.IsFalse( reader.Read() );
+				Assert.IsFalse(reader.Read());
 			}
 			catch (Exception ex) 
 			{
-				Assert.Fail( ex.Message );
+				Assert.Fail(ex.Message);
 			}
 			finally 
 			{
@@ -215,7 +220,7 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-		[Test()]
+		[Test]
 		public void TestTime()
 		{
 			MySqlDataReader reader = null;
@@ -259,7 +264,7 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-		[Test()]
+		[Test]
 		public void YearType() 
 		{
 			execSQL("DROP TABLE IF EXISTS Test");
@@ -293,7 +298,7 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-		[Test()]
+		[Test]
 		public void TypeCoercion()
 		{
 			MySqlParameter p = new MySqlParameter("?test", 1);
@@ -459,67 +464,15 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}*/
 
-		[Test]
-		public void BitAndDecimal() 
-		{
-			execSQL("DROP TABLE IF EXISTS test");
-			execSQL("CREATE TABLE test (bt1 BIT, bt4 BIT(4), bt11 BIT(11), bt23 BIT(23), bt32 BIT(32)) engine=myisam");
-			execSQL("INSERT INTO test VALUES (12, 2, 120, 240, 1000)");
+        [Test]
+        public void BitAndDecimal()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test (bt1 BIT, bt4 BIT(4), bt11 BIT(11), bt23 BIT(23), bt32 BIT(32)) engine=myisam");
+            execSQL("INSERT INTO test VALUES (12, 2, 120, 240, 1000)");
 
-			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
-			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
-			DataTable dt = new DataTable();
-			da.Fill(dt);
-			DataRow row = dt.NewRow();
-			row["id"] = DBNull.Value;
-			row["dec1"] = 23.4;
-			dt.Rows.Add(row);
-			da.Update(dt);
-
-			dt.Clear();
-			da.Fill(dt);
-			Assert.AreEqual(1, dt.Rows.Count);
-			Assert.AreEqual(1, dt.Rows[0]["id"]);
-			Assert.AreEqual(23.4, dt.Rows[0]["dec1"]);
-		}
-
-		[Test]
-		public void DecimalTests() 
-		{
-			execSQL("DROP TABLE IF EXISTS test");
-			execSQL("CREATE TABLE test (val decimal(10,1))");
-
-			MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES(?dec)", conn);
-			cmd.Parameters.Add("?dec", (decimal)2.4);
-			Assert.AreEqual(1, cmd.ExecuteNonQuery());
-
-			cmd.Prepare();
-			Assert.AreEqual(1, cmd.ExecuteNonQuery());
-
-			cmd.CommandText = "SELECT * FROM test";
-			MySqlDataReader reader = null;
-			try 
-			{
-				reader = cmd.ExecuteReader();
-				Assert.IsTrue(reader.Read());
-				Assert.AreEqual( 1, reader.GetInt32(0));
-				Assert.AreEqual( 2, reader.GetInt32(1));
-				Assert.AreEqual( 120, reader.GetInt32(2));
-				Assert.AreEqual( 1000, reader.GetInt32(3));
-			}
-			catch (Exception ex) 
-			{
-				Assert.Fail(ex.Message);
-			}
-			finally 
-			{
-				if (reader != null) reader.Close();
-			}
-
-            execSQL("CREATE TABLE test (bt1 BIT, bt4 BIT(4), bt8 BIT(8), bt32 BIT(32)) engine=myisam");
-            execSQL("INSERT INTO test VALUES (12, 2, 120, 1000)");
-            cmd.CommandText = "SELECT * FROM test";
-            reader = null;
+            MySqlCommand cmd = new MySqlCommand("SELECT * FROM test", conn);
+            MySqlDataReader reader = null;
             try
             {
                 reader = cmd.ExecuteReader();
@@ -527,7 +480,8 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.AreEqual(1, reader.GetInt32(0));
                 Assert.AreEqual(2, reader.GetInt32(1));
                 Assert.AreEqual(120, reader.GetInt32(2));
-                Assert.AreEqual(1000, reader.GetInt32(3));
+                Assert.AreEqual(240, reader.GetInt32(3));
+                Assert.AreEqual(1000, reader.GetInt32(4));
             }
             catch (Exception ex)
             {
@@ -535,11 +489,9 @@ namespace MySql.Data.MySqlClient.Tests
             }
             finally
             {
-                execSQL("DROP TABLE IF EXISTS test2");
                 if (reader != null) reader.Close();
             }
-
-		}
+        }
 
         /// <summary>
         /// Bug #10486 MySqlDataAdapter.Update error for decimal column 
@@ -566,6 +518,45 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(1, dt.Rows.Count);
             Assert.AreEqual(1, dt.Rows[0]["id"]);
             Assert.AreEqual(23.4, dt.Rows[0]["dec1"]);
+        }
+
+        [Test]
+        public void DecimalTests()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test (val decimal(10,1))");
+
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES(?dec)", conn);
+            cmd.Parameters.Add("?dec", (decimal)2.4);
+            Assert.AreEqual(1, cmd.ExecuteNonQuery());
+
+            cmd.Prepare();
+            Assert.AreEqual(1, cmd.ExecuteNonQuery());
+
+            cmd.CommandText = "SELECT * FROM test";
+            MySqlDataReader reader = null;
+            try
+            {
+                reader = cmd.ExecuteReader();
+                Assert.IsTrue(reader.Read());
+                Assert.IsTrue(reader[0] is Decimal);
+                Assert.AreEqual(2.4, reader[0]);
+
+                Assert.IsTrue(reader.Read());
+                Assert.IsTrue(reader[0] is Decimal);
+                Assert.AreEqual(2.4, reader[0]);
+
+                Assert.IsFalse(reader.Read());
+                Assert.IsFalse(reader.NextResult());
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                if (reader != null) reader.Close();
+            }
         }
 
         [Test]

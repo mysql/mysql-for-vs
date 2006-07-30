@@ -22,6 +22,7 @@ using System;
 using MySql.Data.MySqlClient;
 using System.Data;
 using NUnit.Framework;
+using System.Diagnostics;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -56,24 +57,23 @@ namespace MySql.Data.MySqlClient.Tests
 
 			execSQL("set @@global.max_allowed_packet=35000000");
 
-			MySqlConnection c = new MySqlConnection( conn.ConnectionString + ";pooling=false" );
+			MySqlConnection c = new MySqlConnection(conn.ConnectionString + ";pooling=false");
 			c.Open();
 
-			byte[] dataIn = Utils.CreateBlob( len );
-			byte[] dataIn2 = Utils.CreateBlob( len );
+			byte[] dataIn = Utils.CreateBlob(len);
+			byte[] dataIn2 = Utils.CreateBlob(len);
 
 			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (?id, NULL, ?blob, NULL )", c);
-			cmd.Parameters.Add( new MySqlParameter("?id", 1));
-			cmd.Parameters.Add( new MySqlParameter("?blob", dataIn));
+			cmd.Parameters.Add(new MySqlParameter("?id", 1));
+			cmd.Parameters.Add(new MySqlParameter("?blob", dataIn));
 			try 
 			{
 				cmd.ExecuteNonQuery();
 			}
 			catch (Exception ex) 
 			{
-				Assert.Fail( ex.Message );
+				Assert.Fail(ex.Message);
 			}
-
 
 			cmd.Parameters[0].Value = 2;
 			cmd.Parameters[1].Value = dataIn2;
@@ -88,22 +88,22 @@ namespace MySql.Data.MySqlClient.Tests
 				reader = cmd.ExecuteReader();
 				reader.Read();
 				byte[] dataOut = new byte[ len ];
-				long count = reader.GetBytes( 2, 0, dataOut, 0, len );
-				Assert.AreEqual( len, count );
+				long count = reader.GetBytes(2, 0, dataOut, 0, len);
+				Assert.AreEqual(len, count);
 
 				for (int i=0; i < len; i++)
-					Assert.AreEqual( dataIn[i], dataOut[i] );
+					Assert.AreEqual(dataIn[i], dataOut[i]);
 
 				reader.Read();
-				count = reader.GetBytes( 2, 0, dataOut, 0, len );
-				Assert.AreEqual( len, count );
+				count = reader.GetBytes(2, 0, dataOut, 0, len);
+				Assert.AreEqual(len, count);
 
 				for (int i=0; i < len; i++)
-					Assert.AreEqual( dataIn2[i], dataOut[i] );
+					Assert.AreEqual(dataIn2[i], dataOut[i]);
 			}
 			catch (Exception ex) 
 			{
-				Assert.Fail( ex.Message );
+				Assert.Fail(ex.Message);
 			}
 			finally 
 			{
@@ -121,6 +121,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 			for (int i=1; i <= 8000; i++)
 			{
+                Trace.WriteLine("iteration " + i);
 				cmd.Parameters[0].Value = i;
 				cmd.ExecuteNonQuery();
 			}
@@ -133,18 +134,18 @@ namespace MySql.Data.MySqlClient.Tests
 				reader = cmd.ExecuteReader();
 				while (reader.Read())
 				{
-					Assert.AreEqual( i2+1, reader.GetInt32(0), "Sequence out of order" );
+					Assert.AreEqual(i2+1, reader.GetInt32(0), "Sequence out of order");
 					i2++;
 				}
 				reader.Close();
 
-				Assert.AreEqual( 8000, i2 );
+				Assert.AreEqual(8000, i2);
 				cmd = new MySqlCommand("delete from Test where id >= 100", conn);
 				cmd.ExecuteNonQuery();
 			}
 			catch (Exception ex) 
 			{
-				Assert.Fail( ex.Message );
+				Assert.Fail(ex.Message);
 			}
 			finally 
 			{

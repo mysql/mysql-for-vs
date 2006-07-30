@@ -37,9 +37,6 @@ namespace MySql.Data.MySqlClient.Tests
 		public void TestFixtureSetUp()
 		{
 			Open();
-
-			execSQL("DROP TABLE IF EXISTS Test");
-			execSQL("CREATE TABLE Test (id INT NOT NULL, dt DATETIME, d DATE, t TIME, ts TIMESTAMP, PRIMARY KEY(id))");
 		}
 
 		[TestFixtureTearDown]
@@ -48,10 +45,19 @@ namespace MySql.Data.MySqlClient.Tests
 			Close();
 		}
 
+        protected override void Setup()
+        {
+            base.Setup();
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id INT NOT NULL, dt DATETIME, d DATE, " +
+                "t TIME, ts TIMESTAMP, PRIMARY KEY(id))");
+        }
+
 		[Test]
 		public void ConvertZeroDateTime()
 		{
-			execSQL("INSERT INTO Test VALUES(1, '0000-00-00', '0000-00-00', '00:00:00', NULL)");
+			execSQL("INSERT INTO Test VALUES(1, '0000-00-00', '0000-00-00', " +
+                "'00:00:00', NULL)");
 
 			MySqlConnection c;
 			MySqlDataReader reader = null;
@@ -123,21 +129,22 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void DateAdd() 
 		{
-			MySqlCommand cmd = new MySqlCommand( "select date_add(?someday, interval 1 hour)", conn);
+			MySqlCommand cmd = new MySqlCommand( "select date_add(?someday, interval 1 hour)", 
+                conn);
 			DateTime now = DateTime.Now;
 			DateTime later = now.AddHours(1);
-			later = later.AddMilliseconds( later.Millisecond * -1 );
+			later = later.AddMilliseconds(later.Millisecond * -1);
 			cmd.Parameters.Add("?someday", now );
 			MySqlDataReader reader = null;
 			try 
 			{
 				reader = cmd.ExecuteReader();
-				Assert.IsTrue( reader.Read() );
+				Assert.IsTrue(reader.Read());
 				DateTime dt = reader.GetDateTime(0);
-				Assert.AreEqual( later.Date, dt.Date );
-				Assert.AreEqual( later.Hour, dt.Hour );
-				Assert.AreEqual( later.Minute, dt.Minute );
-				Assert.AreEqual( later.Second, dt.Second );
+				Assert.AreEqual(later.Date, dt.Date);
+				Assert.AreEqual(later.Hour, dt.Hour);
+				Assert.AreEqual(later.Minute, dt.Minute);
+				Assert.AreEqual(later.Second, dt.Second);
 			}
 			catch (Exception ex) 
 			{

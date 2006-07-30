@@ -30,7 +30,6 @@ namespace MySql.Data.MySqlClient.Tests
 		[TestFixtureSetUp]
 		public void FixtureSetup()
 		{
-            csAdditions += ";logging=true";
 			Open();
 
 			execSQL("DROP TABLE IF EXISTS Test");
@@ -105,7 +104,8 @@ namespace MySql.Data.MySqlClient.Tests
 
 			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
 			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
-			DataTable dt = new DataTable();
+            cb.ConflictOption = ConflictOption.CompareAllSearchableValues;
+            DataTable dt = new DataTable();
 			da.Fill(dt);
 			Assert.AreEqual(1, dt.Rows.Count);
 
@@ -114,7 +114,7 @@ namespace MySql.Data.MySqlClient.Tests
 			try 
 			{
 				dt.Rows[0]["name"] = "Test3";
-				da.Update( dt );
+				da.Update(dt);
 				Assert.Fail("This should not work");
 			}
 			catch (DBConcurrencyException) 
@@ -122,9 +122,9 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 
 			dt.Rows.Clear();
-			da.Fill( dt );
-			Assert.AreEqual( 1, dt.Rows.Count );
-			Assert.AreEqual( "Test2", dt.Rows[0]["name"] );			
+			da.Fill(dt);
+			Assert.AreEqual(1, dt.Rows.Count);
+			Assert.AreEqual("Test2", dt.Rows[0]["name"]);			
 		}
 
 		/// <summary>

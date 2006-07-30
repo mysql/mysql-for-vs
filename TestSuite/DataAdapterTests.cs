@@ -44,7 +44,9 @@ namespace MySql.Data.MySqlClient.Tests
 			base.Setup();
 
 			execSQL("DROP TABLE IF EXISTS Test");
-			execSQL("CREATE TABLE Test (id INT NOT NULL AUTO_INCREMENT, id2 INT NOT NULL, name VARCHAR(100), dt DATETIME, tm TIME, ts TIMESTAMP, OriginalId INT, PRIMARY KEY(id, id2))");
+			execSQL("CREATE TABLE Test (id INT NOT NULL AUTO_INCREMENT, " +
+                "id2 INT NOT NULL, name VARCHAR(100), dt DATETIME, tm TIME, " +
+                "ts TIMESTAMP, OriginalId INT, PRIMARY KEY(id, id2))");
 		}
 
 
@@ -87,48 +89,49 @@ namespace MySql.Data.MySqlClient.Tests
 
 			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
 			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
-			cb.ToString();  // keep the compiler happy
 			DataTable dt = new DataTable();
 			da.Fill(dt);
 
 			DataRow dr = dt.NewRow();
 			dr["id2"] = 2;
 			dr["name"] = "TestName1";
-			dt.Rows.Add( dr );
-
+			dt.Rows.Add(dr);
 			int count = da.Update(dt);
 
 			// make sure our refresh of auto increment values worked
-			Assert.AreEqual( 1, count, "checking insert count" );
-			Assert.IsNotNull( dt.Rows[ dt.Rows.Count-1 ]["id"], "Checking auto increment column" );
+			Assert.AreEqual(1, count, "checking insert count");
+			Assert.IsNotNull(dt.Rows[ dt.Rows.Count-1 ]["id"], 
+                "Checking auto increment column");
 
+            dt.Rows.Clear();
+            da.Fill(dt);
 			dt.Rows[0]["id2"] = 3;
 			dt.Rows[0]["name"] = "TestName2";
 			dt.Rows[0]["ts"] = DBNull.Value;
 			DateTime day1 = new DateTime(2003, 1, 16, 12, 24, 0);
 			dt.Rows[0]["dt"] = day1;
 			dt.Rows[0]["tm"] = day1.TimeOfDay;
-			count = da.Update( dt );
+			count = da.Update(dt);
 
-			Assert.IsNotNull( dt.Rows[0]["ts"], "checking refresh of record" );
-			Assert.AreEqual( 3, dt.Rows[0]["id2"], "checking refresh of primary column" );
-
-			dt.Rows.Clear();
-			da.Fill( dt );
-
-			Assert.AreEqual( 1, count, "checking update count" );
-			DateTime dateTime = (DateTime)dt.Rows[0]["dt"];
-			Assert.AreEqual( day1, dateTime, "checking date" );
-			Assert.AreEqual( day1.TimeOfDay, dt.Rows[0]["tm"], "checking time" );
-
-			dt.Rows[0].Delete();
-			count = da.Update( dt );
-
-			Assert.AreEqual( 1, count, "checking insert count" );
+			Assert.IsNotNull(dt.Rows[0]["ts"], "checking refresh of record");
+			Assert.AreEqual(3, dt.Rows[0]["id2"], "checking refresh of primary column");
 
 			dt.Rows.Clear();
 			da.Fill(dt);
-			Assert.AreEqual( 0, dt.Rows.Count, "checking row count" );
+
+			Assert.AreEqual(1, count, "checking update count");
+			DateTime dateTime = (DateTime)dt.Rows[0]["dt"];
+			Assert.AreEqual(day1, dateTime, "checking date");
+			Assert.AreEqual(day1.TimeOfDay, dt.Rows[0]["tm"], "checking time");
+
+			dt.Rows[0].Delete();
+			count = da.Update(dt);
+
+			Assert.AreEqual(1, count, "checking insert count");
+
+			dt.Rows.Clear();
+			da.Fill(dt);
+			Assert.AreEqual(0, dt.Rows.Count, "checking row count");
 		}
 
 		[Test]
@@ -359,17 +362,12 @@ namespace MySql.Data.MySqlClient.Tests
 
 			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
 			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
-			cb.ToString();  // keep the compiler happy
 			DataSet ds = new DataSet();
 			da.Fill(ds);
 			Assert.AreEqual(1, ds.Tables[0].Rows[0]["id"]);
-			ds.Tables[0].Rows[0]["id"] = 2;
-			DataRow row = ds.Tables[0].NewRow();
-			row["id"] = 4;
-			ds.Tables[0].Rows.Add(row);
 
-			// add a null id.  This should be auto'ed to 5
-			row = ds.Tables[0].NewRow();
+			// add a null id.  This should be auto'ed to 2
+			DataRow row = ds.Tables[0].NewRow();
 			row["id"] = DBNull.Value;
 			ds.Tables[0].Rows.Add(row);
 
@@ -384,9 +382,8 @@ namespace MySql.Data.MySqlClient.Tests
 
 			ds.Clear();
 			da.Fill(ds);
-			Assert.AreEqual(2, ds.Tables[0].Rows[0]["id"]);
-			Assert.AreEqual(4, ds.Tables[0].Rows[1]["id"]);
-			Assert.AreEqual(5, ds.Tables[0].Rows[2]["id"]);
+			Assert.AreEqual(1, ds.Tables[0].Rows[0]["id"]);
+			Assert.AreEqual(2, ds.Tables[0].Rows[1]["id"]);
 		}
 
 		/// <summary>

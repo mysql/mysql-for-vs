@@ -71,9 +71,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MySQL.Data, Version=5.0.0.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+    <Reference Include="MySql.Data, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\bin\net-2.0\Debug\MySQL.Data.dll</HintPath>
+      <HintPath>..\mysqlclient\bin\net-2.0\Debug\MySql.Data.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <Name>nunit.framework</Name>
@@ -86,10 +86,8 @@
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
-    <Reference Include="System.Web.Services" />
-    <Reference Include="System.Xml">
-      <Name>System.XML</Name>
-    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs">
@@ -114,6 +112,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AsyncTests.cs" />
+    <Compile Include="Copy of BaseTest.cs" />
     <Compile Include="InterfaceTests.cs" />
     <Compile Include="GetSchemaTests.cs" />
     <Compile Include="DataReaderTests.cs" />

@@ -387,7 +387,6 @@ namespace MySql.Data.MySqlClient.Tests
 				reader.Read();
 				Assert.AreEqual(2, reader.GetValue(0));
 				Assert.AreEqual(DBNull.Value, reader.GetValue(1));
-                Assert.AreEqual(null, reader.GetString(1));
 				reader.Read();
 				Assert.AreEqual(3, reader.GetValue(0));
 				Assert.AreEqual("Test2", reader.GetValue(1));

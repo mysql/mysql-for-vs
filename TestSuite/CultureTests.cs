@@ -33,7 +33,6 @@ namespace MySql.Data.MySqlClient.Tests
 		[TestFixtureSetUp]
 		public void FixtureSetup()
 		{
-            csAdditions += ";logging=true";
 			Open();
 
 			execSQL("DROP TABLE IF EXISTS Test");
@@ -68,7 +67,7 @@ namespace MySql.Data.MySqlClient.Tests
 			CultureInfo c = new CultureInfo("de-DE");
 			Thread.CurrentThread.CurrentCulture = c;
 			Thread.CurrentThread.CurrentUICulture = c;
-
+            
 			execSQL("DROP TABLE IF EXISTS Test");
 			execSQL("CREATE TABLE Test (fl FLOAT, db DOUBLE, dec1 DECIMAL(5,2))");
 

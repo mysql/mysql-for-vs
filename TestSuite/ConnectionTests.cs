@@ -234,7 +234,7 @@ namespace MySql.Data.MySqlClient.Tests
 			catch (Exception) 
 			{
 				TimeSpan diff = DateTime.Now.Subtract(start);
-				Assert.IsTrue(diff.TotalSeconds < 6, "Timeout exceeded");
+				Assert.IsTrue(diff.TotalSeconds < 30, "Timeout exceeded");
 			}
 		}
 
@@ -246,13 +246,13 @@ namespace MySql.Data.MySqlClient.Tests
 				string connStr = conn.ConnectionString;
 
 				// connect with no db
-				string connStr2 = connStr.Replace("database=test;","");
-				MySqlConnection c = new MySqlConnection( connStr2 );
+				string connStr2 = GetConnectionString(false);
+				MySqlConnection c = new MySqlConnection(connStr2);
 				c.Open();
 				c.Close();
 
                 // TODO: make anonymous login work
-                execSQL("CREATE USER ''");
+                execSQL("GRANT ALL ON *.* to '' IDENTIFIED BY ''");
 
 				// connect with all defaults
 				if (connStr.IndexOf("localhost") != -1) 

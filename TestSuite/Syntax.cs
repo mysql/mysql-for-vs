@@ -56,8 +56,8 @@ namespace MySql.Data.MySqlClient.Tests
 			DataTable dt = new DataTable();
 			da.Fill(dt);
 
-			Assert.AreEqual( 1, dt.Rows.Count );
-			Assert.AreEqual( 2, dt.Columns.Count );
+			Assert.AreEqual(1, dt.Rows.Count);
+			Assert.AreEqual(2, dt.Columns.Count);
 		}
 
 		[Test]
@@ -68,9 +68,9 @@ namespace MySql.Data.MySqlClient.Tests
 			execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(250), mt MEDIUMTEXT, PRIMARY KEY(id)) CHAR SET utf8");
 
 			MySqlCommand cmd = new MySqlCommand( "INSERT INTO Test VALUES (?id, ?text, ?mt)", conn);
-			cmd.Parameters.Add( "?id", 1 );
-			cmd.Parameters.Add( "?text", "This is my;test ? string–’‘’“”…" );
-			cmd.Parameters.Add( "?mt", "My MT string: £" );
+			cmd.Parameters.Add("?id", 1);
+			cmd.Parameters.Add("?text", "This is my;test ? string–’‘’“”…");
+			cmd.Parameters.Add("?mt", "My MT string: £");
 			cmd.ExecuteNonQuery();
 
 			cmd.CommandText = "SELECT * FROM Test";
@@ -78,17 +78,17 @@ namespace MySql.Data.MySqlClient.Tests
 			try 
 			{
 				reader = cmd.ExecuteReader();
-				Assert.IsTrue( reader.Read() );
-				Assert.AreEqual( 1, reader.GetInt32(0));
+				Assert.IsTrue(reader.Read());
+				Assert.AreEqual(1, reader.GetInt32(0));
 				if (Is40)
-					Assert.AreEqual( "This is my;test ? string-'''\"\".", reader.GetString(1));
+					Assert.AreEqual("This is my;test ? string-'''\"\".", reader.GetString(1));
 				else
-					Assert.AreEqual( "This is my;test ? string–’‘’“”…", reader.GetString(1));
-				Assert.AreEqual( "My MT string: £", reader.GetString(2) );
+					Assert.AreEqual("This is my;test ? string–’‘’“”…", reader.GetString(1));
+				Assert.AreEqual("My MT string: £", reader.GetString(2));
 			}
 			catch (Exception ex) 
 			{
-				Assert.Fail( ex.Message );
+				Assert.Fail(ex.Message);
 			}
 			finally 
 			{
@@ -102,11 +102,11 @@ namespace MySql.Data.MySqlClient.Tests
 			execSQL("set @@global.max_allowed_packet=250000000");
 
 			string connString = conn.ConnectionString + ";pooling=false";
-			MySqlConnection c = new MySqlConnection( connString );
+			MySqlConnection c = new MySqlConnection(connString);
 			c.Open();
 
 			string path = Path.GetTempFileName();
-			StreamWriter sw = new StreamWriter( path );
+			StreamWriter sw = new StreamWriter(path);
 			for (int i=0; i < 2000000; i++) 
 				sw.WriteLine(i + ",'Test'");
 			sw.Flush();
@@ -122,13 +122,13 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 			catch (Exception ex) 
 			{
-				Assert.Fail( ex.Message );
+				Assert.Fail(ex.Message);
 			}
-			Assert.AreEqual( 2000000, cnt );
+			Assert.AreEqual(2000000, cnt);
 
 			cmd.CommandText = "SELECT COUNT(*) FROM Test";
 			cnt = cmd.ExecuteScalar();
-			Assert.AreEqual( 2000000, cnt );
+			Assert.AreEqual(2000000, cnt);
 
 			c.Close();
 			execSQL("set @@global.max_allowed_packet=1047256");
@@ -146,11 +146,11 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 			catch (MySqlException) 
 			{
-				Assert.AreEqual( ConnectionState.Open, conn.State );
+				Assert.AreEqual(ConnectionState.Open, conn.State);
 			}
 			catch (Exception ex) 
 			{
-				Assert.Fail( ex.Message );
+				Assert.Fail(ex.Message);
 			}
 			finally 
 			{
@@ -172,7 +172,7 @@ namespace MySql.Data.MySqlClient.Tests
 				"`LastVisit` timestamp(14) NOT NULL, `Categorie` int(11) NOT NULL default '0', " +
 				"PRIMARY KEY  (`KlantNummer`),	UNIQUE KEY `UniqueUsername` (`Username`), " +
 				"UNIQUE KEY `UniqueDefaultMail` (`DefaultMail`)	)";
-			createTable( sql, "MyISAM" );
+			createTable(sql, "MyISAM");
 
 			MySqlCommand cmd = new MySqlCommand("SELECT * FROM KLANT", conn);
 			MySqlDataReader reader = null;
@@ -183,7 +183,7 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 			catch (Exception ex) 
 			{
-				Assert.Fail( ex.Message );
+				Assert.Fail(ex.Message);
 			}
 			finally 
 			{
