@@ -30,7 +30,7 @@ namespace MySql.Data.MySqlClient.Tests
 	/// Summary description for BlobTests.
 	/// </summary>
 	[TestFixture]
-	public class BlobTests : BaseTest
+	public abstract class BlobTests : BaseTest
 	{
 		[TestFixtureSetUp]
 		public void TestFixtureSetUp()
@@ -46,6 +46,11 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 			Close();
 		}
+
+        protected override string GetConnectionInfo()
+        {
+            return ";port=3306";
+        }
 
 		[Test]
 		[Category("4.0")]
@@ -257,26 +262,28 @@ namespace MySql.Data.MySqlClient.Tests
 			{
 				MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
 				MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
-				cb.ToString();
 				DataTable dt = new DataTable();
 				da.Fill(dt);
 
 				string s = (string)dt.Rows[0][2];
-				Assert.AreEqual( "Text field", s );
+				Assert.AreEqual("Text field", s);
 
-				byte[] inBuf = Utils.CreateBlob(512);
+				byte[] inBuf = Utils.CreateBlob(2);
+                dt.Rows[0].BeginEdit();
 				dt.Rows[0]["blob1"] = inBuf;
+                dt.Rows[0].EndEdit();
 				DataTable changes = dt.GetChanges();
-				da.Update( changes );
+                da.Update(changes);
 				dt.AcceptChanges();
 
 				dt.Clear();
 				da.Fill(dt);
 
 				byte[] outBuf = (byte[])dt.Rows[0]["blob1"];
-				Assert.AreEqual( inBuf.Length, outBuf.Length, "checking length of updated buffer" );
+				Assert.AreEqual(inBuf.Length, outBuf.Length, 
+                    "checking length of updated buffer");
 				for (int y=0; y < inBuf.Length; y++)
-					Assert.AreEqual( inBuf[y], outBuf[y], "checking array data" );
+					Assert.AreEqual(inBuf[y], outBuf[y], "checking array data");
 			}
 			catch (Exception ex)
 			{
@@ -328,7 +335,7 @@ namespace MySql.Data.MySqlClient.Tests
             cmd.Parameters.Add("?size", image.Length);
             cmd.ExecuteNonQuery();
 
-            cmd.CommandText = "SELECT imageSize, image FROM test WHERE id=?id";
+            cmd.CommandText = "SELECT imageSize, length(image), image FROM test WHERE id=?id";
             cmd.Parameters.Add("?id", 1);
             cmd.Prepare();
 
@@ -337,7 +344,9 @@ namespace MySql.Data.MySqlClient.Tests
             {
                 reader = cmd.ExecuteReader();
                 reader.Read();
-                uint size = reader.GetUInt32(reader.GetOrdinal("imageSize"));
+                uint actualsize = reader.GetUInt32(1);
+                Assert.AreEqual(image.Length, actualsize);
+                uint size = reader.GetUInt32(0);
                 byte[] outImage = new byte[size];
                 long len = reader.GetBytes(reader.GetOrdinal("image"), 0, outImage, 0, (int)size);
                 Assert.AreEqual(image.Length, size);
@@ -353,5 +362,50 @@ namespace MySql.Data.MySqlClient.Tests
                     reader.Close();
             }
         }
-	}
+    }
+
+    #region Configs
+
+    public class BlobTestsSocketCompressed : BlobTests
+    {
+        protected override string GetConnectionInfo()
+        {
+            return ";port=3306;compress=true";
+        }
+    }
+
+    public class BlobTestsPipe : BlobTests
+    {
+        protected override string GetConnectionInfo()
+        {
+            return ";protocol=pipe";
+        }
+    }
+
+    public class BlobTestsPipeCompressed : BlobTests
+    {
+        protected override string GetConnectionInfo()
+        {
+            return ";protocol=pipe;compress=true";
+        }
+    }
+
+    public class BlobTestsSharedMemory : BlobTests
+    {
+        protected override string GetConnectionInfo()
+        {
+            return ";protocol=memory";
+        }
+    }
+
+    public class BlobTestsSharedMemoryCompressed : BlobTests
+    {
+        protected override string GetConnectionInfo()
+        {
+            return ";protocol=memory;compress=true";
+        }
+    }
+
+    #endregion
+
 }

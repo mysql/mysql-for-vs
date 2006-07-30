@@ -112,7 +112,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AsyncTests.cs" />
-    <Compile Include="Copy of BaseTest.cs" />
     <Compile Include="InterfaceTests.cs" />
     <Compile Include="GetSchemaTests.cs" />
     <Compile Include="DataReaderTests.cs" />
