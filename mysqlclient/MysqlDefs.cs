@@ -322,23 +322,4 @@ namespace MySql.Data.MySqlClient
         /// </summary>
         Embedded
     }
-
-    /// <summary>
-    /// Specifies command types that are specific to MySQL.
-    /// </summary>
-    public enum MySqlCommandType
-    {
-        /// <summary>
-        /// Direct SQL execution.
-        /// </summary>
-        Text,
-        /// <summary>
-        /// Used to execute a stored procedure.
-        /// </summary>
-        StoredProcedure,
-        /// <summary>
-        ///  Use to execute a stored function.
-        /// </summary>
-        StoredFunction
-    }
 }

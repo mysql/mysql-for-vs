@@ -21,6 +21,7 @@
 using System;
 using System.Data;
 using MySql.Data.MySqlClient;
+using System.Globalization;
 
 namespace MySql.Data.Types
 {
@@ -55,12 +56,12 @@ namespace MySql.Data.Types
 			get { return isNull; }
 		}
 
-		public MySql.Data.MySqlClient.MySqlDbType MySqlDbType
+		MySqlDbType IMySqlValue.MySqlDbType
 		{
 			get	{ return MySqlDbType.Int32; }
 		}
 
-		public System.Data.DbType DbType
+		DbType IMySqlValue.DbType
 		{
 			get	{ return DbType.Int32; }
 		}
@@ -75,12 +76,12 @@ namespace MySql.Data.Types
 			get { return mValue; }
 		}
 
-		public Type SystemType
+		Type IMySqlValue.SystemType
 		{
 			get	{ return typeof(Int32); }
 		}
 
-		public string MySqlTypeName
+		string IMySqlValue.MySqlTypeName
 		{
 			get	{ return is24Bit ? "MEDIUMINT" : "INT"; }
 		}
@@ -96,14 +97,16 @@ namespace MySql.Data.Types
 
 		IMySqlValue IMySqlValue.ReadValue(MySqlStream stream, long length, bool nullVal)
 		{
-			if (nullVal) 
-                return new MySqlInt32(MySqlDbType, true);
+			if (nullVal)
+                return new MySqlInt32((this as IMySqlValue).MySqlDbType, true);
 
-			if (length == -1) 
-				return new MySqlInt32(MySqlDbType, stream.ReadInteger(4));
-			else 
-				return new MySqlInt32(MySqlDbType, Int32.Parse(
-                    stream.ReadString(length )));
+			if (length == -1)
+                return new MySqlInt32((this as IMySqlValue).MySqlDbType, 
+                    stream.ReadInteger(4));
+			else
+                return new MySqlInt32((this as IMySqlValue).MySqlDbType, 
+                    Int32.Parse(stream.ReadString(length),
+                    CultureInfo.InvariantCulture));
 		}
 
 		void IMySqlValue.SkipValue(MySqlStream stream)

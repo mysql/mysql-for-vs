@@ -45,12 +45,12 @@ namespace MySql.Data.Types
             get { return isNull; }
         }
 
-        public MySqlDbType MySqlDbType
+        MySqlDbType IMySqlValue.MySqlDbType
         {
             get { return MySqlDbType.Bit; }
         }
 
-        public DbType DbType
+        DbType IMySqlValue.DbType
         {
             get { return DbType.UInt64; }
         }
@@ -65,7 +65,7 @@ namespace MySql.Data.Types
             get { return typeof(UInt64); }
         }
 
-        public string MySqlTypeName
+        string IMySqlValue.MySqlTypeName
         {
             get { return "BIT"; }
         }

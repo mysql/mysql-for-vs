@@ -54,7 +54,7 @@ namespace MySql.Data.Types
 			get { return isNull; }
 		}
 
-		public MySql.Data.MySqlClient.MySqlDbType MySqlDbType
+		MySqlDbType IMySqlValue.MySqlDbType
 		{
 			get	{ return MySqlDbType.Decimal; }
 		}
@@ -72,7 +72,7 @@ namespace MySql.Data.Types
 		}
 
 
-		public System.Data.DbType DbType
+		DbType IMySqlValue.DbType
 		{
 			get	{ return DbType.Decimal; }
 		}
@@ -87,12 +87,12 @@ namespace MySql.Data.Types
 			get { return mValue; }
 		}
 
-		public Type SystemType
+		Type IMySqlValue.SystemType
 		{
 			get	{ return typeof(decimal); }
 		}
 
-		public string MySqlTypeName
+		string IMySqlValue.MySqlTypeName
 		{
 			get	{ return "DECIMAL"; }
 		}

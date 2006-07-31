@@ -52,12 +52,12 @@ namespace MySql.Data.Types
 			get { return isNull; }
 		}
 
-		public MySql.Data.MySqlClient.MySqlDbType MySqlDbType
+		MySqlDbType IMySqlValue.MySqlDbType
 		{
 			get	{ return type; }
 		}
 
-		public System.Data.DbType DbType
+		DbType IMySqlValue.DbType
 		{
 			get	{ return DbType.Binary; }
 		}
@@ -72,12 +72,12 @@ namespace MySql.Data.Types
 			get { return mValue; }
 		}
 
-		public Type SystemType
+		Type IMySqlValue.SystemType
 		{
 			get	{ return typeof(byte[]); }
 		}
 
-		public string MySqlTypeName
+		string IMySqlValue.MySqlTypeName
 		{
 			get	
 			{ 
