@@ -103,12 +103,17 @@ namespace MySql.Data.MySqlClient.Tests
 		}
 
 		[Test]
-		public void TestFloats() 
+		public void TestFloat() 
 		{
 			InternalTestFloats(false);
-			if (! Is41 && ! Is50) return;
-			InternalTestFloats(true);
 		}
+
+        [Test]
+        [Category("4.1")]
+        public void TestFloatPrepared()
+        {
+            InternalTestFloats(true);
+        }
 
 		private void InternalTestFloats(bool prepared)
 		{
@@ -116,46 +121,48 @@ namespace MySql.Data.MySqlClient.Tests
 			execSQL( "CREATE TABLE Test (fl FLOAT, db DOUBLE, dec1 DECIMAL(5,2))" );
 
 			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (?fl, ?db, ?dec)", conn);
-			cmd.Parameters.Add( "?fl", MySqlDbType.Float );
-			cmd.Parameters.Add( "?db", MySqlDbType.Double );
-			cmd.Parameters.Add( "?dec", MySqlDbType.Decimal );
+			cmd.Parameters.Add("?fl", MySqlDbType.Float);
+			cmd.Parameters.Add("?db", MySqlDbType.Double);
+			cmd.Parameters.Add("?dec", MySqlDbType.Decimal);
 			cmd.Parameters[0].Value = 2.3;
 			cmd.Parameters[1].Value = 4.6;
 			cmd.Parameters[2].Value = 23.82;
 			if (prepared)
 				cmd.Prepare();
 			int count = cmd.ExecuteNonQuery();
-			Assert.AreEqual( 1, count );
+			Assert.AreEqual(1, count);
 
 			cmd.Parameters[0].Value = 1.5;
 			cmd.Parameters[1].Value = 47.85;
 			cmd.Parameters[2].Value = 123.85;
 			count = cmd.ExecuteNonQuery();
-			Assert.AreEqual( 1, count );
+			Assert.AreEqual(1, count);
 
 			MySqlDataReader reader = null;
 			try 
 			{
 				cmd.CommandText = "SELECT * FROM Test";
-				if (prepared) cmd.Prepare();
+				if (prepared) 
+                    cmd.Prepare();
 				reader = cmd.ExecuteReader();
-				Assert.IsTrue( reader.Read() );
-				Assert.AreEqual( 2.3, reader.GetFloat(0) );
-				Assert.AreEqual( 4.6, reader.GetDouble(1) );
-				Assert.AreEqual( 23.82, reader.GetDecimal(2) );
+				Assert.IsTrue(reader.Read());
+				Assert.AreEqual(2.3, reader.GetFloat(0));
+				Assert.AreEqual(4.6, reader.GetDouble(1));
+				Assert.AreEqual(23.82, reader.GetDecimal(2));
 
-				Assert.IsTrue( reader.Read() );
-				Assert.AreEqual( 1.5, reader.GetFloat(0) );
-				Assert.AreEqual( 47.85, reader.GetDouble(1) );
-				Assert.AreEqual( 123.85, reader.GetDecimal(2) );
+				Assert.IsTrue(reader.Read());
+				Assert.AreEqual(1.5, reader.GetFloat(0));
+				Assert.AreEqual(47.85, reader.GetDouble(1));
+				Assert.AreEqual(123.85, reader.GetDecimal(2));
 			}
 			catch (Exception ex) 
 			{
-				Assert.Fail( ex.Message );
+				Assert.Fail(ex.Message);
 			}
 			finally 
 			{
-				if (reader != null) reader.Close();
+				if (reader != null) 
+                    reader.Close();
 			}
 		}
 
@@ -272,6 +279,7 @@ namespace MySql.Data.MySqlClient.Tests
 			execSQL("INSERT INTO Test VALUES (98)");
 			execSQL("INSERT INTO Test VALUES (1990)");
 			execSQL("INSERT INTO Test VALUES (2004)");
+            execSQL("SET SQL_MODE=''");
 			execSQL("INSERT INTO Test VALUES (111111111111111111111)");
 
 			MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test", conn);
@@ -280,21 +288,22 @@ namespace MySql.Data.MySqlClient.Tests
 			{
 				reader = cmd.ExecuteReader();
 				reader.Read();
-				Assert.AreEqual( 1998, reader.GetUInt32(0) );
+				Assert.AreEqual(1998, reader.GetUInt32(0));
 				reader.Read();
-				Assert.AreEqual( 1990, reader.GetUInt32(0) );
+				Assert.AreEqual(1990, reader.GetUInt32(0));
 				reader.Read();
-				Assert.AreEqual( 2004, reader.GetUInt32(0) );
+				Assert.AreEqual(2004, reader.GetUInt32(0));
 				reader.Read();
-				Assert.AreEqual( 0, reader.GetUInt32(0) );
+				Assert.AreEqual(0, reader.GetUInt32(0));
 			}
 			catch (Exception ex) 
 			{
-				Assert.Fail( ex.Message );
+				Assert.Fail(ex.Message);
 			}
 			finally 
 			{
-				if (reader != null) reader.Close();
+				if (reader != null) 
+                    reader.Close();
 			}
 		}
 
@@ -469,7 +478,7 @@ namespace MySql.Data.MySqlClient.Tests
         {
             execSQL("DROP TABLE IF EXISTS test");
             execSQL("CREATE TABLE test (bt1 BIT, bt4 BIT(4), bt11 BIT(11), bt23 BIT(23), bt32 BIT(32)) engine=myisam");
-            execSQL("INSERT INTO test VALUES (12, 2, 120, 240, 1000)");
+            execSQL("INSERT INTO test VALUES (1, 2, 120, 240, 1000)");
 
             MySqlCommand cmd = new MySqlCommand("SELECT * FROM test", conn);
             MySqlDataReader reader = null;

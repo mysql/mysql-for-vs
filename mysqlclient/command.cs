@@ -59,6 +59,7 @@ namespace MySql.Data.MySqlClient
 			parameters = new MySqlParameterCollection();
 			updatedRowSource = UpdateRowSource.Both;
 			cursorPageSize = 0;
+            cmdText = String.Empty;
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ctor2/*'/>

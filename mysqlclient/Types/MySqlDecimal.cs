@@ -120,7 +120,7 @@ namespace MySql.Data.Types
             }
             else
             {
-                string s = stream.ReadString();
+                string s = stream.ReadString(length);
                 return new MySqlDecimal(Decimal.Parse(s,
                     CultureInfo.InvariantCulture));
             }

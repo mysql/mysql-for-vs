@@ -30,7 +30,7 @@ namespace MySql.Data.MySqlClient.Tests
 	/// Summary description for BlobTests.
 	/// </summary>
 	[TestFixture]
-	public abstract class BlobTests : BaseTest
+	public class BlobTests : BaseTest
 	{
 		[TestFixtureSetUp]
 		public void TestFixtureSetUp()
@@ -130,11 +130,16 @@ namespace MySql.Data.MySqlClient.Tests
 		public void GetChars() 
 		{
 			InternalGetChars(false);
-			if (!Is41 && !Is50) return;
-			InternalGetChars(true);
 		}
 
-		private void InternalGetChars( bool prepare ) 
+        [Test]
+        [Category("4.1")]
+        public void GetCharsPrepared()
+        {
+            InternalGetChars(true);
+        }
+
+		private void InternalGetChars(bool prepare) 
 		{
 			execSQL("TRUNCATE TABLE Test");
 
@@ -143,7 +148,7 @@ namespace MySql.Data.MySqlClient.Tests
 				data[x] = (char)(65 + (x%20));
 
 			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (1, NULL, ?text1)", conn);
-			cmd.Parameters.Add( "?text1", data );
+			cmd.Parameters.Add("?text1", data);
 			if (prepare)
 				cmd.Prepare();
 			cmd.ExecuteNonQuery();
@@ -163,23 +168,24 @@ namespace MySql.Data.MySqlClient.Tests
 				int lenToRead = data.Length;
 				while (lenToRead > 0) 
 				{
-					int size = Math.Min( lenToRead, 1024 );
-					int read = (int)reader.GetChars( 2, pos, dataOut, pos, size );
+					int size = Math.Min(lenToRead, 1024);
+					int read = (int)reader.GetChars(2, pos, dataOut, pos, size);
 					lenToRead -= read;
 					pos += read;
 				}
 				// now see if the buffer is intact
 				for (int x=0; x < data.Length; x++) 
-					Assert.AreEqual( data[x], dataOut[x], "Checking first text array at " + x );
+					Assert.AreEqual(data[x], dataOut[x], "Checking first text array at " + x);
 
 			}
 			catch (Exception ex) 
 			{
-				Assert.Fail( ex.Message );
+				Assert.Fail(ex.Message);
 			}
 			finally 
 			{
-				if (reader != null) reader.Close();
+				if (reader != null) 
+                    reader.Close();
 			}
 		}
 
@@ -188,9 +194,14 @@ namespace MySql.Data.MySqlClient.Tests
 		public void InsertText() 
 		{
 			InternalInsertText(false);
-			if (!Is41 && !Is50) return;
-			InternalInsertText(true);
 		}
+
+        [Test]
+        [Category("4.1")]
+        public void InsertTextPrepared()
+        {
+            InternalInsertText(true);
+        }
 
 		private void InternalInsertText(bool prepare) 
 		{
@@ -361,6 +372,7 @@ namespace MySql.Data.MySqlClient.Tests
 
     #region Configs
 
+    [Category("NotWorking")]
     public class BlobTestsSocketCompressed : BlobTests
     {
         protected override string GetConnectionInfo()
@@ -377,6 +389,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
+    [Category("NotWorking")]
     public class BlobTestsPipeCompressed : BlobTests
     {
         protected override string GetConnectionInfo()
@@ -393,6 +406,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
+    [Category("NotWorking")]
     public class BlobTestsSharedMemoryCompressed : BlobTests
     {
         protected override string GetConnectionInfo()

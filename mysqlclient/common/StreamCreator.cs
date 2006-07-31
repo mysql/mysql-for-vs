@@ -127,8 +127,8 @@ namespace MySql.Data.Common
         private void ConnectCallback(IAsyncResult ias)
         {
             Socket s = (ias.AsyncState as Socket);
-            s.EndConnect(ias);
-            waitHandle.Set();
+            if (s.Connected)
+                waitHandle.Set();
         }
 
 		private Stream CreateSocketStream( IPAddress ip, uint port, bool unix ) 

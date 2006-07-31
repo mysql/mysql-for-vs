@@ -139,6 +139,8 @@ namespace MySql.Data.MySqlClient
             int peek = PeekByte();
             if (peek == 0xff)
             {
+                ReadByte();  // read off the 0xff
+
                 int code = ReadInteger(2);
                 string msg = ReadString();
                 throw new MySqlException(msg, code);
@@ -174,7 +176,7 @@ namespace MySql.Data.MySqlClient
             byte[] tempBuf = new byte[1024];
             while (inPos < inLength)
             {
-                int toRead = (int)Math.Min((ulong)tempBuf.Length, inLength);
+                int toRead = (int)Math.Min((ulong)tempBuf.Length, (inLength-inPos));
                 Read(tempBuf, 0, toRead);
                 inPos += (ulong)toRead;
             }
@@ -242,7 +244,9 @@ namespace MySql.Data.MySqlClient
             {
                 // we read the byte this way because we might cross over a 
                 // multipacket boundary
-                Read(byteBuffer, 0, 1);
+                int cnt = Read(byteBuffer, 0, 1);
+                if (cnt == -1)
+                    return -1;
                 b = byteBuffer[0];
             }
             return b;
@@ -257,7 +261,8 @@ namespace MySql.Data.MySqlClient
             // we use asserts here because this is internal code
             // and we should be calling it correctly in all cases
             Debug.Assert(buffer != null);
-            Debug.Assert(offset >= 0 && offset < buffer.Length);
+            Debug.Assert(offset >= 0 &&
+                (offset < buffer.Length || (offset == 0 && buffer.Length == 0)));
             Debug.Assert(count >= 0);
             Debug.Assert((offset + count) <= buffer.Length);
 
@@ -268,17 +273,20 @@ namespace MySql.Data.MySqlClient
                 // if we have peeked at a byte, then read it off first.
                 if (peekByte != -1)
                 {
-                    buffer[offset] = (byte)ReadByte();
+                    buffer[offset++] = (byte)ReadByte();
                     count--;
                     continue;
                 }
 
-                // check if we are reading multipacket and are done with the
-                // last packet
+                // check if we are done reading the current packet
 				if (inPos == inLength) 
 				{
-                    // at this point, we better be reading multipacket
-                    Debug.Assert(inLength == (ulong)maxBlockSize);
+                    // if yes and this block is not max size, then we are done
+                    if (inLength < (ulong)maxBlockSize)
+                        return -1;
+
+                    // the current block is maxBlockSize so we need to read
+                    // in another block to continue
 					LoadPacket();
 				}
 
