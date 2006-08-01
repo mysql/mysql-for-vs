@@ -123,6 +123,7 @@ namespace MySql.Data.MySqlClient
             keys[1] = "TABLE_SCHEMA";
             keys[2] = "TABLE_NAME";
             DataTable dt = Query("VIEWS", null, keys, restrictions);
+            dt.TableName = "Views";
             return dt;
         }
 

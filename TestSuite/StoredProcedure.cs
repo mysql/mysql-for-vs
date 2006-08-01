@@ -500,7 +500,7 @@ namespace MySql.Data.MySqlClient.Tests
 		public void TestSelectingInts()
 		{
 			execSQL("CREATE PROCEDURE spTest() BEGIN DECLARE myVar INT; " +
-				"SET MyVar := 1; SELECT CAST(myVar as INT); END");
+				"SET MyVar := 1; SELECT CAST(myVar as SIGNED); END");
 			
 			MySqlCommand cmd = new MySqlCommand("spTest", conn);
 			cmd.CommandType = CommandType.StoredProcedure;

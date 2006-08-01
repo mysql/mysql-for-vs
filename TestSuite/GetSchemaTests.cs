@@ -59,7 +59,7 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("Indexes", dt.Rows[11][0]);
             Assert.AreEqual("Views", dt.Rows[12][0]);
             Assert.AreEqual("ViewColumns", dt.Rows[13][0]);
-            Assert.AreEqual("ProcedureParameters", dt.Rows[14][0]);
+            Assert.AreEqual("Procedure Parameters", dt.Rows[14][0]);
             Assert.AreEqual("Procedures", dt.Rows[15][0]);
             Assert.AreEqual("Triggers", dt.Rows[16][0]);
         }
@@ -129,7 +129,6 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("YES", dt.Rows[2]["IS_NULLABLE"]);
             Assert.AreEqual("VARCHAR", dt.Rows[2]["DATA_TYPE"].ToString().ToUpper());
             Assert.AreEqual("VARCHAR(50)", dt.Rows[2]["COLUMN_TYPE"].ToString().ToUpper());
-            Assert.AreEqual(50, dt.Rows[2]["CHARACTER_MAXIMUM_LENGTH"]);
 
             // fourth column
             Assert.AreEqual("TEST", dt.Rows[3]["TABLE_SCHEMA"].ToString().ToUpper());
@@ -216,6 +215,7 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void Views()
         {
+            execSQL("DROP VIEW IF EXISTS vw");
             execSQL("CREATE VIEW vw AS SELECT Now() as theTime");
 
             string[] restrictions = new string[4];
@@ -224,7 +224,66 @@ namespace MySql.Data.MySqlClient.Tests
             DataTable dt = conn.GetSchema("Views", restrictions);
             Assert.IsTrue(dt.Rows.Count == 1);
             Assert.AreEqual("Views", dt.TableName);
-            Assert.AreEqual("vw", dt.Rows[0][3]);
+            Assert.AreEqual("vw", dt.Rows[0]["TABLE_NAME"]);
         }
+
+        [Test]
+        [Category("5.0")]
+        public void SingleProcedureParameters()
+        {
+            execSQL("DROP PROCEDURE IF EXISTS spTest");
+            execSQL("CREATE PROCEDURE spTest(id int, IN id2 INT(11), " +
+                "INOUT io1 VARCHAR(20), OUT out1 FLOAT) BEGIN END");
+            string[] restrictions = new string[4];
+            restrictions[1] = "test";
+            restrictions[2] = "spTest";
+            DataTable procs = conn.GetSchema("PROCEDURES", restrictions);
+            Assert.AreEqual(1, procs.Rows.Count);
+            Assert.AreEqual("spTest", procs.Rows[0][0]);
+            Assert.AreEqual("test", procs.Rows[0][2]);
+            Assert.AreEqual("spTest", procs.Rows[0][3]);
+
+            DataTable parameters = conn.GetSchema("PROCEDURE PARAMETERS", restrictions);
+            Assert.AreEqual(4, parameters.Rows.Count);
+            Assert.AreEqual(DBNull.Value, parameters.Rows[0][0]);
+            Assert.AreEqual(DBNull.Value, parameters.Rows[1][0]);
+            Assert.AreEqual(DBNull.Value, parameters.Rows[2][0]);
+            Assert.AreEqual(DBNull.Value, parameters.Rows[3][0]);
+
+            Assert.AreEqual("test", parameters.Rows[0][1]);
+            Assert.AreEqual("test", parameters.Rows[1][1]);
+            Assert.AreEqual("test", parameters.Rows[2][1]);
+            Assert.AreEqual("test", parameters.Rows[3][1]);
+
+            Assert.AreEqual("spTest", parameters.Rows[0][2]);
+            Assert.AreEqual("spTest", parameters.Rows[1][2]);
+            Assert.AreEqual("spTest", parameters.Rows[2][2]);
+            Assert.AreEqual("spTest", parameters.Rows[3][2]);
+
+            Assert.AreEqual("id", parameters.Rows[0][3]);
+            Assert.AreEqual(1, parameters.Rows[0][4]);
+            Assert.AreEqual("IN", parameters.Rows[0][5]);
+            Assert.AreEqual("NO", parameters.Rows[0][6]);
+            Assert.AreEqual("INT", parameters.Rows[0][7].ToString().ToUpper());
+
+            Assert.AreEqual("id2", parameters.Rows[1][3]);
+            Assert.AreEqual(2, parameters.Rows[1][4]);
+            Assert.AreEqual("IN", parameters.Rows[1][5]);
+            Assert.AreEqual("NO", parameters.Rows[1][6]);
+            Assert.AreEqual("INT", parameters.Rows[1][7].ToString().ToUpper());
+
+            Assert.AreEqual("io1", parameters.Rows[2][3]);
+            Assert.AreEqual(3, parameters.Rows[2][4]);
+            Assert.AreEqual("INOUT", parameters.Rows[2][5]);
+            Assert.AreEqual("NO", parameters.Rows[2][6]);
+            Assert.AreEqual("VARCHAR", parameters.Rows[2][7].ToString().ToUpper());
+
+            Assert.AreEqual("out1", parameters.Rows[3][3]);
+            Assert.AreEqual(4, parameters.Rows[3][4]);
+            Assert.AreEqual("OUT", parameters.Rows[3][5]);
+            Assert.AreEqual("NO", parameters.Rows[3][6]);
+            Assert.AreEqual("FLOAT", parameters.Rows[3][7].ToString().ToUpper());
+        }
+
 	}
 }

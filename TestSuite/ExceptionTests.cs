@@ -48,7 +48,7 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void Timeout() 
 		{
-			for (int i=1; i < 2000; i++)
+			for (int i=1; i < 10; i++)
 				execSQL("INSERT INTO Test VALUES (" + i + ", 'This is a long text string that I am inserting')");
 
 			// we create a new connection so our base one is not closed

@@ -42,7 +42,6 @@ namespace MySql.Data.MySqlClient
 	{
         private const int UNSIGNED_MASK = 0x8000;
 		private object				paramValue;
-//		private IMySqlValue			valueObject;
 		private ParameterDirection	direction = ParameterDirection.Input;
 		private bool				isNullable  = false;
 		private string				paramName;
@@ -167,7 +166,7 @@ namespace MySql.Data.MySqlClient
 			get { return dbType; }
 			set 
 			{ 
-				SetDbType( value ); 
+				SetDbType(value); 
 				inferType = false;
 			}
 		}
@@ -208,7 +207,7 @@ namespace MySql.Data.MySqlClient
 			get { return mySqlDbType; }
 			set 
 			{ 
-				SetMySqlDbType( value ); 
+				SetMySqlDbType(value); 
 				inferType = false;
 			}
 		}
@@ -296,12 +295,12 @@ namespace MySql.Data.MySqlClient
 		{
 			get	{ return paramValue; }
 			set	
-			{ 
-				paramValue = value; 
-				if (value is Byte[])
-					size = (value as Byte[]).Length;
-				else if (value is String)
-					size = (value as string).Length;
+			{
+				paramValue = value;
+                if (value is Byte[])
+                    size = (value as Byte[]).Length;
+                else if (value is String)
+                    size = (value as string).Length;
 				if (inferType)
 					SetTypeFromValue();
 			}
@@ -318,22 +317,6 @@ namespace MySql.Data.MySqlClient
 			return paramName;
 		}
 
-/*		internal MySqlValue GetValueObject() 
-		{
-			if (valueObject == null)
-			{
-				valueObject = MySqlValue.GetMySqlValue( mySqlDbType, true );
-
-				MySqlDecimal dec = (valueObject as MySqlDecimal);
-				if (dec != null) 
-				{
-					dec.Precision = precision;
-					dec.Scale = scale;
-				}
-			}
-			return valueObject;
-		}
-*/
 		internal int GetPSType()
 		{
             switch (mySqlDbType)
@@ -396,7 +379,7 @@ namespace MySql.Data.MySqlClient
 				case MySqlDbType.TinyBlob:
 				case MySqlDbType.MediumBlob:
 				case MySqlDbType.LongBlob:
-				case MySqlDbType.Blob: dbType = DbType.Object; break;
+                case MySqlDbType.Blob: dbType = DbType.Object; break;
 				case MySqlDbType.String: dbType = DbType.StringFixedLength; break;
 			}
 		}

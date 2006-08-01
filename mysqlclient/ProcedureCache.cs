@@ -60,14 +60,16 @@ namespace MySql.Data.MySqlClient
             {
                 ds = AddNew(conn, spName);
                 conn.PerfMonitor.AddHardProcedureQuery();
-                Logger.LogInformation(String.Format(
-                    Resources.HardProcQuery, spName));
+                if (conn.Settings.Logging)
+                    Logger.LogInformation(String.Format(
+                        Resources.HardProcQuery, spName));
             }
             else
             {
                 conn.PerfMonitor.AddSoftProcedureQuery();
-                Logger.LogInformation(String.Format(
-                    Resources.SoftProcQuery, spName));
+                if (conn.Settings.Logging)
+                    Logger.LogInformation(String.Format(
+                        Resources.SoftProcQuery, spName));
             }
             return ds;
         }

@@ -39,6 +39,7 @@ namespace MySql.Data.MySqlClient
         private MemoryStream bufferStream;
 
         private int maxBlockSize;
+        private ulong maxPacketSize;
 
         private BufferedStream inStream;
         private ulong inLength;
@@ -52,6 +53,12 @@ namespace MySql.Data.MySqlClient
 
         public MySqlStream(Encoding encoding)
         {
+            // we have no idea what the real value is so we start off with the max value
+            // The real value will be set in NativeDriver.Configure()
+            // we don't need to default maxBlockSize since we will get that value in the 
+            // authentication handshake and we know that value will not exceed maxBlockSize
+            maxPacketSize = ulong.MaxValue;
+
             this.encoding = encoding;
             bufferStream = new MemoryStream();
             byteBuffer = new byte[1];
@@ -75,12 +82,6 @@ namespace MySql.Data.MySqlClient
         public bool IsLastPacket
         {
             get { return isLastPacket; }
-        }
-
-        public int MaxBlockLength
-        {
-            get { return maxBlockSize; }
-            set { maxBlockSize = value; }
         }
 
         public DBVersion Version
@@ -115,11 +116,17 @@ namespace MySql.Data.MySqlClient
             }
 		}
 
-		public int MaxSinglePacket 
+		public int MaxBlockSize
 		{
 			get { return maxBlockSize; }
 			set { maxBlockSize = value; }
 		}
+
+        public ulong MaxPacketSize
+        {
+            get { return maxPacketSize; }
+            set { maxPacketSize = value; }
+        }
 
 		#endregion
 
@@ -153,18 +160,25 @@ namespace MySql.Data.MySqlClient
         /// </summary>
         public void LoadPacket()
         {
-            int b1 = inStream.ReadByte();
-            int b2 = inStream.ReadByte();
-            int b3 = inStream.ReadByte();
-            int seqByte = inStream.ReadByte();
+            try
+            {
+                int b1 = inStream.ReadByte();
+                int b2 = inStream.ReadByte();
+                int b3 = inStream.ReadByte();
+                int seqByte = inStream.ReadByte();
 
-            if (b1 == -1 || b2 == -1 || b3 == -1 || seqByte == -1)
-                throw new MySqlException(
-                    Resources.ConnectionBroken, true, null);
+                if (b1 == -1 || b2 == -1 || b3 == -1 || seqByte == -1)
+                    throw new MySqlException(
+                        Resources.ConnectionBroken, true, null);
 
-            sequenceByte = (byte)++seqByte;
-            inLength = (ulong)(b1 + (b2 << 8) + (b3 << 16));
-            inPos = 0;
+                sequenceByte = (byte)++seqByte;
+                inLength = (ulong)(b1 + (b2 << 8) + (b3 << 16));
+                inPos = 0;
+            }
+            catch (IOException ioex)
+            {
+                throw new MySqlException(Resources.ReadFromStreamFailed, true, ioex);
+            }
         }
 
         /// <summary>
@@ -189,7 +203,11 @@ namespace MySql.Data.MySqlClient
         {
             outLength = outPos = 0;
             if (length > 0)
+            {
+                if (length > maxPacketSize)
+                    throw new MySqlException(Resources.QueryTooLarge, (int)MySqlErrorCode.PacketTooLarge);
                 outLength = length;
+            }
 
             if (resetSequence)
                 sequenceByte = 0;
@@ -291,18 +309,25 @@ namespace MySql.Data.MySqlClient
 				}
 
 				int lenToRead = Math.Min(count, (int)(inLength - inPos));
-				int read = inStream.Read(buffer, offset, lenToRead);
+                try
+                {
+                    int read = inStream.Read(buffer, offset, lenToRead);
 
-                // we don't throw an exception here even though this probably
-                // indicates a broken connection.  We leave that to the 
-                // caller.
-                if (read == 0)
-                    break;
+                    // we don't throw an exception here even though this probably
+                    // indicates a broken connection.  We leave that to the 
+                    // caller.
+                    if (read == 0)
+                        break;
 
-				count -= read;
-				offset += read;
-				totalRead += read;
-				inPos += (ulong)read;
+                    count -= read;
+                    offset += read;
+                    totalRead += read;
+                    inPos += (ulong)read;
+                }
+                catch (IOException ioex)
+                {
+                    throw new MySqlException(Resources.ReadFromStreamFailed, true, ioex);
+                }
 			}
 
 			return totalRead;
@@ -361,7 +386,14 @@ namespace MySql.Data.MySqlClient
                 if ((outPos % (ulong)maxBlockSize) == 0)
                     WriteHeader();
 
-                outStream.Write(buffer, pos, cntToWrite);
+                try
+                {
+                    outStream.Write(buffer, pos, cntToWrite);
+                }
+                catch (IOException ioex)
+                {
+                    throw new MySqlException(Resources.WriteToStreamFailed, true, ioex);
+                }
 
                 outPos += (ulong)cntToWrite;
                 pos += cntToWrite;

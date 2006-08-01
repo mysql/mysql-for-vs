@@ -36,23 +36,18 @@ namespace MySql.Data.MySqlClient
 	/// </summary>
 	internal class NativeDriver : Driver
 	{
-		public    int					MaxSinglePacket = 255 * 255 * 255;
-		protected byte					packetSeq;
-
 		protected int					protocol;
 		protected String				encryptionSeed;
 		protected ClientFlags			connectionFlags;
 
-		protected MySqlStream		stream;
+		protected MySqlStream		    stream;
 		private   BitArray				nullMap;
 
         private int warningCount;
 
 		public NativeDriver(MySqlConnectionStringBuilder settings) : base(settings)
 		{
-			packetSeq = 0;
 			isOpen = false;
-			maxPacketSize = 1047552;
 		}
 
 		public ClientFlags Flags
@@ -93,32 +88,56 @@ namespace MySql.Data.MySqlClient
 		{
             Debug.Assert(length == 0 || bytes != null);
 
-            stream.StartOutput((ulong)length + 1, true);
-            stream.WriteByte((byte)cmd);
-            if (length > 0)
-                stream.Write(bytes, 0, length);
-            stream.Flush();
+            try
+            {
+                stream.StartOutput((ulong)length + 1, true);
+                stream.WriteByte((byte)cmd);
+                if (length > 0)
+                    stream.Write(bytes, 0, length);
+                stream.Flush();
+            }
+            catch (MySqlException ex)
+            {
+                if (ex.IsFatal)
+                {
+                    isOpen = false;
+                    Close();
+                }
+                throw;
+            }
 		}
 
 		private void ReadOk(bool read) 
 		{
-			if (read)
-				stream.OpenPacket();
-			byte marker = (byte)stream.ReadByte();
-			if (marker != 0)
-				throw new MySqlException("Out of sync with server", true, null);
+            try
+            {
+                if (read)
+                    stream.OpenPacket();
+                byte marker = (byte)stream.ReadByte();
+                if (marker != 0)
+                    throw new MySqlException("Out of sync with server", true, null);
 
-			long affectedRows = stream.ReadFieldLength();
-			long lastInsertId = stream.ReadFieldLength();
-			if (stream.HasMoreData)
-			{
-				serverStatus = (ServerStatusFlags)stream.ReadInteger(2);
-				int warningCount = stream.ReadInteger(2);
-				if (stream.HasMoreData)
-				{
-					string msg = stream.ReadLenString();
-				}
-			}
+                long affectedRows = stream.ReadFieldLength();
+                long lastInsertId = stream.ReadFieldLength();
+                if (stream.HasMoreData)
+                {
+                    serverStatus = (ServerStatusFlags)stream.ReadInteger(2);
+                    int warningCount = stream.ReadInteger(2);
+                    if (stream.HasMoreData)
+                    {
+                        string msg = stream.ReadLenString();
+                    }
+                }
+            }
+            catch (MySqlException ex)
+            {
+                if (ex.IsFatal)
+                {
+                    isOpen = false;
+                    Close();
+                }
+                throw;
+            }
 		}
 
 		/// <summary>
@@ -128,20 +147,15 @@ namespace MySql.Data.MySqlClient
 		public override void SetDatabase(string dbName)
 		{
 			byte[] dbNameBytes = Encoding.GetBytes( dbName );
-			ExecuteCommand( DBCmd.INIT_DB, dbNameBytes, dbNameBytes.Length );
+			ExecuteCommand(DBCmd.INIT_DB, dbNameBytes, dbNameBytes.Length);
 			ReadOk(true);
 		}
 
-		public string GetString(byte[] stringBuffer)
-		{
-			if (stringBuffer == null) return String.Empty;
-			return encoding.GetString(stringBuffer, 0, stringBuffer.Length);
-		}
-
-		public byte[] GetBytes(string s)
-		{
-			return encoding.GetBytes(s);
-		}
+        public override void Configure(MySqlConnection connection)
+        {
+            base.Configure(connection);
+            stream.MaxPacketSize = (ulong)maxPacketSize;
+        }
 
 		public override void Open()
 		{
@@ -191,7 +205,9 @@ namespace MySql.Data.MySqlClient
 
 			// starting with 4.0.8, maxSinglePacket should be 0xffffff
 			if ( version.isAtLeast(4,0,8))
-				MaxSinglePacket = (256*256*256)-1;
+				stream.MaxBlockSize = (256*256*256)-1;
+            else
+                stream.MaxBlockSize = 255 * 255 * 255;
 
 			// read in Server capabilities if they are provided
 			serverCaps = 0;
@@ -204,7 +220,7 @@ namespace MySql.Data.MySqlClient
 			stream.StartOutput(0, false);
 			stream.WriteInteger((int)connectionFlags, 
                 version.isAtLeast(4,1,0) ? 4 : 2);
-			stream.WriteInteger(MaxSinglePacket, 
+			stream.WriteInteger(stream.MaxBlockSize, 
                 version.isAtLeast(4,1,0) ? 4 : 3);
 
 			// 4.1.1 included some new server status info
@@ -225,8 +241,6 @@ namespace MySql.Data.MySqlClient
                 stream.WriteByte(8);
 				stream.Write(new byte[23]);
 			}
-
-            stream.MaxBlockLength = MaxSinglePacket;
 
             Authenticate();
 
@@ -383,8 +397,10 @@ namespace MySql.Data.MySqlClient
 
 		public override void Close() 
 		{
-			if (isOpen)
-				ExecuteCommand(DBCmd.QUIT, null, 0);
+            if (isOpen)
+            {
+                ExecuteCommand(DBCmd.QUIT, null, 0);
+            }
 
 			stream.Close();
 			base.Close();
@@ -401,9 +417,7 @@ namespace MySql.Data.MySqlClient
 			}
 			catch (Exception) 
 			{
-				isOpen = false;
-				// exceptions here can be very common so we don't log
-				return false;
+                return false;
 			}
 		}
 
@@ -464,26 +478,24 @@ namespace MySql.Data.MySqlClient
 			byte[]		buffer = new byte[4092];
 			FileStream	fs = null;
 
-
 			try 
 			{
 				fs = new FileStream(filename, FileMode.Open);
-//				stream.StartPacket(fs.Length, true);
+                stream.StartOutput((ulong)fs.Length, true);
 
 				long len = fs.Length;
 				while (len > 0) 
 				{
-					int count = fs.Read( buffer, 0, 4092 );
-					//stream.Write(buffer, 0, count);
+					int count = fs.Read(buffer, 0, 4092);
+					stream.Write(buffer, 0, count);
 					len -= count;
 				}
 				stream.Flush();
 
 				// write the terminating packet
-				//TODO: fix this
-//				stream.WriteInteger(0, 3);
-//				stream.WriteByte(this.SequenceByte ++);
-//				stream.Flush();
+                stream.StartOutput(3, false);
+                stream.WriteInteger(0, 3);
+                stream.Flush();
 			}
 			catch (Exception ex)
 			{

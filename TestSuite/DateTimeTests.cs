@@ -90,6 +90,7 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void TestNotAllowZerDateAndTime() 
 		{
+            execSQL("SET SQL_MODE=''");
 			execSQL("INSERT INTO Test VALUES(1, 'Test', '0000-00-00', '0000-00-00', '00:00:00')");
 			execSQL("INSERT INTO Test VALUES(2, 'Test', '2004-11-11', '2004-11-11', '06:06:06')");
 

@@ -32,8 +32,8 @@ namespace MySql.Data.MySqlClient
 #endif
 	public sealed class MySqlException : SystemException
 	{
-		private int			errorCode;
-		private bool		isFatal;
+		private int errorCode;
+		private bool isFatal;
 
 		internal MySqlException() 
 		{

@@ -137,13 +137,12 @@ namespace MySql.Data.MySqlClient
 		public virtual void Close() 
 		{
 			isOpen = false;
+
+            // if we are pooling, then release ourselves
+            if (connectionString.Pooling)
+                MySqlPoolManager.RemoveConnection(this);
 		}
 
-		/// <summary>
-		/// I don't like this setup but can't think of a better way of doing
-		/// right now.
-		/// </summary>
-		/// <param name="connection"></param>
 		public virtual void Configure(MySqlConnection connection)
 		{
 			this.connection = connection;
@@ -173,7 +172,7 @@ namespace MySql.Data.MySqlClient
 				throw;
 			}
 
-			if (serverProps.Contains( "max_allowed_packet"))
+			if (serverProps.Contains("max_allowed_packet"))
 				maxPacketSize = Convert.ToInt64(serverProps["max_allowed_packet"]);
 
 #if AUTHENTICATED

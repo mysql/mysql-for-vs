@@ -33,7 +33,7 @@ namespace MySql.Data.MySqlClient.Tests
 	{
 		public PoolingTests() : base()
 		{
-			csAdditions = ";pooling=true";
+			csAdditions = ";pooling=true; connection reset=true";
 		}
 
 		[TestFixtureSetUp]
@@ -132,15 +132,15 @@ namespace MySql.Data.MySqlClient.Tests
 			string connStr = conn.ConnectionString + ";max pool size=1";
 
 			// now use up that connection
-			MySqlConnection c = new MySqlConnection( connStr );
+			MySqlConnection c = new MySqlConnection(connStr);
 			c.Open();
 
 			// now attempting to open a connection should fail
 			try 
 			{
-				MySqlConnection c2 = new MySqlConnection( connStr );
+				MySqlConnection c2 = new MySqlConnection(connStr);
 				c2.Open();
-				Assert.Fail( "Open after using up pool should fail" );
+				Assert.Fail("Open after using up pool should fail");
 			}
 			catch (Exception) { }
 
@@ -158,69 +158,56 @@ namespace MySql.Data.MySqlClient.Tests
 			// Opening a connection now should work
 			try 
 			{
-				MySqlConnection c2 = new MySqlConnection( connStr );
+				MySqlConnection c2 = new MySqlConnection(connStr);
 				c2.Open();
 				c2.Close();
 			}
 			catch (Exception ex) 
 			{ 
-				Assert.Fail( ex.Message);
+				Assert.Fail(ex.Message);
 			}
 		}
 
-		[Test()]
+		[Test]
 		public void TestUserReset()
 		{
 			execSQL("SET @testvar='5'");
 			MySqlCommand cmd = new MySqlCommand("SELECT @testvar", conn);
 			object var = cmd.ExecuteScalar();
-			Assert.AreEqual("5", var );
+			Assert.AreEqual("5", var);
 			conn.Close();
 
 			conn.Open();
 			object var2 = cmd.ExecuteScalar();
-			Assert.AreEqual( DBNull.Value, var2 );
+			Assert.AreEqual(DBNull.Value, var2);
 		}
 
-		[Test]
-		public void ExceedMaxAllowedPacket()
-		{
-			MySqlConnection c = null;
+        [Test]
+        public void ExceedMaxAllowedPacket()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+			execSQL("CREATE TABLE test (b1 LONGBLOB)");
 
-			execSQL("set @@global.max_allowed_packet=1000000");		
-			execSQL("DROP TABLE IF EXISTS test");
-			try 
-			{
-				execSQL("CREATE TABLE test (b1 LONGBLOB)");
+            try
+            {
+                MySqlCommand cmd = new MySqlCommand("select @@global.max_allowed_packet", conn);
+                object maxPacketSize = cmd.ExecuteScalar();
 
-				string connStr = GetConnectionString(true) + ";max pool size=1";
-				c = new MySqlConnection(connStr);
-				c.Open();
-
-				byte[] b1 = new byte[2500000];
-				MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES (?b1)", c);
-				cmd.Parameters.Add("?b1", b1);
-				cmd.ExecuteNonQuery();
-			}
-			catch (Exception)
-			{
-				Assert.IsTrue(c.State == ConnectionState.Closed);
-
-				try 
-				{
-					c.Open();
-					c.ChangeDatabase("mysql");
-				}
-				catch (Exception ex2)
-				{
-					Assert.Fail(ex2.Message);
-				}
-			}
-			finally 
-			{
-				if (c != null)
-					c.Close();
-			}
-		}
+                byte[] buffer = new byte[(UInt64)maxPacketSize + 100];
+                cmd.CommandText = "INSERT INTO test vALUES (?b1)";
+                cmd.Parameters.Add("b1", buffer);
+                cmd.ExecuteNonQuery();
+            }
+            catch (MySqlException mex)
+            {
+                Assert.IsTrue(conn.State == ConnectionState.Open);
+                Assert.AreEqual((int)MySqlErrorCode.PacketTooLarge, mex.Number);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
+        
 	}
 }

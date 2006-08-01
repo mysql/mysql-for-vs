@@ -69,6 +69,18 @@ namespace MySql.Data.MySqlClient
 			}
 		}
 
+        public static void RemoveConnection(Driver driver)
+        {
+            lock (pools.SyncRoot)
+            {
+                string key = driver.Settings.GetConnectionString(true);
+                MySqlPool pool = (MySqlPool)pools[key];
+                if (pool == null)
+                    throw new MySqlException("Pooling exception: Unable to find original pool for connection");
+                pool.RemoveConnection(driver);
+            }
+        }
+
 		public static void ReleaseConnection(Driver driver)
 		{
 			lock (pools.SyncRoot) 

@@ -147,9 +147,6 @@
     <Compile Include="PreparedStatements.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="SchemaTests.cs">
-      <SubType>code</SubType>
-    </Compile>
     <Compile Include="StoredProcedure.cs">
       <SubType>Code</SubType>
     </Compile>
