@@ -45,8 +45,9 @@
 		
 		<mkdir dir="${outdir}" failonerror="false"/>
 		<resgen input="mysqlclient/Resources.resx" output="mysqlclient/Resources.resources"/>
+    <echo message="defines=${defines}"/>
 		<csc output="${outdir}/MySql.Data.dll" target="library" 
-			define="${defines}" debug="${debug}" optimize="${opt}"
+			define="${defines}" debug="${debug}" optimize="${opt}" keycontainer="ConnectorNet" 
 			doc="${outdir}/MySql.Data.xml">
 			<arg value="/nowarn:0679,1591"/>
 			<resources prefix="MySql.Data.MySqlClient" dynamicprefix="false">
@@ -93,7 +94,7 @@
 	<target name="net-2.0" description="2.0 .NET target">
 		<property name="nunit-lib" value="${nunit}/bin"/>
 		<property name="framework" value="net-2.0"/>
-		<property name="defines" value="NET20"/>
+		<property name="defines" value="${defines},NET20"/>
 		<call target="client"/>
 		<call target="Docs"/>
 </target>
@@ -205,7 +206,7 @@
 	<!-- documentation target -->
 	<target name="Docs" description="Documentation">
 		<ndoc>
-			<assemblies basedir="${build.dir}/mysqlclient/bin/${framework}/${buildType}">
+			<assemblies basedir="c:\work\connector-net\trunk\staging\mysqlclient\bin\net-2.0\release">
 				<include name="MySQL.Data.dll" />
 			</assemblies>
 			<summaries>

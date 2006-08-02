@@ -78,7 +78,7 @@ using System.Runtime.CompilerServices;
 //       documentation for more information on this.
 //
 [assembly: AssemblyDelaySign(false)]
-#if FINAL
+#if FINAL && !NET20
 [assembly: AssemblyKeyFile("")]
 [assembly: AssemblyKeyName("ConnectorNet")]
 #endif

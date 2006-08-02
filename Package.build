@@ -6,11 +6,17 @@
 
 	<!-- filesets -->
 	<fileset id="BaseSource">
-		<include name="mysqlclient/**"/>
+		<include name="mysqlclient/*.cs"/>
+    <include name="mysqlclient/*.resx"/>
+    <include name="mysqlclient/common/*.cs"/>
+    <include name="mysqlclient/types/*.cs"/>
+    <include name="mysqlclient/docs/*"/>
+    <include name="mysqlclient/*.csproj"/>
 		<include name="testsuite/**"/>
 		<include name="Client.build"/>
 		<include name="CHANGES"/>
 		<include name="README"/>
+    <include name="Release Notes.txt"/>
 		<include name="MySql.Data.csproj"/>
 		<include name="Samples/**" />
 	</fileset>
@@ -85,9 +91,10 @@
 		<property name="debug" value="false"/>
 		<property name="build.dir" value="staging" />
 		
-		<nant buildfile="staging/Client.build" target="allframeworks"/>
-		
-		<!-- now build the WIX installer -->
+<!--		<nant buildfile="staging/Client.build" target="allframeworks"/>-->
+      <nant buildfile="staging/Client.build" target="net-2.0"/>
+
+      <!-- now build the WIX installer -->
 		<exec workingdir="staging/Installer" program="candle" commandline="-dIsGPL=${IsGPL} -dbuild=release main.wxs"/>
 		<exec workingdir="staging/Installer" program="candle" commandline="ui.wxs"/>
 		<exec workingdir="staging/Installer" program="light" 

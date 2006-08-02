@@ -178,8 +178,6 @@
     <Content Include="docs\MySqlParameter.xml" />
     <Content Include="docs\MySqlParameterCollection.xml" />
     <Content Include="docs\MySqlTransaction.xml" />
-    <Content Include="Release Notes.txt" />
-    <Content Include="ReservedWords.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">
