@@ -109,10 +109,9 @@ namespace MySql.Data.MySqlClient
             restrictions[2] = name;
             DataTable procTable = connection.GetSchema("procedures", restrictions);
             if (procTable.Rows.Count > 1)
-                throw new InvalidOperationException(Resources.ProcAndFuncSameName);
+                throw new MySqlException(Resources.ProcAndFuncSameName);
             if (procTable.Rows.Count == 0)
-                throw new InvalidOperationException(
-                    String.Format(Resources.InvalidProcName, name, schema));
+                throw new MySqlException(String.Format(Resources.InvalidProcName, name, schema));
 
             // we don't use GetSchema here because that would cause another
             // query of procedures and we don't need that since we already

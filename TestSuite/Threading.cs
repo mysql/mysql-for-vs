@@ -113,6 +113,7 @@ namespace MySql.Data.MySqlClient.Tests
         /// <summary>
         /// Bug #17106 MySql.Data.MySqlClient.CharSetMap.GetEncoding thread synchronization issue
         /// </summary>
+        [Explicit]
         [Test]
         public void MultipleThreads()
         {

@@ -96,7 +96,7 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-        [Category("NotWorking")]
+        [Explicit]
 		[Test]
 		public void LoadDataLocalInfile() 
 		{

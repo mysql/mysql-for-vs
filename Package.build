@@ -13,7 +13,6 @@
 		<include name="README"/>
 		<include name="MySql.Data.csproj"/>
 		<include name="Samples/**" />
-		<include name="ICSharpCode.SharpZipLib.dll"/>
 	</fileset>
 
 	<fileset id="SourceGPL">

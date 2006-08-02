@@ -372,7 +372,7 @@ namespace MySql.Data.MySqlClient.Tests
 
     #region Configs
 
-    [Category("NotWorking")]
+    [Explicit]
     public class BlobTestsSocketCompressed : BlobTests
     {
         protected override string GetConnectionInfo()
@@ -389,7 +389,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
-    [Category("NotWorking")]
+    [Explicit]
     public class BlobTestsPipeCompressed : BlobTests
     {
         protected override string GetConnectionInfo()
@@ -398,6 +398,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
+    [Explicit]
     public class BlobTestsSharedMemory : BlobTests
     {
         protected override string GetConnectionInfo()
@@ -406,7 +407,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
-    [Category("NotWorking")]
+    [Explicit]
     public class BlobTestsSharedMemoryCompressed : BlobTests
     {
         protected override string GetConnectionInfo()

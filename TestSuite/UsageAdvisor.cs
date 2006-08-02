@@ -44,6 +44,7 @@ namespace MySql.Data.MySqlClient.Tests
 			Close();
 		}
 
+        [Explicit]
 		[Test]
 		public void NotReadingEveryField() 
 		{
@@ -86,6 +87,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 		}
 
+        [Explicit]
 		[Test]
 		public void NotReadingEveryRow() 
 		{

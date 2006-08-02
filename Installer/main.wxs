@@ -11,6 +11,7 @@
 		<Directory Id="TARGETDIR" Name="SourceDir">
 			<Component Id="BaseComponents" Guid="d2192cc7-7915-46a5-bf36-383e432fb79e">
 				<File Id="ChangeLog" Name="CLog" LongName="CHANGES" src="..\CHANGES" DiskId="1"/>
+				<File Id="ReleaseNotes" Name="RelNotes" LongName="Release Notes.txt" src="..\mysqlclient\Release Notes.txt" DiskId="1"/>
 				<?if $(var.IsGPL) = true ?>
 				<File Id="EXCEPTIONS" Name="EXC" LongName="EXCEPTIONS" src="..\EXCEPTIONS" DiskId="1"/>
 				<File Id="COPYING" Name="COPY" LongName="COPYING" src="..\COPYING" DiskId="1" />
@@ -24,7 +25,8 @@
 			<Directory Id="BinFolder" Name="bin">
 				<Directory Id="Bin20" Name="NET20" LongName=".NET 2.0">
 					<Component Id="Net20" Guid="5e1cc5ab-ccba-4dff-82ce-c39d78901d30">
-						<File Id="CoreBin20" Name="MD20" LongName="MySql.Data.dll" src="..\bin\net-2.0\$(var.build)\mysql.data.dll" DiskId="1"  />
+						<File Id="CoreBin20" Name="MD20" LongName="MySql.Data.dll" src="..\mysqlclient\bin\net-2.0\$(var.build)\mysql.data.dll" DiskId="1"  />
+						<Registry Id="vs80registry" Root="HKLM" Key="Software\Microsoft\VisualStudio\8.0\AssemblyFolders\MySQL Connector Net $(var.ProductVersion)" Type="string" KeyPath="yes" Value="[TARGETDIR]bin\.NET 2.0\" />
 					</Component>
 				</Directory>
 				<Directory Id="Bin11" Name="NET11" LongName=".NET 1.1">
@@ -44,6 +46,10 @@
 						<File Id="CoreMono10" Name="MOD10" LongName="MySql.Data.dll" src="..\bin\mono-1.0\$(var.build)\mysql.data.dll" DiskId="1" />
 					</Component>
 				</Directory>
+				<Component Id="GACFiles20" Guid="9D1C9A94-8B78-4225-9E87-6DED3A7D19B4">
+					<Condition><![CDATA[REGISTERGAC="1"]]></Condition>
+					<File Id="CoreBin20GAC" Name="MD20" LongName="MySql.Data.dll" src="..\bin\net-2.0\$(var.build)\mysql.data.dll" DiskId="1" Assembly=".net" KeyPath="yes" />
+				</Component>
 				<Component Id="GACFiles11" Guid="61a90246-01e8-449a-a59c-afc16938b49f">
 					<Condition><![CDATA[REGISTERGAC="1"]]></Condition>
 					<File Id="CoreBin11GAC" Name="MD11" LongName="MySql.Data.dll" src="..\bin\net-1.1\$(var.build)\mysql.data.dll" DiskId="1" Assembly=".net" KeyPath="yes" />
@@ -64,7 +70,6 @@
 							<File Id="teCS3" Name="Form1.cs" src="..\Samples\TableEditor\cs\Form1.cs" DiskId="1"/>
 							<File Id="teCS4" Name="Form1.res" LongName="Form1.resx" src="..\Samples\TableEditor\cs\Form1.resx" DiskId="1"/>
 							<File Id="teCS5" Name="te.csp" LongName="TableEditor.csproj" src="..\Samples\TableEditor\cs\TableEditor.csproj" DiskId="1"/>
-							<File Id="teCS6" Name="te.csu" LongName="TableEditor.csproj.user" src="..\Samples\TableEditor\cs\TableEditor.csproj.user" DiskId="1"/>
 							<File Id="teCS7" Name="def.bld" LongName="TableEditor.build" src="..\Samples\TableEditor\cs\TableEditor.build" DiskId="1"/>
 						</Component>
 					</Directory>
@@ -74,7 +79,6 @@
 							<File Id="teVB3" Name="Form1.vb" src="..\Samples\TableEditor\vb\Form1.vb" DiskId="1"/>
 							<File Id="teVB4" Name="Form1.res" LongName="Form1.resx" src="..\Samples\TableEditor\vb\Form1.resx" DiskId="1"/>
 							<File Id="teVB5" Name="te.vbp" LongName="TableEditor.vbproj" src="..\Samples\TableEditor\vb\TableEditor.vbproj" DiskId="1"/>
-							<File Id="teVB6" Name="te.vbu" LongName="TableEditor.vbproj.user" src="..\Samples\TableEditor\vb\TableEditor.vbproj.user" DiskId="1"/>
 							<File Id="teVB7" Name="te.bld" LongName="TableEditor.build" src="..\Samples\TableEditor\vb\TableEditor.build" DiskId="1"/>
 						</Component>
 					</Directory>

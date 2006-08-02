@@ -384,6 +384,7 @@ namespace MySql.Data.MySqlClient.Tests
 
     #region Configs
 
+    [Explicit]
     public class CommandTestsSocketCompressed : CommandTests
     {
         protected override string GetConnectionInfo()
@@ -400,6 +401,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
+    [Explicit]
     public class CommandTestsPipeCompressed : CommandTests
     {
         protected override string GetConnectionInfo()
@@ -408,6 +410,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
+    [Explicit]
     public class CommandTestsSharedMemory : CommandTests
     {
         protected override string GetConnectionInfo()
@@ -416,6 +419,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
+    [Explicit]
     public class CommandTestsSharedMemoryCompressed : CommandTests
     {
         protected override string GetConnectionInfo()

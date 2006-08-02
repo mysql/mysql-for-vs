@@ -456,7 +456,7 @@ namespace MySql.Data.MySqlClient
 
 			affectedRows = (ulong)stream.ReadFieldLength();
 			lastInsertId = (long)stream.ReadFieldLength();
-			if ( version.isAtLeast(4,1,0) ) 
+			if (version.isAtLeast(4,1,0)) 
 			{
 				serverStatus = (ServerStatusFlags)stream.ReadInteger(2);
 				warningCount = stream.ReadInteger(2);

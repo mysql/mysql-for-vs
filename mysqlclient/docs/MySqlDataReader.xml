@@ -89,7 +89,13 @@ public void ReadMyData(string myConnString) {
 <GetTimeSpan>
 	<summary>Gets the value of the specified column as a <see cref="TimeSpan"/> object.</summary>
 	<remarks>
-	</remarks>
+    <para>
+      No conversions are performed; therefore, the data retrieved must already be a <b>Time</b> value.
+    </para>
+    <para>
+      Call IsDBNull to check for null values before calling this method.
+    </para>
+  </remarks>
 	<param name="index">The zero-based column ordinal.</param>
 	<returns>The value of the specified column.</returns>
 </GetTimeSpan>
@@ -97,7 +103,13 @@ public void ReadMyData(string myConnString) {
 <GetDateTime>
 	<summary>Gets the value of the specified column as a <see cref="DateTime"/> object.</summary>
 	<remarks>
-		<note>
+    <para>
+    No conversions are performed; therefore, the data retrieved must already be a <b>DateTime</b> object.
+    </para>
+    <para>
+      Call IsDBNull to check for null values before calling this method.
+    </para>
+    <note>
 		<para>
 		MySql allows date columns to contain the value '0000-00-00' and datetime
 		columns to contain the value '0000-00-00 00:00:00'.  The DateTime structure cannot contain
@@ -118,34 +130,71 @@ public void ReadMyData(string myConnString) {
 <GetMySqlDateTime>
 	<summary>Gets the value of the specified column as a <see cref="MySql.Data.Types.MySqlDateTime"/> object.</summary>
 	<remarks>
-	</remarks>
+    <para>
+      No conversions are performed; therefore, the data retrieved must already be a <b>DateTime</b> object.
+    </para>
+    <para>
+      Call IsDBNull to check for null values before calling this method.
+    </para>
+  </remarks>
 	<param name="index">The zero-based column ordinal.</param>
 	<returns>The value of the specified column.</returns>
 </GetMySqlDateTime>
 
 <GetString>
 	<summary>Gets the value of the specified column as a <see cref="String"/> object.</summary>
-	<remarks></remarks>
+	<remarks>
+    <para>
+      No conversions are performed; therefore, the data retrieved must already be a <b>String</b> object.
+    </para>
+    <para>
+      Call IsDBNull to check for null values before calling this method.
+    </para>
+  </remarks>
 	<param name="index">The zero-based column ordinal.</param>
 	<returns>The value of the specified column.</returns>
 </GetString>
 
 <GetDecimal>
 	<summary>Gets the value of the specified column as a <see cref="Decimal"/> object.</summary>
-	<remarks></remarks>
+	<remarks>
+    <para>
+      No conversions are performed; therefore, the data retrieved must already be a <b>Decimal</b> object.
+    </para>
+    <para>
+      Call IsDBNull to check for null values before calling this method.
+    </para>
+  </remarks>
 	<param name="index">The zero-based column ordinal.</param>
 	<returns>The value of the specified column.</returns>
 </GetDecimal>
 
 <GetDouble>
 	<summary>Gets the value of the specified column as a double-precision floating point number.</summary>
-	<remarks></remarks>
+	<remarks>
+    <para>
+      No conversions are performed; therefore, the data retrieved must already be a <b>Double</b> object.
+    </para>
+    <para>
+      Call IsDBNull to check for null values before calling this method.
+    </para>
+  </remarks>
 	<param name="index">The zero-based column ordinal.</param>
 	<returns>The value of the specified column.</returns>
 </GetDouble>
 
 <GetFloat>
-	<summary>Gets the value of the specified column as a single-precision floating point number.</summary>
+	<summary>
+    Gets the value of the specified column as a single-precision floating point number.
+    </summary>
+  <remarks>
+    <para>
+      No conversions are performed; therefore, the data retrieved must already be a <b>Float</b> object.
+    </para>
+    <para>
+      Call IsDBNull to check for null values before calling this method.
+    </para>
+  </remarks>
 	<param name="index">The zero-based column ordinal.</param>
 	<returns>The value of the specified column.</returns>
 </GetFloat>
@@ -158,37 +207,85 @@ public void ReadMyData(string myConnString) {
 
 <GetInt16>
 	<summary>Gets the value of the specified column as a 16-bit signed integer.</summary>
+  <remarks>
+    <para>
+      No conversions are performed; therefore, the data retrieved must already be a <b>16 bit integer</b> value.
+    </para>
+    <para>
+      Call IsDBNull to check for null values before calling this method.
+    </para>
+  </remarks>
 	<param name="index">The zero-based column ordinal.</param>
 	<returns>The value of the specified column.</returns>
 </GetInt16>
 
 <GetInt32>
 	<summary>Gets the value of the specified column as a 32-bit signed integer.</summary>
-	<param name="index">The zero-based column ordinal.</param>
+  <remarks>
+    <para>
+      No conversions are performed; therefore, the data retrieved must already be a <b>32 bit integer</b> value.
+    </para>
+    <para>
+      Call IsDBNull to check for null values before calling this method.
+    </para>
+  </remarks>
+  <param name="index">The zero-based column ordinal.</param>
 	<returns>The value of the specified column.</returns>
 </GetInt32>
 
 <GetInt64>
 	<summary>Gets the value of the specified column as a 64-bit signed integer.</summary>
-	<param name="index">The zero-based column ordinal.</param>
+  <remarks>
+    <para>
+      No conversions are performed; therefore, the data retrieved must already be a <b>64 bit integer</b> value.
+    </para>
+    <para>
+      Call IsDBNull to check for null values before calling this method.
+    </para>
+  </remarks>
+  <param name="index">The zero-based column ordinal.</param>
 	<returns>The value of the specified column.</returns>
 </GetInt64>
 
 <GetUInt16>
 	<summary>Gets the value of the specified column as a 16-bit unsigned integer.</summary>
-	<param name="index">The zero-based column ordinal.</param>
+  <remarks>
+    <para>
+      No conversions are performed; therefore, the data retrieved must already be a <b>16 bit unsigned integer</b> value.
+    </para>
+    <para>
+      Call IsDBNull to check for null values before calling this method.
+    </para>
+  </remarks>
+  <param name="index">The zero-based column ordinal.</param>
 	<returns>The value of the specified column.</returns>
 </GetUInt16>
 
 <GetUInt32>
 	<summary>Gets the value of the specified column as a 32-bit unsigned integer.</summary>
-	<param name="index">The zero-based column ordinal.</param>
+  <remarks>
+    <para>
+      No conversions are performed; therefore, the data retrieved must already be a <b>32 bit unsigned integer</b> value.
+    </para>
+    <para>
+      Call IsDBNull to check for null values before calling this method.
+    </para>
+  </remarks>
+  <param name="index">The zero-based column ordinal.</param>
 	<returns>The value of the specified column.</returns>
 </GetUInt32>
 
 <GetUInt64>
 	<summary>Gets the value of the specified column as a 64-bit unsigned integer.</summary>
-	<param name="index">The zero-based column ordinal.</param>
+  <remarks>
+    <para>
+      No conversions are performed; therefore, the data retrieved must already be a <b>64 bit unsigned integer</b> value.
+    </para>
+    <para>
+      Call IsDBNull to check for null values before calling this method.
+    </para>
+  </remarks>
+  <param name="index">The zero-based column ordinal.</param>
 	<returns>The value of the specified column.</returns>
 </GetUInt64>
 

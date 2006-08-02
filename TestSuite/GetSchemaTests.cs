@@ -44,7 +44,7 @@ namespace MySql.Data.MySqlClient.Tests
         public void Collections()
         {
             DataTable dt = conn.GetSchema();
-            Assert.AreEqual(17, dt.Rows.Count);
+
             Assert.AreEqual("MetaDataCollections", dt.Rows[0][0]);
             Assert.AreEqual("DataSourceInformation", dt.Rows[1][0]);
             Assert.AreEqual("DataTypes", dt.Rows[2][0]);
@@ -57,18 +57,25 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("Foreign Keys", dt.Rows[9][0]);
             Assert.AreEqual("IndexColumns", dt.Rows[10][0]);
             Assert.AreEqual("Indexes", dt.Rows[11][0]);
-            Assert.AreEqual("Views", dt.Rows[12][0]);
-            Assert.AreEqual("ViewColumns", dt.Rows[13][0]);
-            Assert.AreEqual("Procedure Parameters", dt.Rows[14][0]);
-            Assert.AreEqual("Procedures", dt.Rows[15][0]);
-            Assert.AreEqual("Triggers", dt.Rows[16][0]);
+
+            if (Is50)
+            {
+                Assert.AreEqual("Views", dt.Rows[12][0]);
+                Assert.AreEqual("ViewColumns", dt.Rows[13][0]);
+                Assert.AreEqual("Procedure Parameters", dt.Rows[14][0]);
+                Assert.AreEqual("Procedures", dt.Rows[15][0]);
+                Assert.AreEqual("Triggers", dt.Rows[16][0]);
+            }
         }
 
         [Test]
         public void Databases()
         {
             DataTable dt = conn.GetSchema("Databases");
-            Assert.IsTrue(dt.Rows.Count >= 3);
+            if (Is50)
+                Assert.IsTrue(dt.Rows.Count >= 3);
+            else
+                Assert.IsTrue(dt.Rows.Count >= 2);
             Assert.AreEqual("Databases", dt.TableName);
 
             dt = conn.GetSchema("Databases", new string[1] { "mysql" });

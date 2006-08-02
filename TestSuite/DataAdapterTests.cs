@@ -412,7 +412,7 @@ namespace MySql.Data.MySqlClient.Tests
 		/// Bug #8514  	CURRENT_TIMESTAMP default not respected
 		/// </summary>
 		[Test]
-		[Category("NotWorking")]
+        [Explicit]
 		public void DefaultValues() 
 		{
 			execSQL("DROP TABLE IF EXISTS test");

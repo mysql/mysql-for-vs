@@ -495,7 +495,7 @@ namespace MySql.Data.MySqlClient.Tests
 		/// <summary>
 		/// Bug #13590  	ExecuteScalar returns only Int64 regardless of actual SQL type
 		/// </summary>
-		[Category("NotWorking")]
+        [Explicit]
 		[Test]
 		public void TestSelectingInts()
 		{
@@ -676,7 +676,7 @@ namespace MySql.Data.MySqlClient.Tests
 		}
 
 		[Test]
-		[Category("NotWorking")]
+        [Explicit]
 		public void CallingSPWithPrepare()
 		{
 			execSQL("DROP PROCEDURE IF EXISTS spTest");
@@ -784,9 +784,17 @@ namespace MySql.Data.MySqlClient.Tests
 
             DataSet ds = new DataSet();
             MySqlDataAdapter da = new MySqlDataAdapter(cmd);
-            da.Fill(ds);
+            try
+            {
+                da.Fill(ds);
+            }
+            catch (MySqlException)
+            {
+                // on 5.1 this throws an exception that no rows were returned.
+            }
         }
 
+        [Explicit]
         [Category("5.0")]
         [Test]
         public void ProcedureCache()

@@ -18,9 +18,10 @@ Version 5.0.0.0 (Alpha)
     Implemented MySqlClientFactory class
     Implemented classes and interfaces for ADO.Net 2.0 support
     Replaced use of ICSharpCode with .NET 2.0 internal deflate support
-    Refactored test suite to test all protocols in a single pass	
+    Refactored test suite to test all protocols in a single pass
+    Completely refactored how column values are handled to avoid boxing in some cases
     	
-<unreleased> - Version 1.0.8
+Version 1.0.8  (not yet released)
 
     Other changes
     -------------

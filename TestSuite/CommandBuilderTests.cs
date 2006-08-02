@@ -31,9 +31,6 @@ namespace MySql.Data.MySqlClient.Tests
 		public void FixtureSetup()
 		{
 			Open();
-
-			execSQL("DROP TABLE IF EXISTS Test");
-			execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(100), dt DATETIME, tm TIME,  `multi word` int, PRIMARY KEY(id))");
 		}
 
 		[TestFixtureTearDown]
@@ -41,6 +38,14 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 			Close();
 		}
+
+        protected override void Setup()
+        {
+            base.Setup();
+
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(100), dt DATETIME, tm TIME,  `multi word` int, PRIMARY KEY(id))");
+        }
 
 		[Test]
 		public void MultiWord()
@@ -80,7 +85,7 @@ namespace MySql.Data.MySqlClient.Tests
 			execSQL("INSERT INTO Test (id, name) VALUES (1, 'Test')");
 
 			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
-			MySqlCommandBuilder cb = new MySqlCommandBuilder(da, true);
+			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
             cb.ConflictOption = ConflictOption.OverwriteChanges;
 			DataTable dt = new DataTable();
 			da.Fill( dt );
@@ -163,7 +168,8 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual("test1", dt.Rows[0]["name"]);
 
 			da.SelectCommand.CommandText = "SELECT *, now() as stime FROM test WHERE id<4";
-			cb = new MySqlCommandBuilder(da, true);
+			cb = new MySqlCommandBuilder(da);
+            cb.ConflictOption = ConflictOption.OverwriteChanges;
 			da.InsertCommand = cb.GetInsertCommand();
 		}
 

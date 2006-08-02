@@ -489,8 +489,16 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.AreEqual(1, reader.GetInt32(0));
                 Assert.AreEqual(2, reader.GetInt32(1));
                 Assert.AreEqual(120, reader.GetInt32(2));
-                Assert.AreEqual(240, reader.GetInt32(3));
-                Assert.AreEqual(1000, reader.GetInt32(4));
+                if (Is50)
+                {
+                    Assert.AreEqual(240, reader.GetInt32(3));
+                    Assert.AreEqual(1000, reader.GetInt32(4));
+                }
+                else
+                {
+                    Assert.AreEqual(127, reader.GetInt32(3));
+                    Assert.AreEqual(127, reader.GetInt32(4));
+                }
             }
             catch (Exception ex)
             {

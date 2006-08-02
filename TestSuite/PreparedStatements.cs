@@ -669,6 +669,7 @@ namespace MySql.Data.MySqlClient.Tests
 
     #region Configs
 
+    [Explicit]
     public class PreparedStatementsSocketCompressed : PreparedStatements
     {
         protected override string GetConnectionInfo()
@@ -685,6 +686,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
+    [Explicit]
     public class PreparedStatementsPipeCompressed : PreparedStatements
     {
         protected override string GetConnectionInfo()
@@ -693,6 +695,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
+    [Explicit]
     public class PreparedStatementsSharedMemory : PreparedStatements
     {
         protected override string GetConnectionInfo()
@@ -701,6 +704,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
+    [Explicit]
     public class PreparedStatementsSharedMemoryCompressed : PreparedStatements
     {
         protected override string GetConnectionInfo()

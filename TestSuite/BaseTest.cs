@@ -102,7 +102,11 @@ namespace MySql.Data.MySqlClient.Tests
 
 		protected bool Is50 
 		{ 
-			get { return conn.ServerVersion.StartsWith("5.0"); }
+			get 
+            {
+                string v = conn.ServerVersion;
+                return v.StartsWith("5.0") || v.StartsWith("5.1");
+            }
 		}
 
 		protected bool Is41 

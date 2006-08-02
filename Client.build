@@ -1,7 +1,7 @@
 <project name="MySqlClient" default="allframeworks" xmlns="http://nant.sf.net/schemas/nant-0.84.win32.net-1.0.xsd">
 	<description>MySQLClient Managed Provider for MySQL</description>
 
-	<property name="nunit" value="C:\Program Files (x86)\NUnit"/>
+	<property name="nunit" value="C:\Program Files\NUnit"/>
 	<property name="ncover.executable" value="c:\program files\ncover\ncover.console.exe"/>
 	<property name="fxcop.executable" value="c:\program files\fxcop\fxcopcmd.exe"/>
 
@@ -95,7 +95,8 @@
 		<property name="framework" value="net-2.0"/>
 		<property name="defines" value="NET20"/>
 		<call target="client"/>
-	</target>
+		<call target="Docs"/>
+</target>
 	
 	<!-- core managed driver target mono 1.0 -->
 	<target name="mono-1.0" description="Mono 1.0 Target">
@@ -204,7 +205,7 @@
 	<!-- documentation target -->
 	<target name="Docs" description="Documentation">
 		<ndoc>
-			<assemblies basedir="bin/${framework}/${buildType}">
+			<assemblies basedir="${build.dir}/mysqlclient/bin/${framework}/${buildType}">
 				<include name="MySQL.Data.dll" />
 			</assemblies>
 			<summaries>
@@ -212,7 +213,7 @@
 			</summaries>
 			<documenters>
 				<documenter name="MSDN">
-					<property name="OutputDirectory" value="${build.dir}/bin/${framework}/${buildType}/doc/VS.Net" />
+					<property name="OutputDirectory" value="${build.dir}/mysqlclient/bin/${framework}/${buildType}/doc/VS.Net" />
                     <property name="HtmlHelpName" value="MySql.Data" />
                     <property name="HtmlHelpCompilerFilename" value="hhc.exe" />
                     <property name="IncludeFavorites" value="False" />
@@ -230,7 +231,7 @@
                     <property name="DocumentPrivates" value="False" />
                     <property name="DocumentEmptyNamespaces" value="False" />
                     <property name="IncludeAssemblyVersion" value="False" />
-                    <property name="CopyrightText" value="Copyright MySQL AB 2004-2005" />
+                    <property name="CopyrightText" value="Copyright MySQL AB 2004-2006" />
                     <property name="CopyrightHref" value="http://www.mysql.com" />
 				</documenter>
 			</documenters>
@@ -238,8 +239,8 @@
 		
 		<!-- now copy the generated docs to the doc folder -->
 		<mkdir dir="doc"/>
-		<copy file="bin/${framework}/${buildType}/doc/VS.Net/MySql.Data.chm" todir="doc"/>
-		<delete dir="bin/${framework}/${buildType}/doc" failonerror="false"/>
+		<copy file="mysqlclient/bin/${framework}/${buildType}/doc/VS.Net/MySql.Data.chm" todir="doc"/>
+		<delete dir="mysqlclient/bin/${framework}/${buildType}/doc" failonerror="false"/>
 	</target>
 	
 	<!-- Remove all generated files target -->

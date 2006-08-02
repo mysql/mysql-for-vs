@@ -63,8 +63,19 @@ namespace MySql.Data.MySqlClient
             MySqlDataAdapter da = new MySqlDataAdapter(sql, connection);
             DataTable dt = new DataTable();
             da.Fill(dt);
-            dt.TableName = "Databases";
-            return dt;
+
+            DataTable table = new DataTable("Databases");
+            table.Columns.Add("CATALOG_NAME", typeof(string));
+            table.Columns.Add("SCHEMA_NAME", typeof(string));
+
+            foreach (DataRow row in dt.Rows)
+            {
+                DataRow newRow = table.NewRow();
+                newRow[1] = row[0];
+                table.Rows.Add(newRow);
+            }
+
+            return table;
         }
 
         public virtual DataTable GetTables(string[] restrictions)
@@ -98,7 +109,7 @@ namespace MySql.Data.MySqlClient
                 restrictions[1] = db["SCHEMA_NAME"].ToString();
                 string table_type = restrictions[1].ToLower() == "information_schema" ?
                     "SYSTEM VIEW" : "BASE TABLE";
-                DataTable tables = FindTables(restrictions, "NOT comment = 'View'");
+                DataTable tables = FindTables(restrictions);
                 foreach (DataRow table in tables.Rows)
                 {
                     DataRow row = dt.NewRow();
@@ -177,7 +188,7 @@ namespace MySql.Data.MySqlClient
             MySqlDataReader reader = null;
             try
             {
-                int pos = 0;
+                int pos = 1;
                 reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
@@ -185,18 +196,18 @@ namespace MySql.Data.MySqlClient
                     if (columnRestriction != null && colName != columnRestriction)
                         continue;
                     DataRow row = dt.NewRow();
-                    row["TABLE_CATALOG"] = null;
+                    row["TABLE_CATALOG"] = DBNull.Value;
                     row["TABLE_SCHEMA"] = schema;
                     row["TABLE_NAME"] = tableName;
                     row["COLUMN_NAME"] = colName;
                     row["ORDINAL_POSITION"] = pos++;
-                    row["COLUMN_DEFAULT"] = reader.GetString(5);
+                    row["COLUMN_DEFAULT"] = reader.GetValue(5);
                     row["IS_NULLABLE"] = reader.GetString(3);
                     row["DATA_TYPE"] = reader.GetString(1);
-                    row["CHARACTER_MAXIMUM_LENGTH"] = null;
-                    row["NUMERIC_PRECISION"] = null;
-                    row["NUMERIC_SCALE"] = null;
-                    row["CHARACTER_SET_NAME"] = reader.GetString(2);
+                    row["CHARACTER_MAXIMUM_LENGTH"] = DBNull.Value;
+                    row["NUMERIC_PRECISION"] = DBNull.Value;
+                    row["NUMERIC_SCALE"] = DBNull.Value;
+                    row["CHARACTER_SET_NAME"] = reader.GetValue(2);
                     row["COLLATION_NAME"] = row["CHARACTER_SET_NAME"];
                     row["COLUMN_TYPE"] = reader.GetString(1);
                     row["COLUMN_KEY"] = reader.GetString(4);
@@ -236,7 +247,7 @@ namespace MySql.Data.MySqlClient
             string dataLen = dataType.Substring(index + 1, stop - (index + 1));
             string lowerType = row["DATA_TYPE"].ToString().ToLower();
             if (lowerType == "char" || lowerType == "varchar")
-                row["CHARACTER_SET_MAXIMUM"] = dataLen;
+                row["CHARACTER_MAXIMUM_LENGTH"] = dataLen;
             else
             {
                 string[] lenparts = dataLen.Split(new char[] { ',' });
@@ -561,7 +572,7 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-        private DataTable FindTables(string[] restrictions, string whereSQL)
+        private DataTable FindTables(string[] restrictions)
         {
             string[] dbres = new string[1];
             if (restrictions != null && restrictions.Length >= 2)
@@ -573,17 +584,10 @@ namespace MySql.Data.MySqlClient
             {
                 StringBuilder sql = new StringBuilder();
                 StringBuilder where = new StringBuilder();
-                sql.AppendFormat("SHOW TABLE STATUS FROM '{0}'", db["SCHEMA_NAME"]);
+                sql.AppendFormat("SHOW TABLE STATUS FROM `{0}`", db["SCHEMA_NAME"]);
                 if (restrictions != null && restrictions.Length >= 3 &&
                     restrictions[2] != null)
-                    where.AppendFormat(" WHERE NAME='{0}'", restrictions[2]);
-                if (whereSQL != null)
-                {
-                    if (where.Length > 0)
-                        where.AppendFormat(" AND {0}", whereSQL);
-                    else
-                        where.AppendFormat(" WHERE {0}", whereSQL);
-                }
+                    where.AppendFormat(" LIKE '{0}'", restrictions[2]);
                 sql.Append(where.ToString());
                 MySqlDataAdapter da = new MySqlDataAdapter(sql.ToString(), connection);
                 da.Fill(tables);
