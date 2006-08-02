@@ -1,0 +1,80 @@
+Connector/Net 5.0.0.0  Release Notes
+------------------------------------
+
+Welcome to the release notes for Connector/Net 5.0.  As the old saying goes, 
+I've got some good news and I've got some bad news.
+
+First the good news
+-------------------
+We are finally releasing a build of Connector/Net 5.0.  This version of the connector
+incorporates many changes to its internal structure that will provide both increased
+speed and flexibility.  Speed is increased by allowing column values to be processed
+without ever being boxed (if you use MySqlDataReader) and flexibility is increased
+by virtualizing the execution engine.  This virtualization will allow future versions
+of the Connector to support the embedded server and to use the client library.
+
+Many more features have been added to this version including Usage Advisor, PerfMon hooks,
+asynchronous queries, and full ADO.net 2.0 support.
+
+Now the bad news
+----------------
+This is an alpha release and, as such, some things are just broken.  Rather than hold
+the release until all these things were working, we decided to release so we can be 
+gathering feedback while the rest of the features are fixed.  Below you will find a 
+list of the features we know do not work in this release.
+
+* load data local infile
+* using the compression protocol
+* shared memory protocol
+
+.NET 1.0 and 1.1 binaries not included
+--------------------------------------
+This release only ships with a .NET 2.0 compiled binary.  The reason for this is because
+most of the core classes in the provider now derive from base classes provided by .NET 2.0. 
+These include classes like DbCommand, DbConnection, etc.  In order to ship binaries for
+.NET 1.0 and 1.1 using this code base, we would need to build our own set of base classes that
+mirror what the .NET 2.0 base classes are doing.  We are working on this but those classes are
+not done yet.  Again, rather than wait for those classes to be finished we decided to release
+what we have and start gathering feedback.  
+
+Mono support
+------------
+We are currently evaluating Mono support for ADO.Net 2.0 and will be including Mono support,
+if possible, in the next beta release.
+
+Functionality changes
+---------------------
+There are a number of functionality changes in this release compared to the 1.0 line.  Those
+have been documented in the help file but we'll make a brief note about them here.
+
+* We no longer support having both a stored procedure and a stored function with the same
+  name in the same database.  MySQL supports this but the connector does not.  If you attempt
+  to call a stored procedure or stored function while a stored routine of the same name
+  exists in that database, a MySqlException will be raised.
+  
+* Some of the type safe methods on MySqlDataReader such as GetString() will now 
+  throw an exception if you call them on a null column.  You should use IsNull to check for
+  a column's nullness.
+  
+* MySqlCommandBuilder no longer has constructors for specifying 'last one wins' type of conflict
+  resolution.  You should use the ConflictOption property to specify this.
+  
+* MySqlCommandBuilder also no longer includes a select statement on the end of the update
+  statement to refresh the dataset or datatable after an update.  If you have server generated
+  values and you need to retrieve them, you can either handcraft the update statement or
+  refill your table or dataset.
+  
+  
+Things that are missing or incomplete
+-------------------------------------
+* CommandTimeout support - We are going to support CommandTimeout in 5.0 but it is not active in this 
+                           release.
+* System.Transaction support - We are examining what needs to be done in this area and will have a more
+                               complete answer with beta 1.
+* Documentation - Past versions of the provider have used NDoc to generate documentation.  Now that NDoc
+                  is no longer being developed, we will be changing to a different system.  This change
+                  has not been made yet.  As a result, the help file that ships with this release does not
+                  properly link to framework help topics.
+                  
+                  We are committed to providing and integrating our help into the Visual Studio help collections
+                  as well as providing documentation for those people not using Visual Studio.                                                          
