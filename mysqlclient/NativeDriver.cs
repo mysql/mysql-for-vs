@@ -203,12 +203,6 @@ namespace MySql.Data.MySqlClient
 			threadId = (int)stream.ReadInteger(4);
 			encryptionSeed = stream.ReadString();
 
-			// starting with 4.0.8, maxSinglePacket should be 0xffffff
-			if ( version.isAtLeast(4,0,8))
-				stream.MaxBlockSize = (256*256*256)-1;
-            else
-                stream.MaxBlockSize = 255 * 255 * 255;
-
 			// read in Server capabilities if they are provided
 			serverCaps = 0;
 			if (stream.HasMoreData)
@@ -248,6 +242,12 @@ namespace MySql.Data.MySqlClient
 			// to hide the ugliness of managing the compression
 			if ((connectionFlags & ClientFlags.COMPRESS) != 0)
 				stream = new MySqlStream(new CompressedStream(baseStream),encoding);
+
+            // starting with 4.0.8, maxSinglePacket should be 0xffffff
+            if (version.isAtLeast(4, 0, 8))
+                stream.MaxBlockSize = (256 * 256 * 256) - 1;
+            else
+                stream.MaxBlockSize = 255 * 255 * 255;
 
 			// give our stream the server version we are connected to.  
             // We may have some fields that are read differently based 

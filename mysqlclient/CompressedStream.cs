@@ -27,6 +27,7 @@ using ICSharpCode.SharpZipLib.Zip.Compression;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 #endif
 using MySql.Data.Common;
+using System.Diagnostics;
 
 namespace MySql.Data.MySqlClient
 {
@@ -155,13 +156,12 @@ namespace MySql.Data.MySqlClient
 
 		private bool InputDone() 
 		{
-			// if we have not done so yet, see if we can calculate how many bytes we are expecting
-			if (expecting == 0)
-			{
-				byte[] buf = cache.GetBuffer();
-				expecting = buf[0] + (buf[1] << 8) + (buf[2] << 16);
-			}
-			return numWritten == (expecting+4);
+            // if we have not done so yet, see if we can calculate how many bytes we are expecting
+            if (cache.Length < 4) return false;
+            byte[] buf = cache.GetBuffer();
+            int expectedLen = buf[0] + (buf[1] << 8) + (buf[2] << 16);
+            if (cache.Length < (expectedLen + 4)) return false;
+            return true;
 		}
 
 		private void FlushData(byte[] buff, int offset, int count)

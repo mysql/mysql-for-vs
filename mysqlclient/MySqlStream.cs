@@ -55,9 +55,12 @@ namespace MySql.Data.MySqlClient
         {
             // we have no idea what the real value is so we start off with the max value
             // The real value will be set in NativeDriver.Configure()
-            // we don't need to default maxBlockSize since we will get that value in the 
-            // authentication handshake and we know that value will not exceed maxBlockSize
             maxPacketSize = ulong.MaxValue;
+
+            // we default maxBlockSize to MaxValue since we will get the 'real' value in 
+            // the authentication handshake and we know that value will not exceed 
+            // true maxBlockSize prior to that.
+            maxBlockSize = Int32.MaxValue;
 
             this.encoding = encoding;
             bufferStream = new MemoryStream();
