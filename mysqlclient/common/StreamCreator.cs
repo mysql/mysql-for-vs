@@ -131,7 +131,49 @@ namespace MySql.Data.Common
                 waitHandle.Set();
         }
 
-		private Stream CreateSocketStream( IPAddress ip, uint port, bool unix ) 
+        private Stream CreateSocketStream(IPAddress ip, uint port, bool unix)
+        {
+            SocketStream ss = null;
+            try
+            {
+                //
+                // Lets try to connect
+                EndPoint endPoint;
+
+                if (!Platform.IsWindows() && unix)
+                    endPoint = CreateUnixEndPoint(hostList);
+                else
+                    endPoint = new IPEndPoint(ip, (int)port);
+
+                ss = unix ?
+                    new SocketStream(AddressFamily.Unix, SocketType.Stream, ProtocolType.IP) :
+                    new SocketStream(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                ss.Connect(endPoint, (int)timeOut);
+            }
+            catch (ArgumentOutOfRangeException are)
+            {
+                Logger.LogException(are);
+                ss = null;
+            }
+            catch (SocketException se)
+            {
+                Logger.LogException(se);
+                ss = null;
+            }
+            catch (ObjectDisposedException ode)
+            {
+                Logger.LogException(ode);
+                ss = null;
+            }
+            catch (MySqlException me)
+            {
+                Logger.LogException(me);
+                ss = null;
+            }
+            return ss;
+        }
+
+/*		private Stream CreateSocketStream( IPAddress ip, uint port, bool unix ) 
 		{
 			try
 			{
@@ -175,7 +217,7 @@ namespace MySql.Data.Common
 				Logger.LogException(ode);
 				return null;
 			}
-		}
+		}*/
  
 	}
 }

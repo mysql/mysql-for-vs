@@ -49,6 +49,7 @@ Version 1.0.8  (not yet released)
     Bug #19936 DataReader already open exception [fixed]
     Bug #17106 MySql.Data.MySqlClient.CharSetMap.GetEncoding thread synchronization issue [fixed]
     Bug #17736 Selecting a row with with empty date '0000-00-00' results in Read() hanging. [fixed]
+	Bug #20581 Null Reference Exception when closing reader after stored procedure. 
     
 Version 1.0.7
 

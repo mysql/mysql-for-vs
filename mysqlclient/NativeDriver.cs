@@ -189,7 +189,6 @@ namespace MySql.Data.MySqlClient
 				throw new MySqlException("Unable to connect to any of the specified MySQL hosts", ex);
 			}
 
-
 			if (baseStream == null) 
 				throw new MySqlException("Unable to connect to any of the specified MySQL hosts");
 

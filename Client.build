@@ -106,6 +106,13 @@
 		<call target="client"/>
 	</target>
 
+	<target name="mono-2.0" description="Mono 2.0 Target">
+	    <property name="defines" value="${defines},MONO,NET20"/>
+        <property name="nunit-lib" value="c:/program files/nunit/src/build/mono/2.0/debug"/>
+		<property name="framework" value="mono-2.0"/>
+		<call target="client"/>
+	</target>
+
 	<!-- testing targets -->
 	<target name="alltests" depends="test-net-2.0, test-net-1.1, test-net-1.0">
 	</target>

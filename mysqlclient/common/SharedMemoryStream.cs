@@ -70,7 +70,7 @@ namespace MySql.Data.Common
 			AutoResetEvent connectRequest = new AutoResetEvent(false);
             IntPtr handle = OpenEvent(EVENT_ALL_ACCESS, false, 
 				memoryName + "_" + "CONNECT_REQUEST");
-#if NET20
+#if NET20 && !MONO
             connectRequest.SafeWaitHandle = new SafeWaitHandle(handle, true);
 #else
 			connectRequest.Handle = handle;
@@ -79,7 +79,7 @@ namespace MySql.Data.Common
 			AutoResetEvent connectAnswer = new AutoResetEvent(false);
 			handle = OpenEvent(EVENT_ALL_ACCESS, false, 
 				memoryName + "_" + "CONNECT_ANSWER");
-#if NET20
+#if NET20 && !MONO
             connectAnswer.SafeWaitHandle = new SafeWaitHandle(handle, true);
 #else
 			connectAnswer.Handle = handle;
@@ -110,7 +110,7 @@ namespace MySql.Data.Common
 			serverWrote = new AutoResetEvent(false);
             IntPtr handle = OpenEvent(EVENT_ALL_ACCESS, false,
                 dataMemoryName + "_SERVER_WROTE");
-#if NET20
+#if NET20 && !MONO
             serverWrote.SafeWaitHandle = new SafeWaitHandle(handle, true);
 #else
 			serverWrote.Handle = handle;
@@ -119,7 +119,7 @@ namespace MySql.Data.Common
 			serverRead = new AutoResetEvent(false);
 			handle = OpenEvent(EVENT_ALL_ACCESS, false, 
 				dataMemoryName + "_SERVER_READ");
-#if NET20
+#if NET20 && !MONO
             serverRead.SafeWaitHandle = new SafeWaitHandle(handle, true);
 #else
 			serverRead.Handle = handle;
@@ -128,7 +128,7 @@ namespace MySql.Data.Common
 			clientWrote = new AutoResetEvent(false);
 			handle = OpenEvent(EVENT_ALL_ACCESS, false, 
 				dataMemoryName + "_CLIENT_WROTE");
-#if NET20
+#if NET20 && !MONO
             clientWrote.SafeWaitHandle = new SafeWaitHandle(handle, true);
 #else
 			clientWrote.Handle = handle;
@@ -137,7 +137,7 @@ namespace MySql.Data.Common
 			clientRead = new AutoResetEvent(false);
 			handle = OpenEvent(EVENT_ALL_ACCESS, false, 
 				dataMemoryName + "_CLIENT_READ");
-#if NET20
+#if NET20 && !MONO
             clientRead.SafeWaitHandle = new SafeWaitHandle(handle, true);
 #else
 			clientRead.Handle = handle;

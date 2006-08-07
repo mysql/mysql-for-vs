@@ -152,6 +152,8 @@ namespace MySql.Data.MySqlClient
 		/// <include file='docs/MySqlCommandBuilder.xml' path='docs/RefreshSchema/*'/>
 		public override void RefreshSchema()
 		{
+            marker = (DataAdapter.SelectCommand.Connection as MySqlConnection).ParameterMarker;
+            base.RefreshSchema();
 		}
 		#endregion
 
@@ -181,19 +183,6 @@ namespace MySql.Data.MySqlClient
             return base.InitializeCommand(command);
         }
 
-        protected override DataTable GetSchemaTable(DbCommand sourceCommand)
-        {
-            marker = (sourceCommand.Connection as MySqlConnection).ParameterMarker;
-
-            DataTable schema;
-            using (MySqlDataReader reader = (MySqlDataReader)sourceCommand.ExecuteReader(
-                CommandBehavior.KeyInfo | CommandBehavior.SchemaOnly)) 
-            {
-                schema = reader.GetSchemaTable();
-            }
-
-            return schema;
-        }
 
         protected override void ApplyParameterInfo(DbParameter parameter, DataRow row, 
             StatementType statementType, bool whereClause)

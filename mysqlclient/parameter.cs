@@ -230,7 +230,11 @@ namespace MySql.Data.MySqlClient
 #if DESIGN
 		[Category("Data")]
 #endif
-		public byte Precision 
+#if MONO
+		public override byte Precision 
+#else
+        public byte Precision
+#endif
 		{
 			get { return precision; }
 			set { precision = value; }
@@ -242,7 +246,11 @@ namespace MySql.Data.MySqlClient
 #if DESIGN
 		[Category("Data")]
 #endif
-		public byte Scale 
+#if MONO
+		public override byte Scale 
+#else
+        public byte Scale
+#endif
 		{
 			get { return scale; }
 			set { scale = value; }

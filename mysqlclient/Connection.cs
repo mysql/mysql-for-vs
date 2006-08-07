@@ -51,6 +51,11 @@ namespace MySql.Data.MySqlClient
 		/// <include file='docs/MySqlConnection.xml' path='docs/InfoMessage/*'/>
 		public event MySqlInfoMessageEventHandler	InfoMessage;
 
+#if MONO
+        /// <include file='docs/MySqlConnection.xml' path='docs/StateChange/*'/>
+        public event StateChangeEventHandler StateChange;
+#endif
+
 		/// <include file='docs/MySqlConnection.xml' path='docs/DefaultCtor/*'/>
 		public MySqlConnection()
 		{
@@ -424,6 +429,16 @@ namespace MySql.Data.MySqlClient
 
             SetState(ConnectionState.Closed);
         }
+
+#if MONO
+
+        protected void OnStateChange (StateChangeEventArgs stateChangeArgs)
+        {
+            if (StateChange != null)
+                StateChange(this, stateChangeArgs);
+        }
+
+#endif
 
         #region GetSchema Support
 

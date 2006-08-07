@@ -60,7 +60,7 @@ namespace MySql.Data.MySqlClient
         #region Server Properties
 
 
-#if !CF
+#if !CF && !MONO
         [Category("Connection")]
         [Description("Server to connect to")]
 #endif
@@ -70,7 +70,7 @@ namespace MySql.Data.MySqlClient
             set { CheckNullAndSet("Server", value); server = value; }
         }
 
-#if !CF
+#if !CF && !MONO
         [Category("Connection")]
         [Description("Database to use initially")]
 #endif
@@ -80,7 +80,7 @@ namespace MySql.Data.MySqlClient
             set { CheckNullAndSet("Database", value); database = value;  }
         }
 
-#if !CF
+#if !CF && !MONO
 		[Category("Connection")]
         [DisplayName("Connection Protocol")]
 		[Description("Protocol to use for connection to MySQL")]
@@ -92,8 +92,8 @@ namespace MySql.Data.MySqlClient
             set { base["Protocol"] = value; protocol = value; }
         }
 
-#if !CF
-		[Category("Connection")]
+#if !CF && !MONO
+        [Category("Connection")]
         [DisplayName("Pipe Name")]
 		[Description("Name of pipe to use when connecting with named pipes (Win32 only)")]
 #endif
@@ -103,8 +103,8 @@ namespace MySql.Data.MySqlClient
             set { CheckNullAndSet("Pipe Name", value); pipeName = value;  }
         }
 
-#if !CF
-		[Category("Connection")]
+#if !CF && !MONO
+        [Category("Connection")]
         [DisplayName("Use Compression")]
 		[Description("Should the connection ues compression")]
 		[DefaultValue(false)]
@@ -115,8 +115,8 @@ namespace MySql.Data.MySqlClient
             set { base["compress"] = value; compress = value; }
         }
 
-#if !CF
-		[Category("Connection")]
+#if !CF && !MONO
+        [Category("Connection")]
         [DisplayName("Allow Batch")]
 		[Description("Allows execution of multiple SQL commands in a single statement")]
 		[DefaultValue(true)]
@@ -127,8 +127,8 @@ namespace MySql.Data.MySqlClient
             set { base["allow batch"] = value; allowBatch = value;  }
         }
 
-#if !CF
-		[Category("Connection")]
+#if !CF && !MONO
+        [Category("Connection")]
 		[Description("Enables output of diagnostic messages")]
 		[DefaultValue(false)]
 #endif
@@ -138,8 +138,8 @@ namespace MySql.Data.MySqlClient
             set { base["logging"] = value; logging = value; }
         }
 
-#if !CF
-		[Category("Connection")]
+#if !CF && !MONO
+        [Category("Connection")]
         [DisplayName("Shared Memory Name")]
 		[Description("Name of the shared memory object to use")]
 		[DefaultValue("MYSQL")]
@@ -150,8 +150,8 @@ namespace MySql.Data.MySqlClient
             set { CheckNullAndSet("Shared Memory Name", value); sharedMemName = value;  }
         }
 
-#if !CF
-		[Category("Connection")]
+#if !CF && !MONO
+        [Category("Connection")]
         [DisplayName("Use Old Syntax")]
 		[Description("Allows the use of old style @ syntax for parameters")]
 		[DefaultValue(false)]
@@ -162,8 +162,8 @@ namespace MySql.Data.MySqlClient
             set { base["Old Syntax"] = value; oldSyntax = value;  }
         }
 
-#if !CF
-		[Category("Connection")]
+#if !CF && !MONO
+        [Category("Connection")]
         [DisplayName("Driver Type")]
 		[Description("Specifies the type of driver to use for this connection")]
 		[DefaultValue(MySqlDriverType.Native)]
@@ -180,7 +180,7 @@ namespace MySql.Data.MySqlClient
             set { CheckNullAndSet("Option File", value); optionFile = value;  }
         }
 
-#if !CF
+#if !CF && !MONO
         [Category("Connection")]
         [Description("Port to use for TCP/IP connections")]
         [DefaultValue(3306)]
@@ -191,7 +191,7 @@ namespace MySql.Data.MySqlClient
             set { base["Port"] = value; port = value; }
         }
 
-#if !CF
+#if !CF && !MONO
         [Category("Connection")]
         [DisplayName("Connect Timeout")]
         [Description("The length of time (in seconds) to wait for a connection " +
@@ -208,36 +208,42 @@ namespace MySql.Data.MySqlClient
 
         #region Authentication Properties
 
+#if !CF && !MONO
         [Category("Security")]
         [DisplayName("User ID")]
         [Description("Indicates the user ID to be used when connecting to the data source.")]
+#endif
         public string UserID
         {
             get { return this.userId; }
             set { CheckNullAndSet("User Id", value); userId = value;  }
         }
 
+#if !CF && !MONO
         [Category("Security")]
         [Description("Indicates the password to be used when connecting to the data source.")]
+#endif
         public string Password
         {
             get { return this.password; }
             set { CheckNullAndSet("Password", value); password = value;  }
         }
 
+#if !CF && !MONO
         [Category("Security")]
         [DisplayName("Persist Security Info")]
         [Description("When false, security-sensitive information, such as the password, " +
             "is not returned as part of the connection if the connection is open or " +
             "has ever been in an open state.")]
+#endif
         public bool PersistSecurityInfo
         {
             get { return persistSI; }
             set { base["Persist Security Info"] = value; persistSI = value; }
         }
 
-#if !CF
-		[Category("Authentication")]
+#if !CF && !MONO
+        [Category("Authentication")]
 		[Description("Should the connection use SSL.  This currently has no effect.")]
 		[DefaultValue(false)]
 #endif
@@ -251,8 +257,8 @@ namespace MySql.Data.MySqlClient
 
         #region Other Properties
 
-#if !CF
-		[Category("Advanced")]
+#if !CF && !MONO
+        [Category("Advanced")]
         [DisplayName("Allow Zero Datetime")]
 		[Description("Should zero datetimes be supported")]
 		[DefaultValue(false)]
@@ -263,8 +269,8 @@ namespace MySql.Data.MySqlClient
             set { base["Allow Zero DateTime"] = value; allowZeroDatetime = value; }
         }
 
-#if !CF
-		[Category("Advanced")]
+#if !CF && !MONO
+        [Category("Advanced")]
         [DisplayName("Convert Zero Datetime")]
 		[Description("Should illegal datetime values be converted to DateTime.MinValue")]
 		[DefaultValue(false)]
@@ -275,8 +281,8 @@ namespace MySql.Data.MySqlClient
             set { base["Convert Zero DateTime"] = value; convertZeroDatetime = value; }
         }
 
-#if !CF
-		[Category("Advanced")]
+#if !CF && !MONO
+        [Category("Advanced")]
 		[Description("Character set this connection should use")]
 #endif
         public string CharacterSet
@@ -285,8 +291,8 @@ namespace MySql.Data.MySqlClient
             set { CheckNullAndSet("Character Set", value); charSet = value; }
         }
 
-#if !CF
-		[Category("Advanced")]
+#if !CF && !MONO
+        [Category("Advanced")]
         [DisplayName("Use Usage Advisor")]
 		[Description("Logs inefficient database operations")]
 		[DefaultValue(false)]
@@ -297,8 +303,8 @@ namespace MySql.Data.MySqlClient
             set { base["Use Usage Advisor"] = value; useUsageAdvisor = value; }
         }
 
-#if !CF
-		[Category("Advanced")]
+#if !CF && !MONO
+        [Category("Advanced")]
         [DisplayName("Procedure Cache Size")]
 		[Description("Indicates how many stored procedures can be cached at one time. " +
             "A value of 0 effectively disables the procedure cache.")]
@@ -310,8 +316,8 @@ namespace MySql.Data.MySqlClient
             set { base["Procedure Cache Size"] = value; procCacheSize = value; }
         }
 
-#if !CF
-		[Category("Advanced")]
+#if !CF && !MONO
+        [Category("Advanced")]
         [DisplayName("Use Performance Monitor")]
 		[Description("Indicates that performance counters should be updated during execution.")]
 		[DefaultValue(false)]
@@ -326,7 +332,7 @@ namespace MySql.Data.MySqlClient
 
         #region Pooling Properties
 
-#if !CF
+#if !CF && !MONO
         [Category("Pooling")]
         [DisplayName("Load Balance Timeout")]
         [Description("The minimum amount of time (in seconds) for this connection to " +
@@ -339,7 +345,7 @@ namespace MySql.Data.MySqlClient
             set { base["Connection Lifetime"] = value; connectionLifetime = value; }
         }
 
-#if !CF
+#if !CF && !MONO
         [Category("Pooling")]
         [Description("When true, the connection object is drawn from the appropriate " +
             "pool, or if necessary, is created and added to the appropriate pool.")]
@@ -351,7 +357,7 @@ namespace MySql.Data.MySqlClient
             set { base["Pooling"] = value; pooling = value; }
         }
 
-#if !CF
+#if !CF && !MONO
         [Category("Pooling")]
         [DisplayName("Min Pool Size")]
         [Description("The minimum number of connections allowed in the pool.")]
@@ -363,7 +369,7 @@ namespace MySql.Data.MySqlClient
             set { base["Minimum Pool Size"] = value; minPoolSize = value; }
         }
 
-#if !CF
+#if !CF && !MONO
         [Category("Pooling")]
         [DisplayName("Max Pool Size")]
         [Description("The maximum number of connections allowed in the pool.")]
@@ -375,7 +381,7 @@ namespace MySql.Data.MySqlClient
             set { base["Maximum Pool Size"] = value; maxPoolSize = value; }
         }
 
-#if !CF
+#if !CF && !MONO
         [Category("Pooling")]
         [DisplayName("Connection Reset")]
         [Description("When true, indicates the connection state is reset when " +

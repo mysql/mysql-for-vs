@@ -842,5 +842,37 @@ namespace MySql.Data.MySqlClient.Tests
                     execSQL("DROP PROCEDURE IF EXISTS spTest" + x);
             }
         }
+
+        /// <summary>
+        /// Bug #20581 Null Reference Exception when closing reader after stored procedure. 
+        /// </summary>
+        [Test]
+        public void Bug20581()
+        {
+            execSQL("CREATE PROCEDURE spTest(p int) BEGIN SELECT p; END");
+            MySqlParameter param1;
+            MySqlCommand command = new MySqlCommand("spTest", conn);
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+
+            param1 = command.Parameters.Add("p", MySqlDbType.Int32);
+            param1.Value = 3;
+
+            MySqlDataReader reader = null;
+            try
+            {
+                command.Prepare();
+                reader = command.ExecuteReader(CommandBehavior.SingleRow);
+                reader.Read();
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                if (reader != null)
+                    reader.Close();
+            }
+        }
     }
 }
