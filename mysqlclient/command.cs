@@ -350,77 +350,6 @@ namespace MySql.Data.MySqlClient
 				throw new MySqlException( "Stored procedures are not supported on this version of MySQL" );
 		}
 
-/*        internal bool ExecuteInternal()
-        {
-            if (statements.Count == 0)
-                return false;
-
-            Statement st = statements[0];
-            st.Execute(parameters);
-            statements.Remove(st);*/
-
-/*            if (preparedStatement != null)
-            {
-                if (!preparedStatement.ExecutionCount > 0)
-                    return false;
-                preparedStatement.Execute(parameters, cursorPageSize);
-            }
-            else 
-            {
-                if (sqlBuffers.Count == 0) return false;
-				MemoryStream sqlStream = (MemoryStream)sqlBuffers[0];
-
-				using (sqlStream) 
-				{
-					connection.driver.SendQuery(sqlStream.GetBuffer());
-                    sqlBuffers.RemoveAt(0);
-                }
-            }*/
-//            return true;
-  //      }
-
-/*        internal Statement GetNextResultset()
-        {
-            // execute the statement
-//            ulong affectedRows;
-  //          long fieldCount;
-
-            if (Driver.HasMoreResults(StatementId))
-                return true;
-
-            while (statements.Count > 0)
-            {
-                Statement statement = (Statement)statements[0];
-                // if this is a prepared statement and we have already executed it,
-                // then break out of the loop
-                if (statement is PreparedStatement &&
-                    (statement as PreparedStatement).ExecutionCount > 0) break;
-                statement.Execute(parameters);
-                if (statement.HasRows)
-                    return statement;
-                RecordsAffected += statement.RecordsAffected;
-            }
-            return null;*/
-/*
-            while (true)
-            {
-                bool hasResults = connection.driver.ReadResult(ref fieldCount, ref affectedRows, ref lastInsertedId);
-                if (hasResults)
-                {
-                    if (fieldCount > 0)
-                        return fieldCount;
-                    if (updatedRowCount == -1)
-                        updatedRowCount = 0;
-                    updatedRowCount += affectedRows;
-                }
-                else
-                {
-                    if (!ExecuteInternal())
-                        return 0;
-                }
-            }*/
-//        }
-
 		/// <include file='docs/mysqlcommand.xml' path='docs/ExecuteNonQuery/*'/>
 		public override int ExecuteNonQuery()
 		{
@@ -428,29 +357,8 @@ namespace MySql.Data.MySqlClient
             MySqlDataReader reader = ExecuteReader();
             reader.Close();
             lastInsertedId = reader.InsertedId;
+            this.updatedRowCount = reader.RecordsAffected;
             return reader.RecordsAffected;
-/*			CheckState();
-
-//			updatedRowsCount = -1;
-
-//			if (preparedStatement == null)
-//				sqlBuffers = PrepareSqlBuffers(CommandText);
-
-            try
-            {
-//                ExecuteInternal();
-                MySqlDataReader reader = new MySqlDataReader(this, statement, CommandBehavior.Default);
-                reader.NextResult();
-                reader.Close();
-            }
-            catch (MySqlException ex)
-            {
-                //TODO: fix this
-                //connection.Abort();
-                throw;
-            }
-
-            return (int)this.updatedRowCount;*/
         }
 
         internal void Close()
@@ -546,7 +454,8 @@ namespace MySql.Data.MySqlClient
 
 		#region Async Methods
 
-		internal delegate void AsyncExecuteNonQueryDelegate();
+		internal delegate int AsyncExecuteNonQueryDelegate();
+        internal delegate MySqlDataReader AsyncExecuteReaderDelegate(CommandBehavior behavior);
 
 		private string TrimSemicolons(string sql)
 		{
@@ -560,23 +469,44 @@ namespace MySql.Data.MySqlClient
 				end--;
 			return sb.ToString(start, end-start+1);
 		}
-		private void AsyncExecuteNonQuery() 
-		{
-			ExecuteNonQuery();
-		}
+
+        public IAsyncResult BeginExecuteReader()
+        {
+            return BeginExecuteReader(CommandBehavior.Default);
+        }
+
+        public IAsyncResult BeginExecuteReader(CommandBehavior behavior)
+        {
+            AsyncExecuteReaderDelegate del = new AsyncExecuteReaderDelegate(ExecuteReader);
+            asyncResult = del.BeginInvoke(behavior, null, null);
+            return asyncResult;
+        }
+
+        public MySqlDataReader EndExecuteReader(IAsyncResult result)
+        {
+            result.AsyncWaitHandle.WaitOne();
+            return connection.Reader;
+        }
+
+        public IAsyncResult BeginExecuteNonQuery(AsyncCallback callback, object stateObject)
+        {
+            AsyncExecuteNonQueryDelegate del =
+                new AsyncExecuteNonQueryDelegate(ExecuteNonQuery);
+            asyncResult = del.BeginInvoke(callback, stateObject);
+            return asyncResult;
+        }
 
 		public IAsyncResult BeginExecuteNonQuery() 
 		{
 			AsyncExecuteNonQueryDelegate del = 
-				new AsyncExecuteNonQueryDelegate(AsyncExecuteNonQuery);
+				new AsyncExecuteNonQueryDelegate(ExecuteNonQuery);
 			asyncResult = del.BeginInvoke(null, null);
 			return asyncResult;
 		}
 
 		public int EndExecuteNonQuery(IAsyncResult result)
 		{
-			while (! result.IsCompleted)
-				System.Threading.Thread.Sleep(100);
+            result.AsyncWaitHandle.WaitOne();
 			return (int)updatedRowCount;
 		}
 

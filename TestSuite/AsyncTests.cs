@@ -43,17 +43,81 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void ExecuteNonQuery()
         {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test (id int)");
+            execSQL("CREATE PROCEDURE spTest() BEGIN SET @x=0; REPEAT INSERT INTO test VALUES(@x); " +
+                "SET @x=@x+1; UNTIL @x = 300 END REPEAT; END");
 
+            try
+            {
+                MySqlCommand proc = new MySqlCommand("spTest", conn);
+                proc.CommandType = CommandType.StoredProcedure;
+                IAsyncResult iar = proc.BeginExecuteNonQuery();
+                int count = 0;
+                while (!iar.IsCompleted)
+                {
+                    count++;
+                    System.Threading.Thread.Sleep(20);
+                }
+                int updated = proc.EndExecuteNonQuery(iar);
+                Assert.IsTrue(count > 0);
+
+                proc.CommandType = CommandType.Text;
+                proc.CommandText = "SELECT COUNT(*) FROM test";
+                object cnt = proc.ExecuteScalar();
+                Assert.AreEqual(300, cnt);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+            }
         }
 
         [Test]
         public void ExecuteReader()
         {
-        }
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test (id int)");
+            execSQL("CREATE PROCEDURE spTest() BEGIN SET @x=0; REPEAT INSERT INTO test VALUES(@x); " +
+                "SET @x=@x+1; UNTIL @x = 300 END REPEAT; SELECT 'done'; END");
 
-        [Test]
-        public void ExecuteScalar()
-        {
+            MySqlDataReader reader = null;
+            try
+            {
+                MySqlCommand proc = new MySqlCommand("spTest", conn);
+                proc.CommandType = CommandType.StoredProcedure;
+                IAsyncResult iar = proc.BeginExecuteReader();
+                int count = 0;
+                while (!iar.IsCompleted)
+                {
+                    count++;
+                    System.Threading.Thread.Sleep(20);
+                }
+
+                reader = proc.EndExecuteReader(iar);
+                Assert.IsNotNull(reader);
+                Assert.IsTrue(count > 0);
+                Assert.IsTrue(reader.Read());
+                Assert.AreEqual("done", reader.GetString(0));
+                reader.Close();
+
+                proc.CommandType = CommandType.Text;
+                proc.CommandText = "SELECT COUNT(*) FROM test";
+                object cnt = proc.ExecuteScalar();
+                Assert.AreEqual(300, cnt);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                if (reader != null)
+                    reader.Close();
+            }
         }
 	}
 }
