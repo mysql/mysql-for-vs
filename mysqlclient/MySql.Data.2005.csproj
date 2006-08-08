@@ -81,6 +81,7 @@
     <Reference Include="System.Drawing">
       <Name>System.Drawing</Name>
     </Reference>
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
@@ -130,6 +131,7 @@
     <Compile Include="MySqlHelper.cs" />
     <Compile Include="MySqlPool.cs" />
     <Compile Include="MySqlPoolManager.cs" />
+    <Compile Include="MySqlPromotableTransaction.cs" />
     <Compile Include="MySqlStream.cs" />
     <Compile Include="NativeDriver.cs" />
     <Compile Include="parameter.cs" />

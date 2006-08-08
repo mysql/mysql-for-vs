@@ -22,11 +22,14 @@ using System;
 using System.Data;
 using System.IO;
 using NUnit.Framework;
+#if NET20
+using System.Transactions;
+#endif
 
 namespace MySql.Data.MySqlClient.Tests
 {
-	[TestFixture()]
-	public class Transactions : BaseTest
+	[TestFixture]
+	public class TransactionTests : BaseTest
 	{
 		[TestFixtureSetUp]
 		public void FixtureSetup()
@@ -34,7 +37,7 @@ namespace MySql.Data.MySqlClient.Tests
 			Open();
 
 			execSQL("DROP TABLE IF EXISTS Test");
-			createTable( "CREATE TABLE Test (key2 VARCHAR(1), name VARCHAR(100), name2 VARCHAR(100))", "INNODB" );
+			createTable("CREATE TABLE Test (key2 VARCHAR(1), name VARCHAR(100), name2 VARCHAR(100))", "INNODB");
 		}
 
 		[TestFixtureTearDown]
@@ -43,7 +46,7 @@ namespace MySql.Data.MySqlClient.Tests
 			Close();
 		}
 
-		[Test()]
+		[Test]
 		public void TestReader() 
 		{
 			execSQL("INSERT INTO Test VALUES('P', 'Test1', 'Test2')");
@@ -72,5 +75,104 @@ namespace MySql.Data.MySqlClient.Tests
 				if (reader != null) reader.Close();
 			}
 		}
+
+#if NET20
+
+        void TransactionScopeInternal(bool commit) 
+        {
+            MySqlConnection c = new MySqlConnection(GetConnectionString(true));
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES ('a', 'name', 'name2')", c);
+
+            try 
+            {
+                using (TransactionScope ts = new TransactionScope())
+                {
+                    c.Open();
+
+                    cmd.ExecuteNonQuery();
+
+                    if (commit)
+                        ts.Complete();
+                }
+
+                cmd.CommandText = "SELECT COUNT(*) FROM test";
+                object count = cmd.ExecuteScalar();
+                Assert.AreEqual(commit ? 1 : 0, count);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                if (c != null)
+                    c.Close();
+            }
+        }
+
+        [Test]
+        public void TransactionScopeRollback()
+        {
+            TransactionScopeInternal(false);
+        }
+
+        [Test]
+        public void TransactionScopeCommit()
+        {
+            TransactionScopeInternal(true);
+        }
+
+        void TransactionScopeMultipleInternal(bool commit)
+        {
+            MySqlConnection c1 = new MySqlConnection(GetConnectionString(true));
+            MySqlConnection c2 = new MySqlConnection(GetConnectionString(true));
+            MySqlCommand cmd1 = new MySqlCommand("INSERT INTO test VALUES ('a', 'name', 'name2')", c1);
+            MySqlCommand cmd2 = new MySqlCommand("INSERT INTO test VALUES ('b', 'name', 'name2')", c1);
+
+            try
+            {
+                using (TransactionScope ts = new TransactionScope())
+                {
+                    c1.Open();
+                    cmd1.ExecuteNonQuery();
+
+                    c2.Open();
+                    cmd2.ExecuteNonQuery();
+
+                    if (commit)
+                        ts.Complete();
+                }
+
+                cmd1.CommandText = "SELECT COUNT(*) FROM test";
+                object count = cmd1.ExecuteScalar();
+                Assert.AreEqual(commit ? 2 : 0, count);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                if (c1 != null)
+                    c1.Close();
+                if (c2 != null)
+                    c2.Close();
+            }
+        }
+
+        [Test]
+        public void TransactionScopeMultipleRollback()
+        {
+            TransactionScopeMultipleInternal(false);
+        }
+
+        [Test]
+        public void TransactionScopeMultipleCommit()
+        {
+            TransactionScopeMultipleInternal(true);
+        }
+
+#endif
+
 	}
 }

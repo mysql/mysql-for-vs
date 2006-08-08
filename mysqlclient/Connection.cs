@@ -47,6 +47,7 @@ namespace MySql.Data.MySqlClient
         private SchemaProvider schemaProvider;
         private ProcedureCache procedureCache;
         private PerformanceMonitor perfMonitor;
+        private MySqlPromotableTransaction currentTransaction;
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/InfoMessage/*'/>
 		public event MySqlInfoMessageEventHandler	InfoMessage;
@@ -73,6 +74,12 @@ namespace MySql.Data.MySqlClient
 		}
 
 		#region Interal Methods & Properties
+
+        internal MySqlPromotableTransaction CurrentTransaction
+        {
+            get { return currentTransaction; }
+            set { currentTransaction = value; }
+        }
 
         internal ProcedureCache ProcedureCache
         {
@@ -241,6 +248,20 @@ namespace MySql.Data.MySqlClient
 
 		#region Transactions
 
+        public override void EnlistTransaction(System.Transactions.Transaction transaction)
+        {
+            if (currentTransaction != null)
+            {
+                if (currentTransaction.BaseTransaction == transaction)
+                    return;
+
+                throw new MySqlException("Already enlisted");
+            }
+
+            currentTransaction = new MySqlPromotableTransaction(this, transaction);
+            transaction.EnlistPromotableSinglePhase(currentTransaction);
+        }
+
 		/// <include file='docs/MySqlConnection.xml' path='docs/BeginTransaction/*'/>
 		public new MySqlTransaction BeginTransaction()
 		{
@@ -360,6 +381,11 @@ namespace MySql.Data.MySqlClient
             else
                 schemaProvider = new SchemaProvider(this);
             perfMonitor = new PerformanceMonitor(this);
+
+            // if we are opening up inside a current transaction, then autoenlist
+            // TODO: control this with a connection string option
+            if (System.Transactions.Transaction.Current != null)
+                EnlistTransaction(System.Transactions.Transaction.Current);
 
             hasBeenOpen = true;
 		}
