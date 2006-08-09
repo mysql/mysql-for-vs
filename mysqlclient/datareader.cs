@@ -188,6 +188,12 @@ namespace MySql.Data.MySqlClient
 		}
 
 		#region TypeSafe Accessors
+
+        public bool GetBoolean(string name)
+        {
+            return GetBoolean(GetOrdinal(name));
+        }
+
 		/// <summary>
 		/// Gets the value of the specified column as a Boolean.
 		/// </summary>
@@ -197,6 +203,11 @@ namespace MySql.Data.MySqlClient
 		{
 			return Convert.ToBoolean(GetValue(i));
 		}
+
+        public byte GetByte(string name)
+        {
+            return GetByte(GetOrdinal(name));
+        }
 
 		/// <summary>
 		/// Gets the value of the specified column as a byte.
@@ -257,6 +268,11 @@ namespace MySql.Data.MySqlClient
 			return length;
 		}
 
+        public char GetChar(string name)
+        {
+            return GetChar(GetOrdinal(name));
+        }
+
 		/// <summary>
 		/// Gets the value of the specified column as a single character.
 		/// </summary>
@@ -313,11 +329,21 @@ namespace MySql.Data.MySqlClient
 			return values[i].MySqlTypeName;
 		}
 
+        public MySqlDateTime GetMySqlDateTime(string name)
+        {
+            return GetMySqlDateTime(GetOrdinal(name));
+        }
+        
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetMySqlDateTime/*'/>
 		public MySqlDateTime GetMySqlDateTime(int index)
 		{
 			return (MySqlDateTime)GetFieldValue(index);
 		}
+
+        public DateTime GetDateTime(string name)
+        {
+            return GetDateTime(GetOrdinal(name));
+        }
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetDateTime/*'/>
 		public override DateTime GetDateTime(int index)
@@ -340,6 +366,11 @@ namespace MySql.Data.MySqlClient
 				return dt.GetDateTime();
 		}
 
+        public Decimal GetDecimal(string name)
+        {
+            return GetDecimal(GetOrdinal(name));
+        }
+
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetDecimal/*'/>
 		public override Decimal GetDecimal(int index)
 		{
@@ -348,6 +379,11 @@ namespace MySql.Data.MySqlClient
 				return ((MySqlDecimal)v).Value;
 			return Convert.ToDecimal(v.Value);
 		}
+
+        public double GetDouble(string name)
+        {
+            return GetDouble(GetOrdinal(name));
+        }
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetDouble/*'/>
 		public override double GetDouble(int index)
@@ -373,6 +409,11 @@ namespace MySql.Data.MySqlClient
 			return values[i].SystemType;
 		}
 
+        public float GetFloat(string name)
+        {
+            return GetFloat(GetOrdinal(name));
+        }
+
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetFloat/*'/>
 		public override float GetFloat(int index)
 		{
@@ -382,11 +423,21 @@ namespace MySql.Data.MySqlClient
 			return Convert.ToSingle(v.Value);
 		}
 
+        public Guid GetGuid(string name)
+        {
+            return GetGuid(GetOrdinal(name));
+        }
+
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetGuid/*'/>
 		public override Guid GetGuid(int index)
 		{
 			return new Guid( GetString(index) );
 		}
+
+        public Int16 GetInt16(string name)
+        {
+            return GetInt16(GetOrdinal(name));
+        }
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetInt16/*'/>
 		public override Int16 GetInt16(int index)
@@ -400,6 +451,11 @@ namespace MySql.Data.MySqlClient
 			return ((IConvertible)v.Value).ToInt16(null);
 		}
 
+        public Int32 GetInt32(string name)
+        {
+            return GetInt32(GetOrdinal(name));
+        }
+
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetInt32/*'/>
 		public override Int32 GetInt32(int index)
 		{
@@ -411,6 +467,11 @@ namespace MySql.Data.MySqlClient
                 fields[index].ColumnName, v.MySqlTypeName, "Int32");
             return ((IConvertible)v.Value).ToInt32(null); 
 		}
+
+        public Int64 GetInt64(string name)
+        {
+            return GetInt64(GetOrdinal(name));
+        }
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetInt64/*'/>
 		public override Int64 GetInt64(int index)
@@ -527,6 +588,11 @@ namespace MySql.Data.MySqlClient
 			return dataTableSchema;
 		}
 
+        public string GetString(string name)
+        {
+            return GetString(GetOrdinal(name));
+        }
+
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetString/*'/>
 		public override String GetString(int index)
 		{
@@ -542,6 +608,11 @@ namespace MySql.Data.MySqlClient
 
 			return val.Value.ToString();
 		}
+
+        public TimeSpan GetTimeSpan(string name)
+        {
+            return GetTimeSpan(GetOrdinal(name));
+        }
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetTimeSpan/*'/>
 		public TimeSpan GetTimeSpan(int index)
@@ -594,6 +665,11 @@ namespace MySql.Data.MySqlClient
 			return numCols;
 		}
 
+        public UInt16 GetUInt16(string name)
+        {
+            return GetUInt16(GetOrdinal(name));
+        }
+
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetUInt16/*'/>
 		public UInt16 GetUInt16(int index)
 		{
@@ -606,7 +682,12 @@ namespace MySql.Data.MySqlClient
             return Convert.ToUInt16(v.Value);
 		}
 
-		/// <include file='docs/MySqlDataReader.xml' path='docs/GetUInt32/*'/>
+        public UInt32 GetUInt32(string name)
+        {
+            return GetUInt32(GetOrdinal(name));
+        }
+
+        /// <include file='docs/MySqlDataReader.xml' path='docs/GetUInt32/*'/>
 		public UInt32 GetUInt32(int index)
 		{
 			IMySqlValue v = GetFieldValue(index);
@@ -617,6 +698,11 @@ namespace MySql.Data.MySqlClient
                 fields[index].ColumnName, v.MySqlTypeName, "UInt32");
             return Convert.ToUInt32(v.Value);
 		}
+
+        public UInt64 GetUInt64(string name)
+        {
+            return GetUInt64(GetOrdinal(name));
+        }
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetUInt64/*'/>
 		public UInt64 GetUInt64(int index)

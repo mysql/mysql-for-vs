@@ -1,3 +1,11 @@
+    Bugs fixed
+    ----------
+    
+    Other changes
+    -------------
+    Implemented simple local transactions
+    Added overloaded methods in MySqlDataReader for getting a column value right from column name
+
 Version 5.0.0.0 (Alpha)
 
     Bugs fixed

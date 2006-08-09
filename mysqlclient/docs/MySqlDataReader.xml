@@ -87,6 +87,7 @@ public void ReadMyData(string myConnString) {
 </GetBytes>
 
 <GetTimeSpan>
+  <overloads/>
 	<summary>Gets the value of the specified column as a <see cref="TimeSpan"/> object.</summary>
 	<remarks>
     <para>
@@ -100,7 +101,23 @@ public void ReadMyData(string myConnString) {
 	<returns>The value of the specified column.</returns>
 </GetTimeSpan>
 
-<GetDateTime>
+<GetTimeSpanString>
+<summary>
+  Gets the value of the specified column as a <see cref="TimeSpan"/> object.
+</summary>
+<remarks>
+  <para>
+    No conversions are performed; therefore, the data retrieved must already be a <b>Time</b> value.
+  </para>
+  <para>
+    Call IsDBNull to check for null values before calling this method.
+  </para>
+</remarks>
+<param name="name">The name of the column.</param>
+<returns>The value of the specified column.</returns>
+</GetTimeSpanString>
+
+  <GetDateTime>
 	<summary>Gets the value of the specified column as a <see cref="DateTime"/> object.</summary>
 	<remarks>
     <para>
