@@ -248,6 +248,7 @@ namespace MySql.Data.MySqlClient
 
 		#region Transactions
 
+#if !MONO
         public override void EnlistTransaction(System.Transactions.Transaction transaction)
         {
             if (currentTransaction != null)
@@ -261,6 +262,7 @@ namespace MySql.Data.MySqlClient
             currentTransaction = new MySqlPromotableTransaction(this, transaction);
             transaction.EnlistPromotableSinglePhase(currentTransaction);
         }
+#endif
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/BeginTransaction/*'/>
 		public new MySqlTransaction BeginTransaction()
@@ -384,8 +386,10 @@ namespace MySql.Data.MySqlClient
 
             // if we are opening up inside a current transaction, then autoenlist
             // TODO: control this with a connection string option
+#if !MONO            
             if (System.Transactions.Transaction.Current != null)
                 EnlistTransaction(System.Transactions.Transaction.Current);
+#endif                
 
             hasBeenOpen = true;
 		}

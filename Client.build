@@ -57,6 +57,7 @@
 				<include name="ICSharpCode.SharpZipLib.dll"/>
 				<include name="System.Data.dll"/>		
 				<include name="System.Drawing.dll"/>
+				<include name="System.Transactions.dll"/>
 			</references>
 			<sources refid="Source"/>
 		</csc>
@@ -70,6 +71,7 @@
 				<include name="System.Data.dll"/>		
 				<include name="System.Configuration.dll"/>
 				<include name="System.Drawing.dll"/>
+				<include name="System.Transactions.dll"/>
 				<include name="System.Windows.Forms.dll"/>
 				<include name="${nunit-lib}/nunit.framework.dll"/>
 			</references>
