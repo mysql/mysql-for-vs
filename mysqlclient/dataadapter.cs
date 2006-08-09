@@ -26,7 +26,7 @@ using System.ComponentModel;
 namespace MySql.Data.MySqlClient
 {
 	/// <include file='docs/MySqlDataAdapter.xml' path='docs/class/*'/>
-#if DESIGN
+#if !CF
 	[System.Drawing.ToolboxBitmap( typeof(MySqlDataAdapter), "MySqlClient.resources.dataadapter.bmp")]
 	[System.ComponentModel.DesignerCategory("Code")]
 	[Designer("MySql.Data.MySqlClient.Design.MySqlDataAdapterDesigner,MySqlClient.Design")]
@@ -79,7 +79,7 @@ namespace MySql.Data.MySqlClient
 		#region Properties
 
 		/// <include file='docs/MySqlDataAdapter.xml' path='docs/DeleteCommand/*'/>
-#if DESIGN
+#if !CF
 		[Description("Used during Update for deleted rows in Dataset.")]
 #endif
 		public new MySqlCommand DeleteCommand 
@@ -89,7 +89,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/MySqlDataAdapter.xml' path='docs/InsertCommand/*'/>
-#if DESIGN
+#if !CF
 		[Description("Used during Update for new rows in Dataset.")]
 #endif
 		public new MySqlCommand InsertCommand 
@@ -99,7 +99,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/MySqlDataAdapter.xml' path='docs/SelectCommand/*'/>
-#if DESIGN
+#if !CF
 		[Description("Used during Fill/FillSchema")]
 		[Category("Fill")]
 #endif
@@ -110,7 +110,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/MySqlDataAdapter.xml' path='docs/UpdateCommand/*'/>
-#if DESIGN
+#if !CF
 		[Description("Used during Update for modified rows in Dataset.")]
 #endif
 		public new MySqlCommand UpdateCommand 

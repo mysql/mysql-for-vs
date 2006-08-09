@@ -30,7 +30,7 @@ using System.ComponentModel;
 namespace MySql.Data.MySqlClient
 {
 	/// <include file='docs/mysqlcommand.xml' path='docs/ClassSummary/*'/>
-#if DESIGN
+#if !CF
 	[System.Drawing.ToolboxBitmap( typeof(MySqlCommand), "MySqlClient.resources.command.bmp")]
 	[System.ComponentModel.DesignerCategory("Code")]
 #endif
@@ -88,7 +88,7 @@ namespace MySql.Data.MySqlClient
 
 
         /// <include file='docs/mysqlcommand.xml' path='docs/LastInseredId/*'/>
-#if DESIGN
+#if !CF
 		[Browsable(false)]
 #endif
         public Int64 LastInsertedId
@@ -97,7 +97,7 @@ namespace MySql.Data.MySqlClient
         }
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/CommandText/*'/>
-#if DESIGN
+#if !CF
 		[Category("Data")]
 		[Description("Command text to execute")]
 		[Editor("MySql.Data.Common.Design.SqlCommandTextEditor,MySqlClient.Design", typeof(System.Drawing.Design.UITypeEditor))]
@@ -134,7 +134,7 @@ namespace MySql.Data.MySqlClient
         }*/
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/CommandTimeout/*'/>
-#if DESIGN
+#if !CF
 		[Category("Misc")]
 		[Description("Time to wait for command to execute")]
 #endif
@@ -146,7 +146,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/CommandType/*'/>
-#if DESIGN
+#if !CF
 		[Category("Data")]
 #endif
 		public override CommandType CommandType
@@ -156,7 +156,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/IsPrepared/*'/>
-#if DESIGN
+#if !CF
 		[Browsable(false)]
 #endif
 		public bool IsPrepared 
@@ -165,7 +165,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 			/// <include file='docs/mysqlcommand.xml' path='docs/Connection/*'/>
-#if DESIGN
+#if !CF
 		[Category("Behavior")]
 		[Description("Connection used by the command")]
 #endif
@@ -189,7 +189,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/Parameters/*'/>
-#if DESIGN
+#if !CF
 		[Category("Data")]
 		[Description("The parameters collection")]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
@@ -201,7 +201,7 @@ namespace MySql.Data.MySqlClient
 
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/Transaction/*'/>
-#if DESIGN
+#if !CF
 		[Browsable(false)]
 #endif
 		public new MySqlTransaction Transaction
@@ -211,7 +211,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 /*		/// <include file='docs/mysqlcommand.xml' path='docs/UpdatedRowSource/*'/>
-#if DESIGN
+#if !CF
 		[Category("Behavior")]
 #endif
 		public override UpdateRowSource UpdatedRowSource

@@ -31,7 +31,7 @@ using System.Globalization;
 namespace MySql.Data.MySqlClient
 {
 	/// <include file='docs/MySqlCommandBuilder.xml' path='docs/class/*'/>
-#if DESIGN
+#if !CF
 	[ToolboxItem(false)]
 	[System.ComponentModel.DesignerCategory("Code")]
 #endif
