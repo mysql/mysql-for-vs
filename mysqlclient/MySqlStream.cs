@@ -45,11 +45,12 @@ namespace MySql.Data.MySqlClient
         private ulong inLength;
         private ulong inPos;
 
-        private Stream outStream;
+        private BufferedStream outStream;
         private ulong outLength;
         private ulong outPos;
         private bool isLastPacket;
         private byte[] byteBuffer;
+        private Stream baseStream;
 
         public MySqlStream(Encoding encoding)
         {
@@ -70,8 +71,9 @@ namespace MySql.Data.MySqlClient
 
 		public MySqlStream(Stream baseStr, Encoding encoding) : this(encoding)
 		{
-            outStream = new BufferedStream(baseStr);
-            inStream = new BufferedStream(baseStr);
+            baseStream = baseStr;
+            outStream = new BufferedStream(baseStream);
+            inStream = new BufferedStream(baseStream);
 		}
 
         public void Close()
@@ -309,7 +311,7 @@ namespace MySql.Data.MySqlClient
 				{
                     // if yes and this block is not max size, then we are done
                     if (inLength < (ulong)maxBlockSize)
-                        return -1;
+                        return 0;
 
                     // the current block is maxBlockSize so we need to read
                     // in another block to continue
@@ -428,6 +430,10 @@ namespace MySql.Data.MySqlClient
                 bufferStream.Position = 0;
             }
             outStream.Flush();
+            // we do a flush on the basestream here because we might be sitting on top of
+            // a compression stream and calling flush on the BufferedStream doesn't always
+            // call flush on the underlying stream.
+            baseStream.Flush();
         }
 
         #endregion

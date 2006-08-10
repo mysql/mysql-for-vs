@@ -372,7 +372,6 @@ namespace MySql.Data.MySqlClient.Tests
 
     #region Configs
 
-    [Explicit]
     public class BlobTestsSocketCompressed : BlobTests
     {
         protected override string GetConnectionInfo()
@@ -389,7 +388,6 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
-    [Explicit]
     public class BlobTestsPipeCompressed : BlobTests
     {
         protected override string GetConnectionInfo()

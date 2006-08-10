@@ -117,7 +117,6 @@ namespace MySql.Data.MySqlClient.Tests
 
     #region Configs
 
-    [Explicit]
     public class StressTestsSocketCompressed : PreparedStatements
     {
         protected override string GetConnectionInfo()
@@ -134,7 +133,6 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
-    [Explicit]
     public class StressTestsPipeCompressed : StressTests
     {
         protected override string GetConnectionInfo()

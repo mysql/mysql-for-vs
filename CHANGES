@@ -5,6 +5,8 @@
     -------------
     Implemented simple local transactions
     Added overloaded methods in MySqlDataReader for getting a column value right from column name
+    Replaced use of .NET 2.0 compression code with open source zlib library
+    Fixed compression
 
 Version 5.0.0.0 (Alpha)
 
