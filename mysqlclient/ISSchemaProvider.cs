@@ -42,7 +42,7 @@ namespace MySql.Data.MySqlClient
             {
                 new object[] {"Views", 2, 3},
                 new object[] {"ViewColumns", 3, 4},
-                new object[] {"Procedure Parameters", 4, 1},
+                new object[] {"Procedure Parameters", 5, 1},
                 new object[] {"Procedures", 4, 3},
                 new object[] {"Triggers", 2, 4}
             };
@@ -60,7 +60,8 @@ namespace MySql.Data.MySqlClient
                 new object[] {"Procedure Parameters", "Catalog", "", 0},
                 new object[] {"Procedure Parameters", "Owner", "", 1},
                 new object[] {"Procedure Parameters", "Name", "", 2},
-                new object[] {"Procedure Parameters", "Parameter", "", 3},
+                new object[] {"Procedure Parameters", "Type", "", 3},
+                new object[] {"Procedure Parameters", "Parameter", "", 4},
                 new object[] {"Procedures", "Catalog", "", 0},
                 new object[] {"Procedures", "Owner", "", 1},
                 new object[] {"Procedures", "Name", "", 2},
@@ -197,6 +198,7 @@ namespace MySql.Data.MySqlClient
             dt.Columns.Add("ROUTINE_CATALOG", typeof(string));
             dt.Columns.Add("ROUTINE_SCHEMA", typeof(string));
             dt.Columns.Add("ROUTINE_NAME", typeof(string));
+            dt.Columns.Add("ROUTINE_TYPE", typeof(string));
             dt.Columns.Add("PARAMETER_NAME", typeof(string));
             dt.Columns.Add("ORDINAL_POSITION", typeof(Int32));
             dt.Columns.Add("PARAMETER_MODE", typeof(string));
@@ -250,8 +252,9 @@ namespace MySql.Data.MySqlClient
             query.Append(table_name);
 
             if (values != null)
-                for (int i = 0; i < values.Length; i++)
+                for (int i = 0; i < keys.Length; i++)
                 {
+                    if (values.Length <= i) continue;
                     if (values[i] == null || values[i] == String.Empty) continue;
                     if (where.Length > 0)
                         where.Append(" AND ");
@@ -348,9 +351,9 @@ namespace MySql.Data.MySqlClient
                 try
                 {
                     string nameToRestrict = null;
-                    if (restrictions != null && restrictions.Length == 4 &&
-                        restrictions[3] != null)
-                        nameToRestrict = restrictions[3];
+                    if (restrictions != null && restrictions.Length == 5 &&
+                        restrictions[4] != null)
+                        nameToRestrict = restrictions[4];
                     reader = cmd.ExecuteReader();
                     reader.Read();
                     ParseProcedureBody(parametersTable, reader.GetString(2),
@@ -434,6 +437,7 @@ namespace MySql.Data.MySqlClient
                 parmRow["ROUTINE_CATALOG"] = null;
                 parmRow["ROUTINE_SCHEMA"] = row["ROUTINE_SCHEMA"];
                 parmRow["ROUTINE_NAME"] = row["ROUTINE_NAME"];
+                parmRow["ROUTINE_TYPE"] = row["ROUTINE_TYPE"];
                 ParseParameter(def, cs, sqlMode, parmRow);
                 if (parmRow["IS_RESULT"].Equals("YES"))
                     parmRow["ORDINAL_POSITION"] = 0;

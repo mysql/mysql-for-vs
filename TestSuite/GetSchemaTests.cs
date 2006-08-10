@@ -182,13 +182,13 @@ namespace MySql.Data.MySqlClient.Tests
         public void ProcedureParameters()
         {
             execSQL("DROP PROCEDURE IF EXISTS spTest");
-            execSQL("CREATE PROCEDURE spTest (id int) BEGIN SELECT 1; END");
+            execSQL("CREATE PROCEDURE spTest (id int, name varchar(50)) BEGIN SELECT 1; END");
 
-            string[] restrictions = new string[4];
+            string[] restrictions = new string[5];
             restrictions[1] = "test";
             restrictions[2] = "spTest";
             DataTable dt = conn.GetSchema("Procedure Parameters", restrictions);
-            Assert.IsTrue(dt.Rows.Count == 1);
+            Assert.IsTrue(dt.Rows.Count == 2);
             Assert.AreEqual("Procedure Parameters", dt.TableName);
             Assert.AreEqual("test", dt.Rows[0]["ROUTINE_SCHEMA"].ToString().ToLower());
             Assert.AreEqual("sptest", dt.Rows[0]["ROUTINE_NAME"].ToString().ToLower());
@@ -197,9 +197,21 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("IN", dt.Rows[0]["PARAMETER_MODE"]);
             Assert.AreEqual("NO", dt.Rows[0]["IS_RESULT"]);
 
+            restrictions[4] = "name";
+            dt.Clear();
+            dt = conn.GetSchema("Procedure Parameters", restrictions);
+            Assert.AreEqual(1, dt.Rows.Count);
+            Assert.AreEqual("test", dt.Rows[0]["ROUTINE_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual("sptest", dt.Rows[0]["ROUTINE_NAME"].ToString().ToLower());
+            Assert.AreEqual("name", dt.Rows[0]["PARAMETER_NAME"].ToString().ToLower());
+            Assert.AreEqual(2, dt.Rows[0]["ORDINAL_POSITION"]);
+            Assert.AreEqual("IN", dt.Rows[0]["PARAMETER_MODE"]);
+            Assert.AreEqual("NO", dt.Rows[0]["IS_RESULT"]);
+
             execSQL("DROP FUNCTION IF EXISTS spFunc");
             execSQL("CREATE FUNCTION spFunc (id int) RETURNS INT BEGIN RETURN 1; END");
 
+            restrictions[4] = null;
             restrictions[1] = "test";
             restrictions[2] = "spFunc";
             dt = conn.GetSchema("Procedure Parameters", restrictions);
