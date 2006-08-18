@@ -254,7 +254,7 @@ namespace MySql.Data.MySqlClient
             if (values != null)
                 for (int i = 0; i < keys.Length; i++)
                 {
-                    if (values.Length <= i) continue;
+                    if (i >= values.Length) break;
                     if (values[i] == null || values[i] == String.Empty) continue;
                     if (where.Length > 0)
                         where.Append(" AND ");

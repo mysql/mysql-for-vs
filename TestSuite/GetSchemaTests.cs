@@ -232,6 +232,69 @@ namespace MySql.Data.MySqlClient.Tests
 
         [Category("5.0")]
         [Test]
+        public void Indexes()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test (id int, PRIMARY KEY(id))");
+            string[] restrictions = new string[4];
+            restrictions[2] = "test";
+            restrictions[1] = "test";
+            DataTable dt = conn.GetSchema("Indexes", restrictions);
+            Assert.AreEqual(1, dt.Rows.Count);
+            Assert.AreEqual("test", dt.Rows[0]["TABLE_NAME"]);
+            Assert.AreEqual(true, dt.Rows[0]["PRIMARY"]);
+            Assert.AreEqual(true, dt.Rows[0]["UNIQUE"]);
+
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test (id int, name varchar(50), " +
+                "UNIQUE KEY key2 (name))");
+
+            dt = conn.GetSchema("Indexes", restrictions);
+            Assert.AreEqual(1, dt.Rows.Count);
+            Assert.AreEqual("test", dt.Rows[0]["TABLE_NAME"]);
+            Assert.AreEqual("key2", dt.Rows[0]["INDEX_NAME"]);
+            Assert.AreEqual(false, dt.Rows[0]["PRIMARY"]);
+            Assert.AreEqual(true, dt.Rows[0]["UNIQUE"]);
+
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test (id int, name varchar(50), " +
+                "KEY key2 (name))");
+
+            dt = conn.GetSchema("Indexes", restrictions);
+            Assert.AreEqual(1, dt.Rows.Count);
+            Assert.AreEqual("test", dt.Rows[0]["TABLE_NAME"]);
+            Assert.AreEqual("key2", dt.Rows[0]["INDEX_NAME"]);
+            Assert.AreEqual(false, dt.Rows[0]["PRIMARY"]);
+            Assert.AreEqual(false, dt.Rows[0]["UNIQUE"]);
+        }
+
+        [Test]
+        public void IndexColumns()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test (id int, PRIMARY KEY(id))");
+            string[] restrictions = new string[5];
+            restrictions[2] = "test";
+            restrictions[1] = "test";
+            DataTable dt = conn.GetSchema("IndexColumns", restrictions);
+            Assert.AreEqual(1, dt.Rows.Count);
+            Assert.AreEqual("test", dt.Rows[0]["TABLE_NAME"]);
+            Assert.AreEqual("id", dt.Rows[0]["COLUMN_NAME"]);
+
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test (id int, id1 int, id2 int, " +
+                "INDEX key1 (id1, id2))");
+            restrictions[2] = "test";
+            restrictions[1] = "test";
+            restrictions[4] = "id2";
+            dt = conn.GetSchema("IndexColumns", restrictions);
+            Assert.AreEqual(1, dt.Rows.Count);
+            Assert.AreEqual("test", dt.Rows[0]["TABLE_NAME"]);
+            Assert.AreEqual("id2", dt.Rows[0]["COLUMN_NAME"]);
+            Assert.AreEqual(2, dt.Rows[0]["ORDINAL_POSITION"]);
+        }
+
+        [Test]
         public void Views()
         {
             execSQL("DROP VIEW IF EXISTS vw");

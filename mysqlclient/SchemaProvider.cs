@@ -270,14 +270,15 @@ namespace MySql.Data.MySqlClient
             DataTable tables = GetTables(restrictions);
             foreach (DataRow table in tables.Rows)
             {
-                string sql = String.Format("SHOW INDEX FROM {0}.{1}", table["TABLE_SCHEMA"],
-                    table["TABLE_NAME"]);
+                string sql = String.Format("SHOW INDEX FROM `{0}`.`{1}`", 
+                    table["TABLE_SCHEMA"], table["TABLE_NAME"]);
                 MySqlDataAdapter da = new MySqlDataAdapter(sql, connection);
                 DataTable indexes = new DataTable();
                 da.Fill(indexes);
                 foreach (DataRow index in indexes.Rows)
                 {
-                    if (!index["SEQ_IN_INDEX"].Equals(1)) continue;
+                    long seq_index = (long)index["SEQ_IN_INDEX"];
+                    if (seq_index != 1) continue;
                     if (restrictions != null && restrictions.Length == 4 &&
                         restrictions[3] != null &&
                         !index["KEY_NAME"].Equals(restrictions[3])) continue;
@@ -286,7 +287,7 @@ namespace MySql.Data.MySqlClient
                     row["INDEX_SCHEMA"] = table["TABLE_SCHEMA"];
                     row["INDEX_NAME"] = index["KEY_NAME"];
                     row["TABLE_NAME"] = index["TABLE"];
-                    row["UNIQUE"] = index["NON_UNIQUE"].Equals(0);
+                    row["UNIQUE"] = (long)index["NON_UNIQUE"] == 0;
                     row["PRIMARY"] = index["KEY_NAME"].Equals("PRIMARY");
                     dt.Rows.Add(row);
                 }
@@ -308,14 +309,13 @@ namespace MySql.Data.MySqlClient
             DataTable tables = GetTables(restrictions);
             foreach (DataRow table in tables.Rows)
             {
-                string sql = String.Format("SHOW INDEX FROM {0}.{1}", table["TABLE_SCHEMA"],
-                    table["TABLE_NAME"]);
+                string sql = String.Format("SHOW INDEX FROM `{0}`.`{1}`", 
+                    table["TABLE_SCHEMA"], table["TABLE_NAME"]);
                 MySqlDataAdapter da = new MySqlDataAdapter(sql, connection);
                 DataTable indexes = new DataTable();
                 da.Fill(indexes);
                 foreach (DataRow index in indexes.Rows)
                 {
-                    if (!index["SEQ_IN_INDEX"].Equals(1)) continue;
                     if (restrictions != null)
                     {
                         if (restrictions.Length == 4 && restrictions[3] != null &&

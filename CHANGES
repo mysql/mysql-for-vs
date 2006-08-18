@@ -7,6 +7,7 @@
     Added overloaded methods in MySqlDataReader for getting a column value right from column name
     Replaced use of .NET 2.0 compression code with open source zlib library
     Fixed compression
+    Fixed some problems with GetSchema and the Indexes and IndexColumns collections
 
 Version 5.0.0.0 (Alpha)
 

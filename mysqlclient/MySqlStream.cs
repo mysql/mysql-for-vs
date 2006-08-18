@@ -556,6 +556,8 @@ namespace MySql.Data.MySqlClient
 
         public string ReadString(long length)
         {
+            if (length == 0)
+                return String.Empty;
             byte[] buf = new byte[length];
             Read(buf, 0, (int)length);
             return encoding.GetString(buf, 0, buf.Length);
