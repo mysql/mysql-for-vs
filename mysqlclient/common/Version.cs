@@ -61,14 +61,14 @@ namespace MySql.Data.Common
 			int start = 0;
 			int index = versionString.IndexOf('.', start);
 			if (index == -1) 
-				throw new MySqlException(Resources.GetString("BadVersionFormat"));
+				throw new MySqlException(Resources.BadVersionFormat);
 			string val = versionString.Substring(start, index-start).Trim();
 			int major = Convert.ToInt32(val, System.Globalization.NumberFormatInfo.InvariantInfo);
 
 			start = index+1;
 			index = versionString.IndexOf('.', start);
 			if (index == -1) 
-				throw new MySqlException(Resources.GetString("BadVersionFormat"));
+				throw new MySqlException(Resources.BadVersionFormat);
 			val = versionString.Substring(start, index-start).Trim();
 			int minor = Convert.ToInt32(val, System.Globalization.NumberFormatInfo.InvariantInfo);
 

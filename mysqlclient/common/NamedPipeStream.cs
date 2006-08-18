@@ -20,6 +20,7 @@
 
 using System;
 using System.IO;
+using MySql.Data.MySqlClient;
 
 
 namespace MySql.Data.Common
@@ -64,17 +65,17 @@ namespace MySql.Data.Common
 
 		public override bool CanSeek
 		{
-			get { throw new NotSupportedException(Resources.GetString("NamedPipeNoSeek")); }
+			get { throw new NotSupportedException(Resources.NamedPipeNoSeek); }
 		}
 
 		public override long Length
 		{
-			get { throw new NotSupportedException(Resources.GetString("NamedPipeNoSeek")); }
+			get { throw new NotSupportedException(Resources.NamedPipeNoSeek); }
 		}
 
 		public override long Position 
 		{
-			get { throw new NotSupportedException(Resources.GetString("NamedPipeNoSeek")); }
+			get { throw new NotSupportedException(Resources.NamedPipeNoSeek); }
 			set { }
 		}
 
@@ -88,21 +89,21 @@ namespace MySql.Data.Common
 		{
 			if (buffer == null) 
 				throw new ArgumentNullException("buffer", 
-					Resources.GetString("BufferCannotBeNull"));
+					Resources.BufferCannotBeNull);
 			if (buffer.Length < (offset + count))
 				throw new ArgumentException(
-					Resources.GetString("BufferNotLargeEnough"));
+					Resources.BufferNotLargeEnough);
 			if (offset < 0) 
 				throw new ArgumentOutOfRangeException("offset", offset, 
-					Resources.GetString("OffsetCannotBeNegative"));
+					Resources.OffsetCannotBeNegative);
 			if (count < 0)
 				throw new ArgumentOutOfRangeException("count", count, 
-					Resources.GetString("CountCannotBeNegative"));
+					Resources.CountCannotBeNegative);
 			if (! CanRead)
-				throw new NotSupportedException(Resources.GetString("StreamNoRead"));
+				throw new NotSupportedException(Resources.StreamNoRead);
 			if (pipeHandle == 0) 
 				throw new ObjectDisposedException("NamedPipeStream", 
-					Resources.GetString("StreamAlreadyClosed"));
+					Resources.StreamAlreadyClosed);
 
 			// first read the data into an internal buffer since ReadFile cannot read into a buf at
 			// a specified offset
@@ -115,7 +116,7 @@ namespace MySql.Data.Common
 			{
 				Close();
 				throw new MySqlClient.MySqlException(
-					Resources.GetString("ReadFromStreamFailed"), true, null);
+					Resources.ReadFromStreamFailed, true, null);
 			}
 
 			Array.Copy(buf, (int)0, buffer, (int)offset, (int)read);
@@ -133,26 +134,26 @@ namespace MySql.Data.Common
 
 		public override void SetLength(long length)
 		{
-			throw new NotSupportedException(Resources.GetString("NamedPipeNoSetLength"));
+			throw new NotSupportedException(Resources.NamedPipeNoSetLength);
 		}
 
 		public override void Write(byte[] buffer, int offset, int count)
 		{
 			if (buffer == null) 
-				throw new ArgumentNullException("buffer", Resources.GetString("BufferCannotBeNull"));
+				throw new ArgumentNullException("buffer", Resources.BufferCannotBeNull);
 			if (buffer.Length < (offset + count))
-				throw new ArgumentException(Resources.GetString("BufferNotLargeEnough"), "buffer");
+				throw new ArgumentException(Resources.BufferNotLargeEnough, "buffer");
 			if (offset < 0) 
 				throw new ArgumentOutOfRangeException("offset", offset, 
-					Resources.GetString("OffsetCannotBeNegative"));
+					Resources.OffsetCannotBeNegative);
 			if (count < 0)
 				throw new ArgumentOutOfRangeException("count", count, 
-					Resources.GetString("CountCannotBeNegative"));
+					Resources.CountCannotBeNegative);
 			if (! CanWrite)
-				throw new NotSupportedException(Resources.GetString("StreamNoWrite"));
+				throw new NotSupportedException(Resources.StreamNoWrite);
 			if (pipeHandle == 0)
 				throw new ObjectDisposedException("NamedPipeStream", 
-					Resources.GetString("StreamAlreadyClosed"));
+					Resources.StreamAlreadyClosed);
 			
 			// copy data to internal buffer to allow writing from a specified offset
 			uint bytesWritten = 0;
@@ -180,7 +181,7 @@ namespace MySql.Data.Common
 			if (! result)
 			{
 				Close();
-				throw new MySqlClient.MySqlException(Resources.GetString("WriteToStreamFailed"),
+				throw new MySqlClient.MySqlException(Resources.WriteToStreamFailed,
 					true, null);
 			}
 			if (bytesWritten < count)
@@ -189,7 +190,7 @@ namespace MySql.Data.Common
 
 		public override long Seek( long offset, SeekOrigin origin )
 		{
-			throw new NotSupportedException(Resources.GetString("NamedPipeNoSeek"));
+			throw new NotSupportedException(Resources.NamedPipeNoSeek);
 		}
 	}
 }
