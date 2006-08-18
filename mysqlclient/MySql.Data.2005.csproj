@@ -107,7 +107,6 @@
     <Compile Include="common\NamedPipeStream.cs" />
     <Compile Include="common\NativeMethods.cs" />
     <Compile Include="common\Platform.cs" />
-    <Compile Include="common\Resources.cs" />
     <Compile Include="common\SHA1.cs" />
     <Compile Include="common\SharedMemoryStream.cs" />
     <Compile Include="common\SocketStream.cs" />

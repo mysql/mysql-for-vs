@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="Windows-1252"?>
 <project name="MySqlClient" default="allframeworks" xmlns="http://nant.sf.net/schemas/nant-0.84.win32.net-1.0.xsd">
 	<description>MySQLClient Managed Provider for MySQL</description>
 
