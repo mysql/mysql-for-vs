@@ -273,7 +273,7 @@ namespace MySql.Data.MySqlClient
                 // we read the byte this way because we might cross over a 
                 // multipacket boundary
                 int cnt = Read(byteBuffer, 0, 1);
-                if (cnt == -1)
+                if (cnt <= 0)
                     return -1;
                 b = byteBuffer[0];
             }

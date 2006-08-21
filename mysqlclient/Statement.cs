@@ -192,7 +192,7 @@ namespace MySql.Data.MySqlClient
                     sqlPart.Remove(0, sqlPart.Length);
                     continue;
                 }
-                else if ((c == '\'' || c == '\"') & !escaped & delim == Char.MinValue)
+                else if ((c == '\'' || c == '\"' || c == '`') & !escaped & delim == Char.MinValue)
                     delim = c;
                 else if (c == '\\')
                     escaped = !escaped;

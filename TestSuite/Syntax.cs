@@ -326,5 +326,32 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual(1000, cnt);
 		}
 
+        /// <summary>
+        /// Bug #21521 # Symbols not allowed in column/table names. 
+        /// </summary>
+        [Test]
+        public void CommentSymbolInTableName()
+        {
+            try
+            {
+                execSQL("DROP TABLE IF EXISTS test");
+                execSQL("CREATE TABLE test (`PO#` int(11) NOT NULL auto_increment, " +
+                    "`PODate` date default NULL, PRIMARY KEY  (`PO#`))");
+                execSQL("INSERT INTO test ( `PO#`, `PODate` ) " +
+                    "VALUES ( NULL, '2006-01-01' )");
+
+                string sql = "SELECT `PO#` AS PurchaseOrderNumber, " +
+                    "`PODate` AS OrderDate FROM  test";
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                Assert.AreEqual(1, dt.Rows.Count);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
 	}
 }

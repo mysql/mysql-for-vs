@@ -1,5 +1,6 @@
     Bugs fixed
     ----------
+	Bug #21521 # Symbols not allowed in column/table names.    
     
     Other changes
     -------------
