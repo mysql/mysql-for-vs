@@ -38,7 +38,6 @@ namespace MySql.Data.Common
 		uint				port;
 		string				pipeName;
 		uint				timeOut;
-        ManualResetEvent    waitHandle;        
 
 		public StreamCreator( string hosts, uint port, string pipeName)
 		{
@@ -47,7 +46,6 @@ namespace MySql.Data.Common
 				hostList = "localhost";
 			this.port = port;
 			this.pipeName = pipeName;
-            waitHandle = new ManualResetEvent(false);
         }
 
 		public Stream GetStream(uint timeOut) 
@@ -124,13 +122,6 @@ namespace MySql.Data.Common
 			return ep;
         }
 
-        private void ConnectCallback(IAsyncResult ias)
-        {
-            Socket s = (ias.AsyncState as Socket);
-            if (s.Connected)
-                waitHandle.Set();
-        }
-
         private Stream CreateSocketStream(IPAddress ip, uint port, bool unix)
         {
             SocketStream ss = null;
@@ -172,52 +163,6 @@ namespace MySql.Data.Common
             }
             return ss;
         }
-
-/*		private Stream CreateSocketStream( IPAddress ip, uint port, bool unix ) 
-		{
-			try
-			{
-				//
-				// Lets try to connect
-                EndPoint endPoint;
-                
-				if (!Platform.IsWindows() && unix)
-					endPoint = CreateUnixEndPoint(hostList);
-				else
-					endPoint = 	new IPEndPoint(ip, (int)port);
-
-                waitHandle.Reset();
-                Socket s = unix ?
-                    new Socket(AddressFamily.Unix, SocketType.Stream, ProtocolType.IP) :
-                    new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                IAsyncResult ias = s.BeginConnect(endPoint, 
-                    new AsyncCallback(ConnectCallback), s);
-
-                if (ias.CompletedSynchronously || 
-                    waitHandle.WaitOne((int)timeOut * 1000, false))
-                    return new NetworkStream(s);
-                else 
-                {
-                    s.EndConnect(ias);
-                    return null;
-                }
-            }
-			catch (ArgumentNullException are)
-			{
-				Logger.LogException(are);
-                return null;
-			}
-			catch (SocketException se) 
-			{
-				Logger.LogException(se);
-                return null;
-			}
-			catch (ObjectDisposedException ode) 
-			{
-				Logger.LogException(ode);
-				return null;
-			}
-		}*/
  
 	}
 }
