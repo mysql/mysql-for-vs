@@ -20,6 +20,7 @@
 
 using System;
 using System.Runtime.Serialization;
+using System.Data.Common;
 
 namespace MySql.Data.MySqlClient
 {
@@ -30,7 +31,7 @@ namespace MySql.Data.MySqlClient
 #if !CF
 	[Serializable]
 #endif
-	public sealed class MySqlException : SystemException
+	public sealed class MySqlException : DbException
 	{
 		private int errorCode;
 		private bool isFatal;
