@@ -1,6 +1,7 @@
     Bugs fixed
     ----------
 	Bug #21521 # Symbols not allowed in column/table names.    
+    Bug #21874 MySqlException should derive from DbException     
     
     Other changes
     -------------

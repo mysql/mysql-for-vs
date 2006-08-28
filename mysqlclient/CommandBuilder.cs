@@ -37,8 +37,6 @@ namespace MySql.Data.MySqlClient
 #endif
 	public sealed class MySqlCommandBuilder : DbCommandBuilder
 	{
-		private char				marker = '?';
-
 		#region Constructors
 
 		/// <include file='docs/MySqlCommandBuilder.xml' path='docs/Ctor/*'/>
@@ -62,6 +60,14 @@ namespace MySql.Data.MySqlClient
         {
             get { return (MySqlDataAdapter)base.DataAdapter; }
             set { base.DataAdapter = value; }
+        }
+
+        private char ParameterMarker
+        {
+            get
+            {
+                return (DataAdapter.SelectCommand.Connection as MySqlConnection).ParameterMarker;
+            }
         }
 
 		#endregion
@@ -152,7 +158,6 @@ namespace MySql.Data.MySqlClient
 		/// <include file='docs/MySqlCommandBuilder.xml' path='docs/RefreshSchema/*'/>
 		public override void RefreshSchema()
 		{
-            marker = (DataAdapter.SelectCommand.Connection as MySqlConnection).ParameterMarker;
             base.RefreshSchema();
 		}
 		#endregion
@@ -192,13 +197,13 @@ namespace MySql.Data.MySqlClient
 
         protected override string GetParameterName(int parameterOrdinal)
         {
-            return String.Format("{0}p{1}", marker,
+            return String.Format("{0}p{1}", ParameterMarker,
                 parameterOrdinal.ToString(CultureInfo.InvariantCulture));
         }
 
         protected override string GetParameterPlaceholder(int parameterOrdinal)
         {
-            return String.Format("{0}p{1}", marker,
+            return String.Format("{0}p{1}", ParameterMarker,
                 parameterOrdinal.ToString(CultureInfo.InvariantCulture));
         }
 
