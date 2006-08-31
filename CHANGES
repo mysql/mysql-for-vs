@@ -11,6 +11,7 @@
     Fixed compression
     Fixed some problems with GetSchema and the Indexes and IndexColumns collections
     Fixed shared memory connections
+    Implemented command canceling for MySQL 5.0.0 and higher
 
 Version 5.0.0.0 (Alpha)
 

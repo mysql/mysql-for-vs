@@ -22,6 +22,7 @@ using System;
 using System.Data;
 using MySql.Data.MySqlClient;
 using NUnit.Framework;
+using System.Threading;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -380,7 +381,43 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(-1, cmd.LastInsertedId);
         }
 
+        private delegate void CommandInvokerDelegate(MySqlCommand cmdToRun);
+
+        private void CommandRunner(MySqlCommand cmdToRun)
+        {
+            try
+            {
+                object o = cmdToRun.ExecuteScalar();
+                Assert.IsNull(o);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
+
+        [Test]
+        public void CancelSingleQuery()
+        {
+            // first we need a routine that will run for a bit
+            execSQL("CREATE PROCEDURE spTest() BEGIN SET @start=NOW()+0; REPEAT SET @end=NOW()-@start; " +
+                "UNTIL @end >= 500 END REPEAT; SELECT @start, @end; END");
+
+            MySqlCommand cmd = new MySqlCommand("spTest", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            // now we start execution of the command
+            CommandInvokerDelegate d = new CommandInvokerDelegate(CommandRunner);
+            IAsyncResult iar = d.BeginInvoke(cmd, null, null);
+
+            // sleep 10 seconds
+            Thread.Sleep(5000);
+
+            // now cancel the command
+            cmd.Cancel();
+        }
 	}
+
 
     #region Configs
 

@@ -258,4 +258,7 @@
   <data name="IncorrectTransmission" xml:space="preserve">
     <value>An incorrect response was received from the server.</value>
   </data>
+  <data name="CancelNotSupported" xml:space="preserve">
+    <value>Canceling an active query is only supported on MySQL 5.0.0 and above. </value>
+  </data>
 </root>

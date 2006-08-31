@@ -224,15 +224,29 @@ namespace MySql.Data.MySqlClient
 		#region Methods
 
 		/// <summary>
-		/// Attempts to cancel the execution of a MySqlCommand.  This operation is not supported.
+		/// Attempts to cancel the execution of a MySqlCommand.
 		/// </summary>
 		/// <remarks>
-		/// Cancelling an executing command is currently not supported on any version of MySQL.
+        /// Cancelling a currently active query only works with MySQL versions 5.0.0 and higher.
 		/// </remarks>
-		/// <exception cref="NotSupportedException">This operation is not supported.</exception>
 		public override void Cancel()
 		{
-			throw new NotSupportedException();
+            if (!connection.driver.Version.isAtLeast(5, 0, 0))
+                throw new NotSupportedException(Resources.CancelNotSupported);
+
+            MySqlConnection c = new MySqlConnection(connection.Settings.GetConnectionString(true));
+            try
+            {
+                c.Open();
+                MySqlCommand cmd = new MySqlCommand(String.Format("KILL QUERY {0}",
+                    connection.ServerThread), c);
+                cmd.ExecuteNonQuery();
+            }
+            finally
+            {
+                if (c != null)
+                    c.Close();
+            }
 		}
 
 		/// <summary>
@@ -272,11 +286,16 @@ namespace MySql.Data.MySqlClient
 		public override int ExecuteNonQuery()
 		{
             lastInsertedId = -1;
+            updatedRowCount = -1;
+
             MySqlDataReader reader = ExecuteReader();
-            reader.Close();
-            lastInsertedId = reader.InsertedId;
-            this.updatedRowCount = reader.RecordsAffected;
-            return reader.RecordsAffected;
+            if (reader != null)
+            {
+                reader.Close();
+                lastInsertedId = reader.InsertedId;
+                this.updatedRowCount = reader.RecordsAffected;
+            }
+            return (int)updatedRowCount;
         }
 
         internal void Close()
@@ -321,14 +340,24 @@ namespace MySql.Data.MySqlClient
 
 			updatedRowCount = -1;
 
-			MySqlDataReader reader = new MySqlDataReader(this, statement, behavior);
+            try
+            {
+                MySqlDataReader reader = new MySqlDataReader(this, statement, behavior);
 
-            // execute the statement
-            statement.Execute(Parameters);
+                // execute the statement
+                statement.Execute(Parameters);
 
-			reader.NextResult();
-			connection.Reader = reader;
-			return reader;
+                reader.NextResult();
+                connection.Reader = reader;
+                return reader;
+            }
+            catch (MySqlException ex)
+            {
+                // if we caught an exception because of a cancel, then just return null
+                if (ex.ErrorCode == 1317)
+                    return null;
+                throw;
+            }
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ExecuteScalar/*'/>
@@ -337,11 +366,13 @@ namespace MySql.Data.MySqlClient
             lastInsertedId = -1;
 			object val = null;
 			MySqlDataReader reader = ExecuteReader();
-			if (reader.Read())
-				val = reader.GetValue(0);
-			reader.Close();
-            lastInsertedId = reader.InsertedId;
-
+            if (reader != null)
+            {
+                if (reader.Read())
+                    val = reader.GetValue(0);
+                reader.Close();
+                lastInsertedId = reader.InsertedId;
+            }
 			return val;
 		}
 
