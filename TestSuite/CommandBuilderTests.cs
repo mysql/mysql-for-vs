@@ -84,8 +84,9 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 			execSQL("INSERT INTO Test (id, name) VALUES (1, 'Test')");
 
-			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
-			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
+			MySqlCommandBuilder cb = new MySqlCommandBuilder(
+                new MySqlDataAdapter("SELECT * FROM Test", conn));
+            MySqlDataAdapter da = cb.DataAdapter;
             cb.ConflictOption = ConflictOption.OverwriteChanges;
 			DataTable dt = new DataTable();
 			da.Fill( dt );
@@ -234,17 +235,27 @@ namespace MySql.Data.MySqlClient.Tests
 			execSQL("CREATE TABLE test (id INT NOT NULL, name VARCHAR(100), PRIMARY KEY(id))");
 			execSQL("INSERT INTO test VALUES(1, 'Data')");
 
-			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test;", conn);
-			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
-			DataTable dt = new DataTable();
-			da.Fill(dt);
-			dt.Rows[0]["id"] = 2;
-			da.Update(dt);
+            try
+            {
+                DataSet ds = new DataSet();
+                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM `test`;", conn);
+                da.FillSchema(ds, SchemaType.Source, "test");
 
-			dt.Clear();
-			da.Fill(dt);
-			Assert.AreEqual(1, dt.Rows.Count);
-			Assert.AreEqual(2, dt.Rows[0]["id"]);
+                MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                dt.Rows[0]["id"] = 2;
+                da.Update(dt);
+
+                dt.Clear();
+                da.Fill(dt);
+                Assert.AreEqual(1, dt.Rows.Count);
+                Assert.AreEqual(2, dt.Rows[0]["id"]);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
 		}
 	}
 }

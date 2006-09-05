@@ -823,51 +823,8 @@ namespace MySql.Data.MySqlClient
 				throw;
 			}
 
-			// if there was no more resultsets, then signal done
-//			if (currentResult == null) 
-//			{
-//				canRead = false;
-//				return false;
-//			}
-
-//            SchemaTableColumn = null;
-
-			// When executing query statements, the result byte that is returned
-			// from MySql is the column count.  That is why we reference the LastResult
-			// property here to dimension our field array
-			//connection.SetState( ConnectionState.Fetching );
-
-			// load in our field defs and set our internal variables so we know
-			// what we can do (canRead, hasRows)
-//			try 
-//			{
-//				canRead = hasRows = currentResult.Load();
-//				fields = currentResult.Fields;
-//				return true;
-//			}
-//			catch (Exception ex) 
-//			{
-//				if (ex.IsFatal) 
-//					connection.Close();
-//				else
-//					connection.SetState( ConnectionState.Open );
-//				throw;
-//			}
-//			finally 
-//			{
-//				if (connection.State != ConnectionState.Closed && connection.State != ConnectionState.Open)
-//					connection.SetState( ConnectionState.Open );
-//			}
 		}
 
-/*        private void ReadDataRow()
-        {
-            System.Diagnostics.Debug.Assert(data == null, "Column data array should be null");
-            data = new IMySqlValue[FieldCount];
-            if ((commandBehavior & CommandBehavior.SequentialAccess) == 0)
-                connection.driver.ReadDataRow(fields, data);
-        }
-        */
 		/// <summary>
 		/// Advances the MySqlDataReader to the next record.
 		/// </summary>

@@ -12,6 +12,7 @@
     Fixed some problems with GetSchema and the Indexes and IndexColumns collections
     Fixed shared memory connections
     Implemented command canceling for MySQL 5.0.0 and higher
+    Fixed problem with executing a Fill after a FillSchema
 
 Version 5.0.0.0 (Alpha)
 

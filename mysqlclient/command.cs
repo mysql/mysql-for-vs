@@ -322,15 +322,15 @@ namespace MySql.Data.MySqlClient
             //TODO: make these work with prepared statements and stored procedures
 			if (0 != (behavior & CommandBehavior.SchemaOnly))
 			{
-                sql = String.Format("SET SQL_SELECT_LIMIT=0;{0};SET sql_select_limit=-1;", cmdText);
+                sql = String.Format("SET SQL_SELECT_LIMIT=0;{0};SET sql_select_limit=-1;", sql);
 			}
 
 			if (0 != (behavior & CommandBehavior.SingleRow))
 			{
-				sql = String.Format("SET SQL_SELECT_LIMIT=1;{0};SET sql_select_limit=-1;", cmdText);
+				sql = String.Format("SET SQL_SELECT_LIMIT=1;{0};SET sql_select_limit=-1;", sql);
 			}
             
-            if (statement == null)
+            if (statement == null || !(statement is PreparedStatement))
             {
                 if (CommandType == CommandType.StoredProcedure)
                     statement = new StoredProcedure(this.Connection, sql);
