@@ -26,6 +26,8 @@ using System.Collections;
 using System.Text;
 using MySql.Data.Common;
 using System.ComponentModel;
+using System.Threading;
+using System.Diagnostics;
 
 namespace MySql.Data.MySqlClient
 {
@@ -47,8 +49,11 @@ namespace MySql.Data.MySqlClient
 		private int					cursorPageSize;
 		private IAsyncResult		asyncResult;
         private bool                designTimeVisible;
-        internal Int64 lastInsertedId;
-        private Statement statement;
+        internal Int64              lastInsertedId;
+        private Statement           statement;
+        private int                 commandTimeout;
+        private bool                canCancel;
+        private bool                timedOut;
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ctor1/*'/>
 		public MySqlCommand()
@@ -60,7 +65,10 @@ namespace MySql.Data.MySqlClient
 			updatedRowSource = UpdateRowSource.Both;
 			cursorPageSize = 0;
             cmdText = String.Empty;
-		}
+            commandTimeout = 30;
+            canCancel = false;
+            timedOut = false;
+        }
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ctor2/*'/>
 		public MySqlCommand(string cmdText) : this()
@@ -123,26 +131,21 @@ namespace MySql.Data.MySqlClient
 			get { return (int)updatedRowCount; }
 		}
 
-/*        internal int StatementId
-        {
-            get
-            {
-                if (this.preparedStatement == null)
-                    return -1;
-                return (preparedStatement.StatementId);
-            }
-        }*/
-
 		/// <include file='docs/mysqlcommand.xml' path='docs/CommandTimeout/*'/>
 #if !CF
 		[Category("Misc")]
 		[Description("Time to wait for command to execute")]
+        [DefaultValue(30)]
 #endif
 		public override int CommandTimeout
 		{
-			// TODO: support this
-			get  { return 0; }
-			set  { if (value != 0) throw new NotSupportedException(); }
+            get { return commandTimeout; }
+            set 
+            {
+                if (!connection.driver.Version.isAtLeast(5, 0, 0))
+                    throw new NotSupportedException(Resources.CancelNeeds50);
+                commandTimeout = value; 
+            }
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/CommandType/*'/>
@@ -237,17 +240,22 @@ namespace MySql.Data.MySqlClient
             MySqlConnection c = new MySqlConnection(connection.Settings.GetConnectionString(true));
             try
             {
+                Trace.WriteLine("connstr = " + c.ConnectionString);
                 c.Open();
                 MySqlCommand cmd = new MySqlCommand(String.Format("KILL QUERY {0}",
                     connection.ServerThread), c);
                 cmd.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
             }
             finally
             {
                 if (c != null)
                     c.Close();
             }
-		}
+        }
 
 		/// <summary>
 		/// Creates a new instance of a <see cref="MySqlParameter"/> object.
@@ -310,6 +318,15 @@ namespace MySql.Data.MySqlClient
 			return ExecuteReader(CommandBehavior.Default);
 		}
 
+        private void TimeoutExpired(object commandObject)
+        {
+            MySqlCommand cmd = (commandObject as MySqlCommand);
+            if (cmd.canCancel)
+            {
+                cmd.timedOut = true;
+                cmd.Cancel();
+            }
+        }
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ExecuteReader1/*'/>
 		public new MySqlDataReader ExecuteReader(CommandBehavior behavior)
@@ -344,18 +361,33 @@ namespace MySql.Data.MySqlClient
             {
                 MySqlDataReader reader = new MySqlDataReader(this, statement, behavior);
 
+                // start a threading timer on our command timeout 
+                timedOut = false;
+                if (connection.driver.Version.isAtLeast(5, 0, 0))
+                {
+                    TimerCallback timerDelegate =
+                        new TimerCallback(TimeoutExpired);
+                    Timer t = new Timer(timerDelegate, this, this.CommandTimeout * 1000, Timeout.Infinite);
+                }
+
                 // execute the statement
                 statement.Execute(Parameters);
 
+                canCancel = true;
                 reader.NextResult();
+                canCancel = false;
                 connection.Reader = reader;
                 return reader;
             }
             catch (MySqlException ex)
             {
                 // if we caught an exception because of a cancel, then just return null
-                if (ex.ErrorCode == 1317)
+                if (ex.Number == 1317)
+                {
+                    if (timedOut)
+                        throw new MySqlException(Resources.Timeout);
                     return null;
+                }
                 throw;
             }
 		}

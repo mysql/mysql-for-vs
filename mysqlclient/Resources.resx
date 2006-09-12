@@ -261,4 +261,10 @@
   <data name="CancelNotSupported" xml:space="preserve">
     <value>Canceling an active query is only supported on MySQL 5.0.0 and above. </value>
   </data>
+  <data name="Timeout" xml:space="preserve">
+    <value>Timeout expired.  The timeout period elapsed prior to completion of the operation or the server is not responding.</value>
+  </data>
+  <data name="CancelNeeds50" xml:space="preserve">
+    <value>Canceling an executing query requires MySQL 5.0 or higher.</value>
+  </data>
 </root>

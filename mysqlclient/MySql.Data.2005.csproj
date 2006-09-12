@@ -102,7 +102,6 @@
     </Compile>
     <Compile Include="CommandBuilder.cs">
     </Compile>
-    <Compile Include="CommandMonitor.cs" />
     <Compile Include="common\ContextString.cs" />
     <Compile Include="common\NamedPipeStream.cs" />
     <Compile Include="common\NativeMethods.cs" />
