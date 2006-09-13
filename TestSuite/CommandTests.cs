@@ -417,12 +417,13 @@ namespace MySql.Data.MySqlClient.Tests
             cmd.Cancel();
         }
 
+        [Category("5.0")]
         [Test]
-        public void Timeout()
+        public void TimeoutExpiring()
         {
             // first we need a routine that will run for a bit
             execSQL("CREATE PROCEDURE spTest() BEGIN SET @start=NOW()+0; REPEAT SET @end=NOW()-@start; " +
-                "UNTIL @end >= 5000 END REPEAT; SELECT @start, @end; END");
+                "UNTIL @end >= 600 END REPEAT; SELECT @start, @end; END");
 
             DateTime start = DateTime.Now;
             try
@@ -438,9 +439,29 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.IsTrue(ex.Message.StartsWith("Timeout expired"));
                 Assert.IsTrue(ts.TotalSeconds < 20);
             }
-
-
         }
+
+        [Category("5.0")]
+        [Test]
+        public void TimeoutNotExpiring()
+        {
+            // first we need a routine that will run for a bit
+            execSQL("CREATE PROCEDURE spTest() BEGIN SET @start=NOW()+0; REPEAT SET @end=NOW()-@start; " +
+                "UNTIL @end >= 20 END REPEAT; SELECT @start, @end; END");
+
+            try
+            {
+                MySqlCommand cmd = new MySqlCommand("spTest", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandTimeout = 15;
+                cmd.ExecuteNonQuery();
+            }
+            catch (MySqlException ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
+
 	}
 
 

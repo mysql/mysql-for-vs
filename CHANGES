@@ -13,7 +13,8 @@
     Fixed shared memory connections
     Implemented command canceling for MySQL 5.0.0 and higher
     Fixed problem with executing a Fill after a FillSchema
-
+    Implemented CommandTimeout for non-batch queries
+    
 Version 5.0.0.0 (Alpha)
 
     Bugs fixed
