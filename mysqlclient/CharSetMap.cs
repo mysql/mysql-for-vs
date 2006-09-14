@@ -74,7 +74,6 @@ namespace MySql.Data.MySqlClient
 		/// </summary>
 		private static void InitializeMapping()
 		{
-            Logger.LogInformation("Initializing character set mapping array");
 			LoadCharsetMap();
 		}
 

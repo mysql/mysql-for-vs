@@ -56,42 +56,39 @@ namespace MySql.Data.Common
 				return CreateSocketStream(null, 0, true);
 
 			string [] dnsHosts = hostList.Split('&');
-			ArrayList ipAddresses = new ArrayList();
-			ArrayList hostNames = new ArrayList();
 
-			//
-			// Each host name specified may contain multiple IP addresses
-			// Lets look at the DNS entries for each host name
-			foreach (string h in dnsHosts)
-			{
+            System.Random random = new Random((int)DateTime.Now.Ticks);
+            int index = random.Next(dnsHosts.Length);
+            int pos = 0;
+            bool usePipe = (pipeName != null && pipeName.Length != 0);
+            Stream stream = null;
+
+            while (pos < dnsHosts.Length)
+            {
+                if (usePipe)
+                    stream = CreateNamedPipeStream(dnsHosts[index]);
+                else
+                {
 #if NET20
-                IPHostEntry hostAddress = Dns.GetHostEntry(h);
+                    IPHostEntry ipHE = Dns.GetHostEntry(dnsHosts[index]);
 #else
-				IPHostEntry hostAddress = Dns.GetHostByName(h);
+				    IPHostEntry ipHE = Dns.GetHostByName(dnsHosts[index]);
 #endif
-				foreach (IPAddress addr in hostAddress.AddressList)
-				{
-					ipAddresses.Add( addr );
-					hostNames.Add( hostAddress.HostName );
-				}
-			}
 
-			System.Random random = new Random((int)DateTime.Now.Ticks);
-			int index = random.Next(ipAddresses.Count);
-
-			bool usePipe = (pipeName != null && pipeName.Length != 0);
-			Stream stream = null;
-			for (int i=0; i < ipAddresses.Count; i++)
-			{
-				if (usePipe)
-					stream = CreateNamedPipeStream( (string)hostNames[index] );
-				else
-					stream = CreateSocketStream( (IPAddress)ipAddresses[index], port, false );
-				if (stream != null) return stream;
-
-				index++;
-				if (index == ipAddresses.Count) index = 0;
-			}
+                    foreach (IPAddress address in ipHE.AddressList)
+                    {
+                        stream = CreateSocketStream(address, port, false);
+                        if (stream != null)
+                            break;
+                    }
+                }
+                if (stream != null)
+                    break;
+                index++;
+                if (index == dnsHosts.Length)
+                    index = 0;
+                pos++;
+            }
 
 			return stream;
 		}
@@ -138,30 +135,14 @@ namespace MySql.Data.Common
 
                 ss = unix ?
                     new SocketStream(AddressFamily.Unix, SocketType.Stream, ProtocolType.IP) :
-                    new SocketStream(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                    new SocketStream(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
                 ss.Connect(endPoint, (int)timeOut);
+                return ss;
             }
-            catch (ArgumentOutOfRangeException are)
+            catch (Exception)
             {
-                Logger.LogException(are);
-                ss = null;
+                return null;
             }
-            catch (SocketException se)
-            {
-                Logger.LogException(se);
-                ss = null;
-            }
-            catch (ObjectDisposedException ode)
-            {
-                Logger.LogException(ode);
-                ss = null;
-            }
-            catch (MySqlException me)
-            {
-                Logger.LogException(me);
-                ss = null;
-            }
-            return ss;
         }
  
 	}

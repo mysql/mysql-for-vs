@@ -114,9 +114,9 @@ namespace MySql.Data.Common
 				buff[i] = addr[i];
 
 			int result = NativeMethods.connect(socket.Handle, buff, addr.Size);
-			int wsaerror = NativeMethods.WSAGetLastError();
-			if (wsaerror != 10035)
-				throw new Exception("Error creating MySQLSocket");
+            int wsaerror = NativeMethods.WSAGetLastError();
+            if (wsaerror != 10035)
+                throw new SocketException(wsaerror);
 
 			// next we wait for our connect timeout or until the socket is connected
 			ArrayList write = new ArrayList();

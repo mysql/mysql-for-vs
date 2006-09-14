@@ -491,7 +491,6 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
-    [Explicit]
     public class CommandTestsSharedMemory : CommandTests
     {
         protected override string GetConnectionInfo()
@@ -500,7 +499,6 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
-    [Explicit]
     public class CommandTestsSharedMemoryCompressed : CommandTests
     {
         protected override string GetConnectionInfo()
