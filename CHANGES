@@ -1,8 +1,9 @@
     Bugs fixed
     ----------
 	Bug #21521 # Symbols not allowed in column/table names.    
-    Bug #21874 MySqlException should derive from DbException     
-    
+    Bug #21874 MySqlException should derive from DbException         
+	Bug #22042 mysql-connector-net-5.0.0-alpha BeginTransaction
+	 
     Other changes
     -------------
     Implemented simple local transactions
@@ -14,6 +15,7 @@
     Implemented command canceling for MySQL 5.0.0 and higher
     Fixed problem with executing a Fill after a FillSchema
     Implemented CommandTimeout for non-batch queries
+    Fixed socket create code related to IPv6 (thanks Mark!)
     
 Version 5.0.0.0 (Alpha)
 

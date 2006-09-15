@@ -24,6 +24,7 @@ using System.IO;
 using NUnit.Framework;
 #if NET20
 using System.Transactions;
+using System.Data.Common;
 #endif
 
 namespace MySql.Data.MySqlClient.Tests
@@ -75,6 +76,29 @@ namespace MySql.Data.MySqlClient.Tests
 				if (reader != null) reader.Close();
 			}
 		}
+
+        /// <summary>
+        /// Bug #22042 mysql-connector-net-5.0.0-alpha BeginTransaction 
+        /// </summary>
+        void Bug22042()
+        {
+            DbProviderFactory factory = 
+                new MySql.Data.MySqlClient.MySqlClientFactory();
+            DbConnection conexion = factory.CreateConnection();
+
+            try
+            {
+                conexion.ConnectionString = GetConnectionString(true);
+                conexion.Open();
+                DbTransaction trans = conexion.BeginTransaction();
+                trans.Rollback();
+                conexion.Close();
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
 
 #if NET20
 

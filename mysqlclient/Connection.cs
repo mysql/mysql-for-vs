@@ -430,6 +430,8 @@ namespace MySql.Data.MySqlClient
 
         protected override DbTransaction BeginDbTransaction(IsolationLevel isolationLevel)
         {
+            if (isolationLevel == IsolationLevel.Unspecified)
+                return BeginTransaction();
             return BeginTransaction(isolationLevel);
         }
 
