@@ -368,42 +368,56 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-		[Test]
-		public void ConsecutiveNulls() 
-		{
-			execSQL("INSERT INTO Test (id, name) VALUES (1, 'Test')");
-			execSQL("INSERT INTO Test (id, name) VALUES (2, NULL)");
-			execSQL("INSERT INTO Test (id, name) VALUES (3, 'Test2')");
+        [Test]
+        public void ConsecutiveNulls()
+        {
+            execSQL("INSERT INTO Test (id, name, dt) VALUES (1, 'Test', NULL)");
+            execSQL("INSERT INTO Test (id, name, dt) VALUES (2, NULL, now())");
+            execSQL("INSERT INTO Test (id, name, dt) VALUES (3, 'Test2', NULL)");
 
-			MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test", conn);
-			MySqlDataReader reader = null;
-			try 
-			{
-				reader = cmd.ExecuteReader();
-				reader.Read();
-				Assert.AreEqual(1, reader.GetValue(0));
-				Assert.AreEqual("Test", reader.GetValue(1));
-				Assert.AreEqual("Test", reader.GetString(1));
-				reader.Read();
-				Assert.AreEqual(2, reader.GetValue(0));
-				Assert.AreEqual(DBNull.Value, reader.GetValue(1));
-				reader.Read();
-				Assert.AreEqual(3, reader.GetValue(0));
-				Assert.AreEqual("Test2", reader.GetValue(1));
-				Assert.AreEqual("Test2", reader.GetString(1));
-				Assert.IsFalse(reader.Read());
-				Assert.IsFalse(reader.NextResult());
-			}
-			catch (Exception ex) 
-			{
-				Assert.Fail(ex.Message);
-			}
-			finally 
-			{
-				if (reader != null) reader.Close();
-			}
-
-		}
+            MySqlCommand cmd = new MySqlCommand("SELECT id, name, dt FROM Test", conn);
+            MySqlDataReader reader = null;
+            try
+            {
+                reader = cmd.ExecuteReader();
+                reader.Read();
+                Assert.AreEqual(1, reader.GetValue(0));
+                Assert.AreEqual("Test", reader.GetValue(1));
+                Assert.AreEqual("Test", reader.GetString(1));
+                Assert.AreEqual(DBNull.Value, reader.GetValue(2));
+                reader.Read();
+                Assert.AreEqual(2, reader.GetValue(0));
+                Assert.AreEqual(DBNull.Value, reader.GetValue(1));
+                try
+                {
+                    reader.GetString(1);
+                    Assert.Fail("Should not get here");
+                }
+                catch (Exception) { }
+                Assert.IsFalse(reader.IsDBNull(2));
+                reader.Read();
+                Assert.AreEqual(3, reader.GetValue(0));
+                Assert.AreEqual("Test2", reader.GetValue(1));
+                Assert.AreEqual("Test2", reader.GetString(1));
+                Assert.AreEqual(DBNull.Value, reader.GetValue(2));
+                try
+                {
+                    reader.GetMySqlDateTime(2);
+                    Assert.Fail("Should not get here");
+                }
+                catch (Exception) { }
+                Assert.IsFalse(reader.Read());
+                Assert.IsFalse(reader.NextResult());
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                if (reader != null) reader.Close();
+            }
+        }
 
 		[Test]
 		public void HungDataReader() 
