@@ -116,7 +116,12 @@ namespace MySql.Data.Common
 			int result = NativeMethods.connect(socket.Handle, buff, addr.Size);
             int wsaerror = NativeMethods.WSAGetLastError();
             if (wsaerror != 10035)
+            {
+                //  this is probably an IPV6 address
+                if (wsaerror == 10047)
+                    return false;
                 throw new SocketException(wsaerror);
+            }
 
 			// next we wait for our connect timeout or until the socket is connected
 			ArrayList write = new ArrayList();

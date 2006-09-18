@@ -39,12 +39,10 @@ namespace MySql.Data.MySqlClient
         private byte[] localByte;
         private int inPos;
         private int maxInPos;
-        private int maxBlockSize;
         private ZInputStream zInStream;
 
 		public CompressedStream( Stream baseStream )
 		{
-            maxBlockSize = Int32.MaxValue;
 			this.baseStream = baseStream;
             localByte = new byte[1];
 			cache = new MemoryStream();
@@ -112,33 +110,18 @@ namespace MySql.Data.MySqlClient
 			if ((offset + count) > buffer.Length)
 				throw new ArgumentException(Resources.BufferNotLargeEnough, "buffer");
 
-            int totalRead = 0;
-            while (count > 0)
-            {
-                if (inPos == maxInPos)
-                {
-                    if (maxInPos != 0 && maxInPos < maxBlockSize)
-                        break;
-                    PrepareNextPacket();
-                }
-                int countToRead = Math.Min(count, maxInPos-inPos);
-                int countRead = 0;
-                if (zInStream != null)
-                    countRead = zInStream.read(buffer, offset, countToRead);
-                else
-                    countRead =baseStream.Read(buffer, offset, countToRead);
-                offset += countRead;
-                count -= countRead;
-                inPos += countRead;
-                totalRead += countRead;
-            }
-            
-            // if we have read everything from this packet, then reset maxInPos so 
-            // that the next time we come here we will load another packet
             if (inPos == maxInPos)
-                inPos = maxInPos = 0;
-
-			return totalRead;
+            {
+                PrepareNextPacket();
+            }
+            int countToRead = Math.Min(count, maxInPos-inPos);
+            int countRead = 0;
+            if (zInStream != null)
+                countRead = zInStream.read(buffer, offset, countToRead);
+            else
+                countRead = baseStream.Read(buffer, offset, countToRead);
+            inPos += countRead;
+            return countRead;
 		}
 
         private void PrepareNextPacket()
@@ -161,6 +144,7 @@ namespace MySql.Data.MySqlClient
             else
             {
                 zInStream = new ZInputStream(baseStream);
+                zInStream.maxInput = compressedLength;
             }
 
             inPos = 0;

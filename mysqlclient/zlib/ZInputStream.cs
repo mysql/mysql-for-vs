@@ -47,6 +47,8 @@ namespace zlib
 	
 	public class ZInputStream:System.IO.BinaryReader
 	{
+        public long maxInput;
+
 		private void  InitBlock()
 		{
 			flush = zlibConst.Z_NO_FLUSH;
@@ -141,7 +143,17 @@ namespace zlib
                 {
                     // if buffer is empty and more input is avaiable, refill it
                     z.next_in_index = 0;
-                    z.avail_in = SupportClass.ReadInput(in_Renamed, buf, 0, bufsize); //(bufsize<z.avail_out ? bufsize : z.avail_out));
+
+                    int inToRead = bufsize;
+                    if (maxInput > 0)
+                    {
+                        if (TotalIn < maxInput)
+                            inToRead = (int)(Math.Min(maxInput - TotalIn, (long)bufsize));
+                        else
+                            z.avail_in = -1;
+                    }
+                    if (z.avail_in != -1)
+                        z.avail_in = SupportClass.ReadInput(in_Renamed, buf, 0, inToRead); //(bufsize<z.avail_out ? bufsize : z.avail_out));
                     if (z.avail_in == -1)
                     {
                         z.avail_in = 0;

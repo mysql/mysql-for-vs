@@ -216,9 +216,9 @@ namespace MySql.Data.MySqlClient
 			}
 
 			if (charSet != null)
-				Encoding = CharSetMap.GetEncoding( version, charSet );
+				Encoding = CharSetMap.GetEncoding(version, charSet);
 			else
-				Encoding = CharSetMap.GetEncoding( version, "latin1" );
+				Encoding = CharSetMap.GetEncoding(version, "latin1");
 		}
 
 		/// <summary>

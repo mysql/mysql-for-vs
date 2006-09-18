@@ -136,7 +136,8 @@ namespace MySql.Data.Common
                 ss = unix ?
                     new SocketStream(AddressFamily.Unix, SocketType.Stream, ProtocolType.IP) :
                     new SocketStream(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
-                ss.Connect(endPoint, (int)timeOut);
+                if (!ss.Connect(endPoint, (int)timeOut))
+                    return null;
                 return ss;
             }
             catch (Exception)
