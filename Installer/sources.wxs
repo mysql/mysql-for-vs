@@ -21,7 +21,8 @@
 					<File Id="file12" Name="Field.cs" src="..\mysqlclient\Field.cs" />
 					<File Id="file14" Name="ISSCHE_1.CS" LongName="ISSchemaProvider.cs" src="..\mysqlclient\ISSchemaProvider.cs" />
 					<File Id="file15" Name="Logger.cs" src="..\mysqlclient\Logger.cs" />
-					<File Id="file17" Name="MYSQLD_2.CSP" LongName="MySql.Data.2005.csproj" src="..\mysqlclient\MySql.Data.2005.csproj" />
+          <File Id="file17" Name="MYSQLD_2.CSP" LongName="MySql.Data.2005.csproj" src="..\mysqlclient\MySql.Data.2005.csproj" />
+          <File Id="file42" Name="MYSQLD_3.CSP" LongName="MySql.Data.2003.csproj" src="..\mysqlclient\MySql.Data.2003.csproj" />
 					<File Id="file18" Name="MYSQLC_1.CS" LongName="MySqlClientFactory.cs" src="..\mysqlclient\MySqlClientFactory.cs" />
 					<File Id="file19" Name="MYSQLC_2.CS" LongName="MySqlConnectionStringBuilder.cs" src="..\mysqlclient\MySqlConnectionStringBuilder.cs" />
 					<File Id="file20" Name="MYSQLD_1.CS" LongName="MysqlDefs.cs" src="..\mysqlclient\MysqlDefs.cs" />
@@ -29,7 +30,8 @@
 					<File Id="file22" Name="MYSQLH_1.CS" LongName="MySqlHelper.cs" src="..\mysqlclient\MySqlHelper.cs" />
 					<File Id="file23" Name="MYSQLP_1.CS" LongName="MySqlPool.cs" src="..\mysqlclient\MySqlPool.cs" />
 					<File Id="file24" Name="MYSQLP_2.CS" LongName="MySqlPoolManager.cs" src="..\mysqlclient\MySqlPoolManager.cs" />
-					<File Id="file25" Name="MYSQLS_1.CS" LongName="MySqlStream.cs" src="..\mysqlclient\MySqlStream.cs" />
+          <File Id="file43" Name="MySqlP_3.cs" LongName="MySqlPromotableTransaction.cs" src="..\mysqlclient\MySqlPromotableTransaction.cs" />
+          <File Id="file25" Name="MYSQLS_1.CS" LongName="MySqlStream.cs" src="..\mysqlclient\MySqlStream.cs" />
 					<File Id="file26" Name="NATIVE_1.CS" LongName="NativeDriver.cs" src="..\mysqlclient\NativeDriver.cs" />
 					<File Id="file27" Name="PARAME_1.CS" LongName="parameter.cs" src="..\mysqlclient\parameter.cs" />
 					<File Id="file28" Name="PARAME_2.CS" LongName="parameter_collection.cs" src="..\mysqlclient\parameter_collection.cs" />
@@ -50,8 +52,9 @@
 						<File Id="file181" Name="NATIVE_1.CS" LongName="NativeMethods.cs" src="..\mysqlclient\common\NativeMethods.cs" />
 						<File Id="file182" Name="Platform.cs" src="..\mysqlclient\common\Platform.cs" />
 						<File Id="file184" Name="SHA1.cs" src="..\mysqlclient\common\SHA1.cs" />
-						<File Id="file185" Name="SHARED_1.CS" LongName="SharedMemoryStream.cs" src="..\mysqlclient\common\SharedMemoryStream.cs" />
-						<File Id="file187" Name="STREAM_1.CS" LongName="StreamCreator.cs" src="..\mysqlclient\common\StreamCreator.cs" />
+						<File Id="file185" Name="SHARED_1.cs" LongName="SharedMemoryStream.cs" src="..\mysqlclient\common\SharedMemoryStream.cs" />
+            <File Id="file186" Name="STREAM_1.cs" LongName="StreamCreator.cs" src="..\mysqlclient\common\StreamCreator.cs" />
+            <File Id="file187" Name="Socket_1.cs" LongName="SocketStream.cs" src="..\mysqlclient\common\SocketStream.cs" />
 						<File Id="file188" Name="Version.cs" src="..\mysqlclient\common\Version.cs" />
 						<File Id="file189" Name="WinCE.cs" src="..\mysqlclient\common\WinCE.cs" />
 					</Component>
@@ -94,6 +97,24 @@
 						<File Id="file317" Name="MYSQLV_1.CS" LongName="MySqlValue.cs" src="..\mysqlclient\Types\MySqlValue.cs" />
 					</Component>
 				</Directory>
+        <Directory Id="zlibFolder" Name="zlib">
+          <Component Id="ZLibSrc" DiskId="1" Guid="bf2429da-2580-4b4b-8232-455dfe336576">
+            <File Id="file500" Name="Adler32.cs" src="..\mysqlclient\zlib\Adler32.cs" />
+            <File Id="file501" Name="Deflate.cs" src="..\mysqlclient\zlib\Deflate.cs" />
+            <File Id="file502" Name="InfBlo_1.cs" LongName="InfBlocks.cs" src="..\mysqlclient\zlib\InfBlocks.cs" />
+            <File Id="file503" Name="InfCodes.cs" src="..\mysqlclient\zlib\InfCodes.cs" />
+            <File Id="file504" Name="Inflate.cs" src="..\mysqlclient\zlib\Inflate.cs" />
+            <File Id="file505" Name="InfTree.cs" src="..\mysqlclient\zlib\InfTree.cs" />
+            <File Id="file506" Name="Static_1.cs" LongName="StaticTree.cs" src="..\mysqlclient\zlib\StaticTree.cs" />
+            <File Id="file507" Name="Suppor_1.cs" LongName="SupportClass.cs" src="..\mysqlclient\zlib\SupportClass.cs" />
+            <File Id="file508" Name="Tree.cs" src="..\mysqlclient\zlib\Tree.cs" />
+            <File Id="file509" Name="ZInput_1.cs" LongName="ZInputStream.cs" src="..\mysqlclient\zlib\ZInputStream.cs" />
+            <File Id="file510" Name="Zlib.cs" src="..\mysqlclient\zlib\Zlib.cs" />
+            <File Id="file511" Name="ZOutpu_1.cs" LongName="ZOutputStream.cs" src="..\mysqlclient\zlib\ZOutputStream.cs" />
+            <File Id="file512" Name="ZStream.cs" src="..\mysqlclient\zlib\ZStream.cs" />
+            <File Id="file513" Name="ZStrea_1.cs" LongName="ZStreamException.cs" src="..\mysqlclient\zlib\ZStreamException.cs" />
+          </Component>
+        </Directory>        
 			</Directory>
 			<Directory Id="TestSuite" Name="ts" LongName="TestSuite">
 				<Component Id="TestSuiteSrc" DiskId="1" Guid="a17ca97f-1704-4b50-85e6-d9e727af64fe">
@@ -120,7 +141,8 @@
 					<File Id="file422" Name="LANGUA_1.CS" LongName="LanguageTests.cs" src="..\TestSuite\LanguageTests.cs" />
 					<File Id="file424" Name="MICROP_1.CS" LongName="MicroPerfTests.cs" src="..\TestSuite\MicroPerfTests.cs" />
 					<File Id="file427" Name="MYSQLD_2.CSP" LongName="MySql.Data.Tests.2005.csproj" src="..\TestSuite\MySql.Data.Tests.2005.csproj" />
-					<File Id="file430" Name="MYSQLH_1.CS" LongName="MySqlHelperTests.cs" src="..\TestSuite\MySqlHelperTests.cs" />
+          <File Id="file428" Name="MYSQLD_3.CSP" LongName="MySql.Data.Tests.2003.csproj" src="..\TestSuite\MySql.Data.Tests.2003.csproj" />
+          <File Id="file430" Name="MYSQLH_1.CS" LongName="MySqlHelperTests.cs" src="..\TestSuite\MySqlHelperTests.cs" />
 					<File Id="file431" Name="PARAME_1.CS" LongName="ParameterTests.cs" src="..\TestSuite\ParameterTests.cs" />
 					<File Id="file432" Name="PERFMO_1.CS" LongName="PerfMonTests.cs" src="..\TestSuite\PerfMonTests.cs" />
 					<File Id="file433" Name="POOLIN_1.CS" LongName="PoolingTests.cs" src="..\TestSuite\PoolingTests.cs" />
