@@ -2,7 +2,7 @@
 <project name="MySqlClient" default="allframeworks" xmlns="http://nant.sf.net/schemas/nant-0.84.win32.net-1.0.xsd">
 	<description>MySQLClient Managed Provider for MySQL</description>
 
-	<property name="nunit" value="C:\Program Files\NUnit"/>
+	<property name="nunit" value="C:\Program Files\NUnit-Net-2.0 2.2.8"/>
 	<property name="ncover.executable" value="c:\program files\ncover\ncover.console.exe"/>
 	<property name="fxcop.executable" value="c:\program files\fxcop\fxcopcmd.exe"/>
 
@@ -10,6 +10,7 @@
 	<fileset id="Source">
 		<include name="mysqlclient/common/*.cs"/>
 		<include name="mysqlclient/Types/*.cs"/>
+		<include name="mysqlclient/zlib/*.cs"/>
 		<include name="mysqlclient/*.cs"/>
 	</fileset>
 
@@ -55,7 +56,6 @@
 				<include name="mysqlclient/Resources.resources"/>
 			</resources>
 			<references>
-				<include name="ICSharpCode.SharpZipLib.dll"/>
 				<include name="System.Data.dll"/>		
 				<include name="System.Drawing.dll"/>
 				<include name="System.Transactions.dll"/>
@@ -216,8 +216,8 @@
 	<!-- documentation target -->
 	<target name="Docs" description="Documentation">
 		<ndoc>
-			<assemblies basedir="c:\work\connector-net\trunk\staging\mysqlclient\bin\net-2.0\release">
-				<include name="MySQL.Data.dll" />
+			<assemblies basedir="mysqlclient/bin/${framework}/${buildType}">
+				<include name="MySql.Data.dll" />
 			</assemblies>
 			<summaries>
 				<include name="${build.dir}/mysqlclient/docs/namespace.xml"/>

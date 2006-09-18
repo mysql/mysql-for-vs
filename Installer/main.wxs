@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?define ProductVersion="5.0.0.0"?>
+<?define ProductVersion="5.0.1"?>
 <?define ProductName="MySQL Connector Net $(var.ProductVersion)"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
 	<Product Id="796B0557-FB78-4d62-91DD-B0EB1B5BDC33" Name="$(var.ProductName)" Manufacturer="MySQL" Version="$(var.ProductVersion)" Language="1033">
@@ -7,8 +7,33 @@
 		<Package Id="????????-????-????-????-????????????" Compressed="yes" InstallerVersion="200" Languages="1033" SummaryCodepage="1252" />
 		
 		<Media Id="1" EmbedCab="yes" Cabinet="ConnectorNet.cab" CompressionLevel="high" />
-		
-		<Directory Id="TARGETDIR" Name="SourceDir">
+
+		<!-- Our directory structure -->
+		<Directory Id='TARGETDIR' Name='SourceDir'>
+			<Directory Id='ProgramFilesFolder' Name='PFiles'>
+				<Directory Id='CompanyDir' Name='MySQL'>
+					<Directory Id='INSTALLDIR' Name='Con$(var.ProductVersion)' LongName='$(var.ProductName)'>
+						<Directory Id='Binaries' Name='Binaries'>
+							<Directory Id='BinNet20' Name='NET20' LongName='.NET 2.0'/>
+							<Directory Id='BinNet11' Name='NET11' LongName='.NET 1.1'/>
+							<Directory Id='BinNet10' Name='NET10' LongName='.NET 1.0'/>
+							<Directory Id='Mono10' Name='MONO10' LongName='Mono 1.0'/>
+						</Directory>
+						<Directory Id='DocsDir' Name='Docs' LongName='Documentation'/>
+						<Directory Id='SourceDir' Name='Source'/>
+						<Directory Id='SampleDir' Name='Samples'/>
+					</Directory>
+				</Directory>
+			</Directory>
+			<Directory Id="ProgramMenuFolder" Name="PMFolder">
+				<Directory Id='PMCompanyDir' Name='MySQL'>
+					<Directory Id="ShortCutDir" Name="SCutDir" LongName="$(var.ProductName)"/>
+				</Directory>
+			</Directory>
+		</Directory>
+
+		<!-- Top level junk - readme, changelog, etc -->
+		<DirectoryRef Id='INSTALLDIR'>
 			<Component Id="BaseComponents" Guid="796B0557-FB78-4d62-91DD-B0EB1B5BDC33" DiskId="1">
 				<File Id="ChangeLog" Name="CLog" LongName="CHANGES" src="..\CHANGES" />
 				<File Id="RelNotes" Name="RelNotes" LongName="Release Notes.txt" src="..\Release Notes.txt" />
@@ -20,296 +45,73 @@
 				<Registry Id="LocKey" Root="HKLM" Key="Software\MySQL AB\MySQL Connector/Net $(var.ProductVersion)" Name="Location" Type="string" Value="[TARGETDIR]"/>
 				<Registry Id="VerKey" Root="HKLM" Key="Software\MySQL AB\MySQL Connector/Net $(var.ProductVersion)" Name="Version" Type="string" Value="$(var.ProductVersion)"/>
 			</Component>
-					
-			<!-- binaries folder -->
-			<Directory Id="BinFolder" Name="bin">
-				<Directory Id="Bin20" Name="NET20" LongName=".NET 2.0">
-					<Component Id="Net20" Guid="6462e5d1-a7b0-4020-a110-5d15bf518309">
-						<File Id="CoreBin20" Name="MD20" LongName="MySql.Data.dll" src="..\mysqlclient\bin\net-2.0\$(var.build)\mysql.data.dll" DiskId="1"  />
-						<Registry Id="vs80registry" Root="HKLM" Key="Software\Microsoft\VisualStudio\8.0\AssemblyFolders\MySQL Connector Net $(var.ProductVersion)" Type="string" KeyPath="yes" Value="[TARGETDIR]bin\.NET 2.0\" />
-					</Component>
-				</Directory>
-<!--				<Directory Id="Bin11" Name="NET11" LongName=".NET 1.1">
-					<Component Id="Net11" Guid="b586a8a2-e933-4a34-a93f-8a3918a9f3b8">
-						<File Id="CoreBin11" Name="MD11" LongName="MySql.Data.dll" src="..\bin\net-1.1\$(var.build)\mysql.data.dll" DiskId="1"  />
-						<Registry Id="vs71registry" Root="HKLM" Key="Software\Microsoft\VisualStudio\7.1\AssemblyFolders\MySQL Connector Net $(var.ProductVersion)" Type="string" KeyPath="yes" Value="[TARGETDIR]bin\.NET 1.1\" />
-					</Component>
-				</Directory>
-				<Directory Id="Bin10" Name="NET10" LongName=".NET 1.0">
-					<Component Id="Net10" Guid="02c6b4a1-fdb8-4735-a97e-31e751499b27">
-						<File Id="CoreBin10" Name="MD10" LongName="MySql.Data.dll" src="..\bin\net-1.0\$(var.build)\mysql.data.dll" DiskId="1" />
-						<Registry Id="vs70registry" Root="HKLM" Key="Software\Microsoft\VisualStudio\7.0\AssemblyFolders\MySQL Connector Net $(var.ProductVersion)" Type="string" KeyPath="yes" Value="[TARGETDIR]bin\.NET 1.0\" />
-					</Component>
-				</Directory>
-				<Directory Id="Mono10" Name="MONO10" LongName="Mono 1.0">
-					<Component Id="Mono10" Guid="a81f6e9c-9b66-4ff6-94c1-563304bf7d8f">
-						<File Id="CoreMono10" Name="MOD10" LongName="MySql.Data.dll" src="..\bin\mono-1.0\$(var.build)\mysql.data.dll" DiskId="1" />
-					</Component>
-				</Directory>-->
-<!--				<Component Id="GACFiles20" DiskId="1" Guid="302b607b-2633-4b2c-b3da-476a50574b16">
-					<Condition><![CDATA[REGISTERGAC="1"]]></Condition>
-					<File Id="CoreBin20GAC" Name="MD20" LongName="MySql.Data.dll" src="..\mysqlclient\bin\net-2.0\$(var.build)\mysql.data.dll" Assembly=".net" KeyPath="yes" />
-				</Component>-->
-<!--				<Component Id="GACFiles11" Guid="61a90246-01e8-449a-a59c-afc16938b49f">
-					<Condition><![CDATA[REGISTERGAC="1"]]></Condition>
-					<File Id="CoreBin11GAC" Name="MD11" LongName="MySql.Data.dll" src="..\bin\net-1.1\$(var.build)\mysql.data.dll" DiskId="1" Assembly=".net" KeyPath="yes" />
-				</Component>
-				<Component Id="GACFiles10" Guid="6d61f371-4558-44b0-98ef-f12d2cf14746">
-					<Condition><![CDATA[REGISTERGAC="1"]]></Condition>
-					<File Id="CoreBin10GAC" Name="MD10" LongName="MySql.Data.dll" src="..\bin\net-1.0\$(var.build)\mysql.data.dll" DiskId="1" Assembly=".net" KeyPath="yes" />
-				</Component>-->
-			</Directory>
-					
-			<!-- Samples -->
-			<Directory Id="SamplesFolder" Name="samples">
-				<Directory Id="TableEditor" Name="teditor" LongName="Table Editor">
-					<Directory Id="teCS" Name="cs">
-						<Component Id="teCS" Guid="1c6044bb-0ff4-4e51-b301-6a64dcdf084c">
-							<File Id="teCS1" Name="App.ico" src="..\Samples\TableEditor\cs\App.ico" DiskId="1"/>
-							<File Id="teCS2" Name="AssInfo.cs" LongName="AssemblyInfo.cs" src="..\Samples\TableEditor\cs\AssemblyInfo.cs" DiskId="1"/>
-							<File Id="teCS3" Name="Form1.cs" src="..\Samples\TableEditor\cs\Form1.cs" DiskId="1"/>
-							<File Id="teCS4" Name="Form1.res" LongName="Form1.resx" src="..\Samples\TableEditor\cs\Form1.resx" DiskId="1"/>
-							<File Id="teCS5" Name="te.csp" LongName="TableEditor.csproj" src="..\Samples\TableEditor\cs\TableEditor.csproj" DiskId="1"/>
-							<File Id="teCS7" Name="def.bld" LongName="TableEditor.build" src="..\Samples\TableEditor\cs\TableEditor.build" DiskId="1"/>
-						</Component>
-					</Directory>
-					<Directory Id="teVB" Name="vb">
-						<Component Id="teVB" Guid="150505df-cc43-45f6-962d-a3106fbb8a62">
-							<File Id="teVB2" Name="AssInfo.vb" LongName="AssemblyInfo.vb" src="..\Samples\TableEditor\vb\AssemblyInfo.vb" DiskId="1"/>
-							<File Id="teVB3" Name="Form1.vb" src="..\Samples\TableEditor\vb\Form1.vb" DiskId="1"/>
-							<File Id="teVB4" Name="Form1.res" LongName="Form1.resx" src="..\Samples\TableEditor\vb\Form1.resx" DiskId="1"/>
-							<File Id="teVB5" Name="te.vbp" LongName="TableEditor.vbproj" src="..\Samples\TableEditor\vb\TableEditor.vbproj" DiskId="1"/>
-							<File Id="teVB7" Name="te.bld" LongName="TableEditor.build" src="..\Samples\TableEditor\vb\TableEditor.build" DiskId="1"/>
-						</Component>
-					</Directory>
-				</Directory>
-			</Directory>
-					
-			<!-- docs folder -->
-			<Directory Id="DocsFolder" Name="docs">
-				<Component Id="Docs" Guid="62b88612-0ce5-4ecb-bae2-b84ceb4d3229">
-					<File Id="CoreCHM" Name="Docs" LongName="MySql.Data.chm" src="..\doc\MySql.Data.chm" DiskId="1" />
-				</Component>
-			</Directory>
-					
-			<!-- sources folder -->
-			<Directory Id="srcFolder" Name="src">
-				<Component Id="TopLevelSrc" Guid="431c9afa-babe-4483-8a75-b68264c52d2a">
-					<File Id="nantFile" Name="client.bld" LongName="client.build" src="..\client.build" DiskId="1"/>
-				</Component>
-				<Directory Id="clientFolder" Name="msc" LongName="MySqlClient">
-					<Component Id="ClientSrc" DiskId="1" Guid="e79a81cc-7f4a-420d-a58c-2a90f0b6f372">
-            <File Id="file0" Name="ASSEMB_1.CS" LongName="AssemblyInfo.cs" src="..\mysqlclient\AssemblyInfo.cs" />
-            <File Id="file1" Name="CHARSE_1.CS" LongName="CharSetMap.cs" src="..\mysqlclient\CharSetMap.cs" />
-            <File Id="file2" Name="command.cs" src="..\mysqlclient\command.cs" />
-            <File Id="file3" Name="COMMAN_1.CS" LongName="CommandBuilder.cs" src="..\mysqlclient\CommandBuilder.cs" />
-            <File Id="file4" Name="COMPRE_1.CS" LongName="CompressedStream.cs" src="..\mysqlclient\CompressedStream.cs" />
-            <File Id="file5" Name="CONNEC_1.CS" LongName="Connection.cs" src="..\mysqlclient\Connection.cs" />
-            <File Id="file6" Name="Crypt.cs" src="..\mysqlclient\Crypt.cs" />
-            <File Id="file7" Name="DATAAD_1.CS" LongName="dataadapter.cs" src="..\mysqlclient\dataadapter.cs" />
-            <File Id="file8" Name="DATARE_1.CS" LongName="datareader.cs" src="..\mysqlclient\datareader.cs" />
-            <File Id="file10" Name="Driver.cs" src="..\mysqlclient\Driver.cs" />
-            <File Id="file11" Name="EXCEPT_1.CS" LongName="Exception.cs" src="..\mysqlclient\Exception.cs" />
-            <File Id="file12" Name="Field.cs" src="..\mysqlclient\Field.cs" />
-            <File Id="file14" Name="ISSCHE_1.CS" LongName="ISSchemaProvider.cs" src="..\mysqlclient\ISSchemaProvider.cs" />
-            <File Id="file15" Name="Logger.cs" src="..\mysqlclient\Logger.cs" />
-            <File Id="file17" Name="MYSQLD_2.CSP" LongName="MySql.Data.2005.csproj" src="..\mysqlclient\MySql.Data.2005.csproj" />
-            <File Id="file18" Name="MYSQLC_1.CS" LongName="MySqlClientFactory.cs" src="..\mysqlclient\MySqlClientFactory.cs" />
-            <File Id="file19" Name="MYSQLC_2.CS" LongName="MySqlConnectionStringBuilder.cs" src="..\mysqlclient\MySqlConnectionStringBuilder.cs" />
-            <File Id="file20" Name="MYSQLD_1.CS" LongName="MysqlDefs.cs" src="..\mysqlclient\MysqlDefs.cs" />
-            <File Id="file21" Name="MYSQLE_1.CS" LongName="MySqlError.cs" src="..\mysqlclient\MySqlError.cs" />
-            <File Id="file22" Name="MYSQLH_1.CS" LongName="MySqlHelper.cs" src="..\mysqlclient\MySqlHelper.cs" />
-            <File Id="file23" Name="MYSQLP_1.CS" LongName="MySqlPool.cs" src="..\mysqlclient\MySqlPool.cs" />
-            <File Id="file24" Name="MYSQLP_2.CS" LongName="MySqlPoolManager.cs" src="..\mysqlclient\MySqlPoolManager.cs" />
-            <File Id="file25" Name="MYSQLS_1.CS" LongName="MySqlStream.cs" src="..\mysqlclient\MySqlStream.cs" />
-            <File Id="file26" Name="NATIVE_1.CS" LongName="NativeDriver.cs" src="..\mysqlclient\NativeDriver.cs" />
-            <File Id="file27" Name="PARAME_1.CS" LongName="parameter.cs" src="..\mysqlclient\parameter.cs" />
-            <File Id="file28" Name="PARAME_2.CS" LongName="parameter_collection.cs" src="..\mysqlclient\parameter_collection.cs" />
-            <File Id="file29" Name="PERFOR_1.CS" LongName="PerformanceMonitor.cs" src="..\mysqlclient\PerformanceMonitor.cs" />
-            <File Id="file30" Name="PREPAR_1.CS" LongName="PreparedStatement.cs" src="..\mysqlclient\PreparedStatement.cs" />
-            <File Id="file31" Name="PROCED_1.CS" LongName="ProcedureCache.cs" src="..\mysqlclient\ProcedureCache.cs" />
-            <File Id="file36" Name="RESOUR_1.RES" LongName="Resources.resx" src="..\mysqlclient\Resources.resx" />
-            <File Id="file37" Name="SCHEMA_1.CS" LongName="SchemaProvider.cs" src="..\mysqlclient\SchemaProvider.cs" />
-            <File Id="file38" Name="STATEM_1.CS" LongName="Statement.cs" src="..\mysqlclient\Statement.cs" />
-            <File Id="file39" Name="STORED_1.CS" LongName="StoredProcedure.cs" src="..\mysqlclient\StoredProcedure.cs" />
-            <File Id="file40" Name="TRANSA_1.CS" LongName="transaction.cs" src="..\mysqlclient\transaction.cs" />
-            <File Id="file41" Name="USAGEA_1.CS" LongName="UsageAdvisor.cs" src="..\mysqlclient\UsageAdvisor.cs" />
-          </Component>
-					<Directory Id="commonFolder" Name="Common">
-						<Component Id="CommonSrc"  DiskId="1" Guid="88ed3210-b947-4536-9d31-aeb9fcab2316">
-              <File Id="file179" Name="CONTEX_1.CS" LongName="ContextString.cs" src="..\mysqlclient\common\ContextString.cs" />
-              <File Id="file180" Name="NAMEDP_1.CS" LongName="NamedPipeStream.cs" src="..\mysqlclient\common\NamedPipeStream.cs" />
-              <File Id="file181" Name="NATIVE_1.CS" LongName="NativeMethods.cs" src="..\mysqlclient\common\NativeMethods.cs" />
-              <File Id="file182" Name="Platform.cs" src="..\mysqlclient\common\Platform.cs" />
-              <File Id="file183" Name="RESOUR_1.CS" LongName="Resources.cs" src="..\mysqlclient\common\Resources.cs" />
-              <File Id="file184" Name="SHA1.cs" src="..\mysqlclient\common\SHA1.cs" />
-              <File Id="file185" Name="SHARED_1.CS" LongName="SharedMemoryStream.cs" src="..\mysqlclient\common\SharedMemoryStream.cs" />
-              <File Id="file187" Name="STREAM_1.CS" LongName="StreamCreator.cs" src="..\mysqlclient\common\StreamCreator.cs" />
-              <File Id="file188" Name="Version.cs" src="..\mysqlclient\common\Version.cs" />
-              <File Id="file189" Name="WinCE.cs" src="..\mysqlclient\common\WinCE.cs" />
-            </Component>
-					</Directory>
-					<Directory Id="docSrcFolder" Name="Docs">
-						<Component Id="DocsSrc" DiskId="1" Guid="212bf5d7-db43-411d-9abc-ba4e54017abf">
-              <File Id="file245" Name="MYSQLC_1.XML" LongName="MySqlCommand.xml" src="..\mysqlclient\docs\MySqlCommand.xml" />
-              <File Id="file246" Name="MYSQLC_2.XML" LongName="MySqlCommandBuilder.xml" src="..\mysqlclient\docs\MySqlCommandBuilder.xml" />
-              <File Id="file247" Name="MYSQLC_3.XML" LongName="MySqlConnection.xml" src="..\mysqlclient\docs\MySqlConnection.xml" />
-              <File Id="file248" Name="MYSQLC_4.XML" LongName="MySqlConnectionStringBuilder.xml" src="..\mysqlclient\docs\MySqlConnectionStringBuilder.xml" />
-              <File Id="file249" Name="MYSQLD_1.XML" LongName="MySqlDataAdapter.xml" src="..\mysqlclient\docs\MySqlDataAdapter.xml" />
-              <File Id="file250" Name="MYSQLD_2.XML" LongName="MySqlDataReader.xml" src="..\mysqlclient\docs\MySqlDataReader.xml" />
-              <File Id="file251" Name="MYSQLE_1.XML" LongName="MySqlException.xml" src="..\mysqlclient\docs\MySqlException.xml" />
-              <File Id="file252" Name="MYSQLH_1.XML" LongName="MySqlHelper.xml" src="..\mysqlclient\docs\MySqlHelper.xml" />
-              <File Id="file253" Name="MYSQLP_1.XML" LongName="MySqlParameter.xml" src="..\mysqlclient\docs\MySqlParameter.xml" />
-              <File Id="file254" Name="MYSQLP_2.XML" LongName="MySqlParameterCollection.xml" src="..\mysqlclient\docs\MySqlParameterCollection.xml" />
-              <File Id="file255" Name="MYSQLT_1.XML" LongName="MySqlTransaction.xml" src="..\mysqlclient\docs\MySqlTransaction.xml" />
-            </Component>
-					</Directory>
-					<Directory Id="typesFolder" Name="Types">
-						<Component Id="TypesSrc" DiskId="1" Guid="bf2429da-2580-4b4b-8232-455dfe336576">
-              <File Id="file299" Name="MetaData.cs" src="..\mysqlclient\Types\MetaData.cs" />
-              <File Id="file300" Name="MYSQLB_1.CS" LongName="MySqlBinary.cs" src="..\mysqlclient\Types\MySqlBinary.cs" />
-              <File Id="file301" Name="MySqlBit.cs" src="..\mysqlclient\Types\MySqlBit.cs" />
-              <File Id="file302" Name="MYSQLB_2.CS" LongName="MySqlByte.cs" src="..\mysqlclient\Types\MySqlByte.cs" />
-              <File Id="file303" Name="MYSQLC_1.CS" LongName="MySqlConversionException.cs" src="..\mysqlclient\Types\MySqlConversionException.cs" />
-              <File Id="file304" Name="MYSQLD_1.CS" LongName="MySqlDateTime.cs" src="..\mysqlclient\Types\MySqlDateTime.cs" />
-              <File Id="file305" Name="MYSQLD_2.CS" LongName="MySqlDecimal.cs" src="..\mysqlclient\Types\MySqlDecimal.cs" />
-              <File Id="file306" Name="MYSQLD_3.CS" LongName="MySqlDouble.cs" src="..\mysqlclient\Types\MySqlDouble.cs" />
-              <File Id="file307" Name="MYSQLI_1.CS" LongName="MySqlInt16.cs" src="..\mysqlclient\Types\MySqlInt16.cs" />
-              <File Id="file308" Name="MYSQLI_2.CS" LongName="MySqlInt32.cs" src="..\mysqlclient\Types\MySqlInt32.cs" />
-              <File Id="file309" Name="MYSQLI_3.CS" LongName="MySqlInt64.cs" src="..\mysqlclient\Types\MySqlInt64.cs" />
-              <File Id="file310" Name="MYSQLS_1.CS" LongName="MySqlSingle.cs" src="..\mysqlclient\Types\MySqlSingle.cs" />
-              <File Id="file311" Name="MYSQLS_2.CS" LongName="MySqlString.cs" src="..\mysqlclient\Types\MySqlString.cs" />
-              <File Id="file312" Name="MYSQLT_1.CS" LongName="MySqlTime.cs" src="..\mysqlclient\Types\MySqlTime.cs" />
-              <File Id="file313" Name="MYSQLU_1.CS" LongName="MySqlUByte.cs" src="..\mysqlclient\Types\MySqlUByte.cs" />
-              <File Id="file314" Name="MYSQLU_2.CS" LongName="MySqlUInt16.cs" src="..\mysqlclient\Types\MySqlUInt16.cs" />
-              <File Id="file315" Name="MYSQLU_3.CS" LongName="MySqlUInt32.cs" src="..\mysqlclient\Types\MySqlUInt32.cs" />
-              <File Id="file316" Name="MYSQLU_4.CS" LongName="MySqlUInt64.cs" src="..\mysqlclient\Types\MySqlUInt64.cs" />
-              <File Id="file317" Name="MYSQLV_1.CS" LongName="MySqlValue.cs" src="..\mysqlclient\Types\MySqlValue.cs" />
-            </Component>
-					</Directory>
-					
-				</Directory>
-						
-				<Directory Id="TestSuite" Name="ts" LongName="TestSuite">
-					<Component Id="TestSuiteSrc" DiskId="1" Guid="a17ca97f-1704-4b50-85e6-d9e727af64fe">
-            <File Id="file400" Name="APP_1.CON" LongName="App.config" src="..\TestSuite\App.config" />
-            <File Id="file401" Name="ASSEMB_1.CS" LongName="AssemblyInfo.cs" src="..\TestSuite\AssemblyInfo.cs" />
-            <File Id="file402" Name="ASYNCT_1.CS" LongName="AsyncTests.cs" src="..\TestSuite\AsyncTests.cs" />
-            <File Id="file403" Name="BaseTest.cs" src="..\TestSuite\BaseTest.cs" />
-            <File Id="file404" Name="BLOBTE_1.CS" LongName="BlobTests.cs" src="..\TestSuite\BlobTests.cs" />
-            <File Id="file405" Name="CHARAC_1.CS" LongName="CharacterSetTests.cs" src="..\TestSuite\CharacterSetTests.cs" />
-            <File Id="file406" Name="COMMAN_1.CS" LongName="CommandBuilderTests.cs" src="..\TestSuite\CommandBuilderTests.cs" />
-            <File Id="file407" Name="COMMAN_2.CS" LongName="CommandTests.cs" src="..\TestSuite\CommandTests.cs" />
-            <File Id="file408" Name="CONNEC_1.CS" LongName="ConnectionTests.cs" src="..\TestSuite\ConnectionTests.cs" />
-            <File Id="file409" Name="CULTUR_1.CS" LongName="CultureTests.cs" src="..\TestSuite\CultureTests.cs" />
-            <File Id="file410" Name="CURSOR_1.CS" LongName="CursorTests.cs" src="..\TestSuite\CursorTests.cs" />
-            <File Id="file411" Name="DATAAD_1.CS" LongName="DataAdapterTests.cs" src="..\TestSuite\DataAdapterTests.cs" />
-            <File Id="file412" Name="DATARE_1.CS" LongName="DataReaderTests.cs" src="..\TestSuite\DataReaderTests.cs" />
-            <File Id="file413" Name="DATASE_1.CS" LongName="DataSetTest.cs" src="..\TestSuite\DataSetTest.cs" />
-            <File Id="file414" Name="DATATY_1.CS" LongName="DataTypeTests.cs" src="..\TestSuite\DataTypeTests.cs" />
-            <File Id="file415" Name="DATETI_1.CS" LongName="DateTimeTests.cs" src="..\TestSuite\DateTimeTests.cs" />
-            <File Id="file416" Name="EVENTT_1.CS" LongName="EventTests.cs" src="..\TestSuite\EventTests.cs" />
-            <File Id="file418" Name="EXCEPT_1.CS" LongName="ExceptionTests.cs" src="..\TestSuite\ExceptionTests.cs" />
-            <File Id="file420" Name="GETSCH_1.CS" LongName="GetSchemaTests.cs" src="..\TestSuite\GetSchemaTests.cs" />
-            <File Id="file421" Name="INTERF_1.CS" LongName="InterfaceTests.cs" src="..\TestSuite\InterfaceTests.cs" />
-            <File Id="file422" Name="LANGUA_1.CS" LongName="LanguageTests.cs" src="..\TestSuite\LanguageTests.cs" />
-            <File Id="file424" Name="MICROP_1.CS" LongName="MicroPerfTests.cs" src="..\TestSuite\MicroPerfTests.cs" />
-            <File Id="file427" Name="MYSQLD_2.CSP" LongName="MySql.Data.Tests.2005.csproj" src="..\TestSuite\MySql.Data.Tests.2005.csproj" />
-            <File Id="file430" Name="MYSQLH_1.CS" LongName="MySqlHelperTests.cs" src="..\TestSuite\MySqlHelperTests.cs" />
-            <File Id="file431" Name="PARAME_1.CS" LongName="ParameterTests.cs" src="..\TestSuite\ParameterTests.cs" />
-            <File Id="file432" Name="PERFMO_1.CS" LongName="PerfMonTests.cs" src="..\TestSuite\PerfMonTests.cs" />
-            <File Id="file433" Name="POOLIN_1.CS" LongName="PoolingTests.cs" src="..\TestSuite\PoolingTests.cs" />
-            <File Id="file434" Name="PREPAR_1.CS" LongName="PreparedStatements.cs" src="..\TestSuite\PreparedStatements.cs" />
-            <File Id="file435" Name="STORED_1.CS" LongName="StoredProcedure.cs" src="..\TestSuite\StoredProcedure.cs" />
-            <File Id="file436" Name="STRESS_1.CS" LongName="StressTests.cs" src="..\TestSuite\StressTests.cs" />
-            <File Id="file437" Name="Syntax.cs" src="..\TestSuite\Syntax.cs" />
-            <File Id="file438" Name="THREAD_1.CS" LongName="Threading.cs" src="..\TestSuite\Threading.cs" />
-            <File Id="file439" Name="TRANSA_1.CS" LongName="Transactions.cs" src="..\TestSuite\Transactions.cs" />
-            <File Id="file440" Name="USAGEA_1.CS" LongName="UsageAdvisor.cs" src="..\TestSuite\UsageAdvisor.cs" />
-            <File Id="file441" Name="Utils.cs" src="..\TestSuite\Utils.cs" />
-          </Component>
-				</Directory>
-			</Directory>
+		</DirectoryRef>
+			
+		<!-- .Net 2.0 Binaries -->
+		<DirectoryRef Id='BinNet20'>
+			<Component Id="Net20" Guid="6462e5d1-a7b0-4020-a110-5d15bf518309">
+				<File Id="CoreBin20" Name="MD20" LongName="MySql.Data.dll" src="..\mysqlclient\bin\net-2.0\$(var.build)\mysql.data.dll" DiskId="1"  />
+				<Registry Id="vs80registry" Root="HKLM" Key="Software\Microsoft\VisualStudio\8.0\AssemblyFolders\MySQL Connector Net $(var.ProductVersion)" Type="string" KeyPath="yes" Value="[TARGETDIR]bin\.NET 2.0\" />
+			</Component>
+			<Component Id="GAC20" DiskId="1" Guid="302b607b-2633-4b2c-b3da-476a50574b16">
+				<Condition><![CDATA[REGISTERGAC="1"]]></Condition>
+				<File Id="CoreBin20GAC" Name="MD20" LongName="MySql.Data.dll" src="..\mysqlclient\bin\net-2.0\$(var.build)\mysql.data.dll" Assembly=".net" KeyPath="yes" />
+			</Component>
+		</DirectoryRef>
 
-			<Directory Id="ProgramMenuFolder" Name="PMFolder">
-				<Directory Id="ShortCutDir" Name="SCutDir" LongName="$(var.ProductName)"/>
-					<Component Id="StartMenuComponent" Guid="e0685a46-8c07-41eb-8155-77c109cb5a1d">
-						<Condition><![CDATA[CREATESTARTMENU="1"]]></Condition>
-						<Shortcut Id="S100" Name="Docs" LongName="Documentation" 
-							Description="Complete documentation for the connector" 
-							Target="[#CoreCHM]" Directory="ShortCutDir" /> 
-						<Shortcut Id="S101" Name="Changes" LongName="ChangeLog" 
-							Description="Complete changelog for the connector" Directory="ShortCutDir" 
-							Icon="ChangeLogIcon" Target="[#ChangeLog]"/>
-            <Shortcut Id="S102" Name="Release" LongName="Release Notes" 
-							Description="Release notes" Directory="ShortCutDir" Target="[#RelNotes]"/>
-          </Component>
-			</Directory> 
-		</Directory>		
+		<!-- Start menu junk -->
+		<DirectoryRef Id='ShortCutDir'>
+			<Component Id="StartMenuComponent" Guid="e0685a46-8c07-41eb-8155-77c109cb5a1d">
+				<Condition><![CDATA[CREATESTARTMENU="1"]]></Condition>
+				<Shortcut Id="S100" Name="Docs" LongName="Documentation" 
+					Description="Complete documentation for the connector" 
+					Target="[#CoreCHM]" Directory="ShortCutDir" /> 
+				<Shortcut Id="S101" Name="Changes" LongName="ChangeLog" 
+					Description="Complete changelog for the connector" Directory="ShortCutDir" 
+					Icon="ChangeLogIcon" Target="[#ChangeLog]"/>
+				<Shortcut Id="S102" Name="Release" LongName="Release Notes" 
+					Description="Release notes" Directory="ShortCutDir" Target="[#RelNotes]"/>
+			</Component>
+		</DirectoryRef>		
 
+		<DirectoryRef Id='DocsDir'>
+			<Component Id="Docs" Guid="62b88612-0ce5-4ecb-bae2-b84ceb4d3229">
+				<File Id="CoreCHM" Name="Docs" LongName="MySql.Data.chm" src="..\doc\MySql.Data.chm" DiskId="1" />
+			</Component>
+		</DirectoryRef>
 		
-		<Feature Id="CoreComponents" Level="1" Title="Core Components" Description="Core connector assemblies" 
-			ConfigurableDirectory="TARGETDIR">
+		<Feature Id="CoreComponents" Level="1" Title="Core Components" Description="Core Desc" Display="hidden">
 			<ComponentRef Id="BaseComponents"/>
-			<ComponentRef Id="Net20"/>
-<!--			<ComponentRef Id="Net11"/>
-			<ComponentRef Id="Net10"/>
-			<ComponentRef Id="Mono10"/> -->
 			<ComponentRef Id="StartMenuComponent"/>
-			<!--<ComponentRef Id="GACFiles11"/>
-			<ComponentRef Id="GACFiles10"/>
-      <ComponentRef Id="GACFiles20"/>-->
-		</Feature>
-
-		<Feature Id="Docs" Level="1" Title="Documentation" Description="Help files and other documentation" ConfigurableDirectory="TARGETDIR">
-			<ComponentRef Id="Docs"/>
 		</Feature>
 		
-		<Feature Id="Samples" Level="1" Title="Sample Programs" Description="Sample Programs" ConfigurableDirectory="TARGETDIR">
-			<ComponentRef Id="teCS"/>
-			<ComponentRef Id="teVB"/>
+		<Feature Id="SupportedAssemblies" Level="1" Title="Supported Frameworks" 
+			ConfigurableDirectory="INSTALLDIR" Absent="disallow"
+			Description="Frameworks that will be supported.">
+				<Feature Id="FeatureNet10" Level='0' Title=".NET 1.0">
+					<!--<ComponentRef Id="Net10"/>-->
+					<!--<ComponentRef Id="GACFiles10"/>-->
+				</Feature>
+				<Feature Id="FeatureNet11" Level='0' Title=".NET 1.1">
+					<!--<ComponentRef Id="Net11"/>-->
+					<!--<ComponentRef Id="GACFiles11"/>-->
+				</Feature>
+				<Feature Id="FeatureNet20" Level='1' Title=".NET 2.0">
+					<ComponentRef Id="Net20"/>
+					<ComponentRef Id="GAC20"/>
+				</Feature>
 		</Feature>
 
-		<Feature Id="SourceCode" Level="1" Title="Source Code" Description="Source code to all assemblies and the test suite" ConfigurableDirectory="TARGETDIR">
-			<ComponentRef Id="TopLevelSrc"/>
-			<ComponentRef Id="ClientSrc"/>
-			<ComponentRef Id="CommonSrc"/>
-			<ComponentRef Id="DocsSrc"/>
-			<ComponentRef Id="TypesSrc"/>
-			<ComponentRef Id="TestSuiteSrc"/>
+		<Feature Id='DocsFeature' Level='1' Title='Documentation' Description='Documentation'>
+			<ComponentRef Id='Docs'/>
 		</Feature>
-		
-		<CustomAction Id="DIRCA_TARGETDIR" Property="TARGETDIR" Value="[ProgramFilesFolder][Manufacturer]\[ProductName]" Execute="firstSequence" />
-		<CustomAction Id="SetProp_CREATESTARTMENU" Property="CREATESTARTMENU" Value="1" Execute="firstSequence" />
-		<CustomAction Id="SetProp_REGISTERGAC" Property="REGISTERGAC" Value="1" Execute="firstSequence" />
-		
-		<InstallUISequence>
-			<Custom Action="DIRCA_TARGETDIR" After="ValidateProductID"><![CDATA[TARGETDIR=""]]></Custom>
-			<Custom Action="SetProp_CREATESTARTMENU" After="DIRCA_TARGETDIR"></Custom>
-			<Custom Action="SetProp_REGISTERGAC" After="SetProp_CREATESTARTMENU"></Custom>
-			<Show Dialog="FatalError" OnExit="error" />
-			<Show Dialog="UserExit" OnExit="cancel" />
-			<Show Dialog="ExitDialog" OnExit="success" />
-			<Show Dialog="PrepareDlg" After="LaunchConditions" />
-			<Show Dialog="WelcomeDlg" After="MigrateFeatureStates"><![CDATA[NOT Installed]]></Show>
-			<Show Dialog="ResumeDlg" After="WelcomeDlg"><![CDATA[Installed AND (RESUME OR Preselected)]]></Show>
-			<Show Dialog="MaintenanceWelcomeDlg" After="ResumeDlg"><![CDATA[Installed AND NOT RESUME AND NOT Preselected]]></Show>
-			<Show Dialog="ProgressDlg" After="MaintenanceWelcomeDlg" />
-		</InstallUISequence>
-		
 
-		<AdminUISequence>
-			<Custom Action="DIRCA_TARGETDIR" Before="CostInitialize"><![CDATA[TARGETDIR=""]]></Custom>
-			<Custom Action="SetProp_CREATESTARTMENU" After="DIRCA_TARGETDIR"></Custom>
-			<Custom Action="SetProp_REGISTERGAC" After="SetProp_CREATESTARTMENU"></Custom>
-			<Show Dialog="FatalError" OnExit="error" />
-			<Show Dialog="UserExit" OnExit="cancel" />
-			<Show Dialog="ExitDialog" OnExit="success" />
-			<Show Dialog="PrepareDlg" Before="CostInitialize"><![CDATA[]]></Show>
-			<Show Dialog="AdminWelcomeDlg" After="CostFinalize" />
-			<Show Dialog="ProgressDlg" After="AdminWelcomeDlg" />
-		</AdminUISequence>
+		<FeatureRef Id="Samples"/>
+		<FeatureRef Id="Sources"/>
 
-		<Icon Id="ChangeLogIcon" src="Binary\document.ico"/>
+		<Property Id="WIXUI_INSTALLDIR" Value='INSTALLDIR'/>
+		<UIRef Id="WixUI_Mondo"/>
+
+		<Icon Id="ChangeLogIcon" src="Bitmaps\document.ico"/>
 	</Product>
 </Wix>

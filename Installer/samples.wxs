@@ -1,0 +1,40 @@
+<?xml version="1.0"?> 
+<Wix xmlns='http://schemas.microsoft.com/wix/2003/01/wi'> 
+   <Fragment Id='SamplesFragment'> 
+    <DirectoryRef Id='SampleDir'> 
+		<Directory Id="TableEditor" Name="teditor" LongName="Table Editor">
+			<Directory Id="teCS" Name="cs">
+				<Component Id="Sample1CS" Guid="1c6044bb-0ff4-4e51-b301-6a64dcdf084c">
+					<File Id="teCS1" Name="App.ico" src="..\Samples\TableEditor\cs\App.ico" DiskId="1"/>
+					<File Id="teCS2" Name="AssInfo.cs" LongName="AssemblyInfo.cs" src="..\Samples\TableEditor\cs\AssemblyInfo.cs" DiskId="1"/>
+					<File Id="teCS3" Name="Form1.cs" src="..\Samples\TableEditor\cs\Form1.cs" DiskId="1"/>
+					<File Id="teCS4" Name="Form1.res" LongName="Form1.resx" src="..\Samples\TableEditor\cs\Form1.resx" DiskId="1"/>
+					<File Id="teCS5" Name="te.csp" LongName="TableEditor.csproj" src="..\Samples\TableEditor\cs\TableEditor.csproj" DiskId="1"/>
+					<File Id="teCS7" Name="def.bld" LongName="TableEditor.build" src="..\Samples\TableEditor\cs\TableEditor.build" DiskId="1"/>
+				</Component>
+			</Directory>
+			<Directory Id="teVB" Name="vb">
+				<Component Id="Sample1VB" Guid="1c6044bb-0ff4-4e51-b301-6a64dcdf084c">
+					<File Id="teVB2" Name="AssInfo.vb" LongName="AssemblyInfo.vb" src="..\Samples\TableEditor\vb\AssemblyInfo.vb" DiskId="1"/>
+					<File Id="teVB3" Name="Form1.vb" src="..\Samples\TableEditor\vb\Form1.vb" DiskId="1"/>
+					<File Id="teVB4" Name="Form1.res" LongName="Form1.resx" src="..\Samples\TableEditor\vb\Form1.resx" DiskId="1"/>
+					<File Id="teVB5" Name="te.vbp" LongName="TableEditor.vbproj" src="..\Samples\TableEditor\vb\TableEditor.vbproj" DiskId="1"/>
+					<File Id="teVB7" Name="te.bld" LongName="TableEditor.build" src="..\Samples\TableEditor\vb\TableEditor.build" DiskId="1"/>
+				</Component>
+			</Directory>
+		</Directory>
+    </DirectoryRef> 
+
+	<Feature Id='Samples' Level='1' Title='Samples' Description='Sample Applications'>
+		<Feature Id='CSSamples' Level='1' Title='CSharp' Description='Sample CSharp Applications' InstallDefault='local'>
+			<ComponentRef Id='Sample1CS'/>
+		</Feature>
+		<Feature Id='VBSamples' Level='1' Title='Visual Basic' Description='Sample Visual Basic Applications' InstallDefault='local'>
+			<ComponentRef Id='Sample1VB'/>
+		</Feature>
+	</Feature>
+
+	</Fragment> 
+</Wix> 
+
+

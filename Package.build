@@ -7,16 +7,18 @@
 	<!-- filesets -->
 	<fileset id="BaseSource">
 		<include name="mysqlclient/*.cs"/>
-    <include name="mysqlclient/*.resx"/>
-    <include name="mysqlclient/common/*.cs"/>
-    <include name="mysqlclient/types/*.cs"/>
-    <include name="mysqlclient/docs/*"/>
-    <include name="mysqlclient/*.csproj"/>
+		<include name="mysqlclient/*.resx"/>
+		<include name="mysqlclient/common/*.cs"/>
+		<include name="mysqlclient/types/*.cs"/>
+		<include name="mysqlclient/zlib/*.cs"/>
+		<include name="mysqlclient/docs/*"/>
+		<include name="mysqlclient/*.csproj"/>
+		<include name="installer/*"/>
 		<include name="testsuite/**"/>
 		<include name="Client.build"/>
 		<include name="CHANGES"/>
 		<include name="README"/>
-    <include name="Release Notes.txt"/>
+		<include name="Release Notes.txt"/>
 		<include name="MySql.Data.csproj"/>
 		<include name="Samples/**" />
 	</fileset>
@@ -34,17 +36,8 @@
 	<delete dir="packages" failonerror="false"/>
 	<mkdir dir="packages"/>
 
-
-
 	<!-- packaging targets -->
 	<target name="all" depends="GPL, Commercial"/>
-
-<!--	<target name="AuthNoSSL">
-		<property name="defines" value="FINAL,AUTHENTICATED" />
-		<property name="IsGPL" value="false"/>
-		<property name="postfix" value="-com-auth"/>
-		<call target="package"/>
-	</target>-->
 	
 	<target name="Commercial">
 		<property name="defines" value="FINAL" />
@@ -68,12 +61,13 @@
 		<copy todir="staging"><fileset refid="BaseSource"/></copy>
 		<copy if="${IsGPL}" todir="staging"><fileset refid="SourceGPL"/></copy>
 		<copy unless="${IsGPL}" todir="staging"><fileset refid="SourceCommercial"/></copy>
+		<move if="${IsGPL}" file="staging/installer/GPL.rtf" tofile="staging/installer/License.rtf"/>
+		<move unless="${IsGPL}" file="staging/installer/EULA.rtf" tofile="staging/installer/License.rtf"/>
 		
 		<copy todir="staging">
 			<fileset>
 				<include name="Installer/main.wxs"/>
-				<include name="Installer/ui.wxs"/>
-				<include name="Installer/binary/*.*"/>
+				<include name="Installer/Bitmaps/*.*"/>
 			</fileset>
 		</copy>
 		
@@ -96,9 +90,10 @@
 
       <!-- now build the WIX installer -->
 		<exec workingdir="staging/Installer" program="candle" commandline="-dIsGPL=${IsGPL} -dbuild=release main.wxs"/>
-		<exec workingdir="staging/Installer" program="candle" commandline="ui.wxs"/>
+		<exec workingdir="staging/Installer" program="candle" commandline="samples.wxs"/>
+		<exec workingdir="staging/Installer" program="candle" commandline="sources.wxs"/>
 		<exec workingdir="staging/Installer" program="light" 
-			commandline="-out MySql.Data.msi main.wixobj ui.wixobj"/>
+			commandline='main.wixobj samples.wixobj sources "${WIXPATH}/WixUI.wixlib" -loc "${WIXPATH}/WixUI_en-us.wxl" -out MySql.Data.msi'/>
 
 		<zip zipfile="packages/mysql-connector-net-${ver}${postfix}.zip">
 			<fileset basedir="staging/Installer"><include name="MySql.Data.msi"/></fileset>
