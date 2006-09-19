@@ -23,12 +23,24 @@
 				</Component>
 			</Directory>
 		</Directory>
+      <Directory Id="Async" Name="Async">
+        <Directory Id="asyncCS" Name="cs">
+          <Component Id="Sample2CS" Guid="1c6044bb-0ff4-4e51-b301-6a64dcdf084c">
+            <File Id="sample2file1" Name="App.ico" src="..\Samples\Async\cs\App.ico" DiskId="1"/>
+            <File Id="sample2file2" Name="AssInfo.cs" LongName="AssemblyInfo.cs" src="..\Samples\Async\cs\AssemblyInfo.cs" DiskId="1"/>
+            <File Id="sample2file3" Name="Form1.cs" src="..\Samples\Async\cs\Form1.cs" DiskId="1"/>
+            <File Id="sample2file4" Name="Form1.res" src="..\Samples\Async\cs\Form1.resx" DiskId="1"/>
+            <File Id="sample2file5" Name="Async.csp" LongName="Async.csproj" src="..\Samples\Async\cs\Async.csproj" DiskId="1"/>
+          </Component>
+        </Directory>
+      </Directory>
     </DirectoryRef> 
 
 	<Feature Id='Samples' Level='1' Title='Samples' Description='Sample Applications'>
 		<Feature Id='CSSamples' Level='1' Title='CSharp' Description='Sample CSharp Applications' InstallDefault='local'>
 			<ComponentRef Id='Sample1CS'/>
-		</Feature>
+      <ComponentRef Id='Sample2CS'/>
+    </Feature>
 		<Feature Id='VBSamples' Level='1' Title='Visual Basic' Description='Sample Visual Basic Applications' InstallDefault='local'>
 			<ComponentRef Id='Sample1VB'/>
 		</Feature>
