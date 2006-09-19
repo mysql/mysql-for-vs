@@ -22,13 +22,16 @@ using System;
 using System.Data;
 using MySql.Data.MySqlClient;
 using NUnit.Framework;
+using System.Threading;
+using System.Globalization;
 
 namespace MySql.Data.MySqlClient.Tests
 {
 	/// <summary>
 	/// Summary description for StoredProcedure.
 	/// </summary>
-	[TestFixture]
+	[Category("5.0")]
+    [TestFixture]
 	public class StoredProcedure : BaseTest
 	{
 		private static string fillError = null;
@@ -872,6 +875,96 @@ namespace MySql.Data.MySqlClient.Tests
             {
                 if (reader != null)
                     reader.Close();
+            }
+        }
+
+        /// <summary>
+        /// Bug #17046 Null pointer access when stored procedure is used 
+        /// </summary>
+        [Test]
+        public void PreparedReader()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE  test (id int(10) unsigned NOT NULL default '0', " +
+                "val int(10) unsigned default NULL, PRIMARY KEY (id)) " +
+                "ENGINE=InnoDB DEFAULT CHARSET=utf8");
+            execSQL("CREATE PROCEDURE spTest (IN pp INTEGER) " +
+                    "select * from test where id > pp ");
+
+            MySqlCommand c = new MySqlCommand("spTest", conn);
+            c.CommandType = CommandType.StoredProcedure;
+            IDataParameter p = c.CreateParameter();
+            p.ParameterName = "pp";
+            p.Value = 10;
+            c.Parameters.Add(p);
+            c.Prepare();
+            MySqlDataReader reader = null;
+            try
+            {
+                reader = c.ExecuteReader();
+                while (reader.Read())
+                {
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                if (reader != null)
+                    reader.Close();
+            }
+        }
+
+        [Test]
+        public void UnsignedOutputParameters()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE  test (id INT(10) UNSIGNED AUTO_INCREMENT, PRIMARY KEY (id)) ");
+            execSQL("CREATE PROCEDURE spTest (OUT id BIGINT UNSIGNED) " +
+                    "BEGIN INSERT INTO test VALUES (NULL); SET id=LAST_INSERT_ID(); END");
+
+            MySqlCommand cmd = new MySqlCommand("spTest", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("?id", MySqlDbType.UInt64);
+            cmd.Parameters[0].Direction = ParameterDirection.Output;
+            cmd.ExecuteNonQuery();
+
+            object o = cmd.Parameters[0].Value;
+            Assert.IsTrue(o is ulong);
+            Assert.AreEqual(1, o);
+        }
+
+        /// <summary>
+        /// Bug #22452 MySql.Data.MySqlClient.MySqlException: 
+        /// </summary>
+        [Category("5.0")]
+        [Test]
+        public void TurkishStoredProcs()
+        {
+            execSQL("CREATE PROCEDURE spTest(IN p_paramname INT) BEGIN SELECT p_paramname; END");
+            CultureInfo uiCulture = Thread.CurrentThread.CurrentUICulture;
+            CultureInfo culture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("tr-TR");
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("tr-TR");
+
+            try
+            {
+                MySqlCommand cmd = new MySqlCommand("spTest", conn);
+                cmd.Parameters.Add("p_paramname", 2);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.ExecuteScalar();
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                Thread.CurrentThread.CurrentCulture = culture;
+                Thread.CurrentThread.CurrentUICulture = uiCulture;
             }
         }
     }

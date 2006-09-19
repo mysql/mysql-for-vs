@@ -3,7 +3,8 @@
 	Bug #21521 # Symbols not allowed in column/table names.    
     Bug #21874 MySqlException should derive from DbException         
 	Bug #22042 mysql-connector-net-5.0.0-alpha BeginTransaction
-	 
+	Bug #22452 MySql.Data.MySqlClient.MySqlException: 	 
+	
     Other changes
     -------------
     Implemented simple local transactions

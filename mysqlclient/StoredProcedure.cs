@@ -69,9 +69,9 @@ namespace MySql.Data.MySqlClient
             string retParm = GetReturnParameter();
             foreach (DataRow param in parametersTable.Rows)
             {
-                if (param["ordinal_position"].Equals(0)) continue;
-                string mode = (string)param["parameter_mode"];
-                string name = (string)param["parameter_name"];
+                if (param["ORDINAL_POSITION"].Equals(0)) continue;
+                string mode = (string)param["PARAMETER_MODE"];
+                string name = (string)param["PARAMETER_NAME"];
                 string datatype = (string)param["DATA_TYPE"];
 
                 // make sure the parameters given to us have an appropriate
