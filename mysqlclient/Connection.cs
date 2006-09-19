@@ -60,8 +60,6 @@ namespace MySql.Data.MySqlClient
 		/// <include file='docs/MySqlConnection.xml' path='docs/DefaultCtor/*'/>
 		public MySqlConnection()
 		{
-            System.Diagnostics.Trace.Listeners.Add(
-                new TextWriterTraceListener("c:\\output.log"));
 			//TODO: add event data to StateChange docs
 			settings = new MySqlConnectionStringBuilder();
 			advisor = new UsageAdvisor(this);

@@ -71,6 +71,7 @@ Version 1.0.8  (not yet released)
     Bug #17736 Selecting a row with with empty date '0000-00-00' results in Read() hanging. [fixed]
 	Bug #20581 Null Reference Exception when closing reader after stored procedure. 
 	Bug #16884 Invalid DateTime Values from DataReader     
+	Bug #7248  There is already an open DataReader associated with this Connection which must 
     
 Version 1.0.7
 
