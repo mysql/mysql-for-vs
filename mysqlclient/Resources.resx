@@ -267,4 +267,7 @@
   <data name="CancelNeeds50" xml:space="preserve">
     <value>Canceling an executing query requires MySQL 5.0 or higher.</value>
   </data>
+  <data name="NoNestedTransactions" xml:space="preserve">
+    <value>Nested transactions are not supported.</value>
+  </data>
 </root>

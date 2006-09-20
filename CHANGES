@@ -72,7 +72,8 @@ Version 1.0.8  (not yet released)
 	Bug #20581 Null Reference Exception when closing reader after stored procedure. 
 	Bug #16884 Invalid DateTime Values from DataReader     
 	Bug #7248  There is already an open DataReader associated with this Connection which must 
-    
+	Bug #22400 Nested transactions     
+	
 Version 1.0.7
 
     Bugs fixed or addressed

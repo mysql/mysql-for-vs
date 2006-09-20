@@ -84,16 +84,20 @@ namespace MySql.Data.MySqlClient
 				throw new InvalidOperationException("Connection must be valid and open to commit transaction");
 			if (!open)
 				throw new InvalidOperationException("Transaction has already been committed or is not pending");
-			try 
-			{
-				MySqlCommand cmd = new MySqlCommand( "COMMIT", conn );
-				cmd.ExecuteNonQuery();
-				open = false;
-			}
-			catch (MySqlException) 
-			{
-				throw;
-			}
+            try
+            {
+                MySqlCommand cmd = new MySqlCommand("COMMIT", conn);
+                cmd.ExecuteNonQuery();
+                open = false;
+            }
+            catch (MySqlException)
+            {
+                throw;
+            }
+            finally
+            {
+                conn.activeLegacyTransaction = null;
+            }
 		}
 
 		/// <include file='docs/MySqlTransaction.xml' path='docs/Rollback/*'/>
@@ -113,7 +117,11 @@ namespace MySql.Data.MySqlClient
 			{
 				throw;
 			}
-		}
+            finally
+            {
+                conn.activeLegacyTransaction = null;
+            }
+        }
 
     }
 }
