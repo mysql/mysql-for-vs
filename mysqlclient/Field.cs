@@ -146,6 +146,18 @@ namespace MySql.Data.MySqlClient
 			get { return (colFlags & ColumnFlags.UNSIGNED) > 0; }
 		}
 
+        public bool IsTextField
+        {
+            get
+            {
+                return Type == MySqlDbType.VarString || Type == MySqlDbType.VarChar ||
+                    ((Type == MySqlDbType.TinyBlob || Type == MySqlDbType.MediumBlob ||
+                      Type == MySqlDbType.Blob || Type == MySqlDbType.LongBlob) &&
+                      !IsBinary);
+            }
+
+        }
+
 #endregion
 
         public void SetTypeAndFlags(MySqlDbType type, ColumnFlags flags)
