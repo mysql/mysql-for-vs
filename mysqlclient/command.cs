@@ -333,6 +333,10 @@ namespace MySql.Data.MySqlClient
             lastInsertedId = -1;
 			CheckState();
 
+            if (cmdText == null ||
+                cmdText.Trim().Length == 0)
+                throw new InvalidOperationException(Resources.CommandTextNotInitialized);
+
 			string sql = TrimSemicolons(cmdText);
 
             //TODO: make these work with prepared statements and stored procedures
@@ -425,6 +429,12 @@ namespace MySql.Data.MySqlClient
 		{
 			if (! connection.driver.Version.isAtLeast(5,0,0) && cursorPageSize > 0)
 				throw new InvalidOperationException("Nested commands are only supported on MySQL 5.0 and later");
+
+            // if the length of the command text is zero, then just return
+            string psSQL = CommandText;
+            if (psSQL == null ||
+                psSQL.Trim().Length == 0)
+                return;
 
             PreparedStatement ps = new PreparedStatement(connection, CommandText, cursorPageSize);
             ps.Prepare();

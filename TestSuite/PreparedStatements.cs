@@ -665,6 +665,28 @@ namespace MySql.Data.MySqlClient.Tests
                     reader.Close();
             }
         }
+
+        /// <summary>
+        /// Bug #18391 Better error handling for the .NET class "MySqlCommand" needed. 
+        /// </summary>
+        [Test]
+        public void PrepareEmptyString()
+        {
+            try
+            {
+                MySqlCommand cmd = new MySqlCommand("", conn);
+                cmd.Prepare();
+                cmd.ExecuteNonQuery();
+                Assert.Fail("Should not get here");
+            }
+            catch (InvalidOperationException)
+            {
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
 	}
 
     #region Configs

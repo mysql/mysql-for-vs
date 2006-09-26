@@ -270,4 +270,7 @@
   <data name="NoNestedTransactions" xml:space="preserve">
     <value>Nested transactions are not supported.</value>
   </data>
+  <data name="CommandTextNotInitialized" xml:space="preserve">
+    <value>The CommandText property has not been properly initialized.</value>
+  </data>
 </root>

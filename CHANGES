@@ -75,6 +75,7 @@ Version 1.0.8  (not yet released)
 	Bug #22400 Nested transactions     
 	Bug #11991 ExecuteScalar 	
 	Bug #14592 Wrong column length returned for VARCHAR UTF8 columns 
+	Bug #18391 Better error handling for the .NET class "MySqlCommand" needed. 	
 	
 Version 1.0.7
 
