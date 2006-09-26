@@ -400,12 +400,22 @@ namespace MySql.Data.MySqlClient
             lastInsertedId = -1;
 			object val = null;
 			MySqlDataReader reader = ExecuteReader();
-            if (reader != null)
+            try
             {
-                if (reader.Read())
-                    val = reader.GetValue(0);
-                reader.Close();
-                lastInsertedId = reader.InsertedId;
+                if (reader != null)
+                {
+                    if (reader.Read())
+                        val = reader.GetValue(0);
+                    reader.Close();
+                    lastInsertedId = reader.InsertedId;
+                    reader = null;
+                }
+            }
+            catch (Exception)
+            {
+                if (reader != null)
+                    reader.Close();
+                throw;
             }
 			return val;
 		}

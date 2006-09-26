@@ -479,6 +479,35 @@ namespace MySql.Data.MySqlClient.Tests
             DataSet ds = new DataSet();
             da.Fill(ds);
         }
+
+        /// <summary>
+        /// Bug #11991 ExecuteScalar 
+        /// </summary>
+        [Test]
+        public void CloseReaderAfterFailedConvert()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test (dt DATETIME)");
+            execSQL("INSERT INTO test VALUES ('00-00-0000 00:00:00')");
+
+            MySqlCommand cmd = new MySqlCommand("SELECT * FROM test", conn);
+            try
+            {
+                object o = cmd.ExecuteScalar();
+            }
+            catch (Exception ex)
+            {
+            }
+
+            try
+            {
+                IDbTransaction trans = conn.BeginTransaction();
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
 	}
 
 
