@@ -404,8 +404,12 @@ namespace MySql.Data.MySqlClient
 			if (! isOpen) throw new Exception("No current query in data reader");
 			if (i >= fields.Length) throw new IndexOutOfRangeException();
 
-			if (values[i] is MySqlDateTime && !connection.Settings.AllowZeroDateTime)
-				return typeof(DateTime);
+			if (values[i] is MySqlDateTime)
+            {
+                if (!connection.Settings.AllowZeroDateTime)
+				    return typeof(DateTime);
+                return typeof(MySqlDateTime);
+            }
 			return values[i].SystemType;
 		}
 

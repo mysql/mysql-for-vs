@@ -157,13 +157,16 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
+        /// <summary>
+        /// Bug #9619 Cannot update row using DbDataAdapter when row contains an invalid date 
+        /// </summary>
 		[Test]
 		public void TestAllowZeroDateTime()
 		{
 			execSQL("INSERT INTO Test (id, d, dt) VALUES (1, '0000-00-00', '0000-00-00 00:00:00')");
 
 			MySqlConnection c = new MySqlConnection(
-				conn.ConnectionString + ";pooling=false;AllowZeroDatetime=true" );
+				conn.ConnectionString + ";pooling=false;AllowZeroDatetime=true");
 			c.Open();
 			MySqlDataReader reader = null;
 			try 
@@ -172,11 +175,11 @@ namespace MySql.Data.MySqlClient.Tests
 				reader = cmd.ExecuteReader();
 				reader.Read();
 
-				Assert.IsTrue( reader.GetValue(1) is MySqlDateTime );
-				Assert.IsTrue( reader.GetValue(2) is MySqlDateTime );
+				Assert.IsTrue(reader.GetValue(1) is MySqlDateTime);
+				Assert.IsTrue(reader.GetValue(2) is MySqlDateTime);
 
-				Assert.IsFalse( reader.GetMySqlDateTime(1).IsValidDateTime );
-				Assert.IsFalse( reader.GetMySqlDateTime(2).IsValidDateTime );
+				Assert.IsFalse(reader.GetMySqlDateTime(1).IsValidDateTime);
+				Assert.IsFalse(reader.GetMySqlDateTime(2).IsValidDateTime);
 
 				try 
 				{
@@ -184,12 +187,19 @@ namespace MySql.Data.MySqlClient.Tests
 					Assert.Fail("This should not succeed");
 				}
 				catch (MySqlConversionException) {}
+                reader.Close();
+                reader = null;
 
-
+                DataTable dt = new DataTable();
+                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", c);
+                MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
+                da.Fill(dt);
+                dt.Rows[0]["id"] = 2;
+                da.Update(dt);
 			}
-			catch (MySqlException ex) 
+			catch (Exception ex) 
 			{
-				Assert.Fail( ex.Message );
+				Assert.Fail(ex.Message);
 			}
 			finally 
 			{

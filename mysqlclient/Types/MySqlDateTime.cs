@@ -34,6 +34,7 @@ namespace MySql.Data.Types
 		private	bool			isNull;
 		private MySqlDbType		type;
 		private int				year, month, day, hour, minute, second;
+        private int millisecond;
 		private static string	fullPattern;
 		private static string	shortPattern;
 
@@ -49,6 +50,7 @@ namespace MySql.Data.Types
 			this.hour = hour;
 			this.minute = minute;
 			this.second = second;
+            this.millisecond = 0;
 
             if (fullPattern == null)
 				ComposePatterns();
@@ -68,6 +70,7 @@ namespace MySql.Data.Types
 			hour = val.Hour;
 			minute = val.Minute;
 			second = val.Second;
+            millisecond = val.Millisecond;
 		}
 
 		#region Properties
@@ -124,6 +127,12 @@ namespace MySql.Data.Types
 			get { return second; }
 			set { second = value; }
 		}
+
+        public int Millisecond
+        {
+            get { return millisecond; }
+            set { millisecond = value; }
+        }
 
 		#endregion
 
@@ -182,7 +191,7 @@ namespace MySql.Data.Types
 		}
 
 
-		private void SerializeText(MySqlStream stream, DateTime value) 
+		private void SerializeText(MySqlStream stream, MySqlDateTime value) 
 		{
 			string val = String.Empty;
 
@@ -197,20 +206,20 @@ namespace MySql.Data.Types
 			stream.WriteStringNoNull( "'" + val + "'" );
 		}
 
-		void IMySqlValue.WriteValue(MySqlStream stream, bool binary, 
-            object value, int length)
+		void IMySqlValue.WriteValue(MySqlStream stream, bool binary, object value, int length)
 		{
-			if (value is MySqlDateTime)
-				value = ((MySqlDateTime)value).GetDateTime();
+            MySqlDateTime dtValue;
 
-			if (value is string)
-				value = DateTime.Parse((string)value, 
-					System.Globalization.CultureInfo.CurrentCulture);
+            if (value is DateTime)
+                dtValue = new MySqlDateTime(type, (DateTime)value);
+            else if (value is string)
+                dtValue = new MySqlDateTime(type, DateTime.Parse((string)value,
+                    System.Globalization.CultureInfo.CurrentCulture));
+            else if (value is MySqlDateTime)
+                dtValue = (MySqlDateTime)value;
+            else
+				throw new MySqlException("Unable to serialize date/time value.");
 
-			if (! (value is DateTime))
-				throw new MySqlException( "Only DateTime objects can be serialized by MySqlDateTime" );
-
-			DateTime dtValue = (DateTime)value;
 			if (! binary)
 			{
 				SerializeText(stream, dtValue);
@@ -222,24 +231,24 @@ namespace MySql.Data.Types
 			else
 				stream.WriteByte(7);
 
-			stream.WriteInteger( dtValue.Year, 2 );
-			stream.WriteByte( (byte)dtValue.Month );
-			stream.WriteByte( (byte)dtValue.Day );
+			stream.WriteInteger(dtValue.Year, 2);
+			stream.WriteByte((byte)dtValue.Month);
+			stream.WriteByte((byte)dtValue.Day);
 			if (type == MySqlDbType.Date) 
 			{
-				stream.WriteByte( 0 );
-				stream.WriteByte( 0 );
-				stream.WriteByte( 0 );
+				stream.WriteByte(0);
+				stream.WriteByte(0);
+				stream.WriteByte(0);
 			}
 			else 
 			{
-				stream.WriteByte( (byte)dtValue.Hour );
-				stream.WriteByte( (byte)dtValue.Minute  );
-				stream.WriteByte( (byte)dtValue.Second );
+				stream.WriteByte((byte)dtValue.Hour);
+				stream.WriteByte((byte)dtValue.Minute);
+				stream.WriteByte((byte)dtValue.Second);
 			}
 			
 			if (type == MySqlDbType.Timestamp)
-				stream.WriteInteger( dtValue.Millisecond, 4 );
+				stream.WriteInteger(dtValue.Millisecond, 4);
 		}
 
 		private MySqlDateTime Parse40Timestamp(string s) 
@@ -592,6 +601,9 @@ namespace MySql.Data.Types
 
             if (Second < otherDate.Second) return -1;
             else if (Second > otherDate.Second) return 1;
+
+            if (Millisecond < otherDate.Millisecond) return -1;
+            else if (Millisecond > otherDate.Millisecond) return 1;
 
             return 0;
 		}
