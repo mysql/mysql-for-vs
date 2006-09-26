@@ -687,6 +687,32 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.Fail(ex.Message);
             }
         }
+
+        /// <summary>
+        /// Bug #14115 Prepare() with compound statements breaks 
+        /// </summary>
+        [Test]
+        public void CompoundStatements()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE IF NOT EXISTS test ("+
+	            "id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT," +
+	            "test1 INT UNSIGNED, test2 INT UNSIGNED)");
+
+            try
+            {
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "INSERT INTO test VALUES (NULL, ?t1, ?t2);" +
+                    "SELECT last_insert_id()";
+                cmd.Parameters.Add("?t1", MySqlDbType.Int32);
+                cmd.Parameters.Add("?t2", MySqlDbType.Int32);
+                cmd.Prepare();
+                Assert.Fail("Should not reach here");
+            }
+            catch (Exception ex)
+            {
+            }
+        }
 	}
 
     #region Configs
