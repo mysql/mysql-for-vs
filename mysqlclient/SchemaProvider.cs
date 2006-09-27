@@ -352,7 +352,143 @@ namespace MySql.Data.MySqlClient
             dt.Columns.Add("REFERENCED_TABLE_NAME", typeof(string));
             dt.Columns.Add("REFERENCED_COLUMN_NAME", typeof(string));
 
+            // first we use our restrictions to get a list of tables that should be
+            // consulted.  We save the keyname restriction since GetTables doesn't 
+            // understand that.
+            string keyName = restrictions[3];
+            restrictions[3] = null;
+            DataTable tables = GetTables(restrictions);
+
+            // now for each table retrieved, we call our helper function to
+            // parse it's foreign keys
+            foreach (DataRow table in tables.Rows)
+            {
+                GetForeignKeysOnTable(dt, table, keyName);
+            }
+
             return dt;
+        }
+
+        private string GetSqlMode()
+        {
+            MySqlCommand cmd = new MySqlCommand("SELECT @@SQL_MODE", connection);
+            return cmd.ExecuteScalar().ToString();
+        }
+
+        /// <summary>
+        /// GetForeignKeysOnTable retrieves the foreign keys on the given table.
+        /// Since MySQL supports foreign keys on versions prior to 5.0, we can't  use
+        /// information schema.  MySQL also does not include any type of SHOW command
+        /// for foreign keys so we have to resort to use SHOW CREATE TABLE and parsing
+        /// the output.
+        /// </summary>
+        /// <param name="fkTable">The table to store the key info in.</param>
+        /// <param name="tableToParse">The table to get the foeign key info for.</param>
+        /// <param name="filterName">Only get foreign keys that match this name.</param>
+        private void GetForeignKeysOnTable(DataTable fkTable, DataRow tableToParse,
+            string filterName)
+        {
+            string sqlMode = GetSqlMode();
+            bool ansiQuotes = sqlMode.IndexOf("ANSI_QUOTES") != -1;
+            bool noBackslash = sqlMode.IndexOf("NO_BACKSLASH_ESCAPES") != -1;
+            string quotePattern = ansiQuotes ? "``\"\"" : "``";
+
+            if (filterName != null)
+                filterName = filterName.ToLower(CultureInfo.InvariantCulture);
+
+            string sql = string.Format("SHOW CREATE TABLE `{0}`.`{1}`", 
+                tableToParse["TABLE_SCHEMA"], tableToParse["TABLE_NAME"]);
+            MySqlCommand cmd = new MySqlCommand(sql, connection);
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                reader.Read();
+                string body = reader.GetString(1);
+
+                string lowerBody = body.ToLower(CultureInfo.InvariantCulture);
+                ContextString cs = new ContextString(quotePattern, !noBackslash);
+                int index = cs.IndexOf(lowerBody, "constraint");
+
+                while (index != -1)
+                {
+                    index += 11;
+                    int fkIndex = cs.IndexOf(lowerBody, "foreign key", index);
+                    if (fkIndex != -1)
+                    {
+                        string cName = body.Substring(index+1, fkIndex - 3 - index);
+                        index = fkIndex;
+                        if (filterName == null ||
+                            cName.ToLower(CultureInfo.InvariantCulture) == filterName)
+                        {
+                            int endOfFkArray = cs.IndexOf(lowerBody, ")", index);
+                            if (endOfFkArray == -1)
+                                throw new MySqlException(Resources.UnableToParseFK);
+                            index += 13;
+                            string fkArray = body.Substring(index, endOfFkArray - index);
+
+                            int references = cs.IndexOf(lowerBody, "references", endOfFkArray);
+                            if (references == -1)
+                                throw new MySqlException(Resources.UnableToParseFK);
+                            references += 11;
+                            int startOfRefArray = cs.IndexOf(lowerBody, "(", references);
+                            if (startOfRefArray == -1)
+                                throw new MySqlException(Resources.UnableToParseFK);
+                            string refTable = body.Substring(references, startOfRefArray - references-1);
+
+                            int endOfRefArray = cs.IndexOf(lowerBody, ")", startOfRefArray);
+                            if (endOfRefArray == -1)
+                                throw new MySqlException(Resources.UnableToParseFK);
+                            string refArray = body.Substring(startOfRefArray+1, 
+                                endOfRefArray - startOfRefArray - 1);
+
+                            ParseFkColumns(fkTable, tableToParse, cName, refTable, cs, fkArray, refArray);
+                            index = endOfRefArray;
+                        }
+                    }
+                    index = cs.IndexOf(lowerBody, "constraint", index);
+                }
+            }
+        }
+
+        private void ParseFkColumns(DataTable fkTable, DataRow table, string cName, 
+            string refTable, ContextString cs, string fkArray, string refArray)
+        {
+            string[] fkColumns = fkArray.Split(new char[] { ',' });
+            string[] refColumns = refArray.Split(new char[] { ',' });
+
+            string refSchema = table["TABLE_SCHEMA"].ToString();
+            int index = cs.IndexOf(refTable, ".");
+            if (index != -1)
+            {
+                refSchema = refTable.Substring(1, index - 3);
+                refTable = refTable.Substring(index + 2, refTable.Length - index - 3);
+            }
+            else
+                refTable = CleanSymbol(refTable);
+
+            int pos = 0;
+            foreach (string fkColumn in fkColumns)
+            {
+                DataRow row = fkTable.NewRow();
+                row["CONSTRAINT_CATALOG"] = table["TABLE_CATALOG"];
+                row["CONSTRAINT_SCHEMA"] = table["TABLE_SCHEMA"];
+                row["CONSTRAINT_NAME"] = cName;
+                row["TABLE_CATALOG"] = table["TABLE_CATALOG"];
+                row["TABLE_SCHEMA"] = table["TABLE_SCHEMA"];
+                row["TABLE_NAME"] = table["TABLE_NAME"];
+                row["COLUMN_NAME"] = CleanSymbol(fkColumn.Trim());
+                row["ORDINAL_POSITION"] = pos;
+                row["REFERENCED_TABLE_SCHEMA"] = refSchema;
+                row["REFERENCED_TABLE_NAME"] = refTable;
+                row["REFERENCED_COLUMN_NAME"] = CleanSymbol(refColumns[pos++].Trim());
+                fkTable.Rows.Add(row);
+            }
+        }
+
+        private string CleanSymbol(string sym)
+        {
+            sym = sym.Remove(0, 1);
+            sym = sym.Remove(sym.Length - 1, 1);
+            return sym;
         }
 
         public virtual DataTable GetUsers(string[] restrictions)
@@ -517,11 +653,10 @@ namespace MySql.Data.MySqlClient
                 new object[] {"IndexColumns", "Table", "", 2},
                 new object[] {"IndexColumns", "ConstraintName", "", 3},
                 new object[] {"IndexColumns", "Column", "", 4},
-
-//                {"ForeignKeys", "Catalog", "", "CONSTRAINT_CATALOG"},
-  //              {"ForeignKeys", "Owner", "", "CONSTRAINT_SCHEMA"},
-    //            {"ForeignKeys", "Table", "", "TABLE_NAME"},
-      //          {"ForeignKeys", "Name", "", "CONSTAINT_NAME"},
+                new object[] {"Foreign Keys", "Catalog", "", 0},
+                new object[] {"Foreign Keys", "Owner", "", 1},
+                new object[] {"Foreign Keys", "Table", "", 2},
+                new object[] {"Foreign Keys", "Name", "", 3}
             };
 
             DataTable dt = new DataTable("Restrictions");
@@ -624,8 +759,8 @@ namespace MySql.Data.MySqlClient
                     return GetIndexes(restrictions);
                 case "indexcolumns":
                     return GetIndexColumns(restrictions);
-//                case "foreign keys":
-  //                  return GetForeignKeys(restrictions);
+                case "foreign keys":
+                    return GetForeignKeys(restrictions);
             }
             return null;
         }

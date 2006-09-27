@@ -367,5 +367,95 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("FLOAT", parameters.Rows[3][7].ToString().ToUpper());
         }
 
-	}
+        [Test]
+        public void SingleForeignKey()
+        {
+            execSQL("DROP TABLE IF EXISTS child");
+            execSQL("DROP TABLE IF EXISTS parent");
+            execSQL("CREATE TABLE parent (id INT NOT NULL, PRIMARY KEY (id)) TYPE=INNODB");
+            execSQL("CREATE TABLE child (id INT, parent_id INT, INDEX par_ind (parent_id), " +
+                "CONSTRAINT c1 FOREIGN KEY (parent_id) REFERENCES parent(id) ON DELETE CASCADE) TYPE=INNODB");
+            string[] restrictions = new string[4];
+            restrictions[0] = null;
+            restrictions[1] = "test";
+            restrictions[2] = "child";
+            DataTable dt = conn.GetSchema("Foreign Keys", restrictions);
+            Assert.AreEqual(1, dt.Rows.Count);
+            DataRow row = dt.Rows[0];
+            Assert.AreEqual(DBNull.Value, row["CONSTRAINT_CATALOG"]);
+            Assert.AreEqual("test", row["CONSTRAINT_SCHEMA"]);
+            Assert.AreEqual("c1", row["CONSTRAINT_NAME"]);
+            Assert.AreEqual(DBNull.Value, row["TABLE_CATALOG"]);
+            Assert.AreEqual("test", row["TABLE_SCHEMA"]);
+            Assert.AreEqual("child", row["TABLE_NAME"]);
+            Assert.AreEqual("parent_id", row["COLUMN_NAME"]);
+            Assert.AreEqual(0, row["ORDINAL_POSITION"]);
+            Assert.AreEqual("test", row["REFERENCED_TABLE_SCHEMA"]);
+            Assert.AreEqual("parent", row["REFERENCED_TABLE_NAME"]);
+            Assert.AreEqual("id", row["REFERENCED_COLUMN_NAME"]);
+        }
+
+        [Test]
+        public void MultiSingleForeignKey()
+        {
+            execSQL("DROP TABLE IF EXISTS product_order");
+            execSQL("DROP TABLE IF EXISTS product");
+            execSQL("DROP TABLE IF EXISTS customer");
+            execSQL("CREATE TABLE product (category INT NOT NULL, id INT NOT NULL, " +
+                      "price DECIMAL, PRIMARY KEY(category, id)) TYPE=INNODB");
+            execSQL("CREATE TABLE customer (id INT NOT NULL, PRIMARY KEY (id)) TYPE=INNODB");
+            execSQL("CREATE TABLE product_order (no INT NOT NULL AUTO_INCREMENT, " +
+                "product_category INT NOT NULL, product_id INT NOT NULL, customer_id INT NOT NULL, " +
+                "PRIMARY KEY(no), INDEX (product_category, product_id), " +
+                "FOREIGN KEY (product_category, product_id) REFERENCES product(category, id) " +
+                "ON UPDATE CASCADE ON DELETE RESTRICT, INDEX (customer_id), " +
+                "FOREIGN KEY (customer_id) REFERENCES customer(id)) TYPE=INNODB");
+
+            string[] restrictions = new string[4];
+            restrictions[0] = null;
+            restrictions[1] = "test";
+            restrictions[2] = "product_order";
+            DataTable dt = conn.GetSchema("Foreign Keys", restrictions);
+            Assert.AreEqual(3, dt.Rows.Count);
+            DataRow row = dt.Rows[0];
+            Assert.AreEqual(DBNull.Value, row["CONSTRAINT_CATALOG"]);
+            Assert.AreEqual("test", row["CONSTRAINT_SCHEMA"]);
+            Assert.AreEqual("product_order_ibfk_1", row["CONSTRAINT_NAME"]);
+            Assert.AreEqual(DBNull.Value, row["TABLE_CATALOG"]);
+            Assert.AreEqual("test", row["TABLE_SCHEMA"]);
+            Assert.AreEqual("product_order", row["TABLE_NAME"]);
+            Assert.AreEqual("product_category", row["COLUMN_NAME"]);
+            Assert.AreEqual(0, row["ORDINAL_POSITION"]);
+            Assert.AreEqual("test", row["REFERENCED_TABLE_SCHEMA"]);
+            Assert.AreEqual("product", row["REFERENCED_TABLE_NAME"]);
+            Assert.AreEqual("category", row["REFERENCED_COLUMN_NAME"]);
+
+            row = dt.Rows[1];
+            Assert.AreEqual(DBNull.Value, row["CONSTRAINT_CATALOG"]);
+            Assert.AreEqual("test", row["CONSTRAINT_SCHEMA"]);
+            Assert.AreEqual("product_order_ibfk_1", row["CONSTRAINT_NAME"]);
+            Assert.AreEqual(DBNull.Value, row["TABLE_CATALOG"]);
+            Assert.AreEqual("test", row["TABLE_SCHEMA"]);
+            Assert.AreEqual("product_order", row["TABLE_NAME"]);
+            Assert.AreEqual("product_id", row["COLUMN_NAME"]);
+            Assert.AreEqual(1, row["ORDINAL_POSITION"]);
+            Assert.AreEqual("test", row["REFERENCED_TABLE_SCHEMA"]);
+            Assert.AreEqual("product", row["REFERENCED_TABLE_NAME"]);
+            Assert.AreEqual("id", row["REFERENCED_COLUMN_NAME"]);
+
+            row = dt.Rows[2];
+            Assert.AreEqual(DBNull.Value, row["CONSTRAINT_CATALOG"]);
+            Assert.AreEqual("test", row["CONSTRAINT_SCHEMA"]);
+            Assert.AreEqual("product_order_ibfk_2", row["CONSTRAINT_NAME"]);
+            Assert.AreEqual(DBNull.Value, row["TABLE_CATALOG"]);
+            Assert.AreEqual("test", row["TABLE_SCHEMA"]);
+            Assert.AreEqual("product_order", row["TABLE_NAME"]);
+            Assert.AreEqual("customer_id", row["COLUMN_NAME"]);
+            Assert.AreEqual(0, row["ORDINAL_POSITION"]);
+            Assert.AreEqual("test", row["REFERENCED_TABLE_SCHEMA"]);
+            Assert.AreEqual("customer", row["REFERENCED_TABLE_NAME"]);
+            Assert.AreEqual("id", row["REFERENCED_COLUMN_NAME"]);
+        }
+    
+    }
 }

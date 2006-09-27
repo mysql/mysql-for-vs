@@ -17,6 +17,7 @@
     Fixed problem with executing a Fill after a FillSchema
     Implemented CommandTimeout for non-batch queries
     Fixed socket create code related to IPv6 (thanks Mark!)
+    Added foreign key support to GetSchema
     
 Version 5.0.0.0 (Alpha)
 

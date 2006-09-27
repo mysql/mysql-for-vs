@@ -273,4 +273,7 @@
   <data name="CommandTextNotInitialized" xml:space="preserve">
     <value>The CommandText property has not been properly initialized.</value>
   </data>
+  <data name="UnableToParseFK" xml:space="preserve">
+    <value>There was an error parsing the foreign key definition.</value>
+  </data>
 </root>
