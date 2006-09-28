@@ -220,7 +220,7 @@ namespace MySql.Data.MySqlClient
 			{
 				// Always return exactly what the user set.
 				// Security-sensitive information may be removed.
-				return settings.GetConnectionString(!hasBeenOpen);
+				return settings.GetConnectionString(!hasBeenOpen || settings.PersistSecurityInfo);
 			}
 			set
 			{

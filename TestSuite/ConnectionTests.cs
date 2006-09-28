@@ -354,21 +354,28 @@ namespace MySql.Data.MySqlClient.Tests
 			string s = GetConnectionString(true).ToLower();
 			int start = s.IndexOf("persist security info");
 			int end = s.IndexOf(";", start);
-			string newConnStr = s.Substring(0, start);
-			newConnStr += s.Substring(end, s.Length - (end));
-			newConnStr += ";persist security info=false";
+			string connStr = s.Substring(0, start);
+			connStr += s.Substring(end, s.Length - (end));
 
+            string p = "password";
+            if (connStr.IndexOf("pwd") != -1)
+                p = "pwd";
+            else if (connStr.IndexOf("passwd") != -1)
+                p = "passwd";
+
+			string newConnStr = connStr + ";persist security info=true";
 			MySqlConnection conn2 = new MySqlConnection(newConnStr);
-			string p = "password";
-			if (conn2.ConnectionString.IndexOf("pwd") != -1)
-				p = "pwd";
-			else if (conn2.ConnectionString.IndexOf("passwd") != -1)
-				p = "passwd";
-
 			Assert.IsTrue(conn2.ConnectionString.IndexOf(p) != -1);
 			conn2.Open();
 			conn2.Close();
-			Assert.IsTrue(conn2.ConnectionString.IndexOf(p) == -1);
+			Assert.IsTrue(conn2.ConnectionString.IndexOf(p) != -1);
+
+            newConnStr = connStr + ";persist security info=false";
+            conn2 = new MySqlConnection(newConnStr);
+            Assert.IsTrue(conn2.ConnectionString.IndexOf(p) != -1);
+            conn2.Open();
+            conn2.Close();
+            Assert.IsTrue(conn2.ConnectionString.IndexOf(p) == -1);
 		}
 
 		/// <summary>
