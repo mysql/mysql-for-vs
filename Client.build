@@ -54,6 +54,7 @@
 			<arg value="/nowarn:0679,1591"/>
 			<resources prefix="MySql.Data.MySqlClient" dynamicprefix="false">
 				<include name="mysqlclient/Resources.resources"/>
+        <include name="mysqlclient/ResoucedWords.txt"/>
 			</resources>
 			<references>
 				<include name="System.Data.dll"/>		

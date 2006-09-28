@@ -217,7 +217,7 @@
     <Content Include="docs\MySqlParameter.xml" />
     <Content Include="docs\MySqlParameterCollection.xml" />
     <Content Include="docs\MySqlTransaction.xml" />
-    <Content Include="ReservedWords.txt" />
+    <EmbeddedResource Include="ReservedWords.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">
