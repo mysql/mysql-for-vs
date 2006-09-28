@@ -34,8 +34,6 @@ namespace MySql.Data.MySqlClient.Tests
 		public void TestFixtureSetUp()
 		{
 			Open();
-			execSQL("DROP TABLE IF EXISTS Test");
-			execSQL("CREATE TABLE Test (id int NOT NULL, name VARCHAR(100))");
 		}
 
 		[TestFixtureTearDown]
@@ -43,6 +41,13 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 			Close();
 		}
+
+        protected override void Setup()
+        {
+            base.Setup();
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id int NOT NULL, name VARCHAR(100))");
+        }
 
 		[Test]
 		public void InsertTest()
@@ -132,16 +137,16 @@ namespace MySql.Data.MySqlClient.Tests
 				// make sure we get the right value back out
 				MySqlCommand cmd = new MySqlCommand("DELETE FROM Test WHERE id=1 or id=2", conn);
 				int delcnt = cmd.ExecuteNonQuery();
-				Assert.AreEqual( 2, delcnt );
+				Assert.AreEqual(2, delcnt);
 			
 				// find out how many rows we have now
 				cmd.CommandText = "SELECT COUNT(*) FROM Test";
 				object after_cnt = cmd.ExecuteScalar();
-				Assert.AreEqual( 0, after_cnt );
+				Assert.AreEqual(0, after_cnt);
 			}
 			catch (Exception ex)
 			{
-				Assert.Fail( ex.Message );
+				Assert.Fail(ex.Message);
 			}
 		}
 
@@ -216,7 +221,7 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 			catch (Exception ex) 
 			{
-				Assert.Fail( ex.Message );
+				Assert.Fail(ex.Message);
 			}
 			finally 
 			{
@@ -396,6 +401,7 @@ namespace MySql.Data.MySqlClient.Tests
             }
         }
 
+        [Category("5.0")]
         [Test]
         public void CancelSingleQuery()
         {
@@ -495,7 +501,7 @@ namespace MySql.Data.MySqlClient.Tests
             {
                 object o = cmd.ExecuteScalar();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
 

@@ -141,7 +141,6 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
-    [Explicit]
     public class StressTestsSharedMemory : StressTests
     {
         protected override string GetConnectionInfo()
@@ -150,7 +149,6 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
-    [Explicit]
     public class StressTestsSharedMemoryCompressed : StressTests
     {
         protected override string GetConnectionInfo()

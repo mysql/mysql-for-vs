@@ -294,6 +294,7 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(2, dt.Rows[0]["ORDINAL_POSITION"]);
         }
 
+        [Category("5.0")]
         [Test]
         public void Views()
         {

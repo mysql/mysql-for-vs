@@ -40,6 +40,7 @@ namespace MySql.Data.MySqlClient.Tests
 			Close();
 		}
 
+        [Category("5.0")]
         [Test]
         public void ExecuteNonQuery()
         {
@@ -76,6 +77,7 @@ namespace MySql.Data.MySqlClient.Tests
             }
         }
 
+        [Category("5.0")]
         [Test]
         public void ExecuteReader()
         {

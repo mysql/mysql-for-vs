@@ -140,12 +140,7 @@ namespace MySql.Data.MySqlClient
 		public override int CommandTimeout
 		{
             get { return commandTimeout; }
-            set 
-            {
-                if (!connection.driver.Version.isAtLeast(5, 0, 0))
-                    throw new NotSupportedException(Resources.CancelNeeds50);
-                commandTimeout = value; 
-            }
+            set { commandTimeout = value; }
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/CommandType/*'/>

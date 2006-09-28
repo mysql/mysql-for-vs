@@ -709,7 +709,7 @@ namespace MySql.Data.MySqlClient.Tests
                 cmd.Prepare();
                 Assert.Fail("Should not reach here");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
         }
@@ -741,7 +741,6 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
-    [Explicit]
     public class PreparedStatementsSharedMemory : PreparedStatements
     {
         protected override string GetConnectionInfo()
@@ -750,7 +749,6 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
-    [Explicit]
     public class PreparedStatementsSharedMemoryCompressed : PreparedStatements
     {
         protected override string GetConnectionInfo()

@@ -67,6 +67,8 @@
 		<copy todir="staging">
 			<fileset>
 				<include name="Installer/main.wxs"/>
+				<include name="Installer/samples.wxs"/>
+				<include name="Installer/sources.wxs"/>
 				<include name="Installer/Bitmaps/*.*"/>
 			</fileset>
 		</copy>

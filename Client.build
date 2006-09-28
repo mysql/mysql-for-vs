@@ -2,10 +2,6 @@
 <project name="MySqlClient" default="allframeworks" xmlns="http://nant.sf.net/schemas/nant-0.84.win32.net-1.0.xsd">
 	<description>MySQLClient Managed Provider for MySQL</description>
 
-	<property name="nunit" value="C:\Program Files\NUnit-Net-2.0 2.2.8"/>
-	<property name="ncover.executable" value="c:\program files\ncover\ncover.console.exe"/>
-	<property name="fxcop.executable" value="c:\program files\fxcop\fxcopcmd.exe"/>
-
 	<!-- filesets -->
 	<fileset id="Source">
 		<include name="mysqlclient/common/*.cs"/>
@@ -47,11 +43,10 @@
 		
 		<mkdir dir="${outdir}" failonerror="false"/>
 		<resgen input="mysqlclient/Resources.resx" output="mysqlclient/Resources.resources"/>
-    <echo message="defines=${defines}"/>
 		<csc output="${outdir}/MySql.Data.dll" target="library" 
 			define="${defines}" debug="${debug}" optimize="${opt}" keycontainer="ConnectorNet" 
 			doc="${outdir}/MySql.Data.xml">
-			<arg value="/nowarn:0679,1591"/>
+			<arg value="/nowarn:0679,1591,2029"/>
 			<resources prefix="MySql.Data.MySqlClient" dynamicprefix="false">
 				<include name="mysqlclient/Resources.resources"/>
         <include name="mysqlclient/ResoucedWords.txt"/>
@@ -64,7 +59,7 @@
 			<sources refid="Source"/>
 		</csc>
 		<csc output="${outdir}/MySql.Data.Tests.dll" target="library" 
-			define="${defines}" debug="${debug}" optimize="${opt}"> <arg value="/nowarn:0679"/>
+			define="${defines}" debug="${debug}" optimize="${opt}"> <arg value="/nowarn:0679,2029"/>
 			<sources>
 				<include name="TestSuite/*.cs" />
 			</sources>
@@ -82,21 +77,21 @@
 
 	<!-- core managed driver target 1.0 -->	
 	<target name="net-1.0" description="1.0 .NET target">
-		<property name="nunit-lib" value="${nunit}/bin"/>
+		<property name="nunit-lib" value="${nunit.dir}/bin"/>
 		<property name="framework" value="net-1.0"/>
 		<call target="client"/>
 	</target>
 	
 	<!-- core managed driver target 1.1 -->
 	<target name="net-1.1" description="1.1 .NET target">
-		<property name="nunit-lib" value="${nunit}/bin"/>
+		<property name="nunit-lib" value="${nunit.dir}/bin"/>
 		<property name="framework" value="net-1.1"/>
 		<call target="client"/>
 	</target>
 
 	<!-- core managed driver target 2.0 -->
 	<target name="net-2.0" description="2.0 .NET target">
-		<property name="nunit-lib" value="${nunit}/bin"/>
+		<property name="nunit-lib" value="${nunit.dir}/bin"/>
 		<property name="framework" value="net-2.0"/>
 		<property name="defines" value="${defines},NET20"/>
 		<call target="client"/>
@@ -143,18 +138,6 @@
 		<call target="testclient"/>
 	</target>
 
-	<!-- This target will call the testdb target for each supported config. -->
-	<target name="test_all_configs">
-		<property name="config" value="tcp"/>
-		<call target="testdb"/>  
-		<property name="config" value="tcp_compressed"/>
-		<call target="testdb"/> 
-<!--		<property name="config" value="pipe"/>
-		<call target="testdb"/>  
-		<property name="config" value="pipe_compressed"/>
-		<call target="testdb"/>-->
-	</target>
-
     <!-- 
     Target to run the test suite.  This target will run through all the 
     supported versions of MySQL, stopping the services, and then starting
@@ -164,29 +147,28 @@
 		<mkdir dir="results"/>
 		<echo message="Stopping all services"/>
 		<property name="doCoverage" value="false"/>
-		<servicecontroller action="Stop" service="MySql4.0"/>
 		<servicecontroller action="Stop" service="MySql4.1"/>
 		<servicecontroller action="Stop" service="MySql5.0"/>
+		<servicecontroller action="Stop" service="MySql5.1"/>
 
-		<!-- test 4.0 -->		
-		<echo message="Testing MySQL 4.0"/>
-		<property name="excludes" value="4.1,5.0,NotWorking"/>
-		<servicecontroller action="Start" service="MySql4.0"/>
-		<call target="test_all_configs"/>
-
+		<!-- test 4.1 -->		
 		<echo message="Testing MySQL 4.1"/>
-		<servicecontroller action="Stop" service="MySql4.0"/>
-		<servicecontroller action="Start" service="MySql4.1"/>
 		<property name="excludes" value="5.0,NotWorking"/>
-		<call target="test_all_configs"/>
+		<servicecontroller action="Start" service="MySql4.1"/>
+		<call target="testdb"/>  
 
 		<echo message="Testing MySQL 5.0"/>
 		<servicecontroller action="Stop" service="MySql4.1"/>
 		<servicecontroller action="Start" service="MySql5.0"/>
 		<property name="excludes" value="NotWorking"/>
 		<!--<property name="doCoverage" value="true"/>-->
-		<call target="test_all_configs"/>
+		<call target="testdb"/>  
 		
+		<echo message="Testing MySQL 5.1"/>
+		<servicecontroller action="Stop" service="MySql5.0"/>
+		<servicecontroller action="Start" service="MySql5.1"/>
+		<property name="excludes" value="NotWorking"/>
+		<call target="testdb"/>  
 	</target>
 
 	<!-- 
@@ -196,8 +178,8 @@
 	<target name="testdb" description="Target to test a database with all possible configurations">
 		<copy file="testsuite/configs/${config}.config" tofile="bin/${framework}/${buildType}/MySql.Data.Tests.dll.config"/>
 		
-		<property name="nunit-exe" value="${nunit}/bin/nunit-console.exe"/>
-		<property name="nunit-exe" value="${nunit}/mono/bin/nunit-console.exe" if="${string::contains(framework, 'mono')}"/>
+		<property name="nunit-exe" value="${nunit.dir}/bin/nunit-console.exe"/>
+		<property name="nunit-exe" value="${nunit.dir}/mono/bin/nunit-console.exe" if="${string::contains(framework, 'mono')}"/>
 		
 		<exec unless="${doCoverage}" program="${nunit-exe}"
 		      commandline="/exclude=${excludes} /xml=../../../results/nunit-${framework}-${buildType}.xml bin/${framework}/${buildType}/MySql.Data.Tests.dll"

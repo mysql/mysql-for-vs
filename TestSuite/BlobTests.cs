@@ -36,9 +36,6 @@ namespace MySql.Data.MySqlClient.Tests
 		public void TestFixtureSetUp()
 		{
 			Open();
-
-			execSQL("DROP TABLE IF EXISTS Test");
-			execSQL("CREATE TABLE Test (id INT NOT NULL, blob1 LONGBLOB, text1 LONGTEXT, PRIMARY KEY(id))");
 		}
 
 		[TestFixtureTearDown]
@@ -46,6 +43,14 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 			Close();
 		}
+
+        protected override void Setup()
+        {
+            base.Setup();
+
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id INT NOT NULL, blob1 LONGBLOB, text1 LONGTEXT, PRIMARY KEY(id))");
+        }
 
 		[Test]
 		[Category("4.0")]
@@ -368,7 +373,33 @@ namespace MySql.Data.MySqlClient.Tests
                     reader.Close();
             }
         }
-    }
+
+        [Test]
+        public void BlobBiggerThanMaxPacket()
+        {
+            execSQL("set @@global.max_allowed_packet=500000");
+
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test (id INT(10), image BLOB)");
+
+            try
+            {
+                byte[] image = Utils.CreateBlob(1000000);
+                MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES(NULL, ?image)", conn);
+                cmd.Parameters.Add("?image", image);
+                cmd.ExecuteNonQuery();
+                Assert.Fail("This should have thrown an exception");
+            }
+            catch (Exception)
+            {
+                Assert.AreEqual(ConnectionState.Open, conn.State);
+            }
+            finally
+            {
+                execSQL("set @@global.max_allowed_packet=1000000");
+            }
+        }
+     }
 
     #region Configs
 
@@ -396,7 +427,6 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
-    [Explicit]
     public class BlobTestsSharedMemory : BlobTests
     {
         protected override string GetConnectionInfo()
@@ -405,7 +435,6 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
-    [Explicit]
     public class BlobTestsSharedMemoryCompressed : BlobTests
     {
         protected override string GetConnectionInfo()

@@ -161,7 +161,7 @@ namespace MySql.Data.MySqlClient
             foreach (string token in tokens)
             {
                 if ( token[0] != connection.ParameterMarker)
-                    newSQL.Append( token );
+                    newSQL.Append(token);
                 else
                 {
                     parameterMap.Add( token );
