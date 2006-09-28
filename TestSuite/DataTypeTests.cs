@@ -479,6 +479,7 @@ namespace MySql.Data.MySqlClient.Tests
             execSQL("DROP TABLE IF EXISTS test");
             execSQL("CREATE TABLE test (bt1 BIT, bt4 BIT(4), bt11 BIT(11), bt23 BIT(23), bt32 BIT(32)) engine=myisam");
             execSQL("INSERT INTO test VALUES (1, 2, 120, 240, 1000)");
+            execSQL("INSERT INTO test VALUES (NULL, NULL, 100, NULL, NULL)");
 
             MySqlCommand cmd = new MySqlCommand("SELECT * FROM test", conn);
             MySqlDataReader reader = null;
@@ -499,6 +500,13 @@ namespace MySql.Data.MySqlClient.Tests
                     Assert.AreEqual(127, reader.GetInt32(3));
                     Assert.AreEqual(127, reader.GetInt32(4));
                 }
+
+                Assert.IsTrue(reader.Read());
+                Assert.IsTrue(reader.IsDBNull(0));
+                Assert.IsTrue(reader.IsDBNull(1));
+                Assert.AreEqual(100, reader.GetInt32(2));
+                Assert.IsTrue(reader.IsDBNull(3));
+                Assert.IsTrue(reader.IsDBNull(4));
             }
             catch (Exception ex)
             {
@@ -704,5 +712,6 @@ namespace MySql.Data.MySqlClient.Tests
                     dr.Close();
             }
 		}
+
 	}
 }

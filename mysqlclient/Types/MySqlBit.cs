@@ -81,6 +81,12 @@ namespace MySql.Data.Types
 
         public IMySqlValue ReadValue(MySqlStream stream, long length, bool isNull)
         {
+            if (isNull)
+            {
+                this.isNull = true;
+                return this;
+            }
+
             if (buffer == null)
                 buffer = new byte[8];
 			if (length == -1) 
