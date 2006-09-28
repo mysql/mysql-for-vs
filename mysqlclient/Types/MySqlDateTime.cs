@@ -38,6 +38,32 @@ namespace MySql.Data.Types
 		private static string	fullPattern;
 		private static string	shortPattern;
 
+        public MySqlDateTime(int year, int month, int day, int hour, int minute, int second)
+            : this(MySqlDbType.Datetime, year, month, day, hour, minute, second)
+        {
+        }
+
+        public MySqlDateTime(DateTime dt)
+            : this(MySqlDbType.Datetime, dt)
+        {
+        }
+
+        public MySqlDateTime(MySqlDateTime mdt)
+        {
+            year = mdt.Year;
+            month = mdt.Month;
+            day = mdt.Day;
+            hour = mdt.Hour;
+            minute = mdt.Minute;
+            second = mdt.Second;
+            millisecond = 0;
+            type = MySqlDbType.Datetime;
+            isNull = false;
+        }
+
+        public MySqlDateTime(string s) : this(MySqlDateTime.Parse(s))
+        {
+        }
 
 		internal MySqlDateTime(MySqlDbType type, int year, int month, int day, int hour, int minute, 
 			int second)
@@ -295,6 +321,12 @@ namespace MySql.Data.Types
                 minute, second);
 		}
 
+        static internal MySqlDateTime Parse(string s)
+        {
+            MySqlDateTime dt = new MySqlDateTime();
+            return dt.ParseMySql(s, true);
+        }
+
         static internal MySqlDateTime Parse(string s, Common.DBVersion version)
         {
             MySqlDateTime dt = new MySqlDateTime();
@@ -306,7 +338,7 @@ namespace MySql.Data.Types
 			if (type == MySqlDbType.Timestamp && ! is41)
 				return Parse40Timestamp(s);
 
-			string[] parts = s.Split( '-', ' ', ':' );
+			string[] parts = s.Split( '-', ' ', ':', '/' );
 			
 			int year = int.Parse(parts[0]);
 			int month = int.Parse(parts[1]);
@@ -428,7 +460,6 @@ namespace MySql.Data.Types
 			else
 				shortPattern = shortPattern.Replace("3", "{2}" );
 		}
-
 
 		/// <summary></summary>
 		/// <param name="val"></param>

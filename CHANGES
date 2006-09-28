@@ -79,6 +79,7 @@ Version 1.0.8  (not yet released)
 	Bug #18391 Better error handling for the .NET class "MySqlCommand" needed. 	
 	Bug #8131 Data Adapter doesn't close connection 
 	Bug #9619 Cannot update row using DbDataAdapter when row contains an invalid date 
+	Bug #15112 MySqlDateTime Constructor 
 	
 Version 1.0.7
 

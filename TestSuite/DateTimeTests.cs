@@ -159,6 +159,7 @@ namespace MySql.Data.MySqlClient.Tests
 
         /// <summary>
         /// Bug #9619 Cannot update row using DbDataAdapter when row contains an invalid date 
+        /// Bug #15112 MySqlDateTime Constructor 
         /// </summary>
 		[Test]
 		public void TestAllowZeroDateTime()
@@ -195,7 +196,21 @@ namespace MySql.Data.MySqlClient.Tests
                 MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
                 da.Fill(dt);
                 dt.Rows[0]["id"] = 2;
+                DataRow row = dt.NewRow();
+                row["id"] = 3;
+                row["d"] = new MySqlDateTime("2003-9-24");
+                row["dt"] = new MySqlDateTime("0000/0/00 00:00:00");
+                dt.Rows.Add(row);
+
                 da.Update(dt);
+
+                dt.Clear();
+                da.Fill(dt);
+                Assert.AreEqual(2, dt.Rows.Count);
+                MySqlDateTime date = (MySqlDateTime)dt.Rows[1]["d"];
+                Assert.AreEqual(2003, date.Year);
+                Assert.AreEqual(9, date.Month);
+                Assert.AreEqual(24, date.Day);
 			}
 			catch (Exception ex) 
 			{
