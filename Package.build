@@ -95,7 +95,7 @@
 		<exec workingdir="staging/Installer" program="candle" commandline="samples.wxs"/>
 		<exec workingdir="staging/Installer" program="candle" commandline="sources.wxs"/>
 		<exec workingdir="staging/Installer" program="light" 
-			commandline='main.wixobj samples.wixobj sources "${WIXPATH}/WixUI.wixlib" -loc "${WIXPATH}/WixUI_en-us.wxl" -out MySql.Data.msi'/>
+			commandline='main.wixobj samples.wixobj sources.wixobj "${wix.dir}/WixUI.wixlib" -loc "${wix.dir}/WixUI_en-us.wxl" -out MySql.Data.msi'/>
 
 		<zip zipfile="packages/mysql-connector-net-${ver}${postfix}.zip">
 			<fileset basedir="staging/Installer"><include name="MySql.Data.msi"/></fileset>
@@ -111,12 +111,12 @@
 		</zip>
 
 		<!-- now add the MD5 sig -->
-        <checksum algorithm="MD5" fileext="MD5">
+<!--        <checksum algorithm="MD5" fileext="MD5">
             <fileset>
                 <include name="packages/mysql-connector-net-${ver}${postfix}.zip"/>
                 <include name="packages/mysql-connector-net-${ver}${postfix}-noinstall.zip"/>
             </fileset>
-        </checksum>
+        </checksum>-->
 
     </target>
     

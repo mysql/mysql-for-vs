@@ -1,9 +1,6 @@
-
 using System;
 
-/// <summary>
-/// Contains conversion support elements such as classes, interfaces and static methods.
-/// </summary>
+/* Contains conversion support elements such as classes, interfaces and static methods. */
 namespace zlib
 {
 	public class SupportClass
@@ -183,7 +180,7 @@ namespace zlib
 		/// <summary>
 		/// Writes an object to the specified BinaryWriter
 		/// </summary>
-		/// <param name="stream">The target BinaryWriter</param>
+		/// <param name="binaryWriter">The target BinaryWriter</param>
 		/// <param name="objectToSend">The object to be sent</param>
 		public static void Serialize(System.IO.BinaryWriter binaryWriter, System.Object objectToSend)
 		{

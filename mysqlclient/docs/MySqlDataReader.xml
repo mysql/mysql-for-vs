@@ -131,7 +131,7 @@ public void ReadMyData(string myConnString) {
 		MySql allows date columns to contain the value '0000-00-00' and datetime
 		columns to contain the value '0000-00-00 00:00:00'.  The DateTime structure cannot contain
 		or represent these values.  To read a datetime value from a column that might
-		contain zero values, use <see cref="GetMySqlDateTime"/>.
+		contain zero values, use <see cref="GetMySqlDateTime(int)"/>.
 		</para>
 		<para>
 		The behavior of reading a zero datetime column using this method is defined by the

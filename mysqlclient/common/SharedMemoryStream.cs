@@ -45,12 +45,12 @@ namespace MySql.Data.Common
 		private int				position;
 		private int				connectNumber;
 
-        private uint SYNCHRONIZE = 0x00100000;
-        private uint READ_CONTROL = 0x00020000;
-        private uint EVENT_MODIFY_STATE = 0x2;
-		private uint EVENT_ALL_ACCESS = 0x001F0003;
-		private uint FILE_MAP_WRITE = 0x2;
-		private int	BUFFERLENGTH = 16004;
+        private const uint SYNCHRONIZE = 0x00100000;
+        private const uint READ_CONTROL = 0x00020000;
+        private const uint EVENT_MODIFY_STATE = 0x2;
+		private const uint EVENT_ALL_ACCESS = 0x001F0003;
+		private const uint FILE_MAP_WRITE = 0x2;
+		private const int	BUFFERLENGTH = 16004;
 
 		public SharedMemoryStream(string memName)
 		{
