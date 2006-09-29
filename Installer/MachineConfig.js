@@ -125,7 +125,7 @@ function InitLog()
     try
     {
         var fso = new ActiveXObject("Scripting.FileSystemObject");
-        return fso.CreateTextFile("c:\\mysqlddexinstall.txt", true);
+        return fso.CreateTextFile("c:\\MySql.Data.log", true);
     }
     catch(e)
     {
