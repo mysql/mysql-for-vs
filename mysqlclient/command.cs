@@ -50,7 +50,7 @@ namespace MySql.Data.MySqlClient
 		private IAsyncResult		asyncResult;
         private bool                designTimeVisible;
         internal Int64              lastInsertedId;
-        private Statement           statement;
+        private PreparableStatement statement;
         private int                 commandTimeout;
         private bool                canCancel;
         private bool                timedOut;
@@ -159,7 +159,7 @@ namespace MySql.Data.MySqlClient
 #endif
 		public bool IsPrepared 
 		{
-            get { return statement != null && statement is PreparedStatement; }
+            get { return statement != null && statement.IsPrepared; }
 		}
 
 			/// <include file='docs/mysqlcommand.xml' path='docs/Connection/*'/>
@@ -345,12 +345,12 @@ namespace MySql.Data.MySqlClient
 				sql = String.Format("SET SQL_SELECT_LIMIT=1;{0};SET sql_select_limit=-1;", sql);
 			}
             
-            if (statement == null || !(statement is PreparedStatement))
+            if (statement == null || !statement.IsPrepared)
             {
                 if (CommandType == CommandType.StoredProcedure)
                     statement = new StoredProcedure(this.Connection, sql);
                 else
-                    statement = new Statement(this.Connection, sql);
+                    statement = new PreparableStatement(this.Connection, sql);
             }
 
 			updatedRowCount = -1;
@@ -370,7 +370,7 @@ namespace MySql.Data.MySqlClient
                 }
 
                 // execute the statement
-                statement.Execute(Parameters);
+                statement.Execute(parameters);
 
                 canCancel = true;
                 reader.NextResult();
@@ -422,6 +422,8 @@ namespace MySql.Data.MySqlClient
 		/// <include file='docs/mysqlcommand.xml' path='docs/Prepare2/*'/>
 		private void Prepare(int cursorPageSize) 
 		{
+            Debug.Assert(statement == null);
+
 			if (! connection.driver.Version.isAtLeast(5,0,0) && cursorPageSize > 0)
 				throw new InvalidOperationException("Nested commands are only supported on MySQL 5.0 and later");
 
@@ -431,9 +433,12 @@ namespace MySql.Data.MySqlClient
                 psSQL.Trim().Length == 0)
                 return;
 
-            PreparedStatement ps = new PreparedStatement(connection, CommandText, cursorPageSize);
-            ps.Prepare();
-            statement = ps;
+            if (CommandType == CommandType.StoredProcedure)
+                statement = new StoredProcedure(this.Connection, CommandText);
+            else
+                statement = new PreparableStatement(this.Connection, CommandText);
+
+            statement.Prepare(parameters);
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/Prepare/*'/>
@@ -443,7 +448,7 @@ namespace MySql.Data.MySqlClient
 				throw new InvalidOperationException("The connection property has not been set.");
 			if (connection.State != ConnectionState.Open)
 				throw new InvalidOperationException("The connection is not open.");
-			if (! connection.driver.Version.isAtLeast( 4,1,0)) 
+			if (! connection.driver.Version.isAtLeast(4,1,0)) 
                 return;
 
             Prepare(0);

@@ -22,17 +22,19 @@ using System;
 using System.Data;
 using MySql.Data.Common;
 using System.Text;
+using MySql.Data.Types;
 
 namespace MySql.Data.MySqlClient
 {
 	/// <summary>
 	/// Summary description for StoredProcedure.
 	/// </summary>
-	internal class StoredProcedure : Statement
+	internal class StoredProcedure : PreparableStatement
 	{
 		private string			hash;
 		private string			outSelect;
         private DataTable parametersTable;
+        private string processedCommandText;
 
 		public StoredProcedure(MySqlConnection connection, string text) : 
             base(connection, text)
@@ -44,13 +46,24 @@ namespace MySql.Data.MySqlClient
 
 		private string GetReturnParameter()
 		{
-			foreach (MySqlParameter p in parameters)
-				if (p.Direction == ParameterDirection.ReturnValue)
-					return hash + p.ParameterName;
+            if (parameters != null)
+			    foreach (MySqlParameter p in parameters)
+				    if (p.Direction == ParameterDirection.ReturnValue)
+					    return hash + p.ParameterName;
 			return null;
 		}
 
-        protected override void BindParameters()
+        public override string ProcessedCommandText
+        {
+            get
+            {
+                if (processedCommandText == null)
+                    ProcessCommandText();
+                return processedCommandText;
+            }
+        }
+
+        private void ProcessCommandText()
         {
             // first retrieve the procedure definition from our
             // procedure cache
@@ -78,9 +91,11 @@ namespace MySql.Data.MySqlClient
                 // type set if it's not already
                 MySqlParameter p = parameters[name];
                 if (!p.TypeHasBeenSet)
-                    p.MySqlDbType = GetTypeFromName(datatype,
-                        param["FLAGS"].ToString().IndexOf("UNSIGNED") != -1,
-                        procTable.Rows[0]["SQL_MODE"].ToString().IndexOf("REAL_AS_FLOAT") != -1);
+                {
+                    bool unsigned = param["FLAGS"].ToString().IndexOf("UNSIGNED") != -1;
+                    bool real_as_float = procTable.Rows[0]["SQL_MODE"].ToString().IndexOf("REAL_AS_FLOAT") != -1;
+                    p.MySqlDbType = MetaData.NameToType(datatype, unsigned, real_as_float, connection);
+                }
 
                 string pName = String.Format("{0}{1}",
                     connection.ParameterMarker, name);
@@ -120,76 +135,8 @@ namespace MySql.Data.MySqlClient
 				sqlCmd = setStr.ToString() + sqlCmd;
             string oldCmdText = commandText;
 
-            // now call our base version
-            // we save our original command text because we are about to
-            // overwrite it.  We restore it once our base class gets done
-            // binding the parameters
-            commandText = sqlCmd;
-            base.BindParameters();
-            commandText = oldCmdText;
+            processedCommandText = sqlCmd;
 		}
-
-        private MySqlDbType GetTypeFromName(string typeName, bool unsigned, 
-            bool realAsFloat)
-        {
-            switch (typeName)
-            {
-                case "char": return MySqlDbType.String;
-                case "varchar": return MySqlDbType.VarChar;
-                case "date": return MySqlDbType.Date;
-                case "datetime": return MySqlDbType.Datetime;
-                case "numeric":
-                case "decimal":
-                case "dec":
-                case "fixed":
-                    if (connection.driver.Version.isAtLeast(5, 0, 3))
-                        return MySqlDbType.NewDecimal;
-                    else
-                        return MySqlDbType.Decimal;
-                case "year":
-                    return MySqlDbType.Year;
-                case "time":
-                    return MySqlDbType.Time;
-                case "timestamp":
-                    return MySqlDbType.Timestamp;
-                case "set": return MySqlDbType.Set;
-                case "enum": return MySqlDbType.Enum;
-                case "bit": return MySqlDbType.Bit;
-
-                case "tinyint":
-                case "bool":
-                case "boolean":
-                    return MySqlDbType.Byte;
-                case "smallint":
-                    return unsigned ? MySqlDbType.UInt16 : MySqlDbType.Int16;
-                case "mediumint":
-                    return unsigned ? MySqlDbType.UInt24 : MySqlDbType.Int24;
-                case "int":
-                case "integer":
-                    return unsigned ? MySqlDbType.UInt32 : MySqlDbType.Int32;
-                case "serial":
-                    return MySqlDbType.UInt64;
-                case "bigint":
-                    return unsigned ? MySqlDbType.UInt64 : MySqlDbType.Int64;
-                case "float": return MySqlDbType.Float;
-                case "double": return MySqlDbType.Double;
-                case "real": return
-                     realAsFloat ? MySqlDbType.Float : MySqlDbType.Double;
-                case "blob":
-                case "text":
-                    return MySqlDbType.Blob;
-                case "longblob":
-                case "longtext":
-                    return MySqlDbType.LongBlob;
-                case "mediumblob":
-                case "mediumtext":
-                    return MySqlDbType.MediumBlob;
-                case "tinyblob":
-                case "tinytext":
-                    return MySqlDbType.TinyBlob;
-            }
-            throw new MySqlException("Unhandled type encountered");
-        }
 
 		public override void Close()
 		{

@@ -38,6 +38,10 @@ namespace MySql.Data.MySqlClient
             if (categoryName == null)
             {
                 categoryName = ".NET Data Provider for MySQL";
+            }
+
+            if (connection.Settings.UsePerformanceMonitor && procedureHardQueries == null)
+            {
                 if (PerformanceCounterCategory.Exists(categoryName))
                 {
                     if (PerformanceCounterCategory.CounterExists("HardProcedureQueries",

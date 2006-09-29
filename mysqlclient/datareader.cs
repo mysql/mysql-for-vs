@@ -45,7 +45,7 @@ namespace MySql.Data.MySqlClient
 		private bool[] uaFieldsUsed;
         private Driver driver;
         private long lastInsertId;
-        private Statement statement;
+        private PreparableStatement statement;
         private int seqIndex;
         private bool hasRead;
         private bool nextResultDone;
@@ -62,7 +62,7 @@ namespace MySql.Data.MySqlClient
 		 * DataReader object, the constructors are
 		 * marked as internal.
 		 */
-		internal MySqlDataReader(MySqlCommand cmd, Statement statement, CommandBehavior behavior)
+		internal MySqlDataReader(MySqlCommand cmd, PreparableStatement statement, CommandBehavior behavior)
 		{
 			this.command = cmd;
 			connection = (MySqlConnection)command.Connection;
@@ -819,7 +819,7 @@ namespace MySql.Data.MySqlClient
                 hasRead = false;
 
                 uaFieldsUsed = new bool[fields.Length];
-                hasRows = canRead = driver.FetchDataRow(statement.Id, 0, fields.Length);
+                hasRows = canRead = driver.FetchDataRow(statement.StatementId, 0, fields.Length);
                 return true;
             }
 			catch (MySqlException ex) 
@@ -851,7 +851,7 @@ namespace MySql.Data.MySqlClient
 				bool isSequential = (Behavior & CommandBehavior.SequentialAccess) != 0;
                 seqIndex = -1;
                 if (hasRead)
-                    canRead = driver.FetchDataRow(statement.Id, 0, fields.Length);
+                    canRead = driver.FetchDataRow(statement.StatementId, 0, fields.Length);
                 hasRead = true;
                 if (canRead && !isSequential)
                     for (int i = 0; i < fields.Length; i++)

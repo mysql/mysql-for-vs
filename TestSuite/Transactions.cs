@@ -200,6 +200,7 @@ namespace MySql.Data.MySqlClient.Tests
         /// <summary>
         /// Bug #22400 Nested transactions 
         /// </summary>
+        [Category("NotWorking")]
         [Test]
         public void NestedTransactions()
         {

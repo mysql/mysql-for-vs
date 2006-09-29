@@ -407,7 +407,7 @@ namespace MySql.Data.MySqlClient.Tests
         {
             // first we need a routine that will run for a bit
             execSQL("CREATE PROCEDURE spTest() BEGIN SET @start=NOW()+0; REPEAT SET @end=NOW()-@start; " +
-                "UNTIL @end >= 500 END REPEAT; SELECT @start, @end; END");
+                "UNTIL @end >= 5000 END REPEAT; SELECT @start, @end; END");
 
             MySqlCommand cmd = new MySqlCommand("spTest", conn);
             cmd.CommandType = CommandType.StoredProcedure;
@@ -416,7 +416,7 @@ namespace MySql.Data.MySqlClient.Tests
             CommandInvokerDelegate d = new CommandInvokerDelegate(CommandRunner);
             IAsyncResult iar = d.BeginInvoke(cmd, null, null);
 
-            // sleep 10 seconds
+            // sleep 5 seconds
             Thread.Sleep(5000);
 
             // now cancel the command
@@ -453,7 +453,7 @@ namespace MySql.Data.MySqlClient.Tests
         {
             // first we need a routine that will run for a bit
             execSQL("CREATE PROCEDURE spTest() BEGIN SET @start=NOW()+0; REPEAT SET @end=NOW()-@start; " +
-                "UNTIL @end >= 20 END REPEAT; SELECT @start, @end; END");
+                "UNTIL @end >= 5 END REPEAT; SELECT @start, @end; END");
 
             try
             {
@@ -519,6 +519,7 @@ namespace MySql.Data.MySqlClient.Tests
 
     #region Configs
 
+    [Category("Compressed")]
     public class CommandTestsSocketCompressed : CommandTests
     {
         protected override string GetConnectionInfo()
@@ -535,6 +536,8 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
+    [Category("Compressed")]
+    [Category("Pipe")]
     public class CommandTestsPipeCompressed : CommandTests
     {
         protected override string GetConnectionInfo()
@@ -543,6 +546,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
+    [Category("SharedMemory")]
     public class CommandTestsSharedMemory : CommandTests
     {
         protected override string GetConnectionInfo()
@@ -551,6 +555,8 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
+    [Category("Compressed")]
+    [Category("SharedMemory")]
     public class CommandTestsSharedMemoryCompressed : CommandTests
     {
         protected override string GetConnectionInfo()

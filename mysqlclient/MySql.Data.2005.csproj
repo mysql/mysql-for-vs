@@ -159,7 +159,7 @@
     <Compile Include="parameter.cs" />
     <Compile Include="parameter_collection.cs" />
     <Compile Include="PerformanceMonitor.cs" />
-    <Compile Include="PreparedStatement.cs" />
+    <Compile Include="PreparableStatement.cs" />
     <Compile Include="ProcedureCache.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>

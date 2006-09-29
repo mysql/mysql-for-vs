@@ -25,13 +25,12 @@ using System.IO;
 
 namespace MySql.Data.MySqlClient
 {
-    internal class Statement
+    internal abstract class Statement
     {
         protected MySqlConnection connection;
         protected Driver driver;
         protected string commandText;
         private ArrayList buffers;
-        protected int statementId;
         protected MySqlParameterCollection parameters;
 
         private Statement(MySqlConnection connection)
@@ -39,7 +38,6 @@ namespace MySql.Data.MySqlClient
             this.connection = connection;
             this.driver = connection.driver;
             buffers = new ArrayList();
-            this.statementId = 0;
         }
 
         public Statement(MySqlConnection connection, string text) : this(connection)
@@ -47,9 +45,9 @@ namespace MySql.Data.MySqlClient
             commandText = text;
         }
 
-        public int Id
+        public virtual string ProcessedCommandText
         {
-            get { return statementId; }
+            get { return commandText; }
         }
 
         public virtual void Close()
@@ -58,8 +56,9 @@ namespace MySql.Data.MySqlClient
 
         public virtual void Execute(MySqlParameterCollection parameters)
         {
-            // we keep a reference to this until we are done
             this.parameters = parameters;
+
+            // we keep a reference to this until we are done
             BindParameters();
             ExecuteNext();
         }
@@ -78,7 +77,7 @@ namespace MySql.Data.MySqlClient
         protected virtual void BindParameters()
         {
             // tokenize the sql
-            ArrayList tokenArray = TokenizeSql(commandText);
+            ArrayList tokenArray = TokenizeSql(ProcessedCommandText);
 
             MySqlStream stream = new MySqlStream(driver.Encoding);
             stream.Version = driver.Version;

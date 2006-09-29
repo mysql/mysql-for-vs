@@ -29,16 +29,18 @@ namespace MySql.Data.MySqlClient
 	/// <summary>
 	/// Summary description for PreparedStatement.
 	/// </summary>
-	internal class PreparedStatement : Statement
+	internal class PreparableStatement : Statement
 	{
 		private MySqlField[] paramList;
 		private int executionCount;
         private int pageSize;
+        private int statementId;
 
-        public PreparedStatement(MySqlConnection connection, string text, int pageSize)
+        public PreparableStatement(MySqlConnection connection, string text)
             : base(connection, text)
         {
-            this.pageSize = pageSize;
+            pageSize = 0;
+            statementId = 0;
         }
 
 		#region Properties
@@ -54,10 +56,23 @@ namespace MySql.Data.MySqlClient
 			set { executionCount = value; }
 		}
 
+        public bool IsPrepared
+        {
+            get { return statementId > 0; }
+        }
+
+        public int StatementId
+        {
+            get { return statementId; }
+        }
+
 		#endregion
 
-        public void Prepare()
+        public virtual void Prepare(MySqlParameterCollection parameters)
         {
+            // store our parameters.
+            this.parameters = parameters;
+
             // strip out names from parameter markers
             string text;
             ArrayList parameter_names = PrepareCommandText(out text);
@@ -73,6 +88,13 @@ namespace MySql.Data.MySqlClient
 
 		public override void Execute(MySqlParameterCollection parameters)
 		{
+            // if we are not prepared, then call down to our base
+            if (!IsPrepared)
+            {
+                base.Execute(parameters);
+                return;
+            }
+
 			MySqlStream stream = new MySqlStream(driver.Encoding);
 
 			//TODO: support long data here
@@ -94,7 +116,7 @@ namespace MySql.Data.MySqlClient
 			nullMap.CopyTo(nullMapBytes, 0);
 
 			// start constructing our packet
-			stream.WriteInteger(Id, 4);
+			stream.WriteInteger(statementId, 4);
             stream.WriteByte((byte)pageSize);          // flags; always 0 for 4.1
             stream.WriteInteger(1, 4);    // interation count; 1 for 4.1
             stream.Write(nullMapBytes);
@@ -136,6 +158,8 @@ namespace MySql.Data.MySqlClient
 
         public override bool ExecuteNext()
         {
+            if (!IsPrepared)
+                return base.ExecuteNext();
             return false;
         }
 
@@ -155,7 +179,7 @@ namespace MySql.Data.MySqlClient
             ArrayList parameterMap = new ArrayList();
 
             // tokenize the sql first
-            ArrayList tokens = TokenizeSql(commandText);
+            ArrayList tokens = TokenizeSql(ProcessedCommandText);
             parameterMap.Clear();
 
             foreach (string token in tokens)
@@ -164,7 +188,7 @@ namespace MySql.Data.MySqlClient
                     newSQL.Append(token);
                 else
                 {
-                    parameterMap.Add( token );
+                    parameterMap.Add(token);
                     newSQL.Append(connection.ParameterMarker);
                 }
             }

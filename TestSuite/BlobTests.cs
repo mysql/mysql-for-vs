@@ -159,6 +159,7 @@ namespace MySql.Data.MySqlClient.Tests
 			cmd.ExecuteNonQuery();
 
 			cmd.CommandText = "SELECT * FROM Test";
+            cmd.Parameters.Clear();
 			if (prepare)
 				cmd.Prepare();
 			MySqlDataReader reader = null;
@@ -403,6 +404,7 @@ namespace MySql.Data.MySqlClient.Tests
 
     #region Configs
 
+    [Category("Compressed")]
     public class BlobTestsSocketCompressed : BlobTests
     {
         protected override string GetConnectionInfo()
@@ -411,6 +413,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
+    [Category("Pipe")]
     public class BlobTestsPipe : BlobTests
     {
         protected override string GetConnectionInfo()
@@ -419,6 +422,8 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
+    [Category("Compressed")]
+    [Category("Pipe")]
     public class BlobTestsPipeCompressed : BlobTests
     {
         protected override string GetConnectionInfo()
@@ -427,6 +432,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
+    [Category("SharedMemory")]
     public class BlobTestsSharedMemory : BlobTests
     {
         protected override string GetConnectionInfo()
@@ -435,6 +441,8 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
+    [Category("Compressed")]
+    [Category("SharedMemory")]
     public class BlobTestsSharedMemoryCompressed : BlobTests
     {
         protected override string GetConnectionInfo()

@@ -343,29 +343,33 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("spTest", parameters.Rows[2][2]);
             Assert.AreEqual("spTest", parameters.Rows[3][2]);
 
-            Assert.AreEqual("id", parameters.Rows[0][3]);
-            Assert.AreEqual(1, parameters.Rows[0][4]);
-            Assert.AreEqual("IN", parameters.Rows[0][5]);
-            Assert.AreEqual("NO", parameters.Rows[0][6]);
-            Assert.AreEqual("INT", parameters.Rows[0][7].ToString().ToUpper());
+            Assert.AreEqual("PROCEDURE", parameters.Rows[0][3]);
+            Assert.AreEqual("id", parameters.Rows[0][4]);
+            Assert.AreEqual(1, parameters.Rows[0][5]);
+            Assert.AreEqual("IN", parameters.Rows[0][6]);
+            Assert.AreEqual("NO", parameters.Rows[0][7]);
+            Assert.AreEqual("INT", parameters.Rows[0][8].ToString().ToUpper());
 
-            Assert.AreEqual("id2", parameters.Rows[1][3]);
-            Assert.AreEqual(2, parameters.Rows[1][4]);
-            Assert.AreEqual("IN", parameters.Rows[1][5]);
-            Assert.AreEqual("NO", parameters.Rows[1][6]);
-            Assert.AreEqual("INT", parameters.Rows[1][7].ToString().ToUpper());
+            Assert.AreEqual("PROCEDURE", parameters.Rows[1][3]);
+            Assert.AreEqual("id2", parameters.Rows[1][4]);
+            Assert.AreEqual(2, parameters.Rows[1][5]);
+            Assert.AreEqual("IN", parameters.Rows[1][6]);
+            Assert.AreEqual("NO", parameters.Rows[1][7]);
+            Assert.AreEqual("INT", parameters.Rows[1][8].ToString().ToUpper());
 
-            Assert.AreEqual("io1", parameters.Rows[2][3]);
-            Assert.AreEqual(3, parameters.Rows[2][4]);
-            Assert.AreEqual("INOUT", parameters.Rows[2][5]);
-            Assert.AreEqual("NO", parameters.Rows[2][6]);
-            Assert.AreEqual("VARCHAR", parameters.Rows[2][7].ToString().ToUpper());
+            Assert.AreEqual("PROCEDURE", parameters.Rows[2][3]);
+            Assert.AreEqual("io1", parameters.Rows[2][4]);
+            Assert.AreEqual(3, parameters.Rows[2][5]);
+            Assert.AreEqual("INOUT", parameters.Rows[2][6]);
+            Assert.AreEqual("NO", parameters.Rows[2][7]);
+            Assert.AreEqual("VARCHAR", parameters.Rows[2][8].ToString().ToUpper());
 
-            Assert.AreEqual("out1", parameters.Rows[3][3]);
-            Assert.AreEqual(4, parameters.Rows[3][4]);
-            Assert.AreEqual("OUT", parameters.Rows[3][5]);
-            Assert.AreEqual("NO", parameters.Rows[3][6]);
-            Assert.AreEqual("FLOAT", parameters.Rows[3][7].ToString().ToUpper());
+            Assert.AreEqual("PROCEDURE", parameters.Rows[3][3]);
+            Assert.AreEqual("out1", parameters.Rows[3][4]);
+            Assert.AreEqual(4, parameters.Rows[3][5]);
+            Assert.AreEqual("OUT", parameters.Rows[3][6]);
+            Assert.AreEqual("NO", parameters.Rows[3][7]);
+            Assert.AreEqual("FLOAT", parameters.Rows[3][8].ToString().ToUpper());
         }
 
         [Test]
