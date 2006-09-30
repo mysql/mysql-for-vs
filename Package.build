@@ -7,6 +7,7 @@
 	<!-- filesets -->
 	<fileset id="BaseSource">
 		<include name="mysqlclient/*.cs"/>
+		<include name="mysqlclient/ReservedWords.txt"/>
 		<include name="mysqlclient/*.resx"/>
 		<include name="mysqlclient/common/*.cs"/>
 		<include name="mysqlclient/types/*.cs"/>
@@ -16,6 +17,8 @@
 		<include name="installer/*"/>
 		<include name="testsuite/**"/>
 		<include name="Client.build"/>
+		<include name="MySqlClient.2003.sln"/>
+		<include name="MySqlClient.2005.sln"/>
 		<include name="CHANGES"/>
 		<include name="README"/>
 		<include name="Release Notes.txt"/>

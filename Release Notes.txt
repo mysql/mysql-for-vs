@@ -1,31 +1,42 @@
-Connector/Net 5.0.0.0  Release Notes
+Connector/Net 5.0.1  Release Notes
 ------------------------------------
 
-Welcome to the release notes for Connector/Net 5.0.  As the old saying goes, 
-I've got some good news and I've got some bad news.
+Welcome to the release notes for Connector/Net 5.0.1.
 
-First the good news
--------------------
-We are finally releasing a build of Connector/Net 5.0.  This version of the connector
-incorporates many changes to its internal structure that will provide both increased
-speed and flexibility.  Speed is increased by allowing column values to be processed
-without ever being boxed (if you use MySqlDataReader) and flexibility is increased
-by virtualizing the execution engine.  This virtualization will allow future versions
-of the Connector to support the embedded server and to use the client library.
+This version of the connector incorporates many changes to its internal structure that 
+will provide both increased speed and flexibility.  Speed is increased by allowing column 
+values to be processed without ever being boxed (if you use MySqlDataReader) and flexibility 
+is increased by virtualizing the execution engine.  This virtualization will allow future 
+versions of the Connector to support the embedded server and to use the client library.
 
 Many more features have been added to this version including Usage Advisor, PerfMon hooks,
 asynchronous queries, and full ADO.net 2.0 support.
 
-Now the bad news
-----------------
-This is an alpha release and, as such, some things are just broken.  Rather than hold
-the release until all these things were working, we decided to release so we can be 
-gathering feedback while the rest of the features are fixed.  Below you will find a 
-list of the features we know do not work in this release.
+This is the second release of the connector and many things that were broken in the first
+release have been fixed.  Below is the list of what was listed as missing or incomplete
+in the first release and their current status.
 
-* load data local infile
-* using the compression protocol
-* shared memory protocol
+* CommandTimeout support
+This works but does contain some bugs.
+
+* System.Transaction support
+This has been implemented however DTC elevation does not work.  There are also some
+open bugs against this feature.
+
+* Documentation
+We spent so much time fixing bugs in this release that we ran out of time before improving
+the documentation.  Look for improvements in the coming releases.
+
+* Load data local infile
+This still is not working but will be fixed in 5.0.2
+
+* Compression protocol
+This now works as expected.  We have also removed the use of the ICSharpCode zib library and
+replaced it with a C# version of zlib.
+
+* Shared memory protocol
+This now works as expected.
+
 
 .NET 1.0 and 1.1 binaries not included
 --------------------------------------
@@ -65,16 +76,3 @@ have been documented in the help file but we'll make a brief note about them her
   refill your table or dataset.
   
   
-Things that are missing or incomplete
--------------------------------------
-* CommandTimeout support - We are going to support CommandTimeout in 5.0 but it is not active in this 
-                           release.
-* System.Transaction support - We are examining what needs to be done in this area and will have a more
-                               complete answer with beta 1.
-* Documentation - Past versions of the provider have used NDoc to generate documentation.  Now that NDoc
-                  is no longer being developed, we will be changing to a different system.  This change
-                  has not been made yet.  As a result, the help file that ships with this release does not
-                  properly link to framework help topics.
-                  
-                  We are committed to providing and integrating our help into the Visual Studio help collections
-                  as well as providing documentation for those people not using Visual Studio.                                                          

@@ -4,6 +4,8 @@
 		<DirectoryRef Id='SourceDir'> 
 			<Component Id="TopLevelSrc" Guid="f1c97712-f21c-4a1a-9c3b-37fd42163a3f">
 				<File Id="nantFile" Name="client.bld" LongName="client.build" src="..\client.build" DiskId="1"/>
+				<File Id="sln2005" Name="MySql5.sln" LongName="MySqlClient.2005.sln" src="..\MySQLClient.2005.sln" DiskId="1"/>
+				<File Id="sln2003" Name="MySql3.sln" LongName="MySqlClient.2003.sln" src="..\MySQLClient.2003.sln" DiskId="1"/>
 			</Component>
 			<Directory Id="clientFolder" Name="msc" LongName="MySqlClient">
 				<Component Id="ClientSrc" DiskId="1" Guid="e79a81cc-7f4a-420d-a58c-2a90f0b6f372">
@@ -45,6 +47,7 @@
 					<File Id="file39" Name="STORED_1.CS" LongName="StoredProcedure.cs" src="..\mysqlclient\StoredProcedure.cs" />
 					<File Id="file40" Name="TRANSA_1.CS" LongName="transaction.cs" src="..\mysqlclient\transaction.cs" />
 					<File Id="file41" Name="USAGEA_1.CS" LongName="UsageAdvisor.cs" src="..\mysqlclient\UsageAdvisor.cs" />
+					<File Id="file45" Name="Reserv_1.txt" LongName="ReservedWords.txt" src="..\mysqlclient\ReservedWords.txt"/>
 				</Component>
 				<Directory Id="commonFolder" Name="Common">
 					<Component Id="CommonSrc"  DiskId="1" Guid="237ec06a-e0df-4f1b-976a-ba2f1aaa0de4">

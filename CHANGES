@@ -1,3 +1,5 @@
+Version 5.0.1 (Beta)
+
     Bugs fixed
     ----------
 	Bug #21521 # Symbols not allowed in column/table names.    
@@ -18,8 +20,9 @@
     Implemented CommandTimeout for non-batch queries
     Fixed socket create code related to IPv6 (thanks Mark!)
     Added foreign key support to GetSchema
+    Fixed installer to add assembly to GAC and machine.config
     
-Version 5.0.0.0 (Alpha)
+Version 5.0.1 (Alpha)
 
     Bugs fixed
     ----------
