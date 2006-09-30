@@ -39,6 +39,7 @@
 					<File Id="file30" Name="PREPAR_1.CS" LongName="PreparableStatement.cs" src="..\mysqlclient\PreparableStatement.cs" />
 					<File Id="file31" Name="PROCED_1.CS" LongName="ProcedureCache.cs" src="..\mysqlclient\ProcedureCache.cs" />
 					<File Id="file36" Name="RESOUR_1.RES" LongName="Resources.resx" src="..\mysqlclient\Resources.resx" />
+          <File Id="file44" Name="RESOUR_2.RES" LongName="Resources.Designer.cs" src="..\mysqlclient\Resources.Designer.cs" />
 					<File Id="file37" Name="SCHEMA_1.CS" LongName="SchemaProvider.cs" src="..\mysqlclient\SchemaProvider.cs" />
 					<File Id="file38" Name="STATEM_1.CS" LongName="Statement.cs" src="..\mysqlclient\Statement.cs" />
 					<File Id="file39" Name="STORED_1.CS" LongName="StoredProcedure.cs" src="..\mysqlclient\StoredProcedure.cs" />

@@ -41,7 +41,7 @@ namespace MySql.Data.MySqlClient
         private int maxInPos;
         private ZInputStream zInStream;
 
-		public CompressedStream( Stream baseStream )
+		public CompressedStream(Stream baseStream)
 		{
 			this.baseStream = baseStream;
             localByte = new byte[1];

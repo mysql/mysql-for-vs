@@ -296,6 +296,7 @@ namespace MySql.Data.MySqlClient.Tests
         /// <summary>
         /// Bug# 8119.  Unable to reproduce but left in anyway
         /// </summary>
+        [Category("NotWorking")]
         [Test]
         public void ReallyBigCommandString()
         {
@@ -403,6 +404,7 @@ namespace MySql.Data.MySqlClient.Tests
 
         [Category("5.0")]
         [Test]
+        [Category("NotWorking")]
         public void CancelSingleQuery()
         {
             // first we need a routine that will run for a bit
@@ -425,6 +427,7 @@ namespace MySql.Data.MySqlClient.Tests
 
         [Category("5.0")]
         [Test]
+        [Category("NotWorking")]
         public void TimeoutExpiring()
         {
             // first we need a routine that will run for a bit
@@ -528,6 +531,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
+    [Category("Pipe")]
     public class CommandTestsPipe : CommandTests
     {
         protected override string GetConnectionInfo()

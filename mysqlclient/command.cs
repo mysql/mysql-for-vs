@@ -422,8 +422,6 @@ namespace MySql.Data.MySqlClient
 		/// <include file='docs/mysqlcommand.xml' path='docs/Prepare2/*'/>
 		private void Prepare(int cursorPageSize) 
 		{
-            Debug.Assert(statement == null);
-
 			if (! connection.driver.Version.isAtLeast(5,0,0) && cursorPageSize > 0)
 				throw new InvalidOperationException("Nested commands are only supported on MySQL 5.0 and later");
 
