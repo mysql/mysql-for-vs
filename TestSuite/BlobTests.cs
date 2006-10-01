@@ -196,7 +196,6 @@ namespace MySql.Data.MySqlClient.Tests
 		}
 
 		[Test]
-		[Category("4.0")]
 		public void InsertText() 
 		{
 			InternalInsertText(false);
@@ -263,7 +262,6 @@ namespace MySql.Data.MySqlClient.Tests
 		}
 
 		[Test]
-		[Category("4.0")]
 		public void UpdateDataSet() 
 		{
             execSQL("DROP TABLE IF EXISTS Test");
@@ -280,7 +278,7 @@ namespace MySql.Data.MySqlClient.Tests
 				string s = (string)dt.Rows[0][2];
 				Assert.AreEqual("Text field", s);
 
-				byte[] inBuf = Utils.CreateBlob(2);
+				byte[] inBuf = Utils.CreateBlob(512);
                 dt.Rows[0].BeginEdit();
 				dt.Rows[0]["blob1"] = inBuf;
                 dt.Rows[0].EndEdit();

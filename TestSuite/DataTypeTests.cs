@@ -20,6 +20,7 @@
 
 using System;
 using MySql.Data.MySqlClient;
+using MySql.Data.Types;
 using System.Data;
 using NUnit.Framework;
 

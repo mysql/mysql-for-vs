@@ -22,7 +22,8 @@ using System;
 using MySql.Data.MySqlClient;
 using System.Data;
 using NUnit.Framework;
-using System.Diagnostics;
+using System.Threading;
+using System.Collections;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -113,12 +114,50 @@ namespace MySql.Data.MySqlClient.Tests
 			execSQL("set @@global.max_allowed_packet=1047552");
 		}
 
-	}
+		[Test]
+		public void TestSequence()
+		{
+            MySqlCommand cmd = new MySqlCommand("insert into Test (id, name) values (?id, 'test')", conn);
+			cmd.Parameters.Add( new MySqlParameter("?id", 1));
+
+			for (int i=1; i <= 8000; i++)
+			{
+				cmd.Parameters[0].Value = i;
+				cmd.ExecuteNonQuery();
+			}
+				
+			int i2 = 0;
+			cmd = new MySqlCommand("select * from Test", conn);
+			MySqlDataReader reader = null;
+			try 
+			{
+				reader = cmd.ExecuteReader();
+				while (reader.Read())
+				{
+					Assert.AreEqual( i2+1, reader.GetInt32(0), "Sequence out of order" );
+					i2++;
+				}
+				reader.Close();
+
+				Assert.AreEqual( 8000, i2 );
+				cmd = new MySqlCommand("delete from Test where id >= 100", conn);
+				cmd.ExecuteNonQuery();
+			}
+			catch (Exception ex) 
+			{
+				Assert.Fail( ex.Message );
+			}
+			finally 
+			{
+				if (reader != null) reader.Close();
+			}
+		}
+    }
 
     #region Configs
 
-    [Category("Compressed")]
-    public class StressTestsSocketCompressed : PreparedStatements
+	[Category("Compressed")]
+    public class StressTestsSocketCompressed : StressTests
     {
         protected override string GetConnectionInfo()
         {
@@ -126,8 +165,8 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
-    [Category("Pipe")]
-    public class StressTestsPipe : PreparedStatements
+	[Category("Pipe")]
+    public class StressTestsPipe : StressTests
     {
         protected override string GetConnectionInfo()
         {

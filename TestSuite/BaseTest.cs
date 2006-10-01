@@ -37,20 +37,13 @@ namespace MySql.Data.MySqlClient.Tests
 		protected string			host;
 		protected string			user;
 		protected string			password;
-		protected string			otherkeys;
 
 		public BaseTest() 
 		{
 			csAdditions = ";pooling=false";
             user = "root";
             password = "";
-#if NET20
-            otherkeys = ConfigurationManager.AppSettings["otherkeys"];
-            host = ConfigurationManager.AppSettings["host"];
-#else
-            otherkeys = ConfigurationSettings.AppSettings["otherkeys"];
-            host = ConfigurationSettings.AppSettings["host"];
-#endif
+            host = "localhost";
         }
 
         protected virtual string GetConnectionInfo()
@@ -61,8 +54,7 @@ namespace MySql.Data.MySqlClient.Tests
 		protected string GetConnectionString(bool includedb)
 		{
             string connStr = String.Format("server={0};user id={1};password={2};" +
-                "persist security info=true;{3}{4}", host, user, password,
-                otherkeys, csAdditions);
+                "persist security info=true;{3}", host, user, password, csAdditions);
             if (includedb)
                 connStr += ";database=test";
             connStr += GetConnectionInfo();
@@ -74,7 +66,7 @@ namespace MySql.Data.MySqlClient.Tests
 			try 
 			{
 				string connString = GetConnectionString(true);
-				conn = new MySqlConnection( connString );
+				conn = new MySqlConnection(connString);
 				conn.Open();
 			}
 			catch (Exception ex)

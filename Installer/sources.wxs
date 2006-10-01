@@ -158,6 +158,9 @@
 					<File Id="file439" Name="TRANSA_1.CS" LongName="Transactions.cs" src="..\TestSuite\Transactions.cs" />
 					<File Id="file440" Name="USAGEA_1.CS" LongName="UsageAdvisor.cs" src="..\TestSuite\UsageAdvisor.cs" />
 					<File Id="file441" Name="Utils.cs" src="..\TestSuite\Utils.cs" />
+					<File Id="file442" Name="Simple_1.cs" LongName="SimpleTransactions.cs" src="..\mysqlclient\SimpleTransactions.cs"/>
+					<File Id="file443" Name="Timeou_1.cs" LongName="TimeoutAndCancel.cs" src="..\mysqlclient\TimeoutAndCancel.cs"/>
+					<File Id="file444" Name="Syntax2.cs" src="..\mysqlclient\Syntax2.cs"/>
 				</Component>
 			</Directory>
 		</DirectoryRef> 

@@ -110,6 +110,7 @@
     <Compile Include="CommandTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ConnectionStringBuilder.cs" />
     <Compile Include="ConnectionTests.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -149,6 +150,7 @@
     <Compile Include="PreparedStatements.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SimpleTransactions.cs" />
     <Compile Include="StoredProcedure.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -159,6 +161,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Threading.cs" />
+    <Compile Include="TimeoutAndCancel.cs" />
     <Compile Include="Transactions.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -168,9 +171,6 @@
     <Compile Include="Utils.cs">
       <SubType>Code</SubType>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

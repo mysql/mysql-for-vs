@@ -96,7 +96,6 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-        [Explicit]
 		[Test]
 		public void LoadDataLocalInfile() 
 		{

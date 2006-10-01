@@ -22,8 +22,9 @@ using System;
 using System.Data;
 using MySql.Data.MySqlClient;
 using NUnit.Framework;
-using System.Threading;
 using System.Globalization;
+using System.Threading;
+using MySql.Data.Types;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -205,24 +206,26 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual( "myvalue", val );
 		}
 
-		[Test()]
+		[Test]
 		public void InputOutputParameters()
 		{
 			// create our procedure
-			execSQL( "CREATE PROCEDURE spTest( INOUT strVal VARCHAR(50), INOUT numVal INT ) " +
-				"BEGIN  SET strVal = CONCAT(strVal,'ending'); SET numVal=numVal * 2;  END" );
+			execSQL( "CREATE PROCEDURE spTest( INOUT strVal VARCHAR(50), INOUT numVal INT, OUT outVal INT UNSIGNED ) " +
+				"BEGIN  SET strVal = CONCAT(strVal,'ending'); SET numVal=numVal * 2;  SET outVal=99; END" );
 
 			MySqlCommand cmd = new MySqlCommand("spTest", conn);
 			cmd.CommandType = CommandType.StoredProcedure;
 			cmd.Parameters.Add( "?strVal", "beginning" );
 			cmd.Parameters.Add( "?numVal", 33 );
+			cmd.Parameters.Add( "?outVal", MySqlDbType.Int32);
 			cmd.Parameters[0].Direction = ParameterDirection.InputOutput;
 			cmd.Parameters[1].Direction = ParameterDirection.InputOutput;
+			cmd.Parameters[2].Direction = ParameterDirection.Output;
 			int rowsAffected = cmd.ExecuteNonQuery();
 			Assert.AreEqual( 0, rowsAffected );
 			Assert.AreEqual( "beginningending", cmd.Parameters[0].Value );
 			Assert.AreEqual( 66, cmd.Parameters[1].Value );
-
+			Assert.AreEqual(99, cmd.Parameters[2].Value);
 		}
 
 		[Test]
@@ -481,7 +484,7 @@ namespace MySql.Data.MySqlClient.Tests
 		/// <summary>
 		/// Bug #13590  	ExecuteScalar returns only Int64 regardless of actual SQL type
 		/// </summary>
-        [Explicit]
+		[Category("NotWorking")]
 		[Test]
 		public void TestSelectingInts()
 		{

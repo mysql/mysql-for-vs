@@ -22,15 +22,13 @@ using System;
 using System.Data;
 using System.IO;
 using NUnit.Framework;
-#if NET20
 using System.Transactions;
 using System.Data.Common;
-#endif
 
 namespace MySql.Data.MySqlClient.Tests
 {
 	[TestFixture]
-	public class TransactionTests : BaseTest
+	public class Transactions : BaseTest
 	{
 		[TestFixtureSetUp]
 		public void FixtureSetup()
@@ -46,59 +44,6 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 			Close();
 		}
-
-		[Test]
-		public void TestReader() 
-		{
-			execSQL("INSERT INTO Test VALUES('P', 'Test1', 'Test2')");
-
-			MySqlTransaction txn = conn.BeginTransaction();
-			MySqlConnection c = txn.Connection;
-			Assert.AreEqual( conn, c );
-			MySqlCommand cmd = new MySqlCommand("SELECT name, name2 FROM Test WHERE key2='P'", 
-				conn, txn);
-			MySqlTransaction t2 = cmd.Transaction;
-			Assert.AreEqual( txn, t2 );
-			MySqlDataReader reader = null;
-			try 
-			{
-				reader = cmd.ExecuteReader();
-				reader.Close();
-				txn.Commit();
-			}
-			catch (Exception ex) 
-			{
-				Assert.Fail( ex.Message );
-				txn.Rollback();
-			}
-			finally 
-			{
-				if (reader != null) reader.Close();
-			}
-		}
-
-        /// <summary>
-        /// Bug #22042 mysql-connector-net-5.0.0-alpha BeginTransaction 
-        /// </summary>
-        void Bug22042()
-        {
-            DbProviderFactory factory = 
-                new MySql.Data.MySqlClient.MySqlClientFactory();
-            DbConnection conexion = factory.CreateConnection();
-
-            try
-            {
-                conexion.ConnectionString = GetConnectionString(true);
-                conexion.Open();
-                DbTransaction trans = conexion.BeginTransaction();
-                trans.Rollback();
-                conexion.Close();
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
-        }
 
 #if NET20
 
@@ -224,5 +169,27 @@ namespace MySql.Data.MySqlClient.Tests
             }
         }
 
-	}
+        /// <summary
+        /// Bug #22042 mysql-connector-net-5.0.0-alpha BeginTransaction 
+        /// </summary>
+        void Bug22042()
+        {
+            DbProviderFactory factory =
+                new MySql.Data.MySqlClient.MySqlClientFactory();
+            DbConnection conexion = factory.CreateConnection();
+
+            try
+            {
+                conexion.ConnectionString = GetConnectionString(true);
+                conexion.Open();
+                DbTransaction trans = conexion.BeginTransaction();
+                trans.Rollback();
+                conexion.Close();
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
+    }
 }

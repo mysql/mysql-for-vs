@@ -23,9 +23,9 @@ using System.Data;
 using System.Data.Common;
 using System.Threading;
 using MySql.Data.MySqlClient;
+using MySql.Data.Types;
 using System.Globalization;
 using NUnit.Framework;
-using MySql.Data.Types;
 using System.Text;
 
 namespace MySql.Data.MySqlClient.Tests
@@ -233,7 +233,6 @@ namespace MySql.Data.MySqlClient.Tests
 				c.Open();
 				MySqlDataAdapter da = new MySqlDataAdapter("SELECT id, dt FROM Test", c);
 				MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
-				cb.ToString();  // keep the compiler happy
 
 				DataTable dt = new DataTable();
 				dt.Columns.Add(new DataColumn("id", typeof(int)));
