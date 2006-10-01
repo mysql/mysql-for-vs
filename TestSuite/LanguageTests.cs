@@ -27,7 +27,7 @@ using NUnit.Framework;
 
 namespace MySql.Data.MySqlClient.Tests
 {
-	[TestFixture()]
+	[TestFixture]
 	public class LanguageTests : BaseTest
 	{
 		[TestFixtureSetUp]
@@ -43,10 +43,9 @@ namespace MySql.Data.MySqlClient.Tests
 		}
 
 		[Test]
+		[Category("4.1")]
 		public void Unicode()
 		{
-			if (!Is41 && !Is50) return;
-
 			execSQL( "DROP TABLE IF EXISTS Test" );
 			execSQL( "CREATE TABLE Test (u2 varchar(255) CHARACTER SET ucs2)");
 
@@ -104,10 +103,9 @@ namespace MySql.Data.MySqlClient.Tests
 		}
 
 		[Test]
+		[Category("4.1")]
 		public void UTF8() 
 		{
-			if (!Is41 && !Is50) return;
-
 			execSQL("DROP TABLE IF EXISTS Test");
 			execSQL("CREATE TABLE Test (id int, name VARCHAR(200) CHAR SET utf8)");
 
@@ -171,11 +169,10 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-		[Test()]
+		[Test]
+		[Category("4.1")]
 		public void UTF8PreparedAndUsingParameters() 
 		{
-			if (!Is41 && !Is50) return;
-
 			execSQL("DROP TABLE IF EXISTS Test");
 			execSQL("CREATE TABLE Test (name VARCHAR(200) CHAR SET utf8)");
 
@@ -243,11 +240,10 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-		[Test()]
+		[Test]
+		[Category("4.1")]
 		public void Chinese() 
 		{
-			if (!Is41 && !Is50) return;
-
 			MySqlConnection c = new MySqlConnection( conn.ConnectionString + ";charset=utf8" );
 			c.Open();
 
@@ -277,11 +273,10 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-		[Test()]
+		[Test]
+		[Category("4.1")]
 		public void Turkish() 
 		{
-			if (!Is41 && !Is50) return;
-
 			execSQL("DROP TABLE IF EXISTS Test");
 			execSQL("CREATE TABLE Test (id int, name VARCHAR(200) CHAR SET latin5 )");
 
@@ -311,11 +306,10 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-		[Test()]
+		[Test]
+		[Category("4.1")]
 		public void Russian() 
 		{
-			if (!Is41 && !Is50) return;
-
 			execSQL("DROP TABLE IF EXISTS Test");
 			execSQL("CREATE TABLE Test (id int, name VARCHAR(200) CHAR SET cp1251)");
 			
@@ -345,10 +339,9 @@ namespace MySql.Data.MySqlClient.Tests
 		}
 
 		[Test]
+		[Category("4.1")]
 		public void VariousCollations() 
 		{
-			if (!Is41 && ! Is50) return;
-
 			execSQL("DROP DATABASE IF EXISTS dbtest");
 			execSQL("DROP TABLE IF EXISTS test_tbl");
 			execSQL("CREATE DATABASE `dbtest` DEFAULT CHARACTER SET utf8 COLLATE utf8_swedish_ci");

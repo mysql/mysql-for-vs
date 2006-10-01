@@ -412,7 +412,7 @@ namespace MySql.Data.MySqlClient.Tests
 		/// Bug #8514  	CURRENT_TIMESTAMP default not respected
 		/// </summary>
 		[Test]
-        [Explicit]
+        [Category("NotWorking")]
 		public void DefaultValues() 
 		{
 			execSQL("DROP TABLE IF EXISTS test");
@@ -473,6 +473,64 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
+        /// <summary>
+        /// Bug #16307 @@Identity returning incorrect value 
+        /// </summary>
+        [Test]
+        public void Bug16307()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test (OrgNum int auto_increment, CallReportNum int, Stamp varchar(50), " +
+                "WasRealCall varchar(50), WasHangup varchar(50), primary key(orgnum))");
+
+            string strSQL = "INSERT INTO test(OrgNum, CallReportNum, Stamp, WasRealCall, WasHangup) " +
+                "VALUES (?OrgNum, ?CallReportNum, ?Stamp, ?WasRealCall, ?WasHangup)";
+
+            MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+            MySqlParameterCollection pc = cmd.Parameters;
+        		
+            pc.Add("?OrgNum", MySqlDbType.Int32, 0, "OrgNum");
+            pc.Add("?CallReportNum", MySqlDbType.Int32, 0, "CallReportNum");
+            pc.Add("?Stamp", MySqlDbType.VarChar, 0, "Stamp");
+            pc.Add("?WasRealCall", MySqlDbType.VarChar, 0, "WasRealCall");
+            pc.Add("?WasHangup", MySqlDbType.VarChar, 0, "WasHangup");
+
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
+            da.InsertCommand = cmd;
+
+            DataSet ds = new DataSet();
+            da.Fill(ds);
+
+            DataRow row = ds.Tables[0].NewRow();
+            row["CallReportNum"] = 1;
+            row["Stamp"] = "stamp";
+            row["WasRealCall"] = "yes";
+            row["WasHangup"] = "no";
+            ds.Tables[0].Rows.Add(row);
+
+            da.Update(ds.Tables[0]);
+
+            strSQL = "SELECT @@IDENTITY AS 'Identity';";
+            MySqlCommand cmd2 = new MySqlCommand(strSQL, conn);
+            MySqlDataReader reader = null;
+            try
+            {
+                reader = cmd2.ExecuteReader();
+                reader.Read();
+                int intCallNum = Int32.Parse(reader.GetValue(0).ToString());
+                Assert.AreEqual(1, intCallNum);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                if (reader != null)
+                    reader.Close();
+            }
+        }
+        
         /// <summary>
         /// Bug #8131 Data Adapter doesn't close connection 
         /// </summary>

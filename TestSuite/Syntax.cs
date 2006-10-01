@@ -260,11 +260,10 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
+		[Category("4.1")]
 		[Test]
 		public void ForceWarnings() 
 		{
-			if (! Is41 && ! Is50) return;
-
 			MySqlCommand cmd = new MySqlCommand("SELECT * FROM test; DROP TABLE IF EXISTS test2; SELECT * FROM test", conn);
 			MySqlDataReader reader = null; 
 			try 
@@ -326,6 +325,34 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual(1000, cnt);
 		}
 
+        [Test]
+        public void AutoIncrement()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test (testID int(11) NOT NULL auto_increment, testName varchar(100) default '', " +
+                    "PRIMARY KEY  (testID)) ENGINE=InnoDB DEFAULT CHARSET=latin1");
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES (NULL, 'test')", conn);
+            cmd.ExecuteNonQuery();
+            cmd.CommandText = "SELECT @@IDENTITY as 'Identity'";
+            MySqlDataReader reader = null;
+            try
+            {
+                reader = cmd.ExecuteReader();
+                reader.Read();
+                int ident = Int32.Parse(reader.GetValue(0).ToString());
+                Assert.AreEqual(1, ident);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                if (reader != null)
+                    reader.Close();
+            }
+        }
+        
         /// <summary>
         /// Bug #21521 # Symbols not allowed in column/table names. 
         /// </summary>

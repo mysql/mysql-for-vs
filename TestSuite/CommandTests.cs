@@ -233,6 +233,7 @@ namespace MySql.Data.MySqlClient.Tests
 		/// <summary>
 		/// Bug #12245  	using Prepare() on an insert command causes null parameters to convert to "0"
 		/// </summary>
+		[Category("4.1")]
 		[Test]
 		public void InsertingPreparedNulls()
 		{
@@ -265,6 +266,7 @@ namespace MySql.Data.MySqlClient.Tests
 		/// <summary>
 		/// MySQL Bugs: #12163: Insert using prepared statement causes double insert
 		/// </summary>
+		[Category("4.1")]
 		[Test]
 		public void PreparedInsertUsingReader()
 		{

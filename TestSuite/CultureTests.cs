@@ -46,7 +46,6 @@ namespace MySql.Data.MySqlClient.Tests
 		}
 
 
-        [Category("4.0")]
 		[Test]
 		public void TestFloats() 
 		{

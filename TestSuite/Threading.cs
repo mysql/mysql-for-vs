@@ -84,16 +84,6 @@ namespace MySql.Data.MySqlClient.Tests
 		{
         }
 
-        [SetUp]
-        protected override void Setup()
-        {
-        }
-
-        [TearDown]
-        protected override void Teardown()
-        {
-        }
-
         private void MultipleThreadsWorker(object ev)
         {
             (ev as ManualResetEvent).WaitOne();

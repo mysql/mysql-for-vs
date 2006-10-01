@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB
+// Copyright (C) 2004-2006 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -27,7 +27,7 @@ using NUnit.Framework;
 
 namespace MySql.Data.MySqlClient.Tests
 {
-	[TestFixture()]
+	[TestFixture]
 	public class MySqlHelperTests : BaseTest
 	{
 		[TestFixtureSetUp]
@@ -49,6 +49,7 @@ namespace MySql.Data.MySqlClient.Tests
 		/// Bug #11490  	certain incorrect queries trigger connection must be valid and open message
 		/// </summary>
 		[Test]
+		[Category("4.1")]
 		public void Bug11490()
 		{
 			MySqlDataReader reader = null;

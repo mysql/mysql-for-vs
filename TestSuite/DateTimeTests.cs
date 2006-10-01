@@ -437,6 +437,44 @@ namespace MySql.Data.MySqlClient.Tests
                     reader.Close();
             }
         }
+        
+        [Test]
+        public void DateTimeInDataTable()
+        {
+            execSQL("INSERT INTO test VALUES(1, Now(), '0000-00-00', NULL, NULL)");
+
+            MySqlConnection c = new MySqlConnection(
+                conn.ConnectionString + ";pooling=false;AllowZeroDatetime=true");
+            c.Open();
+
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", c);
+            DataTable dt = new DataTable();
+            try
+            {
+                da.Fill(dt);
+                DataRow row = dt.NewRow();
+                row["id"] = 2;
+                row["dt"] = DateTime.Now;
+                row["d"] = DateTime.Now;
+                row["t"] = DateTime.Now;
+                row["ts"] = DBNull.Value;
+                dt.Rows.Add(row);
+                da.Update(dt);
+
+                dt.Rows.Clear();
+                da.Fill(dt);
+                Assert.AreEqual(2, dt.Rows.Count);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                if (c != null)
+                    c.Close();
+            }
+        }        
 	}
 
 }
