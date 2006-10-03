@@ -38,7 +38,19 @@ namespace MySql.Data.MySqlClient
 	{
 		private ArrayList items = new ArrayList();
 		private char paramMarker = '?';
-        //private bool changed;
+    private Hashtable ciHash;
+    private Hashtable hash;
+
+    public MySqlParameterCollection()
+    {
+      hash = new Hashtable();
+#if NET20
+      ciHash = new Hashtable(StringComparer.CurrentCultureIgnoreCase);
+#else
+      ciHash = new Hashtable(new CaseInsensitiveHashCodeProvider(),
+        new CaseInsensitiveComparer());
+#endif
+    }
 
 		internal char ParameterMarker 
 		{
@@ -108,8 +120,10 @@ namespace MySql.Data.MySqlClient
 				}
 			}
 
-			items.Add(value);
-			return value;
+			int index = items.Add(value);
+      hash.Add(value.ParameterName, index);
+      ciHash.Add(value.ParameterName, index); 
+      return value;
 		}
 
         private MySqlParameter AddReturnParameter(MySqlParameter value)
@@ -242,6 +256,8 @@ namespace MySql.Data.MySqlClient
         public override void Clear()
         {
             items.Clear();
+            hash.Clear();
+            ciHash.Clear();
         }
 
         /// <summary>
@@ -295,18 +311,12 @@ namespace MySql.Data.MySqlClient
         /// <returns>The zero-based location of the <see cref="MySqlParameter"/> in the collection.</returns>
         public override int IndexOf(string parameterName)
         {
-            if (parameterName[0] == paramMarker)
-                parameterName = parameterName.Substring(1, parameterName.Length - 1);
-            parameterName = parameterName.ToLower();
-            for (int x = 0; x < items.Count; x++)
-            {
-                MySqlParameter p = (MySqlParameter)items[x];
-                string listName = p.ParameterName;
-                if (listName[0] == paramMarker)
-                    listName = listName.Substring(1, listName.Length - 1);
-                if (listName.ToLower() == parameterName) return x;
-            }
+          object o = hash[parameterName];
+          if (o == null)
+            o = ciHash[parameterName];
+          if (o == null)
             return -1;
+          return (int)o;
         }
 
         /// <summary>

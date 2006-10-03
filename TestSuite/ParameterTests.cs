@@ -346,7 +346,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
 			MySqlCommand c = new MySqlCommand("INSERT INTO test (foo) values (?foo)", conn);
-			c.Parameters.Add("foo", MySqlDbType.Int32, 0, "foo");
+			c.Parameters.Add("?foo", MySqlDbType.Int32, 0, "foo");
 
 			da.InsertCommand = c;
 			DataTable dt = new DataTable();
