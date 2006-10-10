@@ -120,11 +120,6 @@
 		<call target="testclient"/>
 	</target>
 
-	<target name="test-net-1.0" depends="net-1.0">
-		<property name="framework" value="net-1.0"/>
-		<call target="testclient"/>
-	</target>
-
 	<target name="test-mono-1.0" depends="mono-1.0">
         <property name="nunit" value="${nunit-mono}"/>
 		<property name="framework" value="mono-1.0"/>
