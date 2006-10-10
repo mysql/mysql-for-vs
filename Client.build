@@ -75,13 +75,6 @@
 		</csc>
 	</target>
 
-	<!-- core managed driver target 1.0 -->	
-	<target name="net-1.0" description="1.0 .NET target">
-		<property name="nunit-lib" value="${nunit.dir}/bin"/>
-		<property name="framework" value="net-1.0"/>
-		<call target="client"/>
-	</target>
-	
 	<!-- core managed driver target 1.1 -->
 	<target name="net-1.1" description="1.1 .NET target">
 		<property name="nunit-lib" value="${nunit.dir}/bin"/>
