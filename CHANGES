@@ -7,6 +7,7 @@ Version 5.0.2 (unreleased)
     -------------
     Increased speed of MySqlParameterCollection.IndexOf(string) orders of magnitude
     (parameter name lookups are now strict on use of parameter marker)
+	Improved character set mappings
 
 Version 5.0.1 (Beta)
 
