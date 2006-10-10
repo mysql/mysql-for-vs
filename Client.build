@@ -106,7 +106,7 @@
 	</target>
 
 	<!-- testing targets -->
-	<target name="alltests" depends="test-net-2.0, test-net-1.1, test-net-1.0">
+	<target name="alltests" depends="test-net-2.0, test-net-1.1">
 	</target>
 	
 	<target name="test-net-1.1" depends="net-1.1">
