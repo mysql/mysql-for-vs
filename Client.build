@@ -32,7 +32,7 @@
 	</if>
 
 	<!-- builds the client on all supported frameworks -->
-	<target name="allframeworks" depends="net-1.0, net-1.1, net-2.0, mono-1.0">
+	<target name="allframeworks" depends="net-1.1, net-2.0, mono-1.0">
 		<call target="Docs"/>
 	</target>
 
