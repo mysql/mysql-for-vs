@@ -376,29 +376,33 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void BlobBiggerThanMaxPacket()
         {
-            execSQL("set @@global.max_allowed_packet=500000");
+          execSQL("set @@global.max_allowed_packet=500000");
 
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL("CREATE TABLE test (id INT(10), image BLOB)");
+          execSQL("DROP TABLE IF EXISTS test");
+          execSQL("CREATE TABLE test (id INT(10), image BLOB)");
 
-            try
-            {
-                byte[] image = Utils.CreateBlob(1000000);
-                MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES(NULL, ?image)", conn);
-                cmd.Parameters.Add("?image", image);
-                cmd.ExecuteNonQuery();
-                Assert.Fail("This should have thrown an exception");
-            }
-            catch (Exception)
-            {
-                Assert.AreEqual(ConnectionState.Open, conn.State);
-            }
-            finally
-            {
-                execSQL("set @@global.max_allowed_packet=1000000");
-            }
+          MySqlConnection c = new MySqlConnection(GetConnectionString(true));
+          try
+          {
+            c.Open();
+            byte[] image = Utils.CreateBlob(1000000);
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES(NULL, ?image)", c);
+            cmd.Parameters.Add("?image", image);
+            cmd.ExecuteNonQuery();
+            Assert.Fail("This should have thrown an exception");
+          }
+          catch (Exception)
+          {
+            Assert.AreEqual(ConnectionState.Open, c.State);
+          }
+          finally
+          {
+            if (c != null)
+              c.Close();
+            execSQL("set @@global.max_allowed_packet=2000000");
+          }
         }
-     }
+      }
 
     #region Configs
 

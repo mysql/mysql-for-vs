@@ -181,33 +181,5 @@ namespace MySql.Data.MySqlClient.Tests
 			object var2 = cmd.ExecuteScalar();
 			Assert.AreEqual(DBNull.Value, var2);
 		}
-
-        [Test]
-        public void ExceedMaxAllowedPacket()
-        {
-            execSQL("DROP TABLE IF EXISTS test");
-			execSQL("CREATE TABLE test (b1 LONGBLOB)");
-
-            try
-            {
-                MySqlCommand cmd = new MySqlCommand("select @@global.max_allowed_packet", conn);
-                object maxPacketSize = cmd.ExecuteScalar();
-
-                byte[] buffer = new byte[(UInt64)maxPacketSize + 100];
-                cmd.CommandText = "INSERT INTO test vALUES (?b1)";
-                cmd.Parameters.Add("b1", buffer);
-                cmd.ExecuteNonQuery();
-            }
-            catch (MySqlException mex)
-            {
-                Assert.IsTrue(conn.State == ConnectionState.Open);
-                Assert.AreEqual((int)MySqlErrorCode.PacketTooLarge, mex.Number);
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
-        }
-        
 	}
 }

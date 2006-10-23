@@ -38,19 +38,19 @@ namespace MySql.Data.MySqlClient
 	{
 		private ArrayList items = new ArrayList();
 		private char paramMarker = '?';
-    private Hashtable ciHash;
-    private Hashtable hash;
+		private Hashtable ciHash;
+		private Hashtable hash;
 
-    public MySqlParameterCollection()
-    {
-      hash = new Hashtable();
+		public MySqlParameterCollection()
+		{
+			hash = new Hashtable();
 #if NET20
-      ciHash = new Hashtable(StringComparer.CurrentCultureIgnoreCase);
+			ciHash = new Hashtable(StringComparer.CurrentCultureIgnoreCase);
 #else
-      ciHash = new Hashtable(new CaseInsensitiveHashCodeProvider(),
-        new CaseInsensitiveComparer());
+			ciHash = new Hashtable(new CaseInsensitiveHashCodeProvider(),
+			new CaseInsensitiveComparer());
 #endif
-    }
+		}
 
 		internal char ParameterMarker 
 		{
@@ -67,7 +67,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 
-		#region Public Methods
+#region Public Methods
 
 		/// <summary>
 		/// Gets the <see cref="MySqlParameter"/> at the specified index.
@@ -121,9 +121,9 @@ namespace MySql.Data.MySqlClient
 			}
 
 			int index = items.Add(value);
-      hash.Add(value.ParameterName, index);
-      ciHash.Add(value.ParameterName, index); 
-      return value;
+			hash.Add(value.ParameterName, index);
+			ciHash.Add(value.ParameterName, index); 
+			return value;
 		}
 
         private MySqlParameter AddReturnParameter(MySqlParameter value)
@@ -186,9 +186,9 @@ namespace MySql.Data.MySqlClient
 			return Add(new MySqlParameter(parameterName, dbType, size, sourceColumn));
 		}
 
-		#endregion
+#endregion
 
-        #region DbParameterCollection Implementation
+#region DbParameterCollection Implementation
 
         public override void AddRange(Array values)
         {
@@ -247,7 +247,8 @@ namespace MySql.Data.MySqlClient
             if (p.ParameterName == null || p.ParameterName == String.Empty)
                 throw new MySqlException("Parameters must be named");
 
-            return items.Add((MySqlParameter)value);
+			p = Add(p);
+			return IndexOf(p);
         }
 
         /// <summary>
@@ -388,7 +389,7 @@ namespace MySql.Data.MySqlClient
             get { return items.SyncRoot; }
         }
 
-        #endregion
+#endregion
 
     }
 }

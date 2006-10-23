@@ -25,12 +25,11 @@ using MySql.Data.MySqlClient;
 
 namespace MySql.Data.Types
 {
-
 	internal struct MySqlString : IMySqlValue
 	{
-		private string		mValue;
-		private	bool		isNull;
-		private MySqlDbType	type;
+		private string mValue;
+		private bool isNull;
+		private MySqlDbType type;
 
 		public MySqlString(MySqlDbType type, bool isNull)
 		{
@@ -55,15 +54,15 @@ namespace MySql.Data.Types
 
 		MySqlDbType IMySqlValue.MySqlDbType
 		{
-			get	{ return type; }
+			get { return type; }
 		}
 
 		DbType IMySqlValue.DbType
 		{
-			get	{ return DbType.String; }
+			get { return DbType.String; }
 		}
 
-		object IMySqlValue.Value 
+		object IMySqlValue.Value
 		{
 			get { return mValue; }
 		}
@@ -75,15 +74,15 @@ namespace MySql.Data.Types
 
 		Type IMySqlValue.SystemType
 		{
-			get	{ return typeof(string); }
+			get { return typeof(string); }
 		}
 
 		string IMySqlValue.MySqlTypeName
 		{
-			get	{ return type == MySqlDbType.Set ? "SET" : type == MySqlDbType.Enum ? "ENUM" : "VARCHAR"; }
+			get { return type == MySqlDbType.Set ? "SET" : type == MySqlDbType.Enum ? "ENUM" : "VARCHAR"; }
 		}
 
-		private string EscapeString( string s )
+		private string EscapeString(string s)
 		{
 			s = s.Replace("\\", "\\\\");
 			s = s.Replace("\'", "\\\'");
@@ -109,16 +108,16 @@ namespace MySql.Data.Types
 
 		IMySqlValue IMySqlValue.ReadValue(MySqlStream stream, long length, bool nullVal)
 		{
-			if (nullVal) 
-                return new MySqlString(type, true);
+			if (nullVal)
+				return new MySqlString(type, true);
 
 			string s = String.Empty;
 			if (length == -1)
 				s = stream.ReadLenString();
 			else
 				s = stream.ReadString(length);
-            MySqlString str = new MySqlString(type, s);
-            return str;
+			MySqlString str = new MySqlString(type, s);
+			return str;
 		}
 
 		void IMySqlValue.SkipValue(MySqlStream stream)
@@ -129,43 +128,43 @@ namespace MySql.Data.Types
 
 		#endregion
 
-        internal static void SetDSInfo(DataTable dsTable)
-        {
-            string[] types = new string[] { "CHAR", "VARCHAR", "SET", "ENUM" };
-            MySqlDbType[] dbtype = new MySqlDbType[] { MySqlDbType.String, 
+		internal static void SetDSInfo(DataTable dsTable)
+		{
+			string[] types = new string[] { "CHAR", "VARCHAR", "SET", "ENUM" };
+			MySqlDbType[] dbtype = new MySqlDbType[] { MySqlDbType.String, 
                 MySqlDbType.VarChar, MySqlDbType.Set, MySqlDbType.Enum };
 
-            // we use name indexing because this method will only be called
-            // when GetSchema is called for the DataSourceInformation 
-            // collection and then it wil be cached.
-            for (int x = 0; x < types.Length; x++)
-            {
-                DataRow row = dsTable.NewRow();
-                row["TypeName"] = types[x];
-                row["ProviderDbType"] = dbtype[x];
-                row["ColumnSize"] = 0;
-                row["CreateFormat"] = types[x];
-                row["CreateParameters"] = null;
-                row["DataType"] = "System.String";
-                row["IsAutoincrementable"] = false;
-                row["IsBestMatch"] = true;
-                row["IsCaseSensitive"] = false;
-                row["IsFixedLength"] = true;
-                row["IsFixedPrecisionScale"] = true;
-                row["IsLong"] = false;
-                row["IsNullable"] = true;
-                row["IsSearchable"] = true;
-                row["IsSearchableWithLike"] = true;
-                row["IsUnsigned"] = false;
-                row["MaximumScale"] = 0;
-                row["MinimumScale"] = 0;
-                row["IsConcurrencyType"] = DBNull.Value;
-                row["IsLiteralsSupported"] = false;
-                row["LiteralPrefix"] = null;
-                row["LiteralSuffix"] = null;
-                row["NativeDataType"] = null;
-                dsTable.Rows.Add(row);
-            }
-        }
+			// we use name indexing because this method will only be called
+			// when GetSchema is called for the DataSourceInformation 
+			// collection and then it wil be cached.
+			for (int x = 0; x < types.Length; x++)
+			{
+				DataRow row = dsTable.NewRow();
+				row["TypeName"] = types[x];
+				row["ProviderDbType"] = dbtype[x];
+				row["ColumnSize"] = 0;
+				row["CreateFormat"] = types[x];
+				row["CreateParameters"] = null;
+				row["DataType"] = "System.String";
+				row["IsAutoincrementable"] = false;
+				row["IsBestMatch"] = true;
+				row["IsCaseSensitive"] = false;
+				row["IsFixedLength"] = true;
+				row["IsFixedPrecisionScale"] = true;
+				row["IsLong"] = false;
+				row["IsNullable"] = true;
+				row["IsSearchable"] = true;
+				row["IsSearchableWithLike"] = true;
+				row["IsUnsigned"] = false;
+				row["MaximumScale"] = 0;
+				row["MinimumScale"] = 0;
+				row["IsConcurrencyType"] = DBNull.Value;
+				row["IsLiteralsSupported"] = false;
+				row["LiteralPrefix"] = null;
+				row["LiteralSuffix"] = null;
+				row["NativeDataType"] = null;
+				dsTable.Rows.Add(row);
+			}
+		}
 	}
 }

@@ -402,7 +402,7 @@ namespace MySql.Data.MySqlClient.Tests
 			cmd.CommandText = "SELECT * FROM test where one = ?p1";
 			// create the parameter
 			IDbDataParameter p1 = cmd.CreateParameter();
-			p1.ParameterName = "p1";
+			p1.ParameterName = "?p1";
 			p1.DbType = DbType.Int32;
 			p1.Precision = (byte)10;
 			p1.Scale = (byte)0;
@@ -489,9 +489,9 @@ namespace MySql.Data.MySqlClient.Tests
 			cmd.Parameters.Add (new MySqlParameter("?sc", Convert.ToInt32 (0)));
 			cmd.Prepare();
 
-			cmd.Parameters["input"].Value = "test";
-			cmd.Parameters["st"].Value = 1;
-			cmd.Parameters["sc"].Value = 42;
+			cmd.Parameters["?input"].Value = "test";
+			cmd.Parameters["?st"].Value = 1;
+			cmd.Parameters["?sc"].Value = 42;
 			int result = cmd.ExecuteNonQuery();
 			Assert.AreEqual(1, result);
 

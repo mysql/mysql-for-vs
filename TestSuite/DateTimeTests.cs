@@ -447,15 +447,16 @@ namespace MySql.Data.MySqlClient.Tests
             c.Open();
 
             MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", c);
+            MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
             DataTable dt = new DataTable();
             try
             {
                 da.Fill(dt);
                 DataRow row = dt.NewRow();
                 row["id"] = 2;
-                row["dt"] = DateTime.Now;
-                row["d"] = DateTime.Now;
-                row["t"] = DateTime.Now;
+                row["dt"] = new MySqlDateTime(DateTime.Now);
+                row["d"] = new MySqlDateTime(DateTime.Now);
+                row["t"] = new TimeSpan(1, 1, 1);
                 row["ts"] = DBNull.Value;
                 dt.Rows.Add(row);
                 da.Update(dt);

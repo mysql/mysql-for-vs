@@ -24,11 +24,10 @@ using MySql.Data.MySqlClient;
 
 namespace MySql.Data.Types
 {
-
 	internal struct MySqlUByte : IMySqlValue
 	{
-		private byte	mValue;
-		private	bool	isNull;
+		private byte mValue;
+		private bool isNull;
 
 		public MySqlUByte(bool isNull)
 		{
@@ -51,15 +50,15 @@ namespace MySql.Data.Types
 
 		MySqlDbType IMySqlValue.MySqlDbType
 		{
-			get	{ return MySqlDbType.UByte; }
+			get { return MySqlDbType.UByte; }
 		}
 
 		DbType IMySqlValue.DbType
 		{
-			get	{ return DbType.Byte; }
+			get { return DbType.Byte; }
 		}
 
-		object IMySqlValue.Value 
+		object IMySqlValue.Value
 		{
 			get { return mValue; }
 		}
@@ -71,31 +70,31 @@ namespace MySql.Data.Types
 
 		Type IMySqlValue.SystemType
 		{
-			get	{ return typeof(byte); }
+			get { return typeof(byte); }
 		}
 
 		string IMySqlValue.MySqlTypeName
 		{
-			get	{ return "TINYINT"; }
+			get { return "TINYINT"; }
 		}
 
 		void IMySqlValue.WriteValue(MySqlStream stream, bool binary, object val, int length)
 		{
-			byte v = ((IConvertible)val).ToByte(null); 
+			byte v = ((IConvertible)val).ToByte(null);
 			if (binary)
-				stream.Write( BitConverter.GetBytes(v));
+				stream.Write(BitConverter.GetBytes(v));
 			else
-				stream.WriteStringNoNull(v.ToString());		
+				stream.WriteStringNoNull(v.ToString());
 		}
 
 		IMySqlValue IMySqlValue.ReadValue(MySqlStream stream, long length, bool nullVal)
 		{
-			if (nullVal) 
-                return new MySqlUByte(true);
+			if (nullVal)
+				return new MySqlUByte(true);
 
-			if (length == -1) 
+			if (length == -1)
 				return new MySqlUByte((byte)stream.ReadByte());
-			else 
+			else
 				return new MySqlUByte(Byte.Parse(stream.ReadString(length)));
 		}
 
@@ -106,36 +105,36 @@ namespace MySql.Data.Types
 
 		#endregion
 
-        internal static void SetDSInfo(DataTable dsTable)
-        {
-            // we use name indexing because this method will only be called
-            // when GetSchema is called for the DataSourceInformation 
-            // collection and then it wil be cached.
-            DataRow row = dsTable.NewRow();
-            row["TypeName"] = "INT";
-            row["ProviderDbType"] = MySqlDbType.UByte;
-            row["ColumnSize"] = 0;
-            row["CreateFormat"] = "INT UNSIGNED";
-            row["CreateParameters"] = null;
-            row["DataType"] = "System.Byte";
-            row["IsAutoincrementable"] = true;
-            row["IsBestMatch"] = true;
-            row["IsCaseSensitive"] = false;
-            row["IsFixedLength"] = true;
-            row["IsFixedPrecisionScale"] = true;
-            row["IsLong"] = false;
-            row["IsNullable"] = true;
-            row["IsSearchable"] = true;
-            row["IsSearchableWithLike"] = false;
-            row["IsUnsigned"] = true;
-            row["MaximumScale"] = 0;
-            row["MinimumScale"] = 0;
-            row["IsConcurrencyType"] = DBNull.Value;
-            row["IsLiteralsSupported"] = false;
-            row["LiteralPrefix"] = null;
-            row["LiteralSuffix"] = null;
-            row["NativeDataType"] = null;
-            dsTable.Rows.Add(row);
-        }
-    }
+		internal static void SetDSInfo(DataTable dsTable)
+		{
+			// we use name indexing because this method will only be called
+			// when GetSchema is called for the DataSourceInformation 
+			// collection and then it wil be cached.
+			DataRow row = dsTable.NewRow();
+			row["TypeName"] = "INT";
+			row["ProviderDbType"] = MySqlDbType.UByte;
+			row["ColumnSize"] = 0;
+			row["CreateFormat"] = "INT UNSIGNED";
+			row["CreateParameters"] = null;
+			row["DataType"] = "System.Byte";
+			row["IsAutoincrementable"] = true;
+			row["IsBestMatch"] = true;
+			row["IsCaseSensitive"] = false;
+			row["IsFixedLength"] = true;
+			row["IsFixedPrecisionScale"] = true;
+			row["IsLong"] = false;
+			row["IsNullable"] = true;
+			row["IsSearchable"] = true;
+			row["IsSearchableWithLike"] = false;
+			row["IsUnsigned"] = true;
+			row["MaximumScale"] = 0;
+			row["MinimumScale"] = 0;
+			row["IsConcurrencyType"] = DBNull.Value;
+			row["IsLiteralsSupported"] = false;
+			row["LiteralPrefix"] = null;
+			row["LiteralSuffix"] = null;
+			row["NativeDataType"] = null;
+			dsTable.Rows.Add(row);
+		}
+	}
 }

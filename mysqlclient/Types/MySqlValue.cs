@@ -25,17 +25,17 @@ using MySql.Data.MySqlClient;
 
 namespace MySql.Data.Types
 {
-	internal interface IMySqlValue 
+	internal interface IMySqlValue
 	{
-		bool		IsNull			{ get; }
-		MySqlDbType	MySqlDbType		{ get; }
-		DbType		DbType			{ get; }
-		object		Value			{ get; /*set;*/ }
-		Type		SystemType		{ get; }
-		string		MySqlTypeName	{ get; }
+		bool IsNull { get; }
+		MySqlDbType MySqlDbType { get; }
+		DbType DbType { get; }
+		object Value { get; /*set;*/ }
+		Type SystemType { get; }
+		string MySqlTypeName { get; }
 
-		void		WriteValue(MySqlStream stream, bool binary, object value, int length);
-		IMySqlValue	ReadValue(MySqlStream stream, long length, bool isNull);
-		void		SkipValue(MySqlStream stream);
+		void WriteValue(MySqlStream stream, bool binary, object value, int length);
+		IMySqlValue ReadValue(MySqlStream stream, long length, bool isNull);
+		void SkipValue(MySqlStream stream);
 	}
 }

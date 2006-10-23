@@ -28,10 +28,10 @@ namespace MySql.Data.Types
 
 	internal struct MySqlDecimal : IMySqlValue
 	{
-		private byte	precision;
-		private byte	scale;
-		private Decimal	mValue;
-		private	bool	isNull;
+		private byte precision;
+		private byte scale;
+		private Decimal mValue;
+		private bool isNull;
 
 		public MySqlDecimal(bool isNull)
 		{
@@ -56,16 +56,16 @@ namespace MySql.Data.Types
 
 		MySqlDbType IMySqlValue.MySqlDbType
 		{
-			get	{ return MySqlDbType.Decimal; }
+			get { return MySqlDbType.Decimal; }
 		}
 
-		public byte Precision 
+		public byte Precision
 		{
 			get { return precision; }
 			set { precision = value; }
 		}
 
-		public byte Scale 
+		public byte Scale
 		{
 			get { return scale; }
 			set { scale = value; }
@@ -74,10 +74,10 @@ namespace MySql.Data.Types
 
 		DbType IMySqlValue.DbType
 		{
-			get	{ return DbType.Decimal; }
+			get { return DbType.Decimal; }
 		}
 
-		object IMySqlValue.Value 
+		object IMySqlValue.Value
 		{
 			get { return mValue; }
 		}
@@ -89,41 +89,41 @@ namespace MySql.Data.Types
 
 		Type IMySqlValue.SystemType
 		{
-			get	{ return typeof(decimal); }
+			get { return typeof(decimal); }
 		}
 
 		string IMySqlValue.MySqlTypeName
 		{
-			get	{ return "DECIMAL"; }
+			get { return "DECIMAL"; }
 		}
 
 		void IMySqlValue.WriteValue(MySqlStream stream, bool binary, object val, int length)
 		{
 			decimal v = Convert.ToDecimal(val);
-            string valStr = v.ToString(CultureInfo.InvariantCulture);
+			string valStr = v.ToString(CultureInfo.InvariantCulture);
 			if (binary)
-                stream.WriteLenString(valStr);
+				stream.WriteLenString(valStr);
 			else
-                stream.WriteStringNoNull(valStr);
+				stream.WriteStringNoNull(valStr);
 		}
 
 		IMySqlValue IMySqlValue.ReadValue(MySqlStream stream, long length, bool nullVal)
 		{
-			if (nullVal) 
-                return new MySqlDecimal(true);
+			if (nullVal)
+				return new MySqlDecimal(true);
 
-            if (length == -1)
-            {
-                string s = stream.ReadLenString();
-                return new MySqlDecimal(Decimal.Parse(s,
-                    CultureInfo.InvariantCulture));
-            }
-            else
-            {
-                string s = stream.ReadString(length);
-                return new MySqlDecimal(Decimal.Parse(s,
-                    CultureInfo.InvariantCulture));
-            }
+			if (length == -1)
+			{
+				string s = stream.ReadLenString();
+				return new MySqlDecimal(Decimal.Parse(s,
+					 CultureInfo.InvariantCulture));
+			}
+			else
+			{
+				string s = stream.ReadString(length);
+				return new MySqlDecimal(Decimal.Parse(s,
+					 CultureInfo.InvariantCulture));
+			}
 		}
 
 		void IMySqlValue.SkipValue(MySqlStream stream)
@@ -134,36 +134,36 @@ namespace MySql.Data.Types
 
 		#endregion
 
-        internal static void SetDSInfo(DataTable dsTable)
-        {
-            // we use name indexing because this method will only be called
-            // when GetSchema is called for the DataSourceInformation 
-            // collection and then it wil be cached.
-            DataRow row = dsTable.NewRow();
-            row["TypeName"] = "DECIMAL";
-            row["ProviderDbType"] = MySqlDbType.NewDecimal;
-            row["ColumnSize"] = 0;
-            row["CreateFormat"] = "DECIMAL({0},{1})";
-            row["CreateParameters"] = "precision,scale";
-            row["DataType"] = "System.Decimal";
-            row["IsAutoincrementable"] = false;
-            row["IsBestMatch"] = true;
-            row["IsCaseSensitive"] = false;
-            row["IsFixedLength"] = true;
-            row["IsFixedPrecisionScale"] = true;
-            row["IsLong"] = false;
-            row["IsNullable"] = true;
-            row["IsSearchable"] = true;
-            row["IsSearchableWithLike"] = false;
-            row["IsUnsigned"] = false;
-            row["MaximumScale"] = 0;
-            row["MinimumScale"] = 0;
-            row["IsConcurrencyType"] = DBNull.Value;
-            row["IsLiteralsSupported"] = false;
-            row["LiteralPrefix"] = null;
-            row["LiteralSuffix"] = null;
-            row["NativeDataType"] = null;
-            dsTable.Rows.Add(row);
-        }
-    }
+		internal static void SetDSInfo(DataTable dsTable)
+		{
+			// we use name indexing because this method will only be called
+			// when GetSchema is called for the DataSourceInformation 
+			// collection and then it wil be cached.
+			DataRow row = dsTable.NewRow();
+			row["TypeName"] = "DECIMAL";
+			row["ProviderDbType"] = MySqlDbType.NewDecimal;
+			row["ColumnSize"] = 0;
+			row["CreateFormat"] = "DECIMAL({0},{1})";
+			row["CreateParameters"] = "precision,scale";
+			row["DataType"] = "System.Decimal";
+			row["IsAutoincrementable"] = false;
+			row["IsBestMatch"] = true;
+			row["IsCaseSensitive"] = false;
+			row["IsFixedLength"] = true;
+			row["IsFixedPrecisionScale"] = true;
+			row["IsLong"] = false;
+			row["IsNullable"] = true;
+			row["IsSearchable"] = true;
+			row["IsSearchableWithLike"] = false;
+			row["IsUnsigned"] = false;
+			row["MaximumScale"] = 0;
+			row["MinimumScale"] = 0;
+			row["IsConcurrencyType"] = DBNull.Value;
+			row["IsLiteralsSupported"] = false;
+			row["LiteralPrefix"] = null;
+			row["LiteralSuffix"] = null;
+			row["NativeDataType"] = null;
+			dsTable.Rows.Add(row);
+		}
+	}
 }

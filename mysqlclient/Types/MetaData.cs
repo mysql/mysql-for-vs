@@ -24,22 +24,22 @@ using System.Globalization;
 
 namespace MySql.Data.Types
 {
-    internal class MetaData
-    {
-        public static MySqlDbType NameToType(string typeName, bool unsigned, 
-            bool realAsFloat, MySqlConnection connection)
-        {
+	internal class MetaData
+	{
+		public static MySqlDbType NameToType(string typeName, bool unsigned,
+			 bool realAsFloat, MySqlConnection connection)
+		{
 			switch (typeName)
 			{
-                case "char": return MySqlDbType.String;
-                case "varchar": return MySqlDbType.VarChar;
-                case "date": return MySqlDbType.Date;
-                case "datetime": return MySqlDbType.Datetime;
-                case "numeric":
-				case "decimal": 
+				case "char": return MySqlDbType.String;
+				case "varchar": return MySqlDbType.VarChar;
+				case "date": return MySqlDbType.Date;
+				case "datetime": return MySqlDbType.Datetime;
+				case "numeric":
+				case "decimal":
 				case "dec":
 				case "fixed":
-					if (connection.driver.Version.isAtLeast(5,0,3))
+					if (connection.driver.Version.isAtLeast(5, 0, 3))
 						return MySqlDbType.NewDecimal;
 					else
 						return MySqlDbType.Decimal;
@@ -55,22 +55,22 @@ namespace MySql.Data.Types
 
 				case "tinyint":
 				case "bool":
-				case "boolean": 
+				case "boolean":
 					return MySqlDbType.Byte;
-				case "smallint": 
+				case "smallint":
 					return unsigned ? MySqlDbType.UInt16 : MySqlDbType.Int16;
-				case "mediumint": 
+				case "mediumint":
 					return unsigned ? MySqlDbType.UInt24 : MySqlDbType.Int24;
-				case "int" : 
+				case "int":
 				case "integer":
 					return unsigned ? MySqlDbType.UInt32 : MySqlDbType.Int32;
-                case "serial":
-                    return MySqlDbType.UInt64;
-                case "bigint": 
+				case "serial":
+					return MySqlDbType.UInt64;
+				case "bigint":
 					return unsigned ? MySqlDbType.UInt64 : MySqlDbType.Int64;
 				case "float": return MySqlDbType.Float;
 				case "double": return MySqlDbType.Double;
-				case "real": return 
+				case "real": return
 					 realAsFloat ? MySqlDbType.Float : MySqlDbType.Double;
 				case "blob":
 				case "text":
@@ -88,5 +88,5 @@ namespace MySql.Data.Types
 			throw new MySqlException("Unhandled type encountered");
 		}
 
-    }
+	}
 }

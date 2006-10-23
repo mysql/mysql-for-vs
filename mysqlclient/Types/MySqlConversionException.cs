@@ -28,7 +28,8 @@ namespace MySql.Data.Types
 	public class MySqlConversionException : ApplicationException
 	{
 		/// <summary>Ctor</summary>
-		public MySqlConversionException(string msg) : base(msg)
+		public MySqlConversionException(string msg)
+			: base(msg)
 		{
 		}
 	}

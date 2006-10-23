@@ -27,9 +27,9 @@ namespace MySql.Data.Types
 
 	internal struct MySqlBinary : IMySqlValue
 	{
-		private MySqlDbType	type;
-		private byte[]		mValue;
-		private	bool		isNull;
+		private MySqlDbType type;
+		private byte[] mValue;
+		private bool isNull;
 
 		public MySqlBinary(MySqlDbType type, bool isNull)
 		{
@@ -54,15 +54,15 @@ namespace MySql.Data.Types
 
 		MySqlDbType IMySqlValue.MySqlDbType
 		{
-			get	{ return type; }
+			get { return type; }
 		}
 
 		DbType IMySqlValue.DbType
 		{
-			get	{ return DbType.Binary; }
+			get { return DbType.Binary; }
 		}
 
-		object IMySqlValue.Value 
+		object IMySqlValue.Value
 		{
 			get { return mValue; }
 		}
@@ -74,22 +74,22 @@ namespace MySql.Data.Types
 
 		Type IMySqlValue.SystemType
 		{
-			get	{ return typeof(byte[]); }
+			get { return typeof(byte[]); }
 		}
 
 		string IMySqlValue.MySqlTypeName
 		{
-			get	
-			{ 
-				switch (type) 
+			get
+			{
+				switch (type)
 				{
-					case MySqlDbType.TinyBlob:		return "TINY_BLOB";
-					case MySqlDbType.MediumBlob:	return "MEDIUM_BLOB";
-					case MySqlDbType.LongBlob:		return "LONG_BLOB";
-					case MySqlDbType.Blob:			
+					case MySqlDbType.TinyBlob: return "TINY_BLOB";
+					case MySqlDbType.MediumBlob: return "MEDIUM_BLOB";
+					case MySqlDbType.LongBlob: return "LONG_BLOB";
+					case MySqlDbType.Blob:
 					default:
 						return "BLOB";
-				}			
+				}
 			}
 		}
 
@@ -99,69 +99,69 @@ namespace MySql.Data.Types
 
 			if (val is System.Byte[])
 				buffToWrite = (byte[])val;
-			else if (val is String) 
+			else if (val is String)
 			{
-                string s = (val as string);
-                if (length == 0)
-                    length = s.Length;
-                else
-				    s = s.Substring(0, length);
+				string s = (val as string);
+				if (length == 0)
+					length = s.Length;
+				else
+					s = s.Substring(0, length);
 				buffToWrite = stream.Encoding.GetBytes(s);
 			}
-			else if (val is Char[]) 
+			else if (val is Char[])
 				buffToWrite = stream.Encoding.GetBytes(val as char[]);
 
-            // we assume zero length means write all of the value
-            if (length == 0)
-                length = buffToWrite.Length;
+			// we assume zero length means write all of the value
+			if (length == 0)
+				length = buffToWrite.Length;
 
 			if (buffToWrite == null)
 				throw new MySqlException("Only byte arrays and strings can be serialized by MySqlBinary");
 
-			if (binary) 
+			if (binary)
 			{
 				stream.WriteLength(length);
 				stream.Write(buffToWrite, 0, length);
 			}
-			else 
+			else
 			{
-				if (stream.Version.isAtLeast(4,1,0))
+				if (stream.Version.isAtLeast(4, 1, 0))
 					stream.WriteStringNoNull("_binary ");
 
 				stream.WriteByte((byte)'\'');
 				EscapeByteArray(buffToWrite, length, stream);
 				stream.WriteByte((byte)'\'');
-			}	
+			}
 		}
 
 		private void EscapeByteArray(byte[] bytes, int length, MySqlStream stream)
 		{
-		//	System.IO.MemoryStream ms = (System.IO.MemoryStream)stream.Stream;
-		//	ms.Capacity += (length * 2);
+			//	System.IO.MemoryStream ms = (System.IO.MemoryStream)stream.Stream;
+			//	ms.Capacity += (length * 2);
 
-			for (int x=0; x < length; x++)
+			for (int x = 0; x < length; x++)
 			{
 				byte b = bytes[x];
-				if (b == '\0') 
+				if (b == '\0')
 				{
-					stream.WriteByte( (byte)'\\' );
-					stream.WriteByte( (byte)'0' );
+					stream.WriteByte((byte)'\\');
+					stream.WriteByte((byte)'0');
 				}
-				
+
 				else if (b == '\\' || b == '\'' || b == '\"')
 				{
-					stream.WriteByte( (byte)'\\' );
-					stream.WriteByte( b );
+					stream.WriteByte((byte)'\\');
+					stream.WriteByte(b);
 				}
 				else
-					stream.WriteByte( b );
+					stream.WriteByte(b);
 			}
 		}
 
 		IMySqlValue IMySqlValue.ReadValue(MySqlStream stream, long length, bool nullVal)
 		{
-			if (nullVal) 
-                return new MySqlBinary(type, true);
+			if (nullVal)
+				return new MySqlBinary(type, true);
 
 			if (length == -1)
 				length = (long)stream.ReadFieldLength();
@@ -179,43 +179,43 @@ namespace MySql.Data.Types
 
 		#endregion
 
-        public static void SetDSInfo(DataTable dsTable)
-        {
-            string[] types = new string[] { "BLOB", "TINYBLOB", "MEDIUMBLOB", "LONGBLOB" };
-            MySqlDbType[] dbtype = new MySqlDbType[] { MySqlDbType.Blob, 
+		public static void SetDSInfo(DataTable dsTable)
+		{
+			string[] types = new string[] { "BLOB", "TINYBLOB", "MEDIUMBLOB", "LONGBLOB" };
+			MySqlDbType[] dbtype = new MySqlDbType[] { MySqlDbType.Blob, 
                 MySqlDbType.TinyBlob, MySqlDbType.MediumBlob, MySqlDbType.LongBlob };
 
-            // we use name indexing because this method will only be called
-            // when GetSchema is called for the DataSourceInformation 
-            // collection and then it wil be cached.
-            for (int x=0; x < types.Length; x++)
-            {
-                DataRow row = dsTable.NewRow();
-                row["TypeName"] = types[x];
-                row["ProviderDbType"] = dbtype[x];
-                row["ColumnSize"] = 0;
-                row["CreateFormat"] = types[x];
-                row["CreateParameters"] = null;
-                row["DataType"] = "Byte";
-                row["IsAutoincrementable"] = false;
-                row["IsBestMatch"] = true;
-                row["IsCaseSensitive"] = false;
-                row["IsFixedLength"] = false;
-                row["IsFixedPrecisionScale"] = true;
-                row["IsLong"] = true;
-                row["IsNullable"] = true;
-                row["IsSearchable"] = true;
-                row["IsSearchableWithLike"] = true;
-                row["IsUnsigned"] = false;
-                row["MaximumScale"] = 0;
-                row["MinimumScale"] = 0;
-                row["IsConcurrencyType"] = DBNull.Value;
-                row["IsLiteralsSupported"] = false;
-                row["LiteralPrefix"] = null;
-                row["LiteralSuffix"] = null;
-                row["NativeDataType"] = null;
-                dsTable.Rows.Add(row);
-            }
-        }
+			// we use name indexing because this method will only be called
+			// when GetSchema is called for the DataSourceInformation 
+			// collection and then it wil be cached.
+			for (int x = 0; x < types.Length; x++)
+			{
+				DataRow row = dsTable.NewRow();
+				row["TypeName"] = types[x];
+				row["ProviderDbType"] = dbtype[x];
+				row["ColumnSize"] = 0;
+				row["CreateFormat"] = types[x];
+				row["CreateParameters"] = null;
+				row["DataType"] = "Byte";
+				row["IsAutoincrementable"] = false;
+				row["IsBestMatch"] = true;
+				row["IsCaseSensitive"] = false;
+				row["IsFixedLength"] = false;
+				row["IsFixedPrecisionScale"] = true;
+				row["IsLong"] = true;
+				row["IsNullable"] = true;
+				row["IsSearchable"] = true;
+				row["IsSearchableWithLike"] = true;
+				row["IsUnsigned"] = false;
+				row["MaximumScale"] = 0;
+				row["MinimumScale"] = 0;
+				row["IsConcurrencyType"] = DBNull.Value;
+				row["IsLiteralsSupported"] = false;
+				row["LiteralPrefix"] = null;
+				row["LiteralSuffix"] = null;
+				row["NativeDataType"] = null;
+				dsTable.Rows.Add(row);
+			}
+		}
 	}
 }
