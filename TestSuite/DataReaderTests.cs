@@ -840,5 +840,23 @@ namespace MySql.Data.MySqlClient.Tests
                     reader.Close();
             }
         }
+
+		/// <summary>
+		/// Bug #23538 Exception thrown when GetSchemaTable is called and "fields" is null. 
+		/// </summary>
+		[Category("5.0")]
+		[Test]
+		public void GetSchemaTableOnEmptyResultset()
+		{
+			execSQL("CREATE PROCEDURE spTest() BEGIN END");
+
+			MySqlCommand cmd = new MySqlCommand("spTest", conn);
+			cmd.CommandType = CommandType.StoredProcedure;
+			using (MySqlDataReader reader = cmd.ExecuteReader())
+			{
+				DataTable dt = reader.GetSchemaTable();
+				Assert.IsNull(dt);
+			}
+		}
 	}
 }
