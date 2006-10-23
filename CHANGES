@@ -2,21 +2,22 @@ Version 5.0.2 (unreleased)
 
     Bugs fixed
     ----------
-	
+    Bug #23268 System.FormatException when invoking procedure with ENUM input parameter 	
+    
     Other changes
     -------------
     Increased speed of MySqlParameterCollection.IndexOf(string) orders of magnitude
     (parameter name lookups are now strict on use of parameter marker)
-	Improved character set mappings
+    Improved character set mappings
 
 Version 5.0.1 (Beta)
 
     Bugs fixed
     ----------
-	Bug #21521 # Symbols not allowed in column/table names.    
+	  Bug #21521 # Symbols not allowed in column/table names.    
     Bug #21874 MySqlException should derive from DbException         
-	Bug #22042 mysql-connector-net-5.0.0-alpha BeginTransaction
-	Bug #22452 MySql.Data.MySqlClient.MySqlException: 	 
+	  Bug #22042 mysql-connector-net-5.0.0-alpha BeginTransaction
+	  Bug #22452 MySql.Data.MySqlClient.MySqlException: 	 
 	
     Other changes
     -------------

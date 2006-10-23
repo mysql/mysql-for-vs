@@ -84,12 +84,12 @@ namespace MySql.Data.MySqlClient
             {
                 if (param["ORDINAL_POSITION"].Equals(0)) continue;
                 string mode = (string)param["PARAMETER_MODE"];
-                string name = (string)param["PARAMETER_NAME"];
+                string pName = (string)param["PARAMETER_NAME"];
                 string datatype = (string)param["DATA_TYPE"];
 
                 // make sure the parameters given to us have an appropriate
                 // type set if it's not already
-                MySqlParameter p = parameters[name];
+                MySqlParameter p = parameters[pName];
                 if (!p.TypeHasBeenSet)
                 {
                     bool unsigned = param["FLAGS"].ToString().IndexOf("UNSIGNED") != -1;
@@ -97,9 +97,8 @@ namespace MySql.Data.MySqlClient
                     p.MySqlDbType = MetaData.NameToType(datatype, unsigned, real_as_float, connection);
                 }
 
-                string pName = String.Format("{0}{1}",
-                    connection.ParameterMarker, name);
-                string vName = string.Format("@{0}{1}", hash, name);
+					 string basePName = pName.Substring(1);
+                string vName = string.Format("@{0}{1}", hash, basePName);
 
                 if (mode == "OUT" || mode == "INOUT")
                 {

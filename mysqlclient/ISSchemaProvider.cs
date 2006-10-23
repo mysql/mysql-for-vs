@@ -481,7 +481,8 @@ namespace MySql.Data.MySqlClient
             string[] split = cs.Split(parmDef, " \t\r\n");
             if (parmRow["IS_RESULT"].Equals("NO"))
             {
-                parmRow["PARAMETER_NAME"] = CleanParameterName(split[0]);
+					parmRow["PARAMETER_NAME"] = String.Format("{0}{1}",
+						connection.ParameterMarker, CleanParameterName(split[0]));
                 parmDef = parmDef.Substring(split[0].Length);
             }
 
@@ -526,7 +527,7 @@ namespace MySql.Data.MySqlClient
 
             parmRow["DATA_TYPE"] = typeName;
 
-            if (endExtra > startExtra && typeName != "set")
+            if (endExtra > startExtra && typeName != "set" && typeName != "enum")
             {
                 size = type.Substring(startExtra + 1, endExtra - (startExtra + 1));
                 string[] parts = size.Split(new char[] { ',' });
