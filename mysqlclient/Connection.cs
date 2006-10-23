@@ -7,7 +7,7 @@
 // There are special exceptions to the terms and conditions of the GPL 
 // as it is applied to this software. View the full text of the 
 // exception in file EXCEPTIONS in the directory of this software 
-// distribution.
+// distribution. 
 //
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -367,7 +367,7 @@ namespace MySql.Data.MySqlClient
 			}
 
 			// if the user is using old syntax, let them know
-			if ( driver.Settings.UseOldSyntax)
+			if (driver.Settings.UseOldSyntax)
 				Logger.LogWarning("You are using old syntax that will be removed in future versions");
 
             SetState(ConnectionState.Open);

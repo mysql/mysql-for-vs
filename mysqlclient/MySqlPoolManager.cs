@@ -27,28 +27,17 @@ namespace MySql.Data.MySqlClient
 	/// <summary>
 	/// Summary description for MySqlPoolManager.
 	/// </summary>
-	internal sealed class MySqlPoolManager
+	internal static class MySqlPoolManager
 	{
 		private static Hashtable	pools;
 
-		public MySqlPoolManager() 
-		{
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		private static void Initialize()
+		static MySqlPoolManager()
 		{
 			pools = new Hashtable();
 		}
 
 		public static MySqlPool GetPool(MySqlConnectionStringBuilder settings) 
 		{
-			// make sure the manager is initialized
-			if (MySqlPoolManager.pools == null)
-				MySqlPoolManager.Initialize();
-
 			string text = settings.GetConnectionString(true);
 
 			lock(pools.SyncRoot) 
