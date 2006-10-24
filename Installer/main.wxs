@@ -111,6 +111,7 @@
 
 		<Property Id="WIXUI_INSTALLDIR" Value='INSTALLDIR'/>
 		<UIRef Id="WixUI_Mondo"/>
+		<UIRef Id="CustomDialogs"/>
 
 		<Icon Id="ChangeLogIcon" src="Bitmaps\document.ico"/>
 
