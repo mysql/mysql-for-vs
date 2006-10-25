@@ -184,6 +184,9 @@ namespace MySql.Data.MySqlClient
 			if (shouldCloseConnection)
 				connection.Close();
 
+			command = null;
+			connection = null;
+
 			isOpen = false;
 		}
 

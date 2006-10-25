@@ -155,21 +155,22 @@ namespace MySql.Data.MySqlClient
 			serverProps = new Hashtable();
 			MySqlCommand cmd = new MySqlCommand("SHOW VARIABLES", connection);
 
-			try
+			using (MySqlDataReader reader = cmd.ExecuteReader())
 			{
-				MySqlDataReader reader = cmd.ExecuteReader();
-				while (reader.Read())
+				try
 				{
-					string key = reader.GetString(0);
-					string value = reader.GetString(1);
-					serverProps[key] = value;
+					while (reader.Read())
+					{
+						string key = reader.GetString(0);
+						string value = reader.GetString(1);
+						serverProps[key] = value;
+					}
 				}
-				reader.Close();
-			}
-			catch (Exception ex)
-			{
-				Logger.LogException(ex);
-				throw;
+				catch (Exception ex)
+				{
+					Logger.LogException(ex);
+					throw;
+				}
 			}
 
 			if (serverProps.Contains("max_allowed_packet"))

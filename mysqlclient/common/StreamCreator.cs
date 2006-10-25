@@ -34,66 +34,66 @@ namespace MySql.Data.Common
 	/// </summary>
 	internal class StreamCreator
 	{
-		string				hostList;
-		uint				port;
-		string				pipeName;
-		uint				timeOut;
+		string hostList;
+		uint port;
+		string pipeName;
+		uint timeOut;
 
-		public StreamCreator( string hosts, uint port, string pipeName)
+		public StreamCreator(string hosts, uint port, string pipeName)
 		{
 			hostList = hosts;
 			if (hostList == null || hostList.Length == 0)
 				hostList = "localhost";
 			this.port = port;
 			this.pipeName = pipeName;
-        }
+		}
 
-		public Stream GetStream(uint timeOut) 
+		public Stream GetStream(uint timeOut)
 		{
 			this.timeOut = timeOut;
 
 			if (hostList.StartsWith("/"))
 				return CreateSocketStream(null, 0, true);
 
-			string [] dnsHosts = hostList.Split('&');
+			string[] dnsHosts = hostList.Split('&');
 
-            System.Random random = new Random((int)DateTime.Now.Ticks);
-            int index = random.Next(dnsHosts.Length);
-            int pos = 0;
-            bool usePipe = (pipeName != null && pipeName.Length != 0);
-            Stream stream = null;
+			System.Random random = new Random((int)DateTime.Now.Ticks);
+			int index = random.Next(dnsHosts.Length);
+			int pos = 0;
+			bool usePipe = (pipeName != null && pipeName.Length != 0);
+			Stream stream = null;
 
-            while (pos < dnsHosts.Length)
-            {
-                if (usePipe)
-                    stream = CreateNamedPipeStream(dnsHosts[index]);
-                else
-                {
+			while (pos < dnsHosts.Length)
+			{
+				if (usePipe)
+					stream = CreateNamedPipeStream(dnsHosts[index]);
+				else
+				{
 #if NET20
-                    IPHostEntry ipHE = Dns.GetHostEntry(dnsHosts[index]);
+					IPHostEntry ipHE = Dns.GetHostEntry(dnsHosts[index]);
 #else
 				    IPHostEntry ipHE = Dns.GetHostByName(dnsHosts[index]);
 #endif
 
-                    foreach (IPAddress address in ipHE.AddressList)
-                    {
-                        stream = CreateSocketStream(address, port, false);
-                        if (stream != null)
-                            break;
-                    }
-                }
-                if (stream != null)
-                    break;
-                index++;
-                if (index == dnsHosts.Length)
-                    index = 0;
-                pos++;
-            }
+					foreach (IPAddress address in ipHE.AddressList)
+					{
+						stream = CreateSocketStream(address, port, false);
+						if (stream != null)
+							break;
+					}
+				}
+				if (stream != null)
+					break;
+				index++;
+				if (index == dnsHosts.Length)
+					index = 0;
+				pos++;
+			}
 
 			return stream;
 		}
 
-		private Stream CreateNamedPipeStream( string hostname ) 
+		private Stream CreateNamedPipeStream(string hostname)
 		{
 			string pipePath;
 			if (0 == String.Compare(hostname, "localhost", true))
@@ -102,49 +102,52 @@ namespace MySql.Data.Common
 				pipePath = String.Format(@"\\{0}\pipe\{1}", hostname.ToString(), pipeName);
 			return new NamedPipeStream(pipePath, FileAccess.ReadWrite);
 		}
-		
+
 		private EndPoint CreateUnixEndPoint(string host)
 		{
 			// first we need to load the Mono.posix assembly
 #if NET20
-            Assembly a = Assembly.Load("Mono.Posix");
+			Assembly a = Assembly.Load("Mono.Posix");
 #else
 			Assembly a = Assembly.LoadWithPartialName("Mono.Posix");
 #endif
 
 			// then we need to construct a UnixEndPoint object
-			EndPoint ep = (EndPoint)a.CreateInstance("Mono.Posix.UnixEndPoint", 
-				false, BindingFlags.CreateInstance, null, 
+			EndPoint ep = (EndPoint)a.CreateInstance("Mono.Posix.UnixEndPoint",
+				false, BindingFlags.CreateInstance, null,
 				new object[1] { host }, null, null);
 			return ep;
-        }
+		}
 
-        private Stream CreateSocketStream(IPAddress ip, uint port, bool unix)
-        {
-            SocketStream ss = null;
-            try
-            {
-                //
-                // Lets try to connect
-                EndPoint endPoint;
+		private Stream CreateSocketStream(IPAddress ip, uint port, bool unix)
+		{
+			EndPoint endPoint;
 
-                if (!Platform.IsWindows() && unix)
-                    endPoint = CreateUnixEndPoint(hostList);
-                else
-                    endPoint = new IPEndPoint(ip, (int)port);
+			if (!Platform.IsWindows() && unix)
+				endPoint = CreateUnixEndPoint(hostList);
+			else
+				endPoint = new IPEndPoint(ip, (int)port);
 
-                ss = unix ?
-                    new SocketStream(AddressFamily.Unix, SocketType.Stream, ProtocolType.IP) :
-                    new SocketStream(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
-                if (!ss.Connect(endPoint, (int)timeOut))
-                    return null;
-                return ss;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
- 
+			Socket socket = unix ?
+				new Socket(AddressFamily.Unix, SocketType.Stream, ProtocolType.IP) :
+				new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+			IAsyncResult ias = socket.BeginConnect(endPoint, null, null);
+			if (!ias.AsyncWaitHandle.WaitOne((int)timeOut * 1000, true))
+			{
+				socket.Close();
+				return null;
+			}
+			try
+			{
+				socket.EndConnect(ias);
+			}
+			catch (Exception)
+			{
+				socket.Close();
+				return null;
+			}
+			return new NetworkStream(socket, true);
+		}
+
 	}
 }

@@ -33,51 +33,53 @@ namespace MySql.Data.MySqlClient
 {
 	/// <include file='docs/mysqlcommand.xml' path='docs/ClassSummary/*'/>
 #if !CF
-	[System.Drawing.ToolboxBitmap( typeof(MySqlCommand), "MySqlClient.resources.command.bmp")]
+	[System.Drawing.ToolboxBitmap(typeof(MySqlCommand), "MySqlClient.resources.command.bmp")]
 	[System.ComponentModel.DesignerCategory("Code")]
 #endif
 	public sealed class MySqlCommand : DbCommand, ICloneable
 	{
-		MySqlConnection				connection;
-		MySqlTransaction			curTransaction;
-		string						cmdText;
-		CommandType					cmdType;
-		long						updatedRowCount;
-		UpdateRowSource				updatedRowSource;
-		MySqlParameterCollection	parameters;
-		private ArrayList			parameterMap;
-		private int					cursorPageSize;
-		private IAsyncResult		asyncResult;
-        private bool                designTimeVisible;
-        internal Int64              lastInsertedId;
-        private PreparableStatement statement;
-        private int                 commandTimeout;
-        private bool                canCancel;
-        private bool                timedOut;
+		MySqlConnection connection;
+		MySqlTransaction curTransaction;
+		string cmdText;
+		CommandType cmdType;
+		long updatedRowCount;
+		UpdateRowSource updatedRowSource;
+		MySqlParameterCollection parameters;
+		private ArrayList parameterMap;
+		private int cursorPageSize;
+		private IAsyncResult asyncResult;
+		private bool designTimeVisible;
+		internal Int64 lastInsertedId;
+		private PreparableStatement statement;
+		private int commandTimeout;
+		private bool canCancel;
+		private bool timedOut;
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ctor1/*'/>
 		public MySqlCommand()
 		{
-            designTimeVisible = true;
+			designTimeVisible = true;
 			cmdType = CommandType.Text;
 			parameterMap = new ArrayList();
 			parameters = new MySqlParameterCollection();
 			updatedRowSource = UpdateRowSource.Both;
 			cursorPageSize = 0;
-            cmdText = String.Empty;
-            commandTimeout = 30;
-            canCancel = false;
-            timedOut = false;
-        }
+			cmdText = String.Empty;
+			commandTimeout = 30;
+			canCancel = false;
+			timedOut = false;
+		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ctor2/*'/>
-		public MySqlCommand(string cmdText) : this()
+		public MySqlCommand(string cmdText)
+			: this()
 		{
 			CommandText = cmdText;
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ctor3/*'/>
-		public MySqlCommand(string cmdText, MySqlConnection connection) : this(cmdText)
+		public MySqlCommand(string cmdText, MySqlConnection connection)
+			: this(cmdText)
 		{
 			Connection = connection;
 			if (connection != null)
@@ -85,24 +87,25 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ctor4/*'/>
-		public MySqlCommand(string cmdText, MySqlConnection connection, 
-            MySqlTransaction transaction) : 
+		public MySqlCommand(string cmdText, MySqlConnection connection,
+				MySqlTransaction transaction)
+			:
 			this(cmdText, connection)
 		{
-			curTransaction	= transaction;
-		} 
+			curTransaction = transaction;
+		}
 
 		#region Properties
 
 
-        /// <include file='docs/mysqlcommand.xml' path='docs/LastInseredId/*'/>
+		/// <include file='docs/mysqlcommand.xml' path='docs/LastInseredId/*'/>
 #if !CF
 		[Browsable(false)]
 #endif
-        public Int64 LastInsertedId
-        {
-            get { return lastInsertedId; }
-        }
+		public Int64 LastInsertedId
+		{
+			get { return lastInsertedId; }
+		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/CommandText/*'/>
 #if !CF
@@ -113,20 +116,20 @@ namespace MySql.Data.MySqlClient
 		public override string CommandText
 		{
 			get { return cmdText; }
-			set 
-            { 
-                cmdText = value;  
-                statement=null;
-                if (cmdText.EndsWith("DEFAULT VALUES"))
-                {
-                    cmdText = cmdText.Substring(0, cmdText.Length - 14);
-                    cmdText = cmdText + "() VALUES ()";
-                }
+			set
+			{
+				cmdText = value;
+				statement = null;
+				if (cmdText.EndsWith("DEFAULT VALUES"))
+				{
+					cmdText = cmdText.Substring(0, cmdText.Length - 14);
+					cmdText = cmdText + "() VALUES ()";
+				}
 
-            }
+			}
 		}
 
-		internal int UpdateCount 
+		internal int UpdateCount
 		{
 			get { return (int)updatedRowCount; }
 		}
@@ -135,12 +138,12 @@ namespace MySql.Data.MySqlClient
 #if !CF
 		[Category("Misc")]
 		[Description("Time to wait for command to execute")]
-        [DefaultValue(30)]
+		[DefaultValue(30)]
 #endif
 		public override int CommandTimeout
 		{
-            get { return commandTimeout; }
-            set { commandTimeout = value; }
+			get { return commandTimeout; }
+			set { commandTimeout = value; }
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/CommandType/*'/>
@@ -150,26 +153,26 @@ namespace MySql.Data.MySqlClient
 		public override CommandType CommandType
 		{
 			get { return cmdType; }
-            set { cmdType = value; SyncCommandType(true);  }
+			set { cmdType = value; SyncCommandType(true); }
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/IsPrepared/*'/>
 #if !CF
 		[Browsable(false)]
 #endif
-		public bool IsPrepared 
+		public bool IsPrepared
 		{
-            get { return statement != null && statement.IsPrepared; }
+			get { return statement != null && statement.IsPrepared; }
 		}
 
-			/// <include file='docs/mysqlcommand.xml' path='docs/Connection/*'/>
+		/// <include file='docs/mysqlcommand.xml' path='docs/Connection/*'/>
 #if !CF
 		[Category("Behavior")]
 		[Description("Connection used by the command")]
 #endif
 		public new MySqlConnection Connection
 		{
-			get { return connection;  }
+			get { return connection; }
 			set
 			{
 				/*
@@ -194,7 +197,7 @@ namespace MySql.Data.MySqlClient
 #endif
 		public new MySqlParameterCollection Parameters
 		{
-			get  { return parameters; }
+			get { return parameters; }
 		}
 
 
@@ -208,15 +211,15 @@ namespace MySql.Data.MySqlClient
 			set { curTransaction = (MySqlTransaction)value; }
 		}
 
-/*		/// <include file='docs/mysqlcommand.xml' path='docs/UpdatedRowSource/*'/>
-#if !CF
-		[Category("Behavior")]
-#endif
-		public override UpdateRowSource UpdatedRowSource
-		{
-			get { return updatedRowSource;  }
-			set { updatedRowSource = value; }
-		}*/
+		/*		/// <include file='docs/mysqlcommand.xml' path='docs/UpdatedRowSource/*'/>
+		#if !CF
+				[Category("Behavior")]
+		#endif
+				public override UpdateRowSource UpdatedRowSource
+				{
+					get { return updatedRowSource;  }
+					set { updatedRowSource = value; }
+				}*/
 		#endregion
 
 		#region Methods
@@ -225,31 +228,31 @@ namespace MySql.Data.MySqlClient
 		/// Attempts to cancel the execution of a MySqlCommand.
 		/// </summary>
 		/// <remarks>
-        /// Cancelling a currently active query only works with MySQL versions 5.0.0 and higher.
+		/// Cancelling a currently active query only works with MySQL versions 5.0.0 and higher.
 		/// </remarks>
 		public override void Cancel()
 		{
-            if (!connection.driver.Version.isAtLeast(5, 0, 0))
-                throw new NotSupportedException(Resources.CancelNotSupported);
+			if (!connection.driver.Version.isAtLeast(5, 0, 0))
+				throw new NotSupportedException(Resources.CancelNotSupported);
 
-            MySqlConnection c = new MySqlConnection(connection.Settings.GetConnectionString(true));
-            try
-            {
-                c.Open();
-                MySqlCommand cmd = new MySqlCommand(String.Format("KILL QUERY {0}",
-                    connection.ServerThread), c);
-                cmd.ExecuteNonQuery();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                if (c != null)
-                    c.Close();
-            }
-        }
+			MySqlConnection c = new MySqlConnection(connection.Settings.GetConnectionString(true));
+			try
+			{
+				c.Open();
+				MySqlCommand cmd = new MySqlCommand(String.Format("KILL QUERY {0}",
+					 connection.ServerThread), c);
+				cmd.ExecuteNonQuery();
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+			finally
+			{
+				if (c != null)
+					c.Close();
+			}
+		}
 
 		/// <summary>
 		/// Creates a new instance of a <see cref="MySqlParameter"/> object.
@@ -261,7 +264,7 @@ namespace MySql.Data.MySqlClient
 		/// 
 		public new MySqlParameter CreateParameter()
 		{
-            return (MySqlParameter)CreateDbParameter();
+			return (MySqlParameter)CreateDbParameter();
 		}
 
 		/// <summary>
@@ -280,31 +283,31 @@ namespace MySql.Data.MySqlClient
 			if (connection.Reader != null && cursorPageSize == 0)
 				throw new MySqlException("There is already an open DataReader associated with this Connection which must be closed first.");
 
-			if (CommandType == CommandType.StoredProcedure && ! connection.driver.Version.isAtLeast(5,0,0))
-				throw new MySqlException( "Stored procedures are not supported on this version of MySQL" );
+			if (CommandType == CommandType.StoredProcedure && !connection.driver.Version.isAtLeast(5, 0, 0))
+				throw new MySqlException("Stored procedures are not supported on this version of MySQL");
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ExecuteNonQuery/*'/>
 		public override int ExecuteNonQuery()
 		{
-            lastInsertedId = -1;
-            updatedRowCount = -1;
+			lastInsertedId = -1;
+			updatedRowCount = -1;
 
-            MySqlDataReader reader = ExecuteReader();
-            if (reader != null)
-            {
-                reader.Close();
-                lastInsertedId = reader.InsertedId;
-                this.updatedRowCount = reader.RecordsAffected;
-            }
-            return (int)updatedRowCount;
-        }
+			MySqlDataReader reader = ExecuteReader();
+			if (reader != null)
+			{
+				reader.Close();
+				lastInsertedId = reader.InsertedId;
+				this.updatedRowCount = reader.RecordsAffected;
+			}
+			return (int)updatedRowCount;
+		}
 
-        internal void Close()
-        {
-            if (statement != null)
-                statement.Close();
-        }
+		internal void Close()
+		{
+			if (statement != null)
+				statement.Close();
+		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ExecuteReader/*'/>
 		public new MySqlDataReader ExecuteReader()
@@ -312,131 +315,131 @@ namespace MySql.Data.MySqlClient
 			return ExecuteReader(CommandBehavior.Default);
 		}
 
-        private void TimeoutExpired(object commandObject)
-        {
-            MySqlCommand cmd = (commandObject as MySqlCommand);
-            if (cmd.canCancel)
-            {
-                cmd.timedOut = true;
-                cmd.Cancel();
-            }
-        }
+		private void TimeoutExpired(object commandObject)
+		{
+			MySqlCommand cmd = (commandObject as MySqlCommand);
+			if (cmd.canCancel)
+			{
+				cmd.timedOut = true;
+				cmd.Cancel();
+			}
+		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ExecuteReader1/*'/>
 		public new MySqlDataReader ExecuteReader(CommandBehavior behavior)
 		{
-            lastInsertedId = -1;
+			lastInsertedId = -1;
 			CheckState();
 
-            if (cmdText == null ||
-                cmdText.Trim().Length == 0)
-                throw new InvalidOperationException(Resources.CommandTextNotInitialized);
+			if (cmdText == null ||
+				 cmdText.Trim().Length == 0)
+				throw new InvalidOperationException(Resources.CommandTextNotInitialized);
 
 			string sql = TrimSemicolons(cmdText);
 
-            //TODO: make these work with prepared statements and stored procedures
+			//TODO: make these work with prepared statements and stored procedures
 			if (0 != (behavior & CommandBehavior.SchemaOnly))
 			{
-                sql = String.Format("SET SQL_SELECT_LIMIT=0;{0};SET sql_select_limit=-1;", sql);
+				sql = String.Format("SET SQL_SELECT_LIMIT=0;{0};SET sql_select_limit=-1;", sql);
 			}
 
 			if (0 != (behavior & CommandBehavior.SingleRow))
 			{
 				sql = String.Format("SET SQL_SELECT_LIMIT=1;{0};SET sql_select_limit=-1;", sql);
 			}
-            
-            if (statement == null || !statement.IsPrepared)
-            {
-                if (CommandType == CommandType.StoredProcedure)
-                    statement = new StoredProcedure(this.Connection, sql);
-                else
-                    statement = new PreparableStatement(this.Connection, sql);
-            }
+
+			if (statement == null || !statement.IsPrepared)
+			{
+				if (CommandType == CommandType.StoredProcedure)
+					statement = new StoredProcedure(this.Connection, sql);
+				else
+					statement = new PreparableStatement(this.Connection, sql);
+			}
 
 			updatedRowCount = -1;
 
-            try
-            {
-                MySqlDataReader reader = new MySqlDataReader(this, statement, behavior);
+			try
+			{
+				MySqlDataReader reader = new MySqlDataReader(this, statement, behavior);
 
-                // start a threading timer on our command timeout 
-                timedOut = false;
-                Timer t = null;
-                if (connection.driver.Version.isAtLeast(5, 0, 0))
-                {
-                    TimerCallback timerDelegate =
-                        new TimerCallback(TimeoutExpired);
-                    t = new Timer(timerDelegate, this, this.CommandTimeout * 1000, Timeout.Infinite);
-                }
+				// start a threading timer on our command timeout 
+				timedOut = false;
+//				Timer t = null;
+//				if (connection.driver.Version.isAtLeast(5, 0, 0))
+//				{
+//					TimerCallback timerDelegate =
+//						 new TimerCallback(TimeoutExpired);
+//					t = new Timer(timerDelegate, this, this.CommandTimeout * 1000, Timeout.Infinite);
+//				}
 
-                // execute the statement
-                statement.Execute(parameters);
+				// execute the statement
+				statement.Execute(parameters);
 
-                canCancel = true;
-                reader.NextResult();
-                if (t != null)
-                    t.Dispose();
-                canCancel = false;
-                connection.Reader = reader;
-                return reader;
-            }
-            catch (MySqlException ex)
-            {
-                // if we caught an exception because of a cancel, then just return null
-                if (ex.Number == 1317)
-                {
-                    if (timedOut)
-                        throw new MySqlException(Resources.Timeout);
-                    return null;
-                }
-                throw;
-            }
+				canCancel = true;
+				reader.NextResult();
+//				if (t != null)
+//					t.Dispose();
+				canCancel = false;
+				connection.Reader = reader;
+				return reader;
+			}
+			catch (MySqlException ex)
+			{
+				// if we caught an exception because of a cancel, then just return null
+				if (ex.Number == 1317)
+				{
+					if (timedOut)
+						throw new MySqlException(Resources.Timeout);
+					return null;
+				}
+				throw;
+			}
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ExecuteScalar/*'/>
 		public override object ExecuteScalar()
 		{
-            lastInsertedId = -1;
+			lastInsertedId = -1;
 			object val = null;
 			MySqlDataReader reader = ExecuteReader();
-            try
-            {
-                if (reader != null)
-                {
-                    if (reader.Read())
-                        val = reader.GetValue(0);
-                    reader.Close();
-                    lastInsertedId = reader.InsertedId;
-                    reader = null;
-                }
-            }
-            catch (Exception)
-            {
-                if (reader != null)
-                    reader.Close();
-                throw;
-            }
+			try
+			{
+				if (reader != null)
+				{
+					if (reader.Read())
+						val = reader.GetValue(0);
+					reader.Close();
+					lastInsertedId = reader.InsertedId;
+					reader = null;
+				}
+			}
+			catch (Exception)
+			{
+				if (reader != null)
+					reader.Close();
+				throw;
+			}
 			return val;
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/Prepare2/*'/>
-		private void Prepare(int cursorPageSize) 
+		private void Prepare(int cursorPageSize)
 		{
-			if (! connection.driver.Version.isAtLeast(5,0,0) && cursorPageSize > 0)
+			if (!connection.driver.Version.isAtLeast(5, 0, 0) && cursorPageSize > 0)
 				throw new InvalidOperationException("Nested commands are only supported on MySQL 5.0 and later");
 
-            // if the length of the command text is zero, then just return
-            string psSQL = CommandText;
-            if (psSQL == null ||
-                psSQL.Trim().Length == 0)
-                return;
+			// if the length of the command text is zero, then just return
+			string psSQL = CommandText;
+			if (psSQL == null ||
+				 psSQL.Trim().Length == 0)
+				return;
 
-            if (CommandType == CommandType.StoredProcedure)
-                statement = new StoredProcedure(this.Connection, CommandText);
-            else
-                statement = new PreparableStatement(this.Connection, CommandText);
+			if (CommandType == CommandType.StoredProcedure)
+				statement = new StoredProcedure(this.Connection, CommandText);
+			else
+				statement = new PreparableStatement(this.Connection, CommandText);
 
-            statement.Prepare(parameters);
+			statement.Prepare(parameters);
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/Prepare/*'/>
@@ -446,17 +449,18 @@ namespace MySql.Data.MySqlClient
 				throw new InvalidOperationException("The connection property has not been set.");
 			if (connection.State != ConnectionState.Open)
 				throw new InvalidOperationException("The connection is not open.");
-			if (! connection.driver.Version.isAtLeast(4,1,0)) 
-                return;
+			if (!connection.driver.Version.isAtLeast(4, 1, 0) ||
+				 connection.Settings.IgnorePrepare)
+				return;
 
-            Prepare(0);
+			Prepare(0);
 		}
 		#endregion
 
 		#region Async Methods
 
 		internal delegate int AsyncExecuteNonQueryDelegate();
-        internal delegate MySqlDataReader AsyncExecuteReaderDelegate(CommandBehavior behavior);
+		internal delegate MySqlDataReader AsyncExecuteReaderDelegate(CommandBehavior behavior);
 
 		private string TrimSemicolons(string sql)
 		{
@@ -465,41 +469,41 @@ namespace MySql.Data.MySqlClient
 			while (sb[start] == ';')
 				start++;
 
-			int end = sb.Length-1;
+			int end = sb.Length - 1;
 			while (sb[end] == ';')
 				end--;
-			return sb.ToString(start, end-start+1);
+			return sb.ToString(start, end - start + 1);
 		}
 
-        public IAsyncResult BeginExecuteReader()
-        {
-            return BeginExecuteReader(CommandBehavior.Default);
-        }
-
-        public IAsyncResult BeginExecuteReader(CommandBehavior behavior)
-        {
-            AsyncExecuteReaderDelegate del = new AsyncExecuteReaderDelegate(ExecuteReader);
-            asyncResult = del.BeginInvoke(behavior, null, null);
-            return asyncResult;
-        }
-
-        public MySqlDataReader EndExecuteReader(IAsyncResult result)
-        {
-            result.AsyncWaitHandle.WaitOne();
-            return connection.Reader;
-        }
-
-        public IAsyncResult BeginExecuteNonQuery(AsyncCallback callback, object stateObject)
-        {
-            AsyncExecuteNonQueryDelegate del =
-                new AsyncExecuteNonQueryDelegate(ExecuteNonQuery);
-            asyncResult = del.BeginInvoke(callback, stateObject);
-            return asyncResult;
-        }
-
-		public IAsyncResult BeginExecuteNonQuery() 
+		public IAsyncResult BeginExecuteReader()
 		{
-			AsyncExecuteNonQueryDelegate del = 
+			return BeginExecuteReader(CommandBehavior.Default);
+		}
+
+		public IAsyncResult BeginExecuteReader(CommandBehavior behavior)
+		{
+			AsyncExecuteReaderDelegate del = new AsyncExecuteReaderDelegate(ExecuteReader);
+			asyncResult = del.BeginInvoke(behavior, null, null);
+			return asyncResult;
+		}
+
+		public MySqlDataReader EndExecuteReader(IAsyncResult result)
+		{
+			result.AsyncWaitHandle.WaitOne();
+			return connection.Reader;
+		}
+
+		public IAsyncResult BeginExecuteNonQuery(AsyncCallback callback, object stateObject)
+		{
+			AsyncExecuteNonQueryDelegate del =
+				 new AsyncExecuteNonQueryDelegate(ExecuteNonQuery);
+			asyncResult = del.BeginInvoke(callback, stateObject);
+			return asyncResult;
+		}
+
+		public IAsyncResult BeginExecuteNonQuery()
+		{
+			AsyncExecuteNonQueryDelegate del =
 				new AsyncExecuteNonQueryDelegate(ExecuteNonQuery);
 			asyncResult = del.BeginInvoke(null, null);
 			return asyncResult;
@@ -507,7 +511,7 @@ namespace MySql.Data.MySqlClient
 
 		public int EndExecuteNonQuery(IAsyncResult result)
 		{
-            result.AsyncWaitHandle.WaitOne();
+			result.AsyncWaitHandle.WaitOne();
 			return (int)updatedRowCount;
 		}
 
@@ -515,59 +519,59 @@ namespace MySql.Data.MySqlClient
 
 		#region Private Methods
 
-        private void SyncCommandType(bool cmdTypeSet)
-        {
-            int i = (int)CommandType;
-        }
-
-/*		private ArrayList PrepareSqlBuffers(string sql)
+		private void SyncCommandType(bool cmdTypeSet)
 		{
-			ArrayList buffers = new ArrayList();
-			MySqlStreamWriter writer = new MySqlStreamWriter(new MemoryStream(), connection.Encoding);
-			writer.Version = connection.driver.Version;
+			int i = (int)CommandType;
+		}
 
-			// if we are executing as a stored procedure, then we need to add the call
-			// keyword.
-			if (CommandType == CommandType.StoredProcedure)
-			{
-				if (storedProcedure == null)
-					storedProcedure = new StoredProcedure(this);
-				sql = storedProcedure.Prepare( CommandText );
-			}
-
-			// tokenize the SQL
-			sql = sql.TrimStart(';').TrimEnd(';');
-			ArrayList tokens = TokenizeSql( sql );
-
-			foreach (string token in tokens)
-			{
-				if (token.Trim().Length == 0) continue;
-				if (token == ";" && ! connection.driver.SupportsBatch)
+		/*		private ArrayList PrepareSqlBuffers(string sql)
 				{
-					MemoryStream ms = (MemoryStream)writer.Stream;
-					if (ms.Length > 0)
-						buffers.Add( ms );
-
-					writer = new MySqlStreamWriter(new MemoryStream(), connection.Encoding);
+					ArrayList buffers = new ArrayList();
+					MySqlStreamWriter writer = new MySqlStreamWriter(new MemoryStream(), connection.Encoding);
 					writer.Version = connection.driver.Version;
-					continue;
-				}
-				else if (token[0] == parameters.ParameterMarker) 
-				{
-					if (SerializeParameter(writer, token)) continue;
-				}
 
-				// our fall through case is to write the token to the byte stream
-				writer.WriteStringNoNull(token);
-			}
+					// if we are executing as a stored procedure, then we need to add the call
+					// keyword.
+					if (CommandType == CommandType.StoredProcedure)
+					{
+						if (storedProcedure == null)
+							storedProcedure = new StoredProcedure(this);
+						sql = storedProcedure.Prepare( CommandText );
+					}
 
-			// capture any buffer that is left over
-			MemoryStream mStream = (MemoryStream)writer.Stream;
-			if (mStream.Length > 0)
-				buffers.Add( mStream );
+					// tokenize the SQL
+					sql = sql.TrimStart(';').TrimEnd(';');
+					ArrayList tokens = TokenizeSql( sql );
 
-			return buffers;
-		}*/
+					foreach (string token in tokens)
+					{
+						if (token.Trim().Length == 0) continue;
+						if (token == ";" && ! connection.driver.SupportsBatch)
+						{
+							MemoryStream ms = (MemoryStream)writer.Stream;
+							if (ms.Length > 0)
+								buffers.Add( ms );
+
+							writer = new MySqlStreamWriter(new MemoryStream(), connection.Encoding);
+							writer.Version = connection.driver.Version;
+							continue;
+						}
+						else if (token[0] == parameters.ParameterMarker) 
+						{
+							if (SerializeParameter(writer, token)) continue;
+						}
+
+						// our fall through case is to write the token to the byte stream
+						writer.WriteStringNoNull(token);
+					}
+
+					// capture any buffer that is left over
+					MemoryStream mStream = (MemoryStream)writer.Stream;
+					if (mStream.Length > 0)
+						buffers.Add( mStream );
+
+					return buffers;
+				}*/
 
 
 		#endregion
@@ -578,10 +582,10 @@ namespace MySql.Data.MySqlClient
 		/// are included as well as the entire parameter list.
 		/// </summary>
 		/// <returns>The cloned MySqlCommand object</returns>
-		object ICloneable.Clone() 
+		object ICloneable.Clone()
 		{
 			MySqlCommand clone = new MySqlCommand(cmdText, connection, curTransaction);
-			foreach (MySqlParameter p in parameters) 
+			foreach (MySqlParameter p in parameters)
 			{
 				clone.Parameters.Add((p as ICloneable).Clone());
 			}
@@ -598,57 +602,57 @@ namespace MySql.Data.MySqlClient
 
 		#endregion
 
-        [Browsable(false)]
-        public override bool DesignTimeVisible
-        {
-            get
-            {
-                return this.designTimeVisible; 
-            }
-            set
-            {
-                this.designTimeVisible = value;
-            }
-        }
+		[Browsable(false)]
+		public override bool DesignTimeVisible
+		{
+			get
+			{
+				return this.designTimeVisible;
+			}
+			set
+			{
+				this.designTimeVisible = value;
+			}
+		}
 
-        public override UpdateRowSource UpdatedRowSource
-        {
-            get
-            {
-                return this.updatedRowSource;
-            }
-            set
-            {
-                this.updatedRowSource = value;
-            }
-        }
+		public override UpdateRowSource UpdatedRowSource
+		{
+			get
+			{
+				return this.updatedRowSource;
+			}
+			set
+			{
+				this.updatedRowSource = value;
+			}
+		}
 
-        protected override DbParameter CreateDbParameter()
-        {
-            return new MySqlParameter();
-        }
+		protected override DbParameter CreateDbParameter()
+		{
+			return new MySqlParameter();
+		}
 
-        protected override DbConnection DbConnection
-        {
-            get { return this.Connection; }
-            set { this.Connection = (MySqlConnection)value; }
-        }
+		protected override DbConnection DbConnection
+		{
+			get { return this.Connection; }
+			set { this.Connection = (MySqlConnection)value; }
+		}
 
-        protected override DbParameterCollection DbParameterCollection
-        {
-            get { return this.Parameters; }
-        }
+		protected override DbParameterCollection DbParameterCollection
+		{
+			get { return this.Parameters; }
+		}
 
-        protected override DbTransaction DbTransaction
-        {
-            get { return this.Transaction; }
-            set { this.Transaction = (MySqlTransaction)value; }
-        }
+		protected override DbTransaction DbTransaction
+		{
+			get { return this.Transaction; }
+			set { this.Transaction = (MySqlTransaction)value; }
+		}
 
-        protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior)
-        {
-            return this.ExecuteReader(behavior);
-        }
-    }
+		protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior)
+		{
+			return this.ExecuteReader(behavior);
+		}
+	}
 }
 

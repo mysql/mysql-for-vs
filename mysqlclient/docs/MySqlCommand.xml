@@ -610,12 +610,13 @@ public void CreateMySqlCommand()
 and generating an error.
 	</summary>
 	<value>
-	The time (in seconds) to wait for the command to execute. The default is 0 
+	The time (in seconds) to wait for the command to execute. The default is 30 
 seconds.
 	</value>
 	<remarks>
-	MySQL currently does not support any method of canceling a pending or exeucting operation. All 
-	commands issues against a MySQL server will execute until completion or exception occurs.
+	CommandTimeout is dependent on the ability of MySQL to cancel an executing query.
+  Because of this, CommandTimeout is only supported when connected to MySQL
+  version 5.0.0 or higher.
 	</remarks>
 </CommandTimeout>
 

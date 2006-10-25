@@ -27,7 +27,7 @@ namespace MySql.Data.MySqlClient
 	/// <summary>
 	/// Summary description for MySqlPoolManager.
 	/// </summary>
-	internal static class MySqlPoolManager
+	class MySqlPoolManager
 	{
 		private static Hashtable	pools;
 

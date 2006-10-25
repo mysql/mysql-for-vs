@@ -403,6 +403,7 @@ namespace MySql.Data.MySqlClient
 			}
 
 			stream.Close();
+			stream = null;
 			base.Close();
 		}
 
