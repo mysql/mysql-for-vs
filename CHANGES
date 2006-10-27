@@ -4,6 +4,7 @@ Version 5.0.2 (unreleased)
     ----------
     Bug #23268 System.FormatException when invoking procedure with ENUM input parameter 	
     Bug #23538 Exception thrown when GetSchemaTable is called and "fields" is null. 
+    Bug #23245 Connector Net 5.01 Beta Installer produces Antivirus Error Message 
     
     Other changes
     -------------

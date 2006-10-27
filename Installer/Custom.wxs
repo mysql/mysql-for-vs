@@ -47,14 +47,14 @@
 
 	<InstallUISequence>
 		<Custom Action="RGSM1" Sequence="1"/>
-		<Custom Action="RGSM2" Sequence="1"/>
-		<Custom Action="RGSM3" Sequence="1"/>
-		<Custom Action="RGSM4" Sequence="1"/>
-		<Custom Action="RGSM5" Sequence="1"/>
-		<Custom Action="RGSM6" Sequence="1"/>
-		<Custom Action="RGSM7" Sequence="1"/>
-		<Custom Action="RGSM8" Sequence="1"/>
-		<Custom Action="RGSM9" Sequence="1"/>
+		<Custom Action="RGSM2" After="RGSM1"/>
+		<Custom Action="RGSM3" After="RGSM2"/>
+		<Custom Action="RGSM4" After="RGSM3"/>
+		<Custom Action="RGSM5" After="RGSM4"/>
+		<Custom Action="RGSM6" After="RGSM5"/>
+		<Custom Action="RGSM7" After="RGSM6"/>
+		<Custom Action="RGSM8" After="RGSM7"/>
+		<Custom Action="RGSM9" After="RGSM8"/>
 	</InstallUISequence>
 	
 	</Fragment>

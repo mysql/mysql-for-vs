@@ -122,7 +122,6 @@
 			</Directory>
 			<Directory Id="TestSuite" Name="ts" LongName="TestSuite">
 				<Component Id="TestSuiteSrc" DiskId="1" Guid="cfe61742-5d9d-452b-9b12-f8adb012bbb4">
-					<File Id="file400" Name="APP_1.CON" LongName="App.config" src="..\TestSuite\App.config" />
 					<File Id="file401" Name="ASSEMB_1.CS" LongName="AssemblyInfo.cs" src="..\TestSuite\AssemblyInfo.cs" />
 					<File Id="file402" Name="ASYNCT_1.CS" LongName="AsyncTests.cs" src="..\TestSuite\AsyncTests.cs" />
 					<File Id="file403" Name="BaseTest.cs" src="..\TestSuite\BaseTest.cs" />
@@ -158,9 +157,9 @@
 					<File Id="file439" Name="TRANSA_1.CS" LongName="Transactions.cs" src="..\TestSuite\Transactions.cs" />
 					<File Id="file440" Name="USAGEA_1.CS" LongName="UsageAdvisor.cs" src="..\TestSuite\UsageAdvisor.cs" />
 					<File Id="file441" Name="Utils.cs" src="..\TestSuite\Utils.cs" />
-					<File Id="file442" Name="Simple_1.cs" LongName="SimpleTransactions.cs" src="..\mysqlclient\SimpleTransactions.cs"/>
-					<File Id="file443" Name="Timeou_1.cs" LongName="TimeoutAndCancel.cs" src="..\mysqlclient\TimeoutAndCancel.cs"/>
-					<File Id="file444" Name="Syntax2.cs" src="..\mysqlclient\Syntax2.cs"/>
+					<File Id="file442" Name="Simple_1.cs" LongName="SimpleTransactions.cs" src="..\TestSuite\SimpleTransactions.cs"/>
+					<File Id="file443" Name="Timeou_1.cs" LongName="TimeoutAndCancel.cs" src="..\TestSuite\TimeoutAndCancel.cs"/>
+					<File Id="file444" Name="Syntax2.cs" src="..\TestSuite\Syntax2.cs"/>
 				</Component>
 			</Directory>
 		</DirectoryRef> 

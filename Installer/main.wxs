@@ -51,6 +51,7 @@
 		<DirectoryRef Id='BinNet20'>
 			<Component Id="Net20" Guid="529dc176-92d0-4f14-ab09-25f611ce2959">
 				<File Id="CoreBin20" Name="MD20" LongName="MySql.Data.dll" src="..\mysqlclient\bin\net-2.0\$(var.build)\mysql.data.dll" DiskId="1"  />
+				<File Id="CoreBin20Config" Name="mdconfig" LongName="CustomAction.config" src="CustomAction.config" DiskId="1"/>
 				<Registry Id="vs80registry" Root="HKLM" Key="Software\Microsoft\VisualStudio\8.0\AssemblyFolders\MySQL Connector Net $(var.ProductVersion)" Type="string" KeyPath="yes" Value="[TARGETDIR]bin\.NET 2.0\" />
 			</Component>
 			<Component Id="GAC20" DiskId="1" Guid="302b607b-2633-4b2c-b3da-476a50574b16">
@@ -115,17 +116,20 @@
 
 		<Icon Id="ChangeLogIcon" src="Bitmaps\document.ico"/>
 
+		<!-- custom actions for performing machine.config mods -->
+		<Binary Id="InstallUtil" src="InstallUtilLib.dll" />
+		<CustomAction Id="CustomInstall" BinaryKey="InstallUtil" DllEntry="ManagedInstall" Execute="deferred" />
+		<CustomAction Id="InstallSetProp" Property="CustomInstall" Value="/installtype=notransaction /action=install /LogFile= &quot;[#CoreBin20]&quot; &quot;[#CoreBin20Config]&quot;" />
+		<CustomAction Id="CustomUninstall" BinaryKey="InstallUtil" DllEntry="ManagedInstall" Execute="deferred" />
+		<CustomAction Id="UninstallSetProp" Property="CustomUninstall" Value="/installtype=notransaction /action=uninstall /LogFile= &quot;[#CoreBin20]&quot; &quot;[#CoreBin20Config]&quot;" />
 
-    <Binary Id="MachineConfig" src='MachineConfig.js' />
-    <CustomAction Id="InstallMachineConfig" BinaryKey="MachineConfig" JScriptCall='InstallMachineConfig'/>
-    <CustomAction Id="ReinstallMachineConfig" BinaryKey="MachineConfig" JScriptCall='InstallMachineConfig'/>
-    <CustomAction Id="UninstallMachineConfig" BinaryKey="MachineConfig" JScriptCall='UninstallMachineConfig'/>
+		<InstallExecuteSequence>
+			<Custom Action="InstallSetProp" After="InstallFiles">NOT Installed</Custom>
+			<Custom Action="CustomInstall" After="InstallSetProp">NOT Installed</Custom>
 
-    <InstallExecuteSequence>
-      <Custom Action='InstallMachineConfig' After='InstallFinalize'>NOT Installed</Custom>
-      <Custom Action='UninstallMachineConfig' Before='ProcessComponents'>Installed</Custom>
-      <Custom Action='ReinstallMachineConfig' Before='ProcessComponents'>(&amp;Complete&lt;&gt;2) AND (!Complete=3)</Custom>
-    </InstallExecuteSequence>    
+			<Custom Action="UninstallSetProp" After="ProcessComponents">Installed</Custom>
+			<Custom Action="CustomUninstall" After="UninstallSetProp">Installed</Custom>
+		</InstallExecuteSequence>
   </Product>
 </Wix>
 
