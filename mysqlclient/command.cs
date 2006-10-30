@@ -364,21 +364,22 @@ namespace MySql.Data.MySqlClient
 
 				// start a threading timer on our command timeout 
 				timedOut = false;
-//				Timer t = null;
-//				if (connection.driver.Version.isAtLeast(5, 0, 0))
-//				{
-//					TimerCallback timerDelegate =
-//						 new TimerCallback(TimeoutExpired);
-//					t = new Timer(timerDelegate, this, this.CommandTimeout * 1000, Timeout.Infinite);
-//				}
+				Timer t = null;
+				if (connection.driver.Version.isAtLeast(5, 0, 0) &&
+					 commandTimeout > 0)
+				{
+					TimerCallback timerDelegate =
+						 new TimerCallback(TimeoutExpired);
+					t = new Timer(timerDelegate, this, this.CommandTimeout * 1000, Timeout.Infinite);
+				}
 
 				// execute the statement
 				statement.Execute(parameters);
 
 				canCancel = true;
 				reader.NextResult();
-//				if (t != null)
-//					t.Dispose();
+				if (t != null)
+					t.Dispose();
 				canCancel = false;
 				connection.Reader = reader;
 				return reader;

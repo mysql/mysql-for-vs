@@ -77,6 +77,10 @@ namespace MySql.Data.Common
 
 					foreach (IPAddress address in ipHE.AddressList)
 					{
+						// MySQL doesn't currently support IPv6 addresses
+						if (address.AddressFamily == AddressFamily.InterNetworkV6)
+							continue;
+
 						stream = CreateSocketStream(address, port, false);
 						if (stream != null)
 							break;
