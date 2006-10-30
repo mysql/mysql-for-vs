@@ -6,6 +6,7 @@ Version 5.0.2 (unreleased)
     Bug #23538 Exception thrown when GetSchemaTable is called and "fields" is null. 
     Bug #23245 Connector Net 5.01 Beta Installer produces Antivirus Error Message 
     Bug #23758 Unable to connect to any server - IPv6 related 
+    Bug #22882 Registry key 'Global' access denied 
     
     Other changes
     -------------

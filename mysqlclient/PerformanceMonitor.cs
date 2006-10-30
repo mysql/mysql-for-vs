@@ -20,52 +20,42 @@
 
 using System;
 using System.Diagnostics;
+using System.Security.Permissions;
 
 
 namespace MySql.Data.MySqlClient
 {
-    class PerformanceMonitor
-    {
-        private MySqlConnection connection;
-        private static PerformanceCounter procedureHardQueries;
-        private static PerformanceCounter procedureSoftQueries;
-        private static string categoryName;
+	class PerformanceMonitor
+	{
+		private MySqlConnection connection;
+		private static PerformanceCounter procedureHardQueries;
+		private static PerformanceCounter procedureSoftQueries;
 
-        public PerformanceMonitor(MySqlConnection connection)
-        {
-            this.connection = connection;
+		public PerformanceMonitor(MySqlConnection connection)
+		{
+			this.connection = connection;
 
-            if (categoryName == null)
-            {
-                categoryName = ".NET Data Provider for MySQL";
-            }
+			string categoryName = Resources.PerfMonCategoryName;
 
-            if (connection.Settings.UsePerformanceMonitor && procedureHardQueries == null)
-            {
-                if (PerformanceCounterCategory.Exists(categoryName))
-                {
-                    if (PerformanceCounterCategory.CounterExists("HardProcedureQueries",
-                        categoryName))
-                        procedureHardQueries = new PerformanceCounter(categoryName,
-                            "HardProcedureQueries", false);
-                    if (PerformanceCounterCategory.CounterExists("SoftProcedureQueries",
-                        categoryName))
-                        procedureSoftQueries = new PerformanceCounter(categoryName,
-                            "SoftProcedureQueries", false);
-                }
-            }
-        }
+			if (connection.Settings.UsePerformanceMonitor && procedureHardQueries == null)
+			{
+				procedureHardQueries = new PerformanceCounter(categoryName,
+					 "HardProcedureQueries", false);
+				procedureSoftQueries = new PerformanceCounter(categoryName,
+					 "SoftProcedureQueries", false);
+			}
+		}
 
-        public void AddHardProcedureQuery()
-        {
-            if (!connection.Settings.UsePerformanceMonitor) return;
-            procedureHardQueries.Increment();
-        }
+		public void AddHardProcedureQuery()
+		{
+			if (!connection.Settings.UsePerformanceMonitor) return;
+			procedureHardQueries.Increment();
+		}
 
-        public void AddSoftProcedureQuery()
-        {
-            if (!connection.Settings.UsePerformanceMonitor) return;
-            procedureSoftQueries.Increment();
-        }
-    }
+		public void AddSoftProcedureQuery()
+		{
+			if (!connection.Settings.UsePerformanceMonitor) return;
+			procedureSoftQueries.Increment();
+		}
+	}
 }

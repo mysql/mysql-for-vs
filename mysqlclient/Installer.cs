@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using Microsoft.Win32;
 using System.Xml;
 using System.IO;
+using System.Diagnostics;
 
 namespace MySql.Data.MySqlClient
 {
@@ -24,6 +25,13 @@ namespace MySql.Data.MySqlClient
 		public override void Install(System.Collections.IDictionary stateSaver)
 		{
 			base.Install(stateSaver);
+
+			AddProviderToMachineConfig();
+			InstallPerfMonItems();
+		}
+
+		private void AddProviderToMachineConfig()
+		{
 			object installRoot = Registry.GetValue(
 				@"HKEY_LOCAL_MACHINE\Software\Microsoft\.NETFramework\",
 				"InstallRoot", null);
@@ -40,7 +48,7 @@ namespace MySql.Data.MySqlClient
 			// load the XML into the XmlDocument
 			XmlDocument doc = new XmlDocument();
 			doc.LoadXml(configXML);
- 
+
 			// create our new node
 			XmlElement newNode = (XmlElement)doc.CreateNode(XmlNodeType.Element, "add", "");
 
@@ -62,6 +70,22 @@ namespace MySql.Data.MySqlClient
 			doc.Save(writer);
 		}
 
+		private void InstallPerfMonItems()
+		{
+			string categoryName = Resources.PerfMonCategoryName;
+
+			if (!PerformanceCounterCategory.Exists(categoryName))
+			{
+				CounterCreationDataCollection ccdc = new CounterCreationDataCollection();
+				ccdc.Add(new CounterCreationData(Resources.PerfMonHardProcName,
+					Resources.PerfMonHardProcHelp, PerformanceCounterType.NumberOfItems32));
+				ccdc.Add(new CounterCreationData(Resources.PerfMonSoftProcName,
+					Resources.PerfMonSoftProcHelp, PerformanceCounterType.NumberOfItems32));
+				PerformanceCounterCategory.Create(categoryName, Resources.PerfMonCategoryHelp,
+					PerformanceCounterCategoryType.SingleInstance, ccdc);
+			}
+		}
+
 		/// <summary>
 		/// We override Uninstall so we can remove out assembly from the
 		/// machine.config files.
@@ -71,6 +95,12 @@ namespace MySql.Data.MySqlClient
 		{
 			base.Uninstall(savedState);
 
+			RemoveProviderFromMachineConfig();
+			RemovePerfMonItems();
+		}
+
+		private void RemoveProviderFromMachineConfig()
+		{
 			object installRoot = Registry.GetValue(
 				@"HKEY_LOCAL_MACHINE\Software\Microsoft\.NETFramework\",
 				"InstallRoot", null);
@@ -103,6 +133,16 @@ namespace MySql.Data.MySqlClient
 			XmlTextWriter writer = new XmlTextWriter(configPath, null);
 			writer.Formatting = Formatting.Indented;
 			doc.Save(writer);
+		}
+
+		private void RemovePerfMonItems()
+		{
+			string categoryName = Resources.PerfMonCategoryName;
+
+			// TODO: add code to inspect registry and make sure no other connector/net 5.x
+			// installs are present.
+			if (PerformanceCounterCategory.Exists(categoryName))
+				PerformanceCounterCategory.Delete(categoryName);
 		}
 	}
 }

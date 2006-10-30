@@ -276,4 +276,22 @@
   <data name="UnableToParseFK" xml:space="preserve">
     <value>There was an error parsing the foreign key definition.</value>
   </data>
+  <data name="PerfMonCategoryHelp" xml:space="preserve">
+    <value>This category includes a series of counters for MySQL.</value>
+  </data>
+  <data name="PerfMonCategoryName" xml:space="preserve">
+    <value>.NET Data Provider for MySQL</value>
+  </data>
+  <data name="PerfMonHardProcHelp" xml:space="preserve">
+    <value>The number of times a procedures metadata had to be queried from the server.</value>
+  </data>
+  <data name="PerfMonHardProcName" xml:space="preserve">
+    <value>Hard Procedure Queries</value>
+  </data>
+  <data name="PerfMonSoftProcHelp" xml:space="preserve">
+    <value>The number of times a procedures metadata was retrieved from the client-side cache.</value>
+  </data>
+  <data name="PerfMonSoftProcName" xml:space="preserve">
+    <value>Soft Procedure Queries</value>
+  </data>
 </root>
