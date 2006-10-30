@@ -117,13 +117,14 @@ namespace MySql.Data.MySqlClient.Tests
 
 		/// <summary>
 		/// Bug #17814  	Stored procedure fails unless DbType set explicitly
+		/// Bug #23749 VarChar field size over 255 causes a System.OverflowException 
 		/// </summary>
 		[Test]
 		public void OutputParameters()
 		{
 			// create our procedure
 			execSQL("DROP PROCEDURE IF EXISTS spCount");
-			execSQL("CREATE PROCEDURE spCount(out value VARCHAR(50), OUT intVal INT, " +
+			execSQL("CREATE PROCEDURE spCount(out value VARCHAR(350), OUT intVal INT, " +
 				"OUT dateVal TIMESTAMP, OUT floatVal FLOAT, OUT noTypeVarChar VARCHAR(20), " +
 				"OUT noTypeInt INT) " +
 				"BEGIN  SET value='42';  SET intVal=33; SET dateVal='2004-06-05 07:58:09'; " +
@@ -136,11 +137,11 @@ namespace MySql.Data.MySqlClient.Tests
 			cmd.Parameters.Add(new MySqlParameter("?dateVal", MySqlDbType.Datetime));
 			cmd.Parameters.Add(new MySqlParameter("?floatVal", MySqlDbType.Float));
 			MySqlParameter vcP = new MySqlParameter();
-			vcP.ParameterName = "noTypeVarChar";
+			vcP.ParameterName = "?noTypeVarChar";
 			vcP.Direction = ParameterDirection.Output;
 			cmd.Parameters.Add(vcP);
 			MySqlParameter vcI = new MySqlParameter();
-			vcI.ParameterName = "noTypeInt";
+			vcI.ParameterName = "?noTypeInt";
 			vcI.Direction = ParameterDirection.Output;
 			cmd.Parameters.Add(vcI);
 			cmd.Parameters[0].Direction = ParameterDirection.Output;
