@@ -294,4 +294,7 @@
   <data name="PerfMonSoftProcName" xml:space="preserve">
     <value>Soft Procedure Queries</value>
   </data>
+  <data name="WrongParameterName" xml:space="preserve">
+    <value>Parameter '{0}' is not found but a parameter with the name '{1}' is found. Parameter names must include the leading parameter marker.</value>
+  </data>
 </root>

@@ -590,5 +590,14 @@ namespace MySql.Data.MySqlClient {
                 return ResourceManager.GetString("WriteToStreamFailed", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parameter &apos;{0}&apos; is not found but a parameter with the name &apos;{1}&apos; is found. Parameter names must include the leading parameter marker..
+        /// </summary>
+        internal static string WrongParameterName {
+            get {
+                return ResourceManager.GetString("WrongParameterName", resourceCulture);
+            }
+        }
     }
 }

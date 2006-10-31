@@ -21,6 +21,7 @@ Version 5.0.2 (unreleased)
          statements application-wide
     Added Installer class to provide custom install type procedures such as modifying
          machine.config
+    A nicer exception is displayed if you have added a parameter without the parameter marker.
          
 Version 5.0.1 (Beta)
 
