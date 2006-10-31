@@ -19,6 +19,8 @@ Version 5.0.2 (unreleased)
          (A similar suggestion came in from a user)
     Added 'Ignore Prepare' connection string option for disabling prepared
          statements application-wide
+    Added Installer class to provide custom install type procedures such as modifying
+         machine.config
          
 Version 5.0.1 (Beta)
 

@@ -37,8 +37,21 @@ namespace MySql.Data.MySqlClient
 				"InstallRoot", null);
 			if (installRoot == null)
 				throw new Exception("Unable to retrieve install root for .NET framework");
+
+			AddProviderToMachineConfigInDir(installRoot.ToString());
+
+			string installRoot64 = installRoot.ToString();
+			installRoot64 = installRoot64.Substring(0, installRoot64.Length - 1);
+			installRoot64 = string.Format("{0}64{1}", installRoot64,
+				Path.DirectorySeparatorChar);
+			if (Directory.Exists(installRoot64))
+				AddProviderToMachineConfigInDir(installRoot64);
+		}
+
+		private void AddProviderToMachineConfigInDir(string path)
+		{
 			string configPath = String.Format(@"{0}v2.0.50727\CONFIG\machine.config",
-				installRoot);
+				path);
 
 			// now read the config file into memory
 			StreamReader sr = new StreamReader(configPath);
@@ -59,10 +72,24 @@ namespace MySql.Data.MySqlClient
 
 			// add the type attribute by reflecting on the executing assembly
 			Assembly a = Assembly.GetExecutingAssembly();
-			newNode.SetAttribute("type", a.FullName);
+			string type = String.Format("MySql.Data.MySqlClient.MySqlClientFactory, {0}", a.FullName);
+			newNode.SetAttribute("type", type);
 
 			XmlNodeList nodes = doc.GetElementsByTagName("DbProviderFactories");
-			nodes[0].AppendChild(newNode);
+
+			bool alreadyThere = false;
+			foreach (XmlNode node in nodes[0].ChildNodes)
+			{
+				string typeValue = node.Attributes["type"].Value;
+				if (typeValue == type)
+				{
+					alreadyThere = true;
+					break;
+				}
+			}
+
+			if (! alreadyThere)
+				nodes[0].AppendChild(newNode);
 
 			// Save the document to a file and auto-indent the output.
 			XmlTextWriter writer = new XmlTextWriter(configPath, null);
@@ -106,8 +133,22 @@ namespace MySql.Data.MySqlClient
 				"InstallRoot", null);
 			if (installRoot == null)
 				throw new Exception("Unable to retrieve install root for .NET framework");
+
+
+			RemoveProviderFromMachineConfigInDir(installRoot.ToString());
+
+			string installRoot64 = installRoot.ToString();
+			installRoot64 = installRoot64.Substring(0, installRoot64.Length - 1);
+			installRoot64 = string.Format("{0}64{1}", installRoot64,
+				Path.DirectorySeparatorChar);
+			if (Directory.Exists(installRoot64))
+				RemoveProviderFromMachineConfigInDir(installRoot64);
+		}
+
+		private void RemoveProviderFromMachineConfigInDir(string path)
+		{
 			string configPath = String.Format(@"{0}v2.0.50727\CONFIG\machine.config",
-				installRoot);
+				path);
 
 			// now read the config file into memory
 			StreamReader sr = new StreamReader(configPath);
