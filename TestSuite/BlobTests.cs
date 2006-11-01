@@ -39,22 +39,22 @@ namespace MySql.Data.MySqlClient.Tests
 		}
 
 		[TestFixtureTearDown]
-		public void TestFixtureTearDown() 
+		public void TestFixtureTearDown()
 		{
 			Close();
 		}
 
-        protected override void Setup()
-        {
-            base.Setup();
+		protected override void Setup()
+		{
+			base.Setup();
 
-            execSQL("DROP TABLE IF EXISTS Test");
-            execSQL("CREATE TABLE Test (id INT NOT NULL, blob1 LONGBLOB, text1 LONGTEXT, PRIMARY KEY(id))");
-        }
+			execSQL("DROP TABLE IF EXISTS Test");
+			execSQL("CREATE TABLE Test (id INT NOT NULL, blob1 LONGBLOB, text1 LONGTEXT, PRIMARY KEY(id))");
+		}
 
 		[Test]
 		[Category("4.0")]
-		public void InsertBinary() 
+		public void InsertBinary()
 		{
 			int lenIn = 400000;
 			byte[] dataIn = Utils.CreateBlob(lenIn);
@@ -69,8 +69,8 @@ namespace MySql.Data.MySqlClient.Tests
 			cmd.ExecuteNonQuery();
 
 			cmd.CommandText = "INSERT INTO Test VALUES (?id, ?b1, NULL)";
-			cmd.Parameters.Add( new MySqlParameter("?id", 1));
-			cmd.Parameters.Add( new MySqlParameter("?b1", dataIn));
+			cmd.Parameters.Add(new MySqlParameter("?id", 1));
+			cmd.Parameters.Add(new MySqlParameter("?b1", dataIn));
 			int rows = cmd.ExecuteNonQuery();
 
 			byte[] dataIn2 = Utils.CreateBlob(lenIn);
@@ -78,53 +78,53 @@ namespace MySql.Data.MySqlClient.Tests
 			cmd.Parameters[1].Value = dataIn2;
 			rows += cmd.ExecuteNonQuery();
 
-			Assert.AreEqual( 2, rows, "Checking insert rowcount" );
+			Assert.AreEqual(2, rows, "Checking insert rowcount");
 
 			MySqlDataReader reader = null;
-			try 
+			try
 			{
 				cmd.CommandText = "SELECT * FROM Test";
 				reader = cmd.ExecuteReader();
-				Assert.AreEqual( true, reader.HasRows, "Checking HasRows" );
-			
+				Assert.AreEqual(true, reader.HasRows, "Checking HasRows");
+
 				reader.Read();
 
-				byte[] dataOut = new byte[ lenIn ];
-				long lenOut = reader.GetBytes( 1, 0, dataOut, 0, lenIn );
+				byte[] dataOut = new byte[lenIn];
+				long lenOut = reader.GetBytes(1, 0, dataOut, 0, lenIn);
 
-				Assert.AreEqual( lenIn, lenOut, "Checking length of binary data (row 1)" );
+				Assert.AreEqual(lenIn, lenOut, "Checking length of binary data (row 1)");
 
 				// now see if the buffer is intact
-				for (int x=0; x < dataIn.Length; x++) 
-					Assert.AreEqual( dataIn[x], dataOut[x], "Checking first binary array at " + x );
+				for (int x = 0; x < dataIn.Length; x++)
+					Assert.AreEqual(dataIn[x], dataOut[x], "Checking first binary array at " + x);
 
 				// now we test chunking
 				int pos = 0;
 				int lenToRead = dataIn.Length;
-				while (lenToRead > 0) 
+				while (lenToRead > 0)
 				{
-					int size = Math.Min( lenToRead, 1024 );
-					int read = (int)reader.GetBytes( 1, pos, dataOut, pos, size );
+					int size = Math.Min(lenToRead, 1024);
+					int read = (int)reader.GetBytes(1, pos, dataOut, pos, size);
 					lenToRead -= read;
 					pos += read;
 				}
 				// now see if the buffer is intact
-				for (int x=0; x < dataIn.Length; x++) 
-					Assert.AreEqual( dataIn[x], dataOut[x], "Checking first binary array at " + x );
+				for (int x = 0; x < dataIn.Length; x++)
+					Assert.AreEqual(dataIn[x], dataOut[x], "Checking first binary array at " + x);
 
 				reader.Read();
-				lenOut = reader.GetBytes( 1, 0, dataOut, 0, lenIn );
-				Assert.AreEqual( lenIn, lenOut, "Checking length of binary data (row 2)" );
+				lenOut = reader.GetBytes(1, 0, dataOut, 0, lenIn);
+				Assert.AreEqual(lenIn, lenOut, "Checking length of binary data (row 2)");
 
 				// now see if the buffer is intact
-				for (int x=0; x < dataIn2.Length; x++) 
-					Assert.AreEqual( dataIn2[x], dataOut[x], "Checking second binary array at " + x );
+				for (int x = 0; x < dataIn2.Length; x++)
+					Assert.AreEqual(dataIn2[x], dataOut[x], "Checking second binary array at " + x);
 			}
-			catch (Exception ex) 
+			catch (Exception ex)
 			{
-				Assert.Fail( ex.Message );
+				Assert.Fail(ex.Message);
 			}
-			finally 
+			finally
 			{
 				if (reader != null) reader.Close();
 			}
@@ -132,25 +132,25 @@ namespace MySql.Data.MySqlClient.Tests
 
 		[Test]
 		[Category("4.0")]
-		public void GetChars() 
+		public void GetChars()
 		{
 			InternalGetChars(false);
 		}
 
-        [Test]
-        [Category("4.1")]
-        public void GetCharsPrepared()
-        {
-            InternalGetChars(true);
-        }
+		[Test]
+		[Category("4.1")]
+		public void GetCharsPrepared()
+		{
+			InternalGetChars(true);
+		}
 
-		private void InternalGetChars(bool prepare) 
+		private void InternalGetChars(bool prepare)
 		{
 			execSQL("TRUNCATE TABLE Test");
 
 			char[] data = new char[20000];
-			for (int x=0; x < data.Length; x++) 
-				data[x] = (char)(65 + (x%20));
+			for (int x = 0; x < data.Length; x++)
+				data[x] = (char)(65 + (x % 20));
 
 			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (1, NULL, ?text1)", conn);
 			cmd.Parameters.Add("?text1", data);
@@ -159,11 +159,11 @@ namespace MySql.Data.MySqlClient.Tests
 			cmd.ExecuteNonQuery();
 
 			cmd.CommandText = "SELECT * FROM Test";
-            cmd.Parameters.Clear();
+			cmd.Parameters.Clear();
 			if (prepare)
 				cmd.Prepare();
 			MySqlDataReader reader = null;
-			try 
+			try
 			{
 				reader = cmd.ExecuteReader();
 				reader.Read();
@@ -172,7 +172,7 @@ namespace MySql.Data.MySqlClient.Tests
 				char[] dataOut = new char[data.Length];
 				int pos = 0;
 				int lenToRead = data.Length;
-				while (lenToRead > 0) 
+				while (lenToRead > 0)
 				{
 					int size = Math.Min(lenToRead, 1024);
 					int read = (int)reader.GetChars(2, pos, dataOut, pos, size);
@@ -180,95 +180,95 @@ namespace MySql.Data.MySqlClient.Tests
 					pos += read;
 				}
 				// now see if the buffer is intact
-				for (int x=0; x < data.Length; x++) 
+				for (int x = 0; x < data.Length; x++)
 					Assert.AreEqual(data[x], dataOut[x], "Checking first text array at " + x);
 
 			}
-			catch (Exception ex) 
+			catch (Exception ex)
 			{
 				Assert.Fail(ex.Message);
 			}
-			finally 
+			finally
 			{
-				if (reader != null) 
-                    reader.Close();
+				if (reader != null)
+					reader.Close();
 			}
 		}
 
 		[Test]
-		public void InsertText() 
+		public void InsertText()
 		{
 			InternalInsertText(false);
 		}
 
-        [Test]
-        [Category("4.1")]
-        public void InsertTextPrepared()
-        {
-            InternalInsertText(true);
-        }
+		[Test]
+		[Category("4.1")]
+		public void InsertTextPrepared()
+		{
+			InternalInsertText(true);
+		}
 
-		private void InternalInsertText(bool prepare) 
+		private void InternalInsertText(bool prepare)
 		{
 			byte[] data = new byte[1024];
-			for (int x=0; x < 1024; x++) 
-				data[x] = (byte)(65 + (x%20));
+			for (int x = 0; x < 1024; x++)
+				data[x] = (byte)(65 + (x % 20));
 
 			// Create sample table
 			execSQL("TRUNCATE TABLE Test");
 			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (1, ?b1, ?t1)", conn);
-			cmd.Parameters.Add( new MySqlParameter("?t1", data));
-			cmd.Parameters.Add( new MySqlParameter("?b1", "This is my blob data"));
+			cmd.Parameters.Add(new MySqlParameter("?t1", data));
+			cmd.Parameters.Add(new MySqlParameter("?b1", "This is my blob data"));
 			if (prepare) cmd.Prepare();
 			int rows = cmd.ExecuteNonQuery();
-			Assert.AreEqual( 1, rows, "Checking insert rowcount" );
+			Assert.AreEqual(1, rows, "Checking insert rowcount");
 
 			cmd.CommandText = "INSERT INTO Test VALUES(2, ?b1, ?t1)";
 			cmd.Parameters.Clear();
-			cmd.Parameters.Add( "?t1", DBNull.Value );
+			cmd.Parameters.Add("?t1", DBNull.Value);
 			string str = "This is my text value";
-			cmd.Parameters.Add( new MySqlParameter( "?b1", MySqlDbType.LongBlob, str.Length,
-				ParameterDirection.Input, true, 0, 0, "b1", DataRowVersion.Current, str ) );
+			cmd.Parameters.Add(new MySqlParameter("?b1", MySqlDbType.LongBlob, str.Length,
+				ParameterDirection.Input, true, 0, 0, "b1", DataRowVersion.Current, str));
 			rows = cmd.ExecuteNonQuery();
-			Assert.AreEqual( 1, rows, "Checking insert rowcount" );
+			Assert.AreEqual(1, rows, "Checking insert rowcount");
 
 			MySqlDataReader reader = null;
-			try 
+			try
 			{
 				cmd.CommandText = "SELECT * FROM Test";
 				if (prepare) cmd.Prepare();
 				reader = cmd.ExecuteReader();
-				Assert.AreEqual( true, reader.HasRows, "Checking HasRows" );
-			
-				Assert.IsTrue( reader.Read() );
+				Assert.AreEqual(true, reader.HasRows, "Checking HasRows");
 
-				Assert.AreEqual( "This is my blob data", reader.GetString(1));
+				Assert.IsTrue(reader.Read());
+
+				Assert.AreEqual("This is my blob data", reader.GetString(1));
 				string s = reader.GetString(2);
-				Assert.AreEqual( 1024, s.Length, "Checking length returned " );
-				Assert.AreEqual( "ABCDEFGHI", s.Substring(0, 9), "Checking first few chars of string" );
+				Assert.AreEqual(1024, s.Length, "Checking length returned ");
+				Assert.AreEqual("ABCDEFGHI", s.Substring(0, 9), "Checking first few chars of string");
 
-				Assert.IsTrue( reader.Read() );
-				Assert.AreEqual( DBNull.Value, reader.GetValue(2) );
-				Assert.AreEqual( "This is my text value", reader.GetString(1) );
+				Assert.IsTrue(reader.Read());
+				Assert.AreEqual(DBNull.Value, reader.GetValue(2));
+				Assert.AreEqual("This is my text value", reader.GetString(1));
 			}
-			catch (Exception ex) 
+			catch (Exception ex)
 			{
-				Assert.Fail( ex.Message );
+				Assert.Fail(ex.Message);
 			}
-			finally 
+			finally
 			{
 				if (reader != null) reader.Close();
 			}
 		}
 
 		[Test]
-		public void UpdateDataSet() 
+		public void UpdateDataSet()
 		{
-            execSQL("DROP TABLE IF EXISTS Test");
-            execSQL("CREATE TABLE Test (id INT NOT NULL, blob1 LONGBLOB, text1 LONGTEXT, PRIMARY KEY(id))");
-            execSQL("INSERT INTO Test VALUES( 1, NULL, 'Text field' )");
+			execSQL("DROP TABLE IF EXISTS Test");
+			execSQL("CREATE TABLE Test (id INT NOT NULL, blob1 LONGBLOB, text1 LONGTEXT, PRIMARY KEY(id))");
+			execSQL("INSERT INTO Test VALUES( 1, NULL, 'Text field' )");
 
-			try 
+			try
 			{
 				MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
 				MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
@@ -279,20 +279,20 @@ namespace MySql.Data.MySqlClient.Tests
 				Assert.AreEqual("Text field", s);
 
 				byte[] inBuf = Utils.CreateBlob(512);
-                dt.Rows[0].BeginEdit();
+				dt.Rows[0].BeginEdit();
 				dt.Rows[0]["blob1"] = inBuf;
-                dt.Rows[0].EndEdit();
+				dt.Rows[0].EndEdit();
 				DataTable changes = dt.GetChanges();
-                da.Update(changes);
+				da.Update(changes);
 				dt.AcceptChanges();
 
 				dt.Clear();
 				da.Fill(dt);
 
 				byte[] outBuf = (byte[])dt.Rows[0]["blob1"];
-				Assert.AreEqual(inBuf.Length, outBuf.Length, 
-                    "checking length of updated buffer");
-				for (int y=0; y < inBuf.Length; y++)
+				Assert.AreEqual(inBuf.Length, outBuf.Length,
+						  "checking length of updated buffer");
+				for (int y = 0; y < inBuf.Length; y++)
 					Assert.AreEqual(inBuf[y], outBuf[y], "checking array data");
 			}
 			catch (Exception ex)
@@ -303,156 +303,156 @@ namespace MySql.Data.MySqlClient.Tests
 
 		[Test]
 		[Category("4.0")]
-		public void GetCharsOnLongTextColumn() 
+		public void GetCharsOnLongTextColumn()
 		{
 			execSQL("INSERT INTO Test (id, text1) VALUES(1, 'Test')");
 
 			MySqlCommand cmd = new MySqlCommand("SELECT id, text1 FROM Test", conn);
 			MySqlDataReader reader = null;
-			try 
+			try
 			{
 				char[] buf = new char[2];
 
 				reader = cmd.ExecuteReader();
 				reader.Read();
-				reader.GetChars( 1, 0, buf, 0, 2 );
-				Assert.AreEqual( 'T', buf[0] );
-				Assert.AreEqual( 'e', buf[1] );
+				reader.GetChars(1, 0, buf, 0, 2);
+				Assert.AreEqual('T', buf[0]);
+				Assert.AreEqual('e', buf[1]);
 			}
-			catch (Exception ex) 
+			catch (Exception ex)
 			{
-				Assert.Fail( ex.Message );
+				Assert.Fail(ex.Message);
 			}
-			finally 
+			finally
 			{
 				if (reader != null) reader.Close();
 			}
 		}
 
-        [Test]
-        public void MediumIntBlobSize()
-        {
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL("CREATE TABLE test (id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT, " +
-                "image MEDIUMBLOB NOT NULL, imageSize MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT 0, " +
-                "PRIMARY KEY (id))");
+		[Test]
+		public void MediumIntBlobSize()
+		{
+			execSQL("DROP TABLE IF EXISTS test");
+			execSQL("CREATE TABLE test (id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT, " +
+				 "image MEDIUMBLOB NOT NULL, imageSize MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT 0, " +
+				 "PRIMARY KEY (id))");
 
-            byte[] image = new byte[2048];
-            for (int x = 0; x < image.Length; x++)
-                image[x] = (byte)(x % 47);
-            MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES(NULL, ?image, ?size)", conn);
-            cmd.Parameters.Add("?image", image);
-            cmd.Parameters.Add("?size", image.Length);
-            cmd.ExecuteNonQuery();
+			byte[] image = new byte[2048];
+			for (int x = 0; x < image.Length; x++)
+				image[x] = (byte)(x % 47);
+			MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES(NULL, ?image, ?size)", conn);
+			cmd.Parameters.Add("?image", image);
+			cmd.Parameters.Add("?size", image.Length);
+			cmd.ExecuteNonQuery();
 
-            cmd.CommandText = "SELECT imageSize, length(image), image FROM test WHERE id=?id";
-            cmd.Parameters.Add("?id", 1);
-            cmd.Prepare();
+			cmd.CommandText = "SELECT imageSize, length(image), image FROM test WHERE id=?id";
+			cmd.Parameters.Add("?id", 1);
+			cmd.Prepare();
 
-            MySqlDataReader reader = null;
-            try
-            {
-                reader = cmd.ExecuteReader();
-                reader.Read();
-                uint actualsize = reader.GetUInt32(1);
-                Assert.AreEqual(image.Length, actualsize);
-                uint size = reader.GetUInt32(0);
-                byte[] outImage = new byte[size];
-                long len = reader.GetBytes(reader.GetOrdinal("image"), 0, outImage, 0, (int)size);
-                Assert.AreEqual(image.Length, size);
-                Assert.AreEqual(image.Length, len);
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
-            finally
-            {
-                if (reader != null)
-                    reader.Close();
-            }
-        }
+			MySqlDataReader reader = null;
+			try
+			{
+				reader = cmd.ExecuteReader();
+				reader.Read();
+				uint actualsize = reader.GetUInt32(1);
+				Assert.AreEqual(image.Length, actualsize);
+				uint size = reader.GetUInt32(0);
+				byte[] outImage = new byte[size];
+				long len = reader.GetBytes(reader.GetOrdinal("image"), 0, outImage, 0, (int)size);
+				Assert.AreEqual(image.Length, size);
+				Assert.AreEqual(image.Length, len);
+			}
+			catch (Exception ex)
+			{
+				Assert.Fail(ex.Message);
+			}
+			finally
+			{
+				if (reader != null)
+					reader.Close();
+			}
+		}
 
-        [Test]
-        public void BlobBiggerThanMaxPacket()
-        {
-          execSQL("set @@global.max_allowed_packet=500000");
+		[Test]
+		public void BlobBiggerThanMaxPacket()
+		{
+			execSQL("set @@global.max_allowed_packet=500000");
 
-          execSQL("DROP TABLE IF EXISTS test");
-          execSQL("CREATE TABLE test (id INT(10), image BLOB)");
+			execSQL("DROP TABLE IF EXISTS test");
+			execSQL("CREATE TABLE test (id INT(10), image BLOB)");
 
-          MySqlConnection c = new MySqlConnection(GetConnectionString(true));
-          try
-          {
-            c.Open();
-            byte[] image = Utils.CreateBlob(1000000);
-            MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES(NULL, ?image)", c);
-            cmd.Parameters.Add("?image", image);
-            cmd.ExecuteNonQuery();
-            Assert.Fail("This should have thrown an exception");
-          }
-          catch (Exception)
-          {
-            Assert.AreEqual(ConnectionState.Open, c.State);
-          }
-          finally
-          {
-            if (c != null)
-              c.Close();
-            execSQL("set @@global.max_allowed_packet=2000000");
-          }
-        }
-      }
+			MySqlConnection c = new MySqlConnection(GetConnectionString(true));
+			try
+			{
+				c.Open();
+				byte[] image = Utils.CreateBlob(1000000);
+				MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES(NULL, ?image)", c);
+				cmd.Parameters.Add("?image", image);
+				cmd.ExecuteNonQuery();
+				Assert.Fail("This should have thrown an exception");
+			}
+			catch (Exception)
+			{
+				Assert.AreEqual(ConnectionState.Open, c.State);
+			}
+			finally
+			{
+				if (c != null)
+					c.Close();
+				execSQL("set @@global.max_allowed_packet=2000000");
+			}
+		}
+	}
 
-    #region Configs
+	#region Configs
 
-    [Category("Compressed")]
-    public class BlobTestsSocketCompressed : BlobTests
-    {
-        protected override string GetConnectionInfo()
-        {
-            return ";port=3306;compress=true";
-        }
-    }
+	[Category("Compressed")]
+	public class BlobTestsSocketCompressed : BlobTests
+	{
+		protected override string GetConnectionInfo()
+		{
+			return ";port=3306;compress=true";
+		}
+	}
 
-    [Category("Pipe")]
-    public class BlobTestsPipe : BlobTests
-    {
-        protected override string GetConnectionInfo()
-        {
-            return ";protocol=pipe";
-        }
-    }
+	[Category("Pipe")]
+	public class BlobTestsPipe : BlobTests
+	{
+		protected override string GetConnectionInfo()
+		{
+			return ";protocol=pipe";
+		}
+	}
 
-    [Category("Compressed")]
-    [Category("Pipe")]
-    public class BlobTestsPipeCompressed : BlobTests
-    {
-        protected override string GetConnectionInfo()
-        {
-            return ";protocol=pipe;compress=true";
-        }
-    }
+	[Category("Compressed")]
+	[Category("Pipe")]
+	public class BlobTestsPipeCompressed : BlobTests
+	{
+		protected override string GetConnectionInfo()
+		{
+			return ";protocol=pipe;compress=true";
+		}
+	}
 
-    [Category("SharedMemory")]
-    public class BlobTestsSharedMemory : BlobTests
-    {
-        protected override string GetConnectionInfo()
-        {
-            return ";protocol=memory";
-        }
-    }
+	[Category("SharedMemory")]
+	public class BlobTestsSharedMemory : BlobTests
+	{
+		protected override string GetConnectionInfo()
+		{
+			return ";protocol=memory";
+		}
+	}
 
-    [Category("Compressed")]
-    [Category("SharedMemory")]
-    public class BlobTestsSharedMemoryCompressed : BlobTests
-    {
-        protected override string GetConnectionInfo()
-        {
-            return ";protocol=memory;compress=true";
-        }
-    }
+	[Category("Compressed")]
+	[Category("SharedMemory")]
+	public class BlobTestsSharedMemoryCompressed : BlobTests
+	{
+		protected override string GetConnectionInfo()
+		{
+			return ";protocol=memory;compress=true";
+		}
+	}
 
-    #endregion
+	#endregion
 
 }

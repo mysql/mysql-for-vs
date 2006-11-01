@@ -338,8 +338,8 @@ namespace MySql.Data.MySqlClient
 #endif
 		public bool IgnorePrepare
 		{
-			get { return IgnorePrepare; }
-			set { base["Ignore Prepare"] = value; IgnorePrepare = value; }
+			get { return ignorePrepare; }
+			set { base["Ignore Prepare"] = value; ignorePrepare = value; }
 		}
 
 		#endregion
