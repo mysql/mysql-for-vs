@@ -1,167 +1,79 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ProjectType>Local</ProjectType>
-    <ProductVersion>8.0.50727</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{92CB29DF-61DE-4277-8DC6-D3587C7311EE}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ApplicationIcon>
-    </ApplicationIcon>
-    <AssemblyKeyContainerName>
-    </AssemblyKeyContainerName>
-    <AssemblyName>MySql.Data.Tests</AssemblyName>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
-    <DefaultClientScript>JScript</DefaultClientScript>
-    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
-    <DefaultTargetSchema>IE50</DefaultTargetSchema>
-    <DelaySign>false</DelaySign>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F29E5B3D-7F76-4CF9-BF5E-8E3A1377B1E4}</ProjectGuid>
     <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MySql.Data.MySqlClient.Tests</RootNamespace>
-    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <StartupObject>
-    </StartupObject>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
+    <AssemblyName>MySql.Data.Tests</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>bin\net-2.0\Debug\</OutputPath>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <BaseAddress>285212672</BaseAddress>
-    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
-    <ConfigurationOverrideFile>
-    </ConfigurationOverrideFile>
-    <DefineConstants>TRACE;DEBUG;NET20</DefineConstants>
-    <DocumentationFile>
-    </DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
-    <FileAlignment>4096</FileAlignment>
-    <NoStdLib>false</NoStdLib>
-    <NoWarn>
-    </NoWarn>
+    <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <RegisterForComInterop>false</RegisterForComInterop>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NET20</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisRules>
+    </CodeAnalysisRules>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>bin\net-2.0\Release\</OutputPath>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <BaseAddress>285212672</BaseAddress>
-    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
-    <ConfigurationOverrideFile>
-    </ConfigurationOverrideFile>
-    <DefineConstants>TRACE</DefineConstants>
-    <DocumentationFile>
-    </DocumentationFile>
-    <DebugSymbols>false</DebugSymbols>
-    <FileAlignment>4096</FileAlignment>
-    <NoStdLib>false</NoStdLib>
-    <NoWarn>
-    </NoWarn>
+    <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <RegisterForComInterop>false</RegisterForComInterop>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;NET20</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit.framework, Version=2.2.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
-    <Reference Include="System">
-      <Name>System</Name>
-    </Reference>
-    <Reference Include="System.Data">
-      <Name>System.Data</Name>
-    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Transactions" />
-    <Reference Include="System.XML" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="BaseTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="BlobTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CharacterSetTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CommandBuilderTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CommandTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ConnectionStringBuilder.cs" />
-    <Compile Include="ConnectionTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="AsyncTests.cs" />
-    <Compile Include="InterfaceTests.cs" />
-    <Compile Include="GetSchemaTests.cs" />
+    <Compile Include="BaseTest.cs" />
+    <Compile Include="BlobTests.cs" />
+    <Compile Include="CharacterSetTests.cs" />
+    <Compile Include="CommandBuilderTests.cs" />
+    <Compile Include="CommandTests.cs" />
+    <Compile Include="ConnectionStringBuilder.cs" />
+    <Compile Include="ConnectionTests.cs" />
+    <Compile Include="CultureTests.cs" />
+    <Compile Include="CursorTests.cs" />
+    <Compile Include="DataAdapterTests.cs" />
     <Compile Include="DataReaderTests.cs" />
+    <Compile Include="DataTypeTests.cs" />
+    <Compile Include="DateTimeTests.cs" />
+    <Compile Include="EventTests.cs" />
+    <Compile Include="ExceptionTests.cs" />
+    <Compile Include="GetSchemaTests.cs" />
+    <Compile Include="InterfaceTests.cs" />
+    <Compile Include="LanguageTests.cs" />
     <Compile Include="MicroPerfTests.cs" />
-    <Compile Include="CultureTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CursorTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DataAdapterTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DataTypeTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DateTimeTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ExceptionTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="LanguageTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ParameterTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="MySqlHelperTests.cs" />
+    <Compile Include="ParameterTests.cs" />
     <Compile Include="PerfMonTests.cs" />
-    <Compile Include="PoolingTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="PreparedStatements.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="PoolingTests.cs" />
+    <Compile Include="PreparedStatements.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleTransactions.cs" />
-    <Compile Include="StoredProcedure.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="StressTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Syntax.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="StoredProcedure.cs" />
+    <Compile Include="StressTests.cs" />
+    <Compile Include="Syntax.cs" />
+    <Compile Include="Syntax2.cs" />
     <Compile Include="Threading.cs" />
     <Compile Include="TimeoutAndCancel.cs" />
-    <Compile Include="Transactions.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="UsageAdvisor.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Utils.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Transactions.cs" />
+    <Compile Include="UsageAdvisor.cs" />
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\mysqlclient\MySql.Data.2005.csproj">
@@ -170,10 +82,11 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
 </Project>

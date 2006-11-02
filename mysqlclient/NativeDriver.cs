@@ -437,10 +437,6 @@ namespace MySql.Data.MySqlClient
 				return -1;
 
 			lastInsertId = -1;
-			// the code to read last packet will set these server status vars 
-			// again if necessary.
-			serverStatus &= ~(ServerStatusFlags.AnotherQuery |
-					  ServerStatusFlags.MoreResults);
 			stream.OpenPacket();
 
 			long fieldCount = stream.ReadFieldLength();
@@ -455,6 +451,10 @@ namespace MySql.Data.MySqlClient
 				return ReadResult(ref affectedRows, ref lastInsertId);
 			}
 
+			// the code to read last packet will set these server status vars 
+			// again if necessary.
+			serverStatus &= ~(ServerStatusFlags.AnotherQuery |
+					  ServerStatusFlags.MoreResults);
 			affectedRows = (ulong)stream.ReadFieldLength();
 			lastInsertId = (long)stream.ReadFieldLength();
 			if (version.isAtLeast(4, 1, 0))
@@ -482,7 +482,7 @@ namespace MySql.Data.MySqlClient
 			try
 			{
 				fs = new FileStream(filename, FileMode.Open);
-				stream.StartOutput((ulong)fs.Length, true);
+				stream.StartOutput((ulong)fs.Length, false);
 
 				long len = fs.Length;
 				while (len > 0)
@@ -491,11 +491,9 @@ namespace MySql.Data.MySqlClient
 					stream.Write(buffer, 0, count);
 					len -= count;
 				}
-				stream.Flush();
 
 				// write the terminating packet
-				stream.StartOutput(3, false);
-				stream.WriteInteger(0, 3);
+				stream.SendEmptyPacket();
 				stream.Flush();
 			}
 			catch (Exception ex)

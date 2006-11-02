@@ -238,6 +238,14 @@ namespace MySql.Data.MySqlClient
 			outStream.WriteByte((byte)sequenceByte++);
 		}
 
+		public void SendEmptyPacket()
+		{
+			outLength = 0;
+			outPos = 0;
+			WriteHeader();
+			outStream.Flush();
+		}
+
 		#endregion
 
 		#region Byte methods
