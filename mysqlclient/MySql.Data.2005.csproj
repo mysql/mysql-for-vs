@@ -94,6 +94,7 @@
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
+    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
@@ -138,6 +139,9 @@
     <Compile Include="Driver.cs" />
     <Compile Include="Exception.cs" />
     <Compile Include="Field.cs" />
+    <Compile Include="Installer.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ISSchemaProvider.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="MySqlClientFactory.cs" />
