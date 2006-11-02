@@ -402,7 +402,8 @@ namespace MySql.Data.MySqlClient
 				ExecuteCommand(DBCmd.QUIT, null, 0);
 			}
 
-			stream.Close();
+			if (stream != null)
+				stream.Close();
 			stream = null;
 			base.Close();
 		}

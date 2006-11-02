@@ -441,7 +441,15 @@ namespace MySql.Data.MySqlClient
 
 		internal void Abort()
 		{
-			//TODO: implement me
+			try
+			{
+				if (settings.Pooling)
+					MySqlPoolManager.ReleaseConnection(driver);
+				else
+					driver.Close();
+			}
+			catch (Exception) { }
+			SetState(ConnectionState.Closed);
 		}
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/Close/*'/>

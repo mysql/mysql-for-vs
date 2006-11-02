@@ -101,7 +101,7 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 			try 
 			{
-				string connStr = conn.ConnectionString + ";pooling=true";
+				string connStr = conn.ConnectionString + ";pooling=true;min pool size=1; max pool size=1";
 				MySqlConnection c = new MySqlConnection(connStr);
 				c.Open();
 				int threadId = c.ServerThread;
