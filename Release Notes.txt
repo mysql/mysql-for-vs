@@ -1,7 +1,7 @@
-Connector/Net 5.0.1  Release Notes
+Connector/Net 5.0.2  Release Notes
 ------------------------------------
 
-Welcome to the release notes for Connector/Net 5.0.1.
+Welcome to the release notes for Connector/Net 5.0.2.
 
 This version of the connector incorporates many changes to its internal structure that 
 will provide both increased speed and flexibility.  Speed is increased by allowing column 
@@ -12,12 +12,9 @@ versions of the Connector to support the embedded server and to use the client l
 Many more features have been added to this version including Usage Advisor, PerfMon hooks,
 asynchronous queries, and full ADO.net 2.0 support.
 
-This is the second release of the connector and many things that were broken in the first
+This is the third release of the connector and many things that were broken in the first
 release have been fixed.  Below is the list of what was listed as missing or incomplete
 in the first release and their current status.
-
-* CommandTimeout support
-This works but does contain some bugs.
 
 * System.Transaction support
 This has been implemented however DTC elevation does not work.  There are also some
@@ -28,15 +25,7 @@ We spent so much time fixing bugs in this release that we ran out of time before
 the documentation.  Look for improvements in the coming releases.
 
 * Load data local infile
-This still is not working but will be fixed in 5.0.2
-
-* Compression protocol
-This now works as expected.  We have also removed the use of the ICSharpCode zib library and
-replaced it with a C# version of zlib.
-
-* Shared memory protocol
-This now works as expected.
-
+This is now fixed and working.
 
 .NET 1.0 and 1.1 binaries not included
 --------------------------------------
@@ -50,8 +39,8 @@ what we have and start gathering feedback.
 
 Mono support
 ------------
-We are currently evaluating Mono support for ADO.Net 2.0 and will be including Mono support,
-if possible, in the next beta release.
+We are currently evaluating Mono support for ADO.Net 2.0 and will be including fully tested
+Mono support in an upcoming release.
 
 Functionality changes
 ---------------------
@@ -74,5 +63,8 @@ have been documented in the help file but we'll make a brief note about them her
   statement to refresh the dataset or datatable after an update.  If you have server generated
   values and you need to retrieve them, you can either handcraft the update statement or
   refill your table or dataset.
+  
+* MySqlCommandBuilder also no longer supports updating datasets and datatables where the user
+  has specified a custom value for an autoincrement field.  This is a limitation of .NET 2.0.  
   
   

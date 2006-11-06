@@ -32,16 +32,17 @@
 	</if>
 
 	<!-- builds the client on all supported frameworks -->
-	<target name="allframeworks" depends="net-1.1, net-2.0, mono-1.0">
+	<target name="allframeworks" depends="net-2.0">
 		<call target="Docs"/>
 	</target>
 
 	<!-- core managed driver target -->	
 	<target name="client" description="Core client target">
+		<property name="nunit-lib" value="${nunit.dir}/bin"/>
 		<property name="nant.settings.currentframework" value="${framework}"/>
 		<property name="outdir" value="mysqlclient/bin/${framework}/${buildType}"/>
 		
-		<mkdir dir="${outdir}" failonerror="false"/>
+ 		<mkdir dir="${outdir}" failonerror="false"/>
 		<resgen input="mysqlclient/Resources.resx" output="mysqlclient/Resources.resources"/>
 		<csc output="${outdir}/MySql.Data.dll" target="library" 
 			define="${defines}" debug="${debug}" optimize="${opt}" keycontainer="ConnectorNet" 
@@ -77,18 +78,20 @@
 
 	<!-- core managed driver target 1.1 -->
 	<target name="net-1.1" description="1.1 .NET target">
-		<property name="nunit-lib" value="${nunit.dir}/bin"/>
+		<property name="nunit.dir" value="${nunit1.dir}"/>
 		<property name="framework" value="net-1.1"/>
 		<call target="client"/>
 	</target>
 
 	<!-- core managed driver target 2.0 -->
 	<target name="net-2.0" description="2.0 .NET target">
-		<property name="nunit-lib" value="${nunit.dir}/bin"/>
+		<property name="nunit.dir" value="${nunit2.dir}"/>
 		<property name="framework" value="net-2.0"/>
-		<property name="defines" value="${defines},NET20"/>
+		<if test="${string::get-length(defines) > 0}">
+			<property name="defines" value="${defines},"/>
+		</if>
+		<property name="defines" value="${defines}NET20"/>
 		<call target="client"/>
-		<call target="Docs"/>
 </target>
 	
 	<!-- core managed driver target mono 1.0 -->

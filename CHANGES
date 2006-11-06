@@ -1,152 +1,152 @@
-Version 5.0.2 (unreleased)
+Version 5.0.2 11-3-2006
 
-    Bugs fixed
-    ----------
-    Bug #23268 System.FormatException when invoking procedure with ENUM input parameter 	
-    Bug #23538 Exception thrown when GetSchemaTable is called and "fields" is null. 
-    Bug #23245 Connector Net 5.01 Beta Installer produces Antivirus Error Message 
-    Bug #23758 Unable to connect to any server - IPv6 related 
-    Bug #22882 Registry key 'Global' access denied 
-    Bug #18186 Problem with implementation of PreparedStatement  
-    
-    Other changes
-    -------------
-    Increased speed of MySqlParameterCollection.IndexOf(string) orders of magnitude
-    (parameter name lookups are now strict on use of parameter marker)
-    Improved character set mappings
-    Turned MySqlPoolManager into a static class and added a static ctor to
-         avoid any race conditions related to initializing the hashtable.
-         (A similar suggestion came in from a user)
-    Added 'Ignore Prepare' connection string option for disabling prepared
-         statements application-wide
-    Added Installer class to provide custom install type procedures such as modifying
-         machine.config
-    A nicer exception is displayed if you have added a parameter without the parameter marker.
-    Load Data Local InFile is working again         
+  Bugs fixed
+  ----------
+  Bug #23268 System.FormatException when invoking procedure with ENUM input parameter 	
+  Bug #23538 Exception thrown when GetSchemaTable is called and "fields" is null. 
+  Bug #23245 Connector Net 5.01 Beta Installer produces Antivirus Error Message 
+  Bug #23758 Unable to connect to any server - IPv6 related 
+  Bug #22882 Registry key 'Global' access denied 
+  Bug #18186 Problem with implementation of PreparedStatement  
+
+  Other changes
+  -------------
+  Increased speed of MySqlParameterCollection.IndexOf(string) orders of magnitude
+  (parameter name lookups are now strict on use of parameter marker)
+  Improved character set mappings
+  Turned MySqlPoolManager into a static class and added a static ctor to
+    avoid any race conditions related to initializing the hashtable.
+    (A similar suggestion came in from a user)
+  Added 'Ignore Prepare' connection string option for disabling prepared
+    statements application-wide
+  Added Installer class to provide custom install type procedures such as modifying
+    machine.config
+  A nicer exception is displayed if you have added a parameter without the parameter marker.
+  Load Data Local InFile is working again         
          
 Version 5.0.1 (Beta)
 
-    Bugs fixed
-    ----------
-	  Bug #21521 # Symbols not allowed in column/table names.    
-    Bug #21874 MySqlException should derive from DbException         
-	  Bug #22042 mysql-connector-net-5.0.0-alpha BeginTransaction
-	  Bug #22452 MySql.Data.MySqlClient.MySqlException: 	 
-	
-    Other changes
-    -------------
-    Implemented simple local transactions
-    Added overloaded methods in MySqlDataReader for getting a column value right from column name
-    Replaced use of .NET 2.0 compression code with open source zlib library
-    Fixed compression
-    Fixed some problems with GetSchema and the Indexes and IndexColumns collections
-    Fixed shared memory connections
-    Implemented command canceling for MySQL 5.0.0 and higher
-    Fixed problem with executing a Fill after a FillSchema
-    Implemented CommandTimeout for non-batch queries
-    Fixed socket create code related to IPv6 (thanks Mark!)
-    Added foreign key support to GetSchema
-    Fixed installer to add assembly to GAC and machine.config
+  Bugs fixed
+  ----------
+  Bug #21521 # Symbols not allowed in column/table names.    
+  Bug #21874 MySqlException should derive from DbException         
+  Bug #22042 mysql-connector-net-5.0.0-alpha BeginTransaction
+  Bug #22452 MySql.Data.MySqlClient.MySqlException: 	 
+
+  Other changes
+  -------------
+  Implemented simple local transactions
+  Added overloaded methods in MySqlDataReader for getting a column value right from column name
+  Replaced use of .NET 2.0 compression code with open source zlib library
+  Fixed compression
+  Fixed some problems with GetSchema and the Indexes and IndexColumns collections
+  Fixed shared memory connections
+  Implemented command canceling for MySQL 5.0.0 and higher
+  Fixed problem with executing a Fill after a FillSchema
+  Implemented CommandTimeout for non-batch queries
+  Fixed socket create code related to IPv6 (thanks Mark!)
+  Added foreign key support to GetSchema
+  Fixed installer to add assembly to GAC and machine.config
     
 Version 5.0.1 (Alpha)
 
-    Bugs fixed
-    ----------
-    Bug #6214  	CommandText: Question mark in comment line is being parsed as a parameter [fixed]
+  Bugs fixed
+  ----------
+  Bug #6214  	CommandText: Question mark in comment line is being parsed as a parameter [fixed]
 
-    Other changes
-    -------------
-    Implemented Usage Advisor
-    Added Async query methods
-    Reimplemented PacketReader/PacketWriter support into MySqlStream class
-    Added internal implemention of SHA1 so we don't have to distribute the OpenNetCF on mobile devices    	
-    Added usage advisor warnings for requesting column values by the wrong type
-    Reworked connection string classes to be simpler and faster
-    Added procedure metadata caching
-    Added perfmon hooks for stored procedure cache hits and misses    	
-    Implemented MySqlConnectionBuilder class
-    Implemented MySqlClientFactory class
-    Implemented classes and interfaces for ADO.Net 2.0 support
-    Replaced use of ICSharpCode with .NET 2.0 internal deflate support
-    Refactored test suite to test all protocols in a single pass
-    Completely refactored how column values are handled to avoid boxing in some cases
+  Other changes
+  -------------
+  Implemented Usage Advisor
+  Added Async query methods
+  Reimplemented PacketReader/PacketWriter support into MySqlStream class
+  Added internal implemention of SHA1 so we don't have to distribute the OpenNetCF on mobile devices    	
+  Added usage advisor warnings for requesting column values by the wrong type
+  Reworked connection string classes to be simpler and faster
+  Added procedure metadata caching
+  Added perfmon hooks for stored procedure cache hits and misses    	
+  Implemented MySqlConnectionBuilder class
+  Implemented MySqlClientFactory class
+  Implemented classes and interfaces for ADO.Net 2.0 support
+  Replaced use of ICSharpCode with .NET 2.0 internal deflate support
+  Refactored test suite to test all protocols in a single pass
+  Completely refactored how column values are handled to avoid boxing in some cases
     	
-Version 1.0.8  (not yet released)
+Version 1.0.8 
 
-    Other changes
-    -------------
-    Implemented a stored procedure cache
-    Changed how stored procedure metadata is retrieved to allow users without select privs
-              on mysql.proc to use them
-    
-    Bugs fixed or addressed
-    -----------------------
-    Bug #16659 Can't use double quotation marks(") as password access server by Connector/NET [fixed]
-    Bug #17375 CommandBuilder ignores Unsigned flag at Parameter creation [fixed]
-    Bug #17749 There is no char type in MySqlDbType [fixed]
-	Bug #16788 Only byte arrays and strings can be serialized by MySqlBinary [fixed]
-	Bug #16645 FOUND_ROWS() Bug [can't repeat - added test case]
-    Bug #18570 Unsigned tinyint (NET byte) incorrectly determined param type from param val	[fixed]
-    Bug #19261 Supplying Input Parameters [fixed]
-    Bug #19481 Where clause with datetime throws exception [any warning causes the exception] [fixed]
-    Bug #15077 Error MySqlCommandBuilder.DeriveParameters for sp without parameters. [fixed]
-    Bug #16934 Unsigned values > 2^63 (UInt64) cannot be used in prepared statements
-	Bug #19515 DiscoverParameters fails on numeric datatype [fixed]
-    Bug #17814 Stored procedure fails unless DbType set explicitly [fixed]
-    Bug #19294 IDataRecord.GetString method should return null for null values [fixed]
-    Bug #13590 ExecuteScalar returns only Int64 regardless of actual SQL type [added test case]
-    Bug #19017 GetBytes Error [fixed]
-    Bug #19936 DataReader already open exception [fixed]
-    Bug #17106 MySql.Data.MySqlClient.CharSetMap.GetEncoding thread synchronization issue [fixed]
-    Bug #17736 Selecting a row with with empty date '0000-00-00' results in Read() hanging. [fixed]
-	Bug #20581 Null Reference Exception when closing reader after stored procedure. 
-	Bug #16884 Invalid DateTime Values from DataReader     
-	Bug #7248  There is already an open DataReader associated with this Connection which must 
-	Bug #22400 Nested transactions     
-	Bug #11991 ExecuteScalar 	
-	Bug #14592 Wrong column length returned for VARCHAR UTF8 columns 
-	Bug #18391 Better error handling for the .NET class "MySqlCommand" needed. 	
-	Bug #8131 Data Adapter doesn't close connection 
-	Bug #9619 Cannot update row using DbDataAdapter when row contains an invalid date 
-	Bug #15112 MySqlDateTime Constructor 
+  Other changes
+  -------------
+  Implemented a stored procedure cache
+  Changed how stored procedure metadata is retrieved to allow users without select privs
+    on mysql.proc to use them
+
+  Bugs fixed or addressed
+  -----------------------
+  Bug #16659 Can't use double quotation marks(") as password access server by Connector/NET [fixed]
+  Bug #17375 CommandBuilder ignores Unsigned flag at Parameter creation [fixed]
+  Bug #17749 There is no char type in MySqlDbType [fixed]
+  Bug #16788 Only byte arrays and strings can be serialized by MySqlBinary [fixed]
+  Bug #16645 FOUND_ROWS() Bug [can't repeat - added test case]
+  Bug #18570 Unsigned tinyint (NET byte) incorrectly determined param type from param val	[fixed]
+  Bug #19261 Supplying Input Parameters [fixed]
+  Bug #19481 Where clause with datetime throws exception [any warning causes the exception] [fixed]
+  Bug #15077 Error MySqlCommandBuilder.DeriveParameters for sp without parameters. [fixed]
+  Bug #16934 Unsigned values > 2^63 (UInt64) cannot be used in prepared statements
+  Bug #19515 DiscoverParameters fails on numeric datatype [fixed]
+  Bug #17814 Stored procedure fails unless DbType set explicitly [fixed]
+  Bug #19294 IDataRecord.GetString method should return null for null values [fixed]
+  Bug #13590 ExecuteScalar returns only Int64 regardless of actual SQL type [added test case]
+  Bug #19017 GetBytes Error [fixed]
+  Bug #19936 DataReader already open exception [fixed]
+  Bug #17106 MySql.Data.MySqlClient.CharSetMap.GetEncoding thread synchronization issue [fixed]
+  Bug #17736 Selecting a row with with empty date '0000-00-00' results in Read() hanging. [fixed]
+  Bug #20581 Null Reference Exception when closing reader after stored procedure. 
+  Bug #16884 Invalid DateTime Values from DataReader     
+  Bug #7248  There is already an open DataReader associated with this Connection which must 
+  Bug #22400 Nested transactions     
+  Bug #11991 ExecuteScalar 	
+  Bug #14592 Wrong column length returned for VARCHAR UTF8 columns 
+  Bug #18391 Better error handling for the .NET class "MySqlCommand" needed. 	
+  Bug #8131 Data Adapter doesn't close connection 
+  Bug #9619 Cannot update row using DbDataAdapter when row contains an invalid date 
+  Bug #15112 MySqlDateTime Constructor 
 	
 Version 1.0.7
 
-    Bugs fixed or addressed
-    -------------------------
-    Bug #13658 connection.state does not update on Ping() [ fixed ]
-	Bug #13590 ExecuteScalar returns only Int64 regardless of actual SQL type [added test case]
-	Bug #13662 Prepare() truncates accented character input [already fixed, added test]
-	Bug #11947 MySQLCommandBuilder mishandling CONCAT() aliased column [updated test case]
-	Bug #13541 Prepare breaks if a parameter is used more than once [fixed]
-	Bug #13632 the MySQLCommandBuilder.deriveparameters has not been updated for MySQL 5
-	Bug #13753 Exception calling stored procedure with special characters in parameters
-	Bug #11386 Numeric parameters with Precision and Scale not taken into account by Connector [added test case]
-	Bug #6902  Errors in parsing stored procedure parameters [fixed before, refixed]
-	Bug #13927 Multiple Records to same Table in Transaction Problem [fixed]
-	Bug #14631 "#42000Query was empty" [fixed]
-	Bug #13806 Does not support Code Page 932	
+  Bugs fixed or addressed
+  -------------------------
+  Bug #13658 connection.state does not update on Ping() [ fixed ]
+  Bug #13590 ExecuteScalar returns only Int64 regardless of actual SQL type [added test case]
+  Bug #13662 Prepare() truncates accented character input [already fixed, added test]
+  Bug #11947 MySQLCommandBuilder mishandling CONCAT() aliased column [updated test case]
+  Bug #13541 Prepare breaks if a parameter is used more than once [fixed]
+  Bug #13632 the MySQLCommandBuilder.deriveparameters has not been updated for MySQL 5
+  Bug #13753 Exception calling stored procedure with special characters in parameters
+  Bug #11386 Numeric parameters with Precision and Scale not taken into account by Connector [added test case]
+  Bug #6902  Errors in parsing stored procedure parameters [fixed before, refixed]
+  Bug #13927 Multiple Records to same Table in Transaction Problem [fixed]
+  Bug #14631 "#42000Query was empty" [fixed]
+  Bug #13806 Does not support Code Page 932	
 
-	Other changes
-	-------------------------    
-	Failure to provide parameters for out and inout values is now detected
-	Changed pooling code to remove issue of skipping Ping() on bogus connnections
+  Other changes
+  -------------------------    
+  Failure to provide parameters for out and inout values is now detected
+  Changed pooling code to remove issue of skipping Ping() on bogus connnections
     
 Version 1.0.6
  
-    Bugs fixed or addressed
-    -------------------------
-    Bug #13036  Returns error when field names contain any of the following chars %<>()/ etc [fixed]
-    Bug #12835	1.0.5 won't install on system with 1.0.4 installed [fixed]
-    Bug #12978 	Fatal Error C# Compilation [fixed]
-    Bug #13276 	Exception on serialize after inserting null value [fixed]
-    Bug #13345 	Connecting from mono 1.1.8 to MySQL 5.0 using MySQL Connector/Net 1.0.5
-    
-    Other changes
-    -------------------------
-    Changed SocketStream and StreamCreator to be compatible with Mono
-    Added options to not reset and reconfigure connections pulled from the pool
-    Connections pulled from the pool that are not reset are also not pinged
+  Bugs fixed or addressed
+  -------------------------
+  Bug #13036  Returns error when field names contain any of the following chars %<>()/ etc [fixed]
+  Bug #12835	1.0.5 won't install on system with 1.0.4 installed [fixed]
+  Bug #12978 	Fatal Error C# Compilation [fixed]
+  Bug #13276 	Exception on serialize after inserting null value [fixed]
+  Bug #13345 	Connecting from mono 1.1.8 to MySQL 5.0 using MySQL Connector/Net 1.0.5
+
+  Other changes
+  -------------------------
+  Changed SocketStream and StreamCreator to be compatible with Mono
+  Added options to not reset and reconfigure connections pulled from the pool
+  Connections pulled from the pool that are not reset are also not pinged
 
 Version 1.0.5
 
