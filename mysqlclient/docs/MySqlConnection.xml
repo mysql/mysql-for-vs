@@ -777,10 +777,10 @@ terminating the attempt and generating an error.</td>
 		<tr>
 			<td>Encrypt</td>
 			<td>false</td>
-			<td>When <B>true</B>, SSL encryption is used for all data sent between the 
+			<td>When <B>true</B>, SSL/TLS encryption is used for all data sent between the 
 client and server if the server has a certificate installed. Recognized values 
-are <B>true</B>, <B>false</B>, <B>yes</B>, and <B>no</B>.<para><b>Note</b>  This parameter currently has no
-effect.</para></td>
+are <B>true</B>, <B>false</B>, <B>yes</B>, and <B>no</B>.
+      </td>
 		</tr>
 		<tr>
 			<td>Initial Catalog<para>  -or-  </para>Database</td>

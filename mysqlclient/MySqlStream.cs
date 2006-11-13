@@ -439,10 +439,11 @@ namespace MySql.Data.MySqlClient
 				bufferStream.Position = 0;
 			}
 			outStream.Flush();
+			if (baseStream is CompressedStream)
 			// we do a flush on the basestream here because we might be sitting on top of
 			// a compression stream and calling flush on the BufferedStream doesn't always
 			// call flush on the underlying stream.
-			baseStream.Flush();
+				baseStream.Flush();
 		}
 
 		#endregion

@@ -28,6 +28,9 @@ using System.Collections;
 using System.Text;
 using MySql.Data.Types;
 using System.Diagnostics;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
+using System.Security.Authentication;
 
 namespace MySql.Data.MySqlClient
 {
@@ -41,6 +44,7 @@ namespace MySql.Data.MySqlClient
 		protected ClientFlags connectionFlags;
 
 		protected MySqlStream stream;
+		protected Stream baseStream;
 		private BitArray nullMap;
 
 		private int warningCount;
@@ -163,7 +167,6 @@ namespace MySql.Data.MySqlClient
 			base.Open();
 
 			// connect to one of our specified hosts
-			Stream baseStream;
 			try
 			{
 #if !CF
@@ -193,6 +196,7 @@ namespace MySql.Data.MySqlClient
 			if (baseStream == null)
 				throw new MySqlException("Unable to connect to any of the specified MySQL hosts");
 
+			int maxSinglePacket = 255 * 255 * 255;
 			stream = new MySqlStream(baseStream, encoding);
 
 			// read off the welcome packet and parse out it's values
@@ -203,10 +207,23 @@ namespace MySql.Data.MySqlClient
 			threadId = (int)stream.ReadInteger(4);
 			encryptionSeed = stream.ReadString();
 
+			if (version.isAtLeast(4, 0, 8))
+				maxSinglePacket = (256 * 256 * 256) - 1;
+
 			// read in Server capabilities if they are provided
 			serverCaps = 0;
 			if (stream.HasMoreData)
 				serverCaps = (ClientFlags)stream.ReadInteger(2);
+			if (version.isAtLeast(4, 1, 1))
+			{
+				/* New protocol with 16 bytes to describe server characteristics */
+				serverCharSetIndex = stream.ReadInteger(1);
+
+				serverStatus = (ServerStatusFlags)stream.ReadInteger(2);
+				stream.SkipBytes(13);
+				string seedPart2 = stream.ReadString();
+				encryptionSeed += seedPart2;
+			}
 
 			// based on our settings, set our connection flags
 			SetConnectionFlags();
@@ -214,24 +231,23 @@ namespace MySql.Data.MySqlClient
 			stream.StartOutput(0, false);
 			stream.WriteInteger((int)connectionFlags,
 					 version.isAtLeast(4, 1, 0) ? 4 : 2);
-			stream.WriteInteger(stream.MaxBlockSize,
-					 version.isAtLeast(4, 1, 0) ? 4 : 3);
 
-			// 4.1.1 included some new server status info
-			if (stream.HasMoreData)
+			if (connectionString.UseSSL && (serverCaps & ClientFlags.SSL) != 0)
 			{
-				/* New protocol with 16 bytes to describe server characteristics */
-				serverCharSetIndex = stream.ReadInteger(1);
+				stream.Flush();
 
-				serverStatus = (ServerStatusFlags)stream.ReadInteger(2);
-				stream.SkipBytes(13);
+				StartSSL();
+
+				stream.StartOutput(0, false);
+				stream.WriteInteger((int)connectionFlags,
+						 version.isAtLeast(4, 1, 0) ? 4 : 2);
 			}
+
+			stream.WriteInteger(maxSinglePacket,
+				 version.isAtLeast(4, 1, 0) ? 4 : 3);
 
 			if (version.isAtLeast(4, 1, 1))
 			{
-				string seedPart2 = stream.ReadString();
-				encryptionSeed += seedPart2;
-
 				stream.WriteByte(8);
 				stream.Write(new byte[23]);
 			}
@@ -243,18 +259,48 @@ namespace MySql.Data.MySqlClient
 			if ((connectionFlags & ClientFlags.COMPRESS) != 0)
 				stream = new MySqlStream(new CompressedStream(baseStream), encoding);
 
-			// starting with 4.0.8, maxSinglePacket should be 0xffffff
-			if (version.isAtLeast(4, 0, 8))
-				stream.MaxBlockSize = (256 * 256 * 256) - 1;
-			else
-				stream.MaxBlockSize = 255 * 255 * 255;
-
 			// give our stream the server version we are connected to.  
 			// We may have some fields that are read differently based 
 			// on the version of the server we are connected to.
 			stream.Version = this.version;
 
 			isOpen = true;
+		}
+
+		private void StartSSL()
+		{
+			RemoteCertificateValidationCallback sslValidateCallback;
+
+			sslValidateCallback = new RemoteCertificateValidationCallback(NoServerCheckValidation);
+			SslStream ss = new SslStream(baseStream, true, sslValidateCallback, null);
+			try
+			{
+				X509CertificateCollection certs = new X509CertificateCollection();
+				ss.AuthenticateAsClient(String.Empty, certs, SslProtocols.Default, false);
+				baseStream = ss;
+				stream = new MySqlStream(ss, encoding);
+				stream.SequenceByte = 2;
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+		}
+
+		private static bool ServerCheckValidation(object sender, X509Certificate certificate,
+			 X509Chain chain, SslPolicyErrors sslPolicyErrors)
+		{
+			if (sslPolicyErrors == SslPolicyErrors.None)
+				return true;
+
+			// Do not allow this client to communicate with unauthenticated servers.
+			return false;
+		}
+
+		private static bool NoServerCheckValidation(object sender, X509Certificate certificate,
+			 X509Chain chain, SslPolicyErrors sslPolicyErrors)
+		{
+			return true;
 		}
 
 		/// <summary>
@@ -307,6 +353,10 @@ namespace MySql.Data.MySqlClient
 			if ((serverCaps & ClientFlags.SECURE_CONNECTION) != 0)
 				flags |= ClientFlags.SECURE_CONNECTION;
 
+			// if the server is capable of SSL and the user is requesting SSL
+			if ((serverCaps & ClientFlags.SSL) != 0 && connectionString.UseSSL)
+				flags |= ClientFlags.SSL;
+
 			connectionFlags = flags;
 		}
 
@@ -321,6 +371,7 @@ namespace MySql.Data.MySqlClient
 			stream.Write(Crypt.Get411Password(connectionString.Password, this.encryptionSeed));
 			if ((connectionFlags & ClientFlags.CONNECT_WITH_DB) != 0 && connectionString.Database != null)
 				stream.WriteString(connectionString.Database);
+			
 			stream.Flush();
 
 			// this result means the server wants us to send the password using
@@ -344,6 +395,7 @@ namespace MySql.Data.MySqlClient
 				connectionString.Password, encryptionSeed, protocol > 9));
 			if ((connectionFlags & ClientFlags.CONNECT_WITH_DB) != 0 && connectionString.Database != null)
 				stream.WriteString(connectionString.Database);
+
 			stream.Flush();
 			ReadOk(true);
 		}

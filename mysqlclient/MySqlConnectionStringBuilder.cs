@@ -634,6 +634,8 @@ namespace MySql.Data.MySqlClient
 					return Keyword.ConnectionReset;
 				case "ignore prepare":
 					return Keyword.IgnorePrepare;
+				case "encrypt":
+					return Keyword.UseSSL;
 			}
 			throw new ArgumentException(Resources.KeywordNotSupported, key);
 		}
@@ -669,6 +671,7 @@ namespace MySql.Data.MySqlClient
 				case Keyword.AllowZeroDatetime: return AllowZeroDateTime;
 				case Keyword.UsePerformanceMonitor: return UsePerformanceMonitor;
 				case Keyword.IgnorePrepare: return IgnorePrepare;
+				case Keyword.UseSSL: return UseSSL;
 				default: return null;  /* this will never happen */
 			}
 		}
@@ -704,6 +707,7 @@ namespace MySql.Data.MySqlClient
 				case Keyword.AllowZeroDatetime: AllowZeroDateTime = ConvertToBool(value); break;
 				case Keyword.ProcedureCacheSize: ProcedureCacheSize = ConvertToUInt(value); break;
 				case Keyword.IgnorePrepare: IgnorePrepare = ConvertToBool(value); break;
+				case Keyword.UseSSL: UseSSL = ConvertToBool(value); break;
 			}
 		}
 
@@ -752,6 +756,7 @@ namespace MySql.Data.MySqlClient
 		AllowZeroDatetime,
 		UsePerformanceMonitor,
 		ProcedureCacheSize,
-		IgnorePrepare
+		IgnorePrepare,
+		UseSSL
 	}
 }
