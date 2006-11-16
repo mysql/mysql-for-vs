@@ -52,7 +52,7 @@ namespace MySql.Data.MySqlClient
 		/// <include file='docs/MySqlConnection.xml' path='docs/InfoMessage/*'/>
 		public event MySqlInfoMessageEventHandler InfoMessage;
 
-#if MONO
+#if MONO2
         /// <include file='docs/MySqlConnection.xml' path='docs/StateChange/*'/>
         public event StateChangeEventHandler StateChange;
 #endif
@@ -469,7 +469,7 @@ namespace MySql.Data.MySqlClient
 			SetState(ConnectionState.Closed);
 		}
 
-#if MONO
+#if MONO2
 
         protected void OnStateChange (StateChangeEventArgs stateChangeArgs)
         {

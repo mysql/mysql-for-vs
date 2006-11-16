@@ -38,7 +38,6 @@
 
 	<!-- core managed driver target -->	
 	<target name="client" description="Core client target">
-		<property name="nunit-lib" value="${nunit.dir}/bin"/>
 		<property name="nant.settings.currentframework" value="${framework}"/>
 		<property name="outdir" value="mysqlclient/bin/${framework}/${buildType}"/>
 		
@@ -59,6 +58,13 @@
 			</references>
 			<sources refid="Source"/>
 		</csc>
+	</target>
+
+	<target name="compile-test-suite" description="Compiling test suite">
+		<property name="nunit-lib" value="${nunit.dir}/bin"/>
+		<property name="nant.settings.currentframework" value="${framework}"/>
+		<property name="outdir" value="mysqlclient/bin/${framework}/${buildType}"/>
+
 		<csc output="${outdir}/MySql.Data.Tests.dll" target="library" 
 			define="${defines}" debug="${debug}" optimize="${opt}"> <arg value="/nowarn:0679,2029"/>
 			<sources>
@@ -81,6 +87,7 @@
 		<property name="nunit.dir" value="${nunit1.dir}"/>
 		<property name="framework" value="net-1.1"/>
 		<call target="client"/>
+		<call target="compile-test-suite"/>
 	</target>
 
 	<!-- core managed driver target 2.0 -->
@@ -92,7 +99,8 @@
 		</if>
 		<property name="defines" value="${defines}NET20"/>
 		<call target="client"/>
-</target>
+		<call target="compile-test-suite"/>
+	</target>
 	
 	<!-- core managed driver target mono 1.0 -->
 	<target name="mono-1.0" description="Mono 1.0 Target">

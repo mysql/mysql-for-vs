@@ -59,14 +59,6 @@ namespace MySql.Data.MySqlClient
             connection.CurrentTransaction = null;
         }
 
-//TODO:  remove this once Mono corrects this bug
-#if MONO
-	    Transaction IPromotableSinglePhaseNotification.Promote()
-	    {
-			throw new NotSupportedException();
-		}
-#endif		
-
         byte[] ITransactionPromoter.Promote()
         {
             throw new NotSupportedException();

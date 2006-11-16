@@ -1,3 +1,5 @@
+#if !MONO
+
 using System.Configuration.Install;
 using System.ComponentModel;
 using System.Reflection;
@@ -187,3 +189,5 @@ namespace MySql.Data.MySqlClient
 		}
 	}
 }
+
+#endif
