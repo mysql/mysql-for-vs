@@ -3,7 +3,7 @@ using System;
 /* Contains conversion support elements such as classes, interfaces and static methods. */
 namespace zlib
 {
-	public class SupportClass
+	class SupportClass
 	{
 		/// <summary>
 		/// This method returns the literal value received

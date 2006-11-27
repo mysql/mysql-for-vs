@@ -46,7 +46,7 @@ namespace zlib
 {
 	
 	[Serializable]
-	public class ZStreamException:System.IO.IOException
+	class ZStreamException:System.IO.IOException
 	{
 		public ZStreamException():base()
 		{
