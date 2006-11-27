@@ -30,7 +30,7 @@ namespace MySql.Data.MySqlClient
 	/// Represents a collection of parameters relevant to a <see cref="MySqlCommand"/> as well as their respective mappings to columns in a <see cref="DataSet"/>. This class cannot be inherited.
 	/// </summary>
 	/// <include file='docs/MySqlParameterCollection.xml' path='MyDocs/MyMembers[@name="Class"]/*'/>
-#if !CF
+#if !PocketPC
 	[Editor("MySql.Data.MySqlClient.Design.DBParametersEditor,MySql.Design", typeof(System.Drawing.Design.UITypeEditor))]
 	[ListBindable(true)]
 #endif

@@ -27,7 +27,7 @@ using MySql.Data.Types;
 
 namespace MySql.Data.MySqlClient
 {
-#if !CF
+#if !PocketPC
 	/// <summary>
 	/// Summary description for ClientDriver.
 	/// </summary>

@@ -1,4 +1,4 @@
-#if !MONO
+#if !MONO && !PocketPC
 
 using System.Configuration.Install;
 using System.ComponentModel;
@@ -16,7 +16,7 @@ namespace MySql.Data.MySqlClient
 	/// We are adding a custom installer class to our assembly so our installer
 	/// can make proper changes to the machine.config file.
 	/// </summary>
-	[RunInstaller(true)]
+    [RunInstaller(true)]
 	public class CustomInstaller : Installer
 	{
 		/// <summary>

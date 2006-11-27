@@ -40,10 +40,10 @@ namespace MySql.Data.MySqlClient.Tests
 
 		public BaseTest()
 		{
-			csAdditions = ";pooling=false";
+			csAdditions = ";pooling=false;use ssl=true";
 			user = "root";
 			password = "";
-			host = "localhost";
+			host = "192.168.1.127";
 		}
 
 		protected virtual string GetConnectionInfo()

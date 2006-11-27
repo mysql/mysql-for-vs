@@ -28,7 +28,7 @@ using System.Diagnostics;
 
 namespace MySql.Data.Common
 {
-#if !CF
+#if !PocketPC
 	/// <summary>
 	/// Summary description for SharedMemoryStream.
 	/// </summary>

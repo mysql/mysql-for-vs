@@ -4,7 +4,7 @@ using System;
 
 namespace MySql.Data.MySqlClient
 {
-#if !CF
+#if !PocketPC
 
 	/// <summary>
 	/// Summary description for EmbeddedDriver.

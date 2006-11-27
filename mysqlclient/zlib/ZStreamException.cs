@@ -43,9 +43,8 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 using System;
 namespace zlib
-{
-	
-	[Serializable]
+{	
+//	[Serializable]
 	class ZStreamException:System.IO.IOException
 	{
 		public ZStreamException():base()
