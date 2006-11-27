@@ -41,7 +41,7 @@ namespace MySql.Data.MySqlClient
 		private Hashtable ciHash;
 		private Hashtable hash;
 
-		public MySqlParameterCollection()
+		internal MySqlParameterCollection()
 		{
 			hash = new Hashtable();
 #if NET20
@@ -181,6 +181,10 @@ namespace MySql.Data.MySqlClient
 
 		#region DbParameterCollection Implementation
 
+        /// <summary>
+        /// Adds an array of values to the end of the <see cref="MySqlParameterCollection"/>. 
+        /// </summary>
+        /// <param name="values"></param>
 		public override void AddRange(Array values)
 		{
 			foreach (DbParameter p in values)
@@ -309,6 +313,10 @@ namespace MySql.Data.MySqlClient
 			get { return items.Count; }
 		}
 
+        /// <summary>
+        /// Returns an enumerator that iterates through the <see cref="MySqlParameterCollection"/>. 
+        /// </summary>
+        /// <returns></returns>
 		public override IEnumerator GetEnumerator()
 		{
 			return ((IEnumerable)items).GetEnumerator();
@@ -350,16 +358,28 @@ namespace MySql.Data.MySqlClient
 			items.Insert(index, value);
 		}
 
+        /// <summary>
+        /// Gets a value that indicates whether the <see cref="MySqlParameterCollection"/>
+        /// has a fixed size. 
+        /// </summary>
 		public override bool IsFixedSize
 		{
 			get { return items.IsFixedSize; }
 		}
 
+        /// <summary>
+        /// Gets a value that indicates whether the <see cref="MySqlParameterCollection"/>
+        /// is read-only. 
+        /// </summary>
 		public override bool IsReadOnly
 		{
 			get { return items.IsReadOnly; }
 		}
 
+        /// <summary>
+        /// Gets a value that indicates whether the <see cref="MySqlParameterCollection"/>
+        /// is synchronized. 
+        /// </summary>
 		public override bool IsSynchronized
 		{
 			get { return items.IsSynchronized; }
@@ -394,6 +414,10 @@ namespace MySql.Data.MySqlClient
 			items.RemoveAt(index);
 		}
 
+        /// <summary>
+        /// Gets an object that can be used to synchronize access to the 
+        /// <see cref="MySqlParameterCollection"/>. 
+        /// </summary>
 		public override object SyncRoot
 		{
 			get { return items.SyncRoot; }

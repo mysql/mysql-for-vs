@@ -192,6 +192,11 @@ namespace MySql.Data.MySqlClient
 
 		#region TypeSafe Accessors
 
+		/// <summary>
+		/// Gets the value of the specified column as a Boolean.
+		/// </summary>
+		/// <param name="name"></param>
+		/// <returns></returns>
 		public bool GetBoolean(string name)
 		{
 			return GetBoolean(GetOrdinal(name));
@@ -207,6 +212,11 @@ namespace MySql.Data.MySqlClient
 			return Convert.ToBoolean(GetValue(i));
 		}
 
+		/// <summary>
+		/// Gets the value of the specified column as a byte.
+		/// </summary>
+		/// <param name="name"></param>
+		/// <returns></returns>
 		public byte GetByte(string name)
 		{
 			return GetByte(GetOrdinal(name));
@@ -271,6 +281,11 @@ namespace MySql.Data.MySqlClient
 			return length;
 		}
 
+		/// <summary>
+		/// Gets the value of the specified column as a single character.
+		/// </summary>
+		/// <param name="name"></param>
+		/// <returns></returns>
 		public char GetChar(string name)
 		{
 			return GetChar(GetOrdinal(name));
@@ -332,26 +347,28 @@ namespace MySql.Data.MySqlClient
 			return values[i].MySqlTypeName;
 		}
 
-		public MySqlDateTime GetMySqlDateTime(string name)
+		/// <include file='docs/MySqlDataReader.xml' path='docs/GetMySqlDateTime/*'/>
+		public MySqlDateTime GetMySqlDateTime(string column)
 		{
-			return GetMySqlDateTime(GetOrdinal(name));
+			return GetMySqlDateTime(GetOrdinal(column));
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetMySqlDateTime/*'/>
-		public MySqlDateTime GetMySqlDateTime(int index)
+		public MySqlDateTime GetMySqlDateTime(int column)
 		{
-			return (MySqlDateTime)GetFieldValue(index, true);
-		}
-
-		public DateTime GetDateTime(string name)
-		{
-			return GetDateTime(GetOrdinal(name));
+			return (MySqlDateTime)GetFieldValue(column, true);
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetDateTime/*'/>
-		public override DateTime GetDateTime(int index)
+		public DateTime GetDateTime(string column)
 		{
-			IMySqlValue val = GetFieldValue(index, true);
+			return GetDateTime(GetOrdinal(column));
+		}
+
+		/// <include file='docs/MySqlDataReader.xml' path='docs/GetDateTime/*'/>
+		public override DateTime GetDateTime(int column)
+		{
+			IMySqlValue val = GetFieldValue(column, true);
 			MySqlDateTime dt;
 
 			// we need to do this because functions like date_add return string
@@ -369,29 +386,31 @@ namespace MySql.Data.MySqlClient
 				return dt.GetDateTime();
 		}
 
-		public Decimal GetDecimal(string name)
+		/// <include file='docs/MySqlDataReader.xml' path='docs/GetDecimal/*'/>
+		public Decimal GetDecimal(string column)
 		{
-			return GetDecimal(GetOrdinal(name));
+			return GetDecimal(GetOrdinal(column));
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetDecimal/*'/>
-		public override Decimal GetDecimal(int index)
+		public override Decimal GetDecimal(int column)
 		{
-			IMySqlValue v = GetFieldValue(index, true);
+			IMySqlValue v = GetFieldValue(column, true);
 			if (v is MySqlDecimal)
 				return ((MySqlDecimal)v).Value;
 			return Convert.ToDecimal(v.Value);
 		}
 
-		public double GetDouble(string name)
+		/// <include file='docs/MySqlDataReader.xml' path='docs/GetDouble/*'/>
+		public double GetDouble(string column)
 		{
-			return GetDouble(GetOrdinal(name));
+			return GetDouble(GetOrdinal(column));
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetDouble/*'/>
-		public override double GetDouble(int index)
+		public override double GetDouble(int column)
 		{
-			IMySqlValue v = GetFieldValue(index, true);
+			IMySqlValue v = GetFieldValue(column, true);
 			if (v is MySqlDouble)
 				return ((MySqlDouble)v).Value;
 			return Convert.ToDouble(v.Value);
@@ -416,79 +435,84 @@ namespace MySql.Data.MySqlClient
 			return values[i].SystemType;
 		}
 
-		public float GetFloat(string name)
+		/// <include file='docs/MySqlDataReader.xml' path='docs/GetFloat/*'/>
+		public float GetFloat(string column)
 		{
-			return GetFloat(GetOrdinal(name));
+			return GetFloat(GetOrdinal(column));
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetFloat/*'/>
-		public override float GetFloat(int index)
+		public override float GetFloat(int column)
 		{
-			IMySqlValue v = GetFieldValue(index, true);
+			IMySqlValue v = GetFieldValue(column, true);
 			if (v is MySqlSingle)
 				return ((MySqlSingle)v).Value;
 			return Convert.ToSingle(v.Value);
 		}
 
-		public Guid GetGuid(string name)
+		/// <include file='docs/MySqlDataReader.xml' path='docs/GetGuid/*'/>
+		public Guid GetGuid(string column)
 		{
-			return GetGuid(GetOrdinal(name));
+			return GetGuid(GetOrdinal(column));
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetGuid/*'/>
-		public override Guid GetGuid(int index)
+		public override Guid GetGuid(int column)
 		{
-			return new Guid(GetString(index));
-		}
-
-		public Int16 GetInt16(string name)
-		{
-			return GetInt16(GetOrdinal(name));
+			return new Guid(GetString(column));
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetInt16/*'/>
-		public override Int16 GetInt16(int index)
+		public Int16 GetInt16(string column)
 		{
-			IMySqlValue v = GetFieldValue(index, true);
+			return GetInt16(GetOrdinal(column));
+		}
+
+		/// <include file='docs/MySqlDataReader.xml' path='docs/GetInt16/*'/>
+		public override Int16 GetInt16(int column)
+		{
+			IMySqlValue v = GetFieldValue(column, true);
 			if (v is MySqlInt16)
 				return ((MySqlInt16)v).Value;
 
 			connection.UsageAdvisor.Converting(command.CommandText,
-				 fields[index].ColumnName, v.MySqlTypeName, "Int16");
+				 fields[column].ColumnName, v.MySqlTypeName, "Int16");
 			return ((IConvertible)v.Value).ToInt16(null);
 		}
 
-		public Int32 GetInt32(string name)
+		/// <include file='docs/MySqlDataReader.xml' path='docs/GetInt32/*'/>
+		public Int32 GetInt32(string column)
 		{
-			return GetInt32(GetOrdinal(name));
+			return GetInt32(GetOrdinal(column));
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetInt32/*'/>
-		public override Int32 GetInt32(int index)
+		public override Int32 GetInt32(int column)
 		{
-			IMySqlValue v = GetFieldValue(index, true);
+			IMySqlValue v = GetFieldValue(column, true);
 			if (v is MySqlInt32)
 				return ((MySqlInt32)v).Value;
 
 			connection.UsageAdvisor.Converting(command.CommandText,
-				 fields[index].ColumnName, v.MySqlTypeName, "Int32");
+				 fields[column].ColumnName, v.MySqlTypeName, "Int32");
 			return ((IConvertible)v.Value).ToInt32(null);
 		}
 
-		public Int64 GetInt64(string name)
+		/// <include file='docs/MySqlDataReader.xml' path='docs/GetInt64/*'/>
+		public Int64 GetInt64(string column)
 		{
-			return GetInt64(GetOrdinal(name));
+			return GetInt64(GetOrdinal(column));
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetInt64/*'/>
-		public override Int64 GetInt64(int index)
+		public override Int64 GetInt64(int column)
 		{
-			IMySqlValue v = GetFieldValue(index, true);
+			IMySqlValue v = GetFieldValue(column, true);
 			if (v is MySqlInt64)
 				return ((MySqlInt64)v).Value;
 
 			connection.UsageAdvisor.Converting(command.CommandText,
-				 fields[index].ColumnName, v.MySqlTypeName, "Int64");
+				 fields[column].ColumnName, v.MySqlTypeName, "Int64");
 			return ((IConvertible)v.Value).ToInt64(null);
 		}
 
@@ -595,34 +619,36 @@ namespace MySql.Data.MySqlClient
 			return dataTableSchema;
 		}
 
-		public string GetString(string name)
+		/// <include file='docs/MySqlDataReader.xml' path='docs/GetString/*'/>
+		public string GetString(string column)
 		{
-			return GetString(GetOrdinal(name));
+			return GetString(GetOrdinal(column));
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetString/*'/>
-		public override String GetString(int index)
+		public override String GetString(int column)
 		{
-			IMySqlValue val = GetFieldValue(index, true);
+			IMySqlValue val = GetFieldValue(column, true);
 
 			if (val is MySqlBinary)
 			{
 				byte[] v = ((MySqlBinary)val).Value;
-				return fields[index].Encoding.GetString(v, 0, v.Length);
+				return fields[column].Encoding.GetString(v, 0, v.Length);
 			}
 
 			return val.Value.ToString();
 		}
 
-		public TimeSpan GetTimeSpan(string name)
+		/// <include file='docs/MySqlDataReader.xml' path='docs/GetTimeSpan/*'/>
+		public TimeSpan GetTimeSpan(string column)
 		{
-			return GetTimeSpan(GetOrdinal(name));
+			return GetTimeSpan(GetOrdinal(column));
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetTimeSpan/*'/>
-		public TimeSpan GetTimeSpan(int index)
+		public TimeSpan GetTimeSpan(int column)
 		{
-			IMySqlValue val = GetFieldValue(index, true);
+			IMySqlValue val = GetFieldValue(column, true);
 
 			MySqlTimeSpan ts = (MySqlTimeSpan)val;
 			return ts.Value;
@@ -673,54 +699,57 @@ namespace MySql.Data.MySqlClient
 			return numCols;
 		}
 
-		public UInt16 GetUInt16(string name)
+		/// <include file='docs/MySqlDataReader.xml' path='docs/GetUInt16/*'/>
+		public UInt16 GetUInt16(string column)
 		{
-			return GetUInt16(GetOrdinal(name));
+			return GetUInt16(GetOrdinal(column));
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetUInt16/*'/>
-		public UInt16 GetUInt16(int index)
+		public UInt16 GetUInt16(int column)
 		{
-			IMySqlValue v = GetFieldValue(index, true);
+			IMySqlValue v = GetFieldValue(column, true);
 			if (v is MySqlUInt16)
 				return ((MySqlUInt16)v).Value;
 
 			connection.UsageAdvisor.Converting(command.CommandText,
-				 fields[index].ColumnName, v.MySqlTypeName, "UInt16");
+				 fields[column].ColumnName, v.MySqlTypeName, "UInt16");
 			return Convert.ToUInt16(v.Value);
 		}
 
-		public UInt32 GetUInt32(string name)
+		/// <include file='docs/MySqlDataReader.xml' path='docs/GetUInt32/*'/>
+		public UInt32 GetUInt32(string column)
 		{
-			return GetUInt32(GetOrdinal(name));
+			return GetUInt32(GetOrdinal(column));
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetUInt32/*'/>
-		public UInt32 GetUInt32(int index)
+		public UInt32 GetUInt32(int column)
 		{
-			IMySqlValue v = GetFieldValue(index, true);
+			IMySqlValue v = GetFieldValue(column, true);
 			if (v is MySqlUInt32)
 				return ((MySqlUInt32)v).Value;
 
 			connection.UsageAdvisor.Converting(command.CommandText,
-				 fields[index].ColumnName, v.MySqlTypeName, "UInt32");
+				 fields[column].ColumnName, v.MySqlTypeName, "UInt32");
 			return Convert.ToUInt32(v.Value);
 		}
 
-		public UInt64 GetUInt64(string name)
+		/// <include file='docs/MySqlDataReader.xml' path='docs/GetUInt64/*'/>
+		public UInt64 GetUInt64(string column)
 		{
-			return GetUInt64(GetOrdinal(name));
+			return GetUInt64(GetOrdinal(column));
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetUInt64/*'/>
-		public UInt64 GetUInt64(int index)
+		public UInt64 GetUInt64(int column)
 		{
-			IMySqlValue v = GetFieldValue(index, true);
+			IMySqlValue v = GetFieldValue(column, true);
 			if (v is MySqlUInt64)
 				return ((MySqlUInt64)v).Value;
 
 			connection.UsageAdvisor.Converting(command.CommandText,
-				 fields[index].ColumnName, v.MySqlTypeName, "UInt64");
+				 fields[column].ColumnName, v.MySqlTypeName, "UInt64");
 			return Convert.ToUInt64(v.Value);
 		}
 
@@ -922,6 +951,10 @@ namespace MySql.Data.MySqlClient
 
 		#region IEnumerator
 
+		/// <summary>
+		/// Returns an <see cref="IEnumerator"/> that iterates through the <see cref="MySqlDataReader"/>. 
+		/// </summary>
+		/// <returns></returns>
 		public override IEnumerator GetEnumerator()
 		{
 			return new DbEnumerator(this);

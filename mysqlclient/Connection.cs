@@ -27,6 +27,7 @@ using System.ComponentModel;
 using System.Globalization;
 using MySql.Data.Common;
 using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace MySql.Data.MySqlClient
 {
@@ -248,6 +249,12 @@ namespace MySql.Data.MySqlClient
 		#region Transactions
 
 #if !MONO
+		/// <summary>
+		/// Enlists in the specified transaction. 
+		/// </summary>
+		/// <param name="transaction">
+		/// A reference to an existing <see cref="Transaction"/> in which to enlist.
+		/// </param>
 		public override void EnlistTransaction(System.Transactions.Transaction transaction)
 		{
 			if (currentTransaction != null)
@@ -481,20 +488,45 @@ namespace MySql.Data.MySqlClient
 
 		#region GetSchema Support
 
+		/// <summary>
+		/// Returns schema information for the data source of this <see cref="DbConnection"/>. 
+		/// </summary>
+		/// <returns>A <see cref="DataTable"/> that contains schema information. </returns>
 		public override DataTable GetSchema()
 		{
 			return GetSchema(null);
 		}
 
+		/// <summary>
+		/// Returns schema information for the data source of this 
+		/// <see cref="DbConnection"/> using the specified string for the schema name. 
+		/// </summary>
+		/// <param name="collectionName">Specifies the name of the schema to return. </param>
+		/// <returns>A <see cref="DataTable"/> that contains schema information. </returns>
 		public override DataTable GetSchema(string collectionName)
 		{
 			if (collectionName == null)
 				collectionName = SchemaProvider.MetaCollection;
+
 			return schemaProvider.GetSchema(collectionName, null);
 		}
 
+		/// <summary>
+		/// Returns schema information for the data source of this <see cref="DbConnection"/>
+		/// using the specified string for the schema name and the specified string array 
+		/// for the restriction values. 
+		/// </summary>
+		/// <param name="collectionName">Specifies the name of the schema to return.</param>
+		/// <param name="restrictionValues">Specifies a set of restriction values for the requested schema.</param>
+		/// <returns>A <see cref="DataTable"/> that contains schema information.</returns>
 		public override DataTable GetSchema(string collectionName, string[] restrictionValues)
 		{
+			string msg = "collection = " + collectionName + " with rest = ";
+			foreach (string s in restrictionValues)
+			{
+				msg += "r = " + s;
+			}
+
 			if (collectionName == null)
 				collectionName = SchemaProvider.MetaCollection;
 			return schemaProvider.GetSchema(collectionName, restrictionValues);
