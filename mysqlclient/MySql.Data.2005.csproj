@@ -114,12 +114,6 @@
     <None Include="..\README" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="CharSetMap.cs" />
-    <Compile Include="command.cs">
-    </Compile>
-    <Compile Include="CommandBuilder.cs">
-    </Compile>
     <Compile Include="common\ContextString.cs" />
     <Compile Include="common\NamedPipeStream.cs" />
     <Compile Include="common\NativeMethods.cs" />
@@ -129,45 +123,48 @@
     <Compile Include="common\StreamCreator.cs" />
     <Compile Include="common\Version.cs" />
     <Compile Include="common\WinCE.cs" />
-    <Compile Include="CompressedStream.cs" />
-    <Compile Include="Connection.cs">
-    </Compile>
-    <Compile Include="Crypt.cs" />
-    <Compile Include="dataadapter.cs">
-    </Compile>
-    <Compile Include="datareader.cs" />
-    <Compile Include="Driver.cs" />
-    <Compile Include="Exception.cs" />
-    <Compile Include="Field.cs" />
-    <Compile Include="Installer.cs">
+    <Compile Include="core\AssemblyInfo.cs" />
+    <Compile Include="core\CharSetMap.cs" />
+    <Compile Include="core\ClientAPI.cs" />
+    <Compile Include="core\ClientDriver.cs" />
+    <Compile Include="core\command.cs" />
+    <Compile Include="core\CommandBuilder.cs" />
+    <Compile Include="core\CompressedStream.cs" />
+    <Compile Include="core\Connection.cs" />
+    <Compile Include="core\Crypt.cs" />
+    <Compile Include="core\dataadapter.cs" />
+    <Compile Include="core\datareader.cs" />
+    <Compile Include="core\Driver.cs" />
+    <Compile Include="core\EmbeddedAPI.cs" />
+    <Compile Include="core\EmbeddedDriver.cs" />
+    <Compile Include="core\Exception.cs" />
+    <Compile Include="core\Field.cs" />
+    <Compile Include="core\Installer.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ISSchemaProvider.cs" />
-    <Compile Include="Logger.cs" />
-    <Compile Include="MySqlClientFactory.cs" />
-    <Compile Include="MySqlConnectionStringBuilder.cs" />
-    <Compile Include="MysqlDefs.cs" />
-    <Compile Include="MySqlError.cs" />
-    <Compile Include="MySqlHelper.cs" />
-    <Compile Include="MySqlPool.cs" />
-    <Compile Include="MySqlPoolManager.cs" />
-    <Compile Include="MySqlPromotableTransaction.cs" />
-    <Compile Include="MySqlStream.cs" />
-    <Compile Include="NativeDriver.cs" />
-    <Compile Include="parameter.cs" />
-    <Compile Include="parameter_collection.cs" />
-    <Compile Include="PerformanceMonitor.cs" />
-    <Compile Include="PreparableStatement.cs" />
-    <Compile Include="ProcedureCache.cs" />
-    <Compile Include="Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="SchemaProvider.cs" />
-    <Compile Include="Statement.cs" />
-    <Compile Include="StoredProcedure.cs" />
-    <Compile Include="transaction.cs" />
+    <Compile Include="core\ISSchemaProvider.cs" />
+    <Compile Include="core\Logger.cs" />
+    <Compile Include="core\MySqlClientFactory.cs" />
+    <Compile Include="core\MySqlConnectionStringBuilder.cs" />
+    <Compile Include="core\MysqlDefs.cs" />
+    <Compile Include="core\MySqlError.cs" />
+    <Compile Include="core\MySqlHelper.cs" />
+    <Compile Include="core\MySqlPool.cs" />
+    <Compile Include="core\MySqlPoolManager.cs" />
+    <Compile Include="core\MySqlPromotableTransaction.cs" />
+    <Compile Include="core\MySqlStream.cs" />
+    <Compile Include="core\NativeDriver.cs" />
+    <Compile Include="core\parameter.cs" />
+    <Compile Include="core\parameter_collection.cs" />
+    <Compile Include="core\PerformanceMonitor.cs" />
+    <Compile Include="core\PreparableStatement.cs" />
+    <Compile Include="core\ProcedureCache.cs" />
+    <Compile Include="core\Resources.Designer.cs" />
+    <Compile Include="core\SchemaProvider.cs" />
+    <Compile Include="core\Statement.cs" />
+    <Compile Include="core\StoredProcedure.cs" />
+    <Compile Include="core\transaction.cs" />
+    <Compile Include="core\UsageAdvisor.cs" />
     <Compile Include="Types\MetaData.cs" />
     <Compile Include="Types\MySqlBinary.cs" />
     <Compile Include="Types\MySqlBit.cs" />
@@ -187,7 +184,6 @@
     <Compile Include="Types\MySqlUInt32.cs" />
     <Compile Include="Types\MySqlUInt64.cs" />
     <Compile Include="Types\MySqlValue.cs" />
-    <Compile Include="UsageAdvisor.cs" />
     <Compile Include="zlib\Adler32.cs" />
     <Compile Include="zlib\Deflate.cs" />
     <Compile Include="zlib\InfBlocks.cs" />
@@ -204,6 +200,7 @@
     <Compile Include="zlib\ZStreamException.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="core\ReservedWords.txt" />
     <Content Include="docs\MySqlCommand.xml" />
     <Content Include="docs\MySqlCommandBuilder.xml" />
     <Content Include="docs\MySqlConnection.xml" />
@@ -215,13 +212,10 @@
     <Content Include="docs\MySqlParameter.xml" />
     <Content Include="docs\MySqlParameterCollection.xml" />
     <Content Include="docs\MySqlTransaction.xml" />
-    <EmbeddedResource Include="ReservedWords.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources.resx">
+    <EmbeddedResource Include="core\Resources.resx">
       <SubType>Designer</SubType>
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

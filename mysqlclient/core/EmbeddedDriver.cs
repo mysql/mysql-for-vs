@@ -1,5 +1,7 @@
 using System;
 
+#if FALSE
+
 namespace MySql.Data.MySqlClient
 {
 #if !CF
@@ -152,3 +154,5 @@ namespace MySql.Data.MySqlClient
 
 #endif
 }
+
+#endif
