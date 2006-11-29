@@ -1,5 +1,9 @@
 Version 5.0.3
 
+  Bugs fixed
+  ----------
+  Bug #23687 Deleting a connection to a disconnected server causes a failed assertion 
+
   Other changes
   -------------
   SSL now working.  [Thanks Alessandro Muzzetta]
@@ -14,7 +18,9 @@ Version 5.0.2 11-3-2006
   Bug #23758 Unable to connect to any server - IPv6 related 
   Bug #22882 Registry key 'Global' access denied 
   Bug #18186 Problem with implementation of PreparedStatement  
-
+  Bug #23657 Column names with accented characters were not parsed properly causing malformed column names in result sets.
+  Bug #16126 Connector/NET did not work as a data source for the SqlDataSource object used by ASP.NET 2.0.
+ 
   Other changes
   -------------
   Increased speed of MySqlParameterCollection.IndexOf(string) orders of magnitude

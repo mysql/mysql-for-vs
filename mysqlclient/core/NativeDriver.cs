@@ -449,15 +449,23 @@ namespace MySql.Data.MySqlClient
 
 		public override void Close()
 		{
-			if (isOpen)
-			{
-				ExecuteCommand(DBCmd.QUIT, null, 0);
-			}
+            try
+            {
+                if (isOpen)
+                {
+                    ExecuteCommand(DBCmd.QUIT, null, 0);
+                }
 
-			if (stream != null)
-				stream.Close();
-			stream = null;
-			base.Close();
+                if (stream != null)
+                    stream.Close();
+                stream = null;
+                base.Close();
+            }
+            catch (Exception)
+            {
+                // we are just going to eat any exceptions
+                // generated here
+            }
 		}
 
 

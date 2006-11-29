@@ -73,14 +73,16 @@ namespace MySql.Data.MySqlClient
 			: this(encoding)
 		{
 			baseStream = baseStr;
-			outStream = new BufferedStream(baseStream);
-			inStream = new BufferedStream(baseStream);
+            inStream = new BufferedStream(baseStream);
+            outStream = new BufferedStream(baseStream);
 		}
 
 		public void Close()
 		{
 			inStream.Close();
-			outStream.Close();
+            // no need to close outStream because closing
+            // inStream closes the underlying network stream
+            // for us.
 		}
 
 		#region Properties
@@ -438,13 +440,21 @@ namespace MySql.Data.MySqlClient
 				bufferStream.SetLength(0);
 				bufferStream.Position = 0;
 			}
-			outStream.Flush();
-			if (baseStream is CompressedStream)
-			// we do a flush on the basestream here because we might be sitting on top of
-			// a compression stream and calling flush on the BufferedStream doesn't always
-			// call flush on the underlying stream.
-				baseStream.Flush();
-		}
+
+            try
+            {
+                outStream.Flush();
+                if (baseStream is CompressedStream)
+                    // we do a flush on the basestream here because we might be sitting on top of
+                    // a compression stream and calling flush on the BufferedStream doesn't always
+                    // call flush on the underlying stream.
+                    baseStream.Flush();
+            }
+            catch (IOException ioex)
+            {
+                throw new MySqlException(Resources.WriteToStreamFailed, true, ioex);
+            }
+        }
 
 		#endregion
 
