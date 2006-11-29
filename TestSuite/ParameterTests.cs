@@ -363,5 +363,35 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual(2, dt.Rows.Count);
 			Assert.AreEqual(2, dt.Rows[1]["foo"]);
 		}
-	}
+
+        /// <summary>
+        /// Bug #24565 Inferring DbType fails when reusing commands and the first time the value is nul 
+        /// </summary>
+        [Test]
+        public void UnTypedParameterBeingReused()
+        {
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO test (id, dt) VALUES (?id, ?dt)", conn);
+            cmd.Parameters.Add("?id", 1);
+            MySqlParameter p = cmd.CreateParameter();
+            p.ParameterName = "?dt";
+            p.Value = DBNull.Value;
+            cmd.Parameters.Add(p);
+            cmd.ExecuteNonQuery();
+
+            cmd.Parameters[0].Value = 2;
+            p.Value = DateTime.Now;
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "SELECT * FROM test";
+            cmd.Parameters.Clear();
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                reader.Read();
+                Assert.IsTrue(reader.IsDBNull(2));
+                reader.Read();
+                Assert.IsFalse(reader.IsDBNull(2));
+                Assert.IsFalse(reader.Read());
+            }
+        }
+    }
 }

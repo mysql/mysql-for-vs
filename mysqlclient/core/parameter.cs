@@ -356,7 +356,7 @@ namespace MySql.Data.MySqlClient
 
 		private void SetMySqlDbType(MySqlDbType mySqlDbType)
 		{
-			this.mySqlDbType = mySqlDbType;
+            this.mySqlDbType = mySqlDbType;
 			switch (mySqlDbType)
 			{
 				case MySqlDbType.Decimal: dbType = DbType.Decimal; break;
@@ -393,7 +393,7 @@ namespace MySql.Data.MySqlClient
 
 		private void SetDbType(DbType dbType)
 		{
-			this.dbType = dbType;
+            this.dbType = dbType;
 			switch (dbType)
 			{
 				case DbType.Guid:
@@ -440,7 +440,7 @@ namespace MySql.Data.MySqlClient
 
 		private void SetTypeFromValue()
 		{
-			if (paramValue == null) return;
+            if (paramValue == null || paramValue == DBNull.Value) return;
 
 			if (paramValue is Guid)
 				DbType = DbType.String;

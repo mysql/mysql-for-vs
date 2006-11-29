@@ -3,6 +3,7 @@ Version 5.0.3
   Bugs fixed
   ----------
   Bug #23687 Deleting a connection to a disconnected server causes a failed assertion 
+  Bug #24565 Inferring DbType fails when reusing commands and the first time the value is nul 
 
   Other changes
   -------------
