@@ -7,7 +7,7 @@
 		<include name="mysqlclient/common/*.cs"/>
 		<include name="mysqlclient/Types/*.cs"/>
 		<include name="mysqlclient/zlib/*.cs"/>
-		<include name="mysqlclient/*.cs"/>
+		<include name="mysqlclient/core/*.cs"/>
 	</fileset>
 
 	<if test="${not property::exists('debug')}">
@@ -42,7 +42,13 @@
 		<property name="outdir" value="mysqlclient/bin/${framework}/${buildType}"/>
 		
  		<mkdir dir="${outdir}" failonerror="false"/>
-		<resgen input="mysqlclient/Resources.resx" output="mysqlclient/Resources.resources"/>
+ 		
+		<resgen todir="mysqlclient/core">
+			<resources prefix="MySql.Data.MySqlClient">
+				<include name="mysqlclient/core/*.resx" />
+			</resources>
+		</resgen> 		
+ 		
 		<csc output="${outdir}/MySql.Data.dll" target="library" 
 			define="${defines}" debug="${debug}" optimize="${opt}" keycontainer="ConnectorNet" 
 			doc="${outdir}/MySql.Data.xml">
