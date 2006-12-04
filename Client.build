@@ -33,7 +33,7 @@
 
 	<!-- builds the client on all supported frameworks -->
 	<target name="allframeworks" depends="net-2.0">
-		<call target="Docs"/>
+		<!--<call target="Docs"/>-->
 	</target>
 
 	<!-- core managed driver target -->	
