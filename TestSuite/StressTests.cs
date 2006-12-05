@@ -161,7 +161,7 @@ namespace MySql.Data.MySqlClient.Tests
     {
         protected override string GetConnectionInfo()
         {
-            return ";port=3306;compress=true";
+            return String.Format("port={0};compress=true", port);
         }
     }
 
@@ -170,7 +170,7 @@ namespace MySql.Data.MySqlClient.Tests
     {
         protected override string GetConnectionInfo()
         {
-            return ";protocol=pipe";
+            return String.Format("protocol=pipe;pipe name={0}", pipeName);
         }
     }
 
@@ -180,7 +180,7 @@ namespace MySql.Data.MySqlClient.Tests
     {
         protected override string GetConnectionInfo()
         {
-            return ";protocol=pipe;compress=true";
+            return String.Format("protocol=pipe;pipe name={0};compress=true", pipeName);
         }
     }
 
@@ -189,7 +189,7 @@ namespace MySql.Data.MySqlClient.Tests
     {
         protected override string GetConnectionInfo()
         {
-            return ";protocol=memory";
+            return String.Format("protocol=memory; shared memory name={0}", memoryName);
         }
     }
 
@@ -199,7 +199,7 @@ namespace MySql.Data.MySqlClient.Tests
     {
         protected override string GetConnectionInfo()
         {
-            return ";protocol=memory;compress=true";
+            return String.Format("protocol=memory; shared memory name={0};compress=true", memoryName);
         }
     }
 

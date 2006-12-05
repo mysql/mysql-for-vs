@@ -39,6 +39,8 @@ namespace MySql.Data.MySqlClient.Tests
 		protected string password;
         protected int port;
         protected string database;
+        protected string pipeName;
+        protected string memoryName;
 
 		public BaseTest()
 		{
@@ -48,17 +50,23 @@ namespace MySql.Data.MySqlClient.Tests
             host = "localhost";
             database = "test";
             port = 3306;
+            pipeName = "MYSQL";
+            memoryName = "MYSQL";
 
 #if NET20
             string strPort = ConfigurationManager.AppSettings["port"];
             string strDatabase = ConfigurationManager.AppSettings["database"];
             string strUserId = ConfigurationManager.AppSettings["userid"];
             string strPassword = ConfigurationManager.AppSettings["password"];
+            string strPipeName = ConfigurationManager.AppSettings["pipename"];
+            string strMemName = ConfigurationManager.AppSettings["memory_name"];
 #else
             string strPort = ConfigurationSettings.AppSettings["port"];
             string strDatabase = ConfigurationSettings.AppSettings["database"];
             string strUserId = ConfigurationSettings.AppSettings["userid"];
             string strPassword = ConfigurationSettings.AppSettings["password"];
+            string strPipeName = ConfigurationSettings.AppSettings["pipename"];
+            string strMemName = ConfigurationSettings.AppSettings["memory_name"];
 #endif
             if (strPort != null)
                 port = Int32.Parse(strPort);
@@ -68,6 +76,10 @@ namespace MySql.Data.MySqlClient.Tests
                 user = strUserId;
             if (strPassword != null)
                 password = strPassword;
+            if (strPipeName != null)
+                pipeName = strPipeName;
+            if (strMemName != null)
+                memoryName = strMemName;
         }
 
 		protected virtual string GetConnectionInfo()
