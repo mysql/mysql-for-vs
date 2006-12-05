@@ -49,18 +49,25 @@ namespace MySql.Data.MySqlClient.Tests
             database = "test";
             port = 3306;
 
-            object o = ConfigurationSettings.AppSettings["port"];
-            if (o != null)
-                port = Int32.Parse((string)o);
-            o = ConfigurationSettings.AppSettings["database"];
-            if (o != null)
-                database = (string)o;
-            o = ConfigurationSettings.AppSettings["userid"];
-            if (o != null)
-                user = (string)o;
-            o = ConfigurationSettings.AppSettings["password"];
-            if (o != null)
-                password = (string)o;
+#if NET20
+            string strPort = ConfigurationManager.AppSettings["port"];
+            string strDatabase = ConfigurationManager.AppSettings["database"];
+            string strUserId = ConfigurationManager.AppSettings["userid"];
+            string strPassword = ConfigurationManager.AppSettings["password"];
+#else
+            string strPort = ConfigurationSettings.AppSettings["port"];
+            string strDatabase = ConfigurationSettings.AppSettings["database"];
+            string strUserId = ConfigurationSettings.AppSettings["userid"];
+            string strPassword = ConfigurationSettings.AppSettings["password"];
+#endif
+            if (strPort != null)
+                port = Int32.Parse(strPort);
+            if (strDatabase != null)
+                database = strDatabase;
+            if (strUserId != null)
+                user = strUserId;
+            if (strPassword != null)
+                password = strPassword;
         }
 
 		protected virtual string GetConnectionInfo()
