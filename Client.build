@@ -180,7 +180,7 @@
 <!--		<property name="nunit-exe" value="${nunit.dir}/mono/bin/nunit-console.exe" if="${string::contains(framework, 'mono')}"/>-->
 
 		<exec unless="${doCoverage}" program="${nunit-exe}"
-		      commandline="/fixture=MySql.Data.MySqlClient.Tests.AsyncTests /exclude=${excludes} mysqlclient/bin/${framework}/${buildType}/MySql.Data.Tests.dll"
+		      commandline="/exclude=${excludes} mysqlclient/bin/${framework}/${buildType}/MySql.Data.Tests.dll"
 		      failonerror="true"/>
 <!--		<exec if="${doCoverage}" program="${ncover.executable}"
 		      commandline="/c &quot;${nunit-exe}&quot; &quot;mysqlclient/bin/${framework}/${buildType}/MySql.Data.Tests.dll /exclude=${excludes} /xml=../../../results/nunit-${framework}-${buildType}.xml&quot; /a MySql.Data /o results/ncover-${framework}-${config}.xml"
