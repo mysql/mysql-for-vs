@@ -37,18 +37,35 @@ namespace MySql.Data.MySqlClient.Tests
 		protected string host;
 		protected string user;
 		protected string password;
+        protected int port;
+        protected string database;
 
 		public BaseTest()
 		{
-			csAdditions = ";pooling=false;use ssl=true";
-			user = "root";
-			password = "";
-			host = "192.168.1.127";
-		}
+            csAdditions = ";pooling=false;";
+            user = "root";
+            password = "";
+            host = "localhost";
+            database = "test";
+            port = 3306;
+
+            object o = ConfigurationSettings.AppSettings["port"];
+            if (o != null)
+                port = Int32.Parse((string)o);
+            o = ConfigurationSettings.AppSettings["database"];
+            if (o != null)
+                database = (string)o;
+            o = ConfigurationSettings.AppSettings["userid"];
+            if (o != null)
+                user = (string)o;
+            o = ConfigurationSettings.AppSettings["password"];
+            if (o != null)
+                password = (string)o;
+        }
 
 		protected virtual string GetConnectionInfo()
 		{
-			return String.Empty;
+            return String.Format("protocol=tcp;port={0}", port);
 		}
 
 		protected string GetConnectionString(bool includedb)
@@ -56,7 +73,7 @@ namespace MySql.Data.MySqlClient.Tests
 			string connStr = String.Format("server={0};user id={1};password={2};" +
 				 "persist security info=true;{3}", host, user, password, csAdditions);
 			if (includedb)
-				connStr += ";database=test";
+                connStr += String.Format("database={0};", database);
 			connStr += GetConnectionInfo();
 			return connStr;
 		}
