@@ -106,7 +106,8 @@ namespace MySql.Data.MySqlClient
 		public bool IsTooOld()
 		{
 			TimeSpan ts = DateTime.Now.Subtract(creationTime);
-			if (ts.Seconds > Settings.ConnectionLifeTime)
+			if (Settings.ConnectionLifeTime != 0 && 
+                ts.TotalSeconds > Settings.ConnectionLifeTime)
 				return true;
 			return false;
 		}

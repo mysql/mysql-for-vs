@@ -154,7 +154,7 @@ namespace MySql.Data.MySqlClient
                 lock ((inUsePool as ICollection).SyncRoot)
                 {
 					inUsePool.Remove(driver);
-					if (driver.Settings.ConnectionLifeTime != 0 && driver.IsTooOld())
+					if (driver.IsTooOld())
 						driver.Close();
 					else
 						idlePool.Enqueue(driver);
