@@ -310,6 +310,24 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("vw", dt.Rows[0]["TABLE_NAME"]);
         }
 
+        [Category("5.0")]
+        [Test]
+        public void ViewColumns()
+        {
+            execSQL("DROP VIEW IF EXISTS vw");
+            execSQL("CREATE VIEW vw AS SELECT Now() as theTime");
+
+            string[] restrictions = new string[4];
+            restrictions[1] = "test";
+            restrictions[2] = "vw";
+            DataTable dt = conn.GetSchema("ViewColumns", restrictions);
+            Assert.IsTrue(dt.Rows.Count == 1);
+            Assert.AreEqual("ViewColumns", dt.TableName);
+            Assert.AreEqual("test", dt.Rows[0]["VIEW_SCHEMA"]);
+            Assert.AreEqual("vw", dt.Rows[0]["VIEW_NAME"]);
+            Assert.AreEqual("theTime", dt.Rows[0]["COLUMN_NAME"]);
+        }
+
         [Test]
         [Category("5.0")]
         public void SingleProcedureParameters()

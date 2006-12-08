@@ -130,30 +130,36 @@ namespace MySql.Data.MySqlClient
 
         private DataTable GetViewColumns(string[] restrictions)
         {
-            DataTable dt = new DataTable("ViewColumns");
-            dt.Columns.Add("VIEW_CATALOG", typeof(string));
-            dt.Columns.Add("VIEW_SCHEMA", typeof(string));
-            dt.Columns.Add("VIEW_NAME", typeof(string));
-            dt.Columns.Add("COLUMN_NAME", typeof(string));
-
             StringBuilder where = new StringBuilder();
             StringBuilder sql = new StringBuilder(
-                "SELECT NULL as VIEW_CATALOG, C.table_schema AS VIEW_SCHEMA, ");
-            sql.Append("C.table_name AS VIEW_NAME, C.column_name ");
-            sql.Append("FROM information_schema.columns C JOIN information_schema.views V");
+                "SELECT C.* FROM information_schema.columns C");
+            sql.Append(" JOIN information_schema.views V ");
             sql.Append("ON C.table_schema=V.table_schema AND C.table_name=V.table_name ");
             if (restrictions != null && restrictions.Length >= 2 &&
                 restrictions[1] != null)
-                where.AppendFormat("C.table_schema='{0}'", restrictions[1]);
+                where.AppendFormat("C.table_schema='{0}' ", restrictions[1]);
             if (restrictions != null && restrictions.Length >= 3 &&
                 restrictions[2] != null)
-                where.AppendFormat("C.table_name='{0}'", restrictions[2]);
+            {
+                if (where.Length > 0)
+                    where.Append("AND ");
+                where.AppendFormat("C.table_name='{0}' ", restrictions[2]);
+            }
             if (restrictions != null && restrictions.Length == 4 &&
                 restrictions[3] != null)
-                where.AppendFormat("C.column_name='{0}'", restrictions[3]);
+            {
+                if (where.Length > 0)
+                    where.Append("AND ");
+                where.AppendFormat("C.column_name='{0}' ", restrictions[3]);
+            }
             if (where.Length > 0)
                 sql.AppendFormat(" WHERE {0}", where.ToString());
-            return GetTable(sql.ToString());
+            DataTable dt = GetTable(sql.ToString());
+            dt.TableName = "ViewColumns";
+            dt.Columns[0].ColumnName = "VIEW_CATALOG";
+            dt.Columns[1].ColumnName = "VIEW_SCHEMA";
+            dt.Columns[2].ColumnName  = "VIEW_NAME";
+            return dt;
         }
 
         private DataTable GetTriggers(string[] restrictions)

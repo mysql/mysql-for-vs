@@ -520,12 +520,6 @@ namespace MySql.Data.MySqlClient
 		/// <returns>A <see cref="DataTable"/> that contains schema information.</returns>
 		public override DataTable GetSchema(string collectionName, string[] restrictionValues)
 		{
-			string msg = "collection = " + collectionName + " with rest = ";
-			foreach (string s in restrictionValues)
-			{
-				msg += "r = " + s;
-			}
-
 			if (collectionName == null)
 				collectionName = SchemaProvider.MetaCollection;
 			return schemaProvider.GetSchema(collectionName, restrictionValues);

@@ -8,6 +8,7 @@ Version 5.0.3
   Other changes
   -------------
   SSL now working.  [Thanks Alessandro Muzzetta]
+  Fixed ViewColumns GetSchema collection
 
 Version 5.0.2 11-3-2006
 

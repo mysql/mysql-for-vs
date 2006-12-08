@@ -181,7 +181,6 @@
 
 		<exec unless="${doCoverage}" program="${nunit-exe}" workingdir="mysqlclient/bin/${framework}/${buildType}"
 		      failonerror="true">
-		      <arg value="/fixture=MySql.Data.MySqlClient.Tests.AsyncTests"/>
 		      <arg value="/exclude=${excludes}"/>
 		      <arg value="MySql.Data.Tests.dll"/>
 		      <arg value="/xml=${framework}-nunit-results.xml"/>
