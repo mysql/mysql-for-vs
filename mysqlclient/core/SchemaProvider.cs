@@ -348,6 +348,7 @@ namespace MySql.Data.MySqlClient
             dt.Columns.Add("TABLE_NAME", typeof(string));
             dt.Columns.Add("COLUMN_NAME", typeof(string));
             dt.Columns.Add("ORDINAL_POSITION", typeof(int));
+            dt.Columns.Add("REFERENCED_TABLE_CATALOG", typeof(string));
             dt.Columns.Add("REFERENCED_TABLE_SCHEMA", typeof(string));
             dt.Columns.Add("REFERENCED_TABLE_NAME", typeof(string));
             dt.Columns.Add("REFERENCED_COLUMN_NAME", typeof(string));
@@ -477,6 +478,7 @@ namespace MySql.Data.MySqlClient
                 row["TABLE_NAME"] = table["TABLE_NAME"];
                 row["COLUMN_NAME"] = CleanSymbol(fkColumn.Trim());
                 row["ORDINAL_POSITION"] = pos;
+                row["REFERENCED_TABLE_CATALOG"] = null;
                 row["REFERENCED_TABLE_SCHEMA"] = refSchema;
                 row["REFERENCED_TABLE_NAME"] = refTable;
                 row["REFERENCED_COLUMN_NAME"] = CleanSymbol(refColumns[pos++].Trim());

@@ -167,9 +167,10 @@ namespace MySql.Data.MySqlClient
             string[] keys = new string[4];
             keys[0] = "TRIGGER_CATALOG";
             keys[1] = "TRIGGER_SCHEMA";
-            keys[2] = "TRIGGER_NAME";
-            keys[3] = "EVENT_OBJECT_TABLE";
+            keys[2] = "EVENT_OBJECT_TABLE";
+            keys[3] = "TRIGGER_NAME";
             DataTable dt = Query("TRIGGERS", null, keys, restrictions);
+            dt.TableName = "Triggers";
             return dt;
         }
 
