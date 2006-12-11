@@ -40,7 +40,7 @@ namespace MySql.Data.MySqlClient.Tests
 		[TestFixtureSetUp]
 		public void FixtureSetup()
 		{
-			csAdditions = ";pooling=false;procedure cache size=0";
+			csAdditions = ";pooling=false;procedure cache size=0;";
 			Open();
 		}
 

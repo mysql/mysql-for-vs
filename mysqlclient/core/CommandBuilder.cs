@@ -92,24 +92,14 @@ namespace MySql.Data.MySqlClient
 			if (!command.Connection.driver.Version.isAtLeast(5,0,0))
 				throw new MySqlException("DeriveParameters is not supported on versions " +
 					"prior to 5.0");
-            StoredProcedure sp = new StoredProcedure(command.Connection, "");
 
-            string schema = command.Connection.Database;
+            // retrieve the proc definitino from the cache.
             string spName = command.CommandText;
-            int dotIndex = spName.IndexOf('.');
-            if (dotIndex != -1)
-            {
-                schema = spName.Substring(0, dotIndex);
-                spName = spName.Substring(dotIndex + 1);
-            }
+            if (spName.IndexOf(".") == -1)
+                spName = command.Connection.Database + "." + spName;
+            DataSet ds = command.Connection.ProcedureCache.GetProcedure(command.Connection, spName);
 
-            // now retrieve the paramters using GetSchema
-            string[] restrictions = new string[5];
-            restrictions[1] = schema;
-            restrictions[2] = spName;
-            DataTable parameters = command.Connection.GetSchema(
-                "procedure parameters", restrictions);
-
+            DataTable parameters = ds.Tables["Procedure Parameters"];
             command.Parameters.Clear();
             foreach (DataRow row in parameters.Rows)
             {

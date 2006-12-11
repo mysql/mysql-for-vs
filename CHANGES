@@ -4,11 +4,13 @@ Version 5.0.3
   ----------
   Bug #23687 Deleting a connection to a disconnected server causes a failed assertion 
   Bug #24565 Inferring DbType fails when reusing commands and the first time the value is nul 
+  Bug #24661 mysql-connector-net-5.0.2-beta Driver.IsTooOld() Error.... 
 
   Other changes
   -------------
   SSL now working.  [Thanks Alessandro Muzzetta]
   Fixed ViewColumns GetSchema collection
+  Improved CommandBuilder.DeriveParameters to use the procedure cache if possible
 
 Version 5.0.2 11-3-2006
 
