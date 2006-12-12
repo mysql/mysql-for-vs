@@ -153,9 +153,10 @@
 		<property name="doCoverage" value="false"/>
 
 		<!-- test 4.1 -->		
-<!--		<echo message="Testing MySQL 4.1"/>
-		<property name="excludes" value="5.0,NotWorking"/>
-		<call target="testdb"/>  -->
+		<echo message="Testing MySQL 4.1"/>
+		<property name="excludes" value="5.0,NotWorking,SharedMemory"/>
+		<property name="config" value="mysql-41.config"/>
+		<call target="testdb"/>
 
 		<echo message="Testing MySQL 5.0"/>
 		<property name="excludes" value="NotWorking,SharedMemory"/>
