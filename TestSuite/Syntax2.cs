@@ -101,5 +101,78 @@ namespace MySql.Data.MySqlClient.Tests
             cmd.ExecuteScalar();
             Assert.AreEqual(-1, cmd.LastInsertedId);
         }
+
+        [Category("NotWorking")]
+        [Test]
+        public void TestCase()
+        {
+            string importQuery = "SET FOREIGN_KEY_CHECKS = 1;DELETE FROM Category " +
+                "WHERE id=\'0205342903\';SET FOREIGN_KEY_CHECKS = 0;INSERT INTO Category " +
+                "VALUES(\'d0450f050a0dfd8e00e6da7bda3bb07e\',\'0205342903\',\'000000000000000 " +
+                "00000000000000000\',\'\',\'0\');INSERT INTO Attribute " +
+                "VALUES(\'d0450f050a0dfd8e00e6da7b00dfa3c5\',\'d0450f050a0dfd8e00e6da7bda3bb0 " +
+                "7e\',\'eType\',\'machine\',null);SET FOREIGN_KEY_CHECKS = 1;";
+            string deleteQuery = "SET FOREIGN_KEY_CHECKS=1;DELETE FROM Attribute " +
+                "WHERE foreignuuid=\'d0450f050a0dfd8e00e6da7bda3bb07e\' AND " +
+                "name=\'eType\'";
+            string insertQuery = "SET FOREIGN_KEY_CHECKS = 0;INSERT INTO Attribute " +
+                "VALUES(\'d0563ba70a0dfd8e01df43e22395b352\',\'d0450f050a0dfd8e00e6da7bda3bb0 " +
+                "7e\',\'eType\',\'machine\',null);SET FOREIGN_KEY_CHECKS = 1";
+            string updateQuery = "SET FOREIGN_KEY_CHECKS = 1;DELETE FROM Attribute " +
+                "WHERE foreignuuid=\'d0450f050a0dfd8e00e6da7bda3bb07e\' AND " + 
+                "name=\'eType\';SET FOREIGN_KEY_CHECKS = 0;INSERT INTO Attribute " + 
+                "VALUES(\'d0563ba70a0dfd8e01df43e22395b352\',\'d0450f050a0dfd8e00e6da7bda3bb0 " +
+                "7e\',\'eType\',\'machine\',null);SET FOREIGN_KEY_CHECKS = 1;";
+            string bugQuery = "SELECT name,value FROM Attribute WHERE " +
+                "foreignuuid=\'d0450f050a0dfd8e00e6da7bda3bb07e\'";
+
+            execSQL("SET FOREIGN_KEY_CHECKS=0");
+            execSQL("DROP TABLE IF EXISTS Attribute");
+            execSQL("CREATE TABLE IF NOT EXISTS Attribute (uuid char(32) NOT NULL," +
+                "foreignuuid char(32), name character varying(254), value character varying(254)," +
+                "fid integer, PRIMARY KEY (uuid), INDEX foreignuuid (foreignuuid), " +
+                "INDEX name (name(16)), INDEX value (value(8)), CONSTRAINT `attribute_fk_1` " +
+                "FOREIGN KEY (`foreignuuid`) REFERENCES `Category` (`uuid`) ON DELETE CASCADE" +
+                ") CHARACTER SET utf8 ENGINE=InnoDB;");
+
+            execSQL("DROP TABLE IF EXISTS Category");
+            execSQL("CREATE TABLE IF NOT EXISTS Category (uuid char(32) NOT NULL," +
+                "id character varying(254), parentuuid char(32), name character varying(254)," +
+                "sort integer, PRIMARY KEY (uuid), INDEX parentuuid (parentuuid), INDEX id (id)," +
+                "CONSTRAINT `parent_fk_1` FOREIGN KEY (`parentuuid`) REFERENCES `Category` " +
+                "(`uuid`) ON DELETE CASCADE) CHARACTER SET utf8 ENGINE=InnoDB;");
+            execSQL("SET FOREIGN_KEY_CHECKS=1");
+
+            try
+            {
+                conn.InfoMessage += new MySqlInfoMessageEventHandler(conn_InfoMessage);
+                MySqlCommand cmd = new MySqlCommand(importQuery, conn);
+                cmd.ExecuteNonQuery();
+
+                for (int i = 0; i <= 5000; i++)
+                {
+                    cmd.CommandText = deleteQuery;
+                    cmd.ExecuteNonQuery();
+
+                    cmd.CommandText = insertQuery;
+                    cmd.ExecuteNonQuery();
+
+                    cmd.CommandText = bugQuery;
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        reader.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
+
+        void conn_InfoMessage(object sender, MySqlInfoMessageEventArgs args)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
     }
 }

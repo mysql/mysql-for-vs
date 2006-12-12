@@ -33,7 +33,7 @@ namespace MySql.Data.MySqlClient.Tests
 	{
 		public PoolingTests() : base()
 		{
-			csAdditions = ";pooling=true; connection reset=true";
+			csAdditions = ";pooling=true; connection reset=true;";
 		}
 
 		[TestFixtureSetUp]

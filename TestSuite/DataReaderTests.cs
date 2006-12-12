@@ -818,7 +818,8 @@ namespace MySql.Data.MySqlClient.Tests
         {
             execSQL("DROP TABLE IF EXISTS test");
             execSQL("CREATE TABLE test (id int, PRIMARY KEY(id))");
-            MySqlCommand cmd = new MySqlCommand("SHOW INDEX FROM test FROM test", conn);
+            MySqlCommand cmd = new MySqlCommand(
+                String.Format("SHOW INDEX FROM test FROM {0}", database), conn);
             MySqlDataReader reader = null;
             try
             {
@@ -858,5 +859,21 @@ namespace MySql.Data.MySqlClient.Tests
 				Assert.IsNull(dt);
 			}
 		}
+
+        /// <summary>
+        /// Bug #24765  	Retrieving empty fields results in check for isDBNull
+        /// </summary>
+        [Test]
+        public void IsDbNullOnNonNullFields()
+        {
+            execSQL("INSERT INTO test (id, name) VALUES (1, '')");
+
+            MySqlCommand cmd = new MySqlCommand("SELECT * FROM test", conn);
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                Assert.IsTrue(reader.Read());
+                Assert.IsFalse(reader.IsDBNull(1));
+            }
+        }
 	}
 }

@@ -89,18 +89,18 @@ namespace MySql.Data.MySqlClient.Tests
             MySqlDataAdapter da = cb.DataAdapter;
             cb.ConflictOption = ConflictOption.OverwriteChanges;
 			DataTable dt = new DataTable();
-			da.Fill( dt );
-			Assert.AreEqual( 1, dt.Rows.Count );
+			da.Fill(dt);
+			Assert.AreEqual(1, dt.Rows.Count);
 
 			execSQL("UPDATE Test SET name='Test2' WHERE id=1");
 
 			dt.Rows[0]["name"] = "Test3";
-			Assert.AreEqual( 1, da.Update( dt ) );
+			Assert.AreEqual(1, da.Update(dt));
 
 			dt.Rows.Clear();
-			da.Fill( dt );
-			Assert.AreEqual( 1, dt.Rows.Count );
-			Assert.AreEqual( "Test3", dt.Rows[0]["name"] );			
+			da.Fill(dt);
+			Assert.AreEqual(1, dt.Rows.Count);
+			Assert.AreEqual("Test3", dt.Rows[0]["name"]);			
 		}
 
 		[Test]
@@ -187,7 +187,8 @@ namespace MySql.Data.MySqlClient.Tests
 
 			conn.ChangeDatabase("mysql");
 
-			MySqlDataAdapter da = new MySqlDataAdapter("SELECT id, name FROM test.test", conn);
+			MySqlDataAdapter da = new MySqlDataAdapter(
+                String.Format("SELECT id, name FROM {0}.test", database), conn);
 			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
 			cb.ToString();  // keep the compiler happy
 			DataSet ds = new DataSet();
@@ -196,10 +197,10 @@ namespace MySql.Data.MySqlClient.Tests
 			ds.Tables[0].Rows[0]["id"] = 4;
 			DataSet changes = ds.GetChanges();
 			da.Update(changes);
-			ds.Merge( changes );
+			ds.Merge(changes);
 			ds.AcceptChanges();
 			
-			conn.ChangeDatabase("test");
+			conn.ChangeDatabase(database);
 		}
 
 		/// <summary>

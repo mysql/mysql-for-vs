@@ -79,6 +79,48 @@ namespace MySql.Data.MySqlClient.Tests
             cmd.Cancel();
         }
 
+        int stateChangeCount;
+        [Test]
+        public void WaitTimeoutExpiring()
+        {
+            MySqlConnection c = new MySqlConnection(GetConnectionString(true));
+            c.Open();
+            c.StateChange += new StateChangeEventHandler(c_StateChange);
+
+            // set the session wait timeout on this new connection
+            MySqlCommand cmd = new MySqlCommand("SET SESSION interactive_timeout=10", c);
+            cmd.ExecuteNonQuery();
+            cmd.CommandText = "SET SESSION wait_timeout=10";
+            cmd.ExecuteNonQuery();
+
+            stateChangeCount = 0;
+            // now wait 10 seconds
+            System.Threading.Thread.Sleep(15000);
+
+            try
+            {
+                cmd.CommandText = "SELECT now()";
+                object date = cmd.ExecuteScalar();
+            }
+            catch (Exception) { }
+            Assert.AreEqual(1, stateChangeCount);
+            Assert.AreEqual(ConnectionState.Closed, c.State);
+
+            c = new MySqlConnection(GetConnectionString(true));
+            c.Open();
+            cmd = new MySqlCommand("SELECT now() as thetime, database() as db", c);
+            using (MySqlDataReader r = cmd.ExecuteReader())
+            {
+                Assert.IsTrue(r.Read());
+            }
+        }
+
+        void c_StateChange(object sender, StateChangeEventArgs e)
+        {
+            stateChangeCount++;
+        }
+
+
         [Category("5.0")]
         [Test]
         [Category("NotWorking")]

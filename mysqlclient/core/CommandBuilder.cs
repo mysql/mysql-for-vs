@@ -90,7 +90,7 @@ namespace MySql.Data.MySqlClient
 		public static void DeriveParameters(MySqlCommand command)
 		{
 			if (!command.Connection.driver.Version.isAtLeast(5,0,0))
-				throw new MySqlException("DeriveParameters is not supported on versions " +
+				throw new MySqlException("DeriveParameters is not supported on MySQL versions " +
 					"prior to 5.0");
 
             // retrieve the proc definitino from the cache.

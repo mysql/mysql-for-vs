@@ -144,7 +144,7 @@ namespace MySql.Data.MySqlClient.Tests
 			c.Open();
 			Assert.IsTrue(c.State == ConnectionState.Open);
 
-			Assert.AreEqual("test", c.Database.ToLower());
+			Assert.AreEqual(database, c.Database.ToLower());
 
 			c.ChangeDatabase("mysql");
 

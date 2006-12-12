@@ -27,6 +27,7 @@ using System.ComponentModel;
 using System.Globalization;
 using MySql.Data.Common;
 using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace MySql.Data.MySqlClient
 {
@@ -520,6 +521,13 @@ namespace MySql.Data.MySqlClient
 		/// <returns>A <see cref="DataTable"/> that contains schema information.</returns>
 		public override DataTable GetSchema(string collectionName, string[] restrictionValues)
 		{
+/*            string msg = String.Format("collection = {0}", collectionName);
+            foreach (string s in restrictionValues)
+            {
+                msg += String.Format(" res={0}", s);
+            }
+            MessageBox.Show(msg);
+            */
 			if (collectionName == null)
 				collectionName = SchemaProvider.MetaCollection;
 			return schemaProvider.GetSchema(collectionName, restrictionValues);
