@@ -107,15 +107,15 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void TestPersistSecurityInfoCachingPasswords() 
 		{
-			string connStr = String.Format("database=test;server={0};user id={1};Password={2}; pooling=false",
-				host, this.user, this.password );
-			MySqlConnection c = new MySqlConnection( connStr );
+			string connStr = String.Format("database={3};test;server={0};user id={1};Password={2};" +
+                "pooling=false", host, this.user, this.password, database);
+			MySqlConnection c = new MySqlConnection(connStr);
 			c.Open();
 			c.Close();
 
 			// this shouldn't work
-			connStr = String.Format("database=test;server={0};user id={1};Password={2}; pooling=false",
-				host, this.user, "bad_password" );
+			connStr = String.Format("database={3};server={0};user id={1};Password={2}; pooling=false",
+				host, this.user, "bad_password", database);
 			c = new MySqlConnection( connStr );
 			try 
 			{
@@ -225,15 +225,14 @@ namespace MySql.Data.MySqlClient.Tests
 		[Category("4.1")]
 		public void ConnectingAsUTF8()
 		{
-			execSQL("CREATE Database IF NOT EXISTS test2 DEFAULT CHARACTER SET utf8");
-
-			string connStr = String.Format("server={0};user id={1}; password={2}; database=test2;pooling=false;charset=utf8",
-				host, user, password);
+            string connStr = GetConnectionString(true) + ";charset=utf8";
 			MySqlConnection c = new MySqlConnection(connStr);
 			c.Open();
 
-			MySqlCommand cmd = new MySqlCommand("DROP TABLE IF EXISTS test;CREATE TABLE test (id varbinary(16), active bit)", c);
+			MySqlCommand cmd = new MySqlCommand("DROP TABLE IF EXISTS test", c);
 			cmd.ExecuteNonQuery();
+            cmd.CommandText = "CREATE TABLE test (id varbinary(16), active bit) CHARACTER SET utf8";
+            cmd.ExecuteNonQuery();
 			cmd.CommandText = "INSERT INTO test (id, active) VALUES (CAST(0x1234567890 AS Binary), true)";
 			cmd.ExecuteNonQuery();
 			cmd.CommandText = "INSERT INTO test (id, active) VALUES (CAST(0x123456789a AS Binary), true)";
@@ -263,8 +262,6 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 			
 			d.Close();
-
-			execSQL("DROP DATABASE IF EXISTS test2");
 		}
 
 		/// <summary>
