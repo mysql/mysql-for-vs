@@ -258,5 +258,42 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.Fail(ex.Message);
             }
 		}
+
+        /// <summary>
+        /// Bug #23862 Problem with CommandBuilder 'GetInsertCommand' method 
+        /// </summary>
+        [Test]
+        public void AutoIncrementColumnsOnInsert()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test (id INT UNSIGNED NOT NULL AUTO_INCREMENT, " +
+                "name VARCHAR(100), PRIMARY KEY(id))");
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
+            MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
+
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            dt.Columns[0].AutoIncrement = true;
+            //Assert.IsTrue(dt.Columns[0].AutoIncrement);
+            dt.Columns[0].AutoIncrementSeed = -1;
+            dt.Columns[0].AutoIncrementStep = -1;
+            DataRow row = dt.NewRow();
+            row["name"] = "Test";
+
+            try
+            {
+                dt.Rows.Add(row);
+                da.Update(dt);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            dt.Clear();
+            da.Fill(dt);
+            Assert.AreEqual(1, dt.Rows.Count);
+            Assert.AreEqual(1, dt.Rows[0]["id"]);
+            Assert.AreEqual("Test", dt.Rows[0]["name"]);
+        }
 	}
 }
