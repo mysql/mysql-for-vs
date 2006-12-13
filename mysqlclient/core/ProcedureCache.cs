@@ -55,22 +55,24 @@ namespace MySql.Data.MySqlClient
 		public DataSet GetProcedure(MySqlConnection conn, string spName)
 		{
 			int hash = spName.GetHashCode();
-			DataSet ds = (DataSet)procHash[hash];
-			if (ds == null)
-			{
-				ds = AddNew(conn, spName);
-				conn.PerfMonitor.AddHardProcedureQuery();
-				if (conn.Settings.Logging)
-					Logger.LogInformation(String.Format(
-						 Resources.HardProcQuery, spName));
-			}
-			else
-			{
-				conn.PerfMonitor.AddSoftProcedureQuery();
-				if (conn.Settings.Logging)
-					Logger.LogInformation(String.Format(
-						 Resources.SoftProcQuery, spName));
-			}
+            DataSet ds = null;
+
+            ds = (DataSet)procHash[hash];
+            if (ds == null)
+            {
+                ds = AddNew(conn, spName);
+                conn.PerfMonitor.AddHardProcedureQuery();
+                if (conn.Settings.Logging)
+                    Logger.LogInformation(String.Format(
+                         Resources.HardProcQuery, spName));
+            }
+            else
+            {
+                conn.PerfMonitor.AddSoftProcedureQuery();
+                if (conn.Settings.Logging)
+                    Logger.LogInformation(String.Format(
+                         Resources.SoftProcQuery, spName));
+            }
 			return ds;
 		}
 
@@ -82,8 +84,14 @@ namespace MySql.Data.MySqlClient
 				if (procHash.Keys.Count == maxSize)
 					TrimHash();
 				int hash = spName.GetHashCode();
-				procHash.Add(hash, procData);
-				hashQueue.Enqueue(hash);
+                lock (procHash.SyncRoot)
+                {
+                    if (!procHash.ContainsKey(hash))
+                    {
+                        procHash[hash] = procData;
+                        hashQueue.Enqueue(hash);
+                    }
+                }
 			}
 			return procData;
 		}
