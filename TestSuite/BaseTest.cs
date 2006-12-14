@@ -63,6 +63,7 @@ namespace MySql.Data.MySqlClient.Tests
 #if NET20
             string strPort = ConfigurationManager.AppSettings["port"];
             string strDatabase = ConfigurationManager.AppSettings["database"];
+            string strDatabase1 = ConfigurationManager.AppSettings["database1"];
             string strUserId = ConfigurationManager.AppSettings["userid"];
             string strPassword = ConfigurationManager.AppSettings["password"];
             string strPipeName = ConfigurationManager.AppSettings["pipename"];
@@ -70,6 +71,7 @@ namespace MySql.Data.MySqlClient.Tests
 #else
             string strPort = ConfigurationSettings.AppSettings["port"];
             string strDatabase = ConfigurationSettings.AppSettings["database"];
+            string strDatabase1 = ConfigurationSettings.AppSettings["database1"];
             string strUserId = ConfigurationSettings.AppSettings["userid"];
             string strPassword = ConfigurationSettings.AppSettings["password"];
             string strPipeName = ConfigurationSettings.AppSettings["pipename"];
@@ -79,6 +81,8 @@ namespace MySql.Data.MySqlClient.Tests
                 port = Int32.Parse(strPort);
             if (strDatabase != null)
                 databases[0] = strDatabase;
+            if (strDatabase1 != null)
+                databases[1] = strDatabase1;
             if (strUserId != null)
                 user = strUserId;
             if (strPassword != null)

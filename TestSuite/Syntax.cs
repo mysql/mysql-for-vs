@@ -135,8 +135,6 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void LoadDataLocalInfile() 
 		{
-			execSQL("set max_allowed_packet=250000000");
-
 			string connString = conn.ConnectionString + ";pooling=false";
 			MySqlConnection c = new MySqlConnection(connString);
 			c.Open();

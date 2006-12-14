@@ -193,7 +193,8 @@ namespace MySql.Data.MySqlClient.Tests
 				}
 
 				suExecSQL("GRANT ALL ON *.* to 'nopass'@'%'");
-				suExecSQL("FLUSH PRIVILEGES");
+                suExecSQL("GRANT ALL ON *.* to 'nopass'@'localhost'");
+                suExecSQL("FLUSH PRIVILEGES");
 
 				// connect with no password
                 connStr2 = GetConnectionStringEx("nopass", null, false);
@@ -325,6 +326,7 @@ namespace MySql.Data.MySqlClient.Tests
 		public void ConnectWithQuotePassword()
 		{
 			suExecSQL("GRANT ALL ON *.* to 'quotedUser'@'%' IDENTIFIED BY '\"'");
+            suExecSQL("GRANT ALL ON *.* to 'quotedUser'@'localhost' IDENTIFIED BY '\"'");
             string connStr = GetConnectionStringEx("quotedUser", null, false);
             connStr += ";pwd='\"'";
 			MySqlConnection c = new MySqlConnection(connStr);

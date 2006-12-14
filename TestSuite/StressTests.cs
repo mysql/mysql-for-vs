@@ -56,8 +56,6 @@ namespace MySql.Data.MySqlClient.Tests
 			// currently do not test this with compression
 			if (conn.UseCompression) return;
 
-			execSQL("set max_allowed_packet=35000000");
-
 			MySqlConnection c = new MySqlConnection(conn.ConnectionString + ";pooling=false");
 			c.Open();
 
