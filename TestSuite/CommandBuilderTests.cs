@@ -185,12 +185,11 @@ namespace MySql.Data.MySqlClient.Tests
 			execSQL("INSERT INTO test (id, name) VALUES (2,'test2')");
 			execSQL("INSERT INTO test (id, name) VALUES (3,'test3')");
 
-			conn.ChangeDatabase("mysql");
+			conn.ChangeDatabase(databases[1]);
 
 			MySqlDataAdapter da = new MySqlDataAdapter(
-                String.Format("SELECT id, name FROM {0}.test", database), conn);
+                String.Format("SELECT id, name FROM {0}.test", databases[0]), conn);
 			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
-			cb.ToString();  // keep the compiler happy
 			DataSet ds = new DataSet();
 			da.Fill(ds);
 
@@ -200,7 +199,7 @@ namespace MySql.Data.MySqlClient.Tests
 			ds.Merge(changes);
 			ds.AcceptChanges();
 			
-			conn.ChangeDatabase(database);
+			conn.ChangeDatabase(databases[0]);
 		}
 
 		/// <summary>

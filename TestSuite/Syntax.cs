@@ -135,11 +135,14 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void LoadDataLocalInfile() 
 		{
-			execSQL("set @@global.max_allowed_packet=250000000");
+			execSQL("set max_allowed_packet=250000000");
 
 			string connString = conn.ConnectionString + ";pooling=false";
 			MySqlConnection c = new MySqlConnection(connString);
 			c.Open();
+
+            MySqlCommand cmd = new MySqlCommand("SET max_allowed_packet=250000000", c);
+            cmd.ExecuteNonQuery();
 
 			string path = Path.GetTempFileName();
 			StreamWriter sw = new StreamWriter(path);
@@ -149,7 +152,7 @@ namespace MySql.Data.MySqlClient.Tests
 			sw.Close();
 
 			path = path.Replace(@"\", @"\\");
-			MySqlCommand cmd = new MySqlCommand("LOAD DATA LOCAL INFILE '" + path + "' INTO TABLE Test FIELDS TERMINATED BY ','", c);
+			cmd.CommandText = "LOAD DATA LOCAL INFILE '" + path + "' INTO TABLE Test FIELDS TERMINATED BY ','";
 
 			object cnt = 0;
 			try 
@@ -167,7 +170,6 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual(2000000, cnt);
 
 			c.Close();
-			execSQL("set @@global.max_allowed_packet=1047256");
 		}
 
 		[Test]

@@ -467,7 +467,7 @@ namespace MySql.Data.MySqlClient.Tests
 			try
 			{
 				c.Open();
-				MySqlCommand cmd2 = new MySqlCommand(String.Format("use {0}", database), c);
+				MySqlCommand cmd2 = new MySqlCommand(String.Format("use {0}", databases[0]), c);
 				cmd2.ExecuteNonQuery();
 
 				MySqlCommand cmd = new MySqlCommand("spTest", c);
@@ -478,7 +478,7 @@ namespace MySql.Data.MySqlClient.Tests
 				cmd2.CommandText = "use mysql";
 				cmd2.ExecuteNonQuery();
 
-				cmd.CommandText = String.Format("{0}.spTest", database);
+				cmd.CommandText = String.Format("{0}.spTest", databases[0]);
 				val = cmd.ExecuteScalar();
 				Assert.AreEqual(4, val);
 			}

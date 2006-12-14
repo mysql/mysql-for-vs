@@ -376,7 +376,7 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void BlobBiggerThanMaxPacket()
 		{
-			execSQL("set @@global.max_allowed_packet=500000");
+			execSQL("set max_allowed_packet=500000");
 
 			execSQL("DROP TABLE IF EXISTS test");
 			execSQL("CREATE TABLE test (id INT(10), image BLOB)");
@@ -385,8 +385,11 @@ namespace MySql.Data.MySqlClient.Tests
 			try
 			{
 				c.Open();
+                MySqlCommand cmd = new MySqlCommand("SET max_allowed_packet=500000", c);
+                cmd.ExecuteNonQuery();
+
 				byte[] image = Utils.CreateBlob(1000000);
-				MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES(NULL, ?image)", c);
+                cmd.CommandText = "INSERT INTO test VALUES(NULL, ?image)";
 				cmd.Parameters.Add("?image", image);
 				cmd.ExecuteNonQuery();
 				Assert.Fail("This should have thrown an exception");
@@ -399,7 +402,6 @@ namespace MySql.Data.MySqlClient.Tests
 			{
 				if (c != null)
 					c.Close();
-				execSQL("set @@global.max_allowed_packet=2000000");
 			}
 		}
 	}

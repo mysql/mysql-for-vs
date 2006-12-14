@@ -342,22 +342,21 @@ namespace MySql.Data.MySqlClient.Tests
 		[Category("4.1")]
 		public void VariousCollations() 
 		{
-			execSQL("DROP DATABASE IF EXISTS dbtest");
-			execSQL("DROP TABLE IF EXISTS test_tbl");
-			execSQL("CREATE DATABASE `dbtest` DEFAULT CHARACTER SET utf8 COLLATE utf8_swedish_ci");
 			execSQL("CREATE TABLE `test_tbl` ( `test` VARCHAR( 255 ) NOT NULL) CHARACTER SET utf8 COLLATE utf8_swedish_ci TYPE = MYISAM");
 			execSQL("INSERT INTO test_tbl VALUES ('myval')");
-			try 
-			{
-				MySqlCommand cmd = new MySqlCommand("SELECT test FROM test_tbl", conn);
-				cmd.ExecuteScalar();
-			}
-			catch (Exception ex) 
-			{
-				Assert.Fail( ex.Message );
-			}
-			execSQL("DROP TABLE test_tbl");
-			execSQL("DROP DATABASE dbtest");
+            try
+            {
+                MySqlCommand cmd = new MySqlCommand("SELECT test FROM test_tbl", conn);
+                cmd.ExecuteScalar();
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                execSQL("DROP TABLE test_tbl");
+            }
 		}
 	}
 }

@@ -51,7 +51,10 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 			conn.InfoMessage += new MySqlInfoMessageEventHandler(WarningsInfoMessage);
 
-			MySqlCommand cmd = new MySqlCommand("SELECT * FROM mysql.host WHERE TIME('2005/6/21')", conn);
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test (name VARCHAR(10))");
+
+			MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES ('12345678901')", conn);
 			MySqlDataReader reader = null;
 
 			try 

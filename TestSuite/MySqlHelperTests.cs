@@ -24,6 +24,7 @@ using System.IO;
 using System.Globalization;
 using System.Threading;
 using NUnit.Framework;
+using System.Text;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -56,8 +57,11 @@ namespace MySql.Data.MySqlClient.Tests
 
 			try 
 			{
-				reader = MySqlHelper.ExecuteReader(this.GetConnectionString(true),
-					"SELECT * FROM mysql.host WHERE TIME('2005/6/21')");
+                StringBuilder sb = new StringBuilder();
+                for (int i=0; i < 254; i++)
+                    sb.Append('a');
+                string sql = "INSERT INTO test (name) VALUES ('" + sb.ToString() + "')";
+				reader = MySqlHelper.ExecuteReader(this.GetConnectionString(true), sql);
 			}
 			catch (Exception ex)
 			{

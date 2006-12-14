@@ -38,20 +38,27 @@ namespace MySql.Data.MySqlClient.Tests
 		protected string user;
 		protected string password;
         protected int port;
-        protected string database;
         protected string pipeName;
         protected string memoryName;
+        protected string[] databases;
+        protected string rootUser;
+        protected string rootPassword;
 
 		public BaseTest()
 		{
+            databases = new string[2];
+
             csAdditions = ";pooling=false;";
             user = "root";
             password = "";
             host = "localhost";
-            database = "test";
+            databases[0] = "test";
+            databases[1] = "mysql";
             port = 3306;
             pipeName = "MYSQL";
             memoryName = "MYSQL";
+            rootUser = "su";
+            rootPassword = "su";
 
 #if NET20
             string strPort = ConfigurationManager.AppSettings["port"];
@@ -71,7 +78,7 @@ namespace MySql.Data.MySqlClient.Tests
             if (strPort != null)
                 port = Int32.Parse(strPort);
             if (strDatabase != null)
-                database = strDatabase;
+                databases[0] = strDatabase;
             if (strUserId != null)
                 user = strUserId;
             if (strPassword != null)
@@ -92,10 +99,22 @@ namespace MySql.Data.MySqlClient.Tests
 			string connStr = String.Format("server={0};user id={1};password={2};" +
 				 "persist security info=true;{3}", host, user, password, csAdditions);
 			if (includedb)
-                connStr += String.Format("database={0};", database);
+                connStr += String.Format("database={0};", databases[0]);
 			connStr += GetConnectionInfo();
 			return connStr;
 		}
+
+        protected string GetConnectionStringEx(string user, string pw, bool includedb)
+        {
+            string connStr = String.Format("server={0};user id={1};" +
+                 "persist security info=true;{2}", host, user, csAdditions);
+            if (includedb)
+                connStr += String.Format("database={0};", databases[0]);
+            if (pw != null)
+                connStr += String.Format("password={0};", pw);
+            connStr += GetConnectionInfo();
+            return connStr;
+        }
 
 		protected void Open()
 		{
@@ -202,6 +221,19 @@ namespace MySql.Data.MySqlClient.Tests
 				sql += " TYPE=" + engine;
 			execSQL(sql);
 		}
+
+        protected void suExecSQL(string sql)
+        {
+			string connStr = String.Format("server={0};user id={1};password={2};" +
+				 "persist security info=true;{3}", host, rootUser, rootPassword, csAdditions);
+			connStr += GetConnectionInfo();
+
+            MySqlConnection c = new MySqlConnection(connStr);
+            c.Open();
+            MySqlCommand cmd = new MySqlCommand(sql, c);
+            cmd.ExecuteNonQuery();
+            c.Close();
+        }
 
 		protected void execSQL(string sql)
 		{
