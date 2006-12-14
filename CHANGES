@@ -6,6 +6,12 @@ Version 5.0.3
   Bug #24565 Inferring DbType fails when reusing commands and the first time the value is nul 
   Bug #24661 mysql-connector-net-5.0.2-beta Driver.IsTooOld() Error.... 
   Bug #23905 Stored procedure usages is not thread safe 
+  Bug #25033 Exception raised/ HANG if no SELECT privileges granted for stored procedure call 
+      [this is a correction;  a previous change log entry indicated that Connector/Net
+       no longer required select privs on mysql database.  This is not true and select privs
+       are required. This will be fixed when the server exposes procedure parameters via
+       information schema.]
+  Bug #25013 Return Value parameter not found 
 
   Other changes
   -------------

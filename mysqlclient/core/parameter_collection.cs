@@ -126,8 +126,10 @@ namespace MySql.Data.MySqlClient
 				items[i] = value;
 				return value;
 			}
-			items.Add(value);
-			return value;
+			int index = items.Add(value);
+            hash.Add(value.ParameterName, index);
+            ciHash.Add(value.ParameterName, index);
+            return value;
 		}
 
 		/// <summary>

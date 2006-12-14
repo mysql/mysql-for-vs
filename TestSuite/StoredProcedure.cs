@@ -434,7 +434,8 @@ namespace MySql.Data.MySqlClient.Tests
 
 		/// <summary>
 		/// Bug #10644 Cannot call a stored function directly from Connector/Net 
-		/// </summary>
+		/// Bug #25013 Return Value parameter not found 
+        /// </summary>
 		[Test]
 		public void CallingStoredFunctionasProcedure()
 		{
@@ -442,10 +443,13 @@ namespace MySql.Data.MySqlClient.Tests
 				" LANGUAGE SQL DETERMINISTIC BEGIN return valin * 2; END");
 			MySqlCommand cmd = new MySqlCommand("fnTest", conn);
 			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("?valin", 22);
-			cmd.Parameters.Add("?retval", MySqlDbType.Int32);
-			cmd.Parameters[1].Direction = ParameterDirection.ReturnValue;
-			cmd.ExecuteNonQuery();
+            cmd.Parameters.Add("?valin", 22);
+            MySqlParameter retVal = cmd.CreateParameter();
+            retVal.ParameterName = "?retval";
+            retVal.MySqlDbType = MySqlDbType.Int32;
+            retVal.Direction = ParameterDirection.ReturnValue;
+            cmd.Parameters.Add(retVal);
+            cmd.ExecuteNonQuery();
 			Assert.AreEqual(44, cmd.Parameters[1].Value);
 		}
 
