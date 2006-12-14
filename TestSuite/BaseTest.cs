@@ -61,6 +61,7 @@ namespace MySql.Data.MySqlClient.Tests
             rootPassword = "su";
 
 #if NET20
+            string strHost = ConfigurationManager.AppSettings["host"];
             string strPort = ConfigurationManager.AppSettings["port"];
             string strDatabase = ConfigurationManager.AppSettings["database"];
             string strDatabase1 = ConfigurationManager.AppSettings["database1"];
@@ -69,6 +70,7 @@ namespace MySql.Data.MySqlClient.Tests
             string strPipeName = ConfigurationManager.AppSettings["pipename"];
             string strMemName = ConfigurationManager.AppSettings["memory_name"];
 #else
+            string strHost = ConfigurationSettings.AppSettings["host"];
             string strPort = ConfigurationSettings.AppSettings["port"];
             string strDatabase = ConfigurationSettings.AppSettings["database"];
             string strDatabase1 = ConfigurationSettings.AppSettings["database1"];
@@ -77,6 +79,8 @@ namespace MySql.Data.MySqlClient.Tests
             string strPipeName = ConfigurationSettings.AppSettings["pipename"];
             string strMemName = ConfigurationSettings.AppSettings["memory_name"];
 #endif
+            if (strHost != null)
+                host = strHost;
             if (strPort != null)
                 port = Int32.Parse(strPort);
             if (strDatabase != null)
