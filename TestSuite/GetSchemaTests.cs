@@ -87,9 +87,9 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.IsTrue(foundZero);
             Assert.IsTrue(foundOne);
 
-            dt = conn.GetSchema("Databases", new string[1] { "mysql" });
+            dt = conn.GetSchema("Databases", new string[1] { databases[0] });
             Assert.AreEqual(1, dt.Rows.Count);
-            Assert.AreEqual("mysql", dt.Rows[0][1].ToString().ToLower());
+            Assert.AreEqual(databases[0], dt.Rows[0][1].ToString().ToLower());
         }
 
         [Test]
