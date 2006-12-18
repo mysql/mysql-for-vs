@@ -168,6 +168,18 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
+        [Category("NotWorking")]
+        [Test]
+        public void AnonymousLogin()
+        {
+            suExecSQL(String.Format("GRANT ALL ON *.* to ''@'{0}' IDENTIFIED BY 'set_to_blank'", host));
+            suExecSQL("UPDATE mysql.user SET password='' WHERE password='set_to_blank'");
+
+            MySqlConnection c = new MySqlConnection(String.Empty);
+            c.Open();
+            c.Close();
+        }
+
 		[Test]
 		public void ConnectInVariousWays()
 		{
@@ -180,17 +192,6 @@ namespace MySql.Data.MySqlClient.Tests
 				MySqlConnection c = new MySqlConnection(connStr2);
 				c.Open();
 				c.Close();
-
-                // TODO: make anonymous login work
-                suExecSQL("GRANT ALL ON *.* to '' IDENTIFIED BY ''");
-
-				// connect with all defaults
-				if (connStr.IndexOf("localhost") != -1) 
-				{
-					c = new MySqlConnection(String.Empty);
-					c.Open();
-					c.Close();
-				}
 
 				suExecSQL("GRANT ALL ON *.* to 'nopass'@'%'");
                 suExecSQL("GRANT ALL ON *.* to 'nopass'@'localhost'");
