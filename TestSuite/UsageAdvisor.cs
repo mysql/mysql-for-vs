@@ -24,14 +24,14 @@ using NUnit.Framework;
 
 namespace MySql.Data.MySqlClient.Tests
 {
-	[TestFixture()]
+	[TestFixture]
 	public class UsageAdvisorTests : BaseTest
 	{
 
 		[TestFixtureSetUp]
 		public void FixtureSetup()
 		{
-			csAdditions = ";Usage Advisor=true";
+			csAdditions = ";Usage Advisor=true;";
 			Open();
 
 			execSQL("DROP TABLE IF EXISTS Test");
