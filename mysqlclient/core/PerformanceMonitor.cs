@@ -39,22 +39,31 @@ namespace MySql.Data.MySqlClient
 
 			if (connection.Settings.UsePerformanceMonitor && procedureHardQueries == null)
 			{
-				procedureHardQueries = new PerformanceCounter(categoryName,
-					 "HardProcedureQueries", false);
-				procedureSoftQueries = new PerformanceCounter(categoryName,
-					 "SoftProcedureQueries", false);
+                try
+                {
+                    procedureHardQueries = new PerformanceCounter(categoryName,
+                         "HardProcedureQueries", false);
+                    procedureSoftQueries = new PerformanceCounter(categoryName,
+                         "SoftProcedureQueries", false);
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogException(ex);
+                }
 			}
 		}
 
 		public void AddHardProcedureQuery()
 		{
-			if (!connection.Settings.UsePerformanceMonitor) return;
+			if (!connection.Settings.UsePerformanceMonitor ||
+                procedureHardQueries == null) return;
 			procedureHardQueries.Increment();
 		}
 
 		public void AddSoftProcedureQuery()
 		{
-			if (!connection.Settings.UsePerformanceMonitor) return;
+			if (!connection.Settings.UsePerformanceMonitor ||
+                procedureSoftQueries == null) return;
 			procedureSoftQueries.Increment();
 		}
 	}
