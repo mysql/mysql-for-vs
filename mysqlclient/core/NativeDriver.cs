@@ -263,6 +263,7 @@ namespace MySql.Data.MySqlClient
 			// We may have some fields that are read differently based 
 			// on the version of the server we are connected to.
 			stream.Version = this.version;
+            stream.MaxBlockSize = maxSinglePacket;
 
 			isOpen = true;
 		}

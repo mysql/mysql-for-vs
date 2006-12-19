@@ -12,6 +12,7 @@ Version 5.0.3
        are required. This will be fixed when the server exposes procedure parameters via
        information schema.]
   Bug #25013 Return Value parameter not found 
+  Bug #25151 Reading from the stream has failed Exception in MySQL Connector 5.0.2 
 
   Other changes
   -------------
