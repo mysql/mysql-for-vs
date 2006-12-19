@@ -415,5 +415,23 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.Fail(ex.Message);
             }
         }
+
+        /// <summary>
+        /// Bug #25178 Addition message in error 
+        /// </summary>
+        [Test]
+        public void ErrorMessage()
+        {
+            MySqlCommand cmd = new MySqlCommand("SELEKT NOW() as theTime", conn);
+            try
+            {
+                object o = cmd.ExecuteScalar();
+            }
+            catch (MySqlException ex)
+            {
+                string s = ex.Message;
+                Assert.IsFalse(s.StartsWith("#"));
+            }
+        }
 	}
 }

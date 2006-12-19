@@ -163,6 +163,11 @@ namespace MySql.Data.MySqlClient
 
 				int code = ReadInteger(2);
 				string msg = ReadString();
+                if (msg.StartsWith("#"))
+                {
+                    string stateCode = msg.Substring(1, 5);
+                    msg = msg.Substring(6);
+                }
 				throw new MySqlException(msg, code);
 			}
 			isLastPacket = (peek == 0xfe && (inLength < 9));
