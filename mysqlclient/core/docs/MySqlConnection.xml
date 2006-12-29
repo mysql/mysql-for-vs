@@ -242,7 +242,9 @@ public void CreateMySqlConnection(string myConnString)
 		<para>You must explicitly commit or roll back the transaction using the <see cref="MySqlTransaction.Commit"/> or 
 		<see cref="MySqlTransaction.Rollback"/> method.
 		<note>If you do not specify an isolation level, the default isolation level is used. To specify an isolation 
-		level with the <see cref="BeginTransaction()"/> method, use the overload that takes the <I>iso</I> parameter.
+		level with the <see cref="BeginTransaction()"/> method, use the overload that takes the <I>iso</I> parameter.  Also
+    note that any attempt to begin a transaction while a transaction is in progress will throw an exception on MySQL 4.1 and higher.
+    On MySQL 4.0, an exception will not be thrown because servers 4.0 and earlier did not report their transacation status.
 		</note></para>
 	</remarks>
 	<example>

@@ -279,6 +279,10 @@ namespace MySql.Data.MySqlClient
 		/// <include file='docs/MySqlConnection.xml' path='docs/BeginTransaction1/*'/>
 		public new MySqlTransaction BeginTransaction(IsolationLevel iso)
 		{
+            // First check to see if we are in a current transaction
+            if ((driver.ServerStatus & ServerStatusFlags.InTransaction) != 0)
+                throw new InvalidOperationException(Resources.NoNestedTransactions);
+
 			//TODO: check note in help
 			if (State != ConnectionState.Open)
 				throw new InvalidOperationException(Resources.ConnectionNotOpen);
