@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?define ProductVersion="5.0.2"?>
+<?define ProductVersion="5.0.3"?>
 <?define ProductName="MySQL Connector Net $(var.ProductVersion)"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
-	<Product Id="E9E76B08-5DCB-47d4-B8FD-B8B0FD51932F" Name="$(var.ProductName)" Manufacturer="MySQL" Version="$(var.ProductVersion)" Language="1033">
+	<Product Id="7394c123-cacc-4ad2-82b8-c6992131af08" Name="$(var.ProductName)" Manufacturer="MySQL" Version="$(var.ProductVersion)" Language="1033">
 
-		<Package Id="B1855AEF-1ACC-4c06-AEF8-A6BDCD651598" Compressed="yes" InstallerVersion="200" Languages="1033" SummaryCodepage="1252" />
+		<Package Id="2bb12bc3-ad0f-4ffe-be09-7361268baf8b" Compressed="yes" InstallerVersion="200" Languages="1033" SummaryCodepage="1252" />
 		
 		<Media Id="1" EmbedCab="yes" Cabinet="ConnectorNet.cab" CompressionLevel="high" />
 
@@ -34,7 +34,7 @@
 
 		<!-- Top level junk - readme, changelog, etc -->
 		<DirectoryRef Id='INSTALLDIR'>
-			<Component Id="BaseComponents" Guid="EDA8C4DA-432F-4eb5-AED4-A057C2B95BDC" DiskId="1">
+			<Component Id="BaseComponents" Guid="6cbae281-be1e-4952-8a5d-cb5d1ad799a9" DiskId="1">
 				<File Id="ChangeLog" Name="CLog" LongName="CHANGES" src="..\CHANGES" />
 				<File Id="RelNotes" Name="RelNotes" LongName="Release Notes.txt" src="..\Release Notes.txt" />
 				<?if $(var.IsGPL) = true ?>
@@ -49,12 +49,12 @@
 			
 		<!-- .Net 2.0 Binaries -->
 		<DirectoryRef Id='BinNet20'>
-			<Component Id="Net20" Guid="BA887AEB-53F3-4a54-AEEF-1E31C58EF0E5">
+			<Component Id="Net20" Guid="1b476514-8bcb-48a1-8b32-e477f520b450">
 				<File Id="CoreBin20" Name="MD20" LongName="MySql.Data.dll" src="..\mysqlclient\bin\net-2.0\$(var.build)\mysql.data.dll" DiskId="1"  />
 				<File Id="CoreBin20Config" Name="mdconfig" LongName="CustomAction.config" src="CustomAction.config" DiskId="1"/>
 				<Registry Id="vs80registry" Root="HKLM" Key="Software\Microsoft\VisualStudio\8.0\AssemblyFolders\MySQL Connector Net $(var.ProductVersion)" Type="string" KeyPath="yes" Value="[TARGETDIR]bin\.NET 2.0\" />
 			</Component>
-			<Component Id="GAC20" DiskId="1" Guid="36FCD23F-7319-40ba-9B1C-5C5DDE16C439">
+			<Component Id="GAC20" DiskId="1" Guid="50ec2fb6-f33e-48b8-80da-6ee57124e9ce">
 				<Condition><![CDATA[REGISTERGAC="1"]]></Condition>
 				<File Id="CoreBin20GAC" Name="MD20" LongName="MySql.Data.dll" src="..\mysqlclient\bin\net-2.0\$(var.build)\mysql.data.dll" Assembly=".net" KeyPath="yes" />
 			</Component>
@@ -62,7 +62,7 @@
 
 		<!-- Start menu junk -->
 		<DirectoryRef Id='ShortCutDir'>
-			<Component Id="StartMenuComponent" Guid="E7943593-5115-425c-BD1F-8D341CC50590">
+			<Component Id="StartMenuComponent" Guid="0cd164ab-5f94-4ed3-a7aa-8bbf805a87a0">
 				<Condition><![CDATA[CREATESTARTMENU="1"]]></Condition>
 				<Shortcut Id="S100" Name="Docs" LongName="Documentation" 
 					Description="Complete documentation for the connector" 
@@ -76,7 +76,7 @@
 		</DirectoryRef>		
 
 		<DirectoryRef Id='DocsDir'>
-			<Component Id="Docs" Guid="4F9C3D2F-86C3-44b3-A00B-030DDD2D24D6">
+			<Component Id="Docs" Guid="686fbf13-83a2-4f50-a002-3378328d4740">
 				<File Id="CoreCHM" Name="Docs" LongName="MySql.Data.chm" src="..\doc\MySql.Data.chm" DiskId="1" />
 			</Component>
 		</DirectoryRef>

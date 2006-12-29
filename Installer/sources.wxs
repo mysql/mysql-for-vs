@@ -2,13 +2,13 @@
 <Wix xmlns='http://schemas.microsoft.com/wix/2003/01/wi'>
   <Fragment Id='SourceFragment'>
     <DirectoryRef Id='SourceDir'>
-      <Component Id="TopLevelSrc" Guid="A2B68033-573D-4943-8CBA-1D3E4FF06385">
+      <Component Id="TopLevelSrc" Guid="0b171095-b9cb-4bab-8c0e-4b8e8247bfe0">
         <File Id="nantFile" Name="client.bld" LongName="client.build" src="..\client.build" DiskId="1"/>
         <File Id="sln2005" Name="MySql5.sln" LongName="MySqlClient.2005.sln" src="..\MySQLClient.2005.sln" DiskId="1"/>
         <File Id="sln2003" Name="MySql3.sln" LongName="MySqlClient.2003.sln" src="..\MySQLClient.2003.sln" DiskId="1"/>
       </Component>
       <Directory Id="clientFolder" Name="msc" LongName="MySqlClient">
-        <Component Id="ClientSrc" DiskId="1" Guid="F8D96273-EC96-4948-8649-BC653BA4953D">
+        <Component Id="ClientSrc" DiskId="1" Guid="14ffe0b2-329f-4981-ab1c-1d099ec958fa">
           <File Id="file0" Name="ASSEMB_1.CS" LongName="AssemblyInfo.cs" src="..\mysqlclient\AssemblyInfo.cs" />
           <File Id="file1" Name="CHARSE_1.CS" LongName="CharSetMap.cs" src="..\mysqlclient\CharSetMap.cs" />
           <File Id="file2" Name="command.cs" src="..\mysqlclient\command.cs" />
@@ -51,7 +51,7 @@
           <File Id="file46" Name="Instal_1.cs" LongName="Installer.cs" src="..\mysqlclient\Installer.cs"/>
         </Component>
         <Directory Id="commonFolder" Name="Common">
-          <Component Id="CommonSrc"  DiskId="1" Guid="9D5459FC-9866-4d4d-8838-385CCF75A6A8">
+          <Component Id="CommonSrc"  DiskId="1" Guid="e5726acb-91cc-4212-8d2b-594bee186f8c">
             <File Id="file179" Name="CONTEX_1.CS" LongName="ContextString.cs" src="..\mysqlclient\common\ContextString.cs" />
             <File Id="file180" Name="NAMEDP_1.CS" LongName="NamedPipeStream.cs" src="..\mysqlclient\common\NamedPipeStream.cs" />
             <File Id="file181" Name="NATIVE_1.CS" LongName="NativeMethods.cs" src="..\mysqlclient\common\NativeMethods.cs" />
@@ -65,7 +65,7 @@
           </Component>
         </Directory>
         <Directory Id="docSrcFolder" Name="Docs">
-          <Component Id="DocsSrc" DiskId="1" Guid="79FCD690-17C5-47a4-854C-C86544F96168">
+          <Component Id="DocsSrc" DiskId="1" Guid="9fa4a523-7578-4d1e-b682-6383c6663518">
             <File Id="file245" Name="MYSQLC_1.XML" LongName="MySqlCommand.xml" src="..\mysqlclient\docs\MySqlCommand.xml" />
             <File Id="file246" Name="MYSQLC_2.XML" LongName="MySqlCommandBuilder.xml" src="..\mysqlclient\docs\MySqlCommandBuilder.xml" />
             <File Id="file247" Name="MYSQLC_3.XML" LongName="MySqlConnection.xml" src="..\mysqlclient\docs\MySqlConnection.xml" />
@@ -80,7 +80,7 @@
           </Component>
         </Directory>
         <Directory Id="typesFolder" Name="Types">
-          <Component Id="TypesSrc" DiskId="1" Guid="A4F10442-785E-46f1-9153-16E8C59C5353">
+          <Component Id="TypesSrc" DiskId="1" Guid="00026aa3-136d-4379-a8e2-c12c72866890">
             <File Id="file299" Name="MetaData.cs" src="..\mysqlclient\Types\MetaData.cs" />
             <File Id="file300" Name="MYSQLB_1.CS" LongName="MySqlBinary.cs" src="..\mysqlclient\Types\MySqlBinary.cs" />
             <File Id="file301" Name="MySqlBit.cs" src="..\mysqlclient\Types\MySqlBit.cs" />
@@ -103,7 +103,7 @@
           </Component>
         </Directory>
         <Directory Id="zlibFolder" Name="zlib">
-          <Component Id="ZLibSrc" DiskId="1" Guid="C03F64B7-034F-44ac-868E-74C96B919CA4">
+          <Component Id="ZLibSrc" DiskId="1" Guid="5bf41c05-1d57-4a64-b8a6-e0bad6141317">
             <File Id="file500" Name="Adler32.cs" src="..\mysqlclient\zlib\Adler32.cs" />
             <File Id="file501" Name="Deflate.cs" src="..\mysqlclient\zlib\Deflate.cs" />
             <File Id="file502" Name="InfBlo_1.cs" LongName="InfBlocks.cs" src="..\mysqlclient\zlib\InfBlocks.cs" />
@@ -122,7 +122,7 @@
         </Directory>
       </Directory>
       <Directory Id="TestSuite" Name="ts" LongName="TestSuite">
-        <Component Id="TestSuiteSrc" DiskId="1" Guid="E0F549CB-3B88-4bea-9231-23F5FA9317A5">
+        <Component Id="TestSuiteSrc" DiskId="1" Guid="54eddace-adcc-44eb-bc25-eb69cbf278d3">
           <File Id="file402" Name="ASYNCT_1.CS" LongName="AsyncTests.cs" src="..\TestSuite\AsyncTests.cs" />
           <File Id="file403" Name="BaseTest.cs" src="..\TestSuite\BaseTest.cs" />
           <File Id="file404" Name="BLOBTE_1.CS" LongName="BlobTests.cs" src="..\TestSuite\BlobTests.cs" />
@@ -163,7 +163,7 @@
           <File Id="file445" Name="CONNEC_2.cs" LongName="ConnectionStringBuilder.cs" src="..\TestSuite\ConnectionStringBuilder.cs"/>
         </Component>
         <Directory Id="TSProperties" Name="tsp" LongName="Properties">
-          <Component Id="TestSuitePropSrc" DiskId="1" Guid="F06B71B0-B607-4dba-BFB3-A1900959FBCF">
+          <Component Id="TestSuitePropSrc" DiskId="1" Guid="45741f34-56c0-4186-aeb2-7218210bed7d">
             <File Id="file401" Name="ASSEMB_1.CS" LongName="AssemblyInfo.cs" src="..\TestSuite\Properties\AssemblyInfo.cs" />
           </Component>
         </Directory>

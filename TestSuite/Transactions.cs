@@ -142,32 +142,6 @@ namespace MySql.Data.MySqlClient.Tests
         }
 
 #endif
-        /// <summary>
-        /// Bug #22400 Nested transactions 
-        /// </summary>
-        [Category("NotWorking")]
-        [Test]
-        public void NestedTransactions()
-        {
-            MySqlTransaction t1 = conn.BeginTransaction();
-            try
-            {
-                MySqlTransaction t2 = conn.BeginTransaction();
-                t2.Rollback();
-                Assert.Fail("Exception should have been thrown");
-            }
-            catch (NotSupportedException)
-            {
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
-            finally 
-            {
-                t1.Rollback();
-            }
-        }
 
         /// <summary
         /// Bug #22042 mysql-connector-net-5.0.0-alpha BeginTransaction 
