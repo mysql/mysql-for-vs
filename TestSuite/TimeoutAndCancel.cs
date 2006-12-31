@@ -21,8 +21,8 @@
 using System;
 using System.Data;
 using System.IO;
-using NUnit.Framework;
 using System.Threading;
+using NUnit.Framework;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -58,7 +58,6 @@ namespace MySql.Data.MySqlClient.Tests
 
         [Category("5.0")]
         [Test]
-        [Category("NotWorking")]
         public void CancelSingleQuery()
         {
             // first we need a routine that will run for a bit
@@ -123,7 +122,6 @@ namespace MySql.Data.MySqlClient.Tests
 
         [Category("5.0")]
         [Test]
-        [Category("NotWorking")]
         public void TimeoutExpiring()
         {
             // first we need a routine that will run for a bit

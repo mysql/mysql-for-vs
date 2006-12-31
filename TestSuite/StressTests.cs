@@ -56,16 +56,10 @@ namespace MySql.Data.MySqlClient.Tests
 			// currently do not test this with compression
 			if (conn.UseCompression) return;
 
-			MySqlConnection c = new MySqlConnection(conn.ConnectionString + ";pooling=false");
-			c.Open();
-
 			byte[] dataIn = Utils.CreateBlob(len);
 			byte[] dataIn2 = Utils.CreateBlob(len);
 
-            MySqlCommand cmd = new MySqlCommand("SET max_allowed_packet=35000000", c);
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "INSERT INTO Test VALUES (?id, NULL, ?blob, NULL )";
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (?id, NULL, ?blob, NULL )", conn);
 			cmd.Parameters.Add(new MySqlParameter("?id", 1));
 			cmd.Parameters.Add(new MySqlParameter("?blob", dataIn));
 			try 
@@ -81,37 +75,32 @@ namespace MySql.Data.MySqlClient.Tests
 			cmd.Parameters[1].Value = dataIn2;
 			cmd.ExecuteNonQuery();
 
-
 			cmd.CommandText = "SELECT * FROM Test";
-			MySqlDataReader reader = null;
-			
-			try 
-			{
-				reader = cmd.ExecuteReader();
-				reader.Read();
-				byte[] dataOut = new byte[ len ];
-				long count = reader.GetBytes(2, 0, dataOut, 0, len);
-				Assert.AreEqual(len, count);
 
-				for (int i=0; i < len; i++)
-					Assert.AreEqual(dataIn[i], dataOut[i]);
+            try
+            {
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    reader.Read();
+                    byte[] dataOut = new byte[len];
+                    long count = reader.GetBytes(2, 0, dataOut, 0, len);
+                    Assert.AreEqual(len, count);
 
-				reader.Read();
-				count = reader.GetBytes(2, 0, dataOut, 0, len);
-				Assert.AreEqual(len, count);
+                    for (int i = 0; i < len; i++)
+                        Assert.AreEqual(dataIn[i], dataOut[i]);
 
-				for (int i=0; i < len; i++)
-					Assert.AreEqual(dataIn2[i], dataOut[i]);
-			}
-			catch (Exception ex) 
-			{
-				Assert.Fail(ex.Message);
-			}
-			finally 
-			{
-				if (reader != null) reader.Close();
-				c.Close();
-			}
+                    reader.Read();
+                    count = reader.GetBytes(2, 0, dataOut, 0, len);
+                    Assert.AreEqual(len, count);
+
+                    for (int i = 0; i < len; i++)
+                        Assert.AreEqual(dataIn2[i], dataOut[i]);
+                }
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
 		}
 
 		[Test]
