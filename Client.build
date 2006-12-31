@@ -4,10 +4,11 @@
 
 	<!-- filesets -->
 	<fileset id="Source">
-		<include name="mysqlclient/common/*.cs"/>
-		<include name="mysqlclient/Types/*.cs"/>
-		<include name="mysqlclient/zlib/*.cs"/>
-		<include name="mysqlclient/core/*.cs"/>
+		<include name="Driver/Source/*.cs"/>
+		<include name="Driver/Source/Common/*.cs"/>
+		<include name="Driver/Source/Properties/*.cs"/>
+		<include name="Driver/Source/Types/*.cs"/>
+		<include name="Driver/Source/ZLib/*.cs"/>
 	</fileset>
 
 	<if test="${not property::exists('debug')}">
@@ -34,13 +35,13 @@
 	<!-- core managed driver target -->	
 	<target name="compile-client" description="Core client target">
 		<property name="nant.settings.currentframework" value="${framework}"/>
-		<property name="outdir" value="mysqlclient/bin/${framework}/${buildType}"/>
+		<property name="outdir" value="Driver/bin/${framework}/${buildType}"/>
 		
  		<mkdir dir="${outdir}" failonerror="false"/>
  		
-		<resgen todir="mysqlclient/core">
+		<resgen todir="Driver/Source">
 			<resources>
-				<include name="mysqlclient/core/*.resx" />
+				<include name="Driver/Source/*.resx" />
 			</resources>
 		</resgen> 		
  		
@@ -49,8 +50,8 @@
 			doc="${outdir}/MySql.Data.xml">
 			<arg value="/nowarn:0679,1591,2029"/>
 			<resources prefix="MySql.Data.MySqlClient.Core">
-				<include name="mysqlclient/core/Resources.resources"/>
-				<include name="mysqlclient/core/ReservedWords.txt"/>
+				<include name="Driver/Source/Resources.resources"/>
+				<include name="Driver/Source/ReservedWords.txt"/>
 			</resources>
 			<references>
 				<include name="System.Data.dll"/>		
@@ -64,7 +65,7 @@
 	<target name="compile-test-suite" description="Compiling test suite">
 		<property name="nunit-lib" value="${nunit.dir}/bin"/>
 		<property name="nant.settings.currentframework" value="${framework}"/>
-		<property name="outdir" value="mysqlclient/bin/${framework}/${buildType}"/>
+		<property name="outdir" value="Driver/bin/${framework}/${buildType}"/>
 
 		<csc output="${outdir}/MySql.Data.Tests.dll" target="library" 
 			define="${defines}" debug="${debug}" optimize="${opt}"> <arg value="/nowarn:0679,2029"/>
@@ -175,12 +176,12 @@
 	coverage
 	-->
 	<target name="testdb" description="Target to test a database with all possible configurations">
-		<copy overwrite="true" file="testsuite/configs/${config}" tofile="mysqlclient/bin/${framework}/${buildType}/MySql.Data.Tests.dll.config"/>
+		<copy overwrite="true" file="testsuite/configs/${config}" tofile="Driver/bin/${framework}/${buildType}/MySql.Data.Tests.dll.config"/>
 		
 		<property name="nunit-exe" value="${nunit.dir}/bin/nunit-console.exe"/>
 <!--		<property name="nunit-exe" value="${nunit.dir}/mono/bin/nunit-console.exe" if="${string::contains(framework, 'mono')}"/>-->
 
-		<exec unless="${doCoverage}" program="${nunit-exe}" workingdir="mysqlclient/bin/${framework}/${buildType}"
+		<exec unless="${doCoverage}" program="${nunit-exe}" workingdir="Driver/bin/${framework}/${buildType}"
 		      failonerror="true">
 		      <arg value="/exclude=${excludes}"/>
 		      <arg value="MySql.Data.Tests.dll"/>
@@ -188,7 +189,7 @@
 		      <arg value="/nologo"/>
 		 </exec>
 <!--		<exec if="${doCoverage}" program="${ncover.executable}"
-		      commandline="/c &quot;${nunit-exe}&quot; &quot;mysqlclient/bin/${framework}/${buildType}/MySql.Data.Tests.dll /exclude=${excludes} /xml=../../../results/nunit-${framework}-${buildType}.xml&quot; /a MySql.Data /o results/ncover-${framework}-${config}.xml"
+		      commandline="/c &quot;${nunit-exe}&quot; &quot;Driver/bin/${framework}/${buildType}/MySql.Data.Tests.dll /exclude=${excludes} /xml=../../../results/nunit-${framework}-${buildType}.xml&quot; /a MySql.Data /o results/ncover-${framework}-${config}.xml"
 		      failonerror="true"/>-->
 	</target>
 
@@ -202,15 +203,15 @@
 	<!-- documentation target -->
 	<target name="Docs" description="Documentation">
 		<ndoc>
-			<assemblies basedir="mysqlclient/bin/${framework}/${buildType}">
+			<assemblies basedir="Driver/bin/${framework}/${buildType}">
 				<include name="MySql.Data.dll" />
 			</assemblies>
 			<summaries>
-				<include name="${build.dir}/mysqlclient/docs/namespace.xml"/>
+				<include name="${build.dir}/Driver/docs/namespace.xml"/>
 			</summaries>
 			<documenters>
 				<documenter name="MSDN">
-					<property name="OutputDirectory" value="${build.dir}/mysqlclient/bin/${framework}/${buildType}/doc/VS.Net" />
+					<property name="OutputDirectory" value="${build.dir}/Driver/bin/${framework}/${buildType}/doc/VS.Net" />
                     <property name="HtmlHelpName" value="MySql.Data" />
                     <property name="HtmlHelpCompilerFilename" value="hhc.exe" />
                     <property name="IncludeFavorites" value="False" />
@@ -236,8 +237,8 @@
 		
 		<!-- now copy the generated docs to the doc folder -->
 		<mkdir dir="doc"/>
-		<copy file="mysqlclient/bin/${framework}/${buildType}/doc/VS.Net/MySql.Data.chm" todir="doc"/>
-		<delete dir="mysqlclient/bin/${framework}/${buildType}/doc" failonerror="false"/>
+		<copy file="Driver/bin/${framework}/${buildType}/doc/VS.Net/MySql.Data.chm" todir="doc"/>
+		<delete dir="Driver/bin/${framework}/${buildType}/doc" failonerror="false"/>
 	</target>
 	
 	<!-- Remove all generated files target -->

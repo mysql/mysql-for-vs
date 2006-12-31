@@ -102,7 +102,7 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(-1, cmd.LastInsertedId);
         }
 
-        [Category("NotWorking")]
+/*        [Category("NotWorking")]
         [Test]
         public void TestCase()
         {
@@ -174,5 +174,6 @@ namespace MySql.Data.MySqlClient.Tests
         {
             throw new Exception("The method or operation is not implemented.");
         }
+        */
     }
 }

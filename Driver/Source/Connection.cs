@@ -253,7 +253,7 @@ namespace MySql.Data.MySqlClient
 		/// Enlists in the specified transaction. 
 		/// </summary>
 		/// <param name="transaction">
-		/// A reference to an existing <see cref="Transaction"/> in which to enlist.
+		/// A reference to an existing <see cref="System.Transactions.Transaction"/> in which to enlist.
 		/// </param>
 		public override void EnlistTransaction(System.Transactions.Transaction transaction)
 		{
