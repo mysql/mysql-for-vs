@@ -4,7 +4,6 @@ using System.Configuration.Install;
 using System.ComponentModel;
 using System.Reflection;
 using System;
-using System.Windows.Forms;
 using Microsoft.Win32;
 using System.Xml;
 using System.IO;
@@ -28,8 +27,8 @@ namespace MySql.Data.MySqlClient
 		{
 			base.Install(stateSaver);
 
-			AddProviderToMachineConfig();
-			InstallPerfMonItems();
+            AddProviderToMachineConfig();
+            InstallPerfMonItems();
 		}
 
 		private void AddProviderToMachineConfig()

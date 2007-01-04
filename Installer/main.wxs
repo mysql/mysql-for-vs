@@ -20,7 +20,7 @@
 							<Directory Id='Mono10' Name='MONO10' LongName='Mono 1.0'/>
 						</Directory>
 						<Directory Id='DocsDir' Name='Docs' LongName='Documentation'/>
-						<Directory Id='SourceDir' Name='Source'/>
+						<Directory Id='DriverDir' Name='Driver'/>
 						<Directory Id='SampleDir' Name='Samples'/>
 					</Directory>
 				</Directory>
@@ -50,13 +50,13 @@
 		<!-- .Net 2.0 Binaries -->
 		<DirectoryRef Id='BinNet20'>
 			<Component Id="Net20" Guid="1b476514-8bcb-48a1-8b32-e477f520b450">
-				<File Id="CoreBin20" Name="MD20" LongName="MySql.Data.dll" src="..\mysqlclient\bin\net-2.0\$(var.build)\mysql.data.dll" DiskId="1"  />
+				<File Id="CoreBin20" Name="MD20" LongName="MySql.Data.dll" src="..\Driver\bin\net-2.0\$(var.build)\mysql.data.dll" DiskId="1"  />
 				<File Id="CoreBin20Config" Name="mdconfig" LongName="CustomAction.config" src="CustomAction.config" DiskId="1"/>
 				<Registry Id="vs80registry" Root="HKLM" Key="Software\Microsoft\VisualStudio\8.0\AssemblyFolders\MySQL Connector Net $(var.ProductVersion)" Type="string" KeyPath="yes" Value="[TARGETDIR]bin\.NET 2.0\" />
 			</Component>
 			<Component Id="GAC20" DiskId="1" Guid="50ec2fb6-f33e-48b8-80da-6ee57124e9ce">
 				<Condition><![CDATA[REGISTERGAC="1"]]></Condition>
-				<File Id="CoreBin20GAC" Name="MD20" LongName="MySql.Data.dll" src="..\mysqlclient\bin\net-2.0\$(var.build)\mysql.data.dll" Assembly=".net" KeyPath="yes" />
+				<File Id="CoreBin20GAC" Name="MD20" LongName="MySql.Data.dll" src="..\Driver\bin\net-2.0\$(var.build)\mysql.data.dll" Assembly=".net" KeyPath="yes" />
 			</Component>
 		</DirectoryRef>
 

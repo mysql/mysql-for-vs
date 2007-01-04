@@ -6,23 +6,15 @@
 
 	<!-- filesets -->
 	<fileset id="BaseSource">
-		<include name="mysqlclient/*.cs"/>
-		<include name="mysqlclient/ReservedWords.txt"/>
-		<include name="mysqlclient/*.resx"/>
-		<include name="mysqlclient/common/*.cs"/>
-		<include name="mysqlclient/types/*.cs"/>
-		<include name="mysqlclient/zlib/*.cs"/>
-		<include name="mysqlclient/docs/*"/>
-		<include name="mysqlclient/*.csproj"/>
+		<include name="Driver/MySql.Data.2005.csproj"/>
+		<include name="Driver/Properties/**"/>
+		<include name="Driver/Source/**"/>
 		<include name="installer/*"/>
 		<include name="testsuite/**"/>
 		<include name="Client.build"/>
-		<include name="MySqlClient.2003.sln"/>
-		<include name="MySqlClient.2005.sln"/>
 		<include name="CHANGES"/>
 		<include name="README"/>
 		<include name="Release Notes.txt"/>
-		<include name="MySql.Data.csproj"/>
 		<include name="Samples/**" />
 	</fileset>
 

@@ -4,9 +4,9 @@
 
 	<!-- filesets -->
 	<fileset id="Source">
+		<include name="Driver/Properties/*.cs"/>
 		<include name="Driver/Source/*.cs"/>
 		<include name="Driver/Source/Common/*.cs"/>
-		<include name="Driver/Source/Properties/*.cs"/>
 		<include name="Driver/Source/Types/*.cs"/>
 		<include name="Driver/Source/ZLib/*.cs"/>
 	</fileset>
@@ -49,7 +49,7 @@
 			define="${defines}" debug="${debug}" optimize="${opt}" keycontainer="ConnectorNet" 
 			doc="${outdir}/MySql.Data.xml">
 			<arg value="/nowarn:0679,1591,2029"/>
-			<resources prefix="MySql.Data.MySqlClient.Core">
+			<resources prefix="MySql.Data.MySqlClient.Source">
 				<include name="Driver/Source/Resources.resources"/>
 				<include name="Driver/Source/ReservedWords.txt"/>
 			</resources>
@@ -78,7 +78,6 @@
 				<include name="System.Configuration.dll"/>
 				<include name="System.Drawing.dll"/>
 				<include name="System.Transactions.dll"/>
-				<include name="System.Windows.Forms.dll"/>
 				<include name="${nunit-lib}/nunit.framework.dll"/>
 			</references>
 		</csc>
@@ -86,7 +85,7 @@
 
 	<!-- builds the client on all supported frameworks -->
 	<target name="allframeworks" depends="net-2.0">
-		<!--<call target="Docs"/>-->
+		<call target="Docs"/>
 	</target>
 
 	<!-- core managed driver target 1.1 -->

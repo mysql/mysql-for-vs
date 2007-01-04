@@ -1,7 +1,7 @@
-Connector/Net 5.0.2  Release Notes
+Connector/Net 5.0.3  Release Notes
 ------------------------------------
 
-Welcome to the release notes for Connector/Net 5.0.2.
+Welcome to the release notes for Connector/Net 5.0.3.
 
 This version of the connector incorporates many changes to its internal structure that 
 will provide both increased speed and flexibility.  Speed is increased by allowing column 
@@ -12,35 +12,26 @@ versions of the Connector to support the embedded server and to use the client l
 Many more features have been added to this version including Usage Advisor, PerfMon hooks,
 asynchronous queries, and full ADO.net 2.0 support.
 
-This is the third release of the connector and many things that were broken in the first
-release have been fixed.  Below is the list of what was listed as missing or incomplete
-in the first release and their current status.
+.NET 1.0 binaries not included
+--------------------------------------
+We believe that most of our users have moved their projects to .NET Framework 1.1 or higher.  To this end, 
+we are no longer providing binaries for .NET 1.0.  The code should still compile to that target
+so any users who need this should be able to build it.
 
-* System.Transaction support
-This has been implemented however DTC elevation does not work.  There are also some
-open bugs against this feature.
-
-* Documentation
-We spent so much time fixing bugs in this release that we ran out of time before improving
-the documentation.  Look for improvements in the coming releases.
-
-* Load data local infile
-This is now fixed and working.
-
-.NET 1.0 and 1.1 binaries not included
+.NET 1.1 binaries not included
 --------------------------------------
 This release only ships with a .NET 2.0 compiled binary.  The reason for this is because
 most of the core classes in the provider now derive from base classes provided by .NET 2.0. 
 These include classes like DbCommand, DbConnection, etc.  In order to ship binaries for
-.NET 1.0 and 1.1 using this code base, we would need to build our own set of base classes that
+.NET 1.1 using this code base, we would need to build our own set of base classes that
 mirror what the .NET 2.0 base classes are doing.  We are working on this but those classes are
 not done yet.  Again, rather than wait for those classes to be finished we decided to release
-what we have and start gathering feedback.  
+what we have and start gathering feedback.  Look for a .NET 1.1 version of Connector/Net 5 in the 
+near future.
 
 Mono support
 ------------
-We are currently evaluating Mono support for ADO.Net 2.0 and will be including fully tested
-Mono support in an upcoming release.
+Look for a Mono package in the near future.
 
 Functionality changes
 ---------------------

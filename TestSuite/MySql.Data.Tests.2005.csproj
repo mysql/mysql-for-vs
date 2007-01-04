@@ -77,7 +77,7 @@
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\mysqlclient\MySql.Data.2005.csproj">
+    <ProjectReference Include="..\Driver\MySql.Data.2005.csproj">
       <Project>{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}</Project>
       <Name>MySql.Data.2005</Name>
     </ProjectReference>
