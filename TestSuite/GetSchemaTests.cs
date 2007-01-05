@@ -493,13 +493,9 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void Triggers()
         {
-            // CREATE TRIGGER AND DROP TRIGGER required SUPER privs in 5.0 so we 
-            // test them only in 5.1
-            if (!Is51) return;
-
             try
             {
-                execSQL("DROP TRIGGER trigger1");
+                suExecSQL("DROP TRIGGER trigger1");
             }
             catch (Exception) { }
 
@@ -508,13 +504,13 @@ namespace MySql.Data.MySqlClient.Tests
             execSQL("CREATE TABLE test1 (id int)");
             execSQL("CREATE TABLE test2 (count int)");
             execSQL("INSERT INTO test2 VALUES (0)");
-            execSQL("CREATE TRIGGER trigger1 AFTER INSERT ON test1 FOR EACH ROW BEGIN " +
+            suExecSQL("CREATE TRIGGER trigger1 AFTER INSERT ON test1 FOR EACH ROW BEGIN " +
                 "UPDATE test2 SET count = count+1; END");
 
             try
             {
                 string[] restrictions = new string[4];
-                restrictions[1] = "test";
+                restrictions[1] = databases[0];
                 restrictions[2] = "test1";
                 DataTable dt = conn.GetSchema("Triggers", restrictions);
                 Assert.IsTrue(dt.Rows.Count == 1);
