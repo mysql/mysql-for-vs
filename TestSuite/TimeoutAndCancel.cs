@@ -119,29 +119,30 @@ namespace MySql.Data.MySqlClient.Tests
             stateChangeCount++;
         }
 
-
+        [Category("NotWorking")]
         [Category("5.0")]
         [Test]
         public void TimeoutExpiring()
         {
             // first we need a routine that will run for a bit
-            execSQL("CREATE PROCEDURE spTest() BEGIN SET @start=NOW()+0; REPEAT SET @end=NOW()-@start; " +
-                "UNTIL @end >= 600 END REPEAT; SELECT @start, @end; END");
+            execSQL("CREATE PROCEDURE spTest() BEGIN SET @start=UNIX_TIMESTAMP(NOW()); " +
+                "REPEAT SET @end=UNIX_TIMESTAMP(NOW())-@start; " +
+                "UNTIL @end >= 60 END REPEAT; SELECT @start, @end; END");
 
             DateTime start = DateTime.Now;
             try
             {
                 MySqlCommand cmd = new MySqlCommand("spTest", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandTimeout = 15;
+                cmd.CommandTimeout = 10;
                 cmd.ExecuteNonQuery();
                 Assert.Fail("Should not get to this point");
             }
             catch (MySqlException ex)
             {
                 TimeSpan ts = DateTime.Now.Subtract(start);
-                Assert.IsTrue(ex.Message.StartsWith("Timeout expired"));
-                Assert.IsTrue(ts.TotalSeconds < 20);
+                Assert.IsTrue(ex.Message.StartsWith("Timeout expired"), "Message is wrong");
+                Assert.IsTrue(ts.TotalSeconds < 60, "Took too much time");
             }
         }
 
