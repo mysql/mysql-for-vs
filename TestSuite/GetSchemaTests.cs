@@ -499,7 +499,7 @@ namespace MySql.Data.MySqlClient.Tests
 
             try
             {
-                suExecSQL("DROP TRIGGER trigger1");
+                execSQL("DROP TRIGGER trigger1");
             }
             catch (Exception) { }
 
@@ -508,7 +508,7 @@ namespace MySql.Data.MySqlClient.Tests
             execSQL("CREATE TABLE test1 (id int)");
             execSQL("CREATE TABLE test2 (count int)");
             execSQL("INSERT INTO test2 VALUES (0)");
-            suExecSQL("CREATE TRIGGER trigger1 AFTER INSERT ON test1 FOR EACH ROW BEGIN " +
+            execSQL("CREATE TRIGGER trigger1 AFTER INSERT ON test1 FOR EACH ROW BEGIN " +
                 "UPDATE test2 SET count = count+1; END");
 
             try
