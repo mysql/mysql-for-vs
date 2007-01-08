@@ -103,7 +103,11 @@ namespace MySql.Data.MySqlClient
             dt.Columns.Add("CREATE_OPTIONS", typeof(string));
             dt.Columns.Add("TABLE_COMMENT", typeof(string));
 
-            DataTable databases = GetDatabases(restrictions);
+            // we have to new up a new restriction array here since
+            // GetDatabases takes the database in the first slot
+            string[] dbRestriction = new string[1] { restrictions[1] };
+            DataTable databases = GetDatabases(dbRestriction);
+
             foreach (DataRow db in databases.Rows)
             {
                 restrictions[1] = db["SCHEMA_NAME"].ToString();

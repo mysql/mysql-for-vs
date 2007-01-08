@@ -1,3 +1,9 @@
+Version 5.0.4
+
+  Bugs fixed
+  ----------
+  Bug #25443 ExecuteScalar() hangs when more than one bad result 
+
 Version 5.0.3 12-31-2006
 
   Bugs fixed

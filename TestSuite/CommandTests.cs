@@ -382,6 +382,39 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.Fail(ex.Message);
             }
         }
+
+        /// <summary>
+        /// Bug #25443 ExecuteScalar() hangs when more than one bad result 
+        /// </summary>
+        [Test]
+        public void ExecuteWithOneBadQuery()
+        {
+            MySqlCommand command = new MySqlCommand("SELECT 1; SELECT * FROM foo", conn);
+            try
+            {
+                command.ExecuteScalar();
+            }
+            catch (MySqlException)
+            {
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+
+            // now try using ExecuteNonQuery
+            try
+            {
+                command.ExecuteNonQuery();
+            }
+            catch (MySqlException)
+            {
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
 	}
 
 
