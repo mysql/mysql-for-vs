@@ -294,5 +294,44 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(1, dt.Rows[0]["id"]);
             Assert.AreEqual("Test", dt.Rows[0]["name"]);
         }
+
+        [Test]
+        public void MultiUpdate()
+        {
+            try
+            {
+                execSQL("INSERT INTO  test (id, name) VALUES (1, 'test1')");
+                execSQL("INSERT INTO  test (id, name) VALUES (2, 'test2')");
+                execSQL("INSERT INTO  test (id, name) VALUES (3, 'test3')");
+                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
+                MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                dt.Rows[0]["id"] = 4;
+                dt.Rows[0]["name"] = "test4";
+                dt.Rows[1]["id"] = 5;
+                dt.Rows[1]["name"] = "test5";
+                dt.Rows[2]["id"] = 6;
+                dt.Rows[2]["name"] = "test6";
+                DataTable changes = dt.GetChanges();
+                da.Update(changes);
+                dt.AcceptChanges();
+
+                dt.Rows[0]["id"] = 7;
+                dt.Rows[0]["name"] = "test7";
+                dt.Rows[1]["id"] = 8;
+                dt.Rows[1]["name"] = "test8";
+                dt.Rows[2]["id"] = 9;
+                dt.Rows[2]["name"] = "test9";
+                changes = dt.GetChanges();
+                da.Update(changes);
+                dt.AcceptChanges();
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
 	}
 }
