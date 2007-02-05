@@ -47,7 +47,9 @@ namespace MySql.Data.MySqlClient
 
         static public void LogInformation(string msg)
         {
+#if !CF
             Trace.WriteLine(msg);
+#endif
         }
 
 		static public void LogException(Exception ex)

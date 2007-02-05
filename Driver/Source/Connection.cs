@@ -27,7 +27,6 @@ using System.ComponentModel;
 using System.Globalization;
 using MySql.Data.Common;
 using System.Diagnostics;
-using System.Windows.Forms;
 
 namespace MySql.Data.MySqlClient
 {
@@ -47,10 +46,12 @@ namespace MySql.Data.MySqlClient
 		private bool hasBeenOpen;
 		private SchemaProvider schemaProvider;
 		private ProcedureCache procedureCache;
+#if !CF
 		private PerformanceMonitor perfMonitor;
 		private MySqlPromotableTransaction currentTransaction;
+#endif
 
-		/// <include file='docs/MySqlConnection.xml' path='docs/InfoMessage/*'/>
+        /// <include file='docs/MySqlConnection.xml' path='docs/InfoMessage/*'/>
 		public event MySqlInfoMessageEventHandler InfoMessage;
 
 #if MONO2
@@ -75,13 +76,21 @@ namespace MySql.Data.MySqlClient
 
 		#region Interal Methods & Properties
 
-		internal MySqlPromotableTransaction CurrentTransaction
+#if !CF
+        internal MySqlPromotableTransaction CurrentTransaction
 		{
 			get { return currentTransaction; }
 			set { currentTransaction = value; }
 		}
 
-		internal ProcedureCache ProcedureCache
+		internal PerformanceMonitor PerfMonitor
+		{
+			get { return perfMonitor; }
+		}
+
+#endif
+
+        internal ProcedureCache ProcedureCache
 		{
 			get { return procedureCache; }
 		}
@@ -108,11 +117,6 @@ namespace MySql.Data.MySqlClient
 			{
 				InfoMessage(this, args);
 			}
-		}
-
-		internal PerformanceMonitor PerfMonitor
-		{
-			get { return perfMonitor; }
 		}
 
 		#endregion
@@ -248,7 +252,7 @@ namespace MySql.Data.MySqlClient
 
 		#region Transactions
 
-#if !MONO
+#if !MONO && !CF
 		/// <summary>
 		/// Enlists in the specified transaction. 
 		/// </summary>
@@ -369,7 +373,7 @@ namespace MySql.Data.MySqlClient
 				else
 				{
 					driver = Driver.Create(settings);
-					procedureCache = new ProcedureCache(settings.ProcedureCacheSize);
+					procedureCache = new ProcedureCache((int)settings.ProcedureCacheSize);
 				}
 			}
 			catch (Exception)
@@ -392,11 +396,13 @@ namespace MySql.Data.MySqlClient
 				schemaProvider = new ISSchemaProvider(this);
 			else
 				schemaProvider = new SchemaProvider(this);
+#if !CF
 			perfMonitor = new PerformanceMonitor(this);
+#endif
 
 			// if we are opening up inside a current transaction, then autoenlist
 			// TODO: control this with a connection string option
-#if !MONO
+#if !MONO && !CF
 			if (System.Transactions.Transaction.Current != null)
 				EnlistTransaction(System.Transactions.Transaction.Current);
 #endif

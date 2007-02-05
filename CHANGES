@@ -1,8 +1,27 @@
+Version 5.1.0
+
+  - Added Membership and Role provider contributed by Sean Wright (thanks!)
+  - Now compiles for .NET CF 2.0
+
 Version 5.0.4
 
   Bugs fixed
   ----------
   Bug #25443 ExecuteScalar() hangs when more than one bad result 
+  Bug #24802 Error Handling 
+  Bug #25614 After connection is closed, and opened again UTF-8 characters are not read well 
+  Bug #25625 Crashes when calling with CommandType set to StoredProcedure 
+  Bug #25458 Opening connection hangs 
+  Bug #25651 SELECT does not work properly when WHERE contains UTF-8 characters   
+  Bug #25726 MySqlConnection throws NullReferenceException and ArgumentNullException 
+  Bug #25609 MySqlDataAdapter.FillSchema 
+  
+  Other changes
+  -------------
+  Return parameters created with DeriveParameters now have the name RETURN_VALUE
+  Fixed problem with parameter name hashing where the hashes were not getting updated
+       or removed in certain situations.
+  Fixed problem with calling stored functions when a return parameter was not given
 
 Version 5.0.3 12-31-2006
 

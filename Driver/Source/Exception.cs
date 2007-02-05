@@ -19,7 +19,6 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
-using System.Runtime.Serialization;
 using System.Data.Common;
 
 namespace MySql.Data.MySqlClient
@@ -52,6 +51,12 @@ namespace MySql.Data.MySqlClient
 		{
 			this.isFatal = isFatal;
 		}
+
+        internal MySqlException(string msg, int errno, Exception inner)
+            : this(msg, inner)
+        {
+            errorCode = errno;
+        }
 
 		internal MySqlException(string msg, int errno) : this(msg)
 		{

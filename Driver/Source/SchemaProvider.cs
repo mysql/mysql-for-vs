@@ -501,7 +501,7 @@ namespace MySql.Data.MySqlClient
         {
             StringBuilder sb = new StringBuilder("SELECT Host, User FROM mysql.user");
             if (restrictions != null && restrictions.Length > 0)
-                sb.AppendFormat(" WHERE User LIKE '{0}'", restrictions[0]);
+                sb.AppendFormat(CultureInfo.InvariantCulture, " WHERE User LIKE '{0}'", restrictions[0]);
 
             MySqlDataAdapter da = new MySqlDataAdapter(sb.ToString(), connection);
             DataTable dt = new DataTable();
@@ -542,6 +542,9 @@ namespace MySql.Data.MySqlClient
 
         private DataTable GetDataSourceInformation()
         {
+#if CF
+            throw new NotSupportedException();
+#else
             DataTable dt = new DataTable("DataSourceInformation");
             dt.Columns.Add("CompositeIdentifierSeparatorPattern", typeof(string));
             dt.Columns.Add("DataSourceProductName", typeof(string));
@@ -586,6 +589,7 @@ namespace MySql.Data.MySqlClient
             dt.Rows.Add(row);
 
             return dt;
+#endif
         }
 
         private DataTable GetDataTypes()
@@ -725,10 +729,11 @@ namespace MySql.Data.MySqlClient
             {
                 StringBuilder sql = new StringBuilder();
                 StringBuilder where = new StringBuilder();
-                sql.AppendFormat("SHOW TABLE STATUS FROM `{0}`", db["SCHEMA_NAME"]);
+                sql.AppendFormat(CultureInfo.InvariantCulture, "SHOW TABLE STATUS FROM `{0}`", 
+                    db["SCHEMA_NAME"]);
                 if (restrictions != null && restrictions.Length >= 3 &&
                     restrictions[2] != null)
-                    where.AppendFormat(" LIKE '{0}'", restrictions[2]);
+                    where.AppendFormat(CultureInfo.InvariantCulture, " LIKE '{0}'", restrictions[2]);
                 sql.Append(where.ToString());
                 MySqlDataAdapter da = new MySqlDataAdapter(sql.ToString(), connection);
                 da.Fill(tables);

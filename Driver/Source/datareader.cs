@@ -808,7 +808,7 @@ namespace MySql.Data.MySqlClient
 		public override bool NextResult()
 		{
 			if (!isOpen)
-				throw new MySqlException("Invalid attempt to NextResult when reader is closed.");
+                throw new MySqlException(Resources.NextResultIsClosed);
 
 			bool firstResult = fields == null;
 			if (fields != null)

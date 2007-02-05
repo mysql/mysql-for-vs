@@ -107,8 +107,7 @@ namespace MySql.Data.Types
 					 (uint)stream.ReadInteger(4));
 			else
 				return new MySqlUInt32((this as IMySqlValue).MySqlDbType,
-					 UInt32.Parse(stream.ReadString(length),
-					 CultureInfo.InvariantCulture));
+					 UInt32.Parse(stream.ReadString(length), NumberStyles.Any, CultureInfo.InvariantCulture));
 		}
 
 		void IMySqlValue.SkipValue(MySqlStream stream)

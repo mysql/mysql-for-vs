@@ -577,12 +577,14 @@ namespace MySql.Data.MySqlClient
 					string lowerString = (value as string).ToLower();
 					if (lowerString == "socket" || lowerString == "tcp")
 						return MySqlConnectionProtocol.Sockets;
+#if !CF
 					else if (lowerString == "pipe")
 						return MySqlConnectionProtocol.NamedPipe;
 					else if (lowerString == "unix")
 						return MySqlConnectionProtocol.UnixSocket;
 					else if (lowerString == "memory")
 						return MySqlConnectionProtocol.SharedMemory;
+#endif
 				}
 			}
 			throw new ArgumentException(Resources.ImproperValueFormat, value.ToString());
@@ -698,8 +700,6 @@ namespace MySql.Data.MySqlClient
 				case "old syntax":
 				case "oldsyntax":
 					return Keyword.OldSyntax;
-				case "shared memory name":
-					return Keyword.SharedMemoryName;
 				case "allow batch":
 					return Keyword.AllowBatch;
 				case "convert zero datetime":
@@ -725,16 +725,9 @@ namespace MySql.Data.MySqlClient
 					return Keyword.MaximumPoolSize;
 				case "connection lifetime":
 					return Keyword.ConnectionLifetime;
-				case "driver":
-					return Keyword.DriverType;
-				case "protocol":
-					return Keyword.Protocol;
 				case "allow zero datetime":
 				case "allowzerodatetime":
 					return Keyword.AllowZeroDatetime;
-				case "useperformancemonitor":
-				case "use performance monitor":
-					return Keyword.UsePerformanceMonitor;
 				case "procedure cache size":
 				case "procedurecachesize":
 				case "procedure cache":
@@ -744,9 +737,20 @@ namespace MySql.Data.MySqlClient
 					return Keyword.ConnectionReset;
 				case "ignore prepare":
 					return Keyword.IgnorePrepare;
+#if !CF
+				case "shared memory name":
+					return Keyword.SharedMemoryName;
+				case "useperformancemonitor":
+				case "use performance monitor":
+					return Keyword.UsePerformanceMonitor;
 				case "encrypt":
 					return Keyword.UseSSL;
-			}
+				case "driver":
+					return Keyword.DriverType;
+				case "protocol":
+					return Keyword.Protocol;
+#endif
+            }
 			throw new ArgumentException(Resources.KeywordNotSupported, key);
 		}
 
@@ -838,7 +842,7 @@ namespace MySql.Data.MySqlClient
 			{
 				Keyword kw = GetKey(key);
 				if (kw != Keyword.Password)
-					persistConnString.AppendFormat("{0}={1};", key, value);
+					persistConnString.AppendFormat(CultureInfo.InvariantCulture, "{0}={1};", key, value);
 				SetValue(kw, value);
 			}
 		}

@@ -65,9 +65,11 @@ namespace MySql.Data.Common
 
 			while (pos < dnsHosts.Length)
 			{
+#if !CF
 				if (usePipe)
 					stream = CreateNamedPipeStream(dnsHosts[index]);
 				else
+#endif
 				{
 #if NET20
 					IPHostEntry ipHE = Dns.GetHostEntry(dnsHosts[index]);
@@ -97,6 +99,7 @@ namespace MySql.Data.Common
 			return stream;
 		}
 
+#if !CF
 		private Stream CreateNamedPipeStream(string hostname)
 		{
 			string pipePath;
@@ -122,14 +125,16 @@ namespace MySql.Data.Common
 				new object[1] { host }, null, null);
 			return ep;
 		}
+#endif
 
-		private Stream CreateSocketStream(IPAddress ip, uint port, bool unix)
+        private Stream CreateSocketStream(IPAddress ip, uint port, bool unix)
 		{
 			EndPoint endPoint;
-
+#if !CF
 			if (!Platform.IsWindows() && unix)
 				endPoint = CreateUnixEndPoint(hostList);
 			else
+#endif
 				endPoint = new IPEndPoint(ip, (int)port);
 
 			Socket socket = unix ?

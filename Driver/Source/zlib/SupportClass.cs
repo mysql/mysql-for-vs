@@ -165,6 +165,7 @@ namespace zlib
 			return System.Text.UTF8Encoding.UTF8.GetChars(byteArray);
 		}
 
+#if !CF
 		/*******************************/
 		/// <summary>
 		/// Writes an object to the specified Stream
@@ -199,6 +200,8 @@ namespace zlib
 			System.Runtime.Serialization.Formatters.Binary.BinaryFormatter formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
 			return formatter.Deserialize(binaryReader.BaseStream);
 		}
+
+#endif
 
 		/*******************************/
 		/// <summary>

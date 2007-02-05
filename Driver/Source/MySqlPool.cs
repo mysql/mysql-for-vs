@@ -51,15 +51,15 @@ namespace MySql.Data.MySqlClient
             inUsePool = new List<Driver>((int)maxSize);
             idlePool = new Queue<Driver>((int)maxSize);
 #else
-			inUsePool =new ArrayList(maxSize);
-			idlePool = new Queue(maxSize);
+			inUsePool =new ArrayList((int)maxSize);
+			idlePool = new Queue((int)maxSize);
 #endif
 
 			// prepopulate the idle pool to minSize
 			for (int i=0; i < minSize; i++) 
 				CreateNewPooledConnection();
 
-            procedureCache = new ProcedureCache(settings.ProcedureCacheSize);
+            procedureCache = new ProcedureCache((int)settings.ProcedureCacheSize);
 		}
 
 		public MySqlConnectionStringBuilder	Settings 

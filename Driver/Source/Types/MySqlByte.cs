@@ -98,7 +98,7 @@ namespace MySql.Data.Types
 			else
 			{
 				string s = stream.ReadString(length);
-				return new MySqlByte(SByte.Parse(s, CultureInfo.InvariantCulture));
+				return new MySqlByte(SByte.Parse(s, NumberStyles.Any, CultureInfo.InvariantCulture));
 			}
 		}
 

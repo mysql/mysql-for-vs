@@ -39,17 +39,17 @@ namespace MySql.Data.MySqlClient
 #else
       private Queue hashQueue;
 #endif
-		private uint maxSize;
+		private int maxSize;
 
-		public ProcedureCache(uint size)
+		public ProcedureCache(int size)
 		{
 			maxSize = size;
 #if NET20
-			hashQueue = new Queue<int>((int)maxSize);
+			hashQueue = new Queue<int>(maxSize);
 #else
          hashQueue = new Queue(maxSize);
 #endif
-			procHash = new Hashtable((int)maxSize);
+			procHash = new Hashtable(maxSize);
 		}
 
 		public DataSet GetProcedure(MySqlConnection conn, string spName)
@@ -61,14 +61,18 @@ namespace MySql.Data.MySqlClient
             if (ds == null)
             {
                 ds = AddNew(conn, spName);
+#if !CF
                 conn.PerfMonitor.AddHardProcedureQuery();
+#endif
                 if (conn.Settings.Logging)
                     Logger.LogInformation(String.Format(
                          Resources.HardProcQuery, spName));
             }
             else
             {
+#if !CF
                 conn.PerfMonitor.AddSoftProcedureQuery();
+#endif
                 if (conn.Settings.Logging)
                     Logger.LogInformation(String.Format(
                          Resources.SoftProcQuery, spName));
