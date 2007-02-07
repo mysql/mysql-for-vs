@@ -116,7 +116,7 @@ namespace MySql.Data.Types
 			row["ColumnSize"] = 0;
 			row["CreateFormat"] = "SMALLINT";
 			row["CreateParameters"] = null;
-			row["DataType"] = "System.Short";
+			row["DataType"] = "System.Int16";
 			row["IsAutoincrementable"] = true;
 			row["IsBestMatch"] = true;
 			row["IsCaseSensitive"] = false;

@@ -54,6 +54,7 @@ namespace MySql.Data.MySqlClient
 		private DbType dbType;
 		private bool inferType;
 		private bool sourceColumnNullMapping;
+        private MySqlParameterCollection collection;
 
 		#region Constructors
 
@@ -159,6 +160,12 @@ namespace MySql.Data.MySqlClient
 
 		#region Properties
 
+        internal MySqlParameterCollection Collection
+        {
+            get { return collection; }
+            set { collection = value; }
+        }
+
 		internal bool TypeHasBeenSet
 		{
 			get { return inferType == false; }
@@ -227,7 +234,12 @@ namespace MySql.Data.MySqlClient
 		public override String ParameterName
 		{
 			get { return paramName; }
-			set { paramName = value; }
+			set 
+            { 
+                if (collection != null)
+                    collection.ParameterNameChanged(this, paramName, value);
+                paramName = value;
+            }
 		}
 
 		/// <summary>

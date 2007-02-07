@@ -578,7 +578,8 @@ namespace MySql.Data.MySqlClient
             row["IdentifierCase"] = IdentifierCase.Insensitive;
             row["OrderByColumnsInSelect"] = false;
             row["ParameterMarkerFormat"] = "{0}";
-            row["ParameterMarkerPattern"] = "@([A-Za-z0-9_$#]*)";
+            row["ParameterMarkerPattern"] = String.Format("{0}([A-Za-z0-9_$#]*)",
+                connection.Settings.UseOldSyntax ? "@" : "?");
             row["ParameterNameMaxLength"] = 128;
             row["ParameterNamePattern"] = @"^[\p{Lo}\p{Lu}\p{Ll}\p{Lm}_@#][\p{Lo}\p{Lu}\p{Ll}\p{Lm}\p{Nd}\uff3f_@#\$]*(?=\s+|$)";
             row["QuotedIdentifierPattern"] = @"(([^\[]|\]\])*)";
@@ -616,7 +617,7 @@ namespace MySql.Data.MySqlClient
             dt.Columns.Add(new DataColumn("IsConcurrencyType", typeof(bool)));
             dt.Columns.Add(new DataColumn("IsLiteralsSupported", typeof(bool)));
             dt.Columns.Add(new DataColumn("LiteralPrefix", typeof(string)));
-            dt.Columns.Add(new DataColumn("LitteralSuffix", typeof(string)));
+            dt.Columns.Add(new DataColumn("LiteralSuffix", typeof(string)));
             dt.Columns.Add(new DataColumn("NativeDataType", typeof(string)));
 
             // have each one of the types contribute to the datatypes collection

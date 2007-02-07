@@ -117,7 +117,7 @@ namespace MySql.Data.Types
 			row["ColumnSize"] = 64;
 			row["CreateFormat"] = "BIT";
 			row["CreateParameters"] = null;
-			row["DataType"] = "UInt64";
+            row["DataType"] = typeof(UInt64).ToString();
 			row["IsAutoincrementable"] = false;
 			row["IsBestMatch"] = true;
 			row["IsCaseSensitive"] = false;

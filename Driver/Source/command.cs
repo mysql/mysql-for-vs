@@ -55,6 +55,7 @@ namespace MySql.Data.MySqlClient
 		private bool canCancel;
 		private bool timedOut;
         private AutoResetEvent querySent;
+        private bool resetSqlSelect;
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ctor1/*'/>
 		public MySqlCommand()
@@ -309,7 +310,12 @@ namespace MySql.Data.MySqlClient
 		{
 			if (statement != null)
 				statement.Close();
-		}
+
+            // if we are supposed to reset the sql select limit, do that here
+            if (resetSqlSelect)
+                new MySqlCommand("SET SQL_SELECT_LIMIT=-1", connection).ExecuteNonQuery();
+            resetSqlSelect = false;
+        }
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ExecuteReader/*'/>
 		public new MySqlDataReader ExecuteReader()
@@ -342,17 +348,6 @@ namespace MySql.Data.MySqlClient
 
 			string sql = TrimSemicolons(cmdText);
 
-			//TODO: make these work with prepared statements and stored procedures
-			if (0 != (behavior & CommandBehavior.SchemaOnly))
-			{
-				sql = String.Format("SET SQL_SELECT_LIMIT=0;{0};SET sql_select_limit=-1;", sql);
-			}
-
-			if (0 != (behavior & CommandBehavior.SingleRow))
-			{
-				sql = String.Format("SET SQL_SELECT_LIMIT=1;{0};SET sql_select_limit=-1;", sql);
-			}
-
 			if (statement == null || !statement.IsPrepared)
 			{
 				if (CommandType == CommandType.StoredProcedure)
@@ -360,6 +355,13 @@ namespace MySql.Data.MySqlClient
 				else
 					statement = new PreparableStatement(this.Connection, sql);
 			}
+
+            // stored procs are the only statement type that need do anything during resolve
+            statement.Resolve();
+
+            // Now that we have completed our resolve step, we can handle our
+            // command behaviors
+            HandleCommandBehaviors(behavior);
 
 			updatedRowCount = -1;
 
@@ -439,6 +441,20 @@ namespace MySql.Data.MySqlClient
 
 			return val;
 		}
+
+        private void HandleCommandBehaviors(CommandBehavior behavior)
+        {
+            if ((behavior & CommandBehavior.SchemaOnly) != 0)
+            {
+                new MySqlCommand("SET SQL_SELECT_LIMIT=0", connection).ExecuteNonQuery();
+                resetSqlSelect = true;
+            }
+            else if ((behavior & CommandBehavior.SingleRow) != 0)
+            {
+                new MySqlCommand("SET SQL_SELECT_LIMIT=1", connection).ExecuteNonQuery();
+                resetSqlSelect = true;
+            }
+        }
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/Prepare2/*'/>
 		private void Prepare(int cursorPageSize)

@@ -183,7 +183,7 @@ namespace MySql.Data.MySqlClient
 			ArrayList parameterMap = new ArrayList();
 
 			// tokenize the sql first
-			ArrayList tokens = TokenizeSql(ProcessedCommandText);
+			ArrayList tokens = TokenizeSql(ResolvedCommandText);
 			parameterMap.Clear();
 
 			foreach (string token in tokens)

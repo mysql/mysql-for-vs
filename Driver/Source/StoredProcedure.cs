@@ -34,7 +34,7 @@ namespace MySql.Data.MySqlClient
 		private string hash;
 		private string outSelect;
 		private DataTable parametersTable;
-		private string processedCommandText;
+		private string resolvedCommandText;
 
 		public StoredProcedure(MySqlConnection connection, string text)
 			:
@@ -57,17 +57,12 @@ namespace MySql.Data.MySqlClient
 			return null;
 		}
 
-		public override string ProcessedCommandText
+		public override string ResolvedCommandText
 		{
-			get
-			{
-				if (processedCommandText == null)
-					ProcessCommandText();
-				return processedCommandText;
-			}
+            get { return resolvedCommandText; }
 		}
 
-		private void ProcessCommandText()
+		public override void Resolve()
 		{
 			// first retrieve the procedure definition from our
 			// procedure cache
@@ -129,16 +124,18 @@ namespace MySql.Data.MySqlClient
 				sqlCmd = String.Format("call {0} ({1})", commandText, sqlCmd);
 			else
 			{
-				sqlCmd = String.Format("set @{0}={1} ({2})", retParm,
-					 commandText, sqlCmd);
-				outSelect = String.Format("@{0}", retParm);
+                if (retParm == null)
+                    retParm = hash + "dummy";
+                else
+                    outSelect = String.Format("@{0}", retParm);
+                sqlCmd = String.Format("set @{0}={1}({2})", retParm, commandText, sqlCmd);
 			}
 
 			if (setStr.Length > 0)
 				sqlCmd = setStr.ToString() + sqlCmd;
 			string oldCmdText = commandText;
 
-			processedCommandText = sqlCmd;
+			resolvedCommandText = sqlCmd;
 		}
 
 		public override void Close()

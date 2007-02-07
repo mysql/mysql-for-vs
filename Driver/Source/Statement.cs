@@ -45,12 +45,20 @@ namespace MySql.Data.MySqlClient
             commandText = text;
         }
 
-        public virtual string ProcessedCommandText
+        #region Properties
+
+        public virtual string ResolvedCommandText
         {
             get { return commandText; }
         }
 
+        #endregion
+
         public virtual void Close()
+        {
+        }
+
+        public virtual void Resolve()
         {
         }
 
@@ -77,7 +85,7 @@ namespace MySql.Data.MySqlClient
         protected virtual void BindParameters()
         {
             // tokenize the sql
-            ArrayList tokenArray = TokenizeSql(ProcessedCommandText);
+            ArrayList tokenArray = TokenizeSql(ResolvedCommandText);
 
             MySqlStream stream = new MySqlStream(driver.Encoding);
             stream.Version = driver.Version;

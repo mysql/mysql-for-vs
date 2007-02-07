@@ -713,6 +713,20 @@ namespace MySql.Data.MySqlClient.Tests
             {
             }
         }
+
+        [Test]
+        public void SchemaOnly()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test (id INT, name VARCHAR(50))");
+
+            MySqlCommand cmd = new MySqlCommand("SELECT * FROM test", conn);
+            cmd.Prepare();
+            using (MySqlDataReader reader = cmd.ExecuteReader(CommandBehavior.SchemaOnly))
+            {
+                reader.Read();
+            }
+        }
 	}
 
     #region Configs

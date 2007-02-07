@@ -148,34 +148,37 @@ namespace MySql.Data.MySqlClient
 		{
 			this.connection = connection;
 
-			// check if we are already configured
-			if (serverProps != null)
-				return;
+            // if we have not already configured our server variables
+            // then do so now
+            if (serverProps == null)
+            {
+                // load server properties
+                serverProps = new Hashtable();
+                MySqlCommand cmd = new MySqlCommand("SHOW VARIABLES", connection);
 
-			// load server properties
-			serverProps = new Hashtable();
-			MySqlCommand cmd = new MySqlCommand("SHOW VARIABLES", connection);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    try
+                    {
+                        while (reader.Read())
+                        {
+                            string key = reader.GetString(0);
+                            string value = reader.GetString(1);
+                            serverProps[key] = value;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.LogException(ex);
+                        throw;
+                    }
+                }
 
-			using (MySqlDataReader reader = cmd.ExecuteReader())
-			{
-				try
-				{
-					while (reader.Read())
-					{
-						string key = reader.GetString(0);
-						string value = reader.GetString(1);
-						serverProps[key] = value;
-					}
-				}
-				catch (Exception ex)
-				{
-					Logger.LogException(ex);
-					throw;
-				}
-			}
+                if (serverProps.Contains("max_allowed_packet"))
+                    maxPacketSize = Convert.ToInt64(serverProps["max_allowed_packet"]);
 
-			if (serverProps.Contains("max_allowed_packet"))
-				maxPacketSize = Convert.ToInt64(serverProps["max_allowed_packet"]);
+                LoadCharacterSets();
+            }
 
 #if AUTHENTICATED
 			string licenseType = serverProps["license"];
@@ -183,7 +186,9 @@ namespace MySql.Data.MySqlClient
 				licenseType != "commercial") 
 				throw new MySqlException( "This client library licensed only for use with commercially-licensed MySQL servers." );
 #endif
-			LoadCharacterSets();
+            // if the user has indicated that we are not to reset
+            // the connection then we are done.
+            if (!Settings.ConnectionReset) return;
 
 			string charSet = connectionString.CharacterSet;
 			if (charSet == null || charSet.Length == 0)
@@ -206,7 +211,8 @@ namespace MySql.Data.MySqlClient
 			// want results in
 			if (version.isAtLeast(4, 1, 0))
 			{
-				cmd.CommandText = "SET character_set_results=NULL";
+                MySqlCommand cmd = new MySqlCommand("SET character_set_results=NULL",
+                    connection);
 				object clientCharSet = serverProps["character_set_client"];
 				object connCharSet = serverProps["character_set_connection"];
 				if ((clientCharSet != null && clientCharSet.ToString() != charSet) ||

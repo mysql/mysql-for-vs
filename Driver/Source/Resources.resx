@@ -297,4 +297,16 @@
   <data name="WrongParameterName" xml:space="preserve">
     <value>Parameter '{0}' is not found but a parameter with the name '{1}' is found. Parameter names must include the leading parameter marker.</value>
   </data>
+  <data name="UnableToConnectToHost" xml:space="preserve">
+    <value>Unable to connect to any of the specified MySQL hosts.</value>
+  </data>
+  <data name="UnableToRetrieveSProcData" xml:space="preserve">
+    <value>Unable to retrieve stored procedure metadata.  Either grant SELECTprivilege to mysql.proc for this user or use "noAccessToProcedureBody=true" with  your connection string.</value>
+  </data>
+  <data name="NextResultIsClosed" xml:space="preserve">
+    <value>Invalid attempt to call NextResult when the reader is closed.</value>
+  </data>
+  <data name="ObjectDisposed" xml:space="preserve">
+    <value>The object is not open or has been disposed.</value>
+  </data>
 </root>

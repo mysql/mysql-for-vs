@@ -196,7 +196,7 @@ namespace MySql.Data.Types
 				row["ColumnSize"] = 0;
 				row["CreateFormat"] = types[x];
 				row["CreateParameters"] = null;
-				row["DataType"] = "Byte";
+				row["DataType"] = "System.Byte[]";
 				row["IsAutoincrementable"] = false;
 				row["IsBestMatch"] = true;
 				row["IsCaseSensitive"] = false;

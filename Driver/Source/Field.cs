@@ -225,6 +225,7 @@ namespace MySql.Data.MySqlClient
 				case MySqlDbType.Set:
 				case MySqlDbType.Enum:
 				case MySqlDbType.String:
+                case MySqlDbType.VarString:
 				case MySqlDbType.VarChar: return new MySqlString(type, true);
 				case MySqlDbType.Blob:
 				case MySqlDbType.MediumBlob:

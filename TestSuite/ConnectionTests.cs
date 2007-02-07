@@ -342,5 +342,28 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 			suExecSQL("DELETE FROM mysql.user WHERE user='quotedUser'");
 		}
-	}
+
+        /// <summary>
+        /// Bug #24802 Error Handling 
+        /// </summary>
+        [Test]
+        public void TestConnectingSocketBadHostName()
+        {
+            string connStr = "server=foobar;user id=foouser;password=;database=Test;" +
+                "pooling=false";
+            MySqlConnection c = new MySqlConnection(connStr);
+            try
+            {
+                c.Open();
+            }
+            catch (MySqlException ex)
+            {
+                Assert.AreEqual((int)MySqlErrorCode.UnableToConnectToHost, ex.Number);
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(e.Message);
+            }
+        }
+    }
 }

@@ -393,5 +393,28 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.IsFalse(reader.Read());
             }
         }
+
+        [Test]
+        public void ParameterCacheNotClearing()
+        {
+            try
+            {
+                MySqlCommand cmd = new MySqlCommand("INSERT INTO test (id, name) VALUES (?id, ?name)", conn);
+                cmd.Parameters.Add("?id", 1);
+                cmd.Parameters.Add("?name", "test");
+                cmd.ExecuteNonQuery();
+
+                cmd.CommandText = "INSERT INTO test (id, name, dt) VALUES (?id1, ?name1, ?id)";
+                cmd.Parameters[0].ParameterName = "?id1";
+                cmd.Parameters[0].Value = 2;
+                cmd.Parameters[1].ParameterName = "?name1";
+                cmd.Parameters.Add("?id", DateTime.Now);
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
     }
 }

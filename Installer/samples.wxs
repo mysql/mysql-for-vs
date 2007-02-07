@@ -1,36 +1,36 @@
-<?xml version="1.0"?> 
-<Wix xmlns='http://schemas.microsoft.com/wix/2003/01/wi'> 
-   <Fragment Id='SamplesFragment'> 
+<?xml version="1.0"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment Id='SamplesFragment'> 
     <DirectoryRef Id='SampleDir'> 
-		<Directory Id="TableEditor" Name="teditor" LongName="Table Editor">
+		<Directory Id="TableEditor" Name="Table Editor">
 			<Directory Id="teCS" Name="cs">
 				<Component Id="Sample1CS" Guid="22cbf994-2ffb-4c7c-8538-1f773cd8a2a5">
-					<File Id="teCS1" Name="App.ico" src="..\Samples\TableEditor\cs\App.ico" DiskId="1"/>
-					<File Id="teCS2" Name="AssInfo.cs" LongName="AssemblyInfo.cs" src="..\Samples\TableEditor\cs\AssemblyInfo.cs" DiskId="1"/>
-					<File Id="teCS3" Name="Form1.cs" src="..\Samples\TableEditor\cs\Form1.cs" DiskId="1"/>
-					<File Id="teCS4" Name="Form1.res" LongName="Form1.resx" src="..\Samples\TableEditor\cs\Form1.resx" DiskId="1"/>
-					<File Id="teCS5" Name="te.csp" LongName="TableEditor.csproj" src="..\Samples\TableEditor\cs\TableEditor.csproj" DiskId="1"/>
-					<File Id="teCS7" Name="def.bld" LongName="TableEditor.build" src="..\Samples\TableEditor\cs\TableEditor.build" DiskId="1"/>
+					<File Id="teCS1" Name="App.ico" Source="..\Samples\TableEditor\cs\App.ico" DiskId="1"/>
+					<File Id="teCS2" Name="AssemblyInfo.cs" Source="..\Samples\TableEditor\cs\AssemblyInfo.cs" DiskId="1"/>
+					<File Id="teCS3" Name="Form1.cs" Source="..\Samples\TableEditor\cs\Form1.cs" DiskId="1"/>
+					<File Id="teCS4" Name="Form1.resx" Source="..\Samples\TableEditor\cs\Form1.resx" DiskId="1"/>
+					<File Id="teCS5" Name="TableEditor.csproj" Source="..\Samples\TableEditor\cs\TableEditor.csproj" DiskId="1"/>
+					<File Id="teCS7" Name="TableEditor.build" Source="..\Samples\TableEditor\cs\TableEditor.build" DiskId="1"/>
 				</Component>
 			</Directory>
 			<Directory Id="teVB" Name="vb">
 				<Component Id="Sample1VB" Guid="72104075-eff1-4d96-b186-8b0a61e7d858">
-					<File Id="teVB2" Name="AssInfo.vb" LongName="AssemblyInfo.vb" src="..\Samples\TableEditor\vb\AssemblyInfo.vb" DiskId="1"/>
-					<File Id="teVB3" Name="Form1.vb" src="..\Samples\TableEditor\vb\Form1.vb" DiskId="1"/>
-					<File Id="teVB4" Name="Form1.res" LongName="Form1.resx" src="..\Samples\TableEditor\vb\Form1.resx" DiskId="1"/>
-					<File Id="teVB5" Name="te.vbp" LongName="TableEditor.vbproj" src="..\Samples\TableEditor\vb\TableEditor.vbproj" DiskId="1"/>
-					<File Id="teVB7" Name="te.bld" LongName="TableEditor.build" src="..\Samples\TableEditor\vb\TableEditor.build" DiskId="1"/>
+					<File Id="teVB2" Name="AssemblyInfo.vb" Source="..\Samples\TableEditor\vb\AssemblyInfo.vb" DiskId="1"/>
+					<File Id="teVB3" Name="Form1.vb" Source="..\Samples\TableEditor\vb\Form1.vb" DiskId="1"/>
+					<File Id="teVB4" Name="Form1.resx" Source="..\Samples\TableEditor\vb\Form1.resx" DiskId="1"/>
+					<File Id="teVB5" Name="TableEditor.vbproj" Source="..\Samples\TableEditor\vb\TableEditor.vbproj" DiskId="1"/>
+					<File Id="teVB7" Name="TableEditor.build" Source="..\Samples\TableEditor\vb\TableEditor.build" DiskId="1"/>
 				</Component>
 			</Directory>
 		</Directory>
       <Directory Id="Async" Name="Async">
         <Directory Id="asyncCS" Name="cs">
           <Component Id="Sample2CS" Guid="1cfb8520-6afd-4979-888b-7dfdf4728219">
-            <File Id="sample2file1" Name="App.ico" src="..\Samples\Async\cs\App.ico" DiskId="1"/>
-            <File Id="sample2file2" Name="AssInfo.cs" LongName="AssemblyInfo.cs" src="..\Samples\Async\cs\AssemblyInfo.cs" DiskId="1"/>
-            <File Id="sample2file3" Name="Form1.cs" src="..\Samples\Async\cs\Form1.cs" DiskId="1"/>
-            <File Id="sample2file4" Name="Form1.res" src="..\Samples\Async\cs\Form1.resx" DiskId="1"/>
-            <File Id="sample2file5" Name="Async.csp" LongName="Async.csproj" src="..\Samples\Async\cs\Async.csproj" DiskId="1"/>
+            <File Id="sample2file1" Name="App.ico" Source="..\Samples\Async\cs\App.ico" DiskId="1"/>
+            <File Id="sample2file2" Name="AssemblyInfo.cs" Source="..\Samples\Async\cs\AssemblyInfo.cs" DiskId="1"/>
+            <File Id="sample2file3" Name="Form1.cs" Source="..\Samples\Async\cs\Form1.cs" DiskId="1"/>
+            <File Id="sample2file4" Name="Form1.res" Source="..\Samples\Async\cs\Form1.resx" DiskId="1"/>
+            <File Id="sample2file5" Name="Async.csproj" Source="..\Samples\Async\cs\Async.csproj" DiskId="1"/>
           </Component>
         </Directory>
       </Directory>

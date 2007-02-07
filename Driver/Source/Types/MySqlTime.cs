@@ -187,6 +187,11 @@ namespace MySql.Data.Types
 			int hours = Int32.Parse(parts[0]);
 			int mins = Int32.Parse(parts[1]);
 			int secs = Int32.Parse(parts[2]);
+            if (hours < 0)
+            {
+                mins *= -1;
+                secs *= -1;
+            }
 			int days = hours / 24;
 			hours = hours - (days * 24);
 			mValue = new TimeSpan(days, hours, mins, secs, 0);

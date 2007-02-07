@@ -84,13 +84,7 @@
 		
 		<nant buildfile="staging/Client.build" target="allframeworks"/>
 
-		<!-- now build the WIX installer -->
-		<exec workingdir="staging/Installer" program="candle" commandline="-dIsGPL=${IsGPL} -dbuild=release main.wxs"/>
-		<exec workingdir="staging/Installer" program="candle" commandline="samples.wxs"/>
-		<exec workingdir="staging/Installer" program="candle" commandline="sources.wxs"/>
-		<exec workingdir="staging/Installer" program="candle" commandline="custom.wxs"/>
-		<exec workingdir="staging/Installer" program="light" 
-			commandline='main.wixobj samples.wixobj sources.wixobj custom.wixobj "${wix.dir}/WixUI.wixlib" -loc "${wix.dir}/WixUI_en-us.wxl" -out MySql.Data.msi'/>
+      <call target="MakeInstaller"/>
 
 		<zip zipfile="packages/mysql-connector-net-${ver}${postfix}.zip">
 			<fileset basedir="staging/Installer"><include name="MySql.Data.msi"/></fileset>
@@ -114,7 +108,15 @@
         </checksum>-->
 
     </target>
-    
+
+  <target name="MakeInstaller">
+    <!-- now build the WIX installer -->
+    <exec workingdir="staging/Installer" program="candle" 
+          commandline="-dIsGPL=${IsGPL} -dbuild=release main.wxs samples.wxs sources.wxs"/>
+    <exec workingdir="staging/Installer" program="light"
+			    commandline="-sval -ext WixUIExtension -cultures:en-us main.wixobj samples.wixobj sources.wixobj -out MySql.Data.msi"/>
+  </target>
+  
     <!-- verification targets -->
 	<target name="VerifyAll" depends="all">
 		<property name="licenseFile" value="gpl-banner.txt"/>

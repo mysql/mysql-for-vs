@@ -25,6 +25,7 @@ using MySql.Data.Common;
 using System.Globalization;
 using System.Diagnostics;
 using System.Collections;
+using System.Data.SqlTypes;
 
 namespace MySql.Data.MySqlClient
 {
@@ -137,23 +138,23 @@ namespace MySql.Data.MySqlClient
             sql.Append("ON C.table_schema=V.table_schema AND C.table_name=V.table_name ");
             if (restrictions != null && restrictions.Length >= 2 &&
                 restrictions[1] != null)
-                where.AppendFormat("C.table_schema='{0}' ", restrictions[1]);
+                where.AppendFormat(CultureInfo.InvariantCulture, "C.table_schema='{0}' ", restrictions[1]);
             if (restrictions != null && restrictions.Length >= 3 &&
                 restrictions[2] != null)
             {
                 if (where.Length > 0)
                     where.Append("AND ");
-                where.AppendFormat("C.table_name='{0}' ", restrictions[2]);
+                where.AppendFormat(CultureInfo.InvariantCulture, "C.table_name='{0}' ", restrictions[2]);
             }
             if (restrictions != null && restrictions.Length == 4 &&
                 restrictions[3] != null)
             {
                 if (where.Length > 0)
                     where.Append("AND ");
-                where.AppendFormat("C.column_name='{0}' ", restrictions[3]);
+                where.AppendFormat(CultureInfo.InvariantCulture, "C.column_name='{0}' ", restrictions[3]);
             }
             if (where.Length > 0)
-                sql.AppendFormat(" WHERE {0}", where.ToString());
+                sql.AppendFormat(CultureInfo.InvariantCulture, " WHERE {0}", where.ToString());
             DataTable dt = GetTable(sql.ToString());
             dt.TableName = "ViewColumns";
             dt.Columns[0].ColumnName = "VIEW_CATALOG";
@@ -265,11 +266,11 @@ namespace MySql.Data.MySqlClient
                     if (values[i] == null || values[i] == String.Empty) continue;
                     if (where.Length > 0)
                         where.Append(" AND ");
-                    where.AppendFormat("{0}='{1}'", keys[i], values[i]);
+                    where.AppendFormat(CultureInfo.InvariantCulture, "{0}='{1}'", keys[i], values[i]);
                 }
 
             if (where.Length > 0)
-                query.AppendFormat(" WHERE {0}", where.ToString());
+                query.AppendFormat(CultureInfo.InvariantCulture, " WHERE {0}", where.ToString());
 
             return GetTable(query.ToString());
         }
@@ -365,6 +366,11 @@ namespace MySql.Data.MySqlClient
                     reader.Read();
                     ParseProcedureBody(parametersTable, reader.GetString(2),
                         routine, nameToRestrict);
+                }
+                catch (SqlNullValueException snex)
+                {
+                    throw new InvalidOperationException(
+                        Resources.UnableToRetrieveSProcData, snex);
                 }
                 catch (Exception)
                 {
@@ -488,10 +494,13 @@ namespace MySql.Data.MySqlClient
             string[] split = cs.Split(parmDef, " \t\r\n");
             if (parmRow["IS_RESULT"].Equals("NO"))
             {
-					parmRow["PARAMETER_NAME"] = String.Format("{0}{1}",
-						connection.ParameterMarker, CleanParameterName(split[0]));
+                parmRow["PARAMETER_NAME"] = String.Format("{0}{1}",
+                    connection.ParameterMarker, CleanParameterName(split[0]));
                 parmDef = parmDef.Substring(split[0].Length);
             }
+            else
+                parmRow["PARAMETER_NAME"] = String.Format("{0}RETURN_VALUE",
+                    connection.ParameterMarker);
 
             ParseType(parmDef, sqlMode, parmRow);
         }

@@ -21,7 +21,6 @@ namespace MySql.Data.MySqlClient {
     // with the /str option, or rebuild your VS project.
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "2.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
@@ -349,6 +348,15 @@ namespace MySql.Data.MySqlClient {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid attempt to call NextResult when the reader is closed..
+        /// </summary>
+        internal static string NextResultIsClosed {
+            get {
+                return ResourceManager.GetString("NextResultIsClosed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nested transactions are not supported..
         /// </summary>
         internal static string NoNestedTransactions {
@@ -356,7 +364,15 @@ namespace MySql.Data.MySqlClient {
                 return ResourceManager.GetString("NoNestedTransactions", resourceCulture);
             }
         }
-        
+
+        internal static string ObjectDisposed
+        {
+            get
+            {
+                return ResourceManager.GetString("ObjectDisposed", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to  Offset cannot be negative.
         /// </summary>
@@ -556,6 +572,15 @@ namespace MySql.Data.MySqlClient {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to connect to any of the specified MySQL hosts..
+        /// </summary>
+        internal static string UnableToConnectToHost {
+            get {
+                return ResourceManager.GetString("UnableToConnectToHost", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unable to execute stored procedure &apos;{0}&apos;..
         /// </summary>
         internal static string UnableToExecuteSP {
@@ -570,6 +595,15 @@ namespace MySql.Data.MySqlClient {
         internal static string UnableToParseFK {
             get {
                 return ResourceManager.GetString("UnableToParseFK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to retrieve stored procedure metadata.  Either grant SELECTprivilege to mysql.proc for this user or use &quot;noAccessToProcedureBody=true&quot; with  your connection string..
+        /// </summary>
+        internal static string UnableToRetrieveSProcData {
+            get {
+                return ResourceManager.GetString("UnableToRetrieveSProcData", resourceCulture);
             }
         }
         

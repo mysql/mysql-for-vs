@@ -1,4 +1,4 @@
-// Copyright (C) 2004 MySQL AB & MySQL Finland AB
+// Copyright (C) 2004-2006 MySQL AB & MySQL Finland AB
 // 
 // This software is distributed with NO WARRANTY OF ANY KIND.  No author or
 // distributor accepts any responsibility for the consequences of using it, or

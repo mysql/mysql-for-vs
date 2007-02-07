@@ -111,10 +111,10 @@ namespace MySql.Data.Types
 			// when GetSchema is called for the DataSourceInformation 
 			// collection and then it wil be cached.
 			DataRow row = dsTable.NewRow();
-			row["TypeName"] = "INT";
+			row["TypeName"] = "TINY INT";
 			row["ProviderDbType"] = MySqlDbType.UByte;
 			row["ColumnSize"] = 0;
-			row["CreateFormat"] = "INT UNSIGNED";
+			row["CreateFormat"] = "TINYINT UNSIGNED";
 			row["CreateParameters"] = null;
 			row["DataType"] = "System.Byte";
 			row["IsAutoincrementable"] = true;

@@ -500,7 +500,7 @@ namespace MySql.Data.Types
 				row["ColumnSize"] = 0;
 				row["CreateFormat"] = types[x];
 				row["CreateParameters"] = null;
-				row["DataType"] = "DateTime";
+				row["DataType"] = "System.DateTime";
 				row["IsAutoincrementable"] = false;
 				row["IsBestMatch"] = true;
 				row["IsCaseSensitive"] = false;

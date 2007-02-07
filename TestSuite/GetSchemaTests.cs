@@ -68,6 +68,78 @@ namespace MySql.Data.MySqlClient.Tests
             }
         }
 
+        /// <summary>
+        /// Bug #25907 DataType Column of DataTypes collection does'nt contain the correct CLR Datatype 
+        /// </summary>
+        [Test]
+        public void DataTypes()
+        {
+            try
+            {
+                DataTable dt = conn.GetSchema("DataTypes", new string[] { });
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    string type = row["TYPENAME"].ToString();
+                    Type systemType = Type.GetType(row["DATATYPE"].ToString());
+                    if (type == "BIT")
+                        Assert.AreEqual(typeof(System.UInt64), systemType);
+                    else if (type == "DATE" || type == "DATETIME" || 
+                        type == "TIMESTAMP")
+                        Assert.AreEqual(typeof(System.DateTime), systemType);
+                    else if (type == "BLOB" || type == "TINYBLOB" || 
+                             type == "MEDIUMBLOB" || type == "LONGBLOB")
+                        Assert.AreEqual(typeof(System.Byte[]), systemType);
+                    else if (type == "TIME")
+                        Assert.AreEqual(typeof(System.TimeSpan), systemType);
+                    else if (type == "CHAR" || type == "SET" || 
+                             type == "VARCHAR" || type == "ENUM")
+                        Assert.AreEqual(typeof(System.String), systemType);
+                    else if (type == "DOUBLE")
+                        Assert.AreEqual(typeof(System.Double), systemType);
+                    else if (type == "SINGLE")
+                        Assert.AreEqual(typeof(System.Single), systemType);
+                    else if (type == "TINYINT")
+                    {
+                        if (row["CREATEFORMAT"].ToString().EndsWith("UNSIGNED"))
+                            Assert.AreEqual(typeof(System.Byte), systemType);
+                        else
+                            Assert.AreEqual(typeof(System.SByte), systemType);
+                    }
+                    else if (type == "SMALLINT")
+                    {
+                        if (row["CREATEFORMAT"].ToString().EndsWith("UNSIGNED"))
+                            Assert.AreEqual(typeof(System.UInt16), systemType);
+                        else
+                            Assert.AreEqual(typeof(System.Int16), systemType);
+                    }
+                    else if (type == "MEDIUMINT" || type == "INT")
+                    {
+                        if (row["CREATEFORMAT"].ToString().EndsWith("UNSIGNED"))
+                            Assert.AreEqual(typeof(System.UInt32), systemType);
+                        else
+                            Assert.AreEqual(typeof(System.Int32), systemType);
+                    }
+                    else if (type == "BIGINT")
+                    {
+                        if (row["CREATEFORMAT"].ToString().EndsWith("UNSIGNED"))
+                            Assert.AreEqual(typeof(System.UInt64), systemType);
+                        else
+                            Assert.AreEqual(typeof(System.Int64), systemType);
+                    }
+                    else if (type == "DECIMAL")
+                        Assert.AreEqual(typeof(System.Decimal), systemType);
+                    else if (type == "TINYINT")
+                        Assert.AreEqual(typeof(System.Byte), systemType);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
+
         [Test]
         public void Databases()
         {

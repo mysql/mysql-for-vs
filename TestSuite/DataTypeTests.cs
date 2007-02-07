@@ -247,18 +247,18 @@ namespace MySql.Data.MySqlClient.Tests
 				object value = reader["tm"];
 				Assert.AreEqual( value.GetType(), typeof(TimeSpan));
 				TimeSpan ts = (TimeSpan)reader["tm"];
-				Assert.AreEqual( 0, ts.Hours );
-				Assert.AreEqual( 0, ts.Minutes );
-				Assert.AreEqual( 0, ts.Seconds );
+				Assert.AreEqual(0, ts.Hours);
+				Assert.AreEqual(0, ts.Minutes);
+				Assert.AreEqual(0, ts.Seconds);
 
 				reader.Read();
 				value = reader["tm"];
 				Assert.AreEqual( value.GetType(), typeof(TimeSpan));
 				ts = (TimeSpan)reader["tm"];
-				Assert.AreEqual( 21, ts.Days );
-				Assert.AreEqual( 8, ts.Hours );
-				Assert.AreEqual( 45, ts.Minutes );
-				Assert.AreEqual( 17, ts.Seconds );
+				Assert.AreEqual(21, ts.Days);
+				Assert.AreEqual(8, ts.Hours);
+				Assert.AreEqual(45, ts.Minutes);
+				Assert.AreEqual(17, ts.Seconds);
 			
 				reader.Close();
 			}
@@ -714,5 +714,24 @@ namespace MySql.Data.MySqlClient.Tests
             }
 		}
 
+        /// <summary>
+        /// Bug #25912 selecting negative time values gets wrong results 
+        /// </summary>
+        [Test]
+        public void TestNegativeTime()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test (t time)");
+            execSQL("INSERT INTO test SET T='-07:24:00'");
+
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+
+            TimeSpan ts = (TimeSpan)dt.Rows[0]["t"];
+            Assert.AreEqual(-7, ts.Hours);
+            Assert.AreEqual(-24, ts.Minutes);
+            Assert.AreEqual(0, ts.Seconds);
+        }
 	}
 }

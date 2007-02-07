@@ -40,6 +40,7 @@ namespace MySql.Data.MySqlClient
 		private char paramMarker = '?';
 		private Hashtable ciHash;
 		private Hashtable hash;
+        private int returnParameterIndex;
 
 		internal MySqlParameterCollection()
 		{
@@ -50,6 +51,7 @@ namespace MySql.Data.MySqlClient
 			ciHash = new Hashtable(new CaseInsensitiveHashCodeProvider(),
 			new CaseInsensitiveComparer());
 #endif
+            Clear();
 		}
 
 		internal char ParameterMarker
@@ -114,21 +116,19 @@ namespace MySql.Data.MySqlClient
 			int index = items.Add(value);
 			hash.Add(value.ParameterName, index);
 			ciHash.Add(value.ParameterName, index);
+            value.Collection = this;
 			return value;
 		}
 
 		private MySqlParameter AddReturnParameter(MySqlParameter value)
 		{
-			for (int i = 0; i < items.Count; i++)
+            if (returnParameterIndex != -1)
 			{
-				MySqlParameter p = (MySqlParameter)items[i];
-				if (p.Direction != ParameterDirection.ReturnValue) continue;
-				items[i] = value;
+				items[returnParameterIndex] = value;
 				return value;
 			}
+
 			int index = items.Add(value);
-            hash.Add(value.ParameterName, index);
-            ciHash.Add(value.ParameterName, index);
             return value;
 		}
 
@@ -138,10 +138,16 @@ namespace MySql.Data.MySqlClient
 		/// <param name="parameterName">The name of the parameter.</param>
 		/// <param name="value">The <see cref="MySqlParameter.Value"/> of the <see cref="MySqlParameter"/> to add to the collection.</param>
 		/// <returns>The newly added <see cref="MySqlParameter"/> object.</returns>
-		public MySqlParameter Add(string parameterName, object value)
+		[Obsolete("Add(String parameterName, Object value) has been deprecated.  Use AddWithValue(String parameterName, Object value)")]
+        public MySqlParameter Add(string parameterName, object value)
 		{
 			return Add(new MySqlParameter(parameterName, value));
 		}
+
+        public MySqlParameter AddWithValue(string parameterName, object value)
+        {
+            return Add(new MySqlParameter(parameterName, value));
+        }
 
 		/// <summary>
 		/// Adds a <see cref="MySqlParameter"/> to the <see cref="MySqlParameterCollection"/> given the parameter name and the data type.
@@ -236,16 +242,31 @@ namespace MySql.Data.MySqlClient
 			int index = this.IndexOf(parameterName);
 			if (index < 0)
 				throw new ArgumentException("Parameter '" + parameterName + "' not found in the collection.");
-			//changed = true;
-			items[index] = (MySqlParameter)value;
+            SetParameter(index, value);
 		}
 
 		protected override void SetParameter(int index, DbParameter value)
 		{
 			CheckIndex(index);
-			//changed = true;
+            MySqlParameter p = (MySqlParameter)items[index];
+            if (p.Direction == ParameterDirection.ReturnValue)
+                returnParameterIndex = -1;
+            else
+            {
+                hash.Remove(p.ParameterName);
+                ciHash.Remove(p.ParameterName);
+            }
+
 			items[index] = (MySqlParameter)value;
-		}
+            p = (MySqlParameter)value;
+            if (p.Direction == ParameterDirection.ReturnValue)
+                returnParameterIndex = index;
+            else
+            {
+                hash.Add(p.ParameterName, index);
+                ciHash.Add(p.ParameterName, index);
+            }
+        }
 
 		/// <summary>
 		/// Adds the specified <see cref="MySqlParameter"/> object to the <see cref="MySqlParameterCollection"/>.
@@ -271,9 +292,12 @@ namespace MySql.Data.MySqlClient
 		/// </summary>
 		public override void Clear()
 		{
+            foreach (MySqlParameter p in items)
+                p.Collection = null;
 			items.Clear();
 			hash.Clear();
 			ciHash.Clear();
+            returnParameterIndex = -1;
 		}
 
 		/// <summary>
@@ -332,11 +356,20 @@ namespace MySql.Data.MySqlClient
 		public override int IndexOf(string parameterName)
 		{
 			object o = hash[parameterName];
-			if (o == null)
-				o = ciHash[parameterName];
-			if (o == null)
-				return -1;
-			return (int)o;
+            if (o != null)
+                return (int)o;
+
+			o = ciHash[parameterName];
+            if (o != null)
+                return (int)o;
+
+            if (returnParameterIndex != -1)
+            {
+                MySqlParameter p = (MySqlParameter)items[returnParameterIndex];
+                if (String.Compare(parameterName, p.ParameterName, true) == 0)
+                    return returnParameterIndex;
+            }
+			return -1;
 		}
 
 		/// <summary>
@@ -394,6 +427,13 @@ namespace MySql.Data.MySqlClient
 		public override void Remove(object value)
 		{
 			items.Remove(value);
+
+            MySqlParameter p = (value as MySqlParameter);
+            hash.Remove(p.ParameterName);
+            ciHash.Remove(p.ParameterName);
+            p.Collection = null;
+            if (p.Direction == ParameterDirection.ReturnValue)
+                returnParameterIndex = -1;
 		}
 
 		/// <summary>
@@ -403,7 +443,7 @@ namespace MySql.Data.MySqlClient
 		public override void RemoveAt(string name)
 		{
 			DbParameter p = GetParameter(name);
-			items.Remove(p);
+			Remove(p);
 		}
 
 		/// <summary>
@@ -413,7 +453,8 @@ namespace MySql.Data.MySqlClient
 		/// <overloads>Removes the specified <see cref="MySqlParameter"/> from the collection.</overloads>
 		public override void RemoveAt(int index)
 		{
-			items.RemoveAt(index);
+            object o = items[index];
+            Remove(o);
 		}
 
         /// <summary>
@@ -427,5 +468,15 @@ namespace MySql.Data.MySqlClient
 
 		#endregion
 
+        internal void ParameterNameChanged(MySqlParameter p, string oldName, string newName)
+        {
+            if (p.Direction == ParameterDirection.ReturnValue)
+                return;
+            int index = IndexOf(oldName);
+            hash.Remove(oldName);
+            ciHash.Remove(oldName);
+            hash.Add(newName, index);
+            ciHash.Add(newName, index);
+        }
 	}
 }
