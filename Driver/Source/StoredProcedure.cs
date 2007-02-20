@@ -23,6 +23,7 @@ using System.Data;
 using MySql.Data.Common;
 using System.Text;
 using MySql.Data.Types;
+using System.Globalization;
 
 namespace MySql.Data.MySqlClient
 {
@@ -113,7 +114,7 @@ namespace MySql.Data.MySqlClient
 
 				if (mode == "INOUT")
 				{
-					setStr.AppendFormat("SET {0}={1};", vName, pName);
+                    setStr.AppendFormat(CultureInfo.InvariantCulture, "SET {0}={1};", vName, pName);
 					outSelect += vName + ", ";
 				}
 			}
