@@ -1,0 +1,175 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{19DAEB9F-F508-43A5-AB25-D66919A18259}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MySql.Data.MySqlClient</RootNamespace>
+    <AssemblyName>MySql.Data</AssemblyName>
+    <ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <PlatformFamilyName>PocketPC</PlatformFamilyName>
+    <PlatformID>3C41C503-53EF-4c2a-8DD4-A8217CAD115E</PlatformID>
+    <OSVersion>4.20</OSVersion>
+    <DeployDirSuffix>PPC2003</DeployDirSuffix>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FormFactorID>
+    </FormFactorID>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\netcf-2.0\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;PocketPC, CF</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <FileAlignment>512</FileAlignment>
+    <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\netcf-2.0\Release\</OutputPath>
+    <DefineConstants>TRACE;PocketPC, CF</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <FileAlignment>512</FileAlignment>
+    <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Source\base\DbConnectionStringBuilder.cs" />
+    <Compile Include="Source\base\DbException.cs" />
+    <Compile Include="Source\CharSetMap.cs" />
+    <Compile Include="Source\command.cs">
+    </Compile>
+    <Compile Include="Source\CommandBuilder.cs">
+    </Compile>
+    <Compile Include="Source\common\BufferedStream.cs" />
+    <Compile Include="Source\common\ContextString.cs" />
+    <Compile Include="Source\common\NativeMethods.cs" />
+    <Compile Include="Source\common\Platform.cs" />
+    <Compile Include="Source\common\SHA1.cs" />
+    <Compile Include="Source\common\SocketStream.cs" />
+    <Compile Include="Source\common\StreamCreator.cs" />
+    <Compile Include="Source\common\Version.cs" />
+    <Compile Include="Source\common\WinCE.cs" />
+    <Compile Include="Source\CompressedStream.cs" />
+    <Compile Include="Source\Connection.cs">
+    </Compile>
+    <Compile Include="Source\Crypt.cs" />
+    <Compile Include="Source\dataadapter.cs">
+    </Compile>
+    <Compile Include="Source\datareader.cs" />
+    <Compile Include="Source\Driver.cs" />
+    <Compile Include="Source\Exception.cs" />
+    <Compile Include="Source\Field.cs" />
+    <Compile Include="Source\Installer.cs" />
+    <Compile Include="Source\ISSchemaProvider.cs" />
+    <Compile Include="Source\Logger.cs" />
+    <Compile Include="Source\MySqlClientFactory.cs" />
+    <Compile Include="Source\MySqlConnectionStringBuilder.cs" />
+    <Compile Include="Source\MysqlDefs.cs" />
+    <Compile Include="Source\MySqlError.cs" />
+    <Compile Include="Source\MySqlHelper.cs" />
+    <Compile Include="Source\MySqlPool.cs" />
+    <Compile Include="Source\MySqlPoolManager.cs" />
+    <Compile Include="Source\MySqlStream.cs" />
+    <Compile Include="Source\NativeDriver.cs" />
+    <Compile Include="Source\parameter.cs" />
+    <Compile Include="Source\parameter_collection.cs" />
+    <Compile Include="Source\PreparableStatement.cs" />
+    <Compile Include="Source\ProcedureCache.cs" />
+    <Compile Include="Source\Resources.Designer.cs" />
+    <Compile Include="Source\SchemaProvider.cs" />
+    <Compile Include="Source\Statement.cs" />
+    <Compile Include="Source\StoredProcedure.cs" />
+    <Compile Include="Source\transaction.cs" />
+    <Compile Include="Source\Types\MetaData.cs" />
+    <Compile Include="Source\Types\MySqlBinary.cs" />
+    <Compile Include="Source\Types\MySqlBit.cs" />
+    <Compile Include="Source\Types\MySqlByte.cs" />
+    <Compile Include="Source\Types\MySqlConversionException.cs" />
+    <Compile Include="Source\Types\MySqlDateTime.cs" />
+    <Compile Include="Source\Types\MySqlDecimal.cs" />
+    <Compile Include="Source\Types\MySqlDouble.cs" />
+    <Compile Include="Source\Types\MySqlInt16.cs" />
+    <Compile Include="Source\Types\MySqlInt32.cs" />
+    <Compile Include="Source\Types\MySqlInt64.cs" />
+    <Compile Include="Source\Types\MySqlSingle.cs" />
+    <Compile Include="Source\Types\MySqlString.cs" />
+    <Compile Include="Source\Types\MySqlTime.cs" />
+    <Compile Include="Source\Types\MySqlUByte.cs" />
+    <Compile Include="Source\Types\MySqlUInt16.cs" />
+    <Compile Include="Source\Types\MySqlUInt32.cs" />
+    <Compile Include="Source\Types\MySqlUInt64.cs" />
+    <Compile Include="Source\Types\MySqlValue.cs" />
+    <Compile Include="Source\UsageAdvisor.cs" />
+    <Compile Include="Source\zlib\Adler32.cs" />
+    <Compile Include="Source\zlib\Deflate.cs" />
+    <Compile Include="Source\zlib\InfBlocks.cs" />
+    <Compile Include="Source\zlib\InfCodes.cs" />
+    <Compile Include="Source\zlib\Inflate.cs" />
+    <Compile Include="Source\zlib\InfTree.cs" />
+    <Compile Include="Source\zlib\StaticTree.cs" />
+    <Compile Include="Source\zlib\SupportClass.cs" />
+    <Compile Include="Source\zlib\Tree.cs" />
+    <Compile Include="Source\zlib\ZInputStream.cs" />
+    <Compile Include="Source\zlib\Zlib.cs" />
+    <Compile Include="Source\zlib\ZOutputStream.cs" />
+    <Compile Include="Source\zlib\ZStream.cs" />
+    <Compile Include="Source\zlib\ZStreamException.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Source\docs\MySqlCommand.xml" />
+    <Content Include="Source\docs\MySqlCommandBuilder.xml" />
+    <Content Include="Source\docs\MySqlConnection.xml" />
+    <Content Include="Source\docs\MySqlConnectionStringBuilder.xml" />
+    <Content Include="Source\docs\MySqlDataAdapter.xml" />
+    <Content Include="Source\docs\MySqlDataReader.xml" />
+    <Content Include="Source\docs\MySqlException.xml" />
+    <Content Include="Source\docs\MySqlHelper.xml" />
+    <Content Include="Source\docs\MySqlParameter.xml" />
+    <Content Include="Source\docs\MySqlParameterCollection.xml" />
+    <Content Include="Source\docs\MySqlTransaction.xml" />
+    <Content Include="Source\ReservedWords.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Source\Resources.resx">
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="docs\" />
+  </ItemGroup>
+  <Import Condition="'$(TargetFrameworkVersion)' == 'v1.0'" Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.v1.targets" />
+  <Import Condition="'$(TargetFrameworkVersion)' == 'v2.0'" Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}">
+        <HostingProcess disable="1" />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
