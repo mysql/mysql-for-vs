@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2006 MySQL AB
+// Copyright (C) 2004-2007 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -148,10 +148,12 @@ namespace MySql.Data.MySqlClient
 		{
 			this.connection = connection;
 
+            bool firstConfigure = false;
             // if we have not already configured our server variables
             // then do so now
             if (serverProps == null)
             {
+                firstConfigure = true;
                 // load server properties
                 serverProps = new Hashtable();
                 MySqlCommand cmd = new MySqlCommand("SHOW VARIABLES", connection);
@@ -187,8 +189,9 @@ namespace MySql.Data.MySqlClient
 				throw new MySqlException( "This client library licensed only for use with commercially-licensed MySQL servers." );
 #endif
             // if the user has indicated that we are not to reset
-            // the connection then we are done.
-            if (!Settings.ConnectionReset) return;
+            // the connection and this is not our first time through,
+            // then we are done.
+            if (!Settings.ConnectionReset && !firstConfigure) return;
 
 			string charSet = connectionString.CharacterSet;
 			if (charSet == null || charSet.Length == 0)

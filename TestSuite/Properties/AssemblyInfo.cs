@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2006 MySQL AB
+// Copyright (C) 2004-2007 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -31,7 +31,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("MySQL AB")]
 [assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("Copyright 2004-2006, MySQL AB")]
+[assembly: AssemblyCopyright("Copyright 2004-2007, MySQL AB")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
 
@@ -46,7 +46,7 @@ using System.Runtime.CompilerServices;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("5.0.3")]
+[assembly: AssemblyVersion("5.0.4")]
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 

@@ -3,7 +3,7 @@ Version 5.1.0
   - Added Membership and Role provider contributed by Sean Wright (thanks!)
   - Now compiles for .NET CF 2.0
 
-Version 5.0.4
+Version 5.0.4 2-28-2007
 
   Bugs fixed
   ----------
@@ -20,7 +20,13 @@ Version 5.0.4
   Bug #25906 Typo makes GetSchema with DataTypes collection throw an exception   
   Bug #25907 DataType Column of DataTypes collection does'nt contain the correct CLR Datatype   
   Bug #25950 DataSourceInformation collection contains incorrect values 
-  
+  Bug #26430 Will not install under Vista   
+  Bug #26152 Opening a connection is really slow 
+  Bug #24373 High CPU utilization when no idle connection 
+  Bug #24957 MySql.Data.Types.MySqlConversionException is not marked as Serializable. 
+  Bug #25603 Critial ConnectionPool Error in Connector.Net 5.03 
+  Bug #26660 MySqlConnection.GetSchema fails with NullReferenceException for Foreign Keys 
+
   Other changes
   -------------
   Return parameters created with DeriveParameters now have the name RETURN_VALUE
@@ -31,6 +37,14 @@ Version 5.0.4
        sprocs or prepared statements
   Assembly now properly appears in the Visual Studio 2005 Add/Remove Reference dialog
   Added MySqlParameterCollection.AddWithValue and marked the Add(name, value) method as obsolete
+  Added "Use Procedure Bodies" connection string option to allow calling procedures without
+       using procedure metadata (if possible).
+  Reverted behavior that required parameter names to start with the parameter marker.  We 
+       apologize for this back and forth but we mistakenly changed the behavior to not
+       match what SqlClient supports.  We now support using either syntax for adding
+       parameters however we also respond exactly like SqlClient in that if you ask for the
+       index of a parameter using a syntax different than you added the parameter, the result
+       will be -1.
   
 Version 5.0.3 12-31-2006
 

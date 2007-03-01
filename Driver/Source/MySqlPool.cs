@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2006 MySQL AB
+// Copyright (C) 2004-2007 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -22,6 +22,8 @@ using System;
 using MySql.Data.Common;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading;
 
 namespace MySql.Data.MySqlClient
 {
@@ -41,11 +43,15 @@ namespace MySql.Data.MySqlClient
 		private uint minSize;
 		private uint maxSize;
         private ProcedureCache procedureCache;
+        private Object lockObject;
+        private Semaphore poolGate;
 
 		public MySqlPool(MySqlConnectionStringBuilder settings)
 		{
 			minSize = settings.MinimumPoolSize;
 			maxSize = settings.MaximumPoolSize;
+            if (minSize > maxSize)
+                minSize = maxSize;
 			this.settings = settings;
 #if NET20
             inUsePool = new List<Driver>((int)maxSize);
@@ -60,9 +66,15 @@ namespace MySql.Data.MySqlClient
 				CreateNewPooledConnection();
 
             procedureCache = new ProcedureCache((int)settings.ProcedureCacheSize);
-		}
+            poolGate = new Semaphore((int)maxSize, (int)maxSize);
 
-		public MySqlConnectionStringBuilder	Settings 
+            // we don't really need to create this but it makes the code a bit cleaner
+            lockObject = new Object();
+        }
+
+        #region Properties
+
+        public MySqlConnectionStringBuilder	Settings 
 		{
 			get { return settings; }
 			set { settings = value; }
@@ -73,93 +85,105 @@ namespace MySql.Data.MySqlClient
             get { return procedureCache; }
         }
 
-/*		private int CheckConnections() 
-		{
-			int freed = 0;
-			lock (inUsePool.SyncRoot) 
-			{
-				for (int i=inUsePool.Count-1; i >= 0; i--) 
-				{
-					Driver d = (inUsePool[i] as Driver);
-					if (! d.Ping()) 
-					{
-						inUsePool.RemoveAt(i);
-						freed++;
-					}
-				}
-			}
-			return freed;
-		}
-*/
+        /// <summary>
+        /// It is assumed that this property will only be used from inside an active
+        /// lock.
+        /// </summary>
+        private bool HasIdleConnections
+        {
+            get { return idlePool.Count > 0; }
+        }
+
+        /// <summary>
+        /// It is assumed that this property will only be used from inside an active
+        /// lock.
+        /// </summary>
+        private bool HasRoomForConnections
+        {
+            get
+            {
+                if ((inUsePool.Count + idlePool.Count) == maxSize)
+                    return false;
+                return true;
+            }
+
+        }
+
+        #endregion
+
+        /// <summary>
+        /// CheckoutConnection handles the process of pulling a driver
+        /// from the idle pool, possibly resetting its state,
+        /// and adding it to the in use pool.  We assume that this method is only
+        /// called inside an active lock so there is no need to acquire a new lock.
+        /// </summary>
+        /// <returns>An idle driver object</returns>
 		private Driver CheckoutConnection()
 		{
-			lock((idlePool as ICollection).SyncRoot)
-			{
-				if (idlePool.Count == 0) return null;
-				Driver driver = (Driver)idlePool.Dequeue();
+			Driver driver = (Driver)idlePool.Dequeue();
 
-				// if the user asks us to ping/reset pooled connections
-				// do so now
-				if (settings.ConnectionReset)
-				{
-					if (!driver.Ping())
-					{
-						driver.Close();
-						return null;
-					}
-					driver.Reset();
-				}
+            // first check to see that the server is still alive
+            if (!driver.Ping())
+            {
+                driver.Close();
+                return null;
+            }
 
-                lock ((inUsePool as ICollection).SyncRoot)
-                {
-					inUsePool.Add(driver);
-				}
-				return driver;
-			}
+            // if the user asks us to ping/reset pooled connections
+			// do so now
+			if (settings.ConnectionReset)
+				driver.Reset();
+
+			inUsePool.Add(driver);
+
+			return driver;
 		}
 
-		private Driver GetPooledConnection()
+        /// <summary>
+        /// It is assumed that this method is only called from inside an active lock.
+        /// </summary>
+        private Driver GetPooledConnection()
 		{
-			while (true)
-			{
-				if (idlePool.Count > 0)
-					return CheckoutConnection();
+            while (true)
+            {
+                // if we don't have an idle connection but we have room for a new
+                // one, then create it here.
+                if (!HasIdleConnections)
+                    CreateNewPooledConnection();
 
-				// if idlepool == 0 and inusepool == max, then we can't create a new one
-				if (inUsePool.Count == maxSize)
-					return null;
-
-				CreateNewPooledConnection();
-			}
+                Driver d = CheckoutConnection();
+                if (d != null)
+                    return d;
+            }
 		}
 
+        /// <summary>
+        /// It is assumed that this method is only called from inside an active lock.
+        /// </summary>
 		private void CreateNewPooledConnection()
 		{
-            lock ((idlePool as ICollection).SyncRoot)
-                lock ((inUsePool as ICollection).SyncRoot)
-                {
-					// first we check if we are allowed to create another
-					if ((inUsePool.Count + idlePool.Count) == maxSize)
-						return;
-
-					Driver driver = Driver.Create(settings);
-
-					idlePool.Enqueue(driver);
-				}
+			Driver driver = Driver.Create(settings);
+			idlePool.Enqueue(driver);
 		}
 
 		public void ReleaseConnection(Driver driver)
 		{
-            lock ((idlePool as ICollection).SyncRoot)
-                lock ((inUsePool as ICollection).SyncRoot)
-                {
-					inUsePool.Remove(driver);
-					if (driver.IsTooOld())
-						driver.Close();
-					else
-						idlePool.Enqueue(driver);
-				}
-		}
+            lock (lockObject)
+            {
+                if (!inUsePool.Contains(driver))
+                    return;
+
+                inUsePool.Remove(driver);
+                if (driver.IsTooOld())
+                    driver.Close();
+                else
+                    idlePool.Enqueue(driver);
+
+                // we now either have a connection available or have room to make
+                // one so we release one slot in our semaphore
+                poolGate.Release();
+            }
+        }
 
         /// <summary>
         /// Removes a connection from the in use pool.  The only situations where this method 
@@ -170,32 +194,31 @@ namespace MySql.Data.MySqlClient
         /// <param name="driver"></param>
         public void RemoveConnection(Driver driver)
         {
-            lock ((inUsePool as ICollection).SyncRoot)
+            lock (lockObject)
             {
-                inUsePool.Remove(driver);
+                if (inUsePool.Contains(driver))
+                {
+                    inUsePool.Remove(driver);
+                    poolGate.Release();
+                }
             }
         }
 
 		public Driver GetConnection() 
 		{
-			Driver driver = null;
+			int ticks = (int)settings.ConnectionTimeout * 1000;
 
-			int start = Environment.TickCount;
-			uint ticks = settings.ConnectionTimeout * 1000;
+            // wait till we are allowed in
+            bool allowed = poolGate.WaitOne(ticks, false);
+            if (! allowed)
+                throw new MySqlException(Resources.TimeoutGettingConnection);
 
-			// wait timeOut seconds at most to get a connection
-			while (driver == null && (Environment.TickCount - start) < ticks)
-				driver = GetPooledConnection();
-					 
-			// if pool size is at maximum, then we must have reached our timeout so we simply
-			// throw our exception
-			if (driver == null)
-				throw new MySqlException("error connecting: Timeout expired.  The timeout period elapsed " + 
-					"prior to obtaining a connection from the pool.  This may have occurred because all " +
-					"pooled connections were in use and max pool size was reached.");
-
-			return driver;
+            // if we get here, then it means that we either have an idle connection
+            // or room to make a new connection
+            lock (lockObject)
+            {
+                return GetPooledConnection();
+            }
 		}
-
 	}
 }

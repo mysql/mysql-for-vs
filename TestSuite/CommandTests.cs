@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2006 MySQL AB
+// Copyright (C) 2004-2007 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -158,7 +158,7 @@ namespace MySql.Data.MySqlClient.Tests
 
             MySqlCommand clone = new MySqlCommand(cmd.CommandText, (MySqlConnection)cmd.Connection,
                 (MySqlTransaction)cmd.Transaction);
-            clone.Parameters.Add("?test", 1);
+            clone.Parameters.AddWithValue("?test", 1);
             txn.Rollback();
         }
 

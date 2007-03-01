@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2006 MySQL AB
+// Copyright (C) 2004-2007 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -200,33 +200,45 @@ namespace MySql.Data.MySqlClient
 			{
 				case MySqlDbType.Byte:
 					return new MySqlByte();
-				case MySqlDbType.UByte: return new MySqlUByte();
-				case MySqlDbType.Int16: return new MySqlInt16();
-				case MySqlDbType.UInt16: return new MySqlUInt16();
+				case MySqlDbType.UByte: 
+                    return new MySqlUByte();
+				case MySqlDbType.Int16: 
+                    return new MySqlInt16();
+				case MySqlDbType.UInt16: 
+                    return new MySqlUInt16();
 				case MySqlDbType.Int24:
 				case MySqlDbType.Int32:
-				case MySqlDbType.Year: return new MySqlInt32(type, true);
+				case MySqlDbType.Year: 
+                    return new MySqlInt32(type, true);
 				case MySqlDbType.UInt24:
-				case MySqlDbType.UInt32: return new MySqlUInt32(type, true);
-				case MySqlDbType.Bit: return new MySqlBit();
+				case MySqlDbType.UInt32: 
+                    return new MySqlUInt32(type, true);
+				case MySqlDbType.Bit: 
+                    return new MySqlBit();
 				case MySqlDbType.Int64:
 					return new MySqlInt64();
-				case MySqlDbType.UInt64: return new MySqlUInt64();
-				case MySqlDbType.Time: return new MySqlTimeSpan();
+				case MySqlDbType.UInt64: 
+                    return new MySqlUInt64();
+				case MySqlDbType.Time: 
+                    return new MySqlTimeSpan();
 				case MySqlDbType.Date:
 				case MySqlDbType.Datetime:
 				case MySqlDbType.Newdate:
-				case MySqlDbType.Timestamp: return new MySqlDateTime(type, true);
+				case MySqlDbType.Timestamp: 
+                    return new MySqlDateTime(type, true);
 				case MySqlDbType.Decimal:
 				case MySqlDbType.NewDecimal:
 					return new MySqlDecimal();
-				case MySqlDbType.Float: return new MySqlSingle();
-				case MySqlDbType.Double: return new MySqlDouble();
+				case MySqlDbType.Float: 
+                    return new MySqlSingle();
+				case MySqlDbType.Double: 
+                    return new MySqlDouble();
 				case MySqlDbType.Set:
 				case MySqlDbType.Enum:
 				case MySqlDbType.String:
                 case MySqlDbType.VarString:
-				case MySqlDbType.VarChar: return new MySqlString(type, true);
+				case MySqlDbType.VarChar:
+                    return new MySqlString(type, true);
 				case MySqlDbType.Blob:
 				case MySqlDbType.MediumBlob:
 				case MySqlDbType.LongBlob:

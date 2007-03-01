@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2006 MySQL AB
+// Copyright (C) 2004-2007 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -351,9 +351,9 @@ namespace MySql.Data.MySqlClient
 			if (statement == null || !statement.IsPrepared)
 			{
 				if (CommandType == CommandType.StoredProcedure)
-					statement = new StoredProcedure(this.Connection, sql);
+					statement = new StoredProcedure(this, sql);
 				else
-					statement = new PreparableStatement(this.Connection, sql);
+					statement = new PreparableStatement(this, sql);
 			}
 
             // stored procs are the only statement type that need do anything during resolve
@@ -382,7 +382,7 @@ namespace MySql.Data.MySqlClient
                 }
 
                 // execute the statement
-                statement.Execute(parameters);
+                statement.Execute();
                 querySent.Set();
 
                 canCancel = true;
@@ -469,11 +469,11 @@ namespace MySql.Data.MySqlClient
 				return;
 
 			if (CommandType == CommandType.StoredProcedure)
-				statement = new StoredProcedure(this.Connection, CommandText);
+				statement = new StoredProcedure(this, CommandText);
 			else
-				statement = new PreparableStatement(this.Connection, CommandText);
+				statement = new PreparableStatement(this, CommandText);
 
-			statement.Prepare(parameters);
+			statement.Prepare();
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/Prepare/*'/>

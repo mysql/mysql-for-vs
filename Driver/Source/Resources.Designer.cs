@@ -357,6 +357,15 @@ namespace MySql.Data.MySqlClient {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to When calling stored procedures and &apos;Use Procedure Bodies&apos; is false, all parameters must have their type explicitly set..
+        /// </summary>
+        internal static string NoBodiesAndTypeNotSet {
+            get {
+                return ResourceManager.GetString("NoBodiesAndTypeNotSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nested transactions are not supported..
         /// </summary>
         internal static string NoNestedTransactions {
@@ -392,6 +401,15 @@ namespace MySql.Data.MySqlClient {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Parameter &apos;{0}&apos; has already been defined..
+        /// </summary>
+        internal static string ParameterAlreadyDefined {
+            get {
+                return ResourceManager.GetString("ParameterAlreadyDefined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Parameter cannot have a negative value.
         /// </summary>
         internal static string ParameterCannotBeNegative {
@@ -415,6 +433,15 @@ namespace MySql.Data.MySqlClient {
         internal static string ParameterIsInvalid {
             get {
                 return ResourceManager.GetString("ParameterIsInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parameter &apos;{0}&apos; must be defined..
+        /// </summary>
+        internal static string ParameterMustBeDefined {
+            get {
+                return ResourceManager.GetString("ParameterMustBeDefined", resourceCulture);
             }
         }
         
@@ -572,6 +599,15 @@ namespace MySql.Data.MySqlClient {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to error connecting: Timeout expired.  The timeout period elapsed prior to obtaining a connection from the pool.  This may have occurred because all pooled connections were in use and max pool size was reached..
+        /// </summary>
+        internal static string TimeoutGettingConnection {
+            get {
+                return ResourceManager.GetString("TimeoutGettingConnection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unable to connect to any of the specified MySQL hosts..
         /// </summary>
         internal static string UnableToConnectToHost {
@@ -599,7 +635,7 @@ namespace MySql.Data.MySqlClient {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable to retrieve stored procedure metadata.  Either grant SELECTprivilege to mysql.proc for this user or use &quot;noAccessToProcedureBody=true&quot; with  your connection string..
+        ///   Looks up a localized string similar to Unable to retrieve stored procedure metadata.  Either grant  SELECTprivilege to mysql.proc for this user or use &quot;use procedure bodies=false&quot; with  your connection string..
         /// </summary>
         internal static string UnableToRetrieveSProcData {
             get {

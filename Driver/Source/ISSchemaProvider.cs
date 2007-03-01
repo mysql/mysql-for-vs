@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2006 MySQL AB
+// Copyright (C) 2004-2007 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -499,8 +499,12 @@ namespace MySql.Data.MySqlClient
                 parmDef = parmDef.Substring(split[0].Length);
             }
             else
+            {
+                lowerDef = parmDef.ToLower(CultureInfo.InvariantCulture);
+                parmDef = parmDef.Substring(0, lowerDef.IndexOf("begin"));
                 parmRow["PARAMETER_NAME"] = String.Format("{0}RETURN_VALUE",
                     connection.ParameterMarker);
+            }
 
             ParseType(parmDef, sqlMode, parmRow);
         }

@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2006 MySQL AB
+// Copyright (C) 2004-2007 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -88,7 +88,7 @@ namespace MySql.Data.MySqlClient.Tests
 			//setup testing data
 			MySqlCommand cmd = new MySqlCommand("spTest", conn);
 			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("?value", 2);
+			cmd.Parameters.AddWithValue("?value", 2);
 			int rowsAffected = cmd.ExecuteNonQuery();
 			Assert.AreEqual(1, rowsAffected);
 
@@ -185,7 +185,7 @@ namespace MySql.Data.MySqlClient.Tests
 			{
 				MySqlCommand cmd = new MySqlCommand("spTest", conn);
 				cmd.CommandType = CommandType.StoredProcedure;
-				cmd.Parameters.Add("?p2", 1);
+				cmd.Parameters.AddWithValue("?p2", 1);
 				cmd.ExecuteNonQuery();
 				Assert.Fail("Should have thrown an exception");
 			}
@@ -202,7 +202,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 			MySqlCommand cmd = new MySqlCommand("spTest", conn);
 			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("?valin", "myvalue");
+			cmd.Parameters.AddWithValue("?valin", "myvalue");
 			object val = cmd.ExecuteScalar();
 			Assert.AreEqual("myvalue", val);
 		}
@@ -216,9 +216,9 @@ namespace MySql.Data.MySqlClient.Tests
 
 			MySqlCommand cmd = new MySqlCommand("spTest", conn);
 			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("?strVal", "beginning");
-			cmd.Parameters.Add("?numVal", 33);
-			cmd.Parameters.Add("?outVal", MySqlDbType.Int32);
+			cmd.Parameters.AddWithValue("?strVal", "beginning");
+			cmd.Parameters.AddWithValue("?numVal", 33);
+			cmd.Parameters.AddWithValue("?outVal", MySqlDbType.Int32);
 			cmd.Parameters[0].Direction = ParameterDirection.InputOutput;
 			cmd.Parameters[1].Direction = ParameterDirection.InputOutput;
 			cmd.Parameters[2].Direction = ParameterDirection.Output;
@@ -253,7 +253,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 			MySqlCommand cmd = new MySqlCommand("spTest", conn);
 			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("?valin", "valuein");
+			cmd.Parameters.AddWithValue("?valin", "valuein");
 			cmd.Parameters.Add(new MySqlParameter("?valout", MySqlDbType.VarChar));
 			cmd.Parameters[1].Direction = ParameterDirection.Output;
 			object result = cmd.ExecuteScalar();
@@ -283,17 +283,18 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 			// create our procedure
 			execSQL("CREATE PROCEDURE spTest(OUT p INT) " +
-				"BEGIN  SELECT * FROM mysql.db; SET p=2; END");
+				"BEGIN SELECT 1; SET p=2; END");
 
 			MySqlCommand cmd = new MySqlCommand("spTest", conn);
 			cmd.Parameters.Add("?p", MySqlDbType.Int32);
 			cmd.Parameters[0].Direction = ParameterDirection.Output;
 			cmd.CommandType = CommandType.StoredProcedure;
-			MySqlDataReader reader = cmd.ExecuteReader();
-			Assert.AreEqual(true, reader.Read());
-			Assert.AreEqual(false, reader.NextResult());
-			Assert.AreEqual(false, reader.Read());
-			reader.Close();
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                Assert.AreEqual(true, reader.Read());
+                Assert.AreEqual(false, reader.NextResult());
+                Assert.AreEqual(false, reader.Read());
+            }
 			Assert.AreEqual(2, cmd.Parameters[0].Value);
 		}
 
@@ -383,7 +384,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 			MySqlCommand cmd = new MySqlCommand("spTest", c2);
 			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("@valin", "value");
+			cmd.Parameters.AddWithValue("@valin", "value");
 			cmd.Parameters.Add(new MySqlParameter("@valout", MySqlDbType.VarChar));
 			cmd.Parameters[1].Direction = ParameterDirection.Output;
 			object result = cmd.ExecuteScalar();
@@ -416,8 +417,8 @@ namespace MySql.Data.MySqlClient.Tests
 
 			MySqlCommand cmd = new MySqlCommand("spTest", conn);
 			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("?valin", 20.4);
-			cmd.Parameters.Add("?val2", 4);
+			cmd.Parameters.AddWithValue("?valin", 20.4);
+			cmd.Parameters.AddWithValue("?val2", 4);
 			decimal val = (decimal)cmd.ExecuteScalar();
 			Decimal d = new Decimal(20.4);
 			Assert.AreEqual(d, val);
@@ -436,14 +437,14 @@ namespace MySql.Data.MySqlClient.Tests
 		/// Bug #10644 Cannot call a stored function directly from Connector/Net 
 		/// Bug #25013 Return Value parameter not found 
         /// </summary>
-		[Test]
+        [Test]
 		public void CallingStoredFunctionasProcedure()
 		{
 			execSQL("CREATE FUNCTION fnTest(valin int) RETURNS INT " +
 				" LANGUAGE SQL DETERMINISTIC BEGIN return valin * 2; END");
 			MySqlCommand cmd = new MySqlCommand("fnTest", conn);
 			cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.Add("?valin", 22);
+            cmd.Parameters.AddWithValue("?valin", 22);
             MySqlParameter retVal = cmd.CreateParameter();
             retVal.ParameterName = "?retval";
             retVal.MySqlDbType = MySqlDbType.Int32;
@@ -475,7 +476,7 @@ namespace MySql.Data.MySqlClient.Tests
 				object val = cmd.ExecuteScalar();
 				Assert.AreEqual(4, val);
 
-				cmd2.CommandText = "use mysql";
+                cmd2.CommandText = String.Format("use {0}", databases[1]);
 				cmd2.ExecuteNonQuery();
 
 				cmd.CommandText = String.Format("{0}.spTest", databases[0]);
@@ -621,7 +622,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 			MySqlCommand cmd = new MySqlCommand("spTest", conn);
 			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("?d", 21);
+			cmd.Parameters.AddWithValue("?d", 21);
 			decimal d = (decimal)cmd.ExecuteScalar();
 			Assert.AreEqual(21, d);
 		}
@@ -637,7 +638,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 			MySqlCommand cmd = new MySqlCommand("spTest", conn);
 			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("?P", "This is my value");
+			cmd.Parameters.AddWithValue("?P", "This is my value");
 			string p = (string)cmd.ExecuteScalar();
 			Assert.AreEqual("This is my value", p);
 		}
@@ -654,7 +655,7 @@ namespace MySql.Data.MySqlClient.Tests
 				execSQL("CREATE PROCEDURE spTest(\"@Param1\" text) BEGIN SELECT \"@Param1\"; END");
 
 				MySqlCommand cmd = new MySqlCommand("spTest", conn);
-				cmd.Parameters.Add("?@Param1", "This is my value");
+				cmd.Parameters.AddWithValue("?@Param1", "This is my value");
 				cmd.CommandType = CommandType.StoredProcedure;
 
 				string val = (string)cmd.ExecuteScalar();
@@ -678,7 +679,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 			MySqlCommand cmd = new MySqlCommand("spTest", conn);
 			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("?P", 33);
+			cmd.Parameters.AddWithValue("?P", 33);
 			cmd.Prepare();
 
 			int p = (int)cmd.ExecuteScalar();
@@ -698,12 +699,13 @@ namespace MySql.Data.MySqlClient.Tests
 			MySqlCommand cmd = new MySqlCommand("spTest", conn);
 			cmd.CommandType = CommandType.StoredProcedure;
 
-			cmd.Parameters.Add("?id", 1);
-			cmd.Parameters.Add("?str", "First record");
+			cmd.Parameters.AddWithValue("?id", 1);
+			cmd.Parameters.AddWithValue("?str", "First record");
 			cmd.ExecuteNonQuery();
 
-			cmd.Parameters.Add("?id", 2);
-			cmd.Parameters.Add("?str", "Second record");
+            cmd.Parameters.Clear();
+			cmd.Parameters.AddWithValue("?id", 2);
+			cmd.Parameters.AddWithValue("?str", "Second record");
 			cmd.ExecuteNonQuery();
 
 			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
@@ -769,7 +771,7 @@ namespace MySql.Data.MySqlClient.Tests
 			MySqlCommand cmd = conn.CreateCommand();
 			cmd.CommandType = CommandType.StoredProcedure;
 			cmd.CommandText = "spTest";
-			cmd.Parameters.Add("?Name", "Item3");
+			cmd.Parameters.AddWithValue("?Name", "Item3");
 			cmd.Parameters.Add("?Table1Id", MySqlDbType.Int32);
 			cmd.Parameters["?Table1Id"].Direction = ParameterDirection.Output;
 
@@ -939,7 +941,7 @@ namespace MySql.Data.MySqlClient.Tests
 			try
 			{
 				MySqlCommand cmd = new MySqlCommand("spTest", conn);
-				cmd.Parameters.Add("?p_paramname", 2);
+				cmd.Parameters.AddWithValue("?p_paramname", 2);
 				cmd.CommandType = CommandType.StoredProcedure;
 				cmd.ExecuteScalar();
 			}
@@ -969,7 +971,7 @@ namespace MySql.Data.MySqlClient.Tests
 			{
 				MySqlCommand cmd = new MySqlCommand("spTest", conn);
 				cmd.CommandType = CommandType.StoredProcedure;
-				cmd.Parameters.Add("?p_enum", "P");
+				cmd.Parameters.AddWithValue("?p_enum", "P");
 				cmd.Parameters["?p_enum"].Direction = ParameterDirection.Input;
 				using (MySqlDataReader reader = cmd.ExecuteReader())
 				{
@@ -1027,10 +1029,10 @@ namespace MySql.Data.MySqlClient.Tests
 
                 MySqlCommand cmd = new MySqlCommand("spTest", c);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add("?id", 2);
-                cmd.Parameters.Add("?outid", MySqlDbType.Int32);
+                cmd.Parameters.AddWithValue("?id", 2);
+                cmd.Parameters.AddWithValue("?outid", MySqlDbType.Int32);
                 cmd.Parameters[1].Direction = ParameterDirection.Output;
-                cmd.Parameters.Add("?inoutid", 4);
+                cmd.Parameters.AddWithValue("?inoutid", 4);
                 cmd.Parameters[2].Direction = ParameterDirection.InputOutput;
                 cmd.ExecuteNonQuery();
 
@@ -1062,8 +1064,8 @@ namespace MySql.Data.MySqlClient.Tests
 
             MySqlCommand cmd = new MySqlCommand("fnTest", conn);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.Add("?p_kiosk", 2);
-            cmd.Parameters.Add("?p_user", 4);
+            cmd.Parameters.AddWithValue("?p_kiosk", 2);
+            cmd.Parameters.AddWithValue("?p_user", 4);
             try
             {
                 cmd.ExecuteNonQuery();
@@ -1087,7 +1089,6 @@ namespace MySql.Data.MySqlClient.Tests
 
                 MySqlCommand cmd = new MySqlCommand("spTest", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandTimeout = 0;
 
                 MySqlDataReader reader = cmd.ExecuteReader(CommandBehavior.SchemaOnly);
                 reader.Read();
@@ -1104,5 +1105,58 @@ namespace MySql.Data.MySqlClient.Tests
             }
         }
 
+        /// <summary>
+        /// Bug #26139 MySqlCommand.LastInsertedId doesn't work for stored procedures 
+        /// Currently this is borked on the server so we are marking this as notworking
+        /// until the server has this fixed.
+        /// </summary>
+        [Category("NotWorking")]
+        [Test]
+        public void LastInsertId()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(200))");
+            execSQL("INSERT INTO test VALUES (NULL, 'Test1')");
+            execSQL("CREATE PROCEDURE spTest() BEGIN " +
+                "INSERT INTO test VALUES (NULL, 'test'); END");
+
+            MySqlCommand cmd = new MySqlCommand("spTest", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.ExecuteNonQuery();
+            Assert.AreEqual(2, cmd.LastInsertedId);
+        }
+
+        [Test]
+        public void NoAccessToProcedureBodies()
+        {
+            suExecSQL("DROP PROCEDURE IF EXISTS spTest");
+            suExecSQL("CREATE PROCEDURE spTest(in1 INT, INOUT inout1 INT, OUT out1 INT ) " +
+                "BEGIN SET inout1 = inout1+2; SET out1=inout1-3; SELECT in1; END");
+
+            string connStr = GetConnectionString(true) +"; use procedure bodies=false";
+            using (MySqlConnection c = new MySqlConnection(connStr))
+            {
+                try
+                {
+                    c.Open();
+
+                    MySqlCommand cmd = new MySqlCommand("spTest", c);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("?in1", 2);
+                    cmd.Parameters.AddWithValue("?inout1", 4);
+                    cmd.Parameters.Add("?out1", MySqlDbType.Int32);
+                    cmd.Parameters[1].Direction = ParameterDirection.InputOutput;
+                    cmd.Parameters[2].Direction = ParameterDirection.Output;
+                    cmd.ExecuteNonQuery();
+
+                    Assert.AreEqual(6, cmd.Parameters[1].Value);
+                    Assert.AreEqual(3, cmd.Parameters[2].Value);
+                }
+                catch (Exception ex)
+                {
+                    Assert.Fail(ex.Message);
+                }
+            }
+        }
 	}
 }

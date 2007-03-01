@@ -9,7 +9,7 @@
 		<include name="Driver/MySql.Data.2005.csproj"/>
 		<include name="Driver/Properties/**"/>
 		<include name="Driver/Source/**"/>
-		<include name="installer/*"/>
+		<include name="installer/**"/>
 		<include name="testsuite/**"/>
 		<include name="Client.build"/>
 		<include name="CHANGES"/>
@@ -112,9 +112,9 @@
   <target name="MakeInstaller">
     <!-- now build the WIX installer -->
     <exec workingdir="staging/Installer" program="candle" 
-          commandline="-dIsGPL=${IsGPL} -dbuild=release main.wxs samples.wxs sources.wxs"/>
+          commandline="-ext WixNetFxExtension -dIsGPL=${IsGPL} -dbuild=release main.wxs samples.wxs sources.wxs"/>
     <exec workingdir="staging/Installer" program="light"
-			    commandline="-sval -ext WixUIExtension -cultures:en-us main.wixobj samples.wixobj sources.wixobj -out MySql.Data.msi"/>
+			    commandline="-sval -ext WixNetFxExtension -ext WixUIExtension -cultures:en-us main.wixobj samples.wixobj sources.wixobj -out MySql.Data.msi"/>
   </target>
   
     <!-- verification targets -->

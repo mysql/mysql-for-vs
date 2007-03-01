@@ -2,13 +2,17 @@
 <?define ProductVersion="5.0.4"?>
 <?define ProductName="MySQL Connector Net $(var.ProductVersion)"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="7394c123-cacc-4ad2-82b8-c6992131af08" Name="$(var.ProductName)" Manufacturer="MySQL" Version="$(var.ProductVersion)" Language="1033">
+  <Product Id="5FD88490-011C-4df1-B886-F298D955171B" Name="$(var.ProductName)" Manufacturer="MySQL" Version="$(var.ProductVersion)" Language="1033">
 
-		<Package Compressed="yes" InstallerVersion="200" Languages="1033" SummaryCodepage="1252" />
-		
-		<Media Id="1" EmbedCab="yes" Cabinet="ConnectorNet.cab" CompressionLevel="high" />
+    <Package Compressed="yes" InstallerVersion="200" Languages="1033" SummaryCodepage="1252" />
 
-		<!-- Our directory structure -->
+    <Media Id="1" EmbedCab="yes" Cabinet="ConnectorNet.cab" CompressionLevel="high" />
+
+    <!-- First make sure that .NET 2.0 is installed -->
+    <PropertyRef Id="NETFRAMEWORK20"/>
+    <Condition Message="The .NET Framework 2.0 must be installed before installing this package.">Installed OR NETFRAMEWORK20</Condition>
+
+    <!-- Our directory structure -->
     <Directory Id='TARGETDIR' Name='SourceDir'>
       <Directory Id='ProgramFilesFolder' Name='PFiles'>
         <Directory Id='CompanyDir' Name='MySQL'>
@@ -33,105 +37,118 @@
       </Directory>
     </Directory>
 
-		<!-- Top level junk - readme, changelog, etc -->
-		<DirectoryRef Id='INSTALLDIR'>
-			<Component Id="BaseComponents" Guid="6cbae281-be1e-4952-8a5d-cb5d1ad799a9" DiskId="1">
-				<File Id="ChangeLog" Name="CHANGES" Source="..\CHANGES" />
-				<File Id="RelNotes" Name="Release Notes.txt" Source="..\Release Notes.txt" />
-				<?if $(var.IsGPL) = true ?>
-				<File Id="EXCEPTIONS" Name="EXCEPTIONS" Source="..\EXCEPTIONS" DiskId="1"/>
-				<File Id="COPYING" Name="COPYING" Source="..\COPYING" DiskId="1" />
-				<?endif?>
-				<File Id="README1" Name="README" Source="..\README" DiskId="1"/>
+    <!-- Top level junk - readme, changelog, etc -->
+    <DirectoryRef Id='INSTALLDIR'>
+      <Component Id="BaseComponents" Guid="6cbae281-be1e-4952-8a5d-cb5d1ad799a9" DiskId="1">
+        <File Id="ChangeLog" Name="CHANGES" Source="..\CHANGES" />
+        <File Id="RelNotes" Name="Release Notes.txt" Source="..\Release Notes.txt" />
+        <?if $(var.IsGPL) = true ?>
+        <File Id="EXCEPTIONS" Name="EXCEPTIONS" Source="..\EXCEPTIONS" DiskId="1"/>
+        <File Id="COPYING" Name="COPYING" Source="..\COPYING" DiskId="1" />
+        <?endif?>
+        <File Id="README1" Name="README" Source="..\README" DiskId="1"/>
         <RegistryKey Id="MySqlKey" Root="HKLM" Action="createAndRemoveOnUninstall"
                      Key="Software\MySQL AB\MySQL Connector/Net $(var.ProductVersion)">
-          <RegistryValue Id="Location" Name="Location" Value="[TARGETDIR]" Type="string"/>
+          <RegistryValue Id="Location" Name="Location" Value="[INSTALLDIR]" Type="string"/>
           <RegistryValue Id="Version" Name="Version" Value="$(var.ProductVersion)" Type="string"/>
         </RegistryKey>
-			</Component>
-		</DirectoryRef>
-			
-		<!-- .Net 2.0 Binaries -->
-		<DirectoryRef Id='BinNet20'>
-			<Component Id="Net20" Guid="1b476514-8bcb-48a1-8b32-e477f520b450">
+      </Component>
+    </DirectoryRef>
+
+    <!-- .Net 2.0 Binaries -->
+    <DirectoryRef Id='BinNet20'>
+      <Component Id="Net20" Guid="17250F82-34FF-44d6-9721-601E976AF1A8">
         <File Id="CoreBin20" Name="MySql.Data.dll"
               Source="..\Driver\bin\net-2.0\$(var.build)\mysql.data.dll" DiskId="1"/>
-				<File Id="CoreBin20Config" Name="CustomAction.config" Source="CustomAction.config" DiskId="1"/>
         <RegistryKey Id="VSRegistry" Root="HKLM" Action="createAndRemoveOnUninstall"
                      Key="SOFTWARE\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\MySQL Connector Net $(var.ProductVersion)">
           <RegistryValue Id="VSRegistryValue" Value="[BinNet20]" Type="string" Action="write"/>
         </RegistryKey>
-			</Component>
-		</DirectoryRef>
+      </Component>
+      <Component Id="GAC20" Guid="BAC52988-72B6-483e-8B7B-017E77461CDC">
+        <File Id="GAC20" Name="MySql.Data.dll"
+              Source="..\Driver\bin\net-2.0\$(var.build)\mysql.data.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
 
-		<!-- Start menu junk -->
-		<DirectoryRef Id='ShortCutDir'>
-			<Component Id="StartMenuComponent" Guid="0cd164ab-5f94-4ed3-a7aa-8bbf805a87a0">
-				<Shortcut Id="S100" Name="Documentation" Description="Complete documentation for the connector" 
-					Target="[DocsDir]/MySql.Data.chm" Directory="ShortCutDir" /> 
-				<Shortcut Id="S101" Name="ChangeLog" Description="Complete changelog for the connector" Directory="ShortCutDir" 
+    <!-- Start menu junk -->
+    <DirectoryRef Id='ShortCutDir'>
+      <Component Id="StartMenuComponent" Guid="B0801261-F922-4fce-A711-C8B278554E03">
+        <Shortcut Id="S100" Name="Documentation" Description="Complete documentation for the connector"
+					Target="[DocsDir]/MySql.Data.chm" Directory="ShortCutDir" />
+        <Shortcut Id="S101" Name="ChangeLog" Description="Complete changelog for the connector" Directory="ShortCutDir"
 					Icon="ChangeLogIcon" Target="[INSTALLDIR]/CHANGES"/>
-				<Shortcut Id="S102" Name="Release Notes" Description="Release notes" Directory="ShortCutDir" 
+        <Shortcut Id="S102" Name="Release Notes" Description="Release notes" Directory="ShortCutDir"
                   Target="[INSTALLDIR]/Release Notes.txt"/>
-			</Component>
-		</DirectoryRef>		
+      </Component>
+    </DirectoryRef>
 
-		<DirectoryRef Id='DocsDir'>
-			<Component Id="Docs" Guid="686fbf13-83a2-4f50-a002-3378328d4740">
-				<File Id="CoreCHM" Name="MySql.Data.chm" Source="..\doc\MySql.Data.chm" DiskId="1" />
-			</Component>
-		</DirectoryRef>
-		
-		<Feature Id="CoreComponents" Level="1" Title="Core Components" Description="Core Desc" Display="hidden">
-			<ComponentRef Id="BaseComponents"/>
-			<ComponentRef Id="StartMenuComponent"/>
-		</Feature>
-		
-		<Feature Id="SupportedAssemblies" Level="1" Title="Supported Frameworks" 
+    <DirectoryRef Id='DocsDir'>
+      <Component Id="Docs" Guid="091551DE-12FA-4c9a-84DE-221E14993714">
+        <File Id="CoreCHM" Name="MySql.Data.chm" Source="..\doc\MySql.Data.chm" DiskId="1" />
+      </Component>
+    </DirectoryRef>
+
+    <Feature Id="CoreComponents" Level="1" Title="Core Components"
+             Description="Core Components" ConfigurableDirectory ="INSTALLDIR"
+             Absent="disallow" Display="2">
+      <ComponentRef Id="BaseComponents"/>
+      <ComponentRef Id="Net20"/>
+      <ComponentRef Id="GAC20"/>
+      <ComponentRef Id="StartMenuComponent"/>
+    </Feature>
+
+    <!--		<Feature Id="SupportedAssemblies" Level="1" Title="Supported Frameworks" 
 			ConfigurableDirectory="INSTALLDIR" Absent="disallow"
 			Description="Frameworks that will be supported.">
-				<Feature Id="FeatureNet10" Level='0' Title=".NET 1.0">
-					<!--<ComponentRef Id="Net10"/>-->
-					<!--<ComponentRef Id="GACFiles10"/>-->
-				</Feature>
-				<Feature Id="FeatureNet11" Level='0' Title=".NET 1.1">
-					<!--<ComponentRef Id="Net11"/>-->
-					<!--<ComponentRef Id="GACFiles11"/>-->
-				</Feature>
 				<Feature Id="FeatureNet20" Level='1' Title=".NET 2.0">
 					<ComponentRef Id="Net20"/>
 				</Feature>
-		</Feature>
+		</Feature>-->
 
-		<Feature Id='DocsFeature' Level='1' Title='Documentation' Description='Documentation'>
-			<ComponentRef Id='Docs'/>
-		</Feature>
+    <Feature Id='DocsFeature' Display='4' Level='1' Title='Documentation' Description='Documentation'>
+      <ComponentRef Id='Docs'/>
+    </Feature>
 
-		<FeatureRef Id="Samples"/>
-		<FeatureRef Id="Sources"/>
+    <FeatureRef Id="Samples"/>
+    <FeatureRef Id="Sources"/>
 
-		<Property Id="WIXUI_INSTALLDIR" Value='INSTALLDIR'/>
-		<UIRef Id="WixUI_Mondo"/>
+    <Property Id="WIXUI_INSTALLDIR" Value='INSTALLDIR'/>
+    <UIRef Id="WixUI_Mondo"/>
     <WixVariable Id="WixUILicenseRtf" Value="License.rtf"/>
     <WixVariable Id="WixUIBannerBmp" Value="Bitmaps/BannrBmp.bmp"/>
     <WixVariable Id="WixUIDialogBmp" Value="Bitmaps/DlgBmp.bmp"/>
 
     <Icon Id="ChangeLogIcon" SourceFile="Bitmaps\document.ico"/>
 
-		<!-- custom actions for performing machine.config mods -->
-<!--		<Binary Id="InstallUtil" SourceFile="InstallUtilLib.dll" />
-		<CustomAction Id="CustomInstall" BinaryKey="InstallUtil" DllEntry="ManagedInstall" Execute="deferred" />
-		<CustomAction Id="InstallSetProp" Property="CustomInstall" Value="/installtype=notransaction /action=install /LogFile= &quot;[#CoreBin20]&quot; &quot;[#CoreBin20Config]&quot;" />
-		<CustomAction Id="CustomUninstall" BinaryKey="InstallUtil" DllEntry="ManagedInstall" Execute="deferred" />
-		<CustomAction Id="UninstallSetProp" Property="CustomUninstall" Value="/installtype=notransaction /action=uninstall /LogFile= &quot;[#CoreBin20]&quot; &quot;[#CoreBin20Config]&quot;" />
+    <!-- custom actions for machine.config mods -->
+    <Binary Id="InstallUtil" SourceFile="Binary\InstallUtilLib.dll" />
+    <Binary Id="MSVBDPCADLL" SourceFile="Binary\MSVBDPCADLL.ibd" />
+    <Binary Id="VSDNETCFG" SourceFile="Binary\VSDNETCFG.ibd" />
 
-		<InstallExecuteSequence>
-			<Custom Action="InstallSetProp" After="InstallFiles">NOT Installed</Custom>
-			<Custom Action="CustomInstall" After="InstallSetProp">NOT Installed</Custom>
+    <CustomAction Id="SetPrereqs" BinaryKey="MSVBDPCADLL" DllEntry="CheckFX" Impersonate="no" />
+    <CustomAction Id="MyCASetProp" Property="InstallCA"  Impersonate="no"
+                  Value="/installtype=notransaction /action=install /LogFile= &quot;[#CoreBin20]&quot; &quot;[VSDFxConfigFile]&quot;"/>
+    <CustomAction Id="InstallCA" BinaryKey="InstallUtil" DllEntry="ManagedInstall"
+                  Execute="deferred" Impersonate="no"/>
 
-			<Custom Action="UninstallSetProp" After="ProcessComponents">Installed</Custom>
-			<Custom Action="CustomUninstall" After="UninstallSetProp">Installed</Custom>
-		</InstallExecuteSequence>-->
+    <CustomAction Id="SetPrereqs1" BinaryKey="MSVBDPCADLL" DllEntry="CheckFX" Impersonate="no"/>
+    <CustomAction Id="MyCAUnSetProp" Property="RemoveCA" Impersonate="no"
+                  Value="/installtype=notransaction /action=uninstall /LogFile= &quot;[#CoreBin20]&quot; &quot;[VSDFxConfigFile]&quot;"/>
+    <CustomAction Id="RemoveCA" BinaryKey="InstallUtil" DllEntry="ManagedInstall"
+                  Execute="deferred" Impersonate="no" />
+
+    <InstallExecuteSequence>
+      <!-- Install code -->
+      <Custom Action="SetPrereqs" After="InstallFiles"/>
+      <Custom Action="MyCASetProp" After="SetPrereqs">NOT Installed</Custom>
+      <Custom Action="InstallCA" After="MyCASetProp">NOT Installed</Custom>
+
+      <!-- UnInstall code -->
+      <Custom Action="SetPrereqs1" Before="RemoveFiles">Installed</Custom>
+      <Custom Action="MyCAUnSetProp" After="SetPrereqs1">Installed</Custom>
+      <Custom Action="RemoveCA" After="MyCAUnSetProp">Installed</Custom>
+    </InstallExecuteSequence>
   </Product>
 </Wix>
 

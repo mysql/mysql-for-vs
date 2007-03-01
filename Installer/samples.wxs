@@ -4,7 +4,7 @@
     <DirectoryRef Id='SampleDir'> 
 		<Directory Id="TableEditor" Name="Table Editor">
 			<Directory Id="teCS" Name="cs">
-				<Component Id="Sample1CS" Guid="22cbf994-2ffb-4c7c-8538-1f773cd8a2a5">
+				<Component Id="Sample1CS" Guid="69C435DD-64A5-44cd-B3BE-89747B50956C">
 					<File Id="teCS1" Name="App.ico" Source="..\Samples\TableEditor\cs\App.ico" DiskId="1"/>
 					<File Id="teCS2" Name="AssemblyInfo.cs" Source="..\Samples\TableEditor\cs\AssemblyInfo.cs" DiskId="1"/>
 					<File Id="teCS3" Name="Form1.cs" Source="..\Samples\TableEditor\cs\Form1.cs" DiskId="1"/>
@@ -14,7 +14,7 @@
 				</Component>
 			</Directory>
 			<Directory Id="teVB" Name="vb">
-				<Component Id="Sample1VB" Guid="72104075-eff1-4d96-b186-8b0a61e7d858">
+				<Component Id="Sample1VB" Guid="AC22A69F-2E52-40cf-8C4C-4E70EAC6F088">
 					<File Id="teVB2" Name="AssemblyInfo.vb" Source="..\Samples\TableEditor\vb\AssemblyInfo.vb" DiskId="1"/>
 					<File Id="teVB3" Name="Form1.vb" Source="..\Samples\TableEditor\vb\Form1.vb" DiskId="1"/>
 					<File Id="teVB4" Name="Form1.resx" Source="..\Samples\TableEditor\vb\Form1.resx" DiskId="1"/>
@@ -25,7 +25,7 @@
 		</Directory>
       <Directory Id="Async" Name="Async">
         <Directory Id="asyncCS" Name="cs">
-          <Component Id="Sample2CS" Guid="1cfb8520-6afd-4979-888b-7dfdf4728219">
+          <Component Id="Sample2CS" Guid="326A8013-1780-4e65-A1C0-A1C725659DA4">
             <File Id="sample2file1" Name="App.ico" Source="..\Samples\Async\cs\App.ico" DiskId="1"/>
             <File Id="sample2file2" Name="AssemblyInfo.cs" Source="..\Samples\Async\cs\AssemblyInfo.cs" DiskId="1"/>
             <File Id="sample2file3" Name="Form1.cs" Source="..\Samples\Async\cs\Form1.cs" DiskId="1"/>
@@ -36,7 +36,7 @@
       </Directory>
     </DirectoryRef> 
 
-	<Feature Id='Samples' Level='1' Title='Samples' Description='Sample Applications'>
+	<Feature Id='Samples' Display='6' Level='1' Title='Samples' Description='Sample Applications'>
 		<Feature Id='CSSamples' Level='1' Title='CSharp' Description='Sample CSharp Applications' InstallDefault='local'>
 			<ComponentRef Id='Sample1CS'/>
       <ComponentRef Id='Sample2CS'/>

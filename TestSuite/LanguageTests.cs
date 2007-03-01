@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2006 MySQL AB
+// Copyright (C) 2004-2007 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -383,7 +383,6 @@ namespace MySql.Data.MySqlClient.Tests
                     cmd.CommandText = "SELECT id FROM test WHERE value =  ?parameter";
                     cmd.Parameters.Add("?parameter", MySqlDbType.VarString);
                     cmd.Parameters[0].Value = "šđčćžŠĐČĆŽ";
-                    cmd.CommandTimeout = 0;
                     object o = cmd.ExecuteScalar();
                     Assert.AreEqual(1, o);
                 }

@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2006 MySQL AB
+// Copyright (C) 2004-2007 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -69,7 +69,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 			MySqlCommand cmd = new MySqlCommand("spTest", conn);
 			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("?id", 1);
+			cmd.Parameters.AddWithValue("?id", 1);
 			cmd.ExecuteScalar();
 
 			Assert.AreEqual(hardCount + 1, hardQuery.RawValue);
@@ -78,7 +78,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 			MySqlCommand cmd2 = new MySqlCommand("spTest", conn);
 			cmd2.CommandType = CommandType.StoredProcedure;
-			cmd2.Parameters.Add("?id", 1);
+			cmd2.Parameters.AddWithValue("?id", 1);
 			cmd2.ExecuteScalar();
 
 			Assert.AreEqual(hardCount, hardQuery.RawValue);

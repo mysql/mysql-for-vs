@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2006 MySQL AB
+// Copyright (C) 2004-2007 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -27,20 +27,17 @@ namespace MySql.Data.MySqlClient
 {
     internal abstract class Statement
     {
-        protected MySqlConnection connection;
-        protected Driver driver;
+        protected MySqlCommand command;
         protected string commandText;
         private ArrayList buffers;
-        protected MySqlParameterCollection parameters;
 
-        private Statement(MySqlConnection connection)
+        private Statement(MySqlCommand cmd)
         {
-            this.connection = connection;
-            this.driver = connection.driver;
+            command = cmd;
             buffers = new ArrayList();
         }
 
-        public Statement(MySqlConnection connection, string text) : this(connection)
+        public Statement(MySqlCommand cmd, string text) : this(cmd)
         {
             commandText = text;
         }
@@ -50,6 +47,21 @@ namespace MySql.Data.MySqlClient
         public virtual string ResolvedCommandText
         {
             get { return commandText; }
+        }
+
+        protected Driver Driver
+        {
+            get { return command.Connection.driver; }
+        }
+
+        protected MySqlConnection Connection
+        {
+            get { return command.Connection; }
+        }
+
+        protected MySqlParameterCollection Parameters
+        {
+            get { return command.Parameters; }
         }
 
         #endregion
@@ -62,10 +74,8 @@ namespace MySql.Data.MySqlClient
         {
         }
 
-        public virtual void Execute(MySqlParameterCollection parameters)
+        public virtual void Execute()
         {
-            this.parameters = parameters;
-
             // we keep a reference to this until we are done
             BindParameters();
             ExecuteNext();
@@ -77,7 +87,7 @@ namespace MySql.Data.MySqlClient
                 return false;
 
             MemoryStream ms = (MemoryStream)buffers[0];
-            driver.Query(ms.GetBuffer(), (int)ms.Length);
+            Driver.Query(ms.GetBuffer(), (int)ms.Length);
             buffers.RemoveAt(0);
             return true;
         }
@@ -87,8 +97,8 @@ namespace MySql.Data.MySqlClient
             // tokenize the sql
             ArrayList tokenArray = TokenizeSql(ResolvedCommandText);
 
-            MySqlStream stream = new MySqlStream(driver.Encoding);
-            stream.Version = driver.Version;
+            MySqlStream stream = new MySqlStream(Driver.Encoding);
+            stream.Version = Driver.Version;
 
             // make sure our token array ends with a ;
             string lastToken = (string)tokenArray[tokenArray.Count - 1];
@@ -102,18 +112,39 @@ namespace MySql.Data.MySqlClient
                 if (token == ";")
                 {
                     buffers.Add(stream.InternalBuffer);
-                    stream = new MySqlStream(driver.Encoding);
+                    stream = new MySqlStream(Driver.Encoding);
                     continue;
                 }
-                if (token[0] == parameters.ParameterMarker)
+                if (token[0] == Parameters.ParameterMarker)
                 {
-                    if (SerializeParameter(parameters, stream, token))
+                    if (SerializeParameter(Parameters, stream, token))
                         continue;
                 }
  
                 // our fall through case is to write the token to the byte stream
                 stream.WriteStringNoNull(token);
             }
+        }
+
+        /// <summary>
+        /// We use a separate method here because we want to support using parameter
+        /// names with and without a leading marker but we don't want the indexing
+        /// methods of MySqlParameterCollection to support that.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private MySqlParameter GetParameter(MySqlParameterCollection parameters, string name)
+        {
+            string parmName = name;
+            int index = parameters.IndexOf(name);
+            if (index == -1)
+            {
+                name = name.Substring(1);
+                index = Parameters.IndexOf(name);
+                if (index == -1)
+                    return null;
+            }
+            return parameters[index];
         }
 
         /// <summary>
@@ -128,16 +159,17 @@ namespace MySql.Data.MySqlClient
         private bool SerializeParameter(MySqlParameterCollection parameters, 
             MySqlStream stream, string parmName)
         {
-            int index = parameters.IndexOf(parmName);
-            if (index == -1)
+            MySqlParameter parameter = GetParameter(parameters, parmName);
+            if (parameter == null)
             {
                 // if we are using old syntax, we can't throw exceptions for parameters
                 // not defined.
-                if (connection.Settings.UseOldSyntax) 
+                if (Connection.Settings.UseOldSyntax)
                     return false;
-                throw new MySqlException("Parameter '" + parmName + "' must be defined");
+                throw new MySqlException(
+                    String.Format(Resources.ParameterMustBeDefined));
             }
-            MySqlParameter parameter = parameters[index];
+
             parameter.Serialize(stream, false);
             return true;
         }
@@ -153,7 +185,7 @@ namespace MySql.Data.MySqlClient
         /// </remarks>
         public ArrayList TokenizeSql(string sql)
         {
-            bool batch = connection.Settings.AllowBatch & driver.SupportsBatch;
+            bool batch = Connection.Settings.AllowBatch & Driver.SupportsBatch;
             char delim = Char.MinValue;
             StringBuilder sqlPart = new StringBuilder();
             bool escaped = false;
@@ -203,15 +235,15 @@ namespace MySql.Data.MySqlClient
                     delim = c;
                 else if (c == '\\')
                     escaped = !escaped;
-                else if (c == connection.ParameterMarker && delim == Char.MinValue && !escaped)
+                else if (c == Connection.ParameterMarker && delim == Char.MinValue && !escaped)
                 {
                     tokens.Add(sqlPart.ToString());
                     sqlPart.Remove(0, sqlPart.Length);
                 }
-                else if (sqlPart.Length > 0 && sqlPart[0] == connection.ParameterMarker &&
+                else if (sqlPart.Length > 0 && sqlPart[0] == Connection.ParameterMarker &&
                     !Char.IsLetterOrDigit(c) && c != '_' && c != '.' && c != '$' &&
-                    ((c != '@' && c != connection.ParameterMarker) &&
-                     (c != '?' && c != connection.ParameterMarker)))
+                    ((c != '@' && c != Connection.ParameterMarker) &&
+                     (c != '?' && c != Connection.ParameterMarker)))
                 {
                     tokens.Add(sqlPart.ToString());
                     sqlPart.Remove(0, sqlPart.Length);

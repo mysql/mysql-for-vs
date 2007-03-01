@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2006 MySQL AB
+// Copyright (C) 2004-2007 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -108,8 +108,8 @@ namespace MySql.Data.MySqlClient
 					name = name.Substring(1, name.Length - 1);
 				if (name == inComingName)
 				{
-					items[i] = value;
-					return value;
+                    throw new MySqlException(
+                        String.Format(Resources.ParameterAlreadyDefined, value.ParameterName));
 				}
 			}
 
@@ -128,7 +128,7 @@ namespace MySql.Data.MySqlClient
 				return value;
 			}
 
-			int index = items.Add(value);
+			returnParameterIndex = items.Add(value);
             return value;
 		}
 

@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2006 MySQL AB
+// Copyright (C) 2004-2007 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -179,8 +179,8 @@ namespace MySql.Data.MySqlClient.Tests
 
 				Guid g = Guid.NewGuid();
 				cmd.CommandText = "INSERT INTO Test VALUES (?id, ?guid, NULL, NULL, NULL)";
-				cmd.Parameters.Add( new MySqlParameter("?id", 1));
-				cmd.Parameters.Add( new MySqlParameter( "?guid", g ));
+				cmd.Parameters.Add(new MySqlParameter("?id", 1));
+				cmd.Parameters.Add(new MySqlParameter("?guid", g));
 				cmd.ExecuteNonQuery();
 
 				cmd.Parameters[0].Value = 2;
@@ -202,25 +202,25 @@ namespace MySql.Data.MySqlClient.Tests
 				cmd.CommandText = "SELECT * FROM Test";
 				reader = cmd.ExecuteReader();
 
-				Assert.AreEqual( true, reader.Read() );
+				Assert.AreEqual(true, reader.Read());
 				Guid newG = reader.GetGuid(1);
-				Assert.AreEqual( g, newG );
+				Assert.AreEqual(g, newG);
 
-				Assert.AreEqual( true, reader.Read() );
+				Assert.AreEqual(true, reader.Read());
 				newG = reader.GetGuid(1);
-				Assert.AreEqual( g, newG );
+				Assert.AreEqual(g, newG);
 
-				Assert.AreEqual( true, reader.Read() );
+				Assert.AreEqual(true, reader.Read());
 				newG = reader.GetGuid(1);
-				Assert.AreEqual( g, newG );
+				Assert.AreEqual(g, newG);
 
-				Assert.AreEqual( true, reader.Read() );
+				Assert.AreEqual(true, reader.Read());
 				newG = reader.GetGuid(1);
-				Assert.AreEqual( g, newG );
+				Assert.AreEqual(g, newG);
 			}
 			catch (Exception ex) 
 			{
-				Assert.Fail( ex.Message );
+				Assert.Fail(ex.Message);
 			}
 			finally 
 			{
@@ -553,7 +553,7 @@ namespace MySql.Data.MySqlClient.Tests
             execSQL("CREATE TABLE test (val decimal(10,1))");
 
             MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES(?dec)", conn);
-            cmd.Parameters.Add("?dec", (decimal)2.4);
+            cmd.Parameters.AddWithValue("?dec", (decimal)2.4);
             Assert.AreEqual(1, cmd.ExecuteNonQuery());
 
             cmd.Prepare();
@@ -592,7 +592,7 @@ namespace MySql.Data.MySqlClient.Tests
             execSQL("CREATE TABLE test (val decimal(10,1))");
 
             MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES(?dec)", conn);
-            cmd.Parameters.Add("?dec", (decimal)2.4);
+            cmd.Parameters.AddWithValue("?dec", (decimal)2.4);
             Assert.AreEqual(1, cmd.ExecuteNonQuery());
 
             cmd.Prepare();
@@ -732,6 +732,28 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(-7, ts.Hours);
             Assert.AreEqual(-24, ts.Minutes);
             Assert.AreEqual(0, ts.Seconds);
+        }
+
+        /// <summary>
+        /// Bug #25605 BINARY and VARBINARY is returned as a string 
+        /// </summary>
+        [Category("NotWorking")]
+        [Test]
+        public void BinaryAndVarBinary()
+        {
+            MySqlCommand cmd = new MySqlCommand("SELECT BINARY 'something' AS BinaryData", conn);
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                reader.Read();
+                byte[] buffer = new byte[2];
+                long read = reader.GetBytes(0, 0, buffer, 0, 2);
+                Assert.AreEqual('s', buffer[0]);
+                Assert.AreEqual('o', buffer[1]);
+                Assert.AreEqual(2, read);
+
+                string s = reader.GetString(0);
+                Assert.AreEqual("something", s);
+            }
         }
 	}
 }

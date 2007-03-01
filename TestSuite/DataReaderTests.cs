@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2006 MySQL AB
+// Copyright (C) 2004-2007 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -130,7 +130,7 @@ namespace MySql.Data.MySqlClient.Tests
 			byte[] bytes = Utils.CreateBlob(len);
 			MySqlCommand cmd = new MySqlCommand(
                 "INSERT INTO Test (id, name, b1) VALUES(1, 'Test', ?b1)", conn);
-			cmd.Parameters.Add("?b1", bytes);
+			cmd.Parameters.AddWithValue("?b1", bytes);
 			cmd.ExecuteNonQuery();
 
 			cmd.CommandText = "SELECT * FROM Test";
@@ -599,7 +599,7 @@ namespace MySql.Data.MySqlClient.Tests
 					"SELECT id, dt, b1 FROM Test WHERE id < ?param1; "+
 					"SELECT b1 FROM Test WHERE id >= ?param1;", conn);
 
-				cmd.Parameters.Add("?param1",50);
+				cmd.Parameters.AddWithValue("?param1",50);
 
 				reader = cmd.ExecuteReader();
 

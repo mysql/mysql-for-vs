@@ -1,61 +1,34 @@
-Connector/Net 5.0.3  Release Notes
+Connector/Net 5.0.4  Release Notes
 ------------------------------------
 
-Welcome to the release notes for Connector/Net 5.0.3.
+Welcome to the release notes for Connector/Net 5.0.4.
 
-This version of the connector incorporates many changes to its internal structure that 
-will provide both increased speed and flexibility.  Speed is increased by allowing column 
-values to be processed without ever being boxed (if you use MySqlDataReader) and flexibility 
-is increased by virtualizing the execution engine.  This virtualization will allow future 
-versions of the Connector to support the embedded server and to use the client library.
-
-Many more features have been added to this version including Usage Advisor, PerfMon hooks,
-asynchronous queries, and full ADO.net 2.0 support.
-
-.NET 1.0 binaries not included
---------------------------------------
-We believe that most of our users have moved their projects to .NET Framework 1.1 or higher.  To this end, 
-we are no longer providing binaries for .NET 1.0.  The code should still compile to that target
-so any users who need this should be able to build it.
-
-.NET 1.1 binaries not included
---------------------------------------
-This release only ships with a .NET 2.0 compiled binary.  The reason for this is because
-most of the core classes in the provider now derive from base classes provided by .NET 2.0. 
-These include classes like DbCommand, DbConnection, etc.  In order to ship binaries for
-.NET 1.1 using this code base, we would need to build our own set of base classes that
-mirror what the .NET 2.0 base classes are doing.  We are working on this but those classes are
-not done yet.  Again, rather than wait for those classes to be finished we decided to release
-what we have and start gathering feedback.  Look for a .NET 1.1 version of Connector/Net 5 in the 
-near future.
-
-Mono support
-------------
-Look for a Mono package in the near future.
-
-Functionality changes
+Important Changes
 ---------------------
-There are a number of functionality changes in this release compared to the 1.0 line.  Those
-have been documented in the help file but we'll make a brief note about them here.
 
-* We no longer support having both a stored procedure and a stored function with the same
-  name in the same database.  MySQL supports this but the connector does not.  If you attempt
-  to call a stored procedure or stored function while a stored routine of the same name
-  exists in that database, a MySqlException will be raised.
+* We've added support for MySqlParameterCollection.AddWithValue.  This method should
+  be used whenever you are wanting to add a parameter by name and set its value in a
+  single method call.  The previous .Add overload is marked as deprecated and will give
+  a compiler warning if you continue to use it.
   
-* Some of the type safe methods on MySqlDataReader such as GetString() will now 
-  throw an exception if you call them on a null column.  You should use IsNull to check for
-  a column's nullness.
+* This release includes support for calling stored procedures without having privileges
+  on the mysql.proc table.  This is accomplished by adding 'Use Procedure Bodies=false' to
+  your connection string.  The default is true (which means by default you still need
+  access to mysql.proc).  Since MySQL does not yet support an information schema parameters
+  view, the connector has to trust the order of parameters that you set on the command.
+  So, to call a procedure using a limited privilege account, set 'Use Procedure Bodies=false'
+  on your connection string, add parameters to your command object in the exact same order
+  they appear in the procedure definition, and make sure all the parameters have their
+  type set.
   
-* MySqlCommandBuilder no longer has constructors for specifying 'last one wins' type of conflict
-  resolution.  You should use the ConflictOption property to specify this.
+* With 5.0.3, we required that all parameters start with the parameter marker (default is ?).
+  This was not fully thought out and has been rolled out in this release.  With this release,
+  you can add parameters with or without the leading parameter marker.  One thing to understand
+  though is that the IndexOf method of MySqlParameterCollection is still sensitive to the name.
+  What this means is that if you add a parameter with the name '?parm1' and then call IndexOf
+  with the value 'parm1', it will return -1.
   
-* MySqlCommandBuilder also no longer includes a select statement on the end of the update
-  statement to refresh the dataset or datatable after an update.  If you have server generated
-  values and you need to retrieve them, you can either handcraft the update statement or
-  refill your table or dataset.
-  
-* MySqlCommandBuilder also no longer supports updating datasets and datatables where the user
-  has specified a custom value for an autoincrement field.  This is a limitation of .NET 2.0.  
-  
+* Connecion pooling has been significantly changed in this release.  Now, a semaphore is used
+  to control access to the pool.  This significantly reduces CPU time incurred while waiting
+  on a connection to free and greatly simplifies the locking code involved.  
   

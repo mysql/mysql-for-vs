@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2006 MySQL AB
+// Copyright (C) 2004-2007 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -153,7 +153,7 @@ namespace MySql.Data.MySqlClient.Tests
 				data[x] = (char)(65 + (x % 20));
 
 			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (1, NULL, ?text1)", conn);
-			cmd.Parameters.Add("?text1", data);
+			cmd.Parameters.AddWithValue("?text1", data);
 			if (prepare)
 				cmd.Prepare();
 			cmd.ExecuteNonQuery();
@@ -225,7 +225,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 			cmd.CommandText = "INSERT INTO Test VALUES(2, ?b1, ?t1)";
 			cmd.Parameters.Clear();
-			cmd.Parameters.Add("?t1", DBNull.Value);
+			cmd.Parameters.AddWithValue("?t1", DBNull.Value);
 			string str = "This is my text value";
 			cmd.Parameters.Add(new MySqlParameter("?b1", MySqlDbType.LongBlob, str.Length,
 				ParameterDirection.Input, true, 0, 0, "b1", DataRowVersion.Current, str));
@@ -341,12 +341,12 @@ namespace MySql.Data.MySqlClient.Tests
 			for (int x = 0; x < image.Length; x++)
 				image[x] = (byte)(x % 47);
 			MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES(NULL, ?image, ?size)", conn);
-			cmd.Parameters.Add("?image", image);
-			cmd.Parameters.Add("?size", image.Length);
+			cmd.Parameters.AddWithValue("?image", image);
+			cmd.Parameters.AddWithValue("?size", image.Length);
 			cmd.ExecuteNonQuery();
 
 			cmd.CommandText = "SELECT imageSize, length(image), image FROM test WHERE id=?id";
-			cmd.Parameters.Add("?id", 1);
+			cmd.Parameters.AddWithValue("?id", 1);
 			cmd.Prepare();
 
 			MySqlDataReader reader = null;
@@ -390,7 +390,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 				byte[] image = Utils.CreateBlob(1000000);
                 cmd.CommandText = "INSERT INTO test VALUES(NULL, ?image)";
-				cmd.Parameters.Add("?image", image);
+				cmd.Parameters.AddWithValue("?image", image);
 				cmd.ExecuteNonQuery();
 				Assert.Fail("This should have thrown an exception");
 			}

@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2006 MySQL AB
+// Copyright (C) 2004-2007 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -72,9 +72,9 @@ namespace MySql.Data.MySqlClient.Tests
 			c.Open();
 
 			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (?id, ?text, ?mt)", c);
-			cmd.Parameters.Add("?id", 1);
-			cmd.Parameters.Add("?text", "This is my;test ? string–’‘’“”…");
-			cmd.Parameters.Add("?mt", "My MT string: £");
+			cmd.Parameters.AddWithValue("?id", 1);
+			cmd.Parameters.AddWithValue("?text", "This is my;test ? string–’‘’“”…");
+			cmd.Parameters.AddWithValue("?mt", "My MT string: ?");
 			cmd.ExecuteNonQuery();
 
 			cmd.CommandText = "SELECT * FROM Test";
@@ -85,7 +85,7 @@ namespace MySql.Data.MySqlClient.Tests
 				Assert.IsTrue(reader.Read());
 				Assert.AreEqual(1, reader.GetInt32(0));
 				Assert.AreEqual("This is my;test ? string–’‘’“”…", reader.GetString(1));
-				Assert.AreEqual("My MT string: £", reader.GetString(2));
+				Assert.AreEqual("My MT string: ?", reader.GetString(2));
 			}
 			catch (Exception ex)
 			{
@@ -107,9 +107,9 @@ namespace MySql.Data.MySqlClient.Tests
 					  "PRIMARY KEY(id))");
 
 			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (?id, ?text, ?mt)", conn);
-			cmd.Parameters.Add("?id", 1);
-			cmd.Parameters.Add("?text", "This is my;test ? string-'''\"\".");
-			cmd.Parameters.Add("?mt", "My MT string: £");
+			cmd.Parameters.AddWithValue("?id", 1);
+			cmd.Parameters.AddWithValue("?text", "This is my;test ? string-'''\"\".");
+			cmd.Parameters.AddWithValue("?mt", "My MT string: ?");
 			cmd.ExecuteNonQuery();
 
 			cmd.CommandText = "SELECT * FROM Test";
@@ -120,7 +120,7 @@ namespace MySql.Data.MySqlClient.Tests
 				Assert.IsTrue(reader.Read());
 				Assert.AreEqual(1, reader.GetInt32(0));
 				Assert.AreEqual("This is my;test ? string-'''\"\".", reader.GetString(1));
-				Assert.AreEqual("My MT string: £", reader.GetString(2));
+				Assert.AreEqual("My MT string: ?", reader.GetString(2));
 			}
 			catch (Exception ex)
 			{

@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2006 MySQL AB
+// Copyright (C) 2004-2007 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -127,10 +127,10 @@ namespace MySql.Data.MySqlClient.Tests
 			dt = dt.AddMilliseconds( dt.Millisecond * -1 );
 			TimeSpan ts = new TimeSpan( 8, 11, 44, 56, 501 );
 
-			cmd.Parameters.Add( "?id", 1 );
-			cmd.Parameters.Add( "?d", dt );
-			cmd.Parameters.Add( "?dt", dt );
-			cmd.Parameters.Add( "?tm", ts );
+			cmd.Parameters.AddWithValue("?id", 1);
+			cmd.Parameters.AddWithValue("?d", dt);
+			cmd.Parameters.AddWithValue("?dt", dt);
+			cmd.Parameters.AddWithValue("?tm", ts);
 			int count = cmd.ExecuteNonQuery();
 			Assert.AreEqual( 1, count, "Records affected by insert" );
 
@@ -264,9 +264,9 @@ namespace MySql.Data.MySqlClient.Tests
 			byte[] bytes = Utils.CreateBlob( 400000 );
 			string inStr = "This is my text";
 
-			cmd.Parameters.Add( "?id", 1 );
-			cmd.Parameters.Add( "?blob1", bytes );
-			cmd.Parameters.Add( "?text1", inStr );
+			cmd.Parameters.AddWithValue("?id", 1);
+			cmd.Parameters.AddWithValue("?blob1", bytes);
+			cmd.Parameters.AddWithValue("?text1", inStr);
 			int count = cmd.ExecuteNonQuery();
 			Assert.AreEqual( 1, count );
 
@@ -354,11 +354,11 @@ namespace MySql.Data.MySqlClient.Tests
 			dt = dt.AddMilliseconds( dt.Millisecond * -1 );
 
 			byte[] xpDOSG_Avatar = Utils.CreateBlob( 13000 );
-			cmd.Parameters.Add( "?name", "Ceci est un nom");
+			cmd.Parameters.AddWithValue("?name", "Ceci est un nom");
 
-			cmd.Parameters.Add( "?desc", "Ceci est une description facile à plantouiller");
-			cmd.Parameters.Add( "?avatar",xpDOSG_Avatar); 
-			cmd.Parameters.Add( "?dt", dt);
+			cmd.Parameters.AddWithValue("?desc", "Ceci est une description facile à plantouiller");
+			cmd.Parameters.AddWithValue("?avatar",xpDOSG_Avatar); 
+			cmd.Parameters.AddWithValue("?dt", dt);
 			int count = cmd.ExecuteNonQuery();
 			Assert.AreEqual( 1, count );
 
@@ -603,19 +603,22 @@ namespace MySql.Data.MySqlClient.Tests
             command.Connection = (MySqlConnection)conn;
             command.Prepare();
 
-            command.Parameters.Add("?id", (byte)127);
+            command.Parameters.AddWithValue("?id", (byte)127);
             object count = command.ExecuteScalar();
             Assert.AreEqual(1, count);
 
-            command.Parameters.Add("?id", (byte)128);
+            command.Parameters.Clear();
+            command.Parameters.AddWithValue("?id", (byte)128);
             count = command.ExecuteScalar();
             Assert.AreEqual(1, count);
 
-            command.Parameters.Add("?id", (byte)255);
+            command.Parameters.Clear();
+            command.Parameters.AddWithValue("?id", (byte)255);
             count = command.ExecuteScalar();
             Assert.AreEqual(1, count);
 
-            command.Parameters.Add("?id", "255");
+            command.Parameters.Clear();
+            command.Parameters.AddWithValue("?id", "255");
             count = command.ExecuteScalar();
             Assert.AreEqual(1, count);
         }

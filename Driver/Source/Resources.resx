@@ -301,10 +301,22 @@
     <value>Unable to connect to any of the specified MySQL hosts.</value>
   </data>
   <data name="UnableToRetrieveSProcData" xml:space="preserve">
-    <value>Unable to retrieve stored procedure metadata.  Either grant SELECTprivilege to mysql.proc for this user or use "noAccessToProcedureBody=true" with  your connection string.</value>
+    <value>Unable to retrieve stored procedure metadata.  Either grant  SELECTprivilege to mysql.proc for this user or use "use procedure bodies=false" with  your connection string.</value>
   </data>
   <data name="NextResultIsClosed" xml:space="preserve">
     <value>Invalid attempt to call NextResult when the reader is closed.</value>
+  </data>
+  <data name="NoBodiesAndTypeNotSet" xml:space="preserve">
+    <value>When calling stored procedures and 'Use Procedure Bodies' is false, all parameters must have their type explicitly set.</value>
+  </data>
+  <data name="TimeoutGettingConnection" xml:space="preserve">
+    <value>error connecting: Timeout expired.  The timeout period elapsed prior to obtaining a connection from the pool.  This may have occurred because all pooled connections were in use and max pool size was reached.</value>
+  </data>
+  <data name="ParameterAlreadyDefined" xml:space="preserve">
+    <value>Parameter '{0}' has already been defined.</value>
+  </data>
+  <data name="ParameterMustBeDefined" xml:space="preserve">
+    <value>Parameter '{0}' must be defined.</value>
   </data>
   <data name="ObjectDisposed" xml:space="preserve">
     <value>The object is not open or has been disposed.</value>

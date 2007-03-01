@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2006 MySQL AB
+// Copyright (C) 2004-2007 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -72,7 +72,7 @@ namespace MySql.Data.Common
 #endif
 				{
 #if NET20
-					IPHostEntry ipHE = Dns.GetHostEntry(dnsHosts[index]);
+                    IPHostEntry ipHE = GetHostEntry(dnsHosts[index]);
 #else
 				    IPHostEntry ipHE = Dns.GetHostByName(dnsHosts[index]);
 #endif
@@ -98,6 +98,21 @@ namespace MySql.Data.Common
 
 			return stream;
 		}
+
+        private IPHostEntry GetHostEntry(string hostname)
+        {
+            IPAddress addr = null;
+            IPHostEntry ipHE;
+            if (IPAddress.TryParse(hostname, out addr))
+            {
+                ipHE = new IPHostEntry();
+                ipHE.AddressList = new IPAddress[1];
+                ipHE.AddressList[0] = addr;
+            }
+            else
+                ipHE = Dns.GetHostEntry(hostname);
+            return ipHE;
+        }
 
 #if !CF
 		private Stream CreateNamedPipeStream(string hostname)

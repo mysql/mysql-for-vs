@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2006 MySQL AB
+// Copyright (C) 2004-2007 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -567,6 +567,21 @@ namespace MySql.Data.MySqlClient.Tests
             {
                 Assert.Fail(ex.Message);
             }
+        }
+
+        [Test]
+        public void RangeFill()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test (id INT)");
+            execSQL("INSERT INTO test VALUES (1)");
+            execSQL("INSERT INTO test VALUES (2)");
+            execSQL("INSERT INTO test VALUES (3)");
+            execSQL("INSERT INTO test VALUES (4)");
+
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
+            DataSet ds = new DataSet();
+            da.Fill(ds, 1, 2, "test");
         }
 	}
 }

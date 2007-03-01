@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2006 MySQL AB
+// Copyright (C) 2004-2007 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -36,8 +36,8 @@ namespace MySql.Data.MySqlClient
 		private int pageSize;
 		private int statementId;
 
-		public PreparableStatement(MySqlConnection connection, string text)
-			: base(connection, text)
+		public PreparableStatement(MySqlCommand command, string text)
+			: base(command, text)
 		{
 			pageSize = 0;
 			statementId = 0;
@@ -68,17 +68,14 @@ namespace MySql.Data.MySqlClient
 
 		#endregion
 
-		public virtual void Prepare(MySqlParameterCollection parameters)
+		public virtual void Prepare()
 		{
-			// store our parameters.
-			this.parameters = parameters;
-
 			// strip out names from parameter markers
 			string text;
 			ArrayList parameter_names = PrepareCommandText(out text);
 
 			// ask our connection to send the prepare command
-			statementId = driver.PrepareStatement(text, ref paramList);
+			statementId = Driver.PrepareStatement(text, ref paramList);
 
 			// now we need to assign our field names since we stripped them out
 			// for the prepare
@@ -86,20 +83,20 @@ namespace MySql.Data.MySqlClient
 				paramList[i].ColumnName = (string)parameter_names[i];
 		}
 
-		public override void Execute(MySqlParameterCollection parameters)
+		public override void Execute()
 		{
 			// if we are not prepared, then call down to our base
 			if (!IsPrepared)
 			{
-				base.Execute(parameters);
+				base.Execute();
 				return;
 			}
 
-			MySqlStream stream = new MySqlStream(driver.Encoding);
+			MySqlStream stream = new MySqlStream(Driver.Encoding);
 
 			//TODO: support long data here
 			// create our null bitmap
-			BitArray nullMap = new BitArray(parameters.Count);
+			BitArray nullMap = new BitArray(Parameters.Count);
 
 			// now we run through the parameters that PREPARE sent back and use
 			// those names to index into the parameters the user gave us.
@@ -108,11 +105,11 @@ namespace MySql.Data.MySqlClient
 			if (paramList != null)
 				for (int x = 0; x < paramList.Length; x++)
 				{
-					MySqlParameter p = parameters[paramList[x].ColumnName];
+					MySqlParameter p = Parameters[paramList[x].ColumnName];
 					if (p.Value == DBNull.Value || p.Value == null)
 						nullMap[x] = true;
 				}
-			byte[] nullMapBytes = new byte[(parameters.Count + 7) / 8];
+			byte[] nullMapBytes = new byte[(Parameters.Count + 7) / 8];
 
 			// we check this because Mono doesn't ignore the case where nullMapBytes
 			// is zero length.
@@ -135,18 +132,18 @@ namespace MySql.Data.MySqlClient
 			{
 				foreach (MySqlField param in paramList)
 				{
-					MySqlParameter parm = parameters[param.ColumnName];
+					MySqlParameter parm = Parameters[param.ColumnName];
 					stream.WriteInteger((long)parm.GetPSType(), 2);
 				}
 
 				// now write out all non-null values
 				foreach (MySqlField param in paramList)
 				{
-					int index = parameters.IndexOf(param.ColumnName);
+					int index = Parameters.IndexOf(param.ColumnName);
 					if (index == -1)
 						throw new MySqlException("Parameter '" + param.ColumnName +
 							 "' is not defined.");
-					MySqlParameter parm = parameters[index];
+					MySqlParameter parm = Parameters[index];
 					if (parm.Value == DBNull.Value || parm.Value == null)
 						continue;
 
@@ -157,7 +154,7 @@ namespace MySql.Data.MySqlClient
 
 			executionCount++;
 
-			driver.ExecuteStatement(stream.InternalBuffer.ToArray());
+			Driver.ExecuteStatement(stream.InternalBuffer.ToArray());
 		}
 
 		public override bool ExecuteNext()
@@ -188,12 +185,12 @@ namespace MySql.Data.MySqlClient
 
 			foreach (string token in tokens)
 			{
-				if (token[0] != connection.ParameterMarker)
+				if (token[0] != Connection.ParameterMarker)
 					newSQL.Append(token);
 				else
 				{
 					parameterMap.Add(token);
-					newSQL.Append(connection.ParameterMarker);
+					newSQL.Append(Connection.ParameterMarker);
 				}
 			}
 
