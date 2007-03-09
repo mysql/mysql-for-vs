@@ -26,6 +26,29 @@ namespace MySql.Data.Types
 {
 	internal class MetaData
 	{
+        public static bool IsNumericType(string typename)
+        {
+            string lowerType = typename.ToLower(CultureInfo.InvariantCulture);
+            switch (lowerType)
+            {
+                case "int":
+                case "integer":
+                case "numeric":
+                case "decimal":
+                case "dec":
+                case "fixed":
+                case "tinyint":
+                case "mediumint":
+                case "bigint":
+                case "real":
+                case "double":
+                case "float":
+                case "serial":
+                case "smallint": return true;
+            }
+            return false;
+        }
+
 		public static MySqlDbType NameToType(string typeName, bool unsigned,
 			 bool realAsFloat, MySqlConnection connection)
 		{

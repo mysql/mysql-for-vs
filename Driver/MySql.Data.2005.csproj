@@ -221,6 +221,7 @@
     <Content Include="Source\ReservedWords.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Source\common\SqlTokenizer.cs" />
     <Compile Include="Source\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

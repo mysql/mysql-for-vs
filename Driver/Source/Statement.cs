@@ -189,8 +189,6 @@ namespace MySql.Data.MySqlClient
             char delim = Char.MinValue;
             StringBuilder sqlPart = new StringBuilder();
             bool escaped = false;
-            bool inLineComment = false;
-            bool inComment = false;
             ArrayList tokens = new ArrayList();
 
             sql = sql.TrimStart(';').TrimEnd(';');
@@ -201,29 +199,6 @@ namespace MySql.Data.MySqlClient
                     escaped = !escaped;
                 else if (c == delim)
                     delim = Char.MinValue;
-                else if (c == '#' && delim == Char.MinValue)
-                {
-                    inLineComment = true;
-                    continue;
-                }
-                else if (c == '\n' && inLineComment == true)
-                {
-                    inLineComment = false;
-                    continue;
-                }
-                else if (c == '/')
-                {
-                    if (sql.Length > (i + 1) && sql[i + 1] == '*' && delim == Char.MinValue)
-                    {
-                        inComment = true; continue;
-                    }
-                    else if (inComment && delim == Char.MinValue && i != 0 && sql[i - 1] == '*')
-                    {
-                        inComment = false; continue;
-                    }
-                }
-                else if (inLineComment || inComment)
-                    continue;
                 else if (c == ';' && !escaped && delim == Char.MinValue && !batch)
                 {
                     tokens.Add(sqlPart.ToString());
