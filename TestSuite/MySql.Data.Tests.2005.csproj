@@ -32,7 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=2.2.9.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
+    <Reference Include="nunit.framework, Version=2.4.0.2, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
@@ -40,43 +40,43 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="AsyncTests.cs" />
-    <Compile Include="BaseTest.cs" />
-    <Compile Include="BlobTests.cs" />
-    <Compile Include="CharacterSetTests.cs" />
-    <Compile Include="CommandBuilderTests.cs" />
-    <Compile Include="CommandTests.cs" />
-    <Compile Include="ConnectionStringBuilder.cs" />
-    <Compile Include="ConnectionTests.cs" />
-    <Compile Include="CultureTests.cs" />
-    <Compile Include="CursorTests.cs" />
-    <Compile Include="DataAdapterTests.cs" />
-    <Compile Include="DataReaderTests.cs" />
-    <Compile Include="DataTypeTests.cs" />
-    <Compile Include="DateTimeTests.cs" />
-    <Compile Include="EventTests.cs" />
-    <Compile Include="ExceptionTests.cs" />
-    <Compile Include="GetSchemaTests.cs" />
-    <Compile Include="InterfaceTests.cs" />
-    <Compile Include="LanguageTests.cs" />
-    <Compile Include="MicroPerfTests.cs" />
-    <Compile Include="MySqlHelperTests.cs" />
-    <Compile Include="ParameterTests.cs" />
-    <Compile Include="PerfMonTests.cs" />
-    <Compile Include="PoolingTests.cs" />
-    <Compile Include="PreparedStatements.cs" />
-    <Compile Include="ProcedureParameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SimpleTransactions.cs" />
-    <Compile Include="StoredProcedure.cs" />
-    <Compile Include="StressTests.cs" />
-    <Compile Include="Syntax.cs" />
-    <Compile Include="Syntax2.cs" />
-    <Compile Include="Threading.cs" />
-    <Compile Include="TimeoutAndCancel.cs" />
-    <Compile Include="Transactions.cs" />
-    <Compile Include="UsageAdvisor.cs" />
-    <Compile Include="Utils.cs" />
+    <Compile Include="Source\AsyncTests.cs" />
+    <Compile Include="Source\BaseTest.cs" />
+    <Compile Include="Source\BlobTests.cs" />
+    <Compile Include="Source\CharacterSetTests.cs" />
+    <Compile Include="Source\CommandBuilderTests.cs" />
+    <Compile Include="Source\CommandTests.cs" />
+    <Compile Include="Source\ConnectionStringBuilder.cs" />
+    <Compile Include="Source\ConnectionTests.cs" />
+    <Compile Include="Source\CultureTests.cs" />
+    <Compile Include="Source\CursorTests.cs" />
+    <Compile Include="Source\DataAdapterTests.cs" />
+    <Compile Include="Source\DataReaderTests.cs" />
+    <Compile Include="Source\DataTypeTests.cs" />
+    <Compile Include="Source\DateTimeTests.cs" />
+    <Compile Include="Source\EventTests.cs" />
+    <Compile Include="Source\ExceptionTests.cs" />
+    <Compile Include="Source\GetSchemaTests.cs" />
+    <Compile Include="Source\InterfaceTests.cs" />
+    <Compile Include="Source\LanguageTests.cs" />
+    <Compile Include="Source\MicroPerfTests.cs" />
+    <Compile Include="Source\MySqlHelperTests.cs" />
+    <Compile Include="Source\ParameterTests.cs" />
+    <Compile Include="Source\PerfMonTests.cs" />
+    <Compile Include="Source\PoolingTests.cs" />
+    <Compile Include="Source\PreparedStatements.cs" />
+    <Compile Include="Source\ProcedureParameters.cs" />
+    <Compile Include="Source\SimpleTransactions.cs" />
+    <Compile Include="Source\StoredProcedure.cs" />
+    <Compile Include="Source\StressTests.cs" />
+    <Compile Include="Source\Syntax.cs" />
+    <Compile Include="Source\Syntax2.cs" />
+    <Compile Include="Source\Threading.cs" />
+    <Compile Include="Source\TimeoutAndCancel.cs" />
+    <Compile Include="Source\Transactions.cs" />
+    <Compile Include="Source\UsageAdvisor.cs" />
+    <Compile Include="Source\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Driver\MySql.Data.2005.csproj">
