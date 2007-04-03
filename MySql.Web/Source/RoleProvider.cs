@@ -97,6 +97,12 @@ namespace MySql.Web.Security
                 throw new ProviderException("Connection string cannot be blank.");
             }
             connectionString = pConnectionStringSettings.ConnectionString;
+
+
+            // make sure our schema is up to date
+            string autoGenSchema = config["AutoGenerateSchema"];
+            if (String.IsNullOrEmpty(autoGenSchema) || Convert.ToBoolean(autoGenSchema))
+                RoleSchema.CheckSchema(connectionString);
         }
 
         #region Properties
@@ -139,7 +145,9 @@ namespace MySql.Web.Security
                 }
             }
             MySqlConnection conn = new MySqlConnection(connectionString);
-            MySqlCommand cmd = new MySqlCommand("INSERT INTO MySqlWebUsersInRoles " + " (Username, Rolename, ApplicationName) " + " Values(?Username, ?Rolename, ?ApplicationName)", conn);
+            MySqlCommand cmd = new MySqlCommand(
+                @"INSERT INTO mysql_UsersInRoles (Username, Rolename, ApplicationName) 
+                Values(?Username, ?Rolename, ?ApplicationName)", conn);
             MySqlParameter userParm = cmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255);
             MySqlParameter roleParm = cmd.Parameters.Add("?Rolename", MySqlDbType.VarChar, 255);
             cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
@@ -195,7 +203,8 @@ namespace MySql.Web.Security
                 throw new ProviderException("Role name already exists.");
             }
             MySqlConnection conn = new MySqlConnection(connectionString);
-            MySqlCommand cmd = new MySqlCommand("INSERT INTO MySqlWebRoles " + " (Rolename, ApplicationName) " + " Values(?Rolename, ?ApplicationName)", conn);
+            MySqlCommand cmd = new MySqlCommand(@"INSERT INTO mysql_Roles (Rolename, ApplicationName) 
+                Values(?Rolename, ?ApplicationName)", conn);
             cmd.Parameters.Add("?Rolename", MySqlDbType.VarChar, 255).Value = rolename;
             cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
             try
@@ -231,10 +240,12 @@ namespace MySql.Web.Security
                 throw new ProviderException("Cannot delete a populated role.");
             }
             MySqlConnection conn = new MySqlConnection(connectionString);
-            MySqlCommand cmd = new MySqlCommand("DELETE FROM MySqlWebRoles " + " WHERE Rolename = ?Rolename AND ApplicationName = ?ApplicationName", conn);
+            MySqlCommand cmd = new MySqlCommand(@"DELETE FROM mysql_Roles 
+                WHERE Rolename = ?Rolename AND ApplicationName = ?ApplicationName", conn);
             cmd.Parameters.Add("?Rolename", MySqlDbType.VarChar, 255).Value = rolename;
             cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
-            MySqlCommand cmd2 = new MySqlCommand("DELETE FROM MySqlWebUsersInRoles " + " WHERE Rolename = ?Rolename AND ApplicationName = ?ApplicationName", conn);
+            MySqlCommand cmd2 = new MySqlCommand(@"DELETE FROM mysql_UsersInRoles 
+                WHERE Rolename = ?Rolename AND ApplicationName = ?ApplicationName", conn);
             cmd2.Parameters.Add("?Rolename", MySqlDbType.VarChar, 255).Value = rolename;
             cmd2.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
             MySqlTransaction tran = null;
@@ -278,7 +289,8 @@ namespace MySql.Web.Security
         {
             string tmpRoleNames = "";
             MySqlConnection conn = new MySqlConnection(connectionString);
-            MySqlCommand cmd = new MySqlCommand("SELECT Rolename FROM MySqlWebRoles " + " WHERE ApplicationName = ?ApplicationName", conn);
+            MySqlCommand cmd = new MySqlCommand(@"SELECT Rolename FROM mysql_Roles 
+                WHERE ApplicationName = ?ApplicationName", conn);
             cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
             MySqlDataReader reader = null;
 
@@ -318,84 +330,110 @@ namespace MySql.Web.Security
             return new string[0];
         }
 
-        public override string[] GetRolesForUser(string username) 
-   { 
-     string tmpRoleNames = ""; 
-     MySqlConnection conn = new MySqlConnection(connectionString); 
-     MySqlCommand cmd = new MySqlCommand("SELECT Rolename FROM MySqlWebUsersInRoles " + " WHERE Username = ?Username AND ApplicationName = ?ApplicationName", conn); 
-     cmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255).Value = username; 
-     cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName; 
-     MySqlDataReader reader = null; 
-     try { 
-       conn.Open(); 
-       reader = cmd.ExecuteReader(); 
-       while (reader.Read()) { 
-         tmpRoleNames += reader.GetString(0) + ","; 
-       } 
-     } catch (MySqlException e) { 
-       if (WriteExceptionsToEventLog) { 
-         WriteToEventLog(e, "GetRolesForUser"); 
-       } else { 
-         throw e; 
-       } 
-     } finally { 
-       if (!(reader == null)) { 
-         reader.Close(); 
-       } 
-       conn.Close(); 
-     } 
-     if (tmpRoleNames.Length > 0) { 
-       tmpRoleNames = tmpRoleNames.Substring(0, tmpRoleNames.Length - 1); 
-       return tmpRoleNames.Split(System.Convert.ToChar(",")); 
-     } 
-     return new string[0]; 
-   }
+        public override string[] GetRolesForUser(string username)
+        {
+            string tmpRoleNames = "";
+            MySqlConnection conn = new MySqlConnection(connectionString);
+            MySqlCommand cmd = new MySqlCommand(@"SELECT Rolename FROM myql_UsersInRoles 
+                WHERE Username = ?Username AND ApplicationName = ?ApplicationName", conn);
+            cmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255).Value = username;
+            cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
+            MySqlDataReader reader = null;
+            try
+            {
+                conn.Open();
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    tmpRoleNames += reader.GetString(0) + ",";
+                }
+            }
+            catch (MySqlException e)
+            {
+                if (WriteExceptionsToEventLog)
+                {
+                    WriteToEventLog(e, "GetRolesForUser");
+                }
+                else
+                {
+                    throw e;
+                }
+            }
+            finally
+            {
+                if (!(reader == null))
+                {
+                    reader.Close();
+                }
+                conn.Close();
+            }
+            if (tmpRoleNames.Length > 0)
+            {
+                tmpRoleNames = tmpRoleNames.Substring(0, tmpRoleNames.Length - 1);
+                return tmpRoleNames.Split(System.Convert.ToChar(","));
+            }
+            return new string[0];
+        }
 
-        public override string[] GetUsersInRole(string rolename) 
-   { 
-     string tmpUserNames = ""; 
-     MySqlConnection conn = new MySqlConnection(connectionString); 
-     MySqlCommand cmd = new MySqlCommand("SELECT Username FROM MySqlWebUsersInRoles " + " WHERE Rolename = ?Rolename AND ApplicationName = ?ApplicationName", conn); 
-     cmd.Parameters.Add("?Rolename", MySqlDbType.VarChar, 255).Value = rolename; 
-     cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName; 
-     MySqlDataReader reader = null; 
-     try { 
-       conn.Open(); 
-       reader = cmd.ExecuteReader(); 
-       while (reader.Read()) { 
-         tmpUserNames += reader.GetString(0) + ","; 
-       } 
-     } catch (MySqlException e) { 
-       if (WriteExceptionsToEventLog) { 
-         WriteToEventLog(e, "GetUsersInRole"); 
-       } else { 
-         throw e; 
-       } 
-     } finally { 
-       if (!(reader == null)) { 
-         reader.Close(); 
-       } 
-       conn.Close(); 
-     } 
-     if (tmpUserNames.Length > 0) { 
-       tmpUserNames = tmpUserNames.Substring(0, tmpUserNames.Length - 1); 
-       return tmpUserNames.Split(System.Convert.ToChar(",")); 
-     } 
-     return new string[0]; 
-   }
+        public override string[] GetUsersInRole(string rolename)
+        {
+            string tmpUserNames = "";
+            MySqlConnection conn = new MySqlConnection(connectionString);
+            MySqlCommand cmd = new MySqlCommand(@"SELECT Username FROM mysql_UsersInRoles 
+                WHERE Rolename = ?Rolename AND ApplicationName = ?ApplicationName", conn);
+            cmd.Parameters.Add("?Rolename", MySqlDbType.VarChar, 255).Value = rolename;
+            cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
+            MySqlDataReader reader = null;
+            try
+            {
+                conn.Open();
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    tmpUserNames += reader.GetString(0) + ",";
+                }
+            }
+            catch (MySqlException e)
+            {
+                if (WriteExceptionsToEventLog)
+                {
+                    WriteToEventLog(e, "GetUsersInRole");
+                }
+                else
+                {
+                    throw e;
+                }
+            }
+            finally
+            {
+                if (!(reader == null))
+                {
+                    reader.Close();
+                }
+                conn.Close();
+            }
+            if (tmpUserNames.Length > 0)
+            {
+                tmpUserNames = tmpUserNames.Substring(0, tmpUserNames.Length - 1);
+                return tmpUserNames.Split(System.Convert.ToChar(","));
+            }
+            return new string[0];
+        }
 
         public override bool IsUserInRole(string username, string rolename)
         {
             bool userIsInRole = false;
             MySqlConnection conn = new MySqlConnection(connectionString);
-            MySqlCommand cmd = new MySqlCommand("SELECT COUNT(*) FROM MySqlWebUsersInRoles " + " WHERE Username = ?Username AND Rolename = ?Rolename AND ApplicationName = ?ApplicationName", conn);
+            MySqlCommand cmd = new MySqlCommand(@"SELECT COUNT(*) FROM mysql_UsersInRoles 
+                WHERE Username = ?Username AND Rolename = ?Rolename AND 
+                ApplicationName = ?ApplicationName", conn);
             cmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255).Value = username;
             cmd.Parameters.Add("?Rolename", MySqlDbType.VarChar, 255).Value = rolename;
             cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
             try
             {
                 conn.Open();
-                int numRecs = ((int)(cmd.ExecuteScalar()));
+                int numRecs = Convert.ToInt32(cmd.ExecuteScalar());
                 if (numRecs > 0)
                 {
                     userIsInRole = true;
@@ -439,7 +477,9 @@ namespace MySql.Web.Security
                 }
             }
             MySqlConnection conn = new MySqlConnection(connectionString);
-            MySqlCommand cmd = new MySqlCommand("DELETE FROM MySqlWebUsersInRoles " + " WHERE Username = ?Username AND Rolename = ?Rolename AND ApplicationName = ?ApplicationName", conn);
+            MySqlCommand cmd = new MySqlCommand(@"DELETE FROM mysql_UsersInRoles 
+                WHERE Username = ?Username AND Rolename = ?Rolename AND 
+                ApplicationName = ?ApplicationName", conn);
             MySqlParameter userParm = cmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255);
             MySqlParameter roleParm = cmd.Parameters.Add("?Rolename", MySqlDbType.VarChar, 255);
             cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
@@ -488,13 +528,14 @@ namespace MySql.Web.Security
         {
             bool exists = false;
             MySqlConnection conn = new MySqlConnection(connectionString);
-            MySqlCommand cmd = new MySqlCommand("SELECT COUNT(*) FROM MySqlWebRoles " + " WHERE Rolename = ?Rolename AND ApplicationName = ?ApplicationName", conn);
+            MySqlCommand cmd = new MySqlCommand(@"SELECT COUNT(*) FROM mysql_Roles 
+                WHERE Rolename = ?Rolename AND ApplicationName = ?ApplicationName", conn);
             cmd.Parameters.Add("?Rolename", MySqlDbType.VarChar, 255).Value = rolename;
             cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
             try
             {
                 conn.Open();
-                int numRecs = ((int)(cmd.ExecuteScalar()));
+                int numRecs = Convert.ToInt32(cmd.ExecuteScalar());
                 if (numRecs > 0)
                 {
                     exists = true;
@@ -518,39 +559,52 @@ namespace MySql.Web.Security
             return exists;
         }
 
-        public override string[] FindUsersInRole(string rolename, string usernameToMatch) 
-   { 
-     MySqlConnection conn = new MySqlConnection(connectionString); 
-     MySqlCommand cmd = new MySqlCommand("SELECT Username FROM MySqlWebUsersInRoles " + "WHERE Username LIKE ?UsernameSearch AND RoleName = ?RoleName AND ApplicationName = ?ApplicationName", conn); 
-     cmd.Parameters.Add("?UsernameSearch", MySqlDbType.VarChar, 255).Value = usernameToMatch; 
-     cmd.Parameters.Add("?RoleName", MySqlDbType.VarChar, 255).Value = rolename; 
-     cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName; 
-     string tmpUserNames = ""; 
-     MySqlDataReader reader = null; 
-     try { 
-       conn.Open(); 
-       reader = cmd.ExecuteReader(); 
-       while (reader.Read()) { 
-         tmpUserNames += reader.GetString(0) + ","; 
-       } 
-     } catch (MySqlException e) { 
-       if (WriteExceptionsToEventLog) { 
-         WriteToEventLog(e, "FindUsersInRole"); 
-       } else { 
-         throw e; 
-       } 
-     } finally { 
-       if (!(reader == null)) { 
-         reader.Close(); 
-       } 
-       conn.Close(); 
-     } 
-     if (tmpUserNames.Length > 0) { 
-       tmpUserNames = tmpUserNames.Substring(0, tmpUserNames.Length - 1); 
-       return tmpUserNames.Split(System.Convert.ToChar(",")); 
-     } 
-     return new string[0]; 
-   }
+        public override string[] FindUsersInRole(string rolename, string usernameToMatch)
+        {
+            MySqlConnection conn = new MySqlConnection(connectionString);
+            MySqlCommand cmd = new MySqlCommand(@"SELECT Username FROM mysql_UsersInRoles 
+                WHERE Username LIKE ?UsernameSearch AND RoleName = ?RoleName AND 
+                ApplicationName = ?ApplicationName", conn);
+            cmd.Parameters.Add("?UsernameSearch", MySqlDbType.VarChar, 255).Value = usernameToMatch;
+            cmd.Parameters.Add("?RoleName", MySqlDbType.VarChar, 255).Value = rolename;
+            cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
+            string tmpUserNames = "";
+            MySqlDataReader reader = null;
+            try
+            {
+                conn.Open();
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    tmpUserNames += reader.GetString(0) + ",";
+                }
+            }
+            catch (MySqlException e)
+            {
+                if (WriteExceptionsToEventLog)
+                {
+                    WriteToEventLog(e, "FindUsersInRole");
+                }
+                else
+                {
+                    throw e;
+                }
+            }
+            finally
+            {
+                if (!(reader == null))
+                {
+                    reader.Close();
+                }
+                conn.Close();
+            }
+            if (tmpUserNames.Length > 0)
+            {
+                tmpUserNames = tmpUserNames.Substring(0, tmpUserNames.Length - 1);
+                return tmpUserNames.Split(System.Convert.ToChar(","));
+            }
+            return new string[0];
+        }
 
         private void WriteToEventLog(MySqlException e, string action)
         {
