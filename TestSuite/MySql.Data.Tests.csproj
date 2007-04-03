@@ -79,12 +79,12 @@
     <Compile Include="Source\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Driver\MySql.Data.2005.csproj">
+    <ProjectReference Include="..\Driver\MySql.Data.csproj">
       <Project>{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}</Project>
       <Name>MySql.Data.2005</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Ovatsus.CSharp.targets"/>
+  <Import Project="$(MSBuildExtensionsPath)\Ovatsus.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

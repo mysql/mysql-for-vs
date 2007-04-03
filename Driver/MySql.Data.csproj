@@ -120,10 +120,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Source\CharSetMap.cs" />
     <Compile Include="Source\command.cs">
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Source\CommandBuilder.cs">
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Source\common\ContextString.cs" />
     <Compile Include="Source\common\NamedPipeStream.cs" />
@@ -137,17 +135,16 @@
     <Compile Include="Source\common\WinCE.cs" />
     <Compile Include="Source\CompressedStream.cs" />
     <Compile Include="Source\Connection.cs">
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Source\Crypt.cs" />
     <Compile Include="Source\dataadapter.cs">
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Source\datareader.cs" />
     <Compile Include="Source\Driver.cs" />
     <Compile Include="Source\Exception.cs" />
     <Compile Include="Source\Field.cs" />
     <Compile Include="Source\Installer.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Source\ISSchemaProvider.cs" />
     <Compile Include="Source\Logger.cs" />
