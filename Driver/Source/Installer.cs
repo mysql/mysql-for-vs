@@ -116,6 +116,8 @@ namespace MySql.Data.MySqlClient
 			XmlTextWriter writer = new XmlTextWriter(configPath, null);
 			writer.Formatting = Formatting.Indented;
 			doc.Save(writer);
+            writer.Flush();
+            writer.Close();
 		}
 
 		private void InstallPerfMonItems()
@@ -195,7 +197,9 @@ namespace MySql.Data.MySqlClient
 			XmlTextWriter writer = new XmlTextWriter(configPath, null);
 			writer.Formatting = Formatting.Indented;
 			doc.Save(writer);
-		}
+            writer.Flush();
+            writer.Close();
+        }
 
 		private void RemovePerfMonItems()
 		{

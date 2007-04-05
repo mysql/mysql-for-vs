@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?define ProductVersion="5.0.4"?>
+<?define ProductVersion="5.1.0"?>
 <?define ProductName="MySQL Connector Net $(var.ProductVersion)"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="5FD88490-011C-4df1-B886-F298D955171B" Name="$(var.ProductName)" Manufacturer="MySQL" Version="$(var.ProductVersion)" Language="1033">
-
-    <Package Compressed="yes" InstallerVersion="200" Languages="1033" SummaryCodepage="1252" />
-
+  <Product Id="5FD88490-011C-4df1-B886-F298D955171B" Name="$(var.ProductName)" Manufacturer="MySQL AB"
+           Version="$(var.ProductVersion)" Language="1033">
+    <Package Compressed="yes" InstallerVersion="200"/>
     <Media Id="1" EmbedCab="yes" Cabinet="ConnectorNet.cab" CompressionLevel="high" />
 
     <!-- First make sure that .NET 2.0 is installed -->
@@ -19,9 +18,6 @@
           <Directory Id='INSTALLDIR' Name='$(var.ProductName)'>
             <Directory Id='Binaries' Name='Binaries'>
               <Directory Id='BinNet20' Name='.NET 2.0'/>
-              <Directory Id='BinNet11' Name='.NET 1.1'/>
-              <Directory Id='BinNet10' Name='.NET 1.0'/>
-              <Directory Id='Mono10' Name='Mono 1.0'/>
             </Directory>
             <Directory Id='DocsDir' Name='Documentation'/>
             <Directory Id='DriverDir' Name='Driver'/>
@@ -42,7 +38,7 @@
       <Component Id="BaseComponents" Guid="6cbae281-be1e-4952-8a5d-cb5d1ad799a9" DiskId="1">
         <File Id="ChangeLog" Name="CHANGES" Source="..\CHANGES" />
         <File Id="RelNotes" Name="Release Notes.txt" Source="..\Release Notes.txt" />
-        <?if $(var.IsGPL) = true ?>
+        <?if $(var.IsGPL) = 1 ?>
         <File Id="EXCEPTIONS" Name="EXCEPTIONS" Source="..\EXCEPTIONS" DiskId="1"/>
         <File Id="COPYING" Name="COPYING" Source="..\COPYING" DiskId="1" />
         <?endif?>
@@ -59,7 +55,7 @@
     <DirectoryRef Id='BinNet20'>
       <Component Id="Net20" Guid="17250F82-34FF-44d6-9721-601E976AF1A8">
         <File Id="CoreBin20" Name="MySql.Data.dll"
-              Source="..\Driver\bin\net-2.0\$(var.build)\mysql.data.dll" DiskId="1"/>
+              Source="..\Driver\bin\net-2.0\release\mysql.data.dll" DiskId="1"/>
         <RegistryKey Id="VSRegistry" Root="HKLM" Action="createAndRemoveOnUninstall"
                      Key="SOFTWARE\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\MySQL Connector Net $(var.ProductVersion)">
           <RegistryValue Id="VSRegistryValue" Value="[BinNet20]" Type="string" Action="write"/>
@@ -67,7 +63,7 @@
       </Component>
       <Component Id="GAC20" Guid="BAC52988-72B6-483e-8B7B-017E77461CDC">
         <File Id="GAC20" Name="MySql.Data.dll"
-              Source="..\Driver\bin\net-2.0\$(var.build)\mysql.data.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
+              Source="..\Driver\bin\net-2.0\release\mysql.data.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
       </Component>
     </DirectoryRef>
 
@@ -76,10 +72,10 @@
       <Component Id="StartMenuComponent" Guid="B0801261-F922-4fce-A711-C8B278554E03">
         <Shortcut Id="S100" Name="Documentation" Description="Complete documentation for the connector"
 					Target="[DocsDir]/MySql.Data.chm" Directory="ShortCutDir" />
-        <Shortcut Id="S101" Name="ChangeLog" Description="Complete changelog for the connector" Directory="ShortCutDir"
-					Icon="ChangeLogIcon" Target="[INSTALLDIR]/CHANGES"/>
-        <Shortcut Id="S102" Name="Release Notes" Description="Release notes" Directory="ShortCutDir"
-                  Target="[INSTALLDIR]/Release Notes.txt"/>
+        <Shortcut Id="S101" Name="ChangeLog" Description="Complete changelog for the connector" 
+                  Directory="ShortCutDir" Icon="ChangeLogIcon" Target="[INSTALLDIR]/CHANGES"/>
+        <Shortcut Id="S102" Name="Release Notes" Description="Release notes" 
+                  Directory="ShortCutDir" Target="[INSTALLDIR]/Release Notes.txt"/>
       </Component>
     </DirectoryRef>
 
@@ -89,33 +85,28 @@
       </Component>
     </DirectoryRef>
 
-    <Feature Id="CoreComponents" Level="1" Title="Core Components"
-             Description="Core Components" ConfigurableDirectory ="INSTALLDIR"
-             Absent="disallow" Display="2">
+    <Feature Id="CoreComponents" Level="1" Title="Core Components" Description="Core Components" 
+             ConfigurableDirectory ="INSTALLDIR" Absent="disallow" Display="2">
       <ComponentRef Id="BaseComponents"/>
       <ComponentRef Id="Net20"/>
       <ComponentRef Id="GAC20"/>
       <ComponentRef Id="StartMenuComponent"/>
     </Feature>
 
-    <!--		<Feature Id="SupportedAssemblies" Level="1" Title="Supported Frameworks" 
-			ConfigurableDirectory="INSTALLDIR" Absent="disallow"
-			Description="Frameworks that will be supported.">
-				<Feature Id="FeatureNet20" Level='1' Title=".NET 2.0">
-					<ComponentRef Id="Net20"/>
-				</Feature>
-		</Feature>-->
-
     <Feature Id='DocsFeature' Display='4' Level='1' Title='Documentation' Description='Documentation'>
       <ComponentRef Id='Docs'/>
     </Feature>
 
     <FeatureRef Id="Samples"/>
-    <FeatureRef Id="Sources"/>
-
+    <FeatureRef Id="WebProviders"/>
+    
     <Property Id="WIXUI_INSTALLDIR" Value='INSTALLDIR'/>
     <UIRef Id="WixUI_Mondo"/>
-    <WixVariable Id="WixUILicenseRtf" Value="License.rtf"/>
+    <?if $(var.IsGPL) = 1 ?>
+    <WixVariable Id="WixUILicenseRtf" Value="GPL.rtf"/>
+    <?else?>
+    <WixVariable Id="WixUILicenseRtf" Value="EULA.rtf"/>
+    <?endif?>
     <WixVariable Id="WixUIBannerBmp" Value="Bitmaps/BannrBmp.bmp"/>
     <WixVariable Id="WixUIDialogBmp" Value="Bitmaps/DlgBmp.bmp"/>
 

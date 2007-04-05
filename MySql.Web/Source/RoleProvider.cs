@@ -39,7 +39,6 @@ namespace MySql.Web.Security
 {
     public sealed class MySqlRoleProvider : RoleProvider
     {
-        private MySqlConnection conn;
         private string eventSource = "MySQLRoleProvider";
         private string eventLog = "Application";
         private string exceptionMessage = "An exception occurred. Please check the Event Log.";
