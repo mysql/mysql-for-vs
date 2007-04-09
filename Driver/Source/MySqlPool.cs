@@ -170,7 +170,8 @@ namespace MySql.Data.MySqlClient
 		{
             lock (lockObject)
             {
-                if (!inUsePool.Contains(driver))
+                if (!inUsePool.Contains(driver) ||
+                    idlePool.Contains(driver))
                     return;
 
                 inUsePool.Remove(driver);

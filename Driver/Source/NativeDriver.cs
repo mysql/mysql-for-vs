@@ -662,7 +662,7 @@ namespace MySql.Data.MySqlClient
 			else
 			{
 				stream.OpenPacket();
-				field = new MySqlField(this.Version);
+				field = new MySqlField(this.connection);
 
 				field.Encoding = encoding;
 				field.TableName = stream.ReadLenString();
@@ -687,7 +687,7 @@ namespace MySql.Data.MySqlClient
 
 		private MySqlField GetFieldMetaData41()
 		{
-			MySqlField field = new MySqlField(this.Version);
+			MySqlField field = new MySqlField(this.connection);
 
 			stream.OpenPacket();
 			field.Encoding = encoding;
@@ -697,27 +697,31 @@ namespace MySql.Data.MySqlClient
 			field.RealTableName = stream.ReadLenString();
 			field.ColumnName = stream.ReadLenString();
 			field.OriginalColumnName = stream.ReadLenString();
-			stream.ReadByte();
-			field.CharactetSetIndex = stream.ReadInteger(2);
+			byte b = (byte)stream.ReadByte();
+			field.CharacterSetIndex = stream.ReadInteger(2);
 			field.ColumnLength = stream.ReadInteger(4);
-			MySqlDbType type = (MySqlDbType)stream.ReadByte();
+            MySqlDbType type = (MySqlDbType)stream.ReadByte();
 			ColumnFlags colFlags;
 			if ((Flags & ClientFlags.LONG_FLAG) != 0)
 				colFlags = (ColumnFlags)stream.ReadInteger(2);
 			else
 				colFlags = (ColumnFlags)stream.ReadByte();
-			field.SetTypeAndFlags(type, colFlags);
+
+            field.SetTypeAndFlags(type, colFlags);
 
 			field.Scale = (byte)stream.ReadByte();
 
-			if (stream.HasMoreData)
-				stream.ReadInteger(2);	// reserved
+
+            if (stream.HasMoreData)
+            {
+                int reserved = stream.ReadInteger(2);	// reserved
+            }
 
 			if (charSets != null)
 			{
-				CharacterSet cs = CharSetMap.GetChararcterSet(this.Version, (string)charSets[field.CharactetSetIndex]);
+				CharacterSet cs = CharSetMap.GetChararcterSet(this.Version, (string)charSets[field.CharacterSetIndex]);
 				field.MaxLength = cs.byteCount;
-				field.Encoding = CharSetMap.GetEncoding(this.version, (string)charSets[field.CharactetSetIndex]);
+				field.Encoding = CharSetMap.GetEncoding(this.version, (string)charSets[field.CharacterSetIndex]);
 			}
 
 			return field;

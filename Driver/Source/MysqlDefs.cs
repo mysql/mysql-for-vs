@@ -200,27 +200,25 @@ namespace MySql.Data.MySqlClient
         /// </summary>
 		Set         = 248,
 		/// <summary>
-        /// A BLOB or TEXT column with a maximum length of 255 (2^8 - 1) 
+        /// A binary column with a maximum length of 255 (2^8 - 1) 
         /// characters
         /// </summary>
 		TinyBlob    = 249,
 		/// <summary>
-        /// A BLOB or TEXT column with a maximum length of 16777215 (2^24 - 1) 
-        /// characters
+        /// A binary column with a maximum length of 16777215 (2^24 - 1) bytes.
         /// </summary>
 		MediumBlob  = 250,
 		/// <summary>
-        /// A BLOB or TEXT column with a maximum length of 4294967295 or 
-        /// 4G (2^32 - 1) characters.
+        /// A binary column with a maximum length of 4294967295 or 
+        /// 4G (2^32 - 1) bytes.
         /// </summary>
 		LongBlob    = 251,
 		/// <summary>
-        /// A BLOB or TEXT column with a maximum length of 65535 (2^16 - 1) 
-        /// characters.
+        /// A binary column with a maximum length of 65535 (2^16 - 1) bytes.
         /// </summary>
 		Blob        = 252,
 		/// <summary>
-        /// A variable-length string containing 0 to 255 characters.
+        /// A variable-length string containing 0 to 255 bytes.
         /// </summary>
 		VarChar     = 253,
 		/// <summary>
@@ -234,23 +232,48 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
         /// Unsigned 8-bit value.
         /// </summary>
-		UByte		= 1024,
+		UByte = 501,
 		/// <summary>
         /// Unsigned 16-bit value.
         /// </summary>
-		UInt16		= 1025,
+		UInt16 = 502,
 		/// <summary>
         /// Unsigned 24-bit value.
         /// </summary>
-		UInt24		= 1026,
+		UInt24 = 509,
 		/// <summary>
         /// Unsigned 32-bit value.
         /// </summary>
-		UInt32		= 1027,
+		UInt32 = 503,
 		/// <summary>
         /// Unsigned 64-bit value.
         /// </summary>
-		UInt64		= 1028
+		UInt64 = 508,
+        /// <summary>
+        /// Fixed length binary string.
+        /// </summary>
+        Binary = 600,
+        /// <summary>
+        /// Variable length binary string.
+        /// </summary>
+        VarBinary = 601,
+        /// <summary>
+        /// A text column with a maximum length of 255 (2^8 - 1) characters.
+        /// </summary>
+        TinyText = 749,
+        /// <summary>
+        /// A text column with a maximum length of 16777215 (2^24 - 1) characters.
+        /// </summary>
+        MediumText = 750,
+        /// <summary>
+        /// A text column with a maximum length of 4294967295 or 
+        /// 4G (2^32 - 1) characters.
+        /// </summary>
+        LongText = 751,
+        /// <summary>
+        /// A text column with a maximum length of 65535 (2^16 - 1) characters.
+        /// </summary>
+        Text = 752
 	};
 
 

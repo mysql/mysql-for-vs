@@ -2,8 +2,44 @@ Version 5.1.0
 
   - Added Membership and Role provider contributed by Sean Wright (thanks!)
   - Now compiles for .NET CF 2.0
+  - Rewrote stored procedure parsing code using a new SQL tokenizer.  Really nasty
+    procedures including nested comments are now supported.
 
-Version 5.0.4 2-28-2007
+Version 5.0.7
+
+  Bugs fixed
+  ----------
+  Bug #27269 MySqlConnection.Clone does not mimic SqlConnection.Clone behaviour 
+  Bug #27289 Transaction is not rolledback when connection close 
+  Bug #26147 "User Id" problem during connection creation 
+  Bug #27240 Property value characterset not retrieved/fetched in conn wizard 
+  Bug #25947 CreateFormat/CreateParameters Column of DataTypes collection incorrect for CHAR 
+   
+  Other changes
+  -------------
+  Installer now works if XML comments are found in machine.config
+  GetSchema will now attempt to unquote identifiers passed in as restrictions
+  The MySqlCommand object now properly clones the CommandType and CommandTimeout properties  
+  
+Version 5.0.6 3/21/2007
+
+  Bugs fixed
+  ----------
+  Bug #27135 MySqlParameterCollection and parameters added with Insert Method 
+  Bug #27253 Installer : Company info is different 
+  Bug #27187 cmd.Parameters.RemoveAt("Id") will cause an error if the last item is requested   
+  Bug #27093 Exception when using large values in IN UInt64 parameters 
+  Bug #27221 describe SQL command returns all byte array on MySQL versions older than 4.1.15 
+  Bug #26960 Connector .NET 5.0.5 / Visual Studio Plugin 1.1.2 
+  
+Version 5.0.5 3/5/2007
+
+  Bugs fixed
+  ----------
+  Bug #25605 BINARY and VARBINARY is returned as a string 
+  Bug #25569 UpdateRowSource.FirstReturnedRecord does not work 
+
+Version 5.0.4 *unreleased*
 
   Bugs fixed
   ----------

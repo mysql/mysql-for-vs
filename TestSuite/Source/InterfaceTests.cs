@@ -41,6 +41,7 @@ namespace MySql.Data.MySqlClient.Tests
 			Close();
 		}
 
+#if !NET_CF
         [Test]
         public void ClientFactory()
         {
@@ -72,6 +73,6 @@ namespace MySql.Data.MySqlClient.Tests
             }
 
         }
-
+#endif
 	}
 }

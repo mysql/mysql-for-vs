@@ -116,35 +116,7 @@ namespace MySql.Data.MySqlClient
             foreach (DataRow db in databases.Rows)
             {
                 dbRestriction[1] = db["SCHEMA_NAME"].ToString();
-                string table_type = dbRestriction[1].ToLower() == "information_schema" ?
-                    "SYSTEM VIEW" : "BASE TABLE";
-                DataTable tables = FindTables(dbRestriction);
-                foreach (DataRow table in tables.Rows)
-                {
-                    DataRow row = dt.NewRow();
-                    row["TABLE_CATALOG"] = null;
-                    row["TABLE_SCHEMA"] = dbRestriction[1];
-                    row["TABLE_NAME"] = table[0];
-                    row["TABLE_TYPE"] = table_type;
-                    row["ENGINE"] = table[1];
-                    row["VERSION"] = table[2];
-                    row["ROW_FORMAT"] = table[3];
-                    row["TABLE_ROWS"] = table[4];
-                    row["AVG_ROW_LENGTH"] = table[5];
-                    row["DATA_LENGTH"] = table[6];
-                    row["MAX_DATA_LENGTH"] = table[7];
-                    row["INDEX_LENGTH"] = table[8];
-                    row["DATA_FREE"] = table[9];
-                    row["AUTO_INCREMENT"] = table[10];
-                    row["CREATE_TIME"] = table[11];
-                    row["UPDATE_TIME"] = table[12];
-                    row["CHECK_TIME"] = table[13];
-                    row["TABLE_COLLATION"] = table[14];
-                    row["CHECKSUM"] = table[15];
-                    row["CREATE_OPTIONS"] = table[16];
-                    row["TABLE_COMMENT"] = table[17];
-                    dt.Rows.Add(row);
-                }
+                FindTables(dt, dbRestriction);
             }
             return dt;
         }
@@ -320,26 +292,30 @@ namespace MySql.Data.MySqlClient
             {
                 string sql = String.Format("SHOW INDEX FROM `{0}`.`{1}`", 
                     table["TABLE_SCHEMA"], table["TABLE_NAME"]);
-                MySqlDataAdapter da = new MySqlDataAdapter(sql, connection);
-                DataTable indexes = new DataTable();
-                da.Fill(indexes);
-                foreach (DataRow index in indexes.Rows)
+                MySqlCommand cmd = new MySqlCommand(sql, connection);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
-                    if (restrictions != null)
+                    while (reader.Read())
                     {
-                        if (restrictions.Length == 4 && restrictions[3] != null &&
-                        !index["KEY_NAME"].Equals(restrictions[3])) continue;
-                        if (restrictions.Length == 5 && restrictions[4] != null &&
-                            !index["COLUMN_NAME"].Equals(restrictions[4])) continue;
+                        string key_name = GetString(reader, reader.GetOrdinal("KEY_NAME"));
+                        string col_name = GetString(reader, reader.GetOrdinal("COLUMN_NAME"));
+
+                        if (restrictions != null)
+                        {
+                            if (restrictions.Length == 4 && restrictions[3] != null &&
+                            key_name != restrictions[3]) continue;
+                            if (restrictions.Length == 5 && restrictions[4] != null &&
+                                col_name != restrictions[4]) continue;
+                        }
+                        DataRow row = dt.NewRow();
+                        row["INDEX_CATALOG"] = null;
+                        row["INDEX_SCHEMA"] = table["TABLE_SCHEMA"];
+                        row["INDEX_NAME"] = key_name;
+                        row["TABLE_NAME"] = GetString(reader, reader.GetOrdinal("TABLE"));
+                        row["COLUMN_NAME"] = col_name;
+                        row["ORDINAL_POSITION"] = reader.GetValue(reader.GetOrdinal("SEQ_IN_INDEX"));
+                        dt.Rows.Add(row);
                     }
-                    DataRow row = dt.NewRow();
-                    row["INDEX_CATALOG"] = null;
-                    row["INDEX_SCHEMA"] = table["TABLE_SCHEMA"];
-                    row["INDEX_NAME"] = index["KEY_NAME"];
-                    row["TABLE_NAME"] = index["TABLE"];
-                    row["COLUMN_NAME"] = index["COLUMN_NAME"];
-                    row["ORDINAL_POSITION"] = index["SEQ_IN_INDEX"];
-                    dt.Rows.Add(row);
                 }
             }
 
@@ -655,25 +631,25 @@ namespace MySql.Data.MySqlClient
             {
                 new object[] {"Users", "Name", "", 0},
                 new object[] {"Databases", "Name", "", 0},
-                new object[] {"Tables", "Catalog", "", 0},
-                new object[] {"Tables", "Owner", "", 1},
+                new object[] {"Tables", "Database", "", 0},
+                new object[] {"Tables", "Schema", "", 1},
                 new object[] {"Tables", "Table", "", 2},
                 new object[] {"Tables", "TableType", "", 3},
-                new object[] {"Columns", "Catalog", "", 0},
-                new object[] {"Columns", "Owner", "", 1},
+                new object[] {"Columns", "Database", "", 0},
+                new object[] {"Columns", "Schema", "", 1},
                 new object[] {"Columns", "Table", "", 2},
                 new object[] {"Columns", "Column", "", 3},          
-                new object[] {"Indexes", "Catalog", "", 0},
-                new object[] {"Indexes", "Owner", "", 1},
+                new object[] {"Indexes", "Database", "", 0},
+                new object[] {"Indexes", "Schema", "", 1},
                 new object[] {"Indexes", "Table", "", 2},
                 new object[] {"Indexes", "Name", "", 3},
-                new object[] {"IndexColumns", "Catalog", "", 0},
-                new object[] {"IndexColumns", "Owner", "", 1},
+                new object[] {"IndexColumns", "Database", "", 0},
+                new object[] {"IndexColumns", "Schema", "", 1},
                 new object[] {"IndexColumns", "Table", "", 2},
                 new object[] {"IndexColumns", "ConstraintName", "", 3},
                 new object[] {"IndexColumns", "Column", "", 4},
-                new object[] {"Foreign Keys", "Catalog", "", 0},
-                new object[] {"Foreign Keys", "Owner", "", 1},
+                new object[] {"Foreign Keys", "Database", "", 0},
+                new object[] {"Foreign Keys", "Schema", "", 1},
                 new object[] {"Foreign Keys", "Table", "", 2},
                 new object[] {"Foreign Keys", "Name", "", 3}
             };
@@ -726,28 +702,57 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-        private DataTable FindTables(string[] restrictions)
+        private void FindTables(DataTable schemaTable, string[] restrictions)
         {
-            string[] dbres = new string[1];
-            if (restrictions != null && restrictions.Length >= 2)
-                dbres[0] = restrictions[1];
-            DataTable databases = GetDatabases(dbres);
+            StringBuilder sql = new StringBuilder();
+            StringBuilder where = new StringBuilder();
+            sql.AppendFormat("SHOW TABLE STATUS FROM `{0}`",
+                restrictions[1]);
+            if (restrictions != null && restrictions.Length >= 3 &&
+                restrictions[2] != null)
+                where.AppendFormat(" LIKE '{0}'", restrictions[2]);
+            sql.Append(where.ToString());
 
-            DataTable tables = new DataTable();
-            foreach (DataRow db in databases.Rows)
+            string table_type = restrictions[1].ToLower() == "information_schema" ?
+                "SYSTEM VIEW" : "BASE TABLE";
+
+            MySqlCommand cmd = new MySqlCommand(sql.ToString(), connection);
+            using (MySqlDataReader reader = cmd.ExecuteReader())
             {
-                StringBuilder sql = new StringBuilder();
-                StringBuilder where = new StringBuilder();
-                sql.AppendFormat(CultureInfo.InvariantCulture, "SHOW TABLE STATUS FROM `{0}`", 
-                    db["SCHEMA_NAME"]);
-                if (restrictions != null && restrictions.Length >= 3 &&
-                    restrictions[2] != null)
-                    where.AppendFormat(CultureInfo.InvariantCulture, " LIKE '{0}'", restrictions[2]);
-                sql.Append(where.ToString());
-                MySqlDataAdapter da = new MySqlDataAdapter(sql.ToString(), connection);
-                da.Fill(tables);
+                while (reader.Read())
+                {
+                    DataRow row = schemaTable.NewRow();
+                    row["TABLE_CATALOG"] = null;
+                    row["TABLE_SCHEMA"] = restrictions[1];
+                    row["TABLE_NAME"] = reader.GetString(0);
+                    row["TABLE_TYPE"] = table_type;
+                    row["ENGINE"] = GetString(reader, 1);
+                    row["VERSION"] = reader.GetValue(2);
+                    row["ROW_FORMAT"] = GetString(reader, 3);
+                    row["TABLE_ROWS"] = reader.GetValue(4);
+                    row["AVG_ROW_LENGTH"] = reader.GetValue(5);
+                    row["DATA_LENGTH"] = reader.GetValue(6);
+                    row["MAX_DATA_LENGTH"] = reader.GetValue(7);
+                    row["INDEX_LENGTH"] = reader.GetValue(8);
+                    row["DATA_FREE"] = reader.GetValue(9);
+                    row["AUTO_INCREMENT"] = reader.GetValue(10);
+                    row["CREATE_TIME"] = reader.GetValue(11);
+                    row["UPDATE_TIME"] = reader.GetValue(12);
+                    row["CHECK_TIME"] = reader.GetValue(13);
+                    row["TABLE_COLLATION"] = GetString(reader, 14);
+                    row["CHECKSUM"] = reader.GetValue(15);
+                    row["CREATE_OPTIONS"] = GetString(reader, 16);
+                    row["TABLE_COMMENT"] = GetString(reader, 17);
+                    schemaTable.Rows.Add(row);
+                }
             }
-            return tables;
+        }
+
+        private string GetString(MySqlDataReader reader, int index)
+        {
+            if (reader.IsDBNull(index))
+                return null;
+            return reader.GetString(index);
         }
 
         protected virtual DataTable GetSchemaInternal(string collection, string[] restrictions)

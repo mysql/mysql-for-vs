@@ -330,6 +330,15 @@ namespace MySql.Data.MySqlClient {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to When MySqlCommandBuilder.ReturnGeneratedIdentifiers is true, MySqlCommand.UpdatedRowSource must be set to None..
+        /// </summary>
+        internal static string MixingUpdatedRowSource {
+            get {
+                return ResourceManager.GetString("MixingUpdatedRowSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to NamedPipeStream does not support seeking.
         /// </summary>
         internal static string NamedPipeNoSeek {

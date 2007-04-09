@@ -69,18 +69,22 @@ namespace MySql.Data.MySqlClient
 		protected byte scale;
 		protected MySqlDbType mySqlDbType;
 		protected DBVersion connVersion;
+        protected MySqlConnection connection;
+        protected bool binaryOk;
 
 		#endregion
 
-		public MySqlField(DBVersion connVersion)
+		public MySqlField(MySqlConnection connection)
 		{
-			this.connVersion = connVersion;
+            this.connection = connection;
+            connVersion = connection.driver.Version;
 			maxLength = 1;
+            binaryOk = true;
 		}
 
 		#region Properties
 
-		public int CharactetSetIndex
+		public int CharacterSetIndex
 		{
 			get { return charSetIndex; }
 			set { charSetIndex = value; }
@@ -146,7 +150,12 @@ namespace MySql.Data.MySqlClient
 
 		public bool IsBinary
 		{
-			get { return (colFlags & ColumnFlags.BINARY) > 0; }
+			get 
+            { 
+                if (connVersion.isAtLeast(4,1,0))
+                    return binaryOk && (CharacterSetIndex == 63);
+                return binaryOk && ((colFlags & ColumnFlags.BINARY) > 0); 
+            }
 		}
 
 		public bool IsUnsigned
@@ -163,7 +172,6 @@ namespace MySql.Data.MySqlClient
 						Type == MySqlDbType.Blob || Type == MySqlDbType.LongBlob) &&
 						!IsBinary);
 			}
-
 		}
 
 		#endregion
@@ -172,29 +180,68 @@ namespace MySql.Data.MySqlClient
 		{
 			colFlags = flags;
 			mySqlDbType = type;
-			if (!IsUnsigned) return;
 
-			switch (type)
-			{
-				case MySqlDbType.Byte:
-					mySqlDbType = MySqlDbType.UByte; break;
-				case MySqlDbType.Int16:
-					mySqlDbType = MySqlDbType.UInt16; break;
-				case MySqlDbType.Int24:
-					mySqlDbType = MySqlDbType.UInt24; break;
-				case MySqlDbType.Int32:
-					mySqlDbType = MySqlDbType.UInt32; break;
-				case MySqlDbType.Int64:
-					mySqlDbType = MySqlDbType.UInt64; break;
-			}
+            // if our type is an unsigned number, then we need
+            // to bump it up into our unsigned types
+            // we're trusting that the server is not going to set the UNSIGNED
+            // flag unless we are a number
+            if (IsUnsigned)
+            {
+                switch (type)
+                {
+                    case MySqlDbType.Byte:
+                        mySqlDbType = MySqlDbType.UByte; break;
+                    case MySqlDbType.Int16:
+                        mySqlDbType = MySqlDbType.UInt16; break;
+                    case MySqlDbType.Int24:
+                        mySqlDbType = MySqlDbType.UInt24; break;
+                    case MySqlDbType.Int32:
+                        mySqlDbType = MySqlDbType.UInt32; break;
+                    case MySqlDbType.Int64:
+                        mySqlDbType = MySqlDbType.UInt64; break;
+                }
+            }
+
+            // now determine if we really should be binary
+            if (CharacterSetIndex == 63 && (colFlags & ColumnFlags.BINARY) != 0)
+                CheckForExceptions();
+
+            if (IsBinary)
+            {
+                if (type == MySqlDbType.String)
+                    mySqlDbType = MySqlDbType.Binary;
+                else if (type == MySqlDbType.VarChar ||
+                         type == MySqlDbType.VarString)
+                    mySqlDbType = MySqlDbType.VarBinary;
+            }
+            else
+            {
+                if (type == MySqlDbType.TinyBlob)
+                    mySqlDbType = MySqlDbType.TinyText;
+                else if (type == MySqlDbType.MediumBlob)
+                    mySqlDbType = MySqlDbType.MediumText;
+                else if (type == MySqlDbType.Blob)
+                    mySqlDbType = MySqlDbType.Text;
+                else if (type == MySqlDbType.LongBlob)
+                    mySqlDbType = MySqlDbType.LongText;
+            }
 		}
+
+        private void CheckForExceptions()
+        {
+            string colName = OriginalColumnName.ToLower(CultureInfo.InvariantCulture);
+            if (colName.StartsWith("char("))
+                binaryOk = false;
+            else if (connection.IsExecutingBuggyQuery)
+                binaryOk = false;
+        }
 
 		public IMySqlValue GetValueObject()
 		{
-			return GetIMySqlValue(Type, IsBinary);
+			return GetIMySqlValue(Type);
 		}
 
-		public static IMySqlValue GetIMySqlValue(MySqlDbType type, bool binary)
+		public static IMySqlValue GetIMySqlValue(MySqlDbType type)
 		{
 			switch (type)
 			{
@@ -238,13 +285,21 @@ namespace MySql.Data.MySqlClient
 				case MySqlDbType.String:
                 case MySqlDbType.VarString:
 				case MySqlDbType.VarChar:
+                case MySqlDbType.Text:
+                case MySqlDbType.TinyText:
+                case MySqlDbType.MediumText:
+                case MySqlDbType.LongText:
+                case (MySqlDbType)Field_Type.NULL:
                     return new MySqlString(type, true);
 				case MySqlDbType.Blob:
 				case MySqlDbType.MediumBlob:
 				case MySqlDbType.LongBlob:
-				default:
-					if (binary) return new MySqlBinary(type, true);
-					return new MySqlString(type, true);
+                case MySqlDbType.TinyBlob:
+                case MySqlDbType.Binary:
+                case MySqlDbType.VarBinary:
+                    return new MySqlBinary(type, true);
+                default:
+                    throw new MySqlException("Unknown data type");
 			}
 		}
 	}

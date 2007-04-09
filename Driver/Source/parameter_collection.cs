@@ -36,20 +36,17 @@ namespace MySql.Data.MySqlClient
 #endif
 	public sealed class MySqlParameterCollection : DbParameterCollection
 	{
-		private ArrayList items = new ArrayList();
+        private ArrayList items = new ArrayList();
+        private Hashtable indexHash;
 		private char paramMarker = '?';
-		private Hashtable ciHash;
-		private Hashtable hash;
-        private int returnParameterIndex;
 
 		internal MySqlParameterCollection()
 		{
-			hash = new Hashtable();
 #if NET20
-			ciHash = new Hashtable(StringComparer.CurrentCultureIgnoreCase);
+			indexHash = new Hashtable(StringComparer.CurrentCultureIgnoreCase);
 #else
-			ciHash = new Hashtable(new CaseInsensitiveHashCodeProvider(),
-			new CaseInsensitiveComparer());
+			indexHash = new Hashtable(new CaseInsensitiveHashCodeProvider(),
+			    new CaseInsensitiveComparer());
 #endif
             Clear();
 		}
@@ -90,46 +87,7 @@ namespace MySql.Data.MySqlClient
 		/// <returns>The newly added <see cref="MySqlParameter"/> object.</returns>
 		public MySqlParameter Add(MySqlParameter value)
 		{
-			if (value == null)
-				throw new ArgumentException("The MySqlParameterCollection only accepts non-null MySqlParameter type objects.", "value");
-
-			if (value.Direction == ParameterDirection.ReturnValue)
-				return AddReturnParameter(value);
-
-			string inComingName = value.ParameterName.ToLower();
-			if (inComingName[0] == paramMarker)
-				inComingName = inComingName.Substring(1, inComingName.Length - 1);
-
-			for (int i = 0; i < items.Count; i++)
-			{
-				MySqlParameter p = (MySqlParameter)items[i];
-				string name = p.ParameterName.ToLower();
-				if (name[0] == paramMarker)
-					name = name.Substring(1, name.Length - 1);
-				if (name == inComingName)
-				{
-                    throw new MySqlException(
-                        String.Format(Resources.ParameterAlreadyDefined, value.ParameterName));
-				}
-			}
-
-			int index = items.Add(value);
-			hash.Add(value.ParameterName, index);
-			ciHash.Add(value.ParameterName, index);
-            value.Collection = this;
-			return value;
-		}
-
-		private MySqlParameter AddReturnParameter(MySqlParameter value)
-		{
-            if (returnParameterIndex != -1)
-			{
-				items[returnParameterIndex] = value;
-				return value;
-			}
-
-			returnParameterIndex = items.Add(value);
-            return value;
+            return InternalAdd(value, -1);
 		}
 
 		/// <summary>
@@ -201,7 +159,7 @@ namespace MySql.Data.MySqlClient
 
 		void CheckIndex(int index)
 		{
-			if (index < 0 || index >= items.Count)
+			if (index < 0 || index >= Count)
 				throw new IndexOutOfRangeException("Parameter index is out of range.");
 		}
 
@@ -222,9 +180,7 @@ namespace MySql.Data.MySqlClient
 					string newParameterName = parameterName.Substring(1);
 					index = IndexOf(newParameterName);
 					if (index != -1)
-						throw new ArgumentException(
-							String.Format(Resources.WrongParameterName, parameterName,
-							newParameterName));
+                        return (DbParameter)items[index];
 				}
 				throw new ArgumentException("Parameter '" + parameterName + "' not found in the collection.");
 			}
@@ -249,23 +205,10 @@ namespace MySql.Data.MySqlClient
 		{
 			CheckIndex(index);
             MySqlParameter p = (MySqlParameter)items[index];
-            if (p.Direction == ParameterDirection.ReturnValue)
-                returnParameterIndex = -1;
-            else
-            {
-                hash.Remove(p.ParameterName);
-                ciHash.Remove(p.ParameterName);
-            }
-
+            
+            indexHash.Remove(p.ParameterName);
 			items[index] = (MySqlParameter)value;
-            p = (MySqlParameter)value;
-            if (p.Direction == ParameterDirection.ReturnValue)
-                returnParameterIndex = index;
-            else
-            {
-                hash.Add(p.ParameterName, index);
-                ciHash.Add(p.ParameterName, index);
-            }
+            indexHash.Add(value.ParameterName, index);
         }
 
 		/// <summary>
@@ -295,9 +238,7 @@ namespace MySql.Data.MySqlClient
             foreach (MySqlParameter p in items)
                 p.Collection = null;
 			items.Clear();
-			hash.Clear();
-			ciHash.Clear();
-            returnParameterIndex = -1;
+			indexHash.Clear();
 		}
 
 		/// <summary>
@@ -355,21 +296,10 @@ namespace MySql.Data.MySqlClient
 		/// <returns>The zero-based location of the <see cref="MySqlParameter"/> in the collection.</returns>
 		public override int IndexOf(string parameterName)
 		{
-			object o = hash[parameterName];
-            if (o != null)
-                return (int)o;
-
-			o = ciHash[parameterName];
-            if (o != null)
-                return (int)o;
-
-            if (returnParameterIndex != -1)
-            {
-                MySqlParameter p = (MySqlParameter)items[returnParameterIndex];
-                if (String.Compare(parameterName, p.ParameterName, true) == 0)
-                    return returnParameterIndex;
-            }
-			return -1;
+            object o = indexHash[parameterName];
+            if (o == null)
+                return -1;
+            return (int)o;
 		}
 
 		/// <summary>
@@ -390,7 +320,9 @@ namespace MySql.Data.MySqlClient
 		/// <param name="value"></param>
 		public override void Insert(int index, object value)
 		{
-			items.Insert(index, value);
+            if (!(value is MySqlParameter))
+                throw new MySqlException("Only MySqlParameter objects may be stored");
+            InternalAdd((MySqlParameter)value, index);
 		}
 
         /// <summary>
@@ -426,14 +358,12 @@ namespace MySql.Data.MySqlClient
 		/// <param name="value"></param>
 		public override void Remove(object value)
 		{
-			items.Remove(value);
-
             MySqlParameter p = (value as MySqlParameter);
-            hash.Remove(p.ParameterName);
-            ciHash.Remove(p.ParameterName);
             p.Collection = null;
-            if (p.Direction == ParameterDirection.ReturnValue)
-                returnParameterIndex = -1;
+            int index = IndexOf(p);
+			items.Remove(p);
+            indexHash.Remove(p.ParameterName);
+            AdjustHash(index, false);
 		}
 
 		/// <summary>
@@ -470,13 +400,54 @@ namespace MySql.Data.MySqlClient
 
         internal void ParameterNameChanged(MySqlParameter p, string oldName, string newName)
         {
-            if (p.Direction == ParameterDirection.ReturnValue)
-                return;
             int index = IndexOf(oldName);
-            hash.Remove(oldName);
-            ciHash.Remove(oldName);
-            hash.Add(newName, index);
-            ciHash.Add(newName, index);
+            indexHash.Remove(oldName);
+            indexHash.Add(newName, index);
+        }
+
+        private MySqlParameter InternalAdd(MySqlParameter value, int index)
+        {
+            if (value == null)
+                throw new ArgumentException("The MySqlParameterCollection only accepts non-null MySqlParameter type objects.", "value");
+
+            // make sure we don't already have a parameter with this name
+            string inComingName = value.ParameterName;
+            if (indexHash.ContainsKey(inComingName))
+                throw new MySqlException(
+                    String.Format(Resources.ParameterAlreadyDefined, value.ParameterName));
+            if (inComingName[0] == paramMarker)
+                inComingName = inComingName.Substring(1, inComingName.Length - 1);
+            if (indexHash.ContainsKey(inComingName))
+                throw new MySqlException(
+                    String.Format(Resources.ParameterAlreadyDefined, value.ParameterName));
+
+            if (index == -1)
+            {
+                index = items.Add(value);
+                indexHash.Add(value.ParameterName, index);
+            }
+            else
+            {
+                items.Insert(index, value);
+                AdjustHash(index, true);
+                indexHash.Add(value.ParameterName, index);
+            }
+
+            value.Collection = this;
+            return value;
+        }
+
+        private void AdjustHash(int keyIndex, bool addEntry)
+        {
+            for (int i=0; i < Count; i++)
+            {
+                MySqlParameter p = (MySqlParameter)items[i];
+                if (!indexHash.ContainsKey(p.ParameterName))
+                    return;
+                int index = (int)indexHash[p.ParameterName];
+                if (index < keyIndex) continue;
+                indexHash[p.ParameterName] = addEntry ? ++index : --index;
+            }
         }
 	}
 }

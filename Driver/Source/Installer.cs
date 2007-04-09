@@ -101,13 +101,16 @@ namespace MySql.Data.MySqlClient
 			bool alreadyThere = false;
 			foreach (XmlNode node in nodes[0].ChildNodes)
 			{
-				string typeValue = node.Attributes["type"].Value;
-				if (typeValue == type)
-				{
-					alreadyThere = true;
-					break;
-				}
-			}
+                if (node.Attributes == null) continue;
+                foreach (XmlAttribute attr in node.Attributes)
+                {
+                    if (attr.Name == "type" && attr.Value == type)
+                    {
+                        alreadyThere = true;
+                        break;
+                    }
+                }
+            }
 
 			if (! alreadyThere)
 				nodes[0].AppendChild(newNode);
@@ -185,6 +188,7 @@ namespace MySql.Data.MySqlClient
 			XmlNodeList nodes = doc.GetElementsByTagName("DbProviderFactories");
 			foreach (XmlNode node in nodes[0].ChildNodes)
 			{
+                if (node.Attributes == null) continue;
 				string name = node.Attributes["name"].Value;
 				if (name == "MySQL Data Provider")
 				{

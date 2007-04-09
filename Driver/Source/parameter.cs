@@ -358,7 +358,7 @@ namespace MySql.Data.MySqlClient
 
 		internal void Serialize(MySqlStream stream, bool binary)
 		{
-			IMySqlValue v = MySqlField.GetIMySqlValue(mySqlDbType, true);
+			IMySqlValue v = MySqlField.GetIMySqlValue(mySqlDbType);
 
 			if (!binary && (paramValue == null || paramValue == DBNull.Value))
 				stream.WriteStringNoNull("NULL");
@@ -436,7 +436,7 @@ namespace MySql.Data.MySqlClient
 				case DbType.UInt32: mySqlDbType = MySqlDbType.UInt32; break;
 
 				case DbType.Int64: mySqlDbType = MySqlDbType.Int64; break;
-				case DbType.UInt64: mySqlDbType = MySqlDbType.Int64; break;
+				case DbType.UInt64: mySqlDbType = MySqlDbType.UInt64; break;
 
 				case DbType.Decimal:
 				case DbType.Currency: mySqlDbType = MySqlDbType.Decimal; break;

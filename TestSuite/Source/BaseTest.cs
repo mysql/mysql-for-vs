@@ -60,7 +60,7 @@ namespace MySql.Data.MySqlClient.Tests
             rootUser = "su";
             rootPassword = "su";
 
-#if NET20
+#if NET20 || NET_CF_2_0
             string strHost = ConfigurationManager.AppSettings["host"];
             string strPort = ConfigurationManager.AppSettings["port"];
             string strDatabase = ConfigurationManager.AppSettings["database"];

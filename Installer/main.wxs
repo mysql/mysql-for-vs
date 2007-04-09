@@ -5,6 +5,12 @@
   <Product Id="5FD88490-011C-4df1-B886-F298D955171B" Name="$(var.ProductName)" Manufacturer="MySQL AB"
            Version="$(var.ProductVersion)" Language="1033">
     <Package Compressed="yes" InstallerVersion="200"/>
+
+    <Property Id="ARPURLINFOABOUT" Value="http://www.mysql.com" />
+    <Property Id="ARPURLUPDATEINFO" Value="http://dev.mysql.com"/>
+    <Property Id="ARPURLINFOABOUT" Value="http://www.mysql.com" />
+    <Property Id="ARPURLUPDATEINFO" Value="http://dev.mysql.com"/>
+
     <Media Id="1" EmbedCab="yes" Cabinet="ConnectorNet.cab" CompressionLevel="high" />
 
     <Condition Message="You must have Administrative rights on this machine to install [ProductName].">
@@ -41,7 +47,7 @@
 
     <!-- Top level junk - readme, changelog, etc -->
     <DirectoryRef Id='INSTALLDIR'>
-      <Component Id="BaseComponents" Guid="6cbae281-be1e-4952-8a5d-cb5d1ad799a9" DiskId="1">
+      <Component Id="BaseComponents" Guid="2448b1b1-f2ec-4153-96c6-bcaae7692ef9" DiskId="1">
         <File Id="ChangeLog" Name="CHANGES" Source="..\CHANGES" />
         <File Id="RelNotes" Name="Release Notes.txt" Source="..\Release Notes.txt" />
         <?if $(var.IsGPL) = 1 ?>
@@ -59,7 +65,7 @@
 
     <!-- .Net 2.0 Binaries -->
     <DirectoryRef Id='BinNet20'>
-      <Component Id="Net20" Guid="17250F82-34FF-44d6-9721-601E976AF1A8">
+      <Component Id="Net20" Guid="0e8af006-273c-49bb-b7c1-ec1737260a5a">
         <File Id="CoreBin20" Name="MySql.Data.dll"
               Source="..\Driver\bin\net-2.0\release\mysql.data.dll" DiskId="1"/>
         <RegistryKey Id="VSRegistry" Root="HKLM" Action="createAndRemoveOnUninstall"
@@ -67,7 +73,7 @@
           <RegistryValue Id="VSRegistryValue" Value="[BinNet20]" Type="string" Action="write"/>
         </RegistryKey>
       </Component>
-      <Component Id="GAC20" Guid="BAC52988-72B6-483e-8B7B-017E77461CDC">
+      <Component Id="GAC20" Guid="58f70e4a-96f7-4b67-bdab-9b77a60f9c09">
         <File Id="GAC20" Name="MySql.Data.dll"
               Source="..\Driver\bin\net-2.0\release\mysql.data.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
       </Component>
@@ -75,7 +81,7 @@
 
     <!-- Start menu junk -->
     <DirectoryRef Id='ShortCutDir'>
-      <Component Id="StartMenuComponent" Guid="B0801261-F922-4fce-A711-C8B278554E03">
+      <Component Id="StartMenuComponent" Guid="31e1c7c6-e06d-4214-82ca-58e67e5232e2">
         <Shortcut Id="S100" Name="Documentation" Description="Complete documentation for the connector"
 					Target="[DocsDir]/MySql.Data.chm" Directory="ShortCutDir" />
         <Shortcut Id="S101" Name="ChangeLog" Description="Complete changelog for the connector" 
@@ -86,7 +92,7 @@
     </DirectoryRef>
 
     <DirectoryRef Id='DocsDir'>
-      <Component Id="Docs" Guid="091551DE-12FA-4c9a-84DE-221E14993714">
+      <Component Id="Docs" Guid="8f9d25c7-1eba-4391-b764-eb1f7d39243e">
         <File Id="CoreCHM" Name="MySql.Data.chm" Source="..\doc\MySql.Data.chm" DiskId="1" />
       </Component>
     </DirectoryRef>

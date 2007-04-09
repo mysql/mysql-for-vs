@@ -59,23 +59,23 @@ namespace MySql.Data.MySqlClient
 
             object[][] restrictions = new object[][] 
             {
-                new object[] {"Procedure Parameters", "Catalog", "", 0},
-                new object[] {"Procedure Parameters", "Owner", "", 1},
+                new object[] {"Procedure Parameters", "Database", "", 0},
+                new object[] {"Procedure Parameters", "Schema", "", 1},
                 new object[] {"Procedure Parameters", "Name", "", 2},
                 new object[] {"Procedure Parameters", "Type", "", 3},
                 new object[] {"Procedure Parameters", "Parameter", "", 4},
-                new object[] {"Procedures", "Catalog", "", 0},
-                new object[] {"Procedures", "Owner", "", 1},
+                new object[] {"Procedures", "Database", "", 0},
+                new object[] {"Procedures", "Schema", "", 1},
                 new object[] {"Procedures", "Name", "", 2},
                 new object[] {"Procedures", "Type", "", 3},
-                new object[] {"Views", "Catalog", "", 0},
-                new object[] {"Views", "Owner", "", 1},
+                new object[] {"Views", "Database", "", 0},
+                new object[] {"Views", "Schema", "", 1},
                 new object[] {"Views", "Table", "", 2},
-                new object[] {"ViewColumns", "Catalog", "", 0},
-                new object[] {"ViewColumns", "Owner", "", 1},
+                new object[] {"ViewColumns", "Database", "", 0},
+                new object[] {"ViewColumns", "Schema", "", 1},
                 new object[] {"ViewColumns", "Table", "", 2},
                 new object[] {"ViewColumns", "Column", "", 3},
-                new object[] {"Triggers", "Catalog", "", 0},
+                new object[] {"Triggers", "Database", "", 0},
                 new object[] {"Triggers", "Schema", "", 1},
                 new object[] {"Triggers", "Name", "", 2},
                 new object[] {"Triggers", "EventObjectTable", "", 3},
@@ -190,6 +190,7 @@ namespace MySql.Data.MySqlClient
             keys[1] = "ROUTINE_SCHEMA";
             keys[2] = "ROUTINE_NAME";
             keys[3] = "ROUTINE_TYPE";
+
             DataTable dt = Query("ROUTINES", null, keys, restrictions);
             dt.TableName = "Procedures";
             return dt;
@@ -456,8 +457,12 @@ namespace MySql.Data.MySqlClient
                         row["FLAGS"] = String.Format("{0} {1}", row["FLAGS"], token);
                         return true;
                     case "character":
-                        string set = tokenizer.NextToken().ToLower(CultureInfo.InvariantCulture);
-                        Debug.Assert(set == "set");
+                    case "charset":
+                        if (lowerToken == "character")
+                        {
+                            string set = tokenizer.NextToken().ToLower(CultureInfo.InvariantCulture);
+                            Debug.Assert(set == "set");
+                        }
                         row["CHARACTER_SET"] = tokenizer.NextToken();
                         return true;
                     case "ascii":

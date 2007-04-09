@@ -143,13 +143,13 @@ namespace MySql.Data.Types
 				row["TypeName"] = types[x];
 				row["ProviderDbType"] = dbtype[x];
 				row["ColumnSize"] = 0;
-				row["CreateFormat"] = types[x];
-				row["CreateParameters"] = null;
+                row["CreateFormat"] = x < 2 ? types[x] + "({0})" : types[x];
+				row["CreateParameters"] = x < 2 ? "size" : null;
 				row["DataType"] = "System.String";
 				row["IsAutoincrementable"] = false;
 				row["IsBestMatch"] = true;
 				row["IsCaseSensitive"] = false;
-				row["IsFixedLength"] = true;
+				row["IsFixedLength"] = false;
 				row["IsFixedPrecisionScale"] = true;
 				row["IsLong"] = false;
 				row["IsNullable"] = true;

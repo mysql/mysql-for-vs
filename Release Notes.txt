@@ -1,34 +1,10 @@
-Connector/Net 5.0.4  Release Notes
+Connector/Net 5.0.6  Release Notes
 ------------------------------------
 
-Welcome to the release notes for Connector/Net 5.0.4.
+Welcome to the release notes for Connector/Net 5.0.6.
 
 Important Changes
 ---------------------
 
-* We've added support for MySqlParameterCollection.AddWithValue.  This method should
-  be used whenever you are wanting to add a parameter by name and set its value in a
-  single method call.  The previous .Add overload is marked as deprecated and will give
-  a compiler warning if you continue to use it.
-  
-* This release includes support for calling stored procedures without having privileges
-  on the mysql.proc table.  This is accomplished by adding 'Use Procedure Bodies=false' to
-  your connection string.  The default is true (which means by default you still need
-  access to mysql.proc).  Since MySQL does not yet support an information schema parameters
-  view, the connector has to trust the order of parameters that you set on the command.
-  So, to call a procedure using a limited privilege account, set 'Use Procedure Bodies=false'
-  on your connection string, add parameters to your command object in the exact same order
-  they appear in the procedure definition, and make sure all the parameters have their
-  type set.
-  
-* With 5.0.3, we required that all parameters start with the parameter marker (default is ?).
-  This was not fully thought out and has been rolled out in this release.  With this release,
-  you can add parameters with or without the leading parameter marker.  One thing to understand
-  though is that the IndexOf method of MySqlParameterCollection is still sensitive to the name.
-  What this means is that if you add a parameter with the name '?parm1' and then call IndexOf
-  with the value 'parm1', it will return -1.
-  
-* Connecion pooling has been significantly changed in this release.  Now, a semaphore is used
-  to control access to the pool.  This significantly reduces CPU time incurred while waiting
-  on a connection to free and greatly simplifies the locking code involved.  
-  
+There are no major changes in this version.  Please see the changelog for the list of bugs fixed.
+

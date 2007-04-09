@@ -95,18 +95,26 @@ namespace MySql.Data.Types
 				case "double": return MySqlDbType.Double;
 				case "real": return
 					 realAsFloat ? MySqlDbType.Float : MySqlDbType.Double;
-				case "blob":
-				case "text":
+                case "text":
+                    return MySqlDbType.Text;
+                case "blob":
 					return MySqlDbType.Blob;
 				case "longblob":
-				case "longtext":
-					return MySqlDbType.LongBlob;
+                    return MySqlDbType.LongBlob;
+                case "longtext":
+                    return MySqlDbType.LongText;
 				case "mediumblob":
-				case "mediumtext":
-					return MySqlDbType.MediumBlob;
+                    return MySqlDbType.MediumBlob;
+                case "mediumtext":
+                    return MySqlDbType.MediumText;
 				case "tinyblob":
+                    return MySqlDbType.TinyBlob;
 				case "tinytext":
-					return MySqlDbType.TinyBlob;
+					return MySqlDbType.TinyText;
+                case "binary":
+                    return MySqlDbType.Binary;
+                case "varbinary":
+                    return MySqlDbType.VarBinary;
 			}
 			throw new MySqlException("Unhandled type encountered");
 		}

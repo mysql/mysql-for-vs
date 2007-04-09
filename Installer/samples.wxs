@@ -4,7 +4,7 @@
     <DirectoryRef Id='SampleDir'> 
 		<Directory Id="TableEditor" Name="Table Editor">
 			<Directory Id="teCS" Name="cs">
-				<Component Id="Sample1CS" Guid="69C435DD-64A5-44cd-B3BE-89747B50956C">
+				<Component Id="Sample1CS" Guid="0e39e515-e3a5-4e56-954e-1802b975de29">
 					<File Id="teCS1" Name="App.ico" Source="..\Samples\TableEditor\cs\App.ico" DiskId="1"/>
 					<File Id="teCS2" Name="AssemblyInfo.cs" Source="..\Samples\TableEditor\cs\AssemblyInfo.cs" DiskId="1"/>
 					<File Id="teCS3" Name="Form1.cs" Source="..\Samples\TableEditor\cs\Form1.cs" DiskId="1"/>
@@ -14,7 +14,7 @@
 				</Component>
 			</Directory>
 			<Directory Id="teVB" Name="vb">
-				<Component Id="Sample1VB" Guid="AC22A69F-2E52-40cf-8C4C-4E70EAC6F088">
+				<Component Id="Sample1VB" Guid="f8a6f77b-cd77-4d44-972f-f560059b2c9a">
 					<File Id="teVB2" Name="AssemblyInfo.vb" Source="..\Samples\TableEditor\vb\AssemblyInfo.vb" DiskId="1"/>
 					<File Id="teVB3" Name="Form1.vb" Source="..\Samples\TableEditor\vb\Form1.vb" DiskId="1"/>
 					<File Id="teVB4" Name="Form1.resx" Source="..\Samples\TableEditor\vb\Form1.resx" DiskId="1"/>
@@ -25,7 +25,7 @@
 		</Directory>
       <Directory Id="Async" Name="Async">
         <Directory Id="asyncCS" Name="cs">
-          <Component Id="Sample2CS" Guid="326A8013-1780-4e65-A1C0-A1C725659DA4">
+          <Component Id="Sample2CS" Guid="6e7377c6-bd5e-42e8-a47b-d600fa582744">
             <File Id="sample2file1" Name="App.ico" Source="..\Samples\Async\cs\App.ico" DiskId="1"/>
             <File Id="sample2file2" Name="AssemblyInfo.cs" Source="..\Samples\Async\cs\AssemblyInfo.cs" DiskId="1"/>
             <File Id="sample2file3" Name="Form1.cs" Source="..\Samples\Async\cs\Form1.cs" DiskId="1"/>

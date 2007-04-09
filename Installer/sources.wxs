@@ -2,7 +2,7 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment Id='SourceFragment'>
     <DirectoryRef Id='DriverDir'>
-      <Component Id="TopLevelSrc" Guid="4B94BD76-FF6D-4605-AC99-C45A03364872">
+      <Component Id="TopLevelSrc" Guid="27b8c3d9-b12d-4961-aabc-6132d9d1548d">
         <File Id="nantFile" Name="client.build" Source="..\client.build" DiskId="1"/>
         <File Id="m2005proj" Name="MySql.Data.2005.csproj" Source="..\Driver\MySql.Data.2005.csproj" DiskId="1"/>
       </Component>
@@ -12,7 +12,7 @@
         </Component>
       </Directory>
       <Directory Id="srcFolder" Name="Source">
-        <Component Id="CoreSrc" DiskId="1" Guid="EB1FC0F7-1300-4938-BC0D-720792D064BE">
+        <Component Id="CoreSrc" DiskId="1" Guid="99b3ba9e-ede0-4644-bdbb-07973d3d907b">
           <File Id="file1" Name="CharSetMap.cs" Source="..\Driver\Source\CharSetMap.cs" />
           <File Id="file2" Name="command.cs" Source="..\Driver\Source\command.cs" />
           <File Id="file3" Name="CommandBuilder.cs" Source="..\Driver\Source\CommandBuilder.cs" />
@@ -52,7 +52,7 @@
           <File Id="file46" Name="Installer.cs" Source="..\Driver\Source\Installer.cs"/>
         </Component>
         <Directory Id="commonFolder" Name="Common">
-          <Component Id="CommonSrc"  DiskId="1" Guid="AB468934-0BF8-41d3-BFDD-C3E1CFD45F1B">
+          <Component Id="CommonSrc"  DiskId="1" Guid="ef299809-088c-4ba4-aa7f-771e9c7b265d">
             <File Id="file179" Name="ContextString.cs" Source="..\Driver\Source\common\ContextString.cs" />
             <File Id="file180" Name="NamedPipeStream.cs" Source="..\Driver\Source\common\NamedPipeStream.cs" />
             <File Id="file181" Name="NativeMethods.cs" Source="..\Driver\Source\common\NativeMethods.cs" />
@@ -66,7 +66,7 @@
           </Component>
         </Directory>
         <Directory Id="docSrcFolder" Name="Docs">
-          <Component Id="DocsSrc" DiskId="1" Guid="530BFFA7-199F-49c3-9DEA-D1ADAF61179D">
+          <Component Id="DocsSrc" DiskId="1" Guid="aa942a0c-f508-45dc-b4df-d4571d2b2e44">
             <File Id="file245" Name="MySqlCommand.xml" Source="..\Driver\Source\docs\MySqlCommand.xml" />
             <File Id="file246" Name="MySqlCommandBuilder.xml" Source="..\Driver\Source\docs\MySqlCommandBuilder.xml" />
             <File Id="file247" Name="MySqlConnection.xml" Source="..\Driver\Source\docs\MySqlConnection.xml" />
@@ -81,7 +81,7 @@
           </Component>
         </Directory>
         <Directory Id="typesFolder" Name="Types">
-          <Component Id="TypesSrc" DiskId="1" Guid="57BCAC51-1A1A-4fcf-BFE9-9081E5821301">
+          <Component Id="TypesSrc" DiskId="1" Guid="5f6c45fd-f725-43aa-b85f-0a2467d9e3fe">
             <File Id="file299" Name="MetaData.cs" Source="..\Driver\Source\Types\MetaData.cs" />
             <File Id="file300" Name="MySqlBinary.cs" Source="..\Driver\Source\Types\MySqlBinary.cs" />
             <File Id="file301" Name="MySqlBit.cs" Source="..\Driver\Source\Types\MySqlBit.cs" />
@@ -104,7 +104,7 @@
           </Component>
         </Directory>
         <Directory Id="zlibFolder" Name="zlib">
-          <Component Id="ZLibSrc" DiskId="1" Guid="AF13C4FD-CA99-4fc6-AE6B-6DD44FBEC3CF">
+          <Component Id="ZLibSrc" DiskId="1" Guid="9e7f2a58-229f-4b4b-a88c-8966e7b78a06">
             <File Id="file500" Name="Adler32.cs" Source="..\Driver\Source\zlib\Adler32.cs" />
             <File Id="file501" Name="Deflate.cs" Source="..\Driver\Source\zlib\Deflate.cs" />
             <File Id="file502" Name="InfBlocks.cs" Source="..\Driver\Source\zlib\InfBlocks.cs" />
@@ -123,7 +123,7 @@
         </Directory>
       </Directory>
       <Directory Id="TestSuite" Name="TestSuite">
-        <Component Id="TestSuiteSrc" DiskId="1" Guid="8D1DD3AA-DF35-4107-B7BD-DDE707F79756">
+        <Component Id="TestSuiteSrc" DiskId="1" Guid="a070c1b6-6397-4893-90b4-66877a106558">
           <File Id="file402" Name="AsyncTests.cs" Source="..\TestSuite\AsyncTests.cs" />
           <File Id="file403" Name="BaseTest.cs" Source="..\TestSuite\BaseTest.cs" />
           <File Id="file404" Name="BlobTests.cs" Source="..\TestSuite\BlobTests.cs" />
@@ -164,7 +164,7 @@
           <File Id="file445" Name="ConnectionStringBuilder.cs" Source="..\TestSuite\ConnectionStringBuilder.cs"/>
         </Component>
         <Directory Id="TSProperties" Name="Properties">
-          <Component Id="TestSuitePropSrc" DiskId="1" Guid="42D875F4-62AF-4f5a-BF96-11C6EBA6017C">
+          <Component Id="TestSuitePropSrc" DiskId="1" Guid="2b03e35d-f968-42bd-8c4b-f20fe3e8dff9">
             <File Id="file401" Name="AssemblyInfo.cs" Source="..\TestSuite\Properties\AssemblyInfo.cs" />
           </Component>
         </Directory>

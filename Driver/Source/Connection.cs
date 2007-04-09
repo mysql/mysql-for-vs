@@ -49,7 +49,7 @@ namespace MySql.Data.MySqlClient
 #if !CF
 		private PerformanceMonitor perfMonitor;
 		private MySqlPromotableTransaction currentTransaction;
-#endif
+        private bool isExecutingBuggyQuery;
 
         /// <include file='docs/MySqlConnection.xml' path='docs/InfoMessage/*'/>
 		public event MySqlInfoMessageEventHandler InfoMessage;
@@ -119,7 +119,19 @@ namespace MySql.Data.MySqlClient
 			}
 		}
 
-		#endregion
+        internal bool IsExecutingBuggyQuery
+        {
+            get { return isExecutingBuggyQuery; }
+            set { isExecutingBuggyQuery = value; }
+        }
+
+        internal bool IsExecutingBuggyQuery
+        {
+            get { return isExecutingBuggyQuery; }
+            set { isExecutingBuggyQuery = value; }
+        }
+
+        #endregion
 
 		#region Properties
 
@@ -427,8 +439,7 @@ namespace MySql.Data.MySqlClient
 		object ICloneable.Clone()
 		{
 			MySqlConnection clone = new MySqlConnection();
-			clone.ConnectionString = this.ConnectionString;
-			//TODO:  how deep should this go?
+			clone.ConnectionString = settings.GetConnectionString(true);
 			return clone;
 		}
 		#endregion
@@ -478,6 +489,12 @@ namespace MySql.Data.MySqlClient
 			if (dataReader != null)
 				dataReader.Close();
 
+            if ((driver.ServerStatus & ServerStatusFlags.InTransaction) != 0)
+            {
+                MySqlTransaction t = new MySqlTransaction(this, IsolationLevel.Unspecified);
+                t.Rollback();
+            }
+
 			if (settings.Pooling)
 				MySqlPoolManager.ReleaseConnection(driver);
 			else
@@ -518,7 +535,7 @@ namespace MySql.Data.MySqlClient
 			if (collectionName == null)
 				collectionName = SchemaProvider.MetaCollection;
 
-			return schemaProvider.GetSchema(collectionName, null);
+			return GetSchema(collectionName, null);
 		}
 
 		/// <summary>
@@ -537,10 +554,30 @@ namespace MySql.Data.MySqlClient
                 msg += String.Format(" res={0}", s);
             }
             MessageBox.Show(msg);
-  */          
+  */
 			if (collectionName == null)
 				collectionName = SchemaProvider.MetaCollection;
-			return schemaProvider.GetSchema(collectionName, restrictionValues);
+
+            string[] restrictions = null;
+            if (restrictionValues != null)
+            {
+                restrictions = new string[restrictionValues.Length];
+                for (int x = 0; x < restrictionValues.Length; x++)
+                {
+                    string s = restrictionValues[x];
+                    if (s != null)
+                    {
+                        if (s.StartsWith("`"))
+                            s = s.Substring(1);
+                        if (s.EndsWith("`"))
+                            s = s.Substring(0, s.Length - 1);
+                        restrictions[x] = s;
+                    }
+                }
+            }
+
+			DataTable dt = schemaProvider.GetSchema(collectionName, restrictions);
+            return dt;
 		}
 
 		#endregion

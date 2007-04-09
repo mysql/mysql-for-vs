@@ -28,6 +28,7 @@ using MySql.Data.Common;
 using System.ComponentModel;
 using System.Threading;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace MySql.Data.MySqlClient
 {
@@ -348,6 +349,21 @@ namespace MySql.Data.MySqlClient
 
 			string sql = TrimSemicolons(cmdText);
 
+            // now we check to see if we are executing a query that is buggy
+            // in 4.1
+            connection.IsExecutingBuggyQuery = false;
+            if (!connection.driver.Version.isAtLeast(5, 0, 0) &&
+                connection.driver.Version.isAtLeast(4, 1, 0))
+            {
+                string snippet = sql;
+                if (snippet.Length > 17)
+                    snippet = sql.Substring(0, 17);
+                snippet = snippet.ToLower(CultureInfo.InvariantCulture);
+                connection.IsExecutingBuggyQuery = 
+                    snippet.StartsWith("describe") ||
+                    snippet.StartsWith("show table status");
+            }
+
 			if (statement == null || !statement.IsPrepared)
 			{
 				if (CommandType == CommandType.StoredProcedure)
@@ -373,6 +389,7 @@ namespace MySql.Data.MySqlClient
                 timedOut = false;
                 Timer t = null;
                 querySent.Reset();
+#if !DEBUG
                 if (connection.driver.Version.isAtLeast(5, 0, 0) &&
                      commandTimeout > 0)
                 {
@@ -380,6 +397,7 @@ namespace MySql.Data.MySqlClient
                          new TimerCallback(TimeoutExpired);
                     t = new Timer(timerDelegate, this, this.CommandTimeout * 1000, Timeout.Infinite);
                 }
+#endif
 
                 // execute the statement
                 statement.Execute();
@@ -673,6 +691,9 @@ namespace MySql.Data.MySqlClient
 		object ICloneable.Clone()
 		{
 			MySqlCommand clone = new MySqlCommand(cmdText, connection, curTransaction);
+            clone.CommandType = CommandType;
+            clone.CommandTimeout = CommandTimeout;
+
 			foreach (MySqlParameter p in parameters)
 			{
 				clone.Parameters.Add((p as ICloneable).Clone());
