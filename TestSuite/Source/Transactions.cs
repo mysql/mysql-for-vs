@@ -141,7 +141,6 @@ namespace MySql.Data.MySqlClient.Tests
             TransactionScopeMultipleInternal(true);
         }
 
-#endif
 
         /// <summary
         /// Bug #22042 mysql-connector-net-5.0.0-alpha BeginTransaction 
@@ -165,5 +164,8 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.Fail(ex.Message);
             }
         }
+
+#endif
+
     }
 }
