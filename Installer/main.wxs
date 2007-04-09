@@ -8,16 +8,12 @@
 
     <Property Id="ARPURLINFOABOUT" Value="http://www.mysql.com" />
     <Property Id="ARPURLUPDATEINFO" Value="http://dev.mysql.com"/>
-    <Property Id="ARPURLINFOABOUT" Value="http://www.mysql.com" />
-    <Property Id="ARPURLUPDATEINFO" Value="http://dev.mysql.com"/>
 
     <Media Id="1" EmbedCab="yes" Cabinet="ConnectorNet.cab" CompressionLevel="high" />
 
     <Condition Message="You must have Administrative rights on this machine to install [ProductName].">
       <![CDATA[ Privileged  ]]>
     </Condition>
-    <Property Id="ARPURLINFOABOUT" Value="http://www.mysql.com" />
-    <Property Id="ARPURLUPDATEINFO" Value="http://dev.mysql.com"/>
 
     <!-- First make sure that .NET 2.0 is installed -->
     <PropertyRef Id="NETFRAMEWORK20"/>

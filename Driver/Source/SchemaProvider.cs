@@ -111,7 +111,8 @@ namespace MySql.Data.MySqlClient
             DataTable databases = GetDatabases(dbRestriction);
 
             if (restrictions != null)
-                Array.Copy(restrictions, dbRestriction, dbRestriction.Length);
+                Array.Copy(restrictions, dbRestriction, 
+                    Math.Min(dbRestriction.Length, restrictions.Length));
 
             foreach (DataRow db in databases.Rows)
             {
@@ -776,6 +777,22 @@ namespace MySql.Data.MySqlClient
                     return GetUsers(restrictions);
                 case "databases":
                     return GetDatabases(restrictions);
+            }
+
+            // if we have a current database and our users have
+            // not specified a database, then default to the currently
+            // selected one.
+            if (restrictions == null)
+                restrictions = new string[2];
+            if (connection != null && 
+                connection.Database != null &&
+                connection.Database.Length > 0 &&
+                restrictions.Length > 1 &&
+                restrictions[1] == null)
+                restrictions[1] = connection.Database;
+
+            switch (collection)
+            {
                 case "tables":
                     return GetTables(restrictions);
                 case "columns":

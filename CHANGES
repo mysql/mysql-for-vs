@@ -4,6 +4,9 @@ Version 5.1.0
   - Now compiles for .NET CF 2.0
   - Rewrote stored procedure parsing code using a new SQL tokenizer.  Really nasty
     procedures including nested comments are now supported.
+  - GetSchema will now report objects relative to the currently selected database.
+    What this means is that passing in null as a database restriction will report
+    objects on the currently selected database only.
 
 Version 5.0.7
 

@@ -600,5 +600,18 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("test1", dt.Rows[0][2]);
             Assert.AreEqual("`test1`", restrictions[2]);
         }
+
+        [Test]
+        public void ObjectsRelativeToDatabase()
+        {
+            string[] restrictions = new string[4];
+            restrictions[1] = databases[0];
+            DataTable dt = conn.GetSchema("Tables", restrictions);
+            int count1 = dt.Rows.Count;
+
+            dt.Clear();
+            dt = conn.GetSchema("Tables", null);
+            Assert.AreEqual(count1, dt.Rows.Count);
+        }
     }
 }

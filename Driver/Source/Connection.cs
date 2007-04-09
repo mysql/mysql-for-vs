@@ -49,6 +49,7 @@ namespace MySql.Data.MySqlClient
 #if !CF
 		private PerformanceMonitor perfMonitor;
 		private MySqlPromotableTransaction currentTransaction;
+#endif
         private bool isExecutingBuggyQuery;
 
         /// <include file='docs/MySqlConnection.xml' path='docs/InfoMessage/*'/>
@@ -118,12 +119,6 @@ namespace MySql.Data.MySqlClient
 				InfoMessage(this, args);
 			}
 		}
-
-        internal bool IsExecutingBuggyQuery
-        {
-            get { return isExecutingBuggyQuery; }
-            set { isExecutingBuggyQuery = value; }
-        }
 
         internal bool IsExecutingBuggyQuery
         {
@@ -561,10 +556,11 @@ namespace MySql.Data.MySqlClient
             string[] restrictions = null;
             if (restrictionValues != null)
             {
-                restrictions = new string[restrictionValues.Length];
-                for (int x = 0; x < restrictionValues.Length; x++)
+                restrictions = (string[])restrictionValues.Clone();
+
+                for (int x = 0; x < restrictions.Length; x++)
                 {
-                    string s = restrictionValues[x];
+                    string s = restrictions[x];
                     if (s != null)
                     {
                         if (s.StartsWith("`"))
