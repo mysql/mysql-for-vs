@@ -7,6 +7,12 @@
     <Package Compressed="yes" InstallerVersion="200"/>
     <Media Id="1" EmbedCab="yes" Cabinet="ConnectorNet.cab" CompressionLevel="high" />
 
+    <Condition Message="You must have Administrative rights on this machine to install [ProductName].">
+      <![CDATA[ Privileged  ]]>
+    </Condition>
+    <Property Id="ARPURLINFOABOUT" Value="http://www.mysql.com" />
+    <Property Id="ARPURLUPDATEINFO" Value="http://dev.mysql.com"/>
+
     <!-- First make sure that .NET 2.0 is installed -->
     <PropertyRef Id="NETFRAMEWORK20"/>
     <Condition Message="The .NET Framework 2.0 must be installed before installing this package.">Installed OR NETFRAMEWORK20</Condition>
@@ -99,6 +105,7 @@
 
     <FeatureRef Id="Samples"/>
     <FeatureRef Id="WebProviders"/>
+    <FeatureRef Id="VisualStudio"/>
     
     <Property Id="WIXUI_INSTALLDIR" Value='INSTALLDIR'/>
     <UIRef Id="WixUI_Mondo"/>
