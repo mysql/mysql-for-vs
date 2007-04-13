@@ -40,10 +40,11 @@ namespace MySql.Data.MySqlClient.Tests
 			Close();
 		}
 
-        [Category("5.0")]
         [Test]
         public void ExecuteNonQuery()
         {
+            if (version < new Version(5, 0)) return;
+
             execSQL("DROP TABLE IF EXISTS test");
             execSQL("CREATE TABLE test (id int)");
             execSQL("CREATE PROCEDURE spTest() BEGIN SET @x=0; REPEAT INSERT INTO test VALUES(@x); " +
@@ -77,10 +78,11 @@ namespace MySql.Data.MySqlClient.Tests
             }
         }
 
-        [Category("5.0")]
         [Test]
         public void ExecuteReader()
         {
+            if (version < new Version(5, 0)) return;
+
             execSQL("DROP TABLE IF EXISTS test");
             execSQL("CREATE TABLE test (id int)");
             execSQL("CREATE PROCEDURE spTest() BEGIN SET @x=0; REPEAT INSERT INTO test VALUES(@x); " +

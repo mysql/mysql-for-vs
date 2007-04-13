@@ -49,10 +49,10 @@ namespace MySql.Data.MySqlClient
 
         #region Properties
 
-        public int ErrorCode
-        {
-            get { return errorCode; }
-        }
+//        public int ErrorCode
+  //      {
+    //        get { return errorCode; }
+      //  }
 
         #endregion
 

@@ -43,6 +43,7 @@ namespace MySql.Data.MySqlClient.Tests
         protected string[] databases;
         protected string rootUser;
         protected string rootPassword;
+        protected Version version;
 
         public BaseTest()
         {
@@ -57,10 +58,10 @@ namespace MySql.Data.MySqlClient.Tests
             port = 3306;
             pipeName = "MYSQL";
             memoryName = "MYSQL";
-            rootUser = "su";
-            rootPassword = "su";
+            rootUser = "root";
+            rootPassword = "";
 
-#if NET20 || NET_CF_2_0
+#if NET20
             string strHost = ConfigurationManager.AppSettings["host"];
             string strPort = ConfigurationManager.AppSettings["port"];
             string strDatabase = ConfigurationManager.AppSettings["database"];
@@ -97,6 +98,16 @@ namespace MySql.Data.MySqlClient.Tests
                 memoryName = strMemName;
         }
 
+        #region Properties
+
+        protected Version Version
+        {
+            get { return version; }
+        }
+
+        #endregion
+
+
         protected virtual string GetConnectionInfo()
         {
             return String.Format("protocol=tcp;port={0}", port);
@@ -131,10 +142,25 @@ namespace MySql.Data.MySqlClient.Tests
                 string connString = GetConnectionString(true);
                 conn = new MySqlConnection(connString);
                 conn.Open();
+
+
+                string ver = conn.ServerVersion;
+
+                int x = 0;
+                foreach (char c in ver)
+                {
+                    if (!Char.IsDigit(c) && c != '.')
+                        break;
+                    x++;
+                }
+                ver = ver.Substring(0, x);
+                version = new Version(ver);
             }
             catch (Exception ex)
             {
+#if !CF
                 System.Diagnostics.Trace.WriteLine(ex.Message);
+#endif
                 throw;
             }
         }
@@ -155,34 +181,6 @@ namespace MySql.Data.MySqlClient.Tests
             }
         }
 
-        protected bool Is51
-        {
-            get
-            {
-                string v = conn.ServerVersion;
-                return v.StartsWith("5.1");
-            }
-        }
-
-        protected bool Is50
-        {
-            get
-            {
-                string v = conn.ServerVersion;
-                return v.StartsWith("5.0") || v.StartsWith("5.1");
-            }
-        }
-
-        protected bool Is41
-        {
-            get { return conn.ServerVersion.StartsWith("4.1"); }
-        }
-
-        protected bool Is40
-        {
-            get { return conn.ServerVersion.StartsWith("4.0"); }
-        }
-
         [SetUp]
         protected virtual void Setup()
         {
@@ -193,7 +191,7 @@ namespace MySql.Data.MySqlClient.Tests
                 reader.Close();
                 if (exists)
                     execSQL("TRUNCATE TABLE Test");
-                if (Is50)
+                if (Version >= new Version(5,0))
                 {
                     execSQL("DROP PROCEDURE IF EXISTS spTest");
                     execSQL("DROP FUNCTION IF EXISTS fnTest");
@@ -208,7 +206,7 @@ namespace MySql.Data.MySqlClient.Tests
         [TearDown]
         protected virtual void Teardown()
         {
-            if (Is50)
+            if (Version >= new Version(5, 0))
             {
                 execSQL("DROP PROCEDURE IF EXISTS spTest");
                 execSQL("DROP FUNCTION IF EXISTS fnTest");
@@ -232,7 +230,7 @@ namespace MySql.Data.MySqlClient.Tests
 
         protected void createTable(string sql, string engine)
         {
-            if (Is41 || Is50)
+            if (Version >= new Version(4,1))
                 sql += " ENGINE=" + engine;
             else
                 sql += " TYPE=" + engine;

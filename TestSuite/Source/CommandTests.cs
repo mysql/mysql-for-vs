@@ -42,6 +42,7 @@ namespace MySql.Data.MySqlClient.Tests
 			Close();
 		}
 
+        [SetUp]
         protected override void Setup()
         {
             base.Setup();
@@ -233,10 +234,11 @@ namespace MySql.Data.MySqlClient.Tests
 		/// <summary>
 		/// Bug #12245  	using Prepare() on an insert command causes null parameters to convert to "0"
 		/// </summary>
-		[Category("4.1")]
 		[Test]
 		public void InsertingPreparedNulls()
 		{
+            if (Version < new Version(4, 1)) return;
+
 			execSQL("TRUNCATE TABLE test");
 			MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES(1, ?str)", conn);
 			cmd.Parameters.Add("?str", MySqlDbType.VarChar);
@@ -266,11 +268,12 @@ namespace MySql.Data.MySqlClient.Tests
 		/// <summary>
 		/// MySQL Bugs: #12163: Insert using prepared statement causes double insert
 		/// </summary>
-		[Category("4.1")]
 		[Test]
 		public void PreparedInsertUsingReader()
 		{
-			execSQL("TRUNCATE TABLE test");
+            if (Version < new Version(4, 1)) return;
+
+            execSQL("TRUNCATE TABLE test");
 			MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES(1, 'Test')", conn);
 			cmd.Prepare();
 			MySqlDataReader reader = cmd.ExecuteReader();
@@ -298,8 +301,7 @@ namespace MySql.Data.MySqlClient.Tests
         /// <summary>
         /// Bug# 8119.  Unable to reproduce but left in anyway
         /// </summary>
-        [Category("NotWorking")]
-        [Test]
+/*        [Test]
         public void ReallyBigCommandString()
         {
             System.Text.StringBuilder sql = new System.Text.StringBuilder();
@@ -335,7 +337,7 @@ namespace MySql.Data.MySqlClient.Tests
             }
 
         }
-
+*/
         /// <summary>
         /// Bug #7248 There is already an open DataReader associated with this Connection which must 
         /// </summary>
@@ -420,7 +422,6 @@ namespace MySql.Data.MySqlClient.Tests
 
     #region Configs
 
-    [Category("Compressed")]
     public class CommandTestsSocketCompressed : CommandTests
     {
         protected override string GetConnectionInfo()
@@ -429,6 +430,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
+#if !CF
     [Category("Pipe")]
     public class CommandTestsPipe : CommandTests
     {
@@ -466,7 +468,7 @@ namespace MySql.Data.MySqlClient.Tests
             return String.Format("protocol=memory; shared memory name={0};compress=true", memoryName);
         }
     }
-
+#endif
     #endregion
 
 }

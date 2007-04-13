@@ -23,7 +23,6 @@ using System.Data;
 using System.IO;
 using NUnit.Framework;
 #if NET20
-using System.Transactions;
 using System.Data.Common;
 #endif
 

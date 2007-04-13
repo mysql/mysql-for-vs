@@ -174,7 +174,7 @@ namespace MySql.Data.MySqlClient
 			// connect to one of our specified hosts
 			try
 			{
-#if !PocketPC
+#if !CF
 				if (Settings.ConnectionProtocol == MySqlConnectionProtocol.SharedMemory)
 				{
 					SharedMemoryStream str = new SharedMemoryStream(Settings.SharedMemoryName);
@@ -189,7 +189,7 @@ namespace MySql.Data.MySqlClient
 						pipeName = null;
 					StreamCreator sc = new StreamCreator(Settings.Server, Settings.Port, pipeName);
 					baseStream = sc.GetStream(Settings.ConnectionTimeout);
-#if !PocketPC
+#if !CF
 				}
 #endif
                 if (baseStream == null)

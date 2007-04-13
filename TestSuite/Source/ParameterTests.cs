@@ -43,6 +43,7 @@ namespace MySql.Data.MySqlClient.Tests
 			Close();
 		}
 
+        [SetUp]
         protected override void Setup()
         {
             base.Setup();
@@ -245,11 +246,16 @@ namespace MySql.Data.MySqlClient.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ArgumentException))]
 		public void NullParameterObject() 
 		{
 			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id, name) VALUES (1, ?name)", conn);
-			cmd.Parameters.Add( null );
+            try
+            {
+                cmd.Parameters.Add(null);
+            }
+            catch (ArgumentException)
+            {
+            }
 		}
 
 		/// <summary>

@@ -45,6 +45,7 @@ namespace MySql.Data.MySqlClient.Tests
 			Close();
 		}
 
+        [SetUp]
         protected override void Setup()
         {
             base.Setup();
@@ -263,7 +264,7 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-
+#if !CF
 		[Test]
 		public void SortingMySqlDateTimes()
 		{
@@ -296,6 +297,7 @@ namespace MySql.Data.MySqlClient.Tests
 				Thread.CurrentThread.CurrentUICulture = curUICulture;
 			}
 		}
+#endif
 
 		[Test]
 		public void TestZeroDateTimeException() 
@@ -402,8 +404,9 @@ namespace MySql.Data.MySqlClient.Tests
 
             DateTime date = DateTime.Parse("7/24/2005");
             StringBuilder sql = new StringBuilder();
-            sql.AppendFormat("SELECT ID, ANTENNAID, TEL_TIMESTAMP, LOS_TIMESTAMP FROM test " +
-                "WHERE TEL_TIMESTAMP >= '{0}'", date.ToString("u"));
+            sql.AppendFormat(CultureInfo.InvariantCulture, 
+                @"SELECT ID, ANTENNAID, TEL_TIMESTAMP, LOS_TIMESTAMP FROM test 
+                WHERE TEL_TIMESTAMP >= '{0}'", date.ToString("u"));
             MySqlDataAdapter da = new MySqlDataAdapter(sql.ToString(), conn);
             DataSet dataSet = new DataSet();
             da.Fill(dataSet);
@@ -412,10 +415,11 @@ namespace MySql.Data.MySqlClient.Tests
         /// <summary>
         /// Bug #17736 Selecting a row with with empty date '0000-00-00' results in Read() hanging. 
         /// </summary>
-        [Category("4.1")]
         [Test]
         public void PreparedZeroDateTime()
         {
+            if (Version < new Version(4, 1)) return;
+
             execSQL("INSERT INTO test VALUES(1, Now(), '0000-00-00', NULL, NULL)");
             MySqlCommand cmd = new MySqlCommand("SELECT d FROM test WHERE id=?id", conn);
             cmd.Parameters.AddWithValue("?id", 1);

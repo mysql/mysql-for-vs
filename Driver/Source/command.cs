@@ -33,7 +33,7 @@ using System.Globalization;
 namespace MySql.Data.MySqlClient
 {
 	/// <include file='docs/mysqlcommand.xml' path='docs/ClassSummary/*'/>
-#if !PocketPC
+#if !CF
 	[System.Drawing.ToolboxBitmap(typeof(MySqlCommand), "MySqlClient.resources.command.bmp")]
 	[System.ComponentModel.DesignerCategory("Code")]
 #endif
@@ -103,7 +103,7 @@ namespace MySql.Data.MySqlClient
 
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/LastInseredId/*'/>
-#if !PocketPC
+#if !CF
 		[Browsable(false)]
 #endif
 		public Int64 LastInsertedId
@@ -112,7 +112,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/CommandText/*'/>
-#if !PocketPC
+#if !CF
 		[Category("Data")]
 		[Description("Command text to execute")]
 		[Editor("MySql.Data.Common.Design.SqlCommandTextEditor,MySqlClient.Design", typeof(System.Drawing.Design.UITypeEditor))]
@@ -139,7 +139,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/CommandTimeout/*'/>
-#if !PocketPC
+#if !CF
 		[Category("Misc")]
 		[Description("Time to wait for command to execute")]
 		[DefaultValue(30)]
@@ -151,7 +151,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/CommandType/*'/>
-#if !PocketPC
+#if !CF
 		[Category("Data")]
 #endif
 		public override CommandType CommandType
@@ -161,7 +161,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/IsPrepared/*'/>
-#if !PocketPC
+#if !CF
 		[Browsable(false)]
 #endif
 		public bool IsPrepared
@@ -170,7 +170,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/Connection/*'/>
-#if !PocketPC
+#if !CF
 		[Category("Behavior")]
 		[Description("Connection used by the command")]
 #endif
@@ -194,7 +194,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/Parameters/*'/>
-#if !PocketPC
+#if !CF
 		[Category("Data")]
 		[Description("The parameters collection")]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
@@ -206,7 +206,7 @@ namespace MySql.Data.MySqlClient
 
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/Transaction/*'/>
-#if !PocketPC
+#if !CF
 		[Browsable(false)]
 #endif
 		public new MySqlTransaction Transaction
@@ -216,7 +216,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/*		/// <include file='docs/mysqlcommand.xml' path='docs/UpdatedRowSource/*'/>
-		#if !PocketPC
+		#if !CF
 				[Category("Behavior")]
 		#endif
 				public override UpdateRowSource UpdatedRowSource
@@ -714,7 +714,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Gets or sets a value indicating whether the command object should be visible in a Windows Form Designer control. 
         /// </summary>
-#if !PocketPC
+#if !CF
         [Browsable(false)]
 #endif
 		public override bool DesignTimeVisible

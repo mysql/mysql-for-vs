@@ -122,7 +122,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 			Assert.AreEqual(1, count, "checking update count");
 			DateTime dateTime = (DateTime)dt.Rows[0]["dt"];
-			Assert.AreEqual(day1, dateTime, "checking date");
+			Assert.AreEqual(day1.Date, dateTime.Date, "checking date");
 			Assert.AreEqual(day1.TimeOfDay, dt.Rows[0]["tm"], "checking time");
 
 			dt.Rows[0].Delete();
@@ -388,9 +388,11 @@ namespace MySql.Data.MySqlClient.Tests
 		/// Bug #8292  	GROUP BY / WITH ROLLUP with DataSet causes System.Data.ConstraintException
 		/// </summary>
 		[Test]
-		[Category("4.1")]
 		public void Rollup() 
 		{
+            if (Version < new Version(4, 1))
+                return;
+
 			execSQL("DROP TABLE IF EXISTS test");
 			execSQL("CREATE TABLE test ( id INT NOT NULL, amount INT )");
 			execSQL("INSERT INTO test VALUES (1, 44)");
@@ -409,8 +411,7 @@ namespace MySql.Data.MySqlClient.Tests
 		/// <summary>
 		/// Bug #8514  	CURRENT_TIMESTAMP default not respected
 		/// </summary>
-		[Test]
-        [Category("NotWorking")]
+/*		[Test]
 		public void DefaultValues() 
 		{
 			execSQL("DROP TABLE IF EXISTS test");
@@ -470,7 +471,7 @@ namespace MySql.Data.MySqlClient.Tests
 				Assert.Fail(ex.Message);
 			}
 		}
-
+*/
         /// <summary>
         /// Bug #16307 @@Identity returning incorrect value 
         /// </summary>

@@ -38,6 +38,8 @@ namespace MySql.Data.Common
         {
             baseStream = stream;
             bufferSize = 4096;
+            readBuffer = new byte[bufferSize];
+            writeBuffer = new byte[bufferSize];
         }
 
         #region Stream Implementation
@@ -169,10 +171,6 @@ namespace MySql.Data.Common
             if (baseStream == null)
                 throw new InvalidOperationException(Resources.ObjectDisposed);
 
-            // if we have not created our write buffer yet, then do so now
-            if (writeBuffer == null)
-                writeBuffer = new byte[bufferSize];
-
             // if we don't have enough room in our current write buffer for the data
             // then flush the data
             int roomLeft = bufferSize - writePos;
@@ -183,11 +181,13 @@ namespace MySql.Data.Common
             // We just send it down
             if (count > bufferSize)
                 baseStream.Write(buffer, offset, count);
-
-            // if we get here then there is room in our buffer for the data.  We store it and 
-            // adjust our internal lengths.
-            Buffer.BlockCopy (buffer, offset, writeBuffer, writePos, count);
-            writePos += count;
+            else
+            {
+                // if we get here then there is room in our buffer for the data.  We store it and 
+                // adjust our internal lengths.
+                Buffer.BlockCopy(buffer, offset, writeBuffer, writePos, count);
+                writePos += count;
+            }
         }
 
         #endregion

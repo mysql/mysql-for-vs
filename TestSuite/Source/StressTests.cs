@@ -48,6 +48,8 @@ namespace MySql.Data.MySqlClient.Tests
 			Close();
 		}
 
+#if !CF
+
 		[Test]
 		public void TestMultiPacket()
 		{
@@ -103,6 +105,8 @@ namespace MySql.Data.MySqlClient.Tests
             }
 		}
 
+#endif
+
 		[Test]
 		public void TestSequence()
 		{
@@ -145,6 +149,7 @@ namespace MySql.Data.MySqlClient.Tests
 
     #region Configs
 
+#if !CF
 	[Category("Compressed")]
     public class StressTestsSocketCompressed : StressTests
     {
@@ -191,7 +196,7 @@ namespace MySql.Data.MySqlClient.Tests
             return String.Format("protocol=memory; shared memory name={0};compress=true", memoryName);
         }
     }
-
+#endif
     #endregion
 
 }

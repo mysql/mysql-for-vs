@@ -359,6 +359,7 @@ namespace MySql.Data.MySqlClient
             while (token != ")")
             {
                 token = tokenizer.NextToken();
+                if (token == ")") break; /* handle the case where there are no parms */
                 DataRow parmRow = parametersTable.NewRow();
                 InitParameterRow(row, parmRow);
                 parmRow["ORDINAL_POSITION"] = pos++;
@@ -436,10 +437,15 @@ namespace MySql.Data.MySqlClient
         private bool SetParameterAttribute(DataRow row, string token, bool isSize,
             SqlTokenizer tokenizer)
         {
+            string lcDataType = row["DATA_TYPE"].ToString().ToLower(CultureInfo.InvariantCulture);
+            
             if (isSize)
             {
+                // if the data type if set or enum, then nothing to do.
+                if (lcDataType == "enum" || lcDataType == "set") return true;
+
                 string[] sizeParts = token.Split(new char[] { ',' });
-                if (MetaData.IsNumericType(row["DATA_TYPE"].ToString()))
+                if (MetaData.IsNumericType(lcDataType))
                     row["NUMERIC_PRECISION"] = Int32.Parse(sizeParts[0]);
                 else
                     row["CHARACTER_OCTET_LENGTH"] = Int32.Parse(sizeParts[0]);

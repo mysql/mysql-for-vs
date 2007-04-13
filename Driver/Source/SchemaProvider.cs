@@ -672,7 +672,7 @@ namespace MySql.Data.MySqlClient
             dt.Columns.Add(new DataColumn("Reserved Word", typeof(string)));
 
             Stream str = Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                "MySql.Data.MySqlClient.ReservedWords.txt");
+                "MySql.Data.MySqlClient.Properties.ReservedWords.txt");
             StreamReader sr = new StreamReader(str);
             string line = sr.ReadLine();
             while (line != null)
@@ -707,11 +707,12 @@ namespace MySql.Data.MySqlClient
         {
             StringBuilder sql = new StringBuilder();
             StringBuilder where = new StringBuilder();
-            sql.AppendFormat("SHOW TABLE STATUS FROM `{0}`",
-                restrictions[1]);
+            sql.AppendFormat(CultureInfo.InvariantCulture, 
+                "SHOW TABLE STATUS FROM `{0}`", restrictions[1]);
             if (restrictions != null && restrictions.Length >= 3 &&
                 restrictions[2] != null)
-                where.AppendFormat(" LIKE '{0}'", restrictions[2]);
+                where.AppendFormat(CultureInfo.InvariantCulture, 
+                    " LIKE '{0}'", restrictions[2]);
             sql.Append(where.ToString());
 
             string table_type = restrictions[1].ToLower() == "information_schema" ?

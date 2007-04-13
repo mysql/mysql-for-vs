@@ -214,6 +214,10 @@
     <Content Include="docs\MySqlParameter.xml" />
     <Content Include="docs\MySqlParameterCollection.xml" />
     <Content Include="docs\MySqlTransaction.xml" />
+    <EmbeddedResource Include="Properties\ReservedWords.txt" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <Content Include="Source\docs\MySqlCommand.xml" />
     <Content Include="Source\docs\MySqlCommandBuilder.xml" />
     <Content Include="Source\docs\MySqlConnection.xml" />
@@ -225,21 +229,10 @@
     <Content Include="Source\docs\MySqlParameter.xml" />
     <Content Include="Source\docs\MySqlParameterCollection.xml" />
     <Content Include="Source\docs\MySqlTransaction.xml" />
-    <Content Include="Source\ReservedWords.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Properties\Resources.Designer.cs" />
     <Compile Include="Source\common\SqlTokenizer.cs" />
-    <Compile Include="Source\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <EmbeddedResource Include="Source\Resources.resx">
-      <Generator>ResxFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <CustomToolNamespace>MySql.Data.MySqlClient</CustomToolNamespace>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Ovatsus.CSharp.targets" />
   <PropertyGroup>

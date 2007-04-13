@@ -50,10 +50,11 @@ namespace MySql.Data.MySqlClient.Tests
 		/// Bug #11490  	certain incorrect queries trigger connection must be valid and open message
 		/// </summary>
 		[Test]
-		[Category("4.1")]
 		public void Bug11490()
 		{
-			MySqlDataReader reader = null;
+            if (version < new Version(4, 1)) return;
+
+            MySqlDataReader reader = null;
 
 			try 
 			{

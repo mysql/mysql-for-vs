@@ -40,10 +40,11 @@ namespace MySql.Data.MySqlClient.Tests
 			Close();
 		}
 
-        [Category("5.0")]
         [Test]
         public void ProcedureParameters()
         {
+            if (version < new Version(5, 0)) return;
+
             execSQL("DROP PROCEDURE IF EXISTS spTest");
             execSQL("CREATE PROCEDURE spTest (id int, name varchar(50)) BEGIN SELECT 1; END");
 

@@ -46,9 +46,10 @@ namespace MySql.Data.MySqlClient.Tests
 		}
 
 		[Test]
-		[Category("4.1")]
 		public void Warnings()
 		{
+            if (version < new Version(4, 1)) return;
+
 			conn.InfoMessage += new MySqlInfoMessageEventHandler(WarningsInfoMessage);
 
             execSQL("DROP TABLE IF EXISTS test");

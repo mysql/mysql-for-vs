@@ -31,7 +31,7 @@ using System.Globalization;
 namespace MySql.Data.MySqlClient
 {
     /// <include file='docs/MySqlCommandBuilder.xml' path='docs/class/*'/>
-#if !PocketPC
+#if !CF
     [ToolboxItem(false)]
     [System.ComponentModel.DesignerCategory("Code")]
 #endif
@@ -256,7 +256,8 @@ namespace MySql.Data.MySqlClient
                 if (!(bool)row["IsAutoIncrement"])
                     continue;
 
-                select.AppendFormat("`{0}`", row["ColumnName"]);
+                select.AppendFormat(CultureInfo.InvariantCulture, 
+                    "`{0}`", row["ColumnName"]);
                 break;
             }
 

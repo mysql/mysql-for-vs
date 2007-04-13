@@ -334,10 +334,11 @@ namespace MySql.Data.MySqlClient.Tests
 		}
 
 		[Test]
-		[Category("4.1")]
 		public void Bug6271() 
 		{
-			execSQL("DROP TABLE IF EXISTS Test2");
+            if (version < new Version(4, 1)) return;
+
+            execSQL("DROP TABLE IF EXISTS Test2");
 
 			// Create the table again
 			execSQL("CREATE TABLE `Test2` (id INT unsigned NOT NULL auto_increment, " +
@@ -434,10 +435,11 @@ namespace MySql.Data.MySqlClient.Tests
 		/// Bug #13662  	Prepare() truncates accented character input
 		/// </summary>
 		[Test]
-		[Category("4.1")]
 		public void InsertAccentedCharacters()
 		{
-			execSQL("DROP TABLE IF EXISTS test");
+            if (version < new Version(4, 1)) return;
+
+            execSQL("DROP TABLE IF EXISTS test");
 			execSQL("CREATE TABLE test (id INT UNSIGNED NOT NULL PRIMARY KEY " +
 				"AUTO_INCREMENT, input TEXT NOT NULL) CHARACTER SET UTF8");
 				// COLLATE " +
@@ -474,10 +476,11 @@ namespace MySql.Data.MySqlClient.Tests
 		/// Bug #13541  	Prepare breaks if a parameter is used more than once
 		/// </summary>
 		[Test]
-		[Category("4.1")]
 		public void UsingParametersTwice()
 		{
-			execSQL("DROP TABLE IF EXISTS test");
+            if (version < new Version(4, 1)) return;
+
+            execSQL("DROP TABLE IF EXISTS test");
 			execSQL("CREATE TABLE IF NOT EXISTS test (input TEXT NOT NULL, " +
 				"UNIQUE (input(100)), state INT NOT NULL, score INT NOT NULL)");
 
@@ -508,9 +511,10 @@ namespace MySql.Data.MySqlClient.Tests
         /// Bug #19261  	Supplying Input Parameters
         /// </summary>
         [Test]
-        [Category("4.1")]
         public void MoreParametersOutOfOrder()
         {
+            if (version < new Version(4, 1)) return;
+
             execSQL("DROP TABLE IF EXISTS test");
             execSQL("CREATE TABLE `test` (`BlackListID` int(11) NOT NULL auto_increment, " +
                     "`SubscriberID` int(11) NOT NULL, `Phone` varchar(50) default NULL, " +
@@ -556,9 +560,10 @@ namespace MySql.Data.MySqlClient.Tests
 		/// Bug #16627 Index and length must refer to a location within the string." when executing c
 		/// </summary>
 		[Test]
-		[Category("4.1")]
 		public void ParameterLengths()
 		{
+            if (version < new Version(4, 1)) return;
+
             execSQL("DROP TABLE test");
 			execSQL("CREATE TABLE test (id int, name VARCHAR(255))");
 
@@ -584,9 +589,10 @@ namespace MySql.Data.MySqlClient.Tests
         /// Bug #18570  	Unsigned tinyint (NET byte) incorrectly determined param type from param val
         /// </summary>
         [Test]
-        [Category("4.1")]
         public void UnsignedTinyInt()
         {
+            if (version < new Version(4, 1)) return;
+
             execSQL("DROP TABLE IF EXISTS test");
             execSQL("CREATE TABLE test(ID TINYINT UNSIGNED NOT NULL, " +
 	            "Name VARCHAR(50) NOT NULL,	PRIMARY KEY (ID), UNIQUE (ID), " +
@@ -627,9 +633,10 @@ namespace MySql.Data.MySqlClient.Tests
         /// Bug #16934 Unsigned values > 2^63 (UInt64) cannot be used in prepared statements
         /// </summary>
         [Test]
-        [Category("4.1")]
         public void UnsignedValues()
         {
+            if (version < new Version(4, 1)) return;
+
             execSQL("DROP TABLE IF EXISTS test");
             execSQL("CREATE TABLE test (ulVal BIGINT UNSIGNED, lVal INT UNSIGNED, " +
                 "mVal MEDIUMINT UNSIGNED, sVal SMALLINT UNSIGNED)");
@@ -733,7 +740,7 @@ namespace MySql.Data.MySqlClient.Tests
 	}
 
     #region Configs
-
+#if !CF
     [Category("Compressed")]
     public class PreparedStatementsSocketCompressed : PreparedStatements
     {
@@ -780,7 +787,7 @@ namespace MySql.Data.MySqlClient.Tests
             return String.Format("protocol=memory; shared memory name={0};compress=true", memoryName);
         }
     }
-
+#endif
     #endregion
 
 }

@@ -25,7 +25,7 @@ using System.Text;
 using System.Reflection;
 using MySql.Data.Types;
 using MySql.Data.Common;
-#if !PocketPC
+#if !CF
 using System.ComponentModel;
 using System.ComponentModel.Design.Serialization;
 #endif
@@ -35,7 +35,7 @@ namespace MySql.Data.MySqlClient
 	/// <summary>
 	/// Represents a parameter to a <see cref="MySqlCommand"/>, and optionally, its mapping to <see cref="DataSet"/> columns. This class cannot be inherited.
 	/// </summary>
-#if !PocketPC
+#if !CF
 	[TypeConverter(typeof(MySqlParameter.MySqlParameterConverter))]
 #endif
 	public sealed class MySqlParameter : DbParameter, IDataParameter, IDbDataParameter, ICloneable
@@ -188,7 +188,7 @@ namespace MySql.Data.MySqlClient
 		/// Gets or sets a value indicating whether the parameter is input-only, output-only, bidirectional, or a stored procedure return value parameter.
 		/// As of MySql version 4.1 and earlier, input-only is the only valid choice.
 		/// </summary>
-#if !PocketPC
+#if !CF
 		[Category("Data")]
 #endif
 		public override ParameterDirection Direction
@@ -200,7 +200,7 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// Gets or sets a value indicating whether the parameter accepts null values.
 		/// </summary>
-#if !PocketPC
+#if !CF
 		[Browsable(false)]
 #endif
 		public override Boolean IsNullable
@@ -212,7 +212,7 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// Gets or sets the MySqlDbType of the parameter.
 		/// </summary>
-#if !PocketPC
+#if !CF
 		[Category("Data")]
 #endif
 		public MySqlDbType MySqlDbType
@@ -228,7 +228,7 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// Gets or sets the name of the MySqlParameter.
 		/// </summary>
-#if !PocketPC
+#if !CF
 		[Category("Misc")]
 #endif
 		public override String ParameterName
@@ -245,7 +245,7 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// Gets or sets the maximum number of digits used to represent the <see cref="Value"/> property.
 		/// </summary>
-#if !PocketPC
+#if !CF
 		[Category("Data")]
 #endif
 		public byte Precision
@@ -257,7 +257,7 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// Gets or sets the number of decimal places to which <see cref="Value"/> is resolved.
 		/// </summary>
-#if !PocketPC
+#if !CF
 		[Category("Data")]
 #endif
 		public byte Scale
@@ -269,7 +269,7 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// Gets or sets the maximum size, in bytes, of the data within the column.
 		/// </summary>
-#if !PocketPC
+#if !CF
 		[Category("Data")]
 #endif
 		public override int Size
@@ -281,7 +281,7 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// Gets or sets the name of the source column that is mapped to the <see cref="DataSet"/> and used for loading or returning the <see cref="Value"/>.
 		/// </summary>
-#if !PocketPC
+#if !CF
 		[Category("Data")]
 #endif
 		public override String SourceColumn
@@ -293,7 +293,7 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// Gets or sets the <see cref="DataRowVersion"/> to use when loading <see cref="Value"/>.
 		/// </summary>
-#if !PocketPC
+#if !CF
 		[Category("Data")]
 #endif
 		public override DataRowVersion SourceVersion
@@ -305,7 +305,7 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// Gets or sets the value of the parameter.
 		/// </summary>
-#if !PocketPC
+#if !CF
 		[TypeConverter(typeof(StringConverter))]
 		[Category("Data")]
 #endif
@@ -494,7 +494,7 @@ namespace MySql.Data.MySqlClient
 		}
 		#endregion
 
-#if !PocketPC
+#if !CF
 		internal class MySqlParameterConverter : TypeConverter
 		{
 			public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)

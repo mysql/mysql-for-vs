@@ -31,7 +31,7 @@ using System.Diagnostics;
 namespace MySql.Data.MySqlClient
 {
 	/// <include file='docs/MySqlConnection.xml' path='docs/ClassSummary/*'/>
-#if !PocketPC
+#if !CF
 	[System.Drawing.ToolboxBitmap(typeof(MySqlConnection), "MySqlClient.resources.connection.bmp")]
 	[System.ComponentModel.DesignerCategory("Code")]
 	[ToolboxItem(true)]
@@ -130,7 +130,7 @@ namespace MySql.Data.MySqlClient
 
 		#region Properties
 
-#if !PocketPC
+#if !CF
 		[Browsable(false)]
 #endif
 		internal UsageAdvisor UsageAdvisor
@@ -141,7 +141,7 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// Returns the id of the server thread this connection is executing on
 		/// </summary>
-#if !PocketPC
+#if !CF
 		[Browsable(false)]
 #endif
 		public int ServerThread
@@ -152,7 +152,7 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// Gets the name of the MySQL server to which to connect.
 		/// </summary>
-#if !PocketPC
+#if !CF
 		[Browsable(true)]
 #endif
 		public override string DataSource
@@ -161,7 +161,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/ConnectionTimeout/*'/>
-#if !PocketPC
+#if !CF
 		[Browsable(true)]
 #endif
 		public override int ConnectionTimeout
@@ -170,7 +170,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/Database/*'/>
-#if !PocketPC
+#if !CF
 		[Browsable(true)]
 #endif
 		public override string Database
@@ -181,7 +181,7 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// Indicates if this connection should use compression when communicating with the server.
 		/// </summary>
-#if !PocketPC
+#if !CF
 		[Browsable(false)]
 #endif
 		public bool UseCompression
@@ -190,7 +190,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/State/*'/>
-#if !PocketPC
+#if !CF
 		[Browsable(false)]
 #endif
 		public override ConnectionState State
@@ -199,7 +199,7 @@ namespace MySql.Data.MySqlClient
 		}
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/ServerVersion/*'/>
-#if !PocketPC
+#if !CF
 		[Browsable(false)]
 #endif
 		public override string ServerVersion
@@ -220,7 +220,7 @@ namespace MySql.Data.MySqlClient
 
 
 		/// <include file='docs/MySqlConnection.xml' path='docs/ConnectionString/*'/>
-#if !PocketPC
+#if !CF
 		[Editor("MySql.Data.MySqlClient.Design.ConnectionStringTypeEditor,MySqlClient.Design", typeof(System.Drawing.Design.UITypeEditor))]
 		[Browsable(true)]
 		[Category("Data")]

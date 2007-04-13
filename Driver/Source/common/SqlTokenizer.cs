@@ -62,7 +62,7 @@ namespace MySql.Data.Common
             bool inLineComment = false;
             quoted = isSize = false;
 
-            while (true)
+            while ((index+1) < input.Length)
             {
                 char c = input[++index];
 
@@ -128,6 +128,7 @@ namespace MySql.Data.Common
                     current.Append(c);
                 lastChar = c;
             }
+            return null;
         }
 
     }

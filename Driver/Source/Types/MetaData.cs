@@ -52,7 +52,7 @@ namespace MySql.Data.Types
 		public static MySqlDbType NameToType(string typeName, bool unsigned,
 			 bool realAsFloat, MySqlConnection connection)
 		{
-			switch (typeName)
+			switch (typeName.ToLower(CultureInfo.InvariantCulture))
 			{
 				case "char": return MySqlDbType.String;
 				case "varchar": return MySqlDbType.VarChar;

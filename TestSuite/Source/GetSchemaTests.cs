@@ -58,7 +58,7 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("IndexColumns", dt.Rows[10][0]);
             Assert.AreEqual("Indexes", dt.Rows[11][0]);
 
-            if (Is50)
+            if (version >= new Version(5,0))
             {
                 Assert.AreEqual("Views", dt.Rows[12][0]);
                 Assert.AreEqual("ViewColumns", dt.Rows[13][0]);
@@ -163,11 +163,8 @@ namespace MySql.Data.MySqlClient.Tests
                 string dbName = row[1].ToString().ToLower();
                 if (dbName == databases[0])
                     foundZero = true;
-                else if (dbName == databases[1])
-                    foundOne = true;
             }
             Assert.IsTrue(foundZero);
-            Assert.IsTrue(foundOne);
 
             dt = conn.GetSchema("Databases", new string[1] { databases[0] });
             Assert.AreEqual(1, dt.Rows.Count);
@@ -236,10 +233,11 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("TINYINT", dt.Rows[3]["DATA_TYPE"].ToString().ToUpper());
         }
 
-        [Category("5.0")]
         [Test]
         public void Procedures()
         {
+            if (version < new Version(5, 0)) return;
+
             execSQL("DROP PROCEDURE IF EXISTS spTest");
             execSQL("CREATE PROCEDURE spTest (id int) BEGIN SELECT 1; END");
 
@@ -252,10 +250,11 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("spTest", dt.Rows[0][3]);
         }
 
-        [Category("5.0")]
         [Test]
         public void Functions()
         {
+            if (version < new Version(5, 0)) return;
+
             execSQL("DROP FUNCTION IF EXISTS spFunc");
             execSQL("CREATE FUNCTION spFunc (id int) RETURNS INT BEGIN RETURN 1; END");
 
@@ -268,10 +267,11 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("spFunc", dt.Rows[0][3]);
         }
 
-        [Category("5.0")]
         [Test]
         public void Indexes()
         {
+            if (version < new Version(5, 0)) return;
+
             execSQL("DROP TABLE IF EXISTS test");
             execSQL("CREATE TABLE test (id int, PRIMARY KEY(id))");
             string[] restrictions = new string[4];
@@ -332,10 +332,11 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(2, dt.Rows[0]["ORDINAL_POSITION"]);
         }
 
-        [Category("5.0")]
         [Test]
         public void Views()
         {
+            if (version < new Version(5, 0)) return;
+
             execSQL("DROP VIEW IF EXISTS vw");
             execSQL("CREATE VIEW vw AS SELECT Now() as theTime");
 
@@ -348,10 +349,11 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("vw", dt.Rows[0]["TABLE_NAME"]);
         }
 
-        [Category("5.0")]
         [Test]
         public void ViewColumns()
         {
+            if (version < new Version(5, 0)) return;
+
             execSQL("DROP VIEW IF EXISTS vw");
             execSQL("CREATE VIEW vw AS SELECT Now() as theTime");
 
@@ -367,9 +369,10 @@ namespace MySql.Data.MySqlClient.Tests
         }
 
         [Test]
-        [Category("5.0")]
         public void SingleProcedureParameters()
         {
+            if (version < new Version(5, 0)) return;
+
             execSQL("DROP PROCEDURE IF EXISTS spTest");
             execSQL("CREATE PROCEDURE spTest(id int, IN id2 INT(11), " +
                 "INOUT io1 VARCHAR(20), OUT out1 FLOAT) BEGIN END");
@@ -547,10 +550,11 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("id", row["REFERENCED_COLUMN_NAME"]);
         }
 
-        [Category("5.0")]
         [Test]
         public void Triggers()
         {
+            if (version < new Version(5, 0)) return;
+
             try
             {
                 suExecSQL("DROP TRIGGER trigger1");

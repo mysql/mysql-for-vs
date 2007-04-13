@@ -43,9 +43,10 @@ namespace MySql.Data.MySqlClient.Tests
         }
 
         [Test]
-        [Category("4.1")]
         public void Unicode()
         {
+            if (version < new Version(4, 1)) return;
+
             execSQL("DROP TABLE IF EXISTS Test");
             execSQL("CREATE TABLE Test (u2 varchar(255) CHARACTER SET ucs2)");
 
@@ -103,9 +104,10 @@ namespace MySql.Data.MySqlClient.Tests
         }
 
         [Test]
-        [Category("4.1")]
         public void UTF8()
         {
+            if (version < new Version(4, 1)) return;
+
             execSQL("DROP TABLE IF EXISTS Test");
             execSQL("CREATE TABLE Test (id int, name VARCHAR(200) CHAR SET utf8)");
 
@@ -170,9 +172,10 @@ namespace MySql.Data.MySqlClient.Tests
         }
 
         [Test]
-        [Category("4.1")]
         public void UTF8PreparedAndUsingParameters()
         {
+            if (version < new Version(4, 1)) return;
+
             execSQL("DROP TABLE IF EXISTS Test");
             execSQL("CREATE TABLE Test (name VARCHAR(200) CHAR SET utf8)");
 
@@ -241,9 +244,10 @@ namespace MySql.Data.MySqlClient.Tests
         }
 
         [Test]
-        [Category("4.1")]
         public void Chinese()
         {
+            if (version < new Version(4, 1)) return;
+
             MySqlConnection c = new MySqlConnection(conn.ConnectionString + ";charset=utf8");
             c.Open();
 
@@ -274,9 +278,10 @@ namespace MySql.Data.MySqlClient.Tests
         }
 
         [Test]
-        [Category("4.1")]
         public void Turkish()
         {
+            if (version < new Version(4, 1)) return;
+
             execSQL("DROP TABLE IF EXISTS Test");
             execSQL("CREATE TABLE Test (id int, name VARCHAR(200) CHAR SET latin5 )");
 
@@ -307,9 +312,10 @@ namespace MySql.Data.MySqlClient.Tests
         }
 
         [Test]
-        [Category("4.1")]
         public void Russian()
         {
+            if (version < new Version(4, 1)) return;
+
             execSQL("DROP TABLE IF EXISTS Test");
             execSQL("CREATE TABLE Test (id int, name VARCHAR(200) CHAR SET cp1251)");
 
@@ -339,9 +345,10 @@ namespace MySql.Data.MySqlClient.Tests
         }
 
         [Test]
-        [Category("4.1")]
         public void VariousCollations()
         {
+            if (version < new Version(4, 1)) return;
+
             execSQL("CREATE TABLE `test_tbl` ( `test` VARCHAR( 255 ) NOT NULL) CHARACTER SET utf8 COLLATE utf8_swedish_ci TYPE = MYISAM");
             execSQL("INSERT INTO test_tbl VALUES ('myval')");
             try

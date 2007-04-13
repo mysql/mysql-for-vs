@@ -39,6 +39,7 @@ namespace MySql.Data.MySqlClient.Tests
 			Close();
 		}
 
+        [SetUp]
         protected override void Setup()
         {
             base.Setup();
@@ -178,10 +179,11 @@ namespace MySql.Data.MySqlClient.Tests
 		/// Bug #8382  	Commandbuilder does not handle queries to other databases than the default one-
 		/// </summary>
 		[Test]
-		[Category("4.1")]
 		public void DifferentDatabase()
 		{
-			execSQL("INSERT INTO test (id, name) VALUES (1,'test1')");
+            if (Version < new Version(4, 1)) return;
+
+            execSQL("INSERT INTO test (id, name) VALUES (1,'test1')");
 			execSQL("INSERT INTO test (id, name) VALUES (2,'test2')");
 			execSQL("INSERT INTO test (id, name) VALUES (3,'test3')");
 

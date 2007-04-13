@@ -59,11 +59,12 @@ namespace MySql.Data.MySqlClient.Tests
 			InternalBytesAndBooleans(false);
         }
 
-        [Category("4.1")]
         [Test]
         public void BytesAndBooleansPrepared()
         {
-			InternalBytesAndBooleans(true);
+            if (version < new Version(4, 1)) return;
+
+            InternalBytesAndBooleans(true);
 		}
 
 		private void InternalBytesAndBooleans(bool prepare) 
@@ -110,9 +111,10 @@ namespace MySql.Data.MySqlClient.Tests
 		}
 
         [Test]
-        [Category("4.1")]
         public void TestFloatPrepared()
         {
+            if (version < new Version(4, 1)) return;
+
             InternalTestFloats(true);
         }
 
@@ -491,7 +493,7 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.AreEqual(1, reader.GetInt32(0));
                 Assert.AreEqual(2, reader.GetInt32(1));
                 Assert.AreEqual(120, reader.GetInt32(2));
-                if (Is50)
+                if (version >= new Version(5,0))
                 {
                     Assert.AreEqual(240, reader.GetInt32(3));
                     Assert.AreEqual(1000, reader.GetInt32(4));
@@ -625,10 +627,11 @@ namespace MySql.Data.MySqlClient.Tests
         }
     
 		[Test]
-		[Category("5.0")]
 		public void Bit()
 		{
-			execSQL("DROP TABLE IF EXISTS test");
+            if (version < new Version(5, 0)) return;
+
+            execSQL("DROP TABLE IF EXISTS test");
 			execSQL("CREATE TABLE test (bit1 BIT, bit2 BIT(5), bit3 BIT(10))");
 
 			MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES (?b1, ?b2, ?b3)", conn);

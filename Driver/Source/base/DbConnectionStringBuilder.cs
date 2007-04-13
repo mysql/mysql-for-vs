@@ -16,11 +16,12 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+// Foundation, Inc.,59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
 using System.Collections;
 using System.ComponentModel;
+using System.Text;
 
 namespace MySql.Data.MySqlClient
 {
@@ -47,7 +48,12 @@ namespace MySql.Data.MySqlClient
         public string ConnectionString 
         {
             get { return connectionString; }
-            set { connectionString = value; }
+            set 
+            {
+                Clear();
+                ParseConnectionString(value);
+                connectionString = value; 
+            }
         }
 
         public virtual object this[string key]
@@ -62,7 +68,7 @@ namespace MySql.Data.MySqlClient
 
         public void Add(object key, object value)
         {
-            hash.Add(key, value);
+            hash[key] = value;
             //TODO: update connection string
         }
 
@@ -218,5 +224,107 @@ namespace MySql.Data.MySqlClient
         }
 
         #endregion
+
+        private void ParseConnectionString(string connectString)
+        {
+            if (connectString == null) return;
+
+            StringBuilder key = new StringBuilder();
+            StringBuilder value = new StringBuilder();
+            char quoteChar = Char.MinValue;
+            bool keyDone = false;
+  //          char lastChar = Char.MinValue;
+
+            foreach (char c in connectString)
+            {
+                if (c == '=')
+                    keyDone = true;
+                else if (c == ';')
+                {
+                    string keyStr = key.ToString().Trim();
+                    string valueStr = value.ToString().Trim();
+                    valueStr = CleanValue(valueStr);
+                    if (keyStr.Length > 0)
+                        this[keyStr] = valueStr;
+                    keyDone = false;
+                    key.Remove(0, key.Length);
+                    value.Remove(0, value.Length);
+                }
+                else if (keyDone)
+                    value.Append(c);
+                else
+                    key.Append(c);
+            }
+
+            if (key.Length == 0) return;
+            this[key.ToString().Trim()] = CleanValue(value.ToString().Trim());
+        }
+
+        private string CleanValue(string value)
+        {
+            if ((value.StartsWith("'") && value.EndsWith("'")) ||
+                (value.StartsWith("\"") && value.EndsWith("\"")))
+            {
+                value = value.Substring(1);
+                value = value.Substring(0, value.Length - 1);
+            }
+            return value;
+        }
+
+/*        private void ParseConnectionString(string value)
+        {
+            String[] keyvalues = src.Split(';');
+            String[] newkeyvalues = new String[keyvalues.Length];
+            int x = 0;
+
+            // first run through the array and check for any keys that
+            // have ; in their value
+            foreach (String keyvalue in keyvalues)
+            {
+                // check for trailing ; at the end of the connection string
+                if (keyvalue.Length == 0) continue;
+
+                // this value has an '=' sign so we are ok
+                if (keyvalue.IndexOf('=') >= 0)
+                {
+                    newkeyvalues[x++] = keyvalue;
+                }
+                else
+                {
+                    newkeyvalues[x - 1] += ";";
+                    newkeyvalues[x - 1] += keyvalue;
+                }
+            }
+
+            Hashtable hash = new Hashtable();
+
+            // now we run through our normalized key-values, splitting on equals
+            for (int y = 0; y < x; y++)
+            {
+                String[] parts = newkeyvalues[y].Split('=');
+
+                // first trim off any space and lowercase the key
+                parts[0] = parts[0].Trim().ToLower();
+                parts[1] = parts[1].Trim();
+
+                // we also want to clear off any quotes
+                if (parts[1].Length >= 2)
+                {
+                    if ((parts[1][0] == '"' && parts[1][parts[1].Length - 1] == '"') ||
+                        (parts[1][0] == '\'' && parts[1][parts[1].Length - 1] == '\''))
+                    {
+                        parts[1] = parts[1].Substring(1, parts[1].Length - 2);
+                    }
+                }
+                else
+                {
+                    parts[1] = parts[1];
+                }
+                parts[0] = parts[0].Trim('\'', '"');
+
+                hash[parts[0]] = parts[1];
+            }
+            return hash;
+        }*/
     }
 }

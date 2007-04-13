@@ -508,19 +508,21 @@ namespace MySql.Data.MySqlClient.Tests
 		}
 
 		[Test]
-		[ExpectedException( typeof(MySqlException) )]
 		public void ReadingFieldsBeforeRead() 
 		{
 			MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test", conn);
 			MySqlDataReader reader = cmd.ExecuteReader();
-			try 
-			{
-				reader.GetInt32(0);
-			}
-			catch (Exception) 
-			{
-				throw;
-			}
+            try
+            {
+                reader.GetInt32(0);
+            }
+            catch (MySqlException)
+            {
+            }
+            catch (Exception)
+            {
+                throw;
+            }
 			finally 
 			{
 				if (reader != null) reader.Close();
@@ -845,10 +847,11 @@ namespace MySql.Data.MySqlClient.Tests
 		/// <summary>
 		/// Bug #23538 Exception thrown when GetSchemaTable is called and "fields" is null. 
 		/// </summary>
-		[Category("5.0")]
 		[Test]
 		public void GetSchemaTableOnEmptyResultset()
 		{
+            if (Version < new Version(5, 0)) return;
+
 			execSQL("CREATE PROCEDURE spTest() BEGIN END");
 
 			MySqlCommand cmd = new MySqlCommand("spTest", conn);

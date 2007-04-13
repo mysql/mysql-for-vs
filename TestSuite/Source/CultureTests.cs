@@ -45,18 +45,19 @@ namespace MySql.Data.MySqlClient.Tests
 			Close();
 		}
 
-
+#if !CF
 		[Test]
 		public void TestFloats() 
 		{
 			InternalTestFloats(false);
         }
 
-        [Category("4.1")]
         [Test]
         public void TestFloatsPrepared()
         {
-			InternalTestFloats(true);
+            if (version < new Version(4, 1)) return;
+
+            InternalTestFloats(true);
 		}
 
 		private void InternalTestFloats(bool prepared)
@@ -130,5 +131,6 @@ namespace MySql.Data.MySqlClient.Tests
 			Thread.CurrentThread.CurrentCulture = curCulture;
 			Thread.CurrentThread.CurrentUICulture = curUICulture;
 		}
-	}
+#endif
+    }
 }

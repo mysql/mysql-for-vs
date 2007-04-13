@@ -61,10 +61,11 @@ namespace MySql.Data.MySqlClient.Tests
 		}
 
 		[Test]
-		[Category("4.1")]
 		public void ProblemCharsInSQLUTF8()
 		{
-			execSQL("DROP TABLE IF EXISTS Test");
+            if (version < new Version(4, 1)) return;
+
+            execSQL("DROP TABLE IF EXISTS Test");
 			execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(250), mt MEDIUMTEXT, " +
 					  "PRIMARY KEY(id)) CHAR SET utf8");
 
@@ -296,11 +297,12 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
-		[Category("4.1")]
 		[Test]
 		public void ForceWarnings() 
 		{
-			MySqlCommand cmd = new MySqlCommand("SELECT * FROM test; DROP TABLE IF EXISTS test2; SELECT * FROM test", conn);
+            if (version < new Version(4, 1)) return;
+
+            MySqlCommand cmd = new MySqlCommand("SELECT * FROM test; DROP TABLE IF EXISTS test2; SELECT * FROM test", conn);
 			MySqlDataReader reader = null; 
 			try 
 			{

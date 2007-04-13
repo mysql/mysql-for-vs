@@ -78,7 +78,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Gets or sets the name of the server.
         /// </summary>
-#if !PocketPC && !MONO
+#if !CF && !MONO
         [Category("Connection")]
         [Description("Server to connect to")]
 #endif
@@ -92,7 +92,7 @@ namespace MySql.Data.MySqlClient
         /// Gets or sets the name of the database the connection should 
         /// initially connect to.
         /// </summary>
-#if !PocketPC && !MONO
+#if !CF && !MONO
         [Category("Connection")]
         [Description("Database to use initially")]
 #endif
@@ -106,7 +106,7 @@ namespace MySql.Data.MySqlClient
         /// Gets or sets the protocol that should be used for communicating
         /// with MySQL.
         /// </summary>
-#if !PocketPC && !MONO
+#if !CF && !MONO
         [Category("Connection")]
         [DisplayName("Connection Protocol")]
         [Description("Protocol to use for connection to MySQL")]
@@ -122,7 +122,7 @@ namespace MySql.Data.MySqlClient
         /// Gets or sets the name of the named pipe that should be used
         /// for communicating with MySQL.
         /// </summary>
-#if !PocketPC && !MONO
+#if !CF && !MONO
         [Category("Connection")]
         [DisplayName("Pipe Name")]
         [Description("Name of pipe to use when connecting with named pipes (Win32 only)")]
@@ -137,7 +137,7 @@ namespace MySql.Data.MySqlClient
         /// Gets or sets a boolean value that indicates whether this connection
         /// should use compression.
         /// </summary>
-#if !PocketPC && !MONO
+#if !CF && !MONO
         [Category("Connection")]
         [DisplayName("Use Compression")]
         [Description("Should the connection ues compression")]
@@ -153,7 +153,7 @@ namespace MySql.Data.MySqlClient
         /// Gets or sets a boolean value that indicates whether this connection will allow
         /// commands to send multiple SQL statements in one execution.
         /// </summary>
-#if !PocketPC && !MONO
+#if !CF && !MONO
         [Category("Connection")]
         [DisplayName("Allow Batch")]
         [Description("Allows execution of multiple SQL commands in a single statement")]
@@ -168,7 +168,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Gets or sets a boolean value that indicates whether logging is enabled.
         /// </summary>
-#if !PocketPC && !MONO
+#if !CF && !MONO
         [Category("Connection")]
         [Description("Enables output of diagnostic messages")]
         [DefaultValue(false)]
@@ -183,7 +183,7 @@ namespace MySql.Data.MySqlClient
         /// Gets or sets the base name of the shared memory objects used to 
         /// communicate with MySQL when the shared memory protocol is being used.
         /// </summary>
-#if !PocketPC && !MONO
+#if !CF && !MONO
         [Category("Connection")]
         [DisplayName("Shared Memory Name")]
         [Description("Name of the shared memory object to use")]
@@ -199,7 +199,7 @@ namespace MySql.Data.MySqlClient
         /// Gets or sets a boolean value that indicates whether this connection uses
         /// the old style (@) parameter markers or the new (?) style.
         /// </summary>
-#if !PocketPC && !MONO
+#if !CF && !MONO
         [Category("Connection")]
         [DisplayName("Use Old Syntax")]
         [Description("Allows the use of old style @ syntax for parameters")]
@@ -217,7 +217,7 @@ namespace MySql.Data.MySqlClient
         /// <remarks>
         /// There is only one valid value for this setting currently.
         /// </remarks>
-#if !PocketPC && !MONO
+#if !CF && !MONO
         [Category("Connection")]
         [DisplayName("Driver Type")]
         [Description("Specifies the type of driver to use for this connection")]
@@ -239,7 +239,7 @@ namespace MySql.Data.MySqlClient
         /// Gets or sets the port number that is used when the socket
         /// protocol is being used.
         /// </summary>
-#if !PocketPC && !MONO
+#if !CF && !MONO
         [Category("Connection")]
         [Description("Port to use for TCP/IP connections")]
         [DefaultValue(3306)]
@@ -253,7 +253,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Gets or sets the connection timeout.
         /// </summary>
-#if !PocketPC && !MONO
+#if !CF && !MONO
         [Category("Connection")]
         [DisplayName("Connect Timeout")]
         [Description("The length of time (in seconds) to wait for a connection " +
@@ -273,7 +273,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Gets or sets the user id that should be used to connect with.
         /// </summary>
-#if !PocketPC && !MONO
+#if !CF && !MONO
         [Category("Security")]
         [DisplayName("User ID")]
         [Description("Indicates the user ID to be used when connecting to the data source.")]
@@ -287,7 +287,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Gets or sets the password that should be used to connect with.
         /// </summary>
-#if !PocketPC && !MONO
+#if !CF && !MONO
         [Category("Security")]
         [Description("Indicates the password to be used when connecting to the data source.")]
 #endif
@@ -301,7 +301,7 @@ namespace MySql.Data.MySqlClient
         /// Gets or sets a boolean value that indicates if the password should be persisted
         /// in the connection string.
         /// </summary>
-#if !PocketPC && !MONO
+#if !CF && !MONO
         [Category("Security")]
         [DisplayName("Persist Security Info")]
         [Description("When false, security-sensitive information, such as the password, " +
@@ -314,7 +314,7 @@ namespace MySql.Data.MySqlClient
             set { base["Persist Security Info"] = value; persistSI = value; }
         }
 
-#if !PocketPC && !MONO
+#if !CF && !MONO
         [Category("Authentication")]
         [Description("Should the connection use SSL.  This currently has no effect.")]
         [DefaultValue(false)]
@@ -332,7 +332,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Gets or sets a boolean value that indicates if zero date time values are supported.
         /// </summary>
-#if !PocketPC && !MONO
+#if !CF && !MONO
         [Category("Advanced")]
         [DisplayName("Allow Zero Datetime")]
         [Description("Should zero datetimes be supported")]
@@ -348,7 +348,7 @@ namespace MySql.Data.MySqlClient
         /// Gets or sets a boolean value indicating if zero datetime values should be 
         /// converted to DateTime.MinValue.
         /// </summary>
-#if !PocketPC && !MONO
+#if !CF && !MONO
         [Category("Advanced")]
         [DisplayName("Convert Zero Datetime")]
         [Description("Should illegal datetime values be converted to DateTime.MinValue")]
@@ -363,7 +363,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Gets or sets the character set that should be used for sending queries to the server.
         /// </summary>
-#if !PocketPC && !MONO
+#if !CF && !MONO
         [DisplayName("Character Set")]
         [Category("Advanced")]
         [Description("Character set this connection should use")]
@@ -377,7 +377,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Gets or sets a boolean value indicating if the Usage Advisor should be enabled.
         /// </summary>
-#if !PocketPC && !MONO
+#if !CF && !MONO
         [Category("Advanced")]
         [DisplayName("Use Usage Advisor")]
         [Description("Logs inefficient database operations")]
@@ -392,7 +392,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Gets or sets the size of the stored procedure cache.
         /// </summary>
-#if !PocketPC && !MONO
+#if !CF && !MONO
         [Category("Advanced")]
         [DisplayName("Procedure Cache Size")]
         [Description("Indicates how many stored procedures can be cached at one time. " +
@@ -408,7 +408,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Gets or sets a boolean value indicating if the permon hooks should be enabled.
         /// </summary>
-#if !PocketPC && !MONO
+#if !CF && !MONO
         [Category("Advanced")]
         [DisplayName("Use Performance Monitor")]
         [Description("Indicates that performance counters should be updated during execution.")]
@@ -423,7 +423,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Gets or sets a boolean value indicating if calls to Prepare() should be ignored.
         /// </summary>
-#if !PocketPC && !MONO
+#if !CF && !MONO
         [Category("Advanced")]
         [DisplayName("Ignore Prepare")]
         [Description("Instructs the provider to ignore any attempts to prepare a command.")]
@@ -435,7 +435,7 @@ namespace MySql.Data.MySqlClient
             set { base["Ignore Prepare"] = value; ignorePrepare = value; }
         }
 
-#if !PocketPC && !MONO
+#if !CF && !MONO
         [Category("Advanced")]
         [DisplayName("Use Procedure Bodies")]
         [Description("Indicates if stored procedure bodies will be available for parameter detection.")]
@@ -454,7 +454,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Gets or sets the lifetime of a pooled connection.
         /// </summary>
-#if !PocketPC && !MONO
+#if !CF && !MONO
         [Category("Pooling")]
         [DisplayName("Load Balance Timeout")]
         [Description("The minimum amount of time (in seconds) for this connection to " +
@@ -470,7 +470,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Gets or sets a boolean value indicating if connection pooling is enabled.
         /// </summary>
-#if !PocketPC && !MONO
+#if !CF && !MONO
         [Category("Pooling")]
         [Description("When true, the connection object is drawn from the appropriate " +
              "pool, or if necessary, is created and added to the appropriate pool.")]
@@ -485,7 +485,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Gets the minimum connection pool size.
         /// </summary>
-#if !PocketPC && !MONO
+#if !CF && !MONO
         [Category("Pooling")]
         [DisplayName("Min Pool Size")]
         [Description("The minimum number of connections allowed in the pool.")]
@@ -500,7 +500,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Gets or sets the maximum connection pool setting.
         /// </summary>
-#if !PocketPC && !MONO
+#if !CF && !MONO
         [Category("Pooling")]
         [DisplayName("Max Pool Size")]
         [Description("The maximum number of connections allowed in the pool.")]
@@ -516,7 +516,7 @@ namespace MySql.Data.MySqlClient
         /// Gets or sets a boolean value indicating if the connection should be reset when retrieved
         /// from the pool.
         /// </summary>
-#if !PocketPC && !MONO
+#if !CF && !MONO
         [Category("Pooling")]
         [DisplayName("Connection Reset")]
         [Description("When true, indicates the connection state is reset when " +

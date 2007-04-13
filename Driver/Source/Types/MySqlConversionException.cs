@@ -25,7 +25,9 @@ namespace MySql.Data.Types
 	/// <summary>
 	/// Summary description for MySqlConversionException.
 	/// </summary>
+#if !CF
 	[Serializable]
+#endif
     public class MySqlConversionException : Exception
 	{
 		/// <summary>Ctor</summary>

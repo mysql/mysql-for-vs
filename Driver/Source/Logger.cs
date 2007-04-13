@@ -65,14 +65,14 @@ namespace MySql.Data.MySqlClient
 
 		static public void Write(string s) 
 		{
-#if !PocketPC
+#if !CF
 			Trace.Write(s);
 #endif
 		}
 
 		static public void WriteLine(string s) 
 		{
-#if !PocketPC
+#if !CF
             Trace.WriteLine(String.Format("[{0}] - {1}",
                 DateTime.Now, s));
 #endif

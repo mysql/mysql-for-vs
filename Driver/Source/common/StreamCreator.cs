@@ -29,80 +29,81 @@ using MySql.Data.MySqlClient;
 
 namespace MySql.Data.Common
 {
-	/// <summary>
-	/// Summary description for StreamCreator.
-	/// </summary>
-	internal class StreamCreator
-	{
-		string hostList;
-		uint port;
-		string pipeName;
-		uint timeOut;
+    /// <summary>
+    /// Summary description for StreamCreator.
+    /// </summary>
+    internal class StreamCreator
+    {
+        string hostList;
+        uint port;
+        string pipeName;
+        uint timeOut;
 
-		public StreamCreator(string hosts, uint port, string pipeName)
-		{
-			hostList = hosts;
-			if (hostList == null || hostList.Length == 0)
-				hostList = "localhost";
-			this.port = port;
-			this.pipeName = pipeName;
-		}
+        public StreamCreator(string hosts, uint port, string pipeName)
+        {
+            hostList = hosts;
+            if (hostList == null || hostList.Length == 0)
+                hostList = "localhost";
+            this.port = port;
+            this.pipeName = pipeName;
+        }
 
-		public Stream GetStream(uint timeOut)
-		{
-			this.timeOut = timeOut;
+        public Stream GetStream(uint timeOut)
+        {
+            this.timeOut = timeOut;
 
-			if (hostList.StartsWith("/"))
-				return CreateSocketStream(null, 0, true);
+            if (hostList.StartsWith("/"))
+                return CreateSocketStream(null, 0, true);
 
-			string[] dnsHosts = hostList.Split('&');
+            string[] dnsHosts = hostList.Split('&');
 
-			System.Random random = new Random((int)DateTime.Now.Ticks);
-			int index = random.Next(dnsHosts.Length);
-			int pos = 0;
-			bool usePipe = (pipeName != null && pipeName.Length != 0);
-			Stream stream = null;
+            System.Random random = new Random((int)DateTime.Now.Ticks);
+            int index = random.Next(dnsHosts.Length);
+            int pos = 0;
+            bool usePipe = (pipeName != null && pipeName.Length != 0);
+            Stream stream = null;
 
-			while (pos < dnsHosts.Length)
-			{
+            while (pos < dnsHosts.Length)
+            {
 #if !CF
 				if (usePipe)
 					stream = CreateNamedPipeStream(dnsHosts[index]);
 				else
 #endif
-				{
+                {
 #if NET20
                     IPHostEntry ipHE = GetHostEntry(dnsHosts[index]);
 #else
 				    IPHostEntry ipHE = Dns.GetHostByName(dnsHosts[index]);
 #endif
 
-					foreach (IPAddress address in ipHE.AddressList)
-					{
-						// MySQL doesn't currently support IPv6 addresses
-						if (address.AddressFamily == AddressFamily.InterNetworkV6)
-							continue;
+                    foreach (IPAddress address in ipHE.AddressList)
+                    {
+                        // MySQL doesn't currently support IPv6 addresses
+                        if (address.AddressFamily == AddressFamily.InterNetworkV6)
+                            continue;
 
-						stream = CreateSocketStream(address, port, false);
-						if (stream != null)
-							break;
-					}
-				}
-				if (stream != null)
-					break;
-				index++;
-				if (index == dnsHosts.Length)
-					index = 0;
-				pos++;
-			}
+                        stream = CreateSocketStream(address, port, false);
+                        if (stream != null)
+                            break;
+                    }
+                }
+                if (stream != null)
+                    break;
+                index++;
+                if (index == dnsHosts.Length)
+                    index = 0;
+                pos++;
+            }
 
-			return stream;
-		}
+            return stream;
+        }
 
         private IPHostEntry GetHostEntry(string hostname)
         {
-            IPAddress addr = null;
             IPHostEntry ipHE;
+#if !CF
+            IPAddress addr = null;
             if (IPAddress.TryParse(hostname, out addr))
             {
                 ipHE = new IPHostEntry();
@@ -110,7 +111,8 @@ namespace MySql.Data.Common
                 ipHE.AddressList[0] = addr;
             }
             else
-                ipHE = Dns.GetHostEntry(hostname);
+#endif
+            ipHE = Dns.GetHostEntry(hostname);
             return ipHE;
         }
 
@@ -143,35 +145,35 @@ namespace MySql.Data.Common
 #endif
 
         private Stream CreateSocketStream(IPAddress ip, uint port, bool unix)
-		{
-			EndPoint endPoint;
+        {
+            EndPoint endPoint;
 #if !CF
 			if (!Platform.IsWindows() && unix)
 				endPoint = CreateUnixEndPoint(hostList);
 			else
 #endif
-				endPoint = new IPEndPoint(ip, (int)port);
+            endPoint = new IPEndPoint(ip, (int)port);
 
-			Socket socket = unix ?
-				new Socket(AddressFamily.Unix, SocketType.Stream, ProtocolType.IP) :
-				new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-			IAsyncResult ias = socket.BeginConnect(endPoint, null, null);
-			if (!ias.AsyncWaitHandle.WaitOne((int)timeOut * 1000, true))
-			{
-				socket.Close();
-				return null;
-			}
-			try
-			{
-				socket.EndConnect(ias);
-			}
-			catch (Exception)
-			{
-				socket.Close();
-				return null;
-			}
-			return new NetworkStream(socket, true);
-		}
+            Socket socket = unix ?
+                new Socket(AddressFamily.Unix, SocketType.Stream, ProtocolType.IP) :
+                new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            try
+            {
+                IAsyncResult ias = socket.BeginConnect(endPoint, null, null);
+                if (!ias.AsyncWaitHandle.WaitOne((int)timeOut * 1000, false))
+                {
+                    socket.Close();
+                    return null;
+                }
+                socket.EndConnect(ias);
+            }
+            catch (Exception ex)
+            {
+                socket.Close();
+                return null;
+            }
+            return new NetworkStream(socket, true);
+        }
 
-	}
+    }
 }

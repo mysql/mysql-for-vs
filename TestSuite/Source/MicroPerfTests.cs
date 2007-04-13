@@ -41,23 +41,5 @@ namespace MySql.Data.MySqlClient.Tests
         {
             Close();
         }
-
-        [Explicit]
-        [Test]
-        public void Connect1000Times()
-        {
-            DateTime start = DateTime.Now;
-
-            for (int i = 0; i < 1000; i++)
-            {
-                MySqlConnection c = new MySqlConnection(
-                    base.GetConnectionString(true));
-                c.Open();
-                c.Close();
-            }
-
-            TimeSpan ts = DateTime.Now.Subtract(start);
-            double secs = ts.TotalSeconds;
-        }
     }
 }

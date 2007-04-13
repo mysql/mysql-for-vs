@@ -44,6 +44,7 @@ namespace MySql.Data.MySqlClient.Tests
 			Close();
 		}
 
+        [SetUp]
 		protected override void Setup()
 		{
 			base.Setup();
@@ -53,10 +54,9 @@ namespace MySql.Data.MySqlClient.Tests
 		}
 
 		[Test]
-		[Category("4.0")]
 		public void InsertBinary()
 		{
-			int lenIn = 400000;
+            int lenIn = 400000;
 			byte[] dataIn = Utils.CreateBlob(lenIn);
 
 
@@ -131,17 +131,17 @@ namespace MySql.Data.MySqlClient.Tests
 		}
 
 		[Test]
-		[Category("4.0")]
 		public void GetChars()
 		{
 			InternalGetChars(false);
 		}
 
 		[Test]
-		[Category("4.1")]
 		public void GetCharsPrepared()
 		{
-			InternalGetChars(true);
+            if (version < new Version(4, 1)) return;
+
+            InternalGetChars(true);
 		}
 
 		private void InternalGetChars(bool prepare)
@@ -202,10 +202,11 @@ namespace MySql.Data.MySqlClient.Tests
 		}
 
 		[Test]
-		[Category("4.1")]
 		public void InsertTextPrepared()
 		{
-			InternalInsertText(true);
+            if (version < new Version(4, 1)) return;
+
+            InternalInsertText(true);
 		}
 
 		private void InternalInsertText(bool prepare)
@@ -302,7 +303,6 @@ namespace MySql.Data.MySqlClient.Tests
 		}
 
 		[Test]
-		[Category("4.0")]
 		public void GetCharsOnLongTextColumn()
 		{
 			execSQL("INSERT INTO Test (id, text1) VALUES(1, 'Test')");
@@ -407,7 +407,7 @@ namespace MySql.Data.MySqlClient.Tests
 	}
 
 	#region Configs
-
+#if !CF
 	[Category("Compressed")]
 	public class BlobTestsSocketCompressed : BlobTests
 	{
@@ -454,7 +454,7 @@ namespace MySql.Data.MySqlClient.Tests
             return String.Format("protocol=memory; shared memory name={0};compress=true", memoryName);
         }
 	}
-
+#endif
 	#endregion
 
 }

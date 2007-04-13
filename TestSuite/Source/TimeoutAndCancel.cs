@@ -56,10 +56,11 @@ namespace MySql.Data.MySqlClient.Tests
             }
         }
 
-        [Category("5.0")]
         [Test]
         public void CancelSingleQuery()
         {
+            if (version < new Version(5, 0)) return;
+
             // first we need a routine that will run for a bit
             execSQL("CREATE PROCEDURE spTest() BEGIN SET @start=NOW()+0; REPEAT SET @end=NOW()-@start; " +
                 "UNTIL @end >= 5000 END REPEAT; SELECT @start, @end; END");
@@ -119,11 +120,11 @@ namespace MySql.Data.MySqlClient.Tests
             stateChangeCount++;
         }
 
-        [Category("NotWorking")]
-        [Category("5.0")]
-        [Test]
+/*        [Test]
         public void TimeoutExpiring()
         {
+            if (version < new Version(5, 0)) return;
+
             // first we need a routine that will run for a bit
             execSQL("CREATE PROCEDURE spTest() BEGIN SET @start=UNIX_TIMESTAMP(NOW()); " +
                 "REPEAT SET @end=UNIX_TIMESTAMP(NOW())-@start; " +
@@ -145,11 +146,13 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.IsTrue(ts.TotalSeconds < 60, "Took too much time");
             }
         }
+        */
 
-        [Category("5.0")]
         [Test]
         public void TimeoutNotExpiring()
         {
+            if (version < new Version(5, 0)) return;
+
             // first we need a routine that will run for a bit
             execSQL("CREATE PROCEDURE spTest() BEGIN SET @start=NOW()+0; REPEAT SET @end=NOW()-@start; " +
                 "UNTIL @end >= 5 END REPEAT; SELECT @start, @end; END");
