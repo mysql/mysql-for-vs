@@ -26,7 +26,13 @@ namespace MySql.Data.MySqlClient {
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
-        
+
+#if CF
+        private const string resName = "MySql.Data.CF.Properties.Resources";
+#else
+        private const string resName = "MySql.Data.MySqlClient.Properties.Resources";
+#endif
+
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal Resources() {
         }
@@ -38,7 +44,7 @@ namespace MySql.Data.MySqlClient {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MySql.Data.MySqlClient.Source.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager(resName, typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
