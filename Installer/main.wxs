@@ -108,6 +108,7 @@
     <FeatureRef Id="Samples"/>
     <FeatureRef Id="WebProviders"/>
     <FeatureRef Id="VisualStudio"/>
+    <FeatureRef Id="CompactFramework"/>
     
     <Property Id="WIXUI_INSTALLDIR" Value='INSTALLDIR'/>
     <UIRef Id="WixUI_Mondo"/>

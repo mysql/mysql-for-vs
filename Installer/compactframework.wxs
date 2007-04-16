@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment Id='CFFragment'>
+    <DirectoryRef Id='INSTALLDIR'>
+      <Directory Id="CFDir" Name="Compact Framework">
+        <Component Id="CFBinaries" Guid="5a9c32ad-62f5-4b24-a225-96acf42d88a1">
+          <File Id="cf1" Name="MySql.Data.CF.dll"
+                Source="..\Driver\bin\net-2.0\release\mysql.data.CF.dll" DiskId="1"/>
+          <File Id="cf2" Name="Mysql.Data.Tests.CF.dll"
+                Source="..\TestSuite\bin\net-2.0\Release\mysql.data.tests.CF.dll" DiskId="1"/>
+        </Component>
+      </Directory>
+    </DirectoryRef>
+
+    <Feature Id='CompactFramework' Display='9' Level='1' Title='Compact Framework Support'
+             Description='Support for .NET Compact Framework 2.0'>
+      <ComponentRef Id='CFBinaries'/>
+    </Feature>
+
+  </Fragment>
+</Wix>
+
+
