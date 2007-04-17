@@ -91,6 +91,10 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|.NET 2.0' ">
     <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>bin\net-2.0\Debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|.NET 2.0' ">
+    <OutputPath>bin\net-2.0\Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System">
