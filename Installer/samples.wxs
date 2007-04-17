@@ -1,28 +1,28 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Fragment Id='SamplesFragment'> 
-    <DirectoryRef Id='SampleDir'> 
-		<Directory Id="TableEditor" Name="Table Editor">
-			<Directory Id="teCS" Name="cs">
-				<Component Id="Sample1CS" Guid="0e39e515-e3a5-4e56-954e-1802b975de29">
-					<File Id="teCS1" Name="App.ico" Source="..\Samples\TableEditor\cs\App.ico" DiskId="1"/>
-					<File Id="teCS2" Name="AssemblyInfo.cs" Source="..\Samples\TableEditor\cs\AssemblyInfo.cs" DiskId="1"/>
-					<File Id="teCS3" Name="Form1.cs" Source="..\Samples\TableEditor\cs\Form1.cs" DiskId="1"/>
-					<File Id="teCS4" Name="Form1.resx" Source="..\Samples\TableEditor\cs\Form1.resx" DiskId="1"/>
-					<File Id="teCS5" Name="TableEditor.csproj" Source="..\Samples\TableEditor\cs\TableEditor.csproj" DiskId="1"/>
-					<File Id="teCS7" Name="TableEditor.build" Source="..\Samples\TableEditor\cs\TableEditor.build" DiskId="1"/>
-				</Component>
-			</Directory>
-			<Directory Id="teVB" Name="vb">
-				<Component Id="Sample1VB" Guid="f8a6f77b-cd77-4d44-972f-f560059b2c9a">
-					<File Id="teVB2" Name="AssemblyInfo.vb" Source="..\Samples\TableEditor\vb\AssemblyInfo.vb" DiskId="1"/>
-					<File Id="teVB3" Name="Form1.vb" Source="..\Samples\TableEditor\vb\Form1.vb" DiskId="1"/>
-					<File Id="teVB4" Name="Form1.resx" Source="..\Samples\TableEditor\vb\Form1.resx" DiskId="1"/>
-					<File Id="teVB5" Name="TableEditor.vbproj" Source="..\Samples\TableEditor\vb\TableEditor.vbproj" DiskId="1"/>
-					<File Id="teVB7" Name="TableEditor.build" Source="..\Samples\TableEditor\vb\TableEditor.build" DiskId="1"/>
-				</Component>
-			</Directory>
-		</Directory>
+  <Fragment Id='SamplesFragment'>
+    <DirectoryRef Id='SampleDir'>
+      <Directory Id="TableEditor" Name="Table Editor">
+        <Directory Id="teCS" Name="cs">
+          <Component Id="Sample1CS" Guid="0e39e515-e3a5-4e56-954e-1802b975de29">
+            <File Id="teCS1" Name="App.ico" Source="..\Samples\TableEditor\cs\App.ico" DiskId="1"/>
+            <File Id="teCS2" Name="AssemblyInfo.cs" Source="..\Samples\TableEditor\cs\AssemblyInfo.cs" DiskId="1"/>
+            <File Id="teCS3" Name="Form1.cs" Source="..\Samples\TableEditor\cs\Form1.cs" DiskId="1"/>
+            <File Id="teCS4" Name="Form1.resx" Source="..\Samples\TableEditor\cs\Form1.resx" DiskId="1"/>
+            <File Id="teCS5" Name="TableEditor.csproj" Source="..\Samples\TableEditor\cs\TableEditor.csproj" DiskId="1"/>
+            <File Id="teCS7" Name="TableEditor.build" Source="..\Samples\TableEditor\cs\TableEditor.build" DiskId="1"/>
+          </Component>
+        </Directory>
+        <Directory Id="teVB" Name="vb">
+          <Component Id="Sample1VB" Guid="f8a6f77b-cd77-4d44-972f-f560059b2c9a">
+            <File Id="teVB2" Name="AssemblyInfo.vb" Source="..\Samples\TableEditor\vb\AssemblyInfo.vb" DiskId="1"/>
+            <File Id="teVB3" Name="Form1.vb" Source="..\Samples\TableEditor\vb\Form1.vb" DiskId="1"/>
+            <File Id="teVB4" Name="Form1.resx" Source="..\Samples\TableEditor\vb\Form1.resx" DiskId="1"/>
+            <File Id="teVB5" Name="TableEditor.vbproj" Source="..\Samples\TableEditor\vb\TableEditor.vbproj" DiskId="1"/>
+            <File Id="teVB7" Name="TableEditor.build" Source="..\Samples\TableEditor\vb\TableEditor.build" DiskId="1"/>
+          </Component>
+        </Directory>
+      </Directory>
       <Directory Id="Async" Name="Async">
         <Directory Id="asyncCS" Name="cs">
           <Component Id="Sample2CS" Guid="6e7377c6-bd5e-42e8-a47b-d600fa582744">
@@ -34,19 +34,46 @@
           </Component>
         </Directory>
       </Directory>
-    </DirectoryRef> 
+      <Directory Id="PPC" Name="Pocket PC" FileSource="..\Samples\Pocket PC">
+        <Directory Id="PPCTester" Name="Tester">
+          <Directory Id="PPCProperties" Name="Properties">
+            <Component Id="PPCPropComp" Guid="403861ca-9358-468d-a535-0b17e9ce5a75">
+              <File Id="PPCPropComp1" Name="AssemblyInfo.cs"/>
+              <File Id="PPCPropComp2" Name="green.png"/>
+              <File Id="PPCPropComp3" Name="red.png"/>
+              <File Id="PPCPropComp4" Name="Resources.Designer.cs"/>
+              <File Id="PPCPropComp5" Name="Resources.resx"/>
+              <File Id="PPCPropComp6" Name="white.png"/>
+            </Component>
+          </Directory>
+          <Component Id="PPCTester" Guid="5668e8e9-0ddf-434d-ab93-edca1e2b33dc">
+            <File Id="PPCTester1" Name="FailDetails.cs"/>
+            <File Id="PPCTester2" Name="FailDetails.Designer.cs"/>
+            <File Id="PPCTester3" Name="FailDetails.resx"/>
+            <File Id="PPCTester4" Name="Form1.cs"/>
+            <File Id="PPCTester5" Name="Form1.Designer.cs"/>
+            <File Id="PPCTester6" Name="Form1.resx"/>
+            <File Id="PPCTester7" Name="MySql.Data.Tests.CF.dll.config"/>
+            <File Id="PPCTester8" Name="Program.cs"/>
+            <File Id="PPCTester9" Name="Tester.csproj"/>
+          </Component>
+        </Directory>
+      </Directory>
+    </DirectoryRef>
 
-	<Feature Id='Samples' Display='10' Level='1' Title='Samples' Description='Sample Applications'>
-		<Feature Id='CSSamples' Level='1' Title='CSharp' Description='Sample CSharp Applications' InstallDefault='local'>
-			<ComponentRef Id='Sample1CS'/>
-      <ComponentRef Id='Sample2CS'/>
+    <Feature Id='Samples' Display='10' Level='1' Title='Samples' Description='Sample Applications'>
+      <Feature Id='CSSamples' Level='1' Title='CSharp' Description='Sample CSharp Applications' InstallDefault='local'>
+        <ComponentRef Id='Sample1CS'/>
+        <ComponentRef Id='Sample2CS'/>
+        <ComponentRef Id='PPCTester'/>
+        <ComponentRef Id='PPCPropComp'/>
+      </Feature>
+      <Feature Id='VBSamples' Level='1' Title='Visual Basic' Description='Sample Visual Basic Applications' InstallDefault='local'>
+        <ComponentRef Id='Sample1VB'/>
+      </Feature>
     </Feature>
-		<Feature Id='VBSamples' Level='1' Title='Visual Basic' Description='Sample Visual Basic Applications' InstallDefault='local'>
-			<ComponentRef Id='Sample1VB'/>
-		</Feature>
-	</Feature>
 
-	</Fragment> 
-</Wix> 
+  </Fragment>
+</Wix>
 
 

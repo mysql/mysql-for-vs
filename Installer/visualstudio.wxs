@@ -94,10 +94,11 @@
       <RegistrySearch Id='VSInstallDir' Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\8.0\Setup\VS'
           Name='EnvironmentPath' Type='raw'/>
     </Property>
-    <CustomAction Id="DevenvSetup" ExeCommand='/setup' Property="DEVENVINSTALLDIR" />
+    <CustomAction Id="DevenvSetup" ExeCommand='/setup' Property="DEVENVINSTALLDIR"
+                  Execute="deferred" Impersonate="no"/>
 
     <InstallExecuteSequence>
-      <Custom Action='DevenvSetup' After='InstallFinalize' />
+      <Custom Action='DevenvSetup' After='PublishProduct' />
     </InstallExecuteSequence>
 
   </Fragment>
