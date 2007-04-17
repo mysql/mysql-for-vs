@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.25" />
+  <Class Name="MySql.Data.VisualStudio.Descriptors.ObjectDescriptorFactory" Collapsed="true">
+    <Position X="3.25" Y="1.5" Width="2" />
+    <TypeIdentifier>
+      <FileName>Descriptors\ObjectDescriptorFactory.cs</FileName>
+      <HashCode>EEAAAAAAAAAAAABAAAAgAAAAAAEAAAABQAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Instance" />
+    </ShowAsAssociation>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <AssociationLine Name="Instance" Type="MySql.Data.VisualStudio.Descriptors.ObjectDescriptorFactory" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="4.834" Y="1.5" />
+        <Point X="4.834" Y="1.25" />
+        <Point X="3.999" Y="1.25" />
+        <Point X="3.999" Y="1.5" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.64" Y="0.32" />
+      </MemberNameLabel>
+    </AssociationLine>
+  </Class>
+  <Class Name="MySql.Data.VisualStudio.Descriptors.ObjectDescriptor" Collapsed="true">
+    <Position X="3.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Descriptors\ObjectDescriptor.cs</FileName>
+      <HashCode>QAADACEAhACIQiICAgAQEAqACAAAJBDiAECCQAlgEJA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="MySql.Data.VisualStudio.Descriptors.ColumnDescriptor">
+    <Position X="1" Y="4.5" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>Descriptors\ColumnDescriptor.cs</FileName>
+      <HashCode>AAAAAAAABAAAQAAAAkAAAAAAAAAAABAAAAACAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="MySql.Data.VisualStudio.Descriptors.ColumnDescriptor.Attributes" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Descriptors\ColumnDescriptor.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+  </Class>
+  <Class Name="MySql.Data.VisualStudio.Descriptors.RootDescriptor">
+    <Position X="5.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Descriptors\RootDescriptor.cs</FileName>
+      <HashCode>AAAAAAAAAAAAQAAAAkAAAAAAAAAAABAAAAACAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="MySql.Data.VisualStudio.Descriptors.RootDescriptor.Attributes" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Descriptors\RootDescriptor.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+  </Class>
+  <Class Name="MySql.Data.VisualStudio.Descriptors.TableDescriptor">
+    <Position X="3.25" Y="4.5" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>Descriptors\TableDescriptor.cs</FileName>
+      <HashCode>AAAAAACQgIEAQBEAAkAAGAgAIAAAABAAAECCAEMBQQI=</HashCode>
+    </TypeIdentifier>
+    <Members>
+      <Field Name="ARCHIVE" Hidden="true" />
+      <Field Name="BDB" Hidden="true" />
+      <Field Name="ConnectionOption" Hidden="true" />
+      <Field Name="ConnectionQueryPart" Hidden="true" />
+      <Field Name="CreateTableColumn" Hidden="true" />
+      <Field Name="DefaultCharType" Hidden="true" />
+      <Field Name="DefaultIntType" Hidden="true" />
+      <Field Name="InnoDB" Hidden="true" />
+      <Field Name="InsertMethodOption" Hidden="true" />
+      <Field Name="InsertMethodQueryPart" Hidden="true" />
+      <Field Name="MEMORY" Hidden="true" />
+      <Field Name="MERGE" Hidden="true" />
+      <Field Name="MRG_MyISAM" Hidden="true" />
+      <Field Name="MyISAM" Hidden="true" />
+      <Field Name="NDB" Hidden="true" />
+      <Field Name="UnionOption" Hidden="true" />
+      <Field Name="UnionQueryPart" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="MySql.Data.VisualStudio.Descriptors.TableDescriptor.Attributes" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Descriptors\TableDescriptor.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+  </Class>
+  <Class Name="MySql.Data.VisualStudio.Descriptors.IdLengthAttribute">
+    <Position X="5.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Descriptors\Attributes\IdLengthAttribute.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAABAAAACAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Members>
+      <Method Name="IdLengthAttribute" Hidden="true" />
+      <Field Name="lengthVal" Hidden="true" />
+    </Members>
+  </Class>
+  <Class Name="MySql.Data.VisualStudio.Descriptors.ObjectDescriptorAttribute">
+    <Position X="5" Y="2.75" Width="2" />
+    <TypeIdentifier>
+      <FileName>Descriptors\Attributes\ObjectDescriptorAttribute.cs</FileName>
+      <HashCode>AAAAAAAAIAAAAABAAAAAAAIAgAAAABAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Members>
+      <Field Name="constructorRef" Hidden="true" />
+      <Method Name="CreateDescriptor" Hidden="true" />
+      <Field Name="descriptorInstance" Hidden="true" />
+      <Method Name="ObjectDescriptorAttribute" Hidden="true" />
+      <Field Name="typeNameVal" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+  </Class>
+  <Interface Name="MySql.Data.VisualStudio.Descriptors.IObjectDescriptor">
+    <Position X="1" Y="1.5" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>Descriptors\IObjectDescriptor.cs</FileName>
+      <HashCode>AAAAACEAAAAAAAAAAAAAEAgAAAAAIBAgAAAAQAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+</ClassDiagram>

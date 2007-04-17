@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.25" />
+  <Class Name="MySql.Data.VisualStudio.Commands.CommandFactory" Collapsed="true">
+    <Position X="3" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Commands\CommandFactory.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAQwAKAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Instance" />
+    </ShowAsAssociation>
+    <Members>
+      <Field Name="commandHandlersDictionary" Hidden="true" />
+      <Field Name="instanceRef" Hidden="true" />
+    </Members>
+    <NestedTypes>
+      <Struct Name="MySql.Data.VisualStudio.Commands.CommandFactory.CommandIDKey" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Commands\CommandFactory.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Delegate Name="MySql.Data.VisualStudio.Commands.CommandFactory.CreateCommandMethod" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Commands\CommandFactory.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <AssociationLine Name="Instance" Type="MySql.Data.VisualStudio.Commands.CommandFactory" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="3.5" Y="1.5" />
+        <Point X="3.5" Y="1.25" />
+        <Point X="4.25" Y="1.25" />
+        <Point X="4.25" Y="1.5" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.058" Y="0.3" />
+      </MemberNameLabel>
+    </AssociationLine>
+  </Class>
+  <Class Name="MySql.Data.VisualStudio.Commands.CommandHandlerAttribute">
+    <Position X="5.5" Y="1.5" Width="2" />
+    <TypeIdentifier>
+      <FileName>Commands\CommandHandlerAttribute.cs</FileName>
+      <HashCode>AAQAAAAAAAAAAAABAAAAACAAgAIAABAAABAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Members>
+      <Method Name="CommandHandlerAttribute" Hidden="true" />
+      <Field Name="commandIDVal" Hidden="true" />
+      <Field Name="constructorRef" Hidden="true" />
+      <Method Name="CreateCommandHandler" Hidden="true" />
+      <Field Name="groupIDVal" Hidden="true" />
+      <Field Name="handlerInstance" Hidden="true" />
+    </Members>
+  </Class>
+  <Class Name="MySql.Data.VisualStudio.Commands.BaseCommand">
+    <Position X="2.5" Y="3.25" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>Commands\BaseCommand.cs</FileName>
+      <HashCode>AAQKAAAAAYQBAAQMAAAAAAAAAAIAAAgQEBAAAAAAAAI=</HashCode>
+    </TypeIdentifier>
+    <Members>
+      <Method Name="BaseCommand" Hidden="true" />
+      <Property Name="CommandID" Hidden="true" />
+      <Property Name="CommandText" Hidden="true" />
+      <Field Name="commandTextVal" Hidden="true" />
+      <Method Name="Execute" Hidden="true" />
+      <Method Name="FormatText" Hidden="true" />
+      <Method Name="GetIsVisible" Hidden="true" />
+      <Method Name="GetLocalizedItemType" Hidden="true" />
+      <Method Name="GetParentItemID" Hidden="true" />
+      <Method Name="GetParentObjectID" Hidden="true" />
+      <Method Name="GetText" Hidden="true" />
+      <Property Name="GroupID" Hidden="true" />
+      <Property Name="IsEmptyAllowed" Hidden="true" />
+      <Property Name="IsMultiselectAllowed" Hidden="true" />
+      <Method Name="LocalizeTypeName" Hidden="true" />
+    </Members>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="MySql.Data.VisualStudio.Commands.OpenEditorCommand">
+    <Position X="5.25" Y="3.25" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>Commands\OpenEditorCommand.cs</FileName>
+      <HashCode>AAAAACAAAAABAIAAAAAABAAAAAAAAAAQBAAAAAAgAAA=</HashCode>
+    </TypeIdentifier>
+    <Members>
+      <Method Name="CheckSingleItem" Hidden="true" />
+      <Method Name="ExecuteSingleItem" Hidden="true" />
+      <Method Name="FindAndActivateEditor" Hidden="true" />
+      <Method Name="OpenEditor" Hidden="true" />
+    </Members>
+  </Class>
+  <Class Name="MySql.Data.VisualStudio.Commands.AlterCommand" Collapsed="true">
+    <Position X="4" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Commands\AlterCommand.cs</FileName>
+      <HashCode>AAACACAAAAAAAAAAAAAABAAAAAAAAAAABAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MySql.Data.VisualStudio.Commands.CreateCommand" Collapsed="true">
+    <Position X="6" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Commands\CreateCommand.cs</FileName>
+      <HashCode>AAACACAAAAAAAAAAAAAQBAAAAAAAAAAABAAAAAAgAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MySql.Data.VisualStudio.Commands.DropCommand" Collapsed="true">
+    <Position X="0.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Commands\DropCommand.cs</FileName>
+      <HashCode>AAACAAAAAAABAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MySql.Data.VisualStudio.Commands.CloneCommand" Collapsed="true">
+    <Position X="2.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Commands\CloneCommand.cs</FileName>
+      <HashCode>AAACAAAAAAABAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MySql.Data.VisualStudio.Commands.EditTableDataCommand" Collapsed="true">
+    <Position X="4.75" Y="6.5" Width="2" />
+    <TypeIdentifier>
+      <FileName>Commands\EditTableDataCommand.cs</FileName>
+      <HashCode>AAACACAAAAAAAAAAAAAABAAAAAAAAAAABAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="MySql.Data.VisualStudio.Commands.ICommand">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Commands\ICommand.cs</FileName>
+      <HashCode>AAQAAAAAAAAAAAQIAAAAAAAAAAIAAAAAEAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+</ClassDiagram>

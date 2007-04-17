@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<HSProject ProjectType="0" Version="2.0.26" SaveDateTime="29.09.2006 12:17:01" DXPFileName="" TemplateName="HelpStudio Lite 2005 Style" SpellLastCheckDateTime="0:00:00" Title="MySQL DDEX Provider" SCCActivated="False" SCCProject="" HelpContextIDHeaderFile="" OutputDirectory="" AutoGenerateIndexEntries="True" AutoGenerateCategoryIndex="False" BuildDXProject="False" DefaultTopic="" Lite="True">
+    <SpellIgnoreAllWordList/>
+    <cat Name="Microsoft Help 2.x Error Pages" Key="C5" AutoIndex="True"/>
+    <cat Name="Introduction" Key="{4871D54E-EA88-49A5-817E-036882F8FAC4}" AutoIndex="True"/>
+    <cat Name="Installation" Key="{B8473F5F-DB5A-4402-BAF0-3A9568DD30F2}" AutoIndex="True"/>
+    <cat Name="Connection" Key="{0A3D56EC-A197-4884-9A0B-4321573C2856}" AutoIndex="True"/>
+    <cat Name="Using the Provider" Key="{FD9585B0-BC7E-4EF3-A60A-7C7E78D06D4E}" AutoIndex="True"/>
+    <VariableValue Name="CopyrightNotice"><![CDATA[&copy; MySql Company. All Rights Reserved.]]></VariableValue>
+    <VariableValue Name="FeedbackLink"><![CDATA[<a href="mailto:reggie@mysql.com?subject=MySQL DDEX Provider Documentation Feedback: %%FileName%%">Send comments</a> on this topic.]]></VariableValue>
+    <file FileName="stopwordlist.txt" CaptureInfo="" IncludeInOutput="True"/>
+    <file FileName="Images\Image4.jpg" CaptureInfo="" IncludeInOutput="True"/>
+    <file FileName="Images\Image1.jpg" CaptureInfo="" IncludeInOutput="True"/>
+    <file FileName="Images\Image2.jpg" CaptureInfo="" IncludeInOutput="True"/>
+    <file FileName="Images\Image3.jpg" CaptureInfo="" IncludeInOutput="True"/>
+    <Topic Key="{95CA4353-34B0-4493-B8AB-FF7BF1C9352E}" Name="_index_entry_not_found" Title="Empty Index Entry" ContentsTitle="Empty Index Entry" Status="In Progress" CreatedOn="23-09-2005 00:00:00" ModifiedOn="23-09-2005 00:00:00" LayoutName="" AllStyleSheets="True" AllScripts="True" AutoGenerateIndexEntry="False" IncludeInHelpFile="True" HelpContextIDs="" Category="C5">
+        <Notes/>
+        <K Value="@_vsipsample_index_entry_not_found"/>
+        <s k="BodyText"><![CDATA[<H1>Empty Index Entry</H1>
+<P>The index entry you selected has no target topics associated with it.</P>
+<P>If you have chosen a parent entry, please select a child entry.</P>
+<xml><MSHelp:NoSearch/></xml>]]></s>
+    </Topic>
+    <Topic Key="{11A66232-56ED-4B86-A42C-835E93506F4A}" Name="_topic_not_found" Title="Topic Not Found" ContentsTitle="Topic Not Found" Status="In Progress" CreatedOn="23-09-2005 00:00:00" ModifiedOn="23-09-2005 00:00:00" LayoutName="" AllStyleSheets="True" AllScripts="True" AutoGenerateIndexEntry="False" IncludeInHelpFile="True" HelpContextIDs="" Category="C5">
+        <Notes/>
+        <s k="BodyText"><![CDATA[<script type="text/javascript">
+// ****************************************************************************
+// *                       NavFailPage Parameter Insertion                    *
+// ****************************************************************************
+
+function navfailpageparam() {
+        var keyString = "keywords=";
+        var idxString = "index=";
+        var urlString = "url=";
+        var query = window.location.search;
+        var j = 0;
+        var delim;
+        var i = query.indexOf(keyString);
+
+        if (i >= 0) {
+                i += keyString.length;
+                delim = query.charAt(i);
+                j = query.indexOf(delim, i+1);
+                if (j > 0) document.getElementById("keywordsSpan").innerText = query.substring(i, j+1);
+        }
+
+        i = query.indexOf(idxString);
+        if (i >= 0) {
+                i += idxString.length;
+                delim = query.charAt(i);
+                j = query.indexOf(delim, i+1);
+                if (j > 0) document.getElementById("indexSpan").innerText = query.substring(i, j+1);
+        }
+
+        i = query.indexOf(urlString);
+        if (i >= 0) {
+                i += urlString.length;
+                delim = query.charAt(i);
+                j = query.indexOf(delim, i+1);
+                if (j > 0) document.getElementById("urlSpan").innerText = query.substring(i, j+1);
+        }
+}
+</script>
+
+<h1>Topic Not Found</h1>
+
+<p>The link you just clicked was not able to connect to the target page.</p>
+
+<p>Some possible reasons and remedies are as follows:</p>
+
+<table class="msdn" cellspacing="0">
+    <tbody>
+        <tr valign="top">
+            <th width="47%">Reason</th>
+
+            <th width="53%">Remedy</th>
+        </tr>
+
+        <tr valign="top">
+            <td width="47%">Destination topic is not part of the area you specified in the <b>Filtered by</b>
+            field.</td>
+
+            <td width="53%">Either select another filter or select <b>(no filter)</b>.</td>
+        </tr>
+
+        <tr valign="top">
+            <td width="47%">The URL of the destination topic is incorrect or has changed.</td>
+
+            <td width="53%">Use the index or the search function instead.</td>
+        </tr>
+
+        <tr valign="top">
+            <td width="47%">Problems with the help installation.</td>
+
+            <td width="53%">Rerun Setup for the product this help is related to and select the 'Repair'
+            option.</td>
+        </tr>
+    </tbody>
+</table>
+
+<p>Additional help is available for filters, search, and the index.</p>
+
+<p>Click <a href="javascript:history.back(-1)">Back</a> to return to the page you were on.</p>
+<hr>
+
+<p>The target parameters are:</p>
+<p>Keyword: <span id="keywordsSpan"></span><br>
+Index Moniker: <span id="indexSpan"></span><br>
+URL: <span id="urlSpan"></span></p>
+<script type="text/javascript">
+    navfailpageparam()
+</script>
+<xml><MSHelp:NoSearch/></xml>]]></s>
+    </Topic>
+    <Topic Key="{6E87A0E8-A323-4F4B-9919-DAB7B7785025}" Name="Introduction" Title="Introduction to the MySQL DDEX Provider" ContentsTitle="Introduction to the MySQL DDEX Provider" Status="In Progress" CreatedOn="01-09-2006 16:14:34" ModifiedOn="18-09-2006 20:38:59" LayoutName="" AllStyleSheets="True" AllScripts="True" AutoGenerateIndexEntry="True" IncludeInHelpFile="True" HelpContextIDs="" Category="{4871D54E-EA88-49A5-817E-036882F8FAC4}">
+        <Notes/>
+        <s k="BodyText"><![CDATA[A DDEX provider is a plug-in for Visual Studio 2005, which allows developers to maintain database structures and supports built-in data-driven application development tools.<BR><BR>The current version of the MySQL DDEX Provider includes only database maintenance tools. Data-driven application development tools are not supported.<BR><BR>The MySQL DDEX Provider works as a buildup over the Server Explorer menu of Visual Studio 2005, and permits end users to interact with the MySQL server in an intuitively clear, graphical manner.<BR><BR>The MySQL DDEX Provider is designed to work with MySQL version 5.0.<BR><BR>If you have a comment, or if you discover a bug, please use our MySQL bug-tracking system (<A href="http://bugs.mysql.com">http://bugs.mysql.com</A>) to report problem or add your suggestion.]]></s>
+    </Topic>
+    <Topic Key="{E23F7708-2BCD-477F-AD2E-6D64325ACC62}" Name="Connection" Title="Connection to the MySql server with the MySQL DDEX Provider" ContentsTitle="Connection to the MySql server with the MySQL DDEX Provider" Status="In Progress" CreatedOn="01-09-2006 16:24:05" ModifiedOn="18-09-2006 20:59:37" LayoutName="" AllStyleSheets="True" AllScripts="True" AutoGenerateIndexEntry="True" IncludeInHelpFile="True" HelpContextIDs="" Category="{0A3D56EC-A197-4884-9A0B-4321573C2856}">
+        <Notes/>
+        <s k="BodyText"><![CDATA[<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">Once the MySQL DDEX Provider is installed, you can use it to create, modify, and delete connections to MySQL databases. To create a connection with a MySQL database, perform the following steps:</SPAN></P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt">&nbsp;</P>
+<UL>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">Start Visual Studio 2005, and open the Server Explorer window (<STRONG>View -&gt; Server Explorer</STRONG> option in the main Visual Studio 2005 menu, or <STRONG>Ctrl+W, L</STRONG> hot keys).</SPAN></DIV></LI>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">Right-click on the <STRONG>Data Connections</STRONG> node, and choose the <STRONG>Add Connection</STRONG> button.</SPAN> </DIV></LI>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt; mso-list: l0 level1 lfo1; tab-stops: list 36.0pt; mso-layout-grid-align: none"><SPAN lang=EN-US style="mso-ansi-language: EN-US">Add Connection dialog opens. Press the <STRONG>Change</STRONG> button to choose MySQL Database as a data source.</SPAN> </DIV></LI>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt; mso-list: l0 level1 lfo1; tab-stops: list 36.0pt; mso-layout-grid-align: none"><SPAN lang=EN-US style="mso-ansi-language: EN-US">Change Data Source dialog opens. Choose <STRONG>MySQL Database</STRONG> in the list of data sources (or the <STRONG>&lt;other&gt;</STRONG> option, if MySQL Database is absent), and then choose <EM>.NET Framework Data Provider for MySQL</EM> in the combo box of data providers.</SPAN> </DIV></LI>
+<LI style="LIST-STYLE-TYPE: none">
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt; mso-list: l0 level1 lfo1; tab-stops: list 36.0pt; mso-layout-grid-align: none">&nbsp;</P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt; mso-list: l0 level1 lfo1; tab-stops: list 36.0pt; mso-layout-grid-align: none" align=center><IMG alt="" src="Images/Image1.jpg" border=0>&nbsp;</P></LI>
+<LI style="LIST-STYLE-TYPE: none">
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt; mso-list: l0 level1 lfo1; tab-stops: list 36.0pt; mso-layout-grid-align: none" align=center>&nbsp;</P></LI>
+<LI style="LIST-STYLE-TYPE: none">
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt; mso-list: l0 level1 lfo1; tab-stops: list 36.0pt; mso-layout-grid-align: none" align=left><SPAN lang=EN-US style="mso-ansi-language: EN-US">Press OK to confirm your choice.</SPAN></P></LI></UL>
+<UL>
+<LI class=MsoNormal style="MARGIN: 0cm 0cm 0pt; mso-list: l0 level1 lfo1; tab-stops: list 36.0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">Input the connection settings: the server host name (for example, <STRONG>localhost</STRONG> if the MySQL server is installed on the local machine), the user name, the password, and the default schema name. Note that you must specify the default schema name to open the connection.</SPAN></LI></UL>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt; mso-list: l0 level1 lfo1; tab-stops: list 36.0pt" align=center><SPAN lang=EN-US style="mso-ansi-language: EN-US"><IMG alt="" src="Images/Image2.jpg" align=middle border=0></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt; mso-list: l0 level1 lfo1; tab-stops: list 36.0pt">&nbsp;</P>
+<UL>
+<LI class=MsoNormal style="MARGIN: 0cm 0cm 0pt; mso-list: l0 level1 lfo1; tab-stops: list 36.0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">You can also set the port to connect with the MySQL server by pressing the <STRONG>Advanced</STRONG> button. To test connection with the MySQL server, ser the server host name, the user name, and the password, and press the <STRONG>Test Connection</STRONG> button. If the test succeeds, the success confirmation dialog opens.</SPAN></LI>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt; mso-list: l0 level1 lfo1; tab-stops: list 36.0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">After you set all settings and test the connection, press <STRONG>OK</STRONG>. The newly created connection is displayed in Server Explorer. Now you can work with the MySQL server through standard Server Explorer GUI.</SPAN> </DIV></LI></UL>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">After the connection is successfully established, all settings are saved for future use. When you start Visual Studio for the next time, just open the connection node in Server Explorer to establish a connection to the MySQL server again.<BR><BR>To modify and delete a connection, use the Server Explorer context menu for the corresponding node. You can modify any of the settings just by overwriting the existing values with new ones. Note that the connection may be modified or deleted only if no active editor for its objects is opened: otherwise you may loose your data.</SPAN></P>]]></s>
+    </Topic>
+    <Topic Key="{F1797756-01CB-4A14-A578-D2D59453B921}" Name="Using" Title="Using the MySQL DDEX Provider" ContentsTitle="Using the MySQL DDEX Provider" Status="In Progress" CreatedOn="01-09-2006 16:35:34" ModifiedOn="18-09-2006 21:26:16" LayoutName="" AllStyleSheets="True" AllScripts="True" AutoGenerateIndexEntry="True" IncludeInHelpFile="True" HelpContextIDs="" Category="{FD9585B0-BC7E-4EF3-A60A-7C7E78D06D4E}">
+        <Notes/>
+        <s k="BodyText"><![CDATA[<P>To work with a MySQL server using the MySQL DDEX Provider, open Visual Studio 2005, open Server Explorer, and open the required connection. Now you are able to perform various actions with objects of the corresponding schema of the MySQL server.</P>
+<P>The working area of the MySQL DDEX Provider consists of three parts.</P>
+<P></P>
+<P>&nbsp;</P>
+<P align=center><IMG alt="" src="Images/Image3.jpg" border=0>&nbsp;</P>
+<P>&nbsp;</P>
+<P>Database objects (tables, views, stored routines, triggers, and user defined functions) are displayed in the Server Explorer tree. Here you can choose a desirable object, and perform an action by choosing the appropriate context menu of the object.</P>
+<P>Properties of a database object under work are displayed in the Properties window of Visual Studio 2005. Certain properties can be edited directly in this window.</P>
+<P>The third area of the MySQL DDEX Provider is the editor area. It is placed in the main working area of Visual Studio 2005. Here you can edit the most complex properties of database objects (including, for example, text definitions of views, routines, and so on).</P>
+<P>See details on possible database actions in the remaining part of this chapter.</P>]]></s>
+    </Topic>
+    <Topic Key="{D1425EE1-959C-4C0F-840A-EBD06CD21327}" Name="Tables" Title="Editing Tables" ContentsTitle="Editing Tables" Status="In Progress" CreatedOn="01-09-2006 16:50:11" ModifiedOn="18-09-2006 21:30:04" LayoutName="" AllStyleSheets="True" AllScripts="True" AutoGenerateIndexEntry="True" IncludeInHelpFile="True" HelpContextIDs="" Category="{FD9585B0-BC7E-4EF3-A60A-7C7E78D06D4E}">
+        <Notes/>
+        <s k="BodyText"><![CDATA[<P><SPAN lang=EN-US style="mso-ansi-language: EN-US">The MySQL DDEX Provider contains a Table Editor, which enables the visual creation and modification on tables.</SPAN></P>
+<P><SPAN lang=EN-US style="mso-ansi-language: EN-US">The Table Editor can be accessed through a mouse action on table-type node of Server Explorer. To create a new table, right-click on the <STRONG>Tables</STRONG> node (under the connection node) and choose the <STRONG>Create Table</STRONG> command from the context menu. To modify an existing table, double-click on the node of the table you wish to modify, or right-click on this node and choose the <STRONG>Alter Table</STRONG> command from the context menu. Either of the commands opens the Table Editor.<BR>&nbsp;<BR>The MySQL DDEX Provider Table Editor is implemented in the manner of the well-known Query Browser Table Editor, but with minor differences.</SPAN></P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt">&nbsp;</P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt">&nbsp;</P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt" align=center><SPAN lang=EN-US style="mso-ansi-language: EN-US"><IMG alt="" src="Images/Image4.jpg" border=0></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt">&nbsp;</P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt">&nbsp;</P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">Table Editor consists of the following parts:</SPAN></P>
+<UL>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">Columns Editor - a data grid on top of the Table Editor. Use the Columns grid for column creation, modification, and deletion.</SPAN></DIV></LI>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">Indexes tab - a tab on bottom of the Table Editor. Use the Indexes tab for indexes management.</SPAN></DIV></LI>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">Foreign Keys tab - a tab on bottom of the Table Editor. Use the Foreign Keys tab for foreign keys management.</SPAN></DIV></LI>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">Column Details tab - a tab on bottom of the Table Editor. Use the Column Details tab to set advanced column options.</SPAN></DIV></LI>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">Properties window - a standard Visual Studio Properties window, where the properties of the edited table are displayed. Use the Properties window to set the table properties.</SPAN></DIV></LI></UL>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">Each of these areas is discussed in children topics.<BR><BR>To save changes you have made in the Table Editor, use either <STRONG>Save</STRONG> or <STRONG>Save All</STRONG> button of the Visual Studio main toolbar, or just press <STRONG>Ctrl+S</STRONG>. Before changes are saved, you will be asked to confirm the execution of the corresponding SQL query in a confirmation dialog.</SPAN></P>]]></s>
+    </Topic>
+    <Topic Key="{655CD712-5F07-4E8E-94AD-9D1BB601EA23}" Name="Column Editor" Title="Column Editor" ContentsTitle="Column Editor" Status="In Progress" CreatedOn="05-09-2006 19:37:51" ModifiedOn="18-09-2006 21:31:06" LayoutName="" AllStyleSheets="True" AllScripts="True" AutoGenerateIndexEntry="True" IncludeInHelpFile="True" HelpContextIDs="" Category="{FD9585B0-BC7E-4EF3-A60A-7C7E78D06D4E}">
+        <Notes/>
+        <s k="BodyText"><![CDATA[<P>You can use the Column Editor to set or change the name, data type, default value, and other properties of a table column. To set the focus to a needed cell of a grid, use the mouse click. Also you can move through the grid using <STRONG>Tab</STRONG> and <STRONG>Shift+Tab</STRONG> keys.</P>
+<P>To set or change the name, data type, default value and comment of a column, activate the appropriate cell and type the desired value.</P>
+<P>To set or unset flag-type column properties (being a primary key, NOT NULL, auto incremented, flags), check or uncheck the corresponding check boxes. Note that the set of column flags depends on its data type.</P>
+<P>To reorder columns, index columns or foreign key columns in the Column Editor, select the whole column you wish to reorder by clicking on the selector column on the left of the column grid. Then move the column by using <STRONG>Ctrl+Up</STRONG> (to move the column up) or <STRONG>Ctrl+Down</STRONG> (to move the column down) keys.<BR><BR>To delete a column, select it by clicking on the selector column on the left of the column grid, then press the <STRONG>Delete</STRONG> button on a keyboard.Ы</P>]]></s>
+    </Topic>
+    <Topic Key="{18B49745-EAF3-4C0A-9D5E-ACC0111141DB}" Name="Indexes tab" Title="Indexes tab" ContentsTitle="Indexes tab" Status="In Progress" CreatedOn="05-09-2006 20:10:21" ModifiedOn="18-09-2006 21:32:12" LayoutName="" AllStyleSheets="True" AllScripts="True" AutoGenerateIndexEntry="True" IncludeInHelpFile="True" HelpContextIDs="" Category="{FD9585B0-BC7E-4EF3-A60A-7C7E78D06D4E}">
+        <Notes/>
+        <s k="BodyText"><![CDATA[<P><SPAN lang=EN-US style="mso-ansi-language: EN-US">Indexes management is performed via the Indexes tab.</SPAN></P>
+<P><SPAN lang=EN-US style="mso-ansi-language: EN-US">To add an index, press the "+" button and set its properties in the Index Settings group box on the right. You can set the index name, index kind, index type, and a set of index columns.</SPAN></P>
+<P><SPAN lang=EN-US style="mso-ansi-language: EN-US">To remove an index, select it in the list box on the left, and press the "-" button.</SPAN></P>
+<P><SPAN lang=EN-US style="mso-ansi-language: EN-US">To change index settings, select the needed index in the list box on the left. The detailed information about the index is displayed in the Index Settings group box. Change the desired values.</SPAN></P>
+<P><SPAN lang=EN-US style="mso-ansi-language: EN-US">The possibility to convert a table column to the index column by Drag&amp;Drop is not currently supported. However, you can add new index columns to a table, and set the table columns by using the embedded combo box editor in the Indexes tab.</SPAN></P>]]></s>
+    </Topic>
+    <Topic Key="{086C724D-47B8-4E6B-8833-FF0D13D8A7CB}" Name="Foreign Keys tab" Title="Foreign Keys tab" ContentsTitle="Foreign Keys tab" Status="In Progress" CreatedOn="05-09-2006 20:29:57" ModifiedOn="18-09-2006 21:32:31" LayoutName="" AllStyleSheets="True" AllScripts="True" AutoGenerateIndexEntry="True" IncludeInHelpFile="True" HelpContextIDs="" Category="{FD9585B0-BC7E-4EF3-A60A-7C7E78D06D4E}">
+        <Notes/>
+        <s k="BodyText"><![CDATA[<P class=MsoPlainText style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US">Foreign Keys management is performed via the Foreign Keys tab.<BR>&nbsp;<BR>To add a foreign key, press the "+" button and set its properties in the Foreign Keys Settings group box on the right. You can set the foreign key name, referenced table name, foreign key columns, and actions upon update and delete.</SPAN></SPAN></P><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US">
+<P class=MsoPlainText style="MARGIN: 0cm 0cm 0pt"><BR>To remove a foreign key, select it in the list box on the left, and press the "-" button.</P>
+<P class=MsoPlainText style="MARGIN: 0cm 0cm 0pt"><BR>To change foreign key settings, select the required foreign key in the list box on the left. The detailed information about the foreign key is displayed in the Foreign Keys Settings group box. Change the desired values.</P>
+<P class=MsoPlainText style="MARGIN: 0cm 0cm 0pt"><BR>When a foreign key is changed, the MySQL DDEX Provider actually generates two queries: the first query drops the changed key(s), and the second one recreates one(s) with new values. The reason for such a behavior is to avoid the bugs 8377 and 8919 (see <A href="http://bugs.mysql.com/bug.php?id=8377">http://bugs.mysql.com/bug.php?id=8377</A>; <A href="http://bugs.mysql.com/bug.php?id=8919">http://bugs.mysql.com/bug.php?id=8919</A>).<BR>&nbsp;<BR><STRONG>Note:</STRONG> If changed values are for some reason inconsistent and cause the second query to fail, all affected foreign keys will be just dropped. If this is the case, the MySQL DDEX Provider will mark them as new in the Table Editor, and you will have the possibility to recreate them later. But if you close the Table Editor without save, these foreign keys will be lost.</SPAN></SPAN></P>]]></s>
+    </Topic>
+    <Topic Key="{EAA47575-1BDF-463F-8E3F-9C795B85DCA0}" Name="Column Details tab" Title="Column Details tab" ContentsTitle="Column Details tab" Status="In Progress" CreatedOn="05-09-2006 20:41:53" ModifiedOn="18-09-2006 21:32:51" LayoutName="" AllStyleSheets="True" AllScripts="True" AutoGenerateIndexEntry="True" IncludeInHelpFile="True" HelpContextIDs="" Category="{FD9585B0-BC7E-4EF3-A60A-7C7E78D06D4E}">
+        <Notes/>
+        <s k="BodyText"><![CDATA[<P class=MsoPlainText style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">The Column Details tab can be used to set column options. In addition to the main columns properties presented in the Column Editor, in the Column Details tab you can set two advanced options: the character set, and the collation sequence.</SPAN></P>]]></s>
+    </Topic>
+    <Topic Key="{AFCF28FC-E1FF-468C-86EC-BBE96E16F49A}" Name="Table Properties window" Title="Table Properties window" ContentsTitle="Table Properties window" Status="In Progress" CreatedOn="05-09-2006 20:45:32" ModifiedOn="18-09-2006 21:33:20" LayoutName="" AllStyleSheets="True" AllScripts="True" AutoGenerateIndexEntry="True" IncludeInHelpFile="True" HelpContextIDs="" Category="{FD9585B0-BC7E-4EF3-A60A-7C7E78D06D4E}">
+        <Notes/>
+        <s k="BodyText"><![CDATA[<P class=MsoPlainText style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">The MySQL DDEX Provider Table Editor has no separate tabs for table options and advanced options. All table options can be browsed and changed using the Properties window of Visual Studio 2005.<BR><BR>The following table properties can be set:<BR><BR>Auto Increment<BR>Average Row Length<BR>Character Set<BR>Checksum for Rows<BR>Collation<BR>Comment<BR>Connection<BR>Data Directory<BR>Delay Key Updates<BR>Engine<BR>Index Directory<BR>Insert Method<BR>Maximum Rows<BR>Minimum Rows<BR>Name<BR>Pack Keys<BR>Password<BR>Row Format<BR>Union<BR><BR>Some of these properties may have arbitrary text values, others accept values from a predefined set. In the latter case set the desired value using an embedded combo box.<BR><BR>The properties Schema and Server are read only.</SPAN></P>]]></s>
+    </Topic>
+    <Topic Key="{93D34A23-277A-4249-8B3D-ADA3BC5DDD3E}" Name="Table Data" Title="Editing Table Data" ContentsTitle="Editing Table Data" Status="In Progress" CreatedOn="01-09-2006 16:50:35" ModifiedOn="18-09-2006 21:35:10" LayoutName="" AllStyleSheets="True" AllScripts="True" AutoGenerateIndexEntry="True" IncludeInHelpFile="True" HelpContextIDs="" Category="{FD9585B0-BC7E-4EF3-A60A-7C7E78D06D4E}">
+        <Notes/>
+        <s k="BodyText"><![CDATA[<SPAN lang=EN-US style="mso-ansi-language: EN-US">
+<P>To create a new view, right-click on the <STRONG>Views</STRONG> node under the connection node in Server Explorer. From the node's context menu, choose the <STRONG>Create View</STRONG> command. This command opens the SQL Editor.<BR><BR>To modify an existing view, double-click on the node of the view you wish to modify, or right-click on this node and choose the <STRONG>Alter View</STRONG> command from the context menu. Either of the commands opens the SQL Editor.</P>
+<P>To create or modify the view definition using SQL Editor, type the appropriate SQL statement in the SQL Editor. <STRONG>Note:</STRONG> You should enter only the defining statement itself, without the <STRONG>CREATE VIEW AS</STRONG> preface.</P>
+<P>All other view properties can be set in the Properties window. These properties are:</P>
+<P>Algorithm<BR>Check Option<BR>Definer<BR>Name<BR>Security Type</P>
+<P>Some of these properties can have arbitrary text values, others accept values from a predefined set. In the latter case set the desired value using the embedded combo box.<BR><BR>The properties Is Updatable, Schema, and Server are read only.<BR><BR>To save changes you have made, use either <STRONG>Save</STRONG> or <STRONG>Save All</STRONG> buttons of the Visual Studio main toolbar, or just press <STRONG>Ctrl+S</STRONG>. Before changes are saved, you will be asked to confirm the execution of the corresponding SQL query in a confirmation dialog.</P></SPAN>]]></s>
+    </Topic>
+    <Topic Key="{5C87F657-BE35-4556-BC72-B85A4E7179B1}" Name="Prerequisites" Title="Prerequisites" ContentsTitle="Prerequisites" Status="In Progress" CreatedOn="01-09-2006 16:42:17" ModifiedOn="29-09-2006 12:13:18" LayoutName="" AllStyleSheets="True" AllScripts="True" AutoGenerateIndexEntry="True" IncludeInHelpFile="True" HelpContextIDs="" Category="{B8473F5F-DB5A-4402-BAF0-3A9568DD30F2}">
+        <Notes/>
+        <s k="BodyText"><![CDATA[<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">The MySQL DDEX Provider requires Visual Studio 2005 Professional Edition to be installed, and therefore it has the same hardware and system requirements.<BR><BR>Here is the list of components that are to be installed before the installation of the MySQL DDEX Provider:</SPAN></P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt">&nbsp;</P>
+<UL>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">Visual Studio 2005 Standard, Professional&nbsp;or&nbsp;Team Developer Edition.</SPAN></DIV></LI>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">MySQL Server&nbsp;4.1.1 or higher&nbsp;is required to be installed on the server machine.</SPAN></DIV></LI>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">MySQL Connector .NET 5.0.1 or higher is required to be installed on the client machine.</SPAN></DIV></LI></UL>]]></s>
+    </Topic>
+    <Topic Key="{DEBB17C3-6FE2-4043-852A-B0B9B7C52DA0}" Name="Required rights" Title="Required rights" ContentsTitle="Required rights" Status="In Progress" CreatedOn="01-09-2006 16:45:03" ModifiedOn="18-09-2006 20:42:54" LayoutName="" AllStyleSheets="True" AllScripts="True" AutoGenerateIndexEntry="True" IncludeInHelpFile="True" HelpContextIDs="" Category="{B8473F5F-DB5A-4402-BAF0-3A9568DD30F2}">
+        <Notes/>
+        <s k="BodyText"><![CDATA[<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">To use the MySQL DDEX Provider, the user must have the following rights on the server machine:</SPAN></P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"></SPAN>&nbsp;</P>
+<UL>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">SELECT right for the INFORMATION_SCHEMA database.</SPAN></DIV></LI>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"></SPAN><SPAN lang=EN-US style="mso-ansi-language: EN-US">EXECUTE right for the SHOW CREATE TABLE statement.</SPAN></DIV></LI>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"></SPAN><SPAN lang=EN-US style="mso-ansi-language: EN-US">SELECT right for the MYSQL.PROC table (required for operations with stored procedures and functions).</SPAN></DIV></LI>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"></SPAN><SPAN lang=EN-US style="mso-ansi-language: EN-US">SELECT right for the MYSQL.FUNC table (required for operations with User Defined Functions (UDF)).</SPAN></DIV></LI>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"></SPAN><SPAN lang=EN-US style="mso-ansi-language: EN-US">EXECUTE right for the SHOW ENGINE STATUS statement (required for retrieving extended error information).</SPAN></DIV></LI>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">Appropriate rights for performed operations (e.g. the SELECT right is required to browse data from a table, etc.).</SPAN></DIV></LI></UL>]]></s>
+    </Topic>
+    <Topic Key="{0E049782-A622-4C80-8A1A-782F1D299A6F}" Name="Installation" Title="Installation of the MySQL DDEX Provider" ContentsTitle="Installation of the MySQL DDEX Provider" Status="In Progress" CreatedOn="01-09-2006 16:18:46" ModifiedOn="18-09-2006 20:54:55" LayoutName="" AllStyleSheets="True" AllScripts="True" AutoGenerateIndexEntry="True" IncludeInHelpFile="True" HelpContextIDs="" Category="{B8473F5F-DB5A-4402-BAF0-3A9568DD30F2}">
+        <Notes/>
+        <s k="BodyText"><![CDATA[<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">The MySQL DDEX Provider is delivered as a MSI-package, which can be used to install, uninstall, or reinstall the Provider on all Windows operating systems (note that the operating system must at the same time meet system requirements for Visual Studio 2005). If your version of Windows is older than Windows XP, be sure to upgrade the Windows Installer system to the latest version (see <A href="http://support.microsoft.com/default.aspx?scid=kb;EN-US;292539">http://support.microsoft.com/default.aspx?scid=kb;EN-US;292539</A> for detail). <BR><BR>The MSI-package is named MySQL-DDEX.msi. To install the MySQL DDEX Provider, right-click on the MSI file, and select Install. The installation process is as follows:</SPAN></P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"></P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><?xml:namespace prefix = o ns = "urn:schemas-microsoft-com:office:office" /><o:p></o:p></SPAN>&nbsp;</P>
+<OL>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt; mso-list: l1 level1 lfo1; tab-stops: list 36.0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">Standard Welcome dialog opens. Click Next to continue installation.</SPAN></DIV></LI>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt; mso-list: l1 level1 lfo1; tab-stops: list 36.0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">License agreement (GNU GPL) window opens. Accept the agreement, and click Next to continue.</SPAN></DIV></LI>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt; mso-list: l1 level1 lfo1; tab-stops: list 36.0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">Destination folder choice dialog opens. Here you can point out the folder, where the MySQL DDEX Provider will be installed. The default destination folder is %ProgramFilesDir%\MySQL\MySQL DDEX Data Provider, where %ProgramFilesDir% is the Program Files folder of the installation machine. This value can be changed by standard ways. After choosing the destination folder, click Next to continue.</SPAN></DIV></LI>
+<LI class=MsoNormal style="MARGIN: 0cm 0cm 0pt; mso-list: l1 level1 lfo1; tab-stops: list 36.0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">Ready to install confirmation window opens. Click Install to start the installation process.<o:p></o:p></SPAN></LI>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt; mso-list: l1 level1 lfo1; tab-stops: list 36.0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">The installation window opens, and the information about performed installation actions is displayed. At the end of this step, the Visual Studio command table is rebuilt. <STRONG>Note:</STRONG> This step may take several minutes.</SPAN></DIV></LI>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt; mso-list: l1 level1 lfo1; tab-stops: list 36.0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">The Installation complete notification appears. Click Finish to complete the installation process.</SPAN></DIV></LI></OL>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">To uninstall the MySQL DDEX Provider, you can use either Add/Remove Program page, or the same MSI-package. Choose the <STRONG>Remove</STRONG> option, and the Provider will be automatically uninstalled.</SPAN></P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"></SPAN>&nbsp;</P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">To repair the Provider, right-click on the MSI-package and choose the <STRONG>Repair</STRONG> option. The MySQL DDEX Provider will be automatically repaired.</SPAN></P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><o:p></o:p></SPAN>&nbsp;</P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt">&nbsp;</P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">The installation package includes the following files:</SPAN></P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><O:P></SPAN></P>
+<UL>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt; mso-list: l0 level1 lfo2; tab-stops: list 36.0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><STRONG>MySQL.VisualStudio.dll</STRONG> –&nbsp;the MySQL DDEX Provider assembly&nbsp;itself.</SPAN></DIV></LI>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt; mso-list: l0 level1 lfo2; tab-stops: list 36.0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><STRONG>MySQL.Data.dll</STRONG> – the assembly containing the MySQL Connector .NET, which is used by the Provider.</SPAN></DIV></LI>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt; mso-list: l0 level1 lfo2; tab-stops: list 36.0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><STRONG>MySql.VisualStudio.dll.config</STRONG> – the configuration file for the MySQL DDEX Provider. This file contains default values for the Provider GUI layout. <STRONG>Note:</STRONG> Do not remove this file prior to the first use of the Provider.</SPAN></DIV></LI>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt; mso-list: l0 level1 lfo2; tab-stops: list 36.0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><STRONG>Register.reg</STRONG> – the file with registry entries, which can be used to register the MySQL DDEX Provider in the case of manual installation.</SPAN></DIV></LI></UL>
+<BLOCKQUOTE dir=ltr style="MARGIN-RIGHT: 0px">
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt; mso-list: l0 level1 lfo2; tab-stops: list 36.0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">To install the Provider manually, copy all files of the installation package in the desired folder, then set the full path to the Provider assembly as a value of the CodeBase entry. For example:</SPAN></P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt; mso-list: l0 level1 lfo2; tab-stops: list 36.0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"></SPAN><SPAN lang=EN-US style="mso-ansi-language: EN-US"><BR>[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\8.0\Packages\{79A115C9-B133-4891-9E7B-242509DAD272}]<BR>@="MySql.Data.VisualStudio.MySqlDataProviderPackage"<BR>"InprocServer32"="C:\\WINNT\\system32\\mscoree.dll"<BR>"Class"="MySql.Data.VisualStudio.MySqlDataProviderPackage"<BR><STRONG>"CodeBase"="C:\\MySqlDdexProvider\\MySql.VisualStudio.dll"</STRONG></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt; mso-list: l0 level1 lfo2; tab-stops: list 36.0pt"></P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt; mso-list: l0 level1 lfo2; tab-stops: list 36.0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"></SPAN>&nbsp;</P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt; mso-list: l0 level1 lfo2; tab-stops: list 36.0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">Then import information from the <STRONG>Register.reg</STRONG> file to the registry by clicking of the file. At the confirmation dialog choose <STRONG>Yes</STRONG>.&nbsp;Run the command <STRONG>devenv.exe /setup</STRONG> in the command line to rebuild the Visual Studio command table.</SPAN></P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt; mso-list: l0 level1 lfo2; tab-stops: list 36.0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"></SPAN>&nbsp;</P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt; mso-list: l0 level1 lfo2; tab-stops: list 36.0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><STRONG>Note:</STRONG> Be sure to locate files to the folder with the <STRONG>devenv.exe</STRONG> file, or set the path to this folder as a system path.</SPAN></P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt; mso-list: l0 level1 lfo2; tab-stops: list 36.0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"></SPAN>&nbsp;</P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt; mso-list: l0 level1 lfo2; tab-stops: list 36.0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><STRONG>Note:</STRONG>&nbsp;In course of a normal installation, the installation package does the entire job for you, and you do not need to perform these actions.</SPAN></P></BLOCKQUOTE>
+<UL>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt; mso-list: l0 level1 lfo2; tab-stops: list 36.0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><STRONG>Install.js</STRONG> – the script used to register the Connector .NET as an ADO.NET data provider in the machine.config file.</SPAN></DIV></LI>
+<LI>
+<DIV class=MsoNormal style="MARGIN: 0cm 0cm 0pt; mso-list: l0 level1 lfo2; tab-stops: list 36.0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><STRONG>Release notes.doc</STRONG> – the document with release notes.</SPAN></DIV></LI></UL></O:P>]]></s>
+    </Topic>
+    <Topic Key="{CB7ED839-2811-4357-8C55-72D3BBD13662}" Name="Views" Title="Editing Views" ContentsTitle="Editing Views" Status="In Progress" CreatedOn="01-09-2006 16:47:58" ModifiedOn="05-09-2006 22:11:42" LayoutName="" AllStyleSheets="True" AllScripts="True" AutoGenerateIndexEntry="True" IncludeInHelpFile="True" HelpContextIDs="" Category="{FD9585B0-BC7E-4EF3-A60A-7C7E78D06D4E}">
+        <Notes/>
+        <s k="BodyText"><![CDATA[<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">To create a new view,&nbsp;right click&nbsp;the <STRONG>Views</STRONG> node under the connection node in Server Explorer. From the node's context menu, choose the <STRONG>Create View</STRONG> command. This command opens the SQL Editor.</SPAN></P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"></SPAN>&nbsp;</P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">To modify an existing view, double click on a node of the view you wish to modify, or right click on this node and&nbsp;choose the <STRONG>Alter View</STRONG> command from a context menu.&nbsp;</SPAN><SPAN lang=EN-US style="mso-ansi-language: EN-US">Either of the commands opens the SQL Editor.</SPAN></P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><?xml:namespace prefix = o ns = "urn:schemas-microsoft-com:office:office" /><o:p></o:p></SPAN>&nbsp;</P><SPAN lang=EN-US style="mso-ansi-language: EN-US"><o:p>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">To&nbsp;create or alter the&nbsp;view definition using SQL Editor,&nbsp;type the appropriate SQL statement in the SQL Editor.</SPAN><SPAN lang=EN-US style="mso-ansi-language: EN-US"> <STRONG>Note:</STRONG>&nbsp;you should enter only the defining statement itself, without the&nbsp;<STRONG>CREATE VIEW AS</STRONG> preface.</SPAN></P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"></SPAN>&nbsp;</P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">All other view properties can be set in the Properties window. </SPAN></o:p></SPAN><SPAN lang=EN-US style="mso-ansi-language: EN-US"><o:p><SPAN lang=EN-US style="mso-ansi-language: EN-US">These properties&nbsp;are:</SPAN></P>
+<P class=MsoPlainText style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"></SPAN>&nbsp;</P>
+<P class=MsoPlainText style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">Algorithm</SPAN></P>
+<P class=MsoPlainText style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">Check Option</SPAN></P>
+<P class=MsoPlainText style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">Definer</SPAN></P>
+<P class=MsoPlainText style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"></SPAN></P>
+<P class=MsoPlainText style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">Name</SPAN></P>
+<P class=MsoPlainText style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">Security Type</SPAN></P>
+<P class=MsoPlainText style="MARGIN: 0cm 0cm 0pt">
+<P class=MsoPlainText style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"></SPAN></P>
+<P></P>
+<P class=MsoPlainText style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">Some of these properties can have arbitrary text values, others accept values from a predefined set. In the latter case you set the desired value with an embedded combobox.</SPAN></P>
+<P class=MsoPlainText style="MARGIN: 0cm 0cm 0pt">&nbsp;</P>
+<P class=MsoPlainText style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">The properties Is Updatable, Schema and Server are readonly.</SPAN></P>
+<P class=MsoPlainText style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"></SPAN>&nbsp;</P><SPAN lang=EN-US style="mso-ansi-language: EN-US">
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt; mso-list: l1 level1 lfo2; tab-stops: list 36.0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US">To save changes you have made, use either <STRONG>Save</STRONG> or <STRONG>Save All</STRONG> buttons of&nbsp;the Visual Studio main toolbar, or just press <STRONG>Ctrl+S</STRONG>. Before changes are saved, you will be asked to confirm the execution of&nbsp;the corresponding&nbsp;SQL query in a confirmation dialog.</SPAN></SPAN></SPAN></o:p></SPAN></P>]]></s>
+    </Topic>
+    <Topic Key="{DE30997B-A1B5-4568-A4CB-D3F565E7B62C}" Name="Stored Routines" Title="Editing Stored Procedures and Functions" ContentsTitle="Editing Stored Procedures and Functions" Status="In Progress" CreatedOn="01-09-2006 16:48:35" ModifiedOn="18-09-2006 21:37:05" LayoutName="" AllStyleSheets="True" AllScripts="True" AutoGenerateIndexEntry="True" IncludeInHelpFile="True" HelpContextIDs="" Category="{FD9585B0-BC7E-4EF3-A60A-7C7E78D06D4E}">
+        <Notes/>
+        <s k="BodyText"><![CDATA[<SPAN lang=EN-US style="mso-ansi-language: EN-US">
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">To create a new stored procedure, right-click on the <STRONG>Stored Procedures</STRONG> node under the connection node in Server Explorer. From the node's context menu, choose the <STRONG>Create Routine</STRONG> command. This command opens the SQL Editor.<BR><BR>To create a new stored function, right-click on the <STRONG>Functions</STRONG> node under the connection node in Server Explorer. From the node's context menu, choose the <STRONG>Create Routine</STRONG> command.<BR><BR>To modify an existing stored routine (procedure or function), double-click on the node of the routine you wish to modify, or right-click on this node and choose the <STRONG>Alter Routine</STRONG> command from the context menu. Either of the commands opens the SQL Editor.<BR></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">To create or alter the routine definition using SQL Editor, type this definition in the SQL Editor using standard SQL.<BR>All other routine properties can be set in the Properties window. These properties are:</SPAN></P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"></SPAN>&nbsp;</P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US">Comment<BR>Data Access<BR>Definer<BR>Is Deterministic<BR>Security Type<BR><BR>Some of these properties can have arbitrary text values, others accept values from a predefined set. In the latter case set the desired value using the embedded combo box.<BR><BR>You can also set all the options directly in the SQL Editor, using the standard <STRONG>CREATE PROCEDURE</STRONG> or <STRONG>CREATE FUNCTION</STRONG> statement. However, it is recommended to use the Properties window instead.<BR><BR><STRONG>Note:</STRONG> You should never add the <STRONG>CREATE</STRONG> preface to the routine definition.<BR><BR>The properties Name, Schema, and Server in the Properties window are read only. Set or change the procedure name in the SQL editor.<BR><BR>To save changes you have made, use either <STRONG>Save</STRONG> or <STRONG>Save All</STRONG> buttons of the Visual Studio main toolbar, or just press <STRONG>Ctrl+S</STRONG>. Before changes are saved, you will be asked to confirm the execution of the corresponding SQL query in a confirmation dialog.</SPAN></P></SPAN>]]></s>
+    </Topic>
+    <Topic Key="{5A5E1E41-3D0C-4FA8-91F2-A8BD926EEEC0}" Name="Triggers" Title="Editing Triggers" ContentsTitle="Editing Triggers" Status="In Progress" CreatedOn="01-09-2006 16:48:52" ModifiedOn="18-09-2006 21:38:23" LayoutName="" AllStyleSheets="True" AllScripts="True" AutoGenerateIndexEntry="True" IncludeInHelpFile="True" HelpContextIDs="" Category="{FD9585B0-BC7E-4EF3-A60A-7C7E78D06D4E}">
+        <Notes/>
+        <s k="BodyText"><![CDATA[<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US">To create a new trigger, right-click on the node of the table, for which you wish to add a trigger. From the node's context menu, choose the <STRONG>Create Trigger</STRONG> command. This command opens the SQL Editor.<BR><BR>To modify an existing trigger, double-click on the node of the trigger you wish to modify, or right-click on this node and choose the <STRONG>Alter Trigger</STRONG> command from the context menu. Either of the commands opens the SQL Editor.<BR><BR>To create or alter the trigger definition using SQL Editor, type the trigger statement in the SQL Editor using standard SQL.</SPAN></SPAN></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US">Note: You should enter only the trigger statement, i.e. the part of the <STRONG>CREATE TRIGGER</STRONG> query that is placed after the <STRONG>FOR EACH ROW</STRONG> clause.<BR><BR>All other trigger properties are set in the Properties window. These properties are:</SPAN></SPAN></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US"></SPAN></SPAN></SPAN>&nbsp;</P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US">Definer<BR>Event Manipulation<BR>Name<BR>Timing<BR><BR>Some of these properties can have arbitrary text values, others accept values from a predefined set. In the latter case set the desired value using the embedded combo box.<BR><BR>The properties Event Table, Schema, and Server in the Properties window are read only.<BR><BR>To save changes you have made, use either <STRONG>Save</STRONG> or <STRONG>Save All</STRONG> buttons of the Visual Studio main toolbar, or just press <STRONG>Ctrl+S</STRONG>. Before changes are saved, you will be asked to confirm the execution of the corresponding SQL query in a confirmation dialog.</SPAN></P></SPAN></SPAN>]]></s>
+    </Topic>
+    <Topic Key="{22947133-929F-42AC-9EDC-B0E6A4B6E253}" Name="UDF" Title="Editing User Defined Functions (UDF)" ContentsTitle="Editing User Defined Functions (UDF)" Status="In Progress" CreatedOn="01-09-2006 16:49:13" ModifiedOn="18-09-2006 21:39:24" LayoutName="" AllStyleSheets="True" AllScripts="True" AutoGenerateIndexEntry="True" IncludeInHelpFile="True" HelpContextIDs="" Category="{FD9585B0-BC7E-4EF3-A60A-7C7E78D06D4E}">
+        <Notes/>
+        <s k="BodyText"><![CDATA[<SPAN lang=EN-US style="mso-ansi-language: EN-US">
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US">To create a new User Defined Function (hereafter - UDF), right-click on the <STRONG>UDFs</STRONG> node under the connection node in Server Explorer. From the node's context menu, choose the <STRONG>Create UDF</STRONG> command. This command opens the UDF Editor.</SPAN></SPAN></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US"></SPAN></SPAN></SPAN>&nbsp;</P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US">To modify an existing UDF, double-click on the node of the UDF you wish to modify, or right-click on this node and choose the <STRONG>Alter UDF</STRONG> command from the context menu. Either of the commands opens the UDF Editor.</SPAN></SPAN></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US"></SPAN></SPAN></SPAN>&nbsp;</P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US">The UDF editor allows you to set the following properties:</SPAN></SPAN></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US"></SPAN></SPAN></SPAN>&nbsp;</P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US">Name<BR>So-name (DLL name)<BR>Return type<BR>Is Aggregate</SPAN></SPAN></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US"></SPAN></SPAN></SPAN>&nbsp;</P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US">There are text fields for both names, a combo box for the return type, and a check box to indicate if the UDF is aggregate. All these options are also accessible via the Properties window.</SPAN></SPAN></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US"></SPAN></SPAN></SPAN>&nbsp;</P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US">The property Server in the Properties window is read only.</SPAN></SPAN></SPAN></P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US"></SPAN></SPAN></SPAN>&nbsp;</P>
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US">To save changes you have made, use either <STRONG>Save</STRONG> or <STRONG>Save All</STRONG> buttons of the Visual Studio main toolbar, or just press <STRONG>Ctrl+S</STRONG>. Before changes are saved, you will be asked to confirm the execution of the corresponding SQL query in a confirmation dialog.</SPAN></P></SPAN></SPAN></SPAN>]]></s>
+    </Topic>
+    <Topic Key="{42FB75FC-9C77-4F72-BA6E-2E769E84E080}" Name="Dropping" Title="Dropping database objects" ContentsTitle="Dropping database objects" Status="In Progress" CreatedOn="01-09-2006 20:00:47" ModifiedOn="18-09-2006 21:40:02" LayoutName="" AllStyleSheets="True" AllScripts="True" AutoGenerateIndexEntry="True" IncludeInHelpFile="True" HelpContextIDs="" Category="{FD9585B0-BC7E-4EF3-A60A-7C7E78D06D4E}">
+        <Notes/>
+        <s k="BodyText"><![CDATA[<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US">Tables, views, stored routines, triggers, and UDFs can be dropped with the appropriate Drop command selected from its context menu: <STRONG>Drop Table</STRONG>, <STRONG>Drop View</STRONG>, <STRONG>Drop Routine</STRONG>, <STRONG>Drop Trigger</STRONG>, <STRONG>Drop UDF</STRONG>.<BR><BR>You will be asked to confirm the execution of the corresponding drop query in a confirmation dialog.<BR><BR>Dropping of multiple objects is not supported.</SPAN></SPAN></SPAN></P>]]></s>
+    </Topic>
+    <Topic Key="{95CC16D7-5C2E-4A3A-8241-147FEA97C9C3}" Name="Cloning" Title="Cloning database objects" ContentsTitle="Cloning database objects" Status="In Progress" CreatedOn="01-09-2006 20:02:04" ModifiedOn="18-09-2006 21:41:01" LayoutName="" AllStyleSheets="True" AllScripts="True" AutoGenerateIndexEntry="True" IncludeInHelpFile="True" HelpContextIDs="" Category="{FD9585B0-BC7E-4EF3-A60A-7C7E78D06D4E}">
+        <Notes/>
+        <s k="BodyText"><![CDATA[<SPAN lang=EN-US style="mso-ansi-language: EN-US">
+<P class=MsoNormal style="MARGIN: 0cm 0cm 0pt"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US"><SPAN lang=EN-US style="mso-ansi-language: EN-US">Tables, views, stored procedures, and functions can be cloned using the appropriate Clone command from the context menu: <STRONG>Clone Table</STRONG>, <STRONG>Clone View</STRONG>, <STRONG>Clone Routine</STRONG>. The clone commands open the corresponding editor for a new object: the Table Editor for cloning a table, and the SQL Editor for cloning a view or a routine.<BR><BR>The editor is filled with values of the original object. You can modify these values in a usual manner.<BR><BR>To save the cloned object, use either <STRONG>Save</STRONG> or <STRONG>Save All</STRONG> buttons of the Visual Studio main toolbar, or just press <STRONG>Ctrl+S</STRONG>. Before changes are saved, you will be asked to confirm the execution of the corresponding SQL query in a confirmation dialog.</SPAN></SPAN></SPAN></P></SPAN>]]></s>
+    </Topic>
+    <GlossaryItems/>
+    <Nodes>
+        <n key="{15B8DDAD-B734-4E11-8FF5-AF89763979B4}" nt="0" ct="2" c="Introduction" i="-1" cfn="" tid="" url="">
+            <n key="{5B01D2AF-B5C2-482D-BA82-015725DCCB8A}" nt="1" ct="1" c="" i="-1" cfn="" tid="{6E87A0E8-A323-4F4B-9919-DAB7B7785025}" url=""/>
+        </n>
+        <n key="{39A88AA9-4CCC-40EB-98D8-4EC8384612CD}" nt="0" ct="2" c="Installation" i="-1" cfn="" tid="" url="">
+            <n key="{AEB786A1-0E1A-4C7D-B26A-F0AFDD186A47}" nt="1" ct="1" c="" i="-1" cfn="" tid="{5C87F657-BE35-4556-BC72-B85A4E7179B1}" url=""/>
+            <n key="{F1D9F878-C845-484C-AA86-742D01106192}" nt="1" ct="1" c="" i="-1" cfn="" tid="{DEBB17C3-6FE2-4043-852A-B0B9B7C52DA0}" url=""/>
+            <n key="{56595AFC-3179-475F-983A-6821F1442FCA}" nt="1" ct="1" c="" i="-1" cfn="" tid="{0E049782-A622-4C80-8A1A-782F1D299A6F}" url=""/>
+        </n>
+        <n key="{476ABA19-8FDA-4E7C-8F56-92E4A2E0C4BD}" nt="0" ct="2" c="Connection" i="-1" cfn="" tid="" url="">
+            <n key="{FD71FBDC-B638-42C3-A5E7-EADD89A4605D}" nt="1" ct="1" c="" i="-1" cfn="" tid="{E23F7708-2BCD-477F-AD2E-6D64325ACC62}" url=""/>
+        </n>
+        <n key="{2D91E1E5-1021-42F8-819A-6B3CC28838A3}" nt="0" ct="2" c="Using the Provider" i="-1" cfn="" tid="" url="">
+            <n key="{E29DFD73-4729-47B9-BF2B-9ADEC4E25483}" nt="1" ct="1" c="" i="-1" cfn="" tid="{F1797756-01CB-4A14-A578-D2D59453B921}" url=""/>
+            <n key="{70FB2ABB-B5D8-48EB-98A2-2D5BA3CF08BE}" nt="1" ct="1" c="" i="-1" cfn="" tid="{D1425EE1-959C-4C0F-840A-EBD06CD21327}" url="">
+                <n key="{9DEE08AC-80ED-452E-A683-10211B417B9A}" nt="1" ct="1" c="Column Editor" i="-1" cfn="" tid="{655CD712-5F07-4E8E-94AD-9D1BB601EA23}" url=""/>
+                <n key="{752E0E91-31DD-4884-B655-C18148336CED}" nt="1" ct="1" c="Indexes Tab" i="-1" cfn="" tid="{18B49745-EAF3-4C0A-9D5E-ACC0111141DB}" url=""/>
+                <n key="{4E363626-0240-4045-A1D0-4C473A0E03B9}" nt="1" ct="1" c="Foreign Keys tab" i="-1" cfn="" tid="{086C724D-47B8-4E6B-8833-FF0D13D8A7CB}" url=""/>
+                <n key="{614C0C5E-5EBD-42DD-B9C0-1169E6E618B2}" nt="1" ct="1" c="" i="-1" cfn="" tid="{EAA47575-1BDF-463F-8E3F-9C795B85DCA0}" url=""/>
+                <n key="{CFC6CAD6-4A85-459C-B472-6ED3F057D598}" nt="1" ct="1" c="" i="-1" cfn="" tid="{AFCF28FC-E1FF-468C-86EC-BBE96E16F49A}" url=""/>
+            </n>
+            <n key="{48CB6BAC-B739-4E1C-8150-07B25B15B87B}" nt="1" ct="1" c="" i="-1" cfn="" tid="{93D34A23-277A-4249-8B3D-ADA3BC5DDD3E}" url=""/>
+            <n key="{36B4FBE9-F954-4338-9157-FC40D095EA85}" nt="1" ct="1" c="" i="-1" cfn="" tid="{CB7ED839-2811-4357-8C55-72D3BBD13662}" url=""/>
+            <n key="{02A23A05-EA81-4DE1-9C2D-19397B7EB7F1}" nt="1" ct="1" c="" i="-1" cfn="" tid="{DE30997B-A1B5-4568-A4CB-D3F565E7B62C}" url=""/>
+            <n key="{B5F5042A-93DD-47D9-96A5-2F0CFBA05D80}" nt="1" ct="1" c="" i="-1" cfn="" tid="{5A5E1E41-3D0C-4FA8-91F2-A8BD926EEEC0}" url=""/>
+            <n key="{8F7573F3-F3B6-47FB-A0E9-FE9FA17613C7}" nt="1" ct="1" c="" i="-1" cfn="" tid="{22947133-929F-42AC-9EDC-B0E6A4B6E253}" url=""/>
+            <n key="{3470989F-3324-4C1E-AF1C-2B68E2DBECF2}" nt="1" ct="1" c="" i="-1" cfn="" tid="{42FB75FC-9C77-4F72-BA6E-2E769E84E080}" url=""/>
+            <n key="{02BCA009-05C8-46F3-A1AB-90614B754A2B}" nt="1" ct="1" c="" i="-1" cfn="" tid="{95CC16D7-5C2E-4A3A-8241-147FEA97C9C3}" url=""/>
+        </n>
+    </Nodes>
+    <Tasks>
+        <Task Key="{47B3198F-6CC6-4C28-802A-F1418766CF52}" Priority="1" Title="" AssignedTo="" TopicID="{6E87A0E8-A323-4F4B-9919-DAB7B7785025}" Status="In Progress" CreatedOn="01-09-2006 16:17:07" CreatedBy="antokha" ModifiedOn="30-12-1899 00:00:00" ModifiedBy=""/>
+    </Tasks>
+    <BuildProfiles>
+        <BuildProfile ID="{35359E1E-5F67-4C23-8514-AB73D9E25838}" Name="Default" OutputDirectory="Build\Default\" CompileHelpFile="True" HTMLHelpVersion="2" H2Namespace="MySQL.VisualStudio.Help" H2FileID="MySQL_VisualStudio_Help" H2PlugIn="MS.VSIPCC.v80" HelpFileName="Build\Documentation.hxs" UseBuildFlags="False" ProjectTitle="MySQL DDEX Provider" RemoveOutputFiles="False" BuildFlags="" IncludeInBuild="True" DefaultTopicID="" LocaleID="0"/>
+    </BuildProfiles>
+    <ProjectProperties/>
+</HSProject>
+

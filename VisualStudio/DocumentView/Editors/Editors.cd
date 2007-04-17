@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.25" />
+  <Class Name="MySql.Data.VisualStudio.DocumentView.BaseEditor">
+    <Position X="3.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>DocumentView\Editors\BaseEditor.cs</FileName>
+      <HashCode>OAgBAAAgGCREAAIGAACIX0AAECCIIRrCCAAAhClAAWg=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Document" />
+      <Property Name="OwnerFrame" />
+      <Property Name="SelectedObjects" />
+      <Property Name="SelectableObjects" />
+    </ShowAsAssociation>
+    <Members>
+      <Method Name="BaseEditor" Hidden="true" />
+      <Method Name="ClosePane" Hidden="true" />
+      <Field Name="documentRef" Hidden="true" />
+      <Field Name="EndLine" Hidden="true" />
+      <Method Name="Exec" Hidden="true" />
+      <Method Name="Find" Hidden="true" />
+      <Field Name="findState" Hidden="true" />
+      <Method Name="GetCapabilities" Hidden="true" />
+      <Method Name="GetCurrentSpan" Hidden="true" />
+      <Method Name="GetFindState" Hidden="true" />
+      <Method Name="GetProperty" Hidden="true" />
+      <Method Name="GetSearchImage" Hidden="true" />
+      <Method Name="GetVsService" Hidden="true" />
+      <Method Name="MarkSpan" Hidden="true" />
+      <Method Name="Microsoft.VisualStudio.Shell.Interop.IVsWindowPane.CreatePaneWindow" Hidden="true" />
+      <Method Name="Microsoft.VisualStudio.Shell.Interop.IVsWindowPane.GetDefaultSize" Hidden="true" />
+      <Method Name="Microsoft.VisualStudio.Shell.Interop.IVsWindowPane.LoadViewState" Hidden="true" />
+      <Method Name="Microsoft.VisualStudio.Shell.Interop.IVsWindowPane.SaveViewState" Hidden="true" />
+      <Method Name="Microsoft.VisualStudio.Shell.Interop.IVsWindowPane.TranslateAccelerator" Hidden="true" />
+      <Method Name="Microsoft.VisualStudio.TextManager.Interop.IVsFindTarget.GetMatchRect" Hidden="true" />
+      <Method Name="NavigateTo" Hidden="true" />
+      <Method Name="NotifyFindTarget" Hidden="true" />
+      <Method Name="OnDocumentDataLoaded" Hidden="true" />
+      <Method Name="OnDocumentSaving" Hidden="true" />
+      <Method Name="OnDocumentSuccessfullySaved" Hidden="true" />
+      <Field Name="ownerFrameRef" Hidden="true" />
+      <Method Name="ProcessDialogChar" Hidden="true" />
+      <Method Name="QueryStatus" Hidden="true" />
+      <Method Name="Replace" Hidden="true" />
+      <Field Name="selectableObjectsArray" Hidden="true" />
+      <Field Name="selectedObjectsArray" Hidden="true" />
+      <Property Name="SelectionContainer" Hidden="true" />
+      <Field Name="selectionContainerRef" Hidden="true" />
+      <Method Name="SetFindState" Hidden="true" />
+      <Method Name="SetSite" Hidden="true" />
+      <Property Name="TrackSelection" Hidden="true" />
+      <Field Name="trackSelectionRef" Hidden="true" />
+      <Field Name="vsServiceProvider" Hidden="true" />
+    </Members>
+    <AssociationLine Name="SelectedObjects" Type="System.Collections.IList" FixedToPoint="true">
+      <Path>
+        <Point X="3.5" Y="4.375" />
+        <Point X="2" Y="4.375" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.11" Y="0.039" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="SelectableObjects" Type="System.Collections.IList" FixedToPoint="true">
+      <Path>
+        <Point X="3.5" Y="3.875" />
+        <Point X="2" Y="3.875" />
+      </Path>
+    </AssociationLine>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="MySql.Data.VisualStudio.DocumentView.TableEditor" Collapsed="true">
+    <Position X="6" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>DocumentView\Editors\TableEditor.cs</FileName>
+      <HashCode>RQQACQBAJCAAAAIACQCABAgCAABKAcASgAAAAQBAAAE=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Document" />
+    </ShowAsAssociation>
+    <Members>
+      <Method Name="AdjustColumnsGridStyle" Hidden="true" />
+      <Field Name="autoIncrementColumn" Hidden="true" />
+      <Field Name="bodyTabControl" Hidden="true" />
+      <Field Name="columnDetailsTabPage" Hidden="true" />
+      <Field Name="columnNameColumn" Hidden="true" />
+      <Field Name="columnsDataGrid" Hidden="true" />
+      <Field Name="columnsFooterTabControl" Hidden="true" />
+      <Field Name="columnsSplitContainer" Hidden="true" />
+      <Field Name="columnsTabPage" Hidden="true" />
+      <Field Name="commentColumn" Hidden="true" />
+      <Field Name="commentsLabel" Hidden="true" />
+      <Field Name="commentsText" Hidden="true" />
+      <Field Name="components" Hidden="true" />
+      <Field Name="datatypeColumn" Hidden="true" />
+      <Field Name="defaultValueColumn" Hidden="true" />
+      <Method Name="Dispose" Hidden="true" />
+      <Field Name="headerTableLayout" Hidden="true" />
+      <Method Name="InitializeColumnsGridDatabindings" Hidden="true" />
+      <Method Name="InitializeComponent" Hidden="true" />
+      <Field Name="notNullColumn" Hidden="true" />
+      <Method Name="OnCommentsTextChanged" Hidden="true" />
+      <Method Name="OnTableNameTextChanged" Hidden="true" />
+      <Field Name="optionsTabPage" Hidden="true" />
+      <Field Name="primaryKeyColumn" Hidden="true" />
+      <Method Name="TableEditor" Hidden="true" />
+      <Field Name="tableNameLabel" Hidden="true" />
+      <Field Name="tableNameText" Hidden="true" />
+    </Members>
+  </Class>
+  <Class Name="MySql.Data.VisualStudio.DocumentView.TableDocument" Collapsed="true">
+    <Position X="6" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>DocumentView\Documents\TableDocument.cs</FileName>
+      <HashCode>AAAAgAAgAAAQAAEAgAQAEAgAABAAAQAAAAABAAgAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="MySql.Data.VisualStudio.DocumentView.IDocument" Collapsed="true">
+    <Position X="0.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>DocumentView\IDocument.cs</FileName>
+      <HashCode>AAAAgAAAAAAAAAAAQAAAAASEAAAAABAAAEAAAgAAAEA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Microsoft.VisualStudio.Shell.Interop.IVsWindowFrame" Collapsed="true">
+    <Position X="0.5" Y="3" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="System.Collections.IList" Collapsed="true">
+    <Position X="0.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+</ClassDiagram>

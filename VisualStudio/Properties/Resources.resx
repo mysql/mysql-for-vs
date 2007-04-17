@@ -1,0 +1,1503 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="DataView_SqlServer" xml:space="preserve">
+    <value>MySQL Server</value>
+  </data>
+  <data name="Description_Schema" xml:space="preserve">
+    <value>The schema that owns the database object.</value>
+  </data>
+  <data name="Description_Server" xml:space="preserve">
+    <value>The MySQL server IP or hostname.</value>
+  </data>
+  <data name="Provider_Description" xml:space="preserve">
+    <value>Use this selection to connect to MySQL Server using the .NET Framework Data Provider for MySQL.</value>
+  </data>
+  <data name="Provider_DisplayName" xml:space="preserve">
+    <value>.NET Framework Data Provider for MySQL</value>
+  </data>
+  <data name="Provider_ShortDisplayName" xml:space="preserve">
+    <value>MySQL Data Provider</value>
+  </data>
+  <data name="Category_Security" xml:space="preserve">
+    <value>Security</value>
+  </data>
+  <data name="Category_Connection" xml:space="preserve">
+    <value>Connection</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Default Schema</value>
+  </data>
+  <data name="Description_Database" xml:space="preserve">
+    <value>The default schema name. Can be empty, but it is not recommended.</value>
+  </data>
+  <data name="Description_Password" xml:space="preserve">
+    <value>The database user password.</value>
+  </data>
+  <data name="Description_Port" xml:space="preserve">
+    <value>The port to use when connecting with sockets</value>
+  </data>
+  <data name="Description_UserID" xml:space="preserve">
+    <value>The database user login name.</value>
+  </data>
+  <data name="DisplayName_Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="DisplayName_Port" xml:space="preserve">
+    <value>Port</value>
+  </data>
+  <data name="DisplayName_Server" xml:space="preserve">
+    <value>Server Host</value>
+  </data>
+  <data name="DisplayName_UserID" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="DisplayName_Database" xml:space="preserve">
+    <value>Default Schema</value>
+  </data>
+  <data name="Datasource_Displayname" xml:space="preserve">
+    <value>MySQL Database</value>
+  </data>
+  <data name="Node_Tables" xml:space="preserve">
+    <value>Tables</value>
+  </data>
+  <data name="Category_Advanced" xml:space="preserve">
+    <value>Advanced</value>
+  </data>
+  <data name="Category_Base" xml:space="preserve">
+    <value>Base</value>
+  </data>
+  <data name="Category_DataType" xml:space="preserve">
+    <value>Data Type</value>
+  </data>
+  <data name="Category_Identifier" xml:space="preserve">
+    <value>(Identifier)</value>
+  </data>
+  <data name="Category_Statistic" xml:space="preserve">
+    <value>Statistic</value>
+  </data>
+  <data name="Description_Object_CreationTime" xml:space="preserve">
+    <value>The date and time when the database object was created.</value>
+  </data>
+  <data name="Description_Object_Database" xml:space="preserve">
+    <value>The database catalog which owns the database object.</value>
+  </data>
+  <data name="Description_Object_Name" xml:space="preserve">
+    <value>The name of the database object.</value>
+  </data>
+  <data name="Description_Object_Schema" xml:space="preserve">
+    <value>The schema which owns the database object.</value>
+  </data>
+  <data name="Description_Table_AutoIncrement" xml:space="preserve">
+    <value>The initial AUTO_INCREMENT value for the table. Only for MyISAM tables with a least one AUTO_INCREMENT column.</value>
+  </data>
+  <data name="Description_Table_AverageRowLength" xml:space="preserve">
+    <value>The average length for the rows in the table.</value>
+  </data>
+  <data name="Description_Table_CheckDateTime" xml:space="preserve">
+    <value>The date and time when the table was checked last time.</value>
+  </data>
+  <data name="Description_Table_Checksum" xml:space="preserve">
+    <value>The checksum for the table.</value>
+  </data>
+  <data name="Description_Object_Collation" xml:space="preserve">
+    <value>The collation that is used to compare text for the database object.</value>
+  </data>
+  <data name="Description_Object_Comment" xml:space="preserve">
+    <value>The brief description of the database object.</value>
+  </data>
+  <data name="Description_Table_CreateOptions" xml:space="preserve">
+    <value>The options, used to create the table.</value>
+  </data>
+  <data name="Description_Table_DataFree" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Description_Table_DataLength" xml:space="preserve">
+    <value>The data length for the table.</value>
+  </data>
+  <data name="Description_Table_Engine" xml:space="preserve">
+    <value>The storage engine used for the table.</value>
+  </data>
+  <data name="Description_Table_IndexLength" xml:space="preserve">
+    <value>The index length for the table.</value>
+  </data>
+  <data name="Description_Table_MaxDataLength" xml:space="preserve">
+    <value>The maximum data length for the table.</value>
+  </data>
+  <data name="Description_Table_RowFormat" xml:space="preserve">
+    <value>The row format used for the table.</value>
+  </data>
+  <data name="Description_Table_TableRows" xml:space="preserve">
+    <value>The amount of rows in the table.</value>
+  </data>
+  <data name="Description_Table_Type" xml:space="preserve">
+    <value>The type of the table.</value>
+  </data>
+  <data name="Description_Table_UpdateDateTime" xml:space="preserve">
+    <value>The date and time when the table was updated last time.</value>
+  </data>
+  <data name="Description_Table_Version" xml:space="preserve">
+    <value>The storage engine version.</value>
+  </data>
+  <data name="DisplayName_Object_CreateDateTime" xml:space="preserve">
+    <value>Creation date</value>
+  </data>
+  <data name="DisplayName_Object_Database" xml:space="preserve">
+    <value>Catalog</value>
+  </data>
+  <data name="DisplayName_Object_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="DisplayName_Object_Schema" xml:space="preserve">
+    <value>Schema</value>
+  </data>
+  <data name="DisplayName_Table_AutoIncrement" xml:space="preserve">
+    <value>Auto Increment</value>
+  </data>
+  <data name="DisplayName_Table_AverageRowLength" xml:space="preserve">
+    <value>Average Row Length</value>
+  </data>
+  <data name="DisplayName_Table_CheckDateTime" xml:space="preserve">
+    <value>Check date</value>
+  </data>
+  <data name="DisplayName_Table_Checksum" xml:space="preserve">
+    <value>Checksum</value>
+  </data>
+  <data name="DisplayName_Object_Collation" xml:space="preserve">
+    <value>Collation</value>
+  </data>
+  <data name="DisplayName_Object_Comment" xml:space="preserve">
+    <value>Comment</value>
+  </data>
+  <data name="DisplayName_Table_CreateOptions" xml:space="preserve">
+    <value>Create Options</value>
+  </data>
+  <data name="DisplayName_Table_DataFree" xml:space="preserve">
+    <value>Data Free</value>
+  </data>
+  <data name="DisplayName_Table_DataLength" xml:space="preserve">
+    <value>Data Length</value>
+  </data>
+  <data name="DisplayName_Table_Engine" xml:space="preserve">
+    <value>Engine</value>
+  </data>
+  <data name="DisplayName_Table_IndexLength" xml:space="preserve">
+    <value>Index Length</value>
+  </data>
+  <data name="DisplayName_Table_MaxDataLength" xml:space="preserve">
+    <value>Max Data Length</value>
+  </data>
+  <data name="DisplayName_Table_RowFormat" xml:space="preserve">
+    <value>Row Format</value>
+  </data>
+  <data name="DisplayName_Table_TableRows" xml:space="preserve">
+    <value>Table rows</value>
+  </data>
+  <data name="DisplayName_Table_Type" xml:space="preserve">
+    <value>Table type</value>
+  </data>
+  <data name="DisplayName_Table_UpdateDateTime" xml:space="preserve">
+    <value>Update date</value>
+  </data>
+  <data name="DisplayName_Table_Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="Type_Table" xml:space="preserve">
+    <value>Table</value>
+  </data>
+  <data name="Description_Object_Table" xml:space="preserve">
+    <value>The table which owns the database object.</value>
+  </data>
+  <data name="DisplayName_Object_Table" xml:space="preserve">
+    <value>Table</value>
+  </data>
+  <data name="Type_Column" xml:space="preserve">
+    <value>Column</value>
+  </data>
+  <data name="Description_Column_ColumnKey" xml:space="preserve">
+    <value>The way this column participate table keys and indices.</value>
+  </data>
+  <data name="Description_Column_Default" xml:space="preserve">
+    <value>The default value used to initialize new row values for this column.</value>
+  </data>
+  <data name="Description_Column_Extra" xml:space="preserve">
+    <value>The advanced options for the column.</value>
+  </data>
+  <data name="Description_Object_Length" xml:space="preserve">
+    <value>The maximum length (in characters) that can be stored in this database object.</value>
+  </data>
+  <data name="Description_Object_MySqlType" xml:space="preserve">
+    <value>The native MySQL type for the database object.</value>
+  </data>
+  <data name="Description_Column_Nullable" xml:space="preserve">
+    <value>Indicates if null values are allowed in this database object.</value>
+  </data>
+  <data name="Description_Column_OctetLength" xml:space="preserve">
+    <value>The maximum length (in bytes) that can be stored in the column. Should be the same as Length, except for multi-byte character sets.</value>
+  </data>
+  <data name="Description_Column_Ordinal" xml:space="preserve">
+    <value>The position of this object in the parent database object definition.</value>
+  </data>
+  <data name="Description_Object_Precision" xml:space="preserve">
+    <value>For numeric data, the maximum number of decimal digits that can be stored in this database object.</value>
+  </data>
+  <data name="Description_Column_Privileges" xml:space="preserve">
+    <value>The privileges for the column.</value>
+  </data>
+  <data name="Description_Object_Scale" xml:space="preserve">
+    <value>For numeric data, the maximum number of decimal digits that can be stored in this database object to the right of a decimal point.</value>
+  </data>
+  <data name="Description_Column_SqlType" xml:space="preserve">
+    <value>The ANSI SQL type definition for the column.</value>
+  </data>
+  <data name="Description_Object_CharacterSet" xml:space="preserve">
+    <value>The default character set that is used for the database object.</value>
+  </data>
+  <data name="DisplayName_Column_ColumnKey" xml:space="preserve">
+    <value>Column Key</value>
+  </data>
+  <data name="DisplayName_Column_Default" xml:space="preserve">
+    <value>Default Value</value>
+  </data>
+  <data name="DisplayName_Column_Extra" xml:space="preserve">
+    <value>Extra</value>
+  </data>
+  <data name="DisplayName_Object_Length" xml:space="preserve">
+    <value>Length</value>
+  </data>
+  <data name="DisplayName_Object_MySqlType" xml:space="preserve">
+    <value>Native Type</value>
+  </data>
+  <data name="DisplayName_Column_Nullable" xml:space="preserve">
+    <value>Is Nullable</value>
+  </data>
+  <data name="DisplayName_Column_OctetLength" xml:space="preserve">
+    <value>Octet Length</value>
+  </data>
+  <data name="DisplayName_Column_Ordinal" xml:space="preserve">
+    <value>Ordinal</value>
+  </data>
+  <data name="DisplayName_Object_Precision" xml:space="preserve">
+    <value>Precision</value>
+  </data>
+  <data name="DisplayName_Column_Privileges" xml:space="preserve">
+    <value>Privileges</value>
+  </data>
+  <data name="DisplayName_Object_Scale" xml:space="preserve">
+    <value>Scale</value>
+  </data>
+  <data name="DisplayName_Column_SqlType" xml:space="preserve">
+    <value>SQL Type</value>
+  </data>
+  <data name="DisplayName_Object_CharacterSet" xml:space="preserve">
+    <value>Character Set</value>
+  </data>
+  <data name="Value_Indexed" xml:space="preserve">
+    <value>Indexed</value>
+  </data>
+  <data name="Value_No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Value_PrimaryKey" xml:space="preserve">
+    <value>Primary Key</value>
+  </data>
+  <data name="Value_UniqueIndexed" xml:space="preserve">
+    <value>Unique Indexed</value>
+  </data>
+  <data name="Value_Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="Query_Confirmation" xml:space="preserve">
+    <value>Are you sure you want to execute the following SQL command to apply your changes?
+
+{0}</value>
+  </data>
+  <data name="Command_100" xml:space="preserve">
+    <value>Create {0}</value>
+  </data>
+  <data name="Command_101" xml:space="preserve">
+    <value>Alter {0}</value>
+  </data>
+  <data name="Error_DocumentNotRegistered" xml:space="preserve">
+    <value>Document object for type ‘{0}’ is not registered.</value>
+  </data>
+  <data name="Error_EmptyAttributesNestedClass" xml:space="preserve">
+    <value>Nested class with attributes names doesn’t contain any names.</value>
+  </data>
+  <data name="Error_EmptyString" xml:space="preserve">
+    <value>Argument is null or empty string.</value>
+  </data>
+  <data name="Error_InvalidConnection" xml:space="preserve">
+    <value>The underlying connection is not the correct type.</value>
+  </data>
+  <data name="Error_InvalidGroupID" xml:space="preserve">
+    <value>No valid command group GUID string is provided in argument groupID.</value>
+  </data>
+  <data name="Error_InvlaidIdentifier" xml:space="preserve">
+    <value>Object identifier array length ‘{0}’ doesn’t equals required for object type ‘{1}’ identifier length ‘{2}’ or identifier array contains invalid values.</value>
+  </data>
+  <data name="Error_NoAttributesNestedClass" xml:space="preserve">
+    <value>This type doesn’t contain nested class with attributes names.</value>
+  </data>
+  <data name="Error_NoConstructorForDescriptor" xml:space="preserve">
+    <value>Type, provided in parameter descriptorType,  doesn’t support public default constructor.</value>
+  </data>
+  <data name="Error_NoConstructorForDocument" xml:space="preserve">
+    <value>Type, provided in parameter documentType, doesn’t support public constructor with signature (HierarchyAccessorMediator, bool, object[]).</value>
+  </data>
+  <data name="Error_NoConstructorForEditor" xml:space="preserve">
+    <value>Type, provided in parameter viewType, doesn’t support public constructor with signature (IDocument).</value>
+  </data>
+  <data name="Error_NoDefaultConstructorForCommand" xml:space="preserve">
+    <value>Type, provided in parameter handlerType, doesn’t support public default constructor.</value>
+  </data>
+  <data name="Error_NoDefaultRestrictions" xml:space="preserve">
+    <value>This type doesn’t contain static property with default restrctions.</value>
+  </data>
+  <data name="Error_NoDefaultSort" xml:space="preserve">
+    <value>This type doesn’t contain static property with default sort fields.</value>
+  </data>
+  <data name="Error_NoEnumerateSql" xml:space="preserve">
+    <value>This type doesn’t contain static property with enumeration SQL template.</value>
+  </data>
+  <data name="Error_NotImplementICommand" xml:space="preserve">
+    <value>Type, provided in parameter handlerType, doesn’t implement ICommand interface.</value>
+  </data>
+  <data name="Error_NotImplementIDocument" xml:space="preserve">
+    <value>Type, provided in parameter documentType, doesn’t implement IDocument interface.</value>
+  </data>
+  <data name="Error_NotImplementIEditor" xml:space="preserve">
+    <value>Type, provided in parameter viewType, doesn’t implement IEditor interface.</value>
+  </data>
+  <data name="Error_NotImplementIObjectDescriptor" xml:space="preserve">
+    <value>Type, provided in parameter descriptorType, doesn’t implement IObjectDescriptor interface.</value>
+  </data>
+  <data name="Error_NotMarkedAsCommand" xml:space="preserve">
+    <value>This type is not marked as command handler.</value>
+  </data>
+  <data name="Error_NotMarkedAsDescriptor" xml:space="preserve">
+    <value>This type is not marked as object type descriptor.</value>
+  </data>
+  <data name="Error_NotMarkedAsDocument" xml:space="preserve">
+    <value>This type is not marked as document.</value>
+  </data>
+  <data name="Error_NotMarkedWithIdLength" xml:space="preserve">
+    <value>This type is not marked with identifier length.</value>
+  </data>
+  <data name="Error_UnableToGetDescriptor" xml:space="preserve">
+    <value>Unable to get descriptor for object type '{0}'.</value>
+  </data>
+  <data name="Error_UnableToGetDocumentObject" xml:space="preserve">
+    <value>Unable to get document object for editor.</value>
+  </data>
+  <data name="Error_UnableToGetEnumerationSql" xml:space="preserve">
+    <value>Unable to get enumeration SQL for object type ‘{0}’.</value>
+  </data>
+  <data name="Error_UnableToGetHierarchyItem" xml:space="preserve">
+    <value>Unable to get hierarchy item identifier for editor.</value>
+  </data>
+  <data name="Error_UnableToGetObjectID" xml:space="preserve">
+    <value>Unable to get object identifier for editor.</value>
+  </data>
+  <data name="Error_UnableToGetObjectType" xml:space="preserve">
+    <value>Unable to get object type name for editor.</value>
+  </data>
+  <data name="Error_UnableToGetParrentID" xml:space="preserve">
+    <value>Unable to get owner database object identifier for editor.</value>
+  </data>
+  <data name="Error_UnableToGetViewObject" xml:space="preserve">
+    <value>Unable to get view object for editor.</value>
+  </data>
+  <data name="Error_UnsupportedDocument" xml:space="preserve">
+    <value>Document object is the unsupported type.</value>
+  </data>
+  <data name="Error_ViewNotRegistered" xml:space="preserve">
+    <value>View object for type ‘{0}’ is not registered.</value>
+  </data>
+  <data name="Error_EmptyIdentifierSlot" xml:space="preserve">
+    <value>Object identifier contains null values.</value>
+  </data>
+  <data name="Error_ObjectTypeNotSupported" xml:space="preserve">
+    <value>The object type ‘{0}’ is not supported.</value>
+  </data>
+  <data name="Error_PartialIdentifierToLong" xml:space="preserve">
+    <value>Given partial identifier is longer than full identifier for object type ‘{0}’.</value>
+  </data>
+  <data name="Error_UnableToGetEnumerationInfo" xml:space="preserve">
+    <value>Unable to get enumeration SQL template or default restrictions for object type ‘{0}’.</value>
+  </data>
+  <data name="Error_UnableToGetUIService" xml:space="preserve">
+    <value>Unable to get IUIService implementation for UIHelper.</value>
+  </data>
+  <data name="Error_UnableToGetUIShell" xml:space="preserve">
+    <value>Unable to get IVsUIShell implementation for UIHelper.</value>
+  </data>
+  <data name="Error_InvalidHierarchyItemID" xml:space="preserve">
+    <value>Hierarchy item identifier should be greater than zero.</value>
+  </data>
+  <data name="Error_UnableToGetOpenDocumentShell" xml:space="preserve">
+    <value>Unable to get IVsUIShellOpenDocument reference!</value>
+  </data>
+  <data name="Error_UnableToGetRdt" xml:space="preserve">
+    <value>Unable to get Running Document Table interface reference!</value>
+  </data>
+  <data name="Error_InvalidAccessorNoConnection" xml:space="preserve">
+    <value>Hierarchy accessor doesn't contain valid connection!</value>
+  </data>
+  <data name="Description_Object_Server" xml:space="preserve">
+    <value>The host name of the MySQL server which runs underlying database.</value>
+  </data>
+  <data name="Description_Table_AverageRowLength_Option" xml:space="preserve">
+    <value>An approximation of the average row length for the table. Set this value only for large tables with variable-size records.</value>
+  </data>
+  <data name="Description_Table_Checksum_Option" xml:space="preserve">
+    <value>Set this option if you want MySQL to maintain a live checksum for all rows (that is, a checksum that MySQL updates automatically as the table changes). This makes the table a little slower to update, but also makes it easier to find corrupted tables. The CHECKSUM TABLE statement reports the checksum. (MyISAM only.)</value>
+  </data>
+  <data name="Description_Table_MaxRows_Option" xml:space="preserve">
+    <value>The maximum number of rows you plan to store in the table. This is not a hard limit, but rather a hint to the storage engine that the table must be able to store at least this many rows.</value>
+  </data>
+  <data name="Description_Table_MinRows_Option" xml:space="preserve">
+    <value>The minimum number of rows you plan to store in the table.</value>
+  </data>
+  <data name="Description_View_CheckOption" xml:space="preserve">
+    <value>Check option</value>
+  </data>
+  <data name="Description_View_Definition" xml:space="preserve">
+    <value>Definition of the view</value>
+  </data>
+  <data name="Description_View_IsUpdatable" xml:space="preserve">
+    <value>Indicates if the table or view is updatable</value>
+  </data>
+  <data name="Node_Views" xml:space="preserve">
+    <value>Views</value>
+  </data>
+  <data name="DisplayName_View_CheckOption" xml:space="preserve">
+    <value>Check Option</value>
+  </data>
+  <data name="DisplayName_View_Definition" xml:space="preserve">
+    <value>Definition</value>
+  </data>
+  <data name="DisplayName_View_IsUpdatable" xml:space="preserve">
+    <value>Is Updatable</value>
+  </data>
+  <data name="Type_View" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="Error_InvalidContextNoDocument" xml:space="preserve">
+    <value>Type context provided is invalide. Unable to get underlying document object.</value>
+  </data>
+  <data name="Error_InvalidDocumentNoFacadeOrWrapper" xml:space="preserve">
+    <value>Document object have not IDE façade object or Connection Wrapper!</value>
+  </data>
+  <data name="Error_InvalidTableNoColumn" xml:space="preserve">
+    <value>DataTable doesn’t contain column ‘{0}’!</value>
+  </data>
+  <data name="Error_NoEnumerateObjectTypeSupplied" xml:space="preserve">
+    <value>Name of object type to enumerate is not supplied by the inheritor!</value>
+  </data>
+  <data name="Error_UnableToGetDataTable" xml:space="preserve">
+    <value>Unable to get DataTable with list of supported values!</value>
+  </data>
+  <data name="Error_UnableToGetValueColumn" xml:space="preserve">
+    <value>Unable to get value column name to extract supported values!</value>
+  </data>
+  <data name="Description_Table_RowFormat_Option" xml:space="preserve">
+    <value>Defines how the rows should be stored. For MyISAM tables, the option value can be FIXED or DYNAMIC for static or variable-length row format. myisampack sets the type to COMPRESSED.</value>
+  </data>
+  <data name="Description_Table_Connection_Option" xml:space="preserve">
+    <value>The connection string for a FEDERATED table. This option is available as of MySQL 5.0.13; before that, use a COMMENT option for the connection string.</value>
+  </data>
+  <data name="Description_Table_DataDirectory_Option" xml:space="preserve">
+    <value>By using this option you can specify where the MyISAM storage engine should put a table's data file. The directory must be the full pathname to the directory, not a relative path.</value>
+  </data>
+  <data name="Description_Table_IndexDirectory_Option" xml:space="preserve">
+    <value>By using this option you can specify where the MyISAM storage engine should put a table's index file. The directory must be the full pathname to the directory, not a relative path.</value>
+  </data>
+  <data name="DisplayName_Object_Server" xml:space="preserve">
+    <value>Server</value>
+  </data>
+  <data name="DisplayName_Table_AverageRowLength_Option" xml:space="preserve">
+    <value>Average Row Length</value>
+  </data>
+  <data name="DisplayName_Table_Checksum_Option" xml:space="preserve">
+    <value>Checksum for Rows</value>
+  </data>
+  <data name="DisplayName_Table_Connection_Option" xml:space="preserve">
+    <value>Connection</value>
+  </data>
+  <data name="DisplayName_Table_DataDirectory_Option" xml:space="preserve">
+    <value>Data Directory</value>
+  </data>
+  <data name="DisplayName_Table_IndexDirectory_Option" xml:space="preserve">
+    <value>Index Directory</value>
+  </data>
+  <data name="DisplayName_Table_MaxRows_Option" xml:space="preserve">
+    <value>Maximum Rows</value>
+  </data>
+  <data name="DisplayName_Table_MinRows_Option" xml:space="preserve">
+    <value>Minimum Rows</value>
+  </data>
+  <data name="DisplayName_Table_RowFormat_Option" xml:space="preserve">
+    <value>Row Format</value>
+  </data>
+  <data name="Description_Table_DelayKeyWrite" xml:space="preserve">
+    <value>Set this option if you want to delay key updates for the table until the table is closed. (MyISAM only.)</value>
+  </data>
+  <data name="Description_Table_PackKeys" xml:space="preserve">
+    <value>Use this option to generate smaller indices. This usually makes updates slower and reads faster. Setting it to DEFAULT tells the storage engine to only pack long CHAR/VARCHAR columns.</value>
+  </data>
+  <data name="Description_Table_Password" xml:space="preserve">
+    <value>Use this option to encrypt the .frm file with a password. This option does nothing in the standard MySQL version.</value>
+  </data>
+  <data name="DisplayName_Table_DelayKeyWrite" xml:space="preserve">
+    <value>Delay Key Updates</value>
+  </data>
+  <data name="DisplayName_Table_PackKeys" xml:space="preserve">
+    <value>Pack Keys</value>
+  </data>
+  <data name="DisplayName_Table_Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="Description_Table_InsertMethod" xml:space="preserve">
+    <value>If you want to insert data into a MERGE table, you must specify with INSERT_METHOD the table into which the row should be inserted. INSERT_METHOD is an option useful for MERGE tables only. Use a value of FIRST or LAST to have inserts go to the first or last table, or a value of NO to prevent inserts.</value>
+  </data>
+  <data name="DisplayName_Table_InsertMethod" xml:space="preserve">
+    <value>Insert Method</value>
+  </data>
+  <data name="Description_Object_View" xml:space="preserve">
+    <value>A view owning this object</value>
+  </data>
+  <data name="DisplayName_Object_View" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="Type_ViewColumn" xml:space="preserve">
+    <value>Column</value>
+  </data>
+  <data name="Error_AttributesAreMissing" xml:space="preserve">
+    <value>One of object attributes is missing!</value>
+  </data>
+  <data name="Error_EmptyAttributeName" xml:space="preserve">
+    <value>Empty attribute name found!</value>
+  </data>
+  <data name="ID_Column_Name" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="New_Column_Name_Template" xml:space="preserve">
+    <value>Column{0}</value>
+  </data>
+  <data name="Description_StoredProcedure_Body" xml:space="preserve">
+    <value>Language of the body of the routine</value>
+  </data>
+  <data name="Description_StoredProcedure_Comment" xml:space="preserve">
+    <value>Comments</value>
+  </data>
+  <data name="Description_StoredProcedure_DataAccess" xml:space="preserve">
+    <value>Type of data access of the routine</value>
+  </data>
+  <data name="Description_Object_Definer" xml:space="preserve">
+    <value>Creator of the object</value>
+  </data>
+  <data name="Description_StoredProcedure_IsDeterministic" xml:space="preserve">
+    <value>Defines if the routine is deterministic</value>
+  </data>
+  <data name="Description_StoredProcedure_ExternalLanguage" xml:space="preserve">
+    <value>External language used to write the routine</value>
+  </data>
+  <data name="Description_StoredProcedure_LastModified" xml:space="preserve">
+    <value>Time of the last modification of the routine</value>
+  </data>
+  <data name="Description_StoredProcedure_ParameterList" xml:space="preserve">
+    <value>List of parameters of the routine</value>
+  </data>
+  <data name="Description_Routine_Returns" xml:space="preserve">
+    <value>Return type of the routine</value>
+  </data>
+  <data name="Description_Object_SecurityType" xml:space="preserve">
+    <value>Security type of the object</value>
+  </data>
+  <data name="Description_StoredProcedure_SpecificName" xml:space="preserve">
+    <value>Specific name of the routine</value>
+  </data>
+  <data name="Description_StoredProcedure_Type" xml:space="preserve">
+    <value>Type of the routine (procedure or function)</value>
+  </data>
+  <data name="DisplayName_StoredProcedure_Body" xml:space="preserve">
+    <value>Body</value>
+  </data>
+  <data name="DisplayName_StoredProcedure_Comment" xml:space="preserve">
+    <value>Comment</value>
+  </data>
+  <data name="DisplayName_StoredProcedure_DataAccess" xml:space="preserve">
+    <value>Data Access</value>
+  </data>
+  <data name="DisplayName_Object_Definer" xml:space="preserve">
+    <value>Definer</value>
+  </data>
+  <data name="DisplayName_StoredProcedure_IsDeterministic" xml:space="preserve">
+    <value>Is Deterministic</value>
+  </data>
+  <data name="DisplayName_StoredProcedure_ExternalLanguage" xml:space="preserve">
+    <value>ExternalLanguage</value>
+  </data>
+  <data name="DisplayName_Object_Mode" xml:space="preserve">
+    <value>SQL Mode</value>
+  </data>
+  <data name="DisplayName_StoredProcedure_LastModified" xml:space="preserve">
+    <value>Last Modified</value>
+  </data>
+  <data name="DisplayName_StoredProcedure_ParameterList" xml:space="preserve">
+    <value>Parameter List</value>
+  </data>
+  <data name="DisplayName_Routine_Returns" xml:space="preserve">
+    <value>Returns</value>
+  </data>
+  <data name="DisplayName_Object_SecurityType" xml:space="preserve">
+    <value>Security Type</value>
+  </data>
+  <data name="DisplayName_StoredProcedure_SpecificName" xml:space="preserve">
+    <value>Specific Name</value>
+  </data>
+  <data name="DisplayName_StoredProcedure_Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Node_StoredProcedures" xml:space="preserve">
+    <value>Stored Procedures</value>
+  </data>
+  <data name="Type_StoredProcedure" xml:space="preserve">
+    <value>Stored Procedure</value>
+  </data>
+  <data name="Value_ContainsSql" xml:space="preserve">
+    <value>Contains SQL</value>
+  </data>
+  <data name="Value_Definer" xml:space="preserve">
+    <value>Definer</value>
+  </data>
+  <data name="Value_Function" xml:space="preserve">
+    <value>Function</value>
+  </data>
+  <data name="Value_Invoker" xml:space="preserve">
+    <value>Invoker</value>
+  </data>
+  <data name="Value_ModifiesSqlData" xml:space="preserve">
+    <value>Modifies SQL Data</value>
+  </data>
+  <data name="Value_NoSql" xml:space="preserve">
+    <value>No SQL</value>
+  </data>
+  <data name="Value_Procedure" xml:space="preserve">
+    <value>Procedure</value>
+  </data>
+  <data name="Value_ReadsSqlData" xml:space="preserve">
+    <value>Reads SQL Data</value>
+  </data>
+  <data name="Value_Sql" xml:space="preserve">
+    <value>SQL</value>
+  </data>
+  <data name="Description_Table_Union" xml:space="preserve">
+    <value>List of MyISAM tables that should be used by the MERGE table.</value>
+  </data>
+  <data name="DisplayName_Table_Union" xml:space="preserve">
+    <value>Union</value>
+  </data>
+  <data name="Value_Cascade" xml:space="preserve">
+    <value>Cascade</value>
+  </data>
+  <data name="Value_Local" xml:space="preserve">
+    <value>Local</value>
+  </data>
+  <data name="Binary_Flag" xml:space="preserve">
+    <value>Binary</value>
+  </data>
+  <data name="Default_CharacterSet" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="Default_Collation" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="Unsigned_Flag" xml:space="preserve">
+    <value>Unsigned</value>
+  </data>
+  <data name="Zerofill_Flag" xml:space="preserve">
+    <value>Zerofill</value>
+  </data>
+  <data name="Ascii_Flag" xml:space="preserve">
+    <value>ASCII</value>
+  </data>
+  <data name="Unicode_Flag" xml:space="preserve">
+    <value>UNICODE</value>
+  </data>
+  <data name="Error_ViewDefinitionIsEmpty" xml:space="preserve">
+    <value>Definition of a view is empty.</value>
+  </data>
+  <data name="Description_Object_Flags" xml:space="preserve">
+    <value>The flags used to modify data type of this database object.</value>
+  </data>
+  <data name="Description_Parameter_IsResult" xml:space="preserve">
+    <value>Shows if this parameter is the return value for the routine.</value>
+  </data>
+  <data name="Description_Parameter_Mode" xml:space="preserve">
+    <value>The direction of this parameter.</value>
+  </data>
+  <data name="Description_Parameter_Ordinal" xml:space="preserve">
+    <value>The position of this object in the parent database object definition.</value>
+  </data>
+  <data name="Description_Parameter_StoredProcedure" xml:space="preserve">
+    <value>The stored procedure that owns this database object.</value>
+  </data>
+  <data name="DisplayName_Object_Flags" xml:space="preserve">
+    <value>Flags</value>
+  </data>
+  <data name="DisplayName_Parameter_IsResult" xml:space="preserve">
+    <value>Is Return Value</value>
+  </data>
+  <data name="DisplayName_Parameter_Mode" xml:space="preserve">
+    <value>Direction</value>
+  </data>
+  <data name="DisplayName_Parameter_Ordinal" xml:space="preserve">
+    <value>Ordinal</value>
+  </data>
+  <data name="DisplayName_Parameter_StoredProcedure" xml:space="preserve">
+    <value>Stored Procedure</value>
+  </data>
+  <data name="Type_StoredProcedureParameter" xml:space="preserve">
+    <value>Stored Procedure Parameter</value>
+  </data>
+  <data name="Value_IN" xml:space="preserve">
+    <value>IN</value>
+  </data>
+  <data name="Value_INOUT" xml:space="preserve">
+    <value>IN/OUT</value>
+  </data>
+  <data name="Value_OUT" xml:space="preserve">
+    <value>OUT</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="Add_Icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Add_Icon.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Remove_Icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Remove_Icon.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Value_None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="Description_View_Algorithm" xml:space="preserve">
+    <value>Indicates how to treat a view in SQL statements</value>
+  </data>
+  <data name="DisplayName_View_Algorithm" xml:space="preserve">
+    <value>Algorithm</value>
+  </data>
+  <data name="New_ForeignKey_Template" xml:space="preserve">
+    <value>FK_{0}_{1}</value>
+  </data>
+  <data name="Node_Functions" xml:space="preserve">
+    <value>Functions</value>
+  </data>
+  <data name="Action_Cascade" xml:space="preserve">
+    <value>Cascade</value>
+  </data>
+  <data name="Action_NoAction" xml:space="preserve">
+    <value>No Action</value>
+  </data>
+  <data name="Action_Restrict" xml:space="preserve">
+    <value>Restrict</value>
+  </data>
+  <data name="Action_SetNull" xml:space="preserve">
+    <value>Set Null</value>
+  </data>
+  <data name="Description_StoredProcedure_Definition" xml:space="preserve">
+    <value>Body of the routine</value>
+  </data>
+  <data name="Description_StoredProcedure_ExternalName" xml:space="preserve">
+    <value>External name of the routine</value>
+  </data>
+  <data name="Description_StoredProcedure_ParameterStyle" xml:space="preserve">
+    <value>Parameter style of the routine</value>
+  </data>
+  <data name="Description_StoredProcedure_SqlPath" xml:space="preserve">
+    <value>SQL path to the routine</value>
+  </data>
+  <data name="DisplayName_StoredProcedure_Definition" xml:space="preserve">
+    <value>Definition</value>
+  </data>
+  <data name="DisplayName_StoredProcedure_ExternalName" xml:space="preserve">
+    <value>External Name</value>
+  </data>
+  <data name="DisplayName_StoredProcedure_ParameterStyle" xml:space="preserve">
+    <value>Parameter Style</value>
+  </data>
+  <data name="DisplayName_StoredProcedure_SqlPath" xml:space="preserve">
+    <value>SQL path</value>
+  </data>
+  <data name="Value_Null" xml:space="preserve">
+    <value>Null</value>
+  </data>
+  <data name="Warning_DuplicateName" xml:space="preserve">
+    <value>Database object with same name already exists!</value>
+  </data>
+  <data name="Warning_EmptyName" xml:space="preserve">
+    <value>The name can not be empty!</value>
+  </data>
+  <data name="Error_WrongParameterList" xml:space="preserve">
+    <value>The definition of the routine has a wrong parameter list.</value>
+  </data>
+  <data name="Error_IncorrectRoutineType" xml:space="preserve">
+    <value>Incorrect routine type.</value>
+  </data>
+  <data name="Error_NoReturnType" xml:space="preserve">
+    <value>RETURNS keyword is missing.</value>
+  </data>
+  <data name="Error_IncorrectParameterList" xml:space="preserve">
+    <value>Incorrect parameter list.</value>
+  </data>
+  <data name="Error_UnrecognizedBody" xml:space="preserve">
+    <value>Unable to recognize a routine's body.</value>
+  </data>
+  <data name="Warning_IncorrectComments" xml:space="preserve">
+    <value>Incorrect comments.</value>
+  </data>
+  <data name="Warning_WrongSecurityType" xml:space="preserve">
+    <value>An error in the security type.</value>
+  </data>
+  <data name="Status_for_Engine" xml:space="preserve">
+    <value>"Status for engine {0}:"</value>
+  </data>
+  <data name="Description_Object_Mode" xml:space="preserve">
+    <value>SQL Mode of the object</value>
+  </data>
+  <data name="Description_Trigger_Condition" xml:space="preserve">
+    <value>Condition of the trigger</value>
+  </data>
+  <data name="Description_Trigger_EventManipulation" xml:space="preserve">
+    <value>An event on which the trigger is switched on</value>
+  </data>
+  <data name="Description_Trigger_RefToNewRow" xml:space="preserve">
+    <value>An action reference to a new row</value>
+  </data>
+  <data name="Description_Trigger_RefToNewTable" xml:space="preserve">
+    <value>An action reference to a new table</value>
+  </data>
+  <data name="Description_Trigger_EventCatalog" xml:space="preserve">
+    <value>A catalog on which an action is performed</value>
+  </data>
+  <data name="Description_Trigger_EventSchema" xml:space="preserve">
+    <value>A schema on which an action is performed</value>
+  </data>
+  <data name="Description_Trigger_EventTable" xml:space="preserve">
+    <value>A table on which an action is performed</value>
+  </data>
+  <data name="Description_Trigger_RefToOldRow" xml:space="preserve">
+    <value>An action reference to an old row</value>
+  </data>
+  <data name="Description_Trigger_RefToOldTable" xml:space="preserve">
+    <value>An action reference to an old table</value>
+  </data>
+  <data name="Description_Trigger_Order" xml:space="preserve">
+    <value>The order number of the action</value>
+  </data>
+  <data name="Description_Trigger_Orientation" xml:space="preserve">
+    <value>An atomic object of a trigger action</value>
+  </data>
+  <data name="Description_Trigger_Statement" xml:space="preserve">
+    <value>A statement executed by the trigger</value>
+  </data>
+  <data name="Description_Trigger_Timing" xml:space="preserve">
+    <value>The trigger action time</value>
+  </data>
+  <data name="DisplayName_Trigger_Condition" xml:space="preserve">
+    <value>Condition</value>
+  </data>
+  <data name="DisplayName_Trigger_EventManipulation" xml:space="preserve">
+    <value>Event Manipulation</value>
+  </data>
+  <data name="DisplayName_Trigger_RefToNewRow" xml:space="preserve">
+    <value>Ref to New Row</value>
+  </data>
+  <data name="DisplayName_Trigger_RefToNewTable" xml:space="preserve">
+    <value>Ref to New Table</value>
+  </data>
+  <data name="DisplayName_Trigger_EventCatalog" xml:space="preserve">
+    <value>Event Catalog</value>
+  </data>
+  <data name="DisplayName_Trigger_EventSchema" xml:space="preserve">
+    <value>Event Schema</value>
+  </data>
+  <data name="DisplayName_Trigger_EventTable" xml:space="preserve">
+    <value>Event Table</value>
+  </data>
+  <data name="DisplayName_Trigger_RefToOldRow" xml:space="preserve">
+    <value>Ref to Old Row</value>
+  </data>
+  <data name="DisplayName_Trigger_RefToOldTable" xml:space="preserve">
+    <value>Ref to Old Table</value>
+  </data>
+  <data name="DisplayName_Trigger_Order" xml:space="preserve">
+    <value>Order</value>
+  </data>
+  <data name="DisplayName_Trigger_Orientation" xml:space="preserve">
+    <value>Orientation</value>
+  </data>
+  <data name="DisplayName_Trigger_Statement" xml:space="preserve">
+    <value>Statement</value>
+  </data>
+  <data name="DisplayName_Trigger_Timing" xml:space="preserve">
+    <value>Timing</value>
+  </data>
+  <data name="Node_Triggers" xml:space="preserve">
+    <value>Triggers</value>
+  </data>
+  <data name="Type_Trigger" xml:space="preserve">
+    <value>Trigger</value>
+  </data>
+  <data name="DisplayName_Object_CreationTime" xml:space="preserve">
+    <value>Creation Time</value>
+  </data>
+  <data name="Error_NoCollectionName" xml:space="preserve">
+    <value>Collection name is missing!</value>
+  </data>
+  <data name="Comma" xml:space="preserve">
+    <value>, </value>
+  </data>
+  <data name="Warning_NullablePrimaryKey" xml:space="preserve">
+    <value>One or more primary key columns ({0}) aren’t marked as not nullable. Do you wish to mark them as not nullable?
+
+Yes – mark primary key columns as not nullable and save changes.
+No – return to editor and resolve conflict manually.
+</value>
+  </data>
+  <data name="Error_EmptyForeignKeyName" xml:space="preserve">
+    <value>Empty foreign key name is not allowed!</value>
+  </data>
+  <data name="Error_EmptyReferencedColumn" xml:space="preserve">
+    <value>Foreign key column `{0}` in foreign key `{1}` has empty referenced column name!</value>
+  </data>
+  <data name="Error_EmptyReferencedTable" xml:space="preserve">
+    <value>Empty referenced table name for `{0}` foreign key!</value>
+  </data>
+  <data name="Error_IncompatibleTypes" xml:space="preserve">
+    <value>Foreign key column `{0}` of foreign key `{1}` references column `{2}` of table `{3}` which has different type (‘{4}’ instead of ‘{5}’)!
+See http://dev.mysql.com/doc/mysql/en/InnoDB_foreign_key_constraints.html</value>
+  </data>
+  <data name="Error_InvalidSetNull" xml:space="preserve">
+    <value>Foreign key `{0}` has SET NULL action for on delete or on update, but it includes columns ({1}) which don’t allow nulls!</value>
+  </data>
+  <data name="Error_MultipleAutoIncrement" xml:space="preserve">
+    <value>Multiple auto increment columns are not allowed!</value>
+  </data>
+  <data name="Error_NoColumnsInForeignKey" xml:space="preserve">
+    <value>Foreign key `{0}` doesn’t contain any column!</value>
+  </data>
+  <data name="Error_NoReferencedColumn" xml:space="preserve">
+    <value>Foreign key column `{0}` of foreign key `{1}` references column `{2}` which is not exists in the table `{3}`!</value>
+  </data>
+  <data name="Error_NoSourceColumnForForeignKeyColumn" xml:space="preserve">
+    <value>Foreign key column `{0}` in foreign key `{1}` has no related source column in the source table!</value>
+  </data>
+  <data name="Warning_AutoIncrementIsNotPrimaryKey" xml:space="preserve">
+    <value>Auto increment column `{0}` aren’t marked as primary key. Do you wish to mark it as primary key?
+
+Yes – mark `{0}` column as primary key and save changes.
+No – return to editor and resolve this conflict manually.
+</value>
+  </data>
+  <data name="Error_NoIndexForForeignKey" xml:space="preserve">
+    <value>Foreign key column `{0}` of foreign key `{1}` references column `{2}` of table `{3}`, but that table has not index where `{2}` column is on the same position as foreign key column `{0}`!
+See http://dev.mysql.com/doc/mysql/en/InnoDB_foreign_key_constraints.html
+</value>
+  </data>
+  <data name="Value_After" xml:space="preserve">
+    <value>After</value>
+  </data>
+  <data name="Value_Before" xml:space="preserve">
+    <value>Before</value>
+  </data>
+  <data name="Value_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Value_Insert" xml:space="preserve">
+    <value>Insert</value>
+  </data>
+  <data name="Value_Update" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="Index_Fulltext" xml:space="preserve">
+    <value>FULLTEXT</value>
+  </data>
+  <data name="Index_Hash" xml:space="preserve">
+    <value>HASH</value>
+  </data>
+  <data name="Index_Index" xml:space="preserve">
+    <value>INDEX</value>
+  </data>
+  <data name="Index_Primary" xml:space="preserve">
+    <value>PRIMARY</value>
+  </data>
+  <data name="Index_Spatial" xml:space="preserve">
+    <value>SPATIAL</value>
+  </data>
+  <data name="Index_Unique" xml:space="preserve">
+    <value>UNIQUE</value>
+  </data>
+  <data name="Intex_Btree" xml:space="preserve">
+    <value>BTREE</value>
+  </data>
+  <data name="Error_EmptyColumnName" xml:space="preserve">
+    <value>Empty column names are not allowed for table `{0}`!</value>
+  </data>
+  <data name="Error_EmptyName" xml:space="preserve">
+    <value>Name of database object can not be empty!</value>
+  </data>
+  <data name="Error_InvalidColumnName" xml:space="preserve">
+    <value>`{0}` is not a valid identifier for column in table `{1}`!</value>
+  </data>
+  <data name="Error_InvalidForeignKeyName" xml:space="preserve">
+    <value>`{0}` is not a valid name for foreign key in table `{1}`!</value>
+  </data>
+  <data name="Error_InvalidName" xml:space="preserve">
+    <value>`{0}` is not a valid name for database object!</value>
+  </data>
+  <data name="Error_InvlaidColumnType" xml:space="preserve">
+    <value>Invalid data type ‘{0}’ for column `{1}` in table `{2}`!</value>
+  </data>
+  <data name="New_Index_Template" xml:space="preserve">
+    <value>Index_{0}</value>
+  </data>
+  <data name="Error_DefaultForBlobOrText" xml:space="preserve">
+    <value>Default value is not allowed for {0} `{1}` column in the table `{2}`!</value>
+  </data>
+  <data name="Error_EmptyIndexName" xml:space="preserve">
+    <value>Empty index name is not allowed!</value>
+  </data>
+  <data name="Error_FulltextIndexesUnsupported" xml:space="preserve">
+    <value>Fulltext index `{0}` are defined for table `{1}`, but fulltext indexes are not supported by selected table engine ({2})!</value>
+  </data>
+  <data name="Error_IndexesUnsupported" xml:space="preserve">
+    <value>Indexes for table `{0}` are not supported by the table engine ({1})!</value>
+  </data>
+  <data name="Error_IndexOnBlob" xml:space="preserve">
+    <value>Index column `{0}` in index `{1}` has BLOB or TEXT type, but selected table engine ({2}) doesn’t support indexes on BLOB/TEXT columns!</value>
+  </data>
+  <data name="Error_IndexOnNull" xml:space="preserve">
+    <value>Index column `{0}` in index `{1}` allow nulls, but selected table engine ({2}) doesn’t support indexes on nullable columns!</value>
+  </data>
+  <data name="Error_InvalidIndexName" xml:space="preserve">
+    <value>`{0}` is not a valid name for index in table `{1}`!</value>
+  </data>
+  <data name="Error_NoColumnsInIndex" xml:space="preserve">
+    <value>Index `{0}` doesn’t contain any column!</value>
+  </data>
+  <data name="Error_NonCharacterType" xml:space="preserve">
+    <value>Index column `{0}` in fulltext index `{1}` has not character type ({2})!</value>
+  </data>
+  <data name="Error_NonSpatialType" xml:space="preserve">
+    <value>Index column `{0}` in spatial index `{1}` has not spatial type ({2})!</value>
+  </data>
+  <data name="Error_NoSourceColumnForIndexColumn" xml:space="preserve">
+    <value>Index column `{0}` in index `{1}` has no related column in the table!</value>
+  </data>
+  <data name="Error_NulableColumnInSpatialIndex" xml:space="preserve">
+    <value>Nullable column `{0}` can’t participate in spatial index `{1}`!</value>
+  </data>
+  <data name="Error_SpatialIndexesUnsupported" xml:space="preserve">
+    <value>Spatial index `{0}` are defined for table `{1}`, but spatial indexes are not supported by selected table engine ({2})!</value>
+  </data>
+  <data name="Description_UDF_Dll" xml:space="preserve">
+    <value>The basename of the file containing the implementation of the function.</value>
+  </data>
+  <data name="Description_UDF_Type" xml:space="preserve">
+    <value>The type of the function.</value>
+  </data>
+  <data name="DisplayName_UDF_Dll" xml:space="preserve">
+    <value>Dll</value>
+  </data>
+  <data name="DisplayName_UDF_Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Node_UDFs" xml:space="preserve">
+    <value>UDFs</value>
+  </data>
+  <data name="Type_UDF" xml:space="preserve">
+    <value>UDF</value>
+  </data>
+  <data name="Value_Decimal" xml:space="preserve">
+    <value>Decimal</value>
+  </data>
+  <data name="Value_Integer" xml:space="preserve">
+    <value>Integer</value>
+  </data>
+  <data name="Value_Real" xml:space="preserve">
+    <value>Real</value>
+  </data>
+  <data name="Value_Row" xml:space="preserve">
+    <value>Row</value>
+  </data>
+  <data name="Value_String" xml:space="preserve">
+    <value>String</value>
+  </data>
+  <data name="Error_EmptyDll" xml:space="preserve">
+    <value>The file can't be empty.</value>
+  </data>
+  <data name="Error_EmptyUdfName" xml:space="preserve">
+    <value>The name can't be empty.</value>
+  </data>
+  <data name="Warning_ConfirmDelete" xml:space="preserve">
+    <value>Are you sure you want to delete the selected object(s) {0}?
+
+Please note that this action cannot be rolled back.
+</value>
+  </data>
+  <data name="Error_CantDropBecauseOfEditor" xml:space="preserve">
+    <value>Can’t drop database object {0} because it has opened editors. Please, close all active editors first.</value>
+  </data>
+  <data name="Null" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Null.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TableData_Editor_Caption" xml:space="preserve">
+    <value>{0} (data)</value>
+  </data>
+  <data name="Error_DuplicateColumnName" xml:space="preserve">
+    <value>Duplicate column name `{0}`.</value>
+  </data>
+  <data name="Warning_KeyWasPredropped" xml:space="preserve">
+    <value>One or more foreign key or index was pre-dropped by previous query and are marked as new in the editor.</value>
+  </data>
+  <data name="Error_ReloadFailed" xml:space="preserve">
+    <value>Failed to reload document data! Document will be closed.</value>
+  </data>
+  <data name="EditorCaption_Template" xml:space="preserve">
+    <value>[{0}]</value>
+  </data>
+  <data name="OwnerCaption_Template" xml:space="preserve">
+    <value>{0} ({1})</value>
+  </data>
+  <data name="Error_ChangeTypeIsNotAllowed" xml:space="preserve">
+    <value>It is not allowed to change `{0}` routine type from {1} to {2}.</value>
+  </data>
+  <data name="Warning_ObjectPreDropped" xml:space="preserve">
+    <value>Database object `{0}` was pre-dropped, and is now marked as new in the editor!</value>
+  </data>
+  <data name="Error_TableWasDeleted" xml:space="preserve">
+    <value>Unable to save data because table `{0}` was deleted or renamed!</value>
+  </data>
+  <data name="Description_UDF_IsAgregate" xml:space="preserve">
+    <value>Indicates if the function is aggregate function.</value>
+  </data>
+  <data name="DisplayName_UDF_IsAgregate" xml:space="preserve">
+    <value>Is Agregate</value>
+  </data>
+  <data name="Category_Authentication" xml:space="preserve">
+    <value>Authentication</value>
+  </data>
+  <data name="Category_Pooling" xml:space="preserve">
+    <value>Pooling</value>
+  </data>
+  <data name="Description_AllowBatch" xml:space="preserve">
+    <value>Allows execution of multiple SQL commands in a single statement</value>
+  </data>
+  <data name="Description_AllowZero" xml:space="preserve">
+    <value>Should zero datetimes be supported</value>
+  </data>
+  <data name="Description_CacheSize" xml:space="preserve">
+    <value>Indicates how many stored procedures can be cached at one time. A value of 0 effectively disables the procedure cache</value>
+  </data>
+  <data name="Description_CharacterSet" xml:space="preserve">
+    <value>Character set this connection should use</value>
+  </data>
+  <data name="Description_Compression" xml:space="preserve">
+    <value>Should the connection ues compression</value>
+  </data>
+  <data name="Description_ConnReset" xml:space="preserve">
+    <value>When true, indicates the connection state is reset when removed from the pool</value>
+  </data>
+  <data name="Description_ConvertZero" xml:space="preserve">
+    <value>Should illegal datetime values be converted to DateTime.MinValue</value>
+  </data>
+  <data name="Description_DriverType" xml:space="preserve">
+    <value>Specifies the type of driver to use for this connection</value>
+  </data>
+  <data name="Description_LifeTime" xml:space="preserve">
+    <value>The minimum amount of time (in seconds) for this connection to live in the pool before being destroyed</value>
+  </data>
+  <data name="Description_Logging" xml:space="preserve">
+    <value>Enables output of diagnostic messages</value>
+  </data>
+  <data name="Description_MaxPoolSize" xml:space="preserve">
+    <value>The maximum number of connections allowed in the pool</value>
+  </data>
+  <data name="Description_MinPoolSize" xml:space="preserve">
+    <value>The minimum number of connections allowed in the pool</value>
+  </data>
+  <data name="Description_OptionFile" xml:space="preserve">
+    <value>Name of the file with startup options</value>
+  </data>
+  <data name="Description_PerfMonitor" xml:space="preserve">
+    <value>Indicates that performance counters should be updated during execution</value>
+  </data>
+  <data name="Description_Persist" xml:space="preserve">
+    <value>When false, security-sensitive information, such as the password, is not returned as part of the connection if the connection is open or has ever been in an open state</value>
+  </data>
+  <data name="Description_PipeName" xml:space="preserve">
+    <value>Name of pipe to use when connecting with named pipes (Win32 only)</value>
+  </data>
+  <data name="Description_Pooling" xml:space="preserve">
+    <value>When true, the connection object is drawn from the appropriate pool, or if necessary, is created and added to the appropriate pool</value>
+  </data>
+  <data name="Description_Protocol" xml:space="preserve">
+    <value>Protocol to use for connection to MySQL</value>
+  </data>
+  <data name="Description_SharedMemory" xml:space="preserve">
+    <value>Name of the shared memory object to use</value>
+  </data>
+  <data name="Description_Timeout" xml:space="preserve">
+    <value>The length of time (in seconds) to wait for a connection to the server before terminating the attempt and generating an error</value>
+  </data>
+  <data name="Description_UseOldSyntax" xml:space="preserve">
+    <value>Allows the use of old style @ syntax for parameters</value>
+  </data>
+  <data name="Description_UseSSL" xml:space="preserve">
+    <value>Should the connection use SSL. This currently has no effect</value>
+  </data>
+  <data name="Description_UseUsage" xml:space="preserve">
+    <value>Logs inefficient database operations</value>
+  </data>
+  <data name="DisplayName_AllowBatch" xml:space="preserve">
+    <value>Allow Batch</value>
+  </data>
+  <data name="DisplayName_AllowZero" xml:space="preserve">
+    <value>Allow Zero DateTime</value>
+  </data>
+  <data name="DisplayName_CacheSize" xml:space="preserve">
+    <value>Procedure Cache Size</value>
+  </data>
+  <data name="DisplayName_CharacterSet" xml:space="preserve">
+    <value>Character Set</value>
+  </data>
+  <data name="DisplayName_Compression" xml:space="preserve">
+    <value>Use Compression</value>
+  </data>
+  <data name="DisplayName_ConnReset" xml:space="preserve">
+    <value>Connection Reset</value>
+  </data>
+  <data name="DisplayName_ConvertZero" xml:space="preserve">
+    <value>Convert Zero Datetime</value>
+  </data>
+  <data name="DisplayName_DriverType" xml:space="preserve">
+    <value>Driver Type</value>
+  </data>
+  <data name="DisplayName_LifeTime" xml:space="preserve">
+    <value>Load Balance Timeout</value>
+  </data>
+  <data name="DisplayName_Logging" xml:space="preserve">
+    <value>Logging</value>
+  </data>
+  <data name="DisplayName_MaxPoolSize" xml:space="preserve">
+    <value>Max Pool Size</value>
+  </data>
+  <data name="DisplayName_MinPoolSize" xml:space="preserve">
+    <value>Min Pool Size</value>
+  </data>
+  <data name="DisplayName_OptionFile" xml:space="preserve">
+    <value>Option File</value>
+  </data>
+  <data name="DisplayName_PerfMonitor" xml:space="preserve">
+    <value>Use Performance Monitor</value>
+  </data>
+  <data name="DisplayName_Persist" xml:space="preserve">
+    <value>Persist Security Info</value>
+  </data>
+  <data name="DisplayName_PipeName" xml:space="preserve">
+    <value>Pipe Name</value>
+  </data>
+  <data name="DisplayName_Pooling" xml:space="preserve">
+    <value>Pooling</value>
+  </data>
+  <data name="DisplayName_Protocol" xml:space="preserve">
+    <value>Connection Protocol</value>
+  </data>
+  <data name="DisplayName_SharedMemory" xml:space="preserve">
+    <value>Shared Memory Name</value>
+  </data>
+  <data name="DisplayName_Timeout" xml:space="preserve">
+    <value>Connect Timeout</value>
+  </data>
+  <data name="DisplayName_UseOldSyntax" xml:space="preserve">
+    <value>Use Old Syntax</value>
+  </data>
+  <data name="DisplayName_UseSSL" xml:space="preserve">
+    <value>Use SSL</value>
+  </data>
+  <data name="DisplayName_UseUsage" xml:space="preserve">
+    <value>Use Usage Advisor</value>
+  </data>
+  <data name="Error_EmptyTrigger" xml:space="preserve">
+    <value>Empty trigger body for `{0}` is not allowed!</value>
+  </data>
+  <data name="Error_NoColumns" xml:space="preserve">
+    <value>Table `{0}` contains no columns!</value>
+  </data>
+  <data name="Warning_AutoIncrementIsNotFirstPrimaryKey" xml:space="preserve">
+    <value>Auto increment column `{0}` aren’t first primary key column. Do you wish to make it first primary key column?
+
+Yes – make `{0}` column the first column in the primary key.
+No – return to editor and resolve this conflict manually.
+</value>
+  </data>
+  <data name="Error_CantResetUnion" xml:space="preserve">
+    <value>Unable to reset UNION option for table `{0}`, please set this option to the valid list of MyISAM tables!</value>
+  </data>
+  <data name="Warning_ViewWasRenamed" xml:space="preserve">
+    <value>View `{0}` was renamed to `{1}` in the database.</value>
+  </data>
+  <data name="Error_UnableToCreateEditorOpened" xml:space="preserve">
+    <value>Unable to create `{0}`, because another editor is opened for object with same name!</value>
+  </data>
+  <data name="Error_UnableToCreateObjectExists" xml:space="preserve">
+    <value>Unable to create `{0}`, because another object with same name already exists in the database!</value>
+  </data>
+  <data name="Error_UnableToRenameEditorOpened" xml:space="preserve">
+    <value>Unable to rename `{0}` to `{1}`, because another editor is opened for object with same name!</value>
+  </data>
+  <data name="Error_UnableToRenameObjectExists" xml:space="preserve">
+    <value>Unable to rename `{0}` to `{1}`, because another object with same name already exists in the database!</value>
+  </data>
+  <data name="Error_UnsupportedServerVersion" xml:space="preserve">
+    <value>MySQL server version ‘{0}’ is not supported, please upgraded to MySQL 4.1.1 or higher!</value>
+  </data>
+  <data name="UnknownErrorCode" xml:space="preserve">
+    <value>unknown</value>
+  </data>
+  <data name="Error_EnumeratingAllColumns" xml:space="preserve">
+    <value>Enumerating of columns for all tables are not supported by this MySQL server version!</value>
+  </data>
+  <data name="100" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PackageLoadKey.txt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="101" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon1.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ProductDetails" xml:space="preserve">
+    <value>Data design and management tools for MySQL.  Copyright © 2006 MySQL AB</value>
+  </data>
+  <data name="ProductName" xml:space="preserve">
+    <value>Visual Studio Tools for MySQL</value>
+  </data>
+  <data name="MySqlClientNotRegistered" xml:space="preserve">
+    <value>Connector/Net is not properly installed and configured.  MySQL Tools for Visual Studio will not function correctly.</value>
+  </data>
+</root>
