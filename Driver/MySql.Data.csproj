@@ -238,7 +238,7 @@
     <Compile Include="Properties\Resources.Designer.cs" />
     <Compile Include="Source\common\SqlTokenizer.cs" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Ovatsus.CSharp.targets" />
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
