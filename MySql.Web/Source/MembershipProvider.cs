@@ -22,20 +22,18 @@
 //  The copyright was assigned and transferred under the terms of
 //  the MySQL Contributor License Agreement (CLA)
 
-using System.Web.Security;
-using System.Configuration.Provider;
-using System.Collections.Specialized;
 using System;
-using System.Data;
+using System.Collections.Specialized;
 using System.Configuration;
+using System.Configuration.Provider;
+using System.Data;
 using System.Diagnostics;
-using System.Web;
-using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web.Configuration;
+using System.Web.Hosting;
+using System.Web.Security;
 using MySql.Data.MySqlClient;
-using MySql.Data.Types;
 
 namespace MySql.Web.Security
 {
@@ -62,19 +60,12 @@ namespace MySql.Web.Security
 
         public bool WriteExceptionsToEventLog
         {
-            get
-            {
-                return pWriteExceptionsToEventLog;
-            }
-            set
-            {
-                pWriteExceptionsToEventLog = value;
-            }
+            get { return pWriteExceptionsToEventLog; }
+            set { pWriteExceptionsToEventLog = value; }
         }
 
         public override void Initialize(string name, NameValueCollection config)
         {
-
             if (config == null)
             {
                 throw new ArgumentNullException("config");
@@ -89,12 +80,14 @@ namespace MySql.Web.Security
                 config.Add("description", "MySQL Membership provider");
             }
             base.Initialize(name, config);
-            pApplicationName = GetConfigValue(config["applicationName"], System.Web.Hosting.HostingEnvironment.ApplicationVirtualPath);
+            pApplicationName = GetConfigValue(config["applicationName"], HostingEnvironment.ApplicationVirtualPath);
             pMaxInvalidPasswordAttempts = Convert.ToInt32(GetConfigValue(config["maxInvalidPasswordAttempts"], "5"));
             pPasswordAttemptWindow = Convert.ToInt32(GetConfigValue(config["passwordAttemptWindow"], "10"));
-            pMinRequiredNonAlphanumericCharacters = Convert.ToInt32(GetConfigValue(config["minRequiredAlphaNumericCharacters"], "1"));
+            pMinRequiredNonAlphanumericCharacters =
+                Convert.ToInt32(GetConfigValue(config["minRequiredAlphaNumericCharacters"], "1"));
             pMinRequiredPasswordLength = Convert.ToInt32(GetConfigValue(config["minRequiredPasswordLength"], "7"));
-            pPasswordStrengthRegularExpression = Convert.ToString(GetConfigValue(config["passwordStrengthRegularExpression"], ""));
+            pPasswordStrengthRegularExpression =
+                Convert.ToString(GetConfigValue(config["passwordStrengthRegularExpression"], ""));
             pEnablePasswordReset = Convert.ToBoolean(GetConfigValue(config["enablePasswordReset"], "True"));
             pEnablePasswordRetrieval = Convert.ToBoolean(GetConfigValue(config["enablePasswordRetrieval"], "True"));
             pRequiresQuestionAndAnswer = Convert.ToBoolean(GetConfigValue(config["requiresQuestionAndAnswer"], "False"));
@@ -128,13 +121,14 @@ namespace MySql.Web.Security
                 throw new ProviderException("Connection string cannot be blank.");
             }
             connectionString = ConnectionStringSettings.ConnectionString;
-            System.Configuration.Configuration cfg = WebConfigurationManager.OpenWebConfiguration(System.Web.Hosting.HostingEnvironment.ApplicationVirtualPath);
-            machineKey = ((MachineKeySection)(cfg.GetSection("system.web/machineKey")));
-            if (machineKey.ValidationKey.Contains("AutoGenerate"))
+            Configuration cfg = WebConfigurationManager.OpenWebConfiguration(HostingEnvironment.ApplicationVirtualPath);
+            machineKey = ((MachineKeySection) (cfg.GetSection("system.web/machineKey")));
+            if (machineKey.ValidationKey == "AutoGenerate")
             {
                 if (PasswordFormat != MembershipPasswordFormat.Clear)
                 {
-                    throw new ProviderException("Hashed or Encrypted passwords " + "are not supported with auto-generated keys.");
+                    throw new ProviderException("Hashed or Encrypted passwords " +
+                                                "are not supported with auto-generated keys.");
                 }
             }
 
@@ -145,8 +139,7 @@ namespace MySql.Web.Security
         }
 
 
-
-        private string GetConfigValue(string configValue, string defaultValue)
+        private static string GetConfigValue(string configValue, string defaultValue)
         {
             if (string.IsNullOrEmpty(configValue))
             {
@@ -159,94 +152,58 @@ namespace MySql.Web.Security
 
         public override string ApplicationName
         {
-            get
-            {
-                return pApplicationName;
-            }
-            set
-            {
-                pApplicationName = value;
-            }
+            get { return pApplicationName; }
+            set { pApplicationName = value; }
         }
 
         public override bool EnablePasswordReset
         {
-            get
-            {
-                return pEnablePasswordReset;
-            }
+            get { return pEnablePasswordReset; }
         }
 
         public override bool EnablePasswordRetrieval
         {
-            get
-            {
-                return pEnablePasswordRetrieval;
-            }
+            get { return pEnablePasswordRetrieval; }
         }
 
         public override bool RequiresQuestionAndAnswer
         {
-            get
-            {
-                return pRequiresQuestionAndAnswer;
-            }
+            get { return pRequiresQuestionAndAnswer; }
         }
 
         public override bool RequiresUniqueEmail
         {
-            get
-            {
-                return pRequiresUniqueEmail;
-            }
+            get { return pRequiresUniqueEmail; }
         }
 
         public override int MaxInvalidPasswordAttempts
         {
-            get
-            {
-                return pMaxInvalidPasswordAttempts;
-            }
+            get { return pMaxInvalidPasswordAttempts; }
         }
 
         public override int PasswordAttemptWindow
         {
-            get
-            {
-                return pPasswordAttemptWindow;
-            }
+            get { return pPasswordAttemptWindow; }
         }
 
         public override MembershipPasswordFormat PasswordFormat
         {
-            get
-            {
-                return pPasswordFormat;
-            }
+            get { return pPasswordFormat; }
         }
 
         public override int MinRequiredNonAlphanumericCharacters
         {
-            get
-            {
-                return pMinRequiredNonAlphanumericCharacters;
-            }
+            get { return pMinRequiredNonAlphanumericCharacters; }
         }
 
         public override int MinRequiredPasswordLength
         {
-            get
-            {
-                return pMinRequiredPasswordLength;
-            }
+            get { return pMinRequiredPasswordLength; }
         }
 
         public override string PasswordStrengthRegularExpression
         {
-            get
-            {
-                return pPasswordStrengthRegularExpression;
-            }
+            get { return pPasswordStrengthRegularExpression; }
         }
 
         #endregion
@@ -254,9 +211,8 @@ namespace MySql.Web.Security
         public override bool ChangePassword(string username, string oldPwd, string newPwd)
         {
             if (!(ValidateUser(username, oldPwd)))
-            {
                 return false;
-            }
+
             ValidatePasswordEventArgs args = new ValidatePasswordEventArgs(username, newPwd, true);
             OnValidatingPassword(args);
             if (args.Cancel)
@@ -270,85 +226,74 @@ namespace MySql.Web.Security
                     throw new ProviderException("Change password canceled due to New password validation failure.");
                 }
             }
-            MySqlConnection conn = new MySqlConnection(connectionString);
-            MySqlCommand cmd = new MySqlCommand("UPDATE mysql_Membership " + " SET Password = ?Password, LastPasswordChangedDate = ?LastPasswordChangedDate " + " WHERE Username = ?Username AND ApplicationName = ?ApplicationName", conn);
-            cmd.Parameters.Add("?Password", MySqlDbType.VarChar, 255).Value = EncodePassword(newPwd);
-            cmd.Parameters.Add("?LastPasswordChangedDate", MySqlDbType.Datetime).Value = DateTime.Now;
-            cmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255).Value = username;
-            cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
-            int rowsAffected = 0;
-            try
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
-                conn.Open();
-                rowsAffected = cmd.ExecuteNonQuery();
-            }
-            catch (MySqlException e)
-            {
-                if (WriteExceptionsToEventLog)
+                MySqlCommand cmd =
+                    new MySqlCommand(
+                        "UPDATE mysql_Membership " +
+                        " SET Password = ?Password, LastPasswordChangedDate = ?LastPasswordChangedDate " +
+                        " WHERE Username = ?Username AND ApplicationName = ?ApplicationName", conn);
+                cmd.Parameters.Add("?Password", MySqlDbType.VarChar, 255).Value = EncodePassword(newPwd);
+                cmd.Parameters.Add("?LastPasswordChangedDate", MySqlDbType.Datetime).Value = DateTime.Now;
+                cmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255).Value = username;
+                cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
+                try
                 {
-                    WriteToEventLog(e, "ChangePassword");
-                    throw new ProviderException(exceptionMessage);
+                    conn.Open();
+                    return cmd.ExecuteNonQuery() > 0;
                 }
-                else
+                catch (MySqlException e)
                 {
-                    throw e;
+                    if (WriteExceptionsToEventLog)
+                    {
+                        WriteToEventLog(e, "ChangePassword");
+                        throw new ProviderException(exceptionMessage, e);
+                    }
+                    else
+                        throw;
                 }
             }
-            finally
-            {
-                conn.Close();
-            }
-            if (rowsAffected > 0)
-            {
-                return true;
-            }
-            return false;
         }
 
-        public override bool ChangePasswordQuestionAndAnswer(string username, string password, string newPwdQuestion, string newPwdAnswer)
+        public override bool ChangePasswordQuestionAndAnswer(string username, string password, string newPwdQuestion,
+                                                             string newPwdAnswer)
         {
             if (!(ValidateUser(username, password)))
-            {
                 return false;
-            }
-            MySqlConnection conn = new MySqlConnection(connectionString);
-            MySqlCommand cmd = new MySqlCommand("UPDATE mysql_Membership " + " SET PasswordQuestion = ?PasswordQuestion, PasswordAnswer = ?PasswordAnswer" + " WHERE Username = ?Username AND ApplicationName = ?ApplicationName", conn);
-            cmd.Parameters.Add("?PasswordQuestion", MySqlDbType.VarChar, 255).Value = newPwdQuestion;
-            cmd.Parameters.Add("?PasswordAnswer", MySqlDbType.VarChar, 255).Value = EncodePassword(newPwdAnswer);
-            cmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255).Value = username;
-            cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
-            int rowsAffected = 0;
-            try
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
-                conn.Open();
-                rowsAffected = cmd.ExecuteNonQuery();
-            }
-            catch (MySqlException e)
-            {
-                if (WriteExceptionsToEventLog)
+                MySqlCommand cmd = new MySqlCommand(@"UPDATE mysql_Membership
+                    SET PasswordQuestion = ?PasswordQuestion, PasswordAnswer = ?PasswordAnswer
+                    WHERE Username = ?Username AND ApplicationName = ?ApplicationName",
+                        conn);
+                cmd.Parameters.Add("?PasswordQuestion", MySqlDbType.VarChar, 255).Value = newPwdQuestion;
+                cmd.Parameters.Add("?PasswordAnswer", MySqlDbType.VarChar, 255).Value = EncodePassword(newPwdAnswer);
+                cmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255).Value = username;
+                cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
+                try
                 {
-                    WriteToEventLog(e, "ChangePasswordQuestionAndAnswer");
-                    throw new ProviderException(exceptionMessage);
+                    conn.Open();
+                    return cmd.ExecuteNonQuery() > 0;
                 }
-                else
+                catch (MySqlException e)
                 {
-                    throw e;
+                    if (WriteExceptionsToEventLog)
+                    {
+                        WriteToEventLog(e, "ChangePasswordQuestionAndAnswer");
+                        throw new ProviderException(exceptionMessage, e);
+                    }
+                    else
+                        throw;
                 }
             }
-            finally
-            {
-                conn.Close();
-            }
-            if (rowsAffected > 0)
-            {
-                return true;
-            }
-            return false;
         }
 
-        public override MembershipUser CreateUser(string username, string password, string email, 
-            string passwordQuestion, string passwordAnswer, bool isApproved, object providerUserKey, 
-            out MembershipCreateStatus status)
+        public override MembershipUser CreateUser(string username, string password, string email,
+                                                  string passwordQuestion, string passwordAnswer, bool isApproved,
+                                                  object providerUserKey,
+                                                  out MembershipCreateStatus status)
         {
             ValidatePasswordEventArgs Args = new ValidatePasswordEventArgs(username, password, true);
             OnValidatingPassword(Args);
@@ -379,7 +324,19 @@ namespace MySql.Web.Security
                     }
                 }
                 MySqlConnection conn = new MySqlConnection(connectionString);
-                MySqlCommand cmd = new MySqlCommand("INSERT INTO mysql_Membership " + " (PKID, Username, Password, Email, PasswordQuestion, " + " PasswordAnswer, IsApproved," + " Comment, CreationDate, LastPasswordChangedDate, LastActivityDate," + " ApplicationName, IsLockedOut, LastLockedOutDate," + " FailedPasswordAttemptCount, FailedPasswordAttemptWindowStart, " + " FailedPasswordAnswerAttemptCount, FailedPasswordAnswerAttemptWindowStart)" + " Values(?PKID, ?Username, ?Password, ?Email, ?PasswordQuestion, ?PasswordAnswer," + " ?IsApproved, ?Comment, ?CreationDate, ?LastPasswordChangedDate, ?LastActivityDate," + " ?ApplicationName, ?IsLockedOut, ?LastLockedOutDate, ?FailedPasswordAttemptCount," + " ?FailedPasswordAttemptWindowStart, ?FailedPasswordAnswerAttemptCount, ?FailedPasswordAnswerAttemptWindowStart)", conn);
+                MySqlCommand cmd =
+                    new MySqlCommand(
+                        "INSERT INTO mysql_Membership " + " (PKID, Username, Password, Email, PasswordQuestion, " +
+                        " PasswordAnswer, IsApproved," +
+                        " Comment, CreationDate, LastPasswordChangedDate, LastActivityDate," +
+                        " ApplicationName, IsLockedOut, LastLockedOutDate," +
+                        " FailedPasswordAttemptCount, FailedPasswordAttemptWindowStart, " +
+                        " FailedPasswordAnswerAttemptCount, FailedPasswordAnswerAttemptWindowStart)" +
+                        " Values(?PKID, ?Username, ?Password, ?Email, ?PasswordQuestion, ?PasswordAnswer," +
+                        " ?IsApproved, ?Comment, ?CreationDate, ?LastPasswordChangedDate, ?LastActivityDate," +
+                        " ?ApplicationName, ?IsLockedOut, ?LastLockedOutDate, ?FailedPasswordAttemptCount," +
+                        " ?FailedPasswordAttemptWindowStart, ?FailedPasswordAnswerAttemptCount, ?FailedPasswordAnswerAttemptWindowStart)",
+                        conn);
                 cmd.Parameters.Add("?PKID", MySqlDbType.VarChar).Value = providerUserKey.ToString();
                 cmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255).Value = username;
                 cmd.Parameters.Add("?Password", MySqlDbType.VarChar, 255).Value = EncodePassword(password);
@@ -434,49 +391,44 @@ namespace MySql.Web.Security
 
         public override bool DeleteUser(string username, bool deleteAllRelatedData)
         {
-            MySqlConnection conn = new MySqlConnection(connectionString);
-            MySqlCommand cmd = new MySqlCommand("DELETE FROM mysql_Membership " + " WHERE Username = ?Username AND Applicationname = ?Applicationname", conn);
-            cmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255).Value = username;
-            cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName.ToString();
-            int rowsAffected = 0;
-            try
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
-                conn.Open();
-                rowsAffected = cmd.ExecuteNonQuery();
-/*                if (deleteAllRelatedData)
+                MySqlCommand cmd =
+                    new MySqlCommand(
+                        "DELETE FROM mysql_Membership " +
+                        " WHERE Username = ?Username AND Applicationname = ?Applicationname", conn);
+                cmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255).Value = username;
+                cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName.ToString();
+                try
                 {
-                    cmd = new MySqlCommand("DELETE FROM mysql_MembershipRoles WHERE Username = ?Username", conn);
-                    cmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255).Value = username;
-                    rowsAffected = cmd.ExecuteNonQuery();
-                }*/
-            }
-            catch (MySqlException e)
-            {
-                if (WriteExceptionsToEventLog)
-                {
-                    WriteToEventLog(e, "DeleteUser");
-                    throw new ProviderException(exceptionMessage);
+                    conn.Open();
+                    return cmd.ExecuteNonQuery() > 0;
+                    /*                if (deleteAllRelatedData)
+                                    {
+                                        cmd = new MySqlCommand("DELETE FROM mysql_MembershipRoles WHERE Username = ?Username", conn);
+                                        cmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255).Value = username;
+                                        rowsAffected = cmd.ExecuteNonQuery();
+                                    }*/
                 }
-                else
+                catch (MySqlException e)
                 {
-                    throw e;
+                    if (WriteExceptionsToEventLog)
+                    {
+                        WriteToEventLog(e, "DeleteUser");
+                        throw new ProviderException(exceptionMessage, e);
+                    }
+                    else
+                        throw;
                 }
             }
-            finally
-            {
-                conn.Close();
-            }
-            if (rowsAffected > 0)
-            {
-                return true;
-            }
-            return false;
         }
 
         public override MembershipUserCollection GetAllUsers(int pageIndex, int pageSize, out int totalRecords)
         {
             MySqlConnection conn = new MySqlConnection(connectionString);
-            MySqlCommand cmd = new MySqlCommand("SELECT Count(*) FROM mysql_Membership " + "WHERE ApplicationName = ?ApplicationName", conn);
+            MySqlCommand cmd =
+                new MySqlCommand("SELECT Count(*) FROM mysql_Membership " + "WHERE ApplicationName = ?ApplicationName",
+                                 conn);
             cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
             MembershipUserCollection users = new MembershipUserCollection();
             MySqlDataReader reader = null;
@@ -484,16 +436,20 @@ namespace MySql.Web.Security
             try
             {
                 conn.Open();
-                totalRecords = System.Convert.ToInt32(cmd.ExecuteScalar());
+                totalRecords = Convert.ToInt32(cmd.ExecuteScalar());
                 if (totalRecords <= 0)
                 {
                     return users;
                 }
-                cmd.CommandText = "SELECT PKID, Username, Email, PasswordQuestion," + " Comment, IsApproved, IsLockedOut, CreationDate, LastLoginDate," + " LastActivityDate, LastPasswordChangedDate, LastLockedOutDate " + " FROM mysql_Membership " + " WHERE ApplicationName = ?ApplicationName " + " ORDER BY Username Asc";
+                cmd.CommandText = "SELECT PKID, Username, Email, PasswordQuestion," +
+                                  " Comment, IsApproved, IsLockedOut, CreationDate, LastLoginDate," +
+                                  " LastActivityDate, LastPasswordChangedDate, LastLockedOutDate " +
+                                  " FROM mysql_Membership " + " WHERE ApplicationName = ?ApplicationName " +
+                                  " ORDER BY Username Asc";
                 cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName.ToString();
                 reader = cmd.ExecuteReader();
                 int counter = 0;
-                int startIndex = pageSize * pageIndex;
+                int startIndex = pageSize*pageIndex;
                 int endIndex = startIndex + pageSize - 1;
                 while (reader.Read())
                 {
@@ -518,7 +474,7 @@ namespace MySql.Web.Security
                 }
                 else
                 {
-                    throw e;
+                    throw;
                 }
             }
             finally
@@ -534,113 +490,105 @@ namespace MySql.Web.Security
 
         public override int GetNumberOfUsersOnline()
         {
-            TimeSpan onlineSpan = new TimeSpan(0, System.Web.Security.Membership.UserIsOnlineTimeWindow, 0);
+            TimeSpan onlineSpan = new TimeSpan(0, Membership.UserIsOnlineTimeWindow, 0);
             DateTime compareTime = DateTime.Now.Subtract(onlineSpan);
-            MySqlConnection conn = new MySqlConnection(connectionString);
-            MySqlCommand cmd = new MySqlCommand("SELECT Count(*) FROM mysql_Membership " + " WHERE LastActivityDate > ?LastActivityUpdate AND ApplicationName = ?ApplicationName", conn);
-            cmd.Parameters.Add("?CompareDate", MySqlDbType.Datetime).Value = compareTime;
-            cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
-            int numOnline = 0;
-            try
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
-                conn.Open();
-                numOnline = System.Convert.ToInt32(cmd.ExecuteScalar());
-            }
-            catch (MySqlException e)
-            {
-                if (WriteExceptionsToEventLog)
+                MySqlCommand cmd =
+                    new MySqlCommand(
+                        @"SELECT Count(*) FROM mysql_Membership
+                WHERE LastActivityDate > ?LastActivityUpdate AND 
+                ApplicationName = ?ApplicationName",
+                        conn);
+                cmd.Parameters.Add("?CompareDate", MySqlDbType.Datetime).Value = compareTime;
+                cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
+                try
                 {
-                    WriteToEventLog(e, "GetNumberOfUsersOnline");
-                    throw new ProviderException(exceptionMessage);
+                    conn.Open();
+                    return Convert.ToInt32(cmd.ExecuteScalar());
                 }
-                else
+                catch (MySqlException e)
                 {
-                    throw e;
+                    if (WriteExceptionsToEventLog)
+                    {
+                        WriteToEventLog(e, "GetNumberOfUsersOnline");
+                        throw new ProviderException(exceptionMessage, e);
+                    }
+                    else
+                        throw;
                 }
             }
-            finally
-            {
-                conn.Close();
-            }
-            return numOnline;
         }
 
         public override string GetPassword(string username, string answer)
         {
             if (!(EnablePasswordRetrieval))
-            {
                 throw new ProviderException("Password Retrieval Not Enabled.");
-            }
             if (PasswordFormat == MembershipPasswordFormat.Hashed)
-            {
                 throw new ProviderException("Cannot retrieve Hashed passwords.");
-            }
-            MySqlConnection conn = new MySqlConnection(connectionString);
-            MySqlCommand cmd = new MySqlCommand("SELECT Password, PasswordAnswer, IsLockedOut FROM mysql_Membership " + " WHERE Username = ?Username AND ApplicationName = ?ApplicationName", conn);
-            cmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255).Value = username;
-            cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
-            string password = "";
-            string passwordAnswer = "";
-            MySqlDataReader reader = null;
-            try
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
-                conn.Open();
-                reader = cmd.ExecuteReader(CommandBehavior.SingleRow);
-                if (reader.HasRows)
+                MySqlCommand cmd =
+                    new MySqlCommand(
+                        @"SELECT Password, PasswordAnswer, IsLockedOut 
+                FROM mysql_Membership WHERE Username = ?Username AND ApplicationName = 
+                ?ApplicationName",
+                        conn);
+                cmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255).Value = username;
+                cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
+                try
                 {
-                    reader.Read();
-                    if (reader.GetBoolean(2))
+                    conn.Open();
+                    using (MySqlDataReader reader = cmd.ExecuteReader(CommandBehavior.SingleRow))
                     {
-                        throw new MembershipPasswordException("The supplied user is locked out.");
+                        if (!reader.HasRows)
+                            throw new MembershipPasswordException("The supplied user name is not found.");
+
+                        reader.Read();
+                        if (reader.GetBoolean(2))
+                            throw new MembershipPasswordException("The supplied user is locked out.");
+
+                        string password = reader.GetString(0);
+                        string passwordAnswer = reader.GetString(1);
+
+                        if (RequiresQuestionAndAnswer && !(CheckPassword(answer, passwordAnswer)))
+                        {
+                            UpdateFailureCount(username, "passwordAnswer");
+                            throw new MembershipPasswordException("Incorrect password answer.");
+                        }
+                        if (PasswordFormat == MembershipPasswordFormat.Encrypted)
+                        {
+                            password = UnEncodePassword(password);
+                        }
+                        return password;
                     }
-                    password = reader.GetString(0);
-                    passwordAnswer = reader.GetString(1);
                 }
-                else
+                catch (MySqlException e)
                 {
-                    throw new MembershipPasswordException("The supplied user name is not found.");
+                    if (WriteExceptionsToEventLog)
+                    {
+                        WriteToEventLog(e, "GetPassword");
+                        throw new ProviderException(exceptionMessage, e);
+                    }
+                    else
+                        throw;
                 }
             }
-            catch (MySqlException e)
-            {
-                if (WriteExceptionsToEventLog)
-                {
-                    WriteToEventLog(e, "GetPassword");
-                    throw new ProviderException(exceptionMessage);
-                }
-                else
-                {
-                    throw e;
-                }
-            }
-            finally
-            {
-                if (!(reader == null))
-                {
-                    reader.Close();
-                }
-                conn.Close();
-            }
-            if (RequiresQuestionAndAnswer && !(CheckPassword(answer, passwordAnswer)))
-            {
-                UpdateFailureCount(username, "passwordAnswer");
-                throw new MembershipPasswordException("Incorrect password answer.");
-            }
-            if (PasswordFormat == MembershipPasswordFormat.Encrypted)
-            {
-                password = UnEncodePassword(password);
-            }
-            return password;
         }
 
         public override MembershipUser GetUser(string username, bool userIsOnline)
         {
             MySqlConnection conn = new MySqlConnection(connectionString);
-            MySqlCommand cmd = new MySqlCommand(@"SELECT PKID, Username, Email, PasswordQuestion,
+            MySqlCommand cmd =
+                new MySqlCommand(
+                    @"SELECT PKID, Username, Email, PasswordQuestion,
                 Comment, IsApproved, IsLockedOut, CreationDate, LastLoginDate,
                 LastActivityDate, LastPasswordChangedDate, LastLockedOutDate
                 FROM mysql_Membership WHERE Username = ?Username AND 
-                ApplicationName = ?ApplicationName", conn);
+                ApplicationName = ?ApplicationName",
+                    conn);
             cmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255).Value = username;
             cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
             MembershipUser u = null;
@@ -657,7 +605,8 @@ namespace MySql.Web.Security
                     {
                         MySqlCommand updateCmd = new MySqlCommand(
                             @"UPDATE mysql_Membership SET LastActivityDate = ?LastActivityDate 
-                            WHERE Username = ?Username AND Applicationname = ?Applicationname", conn);
+                            WHERE Username = ?Username AND Applicationname = ?Applicationname",
+                            conn);
                         updateCmd.Parameters.Add("?LastActivityDate", MySqlDbType.Datetime).Value = DateTime.Now;
                         updateCmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255).Value = username;
                         updateCmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
@@ -674,7 +623,7 @@ namespace MySql.Web.Security
                 }
                 else
                 {
-                    throw e;
+                    throw;
                 }
             }
             finally
@@ -691,10 +640,13 @@ namespace MySql.Web.Security
         public override MembershipUser GetUser(object providerUserKey, bool userIsOnline)
         {
             MySqlConnection conn = new MySqlConnection(connectionString);
-            MySqlCommand cmd = new MySqlCommand(@"SELECT PKID, Username, Email, PasswordQuestion,
+            MySqlCommand cmd =
+                new MySqlCommand(
+                    @"SELECT PKID, Username, Email, PasswordQuestion,
                 Comment, IsApproved, IsLockedOut, CreationDate, LastLoginDate,
                 LastActivityDate, LastPasswordChangedDate, LastLockedOutDate
-                FROM mysql_Membership WHERE PKID = ?PKID", conn);
+                FROM mysql_Membership WHERE PKID = ?PKID",
+                    conn);
             cmd.Parameters.Add("?PKID", MySqlDbType.VarChar).Value = providerUserKey.ToString();
             MembershipUser u = null;
             MySqlDataReader reader = null;
@@ -710,7 +662,8 @@ namespace MySql.Web.Security
                     {
                         MySqlCommand updateCmd = new MySqlCommand(
                             @"UPDATE mysql_Membership SET LastActivityDate = ?LastActivityDate
-                            WHERE PKID = ?PKID", conn);
+                            WHERE PKID = ?PKID",
+                            conn);
                         updateCmd.Parameters.Add("?LastActivityDate", MySqlDbType.Datetime).Value = DateTime.Now;
                         updateCmd.Parameters.Add("?PKID", MySqlDbType.VarChar).Value = providerUserKey.ToString();
                         updateCmd.ExecuteNonQuery();
@@ -726,7 +679,7 @@ namespace MySql.Web.Security
                 }
                 else
                 {
-                    throw e;
+                    throw;
                 }
             }
             finally
@@ -770,53 +723,50 @@ namespace MySql.Web.Security
             {
                 lastLockedOutDate = reader.GetDateTime(11);
             }
-            MembershipUser u = new MembershipUser(this.Name, username, providerUserKey, email, passwordQuestion, comment, isApproved, isLockedOut, creationDate, lastLoginDate, lastActivityDate, lastPasswordChangedDate, lastLockedOutDate);
+            MembershipUser u =
+                new MembershipUser(Name, username, providerUserKey, email, passwordQuestion, comment, isApproved,
+                                   isLockedOut, creationDate, lastLoginDate, lastActivityDate, lastPasswordChangedDate,
+                                   lastLockedOutDate);
             return u;
         }
 
         public override bool UnlockUser(string username)
         {
-            MySqlConnection conn = new MySqlConnection(connectionString);
-            MySqlCommand cmd = new MySqlCommand(@"UPDATE mysql_Membership SET IsLockedOut = False, 
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                MySqlCommand cmd = new MySqlCommand(@"UPDATE mysql_Membership SET IsLockedOut = False, 
                 LastLockedOutDate = ?LastLockedOutDate WHERE Username = ?Username AND 
-                ApplicationName = ?ApplicationName", conn);
-            cmd.Parameters.Add("?LastLockedOutDate", MySqlDbType.Datetime).Value = DateTime.Now;
-            cmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255).Value = username;
-            cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
-            int rowsAffected = 0;
-            try
-            {
-                conn.Open();
-                rowsAffected = cmd.ExecuteNonQuery();
-            }
-            catch (MySqlException e)
-            {
-                if (WriteExceptionsToEventLog)
+                ApplicationName = ?ApplicationName",
+                        conn);
+                cmd.Parameters.Add("?LastLockedOutDate", MySqlDbType.Datetime).Value = DateTime.Now;
+                cmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255).Value = username;
+                cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
+                try
                 {
-                    WriteToEventLog(e, "UnlockUser");
-                    throw new ProviderException(exceptionMessage);
+                    conn.Open();
+                    return cmd.ExecuteNonQuery() > 0;
                 }
-                else
+                catch (MySqlException e)
                 {
-                    throw e;
+                    if (WriteExceptionsToEventLog)
+                    {
+                        WriteToEventLog(e, "UnlockUser");
+                        throw new ProviderException(exceptionMessage, e);
+                    }
+                    else
+                        throw;
                 }
             }
-            finally
-            {
-                conn.Close();
-            }
-            if (rowsAffected > 0)
-            {
-                return true;
-            }
-            return false;
         }
 
         public override string GetUserNameByEmail(string email)
         {
             MySqlConnection conn = new MySqlConnection(connectionString);
-            MySqlCommand cmd = new MySqlCommand(@"SELECT Username FROM mysql_Membership 
-                WHERE Email = ?Email AND ApplicationName = ?ApplicationName", conn);
+            MySqlCommand cmd =
+                new MySqlCommand(
+                    @"SELECT Username FROM mysql_Membership 
+                WHERE Email = ?Email AND ApplicationName = ?ApplicationName",
+                    conn);
             cmd.Parameters.Add("?Email", MySqlDbType.VarChar, 128).Value = email;
             cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
             string username = "";
@@ -836,7 +786,7 @@ namespace MySql.Web.Security
                 }
                 else
                 {
-                    throw e;
+                    throw;
                 }
             }
             finally
@@ -853,15 +803,14 @@ namespace MySql.Web.Security
         public override string ResetPassword(string username, string answer)
         {
             if (!(EnablePasswordReset))
-            {
                 throw new NotSupportedException("Password Reset is not enabled.");
-            }
             if (answer == null && RequiresQuestionAndAnswer)
             {
                 UpdateFailureCount(username, "passwordAnswer");
                 throw new ProviderException("Password answer required for password Reset.");
             }
-            string newPassword = System.Web.Security.Membership.GeneratePassword(newPasswordLength, MinRequiredNonAlphanumericCharacters);
+
+            string newPassword = Membership.GeneratePassword(newPasswordLength, MinRequiredNonAlphanumericCharacters);
             ValidatePasswordEventArgs Args = new ValidatePasswordEventArgs(username, newPassword, true);
             OnValidatingPassword(Args);
             if (Args.Cancel)
@@ -875,82 +824,73 @@ namespace MySql.Web.Security
                     throw new MembershipPasswordException("Reset password canceled due to password validation failure.");
                 }
             }
-            MySqlConnection conn = new MySqlConnection(connectionString);
-            MySqlCommand cmd = new MySqlCommand(@"SELECT PasswordAnswer, IsLockedOut FROM mysql_Membership 
-                WHERE Username = ?Username AND ApplicationName = ?ApplicationName", conn);
-            cmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255).Value = username;
-            cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
-            int rowsAffected = 0;
-            string passwordAnswer = "";
-            MySqlDataReader reader = null;
-            try
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
-                conn.Open();
-                reader = cmd.ExecuteReader(CommandBehavior.SingleRow);
-                if (reader.HasRows)
+                MySqlCommand cmd =
+                    new MySqlCommand(
+                        @"SELECT PasswordAnswer, IsLockedOut FROM mysql_Membership 
+                WHERE Username = ?Username AND ApplicationName = ?ApplicationName",
+                        conn);
+                cmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255).Value = username;
+                cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
+
+                try
                 {
-                    reader.Read();
-                    if (reader.GetBoolean(1))
+                    conn.Open();
+                    using (MySqlDataReader reader = cmd.ExecuteReader(CommandBehavior.SingleRow))
                     {
-                        throw new MembershipPasswordException("The supplied user is locked out.");
+                        if (!reader.HasRows)
+                            throw new MembershipPasswordException("The supplied user name is not found.");
+
+                        reader.Read();
+                        if (reader.GetBoolean(1))
+                            throw new MembershipPasswordException("The supplied user is locked out.");
+
+                        string passwordAnswer = reader.GetString(0);
+                        if (RequiresQuestionAndAnswer && !(CheckPassword(answer, passwordAnswer)))
+                        {
+                            UpdateFailureCount(username, "passwordAnswer");
+                            throw new MembershipPasswordException("Incorrect password answer.");
+                        }
                     }
-                    passwordAnswer = reader.GetString(0);
-                }
-                else
-                {
-                    throw new MembershipPasswordException("The supplied user name is not found.");
-                }
-                if (RequiresQuestionAndAnswer && !(CheckPassword(answer, passwordAnswer)))
-                {
-                    UpdateFailureCount(username, "passwordAnswer");
-                    throw new MembershipPasswordException("Incorrect password answer.");
-                }
-                MySqlCommand updateCmd = new MySqlCommand(@"UPDATE mysql_Membership 
+
+                    MySqlCommand updateCmd = new MySqlCommand(@"UPDATE mysql_Membership 
                     SET Password = ?Password, LastPasswordChangedDate = ?LastPasswordChangedDate
                     WHERE Username = ?Username AND ApplicationName = ?ApplicationName AND 
                     IsLockedOut = False", conn);
-                updateCmd.Parameters.Add("?Password", MySqlDbType.VarChar, 255).Value = EncodePassword(newPassword);
-                updateCmd.Parameters.Add("?LastPasswordChangedDate", MySqlDbType.Datetime).Value = DateTime.Now;
-                updateCmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255).Value = username;
-                updateCmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
-                rowsAffected = updateCmd.ExecuteNonQuery();
-            }
-            catch (MySqlException e)
-            {
-                if (WriteExceptionsToEventLog)
-                {
-                    WriteToEventLog(e, "ResetPassword");
-                    throw new ProviderException(exceptionMessage);
+                    updateCmd.Parameters.Add("?Password", MySqlDbType.VarChar, 255).Value = EncodePassword(newPassword);
+                    updateCmd.Parameters.Add("?LastPasswordChangedDate", MySqlDbType.Datetime).Value = DateTime.Now;
+                    updateCmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255).Value = username;
+                    updateCmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
+                    int rowsAffected = updateCmd.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                        return newPassword;
+                    else
+                        throw new MembershipPasswordException("User not found, or user is locked out. Password not Reset.");
                 }
-                else
+                catch (MySqlException e)
                 {
-                    throw e;
+                    if (WriteExceptionsToEventLog)
+                    {
+                        WriteToEventLog(e, "ResetPassword");
+                        throw new ProviderException(exceptionMessage, e);
+                    }
+                    else
+                        throw;
                 }
-            }
-            finally
-            {
-                if (!(reader == null))
-                {
-                    reader.Close();
-                }
-                conn.Close();
-            }
-            if (rowsAffected > 0)
-            {
-                return newPassword;
-            }
-            else
-            {
-                throw new MembershipPasswordException("User not found, or user is locked out. Password not Reset.");
             }
         }
 
         public override void UpdateUser(MembershipUser user)
         {
             MySqlConnection conn = new MySqlConnection(connectionString);
-            MySqlCommand cmd = new MySqlCommand(@"UPDATE mysql_Membership SET Email = ?Email, 
+            MySqlCommand cmd =
+                new MySqlCommand(
+                    @"UPDATE mysql_Membership SET Email = ?Email, 
                 Comment = ?Comment, IsApproved = ?IsApproved WHERE Username = ?Username AND 
-                ApplicationName = ?ApplicationName", conn);
+                ApplicationName = ?ApplicationName",
+                    conn);
             cmd.Parameters.Add("?Email", MySqlDbType.VarChar, 128).Value = user.Email;
             cmd.Parameters.Add("?Comment", MySqlDbType.VarChar, 255).Value = user.Comment;
             cmd.Parameters.Add("?IsApproved", MySqlDbType.Bit).Value = user.IsApproved;
@@ -970,7 +910,7 @@ namespace MySql.Web.Security
                 }
                 else
                 {
-                    throw e;
+                    throw;
                 }
             }
             finally
@@ -982,69 +922,56 @@ namespace MySql.Web.Security
         public override bool ValidateUser(string username, string password)
         {
             bool isValid = false;
-            MySqlConnection conn = new MySqlConnection(connectionString);
-            MySqlCommand cmd = new MySqlCommand(@"SELECT Password, IsApproved FROM mysql_Membership 
-                WHERE Username = ?Username AND ApplicationName = ?ApplicationName AND 
-                IsLockedOut = False", conn);
-            cmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255).Value = username;
-            cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
-            MySqlDataReader reader = null;
-            bool isApproved = false;
-            string pwd = "";
-            try
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
-                conn.Open();
-                reader = cmd.ExecuteReader(CommandBehavior.SingleRow);
-                if (reader.HasRows)
+                MySqlCommand cmd =
+                    new MySqlCommand(
+                        @"SELECT Password, IsApproved FROM mysql_Membership 
+                WHERE Username = ?Username AND ApplicationName = ?ApplicationName AND 
+                IsLockedOut = False",
+                        conn);
+                cmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255).Value = username;
+                cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
+                try
                 {
-                    reader.Read();
-                    pwd = reader.GetString(0);
-                    isApproved = reader.GetBoolean(1);
-                }
-                else
-                {
-                    return false;
-                }
-                reader.Close();
-                if (CheckPassword(password, pwd))
-                {
-                    if (isApproved)
+                    conn.Open();
+                    using (MySqlDataReader reader = cmd.ExecuteReader(CommandBehavior.SingleRow))
                     {
-                        isValid = true;
-                        MySqlCommand updateCmd = new MySqlCommand(@"UPDATE mysql_Membership 
+                        if (!reader.HasRows) return false;
+                        reader.Read();
+                        string pwd = reader.GetString(0);
+                        bool isApproved = reader.GetBoolean(1);
+                        reader.Close();
+
+                        if (!CheckPassword(password, pwd))
+                            UpdateFailureCount(username, "password");
+                        else if (isApproved)
+                        {
+                            isValid = true;
+                            MySqlCommand updateCmd =
+                                new MySqlCommand(
+                                    @"UPDATE mysql_Membership 
                             SET LastLoginDate = ?LastLoginDate WHERE Username = ?Username AND 
-                            ApplicationName = ?ApplicationName", conn);
-                        updateCmd.Parameters.Add("?LastLoginDate", MySqlDbType.Datetime).Value = DateTime.Now;
-                        updateCmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255).Value = username;
-                        updateCmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
-                        updateCmd.ExecuteNonQuery();
+                            ApplicationName = ?ApplicationName",
+                                    conn);
+                            updateCmd.Parameters.Add("?LastLoginDate", MySqlDbType.Datetime).Value = DateTime.Now;
+                            updateCmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255).Value = username;
+                            updateCmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value =
+                                pApplicationName;
+                            updateCmd.ExecuteNonQuery();
+                        }
                     }
                 }
-                else
+                catch (MySqlException e)
                 {
-                    conn.Close();
-                    UpdateFailureCount(username, "password");
+                    if (WriteExceptionsToEventLog)
+                    {
+                        WriteToEventLog(e, "ValidateUser");
+                        throw new ProviderException(exceptionMessage, e);
+                    }
+                    else
+                        throw;
                 }
-            }
-            catch (MySqlException e)
-            {
-                if (WriteExceptionsToEventLog)
-                {
-                    WriteToEventLog(e, "ValidateUser");
-                    throw new ProviderException(exceptionMessage);
-                }
-                else
-                {
-                    throw e;
-                }
-            }
-            finally
-            {
-                if (!(reader == null))
-                {
-                    reader.Close();
-                }
-                conn.Close();
             }
             return isValid;
         }
@@ -1052,10 +979,13 @@ namespace MySql.Web.Security
         private void UpdateFailureCount(string username, string failureType)
         {
             MySqlConnection conn = new MySqlConnection(connectionString);
-            MySqlCommand cmd = new MySqlCommand(@"SELECT FailedPasswordAttemptCount, 
+            MySqlCommand cmd =
+                new MySqlCommand(
+                    @"SELECT FailedPasswordAttemptCount, 
                 FailedPasswordAttemptWindowStart, FailedPasswordAnswerAttemptCount, 
                 FailedPasswordAnswerAttemptWindowStart FROM mysql_Membership 
-                WHERE Username = ?Username AND ApplicationName = ?ApplicationName", conn);
+                WHERE Username = ?Username AND ApplicationName = ?ApplicationName",
+                    conn);
             cmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255).Value = username;
             cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
             MySqlDataReader reader = null;
@@ -1085,14 +1015,16 @@ namespace MySql.Web.Security
                 {
                     if (failureType == "password")
                     {
-                        cmd.CommandText = @"UPDATE mysql_Membership 
+                        cmd.CommandText =
+                            @"UPDATE mysql_Membership 
                             SET FailedPasswordAttemptCount = ?Count, 
                             FailedPasswordAttemptWindowStart = ?WindowStart 
                             WHERE Username = ?Username AND ApplicationName = ?ApplicationName";
                     }
                     if (failureType == "passwordAnswer")
                     {
-                        cmd.CommandText = @"UPDATE mysql_Membership 
+                        cmd.CommandText =
+                            @"UPDATE mysql_Membership 
                             SET FailedPasswordAnswerAttemptCount = ?Count, 
                             FailedPasswordAnswerAttemptWindowStart = ?WindowStart 
                             WHERE Username = ?Username AND ApplicationName = ?ApplicationName";
@@ -1112,7 +1044,8 @@ namespace MySql.Web.Security
                     failureCount += 1;
                     if (failureCount >= MaxInvalidPasswordAttempts)
                     {
-                        cmd.CommandText = @"UPDATE mysql_Membership SET IsLockedOut = ?IsLockedOut, 
+                        cmd.CommandText =
+                            @"UPDATE mysql_Membership SET IsLockedOut = ?IsLockedOut, 
                             LastLockedOutDate = ?LastLockedOutDate WHERE Username = ?Username AND 
                             ApplicationName = ?ApplicationName";
                         cmd.Parameters.Clear();
@@ -1129,13 +1062,15 @@ namespace MySql.Web.Security
                     {
                         if (failureType == "password")
                         {
-                            cmd.CommandText = @"UPDATE mysql_Membership 
+                            cmd.CommandText =
+                                @"UPDATE mysql_Membership 
                                 SET FailedPasswordAttemptCount = ?Count WHERE Username = ?Username 
                                 AND ApplicationName = ?ApplicationName";
                         }
                         if (failureType == "passwordAnswer")
                         {
-                            cmd.CommandText = @"UPDATE mysql_Membership 
+                            cmd.CommandText =
+                                @"UPDATE mysql_Membership 
                                 SET FailedPasswordAnswerAttemptCount = ?Count 
                                 WHERE Username = ?Username AND ApplicationName = ?ApplicationName";
                         }
@@ -1159,7 +1094,7 @@ namespace MySql.Web.Security
                 }
                 else
                 {
-                    throw e;
+                    throw;
                 }
             }
             finally
@@ -1238,22 +1173,25 @@ namespace MySql.Web.Security
             return password;
         }
 
-        private byte[] HexToByte(string hexString)
+        private static byte[] HexToByte(string hexString)
         {
-            byte[] ReturnBytes = new byte[(hexString.Length / 2) - 1];
+            byte[] ReturnBytes = new byte[(hexString.Length/2) - 1];
             for (int i = 0; i <= ReturnBytes.Length - 1; i++)
             {
-                ReturnBytes[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
+                ReturnBytes[i] = Convert.ToByte(hexString.Substring(i*2, 2), 16);
             }
             return ReturnBytes;
         }
 
-        public override MembershipUserCollection FindUsersByName(string usernameToMatch, 
-            int pageIndex, int pageSize, out int totalRecords)
+        public override MembershipUserCollection FindUsersByName(string usernameToMatch,
+                                                                 int pageIndex, int pageSize, out int totalRecords)
         {
             MySqlConnection conn = new MySqlConnection(connectionString);
-            MySqlCommand cmd = new MySqlCommand(@"SELECT Count(*) FROM mysql_Membership 
-                WHERE Username LIKE ?UsernameSearch AND ApplicationName = ?ApplicationName", conn);
+            MySqlCommand cmd =
+                new MySqlCommand(
+                    @"SELECT Count(*) FROM mysql_Membership 
+                WHERE Username LIKE ?UsernameSearch AND ApplicationName = ?ApplicationName",
+                    conn);
             cmd.Parameters.Add("?UsernameSearch", MySqlDbType.VarChar, 255).Value = usernameToMatch;
             cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
             MembershipUserCollection users = new MembershipUserCollection();
@@ -1261,12 +1199,13 @@ namespace MySql.Web.Security
             try
             {
                 conn.Open();
-                totalRecords = System.Convert.ToInt32(cmd.ExecuteScalar());
+                totalRecords = Convert.ToInt32(cmd.ExecuteScalar());
                 if (totalRecords <= 0)
                 {
                     return users;
                 }
-                cmd.CommandText = @"SELECT PKID, Username, Email, PasswordQuestion, Comment, 
+                cmd.CommandText =
+                    @"SELECT PKID, Username, Email, PasswordQuestion, Comment, 
                     IsApproved, IsLockedOut, CreationDate, LastLoginDate, LastActivityDate, 
                     LastPasswordChangedDate, LastLockedOutDate FROM mysql_Membership 
                     WHERE Username LIKE ?UsernameSearch AND ApplicationName = ?ApplicationName 
@@ -1275,7 +1214,7 @@ namespace MySql.Web.Security
                 cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
                 reader = cmd.ExecuteReader();
                 int counter = 0;
-                int startIndex = pageSize * pageIndex;
+                int startIndex = pageSize*pageIndex;
                 int endIndex = startIndex + pageSize - 1;
                 while (reader.Read())
                 {
@@ -1300,7 +1239,7 @@ namespace MySql.Web.Security
                 }
                 else
                 {
-                    throw e;
+                    throw;
                 }
             }
             finally
@@ -1314,12 +1253,15 @@ namespace MySql.Web.Security
             return users;
         }
 
-        public override MembershipUserCollection FindUsersByEmail(string emailToMatch, int pageIndex, 
-            int pageSize, out int totalRecords)
+        public override MembershipUserCollection FindUsersByEmail(string emailToMatch, int pageIndex,
+                                                                  int pageSize, out int totalRecords)
         {
             MySqlConnection conn = new MySqlConnection(connectionString);
-            MySqlCommand cmd = new MySqlCommand(@"SELECT Count(*) FROM mysql_Membership 
-                WHERE Email LIKE ?EmailSearch AND ApplicationName = ?ApplicationName", conn);
+            MySqlCommand cmd =
+                new MySqlCommand(
+                    @"SELECT Count(*) FROM mysql_Membership 
+                WHERE Email LIKE ?EmailSearch AND ApplicationName = ?ApplicationName",
+                    conn);
             cmd.Parameters.Add("?EmailSearch", MySqlDbType.VarChar, 255).Value = emailToMatch;
             cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName.ToString();
             MembershipUserCollection users = new MembershipUserCollection();
@@ -1328,21 +1270,23 @@ namespace MySql.Web.Security
             try
             {
                 conn.Open();
-                totalRecords = System.Convert.ToInt32(cmd.ExecuteScalar());
+                totalRecords = Convert.ToInt32(cmd.ExecuteScalar());
                 if (totalRecords <= 0)
                 {
                     return users;
                 }
-                cmd.CommandText = @"SELECT PKID, Username, Email, PasswordQuestion, Comment, 
+                cmd.CommandText =
+                    @"SELECT PKID, Username, Email, PasswordQuestion, Comment, 
                     IsApproved, IsLockedOut, CreationDate, LastLoginDate, 
                     LastActivityDate, LastPasswordChangedDate, LastLockedOutDate 
                     FROM mysql_Membership WHERE Email LIKE ?EmailSearch AND 
-                    ApplicationName = ?ApplicationName " + " ORDER BY Username Asc";
+                    ApplicationName = ?ApplicationName " +
+                    " ORDER BY Username Asc";
                 cmd.Parameters.Add("?EmailSearch", MySqlDbType.VarChar, 255).Value = emailToMatch;
                 cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
                 reader = cmd.ExecuteReader();
                 int counter = 0;
-                int startIndex = pageSize * pageIndex;
+                int startIndex = pageSize*pageIndex;
                 int endIndex = startIndex + pageSize - 1;
                 while (reader.Read())
                 {
@@ -1367,7 +1311,7 @@ namespace MySql.Web.Security
                 }
                 else
                 {
-                    throw e;
+                    throw;
                 }
             }
             finally
@@ -1387,9 +1331,9 @@ namespace MySql.Web.Security
             log.Source = eventSource;
             log.Log = eventLog;
             string message = "An exception occurred communicating with the data source." +
-                Environment.NewLine + Environment.NewLine;
+                             Environment.NewLine + Environment.NewLine;
             message += "Action: " + action + Environment.NewLine + Environment.NewLine;
-            message += "Exception: " + e.ToString();
+            message += "Exception: " + e;
             log.WriteEntry(message);
         }
     }

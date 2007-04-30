@@ -23,11 +23,8 @@
 //  the MySQL Contributor License Agreement (CLA)
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using MySql.Data.MySqlClient;
-using System.Diagnostics;
 using System.Data;
+using MySql.Data.MySqlClient;
 
 namespace MySql.Web.Security
 {
@@ -81,13 +78,15 @@ namespace MySql.Web.Security
 
         private static void GenerateFirstSchema(string tablename, MySqlConnection connection)
         {
-            string sql = @"CREATE TABLE  mysql_UsersInRoles(`Username` varchar(255) NOT NULL,
+            string sql =
+                @"CREATE TABLE  mysql_UsersInRoles(`Username` varchar(255) NOT NULL,
                 `Rolename` varchar(255) NOT NULL, `ApplicationName` varchar(255) NOT NULL,
                 KEY `Username` (`Username`,`Rolename`,`ApplicationName`)
                 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='1'";
 
-            if (tablename == "mysql_Roles")            
-                sql = @"CREATE TABLE mysql_Roles(`Rolename` varchar(255) NOT NULL,
+            if (tablename == "mysql_Roles")
+                sql =
+                    @"CREATE TABLE mysql_Roles(`Rolename` varchar(255) NOT NULL,
                 `ApplicationName` varchar(255) NOT NULL, 
                 KEY `Rolename` (`Rolename`,`ApplicationName`)
                 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='1'";

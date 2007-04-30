@@ -23,11 +23,8 @@
 //  the MySQL Contributor License Agreement (CLA)
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using MySql.Data.MySqlClient;
-using System.Diagnostics;
 using System.Data;
+using MySql.Data.MySqlClient;
 
 namespace MySql.Web.Security
 {
@@ -75,7 +72,8 @@ namespace MySql.Web.Security
 
         private static void GenerateFirstSchema(MySqlConnection connection)
         {
-            string sql = @"CREATE TABLE  mysql_Membership(`PKID` varchar(36) NOT NULL,
+            string sql =
+                @"CREATE TABLE  mysql_Membership(`PKID` varchar(36) NOT NULL,
                 `Username` varchar(255) NOT NULL, `ApplicationName` varchar(255) NOT NULL,
                 `Email` varchar(128) NOT NULL, `Comment` varchar(255) default NULL,
                 `Password` varchar(128) NOT NULL, `PasswordQuestion` varchar(255) default NULL,
