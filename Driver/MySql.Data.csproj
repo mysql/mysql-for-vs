@@ -139,6 +139,7 @@
     <Compile Include="Source\common\WinCE.cs" />
     <Compile Include="Source\CompressedStream.cs" />
     <Compile Include="Source\Connection.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Source\Crypt.cs" />
     <Compile Include="Source\dataadapter.cs">

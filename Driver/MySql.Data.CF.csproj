@@ -56,10 +56,8 @@
     <Compile Include="Source\base\DbException.cs" />
     <Compile Include="Source\CharSetMap.cs" />
     <Compile Include="Source\command.cs">
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Source\CommandBuilder.cs">
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Source\common\BufferedStream.cs" />
     <Compile Include="Source\common\ContextString.cs" />

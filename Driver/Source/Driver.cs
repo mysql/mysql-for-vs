@@ -19,134 +19,137 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
-using System.Text;
 using System.Collections;
+using System.Globalization;
+using System.Text;
 using MySql.Data.Common;
 using MySql.Data.Types;
 
 namespace MySql.Data.MySqlClient
 {
-	/// <summary>
-	/// Summary description for BaseDriver.
-	/// </summary>
-	internal abstract class Driver
-	{
-		protected int threadId;
-		protected DBVersion version;
-		protected Encoding encoding;
-		protected ServerStatusFlags serverStatus;
-		protected MySqlConnectionStringBuilder connectionString;
-		protected ClientFlags serverCaps;
-		protected bool isOpen;
-		protected DateTime creationTime;
-		protected string serverCharSet;
-		protected int serverCharSetIndex;
-		protected Hashtable serverProps;
-		protected MySqlConnection connection;
-		protected Hashtable charSets;
-		protected bool hasWarnings;
-		protected long maxPacketSize;
+    /// <summary>
+    /// Summary description for BaseDriver.
+    /// </summary>
+    internal abstract class Driver
+    {
+        protected int threadId;
+        protected DBVersion version;
+        protected Encoding encoding;
+        protected ServerStatusFlags serverStatus;
+        protected MySqlConnectionStringBuilder connectionString;
+        protected ClientFlags serverCaps;
+        protected bool isOpen;
+        protected DateTime creationTime;
+        protected string serverCharSet;
+        protected int serverCharSetIndex;
+        protected Hashtable serverProps;
+        protected MySqlConnection connection;
+        protected Hashtable charSets;
+        protected bool hasWarnings;
+        protected long maxPacketSize;
 
-		public Driver(MySqlConnectionStringBuilder settings)
-		{
-			encoding = System.Text.Encoding.GetEncoding(1252);
-			connectionString = settings;
-			threadId = -1;
-			serverCharSetIndex = -1;
-			serverCharSet = null;
-			hasWarnings = false;
-		}
+        public Driver(MySqlConnectionStringBuilder settings)
+        {
+            encoding = Encoding.GetEncoding(1252);
+            connectionString = settings;
+            threadId = -1;
+            serverCharSetIndex = -1;
+            serverCharSet = null;
+            hasWarnings = false;
+        }
 
-		#region Properties
+        #region Properties
 
-		public MySqlConnection Connection
-		{
-			get { return connection; }
-		}
+        public MySqlConnection Connection
+        {
+            get { return connection; }
+        }
 
-		public int ThreadID
-		{
-			get { return threadId; }
-		}
+        public int ThreadID
+        {
+            get { return threadId; }
+        }
 
-		public DBVersion Version
-		{
-			get { return version; }
-		}
+        public DBVersion Version
+        {
+            get { return version; }
+        }
 
-		public MySqlConnectionStringBuilder Settings
-		{
-			get { return connectionString; }
-			set { connectionString = value; }
-		}
+        public MySqlConnectionStringBuilder Settings
+        {
+            get { return connectionString; }
+            set { connectionString = value; }
+        }
 
-		public Encoding Encoding
-		{
-			get { return encoding; }
-			set { encoding = value; }
-		}
+        public Encoding Encoding
+        {
+            get { return encoding; }
+            set { encoding = value; }
+        }
 
-		public ServerStatusFlags ServerStatus
-		{
-			get { return serverStatus; }
-		}
+        public ServerStatusFlags ServerStatus
+        {
+            get { return serverStatus; }
+        }
 
-		public bool HasWarnings
-		{
-			get { return hasWarnings; }
-		}
+        public bool HasWarnings
+        {
+            get { return hasWarnings; }
+        }
 
-		#endregion
+        #endregion
 
-		public string Property(string key)
-		{
-			return (string)serverProps[key];
-		}
+        public string Property(string key)
+        {
+            return (string) serverProps[key];
+        }
 
-		public bool IsTooOld()
-		{
-			TimeSpan ts = DateTime.Now.Subtract(creationTime);
-			if (Settings.ConnectionLifeTime != 0 && 
+        public bool IsTooOld()
+        {
+            TimeSpan ts = DateTime.Now.Subtract(creationTime);
+            if (Settings.ConnectionLifeTime != 0 &&
                 ts.TotalSeconds > Settings.ConnectionLifeTime)
-				return true;
-			return false;
-		}
+                return true;
+            return false;
+        }
 
-		public static Driver Create(MySqlConnectionStringBuilder settings)
-		{
-			Driver d = null;
-			if (settings.DriverType == MySqlDriverType.Native)
-				d = new NativeDriver(settings);
-			d.Open();
-			return d;
-		}
+        public static Driver Create(MySqlConnectionStringBuilder settings)
+        {
+            Driver d = null;
+            if (settings.DriverType == MySqlDriverType.Native)
+                d = new NativeDriver(settings);
+            d.Open();
+            return d;
+        }
 
-		public virtual void Open()
-		{
-			creationTime = DateTime.Now;
-		}
+        public virtual void Open()
+        {
+            creationTime = DateTime.Now;
+        }
 
-		public virtual void SafeClose()
-		{
-			try
-			{
-				Close();
-			}
-			catch (Exception) { }
-		}
+        public virtual void SafeClose()
+        {
+            try
+            {
+                Close();
+            }
+            catch (Exception)
+            {
+            }
+        }
 
-		public virtual void Close()
-		{
-			isOpen = false;
+        public virtual void Close()
+        {
+            isOpen = false;
 
-			// if we are pooling, then release ourselves
-			if (connectionString.Pooling)
-				MySqlPoolManager.RemoveConnection(this);
-		}
+            // if we are pooling, then release ourselves
+            if (connectionString.Pooling)
+                MySqlPoolManager.RemoveConnection(this);
+        }
 
-		public virtual void Configure(MySqlConnection connection)
-		{
-			this.connection = connection;
+        public virtual void Configure(MySqlConnection connection)
+        {
+            this.connection = connection;
 
             bool firstConfigure = false;
             // if we have not already configured our server variables
@@ -193,132 +196,119 @@ namespace MySql.Data.MySqlClient
             // then we are done.
             if (!Settings.ConnectionReset && !firstConfigure) return;
 
-			string charSet = connectionString.CharacterSet;
-			if (charSet == null || charSet.Length == 0)
-			{
-				if (!version.isAtLeast(4, 1, 0))
-				{
-					if (serverProps.Contains("character_set"))
-						charSet = serverProps["character_set"].ToString();
-				}
-				else
-				{
-					if (serverCharSetIndex >= 0)
-						charSet = (string)charSets[serverCharSetIndex];
-					else
-						charSet = serverCharSet;
-				}
-			}
+            string charSet = connectionString.CharacterSet;
+            if (charSet == null || charSet.Length == 0)
+            {
+                if (!version.isAtLeast(4, 1, 0))
+                {
+                    if (serverProps.Contains("character_set"))
+                        charSet = serverProps["character_set"].ToString();
+                }
+                else
+                {
+                    if (serverCharSetIndex >= 0)
+                        charSet = (string) charSets[serverCharSetIndex];
+                    else
+                        charSet = serverCharSet;
+                }
+            }
 
-			// now tell the server which character set we will send queries in and which charset we
-			// want results in
-			if (version.isAtLeast(4, 1, 0))
-			{
+            // now tell the server which character set we will send queries in and which charset we
+            // want results in
+            if (version.isAtLeast(4, 1, 0))
+            {
                 MySqlCommand cmd = new MySqlCommand("SET character_set_results=NULL",
-                    connection);
-				object clientCharSet = serverProps["character_set_client"];
-				object connCharSet = serverProps["character_set_connection"];
-				if ((clientCharSet != null && clientCharSet.ToString() != charSet) ||
-					(connCharSet != null && connCharSet.ToString() != charSet))
-				{
-					cmd.CommandText = "SET NAMES " + charSet + ";" + cmd.CommandText;
-				}
-				cmd.ExecuteNonQuery();
-			}
+                                                    connection);
+                object clientCharSet = serverProps["character_set_client"];
+                object connCharSet = serverProps["character_set_connection"];
+                if ((clientCharSet != null && clientCharSet.ToString() != charSet) ||
+                    (connCharSet != null && connCharSet.ToString() != charSet))
+                {
+                    cmd.CommandText = "SET NAMES " + charSet + ";" + cmd.CommandText;
+                }
+                cmd.ExecuteNonQuery();
+            }
 
-			if (charSet != null)
-				Encoding = CharSetMap.GetEncoding(version, charSet);
-			else
-				Encoding = CharSetMap.GetEncoding(version, "latin1");
-		}
+            if (charSet != null)
+                Encoding = CharSetMap.GetEncoding(version, charSet);
+            else
+                Encoding = CharSetMap.GetEncoding(version, "latin1");
+        }
 
-		/// <summary>
-		/// Loads all the current character set names and ids for this server 
-		/// into the charSets hashtable
-		/// </summary>
-		private void LoadCharacterSets()
-		{
-			if (!version.isAtLeast(4, 1, 0)) return;
+        /// <summary>
+        /// Loads all the current character set names and ids for this server 
+        /// into the charSets hashtable
+        /// </summary>
+        private void LoadCharacterSets()
+        {
+            if (!version.isAtLeast(4, 1, 0)) return;
 
-			MySqlCommand cmd = new MySqlCommand("SHOW COLLATION", connection);
-			MySqlDataReader reader = null;
+            MySqlCommand cmd = new MySqlCommand("SHOW COLLATION", connection);
+            MySqlDataReader reader = null;
 
-			// now we load all the currently active collations
-			try
-			{
-				reader = cmd.ExecuteReader();
-				charSets = new Hashtable();
-				while (reader.Read())
-				{
-					charSets[Convert.ToInt32(reader["id"], System.Globalization.NumberFormatInfo.InvariantInfo)] =
-						reader.GetString(reader.GetOrdinal("charset"));
-				}
-			}
-			catch (Exception ex)
-			{
-				Logger.LogException(ex);
-				throw;
-			}
-			finally
-			{
-				if (reader != null) reader.Close();
-			}
-		}
+            // now we load all the currently active collations
+            try
+            {
+                reader = cmd.ExecuteReader();
+                charSets = new Hashtable();
+                while (reader.Read())
+                {
+                    charSets[Convert.ToInt32(reader["id"], NumberFormatInfo.InvariantInfo)] =
+                        reader.GetString(reader.GetOrdinal("charset"));
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.LogException(ex);
+                throw;
+            }
+            finally
+            {
+                if (reader != null) reader.Close();
+            }
+        }
 
-		public void ReportWarnings()
-		{
-			ArrayList errors = new ArrayList();
+        public void ReportWarnings()
+        {
+            ArrayList errors = new ArrayList();
 
-			MySqlCommand cmd = new MySqlCommand("SHOW WARNINGS", connection);
-			MySqlDataReader reader = null;
-			try
-			{
-				reader = cmd.ExecuteReader();
-				while (reader.Read())
-				{
-					errors.Add(new MySqlError(reader.GetString(0),
-						reader.GetInt32(1), reader.GetString(2)));
-				}
-				reader.Close();
+            MySqlCommand cmd = new MySqlCommand("SHOW WARNINGS", connection);
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    errors.Add(new MySqlError(reader.GetString(0),
+                                              reader.GetInt32(1), reader.GetString(2)));
+                }
 
-				hasWarnings = false;
-				// MySQL resets warnings before each statement, so a batch could indicate
-				// warnings when there aren't any
-				if (errors.Count == 0) return;
+                hasWarnings = false;
+                // MySQL resets warnings before each statement, so a batch could indicate
+                // warnings when there aren't any
+                if (errors.Count == 0) return;
 
-				MySqlInfoMessageEventArgs args = new MySqlInfoMessageEventArgs();
-				args.errors = (MySqlError[])errors.ToArray(typeof(MySqlError));
-				if (connection != null)
-					connection.OnInfoMessage(args);
+                MySqlInfoMessageEventArgs args = new MySqlInfoMessageEventArgs();
+                args.errors = (MySqlError[]) errors.ToArray(typeof (MySqlError));
+                if (connection != null)
+                    connection.OnInfoMessage(args);
+            }
+        }
 
-			}
-			catch (Exception)
-			{
-				throw;
-			}
-			finally
-			{
-				if (reader != null) reader.Close();
-			}
-		}
+        #region Abstract Methods
 
-		#region Abstract Methods
+        public abstract bool SupportsBatch { get; }
+        public abstract void SetDatabase(string dbName);
+        public abstract int PrepareStatement(string sql, ref MySqlField[] parameters);
+        public abstract void Reset();
+        public abstract void Query(byte[] bytes, int length);
+        public abstract long ReadResult(ref ulong affectedRows, ref long lastInsertId);
+        public abstract bool FetchDataRow(int statementId, int pageSize, int columns);
+        public abstract bool SkipDataRow();
+        public abstract IMySqlValue ReadColumnValue(int index, MySqlField field, IMySqlValue value);
+        public abstract void ExecuteStatement(byte[] bytes);
+        public abstract void SkipColumnValue(IMySqlValue valObject);
+        public abstract MySqlField[] ReadColumnMetadata(int count);
+        public abstract bool Ping();
 
-		public abstract bool SupportsBatch { get; }
-		public abstract void SetDatabase(string dbName);
-		public abstract int PrepareStatement(string sql, ref MySqlField[] parameters);
-		public abstract void Reset();
-		public abstract void Query(byte[] bytes, int length);
-		public abstract long ReadResult(ref ulong affectedRows, ref long lastInsertId);
-		public abstract bool FetchDataRow(int statementId, int pageSize, int columns);
-		public abstract bool SkipDataRow();
-		public abstract IMySqlValue ReadColumnValue(int index, MySqlField field, IMySqlValue value);
-		public abstract void ExecuteStatement(byte[] bytes);
-		public abstract void SkipColumnValue(IMySqlValue valObject);
-		public abstract MySqlField[] ReadColumnMetadata(int count);
-		public abstract bool Ping();
-
-		#endregion
-
-	}
+        #endregion
+    }
 }

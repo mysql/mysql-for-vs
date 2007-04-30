@@ -20,8 +20,8 @@
 
 using System;
 using System.Collections;
-using System.Text;
 using System.IO;
+using System.Text;
 
 namespace MySql.Data.MySqlClient
 {
@@ -86,8 +86,8 @@ namespace MySql.Data.MySqlClient
             if (buffers.Count == 0)
                 return false;
 
-            MemoryStream ms = (MemoryStream)buffers[0];
-            Driver.Query(ms.GetBuffer(), (int)ms.Length);
+            MemoryStream ms = (MemoryStream) buffers[0];
+            Driver.Query(ms.GetBuffer(), (int) ms.Length);
             buffers.RemoveAt(0);
             return true;
         }
@@ -101,13 +101,13 @@ namespace MySql.Data.MySqlClient
             stream.Version = Driver.Version;
 
             // make sure our token array ends with a ;
-            string lastToken = (string)tokenArray[tokenArray.Count - 1];
+            string lastToken = (string) tokenArray[tokenArray.Count - 1];
             if (lastToken != ";")
                 tokenArray.Add(";");
 
             foreach (String token in tokenArray)
             {
-                if (token.Trim().Length == 0) 
+                if (token.Trim().Length == 0)
                     continue;
                 if (token == ";")
                 {
@@ -120,7 +120,7 @@ namespace MySql.Data.MySqlClient
                     if (SerializeParameter(Parameters, stream, token))
                         continue;
                 }
- 
+
                 // our fall through case is to write the token to the byte stream
                 stream.WriteStringNoNull(token);
             }
@@ -131,11 +131,11 @@ namespace MySql.Data.MySqlClient
         /// names with and without a leading marker but we don't want the indexing
         /// methods of MySqlParameterCollection to support that.
         /// </summary>
+        /// <param name="parameters"></param>
         /// <param name="name"></param>
         /// <returns></returns>
         private MySqlParameter GetParameter(MySqlParameterCollection parameters, string name)
         {
-            string parmName = name;
             int index = parameters.IndexOf(name);
             if (index == -1)
             {
@@ -156,8 +156,8 @@ namespace MySql.Data.MySqlClient
         /// </para>
         /// </remarks>
         /// <returns>True if the parameter was successfully serialized, false otherwise.</returns>
-        private bool SerializeParameter(MySqlParameterCollection parameters, 
-            MySqlStream stream, string parmName)
+        private bool SerializeParameter(MySqlParameterCollection parameters,
+                                        MySqlStream stream, string parmName)
         {
             MySqlParameter parameter = GetParameter(parameters, parmName);
             if (parameter == null)
@@ -216,9 +216,9 @@ namespace MySql.Data.MySqlClient
                     sqlPart.Remove(0, sqlPart.Length);
                 }
                 else if (sqlPart.Length > 0 && sqlPart[0] == Connection.ParameterMarker &&
-                    !Char.IsLetterOrDigit(c) && c != '_' && c != '.' && c != '$' &&
-                    ((c != '@' && c != Connection.ParameterMarker) &&
-                     (c != '?' && c != Connection.ParameterMarker)))
+                         !Char.IsLetterOrDigit(c) && c != '_' && c != '.' && c != '$' &&
+                         ((c != '@' && c != Connection.ParameterMarker) &&
+                          (c != '?' && c != Connection.ParameterMarker)))
                 {
                     tokens.Add(sqlPart.ToString());
                     sqlPart.Remove(0, sqlPart.Length);

@@ -19,106 +19,112 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
+using System.ComponentModel;
 using System.Data;
 using System.Data.Common;
-using System.Collections.Specialized;
+#if !CF
+using System.Drawing;
+using System.Drawing.Design;
+using System.Transactions;
+#endif
 using System.Text;
-using System.ComponentModel;
-using System.Globalization;
-using MySql.Data.Common;
-using System.Diagnostics;
+using IsolationLevel=System.Data.IsolationLevel;
 
 namespace MySql.Data.MySqlClient
 {
-	/// <include file='docs/MySqlConnection.xml' path='docs/ClassSummary/*'/>
+    /// <include file='docs/MySqlConnection.xml' path='docs/ClassSummary/*'/>
 #if !CF
-	[System.Drawing.ToolboxBitmap(typeof(MySqlConnection), "MySqlClient.resources.connection.bmp")]
-	[System.ComponentModel.DesignerCategory("Code")]
-	[ToolboxItem(true)]
+    [ToolboxBitmap(typeof (MySqlConnection), "MySqlClient.resources.connection.bmp")]
+    [DesignerCategory("Code")]
+    [ToolboxItem(true)]
 #endif
-	public sealed class MySqlConnection : DbConnection, ICloneable
-	{
-		internal ConnectionState connectionState;
-		internal Driver driver;
-		private MySqlDataReader dataReader;
-		private MySqlConnectionStringBuilder settings;
-		private UsageAdvisor advisor;
-		private bool hasBeenOpen;
-		private SchemaProvider schemaProvider;
-		private ProcedureCache procedureCache;
+    public sealed class MySqlConnection : DbConnection, ICloneable
+    {
+        internal ConnectionState connectionState;
+        internal Driver driver;
+        private MySqlDataReader dataReader;
+        private MySqlConnectionStringBuilder settings;
+        private UsageAdvisor advisor;
+        private bool hasBeenOpen;
+        private SchemaProvider schemaProvider;
+        private ProcedureCache procedureCache;
 #if !CF
-		private PerformanceMonitor perfMonitor;
-		private MySqlPromotableTransaction currentTransaction;
+        private PerformanceMonitor perfMonitor;
+        private MySqlPromotableTransaction currentTransaction;
 #endif
         private bool isExecutingBuggyQuery;
 
         /// <include file='docs/MySqlConnection.xml' path='docs/InfoMessage/*'/>
-		public event MySqlInfoMessageEventHandler InfoMessage;
+        public event MySqlInfoMessageEventHandler InfoMessage;
 
 #if MONO2
-        /// <include file='docs/MySqlConnection.xml' path='docs/StateChange/*'/>
+    /// <include file='docs/MySqlConnection.xml' path='docs/StateChange/*'/>
         public event StateChangeEventHandler StateChange;
 #endif
 
-		/// <include file='docs/MySqlConnection.xml' path='docs/DefaultCtor/*'/>
-		public MySqlConnection()
-		{
-			//TODO: add event data to StateChange docs
-			settings = new MySqlConnectionStringBuilder();
-			advisor = new UsageAdvisor(this);
-		}
+        /// <include file='docs/MySqlConnection.xml' path='docs/DefaultCtor/*'/>
+        public MySqlConnection()
+        {
+            //TODO: add event data to StateChange docs
+            settings = new MySqlConnectionStringBuilder();
+            advisor = new UsageAdvisor(this);
+        }
 
-		/// <include file='docs/MySqlConnection.xml' path='docs/Ctor1/*'/>
-		public MySqlConnection(string connectionString)
-			: this()
-		{
-			ConnectionString = connectionString;
-		}
+        /// <include file='docs/MySqlConnection.xml' path='docs/Ctor1/*'/>
+        public MySqlConnection(string connectionString)
+            : this()
+        {
+            ConnectionString = connectionString;
+        }
 
-		#region Interal Methods & Properties
+        #region Interal Methods & Properties
 
 #if !CF
         internal MySqlPromotableTransaction CurrentTransaction
-		{
-			get { return currentTransaction; }
-			set { currentTransaction = value; }
-		}
+        {
+            get { return currentTransaction; }
+            set { currentTransaction = value; }
+        }
 
-		internal PerformanceMonitor PerfMonitor
-		{
-			get { return perfMonitor; }
-		}
+        internal PerformanceMonitor PerfMonitor
+        {
+            get { return perfMonitor; }
+        }
 
 #endif
 
         internal ProcedureCache ProcedureCache
-		{
-			get { return procedureCache; }
-		}
+        {
+            get { return procedureCache; }
+        }
 
-		internal MySqlConnectionStringBuilder Settings
-		{
-			get { return settings; }
-		}
+        internal MySqlConnectionStringBuilder Settings
+        {
+            get { return settings; }
+        }
 
-		internal MySqlDataReader Reader
-		{
-			get { return dataReader; }
-			set { dataReader = value; }
-		}
+        internal MySqlDataReader Reader
+        {
+            get { return dataReader; }
+            set { dataReader = value; }
+        }
 
-		internal char ParameterMarker
-		{
-			get { if (settings.UseOldSyntax) return '@'; return '?'; }
-		}
+        internal char ParameterMarker
+        {
+            get
+            {
+                if (settings.UseOldSyntax) return '@';
+                return '?';
+            }
+        }
 
-		internal void OnInfoMessage(MySqlInfoMessageEventArgs args)
-		{
-			if (InfoMessage != null)
-			{
-				InfoMessage(this, args);
-			}
-		}
+        internal void OnInfoMessage(MySqlInfoMessageEventArgs args)
+        {
+            if (InfoMessage != null)
+            {
+                InfoMessage(this, args);
+            }
+        }
 
         internal bool IsExecutingBuggyQuery
         {
@@ -128,361 +134,365 @@ namespace MySql.Data.MySqlClient
 
         #endregion
 
-		#region Properties
+        #region Properties
 
 #if !CF
-		[Browsable(false)]
+        [Browsable(false)]
 #endif
-		internal UsageAdvisor UsageAdvisor
-		{
-			get { return advisor; }
-		}
+            internal UsageAdvisor UsageAdvisor
+        {
+            get { return advisor; }
+        }
 
-		/// <summary>
-		/// Returns the id of the server thread this connection is executing on
-		/// </summary>
+        /// <summary>
+        /// Returns the id of the server thread this connection is executing on
+        /// </summary>
 #if !CF
-		[Browsable(false)]
+        [Browsable(false)]
 #endif
-		public int ServerThread
-		{
-			get { return driver.ThreadID; }
-		}
+            public int ServerThread
+        {
+            get { return driver.ThreadID; }
+        }
 
-		/// <summary>
-		/// Gets the name of the MySQL server to which to connect.
-		/// </summary>
+        /// <summary>
+        /// Gets the name of the MySQL server to which to connect.
+        /// </summary>
 #if !CF
-		[Browsable(true)]
+        [Browsable(true)]
 #endif
-		public override string DataSource
-		{
-			get { return settings.Server; }
-		}
+            public override string DataSource
+        {
+            get { return settings.Server; }
+        }
 
-		/// <include file='docs/MySqlConnection.xml' path='docs/ConnectionTimeout/*'/>
+        /// <include file='docs/MySqlConnection.xml' path='docs/ConnectionTimeout/*'/>
 #if !CF
-		[Browsable(true)]
+        [Browsable(true)]
 #endif
-		public override int ConnectionTimeout
-		{
-			get { return (int)settings.ConnectionTimeout; }
-		}
+            public override int ConnectionTimeout
+        {
+            get { return (int) settings.ConnectionTimeout; }
+        }
 
-		/// <include file='docs/MySqlConnection.xml' path='docs/Database/*'/>
+        /// <include file='docs/MySqlConnection.xml' path='docs/Database/*'/>
 #if !CF
-		[Browsable(true)]
+        [Browsable(true)]
 #endif
-		public override string Database
-		{
-			get { return settings.Database; }
-		}
+            public override string Database
+        {
+            get { return settings.Database; }
+        }
 
-		/// <summary>
-		/// Indicates if this connection should use compression when communicating with the server.
-		/// </summary>
+        /// <summary>
+        /// Indicates if this connection should use compression when communicating with the server.
+        /// </summary>
 #if !CF
-		[Browsable(false)]
+        [Browsable(false)]
 #endif
-		public bool UseCompression
-		{
-			get { return settings.UseCompression; }
-		}
+            public bool UseCompression
+        {
+            get { return settings.UseCompression; }
+        }
 
-		/// <include file='docs/MySqlConnection.xml' path='docs/State/*'/>
+        /// <include file='docs/MySqlConnection.xml' path='docs/State/*'/>
 #if !CF
-		[Browsable(false)]
+        [Browsable(false)]
 #endif
-		public override ConnectionState State
-		{
-			get { return connectionState; }
-		}
+            public override ConnectionState State
+        {
+            get { return connectionState; }
+        }
 
-		/// <include file='docs/MySqlConnection.xml' path='docs/ServerVersion/*'/>
+        /// <include file='docs/MySqlConnection.xml' path='docs/ServerVersion/*'/>
 #if !CF
-		[Browsable(false)]
+        [Browsable(false)]
 #endif
-		public override string ServerVersion
-		{
-			get { return driver.Version.ToString(); }
-		}
+            public override string ServerVersion
+        {
+            get { return driver.Version.ToString(); }
+        }
 
-		internal Encoding Encoding
-		{
-			get
-			{
-				if (driver == null)
-					return System.Text.Encoding.Default;
-				else
-					return driver.Encoding;
-			}
-		}
+        internal Encoding Encoding
+        {
+            get
+            {
+                if (driver == null)
+                    return Encoding.Default;
+                else
+                    return driver.Encoding;
+            }
+        }
 
 
-		/// <include file='docs/MySqlConnection.xml' path='docs/ConnectionString/*'/>
+        /// <include file='docs/MySqlConnection.xml' path='docs/ConnectionString/*'/>
 #if !CF
-		[Editor("MySql.Data.MySqlClient.Design.ConnectionStringTypeEditor,MySqlClient.Design", typeof(System.Drawing.Design.UITypeEditor))]
-		[Browsable(true)]
-		[Category("Data")]
-		[Description("Information used to connect to a DataSource, such as 'Server=xxx;UserId=yyy;Password=zzz;Database=dbdb'.")]
+        [Editor("MySql.Data.MySqlClient.Design.ConnectionStringTypeEditor,MySqlClient.Design", typeof (UITypeEditor))]
+        [Browsable(true)]
+        [Category("Data")]
+        [Description(
+            "Information used to connect to a DataSource, such as 'Server=xxx;UserId=yyy;Password=zzz;Database=dbdb'.")]
 #endif
-		public override string ConnectionString
-		{
-			get
-			{
-				// Always return exactly what the user set.
-				// Security-sensitive information may be removed.
-				return settings.GetConnectionString(!hasBeenOpen || settings.PersistSecurityInfo);
-			}
-			set
-			{
-				if (this.State != ConnectionState.Closed)
-					throw new MySqlException("Not allowed to change the 'ConnectionString' property while the connection (state=" + State + ").");
+            public override string ConnectionString
+        {
+            get
+            {
+                // Always return exactly what the user set.
+                // Security-sensitive information may be removed.
+                return settings.GetConnectionString(!hasBeenOpen || settings.PersistSecurityInfo);
+            }
+            set
+            {
+                if (State != ConnectionState.Closed)
+                    throw new MySqlException(
+                        "Not allowed to change the 'ConnectionString' property while the connection (state=" + State +
+                        ").");
 
-				try
-				{
-					MySqlConnectionStringBuilder newSettings =
-						 new MySqlConnectionStringBuilder(value);
-					settings = newSettings;
-					if (driver != null)
-						driver.Settings = newSettings;
-					//TODO: what happens if we are in a pool
-				}
-				catch (Exception)
-				{
-					throw;
-				}
-			}
-		}
+                MySqlConnectionStringBuilder newSettings =
+                    new MySqlConnectionStringBuilder(value);
+                settings = newSettings;
+                if (driver != null)
+                    driver.Settings = newSettings;
+                //TODO: what happens if we are in a pool
+            }
+        }
 
-		#endregion
+        #endregion
 
-		#region Transactions
+        #region Transactions
 
 #if !MONO && !CF
-		/// <summary>
-		/// Enlists in the specified transaction. 
-		/// </summary>
-		/// <param name="transaction">
-		/// A reference to an existing <see cref="System.Transactions.Transaction"/> in which to enlist.
-		/// </param>
-		public override void EnlistTransaction(System.Transactions.Transaction transaction)
-		{
-			if (currentTransaction != null)
-			{
-				if (currentTransaction.BaseTransaction == transaction)
-					return;
+        /// <summary>
+        /// Enlists in the specified transaction. 
+        /// </summary>
+        /// <param name="transaction">
+        /// A reference to an existing <see cref="System.Transactions.Transaction"/> in which to enlist.
+        /// </param>
+        public override void EnlistTransaction(Transaction transaction)
+        {
+            if (currentTransaction != null)
+            {
+                if (currentTransaction.BaseTransaction == transaction)
+                    return;
 
-				throw new MySqlException("Already enlisted");
-			}
+                throw new MySqlException("Already enlisted");
+            }
 
-			currentTransaction = new MySqlPromotableTransaction(this, transaction);
-			transaction.EnlistPromotableSinglePhase(currentTransaction);
-		}
+            currentTransaction = new MySqlPromotableTransaction(this, transaction);
+            transaction.EnlistPromotableSinglePhase(currentTransaction);
+        }
 #endif
 
-		/// <include file='docs/MySqlConnection.xml' path='docs/BeginTransaction/*'/>
-		public new MySqlTransaction BeginTransaction()
-		{
-			return this.BeginTransaction(IsolationLevel.RepeatableRead);
-		}
+        /// <include file='docs/MySqlConnection.xml' path='docs/BeginTransaction/*'/>
+        public new MySqlTransaction BeginTransaction()
+        {
+            return BeginTransaction(IsolationLevel.RepeatableRead);
+        }
 
-		/// <include file='docs/MySqlConnection.xml' path='docs/BeginTransaction1/*'/>
-		public new MySqlTransaction BeginTransaction(IsolationLevel iso)
-		{
+        /// <include file='docs/MySqlConnection.xml' path='docs/BeginTransaction1/*'/>
+        public new MySqlTransaction BeginTransaction(IsolationLevel iso)
+        {
             // First check to see if we are in a current transaction
             if ((driver.ServerStatus & ServerStatusFlags.InTransaction) != 0)
                 throw new InvalidOperationException(Resources.NoNestedTransactions);
 
-			//TODO: check note in help
-			if (State != ConnectionState.Open)
-				throw new InvalidOperationException(Resources.ConnectionNotOpen);
+            //TODO: check note in help
+            if (State != ConnectionState.Open)
+                throw new InvalidOperationException(Resources.ConnectionNotOpen);
 
-			MySqlTransaction t = new MySqlTransaction(this, iso);
+            MySqlTransaction t = new MySqlTransaction(this, iso);
 
-			MySqlCommand cmd = new MySqlCommand("", this);
+            MySqlCommand cmd = new MySqlCommand("", this);
 
-			cmd.CommandText = "SET SESSION TRANSACTION ISOLATION LEVEL ";
-			switch (iso)
-			{
-				case IsolationLevel.ReadCommitted:
-					cmd.CommandText += "READ COMMITTED"; break;
-				case IsolationLevel.ReadUncommitted:
-					cmd.CommandText += "READ UNCOMMITTED"; break;
-				case IsolationLevel.RepeatableRead:
-					cmd.CommandText += "REPEATABLE READ"; break;
-				case IsolationLevel.Serializable:
-					cmd.CommandText += "SERIALIZABLE"; break;
-				case IsolationLevel.Chaos:
-					throw new NotSupportedException(Resources.ChaosNotSupported);
-			}
+            cmd.CommandText = "SET SESSION TRANSACTION ISOLATION LEVEL ";
+            switch (iso)
+            {
+                case IsolationLevel.ReadCommitted:
+                    cmd.CommandText += "READ COMMITTED";
+                    break;
+                case IsolationLevel.ReadUncommitted:
+                    cmd.CommandText += "READ UNCOMMITTED";
+                    break;
+                case IsolationLevel.RepeatableRead:
+                    cmd.CommandText += "REPEATABLE READ";
+                    break;
+                case IsolationLevel.Serializable:
+                    cmd.CommandText += "SERIALIZABLE";
+                    break;
+                case IsolationLevel.Chaos:
+                    throw new NotSupportedException(Resources.ChaosNotSupported);
+            }
 
-			cmd.ExecuteNonQuery();
+            cmd.ExecuteNonQuery();
 
-			cmd.CommandText = "BEGIN";
-			cmd.ExecuteNonQuery();
+            cmd.CommandText = "BEGIN";
+            cmd.ExecuteNonQuery();
 
-			return t;
-		}
+            return t;
+        }
 
-		#endregion
+        #endregion
 
-		/// <include file='docs/MySqlConnection.xml' path='docs/ChangeDatabase/*'/>
-		public override void ChangeDatabase(string database)
-		{
-			if (database == null || database.Trim().Length == 0)
-				throw new ArgumentException(Resources.ParameterIsInvalid, "database");
+        /// <include file='docs/MySqlConnection.xml' path='docs/ChangeDatabase/*'/>
+        public override void ChangeDatabase(string database)
+        {
+            if (database == null || database.Trim().Length == 0)
+                throw new ArgumentException(Resources.ParameterIsInvalid, "database");
 
-			if (State != ConnectionState.Open)
-				throw new InvalidOperationException(Resources.ConnectionNotOpen);
+            if (State != ConnectionState.Open)
+                throw new InvalidOperationException(Resources.ConnectionNotOpen);
 
-			driver.SetDatabase(database);
-			settings.Database = database;
-		}
+            driver.SetDatabase(database);
+            settings.Database = database;
+        }
 
-		internal void SetState(ConnectionState newConnectionState)
-		{
-			if (newConnectionState == this.connectionState)
-				return;
-			ConnectionState oldConnectionState = this.connectionState;
-			this.connectionState = newConnectionState;
-			this.OnStateChange(new StateChangeEventArgs(oldConnectionState, this.connectionState));
-		}
+        internal void SetState(ConnectionState newConnectionState)
+        {
+            if (newConnectionState == connectionState)
+                return;
+            ConnectionState oldConnectionState = connectionState;
+            connectionState = newConnectionState;
+            OnStateChange(new StateChangeEventArgs(oldConnectionState, connectionState));
+        }
 
-		/// <summary>
-		/// Ping
-		/// </summary>
-		/// <returns></returns>
-		public bool Ping()
-		{
-			bool result = driver.Ping();
-			if (!result)
-				SetState(ConnectionState.Closed);
-			return result;
-		}
+        /// <summary>
+        /// Ping
+        /// </summary>
+        /// <returns></returns>
+        public bool Ping()
+        {
+            bool result = driver.Ping();
+            if (!result)
+                SetState(ConnectionState.Closed);
+            return result;
+        }
 
-		/// <include file='docs/MySqlConnection.xml' path='docs/Open/*'/>
-		public override void Open()
-		{
-			if (State == ConnectionState.Open)
-				throw new InvalidOperationException(Resources.ConnectionAlreadyOpen);
+        /// <include file='docs/MySqlConnection.xml' path='docs/Open/*'/>
+        public override void Open()
+        {
+            if (State == ConnectionState.Open)
+                throw new InvalidOperationException(Resources.ConnectionAlreadyOpen);
 
-			SetState(ConnectionState.Connecting);
+            SetState(ConnectionState.Connecting);
 
-			try
-			{
-				if (settings.Pooling)
-				{
-					MySqlPool pool = MySqlPoolManager.GetPool(settings);
-					driver = pool.GetConnection();
-					procedureCache = pool.ProcedureCache;
-				}
-				else
-				{
-					driver = Driver.Create(settings);
-					procedureCache = new ProcedureCache((int)settings.ProcedureCacheSize);
-				}
-			}
-			catch (Exception)
-			{
-				SetState(ConnectionState.Closed);
-				throw;
-			}
+            try
+            {
+                if (settings.Pooling)
+                {
+                    MySqlPool pool = MySqlPoolManager.GetPool(settings);
+                    driver = pool.GetConnection();
+                    procedureCache = pool.ProcedureCache;
+                }
+                else
+                {
+                    driver = Driver.Create(settings);
+                    procedureCache = new ProcedureCache((int) settings.ProcedureCacheSize);
+                }
+            }
+            catch (Exception)
+            {
+                SetState(ConnectionState.Closed);
+                throw;
+            }
 
-			// if the user is using old syntax, let them know
-			if (driver.Settings.UseOldSyntax)
-				Logger.LogWarning("You are using old syntax that will be removed in future versions");
+            // if the user is using old syntax, let them know
+            if (driver.Settings.UseOldSyntax)
+                Logger.LogWarning("You are using old syntax that will be removed in future versions");
 
-			SetState(ConnectionState.Open);
-			driver.Configure(this);
-			if (settings.Database != null && settings.Database != String.Empty)
-				ChangeDatabase(settings.Database);
+            SetState(ConnectionState.Open);
+            driver.Configure(this);
+            if (settings.Database != null && settings.Database != String.Empty)
+                ChangeDatabase(settings.Database);
 
-			// setup our schema provider
-			if (driver.Version.isAtLeast(5, 0, 0))
-				schemaProvider = new ISSchemaProvider(this);
-			else
-				schemaProvider = new SchemaProvider(this);
+            // setup our schema provider
+            if (driver.Version.isAtLeast(5, 0, 0))
+                schemaProvider = new ISSchemaProvider(this);
+            else
+                schemaProvider = new SchemaProvider(this);
 #if !CF
-			perfMonitor = new PerformanceMonitor(this);
+            perfMonitor = new PerformanceMonitor(this);
 #endif
 
-			// if we are opening up inside a current transaction, then autoenlist
-			// TODO: control this with a connection string option
+            // if we are opening up inside a current transaction, then autoenlist
+            // TODO: control this with a connection string option
 #if !MONO && !CF
-			if (System.Transactions.Transaction.Current != null)
-				EnlistTransaction(System.Transactions.Transaction.Current);
+            if (Transaction.Current != null)
+                EnlistTransaction(Transaction.Current);
 #endif
 
-			hasBeenOpen = true;
-		}
+            hasBeenOpen = true;
+        }
 
-		/// <include file='docs/MySqlConnection.xml' path='docs/CreateCommand/*'/>
-		public new MySqlCommand CreateCommand()
-		{
-			// Return a new instance of a command object.
-			MySqlCommand c = new MySqlCommand();
-			c.Connection = this;
-			return c;
-		}
+        /// <include file='docs/MySqlConnection.xml' path='docs/CreateCommand/*'/>
+        public new MySqlCommand CreateCommand()
+        {
+            // Return a new instance of a command object.
+            MySqlCommand c = new MySqlCommand();
+            c.Connection = this;
+            return c;
+        }
 
-		#region ICloneable
-		/// <summary>
-		/// Creates a new MySqlConnection object with the exact same ConnectionString value
-		/// </summary>
-		/// <returns>A cloned MySqlConnection object</returns>
-		object ICloneable.Clone()
-		{
-			MySqlConnection clone = new MySqlConnection();
-			clone.ConnectionString = settings.GetConnectionString(true);
-			return clone;
-		}
-		#endregion
+        #region ICloneable
 
-		#region IDisposeable
+        /// <summary>
+        /// Creates a new MySqlConnection object with the exact same ConnectionString value
+        /// </summary>
+        /// <returns>A cloned MySqlConnection object</returns>
+        object ICloneable.Clone()
+        {
+            MySqlConnection clone = new MySqlConnection();
+            clone.ConnectionString = settings.GetConnectionString(true);
+            return clone;
+        }
 
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing && State == ConnectionState.Open)
-				Close();
-			base.Dispose(disposing);
-		}
+        #endregion
 
-		#endregion
+        #region IDisposeable
 
-		protected override DbTransaction BeginDbTransaction(IsolationLevel isolationLevel)
-		{
-			if (isolationLevel == IsolationLevel.Unspecified)
-				return BeginTransaction();
-			return BeginTransaction(isolationLevel);
-		}
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && State == ConnectionState.Open)
+                Close();
+            base.Dispose(disposing);
+        }
 
-		protected override DbCommand CreateDbCommand()
-		{
-			return CreateCommand();
-		}
+        #endregion
 
-		internal void Abort()
-		{
-			try
-			{
-				if (settings.Pooling)
-					MySqlPoolManager.ReleaseConnection(driver);
-				else
-					driver.Close();
-			}
-			catch (Exception) { }
-			SetState(ConnectionState.Closed);
-		}
+        protected override DbTransaction BeginDbTransaction(IsolationLevel isolationLevel)
+        {
+            if (isolationLevel == IsolationLevel.Unspecified)
+                return BeginTransaction();
+            return BeginTransaction(isolationLevel);
+        }
 
-		/// <include file='docs/MySqlConnection.xml' path='docs/Close/*'/>
-		public override void Close()
-		{
-			//TODO: rollback any pending transaction
-			if (State == ConnectionState.Closed) return;
+        protected override DbCommand CreateDbCommand()
+        {
+            return CreateCommand();
+        }
 
-			if (dataReader != null)
-				dataReader.Close();
+        internal void Abort()
+        {
+            try
+            {
+                if (settings.Pooling)
+                    MySqlPoolManager.ReleaseConnection(driver);
+                else
+                    driver.Close();
+            }
+            catch (Exception)
+            {
+            }
+            SetState(ConnectionState.Closed);
+        }
+
+        /// <include file='docs/MySqlConnection.xml' path='docs/Close/*'/>
+        public override void Close()
+        {
+            //TODO: rollback any pending transaction
+            if (State == ConnectionState.Closed) return;
+
+            if (dataReader != null)
+                dataReader.Close();
 
             if ((driver.ServerStatus & ServerStatusFlags.InTransaction) != 0)
             {
@@ -490,13 +500,13 @@ namespace MySql.Data.MySqlClient
                 t.Rollback();
             }
 
-			if (settings.Pooling)
-				MySqlPoolManager.ReleaseConnection(driver);
-			else
-				driver.Close();
+            if (settings.Pooling)
+                MySqlPoolManager.ReleaseConnection(driver);
+            else
+                driver.Close();
 
-			SetState(ConnectionState.Closed);
-		}
+            SetState(ConnectionState.Closed);
+        }
 
 #if MONO2
 
@@ -508,41 +518,41 @@ namespace MySql.Data.MySqlClient
 
 #endif
 
-		#region GetSchema Support
+        #region GetSchema Support
 
-		/// <summary>
-		/// Returns schema information for the data source of this <see cref="DbConnection"/>. 
-		/// </summary>
-		/// <returns>A <see cref="DataTable"/> that contains schema information. </returns>
-		public override DataTable GetSchema()
-		{
-			return GetSchema(null);
-		}
+        /// <summary>
+        /// Returns schema information for the data source of this <see cref="DbConnection"/>. 
+        /// </summary>
+        /// <returns>A <see cref="DataTable"/> that contains schema information. </returns>
+        public override DataTable GetSchema()
+        {
+            return GetSchema(null);
+        }
 
-		/// <summary>
-		/// Returns schema information for the data source of this 
-		/// <see cref="DbConnection"/> using the specified string for the schema name. 
-		/// </summary>
-		/// <param name="collectionName">Specifies the name of the schema to return. </param>
-		/// <returns>A <see cref="DataTable"/> that contains schema information. </returns>
-		public override DataTable GetSchema(string collectionName)
-		{
-			if (collectionName == null)
-				collectionName = SchemaProvider.MetaCollection;
+        /// <summary>
+        /// Returns schema information for the data source of this 
+        /// <see cref="DbConnection"/> using the specified string for the schema name. 
+        /// </summary>
+        /// <param name="collectionName">Specifies the name of the schema to return. </param>
+        /// <returns>A <see cref="DataTable"/> that contains schema information. </returns>
+        public override DataTable GetSchema(string collectionName)
+        {
+            if (collectionName == null)
+                collectionName = SchemaProvider.MetaCollection;
 
-			return GetSchema(collectionName, null);
-		}
+            return GetSchema(collectionName, null);
+        }
 
-		/// <summary>
-		/// Returns schema information for the data source of this <see cref="DbConnection"/>
-		/// using the specified string for the schema name and the specified string array 
-		/// for the restriction values. 
-		/// </summary>
-		/// <param name="collectionName">Specifies the name of the schema to return.</param>
-		/// <param name="restrictionValues">Specifies a set of restriction values for the requested schema.</param>
-		/// <returns>A <see cref="DataTable"/> that contains schema information.</returns>
-		public override DataTable GetSchema(string collectionName, string[] restrictionValues)
-		{
+        /// <summary>
+        /// Returns schema information for the data source of this <see cref="DbConnection"/>
+        /// using the specified string for the schema name and the specified string array 
+        /// for the restriction values. 
+        /// </summary>
+        /// <param name="collectionName">Specifies the name of the schema to return.</param>
+        /// <param name="restrictionValues">Specifies a set of restriction values for the requested schema.</param>
+        /// <returns>A <see cref="DataTable"/> that contains schema information.</returns>
+        public override DataTable GetSchema(string collectionName, string[] restrictionValues)
+        {
 /*            string msg = String.Format("collection = {0}", collectionName);
             foreach (string s in restrictionValues)
             {
@@ -550,13 +560,13 @@ namespace MySql.Data.MySqlClient
             }
             MessageBox.Show(msg);
   */
-			if (collectionName == null)
-				collectionName = SchemaProvider.MetaCollection;
+            if (collectionName == null)
+                collectionName = SchemaProvider.MetaCollection;
 
             string[] restrictions = null;
             if (restrictionValues != null)
             {
-                restrictions = (string[])restrictionValues.Clone();
+                restrictions = (string[]) restrictionValues.Clone();
 
                 for (int x = 0; x < restrictions.Length; x++)
                 {
@@ -572,28 +582,27 @@ namespace MySql.Data.MySqlClient
                 }
             }
 
-			DataTable dt = schemaProvider.GetSchema(collectionName, restrictions);
+            DataTable dt = schemaProvider.GetSchema(collectionName, restrictions);
             return dt;
-		}
+        }
 
-		#endregion
+        #endregion
+    }
 
-	}
+    /// <summary>
+    /// Represents the method that will handle the <see cref="MySqlConnection.InfoMessage"/> event of a 
+    /// <see cref="MySqlConnection"/>.
+    /// </summary>
+    public delegate void MySqlInfoMessageEventHandler(object sender, MySqlInfoMessageEventArgs args);
 
-	/// <summary>
-	/// Represents the method that will handle the <see cref="MySqlConnection.InfoMessage"/> event of a 
-	/// <see cref="MySqlConnection"/>.
-	/// </summary>
-	public delegate void MySqlInfoMessageEventHandler(object sender, MySqlInfoMessageEventArgs args);
-
-	/// <summary>
-	/// Provides data for the InfoMessage event. This class cannot be inherited.
-	/// </summary>
-	public class MySqlInfoMessageEventArgs : EventArgs
-	{
-		/// <summary>
-		/// 
-		/// </summary>
-		public MySqlError[] errors;
-	}
+    /// <summary>
+    /// Provides data for the InfoMessage event. This class cannot be inherited.
+    /// </summary>
+    public class MySqlInfoMessageEventArgs : EventArgs
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public MySqlError[] errors;
+    }
 }

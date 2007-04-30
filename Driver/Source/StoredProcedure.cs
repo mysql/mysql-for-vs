@@ -20,46 +20,45 @@
 
 using System;
 using System.Data;
-using MySql.Data.Common;
+using System.Globalization;
 using System.Text;
 using MySql.Data.Types;
-using System.Globalization;
 
 namespace MySql.Data.MySqlClient
 {
-	/// <summary>
-	/// Summary description for StoredProcedure.
-	/// </summary>
-	internal class StoredProcedure : PreparableStatement
-	{
-		private string hash;
-		private string outSelect;
-		private DataTable parametersTable;
-		private string resolvedCommandText;
+    /// <summary>
+    /// Summary description for StoredProcedure.
+    /// </summary>
+    internal class StoredProcedure : PreparableStatement
+    {
+        private string hash;
+        private string outSelect;
+        private DataTable parametersTable;
+        private string resolvedCommandText;
 
-		public StoredProcedure(MySqlCommand cmd, string text)
-			: base(cmd, text)
-		{
-			uint code = (uint)DateTime.Now.GetHashCode();
-			hash = code.ToString();
-		}
+        public StoredProcedure(MySqlCommand cmd, string text)
+            : base(cmd, text)
+        {
+            uint code = (uint) DateTime.Now.GetHashCode();
+            hash = code.ToString();
+        }
 
-		private string GetReturnParameter()
-		{
-			if (Parameters != null)
-				foreach (MySqlParameter p in Parameters)
-					if (p.Direction == ParameterDirection.ReturnValue)
-					{
-						string pName = p.ParameterName.Substring(1);
-						return hash + pName;
-					}
-			return null;
-		}
+        private string GetReturnParameter()
+        {
+            if (Parameters != null)
+                foreach (MySqlParameter p in Parameters)
+                    if (p.Direction == ParameterDirection.ReturnValue)
+                    {
+                        string pName = p.ParameterName.Substring(1);
+                        return hash + pName;
+                    }
+            return null;
+        }
 
-		public override string ResolvedCommandText
-		{
+        public override string ResolvedCommandText
+        {
             get { return resolvedCommandText; }
-		}
+        }
 
         private DataSet GetParameters(string procName)
         {
@@ -113,111 +112,110 @@ namespace MySql.Data.MySqlClient
             return ds;
         }
 
-		public override void Resolve()
-		{
-			// first retrieve the procedure definition from our
-			// procedure cache
-			string spName = commandText;
-			if (spName.IndexOf(".") == -1)
-				spName = Connection.Database + "." + spName;
+        public override void Resolve()
+        {
+            // first retrieve the procedure definition from our
+            // procedure cache
+            string spName = commandText;
+            if (spName.IndexOf(".") == -1)
+                spName = Connection.Database + "." + spName;
 
             DataSet ds = GetParameters(spName);
 
-			DataTable procTable = ds.Tables["procedures"];
-			parametersTable = ds.Tables["procedure parameters"];
+            DataTable procTable = ds.Tables["procedures"];
+            parametersTable = ds.Tables["procedure parameters"];
 
-			StringBuilder sqlStr = new StringBuilder();
-			StringBuilder setStr = new StringBuilder();
-			outSelect = String.Empty;
+            StringBuilder sqlStr = new StringBuilder();
+            StringBuilder setStr = new StringBuilder();
+            outSelect = String.Empty;
 
-			string retParm = GetReturnParameter();
-			foreach (DataRow param in parametersTable.Rows)
-			{
-				if (param["ORDINAL_POSITION"].Equals(0)) continue;
-				string mode = (string)param["PARAMETER_MODE"];
-				string pName = (string)param["PARAMETER_NAME"];
+            string retParm = GetReturnParameter();
+            foreach (DataRow param in parametersTable.Rows)
+            {
+                if (param["ORDINAL_POSITION"].Equals(0)) continue;
+                string mode = (string) param["PARAMETER_MODE"];
+                string pName = (string) param["PARAMETER_NAME"];
 
-				// make sure the parameters given to us have an appropriate
-				// type set if it's not already
-				MySqlParameter p = command.Parameters[pName];
-				if (!p.TypeHasBeenSet)
-				{
-                    string datatype = (string)param["DATA_TYPE"];
+                // make sure the parameters given to us have an appropriate
+                // type set if it's not already
+                MySqlParameter p = command.Parameters[pName];
+                if (!p.TypeHasBeenSet)
+                {
+                    string datatype = (string) param["DATA_TYPE"];
                     bool unsigned = param["FLAGS"].ToString().IndexOf("UNSIGNED") != -1;
-					bool real_as_float = procTable.Rows[0]["SQL_MODE"].ToString().IndexOf("REAL_AS_FLOAT") != -1;
-					p.MySqlDbType = MetaData.NameToType(datatype, unsigned, real_as_float, Connection);
-				}
+                    bool real_as_float = procTable.Rows[0]["SQL_MODE"].ToString().IndexOf("REAL_AS_FLOAT") != -1;
+                    p.MySqlDbType = MetaData.NameToType(datatype, unsigned, real_as_float, Connection);
+                }
 
-				string basePName = pName.Substring(1);
-				string vName = string.Format("@{0}{1}", hash, basePName);
+                string basePName = pName.Substring(1);
+                string vName = string.Format("@{0}{1}", hash, basePName);
 
-				if (mode == "OUT" || mode == "INOUT")
-				{
-					outSelect += vName + ", ";
-					sqlStr.Append(vName);
-					sqlStr.Append(", ");
-				}
-				else
-				{
-					sqlStr.Append(pName);
-					sqlStr.Append(", ");
-				}
+                if (mode == "OUT" || mode == "INOUT")
+                {
+                    outSelect += vName + ", ";
+                    sqlStr.Append(vName);
+                    sqlStr.Append(", ");
+                }
+                else
+                {
+                    sqlStr.Append(pName);
+                    sqlStr.Append(", ");
+                }
 
-				if (mode == "INOUT")
-				{
+                if (mode == "INOUT")
+                {
                     setStr.AppendFormat(CultureInfo.InvariantCulture, "SET {0}={1};", vName, pName);
-					outSelect += vName + ", ";
-				}
-			}
+                    outSelect += vName + ", ";
+                }
+            }
 
-			string sqlCmd = sqlStr.ToString().TrimEnd(' ', ',');
-			outSelect = outSelect.TrimEnd(' ', ',');
-			if (procTable.Rows[0]["ROUTINE_TYPE"].Equals("PROCEDURE"))
-				sqlCmd = String.Format("call {0} ({1})", commandText, sqlCmd);
-			else
-			{
+            string sqlCmd = sqlStr.ToString().TrimEnd(' ', ',');
+            outSelect = outSelect.TrimEnd(' ', ',');
+            if (procTable.Rows[0]["ROUTINE_TYPE"].Equals("PROCEDURE"))
+                sqlCmd = String.Format("call {0} ({1})", commandText, sqlCmd);
+            else
+            {
                 if (retParm == null)
                     retParm = hash + "dummy";
                 else
                     outSelect = String.Format("@{0}", retParm);
                 sqlCmd = String.Format("set @{0}={1}({2})", retParm, commandText, sqlCmd);
-			}
+            }
 
-			if (setStr.Length > 0)
-				sqlCmd = setStr.ToString() + sqlCmd;
-			string oldCmdText = commandText;
+            if (setStr.Length > 0)
+                sqlCmd = setStr + sqlCmd;
 
-			resolvedCommandText = sqlCmd;
-		}
+            resolvedCommandText = sqlCmd;
+        }
 
-		public override void Close()
-		{
-			if (outSelect.Length == 0) return;
+        public override void Close()
+        {
+            if (outSelect.Length == 0) return;
 
-			char marker = Connection.ParameterMarker;
+            char marker = Connection.ParameterMarker;
 
-			MySqlCommand cmd = new MySqlCommand("SELECT " + outSelect, Connection);
-			MySqlDataReader reader = cmd.ExecuteReader();
+            MySqlCommand cmd = new MySqlCommand("SELECT " + outSelect, Connection);
+            MySqlDataReader reader = cmd.ExecuteReader();
 
-			// since MySQL likes to return user variables as strings
-			// we reset the types of the readers internal value objects
-			// this will allow those value objects to parse the string based
-			// return values
-			for (int i = 0; i < reader.FieldCount; i++)
-			{
-				string fieldName = reader.GetName(i);
-				fieldName = marker + fieldName.Remove(0, hash.Length + 1);
-				reader.values[i] = MySqlField.GetIMySqlValue(Parameters[fieldName].MySqlDbType);
-			}
+            // since MySQL likes to return user variables as strings
+            // we reset the types of the readers internal value objects
+            // this will allow those value objects to parse the string based
+            // return values
+            for (int i = 0; i < reader.FieldCount; i++)
+            {
+                string fieldName = reader.GetName(i);
+                fieldName = marker + fieldName.Remove(0, hash.Length + 1);
+                reader.values[i] = MySqlField.GetIMySqlValue(Parameters[fieldName].MySqlDbType);
+            }
 
-			reader.Read();
-			for (int i = 0; i < reader.FieldCount; i++)
-			{
-				string fieldName = reader.GetName(i);
-				fieldName = marker + fieldName.Remove(0, hash.Length + 1);
-				Parameters[fieldName].Value = reader.GetValue(i);
-			}
-			reader.Close();
-		}
-	}
+            reader.Read();
+            for (int i = 0; i < reader.FieldCount; i++)
+            {
+                string fieldName = reader.GetName(i);
+                fieldName = marker + fieldName.Remove(0, hash.Length + 1);
+                Parameters[fieldName].Value = reader.GetValue(i);
+            }
+            reader.Close();
+        }
+    }
 }

@@ -18,68 +18,63 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
-using System;
-using MySql.Data.Common;
 using System.Collections;
 
 namespace MySql.Data.MySqlClient
 {
-	/// <summary>
-	/// Summary description for MySqlPoolManager.
-	/// </summary>
-	class MySqlPoolManager
-	{
-		private static Hashtable	pools;
+    /// <summary>
+    /// Summary description for MySqlPoolManager.
+    /// </summary>
+    internal class MySqlPoolManager
+    {
+        private static Hashtable pools;
 
-		static MySqlPoolManager()
-		{
-			pools = new Hashtable();
-		}
+        static MySqlPoolManager()
+        {
+            pools = new Hashtable();
+        }
 
-		public static MySqlPool GetPool(MySqlConnectionStringBuilder settings) 
-		{
-			string text = settings.GetConnectionString(true);
+        public static MySqlPool GetPool(MySqlConnectionStringBuilder settings)
+        {
+            string text = settings.GetConnectionString(true);
 
-			lock(pools.SyncRoot) 
-			{
-				MySqlPool pool;
-				if (!pools.Contains(text)) 
-				{
-					pool = new MySqlPool(settings);
-					pools.Add(text, pool);
-				}
-				else 
-				{
-					pool = (pools[text] as MySqlPool);
-					pool.Settings = settings;
-				}
+            lock (pools.SyncRoot)
+            {
+                MySqlPool pool = (pools[text] as MySqlPool);
+                if (pool == null)
+                {
+                    pool = new MySqlPool(settings);
+                    pools.Add(text, pool);
+                }
+                else
+                    pool.Settings = settings;
 
                 return pool;
-			}
-		}
+            }
+        }
 
         public static void RemoveConnection(Driver driver)
         {
             lock (pools.SyncRoot)
             {
                 string key = driver.Settings.GetConnectionString(true);
-                MySqlPool pool = (MySqlPool)pools[key];
+                MySqlPool pool = (MySqlPool) pools[key];
                 if (pool == null)
                     throw new MySqlException("Pooling exception: Unable to find original pool for connection");
                 pool.RemoveConnection(driver);
             }
         }
 
-		public static void ReleaseConnection(Driver driver)
-		{
-			lock (pools.SyncRoot) 
-			{
-				string key = driver.Settings.GetConnectionString(true);
-				MySqlPool pool = (MySqlPool)pools[key];
-				if (pool == null)
-					throw new MySqlException("Pooling exception: Unable to find original pool for connection");
-				pool.ReleaseConnection(driver);
-			}
-		}
-	}
+        public static void ReleaseConnection(Driver driver)
+        {
+            lock (pools.SyncRoot)
+            {
+                string key = driver.Settings.GetConnectionString(true);
+                MySqlPool pool = (MySqlPool) pools[key];
+                if (pool == null)
+                    throw new MySqlException("Pooling exception: Unable to find original pool for connection");
+                pool.ReleaseConnection(driver);
+            }
+        }
+    }
 }
