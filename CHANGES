@@ -21,6 +21,7 @@ Version 5.0.7
   Bug #26147 "User Id" problem during connection creation 
   Bug #27240 Property value characterset not retrieved/fetched in conn wizard 
   Bug #25947 CreateFormat/CreateParameters Column of DataTypes collection incorrect for CHAR 
+  Bug #27765 Logging does not work
    
   Other changes
   -------------
