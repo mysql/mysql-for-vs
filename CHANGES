@@ -1,4 +1,8 @@
-Version 5.1.0
+Version 5.1.1
+  - Fixed password property on MySqlConnectionStringBuilder to use PasswordPropertyText 
+    attribute.  This causes dots to show instead of actual password text.
+    
+Version 5.1.0 - 5/1/2007
 
   - Added Membership and Role provider contributed by Sean Wright (thanks!)
   - Now compiles for .NET CF 2.0
