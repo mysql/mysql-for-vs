@@ -18,15 +18,9 @@
  * This file contains an implemetation of prompt dialog.
  */
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Text;
-using System.Windows.Forms;
-using Microsoft.VisualStudio.Data;
 using System.Diagnostics;
 using System.Globalization;
+using Microsoft.VisualStudio.Data;
 using MySql.Data.VisualStudio.Utils;
 
 namespace MySql.Data.VisualStudio
@@ -41,7 +35,7 @@ namespace MySql.Data.VisualStudio
         /// </summary>
         public MySqlDataConnectionPromptDialog()
         {
-            InitializeComponent();            
+            InitializeComponent();
         }
 
         /// <summary>
@@ -66,19 +60,19 @@ namespace MySql.Data.VisualStudio
             // Extract server name and port to build connection string
             string server = prop[MySqlConnectionProperties.Names.Server] as string;
             if (String.IsNullOrEmpty(server))
-                server = "localhost";   // Empty server name means local host
-            Int64 port = 3306;          // By default port is 3306
+                server = "localhost"; // Empty server name means local host
+            Int64 port = 3306; // By default port is 3306
             if (DataInterpreter.IsInteger(prop[MySqlConnectionProperties.Names.Port]))
-                port = (Int64)prop[MySqlConnectionProperties.Names.Port];
+                port = (Int64) prop[MySqlConnectionProperties.Names.Port];
 
             // Format caption
             Text = String.Format(CultureInfo.CurrentCulture, Text, server, port);
-            
+
             // Extract options
             login.Text = prop[MySqlConnectionProperties.Names.UserID] as string;
             password.Text = prop[MySqlConnectionProperties.Names.Password] as string;
             if (prop[MySqlConnectionProperties.Names.PersistSecurityInfo] is bool)
-                savePassword.Checked = (bool)prop[MySqlConnectionProperties.Names.PersistSecurityInfo];
+                savePassword.Checked = (bool) prop[MySqlConnectionProperties.Names.PersistSecurityInfo];
             else
                 savePassword.Checked = false;
         }
@@ -100,15 +94,14 @@ namespace MySql.Data.VisualStudio
             // Create connection properties to parse connection string
             MySqlConnectionProperties prop = new MySqlConnectionProperties();
             prop.ConnectionStringBuilder.ConnectionString = ConnectionSupport.ConnectionString;
-            
+
             // Apply changed options
             prop[MySqlConnectionProperties.Names.UserID] = login.Text;
             prop[MySqlConnectionProperties.Names.Password] = password.Text;
             prop[MySqlConnectionProperties.Names.PersistSecurityInfo] = savePassword.Checked;
-            
+
             // Change connection string for connection support
             ConnectionSupport.ConnectionString = prop.ToFullString();
         }
-        
     }
 }

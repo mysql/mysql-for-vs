@@ -1,6 +1,6 @@
 Windows Registry Editor Version 5.00
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\8.0\DataProviders\{C6882346-E592-4da5-80BA-D2EADCDA0359}]
+[HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\8.0\DataProviders\{C6882346-E592-4da5-80BA-D2EADCDA0359}]
 "Description"="Provider_Description, MySql.Data.VisualStudio.Properties.Resources"
 "DisplayName"="Provider_DisplayName, MySql.Data.VisualStudio.Properties.Resources"
 @=".NET Framework Data Provider for MySQL"
@@ -8,31 +8,45 @@ Windows Registry Editor Version 5.00
 "FactoryService"="{D949EA95-EDA1-4b65-8A9E-266949A99360}"
 "InvariantName"="MySql.Data.MySqlClient"
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\8.0\DataProviders\{C6882346-E592-4da5-80BA-D2EADCDA0359}\SupportedObjects]
+[HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\8.0\DataProviders\{C6882346-E592-4da5-80BA-D2EADCDA0359}\SupportedObjects]
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\8.0\DataProviders\{C6882346-E592-4da5-80BA-D2EADCDA0359}\SupportedObjects\DataConnectionProperties]
+[HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\8.0\DataProviders\{C6882346-E592-4da5-80BA-D2EADCDA0359}\SupportedObjects\DataConnectionProperties]
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\8.0\DataProviders\{C6882346-E592-4da5-80BA-D2EADCDA0359}\SupportedObjects\DataConnectionSupport]
+[HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\8.0\DataProviders\{C6882346-E592-4da5-80BA-D2EADCDA0359}\SupportedObjects\DataConnectionSupport]
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\8.0\DataProviders\{C6882346-E592-4da5-80BA-D2EADCDA0359}\SupportedObjects\DataConnectionUIControl]
+[HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\8.0\DataProviders\{C6882346-E592-4da5-80BA-D2EADCDA0359}\SupportedObjects\DataConnectionUIControl]
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\8.0\DataProviders\{C6882346-E592-4da5-80BA-D2EADCDA0359}\SupportedObjects\DataObjectSupport]
+[HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\8.0\DataProviders\{C6882346-E592-4da5-80BA-D2EADCDA0359}\SupportedObjects\DataObjectSupport]
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\8.0\DataProviders\{C6882346-E592-4da5-80BA-D2EADCDA0359}\SupportedObjects\DataSourceInformation]
+[HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\8.0\DataProviders\{C6882346-E592-4da5-80BA-D2EADCDA0359}\SupportedObjects\DataSourceInformation]
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\8.0\DataProviders\{C6882346-E592-4da5-80BA-D2EADCDA0359}\SupportedObjects\DataViewSupport]
+[HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\8.0\DataProviders\{C6882346-E592-4da5-80BA-D2EADCDA0359}\SupportedObjects\DataViewSupport]
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\8.0\Packages\{79A115C9-B133-4891-9E7B-242509DAD272}]
-@="MySql.Data.VisualStudio.MySqlDataProviderPackage"
-"InprocServer32"="D:\\WINNT\\system32\\mscoree.dll"
+[HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\8.0\Packages\{79A115C9-B133-4891-9E7B-242509DAD272}]
+@="MySQL Connector Net 5.1.0"
+"InprocServer32"="C:\\Windows\\system32\\mscoree.dll"
 "Class"="MySql.Data.VisualStudio.MySqlDataProviderPackage"
-"CodeBase"="[!!!PATH TO YOUR DDEX INSTALLATION!!!!]MySql.VisualStudio.dll"
+"CodeBase"="C:\\Program Files (x86)\\MySQL\\MySQL Connector Net 5.1.0\\Visual Studio Integration\\MySql.VisualStudio.dll"
 "CompanyName"="MySQL AB c/o MySQL, Inc."
-"ProductName"="Visual Studio Tools for MySQL"
-"ProductVersion"="1.0"
+"ProductName"="MySQL Tools for Visual Studio"
+"ProductVersion"="1.1"
 "MinEdition"="standard"
-"ID"=1510
+"ID"=100
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\8.0\Services\{D949EA95-EDA1-4b65-8A9E-266949A99360}]
+[HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\8.0\Services\{D949EA95-EDA1-4b65-8A9E-266949A99360}]
 @="{79A115C9-B133-4891-9E7B-242509DAD272}"
 "Name"="MySQL Provider Object Factory"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\8.0\DataSources\{98FBE4D8-5583-4233-B219-70FF8C7FBBBD}]
+@="MySQL Database"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\8.0\DataSources\{98FBE4D8-5583-4233-B219-70FF8C7FBBBD}\SupportingProviders]
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\8.0\DataSources\{98FBE4D8-5583-4233-B219-70FF8C7FBBBD}\SupportingProviders\{C6882346-E592-4da5-80BA-D2EADCDA0359}]
+"Description"="Provider_Description, MySql.Data.VisualStudio.Properties.Resources"
+"DisplayName"="Datasource_Displayname, MySql.Data.VisualStudio.Properties.Resources"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\8.0\Menus]
+"{79A115C9-B133-4891-9E7B-242509DAD272}"=",1000,1"
+
+

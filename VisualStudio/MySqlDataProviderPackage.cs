@@ -20,19 +20,15 @@
 
 using System;
 using System.ComponentModel.Design;
-using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.Shell;
-using MySql.Data.VisualStudio;
-using MySql.Data.VisualStudio.Utils;
-using System.Reflection;
-using Microsoft.VisualStudio.TextManager.Interop;
-using System.Diagnostics;
-using System.Windows.Forms.Design;
-using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio;
-using MySql.Data.VisualStudio.Properties;
 using System.Data.Common;
+using System.Diagnostics;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
+using MySql.Data.VisualStudio.Properties;
 
 namespace MySql.Data.VisualStudio
 {
@@ -48,7 +44,7 @@ namespace MySql.Data.VisualStudio
 #else
     [DefaultRegistryRoot(@"Microsoft\VisualStudio\8.0")]
 #endif
-    [ProvideService(typeof(MySqlProviderObjectFactory), ServiceName = "MySQL Provider Object Factory")]
+    [ProvideService(typeof (MySqlProviderObjectFactory), ServiceName = "MySQL Provider Object Factory")]
     [ProvideMenuResource(1000, 1)]
     [ProvideLoadKey("standard", "1.1", "MySQL Tools for Visual Studio", "MySQL AB c/o MySQL, Inc.", 100)]
     public class MySqlDataProviderPackage : Package, IVsInstalledProduct
@@ -70,17 +66,9 @@ namespace MySql.Data.VisualStudio
         /// </summary>
         protected override void Initialize()
         {
-            ((IServiceContainer)this).AddService(typeof(MySqlProviderObjectFactory), new ServiceCreatorCallback(CreateService), true);
+            ((IServiceContainer) this).AddService(typeof (MySqlProviderObjectFactory),
+                                                  new ServiceCreatorCallback(CreateService), true);
             base.Initialize();
-
-            try
-            {
-                DbProviderFactory f = DbProviderFactories.GetFactory("MySql.Data.MySqlClient");
-            }
-            catch (Exception)
-            {
-                MessageBox.Show(Resources.MySqlClientNotRegistered);
-            }
 
             instanceRef = this;
 
@@ -92,7 +80,7 @@ namespace MySql.Data.VisualStudio
         {
             return GetService(serviceType);
         }
-        
+
         /// <summary>
         /// Enumerate all types and their custom attributes. It is necessary 
         /// to get registration attributes to work. They won’t be created 
@@ -111,12 +99,11 @@ namespace MySql.Data.VisualStudio
         /// <param name="container">Not used.</param>
         /// <param name="serviceType">Must be typeof(MySqlProviderObjectFactory).</param>
         /// <returns>Reference to created factory.</returns>
-        private object CreateService(IServiceContainer container, Type serviceType)
+        private static object CreateService(IServiceContainer container, Type serviceType)
         {
-            if (serviceType == typeof(MySqlProviderObjectFactory))
-            {
+            if (serviceType == typeof (MySqlProviderObjectFactory))
                 return new MySqlProviderObjectFactory();
-            }
+
             return null;
         }
 

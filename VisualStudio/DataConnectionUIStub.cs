@@ -18,9 +18,6 @@
  * This file contains stub class, created to allow form designer 
  * to edit connection dialog.
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.VisualStudio.Data;
 
 namespace MySql.Data.VisualStudio
@@ -29,7 +26,7 @@ namespace MySql.Data.VisualStudio
     /// This class is just a stub, but form designer fails to open connection 
     /// dialog which is direct successor of DataConnectionUIControl.
     /// </summary>
-    class DataConnectionUIStub : DataConnectionUIControl
+    internal class DataConnectionUIStub : DataConnectionUIControl
     {
     }
 }

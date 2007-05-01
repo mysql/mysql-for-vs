@@ -74,7 +74,7 @@
             <RegistryValue Id='PackagesDefault' Value='[ProductName]' Type='string'/>
             <RegistryValue Id='PackInProc' Name='InprocServer32' Value='[WindowsFolder]system32\mscoree.dll' Type='string'/>
             <RegistryValue Id='PackClass' Name='Class' Value='MySql.Data.VisualStudio.MySqlDataProviderPackage' Type='string'/>
-            <RegistryValue Id='PackCodeBase' Name='CodeBase' Value='[INSTALLDIR]MySql.VisualStudio.dll' Type='string'/>
+            <RegistryValue Id='PackCodeBase' Name='CodeBase' Value='[INSTALLDIR]\Visual Studio Integration\MySql.VisualStudio.dll' Type='string'/>
             <RegistryValue Id='PackProdName' Name='ProductName' Value='MySQL Tools for Visual Studio' Type='string'/>
             <RegistryValue Id='PackVer' Name='ProductVersion' Value='1.1' Type='string'/>
             <RegistryValue Id='PackComp' Name='CompanyName' Value='MySQL AB c/o MySQL, Inc.' Type='string'/>

@@ -18,14 +18,7 @@
  * This file contains implementation of customized connection properties. 
  */
 using System;
-using Microsoft.VisualStudio.Data;
 using Microsoft.VisualStudio.Data.AdoDotNet;
-using System.ComponentModel;
-using MySql.Data.VisualStudio.Properties;
-using System.Collections;
-using System.Diagnostics;
-using MySql.Data.VisualStudio.Utils;
-using System.Windows.Forms;
 
 namespace MySql.Data.VisualStudio
 {
@@ -36,6 +29,7 @@ namespace MySql.Data.VisualStudio
     public class MySqlConnectionProperties : AdoDotNetConnectionProperties
     {
         #region Option names
+
         /// <summary>
         /// This class contains names for all connection options
         /// </summary>
@@ -71,20 +65,23 @@ namespace MySql.Data.VisualStudio
             public const string ConnectionReset = "Connection Reset";
             public const string InvariantProviderName = "MySql.Data.MySqlClient";
         }
+
         #endregion
 
         #region Initialization
+
         /// <summary>
         /// Constructor fills base object with list of custom options and their description.
         /// </summary>
         public MySqlConnectionProperties()
             : base(Names.InvariantProviderName)
         {
+        }
 
-        } 
         #endregion
 
         #region Overridings
+
         /// <summary>
         /// Test connection for these properties. Uses MySqlConnection support for version validation.
         /// </summary>
@@ -95,9 +92,9 @@ namespace MySql.Data.VisualStudio
             try
             {
                 // Initializes it with empty provider
-                conn.Initialize(null); 
+                conn.Initialize(null);
                 // Set connection string
-                conn.ConnectionString = ToTestString();                               
+                conn.ConnectionString = ToTestString();
                 // Try to open
                 conn.Open(false);
                 // Close after open
@@ -119,9 +116,10 @@ namespace MySql.Data.VisualStudio
             get
             {
                 return !String.IsNullOrEmpty(this[Names.Server] as string)
-                        && !String.IsNullOrEmpty(this[Names.Database] as string);
+                       && !String.IsNullOrEmpty(this[Names.Database] as string);
             }
         }
+
         #endregion
-    }    
+    }
 }
