@@ -116,6 +116,7 @@ namespace MySql.Data.MySqlClient
             DataSet ds = command.Connection.ProcedureCache.GetProcedure(command.Connection, spName);
 
             DataTable parameters = ds.Tables["Procedure Parameters"];
+            DataTable procTable = ds.Tables["Procedures"];
             command.Parameters.Clear();
             foreach (DataRow row in parameters.Rows)
             {
@@ -123,8 +124,10 @@ namespace MySql.Data.MySqlClient
                 p.ParameterName = row["PARAMETER_NAME"].ToString();
                 p.Direction = GetDirection(row["PARAMETER_MODE"].ToString(),
                     row["IS_RESULT"].ToString());
+                bool unsigned = row["FLAGS"].ToString().IndexOf("UNSIGNED") != -1;
+                bool real_as_float = procTable.Rows[0]["SQL_MODE"].ToString().IndexOf("REAL_AS_FLOAT") != -1;
                 p.MySqlDbType = MetaData.NameToType(row["DATA_TYPE"].ToString(),
-                    false, false, command.Connection);
+                    unsigned, real_as_float, command.Connection);
                 if (!row["CHARACTER_MAXIMUM_LENGTH"].Equals(DBNull.Value))
                     p.Size = (int)row["CHARACTER_MAXIMUM_LENGTH"];
                 if (!row["NUMERIC_PRECISION"].Equals(DBNull.Value))

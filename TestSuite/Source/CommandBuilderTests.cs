@@ -338,6 +338,20 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(1, dt.Rows[0]["id"]);
         }
 
+        /// <summary>
+        /// Bug #27679  	MySqlCommandBuilder.DeriveParameters ignores UNSIGNED flag
+        /// </summary>
+        [Category("5.0")]
+        [Test]
+        public void UnsignedParametersInSP()
+        {
+            execSQL("CREATE PROCEDURE spTest(testid TINYINT UNSIGNED) BEGIN SELECT testid; END");
+
+            MySqlCommand cmd = new MySqlCommand("spTest", conn);
+            MySqlCommandBuilder.DeriveParameters(cmd);
+            Assert.AreEqual(MySqlDbType.UByte, cmd.Parameters[0].MySqlDbType);
+            Assert.AreEqual(DbType.Byte, cmd.Parameters[0].DbType);
+        }
 
         [Test]
         public void MultiUpdate()

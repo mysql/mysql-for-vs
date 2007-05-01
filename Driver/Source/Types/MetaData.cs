@@ -77,6 +77,7 @@ namespace MySql.Data.Types
 				case "bit": return MySqlDbType.Bit;
 
 				case "tinyint":
+                    return unsigned ? MySqlDbType.UByte : MySqlDbType.Byte;
 				case "bool":
 				case "boolean":
 					return MySqlDbType.Byte;
