@@ -208,14 +208,16 @@ namespace MySql.Data.MySqlClient
                 reader.values[i] = MySqlField.GetIMySqlValue(Parameters[fieldName].MySqlDbType);
             }
 
-            reader.Read();
-            for (int i = 0; i < reader.FieldCount; i++)
+            if (reader.Read())
             {
-                string fieldName = reader.GetName(i);
-                fieldName = marker + fieldName.Remove(0, hash.Length + 1);
-                Parameters[fieldName].Value = reader.GetValue(i);
+                for (int i = 0; i < reader.FieldCount; i++)
+                {
+                    string fieldName = reader.GetName(i);
+                    fieldName = marker + fieldName.Remove(0, hash.Length + 1);
+                    Parameters[fieldName].Value = reader.GetValue(i);
+                }
             }
-            reader.Close();
-        }
-    }
+		    reader.Close();
+		}
+	}
 }
