@@ -57,6 +57,8 @@ namespace MySql.Data.MySqlClient
         /// <include file='docs/MySqlConnection.xml' path='docs/InfoMessage/*'/>
         public event MySqlInfoMessageEventHandler InfoMessage;
 
+        private static Cache connectionStringCache = new Cache(0, 25);
+
 #if MONO2
     /// <include file='docs/MySqlConnection.xml' path='docs/StateChange/*'/>
         public event StateChangeEventHandler StateChange;
@@ -248,8 +250,18 @@ namespace MySql.Data.MySqlClient
                         "Not allowed to change the 'ConnectionString' property while the connection (state=" + State +
                         ").");
 
-                MySqlConnectionStringBuilder newSettings =
-                    new MySqlConnectionStringBuilder(value);
+                MySqlConnectionStringBuilder newSettings = 
+                    (MySqlConnectionStringBuilder)connectionStringCache[value];
+
+                if (null == newSettings) //!globalConnectionStringCache.TryGetValue(value, out newSettings))
+                {
+                    lock (connectionStringCache)
+                    {
+                        newSettings = new MySqlConnectionStringBuilder(value);
+                        connectionStringCache.Add(value, newSettings);
+                    }
+                }
+
                 settings = newSettings;
                 if (driver != null)
                     driver.Settings = newSettings;
