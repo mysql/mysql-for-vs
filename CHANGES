@@ -1,6 +1,7 @@
 Version 5.1.1
   - Fixed password property on MySqlConnectionStringBuilder to use PasswordPropertyText 
     attribute.  This causes dots to show instead of actual password text.
+  - Fixed problem with pooling on the compact framework.  It should work now.    
     
 Version 5.1.0 - 5/1/2007
 

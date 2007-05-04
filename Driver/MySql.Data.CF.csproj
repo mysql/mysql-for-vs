@@ -62,6 +62,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Source\common\BufferedStream.cs" />
+    <Compile Include="Source\common\Cache.cs" />
     <Compile Include="Source\common\ContextString.cs" />
     <Compile Include="Source\common\NativeMethods.cs" />
     <Compile Include="Source\common\Platform.cs" />

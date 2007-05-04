@@ -237,6 +237,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\Resources.Designer.cs" />
+    <Compile Include="Source\common\Cache.cs" />
     <Compile Include="Source\common\SqlTokenizer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
