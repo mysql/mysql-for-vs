@@ -294,7 +294,7 @@ namespace MySql.Web.Security
             MySqlConnection conn = new MySqlConnection(connectionString);
             MySqlCommand cmd =
                 new MySqlCommand(
-                    @"SELECT Rolename FROM myql_UsersInRoles 
+                    @"SELECT Rolename FROM mysql_UsersInRoles 
                 WHERE Username = ?Username AND ApplicationName = ?ApplicationName",
                     conn);
             cmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255).Value = username;

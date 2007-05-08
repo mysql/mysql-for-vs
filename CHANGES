@@ -3,7 +3,7 @@ Version 5.1.1
     attribute.  This causes dots to show instead of actual password text.
   - Fixed problem with pooling on the compact framework.  It should work now.    
   - Install now calls VS setup only when VS integration is selected. (bug #28260)
-
+  - MySqlRoleProvider.GetRolesForUser now works correctly (bug #28251)
     
 Version 5.1.0 - 5/1/2007
 
