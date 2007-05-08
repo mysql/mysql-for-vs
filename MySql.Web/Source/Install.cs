@@ -80,6 +80,7 @@ namespace MySql.Web.Security
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(configXML);
 
+            AddDefaultConnectionString(doc);
             AddMembershipProvider(doc);
             AddRoleProvider(doc);
 
@@ -89,6 +90,33 @@ namespace MySql.Web.Security
             doc.Save(writer);
             writer.Flush();
             writer.Close();
+        }
+
+        private void AddDefaultConnectionString(XmlDocument doc)
+        {
+            // create our new node
+            XmlElement newNode = (XmlElement)doc.CreateNode(XmlNodeType.Element, "add", "");
+
+            // add the proper attributes
+            newNode.SetAttribute("name", "LocalMySqlServer");
+            newNode.SetAttribute("connectionString", "");
+
+            XmlNodeList nodes = doc.GetElementsByTagName("connectionStrings");
+            XmlNode connectionStringList = nodes[0];
+
+            bool alreadyThere = false;
+            foreach (XmlNode node in connectionStringList.ChildNodes)
+            {
+                string nameValue = node.Attributes["name"].Value;
+                if (nameValue == "LocalMySqlServer")
+                {
+                    alreadyThere = true;
+                    break;
+                }
+            }
+
+            if (!alreadyThere)
+                connectionStringList.AppendChild(newNode);
         }
 
         private void AddMembershipProvider(XmlDocument doc)
@@ -201,6 +229,7 @@ namespace MySql.Web.Security
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(configXML);
 
+            RemoveDefaultConnectionString(doc);
             RemoveMembershipProvider(doc);
             RemoveRoleProvider(doc);
 
@@ -210,6 +239,21 @@ namespace MySql.Web.Security
             doc.Save(writer);
             writer.Flush();
             writer.Close();
+        }
+
+        private void RemoveDefaultConnectionString(XmlDocument doc)
+        {
+            XmlNodeList nodes = doc.GetElementsByTagName("connectionStrings");
+            XmlNode connectionStringList = nodes[0];
+            foreach (XmlNode node in connectionStringList.ChildNodes)
+            {
+                string name = node.Attributes["name"].Value;
+                if (name == "LocalMySqlServer")
+                {
+                    connectionStringList.RemoveChild(node);
+                    break;
+                }
+            }
         }
 
         private void RemoveMembershipProvider(XmlDocument doc)

@@ -4,7 +4,9 @@ Version 5.1.1
   - Fixed problem with pooling on the compact framework.  It should work now.    
   - Install now calls VS setup only when VS integration is selected. (bug #28260)
   - MySqlRoleProvider.GetRolesForUser now works correctly (bug #28251)
-    
+  - Installer now adds a default connection string to machine.config.  This will prevent errors related to a missing 
+    connection string.  You will need to override this value in your web.config files.    
+
 Version 5.1.0 - 5/1/2007
 
   - Added Membership and Role provider contributed by Sean Wright (thanks!)
