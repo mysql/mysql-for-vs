@@ -373,8 +373,6 @@ namespace MySql.Data.MySqlClient.Tests
 
 		private static void da_FillError(object sender, FillErrorEventArgs e)
 		{
-            if (version < new Version(5, 0)) return;
-
             fillError = e.Errors.Message;
 			e.Continue = true;
 		}

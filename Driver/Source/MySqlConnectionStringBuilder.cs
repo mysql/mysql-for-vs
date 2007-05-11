@@ -802,7 +802,7 @@ namespace MySql.Data.MySqlClient
             persistConnString.Remove(0, persistConnString.Length);
 
             // set all the proper defaults
-            foreach (Keyword k in Enum.GetValues(typeof(Keyword)))
+            foreach (Keyword k in defaultValues.Keys)
                 SetValue(k, defaultValues[k]);
         }
 
@@ -979,7 +979,7 @@ namespace MySql.Data.MySqlClient
             SetValue(kw, value);
             base[keyword] = value;
             if (kw != Keyword.Password)
-                persistConnString.AppendFormat("{0}={1};", keyword, value);
+                persistConnString.AppendFormat(CultureInfo.InvariantCulture, "{0}={1};", keyword, value);
         }
 
         private void SetValue(Keyword kw, object value)
@@ -1069,6 +1069,7 @@ namespace MySql.Data.MySqlClient
             }
         }
 
+#if !CF
         protected override void GetProperties(System.Collections.Hashtable propertyDescriptors)
         {
             base.GetProperties(propertyDescriptors);
@@ -1106,6 +1107,7 @@ namespace MySql.Data.MySqlClient
             value = null;
             return false;
         }
+#endif
     }
 
     #region ConnectionProtocolDescriptor
