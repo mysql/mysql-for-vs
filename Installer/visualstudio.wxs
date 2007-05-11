@@ -85,8 +85,14 @@
       </Directory>
     </DirectoryRef>
 
+    <Property Id='VSDIR_2005'>
+      <RegistrySearch Id="RL_EnvironmentDir_2005" Root="HKLM" Key="SOFTWARE\Microsoft\VisualStudio\8.0\Setup\VS"
+        Name="EnvironmentDirectory" Type="directory" />
+    </Property>
+    
     <Feature Id='VisualStudio' Display='8' Level='1' Title='Visual Studio Integration'
              Description='DDEX and Server Explorer Integration'>
+      <Condition Level='0'>VSDIR_2005 = ""</Condition>
       <ComponentRef Id='VStudio'/>
     </Feature>
 
