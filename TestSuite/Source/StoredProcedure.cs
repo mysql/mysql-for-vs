@@ -371,7 +371,7 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.IsNull(fillError);
 		}
 
-		private void da_FillError(object sender, FillErrorEventArgs e)
+		private static void da_FillError(object sender, FillErrorEventArgs e)
 		{
             if (version < new Version(5, 0)) return;
 

@@ -29,6 +29,7 @@ using System.Transactions;
 #endif
 using System.Text;
 using IsolationLevel=System.Data.IsolationLevel;
+using MySql.Data.Common;
 
 namespace MySql.Data.MySqlClient
 {
@@ -250,12 +251,11 @@ namespace MySql.Data.MySqlClient
                         "Not allowed to change the 'ConnectionString' property while the connection (state=" + State +
                         ").");
 
-                MySqlConnectionStringBuilder newSettings = 
-                    (MySqlConnectionStringBuilder)connectionStringCache[value];
-
-                if (null == newSettings) //!globalConnectionStringCache.TryGetValue(value, out newSettings))
+                MySqlConnectionStringBuilder newSettings;
+                lock (connectionStringCache)
                 {
-                    lock (connectionStringCache)
+                    newSettings = (MySqlConnectionStringBuilder)connectionStringCache[value];
+                    if (null == newSettings)
                     {
                         newSettings = new MySqlConnectionStringBuilder(value);
                         connectionStringCache.Add(value, newSettings);
@@ -265,7 +265,6 @@ namespace MySql.Data.MySqlClient
                 settings = newSettings;
                 if (driver != null)
                     driver.Settings = newSettings;
-                //TODO: what happens if we are in a pool
             }
         }
 
@@ -282,6 +281,9 @@ namespace MySql.Data.MySqlClient
         /// </param>
         public override void EnlistTransaction(Transaction transaction)
         {
+            if (transaction == null)
+                return;
+
             if (currentTransaction != null)
             {
                 if (currentTransaction.BaseTransaction == transaction)
@@ -290,8 +292,9 @@ namespace MySql.Data.MySqlClient
                 throw new MySqlException("Already enlisted");
             }
 
-            currentTransaction = new MySqlPromotableTransaction(this, transaction);
-            transaction.EnlistPromotableSinglePhase(currentTransaction);
+            MySqlPromotableTransaction t = new MySqlPromotableTransaction(this, transaction);
+            transaction.EnlistPromotableSinglePhase(t);
+            currentTransaction = t;
         }
 #endif
 

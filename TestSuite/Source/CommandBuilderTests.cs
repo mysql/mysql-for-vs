@@ -341,10 +341,11 @@ namespace MySql.Data.MySqlClient.Tests
         /// <summary>
         /// Bug #27679  	MySqlCommandBuilder.DeriveParameters ignores UNSIGNED flag
         /// </summary>
-        [Category("5.0")]
         [Test]
         public void UnsignedParametersInSP()
         {
+            if (version < new Version(5, 0)) return;
+
             execSQL("CREATE PROCEDURE spTest(testid TINYINT UNSIGNED) BEGIN SELECT testid; END");
 
             MySqlCommand cmd = new MySqlCommand("spTest", conn);

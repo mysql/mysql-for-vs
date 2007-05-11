@@ -31,7 +31,9 @@ Version 5.0.7
   Bug #27679 MySqlCommandBuilder.DeriveParameters ignores UNSIGNED flag
   Bug #27668 FillSchema and Stored Proc with an out parameter
   Bug #28167 Poor performance building connection string (thanks Maxim!)
-   
+  Bug #26041 Connection Protocol Property Error in PropertyGrid Control
+  Bug #26754 EnlistTransaction throws false MySqlExeption "Already enlisted"
+  
   Other changes
   -------------
   Installer now works if XML comments are found in machine.config
