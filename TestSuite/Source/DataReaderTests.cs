@@ -20,6 +20,7 @@
 
 using System;
 using System.Data;
+using System.Diagnostics;
 using MySql.Data.MySqlClient;
 using MySql.Data.Types;
 using NUnit.Framework;
@@ -99,27 +100,6 @@ namespace MySql.Data.MySqlClient.Tests
 			finally 
 			{
 				if (reader != null) reader.Close();
-			}
-		}
-
-		[Test]
-		public void TestNotReadingResultset()
-		{
-			for (int x=0; x < 10; x++)
-			{
-				MySqlConnection c = new MySqlConnection( conn.ConnectionString + 
-                    ";pooling=false" );
-				c.Open();
-
-				MySqlCommand cmd = new MySqlCommand(
-                    "INSERT INTO Test (id, name, b1) VALUES(?val, 'Test', NULL)", c);
-				cmd.Parameters.Add(new MySqlParameter("?val", x));
-				int affected = cmd.ExecuteNonQuery();
-				Assert.AreEqual(1, affected);
-
-				cmd = new MySqlCommand("SELECT * FROM Test", c);
-				cmd.ExecuteReader();
-				c.Close();
 			}
 		}
 

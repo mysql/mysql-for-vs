@@ -482,5 +482,27 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(DBNull.Value, dt.Rows[0][1]);
             Assert.IsTrue(dt.Rows[0][2].GetType() == typeof(string));
         }
-    }
+
+        [Test]
+        public void SpaceInDatabaseName()
+        {
+            try
+            {
+                suExecSQL("CREATE DATABASE `my db`");
+                string connStr = GetConnectionString(false) + ";database=my db";
+
+                MySqlConnection c = new MySqlConnection(connStr);
+                c.Open();
+                c.Close();
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                suExecSQL("DROP DATABASE `my db`");
+            }
+        }
+	}
 }

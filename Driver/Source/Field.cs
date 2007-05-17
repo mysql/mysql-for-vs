@@ -161,16 +161,14 @@ namespace MySql.Data.MySqlClient
             get { return (colFlags & ColumnFlags.UNSIGNED) > 0; }
         }
 
-        public bool IsTextField
-        {
-            get
-            {
-                return Type == MySqlDbType.VarString || Type == MySqlDbType.VarChar ||
-                       ((Type == MySqlDbType.TinyBlob || Type == MySqlDbType.MediumBlob ||
-                         Type == MySqlDbType.Blob || Type == MySqlDbType.LongBlob) &&
-                        !IsBinary);
-            }
-        }
+		public bool IsTextField
+		{
+			get
+			{
+				return Type == MySqlDbType.VarString || Type == MySqlDbType.VarChar ||
+					 (IsBlob && !IsBinary);
+			}
+		}
 
         #endregion
 
@@ -206,18 +204,10 @@ namespace MySql.Data.MySqlClient
             }
 
             // now determine if we really should be binary
-            if (CharacterSetIndex == 63 && (colFlags & ColumnFlags.BINARY) != 0)
-                CheckForExceptions();
+//            if (CharacterSetIndex == 63 && (colFlags & ColumnFlags.BINARY) != 0)
+  //              CheckForExceptions();
 
-            if (IsBinary)
-            {
-                if (type == MySqlDbType.String)
-                    mySqlDbType = MySqlDbType.Binary;
-                else if (type == MySqlDbType.VarChar ||
-                         type == MySqlDbType.VarString)
-                    mySqlDbType = MySqlDbType.VarBinary;
-            }
-            else
+            if (IsBlob && !IsBinary)
             {
                 if (type == MySqlDbType.TinyBlob)
                     mySqlDbType = MySqlDbType.TinyText;
@@ -228,7 +218,17 @@ namespace MySql.Data.MySqlClient
                 else if (type == MySqlDbType.LongBlob)
                     mySqlDbType = MySqlDbType.LongText;
             }
-        }
+            /*
+                if (type == MySqlDbType.String)
+                    mySqlDbType = MySqlDbType.Binary;
+                else if (type == MySqlDbType.VarChar ||
+                         type == MySqlDbType.VarString)
+                    mySqlDbType = MySqlDbType.VarBinary;
+            }
+            else
+            {
+            }*/
+		}
 
         private void CheckForExceptions()
         {

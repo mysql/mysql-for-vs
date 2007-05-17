@@ -320,7 +320,7 @@ namespace MySql.Data.Types
 			if (s.Length > 10)
 				second = int.Parse(s.Substring(pos, 2));
 
-			return new MySqlDateTime(MySqlDbType.Datetime, year, month, day, hour,
+			return new MySqlDateTime(type, year, month, day, hour,
 					 minute, second);
 		}
 

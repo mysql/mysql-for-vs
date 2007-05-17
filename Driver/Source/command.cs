@@ -432,8 +432,8 @@ namespace MySql.Data.MySqlClient
 		/// <include file='docs/mysqlcommand.xml' path='docs/ExecuteScalar/*'/>
 		public override object ExecuteScalar()
 		{
-			lastInsertedId = -1;
-			object val = null;
+            lastInsertedId = -1;
+            object val = null;
 
             MySqlDataReader reader = ExecuteReader();
             if (reader == null) return null;
@@ -442,10 +442,6 @@ namespace MySql.Data.MySqlClient
             {
                 if (reader.Read())
                     val = reader.GetValue(0);
-            }
-            catch (Exception)
-            {
-                throw;
             }
             finally
             {
@@ -457,7 +453,7 @@ namespace MySql.Data.MySqlClient
                 reader = null;
             }
 
-			return val;
+            return val;
 		}
 
         private void HandleCommandBehaviors(CommandBehavior behavior)

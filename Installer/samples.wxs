@@ -25,7 +25,7 @@
       </Directory>
       <Directory Id="Async" Name="Async">
         <Directory Id="asyncCS" Name="cs">
-          <Component Id="Sample2CS" Guid="6e7377c6-bd5e-42e8-a47b-d600fa582744">
+          <Component Id="Sample2CS" Guid="37939b62-bf9b-450b-8845-754a44681b06">
             <File Id="sample2file1" Name="App.ico" Source="..\Samples\Async\cs\App.ico" DiskId="1"/>
             <File Id="sample2file2" Name="AssemblyInfo.cs" Source="..\Samples\Async\cs\AssemblyInfo.cs" DiskId="1"/>
             <File Id="sample2file3" Name="Form1.cs" Source="..\Samples\Async\cs\Form1.cs" DiskId="1"/>

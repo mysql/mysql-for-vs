@@ -46,7 +46,7 @@
     </resgen>
 
     <csc output="${outdir}/MySql.Data.dll" target="library"
-			define="TRACE ${defines}" debug="${debug}" optimize="${opt}" keycontainer="ConnectorNet"
+			define="TRACE,${defines}" debug="${debug}" optimize="${opt}" keycontainer="ConnectorNet"
 			doc="${outdir}/MySql.Data.xml">
       <arg value="/nowarn:0679,1591,2029"/>
       <resources prefix="MySql.Data.MySqlClient.Source">
@@ -67,7 +67,7 @@
     <property name="outdir" value="Driver/bin/${framework}/${buildType}"/>
 
     <csc output="${outdir}/MySql.Data.Tests.dll" target="library"
-			define="TRACE ${defines}" debug="${debug}" optimize="${opt}">
+			define="TRACE,${defines}" debug="${debug}" optimize="${opt}">
       <arg value="/nowarn:0679,2029"/>
       <sources>
         <include name="TestSuite/source/*.cs" />

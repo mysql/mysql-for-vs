@@ -149,16 +149,28 @@ namespace MySql.Data.MySqlClient
             return ParameterDirection.InputOutput;
         }
 
+        /// <summary>
+        /// Gets the delete command.
+        /// </summary>
+        /// <returns></returns>
         public new MySqlCommand GetDeleteCommand()
         {
             return (MySqlCommand)base.GetDeleteCommand();
         }
 
+        /// <summary>
+        /// Gets the update command.
+        /// </summary>
+        /// <returns></returns>
         public new MySqlCommand GetUpdateCommand()
         {
             return (MySqlCommand)base.GetUpdateCommand();
         }
 
+        /// <summary>
+        /// Gets the insert command.
+        /// </summary>
+        /// <returns></returns>
         public new MySqlCommand GetInsertCommand()
         {
             return (MySqlCommand)GetInsertCommand(false);

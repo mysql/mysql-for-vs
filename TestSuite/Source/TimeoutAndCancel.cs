@@ -95,7 +95,7 @@ namespace MySql.Data.MySqlClient.Tests
 
             stateChangeCount = 0;
             // now wait 10 seconds
-            System.Threading.Thread.Sleep(15000);
+            Thread.Sleep(15000);
 
             try
             {
@@ -143,7 +143,6 @@ namespace MySql.Data.MySqlClient.Tests
             {
                 TimeSpan ts = DateTime.Now.Subtract(start);
                 Assert.IsTrue(ex.Message.StartsWith("Timeout expired"), "Message is wrong");
-                Assert.IsTrue(ts.TotalSeconds < 60, "Took too much time");
             }
         }
         */

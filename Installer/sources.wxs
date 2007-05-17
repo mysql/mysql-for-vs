@@ -2,17 +2,18 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment Id='SourceFragment'>
     <DirectoryRef Id='DriverDir'>
-      <Component Id="TopLevelSrc" Guid="27b8c3d9-b12d-4961-aabc-6132d9d1548d">
+      <Component Id="TopLevelSrc" Guid="8f11cdd2-95b2-4153-8d33-8ef2750ecef2">
         <File Id="nantFile" Name="client.build" Source="..\client.build" DiskId="1"/>
         <File Id="m2005proj" Name="MySql.Data.2005.csproj" Source="..\Driver\MySql.Data.2005.csproj" DiskId="1"/>
       </Component>
       <Directory Id="PropertiesFolder" Name="Properties">
-        <Component Id="PropSrc" DiskId="1" Guid="">
+        <Component Id="PropSrc" DiskId="1" Guid="5ae1e395-52e6-4976-a146-6fc59e2b8bc4">
           <File Id="file0" Name="AssemblyInfo.cs" Source="..\Driver\Properties\AssemblyInfo.cs" />
+          <File Id="file45" Name="ReservedWords.txt" Source="..\Driver\Properties\ReservedWords.txt"/>
         </Component>
       </Directory>
       <Directory Id="srcFolder" Name="Source">
-        <Component Id="CoreSrc" DiskId="1" Guid="99b3ba9e-ede0-4644-bdbb-07973d3d907b">
+        <Component Id="CoreSrc" DiskId="1" Guid="f26e0e12-e307-4b03-834c-1a6b45e77b92">
           <File Id="file1" Name="CharSetMap.cs" Source="..\Driver\Source\CharSetMap.cs" />
           <File Id="file2" Name="command.cs" Source="..\Driver\Source\command.cs" />
           <File Id="file3" Name="CommandBuilder.cs" Source="..\Driver\Source\CommandBuilder.cs" />
@@ -48,11 +49,10 @@
           <File Id="file39" Name="StoredProcedure.cs" Source="..\Driver\Source\StoredProcedure.cs" />
           <File Id="file40" Name="transaction.cs" Source="..\Driver\Source\transaction.cs" />
           <File Id="file41" Name="UsageAdvisor.cs" Source="..\Driver\Source\UsageAdvisor.cs" />
-          <File Id="file45" Name="ReservedWords.txt" Source="..\Driver\Source\ReservedWords.txt"/>
           <File Id="file46" Name="Installer.cs" Source="..\Driver\Source\Installer.cs"/>
         </Component>
         <Directory Id="commonFolder" Name="Common">
-          <Component Id="CommonSrc"  DiskId="1" Guid="ef299809-088c-4ba4-aa7f-771e9c7b265d">
+          <Component Id="CommonSrc"  DiskId="1" Guid="d8434f79-1557-46b4-82b8-465b5e50f3de">
             <File Id="file179" Name="ContextString.cs" Source="..\Driver\Source\common\ContextString.cs" />
             <File Id="file180" Name="NamedPipeStream.cs" Source="..\Driver\Source\common\NamedPipeStream.cs" />
             <File Id="file181" Name="NativeMethods.cs" Source="..\Driver\Source\common\NativeMethods.cs" />
@@ -63,10 +63,11 @@
             <File Id="file187" Name="SocketStream.cs" Source="..\Driver\Source\common\SocketStream.cs" />
             <File Id="file188" Name="Version.cs" Source="..\Driver\Source\common\Version.cs" />
             <File Id="file189" Name="WinCE.cs" Source="..\Driver\Source\common\WinCE.cs" />
+            <File Id="file190" Name="Cache.cs" Source="..\Driver\Source\common\Cache.cs"/>
           </Component>
         </Directory>
         <Directory Id="docSrcFolder" Name="Docs">
-          <Component Id="DocsSrc" DiskId="1" Guid="aa942a0c-f508-45dc-b4df-d4571d2b2e44">
+          <Component Id="DocsSrc" DiskId="1" Guid="46e1bf2a-b9f1-4da4-ae2a-ed934efc984a">
             <File Id="file245" Name="MySqlCommand.xml" Source="..\Driver\Source\docs\MySqlCommand.xml" />
             <File Id="file246" Name="MySqlCommandBuilder.xml" Source="..\Driver\Source\docs\MySqlCommandBuilder.xml" />
             <File Id="file247" Name="MySqlConnection.xml" Source="..\Driver\Source\docs\MySqlConnection.xml" />
@@ -81,7 +82,7 @@
           </Component>
         </Directory>
         <Directory Id="typesFolder" Name="Types">
-          <Component Id="TypesSrc" DiskId="1" Guid="5f6c45fd-f725-43aa-b85f-0a2467d9e3fe">
+          <Component Id="TypesSrc" DiskId="1" Guid="891ebd68-243e-4433-9aca-0d682e012466">
             <File Id="file299" Name="MetaData.cs" Source="..\Driver\Source\Types\MetaData.cs" />
             <File Id="file300" Name="MySqlBinary.cs" Source="..\Driver\Source\Types\MySqlBinary.cs" />
             <File Id="file301" Name="MySqlBit.cs" Source="..\Driver\Source\Types\MySqlBit.cs" />
@@ -104,7 +105,7 @@
           </Component>
         </Directory>
         <Directory Id="zlibFolder" Name="zlib">
-          <Component Id="ZLibSrc" DiskId="1" Guid="9e7f2a58-229f-4b4b-a88c-8966e7b78a06">
+          <Component Id="ZLibSrc" DiskId="1" Guid="2e384863-7595-445c-9d29-381bf3cb24bd">
             <File Id="file500" Name="Adler32.cs" Source="..\Driver\Source\zlib\Adler32.cs" />
             <File Id="file501" Name="Deflate.cs" Source="..\Driver\Source\zlib\Deflate.cs" />
             <File Id="file502" Name="InfBlocks.cs" Source="..\Driver\Source\zlib\InfBlocks.cs" />
@@ -123,48 +124,52 @@
         </Directory>
       </Directory>
       <Directory Id="TestSuite" Name="TestSuite">
-        <Component Id="TestSuiteSrc" DiskId="1" Guid="a070c1b6-6397-4893-90b4-66877a106558">
-          <File Id="file402" Name="AsyncTests.cs" Source="..\TestSuite\AsyncTests.cs" />
-          <File Id="file403" Name="BaseTest.cs" Source="..\TestSuite\BaseTest.cs" />
-          <File Id="file404" Name="BlobTests.cs" Source="..\TestSuite\BlobTests.cs" />
-          <File Id="file405" Name="CharacterSetTests.cs" Source="..\TestSuite\CharacterSetTests.cs" />
-          <File Id="file406" Name="CommandBuilderTests.cs" Source="..\TestSuite\CommandBuilderTests.cs" />
-          <File Id="file407" Name="CommandTests.cs" Source="..\TestSuite\CommandTests.cs" />
-          <File Id="file408" Name="ConnectionTests.cs" Source="..\TestSuite\ConnectionTests.cs" />
-          <File Id="file409" Name="CultureTests.cs" Source="..\TestSuite\CultureTests.cs" />
-          <File Id="file410" Name="CursorTests.cs" Source="..\TestSuite\CursorTests.cs" />
-          <File Id="file411" Name="DataAdapterTests.cs" Source="..\TestSuite\DataAdapterTests.cs" />
-          <File Id="file412" Name="DataReaderTests.cs" Source="..\TestSuite\DataReaderTests.cs" />
-          <File Id="file413" Name="DataSetTest.cs" Source="..\TestSuite\DataSetTest.cs" />
-          <File Id="file414" Name="DataTypeTests.cs" Source="..\TestSuite\DataTypeTests.cs" />
-          <File Id="file415" Name="DateTimeTests.cs" Source="..\TestSuite\DateTimeTests.cs" />
-          <File Id="file416" Name="EventTests.cs" Source="..\TestSuite\EventTests.cs" />
-          <File Id="file418" Name="ExceptionTests.cs" Source="..\TestSuite\ExceptionTests.cs" />
-          <File Id="file420" Name="GetSchemaTests.cs" Source="..\TestSuite\GetSchemaTests.cs" />
-          <File Id="file421" Name="InterfaceTests.cs" Source="..\TestSuite\InterfaceTests.cs" />
-          <File Id="file422" Name="LanguageTests.cs" Source="..\TestSuite\LanguageTests.cs" />
-          <File Id="file424" Name="MicroPerfTests.cs" Source="..\TestSuite\MicroPerfTests.cs" />
+        <Component Id="TestSuiteMain" DiskId="1" Guid="0861e1ec-574b-473b-b0c4-69144c9699ac">
           <File Id="file427" Name="MySql.Data.Tests.2005.csproj" Source="..\TestSuite\MySql.Data.Tests.2005.csproj" />
           <File Id="file428" Name="MySql.Data.Tests.2003.csproj" Source="..\TestSuite\MySql.Data.Tests.2003.csproj" />
-          <File Id="file430" Name="MySqlHelperTests.cs" Source="..\TestSuite\MySqlHelperTests.cs" />
-          <File Id="file431" Name="ParameterTests.cs" Source="..\TestSuite\ParameterTests.cs" />
-          <File Id="file432" Name="PerfMonTests.cs" Source="..\TestSuite\PerfMonTests.cs" />
-          <File Id="file433" Name="PoolingTests.cs" Source="..\TestSuite\PoolingTests.cs" />
-          <File Id="file434" Name="PreparedStatements.cs" Source="..\TestSuite\PreparedStatements.cs" />
-          <File Id="file435" Name="StoredProcedure.cs" Source="..\TestSuite\StoredProcedure.cs" />
-          <File Id="file436" Name="StressTests.cs" Source="..\TestSuite\StressTests.cs" />
-          <File Id="file437" Name="Syntax.cs" Source="..\TestSuite\Syntax.cs" />
-          <File Id="file438" Name="Threading.cs" Source="..\TestSuite\Threading.cs" />
-          <File Id="file439" Name="Transactions.cs" Source="..\TestSuite\Transactions.cs" />
-          <File Id="file440" Name="UsageAdvisor.cs" Source="..\TestSuite\UsageAdvisor.cs" />
-          <File Id="file441" Name="Utils.cs" Source="..\TestSuite\Utils.cs" />
-          <File Id="file442" Name="SimpleTransactions.cs" Source="..\TestSuite\SimpleTransactions.cs"/>
-          <File Id="file443" Name="TimeoutAndCancel.cs" Source="..\TestSuite\TimeoutAndCancel.cs"/>
-          <File Id="file444" Name="Syntax2.cs" Source="..\TestSuite\Syntax2.cs"/>
-          <File Id="file445" Name="ConnectionStringBuilder.cs" Source="..\TestSuite\ConnectionStringBuilder.cs"/>
         </Component>
+        <Directory Id="TSSouce" Name="Source">
+          <Component Id="TestSuiteSrc" DiskId="1" Guid="ad9e491e-651c-4989-89ac-d0a486eba74d">
+            <File Id="file402" Name="AsyncTests.cs" Source="..\TestSuite\Source\AsyncTests.cs" />
+            <File Id="file403" Name="BaseTest.cs" Source="..\TestSuite\Source\BaseTest.cs" />
+            <File Id="file404" Name="BlobTests.cs" Source="..\TestSuite\Source\BlobTests.cs" />
+            <File Id="file405" Name="CharacterSetTests.cs" Source="..\TestSuite\Source\CharacterSetTests.cs" />
+            <File Id="file406" Name="CommandBuilderTests.cs" Source="..\TestSuite\Source\CommandBuilderTests.cs" />
+            <File Id="file407" Name="CommandTests.cs" Source="..\TestSuite\Source\CommandTests.cs" />
+            <File Id="file408" Name="ConnectionTests.cs" Source="..\TestSuite\Source\ConnectionTests.cs" />
+            <File Id="file409" Name="CultureTests.cs" Source="..\TestSuite\Source\CultureTests.cs" />
+            <File Id="file410" Name="CursorTests.cs" Source="..\TestSuite\Source\CursorTests.cs" />
+            <File Id="file411" Name="DataAdapterTests.cs" Source="..\TestSuite\Source\DataAdapterTests.cs" />
+            <File Id="file412" Name="DataReaderTests.cs" Source="..\TestSuite\Source\DataReaderTests.cs" />
+            <File Id="file413" Name="DataSetTest.cs" Source="..\TestSuite\Source\DataSetTest.cs" />
+            <File Id="file414" Name="DataTypeTests.cs" Source="..\TestSuite\Source\DataTypeTests.cs" />
+            <File Id="file415" Name="DateTimeTests.cs" Source="..\TestSuite\Source\DateTimeTests.cs" />
+            <File Id="file416" Name="EventTests.cs" Source="..\TestSuite\Source\EventTests.cs" />
+            <File Id="file418" Name="ExceptionTests.cs" Source="..\TestSuite\Source\ExceptionTests.cs" />
+            <File Id="file420" Name="GetSchemaTests.cs" Source="..\TestSuite\Source\GetSchemaTests.cs" />
+            <File Id="file421" Name="InterfaceTests.cs" Source="..\TestSuite\Source\InterfaceTests.cs" />
+            <File Id="file422" Name="LanguageTests.cs" Source="..\TestSuite\Source\LanguageTests.cs" />
+            <File Id="file424" Name="MicroPerfTests.cs" Source="..\TestSuite\Source\MicroPerfTests.cs" />
+            <File Id="file430" Name="MySqlHelperTests.cs" Source="..\TestSuite\Source\MySqlHelperTests.cs" />
+            <File Id="file431" Name="ParameterTests.cs" Source="..\TestSuite\Source\ParameterTests.cs" />
+            <File Id="file432" Name="PerfMonTests.cs" Source="..\TestSuite\Source\PerfMonTests.cs" />
+            <File Id="file433" Name="PoolingTests.cs" Source="..\TestSuite\Source\PoolingTests.cs" />
+            <File Id="file434" Name="PreparedStatements.cs" Source="..\TestSuite\Source\PreparedStatements.cs" />
+            <File Id="file435" Name="StoredProcedure.cs" Source="..\TestSuite\Source\StoredProcedure.cs" />
+            <File Id="file436" Name="StressTests.cs" Source="..\TestSuite\Source\StressTests.cs" />
+            <File Id="file437" Name="Syntax.cs" Source="..\TestSuite\Source\Syntax.cs" />
+            <File Id="file438" Name="Threading.cs" Source="..\TestSuite\Source\Threading.cs" />
+            <File Id="file439" Name="Transactions.cs" Source="..\TestSuite\Source\Transactions.cs" />
+            <File Id="file440" Name="UsageAdvisor.cs" Source="..\TestSuite\Source\UsageAdvisor.cs" />
+            <File Id="file441" Name="Utils.cs" Source="..\TestSuite\Source\Utils.cs" />
+            <File Id="file442" Name="SimpleTransactions.cs" Source="..\TestSuite\Source\SimpleTransactions.cs"/>
+            <File Id="file443" Name="TimeoutAndCancel.cs" Source="..\TestSuite\Source\TimeoutAndCancel.cs"/>
+            <File Id="file444" Name="Syntax2.cs" Source="..\TestSuite\Source\Syntax2.cs"/>
+            <File Id="file445" Name="ConnectionStringBuilder.cs" Source="..\TestSuite\Source\ConnectionStringBuilder.cs"/>
+          </Component>
+        </Directory>
         <Directory Id="TSProperties" Name="Properties">
-          <Component Id="TestSuitePropSrc" DiskId="1" Guid="2b03e35d-f968-42bd-8c4b-f20fe3e8dff9">
+          <Component Id="TestSuitePropSrc" DiskId="1" Guid="562c71a7-b6c9-411c-80ef-cc30ef775afc">
             <File Id="file401" Name="AssemblyInfo.cs" Source="..\TestSuite\Properties\AssemblyInfo.cs" />
           </Component>
         </Directory>
@@ -179,6 +184,7 @@
       <ComponentRef Id='DocsSrc'/>
       <ComponentRef Id='TypesSrc'/>
       <ComponentRef Id='ZLibSrc'/>
+      <ComponentRef Id='TestSuiteMain'/>
       <ComponentRef Id='TestSuiteSrc'/>
       <ComponentRef Id='TestSuitePropSrc'/>
     </Feature>

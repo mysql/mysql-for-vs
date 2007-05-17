@@ -34,7 +34,6 @@ namespace MySql.Data.MySqlClient
 
         string userId, password, server;
         string database, sharedMemName, pipeName, charSet;
-        string optionFile;
         string originalConnectionString;
         StringBuilder persistConnString;
         uint port, connectionTimeout, minPoolSize, maxPoolSize;

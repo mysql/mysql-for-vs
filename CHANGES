@@ -17,8 +17,7 @@ Version 5.1.0 - 5/1/2007
   - GetSchema will now report objects relative to the currently selected database.
     What this means is that passing in null as a database restriction will report
     objects on the currently selected database only.
-
-Version 5.0.7
+Version 5.0.7 5/16/2007
 
   Bugs fixed
   ----------
@@ -33,6 +32,7 @@ Version 5.0.7
   Bug #28167 Poor performance building connection string (thanks Maxim!)
   Bug #26041 Connection Protocol Property Error in PropertyGrid Control
   Bug #26754 EnlistTransaction throws false MySqlExeption "Already enlisted"
+  Bug #23342 Incorrect parsing of Datetime object for MySQL versions below 4.1
   
   Other changes
   -------------

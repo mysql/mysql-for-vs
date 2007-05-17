@@ -1,7 +1,7 @@
-Connector/Net 5.0.6  Release Notes
+Connector/Net 5.0.7  Release Notes
 ------------------------------------
 
-Welcome to the release notes for Connector/Net 5.0.6.
+Welcome to the release notes for Connector/Net 5.0.7
 
 Important Changes
 ---------------------
