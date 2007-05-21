@@ -241,7 +241,7 @@ namespace MySql.Data.MySqlClient
 			outStream.WriteByte((byte)(len & 0xff));
 			outStream.WriteByte((byte)((len >> 8) & 0xff));
 			outStream.WriteByte((byte)((len >> 16) & 0xff));
-			outStream.WriteByte((byte)sequenceByte++);
+			outStream.WriteByte(sequenceByte++);
 		}
 
 		public void SendEmptyPacket()
@@ -261,7 +261,7 @@ namespace MySql.Data.MySqlClient
 			byte c = (byte)ReadByte();
 			if (c < 1 || c > 4)
 				throw new MySqlException(Resources.IncorrectTransmission);
-			return ReadInteger((int)c);
+			return ReadInteger(c);
 		}
 
 		public void SkipBytes(int len)
@@ -404,8 +404,7 @@ namespace MySql.Data.MySqlClient
 			while (count > 0)
 			{
 				int cntToWrite = (int)Math.Min((outLength - outPos), (ulong)count);
-				cntToWrite = (int)Math.Min(
-					 maxBlockSize - (int)(outPos % (ulong)maxBlockSize), cntToWrite);
+				cntToWrite = Math.Min(maxBlockSize - (int)(outPos % (ulong)maxBlockSize), cntToWrite);
 
 				// if we are at a block border, then we need to send a new header
 				if ((outPos % (ulong)maxBlockSize) == 0)
@@ -470,10 +469,10 @@ namespace MySql.Data.MySqlClient
 
 			switch (c)
 			{
-				case 251: return (long)-1;
-				case 252: return (long)ReadInteger(2);
-				case 253: return (long)ReadInteger(3);
-				case 254: return (long)ReadInteger(8);
+				case 251: return -1;
+				case 252: return ReadInteger(2);
+				case 253: return ReadInteger(3);
+				case 254: return ReadInteger(8);
 				default: return c;
 			}
 		}

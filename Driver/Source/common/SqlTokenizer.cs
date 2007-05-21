@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Text;
-using System.Collections.Specialized;
-using System.IO;
 
 namespace MySql.Data.Common
 {
@@ -10,7 +7,7 @@ namespace MySql.Data.Common
     {
         private string input;
         private int index;
-        private StringBuilder current;
+        //private StringBuilder current;
         private bool ansiQuotes;
         private bool backslashEscapes;
         private bool inSize;
@@ -23,7 +20,7 @@ namespace MySql.Data.Common
             this.input = input;
             index = -1;
             backslashEscapes = true;
-            current = new StringBuilder();
+            //current = new StringBuilder();
         }
 
         #region Properties

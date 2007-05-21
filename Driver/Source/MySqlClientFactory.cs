@@ -20,7 +20,6 @@
 
 #if !PocketPC
 
-using System;
 using System.Data.Common;
 
 namespace MySql.Data.MySqlClient

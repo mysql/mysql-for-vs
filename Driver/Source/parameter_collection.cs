@@ -19,7 +19,6 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
-using System.Data;
 using System.Data.Common;
 using System.Collections;
 using System.ComponentModel;
@@ -170,7 +169,7 @@ namespace MySql.Data.MySqlClient
 		/// <returns></returns>
 		protected override DbParameter GetParameter(string parameterName)
 		{
-			int index = this.IndexOf(parameterName);
+			int index = IndexOf(parameterName);
 			if (index < 0)
 			{
 				// check to see if the user has added the parameter without a
@@ -195,7 +194,7 @@ namespace MySql.Data.MySqlClient
 
 		protected override void SetParameter(string parameterName, DbParameter value)
 		{
-			int index = this.IndexOf(parameterName);
+			int index = IndexOf(parameterName);
 			if (index < 0)
 				throw new ArgumentException("Parameter '" + parameterName + "' not found in the collection.");
             SetParameter(index, value);
@@ -207,7 +206,7 @@ namespace MySql.Data.MySqlClient
             MySqlParameter p = (MySqlParameter)items[index];
             
             indexHash.Remove(p.ParameterName);
-			items[index] = (MySqlParameter)value;
+			items[index] = value;
             indexHash.Add(value.ParameterName, index);
         }
 
@@ -286,7 +285,7 @@ namespace MySql.Data.MySqlClient
         /// <returns></returns>
 		public override IEnumerator GetEnumerator()
 		{
-			return ((IEnumerable)items).GetEnumerator();
+			return items.GetEnumerator();
 		}
 
 		/// <summary>

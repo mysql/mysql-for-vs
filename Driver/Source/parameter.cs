@@ -19,12 +19,12 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
-using System.ComponentModel;
 using System.Data;
 using System.Data.Common;
+using MySql.Data.Types;
+using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
-using MySql.Data.Types;
 #if !CF
 using System.ComponentModel.Design.Serialization;
 #endif
@@ -367,9 +367,9 @@ namespace MySql.Data.MySqlClient
                 v.WriteValue(stream, binary, paramValue, size);
         }
 
-        private void SetMySqlDbType(MySqlDbType mySqlDbType)
+        private void SetMySqlDbType(MySqlDbType mysql_dbtype)
         {
-            this.mySqlDbType = mySqlDbType;
+            mySqlDbType = mysql_dbtype;
             switch (mySqlDbType)
             {
                 case MySqlDbType.Decimal:
@@ -440,9 +440,9 @@ namespace MySql.Data.MySqlClient
         }
 
 
-        private void SetDbType(DbType dbType)
+        private void SetDbType(DbType db_type)
         {
-            this.dbType = dbType;
+            dbType = db_type;
             switch (dbType)
             {
                 case DbType.Guid:

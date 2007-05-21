@@ -18,7 +18,6 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
-using System.Globalization;
 using System.Text;
 using MySql.Data.Common;
 using MySql.Data.Types;
@@ -230,7 +229,7 @@ namespace MySql.Data.MySqlClient
             }*/
 		}
 
-        private void CheckForExceptions()
+/*        private void CheckForExceptions()
         {
             string colName = OriginalColumnName.ToLower(CultureInfo.InvariantCulture);
             if (colName.StartsWith("char("))
@@ -238,6 +237,7 @@ namespace MySql.Data.MySqlClient
             else if (connection.IsExecutingBuggyQuery)
                 binaryOk = false;
         }
+        */
 
         public IMySqlValue GetValueObject()
         {

@@ -111,6 +111,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Gets or sets the name of the server.
         /// </summary>
+        /// <value>The server.</value>
 #if !CF && !MONO
         [Category("Connection")]
         [Description("Server to connect to")]
@@ -1082,6 +1083,16 @@ namespace MySql.Data.MySqlClient
             propertyDescriptors["Connection Protocol"] = mypd;
         }
 
+        /// <summary>
+        /// Removes the entry with the specified key from the <see cref="T:System.Data.Common.DbConnectionStringBuilder"></see> instance.
+        /// </summary>
+        /// <param name="keyword">The key of the key/value pair to be removed from the connection string in this <see cref="T:System.Data.Common.DbConnectionStringBuilder"></see>.</param>
+        /// <returns>
+        /// true if the key existed within the connection string and was removed; false if the key did not exist.
+        /// </returns>
+        /// <exception cref="T:System.NotSupportedException">The <see cref="T:System.Data.Common.DbConnectionStringBuilder"></see> is read-only, or the <see cref="T:System.Data.Common.DbConnectionStringBuilder"></see> has a fixed size.</exception>
+        /// <exception cref="T:System.ArgumentNullException">keyword is null (Nothing in Visual Basic)</exception>
+        /// <PermissionSet><IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" PathDiscovery="*AllFiles*"/></PermissionSet>
         public override bool Remove(string keyword)
         {
             // first we need to set this keys value to the default
@@ -1092,6 +1103,16 @@ namespace MySql.Data.MySqlClient
             return base.Remove(keyword);
         }
 
+        /// <summary>
+        /// Retrieves a value corresponding to the supplied key from this <see cref="T:System.Data.Common.DbConnectionStringBuilder"></see>.
+        /// </summary>
+        /// <param name="keyword">The key of the item to retrieve.</param>
+        /// <param name="value">The value corresponding to the key.</param>
+        /// <returns>
+        /// true if keyword was found within the connection string, false otherwise.
+        /// </returns>
+        /// <exception cref="T:System.ArgumentNullException">keyword contains a null value (Nothing in Visual Basic).</exception>
+        /// <PermissionSet><IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" PathDiscovery="*AllFiles*"/></PermissionSet>
         public override bool TryGetValue(string keyword, out object value)
         {
             try

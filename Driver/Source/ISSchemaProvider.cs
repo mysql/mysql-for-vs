@@ -24,7 +24,6 @@ using System.Text;
 using MySql.Data.Common;
 using System.Globalization;
 using System.Diagnostics;
-using System.Collections;
 using System.Data.SqlTypes;
 using MySql.Data.Types;
 
@@ -155,7 +154,7 @@ namespace MySql.Data.MySqlClient
                 where.AppendFormat(CultureInfo.InvariantCulture, "C.column_name='{0}' ", restrictions[3]);
             }
             if (where.Length > 0)
-                sql.AppendFormat(CultureInfo.InvariantCulture, " WHERE {0}", where.ToString());
+                sql.AppendFormat(CultureInfo.InvariantCulture, " WHERE {0}", where);
             DataTable dt = GetTable(sql.ToString());
             dt.TableName = "ViewColumns";
             dt.Columns[0].ColumnName = "VIEW_CATALOG";
@@ -221,14 +220,7 @@ namespace MySql.Data.MySqlClient
             dt.Columns.Add("NUMERIC_PRECISION", typeof(byte));
             dt.Columns.Add("NUMERIC_SCALE", typeof(Int32));
 
-            try
-            {
-                GetParametersFromShowCreate(dt, restrictions, routines);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            GetParametersFromShowCreate(dt, restrictions, routines);
 
             return dt;
         }
@@ -273,24 +265,17 @@ namespace MySql.Data.MySqlClient
                 }
 
             if (where.Length > 0)
-                query.AppendFormat(CultureInfo.InvariantCulture, " WHERE {0}", where.ToString());
+                query.AppendFormat(CultureInfo.InvariantCulture, " WHERE {0}", where);
 
             return GetTable(query.ToString());
         }
 
         private DataTable GetTable(string sql)
         {
-            try
-            {
-                DataTable table = new DataTable();
-                MySqlDataAdapter da = new MySqlDataAdapter(sql, connection);
-                da.Fill(table);
-                return table;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            DataTable table = new DataTable();
+            MySqlDataAdapter da = new MySqlDataAdapter(sql, connection);
+            da.Fill(table);
+            return table;
         }
 
         #region Procedures Support Rouines
@@ -326,12 +311,7 @@ namespace MySql.Data.MySqlClient
                 }
                 catch (SqlNullValueException snex)
                 {
-                    throw new InvalidOperationException(
-                        Resources.UnableToRetrieveSProcData, snex);
-                }
-                catch (Exception)
-                {
-                    throw;
+                    throw new InvalidOperationException(Resources.UnableToRetrieveSProcData, snex);
                 }
                 finally
                 {
@@ -406,7 +386,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Initializes a new row for the procedure parameters table.
         /// </summary>
-        private void InitParameterRow(DataRow procedure, DataRow parameter)
+        private static void InitParameterRow(DataRow procedure, DataRow parameter)
         {
             parameter["ROUTINE_CATALOG"] = null;
             parameter["ROUTINE_SCHEMA"] = procedure["ROUTINE_SCHEMA"];
@@ -420,7 +400,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         ///  Parses out the elements of a procedure parameter data type.
         /// </summary>
-        private string ParseDataType(DataRow row, SqlTokenizer tokenizer)
+        private static string ParseDataType(DataRow row, SqlTokenizer tokenizer)
         {
             row["DATA_TYPE"] = tokenizer.NextToken().ToUpper(CultureInfo.InvariantCulture);
             string token = tokenizer.NextToken();
@@ -434,7 +414,7 @@ namespace MySql.Data.MySqlClient
         /// </summary>
         /// <returns>True if the token was recognized as a type attribute,
         /// false otherwise.</returns>
-        private bool SetParameterAttribute(DataRow row, string token, bool isSize,
+        private static bool SetParameterAttribute(DataRow row, string token, bool isSize,
             SqlTokenizer tokenizer)
         {
             string lcDataType = row["DATA_TYPE"].ToString().ToLower(CultureInfo.InvariantCulture);

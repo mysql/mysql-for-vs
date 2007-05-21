@@ -19,11 +19,12 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
-using MySql.Data.Common;
 using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading;
+using System.Collections.Generic;
+#if CF
+using MySql.Data.Common;
+#endif
 
 namespace MySql.Data.MySqlClient
 {
@@ -92,21 +93,6 @@ namespace MySql.Data.MySqlClient
         private bool HasIdleConnections
         {
             get { return idlePool.Count > 0; }
-        }
-
-        /// <summary>
-        /// It is assumed that this property will only be used from inside an active
-        /// lock.
-        /// </summary>
-        private bool HasRoomForConnections
-        {
-            get
-            {
-                if ((inUsePool.Count + idlePool.Count) == maxSize)
-                    return false;
-                return true;
-            }
-
         }
 
         #endregion

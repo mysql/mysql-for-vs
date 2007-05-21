@@ -23,8 +23,8 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.IO;
 using MySql.Data.MySqlClient;
-using Microsoft.Win32.SafeHandles;
 using System.Diagnostics;
+using Microsoft.Win32.SafeHandles;
 
 namespace MySql.Data.Common
 {
@@ -46,9 +46,9 @@ namespace MySql.Data.Common
 		private int connectNumber;
 
 		private const uint SYNCHRONIZE = 0x00100000;
-		private const uint READ_CONTROL = 0x00020000;
+//		private const uint READ_CONTROL = 0x00020000;
 		private const uint EVENT_MODIFY_STATE = 0x2;
-		private const uint EVENT_ALL_ACCESS = 0x001F0003;
+//		private const uint EVENT_ALL_ACCESS = 0x001F0003;
 		private const uint FILE_MAP_WRITE = 0x2;
 		private const int BUFFERLENGTH = 16004;
 
@@ -193,7 +193,7 @@ namespace MySql.Data.Common
 		{
 			try
 			{
-				dataView = (IntPtr)MapViewOfFile(dataMap, FILE_MAP_WRITE, 0, 0, (IntPtr)(int)BUFFERLENGTH);
+				dataView = MapViewOfFile(dataMap, FILE_MAP_WRITE, 0, 0, (IntPtr)(int)BUFFERLENGTH);
 				if (dataView == IntPtr.Zero) return true;
 				return false;
 			}

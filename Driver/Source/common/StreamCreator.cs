@@ -22,10 +22,7 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Collections;
-using System.Threading;
 using System.Reflection;
-using MySql.Data.MySqlClient;
 
 namespace MySql.Data.Common
 {
@@ -48,16 +45,16 @@ namespace MySql.Data.Common
             this.pipeName = pipeName;
         }
 
-        public Stream GetStream(uint timeOut)
+        public Stream GetStream(uint timeout)
         {
-            this.timeOut = timeOut;
+            timeOut = timeout;
 
             if (hostList.StartsWith("/"))
-                return CreateSocketStream(null, 0, true);
+                return CreateSocketStream(null, true);
 
             string[] dnsHosts = hostList.Split('&');
 
-            System.Random random = new Random((int)DateTime.Now.Ticks);
+            Random random = new Random((int)DateTime.Now.Ticks);
             int index = random.Next(dnsHosts.Length);
             int pos = 0;
             bool usePipe = (pipeName != null && pipeName.Length != 0);
@@ -83,7 +80,7 @@ namespace MySql.Data.Common
                         if (address.AddressFamily == AddressFamily.InterNetworkV6)
                             continue;
 
-                        stream = CreateSocketStream(address, port, false);
+                        stream = CreateSocketStream(address, false);
                         if (stream != null)
                             break;
                     }
@@ -103,7 +100,7 @@ namespace MySql.Data.Common
         {
             IPHostEntry ipHE;
 #if !CF
-            IPAddress addr = null;
+            IPAddress addr;
             if (IPAddress.TryParse(hostname, out addr))
             {
                 ipHE = new IPHostEntry();
@@ -123,11 +120,11 @@ namespace MySql.Data.Common
 			if (0 == String.Compare(hostname, "localhost", true))
 				pipePath = @"\\.\pipe\" + pipeName;
 			else
-				pipePath = String.Format(@"\\{0}\pipe\{1}", hostname.ToString(), pipeName);
+				pipePath = String.Format(@"\\{0}\pipe\{1}", hostname, pipeName);
 			return new NamedPipeStream(pipePath, FileAccess.ReadWrite);
 		}
 
-		private EndPoint CreateUnixEndPoint(string host)
+		private static EndPoint CreateUnixEndPoint(string host)
 		{
 			// first we need to load the Mono.posix assembly
 #if NET20
@@ -144,7 +141,7 @@ namespace MySql.Data.Common
 		}
 #endif
 
-        private Stream CreateSocketStream(IPAddress ip, uint port, bool unix)
+        private Stream CreateSocketStream(IPAddress ip, bool unix)
         {
             EndPoint endPoint;
 #if !CF
@@ -167,7 +164,7 @@ namespace MySql.Data.Common
                 }
                 socket.EndConnect(ias);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 socket.Close();
                 return null;

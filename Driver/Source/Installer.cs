@@ -51,7 +51,7 @@ namespace MySql.Data.MySqlClient
             InstallPerfMonItems();
 		}
 
-		private void AddProviderToMachineConfig()
+		private static void AddProviderToMachineConfig()
 		{
 			object installRoot = Registry.GetValue(
 				@"HKEY_LOCAL_MACHINE\Software\Microsoft\.NETFramework\",
@@ -69,7 +69,7 @@ namespace MySql.Data.MySqlClient
 				AddProviderToMachineConfigInDir(installRoot64);
 		}
 
-		private void AddProviderToMachineConfigInDir(string path)
+		private static void AddProviderToMachineConfigInDir(string path)
 		{
 			string configPath = String.Format(@"{0}v2.0.50727\CONFIG\machine.config",
 				path);
@@ -123,7 +123,7 @@ namespace MySql.Data.MySqlClient
             writer.Close();
 		}
 
-		private void InstallPerfMonItems()
+		private static void InstallPerfMonItems()
 		{
 			string categoryName = Resources.PerfMonCategoryName;
 
@@ -152,7 +152,7 @@ namespace MySql.Data.MySqlClient
 			RemovePerfMonItems();
 		}
 
-		private void RemoveProviderFromMachineConfig()
+		private static void RemoveProviderFromMachineConfig()
 		{
 			object installRoot = Registry.GetValue(
 				@"HKEY_LOCAL_MACHINE\Software\Microsoft\.NETFramework\",
@@ -171,7 +171,7 @@ namespace MySql.Data.MySqlClient
 				RemoveProviderFromMachineConfigInDir(installRoot64);
 		}
 
-		private void RemoveProviderFromMachineConfigInDir(string path)
+		private static void RemoveProviderFromMachineConfigInDir(string path)
 		{
 			string configPath = String.Format(@"{0}v2.0.50727\CONFIG\machine.config",
 				path);
@@ -205,7 +205,7 @@ namespace MySql.Data.MySqlClient
             writer.Close();
         }
 
-		private void RemovePerfMonItems()
+		private static void RemovePerfMonItems()
 		{
 			string categoryName = Resources.PerfMonCategoryName;
 

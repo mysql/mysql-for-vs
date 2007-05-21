@@ -82,11 +82,11 @@ namespace MySql.Data.Common
 			return new DBVersion(versionString, major, minor, build);
 		}
 
-		public bool isAtLeast(int major, int minor, int build)
+		public bool isAtLeast(int majorNum, int minorNum, int buildNum)
 		{
-			if (this.major > major) return true;
-			if (this.major == major && this.minor > minor) return true;
-			if (this.major == major && this.minor == minor && this.build >= build) return true;
+			if (major > majorNum) return true;
+			if (major == majorNum && minor > minorNum) return true;
+			if (major == majorNum && minor == minorNum && build >= buildNum) return true;
 			return false;
 		}
 

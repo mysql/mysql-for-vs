@@ -34,7 +34,6 @@ namespace MySql.Data.Common
 		private Socket	socket;
 
 		public SocketStream(AddressFamily addressFamily, SocketType socketType, ProtocolType protocol)
-			: base()
 		{
 			socket = new Socket(addressFamily, socketType, protocol);
 		}
@@ -113,7 +112,7 @@ namespace MySql.Data.Common
 			for (int i=0; i<addr.Size; i++)
 				buff[i] = addr[i];
 
-			int result = NativeMethods.connect(socket.Handle, buff, addr.Size);
+			NativeMethods.connect(socket.Handle, buff, addr.Size);
             int wsaerror = NativeMethods.WSAGetLastError();
             if (wsaerror != 10035)
             {

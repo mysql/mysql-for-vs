@@ -22,9 +22,9 @@ using System;
 using System.Collections;
 using System.Diagnostics;
 using System.IO;
-using System.Security.Cryptography.X509Certificates;
 using MySql.Data.Common;
 using MySql.Data.Types;
+using System.Security.Cryptography.X509Certificates;
 #if !CF
 using System.Net.Security;
 using System.Security.Authentication;
@@ -157,9 +157,9 @@ namespace MySql.Data.MySqlClient
             ReadOk(true);
         }
 
-        public override void Configure(MySqlConnection connection)
+        public override void Configure(MySqlConnection conn)
         {
-            base.Configure(connection);
+            base.Configure(conn);
             stream.MaxPacketSize = (ulong) maxPacketSize;
         }
 
@@ -193,10 +193,8 @@ namespace MySql.Data.MySqlClient
             }
             catch (Exception ex)
             {
-                throw new MySqlException(
-                    Resources.UnableToConnectToHost,
-                    (int) MySqlErrorCode.UnableToConnectToHost,
-                    ex);
+                throw new MySqlException(Resources.UnableToConnectToHost, 
+                    (int) MySqlErrorCode.UnableToConnectToHost, ex);
             }
 
             if (baseStream == null)
@@ -538,7 +536,7 @@ namespace MySql.Data.MySqlClient
             serverStatus &= ~(ServerStatusFlags.AnotherQuery |
                               ServerStatusFlags.MoreResults);
             affectedRows = (ulong) stream.ReadFieldLength();
-            lastInsertId = (long) stream.ReadFieldLength();
+            lastInsertId = stream.ReadFieldLength();
             if (version.isAtLeast(4, 1, 0))
             {
                 serverStatus = (ServerStatusFlags) stream.ReadInteger(2);
@@ -611,7 +609,7 @@ namespace MySql.Data.MySqlClient
         public override IMySqlValue ReadColumnValue(int index, MySqlField field, IMySqlValue valObject)
         {
             long length = -1;
-            bool isNull = false;
+            bool isNull;
 
             if (nullMap != null)
                 isNull = nullMap[index + 2];
@@ -653,7 +651,7 @@ namespace MySql.Data.MySqlClient
 
         private MySqlField GetFieldMetaData()
         {
-            MySqlField field = null;
+            MySqlField field;
 
             if (version.isAtLeast(4, 1, 0))
                 field = GetFieldMetaData41();

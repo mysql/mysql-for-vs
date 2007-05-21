@@ -19,7 +19,6 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
-using System.Text;
 
 namespace MySql.Data.Common
 {
@@ -43,7 +42,7 @@ namespace MySql.Data.Common
  
         public SHA1Hash()
         {
-            this.intermediateHash = new uint[SHA1_HASH_SIZE/4];
+            intermediateHash = new uint[SHA1_HASH_SIZE/4];
             messageBlock = new byte[64];
 			Reset();
         }
@@ -120,14 +119,13 @@ namespace MySql.Data.Common
             uint    temp;           // Temporary word value
             uint[]  W;              // Word sequence
             uint    A, B, C, D, E;  // Word buffers
-            int     index;
 
             W = new uint[80];
 
             //Initialize the first 16 words in the array W
             for (int t = 0; t < 16; t++)
             {
-                index=t*4;
+                int index=t*4;
                 W[t] = (uint)messageBlock[index] << 24;
                 W[t] |= (uint)messageBlock[index + 1] << 16;
                 W[t] |= (uint)messageBlock[index + 2] << 8;
@@ -195,7 +193,7 @@ namespace MySql.Data.Common
             messageBlockIndex = 0;
         }
 
-        private uint CircularShift(int bits, uint word)
+        private static uint CircularShift(int bits, uint word)
         {
 		    return (((word) << (bits)) | ((word) >> (32-(bits))));
         }

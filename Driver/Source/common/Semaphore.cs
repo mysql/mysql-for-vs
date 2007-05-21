@@ -31,10 +31,8 @@ namespace MySql.Data.Common
             SECURITY_ATTRIBUTES sa = new SECURITY_ATTRIBUTES();
             IntPtr handle = CreateSemaphore(ref sa, initialCount, 
                 maximumCount, null);
-            int num2 = Marshal.GetLastWin32Error();
             if (handle.Equals(IntPtr.Zero))
             {
-                int num = Marshal.GetLastWin32Error();
                 throw new Exception("Unable to create semaphore");
             }
             base.Handle = handle;

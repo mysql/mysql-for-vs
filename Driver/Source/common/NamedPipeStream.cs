@@ -107,7 +107,7 @@ namespace MySql.Data.Common
 
 			// first read the data into an internal buffer since ReadFile cannot read into a buf at
 			// a specified offset
-			uint read=0;
+			uint read;
 			byte[] buf = new Byte[count];
 			bool result = NativeMethods.ReadFile((IntPtr)pipeHandle, buf, 
 				(uint)count, out read, IntPtr.Zero); 
@@ -115,8 +115,7 @@ namespace MySql.Data.Common
 			if (! result)
 			{
 				Close();
-				throw new MySqlClient.MySqlException(
-					Resources.ReadFromStreamFailed, true, null);
+				throw new MySqlException(Resources.ReadFromStreamFailed, true, null);
 			}
 
 			Array.Copy(buf, (int)0, buffer, (int)offset, (int)read);
@@ -166,10 +165,10 @@ namespace MySql.Data.Common
 				byte[] localBuf = new byte[65535];
 
 				result = true;
-				uint thisWritten;
 				while (count != 0 && result)
 				{
-					int cnt = Math.Min( count, 65535 );
+                    uint thisWritten;
+                    int cnt = Math.Min(count, 65535);
 					Array.Copy( buffer, offset, localBuf, 0, cnt );
 					result = NativeMethods.WriteFile((IntPtr)pipeHandle, localBuf, (uint)cnt, out thisWritten, IntPtr.Zero);
 					bytesWritten += thisWritten;
@@ -181,8 +180,7 @@ namespace MySql.Data.Common
 			if (! result)
 			{
 				Close();
-				throw new MySqlClient.MySqlException(Resources.WriteToStreamFailed,
-					true, null);
+				throw new MySqlException(Resources.WriteToStreamFailed, true, null);
 			}
 			if (bytesWritten < count)
 				throw new IOException("Unable to write entire buffer to stream");

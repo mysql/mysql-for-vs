@@ -38,8 +38,7 @@ namespace MySql.Data.MySqlClient
 			if (text.Length > 300)
 				text = text.Substring(0, 300);
 
-			string msg = String.Format("Executing command {0} with text ='{1}'",
-				cmd.ToString(), text);
+			string msg = String.Format("Executing command {0} with text ='{1}'", cmd, text);
 			//TODO: check this
 				//Enum.GetName( typeof(DBCmd), cmd ), text );
 			WriteLine( msg );
