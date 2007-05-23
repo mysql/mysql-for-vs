@@ -509,14 +509,17 @@ namespace MySql.Data.MySqlClient
             if (dataReader != null)
                 dataReader.Close();
 
-            if ((driver.ServerStatus & ServerStatusFlags.InTransaction) != 0)
-            {
-                MySqlTransaction t = new MySqlTransaction(this, IsolationLevel.Unspecified);
-                t.Rollback();
-            }
-
             if (settings.Pooling)
+            {
+                // if we are in a transaction, roll it back
+                if ((driver.ServerStatus & ServerStatusFlags.InTransaction) != 0)
+                {
+                    MySqlTransaction t = new MySqlTransaction(this, IsolationLevel.Unspecified);
+                    t.Rollback();
+                }
+
                 MySqlPoolManager.ReleaseConnection(driver);
+            }
             else
                 driver.Close();
 
