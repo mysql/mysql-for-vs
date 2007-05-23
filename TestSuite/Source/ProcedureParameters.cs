@@ -100,6 +100,8 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void ProcedureParameters2()
         {
+            if (version < new Version(5, 0)) return;
+
             execSQL(@"CREATE PROCEDURE spTest(`/*id*/` /* before type 1 */ varchar(20), 
                      /* after type 1 */ OUT result2 DECIMAL(/*size1*/10,/*size2*/2) /* p2 */) 
                      BEGIN SELECT action, result; END");
@@ -133,6 +135,8 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void ProcedureParameters3()
         {
+            if (version < new Version(5, 0)) return;
+
             execSQL(@"CREATE  PROCEDURE spTest (_ACTION varchar(20),
                     `/*dumb-identifier-1*/` int, `#dumb-identifier-2` int,
                     `--dumb-identifier-3` int, 
@@ -265,6 +269,8 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void ProcedureParameters4()
         {
+            if (version < new Version(5, 0)) return;
+
             execSQL(@"CREATE  PROCEDURE spTest (name VARCHAR(1200) 
                     CHARACTER /* hello*/ SET utf8) BEGIN SELECT name; END");
 
@@ -288,6 +294,8 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void ProcedureParameters5()
         {
+            if (version < new Version(5, 0)) return;
+
             execSQL(@"CREATE  PROCEDURE spTest (name VARCHAR(1200) ASCII BINARY, 
                     name2 TEXT UNICODE) BEGIN SELECT name; END");
 

@@ -53,11 +53,11 @@ namespace MySql.Data.MySqlClient.Tests
         /// This test doesn't work from the CI setup currently
         /// </summary>
 		[Test]
-		[Category("5.0")]
-        [Category("NotWorking")]
 		public void ProcedureFromCache()
 		{
-			execSQL("DROP PROCEDURE IF EXISTS spTest");
+            if (version < new Version(5, 0)) return;
+
+            execSQL("DROP PROCEDURE IF EXISTS spTest");
 			execSQL("CREATE PROCEDURE spTest(id int) BEGIN END");
 
 			PerformanceCounter hardQuery = new PerformanceCounter(
