@@ -111,12 +111,8 @@
     <FeatureRef Id="CompactFramework"/>
     
     <Property Id="WIXUI_INSTALLDIR" Value='INSTALLDIR'/>
-    <UIRef Id="WixUI_Mondo"/>
-    <?if $(var.IsGPL) = 1 ?>
-    <WixVariable Id="WixUILicenseRtf" Value="GPL.rtf"/>
-    <?else?>
-    <WixVariable Id="WixUILicenseRtf" Value="EULA.rtf"/>
-    <?endif?>
+    <!-- Remove the license agreement dialog -->
+    <UIRef Id="WixUI_MySQL"/>
     <WixVariable Id="WixUIBannerBmp" Value="Bitmaps/BannrBmp.bmp"/>
     <WixVariable Id="WixUIDialogBmp" Value="Bitmaps/DlgBmp.bmp"/>
 
