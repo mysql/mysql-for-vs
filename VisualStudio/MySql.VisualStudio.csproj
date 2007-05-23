@@ -233,6 +233,7 @@
     <Compile Include="MySqlDataConnectionPromptDialog.Designer.cs">
       <DependentUpon>MySqlDataConnectionPromptDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="MySqlDataObjectConceptMapper.cs" />
     <Compile Include="MySqlDataObjectIdentifierConverter.cs" />
     <Compile Include="MySqlDataSourceSpecializer.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -442,6 +443,9 @@
     <None Include="Resources\Null.bmp" />
     <None Include="Resources\PackageLoadKey.txt" />
     <None Include="Resources\Icon1.ico" />
+    <None Include="VSDataObjectSupport.xsx">
+      <DependentUpon>VSDataObjectSupport.xsd</DependentUpon>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="C:\Program Files (x86)\Visual Studio 2005 SDK\2007.02\VisualStudioIntegration\Tools\Build\Microsoft.VsSDK.targets" />

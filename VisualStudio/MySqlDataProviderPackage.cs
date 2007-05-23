@@ -140,7 +140,7 @@ namespace MySql.Data.VisualStudio
 
         int IVsInstalledProduct.ProductID(out string pbstrPID)
         {
-            pbstrPID = "1.1";
+            pbstrPID = "5.1";
             return VSConstants.S_OK;
         }
 

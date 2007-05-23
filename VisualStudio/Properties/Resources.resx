@@ -1492,10 +1492,10 @@ No – return to editor and resolve this conflict manually.
     <value>..\Resources\Icon1.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ProductDetails" xml:space="preserve">
-    <value>Data design and management tools for MySQL.  Copyright © 2006 MySQL AB</value>
+    <value>Data design and management tools for MySQL.  Copyright © 2007 MySQL AB</value>
   </data>
   <data name="ProductName" xml:space="preserve">
-    <value>Visual Studio Tools for MySQL</value>
+    <value>MySQL Connector/Net</value>
   </data>
   <data name="MySqlClientNotRegistered" xml:space="preserve">
     <value>Connector/Net is not properly installed and configured.  MySQL Tools for Visual Studio will not function correctly.</value>

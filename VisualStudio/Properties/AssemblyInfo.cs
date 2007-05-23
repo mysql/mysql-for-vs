@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly : AssemblyConfiguration("")]
 [assembly : AssemblyCompany("MySQL AB")]
 [assembly : AssemblyProduct("MySQL Tools for Visual Studio")]
-[assembly : AssemblyCopyright("Copyright © MySQL AB 2006")]
+[assembly : AssemblyCopyright("Copyright © MySQL AB 2007")]
 [assembly : AssemblyTrademark("")]
 [assembly : AssemblyCulture("")]
 
@@ -29,4 +29,4 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-[assembly : AssemblyVersion("1.1.2")]
+[assembly : AssemblyVersion("5.1.1")]

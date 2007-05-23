@@ -61,7 +61,7 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to MDKDJDR3CPJ9QRI0MZZMZDPTJHAKHDICPHI0IZMCP2REZDITPTJJEZRMJQM1PJMID0PKHQZMHZHDC3R3E3CIZDC1AJRQAJPIPMQDHZCDZJETMCZAQJPDIDH0EQMJR9R0.
+        ///   Looks up a localized string similar to H1PZDDC3CDP8CDKAH1HRAPE2ZQZECRQER1PEIKDCEKD9CMKPDKJZMKPZZIRHEIE2EQZHH9JTJED0ZDPTQ2I8RHJMCQRIZ1MDM9Q9Z1MZE8M2JQHTI1MCA2M3ZDRTEZAR.
         /// </summary>
         internal static string _100 {
             get {
@@ -3577,7 +3577,7 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Data design and management tools for MySQL.  Copyright © 2006 MySQL AB.
+        ///   Looks up a localized string similar to Data design and management tools for MySQL.  Copyright © 2007 MySQL AB.
         /// </summary>
         internal static string ProductDetails {
             get {
@@ -3586,7 +3586,7 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Visual Studio Tools for MySQL.
+        ///   Looks up a localized string similar to MySQL Connector/Net.
         /// </summary>
         internal static string ProductName {
             get {

@@ -17,6 +17,7 @@ Version 5.1.0 - 5/1/2007
   - GetSchema will now report objects relative to the currently selected database.
     What this means is that passing in null as a database restriction will report
     objects on the currently selected database only.
+    
 Version 5.0.7 5/16/2007
 
   Bugs fixed
