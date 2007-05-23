@@ -534,9 +534,14 @@ VSDataObjectSupport.xsd">
             <Concept name="Identifier1"/>
           </Concepts>
         </Part>
-        <Part name="Name" itemName="SPECIFIC_NAME">
+        <Part name="Type" itemName="ROUTINE_TYPE">
           <Concepts>
             <Concept name="Identifier2"/>
+          </Concepts>
+        </Part>
+        <Part name="Name" itemName="SPECIFIC_NAME">
+          <Concepts>
+            <Concept name="Identifier3"/>
           </Concepts>
         </Part>
       </Identifier>
@@ -619,13 +624,9 @@ VSDataObjectSupport.xsd">
         </Part>
       </Identifier>
       <Properties>
-        <Property name="Ordinal" type="System.Int64" itemName="ORDINAL_POSITION">
+        <Property name="Ordinal" type="System.Int32" itemName="ORDINAL_POSITION">
           <Concepts>
-            <Concept name="Ordinal">
-              <Conversion>
-                <ChangeType type="System.Int32"/>
-              </Conversion>
-            </Concept>
+            <Concept name="Ordinal"/>
           </Concepts>
         </Property>
         <Property name="SystemType" type="System.String" itemName="DATA_TYPE">
@@ -644,16 +645,12 @@ VSDataObjectSupport.xsd">
         </Property>
         <Property name="Flags" type="System.String" itemName="FLAGS"/>
         <Property name="CharacterSet" type="System.String" itemName="CHARACTER_SET" />
-        <Property name="Length" type="System.Int64" itemName="CHARACTER_MAXIMUM_LENGTH">
+        <Property name="Length" type="System.Int32" itemName="CHARACTER_MAXIMUM_LENGTH">
           <Concepts>
-            <Concept name="Length">
-              <Conversion>
-                <ChangeType type="System.Int32"/>
-              </Conversion>
-            </Concept>
+            <Concept name="Length"/>
           </Concepts>
         </Property>
-        <Property name="Precision" type="System.Int64" itemName="NUMERIC_PRECISION">
+        <Property name="Precision" type="System.Byte" itemName="NUMERIC_PRECISION">
           <Concepts>
             <Concept name="Precision">
               <Conversion>
@@ -662,13 +659,9 @@ VSDataObjectSupport.xsd">
             </Concept>
           </Concepts>
         </Property>
-        <Property name="Scale" type="System.Int64" itemName="NUMERIC_SCALE">
+        <Property name="Scale" type="System.Int32" itemName="NUMERIC_SCALE">
           <Concepts>
-            <Concept name="Scale">
-              <Conversion>
-                <ChangeType type="System.Int32"/>
-              </Conversion>
-            </Concept>
+            <Concept name="Scale"/>
           </Concepts>
         </Property>
         <Property name="Mode" type="System.String" itemName="PARAMETER_MODE"/>
