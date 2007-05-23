@@ -650,5 +650,26 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(3, dt.Rows[2]["id"]);
             Assert.AreEqual("Test3", dt.Rows[2]["name"]);
         }
+
+        [Test]
+        public void PagingFill()
+        {
+            execSQL("INSERT INTO Test (id, id2, name) VALUES (NULL, 1, 'Name 1')");
+            execSQL("INSERT INTO Test (id, id2, name) VALUES (NULL, 2, 'Name 2')");
+            execSQL("INSERT INTO Test (id, id2, name) VALUES (NULL, 3, 'Name 3')");
+            execSQL("INSERT INTO Test (id, id2, name) VALUES (NULL, 4, 'Name 4')");
+            execSQL("INSERT INTO Test (id, id2, name) VALUES (NULL, 5, 'Name 5')");
+            execSQL("INSERT INTO Test (id, id2, name) VALUES (NULL, 6, 'Name 6')");
+            execSQL("INSERT INTO Test (id, id2, name) VALUES (NULL, 7, 'Name 7')");
+            execSQL("INSERT INTO Test (id, id2, name) VALUES (NULL, 8, 'Name 8')");
+            execSQL("INSERT INTO Test (id, id2, name) VALUES (NULL, 9, 'Name 9')");
+            execSQL("INSERT INTO Test (id, id2, name) VALUES (NULL, 10, 'Name 10')");
+            execSQL("INSERT INTO Test (id, id2, name) VALUES (NULL, 11, 'Name 11')");
+
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
+            DataTable dt = new DataTable();
+            da.Fill(0, 10, dt);
+            Assert.AreEqual(10, dt.Rows.Count);
+        }
 	}
 }

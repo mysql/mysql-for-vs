@@ -24,7 +24,7 @@
 	</fileset>
 
 	<fileset id="SourceCommercial">
-		<include name="MySqlEULA.txt"/>
+		<include name="License.txt"/>
 	</fileset>
 
 	<!-- first remove all previous packages -->
