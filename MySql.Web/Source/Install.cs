@@ -125,11 +125,11 @@ namespace MySql.Web.Security
             XmlElement newNode = (XmlElement)doc.CreateNode(XmlNodeType.Element, "add", "");
 
             // add the proper attributes
-            newNode.SetAttribute("name", "MySqlMembershipProvider");
+            newNode.SetAttribute("name", "MySQLMembershipProvider");
 
             // add the type attribute by reflecting on the executing assembly
             Assembly a = Assembly.GetExecutingAssembly();
-            string type = String.Format("MySql.Web.Security.MySqlMembershipProvider, {0}", a.FullName);
+            string type = String.Format("MySql.Web.Security.MySQLMembershipProvider, {0}", a.FullName);
             newNode.SetAttribute("type", type);
 
             newNode.SetAttribute("connectionStringName", "LocalMySqlServer");
@@ -169,11 +169,11 @@ namespace MySql.Web.Security
             XmlElement newNode = (XmlElement)doc.CreateNode(XmlNodeType.Element, "add", "");
 
             // add the proper attributes
-            newNode.SetAttribute("name", "MySqlRoleProvider");
+            newNode.SetAttribute("name", "MySQLRoleProvider");
 
             // add the type attribute by reflecting on the executing assembly
             Assembly a = Assembly.GetExecutingAssembly();
-            string type = String.Format("MySql.Web.Security.MySqlRoleProvider, {0}", a.FullName);
+            string type = String.Format("MySql.Web.Security.MySQLRoleProvider, {0}", a.FullName);
             newNode.SetAttribute("type", type);
 
             newNode.SetAttribute("connectionStringName", "LocalMySqlServer");
@@ -263,7 +263,7 @@ namespace MySql.Web.Security
             foreach (XmlNode node in providersNode.ChildNodes)
             {
                 string name = node.Attributes["name"].Value;
-                if (name == "MySqlMembershipProvider")
+                if (name == "MySQLMembershipProvider")
                 {
                     providersNode.RemoveChild(node);
                     break;
@@ -278,7 +278,7 @@ namespace MySql.Web.Security
             foreach (XmlNode node in providersNode.ChildNodes)
             {
                 string name = node.Attributes["name"].Value;
-                if (name == "MySqlRoleProvider")
+                if (name == "MySQLRoleProvider")
                 {
                     providersNode.RemoveChild(node);
                     break;

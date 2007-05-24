@@ -37,7 +37,7 @@ using MySql.Data.MySqlClient;
 
 namespace MySql.Web.Security
 {
-    public sealed class MySqlMembershipProvider : MembershipProvider
+    public sealed class MySQLMembershipProvider : MembershipProvider
     {
         private int newPasswordLength = 8;
         private string eventSource = "MySQLMembershipProvider";
@@ -80,6 +80,7 @@ namespace MySql.Web.Security
                 config.Add("description", "MySQL Membership provider");
             }
             base.Initialize(name, config);
+
             pApplicationName = GetConfigValue(config["applicationName"], HostingEnvironment.ApplicationVirtualPath);
             pMaxInvalidPasswordAttempts = Convert.ToInt32(GetConfigValue(config["maxInvalidPasswordAttempts"], "5"));
             pPasswordAttemptWindow = Convert.ToInt32(GetConfigValue(config["passwordAttemptWindow"], "10"));
@@ -114,13 +115,14 @@ namespace MySql.Web.Security
             {
                 throw new ProviderException("Password format not supported.");
             }
+
             ConnectionStringSettings ConnectionStringSettings = ConfigurationManager.ConnectionStrings[
                 config["connectionStringName"]];
-            if (ConnectionStringSettings == null || ConnectionStringSettings.ConnectionString.Trim() == "")
-            {
-                throw new ProviderException("Connection string cannot be blank.");
-            }
-            connectionString = ConnectionStringSettings.ConnectionString;
+            if (ConnectionStringSettings != null)
+                connectionString = ConnectionStringSettings.ConnectionString.Trim();
+            else
+                connectionString = "";
+
             Configuration cfg = WebConfigurationManager.OpenWebConfiguration(HostingEnvironment.ApplicationVirtualPath);
             machineKey = ((MachineKeySection) (cfg.GetSection("system.web/machineKey")));
             if (machineKey.ValidationKey == "AutoGenerate")
@@ -134,10 +136,10 @@ namespace MySql.Web.Security
 
             // make sure our schema is up to date
             string autoGenSchema = config["AutoGenerateSchema"];
-            if (String.IsNullOrEmpty(autoGenSchema) || Convert.ToBoolean(autoGenSchema))
+            if ((String.IsNullOrEmpty(autoGenSchema) || Convert.ToBoolean(autoGenSchema)) && 
+                connectionString != String.Empty)
                 MembershipSchema.CheckSchema(connectionString);
         }
-
 
         private static string GetConfigValue(string configValue, string defaultValue)
         {
@@ -426,9 +428,9 @@ namespace MySql.Web.Security
         public override MembershipUserCollection GetAllUsers(int pageIndex, int pageSize, out int totalRecords)
         {
             MySqlConnection conn = new MySqlConnection(connectionString);
-            MySqlCommand cmd =
-                new MySqlCommand("SELECT Count(*) FROM mysql_Membership " + "WHERE ApplicationName = ?ApplicationName",
-                                 conn);
+            MySqlCommand cmd = new MySqlCommand(@"SELECT Count(*) FROM mysql_Membership 
+                WHERE ApplicationName = ?ApplicationName", conn);
+
             cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
             MembershipUserCollection users = new MembershipUserCollection();
             MySqlDataReader reader = null;
@@ -446,6 +448,8 @@ namespace MySql.Web.Security
                                   " LastActivityDate, LastPasswordChangedDate, LastLockedOutDate " +
                                   " FROM mysql_Membership " + " WHERE ApplicationName = ?ApplicationName " +
                                   " ORDER BY Username Asc";
+
+                cmd.Parameters.Clear();
                 cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName.ToString();
                 reader = cmd.ExecuteReader();
                 int counter = 0;

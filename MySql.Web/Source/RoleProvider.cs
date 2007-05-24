@@ -33,7 +33,7 @@ using MySql.Data.MySqlClient;
 
 namespace MySql.Web.Security
 {
-    public sealed class MySqlRoleProvider : RoleProvider
+    public sealed class MySQLRoleProvider : RoleProvider
     {
         private string eventSource = "MySQLRoleProvider";
         private string eventLog = "Application";
@@ -81,16 +81,15 @@ namespace MySql.Web.Security
                 }
             }
             pConnectionStringSettings = ConfigurationManager.ConnectionStrings[config["connectionStringName"]];
-            if (pConnectionStringSettings == null || pConnectionStringSettings.ConnectionString.Trim() == "")
-            {
-                throw new ProviderException("Connection string cannot be blank.");
-            }
-            connectionString = pConnectionStringSettings.ConnectionString;
-
+            if (pConnectionStringSettings != null)
+                connectionString = pConnectionStringSettings.ConnectionString.Trim();
+            else
+                connectionString = "";
 
             // make sure our schema is up to date
             string autoGenSchema = config["AutoGenerateSchema"];
-            if (String.IsNullOrEmpty(autoGenSchema) || Convert.ToBoolean(autoGenSchema))
+            if ((String.IsNullOrEmpty(autoGenSchema) || Convert.ToBoolean(autoGenSchema)) &&
+                connectionString != String.Empty)
                 RoleSchema.CheckSchema(connectionString);
         }
 
