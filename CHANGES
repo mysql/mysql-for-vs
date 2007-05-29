@@ -22,6 +22,11 @@ Version 5.1.0 - 5/1/2007
     What this means is that passing in null as a database restriction will report
     objects on the currently selected database only.
     
+Version 5.0.8
+  Bugs fixed
+  ----------
+  Bug #28706 Log messages are truncated  
+  
 Version 5.0.7 5/16/2007
 
   Bugs fixed
