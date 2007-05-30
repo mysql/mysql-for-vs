@@ -743,9 +743,6 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void BinaryAndVarBinary()
         {
-            // TODO: uncomment when working
-            return;
-
             MySqlCommand cmd = new MySqlCommand("SELECT BINARY 'something' AS BinaryData", conn);
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {
@@ -759,6 +756,23 @@ namespace MySql.Data.MySqlClient.Tests
                 string s = reader.GetString(0);
                 Assert.AreEqual("something", s);
             }
+        }
+
+        [Test]
+        public void BinaryTypes()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL(@"CREATE TABLE test (c1 VARCHAR(20), c2 VARBINARY(20),
+                c3 TEXT, c4 BLOB, c6 VARCHAR(20) CHARACTER SET BINARY)");
+
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            Assert.AreEqual(typeof(String), dt.Columns[0].DataType);
+            Assert.AreEqual(typeof(byte[]), dt.Columns[1].DataType);
+            Assert.AreEqual(typeof(String), dt.Columns[2].DataType);
+            Assert.AreEqual(typeof(byte[]), dt.Columns[3].DataType);
+            Assert.AreEqual(typeof(byte[]), dt.Columns[4].DataType);
         }
 	}
 }
