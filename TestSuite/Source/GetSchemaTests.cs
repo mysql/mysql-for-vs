@@ -320,8 +320,8 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("id", dt.Rows[0]["COLUMN_NAME"]);
 
             execSQL("DROP TABLE IF EXISTS test");
-            execSQL("CREATE TABLE test (id int, id1 int, id2 int, " +
-                "INDEX key1 (id1, id2))");
+            execSQL(@"CREATE TABLE test (id int, id1 int, id2 int, 
+                INDEX key1 (id1, id2))");
             restrictions[2] = "test";
             restrictions[1] = databases[0];
             restrictions[4] = "id2";
