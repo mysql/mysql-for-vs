@@ -184,6 +184,7 @@ namespace MySql.Data.VisualStudio.DocumentView
         #endregion
 
         #region Public properties and methods
+
         /// <summary>
         /// Name of server host which owns this database. This property is read-only.
         /// </summary>
@@ -1440,6 +1441,11 @@ namespace MySql.Data.VisualStudio.DocumentView
             {
                 return documentCookieVal;
             }
+        }
+
+        protected int HierarchyItemIDVal
+        {
+            get { return hierarchyItemIDVal; }
         }
 
         /// <summary>

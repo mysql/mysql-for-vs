@@ -65,11 +65,10 @@ namespace MySql.Data.VisualStudio.DocumentView
         #endregion
 
         #region Private variables
-        /// <summary>Definition of the routine</summary>
-        private string defValue;
 
-        /// <summary>Type of the routine</summary>
+        private string defValue;
         private RoutineTypes typeVal;
+
         #endregion
 
         #region Enumerations
@@ -149,7 +148,7 @@ namespace MySql.Data.VisualStudio.DocumentView
         {
             get
             {
-                return new object[] { null, Schema, Type, Name };
+                return new object[] { null, Schema, Name };
             }
         }
 
@@ -161,9 +160,7 @@ namespace MySql.Data.VisualStudio.DocumentView
         {
             get
             {
-                RoutineTypes oldType = GetRoutineType(GetOldAttributeAsString(StoredProc.Type));
-
-                return new object[] { null, Schema, oldType, OldName };
+                return new object[] { null, Schema, OldName };
             }
         }
         #endregion
@@ -404,8 +401,6 @@ namespace MySql.Data.VisualStudio.DocumentView
         public StoredProcDocument(ServerExplorerFacade hierarchy, bool isNew, object[] id)
             : base(hierarchy, isNew, id)
         {
-            // Type is the 3rd part of an identifier
-            typeVal = GetRoutineType(id[2] as string);
         }
         #endregion
 
@@ -442,6 +437,24 @@ namespace MySql.Data.VisualStudio.DocumentView
             newRow[StoredProc.Type] = Type;
             string body = "BEGIN " + Environment.NewLine + Environment.NewLine + "END";
             newRow[StoredProc.Definition] = body;
+        }
+
+        public override object[] ObjectIDForLoad
+        {
+            get
+            {
+                object typeStr = Hierarchy.Accessor.GetObjectProperty(
+                    HierarchyItemIDVal, "RoutineType");
+                typeVal = GetRoutineType(typeStr.ToString());
+
+                object[] id = ObjectID;
+                object[] newId = new object[4];
+                newId[0] = id[0];
+                newId[1] = id[1];
+                newId[2] = typeVal;
+                newId[3] = id[2];
+                return newId;
+            }
         }
 
         /// <summary>
@@ -909,16 +922,12 @@ namespace MySql.Data.VisualStudio.DocumentView
         #endregion
 
         #region Auxiliary methods
-        /// <summary>
-        /// Determines a routine's type. Throws exception if the type can't be read
-        /// </summary>
-        /// <param name="strType">String representation of the type</param>
-        /// <returns>The routine's type</returns>
-        private RoutineTypes GetRoutineType(string strType)
+
+        private RoutineTypes GetRoutineType(string typeStr)
         {
             try
             {
-                object routineType = Enum.Parse(typeof(RoutineTypes), strType, true);
+                object routineType = Enum.Parse(typeof(RoutineTypes), typeStr, true);
                 return (RoutineTypes)routineType;
             }
             catch (Exception e)

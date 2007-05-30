@@ -27,7 +27,7 @@ namespace MySql.Data.VisualStudio.Descriptors
     /// Stored procedure descriptor
     /// </summary>
     [ObjectDescriptor(StoredProcDescriptor.TypeName, typeof(StoredProcDescriptor))]
-    [IdLength(4)]
+    [IdLength(3)]
     public class StoredProcDescriptor : ObjectDescriptor
     {
         #region Type name

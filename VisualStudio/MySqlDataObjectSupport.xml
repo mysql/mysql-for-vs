@@ -224,10 +224,6 @@ VSDataObjectSupport.xsd">
         <Property name="Ordinal" type="System.Int64" itemName="ORDINAL_POSITION">
           <Concepts>
             <Concept name="Ordinal">
-              <!--
-                The Ordinal concept is defined as an Int32 so we must convert it to
-                the expected type.
-              -->
               <Conversion>
                 <ChangeType type="System.Int32"/>
               </Conversion>
@@ -534,14 +530,9 @@ VSDataObjectSupport.xsd">
             <Concept name="Identifier1"/>
           </Concepts>
         </Part>
-        <Part name="Type" itemName="ROUTINE_TYPE">
-          <Concepts>
-            <Concept name="Identifier2"/>
-          </Concepts>
-        </Part>
         <Part name="Name" itemName="SPECIFIC_NAME">
           <Concepts>
-            <Concept name="Identifier3"/>
+            <Concept name="Identifier2"/>
           </Concepts>
         </Part>
       </Identifier>
@@ -557,14 +548,15 @@ VSDataObjectSupport.xsd">
         <Property name="Schema" type="System.String" itemName="ROUTINE_SCHEMA">
           <Concepts>
             <Concept name="Schema" />
-<!--            <Concept name="Type">
+            <Concept name="Type">
               <Conversion>
                 <Calculate expr="IIF(NOT ({0} = 'information_schema'), 'USER', 'SYSTEM')" type="System.String" />
               </Conversion>
-            </Concept>-->
+            </Concept>
           </Concepts>
         </Property>
         <Property name="Type" type="System.String" itemName="ROUTINE_TYPE" />
+        <Property name="RoutineType" type="System.String" itemName="ROUTINE_TYPE" />
         <Property name="Name" type="System.String" itemName="ROUTINE_NAME" />
         <Property name="SpecificName" type="System.String" itemName="SPECIFIC_NAME" />
         <Property name="CreationTime" type="System.DateTime" itemName="CREATED" />
@@ -590,6 +582,88 @@ VSDataObjectSupport.xsd">
       </Actions>
     </Type>
 
+    <Type name="StoredProcedureColumn" defaultSort="Database, Schema, StoredProcedure, Id">
+      <Concepts>
+        <Concept name="StoredProcedureColumn" restrictions="{Catalog},{Schema},{StoredProcedure},{Name}"/>
+      </Concepts>
+      <Identifier>
+        <Part name="Database">
+          <Concepts>
+            <Concept name="Identifier0"/>
+          </Concepts>
+        </Part>
+        <Part name="Schema">
+          <Concepts>
+            <Concept name="Identifier1"/>
+          </Concepts>
+        </Part>
+        <Part name="StoredProcedure">
+          <Concepts>
+            <Concept name="Identifier2"/>
+          </Concepts>
+        </Part>
+        <Part name="Name">
+          <Concepts>
+            <Concept name="Identifier3"/>
+          </Concepts>
+        </Part>
+      </Identifier>
+      <Properties>
+        <Property name="Name" type="System.String"/>
+        <Property name="Id" type="System.Int32">
+          <Concepts>
+            <Concept name="Ordinal"/>
+          </Concepts>
+        </Property>
+        <Property name="ProviderType" type="System.Int32">
+          <Concepts>
+            <Concept name="ProviderDataType"/>
+          </Concepts>
+        </Property>
+        <Property name="FrameworkType" type="System.Type">
+          <Concepts>
+            <Concept name="FrameworkDataType">
+              <Conversion>
+                <ChangeType type="System.String"/>
+              </Conversion>
+            </Concept>
+          </Concepts>
+        </Property>
+        <Property name="Length" type="System.Int32">
+          <Concepts>
+            <Concept name="Length"/>
+          </Concepts>
+        </Property>
+        <Property name="NumericPrecision" type="System.Int16">
+          <Concepts>
+            <Concept name="Precision">
+              <Conversion>
+                <ChangeType type="System.Int32"/>
+              </Conversion>
+            </Concept>
+          </Concepts>
+        </Property>
+        <Property name="NumericScale" type="System.Int16">
+          <Concepts>
+            <Concept name="Scale">
+              <Conversion>
+                <ChangeType type="System.Int32"/>
+              </Conversion>
+            </Concept>
+          </Concepts>
+        </Property>
+        <Property name="Nullable" type="System.Boolean">
+          <Concepts>
+            <Concept name="Nullable"/>
+          </Concepts>
+        </Property>
+        <Property name="IsAutoIncrement" type="System.Boolean"/>
+      </Properties>
+      <Actions>
+        <Action guid="61CC0372-384D-42e5-9707-6D7C8DC5287A" name="Enumerate" handler="Microsoft.VisualStudio.DataTools.Providers.SqlServer.SqlStoredProcedureColumnEnumerator"/>
+      </Actions>
+    </Type>    
+    
     <!-- Stored procedure parameter -->
     <Type name="StoredProcedureParameter" defaultSort="Database, Schema, StoredProcedure, Ordinal" minSourceVersion="5.0.0">
       <Concepts>
@@ -624,6 +698,7 @@ VSDataObjectSupport.xsd">
         </Part>
       </Identifier>
       <Properties>
+        <Property name="Name" type="System.String" itemName="PARAMETER_NAME"/>
         <Property name="Ordinal" type="System.Int32" itemName="ORDINAL_POSITION">
           <Concepts>
             <Concept name="Ordinal"/>
@@ -674,7 +749,7 @@ VSDataObjectSupport.xsd">
           -->
           <AggregatedConcept name="Direction" fromData="IsResult, Mode">
             <Conversion>
-              <Calculate expr="IIF({0} = 'YES',IIF({1}='IN','IN',IIF({1}='OUT','OUT','IN/OUT')),'RETVAL')" type="System.String"/>
+              <Calculate expr="IIF({0} = 'NO',IIF({1}='IN','IN',IIF({1}='OUT','OUT','IN/OUT')),'RETVAL')" type="System.String"/>
             </Conversion>
           </AggregatedConcept>
         </AggregatedConcepts>
@@ -899,14 +974,10 @@ VSDataObjectSupport.xsd">
       </Identifier>
       <Properties>
         <Property name="Name" type="System.String" itemName="INDEX_NAME"/>
-        <Property name="IsUnique" type="System.String" itemName="UNIQUE"/>
-        <Property name="IsPrimary" type="System.String" itemName="PRIMARY">
+        <Property name="IsUnique" type="System.Boolean" itemName="UNIQUE"/>
+        <Property name="IsPrimary" type="System.Boolean" itemName="PRIMARY">
           <Concepts>
-            <Concept name="IsPrimary">
-              <Conversion>
-                <Calculate expr="IIF({0} = 'YES'), true, false)" type="System.Boolean" />
-              </Conversion>
-            </Concept>
+            <Concept name="IsPrimary"/>
           </Concepts>
         </Property>
       </Properties>
@@ -977,17 +1048,9 @@ VSDataObjectSupport.xsd">
       </Identifier>
       <Properties>
         <Property name="Name" type="System.String" itemName="COLUMN_NAME"/>
-        <Property name="Ordinal" type="System.Int64" itemName="ORDINAL_POSITION">
+        <Property name="Ordinal" type="System.Int32" itemName="ORDINAL_POSITION">
           <Concepts>
-            <Concept name="Ordinal">
-              <!--
-								The Ordinal concept is defined as an Int32 so we must convert it to
-								the expected type.
-							-->
-              <Conversion>
-                <ChangeType type="System.Int32"/>
-              </Conversion>
-            </Concept>
+            <Concept name="Ordinal"/>
           </Concepts>
         </Property>
       </Properties>

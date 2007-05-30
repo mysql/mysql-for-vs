@@ -110,6 +110,12 @@ namespace MySql.Data.VisualStudio
                 return hierarchyAccessor.Hierarchy;
             }
         }
+
+        public DataViewHierarchyAccessor Accessor
+        {
+            get { return hierarchyAccessor; }
+        }
+
         #endregion
 
         #region Public methods for work with hierarchy items
