@@ -1,6 +1,8 @@
 Version 5.1.2
   - Fixed integration with the Website Administration Tool.  Before this fix, the test link
     was visible but did not work and  user management did not work.
+  - Reintroduced code to properly return field values as byte[] when the binary flag is present.
+    (See release notes)    
     
 Version 5.1.1
   - Fixed password property on MySqlConnectionStringBuilder to use PasswordPropertyText 

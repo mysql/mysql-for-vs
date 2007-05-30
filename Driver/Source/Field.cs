@@ -21,6 +21,7 @@
 using System.Text;
 using MySql.Data.Common;
 using MySql.Data.Types;
+using System.Globalization;
 
 namespace MySql.Data.MySqlClient
 {
@@ -202,10 +203,6 @@ namespace MySql.Data.MySqlClient
                 }
             }
 
-            // now determine if we really should be binary
-//            if (CharacterSetIndex == 63 && (colFlags & ColumnFlags.BINARY) != 0)
-  //              CheckForExceptions();
-
             if (IsBlob && !IsBinary)
             {
                 if (type == MySqlDbType.TinyBlob)
@@ -217,19 +214,19 @@ namespace MySql.Data.MySqlClient
                 else if (type == MySqlDbType.LongBlob)
                     mySqlDbType = MySqlDbType.LongText;
             }
-            /*
-                if (type == MySqlDbType.String)
-                    mySqlDbType = MySqlDbType.Binary;
-                else if (type == MySqlDbType.VarChar ||
-                         type == MySqlDbType.VarString)
-                    mySqlDbType = MySqlDbType.VarBinary;
-            }
-            else
-            {
-            }*/
+
+            // now determine if we really should be binary
+            CheckForExceptions();
+            if (!IsBinary) return;
+                
+            if (type == MySqlDbType.String)
+                mySqlDbType = MySqlDbType.Binary;
+            else if (type == MySqlDbType.VarChar ||
+                     type == MySqlDbType.VarString)
+                mySqlDbType = MySqlDbType.VarBinary;
 		}
 
-/*        private void CheckForExceptions()
+        private void CheckForExceptions()
         {
             string colName = OriginalColumnName.ToLower(CultureInfo.InvariantCulture);
             if (colName.StartsWith("char("))
@@ -237,7 +234,6 @@ namespace MySql.Data.MySqlClient
             else if (connection.IsExecutingBuggyQuery)
                 binaryOk = false;
         }
-        */
 
         public IMySqlValue GetValueObject()
         {
