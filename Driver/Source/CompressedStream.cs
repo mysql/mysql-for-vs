@@ -35,6 +35,8 @@ namespace MySql.Data.MySqlClient
 
         // reading fields
         private byte[] localByte;
+        private byte[] inBuffer;
+        private WeakReference inBufferRef;
         private int inPos;
         private int maxInPos;
         private ZInputStream zInStream;
@@ -43,17 +45,12 @@ namespace MySql.Data.MySqlClient
         {
             this.baseStream = baseStream;
             localByte = new byte[1];
-            cache = new MemoryStream();
+			cache = new MemoryStream();
+            inBufferRef = new WeakReference(inBuffer, false);
         }
 
         #region Properties
 
-        //TODO: remove comment
-/*		public Stream BaseStream 
-		{
-			get { return baseStream; }
-		}
-*/
 
         public override bool CanRead
         {
@@ -110,9 +107,8 @@ namespace MySql.Data.MySqlClient
                 throw new ArgumentException(Resources.BufferNotLargeEnough, "buffer");
 
             if (inPos == maxInPos)
-            {
                 PrepareNextPacket();
-            }
+
             int countToRead = Math.Min(count, maxInPos - inPos);
             int countRead;
             if (zInStream != null)
@@ -120,6 +116,15 @@ namespace MySql.Data.MySqlClient
             else
                 countRead = baseStream.Read(buffer, offset, countToRead);
             inPos += countRead;
+
+            // release the weak reference
+            if (inPos == maxInPos)
+            {
+                zInStream = null;
+                inBufferRef.Target = inBuffer;
+                inBuffer = null;
+            }
+
             return countRead;
         }
 
@@ -142,12 +147,29 @@ namespace MySql.Data.MySqlClient
             }
             else
             {
-                zInStream = new ZInputStream(baseStream);
+                ReadNextPacket(compressedLength);
+                MemoryStream ms = new MemoryStream(inBuffer);
+                zInStream = new ZInputStream(ms);
                 zInStream.maxInput = compressedLength;
             }
 
             inPos = 0;
             maxInPos = unCompressedLength;
+        }
+
+        private void ReadNextPacket(int len)
+        {
+            inBuffer = (byte[])inBufferRef.Target;
+            if (inBuffer == null || inBuffer.Length < len)
+                inBuffer = new byte[len];
+            int numRead = 0;
+            int numToRead = len;
+            while (numToRead > 0)
+            {
+                int read = baseStream.Read(inBuffer, numRead, numToRead);
+                numRead += read;
+                numToRead -= read;
+            }
         }
 
         private MemoryStream CompressCache()
