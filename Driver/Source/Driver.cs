@@ -308,6 +308,7 @@ namespace MySql.Data.MySqlClient
         public abstract void SkipColumnValue(IMySqlValue valObject);
         public abstract MySqlField[] ReadColumnMetadata(int count);
         public abstract bool Ping();
+        public abstract void CloseStatement(int id);
 
         #endregion
     }

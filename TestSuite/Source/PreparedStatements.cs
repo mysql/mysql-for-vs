@@ -737,7 +737,50 @@ namespace MySql.Data.MySqlClient.Tests
                 reader.Read();
             }
         }
-	}
+
+        private int GetPreparedStatementCount()
+        {
+            MySqlCommand cmd = new MySqlCommand("SHOW GLOBAL STATUS LIKE 'Prepared%'", conn);
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                reader.Read();
+                string s = reader.GetString(1);
+                return Int32.Parse(s);
+            }
+        }
+
+        [Test]
+        public void ClosingCommandsProperly()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test (id INT, name VARCHAR(50))");
+
+            string connStr = GetConnectionString(true) +
+                ";ignore prepare=false";
+            using (MySqlConnection c = new MySqlConnection(connStr))
+            {
+                c.Open();
+
+                int initialCount = GetPreparedStatementCount();
+
+                for (int i = 0; i < 10; i++)
+                {
+                    using (MySqlCommand cmd =
+                        new MySqlCommand("INSERT INTO test VALUES (?id, ?name)", c))
+                    {
+                        cmd.Parameters.Add("?id", MySqlDbType.Int32);
+                        cmd.Parameters.Add("?name", MySqlDbType.VarChar);
+                        cmd.Prepare();
+                        cmd.Parameters[0].Value = i;
+                        cmd.Parameters[1].Value = "foobar";
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                c.Ping();
+                Assert.AreEqual(initialCount, GetPreparedStatementCount());
+            }
+        }
+    }
 
     #region Configs
 #if !CF

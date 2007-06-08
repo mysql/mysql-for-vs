@@ -698,14 +698,15 @@ namespace MySql.Data.MySqlClient
 		}
 		#endregion
 
-		#region IDisposable Members
-
-		public new void Dispose()
-		{
-			base.Dispose(true);
-		}
-
-		#endregion
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (statement != null && statement.IsPrepared)
+                    ((PreparableStatement)statement).CloseStatement();
+            }
+            base.Dispose(disposing);
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether the command object should be visible in a Windows Form Designer control. 

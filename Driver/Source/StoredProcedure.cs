@@ -188,9 +188,11 @@ namespace MySql.Data.MySqlClient
             resolvedCommandText = sqlCmd;
         }
 
-        public override void Close()
-        {
-            if (outSelect.Length == 0) return;
+		public override void Close()
+		{
+            base.Close();
+
+			if (outSelect.Length == 0) return;
 
             char marker = Connection.ParameterMarker;
 

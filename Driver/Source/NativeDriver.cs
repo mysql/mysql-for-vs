@@ -852,7 +852,16 @@ namespace MySql.Data.MySqlClient
             if (statementId > 0)
                 ReadNullMap(columns);
 
-            return true;
+			return true;
+		}
+
+        public override void CloseStatement(int id)
+        {
+            stream.StartOutput(5, true);
+            stream.WriteByte((byte)DBCmd.CLOSE_STMT);
+            stream.WriteInteger((long)id, 4);
+            stream.Flush();
         }
-    }
+
+	}
 }

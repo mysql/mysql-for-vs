@@ -25,9 +25,13 @@ Version 5.1.0 - 5/1/2007
     objects on the currently selected database only.
     
 Version 5.0.8
-  Bugs fixed
-  ----------
   Bug #28706 Log messages are truncated  
+  - Fixed a problem with compression over a network.  We were letting the inflate stream read
+    directly from the network stream.  Under certain situations, two bytes were being left unread
+    and this messed up our byte counts.  Now we are using a WeakReference to an internal buffer
+    that we read the compressed data into before inflating. (Bug #28204)  
+  - Fixed problem where we were not closing prepared statement handles
+    when commands are disposed.
   
 Version 5.0.7 5/16/2007
 
