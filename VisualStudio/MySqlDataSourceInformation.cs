@@ -19,12 +19,8 @@
  */
 
 using System;
-using System.Data;
-using System.Diagnostics;
-using System.Data.SqlClient;
 using Microsoft.VisualStudio.Data;
 using Microsoft.VisualStudio.Data.AdoDotNet;
-using MySql.Data.VisualStudio.Properties;
 
 namespace MySql.Data.VisualStudio
 {
@@ -59,6 +55,7 @@ namespace MySql.Data.VisualStudio
             AddProperty(SchemaSeparator, ".");
             AddProperty(ParameterPrefix, "?");
             AddProperty(ParameterPrefixInName, true);
+            AddProperty(DefaultCatalog, null);
         } 
         #endregion
 

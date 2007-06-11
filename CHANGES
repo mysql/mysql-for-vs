@@ -3,6 +3,8 @@ Version 5.1.2
     was visible but did not work and  user management did not work.
   - Reintroduced code to properly return field values as byte[] when the binary flag is present.
     (See release notes)    
+  - Fixed problem preventing the DataSet Designer or TableAdapter wizard from being
+    able to generate insert, update, and delete statements. (Bug #26347)    
     
 Version 5.1.1
   - Fixed password property on MySqlConnectionStringBuilder to use PasswordPropertyText 

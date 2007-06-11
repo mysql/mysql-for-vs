@@ -202,7 +202,8 @@ namespace MySql.Data.MySqlClient
             sb.Replace("<", "_lt_");
             sb.Replace(">", "_gt_");
             sb.Replace(".", "_pt_");
-            return sb.ToString();
+            return String.Format("{0}{1}",
+                ParameterMarker, sb.ToString());
         }
 
         protected override DbCommand InitializeCommand(DbCommand command)
