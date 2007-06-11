@@ -192,7 +192,7 @@ namespace MySql.Data.MySqlClient
 #if !CF
         [Category("Data")]
 #endif
-            public override ParameterDirection Direction
+        public override ParameterDirection Direction
         {
             get { return direction; }
             set { direction = value; }
@@ -204,7 +204,7 @@ namespace MySql.Data.MySqlClient
 #if !CF
         [Browsable(false)]
 #endif
-            public override Boolean IsNullable
+        public override Boolean IsNullable
         {
             get { return isNullable; }
             set { isNullable = value; }
@@ -215,8 +215,9 @@ namespace MySql.Data.MySqlClient
         /// </summary>
 #if !CF
         [Category("Data")]
+        [DbProviderSpecificTypeProperty(true)]
 #endif
-            public MySqlDbType MySqlDbType
+        public MySqlDbType MySqlDbType
         {
             get { return mySqlDbType; }
             set
@@ -232,7 +233,7 @@ namespace MySql.Data.MySqlClient
 #if !CF
         [Category("Misc")]
 #endif
-            public override String ParameterName
+        public override String ParameterName
         {
             get { return paramName; }
             set
@@ -249,7 +250,7 @@ namespace MySql.Data.MySqlClient
 #if !CF
         [Category("Data")]
 #endif
-            public byte Precision
+        public byte Precision
         {
             get { return precision; }
             set { precision = value; }
@@ -261,7 +262,7 @@ namespace MySql.Data.MySqlClient
 #if !CF
         [Category("Data")]
 #endif
-            public byte Scale
+        public byte Scale
         {
             get { return scale; }
             set { scale = value; }
@@ -273,7 +274,7 @@ namespace MySql.Data.MySqlClient
 #if !CF
         [Category("Data")]
 #endif
-            public override int Size
+        public override int Size
         {
             get { return size; }
             set { size = value; }
@@ -285,7 +286,7 @@ namespace MySql.Data.MySqlClient
 #if !CF
         [Category("Data")]
 #endif
-            public override String SourceColumn
+        public override String SourceColumn
         {
             get { return sourceColumn; }
             set { sourceColumn = value; }
@@ -297,7 +298,7 @@ namespace MySql.Data.MySqlClient
 #if !CF
         [Category("Data")]
 #endif
-            public override DataRowVersion SourceVersion
+        public override DataRowVersion SourceVersion
         {
             get { return sourceVersion; }
             set { sourceVersion = value; }
@@ -310,7 +311,7 @@ namespace MySql.Data.MySqlClient
         [TypeConverter(typeof (StringConverter))]
         [Category("Data")]
 #endif
-            public override object Value
+        public override object Value
         {
             get { return paramValue; }
             set

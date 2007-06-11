@@ -5,6 +5,8 @@ Version 5.1.2
     (See release notes)    
   - Fixed problem preventing the DataSet Designer or TableAdapter wizard from being
     able to generate insert, update, and delete statements. (Bug #26347)    
+  - Fixed problem preventing use of stored procedures for insert, update, and
+    delete statements in a table adapter.    
     
 Version 5.1.1
   - Fixed password property on MySqlConnectionStringBuilder to use PasswordPropertyText 

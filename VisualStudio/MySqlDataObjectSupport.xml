@@ -11,7 +11,7 @@ VSDataObjectSupport.xsd">
         <Property name="Server" itemName="SERVER_NAME" type="System.String"/>
         <Property name="Database" itemName="CATALOG_NAME" type="System.String"/>
         <Property name="Schema" itemName="SCHEMA_NAME" type="System.String"/>
-<!--        <Property name="DefaultCharset" itemName="DEFAULT_CHARACTER_SET_NAME" type="System.String"/>
+        <!--        <Property name="DefaultCharset" itemName="DEFAULT_CHARACTER_SET_NAME" type="System.String"/>
         <Property name="DefaultCollation" itemName="DEFAULT_COLLATION_NAME" type="System.String"/>
         <Property name="SQLPath" itemName="SQL_PATH" type="System.String"/>-->
       </Properties>
@@ -31,7 +31,7 @@ VSDataObjectSupport.xsd">
         -->
         <Concept name="Table" restrictions="null,{Schema},{Name}" />
       </Concepts>
-      
+
       <!-- This section dfeines what uniquely identifes one of these objects -->
       <Identifier>
         <Part name="Database" itemName="TABLE_CATALOG">
@@ -50,7 +50,7 @@ VSDataObjectSupport.xsd">
           </Concepts>
         </Part>
       </Identifier>
-      
+
       <Properties>
         <Property name="Schema" type="System.String" itemName="TABLE_SCHEMA">
           <Concepts>
@@ -87,11 +87,11 @@ VSDataObjectSupport.xsd">
         <Property name="Comment" type="System.String" itemName="TABLE_COMMENT"/>
       </Properties>
       <Actions>
-        <Action name="Enumerate" guid="61CC0372-384D-42e5-9707-6D7C8DC5287A" 
+        <Action name="Enumerate" guid="61CC0372-384D-42e5-9707-6D7C8DC5287A"
                 handler="Microsoft.VisualStudio.Data.AdoDotNet.AdoDotNetObjectEnumerator">
-                    <Parameter value="Tables"/>
+          <Parameter value="Tables"/>
         </Action>
-        <Action name="BuildDSRef" guid="7C030900-E8DD-471b-8F18-D83DA7036144" 
+        <Action name="BuildDSRef" guid="7C030900-E8DD-471b-8F18-D83DA7036144"
                 handler="Microsoft.VisualStudio.Data.DSRefBuilder">
           <Parameter>
             <!--The name of the node (Identifier2 passed).-->
@@ -514,9 +514,9 @@ VSDataObjectSupport.xsd">
     <Type name="StoredProcedure" defaultSort="Schema, Name" minSourceVersion="5.0.0">
       <Concepts>
         <Concept name="StoredProcedure" restrictions="null, {Schema}, {Name}, PROCEDURE" />
-<!--        <Concept name="TabularFunction" restrictions="null, {Schema}, {Name}, PROCEDURE" />-->
+        <!--        <Concept name="TabularFunction" restrictions="null, {Schema}, {Name}, PROCEDURE" />-->
         <Concept name="Function" restrictions="null, {Schema}, {Name}, FUNCTION" />
-<!--        <Concept name="ScalarFunction" restrictions="null, {Schema}, {Name}, FUNCTION" />-->
+        <!--        <Concept name="ScalarFunction" restrictions="null, {Schema}, {Name}, FUNCTION" />-->
       </Concepts>
 
       <Identifier>
@@ -543,7 +543,7 @@ VSDataObjectSupport.xsd">
         <Restriction name="Name"/>
         <Restriction name="Type"/>
       </Restrictions>
-      
+
       <Properties>
         <Property name="Schema" type="System.String" itemName="ROUTINE_SCHEMA">
           <Concepts>
@@ -587,40 +587,40 @@ VSDataObjectSupport.xsd">
         <Concept name="StoredProcedureColumn" restrictions="{Catalog},{Schema},{StoredProcedure},{Name}"/>
       </Concepts>
       <Identifier>
-        <Part name="Database">
+        <Part name="Database" itemName="BaseCatalogName">
           <Concepts>
             <Concept name="Identifier0"/>
           </Concepts>
         </Part>
-        <Part name="Schema">
+        <Part name="Schema" itemName="BaseSchemaName">
           <Concepts>
             <Concept name="Identifier1"/>
           </Concepts>
         </Part>
-        <Part name="StoredProcedure">
+        <Part name="StoredProcedure" itemName="RoutineName">
           <Concepts>
             <Concept name="Identifier2"/>
           </Concepts>
         </Part>
-        <Part name="Name">
+        <Part name="Name" itemName="ColumnName">
           <Concepts>
             <Concept name="Identifier3"/>
           </Concepts>
         </Part>
       </Identifier>
       <Properties>
-        <Property name="Name" type="System.String"/>
-        <Property name="Id" type="System.Int32">
+        <Property name="Name" type="System.String" itemName="ColumnName"/>
+        <Property name="Id" type="System.Int32" itemName="ColumnOrdinal">
           <Concepts>
             <Concept name="Ordinal"/>
           </Concepts>
         </Property>
-        <Property name="ProviderType" type="System.Int32">
+        <Property name="ProviderType" type="System.Int32" itemName="ProviderType">
           <Concepts>
             <Concept name="ProviderDataType"/>
           </Concepts>
         </Property>
-        <Property name="FrameworkType" type="System.Type">
+        <Property name="FrameworkType" type="System.Type" itemName="DataType">
           <Concepts>
             <Concept name="FrameworkDataType">
               <Conversion>
@@ -629,41 +629,33 @@ VSDataObjectSupport.xsd">
             </Concept>
           </Concepts>
         </Property>
-        <Property name="Length" type="System.Int32">
+        <Property name="Length" type="System.Int32" itemName="ColumnSize">
           <Concepts>
             <Concept name="Length"/>
           </Concepts>
         </Property>
-        <Property name="NumericPrecision" type="System.Int16">
+        <Property name="NumericPrecision" type="System.Int32">
           <Concepts>
-            <Concept name="Precision">
-              <Conversion>
-                <ChangeType type="System.Int32"/>
-              </Conversion>
-            </Concept>
+            <Concept name="Precision"/>
           </Concepts>
         </Property>
-        <Property name="NumericScale" type="System.Int16">
+        <Property name="NumericScale" type="System.Int32">
           <Concepts>
-            <Concept name="Scale">
-              <Conversion>
-                <ChangeType type="System.Int32"/>
-              </Conversion>
-            </Concept>
+            <Concept name="Scale"/>
           </Concepts>
         </Property>
-        <Property name="Nullable" type="System.Boolean">
+        <Property name="Nullable" type="System.Boolean" itemName="AllowDBNull">
           <Concepts>
             <Concept name="Nullable"/>
           </Concepts>
         </Property>
-        <Property name="IsAutoIncrement" type="System.Boolean"/>
+        <Property name="IsAutoIncrement" type="System.Boolean" itemName="IsAutoIncrement"/>
       </Properties>
       <Actions>
-        <Action guid="61CC0372-384D-42e5-9707-6D7C8DC5287A" name="Enumerate" handler="Microsoft.VisualStudio.DataTools.Providers.SqlServer.SqlStoredProcedureColumnEnumerator"/>
+        <Action guid="61CC0372-384D-42e5-9707-6D7C8DC5287A" name="Enumerate" handler="MySql.Data.VisualStudio.StoredProcedureColumnEnumerator"/>
       </Actions>
-    </Type>    
-    
+    </Type>
+
     <!-- Stored procedure parameter -->
     <Type name="StoredProcedureParameter" defaultSort="Database, Schema, StoredProcedure, Ordinal" minSourceVersion="5.0.0">
       <Concepts>
@@ -706,7 +698,7 @@ VSDataObjectSupport.xsd">
         </Property>
         <Property name="SystemType" type="System.String" itemName="DATA_TYPE">
           <Concepts>
-            <Concept name="NativeDataType"/>
+<!--            <Concept name="NativeDataType"/>-->
             <Concept name="ProviderDataType">
               <Conversion mapper="Microsoft.VisualStudio.Data.AdoDotNet.AdoDotNetObjectConceptMapper"/>
             </Concept>
@@ -1095,5 +1087,5 @@ VSDataObjectSupport.xsd">
         </Action>
       </Actions>
     </Type>
-  </Types>  
+  </Types>
 </VSDataObjectSupport>

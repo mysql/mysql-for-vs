@@ -621,7 +621,7 @@
     <TypeExtension name="StoredProcedure">
       <DisplayName resource="Type_StoredProcedure" />
       <Identifier>
-        <!--        <Part name="Database">
+        <Part name="Database">
           <DisplayName resource="DisplayName_Object_Database" />
           <Category resource="Category_Identifier" />
           <Description resource="Description_Object_Database" />
@@ -639,7 +639,7 @@
             <StandardValue value="PROCEDURE" resource="Value_Procedure" />
             <StandardValue value="FUNCTION" resource="Value_Function" />
           </StandardValues>
-        </Part>-->
+        </Part>
         <Part name="Name">
           <DisplayName resource="DisplayName_Object_Name" />
           <Category resource="Category_Identifier" />
