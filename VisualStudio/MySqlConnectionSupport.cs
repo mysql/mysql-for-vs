@@ -22,7 +22,6 @@ using System;
 using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
-using System.Data.SqlClient;
 using System.Reflection;
 using Microsoft.VisualStudio.Data;
 using Microsoft.VisualStudio.Data.AdoDotNet;
@@ -53,21 +52,19 @@ namespace MySql.Data.VisualStudio
         public override void Close()
         {
             IDbConnection providerObjectVal = ProviderObject as IDbConnection;
-            Debug.Assert(providerObjectVal != null, "Provider object is not initialized!"); //
-            if (providerObjectVal != null)
+            Debug.Assert(providerObjectVal != null, "Provider object is not initialized!");
+
+            // check connection, if it's not valid - recreate it
+            if (!TryToPingConnection(providerObjectVal))
             {
-                // check connection, if it's not valid - recreate it
-                if (!TryToPingConnection(providerObjectVal))
-                {
-                    // connection is brooken and we should kill this connection
-                    providerObjectVal.Dispose();
-                    Initialize(null);
-                }
-                else
-                {
-                    // connection is OK, just close it normaly
-                    providerObjectVal.Close();
-                }
+                // connection is brooken and we should kill this connection
+                providerObjectVal.Dispose();
+                Initialize(null);
+            }
+            else
+            {
+                // connection is OK, just close it normaly
+                providerObjectVal.Close();
             }
         }
 
@@ -275,7 +272,7 @@ namespace MySql.Data.VisualStudio
             }
 
             // Invoke method using reflection
-            object methodInvokingResult = null;
+            object methodInvokingResult;
             try
             {
                 methodInvokingResult = method.Invoke(connection, null);

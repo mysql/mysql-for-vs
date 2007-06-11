@@ -47,7 +47,8 @@ namespace MySql.Data.VisualStudio
         /// <summary>Data View command group (Server Explorer tree)</summary>
         public const string guidMySqlProviderCmdSetString = "B87CB51F-8A01-4c5e-BF3E-5D0565D5397D";
         /// <summary>Data View command group (Server Explorer tree)</summary>
-        public static readonly Guid guidMySqlProviderCmdSet = new Guid(GuidList.guidMySqlProviderCmdSetString);
+        public static readonly Guid guidMySqlProviderCmdSet = 
+            new Guid(guidMySqlProviderCmdSetString);
 
         /// <summary>Create table command ID</summary>
         public const int cmdidCreateTable = 0x0100;

@@ -22,14 +22,11 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.VisualStudio.Data;
 using System.Data;
-using System.Reflection;
 using MySql.Data.VisualStudio.Properties;
 using System.Globalization;
-using Microsoft.VisualStudio.Data.AdoDotNet;
 using System.Diagnostics;
 using MySql.Data.VisualStudio.Utils;
 using MySql.Data.VisualStudio.Descriptors;
-using System.Collections;
 using System.Data.SqlTypes;
 using System.Data.Common;
 
@@ -51,7 +48,7 @@ namespace MySql.Data.VisualStudio
             if (connection == null)
                 throw new ArgumentNullException("connection");
 
-            this.connectionRef = connection;
+            connectionRef = connection;
         }
         #endregion
 
@@ -102,7 +99,7 @@ namespace MySql.Data.VisualStudio
                 DbConnection conn = GetConnection();
                 
                 // Temporary string to receive server version
-                string versionString = String.Empty;
+                string versionString;
 
                 // Extract server version from connection
                 try
@@ -230,6 +227,7 @@ namespace MySql.Data.VisualStudio
         #endregion
 
         #region Query execution methods
+
         /// <summary>
         /// Executes single SELECT query and returns DataTable as a result.
         /// </summary>
@@ -277,6 +275,43 @@ namespace MySql.Data.VisualStudio
             {
                 Connection.UnlockProviderObject();
             }            
+        }
+
+        public IDataReader ExecuteReader(string query, bool isProcedure, CommandBehavior behavior)
+        {
+            // Validate inputs
+            if (String.IsNullOrEmpty(query))
+                throw new ArgumentException(Resources.Error_EmptyString, "query");
+
+            Debug.Assert(Connection != null, "Connection is not initialized!");
+
+            // Retrieving connection
+            DbConnection conn = GetConnection();
+
+            try
+            {
+                // Ensure the connection is open
+                EnsureConnectionIsOpen();
+
+                // Create a command object
+                DbCommand comm = conn.CreateCommand();
+                comm.CommandText = query;
+                if (isProcedure)
+                    comm.CommandType = CommandType.StoredProcedure;
+
+                return comm.ExecuteReader(behavior);
+            }
+            catch
+            {
+                // Try to ping connection after error to force socket recreation
+                TryToPingConnection(conn);
+
+                throw;
+            }
+            finally
+            {
+                Connection.UnlockProviderObject();
+            }
         }
 
         /// <summary>
@@ -350,7 +385,7 @@ namespace MySql.Data.VisualStudio
             if (table == null)
                 throw new ArgumentNullException("table");
             if (String.IsNullOrEmpty(selectQuery))
-                throw new ArgumentException(Resources.Error_EmptyString, "query");
+                throw new ArgumentException(Resources.Error_EmptyString, "selectQuery");
 
             Debug.Assert(Connection != null, "Connection is not initialized!");
 
@@ -680,9 +715,9 @@ namespace MySql.Data.VisualStudio
 
             // Start iteration
             StringBuilder result = new StringBuilder();
-            string status;
             foreach (string engine in engines)
             {
+                string status;
                 // Check if engine supports status
                 if (engine == null || !HasStatus(engine))
                     continue;
@@ -690,7 +725,7 @@ namespace MySql.Data.VisualStudio
                 {
                     // Read engine status
                     status = ExecuteScalar(
-                                        String.Format("SHOW ENGINE {0} STATUS", engine)) as string;
+                       String.Format("SHOW ENGINE {0} STATUS", engine)) as string;
                 }
                 catch
                 {
@@ -791,13 +826,11 @@ namespace MySql.Data.VisualStudio
         private void FillTableEngines(DataTable table)
         {
             // Iterate through all engines
-            string name;
-            SqlBoolean isSupported;
             foreach (DataRow engine in table.Rows)
             {
                 // Extract values
-                name = DataInterpreter.GetString(engine, EngineDescriptor.Attributes.Name);
-                isSupported = DataInterpreter.GetSqlBool(engine, EngineDescriptor.Attributes.IsSupported);
+                string name = DataInterpreter.GetString(engine, EngineDescriptor.Attributes.Name);
+                SqlBoolean isSupported = DataInterpreter.GetSqlBool(engine, EngineDescriptor.Attributes.IsSupported);
 
                 // Validate name
                 if (String.IsNullOrEmpty(name))
@@ -835,16 +868,15 @@ namespace MySql.Data.VisualStudio
         private void FillCharSetsAndCollations(DataTable table)
         {
             // Iterate through all collations
-            string collation, charSet;
-            List<string> collForCharSet;
             foreach (DataRow row in table.Rows)
             {
                 // Extract collation and character set name
-                collation = DataInterpreter.GetString(row, CollationName);
-                charSet = DataInterpreter.GetString(row, CharSetName);
+                string collation = DataInterpreter.GetString(row, CollationName);
+                string charSet = DataInterpreter.GetString(row, CharSetName);
 
                 // Validate names
-                if (String.IsNullOrEmpty(collation) || String.IsNullOrEmpty(charSet))
+                if (String.IsNullOrEmpty(collation) || 
+                    String.IsNullOrEmpty(charSet))
                 {
                     Debug.Fail("Empty collation or character set name!");
                     continue;
@@ -862,11 +894,13 @@ namespace MySql.Data.VisualStudio
                 // Create entry in the collationsForCharacterSet dictionary
                 if (!collationsForCharacterSetDictionary.ContainsKey(charSet) || collationsForCharacterSetDictionary[charSet] == null)
                     collationsForCharacterSetDictionary[charSet] = new List<string>();
-                collForCharSet = collationsForCharacterSetDictionary[charSet];
+                List<string> collForCharSet = collationsForCharacterSetDictionary[charSet];
 
                 // Add new collation for character set
-                Debug.Assert(collForCharSet != null && !collForCharSet.Contains(collation), "Empty collation list or dublicate collation!");
-                if (collForCharSet != null && !collForCharSet.Contains(collation))
+                Debug.Assert(collForCharSet != null && 
+                    !collForCharSet.Contains(collation), 
+                    "Empty collation list or dublicate collation!");
+                if (!collForCharSet.Contains(collation))
                     collForCharSet.Add(collation);
 
                 // If collation is default, add it to the defaultCollations dictionary
@@ -912,6 +946,7 @@ namespace MySql.Data.VisualStudio
             Debug.Assert(Connection != null, "Connection is not initialized!");
             DbConnection conn = Connection.GetLockedProviderObject() as DbConnection;
             Debug.Assert(conn != null, "The underlying connection is not the correct type.");
+
             if (conn == null)
             {
                 Connection.UnlockProviderObject();
@@ -997,8 +1032,7 @@ namespace MySql.Data.VisualStudio
             Debug.Assert(builder != null, "Failed to create command builder!");
 
             // Connects to data adapter
-            if (builder != null)
-                builder.DataAdapter = adapter;
+            builder.DataAdapter = adapter;
 
             return builder;
         }
@@ -1014,12 +1048,12 @@ namespace MySql.Data.VisualStudio
         #region Private variables to store properties and connection information
         private string defaultCharacterSetVal;
         private string defaultCollationVal;
-        private List<string> characterSetsList = new List<string>();
-        private List<string> collationsList = new List<string>();
-        private Dictionary<string, List<string>> collationsForCharacterSetDictionary = new Dictionary<string, List<string>>();
-        private Dictionary<string, string> defaultCollationsDictionary = new Dictionary<string, string>();
+        private readonly List<string> characterSetsList = new List<string>();
+        private readonly List<string> collationsList = new List<string>();
+        private readonly Dictionary<string, List<string>> collationsForCharacterSetDictionary = new Dictionary<string, List<string>>();
+        private readonly Dictionary<string, string> defaultCollationsDictionary = new Dictionary<string, string>();
         private readonly DataConnection connectionRef;
-        private List<string> enginesList = new List<string>();
+        private readonly List<string> enginesList = new List<string>();
         private string defaultEngineVal = null;
         private DbProviderFactory factoryRef;
         #endregion

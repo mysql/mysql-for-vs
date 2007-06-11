@@ -18,9 +18,6 @@
  * This file contains data object support entity implementation.
  */
 
-using System;
-using System.IO;
-using System.Globalization;
 using Microsoft.VisualStudio.Data;
 
 namespace MySql.Data.VisualStudio

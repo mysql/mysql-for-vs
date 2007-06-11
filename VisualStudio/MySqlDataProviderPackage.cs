@@ -20,11 +20,9 @@
 
 using System;
 using System.ComponentModel.Design;
-using System.Data.Common;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;

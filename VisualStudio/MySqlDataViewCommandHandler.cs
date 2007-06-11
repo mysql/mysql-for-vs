@@ -19,16 +19,9 @@
  */
 
 using System;
-using System.Windows.Forms.Design;
 using Microsoft.VisualStudio.Data;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio;
-using System.Runtime.InteropServices;
 using System.Diagnostics;
-using System.Data;
 using MySql.Data.VisualStudio.Commands;
-using Microsoft.VisualStudio.OLE.Interop;
 
 namespace MySql.Data.VisualStudio
 {

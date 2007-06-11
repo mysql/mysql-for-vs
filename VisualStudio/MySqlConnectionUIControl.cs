@@ -18,11 +18,7 @@
  * This file contains implementation of custom connection dialog. 
  */
 using System;
-using System.Drawing;
 using System.Windows.Forms;
-using Microsoft.VisualStudio.Data;
-using MySql.Data.VisualStudio.Utils;
-using System.Collections;
 
 namespace MySql.Data.VisualStudio
 {
@@ -48,7 +44,7 @@ namespace MySql.Data.VisualStudio
         /// </summary>
         public override void LoadProperties()
         {
-            this.loadingInProcess = true;
+            loadingInProcess = true;
             try
             {
                 serverNameTextBox.Text = ConnectionProperties[MySqlConnectionProperties.Names.Server] as string;
@@ -66,7 +62,7 @@ namespace MySql.Data.VisualStudio
             }
             finally
             {
-                this.loadingInProcess = false;
+                loadingInProcess = false;
             }
         } 
         #endregion
@@ -80,7 +76,7 @@ namespace MySql.Data.VisualStudio
         private void SetProperty(object sender, EventArgs e)
         {
             // Only set properties if we are not currently loading them
-            if (!this.loadingInProcess)
+            if (!loadingInProcess)
             {
                 Control source = sender as Control;
                 // Tag is used to determine property name
@@ -111,7 +107,7 @@ namespace MySql.Data.VisualStudio
         private void SavePasswordChanged(object sender, EventArgs e)
         {
             // Only set properties if we are not currently loading them
-            if (!this.loadingInProcess)
+            if (!loadingInProcess)
                 ConnectionProperties[MySqlConnectionProperties.Names.PersistSecurityInfo] 
                     = savePasswordCheckBox.Checked;
         }

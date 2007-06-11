@@ -18,7 +18,6 @@
  * This file contains implementation of the hierarchy accessor proxy.
  */
 using System;
-using System.Collections.Generic;
 using System.Text;
 using Microsoft.VisualStudio.Data;
 using System.Diagnostics;
@@ -28,9 +27,7 @@ using MySql.Data.VisualStudio.DocumentView;
 using Microsoft.VisualStudio.Shell;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio;
-using MySql.Data.VisualStudio.Utils;
 using Microsoft.VisualStudio.OLE.Interop;
-using System.Threading;
 
 namespace MySql.Data.VisualStudio
 {
@@ -56,9 +53,9 @@ namespace MySql.Data.VisualStudio
                 throw new ArgumentException(Resources.Error_InvalidAccessorNoConnection, "hierarchy");
             
             // Store hierarchy accessor reference
-            this.hierarchyAccessor = hierarchy;
+            hierarchyAccessor = hierarchy;
             //Extract connection wrapper
-            this.connectionWrapper = new DataConnectionWrapper(hierarchy.Connection);
+            connectionWrapper = new DataConnectionWrapper(hierarchy.Connection);
 
             // Get UI shell object
             uiShell = Package.GetGlobalService(typeof(IVsUIShell)) as IVsUIShell;
@@ -317,8 +314,7 @@ namespace MySql.Data.VisualStudio
             view.OwnerFrame = winFrame;
 
             // Display editor if initialized
-            if (winFrame != null)
-                winFrame.Show();
+            winFrame.Show();
         }
 
         /// <summary>
@@ -362,7 +358,7 @@ namespace MySql.Data.VisualStudio
             if (String.IsNullOrEmpty(newMoniker))
                 throw new ArgumentException(Resources.Error_EmptyString, "newMoniker");
             if (newItemID < 0)
-                throw new ArgumentOutOfRangeException("newItenID");
+                throw new ArgumentOutOfRangeException("newItemID");
 
             if (HasDocument(oldMoniker))
             {

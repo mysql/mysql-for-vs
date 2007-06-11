@@ -18,8 +18,6 @@
  * This file contains stub for data connection specializer.
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.VisualStudio.Data;
 using System.Reflection;
 

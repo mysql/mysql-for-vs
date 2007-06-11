@@ -21,7 +21,6 @@
 using System;
 using Microsoft.VisualStudio.Data;
 using Microsoft.VisualStudio.Data.AdoDotNet;
-using MySql.Data.VisualStudio.Properties;
 using MySql.Data.VisualStudio.Utils;
 
 namespace MySql.Data.VisualStudio

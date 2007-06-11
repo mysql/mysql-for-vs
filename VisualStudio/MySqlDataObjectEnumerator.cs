@@ -20,14 +20,11 @@
 using System;
 using System.Data;
 using System.Diagnostics;
-using System.Globalization;
-using System.Data.SqlClient;
 using Microsoft.VisualStudio.Data;
 using Microsoft.VisualStudio.Data.AdoDotNet;
 using MySql.Data.VisualStudio.Dialogs;
 using MySql.Data.VisualStudio.Utils;
 using MySql.Data.VisualStudio.Descriptors;
-using MySql.Data.VisualStudio.Properties;
 using System.Data.Common;
 
 namespace MySql.Data.VisualStudio
@@ -96,7 +93,7 @@ namespace MySql.Data.VisualStudio
                 appliedRestrictions = restrictions;
             }
 
-            DataTable table = null;
+            DataTable table;
             try
             {
                 // Enumerate objects into table

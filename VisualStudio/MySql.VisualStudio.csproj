@@ -225,15 +225,14 @@
     <Compile Include="Descriptors\ObjectDescriptorFactory.cs" />
     <Compile Include="DocumentView\DocumentViewFactory.cs" />
     <Compile Include="Commands\DropCommand.cs" />
+    <Compile Include="Enumerators\StoredProcedureColumnEnumerator.cs" />
     <Compile Include="GuidList.cs" />
-    <Compile Include="MyDSRefBuilder.cs" />
     <Compile Include="MySqlDataConnectionPromptDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MySqlDataConnectionPromptDialog.Designer.cs">
       <DependentUpon>MySqlDataConnectionPromptDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="MySqlDataObjectConceptMapper.cs" />
     <Compile Include="MySqlDataObjectIdentifierConverter.cs" />
     <Compile Include="MySqlDataSourceSpecializer.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
