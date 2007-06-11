@@ -7,7 +7,8 @@ Version 5.1.2
     able to generate insert, update, and delete statements. (Bug #26347)    
   - Fixed problem preventing use of stored procedures for insert, update, and
     delete statements in a table adapter.    
-    
+  - Fixed problem where text columns would not appear in the Visual Studio query builder (Bug #28437)	
+	    
 Version 5.1.1
   - Fixed password property on MySqlConnectionStringBuilder to use PasswordPropertyText 
     attribute.  This causes dots to show instead of actual password text.

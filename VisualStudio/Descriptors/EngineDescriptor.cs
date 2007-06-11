@@ -82,6 +82,30 @@ namespace MySql.Data.VisualStudio.Descriptors
                 throw new ArgumentNullException("connection");
             return ObjectDescriptor.EnumerateObjects(connection, TypeName, restrictions);
         }
+
         #endregion
+
+        protected override DataTable ReadTable(DataConnectionWrapper connection, 
+            object[] restrictions, string sort)
+        {
+            DataTable dt = base.ReadTable(connection, restrictions, sort);
+
+            // stupid hack to work around the issue that show engines returns 
+            // everything as byte[]
+            DataTable newDT = dt.Clone();
+            foreach (DataColumn column in newDT.Columns)
+                column.DataType = typeof(System.String);
+
+            Encoding e = Encoding.GetEncoding("latin1");
+            foreach (DataRow row in dt.Rows)
+            {
+                DataRow newRow = newDT.NewRow();
+                newRow[0] = e.GetString((byte[])row[0]);
+                newRow[1] = e.GetString((byte[])row[1]);
+                newRow[2] = e.GetString((byte[])row[2]);
+                newDT.Rows.Add(newRow);
+            }
+            return newDT;
+        }
     }
 }

@@ -130,9 +130,11 @@ namespace MySql.Data.Types
 
 		internal static void SetDSInfo(DataTable dsTable)
 		{
-			string[] types = new string[] { "CHAR", "VARCHAR", "SET", "ENUM" };
+			string[] types = new string[] { "CHAR", "VARCHAR", "SET", "ENUM", 
+                "TINYTEXT", "TEXT", "MEDIUMTEXT", "LONGTEXT" };
 			MySqlDbType[] dbtype = new MySqlDbType[] { MySqlDbType.String, 
-                MySqlDbType.VarChar, MySqlDbType.Set, MySqlDbType.Enum };
+                MySqlDbType.VarChar, MySqlDbType.Set, MySqlDbType.Enum, MySqlDbType.TinyText,
+                MySqlDbType.Text, MySqlDbType.MediumText, MySqlDbType.LongText };
 
 			// we use name indexing because this method will only be called
 			// when GetSchema is called for the DataSourceInformation 

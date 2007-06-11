@@ -831,6 +831,8 @@ namespace MySql.Data.VisualStudio
                 // Extract values
                 string name = DataInterpreter.GetString(engine, EngineDescriptor.Attributes.Name);
                 SqlBoolean isSupported = DataInterpreter.GetSqlBool(engine, EngineDescriptor.Attributes.IsSupported);
+                if (engine["Support"].Equals("DISABLED"))
+                    isSupported = false;
 
                 // Validate name
                 if (String.IsNullOrEmpty(name))
