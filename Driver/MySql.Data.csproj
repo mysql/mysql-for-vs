@@ -133,7 +133,6 @@
     <Compile Include="Source\common\Platform.cs" />
     <Compile Include="Source\common\SHA1.cs" />
     <Compile Include="Source\common\SharedMemoryStream.cs" />
-    <Compile Include="Source\common\SocketStream.cs" />
     <Compile Include="Source\common\StreamCreator.cs" />
     <Compile Include="Source\common\Version.cs" />
     <Compile Include="Source\common\WinCE.cs" />

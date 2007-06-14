@@ -1,4 +1,4 @@
-Version 5.1.2
+Version 5.1.2 - 6/12/2007
   - Fixed integration with the Website Administration Tool.  Before this fix, the test link
     was visible but did not work and  user management did not work.
   - Reintroduced code to properly return field values as byte[] when the binary flag is present.

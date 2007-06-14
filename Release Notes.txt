@@ -14,4 +14,9 @@ these fields will be returned as byte[].  They can stil be retrieved as strings 
 MySqlDataReader.GetString().  Please let us know how this issue affects you.  We
 are evaluating adding a connection option to make the past behavior available.
 
+Known Issues
+------------
+1. Creating a procedure with the name StoredProcedure1 will cause any future attempts
+   to create a stored procedure to fail.
+
 

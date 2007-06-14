@@ -752,6 +752,8 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void ClosingCommandsProperly()
         {
+            if (version < new Version(5, 0)) return;
+
             execSQL("DROP TABLE IF EXISTS test");
             execSQL("CREATE TABLE test (id INT, name VARCHAR(50))");
 

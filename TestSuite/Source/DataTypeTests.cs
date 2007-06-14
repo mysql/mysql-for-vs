@@ -774,5 +774,24 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(typeof(byte[]), dt.Columns[3].DataType);
             Assert.AreEqual(typeof(byte[]), dt.Columns[4].DataType);
         }
+
+        [Test]
+        public void ShowColumns()
+        {
+            if (version < new Version(5, 0)) return;
+
+            MySqlDataAdapter da = new MySqlDataAdapter(
+                @"SELECT TRIM(TRAILING ' unsigned' FROM 
+                  TRIM(TRAILING ' zerofill' FROM COLUMN_TYPE)) AS MYSQL_TYPE, 
+                  IF(COLUMN_DEFAULT IS NULL, NULL, 
+                  IF(ASCII(COLUMN_DEFAULT) = 1 OR COLUMN_DEFAULT = '1', 1, 0))
+                  AS TRUE_DEFAULT FROM INFORMATION_SCHEMA.COLUMNS
+                  WHERE TABLE_SCHEMA='test' AND TABLE_NAME='test'", conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+
+            Assert.AreEqual(typeof(string), dt.Columns[0].DataType);
+            Assert.AreEqual(typeof(Int64), dt.Columns[1].DataType);
+        }
 	}
 }

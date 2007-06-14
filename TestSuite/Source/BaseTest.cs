@@ -110,7 +110,7 @@ namespace MySql.Data.MySqlClient.Tests
 
         protected virtual string GetConnectionInfo()
         {
-            return String.Format("protocol=tcp;port={0}", port);
+            return String.Format("protocol=sockets;port={0}", port);
         }
 
         protected string GetConnectionString(bool includedb)
