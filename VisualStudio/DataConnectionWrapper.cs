@@ -226,6 +226,18 @@ namespace MySql.Data.VisualStudio
         }
         #endregion
 
+        public DbConnection GetOpenConnection()
+        {
+            DbConnection c = GetConnection();
+            EnsureConnectionIsOpen();
+            return c;
+        }
+
+        public void ReleaseConnection()
+        {
+            Connection.UnlockProviderObject();
+        }
+
         #region Query execution methods
 
         /// <summary>
@@ -1024,7 +1036,7 @@ namespace MySql.Data.VisualStudio
         /// </summary>
         /// <param name="adapter">Data adapter to connect.</param>
         /// <returns>Returns new command builder connected to the given data adapter.</returns>
-        private DbCommandBuilder CreateCommandBuilder(DbDataAdapter adapter)
+        public DbCommandBuilder CreateCommandBuilder(DbDataAdapter adapter)
         {
             if (Factory == null)
                 return null;

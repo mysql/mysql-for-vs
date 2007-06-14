@@ -29,15 +29,53 @@ namespace MySql.Data.VisualStudio
         {
             DataConnectionWrapper connectionWrapper = new DataConnectionWrapper(Connection);
             string spName = String.Format("{0}.{1}", restrictions[1], restrictions[2]);
-            IDataReader reader = connectionWrapper.ExecuteReader(spName, true, CommandBehavior.SchemaOnly);
-            DataTable dt = reader.GetSchemaTable();
-            reader.Close();
 
-            dt.Columns.Add(new DataColumn("RoutineName", typeof(string)));
-            foreach (DataRow row in dt.Rows)
-                row["RoutineName"] = restrictions[2];
+            DbConnection c = connectionWrapper.GetOpenConnection();
+            try
+            {
+                string[] parmRest = new string[5];
+                parmRest[1] = (string)restrictions[1];
+                parmRest[2] = (string)restrictions[2];
+                parmRest[3] = (string)restrictions[3];
+                DataTable parmTable = c.GetSchema("Procedure Parameters", parmRest);
 
-            return new AdoDotNetDataTableReader(dt);
+                DbCommand cmd = c.CreateCommand();
+                cmd.CommandText = spName;
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                foreach (DataRow row in parmTable.Rows)
+                {
+                    if (row["IS_RESULT"].Equals("YES")) continue;
+
+                    DbParameter p = cmd.CreateParameter();
+                    p.ParameterName = row["PARAMETER_NAME"].ToString();
+                    p.Value = GetDefaultValue(row["DATA_TYPE"].ToString());
+                    cmd.Parameters.Add(p);
+                }
+
+                using (IDataReader reader = cmd.ExecuteReader(CommandBehavior.SchemaOnly))
+                {
+                    DataTable dt = reader.GetSchemaTable();
+
+                    dt.Columns.Add(new DataColumn("RoutineName", typeof(string)));
+                    foreach (DataRow row in dt.Rows)
+                        row["RoutineName"] = restrictions[2];
+
+                    return new AdoDotNetDataTableReader(dt);
+                }
+            }
+            finally
+            {
+                connectionWrapper.ReleaseConnection();
+            }
+        }
+
+        private object GetDefaultValue(string dataType)
+        {
+            if (dataType == "VARCHAR" || dataType == "VARBINARY" ||
+                dataType == "ENUM" || dataType == "SET" || dataType == "CHAR")
+                return "";
+            return 0;
         }
     }
 }
