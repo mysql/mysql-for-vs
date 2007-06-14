@@ -165,6 +165,12 @@ namespace MySql.Data.VisualStudio.DocumentView
         }
         #endregion
 
+        internal bool IsFunction
+        {
+            get { return typeVal == RoutineTypes.FUNCTION; }
+            set { typeVal = value ? RoutineTypes.FUNCTION : RoutineTypes.PROCEDURE; }
+        }
+
         #region Checking properties
         /// <summary>
         /// Checks if just a few certain characteristics of the routine have been 
@@ -443,10 +449,6 @@ namespace MySql.Data.VisualStudio.DocumentView
         {
             get
             {
-                object typeStr = Hierarchy.Accessor.GetObjectProperty(
-                    HierarchyItemIDVal, "RoutineType");
-                typeVal = GetRoutineType(typeStr.ToString());
-
                 object[] id = ObjectID;
                 object[] newId = new object[4];
                 newId[0] = id[0];

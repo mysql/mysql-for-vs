@@ -62,7 +62,7 @@ namespace MySql.Data.VisualStudio.Commands
             if (schema == null)
                 return null;
 
-            return new object[] { null, schema, StoredProcDescriptor.Procedure, null };
+            return new object[] { null, schema, null };
         }
     }
 }

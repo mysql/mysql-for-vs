@@ -62,7 +62,7 @@ namespace MySql.Data.VisualStudio.Commands
             if (schema == null)
                 return null;
 
-            return new object[] { null, schema, StoredProcDescriptor.Function, null };
+            return new object[] { null, schema, null };
         }
 
         /// <summary>
@@ -76,6 +76,14 @@ namespace MySql.Data.VisualStudio.Commands
         protected override string GetTemplate(string typeName, object[] id)
         {
             return "Function";
+        }
+
+        protected override IDocument CreateDocument(ServerExplorerFacade hierarchy, string typeName, object[] objectID, bool isNew)
+        {
+            IDocument doc = base.CreateDocument(hierarchy, typeName, objectID, isNew);
+            StoredProcDocument spDoc = (doc as StoredProcDocument);
+            spDoc.IsFunction = true;
+            return doc;
         }
     }
 }
