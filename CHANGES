@@ -41,6 +41,9 @@ Version 5.0.8
     that we read the compressed data into before inflating. (Bug #28204)  
   - Fixed problem where we were not closing prepared statement handles
     when commands are disposed.
+  - Fixed problem where any attempt to not read all the records returned
+    from a select where each row of the select is greater than 1024 bytes
+    would hang the driver.
   
 Version 5.0.7 5/16/2007
 

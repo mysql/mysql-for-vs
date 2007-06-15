@@ -671,5 +671,41 @@ namespace MySql.Data.MySqlClient.Tests
             da.Fill(0, 10, dt);
             Assert.AreEqual(10, dt.Rows.Count);
         }
-	}
+
+        private string MakeLargeString(int len)
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder(len);
+            while (len-- > 0)
+                sb.Append('a');
+            return sb.ToString();
+        }
+
+        [Test]
+        public void SkippingRowsLargerThan1024()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test (id INT, name TEXT)");
+
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES (?id, ?name)", conn);
+            cmd.Parameters.Add("?id", MySqlDbType.Int32);
+            cmd.Parameters.Add("?name", MySqlDbType.Text);
+            for (int i = 0; i < 5; i++)
+            {
+                cmd.Parameters[0].Value = i;
+                cmd.Parameters[1].Value = MakeLargeString(2000);
+                cmd.ExecuteNonQuery();
+            }
+
+            try
+            {
+                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
+                DataTable dt = new DataTable();
+                da.Fill(0, 2, dt);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
+    }
 }
