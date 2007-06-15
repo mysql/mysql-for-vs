@@ -62,27 +62,31 @@ namespace MySql.Data.MySqlClient
             LogUAFooter();
         }
 
-        public void ReadPartialRowSet(string cmdText, bool[] uaFieldsUsed, MySqlField[] fields)
-        {
-            LogUAHeader(cmdText);
-            Logger.WriteLine("Reason: Every column was not accessed.  Consider a more focused query.");
-            Logger.Write("Fields not accessed: ");
-            for (int i = 0; i < uaFieldsUsed.Length; i++)
-                if (!uaFieldsUsed[i])
-                    Logger.Write(" " + fields[i].ColumnName);
-            Logger.WriteLine(" ");
-            LogUAFooter();
-        }
+		public void ReadPartialRowSet(string cmdText, bool[] uaFieldsUsed, MySqlField[] fields)
+		{
+            if (!conn.Settings.UseUsageAdvisor) return;
 
-        public void Converting(string cmdText, string columnName,
-                               string fromType, string toType)
-        {
             LogUAHeader(cmdText);
-            Logger.WriteLine("Reason: Performing unnecessary conversion on field "
-                             + columnName + ".");
-            Logger.WriteLine("From: " + fromType + " to " + toType);
-            LogUAFooter();
-        }
+			Logger.WriteLine("Reason: Every column was not accessed.  Consider a more focused query.");
+			Logger.Write("Fields not accessed: ");
+			for (int i = 0; i < uaFieldsUsed.Length; i++)
+				if (!uaFieldsUsed[i])
+					Logger.Write(" " + fields[i].ColumnName);
+			Logger.WriteLine(" ");
+			LogUAFooter();
+		}
+
+		public void Converting(string cmdText, string columnName,
+									  string fromType, string toType)
+		{
+            if (!conn.Settings.UseUsageAdvisor) return;
+
+            LogUAHeader(cmdText);
+			Logger.WriteLine("Reason: Performing unnecessary conversion on field "
+									  + columnName + ".");
+			Logger.WriteLine("From: " + fromType + " to " + toType);
+			LogUAFooter();
+		}
 
         private void LogUAWarning(string cmdText, string reason)
         {

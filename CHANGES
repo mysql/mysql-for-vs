@@ -44,7 +44,10 @@ Version 5.0.8
   - Fixed problem where any attempt to not read all the records returned
     from a select where each row of the select is greater than 1024 bytes
     would hang the driver.
-  
+  - Fixed problem where usage advisor warnings for unnecessary field conversions
+    and not reading all rows of a resultset would output even if you
+    did not request usage advisor warnings. (Bug #29124)
+    
 Version 5.0.7 5/16/2007
 
   Bugs fixed
