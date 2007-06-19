@@ -47,6 +47,9 @@ Version 5.0.8
   - Fixed problem where usage advisor warnings for unnecessary field conversions
     and not reading all rows of a resultset would output even if you
     did not request usage advisor warnings. (Bug #29124)
+  - Changed behavior of ConnectionString property.  It now only returns the connection
+    string given to it.  It will not attempt to track changes to the current
+    database when the users uses the ChangeDatabase method. (Bug #29123)
     
 Version 5.0.7 5/16/2007
 

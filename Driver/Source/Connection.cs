@@ -54,6 +54,7 @@ namespace MySql.Data.MySqlClient
         private MySqlPromotableTransaction currentTransaction;
 #endif
         private bool isExecutingBuggyQuery;
+        private string database;
 
         /// <include file='docs/MySqlConnection.xml' path='docs/InfoMessage/*'/>
         public event MySqlInfoMessageEventHandler InfoMessage;
@@ -184,7 +185,7 @@ namespace MySql.Data.MySqlClient
 #endif
             public override string Database
         {
-            get { return settings.Database; }
+            get { return database; }
         }
 
         /// <summary>
@@ -263,6 +264,10 @@ namespace MySql.Data.MySqlClient
                 }
 
                 settings = newSettings;
+
+                if (settings.Database != null && settings.Database.Length > 0)
+                    this.database = settings.Database;
+
                 if (driver != null)
                     driver.Settings = newSettings;
             }
@@ -358,7 +363,7 @@ namespace MySql.Data.MySqlClient
                 throw new InvalidOperationException(Resources.ConnectionNotOpen);
 
             driver.SetDatabase(database);
-            settings.Database = database;
+            this.database = database;
         }
 
         internal void SetState(ConnectionState newConnectionState)

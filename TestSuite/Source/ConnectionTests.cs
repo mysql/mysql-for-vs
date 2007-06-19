@@ -387,5 +387,27 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.Fail(e.Message);
             }
         }
+
+        /// <summary>
+        /// Bug #29123  	Connection String grows with each use resulting in OutOfMemoryException
+        /// </summary>
+        [Test]
+        public void ConnectionStringNotAffectedByChangeDatabase()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                string connStr = GetConnectionString(true) + ";pooling=false";
+                connStr = connStr.Replace("database", "Initial Catalog");
+                connStr = connStr.Replace("persist security info=true",
+                    "persist security info=false");
+                using (MySqlConnection c = new MySqlConnection(connStr))
+                {
+                    c.Open();
+                    string str = c.ConnectionString;
+                    int index = str.IndexOf("Database=");
+                    Assert.AreEqual(-1, index);
+                }
+            }
+        }
     }
 }
