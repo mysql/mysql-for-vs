@@ -30,7 +30,7 @@ namespace MySql.Web.Security
 {
     internal static class MembershipSchema
     {
-        private const int schemaVersion = 1;
+        private const int schemaVersion = 2;
 
         public static void CheckSchema(string connectionString)
         {
@@ -45,7 +45,9 @@ namespace MySql.Web.Security
                     while (currentVersion < schemaVersion)
                     {
                         if (0 == currentVersion)
-                            GenerateFirstSchema(conn);
+                            ApplySchema(conn, schema1);
+                        else if (1 == currentVersion)
+                            ApplySchema(conn, schema2);
                         currentVersion++;
                     }
                 }
@@ -70,17 +72,30 @@ namespace MySql.Web.Security
             return Convert.ToInt32(dt.Rows[0]["TABLE_COMMENT"]);
         }
 
-        private static void GenerateFirstSchema(MySqlConnection connection)
+        private static void ApplySchema(MySqlConnection connection, string schema)
         {
-            string sql =
+            MySqlCommand cmd = new MySqlCommand(schema, connection);
+            cmd.ExecuteNonQuery();
+        }
+
+#region Schema
+
+        private const string schema1 = 
                 @"CREATE TABLE  mysql_Membership(`PKID` varchar(36) NOT NULL,
-                `Username` varchar(255) NOT NULL, `ApplicationName` varchar(255) NOT NULL,
-                `Email` varchar(128) NOT NULL, `Comment` varchar(255) default NULL,
-                `Password` varchar(128) NOT NULL, `PasswordQuestion` varchar(255) default NULL,
-                `PasswordAnswer` varchar(255) default NULL, `IsApproved` tinyint(1) default NULL,
-                `LastActivityDate` datetime default NULL, `LastLoginDate` datetime default NULL,
-                `LastPasswordChangedDate` datetime default NULL, `CreationDate` datetime default NULL,
-                `IsOnline` tinyint(1) default NULL, `IsLockedOut` tinyint(1) default NULL,
+                `Username` varchar(255) NOT NULL, 
+                `ApplicationName` varchar(255) NOT NULL,
+                `Email` varchar(128) NOT NULL, 
+                `Comment` varchar(255) default NULL,
+                `Password` varchar(128) NOT NULL, 
+                `PasswordQuestion` varchar(255) default NULL,
+                `PasswordAnswer` varchar(255) default NULL, 
+                `IsApproved` tinyint(1) default NULL,
+                `LastActivityDate` datetime default NULL, 
+                `LastLoginDate` datetime default NULL,
+                `LastPasswordChangedDate` datetime default NULL, 
+                `CreationDate` datetime default NULL,
+                `IsOnline` tinyint(1) default NULL, 
+                `IsLockedOut` tinyint(1) default NULL,
                 `LastLockedOutDate` datetime default NULL, 
                 `FailedPasswordAttemptCount` int(10) unsigned default NULL,
                 `FailedPasswordAttemptWindowStart` datetime default NULL,
@@ -88,8 +103,12 @@ namespace MySql.Web.Security
                 `FailedPasswordAnswerAttemptWindowStart` datetime default NULL,
                 PRIMARY KEY  (`PKID`)) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='1'";
 
-            MySqlCommand cmd = new MySqlCommand(sql, connection);
-            cmd.ExecuteNonQuery();
-        }
+        private const string schema2 =
+            @"ALTER TABLE mysql_Membership 
+            ADD COLUMN PasswordKey char(16) AFTER Password, 
+            ADD COLUMN PasswordFormat tinyint AFTER PasswordKey, COMMENT='2'";
+
+#endregion
+
     }
 }
