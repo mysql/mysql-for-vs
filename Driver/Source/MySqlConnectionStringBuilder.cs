@@ -46,6 +46,7 @@ namespace MySql.Data.MySqlClient
         bool useUsageAdvisor, useSSL;
         bool ignorePrepare;
         bool useProcedureBodies;
+        bool autoEnlist;
 
         static MySqlConnectionStringBuilder()
         {
@@ -78,6 +79,7 @@ namespace MySql.Data.MySqlClient
             defaultValues.Add(Keyword.UseSSL, false);
             defaultValues.Add(Keyword.IgnorePrepare, true);
             defaultValues.Add(Keyword.UseProcedureBodies, true);
+            defaultValues.Add(Keyword.AutoEnlist, true);
         }
 
         /// <summary>
@@ -588,13 +590,30 @@ namespace MySql.Data.MySqlClient
         [DefaultValue(true)]
         [RefreshProperties(RefreshProperties.All)]
 #endif
-            public bool UseProcedureBodies
+        public bool UseProcedureBodies
         {
             get { return useProcedureBodies; }
             set
             {
                 SetValue("Use Procedure Bodies", value); 
                 useProcedureBodies = value;
+            }
+        }
+
+#if !CF && !MONO
+        [Category("Advanced")]
+        [DisplayName("Auto Enlist")]
+        [Description("Should the connetion automatically enlist in the active connection, if there are any.")]
+        [DefaultValue(true)]
+        [RefreshProperties(RefreshProperties.All)]
+#endif
+        public bool AutoEnlist
+        {
+            get { return autoEnlist; }
+            set
+            {
+                SetValue("Auto Enlist", value);
+                autoEnlist = value;
             }
         }
 
@@ -613,7 +632,7 @@ namespace MySql.Data.MySqlClient
         [DefaultValue(0)]
         [RefreshProperties(RefreshProperties.All)]
 #endif
-            public uint ConnectionLifeTime
+        public uint ConnectionLifeTime
         {
             get { return connectionLifetime; }
             set
@@ -900,6 +919,8 @@ namespace MySql.Data.MySqlClient
                 case "procedure bodies":
                 case "use procedure bodies":
                     return Keyword.UseProcedureBodies;
+                case "auto enlist":
+                    return Keyword.AutoEnlist;
             }
             throw new ArgumentException(Resources.KeywordNotSupported, key);
         }
@@ -966,6 +987,8 @@ namespace MySql.Data.MySqlClient
                     return UseSSL;
                 case Keyword.UseProcedureBodies:
                     return UseProcedureBodies;
+                case Keyword.AutoEnlist:
+                    return AutoEnlist;
                 default:
                     return null; /* this will never happen */
             }
@@ -1044,6 +1067,8 @@ namespace MySql.Data.MySqlClient
                     useSSL = ConvertToBool(value); break;
                 case Keyword.UseProcedureBodies: 
                     useProcedureBodies = ConvertToBool(value); break;
+                case Keyword.AutoEnlist:
+                    autoEnlist = ConvertToBool(value); break;
             }
         }
 
@@ -1215,6 +1240,7 @@ namespace MySql.Data.MySqlClient
         ProcedureCacheSize,
         IgnorePrepare,
         UseSSL,
-        UseProcedureBodies
+        UseProcedureBodies,
+        AutoEnlist
     }
 }

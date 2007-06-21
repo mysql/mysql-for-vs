@@ -33,6 +33,7 @@ namespace MySql.Data.MySqlClient.Tests
         [TestFixtureSetUp]
         public void FixtureSetup()
         {
+            csAdditions += ";pooling=true;";
             Open();
         }
 
@@ -146,6 +147,7 @@ namespace MySql.Data.MySqlClient.Tests
             TransactionScopeMultipleInternal(true);
         }
 
+#endif
 
         /// <summary>
         /// Bug #27289 Transaction is not rolledback when connection close 
@@ -172,6 +174,8 @@ namespace MySql.Data.MySqlClient.Tests
             c2.Close();
             Assert.AreEqual(0, count);
         }
+
+#if NET20
 
         /// <summary>
         /// Bug #22042 mysql-connector-net-5.0.0-alpha BeginTransaction 
@@ -264,6 +268,70 @@ namespace MySql.Data.MySqlClient.Tests
             }
         }
 
+        [Test]
+        public void ManualEnlistment()
+        {
+            using (TransactionScope ts = new TransactionScope())
+            {
+                string connStr = GetConnectionString(true) + ";auto enlist=false";
+                MySqlConnection c = new MySqlConnection(connStr);
+                c.Open();
+
+                MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES ('a', 'name', 'name2')", c);
+                cmd.ExecuteNonQuery();
+            }
+            MySqlCommand cmd2 = new MySqlCommand("SELECT COUNT(*) FROM test", conn);
+            Assert.AreEqual(1, cmd2.ExecuteScalar());
+        }
+
+
+/*        [Test]
+        public void XATransaction1Rollback()
+        {
+            XATransaction1(false);
+        }
+
+        [Test]
+        public void XATransaction1Commit()
+        {
+            XATransaction1(true);
+        }
+
+        private void XATransaction1(bool commit)
+        {
+            try
+            {
+                using (TransactionScope ts = new TransactionScope())
+                {
+                    using (MySqlConnection c = new MySqlConnection(GetConnectionString(true)))
+                    {
+                        c.Open();
+
+                        MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES ('a', 'name', 'name2')", c);
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    using (MySqlConnection c2 = new MySqlConnection(GetConnectionString(true)))
+                    {
+                        c2.Open();
+                        MySqlCommand cmd2 = new MySqlCommand("INSERT INTO test VALUES ('b', 'name', 'name2')", c2);
+                        cmd2.ExecuteNonQuery();
+                    }
+
+                    if (commit)
+                        ts.Complete();
+                }
+
+                MySqlCommand cmd3 = new MySqlCommand("SELECT COUNT(*) FROM test", conn);
+                object count = cmd3.ExecuteScalar();
+                Assert.AreEqual(commit ? 2 : 0, count);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
+        */
 #endif
 
     }

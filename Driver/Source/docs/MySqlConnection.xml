@@ -883,6 +883,14 @@ Recognized values are <B>true</B>, <B>false</B>, <B>yes</B>, and <B>no</B>.</td>
         as they appear in the procedure definition and their types must be explicitly set.
       </td>
     </tr>
+    <tr>
+      <td>Auto Enlist</td>
+      <td>true</td>
+      <td>
+        Indicates whether the connection should automatically enlist in the current transaction,
+        if there is one.
+      </td>
+    </tr>
   </table>
 		</div>
 	<para>

@@ -436,7 +436,7 @@ namespace MySql.Data.MySqlClient
             // if we are opening up inside a current transaction, then autoenlist
             // TODO: control this with a connection string option
 #if !MONO && !CF
-            if (Transaction.Current != null)
+            if (Transaction.Current != null && settings.AutoEnlist)
                 EnlistTransaction(Transaction.Current);
 #endif
 
