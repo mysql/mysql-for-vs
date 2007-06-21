@@ -1245,82 +1245,61 @@ PKID, Username, ApplicationName,
                 throw new ProviderException("Unsupported password format.");
         }
 
-        private static byte[] HexToByte(string hexString)
-        {
-            byte[] ReturnBytes = new byte[(hexString.Length/2) - 1];
-            for (int i = 0; i <= ReturnBytes.Length - 1; i++)
-            {
-                ReturnBytes[i] = Convert.ToByte(hexString.Substring(i*2, 2), 16);
-            }
-            return ReturnBytes;
-        }
-
         public override MembershipUserCollection FindUsersByName(string usernameToMatch,
                                                                  int pageIndex, int pageSize, out int totalRecords)
         {
-            MySqlConnection conn = new MySqlConnection(connectionString);
-            MySqlCommand cmd =
-                new MySqlCommand(
-                    @"SELECT Count(*) FROM mysql_Membership 
-                WHERE Username LIKE ?UsernameSearch AND ApplicationName = ?ApplicationName",
-                    conn);
-            cmd.Parameters.Add("?UsernameSearch", MySqlDbType.VarChar, 255).Value = usernameToMatch;
-            cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
             MembershipUserCollection users = new MembershipUserCollection();
-            MySqlDataReader reader = null;
-            try
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
-                conn.Open();
-                totalRecords = Convert.ToInt32(cmd.ExecuteScalar());
-                if (totalRecords <= 0)
+                MySqlCommand cmd = new MySqlCommand(@"SELECT Count(*) FROM mysql_Membership 
+                    WHERE Username LIKE ?UsernameSearch AND ApplicationName = ?ApplicationName", conn);
+                cmd.Parameters.AddWithValue("?UsernameSearch", usernameToMatch);
+                cmd.Parameters.AddWithValue("?ApplicationName", pApplicationName);
+
+                try
                 {
-                    return users;
-                }
-                cmd.CommandText =
-                    @"SELECT PKID, Username, Email, PasswordQuestion, Comment, 
-                    IsApproved, IsLockedOut, CreationDate, LastLoginDate, LastActivityDate, 
-                    LastPasswordChangedDate, LastLockedOutDate FROM mysql_Membership 
-                    WHERE Username LIKE ?UsernameSearch AND ApplicationName = ?ApplicationName 
-                    ORDER BY Username Asc";
-                cmd.Parameters.Add("?UsernameSearch", MySqlDbType.VarChar, 255).Value = usernameToMatch;
-                cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
-                reader = cmd.ExecuteReader();
-                int counter = 0;
-                int startIndex = pageSize*pageIndex;
-                int endIndex = startIndex + pageSize - 1;
-                while (reader.Read())
-                {
-                    if (counter >= startIndex)
+                    conn.Open();
+                    totalRecords = Convert.ToInt32(cmd.ExecuteScalar());
+                    if (totalRecords <= 0)
+                        return users;
+
+                    cmd.CommandText =
+                        @"SELECT PKID, Username, Email, PasswordQuestion, Comment, 
+                        IsApproved, IsLockedOut, CreationDate, LastLoginDate, LastActivityDate, 
+                        LastPasswordChangedDate, LastLockedOutDate FROM mysql_Membership 
+                        WHERE Username LIKE ?UsernameSearch AND ApplicationName = ?ApplicationName 
+                        ORDER BY Username Asc";
+                    cmd.Parameters["?UsernameSearch"].Value = usernameToMatch;
+                    cmd.Parameters["?ApplicationName"].Value = pApplicationName;
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
-                        MembershipUser u = GetUserFromReader(reader);
-                        users.Add(u);
+                        int counter = 0;
+                        int startIndex = pageSize * pageIndex;
+                        int endIndex = startIndex + pageSize - 1;
+                        while (reader.Read())
+                        {
+                            if (counter >= startIndex)
+                            {
+                                MembershipUser u = GetUserFromReader(reader);
+                                users.Add(u);
+                            }
+                            if (counter >= endIndex)
+                                cmd.Cancel();
+
+                            counter += 1;
+                        }
                     }
-                    if (counter >= endIndex)
+                }
+                catch (MySqlException e)
+                {
+                    if (WriteExceptionsToEventLog)
                     {
-                        cmd.Cancel();
+                        WriteToEventLog(e, "FindUsersByName");
+                        throw new ProviderException(exceptionMessage);
                     }
-                    counter += 1;
-                }
-            }
-            catch (MySqlException e)
-            {
-                if (WriteExceptionsToEventLog)
-                {
-                    WriteToEventLog(e, "FindUsersByName");
-                    throw new ProviderException(exceptionMessage);
-                }
-                else
-                {
                     throw;
                 }
-            }
-            finally
-            {
-                if (!(reader == null))
-                {
-                    reader.Close();
-                }
-                conn.Close();
             }
             return users;
         }

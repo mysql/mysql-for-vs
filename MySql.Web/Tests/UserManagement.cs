@@ -27,6 +27,7 @@ using System.Web.Security;
 using System.Collections.Specialized;
 using System.Data;
 using System;
+using System.Configuration.Provider;
 
 namespace MySql.Web.Security.Tests
 {
@@ -41,13 +42,13 @@ namespace MySql.Web.Security.Tests
             execSQL("TRUNCATE TABLE mysql_Membership");
         }
 
-        [Test]
-        public void CreateUserWithHashedPassword()
+        private void CreateUserWithFormat(MembershipPasswordFormat format)
         {
             provider = new MySQLMembershipProvider();
             NameValueCollection config = new NameValueCollection();
             config.Add("connectionStringName", "LocalMySqlServer");
             config.Add("applicationName", "/");
+            config.Add("passwordFormat", format.ToString());
             provider.Initialize(null, config);
 
             // create the user
@@ -57,12 +58,64 @@ namespace MySql.Web.Security.Tests
 
             // verify that the password format is hashed.
             DataTable table = GetMembers();
-            MembershipPasswordFormat format = 
+            MembershipPasswordFormat rowFormat =
                 (MembershipPasswordFormat)Convert.ToInt32(table.Rows[0]["PasswordFormat"]);
-            Assert.AreEqual(MembershipPasswordFormat.Hashed, format);
+            Assert.AreEqual(format, rowFormat);
 
             //  then attempt to verify the user
             provider.ValidateUser("foo", "bar");
+        }
+
+        [Test]
+        public void CreateUserWithHashedPassword()
+        {
+            CreateUserWithFormat(MembershipPasswordFormat.Hashed);
+        }
+
+        [Test]
+        public void CreateUserWithEncryptedPasswordWithAutoGenKeys()
+        {
+            try
+            {
+                CreateUserWithFormat(MembershipPasswordFormat.Encrypted);
+            }
+            catch (ProviderException)
+            {
+            }
+        }
+
+        [Test]
+        public void CreateUserWithClearPassword()
+        {
+            CreateUserWithFormat(MembershipPasswordFormat.Clear);
+        }
+
+        [Test]
+        public void ChangePassword()
+        {
+            CreateUserWithHashedPassword();
+            provider.ChangePassword("foo", "bar", "bar2");
+            provider.ValidateUser("foo", "bar2");
+        }
+
+        [Test]
+        public void DeleteUser()
+        {
+            CreateUserWithHashedPassword();
+            provider.DeleteUser("foo", true);
+            DataTable table = GetMembers();
+            Assert.AreEqual(0, table.Rows.Count);
+        }
+
+        [Test]
+        public void FindUsersByName()
+        {
+            CreateUserWithHashedPassword();
+
+            int records;
+            MembershipUserCollection users = provider.FindUsersByName("F%", 0, 10, out records);
+            Assert.AreEqual(1, records);
+            Assert.AreEqual("foo", users["foo"].UserName);
         }
     }
 }

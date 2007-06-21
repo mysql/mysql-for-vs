@@ -4,7 +4,9 @@ Version 5.1.3 -
   - Fixed problem with creating users using hashed passwords when machineKey is set
     to AutoGenerate.  We now correctly throw an exception if you are requesting
     encrypted passwords but it works ok for hashed passwords. (Bug #29235)
-
+  - Fixed problem with selecting users for roles in the web admin tool.  The problem was that
+    we had a simple syntax error in our database lookup code. (Bug #29236)
+    
 Version 5.1.2 - 6/12/2007
   - Fixed integration with the Website Administration Tool.  Before this fix, the test link
     was visible but did not work and  user management did not work.
