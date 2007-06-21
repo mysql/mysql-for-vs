@@ -40,18 +40,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Source\ProfileSchema.cs" />
     <Compile Include="Source\Install.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Source\ProfileProvider.cs" />
     <Compile Include="Source\RoleSchema.cs" />
     <Compile Include="Source\MembershipProvider.cs" />
     <Compile Include="Source\RoleProvider.cs" />
     <Compile Include="Source\MembershipSchema.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Driver\MySql.Data.csproj">
+    <ProjectReference Include="..\..\Driver\MySql.Data.csproj">
       <Project>{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}</Project>
       <Name>MySql.Data</Name>
     </ProjectReference>
