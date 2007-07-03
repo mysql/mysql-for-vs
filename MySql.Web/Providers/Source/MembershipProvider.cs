@@ -729,17 +729,19 @@ PKID, Username, ApplicationName,
         {
             object providerUserKey = reader.GetValue(0);
             string username = reader.GetString(1);
-            string email = reader.GetString(2);
+
+            string email = null;
+            if (! reader.IsDBNull(2))
+                email = reader.GetString(2);
+
             string passwordQuestion = "";
             if (!(reader.GetValue(3) == DBNull.Value))
-            {
                 passwordQuestion = reader.GetString(3);
-            }
+
             string comment = "";
             if (!(reader.GetValue(4) == DBNull.Value))
-            {
                 comment = reader.GetString(4);
-            }
+
             bool isApproved = reader.GetBoolean(5);
             bool isLockedOut = reader.GetBoolean(6);
             DateTime creationDate = reader.GetDateTime(7);

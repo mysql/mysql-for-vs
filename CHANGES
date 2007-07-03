@@ -8,6 +8,8 @@ Version 5.1.3 -
     we had a simple syntax error in our database lookup code. (Bug #29236)
   - Added AutoEnlist connection string option.  Setting it to false will prevent the connection
     from automatically enlisting in any current transaction    
+  - Changed membership schema to allow null values for email.  This allows all the 
+    overrides for Membership.CreateUser to work.    
     
 Version 5.1.2 - 6/12/2007
   - Fixed integration with the Website Administration Tool.  Before this fix, the test link

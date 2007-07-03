@@ -117,5 +117,27 @@ namespace MySql.Web.Security.Tests
             Assert.AreEqual(1, records);
             Assert.AreEqual("foo", users["foo"].UserName);
         }
+
+        [Test]
+        public void TestCreateUserOverrides()
+        {
+            try
+            {
+                Membership.CreateUser("foo", "bar");
+                int records;
+                MembershipUserCollection users = Membership.FindUsersByName("F%", 0, 10, out records);
+                Assert.AreEqual(1, records);
+                Assert.AreEqual("foo", users["foo"].UserName);
+
+                Membership.CreateUser("test", "bar", "myemail@host.com");
+                users = Membership.FindUsersByName("T%", 0, 10, out records);
+                Assert.AreEqual(1, records);
+                Assert.AreEqual("test", users["test"].UserName);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
     }
 }
