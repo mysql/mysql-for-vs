@@ -793,5 +793,24 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(typeof(string), dt.Columns[0].DataType);
             Assert.AreEqual(typeof(Int64), dt.Columns[1].DataType);
         }
+
+        [Test]
+        public void RespectBinaryFlag()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test (col1 VARBINARY(20), col2 BLOB)");
+
+            string connStr = GetConnectionString(true) + ";respect binary flags=false";
+
+            using (MySqlConnection c = new MySqlConnection(connStr))
+            {
+                c.Open();
+                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", c);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                Assert.IsTrue(dt.Columns[0].DataType == typeof(System.String));
+                Assert.IsTrue(dt.Columns[1].DataType == typeof(System.Byte[]));
+            }
+        }
 	}
 }

@@ -47,6 +47,7 @@ namespace MySql.Data.MySqlClient
         bool ignorePrepare;
         bool useProcedureBodies;
         bool autoEnlist;
+        bool respectBinaryFlags;
 
         static MySqlConnectionStringBuilder()
         {
@@ -80,6 +81,7 @@ namespace MySql.Data.MySqlClient
             defaultValues.Add(Keyword.IgnorePrepare, true);
             defaultValues.Add(Keyword.UseProcedureBodies, true);
             defaultValues.Add(Keyword.AutoEnlist, true);
+            defaultValues.Add(Keyword.RespectBinaryFlags, true);
         }
 
         /// <summary>
@@ -617,6 +619,23 @@ namespace MySql.Data.MySqlClient
             }
         }
 
+#if !CF && !MONO
+        [Category("Advanced")]
+        [DisplayName("Respect Binary Flags")]
+        [Description("Should binary flags on column metadata be respected.")]
+        [DefaultValue(true)]
+        [RefreshProperties(RefreshProperties.All)]
+#endif
+        public bool RespectBinaryFlags
+        {
+            get { return respectBinaryFlags; }
+            set
+            {
+                SetValue("Respect Binary Flags", value);
+                respectBinaryFlags = value;
+            }
+        }
+
         #endregion
 
         #region Pooling Properties
@@ -921,6 +940,8 @@ namespace MySql.Data.MySqlClient
                     return Keyword.UseProcedureBodies;
                 case "auto enlist":
                     return Keyword.AutoEnlist;
+                case "respect binary flags":
+                    return Keyword.RespectBinaryFlags;
             }
             throw new ArgumentException(Resources.KeywordNotSupported, key);
         }
@@ -989,6 +1010,8 @@ namespace MySql.Data.MySqlClient
                     return UseProcedureBodies;
                 case Keyword.AutoEnlist:
                     return AutoEnlist;
+                case Keyword.RespectBinaryFlags:
+                    return RespectBinaryFlags;
                 default:
                     return null; /* this will never happen */
             }
@@ -1069,6 +1092,8 @@ namespace MySql.Data.MySqlClient
                     useProcedureBodies = ConvertToBool(value); break;
                 case Keyword.AutoEnlist:
                     autoEnlist = ConvertToBool(value); break;
+                case Keyword.RespectBinaryFlags:
+                    respectBinaryFlags = ConvertToBool(value); break;
             }
         }
 
@@ -1241,6 +1266,7 @@ namespace MySql.Data.MySqlClient
         IgnorePrepare,
         UseSSL,
         UseProcedureBodies,
-        AutoEnlist
+        AutoEnlist,
+        RespectBinaryFlags
     }
 }

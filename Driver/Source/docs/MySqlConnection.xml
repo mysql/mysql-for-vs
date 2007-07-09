@@ -891,6 +891,15 @@ Recognized values are <B>true</B>, <B>false</B>, <B>yes</B>, and <B>no</B>.</td>
         if there is one.
       </td>
     </tr>
+    <tr>
+      <td>Respect Binary Flags</td>
+      <td>true</td>
+      <td>
+        Indicates whether the connection should respect all binary flags sent to the client
+        as part of column metadata.  False will cause the connector to behave like
+        Connector/Net 5.0 and earlier.
+      </td>
+    </tr>
   </table>
 		</div>
 	<para>

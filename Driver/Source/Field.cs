@@ -222,14 +222,18 @@ namespace MySql.Data.MySqlClient
             }
 
             // now determine if we really should be binary
-            CheckForExceptions();
+            if (connection.Settings.RespectBinaryFlags)
+                CheckForExceptions();
             if (!IsBinary) return;
-                
-            if (type == MySqlDbType.String)
-                mySqlDbType = MySqlDbType.Binary;
-            else if (type == MySqlDbType.VarChar ||
-                     type == MySqlDbType.VarString)
-                mySqlDbType = MySqlDbType.VarBinary;
+
+            if (connection.Settings.RespectBinaryFlags)
+            {
+                if (type == MySqlDbType.String)
+                    mySqlDbType = MySqlDbType.Binary;
+                else if (type == MySqlDbType.VarChar ||
+                         type == MySqlDbType.VarString)
+                    mySqlDbType = MySqlDbType.VarBinary;
+            }
 		}
 
         private void CheckForExceptions()
