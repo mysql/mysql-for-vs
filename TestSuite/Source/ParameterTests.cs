@@ -514,5 +514,25 @@ namespace MySql.Data.MySqlClient.Tests
             cmd.Parameters.RemoveAt("?id1");
             MySqlParameter p = cmd.Parameters["?id6"];
         }
+
+        /// <summary>
+        /// Bug #29312  	System.FormatException if parameter not found
+        /// </summary>
+        [Test]
+        public void MissingParameter()
+        {
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO test(id) VALUES (?id)", conn);
+            try
+            {
+                cmd.ExecuteNonQuery();
+            }
+            catch (MySqlException)
+            {
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
     }
 }

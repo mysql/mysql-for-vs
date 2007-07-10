@@ -167,7 +167,7 @@ namespace MySql.Data.MySqlClient
                 if (Connection.Settings.UseOldSyntax)
                     return false;
                 throw new MySqlException(
-                    String.Format(Resources.ParameterMustBeDefined));
+                    String.Format(Resources.ParameterMustBeDefined, parmName));
             }
 
             parameter.Serialize(stream, false);

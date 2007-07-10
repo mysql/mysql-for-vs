@@ -64,6 +64,9 @@ Version 5.0.8
   - Fixed problem with calling stored procedures in databases that have hyphens
     in their names.  We were not using backticks to quote the database and sproc name
     when querying for metadata. (Bug #29526)
+  - Fixed problem where a statement that has parameters that is executed without
+    defining those parameters would throw a System.FormatException rather than
+    a MySqlException (bug #29312)    
     
 Version 5.0.7 5/16/2007
 
