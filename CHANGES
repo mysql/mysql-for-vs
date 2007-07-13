@@ -67,6 +67,9 @@ Version 5.0.8
   - Fixed problem where a statement that has parameters that is executed without
     defining those parameters would throw a System.FormatException rather than
     a MySqlException (bug #29312)    
+  - Fixed problem where a command timing out just after it actually finished would cause
+    an exception to be thrown on the command timeout thread which would then be seen
+    as an unhandled exception. 
     
 Version 5.0.7 5/16/2007
 

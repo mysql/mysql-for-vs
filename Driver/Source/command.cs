@@ -242,10 +242,10 @@ namespace MySql.Data.MySqlClient
 			MySqlConnection c = new MySqlConnection(connection.Settings.GetConnectionString(true));
 			try
 			{
-				c.Open();
-				MySqlCommand cmd = new MySqlCommand(String.Format("KILL QUERY {0}",
-					 connection.ServerThread), c);
-				cmd.ExecuteNonQuery();
+                c.Open();
+                MySqlCommand cmd = new MySqlCommand(String.Format("KILL QUERY {0}",
+                     connection.ServerThread), c);
+                cmd.ExecuteNonQuery();
 			}
 			catch (Exception)
 			{
@@ -333,7 +333,17 @@ namespace MySql.Data.MySqlClient
             if (cmd.canCancel)
 			{
                 cmd.timedOut = true;
-                cmd.Cancel();
+                try
+                {
+                    cmd.Cancel();
+                }
+                catch (Exception ex)
+                {
+                    // if something goes wrong, we log it and eat it.  There's really nothing
+                    // else we can do.
+                    if (connection.Settings.Logging)
+                        Logger.LogException(ex);
+                }
 			}
 		}
 
