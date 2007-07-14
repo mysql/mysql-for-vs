@@ -24,6 +24,7 @@ using System.ComponentModel;
 using System.Data.Common;
 using System.Globalization;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace MySql.Data.MySqlClient
 {
@@ -44,10 +45,10 @@ namespace MySql.Data.MySqlClient
         bool oldSyntax, persistSI, usePerfMon, pooling;
         bool allowZeroDatetime, convertZeroDatetime;
         bool useUsageAdvisor, useSSL;
-        bool ignorePrepare;
-        bool useProcedureBodies;
-        bool autoEnlist;
-        bool respectBinaryFlags;
+        bool ignorePrepare, useProcedureBodies;
+        bool autoEnlist, respectBinaryFlags, treatBlobsAsUTF8;
+        string blobAsUtf8IncludePattern, blobAsUtf8ExcludePattern;
+        Regex blobAsUtf8ExcludeRegex, blobAsUtf8IncludeRegex;
 
         static MySqlConnectionStringBuilder()
         {
@@ -82,6 +83,9 @@ namespace MySql.Data.MySqlClient
             defaultValues.Add(Keyword.UseProcedureBodies, true);
             defaultValues.Add(Keyword.AutoEnlist, true);
             defaultValues.Add(Keyword.RespectBinaryFlags, true);
+            defaultValues.Add(Keyword.BlobAsUTF8ExcludePattern, null);
+            defaultValues.Add(Keyword.BlobAsUTF8IncludePattern, null);
+            defaultValues.Add(Keyword.TreatBlobsAsUTF8, false);
         }
 
         /// <summary>
@@ -486,25 +490,6 @@ namespace MySql.Data.MySqlClient
         }
 
         /// <summary>
-        /// Gets or sets the character set that should be used for sending queries to the server.
-        /// </summary>
-#if !CF && !MONO
-        [DisplayName("Character Set")]
-        [Category("Advanced")]
-        [Description("Character set this connection should use")]
-        [RefreshProperties(RefreshProperties.All)]
-#endif
-            public string CharacterSet
-        {
-            get { return charSet; }
-            set
-            {
-                SetValue("Character Set", value); 
-                charSet = value;
-            }
-        }
-
-        /// <summary>
         /// Gets or sets a boolean value indicating if the Usage Advisor should be enabled.
         /// </summary>
 #if !CF && !MONO
@@ -745,6 +730,88 @@ namespace MySql.Data.MySqlClient
 
         #endregion
 
+        #region Language and Character Set Properties
+
+        /// <summary>
+        /// Gets or sets the character set that should be used for sending queries to the server.
+        /// </summary>
+#if !CF && !MONO
+        [DisplayName("Character Set")]
+        [Category("Advanced")]
+        [Description("Character set this connection should use")]
+        [RefreshProperties(RefreshProperties.All)]
+#endif
+        public string CharacterSet
+        {
+            get { return charSet; }
+            set
+            {
+                SetValue("Character Set", value);
+                charSet = value;
+            }
+        }
+
+        /// <summary>
+        /// Indicates whether the driver should treat binary blobs as UTF8
+        /// </summary>
+#if !CF && !MONO
+        [DisplayName("Treat Blobs As UTF8")]
+        [Category("Advanced")]
+        [Description("Should binary blobs be treated as UTF8")]
+        [RefreshProperties(RefreshProperties.All)]
+#endif
+        public bool TreatBlobsAsUTF8
+        {
+            get { return treatBlobsAsUTF8; }
+            set
+            {
+                SetValue("TreatBlobsAsUTF8", value);
+                treatBlobsAsUTF8 = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the pattern that matches the columns that should be treated as UTF8
+        /// </summary>
+#if !CF && !MONO
+        [DisplayName("BlobAsUTF8IncludePattern")]
+        [Category("Advanced")]
+        [Description("Pattern that matches columns that should be treated as UTF8")]
+        [RefreshProperties(RefreshProperties.All)]
+#endif
+        public string BlobAsUTF8IncludePattern
+        {
+            get { return blobAsUtf8IncludePattern; }
+            set
+            {
+                SetValue("BlobAsUTF8IncludePattern", value);
+                blobAsUtf8IncludePattern = value;
+                blobAsUtf8IncludeRegex = null;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the pattern that matches the columns that should not be treated as UTF8
+        /// </summary>
+#if !CF && !MONO
+        [DisplayName("BlobAsUTF8ExcludePattern")]
+        [Category("Advanced")]
+        [Description("Pattern that matches columns that should not be treated as UTF8")]
+        [RefreshProperties(RefreshProperties.All)]
+#endif
+        public string BlobAsUTF8ExcludePattern
+        {
+            get { return blobAsUtf8ExcludePattern; }
+            set
+            {
+                SetValue("BlobAsUTF8ExcludePattern", value);
+                blobAsUtf8ExcludePattern = value;
+                blobAsUtf8ExcludeRegex = null;
+            }
+        }
+
+        #endregion
+
         #region Conversion Routines
 
         private static uint ConvertToUInt(object value)
@@ -814,6 +881,32 @@ namespace MySql.Data.MySqlClient
             if (value is MySqlDriverType) return (MySqlDriverType) value;
             return (MySqlDriverType) Enum.Parse(
                                          typeof (MySqlDriverType), value.ToString(), true);
+        }
+
+        #endregion
+
+        #region Internal Properties
+
+        internal Regex BlobAsUTF8IncludeRegex
+        {
+            get
+            {
+                if (blobAsUtf8IncludePattern == null) return null;
+                if (blobAsUtf8IncludeRegex == null)
+                    blobAsUtf8IncludeRegex = new Regex(blobAsUtf8IncludePattern);
+                return blobAsUtf8IncludeRegex;
+            }
+        }
+
+        internal Regex BlobAsUTF8ExcludeRegex
+        {
+            get 
+            {
+                if (blobAsUtf8ExcludePattern == null) return null;
+                if (blobAsUtf8ExcludeRegex == null)
+                    blobAsUtf8ExcludeRegex = new Regex(blobAsUtf8ExcludePattern);
+                return blobAsUtf8ExcludeRegex;
+            }
         }
 
         #endregion
@@ -942,6 +1035,13 @@ namespace MySql.Data.MySqlClient
                     return Keyword.AutoEnlist;
                 case "respect binary flags":
                     return Keyword.RespectBinaryFlags;
+                case "blobasutf8excludepattern":
+                    return Keyword.BlobAsUTF8ExcludePattern;
+                case "blobasutf8includepattern":
+                    return Keyword.BlobAsUTF8IncludePattern;
+                case "treatblobsasutf8":
+                case "treat blobs as utf8":
+                    return Keyword.TreatBlobsAsUTF8;
             }
             throw new ArgumentException(Resources.KeywordNotSupported, key);
         }
@@ -1012,6 +1112,12 @@ namespace MySql.Data.MySqlClient
                     return AutoEnlist;
                 case Keyword.RespectBinaryFlags:
                     return RespectBinaryFlags;
+                case Keyword.TreatBlobsAsUTF8:
+                    return TreatBlobsAsUTF8;
+                case Keyword.BlobAsUTF8ExcludePattern:
+                    return blobAsUtf8ExcludePattern;
+                case Keyword.BlobAsUTF8IncludePattern:
+                    return blobAsUtf8IncludePattern;
                 default:
                     return null; /* this will never happen */
             }
@@ -1094,6 +1200,12 @@ namespace MySql.Data.MySqlClient
                     autoEnlist = ConvertToBool(value); break;
                 case Keyword.RespectBinaryFlags:
                     respectBinaryFlags = ConvertToBool(value); break;
+                case Keyword.TreatBlobsAsUTF8:
+                    treatBlobsAsUTF8 = ConvertToBool(value); break;
+                case Keyword.BlobAsUTF8ExcludePattern:
+                    blobAsUtf8ExcludePattern = (string)value; break;
+                case Keyword.BlobAsUTF8IncludePattern:
+                    blobAsUtf8IncludePattern = (string)value; break;
             }
         }
 
@@ -1267,6 +1379,9 @@ namespace MySql.Data.MySqlClient
         UseSSL,
         UseProcedureBodies,
         AutoEnlist,
-        RespectBinaryFlags
+        RespectBinaryFlags,
+        TreatBlobsAsUTF8,
+        BlobAsUTF8IncludePattern,
+        BlobAsUTF8ExcludePattern
     }
 }

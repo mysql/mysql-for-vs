@@ -22,6 +22,7 @@ using System.Text;
 using MySql.Data.Common;
 using MySql.Data.Types;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace MySql.Data.MySqlClient
 {
@@ -193,32 +194,55 @@ namespace MySql.Data.MySqlClient
                 {
                     case MySqlDbType.Byte:
                         mySqlDbType = MySqlDbType.UByte;
-                        break;
+                        return;
                     case MySqlDbType.Int16:
                         mySqlDbType = MySqlDbType.UInt16;
-                        break;
+                        return;
                     case MySqlDbType.Int24:
                         mySqlDbType = MySqlDbType.UInt24;
-                        break;
+                        return;
                     case MySqlDbType.Int32:
                         mySqlDbType = MySqlDbType.UInt32;
-                        break;
+                        return;
                     case MySqlDbType.Int64:
                         mySqlDbType = MySqlDbType.UInt64;
-                        break;
+                        return;
                 }
             }
 
-            if (IsBlob && !IsBinary)
+            if (IsBlob)
             {
-                if (type == MySqlDbType.TinyBlob)
-                    mySqlDbType = MySqlDbType.TinyText;
-                else if (type == MySqlDbType.MediumBlob)
-                    mySqlDbType = MySqlDbType.MediumText;
-                else if (type == MySqlDbType.Blob)
-                    mySqlDbType = MySqlDbType.Text;
-                else if (type == MySqlDbType.LongBlob)
-                    mySqlDbType = MySqlDbType.LongText;
+                // handle blob to UTF8 conversion if requested.  This is only activated
+                // on binary blobs
+                if (IsBinary && connection.Settings.TreatBlobsAsUTF8)
+                {
+                    bool convertBlob = true;
+                    Regex includeRegex = connection.Settings.BlobAsUTF8IncludeRegex;
+                    Regex excludeRegex = connection.Settings.BlobAsUTF8ExcludeRegex;
+                    convertBlob &= (includeRegex != null && includeRegex.IsMatch(ColumnName));
+                    if (excludeRegex != null && excludeRegex.IsMatch(ColumnName))
+                        convertBlob = false;
+
+                    if (convertBlob)
+                    {
+                        binaryOk = false;
+                        Encoding = System.Text.Encoding.GetEncoding("UTF-8");
+                        charSetIndex = -1;  // lets driver know we are in charge of encoding
+                        maxLength = 4;
+                    }
+                }
+
+                if (!IsBinary)
+                {
+                    if (type == MySqlDbType.TinyBlob)
+                        mySqlDbType = MySqlDbType.TinyText;
+                    else if (type == MySqlDbType.MediumBlob)
+                        mySqlDbType = MySqlDbType.MediumText;
+                    else if (type == MySqlDbType.Blob)
+                        mySqlDbType = MySqlDbType.Text;
+                    else if (type == MySqlDbType.LongBlob)
+                        mySqlDbType = MySqlDbType.LongText;
+                }
             }
 
             // now determine if we really should be binary

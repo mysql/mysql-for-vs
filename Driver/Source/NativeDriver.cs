@@ -713,7 +713,7 @@ namespace MySql.Data.MySqlClient
                 stream.ReadInteger(2); // reserved
             }
 
-            if (charSets != null)
+            if (charSets != null && field.CharacterSetIndex != -1)
             {
                 CharacterSet cs = CharSetMap.GetChararcterSet(Version, (string) charSets[field.CharacterSetIndex]);
                 field.MaxLength = cs.byteCount;

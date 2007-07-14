@@ -900,9 +900,23 @@ Recognized values are <B>true</B>, <B>false</B>, <B>yes</B>, and <B>no</B>.</td>
         Connector/Net 5.0 and earlier.
       </td>
     </tr>
+    <tr>
+      <td>BlobAsUTF8IncludePattern</td>
+      <td>null</td>
+      <td>
+        Pattern that should be used to indicate which blob columns should be treated as UTF-8.
+      </td>
+    </tr>
+    <tr>
+      <td>BlobAsUTF8ExcludePattern</td>
+      <td>null</td>
+      <td>
+        Pattern that should be used to indicate which blob columns should not be treated as UTF-8.
+      </td>
+    </tr>
   </table>
-		</div>
-	<para>
+</div>
+<para>
 	The following table lists the valid names for connection pooling values within 
 the <B>ConnectionString</B>. For more information about connection pooling, see 
 Connection Pooling for the MySql Data Provider.</para>
