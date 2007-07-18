@@ -1328,5 +1328,31 @@ namespace MySql.Data.MySqlClient.Tests
             cmd.Parameters.Add(param);
             cmd.ExecuteNonQuery();
         }
+
+        /// <summary>
+        /// Bug #29526  	syntax error: "show create procedure" with catalog names containing hyphens
+        /// </summary>
+        [Test]
+        public void CatalogWithHyphens()
+        {
+            try
+            {
+                suExecSQL("CREATE DATABASE `foo-bar`");
+                string connStr = GetConnectionString(false) + ";database=foo-bar";
+                MySqlConnection c = new MySqlConnection(connStr);
+                c.Open();
+
+                MySqlCommand cmd = new MySqlCommand("CREATE PROCEDURE spTest() BEGIN SELECT 1; END", c);
+                cmd.ExecuteNonQuery();
+
+                cmd.CommandText = "spTest";
+                cmd.CommandType = CommandType.StoredProcedure;
+                Assert.AreEqual(1, cmd.ExecuteScalar());
+            }
+            finally
+            {
+                suExecSQL("DROP DATABASE IF EXISTS `foo-bar`");
+            }
+        }
 	}
 }

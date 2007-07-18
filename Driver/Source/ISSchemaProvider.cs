@@ -294,7 +294,7 @@ namespace MySql.Data.MySqlClient
 
             foreach (DataRow routine in routines.Rows)
             {
-                string showCreateSql = String.Format("SHOW CREATE {0} {1}.{2}",
+                string showCreateSql = String.Format("SHOW CREATE {0} `{1}`.`{2}`",
                     routine["ROUTINE_TYPE"], routine["ROUTINE_SCHEMA"],
                     routine["ROUTINE_NAME"]);
                 cmd.CommandText = showCreateSql;
