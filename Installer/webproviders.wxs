@@ -5,11 +5,11 @@
       <Directory Id='WPDir' Name='Web Providers'>
         <Component Id="ProvidersGAC" Guid="6b95d34b-91e1-41ff-9f3f-dcb5308a00ce">
           <File Id="ProviderAssemblyGAC" Name="MySql.Web.dll" ShortName="MW"
-                Source="..\MySql.Web\bin\release\mysql.web.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
+                Source="..\MySql.Web\providers\bin\release\mysql.web.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
         </Component>
         <Component Id="Providers" Guid="8578813e-e123-45ad-9c92-565382a058b6">
           <File Id="ProviderAssembly" Name="MySql.Web.dll" DiskId="1"
-                Source="..\MySql.Web\bin\release\mysql.web.dll"/>
+                Source="..\MySql.Web\providers\bin\release\mysql.web.dll"/>
         </Component>
       </Directory>
     </DirectoryRef>
