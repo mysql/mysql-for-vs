@@ -1,0 +1,58 @@
+<html>
+  <head>
+    <title>Editing Views</title>
+   <link rel="stylesheet" type="text/css" href="../../../styles/presentation.css" />
+   <link rel="stylesheet" type="text/css" href="ms-help://Hx/HxRuntime/HxLink.css" />
+   <link rel="stylesheet" type="text/css" href="ms-help://Dx/DxRuntime/DxLink.css" />
+  </head>
+  <body>
+	<div id="header">
+	<table id="topTable">
+	<tr id="headerTableRow1">
+		<td align="left"><span id="runningHeaderText">MySQL Connector/Net</span></td>
+	</tr>
+	<tr id="headerTableRow2">
+		<td align="left"><span id="nsrTitle">Editing Views</span></td>
+	</tr>
+	</table>
+	</div>
+
+<div id="mainSection">
+<div id="mainBody">
+<p>
+To create a new view, right click the Views node under the connection node in Server Explorer. From the node's context menu, choose the Create View command. This command opens the SQL Editor.
+</p>
+ <p>
+To modify an existing view, double click on a node of the view you wish to modify, or right click on this node and choose the Alter View command from a context menu. Either of the commands opens the SQL Editor.
+</p>
+<p> 
+To create or alter the view definition using SQL Editor, type the appropriate SQL statement in the SQL Editor. Note: you should enter only the defining statement itself, without the CREATE VIEW AS preface.
+</p>
+ <p>
+All other view properties can be set in the Properties window.
+These properties are:
+</p>
+Algorithm<br/>
+Check Option<br/>
+Definer<br/>
+Name<br/>
+Security Type<br/>
+<p>
+Some of these properties can have arbitrary text values, others accept values from a predefined set. In the latter case you set the desired value with an embedded combobox.
+</p>
+ <p>
+The properties Is Updatable, Schema and Server are readonly.
+</p>
+<p>
+To save changes you have made, use either Save or Save All buttons of the Visual Studio main toolbar, or just press Ctrl+S. Before changes are saved, you will be asked to confirm the execution of the corresponding SQL query in a confirmation dialog.
+</p>
+
+<div id="footer">
+	<div class="footerLine">
+		<img width="100%" height="3px" src="../icons/footer.gif" alt="Footer image"></img>
+	</div>
+	<include item="copyright"/>
+</div>
+</div></div>
+  </body>
+</html><!-- @SortOrder 3 -->

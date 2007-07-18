@@ -1,0 +1,62 @@
+<html>
+  <head>
+    <title>Editing Tables</title>
+   <link rel="stylesheet" type="text/css" href="../../../../styles/presentation.css" />
+   <link rel="stylesheet" type="text/css" href="ms-help://Hx/HxRuntime/HxLink.css" />
+   <link rel="stylesheet" type="text/css" href="ms-help://Dx/DxRuntime/DxLink.css" />
+  </head>
+  <body>
+	<div id="header">
+	<table id="topTable">
+	<tr id="headerTableRow1">
+		<td align="left"><span id="runningHeaderText">MySQL Connector/Net</span></td>
+	</tr>
+	<tr id="headerTableRow2">
+		<td align="left"><span id="nsrTitle">Editing Tables</span></td>
+	</tr>
+	</table>
+	</div>
+
+<div id="mainSection">
+<div id="mainBody">
+
+<p>
+Connector/Net contains a table editor, which enables the visual creation and modification of tables.
+</p>
+<p>
+The Table Editor can be accessed through a mouse action on table-type node of Server Explorer. 
+To create a new table, right-click on the Tables node (under the connection node) and choose the Create Table 
+command from the context menu. To modify an existing table, double-click on the node of the table you wish to 
+modify, or right-click on this node and choose the Alter Table command from the context menu. Either of the commands opens the Table Editor.
+</p>
+<p> 
+The table editor is implemented in the manner of the well-known Query Browser Table Editor, but with minor differences.
+</p>
+ <img src="image4.jpg"/>
+ 
+<p>
+Table Editor consists of the following parts:
+</p>
+<ul>
+<li>Columns Editor - a data grid on top of the Table Editor. Use the Columns grid for column creation, modification, and deletion.</li>
+<li>Indexes tab - a tab on bottom of the Table Editor. Use the Indexes tab for indexes management.</li>
+<li>Foreign Keys tab - a tab on bottom of the Table Editor. Use the Foreign Keys tab for foreign keys management.</li>
+<li>Column Details tab - a tab on bottom of the Table Editor. Use the Column Details tab to set advanced column options.</li>
+<li>Properties window - a standard Visual Studio Properties window, where the properties of the edited table are displayed. Use the Properties window to set the table properties.</li>
+</ul>
+<p>
+Each of these areas is discussed in children topics.
+</p>
+<p>
+To save changes you have made in the Table Editor, use either Save or Save All button of the Visual Studio main toolbar, or just press Ctrl+S. Before changes are saved, you will be asked to confirm the execution of the corresponding SQL query in a confirmation dialog.
+</p>
+
+<div id="footer">
+	<div class="footerLine">
+		<img width="100%" height="3px" src="../icons/footer.gif" alt="Footer image"></img>
+	</div>
+	<include item="copyright"/>
+</div>
+</div></div>
+  </body>
+</html><!-- @SortOrder 1 -->
