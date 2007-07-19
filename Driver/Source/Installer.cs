@@ -38,6 +38,29 @@ namespace MySql.Data.MySqlClient
     [RunInstaller(true)]
 	public class CustomInstaller : Installer
 	{
+        public CustomInstaller()
+        {
+            // add in a perf mon installer
+            PerformanceCounterInstaller p = new PerformanceCounterInstaller();
+            p.CategoryName = Resources.PerfMonCategoryName;
+            p.CategoryHelp = Resources.PerfMonCategoryHelp;
+            p. CategoryType = PerformanceCounterCategoryType.SingleInstance;
+
+            CounterCreationData ccd1 = new CounterCreationData(
+                Resources.PerfMonHardProcName,
+                Resources.PerfMonHardProcHelp,
+                PerformanceCounterType.NumberOfItems32);
+
+            CounterCreationData ccd2 = new CounterCreationData(
+             Resources.PerfMonSoftProcName,
+             Resources.PerfMonSoftProcHelp,
+             PerformanceCounterType.RateOfCountsPerSecond32);
+
+            p.Counters.Add(ccd1);
+            p.Counters.Add(ccd2);
+            Installers.Add(p);
+        }
+
 		/// <summary>
 		/// We override Install so we can add our assembly to the proper
 		/// machine.config files.
@@ -48,7 +71,6 @@ namespace MySql.Data.MySqlClient
 			base.Install(stateSaver);
 
             AddProviderToMachineConfig();
-            InstallPerfMonItems();
 		}
 
 		private static void AddProviderToMachineConfig()
@@ -63,10 +85,10 @@ namespace MySql.Data.MySqlClient
 
 			string installRoot64 = installRoot.ToString();
 			installRoot64 = installRoot64.Substring(0, installRoot64.Length - 1);
-			installRoot64 = string.Format("{0}64{1}", installRoot64,
+            installRoot64 = string.Format("{0}64{1}", installRoot64,
 				Path.DirectorySeparatorChar);
-			if (Directory.Exists(installRoot64))
-				AddProviderToMachineConfigInDir(installRoot64);
+            if (Directory.Exists(installRoot64))
+                AddProviderToMachineConfigInDir(installRoot64);
 		}
 
 		private static void AddProviderToMachineConfigInDir(string path)
@@ -123,22 +145,6 @@ namespace MySql.Data.MySqlClient
             writer.Close();
 		}
 
-		private static void InstallPerfMonItems()
-		{
-			string categoryName = Resources.PerfMonCategoryName;
-
-			if (!PerformanceCounterCategory.Exists(categoryName))
-			{
-				CounterCreationDataCollection ccdc = new CounterCreationDataCollection();
-				ccdc.Add(new CounterCreationData(Resources.PerfMonHardProcName,
-					Resources.PerfMonHardProcHelp, PerformanceCounterType.NumberOfItems32));
-				ccdc.Add(new CounterCreationData(Resources.PerfMonSoftProcName,
-					Resources.PerfMonSoftProcHelp, PerformanceCounterType.NumberOfItems32));
-				PerformanceCounterCategory.Create(categoryName, Resources.PerfMonCategoryHelp,
-					PerformanceCounterCategoryType.SingleInstance, ccdc);
-			}
-		}
-
 		/// <summary>
 		/// We override Uninstall so we can remove out assembly from the
 		/// machine.config files.
@@ -149,7 +155,6 @@ namespace MySql.Data.MySqlClient
 			base.Uninstall(savedState);
 
 			RemoveProviderFromMachineConfig();
-			RemovePerfMonItems();
 		}
 
 		private static void RemoveProviderFromMachineConfig()
@@ -204,16 +209,6 @@ namespace MySql.Data.MySqlClient
             writer.Flush();
             writer.Close();
         }
-
-		private static void RemovePerfMonItems()
-		{
-			string categoryName = Resources.PerfMonCategoryName;
-
-			// TODO: add code to inspect registry and make sure no other connector/net 5.x
-			// installs are present.
-			if (PerformanceCounterCategory.Exists(categoryName))
-				PerformanceCounterCategory.Delete(categoryName);
-		}
 	}
 }
 
