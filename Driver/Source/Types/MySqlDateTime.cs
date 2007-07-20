@@ -22,6 +22,7 @@ using System;
 using System.Data;
 using System.IO;
 using MySql.Data.MySqlClient;
+using System.Globalization;
 
 namespace MySql.Data.Types
 {
@@ -35,8 +36,6 @@ namespace MySql.Data.Types
 		private MySqlDbType type;
 		private int year, month, day, hour, minute, second;
 		private int millisecond;
-		private static string fullPattern;
-		private static string shortPattern;
 
 		public MySqlDateTime(int year, int month, int day, int hour, int minute, int second)
 			: this(MySqlDbType.Datetime, year, month, day, hour, minute, second)
@@ -78,9 +77,6 @@ namespace MySql.Data.Types
 			this.minute = minute;
 			this.second = second;
 			this.millisecond = 0;
-
-			if (fullPattern == null)
-				ComposePatterns();
 		}
 
 		internal MySqlDateTime(MySqlDbType type, bool isNull)
@@ -418,51 +414,13 @@ namespace MySql.Data.Types
 				return (type == MySqlDbType.Date) ? d.ToString("d") : d.ToString();
 			}
 
-			if (type == MySqlDbType.Date)
-				return String.Format(shortPattern, year, month, day);
+            if (type == MySqlDbType.Date)
+                return String.Format(CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern,
+                    year, month, day);
 
-			if (hour >= 12)
-				fullPattern = fullPattern.Replace("A", "P");
-			return String.Format(fullPattern, year, month, day, hour, minute, second);
-		}
-
-		private void ComposePatterns()
-		{
-			DateTime tempDT = new DateTime(1, 2, 3, 4, 5, 6);
-			fullPattern = tempDT.ToString();
-			fullPattern = fullPattern.Replace("0001", "{0:0000}");
-			if (fullPattern.IndexOf("02") != -1)
-				fullPattern = fullPattern.Replace("02", "{1:00}");
-			else
-				fullPattern = fullPattern.Replace("2", "{1}");
-			if (fullPattern.IndexOf("03") != -1)
-				fullPattern = fullPattern.Replace("03", "{2:00}");
-			else
-				fullPattern = fullPattern.Replace("3", "{2}");
-			if (fullPattern.IndexOf("04") != -1)
-				fullPattern = fullPattern.Replace("04", "{3:00}");
-			else
-				fullPattern = fullPattern.Replace("4", "{3}");
-			if (fullPattern.IndexOf("05") != -1)
-				fullPattern = fullPattern.Replace("05", "{4:00}");
-			else
-				fullPattern = fullPattern.Replace("5", "{4}");
-			if (fullPattern.IndexOf("06") != -1)
-				fullPattern = fullPattern.Replace("06", "{5:00}");
-			else
-				fullPattern = fullPattern.Replace("6", "{5}");
-
-			shortPattern = tempDT.ToString("d");
-			shortPattern = shortPattern.Replace("0001", "{0:0000}");
-			if (shortPattern.IndexOf("02") != -1)
-				shortPattern = shortPattern.Replace("02", "{1:00}");
-			else
-				shortPattern = shortPattern.Replace("2", "{1}");
-			if (shortPattern.IndexOf("03") != -1)
-				shortPattern = shortPattern.Replace("03", "{2:00}");
-			else
-				shortPattern = shortPattern.Replace("3", "{2}");
-		}
+            return String.Format(CultureInfo.CurrentUICulture.DateTimeFormat.FullDateTimePattern,
+                year, month, day, hour, minute, second);
+        }
 
 		/// <summary></summary>
 		/// <param name="val"></param>
@@ -479,8 +437,6 @@ namespace MySql.Data.Types
 
 			if (DateTime.IsLeapYear(Year))
 				daysInMonths[1]++;
-
-
 		}
 
 		internal static void SetDSInfo(DataTable dsTable)
