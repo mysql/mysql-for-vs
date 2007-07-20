@@ -624,24 +624,24 @@ PKID, Username, ApplicationName,
                 try
                 {
                     conn.Open();
+                    MembershipUser user;
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (!reader.Read()) return null;
-                        MembershipUser u = GetUserFromReader(reader);
-                        reader.Close();
-                        if (userIsOnline)
-                        {
-                            MySqlCommand updateCmd = new MySqlCommand(
-                                @"UPDATE mysql_Membership SET LastActivityDate = ?LastActivityDate 
-                            WHERE Username = ?Username AND Applicationname = ?Applicationname",
-                                conn);
-                            updateCmd.Parameters.Add("?LastActivityDate", MySqlDbType.Datetime).Value = DateTime.Now;
-                            updateCmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255).Value = username;
-                            updateCmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
-                            updateCmd.ExecuteNonQuery();
-                        }
-                        return u;
+                        user = GetUserFromReader(reader);
                     }
+                    if (userIsOnline)
+                    {
+                        MySqlCommand updateCmd = new MySqlCommand(
+                            @"UPDATE mysql_Membership SET LastActivityDate = ?LastActivityDate 
+                        WHERE Username = ?Username AND Applicationname = ?Applicationname",
+                            conn);
+                        updateCmd.Parameters.Add("?LastActivityDate", MySqlDbType.Datetime).Value = DateTime.Now;
+                        updateCmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255).Value = username;
+                        updateCmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
+                        updateCmd.ExecuteNonQuery();
+                    }
+                    return user;
                 }
                 catch (MySqlException e)
                 {
@@ -657,58 +657,45 @@ PKID, Username, ApplicationName,
 
         public override MembershipUser GetUser(object providerUserKey, bool userIsOnline)
         {
-            MySqlConnection conn = new MySqlConnection(connectionString);
-            MySqlCommand cmd =
-                new MySqlCommand(
-                    @"SELECT PKID, Username, Email, PasswordQuestion,
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                MySqlCommand cmd = new MySqlCommand(@"SELECT PKID, Username, Email, PasswordQuestion,
                 Comment, IsApproved, IsLockedOut, CreationDate, LastLoginDate,
                 LastActivityDate, LastPasswordChangedDate, LastLockedOutDate
-                FROM mysql_Membership WHERE PKID = ?PKID",
-                    conn);
-            cmd.Parameters.Add("?PKID", MySqlDbType.VarChar).Value = providerUserKey.ToString();
-            MembershipUser u = null;
-            MySqlDataReader reader = null;
-            try
-            {
-                conn.Open();
-                reader = cmd.ExecuteReader();
-                if (reader.HasRows)
+                FROM mysql_Membership WHERE PKID = ?PKID", conn);
+                cmd.Parameters.Add("?PKID", MySqlDbType.VarChar).Value = providerUserKey.ToString();
+
+                try
                 {
-                    reader.Read();
-                    u = GetUserFromReader(reader);
+                    conn.Open();
+                    MembershipUser user;
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (!reader.Read()) return null;
+                        user = GetUserFromReader(reader);
+                    }
+
                     if (userIsOnline)
                     {
                         MySqlCommand updateCmd = new MySqlCommand(
                             @"UPDATE mysql_Membership SET LastActivityDate = ?LastActivityDate
-                            WHERE PKID = ?PKID",
-                            conn);
+                            WHERE PKID = ?PKID", conn);
                         updateCmd.Parameters.Add("?LastActivityDate", MySqlDbType.Datetime).Value = DateTime.Now;
                         updateCmd.Parameters.Add("?PKID", MySqlDbType.VarChar).Value = providerUserKey.ToString();
                         updateCmd.ExecuteNonQuery();
                     }
+                    return user;
                 }
-            }
-            catch (MySqlException e)
-            {
-                if (WriteExceptionsToEventLog)
+                catch (MySqlException e)
                 {
-                    WriteToEventLog(e, "GetUser(Object, Boolean)");
-                    throw new ProviderException(exceptionMessage);
-                }
-                else
-                {
+                    if (WriteExceptionsToEventLog)
+                    {
+                        WriteToEventLog(e, "GetUser(Object, Boolean)");
+                        throw new ProviderException(exceptionMessage);
+                    }
                     throw;
                 }
             }
-            finally
-            {
-                if (!(reader == null))
-                {
-                    reader.Close();
-                }
-                conn.Close();
-            }
-            return u;
         }
 
         private MembershipUser GetUserFromReader(MySqlDataReader reader)
@@ -1141,25 +1128,6 @@ PKID, Username, ApplicationName,
         {
             password = EncodePassword(password, passwordKey, format);
             return password == dbpassword;
-
-            /*            string pass1 = password;
-                        string pass2 = dbpassword;
-                        if (PasswordFormat == MembershipPasswordFormat.Encrypted)
-                        {
-                            pass2 = UnEncodePassword(dbpassword);
-                        }
-                        else if (PasswordFormat == MembershipPasswordFormat.Hashed)
-                        {
-                            pass1 = EncodePassword(password);
-                        }
-                        else
-                        {
-                        }
-                        if (pass1 == pass2)
-                        {
-                            return true;
-                        }
-                        return false;*/
         }
 
         private void GetPasswordInfo(MySqlConnection connection, string username,
