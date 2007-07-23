@@ -759,6 +759,20 @@ namespace MySql.Data.MySqlClient.Tests
         }
 
         [Test]
+        public void NumericAsBinary()
+        {
+            MySqlCommand cmd = new MySqlCommand("SELECT IFNULL(NULL,0) AS MyServerID", conn);
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                reader.Read();
+                Assert.AreEqual("BIGINT", reader.GetDataTypeName(0));
+                Assert.AreEqual(typeof(Int64), reader.GetFieldType(0));
+                Assert.AreEqual("System.Int64", reader.GetValue(0).GetType().FullName);
+                Assert.AreEqual(0, reader.GetValue(0));
+            }
+        }
+
+        [Test]
         public void BinaryTypes()
         {
             execSQL("DROP TABLE IF EXISTS test");
