@@ -102,5 +102,21 @@ namespace MySql.Data.MySqlClient.Tests
             }
         }
 
+        [Test]
+        public void BeginTransactionOnPreviouslyOpenConnection()
+        {
+            string connStr = GetConnectionString(true);
+            MySqlConnection c = new MySqlConnection(connStr);
+            c.Open();
+            c.Close();
+            try
+            {
+                MySqlTransaction t = c.BeginTransaction();
+            }
+            catch (Exception ex)
+            {
+                Assert.AreEqual("The connection is not open.", ex.Message);
+            }
+        }
 	}
 }

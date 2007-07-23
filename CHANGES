@@ -77,6 +77,12 @@ Version 5.0.8
   - Fixed bug where Connecor/Net was hand building some date time patterns rather than using
     the patterns provided under CultureInfo.  This caused problems with some calendars that do
     not support the same ranges as Gregorian.  (Bug #29931)
+  - Fixed problem where MySqlConnection.BeginTransaction checked the drivers
+    status var before checking if the connection was open.  The result was that the
+    driver could report an invalid condition on a previously opened connection.    
+  - Fixed problem where an attempt to open a connection max pool size times while
+    the server is down will prevent any further attempts due to the pool semaphore
+    being full. (Bug #29409)    
     
 Version 5.0.7 5/16/2007
 
