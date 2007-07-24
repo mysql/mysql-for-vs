@@ -54,8 +54,7 @@ namespace MySql.Data.MySqlClient
 		private PreparableStatement statement;
 		private int commandTimeout;
 		private bool canCancel;
-		private bool timedOut;
-        private AutoResetEvent querySent;
+		private bool timedOut, canceled;
         private bool resetSqlSelect;
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ctor1/*'/>
@@ -71,7 +70,6 @@ namespace MySql.Data.MySqlClient
 			commandTimeout = 30;
 			canCancel = false;
 			timedOut = false;
-            querySent = new AutoResetEvent(false);
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ctor2/*'/>
@@ -239,13 +237,17 @@ namespace MySql.Data.MySqlClient
 			if (!connection.driver.Version.isAtLeast(5, 0, 0))
 				throw new NotSupportedException(Resources.CancelNotSupported);
 
-			MySqlConnection c = new MySqlConnection(connection.Settings.GetConnectionString(true));
-			try
+            // if we are not inside ExecuteReader, then cancel will not do
+            // anything
+            if (!canCancel) return;
+
+			using(MySqlConnection c = new MySqlConnection(connection.Settings.GetConnectionString(true)))
 			{
                 c.Open();
                 MySqlCommand cmd = new MySqlCommand(String.Format("KILL QUERY {0}",
                      connection.ServerThread), c);
                 cmd.ExecuteNonQuery();
+                canceled = true;
 			}
 			catch (Exception)
 			{
@@ -327,8 +329,6 @@ namespace MySql.Data.MySqlClient
 		private void TimeoutExpired(object commandObject)
 		{
 			MySqlCommand cmd = (commandObject as MySqlCommand);
-            // wait for the query to be sent
-            querySent.WaitOne();
 
             if (cmd.canCancel)
 			{
@@ -391,33 +391,43 @@ namespace MySql.Data.MySqlClient
 
 			updatedRowCount = -1;
 
+            Timer timer = null;
             try
             {
                 MySqlDataReader reader = new MySqlDataReader(this, statement, behavior);
 
                 // start a threading timer on our command timeout 
                 timedOut = false;
-                Timer t = null;
-                querySent.Reset();
-#if !DEBUG
+                canceled = false;
+
+                // execute the statement
+                statement.Execute();
+
+                // indicate that we can now be canceled
+                canCancel = true;
+
+                // start a timeout timer
                 if (connection.driver.Version.isAtLeast(5, 0, 0) &&
                      commandTimeout > 0)
                 {
                     TimerCallback timerDelegate =
                          new TimerCallback(TimeoutExpired);
-                    t = new Timer(timerDelegate, this, this.CommandTimeout * 1000, Timeout.Infinite);
+                    timer = new Timer(timerDelegate, this, this.CommandTimeout * 1000, Timeout.Infinite);
                 }
-#endif
 
-                // execute the statement
-                statement.Execute();
-                querySent.Set();
-
-                canCancel = true;
+                // wait for data to return
                 reader.NextResult();
-                if (t != null)
-                    t.Dispose();
+                
+                // if we get here, then we have started receiving data and
+                // can't cancel anymore
                 canCancel = false;
+
+                // if we were canceled or timed out and an exception has not 
+                // yet been thrown, then we need to consume the reader and
+                // that will throw the exception
+                if (canceled || timedOut)
+                    reader.Close();
+
                 connection.Reader = reader;
                 return reader;
             }
@@ -434,8 +444,9 @@ namespace MySql.Data.MySqlClient
             }
             finally
             {
-                querySent.Reset();
                 canCancel = false;
+                if (timer != null)
+                    timer.Dispose();
             }
 		}
 

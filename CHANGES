@@ -83,6 +83,10 @@ Version 5.0.8
   - Fixed problem where an attempt to open a connection max pool size times while
     the server is down will prevent any further attempts due to the pool semaphore
     being full. (Bug #29409)    
+  - Fixed some serious issues with command timeout and cancel that could present
+    as exceptions about thread ownership.  The issue was that not all queries 
+    cancel the same.  Some produce resultsets while others don't.  ExecuteReader
+    had to be changed to check for this.
     
 Version 5.0.7 5/16/2007
 
