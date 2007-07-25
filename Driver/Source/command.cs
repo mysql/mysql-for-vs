@@ -249,15 +249,6 @@ namespace MySql.Data.MySqlClient
                 cmd.ExecuteNonQuery();
                 canceled = true;
 			}
-			catch (Exception)
-			{
-				throw;
-			}
-			finally
-			{
-				if (c != null)
-					c.Close();
-			}
 		}
 
 		/// <summary>
