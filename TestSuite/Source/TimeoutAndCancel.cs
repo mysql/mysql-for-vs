@@ -178,10 +178,11 @@ namespace MySql.Data.MySqlClient.Tests
             }
         }
 
-        [Category("5.0")]
         [Test]
         public void TimeoutDuringBatch()
         {
+            if (version < new Version(5, 0)) return;
+
             execSQL(@"CREATE PROCEDURE spTest(duration INT) 
                 BEGIN 
                     SELECT SLEEP(duration);
