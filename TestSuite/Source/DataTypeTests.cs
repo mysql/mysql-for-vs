@@ -826,5 +826,18 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.IsTrue(dt.Columns[1].DataType == typeof(System.Byte[]));
             }
         }
+
+        [Test]
+        public void BooleanForBit1()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test (id INT, `on` BIT(1))");
+            execSQL("INSERT INTO test VALUES (1,1), (2,0)");
+
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            Assert.AreEqual(typeof(Boolean), dt.Columns[1].DataType);
+        }
 	}
 }
