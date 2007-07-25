@@ -39,7 +39,7 @@ namespace MySql.Web.Security.Tests
         [SetUp]
         public void SetUp()
         {
-            execSQL("TRUNCATE TABLE mysql_Membership");
+            execSQL("DROP TABLE IF EXISTS mysql_membership");
         }
 
         private void CreateUserWithFormat(MembershipPasswordFormat format)
@@ -63,7 +63,7 @@ namespace MySql.Web.Security.Tests
             Assert.AreEqual(format, rowFormat);
 
             //  then attempt to verify the user
-            provider.ValidateUser("foo", "bar");
+            Assert.IsTrue(provider.ValidateUser("foo", "bar"));
         }
 
         [Test]

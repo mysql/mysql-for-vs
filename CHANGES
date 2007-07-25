@@ -16,7 +16,8 @@ Version 5.1.3 -
   - Help is now integrated into Visual Studio 2005 and includes content other than the API 
   - Fixed problem reported by user where MySqlMembershipProvider.GetUser was attempting to 
     reuse the connection to update a table while a reader was open on it.    
-    
+  - Fixed problem with membership schema where the password key column was not large enough  
+
 Version 5.1.2 - 6/12/2007
   - Fixed integration with the Website Administration Tool.  Before this fix, the test link
     was visible but did not work and  user management did not work.

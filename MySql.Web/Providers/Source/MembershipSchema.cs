@@ -105,7 +105,7 @@ namespace MySql.Web.Security
 
         private const string schema2 =
             @"ALTER TABLE mysql_Membership 
-            ADD PasswordKey char(16) AFTER Password, 
+            ADD PasswordKey char(32) AFTER Password, 
             ADD PasswordFormat tinyint AFTER PasswordKey, 
             CHANGE email email VARCHAR(128), COMMENT='2'";
 
