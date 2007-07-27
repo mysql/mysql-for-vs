@@ -27,6 +27,8 @@ using System.Reflection;
 using System.Text;
 using MySql.Data.Common;
 using MySql.Data.Types;
+using System.Collections.Specialized;
+using System.Collections;
 
 namespace MySql.Data.MySqlClient
 {
@@ -316,21 +318,25 @@ namespace MySql.Data.MySqlClient
             return dt;
         }
 
-        public virtual DataTable GetForeignKeys(string[] restrictions)
+        public virtual DataTable GetForeignKeys(string[] restrictions, bool includeColumns)
         {
             DataTable dt = new DataTable("Foreign Keys");
             dt.Columns.Add("CONSTRAINT_CATALOG", typeof (string));
             dt.Columns.Add("CONSTRAINT_SCHEMA", typeof (string));
             dt.Columns.Add("CONSTRAINT_NAME", typeof (string));
-            dt.Columns.Add("TABLE_CATALOG", typeof (string));
+            dt.Columns.Add("TABLE_CATALOG", typeof(string));
             dt.Columns.Add("TABLE_SCHEMA", typeof (string));
             dt.Columns.Add("TABLE_NAME", typeof (string));
-            dt.Columns.Add("COLUMN_NAME", typeof (string));
-            dt.Columns.Add("ORDINAL_POSITION", typeof (int));
+            if (includeColumns)
+            {
+                dt.Columns.Add("COLUMN_NAME", typeof(string));
+                dt.Columns.Add("ORDINAL_POSITION", typeof(int));
+            }
             dt.Columns.Add("REFERENCED_TABLE_CATALOG", typeof (string));
             dt.Columns.Add("REFERENCED_TABLE_SCHEMA", typeof (string));
             dt.Columns.Add("REFERENCED_TABLE_NAME", typeof (string));
-            dt.Columns.Add("REFERENCED_COLUMN_NAME", typeof (string));
+            if (includeColumns)
+                dt.Columns.Add("REFERENCED_COLUMN_NAME", typeof(string));
 
             // first we use our restrictions to get a list of tables that should be
             // consulted.  We save the keyname restriction since GetTables doesn't 
@@ -347,7 +353,7 @@ namespace MySql.Data.MySqlClient
             // now for each table retrieved, we call our helper function to
             // parse it's foreign keys
             foreach (DataRow table in tables.Rows)
-                GetForeignKeysOnTable(dt, table, keyName);
+                GetForeignKeysOnTable(dt, table, keyName, includeColumns);
 
             return dt;
         }
@@ -357,6 +363,8 @@ namespace MySql.Data.MySqlClient
             MySqlCommand cmd = new MySqlCommand("SELECT @@SQL_MODE", connection);
             return cmd.ExecuteScalar().ToString();
         }
+
+        #region Foreign Key routines
 
         /// <summary>
         /// GetForeignKeysOnTable retrieves the foreign keys on the given table.
@@ -369,7 +377,7 @@ namespace MySql.Data.MySqlClient
         /// <param name="tableToParse">The table to get the foeign key info for.</param>
         /// <param name="filterName">Only get foreign keys that match this name.</param>
         private void GetForeignKeysOnTable(DataTable fkTable, DataRow tableToParse,
-                                           string filterName)
+                                           string filterName, bool includeColumns)
         {
             string sqlMode = GetSqlMode();
             bool ansiQuotes = sqlMode.IndexOf("ANSI_QUOTES") != -1;
@@ -381,99 +389,108 @@ namespace MySql.Data.MySqlClient
 
             string sql = string.Format("SHOW CREATE TABLE `{0}`.`{1}`",
                                        tableToParse["TABLE_SCHEMA"], tableToParse["TABLE_NAME"]);
+            string lowerBody = null, body = null;
             MySqlCommand cmd = new MySqlCommand(sql, connection);
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {
                 reader.Read();
-                string body = reader.GetString(1);
+                body = reader.GetString(1);
+                lowerBody = body.ToLower(CultureInfo.InvariantCulture);
+            }
 
-                string lowerBody = body.ToLower(CultureInfo.InvariantCulture);
-                ContextString cs = new ContextString(quotePattern, !noBackslash);
-                int index = cs.IndexOf(lowerBody, "constraint");
+            SqlTokenizer tokenizer = new SqlTokenizer(lowerBody);
+            tokenizer.AnsiQuotes = sqlMode.IndexOf("ANSI_QUOTES") != -1;
+            tokenizer.BackslashEscapes = sqlMode.IndexOf("NO_BACKSLASH_ESCAPES") != -1;
+            
+            while (true)
+            {
+                string token = tokenizer.NextToken();
+                // look for a starting contraint
+                while (token != null && (token != "constraint" || tokenizer.Quoted))
+                    token = tokenizer.NextToken();
+                if (token == null) break;
 
-                while (index != -1)
-                {
-                    index += 11;
-                    int fkIndex = cs.IndexOf(lowerBody, "foreign key", index);
-                    if (fkIndex != -1)
-                    {
-                        string cName = body.Substring(index + 1, fkIndex - 3 - index);
-                        index = fkIndex;
-                        if (filterName == null ||
-                            cName.ToLower(CultureInfo.InvariantCulture) == filterName)
-                        {
-                            int endOfFkArray = cs.IndexOf(lowerBody, ")", index);
-                            if (endOfFkArray == -1)
-                                throw new MySqlException(Resources.UnableToParseFK);
-                            index += 13;
-                            string fkArray = body.Substring(index, endOfFkArray - index);
-
-                            int references = cs.IndexOf(lowerBody, "references", endOfFkArray);
-                            if (references == -1)
-                                throw new MySqlException(Resources.UnableToParseFK);
-                            references += 11;
-                            int startOfRefArray = cs.IndexOf(lowerBody, "(", references);
-                            if (startOfRefArray == -1)
-                                throw new MySqlException(Resources.UnableToParseFK);
-                            string refTable = body.Substring(references, startOfRefArray - references - 1);
-
-                            int endOfRefArray = cs.IndexOf(lowerBody, ")", startOfRefArray);
-                            if (endOfRefArray == -1)
-                                throw new MySqlException(Resources.UnableToParseFK);
-                            string refArray = body.Substring(startOfRefArray + 1,
-                                                             endOfRefArray - startOfRefArray - 1);
-
-                            ParseFkColumns(fkTable, tableToParse, cName, refTable, cs, fkArray, refArray);
-                            index = endOfRefArray;
-                        }
-                    }
-                    index = cs.IndexOf(lowerBody, "constraint", index);
-                }
+                ParseConstraint(fkTable, tableToParse, tokenizer, includeColumns);
             }
         }
 
-        private static void ParseFkColumns(DataTable fkTable, DataRow table, string cName,
-                                           string refTable, ContextString cs, string fkArray, string refArray)
+        private void ParseConstraint(DataTable fkTable, DataRow table, 
+            SqlTokenizer tokenizer, bool includeColumns)
         {
-            string[] fkColumns = fkArray.Split(new char[] {','});
-            string[] refColumns = refArray.Split(new char[] {','});
+            string name = tokenizer.NextToken();
+            DataRow row = fkTable.NewRow();
 
-            string refSchema = table["TABLE_SCHEMA"].ToString();
-            int index = cs.IndexOf(refTable, ".");
-            if (index != -1)
+            // make sure this constraint is a FK
+            string token = tokenizer.NextToken();
+            if (token != "foreign" || tokenizer.Quoted)
+                return;
+            tokenizer.NextToken(); // read off the 'KEY' symbol
+            tokenizer.NextToken(); // read off the '(' symbol
+
+            row["CONSTRAINT_CATALOG"] = table["TABLE_CATALOG"];
+            row["CONSTRAINT_SCHEMA"] = table["TABLE_SCHEMA"];
+            row["TABLE_CATALOG"] = table["TABLE_CATALOG"];
+            row["TABLE_SCHEMA"] = table["TABLE_SCHEMA"];
+            row["TABLE_NAME"] = table["TABLE_NAME"];
+            row["REFERENCED_TABLE_CATALOG"] = null;
+            row["CONSTRAINT_NAME"] = name;
+
+            ArrayList srcColumns = includeColumns ? ParseColumns(tokenizer) : null;
+
+            // now look for the references section
+            while (token != "references" || tokenizer.Quoted)
+                token = tokenizer.NextToken();
+            string target1 = tokenizer.NextToken();
+            string target2 = tokenizer.NextToken();
+            if (target2.StartsWith("."))
             {
-                refSchema = refTable.Substring(1, index - 3);
-                refTable = refTable.Substring(index + 2, refTable.Length - index - 3);
+                row["REFERENCED_TABLE_SCHEMA"] = target1;
+                row["REFERENCED_TABLE_NAME"] = target2.Substring(1);
+                tokenizer.NextToken();  // read off the '('
             }
             else
-                refTable = CleanSymbol(refTable);
-
-            int pos = 0;
-            foreach (string fkColumn in fkColumns)
             {
-                DataRow row = fkTable.NewRow();
-                row["CONSTRAINT_CATALOG"] = table["TABLE_CATALOG"];
-                row["CONSTRAINT_SCHEMA"] = table["TABLE_SCHEMA"];
-                row["CONSTRAINT_NAME"] = cName;
-                row["TABLE_CATALOG"] = table["TABLE_CATALOG"];
-                row["TABLE_SCHEMA"] = table["TABLE_SCHEMA"];
-                row["TABLE_NAME"] = table["TABLE_NAME"];
-                row["COLUMN_NAME"] = CleanSymbol(fkColumn.Trim());
-                row["ORDINAL_POSITION"] = pos;
-                row["REFERENCED_TABLE_CATALOG"] = null;
-                row["REFERENCED_TABLE_SCHEMA"] = refSchema;
-                row["REFERENCED_TABLE_NAME"] = refTable;
-                row["REFERENCED_COLUMN_NAME"] = CleanSymbol(refColumns[pos++].Trim());
+                row["REFERENCED_TABLE_SCHEMA"] = table["TABLE_SCHEMA"];
+                row["REFERENCED_TABLE_NAME"] = target1;
+            }
+
+            // if we are supposed to include columns, read the target columns
+            ArrayList targetColumns = includeColumns ? ParseColumns(tokenizer) : null;
+
+            if (includeColumns)
+                ProcessColumns(fkTable, row, srcColumns, targetColumns);
+            else
                 fkTable.Rows.Add(row);
+        }
+
+        private ArrayList ParseColumns(SqlTokenizer tokenizer)
+        {
+            ArrayList sc = new ArrayList();
+            string token = tokenizer.NextToken();
+            while (token != ")")
+            {
+                if (token != ",")
+                    sc.Add(token);
+                token = tokenizer.NextToken();
+            }
+            return sc;
+        }
+
+        private void ProcessColumns(DataTable fkTable, DataRow row,
+            ArrayList srcColumns, ArrayList targetColumns)
+        {
+            for (int i = 0; i < srcColumns.Count; i++)
+            {
+                DataRow newRow = fkTable.NewRow();
+                newRow.ItemArray = row.ItemArray;
+                newRow["COLUMN_NAME"] = (string)srcColumns[i];
+                newRow["ORDINAL_POSITION"] = i;
+                newRow["REFERENCED_COLUMN_NAME"] = (string)targetColumns[i];
+                fkTable.Rows.Add(newRow);
             }
         }
 
-        private static string CleanSymbol(string sym)
-        {
-            sym = sym.Remove(0, 1);
-            sym = sym.Remove(sym.Length - 1, 1);
-            return sym;
-        }
+        #endregion
 
         public virtual DataTable GetUsers(string[] restrictions)
         {
@@ -648,7 +665,11 @@ namespace MySql.Data.MySqlClient
                     new object[] {"Foreign Keys", "Database", "", 0},
                     new object[] {"Foreign Keys", "Schema", "", 1},
                     new object[] {"Foreign Keys", "Table", "", 2},
-                    new object[] {"Foreign Keys", "Name", "", 3}
+                    new object[] {"Foreign Keys", "Constraint Name", "", 3},
+                    new object[] {"Foreign Key Columns", "Catalog", "", 0},
+                    new object[] {"Foreign Key Columns", "Schema", "", 1},
+                    new object[] {"Foreign Key Columns", "Table", "", 2},
+                    new object[] {"Foreign Key Columns", "Constraint Name", "", 3},
                 };
 
             DataTable dt = new DataTable("Restrictions");
@@ -801,7 +822,9 @@ namespace MySql.Data.MySqlClient
                 case "indexcolumns":
                     return GetIndexColumns(restrictions);
                 case "foreign keys":
-                    return GetForeignKeys(restrictions);
+                    return GetForeignKeys(restrictions, false);
+                case "foreign key columns":
+                    return GetForeignKeys(restrictions, true);
             }
             return null;
         }

@@ -40,6 +40,23 @@ namespace MySql.Data.MySqlClient.Tests
 			Close();
 		}
 
+        protected override void Setup()
+        {
+            base.Setup();
+            execSQL("DROP TABLE IF EXISTS child");
+            execSQL("DROP TABLE IF EXISTS parent1");
+            execSQL("DROP TABLE IF EXISTS parent2");
+        }
+
+        [TearDown]
+        protected override void Teardown()
+        {
+            base.Teardown();
+            execSQL("DROP TABLE IF EXISTS child");
+            execSQL("DROP TABLE IF EXISTS parent1");
+            execSQL("DROP TABLE IF EXISTS parent2");
+        }
+
         [Test]
         public void Collections()
         {
@@ -174,22 +191,20 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void Tables()
         {
-            execSQL("DROP TABLE IF EXISTS test1");
-            execSQL("CREATE TABLE test1 (id int)");
+            execSQL("CREATE TABLE test (id int)");
 
             string[] restrictions = new string[4];
             restrictions[1] = databases[0];
-            restrictions[2] = "test1";
+            restrictions[2] = "test";
             DataTable dt = conn.GetSchema("Tables", restrictions);
             Assert.IsTrue(dt.Rows.Count == 1);
             Assert.AreEqual("Tables", dt.TableName);
-            Assert.AreEqual("test1", dt.Rows[0][2]);
+            Assert.AreEqual("test", dt.Rows[0][2]);
         }
 
         [Test]
         public void Columns()
         {
-            execSQL("DROP TABLE IF EXISTS test");
             execSQL("CREATE TABLE test (col1 int, col2 decimal(20,5), " +
                 "col3 varchar(50) character set utf8, col4 tinyint unsigned)");
 
@@ -238,7 +253,6 @@ namespace MySql.Data.MySqlClient.Tests
         {
             if (version < new Version(5, 0)) return;
 
-            execSQL("DROP PROCEDURE IF EXISTS spTest");
             execSQL("CREATE PROCEDURE spTest (id int) BEGIN SELECT 1; END");
 
             string[] restrictions = new string[4];
@@ -255,7 +269,6 @@ namespace MySql.Data.MySqlClient.Tests
         {
             if (version < new Version(5, 0)) return;
 
-            execSQL("DROP FUNCTION IF EXISTS spFunc");
             execSQL("CREATE FUNCTION spFunc (id int) RETURNS INT BEGIN RETURN 1; END");
 
             string[] restrictions = new string[4];
@@ -272,7 +285,6 @@ namespace MySql.Data.MySqlClient.Tests
         {
             if (version < new Version(5, 0)) return;
 
-            execSQL("DROP TABLE IF EXISTS test");
             execSQL("CREATE TABLE test (id int, PRIMARY KEY(id))");
             string[] restrictions = new string[4];
             restrictions[2] = "test";
@@ -309,7 +321,6 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void IndexColumns()
         {
-            execSQL("DROP TABLE IF EXISTS test");
             execSQL("CREATE TABLE test (id int, PRIMARY KEY(id))");
             string[] restrictions = new string[5];
             restrictions[2] = "test";
@@ -337,16 +348,15 @@ namespace MySql.Data.MySqlClient.Tests
         {
             if (version < new Version(5, 0)) return;
 
-            execSQL("DROP VIEW IF EXISTS vw");
-            execSQL("CREATE VIEW vw AS SELECT Now() as theTime");
+            execSQL("CREATE VIEW view1 AS SELECT Now() as theTime");
 
             string[] restrictions = new string[4];
             restrictions[1] = databases[0];
-            restrictions[2] = "vw";
+            restrictions[2] = "view1";
             DataTable dt = conn.GetSchema("Views", restrictions);
             Assert.IsTrue(dt.Rows.Count == 1);
             Assert.AreEqual("Views", dt.TableName);
-            Assert.AreEqual("vw", dt.Rows[0]["TABLE_NAME"]);
+            Assert.AreEqual("view1", dt.Rows[0]["TABLE_NAME"]);
         }
 
         [Test]
@@ -354,17 +364,16 @@ namespace MySql.Data.MySqlClient.Tests
         {
             if (version < new Version(5, 0)) return;
 
-            execSQL("DROP VIEW IF EXISTS vw");
-            execSQL("CREATE VIEW vw AS SELECT Now() as theTime");
+            execSQL("CREATE VIEW view1 AS SELECT Now() as theTime");
 
             string[] restrictions = new string[4];
             restrictions[1] = databases[0];
-            restrictions[2] = "vw";
+            restrictions[2] = "view1";
             DataTable dt = conn.GetSchema("ViewColumns", restrictions);
             Assert.IsTrue(dt.Rows.Count == 1);
             Assert.AreEqual("ViewColumns", dt.TableName);
             Assert.AreEqual(databases[0].ToLower(), dt.Rows[0]["VIEW_SCHEMA"].ToString().ToLower());
-            Assert.AreEqual("vw", dt.Rows[0]["VIEW_NAME"]);
+            Assert.AreEqual("view1", dt.Rows[0]["VIEW_NAME"]);
             Assert.AreEqual("theTime", dt.Rows[0]["COLUMN_NAME"]);
         }
 
@@ -373,7 +382,6 @@ namespace MySql.Data.MySqlClient.Tests
         {
             if (version < new Version(5, 0)) return;
 
-            execSQL("DROP PROCEDURE IF EXISTS spTest");
             execSQL("CREATE PROCEDURE spTest(id int, IN id2 INT(11), " +
                 "INOUT io1 VARCHAR(20), OUT out1 FLOAT) BEGIN END");
             string[] restrictions = new string[4];
@@ -434,11 +442,9 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void SingleForeignKey()
         {
-            execSQL("DROP TABLE IF EXISTS child");
-            execSQL("DROP TABLE IF EXISTS parent");
-            execSQL("CREATE TABLE parent (id INT NOT NULL, PRIMARY KEY (id)) TYPE=INNODB");
-            execSQL("CREATE TABLE child (id INT, parent_id INT, INDEX par_ind (parent_id), " +
-                "CONSTRAINT c1 FOREIGN KEY (parent_id) REFERENCES parent(id) ON DELETE CASCADE) TYPE=INNODB");
+            execSQL("CREATE TABLE parent1 (id INT NOT NULL, PRIMARY KEY (id)) TYPE=INNODB");
+            execSQL(@"CREATE TABLE child (id INT, parent_id INT, INDEX par_ind (parent_id), 
+                CONSTRAINT fk1 FOREIGN KEY (parent_id) REFERENCES parent1(id) ON DELETE CASCADE) TYPE=INNODB");
             string[] restrictions = new string[4];
             restrictions[0] = null;
             restrictions[1] = databases[0];
@@ -448,14 +454,25 @@ namespace MySql.Data.MySqlClient.Tests
             DataRow row = dt.Rows[0];
             Assert.AreEqual(DBNull.Value, row["CONSTRAINT_CATALOG"]);
             Assert.AreEqual(databases[0].ToLower(), row["CONSTRAINT_SCHEMA"].ToString().ToLower());
-            Assert.AreEqual("c1", row["CONSTRAINT_NAME"]);
-            Assert.AreEqual(DBNull.Value, row["TABLE_CATALOG"]);
+            Assert.AreEqual("fk1", row["CONSTRAINT_NAME"]);
             Assert.AreEqual(databases[0].ToLower(), row["TABLE_SCHEMA"].ToString().ToLower());
             Assert.AreEqual("child", row["TABLE_NAME"]);
+            Assert.AreEqual(databases[0].ToLower(), row["REFERENCED_TABLE_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual("parent1", row["REFERENCED_TABLE_NAME"]);
+
+            // now check that columns are coming back
+            dt = conn.GetSchema("Foreign Key Columns", restrictions);
+            Assert.AreEqual(1, dt.Rows.Count);
+            row = dt.Rows[0];
+            Assert.AreEqual(DBNull.Value, row["CONSTRAINT_CATALOG"]);
+            Assert.AreEqual(databases[0].ToLower(), row["CONSTRAINT_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual("fk1", row["CONSTRAINT_NAME"]);
+            Assert.AreEqual(databases[0].ToLower(), row["TABLE_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual("child", row["TABLE_NAME"]);
+            Assert.AreEqual(databases[0].ToLower(), row["REFERENCED_TABLE_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual("parent1", row["REFERENCED_TABLE_NAME"]);
             Assert.AreEqual("parent_id", row["COLUMN_NAME"]);
             Assert.AreEqual(0, row["ORDINAL_POSITION"]);
-            Assert.AreEqual(databases[0].ToLower(), row["REFERENCED_TABLE_SCHEMA"].ToString().ToLower());
-            Assert.AreEqual("parent", row["REFERENCED_TABLE_NAME"]);
             Assert.AreEqual("id", row["REFERENCED_COLUMN_NAME"]);
         }
 
@@ -465,20 +482,17 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void ForeignKeys()
         {
-            execSQL("DROP TABLE IF EXISTS product_order");
-            execSQL("DROP TABLE IF EXISTS product");
-            execSQL("DROP TABLE IF EXISTS customer");
-            execSQL("CREATE TABLE product (category INT NOT NULL, id INT NOT NULL, " +
+            execSQL("CREATE TABLE parent1 (category INT NOT NULL, id INT NOT NULL, " +
                       "price DECIMAL, PRIMARY KEY(category, id)) TYPE=INNODB");
-            execSQL("CREATE TABLE customer (id INT NOT NULL, PRIMARY KEY (id)) TYPE=INNODB");
-            execSQL("CREATE TABLE product_order (no INT NOT NULL AUTO_INCREMENT, " +
+            execSQL("CREATE TABLE parent2 (id INT NOT NULL, PRIMARY KEY (id)) TYPE=INNODB");
+            execSQL("CREATE TABLE child (no INT NOT NULL AUTO_INCREMENT, " +
                 "product_category INT NOT NULL, product_id INT NOT NULL, customer_id INT NOT NULL, " +
                 "PRIMARY KEY(no), INDEX (product_category, product_id), " +
-                "FOREIGN KEY (product_category, product_id) REFERENCES product(category, id) " +
+                "FOREIGN KEY (product_category, product_id) REFERENCES parent1(category, id) " +
                 "ON UPDATE CASCADE ON DELETE RESTRICT, INDEX (customer_id), " +
-                "FOREIGN KEY (customer_id) REFERENCES customer(id)) TYPE=INNODB");
+                "FOREIGN KEY (customer_id) REFERENCES parent2(id)) TYPE=INNODB");
 
-            try 
+            try
             {
                 DataTable dt = conn.GetSchema("Foreign Keys");
             }
@@ -491,62 +505,78 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void MultiSingleForeignKey()
         {
-            execSQL("DROP TABLE IF EXISTS product_order");
-            execSQL("DROP TABLE IF EXISTS product");
-            execSQL("DROP TABLE IF EXISTS customer");
-            execSQL("CREATE TABLE product (category INT NOT NULL, id INT NOT NULL, " +
+            execSQL("CREATE TABLE parent1 (category INT NOT NULL, id INT NOT NULL, " +
                       "price DECIMAL, PRIMARY KEY(category, id)) TYPE=INNODB");
-            execSQL("CREATE TABLE customer (id INT NOT NULL, PRIMARY KEY (id)) TYPE=INNODB");
-            execSQL("CREATE TABLE product_order (no INT NOT NULL AUTO_INCREMENT, " +
+            execSQL("CREATE TABLE parent2 (id INT NOT NULL, PRIMARY KEY (id)) TYPE=INNODB");
+            execSQL("CREATE TABLE child (no INT NOT NULL AUTO_INCREMENT, " +
                 "product_category INT NOT NULL, product_id INT NOT NULL, customer_id INT NOT NULL, " +
                 "PRIMARY KEY(no), INDEX (product_category, product_id), " +
-                "FOREIGN KEY (product_category, product_id) REFERENCES product(category, id) " +
+                "CONSTRAINT fk1 FOREIGN KEY (product_category, product_id) REFERENCES parent1(category, id) " +
                 "ON UPDATE CASCADE ON DELETE RESTRICT, INDEX (customer_id), " +
-                "FOREIGN KEY (customer_id) REFERENCES customer(id)) TYPE=INNODB");
+                "CONSTRAINT fk2 FOREIGN KEY (customer_id) REFERENCES parent2(id)) TYPE=INNODB");
 
             string[] restrictions = new string[4];
             restrictions[0] = null;
             restrictions[1] = databases[0];
-            restrictions[2] = "product_order";
+            restrictions[2] = "child";
             DataTable dt = conn.GetSchema("Foreign Keys", restrictions);
-            Assert.AreEqual(3, dt.Rows.Count);
+            Assert.AreEqual(2, dt.Rows.Count);
             DataRow row = dt.Rows[0];
             Assert.AreEqual(DBNull.Value, row["CONSTRAINT_CATALOG"]);
             Assert.AreEqual(databases[0].ToLower(), row["CONSTRAINT_SCHEMA"].ToString().ToLower());
-            Assert.AreEqual("product_order_ibfk_1", row["CONSTRAINT_NAME"]);
-            Assert.AreEqual(DBNull.Value, row["TABLE_CATALOG"]);
+            Assert.AreEqual("fk1", row["CONSTRAINT_NAME"]);
             Assert.AreEqual(databases[0].ToLower(), row["TABLE_SCHEMA"].ToString().ToLower());
-            Assert.AreEqual("product_order", row["TABLE_NAME"]);
-            Assert.AreEqual("product_category", row["COLUMN_NAME"]);
-            Assert.AreEqual(0, row["ORDINAL_POSITION"]);
+            Assert.AreEqual("child", row["TABLE_NAME"]);
             Assert.AreEqual(databases[0].ToLower(), row["REFERENCED_TABLE_SCHEMA"].ToString().ToLower());
-            Assert.AreEqual("product", row["REFERENCED_TABLE_NAME"]);
-            Assert.AreEqual("category", row["REFERENCED_COLUMN_NAME"]);
+            Assert.AreEqual("parent1", row["REFERENCED_TABLE_NAME"]);
 
             row = dt.Rows[1];
             Assert.AreEqual(DBNull.Value, row["CONSTRAINT_CATALOG"]);
             Assert.AreEqual(databases[0].ToLower(), row["CONSTRAINT_SCHEMA"].ToString().ToLower());
-            Assert.AreEqual("product_order_ibfk_1", row["CONSTRAINT_NAME"]);
-            Assert.AreEqual(DBNull.Value, row["TABLE_CATALOG"]);
+            Assert.AreEqual("fk2", row["CONSTRAINT_NAME"]);
             Assert.AreEqual(databases[0].ToLower(), row["TABLE_SCHEMA"].ToString().ToLower());
-            Assert.AreEqual("product_order", row["TABLE_NAME"]);
+            Assert.AreEqual("child", row["TABLE_NAME"]);
+            Assert.AreEqual(databases[0].ToLower(), row["REFERENCED_TABLE_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual("parent2", row["REFERENCED_TABLE_NAME"]);
+
+            dt = conn.GetSchema("Foreign Key Columns", restrictions);
+            Assert.AreEqual(3, dt.Rows.Count);
+            row = dt.Rows[0];
+            Assert.AreEqual(DBNull.Value, row["CONSTRAINT_CATALOG"]);
+            Assert.AreEqual(databases[0].ToLower(), row["CONSTRAINT_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual("fk1", row["CONSTRAINT_NAME"]);
+            Assert.AreEqual(databases[0].ToLower(), row["TABLE_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual("child", row["TABLE_NAME"]);
+            Assert.AreEqual(databases[0].ToLower(), row["REFERENCED_TABLE_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual("parent1", row["REFERENCED_TABLE_NAME"]);
+            Assert.AreEqual("product_category", row["COLUMN_NAME"]);
+            Assert.AreEqual(0, row["ORDINAL_POSITION"]);
+            Assert.AreEqual("category", row["REFERENCED_COLUMN_NAME"]);
+
+            // check #2
+            row = dt.Rows[1];
+            Assert.AreEqual(DBNull.Value, row["CONSTRAINT_CATALOG"]);
+            Assert.AreEqual(databases[0].ToLower(), row["CONSTRAINT_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual("fk1", row["CONSTRAINT_NAME"]);
+            Assert.AreEqual(databases[0].ToLower(), row["TABLE_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual("child", row["TABLE_NAME"]);
+            Assert.AreEqual(databases[0].ToLower(), row["REFERENCED_TABLE_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual("parent1", row["REFERENCED_TABLE_NAME"]);
             Assert.AreEqual("product_id", row["COLUMN_NAME"]);
             Assert.AreEqual(1, row["ORDINAL_POSITION"]);
-            Assert.AreEqual(databases[0].ToLower(), row["REFERENCED_TABLE_SCHEMA"].ToString().ToLower());
-            Assert.AreEqual("product", row["REFERENCED_TABLE_NAME"]);
             Assert.AreEqual("id", row["REFERENCED_COLUMN_NAME"]);
 
+            // check #3
             row = dt.Rows[2];
             Assert.AreEqual(DBNull.Value, row["CONSTRAINT_CATALOG"]);
             Assert.AreEqual(databases[0].ToLower(), row["CONSTRAINT_SCHEMA"].ToString().ToLower());
-            Assert.AreEqual("product_order_ibfk_2", row["CONSTRAINT_NAME"]);
-            Assert.AreEqual(DBNull.Value, row["TABLE_CATALOG"]);
+            Assert.AreEqual("fk2", row["CONSTRAINT_NAME"]);
             Assert.AreEqual(databases[0].ToLower(), row["TABLE_SCHEMA"].ToString().ToLower());
-            Assert.AreEqual("product_order", row["TABLE_NAME"]);
+            Assert.AreEqual("child", row["TABLE_NAME"]);
+            Assert.AreEqual(databases[0].ToLower(), row["REFERENCED_TABLE_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual("parent2", row["REFERENCED_TABLE_NAME"]);
             Assert.AreEqual("customer_id", row["COLUMN_NAME"]);
             Assert.AreEqual(0, row["ORDINAL_POSITION"]);
-            Assert.AreEqual(databases[0].ToLower(), row["REFERENCED_TABLE_SCHEMA"].ToString().ToLower());
-            Assert.AreEqual("customer", row["REFERENCED_TABLE_NAME"]);
             Assert.AreEqual("id", row["REFERENCED_COLUMN_NAME"]);
         }
 
@@ -592,17 +622,16 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void UsingQuotedRestrictions()
         {
-            execSQL("DROP TABLE IF EXISTS test1");
-            execSQL("CREATE TABLE test1 (id int)");
+            execSQL("CREATE TABLE test (id int)");
 
             string[] restrictions = new string[4];
             restrictions[1] = databases[0];
-            restrictions[2] = "`test1`";
+            restrictions[2] = "`test`";
             DataTable dt = conn.GetSchema("Tables", restrictions);
             Assert.IsTrue(dt.Rows.Count == 1);
             Assert.AreEqual("Tables", dt.TableName);
-            Assert.AreEqual("test1", dt.Rows[0][2]);
-            Assert.AreEqual("`test1`", restrictions[2]);
+            Assert.AreEqual("test", dt.Rows[0][2]);
+            Assert.AreEqual("`test`", restrictions[2]);
         }
 
         [Test]

@@ -18,6 +18,8 @@ Version 5.1.3 -
     reuse the connection to update a table while a reader was open on it.    
   - Fixed problem with membership schema where the password key column was not large enough  
   - Added feature where bit columns that have the value 0 or 1 are returned as bool
+  - Added Foreign Key Columns metadata collection
+  - Reworked how foreign key metadata is collected to make it more robust and faster
 
 Version 5.1.2 - 6/12/2007
   - Fixed integration with the Website Administration Tool.  Before this fix, the test link

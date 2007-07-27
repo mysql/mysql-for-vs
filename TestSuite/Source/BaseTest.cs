@@ -206,8 +206,10 @@ namespace MySql.Data.MySqlClient.Tests
         [TearDown]
         protected virtual void Teardown()
         {
+            execSQL("DROP TABLE IF EXISTS test");
             if (Version >= new Version(5, 0))
             {
+                execSQL("DROP VIEW IF EXISTS view1");
                 execSQL("DROP PROCEDURE IF EXISTS spTest");
                 execSQL("DROP FUNCTION IF EXISTS fnTest");
             }
