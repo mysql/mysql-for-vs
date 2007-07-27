@@ -20,6 +20,8 @@ Version 5.1.3 -
   - Added feature where bit columns that have the value 0 or 1 are returned as bool
   - Added Foreign Key Columns metadata collection
   - Reworked how foreign key metadata is collected to make it more robust and faster
+  - Changed DDEX provider to use the core providers schema routines for 
+    foreign keys and foreign key columns
 
 Version 5.1.2 - 6/12/2007
   - Fixed integration with the Website Administration Tool.  Before this fix, the test link

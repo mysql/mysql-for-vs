@@ -801,7 +801,9 @@ VSDataObjectSupport.xsd">
         </Property>
       </Properties>
       <Actions>
-        <Action name="Enumerate" guid="61CC0372-384D-42e5-9707-6D7C8DC5287A" handler="MySql.Data.VisualStudio.MySqlDataObjectEnumerator" />
+        <Action name="Enumerate" guid="61CC0372-384D-42e5-9707-6D7C8DC5287A" handler="Microsoft.VisualStudio.Data.AdoDotNet.AdoDotNetObjectEnumerator">
+          <Parameter value="Foreign Keys"/>
+        </Action>
       </Actions>
     </Type>
 
@@ -850,7 +852,6 @@ VSDataObjectSupport.xsd">
             </Concept>
           </Concepts>
         </Property>
-        <Property name="PositionInKey" type="System.Int64" itemName="POSITION_IN_UNIQUE_CONSTRAINT"/>
         <Property name="ReferencedColumnName" type="System.String" itemName="REFERENCED_COLUMN_NAME">
           <Concepts>
             <Concept name="ReferencedTableColumn" />
@@ -858,7 +859,9 @@ VSDataObjectSupport.xsd">
         </Property>
       </Properties>
       <Actions>
-        <Action name="Enumerate" guid="61CC0372-384D-42e5-9707-6D7C8DC5287A" handler="MySql.Data.VisualStudio.MySqlDataObjectEnumerator" />
+        <Action name="Enumerate" guid="61CC0372-384D-42e5-9707-6D7C8DC5287A" handler="Microsoft.VisualStudio.Data.AdoDotNet.AdoDotNetObjectEnumerator">
+          <Parameter value="Foreign Key Columns"/>
+        </Action>
       </Actions>
     </Type>
 
