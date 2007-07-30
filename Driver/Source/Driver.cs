@@ -47,6 +47,7 @@ namespace MySql.Data.MySqlClient
         protected Hashtable charSets;
         protected bool hasWarnings;
         protected long maxPacketSize;
+        protected MySqlPool pool;
 
         public Driver(MySqlConnectionStringBuilder settings)
         {
@@ -95,6 +96,12 @@ namespace MySql.Data.MySqlClient
         public bool HasWarnings
         {
             get { return hasWarnings; }
+        }
+
+        public MySqlPool Pool
+        {
+            get { return pool; }
+            set { pool = value; }
         }
 
         #endregion

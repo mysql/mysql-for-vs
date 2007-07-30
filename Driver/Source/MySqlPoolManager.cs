@@ -19,6 +19,8 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System.Collections;
+using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace MySql.Data.MySqlClient
 {
@@ -28,6 +30,11 @@ namespace MySql.Data.MySqlClient
     internal class MySqlPoolManager
     {
         private static Hashtable pools;
+#if NET20
+        private static List<MySqlPool> clearingPools = new List<MySqlPool>();
+#else
+        private static ArrayList clearingPools;
+#endif
 
         static MySqlPoolManager()
         {
@@ -41,6 +48,7 @@ namespace MySql.Data.MySqlClient
             lock (pools.SyncRoot)
             {
                 MySqlPool pool = (pools[text] as MySqlPool);
+
                 if (pool == null)
                 {
                     pool = new MySqlPool(settings);
@@ -57,10 +65,8 @@ namespace MySql.Data.MySqlClient
         {
             lock (pools.SyncRoot)
             {
-                string key = driver.Settings.GetConnectionString(true);
-                MySqlPool pool = (MySqlPool) pools[key];
-                if (pool == null)
-                    throw new MySqlException("Pooling exception: Unable to find original pool for connection");
+                MySqlPool pool = driver.Pool;
+                Debug.Assert(pool != null);
                 pool.RemoveConnection(driver);
             }
         }
@@ -69,12 +75,47 @@ namespace MySql.Data.MySqlClient
         {
             lock (pools.SyncRoot)
             {
-                string key = driver.Settings.GetConnectionString(true);
-                MySqlPool pool = (MySqlPool) pools[key];
-                if (pool == null)
-                    throw new MySqlException("Pooling exception: Unable to find original pool for connection");
+                MySqlPool pool = driver.Pool;
+                Debug.Assert(pool != null);
                 pool.ReleaseConnection(driver);
             }
+        }
+
+        public static void ClearPool(MySqlConnectionStringBuilder settings)
+        {
+            string text = settings.GetConnectionString(true);
+            ClearPoolByText(text);
+        }
+
+        private static void ClearPoolByText(string key)
+        {
+            lock (pools.SyncRoot)
+            {
+                // add the pool to our list of pools being cleared
+                MySqlPool pool = (pools[key] as MySqlPool);
+                clearingPools.Add(pool);
+
+                // now tell the pool to clear itself
+                pool.Clear();
+
+                // and then remove the pool from the active pools list
+                pools.Remove(key);
+            }
+        }
+
+        public static void ClearAllPools()
+        {
+            lock (pools.SyncRoot)
+            {
+                foreach (string key in pools.Keys)
+                    ClearPoolByText(key);
+            }
+        }
+
+        public static void RemoveClearedPool(MySqlPool pool)
+        {
+            Debug.Assert(clearingPools.Contains(pool));
+            clearingPools.Remove(pool);
         }
     }
 }

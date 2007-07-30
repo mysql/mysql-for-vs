@@ -22,6 +22,7 @@ using System;
 using System.Collections;
 using System.Threading;
 using System.Collections.Generic;
+using System.Diagnostics;
 #if CF
 using MySql.Data.Common;
 #endif
@@ -46,6 +47,7 @@ namespace MySql.Data.MySqlClient
         private ProcedureCache procedureCache;
         private Object lockObject;
         private Semaphore poolGate;
+        private bool beingCleared;
 
 		public MySqlPool(MySqlConnectionStringBuilder settings)
 		{
@@ -71,6 +73,8 @@ namespace MySql.Data.MySqlClient
 
             // we don't really need to create this but it makes the code a bit cleaner
             lockObject = new Object();
+
+            beingCleared = false;
         }
 
         #region Properties
@@ -93,6 +97,19 @@ namespace MySql.Data.MySqlClient
         private bool HasIdleConnections
         {
             get { return idlePool.Count > 0; }
+        }
+
+        private int NumConnections
+        {
+            get { return idlePool.Count + inUsePool.Count; }
+        }
+
+        /// <summary>
+        /// Indicates whether this pool is being cleared.
+        /// </summary>
+        public bool BeingCleared
+        {
+            get { return beingCleared; }
         }
 
         #endregion
@@ -132,11 +149,10 @@ namespace MySql.Data.MySqlClient
 		{
             while (true)
             {
-                // if we don't have an idle connection but we have room for a new
-                // one, then create it here.
+                // if we don't have an idle connection then we must have room
+                // for a new connection since poolGate let us in
                 if (!HasIdleConnections)
-                    if (!CreateNewPooledConnection())
-                        return null;
+                    CreateNewPooledConnection();
 
                 Driver d = CheckoutConnection();
                 if (d != null)
@@ -147,32 +163,25 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// It is assumed that this method is only called from inside an active lock.
         /// </summary>
-		private bool CreateNewPooledConnection()
+		private void CreateNewPooledConnection()
 		{
-            Driver driver = null;
-            try
-            {
-                driver = Driver.Create(settings);
-            }
-            catch (Exception)
-            {
-                return false;
-            }
+            Driver driver = Driver.Create(settings);
+            driver.Pool = this;
             idlePool.Enqueue(driver);
-            return true;
         }
 
 		public void ReleaseConnection(Driver driver)
 		{
             lock (lockObject)
             {
-                if (!inUsePool.Contains(driver) ||
-                    idlePool.Contains(driver))
-                    return;
+                if (inUsePool.Contains(driver))
+                    inUsePool.Remove(driver);
 
-                inUsePool.Remove(driver);
-                if (driver.IsTooOld())
+                if (driver.IsTooOld() || beingCleared)
+                {
                     driver.Close();
+                    Debug.Assert(!idlePool.Contains(driver));
+                }
                 else
                     idlePool.Enqueue(driver);
 
@@ -198,6 +207,11 @@ namespace MySql.Data.MySqlClient
                     inUsePool.Remove(driver);
                     poolGate.Release();
                 }
+
+                // if we are being cleared and we are out of connections then have
+                // the manager destroy us.
+                if (beingCleared && NumConnections == 0)
+                    MySqlPoolManager.RemoveClearedPool(this);
             }
         }
 
@@ -214,11 +228,44 @@ namespace MySql.Data.MySqlClient
             // or room to make a new connection
             lock (lockObject)
             {
-                Driver d = GetPooledConnection();
-                if (d == null)
+                try
+                {
+                    Driver d = GetPooledConnection();
+                    return d;
+                }
+                catch (Exception ex)
+                {
+                    if (settings.Logging)
+                        Logger.LogException(ex);
                     poolGate.Release();
-                return d;
+                    throw;
+                }
             }
 		}
+
+        /// <summary>
+        /// Clears this pool of all idle connections and marks this pool and being cleared
+        /// so all other connections are closed when they are returned.
+        /// </summary>
+        internal void Clear()
+        {
+            lock (lockObject)
+            {
+                // first, mark ourselves as being cleared
+                beingCleared = true;
+
+                // then we remove all connections sitting in the idle pool
+                while (idlePool.Count > 0)
+                {
+                    Driver d = idlePool.Dequeue();
+                    d.Close();
+                }
+
+                // there is nothing left to do here.  Now we just wait for all
+                // in use connections to be returned to the pool.  When they are
+                // they will be closed.  When the last one is closed, the pool will
+                // be destroyed.
+            }
+        }
 	}
 }

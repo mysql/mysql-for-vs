@@ -610,6 +610,22 @@ namespace MySql.Data.MySqlClient
         }
 
         #endregion
+
+        #region Pool Routines
+
+        /// <include file='docs/MySqlConnection.xml' path='docs/ClearPool/*'/>
+        public static void ClearPool(MySqlConnection connection)
+        {
+            MySqlPoolManager.ClearPool(connection.Settings);
+        }
+
+        /// <include file='docs/MySqlConnection.xml' path='docs/ClearAllPools/*'/>
+        public static void ClearAllPools()
+        {
+            MySqlPoolManager.ClearAllPools();
+        }
+
+        #endregion
     }
 
     /// <summary>
