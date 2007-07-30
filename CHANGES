@@ -22,6 +22,8 @@ Version 5.1.3 -
   - Reworked how foreign key metadata is collected to make it more robust and faster
   - Changed DDEX provider to use the core providers schema routines for 
     foreign keys and foreign key columns
+  - Fixed index and foreign key enumerators inside the DDEX provider to work
+    with the new binary respect behavior of 5.1
 
 Version 5.1.2 - 6/12/2007
   - Fixed integration with the Website Administration Tool.  Before this fix, the test link
