@@ -95,6 +95,8 @@ Version 5.0.8
     as exceptions about thread ownership.  The issue was that not all queries 
     cancel the same.  Some produce resultsets while others don't.  ExecuteReader
     had to be changed to check for this.
+  - Fixed problem where date columns that appear in keys caused updates to 
+    fail (bug #30077)
     
 Version 5.0.7 5/16/2007
 
