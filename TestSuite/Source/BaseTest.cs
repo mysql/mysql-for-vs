@@ -50,8 +50,8 @@ namespace MySql.Data.MySqlClient.Tests
             databases = new string[2];
 
             csAdditions = ";pooling=false;";
-            user = "root";
-            password = "";
+            user = "test";
+            password = "test";
             host = "localhost";
             databases[0] = "test";
             databases[1] = "mysql";
