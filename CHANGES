@@ -24,6 +24,8 @@ Version 5.1.3 -
     foreign keys and foreign key columns
   - Fixed index and foreign key enumerators inside the DDEX provider to work
     with the new binary respect behavior of 5.1
+  - Added code to implement better TransactionScope support.  This code is brand new and will be
+    heavily refactored in 5.2. (bug #28709)
 
 Version 5.1.2 - 6/12/2007
   - Fixed integration with the Website Administration Tool.  Before this fix, the test link

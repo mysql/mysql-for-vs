@@ -47,6 +47,10 @@ namespace MySql.Data.MySqlClient
         protected Hashtable charSets;
         protected bool hasWarnings;
         protected long maxPacketSize;
+#if !CF
+        protected MySqlPromotableTransaction currentTransaction;
+        protected bool inActiveUse;
+#endif
 
         public Driver(MySqlConnectionStringBuilder settings)
         {
@@ -96,6 +100,20 @@ namespace MySql.Data.MySqlClient
         {
             get { return hasWarnings; }
         }
+
+#if !CF
+        public MySqlPromotableTransaction CurrentTransaction
+        {
+            get { return currentTransaction; }
+            set { currentTransaction = value; }
+        }
+
+        public bool IsInActiveUse
+        {
+            get { return inActiveUse; }
+            set { inActiveUse = value; }
+        }
+#endif
 
         #endregion
 

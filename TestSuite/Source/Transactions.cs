@@ -33,7 +33,6 @@ namespace MySql.Data.MySqlClient.Tests
         [TestFixtureSetUp]
         public void FixtureSetup()
         {
-            csAdditions += ";pooling=true;";
             Open();
         }
 
@@ -284,54 +283,158 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(1, cmd2.ExecuteScalar());
         }
 
-
-/*        [Test]
-        public void XATransaction1Rollback()
+        private void ManuallyEnlistingInitialConnection(bool complete)
         {
-            XATransaction1(false);
+            using (TransactionScope ts = new TransactionScope())
+            {
+                string connStr = GetConnectionStringBasic(true) + ";auto enlist=false";
+
+                using (MySqlConnection c1 = new MySqlConnection(connStr))
+                {
+                    c1.Open();
+                    c1.EnlistTransaction(Transaction.Current);
+                    MySqlCommand cmd1 = new MySqlCommand("INSERT INTO test (key2) VALUES ('a')", c1);
+                    cmd1.ExecuteNonQuery();
+                }
+
+                using (MySqlConnection c2 = new MySqlConnection(connStr))
+                {
+                    c2.Open();
+                    c2.EnlistTransaction(Transaction.Current);
+                    MySqlCommand cmd2 = new MySqlCommand("INSERT INTO test (key2) VALUES ('b')", c2);
+                    cmd2.ExecuteNonQuery();
+                }
+                if (complete)
+                    ts.Complete();
+            }
         }
 
         [Test]
-        public void XATransaction1Commit()
+        public void ManuallyEnlistingInitialConnection()
         {
-            XATransaction1(true);
+            ManuallyEnlistingInitialConnection(true);
+            ManuallyEnlistingInitialConnection(false);
         }
 
-        private void XATransaction1(bool commit)
+        [Test]
+        public void ManualEnlistmentWithActiveConnection()
         {
-            try
+            using (TransactionScope ts = new TransactionScope())
             {
-                using (TransactionScope ts = new TransactionScope())
+                string connStr = GetConnectionStringBasic(true);
+
+                using (MySqlConnection c1 = new MySqlConnection(connStr))
                 {
-                    using (MySqlConnection c = new MySqlConnection(GetConnectionString(true)))
-                    {
-                        c.Open();
+                    c1.Open();
 
-                        MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES ('a', 'name', 'name2')", c);
-                        cmd.ExecuteNonQuery();
-                    }
-
-                    using (MySqlConnection c2 = new MySqlConnection(GetConnectionString(true)))
+                    connStr += "; auto enlist=false";
+                    using (MySqlConnection c2 = new MySqlConnection(connStr))
                     {
                         c2.Open();
-                        MySqlCommand cmd2 = new MySqlCommand("INSERT INTO test VALUES ('b', 'name', 'name2')", c2);
-                        cmd2.ExecuteNonQuery();
+                        try
+                        {
+                            c2.EnlistTransaction(Transaction.Current);
+                        }
+                        catch (NotSupportedException)
+                        {
+                        }
                     }
-
-                    if (commit)
-                        ts.Complete();
                 }
-
-                MySqlCommand cmd3 = new MySqlCommand("SELECT COUNT(*) FROM test", conn);
-                object count = cmd3.ExecuteScalar();
-                Assert.AreEqual(commit ? 2 : 0, count);
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
             }
         }
-        */
+
+        [Test]
+        public void AttemptToEnlistTwoConnections()
+        {
+            using (TransactionScope ts = new TransactionScope())
+            {
+                string connStr = GetConnectionStringBasic(true);
+
+                using (MySqlConnection c1 = new MySqlConnection(connStr))
+                {
+                    c1.Open();
+
+                    using (MySqlConnection c2 = new MySqlConnection(connStr))
+                    {
+                        try
+                        {
+                            c2.Open();
+                        }
+                        catch (NotSupportedException)
+                        {
+                        }
+                    }
+                }
+            }
+        }
+
+        private void ReusingSameConnection(bool pooling, bool complete)
+        {
+            execSQL("TRUNCATE TABLE test");
+            using (TransactionScope ts = new TransactionScope(TransactionScopeOption.RequiresNew, TimeSpan.MaxValue))
+            {
+                string connStr = GetConnectionStringBasic(true);
+                if (!pooling)
+                    connStr += ";pooling=false";
+
+                using (MySqlConnection c1 = new MySqlConnection(connStr))
+                {
+                    c1.Open();
+                    MySqlCommand cmd1 = new MySqlCommand("INSERT INTO test (key2) VALUES ('a')", c1);
+                    cmd1.ExecuteNonQuery();
+                }
+
+                using (MySqlConnection c2 = new MySqlConnection(connStr))
+                {
+                    c2.Open();
+                    MySqlCommand cmd2 = new MySqlCommand("INSERT INTO test (key2) VALUES ('b')", c2);
+                    cmd2.ExecuteNonQuery();
+                }
+
+                try
+                {
+                    if (complete)
+                        ts.Complete();
+                }
+                catch (Exception ex)
+                {
+                    Assert.Fail(ex.Message);
+                }
+            }
+
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            if (complete)
+            {
+                Assert.AreEqual(2, dt.Rows.Count);
+                Assert.AreEqual("a", dt.Rows[0][0]);
+                Assert.AreEqual("b", dt.Rows[1][0]);
+            }
+            else
+            {
+                Assert.AreEqual(0, dt.Rows.Count);
+            }
+        }
+
+        [Test]
+        public void ReusingSameConnection()
+        {
+            int processes = CountProcesses();
+
+            ReusingSameConnection(true, true);
+            Assert.AreEqual(processes + 1, CountProcesses());
+
+            ReusingSameConnection(true, false);
+            Assert.AreEqual(processes + 1, CountProcesses());
+
+            ReusingSameConnection(false, true);
+            Assert.AreEqual(processes + 1, CountProcesses());
+
+            ReusingSameConnection(false, false);
+            Assert.AreEqual(processes + 1, CountProcesses());
+        }
+
 #endif
 
     }

@@ -44,12 +44,12 @@ namespace MySql.Data.MySqlClient.Tests
         protected string rootUser;
         protected string rootPassword;
         protected Version version;
+        protected bool pooling;
 
         public BaseTest()
         {
             databases = new string[2];
 
-            csAdditions = ";pooling=false;";
             user = "test";
             password = "test";
             host = "localhost";
@@ -113,13 +113,22 @@ namespace MySql.Data.MySqlClient.Tests
             return String.Format("protocol=sockets;port={0}", port);
         }
 
-        protected string GetConnectionString(bool includedb)
+        protected string GetConnectionStringBasic(bool includedb)
         {
             string connStr = String.Format("server={0};user id={1};password={2};" +
-                 "persist security info=true;{3}", host, user, password, csAdditions);
+                 "persist security info=true;", host, user, password);
             if (includedb)
                 connStr += String.Format("database={0};", databases[0]);
+            if (!pooling)
+                connStr += ";pooling=false;";
             connStr += GetConnectionInfo();
+            return connStr;
+        }
+
+        protected string GetConnectionString(bool includedb)
+        {
+            string connStr = String.Format("{0};{1}", 
+                GetConnectionStringBasic(includedb), csAdditions);
             return connStr;
         }
 
@@ -186,6 +195,7 @@ namespace MySql.Data.MySqlClient.Tests
         {
             try
             {
+                pooling = true;
                 IDataReader reader = execReader("SHOW TABLES LIKE 'Test'");
                 bool exists = reader.Read();
                 reader.Close();
@@ -265,5 +275,12 @@ namespace MySql.Data.MySqlClient.Tests
             return cmd.ExecuteReader();
         }
 
+        protected int CountProcesses()
+        {
+            MySqlDataAdapter da = new MySqlDataAdapter("SHOW PROCESSLIST", conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            return dt.Rows.Count;
+        }
     }
 }

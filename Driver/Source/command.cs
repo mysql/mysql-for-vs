@@ -273,7 +273,8 @@ namespace MySql.Data.MySqlClient
 		private void CheckState()
 		{
 			// There must be a valid and open connection.
-			if (connection == null || connection.State != ConnectionState.Open)
+			if ((connection == null || connection.State != ConnectionState.Open) && 
+                !connection.SoftClosed)
 				throw new InvalidOperationException("Connection must be valid and open");
 
 			// Data readers have to be closed first
