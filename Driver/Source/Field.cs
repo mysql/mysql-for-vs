@@ -23,6 +23,7 @@ using MySql.Data.Common;
 using MySql.Data.Types;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using System;
 
 namespace MySql.Data.MySqlClient
 {
@@ -262,7 +263,9 @@ namespace MySql.Data.MySqlClient
 
         private void CheckForExceptions()
         {
-            string colName = OriginalColumnName.ToLower(CultureInfo.InvariantCulture);
+			string colName = String.Empty;
+			if (OriginalColumnName != null)
+				colName = OriginalColumnName.ToLower(CultureInfo.InvariantCulture);
             if (colName.StartsWith("char("))
                 binaryOk = false;
             else if (connection.IsExecutingBuggyQuery)
