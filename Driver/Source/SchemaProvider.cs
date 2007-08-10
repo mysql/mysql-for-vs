@@ -29,6 +29,7 @@ using MySql.Data.Common;
 using MySql.Data.Types;
 using System.Collections.Specialized;
 using System.Collections;
+using System.Text.RegularExpressions;
 
 namespace MySql.Data.MySqlClient
 {
@@ -58,9 +59,21 @@ namespace MySql.Data.MySqlClient
 
         public virtual DataTable GetDatabases(string[] restrictions)
         {
+			Regex regex = null;
+			int caseSetting = Int32.Parse(connection.driver.Property("lower_case_table_names"));
+
             string sql = "SHOW DATABASES";
-            if (restrictions != null && restrictions.Length >= 1)
-                sql = sql + " LIKE '" + restrictions[0] + "'";
+
+			// if lower_case_table_names is zero, then case lookup should be sensitive
+			// so we can use LIKE to do the matching.
+			if (caseSetting == 0)
+			{
+				if (restrictions != null && restrictions.Length >= 1)
+					sql = sql + " LIKE '" + restrictions[0] + "'";
+			}
+			else if (restrictions != null && restrictions.Length >= 1 && restrictions[0] != null)
+				regex = new Regex(restrictions[0], RegexOptions.IgnoreCase);
+
             MySqlDataAdapter da = new MySqlDataAdapter(sql, connection);
             DataTable dt = new DataTable();
             da.Fill(dt);
@@ -71,6 +84,9 @@ namespace MySql.Data.MySqlClient
 
             foreach (DataRow row in dt.Rows)
             {
+				if (caseSetting != 0 && regex != null && 
+					!regex.Match(row[0].ToString()).Success) continue;
+
                 DataRow newRow = table.NewRow();
                 newRow[1] = row[0];
                 table.Rows.Add(newRow);
@@ -165,7 +181,7 @@ namespace MySql.Data.MySqlClient
         private void LoadTableColumns(DataTable dt, string schema,
                                       string tableName, string columnRestriction)
         {
-            string sql = String.Format("SHOW FULL COLUMNS FROM {0}.{1}",
+            string sql = String.Format("SHOW FULL COLUMNS FROM `{0}`.`{1}`",
                                        schema, tableName);
             MySqlCommand cmd = new MySqlCommand(sql, connection);
 
