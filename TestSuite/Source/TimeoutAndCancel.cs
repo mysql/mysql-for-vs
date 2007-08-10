@@ -29,18 +29,6 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture]
 	public class TimeoutAndCancel : BaseTest
 	{
-		[TestFixtureSetUp]
-		public void FixtureSetup()
-		{
-			Open();
-		}
-
-		[TestFixtureTearDown]
-		public void FixtureTeardown()
-		{
-			Close();
-		}
-
         private delegate void CommandInvokerDelegate(MySqlCommand cmdToRun);
 
         private void CommandRunner(MySqlCommand cmdToRun)
@@ -197,6 +185,7 @@ namespace MySql.Data.MySqlClient.Tests
             try
             {
                 cmd.ExecuteNonQuery();
+                Assert.Fail("This should have timed out");
             }
             catch (MySqlException ex)
             {

@@ -72,6 +72,7 @@ namespace MySql.Data.MySqlClient
             //TODO: add event data to StateChange docs
             settings = new MySqlConnectionStringBuilder();
             advisor = new UsageAdvisor(this);
+            database = String.Empty;
         }
 
         /// <include file='docs/MySqlConnection.xml' path='docs/Ctor1/*'/>

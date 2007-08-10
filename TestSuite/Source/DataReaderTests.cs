@@ -33,18 +33,6 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture] 
 	public class DataReaderTests : BaseTest
 	{
-		[TestFixtureSetUp]
-		public void TestFixtureSetUp()
-		{
-			Open();
-		}
-
-		[TestFixtureTearDown]
-		public void TestFixtureTearDown() 
-		{
-			Close();
-		}
-
 		[SetUp]
 		protected override void Setup()
 		{
@@ -204,7 +192,8 @@ namespace MySql.Data.MySqlClient.Tests
 				reader = cmd.ExecuteReader();
 				DataTable dt = reader.GetSchemaTable();
 				Assert.AreEqual(true, dt.Rows[0]["IsAutoIncrement"], "Checking auto increment");
-				Assert.AreEqual(true, dt.Rows[0]["IsUnique"], "Checking IsUnique");
+				Assert.IsFalse((bool)dt.Rows[0]["IsUnique"], "Checking IsUnique");
+                Assert.IsTrue((bool)dt.Rows[0]["IsKey"]);
 				Assert.AreEqual(false, dt.Rows[0]["AllowDBNull"], "Checking AllowDBNull");
 				Assert.AreEqual(false, dt.Rows[1]["AllowDBNull"], "Checking AllowDBNull");
                 Assert.AreEqual(255, dt.Rows[1]["ColumnSize"]);
@@ -801,7 +790,7 @@ namespace MySql.Data.MySqlClient.Tests
             execSQL("DROP TABLE IF EXISTS test");
             execSQL("CREATE TABLE test (id int, PRIMARY KEY(id))");
             MySqlCommand cmd = new MySqlCommand(
-                String.Format("SHOW INDEX FROM test FROM {0}", databases[0]), conn);
+                String.Format("SHOW INDEX FROM test FROM {0}", database0), conn);
             MySqlDataReader reader = null;
             try
             {
@@ -857,6 +846,36 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.IsTrue(reader.Read());
                 Assert.IsFalse(reader.IsDBNull(1));
             }
+        }
+
+        /// <summary>
+        /// Bug #30204  	Incorrect ConstraintException
+        /// </summary>
+        [Test]
+        public void ConstraintWithLoadingReader()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL(@"CREATE TABLE test (ID_A int(11) NOT NULL,
+				ID_B int(11) NOT NULL, PRIMARY KEY (ID_A,ID_B)
+				) ENGINE=MyISAM DEFAULT CHARSET=latin1;");
+
+            MySqlCommand cmd = new MySqlCommand("SELECT * FROM test", conn);
+            DataTable dt = new DataTable();
+
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                dt.Load(reader);
+            }
+
+            DataRow row = dt.NewRow();
+            row["ID_A"] = 2;
+            row["ID_B"] = 3;
+            dt.Rows.Add(row);
+
+            row = dt.NewRow();
+            row["ID_A"] = 2;
+            row["ID_B"] = 4;
+            dt.Rows.Add(row);
         }
 	}
 }

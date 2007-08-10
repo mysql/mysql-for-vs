@@ -28,18 +28,6 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture]
 	public class ConnectionStringBuilder : BaseTest
 	{
-		[TestFixtureSetUp]
-		public void FixtureSetup()
-		{
-			Open();
-		}
-
-		[TestFixtureTearDown]
-		public void FixtureTeardown()
-		{
-			Close();
-		}
-
         [Test]
         public void Simple()
         {

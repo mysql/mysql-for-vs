@@ -38,16 +38,16 @@ namespace MySql.Data.MySqlClient.Tests
 		[TestFixtureSetUp]
 		public void FixtureSetup()
 		{
-			csAdditions = ";pooling=false;use performance monitor=true;";
-			Open();
-			execSQL("DROP TABLE IF EXISTS Test; CREATE TABLE Test (id INT, name VARCHAR(100))");
+            pooling = false;
+			csAdditions = ";use performance monitor=true;";
+            base.FixtureSetup();
 		}
 
-		[TestFixtureTearDown]
-		public void TestFixtureTearDown()
-		{
-			Close();
-		}
+        protected override void Setup()
+        {
+            base.Setup();
+            execSQL("DROP TABLE IF EXISTS Test; CREATE TABLE Test (id INT, name VARCHAR(100))");
+        }
 
         /// <summary>
         /// This test doesn't work from the CI setup currently

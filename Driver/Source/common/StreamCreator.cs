@@ -151,26 +151,29 @@ namespace MySql.Data.Common
 #endif
             endPoint = new IPEndPoint(ip, (int)port);
 
-            Socket socket = unix ?
-                new Socket(AddressFamily.Unix, SocketType.Stream, ProtocolType.IP) :
-                new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            try
-            {
-                IAsyncResult ias = socket.BeginConnect(endPoint, null, null);
-                if (!ias.AsyncWaitHandle.WaitOne((int)timeOut * 1000, false))
-                {
-                    socket.Close();
-                    return null;
-                }
-                socket.EndConnect(ias);
-            }
-            catch (Exception)
-            {
-                socket.Close();
-                return null;
-            }
-            return new NetworkStream(socket, true);
-        }
+			Socket socket = unix ?
+				new Socket(AddressFamily.Unix, SocketType.Stream, ProtocolType.IP) :
+				new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+			IAsyncResult ias = socket.BeginConnect(endPoint, null, null);
+			if (!ias.AsyncWaitHandle.WaitOne((int)timeOut * 1000, true))
+			{
+				socket.Close();
+				return null;
+			}
+			try
+			{
+				socket.EndConnect(ias);
+			}
+			catch (Exception)
+			{
+				socket.Close();
+				return null;
+			}
+            NetworkStream stream = new NetworkStream(socket, true);
+            GC.SuppressFinalize(socket);
+            GC.SuppressFinalize(stream);
+            return stream;
+		}
 
     }
 }

@@ -33,18 +33,6 @@ namespace MySql.Data.MySqlClient.Tests
 	[NUnit.Framework.TestFixture]
 	public class DateTimeTests : BaseTest
 	{
-		[TestFixtureSetUp]
-		public void TestFixtureSetUp()
-		{
-			Open();
-		}
-
-		[TestFixtureTearDown]
-		public void TestFixtureTearDown() 
-		{
-			Close();
-		}
-
         [SetUp]
         protected override void Setup()
         {

@@ -32,14 +32,6 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture] 
 	public class DataAdapterTests : BaseTest
 	{
-
-		[TestFixtureSetUp]
-		public void FixtureSetup()
-		{
-			Open();
-		}
-
-		[SetUp]
 		protected override void Setup()
 		{
 			base.Setup();

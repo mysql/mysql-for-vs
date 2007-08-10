@@ -30,18 +30,6 @@ namespace MySql.Data.MySqlClient.Tests
     [TestFixture]
     public class LanguageTests : BaseTest
     {
-        [TestFixtureSetUp]
-        public void FixtureSetup()
-        {
-            Open();
-        }
-
-        [TestFixtureTearDown]
-        public void FixtureTeardown()
-        {
-            Close();
-        }
-
         [Test]
         public void Unicode()
         {

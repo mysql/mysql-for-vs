@@ -28,18 +28,29 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture]
 	public class MicroPerfTests : BaseTest
 	{
-        [TestFixtureSetUp]
-        public void TestFixtureSetUp()
+        protected override void Setup()
         {
-            Open();
+            base.Setup();
             execSQL("DROP TABLE IF EXISTS Test");
             execSQL("CREATE TABLE Test (id int NOT NULL, name VARCHAR(100))");
         }
 
-        [TestFixtureTearDown]
-        public void TestFixtureTearDown()
+        [Explicit]
+        [Test]
+        public void Connect1000Times()
         {
-            Close();
+            DateTime start = DateTime.Now;
+
+            for (int i = 0; i < 1000; i++)
+            {
+                MySqlConnection c = new MySqlConnection(
+                    base.GetConnectionString(true));
+                c.Open();
+                c.Close();
+            }
+
+            TimeSpan ts = DateTime.Now.Subtract(start);
+            double secs = ts.TotalSeconds;
         }
     }
 }

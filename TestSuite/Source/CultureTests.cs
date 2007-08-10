@@ -30,22 +30,13 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture]
 	public class CultureTests : BaseTest
 	{
-		[TestFixtureSetUp]
-		public void FixtureSetup()
-		{
-			Open();
+        protected override void Setup()
+        {
+            base.Setup();
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(250), PRIMARY KEY(id))");
+        }
 
-			execSQL("DROP TABLE IF EXISTS Test");
-			execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(250), PRIMARY KEY(id))");
-		}
-
-		[TestFixtureTearDown]
-		public void FixtureTeardown()
-		{
-			Close();
-		}
-
-#if !CF
 		[Test]
 		public void TestFloats() 
 		{
@@ -90,7 +81,7 @@ namespace MySql.Data.MySqlClient.Tests
 				if (prepared) cmd.Prepare();
 				reader = cmd.ExecuteReader();
 				reader.Read();
-				Assert.AreEqual(2.3, reader.GetFloat(0));
+				Assert.AreEqual(2.3, (decimal)reader.GetFloat(0));
 				Assert.AreEqual(4.6, reader.GetDouble(1));
 				Assert.AreEqual(23.82, reader.GetDecimal(2));
 			}

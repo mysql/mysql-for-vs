@@ -30,18 +30,6 @@ namespace MySql.Data.MySqlClient.Tests
     [TestFixture]
     public class Transactions : BaseTest
     {
-        [TestFixtureSetUp]
-        public void FixtureSetup()
-        {
-            Open();
-        }
-
-        [TestFixtureTearDown]
-        public void FixtureTeardown()
-        {
-            Close();
-        }
-
         protected override void Setup()
         {
             base.Setup();

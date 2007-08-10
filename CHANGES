@@ -99,7 +99,14 @@ Version 5.0.8
     had to be changed to check for this.
   - Fixed problem where date columns that appear in keys caused updates to 
     fail (bug #30077)
-    
+  - Added code to suppress finalizers for low level socket objects and then
+    added a finalizer to the protocol object so pooled connections will get 
+    closed on process exit    
+  - Fixed problem where attempting to load a reader into a datatable using a table 
+	with a multi-column primary key would result in multiple constraints being added
+	to the datatable. No test case added to the 1.0 tree as loading a datatable
+	with a reader is a .Net 2.0 thing. (Bug #30204)
+          
 Version 5.0.7 5/16/2007
 
   Bugs fixed
