@@ -32,7 +32,7 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture]
 	public class CursorTests : BaseTest
 	{
-		protected override void TestFixtureSetUp()
+		protected override void FixtureSetup()
 		{
 			Open();
 

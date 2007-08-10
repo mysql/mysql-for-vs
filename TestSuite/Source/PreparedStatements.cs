@@ -746,7 +746,6 @@ namespace MySql.Data.MySqlClient.Tests
             }
         }
 
-        [Category("5.0")]
         [Test]
         public void ClosingCommandsProperly()
         {
