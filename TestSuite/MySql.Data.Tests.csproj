@@ -50,7 +50,6 @@
     <Compile Include="Source\ConnectionStringBuilder.cs" />
     <Compile Include="Source\ConnectionTests.cs" />
     <Compile Include="Source\CultureTests.cs" />
-    <Compile Include="Source\CursorTests.cs" />
     <Compile Include="Source\DataAdapterTests.cs" />
     <Compile Include="Source\DataReaderTests.cs" />
     <Compile Include="Source\DataTypeTests.cs" />
