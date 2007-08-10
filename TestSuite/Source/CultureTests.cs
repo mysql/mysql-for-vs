@@ -158,6 +158,5 @@ namespace MySql.Data.MySqlClient.Tests
             Thread.CurrentThread.CurrentCulture = curCulture;
             Thread.CurrentThread.CurrentUICulture = curUICulture;
         }
-#endif
     }
 }

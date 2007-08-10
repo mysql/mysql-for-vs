@@ -512,7 +512,7 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("fk1", row["CONSTRAINT_NAME"]);
             Assert.AreEqual(database0.ToLower(), row["TABLE_SCHEMA"].ToString().ToLower());
             Assert.AreEqual("child", row["TABLE_NAME"]);
-            Assert.AreEqual(databases[0].ToLower(), row["REFERENCED_TABLE_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual(database0.ToLower(), row["REFERENCED_TABLE_SCHEMA"].ToString().ToLower());
             Assert.AreEqual("parent1", row["REFERENCED_TABLE_NAME"]);
 
             // now check that columns are coming back
@@ -520,11 +520,11 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(1, dt.Rows.Count);
             row = dt.Rows[0];
             Assert.AreEqual(DBNull.Value, row["CONSTRAINT_CATALOG"]);
-            Assert.AreEqual(databases[0].ToLower(), row["CONSTRAINT_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual(database0.ToLower(), row["CONSTRAINT_SCHEMA"].ToString().ToLower());
             Assert.AreEqual("fk1", row["CONSTRAINT_NAME"]);
-            Assert.AreEqual(databases[0].ToLower(), row["TABLE_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual(database0.ToLower(), row["TABLE_SCHEMA"].ToString().ToLower());
             Assert.AreEqual("child", row["TABLE_NAME"]);
-            Assert.AreEqual(databases[0].ToLower(), row["REFERENCED_TABLE_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual(database0.ToLower(), row["REFERENCED_TABLE_SCHEMA"].ToString().ToLower());
             Assert.AreEqual("parent1", row["REFERENCED_TABLE_NAME"]);
             Assert.AreEqual("parent_id", row["COLUMN_NAME"]);
             Assert.AreEqual(0, row["ORDINAL_POSITION"]);
@@ -584,27 +584,27 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("fk1", row["CONSTRAINT_NAME"]);
             Assert.AreEqual(database0.ToLower(), row["TABLE_SCHEMA"].ToString().ToLower());
             Assert.AreEqual("child", row["TABLE_NAME"]);
-            Assert.AreEqual(databases[0].ToLower(), row["REFERENCED_TABLE_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual(database0.ToLower(), row["REFERENCED_TABLE_SCHEMA"].ToString().ToLower());
             Assert.AreEqual("parent1", row["REFERENCED_TABLE_NAME"]);
 
             row = dt.Rows[1];
             Assert.AreEqual(DBNull.Value, row["CONSTRAINT_CATALOG"]);
-            Assert.AreEqual(databases[0].ToLower(), row["CONSTRAINT_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual(database0.ToLower(), row["CONSTRAINT_SCHEMA"].ToString().ToLower());
             Assert.AreEqual("fk2", row["CONSTRAINT_NAME"]);
-            Assert.AreEqual(databases[0].ToLower(), row["TABLE_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual(database0.ToLower(), row["TABLE_SCHEMA"].ToString().ToLower());
             Assert.AreEqual("child", row["TABLE_NAME"]);
-            Assert.AreEqual(databases[0].ToLower(), row["REFERENCED_TABLE_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual(database0.ToLower(), row["REFERENCED_TABLE_SCHEMA"].ToString().ToLower());
             Assert.AreEqual("parent2", row["REFERENCED_TABLE_NAME"]);
 
             dt = conn.GetSchema("Foreign Key Columns", restrictions);
             Assert.AreEqual(3, dt.Rows.Count);
             row = dt.Rows[0];
             Assert.AreEqual(DBNull.Value, row["CONSTRAINT_CATALOG"]);
-            Assert.AreEqual(databases[0].ToLower(), row["CONSTRAINT_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual(database0.ToLower(), row["CONSTRAINT_SCHEMA"].ToString().ToLower());
             Assert.AreEqual("fk1", row["CONSTRAINT_NAME"]);
-            Assert.AreEqual(databases[0].ToLower(), row["TABLE_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual(database0.ToLower(), row["TABLE_SCHEMA"].ToString().ToLower());
             Assert.AreEqual("child", row["TABLE_NAME"]);
-            Assert.AreEqual(databases[0].ToLower(), row["REFERENCED_TABLE_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual(database0.ToLower(), row["REFERENCED_TABLE_SCHEMA"].ToString().ToLower());
             Assert.AreEqual("parent1", row["REFERENCED_TABLE_NAME"]);
             Assert.AreEqual("product_category", row["COLUMN_NAME"]);
             Assert.AreEqual(0, row["ORDINAL_POSITION"]);
@@ -619,7 +619,7 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("fk1", row["CONSTRAINT_NAME"]);
             Assert.AreEqual(database0.ToLower(), row["TABLE_SCHEMA"].ToString().ToLower());
             Assert.AreEqual("child", row["TABLE_NAME"]);
-            Assert.AreEqual(databases[0].ToLower(), row["REFERENCED_TABLE_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual(database0.ToLower(), row["REFERENCED_TABLE_SCHEMA"].ToString().ToLower());
             Assert.AreEqual("parent1", row["REFERENCED_TABLE_NAME"]);
             Assert.AreEqual("product_id", row["COLUMN_NAME"]);
             Assert.AreEqual(1, row["ORDINAL_POSITION"]);
@@ -634,7 +634,7 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("fk2", row["CONSTRAINT_NAME"]);
             Assert.AreEqual(database0.ToLower(), row["TABLE_SCHEMA"].ToString().ToLower());
             Assert.AreEqual("child", row["TABLE_NAME"]);
-            Assert.AreEqual(databases[0].ToLower(), row["REFERENCED_TABLE_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual(database0.ToLower(), row["REFERENCED_TABLE_SCHEMA"].ToString().ToLower());
             Assert.AreEqual("parent2", row["REFERENCED_TABLE_NAME"]);
             Assert.AreEqual("customer_id", row["COLUMN_NAME"]);
             Assert.AreEqual(0, row["ORDINAL_POSITION"]);
@@ -701,7 +701,7 @@ namespace MySql.Data.MySqlClient.Tests
         public void ObjectsRelativeToDatabase()
         {
             string[] restrictions = new string[4];
-            restrictions[1] = databases[0];
+            restrictions[1] = database0;
             DataTable dt = conn.GetSchema("Tables", restrictions);
             int count1 = dt.Rows.Count;
 

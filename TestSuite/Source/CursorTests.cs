@@ -32,8 +32,7 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture]
 	public class CursorTests : BaseTest
 	{
-		[TestFixtureSetUp]
-		public void TestFixtureSetUp()
+		protected override void TestFixtureSetUp()
 		{
 			Open();
 
@@ -43,8 +42,7 @@ namespace MySql.Data.MySqlClient.Tests
 			execSQL("CREATE TABLE Test2 (id INT NOT NULL, parent INT, PRIMARY KEY(id))");
 		}
 
-		[TestFixtureTearDown]
-		public void TestFixtureTearDown() 
+		protected override void TestFixtureTearDown() 
 		{
 			execSQL("DROP TABLE IF EXISTS Test2");
 			Close();

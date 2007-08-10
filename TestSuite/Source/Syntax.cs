@@ -498,5 +498,24 @@ namespace MySql.Data.MySqlClient.Tests
             }
         }
 
+		/// <summary>
+		/// Bug #28448  	show processlist; returns byte arrays in the resulting data table
+		/// </summary>
+		[Test]
+		public void ShowProcessList()
+		{
+			MySqlCommand cmd = new MySqlCommand("show processlist", conn);
+			DataTable dt = new DataTable();
+
+			using (MySqlDataReader rdr = cmd.ExecuteReader())
+			{
+				dt.Load(rdr);
+			}
+			DataRow row = dt.Rows[0];
+
+			Assert.IsTrue(row["User"].GetType().Name == "String");
+			Assert.IsTrue(row["Host"].GetType().Name == "String");
+			Assert.IsTrue(row["Command"].GetType().Name == "String");
+		}
 	}
 }
