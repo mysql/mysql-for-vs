@@ -167,8 +167,8 @@ namespace MySql.Data.Common
 				result = true;
 				while (count != 0 && result)
 				{
-                    uint thisWritten;
-                    int cnt = Math.Min(count, 65535);
+					uint thisWritten;
+					int cnt = Math.Min(count, 65535);
 					Array.Copy( buffer, offset, localBuf, 0, cnt );
 					result = NativeMethods.WriteFile((IntPtr)pipeHandle, localBuf, (uint)cnt, out thisWritten, IntPtr.Zero);
 					bytesWritten += thisWritten;

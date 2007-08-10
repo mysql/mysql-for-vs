@@ -58,21 +58,21 @@ namespace MySql.Data.Types
 		object IMySqlValue.Value
 		{
 			get 
-            {
-                if (mValue == 0 || mValue == 1)
-                    return Convert.ToBoolean(mValue);
-                return mValue; 
-            }
+			{
+				if (mValue == 0 || mValue == 1)
+					return Convert.ToBoolean(mValue);
+				return mValue; 
+			}
 		}
 
 		Type IMySqlValue.SystemType
 		{
 			get 
-            {
-                if (mValue == 0 || mValue == 1)
-                    return typeof(Boolean);
-                return typeof(UInt64); 
-            }
+			{
+				if (mValue == 0 || mValue == 1)
+					return typeof(Boolean);
+				return typeof(UInt64); 
+			}
 		}
 
 		string IMySqlValue.MySqlTypeName

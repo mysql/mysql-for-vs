@@ -28,7 +28,7 @@ namespace MySql.Data.Types
 #if !CF
 	[Serializable]
 #endif
-    public class MySqlConversionException : Exception
+	public class MySqlConversionException : Exception
 	{
 		/// <summary>Ctor</summary>
 		public MySqlConversionException(string msg)

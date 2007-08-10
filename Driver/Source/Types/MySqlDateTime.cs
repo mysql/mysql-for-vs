@@ -417,13 +417,13 @@ namespace MySql.Data.Types
 				return (type == MySqlDbType.Date) ? d.ToString("d") : d.ToString();
 			}
 
-            if (type == MySqlDbType.Date)
-                return String.Format(CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern,
-                    year, month, day);
+			if (type == MySqlDbType.Date)
+				return String.Format(CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern,
+					year, month, day);
 
-            return String.Format(CultureInfo.CurrentUICulture.DateTimeFormat.FullDateTimePattern,
-                year, month, day, hour, minute, second);
-        }
+			return String.Format(CultureInfo.CurrentUICulture.DateTimeFormat.FullDateTimePattern,
+				year, month, day, hour, minute, second);
+		}
 
 		/// <summary></summary>
 		/// <param name="val"></param>
@@ -446,7 +446,7 @@ namespace MySql.Data.Types
 		{
 			string[] types = new string[] { "DATE", "DATETIME", "TIMESTAMP" };
 			MySqlDbType[] dbtype = new MySqlDbType[] { MySqlDbType.Date, 
-                MySqlDbType.Datetime, MySqlDbType.Timestamp };
+				MySqlDbType.Datetime, MySqlDbType.Timestamp };
 
 			// we use name indexing because this method will only be called
 			// when GetSchema is called for the DataSourceInformation 

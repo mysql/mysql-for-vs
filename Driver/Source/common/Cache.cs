@@ -22,36 +22,36 @@ using System.Collections.Specialized;
 
 namespace MySql.Data.Common
 {
-    internal class Cache : NameObjectCollectionBase
-    {
-        private int capacity;
+	internal class Cache : NameObjectCollectionBase
+	{
+		private int capacity;
 
-        public Cache(int initialCapacity, int capacity) : base(initialCapacity)
-        {
-            this.capacity = capacity;
-        }
+		public Cache(int initialCapacity, int capacity) : base(initialCapacity)
+		{
+			this.capacity = capacity;
+		}
 
-        public object this[string key]
-        {
-            get { return BaseGet(key); }
-            set { InternalAdd(key, value); }
-        }
+		public object this[string key]
+		{
+			get { return BaseGet(key); }
+			set { InternalAdd(key, value); }
+		}
 
-        public void Add(string key, object value)
-        {
-            InternalAdd(key, value);
-        }
+		public void Add(string key, object value)
+		{
+			InternalAdd(key, value);
+		}
 
-        private void InternalAdd(string key, object value)
-        {
-            if (base.Count == capacity)
-                RemoveOldestItem();
-            BaseAdd(key, value);
-        }
+		private void InternalAdd(string key, object value)
+		{
+			if (base.Count == capacity)
+				RemoveOldestItem();
+			BaseAdd(key, value);
+		}
 
-        private void RemoveOldestItem()
-        {
-            BaseRemoveAt(0);
-        }
-    }
+		private void RemoveOldestItem()
+		{
+			BaseRemoveAt(0);
+		}
+	}
 }

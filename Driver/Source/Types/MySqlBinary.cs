@@ -183,7 +183,7 @@ namespace MySql.Data.Types
 		{
 			string[] types = new string[] { "BLOB", "TINYBLOB", "MEDIUMBLOB", "LONGBLOB" };
 			MySqlDbType[] dbtype = new MySqlDbType[] { MySqlDbType.Blob, 
-                MySqlDbType.TinyBlob, MySqlDbType.MediumBlob, MySqlDbType.LongBlob };
+				MySqlDbType.TinyBlob, MySqlDbType.MediumBlob, MySqlDbType.LongBlob };
 
 			// we use name indexing because this method will only be called
 			// when GetSchema is called for the DataSourceInformation 
