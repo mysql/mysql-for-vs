@@ -155,7 +155,7 @@ namespace MySql.Data.Common
 				new Socket(AddressFamily.Unix, SocketType.Stream, ProtocolType.IP) :
 				new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 			IAsyncResult ias = socket.BeginConnect(endPoint, null, null);
-			if (!ias.AsyncWaitHandle.WaitOne((int)timeOut * 1000, true))
+			if (!ias.AsyncWaitHandle.WaitOne((int)timeOut * 1000, false))
 			{
 				socket.Close();
 				return null;
