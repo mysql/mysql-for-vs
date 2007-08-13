@@ -80,7 +80,7 @@ namespace MySql.Data.MySqlClient
         /// <include file='docs/MySqlTransaction.xml' path='docs/Commit/*'/>
         public override void Commit()
         {
-            if (conn == null || conn.State != ConnectionState.Open)
+            if (conn == null || (conn.State != ConnectionState.Open && !conn.SoftClosed))
                 throw new InvalidOperationException("Connection must be valid and open to commit transaction");
             if (!open)
                 throw new InvalidOperationException("Transaction has already been committed or is not pending");
@@ -92,8 +92,8 @@ namespace MySql.Data.MySqlClient
         /// <include file='docs/MySqlTransaction.xml' path='docs/Rollback/*'/>
         public override void Rollback()
         {
-            if (conn == null || conn.State != ConnectionState.Open)
-                throw new InvalidOperationException("Connection must be valid and open to commit transaction");
+            if (conn == null || (conn.State != ConnectionState.Open && !conn.SoftClosed))
+                throw new InvalidOperationException("Connection must be valid and open to rollback transaction");
             if (!open)
                 throw new InvalidOperationException("Transaction has already been rolled back or is not pending");
             MySqlCommand cmd = new MySqlCommand("ROLLBACK", conn);

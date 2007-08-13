@@ -29,18 +29,6 @@ namespace MySql.Data.MySqlClient.Tests
 	[NUnit.Framework.TestFixture]
 	public class InterfaceTests : BaseTest
 	{
-		[TestFixtureSetUp]
-		public void TestFixtureSetUp()
-		{
-			Open();
-		}
-
-		[TestFixtureTearDown]
-		public void TestFixtureTearDown() 
-		{
-			Close();
-		}
-
 #if !CF
         [Test]
         public void ClientFactory()

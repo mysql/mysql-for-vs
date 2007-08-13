@@ -38,16 +38,11 @@ namespace MySql.Data.MySqlClient.Tests
 		private static string fillError = null;
 
 		[TestFixtureSetUp]
-		public void FixtureSetup()
+		protected override void FixtureSetup()
 		{
-			csAdditions = ";pooling=false;procedure cache size=0;";
-			Open();
-		}
-
-		[TestFixtureTearDown]
-		public void TestFixtureTearDown()
-		{
-			Close();
+            pooling = false;
+			csAdditions = ";procedure cache size=0;";
+            base.FixtureSetup();
 		}
 
         [SetUp]
@@ -162,7 +157,7 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual(33, cmd.Parameters[1].Value);
 			Assert.AreEqual(new DateTime(2004, 6, 5, 7, 58, 9),
 					 Convert.ToDateTime(cmd.Parameters[2].Value));
-			Assert.AreEqual(1.2, cmd.Parameters[3].Value);
+			Assert.AreEqual(1.2, (decimal)(float)cmd.Parameters[3].Value);
 			Assert.AreEqual("test", cmd.Parameters[4].Value);
 			Assert.AreEqual(66, cmd.Parameters[5].Value);
 
@@ -511,7 +506,7 @@ namespace MySql.Data.MySqlClient.Tests
 			try
 			{
 				c.Open();
-				MySqlCommand cmd2 = new MySqlCommand(String.Format("use {0}", databases[0]), c);
+				MySqlCommand cmd2 = new MySqlCommand(String.Format("use {0}", database0), c);
 				cmd2.ExecuteNonQuery();
 
 				MySqlCommand cmd = new MySqlCommand("spTest", c);
@@ -519,10 +514,10 @@ namespace MySql.Data.MySqlClient.Tests
 				object val = cmd.ExecuteScalar();
 				Assert.AreEqual(4, val);
 
-                cmd2.CommandText = String.Format("use {0}", databases[1]);
+                cmd2.CommandText = String.Format("use {0}", database1);
 				cmd2.ExecuteNonQuery();
 
-				cmd.CommandText = String.Format("{0}.spTest", databases[0]);
+				cmd.CommandText = String.Format("{0}.spTest", database0);
 				val = cmd.ExecuteScalar();
 				Assert.AreEqual(4, val);
 			}
@@ -1091,10 +1086,10 @@ namespace MySql.Data.MySqlClient.Tests
 
             suExecSQL(String.Format(
                 "GRANT ALL ON {0}.* to 'testuser'@'%' identified by 'testuser'",
-                databases[0]));
+                database0));
             suExecSQL(String.Format(
                 "GRANT ALL ON {0}.* to 'testuser'@'localhost' identified by 'testuser'",
-                databases[0]));
+                database0));
 
             execSQL("DROP PROCEDURE IF EXISTS spTest");
             execSQL("CREATE PROCEDURE spTest(id int, OUT outid int, INOUT inoutid int) " +
@@ -1335,10 +1330,17 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void CatalogWithHyphens()
         {
+            string dbName = System.IO.Path.GetFileNameWithoutExtension(
+                System.IO.Path.GetTempFileName()) + "-x";
             try
             {
-                suExecSQL("CREATE DATABASE `foo-bar`");
-                string connStr = GetConnectionString(false) + ";database=foo-bar";
+                // create the database
+                suExecSQL(String.Format("CREATE DATABASE `{0}`", dbName));
+                suExecSQL(String.Format("GRANT ALL ON `{0}`.* to 'test'@'localhost' identified by 'test'",
+                    dbName));
+                suExecSQL("FLUSH PRIVILEGES");
+
+                string connStr = GetConnectionString(false) + ";database=" + dbName;
                 MySqlConnection c = new MySqlConnection(connStr);
                 c.Open();
 
@@ -1351,7 +1353,7 @@ namespace MySql.Data.MySqlClient.Tests
             }
             finally
             {
-                suExecSQL("DROP DATABASE IF EXISTS `foo-bar`");
+                suExecSQL(String.Format("DROP DATABASE `{0}`", dbName));
             }
         }
 	}

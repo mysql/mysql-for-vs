@@ -28,18 +28,6 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture]
 	public class Syntax : BaseTest
 	{
-		[TestFixtureSetUp]
-		public void FixtureSetup()
-		{
-			Open();
-		}
-
-		[TestFixtureTearDown]
-		public void FixtureTeardown()
-		{
-			Close();
-		}
-
 		[SetUp]
 		protected override void Setup()
 		{
@@ -460,7 +448,7 @@ namespace MySql.Data.MySqlClient.Tests
         {
             MySqlDataAdapter da = new MySqlDataAdapter(
                 String.Format("SHOW TABLE STATUS FROM {0} LIKE 'test'",
-                databases[0]), conn);
+                database0), conn);
             DataTable dt = new DataTable();
             da.Fill(dt);
 
@@ -486,11 +474,16 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void SpaceInDatabaseName()
         {
+            string dbName = System.IO.Path.GetFileNameWithoutExtension(
+                System.IO.Path.GetTempFileName()) + " x";
             try
             {
-                suExecSQL("CREATE DATABASE `my db`");
-                string connStr = GetConnectionString(false) + ";database=my db";
+                suExecSQL(String.Format("CREATE DATABASE `{0}`", dbName));
+                suExecSQL(String.Format("GRANT ALL ON `{0}`.* to 'test'@'localhost' identified by 'test'",
+                    dbName));
+                suExecSQL("FLUSH PRIVILEGES");
 
+                string connStr = GetConnectionString(false) + ";database=" + dbName;
                 MySqlConnection c = new MySqlConnection(connStr);
                 c.Open();
                 c.Close();
@@ -501,9 +494,28 @@ namespace MySql.Data.MySqlClient.Tests
             }
             finally
             {
-                suExecSQL("DROP DATABASE `my db`");
+                suExecSQL(String.Format("DROP DATABASE `{0}`", dbName));
             }
         }
 
+		/// <summary>
+		/// Bug #28448  	show processlist; returns byte arrays in the resulting data table
+		/// </summary>
+		[Test]
+		public void ShowProcessList()
+		{
+			MySqlCommand cmd = new MySqlCommand("show processlist", conn);
+			DataTable dt = new DataTable();
+
+			using (MySqlDataReader rdr = cmd.ExecuteReader())
+			{
+				dt.Load(rdr);
+			}
+			DataRow row = dt.Rows[0];
+
+			Assert.IsTrue(row["User"].GetType().Name == "String");
+			Assert.IsTrue(row["Host"].GetType().Name == "String");
+			Assert.IsTrue(row["Command"].GetType().Name == "String");
+		}
 	}
 }

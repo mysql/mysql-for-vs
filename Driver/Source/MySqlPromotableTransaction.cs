@@ -20,6 +20,7 @@
 
 using System;
 using System.Transactions;
+using System.Collections;
 
 namespace MySql.Data.MySqlClient
 {
@@ -49,19 +50,51 @@ namespace MySql.Data.MySqlClient
         {
             simpleTransaction.Rollback();
             singlePhaseEnlistment.Aborted();
-            connection.CurrentTransaction = null;
+            DriverTransactionManager.RemoveDriverInTransaction(baseTransaction);
+            connection.CloseDriver();
         }
 
         void IPromotableSinglePhaseNotification.SinglePhaseCommit(SinglePhaseEnlistment singlePhaseEnlistment)
         {
             simpleTransaction.Commit();
             singlePhaseEnlistment.Committed();
-            connection.CurrentTransaction = null;
+            DriverTransactionManager.RemoveDriverInTransaction(baseTransaction);
+            connection.CloseDriver();
         }
 
         byte[] ITransactionPromoter.Promote()
         {
             throw new NotSupportedException();
+        }
+    }
+
+    internal class DriverTransactionManager
+    {
+        private static Hashtable driversInUse = new Hashtable();
+
+        public static Driver GetDriverInTransaction(Transaction transaction)
+        {
+            lock (driversInUse.SyncRoot)
+            {
+                Driver d = (Driver)driversInUse[transaction.GetHashCode()];
+                return d;
+            }
+        }
+
+        public static void SetDriverInTransaction(Driver driver)
+        {
+            lock (driversInUse.SyncRoot)
+            {
+                driversInUse[driver.CurrentTransaction.BaseTransaction.GetHashCode()] = driver;
+            }
+        }
+
+        public static void RemoveDriverInTransaction(Transaction transaction)
+        {
+            lock (driversInUse.SyncRoot)
+            {
+                driversInUse.Remove(transaction.GetHashCode());
+            }
         }
     }
 }

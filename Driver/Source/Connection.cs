@@ -30,6 +30,7 @@ using System.Transactions;
 using System.Text;
 using IsolationLevel=System.Data.IsolationLevel;
 using MySql.Data.Common;
+using System.Diagnostics;
 
 namespace MySql.Data.MySqlClient
 {
@@ -51,7 +52,6 @@ namespace MySql.Data.MySqlClient
         private ProcedureCache procedureCache;
 #if !CF
         private PerformanceMonitor perfMonitor;
-        private MySqlPromotableTransaction currentTransaction;
 #endif
         private bool isExecutingBuggyQuery;
         private string database;
@@ -72,6 +72,7 @@ namespace MySql.Data.MySqlClient
             //TODO: add event data to StateChange docs
             settings = new MySqlConnectionStringBuilder();
             advisor = new UsageAdvisor(this);
+            database = String.Empty;
         }
 
         /// <include file='docs/MySqlConnection.xml' path='docs/Ctor1/*'/>
@@ -84,12 +85,6 @@ namespace MySql.Data.MySqlClient
         #region Interal Methods & Properties
 
 #if !CF
-        internal MySqlPromotableTransaction CurrentTransaction
-        {
-            get { return currentTransaction; }
-            set { currentTransaction = value; }
-        }
-
         internal PerformanceMonitor PerfMonitor
         {
             get { return perfMonitor; }
@@ -134,6 +129,17 @@ namespace MySql.Data.MySqlClient
         {
             get { return isExecutingBuggyQuery; }
             set { isExecutingBuggyQuery = value; }
+        }
+        internal bool SoftClosed
+        {
+            get 
+            {
+#if !CF
+                return (State == ConnectionState.Closed) && driver.CurrentTransaction != null;
+#else
+                return false;            
+#endif
+            }
         }
 
         #endregion
@@ -286,20 +292,50 @@ namespace MySql.Data.MySqlClient
         /// </param>
         public override void EnlistTransaction(Transaction transaction)
         {
+            // enlisting in the null transaction is a noop
             if (transaction == null)
                 return;
 
-            if (currentTransaction != null)
+            // guard against trying to enlist in more than one transaction
+            if (driver.CurrentTransaction != null)
             {
-                if (currentTransaction.BaseTransaction == transaction)
+                if (driver.CurrentTransaction.BaseTransaction == transaction)
                     return;
 
                 throw new MySqlException("Already enlisted");
             }
 
-            MySqlPromotableTransaction t = new MySqlPromotableTransaction(this, transaction);
-            transaction.EnlistPromotableSinglePhase(t);
-            currentTransaction = t;
+            // now see if we need to swap out drivers.  We would need to do this since
+            // we have to make sure all ops for a given transaction are done on the
+            // same physical connection.
+            Driver existingDriver = DriverTransactionManager.GetDriverInTransaction(transaction);
+            if (existingDriver != null)
+            {
+                // we can't allow more than one driver to contribute to the same connection
+                if (existingDriver.IsInActiveUse)
+                    throw new NotSupportedException(Resources.MultipleConnectionsInTransactionNotSupported);
+
+                // there is an existing driver and it's not being currently used.
+                // now we need to see if it is using the same connection string
+                string text1 = existingDriver.Settings.GetConnectionString(true);
+                string text2 = Settings.GetConnectionString(true);
+                if (String.Compare(text1, text2, true) != 0)
+                    throw new NotSupportedException(Resources.MultipleConnectionsInTransactionNotSupported);
+
+                // close existing driver
+                // set this new driver as our existing driver
+                CloseDriver();
+                driver = existingDriver;
+            }
+
+            if (driver.CurrentTransaction == null)
+            {
+                MySqlPromotableTransaction t = new MySqlPromotableTransaction(this, transaction);
+                transaction.EnlistPromotableSinglePhase(t);
+                driver.CurrentTransaction = t;
+                DriverTransactionManager.SetDriverInTransaction(driver);
+                driver.IsInActiveUse = true;
+            }
         }
 #endif
 
@@ -395,17 +431,30 @@ namespace MySql.Data.MySqlClient
 
             SetState(ConnectionState.Connecting);
 
+#if !CF
+                // if we are auto enlisting in a current transaction, then we will be
+                // treating the connection as pooled
+                if (settings.AutoEnlist && Transaction.Current != null)
+                {
+                    driver = DriverTransactionManager.GetDriverInTransaction(Transaction.Current);
+                    if (driver != null && driver.IsInActiveUse)
+                        throw new NotSupportedException(Resources.MultipleConnectionsInTransactionNotSupported);
+                }
+#endif
+
             try
             {
                 if (settings.Pooling)
                 {
                     MySqlPool pool = MySqlPoolManager.GetPool(settings);
-                    driver = pool.GetConnection();
+                    if (driver == null)
+                        driver = pool.GetConnection();
                     procedureCache = pool.ProcedureCache;
                 }
                 else
                 {
-                    driver = Driver.Create(settings);
+                    if (driver == null)
+                        driver = Driver.Create(settings);
                     procedureCache = new ProcedureCache((int) settings.ProcedureCacheSize);
                 }
             }
@@ -505,14 +554,11 @@ namespace MySql.Data.MySqlClient
             SetState(ConnectionState.Closed);
         }
 
-        /// <include file='docs/MySqlConnection.xml' path='docs/Close/*'/>
-        public override void Close()
+        internal void CloseDriver()
         {
-            //TODO: rollback any pending transaction
-            if (State == ConnectionState.Closed) return;
-
-            if (dataReader != null)
-                dataReader.Close();
+#if !CF
+            driver.CurrentTransaction = null;
+#endif
 
             if (settings.Pooling)
             {
@@ -527,6 +573,23 @@ namespace MySql.Data.MySqlClient
             }
             else
                 driver.Close();
+        }
+
+        /// <include file='docs/MySqlConnection.xml' path='docs/Close/*'/>
+        public override void Close()
+        {
+            if (State == ConnectionState.Closed) return;
+
+            if (dataReader != null)
+                dataReader.Close();
+#if !CF
+            if (driver.CurrentTransaction == null)
+#endif
+                CloseDriver();
+#if !CF
+            else
+                driver.IsInActiveUse = false;
+#endif
 
             SetState(ConnectionState.Closed);
         }

@@ -29,19 +29,6 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture]
 	public class CommandTests : BaseTest
 	{
-
-		[TestFixtureSetUp]
-		public void TestFixtureSetUp()
-		{
-			Open();
-		}
-
-		[TestFixtureTearDown]
-		public void TestFixtureTearDown() 
-		{
-			Close();
-		}
-
         [SetUp]
         protected override void Setup()
         {

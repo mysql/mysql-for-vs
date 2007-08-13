@@ -25,21 +25,9 @@ using NUnit.Framework;
 
 namespace MySql.Data.MySqlClient.Tests
 {
-	[NUnit.Framework.TestFixture]
+	[TestFixture]
 	public class AsyncTests : BaseTest
 	{
-		[TestFixtureSetUp]
-		public void TestFixtureSetUp()
-		{
-			Open();
-		}
-
-		[TestFixtureTearDown]
-		public void TestFixtureTearDown() 
-		{
-			Close();
-		}
-
         [Test]
         public void ExecuteNonQuery()
         {

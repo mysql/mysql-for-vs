@@ -27,10 +27,10 @@ using MySql.Data.Types;
 
 namespace MySql.Data.MySqlClient
 {
-    /// <summary>
-    /// Summary description for BaseDriver.
-    /// </summary>
-    internal abstract class Driver
+	/// <summary>
+	/// Summary description for BaseDriver.
+	/// </summary>
+	internal abstract class Driver : IDisposable 
     {
         protected int threadId;
         protected DBVersion version;
@@ -47,6 +47,10 @@ namespace MySql.Data.MySqlClient
         protected Hashtable charSets;
         protected bool hasWarnings;
         protected long maxPacketSize;
+#if !CF
+        protected MySqlPromotableTransaction currentTransaction;
+        protected bool inActiveUse;
+#endif
         protected MySqlPool pool;
 
         public Driver(MySqlConnectionStringBuilder settings)
@@ -98,6 +102,20 @@ namespace MySql.Data.MySqlClient
             get { return hasWarnings; }
         }
 
+#if !CF
+        public MySqlPromotableTransaction CurrentTransaction
+        {
+            get { return currentTransaction; }
+            set { currentTransaction = value; }
+        }
+
+        public bool IsInActiveUse
+        {
+            get { return inActiveUse; }
+            set { inActiveUse = value; }
+        }
+#endif
+
         public MySqlPool Pool
         {
             get { return pool; }
@@ -145,14 +163,11 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-        public virtual void Close()
-        {
-            isOpen = false;
-
-            // if we are pooling, then release ourselves
-            if (connectionString.Pooling)
-                MySqlPoolManager.RemoveConnection(this);
-        }
+		public virtual void Close()
+		{
+            Dispose(true);
+            GC.SuppressFinalize(this);
+		}
 
         public virtual void Configure(MySqlConnection connection)
         {
@@ -316,6 +331,26 @@ namespace MySql.Data.MySqlClient
         public abstract MySqlField[] ReadColumnMetadata(int count);
         public abstract bool Ping();
         public abstract void CloseStatement(int id);
+
+		#endregion
+
+
+        #region IDisposable Members
+
+        protected virtual void Dispose(bool disposing)
+        {
+            // if we are pooling, then release ourselves
+            if (connectionString.Pooling)
+                MySqlPoolManager.RemoveConnection(this);
+
+            isOpen = false;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
         #endregion
     }

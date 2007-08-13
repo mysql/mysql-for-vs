@@ -343,7 +343,14 @@ namespace MySql.Data.MySqlClient {
                 return ResourceManager.GetString("MixingUpdatedRowSource", resourceCulture);
             }
         }
-        
+
+        internal static string MultipleConnectionsInTransactionNotSupported
+        {
+            get {
+                return ResourceManager.GetString("MultipleConnectionsInTransactionNotSupported", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to NamedPipeStream does not support seeking.
         /// </summary>
