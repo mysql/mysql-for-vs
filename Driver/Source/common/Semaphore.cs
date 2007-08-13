@@ -28,8 +28,7 @@ namespace MySql.Data.Common
     {
         public Semaphore(int initialCount, int maximumCount)
         {
-            SECURITY_ATTRIBUTES sa = new SECURITY_ATTRIBUTES();
-            IntPtr handle = CreateSemaphore(ref sa, initialCount, 
+            IntPtr handle = CreateSemaphore(IntPtr.Zero, initialCount, 
                 maximumCount, null);
             if (handle.Equals(IntPtr.Zero))
             {
@@ -59,24 +58,16 @@ namespace MySql.Data.Common
             return false;
         }
 
-        [DllImport("coredll.dll")]
+        [DllImport("coredll")]
         static extern bool ReleaseSemaphore(IntPtr hSemaphore, 
             int lReleaseCount, IntPtr lpPreviousCount);
 
-        [DllImport("coredll.dll", SetLastError = true)]
+        [DllImport("coredll", SetLastError = true)]
         private static extern IntPtr CreateSemaphore(
-            ref SECURITY_ATTRIBUTES securityAttributes, int initialCount, 
+            IntPtr securityAttributes, int initialCount, 
             int maximumCount, string name);
 
-        [DllImport("coredll.dll", SetLastError = true)]
+        [DllImport("coredll", SetLastError = true)]
         private static extern int WaitForSingleObject(IntPtr handle, int millis);
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    internal struct SECURITY_ATTRIBUTES
-    {
-        public int nLength;
-        public IntPtr lpSecurityDescriptor;
-        public int bInheritHandle;
     }
 }
