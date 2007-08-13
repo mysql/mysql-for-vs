@@ -341,6 +341,18 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("test", dt.Rows[0]["TABLE_NAME"]);
             Assert.AreEqual("id2", dt.Rows[0]["COLUMN_NAME"]);
             Assert.AreEqual(2, dt.Rows[0]["ORDINAL_POSITION"]);
+
+            restrictions = new string[3];
+            restrictions[1] = databases[0];
+            restrictions[2] = "test";
+            dt = conn.GetSchema("IndexColumns", restrictions);
+            Assert.AreEqual(2, dt.Rows.Count);
+            Assert.AreEqual("test", dt.Rows[0]["TABLE_NAME"]);
+            Assert.AreEqual("id1", dt.Rows[0]["COLUMN_NAME"]);
+            Assert.AreEqual(1, dt.Rows[0]["ORDINAL_POSITION"]);
+            Assert.AreEqual("test", dt.Rows[1]["TABLE_NAME"]);
+            Assert.AreEqual("id2", dt.Rows[1]["COLUMN_NAME"]);
+            Assert.AreEqual(2, dt.Rows[1]["ORDINAL_POSITION"]);
         }
 
         [Test]
