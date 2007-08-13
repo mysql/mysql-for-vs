@@ -96,13 +96,13 @@ namespace MySql.Data.MySqlClient.Tests
             rootConn.Open();
 
             // now create our databases
-            suExecSQL("CREATE DATABASE " + database0);
-            suExecSQL("CREATE DATABASE " + database1);
+            suExecSQL("CREATE DATABASE `" + database0 + "`");
+            suExecSQL("CREATE DATABASE `" + database1 + "`");
 
             // now allow our user to access them
-            suExecSQL(String.Format(@"GRANT ALL ON {0}.* to 'test'@'localhost' 
+            suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'localhost' 
 				identified by 'test'", database0));
-            suExecSQL(String.Format(@"GRANT ALL ON {0}.* to 'test'@'localhost' 
+            suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'localhost' 
 				identified by 'test'", database1));
             suExecSQL("FLUSH PRIVILEGES");
 
