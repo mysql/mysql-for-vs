@@ -16,6 +16,7 @@
         <contentItem sourcePath=".\Content\Integration\*.*" destPath="html\Integration\" excludeItems="False" />
         <contentItem sourcePath=".\Content\Installation.html" destPath="html\" excludeItems="False" />
         <contentItem sourcePath=".\Content\Requirements.html" destPath="html\" excludeItems="False" />
+        <contentItem sourcePath=".\Content\Advanced Topics\*.*" destPath="html\Advanced Topics\" excludeItems="False" />
     </additionalContent>
     <ProjectSummary />
     <MissingTags>Summary, Parameter, Returns</MissingTags>
