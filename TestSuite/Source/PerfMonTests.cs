@@ -34,9 +34,7 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture]
 	public class PerfMonTests : BaseTest
 	{
-
-		[TestFixtureSetUp]
-		public void FixtureSetup()
+		protected override void FixtureSetup()
 		{
             pooling = false;
 			csAdditions = ";use performance monitor=true;";

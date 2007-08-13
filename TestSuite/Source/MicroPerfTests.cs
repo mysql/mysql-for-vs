@@ -35,7 +35,6 @@ namespace MySql.Data.MySqlClient.Tests
             execSQL("CREATE TABLE Test (id int NOT NULL, name VARCHAR(100))");
         }
 
-        [Explicit]
         [Test]
         public void Connect1000Times()
         {

@@ -29,6 +29,9 @@ Version 5.1.3 -
     with the new binary respect behavior of 5.1
   - Added code to implement better TransactionScope support.  This code is brand new and will be
     heavily refactored in 5.2. (bug #28709)
+  - Fixed problem where connecting to pre-4.1 servers would result in a crash. This was caused
+    by the Field object referring to metadata columns that are not populated on pre-4.1 servers.
+    (bug #29476)
 
 Version 5.1.2 - 6/12/2007
   - Fixed integration with the Website Administration Tool.  Before this fix, the test link
@@ -109,6 +112,8 @@ Version 5.0.8
 	with a multi-column primary key would result in multiple constraints being added
 	to the datatable. No test case added to the 1.0 tree as loading a datatable
 	with a reader is a .Net 2.0 thing. (Bug #30204)
+  - Fixed the database schema collection so that it works on servers that are not properly
+    respecting the lower_case_table_names setting.	
           
 Version 5.0.7 5/16/2007
 

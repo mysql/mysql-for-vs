@@ -37,6 +37,8 @@ namespace MySql.Data.MySqlClient.Tests
             execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(250), PRIMARY KEY(id))");
         }
 
+#if !CF
+
 		[Test]
 		public void TestFloats() 
 		{
@@ -158,5 +160,6 @@ namespace MySql.Data.MySqlClient.Tests
             Thread.CurrentThread.CurrentCulture = curCulture;
             Thread.CurrentThread.CurrentUICulture = curUICulture;
         }
+#endif
     }
 }
