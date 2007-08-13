@@ -25,6 +25,8 @@ Version 5.1.3 -
   - Reworked how foreign key metadata is collected to make it more robust and faster
   - Changed DDEX provider to use the core providers schema routines for 
     foreign keys and foreign key columns
+  - Fixed index and foreign key enumerators inside the DDEX provider to work
+    with the new binary respect behavior of 5.1
 
 Version 5.1.2 - 6/12/2007
   - Fixed integration with the Website Administration Tool.  Before this fix, the test link
@@ -96,6 +98,8 @@ Version 5.0.8
     as exceptions about thread ownership.  The issue was that not all queries 
     cancel the same.  Some produce resultsets while others don't.  ExecuteReader
     had to be changed to check for this.
+  - Fixed problem where date columns that appear in keys caused updates to 
+    fail (bug #30077)
     
 Version 5.0.7 5/16/2007
 

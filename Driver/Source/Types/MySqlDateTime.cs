@@ -225,8 +225,11 @@ namespace MySql.Data.Types
 					value.Year, value.Month, value.Day, value.Hour, value.Minute, value.Second);
 			else
 			{
-				val = String.Format("{0:0000}-{1:00}-{2:00} {3:00}:{4:00}:{5:00}", value.Year, value.Month,
-					value.Day, value.Hour, value.Minute, value.Second);
+				val = String.Format("{0:0000}-{1:00}-{2:00}",
+                    value.Year, value.Month, value.Day);
+                if (type != MySqlDbType.Date)
+                    val = String.Format("{0}  {1:00}:{2:00}:{3:00}", val,
+                        value.Hour, value.Minute, value.Second);
 			}
 			stream.WriteStringNoNull("'" + val + "'");
 		}

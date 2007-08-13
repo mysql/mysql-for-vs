@@ -537,18 +537,18 @@ namespace MySql.Data.VisualStudio.Descriptors
             QueryBuilder.WriteIdentifier(schemaName, tableName, query);
 
             // Execute query and check table
-            DataTable createTable = connection.ExecuteSelectTable(query.ToString());
-            if (createTable == null || createTable.Rows.Count <= 0)
+            IDataReader reader = connection.ExecuteReader(query.ToString(), 
+                false, CommandBehavior.Default);
+            if (reader == null || !reader.Read())
             {
                 Debug.Fail("Failed to read CREATE TABLE query!");
                 return String.Empty;
             }
 
             // Extract result
-            string result = DataInterpreter.GetString(createTable.Rows[0], CreateTableColumn);
+            string result = reader.GetString(1);
+            reader.Close();
 
-            // Dispose table and exit
-            createTable.Dispose();
             return result;
         }
         #endregion
