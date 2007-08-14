@@ -85,7 +85,6 @@
 
   <!-- builds the client on all supported frameworks -->
   <target name="allframeworks" depends="net-2.0">
-    <call target="Docs"/>
   </target>
 
   <!-- core managed driver target 1.1 -->
@@ -200,8 +199,9 @@
 			failonerror="false"/>
   </target>
 
+
   <!-- documentation target -->
-  <target name="Docs" description="Documentation">
+  <target name="Docs1.1" description="Documentation">
     <ndoc>
       <assemblies basedir="Driver/bin/${framework}/${buildType}">
         <include name="MySql.Data.dll" />

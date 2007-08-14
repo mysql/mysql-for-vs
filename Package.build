@@ -4,119 +4,117 @@
 
 	<include buildfile="Client.build"/>
 
-	<!-- filesets -->
-	<fileset id="BaseSource">
-		<include name="Driver/MySql.Data.2005.csproj"/>
-		<include name="Driver/Properties/**"/>
-		<include name="Driver/Source/**"/>
-		<include name="installer/**"/>
-		<include name="testsuite/**"/>
-		<include name="Client.build"/>
-		<include name="CHANGES"/>
-		<include name="README"/>
-		<include name="Release Notes.txt"/>
-		<include name="Samples/**" />
-	</fileset>
-
-	<fileset id="SourceGPL">
-		<include name="COPYING"/>
-		<include name="EXCEPTIONS"/>
-	</fileset>
-
-	<fileset id="SourceCommercial">
-		<include name="License.txt"/>
-	</fileset>
-
 	<!-- first remove all previous packages -->
 	<delete dir="packages" failonerror="false"/>
 	<mkdir dir="packages"/>
 
+	<target name="full">
+		<!-- first make sure our product actually builds -->
+		<nant buildfile="client.build" target="allframeworks"/>
+		<!-- Now build the docs -->
+		<exec program="sandcastlebuilderconsole.exe" commandline="help.shfb" failonerror="true" workingdir="Documentation"/>
+		<call target="all"/>
+	</target>
+
 	<!-- packaging targets -->
 	<target name="all" depends="GPL, Commercial"/>
 	
+	<!-- Commercial package target -->
 	<target name="Commercial">
-		<property name="defines" value="FINAL" />
 		<property name="IsGPL" value="false"/>
 		<property name="postfix" value="-com"/>
 		<call target="package"/>
 	</target>
 
+	<!-- GPL package target -->
 	<target name="GPL">
-		<property name="defines" value="FINAL" />
 		<property name="IsGPL" value="true"/>
 		<property name="postfix" value="" />
 		<call target="package"/>
+
 	</target>
 
-    <!-- GPL package target -->
-    <target name="package" description="Package target for a single edition">
-		<delete dir="staging" failonerror="false"/>
-		<mkdir dir="staging"/>
-		
-		<copy todir="staging"><fileset refid="BaseSource"/></copy>
-		<copy if="${IsGPL}" todir="staging"><fileset refid="SourceGPL"/></copy>
-		<copy unless="${IsGPL}" todir="staging"><fileset refid="SourceCommercial"/></copy>
-		<move if="${IsGPL}" file="staging/installer/GPL.rtf" tofile="staging/installer/License.rtf"/>
-		<move unless="${IsGPL}" file="staging/installer/EULA.rtf" tofile="staging/installer/License.rtf"/>
-		
-		<copy todir="staging">
+	<target name="package" description="Package target for a single edition" 
+				depends="PackageInstall, PackageSource, PackageZip"/>
+
+	<target name="PackageInstall">
+		<exec if="${IsGPL}" program="iscc" workingdir="Installer" failonerror="true"
+			commandline="main.iss /dVERSION=${ver} /dGPL=1 /fmysql-connector-net-${ver}${postfix}.exe"/>
+		<exec unless="${IsGPL}" program="iscc" workingdir="Installer" failonerror="true"
+			commandline="main.iss /dVERSION=${ver} /fmysql-connector-net-${ver}${postfix}.exe"/>
+		<move todir="packages">
+			<fileset basedir="installer/output">
+				<include name="mysql*.exe"/>
+			</fileset>
+		</move>
+    	</target>
+
+	<target name="PackageSource">
+		<delete dir="tmp" failonerror="false"/>
+		<mkdir dir="tmp"/>	
+		<copy todir="tmp">
 			<fileset>
-				<include name="Installer/main.wxs"/>
-				<include name="Installer/samples.wxs"/>
-				<include name="Installer/sources.wxs"/>
-				<include name="Installer/Bitmaps/*.*"/>
+				<exclude name="**/bin/**"/>
+				<exclude name="**/obj/**"/>
+				<exclude name="**/packages/**"/>
+				<exclude name="**/output/**"/>
+				<exclude name="**/cnet.snk"/>
+				<exclude name="**/*.user"/>
+				<exclude name="**/*.suo"/>
+				<exclude name="**/doc.xml"/>
+				<exclude name="Design/**"/>
+				<exclude name="*-banner.txt"/>
+				<exclude name="COPYING" unless="${IsGPL}"/>
+				<exclude name="EXCEPTIONS" unless="${IsGPL}"/>
+				<exclude name="License.txt" if="${IsGPL}"/>
+				<exclude name="*.Design.*"/>
+
+				<include name="**/**"/>
 			</fileset>
 		</copy>
-		
+
 		<!-- if we are not doing GPL, then we need to replace license text -->
 		<if test="true" unless="${IsGPL}">
 			<replacetext>
 				<section fromfile="gpl-banner.txt" tofile="commercial-banner.txt"/>
-				<files basedir="staging">
+				<files basedir="tmp">
 					<include name="./**/*.cs"/>
 				</files>
 			</replacetext>
 		</if>
-		
-		<!-- build all client targets -->
-		<property name="debug" value="false"/>
-		<property name="build.dir" value="staging" />
-		
-		<nant buildfile="staging/Client.build" target="allframeworks"/>
 
-      <call target="MakeInstaller"/>
-
-		<zip zipfile="packages/mysql-connector-net-${ver}${postfix}.zip">
-			<fileset basedir="staging/Installer"><include name="MySql.Data.msi"/></fileset>
-		</zip>
-
-		<delete dir="staging/Installer" failonerror="false"/>
-		
-		<!-- zip the package up -->
-		<zip zipfile="packages/mysql-connector-net-${ver}${postfix}-noinstall.zip">
-			<fileset basedir="staging/">
-				<include name="./**"/>
+		<zip zipfile="packages/mysql-connector-net-${ver}${postfix}-src.zip">
+			<fileset basedir="tmp">			
+				<include name="**/**"/>
 			</fileset>
 		</zip>
 
-		<!-- now add the MD5 sig -->
-<!--        <checksum algorithm="MD5" fileext="MD5">
-            <fileset>
-                <include name="packages/mysql-connector-net-${ver}${postfix}.zip"/>
-                <include name="packages/mysql-connector-net-${ver}${postfix}-noinstall.zip"/>
-            </fileset>
-        </checksum>-->
+		<delete dir="tmp" failonerror="false"/>
+	</target>
 
-    </target>
+	<target name="PackageZip">
+		<zip zipfile="packages/mysql-connector-net-${ver}${postfix}-noinstall.zip">
+			<fileset basedir="driver/bin/net-2.0/release" prefix="bin">
+				<include name="mysql.data.dll" />
+			</fileset>
+			<fileset basedir="Documentation/Output" prefix="Docs">
+				<include name="*.chm" />
+			</fileset>
+			<fileset>
+				<include name="CHANGES"/>
+				<include name="Release Notes.txt"/>
+				<include if="${IsGPL}" name="COPYING"/>
+				<include if="${IsGPL}" name="EXCEPTIONS"/>
+				<include unless="${IsGPL}" name="License.txt"/>
+			</fileset>
+			<fileset basedir="Samples" prefix="Samples">
+				<include name="**/*"/>
+				<exclude name="**/bin/**"/>
+				<exclude name="**/obj/**"/>
+			</fileset>
+		</zip>
+	</target>
 
-  <target name="MakeInstaller">
-    <!-- now build the WIX installer -->
-    <exec workingdir="staging/Installer" program="candle" 
-          commandline="-ext WixNetFxExtension -dIsGPL=${IsGPL} -dbuild=release main.wxs samples.wxs sources.wxs"/>
-    <exec workingdir="staging/Installer" program="light"
-			    commandline="-sval -ext WixNetFxExtension -ext WixUIExtension -cultures:en-us main.wixobj samples.wixobj sources.wixobj -out MySql.Data.msi"/>
-  </target>
-  
     <!-- verification targets -->
 	<target name="VerifyAll" depends="all">
 		<property name="licenseFile" value="gpl-banner.txt"/>
