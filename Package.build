@@ -39,9 +39,9 @@
 
 	<target name="PackageInstall">
 		<exec if="${IsGPL}" program="iscc" workingdir="Installer" failonerror="true"
-			commandline="main.iss /dVERSION=${ver} /dGPL=1 /fmysql-connector-net-${ver}${postfix}.exe"/>
+			commandline="main.iss /dVERSION=${ver} /dGPL=1 /fmysql-connector-net-${ver}${postfix}"/>
 		<exec unless="${IsGPL}" program="iscc" workingdir="Installer" failonerror="true"
-			commandline="main.iss /dVERSION=${ver} /fmysql-connector-net-${ver}${postfix}.exe"/>
+			commandline="main.iss /dVERSION=${ver} /fmysql-connector-net-${ver}${postfix}"/>
 		<move todir="packages">
 			<fileset basedir="installer/output">
 				<include name="mysql*.exe"/>
