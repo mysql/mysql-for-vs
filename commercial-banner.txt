@@ -1,4 +1,4 @@
-// Copyright (C) 2000-2006 MySQL AB.  All Rights Reserved.
+// Copyright (C) 2000-2007 MySQL AB.  All Rights Reserved.
 //
 // This software product is not publicly available software.  This software
 // product is MySQL commercial software and use of this software is governed
