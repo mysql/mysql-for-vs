@@ -140,6 +140,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 			path = path.Replace(@"\", @"\\");
 			cmd.CommandText = "LOAD DATA LOCAL INFILE '" + path + "' INTO TABLE Test FIELDS TERMINATED BY ','";
+			cmd.CommandTimeout = 0;
 
 			object cnt = 0;
 			try 

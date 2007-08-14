@@ -3,7 +3,7 @@
 
 [Setup]
 AppName=MySQL Connector/Net
-AppVersion=VERSION
+AppVersion={#VERSION}
 AppVerName=MySQL Connector/Net {#SetupSetting("AppVersion")}
 AppPublisher=MySQL, Inc.
 AppPublisherURL=http://www.mysql.com.com/
@@ -19,6 +19,7 @@ PrivilegesRequired=admin
 WizardImageFile=Bitmaps\dlgbmp-is.bmp
 WizardImageStretch=false
 WizardSmallImageFile=compiler:wizmodernsmallimage-is.bmp
+VersionInfoVersion={#VERSION}
 
 [Languages]
 Name: english; MessagesFile: compiler:Default.isl
@@ -44,7 +45,7 @@ Source: installtools.dll; DestDir: {app}; Attribs: hidden
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: {group}\{cm:UninstallProgram,MySQL Connector/Net}; Filename: {uninstallexe}
+Name: {group}\{cm:UninstallProgram,MySQL Connector Net}; Filename: {uninstallexe}
 Name: {group}\Change Log; Filename: {app}\CHANGES
 Name: {group}\Release Notes; Filename: {app}\Release Notes.txt
 Name: {group}\Help; Filename: {app}\Documentation\MySql.Data.chm

@@ -394,7 +394,7 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void HungDataReader() 
 		{
-			MySqlCommand cmd = new MySqlCommand("USE test; SHOW TABLES", conn);
+			MySqlCommand cmd = new MySqlCommand("USE " + database0 + "; SHOW TABLES", conn);
 			MySqlDataReader reader = null;
 			try 
 			{
