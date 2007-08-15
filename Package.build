@@ -42,6 +42,15 @@
 				<include name="packages/*.zip"/>
 			</fileset>
 		</checksum>
+
+		<mkdir dir="packages/GPL"/>
+		<mkdir dir="packages/Commercial"/>
+		<move todir="packages/Commercial">
+			<fileset basedir="packages"><include name="*com*.*"/></fileset>
+		</move>
+		<move todir="packages/GPL">
+			<fileset basedir="packages"><include name="*.*"/></fileset>
+		</move>
 	</target>
 
 	<target name="PackageInstall">
