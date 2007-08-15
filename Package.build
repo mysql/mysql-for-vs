@@ -34,8 +34,15 @@
 
 	</target>
 
-	<target name="package" description="Package target for a single edition" 
-				depends="PackageInstall, PackageSource, PackageZip"/>
+	<target name="package" description="Package target for a single edition"
+				depends="PackageInstall, PackageSource, PackageZip">
+		<checksum algorithm="MD5" fileext="MD5">
+			<fileset>
+				<include name="packages/*.exe"/>
+				<include name="packages/*.zip"/>
+			</fileset>
+		</checksum>
+	</target>
 
 	<target name="PackageInstall">
 		<exec if="${IsGPL}" program="iscc" workingdir="Installer" failonerror="true"

@@ -40,7 +40,7 @@ Source: ..\License.txt; DestDir: {app}; Flags: ignoreversion
 
 Source: ..\Samples\*.*; DestDir: {app}\Samples; Excludes: bin,obj,bin\debug,bin\release,obj\debug,obj\release; Flags: ignoreversion createallsubdirs recursesubdirs
 
-Source: installtools.dll; DestDir: {app}; Attribs: hidden
+Source: binary\installtools.dll; DestDir: {app}; Attribs: hidden
 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
