@@ -27,6 +27,8 @@ begin
   begin
     if version = 2 then
       Result := Format('%s\v2.0.50727\installutil.exe', [installroot]);
+    if version = 11 then
+      Result := Format('%s\v1.1.4322\installutil.exe', [installroot]);
   end
   Log('Returning ' + Result + ' as path to installutil');
 end;
@@ -36,6 +38,9 @@ var
   ResultCode : Integer;
   InstallutilPath: String;
 begin
+    Result := true;
+    Log(Format('Registering %s for version %d', [name, version]));
+
     // Install our assembly to the GAC now
     if Not InstallToGAC(name, version) then
     begin
@@ -52,9 +57,9 @@ begin
         Log('Running installer methods in ' + name + ' failed.');
         Result := false;
       end
+      else
+        Log('Successfully registered ' + name);
     end
-    Log('Successfully registered ' + name);
-    Result := true;
 end;
 
 function UnRegisterAssembly(name: String; version: Integer) : Boolean;
@@ -62,8 +67,11 @@ var
   ResultCode : Integer;
   InstallutilPath: String;
 begin
+    Result := true;
+    Log(Format('Unregistering %s for version %d', [name, version]));
+
     // Remove our assembly from the GAC now
-    if Not RemoveFromGAC('mysql.data', 2) then
+    if Not RemoveFromGAC('mysql.data', version) then
     begin
       Log('Removing ' + name + ' from the GAC failed.');
       Result := false;
@@ -78,9 +86,9 @@ begin
         Log('Running remove methods in ' + name + ' failed.');
         Result := false;
       end
+      else
+        Log('Successfully unregistered ' + name);
     end
-    Log('Successfully unregistered ' + name);
-    Result := true;
 end;
 
 
