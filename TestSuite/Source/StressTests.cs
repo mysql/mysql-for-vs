@@ -55,6 +55,7 @@ namespace MySql.Data.MySqlClient.Tests
 			byte[] dataIn2 = Utils.CreateBlob(len);
 
             MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (?id, NULL, ?blob, NULL )", conn);
+		    cmd.CommandTimeout = 0;
 			cmd.Parameters.Add(new MySqlParameter("?id", 1));
 			cmd.Parameters.Add(new MySqlParameter("?blob", dataIn));
 			try 
