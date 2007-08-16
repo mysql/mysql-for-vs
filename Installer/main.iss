@@ -3,7 +3,7 @@
 
 [Setup]
 AppName=MySQL Connector/Net
-AppVersion={#VERSION}
+AppVersion=5.1.3
 AppVerName=MySQL Connector/Net {#SetupSetting("AppVersion")}
 AppPublisher=MySQL, Inc.
 AppPublisherURL=http://www.mysql.com.com/
@@ -19,7 +19,7 @@ PrivilegesRequired=admin
 WizardImageFile=Bitmaps\dlgbmp-is.bmp
 WizardImageStretch=false
 WizardSmallImageFile=compiler:wizmodernsmallimage-is.bmp
-VersionInfoVersion={#VERSION}
+VersionInfoVersion={#SetupSetting("AppVersion")}
 
 [Languages]
 Name: english; MessagesFile: compiler:Default.isl
@@ -55,9 +55,11 @@ Root: HKLM; Subkey: Software\MySQL AB\MySQL Connector/Net {#SetupSetting('AppVer
 Root: HKLM; Subkey: Software\MySQL AB\MySQL Connector/Net {#SetupSetting('AppVersion')}; ValueType: string; ValueName: Location; ValueData: {app}
 Root: HKLM; Subkey: Software\MySQL AB\MySQL Connector/Net {#SetupSetting('AppVersion')}; ValueType: string; ValueName: Version; ValueData: {#SetupSetting('AppVersion')}
 
+#include "vsregistry.iss"
+
 ; make our assembly visible to Visual Studio
-Root: HKLM; Subkey: Software\Microsoft\.NETFramework\AssemblyFolders\MySQL Connector/Net {#VERSION}; Flags: uninsdeletekey
-Root: HKLM; Subkey: Software\Microsoft\.NETFramework\AssemblyFolders\MySQL Connector/Net {#VERSION}; ValueType: string; ValueData: "{app}\Binaries\.NET 2.0"
+Root: HKLM; Subkey: Software\Microsoft\.NETFramework\AssemblyFolders\MySQL Connector/Net {#SetupSetting('AppVersion')}; Flags: uninsdeletekey
+Root: HKLM; Subkey: Software\Microsoft\.NETFramework\AssemblyFolders\MySQL Connector/Net {#SetupSetting('AppVersion')}; ValueType: string; ValueData: {app}\Binaries\.NET 2.0
 
 [Code]
 #include "misc.iss"
