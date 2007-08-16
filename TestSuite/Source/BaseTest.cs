@@ -23,6 +23,8 @@ using NUnit.Framework;
 using System.Configuration;
 using System.Data;
 using MySql.Data.MySqlClient;
+using System.Reflection;
+using System.Diagnostics;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -43,8 +45,8 @@ namespace MySql.Data.MySqlClient.Tests
         protected string memoryName;
         protected string rootUser;
         protected string rootPassword;
-        protected string database0;
-        protected string database1;
+        protected static string database0;
+        protected static string database1;
         protected Version version;
         protected bool pooling;
 
@@ -52,37 +54,40 @@ namespace MySql.Data.MySqlClient.Tests
         {
             user = "test";
             password = "test";
-            host = "localhost";
             port = 3306;
-            pipeName = "MYSQL";
-            memoryName = "MYSQL";
             rootUser = "root";
             rootPassword = "";
 
-            database0 = System.IO.Path.GetFileNameWithoutExtension(
-                System.IO.Path.GetTempFileName());
-            database1 = System.IO.Path.GetFileNameWithoutExtension(
-                System.IO.Path.GetTempFileName());
-
 #if NET20
-            string strHost = ConfigurationManager.AppSettings["host"];
+            string host = ConfigurationManager.AppSettings["host"];
             string strPort = ConfigurationManager.AppSettings["port"];
-            string strPipeName = ConfigurationManager.AppSettings["pipename"];
-            string strMemName = ConfigurationManager.AppSettings["memory_name"];
+            string pipeName = ConfigurationManager.AppSettings["pipename"];
+            string memoryName = ConfigurationManager.AppSettings["memory_name"];
 #else
-            string strHost = ConfigurationSettings.AppSettings["host"];
+            string host = ConfigurationSettings.AppSettings["host"];
             string strPort = ConfigurationSettings.AppSettings["port"];
-            string strPipeName = ConfigurationSettings.AppSettings["pipename"];
-            string strMemName = ConfigurationSettings.AppSettings["memory_name"];
+            string pipeName = ConfigurationSettings.AppSettings["pipename"];
+            string memoryName = ConfigurationSettings.AppSettings["memory_name"];
 #endif
-            if (strHost != null)
-                host = strHost;
             if (strPort != null)
                 port = Int32.Parse(strPort);
-            if (strPipeName != null)
-                pipeName = strPipeName;
-            if (strMemName != null)
-                memoryName = strMemName;
+			if (host == null)
+				host = "localhost";
+            if (pipeName == null)
+				pipeName = "MYSQL";
+            if (memoryName != null)
+				memoryName = "MYSQL";
+
+			// we don't use FileVersion because it's not available
+			// on the compact framework
+			if (database0 == null)
+			{
+				string fullname = Assembly.GetExecutingAssembly().FullName;
+				string[] parts = fullname.Split(new char[] { '=' });
+				string[] versionParts = parts[1].Split(new char[] { '.' });
+				database0 = String.Format("db{0}{1}{2}-a", versionParts[0], versionParts[1], port - 3300);
+				database1 = String.Format("db{0}{1}{2}-b", versionParts[0], versionParts[1], port - 3300);
+			}
         }
 
         [TestFixtureSetUp]
@@ -96,8 +101,8 @@ namespace MySql.Data.MySqlClient.Tests
             rootConn.Open();
 
             // now create our databases
-            suExecSQL("CREATE DATABASE `" + database0 + "`");
-            suExecSQL("CREATE DATABASE `" + database1 + "`");
+			suExecSQL(String.Format("DROP DATABASE IF EXISTS `{0}`; CREATE DATABASE `{0}`", database0));
+			suExecSQL(String.Format("DROP DATABASE IF EXISTS `{0}`; CREATE DATABASE `{0}`", database1));
 
             // now allow our user to access them
             suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'localhost' 
@@ -118,8 +123,8 @@ namespace MySql.Data.MySqlClient.Tests
         [TestFixtureTearDown]
         protected virtual void TestFixtureTearDown()
         {
-            suExecSQL("DROP DATABASE " + database0);
-            suExecSQL("DROP DATABASE " + database1);
+			suExecSQL(String.Format("DROP DATABASE IF EXISTS `{0}`", database0));
+			suExecSQL(String.Format("DROP DATABASE IF EXISTS `{0}`", database1));
 
             rootConn.Close();
             Close();

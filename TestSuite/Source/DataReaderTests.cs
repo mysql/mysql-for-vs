@@ -394,7 +394,7 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void HungDataReader() 
 		{
-			MySqlCommand cmd = new MySqlCommand("USE " + database0 + "; SHOW TABLES", conn);
+			MySqlCommand cmd = new MySqlCommand("USE `" + database0 + "`; SHOW TABLES", conn);
 			MySqlDataReader reader = null;
 			try 
 			{
@@ -790,7 +790,7 @@ namespace MySql.Data.MySqlClient.Tests
             execSQL("DROP TABLE IF EXISTS test");
             execSQL("CREATE TABLE test (id int, PRIMARY KEY(id))");
             MySqlCommand cmd = new MySqlCommand(
-                String.Format("SHOW INDEX FROM test FROM {0}", database0), conn);
+                String.Format("SHOW INDEX FROM test FROM `{0}`", database0), conn);
             MySqlDataReader reader = null;
             try
             {

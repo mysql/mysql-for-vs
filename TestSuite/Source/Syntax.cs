@@ -448,7 +448,7 @@ namespace MySql.Data.MySqlClient.Tests
         public void ShowTableStatus()
         {
             MySqlDataAdapter da = new MySqlDataAdapter(
-                String.Format("SHOW TABLE STATUS FROM {0} LIKE 'test'",
+                String.Format("SHOW TABLE STATUS FROM `{0}` LIKE 'test'",
                 database0), conn);
             DataTable dt = new DataTable();
             da.Fill(dt);
