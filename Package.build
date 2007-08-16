@@ -22,41 +22,55 @@
 
 
 	<!-- packaging targets -->
-	<target name="all" depends="GPL, Commercial"/>
+	<target name="all" depends="GPL, Commercial">
+		<checksum algorithm="MD5" fileext="MD5">
+			<fileset>
+				<include name="packages/**/*.exe"/>
+				<include name="packages/**/*.zip"/>
+			</fileset>
+		</checksum>
+	</target>
 	
 	<!-- Commercial package target -->
 	<target name="Commercial">
+		<mkdir dir="packages/Commercial"/>
 		<property name="IsGPL" value="false"/>
 		<property name="postfix" value="-com"/>
 		<call target="package"/>
+
+		<move todir="packages/Commercial">
+			<fileset basedir="packages"><include name="*.*"/></fileset>
+		</move>
 	</target>
 
 	<!-- GPL package target -->
 	<target name="GPL">
+		<mkdir dir="packages/GPL"/>
+		<mkdir dir="packages/snapshots"/>
+
 		<property name="IsGPL" value="true"/>
 		<property name="postfix" value="" />
 		<call target="package"/>
 
+		<copy todir="packages/GPL">
+			<fileset basedir="packages"><include name="*.*"/></fileset>
+		</copy>
+		<move todir="packages/snapshots">
+			<fileset basedir="packages\"><include name="*.*"/></fileset>
+		</move>
+
+		<!-- now rename the snapshot builds to include date -->
+		<move file="packages/snapshots/mysql-connector-net-${ver}.exe" 
+		      tofile="packages/snapshots/mysql-connector-net-${ver}-${datetime::get-year(datetime::now())}${string::pad-left(convert::to-string(datetime::get-month(datetime::now())), 2, '0')}${string::pad-left(convert::to-string(datetime::get-day(datetime::now())), 2, '0')}.exe" />
+		<move file="packages/snapshots/mysql-connector-net-${ver}-src.zip" 
+		      tofile="packages/snapshots/mysql-connector-net-${ver}-${datetime::get-year(datetime::now())}${string::pad-left(convert::to-string(datetime::get-month(datetime::now())), 2, '0')}${string::pad-left(convert::to-string(datetime::get-day(datetime::now())), 2, '0')}-src.zip" />
+		<move file="packages/snapshots/mysql-connector-net-${ver}-noinstall.zip" 
+		      tofile="packages/snapshots/mysql-connector-net-${ver}-${datetime::get-year(datetime::now())}${string::pad-left(convert::to-string(datetime::get-month(datetime::now())), 2, '0')}${string::pad-left(convert::to-string(datetime::get-day(datetime::now())), 2, '0')}-noinstall.zip" />
+
 	</target>
 
 	<target name="package" description="Package target for a single edition"
-				depends="PackageInstall, PackageSource, PackageZip">
-		<checksum algorithm="MD5" fileext="MD5">
-			<fileset>
-				<include name="packages/*.exe"/>
-				<include name="packages/*.zip"/>
-			</fileset>
-		</checksum>
-
-		<mkdir dir="packages/GPL"/>
-		<mkdir dir="packages/Commercial"/>
-		<move todir="packages/Commercial">
-			<fileset basedir="packages"><include name="*com*.*"/></fileset>
-		</move>
-		<move todir="packages/GPL">
-			<fileset basedir="packages"><include name="*.*"/></fileset>
-		</move>
-	</target>
+				depends="PackageInstall, PackageSource, PackageZip"/>
 
 	<target name="PackageInstall">
 		<exec if="${IsGPL}" program="iscc" workingdir="Installer" failonerror="true"
