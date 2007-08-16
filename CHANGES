@@ -111,6 +111,7 @@ Version 5.0.8
 	with a reader is a .Net 2.0 thing. (Bug #30204)
   - Fixed the database schema collection so that it works on servers that are not properly
     respecting the lower_case_table_names setting.	
+  - Moved installer to Inno Setup
           
 Version 5.0.7 5/16/2007
 
