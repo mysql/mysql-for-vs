@@ -22,6 +22,7 @@ using System;
 using System.Collections;
 using System.Threading;
 using System.Collections.Generic;
+using System.Diagnostics;
 #if CF
 using MySql.Data.Common;
 #endif
