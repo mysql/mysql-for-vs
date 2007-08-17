@@ -453,8 +453,8 @@ namespace MySql.Data.VisualStudio.DocumentView
                 object[] newId = new object[4];
                 newId[0] = id[0];
                 newId[1] = id[1];
-                newId[2] = typeVal;
-                newId[3] = id[2];
+                newId[3] = typeVal;
+                newId[2] = id[2];
                 return newId;
             }
         }

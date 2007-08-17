@@ -20,6 +20,7 @@ using System.Text;
 using MySql.Data.VisualStudio.Utils;
 using System.Globalization;
 using MySql.Data.VisualStudio.Properties;
+using System.Data.Common;
 
 namespace MySql.Data.VisualStudio.Descriptors
 {
@@ -207,5 +208,26 @@ namespace MySql.Data.VisualStudio.Descriptors
             return ObjectDescriptor.EnumerateObjects(connection, TypeName, restrictions);
         }
         #endregion
+
+		protected override DataTable ReadTable(DataConnectionWrapper connection, object[] restrictions, string sort)
+		{
+			if (connection == null)
+				throw new ArgumentNullException("connection");
+
+			if (connection.ServerVersion != null && RequiredVersion > connection.ServerVersion)
+				// This object requires a higher version of the MySql Server
+				return new DataTable();
+
+			DbConnection conn = (DbConnection)connection.Connection.GetLockedProviderObject();
+
+			string[] rest = restrictions == null ? null : new string[restrictions.Length];
+			if (rest != null)
+				for (int x = 0; x < rest.Length; x++)
+					if (restrictions[x] != null)
+						rest[x] = restrictions[x].ToString();
+			DataTable dt = conn.GetSchema("Procedures", rest);
+			connection.Connection.UnlockProviderObject();
+			return dt;
+		}
     }
 }
