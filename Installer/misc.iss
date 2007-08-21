@@ -71,7 +71,7 @@ begin
     Log(Format('Unregistering %s for version %d', [name, version]));
 
     // Remove our assembly from the GAC now
-    if Not RemoveFromGAC('mysql.data', version) then
+    if Not RemoveFromGAC('mysql.data, Version={#SetupSetting('AppVersion')}', version) then
     begin
       Log('Removing ' + name + ' from the GAC failed.');
       Result := false;

@@ -55,8 +55,6 @@ Root: HKLM; Subkey: Software\MySQL AB\MySQL Connector/Net {#SetupSetting('AppVer
 Root: HKLM; Subkey: Software\MySQL AB\MySQL Connector/Net {#SetupSetting('AppVersion')}; ValueType: string; ValueName: Location; ValueData: {app}
 Root: HKLM; Subkey: Software\MySQL AB\MySQL Connector/Net {#SetupSetting('AppVersion')}; ValueType: string; ValueName: Version; ValueData: {#SetupSetting('AppVersion')}
 
-#include "vsregistry.iss"
-
 ; make our assembly visible to Visual Studio
 Root: HKLM; Subkey: Software\Microsoft\.NETFramework\AssemblyFolders\MySQL Connector/Net {#SetupSetting('AppVersion')}; Flags: uninsdeletekey
 Root: HKLM; Subkey: Software\Microsoft\.NETFramework\AssemblyFolders\MySQL Connector/Net {#SetupSetting('AppVersion')}; ValueType: string; ValueData: {app}\Binaries\.NET 2.0
