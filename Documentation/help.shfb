@@ -1,6 +1,6 @@
 ﻿<project schemaVersion="1.4.0.2">
     <assemblies>
-        <assembly assemblyPath="..\Driver\bin\net-2.0\Debug\MySql.Data.dll" xmlCommentsPath="..\Driver\bin\net-2.0\Debug\doc.xml" commentsOnly="False" />
+        <assembly assemblyPath="..\Driver\bin\net-2.0\release\MySql.Data.dll" xmlCommentsPath="..\Driver\bin\net-2.0\release\MySql.Data.xml" commentsOnly="False" />
     </assemblies>
     <namespaceSummaries>
         <namespaceSummaryItem name="" isDocumented="False" />
