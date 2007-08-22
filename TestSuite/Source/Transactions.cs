@@ -43,7 +43,7 @@ namespace MySql.Data.MySqlClient.Tests
         void TransactionScopeInternal(bool commit)
         {
             MySqlConnection c = new MySqlConnection(GetConnectionString(true));
-            MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES ('a', 'name', 'name2')", c);
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES ('a', 'name', 'name2')", c);
 
             try
             {
@@ -57,7 +57,7 @@ namespace MySql.Data.MySqlClient.Tests
                         ts.Complete();
                 }
 
-                cmd.CommandText = "SELECT COUNT(*) FROM test";
+                cmd.CommandText = "SELECT COUNT(*) FROM Test";
                 object count = cmd.ExecuteScalar();
                 Assert.AreEqual(commit ? 1 : 0, count);
             }
@@ -88,8 +88,8 @@ namespace MySql.Data.MySqlClient.Tests
         {
             MySqlConnection c1 = new MySqlConnection(GetConnectionString(true));
             MySqlConnection c2 = new MySqlConnection(GetConnectionString(true));
-            MySqlCommand cmd1 = new MySqlCommand("INSERT INTO test VALUES ('a', 'name', 'name2')", c1);
-            MySqlCommand cmd2 = new MySqlCommand("INSERT INTO test VALUES ('b', 'name', 'name2')", c1);
+            MySqlCommand cmd1 = new MySqlCommand("INSERT INTO Test VALUES ('a', 'name', 'name2')", c1);
+            MySqlCommand cmd2 = new MySqlCommand("INSERT INTO Test VALUES ('b', 'name', 'name2')", c1);
 
             try
             {
@@ -105,7 +105,7 @@ namespace MySql.Data.MySqlClient.Tests
                         ts.Complete();
                 }
 
-                cmd1.CommandText = "SELECT COUNT(*) FROM test";
+                cmd1.CommandText = "SELECT COUNT(*) FROM Test";
                 object count = cmd1.ExecuteScalar();
                 Assert.AreEqual(commit ? 2 : 0, count);
             }
@@ -142,20 +142,20 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void RollingBackOnClose()
         {
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL("CREATE TABLE test (id INT) TYPE=InnoDB");
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id INT) TYPE=InnoDB");
 
             string connStr = GetConnectionString(true) + ";pooling=true;";
             MySqlConnection c = new MySqlConnection(connStr);
             c.Open();
-            MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES (1)", c);
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (1)", c);
             MySqlTransaction tx = c.BeginTransaction();
             cmd.ExecuteNonQuery();
             c.Close();
 
             MySqlConnection c2 = new MySqlConnection(connStr);
             c2.Open();
-            MySqlCommand cmd2 = new MySqlCommand("SELECT COUNT(*) from test", c2);
+            MySqlCommand cmd2 = new MySqlCommand("SELECT COUNT(*) from Test", c2);
             MySqlTransaction tx2 = c2.BeginTransaction();
             object count = cmd2.ExecuteScalar();
             c2.Close();
@@ -264,10 +264,10 @@ namespace MySql.Data.MySqlClient.Tests
                 MySqlConnection c = new MySqlConnection(connStr);
                 c.Open();
 
-                MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES ('a', 'name', 'name2')", c);
+                MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES ('a', 'name', 'name2')", c);
                 cmd.ExecuteNonQuery();
             }
-            MySqlCommand cmd2 = new MySqlCommand("SELECT COUNT(*) FROM test", conn);
+            MySqlCommand cmd2 = new MySqlCommand("SELECT COUNT(*) FROM Test", conn);
             Assert.AreEqual(1, cmd2.ExecuteScalar());
         }
 
@@ -281,7 +281,7 @@ namespace MySql.Data.MySqlClient.Tests
                 {
                     c1.Open();
                     c1.EnlistTransaction(Transaction.Current);
-                    MySqlCommand cmd1 = new MySqlCommand("INSERT INTO test (key2) VALUES ('a')", c1);
+                    MySqlCommand cmd1 = new MySqlCommand("INSERT INTO Test (key2) VALUES ('a')", c1);
                     cmd1.ExecuteNonQuery();
                 }
 
@@ -289,7 +289,7 @@ namespace MySql.Data.MySqlClient.Tests
                 {
                     c2.Open();
                     c2.EnlistTransaction(Transaction.Current);
-                    MySqlCommand cmd2 = new MySqlCommand("INSERT INTO test (key2) VALUES ('b')", c2);
+                    MySqlCommand cmd2 = new MySqlCommand("INSERT INTO Test (key2) VALUES ('b')", c2);
                     cmd2.ExecuteNonQuery();
                 }
                 if (complete)
@@ -358,7 +358,7 @@ namespace MySql.Data.MySqlClient.Tests
 
         private void ReusingSameConnection(bool pooling, bool complete)
         {
-            execSQL("TRUNCATE TABLE test");
+            execSQL("TRUNCATE TABLE Test");
             using (TransactionScope ts = new TransactionScope(TransactionScopeOption.RequiresNew, TimeSpan.MaxValue))
             {
                 string connStr = GetConnectionStringBasic(true);
@@ -368,14 +368,14 @@ namespace MySql.Data.MySqlClient.Tests
                 using (MySqlConnection c1 = new MySqlConnection(connStr))
                 {
                     c1.Open();
-                    MySqlCommand cmd1 = new MySqlCommand("INSERT INTO test (key2) VALUES ('a')", c1);
+                    MySqlCommand cmd1 = new MySqlCommand("INSERT INTO Test (key2) VALUES ('a')", c1);
                     cmd1.ExecuteNonQuery();
                 }
 
                 using (MySqlConnection c2 = new MySqlConnection(connStr))
                 {
                     c2.Open();
-                    MySqlCommand cmd2 = new MySqlCommand("INSERT INTO test (key2) VALUES ('b')", c2);
+                    MySqlCommand cmd2 = new MySqlCommand("INSERT INTO Test (key2) VALUES ('b')", c2);
                     cmd2.ExecuteNonQuery();
                 }
 
@@ -390,7 +390,7 @@ namespace MySql.Data.MySqlClient.Tests
                 }
             }
 
-            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
             DataTable dt = new DataTable();
             da.Fill(dt);
             if (complete)

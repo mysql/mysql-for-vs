@@ -53,7 +53,7 @@ namespace MySql.Data.MySqlClient.Tests
                 StringBuilder sb = new StringBuilder();
                 for (int i=0; i < 254; i++)
                     sb.Append('a');
-                string sql = "INSERT INTO test (name) VALUES ('" + sb.ToString() + "')";
+                string sql = "INSERT INTO Test (name) VALUES ('" + sb.ToString() + "')";
 				reader = MySqlHelper.ExecuteReader(this.GetConnectionString(true), sql);
 			}
 			catch (Exception ex)

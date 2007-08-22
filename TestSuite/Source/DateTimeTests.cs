@@ -59,7 +59,7 @@ namespace MySql.Data.MySqlClient.Tests
 			{
 				c.Open();
 
-				MySqlCommand cmd = new MySqlCommand("SELECT * FROM test", c);
+				MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test", c);
 				reader = cmd.ExecuteReader();
 				Assert.IsTrue(reader.Read());
 				Assert.AreEqual(DateTime.MinValue.Date, reader.GetDateTime(1).Date);
@@ -181,7 +181,7 @@ namespace MySql.Data.MySqlClient.Tests
                 reader = null;
 
                 DataTable dt = new DataTable();
-                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", c);
+                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", c);
                 MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
                 da.Fill(dt);
                 dt.Rows[0]["id"] = 2;
@@ -346,12 +346,12 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void UsingDatesAsStrings()
 		{
-			MySqlCommand cmd = new MySqlCommand("INSERT INTO test (id, dt) VALUES (1, ?dt)", conn);
+			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id, dt) VALUES (1, ?dt)", conn);
 			cmd.Parameters.Add("?dt", MySqlDbType.Date);
 			cmd.Parameters[0].Value = "2005-03-04";
 			cmd.ExecuteNonQuery();
 
-			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
+			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
 			DataTable dt = new DataTable();
 			da.Fill(dt);
 			Assert.AreEqual(1, dt.Rows.Count);
@@ -367,33 +367,33 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void Bug19481()
         {
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL("CREATE TABLE test(ID INT NOT NULL AUTO_INCREMENT, " +
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test(ID INT NOT NULL AUTO_INCREMENT, " +
                 "SATELLITEID VARCHAR(3) NOT NULL, ANTENNAID INT, AOS_TIMESTAMP DATETIME NOT NULL, " +
                 "TEL_TIMESTAMP DATETIME, LOS_TIMESTAMP DATETIME, PRIMARY KEY (ID))");
-            execSQL("INSERT INTO test VALUES (NULL,'224','0','2005-07-24 00:00:00'," +
+            execSQL("INSERT INTO Test VALUES (NULL,'224','0','2005-07-24 00:00:00'," +
                 "'2005-07-24 00:02:00','2005-07-24 00:22:00')");
-            execSQL("INSERT INTO test VALUES (NULL,'155','24','2005-07-24 03:00:00'," +
+            execSQL("INSERT INTO Test VALUES (NULL,'155','24','2005-07-24 03:00:00'," +
                 "'2005-07-24 03:02:30','2005-07-24 03:20:00')");
-            execSQL("INSERT INTO test VALUES (NULL,'094','34','2005-07-24 09:00:00'," +
+            execSQL("INSERT INTO Test VALUES (NULL,'094','34','2005-07-24 09:00:00'," +
                 "'2005-07-24 09:00:30','2005-07-24 09:15:00')");
-            execSQL("INSERT INTO test VALUES (NULL,'224','54','2005-07-24 12:00:00'," +
+            execSQL("INSERT INTO Test VALUES (NULL,'224','54','2005-07-24 12:00:00'," +
                 "'2005-07-24 12:01:00','2005-07-24 12:33:00')");
-            execSQL("INSERT INTO test VALUES (NULL,'155','25','2005-07-24 15:00:00'," +
+            execSQL("INSERT INTO Test VALUES (NULL,'155','25','2005-07-24 15:00:00'," +
                 "'2005-07-24 15:02:00','2005-07-24 15:22:00')");
-            execSQL("INSERT INTO test VALUES (NULL,'094','0','2005-07-24 17:00:00'," +
+            execSQL("INSERT INTO Test VALUES (NULL,'094','0','2005-07-24 17:00:00'," +
                 "'2005-07-24 17:02:12','2005-07-24 17:20:00')");
-            execSQL("INSERT INTO test VALUES (NULL,'224','24','2005-07-24 19:00:00'," +
+            execSQL("INSERT INTO Test VALUES (NULL,'224','24','2005-07-24 19:00:00'," +
                 "'2005-07-24 19:02:00','2005-07-24 19:27:00')");
-            execSQL("INSERT INTO test VALUES (NULL,'155','34','2005-07-24 21:00:00'," +
+            execSQL("INSERT INTO Test VALUES (NULL,'155','34','2005-07-24 21:00:00'," +
                 "'2005-07-24 21:02:33','2005-07-24 21:22:55')");
-            execSQL("INSERT INTO test VALUES (NULL,'094','55','2005-07-24 23:00:00'," +
+            execSQL("INSERT INTO Test VALUES (NULL,'094','55','2005-07-24 23:00:00'," +
                 "'2005-07-24 23:00:45','2005-07-24 23:22:23')");
 
             DateTime date = DateTime.Parse("7/24/2005");
             StringBuilder sql = new StringBuilder();
             sql.AppendFormat(CultureInfo.InvariantCulture, 
-                @"SELECT ID, ANTENNAID, TEL_TIMESTAMP, LOS_TIMESTAMP FROM test 
+                @"SELECT ID, ANTENNAID, TEL_TIMESTAMP, LOS_TIMESTAMP FROM Test 
                 WHERE TEL_TIMESTAMP >= '{0}'", date.ToString("u"));
             MySqlDataAdapter da = new MySqlDataAdapter(sql.ToString(), conn);
             DataSet dataSet = new DataSet();
@@ -408,8 +408,8 @@ namespace MySql.Data.MySqlClient.Tests
         {
             if (Version < new Version(4, 1)) return;
 
-            execSQL("INSERT INTO test VALUES(1, Now(), '0000-00-00', NULL, NULL)");
-            MySqlCommand cmd = new MySqlCommand("SELECT d FROM test WHERE id=?id", conn);
+            execSQL("INSERT INTO Test VALUES(1, Now(), '0000-00-00', NULL, NULL)");
+            MySqlCommand cmd = new MySqlCommand("SELECT d FROM Test WHERE id=?id", conn);
             cmd.Parameters.AddWithValue("?id", 1);
             cmd.Prepare();
             MySqlDataReader reader = null;
@@ -432,13 +432,13 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void DateTimeInDataTable()
         {
-            execSQL("INSERT INTO test VALUES(1, Now(), '0000-00-00', NULL, NULL)");
+            execSQL("INSERT INTO Test VALUES(1, Now(), '0000-00-00', NULL, NULL)");
 
             MySqlConnection c = new MySqlConnection(
                 conn.ConnectionString + ";pooling=false;AllowZeroDatetime=true");
             c.Open();
 
-            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", c);
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", c);
             MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
             DataTable dt = new DataTable();
             try

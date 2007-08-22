@@ -244,7 +244,7 @@ namespace MySql.Data.MySqlClient.Tests
 		[Explicit]
 		public void UpdateManyRows() 
 		{
-			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
+			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
 			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
 			DataTable dt = new DataTable();
 			da.Fill(dt);
@@ -349,11 +349,11 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void AutoIncrementColumns()
 		{
-			execSQL("DROP TABLE IF EXISTS test");
-			execSQL("CREATE TABLE test (id int(10) unsigned NOT NULL auto_increment primary key)");
-			execSQL("INSERT INTO test VALUES(NULL)");
+			execSQL("DROP TABLE IF EXISTS Test");
+			execSQL("CREATE TABLE Test (id int(10) unsigned NOT NULL auto_increment primary key)");
+			execSQL("INSERT INTO Test VALUES(NULL)");
 
-			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
+			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
 			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
 			DataSet ds = new DataSet();
 			da.Fill(ds);
@@ -385,12 +385,12 @@ namespace MySql.Data.MySqlClient.Tests
             if (Version < new Version(4, 1))
                 return;
 
-			execSQL("DROP TABLE IF EXISTS test");
-			execSQL("CREATE TABLE test ( id INT NOT NULL, amount INT )");
-			execSQL("INSERT INTO test VALUES (1, 44)");
-			execSQL("INSERT INTO test VALUES (2, 88)");
+			execSQL("DROP TABLE IF EXISTS Test");
+			execSQL("CREATE TABLE Test ( id INT NOT NULL, amount INT )");
+			execSQL("INSERT INTO Test VALUES (1, 44)");
+			execSQL("INSERT INTO Test VALUES (2, 88)");
 
-			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test GROUP BY id WITH ROLLUP", conn);
+			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test GROUP BY id WITH ROLLUP", conn);
 			DataSet ds = new DataSet();
 			da.Fill(ds);
 
@@ -406,11 +406,11 @@ namespace MySql.Data.MySqlClient.Tests
 /*		[Test]
 		public void DefaultValues() 
 		{
-			execSQL("DROP TABLE IF EXISTS test");
-			execSQL("CREATE TABLE test (id int, name VARCHAR(20) NOT NULL DEFAULT 'abc', dt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)");
+			execSQL("DROP TABLE IF EXISTS Test");
+			execSQL("CREATE TABLE Test (id int, name VARCHAR(20) NOT NULL DEFAULT 'abc', dt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)");
 			
-			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
-			MySqlCommand insCmd = new MySqlCommand("INSERT INTO test VALUES (?id, ?name, ?dt)", conn);
+			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
+			MySqlCommand insCmd = new MySqlCommand("INSERT INTO Test VALUES (?id, ?name, ?dt)", conn);
 			insCmd.Parameters.Add("?id", MySqlDbType.Int32, 0, "id");
 			insCmd.Parameters.Add("?name", MySqlDbType.VarChar, 20, "name");
 			insCmd.Parameters.Add("?dt", MySqlDbType.Datetime, 0, "dt");
@@ -418,7 +418,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 			DataTable dt = new DataTable();
 
-			//da.FillSchema(ds, SchemaType.Source);//, "test");
+			//da.FillSchema(ds, SchemaType.Source);//, "Test");
 			da.MissingSchemaAction = MissingSchemaAction.AddWithKey;
 			try 
 			{
@@ -442,7 +442,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 			da.Update(dt);
 
-			MySqlCommand cmd = new MySqlCommand("SELECT * FROM test", conn);
+			MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test", conn);
 			try 
 			{
 				using (MySqlDataReader reader = cmd.ExecuteReader()) 
@@ -470,11 +470,11 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void Bug16307()
         {
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL("CREATE TABLE test (OrgNum int auto_increment, CallReportNum int, Stamp varchar(50), " +
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (OrgNum int auto_increment, CallReportNum int, Stamp varchar(50), " +
                 "WasRealCall varchar(50), WasHangup varchar(50), primary key(orgnum))");
 
-            string strSQL = "INSERT INTO test(OrgNum, CallReportNum, Stamp, WasRealCall, WasHangup) " +
+            string strSQL = "INSERT INTO Test(OrgNum, CallReportNum, Stamp, WasRealCall, WasHangup) " +
                 "VALUES (?OrgNum, ?CallReportNum, ?Stamp, ?WasRealCall, ?WasHangup)";
 
             MySqlCommand cmd = new MySqlCommand(strSQL, conn);
@@ -486,7 +486,7 @@ namespace MySql.Data.MySqlClient.Tests
             pc.Add("?WasRealCall", MySqlDbType.VarChar, 0, "WasRealCall");
             pc.Add("?WasHangup", MySqlDbType.VarChar, 0, "WasHangup");
 
-            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
             da.InsertCommand = cmd;
 
             DataSet ds = new DataSet();
@@ -528,14 +528,14 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void QuietOpenAndClose()
         {
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL("CREATE TABLE test (id INT, PRIMARY KEY(id))");
-            execSQL("INSERT INTO test VALUES(1)");
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id INT, PRIMARY KEY(id))");
+            execSQL("INSERT INTO Test VALUES(1)");
 
             try
             {
                 MySqlConnection c = new MySqlConnection(GetConnectionString(true));
-                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", c);
+                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", c);
                 MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
                 Assert.IsTrue(c.State == ConnectionState.Closed);
                 DataTable dt = new DataTable();
@@ -565,26 +565,26 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void RangeFill()
         {
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL("CREATE TABLE test (id INT)");
-            execSQL("INSERT INTO test VALUES (1)");
-            execSQL("INSERT INTO test VALUES (2)");
-            execSQL("INSERT INTO test VALUES (3)");
-            execSQL("INSERT INTO test VALUES (4)");
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id INT)");
+            execSQL("INSERT INTO Test VALUES (1)");
+            execSQL("INSERT INTO Test VALUES (2)");
+            execSQL("INSERT INTO Test VALUES (3)");
+            execSQL("INSERT INTO Test VALUES (4)");
 
-            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
             DataSet ds = new DataSet();
-            da.Fill(ds, 1, 2, "test");
+            da.Fill(ds, 1, 2, "Test");
         }
 
         [Test]
         public void FillWithNulls()
         {
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL(@"CREATE TABLE test (id INT UNSIGNED NOT NULL AUTO_INCREMENT, 
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL(@"CREATE TABLE Test (id INT UNSIGNED NOT NULL AUTO_INCREMENT, 
                       name VARCHAR(100), PRIMARY KEY(id))");
 
-            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
             MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
             DataTable dt = new DataTable();
             da.Fill(dt);
@@ -658,7 +658,7 @@ namespace MySql.Data.MySqlClient.Tests
             execSQL("INSERT INTO Test (id, id2, name) VALUES (NULL, 10, 'Name 10')");
             execSQL("INSERT INTO Test (id, id2, name) VALUES (NULL, 11, 'Name 11')");
 
-            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
             DataTable dt = new DataTable();
             da.Fill(0, 10, dt);
             Assert.AreEqual(10, dt.Rows.Count);
@@ -675,10 +675,10 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void SkippingRowsLargerThan1024()
         {
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL("CREATE TABLE test (id INT, name TEXT)");
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id INT, name TEXT)");
 
-            MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES (?id, ?name)", conn);
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (?id, ?name)", conn);
             cmd.Parameters.Add("?id", MySqlDbType.Int32);
             cmd.Parameters.Add("?name", MySqlDbType.Text);
             for (int i = 0; i < 5; i++)
@@ -690,7 +690,7 @@ namespace MySql.Data.MySqlClient.Tests
 
             try
             {
-                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
+                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
                 DataTable dt = new DataTable();
                 da.Fill(0, 2, dt);
             }
