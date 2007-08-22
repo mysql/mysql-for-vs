@@ -388,6 +388,7 @@ namespace MySql.Data.MySqlClient
         /// <param name="fkTable">The table to store the key info in.</param>
         /// <param name="tableToParse">The table to get the foeign key info for.</param>
         /// <param name="filterName">Only get foreign keys that match this name.</param>
+		/// <param name="includeColumns">Should column information be included in the table.</param>
         private void GetForeignKeysOnTable(DataTable fkTable, DataRow tableToParse,
                                            string filterName, bool includeColumns)
         {
