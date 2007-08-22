@@ -18,7 +18,9 @@
 
 	<!-- construct our version id from the assembly version -->
 	<property name="version" value="${assemblyname::get-version(assemblyname::get-assembly-name('driver/bin/net-2.0/release/mysql.data.dll'))}"/>
-	<property name="ver" value="${string::substring(version, 0, string::last-index-of(version, '.'))}"/>
+	<if test="${string::ends-with(version, '0')}">
+		<property name="version" value="${string::substring(version, 0, string::last-index-of(version, '.'))}"/>
+	</if>
 
 
 	<!-- packaging targets -->
@@ -60,12 +62,12 @@
 		</move>
 
 		<!-- now rename the snapshot builds to include date -->
-		<move file="packages/snapshots/mysql-connector-net-${ver}.exe" 
-		      tofile="packages/snapshots/mysql-connector-net-${ver}-${datetime::get-year(datetime::now())}${string::pad-left(convert::to-string(datetime::get-month(datetime::now())), 2, '0')}${string::pad-left(convert::to-string(datetime::get-day(datetime::now())), 2, '0')}.exe" />
-		<move file="packages/snapshots/mysql-connector-net-${ver}-src.zip" 
-		      tofile="packages/snapshots/mysql-connector-net-${ver}-${datetime::get-year(datetime::now())}${string::pad-left(convert::to-string(datetime::get-month(datetime::now())), 2, '0')}${string::pad-left(convert::to-string(datetime::get-day(datetime::now())), 2, '0')}-src.zip" />
-		<move file="packages/snapshots/mysql-connector-net-${ver}-noinstall.zip" 
-		      tofile="packages/snapshots/mysql-connector-net-${ver}-${datetime::get-year(datetime::now())}${string::pad-left(convert::to-string(datetime::get-month(datetime::now())), 2, '0')}${string::pad-left(convert::to-string(datetime::get-day(datetime::now())), 2, '0')}-noinstall.zip" />
+		<move file="packages/snapshots/mysql-connector-net-${version}.exe" 
+		      tofile="packages/snapshots/mysql-connector-net-${version}-${datetime::get-year(datetime::now())}${string::pad-left(convert::to-string(datetime::get-month(datetime::now())), 2, '0')}${string::pad-left(convert::to-string(datetime::get-day(datetime::now())), 2, '0')}.exe" />
+		<move file="packages/snapshots/mysql-connector-net-${version}-src.zip" 
+		      tofile="packages/snapshots/mysql-connector-net-${version}-${datetime::get-year(datetime::now())}${string::pad-left(convert::to-string(datetime::get-month(datetime::now())), 2, '0')}${string::pad-left(convert::to-string(datetime::get-day(datetime::now())), 2, '0')}-src.zip" />
+		<move file="packages/snapshots/mysql-connector-net-${version}-noinstall.zip" 
+		      tofile="packages/snapshots/mysql-connector-net-${version}-${datetime::get-year(datetime::now())}${string::pad-left(convert::to-string(datetime::get-month(datetime::now())), 2, '0')}${string::pad-left(convert::to-string(datetime::get-day(datetime::now())), 2, '0')}-noinstall.zip" />
 
 	</target>
 
@@ -74,9 +76,9 @@
 
 	<target name="PackageInstall">
 		<exec if="${IsGPL}" program="iscc" workingdir="Installer" failonerror="true"
-			commandline="main.iss /dVERSION=${ver} /dGPL=1 /fmysql-connector-net-${ver}${postfix}"/>
+			commandline="main.iss /dVERSION=${version} /dGPL=1 /fmysql-connector-net-${version}${postfix}"/>
 		<exec unless="${IsGPL}" program="iscc" workingdir="Installer" failonerror="true"
-			commandline="main.iss /dVERSION=${ver} /fmysql-connector-net-${ver}${postfix}"/>
+			commandline="main.iss /dVERSION=${version} /fmysql-connector-net-${version}${postfix}"/>
 		<move todir="packages">
 			<fileset basedir="installer/output">
 				<include name="mysql*.exe"/>
@@ -118,7 +120,7 @@
 			</replacetext>
 		</if>
 
-		<zip zipfile="packages/mysql-connector-net-${ver}${postfix}-src.zip">
+		<zip zipfile="packages/mysql-connector-net-${version}${postfix}-src.zip">
 			<fileset basedir="tmp">			
 				<include name="**/**"/>
 			</fileset>
@@ -128,7 +130,7 @@
 	</target>
 
 	<target name="PackageZip">
-		<zip zipfile="packages/mysql-connector-net-${ver}${postfix}-noinstall.zip">
+		<zip zipfile="packages/mysql-connector-net-${version}${postfix}-noinstall.zip">
 			<fileset basedir="driver/bin/net-2.0/release" prefix="bin">
 				<include name="mysql.data.dll" />
 			</fileset>
@@ -153,11 +155,11 @@
     <!-- verification targets -->
 	<target name="VerifyAll" depends="all">
 		<property name="licenseFile" value="gpl-banner.txt"/>
-		<property name="package" value="mysql-connector-net-${ver}"/>
+		<property name="package" value="mysql-connector-net-${version}"/>
 		<call target="VerifyPackage"/>
 		
 		<property name="licenseFile" value="commercial-banner.txt"/>
-		<property name="package" value="mysql-connector-net-${ver}-com"/>
+		<property name="package" value="mysql-connector-net-${version}-com"/>
 		<call target="VerifyPackage"/>
 	</target>
 	
