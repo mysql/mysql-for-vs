@@ -32,6 +32,7 @@
     <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <CodeAnalysisRules>-Microsoft.Performance#CA1805</CodeAnalysisRules>
+    <NoWarn>1699</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -40,6 +41,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoWarn>1699</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <OutputPath>bin\Debug64\</OutputPath>
@@ -447,7 +449,7 @@
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="C:\Program Files (x86)\Visual Studio 2005 SDK\2007.02\VisualStudioIntegration\Tools\Build\Microsoft.VsSDK.targets" />
+  <Import Project="$(VS_SDK_PATH)\VisualStudioIntegration\Tools\Build\Microsoft.VsSDK.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -456,24 +458,9 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>REM Setup WIX environment
-REM SET WIX_DIR=C:\Program Files (x86)\WiX
-
-REM Setup root suffix for the installation package
-REM IF "$(ConfigurationName)"=="Debug" SET rootSuffix="Exp"
-
-REM Set object dir for installer building
-REM IF NOT "$(PlatformName)"=="AnyCPU" SET platform=$(PlatformName)
-
-REM Build main installer
-REM candle.exe  -out $(TargetDir) -drootSuffix=%25rootSuffix%25 -dplatform="%25platform%25"  "$(ProjectDir)\Installer\main.wxs"
-
-REM light.exe -b $(TargetDir) -b $(ProjectDir)/Installer -ext WixUIExtension -cultures:en-us -out "$(TargetDir)\MySQL.VisualStudio.msi" "$(ProjectDir)\obj\\%25platform%25\\$(ConfigurationName)\main.wixobj"
-</PostBuildEvent>
-    <PreBuildEvent>REM Remove readonly flag to avoid Access Denied (2203 -2147287035) error in FixRegTables log.
-REM attrib -r "$(ProjectDir)\MySql.VisualStudio.HelpSetup\CollectionFiles\MSHelp2_RegTables__RTL_---_---.msm"
-
-REM Build help merge module first
-REM start /WAIT devenv.exe "$(SolutionPath)" /build "Help" /out "$(TargetDir)\help_build.log"</PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>

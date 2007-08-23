@@ -54,3 +54,4 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 [assembly: AssemblyVersion("5.1.3")]
 [assembly: AssemblyFileVersion("5.1.3")]
+[assembly: AssemblyKeyName("ConnectorNet")]
