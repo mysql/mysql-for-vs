@@ -43,6 +43,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.VisualStudio", "Visua
 		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Help", "Documentation\Help.vdproj", "{A055373A-DCAB-45C5-BB85-C1AED80FB5A2}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|.NET 2.0 = Debug|.NET 2.0
@@ -131,6 +137,22 @@ Global
 		{DC3517FF-AC26-4755-9B7A-EF658FF69593}.Release|x64.ActiveCfg = Release|x64
 		{DC3517FF-AC26-4755-9B7A-EF658FF69593}.Release|x64.Build.0 = Release|x64
 		{DC3517FF-AC26-4755-9B7A-EF658FF69593}.Release|x86.ActiveCfg = Release|x64
+		{A055373A-DCAB-45C5-BB85-C1AED80FB5A2}.Debug|.NET 2.0.ActiveCfg = Debug
+		{A055373A-DCAB-45C5-BB85-C1AED80FB5A2}.Debug|.NET 2.0.Build.0 = Debug
+		{A055373A-DCAB-45C5-BB85-C1AED80FB5A2}.Debug|Any CPU.ActiveCfg = Debug
+		{A055373A-DCAB-45C5-BB85-C1AED80FB5A2}.Debug|Any CPU.Build.0 = Debug
+		{A055373A-DCAB-45C5-BB85-C1AED80FB5A2}.Debug|x64.ActiveCfg = Debug
+		{A055373A-DCAB-45C5-BB85-C1AED80FB5A2}.Debug|x64.Build.0 = Debug
+		{A055373A-DCAB-45C5-BB85-C1AED80FB5A2}.Debug|x86.ActiveCfg = Debug
+		{A055373A-DCAB-45C5-BB85-C1AED80FB5A2}.Debug|x86.Build.0 = Debug
+		{A055373A-DCAB-45C5-BB85-C1AED80FB5A2}.Release|.NET 2.0.ActiveCfg = Release
+		{A055373A-DCAB-45C5-BB85-C1AED80FB5A2}.Release|.NET 2.0.Build.0 = Release
+		{A055373A-DCAB-45C5-BB85-C1AED80FB5A2}.Release|Any CPU.ActiveCfg = Release
+		{A055373A-DCAB-45C5-BB85-C1AED80FB5A2}.Release|Any CPU.Build.0 = Release
+		{A055373A-DCAB-45C5-BB85-C1AED80FB5A2}.Release|x64.ActiveCfg = Release
+		{A055373A-DCAB-45C5-BB85-C1AED80FB5A2}.Release|x64.Build.0 = Release
+		{A055373A-DCAB-45C5-BB85-C1AED80FB5A2}.Release|x86.ActiveCfg = Release
+		{A055373A-DCAB-45C5-BB85-C1AED80FB5A2}.Release|x86.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
