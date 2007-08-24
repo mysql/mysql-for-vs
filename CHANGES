@@ -61,6 +61,11 @@ Version 5.1.0 - 5/1/2007
     What this means is that passing in null as a database restriction will report
     objects on the currently selected database only.
     
+Version 5.0.9   
+
+  - Fixed problem where fields that were blobs but did not include the BLOB flag were treated
+    as binary when they should have been treated as text.  (Bug #30233)    
+    
 Version 5.0.8  8/16/2007
   Bug #28706 Log messages are truncated  
   - Fixed a problem with compression over a network.  We were letting the inflate stream read
