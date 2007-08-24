@@ -81,8 +81,5 @@ using System.Security;
 //       documentation for more information on this.
 //
 [assembly: AssemblyDelaySign(false)]
-#if FINAL && !NET20
-[assembly: AssemblyKeyFile("")]
 [assembly: AssemblyKeyName("ConnectorNet")]
-#endif
 

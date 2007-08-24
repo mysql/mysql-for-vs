@@ -45,7 +45,7 @@ namespace MySql.Data.MySqlClient.Tests
                 "   comments */\r\n" +
                 "INSERT INTO \r\n" +
                 "  # This table is bogus\r\n" +
-                "test VALUES (2, 'Test2')";
+                "Test VALUES (2, 'Test2')";
             MySqlCommand cmd = new MySqlCommand(sql, conn);
             cmd.ExecuteNonQuery();
 
@@ -62,9 +62,9 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void LastInsertid()
         {
-            execSQL("DROP TABLE test");
-            execSQL("CREATE TABLE test(id int auto_increment, name varchar(20), primary key(id))");
-            MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES(NULL, 'test')", conn);
+            execSQL("DROP TABLE Test");
+            execSQL("CREATE TABLE Test(id int auto_increment, name varchar(20), primary key(id))");
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES(NULL, 'test')", conn);
             cmd.ExecuteNonQuery();
             Assert.AreEqual(1, cmd.LastInsertedId);
 
@@ -85,7 +85,7 @@ namespace MySql.Data.MySqlClient.Tests
             }
             Assert.AreEqual(2, cmd.LastInsertedId);
 
-            cmd.CommandText = "SELECT id FROM test";
+            cmd.CommandText = "SELECT id FROM Test";
             cmd.ExecuteScalar();
             Assert.AreEqual(-1, cmd.LastInsertedId);
         }

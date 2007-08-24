@@ -171,7 +171,7 @@ namespace MySql.Data.MySqlClient.Tests
 
             try
 			{
-				MySqlCommand cmd = new MySqlCommand("spTest;select * from test", conn);
+				MySqlCommand cmd = new MySqlCommand("spTest;select * from Test", conn);
 				cmd.CommandType = CommandType.StoredProcedure;
 				cmd.ExecuteNonQuery();
 				Assert.Fail("Should have thrown an exception");
@@ -745,7 +745,7 @@ namespace MySql.Data.MySqlClient.Tests
 
             execSQL("DROP PROCEDURE IF EXISTS spTest");
 			execSQL("CREATE PROCEDURE spTest(id int, str VARCHAR(45)) " +
-					 "BEGIN INSERT INTO test VALUES(id, str); END");
+					 "BEGIN INSERT INTO Test VALUES(id, str); END");
 
 			MySqlCommand cmd = new MySqlCommand("spTest", conn);
 			cmd.CommandType = CommandType.StoredProcedure;
@@ -759,7 +759,7 @@ namespace MySql.Data.MySqlClient.Tests
 			cmd.Parameters.AddWithValue("?str", "Second record");
 			cmd.ExecuteNonQuery();
 
-			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
+			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
 			DataTable dt = new DataTable();
 			da.Fill(dt);
 
@@ -781,7 +781,7 @@ namespace MySql.Data.MySqlClient.Tests
 			execSQL("CREATE TABLE Test (id integer(9), state varchar(2))");
 			execSQL("CREATE PROCEDURE spTest(IN p1 integer(9), IN p2 varchar(2)) " +
 				"BEGIN " +
-				"INSERT INTO test (id, state) VALUES (p1, p2); " +
+				"INSERT INTO Test (id, state) VALUES (p1, p2); " +
 				"END");
 
 			MySqlCommand cmd = conn.CreateCommand();
@@ -934,12 +934,12 @@ namespace MySql.Data.MySqlClient.Tests
 		{
             if (version < new Version(5, 0)) return;
 
-            execSQL("DROP TABLE IF EXISTS test");
-			execSQL("CREATE TABLE  test (id int(10) unsigned NOT NULL default '0', " +
+            execSQL("DROP TABLE IF EXISTS Test");
+			execSQL("CREATE TABLE  Test (id int(10) unsigned NOT NULL default '0', " +
 				 "val int(10) unsigned default NULL, PRIMARY KEY (id)) " +
 				 "ENGINE=InnoDB DEFAULT CHARSET=utf8");
 			execSQL("CREATE PROCEDURE spTest (IN pp INTEGER) " +
-					  "select * from test where id > pp ");
+					  "select * from Test where id > pp ");
 
 			MySqlCommand c = new MySqlCommand("spTest", conn);
 			c.CommandType = CommandType.StoredProcedure;
@@ -973,10 +973,10 @@ namespace MySql.Data.MySqlClient.Tests
 		{
             if (version < new Version(5, 0)) return;
 
-            execSQL("DROP TABLE IF EXISTS test");
-			execSQL("CREATE TABLE  test (id INT(10) UNSIGNED AUTO_INCREMENT, PRIMARY KEY (id)) ");
+            execSQL("DROP TABLE IF EXISTS Test");
+			execSQL("CREATE TABLE  Test (id INT(10) UNSIGNED AUTO_INCREMENT, PRIMARY KEY (id)) ");
 			execSQL("CREATE PROCEDURE spTest (OUT id BIGINT UNSIGNED) " +
-					  "BEGIN INSERT INTO test VALUES (NULL); SET id=LAST_INSERT_ID(); END");
+					  "BEGIN INSERT INTO Test VALUES (NULL); SET id=LAST_INSERT_ID(); END");
 
 			MySqlCommand cmd = new MySqlCommand("spTest", conn);
 			cmd.CommandType = CommandType.StoredProcedure;
@@ -1033,10 +1033,10 @@ namespace MySql.Data.MySqlClient.Tests
 		{
             if (version < new Version(5, 0)) return;
 
-            execSQL("DROP TABLE IF EXISTS test");
-			execSQL("CREATE TABLE test(str VARCHAR(50), e ENUM ('P','R','F','E'), i INT(6))");
+            execSQL("DROP TABLE IF EXISTS Test");
+			execSQL("CREATE TABLE Test(str VARCHAR(50), e ENUM ('P','R','F','E'), i INT(6))");
 			execSQL("CREATE PROCEDURE spTest(IN p_enum ENUM('P','R','F','E')) BEGIN " +
-				"INSERT INTO test (str, e, i) VALUES (null, p_enum, 55);  END");
+				"INSERT INTO Test (str, e, i) VALUES (null, p_enum, 55);  END");
 
 			try
 			{
@@ -1047,7 +1047,7 @@ namespace MySql.Data.MySqlClient.Tests
 				using (MySqlDataReader reader = cmd.ExecuteReader())
 				{
 				}
-				cmd.CommandText = "SELECT e FROM test";
+				cmd.CommandText = "SELECT e FROM Test";
 				cmd.CommandType = CommandType.Text;
 				using (MySqlDataReader reader = cmd.ExecuteReader())
 				{
@@ -1165,7 +1165,7 @@ namespace MySql.Data.MySqlClient.Tests
 
             try
             {
-                execSQL("CREATE PROCEDURE spTest() BEGIN SELECT * FROM test; END");
+                execSQL("CREATE PROCEDURE spTest() BEGIN SELECT * FROM Test; END");
 
                 MySqlCommand cmd = new MySqlCommand("spTest", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -1180,11 +1180,11 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.AreEqual(2, schema.Columns.Count);
 
                 //Bug #27668  	FillSchema and Stored Proc with an out parameter
-                execSQL("DROP TABLE IF EXISTS test");
-                execSQL(@"CREATE TABLE test(id INT AUTO_INCREMENT, PRIMARY KEY (id)) ");
+                execSQL("DROP TABLE IF EXISTS Test");
+                execSQL(@"CREATE TABLE Test(id INT AUTO_INCREMENT, PRIMARY KEY (id)) ");
                 execSQL("DROP PROCEDURE IF EXISTS spTest");
                 execSQL(@"CREATE PROCEDURE spTest (OUT id INT)
-                    BEGIN INSERT INTO test VALUES (NULL); SET id=520; END");
+                    BEGIN INSERT INTO Test VALUES (NULL); SET id=520; END");
 
                 cmd = new MySqlCommand("spTest", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -1210,11 +1210,11 @@ namespace MySql.Data.MySqlClient.Tests
 /*        [Test]
         public void LastInsertId()
         {
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL("CREATE TABLE test (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(200))");
-            execSQL("INSERT INTO test VALUES (NULL, 'Test1')");
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(200))");
+            execSQL("INSERT INTO Test VALUES (NULL, 'Test1')");
             execSQL("CREATE PROCEDURE spTest() BEGIN " +
-                "INSERT INTO test VALUES (NULL, 'test'); END");
+                "INSERT INTO Test VALUES (NULL, 'test'); END");
 
             MySqlCommand cmd = new MySqlCommand("spTest", conn);
             cmd.CommandType = CommandType.StoredProcedure;
@@ -1302,12 +1302,12 @@ namespace MySql.Data.MySqlClient.Tests
         {
             if (version < new Version(5, 0)) return;
 
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL(@"CREATE TABLE test(f1 bigint(20) unsigned NOT NULL,
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL(@"CREATE TABLE Test(f1 bigint(20) unsigned NOT NULL,
                       PRIMARY KEY(f1)) ENGINE=InnoDB DEFAULT CHARSET=utf8");
 
             execSQL(@"CREATE PROCEDURE spTest(in _val bigint unsigned)
-                      BEGIN insert into  test set f1=_val; END");
+                      BEGIN insert into  Test set f1=_val; END");
 
             DbCommand cmd = new MySqlCommand();
             cmd.Connection = conn;

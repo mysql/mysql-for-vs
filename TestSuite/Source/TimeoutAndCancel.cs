@@ -180,7 +180,7 @@ namespace MySql.Data.MySqlClient.Tests
             execSQL("CREATE TABLE test (id INT)");
 
             MySqlCommand cmd = new MySqlCommand(
-                "call spTest(10);INSERT INTO test VALUES(4)", conn);
+                "call spTest(60);INSERT INTO test VALUES(4)", conn);
             cmd.CommandTimeout = 5;
             try
             {

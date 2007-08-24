@@ -41,7 +41,7 @@
 
     <resgen todir="Driver/Source">
       <resources>
-        <include name="Driver/Source/*.resx" />
+        <include name="Driver/Properties/*.resx" />
       </resources>
     </resgen>
 

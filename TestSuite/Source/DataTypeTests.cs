@@ -320,14 +320,14 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void Timestamp() 
 		{
-			execSQL("DROP TABLE IF EXISTS test");
-			execSQL("CREATE TABLE test (id int, dt DATETIME, ts2 TIMESTAMP(2), ts4 TIMESTAMP(4), " + 
+			execSQL("DROP TABLE IF EXISTS Test");
+			execSQL("CREATE TABLE Test (id int, dt DATETIME, ts2 TIMESTAMP(2), ts4 TIMESTAMP(4), " + 
 				"ts6 TIMESTAMP(6), ts8 TIMESTAMP(8), ts10 TIMESTAMP(10), ts12 TIMESTAMP(12), " +
 				"ts14 TIMESTAMP(14))");
-			execSQL("INSERT INTO test (id, dt, ts2, ts4, ts6, ts8, ts10, ts12, ts14) " +
+			execSQL("INSERT INTO Test (id, dt, ts2, ts4, ts6, ts8, ts10, ts12, ts14) " +
 				"VALUES (1, Now(), Now(), Now(), Now(), Now(), Now(), Now(), Now())");
 
-			MySqlDataAdapter da = new MySqlDataAdapter( "SELECT * FROM test", conn);
+			MySqlDataAdapter da = new MySqlDataAdapter( "SELECT * FROM Test", conn);
 			DataTable dt = new DataTable();
 			da.Fill(dt);
 
@@ -467,12 +467,12 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void BitAndDecimal()
         {
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL("CREATE TABLE test (bt1 BIT, bt4 BIT(4), bt11 BIT(11), bt23 BIT(23), bt32 BIT(32)) engine=myisam");
-            execSQL("INSERT INTO test VALUES (1, 2, 120, 240, 1000)");
-            execSQL("INSERT INTO test VALUES (NULL, NULL, 100, NULL, NULL)");
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (bt1 BIT, bt4 BIT(4), bt11 BIT(11), bt23 BIT(23), bt32 BIT(32)) engine=myisam");
+            execSQL("INSERT INTO Test VALUES (1, 2, 120, 240, 1000)");
+            execSQL("INSERT INTO Test VALUES (NULL, NULL, 100, NULL, NULL)");
 
-            MySqlCommand cmd = new MySqlCommand("SELECT * FROM test", conn);
+            MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test", conn);
             MySqlDataReader reader = null;
             try
             {
@@ -515,11 +515,11 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void UpdateDecimalColumns()
         {
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL("CREATE TABLE test (id int not null auto_increment primary key, " +
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id int not null auto_increment primary key, " +
                 "dec1 decimal(10,1))");
 
-            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
             MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
             DataTable dt = new DataTable();
             da.Fill(dt);
@@ -539,17 +539,17 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void DecimalTests()
         {
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL("CREATE TABLE test (val decimal(10,1))");
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (val decimal(10,1))");
 
-            MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES(?dec)", conn);
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES(?dec)", conn);
             cmd.Parameters.AddWithValue("?dec", (decimal)2.4);
             Assert.AreEqual(1, cmd.ExecuteNonQuery());
 
             cmd.Prepare();
             Assert.AreEqual(1, cmd.ExecuteNonQuery());
 
-            cmd.CommandText = "SELECT * FROM test";
+            cmd.CommandText = "SELECT * FROM Test";
             MySqlDataReader reader = null;
             try
             {
@@ -578,17 +578,17 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void DecimalTests2()
         {
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL("CREATE TABLE test (val decimal(10,1))");
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (val decimal(10,1))");
 
-            MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES(?dec)", conn);
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES(?dec)", conn);
             cmd.Parameters.AddWithValue("?dec", (decimal)2.4);
             Assert.AreEqual(1, cmd.ExecuteNonQuery());
 
             cmd.Prepare();
             Assert.AreEqual(1, cmd.ExecuteNonQuery());
 
-            cmd.CommandText = "SELECT * FROM test";
+            cmd.CommandText = "SELECT * FROM Test";
             MySqlDataReader reader = null;
             try
             {
@@ -619,10 +619,10 @@ namespace MySql.Data.MySqlClient.Tests
 		{
             if (version < new Version(5, 0)) return;
 
-            execSQL("DROP TABLE IF EXISTS test");
-			execSQL("CREATE TABLE test (bit1 BIT, bit2 BIT(5), bit3 BIT(10))");
+            execSQL("DROP TABLE IF EXISTS Test");
+			execSQL("CREATE TABLE Test (bit1 BIT, bit2 BIT(5), bit3 BIT(10))");
 
-			MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES (?b1, ?b2, ?b3)", conn);
+			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (?b1, ?b2, ?b3)", conn);
 			cmd.Parameters.Add(new MySqlParameter("?b1", MySqlDbType.Bit));
 			cmd.Parameters.Add(new MySqlParameter("?b2", MySqlDbType.Bit));
 			cmd.Parameters.Add(new MySqlParameter("?b3", MySqlDbType.Bit));
@@ -635,7 +635,7 @@ namespace MySql.Data.MySqlClient.Tests
 			MySqlDataReader reader = null;
 			try 
 			{
-				cmd.CommandText = "SELECT * FROM test";
+				cmd.CommandText = "SELECT * FROM Test";
 				cmd.Prepare();
 				reader = cmd.ExecuteReader();
 				Assert.IsTrue(reader.Read());
@@ -684,8 +684,8 @@ namespace MySql.Data.MySqlClient.Tests
 
 			execSQL("DROP TABLE IF EXISTS Test");
 			execSQL("CREATE TABLE Test (b MEDIUMINT UNSIGNED PRIMARY KEY)");
-            execSQL("INSERT INTO test VALUES(20)");
-            MySqlCommand cmd = new MySqlCommand("SELECT * FROM test WHERE (b > ?id)", conn);
+            execSQL("INSERT INTO Test VALUES(20)");
+            MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test WHERE (b > ?id)", conn);
             cmd.Parameters.Add("?id", MySqlDbType.UInt16).Value = 10;
             MySqlDataReader dr = null;
             try
@@ -711,11 +711,11 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void TestNegativeTime()
         {
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL("CREATE TABLE test (t time)");
-            execSQL("INSERT INTO test SET T='-07:24:00'");
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (t time)");
+            execSQL("INSERT INTO Test SET T='-07:24:00'");
 
-            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
             DataTable dt = new DataTable();
             da.Fill(dt);
 
@@ -763,11 +763,11 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void BinaryTypes()
         {
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL(@"CREATE TABLE test (c1 VARCHAR(20), c2 VARBINARY(20),
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL(@"CREATE TABLE Test (c1 VARCHAR(20), c2 VARBINARY(20),
                 c3 TEXT, c4 BLOB, c6 VARCHAR(20) CHARACTER SET BINARY)");
 
-            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
             DataTable dt = new DataTable();
             da.Fill(dt);
             Assert.AreEqual(typeof(String), dt.Columns[0].DataType);
@@ -799,15 +799,15 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void RespectBinaryFlag()
         {
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL("CREATE TABLE test (col1 VARBINARY(20), col2 BLOB)");
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (col1 VARBINARY(20), col2 BLOB)");
 
             string connStr = GetConnectionString(true) + ";respect binary flags=false";
 
             using (MySqlConnection c = new MySqlConnection(connStr))
             {
                 c.Open();
-                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", c);
+                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", c);
                 DataTable dt = new DataTable();
                 da.Fill(dt);
                 Assert.IsTrue(dt.Columns[0].DataType == typeof(System.String));
@@ -818,11 +818,11 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void BooleanForBit1()
         {
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL("CREATE TABLE test (id INT, `on` BIT(1))");
-            execSQL("INSERT INTO test VALUES (1,1), (2,0)");
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id INT, `on` BIT(1))");
+            execSQL("INSERT INTO Test VALUES (1,1), (2,0)");
 
-            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
             DataTable dt = new DataTable();
             da.Fill(dt);
             Assert.AreEqual(typeof(Boolean), dt.Columns[1].DataType);

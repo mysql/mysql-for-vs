@@ -398,7 +398,7 @@ namespace MySql.Data.MySqlClient.Tests
 			execSQL("INSERT INTO Test VALUES( 1, 2)");
 			// create the command and prepare the statement
 			IDbCommand cmd = conn.CreateCommand();
-			cmd.CommandText = "SELECT * FROM test where one = ?p1";
+			cmd.CommandText = "SELECT * FROM Test where one = ?p1";
 			// create the parameter
 			IDbDataParameter p1 = cmd.CreateParameter();
 			p1.ParameterName = "?p1";
@@ -437,8 +437,8 @@ namespace MySql.Data.MySqlClient.Tests
 		{
             if (version < new Version(4, 1)) return;
 
-            execSQL("DROP TABLE IF EXISTS test");
-			execSQL("CREATE TABLE test (id INT UNSIGNED NOT NULL PRIMARY KEY " +
+            execSQL("DROP TABLE IF EXISTS Test");
+			execSQL("CREATE TABLE Test (id INT UNSIGNED NOT NULL PRIMARY KEY " +
 				"AUTO_INCREMENT, input TEXT NOT NULL) CHARACTER SET UTF8");
 				// COLLATE " +
 				//"utf8_bin");
@@ -448,7 +448,7 @@ namespace MySql.Data.MySqlClient.Tests
 			{
 				conn2.Open();
 
-				MySqlCommand cmd = new MySqlCommand("INSERT INTO test(input) " +
+				MySqlCommand cmd = new MySqlCommand("INSERT INTO Test(input) " +
 					"VALUES (?input) ON DUPLICATE KEY UPDATE " +
 					"id=LAST_INSERT_ID(id)", conn2);
 				cmd.Parameters.Add(new MySqlParameter("?input", ""));
@@ -456,7 +456,7 @@ namespace MySql.Data.MySqlClient.Tests
 				cmd.Parameters[0].Value = "irache martínez@yahoo.es aol.com";
 				cmd.ExecuteNonQuery();
 
-				MySqlCommand cmd2 = new MySqlCommand("SELECT input FROM test", conn2);
+				MySqlCommand cmd2 = new MySqlCommand("SELECT input FROM Test", conn2);
 				Assert.AreEqual("irache martínez@yahoo.es aol.com",
 					cmd2.ExecuteScalar());
 			}
@@ -478,11 +478,11 @@ namespace MySql.Data.MySqlClient.Tests
 		{
             if (version < new Version(4, 1)) return;
 
-            execSQL("DROP TABLE IF EXISTS test");
-			execSQL("CREATE TABLE IF NOT EXISTS test (input TEXT NOT NULL, " +
+            execSQL("DROP TABLE IF EXISTS Test");
+			execSQL("CREATE TABLE IF NOT EXISTS Test (input TEXT NOT NULL, " +
 				"UNIQUE (input(100)), state INT NOT NULL, score INT NOT NULL)");
 
-			MySqlCommand cmd = new MySqlCommand("Insert into test (input, " +
+			MySqlCommand cmd = new MySqlCommand("Insert into Test (input, " +
 				"state, score) VALUES (?input, ?st, ?sc) ON DUPLICATE KEY " +
 				"UPDATE state=state|?st;", conn);
 			cmd.Parameters.Add (new MySqlParameter("?input", ""));
@@ -496,7 +496,7 @@ namespace MySql.Data.MySqlClient.Tests
 			int result = cmd.ExecuteNonQuery();
 			Assert.AreEqual(1, result);
 
-			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
+			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
 			DataTable dt = new DataTable();
 			da.Fill(dt);
 			Assert.AreEqual(1, dt.Rows.Count);
@@ -513,15 +513,15 @@ namespace MySql.Data.MySqlClient.Tests
         {
             if (version < new Version(4, 1)) return;
 
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL("CREATE TABLE `test` (`BlackListID` int(11) NOT NULL auto_increment, " +
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE `Test` (`BlackListID` int(11) NOT NULL auto_increment, " +
                     "`SubscriberID` int(11) NOT NULL, `Phone` varchar(50) default NULL, " +
                     "`ContactID` int(11) default NULL, " +
                     "`AdminJunk` tinyint(1) NOT NULL default '0', " +
                     "PRIMARY KEY  (`BlackListID`), KEY `SubscriberID` (`SubscriberID`))");
 
             IDbCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "INSERT INTO `test`(`SubscriberID`,`Phone`,`ContactID`, " +
+            cmd.CommandText = "INSERT INTO `Test`(`SubscriberID`,`Phone`,`ContactID`, " +
                 "`AdminJunk`) VALUES (?SubscriberID,?Phone,?ContactID, ?AdminJunk);";
 
             MySqlParameter oParameterSubscriberID = new MySqlParameter();
@@ -561,10 +561,10 @@ namespace MySql.Data.MySqlClient.Tests
 		public void ParameterLengths()
 		{
             if (version < new Version(4, 1)) return;
-            execSQL("DROP TABLE IF EXISTS test");
-			execSQL("CREATE TABLE test (id int, name VARCHAR(255))");
+            execSQL("DROP TABLE IF EXISTS Test");
+			execSQL("CREATE TABLE Test (id int, name VARCHAR(255))");
 
-			MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES (?id, ?name)", conn);
+			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (?id, ?name)", conn);
 			cmd.Parameters.Add("?id", MySqlDbType.Int32);
 			cmd.Parameters.Add("?name", MySqlDbType.VarChar);
 			cmd.Parameters[1].Size = 255;
@@ -574,7 +574,7 @@ namespace MySql.Data.MySqlClient.Tests
 			cmd.Parameters[1].Value = "short string";
 			cmd.ExecuteNonQuery();
 
-			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", conn);
+			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
 			DataTable dt = new DataTable();
 			da.Fill(dt);
 			Assert.AreEqual(1, dt.Rows.Count);
@@ -590,13 +590,13 @@ namespace MySql.Data.MySqlClient.Tests
         {
             if (version < new Version(4, 1)) return;
 
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL("CREATE TABLE test(ID TINYINT UNSIGNED NOT NULL, " +
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test(ID TINYINT UNSIGNED NOT NULL, " +
 	            "Name VARCHAR(50) NOT NULL,	PRIMARY KEY (ID), UNIQUE (ID), " +
                 "UNIQUE (Name))");
-            execSQL("INSERT INTO test VALUES ('127', 'name1')");
-            execSQL("INSERT INTO test VALUES ('128', 'name2')");
-            execSQL("INSERT INTO test VALUES ('255', 'name3')");
+            execSQL("INSERT INTO Test VALUES ('127', 'name1')");
+            execSQL("INSERT INTO Test VALUES ('128', 'name2')");
+            execSQL("INSERT INTO Test VALUES ('255', 'name3')");
 
             string sql = " SELECT count(*) FROM TEST WHERE ID = ?id";
 
@@ -634,11 +634,11 @@ namespace MySql.Data.MySqlClient.Tests
         {
             if (version < new Version(4, 1)) return;
 
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL("CREATE TABLE test (ulVal BIGINT UNSIGNED, lVal INT UNSIGNED, " +
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (ulVal BIGINT UNSIGNED, lVal INT UNSIGNED, " +
                 "mVal MEDIUMINT UNSIGNED, sVal SMALLINT UNSIGNED)");
 
-            MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES (?ulVal, " +
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (?ulVal, " +
                 "?lVal, ?mVal, ?sVal)", conn);
             cmd.Parameters.Add("?ulVal", MySqlDbType.UInt64);
             cmd.Parameters.Add("?lVal", MySqlDbType.UInt32);
@@ -650,7 +650,7 @@ namespace MySql.Data.MySqlClient.Tests
             cmd.Parameters[2].Value = 16777215;
             cmd.Parameters[3].Value = UInt16.MaxValue;
             Assert.AreEqual(1, cmd.ExecuteNonQuery());
-            cmd.CommandText = "SELECT * FROM test";
+            cmd.CommandText = "SELECT * FROM Test";
             cmd.CommandType = CommandType.Text;
             MySqlDataReader reader = null;
             try
@@ -701,15 +701,15 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void CompoundStatements()
         {
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL("CREATE TABLE IF NOT EXISTS test ("+
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE IF NOT EXISTS Test ("+
 	            "id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT," +
 	            "test1 INT UNSIGNED, test2 INT UNSIGNED)");
 
             try
             {
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "INSERT INTO test VALUES (NULL, ?t1, ?t2);" +
+                cmd.CommandText = "INSERT INTO Test VALUES (NULL, ?t1, ?t2);" +
                     "SELECT last_insert_id()";
                 cmd.Parameters.Add("?t1", MySqlDbType.Int32);
                 cmd.Parameters.Add("?t2", MySqlDbType.Int32);
@@ -724,10 +724,10 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void SchemaOnly()
         {
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL("CREATE TABLE test (id INT, name VARCHAR(50))");
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id INT, name VARCHAR(50))");
 
-            MySqlCommand cmd = new MySqlCommand("SELECT * FROM test", conn);
+            MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test", conn);
             cmd.Prepare();
             using (MySqlDataReader reader = cmd.ExecuteReader(CommandBehavior.SchemaOnly))
             {
@@ -751,8 +751,8 @@ namespace MySql.Data.MySqlClient.Tests
         {
             if (version < new Version(5, 0)) return;
 
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL("CREATE TABLE test (id INT, name VARCHAR(50))");
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id INT, name VARCHAR(50))");
 
             string connStr = GetConnectionString(true) +
                 ";ignore prepare=false";
@@ -765,7 +765,7 @@ namespace MySql.Data.MySqlClient.Tests
                 for (int i = 0; i < 10; i++)
                 {
                     using (MySqlCommand cmd =
-                        new MySqlCommand("INSERT INTO test VALUES (?id, ?name)", c))
+                        new MySqlCommand("INSERT INTO Test VALUES (?id, ?name)", c))
                     {
                         cmd.Parameters.Add("?id", MySqlDbType.Int32);
                         cmd.Parameters.Add("?name", MySqlDbType.VarChar);

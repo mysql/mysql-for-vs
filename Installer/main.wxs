@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?define ProductVersion="5.1.3"?>
-<?define ProductName="MySQL Connector Net $(var.ProductVersion)"?>
+<?define ProductName="MySQL Connector Net $(var.Version)"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Product Id="5FD88490-011C-4df1-B886-F298D955171B" Name="$(var.ProductName)" Manufacturer="MySQL AB"
-           Version="$(var.ProductVersion)" Language="1033">
+           Version="$(var.Version)" Language="1033">
     <Package Compressed="yes" InstallerVersion="200"/>
 
     <Property Id="ARPURLINFOABOUT" Value="http://www.mysql.com" />
@@ -52,9 +51,9 @@
         <?endif?>
         <File Id="README1" Name="README" Source="..\README" DiskId="1"/>
         <RegistryKey Id="MySqlKey" Root="HKLM" Action="createAndRemoveOnUninstall"
-                     Key="Software\MySQL AB\MySQL Connector/Net $(var.ProductVersion)">
+                     Key="Software\MySQL AB\MySQL Connector/Net $(var.Version)">
           <RegistryValue Id="Location" Name="Location" Value="[INSTALLDIR]" Type="string"/>
-          <RegistryValue Id="Version" Name="Version" Value="$(var.ProductVersion)" Type="string"/>
+          <RegistryValue Id="Version" Name="Version" Value="$(var.Version)" Type="string"/>
         </RegistryKey>
       </Component>
     </DirectoryRef>
@@ -65,7 +64,7 @@
         <File Id="CoreBin20" Name="MySql.Data.dll"
               Source="..\Driver\bin\net-2.0\release\mysql.data.dll" DiskId="1"/>
         <RegistryKey Id="VSRegistry" Root="HKLM" Action="createAndRemoveOnUninstall"
-                     Key="SOFTWARE\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\MySQL Connector Net $(var.ProductVersion)">
+                     Key="SOFTWARE\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\MySQL Connector Net $(var.Version)">
           <RegistryValue Id="VSRegistryValue" Value="[BinNet20]" Type="string" Action="write"/>
         </RegistryKey>
       </Component>

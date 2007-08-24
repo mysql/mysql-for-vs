@@ -40,7 +40,7 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void ShowCreateTable()
 		{
-			MySqlDataAdapter da = new MySqlDataAdapter("SHOW CREATE TABLE test", conn);
+			MySqlDataAdapter da = new MySqlDataAdapter("SHOW CREATE TABLE Test", conn);
 			DataTable dt = new DataTable();
 			da.Fill(dt);
 
@@ -234,15 +234,15 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void Sum()
 		{
-			execSQL("DROP TABLE IF EXISTS test");
+			execSQL("DROP TABLE IF EXISTS Test");
 
-			execSQL("CREATE TABLE test (field1 mediumint(9) default '0', field2 float(9,3) " +
+			execSQL("CREATE TABLE Test (field1 mediumint(9) default '0', field2 float(9,3) " +
 				"default '0.000', field3 double(15,3) default '0.000') engine=innodb ");
-			execSQL("INSERT INTO test values (1,1,1)");
+			execSQL("INSERT INTO Test values (1,1,1)");
 
 			MySqlDataReader reader = null;
 
-			MySqlCommand cmd2 = new MySqlCommand("SELECT sum(field2) FROM test", conn);
+			MySqlCommand cmd2 = new MySqlCommand("SELECT sum(field2) FROM Test", conn);
 			try 
 			{
 				reader = cmd2.ExecuteReader();
@@ -260,7 +260,7 @@ namespace MySql.Data.MySqlClient.Tests
 				reader = null;
 			}
 
-			execSQL("DROP TABLE IF EXISTS test");
+			execSQL("DROP TABLE IF EXISTS Test");
 			execSQL("CREATE TABLE Test (id int, count int)");
 			execSQL("INSERT INTO Test VALUES (1, 21)");
 			execSQL("INSERT INTO Test VALUES (1, 33)");
@@ -291,7 +291,7 @@ namespace MySql.Data.MySqlClient.Tests
 		{
             if (version < new Version(4, 1)) return;
 
-            MySqlCommand cmd = new MySqlCommand("SELECT * FROM test; DROP TABLE IF EXISTS test2; SELECT * FROM test", conn);
+            MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test; DROP TABLE IF EXISTS test2; SELECT * FROM Test", conn);
 			MySqlDataReader reader = null; 
 			try 
 			{
@@ -339,13 +339,13 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void FoundRows()
 		{
-			execSQL("DROP TABLE IF EXISTS test");
-			execSQL("CREATE TABLE test (testID int(11) NOT NULL auto_increment, testName varchar(100) default '', " +
+			execSQL("DROP TABLE IF EXISTS Test");
+			execSQL("CREATE TABLE Test (testID int(11) NOT NULL auto_increment, testName varchar(100) default '', " +
 				    "PRIMARY KEY  (testID)) ENGINE=InnoDB DEFAULT CHARSET=latin1");
-			MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES (NULL, 'test')", conn);
+			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (NULL, 'test')", conn);
 			for (int i=0; i < 1000; i++)
 				cmd.ExecuteNonQuery();
-			cmd.CommandText = "SELECT SQL_CALC_FOUND_ROWS * FROM test LIMIT 0, 10";
+			cmd.CommandText = "SELECT SQL_CALC_FOUND_ROWS * FROM Test LIMIT 0, 10";
 			cmd.ExecuteNonQuery();
 			cmd.CommandText = "SELECT FOUND_ROWS()";
 			object cnt = cmd.ExecuteScalar();
@@ -355,10 +355,10 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void AutoIncrement()
         {
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL("CREATE TABLE test (testID int(11) NOT NULL auto_increment, testName varchar(100) default '', " +
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (testID int(11) NOT NULL auto_increment, testName varchar(100) default '', " +
                     "PRIMARY KEY  (testID)) ENGINE=InnoDB DEFAULT CHARSET=latin1");
-            MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES (NULL, 'test')", conn);
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (NULL, 'test')", conn);
             cmd.ExecuteNonQuery();
             cmd.CommandText = "SELECT @@IDENTITY as 'Identity'";
             MySqlDataReader reader = null;
@@ -388,14 +388,14 @@ namespace MySql.Data.MySqlClient.Tests
         {
             try
             {
-                execSQL("DROP TABLE IF EXISTS test");
-                execSQL("CREATE TABLE test (`PO#` int(11) NOT NULL auto_increment, " +
+                execSQL("DROP TABLE IF EXISTS Test");
+                execSQL("CREATE TABLE Test (`PO#` int(11) NOT NULL auto_increment, " +
                     "`PODate` date default NULL, PRIMARY KEY  (`PO#`))");
-                execSQL("INSERT INTO test ( `PO#`, `PODate` ) " +
+                execSQL("INSERT INTO Test ( `PO#`, `PODate` ) " +
                     "VALUES ( NULL, '2006-01-01' )");
 
                 string sql = "SELECT `PO#` AS PurchaseOrderNumber, " +
-                    "`PODate` AS OrderDate FROM  test";
+                    "`PODate` AS OrderDate FROM  Test";
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
                 MySqlDataAdapter da = new MySqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
@@ -432,7 +432,7 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void Describe()
         {
-            MySqlDataAdapter da = new MySqlDataAdapter("DESCRIBE test", conn);
+            MySqlDataAdapter da = new MySqlDataAdapter("DESCRIBE Test", conn);
             DataTable dt = new DataTable();
             da.Fill(dt);
 
@@ -448,7 +448,7 @@ namespace MySql.Data.MySqlClient.Tests
         public void ShowTableStatus()
         {
             MySqlDataAdapter da = new MySqlDataAdapter(
-                String.Format("SHOW TABLE STATUS FROM `{0}` LIKE 'test'",
+                String.Format("SHOW TABLE STATUS FROM `{0}` LIKE 'Test'",
                 database0), conn);
             DataTable dt = new DataTable();
             da.Fill(dt);

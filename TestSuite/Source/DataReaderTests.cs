@@ -255,7 +255,7 @@ namespace MySql.Data.MySqlClient.Tests
 				Assert.IsFalse(reader.NextResult(), "Trying NextResult");
 				reader.Close();
 
-				cmd.CommandText = "SELECT * FROM test where id=1";
+				cmd.CommandText = "SELECT * FROM Test where id=1";
 				reader = cmd.ExecuteReader(CommandBehavior.SingleRow);
 				Assert.IsTrue(reader.Read());
 				Assert.AreEqual("test1", reader.GetString(1));
@@ -577,7 +577,7 @@ namespace MySql.Data.MySqlClient.Tests
 				Assert.IsNotNull( reader );
 
 				//First ResultSet, should have 49 rows.
-				//SELECT id FROM test WHERE id<?param1;
+				//SELECT id FROM Test WHERE id<?param1;
 				Assert.AreEqual( true, reader.HasRows );
 				Assert.AreEqual( 1, reader.FieldCount );
 				for (int i = 0; i < 49; i++)
@@ -587,7 +587,7 @@ namespace MySql.Data.MySqlClient.Tests
 				Assert.AreEqual( false, reader.Read() );
 
 				//Second ResultSet, should have no rows.
-				//SELECT id,name FROM test WHERE id = -50;
+				//SELECT id,name FROM Test WHERE id = -50;
 				Assert.IsTrue( reader.NextResult() );
 				Assert.AreEqual( false, reader.HasRows );
 				Assert.AreEqual( 2, reader.FieldCount );
@@ -595,7 +595,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 
 				//Third ResultSet, should have 51 rows.
-				//SELECT * FROM test WHERE id >= ?param1;
+				//SELECT * FROM Test WHERE id >= ?param1;
 				Assert.IsTrue( reader.NextResult() );
 				Assert.AreEqual( true, reader.HasRows );
 				Assert.AreEqual( 5, reader.FieldCount );
@@ -607,21 +607,21 @@ namespace MySql.Data.MySqlClient.Tests
 
 
 				//Fourth ResultSet, should have no rows.
-				//SELECT id, dt, b1 FROM test WHERE id = -50;
+				//SELECT id, dt, b1 FROM Test WHERE id = -50;
 				Assert.IsTrue( reader.NextResult() );
 				Assert.AreEqual( false, reader.HasRows );
 				Assert.AreEqual( 3, reader.FieldCount ); //Will Fail if uncommented expected 3 returned 5
 				Assert.AreEqual( false, reader.Read() );
 
 				//Fifth ResultSet, should have no rows.
-				//SELECT b1 FROM test WHERE id = -50;
+				//SELECT b1 FROM Test WHERE id = -50;
 				Assert.IsTrue( reader.NextResult() );
 				Assert.AreEqual( false, reader.HasRows );
 				Assert.AreEqual( 1, reader.FieldCount ); //Will Fail if uncommented expected 1 returned 5
 				Assert.AreEqual( false, reader.Read() );
 
 				//Sixth ResultSet, should have 49 rows.
-				//SELECT id, dt, b1 FROM test WHERE id < ?param1;
+				//SELECT id, dt, b1 FROM Test WHERE id < ?param1;
 				Assert.IsTrue( reader.NextResult() );
 				Assert.AreEqual( true, reader.HasRows );
 				Assert.AreEqual( 3, reader.FieldCount ); //Will Fail if uncommented expected 3 returned 5
@@ -632,7 +632,7 @@ namespace MySql.Data.MySqlClient.Tests
 				Assert.AreEqual( false, reader.Read() );
 
 				//Seventh ResultSet, should have 51 rows.
-				//SELECT b1 FROM test WHERE id >= ?param1;
+				//SELECT b1 FROM Test WHERE id >= ?param1;
 				Assert.IsTrue( reader.NextResult() );
 				Assert.AreEqual( true, reader.HasRows );
 				Assert.AreEqual( 1, reader.FieldCount ); //Will Fail if uncommented expected 1 returned 5
@@ -713,7 +713,7 @@ namespace MySql.Data.MySqlClient.Tests
 			execSQL("INSERT INTO Test (id,name) VALUES(2,'test2')");
 			execSQL("INSERT INTO Test (id,name) VALUES(3,'test3')");
 
-			MySqlCommand cmd = new MySqlCommand("SELECT * FROM test", conn);
+			MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test", conn);
 			MySqlDataReader reader = null;
 			try 
 			{
@@ -761,11 +761,11 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void InvalidTimestamp() 
 		{
-			execSQL("DROP TABLE IF EXISTS test");
-			execSQL("CREATE TABLE test (tm TIMESTAMP)");
-			execSQL("INSERT INTO test VALUES (NULL)");
+			execSQL("DROP TABLE IF EXISTS Test");
+			execSQL("CREATE TABLE Test (tm TIMESTAMP)");
+			execSQL("INSERT INTO Test VALUES (NULL)");
 
-			MySqlCommand cmd = new MySqlCommand("SELECT * FROM test WHERE tm = '7/1/2005 12:00:00 AM'", conn); 
+			MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test WHERE tm = '7/1/2005 12:00:00 AM'", conn); 
 			MySqlDataReader reader = null;
 			try 
 			{
@@ -787,10 +787,10 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void GetStringOnNull()
         {
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL("CREATE TABLE test (id int, PRIMARY KEY(id))");
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id int, PRIMARY KEY(id))");
             MySqlCommand cmd = new MySqlCommand(
-                String.Format("SHOW INDEX FROM test FROM `{0}`", database0), conn);
+                String.Format("SHOW INDEX FROM Test FROM `{0}`", database0), conn);
             MySqlDataReader reader = null;
             try
             {
@@ -838,9 +838,9 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void IsDbNullOnNonNullFields()
         {
-            execSQL("INSERT INTO test (id, name) VALUES (1, '')");
+            execSQL("INSERT INTO Test (id, name) VALUES (1, '')");
 
-            MySqlCommand cmd = new MySqlCommand("SELECT * FROM test", conn);
+            MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test", conn);
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {
                 Assert.IsTrue(reader.Read());
@@ -854,12 +854,12 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void ConstraintWithLoadingReader()
         {
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL(@"CREATE TABLE test (ID_A int(11) NOT NULL,
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL(@"CREATE TABLE Test (ID_A int(11) NOT NULL,
 				ID_B int(11) NOT NULL, PRIMARY KEY (ID_A,ID_B)
 				) ENGINE=MyISAM DEFAULT CHARSET=latin1;");
 
-            MySqlCommand cmd = new MySqlCommand("SELECT * FROM test", conn);
+            MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test", conn);
             DataTable dt = new DataTable();
 
             using (MySqlDataReader reader = cmd.ExecuteReader())

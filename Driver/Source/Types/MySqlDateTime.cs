@@ -37,16 +37,34 @@ namespace MySql.Data.Types
 		private int year, month, day, hour, minute, second;
 		private int millisecond;
 
+		/// <summary>
+		/// Constructs a new <b>MySqlDateTime</b> object by setting the individual time properties to
+		/// the given values.
+		/// </summary>
+		/// <param name="year">The year to use.</param>
+		/// <param name="month">The month to use.</param>
+		/// <param name="day">The day to use.</param>
+		/// <param name="hour">The hour to use.</param>
+		/// <param name="minute">The minute to use.</param>
+		/// <param name="second">The second to use.</param>
 		public MySqlDateTime(int year, int month, int day, int hour, int minute, int second)
 			: this(MySqlDbType.Datetime, year, month, day, hour, minute, second)
 		{
 		}
 
+		/// <summary>
+		/// Constructs a new <b>MySqlDateTime</b> object by using values from the given <see cref="DateTime"/> object.
+		/// </summary>
+		/// <param name="dt">The <see cref="DateTime"/> object to copy.</param>
 		public MySqlDateTime(DateTime dt)
 			: this(MySqlDbType.Datetime, dt)
 		{
 		}
 
+		/// <summary>
+		/// Constructs a new <b>MySqlDateTime</b> object by copying the current value of the given object.
+		/// </summary>
+		/// <param name="mdt">The <b>MySqlDateTime</b> object to copy.</param>
 		public MySqlDateTime(MySqlDateTime mdt)
 		{
 			year = mdt.Year;
@@ -60,6 +78,10 @@ namespace MySql.Data.Types
 			isNull = false;
 		}
 
+		/// <summary>
+		/// Enables the contruction of a <b>MySqlDateTime</b> object by parsing a string.
+		/// </summary>
+		/// <param name="s"></param>
 		public MySqlDateTime(string s)
 			: this(MySqlDateTime.Parse(s))
 		{
@@ -153,6 +175,9 @@ namespace MySql.Data.Types
 			set { second = value; }
 		}
 
+		/// <summary>
+		/// Retrieves the millisecond value of this object.
+		/// </summary>
 		public int Millisecond
 		{
 			get { return millisecond; }
@@ -191,6 +216,9 @@ namespace MySql.Data.Types
 			get { return GetDateTime(); }
 		}
 
+		/// <summary>
+		/// Retrieves the value of this <see cref="MySqlDateTime"/> as a DateTime object.
+		/// </summary>
 		public DateTime Value
 		{
 			get { return GetDateTime(); }
