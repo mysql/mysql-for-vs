@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Module Codepage="1252" Id="Help" Language='1033' Version='1.0.0.0'>
+        <Package Id="{5A8D2AA7-2CAA-4de4-A994-11D0431D8A2A}" InstallerVersion="200" Languages="1033" Manufacturer="Microsoft" Platform="intel" />
+        <Configuration Name="_1B49871DB86943FEB991EB418DBE8050.B0BAD537397D413AAE4AC8C581C84269" Format="Text" Type="Formatted" ContextData="_RetargetableFolder" DefaultValue="[TARGETDIR]" NonNullable="yes" DisplayName="Module Retargetable Folder" />
+        <CustomAction Id="DIRCA_NEWRETARGETABLEPROPERTY1.B0BAD537397D413AAE4AC8C581C84269" Property="NEWRETARGETABLEPROPERTY1.B0BAD537397D413AAE4AC8C581C84269" Value="[TARGETDIR]" Execute="firstSequence" />
+        <Dependency RequiredId="HTML_Help_Registration_.5C144DD5_72F5_11D4_A53F_0090278A1BB8" RequiredLanguage="0" RequiredVersion="1.0" />
+        <Dependency RequiredId="VSIPCC_Collection_Files.5A852942_E5CE_47F5_82C9_55553BC350E6" RequiredLanguage="0" RequiredVersion="1.0" />
+        <Directory Id="TARGETDIR" Name="SourceDir">
+            <Directory Id="NEWRETARGETABLEPROPERTY1.B0BAD537397D413AAE4AC8C581C84269" Name="Module Retargetable Folder" ShortName="MODULE~1">
+                <Component Id="C__010F910C040D49E9802CB16EC5743CE8.B0BAD537397D413AAE4AC8C581C84269" Guid="{DBBFFC13-9F08-1091-AB6E-7FDB93490DE5}">
+                    <File Id="_010F910C040D49E9802CB16EC5743CE8.B0BAD537397D413AAE4AC8C581C84269" Name="COL_Master_N.HxK" KeyPath="yes" ShortName="COL_MA~1.HXK" Vital="yes" Source="..\Documentation\CollectionFiles\COL_Master_N.HxK" />
+                </Component>
+                <Component Id="C__08670283165543DCAC6E099C00643083.B0BAD537397D413AAE4AC8C581C84269" Guid="{57C68500-B4CD-9C0E-2E6A-24F17047BBD1}">
+                    <File Id="_08670283165543DCAC6E099C00643083.B0BAD537397D413AAE4AC8C581C84269" Name="COL_Master_A.HxK" KeyPath="yes" ShortName="COL_MA~2.HXK" Vital="yes" Source="..\Documentation\CollectionFiles\COL_Master_A.HxK" />
+                </Component>
+                <Component Id="C__7C1784A1FC6948CCBFD7841DBD02B6FF.B0BAD537397D413AAE4AC8C581C84269" Guid="{F8F08CBD-895C-9D66-086A-A4B1855AD01C}">
+                    <File Id="_7C1784A1FC6948CCBFD7841DBD02B6FF.B0BAD537397D413AAE4AC8C581C84269" Name="COL_Master_K.HxK" KeyPath="yes" ShortName="COL_MA~3.HXK" Vital="yes" Source="..\Documentation\CollectionFiles\COL_Master_K.HxK" />
+                </Component>
+                <Component Id="C__9A54EF74418D42C9AAC2C21BC1581919.B0BAD537397D413AAE4AC8C581C84269" Guid="{E7203EE3-E572-8000-BDE3-6512A71B4540}">
+                    <File Id="_9A54EF74418D42C9AAC2C21BC1581919.B0BAD537397D413AAE4AC8C581C84269" Name="COL_Master_F.HxK" KeyPath="yes" ShortName="COL_MA~4.HXK" Vital="yes" Source="..\Documentation\CollectionFiles\COL_Master_F.HxK" />
+                </Component>
+                <Component Id="C__ACA7CDF8C5D04F53AF10EA5FD816460A.B0BAD537397D413AAE4AC8C581C84269" Guid="{D34AA189-F112-BDB2-9CD1-A7EAD8B81875}">
+                    <File Id="_ACA7CDF8C5D04F53AF10EA5FD816460A.B0BAD537397D413AAE4AC8C581C84269" Name="COL_Master.HxT" KeyPath="yes" ShortName="COL_MA~1.HXT" Vital="yes" Source="..\Documentation\CollectionFiles\COL_Master.HxT" />
+                </Component>
+                <Component Id="C__D0A1E0472921469885CF911F108098A8.B0BAD537397D413AAE4AC8C581C84269" Guid="{D0F879BD-DEBE-E064-F7AF-78660B022018}">
+                    <File Id="_D0A1E0472921469885CF911F108098A8.B0BAD537397D413AAE4AC8C581C84269" Name="MySql.Data.HxS" KeyPath="yes" ShortName="MYSQLD~1.HXS" Vital="yes" Source="..\Documentation\Output\MySql.Data.HxS">
+                        <HelpFile Id="MySql.Data" Language="1033" Name="MySql.Data" xmlns="http://schemas.microsoft.com/wix/VSExtension" />
+                    </File>
+                </Component>
+                <Component Id="C__E9F79AAB50AA44A2A8E4E34D68B70B81.B0BAD537397D413AAE4AC8C581C84269" Guid="{5F039555-17AF-C506-B05A-011D32179B24}">
+                    <File Id="_E9F79AAB50AA44A2A8E4E34D68B70B81.B0BAD537397D413AAE4AC8C581C84269" Name="COL_Master.HxC" KeyPath="yes" ShortName="COL_MA~1.HXC" Vital="yes" Source="..\Documentation\CollectionFiles\COL_Master.HxC">
+                        <HelpCollection Id="mysql_connectornet_en" Description="MySQL Connector Net Documentation" Name="mysql.connectornet.en" xmlns="http://schemas.microsoft.com/wix/VSExtension">
+                            <HelpFileRef Id="MySql.Data" />
+                            <PlugCollectionInto TableOfContents="_ACA7CDF8C5D04F53AF10EA5FD816460A.B0BAD537397D413AAE4AC8C581C84269" TargetCollection="MS_VSIPCC_v80" TargetTableOfContents="FL_vsipcc_hxt_86880________" />
+                        </HelpCollection>
+                    </File>
+                </Component>
+            </Directory>
+        </Directory>
+        <IgnoreTable Id="_ModuleConfigurationGroup" />
+        <Substitution Table="CustomAction" Row="DIRCA_NEWRETARGETABLEPROPERTY1.B0BAD537397D413AAE4AC8C581C84269" Column="Target" Value="[=_1B49871DB86943FEB991EB418DBE8050.B0BAD537397D413AAE4AC8C581C84269]" />
+        <InstallExecuteSequence>
+            <Custom Action="DIRCA_NEWRETARGETABLEPROPERTY1.B0BAD537397D413AAE4AC8C581C84269" Before="CostInitialize">NEWRETARGETABLEPROPERTY1.B0BAD537397D413AAE4AC8C581C84269=""</Custom>
+        </InstallExecuteSequence>
+        <InstallUISequence>
+            <Custom Action="DIRCA_NEWRETARGETABLEPROPERTY1.B0BAD537397D413AAE4AC8C581C84269" Before="CostInitialize">NEWRETARGETABLEPROPERTY1.B0BAD537397D413AAE4AC8C581C84269=""</Custom>
+        </InstallUISequence>
+        <AdminExecuteSequence>
+            <Custom Action="DIRCA_NEWRETARGETABLEPROPERTY1.B0BAD537397D413AAE4AC8C581C84269" Before="CostInitialize">NEWRETARGETABLEPROPERTY1.B0BAD537397D413AAE4AC8C581C84269=""</Custom>
+        </AdminExecuteSequence>
+        <AdminUISequence>
+            <Custom Action="DIRCA_NEWRETARGETABLEPROPERTY1.B0BAD537397D413AAE4AC8C581C84269" Before="CostInitialize">NEWRETARGETABLEPROPERTY1.B0BAD537397D413AAE4AC8C581C84269=""</Custom>
+        </AdminUISequence>
+    </Module>
+</Wix>
