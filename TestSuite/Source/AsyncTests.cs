@@ -113,5 +113,22 @@ namespace MySql.Data.MySqlClient.Tests
 					reader.Close();
 			}
 		}
+
+		[Test]
+		public void ThrowingExceptions()
+		{
+			MySqlCommand cmd = new MySqlCommand("SELECT xxx", conn);
+			IAsyncResult r = cmd.BeginExecuteReader();
+			try
+			{
+				MySqlDataReader reader = cmd.EndExecuteReader(r);
+				if (reader != null)
+					reader.Close();
+				Assert.Fail("EndExecuteReader should have thrown an exception");
+			}
+			catch (MySqlException)
+			{
+			}
+		}
 	}
 }
