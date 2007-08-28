@@ -12,7 +12,7 @@
 		<!-- first make sure our product actually builds -->
 <!--		<nant buildfile="client.build" target="allframeworks"/>-->
 		<!-- Now build the docs -->
-<!--		<exec program="sandcastlebuilderconsole.exe" commandline="help.shfb" failonerror="true" workingdir="Documentation"/>-->
+		<exec program="sandcastlebuilderconsole.exe" commandline="help.shfb" failonerror="true" workingdir="Documentation"/>
 		<call target="all"/>
 	</target>
 
@@ -75,10 +75,6 @@
 				depends="PackageInstall, PackageSource, PackageZip"/>
 
 	<target name="PackageInstall">
-		<!-- now build the WIX installer -->
-		<exec workingdir="Installer" program="candle" commandline="-ext WixVSExtension help.wxs"/>
-		<exec workingdir="Installer" program="light" commandline="-sval -ext WixVSExtension help.wixobj -out help.msm"/>
-
 		<exec workingdir="Installer" program="candle"
 			  commandline="-ext WixNetFxExtension -dIsGPL=${IsGPL} -dVersion=${version} -dbuild=release main.wxs samples.wxs sources.wxs visualstudio.wxs webproviders.wxs ui.wxs cf.wxs"/>
 		<exec workingdir="Installer" program="light"
@@ -110,6 +106,11 @@
 				<exclude name="EXCEPTIONS" unless="${IsGPL}"/>
 				<exclude name="License.txt" if="${IsGPL}"/>
 				<exclude name="*.Design.*"/>
+				<exclude name="**/*.wixobj"/>
+				<exclude name="**/*.msi"/>
+				<exclude name="**/*.msm"/>
+				<exclude name="**/debug/**"/>
+				<exclude name="**/release/**"/>
 
 				<include name="**/**"/>
 			</fileset>

@@ -27,13 +27,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_4523E5F2AC48424D833B02277B78650E"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_6B76327AB0994667AFA9764769390972"
+        "MsmKey" = "8:_70AACFDFC56D482DB85143798B29A6F4"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -46,6 +40,12 @@
         "Entry"
         {
         "MsmKey" = "8:_9A54EF74418D42C9AAC2C21BC1581919"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_A2FA79523EB441388CD279AF1F64913E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -304,28 +304,22 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_4523E5F2AC48424D833B02277B78650E"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_70AACFDFC56D482DB85143798B29A6F4"
             {
-            "UseDynamicProperties" = "11:TRUE"
+            "UseDynamicProperties" = "11:FALSE"
             "IsDependency" = "11:FALSE"
-            "SourcePath" = "8:C:\\Program Files (x86)\\Visual Studio 2005 SDK\\HelpIntegrationWizard\\MSHelp2\\HTML_Help_Registration__RTL_X86_---.msm"
-                "Properties"
-                {
-                }
+            "SourcePath" = "8:..\\Installer\\Binary\\HTML_Help_Registration__RTL_X86_---.msm"
             "LanguageId" = "3:0"
             "Exclude" = "11:FALSE"
             "Folder" = "8:"
             "Feature" = "8:"
             "IsolateTo" = "8:"
             }
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_6B76327AB0994667AFA9764769390972"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_A2FA79523EB441388CD279AF1F64913E"
             {
-            "UseDynamicProperties" = "11:TRUE"
+            "UseDynamicProperties" = "11:FALSE"
             "IsDependency" = "11:FALSE"
-            "SourcePath" = "8:C:\\Program Files (x86)\\Visual Studio 2005 SDK\\HelpIntegrationWizard\\VS_2005\\VSIPCC_Collection_Files_RTL_---_---.msm"
-                "Properties"
-                {
-                }
+            "SourcePath" = "8:..\\Installer\\Binary\\VSIPCC_Collection_Files_RTL_---_---.msm"
             "LanguageId" = "3:0"
             "Exclude" = "11:FALSE"
             "Folder" = "8:"

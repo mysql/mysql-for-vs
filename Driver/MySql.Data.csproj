@@ -11,7 +11,8 @@
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
     <AssemblyName>MySql.Data</AssemblyName>
-    <AssemblyOriginatorKeyFile>cnet.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
@@ -116,7 +117,6 @@
   <ItemGroup>
     <None Include="..\CHANGES" />
     <None Include="..\README" />
-    <None Include="cnet.snk" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
