@@ -10,7 +10,8 @@
     <RootNamespace>MySql.Web</RootNamespace>
     <AssemblyName>MySql.Web</AssemblyName>
     <SignAssembly>false</SignAssembly>
-    <AssemblyOriginatorKeyFile>cnet.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -49,9 +50,6 @@
     <Compile Include="Source\MembershipProvider.cs" />
     <Compile Include="Source\RoleProvider.cs" />
     <Compile Include="Source\MembershipSchema.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="cnet.snk" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Driver\MySql.Data.csproj">
