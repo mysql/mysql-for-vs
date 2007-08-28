@@ -35,7 +35,7 @@
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
     <DefineConstants>TRACE;DEBUG;WINDOWS NET20</DefineConstants>
-    <DocumentationFile>doc.xml</DocumentationFile>
+    <DocumentationFile>MySql.Data.xml</DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <NoStdLib>false</NoStdLib>
@@ -54,7 +54,7 @@
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
     <DefineConstants>TRACE;WINDOWS NET20</DefineConstants>
-    <DocumentationFile>doc.xml</DocumentationFile>
+    <DocumentationFile>MySql.Data.xml</DocumentationFile>
     <DebugSymbols>false</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <NoStdLib>false</NoStdLib>
