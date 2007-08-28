@@ -46,6 +46,7 @@ namespace MySql.Data.MySqlClient
         public MySqlCommandBuilder()
         {
             QuotePrefix = QuoteSuffix = "`";
+			ReturnGeneratedIdentifiers = true;
         }
 
         /// <include file='docs/MySqlCommandBuilder.xml' path='docs/Ctor2/*'/>
