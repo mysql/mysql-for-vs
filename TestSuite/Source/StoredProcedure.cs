@@ -1330,6 +1330,8 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void CatalogWithHyphens()
         {
+            if (version < new Version(5, 0)) return;
+
             // make sure this test is valid
             Assert.IsTrue(database0.IndexOf('-') != -1);
 

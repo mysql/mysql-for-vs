@@ -818,6 +818,8 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void BooleanForBit1()
         {
+            if (version < new Version(5, 0)) return;
+
             execSQL("DROP TABLE IF EXISTS Test");
             execSQL("CREATE TABLE Test (id INT, `on` BIT(1))");
             execSQL("INSERT INTO Test VALUES (1,1), (2,0)");
