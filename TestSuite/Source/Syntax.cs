@@ -505,18 +505,25 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void ShowProcessList()
 		{
-			MySqlCommand cmd = new MySqlCommand("show processlist", conn);
-			DataTable dt = new DataTable();
+            string connStr = GetConnectionString(true) + ";respect binary flags=false;";
+            MySqlConnection c = new MySqlConnection(connStr);
+            using (c)
+            {
+                c.Open();
 
-			using (MySqlDataReader rdr = cmd.ExecuteReader())
-			{
-				dt.Load(rdr);
-			}
-			DataRow row = dt.Rows[0];
+                MySqlCommand cmd = new MySqlCommand("show processlist", c);
+                DataTable dt = new DataTable();
 
-			Assert.IsTrue(row["User"].GetType().Name == "String");
-			Assert.IsTrue(row["Host"].GetType().Name == "String");
-			Assert.IsTrue(row["Command"].GetType().Name == "String");
+                using (MySqlDataReader rdr = cmd.ExecuteReader())
+                {
+                    dt.Load(rdr);
+                }
+                DataRow row = dt.Rows[0];
+
+                Assert.IsTrue(row["User"].GetType().Name == "String");
+                Assert.IsTrue(row["Host"].GetType().Name == "String");
+                Assert.IsTrue(row["Command"].GetType().Name == "String");
+            }
 		}
 	}
 }

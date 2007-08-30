@@ -21,6 +21,7 @@
 using System;
 using System.Transactions;
 using System.Collections;
+using System.Data;
 
 namespace MySql.Data.MySqlClient
 {
@@ -51,7 +52,11 @@ namespace MySql.Data.MySqlClient
             simpleTransaction.Rollback();
             singlePhaseEnlistment.Aborted();
             DriverTransactionManager.RemoveDriverInTransaction(baseTransaction);
-            connection.CloseDriver();
+
+            connection.driver.CurrentTransaction = null;
+
+            if (connection.State == ConnectionState.Closed)
+                connection.CloseFully();
         }
 
         void IPromotableSinglePhaseNotification.SinglePhaseCommit(SinglePhaseEnlistment singlePhaseEnlistment)
@@ -59,7 +64,11 @@ namespace MySql.Data.MySqlClient
             simpleTransaction.Commit();
             singlePhaseEnlistment.Committed();
             DriverTransactionManager.RemoveDriverInTransaction(baseTransaction);
-            connection.CloseDriver();
+
+            connection.driver.CurrentTransaction = null;
+
+            if (connection.State == ConnectionState.Closed)
+                connection.CloseFully();
         }
 
         byte[] ITransactionPromoter.Promote()
