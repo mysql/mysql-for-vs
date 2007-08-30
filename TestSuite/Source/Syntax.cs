@@ -482,6 +482,8 @@ namespace MySql.Data.MySqlClient.Tests
                 suExecSQL(String.Format("CREATE DATABASE `{0}`", dbName));
                 suExecSQL(String.Format("GRANT ALL ON `{0}`.* to 'test'@'localhost' identified by 'test'",
                     dbName));
+                suExecSQL(String.Format("GRANT ALL ON `{0}`.* to 'test'@'%' identified by 'test'",
+                    dbName));
                 suExecSQL("FLUSH PRIVILEGES");
 
                 string connStr = GetConnectionString(false) + ";database=" + dbName;

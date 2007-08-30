@@ -1330,31 +1330,15 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void CatalogWithHyphens()
         {
-            string dbName = System.IO.Path.GetFileNameWithoutExtension(
-                System.IO.Path.GetTempFileName()) + "-x";
-            try
-            {
-                // create the database
-                suExecSQL(String.Format("CREATE DATABASE `{0}`", dbName));
-                suExecSQL(String.Format("GRANT ALL ON `{0}`.* to 'test'@'localhost' identified by 'test'",
-                    dbName));
-                suExecSQL("FLUSH PRIVILEGES");
+            // make sure this test is valid
+            Assert.IsTrue(database0.IndexOf('-') != -1);
 
-                string connStr = GetConnectionString(false) + ";database=" + dbName;
-                MySqlConnection c = new MySqlConnection(connStr);
-                c.Open();
+            MySqlCommand cmd = new MySqlCommand("CREATE PROCEDURE spTest() BEGIN SELECT 1; END", conn);
+            cmd.ExecuteNonQuery();
 
-                MySqlCommand cmd = new MySqlCommand("CREATE PROCEDURE spTest() BEGIN SELECT 1; END", c);
-                cmd.ExecuteNonQuery();
-
-                cmd.CommandText = "spTest";
-                cmd.CommandType = CommandType.StoredProcedure;
-                Assert.AreEqual(1, cmd.ExecuteScalar());
-            }
-            finally
-            {
-                suExecSQL(String.Format("DROP DATABASE `{0}`", dbName));
-            }
+            cmd.CommandText = "spTest";
+            cmd.CommandType = CommandType.StoredProcedure;
+            Assert.AreEqual(1, cmd.ExecuteScalar());
         }
 	}
 }

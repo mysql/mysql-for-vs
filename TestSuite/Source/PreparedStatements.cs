@@ -598,7 +598,7 @@ namespace MySql.Data.MySqlClient.Tests
             execSQL("INSERT INTO Test VALUES ('128', 'name2')");
             execSQL("INSERT INTO Test VALUES ('255', 'name3')");
 
-            string sql = " SELECT count(*) FROM TEST WHERE ID = ?id";
+            string sql = " SELECT count(*) FROM Test WHERE ID = ?id";
 
             MySqlCommand command = new MySqlCommand();
             command.CommandText = sql;

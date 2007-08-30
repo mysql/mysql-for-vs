@@ -226,15 +226,15 @@ namespace MySql.Data.MySqlClient.Tests
 		{
             if (Version < new Version(4, 1)) return;
 
-			execSQL("TRUNCATE TABLE test");
-			MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES(1, ?str)", conn);
+			execSQL("TRUNCATE TABLE Test");
+			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES(1, ?str)", conn);
 			cmd.Parameters.Add("?str", MySqlDbType.VarChar);
 			cmd.Prepare();
 
 			cmd.Parameters[0].Value = null;
 			cmd.ExecuteNonQuery();
 
-			cmd.CommandText = "SELECT * FROM test";
+			cmd.CommandText = "SELECT * FROM Test";
 			MySqlDataReader reader = null;
 			try 
 			{
@@ -260,13 +260,13 @@ namespace MySql.Data.MySqlClient.Tests
 		{
             if (Version < new Version(4, 1)) return;
 
-            execSQL("TRUNCATE TABLE test");
-			MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES(1, 'Test')", conn);
+            execSQL("TRUNCATE TABLE Test");
+			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES(1, 'Test')", conn);
 			cmd.Prepare();
 			MySqlDataReader reader = cmd.ExecuteReader();
 			reader.Close();
 
-			cmd.CommandText = "SELECT * FROM test";
+			cmd.CommandText = "SELECT * FROM Test";
 			reader = null;
 			try 
 			{

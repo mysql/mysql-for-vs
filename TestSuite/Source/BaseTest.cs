@@ -59,7 +59,7 @@ namespace MySql.Data.MySqlClient.Tests
             rootPassword = "";
 
 #if NET20
-            string host = ConfigurationManager.AppSettings["host"];
+            host = ConfigurationManager.AppSettings["host"];
             string strPort = ConfigurationManager.AppSettings["port"];
             string pipeName = ConfigurationManager.AppSettings["pipename"];
             string memoryName = ConfigurationManager.AppSettings["memory_name"];
