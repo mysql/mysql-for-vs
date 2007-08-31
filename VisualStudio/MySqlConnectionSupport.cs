@@ -27,6 +27,7 @@ using Microsoft.VisualStudio.Data;
 using Microsoft.VisualStudio.Data.AdoDotNet;
 using System.Globalization;
 using MySql.Data.VisualStudio.Properties;
+using System.Text;
 
 
 namespace MySql.Data.VisualStudio
@@ -42,7 +43,9 @@ namespace MySql.Data.VisualStudio
         /// Simple constructor
         /// </summary>
         public MySqlConnectionSupport()
-            : base(MySqlConnectionProperties.Names.InvariantProviderName) { } 
+            : base(MySqlConnectionProperties.Names.InvariantProviderName) 
+		{
+		} 
         #endregion
 
         #region Overridden methods
@@ -66,6 +69,7 @@ namespace MySql.Data.VisualStudio
                 // connection is OK, just close it normaly
                 providerObjectVal.Close();
             }
+			base.Close();
         }
 
         /// <summary>
@@ -128,6 +132,8 @@ namespace MySql.Data.VisualStudio
             }
 
             // Rreturn true if everything is ok
+			if (sourceInformation != null)
+				sourceInformation.Refresh();
             return true;
         }
 
@@ -152,7 +158,7 @@ namespace MySql.Data.VisualStudio
                 }
                 return viewSupport;
             }
-            if (serviceType == typeof(DataObjectSupport))
+            else if (serviceType == typeof(DataObjectSupport))
             {
                 if (objectSupport == null)
                 {
@@ -160,7 +166,7 @@ namespace MySql.Data.VisualStudio
                 }
                 return objectSupport;
             }
-            if (serviceType == typeof(DataSourceInformation))
+            else if (serviceType == typeof(DataSourceInformation))
             {
                 if (sourceInformation == null)
                 {
@@ -168,8 +174,7 @@ namespace MySql.Data.VisualStudio
                 }
                 return sourceInformation;
             }
-            object result = base.GetServiceImpl(serviceType);
-            return result;
+			else return base.GetServiceImpl(serviceType);
         }
         
         /// <summary>
@@ -296,7 +301,33 @@ namespace MySql.Data.VisualStudio
         #region Support entities
         private DataViewSupport viewSupport;
         private DataObjectSupport objectSupport;
-        private DataSourceInformation sourceInformation;
+        private MySqlDataSourceInformation sourceInformation;
         #endregion
+
+		internal static DataTable ConvertAllBinaryColumns(DataTable dt)
+		{
+			// stupid hack to work around the issue that show engines returns 
+			// everything as byte[]
+			DataTable newDT = dt.Clone();
+
+			foreach (DataColumn column in newDT.Columns)
+				if (column.DataType == typeof(System.Byte[]))
+					column.DataType = typeof(System.String);
+
+			Encoding e = Encoding.GetEncoding("latin1");
+			foreach (DataRow row in dt.Rows)
+			{
+				DataRow newRow = newDT.NewRow();
+				foreach (DataColumn column in dt.Columns)
+				{
+					if (column.DataType == typeof(System.Byte[]))
+						newRow[column.Ordinal] = e.GetString((byte[])row[column.Ordinal]);
+					else
+						newRow[column.Ordinal] = row[column.Ordinal];
+				}
+				newDT.Rows.Add(newRow);
+			}
+			return newDT;
+		}
     }
 }

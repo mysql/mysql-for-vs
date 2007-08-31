@@ -142,7 +142,10 @@ namespace MySql.Data.VisualStudio.Descriptors
                 throw new ArgumentNullException("connection");
 
             // Use base method to read table
-            DataTable result = base.ReadTable(connection, restrictions, sort);
+            DataTable first_result = base.ReadTable(connection, restrictions, sort);
+
+			// fixup collation names
+			DataTable result = MySqlConnectionSupport.ConvertAllBinaryColumns(first_result);
 
             // If there is now result from bas, return immediately
             if (result == null)
