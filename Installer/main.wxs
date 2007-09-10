@@ -40,52 +40,6 @@
       </Directory>
     </Directory>
 
-    <!-- Top level junk - readme, changelog, etc -->
-    <DirectoryRef Id='INSTALLDIR'>
-      <Component Id="BaseComponents" Guid="2448b1b1-f2ec-4153-96c6-bcaae7692ef9" DiskId="1">
-        <File Id="ChangeLog" Name="CHANGES" Source="..\CHANGES" />
-        <File Id="RelNotes" Name="Release Notes.txt" Source="..\Release Notes.txt" />
-        <?if $(var.IsGPL) = 1 ?>
-        <File Id="EXCEPTIONS" Name="EXCEPTIONS" Source="..\EXCEPTIONS" DiskId="1"/>
-        <File Id="COPYING" Name="COPYING" Source="..\COPYING" DiskId="1" />
-        <?endif?>
-        <File Id="README1" Name="README" Source="..\README" DiskId="1"/>
-        <RegistryKey Id="MySqlKey" Root="HKLM" Action="createAndRemoveOnUninstall"
-                     Key="Software\MySQL AB\MySQL Connector/Net $(var.Version)">
-          <RegistryValue Id="Location" Name="Location" Value="[INSTALLDIR]" Type="string"/>
-          <RegistryValue Id="Version" Name="Version" Value="$(var.Version)" Type="string"/>
-        </RegistryKey>
-      </Component>
-    </DirectoryRef>
-
-    <!-- .Net 2.0 Binaries -->
-    <DirectoryRef Id='BinNet20'>
-      <Component Id="Net20" Guid="0e8af006-273c-49bb-b7c1-ec1737260a5a">
-        <File Id="CoreBin20" Name="MySql.Data.dll"
-              Source="..\Driver\bin\net-2.0\release\mysql.data.dll" DiskId="1"/>
-        <RegistryKey Id="VSRegistry" Root="HKLM" Action="createAndRemoveOnUninstall"
-                     Key="SOFTWARE\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\MySQL Connector Net $(var.Version)">
-          <RegistryValue Id="VSRegistryValue" Value="[BinNet20]" Type="string" Action="write"/>
-        </RegistryKey>
-      </Component>
-      <Component Id="GAC20" Guid="58f70e4a-96f7-4b67-bdab-9b77a60f9c09">
-        <File Id="GAC20" Name="MySql.Data.dll"
-              Source="..\Driver\bin\net-2.0\release\mysql.data.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
-      </Component>
-    </DirectoryRef>
-
-    <!-- Start menu junk -->
-    <DirectoryRef Id='ShortCutDir'>
-      <Component Id="StartMenuComponent" Guid="31e1c7c6-e06d-4214-82ca-58e67e5232e2">
-        <Shortcut Id="S100" Name="Documentation" Description="Complete documentation for the connector"
-					Target="[DocsDir]/MySql.Data.chm" Directory="ShortCutDir" />
-        <Shortcut Id="S101" Name="ChangeLog" Description="Complete changelog for the connector" 
-                  Directory="ShortCutDir" Icon="ChangeLogIcon" Target="[INSTALLDIR]/CHANGES"/>
-        <Shortcut Id="S102" Name="Release Notes" Description="Release notes" 
-                  Directory="ShortCutDir" Target="[INSTALLDIR]/Release Notes.txt"/>
-      </Component>
-    </DirectoryRef>
-
     <DirectoryRef Id='DocsDir'>
       <Component Id="Docs" Guid="8f9d25c7-1eba-4391-b764-eb1f7d39243e">
         <File Id="CoreCHM" Name="MySql.Data.chm" Source="..\Documentation\Output\MySql.Data.chm" DiskId="1" />
@@ -95,14 +49,6 @@
       <Merge Id='VSIPREG' Language='0' DiskId='1' SourceFile='Binary\VSIPCC_Collection_Files_RTL_---_---.msm'/>
     </DirectoryRef>
 
-    <Feature Id="CoreComponents" Level="1" Title="Core Components" Description="Core Components" 
-             ConfigurableDirectory ="INSTALLDIR" Absent="disallow" Display="2">
-      <ComponentRef Id="BaseComponents"/>
-      <ComponentRef Id="Net20"/>
-      <ComponentRef Id="GAC20"/>
-      <ComponentRef Id="StartMenuComponent"/>
-    </Feature>
-
     <Feature Id='DocsFeature' Display='4' Level='1' Title='Documentation' Description='Documentation'>
       <ComponentRef Id='Docs'/>
       <MergeRef Id='HELP'/>
@@ -110,11 +56,15 @@
       <MergeRef Id='VSIPREG'/>
     </Feature>
 
+    <FeatureRef Id='Core.Feature'/>
     <FeatureRef Id="Samples"/>
     <FeatureRef Id="WebProviders"/>
     <FeatureRef Id="VisualStudio"/>
     <FeatureRef Id="CompactFramework"/>
-    
+
+    <Binary Id="InstallUtil" SourceFile="Binary\InstallUtilLib.dll" />
+    <Binary Id="MSVBDPCADLL" SourceFile="Binary\MSVBDPCADLL.ibd" />
+    <Binary Id="VSDNETCFG" SourceFile="Binary\VSDNETCFG.ibd" />
     <Property Id="WIXUI_INSTALLDIR" Value='INSTALLDIR'/>
     <!-- Remove the license agreement dialog -->
     <UIRef Id="WixUI_MySQL"/>
@@ -123,43 +73,9 @@
 
     <Icon Id="ChangeLogIcon" SourceFile="Bitmaps\document.ico"/>
 
-    <!-- custom actions for machine.config mods -->
-    <Binary Id="InstallUtil" SourceFile="Binary\InstallUtilLib.dll" />
-    <Binary Id="MSVBDPCADLL" SourceFile="Binary\MSVBDPCADLL.ibd" />
-    <Binary Id="VSDNETCFG" SourceFile="Binary\VSDNETCFG.ibd" />
-
-    <CustomAction Id="SetPrereqs" BinaryKey="MSVBDPCADLL" DllEntry="CheckFX" Impersonate="no" />
-    <CustomAction Id="MyCASetProp" Property="InstallCA"  Impersonate="no"
-                  Value="/installtype=notransaction /action=install /LogFile= &quot;[#CoreBin20]&quot; &quot;[VSDFxConfigFile]&quot;"/>
-    <CustomAction Id="InstallCA" BinaryKey="InstallUtil" DllEntry="ManagedInstall"
-                  Execute="deferred" Impersonate="no"/>
-
-    <CustomAction Id="SetPrereqs1" BinaryKey="MSVBDPCADLL" DllEntry="CheckFX" Impersonate="no"/>
-    <CustomAction Id="MyCAUnSetProp" Property="RemoveCA" Impersonate="no"
-                  Value="/installtype=notransaction /action=uninstall /LogFile= &quot;[#CoreBin20]&quot; &quot;[VSDFxConfigFile]&quot;"/>
-    <CustomAction Id="RemoveCA" BinaryKey="InstallUtil" DllEntry="ManagedInstall"
-                  Execute="deferred" Impersonate="no" />
-
     <InstallExecuteSequence>
-      <ProcessComponents Sequence="2600" />
-      <UnpublishComponents Sequence="2700" />
-      <UnpublishFeatures Sequence="2800" />
-      <StopServices Sequence="2900" />
-      <RegisterComPlus Sequence="6700" />
-      <CreateShortcuts Sequence="7590" />
-      <InstallFinalize Sequence="7800" />
-
-      <!-- Install code -->
-      <Custom Action="SetPrereqs" After="InstallFiles"/>
-      <Custom Action="MyCASetProp" After="SetPrereqs">NOT Installed</Custom>
-      <Custom Action="InstallCA" After="MyCASetProp">NOT Installed</Custom>
-
-      <!-- UnInstall code -->
-      <Custom Action="SetPrereqs1" Before="RemoveFiles">Installed</Custom>
-      <Custom Action="MyCAUnSetProp" After="SetPrereqs1">Installed</Custom>
-      <Custom Action="RemoveCA" After="MyCAUnSetProp">Installed</Custom>
+      <InstallFinalize Sequence="7800"/>
     </InstallExecuteSequence>
-
   </Product>
 </Wix>
 

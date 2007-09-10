@@ -3,12 +3,14 @@
   <Fragment Id='ProvidersFragment'>
     <DirectoryRef Id='INSTALLDIR'>
       <Directory Id='WPDir' Name='Web Providers'>
-        <Component Id="ProvidersGAC" Guid="6b95d34b-91e1-41ff-9f3f-dcb5308a00ce">
-          <File Id="ProviderAssemblyGAC" Name="MySql.Web.dll" ShortName="MW"
-                Source="..\MySql.Web\providers\bin\release\mysql.web.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
-        </Component>
+        <Directory Id="MySql.Web.DummyDir" Name="GAC">
+          <Component Id="ProvidersGAC" Guid="6b95d34b-91e1-41ff-9f3f-dcb5308a00ce">
+            <File Id="ProviderAssemblyGAC" Name="MySql.Web.dll" ShortName="MW"
+                  Source="..\MySql.Web\providers\bin\release\mysql.web.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
+          </Component>
+        </Directory>
         <Component Id="Providers" Guid="8578813e-e123-45ad-9c92-565382a058b6">
-          <File Id="ProviderAssembly" Name="MySql.Web.dll" DiskId="1"
+          <File Id="MySqlWeb" Name="MySql.Web.dll" DiskId="1"
                 Source="..\MySql.Web\providers\bin\release\mysql.web.dll"/>
         </Component>
       </Directory>
@@ -20,30 +22,27 @@
       <ComponentRef Id='ProvidersGAC'/>
     </Feature>
 
-    <CustomAction Id="WPSetPrereqs" BinaryKey="MSVBDPCADLL" DllEntry="CheckFX" Impersonate="no" />
-    <CustomAction Id="WPCASetProp" Property="WPInstallCA"  Impersonate="no"
-                  Value="/installtype=notransaction /action=install /LogFile= &quot;[#ProviderAssembly]&quot; &quot;[VSDFxConfigFile]&quot;"/>
-    <CustomAction Id="WPInstallCA" BinaryKey="InstallUtil" DllEntry="ManagedInstall"
-                  Execute="deferred" Impersonate="no"/>
+    <CustomAction Id="MySqlWeb.Install.CheckFX" BinaryKey="MSVBDPCADLL" DllEntry="CheckFX" />
+    <CustomAction Id="MySqlWeb.Install.SetProperty" Property="MySqlWeb.Install"
+                  Value='/installtype=notransaction /action=install /LogFile= "[#MySqlWeb]" "[VSDFxConfigFile]"'/>
+    <CustomAction Id="MySqlWeb.Install" BinaryKey="InstallUtil" DllEntry="ManagedInstall" Execute="deferred" />
 
-    <CustomAction Id="WPSetPrereqs1" BinaryKey="MSVBDPCADLL" DllEntry="CheckFX" Impersonate="no"/>
-    <CustomAction Id="WPCAUnSetProp" Property="WPRemoveCA" Impersonate="no"
-                  Value="/installtype=notransaction /action=uninstall /LogFile= &quot;[#ProviderAssembly]&quot; &quot;[VSDFxConfigFile]&quot;"/>
-    <CustomAction Id="WPRemoveCA" BinaryKey="InstallUtil" DllEntry="ManagedInstall"
-                  Execute="deferred" Impersonate="no" />
+    <CustomAction Id="MySqlWeb.Remove.CheckFX" BinaryKey="MSVBDPCADLL" DllEntry="CheckFX" />
+    <CustomAction Id="MySqlWeb.Remove.SetProperty" Property="MySqlWeb.Remove"
+                   Value='/installtype=notransaction /action=uninstall /LogFile= "[#MySqlWeb]" "[VSDFxConfigFile]"'/>
+    <CustomAction Id="MySqlWeb.Remove" BinaryKey="InstallUtil" DllEntry="ManagedInstall" Execute="deferred" />
 
     <InstallExecuteSequence>
-      <!-- Install code -->
-      <Custom Action="WPSetPrereqs" After="InstallFiles"><![CDATA[ $Providers > 2 ]]></Custom>
-      <Custom Action="WPCASetProp" After="WPSetPrereqs"><![CDATA[ $Providers > 2 ]]></Custom>
-      <Custom Action="WPInstallCA" After="WPCASetProp"><![CDATA[ $Providers > 2 ]]></Custom>
+      <!-- Register code -->
+      <Custom Action="MySqlWeb.Install.CheckFX" After="InstallFiles">$Providers > 2</Custom>
+      <Custom Action="MySqlWeb.Install.SetProperty" After="MySqlWeb.Install.CheckFX">$Providers > 2</Custom>
+      <Custom Action="MySqlWeb.Install" After="MySqlWeb.Install.SetProperty">$Providers > 2</Custom>
 
-      <!-- UnInstall code -->
-      <Custom Action="WPSetPrereqs1" Before="RemoveFiles"><![CDATA[ $Providers = 2 ]]></Custom>
-      <Custom Action="WPCAUnSetProp" After="WPSetPrereqs1"><![CDATA[ $Providers = 2 ]]></Custom>
-      <Custom Action="WPRemoveCA" After="WPCAUnSetProp"><![CDATA[ $Providers = 2 ]]></Custom>
+      <!-- Unregister code -->
+      <Custom Action="MySqlWeb.Remove.CheckFX" After="InstallFiles">$Providers = 2</Custom>
+      <Custom Action="MySqlWeb.Remove.SetProperty" After="MySqlWeb.Install.CheckFX">$Providers = 2</Custom>
+      <Custom Action="MySqlWeb.Remove" After="MySqlWeb.Remove.SetProperty">$Providers = 2</Custom>
     </InstallExecuteSequence>
-    
   </Fragment>
 </Wix>
 

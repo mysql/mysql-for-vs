@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment Id='CoreFragment'>
+
+    <!-- Top level junk - readme, changelog, etc -->
+    <DirectoryRef Id='INSTALLDIR'>
+      <Component Id="BaseFiles" Guid="2448b1b1-f2ec-4153-96c6-bcaae7692ef9" DiskId="1">
+        <File Id="ChangeLog" Name="CHANGES" Source="..\CHANGES" />
+        <File Id="RelNotes" Name="Release Notes.txt" Source="..\Release Notes.txt" />
+        <?if $(var.IsGPL) = 1 ?>
+        <File Id="EXCEPTIONS" Name="EXCEPTIONS" Source="..\EXCEPTIONS" DiskId="1"/>
+        <File Id="COPYING" Name="COPYING" Source="..\COPYING" DiskId="1" />
+        <?endif?>
+        <File Id="README1" Name="README" Source="..\README" DiskId="1"/>
+        <RegistryKey Id="MySqlKey" Root="HKLM" Action="createAndRemoveOnUninstall"
+                     Key="Software\MySQL AB\MySQL Connector/Net $(var.Version)">
+          <RegistryValue Id="Location" Name="Location" Value="[INSTALLDIR]" Type="string"/>
+          <RegistryValue Id="Version" Name="Version" Value="$(var.Version)" Type="string"/>
+        </RegistryKey>
+      </Component>
+    </DirectoryRef>
+
+    <!-- .Net 2.0 Binaries -->
+    <DirectoryRef Id='BinNet20'>
+      <Component Id="Net20" Guid="0e8af006-273c-49bb-b7c1-ec1737260a5a">
+        <File Id="MySqlData" Name="MySql.Data.dll"
+              Source="..\Driver\bin\net-2.0\release\mysql.data.dll" DiskId="1"/>
+        <RegistryKey Id="VSRegistry" Root="HKLM" Action="createAndRemoveOnUninstall"
+                     Key="SOFTWARE\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\MySQL Connector Net $(var.Version)">
+          <RegistryValue Id="VSRegistryValue" Value="[BinNet20]" Type="string" Action="write"/>
+        </RegistryKey>
+      </Component>
+      <Directory Id="MySql.Data.DummyDir" Name="GAC">
+        <Component Id="GAC20" Guid="58f70e4a-96f7-4b67-bdab-9b77a60f9c09">
+          <File Id="MySql.Data.GAC" Name="MySql.Data.dll"
+                Source="..\Driver\bin\net-2.0\release\mysql.data.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
+        </Component>
+      </Directory>
+    </DirectoryRef>
+
+    <!-- Start menu junk -->
+    <DirectoryRef Id='ShortCutDir'>
+      <Component Id="StartMenuComponent" Guid="31e1c7c6-e06d-4214-82ca-58e67e5232e2">
+        <CreateFolder/>  <!-- Clear ICE18 error -->
+        <Shortcut Id="S100" Name="Documentation" Description="Complete documentation for the connector"
+					Target="[DocsDir]/MySql.Data.chm" Directory="ShortCutDir" />
+        <Shortcut Id="S101" Name="ChangeLog" Description="Complete changelog for the connector"
+                  Directory="ShortCutDir" Icon="ChangeLogIcon" Target="[INSTALLDIR]/CHANGES"/>
+        <Shortcut Id="S102" Name="Release Notes" Description="Release notes"
+                  Directory="ShortCutDir" Target="[INSTALLDIR]/Release Notes.txt"/>
+      </Component>
+    </DirectoryRef>
+
+    <Feature Id="Core.Feature" Level="1" Title="Core Components" Description="Core Components"
+             ConfigurableDirectory ="INSTALLDIR" Absent="disallow" Display="2">
+      <ComponentRef Id="BaseFiles"/>
+      <ComponentRef Id="Net20"/>
+      <ComponentRef Id="GAC20"/>
+      <ComponentRef Id="StartMenuComponent"/>
+    </Feature>
+
+    <CustomAction Id="MySqlData.Install.CheckFX" BinaryKey="MSVBDPCADLL" DllEntry="CheckFX" />
+    <CustomAction Id="MySqlData.Install.SetProperty" Property="MySqlData.Install"
+                  Value='/installtype=notransaction /action=install /LogFile= "[#MySqlData]" "[VSDFxConfigFile]"'/>
+    <CustomAction Id="MySqlData.Install" BinaryKey="InstallUtil" DllEntry="ManagedInstall" Execute="deferred" />
+
+    <CustomAction Id="MySqlData.Remove.CheckFX" BinaryKey="MSVBDPCADLL" DllEntry="CheckFX" />
+    <CustomAction Id="MySqlData.Remove.SetProperty" Property="MySqlData.Remove"
+                   Value='/installtype=notransaction /action=uninstall /LogFile= "[#MySqlData]" "[VSDFxConfigFile]"'/>
+    <CustomAction Id="MySqlData.Remove" BinaryKey="InstallUtil" DllEntry="ManagedInstall" Execute="deferred" />
+
+    <InstallExecuteSequence>
+      <Custom Action="MySqlData.Install.CheckFX" After="InstallFiles">NOT Installed</Custom>
+      <Custom Action="MySqlData.Install.SetProperty" After="MySqlData.Install.CheckFX">NOT Installed</Custom>
+      <Custom Action="MySqlData.Install" After="MySqlData.Install.SetProperty">NOT Installed</Custom>
+
+      <Custom Action="MySqlData.Remove.CheckFX" Before="RemoveFiles">Installed</Custom>
+      <Custom Action="MySqlData.Remove.SetProperty" After="MySqlData.Remove.CheckFX">Installed</Custom>
+      <Custom Action="MySqlData.Remove" After="MySqlData.Remove.SetProperty">Installed</Custom>
+    </InstallExecuteSequence>
+  </Fragment>
+</Wix>
+
+
