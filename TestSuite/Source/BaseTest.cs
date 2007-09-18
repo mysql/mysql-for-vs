@@ -61,13 +61,13 @@ namespace MySql.Data.MySqlClient.Tests
 #if NET20
             host = ConfigurationManager.AppSettings["host"];
             string strPort = ConfigurationManager.AppSettings["port"];
-            string pipeName = ConfigurationManager.AppSettings["pipename"];
-            string memoryName = ConfigurationManager.AppSettings["memory_name"];
+            pipeName = ConfigurationManager.AppSettings["pipename"];
+            memoryName = ConfigurationManager.AppSettings["memory_name"];
 #else
-            string host = ConfigurationSettings.AppSettings["host"];
+            host = ConfigurationSettings.AppSettings["host"];
             string strPort = ConfigurationSettings.AppSettings["port"];
-            string pipeName = ConfigurationSettings.AppSettings["pipename"];
-            string memoryName = ConfigurationSettings.AppSettings["memory_name"];
+            pipeName = ConfigurationSettings.AppSettings["pipename"];
+            memoryName = ConfigurationSettings.AppSettings["memory_name"];
 #endif
             if (strPort != null)
                 port = Int32.Parse(strPort);
@@ -75,7 +75,7 @@ namespace MySql.Data.MySqlClient.Tests
 				host = "localhost";
             if (pipeName == null)
 				pipeName = "MYSQL";
-            if (memoryName != null)
+            if (memoryName == null)
 				memoryName = "MYSQL";
 
 			// we don't use FileVersion because it's not available
