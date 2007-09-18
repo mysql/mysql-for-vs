@@ -39,8 +39,8 @@
       <Custom Action="MySqlWeb.Install" After="MySqlWeb.Install.SetProperty">$Providers > 2</Custom>
 
       <!-- Unregister code -->
-      <Custom Action="MySqlWeb.Remove.CheckFX" After="InstallFiles">$Providers = 2</Custom>
-      <Custom Action="MySqlWeb.Remove.SetProperty" After="MySqlWeb.Install.CheckFX">$Providers = 2</Custom>
+      <Custom Action="MySqlWeb.Remove.CheckFX" Before="RemoveFiles">$Providers = 2</Custom>
+      <Custom Action="MySqlWeb.Remove.SetProperty" After="MySqlWeb.Remove.CheckFX">$Providers = 2</Custom>
       <Custom Action="MySqlWeb.Remove" After="MySqlWeb.Remove.SetProperty">$Providers = 2</Custom>
     </InstallExecuteSequence>
   </Fragment>
