@@ -92,7 +92,7 @@ namespace MySql.Data.MySqlClient.Tests
             string connStr = "server={0};user id={1};password={2};database=dummy; " +
                 "pooling=false";
             MySqlConnection c = new MySqlConnection(
-                String.Format(connStr, host, this.user, this.password));
+                String.Format(connStr, host, user, password));
             try
             {
                 c.Open();

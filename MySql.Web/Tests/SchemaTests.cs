@@ -30,11 +30,13 @@ using MySql.Data.MySqlClient;
 namespace MySql.Web.Security.Tests
 {
     [TestFixture]
-    public class SchemaTests : BaseTest
+    public class SchemaTests : BaseWebTest
     {
         [SetUp]
-        public void Setup()
+        protected override void Setup()
         {
+			base.Setup();
+
             execSQL("DROP TABLE IF EXISTS mysql_Membership");
             execSQL("DROP TABLE IF EXISTS mysql_Roles");
             execSQL("DROP TABLE IF EXISTS mysql_UsersInRoles");
@@ -48,7 +50,7 @@ namespace MySql.Web.Security.Tests
             config.Add("connectionStringName", "LocalMySqlServer");
             provider.Initialize(null, config);
 
-            MySqlCommand cmd = new MySqlCommand("SHOW CREATE TABLE mysql_membership", connection);
+            MySqlCommand cmd = new MySqlCommand("SHOW CREATE TABLE mysql_membership", conn);
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {
                 reader.Read();
@@ -68,7 +70,7 @@ namespace MySql.Web.Security.Tests
             config.Add("connectionStringName", "LocalMySqlServer");
             provider.Initialize(null, config);
 
-            MySqlCommand cmd = new MySqlCommand("SHOW CREATE TABLE mysql_membership", connection);
+            MySqlCommand cmd = new MySqlCommand("SHOW CREATE TABLE mysql_membership", conn);
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {
                 reader.Read();
