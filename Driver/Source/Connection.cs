@@ -591,6 +591,14 @@ namespace MySql.Data.MySqlClient
             SetState(ConnectionState.Closed);
         }
 
+		internal string CurrentDatabase()
+		{
+			if (Database != null && Database.Length > 0)
+				return Database;
+			MySqlCommand cmd = new MySqlCommand("SELECT database()", this);
+			return cmd.ExecuteScalar().ToString();
+		}
+
 #if MONO2
 
         protected void OnStateChange (StateChangeEventArgs stateChangeArgs)
