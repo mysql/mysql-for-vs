@@ -575,12 +575,12 @@ namespace MySql.Data.MySqlClient
 
             DBVersion v = connection.driver.Version;
             string ver = String.Format("{0:0}.{1:0}.{2:0}",
-                                       v.Major, v.Major, v.Build);
+                                       v.Major, v.Minor, v.Build);
 
             DataRow row = dt.NewRow();
             row["CompositeIdentifierSeparatorPattern"] = "\\.";
             row["DataSourceProductName"] = "MySQL";
-            row["DataSourceProductVersion"] = connection.ServerVersion;
+			row["DataSourceProductVersion"] = connection.ServerVersion;
             row["DataSourceProductVersionNormalized"] = ver;
             row["GroupByBehavior"] = GroupByBehavior.Unknown;
             row["IdentifierPattern"] =
