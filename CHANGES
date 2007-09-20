@@ -1,4 +1,4 @@
-Version 5.1.3 - 
+Version 5.1.3 - 9/19/2007
   - Fixed problem with using a stored procedure that takes a parameter as a select routine
     for a TableAdapter wizard. (Bug #29098)
   - Fixed problem with creating users using hashed passwords when machineKey is set
