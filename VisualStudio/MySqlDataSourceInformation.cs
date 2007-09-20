@@ -21,6 +21,8 @@
 using System;
 using Microsoft.VisualStudio.Data;
 using Microsoft.VisualStudio.Data.AdoDotNet;
+using System.Data;
+using System.Data.Common;
 
 namespace MySql.Data.VisualStudio
 {
@@ -30,7 +32,8 @@ namespace MySql.Data.VisualStudio
 	public class MySqlDataSourceInformation : AdoDotNetDataSourceInformation
 	{
         #region Properties names
-        public const string DataSource = "DataSource";        
+        public const string DataSource = "DataSource";
+		private DataTable values;
         #endregion
 
         #region Constructor
@@ -42,6 +45,7 @@ namespace MySql.Data.VisualStudio
             : base(connection)
         {
             AddProperty(DataSource);
+			AddProperty(DataSourceVersion);
             AddProperty(DefaultSchema);
             AddProperty(SupportsAnsi92Sql, true);
             AddProperty(SupportsQuotedIdentifierParts, true);
@@ -59,7 +63,32 @@ namespace MySql.Data.VisualStudio
         } 
         #endregion
 
+		internal void Refresh()
+		{
+			DbConnection c = (DbConnection)Connection.GetLockedProviderObject();
+			values = c.GetSchema("DataSourceInformation");
+			Connection.UnlockProviderObject();
+		}
+
         #region Value retrieving
+
+		public override object this[string propertyName]
+		{
+			get
+			{
+				// data source version can change so we need to 
+				// refresh it here
+				if (propertyName == "DataSourceVersion")
+				{
+					if (values == null)
+						Refresh();
+					return values.Rows[0]["DataSourceProductVersion"];
+				}
+				else
+					return base[propertyName];
+			}
+		}
+
         /// <summary>
         /// Called to retrieve property value. Supports following custom properties:
         /// DataSource – MySQL server name.
@@ -77,7 +106,8 @@ namespace MySql.Data.VisualStudio
             {
                 return ConnectionWrapper.Schema;
             }
-            return base.RetrieveValue(propertyName);
+            object value = base.RetrieveValue(propertyName);
+			return value;
         } 
         #endregion
 

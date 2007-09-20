@@ -251,7 +251,6 @@ namespace MySql.Web.Security
                 cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
                 try
                 {
-                    conn.Open();
                     return cmd.ExecuteNonQuery() > 0;
                 }
                 catch (MySqlException e)

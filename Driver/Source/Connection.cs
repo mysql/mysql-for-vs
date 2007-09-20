@@ -324,7 +324,7 @@ namespace MySql.Data.MySqlClient
 
                 // close existing driver
                 // set this new driver as our existing driver
-                CloseDriver();
+                CloseFully();
                 driver = existingDriver;
             }
 
@@ -554,12 +554,8 @@ namespace MySql.Data.MySqlClient
             SetState(ConnectionState.Closed);
         }
 
-        internal void CloseDriver()
+        internal void CloseFully()
         {
-#if !CF
-            driver.CurrentTransaction = null;
-#endif
-
             if (settings.Pooling)
             {
                 // if we are in a transaction, roll it back
@@ -573,6 +569,7 @@ namespace MySql.Data.MySqlClient
             }
             else
                 driver.Close();
+            driver = null;
         }
 
         /// <include file='docs/MySqlConnection.xml' path='docs/Close/*'/>
@@ -585,7 +582,7 @@ namespace MySql.Data.MySqlClient
 #if !CF
             if (driver.CurrentTransaction == null)
 #endif
-                CloseDriver();
+                CloseFully();
 #if !CF
             else
                 driver.IsInActiveUse = false;
@@ -593,6 +590,14 @@ namespace MySql.Data.MySqlClient
 
             SetState(ConnectionState.Closed);
         }
+
+		internal string CurrentDatabase()
+		{
+			if (Database != null && Database.Length > 0)
+				return Database;
+			MySqlCommand cmd = new MySqlCommand("SELECT database()", this);
+			return cmd.ExecuteScalar().ToString();
+		}
 
 #if MONO2
 

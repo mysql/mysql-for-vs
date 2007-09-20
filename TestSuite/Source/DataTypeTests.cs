@@ -639,7 +639,7 @@ namespace MySql.Data.MySqlClient.Tests
 				cmd.Prepare();
 				reader = cmd.ExecuteReader();
 				Assert.IsTrue(reader.Read());
-				Assert.AreEqual(1, reader[0]);
+				Assert.AreEqual(true, reader[0]);
 				Assert.AreEqual(2, reader[1]);
 				Assert.AreEqual(3, reader[2]);
 			}
@@ -818,6 +818,8 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void BooleanForBit1()
         {
+            if (version < new Version(5, 0)) return;
+
             execSQL("DROP TABLE IF EXISTS Test");
             execSQL("CREATE TABLE Test (id INT, `on` BIT(1))");
             execSQL("INSERT INTO Test VALUES (1,1), (2,0)");

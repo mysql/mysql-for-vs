@@ -1,11 +1,11 @@
-Connector/Net 5.1.2  Release Notes
+Connector/Net 5.1  Release Notes
 ------------------------------------
 
-Welcome to the release notes for Connector/Net 5.1.2
+Welcome to the release notes for Connector/Net 5.1
 
 Binary and VarBinary issues
 ---------------------------
-With 5.1.2, we have reintroduced code to properly return field values as byte[] when 
+With 5.1, we have reintroduced code to properly return field values as byte[] when 
 the field's type is indicated to be binary by the server.  Unfortunately, there are
 some scenarios where the connector simply can't tell which is right.  One example
 is the 'SHOW PROCESSLIST' query.  The fields returned from this query contain text
@@ -16,6 +16,4 @@ are evaluating adding a connection option to make the past behavior available.
 
 Known Issues
 ------------
-1. Creating a procedure with the name StoredProcedure1 will cause any future attempts
-   to create a stored procedure to fail.
 

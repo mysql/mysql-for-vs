@@ -110,7 +110,7 @@ namespace MySql.Data.VisualStudio.Descriptors
             [Field(OptionName = OrdinalOption, FieldType = TypeCode.Int64)]
             public const string Ordinal = "ORDINAL_POSITION";
             [Field(FieldType = TypeCode.String)]
-            public const string Default = "TRUE_DEFAULT";
+            public const string Default = "COLUMN_DEFAULT";
             [Field(FieldType = TypeCode.Boolean)]
             public const string Nullable = "IS_NULLABLE";
             [Field(OptionName = DataTypeOption, FieldType = TypeCode.String)]

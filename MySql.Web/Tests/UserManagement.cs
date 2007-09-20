@@ -32,15 +32,16 @@ using System.Configuration.Provider;
 namespace MySql.Web.Security.Tests
 {
     [TestFixture]
-    public class UserManagement : BaseTest
+    public class UserManagement : BaseWebTest
     {
         private MySQLMembershipProvider provider;
 
         [SetUp]
-        public void SetUp()
-        {
-            execSQL("DROP TABLE IF EXISTS mysql_membership");
-        }
+		protected override void Setup()
+		{
+			base.Setup();
+			execSQL("DROP TABLE IF EXISTS mysql_membership");
+		}
 
         private void CreateUserWithFormat(MembershipPasswordFormat format)
         {
@@ -123,7 +124,14 @@ namespace MySql.Web.Security.Tests
         {
             try
             {
-                Membership.CreateUser("foo", "bar");
+				// we have to initialize the provider so the db will exist
+				provider = new MySQLMembershipProvider();
+				NameValueCollection config = new NameValueCollection();
+				config.Add("connectionStringName", "LocalMySqlServer");
+				config.Add("applicationName", "/");
+				provider.Initialize(null, config);
+				
+				Membership.CreateUser("foo", "bar");
                 int records;
                 MembershipUserCollection users = Membership.FindUsersByName("F%", 0, 10, out records);
                 Assert.AreEqual(1, records);

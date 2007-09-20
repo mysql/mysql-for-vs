@@ -109,7 +109,7 @@ namespace MySql.Data.VisualStudio.Descriptors
                 return base.GetDefaultRestrictions(connection);
 
             // For legacy version return array with current conection information
-            return new string[] { connection.ServerName, "'" + connection.Schema + "'" };
+            return new string[] { "'" + connection.ServerName + "'", "'" + connection.Schema + "'" };
         }
 
         /// <summary>

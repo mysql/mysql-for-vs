@@ -46,6 +46,7 @@ namespace MySql.Data.MySqlClient
         public MySqlCommandBuilder()
         {
             QuotePrefix = QuoteSuffix = "`";
+			ReturnGeneratedIdentifiers = true;
         }
 
         /// <include file='docs/MySqlCommandBuilder.xml' path='docs/Ctor2/*'/>
@@ -254,7 +255,8 @@ namespace MySql.Data.MySqlClient
                     CreateFinalSelect();
             }
 
-            args.Command.CommandText += finalSelect;
+            if (finalSelect != null && finalSelect.Length > 0)
+                args.Command.CommandText += finalSelect;
         }
 
         /// <summary>
@@ -263,7 +265,7 @@ namespace MySql.Data.MySqlClient
         /// </summary>
         private void CreateFinalSelect()
         {
-            StringBuilder select = new StringBuilder(";SELECT last_insert_id() AS ");
+            StringBuilder select = new StringBuilder();
 
             DataTable dt = GetSchemaTable(DataAdapter.SelectCommand);
 
@@ -273,7 +275,7 @@ namespace MySql.Data.MySqlClient
                     continue;
 
                 select.AppendFormat(CultureInfo.InvariantCulture, 
-                    "`{0}`", row["ColumnName"]);
+                    "; SELECT last_insert_id() AS `{0}`", row["ColumnName"]);
                 break;
             }
 

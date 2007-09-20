@@ -104,7 +104,7 @@
                   Execute="deferred" Impersonate="no"/>
 
     <InstallExecuteSequence>
-      <Custom Action='DevenvSetup' After='PublishProduct'>&amp;VisualStudio=3 OR !VisualStudio=3</Custom>
+      <Custom Action='DevenvSetup' After='PublishProduct'>$VStudio >= 2</Custom>
     </InstallExecuteSequence>
 
   </Fragment>

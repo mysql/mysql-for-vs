@@ -48,7 +48,7 @@ namespace MySql.Data.MySqlClient.Tests
 			byte[] dataIn = Utils.CreateBlob(lenIn);
 
 
-			MySqlCommand cmd2 = new MySqlCommand("SELECT * FROM test", conn);
+			MySqlCommand cmd2 = new MySqlCommand("SELECT * FROM Test", conn);
 			MySqlDataReader reader2 = cmd2.ExecuteReader();
 			reader2.Read();
 			reader2.Close();

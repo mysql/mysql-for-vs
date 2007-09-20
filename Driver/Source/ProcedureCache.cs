@@ -112,7 +112,7 @@ namespace MySql.Data.MySqlClient
             string name = spName.Substring(dotIndex + 1, spName.Length - dotIndex - 1);
 
             string[] restrictions = new string[4];
-            restrictions[1] = schema;
+            restrictions[1] = schema.Length > 0 ? schema : connection.CurrentDatabase();
             restrictions[2] = name;
             DataTable procTable = connection.GetSchema("procedures", restrictions);
             if (procTable.Rows.Count > 1)

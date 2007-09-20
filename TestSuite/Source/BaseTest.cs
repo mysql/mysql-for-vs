@@ -37,14 +37,14 @@ namespace MySql.Data.MySqlClient.Tests
         private MySqlConnection rootConn;
         protected string table;
         protected string csAdditions = String.Empty;
-        protected string host;
-        protected string user;
-        protected string password;
-        protected int port;
-        protected string pipeName;
-        protected string memoryName;
-        protected string rootUser;
-        protected string rootPassword;
+        protected static string host;
+        protected static string user;
+        protected static string password;
+        protected static int port;
+        protected static string pipeName;
+        protected static string memoryName;
+        protected static string rootUser;
+        protected static string rootPassword;
         protected static string database0;
         protected static string database1;
         protected Version version;
@@ -52,30 +52,38 @@ namespace MySql.Data.MySqlClient.Tests
 
         public BaseTest()
         {
-            user = "root";
-            password = "";
-            port = 3306;
-            rootUser = "root";
-            rootPassword = "";
+			if (host == null)
+				LoadStaticConfiguration();
+        }
+
+		protected virtual void LoadStaticConfiguration()
+		{
+			Debug.Assert(host == null);
+
+			user = "test";
+			password = "test";
+			port = 3306;
+			rootUser = "root";
+			rootPassword = "";
 
 #if NET20
-            string host = ConfigurationManager.AppSettings["host"];
-            string strPort = ConfigurationManager.AppSettings["port"];
-            string pipeName = ConfigurationManager.AppSettings["pipename"];
-            string memoryName = ConfigurationManager.AppSettings["memory_name"];
+			host = ConfigurationManager.AppSettings["host"];
+			string strPort = ConfigurationManager.AppSettings["port"];
+			pipeName = ConfigurationManager.AppSettings["pipename"];
+			memoryName = ConfigurationManager.AppSettings["memory_name"];
 #else
-            string host = ConfigurationSettings.AppSettings["host"];
+            host = ConfigurationSettings.AppSettings["host"];
             string strPort = ConfigurationSettings.AppSettings["port"];
-            string pipeName = ConfigurationSettings.AppSettings["pipename"];
-            string memoryName = ConfigurationSettings.AppSettings["memory_name"];
+            pipeName = ConfigurationSettings.AppSettings["pipename"];
+            memoryName = ConfigurationSettings.AppSettings["memory_name"];
 #endif
-            if (strPort != null)
-                port = Int32.Parse(strPort);
+			if (strPort != null)
+				port = Int32.Parse(strPort);
 			if (host == null)
 				host = "localhost";
-            if (pipeName == null)
+			if (pipeName == null)
 				pipeName = "MYSQL";
-            if (memoryName != null)
+			if (memoryName == null)
 				memoryName = "MYSQL";
 
 			// we don't use FileVersion because it's not available
@@ -88,7 +96,7 @@ namespace MySql.Data.MySqlClient.Tests
 				database0 = String.Format("db{0}{1}{2}-a", versionParts[0], versionParts[1], port - 3300);
 				database1 = String.Format("db{0}{1}{2}-b", versionParts[0], versionParts[1], port - 3300);
 			}
-        }
+		}
 
         [TestFixtureSetUp]
         protected virtual void FixtureSetup()

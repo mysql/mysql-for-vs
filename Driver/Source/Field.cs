@@ -218,12 +218,14 @@ namespace MySql.Data.MySqlClient
                 // on binary blobs
                 if (IsBinary && connection.Settings.TreatBlobsAsUTF8)
                 {
-                    bool convertBlob = true;
+                    bool convertBlob = false;
                     Regex includeRegex = connection.Settings.BlobAsUTF8IncludeRegex;
                     Regex excludeRegex = connection.Settings.BlobAsUTF8ExcludeRegex;
-                    convertBlob &= (includeRegex != null && includeRegex.IsMatch(ColumnName));
-                    if (excludeRegex != null && excludeRegex.IsMatch(ColumnName))
-                        convertBlob = false;
+                    if (includeRegex != null && includeRegex.IsMatch(ColumnName))
+                        convertBlob = true;
+                    else if (includeRegex == null && excludeRegex != null &&
+                        !excludeRegex.IsMatch(ColumnName))
+                        convertBlob = true;
 
                     if (convertBlob)
                     {

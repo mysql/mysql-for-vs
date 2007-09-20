@@ -32,23 +32,25 @@ using System.Configuration.Provider;
 namespace MySql.Web.Security.Tests
 {
     [TestFixture]
-    public class RoleManagement : BaseTest
+    public class RoleManagement : BaseWebTest
     {
-        private MySQLMembershipProvider provider;
+        private MySQLMembershipProvider membershipProvider;
         private MySQLRoleProvider roleProvider;
 
         [SetUp]
-        public void SetUp()
-        {
-            execSQL("DROP TABLE IF EXISTS mysql_membership");
-            execSQL("DROP TABLE IF EXISTS mysql_roles");
+		protected override void Setup()
+		{
+			base.Setup();
 
-            provider = new MySQLMembershipProvider();
-            NameValueCollection config = new NameValueCollection();
-            config.Add("connectionStringName", "LocalMySqlServer");
-            config.Add("applicationName", "/");
-            provider.Initialize(null, config);
-        }
+			execSQL("DROP TABLE IF EXISTS mysql_membership");
+			execSQL("DROP TABLE IF EXISTS mysql_roles");
+
+			membershipProvider = new MySQLMembershipProvider();
+			NameValueCollection config = new NameValueCollection();
+			config.Add("connectionStringName", "LocalMySqlServer");
+			config.Add("applicationName", "/");
+			membershipProvider.Initialize(null, config);
+		}
 
         [Test]
         public void CreateAndDeleteRoles()
@@ -74,7 +76,7 @@ namespace MySql.Web.Security.Tests
         private void AddUser(string username, string password)
         {
             MembershipCreateStatus status;
-            provider.CreateUser(username, password, "foo@bar.com", null,
+            membershipProvider.CreateUser(username, password, "foo@bar.com", null,
                 null, true, null, out status);
             if (status != MembershipCreateStatus.Success)
                 Assert.Fail("User creation failed");
@@ -94,7 +96,7 @@ namespace MySql.Web.Security.Tests
             roleProvider.AddUsersToRoles(new string[] { "eve" },
                 new string[] { "Administrator" });
             Assert.IsTrue(roleProvider.IsUserInRole("eve", "Administrator"));
-            provider.DeleteUser("foo", false);
+            membershipProvider.DeleteUser("foo", false);
         }
     }
 }
