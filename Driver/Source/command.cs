@@ -520,8 +520,8 @@ namespace MySql.Data.MySqlClient
 
 		#region Async Methods
 
-		internal delegate int AsyncExecuteNonQueryDelegate();
-		internal delegate MySqlDataReader AsyncExecuteReaderDelegate(CommandBehavior behavior);
+		internal delegate void AsyncDelegate(int type, CommandBehavior behavior);
+		internal Exception thrownException;
 
 		private string TrimSemicolons(string sql)
 		{
@@ -534,6 +534,22 @@ namespace MySql.Data.MySqlClient
 			while (sb[end] == ';')
 				end--;
 			return sb.ToString(start, end - start + 1);
+		}
+
+		internal void AsyncExecuteWrapper(int type, CommandBehavior behavior)
+		{
+			thrownException = null;
+			try
+			{
+				if (type == 1)
+					ExecuteReader(behavior);
+				else
+					ExecuteNonQuery();
+			}
+			catch (Exception ex)
+			{
+				thrownException = ex;
+			}
 		}
 
 		/// <summary>
@@ -563,8 +579,8 @@ namespace MySql.Data.MySqlClient
 		/// the returned rows. </returns>
 		public IAsyncResult BeginExecuteReader(CommandBehavior behavior)
 		{
-			AsyncExecuteReaderDelegate del = new AsyncExecuteReaderDelegate(ExecuteReader);
-			asyncResult = del.BeginInvoke(behavior, null, null);
+			AsyncDelegate del = new AsyncDelegate(AsyncExecuteWrapper);
+			asyncResult = del.BeginInvoke(1, behavior, null, null);
 			return asyncResult;
 		}
 
@@ -578,6 +594,8 @@ namespace MySql.Data.MySqlClient
 		public MySqlDataReader EndExecuteReader(IAsyncResult result)
 		{
 			result.AsyncWaitHandle.WaitOne();
+			if (thrownException != null)
+				throw thrownException;
 			return connection.Reader;
 		}
 
@@ -597,9 +615,9 @@ namespace MySql.Data.MySqlClient
 		/// which returns the number of affected rows. </returns>
 		public IAsyncResult BeginExecuteNonQuery(AsyncCallback callback, object stateObject)
 		{
-			AsyncExecuteNonQueryDelegate del =
-				 new AsyncExecuteNonQueryDelegate(ExecuteNonQuery);
-			asyncResult = del.BeginInvoke(callback, stateObject);
+			AsyncDelegate del = new AsyncDelegate(AsyncExecuteWrapper);
+			asyncResult = del.BeginInvoke(2, CommandBehavior.Default, 
+				callback, stateObject);
 			return asyncResult;
 		}
 
@@ -612,9 +630,8 @@ namespace MySql.Data.MySqlClient
 		/// which returns the number of affected rows. </returns>
 		public IAsyncResult BeginExecuteNonQuery()
 		{
-			AsyncExecuteNonQueryDelegate del =
-				new AsyncExecuteNonQueryDelegate(ExecuteNonQuery);
-			asyncResult = del.BeginInvoke(null, null);
+			AsyncDelegate del = new AsyncDelegate(AsyncExecuteWrapper);
+			asyncResult = del.BeginInvoke(2, CommandBehavior.Default, null, null);
 			return asyncResult;
 		}
 
@@ -627,6 +644,8 @@ namespace MySql.Data.MySqlClient
 		public int EndExecuteNonQuery(IAsyncResult asyncResult)
 		{
 			asyncResult.AsyncWaitHandle.WaitOne();
+			if (thrownException != null)
+				throw thrownException;
 			return (int)updatedRowCount;
 		}
 

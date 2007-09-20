@@ -43,9 +43,6 @@
     <Compile Include="UserManagement.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\Driver\MySql.Data.csproj">
       <Project>{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}</Project>
       <Name>MySql.Data</Name>
