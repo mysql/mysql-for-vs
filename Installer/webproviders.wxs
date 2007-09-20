@@ -25,12 +25,12 @@
     <CustomAction Id="MySqlWeb.Install.CheckFX" BinaryKey="MSVBDPCADLL" DllEntry="CheckFX" />
     <CustomAction Id="MySqlWeb.Install.SetProperty" Property="MySqlWeb.Install"
                   Value='/installtype=notransaction /action=install /LogFile= "[#MySqlWeb]" "[VSDFxConfigFile]"'/>
-    <CustomAction Id="MySqlWeb.Install" BinaryKey="InstallUtil" DllEntry="ManagedInstall" Execute="deferred" />
+    <CustomAction Id="MySqlWeb.Install" BinaryKey="InstallUtil" DllEntry="ManagedInstall" Execute="deferred" Impersonate="no" />
 
     <CustomAction Id="MySqlWeb.Remove.CheckFX" BinaryKey="MSVBDPCADLL" DllEntry="CheckFX" />
     <CustomAction Id="MySqlWeb.Remove.SetProperty" Property="MySqlWeb.Remove"
                    Value='/installtype=notransaction /action=uninstall /LogFile= "[#MySqlWeb]" "[VSDFxConfigFile]"'/>
-    <CustomAction Id="MySqlWeb.Remove" BinaryKey="InstallUtil" DllEntry="ManagedInstall" Execute="deferred" />
+    <CustomAction Id="MySqlWeb.Remove" BinaryKey="InstallUtil" DllEntry="ManagedInstall" Execute="deferred" Impersonate="no" />
 
     <InstallExecuteSequence>
       <!-- Register code -->

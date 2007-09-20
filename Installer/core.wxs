@@ -62,12 +62,12 @@
     <CustomAction Id="MySqlData.Install.CheckFX" BinaryKey="MSVBDPCADLL" DllEntry="CheckFX" />
     <CustomAction Id="MySqlData.Install.SetProperty" Property="MySqlData.Install"
                   Value='/installtype=notransaction /action=install /LogFile= "[#MySqlData]" "[VSDFxConfigFile]"'/>
-    <CustomAction Id="MySqlData.Install" BinaryKey="InstallUtil" DllEntry="ManagedInstall" Execute="deferred" />
+    <CustomAction Id="MySqlData.Install" BinaryKey="InstallUtil" DllEntry="ManagedInstall" Execute="deferred" Impersonate="no" />
 
     <CustomAction Id="MySqlData.Remove.CheckFX" BinaryKey="MSVBDPCADLL" DllEntry="CheckFX" />
     <CustomAction Id="MySqlData.Remove.SetProperty" Property="MySqlData.Remove"
                    Value='/installtype=notransaction /action=uninstall /LogFile= "[#MySqlData]" "[VSDFxConfigFile]"'/>
-    <CustomAction Id="MySqlData.Remove" BinaryKey="InstallUtil" DllEntry="ManagedInstall" Execute="deferred" />
+    <CustomAction Id="MySqlData.Remove" BinaryKey="InstallUtil" DllEntry="ManagedInstall" Execute="deferred" Impersonate="no" />
 
     <InstallExecuteSequence>
       <Custom Action="MySqlData.Install.CheckFX" After="InstallFiles">NOT Installed</Custom>
