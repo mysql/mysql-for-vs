@@ -445,7 +445,7 @@ namespace MySql.Data.VisualStudio.DocumentView
             newRow[StoredProc.Definition] = body;
         }
 
-        public override object[] ObjectIDForLoad
+/*        public override object[] ObjectIDForLoad
         {
             get
             {
@@ -458,7 +458,7 @@ namespace MySql.Data.VisualStudio.DocumentView
                 return newId;
             }
         }
-
+		*/
         /// <summary>
         /// Loads a routine from a database
         /// </summary>

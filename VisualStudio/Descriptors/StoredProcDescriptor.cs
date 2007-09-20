@@ -165,27 +165,21 @@ namespace MySql.Data.VisualStudio.Descriptors
         /// </summary>
         /// <param name="identifier">Database object identifier.</param>
         /// <returns>Returns DROP TABLE statement.</returns>
-        public override string BuildDropSql(object[] identifier)
+        public string BuildDropSql(ServerExplorerFacade hierarchy, 
+			int item, object[] identifier)
         {
             if (identifier == null)
                 throw new ArgumentNullException("identifier");
-            if (identifier.Length != 4 || String.IsNullOrEmpty(identifier[1] as string)
-                || String.IsNullOrEmpty(identifier[2] as string) || String.IsNullOrEmpty(identifier[3] as string))
-                throw new ArgumentException(
-                    String.Format(
-                        CultureInfo.CurrentCulture,
-                        Resources.Error_InvlaidIdentifier,
-                        identifier.Length,
-                        TypeName,
-                        4),
-                     "identifier");
+
+			int parentId = hierarchy.GetParent(item);
+			string parentName = hierarchy.GetName(parentId);
 
             // Build query
             StringBuilder query = new StringBuilder("DROP ");
-            query.Append(identifier[2]);
+            query.Append(parentName == "Stored Procedures" ? "PROCEDURE" : "FUNCTION");
             query.Append(' ');
 
-            QueryBuilder.WriteIdentifier(identifier[1] as string, identifier[3] as string, query);
+            QueryBuilder.WriteIdentifier(identifier[1] as string, identifier[2] as string, query);
             return query.ToString();
         }
         #endregion

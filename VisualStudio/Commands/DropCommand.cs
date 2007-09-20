@@ -122,8 +122,14 @@ namespace MySql.Data.VisualStudio.Commands
             }
 
             // Build DROP query
-            string dropQuery = descriptor.BuildDropSql(identifier);
-            if (String.IsNullOrEmpty(dropQuery))
+			string dropQuery = String.Empty;
+			if (descriptor is StoredProcDescriptor)
+				dropQuery = (descriptor as StoredProcDescriptor).BuildDropSql(
+					hierarchy, item, identifier);
+			else
+				dropQuery = descriptor.BuildDropSql(identifier);
+
+			if (String.IsNullOrEmpty(dropQuery))
             {
                 Debug.Fail("Failed to build DROP query!");
                 return null;
