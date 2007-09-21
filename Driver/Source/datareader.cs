@@ -276,7 +276,7 @@ namespace MySql.Data.MySqlClient
 				length = (int)((ulong)binary.Value.Length - (ulong)dataIndex);
 			}
 
-			Array.Copy(bytes, (int)dataIndex, buffer, (int)bufferIndex, (int)length);
+			Buffer.BlockCopy(bytes, (int)dataIndex, buffer, (int)bufferIndex, (int)length);
 
 			return length;
 		}
