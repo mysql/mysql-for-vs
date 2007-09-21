@@ -868,26 +868,10 @@ VSDataObjectSupport.xsd">
     <!-- Trigger -->
     <Type name="Trigger" defaultSort="Schema, EventTable, Name">
       <Identifier>
-        <Part name="Database" itemName="TRIGGER_CATALOG">
-          <Concepts>
-            <Concept name="Identifier0" />
-          </Concepts>
-        </Part>
-        <Part name="Schema" itemName="TRIGGER_SCHEMA">
-          <Concepts>
-            <Concept name="Identifier1" />
-          </Concepts>
-        </Part>
-        <Part name="EventTable" itemName="EVENT_OBJECT_TABLE">
-          <Concepts>
-            <Concept name = "Identifier2" />
-          </Concepts>
-        </Part>
-        <Part name="Name" itemName="TRIGGER_NAME">
-          <Concepts>
-            <Concept name="Identifier3" />
-          </Concepts>
-        </Part>
+          <Part name="Database" itemName="TRIGGER_CATALOG"/>
+          <Part name="Schema" itemName="TRIGGER_SCHEMA"/>
+          <Part name="EventTable" itemName="EVENT_OBJECT_TABLE"/>
+          <Part name="Name" itemName="TRIGGER_NAME"/>
       </Identifier>
       <Properties>
         <Property name="EventManipulation" type="System.String" itemName ="EVENT_MANIPULATION" />
@@ -916,16 +900,8 @@ VSDataObjectSupport.xsd">
     <!-- User defined function -->
     <Type name="UDF" defaultSort="Name">
       <Identifier>
-        <Part name="Database" itemName="CATALOG">
-          <Concepts>
-            <Concept name="Identifier0" />
-          </Concepts>
-        </Part>
-        <Part name="Name" itemName="NAME">
-          <Concepts>
-            <Concept name="Identifier1" />
-          </Concepts>
-        </Part>
+        <Part name="Database" itemName="CATALOG"/>
+        <Part name="Name" itemName="NAME"/>
       </Identifier>
       <Properties>
         <Property name="Returns" type="System.SByte" itemName="RET" />
