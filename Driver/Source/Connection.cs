@@ -402,13 +402,14 @@ namespace MySql.Data.MySqlClient
             this.database = database;
         }
 
-        internal void SetState(ConnectionState newConnectionState)
+        internal void SetState(ConnectionState newConnectionState, bool broadcast)
         {
             if (newConnectionState == connectionState)
                 return;
             ConnectionState oldConnectionState = connectionState;
             connectionState = newConnectionState;
-            OnStateChange(new StateChangeEventArgs(oldConnectionState, connectionState));
+			if (broadcast)
+				OnStateChange(new StateChangeEventArgs(oldConnectionState, connectionState));
         }
 
         /// <summary>
@@ -419,7 +420,7 @@ namespace MySql.Data.MySqlClient
         {
             bool result = driver.Ping();
             if (!result)
-                SetState(ConnectionState.Closed);
+                SetState(ConnectionState.Closed, true);
             return result;
         }
 
@@ -429,7 +430,7 @@ namespace MySql.Data.MySqlClient
             if (State == ConnectionState.Open)
                 throw new InvalidOperationException(Resources.ConnectionAlreadyOpen);
 
-            SetState(ConnectionState.Connecting);
+            SetState(ConnectionState.Connecting, true);
 
 #if !CF
                 // if we are auto enlisting in a current transaction, then we will be
@@ -460,7 +461,7 @@ namespace MySql.Data.MySqlClient
             }
             catch (Exception)
             {
-                SetState(ConnectionState.Closed);
+                SetState(ConnectionState.Closed, true);
                 throw;
             }
 
@@ -468,7 +469,7 @@ namespace MySql.Data.MySqlClient
             if (driver.Settings.UseOldSyntax)
                 Logger.LogWarning("You are using old syntax that will be removed in future versions");
 
-            SetState(ConnectionState.Open);
+            SetState(ConnectionState.Open, false);
             driver.Configure(this);
             if (settings.Database != null && settings.Database != String.Empty)
                 ChangeDatabase(settings.Database);
@@ -490,7 +491,8 @@ namespace MySql.Data.MySqlClient
 #endif
 
             hasBeenOpen = true;
-        }
+			SetState(ConnectionState.Open, true);
+		}
 
         /// <include file='docs/MySqlConnection.xml' path='docs/CreateCommand/*'/>
         public new MySqlCommand CreateCommand()
@@ -551,7 +553,7 @@ namespace MySql.Data.MySqlClient
             catch (Exception)
             {
             }
-            SetState(ConnectionState.Closed);
+            SetState(ConnectionState.Closed, true);
         }
 
         internal void CloseFully()
@@ -588,7 +590,7 @@ namespace MySql.Data.MySqlClient
                 driver.IsInActiveUse = false;
 #endif
 
-            SetState(ConnectionState.Closed);
+            SetState(ConnectionState.Closed, true);
         }
 
 		internal string CurrentDatabase()

@@ -72,7 +72,9 @@ Version 5.0.9
   - Changed from using Array.Copy to Buffer.BlockCopy in MySqlDataReader.GetBytes.  This
     helps with memory usage as we expect the source and destination arrays to not be overlapping.
     (Bug #31090)
-        
+  - Fixed problem that prevented commands from being executed from the state change
+    handler.  Not sure why you would want to do this but...  (bug #30964)
+            
 Version 5.0.8  8/16/2007
   Bug #28706 Log messages are truncated  
   - Fixed a problem with compression over a network.  We were letting the inflate stream read

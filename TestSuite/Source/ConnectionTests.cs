@@ -397,5 +397,30 @@ namespace MySql.Data.MySqlClient.Tests
                 }
             }
         }
+
+		/// <summary>
+		/// Bug #30964 StateChange imperfection 
+		/// </summary>
+		MySqlConnection rqConnection;
+		[Test]
+		public void RunningAQueryFromStateChangeHandler()
+		{
+			string connStr = GetConnectionString(true);
+			using (rqConnection = new MySqlConnection(connStr))
+			{
+				rqConnection.StateChange += new StateChangeEventHandler(RunningQueryStateChangeHandler);
+				rqConnection.Open();
+			}
+		}
+
+		void RunningQueryStateChangeHandler(object sender, StateChangeEventArgs e)
+		{
+			if (e.CurrentState == ConnectionState.Open)
+			{
+				MySqlCommand cmd = new MySqlCommand("SELECT 1", rqConnection);
+				object o = cmd.ExecuteScalar();
+				Assert.AreEqual(1, o);
+			}
+		}
     }
 }
