@@ -32,6 +32,13 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture] 
 	public class DataAdapterTests : BaseTest
 	{
+        protected override void FixtureSetup()
+        {
+            csAdditions += ";logging=true;";
+
+            base.FixtureSetup();
+        }
+
 		protected override void Setup()
 		{
 			base.Setup();
@@ -698,6 +705,202 @@ namespace MySql.Data.MySqlClient.Tests
             {
                 Assert.Fail(ex.Message);
             }
+        }
+
+        [Test]
+        public void TestBatchingInserts()
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id INT, name VARCHAR(20), PRIMARY KEY(id))");
+
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
+            MySqlCommand ins = new MySqlCommand("INSERT INTO test (id, name) VALUES (?p1, ?p2)", conn);
+            da.InsertCommand = ins;
+            ins.UpdatedRowSource = UpdateRowSource.None;
+            ins.Parameters.Add("?p1", MySqlDbType.Int32).SourceColumn = "id";
+            ins.Parameters.Add("?p2", MySqlDbType.VarChar, 20).SourceColumn = "name";
+
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+
+            DataRow row = dt.NewRow();
+            row["id"] = 1;
+            row["name"] = "name 1";
+            dt.Rows.Add(row);
+
+            row = dt.NewRow();
+            row["id"] = 2;
+            row["name"] = "name 2";
+            dt.Rows.Add(row);
+
+            row = dt.NewRow();
+            row["id"] = 3;
+            row["name"] = "name 3";
+            dt.Rows.Add(row);
+
+            try
+            {
+                da.UpdateBatchSize = 0;
+                da.Update(dt);
+
+                dt.Rows.Clear();
+                da.Fill(dt);
+                Assert.AreEqual(3, dt.Rows.Count);
+                Assert.AreEqual(1, dt.Rows[0]["id"]);
+                Assert.AreEqual(2, dt.Rows[1]["id"]);
+                Assert.AreEqual(3, dt.Rows[2]["id"]);
+                Assert.AreEqual("name 1", dt.Rows[0]["name"]);
+                Assert.AreEqual("name 2", dt.Rows[1]["name"]);
+                Assert.AreEqual("name 3", dt.Rows[2]["name"]);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
+
+        [Test]
+        public void TestBatchingUpdates()
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id INT, name VARCHAR(20), PRIMARY KEY(id))");
+            execSQL("INSERT INTO Test VALUES (1, 'Test 1')");
+            execSQL("INSERT INTO Test VALUES (2, 'Test 2')");
+            execSQL("INSERT INTO Test VALUES (3, 'Test 3')");
+
+            MySqlDataAdapter dummyDA = new MySqlDataAdapter("SELECT * FROM Test", conn);
+            MySqlCommandBuilder cb = new MySqlCommandBuilder(dummyDA);
+
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
+            da.UpdateCommand = cb.GetUpdateCommand();
+            da.UpdateCommand.UpdatedRowSource = UpdateRowSource.None;
+
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+
+            dt.Rows[0]["id"] = 4;
+            dt.Rows[1]["name"] = "new test value";
+            dt.Rows[2]["id"] = 6;
+            dt.Rows[2]["name"] = "new test value #2";
+
+            try
+            {
+                da.UpdateBatchSize = 0;
+                da.Update(dt);
+
+                dt.Rows.Clear();
+                da.Fill(dt);
+                Assert.AreEqual(3, dt.Rows.Count);
+                Assert.AreEqual(4, dt.Rows[0]["id"]);
+                Assert.AreEqual(2, dt.Rows[1]["id"]);
+                Assert.AreEqual(6, dt.Rows[2]["id"]);
+                Assert.AreEqual("Test 1", dt.Rows[0]["name"]);
+                Assert.AreEqual("new test value", dt.Rows[1]["name"]);
+                Assert.AreEqual("new test value #2", dt.Rows[2]["name"]);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
+
+        [Test]
+        public void TestBatchingMixed()
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id INT, name VARCHAR(20), PRIMARY KEY(id))");
+            execSQL("INSERT INTO Test VALUES (1, 'Test 1')");
+            execSQL("INSERT INTO Test VALUES (2, 'Test 2')");
+            execSQL("INSERT INTO Test VALUES (3, 'Test 3')");
+
+            MySqlDataAdapter dummyDA = new MySqlDataAdapter("SELECT * FROM Test", conn);
+            MySqlCommandBuilder cb = new MySqlCommandBuilder(dummyDA);
+
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test ORDER BY id", conn);
+            da.UpdateCommand = cb.GetUpdateCommand();
+            da.InsertCommand = cb.GetInsertCommand();
+            da.DeleteCommand = cb.GetDeleteCommand();
+            da.UpdateCommand.UpdatedRowSource = UpdateRowSource.None;
+            da.InsertCommand.UpdatedRowSource = UpdateRowSource.None;
+            da.DeleteCommand.UpdatedRowSource = UpdateRowSource.None;
+
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+
+            dt.Rows[0]["id"] = 4;
+            dt.Rows[1]["name"] = "new test value";
+            dt.Rows[2]["id"] = 6;
+            dt.Rows[2]["name"] = "new test value #2";
+
+            DataRow row = dt.NewRow();
+            row["id"] = 7;
+            row["name"] = "foobar";
+            dt.Rows.Add(row);
+
+            dt.Rows[1].Delete();
+
+            try
+            {
+                da.UpdateBatchSize = 0;
+                da.Update(dt);
+
+                dt.Rows.Clear();
+                da.Fill(dt);
+                Assert.AreEqual(3, dt.Rows.Count);
+                Assert.AreEqual(4, dt.Rows[0]["id"]);
+                Assert.AreEqual(6, dt.Rows[1]["id"]);
+                Assert.AreEqual(7, dt.Rows[2]["id"]);
+                Assert.AreEqual("Test 1", dt.Rows[0]["name"]);
+                Assert.AreEqual("new test value #2", dt.Rows[1]["name"]);
+                Assert.AreEqual("foobar", dt.Rows[2]["name"]);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
+
+        [Test]
+        public void TimingTest()
+        {
+            MySqlConnection c = new MySqlConnection("server=Ubuntu;user id=root;database=test");
+            c.Open();
+
+            MySqlCommand cmd = new MySqlCommand("DROP TABLE IF EXISTS test", c);
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "CREATE TABLE test (id INT, name VARCHAR(20), PRIMARY KEY(id))";
+            cmd.ExecuteNonQuery();
+
+            DataTable dt = new DataTable();
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", c);
+            MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
+            da.Fill(dt);
+
+            for (int x = 0; x < 100000; x++)
+            {
+                DataRow row = dt.NewRow();
+                row["id"] = x;
+                row["name"] = "dummy string";
+                dt.Rows.Add(row);
+            }
+
+            DateTime start = DateTime.Now;
+            cmd.CommandText = "TRUNCATE TABLE test";
+            try
+            {
+                for (int y = 0; y < 1; y++)
+                {
+                    cmd.ExecuteNonQuery();
+                    da.Update(dt);
+                }
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            TimeSpan ts = DateTime.Now.Subtract(start);
+            c.Close();
         }
     }
 }

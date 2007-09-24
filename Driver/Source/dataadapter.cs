@@ -22,6 +22,7 @@ using System;
 using System.Data;
 using System.Data.Common;
 using System.ComponentModel;
+using System.Collections.Generic;
 
 namespace MySql.Data.MySqlClient
 {
@@ -33,13 +34,9 @@ namespace MySql.Data.MySqlClient
 #endif
 	public sealed class MySqlDataAdapter : DbDataAdapter, IDbDataAdapter, IDataAdapter, ICloneable
 	{
-//		private MySqlCommand	m_selectCommand;
-//		private MySqlCommand	m_insertCommand;
-//		private MySqlCommand	m_updateCommand;
-//		private MySqlCommand	m_deleteCommand;
-//		private string			savedSql;
-		private bool			loadingDefaults;
-//		private bool			mayUseDefault;
+		private bool loadingDefaults;
+        private int updateBatchSize;
+        List<IDbCommand> commandBatch;
 
 		/// <summary>
 		/// Occurs during Update before a command is executed against the data source. The attempt to update is made, so the event fires.
@@ -55,6 +52,7 @@ namespace MySql.Data.MySqlClient
 		public MySqlDataAdapter()
 		{
 			loadingDefaults = true;
+            updateBatchSize = 1;
 		}
 
 		/// <include file='docs/MySqlDataAdapter.xml' path='docs/Ctor1/*'/>
@@ -127,8 +125,77 @@ namespace MySql.Data.MySqlClient
 
 		#endregion
 
+        #region Batching Support
 
-/*		protected override int Fill(DataTable dataTable, IDataReader dataReader)
+        public override int UpdateBatchSize
+        {
+            get { return updateBatchSize; }
+            set { updateBatchSize = value; }
+        }
+
+        protected override void InitializeBatching()
+        {
+            commandBatch = new List<IDbCommand>();
+        }
+
+        protected override int AddToBatch(IDbCommand command)
+        {
+            // the first time each command is asked to be batched, we ask
+            // that command to prepare its batchable command text.  We only want
+            // to do this one time for each command
+            MySqlCommand commandToBatch = (MySqlCommand)command;
+            if (commandToBatch.BatchableCommandText == null)
+                commandToBatch.GetCommandTextForBatching();
+
+            IDbCommand cloneCommand = (IDbCommand)((ICloneable)command).Clone();
+            commandBatch.Add(cloneCommand);
+
+            return commandBatch.Count - 1;
+        }
+
+        protected override int ExecuteBatch()
+        {
+            int recordsAffected = 0;
+            int index = 0;
+            while (index < commandBatch.Count)
+            {
+                MySqlCommand cmd = (MySqlCommand)commandBatch[index++];
+                for (int index2 = index; index2 < commandBatch.Count; index2++,index++)
+                {
+                    MySqlCommand cmd2 = (MySqlCommand)commandBatch[index2];
+                    if (cmd2.CommandText != cmd.CommandText) break;
+                    cmd.AddToBatch(cmd2);
+                }
+                recordsAffected += cmd.ExecuteNonQuery();
+            }
+            return recordsAffected;
+        }
+
+        protected override void ClearBatch()
+        {
+            if (commandBatch.Count > 0)
+            {
+                MySqlCommand cmd = (MySqlCommand)commandBatch[0];
+                if (cmd.Batch != null)
+                    cmd.Batch.Clear();
+            }
+            commandBatch.Clear();
+        }
+
+        protected override void TerminateBatching()
+        {
+            ClearBatch();
+            commandBatch = null;
+        }
+
+        protected override IDataParameter GetBatchedParameter(int commandIdentifier, int parameterIndex)
+        {
+            return (IDataParameter)commandBatch[commandIdentifier].Parameters[parameterIndex];
+        }
+
+        #endregion
+
+        /*		protected override int Fill(DataTable dataTable, IDataReader dataReader)
 		{
 			int result = base.Fill (dataTable, dataReader);
 			//LoadDefaultValues(dataTable, dataReader);

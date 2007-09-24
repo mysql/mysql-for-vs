@@ -29,6 +29,7 @@ using System.ComponentModel;
 using System.Threading;
 using System.Diagnostics;
 using System.Globalization;
+using System.Collections.Generic;
 
 namespace MySql.Data.MySqlClient
 {
@@ -56,6 +57,8 @@ namespace MySql.Data.MySqlClient
 		private bool canCancel;
 		private bool timedOut, canceled;
         private bool resetSqlSelect;
+        List<MySqlCommand> batch;
+        private string batchableCommandText;
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ctor1/*'/>
 		public MySqlCommand()
@@ -222,6 +225,17 @@ namespace MySql.Data.MySqlClient
 					get { return updatedRowSource;  }
 					set { updatedRowSource = value; }
 				}*/
+
+        internal List<MySqlCommand> Batch
+        {
+            get { return batch; }
+        }
+
+        internal string BatchableCommandText
+        {
+            get { return batchableCommandText; }
+        }
+
 		#endregion
 
 		#region Methods
@@ -721,6 +735,7 @@ namespace MySql.Data.MySqlClient
 			MySqlCommand clone = new MySqlCommand(cmdText, connection, curTransaction);
             clone.CommandType = CommandType;
             clone.CommandTimeout = CommandTimeout;
+            clone.batchableCommandText = batchableCommandText;
 
 			foreach (MySqlParameter p in parameters)
 			{
@@ -729,6 +744,63 @@ namespace MySql.Data.MySqlClient
 			return clone;
 		}
 		#endregion
+
+        #region Batching support
+
+        internal void AddToBatch(MySqlCommand command)
+        {
+            if (batch == null)
+                batch = new List<MySqlCommand>();
+            batch.Add(command);
+        }
+
+        internal string GetCommandTextForBatching()
+        {
+            if (batchableCommandText == null)
+            {
+                // if the command starts with insert and is "simple" enough, then
+                // we can use the multi-value form of insert
+                if (String.Compare(CommandText.Substring(0, 6), "INSERT", true) == 0)
+                {
+                    MySqlCommand cmd = new MySqlCommand("SELECT @@sql_mode", Connection);
+                    string sql_mode = cmd.ExecuteScalar().ToString().ToLower(CultureInfo.InvariantCulture);
+                    SqlTokenizer tokenizer = new SqlTokenizer(CommandText);
+                    tokenizer.AnsiQuotes = sql_mode.IndexOf("ansi_quotes") != -1;
+                    tokenizer.BackslashEscapes = sql_mode.IndexOf("no_backslash_escapes") == -1;
+                    string token = tokenizer.NextToken().ToLower(CultureInfo.InvariantCulture);
+                    while (token != null)
+                    {
+                        if (token.ToLower(CultureInfo.InvariantCulture) == "values" && 
+                            !tokenizer.Quoted)
+                        {
+                            token = tokenizer.NextToken();
+                            Debug.Assert(token == "(");
+                            while (token != null && token != ")")
+                            {
+                                batchableCommandText += token;
+                                token = tokenizer.NextToken();
+                            }
+                            if (token != null)
+                                batchableCommandText += token;
+                            token = tokenizer.NextToken();
+                            if (token != null && (token == "," || 
+                                token.ToLower(CultureInfo.InvariantCulture) == "on"))
+                            {
+                                batchableCommandText = null;
+                                break;
+                            }
+                        }
+                        token = tokenizer.NextToken();
+                    }
+                }
+                if (batchableCommandText == null)
+                    batchableCommandText = CommandText;
+            }
+
+            return batchableCommandText;
+        }
+
+        #endregion
 
         protected override void Dispose(bool disposing)
         {

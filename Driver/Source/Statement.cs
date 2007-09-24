@@ -86,7 +86,8 @@ namespace MySql.Data.MySqlClient
             if (buffers.Count == 0)
                 return false;
 
-            MemoryStream ms = (MemoryStream) buffers[0];
+            MySqlStream stream = (MySqlStream)buffers[0];
+            MemoryStream ms = stream.InternalBuffer;
             Driver.Query(ms.GetBuffer(), (int) ms.Length);
             buffers.RemoveAt(0);
             return true;
@@ -94,11 +95,34 @@ namespace MySql.Data.MySqlClient
 
         protected virtual void BindParameters()
         {
-            // tokenize the sql
-            ArrayList tokenArray = TokenizeSql(ResolvedCommandText);
+            InternalBindParameters(ResolvedCommandText, command.Parameters, null);
 
-            MySqlStream stream = new MySqlStream(Driver.Encoding);
-            stream.Version = Driver.Version;
+            // now tack on the batched commands
+            if (command.Batch == null) return;
+
+            foreach (MySqlCommand cmd in command.Batch)
+            {
+                MySqlStream stream = (MySqlStream)buffers[buffers.Count - 1];
+                buffers.RemoveAt(buffers.Count - 1);
+                string text = cmd.BatchableCommandText;
+                if (text.StartsWith("("))
+                    stream.WriteStringNoNull(", ");
+                else
+                    stream.WriteStringNoNull("; ");
+                InternalBindParameters(text, cmd.Parameters, stream);
+            }
+        }
+
+        private void InternalBindParameters(string sql, MySqlParameterCollection parameters, MySqlStream stream)
+        {
+            // tokenize the sql
+            ArrayList tokenArray = TokenizeSql(sql);
+
+            if (stream == null)
+            {
+                stream = new MySqlStream(Driver.Encoding);
+                stream.Version = Driver.Version;
+            }
 
             // make sure our token array ends with a ;
             string lastToken = (string) tokenArray[tokenArray.Count - 1];
@@ -111,13 +135,13 @@ namespace MySql.Data.MySqlClient
                     continue;
                 if (token == ";")
                 {
-                    buffers.Add(stream.InternalBuffer);
+                    buffers.Add(stream);
                     stream = new MySqlStream(Driver.Encoding);
                     continue;
                 }
-                if (token[0] == Parameters.ParameterMarker)
+                if (token[0] == parameters.ParameterMarker)
                 {
-                    if (SerializeParameter(Parameters, stream, token))
+                    if (SerializeParameter(parameters, stream, token))
                         continue;
                 }
 
