@@ -3,6 +3,8 @@ Version 5.1.4
     (Bug #31185)
   - Fixed problem where closing the connection before the reader where the reader was
     opened with CloseConnection would cause a object disposed exception to be thrown
+  - Fixed problem with installer where the installation would fail if the performance
+    counter categories had already been removed for some reason      
       
 Version 5.1.3 - 9/19/2007
   - Fixed problem with using a stored procedure that takes a parameter as a select routine
