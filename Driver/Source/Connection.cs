@@ -581,14 +581,20 @@ namespace MySql.Data.MySqlClient
 
             if (dataReader != null)
                 dataReader.Close();
+
+			// if the reader was opened with CloseConnection then driver
+			// will be null on the second time through
+			if (driver != null)
+			{
 #if !CF
-            if (driver.CurrentTransaction == null)
-#endif
-                CloseFully();
+				if (driver.CurrentTransaction == null)
+#endif	
+			        CloseFully();
 #if !CF
-            else
-                driver.IsInActiveUse = false;
+				else
+					driver.IsInActiveUse = false;
 #endif
+			}
 
             SetState(ConnectionState.Closed, true);
         }

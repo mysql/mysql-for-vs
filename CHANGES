@@ -1,6 +1,8 @@
 Version 5.1.4
   - Fixed issue where column name metadata was not using the charset given on the connection string
     (Bug #31185)
+  - Fixed problem where closing the connection before the reader where the reader was
+    opened with CloseConnection would cause a object disposed exception to be thrown
       
 Version 5.1.3 - 9/19/2007
   - Fixed problem with using a stored procedure that takes a parameter as a select routine
