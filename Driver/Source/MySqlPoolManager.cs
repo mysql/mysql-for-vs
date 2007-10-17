@@ -103,14 +103,21 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-        public static void ClearAllPools()
-        {
-            lock (pools.SyncRoot)
-            {
-                foreach (string key in pools.Keys)
-                    ClearPoolByText(key);
-            }
-        }
+		public static void ClearAllPools()
+		{
+			lock (pools.SyncRoot)
+			{
+				// Create separate keys list.
+				List<string> keys = new	List<string>(pools.Count);
+
+				foreach (string key in pools.Keys)
+					keys.Add(key);
+
+				// Remove all pools by key.
+				foreach (string key in keys)
+					ClearPoolByText(key);
+			}
+		}
 
         public static void RemoveClearedPool(MySqlPool pool)
         {
