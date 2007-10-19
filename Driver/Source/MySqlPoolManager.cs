@@ -63,20 +63,22 @@ namespace MySql.Data.MySqlClient
 
         public static void RemoveConnection(Driver driver)
         {
+			MySqlPool pool = driver.Pool;
+			if (pool == null) return;
+
             lock (pools.SyncRoot)
             {
-                MySqlPool pool = driver.Pool;
-                Debug.Assert(pool != null);
                 pool.RemoveConnection(driver);
             }
         }
 
         public static void ReleaseConnection(Driver driver)
         {
-            lock (pools.SyncRoot)
+			MySqlPool pool = driver.Pool;
+			if (pool == null) return;
+			
+			lock (pools.SyncRoot)
             {
-                MySqlPool pool = driver.Pool;
-                Debug.Assert(pool != null);
                 pool.ReleaseConnection(driver);
             }
         }
