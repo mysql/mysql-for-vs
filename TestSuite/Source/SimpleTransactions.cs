@@ -21,7 +21,7 @@
 using System;
 using System.Data;
 using System.IO;
-using NUnit.Framework;
+using MbUnit.Framework;
 #if NET20
 using System.Data.Common;
 #endif
@@ -31,7 +31,7 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture]
 	public class SimpleTransactions : BaseTest
 	{
-        protected override void Setup()
+        public override void Setup()
         {
             base.Setup();
             execSQL("DROP TABLE IF EXISTS Test");

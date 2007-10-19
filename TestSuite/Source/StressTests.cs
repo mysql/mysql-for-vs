@@ -21,7 +21,7 @@
 using System;
 using MySql.Data.MySqlClient;
 using System.Data;
-using NUnit.Framework;
+using MbUnit.Framework;
 using System.Threading;
 using System.Collections;
 
@@ -33,7 +33,7 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture] 
 	public class StressTests : BaseTest
 	{
-        protected override void Setup()
+        public override void Setup()
         {
             base.Setup();
             execSQL("DROP TABLE IF EXISTS Test");
@@ -144,7 +144,7 @@ namespace MySql.Data.MySqlClient.Tests
     #region Configs
 
 #if !CF
-	[Category("Compressed")]
+	[TestCategory("Compressed")]
     public class StressTestsSocketCompressed : StressTests
     {
         protected override string GetConnectionInfo()
@@ -153,7 +153,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
-	[Category("Pipe")]
+	[TestCategory("Pipe")]
     public class StressTestsPipe : StressTests
     {
         protected override string GetConnectionInfo()
@@ -162,8 +162,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
-    [Category("Compressed")]
-    [Category("Pipe")]
+    [TestCategory("Compressed", "Pipe")]
     public class StressTestsPipeCompressed : StressTests
     {
         protected override string GetConnectionInfo()
@@ -172,7 +171,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
-    [Category("SharedMemory")]
+    [TestCategory("SharedMemory")]
     public class StressTestsSharedMemory : StressTests
     {
         protected override string GetConnectionInfo()
@@ -181,8 +180,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
-    [Category("Compressed")]
-    [Category("SharedMemory")]
+    [TestCategory("Compressed", "SharedMemory")]
     public class StressTestsSharedMemoryCompressed : StressTests
     {
         protected override string GetConnectionInfo()

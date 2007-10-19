@@ -21,11 +21,11 @@
 using System;
 using System.Data;
 using MySql.Data.MySqlClient;
-using NUnit.Framework;
+using MbUnit.Framework;
 
 namespace MySql.Data.MySqlClient.Tests
 {
-	[NUnit.Framework.TestFixture]
+	[MbUnit.Framework.TestFixture]
 	public class GetSchemaTests : BaseTest
 	{
 		[Test]

@@ -21,14 +21,14 @@
 using System;
 using System.Data;
 using MySql.Data.MySqlClient;
-using NUnit.Framework;
+using MbUnit.Framework;
 
 namespace MySql.Data.MySqlClient.Tests
 {
 	[TestFixture]
 	public class MicroPerfTests : BaseTest
 	{
-        protected override void Setup()
+        public override void Setup()
         {
             base.Setup();
             execSQL("DROP TABLE IF EXISTS Test");

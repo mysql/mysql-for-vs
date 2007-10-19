@@ -20,7 +20,7 @@
 
 using System;
 using System.Data;
-using NUnit.Framework;
+using MbUnit.Framework;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -28,7 +28,7 @@ namespace MySql.Data.MySqlClient.Tests
     public class CommandBuilderTests : BaseTest
     {
         [SetUp]
-        protected override void Setup()
+        public override void Setup()
         {
             base.Setup();
 

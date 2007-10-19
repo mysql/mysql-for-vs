@@ -25,16 +25,16 @@ using System.Threading;
 using MySql.Data.MySqlClient;
 using MySql.Data.Types;
 using System.Globalization;
-using NUnit.Framework;
+using MbUnit.Framework;
 using System.Text;
 
 namespace MySql.Data.MySqlClient.Tests
 {
-	[NUnit.Framework.TestFixture]
+	[MbUnit.Framework.TestFixture]
 	public class DateTimeTests : BaseTest
 	{
         [SetUp]
-        protected override void Setup()
+        public override void Setup()
         {
             base.Setup();
             execSQL("DROP TABLE IF EXISTS Test");

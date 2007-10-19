@@ -23,7 +23,7 @@
 using System;
 using System.Data;
 using MySql.Data.MySqlClient;
-using NUnit.Framework;
+using MbUnit.Framework;
 using System.Diagnostics;
 
 namespace MySql.Data.MySqlClient.Tests
@@ -34,14 +34,14 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture]
 	public class PerfMonTests : BaseTest
 	{
-		protected override void FixtureSetup()
+		public override void FixtureSetup()
 		{
             pooling = false;
 			csAdditions = ";use performance monitor=true;";
             base.FixtureSetup();
 		}
 
-        protected override void Setup()
+        public override void Setup()
         {
             base.Setup();
             execSQL("DROP TABLE IF EXISTS Test; CREATE TABLE Test (id INT, name VARCHAR(100))");

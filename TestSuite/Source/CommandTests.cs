@@ -21,7 +21,7 @@
 using System;
 using System.Data;
 using MySql.Data.MySqlClient;
-using NUnit.Framework;
+using MbUnit.Framework;
 using System.Threading;
 
 namespace MySql.Data.MySqlClient.Tests
@@ -30,7 +30,7 @@ namespace MySql.Data.MySqlClient.Tests
 	public class CommandTests : BaseTest
 	{
         [SetUp]
-        protected override void Setup()
+        public override void Setup()
         {
             base.Setup();
             execSQL("DROP TABLE IF EXISTS Test");
@@ -418,7 +418,7 @@ namespace MySql.Data.MySqlClient.Tests
     }
 
 #if !CF
-    [Category("Pipe")]
+    [TestCategory("Pipe")]
     public class CommandTestsPipe : CommandTests
     {
         protected override string GetConnectionInfo()
@@ -427,8 +427,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
-    [Category("Compressed")]
-    [Category("Pipe")]
+    [TestCategory("Compressed", "Pipe")]
     public class CommandTestsPipeCompressed : CommandTests
     {
         protected override string GetConnectionInfo()
@@ -437,7 +436,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
-    [Category("SharedMemory")]
+    [TestCategory("SharedMemory")]
     public class CommandTestsSharedMemory : CommandTests
     {
         protected override string GetConnectionInfo()
@@ -446,8 +445,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
-    [Category("Compressed")]
-    [Category("SharedMemory")]
+    [TestCategory("Compressed", "SharedMemory")]
     public class CommandTestsSharedMemoryCompressed : CommandTests
     {
         protected override string GetConnectionInfo()

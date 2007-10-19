@@ -21,14 +21,14 @@
 using System;
 using System.Data;
 using System.IO;
-using NUnit.Framework;
+using MbUnit.Framework;
 
 namespace MySql.Data.MySqlClient.Tests
 {
 	[TestFixture]
 	public class PreparedStatements : BaseTest
 	{
-        protected override void Setup()
+        public override void Setup()
         {
             base.Setup();
             execSQL("DROP TABLE IF EXISTS Test");
@@ -783,7 +783,7 @@ namespace MySql.Data.MySqlClient.Tests
 
     #region Configs
 #if !CF
-    [Category("Compressed")]
+    [TestCategory("Compressed")]
     public class PreparedStatementsSocketCompressed : PreparedStatements
     {
         protected override string GetConnectionInfo()
@@ -792,7 +792,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
-    [Category("Pipe")]
+    [TestCategory("Pipe")]
     public class PreparedStatementsPipe : PreparedStatements
     {
         protected override string GetConnectionInfo()
@@ -801,8 +801,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
-    [Category("Compressed")]
-    [Category("Pipe")]
+    [TestCategory("Compressed", "Pipe")]
     public class PreparedStatementsPipeCompressed : PreparedStatements
     {
         protected override string GetConnectionInfo()
@@ -811,7 +810,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
-    [Category("SharedMemory")]
+    [TestCategory("SharedMemory")]
     public class PreparedStatementsSharedMemory : PreparedStatements
     {
         protected override string GetConnectionInfo()
@@ -820,8 +819,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
-    [Category("Compressed")]
-    [Category("SharedMemory")]
+    [TestCategory("Compressed", "SharedMemory")]
     public class PreparedStatementsSharedMemoryCompressed : PreparedStatements
     {
         protected override string GetConnectionInfo()

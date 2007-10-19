@@ -21,7 +21,7 @@
 using System;
 using System.Data;
 using System.IO;
-using NUnit.Framework;
+using MbUnit.Framework;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -29,7 +29,7 @@ namespace MySql.Data.MySqlClient.Tests
 	public class Syntax2 : BaseTest
 	{
 		[SetUp]
-		protected override void Setup()
+		public override void Setup()
 		{
 			base.Setup ();
 			execSQL("DROP TABLE IF EXISTS Test");
@@ -90,7 +90,7 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(-1, cmd.LastInsertedId);
         }
 
-/*        [Category("NotWorking")]
+/*        [TestCategory("NotWorking")]
         [Test]
         public void TestCase()
         {

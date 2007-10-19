@@ -21,7 +21,7 @@
 using System;
 using System.Data;
 using System.IO;
-using NUnit.Framework;
+using MbUnit.Framework;
 using System.Transactions;
 using System.Data.Common;
 
@@ -32,7 +32,7 @@ namespace MySql.Data.MySqlClient.Tests
     {
         protected int baseProcessCount;
 
-        protected override void Setup()
+        public override void Setup()
         {
             base.Setup();
 

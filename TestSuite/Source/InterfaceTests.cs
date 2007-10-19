@@ -21,12 +21,12 @@
 using System;
 using System.Data;
 using MySql.Data.MySqlClient;
-using NUnit.Framework;
+using MbUnit.Framework;
 using System.Data.Common;
 
 namespace MySql.Data.MySqlClient.Tests
 {
-	[NUnit.Framework.TestFixture]
+	[MbUnit.Framework.TestFixture]
 	public class InterfaceTests : BaseTest
 	{
 #if !CF

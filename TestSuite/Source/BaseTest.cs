@@ -19,7 +19,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
-using NUnit.Framework;
+using MbUnit.Framework;
 using System.Configuration;
 using System.Data;
 using MySql.Data.MySqlClient;
@@ -99,7 +99,7 @@ namespace MySql.Data.MySqlClient.Tests
 		}
 
         [TestFixtureSetUp]
-        protected virtual void FixtureSetup()
+        public virtual void FixtureSetup()
         {
             // open up a root connection
             string connStr = String.Format("server={0};user id={1};password={2};database=mysql;" +
@@ -129,7 +129,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
 
         [TestFixtureTearDown]
-        protected virtual void TestFixtureTearDown()
+        public virtual void TestFixtureTearDown()
         {
 			suExecSQL(String.Format("DROP DATABASE IF EXISTS `{0}`", database0));
 			suExecSQL(String.Format("DROP DATABASE IF EXISTS `{0}`", database1));
@@ -231,7 +231,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
 
         [SetUp]
-        protected virtual void Setup()
+        public virtual void Setup()
         {
             try
             {
@@ -254,7 +254,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
 
         [TearDown]
-        protected virtual void Teardown()
+        public virtual void Teardown()
         {
             execSQL("DROP TABLE IF EXISTS test");
             if (Version >= new Version(5, 0))

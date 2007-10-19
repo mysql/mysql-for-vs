@@ -21,7 +21,7 @@
 using System;
 using MySql.Data.MySqlClient;
 using System.Data;
-using NUnit.Framework;
+using MbUnit.Framework;
 using System.Threading;
 using System.Collections;
 using System.Diagnostics;

@@ -21,7 +21,7 @@
 using System;
 using System.Data;
 using MySql.Data.MySqlClient;
-using NUnit.Framework;
+using MbUnit.Framework;
 using System.Globalization;
 using System.Threading;
 using MySql.Data.Types;
@@ -38,7 +38,7 @@ namespace MySql.Data.MySqlClient.Tests
 		private static string fillError = null;
 
 		[TestFixtureSetUp]
-		protected override void FixtureSetup()
+		public override void FixtureSetup()
 		{
             pooling = false;
 			csAdditions = ";procedure cache size=0;";
@@ -46,7 +46,7 @@ namespace MySql.Data.MySqlClient.Tests
 		}
 
         [SetUp]
-		protected override void Setup()
+        public override void Setup()
 		{
 			base.Setup();
 			execSQL("DROP TABLE IF EXISTS Test");
@@ -1341,6 +1341,26 @@ namespace MySql.Data.MySqlClient.Tests
             cmd.CommandText = "spTest";
             cmd.CommandType = CommandType.StoredProcedure;
             Assert.AreEqual(1, cmd.ExecuteScalar());
+        }
+
+        [Test]
+        public void CallingFunction()
+        {
+            execSQL("DROP FUNCTION IF EXISTS spFunc");
+            execSQL(@"CREATE FUNCTION `GetSupplierBalance`(SupplierID_ INTEGER(11))
+                RETURNS double NOT DETERMINISTIC CONTAINS SQL SQL SECURITY DEFINER
+                COMMENT '' 
+                BEGIN
+                    RETURN 1.0;
+                END");
+
+            MySqlCommand command = new MySqlCommand("GetSupplierBalance", conn);
+            command.CommandType = CommandType.StoredProcedure;
+            command.Parameters.Add("?SupplierID_", MySqlDbType.Int32).Value = 1;
+            command.Parameters.Add("?Balance", MySqlDbType.Double).Direction = ParameterDirection.ReturnValue;
+            command.ExecuteNonQuery();
+            double balance = Convert.ToDouble(command.Parameters["?Balance"].Value);
+            Assert.AreEqual(1.0, balance);
         }
 	}
 }

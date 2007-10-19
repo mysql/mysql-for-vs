@@ -20,7 +20,7 @@
 
 using System;
 using System.Diagnostics;
-using NUnit.Framework;
+using MbUnit.Framework;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -28,13 +28,13 @@ namespace MySql.Data.MySqlClient.Tests
     public class UsageAdvisorTests : BaseTest
     {
         [TestFixtureSetUp]
-        protected override void FixtureSetup()
+        public override void FixtureSetup()
         {
             csAdditions = ";Usage Advisor=true;";
             base.FixtureSetup();
         }
 
-        protected override void Setup()
+        public override void Setup()
         {
             base.Setup();
             execSQL("DROP TABLE IF EXISTS Test");

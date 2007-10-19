@@ -22,7 +22,7 @@ using System;
 using MySql.Data.MySqlClient;
 using MySql.Data.Types;
 using System.Data;
-using NUnit.Framework;
+using MbUnit.Framework;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -32,14 +32,14 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture] 
 	public class DataAdapterTests : BaseTest
 	{
-        protected override void FixtureSetup()
+        public override void FixtureSetup()
         {
             csAdditions += ";logging=true;";
 
             base.FixtureSetup();
         }
 
-		protected override void Setup()
+		public override void Setup()
 		{
 			base.Setup();
 
@@ -858,49 +858,6 @@ namespace MySql.Data.MySqlClient.Tests
             {
                 Assert.Fail(ex.Message);
             }
-        }
-
-        [Test]
-        public void TimingTest()
-        {
-            MySqlConnection c = new MySqlConnection("server=Ubuntu;user id=root;database=test");
-            c.Open();
-
-            MySqlCommand cmd = new MySqlCommand("DROP TABLE IF EXISTS test", c);
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "CREATE TABLE test (id INT, name VARCHAR(20), PRIMARY KEY(id))";
-            cmd.ExecuteNonQuery();
-
-            DataTable dt = new DataTable();
-            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", c);
-            MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
-            da.Fill(dt);
-
-            for (int x = 0; x < 100000; x++)
-            {
-                DataRow row = dt.NewRow();
-                row["id"] = x;
-                row["name"] = "dummy string";
-                dt.Rows.Add(row);
-            }
-
-            DateTime start = DateTime.Now;
-            cmd.CommandText = "TRUNCATE TABLE test";
-            try
-            {
-                for (int y = 0; y < 1; y++)
-                {
-                    cmd.ExecuteNonQuery();
-                    da.Update(dt);
-                }
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
-            TimeSpan ts = DateTime.Now.Subtract(start);
-            c.Close();
         }
     }
 }
