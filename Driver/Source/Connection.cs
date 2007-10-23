@@ -130,12 +130,15 @@ namespace MySql.Data.MySqlClient
             get { return isExecutingBuggyQuery; }
             set { isExecutingBuggyQuery = value; }
         }
+
         internal bool SoftClosed
         {
             get 
             {
 #if !CF
-                return (State == ConnectionState.Closed) && driver.CurrentTransaction != null;
+                return (State == ConnectionState.Closed) && 
+                    driver != null && 
+                    driver.CurrentTransaction != null;
 #else
                 return false;            
 #endif

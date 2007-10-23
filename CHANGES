@@ -5,6 +5,9 @@ Version 5.1.4
     opened with CloseConnection would cause a object disposed exception to be thrown
   - Fixed problem with installer where the installation would fail if the performance
     counter categories had already been removed for some reason      
+  - Fixed problem with attempting to use a command with a connection that is not open.
+    The problem was caused by the introduction of the internal method SoftClosed that is
+    used with transactions.  (Bug #31262)      
       
 Version 5.1.3 - 9/19/2007
   - Fixed problem with using a stored procedure that takes a parameter as a select routine
