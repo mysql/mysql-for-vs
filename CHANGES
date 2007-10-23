@@ -8,6 +8,8 @@ Version 5.1.4
   - Fixed problem with attempting to use a command with a connection that is not open.
     The problem was caused by the introduction of the internal method SoftClosed that is
     used with transactions.  (Bug #31262)      
+  - Fixed problem where attempting to enlist in a distributed transaction would succeed
+    even though Connector/Net doesn't currently support that. (Bug #31703)
       
 Version 5.1.3 - 9/19/2007
   - Fixed problem with using a stored procedure that takes a parameter as a select routine

@@ -334,7 +334,9 @@ namespace MySql.Data.MySqlClient
             if (driver.CurrentTransaction == null)
             {
                 MySqlPromotableTransaction t = new MySqlPromotableTransaction(this, transaction);
-                transaction.EnlistPromotableSinglePhase(t);
+                if (!transaction.EnlistPromotableSinglePhase(t))
+                    throw new NotSupportedException(Resources.DistributedTxnNotSupported);
+
                 driver.CurrentTransaction = t;
                 DriverTransactionManager.SetDriverInTransaction(driver);
                 driver.IsInActiveUse = true;
