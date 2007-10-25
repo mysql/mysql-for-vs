@@ -446,5 +446,32 @@ namespace MySql.Data.MySqlClient.Tests
             {
             }
         }
+
+        /// <summary>
+        /// Bug #31433 Username incorrectly cached for logon where case sensitive 
+        /// </summary>
+        [Test]
+        public void CaseSensitiveUserId()
+        {
+            string connStr = GetConnectionStringEx("Test", "test", true);
+            MySqlConnection c = new MySqlConnection(connStr);
+            try
+            {
+                c.Open();
+            }
+            catch (MySqlException)
+            {
+            }
+            connStr = GetConnectionStringEx("test", "test", true);
+            c = new MySqlConnection(connStr);
+            try
+            {
+                c.Open();
+            }
+            catch (MySqlException ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
     }
 }
