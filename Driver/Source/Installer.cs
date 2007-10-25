@@ -128,16 +128,15 @@ namespace MySql.Data.MySqlClient
                 if (node.Attributes == null) continue;
                 foreach (XmlAttribute attr in node.Attributes)
                 {
-                    if (attr.Name == "type" && attr.Value == type)
+                    if (attr.Name == "invariant" && attr.Value == "MySql.Data.MySqlClient")
                     {
-                        alreadyThere = true;
+                        nodes[0].RemoveChild(node);
                         break;
                     }
                 }
             }
 
-			if (! alreadyThere)
-				nodes[0].AppendChild(newNode);
+    		nodes[0].AppendChild(newNode);
 
 			// Save the document to a file and auto-indent the output.
 			XmlTextWriter writer = new XmlTextWriter(configPath, null);

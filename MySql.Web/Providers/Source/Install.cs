@@ -83,7 +83,6 @@ namespace MySql.Web.Security
             AddDefaultConnectionString(doc);
             AddMembershipProvider(doc);
             AddRoleProvider(doc);
-            AddProfileProvider(doc);
 
             // Save the document to a file and auto-indent the output.
             XmlTextWriter writer = new XmlTextWriter(configPath, null);
@@ -153,15 +152,14 @@ namespace MySql.Web.Security
             foreach (XmlNode node in providerList.ChildNodes)
             {
                 string typeValue = node.Attributes["type"].Value;
-                if (typeValue == type)
+                if (typeValue.StartsWith("MySql.Web.Security.MySQLMembershipProvider"))
                 {
-                    alreadyThere = true;
+                    providerList.RemoveChild(node);
                     break;
                 }
             }
 
-            if (!alreadyThere)
-                providerList.AppendChild(newNode);
+            providerList.AppendChild(newNode);
         }
 
         private void AddRoleProvider(XmlDocument doc)
@@ -187,15 +185,14 @@ namespace MySql.Web.Security
             foreach (XmlNode node in providerList.ChildNodes)
             {
                 string typeValue = node.Attributes["type"].Value;
-                if (typeValue == type)
+                if (typeValue.StartsWith("MySql.Web.Security.MySQLRoleProvider"))
                 {
-                    alreadyThere = true;
+                    providerList.RemoveChild(node);
                     break;
                 }
             }
 
-            if (!alreadyThere)
-                providerList.AppendChild(newNode);
+            providerList.AppendChild(newNode);
         }
 
         private void AddProfileProvider(XmlDocument doc)
@@ -267,7 +264,6 @@ namespace MySql.Web.Security
             RemoveDefaultConnectionString(doc);
             RemoveMembershipProvider(doc);
             RemoveRoleProvider(doc);
-            RemoveProfileProvider(doc);
 
             // Save the document to a file and auto-indent the output.
             XmlTextWriter writer = new XmlTextWriter(configPath, null);
