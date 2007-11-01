@@ -58,12 +58,17 @@ namespace MySql.Web.Security
         private int pMinRequiredNonAlphanumericCharacters;
         private string pPasswordStrengthRegularExpression;
 
-        public bool WriteExceptionsToEventLog
-        {
-            get { return pWriteExceptionsToEventLog; }
-            set { pWriteExceptionsToEventLog = value; }
-        }
-
+        /// <summary>
+        /// Initializes the MySQL membership provider with the property values specified in the 
+        /// ASP.NET application's configuration file. This method is not intended to be used directly 
+        /// from your code. 
+        /// </summary>
+        /// <param name="name">The name of the <see cref="MySqlMembershipProvider"/> instance to initialize.</param>
+        /// <param name="config">A collection of the name/value pairs representing the 
+        /// provider-specific attributes specified in the configuration for this provider.</param>
+        /// <exception cref="T:System.ArgumentNullException">config is a null reference.</exception>
+        /// <exception cref="T:System.InvalidOperationException">An attempt is made to call <see cref="M:System.Configuration.Provider.ProviderBase.Initialize(System.String,System.Collections.Specialized.NameValueCollection)"/> on a provider after the provider has already been initialized.</exception>
+        /// <exception cref="T:System.Configuration.Provider.ProviderException"></exception>
         public override void Initialize(string name, NameValueCollection config)
         {
             if (config == null)
@@ -81,7 +86,8 @@ namespace MySql.Web.Security
             }
             base.Initialize(name, config);
 
-            pApplicationName = GetConfigValue(config["applicationName"], HostingEnvironment.ApplicationVirtualPath);
+            pApplicationName = GetConfigValue(config["applicationName"], 
+                HostingEnvironment.ApplicationVirtualPath);
             pMaxInvalidPasswordAttempts = Convert.ToInt32(GetConfigValue(config["maxInvalidPasswordAttempts"], "5"));
             pPasswordAttemptWindow = Convert.ToInt32(GetConfigValue(config["passwordAttemptWindow"], "10"));
             pMinRequiredNonAlphanumericCharacters =
@@ -90,7 +96,8 @@ namespace MySql.Web.Security
             pPasswordStrengthRegularExpression =
                 Convert.ToString(GetConfigValue(config["passwordStrengthRegularExpression"], ""));
             pEnablePasswordReset = Convert.ToBoolean(GetConfigValue(config["enablePasswordReset"], "True"));
-            pEnablePasswordRetrieval = Convert.ToBoolean(GetConfigValue(config["enablePasswordRetrieval"], "True"));
+            pEnablePasswordRetrieval = Convert.ToBoolean(
+                GetConfigValue(config["enablePasswordRetrieval"], "False"));
             pRequiresQuestionAndAnswer = Convert.ToBoolean(GetConfigValue(config["requiresQuestionAndAnswer"], "False"));
             pRequiresUniqueEmail = Convert.ToBoolean(GetConfigValue(config["requiresUniqueEmail"], "True"));
             pWriteExceptionsToEventLog = Convert.ToBoolean(GetConfigValue(config["writeExceptionsToEventLog"], "True"));
@@ -115,6 +122,11 @@ namespace MySql.Web.Security
             {
                 throw new ProviderException("Password format not supported.");
             }
+
+            // if the user is asking for the ability to retrieve hashed passwords, then let
+            // them know we can't
+            if (PasswordFormat == MembershipPasswordFormat.Hashed && EnablePasswordRetrieval)
+                throw new ProviderException(Resources.CannotRetrieveHashedPasswords);
 
             ConnectionStringSettings ConnectionStringSettings = ConfigurationManager.ConnectionStrings[
                 config["connectionStringName"]];
@@ -152,64 +164,369 @@ namespace MySql.Web.Security
 
         #region Properties
 
+        /// <summary>
+        /// The name of the application using the MySQL membership provider.
+        /// </summary>
+        /// <value></value>
+        /// <returns>The name of the application using the MySQL membership provider.  The default is the 
+        /// application virtual path.</returns>
+        /// <remarks>The ApplicationName is used by the MySqlMembershipProvider to separate 
+        /// membership information for multiple applications.  Using different application names, 
+        /// applications can use the same membership database.
+        /// Likewise, multiple applications can make use of the same membership data by simply using
+        /// the same application name.
+        /// Caution should be taken with multiple applications as the ApplicationName property is not
+        /// thread safe during writes.
+        /// </remarks>
+        /// <example>
+        /// The following example shows the membership element being used in an applications web.config file.
+        /// The application name setting is being used.
+        /// <code>
+        /// <membership defaultProvider="MySQLMembershipProvider">
+        ///     <providers>
+        ///         <add name="MySqlMembershipProvider"
+        ///             type="MySql.Web.Security.MySQLMembershipProvider"
+        ///             connectionStringName="LocalMySqlServer"
+        ///             enablePasswordRetrieval="true"
+        ///             enablePasswordReset="false"
+        ///             requiresQuestionAndAnswer="true"
+        ///             passwordFormat="Encrypted"
+        ///             applicationName="MyApplication" />
+        ///     </providers>
+        /// </membership>
+        /// </code>
+        /// </example>
         public override string ApplicationName
         {
             get { return pApplicationName; }
             set { pApplicationName = value; }
         }
 
+        /// <summary>
+        /// Indicates whether the membership provider is configured to allow users to reset their passwords.
+        /// </summary>
+        /// <value></value>
+        /// <returns>true if the membership provider supports password reset; otherwise, false. The default is true.</returns>
+        /// <remarks>Allows the user to replace their password with a new, randomly generated password.  
+        /// This can be especially handy when using hashed passwords since hashed passwords cannot be
+        /// retrieved.</remarks>
+        /// <example>
+        /// The following example shows the membership element being used in an applications web.config file.
+        /// <code>
+        /// <membership defaultProvider="MySQLMembershipProvider">
+        ///     <providers>
+        ///         <add name="MySqlMembershipProvider"
+        ///             type="MySql.Web.Security.MySQLMembershipProvider"
+        ///             connectionStringName="LocalMySqlServer"
+        ///             enablePasswordRetrieval="true"
+        ///             enablePasswordReset="false"
+        ///             requiresQuestionAndAnswer="true"
+        ///             passwordFormat="Encrypted"
+        ///             applicationName="MyApplication" />
+        ///     </providers>
+        /// </membership>
+        /// </code>
+        /// </example>
         public override bool EnablePasswordReset
         {
             get { return pEnablePasswordReset; }
         }
 
+        /// <summary>
+        /// Indicates whether the membership provider is configured to allow users to retrieve 
+        /// their passwords.
+        /// </summary>
+        /// <value></value>
+        /// <returns>true if the membership provider is configured to support password retrieval; 
+        /// otherwise, false. The default is false.</returns>
+        /// <remarks>If the system is configured to use hashed passwords, then retrieval is not possible.  
+        /// If the user attempts to initialize the provider with hashed passwords and enable password retrieval
+        /// set to true then a <see cref="ProviderException"/> is thrown.</remarks>
+        /// <example>
+        /// The following example shows the membership element being used in an applications web.config file.
+        /// <code>
+        /// <membership defaultProvider="MySQLMembershipProvider">
+        ///     <providers>
+        ///         <add name="MySqlMembershipProvider"
+        ///             type="MySql.Web.Security.MySQLMembershipProvider"
+        ///             connectionStringName="LocalMySqlServer"
+        ///             enablePasswordRetrieval="true"
+        ///             enablePasswordReset="false"
+        ///             requiresQuestionAndAnswer="true"
+        ///             passwordFormat="Encrypted"
+        ///             applicationName="MyApplication" />
+        ///     </providers>
+        /// </membership>
+        /// </code>
+        /// </example>
         public override bool EnablePasswordRetrieval
         {
             get { return pEnablePasswordRetrieval; }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the membership provider is 
+        /// configured to require the user to answer a password question 
+        /// for password reset and retrieval.
+        /// </summary>
+        /// <value></value>
+        /// <returns>true if a password answer is required for password 
+        /// reset and retrieval; otherwise, false. The default is false.</returns>
+        /// <example>
+        /// The following example shows the membership element being used in an applications web.config file.
+        /// <code>
+        /// <membership defaultProvider="MySQLMembershipProvider">
+        ///     <providers>
+        ///         <add name="MySqlMembershipProvider"
+        ///             type="MySql.Web.Security.MySQLMembershipProvider"
+        ///             connectionStringName="LocalMySqlServer"
+        ///             enablePasswordRetrieval="true"
+        ///             enablePasswordReset="false"
+        ///             requiresQuestionAndAnswer="true"
+        ///             passwordFormat="Encrypted"
+        ///             applicationName="MyApplication" />
+        ///     </providers>
+        /// </membership>
+        /// </code>
+        /// </example>
         public override bool RequiresQuestionAndAnswer
         {
             get { return pRequiresQuestionAndAnswer; }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the membership provider is configured 
+        /// to require a unique e-mail address for each user name.
+        /// </summary>
+        /// <value></value>
+        /// <returns>true if the membership provider requires a unique e-mail address; 
+        /// otherwise, false. The default is true.</returns>
+        /// <example>
+        /// The following example shows the membership element being used in an applications web.config file.
+        /// <code>
+        /// <membership defaultProvider="MySQLMembershipProvider">
+        ///     <providers>
+        ///         <add name="MySqlMembershipProvider"
+        ///             type="MySql.Web.Security.MySQLMembershipProvider"
+        ///             connectionStringName="LocalMySqlServer"
+        ///             enablePasswordRetrieval="true"
+        ///             enablePasswordReset="false"
+        ///             requiresUniqueEmail="false"
+        ///             passwordFormat="Encrypted"
+        ///             applicationName="MyApplication" />
+        ///     </providers>
+        /// </membership>
+        /// </code>
+        /// </example>
         public override bool RequiresUniqueEmail
         {
             get { return pRequiresUniqueEmail; }
         }
 
+        /// <summary>
+        /// Gets the number of invalid password or password-answer attempts allowed 
+        /// before the membership user is locked out.
+        /// </summary>
+        /// <value></value>
+        /// <returns>The number of invalid password or password-answer attempts allowed 
+        /// before the membership user is locked out.</returns>
+        /// <example>
+        /// The following example shows the membership element being used in an applications web.config file.
+        /// <code>
+        /// <membership defaultProvider="MySQLMembershipProvider">
+        ///     <providers>
+        ///         <add name="MySqlMembershipProvider"
+        ///             type="MySql.Web.Security.MySQLMembershipProvider"
+        ///             connectionStringName="LocalMySqlServer"
+        ///             enablePasswordRetrieval="true"
+        ///             maxInvalidPasswordAttempts="3"
+        ///             enablePasswordReset="false"
+        ///             requiresUniqueEmail="false"
+        ///             passwordFormat="Encrypted"
+        ///             applicationName="MyApplication" />
+        ///     </providers>
+        /// </membership>
+        /// </code>
+        /// </example>
         public override int MaxInvalidPasswordAttempts
         {
             get { return pMaxInvalidPasswordAttempts; }
         }
 
+        /// <summary>
+        /// Gets the number of minutes in which a maximum number of invalid password or 
+        /// password-answer attempts are allowed before the membership user is locked out.
+        /// </summary>
+        /// <value></value>
+        /// <returns>The number of minutes in which a maximum number of invalid password or 
+        /// password-answer attempts are allowed before the membership user is locked out.</returns>
+        /// <example>
+        /// The following example shows the membership element being used in an applications web.config file.
+        /// <code>
+        /// <membership defaultProvider="MySQLMembershipProvider">
+        ///     <providers>
+        ///         <add name="MySqlMembershipProvider"
+        ///             type="MySql.Web.Security.MySQLMembershipProvider"
+        ///             connectionStringName="LocalMySqlServer"
+        ///             enablePasswordRetrieval="true"
+        ///             maxInvalidPasswordAttempts="3"
+        ///             passwordAttemptWindows="20"
+        ///             requiresUniqueEmail="false"
+        ///             passwordFormat="Encrypted"
+        ///             applicationName="MyApplication" />
+        ///     </providers>
+        /// </membership>
+        /// </code>
+        /// </example>
         public override int PasswordAttemptWindow
         {
             get { return pPasswordAttemptWindow; }
         }
 
+        /// <summary>
+        /// Gets a value indicating the format for storing passwords in the membership data store.
+        /// </summary>
+        /// <value></value>
+        /// <returns>One of the <see cref="T:System.Web.Security.MembershipPasswordFormat"/> 
+        /// values indicating the format for storing passwords in the data store.</returns>
+        /// <example>
+        /// The following example shows the membership element being used in an applications web.config file.
+        /// <code>
+        /// <membership defaultProvider="MySQLMembershipProvider">
+        ///     <providers>
+        ///         <add name="MySqlMembershipProvider"
+        ///             type="MySql.Web.Security.MySQLMembershipProvider"
+        ///             connectionStringName="LocalMySqlServer"
+        ///             enablePasswordRetrieval="true"
+        ///             maxInvalidPasswordAttempts="3"
+        ///             passwordAttemptWindows="20"
+        ///             requiresUniqueEmail="false"
+        ///             passwordFormat="Encrypted"
+        ///             applicationName="MyApplication" />
+        ///     </providers>
+        /// </membership>
+        /// </code>
+        /// </example>
         public override MembershipPasswordFormat PasswordFormat
         {
             get { return pPasswordFormat; }
         }
 
+        /// <summary>
+        /// Gets the minimum number of special characters that must be present in a valid password.
+        /// </summary>
+        /// <value></value>
+        /// <returns>The minimum number of special characters that must be present 
+        /// in a valid password.</returns>
+        /// <example>
+        /// The following example shows the membership element being used in an applications web.config file.
+        /// <code>
+        /// <membership defaultProvider="MySQLMembershipProvider">
+        ///     <providers>
+        ///         <add name="MySqlMembershipProvider"
+        ///             type="MySql.Web.Security.MySQLMembershipProvider"
+        ///             connectionStringName="LocalMySqlServer"
+        ///             enablePasswordRetrieval="true"
+        ///             maxInvalidPasswordAttempts="3"
+        ///             passwordAttemptWindows="20"
+        ///             minRequiredNonAlphanumericCharacters="1"
+        ///             passwordFormat="Encrypted"
+        ///             applicationName="MyApplication" />
+        ///     </providers>
+        /// </membership>
+        /// </code>
+        /// </example>
         public override int MinRequiredNonAlphanumericCharacters
         {
             get { return pMinRequiredNonAlphanumericCharacters; }
         }
 
+        /// <summary>
+        /// Gets the minimum length required for a password.
+        /// </summary>
+        /// <value></value>
+        /// <returns>The minimum length required for a password. </returns>
+        /// <example>
+        /// The following example shows the membership element being used in an applications web.config file.
+        /// <code>
+        /// <membership defaultProvider="MySQLMembershipProvider">
+        ///     <providers>
+        ///         <add name="MySqlMembershipProvider"
+        ///             type="MySql.Web.Security.MySQLMembershipProvider"
+        ///             connectionStringName="LocalMySqlServer"
+        ///             enablePasswordRetrieval="true"
+        ///             maxInvalidPasswordAttempts="3"
+        ///             passwordAttemptWindows="20"
+        ///             minRequiredPasswordLength="11"
+        ///             passwordFormat="Encrypted"
+        ///             applicationName="MyApplication" />
+        ///     </providers>
+        /// </membership>
+        /// </code>
+        /// </example>
         public override int MinRequiredPasswordLength
         {
             get { return pMinRequiredPasswordLength; }
         }
 
+        /// <summary>
+        /// Gets the regular expression used to evaluate a password.
+        /// </summary>
+        /// <value></value>
+        /// <returns>A regular expression used to evaluate a password.</returns>
+        /// <example>
+        /// The following example shows the membership element being used in an applications web.config file.
+        /// In this example, the regular expression specifies that the password must meet the following
+        /// criteria:
+        /// <ul>
+        /// <list>Is at least seven characters.</list>
+        /// <list>Contains at least one digit.</list>
+        /// <list>Contains at least one special (non-alphanumeric) character.</list>
+        /// </ul>
+        /// <code>
+        /// <membership defaultProvider="MySQLMembershipProvider">
+        ///     <providers>
+        ///         <add name="MySqlMembershipProvider"
+        ///             type="MySql.Web.Security.MySQLMembershipProvider"
+        ///             connectionStringName="LocalMySqlServer"
+        ///             enablePasswordRetrieval="true"
+        ///             maxInvalidPasswordAttempts="3"
+        ///             passwordAttemptWindows="20"
+        ///             passwordStrengthRegularExpression="@\"(?=.{6,})(?=(.*\d){1,})(?=(.*\W){1,})"
+        ///             passwordFormat="Encrypted"
+        ///             applicationName="MyApplication" />
+        ///     </providers>
+        /// </membership>
+        /// </code>
+        /// </example>
         public override string PasswordStrengthRegularExpression
         {
             get { return pPasswordStrengthRegularExpression; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether exceptions are written to the event log.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if exceptions should be written to the log; otherwise, <c>false</c>.
+        /// </value>
+        public bool WriteExceptionsToEventLog
+        {
+            get { return pWriteExceptionsToEventLog; }
+            set { pWriteExceptionsToEventLog = value; }
+        }
+
         #endregion
 
+        #region Public Methods
+
+        /// <summary>
+        /// Changes the password.
+        /// </summary>
+        /// <param name="username">The username.</param>
+        /// <param name="oldPwd">The old password.</param>
+        /// <param name="newPwd">The new password.</param>
+        /// <returns></returns>
         public override bool ChangePassword(string username, string oldPwd,
             string newPwd)
         {
@@ -266,6 +583,14 @@ namespace MySql.Web.Security
             }
         }
 
+        /// <summary>
+        /// Changes the password question and answer.
+        /// </summary>
+        /// <param name="username">The username.</param>
+        /// <param name="password">The password.</param>
+        /// <param name="newPwdQuestion">The new PWD question.</param>
+        /// <param name="newPwdAnswer">The new PWD answer.</param>
+        /// <returns></returns>
         public override bool ChangePasswordQuestionAndAnswer(string username,
             string password, string newPwdQuestion, string newPwdAnswer)
         {
@@ -306,6 +631,20 @@ namespace MySql.Web.Security
             }
         }
 
+        /// <summary>
+        /// Adds a new membership user to the data source.
+        /// </summary>
+        /// <param name="username">The user name for the new user.</param>
+        /// <param name="password">The password for the new user.</param>
+        /// <param name="email">The e-mail address for the new user.</param>
+        /// <param name="passwordQuestion">The password question for the new user.</param>
+        /// <param name="passwordAnswer">The password answer for the new user</param>
+        /// <param name="isApproved">Whether or not the new user is approved to be validated.</param>
+        /// <param name="providerUserKey">The unique identifier from the membership data source for the user.</param>
+        /// <param name="status">A <see cref="T:System.Web.Security.MembershipCreateStatus"/> enumeration value indicating whether the user was created successfully.</param>
+        /// <returns>
+        /// A <see cref="T:System.Web.Security.MembershipUser"/> object populated with the information for the newly created user.
+        /// </returns>
         public override MembershipUser CreateUser(string username, string password,
             string email, string passwordQuestion, string passwordAnswer,
             bool isApproved, object providerUserKey, out MembershipCreateStatus status)
@@ -416,6 +755,14 @@ PKID, Username, ApplicationName,
             return GetUser(username, false);
         }
 
+        /// <summary>
+        /// Removes a user from the membership data source.
+        /// </summary>
+        /// <param name="username">The name of the user to delete.</param>
+        /// <param name="deleteAllRelatedData">true to delete data related to the user from the database; false to leave data related to the user in the database.</param>
+        /// <returns>
+        /// true if the user was successfully deleted; otherwise, false.
+        /// </returns>
         public override bool DeleteUser(string username, bool deleteAllRelatedData)
         {
             using (MySqlConnection conn = new MySqlConnection(connectionString))
@@ -450,6 +797,15 @@ PKID, Username, ApplicationName,
             }
         }
 
+        /// <summary>
+        /// Gets a collection of all the users in the data source in pages of data.
+        /// </summary>
+        /// <param name="pageIndex">The index of the page of results to return. <paramref name="pageIndex"/> is zero-based.</param>
+        /// <param name="pageSize">The size of the page of results to return.</param>
+        /// <param name="totalRecords">The total number of matched users.</param>
+        /// <returns>
+        /// A <see cref="T:System.Web.Security.MembershipUserCollection"/> collection that contains a page of <paramref name="pageSize"/><see cref="T:System.Web.Security.MembershipUser"/> objects beginning at the page specified by <paramref name="pageIndex"/>.
+        /// </returns>
         public override MembershipUserCollection GetAllUsers(int pageIndex, int pageSize, out int totalRecords)
         {
             MySqlConnection conn = new MySqlConnection(connectionString);
@@ -517,6 +873,12 @@ PKID, Username, ApplicationName,
             return users;
         }
 
+        /// <summary>
+        /// Gets the number of users currently accessing the application.
+        /// </summary>
+        /// <returns>
+        /// The number of users currently accessing the application.
+        /// </returns>
         public override int GetNumberOfUsersOnline()
         {
             TimeSpan onlineSpan = new TimeSpan(0, Membership.UserIsOnlineTimeWindow, 0);
@@ -550,12 +912,18 @@ PKID, Username, ApplicationName,
             }
         }
 
+        /// <summary>
+        /// Gets the password for the specified user name from the data source.
+        /// </summary>
+        /// <param name="username">The user to retrieve the password for.</param>
+        /// <param name="answer">The password answer for the user.</param>
+        /// <returns>
+        /// The password for the specified user name.
+        /// </returns>
         public override string GetPassword(string username, string answer)
         {
             if (!(EnablePasswordRetrieval))
                 throw new ProviderException("Password Retrieval Not Enabled.");
-            if (PasswordFormat == MembershipPasswordFormat.Hashed)
-                throw new ProviderException("Cannot retrieve Hashed passwords.");
 
             using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
@@ -609,6 +977,14 @@ PKID, Username, ApplicationName,
             }
         }
 
+        /// <summary>
+        /// Gets information from the data source for a user. Provides an option to update the last-activity date/time stamp for the user.
+        /// </summary>
+        /// <param name="username">The name of the user to get information for.</param>
+        /// <param name="userIsOnline">true to update the last-activity date/time stamp for the user; false to return user information without updating the last-activity date/time stamp for the user.</param>
+        /// <returns>
+        /// A <see cref="T:System.Web.Security.MembershipUser"/> object populated with the specified user's information from the data source.
+        /// </returns>
         public override MembershipUser GetUser(string username, bool userIsOnline)
         {
             using (MySqlConnection conn = new MySqlConnection(connectionString))
@@ -654,6 +1030,14 @@ PKID, Username, ApplicationName,
             }
         }
 
+        /// <summary>
+        /// Gets user information from the data source based on the unique identifier for the membership user. Provides an option to update the last-activity date/time stamp for the user.
+        /// </summary>
+        /// <param name="providerUserKey">The unique identifier for the membership user to get information for.</param>
+        /// <param name="userIsOnline">true to update the last-activity date/time stamp for the user; false to return user information without updating the last-activity date/time stamp for the user.</param>
+        /// <returns>
+        /// A <see cref="T:System.Web.Security.MembershipUser"/> object populated with the specified user's information from the data source.
+        /// </returns>
         public override MembershipUser GetUser(object providerUserKey, bool userIsOnline)
         {
             using (MySqlConnection conn = new MySqlConnection(connectionString))
@@ -697,45 +1081,11 @@ PKID, Username, ApplicationName,
             }
         }
 
-        private MembershipUser GetUserFromReader(MySqlDataReader reader)
-        {
-            object providerUserKey = reader.GetValue(0);
-            string username = reader.GetString(1);
-
-            string email = null;
-            if (!reader.IsDBNull(2))
-                email = reader.GetString(2);
-
-            string passwordQuestion = "";
-            if (!(reader.GetValue(3) == DBNull.Value))
-                passwordQuestion = reader.GetString(3);
-
-            string comment = "";
-            if (!(reader.GetValue(4) == DBNull.Value))
-                comment = reader.GetString(4);
-
-            bool isApproved = reader.GetBoolean(5);
-            bool isLockedOut = reader.GetBoolean(6);
-            DateTime creationDate = reader.GetDateTime(7);
-            DateTime lastLoginDate = new DateTime();
-            if (!(reader.GetValue(8) == DBNull.Value))
-            {
-                lastLoginDate = reader.GetDateTime(8);
-            }
-            DateTime lastActivityDate = reader.GetDateTime(9);
-            DateTime lastPasswordChangedDate = reader.GetDateTime(10);
-            DateTime lastLockedOutDate = new DateTime();
-            if (!(reader.GetValue(11) == DBNull.Value))
-            {
-                lastLockedOutDate = reader.GetDateTime(11);
-            }
-            MembershipUser u =
-                new MembershipUser(Name, username, providerUserKey, email, passwordQuestion, comment, isApproved,
-                                   isLockedOut, creationDate, lastLoginDate, lastActivityDate, lastPasswordChangedDate,
-                                   lastLockedOutDate);
-            return u;
-        }
-
+        /// <summary>
+        /// Unlocks the user.
+        /// </summary>
+        /// <param name="username">The username.</param>
+        /// <returns></returns>
         public override bool UnlockUser(string username)
         {
             using (MySqlConnection conn = new MySqlConnection(connectionString))
@@ -765,6 +1115,13 @@ PKID, Username, ApplicationName,
             }
         }
 
+        /// <summary>
+        /// Gets the user name associated with the specified e-mail address.
+        /// </summary>
+        /// <param name="email">The e-mail address to search for.</param>
+        /// <returns>
+        /// The user name associated with the specified e-mail address. If no match is found, return null.
+        /// </returns>
         public override string GetUserNameByEmail(string email)
         {
             MySqlConnection conn = new MySqlConnection(connectionString);
@@ -806,6 +1163,12 @@ PKID, Username, ApplicationName,
             return username;
         }
 
+        /// <summary>
+        /// Resets a user's password to a new, automatically generated password.
+        /// </summary>
+        /// <param name="username">The user to reset the password for.</param>
+        /// <param name="answer">The password answer for the specified user.</param>
+        /// <returns>The new password for the specified user.</returns>
         public override string ResetPassword(string username, string answer)
         {
             if (!(EnablePasswordReset))
@@ -895,6 +1258,10 @@ PKID, Username, ApplicationName,
             }
         }
 
+        /// <summary>
+        /// Updates information about a user in the data source.
+        /// </summary>
+        /// <param name="user">A <see cref="T:System.Web.Security.MembershipUser"/> object that represents the user to update and the updated information for the user.</param>
         public override void UpdateUser(MembershipUser user)
         {
             MySqlConnection conn = new MySqlConnection(connectionString);
@@ -932,6 +1299,14 @@ PKID, Username, ApplicationName,
             }
         }
 
+        /// <summary>
+        /// Verifies that the specified user name and password exist in the data source.
+        /// </summary>
+        /// <param name="username">The name of the user to validate.</param>
+        /// <param name="password">The password for the specified user.</param>
+        /// <returns>
+        /// true if the specified username and password are valid; otherwise, false.
+        /// </returns>
         public override bool ValidateUser(string username, string password)
         {
             bool isValid = false;
@@ -989,6 +1364,265 @@ PKID, Username, ApplicationName,
                 }
             }
             return isValid;
+        }
+
+        /// <summary>
+        /// Gets a collection of membership users where the user name contains the specified user name to match.
+        /// </summary>
+        /// <param name="usernameToMatch">The user name to search for.</param>
+        /// <param name="pageIndex">The index of the page of results to return. <paramref name="pageIndex"/> is zero-based.</param>
+        /// <param name="pageSize">The size of the page of results to return.</param>
+        /// <param name="totalRecords">The total number of matched users.</param>
+        /// <returns>
+        /// A <see cref="T:System.Web.Security.MembershipUserCollection"/> collection that contains a page of <paramref name="pageSize"/><see cref="T:System.Web.Security.MembershipUser"/> objects beginning at the page specified by <paramref name="pageIndex"/>.
+        /// </returns>
+        public override MembershipUserCollection FindUsersByName(string usernameToMatch,
+                                                                 int pageIndex, int pageSize, out int totalRecords)
+        {
+            MembershipUserCollection users = new MembershipUserCollection();
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                MySqlCommand cmd = new MySqlCommand(@"SELECT Count(*) FROM mysql_Membership 
+                    WHERE Username LIKE ?UsernameSearch AND ApplicationName = ?ApplicationName", conn);
+                cmd.Parameters.AddWithValue("?UsernameSearch", usernameToMatch);
+                cmd.Parameters.AddWithValue("?ApplicationName", pApplicationName);
+
+                try
+                {
+                    conn.Open();
+                    totalRecords = Convert.ToInt32(cmd.ExecuteScalar());
+                    if (totalRecords <= 0)
+                        return users;
+
+                    cmd.CommandText =
+                        @"SELECT PKID, Username, Email, PasswordQuestion, Comment, 
+                        IsApproved, IsLockedOut, CreationDate, LastLoginDate, LastActivityDate, 
+                        LastPasswordChangedDate, LastLockedOutDate FROM mysql_Membership 
+                        WHERE Username LIKE ?UsernameSearch AND ApplicationName = ?ApplicationName 
+                        ORDER BY Username Asc";
+                    cmd.Parameters["?UsernameSearch"].Value = usernameToMatch;
+                    cmd.Parameters["?ApplicationName"].Value = pApplicationName;
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        int counter = 0;
+                        int startIndex = pageSize * pageIndex;
+                        int endIndex = startIndex + pageSize - 1;
+                        while (reader.Read())
+                        {
+                            if (counter >= startIndex)
+                            {
+                                MembershipUser u = GetUserFromReader(reader);
+                                users.Add(u);
+                            }
+                            if (counter >= endIndex)
+                                cmd.Cancel();
+
+                            counter += 1;
+                        }
+                    }
+                }
+                catch (MySqlException e)
+                {
+                    if (WriteExceptionsToEventLog)
+                    {
+                        WriteToEventLog(e, "FindUsersByName");
+                        throw new ProviderException(exceptionMessage);
+                    }
+                    throw;
+                }
+            }
+            return users;
+        }
+
+        /// <summary>
+        /// Gets a collection of membership users where the e-mail address contains the specified e-mail address to match.
+        /// </summary>
+        /// <param name="emailToMatch">The e-mail address to search for.</param>
+        /// <param name="pageIndex">The index of the page of results to return. <paramref name="pageIndex"/> is zero-based.</param>
+        /// <param name="pageSize">The size of the page of results to return.</param>
+        /// <param name="totalRecords">The total number of matched users.</param>
+        /// <returns>
+        /// A <see cref="T:System.Web.Security.MembershipUserCollection"/> collection that contains a page of <paramref name="pageSize"/><see cref="T:System.Web.Security.MembershipUser"/> objects beginning at the page specified by <paramref name="pageIndex"/>.
+        /// </returns>
+        public override MembershipUserCollection FindUsersByEmail(string emailToMatch, int pageIndex,
+                                                                  int pageSize, out int totalRecords)
+        {
+            MySqlConnection conn = new MySqlConnection(connectionString);
+            MySqlCommand cmd =
+                new MySqlCommand(
+                    @"SELECT Count(*) FROM mysql_Membership 
+                WHERE Email LIKE ?EmailSearch AND ApplicationName = ?ApplicationName",
+                    conn);
+            cmd.Parameters.Add("?EmailSearch", MySqlDbType.VarChar, 255).Value = emailToMatch;
+            cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName.ToString();
+            MembershipUserCollection users = new MembershipUserCollection();
+            MySqlDataReader reader = null;
+            totalRecords = 0;
+            try
+            {
+                conn.Open();
+                totalRecords = Convert.ToInt32(cmd.ExecuteScalar());
+                if (totalRecords <= 0)
+                {
+                    return users;
+                }
+                cmd.CommandText =
+                    @"SELECT PKID, Username, Email, PasswordQuestion, Comment, 
+                    IsApproved, IsLockedOut, CreationDate, LastLoginDate, 
+                    LastActivityDate, LastPasswordChangedDate, LastLockedOutDate 
+                    FROM mysql_Membership WHERE Email LIKE ?EmailSearch AND 
+                    ApplicationName = ?ApplicationName " +
+                    " ORDER BY Username Asc";
+                cmd.Parameters.Add("?EmailSearch", MySqlDbType.VarChar, 255).Value = emailToMatch;
+                cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
+                reader = cmd.ExecuteReader();
+                int counter = 0;
+                int startIndex = pageSize * pageIndex;
+                int endIndex = startIndex + pageSize - 1;
+                while (reader.Read())
+                {
+                    if (counter >= startIndex)
+                    {
+                        MembershipUser u = GetUserFromReader(reader);
+                        users.Add(u);
+                    }
+                    if (counter >= endIndex)
+                    {
+                        cmd.Cancel();
+                    }
+                    counter += 1;
+                }
+            }
+            catch (MySqlException e)
+            {
+                if (WriteExceptionsToEventLog)
+                {
+                    WriteToEventLog(e, "FindUsersByEmail");
+                    throw new ProviderException(exceptionMessage);
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            finally
+            {
+                if (!(reader == null))
+                {
+                    reader.Close();
+                }
+                conn.Close();
+            }
+            return users;
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private void WriteToEventLog(Exception e, string action)
+        {
+            EventLog log = new EventLog();
+            log.Source = eventSource;
+            log.Log = eventLog;
+            string message = "An exception occurred communicating with the data source." +
+                             Environment.NewLine + Environment.NewLine;
+            message += "Action: " + action + Environment.NewLine + Environment.NewLine;
+            message += "Exception: " + e;
+            log.WriteEntry(message);
+        }
+
+        private MembershipUser GetUserFromReader(MySqlDataReader reader)
+        {
+            object providerUserKey = reader.GetValue(0);
+            string username = reader.GetString(1);
+
+            string email = null;
+            if (!reader.IsDBNull(2))
+                email = reader.GetString(2);
+
+            string passwordQuestion = "";
+            if (!(reader.GetValue(3) == DBNull.Value))
+                passwordQuestion = reader.GetString(3);
+
+            string comment = "";
+            if (!(reader.GetValue(4) == DBNull.Value))
+                comment = reader.GetString(4);
+
+            bool isApproved = reader.GetBoolean(5);
+            bool isLockedOut = reader.GetBoolean(6);
+            DateTime creationDate = reader.GetDateTime(7);
+            DateTime lastLoginDate = new DateTime();
+            if (!(reader.GetValue(8) == DBNull.Value))
+            {
+                lastLoginDate = reader.GetDateTime(8);
+            }
+            DateTime lastActivityDate = reader.GetDateTime(9);
+            DateTime lastPasswordChangedDate = reader.GetDateTime(10);
+            DateTime lastLockedOutDate = new DateTime();
+            if (!(reader.GetValue(11) == DBNull.Value))
+            {
+                lastLockedOutDate = reader.GetDateTime(11);
+            }
+            MembershipUser u =
+                new MembershipUser(Name, username, providerUserKey, email, passwordQuestion, comment, isApproved,
+                                   isLockedOut, creationDate, lastLoginDate, lastActivityDate, lastPasswordChangedDate,
+                                   lastLockedOutDate);
+            return u;
+        }
+
+        private string UnEncodePassword(string encodedPassword, MembershipPasswordFormat format)
+        {
+            string password = encodedPassword;
+            if (format == MembershipPasswordFormat.Clear)
+                return encodedPassword;
+            else if (format == MembershipPasswordFormat.Encrypted)
+                return Encoding.Unicode.GetString(
+                    DecryptPassword(Convert.FromBase64String(password)));
+            else if (format == MembershipPasswordFormat.Hashed)
+                throw new ProviderException("Cannot unencode a hashed password.");
+            else
+                throw new ProviderException("Unsupported password format.");
+        }
+
+        private string GetPasswordKey()
+        {
+            RNGCryptoServiceProvider cryptoProvider =
+                new RNGCryptoServiceProvider();
+            byte[] key = new byte[16];
+            cryptoProvider.GetBytes(key);
+            return Convert.ToBase64String(key);
+        }
+
+        private string EncodePassword(string password, string passwordKey,
+            MembershipPasswordFormat format)
+        {
+            if (password == null)
+                return null;
+            if (format == MembershipPasswordFormat.Clear)
+                return password;
+
+            byte[] passwordBytes = Encoding.Unicode.GetBytes(password);
+            byte[] keyBytes = Convert.FromBase64String(passwordKey);
+            byte[] keyedBytes = new byte[passwordBytes.Length + keyBytes.Length];
+            Array.Copy(keyBytes, keyedBytes, keyBytes.Length);
+            Array.Copy(passwordBytes, 0, keyedBytes, keyBytes.Length, passwordBytes.Length);
+
+            if (format == MembershipPasswordFormat.Encrypted)
+            {
+                byte[] encryptedBytes = EncryptPassword(keyedBytes);
+                return Convert.ToBase64String(encryptedBytes);
+            }
+            else if (format == MembershipPasswordFormat.Hashed)
+            {
+                HashAlgorithm hash = HashAlgorithm.Create(Membership.HashAlgorithmType);
+                return Convert.ToBase64String(hash.ComputeHash(keyedBytes));
+            }
+            else
+            {
+                throw new ProviderException("Unsupported password format.");
+            }
         }
 
         private void UpdateFailureCount(string username, string failureType)
@@ -1146,201 +1780,6 @@ PKID, Username, ApplicationName,
             }
         }
 
-
-        private string GetPasswordKey()
-        {
-            RNGCryptoServiceProvider cryptoProvider =
-                new RNGCryptoServiceProvider();
-            byte[] key = new byte[16];
-            cryptoProvider.GetBytes(key);
-            return Convert.ToBase64String(key);
-        }
-
-        private string EncodePassword(string password, string passwordKey,
-            MembershipPasswordFormat format)
-        {
-            if (password == null)
-                return null;
-            if (format == MembershipPasswordFormat.Clear)
-                return password;
-
-            byte[] passwordBytes = Encoding.Unicode.GetBytes(password);
-            byte[] keyBytes = Convert.FromBase64String(passwordKey);
-            byte[] keyedBytes = new byte[passwordBytes.Length + keyBytes.Length];
-            Array.Copy(keyBytes, keyedBytes, keyBytes.Length);
-            Array.Copy(passwordBytes, 0, keyedBytes, keyBytes.Length, passwordBytes.Length);
-
-            if (format == MembershipPasswordFormat.Encrypted)
-            {
-                byte[] encryptedBytes = EncryptPassword(keyedBytes);
-                return Convert.ToBase64String(encryptedBytes);
-            }
-            else if (format == MembershipPasswordFormat.Hashed)
-            {
-                HashAlgorithm hash = HashAlgorithm.Create(Membership.HashAlgorithmType);
-                return Convert.ToBase64String(hash.ComputeHash(keyedBytes));
-            }
-            else
-            {
-                throw new ProviderException("Unsupported password format.");
-            }
-        }
-
-        private string UnEncodePassword(string encodedPassword, MembershipPasswordFormat format)
-        {
-            string password = encodedPassword;
-            if (format == MembershipPasswordFormat.Clear)
-                return encodedPassword;
-            else if (format == MembershipPasswordFormat.Encrypted)
-                return Encoding.Unicode.GetString(
-                    DecryptPassword(Convert.FromBase64String(password)));
-            else if (format == MembershipPasswordFormat.Hashed)
-                throw new ProviderException("Cannot unencode a hashed password.");
-            else
-                throw new ProviderException("Unsupported password format.");
-        }
-
-        public override MembershipUserCollection FindUsersByName(string usernameToMatch,
-                                                                 int pageIndex, int pageSize, out int totalRecords)
-        {
-            MembershipUserCollection users = new MembershipUserCollection();
-
-            using (MySqlConnection conn = new MySqlConnection(connectionString))
-            {
-                MySqlCommand cmd = new MySqlCommand(@"SELECT Count(*) FROM mysql_Membership 
-                    WHERE Username LIKE ?UsernameSearch AND ApplicationName = ?ApplicationName", conn);
-                cmd.Parameters.AddWithValue("?UsernameSearch", usernameToMatch);
-                cmd.Parameters.AddWithValue("?ApplicationName", pApplicationName);
-
-                try
-                {
-                    conn.Open();
-                    totalRecords = Convert.ToInt32(cmd.ExecuteScalar());
-                    if (totalRecords <= 0)
-                        return users;
-
-                    cmd.CommandText =
-                        @"SELECT PKID, Username, Email, PasswordQuestion, Comment, 
-                        IsApproved, IsLockedOut, CreationDate, LastLoginDate, LastActivityDate, 
-                        LastPasswordChangedDate, LastLockedOutDate FROM mysql_Membership 
-                        WHERE Username LIKE ?UsernameSearch AND ApplicationName = ?ApplicationName 
-                        ORDER BY Username Asc";
-                    cmd.Parameters["?UsernameSearch"].Value = usernameToMatch;
-                    cmd.Parameters["?ApplicationName"].Value = pApplicationName;
-                    using (MySqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        int counter = 0;
-                        int startIndex = pageSize * pageIndex;
-                        int endIndex = startIndex + pageSize - 1;
-                        while (reader.Read())
-                        {
-                            if (counter >= startIndex)
-                            {
-                                MembershipUser u = GetUserFromReader(reader);
-                                users.Add(u);
-                            }
-                            if (counter >= endIndex)
-                                cmd.Cancel();
-
-                            counter += 1;
-                        }
-                    }
-                }
-                catch (MySqlException e)
-                {
-                    if (WriteExceptionsToEventLog)
-                    {
-                        WriteToEventLog(e, "FindUsersByName");
-                        throw new ProviderException(exceptionMessage);
-                    }
-                    throw;
-                }
-            }
-            return users;
-        }
-
-        public override MembershipUserCollection FindUsersByEmail(string emailToMatch, int pageIndex,
-                                                                  int pageSize, out int totalRecords)
-        {
-            MySqlConnection conn = new MySqlConnection(connectionString);
-            MySqlCommand cmd =
-                new MySqlCommand(
-                    @"SELECT Count(*) FROM mysql_Membership 
-                WHERE Email LIKE ?EmailSearch AND ApplicationName = ?ApplicationName",
-                    conn);
-            cmd.Parameters.Add("?EmailSearch", MySqlDbType.VarChar, 255).Value = emailToMatch;
-            cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName.ToString();
-            MembershipUserCollection users = new MembershipUserCollection();
-            MySqlDataReader reader = null;
-            totalRecords = 0;
-            try
-            {
-                conn.Open();
-                totalRecords = Convert.ToInt32(cmd.ExecuteScalar());
-                if (totalRecords <= 0)
-                {
-                    return users;
-                }
-                cmd.CommandText =
-                    @"SELECT PKID, Username, Email, PasswordQuestion, Comment, 
-                    IsApproved, IsLockedOut, CreationDate, LastLoginDate, 
-                    LastActivityDate, LastPasswordChangedDate, LastLockedOutDate 
-                    FROM mysql_Membership WHERE Email LIKE ?EmailSearch AND 
-                    ApplicationName = ?ApplicationName " +
-                    " ORDER BY Username Asc";
-                cmd.Parameters.Add("?EmailSearch", MySqlDbType.VarChar, 255).Value = emailToMatch;
-                cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
-                reader = cmd.ExecuteReader();
-                int counter = 0;
-                int startIndex = pageSize * pageIndex;
-                int endIndex = startIndex + pageSize - 1;
-                while (reader.Read())
-                {
-                    if (counter >= startIndex)
-                    {
-                        MembershipUser u = GetUserFromReader(reader);
-                        users.Add(u);
-                    }
-                    if (counter >= endIndex)
-                    {
-                        cmd.Cancel();
-                    }
-                    counter += 1;
-                }
-            }
-            catch (MySqlException e)
-            {
-                if (WriteExceptionsToEventLog)
-                {
-                    WriteToEventLog(e, "FindUsersByEmail");
-                    throw new ProviderException(exceptionMessage);
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            finally
-            {
-                if (!(reader == null))
-                {
-                    reader.Close();
-                }
-                conn.Close();
-            }
-            return users;
-        }
-
-        private void WriteToEventLog(Exception e, string action)
-        {
-            EventLog log = new EventLog();
-            log.Source = eventSource;
-            log.Log = eventLog;
-            string message = "An exception occurred communicating with the data source." +
-                             Environment.NewLine + Environment.NewLine;
-            message += "Action: " + action + Environment.NewLine + Environment.NewLine;
-            message += "Exception: " + e;
-            log.WriteEntry(message);
-        }
+        #endregion
     }
 }
