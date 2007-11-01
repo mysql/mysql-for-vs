@@ -565,25 +565,21 @@ namespace MySql.Data.MySqlClient
         /// <param name="filename"></param>
         private void SendFileToServer(string filename)
         {
-            byte[] buffer = new byte[4092];
+            byte[] buffer = new byte[8196];
             FileStream fs = null;
 
+            long len = 0;
             try
             {
                 fs = new FileStream(filename, FileMode.Open);
-                stream.StartOutput((ulong) fs.Length, false);
-
-                long len = fs.Length;
+                len = fs.Length;
                 while (len > 0)
                 {
-                    int count = fs.Read(buffer, 0, 4092);
-                    stream.Write(buffer, 0, count);
+                    int count = fs.Read(buffer, 4, (int)(len > 8192 ? 8192 : len));
+                    stream.SendEntirePacketDirectly(buffer, count);
                     len -= count;
                 }
-
-                // write the terminating packet
-                stream.SendEmptyPacket();
-                stream.Flush();
+                stream.SendEntirePacketDirectly(buffer, 0);
             }
             catch (Exception ex)
             {
