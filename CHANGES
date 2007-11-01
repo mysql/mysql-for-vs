@@ -95,7 +95,8 @@ Version 5.0.9
     used the wrong case for a user id and then fixed it to still get access denied
     errors. (Bug #31433) 
   - improved the speed of load data local infile significantly   
-                  
+  - fixed MySqlDateTime.ToString() to properly return the date value (Bug #32010)   
+                    
 Version 5.0.8  8/16/2007
   Bug #28706 Log messages are truncated  
   - Fixed a problem with compression over a network.  We were letting the inflate stream read

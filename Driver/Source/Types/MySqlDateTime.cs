@@ -436,22 +436,41 @@ namespace MySql.Data.Types
 			return new DateTime(year, month, day, hour, minute, second);
 		}
 
-		/// <summary>Returns a MySQL specific string representation of this value</summary>
-		public override string ToString()
-		{
-			if (this.IsValidDateTime)
-			{
-				DateTime d = new DateTime(year, month, day, hour, minute, second);
-				return (type == MySqlDbType.Date) ? d.ToString("d") : d.ToString();
-			}
+        private string FormatDateCustom(string format, int monthVal, int dayVal, int yearVal)
+        {
+            format = format.Replace("MM", "{0:00}");
+            format = format.Replace("M", "{0}");
+            format = format.Replace("dd", "{1:00}");
+            format = format.Replace("d", "{1}");
+            format = format.Replace("yyyy", "{2:0000}");
+            format = format.Replace("yy", "{3:00}");
+            format = format.Replace("y", "{4:0}");
 
-			if (type == MySqlDbType.Date)
-				return String.Format(CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern,
-					year, month, day);
+            int year2digit = yearVal - ((yearVal / 1000) * 1000);
+            year2digit -= ((year2digit / 100) * 100);
+            int year1digit = year2digit - ((year2digit / 10) * 10);
 
-			return String.Format(CultureInfo.CurrentUICulture.DateTimeFormat.FullDateTimePattern,
-				year, month, day, hour, minute, second);
-		}
+            return String.Format(format, monthVal, dayVal, yearVal, year2digit, year1digit);
+        }
+
+        /// <summary>Returns a MySQL specific string representation of this value</summary>
+        public override string ToString()
+        {
+            if (this.IsValidDateTime)
+            {
+                DateTime d = new DateTime(year, month, day, hour, minute, second);
+                return (type == MySqlDbType.Date) ? d.ToString("d") : d.ToString();
+            }
+
+            string dateString = FormatDateCustom(
+                CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern, month, day, year);
+            if (type == MySqlDbType.Date)
+                return dateString;
+
+            DateTime dt = new DateTime(1, 2, 3, hour, minute, second);
+            dateString = String.Format("{0} {1}", dateString, dt.ToLongTimeString());
+            return dateString;
+        }
 
 		/// <summary></summary>
 		/// <param name="val"></param>
