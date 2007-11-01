@@ -1342,5 +1342,42 @@ namespace MySql.Data.MySqlClient.Tests
             cmd.CommandType = CommandType.StoredProcedure;
             Assert.AreEqual(1, cmd.ExecuteScalar());
         }
-	}
+
+		[Test]
+		public void ComplexDefinition()
+		{
+			execSQL(@"CREATE PROCEDURE `spTest`() NOT DETERMINISTIC
+					CONTAINS SQL SQL SECURITY DEFINER COMMENT '' 
+					BEGIN
+						SELECT 1,2,3;
+					END");
+			MySqlCommand command = new MySqlCommand("spTest", conn);
+			command.CommandType = CommandType.StoredProcedure;
+			MySqlDataReader reader = command.ExecuteReader();
+		}
+
+        /// <summary>
+        /// Bug #31930 Stored procedures with "ambiguous column name" error cause lock-ups 
+        /// </summary>
+        [Test]
+        public void AmbiguousColumns()
+        {
+            execSQL("CREATE TABLE t1 (id INT)");
+            execSQL("CREATE TABLE t2 (id1 INT, id INT)");
+            execSQL("CREATE PROCEDURE spTest() BEGIN SELECT id FROM t1 JOIN t2 on t1.id=t2.id; END");
+
+            MySqlCommand cmd = new MySqlCommand("spTest", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            try
+            {
+                da.Fill(dt);
+                Assert.Fail("The above should have thrown an exception");
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+    }
 }
