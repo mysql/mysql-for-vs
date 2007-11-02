@@ -1,6 +1,7 @@
-﻿<project schemaVersion="1.4.0.2">
+﻿<project schemaVersion="1.6.0.1">
     <assemblies>
         <assembly assemblyPath="..\Driver\bin\net-2.0\release\MySql.Data.dll" xmlCommentsPath="..\Driver\bin\net-2.0\release\MySql.Data.xml" commentsOnly="False" />
+        <assembly assemblyPath="..\MySql.Web\Providers\bin\Release\MySql.Web.dll" xmlCommentsPath="..\MySql.Web\Providers\bin\Release\doc.xml" commentsOnly="False" />
     </assemblies>
     <namespaceSummaries>
         <namespaceSummaryItem name="" isDocumented="False" />
@@ -22,6 +23,14 @@
         <contentItem sourcePath=".\Content\Integration\Visual Studio 2005\.svn\*.*" destPath="" excludeItems="True" />
         <contentItem sourcePath=".\Content\Integration\Visual Studio 2005\Editing Tables\.svn\*.*" destPath="" excludeItems="True" />
     </additionalContent>
+    <apiFilter>
+        <filter entryType="Namespace" fullName="MySql.Data.MySqlClient" isExposed="True">
+            <filter entryType="Class" fullName="MySql.Data.MySqlClient.CustomInstaller" filterName="CustomInstaller" isExposed="False" />
+        </filter>
+        <filter entryType="Namespace" fullName="MySql.Web.Security" isExposed="True">
+            <filter entryType="Class" fullName="MySql.Web.Security.CustomInstaller" filterName="CustomInstaller" isExposed="False" />
+        </filter>
+    </apiFilter>
     <ProjectSummary />
     <MissingTags>Summary, Parameter, Returns</MissingTags>
     <VisibleItems>InheritedMembers, InheritedFrameworkMembers, Protected, SealedProtected</VisibleItems>
@@ -31,6 +40,7 @@
     <SandcastlePath path="" />
     <WorkingPath path="" />
     <CleanIntermediates>False</CleanIntermediates>
+    <KeepLogFile>True</KeepLogFile>
     <HelpFileFormat>Help1xAndHelp2x</HelpFileFormat>
     <PurgeDuplicateTopics>True</PurgeDuplicateTopics>
     <CppCommentsFixup>False</CppCommentsFixup>
@@ -44,14 +54,18 @@
     <HtmlHelpName>MySql.Data</HtmlHelpName>
     <Language>en-US</Language>
     <CopyrightHref>http://www.mysql.com</CopyrightHref>
-    <CopyrightText>� 2004-2007 MySQL AB. All rights reserved.</CopyrightText>
+    <CopyrightText>© 2004-2007 MySQL AB. All rights reserved.</CopyrightText>
     <FeedbackEMailAddress>support@mysql.com</FeedbackEMailAddress>
     <HeaderText />
     <FooterText />
     <ProjectLinkType>Local</ProjectLinkType>
     <SdkLinkType>Msdn</SdkLinkType>
+    <SdkLinkTarget>Blank</SdkLinkTarget>
     <PresentationStyle>vs2005</PresentationStyle>
     <NamingMethod>MemberName</NamingMethod>
     <SyntaxFilters>Standard</SyntaxFilters>
+    <ShowFeedbackControl>False</ShowFeedbackControl>
     <ContentPlacement>AboveNamespaces</ContentPlacement>
+    <ContentSiteMap path="" />
+    <TopicFileTransform path="" />
 </project>

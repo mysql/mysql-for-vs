@@ -37,6 +37,18 @@ using MySql.Data.MySqlClient;
 
 namespace MySql.Web.Security
 {
+    /// <summary>
+    /// Manages storage of membership information for an ASP.NET application in a MySQL database. 
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// This class is used by the <see cref="Membership"/> and <see cref="MembershipUser"/> classes
+    /// to provide membership services for ASP.NET applications using a MySQL database.
+    /// </para>
+    /// </remarks>
+    /// <example>
+    /// <code lang="" source="CodeExamples\MembershipCodeExample2.xml"/>
+    /// </example>
     public sealed class MySQLMembershipProvider : MembershipProvider
     {
         private int newPasswordLength = 8;
@@ -167,9 +179,8 @@ namespace MySql.Web.Security
         /// <summary>
         /// The name of the application using the MySQL membership provider.
         /// </summary>
-        /// <value></value>
-        /// <returns>The name of the application using the MySQL membership provider.  The default is the 
-        /// application virtual path.</returns>
+        /// <value>The name of the application using the MySQL membership provider.  The default is the 
+        /// application virtual path.</value>
         /// <remarks>The ApplicationName is used by the MySqlMembershipProvider to separate 
         /// membership information for multiple applications.  Using different application names, 
         /// applications can use the same membership database.
@@ -181,20 +192,7 @@ namespace MySql.Web.Security
         /// <example>
         /// The following example shows the membership element being used in an applications web.config file.
         /// The application name setting is being used.
-        /// <code>
-        /// <membership defaultProvider="MySQLMembershipProvider">
-        ///     <providers>
-        ///         <add name="MySqlMembershipProvider"
-        ///             type="MySql.Web.Security.MySQLMembershipProvider"
-        ///             connectionStringName="LocalMySqlServer"
-        ///             enablePasswordRetrieval="true"
-        ///             enablePasswordReset="false"
-        ///             requiresQuestionAndAnswer="true"
-        ///             passwordFormat="Encrypted"
-        ///             applicationName="MyApplication" />
-        ///     </providers>
-        /// </membership>
-        /// </code>
+        /// <code lang="" source="CodeExamples\MembershipCodeExample1.xml"/>
         /// </example>
         public override string ApplicationName
         {
@@ -205,27 +203,13 @@ namespace MySql.Web.Security
         /// <summary>
         /// Indicates whether the membership provider is configured to allow users to reset their passwords.
         /// </summary>
-        /// <value></value>
-        /// <returns>true if the membership provider supports password reset; otherwise, false. The default is true.</returns>
+        /// <value>true if the membership provider supports password reset; otherwise, false. The default is true.</value>
         /// <remarks>Allows the user to replace their password with a new, randomly generated password.  
         /// This can be especially handy when using hashed passwords since hashed passwords cannot be
         /// retrieved.</remarks>
         /// <example>
         /// The following example shows the membership element being used in an applications web.config file.
-        /// <code>
-        /// <membership defaultProvider="MySQLMembershipProvider">
-        ///     <providers>
-        ///         <add name="MySqlMembershipProvider"
-        ///             type="MySql.Web.Security.MySQLMembershipProvider"
-        ///             connectionStringName="LocalMySqlServer"
-        ///             enablePasswordRetrieval="true"
-        ///             enablePasswordReset="false"
-        ///             requiresQuestionAndAnswer="true"
-        ///             passwordFormat="Encrypted"
-        ///             applicationName="MyApplication" />
-        ///     </providers>
-        /// </membership>
-        /// </code>
+        /// <code source="CodeExamples\MembershipCodeExample1.xml"/>
         /// </example>
         public override bool EnablePasswordReset
         {
@@ -236,28 +220,14 @@ namespace MySql.Web.Security
         /// Indicates whether the membership provider is configured to allow users to retrieve 
         /// their passwords.
         /// </summary>
-        /// <value></value>
-        /// <returns>true if the membership provider is configured to support password retrieval; 
-        /// otherwise, false. The default is false.</returns>
+        /// <value>true if the membership provider is configured to support password retrieval; 
+        /// otherwise, false. The default is false.</value>
         /// <remarks>If the system is configured to use hashed passwords, then retrieval is not possible.  
         /// If the user attempts to initialize the provider with hashed passwords and enable password retrieval
         /// set to true then a <see cref="ProviderException"/> is thrown.</remarks>
         /// <example>
         /// The following example shows the membership element being used in an applications web.config file.
-        /// <code>
-        /// <membership defaultProvider="MySQLMembershipProvider">
-        ///     <providers>
-        ///         <add name="MySqlMembershipProvider"
-        ///             type="MySql.Web.Security.MySQLMembershipProvider"
-        ///             connectionStringName="LocalMySqlServer"
-        ///             enablePasswordRetrieval="true"
-        ///             enablePasswordReset="false"
-        ///             requiresQuestionAndAnswer="true"
-        ///             passwordFormat="Encrypted"
-        ///             applicationName="MyApplication" />
-        ///     </providers>
-        /// </membership>
-        /// </code>
+        /// <code source="CodeExamples\MembershipCodeExample1.xml"/>
         /// </example>
         public override bool EnablePasswordRetrieval
         {
@@ -269,25 +239,11 @@ namespace MySql.Web.Security
         /// configured to require the user to answer a password question 
         /// for password reset and retrieval.
         /// </summary>
-        /// <value></value>
-        /// <returns>true if a password answer is required for password 
-        /// reset and retrieval; otherwise, false. The default is false.</returns>
+        /// <value>true if a password answer is required for password 
+        /// reset and retrieval; otherwise, false. The default is false.</value>
         /// <example>
         /// The following example shows the membership element being used in an applications web.config file.
-        /// <code>
-        /// <membership defaultProvider="MySQLMembershipProvider">
-        ///     <providers>
-        ///         <add name="MySqlMembershipProvider"
-        ///             type="MySql.Web.Security.MySQLMembershipProvider"
-        ///             connectionStringName="LocalMySqlServer"
-        ///             enablePasswordRetrieval="true"
-        ///             enablePasswordReset="false"
-        ///             requiresQuestionAndAnswer="true"
-        ///             passwordFormat="Encrypted"
-        ///             applicationName="MyApplication" />
-        ///     </providers>
-        /// </membership>
-        /// </code>
+        /// <code source="CodeExamples\MembershipCodeExample1.xml"/>
         /// </example>
         public override bool RequiresQuestionAndAnswer
         {
@@ -298,25 +254,11 @@ namespace MySql.Web.Security
         /// Gets a value indicating whether the membership provider is configured 
         /// to require a unique e-mail address for each user name.
         /// </summary>
-        /// <value></value>
-        /// <returns>true if the membership provider requires a unique e-mail address; 
-        /// otherwise, false. The default is true.</returns>
+        /// <value>true if the membership provider requires a unique e-mail address; 
+        /// otherwise, false. The default is true.</value>
         /// <example>
         /// The following example shows the membership element being used in an applications web.config file.
-        /// <code>
-        /// <membership defaultProvider="MySQLMembershipProvider">
-        ///     <providers>
-        ///         <add name="MySqlMembershipProvider"
-        ///             type="MySql.Web.Security.MySQLMembershipProvider"
-        ///             connectionStringName="LocalMySqlServer"
-        ///             enablePasswordRetrieval="true"
-        ///             enablePasswordReset="false"
-        ///             requiresUniqueEmail="false"
-        ///             passwordFormat="Encrypted"
-        ///             applicationName="MyApplication" />
-        ///     </providers>
-        /// </membership>
-        /// </code>
+        /// <code source="CodeExamples\MembershipCodeExample1.xml"/>
         /// </example>
         public override bool RequiresUniqueEmail
         {
@@ -327,26 +269,11 @@ namespace MySql.Web.Security
         /// Gets the number of invalid password or password-answer attempts allowed 
         /// before the membership user is locked out.
         /// </summary>
-        /// <value></value>
-        /// <returns>The number of invalid password or password-answer attempts allowed 
-        /// before the membership user is locked out.</returns>
+        /// <value>The number of invalid password or password-answer attempts allowed 
+        /// before the membership user is locked out.</value>
         /// <example>
         /// The following example shows the membership element being used in an applications web.config file.
-        /// <code>
-        /// <membership defaultProvider="MySQLMembershipProvider">
-        ///     <providers>
-        ///         <add name="MySqlMembershipProvider"
-        ///             type="MySql.Web.Security.MySQLMembershipProvider"
-        ///             connectionStringName="LocalMySqlServer"
-        ///             enablePasswordRetrieval="true"
-        ///             maxInvalidPasswordAttempts="3"
-        ///             enablePasswordReset="false"
-        ///             requiresUniqueEmail="false"
-        ///             passwordFormat="Encrypted"
-        ///             applicationName="MyApplication" />
-        ///     </providers>
-        /// </membership>
-        /// </code>
+        /// <code source="CodeExamples\MembershipCodeExample1.xml"/>
         /// </example>
         public override int MaxInvalidPasswordAttempts
         {
@@ -357,26 +284,11 @@ namespace MySql.Web.Security
         /// Gets the number of minutes in which a maximum number of invalid password or 
         /// password-answer attempts are allowed before the membership user is locked out.
         /// </summary>
-        /// <value></value>
-        /// <returns>The number of minutes in which a maximum number of invalid password or 
-        /// password-answer attempts are allowed before the membership user is locked out.</returns>
+        /// <value>The number of minutes in which a maximum number of invalid password or 
+        /// password-answer attempts are allowed before the membership user is locked out.</value>
         /// <example>
         /// The following example shows the membership element being used in an applications web.config file.
-        /// <code>
-        /// <membership defaultProvider="MySQLMembershipProvider">
-        ///     <providers>
-        ///         <add name="MySqlMembershipProvider"
-        ///             type="MySql.Web.Security.MySQLMembershipProvider"
-        ///             connectionStringName="LocalMySqlServer"
-        ///             enablePasswordRetrieval="true"
-        ///             maxInvalidPasswordAttempts="3"
-        ///             passwordAttemptWindows="20"
-        ///             requiresUniqueEmail="false"
-        ///             passwordFormat="Encrypted"
-        ///             applicationName="MyApplication" />
-        ///     </providers>
-        /// </membership>
-        /// </code>
+        /// <code source="CodeExamples\MembershipCodeExample1.xml"/>
         /// </example>
         public override int PasswordAttemptWindow
         {
@@ -386,26 +298,11 @@ namespace MySql.Web.Security
         /// <summary>
         /// Gets a value indicating the format for storing passwords in the membership data store.
         /// </summary>
-        /// <value></value>
-        /// <returns>One of the <see cref="T:System.Web.Security.MembershipPasswordFormat"/> 
-        /// values indicating the format for storing passwords in the data store.</returns>
+        /// <value>One of the <see cref="T:System.Web.Security.MembershipPasswordFormat"/> 
+        /// values indicating the format for storing passwords in the data store.</value>
         /// <example>
         /// The following example shows the membership element being used in an applications web.config file.
-        /// <code>
-        /// <membership defaultProvider="MySQLMembershipProvider">
-        ///     <providers>
-        ///         <add name="MySqlMembershipProvider"
-        ///             type="MySql.Web.Security.MySQLMembershipProvider"
-        ///             connectionStringName="LocalMySqlServer"
-        ///             enablePasswordRetrieval="true"
-        ///             maxInvalidPasswordAttempts="3"
-        ///             passwordAttemptWindows="20"
-        ///             requiresUniqueEmail="false"
-        ///             passwordFormat="Encrypted"
-        ///             applicationName="MyApplication" />
-        ///     </providers>
-        /// </membership>
-        /// </code>
+        /// <code source="CodeExamples\MembershipCodeExample1.xml"/>
         /// </example>
         public override MembershipPasswordFormat PasswordFormat
         {
@@ -415,26 +312,11 @@ namespace MySql.Web.Security
         /// <summary>
         /// Gets the minimum number of special characters that must be present in a valid password.
         /// </summary>
-        /// <value></value>
-        /// <returns>The minimum number of special characters that must be present 
-        /// in a valid password.</returns>
+        /// <value>The minimum number of special characters that must be present 
+        /// in a valid password.</value>
         /// <example>
         /// The following example shows the membership element being used in an applications web.config file.
-        /// <code>
-        /// <membership defaultProvider="MySQLMembershipProvider">
-        ///     <providers>
-        ///         <add name="MySqlMembershipProvider"
-        ///             type="MySql.Web.Security.MySQLMembershipProvider"
-        ///             connectionStringName="LocalMySqlServer"
-        ///             enablePasswordRetrieval="true"
-        ///             maxInvalidPasswordAttempts="3"
-        ///             passwordAttemptWindows="20"
-        ///             minRequiredNonAlphanumericCharacters="1"
-        ///             passwordFormat="Encrypted"
-        ///             applicationName="MyApplication" />
-        ///     </providers>
-        /// </membership>
-        /// </code>
+        /// <code source="CodeExamples\MembershipCodeExample1.xml"/>
         /// </example>
         public override int MinRequiredNonAlphanumericCharacters
         {
@@ -444,25 +326,10 @@ namespace MySql.Web.Security
         /// <summary>
         /// Gets the minimum length required for a password.
         /// </summary>
-        /// <value></value>
-        /// <returns>The minimum length required for a password. </returns>
+        /// <value>The minimum length required for a password. </value>
         /// <example>
         /// The following example shows the membership element being used in an applications web.config file.
-        /// <code>
-        /// <membership defaultProvider="MySQLMembershipProvider">
-        ///     <providers>
-        ///         <add name="MySqlMembershipProvider"
-        ///             type="MySql.Web.Security.MySQLMembershipProvider"
-        ///             connectionStringName="LocalMySqlServer"
-        ///             enablePasswordRetrieval="true"
-        ///             maxInvalidPasswordAttempts="3"
-        ///             passwordAttemptWindows="20"
-        ///             minRequiredPasswordLength="11"
-        ///             passwordFormat="Encrypted"
-        ///             applicationName="MyApplication" />
-        ///     </providers>
-        /// </membership>
-        /// </code>
+        /// <code source="CodeExamples\MembershipCodeExample1.xml"/>
         /// </example>
         public override int MinRequiredPasswordLength
         {
@@ -472,8 +339,7 @@ namespace MySql.Web.Security
         /// <summary>
         /// Gets the regular expression used to evaluate a password.
         /// </summary>
-        /// <value></value>
-        /// <returns>A regular expression used to evaluate a password.</returns>
+        /// <value>A regular expression used to evaluate a password.</value>
         /// <example>
         /// The following example shows the membership element being used in an applications web.config file.
         /// In this example, the regular expression specifies that the password must meet the following
@@ -483,21 +349,7 @@ namespace MySql.Web.Security
         /// <list>Contains at least one digit.</list>
         /// <list>Contains at least one special (non-alphanumeric) character.</list>
         /// </ul>
-        /// <code>
-        /// <membership defaultProvider="MySQLMembershipProvider">
-        ///     <providers>
-        ///         <add name="MySqlMembershipProvider"
-        ///             type="MySql.Web.Security.MySQLMembershipProvider"
-        ///             connectionStringName="LocalMySqlServer"
-        ///             enablePasswordRetrieval="true"
-        ///             maxInvalidPasswordAttempts="3"
-        ///             passwordAttemptWindows="20"
-        ///             passwordStrengthRegularExpression="@\"(?=.{6,})(?=(.*\d){1,})(?=(.*\W){1,})"
-        ///             passwordFormat="Encrypted"
-        ///             applicationName="MyApplication" />
-        ///     </providers>
-        /// </membership>
-        /// </code>
+        /// <code source="CodeExamples\MembershipCodeExample1.xml"/>
         /// </example>
         public override string PasswordStrengthRegularExpression
         {
@@ -526,7 +378,8 @@ namespace MySql.Web.Security
         /// <param name="username">The username.</param>
         /// <param name="oldPwd">The old password.</param>
         /// <param name="newPwd">The new password.</param>
-        /// <returns></returns>
+        /// <returns>true if the password was updated successfully, false if the supplied old password
+        /// is invalid, the user is locked out, or the user does not exist in the database.</returns>
         public override bool ChangePassword(string username, string oldPwd,
             string newPwd)
         {
@@ -588,9 +441,11 @@ namespace MySql.Web.Security
         /// </summary>
         /// <param name="username">The username.</param>
         /// <param name="password">The password.</param>
-        /// <param name="newPwdQuestion">The new PWD question.</param>
-        /// <param name="newPwdAnswer">The new PWD answer.</param>
-        /// <returns></returns>
+        /// <param name="newPwdQuestion">The new password question.</param>
+        /// <param name="newPwdAnswer">The new password answer.</param>
+        /// <returns>true if the update was successful; otherwise, false. A value of false is 
+        /// also returned if the password is incorrect, the user is locked out, or the user 
+        /// does not exist in the database.</returns>
         public override bool ChangePasswordQuestionAndAnswer(string username,
             string password, string newPwdQuestion, string newPwdAnswer)
         {
@@ -1085,7 +940,9 @@ PKID, Username, ApplicationName,
         /// Unlocks the user.
         /// </summary>
         /// <param name="username">The username.</param>
-        /// <returns></returns>
+        /// <returns>true if the membership user was successfully unlocked; 
+        /// otherwise, false. A value of false is also returned if the user 
+        /// does not exist in the database. </returns>
         public override bool UnlockUser(string username)
         {
             using (MySqlConnection conn = new MySqlConnection(connectionString))

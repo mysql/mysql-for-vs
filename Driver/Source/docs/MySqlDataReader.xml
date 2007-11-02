@@ -35,7 +35,7 @@
       a <see cref="MySqlCommand"/>, and a <B>MySqlDataReader</B>. The example reads through
       the data, writing it out to the console. Finally, the example closes the <B>MySqlDataReader</B>, then the
       <B>MySqlConnection</B>.
-      <code lang="Visual Basic">
+      <code lang="vbnet">
         Public Sub ReadMyData(myConnString As String)
         Dim mySelectQuery As String = "SELECT OrderID, CustomerID FROM Orders"
         Dim myConnection As New MySqlConnection(myConnString)

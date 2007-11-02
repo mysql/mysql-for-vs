@@ -18,7 +18,7 @@
       when the connection is first opened.
     </summary>
     <remarks>
-      There is no default for this property and, if not set, the 
+      There is no default for this property and, if not set, the
       connection will not have a current database until one is set
       using the <see cref="ChangeDatabase"/> method.
     </remarks>
@@ -50,6 +50,6 @@
     <example>
     </example>
   </PipeName>
-  
+
 
 </docs>

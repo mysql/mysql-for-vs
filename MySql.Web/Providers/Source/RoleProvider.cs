@@ -33,6 +33,9 @@ using MySql.Data.MySqlClient;
 
 namespace MySql.Web.Security
 {
+    /// <summary>
+    /// Manages storage of role membership information for an ASP.NET application in a MySQL database. 
+    /// </summary>
     public sealed class MySQLRoleProvider : RoleProvider
     {
         private string eventSource = "MySQLRoleProvider";
@@ -100,8 +103,10 @@ namespace MySql.Web.Security
         /// <summary>
         /// Gets or sets the name of the application to store and retrieve role information for.
         /// </summary>
-        /// <value></value>
-        /// <returns>The name of the application to store and retrieve role information for.</returns>
+        /// <value>The name of the application to store and retrieve role information for.</value>
+        /// <example>
+        /// <code lang="" source="CodeExamples\RoleCodeExample1.xml"/>
+        /// </example>
         public override string ApplicationName
         {
             get { return pApplicationName; }
@@ -112,8 +117,11 @@ namespace MySql.Web.Security
         /// Gets or sets a value indicating whether [write exceptions to event log].
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if [write exceptions to event log]; otherwise, <c>false</c>.
+        /// 	<c>true</c> if exceptions should be written to the event log; otherwise, <c>false</c>.
         /// </value>
+        /// <example>
+        /// <code lang="" source="CodeExamples\RoleCodeExample1.xml"/>
+        /// </example>
         public bool WriteExceptionsToEventLog
         {
             get { return pWriteExceptionsToEventLog; }
@@ -230,7 +238,7 @@ namespace MySql.Web.Security
         /// </summary>
         /// <param name="rolename">The rolename.</param>
         /// <param name="throwOnPopulatedRole">if set to <c>true</c> [throw on populated role].</param>
-        /// <returns></returns>
+        /// <returns>true if the role was successfully deleted; otherwise, false. </returns>
         public override bool DeleteRole(string rolename, bool throwOnPopulatedRole)
         {
             if (!(RoleExists(rolename)))
@@ -384,7 +392,8 @@ namespace MySql.Web.Security
         /// Gets the users in role.
         /// </summary>
         /// <param name="rolename">The rolename.</param>
-        /// <returns></returns>
+        /// <returns>A string array containing the names of all the users 
+        /// who are members of the specified role. </returns>
         public override string[] GetUsersInRole(string rolename)
         {
             string tmpUserNames = "";
@@ -544,7 +553,7 @@ namespace MySql.Web.Security
         /// Roles the exists.
         /// </summary>
         /// <param name="rolename">The rolename.</param>
-        /// <returns></returns>
+        /// <returns>true if the role name already exists in the database; otherwise, false. </returns>
         public override bool RoleExists(string rolename)
         {
             bool exists = false;
@@ -588,7 +597,8 @@ namespace MySql.Web.Security
         /// </summary>
         /// <param name="rolename">The rolename.</param>
         /// <param name="usernameToMatch">The username to match.</param>
-        /// <returns></returns>
+        /// <returns>A string array containing the names of all the users where the 
+        /// user name matches usernameToMatch and the user is a member of the specified role. </returns>
         public override string[] FindUsersInRole(string rolename, string usernameToMatch)
         {
             MySqlConnection conn = new MySqlConnection(connectionString);

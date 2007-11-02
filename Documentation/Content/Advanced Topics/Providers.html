@@ -1,0 +1,65 @@
+<html>
+<head>
+    <title>ASP.NET Provider Model</title>
+    <link rel="stylesheet" type="text/css" href="../../styles/presentation.css" />
+    <link rel="stylesheet" type="text/css" href="ms-help://Hx/HxRuntime/HxLink.css" />
+    <link rel="stylesheet" type="text/css" href="ms-help://Dx/DxRuntime/DxLink.css" />
+</head>
+<body>
+    <div id="header">
+        <table id="topTable">
+            <tr id="headerTableRow1">
+                <td align="left">
+                    <span id="runningHeaderText">MySQL Connector/Net</span></td>
+            </tr>
+            <tr id="headerTableRow2">
+                <td align="left">
+                    <span id="nsrTitle">ASP.NET Provider Model Support</span></td>
+            </tr>
+        </table>
+    </div>
+    <div id="mainSection">
+        <div id="mainBody">
+            <p>
+                MySQL Connector/Net provides support for the ASP.NET 2.0 provider model.&nbsp; This
+                model allows application developers to focus on the business logic of there application
+                instead of having to recreate such boilerplate items as membership and roles support.&nbsp;
+                Currently, only membership and role providers are supplied although session state
+                and profile providers will be provided in upcoming releases.</p>
+            <h4 class="dxh4">
+                Installing The Providers</h4>
+            <p>
+                The installation of Connector/Net 5.1 or later will install the providers and register
+                them in your machines .NET configuration file.&nbsp; The providers are implemented
+                in the file mysql.web.dll and this file can be found in your Connector/Net installation
+                folder.&nbsp; There is no need to run any type of SQL script to setup the database
+                as the providers create and maintain the proper schema automatically.
+            </p>
+            <h4 class="dxh4">
+                Using The Providers</h4>
+            <p>
+                The easiest way to start using the providers is to use the ASP.NET configuration
+                tool that is available on the Solution Explorer toolbar when you have a website
+                project loaded.</p>
+            <p>
+                In the web pages that open you will be able to select the MySQL membership and roles
+                provider by indicating that you want to pick a custom provider for each area.</p>
+            <img src="aspnetconfig.jpg" />
+            <h4 class="dxh4">
+                Distribution</h4>
+            <p>
+                To use the providers on a production server you will need to distribute the MySql.Data
+                and the MySql.Web assemblies and either register them in the remote systems Global
+                Assembly Cache or keep them in your applications bin folder.
+            </p>
+            <p>
+                &nbsp;</p>
+            <p>
+                <img width="100%" height="3px" src="../icons/footer.gif" alt="Footer image"></img>
+            </p>
+            <include item="copyright" />
+        </div>
+    </div>
+</body>
+</html>
+<!-- @SortOrder 2 -->
