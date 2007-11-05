@@ -553,5 +553,20 @@ namespace MySql.Data.MySqlClient.Tests
             da.Fill(dt);
             Assert.AreEqual("1234567890", dt.Rows[1][0]);
         }
+
+        /// <summary>
+        /// Bug #32093 MySqlParameter Constructor does not allow Direction of anything other than Input 
+        /// </summary>
+        [Test]
+        public void NonInputParametersToCtor()
+        {
+            MySqlParameter p = new MySqlParameter("?p1", MySqlDbType.VarChar, 20,
+                ParameterDirection.InputOutput, true, 0, 0, "id", DataRowVersion.Current, 0);
+            Assert.AreEqual(ParameterDirection.InputOutput, p.Direction);
+
+            MySqlParameter p1 = new MySqlParameter("?p1", MySqlDbType.VarChar, 20,
+                ParameterDirection.Output, true, 0, 0, "id", DataRowVersion.Current, 0);
+            Assert.AreEqual(ParameterDirection.Output, p1.Direction);
+        }
     }
 }

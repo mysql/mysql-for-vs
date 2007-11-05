@@ -121,8 +121,6 @@ namespace MySql.Data.MySqlClient
                                 DataRowVersion ver, object val)
             : this(name, type)
         {
-            if (direction != ParameterDirection.Input)
-                throw new ArgumentException("Only input parameters are supported by MySql");
             direction = dir;
             sourceColumn = col;
             sourceVersion = ver;
@@ -149,9 +147,6 @@ namespace MySql.Data.MySqlClient
                               object value)
             : this(parameterName, dbType, size, sourceColumn)
         {
-            if (direction != ParameterDirection.Input)
-                throw new ArgumentException("Only input parameters are supported by MySql");
-
             this.direction = direction;
             this.sourceVersion = sourceVersion;
             Value = value;
