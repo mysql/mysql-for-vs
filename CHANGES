@@ -100,6 +100,8 @@ Version 5.0.9
     (Bug #32094)  
   - fixed problem where old code was preventing creating parameter objects with non-input direction using
     just a constructor (Bug #32093)  
+  - fixed problem where a syntax error in a set of batch statements could leave the data adapter in a state
+    that appears hung (bug #31930)
                         
 Version 5.0.8  8/16/2007
   Bug #28706 Log messages are truncated  

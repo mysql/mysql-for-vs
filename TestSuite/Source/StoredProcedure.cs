@@ -1366,15 +1366,18 @@ namespace MySql.Data.MySqlClient.Tests
         {
             execSQL("CREATE TABLE t1 (id INT)");
             execSQL("CREATE TABLE t2 (id1 INT, id INT)");
-            execSQL("CREATE PROCEDURE spTest() BEGIN SELECT id FROM t1 JOIN t2 on t1.id=t2.id; END");
+            execSQL(@"CREATE PROCEDURE spTest() BEGIN SELECT * FROM t1; 
+                        SELECT id FROM t1 JOIN t2 on t1.id=t2.id; 
+                        SELECT * FROM t2; END");
 
             MySqlCommand cmd = new MySqlCommand("spTest", conn);
             cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandTimeout = 0;
             MySqlDataAdapter da = new MySqlDataAdapter(cmd);
-            DataTable dt = new DataTable();
+            DataSet ds = new DataSet();
             try
             {
-                da.Fill(dt);
+                da.Fill(ds);
                 Assert.Fail("The above should have thrown an exception");
             }
             catch (Exception ex)

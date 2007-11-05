@@ -857,7 +857,9 @@ namespace MySql.Data.MySqlClient
 			{
 				if (ex.IsFatal)
 					connection.Abort();
-				throw;
+                nextResultDone = true;
+                hasRows = canRead = false; 
+                throw;
 			}
 
 		}
