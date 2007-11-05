@@ -57,7 +57,7 @@ namespace MySql.Data.Types
 				case "char": return MySqlDbType.String;
 				case "varchar": return MySqlDbType.VarChar;
 				case "date": return MySqlDbType.Date;
-				case "datetime": return MySqlDbType.Datetime;
+				case "datetime": return MySqlDbType.DateTime;
 				case "numeric":
 				case "decimal":
 				case "dec":

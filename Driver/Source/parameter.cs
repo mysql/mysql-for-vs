@@ -407,7 +407,7 @@ namespace MySql.Data.MySqlClient
                     dbType = DbType.Double;
                     break;
                 case MySqlDbType.Timestamp:
-                case MySqlDbType.Datetime:
+                case MySqlDbType.DateTime:
                     dbType = DbType.DateTime;
                     break;
                 case MySqlDbType.Date:
@@ -465,7 +465,7 @@ namespace MySql.Data.MySqlClient
                     mySqlDbType = MySqlDbType.Date;
                     break;
                 case DbType.DateTime:
-                    mySqlDbType = MySqlDbType.Datetime;
+                    mySqlDbType = MySqlDbType.DateTime;
                     break;
 
                 case DbType.Time:

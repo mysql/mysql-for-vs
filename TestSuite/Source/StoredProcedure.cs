@@ -136,7 +136,7 @@ namespace MySql.Data.MySqlClient.Tests
 			cmd.CommandType = CommandType.StoredProcedure;
 			cmd.Parameters.Add(new MySqlParameter("?value", MySqlDbType.VarChar));
 			cmd.Parameters.Add(new MySqlParameter("?intVal", MySqlDbType.Int32));
-			cmd.Parameters.Add(new MySqlParameter("?dateVal", MySqlDbType.Datetime));
+			cmd.Parameters.Add(new MySqlParameter("?dateVal", MySqlDbType.DateTime));
 			cmd.Parameters.Add(new MySqlParameter("?floatVal", MySqlDbType.Float));
 			MySqlParameter vcP = new MySqlParameter();
 			vcP.ParameterName = "?noTypeVarChar";
@@ -642,7 +642,7 @@ namespace MySql.Data.MySqlClient.Tests
 				Assert.AreEqual(2, cmd.Parameters.Count);
 				Assert.AreEqual("?v1", cmd.Parameters[0].ParameterName);
 				Assert.AreEqual(ParameterDirection.Input, cmd.Parameters[0].Direction);
-				Assert.AreEqual(MySqlDbType.Datetime, cmd.Parameters[0].MySqlDbType);
+				Assert.AreEqual(MySqlDbType.DateTime, cmd.Parameters[0].MySqlDbType);
 
 				Assert.AreEqual(ParameterDirection.ReturnValue, cmd.Parameters[1].Direction);
 				Assert.AreEqual(MySqlDbType.Int32, cmd.Parameters[1].MySqlDbType);
@@ -1380,7 +1380,7 @@ namespace MySql.Data.MySqlClient.Tests
                 da.Fill(ds);
                 Assert.Fail("The above should have thrown an exception");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
         }

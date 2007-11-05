@@ -48,7 +48,7 @@ namespace MySql.Data.Types
 		/// <param name="minute">The minute to use.</param>
 		/// <param name="second">The second to use.</param>
 		public MySqlDateTime(int year, int month, int day, int hour, int minute, int second)
-			: this(MySqlDbType.Datetime, year, month, day, hour, minute, second)
+			: this(MySqlDbType.DateTime, year, month, day, hour, minute, second)
 		{
 		}
 
@@ -57,7 +57,7 @@ namespace MySql.Data.Types
 		/// </summary>
 		/// <param name="dt">The <see cref="DateTime"/> object to copy.</param>
 		public MySqlDateTime(DateTime dt)
-			: this(MySqlDbType.Datetime, dt)
+			: this(MySqlDbType.DateTime, dt)
 		{
 		}
 
@@ -74,7 +74,7 @@ namespace MySql.Data.Types
 			minute = mdt.Minute;
 			second = mdt.Second;
 			millisecond = 0;
-			type = MySqlDbType.Datetime;
+			type = MySqlDbType.DateTime;
 			isNull = false;
 		}
 
@@ -493,7 +493,7 @@ namespace MySql.Data.Types
 		{
 			string[] types = new string[] { "DATE", "DATETIME", "TIMESTAMP" };
 			MySqlDbType[] dbtype = new MySqlDbType[] { MySqlDbType.Date, 
-				MySqlDbType.Datetime, MySqlDbType.Timestamp };
+				MySqlDbType.DateTime, MySqlDbType.Timestamp };
 
 			// we use name indexing because this method will only be called
 			// when GetSchema is called for the DataSourceInformation 

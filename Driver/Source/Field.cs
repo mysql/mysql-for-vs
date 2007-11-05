@@ -308,7 +308,7 @@ namespace MySql.Data.MySqlClient
                 case MySqlDbType.Time:
                     return new MySqlTimeSpan();
                 case MySqlDbType.Date:
-                case MySqlDbType.Datetime:
+                case MySqlDbType.DateTime:
                 case MySqlDbType.Newdate:
                 case MySqlDbType.Timestamp:
                     return new MySqlDateTime(type, true);
