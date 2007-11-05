@@ -522,5 +522,36 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.Fail(ex.Message);
             }
         }
+
+        /// <summary>
+        /// Bug #32094 Size property on string parameter throws an exception 
+        /// </summary>
+        [Test]
+        public void StringParameterSizeSetAfterValue()
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (v VARCHAR(10))");
+
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (?p1)", conn);
+            cmd.Parameters.Add("?p1", MySqlDbType.VarChar);
+            cmd.Parameters[0].Value = "123";
+            cmd.Parameters[0].Size = 10;
+            cmd.ExecuteNonQuery();
+
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            Assert.AreEqual("123", dt.Rows[0][0]);
+
+            cmd.Parameters.Clear();
+            cmd.Parameters.Add("?p1", MySqlDbType.VarChar);
+            cmd.Parameters[0].Value = "123456789012345";
+            cmd.Parameters[0].Size = 10;
+            cmd.ExecuteNonQuery();
+
+            dt.Clear();
+            da.Fill(dt);
+            Assert.AreEqual("1234567890", dt.Rows[1][0]);
+        }
     }
 }
