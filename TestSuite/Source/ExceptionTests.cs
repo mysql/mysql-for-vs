@@ -68,5 +68,22 @@ namespace MySql.Data.MySqlClient.Tests
 				c2.Close();
 			}
 		}
-	}
+
+        /// <summary>
+        /// Bug #27436 Add the MySqlException.Number property value to the Exception.Data Dictionary  
+        /// </summary>
+        [Test]
+        public void ErrorData()
+        {
+            MySqlCommand cmd = new MySqlCommand("SELEDT 1", conn);
+            try
+            {
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Assert.AreEqual(1064, ex.Data["Server Error Code"]);
+            }
+        }
+    }
 }
