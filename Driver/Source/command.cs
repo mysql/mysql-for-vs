@@ -523,7 +523,7 @@ namespace MySql.Data.MySqlClient
 		internal delegate void AsyncDelegate(int type, CommandBehavior behavior);
 		internal Exception thrownException;
 
-		private string TrimSemicolons(string sql)
+		private static string TrimSemicolons(string sql)
 		{
 			System.Text.StringBuilder sb = new System.Text.StringBuilder(sql);
 			int start = 0;

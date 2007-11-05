@@ -31,14 +31,11 @@ namespace MySql.Data.MySqlClient
     {
         private MySqlField[] paramList;
         private int executionCount;
-        private int pageSize;
         private int statementId;
 
         public PreparableStatement(MySqlCommand command, string text)
             : base(command, text)
         {
-            pageSize = 0;
-            statementId = 0;
         }
 
         #region Properties
@@ -116,7 +113,7 @@ namespace MySql.Data.MySqlClient
 
             // start constructing our packet
             stream.WriteInteger(statementId, 4);
-            stream.WriteByte((byte) pageSize); // flags; always 0 for 4.1
+            stream.WriteByte((byte) 0); // flags; always 0 for 4.1
             stream.WriteInteger(1, 4); // interation count; 1 for 4.1
             stream.Write(nullMapBytes);
             //if (parameters != null && parameters.Count > 0)
