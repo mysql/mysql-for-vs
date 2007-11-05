@@ -189,11 +189,11 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="columnName"></param>
+        /// <param name="parameterName"></param>
         /// <returns></returns>
-        protected override string GetParameterName(string columnName)
+        protected override string GetParameterName(string parameterName)
         {
-            StringBuilder sb = new StringBuilder(columnName);
+            StringBuilder sb = new StringBuilder(parameterName);
             sb.Replace(" ", "");
             sb.Replace("/", "_per_");
             sb.Replace("-", "_");

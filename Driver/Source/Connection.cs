@@ -395,7 +395,7 @@ namespace MySql.Data.MySqlClient
         #endregion
 
         /// <include file='docs/MySqlConnection.xml' path='docs/ChangeDatabase/*'/>
-        public override void ChangeDatabase(string database)
+        public override void ChangeDatabase(string databaseName)
         {
             if (database == null || database.Trim().Length == 0)
                 throw new ArgumentException(Resources.ParameterIsInvalid, "database");

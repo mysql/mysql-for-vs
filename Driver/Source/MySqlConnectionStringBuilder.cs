@@ -1213,21 +1213,21 @@ namespace MySql.Data.MySqlClient
         /// Gets or sets the value associated with the specified key. In C#, this property 
         /// is the indexer. 
         /// </summary>
-        /// <param name="key">The key of the item to get or set.</param>
+        /// <param name="keyword">The key of the item to get or set.</param>
         /// <returns>The value associated with the specified key. </returns>
-        public override object this[string key]
+        public override object this[string keyword]
         {
             get
             {
-                Keyword kw = GetKey(key);
+                Keyword kw = GetKey(keyword);
                 return GetValue(kw);
             }
             set
             {
                 if (value == null)
-                    Remove(key);
+                    Remove(keyword);
                 else
-                    SetValue(key, value);
+                    SetValue(keyword, value);
             }
         }
 

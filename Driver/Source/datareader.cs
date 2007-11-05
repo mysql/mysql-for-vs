@@ -240,13 +240,13 @@ namespace MySql.Data.MySqlClient
 		/// Reads a stream of bytes from the specified column offset into the buffer an array starting at the given buffer offset.
 		/// </summary>
 		/// <param name="i">The zero-based column ordinal. </param>
-		/// <param name="dataIndex">The index within the field from which to begin the read operation. </param>
+		/// <param name="fieldOffset">The index within the field from which to begin the read operation. </param>
 		/// <param name="buffer">The buffer into which to read the stream of bytes. </param>
-		/// <param name="bufferIndex">The index for buffer to begin the read operation. </param>
+		/// <param name="bufferoffset">The index for buffer to begin the read operation. </param>
 		/// <param name="length">The maximum length to copy into the buffer. </param>
 		/// <returns>The actual number of bytes read.</returns>
 		/// <include file='docs/MySqlDataReader.xml' path='MyDocs/MyMembers[@name="GetBytes"]/*'/>
-		public override long GetBytes(int i, long dataIndex, byte[] buffer, int bufferIndex, int length)
+		public override long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferoffset, int length)
 		{
 			if (i >= fields.Length)
 				throw new IndexOutOfRangeException();
@@ -260,23 +260,23 @@ namespace MySql.Data.MySqlClient
 			if (buffer == null)
 				return (long)binary.Value.Length;
 
-			if (bufferIndex >= buffer.Length || bufferIndex < 0)
+			if (bufferoffset >= buffer.Length || bufferoffset < 0)
 				throw new IndexOutOfRangeException("Buffer index must be a valid index in buffer");
-			if (buffer.Length < (bufferIndex + length))
+			if (buffer.Length < (bufferoffset + length))
 				throw new ArgumentException("Buffer is not large enough to hold the requested data");
-			if (dataIndex < 0 ||
-				((ulong)dataIndex >= (ulong)binary.Value.Length && (ulong)binary.Value.Length > 0))
+			if (fieldOffset < 0 ||
+				((ulong)fieldOffset >= (ulong)binary.Value.Length && (ulong)binary.Value.Length > 0))
 				throw new IndexOutOfRangeException("Data index must be a valid index in the field");
 
 			byte[] bytes = (byte[])binary.Value;
 
 			// adjust the length so we don't run off the end
-			if ((ulong)binary.Value.Length < (ulong)(dataIndex + length))
+			if ((ulong)binary.Value.Length < (ulong)(fieldOffset + length))
 			{
-				length = (int)((ulong)binary.Value.Length - (ulong)dataIndex);
+				length = (int)((ulong)binary.Value.Length - (ulong)fieldOffset);
 			}
 
-			Buffer.BlockCopy(bytes, (int)dataIndex, buffer, (int)bufferIndex, (int)length);
+			Buffer.BlockCopy(bytes, (int)fieldOffset, buffer, (int)bufferoffset, (int)length);
 
 			return length;
 		}
@@ -306,12 +306,12 @@ namespace MySql.Data.MySqlClient
 		/// Reads a stream of characters from the specified column offset into the buffer as an array starting at the given buffer offset.
 		/// </summary>
 		/// <param name="i"></param>
-		/// <param name="fieldOffset"></param>
+		/// <param name="fieldoffset"></param>
 		/// <param name="buffer"></param>
 		/// <param name="bufferoffset"></param>
 		/// <param name="length"></param>
 		/// <returns></returns>
-		public override long GetChars(int i, long fieldOffset, char[] buffer, int bufferoffset, int length)
+		public override long GetChars(int i, long fieldoffset, char[] buffer, int bufferoffset, int length)
 		{
 			if (i >= fields.Length)
 				throw new IndexOutOfRangeException();
@@ -324,12 +324,12 @@ namespace MySql.Data.MySqlClient
 				throw new IndexOutOfRangeException("Buffer index must be a valid index in buffer");
 			if (buffer.Length < (bufferoffset + length))
 				throw new ArgumentException("Buffer is not large enough to hold the requested data");
-			if (fieldOffset < 0 || fieldOffset >= valAsString.Length)
+			if (fieldoffset < 0 || fieldoffset >= valAsString.Length)
 				throw new IndexOutOfRangeException("Field offset must be a valid index in the field");
 
 			if (valAsString.Length < length)
 				length = valAsString.Length;
-			valAsString.CopyTo((int)fieldOffset, buffer, bufferoffset, length);
+			valAsString.CopyTo((int)fieldoffset, buffer, bufferoffset, length);
 			return length;
 		}
 
@@ -359,16 +359,16 @@ namespace MySql.Data.MySqlClient
 			return (MySqlDateTime)GetFieldValue(column, true);
 		}
 
-		/// <include file='docs/MySqlDataReader.xml' path='docs/GetDateTime/*'/>
+		/// <include file='docs/MySqlDataReader.xml' path='docs/GetDateTimeS/*'/>
 		public DateTime GetDateTime(string column)
 		{
 			return GetDateTime(GetOrdinal(column));
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetDateTime/*'/>
-		public override DateTime GetDateTime(int column)
+		public override DateTime GetDateTime(int i)
 		{
-			IMySqlValue val = GetFieldValue(column, true);
+			IMySqlValue val = GetFieldValue(i, true);
 			MySqlDateTime dt;
 
             if (val is MySqlDateTime)
@@ -376,7 +376,7 @@ namespace MySql.Data.MySqlClient
             else
 			{
                 // we need to do this because functions like date_add return string
-                string s = GetString(column);
+                string s = GetString(i);
 				dt = MySqlDateTime.Parse(s, this.connection.driver.Version);
 			}
 
@@ -386,31 +386,31 @@ namespace MySql.Data.MySqlClient
 				return dt.GetDateTime();
 		}
 
-		/// <include file='docs/MySqlDataReader.xml' path='docs/GetDecimal/*'/>
+		/// <include file='docs/MySqlDataReader.xml' path='docs/GetDecimalS/*'/>
 		public Decimal GetDecimal(string column)
 		{
 			return GetDecimal(GetOrdinal(column));
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetDecimal/*'/>
-		public override Decimal GetDecimal(int column)
+		public override Decimal GetDecimal(int i)
 		{
-			IMySqlValue v = GetFieldValue(column, true);
+			IMySqlValue v = GetFieldValue(i, true);
 			if (v is MySqlDecimal)
 				return ((MySqlDecimal)v).Value;
 			return Convert.ToDecimal(v.Value);
 		}
 
-		/// <include file='docs/MySqlDataReader.xml' path='docs/GetDouble/*'/>
+		/// <include file='docs/MySqlDataReader.xml' path='docs/GetDoubleS/*'/>
 		public double GetDouble(string column)
 		{
 			return GetDouble(GetOrdinal(column));
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetDouble/*'/>
-		public override double GetDouble(int column)
+		public override double GetDouble(int i)
 		{
-			IMySqlValue v = GetFieldValue(column, true);
+			IMySqlValue v = GetFieldValue(i, true);
 			if (v is MySqlDouble)
 				return ((MySqlDouble)v).Value;
 			return Convert.ToDouble(v.Value);
@@ -435,84 +435,84 @@ namespace MySql.Data.MySqlClient
 			return values[i].SystemType;
 		}
 
-		/// <include file='docs/MySqlDataReader.xml' path='docs/GetFloat/*'/>
+		/// <include file='docs/MySqlDataReader.xml' path='docs/GetFloatS/*'/>
 		public float GetFloat(string column)
 		{
 			return GetFloat(GetOrdinal(column));
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetFloat/*'/>
-		public override float GetFloat(int column)
+		public override float GetFloat(int i)
 		{
-			IMySqlValue v = GetFieldValue(column, true);
+			IMySqlValue v = GetFieldValue(i, true);
 			if (v is MySqlSingle)
 				return ((MySqlSingle)v).Value;
 			return Convert.ToSingle(v.Value);
 		}
 
-		/// <include file='docs/MySqlDataReader.xml' path='docs/GetGuid/*'/>
+		/// <include file='docs/MySqlDataReader.xml' path='docs/GetGuidS/*'/>
 		public Guid GetGuid(string column)
 		{
 			return GetGuid(GetOrdinal(column));
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetGuid/*'/>
-		public override Guid GetGuid(int column)
+		public override Guid GetGuid(int i)
 		{
-			return new Guid(GetString(column));
+			return new Guid(GetString(i));
 		}
 
-		/// <include file='docs/MySqlDataReader.xml' path='docs/GetInt16/*'/>
+		/// <include file='docs/MySqlDataReader.xml' path='docs/GetInt16S/*'/>
 		public Int16 GetInt16(string column)
 		{
 			return GetInt16(GetOrdinal(column));
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetInt16/*'/>
-		public override Int16 GetInt16(int column)
+		public override Int16 GetInt16(int i)
 		{
-			IMySqlValue v = GetFieldValue(column, true);
+			IMySqlValue v = GetFieldValue(i, true);
 			if (v is MySqlInt16)
 				return ((MySqlInt16)v).Value;
 
 			connection.UsageAdvisor.Converting(command.CommandText,
-				 fields[column].ColumnName, v.MySqlTypeName, "Int16");
+				 fields[i].ColumnName, v.MySqlTypeName, "Int16");
 			return ((IConvertible)v.Value).ToInt16(null);
 		}
 
-		/// <include file='docs/MySqlDataReader.xml' path='docs/GetInt32/*'/>
-		public Int32 GetInt32(string column)
+        /// <include file='docs/MySqlDataReader.xml' path='docs/GetInt32S/*'/>
+        public Int32 GetInt32(string column)
 		{
 			return GetInt32(GetOrdinal(column));
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetInt32/*'/>
-		public override Int32 GetInt32(int column)
+		public override Int32 GetInt32(int i)
 		{
-			IMySqlValue v = GetFieldValue(column, true);
+			IMySqlValue v = GetFieldValue(i, true);
 			if (v is MySqlInt32)
 				return ((MySqlInt32)v).Value;
 
 			connection.UsageAdvisor.Converting(command.CommandText,
-				 fields[column].ColumnName, v.MySqlTypeName, "Int32");
+				 fields[i].ColumnName, v.MySqlTypeName, "Int32");
 			return ((IConvertible)v.Value).ToInt32(null);
 		}
 
-		/// <include file='docs/MySqlDataReader.xml' path='docs/GetInt64/*'/>
+		/// <include file='docs/MySqlDataReader.xml' path='docs/GetInt64S/*'/>
 		public Int64 GetInt64(string column)
 		{
 			return GetInt64(GetOrdinal(column));
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetInt64/*'/>
-		public override Int64 GetInt64(int column)
+		public override Int64 GetInt64(int i)
 		{
-			IMySqlValue v = GetFieldValue(column, true);
+			IMySqlValue v = GetFieldValue(i, true);
 			if (v is MySqlInt64)
 				return ((MySqlInt64)v).Value;
 
 			connection.UsageAdvisor.Converting(command.CommandText,
-				 fields[column].ColumnName, v.MySqlTypeName, "Int64");
+				 fields[i].ColumnName, v.MySqlTypeName, "Int64");
 			return ((IConvertible)v.Value).ToInt64(null);
 		}
 
@@ -619,21 +619,21 @@ namespace MySql.Data.MySqlClient
 			return dataTableSchema;
 		}
 
-		/// <include file='docs/MySqlDataReader.xml' path='docs/GetString/*'/>
+		/// <include file='docs/MySqlDataReader.xml' path='docs/GetStringS/*'/>
 		public string GetString(string column)
 		{
 			return GetString(GetOrdinal(column));
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetString/*'/>
-		public override String GetString(int column)
+		public override String GetString(int i)
 		{
-			IMySqlValue val = GetFieldValue(column, true);
+			IMySqlValue val = GetFieldValue(i, true);
 
 			if (val is MySqlBinary)
 			{
 				byte[] v = ((MySqlBinary)val).Value;
-				return fields[column].Encoding.GetString(v, 0, v.Length);
+				return fields[i].Encoding.GetString(v, 0, v.Length);
 			}
 
 			return val.Value.ToString();

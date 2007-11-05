@@ -243,11 +243,11 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// Gets a value indicating whether a <see cref="MySqlParameter"/> with the specified parameter name exists in the collection.
 		/// </summary>
-		/// <param name="value">The name of the <see cref="MySqlParameter"/> object to find.</param>
+		/// <param name="parameterName">The name of the <see cref="MySqlParameter"/> object to find.</param>
 		/// <returns>true if the collection contains the parameter; otherwise, false.</returns>
-		public override bool Contains(string value)
+		public override bool Contains(string parameterName)
 		{
-			return IndexOf(value) != -1;
+			return IndexOf(parameterName) != -1;
 		}
 
 		/// <summary>
@@ -368,10 +368,10 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// Removes the specified <see cref="MySqlParameter"/> from the collection using the parameter name.
 		/// </summary>
-		/// <param name="name">The name of the <see cref="MySqlParameter"/> object to retrieve. </param>
-		public override void RemoveAt(string name)
+		/// <param name="parameterName">The name of the <see cref="MySqlParameter"/> object to retrieve. </param>
+		public override void RemoveAt(string parameterName)
 		{
-			DbParameter p = GetParameter(name);
+			DbParameter p = GetParameter(parameterName);
 			Remove(p);
 		}
 
