@@ -277,7 +277,14 @@ namespace MySql.Data.MySqlClient
 
         public IMySqlValue GetValueObject()
         {
-            return GetIMySqlValue(Type);
+            IMySqlValue v = GetIMySqlValue(Type);
+            if (v is MySqlByte && ColumnLength == 1)
+            {
+                MySqlByte b = (MySqlByte)v;
+                b.TreatAsBoolean = true;
+                v = b;
+            }
+            return v;
         }
 
         public static IMySqlValue GetIMySqlValue(MySqlDbType type)

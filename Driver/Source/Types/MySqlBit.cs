@@ -59,8 +59,6 @@ namespace MySql.Data.Types
 		{
 			get 
 			{
-				if (mValue == 0 || mValue == 1)
-					return Convert.ToBoolean(mValue);
 				return mValue; 
 			}
 		}
@@ -69,8 +67,6 @@ namespace MySql.Data.Types
 		{
 			get 
 			{
-				if (mValue == 0 || mValue == 1)
-					return typeof(Boolean);
 				return typeof(UInt64); 
 			}
 		}
