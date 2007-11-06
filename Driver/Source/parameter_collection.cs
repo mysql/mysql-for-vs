@@ -37,9 +37,9 @@ namespace MySql.Data.MySqlClient
 	{
         private ArrayList items = new ArrayList();
         private Hashtable indexHash;
-		private char paramMarker = '?';
+        private MySqlCommand owningCommand;
 
-		internal MySqlParameterCollection()
+		internal MySqlParameterCollection(MySqlCommand cmd)
 		{
 #if NET20
 			indexHash = new Hashtable(StringComparer.CurrentCultureIgnoreCase);
@@ -48,12 +48,12 @@ namespace MySql.Data.MySqlClient
 			    new CaseInsensitiveComparer());
 #endif
             Clear();
+            owningCommand = cmd;
 		}
 
 		internal char ParameterMarker
 		{
-			get { return paramMarker; }
-			set { paramMarker = value; }
+			get { return owningCommand.Connection.ParameterMarker; }
 		}
 
 		#region Public Methods
@@ -414,7 +414,7 @@ namespace MySql.Data.MySqlClient
             if (indexHash.ContainsKey(inComingName))
                 throw new MySqlException(
                     String.Format(Resources.ParameterAlreadyDefined, value.ParameterName));
-            if (inComingName[0] == paramMarker)
+            if (inComingName[0] == ParameterMarker)
                 inComingName = inComingName.Substring(1, inComingName.Length - 1);
             if (indexHash.ContainsKey(inComingName))
                 throw new MySqlException(

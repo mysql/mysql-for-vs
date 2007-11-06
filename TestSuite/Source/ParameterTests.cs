@@ -568,5 +568,21 @@ namespace MySql.Data.MySqlClient.Tests
                 ParameterDirection.Output, true, 0, 0, "id", DataRowVersion.Current, 0);
             Assert.AreEqual(ParameterDirection.Output, p1.Direction);
         }
+
+        /// <summary>
+        /// Bug #13991 oldsyntax configuration and ParameterMarker value bug 
+        /// </summary>
+        [Test]
+        public void SetOldSyntaxAfterCommandCreation()
+        {
+            string connStr = this.GetConnectionString(true);
+            MySqlConnection c = new MySqlConnection(connStr);
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id) VALUES (@id)", c);
+            c.ConnectionString = connStr += ";old syntax=yes";
+            cmd.Parameters.AddWithValue("@id", 2);
+            c.Open();
+            cmd.ExecuteNonQuery();
+            c.Close();
+        }
     }
 }

@@ -106,6 +106,9 @@ Version 5.0.9
     that appears hung (bug #31930)
   - fixed the MySqlException class to set the server error code in the Data[] hash so that 
     DbProviderFactory users can access the server error code (Bug #27436) 
+  - fixed problem where changing the connection string of a connection to one that changes
+    the parameter marker after the connection had been assigned to a command but before
+    the connection is opened can cause parameters to not be found (bug #13991) 
                             
 Version 5.0.8  8/16/2007
   Bug #28706 Log messages are truncated  

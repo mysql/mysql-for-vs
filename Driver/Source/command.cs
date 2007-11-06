@@ -63,7 +63,7 @@ namespace MySql.Data.MySqlClient
 			designTimeVisible = true;
 			cmdType = CommandType.Text;
 			parameterMap = new ArrayList();
-			parameters = new MySqlParameterCollection();
+			parameters = new MySqlParameterCollection(this);
 			updatedRowSource = UpdateRowSource.Both;
 			cursorPageSize = 0;
 			cmdText = String.Empty;
@@ -84,8 +84,6 @@ namespace MySql.Data.MySqlClient
 			: this(cmdText)
 		{
 			Connection = connection;
-			if (connection != null)
-				parameters.ParameterMarker = connection.ParameterMarker;
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ctor4/*'/>
@@ -186,8 +184,6 @@ namespace MySql.Data.MySqlClient
 					this.Transaction = null;
 
 				connection = (MySqlConnection)value;
-				if (connection != null)
-					parameters.ParameterMarker = connection.ParameterMarker;
 			}
 		}
 
