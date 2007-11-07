@@ -68,7 +68,7 @@ namespace MySql.Data.MySqlClient.Tests
 				c2.Close();
 			}
 		}
-
+#if !CF
         /// <summary>
         /// Bug #27436 Add the MySqlException.Number property value to the Exception.Data Dictionary  
         /// </summary>
@@ -85,5 +85,6 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.AreEqual(1064, ex.Data["Server Error Code"]);
             }
         }
+#endif
     }
 }
