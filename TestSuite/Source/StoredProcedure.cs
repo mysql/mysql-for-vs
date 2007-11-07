@@ -1346,7 +1346,9 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void ComplexDefinition()
 		{
-			execSQL(@"CREATE PROCEDURE `spTest`() NOT DETERMINISTIC
+            if (version < new Version(5, 0)) return;
+
+            execSQL(@"CREATE PROCEDURE `spTest`() NOT DETERMINISTIC
 					CONTAINS SQL SQL SECURITY DEFINER COMMENT '' 
 					BEGIN
 						SELECT 1,2,3;
@@ -1364,6 +1366,8 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void AmbiguousColumns()
         {
+            if (version < new Version(5, 0)) return;
+
             execSQL("CREATE TABLE t1 (id INT)");
             execSQL("CREATE TABLE t2 (id1 INT, id INT)");
             execSQL(@"CREATE PROCEDURE spTest() BEGIN SELECT * FROM t1; 
