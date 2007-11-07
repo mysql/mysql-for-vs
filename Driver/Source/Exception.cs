@@ -59,7 +59,9 @@ namespace MySql.Data.MySqlClient
             : this(msg, inner)
         {
             errorCode = errno;
+#if !CF
             Data.Add("Server Error Code", errno);
+#endif
         }
 
         internal MySqlException(string msg, int errno)
