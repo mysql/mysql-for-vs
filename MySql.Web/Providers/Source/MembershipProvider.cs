@@ -34,6 +34,7 @@ using System.Web.Configuration;
 using System.Web.Hosting;
 using System.Web.Security;
 using MySql.Data.MySqlClient;
+using MySql.Web.Properties;
 
 namespace MySql.Web.Security
 {
