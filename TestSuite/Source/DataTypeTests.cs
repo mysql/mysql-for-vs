@@ -639,7 +639,7 @@ namespace MySql.Data.MySqlClient.Tests
 				cmd.Prepare();
 				reader = cmd.ExecuteReader();
 				Assert.IsTrue(reader.Read());
-				Assert.AreEqual(true, reader[0]);
+				Assert.AreEqual(1, reader[0]);
 				Assert.AreEqual(2, reader[1]);
 				Assert.AreEqual(3, reader[2]);
 			}

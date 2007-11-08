@@ -397,14 +397,14 @@ namespace MySql.Data.MySqlClient
         /// <include file='docs/MySqlConnection.xml' path='docs/ChangeDatabase/*'/>
         public override void ChangeDatabase(string databaseName)
         {
-            if (database == null || database.Trim().Length == 0)
-                throw new ArgumentException(Resources.ParameterIsInvalid, "database");
+            if (databaseName == null || databaseName.Trim().Length == 0)
+                throw new ArgumentException(Resources.ParameterIsInvalid, "databaseName");
 
             if (State != ConnectionState.Open)
                 throw new InvalidOperationException(Resources.ConnectionNotOpen);
 
-            driver.SetDatabase(database);
-            this.database = database;
+            driver.SetDatabase(databaseName);
+            this.database = databaseName;
         }
 
         internal void SetState(ConnectionState newConnectionState, bool broadcast)
@@ -657,13 +657,14 @@ namespace MySql.Data.MySqlClient
         /// <returns>A <see cref="DataTable"/> that contains schema information.</returns>
         public override DataTable GetSchema(string collectionName, string[] restrictionValues)
         {
-/*            string msg = String.Format("collection = {0}", collectionName);
-            foreach (string s in restrictionValues)
-            {
-                msg += String.Format(" res={0}", s);
-            }
-            MessageBox.Show(msg);
-  */
+/*            string msg = String.Format("collection name2 = {0}", collectionName);
+            if (restrictionValues != null)
+                foreach (string s in restrictionValues)
+                {
+                    msg += String.Format(" res={0}", s);
+                }
+            System.Windows.Forms.MessageBox.Show(msg);
+            */
             if (collectionName == null)
                 collectionName = SchemaProvider.MetaCollection;
 

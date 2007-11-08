@@ -582,19 +582,19 @@ namespace MySql.Data.MySqlClient
             row["DataSourceProductName"] = "MySQL";
 			row["DataSourceProductVersion"] = connection.ServerVersion;
             row["DataSourceProductVersionNormalized"] = ver;
-            row["GroupByBehavior"] = GroupByBehavior.Unknown;
+            row["GroupByBehavior"] = GroupByBehavior.Unrelated;
             row["IdentifierPattern"] =
-                @"(^\[\p{Lo}\p{Lu}\p{Ll}_@#][\p{Lo}\p{Lu}\p{Ll}\p{Nd}@$#_]*$)|(^\[[^\]\0]|\]\]+\]$)|(^\""[^\""\0]|\""\""+\""$)";
+                @"(^\`\p{Lo}\p{Lu}\p{Ll}_@#][\p{Lo}\p{Lu}\p{Ll}\p{Nd}@$#_]*$)|(^\`[^\`\0]|\`\`+\`$)|(^\"" + [^\""\0]|\""\""+\""$)";
             row["IdentifierCase"] = IdentifierCase.Insensitive;
             row["OrderByColumnsInSelect"] = false;
             row["ParameterMarkerFormat"] = "{0}";
-            row["ParameterMarkerPattern"] = String.Format("{0}([A-Za-z0-9_$#]*)",
+            row["ParameterMarkerPattern"] = String.Format("({0}[A-Za-z0-9_$#]*)",
                                                           connection.Settings.UseOldSyntax ? "@" : "?");
             row["ParameterNameMaxLength"] = 128;
             row["ParameterNamePattern"] =
                 @"^[\p{Lo}\p{Lu}\p{Ll}\p{Lm}_@#][\p{Lo}\p{Lu}\p{Ll}\p{Lm}\p{Nd}\uff3f_@#\$]*(?=\s+|$)";
             row["QuotedIdentifierPattern"] = @"(([^\`]|\`\`)*)";
-            row["QuotedIdentifierCase"] = IdentifierCase.Insensitive;
+            row["QuotedIdentifierCase"] = IdentifierCase.Sensitive;
             row["StatementSeparatorPattern"] = ";";
             row["StringLiteralPattern"] = "'(([^']|'')*)'";
             row["SupportedJoinOperators"] = 15;
