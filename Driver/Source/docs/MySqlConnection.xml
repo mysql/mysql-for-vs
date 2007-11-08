@@ -1072,6 +1072,13 @@
               Pattern that should be used to indicate which blob columns should not be treated as UTF-8.
             </td>
           </tr>
+          <tr>
+            <td>Default Command Timeout</td>
+            <td>30</td>
+            <td>
+              The default timeout that new MySqlCommand objects will use unless changed.
+            </td>
+          </tr>
         </table>
       </div>
       <para>

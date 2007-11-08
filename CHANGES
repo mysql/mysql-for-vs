@@ -16,6 +16,8 @@ Version 5.1.4
   - Marked MySqlDbType.Datetime obsolete; replaced with DateTime (just corrected capitalization) (Bug #26344)
   - fixed code where we were returning bit(1) as boolean but mysql treats tinyint(1) as boolean
     (bug #27959)
+  - Added the Default Command Timeout connection string option to allow DDEX users to set
+    an initial command timeout for very large databases (bug #27958)      
       
 Version 5.1.3 - 9/19/2007
   - Fixed problem with using a stored procedure that takes a parameter as a select routine

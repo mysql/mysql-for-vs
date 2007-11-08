@@ -67,7 +67,6 @@ namespace MySql.Data.MySqlClient
 			updatedRowSource = UpdateRowSource.Both;
 			cursorPageSize = 0;
 			cmdText = String.Empty;
-			commandTimeout = 30;
 			canCancel = false;
 			timedOut = false;
 		}
@@ -142,7 +141,7 @@ namespace MySql.Data.MySqlClient
 #endif
 		public override int CommandTimeout
 		{
-			get { return commandTimeout; }
+			get { return commandTimeout == 0 ? 30 : commandTimeout; }
 			set { commandTimeout = value; }
 		}
 
@@ -184,6 +183,11 @@ namespace MySql.Data.MySqlClient
 					this.Transaction = null;
 
 				connection = (MySqlConnection)value;
+
+                // if the user has not already set the command timeout, then
+                // take the default from the connection
+                if (connection != null && commandTimeout == 0)
+                    commandTimeout = (int)connection.Settings.DefaultCommandTimeout;
 			}
 		}
 
