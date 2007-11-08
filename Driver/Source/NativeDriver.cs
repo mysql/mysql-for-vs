@@ -332,7 +332,7 @@ namespace MySql.Data.MySqlClient
         /// </summary>
         private void SetConnectionFlags()
         {
-            ClientFlags flags = ClientFlags.FOUND_ROWS;
+            ClientFlags flags = 0;
 
             if (version.isAtLeast(4, 1, 1))
             {
