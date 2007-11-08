@@ -527,22 +527,5 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.IsTrue(row["Command"].GetType().Name == "String");
             }
 		}
-
-        /// <summary>
-        /// Bug #32135 row_count() function returns difference value using console and .net 
-        /// </summary>
-        [Test]
-        public void RowCount()
-        {
-            execSQL("INSERT INTO Test VALUES (1, 'Test')");
-            MySqlCommand cmd = new MySqlCommand("UPDATE Test SET name='Test' WHERE name='Test'", conn);
-            int affected = cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "SELECT row_count()";
-            object count = cmd.ExecuteScalar();
-
-            Assert.AreEqual(affected, count);
-            Assert.AreEqual(0, affected);
-        }
 	}
 }
