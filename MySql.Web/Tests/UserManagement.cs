@@ -103,8 +103,18 @@ namespace MySql.Web.Security.Tests
         public void DeleteUser()
         {
             CreateUserWithHashedPassword();
-            provider.DeleteUser("foo", true);
+            Assert.IsTrue(provider.DeleteUser("foo", true));
             DataTable table = GetMembers();
+            Assert.AreEqual(0, table.Rows.Count);
+
+            CreateUserWithHashedPassword();
+            provider = new MySQLMembershipProvider();
+            NameValueCollection config = new NameValueCollection();
+            config.Add("connectionStringName", "LocalMySqlServer");
+            config.Add("applicationName", "/");
+            provider.Initialize(null, config);
+            Assert.IsTrue(Membership.DeleteUser("foo", true));
+            table = GetMembers();
             Assert.AreEqual(0, table.Rows.Count);
         }
 
