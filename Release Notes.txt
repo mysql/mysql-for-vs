@@ -3,6 +3,36 @@ Connector/Net 5.1  Release Notes
 
 Welcome to the release notes for Connector/Net 5.1
 
+Please review the changelog for a detailed list of changes from revision to revision.
+
+Major changes since 5.0?
+======================================
+. Support for compact framework 2.0
+. Membership and Role providers compatible with ASP.NET
+. Dramatically improved DDEX provider that integrates directly into VS 2005
+. Help is now integrated directly into Visual Studio 2005
+. MySQL boolean columns (tinyint(1)) are now returned as System.Boolean
+. Added foreign key columns GetSchema collection
+. Stored procedure parsing code is more robust handling comments and very 
+  complicated definitions.
+. GetSchema has now been made database focused.  This means that passing in 
+  null for collections will return data related to the currently selected
+  database only.
+
+Minor changes since 5.0
+=======================
+. The binary flag given from MySQL is now respected properly (see notes below)
+. A connection string option named 'respect binary flags' is available to revert back
+  to 5.0 behavior.
+. MySqlDbType.Datetime has been marked as obsolete.  We just changed the case to DateTime.
+. Added a Default Command Timeout connection string option.  This sets the default timeout
+  for all command objects unless it is overridden.  This is really only useful with the
+  DDEX provider and large databases.
+. Added the ability to use blobs to stored true UTF-8 data.  (see help)
+. Improved the speed of load data local file significantly.
+. Many others (see changelog)
+
+
 Binary and VarBinary issues
 ---------------------------
 With 5.1, we have reintroduced code to properly return field values as byte[] when 
@@ -14,6 +44,4 @@ these fields will be returned as byte[].  They can stil be retrieved as strings 
 MySqlDataReader.GetString().  Please let us know how this issue affects you.  We
 are evaluating adding a connection option to make the past behavior available.
 
-Known Issues
-------------
 
