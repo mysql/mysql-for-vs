@@ -162,7 +162,9 @@ namespace MySql.Data.MySqlClient
         ///DateTime The supported range is '1000-01-01 00:00:00' to 
         ///'9999-12-31 23:59:59'.
         ///</summary>
+        [Obsolete("The Datetime enum value is obsolete.  Please use DateTime.")]
         Datetime = 12,
+        DateTime = 12,
         /// <summary>
         /// A year in 2- or 4-digit format (default is 4-digit). The 
         /// allowable values are 1901 to 2155, 0000 in the 4-digit year 

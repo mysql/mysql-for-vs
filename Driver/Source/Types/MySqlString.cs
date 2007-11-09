@@ -97,8 +97,11 @@ namespace MySql.Data.Types
 		void IMySqlValue.WriteValue(MySqlStream stream, bool binary, object val, int length)
 		{
 			string v = val.ToString();
-			if (length > 0)
-				v = v.Substring(0, length);
+            if (length > 0)
+            {
+                length = Math.Min(length, v.Length);
+                v = v.Substring(0, length);
+            }
 
 			if (binary)
 				stream.WriteLenString(v);

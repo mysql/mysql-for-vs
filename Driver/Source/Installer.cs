@@ -38,6 +38,8 @@ namespace MySql.Data.MySqlClient
     [RunInstaller(true)]
 	public class CustomInstaller : Installer
 	{
+		int perfMonIndex;
+
         public CustomInstaller()
         {
             // add in a perf mon installer
@@ -58,7 +60,7 @@ namespace MySql.Data.MySqlClient
 
             p.Counters.Add(ccd1);
             p.Counters.Add(ccd2);
-            Installers.Add(p);
+            perfMonIndex = Installers.Add(p);
         }
 
 		/// <summary>
@@ -126,16 +128,15 @@ namespace MySql.Data.MySqlClient
                 if (node.Attributes == null) continue;
                 foreach (XmlAttribute attr in node.Attributes)
                 {
-                    if (attr.Name == "type" && attr.Value == type)
+                    if (attr.Name == "invariant" && attr.Value == "MySql.Data.MySqlClient")
                     {
-                        alreadyThere = true;
+                        nodes[0].RemoveChild(node);
                         break;
                     }
                 }
             }
 
-			if (! alreadyThere)
-				nodes[0].AppendChild(newNode);
+    		nodes[0].AppendChild(newNode);
 
 			// Save the document to a file and auto-indent the output.
 			XmlTextWriter writer = new XmlTextWriter(configPath, null);
@@ -152,6 +153,11 @@ namespace MySql.Data.MySqlClient
 		/// <param name="savedState"></param>
 		public override void Uninstall(System.Collections.IDictionary savedState)
 		{
+			// if our category doesn't exist, then we don't want to run the perf mon
+			// installer
+			if (!PerformanceCounterCategory.Exists(Resources.PerfMonCategoryName))
+				base.Installers.RemoveAt(perfMonIndex);
+
 			base.Uninstall(savedState);
 
 			RemoveProviderFromMachineConfig();

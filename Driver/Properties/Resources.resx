@@ -327,4 +327,7 @@
   <data name="MultipleConnectionsInTransactionNotSupported" xml:space="preserve">
     <value>Multiple simultaneous connections or connections with different connection strings inside the same transaction are not currently supported.</value>
   </data>
+  <data name="DistributedTxnNotSupported" xml:space="preserve">
+    <value>MySQL Connector/Net does not currently support distributed transactions.</value>
+  </data>
 </root>

@@ -130,12 +130,15 @@ namespace MySql.Data.MySqlClient
             get { return isExecutingBuggyQuery; }
             set { isExecutingBuggyQuery = value; }
         }
+
         internal bool SoftClosed
         {
             get 
             {
 #if !CF
-                return (State == ConnectionState.Closed) && driver.CurrentTransaction != null;
+                return (State == ConnectionState.Closed) && 
+                    driver != null && 
+                    driver.CurrentTransaction != null;
 #else
                 return false;            
 #endif
@@ -331,7 +334,9 @@ namespace MySql.Data.MySqlClient
             if (driver.CurrentTransaction == null)
             {
                 MySqlPromotableTransaction t = new MySqlPromotableTransaction(this, transaction);
-                transaction.EnlistPromotableSinglePhase(t);
+                if (!transaction.EnlistPromotableSinglePhase(t))
+                    throw new NotSupportedException(Resources.DistributedTxnNotSupported);
+
                 driver.CurrentTransaction = t;
                 DriverTransactionManager.SetDriverInTransaction(driver);
                 driver.IsInActiveUse = true;
@@ -390,25 +395,26 @@ namespace MySql.Data.MySqlClient
         #endregion
 
         /// <include file='docs/MySqlConnection.xml' path='docs/ChangeDatabase/*'/>
-        public override void ChangeDatabase(string database)
+        public override void ChangeDatabase(string databaseName)
         {
-            if (database == null || database.Trim().Length == 0)
-                throw new ArgumentException(Resources.ParameterIsInvalid, "database");
+            if (databaseName == null || databaseName.Trim().Length == 0)
+                throw new ArgumentException(Resources.ParameterIsInvalid, "databaseName");
 
             if (State != ConnectionState.Open)
                 throw new InvalidOperationException(Resources.ConnectionNotOpen);
 
-            driver.SetDatabase(database);
-            this.database = database;
+            driver.SetDatabase(databaseName);
+            this.database = databaseName;
         }
 
-        internal void SetState(ConnectionState newConnectionState)
+        internal void SetState(ConnectionState newConnectionState, bool broadcast)
         {
             if (newConnectionState == connectionState)
                 return;
             ConnectionState oldConnectionState = connectionState;
             connectionState = newConnectionState;
-            OnStateChange(new StateChangeEventArgs(oldConnectionState, connectionState));
+			if (broadcast)
+				OnStateChange(new StateChangeEventArgs(oldConnectionState, connectionState));
         }
 
         /// <summary>
@@ -419,7 +425,7 @@ namespace MySql.Data.MySqlClient
         {
             bool result = driver.Ping();
             if (!result)
-                SetState(ConnectionState.Closed);
+                SetState(ConnectionState.Closed, true);
             return result;
         }
 
@@ -429,7 +435,7 @@ namespace MySql.Data.MySqlClient
             if (State == ConnectionState.Open)
                 throw new InvalidOperationException(Resources.ConnectionAlreadyOpen);
 
-            SetState(ConnectionState.Connecting);
+            SetState(ConnectionState.Connecting, true);
 
 #if !CF
                 // if we are auto enlisting in a current transaction, then we will be
@@ -460,7 +466,7 @@ namespace MySql.Data.MySqlClient
             }
             catch (Exception)
             {
-                SetState(ConnectionState.Closed);
+                SetState(ConnectionState.Closed, true);
                 throw;
             }
 
@@ -468,7 +474,7 @@ namespace MySql.Data.MySqlClient
             if (driver.Settings.UseOldSyntax)
                 Logger.LogWarning("You are using old syntax that will be removed in future versions");
 
-            SetState(ConnectionState.Open);
+            SetState(ConnectionState.Open, false);
             driver.Configure(this);
             if (settings.Database != null && settings.Database != String.Empty)
                 ChangeDatabase(settings.Database);
@@ -490,7 +496,8 @@ namespace MySql.Data.MySqlClient
 #endif
 
             hasBeenOpen = true;
-        }
+			SetState(ConnectionState.Open, true);
+		}
 
         /// <include file='docs/MySqlConnection.xml' path='docs/CreateCommand/*'/>
         public new MySqlCommand CreateCommand()
@@ -551,7 +558,7 @@ namespace MySql.Data.MySqlClient
             catch (Exception)
             {
             }
-            SetState(ConnectionState.Closed);
+            SetState(ConnectionState.Closed, true);
         }
 
         internal void CloseFully()
@@ -579,16 +586,22 @@ namespace MySql.Data.MySqlClient
 
             if (dataReader != null)
                 dataReader.Close();
-#if !CF
-            if (driver.CurrentTransaction == null)
-#endif
-                CloseFully();
-#if !CF
-            else
-                driver.IsInActiveUse = false;
-#endif
 
-            SetState(ConnectionState.Closed);
+			// if the reader was opened with CloseConnection then driver
+			// will be null on the second time through
+			if (driver != null)
+			{
+#if !CF
+				if (driver.CurrentTransaction == null)
+#endif	
+			        CloseFully();
+#if !CF
+				else
+					driver.IsInActiveUse = false;
+#endif
+			}
+
+            SetState(ConnectionState.Closed, true);
         }
 
 		internal string CurrentDatabase()
@@ -644,13 +657,14 @@ namespace MySql.Data.MySqlClient
         /// <returns>A <see cref="DataTable"/> that contains schema information.</returns>
         public override DataTable GetSchema(string collectionName, string[] restrictionValues)
         {
-/*            string msg = String.Format("collection = {0}", collectionName);
-            foreach (string s in restrictionValues)
-            {
-                msg += String.Format(" res={0}", s);
-            }
-            MessageBox.Show(msg);
-  */
+/*            string msg = String.Format("collection name2 = {0}", collectionName);
+            if (restrictionValues != null)
+                foreach (string s in restrictionValues)
+                {
+                    msg += String.Format(" res={0}", s);
+                }
+            System.Windows.Forms.MessageBox.Show(msg);
+            */
             if (collectionName == null)
                 collectionName = SchemaProvider.MetaCollection;
 

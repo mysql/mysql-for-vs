@@ -277,7 +277,14 @@ namespace MySql.Data.MySqlClient
 
         public IMySqlValue GetValueObject()
         {
-            return GetIMySqlValue(Type);
+            IMySqlValue v = GetIMySqlValue(Type);
+            if (v is MySqlByte && ColumnLength == 1 && MaxLength == 0)
+            {
+                MySqlByte b = (MySqlByte)v;
+                b.TreatAsBoolean = true;
+                v = b;
+            }
+            return v;
         }
 
         public static IMySqlValue GetIMySqlValue(MySqlDbType type)
@@ -308,7 +315,7 @@ namespace MySql.Data.MySqlClient
                 case MySqlDbType.Time:
                     return new MySqlTimeSpan();
                 case MySqlDbType.Date:
-                case MySqlDbType.Datetime:
+                case MySqlDbType.DateTime:
                 case MySqlDbType.Newdate:
                 case MySqlDbType.Timestamp:
                     return new MySqlDateTime(type, true);

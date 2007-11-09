@@ -35,11 +35,12 @@ namespace MySql.Data.MySqlClient
 #endif
 	public sealed class MySqlParameterCollection : DbParameterCollection
 	{
+        private const char DefaultParameterMarker = '?'; 
         private ArrayList items = new ArrayList();
         private Hashtable indexHash;
-		private char paramMarker = '?';
+        private MySqlCommand owningCommand;
 
-		internal MySqlParameterCollection()
+		internal MySqlParameterCollection(MySqlCommand cmd)
 		{
 #if NET20
 			indexHash = new Hashtable(StringComparer.CurrentCultureIgnoreCase);
@@ -48,13 +49,18 @@ namespace MySql.Data.MySqlClient
 			    new CaseInsensitiveComparer());
 #endif
             Clear();
+            owningCommand = cmd;
 		}
 
-		internal char ParameterMarker
-		{
-			get { return paramMarker; }
-			set { paramMarker = value; }
-		}
+        internal char ParameterMarker
+        {
+            get
+            {
+                return owningCommand.Connection != null ?
+                owningCommand.Connection.ParameterMarker :
+                DefaultParameterMarker;
+            }
+        }
 
 		#region Public Methods
 
@@ -243,11 +249,11 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// Gets a value indicating whether a <see cref="MySqlParameter"/> with the specified parameter name exists in the collection.
 		/// </summary>
-		/// <param name="value">The name of the <see cref="MySqlParameter"/> object to find.</param>
+		/// <param name="parameterName">The name of the <see cref="MySqlParameter"/> object to find.</param>
 		/// <returns>true if the collection contains the parameter; otherwise, false.</returns>
-		public override bool Contains(string value)
+		public override bool Contains(string parameterName)
 		{
-			return IndexOf(value) != -1;
+			return IndexOf(parameterName) != -1;
 		}
 
 		/// <summary>
@@ -368,10 +374,10 @@ namespace MySql.Data.MySqlClient
 		/// <summary>
 		/// Removes the specified <see cref="MySqlParameter"/> from the collection using the parameter name.
 		/// </summary>
-		/// <param name="name">The name of the <see cref="MySqlParameter"/> object to retrieve. </param>
-		public override void RemoveAt(string name)
+		/// <param name="parameterName">The name of the <see cref="MySqlParameter"/> object to retrieve. </param>
+		public override void RemoveAt(string parameterName)
 		{
-			DbParameter p = GetParameter(name);
+			DbParameter p = GetParameter(parameterName);
 			Remove(p);
 		}
 
@@ -414,7 +420,7 @@ namespace MySql.Data.MySqlClient
             if (indexHash.ContainsKey(inComingName))
                 throw new MySqlException(
                     String.Format(Resources.ParameterAlreadyDefined, value.ParameterName));
-            if (inComingName[0] == paramMarker)
+            if (inComingName[0] == ParameterMarker)
                 inComingName = inComingName.Substring(1, inComingName.Length - 1);
             if (indexHash.ContainsKey(inComingName))
                 throw new MySqlException(

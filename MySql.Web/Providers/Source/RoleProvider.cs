@@ -33,6 +33,9 @@ using MySql.Data.MySqlClient;
 
 namespace MySql.Web.Security
 {
+    /// <summary>
+    /// Manages storage of role membership information for an ASP.NET application in a MySQL database. 
+    /// </summary>
     public sealed class MySQLRoleProvider : RoleProvider
     {
         private string eventSource = "MySQLRoleProvider";
@@ -43,12 +46,14 @@ namespace MySql.Web.Security
         private bool pWriteExceptionsToEventLog = false;
         private string pApplicationName;
 
-        public bool WriteExceptionsToEventLog
-        {
-            get { return pWriteExceptionsToEventLog; }
-            set { pWriteExceptionsToEventLog = value; }
-        }
-
+        /// <summary>
+        /// Initializes the provider.
+        /// </summary>
+        /// <param name="name">The friendly name of the provider.</param>
+        /// <param name="config">A collection of the name/value pairs representing the provider-specific attributes specified in the configuration for this provider.</param>
+        /// <exception cref="T:System.ArgumentNullException">The name of the provider is null.</exception>
+        /// <exception cref="T:System.ArgumentException">The name of the provider has a length of zero.</exception>
+        /// <exception cref="T:System.InvalidOperationException">An attempt is made to call <see cref="M:System.Configuration.Provider.ProviderBase.Initialize(System.String,System.Collections.Specialized.NameValueCollection)"/> on a provider after the provider has already been initialized.</exception>
         public override void Initialize(string name, NameValueCollection config)
         {
             if (config == null)
@@ -95,14 +100,43 @@ namespace MySql.Web.Security
 
         #region Properties
 
+        /// <summary>
+        /// Gets or sets the name of the application to store and retrieve role information for.
+        /// </summary>
+        /// <value>The name of the application to store and retrieve role information for.</value>
+        /// <example>
+        /// <code lang="" source="CodeExamples\RoleCodeExample1.xml"/>
+        /// </example>
         public override string ApplicationName
         {
             get { return pApplicationName; }
             set { pApplicationName = value; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [write exceptions to event log].
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if exceptions should be written to the event log; otherwise, <c>false</c>.
+        /// </value>
+        /// <example>
+        /// <code lang="" source="CodeExamples\RoleCodeExample1.xml"/>
+        /// </example>
+        public bool WriteExceptionsToEventLog
+        {
+            get { return pWriteExceptionsToEventLog; }
+            set { pWriteExceptionsToEventLog = value; }
+        }
+
         #endregion
 
+        #region Public Methods
+
+        /// <summary>
+        /// Adds the users to roles.
+        /// </summary>
+        /// <param name="usernames">The usernames.</param>
+        /// <param name="rolenames">The rolenames.</param>
         public override void AddUsersToRoles(string[] usernames, string[] rolenames)
         {
             foreach (string rolename in rolenames)
@@ -164,6 +198,10 @@ namespace MySql.Web.Security
             }
         }
 
+        /// <summary>
+        /// Creates the role.
+        /// </summary>
+        /// <param name="rolename">The rolename.</param>
         public override void CreateRole(string rolename)
         {
             if (rolename.IndexOf(',') != -1)
@@ -195,6 +233,12 @@ namespace MySql.Web.Security
             }
         }
 
+        /// <summary>
+        /// Deletes the role.
+        /// </summary>
+        /// <param name="rolename">The rolename.</param>
+        /// <param name="throwOnPopulatedRole">if set to <c>true</c> [throw on populated role].</param>
+        /// <returns>true if the role was successfully deleted; otherwise, false. </returns>
         public override bool DeleteRole(string rolename, bool throwOnPopulatedRole)
         {
             if (!(RoleExists(rolename)))
@@ -244,6 +288,12 @@ namespace MySql.Web.Security
             }
         }
 
+        /// <summary>
+        /// Gets a list of all the roles for the configured applicationName.
+        /// </summary>
+        /// <returns>
+        /// A string array containing the names of all the roles stored in the data source for the configured applicationName.
+        /// </returns>
         public override string[] GetAllRoles()
         {
             string tmpRoleNames = "";
@@ -287,6 +337,13 @@ namespace MySql.Web.Security
             return new string[0];
         }
 
+        /// <summary>
+        /// Gets a list of the roles that a specified user is in for the configured applicationName.
+        /// </summary>
+        /// <param name="username">The user to return a list of roles for.</param>
+        /// <returns>
+        /// A string array containing the names of all the roles that the specified user is in for the configured applicationName.
+        /// </returns>
         public override string[] GetRolesForUser(string username)
         {
             string tmpRoleNames = "";
@@ -331,6 +388,12 @@ namespace MySql.Web.Security
             return new string[0];
         }
 
+        /// <summary>
+        /// Gets the users in role.
+        /// </summary>
+        /// <param name="rolename">The rolename.</param>
+        /// <returns>A string array containing the names of all the users 
+        /// who are members of the specified role. </returns>
         public override string[] GetUsersInRole(string rolename)
         {
             string tmpUserNames = "";
@@ -373,6 +436,14 @@ namespace MySql.Web.Security
             return new string[0];
         }
 
+        /// <summary>
+        /// Determines whether [is user in role] [the specified username].
+        /// </summary>
+        /// <param name="username">The username.</param>
+        /// <param name="rolename">The rolename.</param>
+        /// <returns>
+        /// 	<c>true</c> if [is user in role] [the specified username]; otherwise, <c>false</c>.
+        /// </returns>
         public override bool IsUserInRole(string username, string rolename)
         {
             bool userIsInRole = false;
@@ -413,6 +484,11 @@ namespace MySql.Web.Security
             return userIsInRole;
         }
 
+        /// <summary>
+        /// Removes the users from roles.
+        /// </summary>
+        /// <param name="usernames">The usernames.</param>
+        /// <param name="rolenames">The rolenames.</param>
         public override void RemoveUsersFromRoles(string[] usernames, string[] rolenames)
         {
             foreach (string rolename in rolenames)
@@ -473,6 +549,11 @@ namespace MySql.Web.Security
             }
         }
 
+        /// <summary>
+        /// Roles the exists.
+        /// </summary>
+        /// <param name="rolename">The rolename.</param>
+        /// <returns>true if the role name already exists in the database; otherwise, false. </returns>
         public override bool RoleExists(string rolename)
         {
             bool exists = false;
@@ -511,6 +592,13 @@ namespace MySql.Web.Security
             return exists;
         }
 
+        /// <summary>
+        /// Finds the users in role.
+        /// </summary>
+        /// <param name="rolename">The rolename.</param>
+        /// <param name="usernameToMatch">The username to match.</param>
+        /// <returns>A string array containing the names of all the users where the 
+        /// user name matches usernameToMatch and the user is a member of the specified role. </returns>
         public override string[] FindUsersInRole(string rolename, string usernameToMatch)
         {
             MySqlConnection conn = new MySqlConnection(connectionString);
@@ -561,6 +649,10 @@ namespace MySql.Web.Security
             return new string[0];
         }
 
+        #endregion
+
+        #region Private Methods
+
         private void WriteToEventLog(MySqlException e, string action)
         {
             EventLog log = new EventLog();
@@ -571,5 +663,7 @@ namespace MySql.Web.Security
             message += "Exception: " + e;
             log.WriteEntry(message);
         }
+        #endregion
+
     }
 }

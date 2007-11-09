@@ -522,5 +522,67 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.Fail(ex.Message);
             }
         }
+
+        /// <summary>
+        /// Bug #32094 Size property on string parameter throws an exception 
+        /// </summary>
+        [Test]
+        public void StringParameterSizeSetAfterValue()
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (v VARCHAR(10))");
+
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (?p1)", conn);
+            cmd.Parameters.Add("?p1", MySqlDbType.VarChar);
+            cmd.Parameters[0].Value = "123";
+            cmd.Parameters[0].Size = 10;
+            cmd.ExecuteNonQuery();
+
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            Assert.AreEqual("123", dt.Rows[0][0]);
+
+            cmd.Parameters.Clear();
+            cmd.Parameters.Add("?p1", MySqlDbType.VarChar);
+            cmd.Parameters[0].Value = "123456789012345";
+            cmd.Parameters[0].Size = 10;
+            cmd.ExecuteNonQuery();
+
+            dt.Clear();
+            da.Fill(dt);
+            Assert.AreEqual("1234567890", dt.Rows[1][0]);
+        }
+
+        /// <summary>
+        /// Bug #32093 MySqlParameter Constructor does not allow Direction of anything other than Input 
+        /// </summary>
+        [Test]
+        public void NonInputParametersToCtor()
+        {
+            MySqlParameter p = new MySqlParameter("?p1", MySqlDbType.VarChar, 20,
+                ParameterDirection.InputOutput, true, 0, 0, "id", DataRowVersion.Current, 0);
+            Assert.AreEqual(ParameterDirection.InputOutput, p.Direction);
+
+            MySqlParameter p1 = new MySqlParameter("?p1", MySqlDbType.VarChar, 20,
+                ParameterDirection.Output, true, 0, 0, "id", DataRowVersion.Current, 0);
+            Assert.AreEqual(ParameterDirection.Output, p1.Direction);
+        }
+
+        /// <summary>
+        /// Bug #13991 oldsyntax configuration and ParameterMarker value bug 
+        /// </summary>
+        [Test]
+        public void SetOldSyntaxAfterCommandCreation()
+        {
+            string connStr = this.GetConnectionString(true);
+            MySqlConnection c = new MySqlConnection(connStr);
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id) VALUES (@id)", c);
+            c.ConnectionString = connStr += ";old syntax=yes";
+            cmd.Parameters.AddWithValue("@id", 2);
+            c.Open();
+            cmd.ExecuteNonQuery();
+            c.Close();
+        }
     }
 }

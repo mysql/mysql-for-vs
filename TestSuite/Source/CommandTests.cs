@@ -404,7 +404,29 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.Fail(ex.Message);
             }
         }
-	}
+
+        /// <summary>
+        /// Bug #27958 Cannot use Data Source Configuration Wizard on large databases 
+        /// </summary>
+        [Test]
+        public void DefaultCommandTimeout()
+        {
+            MySqlConnection c = new MySqlConnection("server=localhost");
+            MySqlCommand cmd = new MySqlCommand("", c);
+            Assert.AreEqual(30, cmd.CommandTimeout);
+
+            c = new MySqlConnection("server=localhost;default command timeout=47");
+            cmd = new MySqlCommand("", c);
+            Assert.AreEqual(47, cmd.CommandTimeout);
+
+            cmd = new MySqlCommand("");
+            Assert.AreEqual(30, cmd.CommandTimeout);
+
+            cmd.CommandTimeout = 66;
+            cmd.Connection = c;
+            Assert.AreEqual(66, cmd.CommandTimeout);
+        }
+    }
 
 
     #region Configs

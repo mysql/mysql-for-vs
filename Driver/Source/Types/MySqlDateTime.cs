@@ -48,7 +48,7 @@ namespace MySql.Data.Types
 		/// <param name="minute">The minute to use.</param>
 		/// <param name="second">The second to use.</param>
 		public MySqlDateTime(int year, int month, int day, int hour, int minute, int second)
-			: this(MySqlDbType.Datetime, year, month, day, hour, minute, second)
+			: this(MySqlDbType.DateTime, year, month, day, hour, minute, second)
 		{
 		}
 
@@ -57,7 +57,7 @@ namespace MySql.Data.Types
 		/// </summary>
 		/// <param name="dt">The <see cref="DateTime"/> object to copy.</param>
 		public MySqlDateTime(DateTime dt)
-			: this(MySqlDbType.Datetime, dt)
+			: this(MySqlDbType.DateTime, dt)
 		{
 		}
 
@@ -74,7 +74,7 @@ namespace MySql.Data.Types
 			minute = mdt.Minute;
 			second = mdt.Second;
 			millisecond = 0;
-			type = MySqlDbType.Datetime;
+			type = MySqlDbType.DateTime;
 			isNull = false;
 		}
 
@@ -436,21 +436,40 @@ namespace MySql.Data.Types
 			return new DateTime(year, month, day, hour, minute, second);
 		}
 
-		/// <summary>Returns a MySQL specific string representation of this value</summary>
-		public override string ToString()
-		{
-			if (this.IsValidDateTime)
-			{
-				DateTime d = new DateTime(year, month, day, hour, minute, second);
-				return (type == MySqlDbType.Date) ? d.ToString("d") : d.ToString();
-			}
+        private string FormatDateCustom(string format, int monthVal, int dayVal, int yearVal)
+        {
+            format = format.Replace("MM", "{0:00}");
+            format = format.Replace("M", "{0}");
+            format = format.Replace("dd", "{1:00}");
+            format = format.Replace("d", "{1}");
+            format = format.Replace("yyyy", "{2:0000}");
+            format = format.Replace("yy", "{3:00}");
+            format = format.Replace("y", "{4:0}");
 
+            int year2digit = yearVal - ((yearVal / 1000) * 1000);
+            year2digit -= ((year2digit / 100) * 100);
+            int year1digit = year2digit - ((year2digit / 10) * 10);
+
+            return String.Format(format, monthVal, dayVal, yearVal, year2digit, year1digit);
+        }
+
+        /// <summary>Returns a MySQL specific string representation of this value</summary>
+        public override string ToString()
+        {
+            if (this.IsValidDateTime)
+            {
+                DateTime d = new DateTime(year, month, day, hour, minute, second);
+                return (type == MySqlDbType.Date) ? d.ToString("d") : d.ToString();
+            }
+
+            string dateString = FormatDateCustom(
+                CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern, month, day, year);
             if (type == MySqlDbType.Date)
-                return String.Format(CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern,
-                    year, month, day);
+                return dateString;
 
-            return String.Format(CultureInfo.CurrentUICulture.DateTimeFormat.FullDateTimePattern,
-                year, month, day, hour, minute, second);
+            DateTime dt = new DateTime(1, 2, 3, hour, minute, second);
+            dateString = String.Format("{0} {1}", dateString, dt.ToLongTimeString());
+            return dateString;
         }
 
 		/// <summary></summary>
@@ -474,7 +493,7 @@ namespace MySql.Data.Types
 		{
 			string[] types = new string[] { "DATE", "DATETIME", "TIMESTAMP" };
 			MySqlDbType[] dbtype = new MySqlDbType[] { MySqlDbType.Date, 
-                MySqlDbType.Datetime, MySqlDbType.Timestamp };
+				MySqlDbType.DateTime, MySqlDbType.Timestamp };
 
 			// we use name indexing because this method will only be called
 			// when GetSchema is called for the DataSourceInformation 

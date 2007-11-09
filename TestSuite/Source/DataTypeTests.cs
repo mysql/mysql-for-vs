@@ -639,7 +639,7 @@ namespace MySql.Data.MySqlClient.Tests
 				cmd.Prepare();
 				reader = cmd.ExecuteReader();
 				Assert.IsTrue(reader.Read());
-				Assert.AreEqual(true, reader[0]);
+				Assert.AreEqual(1, reader[0]);
 				Assert.AreEqual(2, reader[1]);
 				Assert.AreEqual(3, reader[2]);
 			}
@@ -815,19 +815,27 @@ namespace MySql.Data.MySqlClient.Tests
             }
         }
 
+        /// <summary>
+        /// Bug #27959 Bool datatype is not returned as System.Boolean by MySqlDataAdapter 
+        /// </summary>
         [Test]
-        public void BooleanForBit1()
+        public void Boolean()
         {
             if (version < new Version(5, 0)) return;
 
             execSQL("DROP TABLE IF EXISTS Test");
-            execSQL("CREATE TABLE Test (id INT, `on` BIT(1))");
-            execSQL("INSERT INTO Test VALUES (1,1), (2,0)");
+            execSQL("CREATE TABLE Test (id INT, `on` BOOLEAN, v TINYINT(2))");
+            execSQL("INSERT INTO Test VALUES (1,1,1), (2,0,0)");
 
             MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
             DataTable dt = new DataTable();
             da.Fill(dt);
             Assert.AreEqual(typeof(Boolean), dt.Columns[1].DataType);
+            Assert.AreEqual(typeof(SByte), dt.Columns[2].DataType);
+            Assert.AreEqual(true, dt.Rows[0][1]);
+            Assert.AreEqual(false, dt.Rows[1][1]);
+            Assert.AreEqual(1, dt.Rows[0][2]);
+            Assert.AreEqual(0, dt.Rows[1][2]);
         }
 	}
 }

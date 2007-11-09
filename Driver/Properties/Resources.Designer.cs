@@ -236,6 +236,12 @@ namespace MySql.Data.MySqlClient {
             }
         }
         
+        internal static string DistributedTxnNotSupported {
+            get {
+                return ResourceManager.GetString("DistributedTxnNotSupported", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Error creating socket connection.
         /// </summary>

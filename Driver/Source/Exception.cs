@@ -59,12 +59,15 @@ namespace MySql.Data.MySqlClient
             : this(msg, inner)
         {
             errorCode = errno;
+#if !CF
+            Data.Add("Server Error Code", errno);
+#endif
         }
 
-		internal MySqlException(string msg, int errno) : this(msg)
-		{
-			errorCode = errno;
-		}
+        internal MySqlException(string msg, int errno)
+            : this(msg, errno, null)
+        {
+        }
 
 #if !CF
 		private MySqlException(SerializationInfo info, StreamingContext context) : base(info, context)

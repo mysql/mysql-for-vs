@@ -49,6 +49,7 @@ namespace MySql.Data.MySqlClient
         bool autoEnlist, respectBinaryFlags, treatBlobsAsUTF8;
         string blobAsUtf8IncludePattern, blobAsUtf8ExcludePattern;
         Regex blobAsUtf8ExcludeRegex, blobAsUtf8IncludeRegex;
+        uint defaultCommandTimeout;
 
         static MySqlConnectionStringBuilder()
         {
@@ -86,6 +87,7 @@ namespace MySql.Data.MySqlClient
             defaultValues.Add(Keyword.BlobAsUTF8ExcludePattern, null);
             defaultValues.Add(Keyword.BlobAsUTF8IncludePattern, null);
             defaultValues.Add(Keyword.TreatBlobsAsUTF8, false);
+            defaultValues.Add(Keyword.DefaultCommandTimeout, 30);
         }
 
         /// <summary>
@@ -363,6 +365,28 @@ namespace MySql.Data.MySqlClient
                 connectionTimeout = value; 
             }
         }
+
+        /// <summary>
+        /// Gets or sets the default command timeout.
+        /// </summary>
+#if !CF && !MONO
+        [Category("Connection")]
+        [DisplayName("Default Command Timeout")]
+        [Description(@"The default timeout that MySqlCommand objects will use
+                     unless changed.")]
+        [DefaultValue(30)]
+        [RefreshProperties(RefreshProperties.All)]
+#endif
+        public uint DefaultCommandTimeout
+        {
+            get { return defaultCommandTimeout; }
+            set
+            {
+                SetValue("Default Command Timeout", value);
+                defaultCommandTimeout = value;
+            }
+        }
+
 
         #endregion
 
@@ -1042,6 +1066,8 @@ namespace MySql.Data.MySqlClient
                 case "treatblobsasutf8":
                 case "treat blobs as utf8":
                     return Keyword.TreatBlobsAsUTF8;
+                case "default command timeout":
+                    return Keyword.DefaultCommandTimeout;
             }
             throw new ArgumentException(Resources.KeywordNotSupported, key);
         }
@@ -1118,6 +1144,8 @@ namespace MySql.Data.MySqlClient
                     return blobAsUtf8ExcludePattern;
                 case Keyword.BlobAsUTF8IncludePattern:
                     return blobAsUtf8IncludePattern;
+                case Keyword.DefaultCommandTimeout:
+                    return defaultCommandTimeout;
                 default:
                     return null; /* this will never happen */
             }
@@ -1206,6 +1234,8 @@ namespace MySql.Data.MySqlClient
                     blobAsUtf8ExcludePattern = (string)value; break;
                 case Keyword.BlobAsUTF8IncludePattern:
                     blobAsUtf8IncludePattern = (string)value; break;
+                case Keyword.DefaultCommandTimeout:
+                    defaultCommandTimeout = ConvertToUInt(value); break;
             }
         }
 
@@ -1213,21 +1243,21 @@ namespace MySql.Data.MySqlClient
         /// Gets or sets the value associated with the specified key. In C#, this property 
         /// is the indexer. 
         /// </summary>
-        /// <param name="key">The key of the item to get or set.</param>
+        /// <param name="keyword">The key of the item to get or set.</param>
         /// <returns>The value associated with the specified key. </returns>
-        public override object this[string key]
+        public override object this[string keyword]
         {
             get
             {
-                Keyword kw = GetKey(key);
+                Keyword kw = GetKey(keyword);
                 return GetValue(kw);
             }
             set
             {
                 if (value == null)
-                    Remove(key);
+                    Remove(keyword);
                 else
-                    SetValue(key, value);
+                    SetValue(keyword, value);
             }
         }
 
@@ -1382,6 +1412,7 @@ namespace MySql.Data.MySqlClient
         RespectBinaryFlags,
         TreatBlobsAsUTF8,
         BlobAsUTF8IncludePattern,
-        BlobAsUTF8ExcludePattern
+        BlobAsUTF8ExcludePattern,
+        DefaultCommandTimeout
     }
 }

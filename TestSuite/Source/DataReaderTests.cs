@@ -877,5 +877,30 @@ namespace MySql.Data.MySqlClient.Tests
             row["ID_B"] = 4;
             dt.Rows.Add(row);
         }
+
+		[Test]
+		public void CloseConnectionBehavior2()
+		{
+			execSQL("INSERT INTO Test(id,name) VALUES(1,'test')");
+
+			MySqlConnection c2 = new MySqlConnection(conn.ConnectionString);
+			c2.Open();
+			MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test", c2);
+			MySqlDataReader reader = null;
+			try
+			{
+				reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+				Assert.IsTrue(reader.Read());
+			}
+			catch (Exception ex)
+			{
+				Assert.Fail(ex.Message);
+			}
+			finally
+			{
+				c2.Close();
+				c2.Dispose();
+			}
+		}
 	}
 }

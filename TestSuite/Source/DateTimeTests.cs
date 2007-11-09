@@ -153,7 +153,8 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void TestAllowZeroDateTime()
 		{
-			execSQL("INSERT INTO Test (id, d, dt) VALUES (1, '0000-00-00', '0000-00-00 00:00:00')");
+            execSQL("TRUNCATE TABLE Test"); 
+            execSQL("INSERT INTO Test (id, d, dt) VALUES (1, '0000-00-00', '0000-00-00 00:00:00')");
 
 			MySqlConnection c = new MySqlConnection(
 				conn.ConnectionString + ";pooling=false;AllowZeroDatetime=true");
@@ -466,7 +467,18 @@ namespace MySql.Data.MySqlClient.Tests
                 if (c != null)
                     c.Close();
             }
-        }        
-	}
+        }
+
+        /// <summary>
+        /// Bug #32010 Connector return incorrect value when pulling 0 datetime 
+        /// </summary>
+        [Test]
+        public void MySqlDateTimeFormatting()
+        {
+            DateTime dt = DateTime.Now;
+            MySqlDateTime mdt = new MySqlDateTime(dt);
+            Assert.AreEqual(dt.ToString(), mdt.ToString());
+        }
+    }
 
 }

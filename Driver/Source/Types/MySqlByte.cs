@@ -29,18 +29,21 @@ namespace MySql.Data.Types
 	{
 		private sbyte mValue;
 		private bool isNull;
+        private bool treatAsBool;
 
 		public MySqlByte(bool isNull)
 		{
 			this.isNull = isNull;
 			mValue = 0;
+            treatAsBool = false;
 		}
 
 		public MySqlByte(sbyte val)
 		{
 			this.isNull = false;
 			mValue = val;
-		}
+            treatAsBool = false;
+        }
 
 		#region IMySqlValue Members
 
@@ -56,22 +59,38 @@ namespace MySql.Data.Types
 
 		DbType IMySqlValue.DbType
 		{
-			get { return DbType.SByte; }
+			get 
+            {
+                if (TreatAsBoolean)
+                    return DbType.Boolean;
+                return DbType.SByte; 
+            }
 		}
 
 		object IMySqlValue.Value
 		{
-			get { return mValue; }
+			get 
+            {
+                if (TreatAsBoolean)
+                    return Convert.ToBoolean(mValue); 
+                return mValue; 
+            }
 		}
 
 		public sbyte Value
 		{
 			get { return mValue; }
+            set { mValue = value; }
 		}
 
 		Type IMySqlValue.SystemType
 		{
-			get { return typeof(sbyte); }
+			get 
+            {
+                if (TreatAsBoolean)
+                    return typeof(Boolean); 
+                return typeof(sbyte); 
+            }
 		}
 
 		string IMySqlValue.MySqlTypeName
@@ -98,7 +117,9 @@ namespace MySql.Data.Types
 			else
 			{
 				string s = stream.ReadString(length);
-				return new MySqlByte(SByte.Parse(s, NumberStyles.Any, CultureInfo.InvariantCulture));
+				MySqlByte b = new MySqlByte(SByte.Parse(s, NumberStyles.Any, CultureInfo.InvariantCulture));
+                b.TreatAsBoolean = TreatAsBoolean;
+                return b;
 			}
 		}
 
@@ -108,6 +129,12 @@ namespace MySql.Data.Types
 		}
 
 		#endregion
+
+        internal bool TreatAsBoolean
+        {
+            get { return treatAsBool; }
+            set { treatAsBool = value; }
+        }
 
 		internal static void SetDSInfo(DataTable dsTable)
 		{

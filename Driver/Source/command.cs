@@ -66,11 +66,10 @@ namespace MySql.Data.MySqlClient
 			designTimeVisible = true;
 			cmdType = CommandType.Text;
 			parameterMap = new ArrayList();
-			parameters = new MySqlParameterCollection();
+			parameters = new MySqlParameterCollection(this);
 			updatedRowSource = UpdateRowSource.Both;
 			cursorPageSize = 0;
 			cmdText = String.Empty;
-			commandTimeout = 30;
 			canCancel = false;
 			timedOut = false;
 		}
@@ -87,8 +86,6 @@ namespace MySql.Data.MySqlClient
 			: this(cmdText)
 		{
 			Connection = connection;
-			if (connection != null)
-				parameters.ParameterMarker = connection.ParameterMarker;
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ctor4/*'/>
@@ -147,7 +144,7 @@ namespace MySql.Data.MySqlClient
 #endif
 		public override int CommandTimeout
 		{
-			get { return commandTimeout; }
+			get { return commandTimeout == 0 ? 30 : commandTimeout; }
 			set { commandTimeout = value; }
 		}
 
@@ -189,8 +186,11 @@ namespace MySql.Data.MySqlClient
 					this.Transaction = null;
 
 				connection = (MySqlConnection)value;
-				if (connection != null)
-					parameters.ParameterMarker = connection.ParameterMarker;
+
+                // if the user has not already set the command timeout, then
+                // take the default from the connection
+                if (connection != null && commandTimeout == 0)
+                    commandTimeout = (int)connection.Settings.DefaultCommandTimeout;
 			}
 		}
 
@@ -537,7 +537,7 @@ namespace MySql.Data.MySqlClient
 		internal delegate void AsyncDelegate(int type, CommandBehavior behavior);
 		internal Exception thrownException;
 
-		private string TrimSemicolons(string sql)
+		private static string TrimSemicolons(string sql)
 		{
 			System.Text.StringBuilder sb = new System.Text.StringBuilder(sql);
 			int start = 0;

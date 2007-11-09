@@ -121,8 +121,6 @@ namespace MySql.Data.MySqlClient
                                 DataRowVersion ver, object val)
             : this(name, type)
         {
-            if (direction != ParameterDirection.Input)
-                throw new ArgumentException("Only input parameters are supported by MySql");
             direction = dir;
             sourceColumn = col;
             sourceVersion = ver;
@@ -149,9 +147,6 @@ namespace MySql.Data.MySqlClient
                               object value)
             : this(parameterName, dbType, size, sourceColumn)
         {
-            if (direction != ParameterDirection.Input)
-                throw new ArgumentException("Only input parameters are supported by MySql");
-
             this.direction = direction;
             this.sourceVersion = sourceVersion;
             Value = value;
@@ -412,7 +407,7 @@ namespace MySql.Data.MySqlClient
                     dbType = DbType.Double;
                     break;
                 case MySqlDbType.Timestamp:
-                case MySqlDbType.Datetime:
+                case MySqlDbType.DateTime:
                     dbType = DbType.DateTime;
                     break;
                 case MySqlDbType.Date:
@@ -470,7 +465,7 @@ namespace MySql.Data.MySqlClient
                     mySqlDbType = MySqlDbType.Date;
                     break;
                 case DbType.DateTime:
-                    mySqlDbType = MySqlDbType.Datetime;
+                    mySqlDbType = MySqlDbType.DateTime;
                     break;
 
                 case DbType.Time:

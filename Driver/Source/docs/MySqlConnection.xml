@@ -123,7 +123,7 @@
       The following example creates a <see cref="MySqlConnection"/>, opens it,
       displays some of its properties, then closes the connection.
 
-      <code lang="Visual Basic">
+      <code lang="vbnet">
         Public Sub CreateMySqlConnection(myConnString As String)
         Dim myConnection As New MySqlConnection(myConnString)
         myConnection.Open()
@@ -160,7 +160,7 @@
       The following example creates a <see cref="MySqlConnection"/> and displays
       some of its read-only properties.
 
-      <code lang="Visual Basic">
+      <code lang="vbnet">
         Public Sub CreateMySqlConnection()
         Dim myConnString As String = _
         "Persist Security Info=False;database=test;server=localhost;user id=joeuser;pwd=pass"
@@ -213,7 +213,7 @@
       The following example creates a <see cref="MySqlConnection"/>, opens it,
       displays some of its properties, then closes the connection.
 
-      <code lang="Visual Basic">
+      <code lang="vbnet">
         Public Sub CreateMySqlConnection(myConnString As String)
         Dim myConnection As New MySqlConnection(myConnString)
         myConnection.Open()
@@ -243,7 +243,7 @@
       The following example creates a <see cref="MySqlConnection"/>, opens it,
       displays some of its properties, then closes the connection.
 
-      <code lang="Visual Basic">
+      <code lang="vbnet">
         Public Sub CreateMySqlConnection(myConnString As String)
         Dim myConnection As New MySqlConnection(myConnString)
         myConnection.Open()
@@ -282,7 +282,7 @@
       The following example creates a <see cref="MySqlConnection"/>, opens it,
       displays some of its properties, then closes the connection.
 
-      <code lang="Visual Basic">
+      <code lang="vbnet">
         Public Sub CreateMySqlConnection(myConnString As String)
         Dim myConnection As New MySqlConnection(myConnString)
         myConnection.Open()
@@ -334,7 +334,7 @@
       The following example creates a <see cref="MySqlConnection"/> and a
       <see cref="MySqlTransaction"/>.  It also demonstrates how to use the <B>BeginTransaction</B>, a
       <see cref="MySqlTransaction.Commit"/>, and <see cref="MySqlTransaction.Rollback"/> methods.
-      <code lang="Visual Basic">
+      <code lang="vbnet">
         Public Sub RunTransaction(myConnString As String)
         Dim myConnection As New MySqlConnection(myConnString)
         myConnection.Open()
@@ -449,7 +449,7 @@
       The following example creates a <see cref="MySqlConnection"/> and a
       <see cref="MySqlTransaction"/>.  It also demonstrates how to use the <B>BeginTransaction</B>, a
       <see cref="MySqlTransaction.Commit"/>, and <see cref="MySqlTransaction.Rollback"/> methods.
-      <code lang="Visual Basic">
+      <code lang="vbnet">
         Public Sub RunTransaction(myConnString As String)
         Dim myConnection As New MySqlConnection(myConnString)
         myConnection.Open()
@@ -544,7 +544,7 @@
 
   <ChangeDatabase>
     <summary>Changes the current database for an open MySqlConnection.</summary>
-    <param name="database">The name of the database to use.</param>
+    <param name="databaseName">The name of the database to use.</param>
     <remarks>
       <para>
         The value supplied in the <I>database</I> parameter must be a valid database
@@ -566,7 +566,7 @@
       The following example creates a <see cref="MySqlConnection"/> and displays
       some of its read-only properties.
 
-      <code lang="Visual Basic">
+      <code lang="vbnet">
         Public Sub CreateMySqlConnection()
         Dim myConnString As String = _
         "Persist Security Info=False;database=test;server=localhost;user id=joeuser;pwd=pass"
@@ -684,7 +684,7 @@
       <see cref="MySqlCommand.ExecuteNonQuery"/>, and closes the connection. To accomplish this, the <B>ExecuteNonQuery</B> is
       passed a connection string and a query string that is a SQL INSERT
       statement.
-      <code lang="Visual Basic">
+      <code lang="vbnet">
         <c>
           Public Sub InsertRow(myConnectionString As String)
           ' If the connection string is null, use a default.
@@ -736,7 +736,7 @@
     <example>
       The following example creates a MySqlConnection
       and sets some of its properties in the connection string.
-      <code lang="Visual Basic">
+      <code lang="vbnet">
         Public Sub CreateSqlConnection()
         Dim myConnection As New MySqlConnection()
         myConnection.ConnectionString = "Persist Security Info=False;Username=user;Password=pass;database=test1;server=localhost;Connect Timeout=30"
@@ -1072,6 +1072,13 @@
               Pattern that should be used to indicate which blob columns should not be treated as UTF-8.
             </td>
           </tr>
+          <tr>
+            <td>Default Command Timeout</td>
+            <td>30</td>
+            <td>
+              The default timeout that new MySqlCommand objects will use unless changed.
+            </td>
+          </tr>
         </table>
       </div>
       <para>
@@ -1153,7 +1160,7 @@
     </remarks>
     <example>
       The following example creates a <see cref="MySqlConnection"/> and sets some of its properties
-      <code lang="Visual Basic">
+      <code lang="vbnet">
         Public Sub CreateConnection()
         Dim myConnection As New MySqlConnection()
         myConnection.ConnectionString = "Persist Security Info=False;database=myDB;server=myHost;Connect Timeout=30;user id=myUser; pwd=myPass"
@@ -1171,7 +1178,7 @@
     </example>
     <example>
       The following example creates a <see cref="MySqlConnection"/> in Unix environment with Mono installed. MySQL socket filename used in this example is "/var/lib/mysql/mysql.sock". The actual filename depends on your MySQL configuration.
-      <code lang="Visual Basic">
+      <code lang="vbnet">
         Public Sub CreateConnection()
         Dim myConnection As New MySqlConnection()
         myConnection.ConnectionString = "database=myDB;server=/var/lib/mysql/mysql.sock;user id=myUser; pwd=myPass"
@@ -1188,7 +1195,6 @@
       </code>
     </example>
   </ConnectionString>
-
   <ClearPool>
     <summary>Empties the connection pool associated with the specified connection.</summary>
     <param name="connection">

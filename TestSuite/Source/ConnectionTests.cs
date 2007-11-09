@@ -397,5 +397,81 @@ namespace MySql.Data.MySqlClient.Tests
                 }
             }
         }
+
+		/// <summary>
+		/// Bug #30964 StateChange imperfection 
+		/// </summary>
+		MySqlConnection rqConnection;
+		[Test]
+		public void RunningAQueryFromStateChangeHandler()
+		{
+			string connStr = GetConnectionString(true);
+			using (rqConnection = new MySqlConnection(connStr))
+			{
+				rqConnection.StateChange += new StateChangeEventHandler(RunningQueryStateChangeHandler);
+				rqConnection.Open();
+			}
+		}
+
+		void RunningQueryStateChangeHandler(object sender, StateChangeEventArgs e)
+		{
+			if (e.CurrentState == ConnectionState.Open)
+			{
+				MySqlCommand cmd = new MySqlCommand("SELECT 1", rqConnection);
+				object o = cmd.ExecuteScalar();
+				Assert.AreEqual(1, o);
+			}
+		}
+
+        /// <summary>
+        /// Bug #31262 NullReferenceException in MySql.Data.MySqlClient.NativeDriver.ExecuteCommand 
+        /// </summary>
+        [Test]
+        public void ConnectionNotOpenThrowningBadException()
+        {
+            MySqlConnection c2 = new MySqlConnection();
+            c2.ConnectionString = GetConnectionString(true); // "DataSource=localhost;Database=test;UserID=root;Password=********;PORT=3306;Allow Zero Datetime=True;logging=True;";
+            //conn.Open();                      << REM
+            MySqlCommand command = new MySqlCommand();
+            command.Connection = c2;
+
+            MySqlCommand cmdCreateTable = new MySqlCommand("DROP TABLE IF EXISTS `test`.`contents_catalog`", c2);
+            cmdCreateTable.CommandType = CommandType.Text;
+            cmdCreateTable.CommandTimeout = 0;
+            try
+            {
+                cmdCreateTable.ExecuteNonQuery();
+            }
+            catch (InvalidOperationException)
+            {
+            }
+        }
+
+        /// <summary>
+        /// Bug #31433 Username incorrectly cached for logon where case sensitive 
+        /// </summary>
+        [Test]
+        public void CaseSensitiveUserId()
+        {
+            string connStr = GetConnectionStringEx("Test", "test", true);
+            MySqlConnection c = new MySqlConnection(connStr);
+            try
+            {
+                c.Open();
+            }
+            catch (MySqlException)
+            {
+            }
+            connStr = GetConnectionStringEx("test", "test", true);
+            c = new MySqlConnection(connStr);
+            try
+            {
+                c.Open();
+            }
+            catch (MySqlException ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
     }
 }
