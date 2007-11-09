@@ -266,27 +266,24 @@ namespace MySql.Data.MySqlClient
             if (!version.isAtLeast(4, 1, 0)) return;
 
             MySqlCommand cmd = new MySqlCommand("SHOW COLLATION", connection);
-            MySqlDataReader reader = null;
 
             // now we load all the currently active collations
             try
             {
-                reader = cmd.ExecuteReader();
-                charSets = new Hashtable();
-                while (reader.Read())
+                using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
-                    charSets[Convert.ToInt32(reader["id"], NumberFormatInfo.InvariantInfo)] =
-                        reader.GetString(reader.GetOrdinal("charset"));
+                    charSets = new Hashtable();
+                    while (reader.Read())
+                    {
+                        charSets[Convert.ToInt32(reader["id"], NumberFormatInfo.InvariantInfo)] =
+                            reader.GetString(reader.GetOrdinal("charset"));
+                    }
                 }
             }
             catch (Exception ex)
             {
                 Logger.LogException(ex);
                 throw;
-            }
-            finally
-            {
-                if (reader != null) reader.Close();
             }
         }
 
