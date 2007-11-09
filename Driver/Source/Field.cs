@@ -278,7 +278,7 @@ namespace MySql.Data.MySqlClient
         public IMySqlValue GetValueObject()
         {
             IMySqlValue v = GetIMySqlValue(Type);
-            if (v is MySqlByte && ColumnLength == 1 && MaxLength == 0)
+            if (v is MySqlByte && ColumnLength == 1 && MaxLength == 1)
             {
                 MySqlByte b = (MySqlByte)v;
                 b.TreatAsBoolean = true;
