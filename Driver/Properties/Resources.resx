@@ -190,7 +190,7 @@
     <value>Stored procedures are not supported on this version of MySQL</value>
   </data>
   <data name="ConnectionNotSet" xml:space="preserve">
-    <value>The connection property has not been set.</value>
+    <value>The connection property has not been set or is null.</value>
   </data>
   <data name="ConnectionNotOpen" xml:space="preserve">
     <value>The connection is not open.</value>

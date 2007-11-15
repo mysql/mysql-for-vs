@@ -122,7 +122,7 @@ namespace MySql.Data.MySqlClient
 			{
 				cmdText = value;
 				statement = null;
-				if (cmdText.EndsWith("DEFAULT VALUES"))
+				if (cmdText != null && cmdText.EndsWith("DEFAULT VALUES"))
 				{
 					cmdText = cmdText.Substring(0, cmdText.Length - 14);
 					cmdText = cmdText + "() VALUES ()";

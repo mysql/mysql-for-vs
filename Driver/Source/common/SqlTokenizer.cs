@@ -47,6 +47,11 @@ namespace MySql.Data.Common
             get { return quoted; }
         }
 
+        public int CurrentPos
+        {
+            get { return index; }
+        }
+
         #endregion
 
         public string NextToken()
@@ -75,7 +80,7 @@ namespace MySql.Data.Common
                 }
                 else if (quoteChar != Char.MinValue)
                     current.Append(c);
-                else if (c == '`' || (c == '\"' && AnsiQuotes))
+                else if (c == '`' || c == '\'' || (c == '\"' && AnsiQuotes))
                     quoteChar = c;
                 else if (c == '/' && lastChar == '*' && inComment)
                     inComment = false;
@@ -125,6 +130,10 @@ namespace MySql.Data.Common
                     current.Append(c);
                 lastChar = c;
             }
+
+            if (current.Length > 0)
+                return current.ToString();
+
             return null;
         }
 
