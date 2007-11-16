@@ -24,6 +24,7 @@ using System.Text;
 using System;
 using System.Data;
 using System.Globalization;
+using System.IO;
 namespace MySql.Data.MySqlClient
 {
     /// <summary>
@@ -37,7 +38,8 @@ namespace MySql.Data.MySqlClient
         private string query;
         private string delimiter;
 
-        public event MySqlQueryExecutedEventHandler QueryExecuted;
+        public event MySqlStatementExecutedEventHandler StatementExecuted;
+        public event MySqlScriptErrorEventHandler Error;
         public event EventHandler ScriptCompleted;
 
         #region Constructors
@@ -150,16 +152,26 @@ namespace MySql.Data.MySqlClient
                 bool noBackslashEscapes = mode.IndexOf("no_backslash_escpaes") != -1;
 
                 // first we break the query up into smaller queries
-                List<string> queries = BreakIntoQueries(ansiQuotes, noBackslashEscapes);
+                List<ScriptStatement> statements = BreakIntoStatements(ansiQuotes, noBackslashEscapes);
 
                 int count = 0;
                 MySqlCommand cmd = new MySqlCommand(null, connection);
-                foreach (string singleQuery in queries)
+                foreach (ScriptStatement statement in statements)
                 {
-                    cmd.CommandText = singleQuery;
-                    cmd.ExecuteNonQuery();
-                    count++;
-                    OnQueryExecuted(singleQuery);
+                    cmd.CommandText = statement.text;
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        count++;
+                        OnQueryExecuted(statement);
+                    }
+                    catch (Exception ex)
+                    {
+                        if (Error == null)
+                            throw;
+                        if (!OnScriptError(ex))
+                            break;
+                    }
                 }
                 OnScriptCompleted();
                 return count;
@@ -175,10 +187,14 @@ namespace MySql.Data.MySqlClient
 
         #endregion
 
-        private void OnQueryExecuted(string singleQuery)
+        private void OnQueryExecuted(ScriptStatement statement)
         {
-            if (QueryExecuted != null)
-                QueryExecuted(this, new QueryExecutedEventArgs(singleQuery));
+            if (StatementExecuted != null)
+            {
+                MySqlScriptEventArgs args = new MySqlScriptEventArgs();
+                args.Statement = statement;
+                StatementExecuted(this, args);
+            }
         }
 
         private void OnScriptCompleted()
@@ -187,10 +203,46 @@ namespace MySql.Data.MySqlClient
                 ScriptCompleted(this, null);
         }
 
-        private List<string> BreakIntoQueries(bool ansiQuotes, bool noBackslashEscapes)
+        private bool OnScriptError(Exception ex)
+        {
+            if (Error != null)
+            {
+                MySqlScriptErrorEventArgs args = new MySqlScriptErrorEventArgs(ex);
+                Error(this, args);
+                return args.Ignore;
+            }
+            return false;
+        }
+
+        private List<int> BreakScriptIntoLines()
+        {
+            List<int> lineNumbers = new List<int>();
+
+            StringReader sr = new StringReader(query);
+            string line = sr.ReadLine();
+            int pos = 0;
+            while (line != null)
+            {
+                lineNumbers.Add(pos);
+                pos += line.Length;
+                line = sr.ReadLine();
+            }
+            return lineNumbers;
+        }
+
+        private int FindLineNumber(int position, List<int> lineNumbers)
+        {
+            int i = 0;
+            while (i < lineNumbers.Count && position < lineNumbers[i])
+                i++;
+            return i;
+        }
+
+        private List<ScriptStatement> BreakIntoStatements(bool ansiQuotes, bool noBackslashEscapes)
         {
             int startPos = 0;
-            List<string> queries = new List<string>();
+            List<ScriptStatement> statements = new List<ScriptStatement>();
+            List<int> lineNumbers = BreakScriptIntoLines();
             SqlTokenizer tokenizer = new SqlTokenizer(query);
 
             tokenizer.AnsiQuotes = ansiQuotes;
@@ -209,7 +261,11 @@ namespace MySql.Data.MySqlClient
                         if (tokenizer.CurrentPos == query.Length-1)
                             endPos++;
                         string currentQuery = query.Substring(startPos, endPos-startPos);
-                        queries.Add(currentQuery.Trim());
+                        ScriptStatement statement = new ScriptStatement();
+                        statement.text = currentQuery.Trim();
+                        statement.line = FindLineNumber(startPos, lineNumbers);
+                        statement.position = startPos - lineNumbers[statement.line];
+                        statements.Add(statement);
                         startPos = endPos + delimiter.Length;
                     }
                 }
@@ -219,38 +275,104 @@ namespace MySql.Data.MySqlClient
             // now clean up the last statement
             if (tokenizer.CurrentPos > startPos)
             {
-                queries.Add(query.Substring(startPos).Trim());
+                ScriptStatement statement = new ScriptStatement();
+                statement.text = query.Substring(startPos).Trim();
+                statements.Add(statement);
             }
-            return queries;
+            return statements;
         }
     }
-
-    public delegate void MySqlQueryExecutedEventHandler(object sender, QueryExecutedEventArgs args);
 
     /// <summary>
     /// 
     /// </summary>
-    public class QueryExecutedEventArgs : EventArgs
+    public delegate void MySqlStatementExecutedEventHandler(object sender, MySqlScriptEventArgs args);
+    /// <summary>
+    /// 
+    /// </summary>
+    public delegate void MySqlScriptErrorEventHandler(object sender, MySqlScriptErrorEventArgs args);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class MySqlScriptEventArgs : EventArgs
     {
-        private string query;
+        private ScriptStatement statement;
 
-        /// <summary>
-        /// Initializes a new instance of the 
-        /// <see cref="QueryExecutedEventArgs"/> class.
-        /// </summary>
-        /// <param name="query">The query.</param>
-        public QueryExecutedEventArgs(string query)
+        internal ScriptStatement Statement
         {
-            this.query = query;
+            set { this.statement = value; }
         }
 
         /// <summary>
-        /// Gets the query.
+        /// Gets the statement text.
         /// </summary>
-        /// <value>The query.</value>
-        public string Query
+        /// <value>The statement text.</value>
+        public string StatementText
         {
-            get { return query; }
+            get { return statement.text; }
         }
+
+        /// <summary>
+        /// Gets the line.
+        /// </summary>
+        /// <value>The line.</value>
+        public int Line
+        {
+            get { return statement.line; }
+        }
+
+        /// <summary>
+        /// Gets the position.
+        /// </summary>
+        /// <value>The position.</value>
+        public int Position
+        {
+            get { return statement.position; }
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class MySqlScriptErrorEventArgs : MySqlScriptEventArgs
+    {
+        private Exception exception;
+        private bool ignore;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MySqlScriptErrorEventArgs"/> class.
+        /// </summary>
+        /// <param name="exception">The exception.</param>
+        public MySqlScriptErrorEventArgs(Exception exception) : base()
+        {
+            this.exception = exception;
+        }
+
+        /// <summary>
+        /// Gets the exception.
+        /// </summary>
+        /// <value>The exception.</value>
+        public Exception Exception
+        {
+            get { return exception; }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="MySqlScriptErrorEventArgs"/> is ignore.
+        /// </summary>
+        /// <value><c>true</c> if ignore; otherwise, <c>false</c>.</value>
+        public bool Ignore
+        {
+            get { return ignore; }
+            set { ignore = value; }
+        }
+    }
+
+    struct ScriptStatement
+    {
+        public string text;
+        public int line;
+        public int position;
     }
 }

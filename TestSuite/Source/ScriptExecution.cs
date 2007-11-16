@@ -54,7 +54,7 @@ namespace MySql.Data.MySqlClient.Tests
                 scriptText += String.Format(statementTemplate1, i, "$$");
             }
             MySqlScript script = new MySqlScript(scriptText);
-            script.QueryExecuted += new MySqlQueryExecutedEventHandler(ExecuteScriptWithProcedures_QueryExecuted);
+            script.StatementExecuted += new MySqlStatementExecutedEventHandler(ExecuteScriptWithProcedures_QueryExecuted);
             script.Connection = conn;
             script.Delimiter = "$$";
             int count = script.Execute();
@@ -67,10 +67,10 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(10, cmd.ExecuteScalar());
         }
 
-        void ExecuteScriptWithProcedures_QueryExecuted(object sender, QueryExecutedEventArgs e)
+        void ExecuteScriptWithProcedures_QueryExecuted(object sender, MySqlScriptEventArgs e)
         {
             string stmt = String.Format(statementTemplate1, statementCount++, null);
-            Assert.AreEqual(stmt, e.Query);
+            Assert.AreEqual(stmt, e.StatementText);
         }
 
         private string statementTemplate2 = @"INSERT INTO Test (id, name) VALUES ({0}, 'a "" na;me'){1}";
@@ -85,7 +85,7 @@ namespace MySql.Data.MySqlClient.Tests
             }
             MySqlScript script = new MySqlScript(scriptText);
             script.Connection = conn;
-            script.QueryExecuted += new MySqlQueryExecutedEventHandler(ExecuteScriptWithInserts_QueryExecuted);
+            script.StatementExecuted += new MySqlStatementExecutedEventHandler(ExecuteScriptWithInserts_StatementExecuted);
             int count = script.Execute();
             Assert.AreEqual(10, count);
 
@@ -93,10 +93,64 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(10, cmd.ExecuteScalar());
         }
 
-        void ExecuteScriptWithInserts_QueryExecuted(object sender, QueryExecutedEventArgs e)
+        void ExecuteScriptWithInserts_StatementExecuted(object sender, MySqlScriptEventArgs e)
         {
             string stmt = String.Format(statementTemplate2, statementCount++, null);
-            Assert.AreEqual(stmt, e.Query);
+            Assert.AreEqual(stmt, e.StatementText);
+        }
+
+        [Test]
+        public void ExecuteScriptContinueOnError()
+        {
+            statementCount = 0;
+            string scriptText = String.Empty;
+            for (int i = 0; i < 5; i++)
+                scriptText += String.Format(statementTemplate2, i, ";");
+            scriptText += "bogus statement;";
+            for (int i = 5; i < 10; i++)
+                scriptText += String.Format(statementTemplate2, i, ";");
+            MySqlScript script = new MySqlScript(scriptText);
+            script.Connection = conn;
+            script.Error += new MySqlScriptErrorEventHandler(ExecuteScript_ContinueOnError);
+            int count = script.Execute();
+            Assert.AreEqual(10, count);
+            Assert.AreEqual(1, statementCount);
+
+            MySqlCommand cmd = new MySqlCommand("SELECT COUNT(*) FROM Test", conn);
+            Assert.AreEqual(10, cmd.ExecuteScalar());
+        }
+
+        void ExecuteScript_ContinueOnError(object sender, MySqlScriptErrorEventArgs args)
+        {
+            args.Ignore = true;
+            statementCount++;
+        }
+
+        [Test]
+        public void ExecuteScriptNotContinueOnError()
+        {
+            statementCount = 0;
+            string scriptText = String.Empty;
+            for (int i = 0; i < 5; i++)
+                scriptText += String.Format(statementTemplate2, i, ";");
+            scriptText += "bogus statement;";
+            for (int i = 5; i < 10; i++)
+                scriptText += String.Format(statementTemplate2, i, ";");
+            MySqlScript script = new MySqlScript(scriptText);
+            script.Connection = conn;
+            script.Error += new MySqlScriptErrorEventHandler(ExecuteScript_NotContinueOnError);
+            int count = script.Execute();
+            Assert.AreEqual(5, count);
+            Assert.AreEqual(1, statementCount);
+
+            MySqlCommand cmd = new MySqlCommand("SELECT COUNT(*) FROM Test", conn);
+            Assert.AreEqual(5, cmd.ExecuteScalar());
+        }
+
+        void ExecuteScript_NotContinueOnError(object sender, MySqlScriptErrorEventArgs args)
+        {
+            args.Ignore = false;
+            statementCount++;
         }
     }
 }
