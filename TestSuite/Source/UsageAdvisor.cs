@@ -41,7 +41,6 @@ namespace MySql.Data.MySqlClient.Tests
             createTable("CREATE TABLE Test (id int, name VARCHAR(200))", "INNODB");
         }
 
-        [Explicit]
         [Test]
         public void NotReadingEveryField()
         {
@@ -84,7 +83,6 @@ namespace MySql.Data.MySqlClient.Tests
 
         }
 
-        [Explicit]
         [Test]
         public void NotReadingEveryRow()
         {
