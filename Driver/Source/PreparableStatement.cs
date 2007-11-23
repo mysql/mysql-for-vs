@@ -180,12 +180,12 @@ namespace MySql.Data.MySqlClient
 
             foreach (string token in tokens)
             {
-                if (token[0] != Connection.ParameterMarker)
+                if (token[0] != '@' && token[0] != '?')
                     newSQL.Append(token);
                 else
                 {
                     parameterMap.Add(token);
-                    newSQL.Append(Connection.ParameterMarker);
+                    newSQL.Append("@");
                 }
             }
 

@@ -194,8 +194,6 @@ namespace MySql.Data.MySqlClient
 
 			if (outSelect.Length == 0) return;
 
-            char marker = Connection.ParameterMarker;
-
             MySqlCommand cmd = new MySqlCommand("SELECT " + outSelect, Connection);
             MySqlDataReader reader = cmd.ExecuteReader();
 
@@ -206,7 +204,7 @@ namespace MySql.Data.MySqlClient
             for (int i = 0; i < reader.FieldCount; i++)
             {
                 string fieldName = reader.GetName(i);
-                fieldName = marker + fieldName.Remove(0, hash.Length + 1);
+                fieldName = "@" + fieldName.Remove(0, hash.Length + 1);
                 reader.values[i] = MySqlField.GetIMySqlValue(Parameters[fieldName].MySqlDbType);
             }
 
@@ -215,7 +213,7 @@ namespace MySql.Data.MySqlClient
                 for (int i = 0; i < reader.FieldCount; i++)
                 {
                     string fieldName = reader.GetName(i);
-                    fieldName = marker + fieldName.Remove(0, hash.Length + 1);
+                    fieldName = "@" + fieldName.Remove(0, hash.Length + 1);
                     Parameters[fieldName].Value = reader.GetValue(i);
                 }
             }

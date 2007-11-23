@@ -139,7 +139,7 @@ namespace MySql.Data.MySqlClient
                     stream = new MySqlStream(Driver.Encoding);
                     continue;
                 }
-                if (token[0] == parameters.ParameterMarker)
+                if (token[0] == '@' || token[0] == '?')
                 {
                     if (SerializeParameter(parameters, stream, token))
                         continue;
@@ -216,9 +216,12 @@ namespace MySql.Data.MySqlClient
             ArrayList tokens = new ArrayList();
 
             sql = sql.TrimStart(';').TrimEnd(';');
+            char c = Char.MinValue;
+            char lastChar;
             for (int i = 0; i < sql.Length; i++)
             {
-                char c = sql[i];
+                lastChar = c;
+                c = sql[i];
                 if (escaped)
                     escaped = !escaped;
                 else if (c == delim)
@@ -234,15 +237,14 @@ namespace MySql.Data.MySqlClient
                     delim = c;
                 else if (c == '\\')
                     escaped = !escaped;
-                else if (c == Connection.ParameterMarker && delim == Char.MinValue && !escaped)
+                else if ((c == '@' || c == '?') && delim == Char.MinValue && !escaped && 
+                    "(,= ".IndexOf(lastChar) != -1)
                 {
                     tokens.Add(sqlPart.ToString());
                     sqlPart.Remove(0, sqlPart.Length);
                 }
-                else if (sqlPart.Length > 0 && sqlPart[0] == Connection.ParameterMarker &&
-                         !Char.IsLetterOrDigit(c) && c != '_' && c != '.' && c != '$' &&
-                         ((c != '@' && c != Connection.ParameterMarker) &&
-                          (c != '?' && c != Connection.ParameterMarker)))
+                else if (sqlPart.Length > 0 && (sqlPart[0] == '@' || sqlPart[0] == '?') &&
+                         !Char.IsLetterOrDigit(c) && c != '_' && c != '.' && c != '$')
                 {
                     tokens.Add(sqlPart.ToString());
                     sqlPart.Remove(0, sqlPart.Length);

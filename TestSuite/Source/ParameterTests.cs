@@ -22,6 +22,7 @@ using System;
 using System.Data;
 using MySql.Data.MySqlClient;
 using MbUnit.Framework;
+using System.Diagnostics;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -38,29 +39,6 @@ namespace MySql.Data.MySqlClient.Tests
             execSQL("DROP TABLE IF EXISTS Test");
             execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(100), dt DATETIME, tm TIME, ts TIMESTAMP, PRIMARY KEY(id))");
         }
-
-		[Test]
-		public void TestUserVariables()
-		{
-			MySqlCommand cmd = new MySqlCommand("SET @myvar = 'test'", conn);
-			cmd.ExecuteNonQuery();
-
-			cmd.CommandText = "SELECT @myvar";
-			MySqlDataReader reader = cmd.ExecuteReader();
-			try 
-			{
-				Assert.AreEqual( true, reader.Read());
-				Assert.AreEqual( "test", reader.GetValue(0));
-			}
-			catch (Exception ex)
-			{
-				Assert.Fail( ex.Message );
-			}
-			finally 
-			{
-				reader.Close();
-			}
-		}
 
 		[Test]
 		public void TestQuoting()
@@ -202,35 +180,19 @@ namespace MySql.Data.MySqlClient.Tests
         }
 
 		[Test]
-		public void UseOldSyntax() 
+		public void UseOldSyntaxGivesWarning() 
 		{
-			string connStr = conn.ConnectionString + ";old syntax=yes;pooling=false";
+            Trace.Listeners.Clear();
+            GenericListener listener = new GenericListener();
+            Trace.Listeners.Add(listener);
+
+            string connStr = conn.ConnectionString + ";old syntax=yes;pooling=false";
 			MySqlConnection conn2 = new MySqlConnection(connStr);
 			conn2.Open();
 
-			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id, name) VALUES (@id, @name)", conn2);
-			cmd.Parameters.AddWithValue( "@id", 33 );
-			cmd.Parameters.AddWithValue( "@name", "Test" );
-			cmd.ExecuteNonQuery();
-
-			MySqlDataReader reader = null;
-			try 
-			{
-				cmd.CommandText = "SELECT * FROM Test";
-				reader = cmd.ExecuteReader();
-				reader.Read();
-				Assert.AreEqual( 33, reader.GetInt32(0) );
-				Assert.AreEqual( "Test", reader.GetString(1) );
-			}
-			catch( Exception ex) 
-			{
-				Assert.Fail( ex.Message );
-			}
-			finally 
-			{
-				if (reader != null) reader.Close(); 
-				conn2.Close();
-			}
+            Assert.IsTrue(listener.Find("Use Old Syntax is now obsolete") != 0);
+            conn2.Close();
+            Trace.Listeners.Clear();
 		}
 
 		[Test]
@@ -583,6 +545,30 @@ namespace MySql.Data.MySqlClient.Tests
             c.Open();
             cmd.ExecuteNonQuery();
             c.Close();
+        }
+
+        [Test]
+        public void UseAtSignForParameters()
+        {
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id, name) VALUES (@id, @name)", conn);
+            cmd.Parameters.AddWithValue("@id", 33);
+            cmd.Parameters.AddWithValue("@name", "Test");
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "SELECT * FROM Test";
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                try
+                {
+                    reader.Read();
+                    Assert.AreEqual(33, reader.GetInt32(0));
+                    Assert.AreEqual("Test", reader.GetString(1));
+                }
+                catch (Exception ex)
+                {
+                    Assert.Fail(ex.Message);
+                }
+            }
         }
     }
 }

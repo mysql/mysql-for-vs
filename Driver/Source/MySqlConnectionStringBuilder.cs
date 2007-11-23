@@ -290,6 +290,7 @@ namespace MySql.Data.MySqlClient
         [Description("Allows the use of old style @ syntax for parameters")]
         [DefaultValue(false)]
         [RefreshProperties(RefreshProperties.All)]
+        [Obsolete("Use Old Syntax is no longer needed.  See documentation")]
 #endif
             public bool UseOldSyntax
         {
@@ -1185,7 +1186,9 @@ namespace MySql.Data.MySqlClient
                 case Keyword.Logging: 
                     logging = ConvertToBool(value); break;
                 case Keyword.OldSyntax: 
-                    oldSyntax = ConvertToBool(value); break;
+                    oldSyntax = ConvertToBool(value);
+                    Logger.LogWarning("Use Old Syntax is now obsolete.  Please see documentation");
+                    break;
                 case Keyword.SharedMemoryName: 
                     sharedMemName = (string)value; break;
                 case Keyword.AllowBatch: 

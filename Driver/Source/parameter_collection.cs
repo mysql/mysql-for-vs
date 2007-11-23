@@ -35,7 +35,6 @@ namespace MySql.Data.MySqlClient
 #endif
 	public sealed class MySqlParameterCollection : DbParameterCollection
 	{
-        private const char DefaultParameterMarker = '?'; 
         private ArrayList items = new ArrayList();
         private Hashtable indexHash;
         private MySqlCommand owningCommand;
@@ -51,16 +50,6 @@ namespace MySql.Data.MySqlClient
             Clear();
             owningCommand = cmd;
 		}
-
-        internal char ParameterMarker
-        {
-            get
-            {
-                return owningCommand.Connection != null ?
-                owningCommand.Connection.ParameterMarker :
-                DefaultParameterMarker;
-            }
-        }
 
 		#region Public Methods
 
@@ -180,7 +169,8 @@ namespace MySql.Data.MySqlClient
 			{
 				// check to see if the user has added the parameter without a
 				// parameter marker.  If so, kindly tell them what they did.
-				if (parameterName.StartsWith(ParameterMarker.ToString()))
+				if (parameterName.StartsWith("@") ||
+                    parameterName.StartsWith("?"))
 				{
 					string newParameterName = parameterName.Substring(1);
 					index = IndexOf(newParameterName);
@@ -420,7 +410,7 @@ namespace MySql.Data.MySqlClient
             if (indexHash.ContainsKey(inComingName))
                 throw new MySqlException(
                     String.Format(Resources.ParameterAlreadyDefined, value.ParameterName));
-            if (inComingName[0] == ParameterMarker)
+            if (inComingName[0] == '@' || inComingName[0] == '?')
                 inComingName = inComingName.Substring(1, inComingName.Length - 1);
             if (indexHash.ContainsKey(inComingName))
                 throw new MySqlException(

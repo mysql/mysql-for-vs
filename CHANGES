@@ -4,6 +4,8 @@ Version 5.2
 . Added support for DbDataAdapter UpdateBatchSize.  Batching is fully supported
   including collapsing inserts down into the multi-value form if possible.
 . Added MySqlScript class for executing scripts against a database.
+. Marked connection string option 'Use Old Syntax' as obsolete and changed code to 
+  allow both @ and ? as paramter markers.
 
 Version 5.1.4
   - Fixed issue where column name metadata was not using the charset given on the connection string

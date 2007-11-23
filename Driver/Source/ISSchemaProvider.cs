@@ -360,8 +360,7 @@ namespace MySql.Data.MySqlClient
                         parameterName = tokenizer.NextToken();
                     }
                 }
-                parmRow["PARAMETER_NAME"] = String.Format("{0}{1}",
-                    connection.ParameterMarker, parameterName);
+                parmRow["PARAMETER_NAME"] = String.Format("@{0}", parameterName);
                 token = ParseDataType(parmRow, tokenizer);
                 if (nameToRestrict == null ||
                   parmRow["PARAMETER_NAME"].ToString().ToLower() ==
@@ -375,8 +374,7 @@ namespace MySql.Data.MySqlClient
             {
                 DataRow parameterRow = parametersTable.NewRow();
                 InitParameterRow(row, parameterRow);
-                parameterRow["PARAMETER_NAME"] = String.Format("{0}RETURN_VALUE",
-                    connection.ParameterMarker);
+                parameterRow["PARAMETER_NAME"] = "@RETURN_VALUE";
                 parameterRow["IS_RESULT"] = "YES";
                 ParseDataType(parameterRow, tokenizer);
                 parametersTable.Rows.Add(parameterRow);

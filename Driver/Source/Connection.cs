@@ -108,15 +108,6 @@ namespace MySql.Data.MySqlClient
             set { dataReader = value; }
         }
 
-        internal char ParameterMarker
-        {
-            get
-            {
-                if (settings.UseOldSyntax) return '@';
-                return '?';
-            }
-        }
-
         internal void OnInfoMessage(MySqlInfoMessageEventArgs args)
         {
             if (InfoMessage != null)
