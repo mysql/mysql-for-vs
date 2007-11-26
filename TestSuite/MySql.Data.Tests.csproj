@@ -53,6 +53,7 @@
     <Compile Include="Source\CommandTests.cs" />
     <Compile Include="Source\ConnectionStringBuilder.cs" />
     <Compile Include="Source\ConnectionTests.cs" />
+    <Compile Include="Source\BulkLoading.cs" />
     <Compile Include="Source\ScriptExecution.cs" />
     <Compile Include="Source\CultureTests.cs" />
     <Compile Include="Source\DataAdapterTests.cs" />
