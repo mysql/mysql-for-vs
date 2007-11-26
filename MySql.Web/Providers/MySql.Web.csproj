@@ -58,6 +58,8 @@
     <Compile Include="Source\Install.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Source\ProfileProvider.cs" />
+    <Compile Include="Source\ProfileSchema.cs" />
     <Compile Include="Source\RoleSchema.cs" />
     <Compile Include="Source\MembershipProvider.cs" />
     <Compile Include="Source\RoleProvider.cs" />
