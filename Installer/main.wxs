@@ -18,6 +18,20 @@
     <PropertyRef Id="NETFRAMEWORK20"/>
     <Condition Message="The .NET Framework 2.0 must be installed before installing this package.">Installed OR NETFRAMEWORK20</Condition>
 
+    <!-- now make sure that we don't have an old version still around -->
+    <Property Id="OLDVERSION">
+      <RegistrySearch Id="Ver5081" Key="Software\MySQL AB\MySQL Connector/Net 5.0.8.1" Name="Location" Root="HKLM" Type="raw"/>
+      <RegistrySearch Id="Ver507" Key="Software\MySQL AB\MySQL Connector/Net 5.0.7" Name="Location" Root="HKLM" Type="raw"/>
+      <RegistrySearch Id="Ver506" Key="Software\MySQL AB\MySQL Connector/Net 5.0.6" Name="Location" Root="HKLM" Type="raw"/>
+      <RegistrySearch Id="Ver505" Key="Software\MySQL AB\MySQL Connector/Net 5.0.5" Name="Location" Root="HKLM" Type="raw"/>
+      <RegistrySearch Id="Ver504" Key="Software\MySQL AB\MySQL Connector/Net 5.0.4" Name="Location" Root="HKLM" Type="raw"/>
+      <RegistrySearch Id="Ver503" Key="Software\MySQL AB\MySQL Connector/Net 5.0.3" Name="Location" Root="HKLM" Type="raw"/>
+      <RegistrySearch Id="Ver502" Key="Software\MySQL AB\MySQL Connector/Net 5.0.2" Name="Location" Root="HKLM" Type="raw"/>
+      <RegistrySearch Id="Ver501" Key="Software\MySQL AB\MySQL Connector/Net 5.0.1" Name="Location" Root="HKLM" Type="raw"/>
+      <RegistrySearch Id="Ver500" Key="Software\MySQL AB\MySQL Connector/Net 5.0.0" Name="Location" Root="HKLM" Type="raw"/>
+    </Property>
+    <Condition Message="A previous version of Connector/Net 5.0 or higher is already installed.  Please uninstall that version first.">Not OLDVERSION</Condition>
+
     <!-- Our directory structure -->
     <Directory Id='TARGETDIR' Name='SourceDir'>
       <Directory Id='ProgramFilesFolder' Name='PFiles'>

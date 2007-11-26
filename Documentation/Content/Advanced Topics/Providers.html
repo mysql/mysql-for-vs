@@ -45,6 +45,18 @@
                 In the web pages that open you will be able to select the MySQL membership and roles
                 provider by indicating that you want to pick a custom provider for each area.</p>
             <img src="aspnetconfig.jpg" />
+            <p>
+                When the provider is installed, it creates a dummy connection string named <i>LocalMySqlServer</i>.
+                This has to be done so that the provider will work in the ASP.NET configuration tool.
+                However, you will want to override this connection string in your web.config file.  You do this
+                by first removing the dummy connection string and then adding in the proper one. Here is an example:
+            </p>
+            <p>
+                &lt;connectionStrings&gt;<br />
+                    &lt;remove name="LocalMySqlServer"/&gt;<br />
+                    &lt;add name="LocalMySqlServer" connectionString="server=xxx;uid=xxx;pwd=xxx"/&gt; <br />
+                &lt;/connectionStrings&gt;<br />
+            </p>
             <h4 class="dxh4">
                 Distribution</h4>
             <p>

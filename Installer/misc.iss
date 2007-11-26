@@ -91,5 +91,23 @@ begin
     end
 end;
 
+function PreviousVersionsInstalled() : Boolean;
+var
+  Names: TArrayOfString;
+  I : Integer;
+begin
+  Result := false;
+  if RegGetSubkeyNames(HKEY_LOCAL_MACHINE, 'Software\MySQL AB', Names) then
+  begin
+    for I := 0 to GetArrayLength(Names)-1 do
+      if Pos('MySQL Connector/Net', Names[I]) = 1 then
+        Result := true;
+  end;
+end;
+
+function CanInstallDDEX() : Boolean;
+begin
+  Result := RegKeyExists(HKEY_LOCAL_MACHINE, 'Software\Microsoft\VisualStudio\8.0');
+end;
 
 

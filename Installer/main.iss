@@ -26,9 +26,10 @@ Name: english; MessagesFile: compiler:Default.isl
 
 [Files]
 Source: ..\Driver\bin\net-2.0\Release\MySql.Data.dll; DestDir: {app}\Binaries\.NET 2.0; Flags: ignoreversion; AfterInstall: AfterMySqlDataInstall
-Source: ..\Documentation\Output\MySql.Data.chm; DestDir: {app}\Documentation; Flags: ignoreversion
+Source: ..\Documentation\Output\MySql.Data.chm; DestDir: {app}\Documentation; Flags: ignoreversion; Components: Documentation
 Source: ..\CHANGES; DestDir: {app}; Flags: ignoreversion
 Source: ..\Release Notes.txt; DestDir: {app}; Flags: ignoreversion
+Source: ..\MySql.Web\Providers\bin\release\MySql.Web.dll; DestDir: {app}\Binaries\.NET 2.0; Flags: ignoreversion; AfterInstall: AfterWebInstall; Components: Providers
 
 ; Handle conditional licensing
 #if defined (GPL)
@@ -42,13 +43,21 @@ Source: ..\Samples\*.*; DestDir: {app}\Samples; Excludes: bin,obj,bin\debug,bin\
 
 Source: binary\installtools.dll; DestDir: {app}; Attribs: hidden
 
-; NOTE: Don't use "Flags: ignoreversion" on any shared system files
+; VS 2005 files
+Source: ..\VisualStudio\bin\Release\MySql.VisualStudio.dll; DestDir: {app}\Visual Studio Integration; Components: VS2005; Check: CanInstallDDEX
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,MySQL Connector Net}; Filename: {uninstallexe}
 Name: {group}\Change Log; Filename: {app}\CHANGES
 Name: {group}\Release Notes; Filename: {app}\Release Notes.txt
 Name: {group}\Help; Filename: {app}\Documentation\MySql.Data.chm
+
+[Components]
+Name: Core; Description: Core assemblies; Flags: fixed; Types: full custom compact
+Name: Documentation; Description: Documentation; Types: full custom
+Name: Samples; Description: Samples; Types: full custom
+Name: Providers; Description: ASP.NET 2.0 Web Providers; Types: full custom
+Name: VS2005; Description: Visual Studio 2005 Integration; Types: full custom
 
 [Registry]
 Root: HKLM; Subkey: Software\MySQL AB\MySQL Connector/Net {#SetupSetting('AppVersion')}; Flags: uninsdeletekey
@@ -67,12 +76,25 @@ begin
   Result := true;
 	if not CheckForFramework('2.0', true) then
 		Result := false
+		
+  if PreviousVersionsInstalled() then
+  begin
+    MsgBox('There is already a version of Connector/Net installed.  ' +
+           'Please uninstall all versions before installing this product.', mbError, MB_OK);
+    Result := false
+  end;
 end;
 
 procedure AfterMySqlDataInstall();
 begin
     if Not RegisterAssembly(ExpandConstant('{app}' + '\Binaries\.NET 2.0\mysql.data.dll'), 2) then
       MsgBox('Registration of the Connector/Net core components failed.', mbError, MB_OK);
+end;
+
+procedure AfterWebInstall();
+begin
+    if Not RegisterAssembly(ExpandConstant('{app}' + '\Binaries\.NET 2.0\mysql.web.dll'), 2) then
+      MsgBox('Registration of the Connector/Net web components failed.', mbError, MB_OK);
 end;
 
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
@@ -82,8 +104,14 @@ begin
     if Not UnRegisterAssembly(ExpandConstant('{app}' + '\Binaries\.NET 2.0\mysql.data.dll'), 2) then
       MsgBox('Unregistration of the Connector/Net core components failed.', mbError, MB_OK);
 
+    if FileExists(ExpandConstant('{app}' + '\Binaries\.NET 2.0\mysql.web.dll')) then
+      if Not UnRegisterAssembly(ExpandConstant('{app}' + '\Binaries\.NET 2.0\mysql.web.dll'), 2) then
+        MsgBox('Unregistration of the Connector/Net web components failed.', mbError, MB_OK);
+
     // Now that we're finished with it, unload MyDll.dll from memory.
     // We have to do this so that the uninstaller will be able to remove the DLL and the {app} directory.
     UnloadDLL(ExpandConstant('{app}\installtools.dll'));
   end
 end;
+
+

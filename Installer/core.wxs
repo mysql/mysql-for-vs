@@ -13,7 +13,7 @@
         <?endif?>
         <File Id="README1" Name="README" Source="..\README" DiskId="1"/>
         <RegistryKey Id="MySqlKey" Root="HKLM" Action="createAndRemoveOnUninstall"
-                     Key="Software\MySQL AB\MySQL Connector/Net $(var.Version)">
+                     Key="Software\MySQL AB\MySQL Connector/Net">
           <RegistryValue Id="Location" Name="Location" Value="[INSTALLDIR]" Type="string"/>
           <RegistryValue Id="Version" Name="Version" Value="$(var.Version)" Type="string"/>
         </RegistryKey>
