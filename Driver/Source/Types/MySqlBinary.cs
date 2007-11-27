@@ -30,12 +30,14 @@ namespace MySql.Data.Types
 		private MySqlDbType type;
 		private byte[] mValue;
 		private bool isNull;
+        internal bool IsGuid;
 
 		public MySqlBinary(MySqlDbType type, bool isNull)
 		{
 			this.type = type;
 			this.isNull = isNull;
 			mValue = null;
+            IsGuid = false;
 		}
 
 		public MySqlBinary(MySqlDbType type, byte[] val)
@@ -43,6 +45,7 @@ namespace MySql.Data.Types
 			this.type = type;
 			this.isNull = false;
 			mValue = val;
+            IsGuid = false;
 		}
 
 		#region IMySqlValue Members
@@ -59,12 +62,18 @@ namespace MySql.Data.Types
 
 		DbType IMySqlValue.DbType
 		{
-			get { return DbType.Binary; }
+			get { return IsGuid ? DbType.Guid : DbType.Binary; }
 		}
 
 		object IMySqlValue.Value
 		{
-			get { return mValue; }
+			get 
+            { 
+                if (IsGuid)
+                    return new Guid(mValue) as object;
+                else
+                    return mValue; 
+            }
 		}
 
 		public byte[] Value
@@ -74,7 +83,7 @@ namespace MySql.Data.Types
 
 		Type IMySqlValue.SystemType
 		{
-			get { return typeof(byte[]); }
+			get { return IsGuid ? typeof(Guid) : typeof(byte[]); }
 		}
 
 		string IMySqlValue.MySqlTypeName
@@ -168,7 +177,9 @@ namespace MySql.Data.Types
 
 			byte[] newBuff = new byte[length];
 			stream.Read(newBuff, 0, (int)length);
-			return new MySqlBinary(type, newBuff);
+			MySqlBinary b = new MySqlBinary(type, newBuff);
+            b.IsGuid = this.IsGuid;
+            return b;
 		}
 
 		void IMySqlValue.SkipValue(MySqlStream stream)

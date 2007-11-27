@@ -7,8 +7,8 @@ Version 5.2
 . Marked connection string option 'Use Old Syntax' as obsolete and changed code to 
   allow both @ and ? as paramter markers.
 . Finished MySqlBulkLoader class
+. BINARY(16) columns are now returned as Guid objects
 
-Version 5.1.4
 Version 5.1.4 - 11/12/2007
   - Fixed issue where column name metadata was not using the charset given on the connection string
     (Bug #31185)

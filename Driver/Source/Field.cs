@@ -284,6 +284,12 @@ namespace MySql.Data.MySqlClient
                 b.TreatAsBoolean = true;
                 v = b;
             }
+            else if (Type == MySqlDbType.Binary && ColumnLength == 16)
+            {
+                MySqlBinary b = (MySqlBinary)v;
+                b.IsGuid = true;
+                v = b;
+            }
             return v;
         }
 

@@ -837,5 +837,30 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(1, dt.Rows[0][2]);
             Assert.AreEqual(0, dt.Rows[1][2]);
         }
+
+        [Test]
+        public void Binary16AsGuid()
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id INT, g BINARY(16), c VARBINARY(16), c1 BINARY(17))");
+
+            Guid g = Guid.NewGuid();
+            byte[] bytes = g.ToByteArray();
+
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (1, @g, @c, @c1)", conn);
+            cmd.Parameters.AddWithValue("@g", bytes);
+            cmd.Parameters.AddWithValue("@c", bytes);
+            cmd.Parameters.AddWithValue("@c1", g.ToString());
+            cmd.ExecuteNonQuery();
+
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            Assert.IsTrue(dt.Rows[0][1] is Guid);
+            Assert.IsTrue(dt.Rows[0][2] is byte[]);
+            Assert.IsTrue(dt.Rows[0][3] is byte[]);
+
+            Assert.AreEqual(g, dt.Rows[0][1]);
+        }
 	}
 }
