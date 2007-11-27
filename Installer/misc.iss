@@ -105,9 +105,14 @@ begin
   end;
 end;
 
-function CanInstallDDEX() : Boolean;
+function VS2005Installed() : Boolean;
 begin
   Result := RegKeyExists(HKEY_LOCAL_MACHINE, 'Software\Microsoft\VisualStudio\8.0');
+end;
+
+function VS2008Installed() : Boolean;
+begin
+  Result := RegKeyExists(HKEY_LOCAL_MACHINE, 'Software\Microsoft\VisualStudio\9.0');
 end;
 
 

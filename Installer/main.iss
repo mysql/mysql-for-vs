@@ -3,7 +3,7 @@
 
 [Setup]
 AppName=MySQL Connector/Net
-AppVersion=5.1.3
+AppVersion=5.2.0
 AppVerName=MySQL Connector/Net {#SetupSetting("AppVersion")}
 AppPublisher=MySQL, Inc.
 AppPublisherURL=http://www.mysql.com.com/
@@ -25,11 +25,11 @@ VersionInfoVersion={#SetupSetting("AppVersion")}
 Name: english; MessagesFile: compiler:Default.isl
 
 [Files]
-Source: ..\Driver\bin\net-2.0\Release\MySql.Data.dll; DestDir: {app}\Binaries\.NET 2.0; Flags: ignoreversion; AfterInstall: AfterMySqlDataInstall
+Source: ..\Driver\bin\net-2.0\Release\MySql.Data.dll; DestDir: {app}\Binaries\.NET 2.0; Flags: ignoreversion
 Source: ..\Documentation\Output\MySql.Data.chm; DestDir: {app}\Documentation; Flags: ignoreversion; Components: Documentation
 Source: ..\CHANGES; DestDir: {app}; Flags: ignoreversion
 Source: ..\Release Notes.txt; DestDir: {app}; Flags: ignoreversion
-Source: ..\MySql.Web\Providers\bin\release\MySql.Web.dll; DestDir: {app}\Binaries\.NET 2.0; Flags: ignoreversion; AfterInstall: AfterWebInstall; Components: Providers
+Source: ..\MySql.Web\Providers\bin\release\MySql.Web.dll; DestDir: {app}\Binaries\.NET 2.0; Flags: ignoreversion; Components: Providers
 
 ; Handle conditional licensing
 #if defined (GPL)
@@ -40,11 +40,10 @@ Source: ..\License.txt; DestDir: {app}; Flags: ignoreversion
 #endif
 
 Source: ..\Samples\*.*; DestDir: {app}\Samples; Excludes: bin,obj,bin\debug,bin\release,obj\debug,obj\release; Flags: ignoreversion createallsubdirs recursesubdirs
-
 Source: binary\installtools.dll; DestDir: {app}; Attribs: hidden
 
-; VS 2005 files
-Source: ..\VisualStudio\bin\Release\MySql.VisualStudio.dll; DestDir: {app}\Visual Studio Integration; Components: VS2005; Check: CanInstallDDEX
+; VS integration
+Source: ..\VisualStudio\bin\Release\MySql.VisualStudio.dll; DestDir: {app}\Visual Studio Integration; Components: VS
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,MySQL Connector Net}; Filename: {uninstallexe}
@@ -57,16 +56,21 @@ Name: Core; Description: Core assemblies; Flags: fixed; Types: full custom compa
 Name: Documentation; Description: Documentation; Types: full custom
 Name: Samples; Description: Samples; Types: full custom
 Name: Providers; Description: ASP.NET 2.0 Web Providers; Types: full custom
-Name: VS2005; Description: Visual Studio 2005 Integration; Types: full custom
+Name: VS; Description: Visual Studio Integration; Types: full custom
+Name: VS/2005; Description: Visual Studio 2005; Types: full custom; Check: VS2005Installed
+Name: VS/2008; Description: Visual Studio 2008; Types: full custom; Check: VS2008Installed
 
 [Registry]
-Root: HKLM; Subkey: Software\MySQL AB\MySQL Connector/Net {#SetupSetting('AppVersion')}; Flags: uninsdeletekey
-Root: HKLM; Subkey: Software\MySQL AB\MySQL Connector/Net {#SetupSetting('AppVersion')}; ValueType: string; ValueName: Location; ValueData: {app}
-Root: HKLM; Subkey: Software\MySQL AB\MySQL Connector/Net {#SetupSetting('AppVersion')}; ValueType: string; ValueName: Version; ValueData: {#SetupSetting('AppVersion')}
+Root: HKLM; Subkey: Software\MySQL AB\MySQL Connector/Net; Flags: uninsdeletekey
+Root: HKLM; Subkey: Software\MySQL AB\MySQL Connector/Net; ValueType: string; ValueName: Location; ValueData: {app}
+Root: HKLM; Subkey: Software\MySQL AB\MySQL Connector/Net; ValueType: string; ValueName: Version; ValueData: {#SetupSetting('AppVersion')}
 
 ; make our assembly visible to Visual Studio
 Root: HKLM; Subkey: Software\Microsoft\.NETFramework\AssemblyFolders\MySQL Connector/Net {#SetupSetting('AppVersion')}; Flags: uninsdeletekey
 Root: HKLM; Subkey: Software\Microsoft\.NETFramework\AssemblyFolders\MySQL Connector/Net {#SetupSetting('AppVersion')}; ValueType: string; ValueData: {app}\Binaries\.NET 2.0
+
+;#include "vs2005.iss"
+;#include "vs2008.iss"
 
 [Code]
 #include "misc.iss"
