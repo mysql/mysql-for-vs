@@ -179,6 +179,7 @@ namespace MySql.Data.MySqlClient.Tests
             }
         }
 
+#if !CF
 		[Test]
 		public void UseOldSyntaxGivesWarning() 
 		{
@@ -194,6 +195,7 @@ namespace MySql.Data.MySqlClient.Tests
             conn2.Close();
             Trace.Listeners.Clear();
 		}
+#endif
 
 		[Test]
 		public void NullParameterObject() 
