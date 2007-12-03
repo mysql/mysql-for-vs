@@ -37,7 +37,7 @@ namespace MySql.Web.Security.Tests
         private MySQLMembershipProvider provider;
 
         [SetUp]
-		protected override void Setup()
+		public override void Setup()
 		{
 			base.Setup();
 			execSQL("DROP TABLE IF EXISTS mysql_membership");
@@ -58,7 +58,7 @@ namespace MySql.Web.Security.Tests
             Assert.AreEqual(MembershipCreateStatus.Success, status);
 
             // verify that the password format is hashed.
-            DataTable table = GetMembers();
+            DataTable table = FillTable("SELECT * FROM my_aspnet_Membership");
             MembershipPasswordFormat rowFormat =
                 (MembershipPasswordFormat)Convert.ToInt32(table.Rows[0]["PasswordFormat"]);
             Assert.AreEqual(format, rowFormat);
@@ -104,7 +104,7 @@ namespace MySql.Web.Security.Tests
         {
             CreateUserWithHashedPassword();
             Assert.IsTrue(provider.DeleteUser("foo", true));
-            DataTable table = GetMembers();
+            DataTable table = FillTable("SELECT * FROM my_aspnet_Membership");
             Assert.AreEqual(0, table.Rows.Count);
 
             CreateUserWithHashedPassword();
@@ -114,7 +114,7 @@ namespace MySql.Web.Security.Tests
             config.Add("applicationName", "/");
             provider.Initialize(null, config);
             Assert.IsTrue(Membership.DeleteUser("foo", true));
-            table = GetMembers();
+            table = FillTable("SELECT * FROM my_aspnet_Membership");
             Assert.AreEqual(0, table.Rows.Count);
         }
 

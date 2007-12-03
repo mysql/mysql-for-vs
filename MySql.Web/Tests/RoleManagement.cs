@@ -38,7 +38,7 @@ namespace MySql.Web.Security.Tests
         private MySQLRoleProvider roleProvider;
 
         [SetUp]
-		protected override void Setup()
+		public override void Setup()
 		{
 			base.Setup();
 
