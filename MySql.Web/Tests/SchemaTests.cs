@@ -26,6 +26,11 @@ using NUnit.Framework;
 using MySql.Web.Security;
 using System.Collections.Specialized;
 using MySql.Data.MySqlClient;
+using System.Resources;
+using System.Data;
+using System;
+using System.IO;
+using System.Configuration.Provider;
 
 namespace MySql.Web.Security.Tests
 {
@@ -33,44 +38,138 @@ namespace MySql.Web.Security.Tests
     public class SchemaTests : BaseWebTest
     {
         [SetUp]
-        protected override void Setup()
+        public override void Setup()
         {
 			base.Setup();
 
-            execSQL("DROP TABLE IF EXISTS mysql_Membership");
-            execSQL("DROP TABLE IF EXISTS mysql_Roles");
-            execSQL("DROP TABLE IF EXISTS mysql_UsersInRoles");
+            DataTable dt = conn.GetSchema("Tables");
+            foreach (DataRow row in dt.Rows)
+                execSQL(String.Format("DROP TABLE IF EXISTS {0}", row["TABLE_NAME"]));
+        }
+
+        [Test]
+        public void SchemaNotPresent()
+        {
+            MySQLMembershipProvider provider = new MySQLMembershipProvider();
+            NameValueCollection config = new NameValueCollection();
+            config.Add("connectionStringName", "LocalMySqlServer");
+            config.Add("applicationName", "/");
+            config.Add("passwordFormat", "Clear");
+
+            try
+            {
+                provider.Initialize(null, config);
+                Assert.Fail("Should have failed");
+            }
+            catch (ProviderException)
+            {
+            }
+        }
+
+        [Test]
+        public void SchemaV1Present()
+        {
+            MySQLMembershipProvider provider = new MySQLMembershipProvider();
+            NameValueCollection config = new NameValueCollection();
+            config.Add("connectionStringName", "LocalMySqlServer");
+            config.Add("applicationName", "/");
+            config.Add("passwordFormat", "Clear");
+
+            LoadSchema(1);
+            try
+            {
+                provider.Initialize(null, config);
+                Assert.Fail("Should have failed");
+            }
+            catch (ProviderException)
+            {
+            }
+        }
+
+        [Test]
+        public void SchemaV2Present()
+        {
+            MySQLMembershipProvider provider = new MySQLMembershipProvider();
+            NameValueCollection config = new NameValueCollection();
+            config.Add("connectionStringName", "LocalMySqlServer");
+            config.Add("applicationName", "/");
+            config.Add("passwordFormat", "Clear");
+
+            LoadSchema(1);
+            LoadSchema(2);
+            try
+            {
+                provider.Initialize(null, config);
+                Assert.Fail("Should have failed");
+            }
+            catch (ProviderException)
+            {
+            }
+        }
+
+        [Test]
+        public void SchemaV3Present()
+        {
+            MySQLMembershipProvider provider = new MySQLMembershipProvider();
+            NameValueCollection config = new NameValueCollection();
+            config.Add("connectionStringName", "LocalMySqlServer");
+            config.Add("applicationName", "/");
+            config.Add("passwordFormat", "Clear");
+
+            LoadSchema(1);
+            LoadSchema(2);
+            LoadSchema(3);
+            try
+            {
+                provider.Initialize(null, config);
+            }
+            catch (ProviderException)
+            {
+                Assert.Fail("Should not have failed");
+            }
+        }
+
+        private void LoadSchema(int version)
+        {
+            if (version < 1) return;
+
+            MySQLMembershipProvider provider = new MySQLMembershipProvider();
+
+            ResourceManager r = new ResourceManager("MySql.Web.Properties.Resources", typeof(MySQLMembershipProvider).Assembly);
+            string schema = r.GetString(String.Format("schema{0}", version));
+            MySqlScript script = new MySqlScript(conn);
+            script.Query = schema;
+            script.Execute();
         }
 
         [Test]
         public void CurrentSchema()
         {
-            MySQLMembershipProvider provider = new MySQLMembershipProvider();
-            NameValueCollection config = new NameValueCollection();
-            config.Add("connectionStringName", "LocalMySqlServer");
-            provider.Initialize(null, config);
+            LoadSchema(1);
+            LoadSchema(2);
+            LoadSchema(3);
 
-            MySqlCommand cmd = new MySqlCommand("SHOW CREATE TABLE mysql_membership", conn);
-            using (MySqlDataReader reader = cmd.ExecuteReader())
-            {
-                reader.Read();
-                string createTable = reader.GetString(1);
-                int index = createTable.IndexOf("COMMENT='2'");
-                Assert.AreNotEqual(-1, index);
-            }
+            MySqlCommand cmd = new MySqlCommand("SELECT * FROM my_aspnet_SchemaVersion", conn);
+            object ver = cmd.ExecuteScalar();
+            Assert.AreEqual(3, ver);
         }
 
         [Test]
         public void UpgradeV1ToV2()
         {
-            execSQL(schema1);
-
-            MySQLMembershipProvider provider = new MySQLMembershipProvider();
-            NameValueCollection config = new NameValueCollection();
-            config.Add("connectionStringName", "LocalMySqlServer");
-            provider.Initialize(null, config);
+            LoadSchema(1);
 
             MySqlCommand cmd = new MySqlCommand("SHOW CREATE TABLE mysql_membership", conn);
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                reader.Read();
+                string createTable = reader.GetString(1);
+                int index = createTable.IndexOf("COMMENT='1'");
+                Assert.AreNotEqual(-1, index);
+            }
+
+            LoadSchema(2);
+            cmd = new MySqlCommand("SHOW CREATE TABLE mysql_membership", conn);
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {
                 reader.Read();
@@ -80,36 +179,115 @@ namespace MySql.Web.Security.Tests
             }
         }
 
-        #region Schema
+        private void LoadData()
+        {
+            LoadSchema(1);
+            LoadSchema(2);
+            execSQL(@"INSERT INTO mysql_membership (pkid, username, applicationname, lastactivitydate) 
+                VALUES('1', 'user1', 'app1', '2007-01-01')");
+            execSQL(@"INSERT INTO mysql_membership (pkid, username, applicationname, lastactivitydate) 
+                VALUES('2', 'user2', 'app1', '2007-01-01')");
+            execSQL(@"INSERT INTO mysql_membership (pkid, username, applicationname, lastactivitydate) 
+                VALUES('3', 'user1', 'app2', '2007-01-01')");
+            execSQL(@"INSERT INTO mysql_membership (pkid, username, applicationname, lastactivitydate) 
+                VALUES('4', 'user2', 'app2', '2007-01-01')");
+            execSQL(@"INSERT INTO mysql_roles VALUES ('role1', 'app1')");
+            execSQL(@"INSERT INTO mysql_roles VALUES ('role2', 'app1')");
+            execSQL(@"INSERT INTO mysql_roles VALUES ('role1', 'app2')");
+            execSQL(@"INSERT INTO mysql_roles VALUES ('role2', 'app2')");
+            execSQL(@"INSERT INTO mysql_UsersInRoles VALUES ('user1', 'role1', 'app1')");
+            execSQL(@"INSERT INTO mysql_UsersInRoles VALUES ('user2', 'role2', 'app1')");
+            execSQL(@"INSERT INTO mysql_UsersInRoles VALUES ('user1', 'role1', 'app2')");
+            execSQL(@"INSERT INTO mysql_UsersInRoles VALUES ('user2', 'role2', 'app2')");
+            LoadSchema(3);
+            Assert.IsFalse(TableExists("mysql_membership"));
+            Assert.IsFalse(TableExists("mysql_roles"));
+            Assert.IsFalse(TableExists("mysql_usersinroles"));
+        }
 
-        private const string schema1 =
-                @"CREATE TABLE  mysql_Membership(`PKID` varchar(36) NOT NULL,
-                `Username` varchar(255) NOT NULL, 
-                `ApplicationName` varchar(255) NOT NULL,
-                `Email` varchar(128) NOT NULL, 
-                `Comment` varchar(255) default NULL,
-                `Password` varchar(128) NOT NULL, 
-                `PasswordQuestion` varchar(255) default NULL,
-                `PasswordAnswer` varchar(255) default NULL, 
-                `IsApproved` tinyint(1) default NULL,
-                `LastActivityDate` datetime default NULL, 
-                `LastLoginDate` datetime default NULL,
-                `LastPasswordChangedDate` datetime default NULL, 
-                `CreationDate` datetime default NULL,
-                `IsOnline` tinyint(1) default NULL, 
-                `IsLockedOut` tinyint(1) default NULL,
-                `LastLockedOutDate` datetime default NULL, 
-                `FailedPasswordAttemptCount` int(10) unsigned default NULL,
-                `FailedPasswordAttemptWindowStart` datetime default NULL,
-                `FailedPasswordAnswerAttemptCount` int(10) unsigned default NULL,
-                `FailedPasswordAnswerAttemptWindowStart` datetime default NULL,
-                PRIMARY KEY  (`PKID`)) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='1'";
+        [Test]
+        public void CheckAppsUpgrade()
+        {
+            LoadData();
 
-        private const string schema2 =
-            @"ALTER TABLE mysql_Membership 
-            ADD COLUMN PasswordKey char(16) AFTER Password, 
-            ADD COLUMN PasswordFormat tinyint AFTER PasswordKey, COMMENT='2'";
+            DataTable apps = FillTable("SELECT * FROM my_aspnet_Applications");
+            Assert.AreEqual(2, apps.Rows.Count);
+            Assert.AreEqual(1, apps.Rows[0]["id"]);
+            Assert.AreEqual("app1", apps.Rows[0]["name"]);
+            Assert.AreEqual(2, apps.Rows[1]["id"]);
+            Assert.AreEqual("app2", apps.Rows[1]["name"]);
+        }
 
-        #endregion
+        [Test]
+        public void CheckUsersUpgrade()
+        {
+            LoadData();
+
+            DataTable dt = FillTable("SELECT * FROM my_aspnet_Users");
+            Assert.AreEqual(4, dt.Rows.Count);
+            Assert.AreEqual(1, dt.Rows[0]["id"]);
+            Assert.AreEqual(1, dt.Rows[0]["applicationId"]);
+            Assert.AreEqual("user1", dt.Rows[0]["name"]);
+            Assert.AreEqual(2, dt.Rows[1]["id"]);
+            Assert.AreEqual(1, dt.Rows[1]["applicationId"]);
+            Assert.AreEqual("user2", dt.Rows[1]["name"]);
+            Assert.AreEqual(3, dt.Rows[2]["id"]);
+            Assert.AreEqual(2, dt.Rows[2]["applicationId"]);
+            Assert.AreEqual("user1", dt.Rows[2]["name"]);
+            Assert.AreEqual(4, dt.Rows[3]["id"]);
+            Assert.AreEqual(2, dt.Rows[3]["applicationId"]);
+            Assert.AreEqual("user2", dt.Rows[3]["name"]);
+        }
+           
+        [Test]
+        public void CheckRolesUpgrade()
+        {
+            LoadData();
+
+            DataTable dt = FillTable("SELECT * FROM my_aspnet_Roles");
+            Assert.AreEqual(4, dt.Rows.Count);
+            Assert.AreEqual(1, dt.Rows[0]["id"]);
+            Assert.AreEqual(1, dt.Rows[0]["applicationId"]);
+            Assert.AreEqual("role1", dt.Rows[0]["name"]);
+            Assert.AreEqual(2, dt.Rows[1]["id"]);
+            Assert.AreEqual(1, dt.Rows[1]["applicationId"]);
+            Assert.AreEqual("role2", dt.Rows[1]["name"]);
+            Assert.AreEqual(3, dt.Rows[2]["id"]);
+            Assert.AreEqual(2, dt.Rows[2]["applicationId"]);
+            Assert.AreEqual("role1", dt.Rows[2]["name"]);
+            Assert.AreEqual(4, dt.Rows[3]["id"]);
+            Assert.AreEqual(2, dt.Rows[3]["applicationId"]);
+            Assert.AreEqual("role2", dt.Rows[3]["name"]);
+        }
+
+        [Test]
+        public void CheckMembershipUpgrade()
+        {
+            LoadData();
+
+            DataTable dt = FillTable("SELECT * FROM my_aspnet_Membership");
+            Assert.AreEqual(4, dt.Rows.Count);
+            Assert.AreEqual(1, dt.Rows[0]["userid"]);
+            Assert.AreEqual(2, dt.Rows[1]["userid"]);
+            Assert.AreEqual(3, dt.Rows[2]["userid"]);
+            Assert.AreEqual(4, dt.Rows[3]["userid"]);
+        }
+
+        [Test]
+        public void CheckUsersInRolesUpgrade()
+        {
+            LoadData();
+
+            DataTable dt = FillTable("SELECT * FROM my_aspnet_UsersInRoles");
+            Assert.AreEqual(4, dt.Rows.Count);
+            Assert.AreEqual(1, dt.Rows[0]["userid"]);
+            Assert.AreEqual(1, dt.Rows[0]["roleid"]);
+            Assert.AreEqual(2, dt.Rows[1]["userid"]);
+            Assert.AreEqual(2, dt.Rows[1]["roleid"]);
+            Assert.AreEqual(3, dt.Rows[2]["userid"]);
+            Assert.AreEqual(3, dt.Rows[2]["roleid"]);
+            Assert.AreEqual(4, dt.Rows[3]["userid"]);
+            Assert.AreEqual(4, dt.Rows[3]["roleid"]);
+        }
     }
 }

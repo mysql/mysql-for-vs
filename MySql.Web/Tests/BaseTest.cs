@@ -74,12 +74,10 @@ namespace MySql.Web.Security.Tests
 			ConfigurationManager.RefreshSection("system.web/membership");
 		}
 
-        protected DataTable GetMembers()
+        [TestFixtureSetUp]
+        public override void FixtureSetup()
         {
-            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM mysql_membership", conn);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-            return dt;
+            base.FixtureSetup();
         }
     }
 }

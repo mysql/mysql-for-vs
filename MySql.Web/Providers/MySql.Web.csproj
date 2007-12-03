@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{C28B1166-1380-445D-AEC1-8A18B990DD18}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -59,11 +59,9 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Source\ProfileProvider.cs" />
-    <Compile Include="Source\ProfileSchema.cs" />
-    <Compile Include="Source\RoleSchema.cs" />
     <Compile Include="Source\MembershipProvider.cs" />
     <Compile Include="Source\RoleProvider.cs" />
-    <Compile Include="Source\MembershipSchema.cs" />
+    <Compile Include="Source\SchemaManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Driver\MySql.Data.csproj">
@@ -77,6 +75,11 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\schema1.sql" />
+    <None Include="Properties\schema2.sql" />
+    <None Include="Properties\schema3.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

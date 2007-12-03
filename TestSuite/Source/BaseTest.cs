@@ -314,5 +314,21 @@ namespace MySql.Data.MySqlClient.Tests
             da.Fill(dt);
             return dt.Rows.Count;
         }
+
+        protected bool TableExists(string tableName)
+        {
+            string[] restrictions = new string[4];
+            restrictions[2] = tableName;
+            DataTable dt = conn.GetSchema("Tables", restrictions);
+            return dt.Rows.Count > 0;
+        }
+
+        protected DataTable FillTable(string sql)
+        {
+            MySqlDataAdapter da = new MySqlDataAdapter(sql, conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            return dt;
+        }
     }
 }
