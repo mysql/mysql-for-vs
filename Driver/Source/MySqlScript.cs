@@ -275,9 +275,15 @@ namespace MySql.Data.MySqlClient
             // now clean up the last statement
             if (tokenizer.CurrentPos > startPos)
             {
-                ScriptStatement statement = new ScriptStatement();
-                statement.text = query.Substring(startPos).Trim();
-                statements.Add(statement);
+                string sqlLeftOver = query.Substring(startPos).Trim();
+                if (!String.IsNullOrEmpty(sqlLeftOver))
+                {
+                    ScriptStatement statement = new ScriptStatement();
+                    statement.text = sqlLeftOver;
+                    statement.line = FindLineNumber(startPos, lineNumbers);
+                    statement.position = startPos - lineNumbers[statement.line];
+                    statements.Add(statement);
+                }
             }
             return statements;
         }
