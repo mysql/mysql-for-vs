@@ -30,6 +30,8 @@ using System.Diagnostics;
 using System.Web.Hosting;
 using System.Web.Security;
 using MySql.Data.MySqlClient;
+using System.Transactions;
+using System.Collections.Generic;
 
 namespace MySql.Web.Security
 {
@@ -44,7 +46,8 @@ namespace MySql.Web.Security
         private ConnectionStringSettings pConnectionStringSettings;
         private string connectionString;
         private bool pWriteExceptionsToEventLog = false;
-        private string pApplicationName;
+        private string applicationName;
+        private int applicationId;
 
         /// <summary>
         /// Initializes the provider.
@@ -70,14 +73,12 @@ namespace MySql.Web.Security
                 config.Add("description", "MySQL Role provider");
             }
             base.Initialize(name, config);
+
             if (config["applicationName"] == null || config["applicationName"].Trim() == "")
-            {
-                pApplicationName = HostingEnvironment.ApplicationVirtualPath;
-            }
+                applicationName = HostingEnvironment.ApplicationVirtualPath;
             else
-            {
-                pApplicationName = config["applicationName"];
-            }
+                applicationName = config["applicationName"];
+
             if (!(config["writeExceptionsToEventLog"] == null))
             {
                 if (config["writeExceptionsToEventLog"].ToUpper() == "TRUE")
@@ -92,10 +93,21 @@ namespace MySql.Web.Security
                 connectionString = "";
 
             // make sure our schema is up to date
-            string autoGenSchema = config["AutoGenerateSchema"];
-            if ((String.IsNullOrEmpty(autoGenSchema) || Convert.ToBoolean(autoGenSchema)) &&
-                connectionString != String.Empty)
-                RoleSchema.CheckSchema(connectionString);
+            SchemaManager.CheckSchema(connectionString, config);
+
+            try
+            {
+                // now pre-cache the applicationId
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                {
+                    MySqlCommand cmd = new MySqlCommand("SELECT id FROM my_aspnet_Applications WHERE name=@name", conn);
+                    applicationId = (int)cmd.ExecuteScalar();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ProviderException("There was an error during role provider initilization.", ex);
+            }
         }
 
         #region Properties
@@ -109,8 +121,8 @@ namespace MySql.Web.Security
         /// </example>
         public override string ApplicationName
         {
-            get { return pApplicationName; }
-            set { pApplicationName = value; }
+            get { return applicationName; }
+            set { applicationName = value; }
         }
 
         /// <summary>
@@ -153,48 +165,39 @@ namespace MySql.Web.Security
                 foreach (string rolename in rolenames)
                 {
                     if (IsUserInRole(username, rolename))
-                    {
                         throw new ProviderException("User is already in role.");
-                    }
                 }
             }
 
-            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            try
             {
-                MySqlCommand cmd =
-                    new MySqlCommand(
-                        @"INSERT INTO mysql_UsersInRoles (Username, Rolename, ApplicationName) 
-                Values(?Username, ?Rolename, ?ApplicationName)",
-                        conn);
-                MySqlParameter userParm = cmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255);
-                MySqlParameter roleParm = cmd.Parameters.Add("?Rolename", MySqlDbType.VarChar, 255);
-                cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
-                MySqlTransaction tran = null;
-                try
+                using (TransactionScope ts = new TransactionScope())
                 {
-                    conn.Open();
-                    tran = conn.BeginTransaction();
-                    cmd.Transaction = tran;
-                    foreach (string username in usernames)
+                    using (MySqlConnection conn = new MySqlConnection(connectionString))
                     {
-                        foreach (string rolename in rolenames)
+                        MySqlCommand cmd = new MySqlCommand(
+                            "INSERT INTO my_aspnet_UsersInRoles VALUES(@userId, @roleId)", conn);
+                        cmd.Parameters.Add("@userId", MySqlDbType.Int32);
+                        cmd.Parameters.Add("@roleId", MySqlDbType.Int32);
+                        foreach (string username in usernames)
                         {
-                            userParm.Value = username;
-                            roleParm.Value = rolename;
-                            cmd.ExecuteNonQuery();
+                            int userId = GetUserId(conn, username);
+                            foreach (string rolename in rolenames)
+                            {
+                                int roleId = GetRoleId(conn, rolename);
+                                cmd.Parameters[0].Value = userId;
+                                cmd.Parameters[1].Value = roleId;
+                                cmd.ExecuteNonQuery();
+                            }
                         }
                     }
-                    tran.Commit();
                 }
-                catch (MySqlException e)
-                {
-                    if (tran != null)
-                        tran.Rollback();
-                    if (WriteExceptionsToEventLog)
-                        WriteToEventLog(e, "AddUsersToRoles");
-                    else
-                        throw;
-                }
+            }
+            catch (Exception ex)
+            {
+                if (WriteExceptionsToEventLog)
+                    WriteToEventLog(ex, "AddUsersToRoles");
+                throw;
             }
         }
 
@@ -213,11 +216,8 @@ namespace MySql.Web.Security
             {
                 MySqlCommand cmd =
                     new MySqlCommand(
-                        @"INSERT INTO mysql_Roles (Rolename, ApplicationName) 
-                Values(?Rolename, ?ApplicationName)",
-                        conn);
-                cmd.Parameters.Add("?Rolename", MySqlDbType.VarChar, 255).Value = rolename;
-                cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
+                        @"INSERT INTO my_aspnet_Roles Values(NULL, @name)", conn);
+                cmd.Parameters.AddWithValue("@name", rolename);
                 try
                 {
                     conn.Open();
@@ -227,8 +227,7 @@ namespace MySql.Web.Security
                 {
                     if (WriteExceptionsToEventLog)
                         WriteToEventLog(e, "CreateRole");
-                    else
-                        throw;
+                    throw;
                 }
             }
         }
@@ -241,51 +240,40 @@ namespace MySql.Web.Security
         /// <returns>true if the role was successfully deleted; otherwise, false. </returns>
         public override bool DeleteRole(string rolename, bool throwOnPopulatedRole)
         {
-            if (!(RoleExists(rolename)))
-                throw new ProviderException("Role does not exist.");
-            if (throwOnPopulatedRole && GetUsersInRole(rolename).Length > 0)
-                throw new ProviderException("Cannot delete a populated role.");
-
-            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            try
             {
-                MySqlCommand cmd =
-                    new MySqlCommand(
-                        @"DELETE FROM mysql_Roles 
-                WHERE Rolename = ?Rolename AND ApplicationName = ?ApplicationName",
-                        conn);
-                cmd.Parameters.Add("?Rolename", MySqlDbType.VarChar, 255).Value = rolename;
-                cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
-                MySqlCommand cmd2 =
-                    new MySqlCommand(
-                        @"DELETE FROM mysql_UsersInRoles 
-                WHERE Rolename = ?Rolename AND ApplicationName = ?ApplicationName",
-                        conn);
-                cmd2.Parameters.Add("?Rolename", MySqlDbType.VarChar, 255).Value = rolename;
-                cmd2.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
+                using (TransactionScope ts = new TransactionScope())
+                {
+                    using (MySqlConnection conn = new MySqlConnection(connectionString))
+                    {
+                        if (!(RoleExists(rolename)))
+                            throw new ProviderException("Role does not exist.");
+                        if (throwOnPopulatedRole && GetUsersInRole(rolename).Length > 0)
+                            throw new ProviderException("Cannot delete a populated role.");
 
-                MySqlTransaction tran = null;
-                try
-                {
-                    conn.Open();
-                    tran = conn.BeginTransaction();
-                    cmd.Transaction = tran;
-                    cmd2.Transaction = tran;
-                    cmd2.ExecuteNonQuery();
-                    cmd.ExecuteNonQuery();
-                    tran.Commit();
-                    return true;
-                }
-                catch (MySqlException e)
-                {
-                    if (tran != null)
-                        tran.Rollback();
-                    if (WriteExceptionsToEventLog)
-                        WriteToEventLog(e, "DeleteRole");
-                    else
-                        throw;
-                    return false;
+                        // first delete all the user/role mappings with that roleid
+                        MySqlCommand cmd = new MySqlCommand(
+                            @"DELETE uir FROM my_aspnet_UsersInRoles uir JOIN 
+                            my_aspnet_Roles r ON uir.roleId=r.id 
+                            WHERE r.name LIKE @rolename AND r.applicationId=@appId", conn);
+                        cmd.Parameters.AddWithValue("@rolename", rolename);
+                        cmd.Parameters.AddWithValue("@appId", applicationId);
+                        cmd.ExecuteNonQuery();
+
+                        // now delete the role itself
+                        cmd.CommandText = @"DELETE FROM my_aspnet_Roles WHERE name=@rolename 
+                            AND applicationId=@appId";
+                        cmd.ExecuteNonQuery();
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                if (WriteExceptionsToEventLog)
+                    WriteToEventLog(ex, "DeleteRole");
+                throw;
+            }
+            return true;
         }
 
         /// <summary>
@@ -296,45 +284,10 @@ namespace MySql.Web.Security
         /// </returns>
         public override string[] GetAllRoles()
         {
-            string tmpRoleNames = "";
-            MySqlConnection conn = new MySqlConnection(connectionString);
-            MySqlCommand cmd =
-                new MySqlCommand(
-                    @"SELECT Rolename FROM mysql_Roles 
-                WHERE ApplicationName = ?ApplicationName", conn);
-            cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
-            MySqlDataReader reader = null;
-
-            try
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
-                conn.Open();
-                reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    tmpRoleNames += reader.GetString(0) + ",";
-                }
+                return GetRolesByUserName(conn, null);
             }
-            catch (MySqlException e)
-            {
-                if (WriteExceptionsToEventLog)
-                    WriteToEventLog(e, "GetAllRoles");
-                else
-                    throw;
-            }
-            finally
-            {
-                if (!(reader == null))
-                {
-                    reader.Close();
-                }
-                conn.Close();
-            }
-            if (tmpRoleNames.Length > 0)
-            {
-                tmpRoleNames = tmpRoleNames.Substring(0, tmpRoleNames.Length - 1);
-                return tmpRoleNames.Split(Convert.ToChar(","));
-            }
-            return new string[0];
         }
 
         /// <summary>
@@ -346,46 +299,10 @@ namespace MySql.Web.Security
         /// </returns>
         public override string[] GetRolesForUser(string username)
         {
-            string tmpRoleNames = "";
-            MySqlConnection conn = new MySqlConnection(connectionString);
-            MySqlCommand cmd =
-                new MySqlCommand(
-                    @"SELECT Rolename FROM mysql_UsersInRoles 
-                WHERE Username = ?Username AND ApplicationName = ?ApplicationName",
-                    conn);
-            cmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255).Value = username;
-            cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
-            MySqlDataReader reader = null;
-            try
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
-                conn.Open();
-                reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    tmpRoleNames += reader.GetString(0) + ",";
-                }
+                return GetRolesByUserName(conn, username);
             }
-            catch (MySqlException e)
-            {
-                if (WriteExceptionsToEventLog)
-                    WriteToEventLog(e, "GetRolesForUser");
-                else
-                    throw;
-            }
-            finally
-            {
-                if (!(reader == null))
-                {
-                    reader.Close();
-                }
-                conn.Close();
-            }
-            if (tmpRoleNames.Length > 0)
-            {
-                tmpRoleNames = tmpRoleNames.Substring(0, tmpRoleNames.Length - 1);
-                return tmpRoleNames.Split(Convert.ToChar(","));
-            }
-            return new string[0];
         }
 
         /// <summary>
@@ -396,42 +313,31 @@ namespace MySql.Web.Security
         /// who are members of the specified role. </returns>
         public override string[] GetUsersInRole(string rolename)
         {
-            string tmpUserNames = "";
-            MySqlConnection conn = new MySqlConnection(connectionString);
-            MySqlCommand cmd =
-                new MySqlCommand(
-                    @"SELECT Username FROM mysql_UsersInRoles 
-                WHERE Rolename = ?Rolename AND ApplicationName = ?ApplicationName",
-                    conn);
-            cmd.Parameters.Add("?Rolename", MySqlDbType.VarChar, 255).Value = rolename;
-            cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
-            MySqlDataReader reader = null;
+            List<string> users = new List<string>();
+
             try
             {
-                conn.Open();
-                reader = cmd.ExecuteReader();
-                while (reader.Read())
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
-                    tmpUserNames += reader.GetString(0) + ",";
+                    int roleId = GetRoleId(conn, rolename);
+
+                    string sql = @"SELECT u.name FROM my_aspnet_Users u JOIN
+                    my_aspnet_UsersInRoles uir ON uir.userid=u.id AND uir.roleid=@roleId
+                    WHERE u.applicationId=@appId";
+                    MySqlCommand cmd = new MySqlCommand(sql, conn);
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                            users.Add(reader.GetString(0));
+                    }
                 }
+                return users.ToArray();
             }
-            catch (MySqlException e)
+            catch (Exception ex)
             {
                 if (WriteExceptionsToEventLog)
-                    WriteToEventLog(e, "GetUsersInRole");
-                else
-                    throw;
-            }
-            finally
-            {
-                if (!(reader == null))
-                    reader.Close();
-                conn.Close();
-            }
-            if (tmpUserNames.Length > 0)
-            {
-                tmpUserNames = tmpUserNames.Substring(0, tmpUserNames.Length - 1);
-                return tmpUserNames.Split(Convert.ToChar(","));
+                    WriteToEventLog(ex, "GetUsersInRole");
+                throw;
             }
             return new string[0];
         }
@@ -446,42 +352,27 @@ namespace MySql.Web.Security
         /// </returns>
         public override bool IsUserInRole(string username, string rolename)
         {
-            bool userIsInRole = false;
-            MySqlConnection conn = new MySqlConnection(connectionString);
-            MySqlCommand cmd =
-                new MySqlCommand(
-                    @"SELECT COUNT(*) FROM mysql_UsersInRoles 
-                WHERE Username = ?Username AND Rolename = ?Rolename AND 
-                ApplicationName = ?ApplicationName",
-                    conn);
-            cmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255).Value = username;
-            cmd.Parameters.Add("?Rolename", MySqlDbType.VarChar, 255).Value = rolename;
-            cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
             try
             {
-                conn.Open();
-                int numRecs = Convert.ToInt32(cmd.ExecuteScalar());
-                if (numRecs > 0)
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
-                    userIsInRole = true;
+                    conn.Open();
+                    string sql = @"SELECT COUNT(uir.*) FROM my_aspnet_UsersInRoles uir 
+                        JOIN my_aspnet_Users u ON uir.userId=u.id
+                        JOIN my_aspnet_Roles r ON uir.roleId=r.id
+                        WHERE u.name LIKE @userName AND r.name LIKE @roleName";
+                    MySqlCommand cmd = new MySqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@userName", username);
+                    cmd.Parameters.AddWithValue("@roleName", rolename);
+                    return (int)cmd.ExecuteScalar() > 0;
                 }
             }
-            catch (MySqlException e)
+            catch (Exception ex)
             {
                 if (WriteExceptionsToEventLog)
-                {
-                    WriteToEventLog(e, "IsUserInRole");
-                }
-                else
-                {
-                    throw;
-                }
+                    WriteToEventLog(ex, "IsUserInRole");
+                throw;
             }
-            finally
-            {
-                conn.Close();
-            }
-            return userIsInRole;
         }
 
         /// <summary>
@@ -494,58 +385,53 @@ namespace MySql.Web.Security
             foreach (string rolename in rolenames)
             {
                 if (!(RoleExists(rolename)))
-                {
                     throw new ProviderException("Role name not found.");
-                }
             }
+
             foreach (string username in usernames)
             {
                 foreach (string rolename in rolenames)
                 {
                     if (!(IsUserInRole(username, rolename)))
-                    {
                         throw new ProviderException("User is not in role.");
-                    }
                 }
             }
 
-            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            try
             {
-                MySqlCommand cmd =
-                    new MySqlCommand(
-                        @"DELETE FROM mysql_UsersInRoles 
-                WHERE Username = ?Username AND Rolename = ?Rolename AND 
-                ApplicationName = ?ApplicationName",
-                        conn);
-                MySqlParameter userParm = cmd.Parameters.Add("?Username", MySqlDbType.VarChar, 255);
-                MySqlParameter roleParm = cmd.Parameters.Add("?Rolename", MySqlDbType.VarChar, 255);
-                cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
-                MySqlTransaction tran = null;
-                try
+                using (TransactionScope ts = new TransactionScope())
                 {
-                    conn.Open();
-                    tran = conn.BeginTransaction();
-                    cmd.Transaction = tran;
-                    foreach (string username in usernames)
+                    using (MySqlConnection conn = new MySqlConnection(connectionString))
                     {
-                        foreach (string rolename in rolenames)
+                        conn.Open();
+                        string sql = @"DELETE uir FROM my_aspnet_UsersInRoles uir
+                                JOIN my_aspnet_Users u ON uir.userId=u.id 
+                                JOIN my_aspnet_Roles r ON uir.roleId=r.id
+                                WHERE u.name LIKE @username AND r.name LIKE @rolename 
+                                AND u.applicationId=@appId AND r.applicationId=@appId";
+
+                        MySqlCommand cmd = new MySqlCommand(sql, conn);
+                        cmd.Parameters.Add("@username", MySqlDbType.VarChar, 255);
+                        cmd.Parameters.Add("@rolename", MySqlDbType.VarChar, 255);
+                        cmd.Parameters.AddWithValue("@appId", applicationId);
+
+                        foreach (string username in usernames)
                         {
-                            userParm.Value = username;
-                            roleParm.Value = rolename;
-                            cmd.ExecuteNonQuery();
+                            foreach (string rolename in rolenames)
+                            {
+                                cmd.Parameters[0].Value = username;
+                                cmd.Parameters[1].Value = rolename;
+                                cmd.ExecuteNonQuery();
+                            }
                         }
                     }
-                    tran.Commit();
                 }
-                catch (MySqlException e)
-                {
-                    if (tran != null)
-                        tran.Rollback();
-                    if (WriteExceptionsToEventLog)
-                        WriteToEventLog(e, "RemoveUsersFromRoles");
-                    else
-                        throw;
-                }
+            }
+            catch (MySqlException e)
+            {
+                if (WriteExceptionsToEventLog)
+                    WriteToEventLog(e, "RemoveUsersFromRoles");
+                throw;
             }
         }
 
@@ -556,40 +442,24 @@ namespace MySql.Web.Security
         /// <returns>true if the role name already exists in the database; otherwise, false. </returns>
         public override bool RoleExists(string rolename)
         {
-            bool exists = false;
-            MySqlConnection conn = new MySqlConnection(connectionString);
-            MySqlCommand cmd =
-                new MySqlCommand(
-                    @"SELECT COUNT(*) FROM mysql_Roles 
-                WHERE Rolename = ?Rolename AND ApplicationName = ?ApplicationName",
-                    conn);
-            cmd.Parameters.Add("?Rolename", MySqlDbType.VarChar, 255).Value = rolename;
-            cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
-            try
+            try 
             {
-                conn.Open();
-                int numRecs = Convert.ToInt32(cmd.ExecuteScalar());
-                if (numRecs > 0)
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
-                    exists = true;
+                    MySqlCommand cmd = new MySqlCommand(
+                        @"SELECT COUNT(*) FROM my_aspnet_Roles WHERE applicationId=@appId 
+                        AND name LIKE @name", conn);
+                    cmd.Parameters.AddWithValue("@appId", applicationId);
+                    cmd.Parameters.AddWithValue("@name", rolename);
+                    return (int)cmd.ExecuteScalar() != 0;
                 }
             }
-            catch (MySqlException e)
+            catch (Exception ex) 
             {
                 if (WriteExceptionsToEventLog)
-                {
-                    WriteToEventLog(e, "RoleExists");
-                }
-                else
-                {
-                    throw;
-                }
+                    WriteToEventLog(ex, "RoleExists");
+                throw;
             }
-            finally
-            {
-                conn.Close();
-            }
-            return exists;
         }
 
         /// <summary>
@@ -601,59 +471,97 @@ namespace MySql.Web.Security
         /// user name matches usernameToMatch and the user is a member of the specified role. </returns>
         public override string[] FindUsersInRole(string rolename, string usernameToMatch)
         {
-            MySqlConnection conn = new MySqlConnection(connectionString);
-            MySqlCommand cmd =
-                new MySqlCommand(
-                    @"SELECT Username FROM mysql_UsersInRoles 
-                WHERE Username LIKE ?UsernameSearch AND RoleName = ?RoleName AND 
-                ApplicationName = ?ApplicationName",
-                    conn);
-            cmd.Parameters.Add("?UsernameSearch", MySqlDbType.VarChar, 255).Value = usernameToMatch;
-            cmd.Parameters.Add("?RoleName", MySqlDbType.VarChar, 255).Value = rolename;
-            cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
-            string tmpUserNames = "";
-            MySqlDataReader reader = null;
-            try
-            {
-                conn.Open();
-                reader = cmd.ExecuteReader();
-                while (reader.Read())
+            List<string> users =new List<string>();
+
+            try {
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
-                    tmpUserNames += reader.GetString(0) + ",";
+                    string sql = @"SELECT u.name FROM my_aspnet_UsersInRole uir
+                        JOIN my_aspnet_Users u ON uir.userId=u.id
+                        JOIN my_aspnet_Roles r ON uir.roleId=r.id
+                        WHERE r.name LIKE @rolename AND
+                        u.name LIKE @username AND
+                        u.applicationId=@appId";
+
+                    MySqlCommand cmd = new MySqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@username", usernameToMatch);
+                    cmd.Parameters.AddWithValue("@rolename", rolename);
+                    cmd.Parameters.AddWithValue("@appId", applicationId);
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                            users.Add(reader.GetString(0));
+                    }
                 }
+                return users.ToArray();
             }
             catch (MySqlException e)
             {
                 if (WriteExceptionsToEventLog)
-                {
                     WriteToEventLog(e, "FindUsersInRole");
-                }
-                else
-                {
-                    throw;
-                }
+                throw;
             }
-            finally
-            {
-                if (!(reader == null))
-                {
-                    reader.Close();
-                }
-                conn.Close();
-            }
-            if (tmpUserNames.Length > 0)
-            {
-                tmpUserNames = tmpUserNames.Substring(0, tmpUserNames.Length - 1);
-                return tmpUserNames.Split(Convert.ToChar(","));
-            }
-            return new string[0];
         }
 
         #endregion
 
+        internal static void DeleteUserData(MySqlConnection connection, int userId)
+        {
+            MySqlCommand cmd = new MySqlCommand("DELETE FROM my_aspnet_UsersInRoles WHERE userId=@userId", connection);
+            cmd.ExecuteNonQuery();
+        }
+
         #region Private Methods
 
-        private void WriteToEventLog(MySqlException e, string action)
+        private string[] GetRolesByUserName(MySqlConnection connection, string username)
+        {
+            List<string> roleList = new List<string>();
+
+            try
+            {
+                string sql = "SELECT r.name FROM my_aspnet_roles r ";
+                if (username != null)
+                    sql += "JOIN my_aspnet_usersinroles uir ON uir.roleId=r.id AND uir.userid=" + 
+                        GetUserId(connection, username);
+                sql += " WHERE r.applicationId=@appId";
+                MySqlCommand cmd = new MySqlCommand(sql, connection);
+                cmd.Parameters.AddWithValue("@appId", applicationId);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                        roleList.Add(reader.GetString(0));
+                }
+                return roleList.ToArray();
+            }
+            catch (Exception ex)
+            {
+                if (WriteExceptionsToEventLog)
+                    WriteToEventLog(ex, "GetRolesByUserName");
+                throw;
+            }
+        }
+
+        private int GetUserId(MySqlConnection connection, string username)
+        {
+            MySqlCommand cmd = new MySqlCommand(
+                "SELECT id FROM my_aspnet_Users WHERE name=@name AND applicationId=@appId",
+                connection);
+            cmd.Parameters.AddWithValue("@name", username);
+            cmd.Parameters.AddWithValue("@appId", applicationId);
+            return (int)cmd.ExecuteScalar();
+        }
+
+        private int GetRoleId(MySqlConnection connection, string rolename)
+        {
+            MySqlCommand cmd = new MySqlCommand(
+                "SELECT id FROM my_aspnet_Roles WHERE name=@name AND applicationId=@appId",
+                connection);
+            cmd.Parameters.AddWithValue("@name", rolename);
+            cmd.Parameters.AddWithValue("@appId", applicationId);
+            return (int)cmd.ExecuteScalar();
+        }
+
+        private void WriteToEventLog(Exception e, string action)
         {
             EventLog log = new EventLog();
             log.Source = eventSource;
@@ -663,6 +571,7 @@ namespace MySql.Web.Security
             message += "Exception: " + e;
             log.WriteEntry(message);
         }
+
         #endregion
 
     }

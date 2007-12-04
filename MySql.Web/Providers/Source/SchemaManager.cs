@@ -32,6 +32,9 @@ using System.IO;
 
 namespace MySql.Web.Security
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class SchemaManager
     {
         private const int schemaVersion = 3;

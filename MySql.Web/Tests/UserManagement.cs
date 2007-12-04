@@ -106,6 +106,8 @@ namespace MySql.Web.Security.Tests
             Assert.IsTrue(provider.DeleteUser("foo", true));
             DataTable table = FillTable("SELECT * FROM my_aspnet_Membership");
             Assert.AreEqual(0, table.Rows.Count);
+            table = FillTable("SELECT * FROM my_aspnet_Users");
+            Assert.AreEqual(0, table.Rows.Count);
 
             CreateUserWithHashedPassword();
             provider = new MySQLMembershipProvider();
@@ -113,9 +115,11 @@ namespace MySql.Web.Security.Tests
             config.Add("connectionStringName", "LocalMySqlServer");
             config.Add("applicationName", "/");
             provider.Initialize(null, config);
-            Assert.IsTrue(Membership.DeleteUser("foo", true));
+            Assert.IsTrue(Membership.DeleteUser("foo", false));
             table = FillTable("SELECT * FROM my_aspnet_Membership");
             Assert.AreEqual(0, table.Rows.Count);
+            table = FillTable("SELECT * FROM my_aspnet_Users");
+            Assert.AreEqual(1, table.Rows.Count);
         }
 
         [Test]
@@ -156,6 +160,62 @@ namespace MySql.Web.Security.Tests
             {
                 Assert.Fail(ex.Message);
             }
+        }
+
+        [Test]
+        public void NumberOfUsersOnline()
+        {
+            Assert.Fail();
+        }
+
+        [Test]
+        public void UnlockUser()
+        {
+            Assert.Fail();
+        }
+
+        [Test]
+        public void GetUsernameByEmail()
+        {
+            Assert.Fail();
+        }
+
+        [Test]
+        public void UpdateUser()
+        {
+            Assert.Fail();
+        }
+
+        [Test]
+        public void ChangePasswordQuestionAndAnswer()
+        {
+            Assert.Fail();
+        }
+
+        [Test]
+        public void GetAllUsers()
+        {
+            Assert.Fail();
+        }
+
+        [Test]
+        public void GetPassword()
+        {
+            Assert.Fail();
+        }
+
+        [Test]
+        public void GetUser()
+        {
+            // both variants
+            Assert.Fail();
+        }
+
+        [Test]
+        public void FindUsers()
+        {
+            // all variants
+            Assert.Fail();
         }
     }
 }

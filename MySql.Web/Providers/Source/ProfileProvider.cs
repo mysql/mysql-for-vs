@@ -458,6 +458,12 @@ namespace MySql.Web.Security
 
         #endregion
 
+        internal static void DeleteUserData(MySqlConnection connection, int userId)
+        {
+            MySqlCommand cmd = new MySqlCommand("DELETE FROM my_aspnet_Profiles WHERE userId=@userId", connection);
+            cmd.ExecuteNonQuery();
+        }
+
         #region Private Methods
 
         private void DecodeProfileData(DataRow profileRow, SettingsPropertyValueCollection values)
