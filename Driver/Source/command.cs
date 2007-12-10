@@ -721,6 +721,13 @@ namespace MySql.Data.MySqlClient
 					return buffers;
 				}*/
 
+        internal long EstimatedSize()
+        {
+            long size = CommandText.Length;
+            foreach (MySqlParameter parameter in Parameters)
+                size += parameter.EstimatedSize();
+            return size;
+        }
 
 		#endregion
 

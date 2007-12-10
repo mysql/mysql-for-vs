@@ -435,7 +435,6 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-
         private void SetDbType(DbType db_type)
         {
             dbType = db_type;
@@ -512,7 +511,6 @@ namespace MySql.Data.MySqlClient
                     break;
             }
         }
-
 
         private void SetTypeFromValue()
         {
@@ -645,6 +643,21 @@ namespace MySql.Data.MySqlClient
         {
             get { return sourceColumnNullMapping; }
             set { sourceColumnNullMapping = value; }
+        }
+
+        // this method is pretty dumb but we want it to be fast.  it doesn't return size based
+        // on value and type but just on the value.
+        internal long EstimatedSize()
+        {
+            if (Value == null || Value == DBNull.Value)
+                return 4; // size of NULL
+            if (Value is byte[])
+                return (Value as byte[]).Length;
+            if (Value is string)
+                return (Value as string).Length * 4; // account for UTF-8 (yeah I know)
+            if (Value is decimal || Value is float)
+                return 64;
+            return 32;
         }
     }
 }

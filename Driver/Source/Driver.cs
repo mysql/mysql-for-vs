@@ -122,6 +122,11 @@ namespace MySql.Data.MySqlClient
             set { pool = value; }
         }
 
+        public long MaxPacketSize
+        {
+            get { return maxPacketSize; }
+        }
+
         #endregion
 
         public string Property(string key)

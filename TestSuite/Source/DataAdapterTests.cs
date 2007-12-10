@@ -34,8 +34,6 @@ namespace MySql.Data.MySqlClient.Tests
 	{
         public override void FixtureSetup()
         {
-            csAdditions += ";logging=true;";
-
             base.FixtureSetup();
         }
 
@@ -853,6 +851,51 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.AreEqual("Test 1", dt.Rows[0]["name"]);
                 Assert.AreEqual("new test value #2", dt.Rows[1]["name"]);
                 Assert.AreEqual("foobar", dt.Rows[2]["name"]);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
+
+        [Test]
+        public void TestBatchingInsertsMoreThanMaxPacket()
+        {
+            int blobSize = 64000;
+
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id INT, img BLOB, PRIMARY KEY(id))");
+
+            int numRows = (maxPacketSize / blobSize) * 2;
+
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
+            MySqlCommand ins = new MySqlCommand("INSERT INTO test (id, img) VALUES (@p1, @p2)", conn);
+            da.InsertCommand = ins;
+            ins.UpdatedRowSource = UpdateRowSource.None;
+            ins.Parameters.Add("@p1", MySqlDbType.Int32).SourceColumn = "id";
+            ins.Parameters.Add("@p2", MySqlDbType.Blob).SourceColumn = "img";
+
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+
+            for (int i = 0; i < numRows; i++)
+            {
+                DataRow row = dt.NewRow();
+                row["id"] = i;
+                row["img"] = Utils.CreateBlob(blobSize);
+                dt.Rows.Add(row);
+            }
+
+            try
+            {
+                da.UpdateBatchSize = 0;
+                da.Update(dt);
+
+                dt.Rows.Clear();
+                da.Fill(dt);
+                Assert.AreEqual(numRows, dt.Rows.Count);
+                for (int i=0; i < numRows; i++)
+                    Assert.AreEqual(i, dt.Rows[i]["id"]);
             }
             catch (Exception ex)
             {

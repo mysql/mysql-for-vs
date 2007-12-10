@@ -22,6 +22,7 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Text;
+using MySql.Data.Common;
 
 namespace MySql.Data.MySqlClient
 {
@@ -95,21 +96,50 @@ namespace MySql.Data.MySqlClient
 
         protected virtual void BindParameters()
         {
-            InternalBindParameters(ResolvedCommandText, command.Parameters, null);
+            MySqlParameterCollection parameters = command.Parameters;
+            int index = 0;
 
-            // now tack on the batched commands
-            if (command.Batch == null) return;
-
-            foreach (MySqlCommand cmd in command.Batch)
+            while (true)
             {
-                MySqlStream stream = (MySqlStream)buffers[buffers.Count - 1];
-                buffers.RemoveAt(buffers.Count - 1);
-                string text = cmd.BatchableCommandText;
-                if (text.StartsWith("("))
-                    stream.WriteStringNoNull(", ");
-                else
-                    stream.WriteStringNoNull("; ");
-                InternalBindParameters(text, cmd.Parameters, stream);
+                InternalBindParameters(ResolvedCommandText, parameters, null);
+
+                // if we are not batching, then we are done.  This is only really relevant the
+                // first time through
+                if (command.Batch == null) return;
+                while (index < command.Batch.Count)
+                {
+                    MySqlCommand batchedCmd = command.Batch[index++];
+                    MySqlStream stream = (MySqlStream)buffers[buffers.Count - 1];
+
+                    // now we make a guess if this statement will fit in our current stream
+                    long estimatedCmdSize = batchedCmd.EstimatedSize();
+                    if ((stream.InternalBuffer.Length + estimatedCmdSize) > Connection.driver.MaxPacketSize)
+                    {
+                        // it won't, so we setup to start a new run from here
+                        parameters = batchedCmd.Parameters;
+                        break;
+                    }
+
+                    // looks like we might have room for it so we remember the current end of the stream
+                    buffers.RemoveAt(buffers.Count - 1);
+                    long originalLength = stream.InternalBuffer.Length;
+
+                    // and attempt to stream the next command
+                    string text = batchedCmd.BatchableCommandText;
+                    if (text.StartsWith("("))
+                        stream.WriteStringNoNull(", ");
+                    else
+                        stream.WriteStringNoNull("; ");
+                    InternalBindParameters(text, batchedCmd.Parameters, stream);
+                    if (stream.InternalBuffer.Length > Connection.driver.MaxPacketSize)
+                    {
+                        stream.InternalBuffer.SetLength(originalLength);
+                        parameters = batchedCmd.Parameters;
+                        break;
+                    }
+                }
+                if (index == command.Batch.Count)
+                    return;
             }
         }
 
@@ -139,7 +169,9 @@ namespace MySql.Data.MySqlClient
                     stream = new MySqlStream(Driver.Encoding);
                     continue;
                 }
-                if (token[0] == '@' || token[0] == '?')
+                if (token.Length >= 2 && 
+                    ((token[0] == '@' && token[1] != '@') || 
+                    token[0] == '?'))
                 {
                     if (SerializeParameter(parameters, stream, token))
                         continue;
@@ -199,6 +231,55 @@ namespace MySql.Data.MySqlClient
         }
 
         /// <summary>
+        /// THis code is not used yet but will likely be used in the future.
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        private ArrayList TokenizeSql2(string sql) 
+        {
+            ArrayList sqlChunks = new ArrayList();
+            StringBuilder currentChunk = new StringBuilder();
+            bool batch = Connection.Settings.AllowBatch & Driver.SupportsBatch;
+
+            int lastPos = 0;
+            SqlTokenizer tokenizer = new SqlTokenizer(sql);
+            string sql_mode = Connection.driver.Property("sql_mode");
+            if (sql_mode != null)
+            {
+                sql_mode = sql_mode.ToString().ToLower();
+                tokenizer.AnsiQuotes = sql_mode.IndexOf("ansi_quotes") != -1;
+                tokenizer.BackslashEscapes = sql_mode.IndexOf("no_backslash_escapes") == -1;
+            }
+
+            string token = tokenizer.NextToken();
+            while (token != null)
+            {
+                if (token == ";" && !batch)
+                {
+                    sqlChunks.Add(currentChunk.ToString());
+                    currentChunk.Remove(0, currentChunk.Length);
+                }
+
+                else if (token.Length >= 2 &&
+                    ((token[0] == '@' && token[1] != '@') ||
+                    token[0] == '?'))
+                {
+                    sqlChunks.Add(currentChunk.ToString());
+                    currentChunk.Remove(0, currentChunk.Length);
+                }
+                else
+                {
+                    currentChunk.Append(sql.Substring(lastPos, tokenizer.CurrentPos - lastPos+1));
+                    lastPos = tokenizer.CurrentPos;
+                }
+                token = tokenizer.NextToken();
+            }
+            if (currentChunk.Length > 0)
+                sqlChunks.Add(currentChunk.ToString());
+            return sqlChunks;
+        }
+
+        /// <summary>
         /// Breaks the given SQL up into 'tokens' that are easier to output
         /// into another form (bytes, preparedText, etc).
         /// </summary>
@@ -243,6 +324,7 @@ namespace MySql.Data.MySqlClient
                     tokens.Add(sqlPart.ToString());
                     sqlPart.Remove(0, sqlPart.Length);
                 }
+                else if (sqlPart.Length == 1 && sqlPart[0] == '@' && c == '@') { }
                 else if (sqlPart.Length > 0 && (sqlPart[0] == '@' || sqlPart[0] == '?') &&
                          !Char.IsLetterOrDigit(c) && c != '_' && c != '.' && c != '$')
                 {

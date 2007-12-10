@@ -49,6 +49,7 @@ namespace MySql.Data.MySqlClient.Tests
         protected static string database1;
         protected Version version;
         protected bool pooling;
+        protected static int maxPacketSize;
 
         public BaseTest()
         {
@@ -126,6 +127,17 @@ namespace MySql.Data.MySqlClient.Tests
             rootConn.ChangeDatabase(database0);
 
             Open();
+
+            if (maxPacketSize == 0)
+            {
+                MySqlCommand cmd = new MySqlCommand("SHOW VARIABLES LIKE 'max_allowed_packet'", conn);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    reader.Read();
+                    maxPacketSize = (int)reader.GetUInt64(1);
+                }
+            }
+            Assert.IsTrue(maxPacketSize < 1500000);
         }
 
         [TestFixtureTearDown]
