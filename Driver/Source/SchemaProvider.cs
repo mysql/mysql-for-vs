@@ -588,8 +588,7 @@ namespace MySql.Data.MySqlClient
             row["IdentifierCase"] = IdentifierCase.Insensitive;
             row["OrderByColumnsInSelect"] = false;
             row["ParameterMarkerFormat"] = "{0}";
-            row["ParameterMarkerPattern"] = String.Format("({0}[A-Za-z0-9_$#]*)",
-                                                          connection.Settings.UseOldSyntax ? "@" : "?");
+            row["ParameterMarkerPattern"] = "(@[A-Za-z0-9_$#]*)";
             row["ParameterNameMaxLength"] = 128;
             row["ParameterNamePattern"] =
                 @"^[\p{Lo}\p{Lu}\p{Ll}\p{Lm}_@#][\p{Lo}\p{Lu}\p{Ll}\p{Lm}\p{Nd}\uff3f_@#\$]*(?=\s+|$)";
