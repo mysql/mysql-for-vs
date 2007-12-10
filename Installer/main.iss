@@ -25,11 +25,10 @@ VersionInfoVersion={#SetupSetting("AppVersion")}
 Name: english; MessagesFile: compiler:Default.isl
 
 [Files]
-Source: ..\Driver\bin\net-2.0\Release\MySql.Data.dll; DestDir: {app}\Binaries\.NET 2.0; Flags: ignoreversion
-Source: ..\Documentation\Output\MySql.Data.chm; DestDir: {app}\Documentation; Flags: ignoreversion; Components: Documentation
+Source: ..\Driver\bin\net-2.0\Release\MySql.Data.dll; DestDir: {app}\Binaries\.NET 2.0; Flags: ignoreversion; AfterInstall: AfterMySqlDataInstall
 Source: ..\CHANGES; DestDir: {app}; Flags: ignoreversion
 Source: ..\Release Notes.txt; DestDir: {app}; Flags: ignoreversion
-Source: ..\MySql.Web\Providers\bin\release\MySql.Web.dll; DestDir: {app}\Binaries\.NET 2.0; Flags: ignoreversion; Components: Providers
+Source: ..\MySql.Web\Providers\bin\release\MySql.Web.dll; DestDir: {app}\Binaries\.NET 2.0; Flags: ignoreversion; AfterInstall: AfterWebInstall; Components: Providers
 
 ; Handle conditional licensing
 #if defined (GPL)
@@ -42,6 +41,20 @@ Source: ..\License.txt; DestDir: {app}; Flags: ignoreversion
 Source: ..\Samples\*.*; DestDir: {app}\Samples; Excludes: bin,obj,bin\debug,bin\release,obj\debug,obj\release; Flags: ignoreversion createallsubdirs recursesubdirs
 Source: binary\installtools.dll; DestDir: {app}; Attribs: hidden
 
+; Documentation files
+Source: ..\Documentation\Output\MySql.Data.chm; DestDir: {app}\Documentation; Components: Docs
+Source: ..\Documentation\CollectionFiles\COL_Master.HxC; DestDir: {app}\Documentation; Components: Docs
+Source: ..\Documentation\CollectionFiles\COL_Master.HxT; DestDir: {app}\Documentation; Components: Docs
+Source: ..\Documentation\CollectionFiles\COL_Master_A.HxK; DestDir: {app}\Documentation; Components: Docs
+Source: ..\Documentation\CollectionFiles\COL_Master_F.HxK; DestDir: {app}\Documentation; Components: Docs
+Source: ..\Documentation\CollectionFiles\COL_Master_K.HxK; DestDir: {app}\Documentation; Components: Docs
+Source: ..\Documentation\CollectionFiles\COL_Master_N.HxK; DestDir: {app}\Documentation; Components: Docs
+Source: ..\Documentation\Output\MySql.Data.HxS; DestDir: {app}\Documentation; Components: Docs
+
+; Documentation registration tools
+Source: ..\Installer\H2Reg.exe; DestDir: {app}\Uninstall; Attribs: hidden; Components: Docs
+Source: ..\Installer\h2reg.ini; DestDir: {app}\Uninstall; Attribs: hidden; Components: Docs
+
 ; VS integration
 Source: ..\VisualStudio\bin\Release\MySql.VisualStudio.dll; DestDir: {app}\Visual Studio Integration; Components: VS
 
@@ -53,7 +66,7 @@ Name: {group}\Help; Filename: {app}\Documentation\MySql.Data.chm
 
 [Components]
 Name: Core; Description: Core assemblies; Flags: fixed; Types: full custom compact
-Name: Documentation; Description: Documentation; Types: full custom
+Name: Docs; Description: Documentation; Types: full custom
 Name: Samples; Description: Samples; Types: full custom
 Name: Providers; Description: ASP.NET 2.0 Web Providers; Types: full custom
 Name: VS; Description: Visual Studio Integration; Types: full custom
@@ -69,8 +82,20 @@ Root: HKLM; Subkey: Software\MySQL AB\MySQL Connector/Net; ValueType: string; Va
 Root: HKLM; Subkey: Software\Microsoft\.NETFramework\AssemblyFolders\MySQL Connector/Net {#SetupSetting('AppVersion')}; Flags: uninsdeletekey
 Root: HKLM; Subkey: Software\Microsoft\.NETFramework\AssemblyFolders\MySQL Connector/Net {#SetupSetting('AppVersion')}; ValueType: string; ValueData: {app}\Binaries\.NET 2.0
 
-;#include "vs2005.iss"
-;#include "vs2008.iss"
+#include "vs2005.iss"
+#include "vs2008.iss"
+
+[Run]
+Filename: "{code:GetVersion2InstallUtil}"; Parameters: {app}\Binaries\.NET 2.0\mysql.data.dll; WorkingDir: {app}; StatusMsg: Adding data provider to machine.config; Flags: runhidden
+Filename: "{code:GetVersion2InstallUtil}"; Parameters: {app}\Binaries\.NET 2.0\mysql.web.dll; WorkingDir: {app}; StatusMsg: Adding web providers to machine.config; Flags: runhidden; Components: Providers
+Filename: "{code:GetVS2005Path}"; Parameters: /setup; WorkingDir: {app}; StatusMsg: Reconfiguring Visual Studio 2005; Flags: runhidden; Components: VS/2005
+Filename: "{code:GetVS2008Path}"; Parameters: /setup; WorkingDir: {app}; StatusMsg: Reconfiguring Visual Studio 2008; Flags: runhidden; Components: VS/2008
+
+[UninstallRun]
+Filename: "{code:GetVS2005Path}"; Parameters: /setup; WorkingDir: {app}; StatusMsg: Reconfiguring Visual Studio 2005; Flags: runhidden runascurrentuser; Components: VS/2005
+Filename: "{code:GetVS2008Path}"; Parameters: /setup; WorkingDir: {app}; StatusMsg: Reconfiguring Visual Studio 2008; Flags: runhidden runascurrentuser; Components: VS/2008
+Filename: "{code:GetVersion2InstallUtil}"; Parameters: /u {app}\Binaries\.NET 2.0\mysql.data.dll; WorkingDir: {app}; StatusMsg: Removing data provider from machine.config; Flags: runhidden
+Filename: "{code:GetVersion2InstallUtil}"; Parameters: /u {app}\Binaries\.NET 2.0\mysql.web.dll; WorkingDir: {app}; StatusMsg: Removing web providers from machine.config; Flags: runhidden; Components: Providers
 
 [Code]
 #include "misc.iss"
@@ -117,5 +142,21 @@ begin
     UnloadDLL(ExpandConstant('{app}\installtools.dll'));
   end
 end;
+
+function VS2005Installed() : Boolean;
+begin
+  Result := RegKeyExists(HKEY_LOCAL_MACHINE, 'Software\Microsoft\VisualStudio\8.0\Setup\VS');
+end;
+
+function VS2008Installed() : Boolean;
+begin
+  Result := RegKeyExists(HKEY_LOCAL_MACHINE, 'Software\Microsoft\VisualStudio\9.0\Setup\VS');
+end;
+
+function GetVersion2InstallUtil(Param: String) : String;
+begin
+  Result := GetInstallUtilPath(2);
+end;
+
 
 

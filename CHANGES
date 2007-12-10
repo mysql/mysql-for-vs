@@ -1,6 +1,6 @@
 Version 5.2
 . Added ClearPool and ClearAllPools features
-. DDEX provider now works under Visual Studio 2008 beta 2	
+. DDEX provider now works under Visual Studio 2008	
 . Added support for DbDataAdapter UpdateBatchSize.  Batching is fully supported
   including collapsing inserts down into the multi-value form if possible.
 . Added MySqlScript class for executing scripts against a database.

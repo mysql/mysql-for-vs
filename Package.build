@@ -76,9 +76,9 @@
 
 	<target name="PackageInstall">
 		<exec workingdir="Installer" program="candle"
-			  commandline="-ext WixNetFxExtension -dIsGPL=${IsGPL} -dVersion=${version} -dbuild=release main.wxs samples.wxs sources.wxs visualstudio.wxs webproviders.wxs ui.wxs cf.wxs core.wxs"/>
+			  commandline="-ext WixNetFxExtension -dIsGPL=${IsGPL} -dVersion=${version} -dbuild=release main.wxs samples.wxs visualstudio.wxs vs2008.wxs webproviders.wxs ui.wxs cf.wxs core.wxs"/>
 		<exec workingdir="Installer" program="light"
-                      commandline="-sval -ext WixNetFxExtension -ext WixUIExtension -ext WixUtilExtension -cultures:en-us main.wixobj samples.wixobj sources.wixobj visualstudio.wixobj webproviders.wixobj ui.wixobj cf.wixobj core.wixobj -out MySql.Data.msi"/>
+                      commandline="-sval -ext WixNetFxExtension -ext WixUIExtension -ext WixUtilExtension -cultures:en-us main.wixobj samples.wixobj sources.wixobj visualstudio.wixobj vs2008.wixobj webproviders.wixobj ui.wixobj cf.wixobj core.wixobj -out MySql.Data.msi"/>
 
 		<zip zipfile="packages/mysql-connector-net-${version}${postfix}.zip">
 			<fileset basedir="Installer">			

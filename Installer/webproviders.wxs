@@ -22,27 +22,19 @@
       <ComponentRef Id='ProvidersGAC'/>
     </Feature>
 
-    <CustomAction Id="MySqlWeb.Install.CheckFX" BinaryKey="MSVBDPCADLL" DllEntry="CheckFX" />
-    <CustomAction Id="MySqlWeb.Install.SetProperty" Property="MySqlWeb.Install"
-                  Value='/installtype=notransaction /action=install /LogFile= "[#MySqlWeb]" "[VSDFxConfigFile]"'/>
-    <CustomAction Id="MySqlWeb.Install" BinaryKey="InstallUtil" DllEntry="ManagedInstall" Execute="deferred" Impersonate="no" />
-
-    <CustomAction Id="MySqlWeb.Remove.CheckFX" BinaryKey="MSVBDPCADLL" DllEntry="CheckFX" />
-    <CustomAction Id="MySqlWeb.Remove.SetProperty" Property="MySqlWeb.Remove"
-                   Value='/installtype=notransaction /action=uninstall /LogFile= "[#MySqlWeb]" "[VSDFxConfigFile]"'/>
-    <CustomAction Id="MySqlWeb.Remove" BinaryKey="InstallUtil" DllEntry="ManagedInstall" Execute="deferred" Impersonate="no" />
-
     <InstallExecuteSequence>
-      <!-- Register code -->
-      <Custom Action="MySqlWeb.Install.CheckFX" After="InstallFiles">$Providers > 2</Custom>
-      <Custom Action="MySqlWeb.Install.SetProperty" After="MySqlWeb.Install.CheckFX">$Providers > 2</Custom>
-      <Custom Action="MySqlWeb.Install" After="MySqlWeb.Install.SetProperty">$Providers > 2</Custom>
-
-      <!-- Unregister code -->
-      <Custom Action="MySqlWeb.Remove.CheckFX" Before="RemoveFiles">$Providers = 2</Custom>
-      <Custom Action="MySqlWeb.Remove.SetProperty" After="MySqlWeb.Remove.CheckFX">$Providers = 2</Custom>
-      <Custom Action="MySqlWeb.Remove" After="MySqlWeb.Remove.SetProperty">$Providers = 2</Custom>
+      <Custom Action='ManagedWebInstallSetup' After="InstallFiles">NOT Installed</Custom>
+      <Custom Action='ManagedWebInstall' After="ManagedWebInstallSetup">NOT Installed</Custom>
+      <Custom Action='ManagedWebUnInstallSetup' Before="RemoveFiles">Installed</Custom>
+      <Custom Action='ManagedWebUnInstall' After="ManagedWebUnInstallSetup">Installed</Custom>
     </InstallExecuteSequence>
+
+    <CustomAction Id="ManagedWebInstallSetup" Property="ManagedWebInstall"
+                  Value='"[WindowsFolder]\Microsoft.NET\Framework\v2.0.50727\installUtil.exe" /LogToConsole=false  "[#MySqlWeb]"'/>
+    <CustomAction Id='ManagedWebUnInstallSetup' Property="ManagedWebUnInstall"
+                  Value='"[WindowsFolder]\Microsoft.NET\Framework\v2.0.50727\installUtil.exe" /LogToConsole=false /u "[#MySqlWeb]"'/>
+    <CustomAction Id="ManagedWebInstall" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
+    <CustomAction Id="ManagedWebUnInstall" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
   </Fragment>
 </Wix>
 

@@ -1,11 +1,10 @@
 <?xml version="1.0"?>
-<?define vsRegPath = "8.0" ?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment Id='VSFragment'>
 
     <DirectoryRef Id='INSTALLDIR'>
       <Directory Id='VSDir' Name='Visual Studio Integration'>
-        <Component Id="VStudio" Guid="a5240e1b-c5c2-4820-8a1d-776c0017f44b">
+        <Component Id="VS_2005" Guid="a5240e1b-c5c2-4820-8a1d-776c0017f44b">
           <File Id='MySQL.VisualStudio' Name='MySQL.VisualStudio.dll' DiskId='1'
                 Source='..\VisualStudio\bin\release\MySQL.VisualStudio.dll' />
           <File Id='MySql.VisualStudio.dll.config' Name='MySql.VisualStudio.dll.config' DiskId='1'
@@ -13,7 +12,7 @@
 
           <!--Datasource registration section-->
           <RegistryKey Id='DataSource' Root='HKLM'
-                       Key='Software\Microsoft\VisualStudio\$(var.vsRegPath)\DataSources\{98FBE4D8-5583-4233-B219-70FF8C7FBBBD}'
+                       Key='Software\Microsoft\VisualStudio\8.0\DataSources\{98FBE4D8-5583-4233-B219-70FF8C7FBBBD}'
                        Action='createAndRemoveOnUninstall'>
             <RegistryValue Id='DSDefaultValue' Type='string' Value='MySQL Database'/>
             <RegistryKey Id='DSSupportingProviders' Key='SupportingProviders' Action='create'>
@@ -26,7 +25,7 @@
 
           <!--Provider registration section-->
           <RegistryKey Id='DataProviders' Root='HKLM'
-                       Key='SOFTWARE\Microsoft\VisualStudio\$(var.vsRegPath)\DataProviders\{C6882346-E592-4da5-80BA-D2EADCDA0359}'
+                       Key='SOFTWARE\Microsoft\VisualStudio\8.0\DataProviders\{C6882346-E592-4da5-80BA-D2EADCDA0359}'
                        Action='createAndRemoveOnUninstall'>
             <RegistryValue Id='DPDefaultValue' Type='string' Value='.NET Framework Data Provider for MySQL'/>
             <RegistryValue Id='DPDisplayName' Name='DisplayName' Type='string' Value='Provider_DisplayName, MySql.Data.VisualStudio.Properties.Resources'/>
@@ -47,12 +46,12 @@
 
           <!--Menu section-->
           <RegistryValue Id='Menu' Root='HKLM'
-                       Key='SOFTWARE\Microsoft\VisualStudio\$(var.vsRegPath)\Menus' Type='string'
+                       Key='SOFTWARE\Microsoft\VisualStudio\8.0\Menus' Type='string'
                        Name='{79A115C9-B133-4891-9E7B-242509DAD272}' Value=',1000,1' Action='write'/>
 
           <!--Service section-->
           <RegistryKey Id='Services' Root='HKLM'
-                       Key='SOFTWARE\Microsoft\VisualStudio\$(var.vsRegPath)\Services\{D949EA95-EDA1-4b65-8A9E-266949A99360}'
+                       Key='SOFTWARE\Microsoft\VisualStudio\8.0\Services\{D949EA95-EDA1-4b65-8A9E-266949A99360}'
                        Action='createAndRemoveOnUninstall'>
             <RegistryValue Id='ServicesDefault' Value='{79A115C9-B133-4891-9E7B-242509DAD272}' Type='string'/>
             <RegistryValue Id='ServicesName' Name='Name' Value='MySQL Provider Object Factory' Type='string'/>
@@ -60,7 +59,7 @@
 
           <!--Installed Products section-->
           <RegistryKey Id='InstalledProducts' Root='HKLM'
-                       Key='SOFTWARE\Microsoft\VisualStudio\$(var.vsRegPath)\InstalledProducts\[ProductName]'
+                       Key='SOFTWARE\Microsoft\VisualStudio\8.0\InstalledProducts\[ProductName]'
                        Action='createAndRemoveOnUninstall'>
             <RegistryValue Id='IPDefault' Value='[ProductName]' Type='string'/>
             <RegistryValue Id='IPPackage' Name='Package' Value='{79A115C9-B133-4891-9E7B-242509DAD272}' Type='string'/>
@@ -69,7 +68,7 @@
 
           <!--Package section-->
           <RegistryKey Id='Packages' Root='HKLM'
-                       Key='SOFTWARE\Microsoft\VisualStudio\$(var.vsRegPath)\Packages\{79A115C9-B133-4891-9E7B-242509DAD272}'
+                       Key='SOFTWARE\Microsoft\VisualStudio\8.0\Packages\{79A115C9-B133-4891-9E7B-242509DAD272}'
                        Action='createAndRemoveOnUninstall'>
             <RegistryValue Id='PackagesDefault' Value='[ProductName]' Type='string'/>
             <RegistryValue Id='PackInProc' Name='InprocServer32' Value='[WindowsFolder]system32\mscoree.dll' Type='string'/>
@@ -85,26 +84,21 @@
       </Directory>
     </DirectoryRef>
 
-    <Property Id='VSDIR_2005'>
-      <RegistrySearch Id="RL_EnvironmentDir_2005" Root="HKLM" Key="SOFTWARE\Microsoft\VisualStudio\8.0\Setup\VS"
-        Name="EnvironmentDirectory" Type="directory" />
-    </Property>
-    
-    <Feature Id='VisualStudio' Display='8' Level='1' Title='Visual Studio Integration'
-             Description='DDEX and Server Explorer Integration'>
-      <Condition Level='0'>VSDIR_2005 = ""</Condition>
-      <ComponentRef Id='VStudio'/>
+    <Feature Id='VS2005Int' Level='1' Title='Visual Studio 2005'>
+      <Condition Level='0'>Not VS_2005_PATH</Condition>
+      <ComponentRef Id='VS_2005'/>
     </Feature>
 
-    <Property Id='DEVENVINSTALLDIR'>
-      <RegistrySearch Id='VSInstallDir' Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\8.0\Setup\VS'
+    <Property Id='VS_2005_PATH'>
+      <RegistrySearch Id='Find_VS2005_Path' Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\8.0\Setup\VS'
           Name='EnvironmentPath' Type='raw'/>
     </Property>
-    <CustomAction Id="DevenvSetup" ExeCommand='/setup' Property="DEVENVINSTALLDIR"
-                  Execute="deferred" Impersonate="no"/>
-
+    <CustomAction Id="VS_2005_Setup" Property="VS_2005_SetupRun" Value='"[VS_2005_PATH]\devenv.com" /setup'/>
+    <CustomAction Id="VS_2005_SetupRun" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
+    
     <InstallExecuteSequence>
-      <Custom Action='DevenvSetup' After='PublishProduct'>$VStudio >= 2</Custom>
+      <Custom Action='VS_2005_Setup' Before='InstallFinalize'>(&amp;VS2005Int=2) OR (&amp;VS2005Int=3)</Custom>
+      <Custom Action='VS_2005_SetupRun' After='VS_2005_Setup'>(&amp;VS2005Int=2) OR (&amp;VS2005Int=3)</Custom>
     </InstallExecuteSequence>
 
   </Fragment>

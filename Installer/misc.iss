@@ -36,7 +36,6 @@ end;
 function RegisterAssembly(name: String; version: Integer) : Boolean;
 var
   ResultCode : Integer;
-  InstallutilPath: String;
 begin
     Result := true;
     Log(Format('Registering %s for version %d', [name, version]));
@@ -47,25 +46,11 @@ begin
       Log('Installing ' + name + ' into the GAC failed.');
       Result := false;
     end
-    else
-    begin
-      InstallUtilPath := GetInstallUtilPath(version);
-
-      Exec(InstallUtilPath, '/LogFile= /i "' + name + '"', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
-      if ResultCode <> 0 then
-      begin
-        Log('Running installer methods in ' + name + ' failed.');
-        Result := false;
-      end
-      else
-        Log('Successfully registered ' + name);
-    end
 end;
 
 function UnRegisterAssembly(name: String; version: Integer) : Boolean;
 var
   ResultCode : Integer;
-  InstallutilPath: String;
 begin
     Result := true;
     Log(Format('Unregistering %s for version %d', [name, version]));
@@ -75,19 +60,6 @@ begin
     begin
       Log('Removing ' + name + ' from the GAC failed.');
       Result := false;
-    end
-    else
-    begin
-      InstallUtilPath := GetInstallUtilPath(version);
-
-      Exec(InstallUtilPath, '/LogFile= /u "' + name + '"', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
-      if ResultCode <> 0 then
-      begin
-        Log('Running remove methods in ' + name + ' failed.');
-        Result := false;
-      end
-      else
-        Log('Successfully unregistered ' + name);
     end
 end;
 
@@ -102,17 +74,20 @@ begin
     for I := 0 to GetArrayLength(Names)-1 do
       if Pos('MySQL Connector/Net', Names[I]) = 1 then
         Result := true;
-  end;
+  end
 end;
 
-function VS2005Installed() : Boolean;
+function GetVS2005Path(Param: String) : String;
 begin
-  Result := RegKeyExists(HKEY_LOCAL_MACHINE, 'Software\Microsoft\VisualStudio\8.0');
+  if Not RegQueryStringValue(HKEY_LOCAL_MACHINE, 'Software\Microsoft\VisualStudio\8.0\Setup\VS', 'EnvironmentDirectory', Result) Then
+    RaiseException('Unable to locate the Visual Studio 2005 installation directory');
+  Result := Format('%sdevenv.com', [Result]);
 end;
 
-function VS2008Installed() : Boolean;
+function GetVS2008Path(Param: String) : String;
 begin
-  Result := RegKeyExists(HKEY_LOCAL_MACHINE, 'Software\Microsoft\VisualStudio\9.0');
+  if Not RegQueryStringValue(HKEY_LOCAL_MACHINE, 'Software\Microsoft\VisualStudio\9.0\Setup\VS', 'EnvironmentDirectory', Result) Then
+    RaiseException('Unable to locate the Visual Studio 2008 installation directory');
+  Result := Format('%sdevenv.com', [Result]);
 end;
-
 

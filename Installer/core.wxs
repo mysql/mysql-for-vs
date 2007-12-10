@@ -59,25 +59,19 @@
       <ComponentRef Id="StartMenuComponent"/>
     </Feature>
 
-    <CustomAction Id="MySqlData.Install.CheckFX" BinaryKey="MSVBDPCADLL" DllEntry="CheckFX" />
-    <CustomAction Id="MySqlData.Install.SetProperty" Property="MySqlData.Install"
-                  Value='/installtype=notransaction /action=install /LogFile= "[#MySqlData]" "[VSDFxConfigFile]"'/>
-    <CustomAction Id="MySqlData.Install" BinaryKey="InstallUtil" DllEntry="ManagedInstall" Execute="deferred" Impersonate="no" />
-
-    <CustomAction Id="MySqlData.Remove.CheckFX" BinaryKey="MSVBDPCADLL" DllEntry="CheckFX" />
-    <CustomAction Id="MySqlData.Remove.SetProperty" Property="MySqlData.Remove"
-                   Value='/installtype=notransaction /action=uninstall /LogFile= "[#MySqlData]" "[VSDFxConfigFile]"'/>
-    <CustomAction Id="MySqlData.Remove" BinaryKey="InstallUtil" DllEntry="ManagedInstall" Execute="deferred" Impersonate="no" />
-
     <InstallExecuteSequence>
-      <Custom Action="MySqlData.Install.CheckFX" After="InstallFiles">NOT Installed</Custom>
-      <Custom Action="MySqlData.Install.SetProperty" After="MySqlData.Install.CheckFX">NOT Installed</Custom>
-      <Custom Action="MySqlData.Install" After="MySqlData.Install.SetProperty">NOT Installed</Custom>
-
-      <Custom Action="MySqlData.Remove.CheckFX" Before="RemoveFiles">Installed</Custom>
-      <Custom Action="MySqlData.Remove.SetProperty" After="MySqlData.Remove.CheckFX">Installed</Custom>
-      <Custom Action="MySqlData.Remove" After="MySqlData.Remove.SetProperty">Installed</Custom>
+      <Custom Action='ManagedDataInstallSetup' After="InstallFiles">NOT Installed</Custom>
+      <Custom Action='ManagedDataInstall' After="ManagedDataInstallSetup">NOT Installed</Custom>
+      <Custom Action='ManagedDataUnInstallSetup' Before="RemoveFiles">Installed</Custom>
+      <Custom Action='ManagedDataUnInstall' After="ManagedDataUnInstallSetup">Installed</Custom>
     </InstallExecuteSequence>
+
+    <CustomAction Id="ManagedDataInstallSetup" Property="ManagedDataInstall"
+                  Value='"[WindowsFolder]\Microsoft.NET\Framework\v2.0.50727\installUtil.exe" /LogToConsole=false  "[#MySqlData]"'/>
+    <CustomAction Id='ManagedDataUnInstallSetup' Property="ManagedDataUnInstall"
+                  Value='"[WindowsFolder]\Microsoft.NET\Framework\v2.0.50727\installUtil.exe" /LogToConsole=false /u "[#MySqlData]"'/>
+    <CustomAction Id="ManagedDataInstall" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
+    <CustomAction Id="ManagedDataUnInstall" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
   </Fragment>
 </Wix>
 

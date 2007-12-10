@@ -61,7 +61,7 @@
       </Directory>
     </DirectoryRef>
 
-    <Feature Id='Samples' Display='10' Level='1' Title='Samples' Description='Sample Applications'>
+    <Feature Id='Samples' Display='15' Level='1' Title='Samples' Description='Sample Applications'>
       <Feature Id='CSSamples' Level='1' Title='CSharp' Description='Sample CSharp Applications' InstallDefault='local'>
         <ComponentRef Id='Sample1CS'/>
         <ComponentRef Id='Sample2CS'/>
