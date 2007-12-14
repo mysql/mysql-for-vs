@@ -114,7 +114,7 @@ namespace MySql.Data.VisualStudio
 
         int IVsInstalledProduct.IdBmpSplash(out uint pIdBmp)
         {
-            pIdBmp = 0;
+            pIdBmp = 101;
             return VSConstants.E_NOTIMPL;
         }
 
@@ -138,7 +138,11 @@ namespace MySql.Data.VisualStudio
 
         int IVsInstalledProduct.ProductID(out string pbstrPID)
         {
-            pbstrPID = "5.1";
+            string fullname = Assembly.GetExecutingAssembly().FullName;
+            string[] parts = fullname.Split(new char[] { '=' });
+            string[] versionParts = parts[1].Split(new char[] { '.' });
+
+            pbstrPID = String.Format("{0}.{1}", versionParts[0], versionParts[1]);
             return VSConstants.S_OK;
         }
 
