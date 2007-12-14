@@ -91,7 +91,7 @@
 
     <Property Id='VS_2005_PATH'>
       <RegistrySearch Id='Find_VS2005_Path' Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\8.0\Setup\VS'
-          Name='EnvironmentPath' Type='raw'/>
+          Name='EnvironmentDirectory' Type='raw'/>
     </Property>
     <CustomAction Id="VS_2005_Setup" Property="VS_2005_SetupRun" Value='"[VS_2005_PATH]\devenv.com" /setup'/>
     <CustomAction Id="VS_2005_SetupRun" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>

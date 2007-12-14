@@ -57,6 +57,14 @@
     <DirectoryRef Id='DocsDir'>
       <Component Id="Docs" Guid="8f9d25c7-1eba-4391-b764-eb1f7d39243e">
         <File Id="CoreCHM" Name="MySql.Data.chm" Source="..\Documentation\Output\MySql.Data.chm" DiskId="1" />
+        <File Id="docs2" Name="COL_Master.HxC" Source="..\Documentation\CollectionFiles\COL_Master.HxC" DiskId="1"/>
+        <File Id="docs3" Name="COL_Master.HxT" Source="..\Documentation\CollectionFiles\COL_Master.HxT" DiskId="1"/>
+        <File Id="docs4" Name="COL_Master_A.HxK" Source="..\Documentation\CollectionFiles\COL_Master_A.HxK" DiskId="1"/>
+        <File Id="docs5" Name="COL_Master_F.HxK" Source="..\Documentation\CollectionFiles\COL_Master_F.HxK" DiskId="1"/>
+        <File Id="docs6" Name="COL_Master_K.HxK" Source="..\Documentation\CollectionFiles\COL_Master_K.HxK" DiskId="1"/>
+        <File Id="docs7" Name="COL_Master_N.HxK" Source="..\Documentation\CollectionFiles\COL_Master_N.HxK" DiskId="1"/>
+        <File Id="docs8" Name="MySql.Data.HxS" Source="..\Documentation\Output\MySql.Data.HxS" DiskId="1"/>
+        <File Id="H2Reg.ini" Name="help.cmd" Source="Binary\h2reg.ini" DiskId="1"/>
       </Component>
     </DirectoryRef>
 
@@ -74,9 +82,7 @@
     </Feature>
     <FeatureRef Id="Samples"/>
 
-    <Binary Id="InstallUtil" SourceFile="Binary\InstallUtilLib.dll" />
-    <Binary Id="MSVBDPCADLL" SourceFile="Binary\MSVBDPCADLL.ibd" />
-    <Binary Id="VSDNETCFG" SourceFile="Binary\VSDNETCFG.ibd" />
+    <Binary Id="H2Reg" SourceFile="Binary\H2Reg.exe"/>
     <Property Id="WIXUI_INSTALLDIR" Value='INSTALLDIR'/>
     <!-- Remove the license agreement dialog -->
     <UIRef Id="WixUI_MySQL"/>
@@ -84,6 +90,14 @@
     <WixVariable Id="WixUIDialogBmp" Value="Bitmaps/DlgBmp.bmp"/>
 
     <Icon Id="ChangeLogIcon" SourceFile="Bitmaps\document.ico"/>
+
+    <InstallExecuteSequence>
+      <Custom Action='RegisterHelp' After="InstallFiles">(&amp;DocsFeature=3) AND NOT(!DocsFeature=3)</Custom>
+      <Custom Action="UnRegisterHelp" Before="RemoveFiles">(&amp;DocsFeature=2) AND (!DocsFeature=3)</Custom>
+    </InstallExecuteSequence>
+
+    <CustomAction Id="RegisterHelp" ExeCommand='-r -q CmdFile="[#H2Reg.ini]"' BinaryKey="H2Reg" Execute="deferred" Return="check" Impersonate="no"/>
+    <CustomAction Id="UnRegisterHelp" ExeCommand='-u -q CmdFile="[#H2Reg.ini]"' BinaryKey="H2Reg" Execute="deferred" Return="check" Impersonate="no"/>
   </Product>
 </Wix>
 

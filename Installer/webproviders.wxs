@@ -23,10 +23,10 @@
     </Feature>
 
     <InstallExecuteSequence>
-      <Custom Action='ManagedWebInstallSetup' After="InstallFiles">NOT Installed</Custom>
-      <Custom Action='ManagedWebInstall' After="ManagedWebInstallSetup">NOT Installed</Custom>
-      <Custom Action='ManagedWebUnInstallSetup' Before="RemoveFiles">Installed</Custom>
-      <Custom Action='ManagedWebUnInstall' After="ManagedWebUnInstallSetup">Installed</Custom>
+      <Custom Action='ManagedWebInstallSetup' After="InstallFiles">(&amp;WebProviders=3) AND NOT(!WebProviders=3)</Custom>
+      <Custom Action='ManagedWebInstall' After="ManagedWebInstallSetup">(&amp;WebProviders=3) AND NOT(!WebProviders=3)</Custom>
+      <Custom Action='ManagedWebUnInstallSetup' Before="RemoveFiles">(&amp;WebProviders=2) AND (!WebProviders=3)</Custom>
+      <Custom Action='ManagedWebUnInstall' After="ManagedWebUnInstallSetup">(&amp;WebProviders=2) AND (!WebProviders=3)</Custom>
     </InstallExecuteSequence>
 
     <CustomAction Id="ManagedWebInstallSetup" Property="ManagedWebInstall"

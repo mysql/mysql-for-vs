@@ -48,8 +48,13 @@
       <ProgressText Action="ManagedWebInstall">Registering web providers in machine.config</ProgressText>
       <ProgressText Action="ManagedWebUnInstall">Unregistering web providers from machine.config</ProgressText>
 
-      <ProgressText Action="VS_2005_Setup">Reconfiguring Visual Studio 2005</ProgressText>
-      <ProgressText Action="VS_2008_Setup">Reconfiguring Visual Studio 2008</ProgressText>
+      <ProgressText Action="VS_2005_SetupRun">Reconfiguring Visual Studio 2005.  Please wait...</ProgressText>
+      <ProgressText Action="VS_2008_SetupRun">Reconfiguring Visual Studio 2008.  Please wait...</ProgressText>
+
+      <ProgressText Action="PMDataCategoryId">Registering performance counters</ProgressText>
+
+      <ProgressText Action="RegisterHelp">Registering help collection</ProgressText>
+      <ProgressText Action="UnRegisterHelp">Unregistering help collection</ProgressText>
     </UI>
 
     <UIRef Id="WixUI_Common" />
