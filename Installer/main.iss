@@ -52,8 +52,8 @@ Source: ..\Documentation\CollectionFiles\COL_Master_N.HxK; DestDir: {app}\Docume
 Source: ..\Documentation\Output\MySql.Data.HxS; DestDir: {app}\Documentation; Components: Docs
 
 ; Documentation registration tools
-Source: ..\Installer\H2Reg.exe; DestDir: {app}\Uninstall; Attribs: hidden; Components: Docs
-Source: ..\Installer\h2reg.ini; DestDir: {app}\Uninstall; Attribs: hidden; Components: Docs
+Source: ..\Installer\Binary\H2Reg.exe; DestDir: {app}\Uninstall; Components: Docs
+Source: ..\Installer\Binary\h2reg.ini; DestDir: {app}\Uninstall; Components: Docs
 
 ; VS integration
 Source: ..\VisualStudio\bin\Release\MySql.VisualStudio.dll; DestDir: {app}\Visual Studio Integration; Components: VS
@@ -88,14 +88,16 @@ Root: HKLM; Subkey: Software\Microsoft\.NETFramework\AssemblyFolders\MySQL Conne
 [Run]
 Filename: "{code:GetVersion2InstallUtil}"; Parameters: {app}\Binaries\.NET 2.0\mysql.data.dll; WorkingDir: {app}; StatusMsg: Adding data provider to machine.config; Flags: runhidden
 Filename: "{code:GetVersion2InstallUtil}"; Parameters: {app}\Binaries\.NET 2.0\mysql.web.dll; WorkingDir: {app}; StatusMsg: Adding web providers to machine.config; Flags: runhidden; Components: Providers
-Filename: "{code:GetVS2005Path}"; Parameters: /setup; WorkingDir: {app}; StatusMsg: Reconfiguring Visual Studio 2005; Flags: runhidden; Components: VS/2005
-Filename: "{code:GetVS2008Path}"; Parameters: /setup; WorkingDir: {app}; StatusMsg: Reconfiguring Visual Studio 2008; Flags: runhidden; Components: VS/2008
+Filename: "{code:GetVS2005Path}"; Parameters: /setup; WorkingDir: {app}; StatusMsg: Reconfiguring Visual Studio 2005.  Please wait...; Flags: runhidden; Components: VS/2005
+Filename: "{code:GetVS2008Path}"; Parameters: /setup; WorkingDir: {app}; StatusMsg: Reconfiguring Visual Studio 2008  Please wait...; Flags: runhidden; Components: VS/2008
+Filename: {app}\Uninstall\h2reg.exe; Parameters: -r -q; WorkingDir: {app}\Uninstall; StatusMsg: Registering help collection; Flags: runhidden; Components: docs and (VS/2005 or VS/2008)
 
 [UninstallRun]
 Filename: "{code:GetVS2005Path}"; Parameters: /setup; WorkingDir: {app}; StatusMsg: Reconfiguring Visual Studio 2005; Flags: runhidden runascurrentuser; Components: VS/2005
 Filename: "{code:GetVS2008Path}"; Parameters: /setup; WorkingDir: {app}; StatusMsg: Reconfiguring Visual Studio 2008; Flags: runhidden runascurrentuser; Components: VS/2008
 Filename: "{code:GetVersion2InstallUtil}"; Parameters: /u {app}\Binaries\.NET 2.0\mysql.data.dll; WorkingDir: {app}; StatusMsg: Removing data provider from machine.config; Flags: runhidden
 Filename: "{code:GetVersion2InstallUtil}"; Parameters: /u {app}\Binaries\.NET 2.0\mysql.web.dll; WorkingDir: {app}; StatusMsg: Removing web providers from machine.config; Flags: runhidden; Components: Providers
+Filename: {app}\Uninstall\h2reg.exe; Parameters: -u -q; WorkingDir: {app}\Uninstall; Flags: runhidden; Components: docs and (VS/2005 or VS/2008)
 
 [Code]
 #include "misc.iss"
