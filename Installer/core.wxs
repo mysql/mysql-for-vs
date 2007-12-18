@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" 
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
   <Fragment Id='CoreFragment'>
 
     <!-- Top level junk - readme, changelog, etc -->
@@ -29,7 +30,14 @@
                      Key="SOFTWARE\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\MySQL Connector Net $(var.Version)">
           <RegistryValue Id="VSRegistryValue" Value="[BinNet20]" Type="string" Action="write"/>
         </RegistryKey>
-      </Component>
+        
+            <util:PerformanceCategory Id="PMDataCategoryId" Name=".NET Data Provider for MySQL" 
+                                      MultiInstance="no" Help="This category includes a series of counters for MySQL.">
+                <util:PerformanceCounter Name="Hard Procedure Queries" Type="numberOfItems32" Help="The number of times a procedures metadata had to be queried from the server." />
+                <util:PerformanceCounter Name="Soft Procedure Queries" Type="rateOfCountsPerSecond32" Help="The number of times a procedures metadata was retrieved from the client-side cache." /> 
+            </util:PerformanceCategory>
+            
+        </Component>
       <Directory Id="MySql.Data.DummyDir" Name="GAC">
         <Component Id="GAC20" Guid="58f70e4a-96f7-4b67-bdab-9b77a60f9c09">
           <File Id="MySql.Data.GAC" Name="MySql.Data.dll"

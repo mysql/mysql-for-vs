@@ -38,31 +38,6 @@ namespace MySql.Data.MySqlClient
     [RunInstaller(true)]
 	public class CustomInstaller : Installer
 	{
-		int perfMonIndex;
-
-        public CustomInstaller()
-        {
-            // add in a perf mon installer
-            PerformanceCounterInstaller p = new PerformanceCounterInstaller();
-            p.CategoryName = Resources.PerfMonCategoryName;
-            p.CategoryHelp = Resources.PerfMonCategoryHelp;
-            p. CategoryType = PerformanceCounterCategoryType.SingleInstance;
-
-            CounterCreationData ccd1 = new CounterCreationData(
-                Resources.PerfMonHardProcName,
-                Resources.PerfMonHardProcHelp,
-                PerformanceCounterType.NumberOfItems32);
-
-            CounterCreationData ccd2 = new CounterCreationData(
-             Resources.PerfMonSoftProcName,
-             Resources.PerfMonSoftProcHelp,
-             PerformanceCounterType.RateOfCountsPerSecond32);
-
-            p.Counters.Add(ccd1);
-            p.Counters.Add(ccd2);
-            perfMonIndex = Installers.Add(p);
-        }
-
 		/// <summary>
 		/// We override Install so we can add our assembly to the proper
 		/// machine.config files.
@@ -122,7 +97,6 @@ namespace MySql.Data.MySqlClient
 
 			XmlNodeList nodes = doc.GetElementsByTagName("DbProviderFactories");
 
-			bool alreadyThere = false;
 			foreach (XmlNode node in nodes[0].ChildNodes)
 			{
                 if (node.Attributes == null) continue;
@@ -153,11 +127,6 @@ namespace MySql.Data.MySqlClient
 		/// <param name="savedState"></param>
 		public override void Uninstall(System.Collections.IDictionary savedState)
 		{
-			// if our category doesn't exist, then we don't want to run the perf mon
-			// installer
-			if (!PerformanceCounterCategory.Exists(Resources.PerfMonCategoryName))
-				base.Installers.RemoveAt(perfMonIndex);
-
 			base.Uninstall(savedState);
 
 			RemoveProviderFromMachineConfig();

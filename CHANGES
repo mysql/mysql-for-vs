@@ -8,6 +8,7 @@ Version 5.2
   allow both @ and ? as paramter markers.
 . Finished MySqlBulkLoader class
 . BINARY(16) columns are now returned as Guid objects
+. Moved code that creates the PerfMon stuff from the assemblies to the Wix installer
 
 Version 5.1.4 - 11/12/2007
   - Fixed issue where column name metadata was not using the charset given on the connection string
