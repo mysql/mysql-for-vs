@@ -130,6 +130,17 @@ namespace MySql.Web.Security.Tests
         }
 
         [Test]
+        public void FindUsersByEmail()
+        {
+            CreateUserWithHashedPassword();
+
+            int records;
+            MembershipUserCollection users = provider.FindUsersByEmail("foo@bar.com", 0, 10, out records);
+            Assert.AreEqual(1, records);
+            Assert.AreEqual("foo", users["foo"].UserName);
+        }
+
+        [Test]
         public void TestCreateUserOverrides()
         {
             try

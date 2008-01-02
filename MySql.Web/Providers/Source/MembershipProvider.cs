@@ -1332,6 +1332,7 @@ PKID, Username, ApplicationName,
                     FROM mysql_Membership WHERE Email LIKE ?EmailSearch AND 
                     ApplicationName = ?ApplicationName " +
                     " ORDER BY Username Asc";
+                cmd.Parameters.Clear();
                 cmd.Parameters.Add("?EmailSearch", MySqlDbType.VarChar, 255).Value = emailToMatch;
                 cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
                 reader = cmd.ExecuteReader();

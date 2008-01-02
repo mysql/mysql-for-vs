@@ -1,3 +1,7 @@
+Version 5.1.5 - 
+  - Fixed problem with membership provider where FindUserByEmail would fail trying to add
+    a second parameter with the same name as the first (bug #33347)
+    
 Version 5.1.4 - 11/12/2007
   - Fixed issue where column name metadata was not using the charset given on the connection string
     (Bug #31185)
