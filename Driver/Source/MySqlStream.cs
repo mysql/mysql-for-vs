@@ -41,16 +41,15 @@ namespace MySql.Data.MySqlClient
 		private int maxBlockSize;
 		private ulong maxPacketSize;
 
-		private BufferedStream inStream;
+		private Stream inStream;
 		private ulong inLength;
 		private ulong inPos;
 
-		private BufferedStream outStream;
+		private Stream outStream;
 		private ulong outLength;
 		private ulong outPos;
 		private bool isLastPacket;
 		private byte[] byteBuffer;
-		private Stream baseStream;
 
 		public MySqlStream(Encoding encoding)
 		{
@@ -69,13 +68,18 @@ namespace MySql.Data.MySqlClient
 			peekByte = -1;
 		}
 
-		public MySqlStream(Stream baseStr, Encoding encoding)
-			: this(encoding)
-		{
-			baseStream = baseStr;
+        public MySqlStream(Stream baseStream, Encoding encoding, bool compress)
+            : this(encoding)
+        {
+
             inStream = new BufferedStream(baseStream);
             outStream = new BufferedStream(baseStream);
-		}
+            if (compress)
+            {
+                inStream = new CompressedStream(inStream);
+                outStream = new CompressedStream(outStream);
+            }
+        }
 
 		public void Close()
 		{
@@ -190,6 +194,7 @@ namespace MySql.Data.MySqlClient
 
 				sequenceByte = (byte)++seqByte;
 				inLength = (ulong)(b1 + (b2 << 8) + (b3 << 16));
+
 				inPos = 0;
 			}
 			catch (IOException ioex)
@@ -218,7 +223,8 @@ namespace MySql.Data.MySqlClient
             buffer[1] = (byte)((count >> 8) & 0xff);
             buffer[2] = (byte)((count >> 16) & 0xff);
             buffer[3] = sequenceByte++;
-            baseStream.Write(buffer, 0, count + 4);
+            outStream.Write(buffer, 0, count + 4);
+            outStream.Flush();
         }
 
         /// <summary>
@@ -456,11 +462,6 @@ namespace MySql.Data.MySqlClient
             try
             {
                 outStream.Flush();
-                if (baseStream is CompressedStream)
-                    // we do a flush on the basestream here because we might be sitting on top of
-                    // a compression stream and calling flush on the BufferedStream doesn't always
-                    // call flush on the underlying stream.
-                    baseStream.Flush();
             }
             catch (IOException ioex)
             {

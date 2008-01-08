@@ -207,7 +207,7 @@ namespace MySql.Data.MySqlClient
                 throw new MySqlException("Unable to connect to any of the specified MySQL hosts");
 
             int maxSinglePacket = 255*255*255;
-            stream = new MySqlStream(baseStream, encoding);
+            stream = new MySqlStream(baseStream, encoding, false);
 
             // read off the welcome packet and parse out it's values
             stream.OpenPacket();
@@ -269,7 +269,7 @@ namespace MySql.Data.MySqlClient
             // if we are using compression, then we use our CompressedStream class
             // to hide the ugliness of managing the compression
             if ((connectionFlags & ClientFlags.COMPRESS) != 0)
-                stream = new MySqlStream(new CompressedStream(baseStream), encoding);
+                stream = new MySqlStream(baseStream, encoding, true);
 
             // give our stream the server version we are connected to.  
             // We may have some fields that are read differently based 
@@ -295,7 +295,7 @@ namespace MySql.Data.MySqlClient
                 X509CertificateCollection certs = new X509CertificateCollection();
                 ss.AuthenticateAsClient(String.Empty, certs, SslProtocols.Default, false);
                 baseStream = ss;
-                stream = new MySqlStream(ss, encoding);
+                stream = new MySqlStream(ss, encoding, false);
                 stream.SequenceByte = 2;
             }
             catch (Exception)
