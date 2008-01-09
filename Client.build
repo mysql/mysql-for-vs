@@ -46,7 +46,7 @@
     </resgen>
 
     <csc output="${outdir}/MySql.Data.dll" target="library"
-			define="TRACE,${defines}" debug="${debug}" optimize="${opt}" keycontainer="ConnectorNet"
+			define="TRACE,${defines}" debug="${debug}" optimize="${opt}"
 			doc="${outdir}/MySql.Data.xml">
       <arg value="/nowarn:0679,1591,2029"/>
       <resources prefix="MySql.Data.MySqlClient.Source">

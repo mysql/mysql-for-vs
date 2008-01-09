@@ -61,11 +61,6 @@ namespace MySql.Data.MySqlClient
 
         private static Cache connectionStringCache = new Cache(0, 25);
 
-#if MONO2
-    /// <include file='docs/MySqlConnection.xml' path='docs/StateChange/*'/>
-        public event StateChangeEventHandler StateChange;
-#endif
-
         /// <include file='docs/MySqlConnection.xml' path='docs/DefaultCtor/*'/>
         public MySqlConnection()
         {
@@ -611,16 +606,6 @@ namespace MySql.Data.MySqlClient
 			MySqlCommand cmd = new MySqlCommand("SELECT database()", this);
 			return cmd.ExecuteScalar().ToString();
 		}
-
-#if MONO2
-
-        protected void OnStateChange (StateChangeEventArgs stateChangeArgs)
-        {
-            if (StateChange != null)
-                StateChange(this, stateChangeArgs);
-        }
-
-#endif
 
         #region GetSchema Support
 
