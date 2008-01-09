@@ -128,8 +128,8 @@ namespace MySql.Data.MySqlClient
                 if (marker != 0)
                     throw new MySqlException("Out of sync with server", true, null);
 
-                long affectedRows = stream.ReadFieldLength();
-                long lastInsertId = stream.ReadFieldLength();
+                stream.ReadFieldLength(); /* affected rows */
+                stream.ReadFieldLength(); /* last insert id */
                 if (stream.HasMoreData)
                 {
                     serverStatus = (ServerStatusFlags) stream.ReadInteger(2);

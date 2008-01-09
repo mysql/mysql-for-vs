@@ -152,7 +152,7 @@ namespace MySql.Data.MySqlClient
 		public override CommandType CommandType
 		{
 			get { return cmdType; }
-			set { cmdType = value; SyncCommandType(true); }
+			set { cmdType = value; }
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/IsPrepared/*'/>
@@ -652,11 +652,6 @@ namespace MySql.Data.MySqlClient
 		#endregion
 
 		#region Private Methods
-
-		private void SyncCommandType(bool cmdTypeSet)
-		{
-			int i = (int)CommandType;
-		}
 
 		/*		private ArrayList PrepareSqlBuffers(string sql)
 				{
