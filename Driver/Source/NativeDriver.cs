@@ -304,7 +304,7 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-        private static bool ServerCheckValidation(object sender, X509Certificate certificate,
+/*        private static bool ServerCheckValidation(object sender, X509Certificate certificate,
                                                   X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
             if (sslPolicyErrors == SslPolicyErrors.None)
@@ -313,7 +313,7 @@ namespace MySql.Data.MySqlClient
             // Do not allow this client to communicate with unauthenticated servers.
             return false;
         }
-
+        */
         private static bool NoServerCheckValidation(object sender, X509Certificate certificate,
                                                     X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {

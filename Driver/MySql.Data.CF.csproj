@@ -56,6 +56,9 @@
     <Compile Include="Properties\Resources.Designer.cs" />
     <Compile Include="Source\base\DbConnectionStringBuilder.cs" />
     <Compile Include="Source\base\DbException.cs" />
+    <Compile Include="Source\cf\BufferedStream.cs" />
+    <Compile Include="Source\cf\Semaphore.cs" />
+    <Compile Include="Source\cf\WinCE.cs" />
     <Compile Include="Source\CharSetMap.cs" />
     <Compile Include="Source\command.cs">
       <SubType>Component</SubType>
@@ -63,18 +66,15 @@
     <Compile Include="Source\CommandBuilder.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Source\common\BufferedStream.cs" />
     <Compile Include="Source\common\Cache.cs" />
     <Compile Include="Source\common\ContextString.cs" />
     <Compile Include="Source\common\NativeMethods.cs" />
     <Compile Include="Source\common\Platform.cs" />
-    <Compile Include="Source\common\Semaphore.cs" />
     <Compile Include="Source\common\SHA1.cs" />
     <Compile Include="Source\common\SocketStream.cs" />
     <Compile Include="Source\common\SqlTokenizer.cs" />
     <Compile Include="Source\common\StreamCreator.cs" />
     <Compile Include="Source\common\Version.cs" />
-    <Compile Include="Source\common\WinCE.cs" />
     <Compile Include="Source\CompressedStream.cs" />
     <Compile Include="Source\Connection.cs">
       <SubType>Component</SubType>

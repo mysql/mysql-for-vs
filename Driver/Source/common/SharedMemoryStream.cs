@@ -74,7 +74,7 @@ namespace MySql.Data.Common
 			AutoResetEvent connectRequest = new AutoResetEvent(false);
 			IntPtr handle = OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, false,
 			memoryName + "_" + "CONNECT_REQUEST");
-#if NET20 && !MONO
+#if NET20
 			connectRequest.SafeWaitHandle = new SafeWaitHandle(handle, true);
 #else
 			connectRequest.Handle = handle;
@@ -83,7 +83,7 @@ namespace MySql.Data.Common
 			AutoResetEvent connectAnswer = new AutoResetEvent(false);
 			handle = OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, false,
 			memoryName + "_" + "CONNECT_ANSWER");
-#if NET20 && !MONO
+#if NET20
 			connectAnswer.SafeWaitHandle = new SafeWaitHandle(handle, true);
 #else
 			connectAnswer.Handle = handle;
@@ -115,7 +115,7 @@ namespace MySql.Data.Common
 			IntPtr handle = OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, false,
 				 dataMemoryName + "_SERVER_WROTE");
 			Debug.Assert(handle != IntPtr.Zero);
-#if NET20 && !MONO
+#if NET20
 			serverWrote.SafeWaitHandle = new SafeWaitHandle(handle, true);
 #else
 			serverWrote.Handle = handle;
@@ -125,7 +125,7 @@ namespace MySql.Data.Common
 			handle = OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, false,
 			dataMemoryName + "_SERVER_READ");
 			Debug.Assert(handle != IntPtr.Zero);
-#if NET20 && !MONO
+#if NET20
 			serverRead.SafeWaitHandle = new SafeWaitHandle(handle, true);
 #else
 			serverRead.Handle = handle;
@@ -135,7 +135,7 @@ namespace MySql.Data.Common
 			handle = OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, false,
 			dataMemoryName + "_CLIENT_WROTE");
 			Debug.Assert(handle != IntPtr.Zero);
-#if NET20 && !MONO
+#if NET20
 			clientWrote.SafeWaitHandle = new SafeWaitHandle(handle, true);
 #else
 			clientWrote.Handle = handle;
@@ -145,7 +145,7 @@ namespace MySql.Data.Common
 			handle = OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, false,
 			dataMemoryName + "_CLIENT_READ");
 			Debug.Assert(handle != IntPtr.Zero);
-#if NET20 && !MONO
+#if NET20
 			clientRead.SafeWaitHandle = new SafeWaitHandle(handle, true);
 #else
 			clientRead.Handle = handle;

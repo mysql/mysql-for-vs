@@ -277,6 +277,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 				dt.Clear();
 				da.Fill(dt);
+                cb.Dispose();
 
 				byte[] outBuf = (byte[])dt.Rows[0]["blob1"];
 				Assert.AreEqual(inBuf.Length, outBuf.Length,

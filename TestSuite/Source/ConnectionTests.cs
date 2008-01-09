@@ -184,8 +184,6 @@ namespace MySql.Data.MySqlClient.Tests
         {
             try
             {
-                string connStr = conn.ConnectionString;
-
                 // connect with no db
                 string connStr2 = GetConnectionString(false);
                 MySqlConnection c = new MySqlConnection(connStr2);

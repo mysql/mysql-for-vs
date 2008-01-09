@@ -49,7 +49,7 @@ namespace MySql.Data.MySqlClient.Tests
 					count++;
 					System.Threading.Thread.Sleep(20);
 				}
-				int updated = proc.EndExecuteNonQuery(iar);
+				proc.EndExecuteNonQuery(iar);
 				Assert.IsTrue(count > 0);
 
 				proc.CommandType = CommandType.Text;

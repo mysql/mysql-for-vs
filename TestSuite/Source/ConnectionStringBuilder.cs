@@ -51,7 +51,6 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.IsTrue(sb.Pooling);
             Assert.AreEqual(33, sb.MinimumPoolSize);
             Assert.AreEqual(66, sb.MaximumPoolSize);
-            string s = sb.ConnectionString;
 
             try
             {
