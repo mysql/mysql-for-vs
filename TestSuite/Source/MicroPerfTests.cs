@@ -35,7 +35,7 @@ namespace MySql.Data.MySqlClient.Tests
             execSQL("CREATE TABLE Test (id int NOT NULL, name VARCHAR(100))");
         }
 
-        [Test]
+/*        [Test]
         public void Connect1000Times()
         {
             DateTime start = DateTime.Now;
@@ -47,6 +47,6 @@ namespace MySql.Data.MySqlClient.Tests
                 c.Open();
                 c.Close();
             }
-        }
+        }*/
     }
 }
