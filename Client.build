@@ -48,7 +48,7 @@
     <csc output="${outdir}/MySql.Data.dll" target="library"
 			define="TRACE,${defines}" debug="${debug}" optimize="${opt}"
 			doc="${outdir}/MySql.Data.xml">
-      <arg value="/nowarn:0679,1591,2029"/>
+      <arg value="/nowarn:0679,1591,1592,2029"/>
       <resources prefix="MySql.Data.MySqlClient.Source">
         <include name="Driver/Source/Resources.resources"/>
         <include name="Driver/Source/ReservedWords.txt"/>
@@ -70,7 +70,7 @@
 			define="TRACE,${defines}" debug="${debug}" optimize="${opt}">
       <arg value="/nowarn:0679,2029"/>
       <sources>
-        <include name="TestSuite/source/*.cs" />
+        <include name="TestSuite/Source/*.cs" />
       </sources>
       <references>
         <include name="${outdir}/MySql.Data.dll"/>

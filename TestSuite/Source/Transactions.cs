@@ -156,14 +156,14 @@ namespace MySql.Data.MySqlClient.Tests
             MySqlConnection c = new MySqlConnection(connStr);
             c.Open();
             MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (1)", c);
-            MySqlTransaction tx = c.BeginTransaction();
+            c.BeginTransaction();
             cmd.ExecuteNonQuery();
             c.Close();
 
             MySqlConnection c2 = new MySqlConnection(connStr);
             c2.Open();
             MySqlCommand cmd2 = new MySqlCommand("SELECT COUNT(*) from Test", c2);
-            MySqlTransaction tx2 = c2.BeginTransaction();
+            c2.BeginTransaction();
             object count = cmd2.ExecuteScalar();
             c2.Close();
             Assert.AreEqual(0, count);
@@ -174,7 +174,7 @@ namespace MySql.Data.MySqlClient.Tests
         /// <summary>
         /// Bug #22042 mysql-connector-net-5.0.0-alpha BeginTransaction 
         /// </summary>
-        void Bug22042()
+        public void Bug22042()
         {
             DbProviderFactory factory =
                 new MySql.Data.MySqlClient.MySqlClientFactory();

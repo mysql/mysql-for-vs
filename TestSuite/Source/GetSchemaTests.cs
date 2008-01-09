@@ -534,7 +534,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 			try 
 			{
-				DataTable dt = conn.GetSchema("Foreign Keys");
+				conn.GetSchema("Foreign Keys");
 			}
 			catch (Exception ex)
 			{

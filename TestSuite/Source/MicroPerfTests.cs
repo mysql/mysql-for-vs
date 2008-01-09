@@ -49,7 +49,6 @@ namespace MySql.Data.MySqlClient.Tests
             }
 
             TimeSpan ts = DateTime.Now.Subtract(start);
-            double secs = ts.TotalSeconds;
         }
     }
 }

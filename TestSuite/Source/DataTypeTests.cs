@@ -534,6 +534,7 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(1, dt.Rows.Count);
             Assert.AreEqual(1, dt.Rows[0]["id"]);
             Assert.AreEqual(23.4, dt.Rows[0]["dec1"]);
+            cb.Dispose();
         }
 
         [Test]
@@ -681,6 +682,7 @@ namespace MySql.Data.MySqlClient.Tests
 			row["b"] = 135;
 			row.EndEdit();
 			da.Update(dv.Table);
+            cb.Dispose();
 
 			execSQL("DROP TABLE IF EXISTS Test");
 			execSQL("CREATE TABLE Test (b MEDIUMINT UNSIGNED PRIMARY KEY)");
