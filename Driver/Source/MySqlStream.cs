@@ -168,7 +168,7 @@ namespace MySql.Data.MySqlClient
 				string msg = ReadString();
                 if (msg.StartsWith("#"))
                 {
-                    string stateCode = msg.Substring(1, 5);
+                    msg.Substring(1, 5);  /* state code */
                     msg = msg.Substring(6);
                 }
 				throw new MySqlException(msg, code);

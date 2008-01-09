@@ -133,10 +133,10 @@ namespace MySql.Data.MySqlClient
                 if (stream.HasMoreData)
                 {
                     serverStatus = (ServerStatusFlags) stream.ReadInteger(2);
-                    int warningCount = stream.ReadInteger(2);
+                    stream.ReadInteger(2);  /* warning count */
                     if (stream.HasMoreData)
                     {
-                        string msg = stream.ReadLenString();
+                        stream.ReadLenString();  /* message */
                     }
                 }
             }
