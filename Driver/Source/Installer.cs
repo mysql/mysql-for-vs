@@ -122,7 +122,6 @@ namespace MySql.Data.MySqlClient
 
 			XmlNodeList nodes = doc.GetElementsByTagName("DbProviderFactories");
 
-			bool alreadyThere = false;
 			foreach (XmlNode node in nodes[0].ChildNodes)
 			{
                 if (node.Attributes == null) continue;

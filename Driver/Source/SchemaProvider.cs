@@ -393,9 +393,6 @@ namespace MySql.Data.MySqlClient
                                            string filterName, bool includeColumns)
         {
             string sqlMode = GetSqlMode();
-            bool ansiQuotes = sqlMode.IndexOf("ANSI_QUOTES") != -1;
-            bool noBackslash = sqlMode.IndexOf("NO_BACKSLASH_ESCAPES") != -1;
-            string quotePattern = ansiQuotes ? "``\"\"" : "``";
 
             if (filterName != null)
                 filterName = filterName.ToLower(CultureInfo.InvariantCulture);
