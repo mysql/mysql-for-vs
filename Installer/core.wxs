@@ -33,8 +33,8 @@
         
             <util:PerformanceCategory Id="PMDataCategoryId" Name=".NET Data Provider for MySQL" 
                                       MultiInstance="no" Help="This category includes a series of counters for MySQL.">
-                <util:PerformanceCounter Name="Hard Procedure Queries" Type="numberOfItems32" Help="The number of times a procedures metadata had to be queried from the server." />
-                <util:PerformanceCounter Name="Soft Procedure Queries" Type="rateOfCountsPerSecond32" Help="The number of times a procedures metadata was retrieved from the client-side cache." /> 
+                <util:PerformanceCounter Name="HardProcedureQueries" Type="numberOfItems32" Help="The number of times a procedures metadata had to be queried from the server." />
+                <util:PerformanceCounter Name="SoftProcedureQueries" Type="rateOfCountsPerSecond32" Help="The number of times a procedures metadata was retrieved from the client-side cache." /> 
             </util:PerformanceCategory>
             
         </Component>
