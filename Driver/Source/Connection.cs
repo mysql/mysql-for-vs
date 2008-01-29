@@ -404,7 +404,7 @@ namespace MySql.Data.MySqlClient
 
         internal void SetState(ConnectionState newConnectionState, bool broadcast)
         {
-            if (newConnectionState == connectionState)
+            if (newConnectionState == connectionState && !broadcast)
                 return;
             ConnectionState oldConnectionState = connectionState;
             connectionState = newConnectionState;

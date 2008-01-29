@@ -3,6 +3,8 @@ Version 5.1.5 -
     a second parameter with the same name as the first (bug #33347)
   - Fixed long standing problem with compression over a network.  It's now fast again. (bug #27865)    
   - Fixed nant compilation problem on mono (bug #33508)
+  - Fixed problem where connection state reported through the state change handler was not
+    showing Open (bug #34082)   
    
 Version 5.1.4 - 11/12/2007
   - Fixed issue where column name metadata was not using the charset given on the connection string
