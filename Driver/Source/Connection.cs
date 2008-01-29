@@ -419,10 +419,11 @@ namespace MySql.Data.MySqlClient
         /// <returns></returns>
         public bool Ping()
         {
-            bool result = driver.Ping();
-            if (!result)
-                SetState(ConnectionState.Closed, true);
-            return result;
+            if (driver != null && driver.Ping())
+                return true;
+            driver = null;
+            SetState(ConnectionState.Closed, true);
+            return false;
         }
 
         /// <include file='docs/MySqlConnection.xml' path='docs/Open/*'/>
