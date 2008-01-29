@@ -957,8 +957,8 @@ namespace MySql.Data.MySqlClient
             persistConnString.Remove(0, persistConnString.Length);
 
             // set all the proper defaults
-            foreach (Keyword k in defaultValues.Keys)
-                SetValue(k, defaultValues[k]);
+            foreach (KeyValuePair<Keyword, object> k in defaultValues)
+                SetValue(k.Key, k.Value);
         }
 
         private static Keyword GetKey(string key)

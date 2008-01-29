@@ -59,7 +59,8 @@ namespace MySql.Data.MySqlClient
         /// <include file='docs/MySqlConnection.xml' path='docs/InfoMessage/*'/>
         public event MySqlInfoMessageEventHandler InfoMessage;
 
-        private static Cache connectionStringCache = new Cache(0, 25);
+        private static Cache<string, MySqlConnectionStringBuilder> connectionStringCache =
+            new Cache<string, MySqlConnectionStringBuilder>(0, 25);
 
         /// <include file='docs/MySqlConnection.xml' path='docs/DefaultCtor/*'/>
         public MySqlConnection()
