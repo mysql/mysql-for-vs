@@ -50,6 +50,7 @@ namespace MySql.Data.MySqlClient
         string blobAsUtf8IncludePattern, blobAsUtf8ExcludePattern;
         Regex blobAsUtf8ExcludeRegex, blobAsUtf8IncludeRegex;
         uint defaultCommandTimeout;
+        bool clearing;
 
         static MySqlConnectionStringBuilder()
         {
@@ -957,9 +958,11 @@ namespace MySql.Data.MySqlClient
             base.Clear();
             persistConnString.Remove(0, persistConnString.Length);
 
+            clearing = true;
             // set all the proper defaults
             foreach (Keyword k in defaultValues.Keys)
                 SetValue(k, defaultValues[k]);
+            clearing = false;
         }
 
         private static Keyword GetKey(string key)
@@ -1187,7 +1190,8 @@ namespace MySql.Data.MySqlClient
                     logging = ConvertToBool(value); break;
                 case Keyword.OldSyntax: 
                     oldSyntax = ConvertToBool(value);
-                    Logger.LogWarning("Use Old Syntax is now obsolete.  Please see documentation");
+                    if (!clearing)
+                        Logger.LogWarning("Use Old Syntax is now obsolete.  Please see documentation");
                     break;
                 case Keyword.SharedMemoryName: 
                     sharedMemName = (string)value; break;
