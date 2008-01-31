@@ -30,7 +30,7 @@ using System.Configuration.Provider;
 using System.Resources;
 using System.IO;
 
-namespace MySql.Web.Security
+namespace MySql.Web.Common
 {
     /// <summary>
     /// 
@@ -50,21 +50,42 @@ namespace MySql.Web.Security
 
         internal static void CheckSchema(string connectionString, NameValueCollection config)
         {
-            // make sure the user doesn't use autogenerateschema any longer
-            foreach (string key in config.AllKeys)
-                if (key.ToLowerInvariant() == "autogenerateschema")
-                    throw new ProviderException(
-                        "AutoGenerateSchema is not a valid configuration option.");
-
             try
             {
                 int ver = GetSchemaVersion(connectionString);
                 if (ver == Version) return;
-            }
-            catch (Exception) { }
 
-            throw new ProviderException(
-                "Unable to initialize provider.  Possibly missing or incorrect schema version.");
+                if (config["autogenerateschema"] == "true")
+                    UpgradeToCurrent(connectionString, ver);
+                else
+                    throw new ProviderException("Unable to initialize provider.  Missing or incorrect schema.");
+
+            }
+            catch (Exception ex)
+            {
+                throw new ProviderException("Error during provider initialization.", ex);
+            }
+        }
+
+        private static void UpgradeToCurrent(string connectionString, int version)
+        {
+            ResourceManager r = new ResourceManager("MySql.Web.Properties.Resources", 
+                typeof(SchemaManager).Assembly);
+
+            if (version == Version) return;
+
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                connection.Open();
+
+                for (int ver = version + 1; ver <= Version; ver++)
+                {
+                    string schema = r.GetString(String.Format("schema{0}", ver));
+                    MySqlScript script = new MySqlScript(connection);
+                    script.Query = schema;
+                    script.Execute();
+                }
+            }
         }
 
         private static int GetSchemaVersion(string connectionString)
@@ -80,10 +101,14 @@ namespace MySql.Web.Security
                 if (dt.Rows.Count == 1)
                     return Convert.ToInt32(dt.Rows[0]["TABLE_COMMENT"]);
 
+                restrictions[2] = "my_aspnet_schemaversion";
+                dt = conn.GetSchema("Tables", restrictions);
+                if (dt.Rows.Count == 0) return 0;
+
                 MySqlCommand cmd = new MySqlCommand("SELECT * FROM my_aspnet_SchemaVersion", conn);
                 object ver = cmd.ExecuteScalar();
                 if (ver == null)
-                    return 0;
+                    throw new ProviderException("Schema corrupt");
                 return (int)ver;
             }
         }

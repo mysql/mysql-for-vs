@@ -28,8 +28,9 @@ using System.Collections.Specialized;
 using System.Data;
 using System;
 using System.Configuration.Provider;
+using MySql.Web.Security;
 
-namespace MySql.Web.Security.Tests
+namespace MySql.Web.Tests
 {
     [TestFixture]
     public class UserManagement : BaseWebTest
@@ -134,17 +135,28 @@ namespace MySql.Web.Security.Tests
         }
 
         [Test]
+        public void FindUsersByEmail()
+        {
+            CreateUserWithHashedPassword();
+
+            int records;
+            MembershipUserCollection users = provider.FindUsersByEmail("foo@bar.com", 0, 10, out records);
+            Assert.AreEqual(1, records);
+            Assert.AreEqual("foo", users["foo"].UserName);
+        }
+
+        [Test]
         public void TestCreateUserOverrides()
         {
             try
             {
 				// we have to initialize the provider so the db will exist
-				provider = new MySQLMembershipProvider();
+/*				provider = new MySQLMembershipProvider();
 				NameValueCollection config = new NameValueCollection();
 				config.Add("connectionStringName", "LocalMySqlServer");
 				config.Add("applicationName", "/");
 				provider.Initialize(null, config);
-				
+*/				
 				Membership.CreateUser("foo", "bar");
                 int records;
                 MembershipUserCollection users = Membership.FindUsersByName("F%", 0, 10, out records);
@@ -165,57 +177,225 @@ namespace MySql.Web.Security.Tests
         [Test]
         public void NumberOfUsersOnline()
         {
-            Assert.Fail();
+            int numOnline = Membership.GetNumberOfUsersOnline();
+            Assert.AreEqual(0, numOnline);
+
+            Membership.CreateUser("foo", "bar");
+            Membership.CreateUser("foo2", "bar");
+
+            numOnline = Membership.GetNumberOfUsersOnline();
+            Assert.AreEqual(2, numOnline);
         }
 
         [Test]
         public void UnlockUser()
         {
-            Assert.Fail();
+            Membership.CreateUser("foo", "bar");
+            Assert.IsFalse(Membership.ValidateUser("foo", "bar2"));
+            Assert.IsFalse(Membership.ValidateUser("foo", "bar3"));
+            Assert.IsFalse(Membership.ValidateUser("foo", "bar3"));
+            Assert.IsFalse(Membership.ValidateUser("foo", "bar3"));
+            Assert.IsFalse(Membership.ValidateUser("foo", "bar3"));
+
+            // the user should be locked now so the right password should fail
+            Assert.IsFalse(Membership.ValidateUser("foo", "bar"));
+
+            MembershipUser user = Membership.GetUser("foo");
+            Assert.IsTrue(user.IsLockedOut);
+
+            Assert.IsTrue(user.UnlockUser());
+            user = Membership.GetUser("foo");
+            Assert.IsFalse(user.IsLockedOut);
+
+            Assert.IsTrue(Membership.ValidateUser("foo", "bar"));
         }
 
         [Test]
         public void GetUsernameByEmail()
         {
-            Assert.Fail();
+            Membership.CreateUser("foo", "bar", "foo@bar.com");
+            string username = Membership.GetUserNameByEmail("foo@bar.com");
+            Assert.AreEqual("foo", username);
+
+            username = Membership.GetUserNameByEmail("foo@b.com");
+            Assert.IsNull(username);
+
+            username = Membership.GetUserNameByEmail("  foo@bar.com   ");
+            Assert.AreEqual("foo", username);
         }
 
         [Test]
         public void UpdateUser()
         {
-            Assert.Fail();
+            MembershipCreateStatus status;
+            Membership.CreateUser("foo", "bar", "foo@bar.com", "color", "blue", true, out status);
+            Assert.AreEqual(MembershipCreateStatus.Success, status);
+
+            MembershipUser user = Membership.GetUser("foo");
+
+            user.Comment = "my comment";
+            user.Email = "my email";
+            user.IsApproved = false;
+            user.LastActivityDate = new DateTime(2008, 1, 1);
+            user.LastLoginDate = new DateTime(2008, 2, 1);
+            Membership.UpdateUser(user);
+
+            MembershipUser newUser = Membership.GetUser("foo");
+            Assert.AreEqual(user.Comment, newUser.Comment);
+            Assert.AreEqual(user.Email, newUser.Email);
+            Assert.AreEqual(user.IsApproved, newUser.IsApproved);
+            Assert.AreEqual(user.LastActivityDate, newUser.LastActivityDate);
+            Assert.AreEqual(user.LastLoginDate, newUser.LastLoginDate);
+        }
+
+        private void ChangePasswordQAHelper(MembershipUser user, string pw, string newQ, string newA)
+        {
+            try
+            {
+                user.ChangePasswordQuestionAndAnswer(pw, newQ, newA);
+                Assert.Fail("This should not work.");
+            }
+            catch (ArgumentNullException ane)
+            {
+                Assert.AreEqual("password", ane.ParamName);
+            }
+            catch (ArgumentException)
+            {
+                Assert.IsNotNull(pw);
+            }
         }
 
         [Test]
         public void ChangePasswordQuestionAndAnswer()
         {
-            Assert.Fail();
+            MembershipCreateStatus status;
+            Membership.CreateUser("foo", "bar", "foo@bar.com", "color", "blue", true, out status);
+            Assert.AreEqual(MembershipCreateStatus.Success, status);
+
+            MembershipUser user = Membership.GetUser("foo");
+            ChangePasswordQAHelper(user, "", "newQ", "newA");
+            ChangePasswordQAHelper(user, "bar", "", "newA");
+            ChangePasswordQAHelper(user, "bar", "newQ", "");
+            ChangePasswordQAHelper(user, null, "newQ", "newA");
+
+            bool result = user.ChangePasswordQuestionAndAnswer("bar", "newQ", "newA");
+            Assert.IsTrue(result);
+
+            user = Membership.GetUser("foo");
+            Assert.AreEqual("newQ", user.PasswordQuestion);
         }
 
         [Test]
         public void GetAllUsers()
         {
-            Assert.Fail();
+            // first create a bunch of users
+            for (int i=0; i < 100; i++)
+                Membership.CreateUser(String.Format("foo{0}", i), "bar");
+
+            MembershipUserCollection users = Membership.GetAllUsers();
+            Assert.AreEqual(100, users.Count);
+            int index = 0;
+            foreach (MembershipUser user in users)
+                Assert.AreEqual(String.Format("foo{0}", index++), user.UserName);
+
+            int total;
+            users = Membership.GetAllUsers(2, 10, out total);
+            Assert.AreEqual(10, users.Count);
+            Assert.AreEqual(100, total);
+            index = 0;
+            foreach (MembershipUser user in users)
+                Assert.AreEqual(String.Format("foo2{0}", index++), user.UserName);
+        }
+
+        private void GetPasswordHelper(bool requireQA, bool enablePasswordRetrieval, string answer)
+        {
+            MembershipCreateStatus status;
+            provider = new MySQLMembershipProvider();
+            NameValueCollection config = new NameValueCollection();
+            config.Add("connectionStringName", "LocalMySqlServer");
+            config.Add("requiresQuestionAndAnswer", requireQA ? "true" : "false");
+            config.Add("enablePasswordRetrieval", enablePasswordRetrieval ? "true" : "false");
+            config.Add("passwordFormat", "clear");
+            config.Add("applicationName", "/");
+            provider.Initialize(null, config);
+
+            provider.CreateUser("foo", "bar", "foo@bar.com", "color", "blue", true, null, out status);
+
+            try
+            {
+                string password = provider.GetPassword("foo", answer);
+                if (!enablePasswordRetrieval)
+                    Assert.Fail("This should have thrown an exception");
+                Assert.AreEqual("bar", password);
+            }
+            catch (ProviderException)
+            {
+                if (requireQA && answer != null)
+                    Assert.Fail("This should not have thrown an exception");
+            }
         }
 
         [Test]
         public void GetPassword()
         {
-            Assert.Fail();
+            GetPasswordHelper(false, false, null);
+            GetPasswordHelper(false, true, null);
+            GetPasswordHelper(true, true, null);
+            GetPasswordHelper(true, true, "blue");
         }
 
         [Test]
         public void GetUser()
         {
-            // both variants
-            Assert.Fail();
+            Membership.CreateUser("foo", "bar");
+            MembershipUser user = Membership.GetUser(1);
+            Assert.AreEqual("foo", user.UserName);
+
+            // now move the activity date back outside the login
+            // window
+            user.LastActivityDate = new DateTime(2008, 1, 1);
+            Membership.UpdateUser(user);
+
+            user = Membership.GetUser("foo");
+            Assert.IsFalse(user.IsOnline);
+
+            user = Membership.GetUser("foo", true);
+            Assert.IsTrue(user.IsOnline);
+
+            // now move the activity date back outside the login
+            // window again
+            user.LastActivityDate = new DateTime(2008, 1, 1);
+            Membership.UpdateUser(user);
+
+            user = Membership.GetUser(1);
+            Assert.IsFalse(user.IsOnline);
+
+            user = Membership.GetUser(1, true);
+            Assert.IsTrue(user.IsOnline);
         }
 
         [Test]
         public void FindUsers()
         {
-            // all variants
-            Assert.Fail();
+            for (int i=0; i < 100; i++)
+                Membership.CreateUser(String.Format("boo{0}", i), "bar");
+            for (int i=0; i < 100; i++)
+                Membership.CreateUser(String.Format("foo{0}", i), "bar");
+            for (int i=0; i < 100; i++)
+                Membership.CreateUser(String.Format("schmoo{0}", i), "bar");
+
+
+            MembershipUserCollection users = Membership.FindUsersByName("fo%");
+            Assert.AreEqual(100, users.Count);
+
+            int total;
+            users = Membership.FindUsersByName("fo%", 2, 10, out total);
+            Assert.AreEqual(10, users.Count);
+            Assert.AreEqual(100, total);
+            int index = 0;
+            foreach (MembershipUser user in users)
+                Assert.AreEqual(String.Format("foo2{0}", index++), user.UserName);
+
         }
     }
 }

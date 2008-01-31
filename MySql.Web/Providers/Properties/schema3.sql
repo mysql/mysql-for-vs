@@ -16,6 +16,7 @@ alter table mysql_membership
           rename to my_aspnet_Membership,
           drop primary key,
           drop column pkid,
+          drop column isonline,
           add column userId INT FIRST,
           add column applicationId INT AFTER userId;
           

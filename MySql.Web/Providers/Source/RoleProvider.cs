@@ -32,6 +32,7 @@ using System.Web.Security;
 using MySql.Data.MySqlClient;
 using System.Transactions;
 using System.Collections.Generic;
+using MySql.Web.Common;
 
 namespace MySql.Web.Security
 {
@@ -507,7 +508,9 @@ namespace MySql.Web.Security
 
         internal static void DeleteUserData(MySqlConnection connection, int userId)
         {
-            MySqlCommand cmd = new MySqlCommand("DELETE FROM my_aspnet_UsersInRoles WHERE userId=@userId", connection);
+            MySqlCommand cmd = new MySqlCommand(
+                "DELETE FROM my_aspnet_UsersInRoles WHERE userId=@userId", connection);
+            cmd.Parameters.AddWithValue("@userId", userId);
             cmd.ExecuteNonQuery();
         }
 

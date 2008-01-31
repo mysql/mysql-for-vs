@@ -28,8 +28,9 @@ using System.Collections.Specialized;
 using System.Data;
 using System;
 using System.Configuration.Provider;
+using MySql.Web.Security;
 
-namespace MySql.Web.Security.Tests
+namespace MySql.Web.Tests
 {
     [TestFixture]
     public class RoleManagement : BaseWebTest

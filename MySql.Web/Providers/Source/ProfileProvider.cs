@@ -35,10 +35,16 @@ using System.Text;
 using System.Data;
 using System.IO;
 using System.Globalization;
+using System.Transactions;
+using System.Web.Security;
+using MySql.Web.Common;
 
-namespace MySql.Web.Security
+namespace MySql.Web.Profile
 {
-    class MySQLProfileProvider : ProfileProvider
+    /// <summary>
+    /// 
+    /// </summary>
+    public class MySQLProfileProvider : ProfileProvider
     {
         private string applicationName;
         private string connectionString;
@@ -46,8 +52,17 @@ namespace MySql.Web.Security
 
         #region Abstract Members
 
+        /// <summary>
+        /// Initializes the provider.
+        /// </summary>
+        /// <param name="name">The friendly name of the provider.</param>
+        /// <param name="config">A collection of the name/value pairs representing the provider-specific attributes specified in the configuration for this provider.</param>
+        /// <exception cref="T:System.ArgumentNullException">The name of the provider is null.</exception>
+        /// <exception cref="T:System.ArgumentException">The name of the provider has a length of zero.</exception>
+        /// <exception cref="T:System.InvalidOperationException">An attempt is made to call <see cref="M:System.Configuration.Provider.ProviderBase.Initialize(System.String,System.Collections.Specialized.NameValueCollection)"/> on a provider after the provider has already been initialized.</exception>
         public override void Initialize(string name, NameValueCollection config)
         {
+            applicationId = -1;
             if (config == null)
                 throw new ArgumentNullException("config");
 
@@ -78,8 +93,12 @@ namespace MySql.Web.Security
                 // now pre-cache the applicationId
                 using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
+                    conn.Open();
                     MySqlCommand cmd = new MySqlCommand("SELECT id FROM my_aspnet_Applications WHERE name=@name", conn);
-                    applicationId = (int)cmd.ExecuteScalar();
+                    cmd.Parameters.AddWithValue("@name", applicationName);
+                    object appIdValue = cmd.ExecuteScalar();
+                    if (appIdValue != null)
+                        applicationId = Convert.ToInt32(appIdValue);
                 }
             }
             catch (Exception ex)
@@ -397,7 +416,7 @@ namespace MySql.Web.Security
             {
                 MySqlConnection c = new MySqlConnection(connectionString);
                 MySqlCommand cmd = new MySqlCommand(@"SELECT * FROM my_aspnet_Profiles p
-                JOIN my_aspnet_Users u ON u.userId = p.userId
+                JOIN my_aspnet_Users u ON u.id = p.userId
                 WHERE u.applicationId = @appId AND u.name = @name", c);
                 cmd.Parameters.AddWithValue("@appId", applicationId);
                 cmd.Parameters.AddWithValue("@name", username);
@@ -405,7 +424,8 @@ namespace MySql.Web.Security
                 DataTable dt = new DataTable();
                 da.Fill(dt);
 
-                DecodeProfileData(dt.Rows[0], values);
+                if (dt.Rows.Count > 0)
+                    DecodeProfileData(dt.Rows[0], values);
                 return values;
             }
             catch (Exception ex)
@@ -432,23 +452,29 @@ namespace MySql.Web.Security
             // save the encoded profile data to the database
             try
             {
-                MySqlConnection c = new MySqlConnection(connectionString);
-                MySqlCommand cmd = new MySqlCommand(@"SELECT id FROM my_aspnet_Users
-                WHERE applicationId = @appId AND name = @name", c);
-                cmd.Parameters.AddWithValue("@appId", applicationId);
-                cmd.Parameters.AddWithValue("@name", username);
-                int userId = (int)cmd.ExecuteScalar();
+                using (TransactionScope ts = new TransactionScope())
+                {
+                    using (MySqlConnection connection = new MySqlConnection(connectionString))
+                    {
+                        connection.Open();
+                        int userId = CreateOrFetchUserId(connection, username, isAuthenticated);
 
-                cmd.CommandText = @"INSERT INTO my_aspnet_Profiles (userId, index, stringData, binaryData) 
-                    VALUES (@userId, @index, @stringData, @binaryData) ON DUPLICATE KEY UPDATE";
-                cmd.Parameters.Clear();
-                cmd.Parameters.AddWithValue("@userId", userId);
-                cmd.Parameters.AddWithValue("@index", index);
-                cmd.Parameters.AddWithValue("@stringData", stringData);
-                cmd.Parameters.AddWithValue("@binaryData", binaryData);
-                count = cmd.ExecuteNonQuery();
-                if (count != 1)
-                    throw new Exception("Profile update operation affected zero rows.");
+                        MySqlCommand cmd = new MySqlCommand(
+                            @"INSERT INTO my_aspnet_Profiles  
+                            VALUES (@userId, @index, @stringData, @binaryData, NULL) ON DUPLICATE KEY UPDATE
+                            valueindex=VALUES(valueindex), stringdata=VALUES(stringdata),
+                            binarydata=VALUES(binarydata)", connection);
+                        cmd.Parameters.Clear();
+                        cmd.Parameters.AddWithValue("@userId", userId);
+                        cmd.Parameters.AddWithValue("@index", index);
+                        cmd.Parameters.AddWithValue("@stringData", stringData);
+                        cmd.Parameters.AddWithValue("@binaryData", binaryData);
+                        count = cmd.ExecuteNonQuery();
+                        if (count != 1)
+                            throw new Exception("Profile update operation affected zero rows.");
+                        ts.Complete();
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -460,15 +486,67 @@ namespace MySql.Web.Security
 
         internal static void DeleteUserData(MySqlConnection connection, int userId)
         {
-            MySqlCommand cmd = new MySqlCommand("DELETE FROM my_aspnet_Profiles WHERE userId=@userId", connection);
+            MySqlCommand cmd = new MySqlCommand(
+                "DELETE FROM my_aspnet_Profiles WHERE userId=@userId", connection);
+            cmd.Parameters.AddWithValue("@userId", userId);
             cmd.ExecuteNonQuery();
         }
 
         #region Private Methods
 
+        /// <summary>
+        /// It is assumed that this method is called from within a transaction or
+        /// a transactionscope
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="username"></param>
+        /// <param name="authenticated"></param>
+        /// <returns></returns>
+        private int CreateOrFetchUserId(MySqlConnection connection, string username, bool authenticated)
+        {
+            // first attempt to fetch an existing user id
+            MySqlCommand cmd = new MySqlCommand(@"SELECT id FROM my_aspnet_Users
+                WHERE applicationId = @appId AND name = @name", connection);
+            cmd.Parameters.AddWithValue("@appId", applicationId);
+            cmd.Parameters.AddWithValue("@name", username);
+            object userId = cmd.ExecuteScalar();
+            if (userId != null) return (int)userId;
+
+            // the user doesn't exist so we have to create one
+            int appId = CreateOrFetchApplicationId(connection);
+
+            cmd.CommandText = @"INSERT INTO my_aspnet_Users VALUES (NULL, @appId, @name, @isAnon, Now())";
+            cmd.Parameters[0].Value = appId;
+            cmd.Parameters.AddWithValue("@isAnon", !authenticated);
+            int recordsAffected = cmd.ExecuteNonQuery();
+            if (recordsAffected != 1)
+                throw new ProviderException("Unable to create use for profile.");
+
+            cmd.CommandText = "SELECT LAST_INSERT_ID()";
+            return Convert.ToInt32(cmd.ExecuteScalar());
+        }
+
+        private int CreateOrFetchApplicationId(MySqlConnection connection)
+        {
+            if (applicationId != -1)
+                return applicationId;
+            MySqlCommand cmd = new MySqlCommand(
+                @"INSERT INTO my_aspnet_Applications VALUES (NULL, @appName, @appDesc)",
+                connection);
+            cmd.Parameters.AddWithValue("@appName", applicationName);
+            cmd.Parameters.AddWithValue("@appDesc", base.Description);
+            int recordsAffected = cmd.ExecuteNonQuery();
+            if (recordsAffected != 1)
+                throw new ProviderException("Unable to create application for profile.");
+
+            cmd.CommandText = "SELECT LAST_INSERT_ID()";
+            applicationId = Convert.ToInt32(cmd.ExecuteScalar());
+            return applicationId;
+        }
+
         private void DecodeProfileData(DataRow profileRow, SettingsPropertyValueCollection values)
         {
-            string indexData = (string)profileRow["index"];
+            string indexData = (string)profileRow["valueindex"];
             string stringData = (string)profileRow["stringData"];
             byte[] binaryData = (byte[])profileRow["binaryData"];
 
@@ -536,18 +614,19 @@ namespace MySql.Web.Security
                     !isAuthenticated) continue;
 
                 count++;
+                object propValue = value.SerializedValue;
                 if ((value.Deserialized && value.PropertyValue == null) ||
                     value.SerializedValue == null)
                     indexBuilder.AppendFormat("{0}//0/-1:", value.Name);
-                else if (value.PropertyValue is string)
+                else if (propValue is string)
                 {
                     indexBuilder.AppendFormat("{0}/0/{1}/{2}:", value.Name,
-                        stringDataBuilder.Length, (value.PropertyValue as string).Length);
-                    stringDataBuilder.Append(value.PropertyValue);
+                        stringDataBuilder.Length, (propValue as string).Length);
+                    stringDataBuilder.Append(propValue);
                 }
                 else
                 {
-                    byte[] binaryValue = (byte[])value.PropertyValue;
+                    byte[] binaryValue = (byte[])propValue;
                     indexBuilder.AppendFormat("{0}/1/{1}/{2}:", value.Name,
                         binaryBuilder.Position, binaryValue.Length);
                     binaryBuilder.Write(binaryValue, 0, binaryValue.Length);

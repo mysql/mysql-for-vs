@@ -32,7 +32,7 @@ using System;
 using System.IO;
 using System.Configuration.Provider;
 
-namespace MySql.Web.Security.Tests
+namespace MySql.Web.Tests
 {
     [TestFixture]
     public class SchemaTests : BaseWebTest
@@ -127,19 +127,6 @@ namespace MySql.Web.Security.Tests
             {
                 Assert.Fail("Should not have failed");
             }
-        }
-
-        private void LoadSchema(int version)
-        {
-            if (version < 1) return;
-
-            MySQLMembershipProvider provider = new MySQLMembershipProvider();
-
-            ResourceManager r = new ResourceManager("MySql.Web.Properties.Resources", typeof(MySQLMembershipProvider).Assembly);
-            string schema = r.GetString(String.Format("schema{0}", version));
-            MySqlScript script = new MySqlScript(conn);
-            script.Query = schema;
-            script.Execute();
         }
 
         [Test]
