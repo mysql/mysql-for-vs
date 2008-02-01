@@ -440,7 +440,9 @@ namespace MySql.Data.MySqlClient
                 if (settings.AutoEnlist && Transaction.Current != null)
                 {
                     driver = DriverTransactionManager.GetDriverInTransaction(Transaction.Current);
-                    if (driver != null && driver.IsInActiveUse)
+                    if (driver != null &&
+                        (driver.IsInActiveUse ||
+                        !driver.Settings.EquivalentTo(this.Settings)))
                         throw new NotSupportedException(Resources.MultipleConnectionsInTransactionNotSupported);
                 }
 #endif
