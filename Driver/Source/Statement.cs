@@ -187,6 +187,7 @@ namespace MySql.Data.MySqlClient
         {
             bool batch = Connection.Settings.AllowBatch & Driver.SupportsBatch;
             char delim = Char.MinValue;
+            char parameterMarker = Connection.ParameterMarker;
             StringBuilder sqlPart = new StringBuilder();
             bool escaped = false;
             ArrayList tokens = new ArrayList();
@@ -206,19 +207,19 @@ namespace MySql.Data.MySqlClient
                     sqlPart.Remove(0, sqlPart.Length);
                     continue;
                 }
-                else if ((c == '\'' || c == '\"' || c == '`') & !escaped & delim == Char.MinValue)
+                else if ((c == '\'' || c == '\"' || c == '`') && !escaped && delim == Char.MinValue)
                     delim = c;
                 else if (c == '\\')
                     escaped = !escaped;
-                else if (c == Connection.ParameterMarker && delim == Char.MinValue && !escaped)
+                else if (c == parameterMarker && delim == Char.MinValue && !escaped)
                 {
                     tokens.Add(sqlPart.ToString());
                     sqlPart.Remove(0, sqlPart.Length);
                 }
-                else if (sqlPart.Length > 0 && sqlPart[0] == Connection.ParameterMarker &&
+                else if (sqlPart.Length > 0 && sqlPart[0] == parameterMarker &&
                          !Char.IsLetterOrDigit(c) && c != '_' && c != '.' && c != '$' &&
-                         ((c != '@' && c != Connection.ParameterMarker) &&
-                          (c != '?' && c != Connection.ParameterMarker)))
+                    ((c != '@' && c != parameterMarker) &&
+                     (c != '?' && c != parameterMarker)))
                 {
                     tokens.Add(sqlPart.ToString());
                     sqlPart.Remove(0, sqlPart.Length);
