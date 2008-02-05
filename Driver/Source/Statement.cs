@@ -190,8 +190,9 @@ namespace MySql.Data.MySqlClient
         /// <param name="parameters"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        private MySqlParameter GetParameter(MySqlParameterCollection parameters, string name)
+/*        private MySqlParameter GetParameter(MySqlParameterCollection parameters, string name)
         {
+            MySqlParameter parameter = parameters.GetParameterFlexible(name, false);
             int index = parameters.IndexOf(name);
             if (index == -1)
             {
@@ -202,7 +203,7 @@ namespace MySql.Data.MySqlClient
             }
             return parameters[index];
         }
-
+        */
         /// <summary>
         /// Serializes the given parameter to the given memory stream
         /// </summary>
@@ -215,17 +216,16 @@ namespace MySql.Data.MySqlClient
         private bool SerializeParameter(MySqlParameterCollection parameters,
                                         MySqlStream stream, string parmName)
         {
-            MySqlParameter parameter = GetParameter(parameters, parmName);
+            MySqlParameter parameter = parameters.GetParameterFlexible(parmName, false);
             if (parameter == null)
             {
-                // if we are using old syntax, we can't throw exceptions for parameters
-                // not defined.
-                if (Connection.Settings.UseOldSyntax)
+                // if we are allowing user variables and the parameter name starts with @
+                // then we can't throw an exception
+                if (parmName.StartsWith("@") && Connection.Settings.AllowUserVariables)
                     return false;
                 throw new MySqlException(
                     String.Format(Resources.ParameterMustBeDefined, parmName));
             }
-
             parameter.Serialize(stream, false);
             return true;
         }
@@ -318,13 +318,12 @@ namespace MySql.Data.MySqlClient
                     delim = c;
                 else if (c == '\\')
                     escaped = !escaped;
-                else if ((c == '@' || c == '?') && delim == Char.MinValue && !escaped && 
-                    "(,= ".IndexOf(lastChar) != -1)
+                else if (sqlPart.Length == 1 && sqlPart[0] == '@' && c == '@') { }
+                else if ((c == '@' || c == '?') && delim == Char.MinValue && !escaped)
                 {
                     tokens.Add(sqlPart.ToString());
                     sqlPart.Remove(0, sqlPart.Length);
                 }
-                else if (sqlPart.Length == 1 && sqlPart[0] == '@' && c == '@') { }
                 else if (sqlPart.Length > 0 && (sqlPart[0] == '@' || sqlPart[0] == '?') &&
                          !Char.IsLetterOrDigit(c) && c != '_' && c != '.' && c != '$')
                 {

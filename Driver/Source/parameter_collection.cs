@@ -444,5 +444,23 @@ namespace MySql.Data.MySqlClient
                 indexHash[p.ParameterName] = addEntry ? ++index : --index;
             }
         }
+
+        internal MySqlParameter GetParameterFlexible(string parameterName, bool throwOnNotFound)
+        {
+            char firstChar = parameterName[0];
+            string baseName = parameterName;
+            if ('@' == firstChar || '?' == firstChar)
+                baseName = baseName.Substring(1);
+            int index = IndexOf("@" + baseName);
+            if (-1 == index)
+                index = IndexOf("?" + baseName);
+            if (-1 == index)
+                index = IndexOf(baseName);
+            if (-1 != index)
+                return this[index];
+            if (throwOnNotFound)
+                throw new ArgumentException("Parameter '" + parameterName + "' not found in the collection.");
+            return null;
+        }
 	}
 }

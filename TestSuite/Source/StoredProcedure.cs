@@ -401,29 +401,6 @@ namespace MySql.Data.MySqlClient.Tests
         }
 
         [Test]
-        public void UseOldSyntax()
-        {
-            if (version < new Version(5, 0)) return;
-
-            // create our procedure
-            execSQL("CREATE PROCEDURE spTest( IN valin VARCHAR(50), OUT valout VARCHAR(50) ) " +
-                "BEGIN  SET valout=valin;  SELECT 'Test'; END");
-
-            MySqlConnection c2 = new MySqlConnection(conn.ConnectionString + ";old syntax=yes");
-            c2.Open();
-
-            MySqlCommand cmd = new MySqlCommand("spTest", c2);
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@valin", "value");
-            cmd.Parameters.Add(new MySqlParameter("@valout", MySqlDbType.VarChar));
-            cmd.Parameters[1].Direction = ParameterDirection.Output;
-            object result = cmd.ExecuteScalar();
-            Assert.AreEqual("Test", result);
-            Assert.AreEqual("value", cmd.Parameters[1].Value);
-            c2.Close();
-        }
-
-        [Test]
         public void ExecuteWithCreate()
         {
             if (version < new Version(5, 0)) return;
@@ -575,39 +552,39 @@ namespace MySql.Data.MySqlClient.Tests
             MySqlCommandBuilder.DeriveParameters(cmd);
 
             Assert.AreEqual(9, cmd.Parameters.Count);
-            Assert.AreEqual("?valin", cmd.Parameters[0].ParameterName);
+            Assert.AreEqual("@valin", cmd.Parameters[0].ParameterName);
             Assert.AreEqual(ParameterDirection.Input, cmd.Parameters[0].Direction);
             Assert.AreEqual(MySqlDbType.NewDecimal, cmd.Parameters[0].MySqlDbType);
 
-            Assert.AreEqual("?val2", cmd.Parameters[1].ParameterName);
+            Assert.AreEqual("@val2", cmd.Parameters[1].ParameterName);
             Assert.AreEqual(ParameterDirection.Input, cmd.Parameters[1].Direction);
             Assert.AreEqual(MySqlDbType.Int32, cmd.Parameters[1].MySqlDbType);
 
-            Assert.AreEqual("?val3", cmd.Parameters[2].ParameterName);
+            Assert.AreEqual("@val3", cmd.Parameters[2].ParameterName);
             Assert.AreEqual(ParameterDirection.InputOutput, cmd.Parameters[2].Direction);
             Assert.AreEqual(MySqlDbType.Float, cmd.Parameters[2].MySqlDbType);
 
-            Assert.AreEqual("?val4", cmd.Parameters[3].ParameterName);
+            Assert.AreEqual("@val4", cmd.Parameters[3].ParameterName);
             Assert.AreEqual(ParameterDirection.Output, cmd.Parameters[3].Direction);
             Assert.AreEqual(MySqlDbType.Double, cmd.Parameters[3].MySqlDbType);
 
-            Assert.AreEqual("?val5", cmd.Parameters[4].ParameterName);
+            Assert.AreEqual("@val5", cmd.Parameters[4].ParameterName);
             Assert.AreEqual(ParameterDirection.InputOutput, cmd.Parameters[4].Direction);
             Assert.AreEqual(MySqlDbType.Bit, cmd.Parameters[4].MySqlDbType);
 
-            Assert.AreEqual("?val6", cmd.Parameters[5].ParameterName);
+            Assert.AreEqual("@val6", cmd.Parameters[5].ParameterName);
             Assert.AreEqual(ParameterDirection.Input, cmd.Parameters[5].Direction);
             Assert.AreEqual(MySqlDbType.VarChar, cmd.Parameters[5].MySqlDbType);
 
-            Assert.AreEqual("?val7", cmd.Parameters[6].ParameterName);
+            Assert.AreEqual("@val7", cmd.Parameters[6].ParameterName);
             Assert.AreEqual(ParameterDirection.Input, cmd.Parameters[6].Direction);
             Assert.AreEqual(MySqlDbType.Set, cmd.Parameters[6].MySqlDbType);
 
-            Assert.AreEqual("?val8", cmd.Parameters[7].ParameterName);
+            Assert.AreEqual("@val8", cmd.Parameters[7].ParameterName);
             Assert.AreEqual(ParameterDirection.Input, cmd.Parameters[7].Direction);
             Assert.AreEqual(MySqlDbType.String, cmd.Parameters[7].MySqlDbType);
 
-            Assert.AreEqual("?val9", cmd.Parameters[8].ParameterName);
+            Assert.AreEqual("@val9", cmd.Parameters[8].ParameterName);
             Assert.AreEqual(ParameterDirection.Input, cmd.Parameters[8].Direction);
             Assert.AreEqual(MySqlDbType.NewDecimal, cmd.Parameters[8].MySqlDbType);
 
@@ -640,7 +617,7 @@ namespace MySql.Data.MySqlClient.Tests
                 MySqlCommandBuilder.DeriveParameters(cmd);
 
                 Assert.AreEqual(2, cmd.Parameters.Count);
-                Assert.AreEqual("?v1", cmd.Parameters[0].ParameterName);
+                Assert.AreEqual("@v1", cmd.Parameters[0].ParameterName);
                 Assert.AreEqual(ParameterDirection.Input, cmd.Parameters[0].Direction);
                 Assert.AreEqual(MySqlDbType.DateTime, cmd.Parameters[0].MySqlDbType);
 
@@ -1073,7 +1050,7 @@ namespace MySql.Data.MySqlClient.Tests
             cmd.CommandType = CommandType.StoredProcedure;
             MySqlCommandBuilder.DeriveParameters(cmd);
             Assert.AreEqual(1, cmd.Parameters.Count);
-            Assert.AreEqual("?RETURN_VALUE", cmd.Parameters[0].ParameterName);
+            Assert.AreEqual("@RETURN_VALUE", cmd.Parameters[0].ParameterName);
         }
 
         /// <summary>

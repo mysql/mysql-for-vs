@@ -306,6 +306,7 @@ namespace MySql.Data.MySqlClient.Tests
             loader.FileName = path;
             loader.Timeout = 0;
             loader.FieldTerminator = ",";
+            loader.LineTerminator = Environment.NewLine;
             loader.Columns.Add("id");
             loader.Columns.Add("n3");
             loader.Columns.Add("n2");

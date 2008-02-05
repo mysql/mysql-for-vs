@@ -416,7 +416,7 @@ namespace MySql.Data.MySqlClient
             SqlTokenizer tokenizer)
         {
             string lcDataType = row["DATA_TYPE"].ToString().ToLower(CultureInfo.InvariantCulture);
-            
+
             if (isSize)
             {
                 // if the data type if set or enum, then nothing to do.

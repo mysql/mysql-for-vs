@@ -104,7 +104,7 @@ namespace MySql.Data.MySqlClient.Tests
         {
             // open up a root connection
             string connStr = String.Format("server={0};user id={1};password={2};database=mysql;" +
-                "persist security info=true;pooling=false;", host, rootUser, rootPassword);
+                "persist security info=true;pooling=false;allow user variables=true;", host, rootUser, rootPassword);
             connStr += GetConnectionInfo();
             rootConn = new MySqlConnection(connStr);
             rootConn.Open();
@@ -168,7 +168,7 @@ namespace MySql.Data.MySqlClient.Tests
         protected string GetConnectionStringBasic(bool includedb)
         {
             string connStr = String.Format("server={0};user id={1};password={2};" +
-                 "persist security info=true;", host, user, password);
+                 "persist security info=true;allow user variables=true;", host, user, password);
             if (includedb)
                 connStr += String.Format("database={0};", database0);
             if (!pooling)

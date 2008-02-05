@@ -185,7 +185,7 @@ namespace MySql.Data.MySqlClient
                 else
                 {
                     parameterMap.Add(token);
-                    newSQL.Append("@");
+                    newSQL.Append("?");
                 }
             }
 

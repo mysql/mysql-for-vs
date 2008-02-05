@@ -409,6 +409,8 @@ namespace MySql.Data.MySqlClient.Tests
             {
                 MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id, name) VALUES (?id, ?name)", conn);
                 cmd.Parameters.AddWithValue("id", 1);
+                Assert.AreEqual(-1, cmd.Parameters.IndexOf("?id"));
+                Assert.AreEqual(-1, cmd.Parameters.IndexOf("@id"));
                 cmd.Parameters.AddWithValue("name", "test");
                 cmd.Parameters.AddWithValue("?id", 2);
                 Assert.Fail("Should not get here");

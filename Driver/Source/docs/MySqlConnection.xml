@@ -1079,6 +1079,13 @@
               The default timeout that new MySqlCommand objects will use unless changed.
             </td>
           </tr>
+          <tr>
+            <td>Allow User Variables</td>
+            <td>false</td>
+            <td>
+              Should the provider expect user variables in the SQL.
+            </td>
+          </tr>
         </table>
       </div>
       <para>

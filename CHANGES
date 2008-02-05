@@ -9,7 +9,9 @@ Version 5.2
 . Finished MySqlBulkLoader class
 . BINARY(16) columns are now returned as Guid objects
 . Moved code that creates the PerfMon stuff from the assemblies to the Wix installer
-
+. Added Allow User Variables connection string option so that users can use user variables
+  without getting missing parameter exceptions
+  
 Version 5.1.4 - 11/12/2007
   - Fixed issue where column name metadata was not using the charset given on the connection string
     (Bug #31185)

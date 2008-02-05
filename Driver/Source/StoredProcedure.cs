@@ -138,7 +138,7 @@ namespace MySql.Data.MySqlClient
 
                 // make sure the parameters given to us have an appropriate
                 // type set if it's not already
-                MySqlParameter p = command.Parameters[pName];
+                MySqlParameter p = command.Parameters.GetParameterFlexible(pName, true);
                 if (!p.TypeHasBeenSet)
                 {
                     string datatype = (string) param["DATA_TYPE"];
@@ -204,8 +204,9 @@ namespace MySql.Data.MySqlClient
             for (int i = 0; i < reader.FieldCount; i++)
             {
                 string fieldName = reader.GetName(i);
-                fieldName = "@" + fieldName.Remove(0, hash.Length + 1);
-                reader.values[i] = MySqlField.GetIMySqlValue(Parameters[fieldName].MySqlDbType);
+                fieldName = fieldName.Remove(0, hash.Length + 1);
+                MySqlParameter parameter = Parameters.GetParameterFlexible(fieldName, true);
+                reader.values[i] = MySqlField.GetIMySqlValue(parameter.MySqlDbType);
             }
 
             if (reader.Read())
@@ -213,8 +214,9 @@ namespace MySql.Data.MySqlClient
                 for (int i = 0; i < reader.FieldCount; i++)
                 {
                     string fieldName = reader.GetName(i);
-                    fieldName = "@" + fieldName.Remove(0, hash.Length + 1);
-                    Parameters[fieldName].Value = reader.GetValue(i);
+                    fieldName = fieldName.Remove(0, hash.Length + 1);
+                    MySqlParameter parameter = Parameters.GetParameterFlexible(fieldName, true);
+                    parameter.Value = reader.GetValue(i);
                 }
             }
 		    reader.Close();

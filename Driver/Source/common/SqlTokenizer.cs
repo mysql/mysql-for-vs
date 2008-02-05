@@ -80,7 +80,7 @@ namespace MySql.Data.Common
                 }
                 else if (quoteChar != Char.MinValue)
                     current.Append(c);
-                else if (c == '`' || c == '\'' || (c == '\"' && AnsiQuotes))
+                else if ((c == '`' || c == '\'' || (c == '\"' && AnsiQuotes)) && !inSize)
                     quoteChar = c;
                 else if (c == '/' && lastChar == '*' && inComment)
                     inComment = false;

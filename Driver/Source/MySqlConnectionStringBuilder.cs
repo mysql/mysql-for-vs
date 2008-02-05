@@ -50,6 +50,7 @@ namespace MySql.Data.MySqlClient
         string blobAsUtf8IncludePattern, blobAsUtf8ExcludePattern;
         Regex blobAsUtf8ExcludeRegex, blobAsUtf8IncludeRegex;
         uint defaultCommandTimeout;
+        bool allowUserVariables;
         bool clearing;
 
         static MySqlConnectionStringBuilder()
@@ -89,6 +90,7 @@ namespace MySql.Data.MySqlClient
             defaultValues.Add(Keyword.BlobAsUTF8IncludePattern, null);
             defaultValues.Add(Keyword.TreatBlobsAsUTF8, false);
             defaultValues.Add(Keyword.DefaultCommandTimeout, 30);
+            defaultValues.Add(Keyword.AllowUserVariables, false);
         }
 
         /// <summary>
@@ -647,6 +649,23 @@ namespace MySql.Data.MySqlClient
             }
         }
 
+#if !CF && !MONO
+        [Category("Advanced")]
+        [DisplayName("Allow User Variables")]
+        [Description("Should the provider expect user variables to appear in the SQL.")]
+        [DefaultValue(false)]
+        [RefreshProperties(RefreshProperties.All)]
+#endif
+        public bool AllowUserVariables
+        {
+            get { return allowUserVariables; }
+            set
+            {
+                SetValue("Allow User Variables", value);
+                allowUserVariables = value;
+            }
+        }
+
         #endregion
 
         #region Pooling Properties
@@ -1072,6 +1091,8 @@ namespace MySql.Data.MySqlClient
                     return Keyword.TreatBlobsAsUTF8;
                 case "default command timeout":
                     return Keyword.DefaultCommandTimeout;
+                case "allow user variables":
+                    return Keyword.AllowUserVariables;
             }
             throw new ArgumentException(Resources.KeywordNotSupported, key);
         }
@@ -1150,6 +1171,8 @@ namespace MySql.Data.MySqlClient
                     return blobAsUtf8IncludePattern;
                 case Keyword.DefaultCommandTimeout:
                     return defaultCommandTimeout;
+                case Keyword.AllowUserVariables:
+                    return allowUserVariables;
                 default:
                     return null; /* this will never happen */
             }
@@ -1243,6 +1266,8 @@ namespace MySql.Data.MySqlClient
                     blobAsUtf8IncludePattern = (string)value; break;
                 case Keyword.DefaultCommandTimeout:
                     defaultCommandTimeout = ConvertToUInt(value); break;
+                case Keyword.AllowUserVariables:
+                    allowUserVariables = ConvertToBool(value); break;
             }
         }
 
@@ -1420,6 +1445,7 @@ namespace MySql.Data.MySqlClient
         TreatBlobsAsUTF8,
         BlobAsUTF8IncludePattern,
         BlobAsUTF8ExcludePattern,
-        DefaultCommandTimeout
+        DefaultCommandTimeout,
+        AllowUserVariables
     }
 }
