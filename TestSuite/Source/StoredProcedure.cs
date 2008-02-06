@@ -824,7 +824,9 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void ProcedureCache()
 		{
-			// open a new connection using a procedure cache
+            if (version < new Version(5, 0)) return;
+
+            // open a new connection using a procedure cache
 			string connStr = GetConnectionString(true);
 			connStr += ";procedure cache size=25;logging=true";
 			MySqlConnection c = new MySqlConnection(connStr);
@@ -1369,6 +1371,8 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void CallingFunction()
         {
+            if (version < new Version(5, 0)) return;
+
             execSQL("DROP FUNCTION IF EXISTS spFunc");
             execSQL(@"CREATE FUNCTION `GetSupplierBalance`(SupplierID_ INTEGER(11))
                 RETURNS double NOT DETERMINISTIC CONTAINS SQL SQL SECURITY DEFINER
