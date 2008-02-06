@@ -9,6 +9,8 @@ Version 5.1.5 -
   - Fixed problem with opening a connection that was previously closed by sudden server disconnection (bug #33909)   
   - Fixed code to yeild better exception when using different connection strings in a single transaction (bug #34204)   
   - Small bugfix and speed enhancement in Statement.TokenizeSql (bug #34220)
+  - Added connection string option 'Treat Tiny As Boolean' so applications that expect TINYINT(1)
+    to return an integer will not break (bug #34052)
    
 Version 5.1.4 - 11/12/2007
   - Fixed issue where column name metadata was not using the charset given on the connection string

@@ -50,6 +50,7 @@ namespace MySql.Data.MySqlClient
         string blobAsUtf8IncludePattern, blobAsUtf8ExcludePattern;
         Regex blobAsUtf8ExcludeRegex, blobAsUtf8IncludeRegex;
         uint defaultCommandTimeout;
+        bool treatTinyAsBoolean;
 
         static MySqlConnectionStringBuilder()
         {
@@ -88,6 +89,7 @@ namespace MySql.Data.MySqlClient
             defaultValues.Add(Keyword.BlobAsUTF8IncludePattern, null);
             defaultValues.Add(Keyword.TreatBlobsAsUTF8, false);
             defaultValues.Add(Keyword.DefaultCommandTimeout, 30);
+            defaultValues.Add(Keyword.TreatTinyAsBoolean, true);
         }
 
         /// <summary>
@@ -645,6 +647,23 @@ namespace MySql.Data.MySqlClient
             }
         }
 
+#if !CF && !MONO
+        [Category("Advanced")]
+        [DisplayName("Treat Tiny As Boolean")]
+        [Description("Should the provider treat TINYINT(1) columns as boolean.")]
+        [DefaultValue(true)]
+        [RefreshProperties(RefreshProperties.All)]
+#endif
+        public bool TreatTinyAsBoolean
+        {
+            get { return treatTinyAsBoolean; }
+            set
+            {
+                SetValue("Treat Tiny As Boolean", value);
+                treatTinyAsBoolean = value;
+            }
+        }
+
         #endregion
 
         #region Pooling Properties
@@ -1068,6 +1087,8 @@ namespace MySql.Data.MySqlClient
                     return Keyword.TreatBlobsAsUTF8;
                 case "default command timeout":
                     return Keyword.DefaultCommandTimeout;
+                case "treat tiny as boolean":
+                    return Keyword.TreatTinyAsBoolean;
             }
             throw new ArgumentException(Resources.KeywordNotSupported, key);
         }
@@ -1146,6 +1167,8 @@ namespace MySql.Data.MySqlClient
                     return blobAsUtf8IncludePattern;
                 case Keyword.DefaultCommandTimeout:
                     return defaultCommandTimeout;
+                case Keyword.TreatTinyAsBoolean:
+                    return treatTinyAsBoolean;
                 default:
                     return null; /* this will never happen */
             }
@@ -1236,6 +1259,8 @@ namespace MySql.Data.MySqlClient
                     blobAsUtf8IncludePattern = (string)value; break;
                 case Keyword.DefaultCommandTimeout:
                     defaultCommandTimeout = ConvertToUInt(value); break;
+                case Keyword.TreatTinyAsBoolean:
+                    treatTinyAsBoolean = ConvertToBool(value); break;
             }
         }
 
@@ -1413,6 +1438,7 @@ namespace MySql.Data.MySqlClient
         TreatBlobsAsUTF8,
         BlobAsUTF8IncludePattern,
         BlobAsUTF8ExcludePattern,
-        DefaultCommandTimeout
+        DefaultCommandTimeout,
+        TreatTinyAsBoolean
     }
 }
