@@ -130,11 +130,11 @@ namespace MySql.Data.MySqlClient.Tests
 
             if (maxPacketSize == 0)
             {
-                MySqlCommand cmd = new MySqlCommand("SHOW VARIABLES LIKE 'max_allowed_packet'", conn);
+                MySqlCommand cmd = new MySqlCommand("SELECT @@max_allowed_packet", conn);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
                     reader.Read();
-                    maxPacketSize = (int)reader.GetUInt64(1);
+                    maxPacketSize = (int)reader.GetUInt64(0);
                 }
             }
             Assert.IsTrue(maxPacketSize < 1500000);
