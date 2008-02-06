@@ -59,12 +59,8 @@ namespace MySql.Data.MySqlClient
         /// <include file='docs/MySqlConnection.xml' path='docs/InfoMessage/*'/>
         public event MySqlInfoMessageEventHandler InfoMessage;
 
-        private static Cache connectionStringCache = new Cache(0, 25);
-
-#if MONO2
-    /// <include file='docs/MySqlConnection.xml' path='docs/StateChange/*'/>
-        public event StateChangeEventHandler StateChange;
-#endif
+        private static Cache<string, MySqlConnectionStringBuilder> connectionStringCache =
+            new Cache<string, MySqlConnectionStringBuilder>(0, 25);
 
         /// <include file='docs/MySqlConnection.xml' path='docs/DefaultCtor/*'/>
         public MySqlConnection()
@@ -400,7 +396,7 @@ namespace MySql.Data.MySqlClient
 
         internal void SetState(ConnectionState newConnectionState, bool broadcast)
         {
-            if (newConnectionState == connectionState)
+            if (newConnectionState == connectionState && !broadcast)
                 return;
             ConnectionState oldConnectionState = connectionState;
             connectionState = newConnectionState;
@@ -414,10 +410,11 @@ namespace MySql.Data.MySqlClient
         /// <returns></returns>
         public bool Ping()
         {
-            bool result = driver.Ping();
-            if (!result)
-                SetState(ConnectionState.Closed, true);
-            return result;
+            if (driver != null && driver.Ping())
+                return true;
+            driver = null;
+            SetState(ConnectionState.Closed, true);
+            return false;
         }
 
         /// <include file='docs/MySqlConnection.xml' path='docs/Open/*'/>
@@ -434,7 +431,7 @@ namespace MySql.Data.MySqlClient
                 if (settings.AutoEnlist && Transaction.Current != null)
                 {
                     driver = DriverTransactionManager.GetDriverInTransaction(Transaction.Current);
-                    if (driver != null && 
+                    if (driver != null &&
                         (driver.IsInActiveUse ||
                         !driver.Settings.EquivalentTo(this.Settings)))
                         throw new NotSupportedException(Resources.MultipleConnectionsInTransactionNotSupported);
@@ -604,16 +601,6 @@ namespace MySql.Data.MySqlClient
 			MySqlCommand cmd = new MySqlCommand("SELECT database()", this);
 			return cmd.ExecuteScalar().ToString();
 		}
-
-#if MONO2
-
-        protected void OnStateChange (StateChangeEventArgs stateChangeArgs)
-        {
-            if (StateChange != null)
-                StateChange(this, stateChangeArgs);
-        }
-
-#endif
 
         #region GetSchema Support
 

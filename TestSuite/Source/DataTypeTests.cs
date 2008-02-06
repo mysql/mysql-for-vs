@@ -468,44 +468,47 @@ namespace MySql.Data.MySqlClient.Tests
         public void BitAndDecimal()
         {
             execSQL("DROP TABLE IF EXISTS Test");
-            execSQL("CREATE TABLE Test (bt1 BIT, bt4 BIT(4), bt11 BIT(11), bt23 BIT(23), bt32 BIT(32)) engine=myisam");
-            execSQL("INSERT INTO Test VALUES (1, 2, 120, 240, 1000)");
+            execSQL("CREATE TABLE Test (bt1 BIT(2), bt4 BIT(4), bt11 BIT(11), bt23 BIT(23), bt32 BIT(32)) engine=myisam");
+            execSQL("INSERT INTO Test VALUES (2, 3, 120, 240, 1000)");
             execSQL("INSERT INTO Test VALUES (NULL, NULL, 100, NULL, NULL)");
 
-            MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test", conn);
-            MySqlDataReader reader = null;
-            try
+            string connStr = GetConnectionString(true) + ";treat tiny as boolean=false";
+            using (MySqlConnection c = new MySqlConnection(connStr))
             {
-                reader = cmd.ExecuteReader();
-                Assert.IsTrue(reader.Read());
-                Assert.AreEqual(1, reader.GetInt32(0));
-                Assert.AreEqual(2, reader.GetInt32(1));
-                Assert.AreEqual(120, reader.GetInt32(2));
-                if (version >= new Version(5,0))
-                {
-                    Assert.AreEqual(240, reader.GetInt32(3));
-                    Assert.AreEqual(1000, reader.GetInt32(4));
-                }
-                else
-                {
-                    Assert.AreEqual(127, reader.GetInt32(3));
-                    Assert.AreEqual(127, reader.GetInt32(4));
-                }
+                c.Open();
 
-                Assert.IsTrue(reader.Read());
-                Assert.IsTrue(reader.IsDBNull(0));
-                Assert.IsTrue(reader.IsDBNull(1));
-                Assert.AreEqual(100, reader.GetInt32(2));
-                Assert.IsTrue(reader.IsDBNull(3));
-                Assert.IsTrue(reader.IsDBNull(4));
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
-            finally
-            {
-                if (reader != null) reader.Close();
+                MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test", c);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    try
+                    {
+                        Assert.IsTrue(reader.Read());
+                        Assert.AreEqual(2, reader.GetInt32(0));
+                        Assert.AreEqual(3, reader.GetInt32(1));
+                        Assert.AreEqual(120, reader.GetInt32(2));
+                        if (version >= new Version(5, 0))
+                        {
+                            Assert.AreEqual(240, reader.GetInt32(3));
+                            Assert.AreEqual(1000, reader.GetInt32(4));
+                        }
+                        else
+                        {
+                            Assert.AreEqual(127, reader.GetInt32(3));
+                            Assert.AreEqual(127, reader.GetInt32(4));
+                        }
+
+                        Assert.IsTrue(reader.Read());
+                        Assert.IsTrue(reader.IsDBNull(0));
+                        Assert.IsTrue(reader.IsDBNull(1));
+                        Assert.AreEqual(100, reader.GetInt32(2));
+                        Assert.IsTrue(reader.IsDBNull(3));
+                        Assert.IsTrue(reader.IsDBNull(4));
+                    }
+                    catch (Exception ex)
+                    {
+                        Assert.Fail(ex.Message);
+                    }
+                }
             }
         }
 
@@ -534,6 +537,7 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(1, dt.Rows.Count);
             Assert.AreEqual(1, dt.Rows[0]["id"]);
             Assert.AreEqual(23.4, dt.Rows[0]["dec1"]);
+            cb.Dispose();
         }
 
         [Test]
@@ -681,6 +685,7 @@ namespace MySql.Data.MySqlClient.Tests
 			row["b"] = 135;
 			row.EndEdit();
 			da.Update(dv.Table);
+            cb.Dispose();
 
 			execSQL("DROP TABLE IF EXISTS Test");
 			execSQL("CREATE TABLE Test (b MEDIUMINT UNSIGNED PRIMARY KEY)");

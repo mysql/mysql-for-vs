@@ -46,9 +46,9 @@
     </resgen>
 
     <csc output="${outdir}/MySql.Data.dll" target="library"
-			define="TRACE,${defines}" debug="${debug}" optimize="${opt}" keycontainer="ConnectorNet"
+			define="TRACE,${defines}" debug="${debug}" optimize="${opt}"
 			doc="${outdir}/MySql.Data.xml">
-      <arg value="/nowarn:0679,1591,2029"/>
+      <arg value="/nowarn:0679,1591,1592,2029"/>
       <resources prefix="MySql.Data.MySqlClient.Source">
         <include name="Driver/Source/Resources.resources"/>
         <include name="Driver/Source/ReservedWords.txt"/>
@@ -70,7 +70,7 @@
 			define="TRACE,${defines}" debug="${debug}" optimize="${opt}">
       <arg value="/nowarn:0679,2029"/>
       <sources>
-        <include name="TestSuite/source/*.cs" />
+        <include name="TestSuite/Source/*.cs" />
       </sources>
       <references>
         <include name="${outdir}/MySql.Data.dll"/>
@@ -87,14 +87,6 @@
   <target name="allframeworks" depends="net-2.0">
   </target>
 
-  <!-- core managed driver target 1.1 -->
-  <target name="net-1.1" description="1.1 .NET target">
-    <property name="nunit.dir" value="${nunit1.dir}"/>
-    <property name="framework" value="net-1.1"/>
-    <call target="compile-client"/>
-    <call target="compile-test-suite"/>
-  </target>
-
   <!-- core managed driver target 2.0 -->
   <target name="net-2.0" description="2.0 .NET target">
     <property name="nunit.dir" value="${nunit2.dir}"/>
@@ -106,13 +98,6 @@
     <property name="defines" value="${defines}NET20"/>
     <call target="compile-client"/>
     <call target="compile-test-suite"/>
-  </target>
-
-  <!-- core managed driver target mono 1.0 -->
-  <target name="mono-1.0" description="Mono 1.0 Target">
-    <property name="nunit-lib" value="${framework::get-assembly-directory('mono-1.0')}"/>
-    <property name="framework" value="mono-1.0"/>
-    <call target="client"/>
   </target>
 
   <target name="mono-2.0" description="Mono 2.0 Target">
@@ -127,20 +112,8 @@
   <target name="alltests" depends="test-net-2.0">
   </target>
 
-  <target name="test-net-1.1" depends="net-1.1">
-    <property name="framework" value="net-1.1"/>
-    <call target="testclient"/>
-    <call target="fxcop"/>
-  </target>
-
   <target name="test-net-2.0" depends="net-2.0">
     <property name="framework" value="net-2.0"/>
-    <call target="testclient"/>
-  </target>
-
-  <target name="test-mono-1.0" depends="mono-1.0">
-    <property name="nunit" value="${nunit-mono}"/>
-    <property name="framework" value="mono-1.0"/>
     <call target="testclient"/>
   </target>
 

@@ -231,9 +231,7 @@ namespace MySql.Data.MySqlClient
 
             StringBuilder key = new StringBuilder();
             StringBuilder value = new StringBuilder();
-            char quoteChar = Char.MinValue;
             bool keyDone = false;
-  //          char lastChar = Char.MinValue;
 
             foreach (char c in connectString)
             {

@@ -103,7 +103,7 @@ namespace MySql.Data.MySqlClient.Tests
             c.Close();
             try
             {
-                MySqlTransaction t = c.BeginTransaction();
+                c.BeginTransaction();
             }
             catch (Exception ex)
             {

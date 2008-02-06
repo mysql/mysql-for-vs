@@ -128,15 +128,15 @@ namespace MySql.Data.MySqlClient
                 if (marker != 0)
                     throw new MySqlException("Out of sync with server", true, null);
 
-                long affectedRows = stream.ReadFieldLength();
-                long lastInsertId = stream.ReadFieldLength();
+                stream.ReadFieldLength(); /* affected rows */
+                stream.ReadFieldLength(); /* last insert id */
                 if (stream.HasMoreData)
                 {
                     serverStatus = (ServerStatusFlags) stream.ReadInteger(2);
-                    int warningCount = stream.ReadInteger(2);
+                    stream.ReadInteger(2);  /* warning count */
                     if (stream.HasMoreData)
                     {
-                        string msg = stream.ReadLenString();
+                        stream.ReadLenString();  /* message */
                     }
                 }
             }
@@ -207,7 +207,7 @@ namespace MySql.Data.MySqlClient
                 throw new MySqlException("Unable to connect to any of the specified MySQL hosts");
 
             int maxSinglePacket = 255*255*255;
-            stream = new MySqlStream(baseStream, encoding);
+            stream = new MySqlStream(baseStream, encoding, false);
 
             // read off the welcome packet and parse out it's values
             stream.OpenPacket();
@@ -269,7 +269,7 @@ namespace MySql.Data.MySqlClient
             // if we are using compression, then we use our CompressedStream class
             // to hide the ugliness of managing the compression
             if ((connectionFlags & ClientFlags.COMPRESS) != 0)
-                stream = new MySqlStream(new CompressedStream(baseStream), encoding);
+                stream = new MySqlStream(baseStream, encoding, true);
 
             // give our stream the server version we are connected to.  
             // We may have some fields that are read differently based 
@@ -295,7 +295,7 @@ namespace MySql.Data.MySqlClient
                 X509CertificateCollection certs = new X509CertificateCollection();
                 ss.AuthenticateAsClient(String.Empty, certs, SslProtocols.Default, false);
                 baseStream = ss;
-                stream = new MySqlStream(ss, encoding);
+                stream = new MySqlStream(ss, encoding, false);
                 stream.SequenceByte = 2;
             }
             catch (Exception)
@@ -304,7 +304,7 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-        private static bool ServerCheckValidation(object sender, X509Certificate certificate,
+/*        private static bool ServerCheckValidation(object sender, X509Certificate certificate,
                                                   X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
             if (sslPolicyErrors == SslPolicyErrors.None)
@@ -313,7 +313,7 @@ namespace MySql.Data.MySqlClient
             // Do not allow this client to communicate with unauthenticated servers.
             return false;
         }
-
+        */
         private static bool NoServerCheckValidation(object sender, X509Certificate certificate,
                                                     X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {

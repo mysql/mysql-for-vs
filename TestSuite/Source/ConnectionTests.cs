@@ -184,8 +184,6 @@ namespace MySql.Data.MySqlClient.Tests
         {
             try
             {
-                string connStr = conn.ConnectionString;
-
                 // connect with no db
                 string connStr2 = GetConnectionString(false);
                 MySqlConnection c = new MySqlConnection(connStr2);
@@ -328,6 +326,8 @@ namespace MySql.Data.MySqlClient.Tests
             KillConnection(conn2);
             Assert.IsFalse(conn2.Ping());
             Assert.IsTrue(conn2.State == ConnectionState.Closed);
+            conn2.Open();
+            conn2.Close();
         }
 
         /// <summary>

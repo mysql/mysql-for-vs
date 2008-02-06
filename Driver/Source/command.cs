@@ -47,7 +47,6 @@ namespace MySql.Data.MySqlClient
 		long updatedRowCount;
 		UpdateRowSource updatedRowSource;
 		MySqlParameterCollection parameters;
-		private ArrayList parameterMap;
 		private int cursorPageSize;
 		private IAsyncResult asyncResult;
 		private bool designTimeVisible;
@@ -65,7 +64,6 @@ namespace MySql.Data.MySqlClient
 		{
 			designTimeVisible = true;
 			cmdType = CommandType.Text;
-			parameterMap = new ArrayList();
 			parameters = new MySqlParameterCollection(this);
 			updatedRowSource = UpdateRowSource.Both;
 			cursorPageSize = 0;
@@ -155,7 +153,7 @@ namespace MySql.Data.MySqlClient
 		public override CommandType CommandType
 		{
 			get { return cmdType; }
-			set { cmdType = value; SyncCommandType(true); }
+			set { cmdType = value; }
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/IsPrepared/*'/>
@@ -666,11 +664,6 @@ namespace MySql.Data.MySqlClient
 		#endregion
 
 		#region Private Methods
-
-		private void SyncCommandType(bool cmdTypeSet)
-		{
-			int i = (int)CommandType;
-		}
 
 		/*		private ArrayList PrepareSqlBuffers(string sql)
 				{

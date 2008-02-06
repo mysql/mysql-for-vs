@@ -201,6 +201,7 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.AreEqual(2003, date.Year);
                 Assert.AreEqual(9, date.Month);
                 Assert.AreEqual(24, date.Day);
+                cb.Dispose();
 			}
 			catch (Exception ex) 
 			{
@@ -239,6 +240,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 				dt.Clear();
 				da.Fill(dt);
+                cb.Dispose();
 
 				Assert.AreEqual(1, dt.Rows.Count);
 				Assert.AreEqual(now.Date, ((DateTime)dt.Rows[0]["dt"]).Date );
@@ -457,6 +459,7 @@ namespace MySql.Data.MySqlClient.Tests
                 dt.Rows.Clear();
                 da.Fill(dt);
                 Assert.AreEqual(2, dt.Rows.Count);
+                cb.Dispose();
             }
             catch (Exception ex)
             {

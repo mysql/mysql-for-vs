@@ -61,7 +61,7 @@ namespace MySql.Data.MySqlClient.Tests
 
             // now we start execution of the command
             CommandInvokerDelegate d = new CommandInvokerDelegate(CommandRunner);
-            IAsyncResult iar = d.BeginInvoke(cmd, null, null);
+            d.BeginInvoke(cmd, null, null);
 
             // sleep 5 seconds
             Thread.Sleep(5000);
@@ -91,7 +91,7 @@ namespace MySql.Data.MySqlClient.Tests
             try
             {
                 cmd.CommandText = "SELECT now()";
-                object date = cmd.ExecuteScalar();
+                cmd.ExecuteScalar();
             }
             catch (Exception) { }
             Assert.AreEqual(1, stateChangeCount);

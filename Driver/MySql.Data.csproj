@@ -136,7 +136,6 @@
     <Compile Include="Source\common\SharedMemoryStream.cs" />
     <Compile Include="Source\common\StreamCreator.cs" />
     <Compile Include="Source\common\Version.cs" />
-    <Compile Include="Source\common\WinCE.cs" />
     <Compile Include="Source\CompressedStream.cs" />
     <Compile Include="Source\Connection.cs">
       <SubType>Component</SubType>

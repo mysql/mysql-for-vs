@@ -59,6 +59,7 @@ namespace MySql.Data.MySqlClient.Tests
 
                 dt.Rows[0]["multi word"] = 3;
                 da.Update(dt);
+                cb.Dispose();
                 Assert.AreEqual(1, dt.Rows.Count);
                 Assert.AreEqual(3, dt.Rows[0]["multi word"]);
             }
@@ -188,6 +189,7 @@ namespace MySql.Data.MySqlClient.Tests
             da.Update(changes);
             ds.Merge(changes);
             ds.AcceptChanges();
+            cb.Dispose();
 
             conn.ChangeDatabase(database0);
         }
@@ -239,6 +241,7 @@ namespace MySql.Data.MySqlClient.Tests
 
                 dt.Clear();
                 da.Fill(dt);
+                cb.Dispose();
                 Assert.AreEqual(1, dt.Rows.Count);
                 Assert.AreEqual(2, dt.Rows[0]["id"]);
             }
@@ -283,6 +286,7 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(1, dt.Rows.Count);
             Assert.AreEqual(1, dt.Rows[0]["id"]);
             Assert.AreEqual("Test", dt.Rows[0]["name"]);
+            cb.Dispose();
         }
 
         /// <summary>
@@ -374,6 +378,7 @@ namespace MySql.Data.MySqlClient.Tests
                 changes = dt.GetChanges();
                 da.Update(changes);
                 dt.AcceptChanges();
+                cb.Dispose();
             }
             catch (Exception ex)
             {

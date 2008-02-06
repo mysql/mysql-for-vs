@@ -50,6 +50,7 @@ namespace MySql.Data.MySqlClient
         string blobAsUtf8IncludePattern, blobAsUtf8ExcludePattern;
         Regex blobAsUtf8ExcludeRegex, blobAsUtf8IncludeRegex;
         uint defaultCommandTimeout;
+        bool treatTinyAsBoolean;
         bool allowUserVariables;
         bool clearing;
 
@@ -90,6 +91,7 @@ namespace MySql.Data.MySqlClient
             defaultValues.Add(Keyword.BlobAsUTF8IncludePattern, null);
             defaultValues.Add(Keyword.TreatBlobsAsUTF8, false);
             defaultValues.Add(Keyword.DefaultCommandTimeout, 30);
+            defaultValues.Add(Keyword.TreatTinyAsBoolean, true);
             defaultValues.Add(Keyword.AllowUserVariables, false);
         }
 
@@ -651,6 +653,23 @@ namespace MySql.Data.MySqlClient
 
 #if !CF && !MONO
         [Category("Advanced")]
+        [DisplayName("Treat Tiny As Boolean")]
+        [Description("Should the provider treat TINYINT(1) columns as boolean.")]
+        [DefaultValue(true)]
+        [RefreshProperties(RefreshProperties.All)]
+#endif
+        public bool TreatTinyAsBoolean
+        {
+            get { return treatTinyAsBoolean; }
+            set
+            {
+                SetValue("Treat Tiny As Boolean", value);
+                treatTinyAsBoolean = value;
+            }
+        }
+
+#if !CF && !MONO
+        [Category("Advanced")]
         [DisplayName("Allow User Variables")]
         [Description("Should the provider expect user variables to appear in the SQL.")]
         [DefaultValue(false)]
@@ -979,8 +998,8 @@ namespace MySql.Data.MySqlClient
 
             clearing = true;
             // set all the proper defaults
-            foreach (Keyword k in defaultValues.Keys)
-                SetValue(k, defaultValues[k]);
+            foreach (KeyValuePair<Keyword, object> k in defaultValues)
+                SetValue(k.Key, k.Value);
             clearing = false;
         }
 
@@ -1091,6 +1110,8 @@ namespace MySql.Data.MySqlClient
                     return Keyword.TreatBlobsAsUTF8;
                 case "default command timeout":
                     return Keyword.DefaultCommandTimeout;
+                case "treat tiny as boolean":
+                    return Keyword.TreatTinyAsBoolean;
                 case "allow user variables":
                     return Keyword.AllowUserVariables;
             }
@@ -1171,6 +1192,8 @@ namespace MySql.Data.MySqlClient
                     return blobAsUtf8IncludePattern;
                 case Keyword.DefaultCommandTimeout:
                     return defaultCommandTimeout;
+                case Keyword.TreatTinyAsBoolean:
+                    return treatTinyAsBoolean;
                 case Keyword.AllowUserVariables:
                     return allowUserVariables;
                 default:
@@ -1266,6 +1289,8 @@ namespace MySql.Data.MySqlClient
                     blobAsUtf8IncludePattern = (string)value; break;
                 case Keyword.DefaultCommandTimeout:
                     defaultCommandTimeout = ConvertToUInt(value); break;
+                case Keyword.TreatTinyAsBoolean:
+                    treatTinyAsBoolean = ConvertToBool(value); break;
                 case Keyword.AllowUserVariables:
                     allowUserVariables = ConvertToBool(value); break;
             }
@@ -1446,6 +1471,7 @@ namespace MySql.Data.MySqlClient
         BlobAsUTF8IncludePattern,
         BlobAsUTF8ExcludePattern,
         DefaultCommandTimeout,
+        TreatTinyAsBoolean,
         AllowUserVariables
     }
 }

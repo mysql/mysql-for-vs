@@ -417,7 +417,7 @@ namespace MySql.Data.MySqlClient.Tests
             MySqlCommand cmd = new MySqlCommand("SELEKT NOW() as theTime", conn);
             try
             {
-                object o = cmd.ExecuteScalar();
+                cmd.ExecuteScalar();
             }
             catch (MySqlException ex)
             {

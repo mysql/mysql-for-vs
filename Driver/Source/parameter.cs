@@ -35,7 +35,7 @@ namespace MySql.Data.MySqlClient
     /// Represents a parameter to a <see cref="MySqlCommand"/>, and optionally, its mapping to <see cref="DataSet"/> columns. This class cannot be inherited.
     /// </summary>
 #if !CF
-    [TypeConverter(typeof (MySqlParameterConverter))]
+    [TypeConverter(typeof(MySqlParameterConverter))]
 #endif
     public sealed class MySqlParameter : DbParameter, IDataParameter, IDbDataParameter, ICloneable
     {
@@ -585,47 +585,6 @@ namespace MySql.Data.MySqlClient
 
         #endregion
 
-#if !CF
-        internal class MySqlParameterConverter : TypeConverter
-        {
-            public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
-            {
-                if (destinationType == typeof (InstanceDescriptor))
-                {
-                    return true;
-                }
-
-                // Always call the base to see if it can perform the conversion.
-                return base.CanConvertTo(context, destinationType);
-            }
-
-            public override object ConvertTo(ITypeDescriptorContext context,
-                                             CultureInfo culture, object value, Type destinationType)
-            {
-                if (destinationType == typeof (InstanceDescriptor))
-                {
-                    ConstructorInfo ci = typeof (MySqlParameter).GetConstructor(
-                        new Type[]
-                            {
-                                typeof (string), typeof (MySqlDbType), typeof (int), typeof (ParameterDirection),
-                                typeof (bool), typeof (byte), typeof (byte), typeof (string), typeof (DataRowVersion),
-                                typeof (object)
-                            });
-                    MySqlParameter p = (MySqlParameter) value;
-                    return new InstanceDescriptor(ci, new object[]
-                                                          {
-                                                              p.ParameterName, p.DbType, p.Size, p.Direction,
-                                                              p.IsNullable, p.Precision,
-                                                              p.Scale, p.SourceColumn, p.SourceVersion, p.Value
-                                                          });
-                }
-
-                // Always call base, even if you can't convert.
-                return base.ConvertTo(context, culture, value, destinationType);
-            }
-        }
-#endif
-
         /// <summary>
         /// Resets the <b>DbType</b> property to its original settings. 
         /// </summary>
@@ -660,4 +619,45 @@ namespace MySql.Data.MySqlClient
             return 32;
         }
     }
+
+#if !CF
+    internal class MySqlParameterConverter : TypeConverter
+    {
+        public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+        {
+            if (destinationType == typeof(InstanceDescriptor))
+            {
+                return true;
+            }
+
+            // Always call the base to see if it can perform the conversion.
+            return base.CanConvertTo(context, destinationType);
+        }
+
+        public override object ConvertTo(ITypeDescriptorContext context,
+                                         CultureInfo culture, object value, Type destinationType)
+        {
+            if (destinationType == typeof(InstanceDescriptor))
+            {
+                ConstructorInfo ci = typeof(MySqlParameter).GetConstructor(
+                    new Type[]
+                            {
+                                typeof (string), typeof (MySqlDbType), typeof (int), typeof (ParameterDirection),
+                                typeof (bool), typeof (byte), typeof (byte), typeof (string), typeof (DataRowVersion),
+                                typeof (object)
+                            });
+                MySqlParameter p = (MySqlParameter)value;
+                return new InstanceDescriptor(ci, new object[]
+                                                          {
+                                                              p.ParameterName, p.DbType, p.Size, p.Direction,
+                                                              p.IsNullable, p.Precision,
+                                                              p.Scale, p.SourceColumn, p.SourceVersion, p.Value
+                                                          });
+            }
+
+            // Always call base, even if you can't convert.
+            return base.ConvertTo(context, culture, value, destinationType);
+        }
+    }
+#endif
 }

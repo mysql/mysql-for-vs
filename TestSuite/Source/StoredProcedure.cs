@@ -546,10 +546,9 @@ namespace MySql.Data.MySqlClient.Tests
                 "val6 VARCHAR(155), val7 SET('a','b'), val8 CHAR, val9 NUMERIC(10,2)) " +
                      "BEGIN SELECT 1; END");
 
-            MySqlCommand cmd = new MySqlCommand("spTest", conn);
-            cmd.CommandType = CommandType.StoredProcedure;
-            MySqlDataAdapter da = new MySqlDataAdapter(cmd);
-            MySqlCommandBuilder.DeriveParameters(cmd);
+			MySqlCommand cmd = new MySqlCommand("spTest", conn);
+			cmd.CommandType = CommandType.StoredProcedure;
+			MySqlCommandBuilder.DeriveParameters(cmd);
 
             Assert.AreEqual(9, cmd.Parameters.Count);
             Assert.AreEqual("@valin", cmd.Parameters[0].ParameterName);
@@ -588,15 +587,14 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(ParameterDirection.Input, cmd.Parameters[8].Direction);
             Assert.AreEqual(MySqlDbType.NewDecimal, cmd.Parameters[8].MySqlDbType);
 
-            execSQL("DROP PROCEDURE spTest");
-            execSQL("CREATE PROCEDURE spTest() BEGIN END");
-            cmd.CommandText = "spTest";
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.Clear();
-            da = new MySqlDataAdapter(cmd);
-            MySqlCommandBuilder.DeriveParameters(cmd);
-            Assert.AreEqual(0, cmd.Parameters.Count);
-        }
+			execSQL("DROP PROCEDURE spTest");
+			execSQL("CREATE PROCEDURE spTest() BEGIN END");
+			cmd.CommandText = "spTest";
+			cmd.CommandType = CommandType.StoredProcedure;
+			cmd.Parameters.Clear();
+			MySqlCommandBuilder.DeriveParameters(cmd);
+			Assert.AreEqual(0, cmd.Parameters.Count);
+		}
 
         /// <summary>
         /// Bug #13632  	the MySQLCommandBuilder.deriveparameters has not been updated for MySQL 5
@@ -611,10 +609,9 @@ namespace MySql.Data.MySqlClient.Tests
                 execSQL("CREATE FUNCTION fnTest(v1 DATETIME) RETURNS INT " +
                     "  LANGUAGE SQL DETERMINISTIC BEGIN RETURN 1; END");
 
-                MySqlCommand cmd = new MySqlCommand("fnTest", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
-                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
-                MySqlCommandBuilder.DeriveParameters(cmd);
+				MySqlCommand cmd = new MySqlCommand("fnTest", conn);
+				cmd.CommandType = CommandType.StoredProcedure;
+				MySqlCommandBuilder.DeriveParameters(cmd);
 
                 Assert.AreEqual(2, cmd.Parameters.Count);
                 Assert.AreEqual("@v1", cmd.Parameters[0].ParameterName);

@@ -481,14 +481,6 @@ namespace MySql.Data.Types
 			return val.GetDateTime();
 		}
 
-		private void ComputeTicks()
-		{
-			int[] daysInMonths = new int[12] { 31, 28, 31, 30, 31, 30, 31, 30, 31, 30, 31, 30 };
-
-			if (DateTime.IsLeapYear(Year))
-				daysInMonths[1]++;
-		}
-
 		internal static void SetDSInfo(DataTable dsTable)
 		{
 			string[] types = new string[] { "DATE", "DATETIME", "TIMESTAMP" };

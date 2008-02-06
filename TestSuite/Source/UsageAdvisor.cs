@@ -59,7 +59,7 @@ namespace MySql.Data.MySqlClient.Tests
             {
                 reader = cmd.ExecuteReader();
                 reader.Read();
-                int id = reader.GetInt32(0);
+                reader.GetInt32(0);  // access  the first field
                 reader.Read();
 
                 Assert.IsTrue(reader.NextResult());

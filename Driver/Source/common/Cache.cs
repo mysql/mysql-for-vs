@@ -18,42 +18,59 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
-using System.Collections.Specialized;
 using System;
+using System.Collections.Generic;
 
 namespace MySql.Data.Common
 {
-    internal class Cache : NameObjectCollectionBase
+    internal class Cache<KeyType, ValueType>
     {
-        private int capacity;
+        private int _capacity;
+        private Queue<KeyType> _keyQ;
+        private Dictionary<KeyType, ValueType> _contents;
 
-        public Cache(int initialCapacity, int capacity) :
-            base(initialCapacity, StringComparer.CurrentCulture)
-		{
-			this.capacity = capacity;
-		}
-
-        public object this[string key]
+        public Cache(int initialCapacity, int capacity)
         {
-            get { return BaseGet(key); }
+            _capacity = capacity;
+            _contents = new Dictionary<KeyType, ValueType>(initialCapacity);
+
+            if (capacity > 0)
+                _keyQ = new Queue<KeyType>(initialCapacity);
+        }
+
+        public ValueType this[KeyType key]
+        {
+            get
+            {
+                ValueType val;
+                if (_contents.TryGetValue(key, out val))
+                    return val;
+                else
+                    return default(ValueType);
+            }
             set { InternalAdd(key, value); }
         }
 
-        public void Add(string key, object value)
+        public void Add(KeyType key, ValueType value)
         {
             InternalAdd(key, value);
         }
 
-        private void InternalAdd(string key, object value)
+        private void InternalAdd(KeyType key, ValueType value)
         {
-            if (base.Count == capacity)
-                RemoveOldestItem();
-            BaseAdd(key, value);
-        }
+            if (!_contents.ContainsKey(key))
+            {
 
-        private void RemoveOldestItem()
-        {
-            BaseRemoveAt(0);
+                if (_capacity > 0)
+                {
+                    _keyQ.Enqueue(key);
+
+                    if (_keyQ.Count > _capacity)
+                        _contents.Remove(_keyQ.Dequeue());
+                }
+            }
+
+            _contents[key] = value;
         }
     }
 }

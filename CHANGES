@@ -12,6 +12,20 @@ Version 5.2
 . Added Allow User Variables connection string option so that users can use user variables
   without getting missing parameter exceptions
   
+Version 5.1.5 - 
+  - Fixed problem with membership provider where FindUserByEmail would fail trying to add
+    a second parameter with the same name as the first (bug #33347)
+  - Fixed long standing problem with compression over a network.  It's now fast again. (bug #27865)    
+  - Fixed nant compilation problem on mono (bug #33508)
+  - Fixed problem where connection state reported through the state change handler was not
+    showing Open (bug #34082)   
+  - Incorporated some connection string cache optimizations sent to us by Maxim Mass (bug #34000)
+  - Fixed problem with opening a connection that was previously closed by sudden server disconnection (bug #33909)   
+  - Fixed code to yeild better exception when using different connection strings in a single transaction (bug #34204)   
+  - Small bugfix and speed enhancement in Statement.TokenizeSql (bug #34220)
+  - Added connection string option 'Treat Tiny As Boolean' so applications that expect TINYINT(1)
+    to return an integer will not break (bug #34052)
+   
 Version 5.1.4 - 11/12/2007
   - Fixed issue where column name metadata was not using the charset given on the connection string
     (Bug #31185)

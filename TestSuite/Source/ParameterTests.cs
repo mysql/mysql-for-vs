@@ -158,7 +158,6 @@ namespace MySql.Data.MySqlClient.Tests
         {
             try
             {
-                IDbConnection conn2 = (IDbConnection)conn;
                 IDbCommand cmd = conn.CreateCommand();
                 IDbDataParameter prm = cmd.CreateParameter();
                 prm.DbType = DbType.Int64;
@@ -467,6 +466,7 @@ namespace MySql.Data.MySqlClient.Tests
             cmd.Parameters.Add("?id6", MySqlDbType.Int32);
             cmd.Parameters.RemoveAt("?id1");
             MySqlParameter p = cmd.Parameters["?id6"];
+            Assert.AreEqual("?id6", p.ParameterName);
         }
 
         /// <summary>

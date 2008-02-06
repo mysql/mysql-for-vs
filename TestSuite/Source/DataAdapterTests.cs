@@ -130,6 +130,7 @@ namespace MySql.Data.MySqlClient.Tests
 			dt.Rows.Clear();
 			da.Fill(dt);
 			Assert.AreEqual(0, dt.Rows.Count, "checking row count");
+            cb.Dispose();
 		}
 
 		[Test]
@@ -379,6 +380,7 @@ namespace MySql.Data.MySqlClient.Tests
 			da.Fill(ds);
 			Assert.AreEqual(1, ds.Tables[0].Rows[0]["id"]);
 			Assert.AreEqual(2, ds.Tables[0].Rows[1]["id"]);
+            cb.Dispose();
 		}
 
 		/// <summary>
@@ -560,6 +562,7 @@ namespace MySql.Data.MySqlClient.Tests
                 da.Fill(dt);
                 Assert.IsTrue(c.State == ConnectionState.Open);
                 Assert.AreEqual(1, dt.Rows.Count);
+                cb.Dispose();
             }
             catch (Exception ex)
             {
@@ -646,6 +649,7 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(3, dt.Rows.Count);
             Assert.AreEqual(3, dt.Rows[2]["id"]);
             Assert.AreEqual("Test3", dt.Rows[2]["name"]);
+            cb.Dispose();
         }
 
         [Test]
@@ -665,7 +669,7 @@ namespace MySql.Data.MySqlClient.Tests
 
             MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
             DataTable dt = new DataTable();
-            da.Fill(0, 10, dt);
+            da.Fill(0, 10, new DataTable[] { dt });
             Assert.AreEqual(10, dt.Rows.Count);
         }
 
@@ -697,7 +701,7 @@ namespace MySql.Data.MySqlClient.Tests
             {
                 MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
                 DataTable dt = new DataTable();
-                da.Fill(0, 2, dt);
+                da.Fill(0, 2, new DataTable[] { dt });
             }
             catch (Exception ex)
             {
