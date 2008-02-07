@@ -846,6 +846,8 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void Binary16AsGuid()
         {
+            if (version < new Version(5, 0)) return;
+
             execSQL("DROP TABLE IF EXISTS Test");
             execSQL("CREATE TABLE Test (id INT, g BINARY(16), c VARBINARY(16), c1 BINARY(17))");
 
