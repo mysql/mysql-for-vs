@@ -3,8 +3,70 @@ Connector/Net 5.2  Release Notes
 
 Welcome to the release notes for Connector/Net 5.2
 
-Changes and new features
-========================
-. Added the MySqlScript object for executing multiple statements, including stored procedure
-  creation, with a single call.
+There are a number of new features in this release and most of those new features do 
+not come with any change in existing behavior.  However there are a couple of changes 
+that users should be aware of.  These changes will be documented in the final GA
+documentation.  Please see the changelog for a complete list of new features or bug fixes
+found in this release.
+
+Use Old Syntax is now obsolete
+==============================
+We've had significant feedback from users that they want to use @ to mark their parameters
+instead of using the ? character.  very early versions of the provider did use the @ character but
+we changed that to ? when we realized that MySQL user variables start with @.  Take the 
+following SQL as an example:
+
+SET @myusevar=4;
+SELECT * FROM mytable WHERE id=@id AND var=@myusevar;
+
+In this SQL @myusevar is a MySQL controlled user variable and @id is intended to be a user-supplied
+parameter.  The problem is that the provider cannot tell the difference.  As we wanted to
+throw exceptions when parameters are missing upon query execution, we decided to 
+use a different parameter marker character and use the Old Syntax configuration option for
+applications that were already using @.
+
+Since then we've come to realize that users don't use MySQL user variables very often 
+and not using @ makes porting applications from SQL Server to MySQL harder than it needs to be.
+
+Therefore, we have decided to move back to suggesting users use the @ character to mark your 
+parameters and we have marked the Use Old Syntax configuration option as obsolete.  If you use
+that option in your connection string, it will have zero effect and a warning message will
+be logged.  Since we realize that many applications are using ?, we intend to support both 
+characters for the foreseeable future.
+
+There are side effects that users should be aware of.  Here is a bullet list of those effects.
+- Attempting to add a parameter with the same base name as an existing parameter will throw
+  a duplicate parameter exception.  (i.e.  Adding ?id when @id is already in the collection)
+- MySqlParameterCollection.IndexOf will return -1 unless the name matches exactly.  
+  (i.e.  calling IndexOf("@id") will return -1 even if ?id is in the collection)
+- Mixing and matching parameters works though it is not recommended.  You can define your SQL using
+  @ (SELECT * FROM mytable WHERE id=@id) but then use ? in your paramters.
+- There is a new connection string option named 'Allow User Variables'.  The default value is false.
+  With the default value, the provider doesn't expect to see any user variables in the SQL therefore
+  if it sees @<name> in the SQL it will assume there should be a parameter with the same base name
+  and throw an exception if one is not there.  If you intend to use user variables, you have two
+  options.  First, continue to use ? for your parameters (not recommended) or 
+  set Allow User Variables to true.  With this set to true, the provider will not throw an exception
+  if a parameter appears to be missing.
+  
+TinyInt conversion to Bool is now configurable
+==============================================
+This change was added to 5.1.5 and pulled forward into this release.  By default, columns 
+of type TINYINT(1) are still converted to boolean however that can be disabled
+with a new connection string option.  Setting 'Treat Tiny As Boolean' to false will 
+return those columns as integer instead of boolean.
+
+Using the new provider schema
+=============================
+This release includes a completely revamped set of web providers along with a completely
+rewritten provider schema.  We will either deliver the SQL scripts in the RTM release
+or we will deliver a tool that will allow you to upgrade existing servers to the new
+schema.  For this release. the only way to upgrade a given server to the new schema is to
+add a configuration option for one of your providers.  The option is 'autogenerateschema'.  
+By setting this to true, the provider will silently upgrade the server to the new schema.
+Please note that there is no reversing of this procedure so please just do this on test
+setups and not on your production systems.
+
+We hope you enjoy this release and encourage you to test this release with your applications
+and let us know any problems you find.
 
