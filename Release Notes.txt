@@ -67,6 +67,13 @@ By setting this to true, the provider will silently upgrade the server to the ne
 Please note that there is no reversing of this procedure so please just do this on test
 setups and not on your production systems.
 
+Known Issues
+==============
+We discovered during our final testing that the Create menu options are
+not working in the server explorer integration.  These are options such as
+Create Table, Create Stored Procedure, and Create View.  We apologize for this 
+inconvenience and will have this working for the beta.
+
 We hope you enjoy this release and encourage you to test this release with your applications
 and let us know any problems you find.
 
