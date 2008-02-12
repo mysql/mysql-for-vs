@@ -76,7 +76,7 @@ begin
   Result := true;
 	if not CheckForFramework('2.0', true) then
 		Result := false
-		
+
   if PreviousVersionsInstalled() then
   begin
     MsgBox('There is already a version of Connector/Net installed.  ' +
@@ -115,3 +115,5 @@ begin
 end;
 
 
+[Run]
+Filename: devenv.com; Parameters: /setup; WorkingDir: C:\Program Files (x86)\Microsoft Visual Studio 8\Common7\IDE; StatusMsg: Reconfiguring Visual Studio 2005; Flags: runhidden runascurrentuser; Components: VS\2005 VS2005; Languages: 
