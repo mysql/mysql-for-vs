@@ -29,6 +29,8 @@ using System.Collections.Specialized;
 using System.Configuration.Provider;
 using System.Resources;
 using System.IO;
+using System.Diagnostics;
+using MySql.Web.Properties;
 
 namespace MySql.Web.Common
 {
@@ -58,12 +60,12 @@ namespace MySql.Web.Common
                 if (config["autogenerateschema"] == "true")
                     UpgradeToCurrent(connectionString, ver);
                 else
-                    throw new ProviderException("Unable to initialize provider.  Missing or incorrect schema.");
+                    throw new ProviderException(Resources.MissingOrWrongSchema);
 
             }
             catch (Exception ex)
             {
-                throw new ProviderException("Error during provider initialization.", ex);
+                throw new ProviderException(Resources.MissingOrWrongSchema, ex);
             }
         }
 
@@ -108,9 +110,68 @@ namespace MySql.Web.Common
                 MySqlCommand cmd = new MySqlCommand("SELECT * FROM my_aspnet_SchemaVersion", conn);
                 object ver = cmd.ExecuteScalar();
                 if (ver == null)
-                    throw new ProviderException("Schema corrupt");
+                    throw new ProviderException(Resources.MissingOrWrongSchema);
                 return (int)ver;
             }
         }
+
+        /// <summary>
+        /// Creates the or fetch user id.
+        /// </summary>
+        /// <param name="connection">The connection.</param>
+        /// <param name="username">The username.</param>
+        /// <param name="applicationId">The application id.</param>
+        /// <param name="authenticated">if set to <c>true</c> [authenticated].</param>
+        /// <returns></returns>
+        internal static int CreateOrFetchUserId(MySqlConnection connection, string username, 
+            int applicationId, bool authenticated)
+        {
+            Debug.Assert(applicationId > 0);
+
+            // first attempt to fetch an existing user id
+            MySqlCommand cmd = new MySqlCommand(@"SELECT id FROM my_aspnet_Users
+                WHERE applicationId = @appId AND name = @name", connection);
+            cmd.Parameters.AddWithValue("@appId", applicationId);
+            cmd.Parameters.AddWithValue("@name", username);
+            object userId = cmd.ExecuteScalar();
+            if (userId != null) return (int)userId;
+
+            cmd.CommandText = @"INSERT INTO my_aspnet_Users VALUES 
+                (NULL, @appId, @name, @isAnon, Now())";
+            cmd.Parameters.AddWithValue("@isAnon", !authenticated);
+            int recordsAffected = cmd.ExecuteNonQuery();
+            if (recordsAffected != 1)
+                throw new ProviderException(Resources.UnableToCreateUser);
+
+            cmd.CommandText = "SELECT LAST_INSERT_ID()";
+            return Convert.ToInt32(cmd.ExecuteScalar());
+        }
+
+        /// <summary>
+        /// Creates the or fetch application id.
+        /// </summary>
+        /// <param name="applicationName">Name of the application.</param>
+        /// <param name="applicationId">The application id.</param>
+        /// <param name="applicationDesc">The application desc.</param>
+        /// <param name="connection">The connection.</param>
+        internal static void CreateOrFetchApplicationId(string applicationName, 
+            ref int applicationId, string applicationDesc, MySqlConnection connection)
+        {
+            // no need to create another one
+            if (applicationId > 0) return;
+
+            MySqlCommand cmd = new MySqlCommand(
+                @"INSERT INTO my_aspnet_Applications VALUES (NULL, @appName, @appDesc)",
+                connection);
+            cmd.Parameters.AddWithValue("@appName", applicationName);
+             cmd.Parameters.AddWithValue("@appDesc", applicationDesc);
+            int recordsAffected = cmd.ExecuteNonQuery();
+            if (recordsAffected != 1)
+                throw new ProviderException(Resources.UnableToCreateApplication);
+
+            cmd.CommandText = "SELECT LAST_INSERT_ID()";
+            applicationId = Convert.ToInt32(cmd.ExecuteScalar());
+        }
+
     }
 }

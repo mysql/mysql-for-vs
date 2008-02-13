@@ -1,4 +1,4 @@
-Version 5.2
+Version 5.2 - 2/11/2008
 . Added ClearPool and ClearAllPools features
 . DDEX provider now works under Visual Studio 2008	
 . Added support for DbDataAdapter UpdateBatchSize.  Batching is fully supported
@@ -12,7 +12,7 @@ Version 5.2
 . Added Allow User Variables connection string option so that users can use user variables
   without getting missing parameter exceptions
   
-Version 5.1.5 - 
+Version 5.1.5 - 2/11/2008
   - Fixed problem with membership provider where FindUserByEmail would fail trying to add
     a second parameter with the same name as the first (bug #33347)
   - Fixed long standing problem with compression over a network.  It's now fast again. (bug #27865)    
