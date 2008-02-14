@@ -133,7 +133,7 @@ namespace MySql.Data.VisualStudio.Descriptors
             [Field(FieldType = TypeCode.String)]
             public const string Definer = "DEFINER";
             [Field(FieldType = TypeCode.String)]
-            public const string ParameterList = "PARAM_LIST";
+            public const string ParameterList = "PARAMETERLIST";
         }
         #endregion
 
@@ -219,7 +219,7 @@ namespace MySql.Data.VisualStudio.Descriptors
 				for (int x = 0; x < rest.Length; x++)
 					if (restrictions[x] != null)
 						rest[x] = restrictions[x].ToString();
-			DataTable dt = conn.GetSchema("Procedures", rest);
+			DataTable dt = conn.GetSchema("Procedures With Parameters", rest);
 			connection.Connection.UnlockProviderObject();
 			return dt;
 		}

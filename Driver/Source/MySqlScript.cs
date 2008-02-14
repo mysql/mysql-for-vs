@@ -257,8 +257,8 @@ namespace MySql.Data.MySqlClient
                     int delimiterPos = token.IndexOf(Delimiter);
                     if (delimiterPos != -1)
                     {
-                        int endPos = tokenizer.CurrentPos - token.Length + delimiterPos;
-                        if (tokenizer.CurrentPos == query.Length-1)
+                        int endPos = tokenizer.Index - token.Length + delimiterPos;
+                        if (tokenizer.Index == query.Length-1)
                             endPos++;
                         string currentQuery = query.Substring(startPos, endPos-startPos);
                         ScriptStatement statement = new ScriptStatement();
@@ -273,7 +273,7 @@ namespace MySql.Data.MySqlClient
             }
 
             // now clean up the last statement
-            if (tokenizer.CurrentPos > startPos)
+            if (tokenizer.Index > startPos)
             {
                 string sqlLeftOver = query.Substring(startPos).Trim();
                 if (!String.IsNullOrEmpty(sqlLeftOver))

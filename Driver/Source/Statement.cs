@@ -269,8 +269,8 @@ namespace MySql.Data.MySqlClient
                 }
                 else
                 {
-                    currentChunk.Append(sql.Substring(lastPos, tokenizer.CurrentPos - lastPos+1));
-                    lastPos = tokenizer.CurrentPos;
+                    currentChunk.Append(sql.Substring(lastPos, tokenizer.Index - lastPos+1));
+                    lastPos = tokenizer.Index;
                 }
                 token = tokenizer.NextToken();
             }

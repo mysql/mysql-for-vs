@@ -195,6 +195,60 @@ namespace MySql.Data.MySqlClient
             return dt;
         }
 
+        private DataTable GetProceduresWithParameters(string[] restrictions)
+        {
+            DataTable dt = GetProcedures(restrictions);
+            dt.Columns.Add("ParameterList", typeof(string));
+
+            foreach (DataRow row in dt.Rows)
+            {
+                row["ParameterList"] = GetProcedureParameterLine(row);
+            }
+            return dt;
+        }
+
+        private string GetProcedureParameterLine(DataRow isRow)
+        {
+            string sql = "SHOW CREATE {0} {1}.{2}";
+            sql = String.Format(sql, isRow["ROUTINE_TYPE"], isRow["ROUTINE_SCHEMA"],
+                isRow["ROUTINE_NAME"]);
+            MySqlCommand cmd = new MySqlCommand(sql, connection);
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                reader.Read();
+
+                // if we are not the owner of this proc or have permissions
+                // then we will get null for the body
+                if (reader.IsDBNull(2)) return null;
+
+                string sql_mode = reader.GetString(1);
+
+                string body = reader.GetString(2);
+                SqlTokenizer tokenizer = new SqlTokenizer(body);
+                tokenizer.AnsiQuotes = sql_mode.IndexOf("ANSI_QUOTES") != -1;
+                tokenizer.BackslashEscapes = sql_mode.IndexOf("NO_BACKSLASH_ESCAPES") == -1;
+
+                string token = tokenizer.NextToken();
+                while (token != "(")
+                    token = tokenizer.NextToken();
+                int start = tokenizer.Index + 1;
+                token = tokenizer.NextToken();
+                while (token != ")" || tokenizer.Quoted)
+                {
+                    token = tokenizer.NextToken();
+                    // if we see another ( and we are not quoted then we
+                    // are in a size element and we need to look for the closing paren
+                    if (token == "(" && !tokenizer.Quoted)
+                    {
+                        while (token != ")" || tokenizer.Quoted)
+                            token = tokenizer.NextToken();
+                        token = tokenizer.NextToken();
+                    }
+                }
+                return body.Substring(start, tokenizer.Index - start);
+            }
+        }
+
         /// <summary>
         /// Return schema information about parameters for procedures and functions
         /// Restrictions supported are:
@@ -237,6 +291,8 @@ namespace MySql.Data.MySqlClient
                     return GetViews(restrictions);
                 case "procedures":
                     return GetProcedures(restrictions);
+                case "procedures with parameters":
+                    return GetProceduresWithParameters(restrictions);
                 case "procedure parameters":
                     return GetProcedureParameters(restrictions, null);
                 case "triggers":
@@ -290,7 +346,6 @@ namespace MySql.Data.MySqlClient
                 routines = GetSchema("procedures", restrictions);
 
             MySqlCommand cmd = connection.CreateCommand();
-            MySqlDataReader reader = null;
 
             foreach (DataRow routine in routines.Rows)
             {
@@ -304,19 +359,16 @@ namespace MySql.Data.MySqlClient
                     if (restrictions != null && restrictions.Length == 5 &&
                         restrictions[4] != null)
                         nameToRestrict = restrictions[4];
-                    reader = cmd.ExecuteReader();
-                    reader.Read();
-                    ParseProcedureBody(parametersTable, reader.GetString(2),
-                        routine, nameToRestrict);
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        reader.Read();
+                        ParseProcedureBody(parametersTable, reader.GetString(2),
+                            routine, nameToRestrict);
+                    }
                 }
                 catch (SqlNullValueException snex)
                 {
                     throw new InvalidOperationException(Resources.UnableToRetrieveSProcData, snex);
-                }
-                finally
-                {
-                    if (reader != null)
-                        reader.Close();
                 }
             }
         }
