@@ -18,6 +18,8 @@ Version 5.2 - 2/11/2008
 Version 5.1.6 
  - Fixed problem where parameters lists were not showing when you tried to alter a routine 
    in server explorer.  (bug #34359)
+ - Fixed a problem in procedure cache where it was possible to get into a race condition
+   and cause a memory leak (bug #34338)
    
 Version 5.1.5 - 2/11/2008
   - Fixed problem with membership provider where FindUserByEmail would fail trying to add
