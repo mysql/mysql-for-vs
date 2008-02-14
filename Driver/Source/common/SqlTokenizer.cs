@@ -47,6 +47,11 @@ namespace MySql.Data.Common
 			get { return quoted; }
 		}
 
+        public int Index
+        {
+            get { return index; }
+        }
+
 		#endregion
 
 		public string NextToken()

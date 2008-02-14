@@ -1,3 +1,7 @@
+Version 5.1.6 
+ - Fixed problem where parameters lists were not showing when you tried to alter a routine 
+   in server explorer.  (bug #34359)
+   
 Version 5.1.5 - 
   - Fixed problem with membership provider where FindUserByEmail would fail trying to add
     a second parameter with the same name as the first (bug #33347)
