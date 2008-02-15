@@ -83,6 +83,7 @@ namespace MySql.Web.Security
             AddDefaultConnectionString(doc);
             AddMembershipProvider(doc);
             AddRoleProvider(doc);
+            AddProfileProvider(doc);
 
             // Save the document to a file and auto-indent the output.
             XmlTextWriter writer = new XmlTextWriter(configPath, null);
@@ -148,7 +149,6 @@ namespace MySql.Web.Security
             XmlNodeList nodes = doc.GetElementsByTagName("membership");
             XmlNode providerList = nodes[0].FirstChild;
 
-            bool alreadyThere = false;
             foreach (XmlNode node in providerList.ChildNodes)
             {
                 string typeValue = node.Attributes["type"].Value;
@@ -181,7 +181,6 @@ namespace MySql.Web.Security
             XmlNodeList nodes = doc.GetElementsByTagName("roleManager");
             XmlNode providerList = nodes[0].FirstChild;
 
-            bool alreadyThere = false;
             foreach (XmlNode node in providerList.ChildNodes)
             {
                 string typeValue = node.Attributes["type"].Value;
@@ -205,7 +204,7 @@ namespace MySql.Web.Security
 
             // add the type attribute by reflecting on the executing assembly
             Assembly a = Assembly.GetExecutingAssembly();
-            string type = String.Format("MySql.Web.Security.MySQLProfileProvider, {0}", a.FullName);
+            string type = String.Format("MySql.Web.Profile.MySQLProfileProvider, {0}", a.FullName);
             newNode.SetAttribute("type", type);
 
             newNode.SetAttribute("connectionStringName", "LocalMySqlServer");
@@ -214,19 +213,17 @@ namespace MySql.Web.Security
             XmlNodeList nodes = doc.GetElementsByTagName("profile");
             XmlNode providerList = nodes[0].FirstChild;
 
-            bool alreadyThere = false;
             foreach (XmlNode node in providerList.ChildNodes)
             {
                 string typeValue = node.Attributes["type"].Value;
-                if (typeValue == type)
+                if (typeValue.StartsWith("MySql.Web.Profile.MySQLProfileProvider"))
                 {
-                    alreadyThere = true;
+                    providerList.RemoveChild(node);
                     break;
                 }
             }
 
-            if (!alreadyThere)
-                providerList.AppendChild(newNode);
+            providerList.AppendChild(newNode);
         }
 
         private void RemoveProviderFromMachineConfig()
@@ -264,6 +261,7 @@ namespace MySql.Web.Security
             RemoveDefaultConnectionString(doc);
             RemoveMembershipProvider(doc);
             RemoveRoleProvider(doc);
+            RemoveProfileProvider(doc);
 
             // Save the document to a file and auto-indent the output.
             XmlTextWriter writer = new XmlTextWriter(configPath, null);
