@@ -55,6 +55,12 @@ namespace MySql.Data.MySqlClient
             return null;
         }
 
+        protected override bool ShouldIgnoreMissingParameter(string parameterName)
+        {
+            if (parameterName.StartsWith("@" + hash)) return true;
+            return base.ShouldIgnoreMissingParameter(parameterName);
+        }
+
         public override string ResolvedCommandText
         {
             get { return resolvedCommandText; }
@@ -179,7 +185,7 @@ namespace MySql.Data.MySqlClient
                     retParm = hash + "dummy";
                 else
                     outSelect = String.Format("@{0}", retParm);
-                sqlCmd = String.Format("set @{0}={1}({2})", retParm, commandText, sqlCmd);
+                sqlCmd = String.Format("SET @{0}={1}({2})", retParm, commandText, sqlCmd);
             }
 
             if (setStr.Length > 0)
@@ -194,32 +200,41 @@ namespace MySql.Data.MySqlClient
 
 			if (outSelect.Length == 0) return;
 
-            MySqlCommand cmd = new MySqlCommand("SELECT " + outSelect, Connection);
-            MySqlDataReader reader = cmd.ExecuteReader();
-
-            // since MySQL likes to return user variables as strings
-            // we reset the types of the readers internal value objects
-            // this will allow those value objects to parse the string based
-            // return values
-            for (int i = 0; i < reader.FieldCount; i++)
+            bool allowUserVar = Connection.Settings.AllowUserVariables;
+            Connection.Settings.AllowUserVariables = true;
+            try
             {
-                string fieldName = reader.GetName(i);
-                fieldName = fieldName.Remove(0, hash.Length + 1);
-                MySqlParameter parameter = Parameters.GetParameterFlexible(fieldName, true);
-                reader.values[i] = MySqlField.GetIMySqlValue(parameter.MySqlDbType);
-            }
-
-            if (reader.Read())
-            {
-                for (int i = 0; i < reader.FieldCount; i++)
+                MySqlCommand cmd = new MySqlCommand("SELECT " + outSelect, Connection);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
-                    string fieldName = reader.GetName(i);
-                    fieldName = fieldName.Remove(0, hash.Length + 1);
-                    MySqlParameter parameter = Parameters.GetParameterFlexible(fieldName, true);
-                    parameter.Value = reader.GetValue(i);
+                    // since MySQL likes to return user variables as strings
+                    // we reset the types of the readers internal value objects
+                    // this will allow those value objects to parse the string based
+                    // return values
+                    for (int i = 0; i < reader.FieldCount; i++)
+                    {
+                        string fieldName = reader.GetName(i);
+                        fieldName = fieldName.Remove(0, hash.Length + 1);
+                        MySqlParameter parameter = Parameters.GetParameterFlexible(fieldName, true);
+                        reader.values[i] = MySqlField.GetIMySqlValue(parameter.MySqlDbType);
+                    }
+
+                    if (reader.Read())
+                    {
+                        for (int i = 0; i < reader.FieldCount; i++)
+                        {
+                            string fieldName = reader.GetName(i);
+                            fieldName = fieldName.Remove(0, hash.Length + 1);
+                            MySqlParameter parameter = Parameters.GetParameterFlexible(fieldName, true);
+                            parameter.Value = reader.GetValue(i);
+                        }
+                    }
                 }
             }
-		    reader.Close();
+            finally
+            {
+                Connection.Settings.AllowUserVariables = allowUserVar;
+            }
 		}
 	}
 }

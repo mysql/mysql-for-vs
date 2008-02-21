@@ -23,6 +23,7 @@ using System.Collections;
 using System.IO;
 using System.Text;
 using MySql.Data.Common;
+using System.Data;
 
 namespace MySql.Data.MySqlClient
 {
@@ -204,6 +205,12 @@ namespace MySql.Data.MySqlClient
             return parameters[index];
         }
         */
+
+        protected virtual bool ShouldIgnoreMissingParameter(string parameterName)
+        {
+            return Connection.Settings.AllowUserVariables;
+        }
+
         /// <summary>
         /// Serializes the given parameter to the given memory stream
         /// </summary>
@@ -221,7 +228,7 @@ namespace MySql.Data.MySqlClient
             {
                 // if we are allowing user variables and the parameter name starts with @
                 // then we can't throw an exception
-                if (parmName.StartsWith("@") && Connection.Settings.AllowUserVariables)
+                if (parmName.StartsWith("@") && ShouldIgnoreMissingParameter(parmName))
                     return false;
                 throw new MySqlException(
                     String.Format(Resources.ParameterMustBeDefined, parmName));

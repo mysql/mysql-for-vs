@@ -1,5 +1,7 @@
 Version 5.2.1
 - Tons of fixes in providers.  The actually work now.  :)
+- Fixed new parameter handling code so that procedures and functions now work 
+  (bug #34699)
 
 Version 5.2 - 2/11/2008
 . Added ClearPool and ClearAllPools features
