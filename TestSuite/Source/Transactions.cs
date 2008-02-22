@@ -140,6 +140,31 @@ namespace MySql.Data.MySqlClient.Tests
             TransactionScopeMultipleInternal(true);
         }
 */
+        /// <summary>
+        /// Bug #34448 Connector .Net 5.2.0 with Transactionscope doesn´t use specified IsolationLevel 
+        /// </summary>
+        [Test]
+        public void TransactionScopeWithIsolationLevel()
+        {
+            TransactionOptions opts = new TransactionOptions();
+            opts.IsolationLevel = System.Transactions.IsolationLevel.ReadCommitted;
+
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, opts))
+            {
+                string connStr = GetConnectionString(true);
+                using (MySqlConnection myconn = new MySqlConnection(connStr))
+                {
+                    myconn.Open();
+                    MySqlCommand cmd = new MySqlCommand("SHOW VARIABLES LIKE 'tx_isolation'", myconn);
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        reader.Read();
+                        string level = reader.GetString(1);
+                        Assert.AreEqual("READ-COMMITTED", level);
+                    }
+                }
+            }
+        }
 
 #endif
 

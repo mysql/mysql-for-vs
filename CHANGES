@@ -28,6 +28,8 @@ Version 5.1.6
    in server explorer.  (bug #34359)
  - Fixed a problem in procedure cache where it was possible to get into a race condition
    and cause a memory leak (bug #34338)
+ - Fixed problem where attempting to use an isolation level other than the default with
+   a transaction scope would use the default instead (bug #34448)
    
 Version 5.1.5 - 2/11/2008
   - Fixed problem with membership provider where FindUserByEmail would fail trying to add
