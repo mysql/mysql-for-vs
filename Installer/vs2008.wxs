@@ -78,6 +78,7 @@
 
     <Feature Id='VS2008Int' Level='1' Title='Visual Studio 2008'>
       <Condition Level='0'>Not VS_2008_PATH</Condition>
+      <ComponentRef Id='VS_Common'/>
       <ComponentRef Id='VS_2008'/>
     </Feature>
 

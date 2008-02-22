@@ -4,12 +4,15 @@
 
     <DirectoryRef Id='INSTALLDIR'>
       <Directory Id='VSDir' Name='Visual Studio Integration'>
-        <Component Id="VS_2005" Guid="a5240e1b-c5c2-4820-8a1d-776c0017f44b">
+        <!-- common DDEX component to be installed if VS2005 or VS2008 is selected -->
+        <Component Id='VS_Common' Guid='75F9BFA2-4D6E-4cb3-97E6-B27C478CDE44'>
           <File Id='MySQL.VisualStudio' Name='MySQL.VisualStudio.dll' DiskId='1'
                 Source='..\VisualStudio\bin\release\MySQL.VisualStudio.dll' />
           <File Id='MySql.VisualStudio.dll.config' Name='MySql.VisualStudio.dll.config' DiskId='1'
                 Source='..\VisualStudio\bin\release\MySql.VisualStudio.dll.config' />
-
+        </Component>
+        
+        <Component Id="VS_2005" Guid="a5240e1b-c5c2-4820-8a1d-776c0017f44b">
           <!--Datasource registration section-->
           <RegistryKey Id='DataSource' Root='HKLM'
                        Key='Software\Microsoft\VisualStudio\8.0\DataSources\{98FBE4D8-5583-4233-B219-70FF8C7FBBBD}'
@@ -86,6 +89,7 @@
 
     <Feature Id='VS2005Int' Level='1' Title='Visual Studio 2005'>
       <Condition Level='0'>Not VS_2005_PATH</Condition>
+      <ComponentRef Id='VS_Common'/>
       <ComponentRef Id='VS_2005'/>
     </Feature>
 
