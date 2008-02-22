@@ -69,20 +69,20 @@
               <!--
                 List of database tables
               -->
-              <Selection type="Table" restrictions="null,{Root.Schema}" >
+              <Selection type="Table" restrictions="null,{Root.Schema}" hideWhen="False AND False">
                 <!--
                   Single table instance
                 -->
                 <SelectionNode nid="Table">
                   <Icon name="Table" />
                   <Children>
-                    <Selection type="Column" restrictions="null,{Table.Schema},{Table.Name}">
+                    <Selection type="Column" restrictions="null,{Table.Schema},{Table.Name}" hideWhen="False AND False">
                       <SelectionNode>
                         <Icon name="Column" />
                       </SelectionNode>
                     </Selection>
                     <Selection type="Trigger" restrictions="null,{Table.Schema},{Table.Name}"
-                               minSourceVersion="5.0.0">
+                               minSourceVersion="5.0.0" hideWhen="False AND False">
                       <SelectionNode>
                         <Icon name="Trigger" />
                       </SelectionNode>
@@ -104,14 +104,15 @@
               <!--
                 List of database views
               -->
-              <Selection type="View" restrictions="{Root.Database},{Root.Schema},null">
+              <Selection type="View" restrictions="{Root.Database},{Root.Schema},null" hideWhen="False AND False">
                 <!--
                   Single view instance
                 -->
                 <SelectionNode nid="View">
                   <Icon name="View" />
                   <Children>
-                    <Selection type="ViewColumn" restrictions="{View.Database},{View.Schema},{View.Name}" minSourceVersion="5.0.0">
+                    <Selection type="ViewColumn" restrictions="{View.Database},{View.Schema},{View.Name}" 
+                               minSourceVersion="5.0.0" hideWhen="False AND False">
                       <SelectionNode>
                         <Icon name="Column" />
                       </SelectionNode>
@@ -129,11 +130,15 @@
               <CommandBinding name="CreateStoredProcedure" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="288" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
             </CommandBindings>
             <Children>
-              <Selection type="StoredProcedure" restrictions="{Root.Database},{Root.Schema},null,PROCEDURE" minSourceVersion="5.0.0">
+              <Selection type="StoredProcedure" 
+                         restrictions="{Root.Database},{Root.Schema},null,PROCEDURE" 
+                         hideWhen="False AND False">
                 <SelectionNode nid="StoredProcedure">
                   <Icon name="StoredProcedure" />
                   <Children>
-                    <Selection type="StoredProcedureParameter" restrictions="{StoredProcedure.Database},{StoredProcedure.Schema},{StoredProcedure.Name},PROCEDURE" minSourceVersion="5.0.0">
+                    <Selection type="StoredProcedureParameter" 
+                               restrictions="{StoredProcedure.Database},{StoredProcedure.Schema},{StoredProcedure.Name},PROCEDURE" 
+                               hideWhen="False AND False">
                       <SelectionNode>
                         <Icon when="{IsResult} = 'YES'" name="ReturnValue" />
                         <Icon when="{Mode} = 'IN'" name="InputParameter" />
@@ -154,11 +159,15 @@
               <CommandBinding name="CreateFunction" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="304" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
             </CommandBindings>
             <Children>
-              <Selection type="StoredProcedure" restrictions="{Root.Database},{Root.Schema},null,FUNCTION" minSourceVersion="5.0.0">
+              <Selection type="StoredProcedure" 
+                         restrictions="{Root.Database},{Root.Schema},null,FUNCTION"
+                         hideWhen="False AND False">
                 <SelectionNode nid="StoredProcedure">
                   <Icon name="ScalarValuedFunction" />
                   <Children>
-                    <Selection type="StoredProcedureParameter" restrictions="{StoredProcedure.Database},{StoredProcedure.Schema},{StoredProcedure.Name},FUNCTION" minSourceVersion="5.0.0">
+                    <Selection type="StoredProcedureParameter" 
+                               restrictions="{StoredProcedure.Database},{StoredProcedure.Schema},{StoredProcedure.Name},FUNCTION"
+                               hideWhen="False AND False">
                       <SelectionNode hideWhen="true">
                         <Icon when="{IsResult} = 'YES'" name="ReturnValue" />
                         <Icon when="{Mode} = 'IN'" name="InputParameter" />
@@ -179,7 +188,7 @@
               <CommandBinding name="CreateUDF" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="336" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
             </CommandBindings>
             <Children>
-              <Selection type="UDF" restrictions="{Root.Database}">
+              <Selection type="UDF" restrictions="{Root.Database}" hideWhen="False AND False">
                 <SelectionNode nid="UDF">
                   <Icon name="UserDefinedType" />
                 </SelectionNode>
