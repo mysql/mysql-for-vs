@@ -94,6 +94,8 @@ namespace MySql.Web.Security
             else
                 connectionString = "";
 
+            if (String.IsNullOrEmpty(connectionString)) return;
+
             // make sure our schema is up to date
             SchemaManager.CheckSchema(connectionString, config);
 

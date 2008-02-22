@@ -88,6 +88,8 @@ namespace MySql.Web.Profile
                 else
                     connectionString = "";
 
+                if (String.IsNullOrEmpty(connectionString)) return;
+
                 // make sure our schema is up to date
                 SchemaManager.CheckSchema(connectionString, config);
 

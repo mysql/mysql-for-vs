@@ -4,6 +4,8 @@ Version 5.2.1
   (bug #34699)
 - Fixed problem with Visual Studio 2008 integration that caused popup menus on
   server explorer nodes to not function
+- Fixed web providers so that they don't attempt to check their schema or cache
+  their application id if the connection string has not been set. (bug #34451)
 
 Version 5.2 - 2/11/2008
 . Added ClearPool and ClearAllPools features
