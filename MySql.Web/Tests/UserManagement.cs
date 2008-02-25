@@ -223,20 +223,13 @@ namespace MySql.Web.Tests
         {
             try
             {
-				// we have to initialize the provider so the db will exist
-/*				provider = new MySQLMembershipProvider();
-				NameValueCollection config = new NameValueCollection();
-				config.Add("connectionStringName", "LocalMySqlServer");
-				config.Add("applicationName", "/");
-				provider.Initialize(null, config);
-*/				
-				Membership.CreateUser("foo", "bar");
+				Membership.CreateUser("foo", "barbar!");
                 int records;
                 MembershipUserCollection users = Membership.FindUsersByName("F%", 0, 10, out records);
                 Assert.AreEqual(1, records);
                 Assert.AreEqual("foo", users["foo"].UserName);
 
-                Membership.CreateUser("test", "bar", "myemail@host.com");
+                Membership.CreateUser("test", "barbar!", "myemail@host.com");
                 users = Membership.FindUsersByName("T%", 0, 10, out records);
                 Assert.AreEqual(1, records);
                 Assert.AreEqual("test", users["test"].UserName);
@@ -253,8 +246,8 @@ namespace MySql.Web.Tests
             int numOnline = Membership.GetNumberOfUsersOnline();
             Assert.AreEqual(0, numOnline);
 
-            Membership.CreateUser("foo", "bar");
-            Membership.CreateUser("foo2", "bar");
+            Membership.CreateUser("foo", "barbar!");
+            Membership.CreateUser("foo2", "barbar!");
 
             numOnline = Membership.GetNumberOfUsersOnline();
             Assert.AreEqual(2, numOnline);
@@ -263,7 +256,7 @@ namespace MySql.Web.Tests
         [Test]
         public void UnlockUser()
         {
-            Membership.CreateUser("foo", "bar");
+            Membership.CreateUser("foo", "barbar!");
             Assert.IsFalse(Membership.ValidateUser("foo", "bar2"));
             Assert.IsFalse(Membership.ValidateUser("foo", "bar3"));
             Assert.IsFalse(Membership.ValidateUser("foo", "bar3"));
@@ -271,7 +264,7 @@ namespace MySql.Web.Tests
             Assert.IsFalse(Membership.ValidateUser("foo", "bar3"));
 
             // the user should be locked now so the right password should fail
-            Assert.IsFalse(Membership.ValidateUser("foo", "bar"));
+            Assert.IsFalse(Membership.ValidateUser("foo", "barbar!"));
 
             MembershipUser user = Membership.GetUser("foo");
             Assert.IsTrue(user.IsLockedOut);
@@ -280,13 +273,13 @@ namespace MySql.Web.Tests
             user = Membership.GetUser("foo");
             Assert.IsFalse(user.IsLockedOut);
 
-            Assert.IsTrue(Membership.ValidateUser("foo", "bar"));
+            Assert.IsTrue(Membership.ValidateUser("foo", "barbar!"));
         }
 
         [Test]
         public void GetUsernameByEmail()
         {
-            Membership.CreateUser("foo", "bar", "foo@bar.com");
+            Membership.CreateUser("foo", "barbar!", "foo@bar.com");
             string username = Membership.GetUserNameByEmail("foo@bar.com");
             Assert.AreEqual("foo", username);
 
@@ -301,7 +294,7 @@ namespace MySql.Web.Tests
         public void UpdateUser()
         {
             MembershipCreateStatus status;
-            Membership.CreateUser("foo", "bar", "foo@bar.com", "color", "blue", true, out status);
+            Membership.CreateUser("foo", "barbar!", "foo@bar.com", "color", "blue", true, out status);
             Assert.AreEqual(MembershipCreateStatus.Success, status);
 
             MembershipUser user = Membership.GetUser("foo");
@@ -342,16 +335,16 @@ namespace MySql.Web.Tests
         public void ChangePasswordQuestionAndAnswer()
         {
             MembershipCreateStatus status;
-            Membership.CreateUser("foo", "bar", "foo@bar.com", "color", "blue", true, out status);
+            Membership.CreateUser("foo", "barbar!", "foo@bar.com", "color", "blue", true, out status);
             Assert.AreEqual(MembershipCreateStatus.Success, status);
 
             MembershipUser user = Membership.GetUser("foo");
             ChangePasswordQAHelper(user, "", "newQ", "newA");
-            ChangePasswordQAHelper(user, "bar", "", "newA");
-            ChangePasswordQAHelper(user, "bar", "newQ", "");
+            ChangePasswordQAHelper(user, "barbar!", "", "newA");
+            ChangePasswordQAHelper(user, "barbar!", "newQ", "");
             ChangePasswordQAHelper(user, null, "newQ", "newA");
 
-            bool result = user.ChangePasswordQuestionAndAnswer("bar", "newQ", "newA");
+            bool result = user.ChangePasswordQuestionAndAnswer("barbar!", "newQ", "newA");
             Assert.IsTrue(result);
 
             user = Membership.GetUser("foo");
@@ -363,7 +356,7 @@ namespace MySql.Web.Tests
         {
             // first create a bunch of users
             for (int i=0; i < 100; i++)
-                Membership.CreateUser(String.Format("foo{0}", i), "bar");
+                Membership.CreateUser(String.Format("foo{0}", i), "barbar!");
 
             MembershipUserCollection users = Membership.GetAllUsers();
             Assert.AreEqual(100, users.Count);
@@ -392,14 +385,14 @@ namespace MySql.Web.Tests
             config.Add("applicationName", "/");
             provider.Initialize(null, config);
 
-            provider.CreateUser("foo", "bar", "foo@bar.com", "color", "blue", true, null, out status);
+            provider.CreateUser("foo", "barbar!", "foo@bar.com", "color", "blue", true, null, out status);
 
             try
             {
                 string password = provider.GetPassword("foo", answer);
                 if (!enablePasswordRetrieval)
                     Assert.Fail("This should have thrown an exception");
-                Assert.AreEqual("bar", password);
+                Assert.AreEqual("barbar!", password);
             }
             catch (ProviderException)
             {
@@ -420,7 +413,7 @@ namespace MySql.Web.Tests
         [Test]
         public void GetUser()
         {
-            Membership.CreateUser("foo", "bar");
+            Membership.CreateUser("foo", "barbar!");
             MembershipUser user = Membership.GetUser(1);
             Assert.AreEqual("foo", user.UserName);
 
@@ -451,11 +444,11 @@ namespace MySql.Web.Tests
         public void FindUsers()
         {
             for (int i=0; i < 100; i++)
-                Membership.CreateUser(String.Format("boo{0}", i), "bar");
+                Membership.CreateUser(String.Format("boo{0}", i), "barbar!");
             for (int i=0; i < 100; i++)
-                Membership.CreateUser(String.Format("foo{0}", i), "bar");
+                Membership.CreateUser(String.Format("foo{0}", i), "barbar!");
             for (int i=0; i < 100; i++)
-                Membership.CreateUser(String.Format("schmoo{0}", i), "bar");
+                Membership.CreateUser(String.Format("schmoo{0}", i), "barbar!");
 
 
             MembershipUserCollection users = Membership.FindUsersByName("fo%");

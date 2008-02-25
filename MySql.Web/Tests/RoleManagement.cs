@@ -92,12 +92,11 @@ namespace MySql.Web.Tests
             config.Add("applicationName", "/");
             roleProvider.Initialize(null, config);
 
-            AddUser("eve", "eve");
+            AddUser("eve", "eveeve!");
             roleProvider.CreateRole("Administrator");
             roleProvider.AddUsersToRoles(new string[] { "eve" },
                 new string[] { "Administrator" });
             Assert.IsTrue(roleProvider.IsUserInRole("eve", "Administrator"));
-            membershipProvider.DeleteUser("foo", false);
         }
     }
 }

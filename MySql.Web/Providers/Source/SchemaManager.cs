@@ -160,17 +160,22 @@ namespace MySql.Web.Common
             // no need to create another one
             if (applicationId > 0) return;
 
-            MySqlCommand cmd = new MySqlCommand(
-                @"INSERT INTO my_aspnet_Applications VALUES (NULL, @appName, @appDesc)",
-                connection);
+            MySqlCommand cmd = new MySqlCommand(@"SELECT id FROM my_aspnet_Applications
+                WHERE name = @appName", connection);
             cmd.Parameters.AddWithValue("@appName", applicationName);
-             cmd.Parameters.AddWithValue("@appDesc", applicationDesc);
-            int recordsAffected = cmd.ExecuteNonQuery();
-            if (recordsAffected != 1)
-                throw new ProviderException(Resources.UnableToCreateApplication);
+            object appId = cmd.ExecuteScalar();
+            if (appId == null)
+            {
+                cmd.CommandText = @"INSERT INTO my_aspnet_Applications VALUES (NULL, @appName, @appDesc)";
+                cmd.Parameters.AddWithValue("@appDesc", applicationDesc);
+                int recordsAffected = cmd.ExecuteNonQuery();
+                if (recordsAffected != 1)
+                    throw new ProviderException(Resources.UnableToCreateApplication);
 
-            cmd.CommandText = "SELECT LAST_INSERT_ID()";
-            applicationId = Convert.ToInt32(cmd.ExecuteScalar());
+                cmd.CommandText = "SELECT LAST_INSERT_ID()";
+                appId = cmd.ExecuteScalar();
+            }
+            applicationId = Convert.ToInt32(appId);
         }
 
     }

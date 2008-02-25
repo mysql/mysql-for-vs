@@ -99,7 +99,7 @@ namespace MySql.Web.Security
             if (string.IsNullOrEmpty(config["description"]))
             {
                 config.Remove("description");
-                config.Add("description", "MySQL Membership provider");
+                config.Add("description", "MySQL default application");
             }
             base.Initialize(name, config);
 

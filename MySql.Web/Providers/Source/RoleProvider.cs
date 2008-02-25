@@ -575,7 +575,8 @@ namespace MySql.Web.Security
                 connection);
             cmd.Parameters.AddWithValue("@name", username);
             cmd.Parameters.AddWithValue("@appId", applicationId);
-            return (int)cmd.ExecuteScalar();
+            object id = cmd.ExecuteScalar();
+            return Convert.ToInt32(id);
         }
 
         private int GetRoleId(MySqlConnection connection, string rolename)
