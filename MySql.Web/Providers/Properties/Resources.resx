@@ -211,4 +211,16 @@
   <data name="UnableToCreateUser" xml:space="preserve">
     <value>Unable to create user.</value>
   </data>
+  <data name="ChangePasswordCanceled" xml:space="preserve">
+    <value>Change password operation was canceled.</value>
+  </data>
+  <data name="NotEnoughNonAlphaNumericInPwd" xml:space="preserve">
+    <value>Non alpha numeric characters in '{0}' needs to be greater than or equal to '{1}'.</value>
+  </data>
+  <data name="PasswordNotLongEnough" xml:space="preserve">
+    <value>The length of parameter '{0}' needs to be greater or equal to '{1}'.</value>
+  </data>
+  <data name="ValidatePasswordCanceled" xml:space="preserve">
+    <value>The validate password operation was canceled.</value>
+  </data>
 </root>

@@ -8,6 +8,8 @@ Version 5.2.1
   their application id if the connection string has not been set. (bug #34451)
 - Fixed installer that did not install the DDEX provider binary if 
   the Visual Studio 2005 component was not selected. (bug #34674)
+- Fixed password validation logic for creating users and changing passwords.
+  It actually works now.  (bug #34792)
 
 Version 5.2 - 2/11/2008
 . Added ClearPool and ClearAllPools features

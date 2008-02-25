@@ -38,6 +38,7 @@ using MySql.Web.Properties;
 using MySql.Web.Profile;
 using MySql.Web.Common;
 using System.Transactions;
+using System.Text.RegularExpressions;
 
 namespace MySql.Web.Security
 {
@@ -379,25 +380,29 @@ namespace MySql.Web.Security
         /// Changes the password.
         /// </summary>
         /// <param name="username">The username.</param>
-        /// <param name="oldPwd">The old password.</param>
-        /// <param name="newPwd">The new password.</param>
+        /// <param name="oldPassword">The old password.</param>
+        /// <param name="newPassword">The new password.</param>
         /// <returns>true if the password was updated successfully, false if the supplied old password
         /// is invalid, the user is locked out, or the user does not exist in the database.</returns>
-        public override bool ChangePassword(string username, string oldPwd, string newPwd)
+        public override bool ChangePassword(string username, string oldPassword, string newPassword)
         {
             // this will return false if the username doesn't exist
-            if (!(ValidateUser(username, oldPwd)))
+            if (!(ValidateUser(username, oldPassword)))
                 return false;
 
-            ValidatePasswordEventArgs args = new ValidatePasswordEventArgs(username, newPwd, true);
+            ValidatePasswordEventArgs args = new ValidatePasswordEventArgs(username, newPassword, true);
             OnValidatingPassword(args);
             if (args.Cancel)
             {
                 if (!(args.FailureInformation == null))
                     throw args.FailureInformation;
                 else
-                    throw new ProviderException(Resources.NewPasswordValidationFailed);
+                    throw new ProviderException(Resources.ChangePasswordCanceled);
             }
+
+            // validate the password according to current guidelines
+            if (!ValidatePassword(newPassword, "newPassword", true))
+                return false;
 
             try
             {
@@ -416,8 +421,8 @@ namespace MySql.Web.Security
                         @"UPDATE my_aspnet_Membership
                         SET Password = @pass, LastPasswordChangedDate = @lastPasswordChangedDate 
                         WHERE userId=@userId", connection);
-                    cmd.Parameters.AddWithValue("@pass", 
-                        EncodePassword(newPwd, passwordKey, passwordFormat));
+                    cmd.Parameters.AddWithValue("@pass",
+                        EncodePassword(newPassword, passwordKey, passwordFormat));
                     cmd.Parameters.AddWithValue("@lastPasswordChangedDate", DateTime.Now);
                     cmd.Parameters.AddWithValue("@userId", userId);
                     return cmd.ExecuteNonQuery() > 0;
@@ -508,6 +513,13 @@ namespace MySql.Web.Security
             if (RequiresUniqueEmail && !String.IsNullOrEmpty(GetUserNameByEmail(email)))
             {
                 status = MembershipCreateStatus.DuplicateEmail;
+                return null;
+            }
+
+            // now try to validate the password
+            if (!ValidatePassword(password, "password", false))
+            {
+                status = MembershipCreateStatus.InvalidPassword;
                 return null;
             }
 
@@ -1415,6 +1427,40 @@ namespace MySql.Web.Security
             }
         }
 
+        private bool ValidatePassword(string password, string argumentName, bool throwExceptions)
+        {
+            string exceptionString = null;
+            object correctValue = MinRequiredPasswordLength;
+
+            if (password.Length < MinRequiredPasswordLength)
+                exceptionString = Resources.PasswordNotLongEnough;
+            else
+            {
+                int count = 0;
+                foreach (char c in password)
+                    if (!char.IsLetterOrDigit(c))
+                        count++;
+                if (count < MinRequiredNonAlphanumericCharacters)
+                    exceptionString = Resources.NotEnoughNonAlphaNumericInPwd;
+                correctValue = MinRequiredNonAlphanumericCharacters;
+            }
+
+            if (exceptionString != null)
+            {
+                if (throwExceptions)
+                    throw new ArgumentException(
+                        string.Format(exceptionString, argumentName, correctValue),
+                        argumentName);
+                else
+                    return false;
+            }
+                
+            if (PasswordStrengthRegularExpression.Length > 0)
+                if (!Regex.IsMatch(password, PasswordStrengthRegularExpression))
+                    return false;
+
+            return true;
+        }
 
         #endregion
     }

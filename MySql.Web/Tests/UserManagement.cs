@@ -50,12 +50,13 @@ namespace MySql.Web.Tests
             NameValueCollection config = new NameValueCollection();
             config.Add("connectionStringName", "LocalMySqlServer");
             config.Add("applicationName", "/");
+            config.Add("passwordStrengthRegularExpression", "bar.*");
             config.Add("passwordFormat", format.ToString());
             provider.Initialize(null, config);
 
             // create the user
             MembershipCreateStatus status;
-            provider.CreateUser("foo", "bar", "foo@bar.com", null, null, true, null, out status);
+            provider.CreateUser("foo", "barbar!", "foo@bar.com", null, null, true, null, out status);
             Assert.AreEqual(MembershipCreateStatus.Success, status);
 
             // verify that the password format is hashed.
@@ -65,7 +66,7 @@ namespace MySql.Web.Tests
             Assert.AreEqual(format, rowFormat);
 
             //  then attempt to verify the user
-            Assert.IsTrue(provider.ValidateUser("foo", "bar"));
+            Assert.IsTrue(provider.ValidateUser("foo", "barbar!"));
         }
 
         [Test]
@@ -92,12 +93,84 @@ namespace MySql.Web.Tests
             CreateUserWithFormat(MembershipPasswordFormat.Clear);
         }
 
+        /// <summary>
+        /// Bug #34792 New User/Changing Password Validation Not working. 
+        /// </summary>
         [Test]
         public void ChangePassword()
         {
             CreateUserWithHashedPassword();
-            provider.ChangePassword("foo", "bar", "bar2");
-            provider.ValidateUser("foo", "bar2");
+            try
+            {
+                provider.ChangePassword("foo", "barbar!", "bar2");
+                Assert.Fail();
+            }
+            catch (ArgumentException ae1)
+            {
+                Assert.AreEqual("newPassword", ae1.ParamName);
+                Assert.IsTrue(ae1.Message.Contains("length of parameter"));
+            }
+
+            try
+            {
+                provider.ChangePassword("foo", "barbar!", "barbar2");
+                Assert.Fail();
+            }
+            catch (ArgumentException ae1)
+            {
+                Assert.AreEqual("newPassword", ae1.ParamName);
+                Assert.IsTrue(ae1.Message.Contains("alpha numeric"));
+            }
+
+            // now test regex strength testing
+            bool result = provider.ChangePassword("foo", "barbar!", "zzzxxx!");
+            Assert.IsFalse(result);
+
+            // now do one that should work
+            result = provider.ChangePassword("foo", "barbar!", "barfoo!");
+            Assert.IsTrue(result);
+
+            provider.ValidateUser("foo", "barfoo!");
+        }
+
+        /// <summary>
+        /// Bug #34792 New User/Changing Password Validation Not working. 
+        /// </summary>
+        [Test]
+        public void CreateUserWithErrors()
+        {
+            provider = new MySQLMembershipProvider();
+            NameValueCollection config = new NameValueCollection();
+            config.Add("connectionStringName", "LocalMySqlServer");
+            config.Add("applicationName", "/");
+            config.Add("passwordStrengthRegularExpression", "bar.*");
+            config.Add("passwordFormat", "Hashed");
+            provider.Initialize(null, config);
+
+            // first try to create a user with a password not long enough
+            MembershipCreateStatus status;
+            MembershipUser user = provider.CreateUser("foo", "xyz", 
+                "foo@bar.com", null, null, true, null, out status);
+            Assert.IsNull(user);
+            Assert.AreEqual(MembershipCreateStatus.InvalidPassword, status);
+
+            // now with not enough non-alphas
+            user = provider.CreateUser("foo", "xyz1234",
+                "foo@bar.com", null, null, true, null, out status);
+            Assert.IsNull(user);
+            Assert.AreEqual(MembershipCreateStatus.InvalidPassword, status);
+
+            // now one that doesn't pass the regex test
+            user = provider.CreateUser("foo", "xyzxyz!",
+                "foo@bar.com", null, null, true, null, out status);
+            Assert.IsNull(user);
+            Assert.AreEqual(MembershipCreateStatus.InvalidPassword, status);
+
+            // now one that works
+            user = provider.CreateUser("foo", "barbar!",
+                "foo@bar.com", null, null, true, null, out status);
+            Assert.IsNotNull(user);
+            Assert.AreEqual(MembershipCreateStatus.Success, status);
         }
 
         [Test]
