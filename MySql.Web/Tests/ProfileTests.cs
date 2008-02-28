@@ -71,6 +71,16 @@ namespace MySql.Web.Tests
             Assert.AreEqual(1, dt.Rows.Count);
             dt = FillTable("SELECT * FROM my_aspnet_Profiles");
             Assert.AreEqual(1, dt.Rows.Count);
+
+            values["color"].PropertyValue = "green";
+            provider.SetPropertyValues(ctx, values);
+
+            dt = FillTable("SELECT * FROM my_aspnet_Applications");
+            Assert.AreEqual(1, dt.Rows.Count);
+            dt = FillTable("SELECT * FROM my_aspnet_Users");
+            Assert.AreEqual(1, dt.Rows.Count);
+            dt = FillTable("SELECT * FROM my_aspnet_Profiles");
+            Assert.AreEqual(1, dt.Rows.Count);
         }
 
         [Test]
