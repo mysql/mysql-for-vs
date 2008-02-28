@@ -463,5 +463,37 @@ namespace MySql.Web.Tests
                 Assert.AreEqual(String.Format("foo2{0}", index++), user.UserName);
 
         }
+
+        [Test]
+        public void CreateUserWithNoQA()
+        {
+            MembershipCreateStatus status;
+            provider = new MySQLMembershipProvider();
+            NameValueCollection config = new NameValueCollection();
+            config.Add("connectionStringName", "LocalMySqlServer");
+            config.Add("requiresQuestionAndAnswer", "true");
+            config.Add("passwordFormat", "clear");
+            config.Add("applicationName", "/");
+            provider.Initialize(null, config);
+
+            try
+            {
+                provider.CreateUser("foo", "barbar!", "foo@bar.com", "color", null, true, null, out status);
+                Assert.Fail();
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex.Message.StartsWith("Password answer supplied is invalid"));
+            }
+            try
+            {
+                provider.CreateUser("foo", "barbar!", "foo@bar.com", "", "blue", true, null, out status);
+                Assert.Fail();
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex.Message.StartsWith("Password question supplied is invalid"));
+            }
+        }
     }
 }

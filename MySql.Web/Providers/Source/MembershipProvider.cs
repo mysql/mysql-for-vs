@@ -516,6 +516,8 @@ namespace MySql.Web.Security
                 return null;
             }
 
+            ValidateQA(passwordQuestion, passwordAnswer);
+
             // now try to validate the password
             if (!ValidatePassword(password, "password", false))
             {
@@ -1425,6 +1427,14 @@ namespace MySql.Web.Security
                     WriteToEventLog(e, "GetUsers");
                 throw new ProviderException(exceptionMessage);
             }
+        }
+
+        private void ValidateQA(string question, string answer)
+        {
+            if (RequiresQuestionAndAnswer && String.IsNullOrEmpty(question))
+                throw new ArgumentException(Resources.PasswordQuestionInvalid);
+            if (RequiresQuestionAndAnswer && String.IsNullOrEmpty(answer))
+                throw new ArgumentException(Resources.PasswordAnswerInvalid);
         }
 
         private bool ValidatePassword(string password, string argumentName, bool throwExceptions)

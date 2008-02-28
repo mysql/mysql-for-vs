@@ -223,4 +223,10 @@
   <data name="ValidatePasswordCanceled" xml:space="preserve">
     <value>The validate password operation was canceled.</value>
   </data>
+  <data name="PasswordAnswerInvalid" xml:space="preserve">
+    <value>Password answer supplied is invalid.</value>
+  </data>
+  <data name="PasswordQuestionInvalid" xml:space="preserve">
+    <value>Password question supplied is invalid.</value>
+  </data>
 </root>
