@@ -208,7 +208,9 @@ namespace MySql.Data.MySqlClient
 
         protected virtual bool ShouldIgnoreMissingParameter(string parameterName)
         {
-            return Connection.Settings.AllowUserVariables;
+            return Connection.Settings.AllowUserVariables ||
+                (parameterName.Length > 1 &&
+                (parameterName[1] == '`' || parameterName[1] == '\''));
         }
 
         /// <summary>

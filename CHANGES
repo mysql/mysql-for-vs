@@ -1,6 +1,8 @@
 Version 5.2.2 - 
 - Fixed profile provider that would throw an exception if you were updating
   a profile that already existed.
+- Fixed problem where new parameter code prevented stored procedures from being
+  altered in Visual Studio (bug #34940)
   
 Version 5.2.1 - 2/27/2008
 - Tons of fixes in providers.  The actually work now.  :)
