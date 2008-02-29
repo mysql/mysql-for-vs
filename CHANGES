@@ -5,6 +5,8 @@ Version 5.2.2 -
   altered in Visual Studio (bug #34940)
 - Fixed problem where the TableAdapter wizard was no longer able to generate commands
   using stored procedures because of our change to using @ instead of ? (bug #34941)
+- Fixed problem in datagrid code related to creating a new table.  This problem may
+  have been introduced with .NET 2.0 SP1.   
     
 Version 5.2.1 - 2/27/2008
 - Tons of fixes in providers.  The actually work now.  :)

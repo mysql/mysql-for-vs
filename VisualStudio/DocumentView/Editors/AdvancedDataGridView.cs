@@ -368,7 +368,8 @@ namespace MySql.Data.VisualStudio.DocumentView
         /// </returns>
         private object GetNextValue()
         {
-            if (OrdinalColumn.ValueType != typeof(Int64))
+            if (OrdinalColumn.ValueType != typeof(Int64) &&
+                OrdinalColumn.ValueType != typeof(UInt64))
             {
                 Debug.Fail("Unsupported ordinal column type!");
                 return Rows.Count;
