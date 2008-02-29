@@ -57,7 +57,7 @@ namespace MySql.Data.VisualStudio
             AddProperty(SchemaSupported, true);
             AddProperty(SchemaSupportedInDml, true);
             AddProperty(SchemaSeparator, ".");
-            AddProperty(ParameterPrefix, "?");
+            AddProperty(ParameterPrefix, "@");
             AddProperty(ParameterPrefixInName, true);
             AddProperty(DefaultCatalog, null);
         } 

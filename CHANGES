@@ -3,7 +3,9 @@ Version 5.2.2 -
   a profile that already existed.
 - Fixed problem where new parameter code prevented stored procedures from being
   altered in Visual Studio (bug #34940)
-  
+- Fixed problem where the TableAdapter wizard was no longer able to generate commands
+  using stored procedures because of our change to using @ instead of ? (bug #34941)
+    
 Version 5.2.1 - 2/27/2008
 - Tons of fixes in providers.  The actually work now.  :)
 - Fixed new parameter handling code so that procedures and functions now work 
