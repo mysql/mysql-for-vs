@@ -295,7 +295,11 @@ namespace MySql.Data.MySqlClient
             dt.Columns.Add("COLUMN_NAME", typeof (string));
             dt.Columns.Add("ORDINAL_POSITION", typeof (int));
 
-            DataTable tables = GetTables(restrictions);
+            string[] tableRestrictions = new string[restrictions.Length];
+            restrictions.CopyTo(tableRestrictions, 0);
+            tableRestrictions[3] = "BASE TABLE";
+            DataTable tables = GetTables(tableRestrictions);
+
             foreach (DataRow table in tables.Rows)
             {
                 string sql = String.Format("SHOW INDEX FROM `{0}`.`{1}`",

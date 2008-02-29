@@ -5,7 +5,9 @@ Version 5.1.6
    and cause a memory leak (bug #34338)
  - Fixed problem where attempting to use an isolation level other than the default with
    a transaction scope would use the default instead (bug #34448)
-   
+ - Fixed problem that causes the TableAdapter wizard to only generate insert statements.
+   The problem was that our code to retrieve index columns was broken. (bug #31338)
+      
 Version 5.1.5 - 
   - Fixed problem with membership provider where FindUserByEmail would fail trying to add
     a second parameter with the same name as the first (bug #33347)
