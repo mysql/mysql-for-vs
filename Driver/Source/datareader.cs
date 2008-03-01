@@ -959,8 +959,8 @@ namespace MySql.Data.MySqlClient
 		/// <returns></returns>
 		public override IEnumerator GetEnumerator()
 		{
-			return new DbEnumerator(this);
-		}
+            return new DbEnumerator(this, (commandBehavior & CommandBehavior.CloseConnection) != 0);
+        }
 
 		#endregion
 	}
