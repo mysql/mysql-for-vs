@@ -169,15 +169,18 @@ namespace MySql.Data.Types
 
 		IMySqlValue IMySqlValue.ReadValue(MySqlStream stream, long length, bool nullVal)
 		{
-			if (nullVal)
-				return new MySqlBinary(type, true);
+            MySqlBinary b;
+            if (nullVal)
+                b = new MySqlBinary(type, true);
+            else
+            {
+                if (length == -1)
+                    length = (long)stream.ReadFieldLength();
 
-			if (length == -1)
-				length = (long)stream.ReadFieldLength();
-
-			byte[] newBuff = new byte[length];
-			stream.Read(newBuff, 0, (int)length);
-			MySqlBinary b = new MySqlBinary(type, newBuff);
+                byte[] newBuff = new byte[length];
+                stream.Read(newBuff, 0, (int)length);
+                b = new MySqlBinary(type, newBuff);
+            }
             b.IsGuid = this.IsGuid;
             return b;
 		}

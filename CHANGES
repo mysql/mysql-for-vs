@@ -7,6 +7,7 @@ Version 5.2.2 -
   using stored procedures because of our change to using @ instead of ? (bug #34941)
 - Fixed problem in datagrid code related to creating a new table.  This problem may
   have been introduced with .NET 2.0 SP1.   
+- Fixed guid type so that a null value is still returned as guid type (bug #35041)
     
 Version 5.2.1 - 2/27/2008
 - Tons of fixes in providers.  The actually work now.  :)
