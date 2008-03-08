@@ -26,6 +26,7 @@ using System.Globalization;
 using System.Diagnostics;
 using System.Data.SqlTypes;
 using MySql.Data.Types;
+using System.Collections;
 
 namespace MySql.Data.MySqlClient
 {
@@ -249,6 +250,36 @@ namespace MySql.Data.MySqlClient
             }
         }
 
+        private DataTable GetParametersFromIS(string[] restrictions)
+        {
+            StringBuilder sql = new StringBuilder(@"SELECT r.ROUTINE_TYPE, p.* FROM 
+                INFORMATION_SCHEMA.ROUTINES r, INFORMATION_SCHEMA.PARAMETERS p");
+            // if the user is not trying to restrict by routine type then we
+            // don't need the join.  However we understand that since 'PARAMETERS'
+            // isn't keyed to routines then we can't tell the difference between
+            // procedures and functions with the same name
+            if (restrictions == null || restrictions.Length < 4 ||
+                restrictions[3] == null)
+                sql = new StringBuilder("SELECT * FROM INFORMATION_SCHEMA.PARAMETERS");
+
+            string[] keys = new string[5];
+            keys[0] = "SPECIFIC_CATALOG";
+            keys[1] = "SPECIFIC_SCHEMA";
+            keys[2] = "SPECIFIC_NAME";
+            keys[3] = "ROUTINE_TYPE";
+            keys[4] = "PARAMETER_NAME";
+
+            // now get our where clause and append it if there is one
+            string where = GetWhereClause(null, keys, restrictions);
+            if (!String.IsNullOrEmpty(where))
+                sql.AppendFormat(" WHERE {0}", where);
+
+            DataTable dt = GetTable(sql.ToString());
+            dt.TableName = "Procedure Parameters";
+
+            return dt;
+        }
+
         /// <summary>
         /// Return schema information about parameters for procedures and functions
         /// Restrictions supported are:
@@ -257,26 +288,29 @@ namespace MySql.Data.MySqlClient
         public virtual DataTable GetProcedureParameters(string[] restrictions,
             DataTable routines)
         {
-            DataTable dt = new DataTable("Procedure Parameters");
-            dt.Columns.Add("ROUTINE_CATALOG", typeof(string));
-            dt.Columns.Add("ROUTINE_SCHEMA", typeof(string));
-            dt.Columns.Add("ROUTINE_NAME", typeof(string));
-            dt.Columns.Add("ROUTINE_TYPE", typeof(string));
-            dt.Columns.Add("PARAMETER_NAME", typeof(string));
-            dt.Columns.Add("ORDINAL_POSITION", typeof(Int32));
-            dt.Columns.Add("PARAMETER_MODE", typeof(string));
-            dt.Columns.Add("IS_RESULT", typeof(string));
-            dt.Columns.Add("DATA_TYPE", typeof(string));
-            dt.Columns.Add("FLAGS", typeof(string));
-            dt.Columns.Add("CHARACTER_SET", typeof(string));
-            dt.Columns.Add("CHARACTER_MAXIMUM_LENGTH", typeof(Int32));
-            dt.Columns.Add("CHARACTER_OCTET_LENGTH", typeof(Int32));
-            dt.Columns.Add("NUMERIC_PRECISION", typeof(byte));
-            dt.Columns.Add("NUMERIC_SCALE", typeof(Int32));
+            if (connection.driver.Version.isAtLeast(6, 0, 0))
+                return GetParametersFromIS(restrictions);
+            else
+            {
+                DataTable dt = new DataTable("Procedure Parameters");
+                dt.Columns.Add("SPECIFIC_CATALOG", typeof(string));
+                dt.Columns.Add("SPECIFIC_SCHEMA", typeof(string));
+                dt.Columns.Add("SPECIFIC_NAME", typeof(string));
+                dt.Columns.Add("ORDINAL_POSITION", typeof(Int32));
+                dt.Columns.Add("PARAMETER_MODE", typeof(string));
+                dt.Columns.Add("PARAMETER_NAME", typeof(string));
+                dt.Columns.Add("DATA_TYPE", typeof(string));
+                dt.Columns.Add("CHARACTER_MAXIMUM_LENGTH", typeof(Int32));
+                dt.Columns.Add("CHARACTER_OCTET_LENGTH", typeof(Int32));
+                dt.Columns.Add("NUMERIC_PRECISION", typeof(byte));
+                dt.Columns.Add("NUMERIC_SCALE", typeof(Int32));
+                dt.Columns.Add("CHARACTER_SET_NAME", typeof(string));
+                dt.Columns.Add("COLLATION_NAME", typeof(string));
+                dt.Columns.Add("DTD_IDENTIFIER", typeof(string));
+                GetParametersFromShowCreate(dt, restrictions, routines);
 
-            GetParametersFromShowCreate(dt, restrictions, routines);
-
-            return dt;
+                return dt;
+            }
         }
 
         protected override DataTable GetSchemaInternal(string collection, string[] restrictions)
@@ -303,22 +337,31 @@ namespace MySql.Data.MySqlClient
             return null;
         }
 
-        private DataTable Query(string table_name, string initial_where,
-            string[] keys, string[] values)
+        private string GetWhereClause(string initial_where, string[] keys, string[] values)
         {
             StringBuilder where = new StringBuilder(initial_where);
-            StringBuilder query = new StringBuilder("SELECT * FROM INFORMATION_SCHEMA.");
-            query.Append(table_name);
-
             if (values != null)
+            {
                 for (int i = 0; i < keys.Length; i++)
                 {
                     if (i >= values.Length) break;
                     if (values[i] == null || values[i] == String.Empty) continue;
                     if (where.Length > 0)
                         where.Append(" AND ");
-                    where.AppendFormat(CultureInfo.InvariantCulture, "{0}='{1}'", keys[i], values[i]);
+                    where.AppendFormat(CultureInfo.InvariantCulture, 
+                        "{0} LIKE '{1}'", keys[i], values[i]);
                 }
+            }
+            return where.ToString();
+        }
+
+        private DataTable Query(string table_name, string initial_where,
+            string[] keys, string[] values)
+        {
+            StringBuilder query = new StringBuilder("SELECT * FROM INFORMATION_SCHEMA.");
+            query.Append(table_name);
+
+            string where = GetWhereClause(initial_where, keys, values);
 
             if (where.Length > 0)
                 query.AppendFormat(CultureInfo.InvariantCulture, " WHERE {0}", where);
@@ -362,8 +405,9 @@ namespace MySql.Data.MySqlClient
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         reader.Read();
-                        ParseProcedureBody(parametersTable, reader.GetString(2),
-                            routine, nameToRestrict);
+                        string body = reader.GetString(2);
+                        reader.Close();
+                        ParseProcedureBody(parametersTable, body, routine, nameToRestrict);
                     }
                 }
                 catch (SqlNullValueException snex)
@@ -376,60 +420,68 @@ namespace MySql.Data.MySqlClient
         private void ParseProcedureBody(DataTable parametersTable, string body,
             DataRow row, string nameToRestrict)
         {
+            ArrayList modes = new ArrayList(new string[3] { "IN", "OUT", "INOUT" });
+
             string sqlMode = row["SQL_MODE"].ToString();
 
             int pos = 1;
             SqlTokenizer tokenizer = new SqlTokenizer(body);
             tokenizer.AnsiQuotes = sqlMode.IndexOf("ANSI_QUOTES") != -1;
             tokenizer.BackslashEscapes = sqlMode.IndexOf("NO_BACKSLASH_ESCAPES") == -1;
+
             string token = tokenizer.NextToken();
 
-            // look for the opening paren
+            // this block will scan for the opening paren while also determining
+            // if this routine is a function.  If so, then we need to add a
+            // parameter row for the return parameter since it is ordinal position
+            // 0 and should appear first.
             while (token != "(")
+            {
+                if (String.Compare(token, "FUNCTION", true) == 0 &&
+                    nameToRestrict == null)
+                {
+                    parametersTable.Rows.Add(parametersTable.NewRow());
+                    InitParameterRow(row, parametersTable.Rows[0]);
+                }
                 token = tokenizer.NextToken();
+            }
+            token = tokenizer.NextToken();  // now move to the next token past the (
 
             while (token != ")")
             {
-                token = tokenizer.NextToken();
-                if (token == ")") break; /* handle the case where there are no parms */
                 DataRow parmRow = parametersTable.NewRow();
                 InitParameterRow(row, parmRow);
                 parmRow["ORDINAL_POSITION"] = pos++;
-                string parameterName = token;
-                if (!tokenizer.Quoted)
+
+                // handle mode and name for the parameter
+                string mode = token.ToUpper(CultureInfo.InvariantCulture);
+                if (!tokenizer.Quoted && modes.Contains(mode))
                 {
-                    string mode = null;
-                    string lowerToken = token.ToLower(CultureInfo.InvariantCulture);
-                    if (lowerToken == "in")
-                        mode = "IN";
-                    else if (lowerToken == "inout")
-                        mode = "INOUT";
-                    else if (lowerToken == "out")
-                        mode = "OUT";
-                    if (mode != null)
-                    {
-                        parmRow["PARAMETER_MODE"] = mode;
-                        parameterName = tokenizer.NextToken();
-                    }
+                    parmRow["PARAMETER_MODE"] = mode;
+                    token = tokenizer.NextToken();
                 }
-                parmRow["PARAMETER_NAME"] = String.Format("@{0}", parameterName);
+                parmRow["PARAMETER_NAME"] = token;
+
+                // now parse data type
                 token = ParseDataType(parmRow, tokenizer);
+                if (token == ",")
+                    token = tokenizer.NextToken();
+
+                // now determine if we should include this row after all
+                // we need to parse it before this check so we are correctly
+                // positioned for the next parameter
                 if (nameToRestrict == null ||
-                  parmRow["PARAMETER_NAME"].ToString().ToLower() ==
-                nameToRestrict)
+                    String.Compare(parmRow["PARAMETER_NAME"].ToString(), nameToRestrict, true) == 0)
                     parametersTable.Rows.Add(parmRow);
             }
 
             // now parse out the return parameter if there is one.
             token = tokenizer.NextToken().ToLower(CultureInfo.InvariantCulture);
-            if (token == "returns")
+            if (String.Compare(token, "returns", true) == 0)
             {
-                DataRow parameterRow = parametersTable.NewRow();
-                InitParameterRow(row, parameterRow);
-                parameterRow["PARAMETER_NAME"] = "@RETURN_VALUE";
-                parameterRow["IS_RESULT"] = "YES";
+                DataRow parameterRow = parametersTable.Rows[0];
+                parameterRow["PARAMETER_NAME"] = "RETURN_VALUE";
                 ParseDataType(parameterRow, tokenizer);
-                parametersTable.Rows.Add(parameterRow);
             }
         }
 
@@ -438,80 +490,103 @@ namespace MySql.Data.MySqlClient
         /// </summary>
         private static void InitParameterRow(DataRow procedure, DataRow parameter)
         {
-            parameter["ROUTINE_CATALOG"] = null;
-            parameter["ROUTINE_SCHEMA"] = procedure["ROUTINE_SCHEMA"];
-            parameter["ROUTINE_NAME"] = procedure["ROUTINE_NAME"];
-            parameter["ROUTINE_TYPE"] = procedure["ROUTINE_TYPE"];
+            parameter["SPECIFIC_CATALOG"] = null;
+            parameter["SPECIFIC_SCHEMA"] = procedure["ROUTINE_SCHEMA"];
+            parameter["SPECIFIC_NAME"] = procedure["ROUTINE_NAME"];
             parameter["PARAMETER_MODE"] = "IN";
             parameter["ORDINAL_POSITION"] = 0;
-            parameter["IS_RESULT"] = "NO";
         }
 
         /// <summary>
         ///  Parses out the elements of a procedure parameter data type.
         /// </summary>
-        private static string ParseDataType(DataRow row, SqlTokenizer tokenizer)
+        private string ParseDataType(DataRow row, SqlTokenizer tokenizer)
         {
-            row["DATA_TYPE"] = tokenizer.NextToken().ToUpper(CultureInfo.InvariantCulture);
+            StringBuilder dtd = new StringBuilder(
+                tokenizer.NextToken().ToUpper(CultureInfo.InvariantCulture));
+            row["DATA_TYPE"] = dtd.ToString();
+            string type = row["DATA_TYPE"].ToString();
+
             string token = tokenizer.NextToken();
-            while (SetParameterAttribute(row, token, tokenizer.IsSize, tokenizer))
+            if (tokenizer.IsSize)
+            {
+                dtd.AppendFormat("({0})", token);
+                if (type != "ENUM" && type != "SET")
+                    ParseDataTypeSize(row, token);
                 token = tokenizer.NextToken();
+            }
+            else
+                dtd.Append(GetDataTypeDefaults(type, row));
+
+            while (token != ")" && token != "," && String.Compare(token, "begin", true) != 0)
+            {
+                if (String.Compare(token, "CHARACTER", true) == 0 ||
+                    String.Compare(token, "BINARY", true) == 0)
+                { }  // we don't need to do anything with this
+                else if (String.Compare(token, "SET", true) == 0 ||
+                         String.Compare(token, "CHARSET", true) == 0)
+                    row["CHARACTER_SET_NAME"] = tokenizer.NextToken();
+                else if (String.Compare(token, "ASCII", true) == 0)
+                    row["CHARACTER_SET_NAME"] = "latin1";
+                else if (String.Compare(token, "UNICODE", true) == 0)
+                    row["CHARACTER_SET_NAME"] = "ucs2";
+                else if (String.Compare(token, "COLLATE", true) == 0)
+                    row["COLLATION_NAME"] = tokenizer.NextToken();
+                else
+                    dtd.AppendFormat(" {0}", token);
+                token = tokenizer.NextToken();
+            }
+
+            if (dtd.Length > 0)
+                row["DTD_IDENTIFIER"] = dtd.ToString();
+
+            // now default the collation if one wasn't given
+            if (row["COLLATION_NAME"].ToString().Length == 0)
+                row["COLLATION_NAME"] = CharSetMap.GetDefaultCollation(
+                    row["CHARACTER_SET_NAME"].ToString(), connection);
+
+            // now set the octet length
+            if (row["CHARACTER_MAXIMUM_LENGTH"] != DBNull.Value)
+                row["CHARACTER_OCTET_LENGTH"] =
+                    CharSetMap.GetMaxLength(row["CHARACTER_SET_NAME"].ToString(), connection) *
+                    (int)row["CHARACTER_MAXIMUM_LENGTH"];
+
             return token;
         }
 
-        /// <summary>
-        /// Attempts to parse a given token as a type attribute.
-        /// </summary>
-        /// <returns>True if the token was recognized as a type attribute,
-        /// false otherwise.</returns>
-        private static bool SetParameterAttribute(DataRow row, string token, bool isSize,
-            SqlTokenizer tokenizer)
+        private static string GetDataTypeDefaults(string type, DataRow row)
         {
-            string lcDataType = row["DATA_TYPE"].ToString().ToLower(CultureInfo.InvariantCulture);
+            string format = "({0},{1})";
 
-            if (isSize)
+            if (MetaData.IsNumericType(type) &&
+                row["NUMERIC_PRECISION"].ToString().Length == 0)
             {
-                // if the data type if set or enum, then nothing to do.
-                if (lcDataType == "enum" || lcDataType == "set") return true;
+                row["NUMERIC_PRECISION"] = 10;
+                row["NUMERIC_SCALE"] = 0;
+                if (!MetaData.SupportScale(type))
+                    format = "({0})";
+                return String.Format(format, row["NUMERIC_PRECISION"],
+                    row["NUMERIC_SCALE"]);
+            }
+            return String.Empty;
+        }
 
-                string[] sizeParts = token.Split(new char[] { ',' });
-                if (MetaData.IsNumericType(lcDataType))
-                    row["NUMERIC_PRECISION"] = Int32.Parse(sizeParts[0]);
-                else
-                    row["CHARACTER_OCTET_LENGTH"] = Int32.Parse(sizeParts[0]);
-                if (sizeParts.Length == 2)
-                    row["NUMERIC_SCALE"] = Int32.Parse(sizeParts[1]);
-                return true;
+        private static void ParseDataTypeSize(DataRow row, string size)
+        {
+            size = size.Trim('(', ')');
+            string[] parts = size.Split(',');
+
+            if (!MetaData.IsNumericType(row["DATA_TYPE"].ToString()))
+            {
+                row["CHARACTER_MAXIMUM_LENGTH"] = Int32.Parse(parts[0]);
+                // will set octet length in a minute
             }
             else
             {
-                string lowerToken = token.ToLower(CultureInfo.InvariantCulture);
-                switch (lowerToken)
-                {
-                    case "unsigned":
-                    case "zerofill":
-                        row["FLAGS"] = String.Format("{0} {1}", row["FLAGS"], token);
-                        return true;
-                    case "character":
-                    case "charset":
-                        if (lowerToken == "character")
-                        {
-                            string set = tokenizer.NextToken().ToLower(CultureInfo.InvariantCulture);
-                            Debug.Assert(set == "set");
-                        }
-                        row["CHARACTER_SET"] = tokenizer.NextToken();
-                        return true;
-                    case "ascii":
-                        row["CHARACTER_SET"] = "latin1";
-                        return true;
-                    case "unicode":
-                        row["CHARACTER_SET"] = "ucs2";
-                        return true;
-                    case "binary":
-                        return true;
-                }
+                row["NUMERIC_PRECISION"] = Int32.Parse(parts[0]);
+                if (parts.Length == 2)
+                    row["NUMERIC_SCALE"] = Int32.Parse(parts[1]);
             }
-            return false;
         }
 
         #endregion

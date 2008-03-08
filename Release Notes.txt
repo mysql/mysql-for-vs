@@ -67,6 +67,17 @@ By setting this to true, the provider will silently upgrade the server to the ne
 Please note that there is no reversing of this procedure so please just do this on test
 setups and not on your production systems.
 
+Procedure Parameter schema view has changed
+===========================================
+With this release we are now supporting using the procedure parameters information
+schema view that is available when running against a 6.0 server or later.  The benefits
+of this is that you no longer need elevated privileges to pull this collection.
+
+Our provider will use the old code when running against a 5.x server so we modified 
+this code to return a collection that matches the 6.0 collection.  This means that we
+dropped columns such as IS_RESULT (just check for ordinal position = 0) and 
+ROUTINE_TYPE.
+
 Known Issues
 ==============
 We discovered during our final testing that the Create menu options are

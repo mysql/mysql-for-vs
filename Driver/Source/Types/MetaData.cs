@@ -49,6 +49,19 @@ namespace MySql.Data.Types
             return false;
         }
 
+        public static bool SupportScale(string typename)
+        {
+            string lowerType = typename.ToLower(CultureInfo.InvariantCulture);
+            switch (lowerType)
+            {
+                case "numeric":
+                case "decimal":
+                case "dec":
+                case "real": return true;
+            }
+            return false;
+        }
+
 		public static MySqlDbType NameToType(string typeName, bool unsigned,
 			 bool realAsFloat, MySqlConnection connection)
 		{
