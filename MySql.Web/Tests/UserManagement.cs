@@ -495,5 +495,23 @@ namespace MySql.Web.Tests
                 Assert.IsTrue(ex.Message.StartsWith("Password question supplied is invalid"));
             }
         }
+
+        [Test]
+        public void MinRequiredAlpha()
+        {
+            provider = new MySQLMembershipProvider();
+            NameValueCollection config = new NameValueCollection();
+            config.Add("connectionStringName", "LocalMySqlServer");
+            config.Add("applicationName", "/");
+            config.Add("minRequiredNonalphanumericCharacters", "3");
+            provider.Initialize(null, config);
+
+            MembershipCreateStatus status;
+            MembershipUser user = provider.CreateUser("foo", "pw!pass", "email", null, null, true, null, out status);
+            Assert.IsNull(user);
+
+            user = provider.CreateUser("foo", "pw!pa!!", "email", null, null, true, null, out status);
+            Assert.IsNotNull(user);
+        }
     }
 }

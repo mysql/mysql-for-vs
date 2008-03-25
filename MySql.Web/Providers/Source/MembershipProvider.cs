@@ -108,7 +108,7 @@ namespace MySql.Web.Security
             maxInvalidPasswordAttempts = Convert.ToInt32(GetConfigValue(config["maxInvalidPasswordAttempts"], "5"));
             passwordAttemptWindow = Convert.ToInt32(GetConfigValue(config["passwordAttemptWindow"], "10"));
             minRequiredNonAlphanumericCharacters =
-                Convert.ToInt32(GetConfigValue(config["minRequiredAlphaNumericCharacters"], "1"));
+                Convert.ToInt32(GetConfigValue(config["minRequiredNonalphanumericCharacters"], "1"));
             minRequiredPasswordLength = Convert.ToInt32(GetConfigValue(config["minRequiredPasswordLength"], "7"));
             passwordStrengthRegularExpression =
                 Convert.ToString(GetConfigValue(config["passwordStrengthRegularExpression"], ""));
