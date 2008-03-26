@@ -513,5 +513,28 @@ namespace MySql.Web.Tests
             user = provider.CreateUser("foo", "pw!pa!!", "email", null, null, true, null, out status);
             Assert.IsNotNull(user);
         }
+
+        /// <summary>
+        /// Bug #35332 GetPassword() don't working (when PasswordAnswer is NULL) 
+        /// </summary>
+        [Test]
+        public void GetPasswordWithNullValues()
+        {
+            MembershipCreateStatus status;
+            provider = new MySQLMembershipProvider();
+            NameValueCollection config = new NameValueCollection();
+            config.Add("connectionStringName", "LocalMySqlServer");
+            config.Add("requiresQuestionAndAnswer", "false");
+            config.Add("enablePasswordRetrieval", "true");
+            config.Add("passwordFormat", "clear");
+            config.Add("applicationName", "/");
+            provider.Initialize(null, config);
+
+            MembershipUser user = provider.CreateUser("foo", "barbar!", "foo@bar.com", null, null, true, null, out status);
+            Assert.IsNotNull(user);
+
+            string pw = provider.GetPassword("foo", null);
+            Assert.AreEqual("barbar!", pw);
+        }
     }
 }

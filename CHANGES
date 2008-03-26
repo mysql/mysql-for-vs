@@ -12,6 +12,8 @@ Version 5.2.2 -
   a 6.0 server    
 - Fixed bug with the membership provider where the min non alpha numeric option
   was not working correctly.    
+- Fixed bug where calling GetPassword on a membership user when the password answer
+  is null would cause an exception (bug #35332)
     
 Version 5.2.1 - 2/27/2008
 - Tons of fixes in providers.  The actually work now.  :)

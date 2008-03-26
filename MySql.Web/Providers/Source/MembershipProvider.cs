@@ -732,7 +732,7 @@ namespace MySql.Web.Security
                             throw new MembershipPasswordException(Resources.UserIsLockedOut);
 
                         string password = reader.GetString("Password");
-                        string passwordAnswer = reader.GetString("PasswordAnswer");
+                        string passwordAnswer = reader.GetValue(reader.GetOrdinal("PasswordAnswer")).ToString();
                         string passwordKey = reader.GetString("PasswordKey");
                         MembershipPasswordFormat format = (MembershipPasswordFormat)
                             reader.GetInt32(3);
@@ -771,15 +771,16 @@ namespace MySql.Web.Security
         {
             try
             {
+                int userId = -1;
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
                     connection.Open();
 
-                    int userId = GetUserId(connection, username);
+                    userId = GetUserId(connection, username);
                     if (-1 == userId) return null;
-
-                    return GetUser(userId, userIsOnline);
                 }
+
+                return GetUser(userId, userIsOnline);
             }
             catch (MySqlException e)
             {
@@ -799,45 +800,47 @@ namespace MySql.Web.Security
         /// </returns>
         public override MembershipUser GetUser(object providerUserKey, bool userIsOnline)
         {
+            MySqlTransaction txn = null;
+
             try
             {
-                using (TransactionScope scope = new TransactionScope())
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
-                    using (MySqlConnection connection = new MySqlConnection(connectionString))
+                    connection.Open();
+
+                    txn = connection.BeginTransaction();
+                    MySqlCommand cmd = new MySqlCommand("", connection);
+                    cmd.Parameters.AddWithValue("@userId", providerUserKey);
+
+                    if (userIsOnline)
                     {
-                        connection.Open();
+                        cmd.CommandText =
+                            @"UPDATE my_aspnet_Users SET lastActivityDate = @date WHERE id=@userId";
+                        cmd.Parameters.AddWithValue("@date", DateTime.Now);
+                        cmd.ExecuteNonQuery();
 
-                        MySqlCommand cmd = new MySqlCommand("", connection);
-                        cmd.Parameters.AddWithValue("@userId", providerUserKey);
-
-                        if (userIsOnline)
-                        {
-                            cmd.CommandText =
-                                @"UPDATE my_aspnet_Users SET lastActivityDate = @date WHERE id=@userId";
-                            cmd.Parameters.AddWithValue("@date", DateTime.Now);
-                            cmd.ExecuteNonQuery();
-
-                            cmd.CommandText = "UPDATE my_aspnet_Membership SET LastActivityDate=@date WHERE userId=@userId";
-                            cmd.ExecuteNonQuery();
-                        }
-
-                        cmd.CommandText = @"SELECT m.*,u.name 
-                        FROM my_aspnet_Membership m JOIN my_aspnet_Users u ON m.userId=u.id 
-                        WHERE u.id=@userId";
-
-                        MembershipUser user;
-                        using (MySqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            if (!reader.Read()) return null;
-                            user = GetUserFromReader(reader);
-                        }
-
-                        return user;
+                        cmd.CommandText = "UPDATE my_aspnet_Membership SET LastActivityDate=@date WHERE userId=@userId";
+                        cmd.ExecuteNonQuery();
                     }
+
+                    cmd.CommandText = @"SELECT m.*,u.name 
+                    FROM my_aspnet_Membership m JOIN my_aspnet_Users u ON m.userId=u.id 
+                    WHERE u.id=@userId";
+
+                    MembershipUser user;
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (!reader.Read()) return null;
+                        user = GetUserFromReader(reader);
+                    }
+                    txn.Commit();
+                    return user;
                 }
             }
             catch (MySqlException e)
             {
+                if (txn != null)
+                    txn.Rollback();
                 if (WriteExceptionsToEventLog)
                     WriteToEventLog(e, "GetUser(Object, Boolean)");
                 throw new ProviderException(exceptionMessage);
