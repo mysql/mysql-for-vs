@@ -536,5 +536,28 @@ namespace MySql.Web.Tests
             string pw = provider.GetPassword("foo", null);
             Assert.AreEqual("barbar!", pw);
         }
+
+        /// <summary>
+        /// Bug #35336 GetPassword() return wrong password (when format is encrypted) 
+        /// </summary>
+        [Test]
+        public void GetEncryptedPassword()
+        {
+            MembershipCreateStatus status;
+            provider = new MySQLMembershipProvider();
+            NameValueCollection config = new NameValueCollection();
+            config.Add("connectionStringName", "LocalMySqlServer");
+            config.Add("requiresQuestionAndAnswer", "false");
+            config.Add("enablePasswordRetrieval", "true");
+            config.Add("passwordFormat", "encrypted");
+            config.Add("applicationName", "/");
+            provider.Initialize(null, config);
+
+            MembershipUser user = provider.CreateUser("foo", "barbar!", "foo@bar.com", null, null, true, null, out status);
+            Assert.IsNotNull(user);
+
+            string pw = provider.GetPassword("foo", null);
+            Assert.AreEqual("barbar!", pw);
+        }
     }
 }

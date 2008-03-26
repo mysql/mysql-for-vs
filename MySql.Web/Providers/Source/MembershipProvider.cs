@@ -1213,8 +1213,8 @@ namespace MySql.Web.Security
             if (format == MembershipPasswordFormat.Clear)
                 return encodedPassword;
             else if (format == MembershipPasswordFormat.Encrypted)
-                return Encoding.Unicode.GetString(
-                    DecryptPassword(Convert.FromBase64String(password)));
+                return Encoding.Unicode.GetString(DecryptPassword(
+                    Convert.FromBase64String(password)));
             else if (format == MembershipPasswordFormat.Hashed)
                 throw new ProviderException(Resources.CannotUnencodeHashedPwd);
             else
@@ -1246,7 +1246,7 @@ namespace MySql.Web.Security
 
             if (format == MembershipPasswordFormat.Encrypted)
             {
-                byte[] encryptedBytes = EncryptPassword(keyedBytes);
+                byte[] encryptedBytes = EncryptPassword(passwordBytes);
                 return Convert.ToBase64String(encryptedBytes);
             }
             else if (format == MembershipPasswordFormat.Hashed)
