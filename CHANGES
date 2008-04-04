@@ -31,6 +31,7 @@ Version 5.2.1 - 2/27/2008
   It actually works now.  (bug #34792)
 
 Version 5.2 - 2/11/2008
+>>>>>>> .r1182
 . Added ClearPool and ClearAllPools features
 . DDEX provider now works under Visual Studio 2008	
 . Added support for DbDataAdapter UpdateBatchSize.  Batching is fully supported
@@ -44,6 +45,9 @@ Version 5.2 - 2/11/2008
 . Added Allow User Variables connection string option so that users can use user variables
   without getting missing parameter exceptions
   
+<<<<<<< .mine
+Version 5.1.5 - 2/11/2008
+=======
 Version 5.1.6 
  - Fixed problem where parameters lists were not showing when you tried to alter a routine 
    in server explorer.  (bug #34359)
@@ -51,8 +55,14 @@ Version 5.1.6
    and cause a memory leak (bug #34338)
  - Fixed problem where attempting to use an isolation level other than the default with
    a transaction scope would use the default instead (bug #34448)
-   
+ - Fixed problem that causes the TableAdapter wizard to only generate insert statements.
+   The problem was that our code to retrieve index columns was broken. (bug #31338)
+ - Fixed problem with connections staying open after being used with SqlDataSource.
+   The problem was that we were not returning an enumerator for our reader with the
+   closeReader option set to true when we were supposed to.  (Bug #34460)
+      
 Version 5.1.5 - 2/11/2008
+>>>>>>> .r1182
   - Fixed problem with membership provider where FindUserByEmail would fail trying to add
     a second parameter with the same name as the first (bug #33347)
   - Fixed long standing problem with compression over a network.  It's now fast again. (bug #27865)    
@@ -179,9 +189,12 @@ Version 5.0.9
     DbProviderFactory users can access the server error code (Bug #27436) 
   - fixed problem where changing the connection string of a connection to one that changes
     the parameter marker after the connection had been assigned to a command but before
-    the connection is opened can cause parameters to not be found (bug #13991) 
-                            
-Version 5.0.8  8/16/2007
+    the connection is opened can cause parameters to not be found (bug #13991)          
+  - added implementation of MySqlCommandBuilder methods QuoteIdentifier and UnquoteIdentifier
+    (bug #35492)        
+        
+Version 5.0.8   8/16/2007
+
   Bug #28706 Log messages are truncated  
   - Fixed a problem with compression over a network.  We were letting the inflate stream read
     directly from the network stream.  Under certain situations, two bytes were being left unread

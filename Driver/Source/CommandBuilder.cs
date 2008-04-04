@@ -175,6 +175,42 @@ namespace MySql.Data.MySqlClient
             base.RefreshSchema();
             finalSelect = null;
         }
+
+        public override string QuoteIdentifier(string unquotedIdentifier)
+        {
+            if (unquotedIdentifier == null) throw new
+                ArgumentNullException("unquotedIdentifier");
+
+            // don't quote again if it is already quoted
+            if (unquotedIdentifier.StartsWith(QuotePrefix) &&
+                unquotedIdentifier.EndsWith(QuoteSuffix))
+                return unquotedIdentifier;
+
+            unquotedIdentifier = unquotedIdentifier.Replace(QuotePrefix, QuotePrefix + QuotePrefix);
+
+            return String.Format("{0}{1}{2}", QuotePrefix, unquotedIdentifier, QuoteSuffix);
+        }
+
+        public override string UnquoteIdentifier(string quotedIdentifier)
+        {
+            if (quotedIdentifier == null) throw new
+                ArgumentNullException("quotedIdentifier");
+
+            // don't unquote again if it is already unquoted
+            if (!quotedIdentifier.StartsWith(QuotePrefix) ||
+                !quotedIdentifier.EndsWith(QuoteSuffix))
+                return quotedIdentifier;
+
+            if (quotedIdentifier.StartsWith(QuotePrefix))
+                quotedIdentifier = quotedIdentifier.Substring(1);
+            if (quotedIdentifier.EndsWith(QuoteSuffix))
+                quotedIdentifier = quotedIdentifier.Substring(0, quotedIdentifier.Length - 1);
+
+            quotedIdentifier = quotedIdentifier.Replace(QuotePrefix + QuotePrefix, QuotePrefix);
+
+            return quotedIdentifier;
+        }
+
         #endregion
 
 

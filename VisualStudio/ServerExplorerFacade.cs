@@ -190,17 +190,35 @@ namespace MySql.Data.VisualStudio
         }
 
         /// <summary>
-        /// Returns array with posible children object type names for the hierarchy item.
+        /// Returns array with possible children object type names for the hierarchy item.
         /// </summary>
         /// <param name="item">The hierarchy item identifier to process.</param>
         /// <returns>Returns array with posible children object type names for the hierarchy item.</returns>
+        /// 
+        /// This routine is a complete hack since GetChildSelectionTypes
+        /// appears to crash under VS2008.  we are rewriting the DDEX provider
+        /// for 5.3 so this code will disappear.
         public string[] GetChildTypes(int item)
         {
             if (item < 0)
                 throw new ArgumentException(Resources.Error_InvalidHierarchyItemID, "item");
             Debug.Assert(hierarchyAccessor != null, "Hierarchy accessor is not initialized!");
 
-            return hierarchyAccessor.GetChildSelectionTypes(item);
+            //string[] typeNames = new string[1];
+            int parent = (int)hierarchyAccessor.GetProperty(item, (int)__VSHPROPID.VSHPROPID_Parent);
+            if (parent == VSConstants.VSITEMID_ROOT || parent < 0)
+            {
+                string name = hierarchyAccessor.GetNodeName(item);
+                if (name == "Stored Procedures" || name == "Functions")
+                    return new string[] { "StoredProcedure" };
+                else if (name.EndsWith("s"))
+                    return new string[] { name.Substring(0, name.Length - 1) };
+            }
+
+            string nodeId = hierarchyAccessor.GetNodeId(item);
+            if (nodeId == "Table")
+                return new string[] { "Trigger" };
+            return null;
         }
 
         /// <summary>
