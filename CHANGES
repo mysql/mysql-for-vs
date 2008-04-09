@@ -186,9 +186,11 @@ Version 5.0.9
     the parameter marker after the connection had been assigned to a command but before
     the connection is opened can cause parameters to not be found (bug #13991) 
   - added implementation of MySqlCommandBuilder methods QuoteIdentifier and UnquoteIdentifier
-    (bug #35492) 
-                                
-Version 5.0.8  8/16/2007
+    (bug #35492)        
+  - some fixed to cancel and timeout operations so that they are more dependable        
+        
+Version 5.0.8   8/16/2007
+
   Bug #28706 Log messages are truncated  
   - Fixed a problem with compression over a network.  We were letting the inflate stream read
     directly from the network stream.  Under certain situations, two bytes were being left unread
