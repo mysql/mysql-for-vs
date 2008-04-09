@@ -141,6 +141,7 @@ Version 5.0.9
     the connection is opened can cause parameters to not be found (bug #13991)          
   - added implementation of MySqlCommandBuilder methods QuoteIdentifier and UnquoteIdentifier
     (bug #35492)        
+  - some fixed to cancel and timeout operations so that they are more dependable        
         
 Version 5.0.8   8/16/2007
 
