@@ -578,12 +578,16 @@ namespace MySql.Data.MySqlClient
 
         #region ICloneable
 
-        object ICloneable.Clone()
-        {
-            MySqlParameter clone = new MySqlParameter(paramName, mySqlDbType, direction,
-                                                      sourceColumn, sourceVersion, paramValue);
-            return clone;
-        }
+		#region ICloneable
+		object System.ICloneable.Clone()
+		{
+			MySqlParameter clone = new MySqlParameter(paramName, mySqlDbType, direction,
+				sourceColumn, sourceVersion, paramValue);
+            // if we have not had our type set yet then our clone should not either
+            clone.inferType = inferType;
+			return clone;
+		}
+		#endregion
 
         #endregion
 

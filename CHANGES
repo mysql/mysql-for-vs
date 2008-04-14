@@ -113,7 +113,7 @@ Version 5.1.0 - 5/1/2007
     What this means is that passing in null as a database restriction will report
     objects on the currently selected database only.
     
-Version 5.0.9   
+Version 5.0.9 - 4/14/08
 
   - Fixed problem where fields that were blobs but did not include the BLOB flag were treated
     as binary when they should have been treated as text.  (Bug #30233)    
@@ -142,6 +142,8 @@ Version 5.0.9
   - added implementation of MySqlCommandBuilder methods QuoteIdentifier and UnquoteIdentifier
     (bug #35492)        
   - some fixed to cancel and timeout operations so that they are more dependable        
+  - fixed problem where cloning a parameter that has not yet had its type set would yeild
+    a cloned paramter that would no longer infer it's type from the value set        
         
 Version 5.0.8   8/16/2007
 
