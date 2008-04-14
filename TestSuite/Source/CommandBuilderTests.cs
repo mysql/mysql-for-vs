@@ -369,7 +369,6 @@ namespace MySql.Data.MySqlClient.Tests
                 da.Update(changes);
                 dt.AcceptChanges();
 
-<<<<<<< .working
                 dt.Rows[0]["id"] = 7;
                 dt.Rows[0]["name"] = "test7";
                 dt.Rows[1]["id"] = 8;
@@ -385,7 +384,7 @@ namespace MySql.Data.MySqlClient.Tests
             {
                 Assert.Fail(ex.Message);
             }
-        }
+		}
 
         /// <summary>
         /// Bug #30077  	MySqlDataAdapter.Update() exception due to date field format
@@ -421,18 +420,6 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.Fail(ex.Message);
             }
         }
-    }
-=======
-				dt.Clear();
-				da.SelectCommand.CommandText = "SELECT * FROM test WHERE cod=6";
-				da.Fill(dt);
-				Assert.AreEqual(6, dt.Rows[0]["cod"]);
-			}
-			catch (Exception ex)
-			{
-				Assert.Fail(ex.Message);
-			}
-		}
 
         /// <summary>
         /// Bug #35492 Please implement DbCommandBuilder.QuoteIdentifier 
@@ -451,5 +438,4 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("bo`o", cb.UnquoteIdentifier("`bo``o`"));
         }
 	}
->>>>>>> .merge-right.r1210
 }
