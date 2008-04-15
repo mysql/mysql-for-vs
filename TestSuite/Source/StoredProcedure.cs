@@ -546,9 +546,9 @@ namespace MySql.Data.MySqlClient.Tests
                 "val6 VARCHAR(155), val7 SET('a','b'), val8 CHAR, val9 NUMERIC(10,2)) " +
                      "BEGIN SELECT 1; END");
 
-			MySqlCommand cmd = new MySqlCommand("spTest", conn);
-			cmd.CommandType = CommandType.StoredProcedure;
-			MySqlCommandBuilder.DeriveParameters(cmd);
+            MySqlCommand cmd = new MySqlCommand("spTest", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            MySqlCommandBuilder.DeriveParameters(cmd);
 
             Assert.AreEqual(9, cmd.Parameters.Count);
             Assert.AreEqual("@valin", cmd.Parameters[0].ParameterName);
@@ -587,14 +587,14 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(ParameterDirection.Input, cmd.Parameters[8].Direction);
             Assert.AreEqual(MySqlDbType.NewDecimal, cmd.Parameters[8].MySqlDbType);
 
-			execSQL("DROP PROCEDURE spTest");
-			execSQL("CREATE PROCEDURE spTest() BEGIN END");
-			cmd.CommandText = "spTest";
-			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Clear();
-			MySqlCommandBuilder.DeriveParameters(cmd);
-			Assert.AreEqual(0, cmd.Parameters.Count);
-		}
+            execSQL("DROP PROCEDURE spTest");
+            execSQL("CREATE PROCEDURE spTest() BEGIN END");
+            cmd.CommandText = "spTest";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Clear();
+            MySqlCommandBuilder.DeriveParameters(cmd);
+            Assert.AreEqual(0, cmd.Parameters.Count);
+        }
 
         /// <summary>
         /// Bug #13632  	the MySQLCommandBuilder.deriveparameters has not been updated for MySQL 5
@@ -609,9 +609,9 @@ namespace MySql.Data.MySqlClient.Tests
                 execSQL("CREATE FUNCTION fnTest(v1 DATETIME) RETURNS INT " +
                     "  LANGUAGE SQL DETERMINISTIC BEGIN RETURN 1; END");
 
-				MySqlCommand cmd = new MySqlCommand("fnTest", conn);
-				cmd.CommandType = CommandType.StoredProcedure;
-				MySqlCommandBuilder.DeriveParameters(cmd);
+                MySqlCommand cmd = new MySqlCommand("fnTest", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                MySqlCommandBuilder.DeriveParameters(cmd);
 
                 Assert.AreEqual(2, cmd.Parameters.Count);
                 Assert.AreEqual("@v1", cmd.Parameters[0].ParameterName);
@@ -818,54 +818,54 @@ namespace MySql.Data.MySqlClient.Tests
 
 #if !CF
         [Explicit]
-		[Test]
-		public void ProcedureCache()
-		{
+        [Test]
+        public void ProcedureCache()
+        {
             if (version < new Version(5, 0)) return;
 
             // open a new connection using a procedure cache
-			string connStr = GetConnectionString(true);
-			connStr += ";procedure cache size=25;logging=true";
-			MySqlConnection c = new MySqlConnection(connStr);
-			try
-			{
-				c.Open();
+            string connStr = GetConnectionString(true);
+            connStr += ";procedure cache size=25;logging=true";
+            MySqlConnection c = new MySqlConnection(connStr);
+            try
+            {
+                c.Open();
 
-				// install our custom trace listener
-				GenericListener myListener = new GenericListener();
-				System.Diagnostics.Trace.Listeners.Add(myListener);
+                // install our custom trace listener
+                GenericListener myListener = new GenericListener();
+                System.Diagnostics.Trace.Listeners.Add(myListener);
 
-				for (int x = 0; x < 10; x++)
-				{
-					execSQL("DROP PROCEDURE IF EXISTS spTest" + x);
-					execSQL("CREATE PROCEDURE spTest" + x + "() BEGIN SELECT 1; END");
-					MySqlCommand cmd = new MySqlCommand("spTest" + x, c);
-					cmd.CommandType = CommandType.StoredProcedure;
-					for (int y = 0; y < 20; y++)
-					{
-						cmd.ExecuteNonQuery();
-					}
-				}
+                for (int x = 0; x < 10; x++)
+                {
+                    execSQL("DROP PROCEDURE IF EXISTS spTest" + x);
+                    execSQL("CREATE PROCEDURE spTest" + x + "() BEGIN SELECT 1; END");
+                    MySqlCommand cmd = new MySqlCommand("spTest" + x, c);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    for (int y = 0; y < 20; y++)
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
 
-				// remove our custom trace listener
-				System.Diagnostics.Trace.Listeners.Remove(myListener);
+                // remove our custom trace listener
+                System.Diagnostics.Trace.Listeners.Remove(myListener);
 
-				// now see how many times our listener recorded a cache hit
-				Assert.AreEqual(190, myListener.Find("from procedure cache"));
-				Assert.AreEqual(10, myListener.Find("from server"));
-			}
-			catch (Exception ex)
-			{
-				Assert.Fail(ex.Message);
-			}
-			finally
-			{
-				if (c != null)
-					c.Close();
-				for (int x = 0; x < 10; x++)
-					execSQL("DROP PROCEDURE IF EXISTS spTest" + x);
-			}
-		}
+                // now see how many times our listener recorded a cache hit
+                Assert.AreEqual(190, myListener.Find("from procedure cache"));
+                Assert.AreEqual(10, myListener.Find("from server"));
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                if (c != null)
+                    c.Close();
+                for (int x = 0; x < 10; x++)
+                    execSQL("DROP PROCEDURE IF EXISTS spTest" + x);
+            }
+        }
 #endif
 
         /// <summary>
@@ -967,37 +967,37 @@ namespace MySql.Data.MySqlClient.Tests
 
 #if !CF
 
-		/// <summary>
-		/// Bug #22452 MySql.Data.MySqlClient.MySqlException: 
-		/// </summary>
-		[Test]
-		public void TurkishStoredProcs()
-		{
+        /// <summary>
+        /// Bug #22452 MySql.Data.MySqlClient.MySqlException: 
+        /// </summary>
+        [Test]
+        public void TurkishStoredProcs()
+        {
             if (version < new Version(5, 0)) return;
 
             execSQL("CREATE PROCEDURE spTest(IN p_paramname INT) BEGIN SELECT p_paramname; END");
-			CultureInfo uiCulture = Thread.CurrentThread.CurrentUICulture;
-			CultureInfo culture = Thread.CurrentThread.CurrentCulture;
-			Thread.CurrentThread.CurrentCulture = new CultureInfo("tr-TR");
-			Thread.CurrentThread.CurrentUICulture = new CultureInfo("tr-TR");
+            CultureInfo uiCulture = Thread.CurrentThread.CurrentUICulture;
+            CultureInfo culture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("tr-TR");
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("tr-TR");
 
-			try
-			{
-				MySqlCommand cmd = new MySqlCommand("spTest", conn);
-				cmd.Parameters.AddWithValue("?p_paramname", 2);
-				cmd.CommandType = CommandType.StoredProcedure;
-				cmd.ExecuteScalar();
-			}
-			catch (Exception ex)
-			{
-				Assert.Fail(ex.Message);
-			}
-			finally
-			{
-				Thread.CurrentThread.CurrentCulture = culture;
-				Thread.CurrentThread.CurrentUICulture = uiCulture;
-			}
-		}
+            try
+            {
+                MySqlCommand cmd = new MySqlCommand("spTest", conn);
+                cmd.Parameters.AddWithValue("?p_paramname", 2);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.ExecuteScalar();
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                Thread.CurrentThread.CurrentCulture = culture;
+                Thread.CurrentThread.CurrentUICulture = uiCulture;
+            }
+        }
 
 #endif
 
@@ -1385,6 +1385,61 @@ namespace MySql.Data.MySqlClient.Tests
             command.ExecuteNonQuery();
             double balance = Convert.ToDouble(command.Parameters["?Balance"].Value);
             Assert.AreEqual(1.0, balance);
+        }
+
+        /// <summary>
+        /// </summary>
+        [Test]
+        public void OutputParametersWithNewParamHandling()
+        {
+            if (version < new Version(5, 0)) return;
+
+            // create our procedure
+            execSQL("CREATE PROCEDURE spTest(out val1 VARCHAR(350)) " +
+                "BEGIN  SET val1 = '42';  END");
+
+            string connStr = GetConnectionString(true);
+            connStr = connStr.Replace("allow user variables=true", "allow user variables=false");
+            using (MySqlConnection c = new MySqlConnection(connStr))
+            {
+                c.Open();
+
+                MySqlCommand cmd = new MySqlCommand("spTest", c);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new MySqlParameter("@val1", MySqlDbType.VarChar)).Direction = ParameterDirection.Output;
+                int rowsAffected = cmd.ExecuteNonQuery();
+
+                Assert.AreEqual(0, rowsAffected);
+                Assert.AreEqual("42", cmd.Parameters[0].Value);
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        [Test]
+        public void FunctionWithNewParamHandling()
+        {
+            if (version < new Version(5, 0)) return;
+
+            // create our procedure
+            execSQL("CREATE FUNCTION spTest(`value` INT) RETURNS INT " +
+                "BEGIN RETURN value; END");
+
+            string connStr = GetConnectionString(true);
+            connStr = connStr.Replace("allow user variables=true", "allow user variables=false");
+            using (MySqlConnection c = new MySqlConnection(connStr))
+            {
+                c.Open();
+
+                MySqlCommand cmd = new MySqlCommand("spTest", c);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new MySqlParameter("@value", MySqlDbType.Int32)).Value = 22;
+                cmd.Parameters.Add(new MySqlParameter("@returnvalue", MySqlDbType.Int32)).Direction = ParameterDirection.ReturnValue;
+                int rowsAffected = cmd.ExecuteNonQuery();
+
+                Assert.AreEqual(0, rowsAffected);
+                Assert.AreEqual(22, cmd.Parameters[1].Value);
+            }
         }
     }
 }

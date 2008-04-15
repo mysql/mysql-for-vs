@@ -50,12 +50,13 @@ namespace MySql.Web.Tests
             NameValueCollection config = new NameValueCollection();
             config.Add("connectionStringName", "LocalMySqlServer");
             config.Add("applicationName", "/");
+            config.Add("passwordStrengthRegularExpression", "bar.*");
             config.Add("passwordFormat", format.ToString());
             provider.Initialize(null, config);
 
             // create the user
             MembershipCreateStatus status;
-            provider.CreateUser("foo", "bar", "foo@bar.com", null, null, true, null, out status);
+            provider.CreateUser("foo", "barbar!", "foo@bar.com", null, null, true, null, out status);
             Assert.AreEqual(MembershipCreateStatus.Success, status);
 
             // verify that the password format is hashed.
@@ -65,7 +66,7 @@ namespace MySql.Web.Tests
             Assert.AreEqual(format, rowFormat);
 
             //  then attempt to verify the user
-            Assert.IsTrue(provider.ValidateUser("foo", "bar"));
+            Assert.IsTrue(provider.ValidateUser("foo", "barbar!"));
         }
 
         [Test]
@@ -92,12 +93,84 @@ namespace MySql.Web.Tests
             CreateUserWithFormat(MembershipPasswordFormat.Clear);
         }
 
+        /// <summary>
+        /// Bug #34792 New User/Changing Password Validation Not working. 
+        /// </summary>
         [Test]
         public void ChangePassword()
         {
             CreateUserWithHashedPassword();
-            provider.ChangePassword("foo", "bar", "bar2");
-            provider.ValidateUser("foo", "bar2");
+            try
+            {
+                provider.ChangePassword("foo", "barbar!", "bar2");
+                Assert.Fail();
+            }
+            catch (ArgumentException ae1)
+            {
+                Assert.AreEqual("newPassword", ae1.ParamName);
+                Assert.IsTrue(ae1.Message.Contains("length of parameter"));
+            }
+
+            try
+            {
+                provider.ChangePassword("foo", "barbar!", "barbar2");
+                Assert.Fail();
+            }
+            catch (ArgumentException ae1)
+            {
+                Assert.AreEqual("newPassword", ae1.ParamName);
+                Assert.IsTrue(ae1.Message.Contains("alpha numeric"));
+            }
+
+            // now test regex strength testing
+            bool result = provider.ChangePassword("foo", "barbar!", "zzzxxx!");
+            Assert.IsFalse(result);
+
+            // now do one that should work
+            result = provider.ChangePassword("foo", "barbar!", "barfoo!");
+            Assert.IsTrue(result);
+
+            provider.ValidateUser("foo", "barfoo!");
+        }
+
+        /// <summary>
+        /// Bug #34792 New User/Changing Password Validation Not working. 
+        /// </summary>
+        [Test]
+        public void CreateUserWithErrors()
+        {
+            provider = new MySQLMembershipProvider();
+            NameValueCollection config = new NameValueCollection();
+            config.Add("connectionStringName", "LocalMySqlServer");
+            config.Add("applicationName", "/");
+            config.Add("passwordStrengthRegularExpression", "bar.*");
+            config.Add("passwordFormat", "Hashed");
+            provider.Initialize(null, config);
+
+            // first try to create a user with a password not long enough
+            MembershipCreateStatus status;
+            MembershipUser user = provider.CreateUser("foo", "xyz", 
+                "foo@bar.com", null, null, true, null, out status);
+            Assert.IsNull(user);
+            Assert.AreEqual(MembershipCreateStatus.InvalidPassword, status);
+
+            // now with not enough non-alphas
+            user = provider.CreateUser("foo", "xyz1234",
+                "foo@bar.com", null, null, true, null, out status);
+            Assert.IsNull(user);
+            Assert.AreEqual(MembershipCreateStatus.InvalidPassword, status);
+
+            // now one that doesn't pass the regex test
+            user = provider.CreateUser("foo", "xyzxyz!",
+                "foo@bar.com", null, null, true, null, out status);
+            Assert.IsNull(user);
+            Assert.AreEqual(MembershipCreateStatus.InvalidPassword, status);
+
+            // now one that works
+            user = provider.CreateUser("foo", "barbar!",
+                "foo@bar.com", null, null, true, null, out status);
+            Assert.IsNotNull(user);
+            Assert.AreEqual(MembershipCreateStatus.Success, status);
         }
 
         [Test]
@@ -150,20 +223,13 @@ namespace MySql.Web.Tests
         {
             try
             {
-				// we have to initialize the provider so the db will exist
-/*				provider = new MySQLMembershipProvider();
-				NameValueCollection config = new NameValueCollection();
-				config.Add("connectionStringName", "LocalMySqlServer");
-				config.Add("applicationName", "/");
-				provider.Initialize(null, config);
-*/				
-				Membership.CreateUser("foo", "bar");
+				Membership.CreateUser("foo", "barbar!");
                 int records;
                 MembershipUserCollection users = Membership.FindUsersByName("F%", 0, 10, out records);
                 Assert.AreEqual(1, records);
                 Assert.AreEqual("foo", users["foo"].UserName);
 
-                Membership.CreateUser("test", "bar", "myemail@host.com");
+                Membership.CreateUser("test", "barbar!", "myemail@host.com");
                 users = Membership.FindUsersByName("T%", 0, 10, out records);
                 Assert.AreEqual(1, records);
                 Assert.AreEqual("test", users["test"].UserName);
@@ -180,8 +246,8 @@ namespace MySql.Web.Tests
             int numOnline = Membership.GetNumberOfUsersOnline();
             Assert.AreEqual(0, numOnline);
 
-            Membership.CreateUser("foo", "bar");
-            Membership.CreateUser("foo2", "bar");
+            Membership.CreateUser("foo", "barbar!");
+            Membership.CreateUser("foo2", "barbar!");
 
             numOnline = Membership.GetNumberOfUsersOnline();
             Assert.AreEqual(2, numOnline);
@@ -190,7 +256,7 @@ namespace MySql.Web.Tests
         [Test]
         public void UnlockUser()
         {
-            Membership.CreateUser("foo", "bar");
+            Membership.CreateUser("foo", "barbar!");
             Assert.IsFalse(Membership.ValidateUser("foo", "bar2"));
             Assert.IsFalse(Membership.ValidateUser("foo", "bar3"));
             Assert.IsFalse(Membership.ValidateUser("foo", "bar3"));
@@ -198,7 +264,7 @@ namespace MySql.Web.Tests
             Assert.IsFalse(Membership.ValidateUser("foo", "bar3"));
 
             // the user should be locked now so the right password should fail
-            Assert.IsFalse(Membership.ValidateUser("foo", "bar"));
+            Assert.IsFalse(Membership.ValidateUser("foo", "barbar!"));
 
             MembershipUser user = Membership.GetUser("foo");
             Assert.IsTrue(user.IsLockedOut);
@@ -207,13 +273,13 @@ namespace MySql.Web.Tests
             user = Membership.GetUser("foo");
             Assert.IsFalse(user.IsLockedOut);
 
-            Assert.IsTrue(Membership.ValidateUser("foo", "bar"));
+            Assert.IsTrue(Membership.ValidateUser("foo", "barbar!"));
         }
 
         [Test]
         public void GetUsernameByEmail()
         {
-            Membership.CreateUser("foo", "bar", "foo@bar.com");
+            Membership.CreateUser("foo", "barbar!", "foo@bar.com");
             string username = Membership.GetUserNameByEmail("foo@bar.com");
             Assert.AreEqual("foo", username);
 
@@ -228,7 +294,7 @@ namespace MySql.Web.Tests
         public void UpdateUser()
         {
             MembershipCreateStatus status;
-            Membership.CreateUser("foo", "bar", "foo@bar.com", "color", "blue", true, out status);
+            Membership.CreateUser("foo", "barbar!", "foo@bar.com", "color", "blue", true, out status);
             Assert.AreEqual(MembershipCreateStatus.Success, status);
 
             MembershipUser user = Membership.GetUser("foo");
@@ -269,16 +335,16 @@ namespace MySql.Web.Tests
         public void ChangePasswordQuestionAndAnswer()
         {
             MembershipCreateStatus status;
-            Membership.CreateUser("foo", "bar", "foo@bar.com", "color", "blue", true, out status);
+            Membership.CreateUser("foo", "barbar!", "foo@bar.com", "color", "blue", true, out status);
             Assert.AreEqual(MembershipCreateStatus.Success, status);
 
             MembershipUser user = Membership.GetUser("foo");
             ChangePasswordQAHelper(user, "", "newQ", "newA");
-            ChangePasswordQAHelper(user, "bar", "", "newA");
-            ChangePasswordQAHelper(user, "bar", "newQ", "");
+            ChangePasswordQAHelper(user, "barbar!", "", "newA");
+            ChangePasswordQAHelper(user, "barbar!", "newQ", "");
             ChangePasswordQAHelper(user, null, "newQ", "newA");
 
-            bool result = user.ChangePasswordQuestionAndAnswer("bar", "newQ", "newA");
+            bool result = user.ChangePasswordQuestionAndAnswer("barbar!", "newQ", "newA");
             Assert.IsTrue(result);
 
             user = Membership.GetUser("foo");
@@ -290,7 +356,7 @@ namespace MySql.Web.Tests
         {
             // first create a bunch of users
             for (int i=0; i < 100; i++)
-                Membership.CreateUser(String.Format("foo{0}", i), "bar");
+                Membership.CreateUser(String.Format("foo{0}", i), "barbar!");
 
             MembershipUserCollection users = Membership.GetAllUsers();
             Assert.AreEqual(100, users.Count);
@@ -319,14 +385,14 @@ namespace MySql.Web.Tests
             config.Add("applicationName", "/");
             provider.Initialize(null, config);
 
-            provider.CreateUser("foo", "bar", "foo@bar.com", "color", "blue", true, null, out status);
+            provider.CreateUser("foo", "barbar!", "foo@bar.com", "color", "blue", true, null, out status);
 
             try
             {
                 string password = provider.GetPassword("foo", answer);
                 if (!enablePasswordRetrieval)
                     Assert.Fail("This should have thrown an exception");
-                Assert.AreEqual("bar", password);
+                Assert.AreEqual("barbar!", password);
             }
             catch (ProviderException)
             {
@@ -347,7 +413,7 @@ namespace MySql.Web.Tests
         [Test]
         public void GetUser()
         {
-            Membership.CreateUser("foo", "bar");
+            Membership.CreateUser("foo", "barbar!");
             MembershipUser user = Membership.GetUser(1);
             Assert.AreEqual("foo", user.UserName);
 
@@ -378,11 +444,11 @@ namespace MySql.Web.Tests
         public void FindUsers()
         {
             for (int i=0; i < 100; i++)
-                Membership.CreateUser(String.Format("boo{0}", i), "bar");
+                Membership.CreateUser(String.Format("boo{0}", i), "barbar!");
             for (int i=0; i < 100; i++)
-                Membership.CreateUser(String.Format("foo{0}", i), "bar");
+                Membership.CreateUser(String.Format("foo{0}", i), "barbar!");
             for (int i=0; i < 100; i++)
-                Membership.CreateUser(String.Format("schmoo{0}", i), "bar");
+                Membership.CreateUser(String.Format("schmoo{0}", i), "barbar!");
 
 
             MembershipUserCollection users = Membership.FindUsersByName("fo%");
@@ -396,6 +462,102 @@ namespace MySql.Web.Tests
             foreach (MembershipUser user in users)
                 Assert.AreEqual(String.Format("foo2{0}", index++), user.UserName);
 
+        }
+
+        [Test]
+        public void CreateUserWithNoQA()
+        {
+            MembershipCreateStatus status;
+            provider = new MySQLMembershipProvider();
+            NameValueCollection config = new NameValueCollection();
+            config.Add("connectionStringName", "LocalMySqlServer");
+            config.Add("requiresQuestionAndAnswer", "true");
+            config.Add("passwordFormat", "clear");
+            config.Add("applicationName", "/");
+            provider.Initialize(null, config);
+
+            try
+            {
+                provider.CreateUser("foo", "barbar!", "foo@bar.com", "color", null, true, null, out status);
+                Assert.Fail();
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex.Message.StartsWith("Password answer supplied is invalid"));
+            }
+            try
+            {
+                provider.CreateUser("foo", "barbar!", "foo@bar.com", "", "blue", true, null, out status);
+                Assert.Fail();
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex.Message.StartsWith("Password question supplied is invalid"));
+            }
+        }
+
+        [Test]
+        public void MinRequiredAlpha()
+        {
+            provider = new MySQLMembershipProvider();
+            NameValueCollection config = new NameValueCollection();
+            config.Add("connectionStringName", "LocalMySqlServer");
+            config.Add("applicationName", "/");
+            config.Add("minRequiredNonalphanumericCharacters", "3");
+            provider.Initialize(null, config);
+
+            MembershipCreateStatus status;
+            MembershipUser user = provider.CreateUser("foo", "pw!pass", "email", null, null, true, null, out status);
+            Assert.IsNull(user);
+
+            user = provider.CreateUser("foo", "pw!pa!!", "email", null, null, true, null, out status);
+            Assert.IsNotNull(user);
+        }
+
+        /// <summary>
+        /// Bug #35332 GetPassword() don't working (when PasswordAnswer is NULL) 
+        /// </summary>
+        [Test]
+        public void GetPasswordWithNullValues()
+        {
+            MembershipCreateStatus status;
+            provider = new MySQLMembershipProvider();
+            NameValueCollection config = new NameValueCollection();
+            config.Add("connectionStringName", "LocalMySqlServer");
+            config.Add("requiresQuestionAndAnswer", "false");
+            config.Add("enablePasswordRetrieval", "true");
+            config.Add("passwordFormat", "clear");
+            config.Add("applicationName", "/");
+            provider.Initialize(null, config);
+
+            MembershipUser user = provider.CreateUser("foo", "barbar!", "foo@bar.com", null, null, true, null, out status);
+            Assert.IsNotNull(user);
+
+            string pw = provider.GetPassword("foo", null);
+            Assert.AreEqual("barbar!", pw);
+        }
+
+        /// <summary>
+        /// Bug #35336 GetPassword() return wrong password (when format is encrypted) 
+        /// </summary>
+        [Test]
+        public void GetEncryptedPassword()
+        {
+            MembershipCreateStatus status;
+            provider = new MySQLMembershipProvider();
+            NameValueCollection config = new NameValueCollection();
+            config.Add("connectionStringName", "LocalMySqlServer");
+            config.Add("requiresQuestionAndAnswer", "false");
+            config.Add("enablePasswordRetrieval", "true");
+            config.Add("passwordFormat", "encrypted");
+            config.Add("applicationName", "/");
+            provider.Initialize(null, config);
+
+            MembershipUser user = provider.CreateUser("foo", "barbar!", "foo@bar.com", null, null, true, null, out status);
+            Assert.IsNotNull(user);
+
+            string pw = provider.GetPassword("foo", null);
+            Assert.AreEqual("barbar!", pw);
         }
     }
 }

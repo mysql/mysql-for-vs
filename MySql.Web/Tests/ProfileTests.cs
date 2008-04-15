@@ -50,10 +50,6 @@ namespace MySql.Web.Tests
         [Test]
         public void SettingValuesCreatesAnAppAndUserId()
         {
-            // make sure there are no apps currently
-            DataTable dt = FillTable("SELECT * FROM my_aspnet_applications");
-            Assert.AreEqual(0, dt.Rows.Count);
-
             MySQLProfileProvider provider = InitProfileProvider();
             SettingsContext ctx = new SettingsContext();
             ctx.Add("IsAuthenticated", false);
@@ -69,21 +65,27 @@ namespace MySql.Web.Tests
 
             provider.SetPropertyValues(ctx, values);
 
-            dt = FillTable("SELECT * FROM my_aspnet_applications");
+            DataTable dt = FillTable("SELECT * FROM my_aspnet_Applications");
             Assert.AreEqual(1, dt.Rows.Count);
-            dt = FillTable("SELECT * FROM my_aspnet_users");
+            dt = FillTable("SELECT * FROM my_aspnet_Users");
             Assert.AreEqual(1, dt.Rows.Count);
-            dt = FillTable("SELECT * FROM my_aspnet_profiles");
+            dt = FillTable("SELECT * FROM my_aspnet_Profiles");
+            Assert.AreEqual(1, dt.Rows.Count);
+
+            values["color"].PropertyValue = "green";
+            provider.SetPropertyValues(ctx, values);
+
+            dt = FillTable("SELECT * FROM my_aspnet_Applications");
+            Assert.AreEqual(1, dt.Rows.Count);
+            dt = FillTable("SELECT * FROM my_aspnet_Users");
+            Assert.AreEqual(1, dt.Rows.Count);
+            dt = FillTable("SELECT * FROM my_aspnet_Profiles");
             Assert.AreEqual(1, dt.Rows.Count);
         }
 
         [Test]
         public void AnonymousUserSettingNonAnonymousProperties()
         {
-            // make sure there are no apps currently
-            DataTable dt = FillTable("SELECT * FROM my_aspnet_applications");
-            Assert.AreEqual(0, dt.Rows.Count);
-
             MySQLProfileProvider provider = InitProfileProvider();
             SettingsContext ctx = new SettingsContext();
             ctx.Add("IsAuthenticated", false);
@@ -99,21 +101,17 @@ namespace MySql.Web.Tests
 
             provider.SetPropertyValues(ctx, values);
 
-            dt = FillTable("SELECT * FROM my_aspnet_applications");
+            DataTable dt = FillTable("SELECT * FROM my_aspnet_Applications");
             Assert.AreEqual(0, dt.Rows.Count);
-            dt = FillTable("SELECT * FROM my_aspnet_users");
+            dt = FillTable("SELECT * FROM my_aspnet_Users");
             Assert.AreEqual(0, dt.Rows.Count);
-            dt = FillTable("SELECT * FROM my_aspnet_profiles");
+            dt = FillTable("SELECT * FROM my_aspnet_Profiles");
             Assert.AreEqual(0, dt.Rows.Count);
         }
 
         [Test]
         public void StringCollectionAsProperty()
         {
-            // make sure there are no apps currently
-            DataTable dt = FillTable("SELECT * FROM my_aspnet_applications");
-            Assert.AreEqual(0, dt.Rows.Count);
-
             ProfileBase profile = ProfileBase.Create("foo", true);
             StringCollection colors = new StringCollection();
             colors.Add("red");
@@ -122,11 +120,11 @@ namespace MySql.Web.Tests
             profile["FavoriteColors"] = colors;
             profile.Save();
 
-            dt = FillTable("SELECT * FROM my_aspnet_applications");
+            DataTable dt = FillTable("SELECT * FROM my_aspnet_Applications");
             Assert.AreEqual(1, dt.Rows.Count);
-            dt = FillTable("SELECT * FROM my_aspnet_users");
+            dt = FillTable("SELECT * FROM my_aspnet_Users");
             Assert.AreEqual(1, dt.Rows.Count);
-            dt = FillTable("SELECT * FROM my_aspnet_profiles");
+            dt = FillTable("SELECT * FROM my_aspnet_Profiles");
             Assert.AreEqual(1, dt.Rows.Count);
 
             // now retrieve them

@@ -858,7 +858,9 @@ namespace MySql.Data.MySqlClient
 				if (ex.IsFatal)
 					connection.Abort();
                 nextResultDone = true;
-                hasRows = canRead = false; 
+                hasRows = canRead = false;
+                if (command.TimedOut)
+                    throw new MySqlException(Resources.Timeout);
                 throw;
 			}
 
@@ -896,6 +898,17 @@ namespace MySql.Data.MySqlClient
 			{
 				if (ex.IsFatal)
 					connection.Abort();
+
+                // if we get a query interrupted then our resultset is done
+                if (ex.Number == 1317)
+                {
+                    nextResultDone = true;
+                    canRead = false;
+                    if (command.TimedOut)
+                        throw new MySqlException(Resources.Timeout);
+                    return false;
+                }
+
 				throw;
 			}
 		}
@@ -959,8 +972,8 @@ namespace MySql.Data.MySqlClient
 		/// <returns></returns>
 		public override IEnumerator GetEnumerator()
 		{
-			return new DbEnumerator(this);
-		}
+            return new DbEnumerator(this, (commandBehavior & CommandBehavior.CloseConnection) != 0);
+        }
 
 		#endregion
 	}

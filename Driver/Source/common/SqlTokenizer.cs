@@ -47,7 +47,7 @@ namespace MySql.Data.Common
             get { return quoted; }
         }
 
-        public int CurrentPos
+        public int Index
         {
             get { return index; }
         }

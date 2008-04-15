@@ -53,7 +53,6 @@ namespace MySql.Data.MySqlClient
 		internal Int64 lastInsertedId;
 		private PreparableStatement statement;
 		private int commandTimeout;
-		private bool canCancel;
 		private bool timedOut, canceled;
         private bool resetSqlSelect;
         List<MySqlCommand> batch;
@@ -68,7 +67,6 @@ namespace MySql.Data.MySqlClient
 			updatedRowSource = UpdateRowSource.Both;
 			cursorPageSize = 0;
 			cmdText = String.Empty;
-			canCancel = false;
 			timedOut = false;
 		}
 
@@ -229,6 +227,11 @@ namespace MySql.Data.MySqlClient
             get { return batch; }
         }
 
+        internal bool TimedOut
+        {
+            get { return timedOut; }
+        }
+
         internal string BatchableCommandText
         {
             get { return batchableCommandText; }
@@ -249,12 +252,9 @@ namespace MySql.Data.MySqlClient
 			if (!connection.driver.Version.isAtLeast(5, 0, 0))
 				throw new NotSupportedException(Resources.CancelNotSupported);
 
-            // if we are not inside ExecuteReader, then cancel will not do
-            // anything
-            if (!canCancel) return;
-
 			using(MySqlConnection c = new MySqlConnection(connection.Settings.GetConnectionString(true)))
 			{
+                c.Settings.Pooling = false;
                 c.Open();
                 MySqlCommand cmd = new MySqlCommand(String.Format("KILL QUERY {0}",
                      connection.ServerThread), c);
@@ -334,21 +334,18 @@ namespace MySql.Data.MySqlClient
 		{
 			MySqlCommand cmd = (commandObject as MySqlCommand);
 
-            if (cmd.canCancel)
-			{
-                cmd.timedOut = true;
-                try
-                {
-                    cmd.Cancel();
-                }
-                catch (Exception ex)
-                {
-                    // if something goes wrong, we log it and eat it.  There's really nothing
-                    // else we can do.
-                    if (connection.Settings.Logging)
-                        Logger.LogException(ex);
-                }
-			}
+            cmd.timedOut = true;
+            try
+            {
+                cmd.Cancel();
+            }
+            catch (Exception ex)
+            {
+                // if something goes wrong, we log it and eat it.  There's really nothing
+                // else we can do.
+                if (connection.Settings.Logging)
+                    Logger.LogException(ex);
+            }
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ExecuteReader1/*'/>
@@ -407,9 +404,6 @@ namespace MySql.Data.MySqlClient
                 // execute the statement
                 statement.Execute();
 
-                // indicate that we can now be canceled
-                canCancel = true;
-
                 // start a timeout timer
                 if (connection.driver.Version.isAtLeast(5, 0, 0) &&
                      commandTimeout > 0)
@@ -422,16 +416,6 @@ namespace MySql.Data.MySqlClient
                 // wait for data to return
                 reader.NextResult();
                 
-                // if we get here, then we have started receiving data and
-                // can't cancel anymore
-                canCancel = false;
-
-                // if we were canceled or timed out and an exception has not 
-                // yet been thrown, then we need to consume the reader and
-                // that will throw the exception
-                if (canceled || timedOut)
-                    reader.Close();
-
                 connection.Reader = reader;
                 return reader;
             }
@@ -440,7 +424,7 @@ namespace MySql.Data.MySqlClient
                 // if we caught an exception because of a cancel, then just return null
                 if (ex.Number == 1317)
                 {
-                    if (timedOut)
+                    if (TimedOut)
                         throw new MySqlException(Resources.Timeout);
                     return null;
                 }
@@ -448,7 +432,6 @@ namespace MySql.Data.MySqlClient
             }
             finally
             {
-                canCancel = false;
                 if (timer != null)
                     timer.Dispose();
             }

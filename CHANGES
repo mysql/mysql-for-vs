@@ -1,4 +1,36 @@
-Version 5.2
+Version 5.2.2 - 
+- Fixed profile provider that would throw an exception if you were updating
+  a profile that already existed.
+- Fixed problem where new parameter code prevented stored procedures from being
+  altered in Visual Studio (bug #34940)
+- Fixed problem where the TableAdapter wizard was no longer able to generate commands
+  using stored procedures because of our change to using @ instead of ? (bug #34941)
+- Fixed problem in datagrid code related to creating a new table.  This problem may
+  have been introduced with .NET 2.0 SP1.   
+- Fixed guid type so that a null value is still returned as guid type (bug #35041)
+- Added support for using the new PARAMETERS I_S view when running against
+  a 6.0 server    
+- Fixed bug with the membership provider where the min non alpha numeric option
+  was not working correctly.    
+- Fixed bug where calling GetPassword on a membership user when the password answer
+  is null would cause an exception (bug #35332)
+- Fixed bug where retrieving passwords that are encrypted was not returning proper
+  passwords (bug #35336)    
+    
+Version 5.2.1 - 2/27/2008
+- Tons of fixes in providers.  The actually work now.  :)
+- Fixed new parameter handling code so that procedures and functions now work 
+  (bug #34699)
+- Fixed problem with Visual Studio 2008 integration that caused popup menus on
+  server explorer nodes to not function
+- Fixed web providers so that they don't attempt to check their schema or cache
+  their application id if the connection string has not been set. (bug #34451)
+- Fixed installer that did not install the DDEX provider binary if 
+  the Visual Studio 2005 component was not selected. (bug #34674)
+- Fixed password validation logic for creating users and changing passwords.
+  It actually works now.  (bug #34792)
+
+Version 5.2 - 2/11/2008
 . Added ClearPool and ClearAllPools features
 . DDEX provider now works under Visual Studio 2008	
 . Added support for DbDataAdapter UpdateBatchSize.  Batching is fully supported
@@ -12,7 +44,20 @@ Version 5.2
 . Added Allow User Variables connection string option so that users can use user variables
   without getting missing parameter exceptions
   
-Version 5.1.5 - 
+Version 5.1.6 
+ - Fixed problem where parameters lists were not showing when you tried to alter a routine 
+   in server explorer.  (bug #34359)
+ - Fixed a problem in procedure cache where it was possible to get into a race condition
+   and cause a memory leak (bug #34338)
+ - Fixed problem where attempting to use an isolation level other than the default with
+   a transaction scope would use the default instead (bug #34448)
+ - Fixed problem that causes the TableAdapter wizard to only generate insert statements.
+   The problem was that our code to retrieve index columns was broken. (bug #31338)
+ - Fixed problem with connections staying open after being used with SqlDataSource.
+   The problem was that we were not returning an enumerator for our reader with the
+   closeReader option set to true when we were supposed to.  (Bug #34460)
+   
+Version 5.1.5 - 2/11/2008
   - Fixed problem with membership provider where FindUserByEmail would fail trying to add
     a second parameter with the same name as the first (bug #33347)
   - Fixed long standing problem with compression over a network.  It's now fast again. (bug #27865)    
@@ -140,8 +185,12 @@ Version 5.0.9
   - fixed problem where changing the connection string of a connection to one that changes
     the parameter marker after the connection had been assigned to a command but before
     the connection is opened can cause parameters to not be found (bug #13991) 
-                            
-Version 5.0.8  8/16/2007
+  - added implementation of MySqlCommandBuilder methods QuoteIdentifier and UnquoteIdentifier
+    (bug #35492)        
+  - some fixed to cancel and timeout operations so that they are more dependable        
+        
+Version 5.0.8   8/16/2007
+
   Bug #28706 Log messages are truncated  
   - Fixed a problem with compression over a network.  We were letting the inflate stream read
     directly from the network stream.  Under certain situations, two bytes were being left unread

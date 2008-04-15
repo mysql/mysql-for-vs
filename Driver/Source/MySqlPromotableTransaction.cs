@@ -44,7 +44,12 @@ namespace MySql.Data.MySqlClient
 
         void IPromotableSinglePhaseNotification.Initialize()
         {
-            simpleTransaction = connection.BeginTransaction();
+            string valueName = Enum.GetName(
+                typeof(System.Transactions.IsolationLevel), baseTransaction.IsolationLevel);
+            System.Data.IsolationLevel dataLevel = (System.Data.IsolationLevel)Enum.Parse(
+                typeof(System.Data.IsolationLevel), valueName);
+
+            simpleTransaction = connection.BeginTransaction(dataLevel);
         }
 
         void IPromotableSinglePhaseNotification.Rollback(SinglePhaseEnlistment singlePhaseEnlistment)

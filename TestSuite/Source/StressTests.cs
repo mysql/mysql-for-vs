@@ -48,54 +48,60 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 			int len = 20000000;
 
-			// currently do not test this with compression
-			if (conn.UseCompression) return;
+            // currently do not test this with compression
+            if (conn.UseCompression) return;
 
-			byte[] dataIn = Utils.CreateBlob(len);
-			byte[] dataIn2 = Utils.CreateBlob(len);
-
-            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (?id, NULL, ?blob, NULL )", conn);
-		    cmd.CommandTimeout = 0;
-			cmd.Parameters.Add(new MySqlParameter("?id", 1));
-			cmd.Parameters.Add(new MySqlParameter("?blob", dataIn));
-			try 
-			{
-				cmd.ExecuteNonQuery();
-			}
-			catch (Exception ex) 
-			{
-				Assert.Fail(ex.Message);
-			}
-
-			cmd.Parameters[0].Value = 2;
-			cmd.Parameters[1].Value = dataIn2;
-			cmd.ExecuteNonQuery();
-
-			cmd.CommandText = "SELECT * FROM Test";
-
-            try
+            using (MySqlConnection c = new MySqlConnection(GetConnectionString(true)))
             {
-                using (MySqlDataReader reader = cmd.ExecuteReader())
+                suExecSQL("SET GLOBAL max_allowed_packet=64000000");
+                c.Open();
+                suExecSQL("SET GLOBAL max_allowed_packet=" + 1500000);
+                byte[] dataIn = Utils.CreateBlob(len);
+                byte[] dataIn2 = Utils.CreateBlob(len);
+
+                MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (?id, NULL, ?blob, NULL )", c);
+                cmd.CommandTimeout = 0;
+                cmd.Parameters.Add(new MySqlParameter("?id", 1));
+                cmd.Parameters.Add(new MySqlParameter("?blob", dataIn));
+                try
                 {
-                    reader.Read();
-                    byte[] dataOut = new byte[len];
-                    long count = reader.GetBytes(2, 0, dataOut, 0, len);
-                    Assert.AreEqual(len, count);
-
-                    for (int i = 0; i < len; i++)
-                        Assert.AreEqual(dataIn[i], dataOut[i]);
-
-                    reader.Read();
-                    count = reader.GetBytes(2, 0, dataOut, 0, len);
-                    Assert.AreEqual(len, count);
-
-                    for (int i = 0; i < len; i++)
-                        Assert.AreEqual(dataIn2[i], dataOut[i]);
+                    cmd.ExecuteNonQuery();
                 }
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
+                catch (Exception ex)
+                {
+                    Assert.Fail(ex.Message);
+                }
+
+                cmd.Parameters[0].Value = 2;
+                cmd.Parameters[1].Value = dataIn2;
+                cmd.ExecuteNonQuery();
+
+                cmd.CommandText = "SELECT * FROM Test";
+
+                try
+                {
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        reader.Read();
+                        byte[] dataOut = new byte[len];
+                        long count = reader.GetBytes(2, 0, dataOut, 0, len);
+                        Assert.AreEqual(len, count);
+
+                        for (int i = 0; i < len; i++)
+                            Assert.AreEqual(dataIn[i], dataOut[i]);
+
+                        reader.Read();
+                        count = reader.GetBytes(2, 0, dataOut, 0, len);
+                        Assert.AreEqual(len, count);
+
+                        for (int i = 0; i < len; i++)
+                            Assert.AreEqual(dataIn2[i], dataOut[i]);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Assert.Fail(ex.Message);
+                }
             }
 		}
 

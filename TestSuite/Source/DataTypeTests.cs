@@ -869,5 +869,27 @@ namespace MySql.Data.MySqlClient.Tests
 
             Assert.AreEqual(g, dt.Rows[0][1]);
         }
+
+        /// <summary>
+        /// Bug #35041 'Binary(16) as GUID' - columns lose IsGuid value after a NULL value found 
+        /// </summary>
+        [Test]
+        public void Binary16AsGuidWithNull()
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL(@"CREATE TABLE Test (id int(10) NOT NULL AUTO_INCREMENT,
+                        AGUID binary(16), PRIMARY KEY (id))");
+            Guid g = new Guid();
+            byte[] guid = g.ToByteArray();
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (NULL, @g)", conn);
+            cmd.Parameters.AddWithValue("@g", guid);
+            cmd.ExecuteNonQuery();
+            execSQL("insert into Test (AGUID) values (NULL)");
+            cmd.ExecuteNonQuery();
+
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+        }
 	}
 }

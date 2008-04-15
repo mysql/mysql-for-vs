@@ -195,5 +195,36 @@ namespace MySql.Data.MySqlClient.Tests
             cmd.CommandText = "SELECT COUNT(*) FROM test";
             Assert.AreEqual(0, cmd.ExecuteScalar());
         }
+        
+        [Test]
+        public void CancelSelect()
+        {
+            execSQL("CREATE TABLE Test (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(20))");
+            for (int i=0; i < 10000; i++)
+                execSQL("INSERT INTO Test VALUES (NULL, 'my string')");
+
+            MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test", conn);
+            cmd.CommandTimeout = 0;
+            int rows = 0;
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                reader.Read();
+
+                cmd.Cancel();
+
+                try
+                {
+                    while (reader.Read())
+                    {
+                        rows++;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Assert.Fail(ex.Message);
+                }
+            }
+            Assert.IsTrue(rows < 10000);
+        }        
     }
 }

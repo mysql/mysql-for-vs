@@ -301,7 +301,7 @@
     <value>Unable to connect to any of the specified MySQL hosts.</value>
   </data>
   <data name="UnableToRetrieveSProcData" xml:space="preserve">
-    <value>Unable to retrieve stored procedure metadata.  Either grant  SELECTprivilege to mysql.proc for this user or use "use procedure bodies=false" with  your connection string.</value>
+    <value>Unable to retrieve stored procedure metadata.  Either grant  SELECT privilege to mysql.proc for this user or use "use procedure bodies=false" with  your connection string.</value>
   </data>
   <data name="NextResultIsClosed" xml:space="preserve">
     <value>Invalid attempt to call NextResult when the reader is closed.</value>

@@ -34,7 +34,9 @@ namespace MySql.Data.MySqlClient
     internal class CharSetMap
     {
 #if NET20
-      private static Dictionary<string, CharacterSet> mapping;
+        private static Dictionary<string, string> defaultCollations;
+        private static Dictionary<string, int> maxLengths;
+        private static Dictionary<string, CharacterSet> mapping;
 #else
         private static Hashtable mapping;
 #endif
@@ -144,6 +146,41 @@ namespace MySql.Data.MySqlClient
             mapping.Add("latvian1", new CharacterSet("iso-8859-13", 1));
             mapping.Add("estonia", new CharacterSet("iso-8859-13", 1));
             mapping.Add("dos", new CharacterSet("ibm437", 1));
+        }
+
+        internal static void InitCollections(MySqlConnection connection)
+        {
+            defaultCollations = new Dictionary<string, string>();
+            maxLengths = new Dictionary<string, int>();
+
+            MySqlCommand cmd = new MySqlCommand("SHOW CHARSET", connection);
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    defaultCollations.Add(reader.GetString(0), reader.GetString(2));
+                    maxLengths.Add(reader.GetString(0), Convert.ToInt32(reader.GetValue(3)));
+                }
+            }
+        }
+
+        internal static string GetDefaultCollation(string charset, MySqlConnection connection)
+        {
+            if (defaultCollations == null)
+                InitCollections(connection);
+            if (!defaultCollations.ContainsKey(charset))
+                return null;
+            return defaultCollations[charset];
+        }
+
+        internal static int GetMaxLength(string charset, MySqlConnection connection)
+        {
+            if (maxLengths == null)
+                InitCollections(connection);
+
+            if (!maxLengths.ContainsKey(charset))
+                return 1;
+            return maxLengths[charset];
         }
     }
 

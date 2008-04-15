@@ -52,7 +52,11 @@ namespace MySql.Data.MySqlClient
         {
             int hash = spName.GetHashCode();
 
-            DataSet ds = (DataSet) procHash[hash];
+            DataSet ds = null;
+            lock (procHash.SyncRoot)
+            {
+                ds = (DataSet)procHash[hash];
+            }
             if (ds == null)
             {
                 ds = AddNew(conn, spName);
@@ -80,11 +84,11 @@ namespace MySql.Data.MySqlClient
             DataSet procData = GetProcData(connection, spName);
             if (maxSize > 0)
             {
-                if (procHash.Keys.Count == maxSize)
-                    TrimHash();
                 int hash = spName.GetHashCode();
                 lock (procHash.SyncRoot)
                 {
+                    if (procHash.Keys.Count >= maxSize)
+                        TrimHash();
                     if (!procHash.ContainsKey(hash))
                     {
                         procHash[hash] = procData;

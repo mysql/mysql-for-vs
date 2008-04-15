@@ -71,10 +71,8 @@
     <Compile Include="Source\cf\WinCE.cs" />
     <Compile Include="Source\CharSetMap.cs" />
     <Compile Include="Source\command.cs">
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Source\CommandBuilder.cs">
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Source\common\Cache.cs" />
     <Compile Include="Source\common\ContextString.cs" />
@@ -91,7 +89,6 @@
     </Compile>
     <Compile Include="Source\Crypt.cs" />
     <Compile Include="Source\dataadapter.cs">
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Source\datareader.cs" />
     <Compile Include="Source\Driver.cs" />

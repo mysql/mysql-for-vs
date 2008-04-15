@@ -369,6 +369,7 @@ namespace MySql.Data.MySqlClient.Tests
                 da.Update(changes);
                 dt.AcceptChanges();
 
+<<<<<<< .working
                 dt.Rows[0]["id"] = 7;
                 dt.Rows[0]["name"] = "test7";
                 dt.Rows[1]["id"] = 8;
@@ -421,4 +422,34 @@ namespace MySql.Data.MySqlClient.Tests
             }
         }
     }
+=======
+				dt.Clear();
+				da.SelectCommand.CommandText = "SELECT * FROM test WHERE cod=6";
+				da.Fill(dt);
+				Assert.AreEqual(6, dt.Rows[0]["cod"]);
+			}
+			catch (Exception ex)
+			{
+				Assert.Fail(ex.Message);
+			}
+		}
+
+        /// <summary>
+        /// Bug #35492 Please implement DbCommandBuilder.QuoteIdentifier 
+        /// </summary>
+        [Test]
+        public void QuoteAndUnquoteIdentifiers()
+        {
+            MySqlCommandBuilder cb = new MySqlCommandBuilder();
+            Assert.AreEqual("`boo`", cb.QuoteIdentifier("boo"));
+            Assert.AreEqual("`bo``o`", cb.QuoteIdentifier("bo`o"));
+            Assert.AreEqual("`boo`", cb.QuoteIdentifier("`boo`"));
+
+            // now do the unquoting
+            Assert.AreEqual("boo", cb.UnquoteIdentifier("`boo`"));
+            Assert.AreEqual("`boo", cb.UnquoteIdentifier("`boo"));
+            Assert.AreEqual("bo`o", cb.UnquoteIdentifier("`bo``o`"));
+        }
+	}
+>>>>>>> .merge-right.r1210
 }
