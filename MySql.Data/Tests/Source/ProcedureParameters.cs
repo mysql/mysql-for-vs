@@ -101,7 +101,7 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("/*id*/", dt.Rows[0]["PARAMETER_NAME"].ToString().ToLower());
             Assert.AreEqual(1, dt.Rows[0]["ORDINAL_POSITION"]);
             Assert.AreEqual("IN", dt.Rows[0]["PARAMETER_MODE"]);
-            Assert.AreEqual("VARCHAR", dt.Rows[0]["DATA_TYPE"].ToString().ToUpperInvariant());
+            Assert.AreEqual("VARCHAR", dt.Rows[0]["DATA_TYPE"].ToString().ToUpper());
             Assert.AreEqual(20, dt.Rows[0]["CHARACTER_MAXIMUM_LENGTH"]);
             Assert.AreEqual(20, dt.Rows[0]["CHARACTER_OCTET_LENGTH"]);
 
@@ -110,7 +110,7 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("result2", dt.Rows[1]["PARAMETER_NAME"].ToString().ToLower());
             Assert.AreEqual(2, dt.Rows[1]["ORDINAL_POSITION"]);
             Assert.AreEqual("OUT", dt.Rows[1]["PARAMETER_MODE"]);
-            Assert.AreEqual("DECIMAL", dt.Rows[1]["DATA_TYPE"].ToString().ToUpperInvariant());
+            Assert.AreEqual("DECIMAL", dt.Rows[1]["DATA_TYPE"].ToString().ToUpper());
             Assert.AreEqual(10, dt.Rows[1]["NUMERIC_PRECISION"]);
             Assert.AreEqual(2, dt.Rows[1]["NUMERIC_SCALE"]);
         }
@@ -151,7 +151,7 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("_action", dt.Rows[0]["PARAMETER_NAME"].ToString().ToLower());
             Assert.AreEqual(1, dt.Rows[0]["ORDINAL_POSITION"]);
             Assert.AreEqual("IN", dt.Rows[0]["PARAMETER_MODE"]);
-            Assert.AreEqual("VARCHAR", dt.Rows[0]["DATA_TYPE"].ToString().ToUpperInvariant());
+            Assert.AreEqual("VARCHAR", dt.Rows[0]["DATA_TYPE"].ToString().ToUpper());
             Assert.AreEqual(20, dt.Rows[0]["CHARACTER_OCTET_LENGTH"]);
 
             Assert.AreEqual(database0.ToLower(), dt.Rows[1]["SPECIFIC_SCHEMA"].ToString().ToLower());
@@ -159,42 +159,42 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("/*dumb-identifier-1*/", dt.Rows[1]["PARAMETER_NAME"].ToString().ToLower());
             Assert.AreEqual(2, dt.Rows[1]["ORDINAL_POSITION"]);
             Assert.AreEqual("IN", dt.Rows[1]["PARAMETER_MODE"]);
-            Assert.AreEqual("INT", dt.Rows[1]["DATA_TYPE"].ToString().ToUpperInvariant());
+            Assert.AreEqual("INT", dt.Rows[1]["DATA_TYPE"].ToString().ToUpper());
 
             Assert.AreEqual(database0.ToLower(), dt.Rows[2]["SPECIFIC_SCHEMA"].ToString().ToLower());
             Assert.AreEqual("sptest", dt.Rows[2]["SPECIFIC_NAME"].ToString().ToLower());
             Assert.AreEqual("#dumb-identifier-2", dt.Rows[2]["PARAMETER_NAME"].ToString().ToLower());
             Assert.AreEqual(3, dt.Rows[2]["ORDINAL_POSITION"]);
             Assert.AreEqual("IN", dt.Rows[2]["PARAMETER_MODE"]);
-            Assert.AreEqual("INT", dt.Rows[2]["DATA_TYPE"].ToString().ToUpperInvariant());
+            Assert.AreEqual("INT", dt.Rows[2]["DATA_TYPE"].ToString().ToUpper());
 
             Assert.AreEqual(database0.ToLower(), dt.Rows[3]["SPECIFIC_SCHEMA"].ToString().ToLower());
             Assert.AreEqual("sptest", dt.Rows[3]["SPECIFIC_NAME"].ToString().ToLower());
             Assert.AreEqual("--dumb-identifier-3", dt.Rows[3]["PARAMETER_NAME"].ToString().ToLower());
             Assert.AreEqual(4, dt.Rows[3]["ORDINAL_POSITION"]);
             Assert.AreEqual("IN", dt.Rows[3]["PARAMETER_MODE"]);
-            Assert.AreEqual("INT", dt.Rows[3]["DATA_TYPE"].ToString().ToUpperInvariant());
+            Assert.AreEqual("INT", dt.Rows[3]["DATA_TYPE"].ToString().ToUpper());
 
             Assert.AreEqual(database0.ToLower(), dt.Rows[4]["SPECIFIC_SCHEMA"].ToString().ToLower());
             Assert.AreEqual("sptest", dt.Rows[4]["SPECIFIC_NAME"].ToString().ToLower());
             Assert.AreEqual("_client_id", dt.Rows[4]["PARAMETER_NAME"].ToString().ToLower());
             Assert.AreEqual(5, dt.Rows[4]["ORDINAL_POSITION"]);
             Assert.AreEqual("IN", dt.Rows[4]["PARAMETER_MODE"]);
-            Assert.AreEqual("INT", dt.Rows[4]["DATA_TYPE"].ToString().ToUpperInvariant());
+            Assert.AreEqual("INT", dt.Rows[4]["DATA_TYPE"].ToString().ToUpper());
 
             Assert.AreEqual(database0.ToLower(), dt.Rows[5]["SPECIFIC_SCHEMA"].ToString().ToLower());
             Assert.AreEqual("sptest", dt.Rows[5]["SPECIFIC_NAME"].ToString().ToLower());
             Assert.AreEqual("_login_id", dt.Rows[5]["PARAMETER_NAME"].ToString().ToLower());
             Assert.AreEqual(6, dt.Rows[5]["ORDINAL_POSITION"]);
             Assert.AreEqual("IN", dt.Rows[5]["PARAMETER_MODE"]);
-            Assert.AreEqual("INT", dt.Rows[5]["DATA_TYPE"].ToString().ToUpperInvariant());
+            Assert.AreEqual("INT", dt.Rows[5]["DATA_TYPE"].ToString().ToUpper());
 
             Assert.AreEqual(database0.ToLower(), dt.Rows[6]["SPECIFIC_SCHEMA"].ToString().ToLower());
             Assert.AreEqual("sptest", dt.Rows[6]["SPECIFIC_NAME"].ToString().ToLower());
             Assert.AreEqual("_where", dt.Rows[6]["PARAMETER_NAME"].ToString().ToLower());
             Assert.AreEqual(7, dt.Rows[6]["ORDINAL_POSITION"]);
             Assert.AreEqual("IN", dt.Rows[6]["PARAMETER_MODE"]);
-            Assert.AreEqual("VARCHAR", dt.Rows[6]["DATA_TYPE"].ToString().ToUpperInvariant());
+            Assert.AreEqual("VARCHAR", dt.Rows[6]["DATA_TYPE"].ToString().ToUpper());
             Assert.AreEqual(2000, dt.Rows[6]["CHARACTER_OCTET_LENGTH"]);
 
             Assert.AreEqual(database0.ToLower(), dt.Rows[7]["SPECIFIC_SCHEMA"].ToString().ToLower());
@@ -202,7 +202,7 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("_sort", dt.Rows[7]["PARAMETER_NAME"].ToString().ToLower());
             Assert.AreEqual(8, dt.Rows[7]["ORDINAL_POSITION"]);
             Assert.AreEqual("IN", dt.Rows[7]["PARAMETER_MODE"]);
-            Assert.AreEqual("VARCHAR", dt.Rows[7]["DATA_TYPE"].ToString().ToUpperInvariant());
+            Assert.AreEqual("VARCHAR", dt.Rows[7]["DATA_TYPE"].ToString().ToUpper());
             Assert.AreEqual(2000, dt.Rows[7]["CHARACTER_OCTET_LENGTH"]);
 
             Assert.AreEqual(database0.ToLower(), dt.Rows[8]["SPECIFIC_SCHEMA"].ToString().ToLower());
@@ -210,7 +210,7 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("_sql", dt.Rows[8]["PARAMETER_NAME"].ToString().ToLower());
             Assert.AreEqual(9, dt.Rows[8]["ORDINAL_POSITION"]);
             Assert.AreEqual("OUT", dt.Rows[8]["PARAMETER_MODE"]);
-            Assert.AreEqual("VARCHAR", dt.Rows[8]["DATA_TYPE"].ToString().ToUpperInvariant());
+            Assert.AreEqual("VARCHAR", dt.Rows[8]["DATA_TYPE"].ToString().ToUpper());
             Assert.AreEqual(8000, dt.Rows[8]["CHARACTER_OCTET_LENGTH"]);
 
             Assert.AreEqual(database0.ToLower(), dt.Rows[9]["SPECIFIC_SCHEMA"].ToString().ToLower());
@@ -218,14 +218,14 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("_song_id", dt.Rows[9]["PARAMETER_NAME"].ToString().ToLower());
             Assert.AreEqual(10, dt.Rows[9]["ORDINAL_POSITION"]);
             Assert.AreEqual("IN", dt.Rows[9]["PARAMETER_MODE"]);
-            Assert.AreEqual("INT", dt.Rows[9]["DATA_TYPE"].ToString().ToUpperInvariant());
+            Assert.AreEqual("INT", dt.Rows[9]["DATA_TYPE"].ToString().ToUpper());
 
             Assert.AreEqual(database0.ToLower(), dt.Rows[10]["SPECIFIC_SCHEMA"].ToString().ToLower());
             Assert.AreEqual("sptest", dt.Rows[10]["SPECIFIC_NAME"].ToString().ToLower());
             Assert.AreEqual("_notes", dt.Rows[10]["PARAMETER_NAME"].ToString().ToLower());
             Assert.AreEqual(11, dt.Rows[10]["ORDINAL_POSITION"]);
             Assert.AreEqual("IN", dt.Rows[10]["PARAMETER_MODE"]);
-            Assert.AreEqual("VARCHAR", dt.Rows[10]["DATA_TYPE"].ToString().ToUpperInvariant());
+            Assert.AreEqual("VARCHAR", dt.Rows[10]["DATA_TYPE"].ToString().ToUpper());
             Assert.AreEqual(2000, dt.Rows[10]["CHARACTER_OCTET_LENGTH"]);
 
             Assert.AreEqual(database0.ToLower(), dt.Rows[11]["SPECIFIC_SCHEMA"].ToString().ToLower());
@@ -233,7 +233,7 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("_result", dt.Rows[11]["PARAMETER_NAME"].ToString().ToLower());
             Assert.AreEqual(12, dt.Rows[11]["ORDINAL_POSITION"]);
             Assert.AreEqual("OUT", dt.Rows[11]["PARAMETER_MODE"]);
-            Assert.AreEqual("VARCHAR", dt.Rows[11]["DATA_TYPE"].ToString().ToUpperInvariant());
+            Assert.AreEqual("VARCHAR", dt.Rows[11]["DATA_TYPE"].ToString().ToUpper());
             Assert.AreEqual(10, dt.Rows[11]["CHARACTER_OCTET_LENGTH"]);
         }
 
@@ -256,7 +256,7 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("name", dt.Rows[0]["PARAMETER_NAME"].ToString().ToLower());
             Assert.AreEqual(1, dt.Rows[0]["ORDINAL_POSITION"]);
             Assert.AreEqual("IN", dt.Rows[0]["PARAMETER_MODE"]);
-            Assert.AreEqual("VARCHAR", dt.Rows[0]["DATA_TYPE"].ToString().ToUpperInvariant());
+            Assert.AreEqual("VARCHAR", dt.Rows[0]["DATA_TYPE"].ToString().ToUpper());
             Assert.AreEqual(1200, dt.Rows[0]["CHARACTER_MAXIMUM_LENGTH"]);
             if (Version.Major >= 6)
                 Assert.AreEqual(4800, dt.Rows[0]["CHARACTER_OCTET_LENGTH"]);
@@ -285,7 +285,7 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("name", dt.Rows[0]["PARAMETER_NAME"].ToString().ToLower());
             Assert.AreEqual(1, dt.Rows[0]["ORDINAL_POSITION"]);
             Assert.AreEqual("IN", dt.Rows[0]["PARAMETER_MODE"]);
-            Assert.AreEqual("VARCHAR", dt.Rows[0]["DATA_TYPE"].ToString().ToUpperInvariant());
+            Assert.AreEqual("VARCHAR", dt.Rows[0]["DATA_TYPE"].ToString().ToUpper());
             Assert.AreEqual("latin1", dt.Rows[0]["CHARACTER_SET_NAME"]);
             Assert.AreEqual(1200, dt.Rows[0]["CHARACTER_OCTET_LENGTH"]);
 
@@ -294,7 +294,7 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("name2", dt.Rows[1]["PARAMETER_NAME"].ToString().ToLower());
             Assert.AreEqual(2, dt.Rows[1]["ORDINAL_POSITION"]);
             Assert.AreEqual("IN", dt.Rows[1]["PARAMETER_MODE"]);
-            Assert.AreEqual("TEXT", dt.Rows[1]["DATA_TYPE"].ToString().ToUpperInvariant());
+            Assert.AreEqual("TEXT", dt.Rows[1]["DATA_TYPE"].ToString().ToUpper());
             Assert.AreEqual("ucs2", dt.Rows[1]["CHARACTER_SET_NAME"]);
         }
 
@@ -317,17 +317,17 @@ namespace MySql.Data.MySqlClient.Tests
 
             Assert.IsTrue(dt.Rows.Count == 6);
             Assert.AreEqual("INT(10) UNSIGNED ZEROFILL",
-                dt.Rows[0]["DTD_IDENTIFIER"].ToString().ToUpperInvariant());
+                dt.Rows[0]["DTD_IDENTIFIER"].ToString().ToUpper());
             Assert.AreEqual("DECIMAL(10,2)",
-                dt.Rows[1]["DTD_IDENTIFIER"].ToString().ToUpperInvariant());
+                dt.Rows[1]["DTD_IDENTIFIER"].ToString().ToUpper());
             Assert.AreEqual("VARCHAR(20)",
-                dt.Rows[2]["DTD_IDENTIFIER"].ToString().ToUpperInvariant());
+                dt.Rows[2]["DTD_IDENTIFIER"].ToString().ToUpper());
             Assert.AreEqual("TINYTEXT",
-                dt.Rows[3]["DTD_IDENTIFIER"].ToString().ToUpperInvariant());
+                dt.Rows[3]["DTD_IDENTIFIER"].ToString().ToUpper());
             Assert.AreEqual("ENUM('A','B','C')",
-                dt.Rows[4]["DTD_IDENTIFIER"].ToString().ToUpperInvariant());
+                dt.Rows[4]["DTD_IDENTIFIER"].ToString().ToUpper());
             Assert.AreEqual("SET('1','2','3')",
-                dt.Rows[5]["DTD_IDENTIFIER"].ToString().ToUpperInvariant());
+                dt.Rows[5]["DTD_IDENTIFIER"].ToString().ToUpper());
         }
     }
 }
