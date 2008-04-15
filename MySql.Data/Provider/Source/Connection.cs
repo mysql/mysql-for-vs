@@ -269,6 +269,14 @@ namespace MySql.Data.MySqlClient
             }
         }
 
+        protected override DbProviderFactory DbProviderFactory
+        {
+            get
+            {
+                return MySqlClientFactory.Instance;
+            }
+        }
+
         #endregion
 
         #region Transactions

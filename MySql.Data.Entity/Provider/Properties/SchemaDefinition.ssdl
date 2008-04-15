@@ -1,0 +1,432 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="MySqlClient" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2006/04/edm/ssdl">
+  <EntityContainer Name="Schema">
+    
+    <EntitySet Name="STables" EntityType="Self.Table">
+      <DefiningQuery>
+        SELECT
+            TABLE_CATALOG as Catalog
+        ,   TABLE_SCHEMA  as Schema
+        ,   TABLE_NAME    as Name
+        FROM
+        INFORMATION_SCHEMA.TABLES
+        WHERE
+        TABLE_TYPE = 'BASE TABLE'
+      </DefiningQuery>
+    </EntitySet>
+    
+    <EntitySet Name="STableColumns" EntityType="Self.TableColumn">
+      <DefiningQuery>
+        SELECT
+        ,   c.COLUMN_NAME      as Name
+        ,   c.ORDINAL_POSITION as Ordinal
+        ,   CAST( CASE c.IS_NULLABLE WHEN 'YES' THEN 1 WHEN 'NO' THEN 0 ELSE 0 END as bit) as IsNullable
+        ,   c.DATA_TYPE as TypeName
+        ,   c.CHARACTER_MAXIMUM_LENGTH as MaxLength
+        ,   c.NUMERIC_PRECISION as Precision
+        ,   c.NUMERIC_SCALE as Scale
+<!--        ,   columnproperty( object_id('[' + c.TABLE_SCHEMA + ']' + '.' + '[' + c.TABLE_NAME + ']'), c.COLUMN_NAME, 'IsIdentity' )
+        as [IsIdentity]
+        ,   columnproperty( object_id('[' + c.TABLE_SCHEMA + ']' + '.' + '[' + c.TABLE_NAME + ']'), c.COLUMN_NAME, 'IsComputed' ) |
+        CASE WHEN c.DATA_TYPE = 'timestamp' THEN 1 ELSE 0 END
+        as [IsStoreGenerated]-->
+        FROM
+        INFORMATION_SCHEMA.COLUMNS c
+        INNER JOIN
+        INFORMATION_SCHEMA.TABLES t ON
+        c.TABLE_CATALOG &lt;=&gt; t.TABLE_CATALOG AND
+        c.TABLE_SCHEMA = t.TABLE_SCHEMA   AND
+        c.TABLE_NAME = t.TABLE_NAME       AND
+        t.TABLE_TYPE = 'BASE TABLE'
+      </DefiningQuery>
+    </EntitySet>
+
+    <EntitySet Name="SViews" EntityType="Self.View">
+      <DefiningQuery>
+        SELECT
+            TABLE_CATALOG   as `Catalog`
+        ,   TABLE_SCHEMA    as `Schema`
+        ,   TABLE_NAME      as `Name`
+        ,   VIEW_DEFINITION as ViewDefinition
+        ,   CASE IS_UPDATABLE WHEN 'YES' THEN 1 WHEN 'NO' THEN 0 ELSE 0 END as IsUpdatable
+        FROM
+        INFORMATION_SCHEMA.VIEWS
+      </DefiningQuery>
+    </EntitySet>
+
+    <EntitySet Name="SViewColumns" EntityType="Self.ViewColumn">
+      <DefiningQuery>
+        SELECT
+            c.COLUMN_NAME   [Name]
+        ,   c.ORDINAL_POSITION [Ordinal]
+        ,   CAST( CASE c.IS_NULLABLE WHEN 'YES' THEN 1 WHEN 'NO' THEN 0 ELSE 0 END as bit) [IsNullable]
+        ,   CASE
+        WHEN c.DATA_TYPE in ('varchar', 'nvarchar', 'varbinary') and
+        c.CHARACTER_MAXIMUM_LENGTH = -1 THEN
+        c.DATA_TYPE + '(max)'
+        ELSE
+        c.DATA_TYPE
+        END
+        as [TypeName]
+        ,   c.CHARACTER_MAXIMUM_LENGTH [MaxLength]
+        ,   c.NUMERIC_PRECISION [Precision]
+        ,   c.NUMERIC_SCALE [Scale]
+        ,   columnproperty( object_id('[' + c.TABLE_SCHEMA + ']' + '.' + '[' + c.TABLE_NAME + ']'), c.COLUMN_NAME, 'IsIdentity' )
+        as [IsIdentity]
+        ,   columnproperty( object_id('[' + c.TABLE_SCHEMA + ']' + '.' + '[' + c.TABLE_NAME + ']'), c.COLUMN_NAME, 'IsComputed' ) |
+        CASE WHEN c.DATA_TYPE = 'timestamp' THEN 1 ELSE 0 END
+        as [IsStoreGenerated]
+        FROM
+        INFORMATION_SCHEMA.COLUMNS c
+        INNER JOIN
+        INFORMATION_SCHEMA.VIEWS v ON
+        c.TABLE_CATALOG = v.TABLE_CATALOG AND
+        c.TABLE_SCHEMA = v.TABLE_SCHEMA AND
+        c.TABLE_NAME = v.TABLE_NAME
+        WHERE
+        NOT (v.TABLE_SCHEMA = 'dbo'
+        AND v.TABLE_NAME in('syssegments', 'sysconstraints')
+        AND SUBSTRING(CAST(SERVERPROPERTY('productversion') as varchar(20)),1,1) = 8)
+      </DefiningQuery>
+    </EntitySet>
+
+
+    <EntitySet Name="SPrimaryKeys" EntityType="Self.PrimaryKey">
+      <DefiningQuery>
+        SELECT
+        '[' + kc.TABLE_SCHEMA + ']' + '[' + kc.TABLE_NAME + ']' + '[' + kc.COLUMN_NAME + ']' [Id]
+        ,   kc.CONSTRAINT_NAME [Name]
+        ,   kc.ORDINAL_POSITION [Ordinal]
+        FROM
+        INFORMATION_SCHEMA.TABLE_CONSTRAINTS pk
+        INNER JOIN
+        INFORMATION_SCHEMA.KEY_COLUMN_USAGE kc on
+        kc.CONSTRAINT_SCHEMA = pk.CONSTRAINT_SCHEMA
+        AND kc.CONSTRAINT_NAME = pk.CONSTRAINT_NAME
+        WHERE
+        pk.CONSTRAINT_TYPE = 'PRIMARY KEY'
+      </DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="SRelationships" EntityType="Self.Relationship">
+      <DefiningQuery>
+        SELECT
+        '[' + CONSTRAINT_SCHEMA + ']' + '[' + CONSTRAINT_NAME + ']' [Id]
+        ,   CONSTRAINT_NAME    [Name]
+        ,   CAST( CASE DELETE_RULE WHEN 'CASCADE' THEN 1 ELSE 0 END as bit) [IsCascadeDelete]
+        FROM
+        INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS
+      </DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="SRelationshipColumnMaps" EntityType="Self.RelationshipColumnMap">
+      <DefiningQuery>
+        SELECT
+        '[' + FC.CONSTRAINT_SCHEMA + ']' + '[' + FC.CONSTRAINT_NAME + ']' + '[' + cast(FC.ORDINAL_POSITION as nvarchar(30)) + ']' [Id]
+        ,   '[' + PC.TABLE_SCHEMA      + ']' + '[' + PC.TABLE_NAME      + ']' + '[' + PC.COLUMN_NAME + ']' [FromColumnId]
+        ,   '[' + FC.TABLE_SCHEMA      + ']' + '[' + FC.TABLE_NAME      + ']' + '[' + FC.COLUMN_NAME + ']' [ToColumnId]
+        ,   '[' + FC.CONSTRAINT_SCHEMA + ']' + '[' + FC.CONSTRAINT_NAME                              + ']' [RelationshipId]
+        ,   FC.ORDINAL_POSITION [MapOrdinal]
+        FROM
+        INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS AS RC
+        INNER JOIN
+        INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS PC /* PRIMARY KEY COLS*/
+        ON       RC.UNIQUE_CONSTRAINT_SCHEMA = PC.CONSTRAINT_SCHEMA
+        AND      RC.UNIQUE_CONSTRAINT_NAME    = PC.CONSTRAINT_NAME
+        INNER JOIN
+        INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS FC /* FOREIGN KEY COLS*/
+        ON       RC.CONSTRAINT_SCHEMA = FC.CONSTRAINT_SCHEMA
+        AND      RC.CONSTRAINT_NAME    = FC.CONSTRAINT_NAME
+        AND      PC.ORDINAL_POSITION = FC.ORDINAL_POSITION
+      </DefiningQuery>
+    </EntitySet>
+
+    <EntitySet Name="SFunctions" EntityType="Self.Function">
+      <DefiningQuery>
+        SELECT
+        '[' + SPECIFIC_SCHEMA + ']' + '[' + SPECIFIC_NAME + ']' [Id]
+        , SPECIFIC_CATALOG         [Catalog]
+        , SPECIFIC_SCHEMA          [Schema]
+        , SPECIFIC_NAME            [Name]
+        ,   CASE
+        WHEN DATA_TYPE in ('varchar', 'nvarchar', 'varbinary') and
+        CHARACTER_MAXIMUM_LENGTH = -1 THEN
+        DATA_TYPE + '(max)'
+        ELSE
+        DATA_TYPE
+        END [ReturnTypeName]
+        , CHARACTER_MAXIMUM_LENGTH [ReturnMaxLength]
+        , NUMERIC_PRECISION        [ReturnPrecision]
+        , NUMERIC_SCALE            [ReturnScale]
+        , CASE
+        WHEN ROUTINE_TYPE = 'PROCEDURE' THEN
+        CAST(0 as bit)
+        ELSE
+        CAST(1 as bit)
+        END
+        as [IsComposable]
+        , CAST(0 as bit) as [IsAggregate]
+        , CAST(0 as bit) as [IsBuiltIn]
+        , CAST(0 as bit) as [IsNiladic]
+
+        FROM
+        INFORMATION_SCHEMA.ROUTINES
+        WHERE
+        NOT (ROUTINE_SCHEMA = 'dbo'
+        AND ROUTINE_NAME LIKE 'dt[_]%'
+        AND SUBSTRING(CAST(SERVERPROPERTY('productversion') as varchar(20)),1,1) = 8)
+        AND (DATA_TYPE != 'TABLE' OR DATA_TYPE is null)
+      </DefiningQuery>
+    </EntitySet>
+
+    <EntitySet Name="SFunctionParameters" EntityType="Self.FunctionParameter">
+      <DefiningQuery>
+        SELECT
+        '[' + SPECIFIC_SCHEMA + ']' + '[' + SPECIFIC_NAME + ']' + '[' + PARAMETER_NAME + ']' [Id]
+        , '[' + SPECIFIC_SCHEMA + ']' + '[' + SPECIFIC_NAME + ']'                              [FunctionId]
+        , CASE -- trim off the @ symbol
+        WHEN PARAMETER_NAME is null THEN NULL
+        ELSE SUBSTRING(PARAMETER_NAME, 2, LEN(PARAMETER_NAME) )
+        END   [Name]
+        , ORDINAL_POSITION [Ordinal]
+        , CASE
+        WHEN DATA_TYPE in ('varchar', 'nvarchar', 'varbinary') and
+        CHARACTER_MAXIMUM_LENGTH = -1 THEN
+        DATA_TYPE + '(max)'
+        ELSE
+        DATA_TYPE
+        END [TypeName]
+        , CHARACTER_MAXIMUM_LENGTH [MaxLength]
+        , NUMERIC_PRECISION [Precision]
+        , NUMERIC_SCALE    [Scale]
+        , PARAMETER_MODE   [Mode]
+        FROM
+        INFORMATION_SCHEMA.PARAMETERS
+        WHERE
+        IS_RESULT = 'NO'
+      </DefiningQuery>
+    </EntitySet>
+
+
+    <AssociationSet Name="SColumnPrimaryKeys" Association="Self.ColumnPrimaryKey" />
+    <AssociationSet Name="SRelationshipRelationshipColumnMaps" Association="Self.RelationshipRelationshipColumnMap" />
+    <AssociationSet Name="SFromColumnRelationshipColumnMaps" Association="Self.FromColumnRelationshipColumnMap" />
+    <AssociationSet Name="SToColumnRelationshipColumnMaps" Association="Self.ToColumnRelationshipColumnMap" />
+    <AssociationSet Name="STableTableColumns" Association="Self.TableTableColumn" />
+    <AssociationSet Name="SViewViewColumns" Association="Self.ViewViewColumn" />
+    <AssociationSet Name="FunctionFunctionParameters" Association="Self.FunctionFunctionParameter" />
+  </EntityContainer>
+
+  <EntityType Name="Table">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="nvarchar(max)" />
+    <Property Name="Catalog" Type="nvarchar" MaxLength="256" />
+    <Property Name="Schema" Nullable="false" Type="nvarchar" MaxLength="256" />
+    <Property Name="Name" Nullable="false" Type="nvarchar" MaxLength="256" />
+  </EntityType>
+
+  <EntityType Name="View">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="nvarchar(max)" />
+    <Property Name="Catalog" Type="nvarchar" MaxLength="256" />
+    <Property Name="Schema" Nullable="false" Type="nvarchar" MaxLength="256" />
+    <Property Name="Name" Nullable="false" Type="nvarchar" MaxLength="256" />
+    <Property Name="ViewDefinition" Nullable="false" Type="nvarchar(max)" />
+    <Property Name="IsUpdatable" Nullable="false" Type="bit" />
+  </EntityType>
+
+  <EntityType Name="Function">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="nvarchar(max)"/>
+    <Property Name="Catalog" Type="nvarchar" MaxLength="256"/>
+    <Property Name="Schema" Nullable="false" Type="nvarchar" MaxLength="256"/>
+    <Property Name="Name" Nullable="false" Type="nvarchar" MaxLength="256"/>
+    <Property Name="ReturnTypeName" Type="nvarchar" MaxLength="256" />
+    <Property Name="ReturnMaxLength" Type="int" />
+    <Property Name="ReturnPrecision" Type="int" />
+    <Property Name="ReturnScale" Type="int" />
+    <Property Name="IsAggregate" Type="bit" />
+    <Property Name="IsComposable" Type="bit" />
+    <Property Name="IsBuiltIn" Type="bit" />
+    <Property Name="IsNiladic" Type="bit" />
+  </EntityType>
+
+  <EntityType Name="FunctionParameter">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="nvarchar(max)"/>
+    <Property Name="FunctionId" Nullable="false" Type="nvarchar(max)"/>
+    <Property Name="Name" Nullable="false" Type="nvarchar(max)" />
+    <Property Name="Ordinal" Nullable="false" Type="int"/>
+    <Property Name="TypeName" Nullable="false" Type="nvarchar" MaxLength="256" />
+    <Property Name="MaxLength" Nullable="true" Type="int" />
+    <Property Name="Precision" Nullable="true" Type="int" />
+    <Property Name="Scale" Nullable="true" Type="int" />
+    <Property Name="Mode" Type="nvarchar" MaxLength="16" />
+  </EntityType>
+
+  <EntityType Name="TableColumn">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="nvarchar(max)"/>
+    <Property Name="TableId" Nullable="false" Type="nvarchar(max)"/>
+    <Property Name="Name" Nullable="false" Type="nvarchar" MaxLength="256"/>
+    <Property Name="Ordinal" Nullable="false" Type="int" />
+    <Property Name="IsNullable" Nullable="false" Type="bit" />
+    <Property Name="TypeName" Nullable="false" Type="nvarchar" MaxLength="256" />
+    <Property Name="MaxLength" Type="int" />
+    <Property Name="Precision" Type="int" />
+    <Property Name="Scale" Type="int" />
+    <Property Name="IsIdentity" Nullable="false" Type="bit" />
+    <Property Name="IsStoreGenerated" Nullable="false" Type="bit" />
+  </EntityType>
+
+
+  <EntityType Name="ViewColumn">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="nvarchar(max)"/>
+    <Property Name="ViewId" Nullable="false" Type="nvarchar(max)"/>
+    <Property Name="Name" Nullable="false" Type="nvarchar" MaxLength="256"/>
+    <Property Name="Ordinal" Nullable="false" Type="int" />
+    <Property Name="IsNullable" Nullable="false" Type="bit" />
+    <Property Name="TypeName" Nullable="false" Type="nvarchar" MaxLength="256" />
+    <Property Name="MaxLength" Type="int" />
+    <Property Name="Precision" Type="int" />
+    <Property Name="Scale" Type="int" />
+    <Property Name="IsIdentity" Nullable="false" Type="bit" />
+    <Property Name="IsStoreGenerated" Nullable="false" Type="bit" />
+  </EntityType>
+
+
+  <EntityType Name="PrimaryKey">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="nvarchar(max)" />
+    <Property Name="Name" Nullable="false" MaxLength="256" Type="nvarchar" />
+    <Property Name="Ordinal" Nullable="false" Type="int" />
+    <NavigationProperty Relationship="Self.ColumnPrimaryKey" Name="Column" FromRole="PrimaryKey" ToRole="Column" />
+  </EntityType>
+
+  <EntityType Name="Relationship">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="nvarchar(max)" />
+    <Property Name="Name" Nullable="false" MaxLength="256" Type="nvarchar" />
+    <Property Name="IsCascadeDelete" Nullable="false" Type="bit" />
+  </EntityType>
+
+  <EntityType Name="RelationshipColumnMap">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="nvarchar(max)" />
+    <Property Name="MapOrdinal" Nullable="false" Type="int" />
+    <Property Name="RelationshipId" Nullable="false" Type="nvarchar(max)" />
+    <Property Name="FromColumnId" Nullable="false" Type="nvarchar(max)" />
+    <Property Name="ToColumnId" Nullable="false" Type="nvarchar(max)" />
+  </EntityType>
+
+  <Association Name="ColumnPrimaryKey">
+    <End Type="Self.TableColumn" Role="Column" Multiplicity="1" />
+    <End Type="Self.PrimaryKey" Role="PrimaryKey" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Column">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="PrimaryKey">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+
+
+  <Association Name="RelationshipRelationshipColumnMap">
+    <End Type="Self.Relationship" Role="Relationship" Multiplicity="1" />
+    <End Type="Self.RelationshipColumnMap" Role="RelationshipColumnMap" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Relationship">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="RelationshipColumnMap">
+        <PropertyRef Name="RelationshipId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+
+  <Association Name="FromColumnRelationshipColumnMap">
+    <End Type="Self.TableColumn" Role="Column" Multiplicity="1" />
+    <End Type="Self.RelationshipColumnMap" Role="RelationshipColumnMap" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Column">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="RelationshipColumnMap">
+        <PropertyRef Name="FromColumnId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+
+  <Association Name="ToColumnRelationshipColumnMap">
+    <End Type="Self.TableColumn" Role="Column" Multiplicity="1" />
+    <End Type="Self.RelationshipColumnMap" Role="RelationshipColumnMap" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Column">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="RelationshipColumnMap">
+        <PropertyRef Name="ToColumnId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+
+  <Association Name="TableTableColumn">
+    <End Type="Self.Table" Role="Table" Multiplicity="1" />
+    <End Type="Self.TableColumn" Role="Column" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Table">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Column">
+        <PropertyRef Name="TableId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+
+
+  <Association Name="ViewViewColumn">
+    <End Type="Self.View" Role="View" Multiplicity="1" />
+    <End Type="Self.ViewColumn" Role="ViewColumn" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="View">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ViewColumn">
+        <PropertyRef Name="ViewId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+
+  <Association Name="FunctionFunctionParameter">
+    <End Type="Self.Function" Role="Function" Multiplicity="1" />
+    <End Type="Self.FunctionParameter" Role="Parameter" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Function">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Parameter">
+        <PropertyRef Name="FunctionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+
+</Schema>
