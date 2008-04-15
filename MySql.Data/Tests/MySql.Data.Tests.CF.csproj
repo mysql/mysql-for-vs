@@ -4,14 +4,23 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{F29E5B3D-7F76-4CF9-BF5E-8E3A1377B1E4}</ProjectGuid>
+    <ProjectGuid>{710D9251-17A3-4429-9A91-63F03267F310}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MySql.Data.MySqlClient.Tests</RootNamespace>
-    <AssemblyName>MySql.Data.Tests</AssemblyName>
+    <RootNamespace>MySql.Data.Tests.CF</RootNamespace>
+    <AssemblyName>MySql.Data.Tests.CF</AssemblyName>
+    <ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <PlatformFamilyName>WindowsCE</PlatformFamilyName>
+    <PlatformID>E2BECB1F-8C8C-41ba-B736-9BE7D946A398</PlatformID>
+    <OSVersion>5.00</OSVersion>
+    <DeployDirSuffix>MySql.Data.Tests.CF</DeployDirSuffix>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FormFactorID>
+    </FormFactorID>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
-    <OldToolsVersion>3.5</OldToolsVersion>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <NativePlatformName>Windows CE</NativePlatformName>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
   </PropertyGroup>
@@ -20,27 +29,34 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\net-2.0\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET20;NUNIT</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;CF;NET20</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
+    <FileAlignment>512</FileAlignment>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRules>
-    </CodeAnalysisRules>
-    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\net-2.0\Release\</OutputPath>
-    <DefineConstants>TRACE;NET20</DefineConstants>
+    <DefineConstants>TRACE;CF;NET20</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
+    <FileAlignment>512</FileAlignment>
     <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MbUnit.Framework, Version=1.0.2700.29885, Culture=neutral, PublicKeyToken=5e72ecd30bc408d5" />
+    <Reference Include="MbUnit.Framework, Version=2.41.232.0, Culture=neutral, PublicKeyToken=5e72ecd30bc408d5">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\MbUnit\MbUnit.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib" />
     <Reference Include="System" />
-    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -51,10 +67,11 @@
     <Compile Include="Source\CharacterSetTests.cs" />
     <Compile Include="Source\CommandBuilderTests.cs" />
     <Compile Include="Source\CommandTests.cs" />
+    <Compile Include="Source\ConfigurationManager.cs" />
     <Compile Include="Source\ConnectionStringBuilder.cs" />
-    <Compile Include="Source\ConnectionTests.cs" />
-    <Compile Include="Source\BulkLoading.cs" />
-    <Compile Include="Source\ScriptExecution.cs" />
+    <Compile Include="Source\ConnectionTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Source\CultureTests.cs" />
     <Compile Include="Source\DataAdapterTests.cs" />
     <Compile Include="Source\DataReaderTests.cs" />
@@ -68,7 +85,6 @@
     <Compile Include="Source\MicroPerfTests.cs" />
     <Compile Include="Source\MySqlHelperTests.cs" />
     <Compile Include="Source\ParameterTests.cs" />
-    <Compile Include="Source\PerfMonTests.cs" />
     <Compile Include="Source\PoolingTests.cs" />
     <Compile Include="Source\PreparedStatements.cs" />
     <Compile Include="Source\ProcedureParameters.cs" />
@@ -77,19 +93,26 @@
     <Compile Include="Source\StressTests.cs" />
     <Compile Include="Source\Syntax.cs" />
     <Compile Include="Source\Syntax2.cs" />
-    <Compile Include="Source\Threading.cs" />
+    <Compile Include="Source\Tester\TestClasses.cs" />
+    <Compile Include="Source\Tester\TestRunner.cs" />
     <Compile Include="Source\TimeoutAndCancel.cs" />
-    <Compile Include="Source\Transactions.cs" />
-    <Compile Include="Source\UsageAdvisor.cs" />
     <Compile Include="Source\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Provider\MySql.Data.csproj">
-      <Project>{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}</Project>
-      <Name>MySql.Data</Name>
+    <ProjectReference Include="..\Driver\MySql.Data.CF.csproj">
+      <Project>{587A47FB-C1CC-459D-93B6-179D95E41EFB}</Project>
+      <Name>MySql.Data.CF</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Condition="'$(TargetFrameworkVersion)' == 'v1.0'" Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.v1.targets" />
+  <Import Condition="'$(TargetFrameworkVersion)' == 'v2.0'" Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}">
+        <HostingProcess disable="1" />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -97,4 +120,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Import Condition="'$(TargetFrameworkVersion)' == 'v3.5'" Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
 </Project>
