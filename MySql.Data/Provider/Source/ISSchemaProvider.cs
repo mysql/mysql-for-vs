@@ -272,7 +272,7 @@ namespace MySql.Data.MySqlClient
             // now get our where clause and append it if there is one
             string where = GetWhereClause(null, keys, restrictions);
             if (!String.IsNullOrEmpty(where))
-                sql.AppendFormat(" WHERE {0}", where);
+                sql.AppendFormat(CultureInfo.InvariantCulture, " WHERE {0}", where);
 
             DataTable dt = GetTable(sql.ToString());
             dt.TableName = "Procedure Parameters";
@@ -510,7 +510,7 @@ namespace MySql.Data.MySqlClient
             string token = tokenizer.NextToken();
             if (tokenizer.IsSize)
             {
-                dtd.AppendFormat("({0})", token);
+                dtd.AppendFormat(CultureInfo.InvariantCulture, "({0})", token);
                 if (type != "ENUM" && type != "SET")
                     ParseDataTypeSize(row, token);
                 token = tokenizer.NextToken();
@@ -533,7 +533,7 @@ namespace MySql.Data.MySqlClient
                 else if (String.Compare(token, "COLLATE", true) == 0)
                     row["COLLATION_NAME"] = tokenizer.NextToken();
                 else
-                    dtd.AppendFormat(" {0}", token);
+                    dtd.AppendFormat(CultureInfo.InvariantCulture, " {0}", token);
                 token = tokenizer.NextToken();
             }
 
