@@ -83,6 +83,12 @@
     <Compile Include="Source\UsageAdvisor.cs" />
     <Compile Include="Source\Utils.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Provider\MySql.Data.csproj">
+      <Project>{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}</Project>
+      <Name>MySql.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

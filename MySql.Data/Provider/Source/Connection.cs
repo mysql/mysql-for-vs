@@ -269,6 +269,8 @@ namespace MySql.Data.MySqlClient
             }
         }
 
+#if !CF
+
         protected override DbProviderFactory DbProviderFactory
         {
             get
@@ -276,6 +278,7 @@ namespace MySql.Data.MySqlClient
                 return MySqlClientFactory.Instance;
             }
         }
+#endif
 
         #endregion
 

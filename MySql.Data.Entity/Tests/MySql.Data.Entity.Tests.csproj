@@ -52,25 +52,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseEdmTest.cs" />
-    <Compile Include="LinqTests.cs" />
-    <Compile Include="InsertTests.cs" />
-    <Compile Include="DeleteTests.cs" />
-    <Compile Include="TestDB.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>TestDB.csdl</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="UpdateTests.cs" />
     <Compile Include="SelectTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Driver\MySql.Data.csproj">
+    <ProjectReference Include="..\..\MySql.Data\Provider\MySql.Data.csproj">
       <Project>{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}</Project>
       <Name>MySql.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TestSuite\MySql.Data.Tests.csproj">
+    <ProjectReference Include="..\..\MySql.Data\Tests\MySql.Data.Tests.csproj">
       <Project>{F29E5B3D-7F76-4CF9-BF5E-8E3A1377B1E4}</Project>
       <Name>MySql.Data.Tests</Name>
     </ProjectReference>
@@ -78,17 +68,6 @@
   <ItemGroup>
     <None Include="App.Config" />
     <None Include="Properties\schema.sql" />
-    <None Include="TestDB.csdl">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>TestDB.Designer.cs</LastGenOutput>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestDB.msl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestDB.ssdl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

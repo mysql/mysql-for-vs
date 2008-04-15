@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Data.CF", "MySql.Data
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Data.CF.Tests", "MySql.Data\Tests\MySql.Data.CF.Tests.csproj", "{710D9251-17A3-4429-9A91-63F03267F310}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Data.Entity", "MySql.Data.Entity\Provider\MySql.Data.Entity.csproj", "{A8E799B1-D6AC-42BD-907E-B213D7E9B3C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Data.Entity.Tests", "MySql.Data.Entity\Tests\MySql.Data.Entity.Tests.csproj", "{77EC4E20-293A-48BA-8415-D0AD869D91FA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|.NET 2.0 = Debug|.NET 2.0
@@ -89,6 +93,26 @@ Global
 		{710D9251-17A3-4429-9A91-63F03267F310}.Release|Any CPU.Build.0 = Release|Any CPU
 		{710D9251-17A3-4429-9A91-63F03267F310}.Release|x64.ActiveCfg = Release|Any CPU
 		{710D9251-17A3-4429-9A91-63F03267F310}.Release|x86.ActiveCfg = Release|Any CPU
+		{A8E799B1-D6AC-42BD-907E-B213D7E9B3C5}.Debug|.NET 2.0.ActiveCfg = Debug|Any CPU
+		{A8E799B1-D6AC-42BD-907E-B213D7E9B3C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8E799B1-D6AC-42BD-907E-B213D7E9B3C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8E799B1-D6AC-42BD-907E-B213D7E9B3C5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A8E799B1-D6AC-42BD-907E-B213D7E9B3C5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A8E799B1-D6AC-42BD-907E-B213D7E9B3C5}.Release|.NET 2.0.ActiveCfg = Release|Any CPU
+		{A8E799B1-D6AC-42BD-907E-B213D7E9B3C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8E799B1-D6AC-42BD-907E-B213D7E9B3C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8E799B1-D6AC-42BD-907E-B213D7E9B3C5}.Release|x64.ActiveCfg = Release|Any CPU
+		{A8E799B1-D6AC-42BD-907E-B213D7E9B3C5}.Release|x86.ActiveCfg = Release|Any CPU
+		{77EC4E20-293A-48BA-8415-D0AD869D91FA}.Debug|.NET 2.0.ActiveCfg = Debug|Any CPU
+		{77EC4E20-293A-48BA-8415-D0AD869D91FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77EC4E20-293A-48BA-8415-D0AD869D91FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77EC4E20-293A-48BA-8415-D0AD869D91FA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{77EC4E20-293A-48BA-8415-D0AD869D91FA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{77EC4E20-293A-48BA-8415-D0AD869D91FA}.Release|.NET 2.0.ActiveCfg = Release|Any CPU
+		{77EC4E20-293A-48BA-8415-D0AD869D91FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77EC4E20-293A-48BA-8415-D0AD869D91FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77EC4E20-293A-48BA-8415-D0AD869D91FA}.Release|x64.ActiveCfg = Release|Any CPU
+		{77EC4E20-293A-48BA-8415-D0AD869D91FA}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

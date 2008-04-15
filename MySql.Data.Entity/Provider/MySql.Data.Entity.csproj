@@ -43,11 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MySqlGenerator.cs" />
     <Compile Include="ProviderManifest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProviderServices.cs" />
-    <Compile Include="SelectGenerator.cs" />
     <Compile Include="SQL Generation\DmlSqlGenerator.cs" />
     <Compile Include="SQL Generation\ISqlFragment.cs" />
     <Compile Include="SQL Generation\JoinSymbol.cs" />
@@ -69,7 +67,7 @@
     <EmbeddedResource Include="Properties\SchemaMapping.msl" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Driver\MySql.Data.csproj">
+    <ProjectReference Include="..\..\MySql.Data\Provider\MySql.Data.csproj">
       <Project>{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}</Project>
       <Name>MySql.Data</Name>
     </ProjectReference>
