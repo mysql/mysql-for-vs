@@ -60,12 +60,8 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs" />
-    <Compile Include="Source\base\DbConnectionStringBuilder.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Source\base\DbException.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Source\base\DbConnectionStringBuilder.cs" />
+    <Compile Include="Source\base\DbException.cs" />
     <Compile Include="Source\cf\BufferedStream.cs" />
     <Compile Include="Source\cf\Semaphore.cs" />
     <Compile Include="Source\cf\WinCE.cs" />
@@ -102,7 +98,6 @@
     <Compile Include="Source\MySqlHelper.cs" />
     <Compile Include="Source\MySqlPool.cs" />
     <Compile Include="Source\MySqlPoolManager.cs" />
-    <Compile Include="Source\MySqlScript.cs" />
     <Compile Include="Source\MySqlStream.cs" />
     <Compile Include="Source\NativeDriver.cs" />
     <Compile Include="Source\parameter.cs" />

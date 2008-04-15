@@ -1,7 +1,7 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -118,29 +118,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\CHANGES" />
+    <None Include="..\README" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\ReservedWords.txt" />
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Properties\Resources.Designer.cs" />
-    <Compile Include="Source\BulkLoader.cs" />
     <Compile Include="Source\CharSetMap.cs" />
-    <Compile Include="Source\command.cs" />
-    <Compile Include="Source\CommandBuilder.cs" />
-    <Compile Include="Source\common\Cache.cs" />
+    <Compile Include="Source\command.cs">
+    </Compile>
+    <Compile Include="Source\CommandBuilder.cs">
+    </Compile>
     <Compile Include="Source\common\ContextString.cs" />
     <Compile Include="Source\common\NamedPipeStream.cs" />
     <Compile Include="Source\common\NativeMethods.cs" />
     <Compile Include="Source\common\Platform.cs" />
     <Compile Include="Source\common\SHA1.cs" />
     <Compile Include="Source\common\SharedMemoryStream.cs" />
-    <Compile Include="Source\common\SocketStream.cs" />
-    <Compile Include="Source\common\SqlTokenizer.cs" />
     <Compile Include="Source\common\StreamCreator.cs" />
     <Compile Include="Source\common\Version.cs" />
     <Compile Include="Source\CompressedStream.cs" />
@@ -148,7 +141,8 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Source\Crypt.cs" />
-    <Compile Include="Source\dataadapter.cs" />
+    <Compile Include="Source\dataadapter.cs">
+    </Compile>
     <Compile Include="Source\datareader.cs" />
     <Compile Include="Source\Driver.cs" />
     <Compile Include="Source\Exception.cs" />
@@ -166,7 +160,6 @@
     <Compile Include="Source\MySqlPool.cs" />
     <Compile Include="Source\MySqlPoolManager.cs" />
     <Compile Include="Source\MySqlPromotableTransaction.cs" />
-    <Compile Include="Source\MySqlScript.cs" />
     <Compile Include="Source\MySqlStream.cs" />
     <Compile Include="Source\NativeDriver.cs" />
     <Compile Include="Source\parameter.cs" />
@@ -212,6 +205,30 @@
     <Compile Include="Source\zlib\ZOutputStream.cs" />
     <Compile Include="Source\zlib\ZStream.cs" />
     <Compile Include="Source\zlib\ZStreamException.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\ReservedWords.txt" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Content Include="Source\docs\MySqlCommand.xml" />
+    <Content Include="Source\docs\MySqlCommandBuilder.xml" />
+    <Content Include="Source\docs\MySqlConnection.xml" />
+    <Content Include="Source\docs\MySqlConnectionStringBuilder.xml" />
+    <Content Include="Source\docs\MySqlDataAdapter.xml" />
+    <Content Include="Source\docs\MySqlDataReader.xml" />
+    <Content Include="Source\docs\MySqlException.xml" />
+    <Content Include="Source\docs\MySqlHelper.xml" />
+    <Content Include="Source\docs\MySqlParameter.xml" />
+    <Content Include="Source\docs\MySqlParameterCollection.xml" />
+    <Content Include="Source\docs\MySqlTransaction.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\Resources.Designer.cs" />
+    <Compile Include="Source\common\Cache.cs" />
+    <Compile Include="Source\common\SqlTokenizer.cs" />
+    <Compile Include="Source\BulkLoader.cs" />
+    <Compile Include="Source\MySqlScript.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -21,23 +21,19 @@
 #if !PocketPC
 
 using System.Data.Common;
-using System;
-using System.Reflection;
 
 namespace MySql.Data.MySqlClient
 {
     /// <summary>
     /// DBProviderFactory implementation for MysqlClient.
     /// </summary>
-    public sealed class MySqlClientFactory : DbProviderFactory, IServiceProvider
+    public sealed class MySqlClientFactory : DbProviderFactory
     {
         /// <summary>
         /// Gets an instance of the <see cref="MySqlClientFactory"/>. 
         /// This can be used to retrieve strongly typed data objects. 
         /// </summary>
         public static readonly MySqlClientFactory Instance;
-        private Type dbServicesType;
-        private FieldInfo mySqlDbProviderServicesInstance;
 
         static MySqlClientFactory()
         {
@@ -106,58 +102,6 @@ namespace MySql.Data.MySqlClient
         {
             get { return false; }
         }
-
-        #region IServiceProvider Members
-
-        /// <summary>
-        /// Provide a simple caching layer
-        /// </summary>
-        private Type DbServicesType
-        {
-            get 
-            {
-                if (dbServicesType == null)
-                {
-                    // Get the type this way so we don't have to reference System.Data.Entity
-                    // from our core provider
-                    dbServicesType = Type.GetType(
-                        @"System.Data.Common.DbProviderServices, System.Data.Entity, 
-                        Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 
-                                                                                          false);
-                }
-                return dbServicesType;
-            }
-        }
-
-        private FieldInfo MySqlDbProviderServicesInstance
-        {
-            get
-            {
-                if (mySqlDbProviderServicesInstance == null)
-                {
-                    string fullName = Assembly.GetExecutingAssembly().FullName;
-                    fullName = fullName.Replace("MySql.Data", "MySql.Data.Entity");
-                    fullName = String.Format("MySql.Data.MySqlClient.MySqlProviderServices, {0}", fullName);
-
-                    Type providerServicesType = Type.GetType(fullName, false);
-                    mySqlDbProviderServicesInstance = providerServicesType.GetField("Instance",
-                        BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
-                }
-                return mySqlDbProviderServicesInstance;
-            }
-        }
-
-        object IServiceProvider.GetService(Type serviceType)
-        {
-            // DbProviderServices is the only service we offer up right now
-            if (serviceType != DbServicesType) return null;
-
-            if (MySqlDbProviderServicesInstance == null) return null;
-
-            return MySqlDbProviderServicesInstance.GetValue(null);
-        }
-
-        #endregion
     }
 }
 
