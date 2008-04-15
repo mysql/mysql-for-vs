@@ -98,12 +98,6 @@
     <Compile Include="Source\TimeoutAndCancel.cs" />
     <Compile Include="Source\Utils.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Driver\MySql.Data.CF.csproj">
-      <Project>{587A47FB-C1CC-459D-93B6-179D95E41EFB}</Project>
-      <Name>MySql.Data.CF</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Condition="'$(TargetFrameworkVersion)' == 'v1.0'" Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.v1.targets" />
   <Import Condition="'$(TargetFrameworkVersion)' == 'v2.0'" Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
   <ProjectExtensions>
