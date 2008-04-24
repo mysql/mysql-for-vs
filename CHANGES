@@ -10,6 +10,8 @@ Version 5.1.6
  - Fixed problem with connections staying open after being used with SqlDataSource.
    The problem was that we were not returning an enumerator for our reader with the
    closeReader option set to true when we were supposed to.  (Bug #34460)
+ - Fixed problem where the bit data type would continue to return null values
+   once it saw a null value in a previous row (bug #36313)      
       
 Version 5.1.5 - 
   - Fixed problem with membership provider where FindUserByEmail would fail trying to add

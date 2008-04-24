@@ -842,5 +842,43 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(1, dt.Rows[0][2]);
             Assert.AreEqual(0, dt.Rows[1][2]);
         }
+
+        /// <summary>
+        /// Bug #36313 BIT result is lost in the left outer join 
+        /// </summary>
+        [Test]
+        public void BitInLeftOuterJoin()
+        {
+            execSQL("DROP TABLE IF EXISTS Main");
+            execSQL("DROP TABLE IF EXISTS Child");
+            execSQL(@"CREATE TABLE Main (Id int(10) unsigned NOT NULL AUTO_INCREMENT,
+                Descr varchar(45) NOT NULL, PRIMARY KEY (`Id`)) 
+                ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1");
+            execSQL(@"INSERT INTO Main (Id,Descr) VALUES (1,'AAA'), (2,'BBB'), (3, 'CCC')");
+
+            execSQL(@"CREATE TABLE Child (Id int(10) unsigned NOT NULL AUTO_INCREMENT,
+                MainId int(10) unsigned NOT NULL, Value int(10) unsigned NOT NULL,
+                Enabled bit(1) NOT NULL, PRIMARY KEY (`Id`)) 
+                ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1");
+            execSQL(@"INSERT INTO Child (Id, MainId, Value, Enabled) VALUES (1,2,12345,0x01)");
+
+            MySqlDataAdapter da = new MySqlDataAdapter(
+                @"SELECT m.Descr, c.Value, c.Enabled FROM Main m 
+                LEFT OUTER JOIN Child c ON m.Id=c.MainId ORDER BY m.Descr", conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            Assert.AreEqual(3, dt.Rows.Count);
+            Assert.AreEqual("AAA", dt.Rows[0][0]);
+            Assert.AreEqual("BBB", dt.Rows[1][0]);
+            Assert.AreEqual("CCC", dt.Rows[2][0]);
+
+            Assert.AreEqual(DBNull.Value, dt.Rows[0][1]);
+            Assert.AreEqual(12345, dt.Rows[1][1]);
+            Assert.AreEqual(DBNull.Value, dt.Rows[2][1]);
+
+            Assert.AreEqual(DBNull.Value, dt.Rows[0][2]);
+            Assert.AreEqual(1, dt.Rows[1][2]);
+            Assert.AreEqual(DBNull.Value, dt.Rows[2][2]);
+        }
 	}
 }
