@@ -436,12 +436,12 @@ namespace MySql.Data.MySqlClient.Tests
             DataTable dt = new DataTable();
             da.Fill(dt);
 
-            Assert.IsTrue(dt.Rows[0][0].GetType() == typeof(string));
-            Assert.IsTrue(dt.Rows[0][1].GetType() == typeof(string));
-            Assert.IsTrue(dt.Rows[0][2].GetType() == typeof(string));
-            Assert.IsTrue(dt.Rows[0][3].GetType() == typeof(string));
-            Assert.IsTrue(dt.Rows[0][4].GetType() == typeof(string));
-            Assert.IsTrue(dt.Rows[0][5].GetType() == typeof(string));
+            Assert.IsTrue(dt.Columns[0].DataType == typeof(string));
+            Assert.IsTrue(dt.Columns[1].DataType == typeof(string));
+            Assert.IsTrue(dt.Columns[2].DataType == typeof(string));
+            Assert.IsTrue(dt.Columns[3].DataType == typeof(string));
+            Assert.IsTrue(dt.Columns[4].DataType == typeof(string));
+            Assert.IsTrue(dt.Columns[5].DataType == typeof(string));
         }
 
         [Test]
