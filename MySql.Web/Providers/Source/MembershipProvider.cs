@@ -801,9 +801,9 @@ PKID, Username, ApplicationName,
                         if (reader.GetBoolean(4))
                             throw new MembershipPasswordException("The supplied user is locked out.");
 
-                        string password = reader.GetString(0);
-                        string passwordAnswer = reader.GetString(1);
-                        string passwordKey = reader.GetString(2);
+                        string password = reader.IsDBNull(0) ? null : reader.GetString(0);
+                        string passwordAnswer = reader.IsDBNull(1) ? null : reader.GetString(1);
+                        string passwordKey = reader.IsDBNull(2) ? null : reader.GetString(2);
                         MembershipPasswordFormat format = (MembershipPasswordFormat)
                             reader.GetInt32(3);
 

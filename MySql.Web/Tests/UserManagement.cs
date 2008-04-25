@@ -168,5 +168,34 @@ namespace MySql.Web.Security.Tests
                 Assert.Fail(ex.Message);
             }
         }
+
+        /// <summary>
+        /// Bug #36159 Problem with 'GetPassword' is Membership provider 
+        /// </summary>
+        [Test]
+        public void GetPassword()
+        {
+            provider = new MySQLMembershipProvider();
+            NameValueCollection config = new NameValueCollection();
+            config.Add("connectionStringName", "LocalMySqlServer");
+            config.Add("applicationName", "/");
+            config.Add("enablePasswordRetrieval", "true");
+            config.Add("passwordFormat", "Clear");
+            config.Add("requireQuestionAndAnswer", "false");
+            try
+            {
+                provider.Initialize(null, config);
+                MembershipCreateStatus status;
+                MembershipUser user = provider.CreateUser("foo", "pass", "foo@bar.net",
+                    null, null, true, null, out status);
+                string password = provider.GetPassword("foo", null);
+                Assert.AreEqual("pass", password);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+
+        }
     }
 }
