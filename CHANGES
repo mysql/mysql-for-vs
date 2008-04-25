@@ -14,6 +14,8 @@ Version 5.1.6
    once it saw a null value in a previous row (bug #36313)      
  - Fixed problem with MembershipUser.GetPassword where attempting to retrieve a
    password on a user where password Q&A is not required would throw an exception (bug #36159)      
+ - Fixed a problem with MembershipUser.GetNumberOfUsersOnline.  
+   It actually works now  :) (bug #36157)
       
 Version 5.1.5 - 
   - Fixed problem with membership provider where FindUserByEmail would fail trying to add

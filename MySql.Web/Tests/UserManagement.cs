@@ -197,5 +197,36 @@ namespace MySql.Web.Security.Tests
             }
 
         }
+
+        /// <summary>
+        /// Bug #36157 Calling "GetNumberOfUsersOnline" in Membership throw error 
+        /// </summary>
+        [Test]
+        public void GetNumberOfUsersOnline()
+        {
+            provider = new MySQLMembershipProvider();
+            NameValueCollection config = new NameValueCollection();
+            config.Add("connectionStringName", "LocalMySqlServer");
+            config.Add("applicationName", "/");
+            config.Add("enablePasswordRetrieval", "true");
+            config.Add("passwordFormat", "Clear");
+            config.Add("requireQuestionAndAnswer", "false");
+            try
+            {
+                provider.Initialize(null, config);
+                MembershipCreateStatus status;
+                MembershipUser user = provider.CreateUser("foo", "pass", "foo@bar.net",
+                    null, null, true, null, out status);
+                MembershipUser user2 = provider.CreateUser("foo2", "pass2", "foo2@bar.net",
+                    null, null, true, null, out status);
+                provider.ValidateUser("foo", "pass");
+                provider.ValidateUser("foo2", "pass2");
+                Assert.AreEqual(2, provider.GetNumberOfUsersOnline());
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
     }
 }

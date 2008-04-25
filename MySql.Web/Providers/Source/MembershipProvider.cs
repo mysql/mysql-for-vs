@@ -742,13 +742,11 @@ PKID, Username, ApplicationName,
 
             using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
-                MySqlCommand cmd =
-                    new MySqlCommand(
-                        @"SELECT Count(*) FROM mysql_Membership
-                WHERE LastActivityDate > ?LastActivityUpdate AND 
-                ApplicationName = ?ApplicationName",
-                        conn);
-                cmd.Parameters.Add("?CompareDate", MySqlDbType.Datetime).Value = compareTime;
+                MySqlCommand cmd = new MySqlCommand(
+                    @"SELECT Count(*) FROM mysql_Membership
+                    WHERE LastActivityDate > ?LastActivityDate AND 
+                    ApplicationName = ?ApplicationName", conn);
+                cmd.Parameters.Add("?LastActivityDate", MySqlDbType.DateTime).Value = compareTime;
                 cmd.Parameters.Add("?ApplicationName", MySqlDbType.VarChar, 255).Value = pApplicationName;
                 try
                 {
