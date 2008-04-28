@@ -18,6 +18,7 @@ Version 5.1.6
    It actually works now  :) (bug #36157)
  - Fixed documentation that still stated that setting port to -1 was necessary for
    a named pipe connection (bug #35356)      
+ - Fixed data type processing so that geometry fields are returned as binary.  (bug #36081)      
       
 Version 5.1.5 - 
   - Fixed problem with membership provider where FindUserByEmail would fail trying to add
