@@ -16,6 +16,8 @@ Version 5.1.6
    password on a user where password Q&A is not required would throw an exception (bug #36159)      
  - Fixed a problem with MembershipUser.GetNumberOfUsersOnline.  
    It actually works now  :) (bug #36157)
+ - Fixed documentation that still stated that setting port to -1 was necessary for
+   a named pipe connection (bug #35356)      
       
 Version 5.1.5 - 
   - Fixed problem with membership provider where FindUserByEmail would fail trying to add
