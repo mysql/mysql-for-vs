@@ -516,7 +516,9 @@ namespace MySql.Data.MySqlClient
         object ICloneable.Clone()
         {
             MySqlConnection clone = new MySqlConnection();
-            clone.ConnectionString = settings.GetConnectionString(true);
+            string connectionString = settings.GetConnectionString(true);
+            if (connectionString != null)
+                clone.ConnectionString = connectionString;
             return clone;
         }
 

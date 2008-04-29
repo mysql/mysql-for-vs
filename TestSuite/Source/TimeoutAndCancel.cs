@@ -199,6 +199,8 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void CancelSelect()
         {
+            if (version < new Version(5, 0)) return;
+
             execSQL("CREATE TABLE Test (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(20))");
             for (int i=0; i < 10000; i++)
                 execSQL("INSERT INTO Test VALUES (NULL, 'my string')");
