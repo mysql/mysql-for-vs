@@ -62,32 +62,32 @@ begin
     end
 end;
 
-function UnRegisterAssembly(name: String; version: Integer) : Boolean;
+function UnRegisterAssembly(assemblyFile: String; assemblyName: String; version: Integer) : Boolean;
 var
   ResultCode : Integer;
   InstallutilPath: String;
 begin
     Result := true;
-    Log(Format('Unregistering %s for version %d', [name, version]));
+    Log(Format('Unregistering %s for version %d', [assemblyName, version]));
 
     // Remove our assembly from the GAC now
-    if Not RemoveFromGAC('mysql.data, Version={#SetupSetting('AppVersion')}', version) then
+    if Not RemoveFromGAC(Format('%s, Version={#SetupSetting("AppVersion")}', [assemblyName]), version) then
     begin
-      Log('Removing ' + name + ' from the GAC failed.');
+      Log('Removing ' + assemblyName + ' from the GAC failed.');
       Result := false;
     end
     else
     begin
       InstallUtilPath := GetInstallUtilPath(version);
 
-      Exec(InstallUtilPath, '/LogFile= /u "' + name + '"', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+      Exec(InstallUtilPath, '/LogFile= /u "' + assemblyFile + '"', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
       if ResultCode <> 0 then
       begin
-        Log('Running remove methods in ' + name + ' failed.');
+        Log('Running remove methods in ' + assemblyName + ' failed.');
         Result := false;
       end
       else
-        Log('Successfully unregistered ' + name);
+        Log('Successfully unregistered ' + assemblyName);
     end
 end;
 
@@ -105,9 +105,11 @@ begin
   end;
 end;
 
-function CanInstallDDEX() : Boolean;
+function GetVS2005Path(Param: String) : String;
 begin
-  Result := RegKeyExists(HKEY_LOCAL_MACHINE, 'Software\Microsoft\VisualStudio\8.0');
+  if Not RegQueryStringValue(HKEY_LOCAL_MACHINE, 'Software\Microsoft\VisualStudio\8.0\Setup\VS', 'EnvironmentDirectory', Result) Then
+    RaiseException('Unable to locate the Visual Studio 2005 installation directory');
+  Result := Format('%sdevenv.com', [Result]);
 end;
 
 
