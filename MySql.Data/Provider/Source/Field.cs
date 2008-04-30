@@ -343,6 +343,7 @@ namespace MySql.Data.MySqlClient
                 case MySqlDbType.LongText:
                 case (MySqlDbType) Field_Type.NULL:
                     return new MySqlString(type, true);
+                case MySqlDbType.Geometry:
                 case MySqlDbType.Blob:
                 case MySqlDbType.MediumBlob:
                 case MySqlDbType.LongBlob:
