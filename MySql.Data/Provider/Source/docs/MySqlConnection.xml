@@ -1086,6 +1086,13 @@
               Should the provider expect user variables in the SQL.
             </td>
           </tr>
+          <tr>
+            <td>Interactive -or- Interactive Session</td>
+            <td>false</td>
+            <td>
+              Should this session be considered interactive?
+            </td>
+          </tr>
         </table>
       </div>
       <para>

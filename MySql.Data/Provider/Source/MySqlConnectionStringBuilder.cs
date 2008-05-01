@@ -53,6 +53,7 @@ namespace MySql.Data.MySqlClient
         bool treatTinyAsBoolean;
         bool allowUserVariables;
         bool clearing;
+        bool interactiveSession;
 
         static MySqlConnectionStringBuilder()
         {
@@ -93,6 +94,7 @@ namespace MySql.Data.MySqlClient
             defaultValues.Add(Keyword.DefaultCommandTimeout, 30);
             defaultValues.Add(Keyword.TreatTinyAsBoolean, true);
             defaultValues.Add(Keyword.AllowUserVariables, false);
+            defaultValues.Add(Keyword.InteractiveSession, false);
         }
 
         /// <summary>
@@ -685,6 +687,22 @@ namespace MySql.Data.MySqlClient
             }
         }
 
+#if !CF && !MONO
+        [Category("Advanced")]
+        [DisplayName("Interactive Session")]
+        [Description("Should this session be considered interactive?")]
+        [DefaultValue(false)]
+        [RefreshProperties(RefreshProperties.All)]
+#endif
+        public bool InteractiveSession
+        {
+            get { return interactiveSession; }
+            set
+            {
+                SetValue("Interactive Session", value);
+                interactiveSession = value;
+            }
+        }
         #endregion
 
         #region Pooling Properties
@@ -1114,6 +1132,9 @@ namespace MySql.Data.MySqlClient
                     return Keyword.TreatTinyAsBoolean;
                 case "allow user variables":
                     return Keyword.AllowUserVariables;
+                case "interactive":
+                case "interactive session":
+                    return Keyword.InteractiveSession;
             }
             throw new ArgumentException(Resources.KeywordNotSupported, key);
         }
@@ -1196,6 +1217,8 @@ namespace MySql.Data.MySqlClient
                     return treatTinyAsBoolean;
                 case Keyword.AllowUserVariables:
                     return allowUserVariables;
+                case Keyword.InteractiveSession:
+                    return interactiveSession;
                 default:
                     return null; /* this will never happen */
             }
@@ -1293,6 +1316,8 @@ namespace MySql.Data.MySqlClient
                     treatTinyAsBoolean = ConvertToBool(value); break;
                 case Keyword.AllowUserVariables:
                     allowUserVariables = ConvertToBool(value); break;
+                case Keyword.InteractiveSession:
+                    interactiveSession = ConvertToBool(value); break;
             }
         }
 
@@ -1472,6 +1497,7 @@ namespace MySql.Data.MySqlClient
         BlobAsUTF8ExcludePattern,
         DefaultCommandTimeout,
         TreatTinyAsBoolean,
-        AllowUserVariables
+        AllowUserVariables,
+        InteractiveSession
     }
 }

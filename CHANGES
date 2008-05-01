@@ -17,7 +17,8 @@ Version 5.2.2 -
 - Fixed bug where retrieving passwords that are encrypted was not returning proper
   passwords (bug #35336)    
 - Fixed problem with profile provider where properties that were specified without
-  a given type could not be retrieved properly (bug #36000)    
+  a given type could not be retrieved properly (bug #36000)  
+- Implemented interactive session connection string option  
     
 Version 5.2.1 - 2/27/2008
 - Tons of fixes in providers.  The actually work now.  :)

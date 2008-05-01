@@ -366,6 +366,10 @@ namespace MySql.Data.MySqlClient
             // allow load data local infile
             flags |= ClientFlags.LOCAL_FILES;
 
+            // did the user request an interactive session?
+            if (Settings.InteractiveSession)
+                flags |= ClientFlags.INTERACTIVE;
+
             // if the server allows it and a database was specified, then indicate
             // that we will connect with a database name
             if ((serverCaps & ClientFlags.CONNECT_WITH_DB) != 0 &&
