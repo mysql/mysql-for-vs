@@ -19,7 +19,9 @@ Version 5.1.6
  - Fixed documentation that still stated that setting port to -1 was necessary for
    a named pipe connection (bug #35356)      
  - Fixed data type processing so that geometry fields are returned as binary.  (bug #36081)      
-      
+ - Fixed problem that kept our provider from showing up in the provider list when configuring
+   a new connection from a SqlDataSource      
+
 Version 5.1.5 - 
   - Fixed problem with membership provider where FindUserByEmail would fail trying to add
     a second parameter with the same name as the first (bug #33347)
@@ -121,6 +123,12 @@ Version 5.1.0 - 5/1/2007
   - GetSchema will now report objects relative to the currently selected database.
     What this means is that passing in null as a database restriction will report
     objects on the currently selected database only.
+    
+Version 5.0.10 - 
+  - Fixed problem with pooling where a bogus host info combined with a pool with a minimum
+    size > 0 can combine to create an exception.  The pool fails to create from the bogus
+    host info but the driver finalizer code will still try to remove the driver from
+    a non-existant pool.  (bug #36432)    
     
 Version 5.0.9 - 4/14/08
 

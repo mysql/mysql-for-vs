@@ -34,6 +34,7 @@
             <RegistryValue Id='DPDescription' Name='Description' Type='string' Value='Provider_Description, MySql.Data.VisualStudio.Properties.Resources'/>
             <RegistryValue Id='FactoryService' Name='FactoryService' Type='string' Value='{D949EA95-EDA1-4b65-8A9E-266949A99360}'/>
             <RegistryValue Id='InvariantName' Name='InvariantName' Type='string' Value='MySql.Data.MySqlClient'/>
+            <RegistryValue Id='Technology' Name='Technology' Type='string' Value='{77AB9A9D-78B9-4ba7-91AC-873F5338F1D2}'/>
             <RegistryKey Id='SupportedObjects' Key='SupportedObjects' Action='create'>
               <RegistryKey Id='SupportedObjects1' Key='DataConnectionPromptDialog' Action='create'/>
               <RegistryKey Id='SupportedObjects2' Key='DataConnectionProperties' Action='create'/>
