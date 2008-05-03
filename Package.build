@@ -17,7 +17,7 @@
 	</target>
 
 	<!-- construct our version id from the assembly version -->
-	<property name="version" value="${assemblyname::get-version(assemblyname::get-assembly-name('driver/bin/net-2.0/release/mysql.data.dll'))}"/>
+	<property name="version" value="${assemblyname::get-version(assemblyname::get-assembly-name('mysql.data/provider/bin/net-2.0/release/mysql.data.dll'))}"/>
 	<if test="${string::ends-with(version, '0')}">
 		<property name="version" value="${string::substring(version, 0, string::last-index-of(version, '.'))}"/>
 	</if>
@@ -76,9 +76,9 @@
 
 	<target name="PackageInstall">
 		<exec workingdir="Installer" program="candle"
-			  commandline="-ext WixNetFxExtension -ext WixUtilExtension -dIsGPL=${IsGPL} -dVersion=${version} -dbuild=release main.wxs samples.wxs visualstudio.wxs vs2008.wxs webproviders.wxs ui.wxs cf.wxs core.wxs"/>
+			  commandline="-ext WixNetFxExtension -ext WixUtilExtension -dIsGPL=${IsGPL} -dVersion=${version} -dbuild=release main.wxs samples.wxs visualstudio.wxs webproviders.wxs ui.wxs cf.wxs core.wxs"/>
 		<exec workingdir="Installer" program="light"
-                      commandline="-sval -ext WixNetFxExtension -ext WixUIExtension -ext WixUtilExtension -cultures:en-us main.wixobj samples.wixobj visualstudio.wixobj vs2008.wixobj webproviders.wixobj ui.wixobj cf.wixobj core.wixobj -out MySql.Data.msi"/>
+                      commandline="-sval -ext WixNetFxExtension -ext WixUIExtension -ext WixUtilExtension -cultures:en-us main.wixobj samples.wixobj visualstudio.wixobj webproviders.wixobj ui.wixobj cf.wixobj core.wixobj -out MySql.Data.msi"/>
 
 		<zip zipfile="packages/mysql-connector-net-${version}${postfix}.zip">
 			<fileset basedir="Installer">			
@@ -137,7 +137,7 @@
 
 	<target name="PackageZip">
 		<zip zipfile="packages/mysql-connector-net-${version}${postfix}-noinstall.zip">
-			<fileset basedir="driver/bin/net-2.0/release" prefix="bin">
+			<fileset basedir="mysql.data/provider/bin/net-2.0/release" prefix="bin">
 				<include name="mysql.data.dll" />
 			</fileset>
 			<fileset basedir="Documentation/Output" prefix="Docs">

@@ -3,7 +3,7 @@
 
 [Setup]
 AppName=MySQL Connector/Net
-AppVersion=5.2.0
+AppVersion=5.2.2
 AppVerName=MySQL Connector/Net {#SetupSetting("AppVersion")}
 AppPublisher=MySQL, Inc.
 AppPublisherURL=http://www.mysql.com.com/
@@ -41,6 +41,7 @@ Source: ..\License.txt; DestDir: {app}; Flags: ignoreversion
 
 Source: ..\Samples\*.*; DestDir: {app}\Samples; Excludes: bin,obj,bin\debug,bin\release,obj\debug,obj\release; Flags: ignoreversion createallsubdirs recursesubdirs
 Source: binary\installtools.dll; DestDir: {app}; Attribs: hidden
+Source: binary\globalinstaller.exe; DestDir: {app}; Attribs: hidden
 
 ; Documentation files
 Source: ..\Documentation\Output\MySql.Data.chm; DestDir: {app}\Documentation; Components: Docs
@@ -57,7 +58,7 @@ Source: ..\Installer\Binary\H2Reg.exe; DestDir: {app}\Uninstall; Components: Doc
 Source: ..\Installer\Binary\h2reg.ini; DestDir: {app}\Uninstall; Components: Docs
 
 ; VS integration
-Source: ..\VisualStudio\bin\Release\MySql.VisualStudio.dll; DestDir: {app}\Visual Studio Integration; Components: VS
+Source: ..\MySql.VisualStudio\bin\Release\MySql.VisualStudio.dll; DestDir: {app}\Visual Studio Integration; Components: VS
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,MySQL Connector Net}; Filename: {uninstallexe}
@@ -84,17 +85,18 @@ Root: HKLM; Subkey: Software\MySQL AB\MySQL Connector/Net; ValueType: string; Va
 Root: HKLM; Subkey: Software\Microsoft\.NETFramework\AssemblyFolders\MySQL Connector/Net {#SetupSetting('AppVersion')}; Flags: uninsdeletekey
 Root: HKLM; Subkey: Software\Microsoft\.NETFramework\AssemblyFolders\MySQL Connector/Net {#SetupSetting('AppVersion')}; ValueType: string; ValueData: {app}\.NET Framework
 
-#include "vs2005.iss"
-#include "vs2008.iss"
-
 [Run]
 Filename: "{code:GetVersion2InstallUtil}"; Parameters: {app}\.NET Framework\mysql.data.dll; WorkingDir: {app}; StatusMsg: Adding data provider to machine.config; Flags: runhidden
 Filename: "{code:GetVersion2InstallUtil}"; Parameters: {app}\Web Providers\mysql.web.dll; WorkingDir: {app}; StatusMsg: Adding web providers to machine.config; Flags: runhidden; Components: Providers
+Filename: {app}\GlobalInstaller.exe; Parameters: mysql.visualstudio.dll version=VS2005; WorkingDir: {app}\Visual Studio Integration; StatusMsg: Integrating with Visual Studio 2005; Flags: runhidden; Components: VS/2005
+Filename: {app}\GlobalInstaller.exe; Parameters: mysql.visualstudio.dll version=VS2008; WorkingDir: {app}\Visual Studio Integration; StatusMsg: Integrating with Visual Studio 2008; Flags: runhidden; Components: VS/2008
 Filename: "{code:GetVS2005Path}"; Parameters: /setup; WorkingDir: {app}; StatusMsg: Reconfiguring Visual Studio 2005.  Please wait...; Flags: runhidden; Components: VS/2005
 Filename: "{code:GetVS2008Path}"; Parameters: /setup; WorkingDir: {app}; StatusMsg: Reconfiguring Visual Studio 2008  Please wait...; Flags: runhidden; Components: VS/2008
 Filename: {app}\Uninstall\h2reg.exe; Parameters: -r -q; WorkingDir: {app}\Uninstall; StatusMsg: Registering help collection; Flags: runhidden; Components: docs and (VS/2005 or VS/2008)
 
 [UninstallRun]
+Filename: {app}\GlobalInstaller.exe; Parameters: /u mysql.visualstudio.dll version=VS2005; WorkingDir: {app}\Visual Studio Integration; StatusMsg: Removing Visual Studio 2005 integration; Flags: runhidden; Components: VS/2005
+Filename: {app}\GlobalInstaller.exe; Parameters: /u mysql.visualstudio.dll version=VS2008; WorkingDir: {app}\Visual Studio Integration; StatusMsg: Removing Visual Studio 2008 integration; Flags: runhidden; Components: VS/2008
 Filename: "{code:GetVS2005Path}"; Parameters: /setup; WorkingDir: {app}; StatusMsg: Reconfiguring Visual Studio 2005; Flags: runhidden runascurrentuser; Components: VS/2005
 Filename: "{code:GetVS2008Path}"; Parameters: /setup; WorkingDir: {app}; StatusMsg: Reconfiguring Visual Studio 2008; Flags: runhidden runascurrentuser; Components: VS/2008
 Filename: "{code:GetVersion2InstallUtil}"; Parameters: /u {app}\.NET Framework\mysql.data.dll; WorkingDir: {app}; StatusMsg: Removing data provider from machine.config; Flags: runhidden

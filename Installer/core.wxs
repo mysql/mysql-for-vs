@@ -25,7 +25,7 @@
     <DirectoryRef Id='BinNet20'>
       <Component Id="Net20" Guid="0e8af006-273c-49bb-b7c1-ec1737260a5a">
         <File Id="MySqlData" Name="MySql.Data.dll"
-              Source="..\Driver\bin\net-2.0\release\mysql.data.dll" DiskId="1"/>
+              Source="..\mysql.data\provider\bin\net-2.0\release\mysql.data.dll" DiskId="1"/>
         <RegistryKey Id="VSRegistry" Root="HKLM" Action="createAndRemoveOnUninstall"
                      Key="SOFTWARE\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\MySQL Connector Net $(var.Version)">
           <RegistryValue Id="VSRegistryValue" Value="[BinNet20]" Type="string" Action="write"/>
@@ -36,12 +36,12 @@
                 <util:PerformanceCounter Name="HardProcedureQueries" Type="numberOfItems32" Help="The number of times a procedures metadata had to be queried from the server." />
                 <util:PerformanceCounter Name="SoftProcedureQueries" Type="rateOfCountsPerSecond32" Help="The number of times a procedures metadata was retrieved from the client-side cache." /> 
             </util:PerformanceCategory>
-            
+           
         </Component>
       <Directory Id="MySql.Data.DummyDir" Name="GAC">
         <Component Id="GAC20" Guid="58f70e4a-96f7-4b67-bdab-9b77a60f9c09">
           <File Id="MySql.Data.GAC" Name="MySql.Data.dll"
-                Source="..\Driver\bin\net-2.0\release\mysql.data.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
+                Source="..\mysql.data\provider\bin\net-2.0\release\mysql.data.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
         </Component>
       </Directory>
     </DirectoryRef>
