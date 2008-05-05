@@ -112,4 +112,10 @@ begin
   Result := Format('%sdevenv.com', [Result]);
 end;
 
+function GetVS2008Path(Param: String) : String;
+begin
+  if Not RegQueryStringValue(HKEY_LOCAL_MACHINE, 'Software\Microsoft\VisualStudio\9.0\Setup\VS', 'EnvironmentDirectory', Result) Then
+    RaiseException('Unable to locate the Visual Studio 2008 installation directory');
+  Result := Format('%sdevenv.com', [Result]);
+end;
 
