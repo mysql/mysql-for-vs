@@ -68,6 +68,8 @@ Version 5.1.6
  - Fixed documentation that still stated that setting port to -1 was necessary for
    a named pipe connection (bug #35356)      
  - Fixed data type processing so that geometry fields are returned as binary.  (bug #36081)      
+ - Fixed problem that kept our provider from showing up in the provider list when configuring
+   a new connection from a SqlDataSource      
           
 Version 5.1.5 - 2/11/2008
   - Fixed problem with membership provider where FindUserByEmail would fail trying to add
