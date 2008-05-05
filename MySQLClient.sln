@@ -43,11 +43,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.VisualStudio", "Visua
 		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Help", "Documentation\Help.vdproj", "{E4E580BE-1CDE-4F28-9518-458FC9D926AD}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Help", "Documentation\Help.vdproj", "{7C06EAEC-3401-4874-BA39-7FD382782430}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -137,22 +133,22 @@ Global
 		{DC3517FF-AC26-4755-9B7A-EF658FF69593}.Release|x64.ActiveCfg = Release|x64
 		{DC3517FF-AC26-4755-9B7A-EF658FF69593}.Release|x64.Build.0 = Release|x64
 		{DC3517FF-AC26-4755-9B7A-EF658FF69593}.Release|x86.ActiveCfg = Release|x64
-		{E4E580BE-1CDE-4F28-9518-458FC9D926AD}.Debug|.NET 2.0.ActiveCfg = Debug
-		{E4E580BE-1CDE-4F28-9518-458FC9D926AD}.Debug|.NET 2.0.Build.0 = Debug
-		{E4E580BE-1CDE-4F28-9518-458FC9D926AD}.Debug|Any CPU.ActiveCfg = Debug
-		{E4E580BE-1CDE-4F28-9518-458FC9D926AD}.Debug|Any CPU.Build.0 = Debug
-		{E4E580BE-1CDE-4F28-9518-458FC9D926AD}.Debug|x64.ActiveCfg = Debug
-		{E4E580BE-1CDE-4F28-9518-458FC9D926AD}.Debug|x64.Build.0 = Debug
-		{E4E580BE-1CDE-4F28-9518-458FC9D926AD}.Debug|x86.ActiveCfg = Debug
-		{E4E580BE-1CDE-4F28-9518-458FC9D926AD}.Debug|x86.Build.0 = Debug
-		{E4E580BE-1CDE-4F28-9518-458FC9D926AD}.Release|.NET 2.0.ActiveCfg = Release
-		{E4E580BE-1CDE-4F28-9518-458FC9D926AD}.Release|.NET 2.0.Build.0 = Release
-		{E4E580BE-1CDE-4F28-9518-458FC9D926AD}.Release|Any CPU.ActiveCfg = Release
-		{E4E580BE-1CDE-4F28-9518-458FC9D926AD}.Release|Any CPU.Build.0 = Release
-		{E4E580BE-1CDE-4F28-9518-458FC9D926AD}.Release|x64.ActiveCfg = Release
-		{E4E580BE-1CDE-4F28-9518-458FC9D926AD}.Release|x64.Build.0 = Release
-		{E4E580BE-1CDE-4F28-9518-458FC9D926AD}.Release|x86.ActiveCfg = Release
-		{E4E580BE-1CDE-4F28-9518-458FC9D926AD}.Release|x86.Build.0 = Release
+		{7C06EAEC-3401-4874-BA39-7FD382782430}.Debug|.NET 2.0.ActiveCfg = Debug
+		{7C06EAEC-3401-4874-BA39-7FD382782430}.Debug|.NET 2.0.Build.0 = Debug
+		{7C06EAEC-3401-4874-BA39-7FD382782430}.Debug|Any CPU.ActiveCfg = Debug
+		{7C06EAEC-3401-4874-BA39-7FD382782430}.Debug|Any CPU.Build.0 = Debug
+		{7C06EAEC-3401-4874-BA39-7FD382782430}.Debug|x64.ActiveCfg = Debug
+		{7C06EAEC-3401-4874-BA39-7FD382782430}.Debug|x64.Build.0 = Debug
+		{7C06EAEC-3401-4874-BA39-7FD382782430}.Debug|x86.ActiveCfg = Debug
+		{7C06EAEC-3401-4874-BA39-7FD382782430}.Debug|x86.Build.0 = Debug
+		{7C06EAEC-3401-4874-BA39-7FD382782430}.Release|.NET 2.0.ActiveCfg = Release
+		{7C06EAEC-3401-4874-BA39-7FD382782430}.Release|.NET 2.0.Build.0 = Release
+		{7C06EAEC-3401-4874-BA39-7FD382782430}.Release|Any CPU.ActiveCfg = Release
+		{7C06EAEC-3401-4874-BA39-7FD382782430}.Release|Any CPU.Build.0 = Release
+		{7C06EAEC-3401-4874-BA39-7FD382782430}.Release|x64.ActiveCfg = Release
+		{7C06EAEC-3401-4874-BA39-7FD382782430}.Release|x64.Build.0 = Release
+		{7C06EAEC-3401-4874-BA39-7FD382782430}.Release|x86.ActiveCfg = Release
+		{7C06EAEC-3401-4874-BA39-7FD382782430}.Release|x86.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
