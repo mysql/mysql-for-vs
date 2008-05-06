@@ -129,6 +129,8 @@ Version 5.0.10 -
     size > 0 can combine to create an exception.  The pool fails to create from the bogus
     host info but the driver finalizer code will still try to remove the driver from
     a non-existant pool.  (bug #36432)    
+  - Fixed problem where supplying the connection reset config option can cause login to fail
+    when there is room to make a new connection and the pool has no idle connections.    
     
 Version 5.0.9 - 4/14/08
 

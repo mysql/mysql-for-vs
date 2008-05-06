@@ -64,8 +64,8 @@ namespace MySql.Data.MySqlClient
 #endif
 
 			// prepopulate the idle pool to minSize
-			for (int i=0; i < minSize; i++) 
-				CreateNewPooledConnection();
+            for (int i = 0; i < minSize; i++)
+                idlePool.Enqueue(CreateNewPooledConnection());
 
             procedureCache = new ProcedureCache((int)settings.ProcedureCacheSize);
             poolGate = new Semaphore((int)maxSize, (int)maxSize);
@@ -131,26 +131,26 @@ namespace MySql.Data.MySqlClient
         /// </summary>
         private Driver GetPooledConnection()
 		{
-            while (true)
-            {
-                // if we don't have an idle connection but we have room for a new
-                // one, then create it here.
-				if (!HasIdleConnections)
-					CreateNewPooledConnection();
+            Driver driver = null;
 
-                Driver d = CheckoutConnection();
-                if (d != null)
-                    return d;
-            }
-		}
+            // if we don't have an idle connection but we have room for a new
+            // one, then create it here.
+            if (!HasIdleConnections)
+                driver = CreateNewPooledConnection();
+            else
+                driver = CheckoutConnection();
+            Debug.Assert(driver != null);
+            inUsePool.Add(driver);
+            return driver;
+        }
 
         /// <summary>
         /// It is assumed that this method is only called from inside an active lock.
         /// </summary>
-		private void CreateNewPooledConnection()
+		private Driver CreateNewPooledConnection()
 		{
             Driver driver = Driver.Create(settings);
-            idlePool.Enqueue(driver);
+            return driver;
         }
 
 		public void ReleaseConnection(Driver driver)
