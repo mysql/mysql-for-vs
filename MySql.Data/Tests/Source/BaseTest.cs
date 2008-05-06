@@ -168,7 +168,7 @@ namespace MySql.Data.MySqlClient.Tests
         protected string GetConnectionStringBasic(bool includedb)
         {
             string connStr = String.Format("server={0};user id={1};password={2};" +
-                 "persist security info=true;allow user variables=true;", host, user, password);
+                 "persist security info=true;connection reset=true;allow user variables=true;", host, user, password);
             if (includedb)
                 connStr += String.Format("database={0};", database0);
             if (!pooling)
