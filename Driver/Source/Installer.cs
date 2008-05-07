@@ -42,25 +42,29 @@ namespace MySql.Data.MySqlClient
 
         public CustomInstaller()
         {
-            // add in a perf mon installer
-            PerformanceCounterInstaller p = new PerformanceCounterInstaller();
-            p.CategoryName = Resources.PerfMonCategoryName;
-            p.CategoryHelp = Resources.PerfMonCategoryHelp;
-            p. CategoryType = PerformanceCounterCategoryType.SingleInstance;
+            string loadPerf = Environment.GetFolderPath(Environment.SpecialFolder.System) + @"\loadperf.dll";
+            if (File.Exists(loadPerf))
+            {
+                // add in a perf mon installer
+                PerformanceCounterInstaller p = new PerformanceCounterInstaller();
+                p.CategoryName = Resources.PerfMonCategoryName;
+                p.CategoryHelp = Resources.PerfMonCategoryHelp;
+                p.CategoryType = PerformanceCounterCategoryType.SingleInstance;
 
-            CounterCreationData ccd1 = new CounterCreationData(
-                Resources.PerfMonHardProcName,
-                Resources.PerfMonHardProcHelp,
-                PerformanceCounterType.NumberOfItems32);
+                CounterCreationData ccd1 = new CounterCreationData(
+                    Resources.PerfMonHardProcName,
+                    Resources.PerfMonHardProcHelp,
+                    PerformanceCounterType.NumberOfItems32);
 
-            CounterCreationData ccd2 = new CounterCreationData(
-             Resources.PerfMonSoftProcName,
-             Resources.PerfMonSoftProcHelp,
-             PerformanceCounterType.RateOfCountsPerSecond32);
+                CounterCreationData ccd2 = new CounterCreationData(
+                 Resources.PerfMonSoftProcName,
+                 Resources.PerfMonSoftProcHelp,
+                 PerformanceCounterType.RateOfCountsPerSecond32);
 
-            p.Counters.Add(ccd1);
-            p.Counters.Add(ccd2);
-            perfMonIndex = Installers.Add(p);
+                p.Counters.Add(ccd1);
+                p.Counters.Add(ccd2);
+                perfMonIndex = Installers.Add(p);
+            }
         }
 
 		/// <summary>
