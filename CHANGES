@@ -22,6 +22,9 @@ Version 5.2.2 -
 - The procedure parameters schema collection has been altered to match what is coming
   with MySQL 6.0.  Some fields have been removed and others combined.  Please review
   your application for incompatibilities.
+- Removed some unnecessary locking from the pool manager and also reworked the pooling
+  code to not use a semaphore (bug #34001)
+
     
 Version 5.2.1 - 2/27/2008
 - Tons of fixes in providers.  The actually work now.  :)

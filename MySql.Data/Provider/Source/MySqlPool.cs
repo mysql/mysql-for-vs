@@ -20,12 +20,9 @@
 
 using System;
 using System.Collections;
-using System.Threading;
 using System.Collections.Generic;
 using System.Diagnostics;
-#if CF
-using MySql.Data.Common;
-#endif
+using System.Threading;
 
 namespace MySql.Data.MySqlClient
 {
@@ -46,13 +43,18 @@ namespace MySql.Data.MySqlClient
 		private uint maxSize;
         private ProcedureCache procedureCache;
         private Object lockObject;
-        private Semaphore poolGate;
         private bool beingCleared;
+        private int available;
+        private AutoResetEvent autoEvent;
 
 		public MySqlPool(MySqlConnectionStringBuilder settings)
 		{
 			minSize = settings.MinimumPoolSize;
 			maxSize = settings.MaximumPoolSize;
+
+            available = (int)maxSize;
+            autoEvent = new AutoResetEvent(false);
+
             if (minSize > maxSize)
                 minSize = maxSize;
 			this.settings = settings;
@@ -69,7 +71,6 @@ namespace MySql.Data.MySqlClient
                 idlePool.Enqueue(CreateNewPooledConnection());
 
             procedureCache = new ProcedureCache((int)settings.ProcedureCacheSize);
-            poolGate = new Semaphore((int)maxSize, (int)maxSize);
 
             // we don't really need to create this but it makes the code a bit cleaner
             lockObject = new Object();
@@ -165,6 +166,8 @@ namespace MySql.Data.MySqlClient
         /// </summary>
 		private Driver CreateNewPooledConnection()
 		{
+            Debug.Assert((maxSize - NumConnections) > 0, "Pool out of sync.");
+
             Driver driver = Driver.Create(settings);
             driver.Pool = this;
             return driver;
@@ -185,9 +188,8 @@ namespace MySql.Data.MySqlClient
                 else
                     idlePool.Enqueue(driver);
 
-                // we now either have a connection available or have room to make
-                // one so we release one slot in our semaphore
-                poolGate.Release();
+                Interlocked.Increment(ref available);
+                autoEvent.Set();
             }
         }
 
@@ -205,7 +207,8 @@ namespace MySql.Data.MySqlClient
                 if (inUsePool.Contains(driver))
                 {
                     inUsePool.Remove(driver);
-                    poolGate.Release();
+                    Interlocked.Increment(ref available);
+                    autoEvent.Set();
                 }
 
                 // if we are being cleared and we are out of connections then have
@@ -215,32 +218,45 @@ namespace MySql.Data.MySqlClient
             }
         }
 
+        private Driver TryToGetDriver()
+        {
+            int count = Interlocked.Decrement(ref available);
+            if (count < 0)
+            {
+                Interlocked.Increment(ref available);
+                return null;
+            }
+            try
+            {
+                Driver driver = GetPooledConnection();
+                return driver;
+            }
+            catch (Exception ex)
+            {
+                if (settings.Logging)
+                    Logger.LogException(ex);
+                Interlocked.Increment(ref available);
+                throw;
+            }
+        }
+
 		public Driver GetConnection() 
 		{
-			int ticks = (int)settings.ConnectionTimeout * 1000;
+			int fullTimeOut = (int)settings.ConnectionTimeout * 1000;
+            int timeOut = fullTimeOut;
 
-            // wait till we are allowed in
-            bool allowed = poolGate.WaitOne(ticks, false);
-            if (! allowed)
-                throw new MySqlException(Resources.TimeoutGettingConnection);
+            DateTime start = DateTime.Now;
 
-            // if we get here, then it means that we either have an idle connection
-            // or room to make a new connection
-            lock (lockObject)
+            while (timeOut > 0)
             {
-                try
-                {
-                    Driver d = GetPooledConnection();
-                    return d;
-                }
-                catch (Exception ex)
-                {
-                    if (settings.Logging)
-                        Logger.LogException(ex);
-                    poolGate.Release();
-                    throw;
-                }
+                Driver driver = TryToGetDriver();
+                if (driver != null) return driver;
+
+                // We have no tickets right now, lets wait for one.
+                if (!autoEvent.WaitOne(timeOut, false)) break;
+                timeOut = fullTimeOut - (int)DateTime.Now.Subtract(start).TotalMilliseconds;
             }
+            throw new MySqlException(Resources.TimeoutGettingConnection);
 		}
 
         /// <summary>

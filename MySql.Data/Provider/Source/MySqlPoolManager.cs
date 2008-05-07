@@ -66,10 +66,7 @@ namespace MySql.Data.MySqlClient
 			MySqlPool pool = driver.Pool;
 			if (pool == null) return;
 
-            lock (pools.SyncRoot)
-            {
-                pool.RemoveConnection(driver);
-            }
+            pool.RemoveConnection(driver);
         }
 
         public static void ReleaseConnection(Driver driver)
@@ -77,10 +74,7 @@ namespace MySql.Data.MySqlClient
 			MySqlPool pool = driver.Pool;
 			if (pool == null) return;
 			
-			lock (pools.SyncRoot)
-            {
-                pool.ReleaseConnection(driver);
-            }
+            pool.ReleaseConnection(driver);
         }
 
         public static void ClearPool(MySqlConnectionStringBuilder settings)

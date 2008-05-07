@@ -221,7 +221,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\Resources.Designer.cs" />
-    <Compile Include="Source\cf\Semaphore.cs" />
     <Compile Include="Source\common\Cache.cs" />
     <Compile Include="Source\common\SqlTokenizer.cs" />
     <Compile Include="Source\BulkLoader.cs" />
