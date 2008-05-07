@@ -1,4 +1,8 @@
-Version 5.1.6 
+Version 5.1.7
+ - Fixed problem with DDEX provider that could sometimes prevent table altering when working with
+   4.1 servers (bug #30603)
+
+Version 5.1.6 - 5/7/08
  - Fixed problem where parameters lists were not showing when you tried to alter a routine 
    in server explorer.  (bug #34359)
  - Fixed a problem in procedure cache where it was possible to get into a race condition
