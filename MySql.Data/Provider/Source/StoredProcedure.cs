@@ -123,7 +123,7 @@ namespace MySql.Data.MySqlClient
             int x = dtd.Length - 1;
             while (x > 0 && (Char.IsLetterOrDigit(dtd[x]) || dtd[x] == ' '))
                 x--;
-            return dtd.Substring(x).ToUpperInvariant();
+            return dtd.Substring(x).ToUpper(CultureInfo.InvariantCulture);
         }
 
         public override void Resolve()
