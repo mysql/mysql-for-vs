@@ -473,5 +473,15 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.Fail(ex.Message);
             }
         }
+
+        /// <summary>
+        /// Bug #35619 creating a MySql connection from toolbox generates an error 
+        /// </summary>
+        [Test]
+        public void NullConnectionString()
+        {
+            MySqlConnection c = new MySqlConnection();
+            c.ConnectionString = null;
+        }
     }
 }

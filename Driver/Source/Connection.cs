@@ -260,11 +260,16 @@ namespace MySql.Data.MySqlClient
                 MySqlConnectionStringBuilder newSettings;
                 lock (connectionStringCache)
                 {
-                    newSettings = (MySqlConnectionStringBuilder)connectionStringCache[value];
-                    if (null == newSettings)
+                    if (value == null)
+                        newSettings = new MySqlConnectionStringBuilder();
+                    else
                     {
-                        newSettings = new MySqlConnectionStringBuilder(value);
-                        connectionStringCache.Add(value, newSettings);
+                        newSettings = (MySqlConnectionStringBuilder)connectionStringCache[value];
+                        if (null == newSettings)
+                        {
+                            newSettings = new MySqlConnectionStringBuilder(value);
+                            connectionStringCache.Add(value, newSettings);
+                        }
                     }
                 }
 
