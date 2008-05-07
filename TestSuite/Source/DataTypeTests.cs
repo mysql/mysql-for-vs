@@ -849,6 +849,8 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void BitInLeftOuterJoin()
         {
+            if (version < new Version(5, 0)) return;
+
             execSQL("DROP TABLE IF EXISTS Main");
             execSQL("DROP TABLE IF EXISTS Child");
             execSQL(@"CREATE TABLE Main (Id int(10) unsigned NOT NULL AUTO_INCREMENT,
