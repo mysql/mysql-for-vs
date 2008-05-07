@@ -118,6 +118,14 @@ namespace MySql.Data.MySqlClient
             return ds;
         }
 
+        public static string GetFlags(string dtd)
+        {
+            int x = dtd.Length - 1;
+            while (x > 0 && (Char.IsLetterOrDigit(dtd[x]) || dtd[x] == ' '))
+                x--;
+            return dtd.Substring(x).ToUpperInvariant();
+        }
+
         public override void Resolve()
         {
             // first retrieve the procedure definition from our
@@ -142,13 +150,19 @@ namespace MySql.Data.MySqlClient
                 string mode = (string) param["PARAMETER_MODE"];
                 string pName = (string) param["PARAMETER_NAME"];
 
+                // if the base parametr name starts with @ then our parameter must start with ?
+                if (pName.StartsWith("@"))
+                    pName = "?" + pName;
+                else if (!pName.StartsWith("?"))
+                    pName = "@" + pName;
+
                 // make sure the parameters given to us have an appropriate
                 // type set if it's not already
                 MySqlParameter p = command.Parameters.GetParameterFlexible(pName, true);
                 if (!p.TypeHasBeenSet)
                 {
                     string datatype = (string) param["DATA_TYPE"];
-                    bool unsigned = param["FLAGS"].ToString().IndexOf("UNSIGNED") != -1;
+                    bool unsigned = GetFlags(param["DTD_IDENTIFIER"].ToString()).IndexOf("UNSIGNED") != -1;
                     bool real_as_float = procTable.Rows[0]["SQL_MODE"].ToString().IndexOf("REAL_AS_FLOAT") != -1;
                     p.MySqlDbType = MetaData.NameToType(datatype, unsigned, real_as_float, Connection);
                 }

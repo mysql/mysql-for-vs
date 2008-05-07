@@ -328,6 +328,7 @@ namespace MySql.Data.MySqlClient
                 else if (c == '\\')
                     escaped = !escaped;
                 else if (sqlPart.Length == 1 && sqlPart[0] == '@' && c == '@') { }
+                else if (sqlPart.Length > 0 && sqlPart[0] == '?' && c == '@') { }
                 else if ((c == '@' || c == '?') && delim == Char.MinValue && !escaped)
                 {
                     tokens.Add(sqlPart.ToString());
