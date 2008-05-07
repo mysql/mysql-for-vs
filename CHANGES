@@ -76,7 +76,9 @@ Version 5.1.6
  - Fixed data type processing so that geometry fields are returned as binary.  (bug #36081)      
  - Fixed problem that kept our provider from showing up in the provider list when configuring
    a new connection from a SqlDataSource      
-          
+ - Fixed problem where setting the ConnectionString property of MySqlConnection to null
+   would throw an exception (bug #35619)
+             
 Version 5.1.5 - 2/11/2008
   - Fixed problem with membership provider where FindUserByEmail would fail trying to add
     a second parameter with the same name as the first (bug #33347)
