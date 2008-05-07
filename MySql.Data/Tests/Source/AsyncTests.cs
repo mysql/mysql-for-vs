@@ -21,7 +21,7 @@
 using System;
 using System.Data;
 using MySql.Data.MySqlClient;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -33,7 +33,6 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 			if (version < new Version(5, 0)) return;
 
-			execSQL("DROP TABLE IF EXISTS test");
 			execSQL("CREATE TABLE test (id int)");
 			execSQL("CREATE PROCEDURE spTest() BEGIN SET @x=0; REPEAT INSERT INTO test VALUES(@x); " +
 				"SET @x=@x+1; UNTIL @x = 300 END REPEAT; END");
@@ -71,7 +70,6 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 			if (version < new Version(5, 0)) return;
 
-			execSQL("DROP TABLE IF EXISTS test");
 			execSQL("CREATE TABLE test (id int)");
 			execSQL("CREATE PROCEDURE spTest() BEGIN INSERT INTO test VALUES(1); " +
 				"SELECT SLEEP(2); SELECT 'done'; END");

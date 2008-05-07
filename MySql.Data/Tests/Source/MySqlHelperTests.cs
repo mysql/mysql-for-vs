@@ -23,7 +23,7 @@ using System.Data;
 using System.IO;
 using System.Globalization;
 using System.Threading;
-using MbUnit.Framework;
+using NUnit.Framework;
 using System.Text;
 
 namespace MySql.Data.MySqlClient.Tests

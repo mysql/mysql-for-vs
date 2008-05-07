@@ -22,7 +22,7 @@ using System;
 using System.Data;
 using System.Threading;
 using MySql.Data.MySqlClient;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -397,7 +397,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 	#region Configs
 #if !CF
-	[TestCategory("Compressed")]
+	[Category("Compressed")]
 	public class BlobTestsSocketCompressed : BlobTests
 	{
 		protected override string GetConnectionInfo()
@@ -406,7 +406,7 @@ namespace MySql.Data.MySqlClient.Tests
 		}
 	}
 
-	[TestCategory("Pipe")]
+	[Category("Pipe")]
 	public class BlobTestsPipe : BlobTests
 	{
 		protected override string GetConnectionInfo()
@@ -415,7 +415,8 @@ namespace MySql.Data.MySqlClient.Tests
 		}
 	}
 
-	[TestCategory("Compressed", "Pipe")]
+	[Category("Compressed")]
+    [Category("Pipe")]
 	public class BlobTestsPipeCompressed : BlobTests
 	{
 		protected override string GetConnectionInfo()
@@ -424,7 +425,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
 	}
 
-	[TestCategory("SharedMemory")]
+	[Category("SharedMemory")]
 	public class BlobTestsSharedMemory : BlobTests
 	{
 		protected override string GetConnectionInfo()
@@ -433,7 +434,8 @@ namespace MySql.Data.MySqlClient.Tests
 		}
 	}
 
-	[TestCategory("Compressed", "SharedMemory")]
+	[Category("Compressed")]
+    [Category("SharedMemory")]
 	public class BlobTestsSharedMemoryCompressed : BlobTests
 	{
 		protected override string GetConnectionInfo()

@@ -21,7 +21,7 @@
 using System;
 using System.Data;
 using System.IO;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -90,7 +90,7 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(-1, cmd.LastInsertedId);
         }
 
-/*        [TestCategory("NotWorking")]
+/*        [Category("NotWorking")]
         [Test]
         public void TestCase()
         {

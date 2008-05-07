@@ -21,7 +21,7 @@
 using System;
 using System.Data;
 using MySql.Data.MySqlClient;
-using MbUnit.Framework;
+using NUnit.Framework;
 using System.Threading;
 
 namespace MySql.Data.MySqlClient.Tests
@@ -440,7 +440,7 @@ namespace MySql.Data.MySqlClient.Tests
     }
 
 #if !CF
-    [TestCategory("Pipe")]
+    [Category("Pipe")]
     public class CommandTestsPipe : CommandTests
     {
         protected override string GetConnectionInfo()
@@ -449,7 +449,8 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
-    [TestCategory("Compressed", "Pipe")]
+    [Category("Compressed")]
+    [Category("Pipe")]
     public class CommandTestsPipeCompressed : CommandTests
     {
         protected override string GetConnectionInfo()
@@ -458,7 +459,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
-    [TestCategory("SharedMemory")]
+    [Category("SharedMemory")]
     public class CommandTestsSharedMemory : CommandTests
     {
         protected override string GetConnectionInfo()
@@ -467,7 +468,8 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
-    [TestCategory("Compressed", "SharedMemory")]
+    [Category("Compressed")]
+    [Category("SharedMemory")]
     public class CommandTestsSharedMemoryCompressed : CommandTests
     {
         protected override string GetConnectionInfo()

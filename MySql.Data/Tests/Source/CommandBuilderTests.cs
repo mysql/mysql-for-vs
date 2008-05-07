@@ -20,7 +20,7 @@
 
 using System;
 using System.Data;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -32,7 +32,6 @@ namespace MySql.Data.MySqlClient.Tests
         {
             base.Setup();
 
-            execSQL("DROP TABLE IF EXISTS Test");
             execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(100), dt DATETIME, tm TIME,  `multi word` int, PRIMARY KEY(id))");
         }
 
