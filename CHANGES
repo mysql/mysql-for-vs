@@ -18,7 +18,10 @@ Version 5.2.2 -
   passwords (bug #35336)    
 - Fixed problem with profile provider where properties that were specified without
   a given type could not be retrieved properly (bug #36000)  
-- Implemented interactive session connection string option  
+- Implemented interactive session connection string option     
+- The procedure parameters schema collection has been altered to match what is coming
+  with MySQL 6.0.  Some fields have been removed and others combined.  Please review
+  your application for incompatibilities.
     
 Version 5.2.1 - 2/27/2008
 - Tons of fixes in providers.  The actually work now.  :)
@@ -180,7 +183,7 @@ Version 5.0.10 -
     a non-existant pool.  (bug #36432)    
   - Fixed problem where supplying the connection reset config option can cause login to fail
     when there is room to make a new connection and the pool has no idle connections.    
-            
+        
 Version 5.0.9 - 4/14/08
 
   - Fixed problem where fields that were blobs but did not include the BLOB flag were treated
