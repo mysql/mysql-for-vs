@@ -23,7 +23,7 @@ using System.Data;
 using System.Diagnostics;
 using MySql.Data.MySqlClient;
 using MySql.Data.Types;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace MySql.Data.MySqlClient.Tests
 {

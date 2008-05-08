@@ -21,7 +21,7 @@
 using System;
 using System.Data;
 using System.IO;
-using MbUnit.Framework;
+using NUnit.Framework;
 #if NET20
 using System.Data.Common;
 #endif

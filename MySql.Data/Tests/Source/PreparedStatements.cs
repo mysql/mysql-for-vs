@@ -21,7 +21,7 @@
 using System;
 using System.Data;
 using System.IO;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -783,7 +783,7 @@ namespace MySql.Data.MySqlClient.Tests
 
     #region Configs
 #if !CF
-    [TestCategory("Compressed")]
+    [Category("Compressed")]
     public class PreparedStatementsSocketCompressed : PreparedStatements
     {
         protected override string GetConnectionInfo()
@@ -792,7 +792,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
-    [TestCategory("Pipe")]
+    [Category("Pipe")]
     public class PreparedStatementsPipe : PreparedStatements
     {
         protected override string GetConnectionInfo()
@@ -801,7 +801,8 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
-    [TestCategory("Compressed", "Pipe")]
+    [Category("Compressed")]
+    [Category("Pipe")]
     public class PreparedStatementsPipeCompressed : PreparedStatements
     {
         protected override string GetConnectionInfo()
@@ -810,7 +811,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
-    [TestCategory("SharedMemory")]
+    [Category("SharedMemory")]
     public class PreparedStatementsSharedMemory : PreparedStatements
     {
         protected override string GetConnectionInfo()
@@ -819,7 +820,8 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
-    [TestCategory("Compressed", "SharedMemory")]
+    [Category("Compressed")]
+    [Category("SharedMemory")]
     public class PreparedStatementsSharedMemoryCompressed : PreparedStatements
     {
         protected override string GetConnectionInfo()

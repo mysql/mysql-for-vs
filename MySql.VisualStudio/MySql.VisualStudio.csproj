@@ -249,6 +249,9 @@
     <Compile Include="Commands\DropCommand.cs" />
     <Compile Include="Enumerators\StoredProcedureColumnEnumerator.cs" />
     <Compile Include="GuidList.cs" />
+    <Compile Include="MyInstaller.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="MySqlDataConnectionPromptDialog.cs">
       <SubType>Form</SubType>
     </Compile>

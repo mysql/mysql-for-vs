@@ -3,7 +3,7 @@
 
 [Setup]
 AppName=MySQL Connector/Net
-AppVersion=5.2.0
+AppVersion=5.2.2
 AppVerName=MySQL Connector/Net {#SetupSetting("AppVersion")}
 AppPublisher=MySQL, Inc.
 AppPublisherURL=http://www.mysql.com.com/
@@ -25,10 +25,11 @@ VersionInfoVersion={#SetupSetting("AppVersion")}
 Name: english; MessagesFile: compiler:Default.isl
 
 [Files]
-Source: ..\Driver\bin\net-2.0\Release\MySql.Data.dll; DestDir: {app}\Binaries\.NET 2.0; Flags: ignoreversion; AfterInstall: AfterMySqlDataInstall
+Source: ..\MySql.Data\Provider\bin\net-2.0\Release\MySql.Data.dll; DestDir: {app}\.NET Framework; Flags: ignoreversion; AfterInstall: AfterMySqlDataInstall
+Source: ..\MySql.Data\Provider\bin\net-2.0\Release\MySql.Data.CF.dll; DestDir: {app}\Compact Framework; Flags: ignoreversion; Components: CF
 Source: ..\CHANGES; DestDir: {app}; Flags: ignoreversion
 Source: ..\Release Notes.txt; DestDir: {app}; Flags: ignoreversion
-Source: ..\MySql.Web\Providers\bin\release\MySql.Web.dll; DestDir: {app}\Binaries\.NET 2.0; Flags: ignoreversion; AfterInstall: AfterWebInstall; Components: Providers
+Source: ..\MySql.Web\Providers\bin\release\MySql.Web.dll; DestDir: {app}\Web Providers; Flags: ignoreversion; AfterInstall: AfterWebInstall; Components: Providers
 
 ; Handle conditional licensing
 #if defined (GPL)
@@ -40,6 +41,7 @@ Source: ..\License.txt; DestDir: {app}; Flags: ignoreversion
 
 Source: ..\Samples\*.*; DestDir: {app}\Samples; Excludes: bin,obj,bin\debug,bin\release,obj\debug,obj\release; Flags: ignoreversion createallsubdirs recursesubdirs
 Source: binary\installtools.dll; DestDir: {app}; Attribs: hidden
+Source: binary\globalinstaller.exe; DestDir: {app}; Attribs: hidden
 
 ; Documentation files
 Source: ..\Documentation\Output\MySql.Data.chm; DestDir: {app}\Documentation; Components: Docs
@@ -56,7 +58,7 @@ Source: ..\Installer\Binary\H2Reg.exe; DestDir: {app}\Uninstall; Components: Doc
 Source: ..\Installer\Binary\h2reg.ini; DestDir: {app}\Uninstall; Components: Docs
 
 ; VS integration
-Source: ..\VisualStudio\bin\Release\MySql.VisualStudio.dll; DestDir: {app}\Visual Studio Integration; Components: VS
+Source: ..\MySql.VisualStudio\bin\Release\MySql.VisualStudio.dll; DestDir: {app}\Visual Studio Integration; Components: VS
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,MySQL Connector Net}; Filename: {uninstallexe}
@@ -67,11 +69,12 @@ Name: {group}\Help; Filename: {app}\Documentation\MySql.Data.chm
 [Components]
 Name: Core; Description: Core assemblies; Flags: fixed; Types: full custom compact
 Name: Docs; Description: Documentation; Types: full custom
-Name: Samples; Description: Samples; Types: full custom
 Name: Providers; Description: ASP.NET 2.0 Web Providers; Types: full custom
 Name: VS; Description: Visual Studio Integration; Types: full custom
 Name: VS/2005; Description: Visual Studio 2005; Types: full custom; Check: VS2005Installed
 Name: VS/2008; Description: Visual Studio 2008; Types: full custom; Check: VS2008Installed
+Name: CF; Description: Compact Framework Support; Types: full custom
+Name: Samples; Description: Samples; Types: full custom
 
 [Registry]
 Root: HKLM; Subkey: Software\MySQL AB\MySQL Connector/Net; Flags: uninsdeletekey
@@ -80,23 +83,24 @@ Root: HKLM; Subkey: Software\MySQL AB\MySQL Connector/Net; ValueType: string; Va
 
 ; make our assembly visible to Visual Studio
 Root: HKLM; Subkey: Software\Microsoft\.NETFramework\AssemblyFolders\MySQL Connector/Net {#SetupSetting('AppVersion')}; Flags: uninsdeletekey
-Root: HKLM; Subkey: Software\Microsoft\.NETFramework\AssemblyFolders\MySQL Connector/Net {#SetupSetting('AppVersion')}; ValueType: string; ValueData: {app}\Binaries\.NET 2.0
-
-#include "vs2005.iss"
-#include "vs2008.iss"
+Root: HKLM; Subkey: Software\Microsoft\.NETFramework\AssemblyFolders\MySQL Connector/Net {#SetupSetting('AppVersion')}; ValueType: string; ValueData: {app}\.NET Framework
 
 [Run]
-Filename: "{code:GetVersion2InstallUtil}"; Parameters: {app}\Binaries\.NET 2.0\mysql.data.dll; WorkingDir: {app}; StatusMsg: Adding data provider to machine.config; Flags: runhidden
-Filename: "{code:GetVersion2InstallUtil}"; Parameters: {app}\Binaries\.NET 2.0\mysql.web.dll; WorkingDir: {app}; StatusMsg: Adding web providers to machine.config; Flags: runhidden; Components: Providers
+Filename: "{code:GetVersion2InstallUtil}"; Parameters: {app}\.NET Framework\mysql.data.dll; WorkingDir: {app}; StatusMsg: Adding data provider to machine.config; Flags: runhidden
+Filename: "{code:GetVersion2InstallUtil}"; Parameters: {app}\Web Providers\mysql.web.dll; WorkingDir: {app}; StatusMsg: Adding web providers to machine.config; Flags: runhidden; Components: Providers
+Filename: {app}\GlobalInstaller.exe; Parameters: mysql.visualstudio.dll version=VS2005; WorkingDir: {app}\Visual Studio Integration; StatusMsg: Integrating with Visual Studio 2005; Flags: runhidden; Components: VS/2005
+Filename: {app}\GlobalInstaller.exe; Parameters: mysql.visualstudio.dll version=VS2008; WorkingDir: {app}\Visual Studio Integration; StatusMsg: Integrating with Visual Studio 2008; Flags: runhidden; Components: VS/2008
 Filename: "{code:GetVS2005Path}"; Parameters: /setup; WorkingDir: {app}; StatusMsg: Reconfiguring Visual Studio 2005.  Please wait...; Flags: runhidden; Components: VS/2005
 Filename: "{code:GetVS2008Path}"; Parameters: /setup; WorkingDir: {app}; StatusMsg: Reconfiguring Visual Studio 2008  Please wait...; Flags: runhidden; Components: VS/2008
 Filename: {app}\Uninstall\h2reg.exe; Parameters: -r -q; WorkingDir: {app}\Uninstall; StatusMsg: Registering help collection; Flags: runhidden; Components: docs and (VS/2005 or VS/2008)
 
 [UninstallRun]
+Filename: {app}\GlobalInstaller.exe; Parameters: /u mysql.visualstudio.dll version=VS2005; WorkingDir: {app}\Visual Studio Integration; StatusMsg: Removing Visual Studio 2005 integration; Flags: runhidden; Components: VS/2005
+Filename: {app}\GlobalInstaller.exe; Parameters: /u mysql.visualstudio.dll version=VS2008; WorkingDir: {app}\Visual Studio Integration; StatusMsg: Removing Visual Studio 2008 integration; Flags: runhidden; Components: VS/2008
 Filename: "{code:GetVS2005Path}"; Parameters: /setup; WorkingDir: {app}; StatusMsg: Reconfiguring Visual Studio 2005; Flags: runhidden runascurrentuser; Components: VS/2005
 Filename: "{code:GetVS2008Path}"; Parameters: /setup; WorkingDir: {app}; StatusMsg: Reconfiguring Visual Studio 2008; Flags: runhidden runascurrentuser; Components: VS/2008
-Filename: "{code:GetVersion2InstallUtil}"; Parameters: /u {app}\Binaries\.NET 2.0\mysql.data.dll; WorkingDir: {app}; StatusMsg: Removing data provider from machine.config; Flags: runhidden
-Filename: "{code:GetVersion2InstallUtil}"; Parameters: /u {app}\Binaries\.NET 2.0\mysql.web.dll; WorkingDir: {app}; StatusMsg: Removing web providers from machine.config; Flags: runhidden; Components: Providers
+Filename: "{code:GetVersion2InstallUtil}"; Parameters: /u {app}\.NET Framework\mysql.data.dll; WorkingDir: {app}; StatusMsg: Removing data provider from machine.config; Flags: runhidden
+Filename: "{code:GetVersion2InstallUtil}"; Parameters: /u {app}\Web Providers\mysql.web.dll; WorkingDir: {app}; StatusMsg: Removing web providers from machine.config; Flags: runhidden; Components: Providers
 Filename: {app}\Uninstall\h2reg.exe; Parameters: -u -q; WorkingDir: {app}\Uninstall; Flags: runhidden; Components: docs and (VS/2005 or VS/2008)
 
 [Code]
@@ -118,13 +122,13 @@ end;
 
 procedure AfterMySqlDataInstall();
 begin
-    if Not RegisterAssembly(ExpandConstant('{app}' + '\Binaries\.NET 2.0\mysql.data.dll'), 2) then
+    if Not RegisterAssembly(ExpandConstant('{app}' + '\.NET Framework\mysql.data.dll'), 2) then
       MsgBox('Registration of the Connector/Net core components failed.', mbError, MB_OK);
 end;
 
 procedure AfterWebInstall();
 begin
-    if Not RegisterAssembly(ExpandConstant('{app}' + '\Binaries\.NET 2.0\mysql.web.dll'), 2) then
+    if Not RegisterAssembly(ExpandConstant('{app}' + '\Web Providers\mysql.web.dll'), 2) then
       MsgBox('Registration of the Connector/Net web components failed.', mbError, MB_OK);
 end;
 
@@ -132,11 +136,11 @@ procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 begin
   if CurUninstallStep = usUninstall then
   begin
-    if Not UnRegisterAssembly(ExpandConstant('{app}' + '\Binaries\.NET 2.0\mysql.data.dll'), 2) then
+    if Not UnRegisterAssembly(ExpandConstant('{app}' + '\.NET Framework\mysql.data.dll'), 'mysql.data', 2) then
       MsgBox('Unregistration of the Connector/Net core components failed.', mbError, MB_OK);
 
-    if FileExists(ExpandConstant('{app}' + '\Binaries\.NET 2.0\mysql.web.dll')) then
-      if Not UnRegisterAssembly(ExpandConstant('{app}' + '\Binaries\.NET 2.0\mysql.web.dll'), 2) then
+    if FileExists(ExpandConstant('{app}' + '\Web Providers\mysql.web.dll')) then
+      if Not UnRegisterAssembly(ExpandConstant('{app}' + '\Web Providers\mysql.web.dll'), 'mysql.web', 2) then
         MsgBox('Unregistration of the Connector/Net web components failed.', mbError, MB_OK);
 
     // Now that we're finished with it, unload MyDll.dll from memory.

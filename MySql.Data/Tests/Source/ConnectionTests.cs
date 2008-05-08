@@ -21,7 +21,7 @@
 using System;
 using System.Data;
 using MySql.Data.MySqlClient;
-using MbUnit.Framework;
+using NUnit.Framework;
 using System.Configuration;
 
 namespace MySql.Data.MySqlClient.Tests
@@ -472,6 +472,16 @@ namespace MySql.Data.MySqlClient.Tests
             {
                 Assert.Fail(ex.Message);
             }
+        }
+
+        /// <summary>
+        /// Bug #35619 creating a MySql connection from toolbox generates an error 
+        /// </summary>
+        [Test]
+        public void NullConnectionString()
+        {
+            MySqlConnection c = new MySqlConnection();
+            c.ConnectionString = null;
         }
     }
 }

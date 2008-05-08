@@ -21,7 +21,7 @@
 using System;
 using System.Data;
 using MySql.Data.MySqlClient;
-using MbUnit.Framework;
+using NUnit.Framework;
 using System.Globalization;
 using System.Threading;
 using MySql.Data.Types;
@@ -614,12 +614,12 @@ namespace MySql.Data.MySqlClient.Tests
                 MySqlCommandBuilder.DeriveParameters(cmd);
 
                 Assert.AreEqual(2, cmd.Parameters.Count);
-                Assert.AreEqual("@v1", cmd.Parameters[0].ParameterName);
-                Assert.AreEqual(ParameterDirection.Input, cmd.Parameters[0].Direction);
-                Assert.AreEqual(MySqlDbType.DateTime, cmd.Parameters[0].MySqlDbType);
+                Assert.AreEqual("@v1", cmd.Parameters[1].ParameterName);
+                Assert.AreEqual(ParameterDirection.Input, cmd.Parameters[1].Direction);
+                Assert.AreEqual(MySqlDbType.DateTime, cmd.Parameters[1].MySqlDbType);
 
-                Assert.AreEqual(ParameterDirection.ReturnValue, cmd.Parameters[1].Direction);
-                Assert.AreEqual(MySqlDbType.Int32, cmd.Parameters[1].MySqlDbType);
+                Assert.AreEqual(ParameterDirection.ReturnValue, cmd.Parameters[0].Direction);
+                Assert.AreEqual(MySqlDbType.Int32, cmd.Parameters[0].MySqlDbType);
             }
             catch (Exception ex)
             {

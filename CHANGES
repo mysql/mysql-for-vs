@@ -16,6 +16,15 @@ Version 5.2.2 -
   is null would cause an exception (bug #35332)
 - Fixed bug where retrieving passwords that are encrypted was not returning proper
   passwords (bug #35336)    
+- Fixed problem with profile provider where properties that were specified without
+  a given type could not be retrieved properly (bug #36000)  
+- Implemented interactive session connection string option     
+- The procedure parameters schema collection has been altered to match what is coming
+  with MySQL 6.0.  Some fields have been removed and others combined.  Please review
+  your application for incompatibilities.
+- Removed some unnecessary locking from the pool manager and also reworked the pooling
+  code to not use a semaphore (bug #34001)
+
     
 Version 5.2.1 - 2/27/2008
 - Tons of fixes in providers.  The actually work now.  :)
@@ -58,7 +67,18 @@ Version 5.1.6
    closeReader option set to true when we were supposed to.  (Bug #34460)
  - Fixed problem where the bit data type would continue to return null values
    once it saw a null value in a previous row (bug #36313)      
-      
+ - Fixed problem with MembershipUser.GetPassword where attempting to retrieve a
+   password on a user where password Q&A is not required would throw an exception (bug #36159)      
+ - Fixed a problem with MembershipUser.GetNumberOfUsersOnline.  
+   It actually works now  :) (bug #36157)
+ - Fixed documentation that still stated that setting port to -1 was necessary for
+   a named pipe connection (bug #35356)      
+ - Fixed data type processing so that geometry fields are returned as binary.  (bug #36081)      
+ - Fixed problem that kept our provider from showing up in the provider list when configuring
+   a new connection from a SqlDataSource      
+ - Fixed problem where setting the ConnectionString property of MySqlConnection to null
+   would throw an exception (bug #35619)
+             
 Version 5.1.5 - 2/11/2008
   - Fixed problem with membership provider where FindUserByEmail would fail trying to add
     a second parameter with the same name as the first (bug #33347)
@@ -161,6 +181,14 @@ Version 5.1.0 - 5/1/2007
     What this means is that passing in null as a database restriction will report
     objects on the currently selected database only.
     
+Version 5.0.10 - 
+  - Fixed problem with pooling where a bogus host info combined with a pool with a minimum
+    size > 0 can combine to create an exception.  The pool fails to create from the bogus
+    host info but the driver finalizer code will still try to remove the driver from
+    a non-existant pool.  (bug #36432)    
+  - Fixed problem where supplying the connection reset config option can cause login to fail
+    when there is room to make a new connection and the pool has no idle connections.    
+        
 Version 5.0.9 - 4/14/08
 
   - Fixed problem where fields that were blobs but did not include the BLOB flag were treated

@@ -19,7 +19,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
-using MbUnit.Framework;
+using NUnit.Framework;
 using System.Configuration;
 using System.Data;
 using MySql.Data.MySqlClient;
@@ -108,46 +108,12 @@ namespace MySql.Data.MySqlClient.Tests
             connStr += GetConnectionInfo();
             rootConn = new MySqlConnection(connStr);
             rootConn.Open();
-
-            // now create our databases
-			suExecSQL(String.Format("DROP DATABASE IF EXISTS `{0}`; CREATE DATABASE `{0}`", database0));
-			suExecSQL(String.Format("DROP DATABASE IF EXISTS `{0}`; CREATE DATABASE `{0}`", database1));
-
-            // now allow our user to access them
-            suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'localhost' 
-				identified by 'test'", database0));
-            suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'localhost' 
-				identified by 'test'", database1));
-			suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'%' 
-				identified by 'test'", database0));
-			suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'%' 
-				identified by 'test'", database1));
-			suExecSQL("FLUSH PRIVILEGES");
-
-            rootConn.ChangeDatabase(database0);
-
-            Open();
-
-            if (maxPacketSize == 0)
-            {
-                MySqlCommand cmd = new MySqlCommand("SELECT @@max_allowed_packet", conn);
-                using (MySqlDataReader reader = cmd.ExecuteReader())
-                {
-                    reader.Read();
-                    maxPacketSize = (int)reader.GetUInt64(0);
-                }
-            }
-            Assert.IsTrue(maxPacketSize < 1500000);
         }
 
         [TestFixtureTearDown]
         public virtual void TestFixtureTearDown()
         {
-			suExecSQL(String.Format("DROP DATABASE IF EXISTS `{0}`", database0));
-			suExecSQL(String.Format("DROP DATABASE IF EXISTS `{0}`", database1));
-
             rootConn.Close();
-            Close();
         }
 
         #region Properties
@@ -168,7 +134,8 @@ namespace MySql.Data.MySqlClient.Tests
         protected string GetConnectionStringBasic(bool includedb)
         {
             string connStr = String.Format("server={0};user id={1};password={2};" +
-                 "persist security info=true;allow user variables=true;", host, user, password);
+                 "persist security info=true;connection reset=true;allow user variables=true;", 
+                 host, user, password);
             if (includedb)
                 connStr += String.Format("database={0};", database0);
             if (!pooling)
@@ -247,17 +214,24 @@ namespace MySql.Data.MySqlClient.Tests
         {
             try
             {
-                pooling = true;
-                IDataReader reader = execReader("SHOW TABLES LIKE 'Test'");
-                bool exists = reader.Read();
-                reader.Close();
-                if (exists)
-                    execSQL("TRUNCATE TABLE Test");
-                if (Version >= new Version(5,0))
-                {
-                    execSQL("DROP PROCEDURE IF EXISTS spTest");
-                    execSQL("DROP FUNCTION IF EXISTS fnTest");
-                }
+                // now create our databases
+                suExecSQL(String.Format("DROP DATABASE IF EXISTS `{0}`; CREATE DATABASE `{0}`", database0));
+                suExecSQL(String.Format("DROP DATABASE IF EXISTS `{0}`; CREATE DATABASE `{0}`", database1));
+
+                // now allow our user to access them
+                suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'localhost' 
+				identified by 'test'", database0));
+                suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'localhost' 
+				identified by 'test'", database1));
+                suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'%' 
+				identified by 'test'", database0));
+                suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'%' 
+				identified by 'test'", database1));
+                suExecSQL("FLUSH PRIVILEGES");
+
+                rootConn.ChangeDatabase(database0);
+
+                Open();
             }
             catch (Exception ex)
             {
@@ -268,13 +242,9 @@ namespace MySql.Data.MySqlClient.Tests
         [TearDown]
         public virtual void Teardown()
         {
-            execSQL("DROP TABLE IF EXISTS test");
-            if (Version >= new Version(5, 0))
-            {
-                execSQL("DROP VIEW IF EXISTS view1");
-                execSQL("DROP PROCEDURE IF EXISTS spTest");
-                execSQL("DROP FUNCTION IF EXISTS fnTest");
-            }
+            suExecSQL(String.Format("DROP DATABASE IF EXISTS `{0}`", database0));
+            suExecSQL(String.Format("DROP DATABASE IF EXISTS `{0}`", database1));
+            Close();
         }
 
         protected void KillConnection(MySqlConnection c)

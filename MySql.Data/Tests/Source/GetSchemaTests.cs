@@ -21,11 +21,11 @@
 using System;
 using System.Data;
 using MySql.Data.MySqlClient;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace MySql.Data.MySqlClient.Tests
 {
-	[MbUnit.Framework.TestFixture]
+	[NUnit.Framework.TestFixture]
 	public class GetSchemaTests : BaseTest
 	{
 		[Test]
@@ -272,23 +272,21 @@ namespace MySql.Data.MySqlClient.Tests
 			DataTable dt = conn.GetSchema("Procedure Parameters", restrictions);
 			Assert.IsTrue(dt.Rows.Count == 2);
 			Assert.AreEqual("Procedure Parameters", dt.TableName);
-			Assert.AreEqual(database0.ToLower(), dt.Rows[0]["ROUTINE_SCHEMA"].ToString().ToLower());
-			Assert.AreEqual("sptest", dt.Rows[0]["ROUTINE_NAME"].ToString().ToLower());
-			Assert.AreEqual("@id", dt.Rows[0]["PARAMETER_NAME"].ToString().ToLower());
+			Assert.AreEqual(database0.ToLower(), dt.Rows[0]["SPECIFIC_SCHEMA"].ToString().ToLower());
+			Assert.AreEqual("sptest", dt.Rows[0]["SPECIFIC_NAME"].ToString().ToLower());
+			Assert.AreEqual("id", dt.Rows[0]["PARAMETER_NAME"].ToString().ToLower());
 			Assert.AreEqual(1, dt.Rows[0]["ORDINAL_POSITION"]);
 			Assert.AreEqual("IN", dt.Rows[0]["PARAMETER_MODE"]);
-			Assert.AreEqual("NO", dt.Rows[0]["IS_RESULT"]);
 
-			restrictions[4] = "@name";
+			restrictions[4] = "name";
 			dt.Clear();
 			dt = conn.GetSchema("Procedure Parameters", restrictions);
 			Assert.AreEqual(1, dt.Rows.Count);
-			Assert.AreEqual(database0.ToLower(), dt.Rows[0]["ROUTINE_SCHEMA"].ToString().ToLower());
-			Assert.AreEqual("sptest", dt.Rows[0]["ROUTINE_NAME"].ToString().ToLower());
-			Assert.AreEqual("@name", dt.Rows[0]["PARAMETER_NAME"].ToString().ToLower());
+			Assert.AreEqual(database0.ToLower(), dt.Rows[0]["SPECIFIC_SCHEMA"].ToString().ToLower());
+			Assert.AreEqual("sptest", dt.Rows[0]["SPECIFIC_NAME"].ToString().ToLower());
+			Assert.AreEqual("name", dt.Rows[0]["PARAMETER_NAME"].ToString().ToLower());
 			Assert.AreEqual(2, dt.Rows[0]["ORDINAL_POSITION"]);
 			Assert.AreEqual("IN", dt.Rows[0]["PARAMETER_MODE"]);
-			Assert.AreEqual("NO", dt.Rows[0]["IS_RESULT"]);
 
 			execSQL("DROP FUNCTION IF EXISTS spFunc");
 			execSQL("CREATE FUNCTION spFunc (id int) RETURNS INT BEGIN RETURN 1; END");
@@ -299,17 +297,15 @@ namespace MySql.Data.MySqlClient.Tests
 			dt = conn.GetSchema("Procedure Parameters", restrictions);
 			Assert.IsTrue(dt.Rows.Count == 2);
 			Assert.AreEqual("Procedure Parameters", dt.TableName);
-			Assert.AreEqual(database0.ToLower(), dt.Rows[0]["ROUTINE_SCHEMA"].ToString().ToLower());
-			Assert.AreEqual("spfunc", dt.Rows[0]["ROUTINE_NAME"].ToString().ToLower());
-			Assert.AreEqual("@id", dt.Rows[0]["PARAMETER_NAME"].ToString().ToLower());
-			Assert.AreEqual(1, dt.Rows[0]["ORDINAL_POSITION"]);
-			Assert.AreEqual("IN", dt.Rows[0]["PARAMETER_MODE"]);
-			Assert.AreEqual("NO", dt.Rows[0]["IS_RESULT"]);
+			Assert.AreEqual(database0.ToLower(), dt.Rows[0]["SPECIFIC_SCHEMA"].ToString().ToLower());
+			Assert.AreEqual("spfunc", dt.Rows[0]["SPECIFIC_NAME"].ToString().ToLower());
+            Assert.AreEqual(0, dt.Rows[0]["ORDINAL_POSITION"]);
 
-			Assert.AreEqual(database0.ToLower(), dt.Rows[1]["ROUTINE_SCHEMA"].ToString().ToLower());
-			Assert.AreEqual("spfunc", dt.Rows[1]["ROUTINE_NAME"].ToString().ToLower());
-			Assert.AreEqual(0, dt.Rows[1]["ORDINAL_POSITION"]);
-			Assert.AreEqual("YES", dt.Rows[1]["IS_RESULT"]);
+            Assert.AreEqual(database0.ToLower(), dt.Rows[1]["SPECIFIC_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual("spfunc", dt.Rows[1]["SPECIFIC_NAME"].ToString().ToLower());
+            Assert.AreEqual("id", dt.Rows[1]["PARAMETER_NAME"].ToString().ToLower());
+			Assert.AreEqual(1, dt.Rows[1]["ORDINAL_POSITION"]);
+			Assert.AreEqual("IN", dt.Rows[1]["PARAMETER_MODE"]);
 		}
 
 		[Test]
@@ -444,48 +440,42 @@ namespace MySql.Data.MySqlClient.Tests
 
 			DataTable parameters = conn.GetSchema("PROCEDURE PARAMETERS", restrictions);
 			Assert.AreEqual(4, parameters.Rows.Count);
-			Assert.AreEqual(DBNull.Value, parameters.Rows[0][0]);
-			Assert.AreEqual(DBNull.Value, parameters.Rows[1][0]);
-			Assert.AreEqual(DBNull.Value, parameters.Rows[2][0]);
-			Assert.AreEqual(DBNull.Value, parameters.Rows[3][0]);
 
-			Assert.AreEqual(database0.ToLower(), parameters.Rows[0][1].ToString().ToLower());
-			Assert.AreEqual(database0.ToLower(), parameters.Rows[1][1].ToString().ToLower());
-			Assert.AreEqual(database0.ToLower(), parameters.Rows[2][1].ToString().ToLower());
-			Assert.AreEqual(database0.ToLower(), parameters.Rows[3][1].ToString().ToLower());
+            DataRow row = parameters.Rows[0];
+            Assert.AreEqual(DBNull.Value, row["SPECIFIC_CATALOG"]);
+            Assert.AreEqual(database0.ToLower(), row["SPECIFIC_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual("spTest", row["SPECIFIC_NAME"]);
+            Assert.AreEqual(1, row["ORDINAL_POSITION"]);
+            Assert.AreEqual("IN", row["PARAMETER_MODE"]);
+            Assert.AreEqual("id", row["PARAMETER_NAME"]);
+            Assert.AreEqual("INT", row["DATA_TYPE"]);
 
-			Assert.AreEqual("spTest", parameters.Rows[0][2]);
-			Assert.AreEqual("spTest", parameters.Rows[1][2]);
-			Assert.AreEqual("spTest", parameters.Rows[2][2]);
-			Assert.AreEqual("spTest", parameters.Rows[3][2]);
+            row = parameters.Rows[1];
+            Assert.AreEqual(DBNull.Value, row["SPECIFIC_CATALOG"]);
+            Assert.AreEqual(database0.ToLower(), row["SPECIFIC_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual("spTest", row["SPECIFIC_NAME"]);
+            Assert.AreEqual(2, row["ORDINAL_POSITION"]);
+            Assert.AreEqual("IN", row["PARAMETER_MODE"]);
+            Assert.AreEqual("id2", row["PARAMETER_NAME"]);
+            Assert.AreEqual("INT", row["DATA_TYPE"]);
 
-			Assert.AreEqual("PROCEDURE", parameters.Rows[0][3]);
-			Assert.AreEqual("@id", parameters.Rows[0][4]);
-			Assert.AreEqual(1, parameters.Rows[0][5]);
-			Assert.AreEqual("IN", parameters.Rows[0][6]);
-			Assert.AreEqual("NO", parameters.Rows[0][7]);
-			Assert.AreEqual("INT", parameters.Rows[0][8].ToString().ToUpper());
+            row = parameters.Rows[2];
+            Assert.AreEqual(DBNull.Value, row["SPECIFIC_CATALOG"]);
+            Assert.AreEqual(database0.ToLower(), row["SPECIFIC_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual("spTest", row["SPECIFIC_NAME"]);
+            Assert.AreEqual(3, row["ORDINAL_POSITION"]);
+            Assert.AreEqual("INOUT", row["PARAMETER_MODE"]);
+            Assert.AreEqual("io1", row["PARAMETER_NAME"]);
+            Assert.AreEqual("VARCHAR", row["DATA_TYPE"]);
 
-			Assert.AreEqual("PROCEDURE", parameters.Rows[1][3]);
-			Assert.AreEqual("@id2", parameters.Rows[1][4]);
-			Assert.AreEqual(2, parameters.Rows[1][5]);
-			Assert.AreEqual("IN", parameters.Rows[1][6]);
-			Assert.AreEqual("NO", parameters.Rows[1][7]);
-			Assert.AreEqual("INT", parameters.Rows[1][8].ToString().ToUpper());
-
-			Assert.AreEqual("PROCEDURE", parameters.Rows[2][3]);
-			Assert.AreEqual("@io1", parameters.Rows[2][4]);
-			Assert.AreEqual(3, parameters.Rows[2][5]);
-			Assert.AreEqual("INOUT", parameters.Rows[2][6]);
-			Assert.AreEqual("NO", parameters.Rows[2][7]);
-			Assert.AreEqual("VARCHAR", parameters.Rows[2][8].ToString().ToUpper());
-
-			Assert.AreEqual("PROCEDURE", parameters.Rows[3][3]);
-			Assert.AreEqual("@out1", parameters.Rows[3][4]);
-			Assert.AreEqual(4, parameters.Rows[3][5]);
-			Assert.AreEqual("OUT", parameters.Rows[3][6]);
-			Assert.AreEqual("NO", parameters.Rows[3][7]);
-			Assert.AreEqual("FLOAT", parameters.Rows[3][8].ToString().ToUpper());
+            row = parameters.Rows[3];
+            Assert.AreEqual(DBNull.Value, row["SPECIFIC_CATALOG"]);
+            Assert.AreEqual(database0.ToLower(), row["SPECIFIC_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual("spTest", row["SPECIFIC_NAME"]);
+            Assert.AreEqual(4, row["ORDINAL_POSITION"]);
+            Assert.AreEqual("OUT", row["PARAMETER_MODE"]);
+            Assert.AreEqual("out1", row["PARAMETER_NAME"]);
+            Assert.AreEqual("FLOAT", row["DATA_TYPE"]);
 		}
 
 		[Test]

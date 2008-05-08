@@ -114,10 +114,9 @@ namespace MySql.Data.MySqlClient
             foreach (DataRow row in parameters.Rows)
             {
                 MySqlParameter p = new MySqlParameter();
-                p.ParameterName = row["PARAMETER_NAME"].ToString();
-                p.Direction = GetDirection(row["PARAMETER_MODE"].ToString(),
-                    row["IS_RESULT"].ToString());
-                bool unsigned = row["FLAGS"].ToString().IndexOf("UNSIGNED") != -1;
+                p.ParameterName = String.Format("@{0}", row["PARAMETER_NAME"]);
+                p.Direction = GetDirection(row);
+                bool unsigned = StoredProcedure.GetFlags(row["DTD_IDENTIFIER"].ToString()).IndexOf("UNSIGNED") != -1;
                 bool real_as_float = procTable.Rows[0]["SQL_MODE"].ToString().IndexOf("REAL_AS_FLOAT") != -1;
                 p.MySqlDbType = MetaData.NameToType(row["DATA_TYPE"].ToString(),
                     unsigned, real_as_float, command.Connection);
@@ -131,13 +130,16 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-        private static ParameterDirection GetDirection(string direction, string is_result)
+        private static ParameterDirection GetDirection(DataRow row)
         {
-            if (is_result == "YES")
+            string mode = row["PARAMETER_MODE"].ToString();
+            int ordinal = Convert.ToInt32(row["ORDINAL_POSITION"]);
+
+            if (0 == ordinal)
                 return ParameterDirection.ReturnValue;
-            else if (direction == "IN")
+            else if (mode == "IN")
                 return ParameterDirection.Input;
-            else if (direction == "OUT")
+            else if (mode == "OUT")
                 return ParameterDirection.Output;
             return ParameterDirection.InputOutput;
         }

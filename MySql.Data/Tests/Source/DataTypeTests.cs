@@ -22,7 +22,7 @@ using System;
 using MySql.Data.MySqlClient;
 using MySql.Data.Types;
 using System.Data;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -898,6 +898,8 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void BitInLeftOuterJoin()
         {
+            if (version < new Version(5, 0)) return;
+
             execSQL("DROP TABLE IF EXISTS Main");
             execSQL("DROP TABLE IF EXISTS Child");
             execSQL(@"CREATE TABLE Main (Id int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -928,6 +930,28 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(DBNull.Value, dt.Rows[0][2]);
             Assert.AreEqual(1, dt.Rows[1][2]);
             Assert.AreEqual(DBNull.Value, dt.Rows[2][2]);
+        }
+
+        /// <summary>
+        /// Bug #36081 Get Unknown Datatype in C# .Net 
+        /// </summary>
+        [Test]
+        public void GeometryType()
+        {
+            if (version < new Version(5, 0)) return;
+
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL(@"CREATE TABLE Test (ID int(11) NOT NULL,
+                ogc_geom geometry NOT NULL default '',
+                PRIMARY KEY  (`ID`))");
+            execSQL(@"INSERT INTO Test VALUES (1, 
+                GeomFromText('GeometryCollection(Point(1 1), LineString(2 2, 3 3))'))");
+
+            MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test", conn);
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                reader.Read();
+            }
         }
     }
 }

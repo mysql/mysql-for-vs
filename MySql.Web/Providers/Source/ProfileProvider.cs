@@ -431,6 +431,11 @@ namespace MySql.Web.Profile
 
             foreach (SettingsProperty property in collection)
             {
+                if (property.PropertyType.IsPrimitive || property.PropertyType == typeof(string))
+                    property.SerializeAs = SettingsSerializeAs.String;
+                else
+                    property.SerializeAs = SettingsSerializeAs.Xml;
+
                 values.Add(new SettingsPropertyValue(property));
             }
 

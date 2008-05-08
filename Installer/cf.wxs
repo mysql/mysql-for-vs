@@ -5,9 +5,9 @@
       <Directory Id="CFDir" Name="Compact Framework">
         <Component Id="CFBinaries" Guid="5a9c32ad-62f5-4b24-a225-96acf42d88a1">
           <File Id="cf1" Name="MySql.Data.CF.dll"
-                Source="..\Driver\bin\net-2.0\release\mysql.data.CF.dll" DiskId="1"/>
+                Source="..\mysql.data\provider\bin\net-2.0\release\mysql.data.CF.dll" DiskId="1"/>
           <File Id="cf2" Name="Mysql.Data.Tests.CF.dll"
-                Source="..\TestSuite\bin\net-2.0\Release\mysql.data.tests.CF.dll" DiskId="1"/>
+                Source="..\mysql.data\tests\bin\net-2.0\Release\mysql.data.CF.tests.dll" DiskId="1"/>
         </Component>
       </Directory>
     </DirectoryRef>

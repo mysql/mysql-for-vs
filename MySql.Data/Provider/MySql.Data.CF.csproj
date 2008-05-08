@@ -63,7 +63,6 @@
     <Compile Include="Source\base\DbConnectionStringBuilder.cs" />
     <Compile Include="Source\base\DbException.cs" />
     <Compile Include="Source\cf\BufferedStream.cs" />
-    <Compile Include="Source\cf\Semaphore.cs" />
     <Compile Include="Source\cf\WinCE.cs" />
     <Compile Include="Source\CharSetMap.cs" />
     <Compile Include="Source\command.cs">

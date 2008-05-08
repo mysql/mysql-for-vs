@@ -22,7 +22,7 @@ using System;
 using MySql.Data.MySqlClient;
 using MySql.Data.Types;
 using System.Data;
-using MbUnit.Framework;
+using NUnit.Framework;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -41,7 +41,6 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 			base.Setup();
 
-			execSQL("DROP TABLE IF EXISTS Test");
 			execSQL("CREATE TABLE Test (id INT NOT NULL AUTO_INCREMENT, " +
                 "id2 INT NOT NULL, name VARCHAR(100), dt DATETIME, tm TIME, " +
                 "ts TIMESTAMP, OriginalId INT, PRIMARY KEY(id, id2))");
@@ -539,35 +538,28 @@ namespace MySql.Data.MySqlClient.Tests
             execSQL("CREATE TABLE Test (id INT, PRIMARY KEY(id))");
             execSQL("INSERT INTO Test VALUES(1)");
 
-            try
-            {
-                MySqlConnection c = new MySqlConnection(GetConnectionString(true));
-                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", c);
-                MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
-                Assert.IsTrue(c.State == ConnectionState.Closed);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-                Assert.IsTrue(c.State == ConnectionState.Closed);
-                Assert.AreEqual(1, dt.Rows.Count);
+            MySqlConnection c = new MySqlConnection(GetConnectionString(true));
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", c);
+            MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
+            Assert.IsTrue(c.State == ConnectionState.Closed);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            Assert.IsTrue(c.State == ConnectionState.Closed);
+            Assert.AreEqual(1, dt.Rows.Count);
 
-                dt.Rows[0][0] = 2;
-                DataRow[] rows = new DataRow[1];
-                rows[0] = dt.Rows[0];
-                da.Update(dt);
-                Assert.IsTrue(c.State == ConnectionState.Closed);
+            dt.Rows[0][0] = 2;
+            DataRow[] rows = new DataRow[1];
+            rows[0] = dt.Rows[0];
+            da.Update(dt);
+            Assert.IsTrue(c.State == ConnectionState.Closed);
 
-                dt.Clear();
-                c.Open();
-                Assert.IsTrue(c.State == ConnectionState.Open);
-                da.Fill(dt);
-                Assert.IsTrue(c.State == ConnectionState.Open);
-                Assert.AreEqual(1, dt.Rows.Count);
-                cb.Dispose();
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
+            dt.Clear();
+            c.Open();
+            Assert.IsTrue(c.State == ConnectionState.Open);
+            da.Fill(dt);
+            Assert.IsTrue(c.State == ConnectionState.Open);
+            Assert.AreEqual(1, dt.Rows.Count);
+            cb.Dispose();
         }
 
         [Test]

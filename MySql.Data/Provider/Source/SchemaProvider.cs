@@ -295,7 +295,7 @@ namespace MySql.Data.MySqlClient
             dt.Columns.Add("COLUMN_NAME", typeof (string));
             dt.Columns.Add("ORDINAL_POSITION", typeof (int));
 
-            string[] tableRestrictions = new string[restrictions.Length];
+            string[] tableRestrictions = new string[Math.Max(restrictions.Length, 4)]; 
             restrictions.CopyTo(tableRestrictions, 0);
             tableRestrictions[3] = "BASE TABLE";
             DataTable tables = GetTables(tableRestrictions);

@@ -875,8 +875,8 @@
             <td>Port</td>
             <td>3306</td>
             <td>
-              The port MySQL is using to listen for connections.  Specify -1 for this value to use a
-              named pipe connection (Windows only). This value is ignored if Unix socket is used.
+              The port MySQL is using to listen for connections.  This value is ignored if the connection protocol 
+              is anything but socket.
             </td>
           </tr>
           <tr>
@@ -1084,6 +1084,13 @@
             <td>false</td>
             <td>
               Should the provider expect user variables in the SQL.
+            </td>
+          </tr>
+          <tr>
+            <td>Interactive -or- Interactive Session</td>
+            <td>false</td>
+            <td>
+              Should this session be considered interactive?
             </td>
           </tr>
         </table>
