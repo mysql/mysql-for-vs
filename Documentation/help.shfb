@@ -1,6 +1,6 @@
-﻿<project schemaVersion="1.6.0.1">
+﻿<project schemaVersion="1.6.0.2">
     <assemblies>
-        <assembly assemblyPath="..\Driver\bin\net-2.0\release\MySql.Data.dll" xmlCommentsPath="..\Driver\bin\net-2.0\release\MySql.Data.xml" commentsOnly="False" />
+        <assembly assemblyPath="..\MySql.Data\Provider\bin\net-2.0\Release\MySql.Data.dll" xmlCommentsPath="..\MySql.Data\Provider\bin\net-2.0\Release\MySql.Data.xml" commentsOnly="False" />
         <assembly assemblyPath="..\MySql.Web\Providers\bin\Release\MySql.Web.dll" xmlCommentsPath="..\MySql.Web\Providers\bin\Release\doc.xml" commentsOnly="False" />
     </assemblies>
     <namespaceSummaries>

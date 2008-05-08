@@ -4,122 +4,122 @@
     <DirectoryRef Id='DriverDir'>
       <Component Id="TopLevelSrc" Guid="8f11cdd2-95b2-4153-8d33-8ef2750ecef2">
         <File Id="nantFile" Name="client.build" Source="..\client.build" DiskId="1"/>
-        <File Id="m2005proj" Name="MySql.Data.2005.csproj" Source="..\Driver\MySql.Data.2005.csproj" DiskId="1"/>
+        <File Id="m2005proj" Name="MySql.Data.2005.csproj" Source="..\MySql.Data\Provider\MySql.Data.2005.csproj" DiskId="1"/>
       </Component>
       <Directory Id="PropertiesFolder" Name="Properties">
         <Component Id="PropSrc" DiskId="1" Guid="5ae1e395-52e6-4976-a146-6fc59e2b8bc4">
-          <File Id="file0" Name="AssemblyInfo.cs" Source="..\Driver\Properties\AssemblyInfo.cs" />
-          <File Id="file45" Name="ReservedWords.txt" Source="..\Driver\Properties\ReservedWords.txt"/>
+          <File Id="file0" Name="AssemblyInfo.cs" Source="..\MySql.Data\Provider\Properties\AssemblyInfo.cs" />
+          <File Id="file45" Name="ReservedWords.txt" Source="..\MySql.Data\Provider\Properties\ReservedWords.txt"/>
         </Component>
       </Directory>
       <Directory Id="srcFolder" Name="Source">
         <Component Id="CoreSrc" DiskId="1" Guid="f26e0e12-e307-4b03-834c-1a6b45e77b92">
-          <File Id="file1" Name="CharSetMap.cs" Source="..\Driver\Source\CharSetMap.cs" />
-          <File Id="file2" Name="command.cs" Source="..\Driver\Source\command.cs" />
-          <File Id="file3" Name="CommandBuilder.cs" Source="..\Driver\Source\CommandBuilder.cs" />
-          <File Id="file4" Name="CompressedStream.cs" Source="..\Driver\Source\CompressedStream.cs" />
-          <File Id="file5" Name="Connection.cs" Source="..\Driver\Source\Connection.cs" />
-          <File Id="file6" Name="Crypt.cs" Source="..\Driver\Source\Crypt.cs" />
-          <File Id="file7" Name="dataadapter.cs" Source="..\Driver\Source\dataadapter.cs" />
-          <File Id="file8" Name="datareader.cs" Source="..\Driver\Source\datareader.cs" />
-          <File Id="file10" Name="Driver.cs" Source="..\Driver\Source\Driver.cs" />
-          <File Id="file11" Name="Exception.cs" Source="..\Driver\Source\Exception.cs" />
-          <File Id="file12" Name="Field.cs" Source="..\Driver\Source\Field.cs" />
-          <File Id="file14" Name="ISSchemaProvider.cs" Source="..\Driver\Source\ISSchemaProvider.cs" />
-          <File Id="file15" Name="Logger.cs" Source="..\Driver\Source\Logger.cs" />
-          <File Id="file18" Name="MySqlClientFactory.cs" Source="..\Driver\Source\MySqlClientFactory.cs" />
-          <File Id="file19" Name="MySqlConnectionStringBuilder.cs" Source="..\Driver\Source\MySqlConnectionStringBuilder.cs" />
-          <File Id="file20" Name="MysqlDefs.cs" Source="..\Driver\Source\MysqlDefs.cs" />
-          <File Id="file21" Name="MySqlError.cs" Source="..\Driver\Source\MySqlError.cs" />
-          <File Id="file22" Name="MySqlHelper.cs" Source="..\Driver\Source\MySqlHelper.cs" />
-          <File Id="file23" Name="MySqlPool.cs" Source="..\Driver\Source\MySqlPool.cs" />
-          <File Id="file24" Name="MySqlPoolManager.cs" Source="..\Driver\Source\MySqlPoolManager.cs" />
-          <File Id="file43" Name="MySqlPromotableTransaction.cs" Source="..\Driver\Source\MySqlPromotableTransaction.cs" />
-          <File Id="file25" Name="MySqlStream.cs" Source="..\Driver\Source\MySqlStream.cs" />
-          <File Id="file26" Name="NativeDriver.cs" Source="..\Driver\Source\NativeDriver.cs" />
-          <File Id="file27" Name="parameter.cs" Source="..\Driver\Source\parameter.cs" />
-          <File Id="file28" Name="parameter_collection.cs" Source="..\Driver\Source\parameter_collection.cs" />
-          <File Id="file29" Name="PerformanceMonitor.cs" Source="..\Driver\Source\PerformanceMonitor.cs" />
-          <File Id="file30" Name="PreparableStatement.cs" Source="..\Driver\Source\PreparableStatement.cs" />
-          <File Id="file31" Name="ProcedureCache.cs" Source="..\Driver\Source\ProcedureCache.cs" />
-          <File Id="file36" Name="Resources.resx" Source="..\Driver\Source\Resources.resx" />
-          <File Id="file44" Name="Resources.Designer.cs" Source="..\Driver\Source\Resources.Designer.cs" />
-          <File Id="file37" Name="SchemaProvider.cs" Source="..\Driver\Source\SchemaProvider.cs" />
-          <File Id="file38" Name="Statement.cs" Source="..\Driver\Source\Statement.cs" />
-          <File Id="file39" Name="StoredProcedure.cs" Source="..\Driver\Source\StoredProcedure.cs" />
-          <File Id="file40" Name="transaction.cs" Source="..\Driver\Source\transaction.cs" />
-          <File Id="file41" Name="UsageAdvisor.cs" Source="..\Driver\Source\UsageAdvisor.cs" />
-          <File Id="file46" Name="Installer.cs" Source="..\Driver\Source\Installer.cs"/>
+          <File Id="file1" Name="CharSetMap.cs" Source="..\MySql.Data\Provider\Source\CharSetMap.cs" />
+          <File Id="file2" Name="command.cs" Source="..\MySql.Data\Provider\Source\command.cs" />
+          <File Id="file3" Name="CommandBuilder.cs" Source="..\MySql.Data\Provider\Source\CommandBuilder.cs" />
+          <File Id="file4" Name="CompressedStream.cs" Source="..\MySql.Data\Provider\Source\CompressedStream.cs" />
+          <File Id="file5" Name="Connection.cs" Source="..\MySql.Data\Provider\Source\Connection.cs" />
+          <File Id="file6" Name="Crypt.cs" Source="..\MySql.Data\Provider\Source\Crypt.cs" />
+          <File Id="file7" Name="dataadapter.cs" Source="..\MySql.Data\Provider\Source\dataadapter.cs" />
+          <File Id="file8" Name="datareader.cs" Source="..\MySql.Data\Provider\Source\datareader.cs" />
+          <File Id="file10" Name="Driver.cs" Source="..\MySql.Data\Provider\Source\Driver.cs" />
+          <File Id="file11" Name="Exception.cs" Source="..\MySql.Data\Provider\Source\Exception.cs" />
+          <File Id="file12" Name="Field.cs" Source="..\MySql.Data\Provider\Source\Field.cs" />
+          <File Id="file14" Name="ISSchemaProvider.cs" Source="..\MySql.Data\Provider\Source\ISSchemaProvider.cs" />
+          <File Id="file15" Name="Logger.cs" Source="..\MySql.Data\Provider\Source\Logger.cs" />
+          <File Id="file18" Name="MySqlClientFactory.cs" Source="..\MySql.Data\Provider\Source\MySqlClientFactory.cs" />
+          <File Id="file19" Name="MySqlConnectionStringBuilder.cs" Source="..\MySql.Data\Provider\Source\MySqlConnectionStringBuilder.cs" />
+          <File Id="file20" Name="MysqlDefs.cs" Source="..\MySql.Data\Provider\Source\MysqlDefs.cs" />
+          <File Id="file21" Name="MySqlError.cs" Source="..\MySql.Data\Provider\Source\MySqlError.cs" />
+          <File Id="file22" Name="MySqlHelper.cs" Source="..\MySql.Data\Provider\Source\MySqlHelper.cs" />
+          <File Id="file23" Name="MySqlPool.cs" Source="..\MySql.Data\Provider\Source\MySqlPool.cs" />
+          <File Id="file24" Name="MySqlPoolManager.cs" Source="..\MySql.Data\Provider\Source\MySqlPoolManager.cs" />
+          <File Id="file43" Name="MySqlPromotableTransaction.cs" Source="..\MySql.Data\Provider\Source\MySqlPromotableTransaction.cs" />
+          <File Id="file25" Name="MySqlStream.cs" Source="..\MySql.Data\Provider\Source\MySqlStream.cs" />
+          <File Id="file26" Name="NativeDriver.cs" Source="..\MySql.Data\Provider\Source\NativeDriver.cs" />
+          <File Id="file27" Name="parameter.cs" Source="..\MySql.Data\Provider\Source\parameter.cs" />
+          <File Id="file28" Name="parameter_collection.cs" Source="..\MySql.Data\Provider\Source\parameter_collection.cs" />
+          <File Id="file29" Name="PerformanceMonitor.cs" Source="..\MySql.Data\Provider\Source\PerformanceMonitor.cs" />
+          <File Id="file30" Name="PreparableStatement.cs" Source="..\MySql.Data\Provider\Source\PreparableStatement.cs" />
+          <File Id="file31" Name="ProcedureCache.cs" Source="..\MySql.Data\Provider\Source\ProcedureCache.cs" />
+          <File Id="file36" Name="Resources.resx" Source="..\MySql.Data\Provider\Source\Resources.resx" />
+          <File Id="file44" Name="Resources.Designer.cs" Source="..\MySql.Data\Provider\Source\Resources.Designer.cs" />
+          <File Id="file37" Name="SchemaProvider.cs" Source="..\MySql.Data\Provider\Source\SchemaProvider.cs" />
+          <File Id="file38" Name="Statement.cs" Source="..\MySql.Data\Provider\Source\Statement.cs" />
+          <File Id="file39" Name="StoredProcedure.cs" Source="..\MySql.Data\Provider\Source\StoredProcedure.cs" />
+          <File Id="file40" Name="transaction.cs" Source="..\MySql.Data\Provider\Source\transaction.cs" />
+          <File Id="file41" Name="UsageAdvisor.cs" Source="..\MySql.Data\Provider\Source\UsageAdvisor.cs" />
+          <File Id="file46" Name="Installer.cs" Source="..\MySql.Data\Provider\Source\Installer.cs"/>
         </Component>
         <Directory Id="commonFolder" Name="Common">
           <Component Id="CommonSrc"  DiskId="1" Guid="d8434f79-1557-46b4-82b8-465b5e50f3de">
-            <File Id="file179" Name="ContextString.cs" Source="..\Driver\Source\common\ContextString.cs" />
-            <File Id="file180" Name="NamedPipeStream.cs" Source="..\Driver\Source\common\NamedPipeStream.cs" />
-            <File Id="file181" Name="NativeMethods.cs" Source="..\Driver\Source\common\NativeMethods.cs" />
-            <File Id="file182" Name="Platform.cs" Source="..\Driver\Source\common\Platform.cs" />
-            <File Id="file184" Name="SHA1.cs" Source="..\Driver\Source\common\SHA1.cs" />
-            <File Id="file185" Name="SharedMemoryStream.cs" Source="..\Driver\Source\common\SharedMemoryStream.cs" />
-            <File Id="file186" Name="StreamCreator.cs" Source="..\Driver\Source\common\StreamCreator.cs" />
-            <File Id="file187" Name="SocketStream.cs" Source="..\Driver\Source\common\SocketStream.cs" />
-            <File Id="file188" Name="Version.cs" Source="..\Driver\Source\common\Version.cs" />
-            <File Id="file189" Name="WinCE.cs" Source="..\Driver\Source\common\WinCE.cs" />
-            <File Id="file190" Name="Cache.cs" Source="..\Driver\Source\common\Cache.cs"/>
+            <File Id="file179" Name="ContextString.cs" Source="..\MySql.Data\Provider\Source\common\ContextString.cs" />
+            <File Id="file180" Name="NamedPipeStream.cs" Source="..\MySql.Data\Provider\Source\common\NamedPipeStream.cs" />
+            <File Id="file181" Name="NativeMethods.cs" Source="..\MySql.Data\Provider\Source\common\NativeMethods.cs" />
+            <File Id="file182" Name="Platform.cs" Source="..\MySql.Data\Provider\Source\common\Platform.cs" />
+            <File Id="file184" Name="SHA1.cs" Source="..\MySql.Data\Provider\Source\common\SHA1.cs" />
+            <File Id="file185" Name="SharedMemoryStream.cs" Source="..\MySql.Data\Provider\Source\common\SharedMemoryStream.cs" />
+            <File Id="file186" Name="StreamCreator.cs" Source="..\MySql.Data\Provider\Source\common\StreamCreator.cs" />
+            <File Id="file187" Name="SocketStream.cs" Source="..\MySql.Data\Provider\Source\common\SocketStream.cs" />
+            <File Id="file188" Name="Version.cs" Source="..\MySql.Data\Provider\Source\common\Version.cs" />
+            <File Id="file189" Name="WinCE.cs" Source="..\MySql.Data\Provider\Source\common\WinCE.cs" />
+            <File Id="file190" Name="Cache.cs" Source="..\MySql.Data\Provider\Source\common\Cache.cs"/>
           </Component>
         </Directory>
         <Directory Id="docSrcFolder" Name="Docs">
           <Component Id="DocsSrc" DiskId="1" Guid="46e1bf2a-b9f1-4da4-ae2a-ed934efc984a">
-            <File Id="file245" Name="MySqlCommand.xml" Source="..\Driver\Source\docs\MySqlCommand.xml" />
-            <File Id="file246" Name="MySqlCommandBuilder.xml" Source="..\Driver\Source\docs\MySqlCommandBuilder.xml" />
-            <File Id="file247" Name="MySqlConnection.xml" Source="..\Driver\Source\docs\MySqlConnection.xml" />
-            <File Id="file248" Name="MySqlConnectionStringBuilder.xml" Source="..\Driver\Source\docs\MySqlConnectionStringBuilder.xml" />
-            <File Id="file249" Name="MySqlDataAdapter.xml" Source="..\Driver\Source\docs\MySqlDataAdapter.xml" />
-            <File Id="file250" Name="MySqlDataReader.xml" Source="..\Driver\Source\docs\MySqlDataReader.xml" />
-            <File Id="file251" Name="MySqlException.xml" Source="..\Driver\Source\docs\MySqlException.xml" />
-            <File Id="file252" Name="MySqlHelper.xml" Source="..\Driver\Source\docs\MySqlHelper.xml" />
-            <File Id="file253" Name="MySqlParameter.xml" Source="..\Driver\Source\docs\MySqlParameter.xml" />
-            <File Id="file254" Name="MySqlParameterCollection.xml" Source="..\Driver\Source\docs\MySqlParameterCollection.xml" />
-            <File Id="file255" Name="MySqlTransaction.xml" Source="..\Driver\Source\docs\MySqlTransaction.xml" />
+            <File Id="file245" Name="MySqlCommand.xml" Source="..\MySql.Data\Provider\Source\docs\MySqlCommand.xml" />
+            <File Id="file246" Name="MySqlCommandBuilder.xml" Source="..\MySql.Data\Provider\Source\docs\MySqlCommandBuilder.xml" />
+            <File Id="file247" Name="MySqlConnection.xml" Source="..\MySql.Data\Provider\Source\docs\MySqlConnection.xml" />
+            <File Id="file248" Name="MySqlConnectionStringBuilder.xml" Source="..\MySql.Data\Provider\Source\docs\MySqlConnectionStringBuilder.xml" />
+            <File Id="file249" Name="MySqlDataAdapter.xml" Source="..\MySql.Data\Provider\Source\docs\MySqlDataAdapter.xml" />
+            <File Id="file250" Name="MySqlDataReader.xml" Source="..\MySql.Data\Provider\Source\docs\MySqlDataReader.xml" />
+            <File Id="file251" Name="MySqlException.xml" Source="..\MySql.Data\Provider\Source\docs\MySqlException.xml" />
+            <File Id="file252" Name="MySqlHelper.xml" Source="..\MySql.Data\Provider\Source\docs\MySqlHelper.xml" />
+            <File Id="file253" Name="MySqlParameter.xml" Source="..\MySql.Data\Provider\Source\docs\MySqlParameter.xml" />
+            <File Id="file254" Name="MySqlParameterCollection.xml" Source="..\MySql.Data\Provider\Source\docs\MySqlParameterCollection.xml" />
+            <File Id="file255" Name="MySqlTransaction.xml" Source="..\MySql.Data\Provider\Source\docs\MySqlTransaction.xml" />
           </Component>
         </Directory>
         <Directory Id="typesFolder" Name="Types">
           <Component Id="TypesSrc" DiskId="1" Guid="891ebd68-243e-4433-9aca-0d682e012466">
-            <File Id="file299" Name="MetaData.cs" Source="..\Driver\Source\Types\MetaData.cs" />
-            <File Id="file300" Name="MySqlBinary.cs" Source="..\Driver\Source\Types\MySqlBinary.cs" />
-            <File Id="file301" Name="MySqlBit.cs" Source="..\Driver\Source\Types\MySqlBit.cs" />
-            <File Id="file302" Name="MySqlByte.cs" Source="..\Driver\Source\Types\MySqlByte.cs" />
-            <File Id="file303" Name="MySqlConversionException.cs" Source="..\Driver\Source\Types\MySqlConversionException.cs" />
-            <File Id="file304" Name="MySqlDateTime.cs" Source="..\Driver\Source\Types\MySqlDateTime.cs" />
-            <File Id="file305" Name="MySqlDecimal.cs" Source="..\Driver\Source\Types\MySqlDecimal.cs" />
-            <File Id="file306" Name="MySqlDouble.cs" Source="..\Driver\Source\Types\MySqlDouble.cs" />
-            <File Id="file307" Name="MySqlInt16.cs" Source="..\Driver\Source\Types\MySqlInt16.cs" />
-            <File Id="file308" Name="MySqlInt32.cs" Source="..\Driver\Source\Types\MySqlInt32.cs" />
-            <File Id="file309" Name="MySqlInt64.cs" Source="..\Driver\Source\Types\MySqlInt64.cs" />
-            <File Id="file310" Name="MySqlSingle.cs" Source="..\Driver\Source\Types\MySqlSingle.cs" />
-            <File Id="file311" Name="MySqlString.cs" Source="..\Driver\Source\Types\MySqlString.cs" />
-            <File Id="file312" Name="MySqlTime.cs" Source="..\Driver\Source\Types\MySqlTime.cs" />
-            <File Id="file313" Name="MySqlUByte.cs" Source="..\Driver\Source\Types\MySqlUByte.cs" />
-            <File Id="file314" Name="MySqlUInt16.cs" Source="..\Driver\Source\Types\MySqlUInt16.cs" />
-            <File Id="file315" Name="MySqlUInt32.cs" Source="..\Driver\Source\Types\MySqlUInt32.cs" />
-            <File Id="file316" Name="MySqlUInt64.cs" Source="..\Driver\Source\Types\MySqlUInt64.cs" />
-            <File Id="file317" Name="MySqlValue.cs" Source="..\Driver\Source\Types\MySqlValue.cs" />
+            <File Id="file299" Name="MetaData.cs" Source="..\MySql.Data\Provider\Source\Types\MetaData.cs" />
+            <File Id="file300" Name="MySqlBinary.cs" Source="..\MySql.Data\Provider\Source\Types\MySqlBinary.cs" />
+            <File Id="file301" Name="MySqlBit.cs" Source="..\MySql.Data\Provider\Source\Types\MySqlBit.cs" />
+            <File Id="file302" Name="MySqlByte.cs" Source="..\MySql.Data\Provider\Source\Types\MySqlByte.cs" />
+            <File Id="file303" Name="MySqlConversionException.cs" Source="..\MySql.Data\Provider\Source\Types\MySqlConversionException.cs" />
+            <File Id="file304" Name="MySqlDateTime.cs" Source="..\MySql.Data\Provider\Source\Types\MySqlDateTime.cs" />
+            <File Id="file305" Name="MySqlDecimal.cs" Source="..\MySql.Data\Provider\Source\Types\MySqlDecimal.cs" />
+            <File Id="file306" Name="MySqlDouble.cs" Source="..\MySql.Data\Provider\Source\Types\MySqlDouble.cs" />
+            <File Id="file307" Name="MySqlInt16.cs" Source="..\MySql.Data\Provider\Source\Types\MySqlInt16.cs" />
+            <File Id="file308" Name="MySqlInt32.cs" Source="..\MySql.Data\Provider\Source\Types\MySqlInt32.cs" />
+            <File Id="file309" Name="MySqlInt64.cs" Source="..\MySql.Data\Provider\Source\Types\MySqlInt64.cs" />
+            <File Id="file310" Name="MySqlSingle.cs" Source="..\MySql.Data\Provider\Source\Types\MySqlSingle.cs" />
+            <File Id="file311" Name="MySqlString.cs" Source="..\MySql.Data\Provider\Source\Types\MySqlString.cs" />
+            <File Id="file312" Name="MySqlTime.cs" Source="..\MySql.Data\Provider\Source\Types\MySqlTime.cs" />
+            <File Id="file313" Name="MySqlUByte.cs" Source="..\MySql.Data\Provider\Source\Types\MySqlUByte.cs" />
+            <File Id="file314" Name="MySqlUInt16.cs" Source="..\MySql.Data\Provider\Source\Types\MySqlUInt16.cs" />
+            <File Id="file315" Name="MySqlUInt32.cs" Source="..\MySql.Data\Provider\Source\Types\MySqlUInt32.cs" />
+            <File Id="file316" Name="MySqlUInt64.cs" Source="..\MySql.Data\Provider\Source\Types\MySqlUInt64.cs" />
+            <File Id="file317" Name="MySqlValue.cs" Source="..\MySql.Data\Provider\Source\Types\MySqlValue.cs" />
           </Component>
         </Directory>
         <Directory Id="zlibFolder" Name="zlib">
           <Component Id="ZLibSrc" DiskId="1" Guid="2e384863-7595-445c-9d29-381bf3cb24bd">
-            <File Id="file500" Name="Adler32.cs" Source="..\Driver\Source\zlib\Adler32.cs" />
-            <File Id="file501" Name="Deflate.cs" Source="..\Driver\Source\zlib\Deflate.cs" />
-            <File Id="file502" Name="InfBlocks.cs" Source="..\Driver\Source\zlib\InfBlocks.cs" />
-            <File Id="file503" Name="InfCodes.cs" Source="..\Driver\Source\zlib\InfCodes.cs" />
-            <File Id="file504" Name="Inflate.cs" Source="..\Driver\Source\zlib\Inflate.cs" />
-            <File Id="file505" Name="InfTree.cs" Source="..\Driver\Source\zlib\InfTree.cs" />
-            <File Id="file506" Name="StaticTree.cs" Source="..\Driver\Source\zlib\StaticTree.cs" />
-            <File Id="file507" Name="SupportClass.cs" Source="..\Driver\Source\zlib\SupportClass.cs" />
-            <File Id="file508" Name="Tree.cs" Source="..\Driver\Source\zlib\Tree.cs" />
-            <File Id="file509" Name="ZInputStream.cs" Source="..\Driver\Source\zlib\ZInputStream.cs" />
-            <File Id="file510" Name="Zlib.cs" Source="..\Driver\Source\zlib\Zlib.cs" />
-            <File Id="file511" Name="ZOutputStream.cs" Source="..\Driver\Source\zlib\ZOutputStream.cs" />
-            <File Id="file512" Name="ZStream.cs" Source="..\Driver\Source\zlib\ZStream.cs" />
-            <File Id="file513" Name="ZStreamException.cs" Source="..\Driver\Source\zlib\ZStreamException.cs" />
+            <File Id="file500" Name="Adler32.cs" Source="..\MySql.Data\Provider\Source\zlib\Adler32.cs" />
+            <File Id="file501" Name="Deflate.cs" Source="..\MySql.Data\Provider\Source\zlib\Deflate.cs" />
+            <File Id="file502" Name="InfBlocks.cs" Source="..\MySql.Data\Provider\Source\zlib\InfBlocks.cs" />
+            <File Id="file503" Name="InfCodes.cs" Source="..\MySql.Data\Provider\Source\zlib\InfCodes.cs" />
+            <File Id="file504" Name="Inflate.cs" Source="..\MySql.Data\Provider\Source\zlib\Inflate.cs" />
+            <File Id="file505" Name="InfTree.cs" Source="..\MySql.Data\Provider\Source\zlib\InfTree.cs" />
+            <File Id="file506" Name="StaticTree.cs" Source="..\MySql.Data\Provider\Source\zlib\StaticTree.cs" />
+            <File Id="file507" Name="SupportClass.cs" Source="..\MySql.Data\Provider\Source\zlib\SupportClass.cs" />
+            <File Id="file508" Name="Tree.cs" Source="..\MySql.Data\Provider\Source\zlib\Tree.cs" />
+            <File Id="file509" Name="ZInputStream.cs" Source="..\MySql.Data\Provider\Source\zlib\ZInputStream.cs" />
+            <File Id="file510" Name="Zlib.cs" Source="..\MySql.Data\Provider\Source\zlib\Zlib.cs" />
+            <File Id="file511" Name="ZOutputStream.cs" Source="..\MySql.Data\Provider\Source\zlib\ZOutputStream.cs" />
+            <File Id="file512" Name="ZStream.cs" Source="..\MySql.Data\Provider\Source\zlib\ZStream.cs" />
+            <File Id="file513" Name="ZStreamException.cs" Source="..\MySql.Data\Provider\Source\zlib\ZStreamException.cs" />
           </Component>
         </Directory>
       </Directory>
