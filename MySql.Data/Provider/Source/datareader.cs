@@ -24,6 +24,8 @@ using System.Data.Common;
 using System.Collections;
 using MySql.Data.Types;
 using System.Data.SqlTypes;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace MySql.Data.MySqlClient
 {
@@ -49,6 +51,8 @@ namespace MySql.Data.MySqlClient
 		private int seqIndex;
 		private bool hasRead;
 		private bool nextResultDone;
+		private Hashtable fieldHashCS;
+		private Hashtable fieldHashCI;
 
 		/* 
 		 * Keep track of the connection in order to implement the
@@ -71,6 +75,8 @@ namespace MySql.Data.MySqlClient
 			affectedRows = -1;
 			this.statement = statement;
 			nextResultDone = false;
+			fieldHashCS = new Hashtable();
+			fieldHashCI = new Hashtable(StringComparer.InvariantCultureIgnoreCase);
 		}
 
 		#region Properties
@@ -536,12 +542,15 @@ namespace MySql.Data.MySqlClient
 			if (!isOpen)
 				throw new Exception("No current query in data reader");
 
-			name = name.ToLower(System.Globalization.CultureInfo.InvariantCulture);
-			for (int i = 0; i < fields.Length; i++)
-			{
-				if (fields[i].ColumnName.ToLower(System.Globalization.CultureInfo.InvariantCulture) == name)
-					return i;
-			}
+			// first we try a quick hash lookup
+			object ordinal = fieldHashCS[name];
+			if (ordinal != null)
+				return (int)ordinal;
+
+			// ok that failed so we use our CI hash
+			ordinal = fieldHashCI[name];
+			if (ordinal != null)
+				return (int)ordinal;
 
 			// Throw an exception if the ordinal cannot be found.
 			throw new IndexOutOfRangeException("Could not find specified column in results");
@@ -844,9 +853,15 @@ namespace MySql.Data.MySqlClient
 				}
 
 				fields = driver.ReadColumnMetadata((int)fieldCount);
+				fieldHashCS.Clear();
+				fieldHashCI.Clear();
 				values = new IMySqlValue[fields.Length];
 				for (int i = 0; i < fields.Length; i++)
+				{
+					fieldHashCS.Add(fields[i].ColumnName, i);
+					fieldHashCI.Add(fields[i].ColumnName, i);
 					values[i] = fields[i].GetValueObject();
+				}
 				hasRead = false;
 
 				uaFieldsUsed = new bool[fields.Length];
