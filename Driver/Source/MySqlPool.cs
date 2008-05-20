@@ -140,7 +140,6 @@ namespace MySql.Data.MySqlClient
             else
                 driver = CheckoutConnection();
             Debug.Assert(driver != null);
-            inUsePool.Add(driver);
             return driver;
         }
 
