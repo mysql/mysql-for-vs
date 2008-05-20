@@ -77,24 +77,13 @@ namespace MySql.Web.Tests
 			ConfigurationManager.RefreshSection("system.web/membership");
 		}
 
-        [TestFixtureSetUp]
-        public override void FixtureSetup()
-        {
-            base.FixtureSetup();
-            for (int ver = 1; ver <= SchemaManager.Version; ver++)
-                LoadSchema(ver);
-        }
-
         public override void Setup()
         {
            base.Setup();
-           execSQL("TRUNCATE TABLE my_aspnet_Applications");
-           execSQL("TRUNCATE TABLE my_aspnet_Membership");
-           execSQL("TRUNCATE TABLE my_aspnet_Profiles");
-           execSQL("TRUNCATE TABLE my_aspnet_Roles");
-           execSQL("TRUNCATE TABLE my_aspnet_Users");
-           execSQL("TRUNCATE TABLE my_aspnet_UsersInRoles");
-       }
+
+           for (int ver = 1; ver <= SchemaManager.Version; ver++)
+               LoadSchema(ver);
+        }
 
         protected void LoadSchema(int version)
         {

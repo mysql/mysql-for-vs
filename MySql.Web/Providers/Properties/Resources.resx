@@ -229,4 +229,7 @@
   <data name="PasswordQuestionInvalid" xml:space="preserve">
     <value>Password question supplied is invalid.</value>
   </data>
+  <data name="schema4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>schema4.sql;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
 </root>

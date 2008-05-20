@@ -72,7 +72,8 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\schema1.sql" />
+    <None Include="Properties\schema1.sql" />
+    <None Include="Properties\schema4.sql" />
     <None Include="Properties\schema2.sql" />
     <None Include="Properties\schema3.sql" />
   </ItemGroup>
