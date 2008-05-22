@@ -79,17 +79,17 @@ namespace MySql.Data.Types
 			get { return "FLOAT"; }
 		}
 
-		void IMySqlValue.WriteValue(MySqlStream stream, bool binary, object val, int length)
+		void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val, int length)
 		{
-			Single v = Convert.ToSingle(val);
+			Single v = (val is Single) ? (Single)val : Convert.ToSingle(val);
 			if (binary)
-				stream.Write(BitConverter.GetBytes(v));
+                packet.Write(BitConverter.GetBytes(v));
 			else
-				stream.WriteStringNoNull(v.ToString(
+                packet.WriteStringNoNull(v.ToString(
 					 CultureInfo.InvariantCulture));
 		}
 
-		IMySqlValue IMySqlValue.ReadValue(MySqlStream stream, long length, bool nullVal)
+        IMySqlValue IMySqlValue.ReadValue(MySqlPacket packet, long length, bool nullVal)
 		{
 			if (nullVal)
 				return new MySqlSingle(true);
@@ -97,16 +97,16 @@ namespace MySql.Data.Types
 			if (length == -1)
 			{
 				byte[] b = new byte[4];
-				stream.Read(b, 0, 4);
+                packet.Read(b, 0, 4);
 				return new MySqlSingle(BitConverter.ToSingle(b, 0));
 			}
-			return new MySqlSingle(Single.Parse(stream.ReadString(length),
+            return new MySqlSingle(Single.Parse(packet.ReadString(length),
 					 CultureInfo.InvariantCulture));
 		}
 
-		void IMySqlValue.SkipValue(MySqlStream stream)
+		void IMySqlValue.SkipValue(MySqlPacket packet)
 		{
-			stream.SkipBytes(4);
+            packet.Position += 4;
 		}
 
 		#endregion

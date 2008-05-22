@@ -27,6 +27,7 @@ using System.Globalization;
 using System.Reflection;
 #if !CF
 using System.ComponentModel.Design.Serialization;
+using System.Text;
 #endif
 
 namespace MySql.Data.MySqlClient
@@ -54,6 +55,8 @@ namespace MySql.Data.MySqlClient
         private bool inferType;
         private bool sourceColumnNullMapping;
         private MySqlParameterCollection collection;
+        IMySqlValue valueObject;
+        private Encoding encoding;
 
         #region Constructors
 
@@ -165,6 +168,12 @@ namespace MySql.Data.MySqlClient
         internal bool TypeHasBeenSet
         {
             get { return inferType == false; }
+        }
+
+        internal Encoding Encoding
+        {
+            get { return encoding; }
+            set { encoding = value; }
         }
 
         /// <summary>
@@ -321,6 +330,11 @@ namespace MySql.Data.MySqlClient
             }
         }
 
+        private IMySqlValue ValueObject
+        {
+            get { return valueObject; }
+        }
+
         #endregion
 
         /// <summary>
@@ -353,19 +367,19 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-        internal void Serialize(MySqlStream stream, bool binary)
+        internal void Serialize(MySqlPacket packet, bool binary)
         {
-            IMySqlValue v = MySqlField.GetIMySqlValue(mySqlDbType);
-
             if (!binary && (paramValue == null || paramValue == DBNull.Value))
-                stream.WriteStringNoNull("NULL");
+                packet.WriteStringNoNull("NULL");
             else
-                v.WriteValue(stream, binary, paramValue, size);
+                ValueObject.WriteValue(packet, binary, paramValue, size);
         }
 
         private void SetMySqlDbType(MySqlDbType mysql_dbtype)
         {
             mySqlDbType = mysql_dbtype;
+            valueObject = MySqlField.GetIMySqlValue(mySqlDbType);
+
             switch (mySqlDbType)
             {
                 case MySqlDbType.Decimal:
@@ -510,6 +524,7 @@ namespace MySql.Data.MySqlClient
                     mySqlDbType = MySqlDbType.Blob;
                     break;
             }
+            valueObject = MySqlField.GetIMySqlValue(mySqlDbType);
         }
 
         private void SetTypeFromValue()

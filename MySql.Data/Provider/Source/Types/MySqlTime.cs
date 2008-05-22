@@ -78,7 +78,7 @@ namespace MySql.Data.Types
 			get { return "TIME"; }
 		}
 
-		void IMySqlValue.WriteValue(MySqlStream stream, bool binary, object val, int length)
+		void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val, int length)
 		{
 			if (!(val is TimeSpan))
 				throw new MySqlException("Only TimeSpan objects can be serialized by MySqlTimeSpan");
@@ -86,59 +86,59 @@ namespace MySql.Data.Types
 			TimeSpan ts = (TimeSpan)val;
 			if (binary)
 			{
-				stream.WriteByte(8);
-				stream.WriteByte((byte)(ts.TotalSeconds < 0 ? 1 : 0));
-				stream.WriteInteger(ts.Days, 4);
-				stream.WriteByte((byte)ts.Hours);
-				stream.WriteByte((byte)ts.Minutes);
-				stream.WriteByte((byte)ts.Seconds);
+                packet.WriteByte(8);
+                packet.WriteByte((byte)(ts.TotalSeconds < 0 ? 1 : 0));
+                packet.WriteInteger(ts.Days, 4);
+                packet.WriteByte((byte)ts.Hours);
+                packet.WriteByte((byte)ts.Minutes);
+                packet.WriteByte((byte)ts.Seconds);
 			}
 			else
 			{
-				stream.WriteStringNoNull(String.Format("'{0} {1:00}:{2:00}:{3:00}.{4}'",
+                packet.WriteStringNoNull(String.Format("'{0} {1:00}:{2:00}:{3:00}.{4}'",
 			  ts.Days, ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds));
 			}
 		}
 
 
-		IMySqlValue IMySqlValue.ReadValue(MySqlStream stream, long length, bool nullVal)
+		IMySqlValue IMySqlValue.ReadValue(MySqlPacket packet, long length, bool nullVal)
 		{
 			if (nullVal) return new MySqlTimeSpan(true);
 
 			if (length >= 0)
 			{
-				string value = stream.ReadString(length);
-				ParseMySql(value, stream.Version.isAtLeast(4, 1, 0));
+                string value = packet.ReadString(length);
+				ParseMySql(value, packet.Version.isAtLeast(4, 1, 0));
 				return this;
 			}
 
-			long bufLength = stream.ReadByte();
+            long bufLength = packet.ReadByte();
 			int negate = 0;
 			if (bufLength > 0)
-				negate = stream.ReadByte();
+                negate = packet.ReadByte();
 
 			isNull = false;
 			if (bufLength == 0)
 				isNull = true;
 			else if (bufLength == 5)
-				mValue = new TimeSpan(stream.ReadInteger(4), 0, 0, 0);
+                mValue = new TimeSpan(packet.ReadInteger(4), 0, 0, 0);
 			else if (bufLength == 8)
-				mValue = new TimeSpan(stream.ReadInteger(4),
-					 stream.ReadByte(), stream.ReadByte(), stream.ReadByte());
+                mValue = new TimeSpan(packet.ReadInteger(4),
+                     packet.ReadByte(), packet.ReadByte(), packet.ReadByte());
 			else
-				mValue = new TimeSpan(stream.ReadInteger(4),
-					 stream.ReadByte(), stream.ReadByte(), stream.ReadByte(),
-					 stream.ReadInteger(4) / 1000000);
+                mValue = new TimeSpan(packet.ReadInteger(4),
+                     packet.ReadByte(), packet.ReadByte(), packet.ReadByte(),
+                     packet.ReadInteger(4) / 1000000);
 
 			if (negate == 1)
 				mValue = mValue.Negate();
 			return this;
 		}
 
-		void IMySqlValue.SkipValue(MySqlStream stream)
+        void IMySqlValue.SkipValue(MySqlPacket packet)
 		{
-			int len = stream.ReadByte();
-			stream.SkipBytes(len);
+            int len = packet.ReadByte();
+            packet.Position += len;
 		}
 
 		#endregion

@@ -29,119 +29,94 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture]
 	public class CommandTests : BaseTest
 	{
-        [SetUp]
-        public override void Setup()
-        {
-            base.Setup();
-            execSQL("DROP TABLE IF EXISTS Test");
-            execSQL("CREATE TABLE Test (id int NOT NULL, name VARCHAR(100))");
-        }
-
 		[Test]
 		public void InsertTest()
 		{
-			try 
-			{
-				// do the insert
-				MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id,name) VALUES(10,'Test')", conn);
-				int cnt = cmd.ExecuteNonQuery();
-				Assert.AreEqual( 1, cnt, "Insert Count" );
+            execSQL("CREATE TABLE Test (id int NOT NULL, name VARCHAR(100))");
+            // do the insert
+			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id,name) VALUES(10,'Test')", conn);
+			int cnt = cmd.ExecuteNonQuery();
+			Assert.AreEqual( 1, cnt, "Insert Count" );
 
-				// make sure we get the right value back out
-				cmd.CommandText = "SELECT name FROM Test WHERE id=10";
-				string name = (string)cmd.ExecuteScalar();
-				Assert.AreEqual( "Test", name, "Insert result" );
+			// make sure we get the right value back out
+			cmd.CommandText = "SELECT name FROM Test WHERE id=10";
+			string name = (string)cmd.ExecuteScalar();
+			Assert.AreEqual( "Test", name, "Insert result" );
 
-				// now do the insert with parameters
-				cmd.CommandText = "INSERT INTO Test (id,name) VALUES(?id, ?name)";
-				cmd.Parameters.Add( new MySqlParameter("?id", 11));
-				cmd.Parameters.Add( new MySqlParameter("?name", "Test2"));
-				cnt = cmd.ExecuteNonQuery();
-				Assert.AreEqual( 1, cnt, "Insert with Parameters Count" );
+			// now do the insert with parameters
+			cmd.CommandText = "INSERT INTO Test (id,name) VALUES(?id, ?name)";
+			cmd.Parameters.Add( new MySqlParameter("?id", 11));
+			cmd.Parameters.Add( new MySqlParameter("?name", "Test2"));
+			cnt = cmd.ExecuteNonQuery();
+			Assert.AreEqual( 1, cnt, "Insert with Parameters Count" );
 
-				// make sure we get the right value back out
-				cmd.Parameters.Clear();
-				cmd.CommandText = "SELECT name FROM Test WHERE id=11";
-				name = (string)cmd.ExecuteScalar();
-				Assert.AreEqual( "Test2", name, "Insert with parameters result" );
-			}
-			catch (MySqlException ex)
-			{
-				Assert.Fail( ex.Message );
-			}
+			// make sure we get the right value back out
+			cmd.Parameters.Clear();
+			cmd.CommandText = "SELECT name FROM Test WHERE id=11";
+			name = (string)cmd.ExecuteScalar();
+			Assert.AreEqual( "Test2", name, "Insert with parameters result" );
 		}
 
 		[Test]
 		public void UpdateTest()
 		{
-			try 
-			{
-				execSQL("INSERT INTO Test (id,name) VALUES(10, 'Test')");
-				execSQL("INSERT INTO Test (id,name) VALUES(11, 'Test2')");
+            execSQL("CREATE TABLE Test (id int NOT NULL, name VARCHAR(100))");
+            execSQL("INSERT INTO Test (id,name) VALUES(10, 'Test')");
+			execSQL("INSERT INTO Test (id,name) VALUES(11, 'Test2')");
 
-				// do the update
-				MySqlCommand cmd = new MySqlCommand("UPDATE Test SET name='Test3' WHERE id=10 OR id=11", conn);
-				MySqlConnection c = cmd.Connection;
-				Assert.AreEqual(conn, c);
-				int cnt = cmd.ExecuteNonQuery();
-				Assert.AreEqual(2, cnt);
+			// do the update
+			MySqlCommand cmd = new MySqlCommand("UPDATE Test SET name='Test3' WHERE id=10 OR id=11", conn);
+			MySqlConnection c = cmd.Connection;
+			Assert.AreEqual(conn, c);
+			int cnt = cmd.ExecuteNonQuery();
+			Assert.AreEqual(2, cnt);
 
-				// make sure we get the right value back out
-				cmd.CommandText = "SELECT name FROM Test WHERE id=10";
-				string name = (string)cmd.ExecuteScalar();
-				Assert.AreEqual("Test3", name);
-			
-				cmd.CommandText = "SELECT name FROM Test WHERE id=11";
-				name = (string)cmd.ExecuteScalar();
-				Assert.AreEqual("Test3", name);
+			// make sure we get the right value back out
+			cmd.CommandText = "SELECT name FROM Test WHERE id=10";
+			string name = (string)cmd.ExecuteScalar();
+			Assert.AreEqual("Test3", name);
+		
+			cmd.CommandText = "SELECT name FROM Test WHERE id=11";
+			name = (string)cmd.ExecuteScalar();
+			Assert.AreEqual("Test3", name);
 
-				// now do the update with parameters
-				cmd.CommandText = "UPDATE Test SET name=?name WHERE id=?id";
-				cmd.Parameters.Add( new MySqlParameter("?id", 11));
-				cmd.Parameters.Add( new MySqlParameter("?name", "Test5"));
-				cnt = cmd.ExecuteNonQuery();
-				Assert.AreEqual(1, cnt, "Update with Parameters Count");
+			// now do the update with parameters
+			cmd.CommandText = "UPDATE Test SET name=?name WHERE id=?id";
+			cmd.Parameters.Add( new MySqlParameter("?id", 11));
+			cmd.Parameters.Add( new MySqlParameter("?name", "Test5"));
+			cnt = cmd.ExecuteNonQuery();
+			Assert.AreEqual(1, cnt, "Update with Parameters Count");
 
-				// make sure we get the right value back out
-				cmd.Parameters.Clear();
-				cmd.CommandText = "SELECT name FROM Test WHERE id=11";
-				name = (string)cmd.ExecuteScalar();
-				Assert.AreEqual("Test5", name);
-			}
-			catch (Exception ex)
-			{
-				Assert.Fail(ex.Message);
-			}
+			// make sure we get the right value back out
+			cmd.Parameters.Clear();
+			cmd.CommandText = "SELECT name FROM Test WHERE id=11";
+			name = (string)cmd.ExecuteScalar();
+			Assert.AreEqual("Test5", name);
 		}
 
 		[Test]
 		public void DeleteTest()
 		{
-			try 
-			{
-				execSQL("INSERT INTO Test (id, name) VALUES(1, 'Test')");
-				execSQL("INSERT INTO Test (id, name) VALUES(2, 'Test2')");
+            execSQL("CREATE TABLE Test (id int NOT NULL, name VARCHAR(100))");
+			execSQL("INSERT INTO Test (id, name) VALUES(1, 'Test')");
+			execSQL("INSERT INTO Test (id, name) VALUES(2, 'Test2')");
 
-				// make sure we get the right value back out
-				MySqlCommand cmd = new MySqlCommand("DELETE FROM Test WHERE id=1 or id=2", conn);
-				int delcnt = cmd.ExecuteNonQuery();
-				Assert.AreEqual(2, delcnt);
-			
-				// find out how many rows we have now
-				cmd.CommandText = "SELECT COUNT(*) FROM Test";
-				object after_cnt = cmd.ExecuteScalar();
-				Assert.AreEqual(0, after_cnt);
-			}
-			catch (Exception ex)
-			{
-				Assert.Fail(ex.Message);
-			}
+			// make sure we get the right value back out
+			MySqlCommand cmd = new MySqlCommand("DELETE FROM Test WHERE id=1 or id=2", conn);
+			int delcnt = cmd.ExecuteNonQuery();
+			Assert.AreEqual(2, delcnt);
+		
+			// find out how many rows we have now
+			cmd.CommandText = "SELECT COUNT(*) FROM Test";
+			object after_cnt = cmd.ExecuteScalar();
+			Assert.AreEqual(0, after_cnt);
 		}
 
 		[Test]
 		public void CtorTest() 
 		{
-			MySqlTransaction txn = conn.BeginTransaction();
+            execSQL("CREATE TABLE Test (id int NOT NULL, name VARCHAR(100))");
+            MySqlTransaction txn = conn.BeginTransaction();
 			MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test", conn);
 
             MySqlCommand clone = new MySqlCommand(cmd.CommandText, (MySqlConnection)cmd.Connection,
@@ -200,22 +175,9 @@ namespace MySql.Data.MySqlClient.Tests
 				"FOREIGN KEY (id_in_zvan) REFERENCES zvan(id) ON DELETE CASCADE ON UPDATE " +
 				"CASCADE) TYPE=INNODB DEFAULT CHARACTER SET cp1251 COLLATE cp1251_ukrainian_ci";
 				*/
-			try 
-			{
-				execSQL("DROP TABLE IF EXISTS zvan");
-				execSQL("DROP TABLE IF EXISTS ljudyna");
-				MySqlCommand cmd = new MySqlCommand(sql, conn);
-				cmd.ExecuteNonQuery();
-			}
-			catch (Exception ex) 
-			{
-				Assert.Fail(ex.Message);
-			}
-			finally 
-			{
-				execSQL("DROP TABLE IF EXISTS zvan");
-				execSQL("DROP TABLE IF EXISTS ljudyna");
-			}
+
+			MySqlCommand cmd = new MySqlCommand(sql, conn);
+			cmd.ExecuteNonQuery();
 		}
 
 		/// <summary>
@@ -226,8 +188,8 @@ namespace MySql.Data.MySqlClient.Tests
 		{
             if (Version < new Version(4, 1)) return;
 
-			execSQL("TRUNCATE TABLE Test");
-			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES(1, ?str)", conn);
+            execSQL("CREATE TABLE Test (id int NOT NULL, name VARCHAR(100))");
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES(1, ?str)", conn);
 			cmd.Parameters.Add("?str", MySqlDbType.VarChar);
 			cmd.Prepare();
 
@@ -235,21 +197,11 @@ namespace MySql.Data.MySqlClient.Tests
 			cmd.ExecuteNonQuery();
 
 			cmd.CommandText = "SELECT * FROM Test";
-			MySqlDataReader reader = null;
-			try 
-			{
-				reader = cmd.ExecuteReader();
-				Assert.IsTrue(reader.Read());
-				Assert.AreEqual(DBNull.Value, reader[1]);
-			}
-			catch (Exception ex)
-			{
-				Assert.Fail(ex.Message);
-			}
-			finally 
-			{
-				if (reader != null) reader.Close();
-			}
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                Assert.IsTrue(reader.Read());
+                Assert.AreEqual(DBNull.Value, reader[1]);
+            }
 		}
 
 		/// <summary>
@@ -260,28 +212,19 @@ namespace MySql.Data.MySqlClient.Tests
 		{
             if (Version < new Version(4, 1)) return;
 
-            execSQL("TRUNCATE TABLE Test");
-			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES(1, 'Test')", conn);
+            execSQL("CREATE TABLE Test (id int NOT NULL, name VARCHAR(100))");
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES(1, 'Test')", conn);
 			cmd.Prepare();
-			MySqlDataReader reader = cmd.ExecuteReader();
-			reader.Close();
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+            }
 
 			cmd.CommandText = "SELECT * FROM Test";
-			reader = null;
-			try 
+			using (MySqlDataReader reader = cmd.ExecuteReader())
 			{
-				reader = cmd.ExecuteReader();
 				Assert.IsTrue(reader.Read());
 				Assert.IsFalse(reader.Read());
 				Assert.IsFalse(reader.NextResult());
-			}
-			catch (Exception ex)
-			{
-				Assert.Fail(ex.Message);
-			}
-			finally 
-			{
-				if (reader != null) reader.Close();
 			}
 		}
 
@@ -305,24 +248,16 @@ namespace MySql.Data.MySqlClient.Tests
                     sql.Append(s);
                 }
 
-            try
-            {
-                MySqlCommand cmd = new MySqlCommand(sql.ToString(), conn);
-                cmd.ExecuteNonQuery();
+            MySqlCommand cmd = new MySqlCommand(sql.ToString(), conn);
+            cmd.ExecuteNonQuery();
 
-                for (int i = 0; i < 10; i++)
-                {
-                    cmd.CommandText = "SELECT COUNT(*) FROM idx" + i;
-                    object count = cmd.ExecuteScalar();
-                    Assert.AreEqual(100, count);
-                    execSQL("DROP TABLE IF EXISTS idx" + i);
-                }
-            }
-            catch (Exception ex)
+            for (int i = 0; i < 10; i++)
             {
-                Assert.Fail(ex.Message);
+                cmd.CommandText = "SELECT COUNT(*) FROM idx" + i;
+                object count = cmd.ExecuteScalar();
+                Assert.AreEqual(100, count);
+                execSQL("DROP TABLE IF EXISTS idx" + i);
             }
-
         }
 */
         /// <summary>
@@ -331,13 +266,12 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void GenWarnings()
         {
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL("CREATE TABLE test (id INT, dt DATETIME)");
-            execSQL("INSERT INTO test VALUES (1, NOW())");
-            execSQL("INSERT INTO test VALUES (2, NOW())");
-            execSQL("INSERT INTO test VALUES (3, NOW())");
+            execSQL("CREATE TABLE Test (id INT, dt DATETIME)");
+            execSQL("INSERT INTO Test VALUES (1, NOW())");
+            execSQL("INSERT INTO Test VALUES (2, NOW())");
+            execSQL("INSERT INTO Test VALUES (3, NOW())");
 
-            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test WHERE dt = '" +
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test WHERE dt = '" +
                 DateTime.Now + "'", conn);
             DataSet ds = new DataSet();
             da.Fill(ds);
@@ -349,11 +283,10 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void CloseReaderAfterFailedConvert()
         {
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL("CREATE TABLE test (dt DATETIME)");
-            execSQL("INSERT INTO test VALUES ('00-00-0000 00:00:00')");
+            execSQL("CREATE TABLE Test (dt DATETIME)");
+            execSQL("INSERT INTO Test VALUES ('00-00-0000 00:00:00')");
 
-            MySqlCommand cmd = new MySqlCommand("SELECT * FROM test", conn);
+            MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test", conn);
             try
             {
                 cmd.ExecuteScalar();
@@ -362,14 +295,7 @@ namespace MySql.Data.MySqlClient.Tests
             {
             }
 
-            try
-            {
-                conn.BeginTransaction();
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
+            conn.BeginTransaction();
         }
 
         /// <summary>
@@ -386,10 +312,6 @@ namespace MySql.Data.MySqlClient.Tests
             catch (MySqlException)
             {
             }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
 
             // now try using ExecuteNonQuery
             try
@@ -398,10 +320,6 @@ namespace MySql.Data.MySqlClient.Tests
             }
             catch (MySqlException)
             {
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
             }
         }
 
@@ -426,7 +344,7 @@ namespace MySql.Data.MySqlClient.Tests
             cmd.Connection = c;
             Assert.AreEqual(66, cmd.CommandTimeout);
         }
-    }
+	}
 
 
     #region Configs

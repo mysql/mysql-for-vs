@@ -36,7 +36,6 @@ namespace MySql.Data.MySqlClient.Tests
         public override void Setup()
         {
             base.Setup();
-            execSQL("DROP TABLE IF EXISTS Test");
             execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(100), dt DATETIME, tm TIME, ts TIMESTAMP, PRIMARY KEY(id))");
         }
 
@@ -156,26 +155,19 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void SetDbType()
         {
-            try
-            {
-                IDbCommand cmd = conn.CreateCommand();
-                IDbDataParameter prm = cmd.CreateParameter();
-                prm.DbType = DbType.Int64;
-                Assert.AreEqual(DbType.Int64, prm.DbType);
-                prm.Value = 3;
-                Assert.AreEqual(DbType.Int64, prm.DbType);
+            IDbCommand cmd = conn.CreateCommand();
+            IDbDataParameter prm = cmd.CreateParameter();
+            prm.DbType = DbType.Int64;
+            Assert.AreEqual(DbType.Int64, prm.DbType);
+            prm.Value = 3;
+            Assert.AreEqual(DbType.Int64, prm.DbType);
 
-                MySqlParameter p = new MySqlParameter("name", MySqlDbType.Int64);
-                Assert.AreEqual(DbType.Int64, p.DbType);
-                Assert.AreEqual(MySqlDbType.Int64, p.MySqlDbType);
-                p.Value = 3;
-                Assert.AreEqual(DbType.Int64, p.DbType);
-                Assert.AreEqual(MySqlDbType.Int64, p.MySqlDbType);
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
+            MySqlParameter p = new MySqlParameter("name", MySqlDbType.Int64);
+            Assert.AreEqual(DbType.Int64, p.DbType);
+            Assert.AreEqual(MySqlDbType.Int64, p.MySqlDbType);
+            p.Value = 3;
+            Assert.AreEqual(DbType.Int64, p.DbType);
+            Assert.AreEqual(MySqlDbType.Int64, p.MySqlDbType);
         }
 
 #if !CF
@@ -298,8 +290,8 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void InsertValueAfterNull()
 		{
-			execSQL("DROP TABLE IF EXISTS Test");
-			execSQL("CREATE TABLE Test (id int auto_increment primary key, foo int)");
+            execSQL("DROP TABLE Test");
+            execSQL("CREATE TABLE Test (id int auto_increment primary key, foo int)");
 
 			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
 			MySqlCommand c = new MySqlCommand("INSERT INTO Test (foo) values (?foo)", conn);
@@ -354,51 +346,37 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void ParameterCacheNotClearing()
         {
-            try
-            {
-                MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id, name) VALUES (?id, ?name)", conn);
-                cmd.Parameters.AddWithValue("?id", 1);
-                cmd.Parameters.AddWithValue("?name", "test");
-                cmd.ExecuteNonQuery();
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id, name) VALUES (?id, ?name)", conn);
+            cmd.Parameters.AddWithValue("?id", 1);
+            cmd.Parameters.AddWithValue("?name", "test");
+            cmd.ExecuteNonQuery();
 
-                cmd.CommandText = "INSERT INTO Test (id, name, dt) VALUES (?id1, ?name1, ?id)";
-                cmd.Parameters[0].ParameterName = "?id1";
-                cmd.Parameters[0].Value = 2;
-                cmd.Parameters[1].ParameterName = "?name1";
-                cmd.Parameters.AddWithValue("?id", DateTime.Now);
-                cmd.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
+            cmd.CommandText = "INSERT INTO Test (id, name, dt) VALUES (?id1, ?name1, ?id)";
+            cmd.Parameters[0].ParameterName = "?id1";
+            cmd.Parameters[0].Value = 2;
+            cmd.Parameters[1].ParameterName = "?name1";
+            cmd.Parameters.AddWithValue("?id", DateTime.Now);
+            cmd.ExecuteNonQuery();
         }
 
         [Test]
         public void WithAndWithoutMarker()
         {
-            try
-            {
-                MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id, name) VALUES (?id, ?name)", conn);
-                cmd.Parameters.AddWithValue("id", 1);
-                Assert.AreEqual(-1, cmd.Parameters.IndexOf("?id"));
-                cmd.Parameters.AddWithValue("name", "test");
-                cmd.ExecuteNonQuery();
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id, name) VALUES (?id, ?name)", conn);
+            cmd.Parameters.AddWithValue("id", 1);
+            Assert.AreEqual(-1, cmd.Parameters.IndexOf("?id"));
+            cmd.Parameters.AddWithValue("name", "test");
+            cmd.ExecuteNonQuery();
 
-                cmd.Parameters.Clear();
-                cmd.Parameters.AddWithValue("?id", 2);
-                Assert.AreEqual(-1, cmd.Parameters.IndexOf("id"));
-                cmd.Parameters.AddWithValue("?name", "test2");
-                cmd.ExecuteNonQuery();
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("?id", 2);
+            Assert.AreEqual(-1, cmd.Parameters.IndexOf("id"));
+            cmd.Parameters.AddWithValue("?name", "test2");
+            cmd.ExecuteNonQuery();
 
-                cmd.CommandText = "SELECT COUNT(*) FROM Test";
-                object count = cmd.ExecuteScalar();
-                Assert.AreEqual(2, count);
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
+            cmd.CommandText = "SELECT COUNT(*) FROM Test";
+            object count = cmd.ExecuteScalar();
+            Assert.AreEqual(2, count);
         }
 
         [Test]
@@ -483,10 +461,6 @@ namespace MySql.Data.MySqlClient.Tests
             catch (MySqlException)
             {
             }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
         }
 
         /// <summary>
@@ -495,7 +469,7 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void StringParameterSizeSetAfterValue()
         {
-            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("DROP TABLE Test");
             execSQL("CREATE TABLE Test (v VARCHAR(10))");
 
             MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (?p1)", conn);
@@ -562,16 +536,9 @@ namespace MySql.Data.MySqlClient.Tests
             cmd.CommandText = "SELECT * FROM Test";
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {
-                try
-                {
-                    reader.Read();
-                    Assert.AreEqual(33, reader.GetInt32(0));
-                    Assert.AreEqual("Test", reader.GetString(1));
-                }
-                catch (Exception ex)
-                {
-                    Assert.Fail(ex.Message);
-                }
+                reader.Read();
+                Assert.AreEqual(33, reader.GetInt32(0));
+                Assert.AreEqual("Test", reader.GetString(1));
             }
         }
     }

@@ -94,7 +94,7 @@ namespace MySql.Data.Types
 			return s;
 		}
 
-		void IMySqlValue.WriteValue(MySqlStream stream, bool binary, object val, int length)
+        void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val, int length)
 		{
 			string v = val.ToString();
             if (length > 0)
@@ -104,29 +104,29 @@ namespace MySql.Data.Types
             }
 
 			if (binary)
-				stream.WriteLenString(v);
+                packet.WriteLenString(v);
 			else
-				stream.WriteStringNoNull("'" + EscapeString(v) + "'");
+                packet.WriteStringNoNull("'" + EscapeString(v) + "'");
 		}
 
-		IMySqlValue IMySqlValue.ReadValue(MySqlStream stream, long length, bool nullVal)
+        IMySqlValue IMySqlValue.ReadValue(MySqlPacket packet, long length, bool nullVal)
 		{
 			if (nullVal)
 				return new MySqlString(type, true);
 
 			string s = String.Empty;
 			if (length == -1)
-				s = stream.ReadLenString();
+                s = packet.ReadLenString();
 			else
-				s = stream.ReadString(length);
+                s = packet.ReadString(length);
 			MySqlString str = new MySqlString(type, s);
 			return str;
 		}
 
-		void IMySqlValue.SkipValue(MySqlStream stream)
+		void IMySqlValue.SkipValue(MySqlPacket packet)
 		{
-			long len = stream.ReadFieldLength();
-			stream.SkipBytes((int)len);
+            int len = packet.ReadFieldLength();
+            packet.Position += len;
 		}
 
 		#endregion

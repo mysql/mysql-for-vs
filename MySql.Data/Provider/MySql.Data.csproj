@@ -224,6 +224,7 @@
     <Compile Include="Source\common\Cache.cs" />
     <Compile Include="Source\common\SqlTokenizer.cs" />
     <Compile Include="Source\BulkLoader.cs" />
+    <Compile Include="Source\MySqlPacket.cs" />
     <Compile Include="Source\MySqlScript.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

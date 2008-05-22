@@ -29,17 +29,11 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture]
 	public class BulkLoading : BaseTest
 	{
-        [SetUp]
-        public override void Setup()
-        {
-            base.Setup();
-            execSQL("DROP TABLE IF EXISTS Test");
-            execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(250), PRIMARY KEY(id))");
-        }
-
         [Test]
         public void BulkLoadSimple()
         {
+            execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(250), PRIMARY KEY(id))");
+
             // first create the external file
             string path = Path.GetTempFileName();
             StreamWriter sw = new StreamWriter(path);
@@ -65,6 +59,8 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void BulkLoadSimple2()
         {
+            execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(250), PRIMARY KEY(id))");
+
             // first create the external file
             string path = Path.GetTempFileName();
             StreamWriter sw = new StreamWriter(path);
@@ -89,6 +85,8 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void BulkLoadSimple3()
         {
+            execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(250), PRIMARY KEY(id))");
+
             // first create the external file
             string path = Path.GetTempFileName();
             StreamWriter sw = new StreamWriter(path);
@@ -114,6 +112,8 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void BulkLoadSimple4()
         {
+            execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(250), PRIMARY KEY(id))");
+
             // first create the external file
             string path = Path.GetTempFileName();
             StreamWriter sw = new StreamWriter(path);
@@ -145,7 +145,6 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void BulkLoadFieldQuoting()
         {
-            execSQL("DROP TABLE IF EXISTS Test");
             execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(250), name2 VARCHAR(250), PRIMARY KEY(id))");
 
             // first create the external file
@@ -176,7 +175,6 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void BulkLoadEscaping()
         {
-            execSQL("DROP TABLE IF EXISTS Test");
             execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(250), name2 VARCHAR(250), PRIMARY KEY(id))");
 
             // first create the external file
@@ -207,6 +205,8 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void BulkLoadConflictOptionReplace()
         {
+            execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(250), PRIMARY KEY(id))");
+
             // first create the external file
             string path = Path.GetTempFileName();
             StreamWriter sw = new StreamWriter(path);
@@ -248,6 +248,8 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void BulkLoadConflictOptionIgnore()
         {
+            execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(250), PRIMARY KEY(id))");
+
             // first create the external file
             string path = Path.GetTempFileName();
             StreamWriter sw = new StreamWriter(path);
@@ -289,7 +291,6 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void BulkLoadColumnOrder()
         {
-            execSQL("DROP TABLE IF EXISTS Test");
             execSQL(@"CREATE TABLE Test (id INT NOT NULL, n1 VARCHAR(250), n2 VARCHAR(250), 
                         n3 VARCHAR(250), PRIMARY KEY(id))");
 

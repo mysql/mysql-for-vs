@@ -244,11 +244,11 @@ namespace MySql.Data.Types
 		}
 
 
-		private void SerializeText(MySqlStream stream, MySqlDateTime value)
+		private void SerializeText(MySqlPacket packet, MySqlDateTime value)
 		{
 			string val = String.Empty;
 
-			if (type == MySqlDbType.Timestamp && !stream.Version.isAtLeast(4, 1, 0))
+            if (type == MySqlDbType.Timestamp && !packet.Version.isAtLeast(4, 1, 0))
 				val = String.Format("{0:0000}{1:00}{2:00}{3:00}{4:00}{5:00}",
 					value.Year, value.Month, value.Day, value.Hour, value.Minute, value.Second);
 			else
@@ -259,10 +259,10 @@ namespace MySql.Data.Types
                     val = String.Format("{0}  {1:00}:{2:00}:{3:00}", val,
                         value.Hour, value.Minute, value.Second);
 			}
-			stream.WriteStringNoNull("'" + val + "'");
+            packet.WriteStringNoNull("'" + val + "'");
 		}
 
-		void IMySqlValue.WriteValue(MySqlStream stream, bool binary, object value, int length)
+        void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object value, int length)
 		{
 			MySqlDateTime dtValue;
 
@@ -278,33 +278,33 @@ namespace MySql.Data.Types
 
 			if (!binary)
 			{
-				SerializeText(stream, dtValue);
+                SerializeText(packet, dtValue);
 				return;
 			}
 
 			if (type == MySqlDbType.Timestamp)
-				stream.WriteByte(11);
+                packet.WriteByte(11);
 			else
-				stream.WriteByte(7);
+                packet.WriteByte(7);
 
-			stream.WriteInteger(dtValue.Year, 2);
-			stream.WriteByte((byte)dtValue.Month);
-			stream.WriteByte((byte)dtValue.Day);
+            packet.WriteInteger(dtValue.Year, 2);
+            packet.WriteByte((byte)dtValue.Month);
+            packet.WriteByte((byte)dtValue.Day);
 			if (type == MySqlDbType.Date)
 			{
-				stream.WriteByte(0);
-				stream.WriteByte(0);
-				stream.WriteByte(0);
+                packet.WriteByte(0);
+                packet.WriteByte(0);
+                packet.WriteByte(0);
 			}
 			else
 			{
-				stream.WriteByte((byte)dtValue.Hour);
-				stream.WriteByte((byte)dtValue.Minute);
-				stream.WriteByte((byte)dtValue.Second);
+                packet.WriteByte((byte)dtValue.Hour);
+                packet.WriteByte((byte)dtValue.Minute);
+                packet.WriteByte((byte)dtValue.Second);
 			}
 
 			if (type == MySqlDbType.Timestamp)
-				stream.WriteInteger(dtValue.Millisecond, 4);
+                packet.WriteInteger(dtValue.Millisecond, 4);
 		}
 
 		private MySqlDateTime Parse40Timestamp(string s)
@@ -385,44 +385,44 @@ namespace MySql.Data.Types
 			return new MySqlDateTime(type, year, month, day, hour, minute, second);
 		}
 
-		IMySqlValue IMySqlValue.ReadValue(MySqlStream stream, long length, bool nullVal)
+		IMySqlValue IMySqlValue.ReadValue(MySqlPacket packet, long length, bool nullVal)
 		{
 			if (nullVal) return new MySqlDateTime(type, true);
 
 			if (length >= 0)
 			{
-				string value = stream.ReadString(length);
-				return ParseMySql(value, stream.Version.isAtLeast(4, 1, 0));
+                string value = packet.ReadString(length);
+                return ParseMySql(value, packet.Version.isAtLeast(4, 1, 0));
 			}
 
-			long bufLength = stream.ReadByte();
+            long bufLength = packet.ReadByte();
 			int year = 0, month = 0, day = 0;
 			int hour = 0, minute = 0, second = 0;
 
 			if (bufLength >= 4)
 			{
-				year = stream.ReadInteger(2);
-				month = stream.ReadByte();
-				day = stream.ReadByte();
+                year = packet.ReadInteger(2);
+                month = packet.ReadByte();
+                day = packet.ReadByte();
 			}
 
 			if (bufLength > 4)
 			{
-				hour = stream.ReadByte();
-				minute = stream.ReadByte();
-				second = stream.ReadByte();
+                hour = packet.ReadByte();
+                minute = packet.ReadByte();
+                second = packet.ReadByte();
 			}
 
 			if (bufLength > 7)
-				stream.ReadInteger(4);
+                packet.ReadInteger(4);
 
 			return new MySqlDateTime(type, year, month, day, hour, minute, second);
 		}
 
-		void IMySqlValue.SkipValue(MySqlStream stream)
+		void IMySqlValue.SkipValue(MySqlPacket packet)
 		{
-			long len = stream.ReadByte();
-			stream.SkipBytes((int)len);
+            int len = packet.ReadByte();
+            packet.Position += len;
 		}
 
 		#endregion

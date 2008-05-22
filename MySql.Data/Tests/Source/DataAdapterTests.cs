@@ -32,32 +32,29 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture] 
 	public class DataAdapterTests : BaseTest
 	{
-        public override void FixtureSetup()
+        private void CreateDefaultTable()
         {
-            base.FixtureSetup();
-        }
-
-		public override void Setup()
-		{
-			base.Setup();
-
-			execSQL("CREATE TABLE Test (id INT NOT NULL AUTO_INCREMENT, " +
+            execSQL("CREATE TABLE Test (id INT NOT NULL AUTO_INCREMENT, " +
                 "id2 INT NOT NULL, name VARCHAR(100), dt DATETIME, tm TIME, " +
                 "ts TIMESTAMP, OriginalId INT, PRIMARY KEY(id, id2))");
-		}
+        }
 
+        [Test]
+        public void TestFill()
+        {
+            FillImpl(false);
+        }
 
 		[Test]
-		public void TestFill()
+		public void TestFillPrepared()
 		{
-			FillImpl(false);
 			FillImpl(true);
 		}
 
 		private void FillImpl(bool prepare)
 		{
-			execSQL("TRUNCATE TABLE Test");
-			execSQL("INSERT INTO Test (id, id2, name, dt) VALUES (NULL, 1, 'Name 1', Now())");
+            CreateDefaultTable();
+            execSQL("INSERT INTO Test (id, id2, name, dt) VALUES (NULL, 1, 'Name 1', Now())");
 			execSQL("INSERT INTO Test (id, id2, name, dt) VALUES (NULL, 2, NULL, Now())");
 			execSQL("INSERT INTO Test (id, id2, name, dt) VALUES (NULL, 3, '', Now())");
 
@@ -81,10 +78,8 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void TestUpdate()
 		{
-			MySqlCommand cmd = new MySqlCommand("TRUNCATE TABLE Test", conn);
-			cmd.ExecuteNonQuery();
-
-			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
+            CreateDefaultTable();
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
 			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
 			DataTable dt = new DataTable();
 			da.Fill(dt);
@@ -135,7 +130,8 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void OriginalInName()
 		{
-			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
+            CreateDefaultTable();
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
 			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
 			cb.ToString();  // keep the compiler happy
 			DataTable dt = new DataTable();
@@ -159,7 +155,8 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void UseAdapterPropertyOfCommandBuilder() 
 		{
-			execSQL("INSERT INTO Test (id, id2, name) VALUES (NULL, 1, 'Test')");
+            CreateDefaultTable();
+            execSQL("INSERT INTO Test (id, id2, name) VALUES (NULL, 1, 'Test')");
 
 			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
 			MySqlCommandBuilder cb = new MySqlCommandBuilder();
@@ -183,40 +180,33 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void UpdateNullTextFieldToEmptyString() 
 		{
-			execSQL("INSERT INTO Test (id, id2, name) VALUES (1, 1, NULL)");
+            CreateDefaultTable();
+            execSQL("INSERT INTO Test (id, id2, name) VALUES (1, 1, NULL)");
 
-			try 
-			{
-				MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
-				MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
-				cb.ToString();  // keep the compiler happy
+			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
+			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
+			cb.ToString();  // keep the compiler happy
 
-				DataTable dt = new DataTable();
-				da.Fill(dt);
+			DataTable dt = new DataTable();
+			da.Fill(dt);
 
-				dt.Rows[0]["name"] = "";
-				int updateCnt = da.Update(dt);
+			dt.Rows[0]["name"] = "";
+			int updateCnt = da.Update(dt);
 
-				Assert.AreEqual( 1, updateCnt );
+			Assert.AreEqual( 1, updateCnt );
 
-				dt.Rows.Clear();
-				da.Fill(dt);
+			dt.Rows.Clear();
+			da.Fill(dt);
 
-				Assert.AreEqual( 1, dt.Rows.Count );
-				Assert.AreEqual( "", dt.Rows[0]["name"] );
-			}
-			catch (Exception ex) 
-			{
-				Assert.Fail( ex.Message );
-			}
+			Assert.AreEqual( 1, dt.Rows.Count );
+			Assert.AreEqual( "", dt.Rows[0]["name"] );
 		}
 
 		[Test]
 		public void UpdateExtendedTextFields() 
 		{
-			execSQL("DROP TABLE IF EXISTS Test");
-			execSQL( "CREATE TABLE Test (id int, notes MEDIUMTEXT, PRIMARY KEY(id))" );
-			execSQL("INSERT INTO Test VALUES(1, 'This is my note')" );
+			execSQL("CREATE TABLE Test (id int, notes MEDIUMTEXT, PRIMARY KEY(id))");
+			execSQL("INSERT INTO Test VALUES(1, 'This is my note')");
 
 			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
 			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
@@ -235,7 +225,8 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void SelectMoreThan252Rows() 
 		{
-			for (int i=0; i < 500; i++) 
+            CreateDefaultTable();
+            for (int i = 0; i < 500; i++) 
 				execSQL("INSERT INTO Test(id, id2) VALUES(NULL, " + i + ")");
 
 			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
@@ -273,7 +264,6 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void DiscreteValues() 
 		{
-			execSQL("DROP TABLE IF EXISTS Test");
 			execSQL("CREATE TABLE Test (id int, name varchar(200), dt DATETIME, b1 TEXT)");
 			execSQL("INSERT INTO Test VALUES (1, 'Test', '2004-08-01', 'Text 1')");
 			execSQL("INSERT INTO Test VALUES (2, 'Test 1', '2004-07-02', 'Text 2')");
@@ -282,20 +272,21 @@ namespace MySql.Data.MySqlClient.Tests
 			DataTable dt = new DataTable();
 			da.Fill(dt);
 
-			Assert.AreEqual( "Test", dt.Rows[0]["name"] );
-			Assert.AreEqual( "Test 1", dt.Rows[1]["name"] );
+			Assert.AreEqual("Test", dt.Rows[0]["name"]);
+			Assert.AreEqual("Test 1", dt.Rows[1]["name"]);
 
-			Assert.AreEqual( "Text 1", dt.Rows[0]["b1"] );
-			Assert.AreEqual( "Text 2", dt.Rows[1]["b1"] );
+			Assert.AreEqual("Text 1", dt.Rows[0]["b1"]);
+			Assert.AreEqual("Text 2", dt.Rows[1]["b1"]);
 
-			Assert.AreEqual( new DateTime(2004, 8, 1, 0, 0, 0).ToString(),  dt.Rows[0]["dt"].ToString() );
-			Assert.AreEqual( new DateTime(2004, 7, 2, 0, 0, 0).ToString(), dt.Rows[1]["dt"].ToString() );
+			Assert.AreEqual(new DateTime(2004, 8, 1, 0, 0, 0).ToString(),  dt.Rows[0]["dt"].ToString());
+			Assert.AreEqual(new DateTime(2004, 7, 2, 0, 0, 0).ToString(), dt.Rows[1]["dt"].ToString());
 		}
 
 		[Test]
 		public void Bug5798() 
 		{
-			execSQL("INSERT INTO Test (id, id2, name) VALUES (1, 1, '')");
+            CreateDefaultTable();
+            execSQL("INSERT INTO Test (id, id2, name) VALUES (1, 1, '')");
 
 			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
 			MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
@@ -316,7 +307,6 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void ColumnMapping() 
 		{
-			execSQL("DROP TABLE IF EXISTS Test");
 			execSQL("CREATE TABLE Test (id int, dcname varchar(100), primary key(id))");
 			execSQL("INSERT INTO Test VALUES (1, 'Test1')");
 			execSQL("INSERT INTO Test VALUES (2, 'Test2')");
@@ -331,10 +321,8 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void TestFillWithHelper() 
 		{
-			execSQL("DROP TABLE IF EXISTS table1");
-			execSQL("DROP TABLE IF EXISTS table2");
-			execSQL( "CREATE TABLE table1 (`key` INT, PRIMARY KEY(`key`))" );
-			execSQL( "CREATE TABLE table2 (`key` INT, PRIMARY KEY(`key`))" );
+			execSQL("CREATE TABLE table1 (`key` INT, PRIMARY KEY(`key`))");
+			execSQL("CREATE TABLE table2 (`key` INT, PRIMARY KEY(`key`))");
 			execSQL("INSERT INTO table1 VALUES (1)");
 			execSQL("INSERT INTO table2 VALUES (1)");
 
@@ -354,7 +342,6 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void AutoIncrementColumns()
 		{
-			execSQL("DROP TABLE IF EXISTS Test");
 			execSQL("CREATE TABLE Test (id int(10) unsigned NOT NULL auto_increment primary key)");
 			execSQL("INSERT INTO Test VALUES(NULL)");
 
@@ -366,14 +353,7 @@ namespace MySql.Data.MySqlClient.Tests
 			DataRow row = ds.Tables[0].NewRow();
 			ds.Tables[0].Rows.Add(row);
 
-			try
-			{
-				da.Update(ds);
-			}
-			catch (Exception ex)
-			{
-				Assert.Fail(ex.Message);
-			}
+			da.Update(ds);
 
 			ds.Clear();
 			da.Fill(ds);
@@ -391,7 +371,6 @@ namespace MySql.Data.MySqlClient.Tests
             if (Version < new Version(4, 1))
                 return;
 
-			execSQL("DROP TABLE IF EXISTS Test");
 			execSQL("CREATE TABLE Test ( id INT NOT NULL, amount INT )");
 			execSQL("INSERT INTO Test VALUES (1, 44)");
 			execSQL("INSERT INTO Test VALUES (2, 88)");
@@ -412,7 +391,6 @@ namespace MySql.Data.MySqlClient.Tests
 /*		[Test]
 		public void DefaultValues() 
 		{
-			execSQL("DROP TABLE IF EXISTS Test");
 			execSQL("CREATE TABLE Test (id int, name VARCHAR(20) NOT NULL DEFAULT 'abc', dt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)");
 			
 			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
@@ -449,24 +427,17 @@ namespace MySql.Data.MySqlClient.Tests
 			da.Update(dt);
 
 			MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test", conn);
-			try 
+			using (MySqlDataReader reader = cmd.ExecuteReader()) 
 			{
-				using (MySqlDataReader reader = cmd.ExecuteReader()) 
-				{
-					Assert.IsTrue(reader.Read());
-					Assert.AreEqual(1, reader["id"]);
-					Assert.AreEqual("xyz", reader["name"]);
-					Assert.AreEqual(DateTime.Now.Year, reader.GetDateTime(2).Year);
-					Assert.IsTrue(reader.Read());
-					Assert.AreEqual(2, reader["id"]);
-					Assert.AreEqual("abc", reader["name"]);
-					Assert.AreEqual(DateTime.Now.Year, reader.GetDateTime(2).Year);
-					Assert.IsFalse(reader.Read());
-				}
-			}
-			catch (Exception ex) 
-			{
-				Assert.Fail(ex.Message);
+				Assert.IsTrue(reader.Read());
+				Assert.AreEqual(1, reader["id"]);
+				Assert.AreEqual("xyz", reader["name"]);
+				Assert.AreEqual(DateTime.Now.Year, reader.GetDateTime(2).Year);
+				Assert.IsTrue(reader.Read());
+				Assert.AreEqual(2, reader["id"]);
+				Assert.AreEqual("abc", reader["name"]);
+				Assert.AreEqual(DateTime.Now.Year, reader.GetDateTime(2).Year);
+				Assert.IsFalse(reader.Read());
 			}
 		}
 */
@@ -476,7 +447,6 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void Bug16307()
         {
-            execSQL("DROP TABLE IF EXISTS Test");
             execSQL("CREATE TABLE Test (OrgNum int auto_increment, CallReportNum int, Stamp varchar(50), " +
                 "WasRealCall varchar(50), WasHangup varchar(50), primary key(orgnum))");
 
@@ -509,22 +479,11 @@ namespace MySql.Data.MySqlClient.Tests
 
             strSQL = "SELECT @@IDENTITY AS 'Identity';";
             MySqlCommand cmd2 = new MySqlCommand(strSQL, conn);
-            MySqlDataReader reader = null;
-            try
+            using (MySqlDataReader reader = cmd2.ExecuteReader())
             {
-                reader = cmd2.ExecuteReader();
                 reader.Read();
                 int intCallNum = Int32.Parse(reader.GetValue(0).ToString());
                 Assert.AreEqual(1, intCallNum);
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
-            finally
-            {
-                if (reader != null)
-                    reader.Close();
             }
         }
         
@@ -534,7 +493,6 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void QuietOpenAndClose()
         {
-            execSQL("DROP TABLE IF EXISTS Test");
             execSQL("CREATE TABLE Test (id INT, PRIMARY KEY(id))");
             execSQL("INSERT INTO Test VALUES(1)");
 
@@ -565,7 +523,6 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void RangeFill()
         {
-            execSQL("DROP TABLE IF EXISTS Test");
             execSQL("CREATE TABLE Test (id INT)");
             execSQL("INSERT INTO Test VALUES (1)");
             execSQL("INSERT INTO Test VALUES (2)");
@@ -580,7 +537,6 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void FillWithNulls()
         {
-            execSQL("DROP TABLE IF EXISTS Test");
             execSQL(@"CREATE TABLE Test (id INT UNSIGNED NOT NULL AUTO_INCREMENT, 
                       name VARCHAR(100), PRIMARY KEY(id))");
 
@@ -593,15 +549,10 @@ namespace MySql.Data.MySqlClient.Tests
             dt.Columns[0].AutoIncrementStep = -1;
             DataRow row = dt.NewRow();
             row["name"] = "Test1";
-            try
-            {
-                dt.Rows.Add(row);
-                da.Update(dt);
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
+
+            dt.Rows.Add(row);
+            da.Update(dt);
+
             dt.Clear();
             da.Fill(dt);
             Assert.AreEqual(1, dt.Rows.Count);
@@ -610,15 +561,10 @@ namespace MySql.Data.MySqlClient.Tests
 
             row = dt.NewRow();
             row["name"] = System.DBNull.Value;
-            try
-            {
-                dt.Rows.Add(row);
-                da.Update(dt);
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
+
+            dt.Rows.Add(row);
+            da.Update(dt);
+
             dt.Clear();
             da.Fill(dt);
             Assert.AreEqual(2, dt.Rows.Count);
@@ -627,15 +573,10 @@ namespace MySql.Data.MySqlClient.Tests
 
             row = dt.NewRow();
             row["name"] = "Test3";
-            try
-            {
-                dt.Rows.Add(row);
-                da.Update(dt);
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
+
+            dt.Rows.Add(row);
+            da.Update(dt);
+
             dt.Clear();
             da.Fill(dt);
             Assert.AreEqual(3, dt.Rows.Count);
@@ -647,6 +588,7 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void PagingFill()
         {
+            CreateDefaultTable();
             execSQL("INSERT INTO Test (id, id2, name) VALUES (NULL, 1, 'Name 1')");
             execSQL("INSERT INTO Test (id, id2, name) VALUES (NULL, 2, 'Name 2')");
             execSQL("INSERT INTO Test (id, id2, name) VALUES (NULL, 3, 'Name 3')");
@@ -676,7 +618,6 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void SkippingRowsLargerThan1024()
         {
-            execSQL("DROP TABLE IF EXISTS Test");
             execSQL("CREATE TABLE Test (id INT, name TEXT)");
 
             MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (?id, ?name)", conn);
@@ -689,22 +630,14 @@ namespace MySql.Data.MySqlClient.Tests
                 cmd.ExecuteNonQuery();
             }
 
-            try
-            {
-                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
-                DataTable dt = new DataTable();
-                da.Fill(0, 2, new DataTable[] { dt });
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
+            DataTable dt = new DataTable();
+            da.Fill(0, 2, new DataTable[] { dt });
         }
 
         [Test]
         public void TestBatchingInserts()
         {
-            execSQL("DROP TABLE IF EXISTS Test");
             execSQL("CREATE TABLE Test (id INT, name VARCHAR(20), PRIMARY KEY(id))");
 
             MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
@@ -732,31 +665,23 @@ namespace MySql.Data.MySqlClient.Tests
             row["name"] = "name 3";
             dt.Rows.Add(row);
 
-            try
-            {
-                da.UpdateBatchSize = 0;
-                da.Update(dt);
+            da.UpdateBatchSize = 0;
+            da.Update(dt);
 
-                dt.Rows.Clear();
-                da.Fill(dt);
-                Assert.AreEqual(3, dt.Rows.Count);
-                Assert.AreEqual(1, dt.Rows[0]["id"]);
-                Assert.AreEqual(2, dt.Rows[1]["id"]);
-                Assert.AreEqual(3, dt.Rows[2]["id"]);
-                Assert.AreEqual("name 1", dt.Rows[0]["name"]);
-                Assert.AreEqual("name 2", dt.Rows[1]["name"]);
-                Assert.AreEqual("name 3", dt.Rows[2]["name"]);
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
+            dt.Rows.Clear();
+            da.Fill(dt);
+            Assert.AreEqual(3, dt.Rows.Count);
+            Assert.AreEqual(1, dt.Rows[0]["id"]);
+            Assert.AreEqual(2, dt.Rows[1]["id"]);
+            Assert.AreEqual(3, dt.Rows[2]["id"]);
+            Assert.AreEqual("name 1", dt.Rows[0]["name"]);
+            Assert.AreEqual("name 2", dt.Rows[1]["name"]);
+            Assert.AreEqual("name 3", dt.Rows[2]["name"]);
         }
 
         [Test]
         public void TestBatchingUpdates()
         {
-            execSQL("DROP TABLE IF EXISTS Test");
             execSQL("CREATE TABLE Test (id INT, name VARCHAR(20), PRIMARY KEY(id))");
             execSQL("INSERT INTO Test VALUES (1, 'Test 1')");
             execSQL("INSERT INTO Test VALUES (2, 'Test 2')");
@@ -777,31 +702,23 @@ namespace MySql.Data.MySqlClient.Tests
             dt.Rows[2]["id"] = 6;
             dt.Rows[2]["name"] = "new test value #2";
 
-            try
-            {
-                da.UpdateBatchSize = 0;
-                da.Update(dt);
+            da.UpdateBatchSize = 0;
+            da.Update(dt);
 
-                dt.Rows.Clear();
-                da.Fill(dt);
-                Assert.AreEqual(3, dt.Rows.Count);
-                Assert.AreEqual(4, dt.Rows[0]["id"]);
-                Assert.AreEqual(2, dt.Rows[1]["id"]);
-                Assert.AreEqual(6, dt.Rows[2]["id"]);
-                Assert.AreEqual("Test 1", dt.Rows[0]["name"]);
-                Assert.AreEqual("new test value", dt.Rows[1]["name"]);
-                Assert.AreEqual("new test value #2", dt.Rows[2]["name"]);
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
+            dt.Rows.Clear();
+            da.Fill(dt);
+            Assert.AreEqual(3, dt.Rows.Count);
+            Assert.AreEqual(4, dt.Rows[0]["id"]);
+            Assert.AreEqual(2, dt.Rows[1]["id"]);
+            Assert.AreEqual(6, dt.Rows[2]["id"]);
+            Assert.AreEqual("Test 1", dt.Rows[0]["name"]);
+            Assert.AreEqual("new test value", dt.Rows[1]["name"]);
+            Assert.AreEqual("new test value #2", dt.Rows[2]["name"]);
         }
 
         [Test]
         public void TestBatchingMixed()
         {
-            execSQL("DROP TABLE IF EXISTS Test");
             execSQL("CREATE TABLE Test (id INT, name VARCHAR(20), PRIMARY KEY(id))");
             execSQL("INSERT INTO Test VALUES (1, 'Test 1')");
             execSQL("INSERT INTO Test VALUES (2, 'Test 2')");
@@ -833,25 +750,18 @@ namespace MySql.Data.MySqlClient.Tests
 
             dt.Rows[1].Delete();
 
-            try
-            {
-                da.UpdateBatchSize = 0;
-                da.Update(dt);
+            da.UpdateBatchSize = 0;
+            da.Update(dt);
 
-                dt.Rows.Clear();
-                da.Fill(dt);
-                Assert.AreEqual(3, dt.Rows.Count);
-                Assert.AreEqual(4, dt.Rows[0]["id"]);
-                Assert.AreEqual(6, dt.Rows[1]["id"]);
-                Assert.AreEqual(7, dt.Rows[2]["id"]);
-                Assert.AreEqual("Test 1", dt.Rows[0]["name"]);
-                Assert.AreEqual("new test value #2", dt.Rows[1]["name"]);
-                Assert.AreEqual("foobar", dt.Rows[2]["name"]);
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
+            dt.Rows.Clear();
+            da.Fill(dt);
+            Assert.AreEqual(3, dt.Rows.Count);
+            Assert.AreEqual(4, dt.Rows[0]["id"]);
+            Assert.AreEqual(6, dt.Rows[1]["id"]);
+            Assert.AreEqual(7, dt.Rows[2]["id"]);
+            Assert.AreEqual("Test 1", dt.Rows[0]["name"]);
+            Assert.AreEqual("new test value #2", dt.Rows[1]["name"]);
+            Assert.AreEqual("foobar", dt.Rows[2]["name"]);
         }
 
         [Test]
@@ -859,7 +769,6 @@ namespace MySql.Data.MySqlClient.Tests
         {
             int blobSize = 64000;
 
-            execSQL("DROP TABLE IF EXISTS Test");
             execSQL("CREATE TABLE Test (id INT, img BLOB, PRIMARY KEY(id))");
 
             int numRows = (maxPacketSize / blobSize) * 2;
@@ -882,21 +791,14 @@ namespace MySql.Data.MySqlClient.Tests
                 dt.Rows.Add(row);
             }
 
-            try
-            {
-                da.UpdateBatchSize = 0;
-                da.Update(dt);
+            da.UpdateBatchSize = 0;
+            da.Update(dt);
 
-                dt.Rows.Clear();
-                da.Fill(dt);
-                Assert.AreEqual(numRows, dt.Rows.Count);
-                for (int i=0; i < numRows; i++)
-                    Assert.AreEqual(i, dt.Rows[i]["id"]);
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
+            dt.Rows.Clear();
+            da.Fill(dt);
+            Assert.AreEqual(numRows, dt.Rows.Count);
+            for (int i=0; i < numRows; i++)
+                Assert.AreEqual(i, dt.Rows[i]["id"]);
         }
     }
 }

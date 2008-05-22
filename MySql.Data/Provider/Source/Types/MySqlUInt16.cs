@@ -78,29 +78,29 @@ namespace MySql.Data.Types
 			get { return "SMALLINT"; }
 		}
 
-		void IMySqlValue.WriteValue(MySqlStream stream, bool binary, object val, int length)
+		void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val, int length)
 		{
-			int v = Convert.ToUInt16(val);
+			int v = (val is UInt16) ? (UInt16)val : Convert.ToUInt16(val);
 			if (binary)
-				stream.Write(BitConverter.GetBytes(v));
+                packet.WriteInteger((long)v, 2);
 			else
-				stream.WriteStringNoNull(v.ToString());
+                packet.WriteStringNoNull(v.ToString());
 		}
 
-		IMySqlValue IMySqlValue.ReadValue(MySqlStream stream, long length, bool nullVal)
+        IMySqlValue IMySqlValue.ReadValue(MySqlPacket packet, long length, bool nullVal)
 		{
 			if (nullVal)
 				return new MySqlUInt16(true);
 
 			if (length == -1)
-				return new MySqlUInt16((ushort)stream.ReadInteger(2));
+                return new MySqlUInt16((ushort)packet.ReadInteger(2));
 			else
-				return new MySqlUInt16(UInt16.Parse(stream.ReadString(length)));
+                return new MySqlUInt16(UInt16.Parse(packet.ReadString(length)));
 		}
 
-		void IMySqlValue.SkipValue(MySqlStream stream)
+		void IMySqlValue.SkipValue(MySqlPacket packet)
 		{
-			stream.SkipBytes(2);
+            packet.Position += 2;
 		}
 
 		#endregion

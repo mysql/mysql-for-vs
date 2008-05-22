@@ -33,21 +33,14 @@ namespace MySql.Data.MySqlClient.Tests
 
         private void CommandRunner(MySqlCommand cmdToRun)
         {
-            try
-            {
-                object o = cmdToRun.ExecuteScalar();
-                Assert.IsNull(o);
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
+            object o = cmdToRun.ExecuteScalar();
+            Assert.IsNull(o);
         }
 
         [Test]
         public void CancelSingleQuery()
         {
-            if (version < new Version(5, 0)) return;
+            if (Version < new Version(5, 0)) return;
 
             // first we need a routine that will run for a bit
             execSQL(@"CREATE PROCEDURE spTest(duration INT) 
@@ -144,7 +137,7 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void TimeoutNotExpiring()
         {
-            if (version < new Version(5, 0)) return;
+            if (Version < new Version(5, 0)) return;
 
             // first we need a routine that will run for a bit
             execSQL(@"CREATE PROCEDURE spTest(duration INT) 
@@ -152,31 +145,23 @@ namespace MySql.Data.MySqlClient.Tests
                     SELECT SLEEP(duration);
                 END");
 
-            try
-            {
-                MySqlCommand cmd = new MySqlCommand("spTest", conn);
-                cmd.Parameters.AddWithValue("duration", 10);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandTimeout = 15;
-                cmd.ExecuteNonQuery();
-            }
-            catch (MySqlException ex)
-            {
-                Assert.Fail(ex.Message);
-            }
+            MySqlCommand cmd = new MySqlCommand("spTest", conn);
+            cmd.Parameters.AddWithValue("duration", 10);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandTimeout = 15;
+            cmd.ExecuteNonQuery();
         }
 
         [Test]
         public void TimeoutDuringBatch()
         {
-            if (version < new Version(5, 0)) return;
+            if (Version < new Version(5, 0)) return;
 
             execSQL(@"CREATE PROCEDURE spTest(duration INT) 
                 BEGIN 
                     SELECT SLEEP(duration);
                 END");
 
-            execSQL("DROP TABLE IF EXISTS test");
             execSQL("CREATE TABLE test (id INT)");
 
             MySqlCommand cmd = new MySqlCommand(
@@ -199,7 +184,7 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void CancelSelect()
         {
-            if (version < new Version(5, 0)) return;
+            if (Version < new Version(5, 0)) return;
 
             execSQL("CREATE TABLE Test (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(20))");
             for (int i=0; i < 10000; i++)
@@ -214,16 +199,9 @@ namespace MySql.Data.MySqlClient.Tests
 
                 cmd.Cancel();
 
-                try
+                while (reader.Read())
                 {
-                    while (reader.Read())
-                    {
-                        rows++;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Assert.Fail(ex.Message);
+                    rows++;
                 }
             }
             Assert.IsTrue(rows < 10000);

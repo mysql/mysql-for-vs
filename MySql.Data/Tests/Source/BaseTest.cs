@@ -25,6 +25,8 @@ using System.Data;
 using MySql.Data.MySqlClient;
 using System.Reflection;
 using System.Diagnostics;
+using System.Resources;
+using System.IO;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -33,10 +35,9 @@ namespace MySql.Data.MySqlClient.Tests
     /// </summary>
     public class BaseTest
     {
-        protected MySqlConnection conn;
-        private MySqlConnection rootConn;
-        protected string table;
-        protected string csAdditions = String.Empty;
+        //statics
+        protected static int maxPacketSize;
+        private static MySqlConnection rootConn;
         protected static string host;
         protected static string user;
         protected static string password;
@@ -47,9 +48,12 @@ namespace MySql.Data.MySqlClient.Tests
         protected static string rootPassword;
         protected static string database0;
         protected static string database1;
-        protected Version version;
+        private static Version version;
+
         protected bool pooling;
-        protected static int maxPacketSize;
+        protected string table;
+        protected string csAdditions = String.Empty;
+        protected MySqlConnection conn;
 
         public BaseTest()
         {
@@ -97,34 +101,32 @@ namespace MySql.Data.MySqlClient.Tests
 				database0 = String.Format("db{0}{1}{2}-a", versionParts[0], versionParts[1], port - 3300);
 				database1 = String.Format("db{0}{1}{2}-b", versionParts[0], versionParts[1], port - 3300);
 			}
-		}
 
-        [TestFixtureSetUp]
-        public virtual void FixtureSetup()
-        {
-            // open up a root connection
-            string connStr = String.Format("server={0};user id={1};password={2};database=mysql;" +
-                "persist security info=true;pooling=false;", host, rootUser, rootPassword);
-            connStr += GetConnectionInfo();
-            rootConn = new MySqlConnection(connStr);
+            string connStr = GetConnectionStringEx(rootUser, rootPassword, false);
+            rootConn = new MySqlConnection(connStr + ";database=mysql");
             rootConn.Open();
-        }
-
-        [TestFixtureTearDown]
-        public virtual void TestFixtureTearDown()
-        {
-            rootConn.Close();
-        }
+		}
 
         #region Properties
 
         protected Version Version
         {
-            get { return version; }
+            get 
+            {
+                if (version == null)
+                {
+                    string versionString = conn.ServerVersion;
+                    int i = 0;
+                    while (i < versionString.Length && 
+                        (Char.IsDigit(versionString[i]) || versionString[i] == '.'))
+                        i++;
+                    version = new Version(versionString.Substring(0, i));
+                }
+                return version; 
+            }
         }
 
         #endregion
-
 
         protected virtual string GetConnectionInfo()
         {
@@ -165,100 +167,54 @@ namespace MySql.Data.MySqlClient.Tests
 
         protected void Open()
         {
-            try
-            {
-                string connString = GetConnectionString(true);
-                conn = new MySqlConnection(connString);
-                conn.Open();
-
-
-                string ver = conn.ServerVersion;
-
-                int x = 0;
-                foreach (char c in ver)
-                {
-                    if (!Char.IsDigit(c) && c != '.')
-                        break;
-                    x++;
-                }
-                ver = ver.Substring(0, x);
-                version = new Version(ver);
-            }
-            catch (Exception ex)
-            {
-#if !CF
-                System.Diagnostics.Trace.WriteLine(ex.Message);
-#endif
-                throw;
-            }
-        }
-
-        protected void Close()
-        {
-            try
-            {
-                // delete the table we created.
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
-                execSQL("DROP TABLE IF EXISTS Test");
-                conn.Close();
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
+            string connString = GetConnectionString(true);
+            conn = new MySqlConnection(connString);
+            conn.Open();
         }
 
         [SetUp]
         public virtual void Setup()
         {
-            try
+            Assembly executingAssembly = Assembly.GetExecutingAssembly();
+            Stream stream = executingAssembly.GetManifestResourceStream("MySql.Data.MySqlClient.Tests.Properties.Setup.sql");
+            StreamReader sr = new StreamReader(stream);
+            string sql = sr.ReadToEnd();
+            sr.Close();
+
+            sql = sql.Replace("[database0]", database0);
+            sql = sql.Replace("[database1]", database1);
+
+            ExecuteSQLAsRoot(sql);
+            Open();
+        }
+
+        protected void ExecuteSQLAsRoot(string sql)
+        {
+            string connStr = GetConnectionStringEx(rootUser, rootPassword, false);
+            using (MySqlConnection c = new MySqlConnection(connStr))
             {
-                // now create our databases
-                suExecSQL(String.Format("DROP DATABASE IF EXISTS `{0}`; CREATE DATABASE `{0}`", database0));
-                suExecSQL(String.Format("DROP DATABASE IF EXISTS `{0}`; CREATE DATABASE `{0}`", database1));
+                c.Open();
 
-                // now allow our user to access them
-                suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'localhost' 
-				identified by 'test'", database0));
-                suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'localhost' 
-				identified by 'test'", database1));
-                suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'%' 
-				identified by 'test'", database0));
-                suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'%' 
-				identified by 'test'", database1));
-                suExecSQL("FLUSH PRIVILEGES");
-
-                rootConn.ChangeDatabase(database0);
-
-                Open();
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
+                MySqlScript s = new MySqlScript(c, sql);
+                s.Execute();
             }
         }
 
         [TearDown]
         public virtual void Teardown()
         {
-            suExecSQL(String.Format("DROP DATABASE IF EXISTS `{0}`", database0));
-            suExecSQL(String.Format("DROP DATABASE IF EXISTS `{0}`", database1));
-            Close();
+            string sql = String.Format(
+                @"DROP DATABASE IF EXISTS `{0}`; DROP DATABASE IF EXISTS `{1}`;",
+                database0, database1);
+            ExecuteSQLAsRoot(sql);
+            conn.Close();
         }
 
         protected void KillConnection(MySqlConnection c)
         {
             int threadId = c.ServerThread;
             MySqlCommand cmd = new MySqlCommand("KILL " + threadId, conn);
-            try
-            {
-                cmd.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
+            cmd.ExecuteNonQuery();
             c.Ping();  // this final ping will cause MySQL to clean up the killed thread
         }
 
@@ -273,6 +229,7 @@ namespace MySql.Data.MySqlClient.Tests
 
         protected void suExecSQL(string sql)
         {
+            Debug.Assert(rootConn != null);
             MySqlCommand cmd = new MySqlCommand(sql, rootConn);
             cmd.ExecuteNonQuery();
         }

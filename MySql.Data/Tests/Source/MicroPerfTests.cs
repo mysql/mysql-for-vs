@@ -31,7 +31,6 @@ namespace MySql.Data.MySqlClient.Tests
         public override void Setup()
         {
             base.Setup();
-            execSQL("DROP TABLE IF EXISTS Test");
             execSQL("CREATE TABLE Test (id int NOT NULL, name VARCHAR(100))");
         }
 

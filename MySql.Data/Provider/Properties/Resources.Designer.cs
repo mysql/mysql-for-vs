@@ -472,6 +472,14 @@ namespace MySql.Data.MySqlClient {
                 return ResourceManager.GetString("ParameterMustBeDefined", resourceCulture);
             }
         }
+
+        internal static string ParameterNotFoundDuringPrepare
+        {
+            get
+            {
+                return ResourceManager.GetString("ParameterNotFoundDuringPrepare", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to Password must be valid and contain length characters.

@@ -21,6 +21,7 @@
 using System;
 using System.Collections;
 using System.Text;
+using System.Collections.Generic;
 
 namespace MySql.Data.MySqlClient
 {
@@ -29,9 +30,13 @@ namespace MySql.Data.MySqlClient
     /// </summary>
     internal class PreparableStatement : Statement
     {
-        private MySqlField[] paramList;
         private int executionCount;
         private int statementId;
+        BitArray nullMap;
+        List<MySqlParameter> parametersToSend = new List<MySqlParameter>();
+        MySqlPacket packet;
+        int dataPosition;
+        int nullMapPosition;
 
         public PreparableStatement(MySqlCommand command, string text)
             : base(command, text)
@@ -39,11 +44,6 @@ namespace MySql.Data.MySqlClient
         }
 
         #region Properties
-
-        public int NumParameters
-        {
-            get { return paramList.Length; }
-        }
 
         public int ExecutionCount
         {
@@ -70,12 +70,46 @@ namespace MySql.Data.MySqlClient
             ArrayList parameter_names = PrepareCommandText(out text);
 
             // ask our connection to send the prepare command
+            MySqlField[] paramList = null;
             statementId = Driver.PrepareStatement(text, ref paramList);
 
             // now we need to assign our field names since we stripped them out
             // for the prepare
             for (int i = 0; i < parameter_names.Count; i++)
-                paramList[i].ColumnName = (string) parameter_names[i];
+            {
+                //paramList[i].ColumnName = (string) parameter_names[i];
+                string parameterName = (string)parameter_names[i];
+                int index = Parameters.IndexOf(parameterName);
+                if (index == -1)
+                    throw new InvalidOperationException(
+                        String.Format(Resources.ParameterNotFoundDuringPrepare, parameterName));
+                MySqlParameter p = Parameters[index];
+                p.Encoding = paramList[i].Encoding;
+                parametersToSend.Add(p);
+            }
+
+            // now prepare our null map
+            int numNullBytes = 0;
+            if (paramList != null && paramList.Length > 0)
+            {
+                nullMap = new BitArray(paramList.Length);
+                numNullBytes = (nullMap.Count + 7) / 8;
+            }
+
+            packet = new MySqlPacket(Driver.Encoding);
+            
+            // write out some values that do not change run to run
+            packet.WriteByte(0);
+            packet.WriteInteger(statementId, 4);
+            packet.WriteByte((byte)0); // flags; always 0 for 4.1
+            packet.WriteInteger(1, 4); // interation count; 1 for 4.1
+            nullMapPosition = packet.Position;
+            packet.Position += numNullBytes;  // leave room for our null map
+            packet.WriteByte(1); // rebound flag
+            // write out the parameter types
+            foreach (MySqlParameter p in parametersToSend)
+                packet.WriteInteger(p.GetPSType(), 2);
+            dataPosition = packet.Position;
         }
 
         public override void Execute()
@@ -87,69 +121,41 @@ namespace MySql.Data.MySqlClient
                 return;
             }
 
-            MySqlStream stream = new MySqlStream(Driver.Encoding);
-
             //TODO: support long data here
             // create our null bitmap
-            BitArray nullMap = new BitArray(Parameters.Count);
-
-            // now we run through the parameters that PREPARE sent back and use
-            // those names to index into the parameters the user gave us.
-            // if the user set that parameter to NULL, then we set the null map
-            // accordingly
-            if (paramList != null)
-                for (int x = 0; x < paramList.Length; x++)
-                {
-                    MySqlParameter p = Parameters[paramList[x].ColumnName];
-                    if (p.Value == DBNull.Value || p.Value == null)
-                        nullMap[x] = true;
-                }
-            byte[] nullMapBytes = new byte[(Parameters.Count + 7)/8];
 
             // we check this because Mono doesn't ignore the case where nullMapBytes
             // is zero length.
-            if (nullMapBytes.Length > 0)
-                nullMap.CopyTo(nullMapBytes, 0);
+//            if (nullMapBytes.Length > 0)
+  //          {
+    //            byte[] bits = packet.Buffer;
+      //          nullMap.CopyTo(bits, 
+        //        nullMap.CopyTo(nullMapBytes, 0);
 
             // start constructing our packet
-            stream.WriteInteger(statementId, 4);
-            stream.WriteByte((byte) 0); // flags; always 0 for 4.1
-            stream.WriteInteger(1, 4); // interation count; 1 for 4.1
-            stream.Write(nullMapBytes);
+//            if (Parameters.Count > 0)
+  //              nullMap.CopyTo(packet.Buffer, nullMapPosition);
             //if (parameters != null && parameters.Count > 0)
-            stream.WriteByte(1); // rebound flag
             //else
             //	packet.WriteByte( 0 );
             //TODO:  only send rebound if parms change
 
-            // write out the parameter types
-            if (paramList != null)
+            // now write out all non-null values
+            packet.Position = dataPosition;
+            for (int i = 0; i < parametersToSend.Count; i++)
             {
-                foreach (MySqlField param in paramList)
-                {
-                    MySqlParameter parm = Parameters[param.ColumnName];
-                    stream.WriteInteger(parm.GetPSType(), 2);
-                }
-
-                // now write out all non-null values
-                foreach (MySqlField param in paramList)
-                {
-                    int index = Parameters.IndexOf(param.ColumnName);
-                    if (index == -1)
-                        throw new MySqlException("Parameter '" + param.ColumnName +
-                                                 "' is not defined.");
-                    MySqlParameter parm = Parameters[index];
-                    if (parm.Value == DBNull.Value || parm.Value == null)
-                        continue;
-
-                    stream.Encoding = param.Encoding;
-                    parm.Serialize(stream, true);
-                }
+                MySqlParameter p = parametersToSend[i];
+                nullMap[i] = (p.Value == DBNull.Value || p.Value == null);
+                if (nullMap[i]) continue;
+                packet.Encoding = p.Encoding;
+                p.Serialize(packet, true);
             }
+            if (nullMap != null)
+                nullMap.CopyTo(packet.Buffer, nullMapPosition);
 
             executionCount++;
 
-            Driver.ExecuteStatement(stream.InternalBuffer.ToArray());
+            (Driver as NativeDriver).ExecuteStatement(packet);
         }
 
         public override bool ExecuteNext()

@@ -47,6 +47,8 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 			int len = 20000000;
 
+            suExecSQL("SET GLOBAL max_allowed_packet=64000000");
+
             // currently do not test this with compression
             if (conn.UseCompression) return;
 
@@ -60,14 +62,7 @@ namespace MySql.Data.MySqlClient.Tests
                 cmd.CommandTimeout = 0;
                 cmd.Parameters.Add(new MySqlParameter("?id", 1));
                 cmd.Parameters.Add(new MySqlParameter("?blob", dataIn));
-                try
-                {
-                    cmd.ExecuteNonQuery();
-                }
-                catch (Exception ex)
-                {
-                    Assert.Fail(ex.Message);
-                }
+                cmd.ExecuteNonQuery();
 
                 cmd.Parameters[0].Value = 2;
                 cmd.Parameters[1].Value = dataIn2;
@@ -75,29 +70,29 @@ namespace MySql.Data.MySqlClient.Tests
 
                 cmd.CommandText = "SELECT * FROM Test";
 
-                try
+                using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
-                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    reader.Read();
+                    byte[] dataOut = new byte[len];
+                    long count = reader.GetBytes(2, 0, dataOut, 0, len);
+                    Assert.AreEqual(len, count);
+                    int i = 0;
+                    try
                     {
-                        reader.Read();
-                        byte[] dataOut = new byte[len];
-                        long count = reader.GetBytes(2, 0, dataOut, 0, len);
-                        Assert.AreEqual(len, count);
-
-                        for (int i = 0; i < len; i++)
+                        for (; i < len; i++)
                             Assert.AreEqual(dataIn[i], dataOut[i]);
-
-                        reader.Read();
-                        count = reader.GetBytes(2, 0, dataOut, 0, len);
-                        Assert.AreEqual(len, count);
-
-                        for (int i = 0; i < len; i++)
-                            Assert.AreEqual(dataIn2[i], dataOut[i]);
                     }
-                }
-                catch (Exception ex)
-                {
-                    Assert.Fail(ex.Message);
+                    catch (Exception)
+                    {
+                        int z = i;
+                    }
+
+                    reader.Read();
+                    count = reader.GetBytes(2, 0, dataOut, 0, len);
+                    Assert.AreEqual(len, count);
+
+                    for (int x=0; x < len; x++)
+                        Assert.AreEqual(dataIn2[x], dataOut[x]);
                 }
             }
 		}
@@ -118,10 +113,8 @@ namespace MySql.Data.MySqlClient.Tests
 				
 			int i2 = 0;
 			cmd = new MySqlCommand("select * from Test", conn);
-			MySqlDataReader reader = null;
-			try 
+			using (MySqlDataReader reader = cmd.ExecuteReader())
 			{
-				reader = cmd.ExecuteReader();
 				while (reader.Read())
 				{
 					Assert.AreEqual( i2+1, reader.GetInt32(0), "Sequence out of order" );
@@ -132,14 +125,6 @@ namespace MySql.Data.MySqlClient.Tests
 				Assert.AreEqual( 8000, i2 );
 				cmd = new MySqlCommand("delete from Test where id >= 100", conn);
 				cmd.ExecuteNonQuery();
-			}
-			catch (Exception ex) 
-			{
-				Assert.Fail( ex.Message );
-			}
-			finally 
-			{
-				if (reader != null) reader.Close();
 			}
 		}
     }

@@ -330,4 +330,7 @@
   <data name="DistributedTxnNotSupported" xml:space="preserve">
     <value>MySQL Connector/Net does not currently support distributed transactions.</value>
   </data>
+  <data name="ParameterNotFoundDuringPrepare" xml:space="preserve">
+    <value>Parameter '{0}' was not found during prepare.</value>
+  </data>
 </root>

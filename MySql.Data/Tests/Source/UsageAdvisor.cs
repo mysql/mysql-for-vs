@@ -27,17 +27,14 @@ namespace MySql.Data.MySqlClient.Tests
     [TestFixture]
     public class UsageAdvisorTests : BaseTest
     {
-        [TestFixtureSetUp]
-        public override void FixtureSetup()
+        public UsageAdvisorTests()
         {
             csAdditions = ";Usage Advisor=true;";
-            base.FixtureSetup();
         }
 
         public override void Setup()
         {
             base.Setup();
-            execSQL("DROP TABLE IF EXISTS Test");
             createTable("CREATE TABLE Test (id int, name VARCHAR(200))", "INNODB");
         }
 
@@ -54,10 +51,8 @@ namespace MySql.Data.MySqlClient.Tests
             Trace.Listeners.Add(listener);
 
             MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test; SELECT * FROM Test WHERE id > 2", conn);
-            MySqlDataReader reader = null;
-            try
+            using (MySqlDataReader reader = cmd.ExecuteReader())
             {
-                reader = cmd.ExecuteReader();
                 reader.Read();
                 reader.GetInt32(0);  // access  the first field
                 reader.Read();
@@ -72,15 +67,6 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.IsFalse(reader.NextResult());
                 Assert.IsTrue(listener.Find("Fields not accessed:  id") > 0);
             }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
-            finally
-            {
-                if (reader != null) reader.Close();
-            }
-
         }
 
         [Test]
@@ -96,10 +82,8 @@ namespace MySql.Data.MySqlClient.Tests
             Trace.Listeners.Add(listener);
 
             MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test; SELECT * FROM Test WHERE id > 2", conn);
-            MySqlDataReader reader = null;
-            try
+            using (MySqlDataReader reader = cmd.ExecuteReader())
             {
-                reader = cmd.ExecuteReader();
                 reader.Read();
                 reader.Read();
 
@@ -114,15 +98,6 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.IsFalse(reader.NextResult());
                 Assert.IsTrue(listener.Find("Reason: Not all rows in resultset were read.") > 0);
             }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
-            finally
-            {
-                if (reader != null) reader.Close();
-            }
-
         }
 
     }

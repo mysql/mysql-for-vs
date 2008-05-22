@@ -78,16 +78,10 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 			(ev as ManualResetEvent).WaitOne();
 
-			try
-			{
-				MySqlConnection c = new MySqlConnection(GetConnectionString(true));
-				c.Open();
-				c.Close();
-			}
-			catch (Exception ex)
-			{
-				Assert.Fail(ex.Message);
-			}
+            using (MySqlConnection c = new MySqlConnection(GetConnectionString(true)))
+            {
+                c.Open();
+            }
 		}
 
 		/// <summary>

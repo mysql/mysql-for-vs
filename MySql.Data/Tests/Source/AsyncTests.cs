@@ -31,63 +31,51 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void ExecuteNonQuery()
 		{
-			if (version < new Version(5, 0)) return;
+			if (Version < new Version(5, 0)) return;
 
 			execSQL("CREATE TABLE test (id int)");
 			execSQL("CREATE PROCEDURE spTest() BEGIN SET @x=0; REPEAT INSERT INTO test VALUES(@x); " +
 				"SET @x=@x+1; UNTIL @x = 300 END REPEAT; END");
 
-			try
+			MySqlCommand proc = new MySqlCommand("spTest", conn);
+			proc.CommandType = CommandType.StoredProcedure;
+			IAsyncResult iar = proc.BeginExecuteNonQuery();
+			int count = 0;
+			while (!iar.IsCompleted)
 			{
-				MySqlCommand proc = new MySqlCommand("spTest", conn);
-				proc.CommandType = CommandType.StoredProcedure;
-				IAsyncResult iar = proc.BeginExecuteNonQuery();
-				int count = 0;
-				while (!iar.IsCompleted)
-				{
-					count++;
-					System.Threading.Thread.Sleep(20);
-				}
-				proc.EndExecuteNonQuery(iar);
-				Assert.IsTrue(count > 0);
+				count++;
+				System.Threading.Thread.Sleep(20);
+			}
+			proc.EndExecuteNonQuery(iar);
+			Assert.IsTrue(count > 0);
 
-				proc.CommandType = CommandType.Text;
-				proc.CommandText = "SELECT COUNT(*) FROM test";
-				object cnt = proc.ExecuteScalar();
-				Assert.AreEqual(300, cnt);
-			}
-			catch (Exception ex)
-			{
-				Assert.Fail(ex.Message);
-			}
-			finally
-			{
-			}
+			proc.CommandType = CommandType.Text;
+			proc.CommandText = "SELECT COUNT(*) FROM test";
+			object cnt = proc.ExecuteScalar();
+			Assert.AreEqual(300, cnt);
 		}
 
 		[Test]
 		public void ExecuteReader()
 		{
-			if (version < new Version(5, 0)) return;
+            if (Version < new Version(5, 0)) return;
 
 			execSQL("CREATE TABLE test (id int)");
 			execSQL("CREATE PROCEDURE spTest() BEGIN INSERT INTO test VALUES(1); " +
 				"SELECT SLEEP(2); SELECT 'done'; END");
 
-			MySqlDataReader reader = null;
-			try
+			MySqlCommand proc = new MySqlCommand("spTest", conn);
+			proc.CommandType = CommandType.StoredProcedure;
+			IAsyncResult iar = proc.BeginExecuteReader();
+			int count = 0;
+			while (!iar.IsCompleted)
 			{
-				MySqlCommand proc = new MySqlCommand("spTest", conn);
-				proc.CommandType = CommandType.StoredProcedure;
-				IAsyncResult iar = proc.BeginExecuteReader();
-				int count = 0;
-				while (!iar.IsCompleted)
-				{
-					count++;
-					System.Threading.Thread.Sleep(20);
-				}
+				count++;
+				System.Threading.Thread.Sleep(20);
+			}
 
-				reader = proc.EndExecuteReader(iar);
+			using (MySqlDataReader reader = proc.EndExecuteReader(iar))
+            {
 				Assert.IsNotNull(reader);
 				Assert.IsTrue(count > 0, "count > 0");
 				Assert.IsTrue(reader.Read(), "can read");
@@ -101,15 +89,6 @@ namespace MySql.Data.MySqlClient.Tests
 				object cnt = proc.ExecuteScalar();
 				Assert.AreEqual(1, cnt);
 			}
-			catch (Exception ex)
-			{
-				Assert.Fail(ex.Message);
-			}
-			finally
-			{
-				if (reader != null)
-					reader.Close();
-			}
 		}
 
 		[Test]
@@ -119,10 +98,10 @@ namespace MySql.Data.MySqlClient.Tests
 			IAsyncResult r = cmd.BeginExecuteReader();
 			try
 			{
-				MySqlDataReader reader = cmd.EndExecuteReader(r);
-				if (reader != null)
-					reader.Close();
-				Assert.Fail("EndExecuteReader should have thrown an exception");
+                using (MySqlDataReader reader = cmd.EndExecuteReader(r))
+                {
+                    Assert.Fail("EndExecuteReader should have thrown an exception");
+                }
 			}
 			catch (MySqlException)
 			{

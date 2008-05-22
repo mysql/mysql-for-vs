@@ -313,7 +313,7 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void Bug19481()
         {
-            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("DROP TABLE Test");
             execSQL("CREATE TABLE Test(ID INT NOT NULL AUTO_INCREMENT, " +
                 "SATELLITEID VARCHAR(3) NOT NULL, ANTENNAID INT, AOS_TIMESTAMP DATETIME NOT NULL, " +
                 "TEL_TIMESTAMP DATETIME, LOS_TIMESTAMP DATETIME, PRIMARY KEY (ID))");

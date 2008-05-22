@@ -28,19 +28,11 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture]
 	public class Syntax : BaseTest
 	{
-		[SetUp]
-		public override void Setup()
-		{
-			base.Setup ();
-			execSQL("DROP TABLE IF EXISTS Test");
-			execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(250), PRIMARY KEY(id))");
-		}
-
-
 		[Test]
 		public void ShowCreateTable()
 		{
-			MySqlDataAdapter da = new MySqlDataAdapter("SHOW CREATE TABLE Test", conn);
+            execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(250), PRIMARY KEY(id))");
+            MySqlDataAdapter da = new MySqlDataAdapter("SHOW CREATE TABLE Test", conn);
 			DataTable dt = new DataTable();
 			da.Fill(dt);
 
@@ -51,47 +43,36 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void ProblemCharsInSQLUTF8()
 		{
-            if (version < new Version(4, 1)) return;
+            if (Version < new Version(4, 1)) return;
 
-            execSQL("DROP TABLE IF EXISTS Test");
 			execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(250), mt MEDIUMTEXT, " +
 					  "PRIMARY KEY(id)) CHAR SET utf8");
 
-			MySqlConnection c = new MySqlConnection(GetConnectionString(true) + ";charset=utf8");
-			c.Open();
+            using (MySqlConnection c = new MySqlConnection(GetConnectionString(true) + ";charset=utf8"))
+            {
+                c.Open();
 
-			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (?id, ?text, ?mt)", c);
-			cmd.Parameters.AddWithValue("?id", 1);
-			cmd.Parameters.AddWithValue("?text", "This is my;test ? string–’‘’“”…");
-			cmd.Parameters.AddWithValue("?mt", "My MT string: ?");
-			cmd.ExecuteNonQuery();
+                MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (?id, ?text, ?mt)", c);
+                cmd.Parameters.AddWithValue("?id", 1);
+                cmd.Parameters.AddWithValue("?text", "This is my;test ? string–’‘’“”…");
+                cmd.Parameters.AddWithValue("?mt", "My MT string: ?");
+                cmd.ExecuteNonQuery();
 
-			cmd.CommandText = "SELECT * FROM Test";
-			MySqlDataReader reader = null;
-			try
-			{
-				reader = cmd.ExecuteReader();
-				Assert.IsTrue(reader.Read());
-				Assert.AreEqual(1, reader.GetInt32(0));
-				Assert.AreEqual("This is my;test ? string–’‘’“”…", reader.GetString(1));
-				Assert.AreEqual("My MT string: ?", reader.GetString(2));
-			}
-			catch (Exception ex)
-			{
-				Assert.Fail(ex.Message);
-			}
-			finally
-			{
-				if (reader != null) reader.Close();
-				if (c != null) c.Close();
-			}
+                cmd.CommandText = "SELECT * FROM Test";
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    Assert.IsTrue(reader.Read());
+                    Assert.AreEqual(1, reader.GetInt32(0));
+                    Assert.AreEqual("This is my;test ? string–’‘’“”…", reader.GetString(1));
+                    Assert.AreEqual("My MT string: ?", reader.GetString(2));
+                }
+            }
 		}
 
 
 		[Test]
 		public void ProblemCharsInSQL()
 		{
-			execSQL("DROP TABLE IF EXISTS Test");
 			execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(250), mt MEDIUMTEXT, " +
 					  "PRIMARY KEY(id))");
 
@@ -102,29 +83,20 @@ namespace MySql.Data.MySqlClient.Tests
 			cmd.ExecuteNonQuery();
 
 			cmd.CommandText = "SELECT * FROM Test";
-			MySqlDataReader reader = null;
-			try
-			{
-				reader = cmd.ExecuteReader();
+			using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
 				Assert.IsTrue(reader.Read());
 				Assert.AreEqual(1, reader.GetInt32(0));
 				Assert.AreEqual("This is my;test ? string-'''\"\".", reader.GetString(1));
 				Assert.AreEqual("My MT string: ?", reader.GetString(2));
-			}
-			catch (Exception ex)
-			{
-				Assert.Fail(ex.Message);
-			}
-			finally
-			{
-				if (reader != null) reader.Close();
 			}
 		}
 
 		[Test]
 		public void LoadDataLocalInfile() 
 		{
-			string connString = conn.ConnectionString + ";pooling=false";
+            execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(250), PRIMARY KEY(id))");
+            string connString = conn.ConnectionString + ";pooling=false";
 			MySqlConnection c = new MySqlConnection(connString);
 			c.Open();
 
@@ -143,14 +115,7 @@ namespace MySql.Data.MySqlClient.Tests
 			cmd.CommandTimeout = 0;
 
 			object cnt = 0;
-			try 
-			{
-				cnt = cmd.ExecuteNonQuery();
-			}
-			catch (Exception ex) 
-			{
-				Assert.Fail(ex.Message);
-			}
+			cnt = cmd.ExecuteNonQuery();
 			Assert.AreEqual(2000000, cnt);
 
 			cmd.CommandText = "SELECT COUNT(*) FROM Test";
@@ -164,30 +129,22 @@ namespace MySql.Data.MySqlClient.Tests
 		public void ShowTablesInNonExistentDb() 
 		{
 			MySqlCommand cmd = new MySqlCommand("SHOW TABLES FROM dummy", conn);
-			MySqlDataReader reader =null;
 			try 
 			{
-				reader = cmd.ExecuteReader();
-				Assert.Fail("ExecuteReader should not succeed");
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    Assert.Fail("ExecuteReader should not succeed");
+                }
 			}
 			catch (MySqlException) 
 			{
 				Assert.AreEqual(ConnectionState.Open, conn.State);
-			}
-			catch (Exception ex) 
-			{
-				Assert.Fail(ex.Message);
-			}
-			finally 
-			{
-				if (reader != null) reader.Close();
 			}
 		}
 
 		[Test]
 		public void Bug6135() 
 		{
-			execSQL("DROP TABLE IF EXISTS KLANT");
 			string sql = "CREATE TABLE `KLANT` (`KlantNummer` int(11) NOT NULL auto_increment, " +
 				"`Username` varchar(50) NOT NULL default '', `Password` varchar(100) NOT NULL default '', " + 
 				"`Naam` varchar(100) NOT NULL default '', `Voornaam` varchar(100) NOT NULL default '', " +
@@ -201,20 +158,10 @@ namespace MySql.Data.MySqlClient.Tests
 			createTable(sql, "MyISAM");
 
 			MySqlCommand cmd = new MySqlCommand("SELECT * FROM KLANT", conn);
-			MySqlDataReader reader = null;
-			try 
-			{
-				reader = cmd.ExecuteReader();
-				while (reader.Read()) { }
-			}
-			catch (Exception ex) 
-			{
-				Assert.Fail(ex.Message);
-			}
-			finally 
-			{
-				if (reader != null) reader.Close();
-			}
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read()) { }
+            }
 		}
 
 		[Test]
@@ -222,7 +169,6 @@ namespace MySql.Data.MySqlClient.Tests
 		{
             //TODO: fix this  
             return;
-			execSQL("DROP TABLE IF EXISTS Test");
 			execSQL("CREATE TABLE Test (id tinyint,val1	tinyint,val2 tinyint)");
 			execSQL("INSERT INTO Test VALUES (65,1,1),(65,1,1)");
 
@@ -236,33 +182,22 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void Sum()
 		{
-			execSQL("DROP TABLE IF EXISTS Test");
-
 			execSQL("CREATE TABLE Test (field1 mediumint(9) default '0', field2 float(9,3) " +
 				"default '0.000', field3 double(15,3) default '0.000') engine=innodb ");
 			execSQL("INSERT INTO Test values (1,1,1)");
 
-			MySqlDataReader reader = null;
-
 			MySqlCommand cmd2 = new MySqlCommand("SELECT sum(field2) FROM Test", conn);
-			try 
-			{
-				reader = cmd2.ExecuteReader();
+			using (MySqlDataReader reader = cmd2.ExecuteReader())
+            {
 				reader.Read();
 				object o = reader[0];
 				Assert.AreEqual(1, o);
 			}
-			catch (Exception ex) 
-			{
-				Assert.Fail(ex.Message);
-			}
-			finally 
-			{
-				if (reader != null) reader.Close();
-				reader = null;
-			}
+        }
 
-			execSQL("DROP TABLE IF EXISTS Test");
+        [Test]
+        public void Sum2()
+        {
 			execSQL("CREATE TABLE Test (id int, count int)");
 			execSQL("INSERT INTO Test VALUES (1, 21)");
 			execSQL("INSERT INTO Test VALUES (1, 33)");
@@ -270,50 +205,31 @@ namespace MySql.Data.MySqlClient.Tests
 			execSQL("INSERT INTO Test VALUES (1, 40)");
 
 			MySqlCommand cmd = new MySqlCommand("SELECT id, SUM(count) FROM Test GROUP BY id", conn);
-			try 
-			{
-				reader = cmd.ExecuteReader();
+			using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
 				reader.Read();
 				Assert.AreEqual( 1, reader.GetInt32(0) );
 				Assert.AreEqual( 110, reader.GetDouble(1) );
-			}
-			catch (Exception ex) 
-			{
-				Assert.Fail( ex.Message );
-			}
-			finally 
-			{
-				if (reader != null)
-					reader.Close();
 			}
 		}
 
 		[Test]
 		public void ForceWarnings() 
 		{
-            if (version < new Version(4, 1)) return;
+            if (Version < new Version(4, 1)) return;
 
-            MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test; DROP TABLE IF EXISTS test2; SELECT * FROM Test", conn);
-			MySqlDataReader reader = null; 
-			try 
-			{
-				reader = cmd.ExecuteReader();
+            execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(250), PRIMARY KEY(id))");
+            MySqlCommand cmd = new MySqlCommand(
+                "SELECT * FROM Test; DROP TABLE IF EXISTS test2; SELECT * FROM Test", conn);
+			using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
 				while (reader.NextResult()) { }
-			}
-			catch( Exception ex) 
-			{
-				Assert.Fail( ex.Message );
-			}
-			finally 
-			{
-				if (reader != null) reader.Close();
 			}
 		}
 
 		[Test]
 		public void SettingAutoIncrementColumns() 
 		{
-			execSQL("DROP TABLE IF EXISTS Test");
 			execSQL("CREATE TABLE Test (id int auto_increment, name varchar(100), primary key(id))");
 			execSQL("INSERT INTO Test VALUES (1, 'One')");
 			execSQL("INSERT INTO Test VALUES (3, 'Two')");
@@ -331,8 +247,9 @@ namespace MySql.Data.MySqlClient.Tests
 				execSQL("INSERT INTO Test (id, name2) values (5, 'Three')");
 				Assert.Fail( "This should have failed" );
 			}
-			catch (MySqlException) 	{}
-			catch (Exception ex) { Assert.Fail( ex.Message); }
+			catch (MySqlException)
+            {
+            }
 		}
 
 		/// <summary>
@@ -341,7 +258,6 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void FoundRows()
 		{
-			execSQL("DROP TABLE IF EXISTS Test");
 			execSQL("CREATE TABLE Test (testID int(11) NOT NULL auto_increment, testName varchar(100) default '', " +
 				    "PRIMARY KEY  (testID)) ENGINE=InnoDB DEFAULT CHARSET=latin1");
 			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (NULL, 'test')", conn);
@@ -357,28 +273,16 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void AutoIncrement()
         {
-            execSQL("DROP TABLE IF EXISTS Test");
             execSQL("CREATE TABLE Test (testID int(11) NOT NULL auto_increment, testName varchar(100) default '', " +
                     "PRIMARY KEY  (testID)) ENGINE=InnoDB DEFAULT CHARSET=latin1");
             MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (NULL, 'test')", conn);
             cmd.ExecuteNonQuery();
             cmd.CommandText = "SELECT @@IDENTITY as 'Identity'";
-            MySqlDataReader reader = null;
-            try
+            using (MySqlDataReader reader = cmd.ExecuteReader())
             {
-                reader = cmd.ExecuteReader();
                 reader.Read();
                 int ident = Int32.Parse(reader.GetValue(0).ToString());
                 Assert.AreEqual(1, ident);
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
-            finally
-            {
-                if (reader != null)
-                    reader.Close();
             }
         }
         
@@ -388,26 +292,18 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void CommentSymbolInTableName()
         {
-            try
-            {
-                execSQL("DROP TABLE IF EXISTS Test");
-                execSQL("CREATE TABLE Test (`PO#` int(11) NOT NULL auto_increment, " +
-                    "`PODate` date default NULL, PRIMARY KEY  (`PO#`))");
-                execSQL("INSERT INTO Test ( `PO#`, `PODate` ) " +
-                    "VALUES ( NULL, '2006-01-01' )");
+            execSQL("CREATE TABLE Test (`PO#` int(11) NOT NULL auto_increment, " +
+                "`PODate` date default NULL, PRIMARY KEY  (`PO#`))");
+            execSQL("INSERT INTO Test ( `PO#`, `PODate` ) " +
+                "VALUES ( NULL, '2006-01-01' )");
 
-                string sql = "SELECT `PO#` AS PurchaseOrderNumber, " +
-                    "`PODate` AS OrderDate FROM  Test";
-                MySqlCommand cmd = new MySqlCommand(sql, conn);
-                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-                Assert.AreEqual(1, dt.Rows.Count);
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
+            string sql = "SELECT `PO#` AS PurchaseOrderNumber, " +
+                "`PODate` AS OrderDate FROM  Test";
+            MySqlCommand cmd = new MySqlCommand(sql, conn);
+            MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            Assert.AreEqual(1, dt.Rows.Count);
         }
 
         /// <summary>
@@ -434,6 +330,7 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void Describe()
         {
+            execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(250), PRIMARY KEY(id))");
             MySqlDataAdapter da = new MySqlDataAdapter("DESCRIBE Test", conn);
             DataTable dt = new DataTable();
             da.Fill(dt);
@@ -449,6 +346,7 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void ShowTableStatus()
         {
+            execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(250), PRIMARY KEY(id))");
             MySqlDataAdapter da = new MySqlDataAdapter(
                 String.Format("SHOW TABLE STATUS FROM `{0}` LIKE 'Test'",
                 database0), conn);
@@ -492,10 +390,6 @@ namespace MySql.Data.MySqlClient.Tests
                 MySqlConnection c = new MySqlConnection(connStr);
                 c.Open();
                 c.Close();
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
             }
             finally
             {

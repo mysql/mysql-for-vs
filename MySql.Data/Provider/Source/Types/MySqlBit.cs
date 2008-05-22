@@ -31,13 +31,11 @@ namespace MySql.Data.Types
 	{
 		private ulong mValue;
 		private bool isNull;
-		private byte[] buffer;
 
 		public MySqlBit(bool isnull)
 		{
 			mValue = 0;
 			isNull = isnull;
-			buffer = new byte[8];
 		}
 
 		public bool IsNull
@@ -76,38 +74,32 @@ namespace MySql.Data.Types
 			get { return "BIT"; }
 		}
 
-		public void WriteValue(MySqlStream stream, bool binary, object value, int length)
+		public void WriteValue(MySqlPacket packet, bool binary, object value, int length)
 		{
-			ulong v = Convert.ToUInt64(value);
+            ulong v = (value is UInt64) ? (UInt64)value : Convert.ToUInt64(value);
 			if (binary)
-				stream.Write(BitConverter.GetBytes(v));
+                packet.WriteInteger((long)v, 8);
 			else
-				stream.WriteStringNoNull(v.ToString());
+                packet.WriteStringNoNull(v.ToString());
 		}
 
-		public IMySqlValue ReadValue(MySqlStream stream, long length, bool isNull)
+        public IMySqlValue ReadValue(MySqlPacket packet, long length, bool isNull)
 		{
             this.isNull = isNull;
             if (isNull)
                 return this;
 
-			if (buffer == null)
-				buffer = new byte[8];
 			if (length == -1)
-			{
-				length = stream.ReadFieldLength();
-			}
-			Array.Clear(buffer, 0, buffer.Length);
-			for (long i = length - 1; i >= 0; i--)
-				buffer[i] = (byte)stream.ReadByte();
-			mValue = BitConverter.ToUInt64(buffer, 0);
+                length = packet.ReadFieldLength();
+
+            mValue = (UInt64)packet.ReadBitValue((int)length);
 			return this;
 		}
 
-		public void SkipValue(MySqlStream stream)
+		public void SkipValue(MySqlPacket packet)
 		{
-			long len = stream.ReadFieldLength();
-			stream.SkipBytes((int)len);
+            int len = packet.ReadFieldLength();
+            packet.Position += len;
 		}
 
 		public static void SetDSInfo(DataTable dsTable)

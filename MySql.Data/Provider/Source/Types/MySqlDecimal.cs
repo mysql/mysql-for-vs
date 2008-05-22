@@ -97,39 +97,39 @@ namespace MySql.Data.Types
 			get { return "DECIMAL"; }
 		}
 
-		void IMySqlValue.WriteValue(MySqlStream stream, bool binary, object val, int length)
+		void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val, int length)
 		{
-			decimal v = Convert.ToDecimal(val);
+			decimal v = (val is decimal) ? (decimal)val : Convert.ToDecimal(val);
 			string valStr = v.ToString(CultureInfo.InvariantCulture);
 			if (binary)
-				stream.WriteLenString(valStr);
+                packet.WriteLenString(valStr);
 			else
-				stream.WriteStringNoNull(valStr);
+                packet.WriteStringNoNull(valStr);
 		}
 
-		IMySqlValue IMySqlValue.ReadValue(MySqlStream stream, long length, bool nullVal)
+        IMySqlValue IMySqlValue.ReadValue(MySqlPacket packet, long length, bool nullVal)
 		{
 			if (nullVal)
 				return new MySqlDecimal(true);
 
 			if (length == -1)
 			{
-				string s = stream.ReadLenString();
+                string s = packet.ReadLenString();
 				return new MySqlDecimal(Decimal.Parse(s,
 					 CultureInfo.InvariantCulture));
 			}
 			else
 			{
-				string s = stream.ReadString(length);
+                string s = packet.ReadString(length);
 				return new MySqlDecimal(Decimal.Parse(s,
 					 CultureInfo.InvariantCulture));
 			}
 		}
 
-		void IMySqlValue.SkipValue(MySqlStream stream)
+        void IMySqlValue.SkipValue(MySqlPacket packet)
 		{
-			long len = stream.ReadFieldLength();
-			stream.SkipBytes((int)len);
+            int len = packet.ReadFieldLength();
+            packet.Position += len;
 		}
 
 		#endregion

@@ -34,7 +34,6 @@ namespace MySql.Data.MySqlClient.Tests
         public override void Setup()
         {
             base.Setup();
-            execSQL("DROP TABLE IF EXISTS Test");
             createTable("CREATE TABLE Test (key2 VARCHAR(1), name VARCHAR(100), name2 VARCHAR(100))", "INNODB");
         }
 
@@ -83,10 +82,6 @@ namespace MySql.Data.MySqlClient.Tests
             }
             catch (InvalidOperationException)
             {
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
             }
             finally 
             {

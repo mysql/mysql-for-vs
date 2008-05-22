@@ -80,17 +80,16 @@ namespace MySql.Data.Types
 			get { return "DOUBLE"; }
 		}
 
-		void IMySqlValue.WriteValue(MySqlStream stream, bool binary, object val, int length)
+        void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val, int length)
 		{
-			double v = Convert.ToDouble(val);
+			double v = (val is double) ? (double)val : Convert.ToDouble(val);
 			if (binary)
-				stream.Write(BitConverter.GetBytes(v));
+                packet.Write(BitConverter.GetBytes(v));
 			else
-				stream.WriteStringNoNull(v.ToString(
-					 CultureInfo.InvariantCulture));
+                packet.WriteStringNoNull(v.ToString(CultureInfo.InvariantCulture));
 		}
 
-		IMySqlValue IMySqlValue.ReadValue(MySqlStream stream, long length,
+        IMySqlValue IMySqlValue.ReadValue(MySqlPacket packet, long length,
 				bool nullVal)
 		{
 			if (nullVal)
@@ -99,16 +98,16 @@ namespace MySql.Data.Types
 			if (length == -1)
 			{
 				byte[] b = new byte[8];
-				stream.Read(b, 0, 8);
+                packet.Read(b, 0, 8);
 				return new MySqlDouble(BitConverter.ToDouble(b, 0));
 			}
-			return new MySqlDouble(Double.Parse(stream.ReadString(length),
+            return new MySqlDouble(Double.Parse(packet.ReadString(length),
 					 CultureInfo.InvariantCulture));
 		}
 
-		void IMySqlValue.SkipValue(MySqlStream stream)
+		void IMySqlValue.SkipValue(MySqlPacket packet)
 		{
-			stream.SkipBytes(8);
+            packet.Position += 8;
 		}
 
 		#endregion

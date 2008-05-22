@@ -34,17 +34,15 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture]
 	public class PerfMonTests : BaseTest
 	{
-		public override void FixtureSetup()
-		{
-            pooling = false;
-			csAdditions = ";use performance monitor=true;";
-            base.FixtureSetup();
-		}
+        public PerfMonTests()
+        {
+            csAdditions = ";use performance monitor=true;";
+        }
 
         public override void Setup()
         {
             base.Setup();
-            execSQL("DROP TABLE IF EXISTS Test; CREATE TABLE Test (id INT, name VARCHAR(100))");
+            execSQL("CREATE TABLE Test (id INT, name VARCHAR(100))");
         }
 
         /// <summary>
@@ -54,7 +52,7 @@ namespace MySql.Data.MySqlClient.Tests
 		public void ProcedureFromCache()
 		{
             return;
-            if (version < new Version(5, 0)) return;
+            if (Version < new Version(5, 0)) return;
 
             execSQL("DROP PROCEDURE IF EXISTS spTest");
 			execSQL("CREATE PROCEDURE spTest(id int) BEGIN END");

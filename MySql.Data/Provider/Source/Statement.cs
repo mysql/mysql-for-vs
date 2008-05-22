@@ -88,9 +88,9 @@ namespace MySql.Data.MySqlClient
             if (buffers.Count == 0)
                 return false;
 
-            MySqlStream stream = (MySqlStream)buffers[0];
-            MemoryStream ms = stream.InternalBuffer;
-            Driver.Query(ms.GetBuffer(), (int) ms.Length);
+            MySqlPacket packet = (MySqlPacket)buffers[0];
+            //MemoryStream ms = stream.InternalBuffer;
+            Driver.Query(packet);
             buffers.RemoveAt(0);
             return true;
         }
@@ -110,11 +110,11 @@ namespace MySql.Data.MySqlClient
                 while (index < command.Batch.Count)
                 {
                     MySqlCommand batchedCmd = command.Batch[index++];
-                    MySqlStream stream = (MySqlStream)buffers[buffers.Count - 1];
+                    MySqlPacket packet = (MySqlPacket)buffers[buffers.Count - 1];
 
                     // now we make a guess if this statement will fit in our current stream
                     long estimatedCmdSize = batchedCmd.EstimatedSize();
-                    if ((stream.InternalBuffer.Length + estimatedCmdSize) > Connection.driver.MaxPacketSize)
+                    if (((packet.Length-4) + estimatedCmdSize) > Connection.driver.MaxPacketSize)
                     {
                         // it won't, so we setup to start a new run from here
                         parameters = batchedCmd.Parameters;
@@ -123,18 +123,19 @@ namespace MySql.Data.MySqlClient
 
                     // looks like we might have room for it so we remember the current end of the stream
                     buffers.RemoveAt(buffers.Count - 1);
-                    long originalLength = stream.InternalBuffer.Length;
+                    long originalLength = packet.Length - 4;
 
                     // and attempt to stream the next command
                     string text = batchedCmd.BatchableCommandText;
                     if (text.StartsWith("("))
-                        stream.WriteStringNoNull(", ");
+                        packet.WriteStringNoNull(", ");
                     else
-                        stream.WriteStringNoNull("; ");
-                    InternalBindParameters(text, batchedCmd.Parameters, stream);
-                    if (stream.InternalBuffer.Length > Connection.driver.MaxPacketSize)
+                        packet.WriteStringNoNull("; ");
+                    InternalBindParameters(text, batchedCmd.Parameters, packet);
+                    if ((packet.Length-4) > Connection.driver.MaxPacketSize)
                     {
-                        stream.InternalBuffer.SetLength(originalLength);
+                        //TODO
+                        //stream.InternalBuffer.SetLength(originalLength);
                         parameters = batchedCmd.Parameters;
                         break;
                     }
@@ -144,15 +145,17 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-        private void InternalBindParameters(string sql, MySqlParameterCollection parameters, MySqlStream stream)
+        private void InternalBindParameters(string sql, MySqlParameterCollection parameters, 
+            MySqlPacket packet)
         {
             // tokenize the sql
             ArrayList tokenArray = TokenizeSql(sql);
 
-            if (stream == null)
+            if (packet == null)
             {
-                stream = new MySqlStream(Driver.Encoding);
-                stream.Version = Driver.Version;
+                packet = new MySqlPacket(Driver.Encoding);
+                packet.Version = Driver.Version;
+                packet.WriteByte(0);
             }
 
             // make sure our token array ends with a ;
@@ -166,20 +169,22 @@ namespace MySql.Data.MySqlClient
                     continue;
                 if (token == ";")
                 {
-                    buffers.Add(stream);
-                    stream = new MySqlStream(Driver.Encoding);
+                    buffers.Add(packet);
+                    packet = new MySqlPacket(Driver.Encoding);
+                    packet.WriteByte(0);
+                    packet.Version = Driver.Version;
                     continue;
                 }
                 if (token.Length >= 2 && 
                     ((token[0] == '@' && token[1] != '@') || 
                     token[0] == '?'))
                 {
-                    if (SerializeParameter(parameters, stream, token))
+                    if (SerializeParameter(parameters, packet, token))
                         continue;
                 }
 
                 // our fall through case is to write the token to the byte stream
-                stream.WriteStringNoNull(token);
+                packet.WriteStringNoNull(token);
             }
         }
 
@@ -223,7 +228,7 @@ namespace MySql.Data.MySqlClient
         /// </remarks>
         /// <returns>True if the parameter was successfully serialized, false otherwise.</returns>
         private bool SerializeParameter(MySqlParameterCollection parameters,
-                                        MySqlStream stream, string parmName)
+                                        MySqlPacket packet, string parmName)
         {
             MySqlParameter parameter = parameters.GetParameterFlexible(parmName, false);
             if (parameter == null)
@@ -235,7 +240,7 @@ namespace MySql.Data.MySqlClient
                 throw new MySqlException(
                     String.Format(Resources.ParameterMustBeDefined, parmName));
             }
-            parameter.Serialize(stream, false);
+            parameter.Serialize(packet, false);
             return true;
         }
 

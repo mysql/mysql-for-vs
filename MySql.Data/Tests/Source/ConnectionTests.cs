@@ -182,39 +182,26 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void ConnectInVariousWays()
         {
-            try
-            {
-                // connect with no db
-                string connStr2 = GetConnectionString(false);
-                MySqlConnection c = new MySqlConnection(connStr2);
-                c.Open();
-                c.Close();
+            // connect with no db
+            string connStr2 = GetConnectionString(false);
+            MySqlConnection c = new MySqlConnection(connStr2);
+            c.Open();
+            c.Close();
 
-                suExecSQL("GRANT ALL ON *.* to 'nopass'@'%'");
-                suExecSQL("GRANT ALL ON *.* to 'nopass'@'localhost'");
-                suExecSQL("FLUSH PRIVILEGES");
+            suExecSQL("GRANT ALL ON *.* to 'nopass'@'%'");
+            suExecSQL("GRANT ALL ON *.* to 'nopass'@'localhost'");
+            suExecSQL("FLUSH PRIVILEGES");
 
-                // connect with no password
-                connStr2 = GetConnectionStringEx("nopass", null, false);
-                c = new MySqlConnection(connStr2);
-                c.Open();
-                c.Close();
+            // connect with no password
+            connStr2 = GetConnectionStringEx("nopass", null, false);
+            c = new MySqlConnection(connStr2);
+            c.Open();
+            c.Close();
 
-                connStr2 = GetConnectionStringEx("nopass", "", false);
-                c = new MySqlConnection(connStr2);
-                c.Open();
-                c.Close();
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
-            finally
-            {
-                suExecSQL("DELETE FROM mysql.user WHERE length(user) = 0");
-                suExecSQL("DELETE FROM mysql.user WHERE user='nopass'");
-                suExecSQL("FLUSH PRIVILEGES");
-            }
+            connStr2 = GetConnectionStringEx("nopass", "", false);
+            c = new MySqlConnection(connStr2);
+            c.Open();
+            c.Close();
         }
 
         [Test]
@@ -223,42 +210,32 @@ namespace MySql.Data.MySqlClient.Tests
             if (Version < new Version(4,1)) return;
 
             string connStr = GetConnectionString(true) + ";charset=utf8";
-            MySqlConnection c = new MySqlConnection(connStr);
-            c.Open();
-
-            MySqlCommand cmd = new MySqlCommand("DROP TABLE IF EXISTS test", c);
-            cmd.ExecuteNonQuery();
-            cmd.CommandText = "CREATE TABLE test (id varbinary(16), active bit) CHARACTER SET utf8";
-            cmd.ExecuteNonQuery();
-            cmd.CommandText = "INSERT INTO test (id, active) VALUES (CAST(0x1234567890 AS Binary), true)";
-            cmd.ExecuteNonQuery();
-            cmd.CommandText = "INSERT INTO test (id, active) VALUES (CAST(0x123456789a AS Binary), true)";
-            cmd.ExecuteNonQuery();
-            cmd.CommandText = "INSERT INTO test (id, active) VALUES (CAST(0x123456789b AS Binary), true)";
-            cmd.ExecuteNonQuery();
-            c.Close();
-
-            MySqlConnection d = new MySqlConnection(connStr);
-            d.Open();
-
-            MySqlCommand cmd2 = new MySqlCommand("SELECT id, active FROM test", d);
-            MySqlDataReader reader = null;
-            try
+            using (MySqlConnection c = new MySqlConnection(connStr))
             {
-                reader = cmd2.ExecuteReader();
-                Assert.IsTrue(reader.Read());
-                Assert.IsTrue(reader.GetBoolean(1));
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
-            finally
-            {
-                if (reader != null) reader.Close();
+                c.Open();
+
+                MySqlCommand cmd = new MySqlCommand(
+                    "CREATE TABLE test (id varbinary(16), active bit) CHARACTER SET utf8", conn);
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = "INSERT INTO test (id, active) VALUES (CAST(0x1234567890 AS Binary), true)";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = "INSERT INTO test (id, active) VALUES (CAST(0x123456789a AS Binary), true)";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = "INSERT INTO test (id, active) VALUES (CAST(0x123456789b AS Binary), true)";
+                cmd.ExecuteNonQuery();
             }
 
-            d.Close();
+            using (MySqlConnection d = new MySqlConnection(connStr))
+            {
+                d.Open();
+
+                MySqlCommand cmd2 = new MySqlCommand("SELECT id, active FROM test", d);
+                using (MySqlDataReader reader = cmd2.ExecuteReader())
+                {
+                    Assert.IsTrue(reader.Read());
+                    Assert.IsTrue(reader.GetBoolean(1));
+                }
+            }
         }
 
         /// <summary>
@@ -340,17 +317,10 @@ namespace MySql.Data.MySqlClient.Tests
             suExecSQL("GRANT ALL ON *.* to 'quotedUser'@'localhost' IDENTIFIED BY '\"'");
             string connStr = GetConnectionStringEx("quotedUser", null, false);
             connStr += ";pwd='\"'";
-            MySqlConnection c = new MySqlConnection(connStr);
-            try
+            using (MySqlConnection c = new MySqlConnection(connStr))
             {
                 c.Open();
-                c.Close();
             }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
-            suExecSQL("DELETE FROM mysql.user WHERE user='quotedUser'");
         }
 
         /// <summary>
@@ -361,18 +331,16 @@ namespace MySql.Data.MySqlClient.Tests
         {
             string connStr = "server=foobar;user id=foouser;password=;database=Test;" +
                 "pooling=false";
-            MySqlConnection c = new MySqlConnection(connStr);
             try
             {
-                c.Open();
+                using (MySqlConnection c = new MySqlConnection(connStr))
+                {
+                    c.Open();
+                }
             }
             catch (MySqlException ex)
             {
                 Assert.AreEqual((int)MySqlErrorCode.UnableToConnectToHost, ex.Number);
-            }
-            catch (Exception e)
-            {
-                Assert.Fail(e.Message);
             }
         }
 
@@ -454,23 +422,21 @@ namespace MySql.Data.MySqlClient.Tests
         public void CaseSensitiveUserId()
         {
             string connStr = GetConnectionStringEx("Test", "test", true);
-            MySqlConnection c = new MySqlConnection(connStr);
-            try
+            using (MySqlConnection c = new MySqlConnection(connStr))
             {
-                c.Open();
+                try
+                {
+                    c.Open();
+                }
+                catch (MySqlException)
+                {
+                }
             }
-            catch (MySqlException)
-            {
-            }
+
             connStr = GetConnectionStringEx("test", "test", true);
-            c = new MySqlConnection(connStr);
-            try
+            using (MySqlConnection c = new MySqlConnection(connStr))
             {
                 c.Open();
-            }
-            catch (MySqlException ex)
-            {
-                Assert.Fail(ex.Message);
             }
         }
 

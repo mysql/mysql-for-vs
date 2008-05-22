@@ -30,26 +30,16 @@ namespace MySql.Data.MySqlClient.Tests
     [TestFixture]
     public class Transactions : BaseTest
     {
-        protected int baseProcessCount;
-
-        public override void Setup()
-        {
-            base.Setup();
-
-            execSQL("DROP TABLE IF EXISTS Test");
-            createTable("CREATE TABLE Test (key2 VARCHAR(1), name VARCHAR(100), name2 VARCHAR(100))", "INNODB");
-            baseProcessCount = CountProcesses();
-        }
 
 #if NET20
 
         void TransactionScopeInternal(bool commit)
         {
-            MySqlConnection c = new MySqlConnection(GetConnectionString(true));
-            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES ('a', 'name', 'name2')", c);
-
-            try
+            createTable("CREATE TABLE Test (key2 VARCHAR(1), name VARCHAR(100), name2 VARCHAR(100))", "INNODB");
+            using (MySqlConnection c = new MySqlConnection(GetConnectionString(true)))
             {
+                MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES ('a', 'name', 'name2')", c);
+
                 using (TransactionScope ts = new TransactionScope())
                 {
                     c.Open();
@@ -63,17 +53,6 @@ namespace MySql.Data.MySqlClient.Tests
                 cmd.CommandText = "SELECT COUNT(*) FROM Test";
                 object count = cmd.ExecuteScalar();
                 Assert.AreEqual(commit ? 1 : 0, count);
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
-            finally
-            {
-                if (c != null)
-                {
-                    c.Close();
-                }
             }
         }
 
@@ -174,7 +153,6 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void RollingBackOnClose()
         {
-            execSQL("DROP TABLE IF EXISTS Test");
             execSQL("CREATE TABLE Test (id INT) TYPE=InnoDB");
 
             string connStr = GetConnectionString(true) + ";pooling=true;";
@@ -205,18 +183,11 @@ namespace MySql.Data.MySqlClient.Tests
                 new MySql.Data.MySqlClient.MySqlClientFactory();
             DbConnection conexion = factory.CreateConnection();
 
-            try
-            {
-                conexion.ConnectionString = GetConnectionString(true);
-                conexion.Open();
-                DbTransaction trans = conexion.BeginTransaction();
-                trans.Rollback();
-                conexion.Close();
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
+            conexion.ConnectionString = GetConnectionString(true);
+            conexion.Open();
+            DbTransaction trans = conexion.BeginTransaction();
+            trans.Rollback();
+            conexion.Close();
         }
 
         /// <summary>
@@ -237,14 +208,7 @@ namespace MySql.Data.MySqlClient.Tests
             {
                 MySqlCommand cmd = new MySqlCommand();
                 cmd.Connection = conn;
-                try
-                {
-                    cmd.Connection.EnlistTransaction(Transaction.Current);
-                }
-                catch (MySqlException)
-                {
-                    Assert.Fail("No exception should have been thrown");
-                }
+                cmd.Connection.EnlistTransaction(Transaction.Current);
             }
         }
 
@@ -276,20 +240,14 @@ namespace MySql.Data.MySqlClient.Tests
             {
                 MySqlCommand cmd = new MySqlCommand();
                 cmd.Connection = conn;
-                try
-                {
-                    cmd.Connection.EnlistTransaction(Transaction.Current);
-                }
-                catch (MySqlException)
-                {
-                    Assert.Fail("No exception should have been thrown");
-                }
+                cmd.Connection.EnlistTransaction(Transaction.Current);
             }
         }
 
         [Test]
         public void ManualEnlistment()
         {
+            createTable("CREATE TABLE Test (key2 VARCHAR(1), name VARCHAR(100), name2 VARCHAR(100))", "INNODB");
             using (TransactionScope ts = new TransactionScope())
             {
                 string connStr = GetConnectionString(true) + ";auto enlist=false";
@@ -305,6 +263,7 @@ namespace MySql.Data.MySqlClient.Tests
 
         private void ManuallyEnlistingInitialConnection(bool complete)
         {
+            createTable("CREATE TABLE Test (key2 VARCHAR(1), name VARCHAR(100), name2 VARCHAR(100))", "INNODB");
             using (TransactionScope ts = new TransactionScope())
             {
                 string connStr = GetConnectionStringBasic(true) + ";auto enlist=false";
@@ -333,6 +292,11 @@ namespace MySql.Data.MySqlClient.Tests
         public void ManuallyEnlistingInitialConnection()
         {
             ManuallyEnlistingInitialConnection(true);
+        }
+
+        [Test]
+        public void ManuallyEnlistingInitialConnectionNoComplete()
+        {
             ManuallyEnlistingInitialConnection(false);
         }
 
@@ -415,15 +379,8 @@ namespace MySql.Data.MySqlClient.Tests
                     Assert.AreEqual(c1Thread, c2.ServerThread);
                 }
 
-                try
-                {
-                    if (complete)
-                        ts.Complete();
-                }
-                catch (Exception ex)
-                {
-                    Assert.Fail(ex.Message);
-                }
+                if (complete)
+                    ts.Complete();
             }
 
             MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
@@ -444,6 +401,7 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void ReusingSameConnection()
         {
+            createTable("CREATE TABLE Test (key2 VARCHAR(1), name VARCHAR(100), name2 VARCHAR(100))", "INNODB");
             ReusingSameConnection(true, true);
 //            Assert.AreEqual(processes + 1, CountProcesses());
 

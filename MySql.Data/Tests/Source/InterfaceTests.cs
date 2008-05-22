@@ -44,22 +44,10 @@ namespace MySql.Data.MySqlClient.Tests
             cmd.Connection = c;
             cmd.CommandText = "SHOW TABLES FROM test";
             cmd.CommandType = CommandType.Text;
-            DbDataReader reader = null;
-            try
+            using (DbDataReader reader = cmd.ExecuteReader())
             {
-                reader = cmd.ExecuteReader();
                 reader.Read();
             }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
-            finally
-            {
-                if (reader != null)
-                    reader.Close();
-            }
-
         }
 #endif
 	}

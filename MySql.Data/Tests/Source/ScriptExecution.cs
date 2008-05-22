@@ -32,7 +32,6 @@ namespace MySql.Data.MySqlClient.Tests
 		public override void Setup()
 		{
 			base.Setup ();
-			execSQL("DROP TABLE IF EXISTS Test");
 			execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(250), PRIMARY KEY(id))");
 		}
 
@@ -45,7 +44,7 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void ExecuteScriptWithProcedures()
         {
-            if (version < new Version(5, 0)) return;
+            if (Version < new Version(5, 0)) return;
 
             statementCount = 0;
             string scriptText = String.Empty;

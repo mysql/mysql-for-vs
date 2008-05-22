@@ -32,17 +32,10 @@ namespace MySql.Data.MySqlClient.Tests
         public void Simple()
         {
             MySqlConnectionStringBuilder sb = null;
-            try
-            {
-                sb = new MySqlConnectionStringBuilder();
-                sb.ConnectionString = "server=localhost;uid=reggie;pwd=pass;port=1111;" +
-                    "connection timeout=23; pooling=true; min pool size=33; " +
-                    "max pool size=66";
-            }
-            catch (ArgumentException ex)
-            {
-                Assert.Fail(ex.Message);
-            }
+            sb = new MySqlConnectionStringBuilder();
+            sb.ConnectionString = "server=localhost;uid=reggie;pwd=pass;port=1111;" +
+                "connection timeout=23; pooling=true; min pool size=33; " +
+                "max pool size=66";
             Assert.AreEqual("localhost", sb.Server);
             Assert.AreEqual("reggie", sb.UserID);
             Assert.AreEqual("pass", sb.Password);
@@ -59,10 +52,6 @@ namespace MySql.Data.MySqlClient.Tests
             }
             catch (ArgumentException)
             {
-            }
-            catch (Exception)
-            {
-                Assert.Fail("Wrong exception type");
             }
 
             sb.Clear();

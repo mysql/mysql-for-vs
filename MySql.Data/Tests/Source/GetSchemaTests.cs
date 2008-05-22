@@ -46,7 +46,7 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual("IndexColumns", dt.Rows[10][0]);
 			Assert.AreEqual("Indexes", dt.Rows[11][0]);
 
-			if (version >= new Version(5, 0))
+            if (Version >= new Version(5, 0))
 			{
 				Assert.AreEqual("Views", dt.Rows[12][0]);
 				Assert.AreEqual("ViewColumns", dt.Rows[13][0]);
@@ -63,78 +63,70 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void DataTypes()
 		{
-			try
-			{
-				DataTable dt = conn.GetSchema("DataTypes", new string[] { });
+			DataTable dt = conn.GetSchema("DataTypes", new string[] { });
 
-				foreach (DataRow row in dt.Rows)
+			foreach (DataRow row in dt.Rows)
+			{
+				string type = row["TYPENAME"].ToString();
+				Type systemType = Type.GetType(row["DATATYPE"].ToString());
+				if (type == "BIT")
+					Assert.AreEqual(typeof(System.UInt64), systemType);
+				else if (type == "DATE" || type == "DATETIME" || 
+					type == "TIMESTAMP")
+					Assert.AreEqual(typeof(System.DateTime), systemType);
+				else if (type == "BLOB" || type == "TINYBLOB" || 
+						 type == "MEDIUMBLOB" || type == "LONGBLOB")
+					Assert.AreEqual(typeof(System.Byte[]), systemType);
+				else if (type == "TIME")
+					Assert.AreEqual(typeof(System.TimeSpan), systemType);
+				else if (type == "CHAR" || type == "VARCHAR")
 				{
-					string type = row["TYPENAME"].ToString();
-					Type systemType = Type.GetType(row["DATATYPE"].ToString());
-					if (type == "BIT")
-						Assert.AreEqual(typeof(System.UInt64), systemType);
-					else if (type == "DATE" || type == "DATETIME" || 
-						type == "TIMESTAMP")
-						Assert.AreEqual(typeof(System.DateTime), systemType);
-					else if (type == "BLOB" || type == "TINYBLOB" || 
-							 type == "MEDIUMBLOB" || type == "LONGBLOB")
-						Assert.AreEqual(typeof(System.Byte[]), systemType);
-					else if (type == "TIME")
-						Assert.AreEqual(typeof(System.TimeSpan), systemType);
-					else if (type == "CHAR" || type == "VARCHAR")
-					{
-						Assert.AreEqual(typeof(System.String), systemType);
-						Assert.IsFalse(Convert.ToBoolean(row["IsFixedLength"]));
-						string format = type + "({0})";
-						Assert.AreEqual(format, row["CreateFormat"].ToString());
-					}
-					else if (type == "SET" || type == "ENUM")
-						Assert.AreEqual(typeof(System.String), systemType);
-					else if (type == "DOUBLE")
-						Assert.AreEqual(typeof(System.Double), systemType);
-					else if (type == "SINGLE")
-						Assert.AreEqual(typeof(System.Single), systemType);
-					else if (type == "TINYINT")
-					{
-						if (row["CREATEFORMAT"].ToString().EndsWith("UNSIGNED"))
-							Assert.AreEqual(typeof(System.Byte), systemType);
-						else
-							Assert.AreEqual(typeof(System.SByte), systemType);
-					}
-					else if (type == "SMALLINT")
-					{
-						if (row["CREATEFORMAT"].ToString().EndsWith("UNSIGNED"))
-							Assert.AreEqual(typeof(System.UInt16), systemType);
-						else
-							Assert.AreEqual(typeof(System.Int16), systemType);
-					}
-					else if (type == "MEDIUMINT" || type == "INT")
-					{
-						if (row["CREATEFORMAT"].ToString().EndsWith("UNSIGNED"))
-							Assert.AreEqual(typeof(System.UInt32), systemType);
-						else
-							Assert.AreEqual(typeof(System.Int32), systemType);
-					}
-					else if (type == "BIGINT")
-					{
-						if (row["CREATEFORMAT"].ToString().EndsWith("UNSIGNED"))
-							Assert.AreEqual(typeof(System.UInt64), systemType);
-						else
-							Assert.AreEqual(typeof(System.Int64), systemType);
-					}
-					else if (type == "DECIMAL")
-					{
-						Assert.AreEqual(typeof(System.Decimal), systemType);
-						Assert.AreEqual("DECIMAL({0},{1})", row["CreateFormat"].ToString());
-					}
-					else if (type == "TINYINT")
-						Assert.AreEqual(typeof(System.Byte), systemType);
+					Assert.AreEqual(typeof(System.String), systemType);
+					Assert.IsFalse(Convert.ToBoolean(row["IsFixedLength"]));
+					string format = type + "({0})";
+					Assert.AreEqual(format, row["CreateFormat"].ToString());
 				}
-
-			}
-			catch (Exception ex)
-			{
-				Assert.Fail(ex.Message);
+				else if (type == "SET" || type == "ENUM")
+					Assert.AreEqual(typeof(System.String), systemType);
+				else if (type == "DOUBLE")
+					Assert.AreEqual(typeof(System.Double), systemType);
+				else if (type == "SINGLE")
+					Assert.AreEqual(typeof(System.Single), systemType);
+				else if (type == "TINYINT")
+				{
+					if (row["CREATEFORMAT"].ToString().EndsWith("UNSIGNED"))
+						Assert.AreEqual(typeof(System.Byte), systemType);
+					else
+						Assert.AreEqual(typeof(System.SByte), systemType);
+				}
+				else if (type == "SMALLINT")
+				{
+					if (row["CREATEFORMAT"].ToString().EndsWith("UNSIGNED"))
+						Assert.AreEqual(typeof(System.UInt16), systemType);
+					else
+						Assert.AreEqual(typeof(System.Int16), systemType);
+				}
+				else if (type == "MEDIUMINT" || type == "INT")
+				{
+					if (row["CREATEFORMAT"].ToString().EndsWith("UNSIGNED"))
+						Assert.AreEqual(typeof(System.UInt32), systemType);
+					else
+						Assert.AreEqual(typeof(System.Int32), systemType);
+				}
+				else if (type == "BIGINT")
+				{
+					if (row["CREATEFORMAT"].ToString().EndsWith("UNSIGNED"))
+						Assert.AreEqual(typeof(System.UInt64), systemType);
+					else
+						Assert.AreEqual(typeof(System.Int64), systemType);
+				}
+				else if (type == "DECIMAL")
+				{
+					Assert.AreEqual(typeof(System.Decimal), systemType);
+					Assert.AreEqual("DECIMAL({0},{1})", row["CreateFormat"].ToString());
+				}
+				else if (type == "TINYINT")
+					Assert.AreEqual(typeof(System.Byte), systemType);
 			}
 		}
 
@@ -165,7 +157,6 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void Tables()
 		{
-			execSQL("DROP TABLE IF EXISTS test1");
 			execSQL("CREATE TABLE test1 (id int)");
 
 			string[] restrictions = new string[4];
@@ -180,7 +171,6 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void Columns()
 		{
-			execSQL("DROP TABLE IF EXISTS test");
 			execSQL("CREATE TABLE test (col1 int, col2 decimal(20,5), " +
 				"col3 varchar(50) character set utf8, col4 tinyint unsigned)");
 
@@ -227,7 +217,7 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void Procedures()
 		{
-			if (version < new Version(5, 0)) return;
+            if (Version < new Version(5, 0)) return;
 
 			execSQL("DROP PROCEDURE IF EXISTS spTest");
 			execSQL("CREATE PROCEDURE spTest (id int) BEGIN SELECT 1; END");
@@ -244,7 +234,7 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void Functions()
 		{
-			if (version < new Version(5, 0)) return;
+            if (Version < new Version(5, 0)) return;
 
 			execSQL("DROP FUNCTION IF EXISTS spFunc");
 			execSQL("CREATE FUNCTION spFunc (id int) RETURNS INT BEGIN RETURN 1; END");
@@ -261,7 +251,7 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void ProcedureParameters()
 		{
-			if (version < new Version(5, 0)) return;
+            if (Version < new Version(5, 0)) return;
 
 			execSQL("DROP PROCEDURE IF EXISTS spTest");
 			execSQL("CREATE PROCEDURE spTest (id int, name varchar(50)) BEGIN SELECT 1; END");
@@ -311,9 +301,8 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void Indexes()
 		{
-			if (version < new Version(5, 0)) return;
+            if (Version < new Version(5, 0)) return;
 
-			execSQL("DROP TABLE IF EXISTS test");
 			execSQL("CREATE TABLE test (id int, PRIMARY KEY(id))");
 			string[] restrictions = new string[4];
 			restrictions[2] = "test";
@@ -350,7 +339,6 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void IndexColumns()
 		{
-			execSQL("DROP TABLE IF EXISTS test");
 			execSQL("CREATE TABLE test (id int, PRIMARY KEY(id))");
 			string[] restrictions = new string[5];
 			restrictions[2] = "test";
@@ -388,7 +376,7 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void Views()
 		{
-			if (version < new Version(5, 0)) return;
+            if (Version < new Version(5, 0)) return;
 
 			execSQL("DROP VIEW IF EXISTS vw");
 			execSQL("CREATE VIEW vw AS SELECT Now() as theTime");
@@ -405,7 +393,7 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void ViewColumns()
 		{
-			if (version < new Version(5, 0)) return;
+            if (Version < new Version(5, 0)) return;
 
 			execSQL("DROP VIEW IF EXISTS vw");
 			execSQL("CREATE VIEW vw AS SELECT Now() as theTime");
@@ -424,7 +412,7 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void SingleProcedureParameters()
 		{
-			if (version < new Version(5, 0)) return;
+            if (Version < new Version(5, 0)) return;
 
 			execSQL("DROP PROCEDURE IF EXISTS spTest");
 			execSQL("CREATE PROCEDURE spTest(id int, IN id2 INT(11), " +
@@ -481,8 +469,6 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void SingleForeignKey()
 		{
-			execSQL("DROP TABLE IF EXISTS child");
-			execSQL("DROP TABLE IF EXISTS parent");
 			execSQL("CREATE TABLE parent (id INT NOT NULL, PRIMARY KEY (id)) TYPE=INNODB");
 			execSQL("CREATE TABLE child (id INT, parent_id INT, INDEX par_ind (parent_id), " +
 				"CONSTRAINT c1 FOREIGN KEY (parent_id) REFERENCES parent(id) ON DELETE CASCADE) TYPE=INNODB");
@@ -509,9 +495,6 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void ForeignKeys()
 		{
-			execSQL("DROP TABLE IF EXISTS product_order");
-			execSQL("DROP TABLE IF EXISTS product");
-			execSQL("DROP TABLE IF EXISTS customer");
 			execSQL("CREATE TABLE product (category INT NOT NULL, id INT NOT NULL, " +
 					  "price DECIMAL, PRIMARY KEY(category, id)) TYPE=INNODB");
 			execSQL("CREATE TABLE customer (id INT NOT NULL, PRIMARY KEY (id)) TYPE=INNODB");
@@ -522,22 +505,12 @@ namespace MySql.Data.MySqlClient.Tests
 				"ON UPDATE CASCADE ON DELETE RESTRICT, INDEX (customer_id), " +
 				"FOREIGN KEY (customer_id) REFERENCES customer(id)) TYPE=INNODB");
 
-			try 
-			{
-				conn.GetSchema("Foreign Keys");
-			}
-			catch (Exception ex)
-			{
-				Assert.Fail(ex.Message);
-			}
+			conn.GetSchema("Foreign Keys");
 		}
 
 		[Test]
 		public void MultiSingleForeignKey()
 		{
-			execSQL("DROP TABLE IF EXISTS product_order");
-			execSQL("DROP TABLE IF EXISTS product");
-			execSQL("DROP TABLE IF EXISTS customer");
 			execSQL("CREATE TABLE product (category INT NOT NULL, id INT NOT NULL, " +
 					  "price DECIMAL, PRIMARY KEY(category, id)) TYPE=INNODB");
 			execSQL("CREATE TABLE customer (id INT NOT NULL, PRIMARY KEY (id)) TYPE=INNODB");
@@ -578,46 +551,31 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void Triggers()
 		{
-			if (version < new Version(5, 0)) return;
+            if (Version < new Version(5, 1, 6)) return;
 
-			try
-			{
-				suExecSQL("DROP TRIGGER trigger1");
-			}
-			catch (Exception) { }
-
-			execSQL("DROP TABLE IF EXISTS test2");
-			execSQL("DROP TABLE IF EXISTS test1");
 			execSQL("CREATE TABLE test1 (id int)");
 			execSQL("CREATE TABLE test2 (count int)");
 			execSQL("INSERT INTO test2 VALUES (0)");
-			suExecSQL("CREATE TRIGGER trigger1 AFTER INSERT ON test1 FOR EACH ROW BEGIN " +
-				"UPDATE test2 SET count = count+1; END");
+            string sql = String.Format("CREATE TRIGGER `{0}`.trigger1 AFTER INSERT ON test1 FOR EACH ROW BEGIN " +
+                "UPDATE test2 SET count = count+1; END", database0);
+            suExecSQL(sql);
 
-			try
-			{
-				string[] restrictions = new string[4];
-				restrictions[1] = database0;
-				restrictions[2] = "test1";
-				DataTable dt = conn.GetSchema("Triggers", restrictions);
-				Assert.IsTrue(dt.Rows.Count == 1);
-				Assert.AreEqual("Triggers", dt.TableName);
-				Assert.AreEqual("trigger1", dt.Rows[0]["TRIGGER_NAME"]);
-				Assert.AreEqual("INSERT", dt.Rows[0]["EVENT_MANIPULATION"]);
-				Assert.AreEqual("test1", dt.Rows[0]["EVENT_OBJECT_TABLE"]);
-				Assert.AreEqual("ROW", dt.Rows[0]["ACTION_ORIENTATION"]);
-				Assert.AreEqual("AFTER", dt.Rows[0]["ACTION_TIMING"]);
-			}
-			catch (Exception ex)
-			{
-				Assert.Fail(ex.Message);
-			}
+			string[] restrictions = new string[4];
+			restrictions[1] = database0;
+			restrictions[2] = "test1";
+			DataTable dt = conn.GetSchema("Triggers", restrictions);
+			Assert.IsTrue(dt.Rows.Count == 1);
+			Assert.AreEqual("Triggers", dt.TableName);
+			Assert.AreEqual("trigger1", dt.Rows[0]["TRIGGER_NAME"]);
+			Assert.AreEqual("INSERT", dt.Rows[0]["EVENT_MANIPULATION"]);
+			Assert.AreEqual("test1", dt.Rows[0]["EVENT_OBJECT_TABLE"]);
+			Assert.AreEqual("ROW", dt.Rows[0]["ACTION_ORIENTATION"]);
+			Assert.AreEqual("AFTER", dt.Rows[0]["ACTION_TIMING"]);
 		}
 
 		[Test]
 		public void UsingQuotedRestrictions()
 		{
-			execSQL("DROP TABLE IF EXISTS test1");
 			execSQL("CREATE TABLE test1 (id int)");
 
 			string[] restrictions = new string[4];

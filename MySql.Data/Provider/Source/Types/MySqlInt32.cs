@@ -88,33 +88,33 @@ namespace MySql.Data.Types
 			get { return is24Bit ? "MEDIUMINT" : "INT"; }
 		}
 
-		void IMySqlValue.WriteValue(MySqlStream stream, bool binary, object val, int length)
+		void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val, int length)
 		{
-			int v = Convert.ToInt32(val);
+			int v = (val is Int32) ? (int)val : Convert.ToInt32(val);
 			if (binary)
-				stream.Write(BitConverter.GetBytes(v));
+                packet.WriteInteger((long)v, is24Bit ? 3 : 4);
 			else
-				stream.WriteStringNoNull(v.ToString());
+                packet.WriteStringNoNull(v.ToString());
 		}
 
-		IMySqlValue IMySqlValue.ReadValue(MySqlStream stream, long length, bool nullVal)
+        IMySqlValue IMySqlValue.ReadValue(MySqlPacket packet, long length, bool nullVal)
 		{
 			if (nullVal)
 				return new MySqlInt32((this as IMySqlValue).MySqlDbType, true);
 
 			if (length == -1)
 				return new MySqlInt32((this as IMySqlValue).MySqlDbType,
-					 stream.ReadInteger(4));
+                     packet.ReadInteger(4));
 			else
 				return new MySqlInt32((this as IMySqlValue).MySqlDbType,
-					 Int32.Parse(stream.ReadString(length),
+                     Int32.Parse(packet.ReadString(length),
 					 CultureInfo.InvariantCulture));
 		}
 
-		void IMySqlValue.SkipValue(MySqlStream stream)
-		{
-			stream.SkipBytes(4);
-		}
+        void IMySqlValue.SkipValue(MySqlPacket packet)
+        {
+            packet.Position += 4;
+        }
 
 		#endregion
 

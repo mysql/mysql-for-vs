@@ -34,7 +34,6 @@ namespace MySql.Data.MySqlClient.Tests
         public override void Setup()
         {
             base.Setup();
-            execSQL("DROP TABLE IF EXISTS Test");
             execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(250), PRIMARY KEY(id))");
         }
 
@@ -44,27 +43,15 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void Bug11490()
 		{
-            if (version < new Version(4, 1)) return;
+            if (Version < new Version(4, 1)) return;
 
-            MySqlDataReader reader = null;
-
-			try 
-			{
-                StringBuilder sb = new StringBuilder();
-                for (int i=0; i < 254; i++)
-                    sb.Append('a');
-                string sql = "INSERT INTO Test (name) VALUES ('" + sb.ToString() + "')";
-				reader = MySqlHelper.ExecuteReader(this.GetConnectionString(true), sql);
-			}
-			catch (Exception ex)
-			{
-				Assert.Fail(ex.Message);
-			}
-			finally 
-			{
-				if (reader != null)
-					reader.Close();
-			}
+            StringBuilder sb = new StringBuilder();
+            for (int i=0; i < 254; i++)
+                sb.Append('a');
+            string sql = "INSERT INTO Test (name) VALUES ('" + sb.ToString() + "')";
+            using (MySqlDataReader reader = MySqlHelper.ExecuteReader(this.GetConnectionString(true), sql))
+            {
+            }
 		}
 
 	}

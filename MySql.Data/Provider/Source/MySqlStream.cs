@@ -32,24 +32,15 @@ namespace MySql.Data.MySqlClient
 	internal class MySqlStream
 	{
 		private byte sequenceByte;
-		private int peekByte;
 		private Encoding encoding;
-		private DBVersion version;
-
 		private MemoryStream bufferStream;
-
 		private int maxBlockSize;
 		private ulong maxPacketSize;
-
 		private Stream inStream;
-		private ulong inLength;
-		private ulong inPos;
-
 		private Stream outStream;
-		private ulong outLength;
-		private ulong outPos;
-		private bool isLastPacket;
-		private byte[] byteBuffer;
+		private byte[] tempBuffer = new byte[4];
+        MySqlPacket packet = new MySqlPacket();
+
 
 		public MySqlStream(Encoding encoding)
 		{
@@ -64,8 +55,6 @@ namespace MySql.Data.MySqlClient
 
 			this.encoding = encoding;
 			bufferStream = new MemoryStream();
-			byteBuffer = new byte[1];
-			peekByte = -1;
 		}
 
         public MySqlStream(Stream baseStream, Encoding encoding, bool compress)
@@ -73,7 +62,7 @@ namespace MySql.Data.MySqlClient
         {
 
             inStream = new BufferedStream(baseStream);
-            outStream = new BufferedStream(baseStream);
+            outStream = baseStream;
             if (compress)
             {
                 inStream = new CompressedStream(inStream);
@@ -91,41 +80,16 @@ namespace MySql.Data.MySqlClient
 
 		#region Properties
 
-		public bool IsLastPacket
-		{
-			get { return isLastPacket; }
-		}
-
-		public DBVersion Version
-		{
-			get { return version; }
-			set { version = value; }
-		}
-
 		public Encoding Encoding
 		{
 			get { return encoding; }
 			set { encoding = value; }
 		}
 
-		public MemoryStream InternalBuffer
-		{
-			get { return bufferStream; }
-		}
-
 		public byte SequenceByte
 		{
 			get { return sequenceByte; }
 			set { sequenceByte = value; }
-		}
-
-		public bool HasMoreData
-		{
-			get
-			{
-				return inLength > 0 &&
-						 (inLength == (ulong)maxBlockSize || inPos < inLength);
-			}
 		}
 
 		public int MaxBlockSize
@@ -145,27 +109,27 @@ namespace MySql.Data.MySqlClient
 		#region Packet methods
 
 		/// <summary>
-		/// OpenPacket is called by NativeDriver to start reading the next
+		/// ReadPacket is called by NativeDriver to start reading the next
 		/// packet on the stream.
 		/// </summary>
-		public void OpenPacket()
+		public MySqlPacket ReadPacket()
 		{
-			if (HasMoreData)
-			{
-				SkipBytes((int)(inLength - inPos));
-			}
+//			if (HasMoreData)
+//			{
+//				SkipBytes((int)(inLength - inPos));
+//			}
 			// make sure we have read all the data from the previous packet
 			//Debug.Assert(HasMoreData == false, "HasMoreData is true in OpenPacket");
 
 			LoadPacket();
 
-			int peek = PeekByte();
-			if (peek == 0xff)
+            // now we check if this packet is a server error
+			if (packet.Buffer[0] == 0xff)
 			{
-				ReadByte();  // read off the 0xff
+				packet.ReadByte();  // read off the 0xff
 
-				int code = ReadInteger(2);
-				string msg = ReadString();
+				int code = packet.ReadInteger(2);
+				string msg = packet.ReadString();
                 if (msg.StartsWith("#"))
                 {
                     msg.Substring(1, 5);  /* state code */
@@ -173,7 +137,9 @@ namespace MySql.Data.MySqlClient
                 }
 				throw new MySqlException(msg, code);
 			}
-			isLastPacket = (peek == 0xfe && (inLength < 9));
+
+            packet.Encoding = encoding;
+            return packet;
 		}
 
 		/// <summary>
@@ -183,31 +149,72 @@ namespace MySql.Data.MySqlClient
 		{
 			try
 			{
-				int b1 = inStream.ReadByte();
-				int b2 = inStream.ReadByte();
-				int b3 = inStream.ReadByte();
-				int seqByte = inStream.ReadByte();
+                packet.Length = 0;
+                int offset = 0;
+                while (true)
+                {
+                    int b1 = inStream.ReadByte();
+                    int b2 = inStream.ReadByte();
+                    int b3 = inStream.ReadByte();
+                    int seqByte = inStream.ReadByte();
 
-				if (b1 == -1 || b2 == -1 || b3 == -1 || seqByte == -1)
-					throw new MySqlException(
-						 Resources.ConnectionBroken, true, null);
+                    if (b1 == -1 || b2 == -1 || b3 == -1 || seqByte == -1)
+                        throw new MySqlException(
+                             Resources.ConnectionBroken, true, null);
 
-				sequenceByte = (byte)++seqByte;
-				inLength = (ulong)(b1 + (b2 << 8) + (b3 << 16));
+                    sequenceByte = (byte)++seqByte;
+                    int length = (int)(b1 + (b2 << 8) + (b3 << 16));
+                    int leftToRead = length;
 
-				inPos = 0;
-			}
+                    // make roo for the next block
+                    packet.Length += length;
+
+                    while (leftToRead > 0)
+                    {
+                        int read = inStream.Read(packet.Buffer, offset, leftToRead);
+                        leftToRead -= read;
+                        offset += read;
+                    }
+                    // if this block was < maxBlock then it's last one in a multipacket series
+                    if (length < maxBlockSize) break;
+                }
+                packet.Position = 0;
+            }
 			catch (IOException ioex)
 			{
 				throw new MySqlException(Resources.ReadFromStreamFailed, true, ioex);
 			}
 		}
 
+        public void SendPacket(MySqlPacket packet)
+        {
+            byte[] buffer = packet.Buffer;
+            int length = packet.Position-4;
+
+            if ((ulong)length > maxPacketSize)
+                throw new MySqlException(Resources.QueryTooLarge, (int)MySqlErrorCode.PacketTooLarge);
+
+            int offset = 0;
+            while (length > 0)
+            {
+                int lenToSend = length > maxBlockSize ? maxBlockSize : length;
+                buffer[offset] = (byte)(lenToSend & 0xff);
+                buffer[offset+1] = (byte)((lenToSend >> 8) & 0xff);
+                buffer[offset+2] = (byte)((lenToSend >> 16) & 0xff);
+                buffer[offset+3] = sequenceByte++;
+
+                outStream.Write(buffer, offset, lenToSend + 4);
+                outStream.Flush();
+                length -= lenToSend;
+                offset += lenToSend;
+            }
+        }
+
 		/// <summary>
 		/// SkipPacket will read the remaining bytes of a packet into a small
 		/// local buffer and discard them.
 		/// </summary>
-		public void SkipPacket()
+/*		public void SkipPacket()
 		{
 			byte[] tempBuf = new byte[1024];
 			while (inPos < inLength)
@@ -215,7 +222,7 @@ namespace MySql.Data.MySqlClient
 				int toRead = (int)Math.Min((ulong)tempBuf.Length, (inLength - inPos));
 				Read(tempBuf, 0, toRead);
             }
-		}
+		}*/
 
         public void SendEntirePacketDirectly(byte[] buffer, int count)
         {
@@ -230,7 +237,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
 		/// StartOutput is used to reset the write state of the stream.
 		/// </summary>
-		public void StartOutput(ulong length, bool resetSequence)
+/*		public void StartOutput(ulong length, bool resetSequence)
 		{
 			outLength = outPos = 0;
 			if (length > 0)
@@ -243,32 +250,32 @@ namespace MySql.Data.MySqlClient
 			if (resetSequence)
 				sequenceByte = 0;
 		}
-
+*/
 		/// <summary>
 		/// Writes out the header that is used at the start of a transmission
 		/// and at the beginning of every packet when multipacket is used.
 		/// </summary>
-		private void WriteHeader()
-		{
-			int len = (int)Math.Min((outLength - outPos), (ulong)maxBlockSize);
+//		private void WriteHeader()
+//		{
+//			int len = (int)Math.Min((outLength - outPos), (ulong)maxBlockSize);
+        //
+		//	outStream.WriteByte((byte)(len & 0xff));
+		//	outStream.WriteByte((byte)((len >> 8) & 0xff));
+		//	outStream.WriteByte((byte)((len >> 16) & 0xff));
+		//	outStream.WriteByte(sequenceByte++);
+		//}
 
-			outStream.WriteByte((byte)(len & 0xff));
-			outStream.WriteByte((byte)((len >> 8) & 0xff));
-			outStream.WriteByte((byte)((len >> 16) & 0xff));
-			outStream.WriteByte(sequenceByte++);
-		}
-
-		public void SendEmptyPacket()
+/*		public void SendEmptyPacket()
 		{
 			outLength = 0;
 			outPos = 0;
 			WriteHeader();
 			outStream.Flush();
 		}
-
+*/
 		#endregion
 
-		#region Byte methods
+/*		#region Byte methods
 
 		public int ReadNBytes()
 		{
@@ -307,13 +314,13 @@ namespace MySql.Data.MySqlClient
 				b = byteBuffer[0];
 			}
 			return b;
-		}
+		}*/
 
 		/// <summary>
 		/// Reads a block of bytes from the input stream into the given buffer.
 		/// </summary>
 		/// <returns>The number of bytes read.</returns>
-		public int Read(byte[] buffer, int offset, int count)
+/*		public int Read(byte[] buffer, int offset, int count)
 		{
 			// we use asserts here because this is internal code
 			// and we should be calling it correctly in all cases
@@ -373,30 +380,7 @@ namespace MySql.Data.MySqlClient
 			return totalRead;
 		}
 
-		/// <summary>
-		/// Peek at the next byte off the stream
-		/// </summary>
-		/// <returns>The next byte off the stream</returns>
-		public int PeekByte()
-		{
-			if (peekByte == -1)
-			{
-				peekByte = ReadByte();
-				// ReadByte will advance inPos so we need to back it up since
-				// we are not really reading the byte
-				inPos--;
-			}
-			return peekByte;
-		}
 
-		/// <summary>
-		/// Writes a single byte to the output stream.
-		/// </summary>
-		public void WriteByte(byte value)
-		{
-			byteBuffer[0] = value;
-			Write(byteBuffer, 0, 1);
-		}
 
 		public void Write(byte[] buffer, int offset, int count)
 		{
@@ -440,10 +424,6 @@ namespace MySql.Data.MySqlClient
 			}
 		}
 
-		public void Write(byte[] buffer)
-		{
-			Write(buffer, 0, buffer.Length);
-		}
 
 		public void Flush()
 		{
@@ -468,149 +448,9 @@ namespace MySql.Data.MySqlClient
                 throw new MySqlException(Resources.WriteToStreamFailed, true, ioex);
             }
         }
+        */
+		//#endregion
 
-		#endregion
-
-		#region Integer methods
-
-		public long ReadFieldLength()
-		{
-			byte c = (byte)ReadByte();
-
-			switch (c)
-			{
-				case 251: return -1;
-				case 252: return ReadInteger(2);
-				case 253: return ReadInteger(3);
-				case 254: return ReadInteger(8);
-				default: return c;
-			}
-		}
-
-		public ulong ReadLong(int numbytes)
-		{
-			ulong val = 0;
-			int raise = 1;
-			for (int x = 0; x < numbytes; x++)
-			{
-				int b = ReadByte();
-				val += (ulong)(b * raise);
-				raise *= 256;
-			}
-			return val;
-		}
-
-		public int ReadInteger(int numbytes)
-		{
-			return (int)ReadLong(numbytes);
-		}
-
-		/// <summary>
-		/// WriteInteger
-		/// </summary>
-		/// <param name="v"></param>
-		/// <param name="numbytes"></param>
-		public void WriteInteger(long v, int numbytes)
-		{
-			long val = v;
-
-			Debug.Assert(numbytes > 0 && numbytes < 5);
-
-			for (int x = 0; x < numbytes; x++)
-			{
-				WriteByte((byte)(val & 0xff));
-				val >>= 8;
-			}
-		}
-
-		public int ReadPackedInteger()
-		{
-			byte c = (byte)ReadByte();
-
-			switch (c)
-			{
-				case 251: return -1;
-				case 252: return ReadInteger(2);
-				case 253: return ReadInteger(3);
-				case 254: return ReadInteger(4);
-				default: return c;
-			}
-		}
-
-		public void WriteLength(long length)
-		{
-			if (length < 251)
-				WriteByte((byte)length);
-			else if (length < 65536L)
-			{
-				WriteByte(252);
-				WriteInteger(length, 2);
-			}
-			else if (length < 16777216L)
-			{
-				WriteByte(253);
-				WriteInteger(length, 3);
-			}
-			else
-			{
-				WriteByte(254);
-				WriteInteger(length, 4);
-			}
-		}
-
-		#endregion
-
-		#region String methods
-
-		public void WriteLenString(string s)
-		{
-			byte[] bytes = encoding.GetBytes(s);
-			WriteLength(bytes.Length);
-			Write(bytes, 0, bytes.Length);
-		}
-
-		public void WriteStringNoNull(string v)
-		{
-			byte[] bytes = encoding.GetBytes(v);
-			Write(bytes, 0, bytes.Length);
-		}
-
-		public void WriteString(string v)
-		{
-			WriteStringNoNull(v);
-			WriteByte(0);
-		}
-
-		public string ReadLenString()
-		{
-			long len = ReadPackedInteger();
-			return ReadString(len);
-		}
-
-		public string ReadString(long length)
-		{
-			if (length == 0)
-				return String.Empty;
-			byte[] buf = new byte[length];
-			Read(buf, 0, (int)length);
-			return encoding.GetString(buf, 0, buf.Length);
-		}
-
-		public string ReadString()
-		{
-			MemoryStream ms = new MemoryStream();
-
-			int b = ReadByte();
-			while (b != 0 && b != -1)
-			{
-				ms.WriteByte((byte)b);
-				b = ReadByte();
-			}
-
-			return encoding.GetString(ms.GetBuffer(), 0, (int)ms.Length);
-		}
-
-		#endregion
 
 	}
 }

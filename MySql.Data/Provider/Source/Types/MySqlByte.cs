@@ -98,34 +98,34 @@ namespace MySql.Data.Types
 			get { return "TINYINT"; }
 		}
 
-		void IMySqlValue.WriteValue(MySqlStream stream, bool binary, object val, int length)
+        void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val, int length)
 		{
-			sbyte v = ((IConvertible)val).ToSByte(null);
+            sbyte v = (val is sbyte) ? (sbyte)val : Convert.ToSByte(val);
 			if (binary)
-				stream.Write(BitConverter.GetBytes(v));
+                packet.WriteByte((byte)v);
 			else
-				stream.WriteStringNoNull(v.ToString());
+                packet.WriteStringNoNull(v.ToString());
 		}
 
-		IMySqlValue IMySqlValue.ReadValue(MySqlStream stream, long length, bool nullVal)
+        IMySqlValue IMySqlValue.ReadValue(MySqlPacket packet, long length, bool nullVal)
 		{
 			if (nullVal)
 				return new MySqlByte(true);
 
 			if (length == -1)
-				return new MySqlByte((sbyte)stream.ReadByte());
+                return new MySqlByte((sbyte)packet.ReadByte());
 			else
 			{
-				string s = stream.ReadString(length);
+                string s = packet.ReadString(length);
 				MySqlByte b = new MySqlByte(SByte.Parse(s, NumberStyles.Any, CultureInfo.InvariantCulture));
                 b.TreatAsBoolean = TreatAsBoolean;
                 return b;
 			}
 		}
 
-		void IMySqlValue.SkipValue(MySqlStream stream)
+        void IMySqlValue.SkipValue(MySqlPacket packet)
 		{
-			stream.ReadByte();
+            packet.ReadByte();
 		}
 
 		#endregion

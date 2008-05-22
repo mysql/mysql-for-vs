@@ -28,18 +28,10 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture]
 	public class Syntax2 : BaseTest
 	{
-		[SetUp]
-		public override void Setup()
-		{
-			base.Setup ();
-			execSQL("DROP TABLE IF EXISTS Test");
-			execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(250), PRIMARY KEY(id))");
-		}
-
-
         [Test]
         public void CommentsInSQL()
         {
+            execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(250), PRIMARY KEY(id))");
             string sql = "INSERT INTO Test /* my table */ VALUES (1 /* this is the id */, 'Test' );" +
                 "/* These next inserts are just for testing \r\n" +
                 "   comments */\r\n" +
@@ -62,26 +54,14 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void LastInsertid()
         {
-            execSQL("DROP TABLE Test");
             execSQL("CREATE TABLE Test(id int auto_increment, name varchar(20), primary key(id))");
             MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES(NULL, 'test')", conn);
             cmd.ExecuteNonQuery();
             Assert.AreEqual(1, cmd.LastInsertedId);
 
-            MySqlDataReader reader = null;
-            try
+            using (MySqlDataReader reader = cmd.ExecuteReader())
             {
-                reader = cmd.ExecuteReader();
                 reader.Read();
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
-            finally
-            {
-                if (reader != null)
-                    reader.Close();
             }
             Assert.AreEqual(2, cmd.LastInsertedId);
 
@@ -131,30 +111,23 @@ namespace MySql.Data.MySqlClient.Tests
                 "(`uuid`) ON DELETE CASCADE) CHARACTER SET utf8 ENGINE=InnoDB;");
             execSQL("SET FOREIGN_KEY_CHECKS=1");
 
-            try
+            conn.InfoMessage += new MySqlInfoMessageEventHandler(conn_InfoMessage);
+            MySqlCommand cmd = new MySqlCommand(importQuery, conn);
+            cmd.ExecuteNonQuery();
+
+            for (int i = 0; i <= 5000; i++)
             {
-                conn.InfoMessage += new MySqlInfoMessageEventHandler(conn_InfoMessage);
-                MySqlCommand cmd = new MySqlCommand(importQuery, conn);
+                cmd.CommandText = deleteQuery;
                 cmd.ExecuteNonQuery();
 
-                for (int i = 0; i <= 5000; i++)
+                cmd.CommandText = insertQuery;
+                cmd.ExecuteNonQuery();
+
+                cmd.CommandText = bugQuery;
+                using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
-                    cmd.CommandText = deleteQuery;
-                    cmd.ExecuteNonQuery();
-
-                    cmd.CommandText = insertQuery;
-                    cmd.ExecuteNonQuery();
-
-                    cmd.CommandText = bugQuery;
-                    using (MySqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        reader.Close();
-                    }
+                    reader.Close();
                 }
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
             }
         }
 

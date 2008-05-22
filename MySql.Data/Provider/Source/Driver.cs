@@ -323,7 +323,7 @@ namespace MySql.Data.MySqlClient
         public abstract void SetDatabase(string dbName);
         public abstract int PrepareStatement(string sql, ref MySqlField[] parameters);
         public abstract void Reset();
-        public abstract void Query(byte[] bytes, int length);
+        public abstract void Query(MySqlPacket packet);
         public abstract long ReadResult(ref ulong affectedRows, ref long lastInsertId);
         public abstract bool FetchDataRow(int statementId, int pageSize, int columns);
         public abstract bool SkipDataRow();

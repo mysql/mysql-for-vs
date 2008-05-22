@@ -30,39 +30,19 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture]
 	public class EventTests : BaseTest
 	{
-        public override void Setup()
-        {
-            base.Setup();
-            execSQL("DROP TABLE IF EXISTS Test");
-            execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(250), PRIMARY KEY(id))");
-        }
-
 		[Test]
 		public void Warnings()
 		{
-            if (version < new Version(4, 1)) return;
+            if (Version < new Version(4, 1)) return;
 
 			conn.InfoMessage += new MySqlInfoMessageEventHandler(WarningsInfoMessage);
 
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL("CREATE TABLE test (name VARCHAR(10))");
+            execSQL("CREATE TABLE Test (name VARCHAR(10))");
 
-			MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES ('12345678901')", conn);
-			MySqlDataReader reader = null;
-
-			try 
-			{
-				reader = cmd.ExecuteReader();
-			}
-			catch (Exception ex)
-			{
-				Assert.Fail(ex.Message);
-			}
-			finally 
-			{
-				if (reader != null)
-					reader.Close();
-			}
+			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES ('12345678901')", conn);
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+            }
 		}
 
 		private void WarningsInfoMessage(object sender, MySqlInfoMessageEventArgs args)

@@ -1,3 +1,6 @@
+Version 5.3
+- Massive speedups
+
 Version 5.2.2 - 
 - Fixed profile provider that would throw an exception if you were updating
   a profile that already existed.
