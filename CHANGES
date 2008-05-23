@@ -3,7 +3,11 @@ Version 5.2.3
   of hashes for lookups
 - Fixed problem where some tables that support the web providers used the latin1
   character set instead of the database default.  (bug #36444) 
-  
+- Changed how the procedure schema collection is retrieved.  If 'use procedure bodies=true'
+  then we select on the mysql.proc table directly as this is up to 50x faster than our current
+  IS implementation.  If 'use procedure bodies=false', then the IS collection is queried.
+  (bug #36694)
+    
 Version 5.2.2 - 
 - Fixed profile provider that would throw an exception if you were updating
   a profile that already existed.
