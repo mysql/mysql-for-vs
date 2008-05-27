@@ -10,9 +10,6 @@ namespace MySql.Data.MySqlClient
     {
         private byte[] tempBuffer = new byte[256];
         private Encoding encoding;
-//        private byte[] buffer;
-  //      private int len;
-    //    private int pos;
         private MemoryStream buffer = new MemoryStream();
         private DBVersion version;
 
@@ -150,9 +147,9 @@ namespace MySql.Data.MySqlClient
             return value;
         }
 
-        public long ReadLong(int numbytes)
+        public ulong ReadULong(int numbytes)
         {
-            int value = 0;
+            ulong value = 0;
 
             int pos = (int)buffer.Position;
             byte[] bits = buffer.GetBuffer();
@@ -160,7 +157,7 @@ namespace MySql.Data.MySqlClient
 
             for (int i = 0; i < numbytes; i++)
             {
-                value |= (bits[pos++] << shift);
+                value |= (ulong)(bits[pos++] << shift);
                 shift += 8;
             }
             buffer.Position += numbytes;
@@ -169,7 +166,8 @@ namespace MySql.Data.MySqlClient
 
         public int ReadInteger(int numbytes)
         {
-            return (int)ReadLong(numbytes);
+            Debug.Assert(numbytes <= 4);
+            return (int)ReadULong(numbytes);
         }
 
         /// <summary>

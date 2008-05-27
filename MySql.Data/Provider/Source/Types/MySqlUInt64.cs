@@ -93,7 +93,7 @@ namespace MySql.Data.Types
 				return new MySqlUInt64(true);
 
 			if (length == -1)
-				return new MySqlUInt64((ulong)packet.ReadLong(8));
+				return new MySqlUInt64(packet.ReadULong(8));
 			else
 				return new MySqlUInt64(UInt64.Parse(packet.ReadString(length)));
 		}
