@@ -244,112 +244,48 @@ namespace MySql.Data.MySqlClient
             return true;
         }
 
-        /// <summary>
-        /// THis code is not used yet but will likely be used in the future.
-        /// </summary>
-        /// <param name="sql"></param>
-        /// <returns></returns>
-        private ArrayList TokenizeSql2(string sql) 
-        {
-            ArrayList sqlChunks = new ArrayList();
-            StringBuilder currentChunk = new StringBuilder();
-            bool batch = Connection.Settings.AllowBatch & Driver.SupportsBatch;
-
-            int lastPos = 0;
-            SqlTokenizer tokenizer = new SqlTokenizer(sql);
-            string sql_mode = Connection.driver.Property("sql_mode");
-            if (sql_mode != null)
-            {
-                sql_mode = sql_mode.ToString().ToLower();
-                tokenizer.AnsiQuotes = sql_mode.IndexOf("ansi_quotes") != -1;
-                tokenizer.BackslashEscapes = sql_mode.IndexOf("no_backslash_escapes") == -1;
-            }
-
-            string token = tokenizer.NextToken();
-            while (token != null)
-            {
-                if (token == ";" && !batch)
-                {
-                    sqlChunks.Add(currentChunk.ToString());
-                    currentChunk.Remove(0, currentChunk.Length);
-                }
-
-                else if (token.Length >= 2 &&
-                    ((token[0] == '@' && token[1] != '@') ||
-                    token[0] == '?'))
-                {
-                    sqlChunks.Add(currentChunk.ToString());
-                    currentChunk.Remove(0, currentChunk.Length);
-                }
-                else
-                {
-                    currentChunk.Append(sql.Substring(lastPos, tokenizer.Index - lastPos+1));
-                    lastPos = tokenizer.Index;
-                }
-                token = tokenizer.NextToken();
-            }
-            if (currentChunk.Length > 0)
-                sqlChunks.Add(currentChunk.ToString());
-            return sqlChunks;
-        }
-
-        /// <summary>
-        /// Breaks the given SQL up into 'tokens' that are easier to output
-        /// into another form (bytes, preparedText, etc).
-        /// </summary>
-        /// <param name="sql">SQL to be tokenized</param>
-        /// <returns>Array of tokens</returns>
-        /// <remarks>The SQL is tokenized at parameter markers ('?') and at 
-        /// (';') sql end markers if the server doesn't support batching.
-        /// </remarks>
         public ArrayList TokenizeSql(string sql)
         {
-            bool batch = Connection.Settings.AllowBatch & Driver.SupportsBatch;
+            bool batch = Connection.Settings.AllowBatch && Driver.SupportsBatch;
             char delim = Char.MinValue;
-            StringBuilder sqlPart = new StringBuilder();
             bool escaped = false;
             ArrayList tokens = new ArrayList();
 
-            sql = sql.TrimStart(';').TrimEnd(';');
-            char c = Char.MinValue;
-            char lastChar;
+            sql = sql.Trim(';');
+            int startIndex = 0;
             for (int i = 0; i < sql.Length; i++)
             {
-                lastChar = c;
-                c = sql[i];
+                char c = sql[i];
                 if (escaped)
-                    escaped = !escaped;
+                    escaped = false;
                 else if (c == delim)
                     delim = Char.MinValue;
                 else if (c == ';' && !escaped && delim == Char.MinValue && !batch)
                 {
-                    tokens.Add(sqlPart.ToString());
+                    tokens.Add(sql.Substring(startIndex, i - startIndex));
                     tokens.Add(";");
-                    sqlPart.Remove(0, sqlPart.Length);
+                    startIndex = i + 1;
                     continue;
                 }
                 else if ((c == '\'' || c == '\"' || c == '`') && !escaped && delim == Char.MinValue)
                     delim = c;
                 else if (c == '\\')
                     escaped = !escaped;
-                else if (sqlPart.Length == 1 && sqlPart[0] == '@' && c == '@') { }
-                else if (sqlPart.Length > 0 && sqlPart[0] == '?' && c == '@') { }
                 else if ((c == '@' || c == '?') && delim == Char.MinValue && !escaped)
                 {
-                    tokens.Add(sqlPart.ToString());
-                    sqlPart.Remove(0, sqlPart.Length);
+                    tokens.Add(sql.Substring(startIndex, i - startIndex));
+                    startIndex = i;
                 }
-                else if (sqlPart.Length > 0 && (sqlPart[0] == '@' || sqlPart[0] == '?') &&
+                else if (i > startIndex && (sql[startIndex] == '@' || sql[startIndex] == '?') &&
                          !Char.IsLetterOrDigit(c) && c != '_' && c != '.' && c != '$')
                 {
-                    tokens.Add(sqlPart.ToString());
-                    sqlPart.Remove(0, sqlPart.Length);
+                    tokens.Add(sql.Substring(startIndex, i - startIndex));
+                    startIndex = i;
                 }
-
-                sqlPart.Append(c);
             }
-            tokens.Add(sqlPart.ToString());
+            tokens.Add(sql.Substring(startIndex, sql.Length - startIndex));
             return tokens;
         }
+
     }
 }

@@ -22,6 +22,7 @@ using System;
 using System.Data;
 using System.IO;
 using NUnit.Framework;
+using System.Collections;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -423,5 +424,43 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.IsTrue(row["Command"].GetType().Name == "String");
             }
 		}
-	}
+
+        private ArrayList GetTokenizerOutput(string sql)
+        {
+            MySqlCommand cmd = new MySqlCommand("", conn);
+
+            object o = typeof(MySqlConnection).Assembly.CreateInstance("MySql.Data.MySqlClient.PreparableStatement",
+                false, System.Reflection.BindingFlags.CreateInstance, null, new
+                    object[] { cmd, "" }, null, null);
+            ArrayList tokens = (ArrayList)o.GetType().InvokeMember("TokenizeSql",
+                System.Reflection.BindingFlags.InvokeMethod,
+                null, o, new object[] { sql });
+            return tokens;
+        }
+
+        [Test]
+        public void TestTokenizer()
+        {
+            ArrayList tokens = GetTokenizerOutput("SELECT * FROM Test");
+            Assert.AreEqual(1, tokens.Count);
+
+            tokens = GetTokenizerOutput("SELECT * FROM Test WHERE id=@id");
+            Assert.AreEqual(2, tokens.Count);
+
+            tokens = GetTokenizerOutput("SELECT * /* this is a comment @test */ FROM Test WHERE id=@id");
+            Assert.AreEqual(2, tokens.Count);
+
+            tokens = GetTokenizerOutput("SELECT * /* this is a comment @test */ FROM Test WHERE id=@@id");
+            Assert.AreEqual(1, tokens.Count);
+
+            tokens = GetTokenizerOutput("SELECT * /* this is a comment @test */ FROM Test WHERE id=?id");
+            Assert.AreEqual(2, tokens.Count);
+
+            tokens = GetTokenizerOutput("SELECT * /* this is a comment @test */ FROM Test WHERE id=?id AND id <> @@id");
+            Assert.AreEqual(3, tokens.Count);
+
+            tokens = GetTokenizerOutput("SELECT * /* this is a comment @test */ FROM Test WHERE id='?id' AND id <> @@id");
+            Assert.AreEqual(1, tokens.Count);
+        }
+    }
 }
