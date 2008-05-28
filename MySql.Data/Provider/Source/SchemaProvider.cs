@@ -550,11 +550,14 @@ namespace MySql.Data.MySqlClient
             if (restrictions != null)
             {
                 if (restrictions.Length >= 2 && restrictions[1] != null)
-                    sql.AppendFormat(" AND db LIKE '{0}'", restrictions[1]);
+                    sql.AppendFormat(CultureInfo.InvariantCulture, 
+                        " AND db LIKE '{0}'", restrictions[1]);
                 if (restrictions.Length >= 3 && restrictions[2] != null)
-                    sql.AppendFormat(" AND name LIKE '{0}'", restrictions[2]);
+                    sql.AppendFormat(CultureInfo.InvariantCulture, 
+                        " AND name LIKE '{0}'", restrictions[2]);
                 if (restrictions.Length >= 4 && restrictions[3] != null)
-                    sql.AppendFormat(" AND type LIKE '{0}'", restrictions[3]);
+                    sql.AppendFormat(CultureInfo.InvariantCulture, 
+                        " AND type LIKE '{0}'", restrictions[3]);
             }
 
             MySqlDataAdapter da = new MySqlDataAdapter(sql.ToString(), connection);
