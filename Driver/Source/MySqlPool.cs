@@ -107,7 +107,7 @@ namespace MySql.Data.MySqlClient
         /// <returns>An idle driver object</returns>
 		private Driver CheckoutConnection()
 		{
-			Driver driver = (Driver)idlePool.Dequeue();
+            Driver driver = (Driver)idlePool.Dequeue();
 
             // first check to see that the server is still alive
             if (!driver.Ping())
@@ -120,8 +120,6 @@ namespace MySql.Data.MySqlClient
 			// do so now
 			if (settings.ConnectionReset)
 				driver.Reset();
-
-			inUsePool.Add(driver);
 
 			return driver;
 		}
@@ -139,6 +137,7 @@ namespace MySql.Data.MySqlClient
                 driver = CreateNewPooledConnection();
             else
                 driver = CheckoutConnection();
+            inUsePool.Add(driver);
             Debug.Assert(driver != null);
             return driver;
         }
@@ -208,7 +207,7 @@ namespace MySql.Data.MySqlClient
 				try
 				{
 					Driver d = GetPooledConnection();
-					return d;
+                    return d;
 				}
 				catch (Exception ex)
 				{
