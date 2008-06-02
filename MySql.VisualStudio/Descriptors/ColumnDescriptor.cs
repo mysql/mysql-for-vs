@@ -258,6 +258,39 @@ namespace MySql.Data.VisualStudio.Descriptors
             return merged;
         }
 
+        DataTable ConvertTableIfNecessary(DataTable table)
+        {
+            DataTable newResult = null;
+            foreach (DataColumn col in table.Columns)
+            {
+                if (col.DataType == typeof(byte[]))
+                {
+                    newResult = table.Clone();
+                    break;
+                }
+            }
+            if (newResult == null) return table;
+
+            foreach (DataColumn col in newResult.Columns)
+            {
+                if (col.DataType == typeof(byte[]))
+                    col.DataType = typeof(String);
+            }
+
+            for (int row = 0; row < table.Rows.Count; row++)
+            {
+                DataRow newRow = newResult.NewRow();
+                DataRow oldRow = table.Rows[row];
+                for (int col = 0; col < table.Columns.Count; col++)
+                {
+                    if (oldRow[col] is byte[])
+                        newRow[col] = Encoding.UTF8.GetString((byte[])oldRow[col]);
+                }
+                newResult.Rows.Add(newRow);
+            }
+            return newResult;
+        }
+
         /// <summary>
         /// Returns DataTable with description of table's columns.
         /// </summary>
@@ -269,6 +302,10 @@ namespace MySql.Data.VisualStudio.Descriptors
         {
             // Execute base method
             DataTable result = base.ReadTable(connection, restrictions, sort);
+
+            // hackity, hack, hack.  We are just doing this so we can avoid having to rewrite a ton
+            // of code to use a data reader to work around the server stupid binary issues.
+            result = ConvertTableIfNecessary(result);
 
             // If result is null, exit
             if (result == null)
