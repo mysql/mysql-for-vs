@@ -129,16 +129,28 @@ namespace MySql.Web.Tests
             }
         }
 
+        /// <summary>
+        /// Bug #36444 'autogenerateschema' produces tables with 'random' collations 
+        /// </summary>
         [Test]
         public void CurrentSchema()
         {
+            execSQL("set character_set_database=utf8");
+
             LoadSchema(1);
             LoadSchema(2);
             LoadSchema(3);
+            LoadSchema(4);
 
             MySqlCommand cmd = new MySqlCommand("SELECT * FROM my_aspnet_SchemaVersion", conn);
             object ver = cmd.ExecuteScalar();
-            Assert.AreEqual(3, ver);
+            Assert.AreEqual(4, ver);
+
+            MySqlDataAdapter da = new MySqlDataAdapter("SHOW CREATE TABLE my_aspnet_membership", conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            string createSql = dt.Rows[0][1].ToString();
+            Assert.IsTrue(createSql.IndexOf("CHARSET=utf8") != -1);
         }
 
         [Test]

@@ -42,7 +42,6 @@ namespace MySql.Data.MySqlClient
 		private uint minSize;
 		private uint maxSize;
         private ProcedureCache procedureCache;
-        private Object lockObject;
         private bool beingCleared;
         private int available;
         private AutoResetEvent autoEvent;
@@ -71,9 +70,6 @@ namespace MySql.Data.MySqlClient
                 idlePool.Enqueue(CreateNewPooledConnection());
 
             procedureCache = new ProcedureCache((int)settings.ProcedureCacheSize);
-
-            // we don't really need to create this but it makes the code a bit cleaner
-            lockObject = new Object();
 
             beingCleared = false;
         }
@@ -124,8 +120,8 @@ namespace MySql.Data.MySqlClient
         /// <returns>An idle driver object</returns>
 		private Driver CheckoutConnection()
 		{
-			Driver driver = (Driver)idlePool.Dequeue();
-
+            Driver driver = (Driver)idlePool.Dequeue();
+ 
             // first check to see that the server is still alive
             if (!driver.Ping())
             {
@@ -137,8 +133,6 @@ namespace MySql.Data.MySqlClient
 			// do so now
 			if (settings.ConnectionReset)
 				driver.Reset();
-
-			inUsePool.Add(driver);
 
 			return driver;
 		}
@@ -152,11 +146,19 @@ namespace MySql.Data.MySqlClient
 
             // if we don't have an idle connection but we have room for a new
             // one, then create it here.
-            if (!HasIdleConnections)
-                driver = CreateNewPooledConnection();
-            else
-                driver = CheckoutConnection();
+            lock ((idlePool as ICollection).SyncRoot)
+            {
+                if (!HasIdleConnections)
+                    driver = CreateNewPooledConnection();
+                else
+                    driver = CheckoutConnection();
+            }
+
             Debug.Assert(driver != null);
+            lock ((inUsePool as ICollection).SyncRoot)
+            {
+                inUsePool.Add(driver);
+            }
             return driver;
         }
 
@@ -174,22 +176,27 @@ namespace MySql.Data.MySqlClient
 
 		public void ReleaseConnection(Driver driver)
 		{
-            lock (lockObject)
+            lock ((inUsePool as ICollection).SyncRoot)
             {
                 if (inUsePool.Contains(driver))
                     inUsePool.Remove(driver);
-
-                if (driver.IsTooOld() || beingCleared)
-                {
-                    driver.Close();
-                    Debug.Assert(!idlePool.Contains(driver));
-                }
-                else
-                    idlePool.Enqueue(driver);
-
-                Interlocked.Increment(ref available);
-                autoEvent.Set();
             }
+
+            if (driver.IsTooOld() || beingCleared)
+            {
+                driver.Close();
+                Debug.Assert(!idlePool.Contains(driver));
+            }
+            else
+            {
+                lock ((idlePool as ICollection).SyncRoot)
+                {
+                    idlePool.Enqueue(driver);
+                }
+            }
+
+            Interlocked.Increment(ref available);
+            autoEvent.Set();
         }
 
         /// <summary>
@@ -201,7 +208,7 @@ namespace MySql.Data.MySqlClient
         /// <param name="driver"></param>
         public void RemoveConnection(Driver driver)
         {
-            lock (lockObject)
+            lock ((inUsePool as ICollection).SyncRoot)
             {
                 if (inUsePool.Contains(driver))
                 {
@@ -209,12 +216,12 @@ namespace MySql.Data.MySqlClient
                     Interlocked.Increment(ref available);
                     autoEvent.Set();
                 }
-
-                // if we are being cleared and we are out of connections then have
-                // the manager destroy us.
-                if (beingCleared && NumConnections == 0)
-                    MySqlPoolManager.RemoveClearedPool(this);
             }
+
+            // if we are being cleared and we are out of connections then have
+            // the manager destroy us.
+            if (beingCleared && NumConnections == 0)
+                MySqlPoolManager.RemoveClearedPool(this);
         }
 
         private Driver TryToGetDriver()
@@ -264,7 +271,7 @@ namespace MySql.Data.MySqlClient
         /// </summary>
         internal void Clear()
         {
-            lock (lockObject)
+            lock ((idlePool as ICollection).SyncRoot)
             {
                 // first, mark ourselves as being cleared
                 beingCleared = true;

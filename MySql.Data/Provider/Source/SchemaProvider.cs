@@ -522,6 +522,79 @@ namespace MySql.Data.MySqlClient
             return dt;
         }
 
+        public virtual DataTable GetProcedures(string[] restrictions)
+        {
+            DataTable dt = new DataTable("Procedures");
+            dt.Columns.Add(new DataColumn("SPECIFIC_NAME", typeof(string)));
+            dt.Columns.Add(new DataColumn("ROUTINE_CATALOG", typeof(string)));
+            dt.Columns.Add(new DataColumn("ROUTINE_SCHEMA", typeof(string)));
+            dt.Columns.Add(new DataColumn("ROUTINE_NAME", typeof(string)));
+            dt.Columns.Add(new DataColumn("ROUTINE_TYPE", typeof(string)));
+            dt.Columns.Add(new DataColumn("DTD_IDENTIFIER", typeof(string)));
+            dt.Columns.Add(new DataColumn("ROUTINE_BODY", typeof(string)));
+            dt.Columns.Add(new DataColumn("ROUTINE_DEFINITION", typeof(string)));
+            dt.Columns.Add(new DataColumn("EXTERNAL_NAME", typeof(string)));
+            dt.Columns.Add(new DataColumn("EXTERNAL_LANGUAGE", typeof(string)));
+            dt.Columns.Add(new DataColumn("PARAMETER_STYLE", typeof(string)));
+            dt.Columns.Add(new DataColumn("IS_DETERMINISTIC", typeof(string)));
+            dt.Columns.Add(new DataColumn("SQL_DATA_ACCESS", typeof(string)));
+            dt.Columns.Add(new DataColumn("SQL_PATH", typeof(string)));
+            dt.Columns.Add(new DataColumn("SECURITY_TYPE", typeof(string)));
+            dt.Columns.Add(new DataColumn("CREATED", typeof(DateTime)));
+            dt.Columns.Add(new DataColumn("LAST_ALTERED", typeof(DateTime)));
+            dt.Columns.Add(new DataColumn("SQL_MODE", typeof(string)));
+            dt.Columns.Add(new DataColumn("ROUTINE_COMMENT", typeof(string)));
+            dt.Columns.Add(new DataColumn("DEFINER", typeof(string)));
+
+            StringBuilder sql = new StringBuilder("SELECT * FROM mysql.proc WHERE 1=1");
+            if (restrictions != null)
+            {
+                if (restrictions.Length >= 2 && restrictions[1] != null)
+                    sql.AppendFormat(CultureInfo.InvariantCulture, 
+                        " AND db LIKE '{0}'", restrictions[1]);
+                if (restrictions.Length >= 3 && restrictions[2] != null)
+                    sql.AppendFormat(CultureInfo.InvariantCulture, 
+                        " AND name LIKE '{0}'", restrictions[2]);
+                if (restrictions.Length >= 4 && restrictions[3] != null)
+                    sql.AppendFormat(CultureInfo.InvariantCulture, 
+                        " AND type LIKE '{0}'", restrictions[3]);
+            }
+
+            MySqlDataAdapter da = new MySqlDataAdapter(sql.ToString(), connection);
+            DataTable procs = new DataTable();
+            da.Fill(procs);
+
+            foreach (DataRow procRow in procs.Rows)
+            {
+                DataRow row = dt.NewRow();
+                row["SPECIFIC_NAME"] = procRow["specific_name"];
+                row["ROUTINE_CATALOG"] = DBNull.Value;
+                row["ROUTINE_SCHEMA"] = procRow["db"];
+                row["ROUTINE_NAME"] = procRow["name"];
+                row["ROUTINE_TYPE"] = procRow["type"];
+                row["DTD_IDENTIFIER"] =
+                    procRow["type"].ToString().ToLower(CultureInfo.InvariantCulture) == "function" ?
+                    procRow["returns"] : DBNull.Value;
+                row["ROUTINE_BODY"] = "SQL";
+                row["ROUTINE_DEFINITION"] = procRow["body"];
+                row["EXTERNAL_NAME"] = DBNull.Value;
+                row["EXTERNAL_LANGUAGE"] = DBNull.Value;
+                row["PARAMETER_STYLE"] = "SQL";
+                row["IS_DETERMINISTIC"] = procRow["is_deterministic"];
+                row["SQL_DATA_ACCESS"] = procRow["sql_data_access"];
+                row["SQL_PATH"] = DBNull.Value;
+                row["SECURITY_TYPE"] = procRow["security_type"];
+                row["CREATED"] = procRow["created"];
+                row["LAST_ALTERED"] = procRow["modified"];
+                row["SQL_MODE"] = procRow["sql_mode"];
+                row["ROUTINE_COMMENT"] = procRow["comment"];
+                row["DEFINER"] = procRow["definer"];
+                dt.Rows.Add(row);
+            }
+
+            return dt;
+        }
+
         protected virtual DataTable GetCollections()
         {
             object[][] collections = new object[][]

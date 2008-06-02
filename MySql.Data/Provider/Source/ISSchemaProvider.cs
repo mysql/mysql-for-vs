@@ -183,8 +183,13 @@ namespace MySql.Data.MySqlClient
         /// </summary>
         /// <param name="restrictions"></param>
         /// <returns></returns>
-        private DataTable GetProcedures(string[] restrictions)
+        public override DataTable GetProcedures(string[] restrictions)
         {
+            // if the user has said that we have access to mysql.proc then
+            // we use that as it is a lot faster
+            if (connection.Settings.UseProcedureBodies)
+                return base.GetProcedures(restrictions);
+
             string[] keys = new string[4];
             keys[0] = "ROUTINE_CATALOG";
             keys[1] = "ROUTINE_SCHEMA";
