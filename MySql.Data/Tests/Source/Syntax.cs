@@ -425,6 +425,7 @@ namespace MySql.Data.MySqlClient.Tests
             }
 		}
 
+#if !CF
         private ArrayList GetTokenizerOutput(string sql)
         {
             MySqlCommand cmd = new MySqlCommand("", conn);
@@ -462,5 +463,7 @@ namespace MySql.Data.MySqlClient.Tests
             tokens = GetTokenizerOutput("SELECT * /* this is a comment @test */ FROM Test WHERE id='?id' AND id <> @@id");
             Assert.AreEqual(1, tokens.Count);
         }
+#endif
+
     }
 }
