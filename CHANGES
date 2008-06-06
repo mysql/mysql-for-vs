@@ -9,7 +9,12 @@ Version 5.2.3
   (bug #36694)
 - Fixed problem with our GetOrdinal speedup where we would attempt to add an already existing
   key to a hash when a resultset had more than 1 column with the same name. (bug #37239)    
-    
+- small fix to how we were allowing in/out and out parameters to slide through parameter 
+  serialization.  Before we were setting the AllowUserVariables connection setting but that 
+  had the unfortunate side effect of setting the value for all connections that shared that 
+  connection string.  This way we isolate it just to our particular command.  
+  This may fix bug #37104    
+
 Version 5.2.2 - 
 - Fixed profile provider that would throw an exception if you were updating
   a profile that already existed.
