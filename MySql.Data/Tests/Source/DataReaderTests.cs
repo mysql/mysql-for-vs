@@ -902,5 +902,24 @@ namespace MySql.Data.MySqlClient.Tests
 				c2.Dispose();
 			}
 		}
-	}
+
+        /// <summary>
+        /// Bug #37239 MySqlReader GetOrdinal performance changes break existing functionality
+        /// </summary>
+        [Test]
+        public void ColumnsWithSameName()
+        {
+            execSQL("INSERT INTO Test (id, name) VALUES (1, 'test')");
+
+            MySqlCommand cmd = new MySqlCommand("SELECT a.name, a.name FROM Test a", conn);
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                reader.Read();
+                string name1 = reader.GetString(0);
+                string name2 = reader.GetString(1);
+                Assert.AreEqual(name1, name2);
+                Assert.AreEqual(name1, "test");
+            }
+        }
+    }
 }

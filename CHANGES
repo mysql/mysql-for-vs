@@ -7,6 +7,8 @@ Version 5.2.3
   then we select on the mysql.proc table directly as this is up to 50x faster than our current
   IS implementation.  If 'use procedure bodies=false', then the IS collection is queried.
   (bug #36694)
+- Fixed problem with our GetOrdinal speedup where we would attempt to add an already existing
+  key to a hash when a resultset had more than 1 column with the same name. (bug #37239)    
     
 Version 5.2.2 - 
 - Fixed profile provider that would throw an exception if you were updating
