@@ -57,6 +57,7 @@ namespace MySql.Data.MySqlClient
         private bool resetSqlSelect;
         List<MySqlCommand> batch;
         private string batchableCommandText;
+        internal string parameterHash;
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ctor1/*'/>
 		public MySqlCommand()
