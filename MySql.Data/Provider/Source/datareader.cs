@@ -858,8 +858,12 @@ namespace MySql.Data.MySqlClient
 				values = new IMySqlValue[fields.Length];
 				for (int i = 0; i < fields.Length; i++)
 				{
-					fieldHashCS.Add(fields[i].ColumnName, i);
-					fieldHashCI.Add(fields[i].ColumnName, i);
+                    string columnName = fields[i].ColumnName;
+                    if (!fieldHashCS.ContainsKey(columnName))
+                    {
+                        fieldHashCS.Add(columnName, i);
+                        fieldHashCI.Add(columnName, i);
+                    }
 					values[i] = fields[i].GetValueObject();
 				}
 				hasRead = false;
