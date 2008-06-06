@@ -213,9 +213,14 @@ namespace MySql.Data.MySqlClient
 
         protected virtual bool ShouldIgnoreMissingParameter(string parameterName)
         {
-            return Connection.Settings.AllowUserVariables ||
-                (parameterName.Length > 1 &&
-                (parameterName[1] == '`' || parameterName[1] == '\''));
+            if (Connection.Settings.AllowUserVariables)
+                return true;
+            if (command.parameterHash != null && parameterName.StartsWith("@" + command.parameterHash))
+                return true;
+            if (parameterName.Length > 1 &&
+                (parameterName[1] == '`' || parameterName[1] == '\''))
+                return true;
+            return false;
         }
 
         /// <summary>

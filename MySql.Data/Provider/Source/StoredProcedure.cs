@@ -31,7 +31,6 @@ namespace MySql.Data.MySqlClient
     /// </summary>
     internal class StoredProcedure : PreparableStatement
     {
-        private string hash;
         private string outSelect;
         private DataTable parametersTable;
         private string resolvedCommandText;
@@ -39,8 +38,9 @@ namespace MySql.Data.MySqlClient
         public StoredProcedure(MySqlCommand cmd, string text)
             : base(cmd, text)
         {
+            // set our parameter hash to something very unique
             uint code = (uint) DateTime.Now.GetHashCode();
-            hash = code.ToString();
+            cmd.parameterHash = code.ToString();
         }
 
         private string GetReturnParameter()
@@ -50,15 +50,9 @@ namespace MySql.Data.MySqlClient
                     if (p.Direction == ParameterDirection.ReturnValue)
                     {
                         string pName = p.ParameterName.Substring(1);
-                        return hash + pName;
+                        return command.parameterHash + pName;
                     }
             return null;
-        }
-
-        protected override bool ShouldIgnoreMissingParameter(string parameterName)
-        {
-            if (parameterName.StartsWith("@" + hash)) return true;
-            return base.ShouldIgnoreMissingParameter(parameterName);
         }
 
         public override string ResolvedCommandText
@@ -131,6 +125,7 @@ namespace MySql.Data.MySqlClient
             // first retrieve the procedure definition from our
             // procedure cache
             string spName = commandText;
+            string parameterHash = command.parameterHash;
             if (spName.IndexOf(".") == -1)
                 spName = Connection.Database + "." + spName;
 
@@ -168,7 +163,7 @@ namespace MySql.Data.MySqlClient
                 }
 
                 string basePName = pName.Substring(1);
-                string vName = string.Format("@{0}{1}", hash, basePName);
+                string vName = string.Format("@{0}{1}", parameterHash, basePName);
 
                 if (mode == "OUT" || mode == "INOUT")
                 {
@@ -196,7 +191,7 @@ namespace MySql.Data.MySqlClient
             else
             {
                 if (retParm == null)
-                    retParm = hash + "dummy";
+                    retParm = parameterHash + "dummy";
                 else
                     outSelect = String.Format("@{0}", retParm);
                 sqlCmd = String.Format("SET @{0}={1}({2})", retParm, commandText, sqlCmd);
@@ -214,40 +209,37 @@ namespace MySql.Data.MySqlClient
 
 			if (outSelect.Length == 0) return;
 
-            bool allowUserVar = Connection.Settings.AllowUserVariables;
-            Connection.Settings.AllowUserVariables = true;
-            try
+            MySqlCommand cmd = new MySqlCommand("SELECT " + outSelect, Connection);
+
+            // set the parameter hash for this new command to our current parameter hash
+            // so the inout and out parameters won't cause a problem
+            string parameterHash = command.parameterHash;
+            cmd.parameterHash = parameterHash;
+
+            using (MySqlDataReader reader = cmd.ExecuteReader())
             {
-                MySqlCommand cmd = new MySqlCommand("SELECT " + outSelect, Connection);
-                using (MySqlDataReader reader = cmd.ExecuteReader())
+                // since MySQL likes to return user variables as strings
+                // we reset the types of the readers internal value objects
+                // this will allow those value objects to parse the string based
+                // return values
+                for (int i = 0; i < reader.FieldCount; i++)
                 {
-                    // since MySQL likes to return user variables as strings
-                    // we reset the types of the readers internal value objects
-                    // this will allow those value objects to parse the string based
-                    // return values
+                    string fieldName = reader.GetName(i);
+                    fieldName = fieldName.Remove(0, parameterHash.Length + 1);
+                    MySqlParameter parameter = Parameters.GetParameterFlexible(fieldName, true);
+                    reader.values[i] = MySqlField.GetIMySqlValue(parameter.MySqlDbType);
+                }
+
+                if (reader.Read())
+                {
                     for (int i = 0; i < reader.FieldCount; i++)
                     {
                         string fieldName = reader.GetName(i);
-                        fieldName = fieldName.Remove(0, hash.Length + 1);
+                        fieldName = fieldName.Remove(0, parameterHash.Length + 1);
                         MySqlParameter parameter = Parameters.GetParameterFlexible(fieldName, true);
-                        reader.values[i] = MySqlField.GetIMySqlValue(parameter.MySqlDbType);
-                    }
-
-                    if (reader.Read())
-                    {
-                        for (int i = 0; i < reader.FieldCount; i++)
-                        {
-                            string fieldName = reader.GetName(i);
-                            fieldName = fieldName.Remove(0, hash.Length + 1);
-                            MySqlParameter parameter = Parameters.GetParameterFlexible(fieldName, true);
-                            parameter.Value = reader.GetValue(i);
-                        }
+                        parameter.Value = reader.GetValue(i);
                     }
                 }
-            }
-            finally
-            {
-                Connection.Settings.AllowUserVariables = allowUserVar;
             }
 		}
 	}
