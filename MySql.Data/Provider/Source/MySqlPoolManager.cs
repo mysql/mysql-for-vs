@@ -63,6 +63,8 @@ namespace MySql.Data.MySqlClient
 
         public static void RemoveConnection(Driver driver)
         {
+            Debug.Assert(driver != null);
+
 			MySqlPool pool = driver.Pool;
 			if (pool == null) return;
 
@@ -71,6 +73,8 @@ namespace MySql.Data.MySqlClient
 
         public static void ReleaseConnection(Driver driver)
         {
+            Debug.Assert(driver != null);
+
 			MySqlPool pool = driver.Pool;
 			if (pool == null) return;
 			
@@ -79,6 +83,8 @@ namespace MySql.Data.MySqlClient
 
         public static void ClearPool(MySqlConnectionStringBuilder settings)
         {
+            Debug.Assert(settings != null);
+
             string text = settings.GetConnectionString(true);
             ClearPoolByText(text);
         }
