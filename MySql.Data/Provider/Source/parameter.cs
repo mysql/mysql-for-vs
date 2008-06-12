@@ -25,6 +25,7 @@ using MySql.Data.Types;
 using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
+using System.Text;
 #if !CF
 using System.ComponentModel.Design.Serialization;
 using System.Text;

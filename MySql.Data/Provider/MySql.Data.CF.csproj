@@ -98,8 +98,10 @@
     <Compile Include="Source\MysqlDefs.cs" />
     <Compile Include="Source\MySqlError.cs" />
     <Compile Include="Source\MySqlHelper.cs" />
+    <Compile Include="Source\MySqlPacket.cs" />
     <Compile Include="Source\MySqlPool.cs" />
     <Compile Include="Source\MySqlPoolManager.cs" />
+    <Compile Include="Source\MySqlScript.cs" />
     <Compile Include="Source\MySqlStream.cs" />
     <Compile Include="Source\NativeDriver.cs" />
     <Compile Include="Source\parameter.cs" />
