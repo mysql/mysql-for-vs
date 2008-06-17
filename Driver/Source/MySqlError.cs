@@ -125,9 +125,12 @@ namespace MySql.Data.MySqlClient
             /// </summary>
             UnableToConnectToHost = 1042,
 /*                ER_HANDSHAKE_ERROR 1043
-                ER_DBACCESS_DENIED_ERROR 1044
-                ER_ACCESS_DENIED_ERROR 1045
-                ER_NO_DB_ERROR 1046
+                ER_DBACCESS_DENIED_ERROR 1044*/
+            /// <summary>
+            /// Normally returned when an incorrect password is given
+            /// </summary>
+            AccessDenied = 1045,
+/*                ER_NO_DB_ERROR 1046
                 ER_UNKNOWN_COM_ERROR 1047
                 ER_BAD_NULL_ERROR 1048
                 ER_BAD_DB_ERROR 1049

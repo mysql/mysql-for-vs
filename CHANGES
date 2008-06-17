@@ -6,6 +6,7 @@ Version 5.1.7
    when an attempt is made to release them back to the pool (bug #36688)
  - Reversed order of Datetime and DateTime enums for MySqlDbType so that VB users won't get
    autocorrection to Datetime (bug #37406)
+ - Uncommented access denied error enumeration value (bug #37398)
 
 Version 5.1.6 - 5/7/08
  - Fixed problem where parameters lists were not showing when you tried to alter a routine 
