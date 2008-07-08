@@ -47,6 +47,9 @@ namespace MySql.Web.Tests
                 execSQL(String.Format("DROP TABLE IF EXISTS {0}", row["TABLE_NAME"]));
         }
 
+        /// <summary>
+        /// Bug #37469 autogenerateschema optimizing
+        /// </summary>
         [Test]
         public void SchemaNotPresent()
         {
