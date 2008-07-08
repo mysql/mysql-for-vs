@@ -113,7 +113,7 @@ namespace MySql.Data.MySqlClient
 
             // start constructing our packet
             stream.WriteInteger(statementId, 4);
-            stream.WriteByte((byte) 0); // flags; always 0 for 4.1
+            stream.WriteByte(0); // flags; always 0 for 4.1
             stream.WriteInteger(1, 4); // interation count; 1 for 4.1
             stream.Write(nullMapBytes);
             //if (parameters != null && parameters.Count > 0)

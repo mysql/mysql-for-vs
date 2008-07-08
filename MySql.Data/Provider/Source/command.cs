@@ -180,9 +180,9 @@ namespace MySql.Data.MySqlClient
 				* is reset.
 				*/
 				if (connection != value)
-					this.Transaction = null;
+					Transaction = null;
 
-				connection = (MySqlConnection)value;
+				connection = value;
 
                 // if the user has not already set the command timeout, then
                 // take the default from the connection
@@ -210,7 +210,7 @@ namespace MySql.Data.MySqlClient
 		public new MySqlTransaction Transaction
 		{
 			get { return curTransaction; }
-			set { curTransaction = (MySqlTransaction)value; }
+			set { curTransaction = value; }
 		}
 
 		/*		/// <include file='docs/mysqlcommand.xml' path='docs/UpdatedRowSource/*'/>
@@ -309,7 +309,7 @@ namespace MySql.Data.MySqlClient
 			{
 				reader.Close();
 				lastInsertedId = reader.InsertedId;
-				this.updatedRowCount = reader.RecordsAffected;
+				updatedRowCount = reader.RecordsAffected;
 			}
 			return (int)updatedRowCount;
 		}
@@ -791,7 +791,7 @@ namespace MySql.Data.MySqlClient
             if (disposing)
             {
                 if (statement != null && statement.IsPrepared)
-                    ((PreparableStatement)statement).CloseStatement();
+                    statement.CloseStatement();
             }
             base.Dispose(disposing);
         }
@@ -806,11 +806,11 @@ namespace MySql.Data.MySqlClient
 		{
 			get
 			{
-				return this.designTimeVisible;
+				return designTimeVisible;
 			}
 			set
 			{
-				this.designTimeVisible = value;
+				designTimeVisible = value;
 			}
 		}
 
@@ -822,11 +822,11 @@ namespace MySql.Data.MySqlClient
 		{
 			get
 			{
-				return this.updatedRowSource;
+				return updatedRowSource;
 			}
 			set
 			{
-				this.updatedRowSource = value;
+				updatedRowSource = value;
 			}
 		}
 
@@ -837,24 +837,24 @@ namespace MySql.Data.MySqlClient
 
 		protected override DbConnection DbConnection
 		{
-			get { return this.Connection; }
-			set { this.Connection = (MySqlConnection)value; }
+			get { return Connection; }
+			set { Connection = (MySqlConnection)value; }
 		}
 
 		protected override DbParameterCollection DbParameterCollection
 		{
-			get { return this.Parameters; }
+			get { return Parameters; }
 		}
 
 		protected override DbTransaction DbTransaction
 		{
-			get { return this.Transaction; }
-			set { this.Transaction = (MySqlTransaction)value; }
+			get { return Transaction; }
+			set { Transaction = (MySqlTransaction)value; }
 		}
 
 		protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior)
 		{
-			return this.ExecuteReader(behavior);
+			return ExecuteReader(behavior);
 		}
 	}
 }

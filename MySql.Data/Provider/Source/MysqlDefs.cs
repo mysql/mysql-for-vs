@@ -25,7 +25,7 @@ namespace MySql.Data.MySqlClient
     /// <summary>
     /// Summary description for ClientParam.
     /// </summary>
-    [Flags()]
+    [Flags]
     internal enum ClientFlags
     {
         LONG_PASSWORD = 1, // new more secure passwords
@@ -48,7 +48,7 @@ namespace MySql.Data.MySqlClient
         MULTI_RESULTS = 131072 // Allow multiple resultsets
     }
 
-    [Flags()]
+    [Flags]
     internal enum ServerStatusFlags
     {
         InTransaction = 1, // Transaction has started
