@@ -8,6 +8,8 @@ Version 5.1.7
    autocorrection to Datetime (bug #37406)
  - Uncommented access denied error enumeration value (bug #37398)
  - Improved documentation concerning autoincrement columns and the DataColumn class (bug #37350)
+ - Fixed problem where executing a command that results in a fatal exception would not
+   close the connection.  (bug #37991)
  
 Version 5.1.6 - 5/7/08
  - Fixed problem where parameters lists were not showing when you tried to alter a routine 

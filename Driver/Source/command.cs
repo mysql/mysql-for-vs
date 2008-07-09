@@ -415,6 +415,8 @@ namespace MySql.Data.MySqlClient
                         throw new MySqlException(Resources.Timeout);
                     return null;
                 }
+                if (ex.IsFatal)
+                    Connection.Close();
                 throw;
             }
             finally

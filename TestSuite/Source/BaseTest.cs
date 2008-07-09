@@ -277,7 +277,20 @@ namespace MySql.Data.MySqlClient.Tests
             {
                 Assert.Fail(ex.Message);
             }
-            c.Ping();  // this final ping will cause MySQL to clean up the killed thread
+
+            // now wait till the process dies
+            bool processStillAlive = false;
+            while (true)
+            {
+                MySqlDataAdapter da = new MySqlDataAdapter("SHOW PROCESSLIST", conn);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                foreach (DataRow row in dt.Rows)
+                    if (row["Id"].Equals(threadId))
+                        processStillAlive = true;
+                if (!processStillAlive) break;
+                System.Threading.Thread.Sleep(500); 
+            }
         }
 
         protected void createTable(string sql, string engine)
