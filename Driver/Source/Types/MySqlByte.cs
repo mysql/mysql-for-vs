@@ -101,11 +101,14 @@ namespace MySql.Data.Types
 		void IMySqlValue.WriteValue(MySqlStream stream, bool binary, object val, int length)
 		{
 			sbyte v = ((IConvertible)val).ToSByte(null);
-			if (binary)
-				stream.Write(BitConverter.GetBytes(v));
-			else
-				stream.WriteStringNoNull(v.ToString());
-		}
+            if (binary)
+            {
+                byte[] b = BitConverter.GetBytes(v);
+                stream.WriteByte(b[0]);
+            }
+            else
+                stream.WriteStringNoNull(v.ToString());
+        }
 
 		IMySqlValue IMySqlValue.ReadValue(MySqlStream stream, long length, bool nullVal)
 		{

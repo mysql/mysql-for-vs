@@ -28,6 +28,12 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture]
 	public class PreparedStatements : BaseTest
 	{
+        protected override void FixtureSetup()
+        {
+            csAdditions = ";ignore prepare=false;";
+            base.FixtureSetup();
+        }
+
         protected override void Setup()
         {
             base.Setup();
@@ -778,6 +784,39 @@ namespace MySql.Data.MySqlClient.Tests
                 c.Ping();
                 Assert.AreEqual(initialCount, GetPreparedStatementCount());
             }
+        }
+
+        /// <summary>
+        /// Bug #37968 Prepared statements byte/tinyint causes data corruption.
+        /// </summary>
+        [Test]
+        public void InsertingUnsignedTinyInt()
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL(@"CREATE TABLE Test(id TINYINT UNSIGNED NOT NULL, 
+                id2 INT UNSIGNED, id3 TINYINT UNSIGNED, id4 INT UNSIGNED NOT NULL)");
+
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (?id, ?id2, ?id3, ?id4)", conn);
+            cmd.Parameters.Add("?id", MySqlDbType.UByte);
+            cmd.Parameters.Add("?id2", MySqlDbType.UByte);
+            cmd.Parameters.Add("?id3", MySqlDbType.UByte);
+            cmd.Parameters.Add("?id4", MySqlDbType.UByte);
+            cmd.Prepare();
+
+            cmd.Parameters[0].Value = 127;
+            cmd.Parameters[1].Value = 1;
+            cmd.Parameters[2].Value = 2;
+            cmd.Parameters[3].Value = 3;
+            cmd.ExecuteNonQuery();
+
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            Assert.AreEqual(1, dt.Rows.Count);
+            Assert.AreEqual(127, dt.Rows[0][0]);
+            Assert.AreEqual(1, dt.Rows[0][1]);
+            Assert.AreEqual(2, dt.Rows[0][2]);
+            Assert.AreEqual(3, dt.Rows[0][3]);
         }
     }
 

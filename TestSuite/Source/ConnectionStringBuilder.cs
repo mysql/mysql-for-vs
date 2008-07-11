@@ -93,5 +93,17 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.IsFalse(sb.UsePerformanceMonitor);
             Assert.AreEqual(25, sb.ProcedureCacheSize);
         }
+
+        /// <summary>
+        /// Bug #37955 Connector/NET keeps adding the same option to the connection string
+        /// </summary>
+        [Test]
+        public void SettingValueMultipeTimes()
+        {
+            MySqlConnectionStringBuilder s = new MySqlConnectionStringBuilder();
+            s["database"] = "test";
+            s["database"] = "test2";
+            Assert.AreEqual("database=test2", s.GetConnectionString(false));
+        }
     }
 }
