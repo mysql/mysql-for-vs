@@ -35,8 +35,8 @@ namespace MySql.Data.MySqlClient
 
         string userId, password, server;
         string database, sharedMemName, pipeName, charSet;
-        string originalConnectionString;
-        StringBuilder persistConnString;
+        readonly string originalConnectionString;
+        readonly StringBuilder persistConnString;
         uint port, connectionTimeout, minPoolSize, maxPoolSize;
         uint procCacheSize, connectionLifetime;
         MySqlConnectionProtocol protocol;
@@ -814,10 +814,10 @@ namespace MySql.Data.MySqlClient
 
         #region Language and Character Set Properties
 
+#if !CF && !MONO
         /// <summary>
         /// Gets or sets the character set that should be used for sending queries to the server.
         /// </summary>
-#if !CF && !MONO
         [DisplayName("Character Set")]
         [Category("Advanced")]
         [Description("Character set this connection should use")]
@@ -833,10 +833,10 @@ namespace MySql.Data.MySqlClient
             }
         }
 
+#if !CF && !MONO
         /// <summary>
         /// Indicates whether the driver should treat binary blobs as UTF8
         /// </summary>
-#if !CF && !MONO
         [DisplayName("Treat Blobs As UTF8")]
         [Category("Advanced")]
         [Description("Should binary blobs be treated as UTF8")]
@@ -852,10 +852,10 @@ namespace MySql.Data.MySqlClient
             }
         }
 
+#if !CF && !MONO
         /// <summary>
         /// Gets or sets the pattern that matches the columns that should be treated as UTF8
         /// </summary>
-#if !CF && !MONO
         [DisplayName("BlobAsUTF8IncludePattern")]
         [Category("Advanced")]
         [Description("Pattern that matches columns that should be treated as UTF8")]
@@ -872,10 +872,10 @@ namespace MySql.Data.MySqlClient
             }
         }
 
+#if !CF && !MONO
         /// <summary>
         /// Gets or sets the pattern that matches the columns that should not be treated as UTF8
         /// </summary>
-#if !CF && !MONO
         [DisplayName("BlobAsUTF8ExcludePattern")]
         [Category("Advanced")]
         [Description("Pattern that matches columns that should not be treated as UTF8")]
@@ -918,17 +918,14 @@ namespace MySql.Data.MySqlClient
                 if (s == "no" || s == "false") return false;
                 throw new ArgumentException(Resources.ImproperValueFormat, (string) value);
             }
-            else
+            try
             {
-                try
-                {
-                    return (value as IConvertible).ToBoolean(
-                        CultureInfo.InvariantCulture);
-                }
-                catch (InvalidCastException)
-                {
-                    throw new ArgumentException(Resources.ImproperValueFormat, value.ToString());
-                }
+                return (value as IConvertible).ToBoolean(
+                    CultureInfo.InvariantCulture);
+            }
+            catch (InvalidCastException)
+            {
+                throw new ArgumentException(Resources.ImproperValueFormat, value.ToString());
             }
         }
 
@@ -947,11 +944,11 @@ namespace MySql.Data.MySqlClient
                     string lowerString = (value as string).ToLower();
                     if (lowerString == "socket" || lowerString == "tcp")
                         return MySqlConnectionProtocol.Sockets;
-                    else if (lowerString == "pipe")
+                    if (lowerString == "pipe")
                         return MySqlConnectionProtocol.NamedPipe;
-                    else if (lowerString == "unix")
+                    if (lowerString == "unix")
                         return MySqlConnectionProtocol.UnixSocket;
-                    else if (lowerString == "memory")
+                    if (lowerString == "memory")
                         return MySqlConnectionProtocol.SharedMemory;
                 }
             }
