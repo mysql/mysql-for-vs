@@ -113,12 +113,11 @@ namespace MySql.Data.MySqlClient
             get { return inActiveUse; }
             set { inActiveUse = value; }
         }
-
-	    public bool IsOpen
-	    {
-            get { return isOpen; }
-	    }
 #endif
+        public bool IsOpen
+        {
+            get { return isOpen; }
+        }
 
         #endregion
 
