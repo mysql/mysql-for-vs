@@ -89,15 +89,6 @@
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|.NET 2.0' ">
-    <PlatformTarget>x64</PlatformTarget>
-    <OutputPath>bin\net-2.0\Debug\</OutputPath>
-    <DefineConstants>NET20</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|.NET 2.0' ">
-    <OutputPath>bin\net-2.0\Release\</OutputPath>
-    <DefineConstants>NET20</DefineConstants>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System">
       <Name>System</Name>

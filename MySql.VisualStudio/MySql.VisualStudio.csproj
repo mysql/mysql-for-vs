@@ -231,6 +231,7 @@
     <Compile Include="DocumentView\Documents\TableDocument.cs">
     </Compile>
     <Compile Include="DataConnectionUIStub.cs">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="DocumentView\Editors\BaseEditor.cs">
       <SubType>UserControl</SubType>
@@ -252,6 +253,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="MySqlDataConnectionPromptDialog.cs">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="MySqlDataConnectionPromptDialog.Designer.cs">
       <DependentUpon>MySqlDataConnectionPromptDialog.cs</DependentUpon>
@@ -285,6 +287,7 @@
     <Compile Include="Utils\Parser.cs" />
     <Compile Include="Utils\QueryBuilder.cs" />
     <Compile Include="MySqlConnectionUIControl.cs">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="MySqlConnectionUIControl.designer.cs">
       <DependentUpon>MySqlConnectionUIControl.cs</DependentUpon>
@@ -324,8 +327,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <SubType>Designer</SubType>
-      <Generator>ResXFileCodeGenerator</Generator>
       <MergeWithCTO>true</MergeWithCTO>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>

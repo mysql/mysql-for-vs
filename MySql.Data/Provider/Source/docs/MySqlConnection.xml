@@ -979,20 +979,6 @@
           </tr>
           <tr>
             <td>
-              Old Syntax<para>  -or-  </para>OldSyntax
-            </td>
-            <td>false</td>
-            <td>
-              Allows use of '@' symbol as a parameter marker.  See <see cref="MySqlCommand"/> for more
-              info.
-              <note>
-                This is for compatibility only.  All future code should be written to
-                use the new '?' parameter marker.
-              </note>
-            </td>
-          </tr>
-          <tr>
-            <td>
               Pipe Name<para>  -or-  </para>Pipe
             </td>
             <td>mysql</td>

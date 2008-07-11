@@ -97,21 +97,24 @@ namespace MySql.Web.Common
             {
                 conn.Open();
 
-                string[] restrictions = new string[4];
-                restrictions[2] = "mysql_Membership";
-                DataTable dt = conn.GetSchema("Tables", restrictions);
-                if (dt.Rows.Count == 1)
-                    return Convert.ToInt32(dt.Rows[0]["TABLE_COMMENT"]);
-
-                restrictions[2] = "my_aspnet_schemaversion";
-                dt = conn.GetSchema("Tables", restrictions);
-                if (dt.Rows.Count == 0) return 0;
-
                 MySqlCommand cmd = new MySqlCommand("SELECT * FROM my_aspnet_SchemaVersion", conn);
-                object ver = cmd.ExecuteScalar();
-                if (ver == null)
-                    throw new ProviderException(Resources.MissingOrWrongSchema);
-                return (int)ver;
+                try
+                {
+                    object ver = cmd.ExecuteScalar();
+                    if (ver != null)
+                        return (int)ver;
+                }
+                catch (MySqlException ex)
+                {
+                    if (ex.Number != (int)MySqlErrorCode.NoSuchTable)
+                        throw;
+                    string[] restrictions = new string[4];
+                    restrictions[2] = "mysql_Membership";
+                    DataTable dt = conn.GetSchema("Tables", restrictions);
+                    if (dt.Rows.Count == 1)
+                        return Convert.ToInt32(dt.Rows[0]["TABLE_COMMENT"]);
+                }
+                throw new ProviderException(Resources.MissingOrWrongSchema);
             }
         }
 

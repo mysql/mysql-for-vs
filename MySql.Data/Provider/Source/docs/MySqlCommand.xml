@@ -39,11 +39,10 @@
       remains open.  It is the responsibility of the programmer to close the connection.
 
       <note>
-        Prior versions of the provider used the '@' symbol to mark parameters in SQL.  This is incompatible
-        with MySQL user variables, so the provider now uses the '?' symbol to locate parameters in SQL.  To
-        support older code, you can set 'old syntax=yes' on your connection string.  If you do this, please
-        be aware that an exception will not be throw if you fail to define a parameter that  you intended to
-        use in your SQL.
+        Using the '@' symbol for paramters is now the preferred approach although the old pattern of using
+		'?' is still supported.  Please be aware though that using '@' can cause conflicts when user variables
+		are also used.  To help with this situation please see the documentation on the 'allow user variables'
+		connection string option.  The 'old syntax' connection string option has now been deprecated.
       </note>
     </remarks>
 
@@ -611,8 +610,8 @@
       The following example demonstrates the use of the <b>Prepare</b> method.
       <code lang="VB.NET">
         public sub PrepareExample()
-        Dim cmd as New MySqlCommand("INSERT INTO mytable VALUES (?val)", myConnection)
-        cmd.Parameters.Add( "?val", 10 )
+        Dim cmd as New MySqlCommand("INSERT INTO mytable VALUES (@val)", myConnection)
+        cmd.Parameters.Add( "@val", 10 )
         cmd.Prepare()
         cmd.ExecuteNonQuery()
 
@@ -623,8 +622,8 @@
       <code lang="C#">
         private void PrepareExample()
         {
-        MySqlCommand cmd = new MySqlCommand("INSERT INTO mytable VALUES (?val)", myConnection);
-        cmd.Parameters.Add( "?val", 10 );
+        MySqlCommand cmd = new MySqlCommand("INSERT INTO mytable VALUES (@val)", myConnection);
+        cmd.Parameters.Add( "@val", 10 );
         cmd.Prepare();
         cmd.ExecuteNonQuery();
 
@@ -861,7 +860,7 @@
         Public Sub CreateMySqlCommand(myConnection As MySqlConnection, _
         mySelectQuery As String, myParamArray() As MySqlParameter)
         Dim myCommand As New MySqlCommand(mySelectQuery, myConnection)
-        myCommand.CommandText = "SELECT id, name FROM mytable WHERE age=?age"
+        myCommand.CommandText = "SELECT id, name FROM mytable WHERE age=@age"
         myCommand.UpdatedRowSource = UpdateRowSource.Both
         myCommand.Parameters.Add(myParamArray)
         Dim j As Integer
@@ -881,7 +880,7 @@
         MySqlParameter[] myParamArray)
         {
         MySqlCommand myCommand = new MySqlCommand(mySelectQuery, myConnection);
-        myCommand.CommandText = "SELECT id, name FROM mytable WHERE age=?age";
+        myCommand.CommandText = "SELECT id, name FROM mytable WHERE age=@age";
         myCommand.Parameters.Add(myParamArray);
         for (int j=0; j&lt;myParamArray.Length; j++)
         {

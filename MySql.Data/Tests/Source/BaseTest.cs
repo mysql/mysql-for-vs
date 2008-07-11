@@ -105,6 +105,10 @@ namespace MySql.Data.MySqlClient.Tests
             string connStr = GetConnectionStringEx(rootUser, rootPassword, false);
             rootConn = new MySqlConnection(connStr + ";database=mysql");
             rootConn.Open();
+
+            // run all tests in strict mode
+            MySqlCommand cmd = new MySqlCommand("SET GLOBAL SQL_MODE=STRICT_ALL_TABLES", rootConn);
+		    cmd.ExecuteNonQuery();
 		}
 
         #region Properties
@@ -215,7 +219,20 @@ namespace MySql.Data.MySqlClient.Tests
             int threadId = c.ServerThread;
             MySqlCommand cmd = new MySqlCommand("KILL " + threadId, conn);
             cmd.ExecuteNonQuery();
-            c.Ping();  // this final ping will cause MySQL to clean up the killed thread
+
+            // now wait till the process dies
+            bool processStillAlive = false;
+            while (true)
+            {
+                MySqlDataAdapter da = new MySqlDataAdapter("SHOW PROCESSLIST", conn);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                foreach (DataRow row in dt.Rows)
+                    if (row["Id"].Equals(threadId))
+                        processStillAlive = true;
+                if (!processStillAlive) break;
+                System.Threading.Thread.Sleep(500);
+            }
         }
 
         protected void createTable(string sql, string engine)

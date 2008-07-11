@@ -120,28 +120,31 @@ namespace MySql.Data.MySqlClient
                 ER_UNEXPECTED_EOF 1039
                 ER_CON_COUNT_ERROR 1040
                 ER_OUT_OF_RESOURCES 1041*/
-            /// <summary>
-            /// Given when the connection is unable to successfully connect to host.
-            /// </summary>
-            UnableToConnectToHost = 1042,
+        /// <summary>
+        /// Given when the connection is unable to successfully connect to host.
+        /// </summary>
+        UnableToConnectToHost = 1042,
 /*                ER_HANDSHAKE_ERROR 1043
-                ER_DBACCESS_DENIED_ERROR 1044
-                ER_ACCESS_DENIED_ERROR 1045
-                ER_NO_DB_ERROR 1046
-                ER_UNKNOWN_COM_ERROR 1047
-                ER_BAD_NULL_ERROR 1048
-                ER_BAD_DB_ERROR 1049
-                ER_TABLE_EXISTS_ERROR 1050
-                ER_BAD_TABLE_ERROR 1051
-                ER_NON_UNIQ_ERROR 1052
-                ER_SERVER_SHUTDOWN 1053
-                ER_BAD_FIELD_ERROR 1054
-                ER_WRONG_FIELD_WITH_GROUP 1055
-                ER_WRONG_GROUP_FIELD 1056
-                ER_WRONG_SUM_SELECT 1057
-                ER_WRONG_VALUE_COUNT 1058
-                ER_TOO_LONG_IDENT 1059
-                ER_DUP_FIELDNAME 1060*/
+                ER_DBACCESS_DENIED_ERROR 1044*/
+        /// <summary>
+        /// Normally returned when an incorrect password is given
+        /// </summary>
+        AccessDenied = 1045,
+            /*                ER_NO_DB_ERROR 1046
+                            ER_UNKNOWN_COM_ERROR 1047
+                            ER_BAD_NULL_ERROR 1048
+                            ER_BAD_DB_ERROR 1049
+                            ER_TABLE_EXISTS_ERROR 1050
+                            ER_BAD_TABLE_ERROR 1051
+                            ER_NON_UNIQ_ERROR 1052
+                            ER_SERVER_SHUTDOWN 1053
+                            ER_BAD_FIELD_ERROR 1054
+                            ER_WRONG_FIELD_WITH_GROUP 1055
+                            ER_WRONG_GROUP_FIELD 1056
+                            ER_WRONG_SUM_SELECT 1057
+                            ER_WRONG_VALUE_COUNT 1058
+                            ER_TOO_LONG_IDENT 1059
+                            ER_DUP_FIELDNAME 1060*/
         /// <summary>
         /// Duplicate Key Name
         /// </summary>
@@ -246,10 +249,11 @@ namespace MySql.Data.MySqlClient
 			ER_TABLEACCESS_DENIED_ERROR 1142
 			ER_COLUMNACCESS_DENIED_ERROR 1143
 			ER_ILLEGAL_GRANT_FOR_TABLE 1144
-			ER_GRANT_WRONG_HOST_OR_USER 1145
-			ER_NO_SUCH_TABLE 1146
-			ER_NONEXISTING_TABLE_GRANT 1147
-			ER_NOT_ALLOWED_COMMAND 1148
+			ER_GRANT_WRONG_HOST_OR_USER 1145 */
+        NoSuchTable = 1146,
+        NonExistingTableGrant = 1147,
+
+/*			ER_NOT_ALLOWED_COMMAND 1148
 			ER_SYNTAX_ERROR 1149
 			ER_DELAYED_CANT_CHANGE_LOCK 1150
 			ER_TOO_MANY_DELAYED_THREADS 1151

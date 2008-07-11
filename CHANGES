@@ -19,7 +19,10 @@ Version 5.2.3
   had the unfortunate side effect of setting the value for all connections that shared that 
   connection string.  This way we isolate it just to our particular command.  
   This may fix bug #37104    
-    
+- Fixed documentation surrounding use of ? vs @ for parameters (bug #37349)
+- Reduced network traffic for the normal case where the web provider schema is up
+  to date (bug #37469)
+
 Version 5.2.2 - 
 - Fixed profile provider that would throw an exception if you were updating
   a profile that already existed.
@@ -81,6 +84,12 @@ Version 5.1.7
  - Fixed problem with pooling code where connections pooled from the pool were added
    twice to the in use pool.  This would cause a semaphore full exception
    when an attempt is made to release them back to the pool (bug #36688)
+ - Reversed order of Datetime and DateTime enums for MySqlDbType so that VB users won't get
+   autocorrection to Datetime (bug #37406)
+ - Uncommented access denied error enumeration value (bug #37398)
+ - Improved documentation concerning autoincrement columns and the DataColumn class (bug #37350)
+ - Fixed problem where executing a command that results in a fatal exception would not
+   close the connection.  (bug #37991)
 
 Version 5.1.6 
  - Fixed problem where parameters lists were not showing when you tried to alter a routine 
@@ -217,6 +226,12 @@ Version 5.0.10 -
     a non-existant pool.  (bug #36432)    
   - Fixed problem where supplying the connection reset config option can cause login to fail
     when there is room to make a new connection and the pool has no idle connections.    
+  - Fixed MySqlConnectionStringBuilder to first remove old keyword settings when setting
+    a value that was previously set (bug #37955)    
+  - Fixed problem where executing a command that results in a fatal exception would not
+    close the connection.  (bug #37991)
+  - Fixed problem with byte and unsigned byte values writing more too many bytes when
+    using prepared statements (bug #37968)      
         
 Version 5.0.9 - 4/14/08
 
