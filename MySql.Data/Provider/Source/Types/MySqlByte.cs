@@ -102,10 +102,7 @@ namespace MySql.Data.Types
 		{
 			sbyte v = ((IConvertible)val).ToSByte(null);
             if (binary)
-            {
-                byte[] b = BitConverter.GetBytes(v);
-                stream.WriteByte(b[0]);
-            }
+                stream.WriteByte((byte)v);
             else
                 stream.WriteStringNoNull(v.ToString());
         }
