@@ -79,6 +79,7 @@
     </Compile>
     <Compile Include="Source\Crypt.cs" />
     <Compile Include="Source\dataadapter.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Source\datareader.cs" />
     <Compile Include="Source\Driver.cs" />
