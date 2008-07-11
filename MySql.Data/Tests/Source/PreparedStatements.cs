@@ -25,176 +25,182 @@ using NUnit.Framework;
 
 namespace MySql.Data.MySqlClient.Tests
 {
-	[TestFixture]
-	public class PreparedStatements : BaseTest
-	{
+    [TestFixture]
+    public class PreparedStatements : BaseTest
+    {
+        public override void FixtureSetup()
+        {
+            csAdditions = ";ignore prepare=false;";
+            base.FixtureSetup();
+        }
+
         public override void Setup()
         {
             base.Setup();
             execSQL("DROP TABLE IF EXISTS Test");
         }
 
-		[Test]
-		public void Simple() 
-		{
-			execSQL("DROP TABLE IF EXISTS Test");
-			execSQL("CREATE TABLE Test (id INT, dec1 DECIMAL(5,2), name VARCHAR(100))");
-			execSQL("INSERT INTO Test VALUES (1, 345.12, 'abcd')");
+        [Test]
+        public void Simple()
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id INT, dec1 DECIMAL(5,2), name VARCHAR(100))");
+            execSQL("INSERT INTO Test VALUES (1, 345.12, 'abcd')");
 
-			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES(1,345.12,'abcd')", conn);
-			cmd.Prepare();
-			cmd.ExecuteNonQuery();
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES(1,345.12,'abcd')", conn);
+            cmd.Prepare();
+            cmd.ExecuteNonQuery();
 
-			cmd.CommandText = "SELECT * FROM Test";
-			cmd.Prepare();
-			MySqlDataReader reader = null;
-			try 
-			{
-				reader = cmd.ExecuteReader();
-				Assert.IsTrue(reader.Read());
-				Assert.AreEqual(1, reader.GetInt32(0));
-				Assert.AreEqual(345.12, reader.GetDecimal(1));
-				Assert.AreEqual("abcd", reader.GetString(2));
-			}
-			catch (Exception ex) 
-			{
-				Assert.Fail(ex.Message);
-			}
-			finally 
-			{
-				if (reader != null) reader.Close();
-			}
-		}
+            cmd.CommandText = "SELECT * FROM Test";
+            cmd.Prepare();
+            MySqlDataReader reader = null;
+            try
+            {
+                reader = cmd.ExecuteReader();
+                Assert.IsTrue(reader.Read());
+                Assert.AreEqual(1, reader.GetInt32(0));
+                Assert.AreEqual(345.12, reader.GetDecimal(1));
+                Assert.AreEqual("abcd", reader.GetString(2));
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                if (reader != null) reader.Close();
+            }
+        }
 
 
-		[Test]
-		public void SimplePrepareBeforeParms() 
-		{
-			execSQL("DROP TABLE IF EXISTS Test");
-			execSQL("CREATE TABLE Test (one INTEGER, two INTEGER)");
-			execSQL("INSERT INTO Test VALUES (1, 2)");
+        [Test]
+        public void SimplePrepareBeforeParms()
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (one INTEGER, two INTEGER)");
+            execSQL("INSERT INTO Test VALUES (1, 2)");
 
-			// create the command and prepare the statement
-			IDbCommand cmd = conn.CreateCommand();
-			cmd.CommandText = "SELECT * FROM Test WHERE one = ?p1";
-			cmd.Prepare();
+            // create the command and prepare the statement
+            IDbCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT * FROM Test WHERE one = ?p1";
+            cmd.Prepare();
 
-			// create the parameter
-			IDbDataParameter p1 = cmd.CreateParameter();
-			p1.ParameterName = "?p1";
-			p1.DbType = DbType.Int32;
-			p1.Precision = (byte)10;
-			p1.Scale = (byte)0;
-			p1.Size = 4;
-			cmd.Parameters.Add(p1);
-			p1.Value = 1;
+            // create the parameter
+            IDbDataParameter p1 = cmd.CreateParameter();
+            p1.ParameterName = "?p1";
+            p1.DbType = DbType.Int32;
+            p1.Precision = (byte)10;
+            p1.Scale = (byte)0;
+            p1.Size = 4;
+            cmd.Parameters.Add(p1);
+            p1.Value = 1;
 
-			// Execute the reader
-			IDataReader reader = null;
-			try 
-			{
-				reader = cmd.ExecuteReader();
+            // Execute the reader
+            IDataReader reader = null;
+            try
+            {
+                reader = cmd.ExecuteReader();
 
-				// Fetch the first record
-				reader.Read();
+                // Fetch the first record
+                reader.Read();
 
-				Assert.AreEqual(1, reader.GetInt32(0));
-				Assert.AreEqual(2, reader.GetInt32(1));
-			}
-			catch (Exception ex) 
-			{
-				Assert.Fail( ex.Message );
-			}
-			finally 
-			{
-				if (reader != null) reader.Close();
-			}
-		}
+                Assert.AreEqual(1, reader.GetInt32(0));
+                Assert.AreEqual(2, reader.GetInt32(1));
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                if (reader != null) reader.Close();
+            }
+        }
 
-		[Test]
-		public void DateAndTimes() 
-		{
-			execSQL("DROP TABLE IF EXISTS Test");
-			execSQL("CREATE TABLE Test (id INT NOT NULL, d DATE, dt DATETIME, tm TIME, ts TIMESTAMP, PRIMARY KEY(id))");
+        [Test]
+        public void DateAndTimes()
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id INT NOT NULL, d DATE, dt DATETIME, tm TIME, ts TIMESTAMP, PRIMARY KEY(id))");
 
-			string sql = "INSERT INTO Test VALUES(?id, ?d, ?dt, ?tm, NULL)";
-			MySqlCommand cmd = new MySqlCommand(sql, conn);
-			cmd.Prepare();
+            string sql = "INSERT INTO Test VALUES(?id, ?d, ?dt, ?tm, NULL)";
+            MySqlCommand cmd = new MySqlCommand(sql, conn);
+            cmd.Prepare();
 
-			DateTime dt = DateTime.Now;
-			dt = dt.AddMilliseconds( dt.Millisecond * -1 );
-			TimeSpan ts = new TimeSpan( 8, 11, 44, 56, 501 );
+            DateTime dt = DateTime.Now;
+            dt = dt.AddMilliseconds(dt.Millisecond * -1);
+            TimeSpan ts = new TimeSpan(8, 11, 44, 56, 501);
 
-			cmd.Parameters.AddWithValue("?id", 1);
-			cmd.Parameters.AddWithValue("?d", dt);
-			cmd.Parameters.AddWithValue("?dt", dt);
-			cmd.Parameters.AddWithValue("?tm", ts);
-			int count = cmd.ExecuteNonQuery();
-			Assert.AreEqual( 1, count, "Records affected by insert" );
+            cmd.Parameters.AddWithValue("?id", 1);
+            cmd.Parameters.AddWithValue("?d", dt);
+            cmd.Parameters.AddWithValue("?dt", dt);
+            cmd.Parameters.AddWithValue("?tm", ts);
+            int count = cmd.ExecuteNonQuery();
+            Assert.AreEqual(1, count, "Records affected by insert");
 
-			cmd.CommandText = "SELECT * FROM Test";
-			cmd.Prepare();
-			
-			MySqlDataReader reader = null;
-			try 
-			{
-				reader = cmd.ExecuteReader();
-				reader.Read();
-				Assert.AreEqual( 1, reader.GetInt32(0), "Id column" );
-				Assert.AreEqual( dt.Date, reader.GetDateTime(1).Date, "Date column" );
+            cmd.CommandText = "SELECT * FROM Test";
+            cmd.Prepare();
 
-				DateTime dt2 = reader.GetDateTime(2);
-				Assert.AreEqual( dt.Date, dt2.Date );
-				Assert.AreEqual( dt.Hour, dt2.Hour );
-				Assert.AreEqual( dt.Minute, dt2.Minute );
-				Assert.AreEqual( dt.Second, dt2.Second );
+            MySqlDataReader reader = null;
+            try
+            {
+                reader = cmd.ExecuteReader();
+                reader.Read();
+                Assert.AreEqual(1, reader.GetInt32(0), "Id column");
+                Assert.AreEqual(dt.Date, reader.GetDateTime(1).Date, "Date column");
 
-				TimeSpan ts2 = reader.GetTimeSpan(3);
-				Assert.AreEqual( ts.Days, ts2.Days );
-				Assert.AreEqual( ts.Hours, ts2.Hours );
-				Assert.AreEqual( ts.Minutes, ts2.Minutes );
-				Assert.AreEqual( ts.Seconds, ts2.Seconds );
+                DateTime dt2 = reader.GetDateTime(2);
+                Assert.AreEqual(dt.Date, dt2.Date);
+                Assert.AreEqual(dt.Hour, dt2.Hour);
+                Assert.AreEqual(dt.Minute, dt2.Minute);
+                Assert.AreEqual(dt.Second, dt2.Second);
 
-				Assert.AreEqual( dt.Date, reader.GetDateTime(4).Date, "Timestamp column" );
-			}
-			catch (Exception ex) 
-			{
-				Assert.Fail( ex.Message );
-			}
-			finally 
-			{
-				if (reader != null) reader.Close();
-			}
-		}
+                TimeSpan ts2 = reader.GetTimeSpan(3);
+                Assert.AreEqual(ts.Days, ts2.Days);
+                Assert.AreEqual(ts.Hours, ts2.Hours);
+                Assert.AreEqual(ts.Minutes, ts2.Minutes);
+                Assert.AreEqual(ts.Seconds, ts2.Seconds);
 
-		[Test]
-		public void ResetCommandText() 
-		{
-			execSQL("DROP TABLE IF EXISTS Test"); 
-			execSQL("CREATE TABLE Test (id int, name varchar(100))");
-			execSQL("INSERT INTO Test VALUES (1, 'Test')");
+                Assert.AreEqual(dt.Date, reader.GetDateTime(4).Date, "Timestamp column");
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                if (reader != null) reader.Close();
+            }
+        }
 
-			MySqlCommand cmd = new MySqlCommand("SELECT id FROM Test", conn);
-			cmd.Prepare();
-			object o = cmd.ExecuteScalar();
-			Assert.AreEqual( 1, o );
+        [Test]
+        public void ResetCommandText()
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id int, name varchar(100))");
+            execSQL("INSERT INTO Test VALUES (1, 'Test')");
 
-			cmd.CommandText = "SELECT name FROM Test";
-			cmd.Prepare();
-			o = cmd.ExecuteScalar();
-			Assert.AreEqual( "Test", o );
-			
-		}
+            MySqlCommand cmd = new MySqlCommand("SELECT id FROM Test", conn);
+            cmd.Prepare();
+            object o = cmd.ExecuteScalar();
+            Assert.AreEqual(1, o);
 
-		[Test]
-		public void DifferentParameterOrder() 
-		{
-			execSQL("DROP TABLE IF EXISTS Test"); 
-			execSQL("CREATE TABLE Test (id int NOT NULL AUTO_INCREMENT, " +
+            cmd.CommandText = "SELECT name FROM Test";
+            cmd.Prepare();
+            o = cmd.ExecuteScalar();
+            Assert.AreEqual("Test", o);
+
+        }
+
+        [Test]
+        public void DifferentParameterOrder()
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id int NOT NULL AUTO_INCREMENT, " +
                     "id2 int NOT NULL, name varchar(50) DEFAULT NULL, " +
                     "id3 int DEFAULT NULL, PRIMARY KEY (id))");
 
-			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id, id2, name, id3) " +
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id, id2, name, id3) " +
                                                 "VALUES(?id, ?id2, ?name,?id3)", conn);
 
             MySqlParameter id = new MySqlParameter();
@@ -248,262 +254,262 @@ namespace MySql.Data.MySqlClient.Tests
             {
                 Assert.Fail(ex.Message);
             }
-		}
+        }
 
-		[Test]
-		public void Blobs() 
-		{
-			execSQL("DROP TABLE IF EXISTS Test");
-			execSQL("CREATE TABLE Test (id INT, blob1 LONGBLOB, text1 LONGTEXT)");
+        [Test]
+        public void Blobs()
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id INT, blob1 LONGBLOB, text1 LONGTEXT)");
 
-			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (?id, ?blob1, ?text1)", conn);
-			cmd.Prepare();
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (?id, ?blob1, ?text1)", conn);
+            cmd.Prepare();
 
-			byte[] bytes = Utils.CreateBlob( 400000 );
-			string inStr = "This is my text";
+            byte[] bytes = Utils.CreateBlob(400000);
+            string inStr = "This is my text";
 
-			cmd.Parameters.AddWithValue("?id", 1);
-			cmd.Parameters.AddWithValue("?blob1", bytes);
-			cmd.Parameters.AddWithValue("?text1", inStr);
-			int count = cmd.ExecuteNonQuery();
-			Assert.AreEqual( 1, count );
+            cmd.Parameters.AddWithValue("?id", 1);
+            cmd.Parameters.AddWithValue("?blob1", bytes);
+            cmd.Parameters.AddWithValue("?text1", inStr);
+            int count = cmd.ExecuteNonQuery();
+            Assert.AreEqual(1, count);
 
-			cmd.CommandText = "SELECT * FROM Test";
-			cmd.Prepare();
-			MySqlDataReader reader = null;
+            cmd.CommandText = "SELECT * FROM Test";
+            cmd.Prepare();
+            MySqlDataReader reader = null;
 
-			try 
-			{
-				reader = cmd.ExecuteReader();
-				Assert.IsTrue( reader.Read() );
-				Assert.AreEqual( 1, reader.GetInt32(0) );
-				Assert.AreEqual( bytes.Length, reader.GetBytes( 1, 0, null, 0, 0 ));	
-				byte[] outBytes = new byte[ bytes.Length ];
-				reader.GetBytes( 1, 0, outBytes, 0, bytes.Length );
-				for (int x=0; x < bytes.Length; x++)
-					Assert.AreEqual( bytes[x], outBytes[x] );
-				Assert.AreEqual( inStr, reader.GetString( 2 ) );
-			}
-			catch (Exception ex) 
-			{
-				Assert.Fail( ex.Message );
-			}
-			finally 
-			{
-				if (reader != null) reader.Close();
-			}
-		}
+            try
+            {
+                reader = cmd.ExecuteReader();
+                Assert.IsTrue(reader.Read());
+                Assert.AreEqual(1, reader.GetInt32(0));
+                Assert.AreEqual(bytes.Length, reader.GetBytes(1, 0, null, 0, 0));
+                byte[] outBytes = new byte[bytes.Length];
+                reader.GetBytes(1, 0, outBytes, 0, bytes.Length);
+                for (int x = 0; x < bytes.Length; x++)
+                    Assert.AreEqual(bytes[x], outBytes[x]);
+                Assert.AreEqual(inStr, reader.GetString(2));
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                if (reader != null) reader.Close();
+            }
+        }
 
-		[Test]
-		public void SimpleTest2() 
-		{
-			execSQL("DROP TABLE IF EXISTS Test");
-			execSQL("CREATE TABLE Test (one integer, two integer, three integer, four integer, five integer, six integer, seven integer)");
-			execSQL("INSERT INTO Test VALUES (1, 2, 3, 4, 5, 6, 7)");
+        [Test]
+        public void SimpleTest2()
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (one integer, two integer, three integer, four integer, five integer, six integer, seven integer)");
+            execSQL("INSERT INTO Test VALUES (1, 2, 3, 4, 5, 6, 7)");
 
-			// create the command and prepare the statement
-			IDbCommand cmd = conn.CreateCommand();
-			cmd.CommandText = "SELECT one, two, three, four, five, six, seven FROM Test";
-			cmd.Prepare();
-			// Execute the reader
-			IDataReader reader = null;
-			try 
-			{
-				reader = cmd.ExecuteReader();
-				// Fetch the first record
-				reader.Read();
+            // create the command and prepare the statement
+            IDbCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT one, two, three, four, five, six, seven FROM Test";
+            cmd.Prepare();
+            // Execute the reader
+            IDataReader reader = null;
+            try
+            {
+                reader = cmd.ExecuteReader();
+                // Fetch the first record
+                reader.Read();
 
-				Assert.AreEqual( 1, reader.GetInt32(0) );
-				Assert.AreEqual( 2, reader.GetInt32(1) );
-				Assert.AreEqual( 3, reader.GetInt32(2) );
-				Assert.AreEqual( 4, reader.GetInt32(3) );
-				Assert.AreEqual( 5, reader.GetInt32(4) );
-				Assert.AreEqual( 6, reader.GetInt32(5) );
-				Assert.AreEqual( 7, reader.GetInt32(6) );
-			}
-			catch (Exception ex) 
-			{
-				Assert.Fail( ex.Message );
-			}
-			finally 
-			{
-				if (reader != null) reader.Close();
-			}
-		}
+                Assert.AreEqual(1, reader.GetInt32(0));
+                Assert.AreEqual(2, reader.GetInt32(1));
+                Assert.AreEqual(3, reader.GetInt32(2));
+                Assert.AreEqual(4, reader.GetInt32(3));
+                Assert.AreEqual(5, reader.GetInt32(4));
+                Assert.AreEqual(6, reader.GetInt32(5));
+                Assert.AreEqual(7, reader.GetInt32(6));
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                if (reader != null) reader.Close();
+            }
+        }
 
-		[Test]
-		public void Bug6271() 
-		{
+        [Test]
+        public void Bug6271()
+        {
             if (version < new Version(4, 1)) return;
 
             execSQL("DROP TABLE IF EXISTS Test2");
 
-			// Create the table again
-			execSQL("CREATE TABLE `Test2` (id INT unsigned NOT NULL auto_increment, " +
-				"`xpDOSG_Name` text,`xpDOSG_Desc` text, `Avatar` MEDIUMBLOB, `dtAdded` DATETIME, `dtTime` TIMESTAMP, " +
-				"PRIMARY KEY(id)) ENGINE=InnoDB DEFAULT CHARSET=latin1" );
+            // Create the table again
+            execSQL("CREATE TABLE `Test2` (id INT unsigned NOT NULL auto_increment, " +
+                "`xpDOSG_Name` text,`xpDOSG_Desc` text, `Avatar` MEDIUMBLOB, `dtAdded` DATETIME, `dtTime` TIMESTAMP, " +
+                "PRIMARY KEY(id)) ENGINE=InnoDB DEFAULT CHARSET=latin1");
 
-			string sql = "INSERT INTO `Test2` (`xpDOSG_Name`,`dtAdded`, `xpDOSG_Desc`,`Avatar`, `dtTime`) " +
-				"VALUES(?name, ?dt, ?desc, ?Avatar, NULL)";
+            string sql = "INSERT INTO `Test2` (`xpDOSG_Name`,`dtAdded`, `xpDOSG_Desc`,`Avatar`, `dtTime`) " +
+                "VALUES(?name, ?dt, ?desc, ?Avatar, NULL)";
 
-			MySqlCommand cmd = new MySqlCommand(sql, conn);
-			cmd.Prepare();
+            MySqlCommand cmd = new MySqlCommand(sql, conn);
+            cmd.Prepare();
 
-			DateTime dt = DateTime.Now;
-			dt = dt.AddMilliseconds( dt.Millisecond * -1 );
+            DateTime dt = DateTime.Now;
+            dt = dt.AddMilliseconds(dt.Millisecond * -1);
 
-			byte[] xpDOSG_Avatar = Utils.CreateBlob( 13000 );
-			cmd.Parameters.AddWithValue("?name", "Ceci est un nom");
+            byte[] xpDOSG_Avatar = Utils.CreateBlob(13000);
+            cmd.Parameters.AddWithValue("?name", "Ceci est un nom");
 
-			cmd.Parameters.AddWithValue("?desc", "Ceci est une description facile à plantouiller");
-			cmd.Parameters.AddWithValue("?avatar",xpDOSG_Avatar); 
-			cmd.Parameters.AddWithValue("?dt", dt);
-			int count = cmd.ExecuteNonQuery();
-			Assert.AreEqual( 1, count );
+            cmd.Parameters.AddWithValue("?desc", "Ceci est une description facile à plantouiller");
+            cmd.Parameters.AddWithValue("?avatar", xpDOSG_Avatar);
+            cmd.Parameters.AddWithValue("?dt", dt);
+            int count = cmd.ExecuteNonQuery();
+            Assert.AreEqual(1, count);
 
-			MySqlDataReader reader = null;
-			try 
-			{
-				cmd.CommandText = "SELECT * FROM Test2";
-				reader = cmd.ExecuteReader();
-				Assert.IsTrue( reader.Read() );
-				Assert.AreEqual( "Ceci est un nom", reader.GetString(1) );
-				Assert.AreEqual( dt.ToString("G"), reader.GetDateTime(4).ToString("G") );
-				Assert.AreEqual( "Ceci est une description facile à plantouiller", reader.GetString(2) );
-				
-				long len = reader.GetBytes( 3, 0, null, 0, 0 );
-				Assert.AreEqual( xpDOSG_Avatar.Length, len );
-				byte[] outBytes = new byte[len];
-				reader.GetBytes( 3, 0, outBytes, 0, (int)len );
+            MySqlDataReader reader = null;
+            try
+            {
+                cmd.CommandText = "SELECT * FROM Test2";
+                reader = cmd.ExecuteReader();
+                Assert.IsTrue(reader.Read());
+                Assert.AreEqual("Ceci est un nom", reader.GetString(1));
+                Assert.AreEqual(dt.ToString("G"), reader.GetDateTime(4).ToString("G"));
+                Assert.AreEqual("Ceci est une description facile à plantouiller", reader.GetString(2));
 
-				for (int x=0; x < xpDOSG_Avatar.Length; x++)
-					Assert.AreEqual( xpDOSG_Avatar[x], outBytes[x] );
-				
-			}
-			catch (Exception ex) 
-			{
-				Assert.Fail( ex.Message );
-			}
-			finally 
-			{
-				if (reader != null) reader.Close();
-			}
-		}
+                long len = reader.GetBytes(3, 0, null, 0, 0);
+                Assert.AreEqual(xpDOSG_Avatar.Length, len);
+                byte[] outBytes = new byte[len];
+                reader.GetBytes(3, 0, outBytes, 0, (int)len);
 
-		[Test]
-		public void SimpleTest() 
-		{
-			execSQL("DROP TABLE IF EXISTS Test");
-			execSQL("CREATE TABLE Test (one integer, two integer )");
-			execSQL("INSERT INTO Test VALUES( 1, 2)");
-			// create the command and prepare the statement
-			IDbCommand cmd = conn.CreateCommand();
-			cmd.CommandText = "SELECT * FROM Test where one = ?p1";
-			// create the parameter
-			IDbDataParameter p1 = cmd.CreateParameter();
-			p1.ParameterName = "?p1";
-			p1.DbType = DbType.Int32;
-			p1.Precision = (byte)10;
-			p1.Scale = (byte)0;
-			p1.Size = 4;
-			cmd.Parameters.Add(p1);
-			// prepare the command
-			cmd.Prepare();
-			// set the parameter value
-			p1.Value = 1;
-			// Execute the reader
-			IDataReader reader = null;
-			try 
-			{
-				reader = cmd.ExecuteReader();
-				// Fetch the first record
-				reader.Read();
-			}
-			catch (Exception ex) 
-			{
-				Assert.Fail( ex.Message );
-			}
-			finally 
-			{
-				if (reader != null) reader.Close();
-			}
-		}
+                for (int x = 0; x < xpDOSG_Avatar.Length; x++)
+                    Assert.AreEqual(xpDOSG_Avatar[x], outBytes[x]);
 
-		/// <summary>
-		/// Bug #13662  	Prepare() truncates accented character input
-		/// </summary>
-		[Test]
-		public void InsertAccentedCharacters()
-		{
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                if (reader != null) reader.Close();
+            }
+        }
+
+        [Test]
+        public void SimpleTest()
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (one integer, two integer )");
+            execSQL("INSERT INTO Test VALUES( 1, 2)");
+            // create the command and prepare the statement
+            IDbCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT * FROM Test where one = ?p1";
+            // create the parameter
+            IDbDataParameter p1 = cmd.CreateParameter();
+            p1.ParameterName = "?p1";
+            p1.DbType = DbType.Int32;
+            p1.Precision = (byte)10;
+            p1.Scale = (byte)0;
+            p1.Size = 4;
+            cmd.Parameters.Add(p1);
+            // prepare the command
+            cmd.Prepare();
+            // set the parameter value
+            p1.Value = 1;
+            // Execute the reader
+            IDataReader reader = null;
+            try
+            {
+                reader = cmd.ExecuteReader();
+                // Fetch the first record
+                reader.Read();
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                if (reader != null) reader.Close();
+            }
+        }
+
+        /// <summary>
+        /// Bug #13662  	Prepare() truncates accented character input
+        /// </summary>
+        [Test]
+        public void InsertAccentedCharacters()
+        {
             if (version < new Version(4, 1)) return;
 
             execSQL("DROP TABLE IF EXISTS Test");
-			execSQL("CREATE TABLE Test (id INT UNSIGNED NOT NULL PRIMARY KEY " +
-				"AUTO_INCREMENT, input TEXT NOT NULL) CHARACTER SET UTF8");
-				// COLLATE " +
-				//"utf8_bin");
-			MySqlConnection conn2 = new MySqlConnection(GetConnectionString(true) + 
-				";charset=utf8");
-			try 
-			{
-				conn2.Open();
+            execSQL("CREATE TABLE Test (id INT UNSIGNED NOT NULL PRIMARY KEY " +
+                "AUTO_INCREMENT, input TEXT NOT NULL) CHARACTER SET UTF8");
+            // COLLATE " +
+            //"utf8_bin");
+            MySqlConnection conn2 = new MySqlConnection(GetConnectionString(true) +
+                ";charset=utf8");
+            try
+            {
+                conn2.Open();
 
-				MySqlCommand cmd = new MySqlCommand("INSERT INTO Test(input) " +
-					"VALUES (?input) ON DUPLICATE KEY UPDATE " +
-					"id=LAST_INSERT_ID(id)", conn2);
-				cmd.Parameters.Add(new MySqlParameter("?input", ""));
-				cmd.Prepare();
-				cmd.Parameters[0].Value = "irache martínez@yahoo.es aol.com";
-				cmd.ExecuteNonQuery();
+                MySqlCommand cmd = new MySqlCommand("INSERT INTO Test(input) " +
+                    "VALUES (?input) ON DUPLICATE KEY UPDATE " +
+                    "id=LAST_INSERT_ID(id)", conn2);
+                cmd.Parameters.Add(new MySqlParameter("?input", ""));
+                cmd.Prepare();
+                cmd.Parameters[0].Value = "irache martínez@yahoo.es aol.com";
+                cmd.ExecuteNonQuery();
 
-				MySqlCommand cmd2 = new MySqlCommand("SELECT input FROM Test", conn2);
-				Assert.AreEqual("irache martínez@yahoo.es aol.com",
-					cmd2.ExecuteScalar());
-			}
-			catch (Exception ex)
-			{
-				Assert.Fail(ex.Message);
-			}
-			finally 
-			{
-				conn2.Close();
-			}
-		}
+                MySqlCommand cmd2 = new MySqlCommand("SELECT input FROM Test", conn2);
+                Assert.AreEqual("irache martínez@yahoo.es aol.com",
+                    cmd2.ExecuteScalar());
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                conn2.Close();
+            }
+        }
 
-		/// <summary>
-		/// Bug #13541  	Prepare breaks if a parameter is used more than once
-		/// </summary>
-		[Test]
-		public void UsingParametersTwice()
-		{
+        /// <summary>
+        /// Bug #13541  	Prepare breaks if a parameter is used more than once
+        /// </summary>
+        [Test]
+        public void UsingParametersTwice()
+        {
             if (version < new Version(4, 1)) return;
 
             execSQL("DROP TABLE IF EXISTS Test");
-			execSQL("CREATE TABLE IF NOT EXISTS Test (input TEXT NOT NULL, " +
-				"UNIQUE (input(100)), state INT NOT NULL, score INT NOT NULL)");
+            execSQL("CREATE TABLE IF NOT EXISTS Test (input TEXT NOT NULL, " +
+                "UNIQUE (input(100)), state INT NOT NULL, score INT NOT NULL)");
 
-			MySqlCommand cmd = new MySqlCommand("Insert into Test (input, " +
-				"state, score) VALUES (?input, ?st, ?sc) ON DUPLICATE KEY " +
-				"UPDATE state=state|?st;", conn);
-			cmd.Parameters.Add (new MySqlParameter("?input", ""));
-			cmd.Parameters.Add (new MySqlParameter("?st", Convert.ToInt32(0)));
-			cmd.Parameters.Add (new MySqlParameter("?sc", Convert.ToInt32 (0)));
-			cmd.Prepare();
+            MySqlCommand cmd = new MySqlCommand("Insert into Test (input, " +
+                "state, score) VALUES (?input, ?st, ?sc) ON DUPLICATE KEY " +
+                "UPDATE state=state|?st;", conn);
+            cmd.Parameters.Add(new MySqlParameter("?input", ""));
+            cmd.Parameters.Add(new MySqlParameter("?st", Convert.ToInt32(0)));
+            cmd.Parameters.Add(new MySqlParameter("?sc", Convert.ToInt32(0)));
+            cmd.Prepare();
 
-			cmd.Parameters["?input"].Value = "test";
-			cmd.Parameters["?st"].Value = 1;
-			cmd.Parameters["?sc"].Value = 42;
-			int result = cmd.ExecuteNonQuery();
-			Assert.AreEqual(1, result);
+            cmd.Parameters["?input"].Value = "test";
+            cmd.Parameters["?st"].Value = 1;
+            cmd.Parameters["?sc"].Value = 42;
+            int result = cmd.ExecuteNonQuery();
+            Assert.AreEqual(1, result);
 
-			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
-			DataTable dt = new DataTable();
-			da.Fill(dt);
-			Assert.AreEqual(1, dt.Rows.Count);
-			Assert.AreEqual("test", dt.Rows[0]["input"]);
-			Assert.AreEqual(1, dt.Rows[0]["state"]);
-			Assert.AreEqual(42, dt.Rows[0]["score"]);
-		}
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            Assert.AreEqual(1, dt.Rows.Count);
+            Assert.AreEqual("test", dt.Rows[0]["input"]);
+            Assert.AreEqual(1, dt.Rows[0]["state"]);
+            Assert.AreEqual(42, dt.Rows[0]["score"]);
+        }
 
         /// <summary>
         /// Bug #19261  	Supplying Input Parameters
@@ -554,33 +560,33 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(1, cnt);
         }
 
-		/// <summary>
-		/// Bug #16627 Index and length must refer to a location within the string." when executing c
-		/// </summary>
-		[Test]
-		public void ParameterLengths()
-		{
+        /// <summary>
+        /// Bug #16627 Index and length must refer to a location within the string." when executing c
+        /// </summary>
+        [Test]
+        public void ParameterLengths()
+        {
             if (version < new Version(4, 1)) return;
             execSQL("DROP TABLE IF EXISTS Test");
-			execSQL("CREATE TABLE Test (id int, name VARCHAR(255))");
+            execSQL("CREATE TABLE Test (id int, name VARCHAR(255))");
 
-			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (?id, ?name)", conn);
-			cmd.Parameters.Add("?id", MySqlDbType.Int32);
-			cmd.Parameters.Add("?name", MySqlDbType.VarChar);
-			cmd.Parameters[1].Size = 255;
-			cmd.Prepare();
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (?id, ?name)", conn);
+            cmd.Parameters.Add("?id", MySqlDbType.Int32);
+            cmd.Parameters.Add("?name", MySqlDbType.VarChar);
+            cmd.Parameters[1].Size = 255;
+            cmd.Prepare();
 
-			cmd.Parameters[0].Value = 1;
-			cmd.Parameters[1].Value = "short string";
-			cmd.ExecuteNonQuery();
+            cmd.Parameters[0].Value = 1;
+            cmd.Parameters[1].Value = "short string";
+            cmd.ExecuteNonQuery();
 
-			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
-			DataTable dt = new DataTable();
-			da.Fill(dt);
-			Assert.AreEqual(1, dt.Rows.Count);
-			Assert.AreEqual(1, dt.Rows[0]["id"]);
-			Assert.AreEqual("short string", dt.Rows[0]["name"]);
-		}
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            Assert.AreEqual(1, dt.Rows.Count);
+            Assert.AreEqual(1, dt.Rows[0]["id"]);
+            Assert.AreEqual("short string", dt.Rows[0]["name"]);
+        }
 
         /// <summary>
         /// Bug #18570  	Unsigned tinyint (NET byte) incorrectly determined param type from param val
@@ -592,7 +598,7 @@ namespace MySql.Data.MySqlClient.Tests
 
             execSQL("DROP TABLE IF EXISTS Test");
             execSQL("CREATE TABLE Test(ID TINYINT UNSIGNED NOT NULL, " +
-	            "Name VARCHAR(50) NOT NULL,	PRIMARY KEY (ID), UNIQUE (ID), " +
+                "Name VARCHAR(50) NOT NULL,	PRIMARY KEY (ID), UNIQUE (ID), " +
                 "UNIQUE (Name))");
             execSQL("INSERT INTO Test VALUES ('127', 'name1')");
             execSQL("INSERT INTO Test VALUES ('128', 'name2')");
@@ -702,9 +708,9 @@ namespace MySql.Data.MySqlClient.Tests
         public void CompoundStatements()
         {
             execSQL("DROP TABLE IF EXISTS Test");
-            execSQL("CREATE TABLE IF NOT EXISTS Test ("+
-	            "id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT," +
-	            "test1 INT UNSIGNED, test2 INT UNSIGNED)");
+            execSQL("CREATE TABLE IF NOT EXISTS Test (" +
+                "id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT," +
+                "test1 INT UNSIGNED, test2 INT UNSIGNED)");
 
             try
             {
@@ -778,6 +784,39 @@ namespace MySql.Data.MySqlClient.Tests
                 c.Ping();
                 Assert.AreEqual(initialCount, GetPreparedStatementCount());
             }
+        }
+
+        /// <summary>
+        /// Bug #37968 Prepared statements byte/tinyint causes data corruption.
+        /// </summary>
+        [Test]
+        public void InsertingUnsignedTinyInt()
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL(@"CREATE TABLE Test(id TINYINT UNSIGNED NOT NULL, 
+                id2 INT UNSIGNED, id3 TINYINT UNSIGNED, id4 INT UNSIGNED NOT NULL)");
+
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (?id, ?id2, ?id3, ?id4)", conn);
+            cmd.Parameters.Add("?id", MySqlDbType.UByte);
+            cmd.Parameters.Add("?id2", MySqlDbType.UByte);
+            cmd.Parameters.Add("?id3", MySqlDbType.UByte);
+            cmd.Parameters.Add("?id4", MySqlDbType.UByte);
+            cmd.Prepare();
+
+            cmd.Parameters[0].Value = 127;
+            cmd.Parameters[1].Value = 1;
+            cmd.Parameters[2].Value = 2;
+            cmd.Parameters[3].Value = 3;
+            cmd.ExecuteNonQuery();
+
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            Assert.AreEqual(1, dt.Rows.Count);
+            Assert.AreEqual(127, dt.Rows[0][0]);
+            Assert.AreEqual(1, dt.Rows[0][1]);
+            Assert.AreEqual(2, dt.Rows[0][2]);
+            Assert.AreEqual(3, dt.Rows[0][3]);
         }
     }
 

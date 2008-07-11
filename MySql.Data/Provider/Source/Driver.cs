@@ -115,6 +115,10 @@ namespace MySql.Data.MySqlClient
             set { inActiveUse = value; }
         }
 #endif
+        public bool IsOpen
+        {
+            get { return isOpen; }
+        }
 
         public MySqlPool Pool
         {

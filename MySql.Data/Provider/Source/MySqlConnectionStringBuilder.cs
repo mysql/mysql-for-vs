@@ -1225,11 +1225,18 @@ namespace MySql.Data.MySqlClient
         {
             if (value == null)
                 throw new ArgumentException(Resources.KeywordNoNull, keyword);
+            object out_obj;
+            TryGetValue(keyword, out out_obj);
+
             Keyword kw = GetKey(keyword);
             SetValue(kw, value);
             base[keyword] = value;
             if (kw != Keyword.Password)
-                persistConnString.AppendFormat(CultureInfo.InvariantCulture, "{0}={1};", keyword, value);
+            {
+                /* Nothing bad happens if the substring is not found */
+                persistConnString.Replace(keyword + "=" + out_obj + ";", "");
+                persistConnString.AppendFormat("{0}={1};", keyword, value);
+            }
         }
 
         private void SetValue(Keyword kw, object value)
