@@ -26,6 +26,7 @@ using MySql.Data.Types;
 using System.Data.SqlTypes;
 using System.Collections.Generic;
 using System.Globalization;
+using MySql.Data.MySqlClient.Properties;
 
 namespace MySql.Data.MySqlClient
 {
@@ -880,8 +881,8 @@ namespace MySql.Data.MySqlClient
                 hasRows = canRead = false;
                 if (command.TimedOut)
                     throw new MySqlException(Resources.Timeout);
-                throw;
-			}
+                throw new MySqlException(Resources.FatalErrorReadingResult, ex);
+            }
 
 		}
 
@@ -928,7 +929,7 @@ namespace MySql.Data.MySqlClient
                     return false;
                 }
 
-				throw;
+                throw new MySqlException(Resources.FatalErrorDuringRead, ex);
 			}
 		}
 

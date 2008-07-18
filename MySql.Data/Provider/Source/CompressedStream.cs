@@ -21,6 +21,7 @@
 using System;
 using System.IO;
 using zlib;
+using MySql.Data.MySqlClient.Properties;
 
 namespace MySql.Data.MySqlClient
 {

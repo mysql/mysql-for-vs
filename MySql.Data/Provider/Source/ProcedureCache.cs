@@ -23,6 +23,7 @@ using System.Collections;
 using System.Data;
 #if NET20
 using System.Collections.Generic;
+using MySql.Data.MySqlClient.Properties;
 #endif
 
 namespace MySql.Data.MySqlClient

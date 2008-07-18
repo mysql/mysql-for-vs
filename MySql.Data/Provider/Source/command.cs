@@ -30,6 +30,7 @@ using System.Threading;
 using System.Diagnostics;
 using System.Globalization;
 using System.Collections.Generic;
+using MySql.Data.MySqlClient.Properties;
 
 namespace MySql.Data.MySqlClient
 {
@@ -431,7 +432,7 @@ namespace MySql.Data.MySqlClient
                 }
                 if (ex.IsFatal)
                     Connection.Close();
-                throw;
+                throw new MySqlException(Resources.FatalErrorDuringExecute, ex);
             }
             finally
             {

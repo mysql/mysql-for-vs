@@ -23,6 +23,7 @@ using System.Text;
 using System.IO;
 using System.Data;
 using System.Collections.Specialized;
+using MySql.Data.MySqlClient.Properties;
 namespace MySql.Data.MySqlClient
 {
     /// <summary>

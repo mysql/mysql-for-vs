@@ -17,6 +17,8 @@ Version 5.2.3
 - Fixed documentation surrounding use of ? vs @ for parameters (bug #37349)
 - Reduced network traffic for the normal case where the web provider schema is up
   to date (bug #37469)
+- Improved error reporting when a timeout occurs.  It no longer uses a message like 
+  'reading from stream failed'.  (bug #38119)
 
 Version 5.2.2 - 
 - Fixed profile provider that would throw an exception if you were updating

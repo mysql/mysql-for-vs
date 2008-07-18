@@ -22,6 +22,7 @@ using System;
 using System.Data.Common;
 using System.Collections;
 using System.ComponentModel;
+using MySql.Data.MySqlClient.Properties;
 
 namespace MySql.Data.MySqlClient
 {

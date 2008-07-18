@@ -330,4 +330,13 @@
   <data name="DistributedTxnNotSupported" xml:space="preserve">
     <value>MySQL Connector/Net does not currently support distributed transactions.</value>
   </data>
+  <data name="FatalErrorDuringExecute" xml:space="preserve">
+    <value>Fatal error encountered during command execution.</value>
+  </data>
+  <data name="FatalErrorDuringRead" xml:space="preserve">
+    <value>Fatal error encountered during data read.</value>
+  </data>
+  <data name="FatalErrorReadingResult" xml:space="preserve">
+    <value>Fatal error encountered attempting to read the resultset.</value>
+  </data>
 </root>

@@ -93,7 +93,11 @@ namespace MySql.Data.MySqlClient.Tests
                 cmd.CommandText = "SELECT now()";
                 cmd.ExecuteScalar();
             }
-            catch (Exception) { }
+            catch (Exception ex) 
+            { 
+                Assert.IsTrue(ex.Message.StartsWith("Fatal"));
+            }
+
             Assert.AreEqual(1, stateChangeCount);
             Assert.AreEqual(ConnectionState.Closed, c.State);
 
