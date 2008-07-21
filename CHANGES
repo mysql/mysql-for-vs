@@ -19,7 +19,9 @@ Version 5.2.3
   to date (bug #37469)
 - Improved error reporting when a timeout occurs.  It no longer uses a message like 
   'reading from stream failed'.  (bug #38119)
-
+- fixed problem where adding a non-existent user to a role would not auto-create the 
+  user record (bug #38243)
+  
 Version 5.2.2 - 
 - Fixed profile provider that would throw an exception if you were updating
   a profile that already existed.

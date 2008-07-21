@@ -34,6 +34,7 @@ using System.Transactions;
 using System.Collections.Generic;
 using MySql.Web.Common;
 using MySql.Web.Properties;
+using System.Web;
 
 namespace MySql.Web.Security
 {
@@ -161,12 +162,16 @@ namespace MySql.Web.Security
         {
             foreach (string rolename in rolenames)
             {
-                if (!(RoleExists(rolename)))
+                if (String.IsNullOrEmpty(rolename))
+                    throw new ArgumentException(Resources.IllegalRoleName, "rolenames");
+                if (!RoleExists(rolename))
                     throw new ProviderException(Resources.RoleNameNotFound);
             }
 
             foreach (string username in usernames)
             {
+                if (String.IsNullOrEmpty(username))
+                    throw new ArgumentException(Resources.IllegalUserName, "usernames");
                 if (username.IndexOf(',') != -1)
                     throw new ArgumentException(Resources.InvalidCharactersInUserName);
 
@@ -190,7 +195,9 @@ namespace MySql.Web.Security
                         cmd.Parameters.Add("@roleId", MySqlDbType.Int32);
                         foreach (string username in usernames)
                         {
-                            int userId = GetUserId(connection, username);
+                            // either create a new user or fetch the existing user id
+                            int userId = SchemaManager.CreateOrFetchUserId(connection,
+                                username, applicationId, true);
                             foreach (string rolename in rolenames)
                             {
                                 int roleId = GetRoleId(connection, rolename);
@@ -200,6 +207,7 @@ namespace MySql.Web.Security
                             }
                         }
                     }
+                    ts.Complete();
                 }
             }
             catch (Exception ex)

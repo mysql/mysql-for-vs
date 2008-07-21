@@ -98,5 +98,64 @@ namespace MySql.Web.Tests
                 new string[] { "Administrator" });
             Assert.IsTrue(roleProvider.IsUserInRole("eve", "Administrator"));
         }
+
+        /// <summary>
+        /// Bug #38243 Not Handling non existing user when calling AddUsersToRoles method 
+        /// </summary>
+        [Test]
+        public void AddNonExistingUserToRole()
+        {
+            roleProvider = new MySQLRoleProvider();
+            NameValueCollection config = new NameValueCollection();
+            config.Add("connectionStringName", "LocalMySqlServer");
+            config.Add("applicationName", "/");
+            roleProvider.Initialize(null, config);
+
+            roleProvider.CreateRole("Administrator");
+            roleProvider.AddUsersToRoles(new string[] { "eve" },
+                new string[] { "Administrator" });
+            Assert.IsTrue(roleProvider.IsUserInRole("eve", "Administrator"));
+        }
+
+        private void AttemptToAddUserToRole(string username, string role)
+        {
+            try
+            {
+                roleProvider.AddUsersToRoles(new string[] { username },
+                    new string[] { role });
+            }
+            catch (ArgumentException)
+            {
+            }
+        }
+
+        [Test]
+        public void IllegalRoleAndUserNames()
+        {
+            roleProvider = new MySQLRoleProvider();
+            NameValueCollection config = new NameValueCollection();
+            config.Add("connectionStringName", "LocalMySqlServer");
+            config.Add("applicationName", "/");
+            roleProvider.Initialize(null, config);
+
+            AttemptToAddUserToRole("test", null);
+            AttemptToAddUserToRole("test", "");
+            roleProvider.CreateRole("Administrator");
+            AttemptToAddUserToRole(null, "Administrator");
+            AttemptToAddUserToRole("", "Administrator");
+        }
+
+        [Test]
+        public void AddUserToRoleWithRoleClass()
+        {
+            Roles.CreateRole("Administrator");
+            MembershipCreateStatus status;
+            Membership.CreateUser("eve", "eve1@eve", "eve@boo.com", 
+                "question", "answer", true, null, out status);
+            Assert.AreEqual(MembershipCreateStatus.Success, status);
+
+            Roles.AddUserToRole("eve", "Administrator");
+            Assert.IsTrue(Roles.IsUserInRole("eve", "Administrator"));
+        }
     }
 }
