@@ -10,6 +10,8 @@ Version 5.1.7
  - Improved documentation concerning autoincrement columns and the DataColumn class (bug #37350)
  - Fixed problem where executing a command that results in a fatal exception would not
    close the connection.  (bug #37991)
+ - Fixed problem where executing a command with a null connection object would result in
+   a null reference exception instead of an InvalidOp (bug #38276)
  
 Version 5.1.6 - 5/7/08
  - Fixed problem where parameters lists were not showing when you tried to alter a routine 
