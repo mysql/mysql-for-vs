@@ -904,5 +904,28 @@ namespace MySql.Data.MySqlClient.Tests
                 reader.Read();
             }
         }
-	}
+
+        /// <summary>
+        /// Bug #33322 Incorrect Double/Single value saved to MySQL database using MySQL Connector for  
+        /// </summary>
+        [Test]
+        public void StoringAndRetrievingDouble()
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (v DOUBLE(25,20) NOT NULL)");
+
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (?v)", conn);
+            cmd.Parameters.Add("?v", MySqlDbType.Double);
+            cmd.Parameters[0].Value = Math.PI;
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "SELECT * FROM Test";
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                reader.Read();
+                double d = reader.GetDouble(0);
+                Assert.AreEqual(Math.PI, d);
+            }
+        }
+    }
 }

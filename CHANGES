@@ -154,7 +154,9 @@ Version 5.0.10 -
     close the connection.  (bug #37991)
   - Fixed problem with byte and unsigned byte values writing more too many bytes when
     using prepared statements (bug #37968)      
-    
+  - Fixed writing of single and double values to write out the proper number of digits
+    (bug #33322)
+        
 Version 5.0.9 - 4/14/08
 
   - Fixed problem where fields that were blobs but did not include the BLOB flag were treated
