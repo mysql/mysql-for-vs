@@ -426,6 +426,24 @@ namespace MySql.Data.MySqlClient.Tests
             cmd.Connection = c;
             Assert.AreEqual(66, cmd.CommandTimeout);
         }
+
+        /// <summary>
+        /// Bug #38276 Short circuit evaluation error in MySqlCommand.CheckState() 
+        /// </summary>
+        [Test]
+        public void SetNullConnection()
+        {
+            MySqlCommand command = new MySqlCommand();
+            command.CommandText = "SELECT 1";
+            command.Connection = null;
+            try
+            {
+                object o = command.ExecuteScalar();
+            }
+            catch (InvalidOperationException)
+            {
+            }
+        }
     }
 
 

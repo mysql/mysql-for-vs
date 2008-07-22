@@ -86,7 +86,7 @@ namespace MySql.Data.Types
 			if (binary)
 				stream.Write(BitConverter.GetBytes(v));
 			else
-				stream.WriteStringNoNull(v.ToString(
+				stream.WriteStringNoNull(v.ToString("R",
 					 CultureInfo.InvariantCulture));
 		}
 
