@@ -82,17 +82,7 @@ namespace MySql.Data.Types
 			get { return type == MySqlDbType.Set ? "SET" : type == MySqlDbType.Enum ? "ENUM" : "VARCHAR"; }
 		}
 
-		private string EscapeString(string s)
-		{
-			s = s.Replace("\\", "\\\\");
-			s = s.Replace("\'", "\\\'");
-			s = s.Replace("\"", "\\\"");
-			s = s.Replace("`", "\\`");
-			s = s.Replace("´", "\\´");
-			s = s.Replace("’", "\\’");
-			s = s.Replace("‘", "\\‘");
-			return s;
-		}
+
 
 		void IMySqlValue.WriteValue(MySqlStream stream, bool binary, object val, int length)
 		{
@@ -106,7 +96,7 @@ namespace MySql.Data.Types
 			if (binary)
 				stream.WriteLenString(v);
 			else
-				stream.WriteStringNoNull("'" + EscapeString(v) + "'");
+				stream.WriteStringNoNull("'" + MySqlHelper.EscapeString(v) + "'");
 		}
 
 		IMySqlValue IMySqlValue.ReadValue(MySqlStream stream, long length, bool nullVal)

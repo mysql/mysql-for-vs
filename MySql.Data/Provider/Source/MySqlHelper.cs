@@ -359,5 +359,26 @@ namespace MySql.Data.MySqlClient
 		}
 
 		#endregion
-	}
+
+        #region Utility methods
+
+        /// <summary>
+        /// Escapes the string.
+        /// </summary>
+        /// <param name="value">The string to escape</param>
+        /// <returns>The string with all quotes escaped.</returns>
+		public static string EscapeString(string value)
+		{
+			value = value.Replace("\\", "\\\\");
+			value = value.Replace("\'", "\\\'");
+			value = value.Replace("\"", "\\\"");
+			value = value.Replace("`", "\\`");
+			value = value.Replace("´", "\\´");
+			value = value.Replace("’", "\\’");
+			value = value.Replace("‘", "\\‘");
+			return value;
+		}
+
+        #endregion
+    }
 }
