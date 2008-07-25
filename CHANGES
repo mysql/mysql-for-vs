@@ -156,6 +156,8 @@ Version 5.0.10 -
     using prepared statements (bug #37968)      
   - Fixed writing of single and double values to write out the proper number of digits
     (bug #33322)
+  - Fixed GetSchema to work properly when querying for a collection with non-English
+    locale (bug #35459)
         
 Version 5.0.9 - 4/14/08
 
