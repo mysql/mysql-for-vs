@@ -31,12 +31,14 @@
           <RegistryValue Id="VSRegistryValue" Value="[BinNet20]" Type="string" Action="write"/>
         </RegistryKey>
         
-            <util:PerformanceCategory Id="PMDataCategoryId" Name=".NET Data Provider for MySQL" 
-                                      MultiInstance="no" Help="This category includes a series of counters for MySQL.">
-                <util:PerformanceCounter Name="HardProcedureQueries" Type="numberOfItems32" Help="The number of times a procedures metadata had to be queried from the server." />
-                <util:PerformanceCounter Name="SoftProcedureQueries" Type="rateOfCountsPerSecond32" Help="The number of times a procedures metadata was retrieved from the client-side cache." /> 
-            </util:PerformanceCategory>
-           
+        <util:PerformanceCategory Id="PMDataCategoryId" Name=".NET Data Provider for MySQL" 
+                                  MultiInstance="no" Help="This category includes a series of counters for MySQL.">
+            <util:PerformanceCounter Name="HardProcedureQueries" Type="numberOfItems32" Help="The number of times a procedures metadata had to be queried from the server." />
+            <util:PerformanceCounter Name="SoftProcedureQueries" Type="rateOfCountsPerSecond32" Help="The number of times a procedures metadata was retrieved from the client-side cache." /> 
+        </util:PerformanceCategory>
+
+        <RemoveFile Id="RemoveStateFile" Name="*.InstallState" On="uninstall"/>
+        
         </Component>
       <Directory Id="MySql.Data.DummyDir" Name="GAC">
         <Component Id="GAC20" Guid="58f70e4a-96f7-4b67-bdab-9b77a60f9c09">
@@ -75,9 +77,9 @@
     </InstallExecuteSequence>
 
     <CustomAction Id="ManagedDataInstallSetup" Property="ManagedDataInstall"
-                  Value='"[WindowsFolder]\Microsoft.NET\Framework\v2.0.50727\installUtil.exe" /LogToConsole=false  "[#MySqlData]"'/>
+                  Value='"[WindowsFolder]\Microsoft.NET\Framework\v2.0.50727\installUtil.exe" /LogToConsole=false /LogFile=  "[#MySqlData]"'/>
     <CustomAction Id='ManagedDataUnInstallSetup' Property="ManagedDataUnInstall"
-                  Value='"[WindowsFolder]\Microsoft.NET\Framework\v2.0.50727\installUtil.exe" /LogToConsole=false /u "[#MySqlData]"'/>
+                  Value='"[WindowsFolder]\Microsoft.NET\Framework\v2.0.50727\installUtil.exe" /LogToConsole=false /LogFile= /u "[#MySqlData]"'/>
     <CustomAction Id="ManagedDataInstall" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
     <CustomAction Id="ManagedDataUnInstall" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
   </Fragment>
