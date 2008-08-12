@@ -1236,7 +1236,7 @@ namespace MySql.Data.MySqlClient
             {
                 /* Nothing bad happens if the substring is not found */
                 persistConnString.Replace(keyword + "=" + out_obj + ";", "");
-                persistConnString.AppendFormat("{0}={1};", keyword, value);
+                persistConnString.AppendFormat(CultureInfo.InvariantCulture, "{0}={1};", keyword, value);
             }
         }
 

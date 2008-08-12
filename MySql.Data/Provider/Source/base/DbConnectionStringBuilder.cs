@@ -33,7 +33,7 @@ namespace MySql.Data.MySqlClient
 
         public DbConnectionStringBuilder()
         {
-            hash = new Hashtable();
+            hash = new Hashtable(StringComparer.InvariantCultureIgnoreCase);
             browsable = false;
         }
 
@@ -224,6 +224,17 @@ namespace MySql.Data.MySqlClient
         }
 
         #endregion
+
+        public virtual object TryGetValue(string keyword, out object value)
+        {
+            if (!hash.ContainsKey(keyword))
+            {
+                value = null;
+                return false;
+            }
+            value = hash[keyword];
+            return true;
+        }
 
         private void ParseConnectionString(string connectString)
         {
