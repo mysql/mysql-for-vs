@@ -4,7 +4,7 @@
     <ProductVersion>3.0</ProductVersion>
     <ProjectGuid>{f533fc43-6c05-4a64-8af6-72b690eb06c3}</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>Installer</OutputName>
+    <OutputName>MySql.Data</OutputName>
     <OutputType>Package</OutputType>
     <WixToolPath>C:\Program Files (x86)\Windows Installer XML v3\bin\</WixToolPath>
   </PropertyGroup>
@@ -96,8 +96,19 @@
     <WixVariables>
     </WixVariables>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'GPL|x86' ">
+    <DefineConstants>Version=5.2.3;IsGPL=1</DefineConstants>
+    <WixVariables>
+    </WixVariables>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Commercial|x86' ">
+    <DefineConstants>Version=5.2.3;IsGPL=0</DefineConstants>
+    <WixVariables>
+    </WixVariables>
+  </PropertyGroup>
   <ItemGroup>
-    <Compile Include="compactframework.wxs" />
+    <Compile Include="cf.wxs" />
+    <Compile Include="core.wxs" />
     <Compile Include="main.wxs" />
     <Compile Include="samples.wxs" />
     <Compile Include="ui.wxs" />
@@ -105,9 +116,18 @@
     <Compile Include="webproviders.wxs" />
   </ItemGroup>
   <ItemGroup>
-    <WixExtension Include="C:\Program Files (x86)\Windows Installer XML v3\bin\WixNetFxExtension.dll" />
-    <WixExtension Include="C:\Program Files (x86)\Windows Installer XML v3\bin\WixUIExtension.dll" />
-    <WixExtension Include="C:\Program Files (x86)\Windows Installer XML v3\bin\WixVSExtension.dll" />
+    <WixExtension Include="WixUtilExtension">
+      <HintPath>$(WixExtDir)\WixUtilExtension.dll</HintPath>
+    </WixExtension>
+    <WixExtension Include="WixNetFxExtension">
+      <HintPath>C:\Program Files (x86)\Windows Installer XML v3\bin\WixNetFxExtension.dll</HintPath>
+    </WixExtension>
+    <WixExtension Include="WixUIExtension">
+      <HintPath>C:\Program Files (x86)\Windows Installer XML v3\bin\WixUIExtension.dll</HintPath>
+    </WixExtension>
+    <WixExtension Include="WixVSExtension">
+      <HintPath>C:\Program Files (x86)\Windows Installer XML v3\bin\WixVSExtension.dll</HintPath>
+    </WixExtension>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.0\Wix.targets" />
 </Project>
