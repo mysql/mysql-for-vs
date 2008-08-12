@@ -663,6 +663,7 @@ namespace MySql.Data.MySqlClient
         {
             MySqlField field;
 
+            stream.Encoding = encoding;
             if (version.isAtLeast(4, 1, 0))
                 field = GetFieldMetaData41();
             else
