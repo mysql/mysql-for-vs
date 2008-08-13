@@ -34,7 +34,6 @@ namespace MySql.Data.MySqlClient.Tests
 	{
         public override void FixtureSetup()
         {
-            csAdditions += ";logging=true;";
             base.FixtureSetup();
         }
 
@@ -862,6 +861,23 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(numRows, dt.Rows.Count);
             for (int i=0; i < numRows; i++)
                 Assert.AreEqual(i, dt.Rows[i]["id"]);
+        }
+
+        [Test]
+        public void FunctionsReturnString()
+        {
+            string connStr = GetConnectionString(true) + ";functions return string=yes";
+
+            using (MySqlConnection c = new MySqlConnection(connStr))
+            {
+                c.Open();
+                MySqlDataAdapter da = new MySqlDataAdapter("SELECT CONCAT(1,2)", c);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                Assert.AreEqual(1, dt.Rows.Count);
+                Assert.AreEqual("12", dt.Rows[0][0]);
+                Assert.IsTrue(dt.Rows[0][0] is string);
+            }
         }
     }
 }
