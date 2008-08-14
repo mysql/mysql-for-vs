@@ -151,7 +151,7 @@ namespace MySql.Data.MySqlClient.Tests
             if (version < new Version(5, 0)) return;
 
             // first we need a routine that will run for a bit
-            execSQL(@"CREATE PROCEDURE spTest(duration INT) 
+            suExecSQL(@"CREATE PROCEDURE spTest(duration INT) 
                 BEGIN 
                     SELECT SLEEP(duration);
                 END");
