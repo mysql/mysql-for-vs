@@ -127,7 +127,7 @@ namespace MySql.Data.MySqlClient
             if (!driver.Ping())
             {
                 driver.Close();
-                return null;
+                driver = CreateNewPooledConnection();
             }
 
             // if the user asks us to ping/reset pooled connections

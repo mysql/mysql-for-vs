@@ -146,12 +146,6 @@ namespace MySql.Data.MySqlClient
                 string mode = (string) param["PARAMETER_MODE"];
                 string pName = (string) param["PARAMETER_NAME"];
 
-                // if the base parametr name starts with @ then our parameter must start with ?
-                if (pName.StartsWith("@"))
-                    pName = "?" + pName;
-                else if (!pName.StartsWith("?"))
-                    pName = "@" + pName;
-
                 // make sure the parameters given to us have an appropriate
                 // type set if it's not already
                 MySqlParameter p = command.Parameters.GetParameterFlexible(pName, true);
@@ -163,8 +157,15 @@ namespace MySql.Data.MySqlClient
                     p.MySqlDbType = MetaData.NameToType(datatype, unsigned, real_as_float, Connection);
                 }
 
-                string basePName = pName.Substring(1);
+                string basePName = pName;
+                if (pName.StartsWith("@") || pName.StartsWith("?"))
+                    basePName = pName.Substring(1);
                 string vName = string.Format("@{0}{1}", parameterHash, basePName);
+
+                // if our parameter doesn't have a leading marker then we need to give it one
+                pName = p.ParameterName;
+                if (!pName.StartsWith("@") && !pName.StartsWith("?"))
+                    pName = "@" + pName;
 
                 if (mode == "OUT" || mode == "INOUT")
                 {
