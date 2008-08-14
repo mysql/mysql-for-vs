@@ -1,4 +1,4 @@
-Version 5.2.3
+Version 5.2.3 - 8/14/08
 - Increased the speed of MySqlDataReader.GetOrdinal dramatically by using a couple
   of hashes for lookups
 - Fixed problem where some tables that support the web providers used the latin1
