@@ -126,7 +126,7 @@ namespace MySql.Web.Security
         /// </summary>
         /// <value>The name of the application to store and retrieve role information for.</value>
         /// <example>
-        /// <code lang="" source="CodeExamples\RoleCodeExample1.xml"/>
+        /// <code source="CodeExamples\RoleCodeExample1.xml"/>
         /// </example>
         public override string ApplicationName
         {
@@ -141,7 +141,7 @@ namespace MySql.Web.Security
         /// 	<c>true</c> if exceptions should be written to the event log; otherwise, <c>false</c>.
         /// </value>
         /// <example>
-        /// <code lang="" source="CodeExamples\RoleCodeExample1.xml"/>
+        /// <code source="CodeExamples\RoleCodeExample1.xml"/>
         /// </example>
         public bool WriteExceptionsToEventLog
         {
