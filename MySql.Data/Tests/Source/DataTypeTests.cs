@@ -960,6 +960,8 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void StoringAndRetrievingDouble()
         {
+            if (version.Major < 5) return;
+
             execSQL("DROP TABLE IF EXISTS Test");
             execSQL("CREATE TABLE Test (v DOUBLE(25,20) NOT NULL)");
 
