@@ -34,7 +34,7 @@ namespace MySql.Data.MySqlClient.Tests
     public class BaseTest
     {
         protected MySqlConnection conn;
-        private MySqlConnection rootConn;
+        protected MySqlConnection rootConn;
         protected string table;
         protected string csAdditions = String.Empty;
         protected static string host;
@@ -128,7 +128,7 @@ namespace MySql.Data.MySqlClient.Tests
 
         protected virtual string GetConnectionInfo()
         {
-            return String.Format("protocol=sockets;port={0}", port);
+            return String.Format("protocol=sockets;port={0};use procedure bodies=false", port);
         }
 
         protected string GetConnectionStringBasic(bool includedb)
@@ -209,6 +209,28 @@ namespace MySql.Data.MySqlClient.Tests
             }
         }
 
+        protected void SetAccountPerms(bool includeProc)
+        {
+            // now allow our user to access them
+            suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'localhost' 
+				identified by 'test'", database0));
+            suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'localhost' 
+				identified by 'test'", database1));
+            suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'%' 
+				identified by 'test'", database0));
+            suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'%' 
+				identified by 'test'", database1));
+
+            if (includeProc)
+            {
+                // now allow our user to access them
+                suExecSQL(@"GRANT ALL ON mysql.proc to 'test'@'localhost' identified by 'test'");
+                suExecSQL(@"GRANT ALL ON mysql.proc to 'test'@'%' identified by 'test'");
+            }
+            
+            suExecSQL("FLUSH PRIVILEGES");
+        }
+
         [SetUp]
         public virtual void Setup()
         {
@@ -218,16 +240,7 @@ namespace MySql.Data.MySqlClient.Tests
                 suExecSQL(String.Format("DROP DATABASE IF EXISTS `{0}`; CREATE DATABASE `{0}`", database0));
                 suExecSQL(String.Format("DROP DATABASE IF EXISTS `{0}`; CREATE DATABASE `{0}`", database1));
 
-                // now allow our user to access them
-                suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'localhost' 
-				identified by 'test'", database0));
-                suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'localhost' 
-				identified by 'test'", database1));
-                suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'%' 
-				identified by 'test'", database0));
-                suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'%' 
-				identified by 'test'", database1));
-                suExecSQL("FLUSH PRIVILEGES");
+                SetAccountPerms(false);
 
                 rootConn.ChangeDatabase(database0);
 
@@ -259,6 +272,15 @@ namespace MySql.Data.MySqlClient.Tests
             {
                 Assert.Fail(ex.Message);
             }
+
+            // the kill flag might need a little prodding to do its thing
+            try
+            {
+                cmd.CommandText = "SELECT 1";
+                cmd.Connection = c;
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception) { }
 
             // now wait till the process dies
             bool processStillAlive = false;

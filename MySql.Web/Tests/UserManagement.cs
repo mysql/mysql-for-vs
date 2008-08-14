@@ -223,13 +223,15 @@ namespace MySql.Web.Tests
         {
             try
             {
-				Membership.CreateUser("foo", "barbar!");
+                MembershipCreateStatus status;
+                Membership.CreateUser("foo", "barbar!", null, "question", "answer", true, out status);
                 int records;
                 MembershipUserCollection users = Membership.FindUsersByName("F%", 0, 10, out records);
                 Assert.AreEqual(1, records);
                 Assert.AreEqual("foo", users["foo"].UserName);
 
-                Membership.CreateUser("test", "barbar!", "myemail@host.com");
+                Membership.CreateUser("test", "barbar!", "myemail@host.com", 
+                    "question", "answer", true, out status);
                 users = Membership.FindUsersByName("T%", 0, 10, out records);
                 Assert.AreEqual(1, records);
                 Assert.AreEqual("test", users["test"].UserName);
@@ -246,8 +248,9 @@ namespace MySql.Web.Tests
             int numOnline = Membership.GetNumberOfUsersOnline();
             Assert.AreEqual(0, numOnline);
 
-            Membership.CreateUser("foo", "barbar!");
-            Membership.CreateUser("foo2", "barbar!");
+            MembershipCreateStatus status;
+            Membership.CreateUser("foo", "barbar!", null, "question", "answer", true, out status);
+            Membership.CreateUser("foo2", "barbar!", null, "question", "answer", true, out status);
 
             numOnline = Membership.GetNumberOfUsersOnline();
             Assert.AreEqual(2, numOnline);
@@ -256,7 +259,8 @@ namespace MySql.Web.Tests
         [Test]
         public void UnlockUser()
         {
-            Membership.CreateUser("foo", "barbar!");
+            MembershipCreateStatus status;
+            Membership.CreateUser("foo", "barbar!", null, "question", "answer", true, out status);
             Assert.IsFalse(Membership.ValidateUser("foo", "bar2"));
             Assert.IsFalse(Membership.ValidateUser("foo", "bar3"));
             Assert.IsFalse(Membership.ValidateUser("foo", "bar3"));
@@ -279,7 +283,8 @@ namespace MySql.Web.Tests
         [Test]
         public void GetUsernameByEmail()
         {
-            Membership.CreateUser("foo", "barbar!", "foo@bar.com");
+            MembershipCreateStatus status;
+            Membership.CreateUser("foo", "barbar!", "foo@bar.com", "question", "answer", true, out status);
             string username = Membership.GetUserNameByEmail("foo@bar.com");
             Assert.AreEqual("foo", username);
 
@@ -354,9 +359,11 @@ namespace MySql.Web.Tests
         [Test]
         public void GetAllUsers()
         {
+            MembershipCreateStatus status;
             // first create a bunch of users
             for (int i=0; i < 100; i++)
-                Membership.CreateUser(String.Format("foo{0}", i), "barbar!");
+                Membership.CreateUser(String.Format("foo{0}", i), "barbar!", null, 
+                    "question", "answer", true, out status);
 
             MembershipUserCollection users = Membership.GetAllUsers();
             Assert.AreEqual(100, users.Count);
@@ -413,7 +420,8 @@ namespace MySql.Web.Tests
         [Test]
         public void GetUser()
         {
-            Membership.CreateUser("foo", "barbar!");
+            MembershipCreateStatus status;
+            Membership.CreateUser("foo", "barbar!", null, "question", "answer", true, out status);
             MembershipUser user = Membership.GetUser(1);
             Assert.AreEqual("foo", user.UserName);
 
@@ -443,12 +451,16 @@ namespace MySql.Web.Tests
         [Test]
         public void FindUsers()
         {
+            MembershipCreateStatus status;
             for (int i=0; i < 100; i++)
-                Membership.CreateUser(String.Format("boo{0}", i), "barbar!");
+                Membership.CreateUser(String.Format("boo{0}", i), "barbar!", null, 
+                    "question", "answer", true, out status);
             for (int i=0; i < 100; i++)
-                Membership.CreateUser(String.Format("foo{0}", i), "barbar!");
+                Membership.CreateUser(String.Format("foo{0}", i), "barbar!", null, 
+                    "question", "answer", true, out status);
             for (int i=0; i < 100; i++)
-                Membership.CreateUser(String.Format("schmoo{0}", i), "barbar!");
+                Membership.CreateUser(String.Format("schmoo{0}", i), "barbar!", null, 
+                    "question", "answer", true, out status);
 
 
             MembershipUserCollection users = Membership.FindUsersByName("fo%");

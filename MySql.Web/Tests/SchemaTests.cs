@@ -125,6 +125,29 @@ namespace MySql.Web.Tests
             try
             {
                 provider.Initialize(null, config);
+                Assert.Fail("Should have failed");
+            }
+            catch (ProviderException)
+            {
+            }
+        }
+
+        [Test]
+        public void SchemaV4Present()
+        {
+            MySQLMembershipProvider provider = new MySQLMembershipProvider();
+            NameValueCollection config = new NameValueCollection();
+            config.Add("connectionStringName", "LocalMySqlServer");
+            config.Add("applicationName", "/");
+            config.Add("passwordFormat", "Clear");
+
+            LoadSchema(1);
+            LoadSchema(2);
+            LoadSchema(3);
+            LoadSchema(4);
+            try
+            {
+                provider.Initialize(null, config);
             }
             catch (ProviderException)
             {
@@ -149,11 +172,13 @@ namespace MySql.Web.Tests
             object ver = cmd.ExecuteScalar();
             Assert.AreEqual(4, ver);
 
-            MySqlDataAdapter da = new MySqlDataAdapter("SHOW CREATE TABLE my_aspnet_membership", conn);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-            string createSql = dt.Rows[0][1].ToString();
-            Assert.IsTrue(createSql.IndexOf("CHARSET=utf8") != -1);
+            cmd.CommandText = "SHOW CREATE TABLE my_aspnet_membership";
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                reader.Read();
+                string createSql = reader.GetString(1);
+                Assert.IsTrue(createSql.IndexOf("CHARSET=utf8") != -1);
+            }
         }
 
         [Test]
