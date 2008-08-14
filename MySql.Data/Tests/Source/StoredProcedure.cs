@@ -143,7 +143,7 @@ namespace MySql.Data.MySqlClient.Tests
 
             // we don't want to run this test under no access
             string connInfo = GetConnectionInfo();
-            if (connInfo.Contains("use procedure bodies=false")) return;
+            if (connInfo.IndexOf("use procedure bodies=false") != -1) return;
 
             // create our procedure
             execSQL("CREATE PROCEDURE spTest(out value VARCHAR(350), OUT intVal INT, " +
@@ -1063,7 +1063,8 @@ namespace MySql.Data.MySqlClient.Tests
             if (version < new Version(5, 0)) return;
 
             // we don't want this test to run in our all access fixture
-            if (!GetConnectionInfo().Contains("use procedure bodies=false"))
+            string connInfo = GetConnectionInfo();
+            if (connInfo.IndexOf("use procedure bodies=false") == -1)
                 return;
 
             suExecSQL(String.Format(
