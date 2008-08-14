@@ -881,7 +881,9 @@ namespace MySql.Data.MySqlClient
                 hasRows = canRead = false;
                 if (command.TimedOut)
                     throw new MySqlException(Resources.Timeout);
-                throw new MySqlException(Resources.FatalErrorReadingResult, ex);
+                if (ex.Number == 0)
+                    throw new MySqlException(Resources.FatalErrorReadingResult, ex);
+                throw;
             }
 
 		}

@@ -434,7 +434,9 @@ namespace MySql.Data.MySqlClient
                 }
                 if (ex.IsFatal)
                     Connection.Close();
-                throw new MySqlException(Resources.FatalErrorDuringExecute, ex);
+                if (ex.Number == 0)
+                    throw new MySqlException(Resources.FatalErrorDuringExecute, ex);
+                throw;
             }
             finally
             {
