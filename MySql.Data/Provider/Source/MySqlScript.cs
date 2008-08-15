@@ -148,9 +148,9 @@ namespace MySql.Data.MySqlClient
             try
             {
                 string mode = connection.driver.Property("sql_mode");
-                mode = mode.ToLower(CultureInfo.InvariantCulture);
-                bool ansiQuotes = mode.IndexOf("ansi_quotes") != -1;
-                bool noBackslashEscapes = mode.IndexOf("no_backslash_escpaes") != -1;
+                mode = mode.ToUpper(CultureInfo.InvariantCulture);
+                bool ansiQuotes = mode.IndexOf("ANSI_QUOTES") != -1;
+                bool noBackslashEscapes = mode.IndexOf("NO_BACKSLASH_ESCAPES") != -1;
 
                 // first we break the query up into smaller queries
                 List<ScriptStatement> statements = BreakIntoStatements(ansiQuotes, noBackslashEscapes);
@@ -231,7 +231,7 @@ namespace MySql.Data.MySqlClient
             return lineNumbers;
         }
 
-        private int FindLineNumber(int position, List<int> lineNumbers)
+        private static int FindLineNumber(int position, List<int> lineNumbers)
         {
             int i = 0;
             while (i < lineNumbers.Count && position < lineNumbers[i])

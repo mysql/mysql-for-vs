@@ -49,7 +49,7 @@ namespace MySql.Data.Common
         {
             timeOut = timeout;
 
-            if (hostList.StartsWith("/"))
+            if (hostList.StartsWith("/", StringComparison.OrdinalIgnoreCase))
                 return CreateSocketStream(null, true);
 
             string[] dnsHosts = hostList.Split('&');
@@ -96,7 +96,7 @@ namespace MySql.Data.Common
             return stream;
         }
 
-        private IPHostEntry GetHostEntry(string hostname)
+        private static IPHostEntry GetHostEntry(string hostname)
         {
             IPHostEntry ipHE;
 #if !CF
@@ -117,7 +117,7 @@ namespace MySql.Data.Common
 		private Stream CreateNamedPipeStream(string hostname)
 		{
 			string pipePath;
-			if (0 == String.Compare(hostname, "localhost", true))
+			if (0 == String.Compare(hostname, "localhost", StringComparison.InvariantCultureIgnoreCase))
 				pipePath = @"\\.\pipe\" + pipeName;
 			else
 				pipePath = String.Format(@"\\{0}\pipe\{1}", hostname, pipeName);

@@ -65,14 +65,14 @@ namespace MySql.Data.Common
 
 		public override void Close()
 		{
-			UnmapViewOfFile(dataView);
-			CloseHandle(dataMap);
+			NativeMethods.UnmapViewOfFile(dataView);
+            NativeMethods.CloseHandle(dataMap);
 		}
 
 		private void GetConnectNumber(uint timeOut)
 		{
 			AutoResetEvent connectRequest = new AutoResetEvent(false);
-			IntPtr handle = OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, false,
+            IntPtr handle = NativeMethods.OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, false,
 			memoryName + "_" + "CONNECT_REQUEST");
 #if NET20
 			connectRequest.SafeWaitHandle = new SafeWaitHandle(handle, true);
@@ -81,7 +81,7 @@ namespace MySql.Data.Common
 #endif
 
 			AutoResetEvent connectAnswer = new AutoResetEvent(false);
-			handle = OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, false,
+            handle = NativeMethods.OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, false,
 			memoryName + "_" + "CONNECT_ANSWER");
 #if NET20
 			connectAnswer.SafeWaitHandle = new SafeWaitHandle(handle, true);
@@ -89,9 +89,9 @@ namespace MySql.Data.Common
 			connectAnswer.Handle = handle;
 #endif
 
-			IntPtr connectFileMap = OpenFileMapping(FILE_MAP_WRITE, false,
+            IntPtr connectFileMap = NativeMethods.OpenFileMapping(FILE_MAP_WRITE, false,
 				memoryName + "_" + "CONNECT_DATA");
-			IntPtr connectView = MapViewOfFile(connectFileMap, FILE_MAP_WRITE,
+            IntPtr connectView = NativeMethods.MapViewOfFile(connectFileMap, FILE_MAP_WRITE,
 				0, 0, (IntPtr)4);
 
 			// now start the connection
@@ -106,13 +106,13 @@ namespace MySql.Data.Common
 		private void SetupEvents()
 		{
 			string dataMemoryName = memoryName + "_" + connectNumber;
-			dataMap = OpenFileMapping(FILE_MAP_WRITE, false,
+            dataMap = NativeMethods.OpenFileMapping(FILE_MAP_WRITE, false,
 				dataMemoryName + "_DATA");
-			dataView = (IntPtr)MapViewOfFile(dataMap, FILE_MAP_WRITE,
+            dataView = (IntPtr)NativeMethods.MapViewOfFile(dataMap, FILE_MAP_WRITE,
 					 0, 0, (IntPtr)(int)BUFFERLENGTH);
 
 			serverWrote = new AutoResetEvent(false);
-			IntPtr handle = OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, false,
+            IntPtr handle = NativeMethods.OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, false,
 				 dataMemoryName + "_SERVER_WROTE");
 			Debug.Assert(handle != IntPtr.Zero);
 #if NET20
@@ -122,7 +122,7 @@ namespace MySql.Data.Common
 #endif
 
 			serverRead = new AutoResetEvent(false);
-			handle = OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, false,
+            handle = NativeMethods.OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, false,
 			dataMemoryName + "_SERVER_READ");
 			Debug.Assert(handle != IntPtr.Zero);
 #if NET20
@@ -132,7 +132,7 @@ namespace MySql.Data.Common
 #endif
 
 			clientWrote = new AutoResetEvent(false);
-			handle = OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, false,
+            handle = NativeMethods.OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, false,
 			dataMemoryName + "_CLIENT_WROTE");
 			Debug.Assert(handle != IntPtr.Zero);
 #if NET20
@@ -142,7 +142,7 @@ namespace MySql.Data.Common
 #endif
 
 			clientRead = new AutoResetEvent(false);
-			handle = OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, false,
+            handle = NativeMethods.OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, false,
 			dataMemoryName + "_CLIENT_READ");
 			Debug.Assert(handle != IntPtr.Zero);
 #if NET20
@@ -186,14 +186,14 @@ namespace MySql.Data.Common
 
 		public override void Flush()
 		{
-			FlushViewOfFile(dataView, 0);
+            NativeMethods.FlushViewOfFile(dataView, 0);
 		}
 
 		public bool IsClosed()
 		{
 			try
 			{
-				dataView = MapViewOfFile(dataMap, FILE_MAP_WRITE, 0, 0, (IntPtr)(int)BUFFERLENGTH);
+                dataView = NativeMethods.MapViewOfFile(dataMap, FILE_MAP_WRITE, 0, 0, (IntPtr)(int)BUFFERLENGTH);
 				if (dataView == IntPtr.Zero) return true;
 				return false;
 			}
@@ -261,38 +261,6 @@ namespace MySql.Data.Common
 		{
 			throw new NotSupportedException("SharedMemoryStream does not support seeking");
 		}
-
-
-
-		#region Imports
-		[DllImport("kernel32.dll")]
-		static extern IntPtr OpenEvent(uint dwDesiredAccess, bool bInheritHandle,
-			string lpName);
-
-		//		[DllImport("kernel32.dll")]
-		//		static extern bool SetEvent(IntPtr hEvent);
-
-		[DllImport("kernel32.dll")]
-		static extern IntPtr OpenFileMapping(uint dwDesiredAccess, bool bInheritHandle,
-			string lpName);
-
-		[DllImport("kernel32.dll")]
-		static extern IntPtr MapViewOfFile(IntPtr hFileMappingObject, uint
-			dwDesiredAccess, uint dwFileOffsetHigh, uint dwFileOffsetLow,
-			IntPtr dwNumberOfBytesToMap);
-
-		[DllImport("kernel32.dll")]
-		static extern bool UnmapViewOfFile(IntPtr lpBaseAddress);
-
-		[DllImport("kernel32.dll", SetLastError = true)]
-		static extern int CloseHandle(IntPtr hObject);
-
-		[DllImport("kernel32.dll", SetLastError = true)]
-		static extern int FlushViewOfFile(IntPtr address, uint numBytes);
-
-		#endregion
-
-
 	}
 #endif
 }

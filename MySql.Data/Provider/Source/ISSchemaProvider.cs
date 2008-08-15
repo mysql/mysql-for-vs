@@ -327,23 +327,23 @@ namespace MySql.Data.MySqlClient
 
             switch (collection)
             {
-                case "views":
+                case "VIEWS":
                     return GetViews(restrictions);
-                case "procedures":
+                case "PROCEDURES":
                     return GetProcedures(restrictions);
-                case "procedures with parameters":
+                case "PROCEDURES WITH PARAMETERS":
                     return GetProceduresWithParameters(restrictions);
-                case "procedure parameters":
+                case "PROCEDURE PARAMETERS":
                     return GetProcedureParameters(restrictions, null);
-                case "triggers":
+                case "TRIGGERS":
                     return GetTriggers(restrictions);
-                case "viewcolumns":
+                case "VIEWCOLUMNS":
                     return GetViewColumns(restrictions);
             }
             return null;
         }
 
-        private string GetWhereClause(string initial_where, string[] keys, string[] values)
+        private static string GetWhereClause(string initial_where, string[] keys, string[] values)
         {
             StringBuilder where = new StringBuilder(initial_where);
             if (values != null)
@@ -482,8 +482,8 @@ namespace MySql.Data.MySqlClient
             }
 
             // now parse out the return parameter if there is one.
-            token = tokenizer.NextToken().ToLower(CultureInfo.InvariantCulture);
-            if (String.Compare(token, "returns", true) == 0)
+            token = tokenizer.NextToken().ToUpper(CultureInfo.InvariantCulture);
+            if (String.Compare(token, "RETURNS", true) == 0)
             {
                 DataRow parameterRow = parametersTable.Rows[0];
                 parameterRow["PARAMETER_NAME"] = "RETURN_VALUE";

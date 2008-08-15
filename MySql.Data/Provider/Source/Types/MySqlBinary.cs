@@ -104,21 +104,22 @@ namespace MySql.Data.Types
 
 		void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val, int length)
 		{
-			byte[] buffToWrite = null;
-
-			if (val is System.Byte[])
-				buffToWrite = (byte[])val;
-            else if (val is Char[])
-                buffToWrite = packet.Encoding.GetBytes(val as char[]);
-            else
-			{
-                string s = val.ToString();
-				if (length == 0)
-					length = s.Length;
-				else
-					s = s.Substring(0, length);
-                buffToWrite = packet.Encoding.GetBytes(s);
-			}
+            byte[] buffToWrite = (val as byte[]);
+            if (buffToWrite == null)
+            {
+                char[] valAsChar = (val as Char[]);
+                if (valAsChar != null)
+                    buffToWrite = packet.Encoding.GetBytes(valAsChar);
+                else
+                {
+                    string s = val.ToString();
+                    if (length == 0)
+                        length = s.Length;
+                    else
+                        s = s.Substring(0, length);
+                    buffToWrite = packet.Encoding.GetBytes(s);
+                }
+            }
 
 			// we assume zero length means write all of the value
 			if (length == 0)
@@ -143,7 +144,7 @@ namespace MySql.Data.Types
 			}
 		}
 
-		private void EscapeByteArray(byte[] bytes, int length, MySqlPacket packet)
+		private static void EscapeByteArray(byte[] bytes, int length, MySqlPacket packet)
 		{
 			//	System.IO.MemoryStream ms = (System.IO.MemoryStream)stream.Stream;
 			//	ms.Capacity += (length * 2);

@@ -31,7 +31,7 @@ using MySql.Data.MySqlClient.Properties;
 namespace MySql.Data.MySqlClient
 {
 	/// <include file='docs/MySqlDataReader.xml' path='docs/ClassSummary/*'/>
-	public sealed class MySqlDataReader : DbDataReader, IDataReader, IDisposable, IDataRecord
+	public sealed class MySqlDataReader : DbDataReader, IDataReader, IDataRecord
 	{
 		// The DataReader should always be open when returned to the user.
 		private bool isOpen = true;

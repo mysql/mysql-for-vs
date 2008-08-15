@@ -28,7 +28,6 @@ using System.Reflection;
 using System.Text;
 #if !CF
 using System.ComponentModel.Design.Serialization;
-using System.Text;
 #endif
 
 namespace MySql.Data.MySqlClient

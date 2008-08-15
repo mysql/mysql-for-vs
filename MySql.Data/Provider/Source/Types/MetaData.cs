@@ -65,69 +65,69 @@ namespace MySql.Data.Types
 		public static MySqlDbType NameToType(string typeName, bool unsigned,
 			 bool realAsFloat, MySqlConnection connection)
 		{
-			switch (typeName.ToLower(CultureInfo.InvariantCulture))
+			switch (typeName.ToUpper(CultureInfo.InvariantCulture))
 			{
-				case "char": return MySqlDbType.String;
-				case "varchar": return MySqlDbType.VarChar;
-				case "date": return MySqlDbType.Date;
-				case "datetime": return MySqlDbType.DateTime;
-				case "numeric":
-				case "decimal":
-				case "dec":
-				case "fixed":
+				case "CHAR": return MySqlDbType.String;
+				case "VARCHAR": return MySqlDbType.VarChar;
+				case "DATE": return MySqlDbType.Date;
+				case "DATETIME": return MySqlDbType.DateTime;
+				case "NUMERIC":
+				case "DECIMAL":
+				case "DEC":
+				case "FIXED":
 					if (connection.driver.Version.isAtLeast(5, 0, 3))
 						return MySqlDbType.NewDecimal;
 					else
 						return MySqlDbType.Decimal;
-				case "year":
+				case "YEAR":
 					return MySqlDbType.Year;
-				case "time":
+				case "TIME":
 					return MySqlDbType.Time;
-				case "timestamp":
+				case "TIMESTAMP":
 					return MySqlDbType.Timestamp;
-				case "set": return MySqlDbType.Set;
-				case "enum": return MySqlDbType.Enum;
-				case "bit": return MySqlDbType.Bit;
+				case "SET": return MySqlDbType.Set;
+				case "ENUM": return MySqlDbType.Enum;
+				case "BIT": return MySqlDbType.Bit;
 
-				case "tinyint":
+				case "TINYINT":
                     return unsigned ? MySqlDbType.UByte : MySqlDbType.Byte;
-				case "bool":
-				case "boolean":
+				case "BOOL":
+				case "BOOLEAN":
 					return MySqlDbType.Byte;
-				case "smallint":
+				case "SMALLINT":
 					return unsigned ? MySqlDbType.UInt16 : MySqlDbType.Int16;
-				case "mediumint":
+				case "MEDIUMINT":
 					return unsigned ? MySqlDbType.UInt24 : MySqlDbType.Int24;
-				case "int":
-				case "integer":
+				case "INT":
+				case "INTEGER":
 					return unsigned ? MySqlDbType.UInt32 : MySqlDbType.Int32;
-				case "serial":
+				case "SERIAL":
 					return MySqlDbType.UInt64;
-				case "bigint":
+				case "BIGINT":
 					return unsigned ? MySqlDbType.UInt64 : MySqlDbType.Int64;
-				case "float": return MySqlDbType.Float;
-				case "double": return MySqlDbType.Double;
-				case "real": return
+				case "FLOAT": return MySqlDbType.Float;
+				case "DOUBLE": return MySqlDbType.Double;
+				case "REAL": return
 					 realAsFloat ? MySqlDbType.Float : MySqlDbType.Double;
-                case "text":
+                case "TEXT":
                     return MySqlDbType.Text;
-                case "blob":
+                case "BLOB":
 					return MySqlDbType.Blob;
-				case "longblob":
+				case "LONGBLOB":
                     return MySqlDbType.LongBlob;
-                case "longtext":
+                case "LONGTEXT":
                     return MySqlDbType.LongText;
-				case "mediumblob":
+				case "MEDIUMBLOB":
                     return MySqlDbType.MediumBlob;
-                case "mediumtext":
+                case "MEDIUMTEXT":
                     return MySqlDbType.MediumText;
-				case "tinyblob":
+				case "TINYBLOB":
                     return MySqlDbType.TinyBlob;
-				case "tinytext":
+				case "TINYTEXT":
 					return MySqlDbType.TinyText;
-                case "binary":
+                case "BINARY":
                     return MySqlDbType.Binary;
-                case "varbinary":
+                case "VARBINARY":
                     return MySqlDbType.VarBinary;
 			}
 			throw new MySqlException("Unhandled type encountered");

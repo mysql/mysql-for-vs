@@ -373,10 +373,10 @@ namespace MySql.Data.MySqlClient
                 string snippet = sql;
                 if (snippet.Length > 17)
                     snippet = sql.Substring(0, 17);
-                snippet = snippet.ToLower(CultureInfo.InvariantCulture);
+                snippet = snippet.ToUpper(CultureInfo.InvariantCulture);
                 connection.IsExecutingBuggyQuery = 
-                    snippet.StartsWith("describe") ||
-                    snippet.StartsWith("show table status");
+                    snippet.StartsWith("DESCRIBE") ||
+                    snippet.StartsWith("SHOW TABLE STATUS");
             }
 
 			if (statement == null || !statement.IsPrepared)
@@ -754,10 +754,10 @@ namespace MySql.Data.MySqlClient
                 if (String.Compare(CommandText.Substring(0, 6), "INSERT", true) == 0)
                 {
                     MySqlCommand cmd = new MySqlCommand("SELECT @@sql_mode", Connection);
-                    string sql_mode = cmd.ExecuteScalar().ToString().ToLower(CultureInfo.InvariantCulture);
+                    string sql_mode = cmd.ExecuteScalar().ToString().ToUpper(CultureInfo.InvariantCulture);
                     SqlTokenizer tokenizer = new SqlTokenizer(CommandText);
-                    tokenizer.AnsiQuotes = sql_mode.IndexOf("ansi_quotes") != -1;
-                    tokenizer.BackslashEscapes = sql_mode.IndexOf("no_backslash_escapes") == -1;
+                    tokenizer.AnsiQuotes = sql_mode.IndexOf("ANSI_QUOTES") != -1;
+                    tokenizer.BackslashEscapes = sql_mode.IndexOf("NO_BACKSLASH_ESCAPES") == -1;
                     string token = tokenizer.NextToken().ToLower(CultureInfo.InvariantCulture);
                     while (token != null)
                     {

@@ -82,8 +82,8 @@ namespace MySql.Data.Types
 		/// Enables the contruction of a <b>MySqlDateTime</b> object by parsing a string.
 		/// </summary>
 		/// <param name="s"></param>
-		public MySqlDateTime(string s)
-			: this(MySqlDateTime.Parse(s))
+		public MySqlDateTime(string dateTime)
+			: this(MySqlDateTime.Parse(dateTime))
 		{
 		}
 
@@ -436,7 +436,7 @@ namespace MySql.Data.Types
 			return new DateTime(year, month, day, hour, minute, second);
 		}
 
-        private string FormatDateCustom(string format, int monthVal, int dayVal, int yearVal)
+        private static string FormatDateCustom(string format, int monthVal, int dayVal, int yearVal)
         {
             format = format.Replace("MM", "{0:00}");
             format = format.Replace("M", "{0}");

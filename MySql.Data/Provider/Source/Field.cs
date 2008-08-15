@@ -275,8 +275,8 @@ namespace MySql.Data.MySqlClient
         {
 			string colName = String.Empty;
 			if (OriginalColumnName != null)
-				colName = OriginalColumnName.ToLower(CultureInfo.InvariantCulture);
-            if (colName.StartsWith("char("))
+				colName = OriginalColumnName.ToUpper(CultureInfo.InvariantCulture);
+            if (colName.StartsWith("CHAR("))
                 binaryOk = false;
             else if (connection.IsExecutingBuggyQuery)
                 binaryOk = false;

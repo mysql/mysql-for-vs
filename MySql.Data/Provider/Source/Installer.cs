@@ -28,6 +28,8 @@ using Microsoft.Win32;
 using System.Xml;
 using System.IO;
 using System.Diagnostics;
+using System.Security;
+using System.Security.Permissions;
 
 namespace MySql.Data.MySqlClient
 {

@@ -70,6 +70,7 @@ namespace MySql.Data.MySqlClient
     /// </summary>
 	public enum MySqlErrorCode 
 	{
+        None = 0,
 /*		ER_HASHCHK=1000,
 		ER_NISAMCHK=1001,
 		ER_NO=1002,

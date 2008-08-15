@@ -933,9 +933,9 @@ namespace MySql.Data.MySqlClient
         {
             if (value is string)
             {
-                string s = value.ToString().ToLower();
-                if (s == "yes" || s == "true") return true;
-                if (s == "no" || s == "false") return false;
+                string s = value.ToString().ToUpper(CultureInfo.InvariantCulture);
+                if (s == "YES" || s == "TRUE") return true;
+                if (s == "NO" || s == "FALSE") return false;
                 throw new ArgumentException(Resources.ImproperValueFormat, (string) value);
             }
             try
@@ -1040,119 +1040,119 @@ namespace MySql.Data.MySqlClient
 
         private static Keyword GetKey(string key)
         {
-            string lowerKey = key.ToLower(CultureInfo.InvariantCulture);
+            string lowerKey = key.ToUpper(CultureInfo.InvariantCulture);
             switch (lowerKey)
             {
-                case "uid":
-                case "username":
-                case "user id":
-                case "user name":
-                case "userid":
-                case "user":
+                case "UID":
+                case "USERNAME":
+                case "USER ID":
+                case "USER NAME":
+                case "USERID":
+                case "USER":
                     return Keyword.UserID;
-                case "host":
-                case "server":
-                case "data source":
-                case "datasource":
-                case "address":
-                case "addr":
-                case "network address":
+                case "HOST":
+                case "SERVER":
+                case "DATA SOURCE":
+                case "DATASOURCE":
+                case "ADDRESS":
+                case "ADDR":
+                case "NETWORK ADDRESS":
                     return Keyword.Server;
-                case "password":
-                case "pwd":
+                case "PASSWORD":
+                case "PWD":
                     return Keyword.Password;
-                case "useusageadvisor":
-                case "usage advisor":
-                case "use usage advisor":
+                case "USEUSAGEADVISOR":
+                case "USAGE ADVISOR":
+                case "USE USAGE ADVISOR":
                     return Keyword.UseUsageAdvisor;
-                case "character set":
-                case "charset":
+                case "CHARACTER SET":
+                case "CHARSET":
                     return Keyword.CharacterSet;
-                case "use compression":
-                case "compress":
+                case "USE COMPRESSION":
+                case "COMPRESS":
                     return Keyword.Compress;
-                case "pipe name":
-                case "pipe":
+                case "PIPE NAME":
+                case "PIPE":
                     return Keyword.PipeName;
-                case "logging":
+                case "LOGGING":
                     return Keyword.Logging;
-                case "use old syntax":
-                case "old syntax":
-                case "oldsyntax":
+                case "USE OLD SYNTAX":
+                case "OLD SYNTAX":
+                case "OLDSYNTAX":
                     return Keyword.OldSyntax;
-                case "shared memory name":
+                case "SHARED MEMORY NAME":
                     return Keyword.SharedMemoryName;
-                case "allow batch":
+                case "ALLOW BATCH":
                     return Keyword.AllowBatch;
-                case "convert zero datetime":
-                case "convertzerodatetime":
+                case "CONVERT ZERO DATETIME":
+                case "CONVERTZERODATETIME":
                     return Keyword.ConvertZeroDatetime;
-                case "persist security info":
+                case "PERSIST SECURITY INFO":
                     return Keyword.PersistSecurityInfo;
-                case "initial catalog":
-                case "database":
+                case "INITIAL CATALOG":
+                case "DATABASE":
                     return Keyword.Database;
-                case "connection timeout":
-                case "connect timeout":
+                case "CONNECTION TIMEOUT":
+                case "CONNECT TIMEOUT":
                     return Keyword.ConnectionTimeout;
-                case "port":
+                case "PORT":
                     return Keyword.Port;
-                case "pooling":
+                case "POOLING":
                     return Keyword.Pooling;
-                case "min pool size":
-                case "minimum pool size":
+                case "MIN POOL SIZE":
+                case "MINIMUM POOL SIZE":
                     return Keyword.MinimumPoolSize;
-                case "max pool size":
-                case "maximum pool size":
+                case "MAX POOL SIZE":
+                case "MAXIMUM POOL SIZE":
                     return Keyword.MaximumPoolSize;
-                case "connection lifetime":
+                case "CONNECTION LIFETIME":
                     return Keyword.ConnectionLifetime;
-                case "driver":
+                case "DRIVER":
                     return Keyword.DriverType;
-                case "protocol":
-                case "connection protocol":
+                case "PROTOCOL":
+                case "CONNECTION PROTOCOL":
                     return Keyword.Protocol;
-                case "allow zero datetime":
-                case "allowzerodatetime":
+                case "ALLOW ZERO DATETIME":
+                case "ALLOWZERODATETIME":
                     return Keyword.AllowZeroDatetime;
-                case "useperformancemonitor":
-                case "use performance monitor":
+                case "USEPERFORMANCEMONITOR":
+                case "USE PERFORMANCE MONITOR":
                     return Keyword.UsePerformanceMonitor;
-                case "procedure cache size":
-                case "procedurecachesize":
-                case "procedure cache":
-                case "procedurecache":
+                case "PROCEDURE CACHE SIZE":
+                case "PROCEDURECACHESIZE":
+                case "PROCEDURE CACHE":
+                case "PROCEDURECACHE":
                     return Keyword.ProcedureCacheSize;
-                case "connection reset":
+                case "CONNECTION RESET":
                     return Keyword.ConnectionReset;
-                case "ignore prepare":
+                case "IGNORE PREPARE":
                     return Keyword.IgnorePrepare;
-                case "encrypt":
+                case "ENCRYPT":
                     return Keyword.UseSSL;
-                case "procedure bodies":
-                case "use procedure bodies":
+                case "PROCEDURE BODIES":
+                case "USE PROCEDURE BODIES":
                     return Keyword.UseProcedureBodies;
-                case "auto enlist":
+                case "AUTO ENLIST":
                     return Keyword.AutoEnlist;
-                case "respect binary flags":
+                case "RESPECT BINARY FLAGS":
                     return Keyword.RespectBinaryFlags;
-                case "blobasutf8excludepattern":
+                case "BLOBASUTF8EXCLUDEPATTERN":
                     return Keyword.BlobAsUTF8ExcludePattern;
-                case "blobasutf8includepattern":
+                case "BLOBASUTF8INCLUDEPATTERN":
                     return Keyword.BlobAsUTF8IncludePattern;
-                case "treatblobsasutf8":
-                case "treat blobs as utf8":
+                case "TREATBLOBSASUTF8":
+                case "TREAT BLOBS AS UTF8":
                     return Keyword.TreatBlobsAsUTF8;
-                case "default command timeout":
+                case "DEFAULT COMMAND TIMEOUT":
                     return Keyword.DefaultCommandTimeout;
-                case "treat tiny as boolean":
+                case "TREAT TINY AS BOOLEAN":
                     return Keyword.TreatTinyAsBoolean;
-                case "allow user variables":
+                case "ALLOW USER VARIABLES":
                     return Keyword.AllowUserVariables;
-                case "interactive":
-                case "interactive session":
+                case "INTERACTIVE":
+                case "INTERACTIVE SESSION":
                     return Keyword.InteractiveSession;
-                case "functions return string":
+                case "FUNCTIONS RETURN STRING":
                     return Keyword.FunctionsReturnString;
             }
             throw new ArgumentException(Resources.KeywordNotSupported, key);

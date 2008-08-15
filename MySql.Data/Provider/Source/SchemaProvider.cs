@@ -49,7 +49,7 @@ namespace MySql.Data.MySqlClient
             if (connection.State != ConnectionState.Open)
                 throw new MySqlException("GetSchema can only be called on an open connection.");
 
-            collection = collection.ToLower(CultureInfo.InvariantCulture);
+            collection = collection.ToUpper(CultureInfo.InvariantCulture);
 
             DataTable dt = GetSchemaInternal(collection, restrictions);
 
@@ -429,7 +429,7 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-        private void ParseConstraint(DataTable fkTable, DataRow table, 
+        private static void ParseConstraint(DataTable fkTable, DataRow table, 
             SqlTokenizer tokenizer, bool includeColumns)
         {
             string name = tokenizer.NextToken();
@@ -478,7 +478,7 @@ namespace MySql.Data.MySqlClient
                 fkTable.Rows.Add(row);
         }
 
-        private ArrayList ParseColumns(SqlTokenizer tokenizer)
+        private static ArrayList ParseColumns(SqlTokenizer tokenizer)
         {
             ArrayList sc = new ArrayList();
             string token = tokenizer.NextToken();
@@ -491,7 +491,7 @@ namespace MySql.Data.MySqlClient
             return sc;
         }
 
-        private void ProcessColumns(DataTable fkTable, DataRow row,
+        private static void ProcessColumns(DataTable fkTable, DataRow row,
             ArrayList srcColumns, ArrayList targetColumns)
         {
             for (int i = 0; i < srcColumns.Count; i++)
@@ -909,23 +909,23 @@ namespace MySql.Data.MySqlClient
             switch (collection)
             {
                     // common collections
-                case "metadatacollections":
+                case "METADATACOLLECTIONS":
                     return GetCollections();
-                case "datasourceinformation":
+                case "DATASOURCEINFORMATION":
                     return GetDataSourceInformation();
-                case "datatypes":
+                case "DATATYPES":
                     return GetDataTypes();
-                case "restrictions":
+                case "RESTRICTIONS":
                     return GetRestrictions();
-                case "reservedwords":
+                case "RESERVEDWORDS":
                     return GetReservedWords();
 
                     // collections specific to our provider
-                case "users":
+                case "USERS":
                     return GetUsers(restrictions);
-                case "databases":
+                case "DATABASES":
                     return GetDatabases(restrictions);
-                case "udf":
+                case "UDF":
                     return GetUDF(restrictions);
             }
 

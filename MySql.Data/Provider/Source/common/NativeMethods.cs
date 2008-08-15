@@ -23,12 +23,26 @@ using System.Runtime.InteropServices;
 
 namespace MySql.Data.Common
 {
-	class NativeMethods
+	internal class NativeMethods
 	{
 		// Keep the compiler from generating a default ctor
 		private NativeMethods() 
 		{
 		}
+
+        //Constants for dwDesiredAccess:
+        public const UInt32 GENERIC_READ = 0x80000000;
+        public const UInt32 GENERIC_WRITE = 0x40000000;
+
+        //Constants for return value:
+        public const Int32 INVALIDpipeHandle_VALUE = -1;
+
+        //Constants for dwFlagsAndAttributes:
+        public const UInt32 FILE_FLAG_OVERLAPPED = 0x40000000;
+        public const UInt32 FILE_FLAG_NO_BUFFERING = 0x20000000;
+
+        //Constants for dwCreationDisposition:
+        public const UInt32 OPEN_EXISTING = 3;
 
 		[StructLayout(LayoutKind.Sequential)]
 		public class SecurityAttributes 
@@ -62,12 +76,12 @@ namespace MySql.Data.Common
 
 		[return:MarshalAs(UnmanagedType.Bool)]
 		[DllImport("kernel32.dll", SetLastError=true)]
-		static extern internal bool ReadFile(IntPtr hFile, [Out] byte[] lpBuffer, uint nNumberOfBytesToRead,
+        static extern public bool ReadFile(IntPtr hFile, [Out] byte[] lpBuffer, uint nNumberOfBytesToRead,
 			out uint lpNumberOfBytesRead, IntPtr lpOverlapped);
 
 		[return:MarshalAs(UnmanagedType.Bool)]
 		[DllImport("Kernel32")]
-		static extern internal bool WriteFile(IntPtr hFile, [In]byte[] buffer,
+        static extern public bool WriteFile(IntPtr hFile, [In]byte[] buffer,
 			uint numberOfBytesToWrite, out uint numberOfBytesWritten,
 			IntPtr lpOverlapped);
 
@@ -79,19 +93,26 @@ namespace MySql.Data.Common
 		[DllImport("kernel32.dll", SetLastError=true)]
 		public static extern bool FlushFileBuffers(IntPtr handle);
 
-		//Constants for dwDesiredAccess:
-		public const UInt32 GENERIC_READ = 0x80000000;
-		public const UInt32 GENERIC_WRITE = 0x40000000;
+        [DllImport("kernel32.dll")]
+        public static extern IntPtr OpenEvent(uint dwDesiredAccess,
+            [MarshalAs(UnmanagedType.Bool)]bool bInheritHandle,
+            string lpName);
 
-		//Constants for return value:
-		public const Int32 INVALIDpipeHandle_VALUE = -1;
+        [DllImport("kernel32.dll")]
+        public static extern IntPtr OpenFileMapping(uint dwDesiredAccess,
+            [MarshalAs(UnmanagedType.Bool)]bool bInheritHandle,
+            string lpName);
 
-		//Constants for dwFlagsAndAttributes:
-		public const UInt32 FILE_FLAG_OVERLAPPED = 0x40000000;
-		public const UInt32 FILE_FLAG_NO_BUFFERING = 0x20000000;
+        [DllImport("kernel32.dll")]
+        public static extern IntPtr MapViewOfFile(IntPtr hFileMappingObject, uint
+            dwDesiredAccess, uint dwFileOffsetHigh, uint dwFileOffsetLow,
+            IntPtr dwNumberOfBytesToMap);
 
-		//Constants for dwCreationDisposition:
-		public const UInt32 OPEN_EXISTING = 3;
+        [DllImport("kernel32.dll")]
+        public static extern bool UnmapViewOfFile(IntPtr lpBaseAddress);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern int FlushViewOfFile(IntPtr address, uint numBytes);
 
 		#region Winsock functions
 
