@@ -943,17 +943,17 @@ namespace MySql.Data.MySqlClient
 
             switch (collection)
             {
-                case "tables":
+                case "TABLES":
                     return GetTables(restrictions);
-                case "columns":
+                case "COLUMNS":
                     return GetColumns(restrictions);
-                case "indexes":
+                case "INDEXES":
                     return GetIndexes(restrictions);
-                case "indexcolumns":
+                case "INDEXCOLUMNS":
                     return GetIndexColumns(restrictions);
-                case "foreign keys":
+                case "FOREIGN KEYS":
                     return GetForeignKeys(restrictions, false);
-                case "foreign key columns":
+                case "FOREIGN KEY COLUMNS":
                     return GetForeignKeys(restrictions, true);
             }
             return null;
