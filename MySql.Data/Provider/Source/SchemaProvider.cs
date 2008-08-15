@@ -610,7 +610,8 @@ namespace MySql.Data.MySqlClient
                     new object[] {"Users", 1, 1},
                     new object[] {"Foreign Keys", 4, 3},
                     new object[] {"IndexColumns", 5, 4},
-                    new object[] {"Indexes", 4, 3}
+                    new object[] {"Indexes", 4, 3},
+                    new object[] {"UDF", 1, 1}
                 };
 
             DataTable dt = new DataTable("MetaDataCollections");
@@ -756,6 +757,7 @@ namespace MySql.Data.MySqlClient
                     new object[] {"Foreign Key Columns", "Schema", "", 1},
                     new object[] {"Foreign Key Columns", "Table", "", 2},
                     new object[] {"Foreign Key Columns", "Constraint Name", "", 3},
+                    new object[] {"UDF", "Name", "", 0}
                 };
 
             DataTable dt = new DataTable("Restrictions");
@@ -862,6 +864,45 @@ namespace MySql.Data.MySqlClient
             return reader.GetString(index);
         }
 
+        public virtual DataTable GetUDF(string[] restrictions)
+        {
+            string sql = "SELECT name,ret,dl FROM mysql.func";
+            if (restrictions != null)
+            {
+                if (restrictions.Length >= 1 && !String.IsNullOrEmpty(restrictions[0]))
+                    sql += String.Format(" WHERE name LIKE '{0}'", restrictions[0]);
+            }
+
+            DataTable dt = new DataTable("User-defined Functions");
+            dt.Columns.Add("NAME", typeof(string));
+            dt.Columns.Add("RETURN_TYPE", typeof(int));
+            dt.Columns.Add("LIBRARY_NAME", typeof(string));
+
+            MySqlCommand cmd = new MySqlCommand(sql, connection);
+            try
+            {
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        DataRow row = dt.NewRow();
+                        row[0] = reader.GetString(0);
+                        row[1] = reader.GetInt32(1);
+                        row[2] = reader.GetString(2);
+                        dt.Rows.Add(row);
+                    }
+                }
+            }
+            catch (MySqlException ex)
+            {
+                if (ex.Number != (int)MySqlErrorCode.TableAccessDenied)
+                    throw;
+                throw new MySqlException(Resources.UnableToEnumerateUDF, ex);
+            }
+
+            return dt;
+        }
+
         protected virtual DataTable GetSchemaInternal(string collection, string[] restrictions)
         {
             switch (collection)
@@ -883,6 +924,8 @@ namespace MySql.Data.MySqlClient
                     return GetUsers(restrictions);
                 case "databases":
                     return GetDatabases(restrictions);
+                case "udf":
+                    return GetUDF(restrictions);
             }
 
             // if we have a current database and our users have

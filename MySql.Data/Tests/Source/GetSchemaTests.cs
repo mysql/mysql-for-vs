@@ -33,26 +33,28 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 			DataTable dt = conn.GetSchema();
 
-			Assert.AreEqual("MetaDataCollections", dt.Rows[0][0]);
-			Assert.AreEqual("DataSourceInformation", dt.Rows[1][0]);
-			Assert.AreEqual("DataTypes", dt.Rows[2][0]);
-			Assert.AreEqual("Restrictions", dt.Rows[3][0]);
-			Assert.AreEqual("ReservedWords", dt.Rows[4][0]);
-			Assert.AreEqual("Databases", dt.Rows[5][0]);
-			Assert.AreEqual("Tables", dt.Rows[6][0]);
-			Assert.AreEqual("Columns", dt.Rows[7][0]);
-			Assert.AreEqual("Users", dt.Rows[8][0]);
-			Assert.AreEqual("Foreign Keys", dt.Rows[9][0]);
-			Assert.AreEqual("IndexColumns", dt.Rows[10][0]);
-			Assert.AreEqual("Indexes", dt.Rows[11][0]);
+            int row = 0;
+			Assert.AreEqual("MetaDataCollections", dt.Rows[row++][0]);
+            Assert.AreEqual("DataSourceInformation", dt.Rows[row++][0]);
+            Assert.AreEqual("DataTypes", dt.Rows[row++][0]);
+            Assert.AreEqual("Restrictions", dt.Rows[row++][0]);
+            Assert.AreEqual("ReservedWords", dt.Rows[row++][0]);
+            Assert.AreEqual("Databases", dt.Rows[row++][0]);
+            Assert.AreEqual("Tables", dt.Rows[row++][0]);
+            Assert.AreEqual("Columns", dt.Rows[row++][0]);
+            Assert.AreEqual("Users", dt.Rows[row++][0]);
+            Assert.AreEqual("Foreign Keys", dt.Rows[row++][0]);
+            Assert.AreEqual("IndexColumns", dt.Rows[row++][0]);
+            Assert.AreEqual("Indexes", dt.Rows[row++][0]);
+            Assert.AreEqual("UDF", dt.Rows[row++][0]);
 
             if (Version >= new Version(5, 0))
 			{
-				Assert.AreEqual("Views", dt.Rows[12][0]);
-				Assert.AreEqual("ViewColumns", dt.Rows[13][0]);
-				Assert.AreEqual("Procedure Parameters", dt.Rows[14][0]);
-				Assert.AreEqual("Procedures", dt.Rows[15][0]);
-				Assert.AreEqual("Triggers", dt.Rows[16][0]);
+                Assert.AreEqual("Views", dt.Rows[row++][0]);
+                Assert.AreEqual("ViewColumns", dt.Rows[row++][0]);
+                Assert.AreEqual("Procedure Parameters", dt.Rows[row++][0]);
+                Assert.AreEqual("Procedures", dt.Rows[row++][0]);
+                Assert.AreEqual("Triggers", dt.Rows[row++][0]);
 			}
 		}
 
