@@ -261,10 +261,11 @@ namespace MySql.Data.MySqlClient
 
         protected override void SetRowUpdatingHandler(DbDataAdapter adapter)
         {
+            MySqlDataAdapter myAdapter = (adapter as MySqlDataAdapter);
             if (adapter != base.DataAdapter)
-                ((MySqlDataAdapter)adapter).RowUpdating += new MySqlRowUpdatingEventHandler(RowUpdating);
+                myAdapter.RowUpdating += new MySqlRowUpdatingEventHandler(RowUpdating);
             else
-                ((MySqlDataAdapter)adapter).RowUpdating -= new MySqlRowUpdatingEventHandler(RowUpdating);
+                myAdapter.RowUpdating -= new MySqlRowUpdatingEventHandler(RowUpdating);
         }
 
         private void RowUpdating(object sender, MySqlRowUpdatingEventArgs args)

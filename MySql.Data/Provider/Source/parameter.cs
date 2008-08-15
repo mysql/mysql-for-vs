@@ -43,7 +43,7 @@ namespace MySql.Data.MySqlClient
         private const int UNSIGNED_MASK = 0x8000;
         private object paramValue;
         private ParameterDirection direction = ParameterDirection.Input;
-        private bool isNullable = false;
+        private bool isNullable;
         private string paramName;
         private string sourceColumn;
         private DataRowVersion sourceVersion = DataRowVersion.Current;
@@ -321,10 +321,13 @@ namespace MySql.Data.MySqlClient
             set
             {
                 paramValue = value;
-                if (value is Byte[])
-                    size = (value as Byte[]).Length;
-                else if (value is String)
-                    size = (value as string).Length;
+                byte[] valueAsByte = value as byte[];
+                string valueAsString = value as string;
+
+                if (valueAsByte != null)
+                    size = valueAsByte.Length;
+                else if (valueAsString != null)
+                    size = valueAsString.Length;
                 if (inferType)
                     SetTypeFromValue();
             }

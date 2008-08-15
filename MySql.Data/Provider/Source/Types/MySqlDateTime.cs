@@ -266,11 +266,12 @@ namespace MySql.Data.Types
 		{
 			MySqlDateTime dtValue;
 
+            string valueAsString = value as string;
+
 			if (value is DateTime)
 				dtValue = new MySqlDateTime(type, (DateTime)value);
-			else if (value is string)
-				dtValue = new MySqlDateTime(type, DateTime.Parse((string)value,
-					 System.Globalization.CultureInfo.CurrentCulture));
+			else if (valueAsString != null)
+				dtValue = new MySqlDateTime(type, DateTime.Parse(valueAsString, CultureInfo.CurrentCulture));
 			else if (value is MySqlDateTime)
 				dtValue = (MySqlDateTime)value;
 			else

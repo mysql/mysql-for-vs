@@ -60,7 +60,7 @@ namespace MySql.Data.MySqlClient
 		 * CommandBehavior.CloseConnection flag. A null reference means
 		 * normal behavior (do not automatically close).
 		 */
-		private MySqlConnection connection = null;
+		private MySqlConnection connection;
 
 		/*
 		 * Because the user should not be able to directly create a 
@@ -75,7 +75,6 @@ namespace MySql.Data.MySqlClient
 			driver = connection.driver;
 			affectedRows = -1;
 			this.statement = statement;
-			nextResultDone = false;
 			fieldHashCS = new Hashtable();
 			fieldHashCI = new Hashtable(StringComparer.InvariantCultureIgnoreCase);
 		}

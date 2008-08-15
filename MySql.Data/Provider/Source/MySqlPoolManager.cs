@@ -29,17 +29,12 @@ namespace MySql.Data.MySqlClient
     /// </summary>
     internal class MySqlPoolManager
     {
-        private static Hashtable pools;
+        private static Hashtable pools = new Hashtable();
 #if NET20
         private static List<MySqlPool> clearingPools = new List<MySqlPool>();
 #else
-        private static ArrayList clearingPools;
+        private static ArrayList clearingPools = new ArrayList();
 #endif
-
-        static MySqlPoolManager()
-        {
-            pools = new Hashtable();
-        }
 
         public static MySqlPool GetPool(MySqlConnectionStringBuilder settings)
         {

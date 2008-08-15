@@ -223,16 +223,15 @@ namespace MySql.Data.MySqlClient
 		/// <returns>The index of the new <see cref="MySqlParameter"/> object.</returns>
 		public override int Add(object value)
 		{
-			if (!(value is MySqlParameter))
+            MySqlParameter parameter = value as MySqlParameter;
+			if (parameter == null)
 				throw new MySqlException("Only MySqlParameter objects may be stored");
 
-			MySqlParameter p = (MySqlParameter)value;
-
-			if (p.ParameterName == null || p.ParameterName == String.Empty)
+			if (parameter.ParameterName == null || parameter.ParameterName == String.Empty)
 				throw new MySqlException("Parameters must be named");
 
-			p = Add(p);
-			return IndexOf(p);
+			parameter = Add(parameter);
+			return IndexOf(parameter);
 		}
 
 		/// <summary>
@@ -334,9 +333,10 @@ namespace MySql.Data.MySqlClient
 		/// <param name="value"></param>
 		public override void Insert(int index, object value)
 		{
-            if (!(value is MySqlParameter))
+            MySqlParameter parameter = value as MySqlParameter;
+            if (parameter == null)
                 throw new MySqlException("Only MySqlParameter objects may be stored");
-            InternalAdd((MySqlParameter)value, index);
+            InternalAdd(parameter, index);
 		}
 
         /// <summary>
@@ -463,7 +463,7 @@ namespace MySql.Data.MySqlClient
             return value;
         }
 
-        private void AdjustHash(Hashtable hash, string parameterName, int keyIndex, bool addEntry)
+        private static void AdjustHash(Hashtable hash, string parameterName, int keyIndex, bool addEntry)
         {
             if (!hash.ContainsKey(parameterName)) return;
             int index = (int)hash[parameterName];

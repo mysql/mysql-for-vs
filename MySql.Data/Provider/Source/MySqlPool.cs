@@ -71,8 +71,6 @@ namespace MySql.Data.MySqlClient
                 idlePool.Enqueue(CreateNewPooledConnection());
 
             procedureCache = new ProcedureCache((int)settings.ProcedureCacheSize);
-
-            beingCleared = false;
         }
 
         #region Properties

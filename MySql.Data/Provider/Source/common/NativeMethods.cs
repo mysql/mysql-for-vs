@@ -20,6 +20,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace MySql.Data.Common
 {
@@ -56,8 +57,9 @@ namespace MySql.Data.Common
 			public bool inheritHandle;
 		}
 
-		[DllImport("Kernel32")]
-		static extern public int CreateFile(String fileName,
+		[DllImport("Kernel32", CharSet=CharSet.Unicode)]
+		static extern public int CreateFile(
+            String fileName,
 			uint desiredAccess,
 			uint shareMode, 
 			SecurityAttributes securityAttributes,
@@ -81,9 +83,8 @@ namespace MySql.Data.Common
 
 		[return:MarshalAs(UnmanagedType.Bool)]
 		[DllImport("Kernel32")]
-        static extern public bool WriteFile(IntPtr hFile, [In]byte[] buffer,
-			uint numberOfBytesToWrite, out uint numberOfBytesWritten,
-			IntPtr lpOverlapped);
+        public static extern bool WriteFile(IntPtr hFile, [In]byte[] buffer,
+			uint numberOfBytesToWrite, out uint numberOfBytesWritten, IntPtr lpOverlapped);
 
 		[return:MarshalAs(UnmanagedType.Bool)]
 		[DllImport("kernel32.dll", SetLastError=true)]
@@ -93,12 +94,12 @@ namespace MySql.Data.Common
 		[DllImport("kernel32.dll", SetLastError=true)]
 		public static extern bool FlushFileBuffers(IntPtr handle);
 
-        [DllImport("kernel32.dll")]
+        [DllImport("kernel32.dll", CharSet=CharSet.Unicode)]
         public static extern IntPtr OpenEvent(uint dwDesiredAccess,
             [MarshalAs(UnmanagedType.Bool)]bool bInheritHandle,
             string lpName);
 
-        [DllImport("kernel32.dll")]
+        [DllImport("kernel32.dll", CharSet=CharSet.Unicode)]
         public static extern IntPtr OpenFileMapping(uint dwDesiredAccess,
             [MarshalAs(UnmanagedType.Bool)]bool bInheritHandle,
             string lpName);
@@ -109,6 +110,7 @@ namespace MySql.Data.Common
             IntPtr dwNumberOfBytesToMap);
 
         [DllImport("kernel32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool UnmapViewOfFile(IntPtr lpBaseAddress);
 
         [DllImport("kernel32.dll", SetLastError = true)]

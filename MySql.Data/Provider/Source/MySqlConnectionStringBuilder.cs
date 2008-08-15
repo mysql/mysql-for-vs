@@ -931,17 +931,17 @@ namespace MySql.Data.MySqlClient
 
         private static bool ConvertToBool(object value)
         {
-            if (value is string)
+            string valAsString = value as string;
+            if (valAsString != null)
             {
-                string s = value.ToString().ToUpper(CultureInfo.InvariantCulture);
+                string s = valAsString.ToUpper(CultureInfo.InvariantCulture);
                 if (s == "YES" || s == "TRUE") return true;
                 if (s == "NO" || s == "FALSE") return false;
-                throw new ArgumentException(Resources.ImproperValueFormat, (string) value);
+                throw new ArgumentException(Resources.ImproperValueFormat, valAsString);
             }
             try
             {
-                return (value as IConvertible).ToBoolean(
-                    CultureInfo.InvariantCulture);
+                return (value as IConvertible).ToBoolean(CultureInfo.InvariantCulture);
             }
             catch (InvalidCastException)
             {
@@ -953,22 +953,24 @@ namespace MySql.Data.MySqlClient
         {
             try
             {
-                if (value is MySqlConnectionProtocol) return (MySqlConnectionProtocol) value;
+                if (value is MySqlConnectionProtocol) 
+                    return (MySqlConnectionProtocol) value;
                 return (MySqlConnectionProtocol) Enum.Parse(
                                                      typeof (MySqlConnectionProtocol), value.ToString(), true);
             }
             catch (Exception)
             {
-                if (value is string)
+                string valAsString = value as String;
+                if (valAsString != null)
                 {
-                    string lowerString = (value as string).ToLower();
-                    if (lowerString == "socket" || lowerString == "tcp")
+                    string upperString = valAsString.ToUpper(CultureInfo.InvariantCulture);
+                    if (upperString == "SOCKET" || upperString == "TCP")
                         return MySqlConnectionProtocol.Sockets;
-                    if (lowerString == "pipe")
+                    if (upperString == "PIPE")
                         return MySqlConnectionProtocol.NamedPipe;
-                    if (lowerString == "unix")
+                    if (upperString == "UNIX")
                         return MySqlConnectionProtocol.UnixSocket;
-                    if (lowerString == "memory")
+                    if (upperString == "MEMORY")
                         return MySqlConnectionProtocol.SharedMemory;
                 }
             }
@@ -1265,24 +1267,25 @@ namespace MySql.Data.MySqlClient
 
         private void SetValue(Keyword kw, object value)
         {
+            string valueAsString = value as string;
             switch (kw)
             {
                 case Keyword.UserID: 
-                    userId = (string)value; break;
-                case Keyword.Password: 
-                    password = (string)value; break;
+                    userId = valueAsString; break;
+                case Keyword.Password:
+                    password = valueAsString; break;
                 case Keyword.Port: 
                     port = ConvertToUInt(value); break;
-                case Keyword.Server: 
-                    server = (string)value; break;
+                case Keyword.Server:
+                    server = valueAsString; break;
                 case Keyword.UseUsageAdvisor: 
                     useUsageAdvisor = ConvertToBool(value); break;
-                case Keyword.CharacterSet: 
-                    charSet = (string)value; break;
+                case Keyword.CharacterSet:
+                    charSet = valueAsString; break;
                 case Keyword.Compress: 
                     compress = ConvertToBool(value); break;
-                case Keyword.PipeName: 
-                    pipeName = (string)value; break;
+                case Keyword.PipeName:
+                    pipeName = valueAsString; break;
                 case Keyword.Logging: 
                     logging = ConvertToBool(value); break;
                 case Keyword.OldSyntax: 
@@ -1290,16 +1293,16 @@ namespace MySql.Data.MySqlClient
                     if (!clearing)
                         Logger.LogWarning("Use Old Syntax is now obsolete.  Please see documentation");
                     break;
-                case Keyword.SharedMemoryName: 
-                    sharedMemName = (string)value; break;
+                case Keyword.SharedMemoryName:
+                    sharedMemName = valueAsString; break;
                 case Keyword.AllowBatch: 
                     allowBatch = ConvertToBool(value); break;
                 case Keyword.ConvertZeroDatetime: 
                     convertZeroDatetime = ConvertToBool(value); break;
                 case Keyword.PersistSecurityInfo: 
                     persistSI = ConvertToBool(value); break;
-                case Keyword.Database: 
-                    database = (string)value; break;
+                case Keyword.Database:
+                    database = valueAsString; break;
                 case Keyword.ConnectionTimeout: 
                     connectionTimeout = ConvertToUInt(value); break;
                 case Keyword.Pooling: 
@@ -1335,9 +1338,9 @@ namespace MySql.Data.MySqlClient
                 case Keyword.TreatBlobsAsUTF8:
                     treatBlobsAsUTF8 = ConvertToBool(value); break;
                 case Keyword.BlobAsUTF8ExcludePattern:
-                    blobAsUtf8ExcludePattern = (string)value; break;
+                    blobAsUtf8ExcludePattern = valueAsString; break;
                 case Keyword.BlobAsUTF8IncludePattern:
-                    blobAsUtf8IncludePattern = (string)value; break;
+                    blobAsUtf8IncludePattern = valueAsString; break;
                 case Keyword.DefaultCommandTimeout:
                     defaultCommandTimeout = ConvertToUInt(value); break;
                 case Keyword.TreatTinyAsBoolean:

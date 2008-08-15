@@ -127,7 +127,7 @@ namespace MySql.Data.MySqlClient
             // procedure cache
             string spName = commandText;
             string parameterHash = command.parameterHash;
-            if (spName.IndexOf(".") == -1)
+            if (spName.IndexOf(".", StringComparison.OrdinalIgnoreCase) == -1)
                 spName = Connection.Database + "." + spName;
 
             DataSet ds = GetParameters(spName);

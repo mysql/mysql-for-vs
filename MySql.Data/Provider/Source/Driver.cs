@@ -59,8 +59,6 @@ namespace MySql.Data.MySqlClient
             connectionString = settings;
             threadId = -1;
             serverCharSetIndex = -1;
-            serverCharSet = null;
-            hasWarnings = false;
         }
 
         #region Properties

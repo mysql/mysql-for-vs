@@ -35,14 +35,9 @@ namespace MySql.Data.MySqlClient
         /// Gets an instance of the <see cref="MySqlClientFactory"/>. 
         /// This can be used to retrieve strongly typed data objects. 
         /// </summary>
-        public static readonly MySqlClientFactory Instance;
+        public static MySqlClientFactory Instance = new MySqlClientFactory();
         private Type dbServicesType;
         private FieldInfo mySqlDbProviderServicesInstance;
-
-        static MySqlClientFactory()
-        {
-            Instance = new MySqlClientFactory();
-        }
 
         /// <summary>
         /// Returns a strongly typed <see cref="DbCommandBuilder"/> instance. 

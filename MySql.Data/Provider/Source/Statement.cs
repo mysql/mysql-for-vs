@@ -124,7 +124,7 @@ namespace MySql.Data.MySqlClient
 
                     // looks like we might have room for it so we remember the current end of the stream
                     buffers.RemoveAt(buffers.Count - 1);
-                    long originalLength = packet.Length - 4;
+                    //long originalLength = packet.Length - 4;
 
                     // and attempt to stream the next command
                     string text = batchedCmd.BatchableCommandText;
