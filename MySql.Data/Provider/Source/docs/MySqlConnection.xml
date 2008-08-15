@@ -1021,7 +1021,7 @@
             <td>Use Procedure Bodies</td>
             <td>true</td>
             <td>
-              Instructs the provider to attempt to call the procedure without first resolving the metadata.  Thjis
+              Instructs the provider to attempt to call the procedure without first resolving the metadata.  This
               is useful in situations where the calling user does not have access to the mysql.proc table.  To
               use this mode, the parameters for the procedure must be added to the command in the same order
               as they appear in the procedure definition and their types must be explicitly set.
