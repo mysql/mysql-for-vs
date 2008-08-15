@@ -12,7 +12,6 @@
           passwordAttemptWindow="20" 
           minRequiredNonAlphanumericCharacters="1" 
           minRequiredPasswordLength="11" 
-          passwordStrengthRegularExpression="@\"(?=.{6,})(?=(.*\d){1,})(?=(.*\W){1,})"
           applicationName="MyApplication" />
   </providers>
 </membership>

@@ -186,6 +186,13 @@ namespace MySql.Data.MySqlClient
             colFlags = flags;
             mySqlDbType = type;
 
+            if (String.IsNullOrEmpty(TableName) && String.IsNullOrEmpty(RealTableName) &&
+                connection.Settings.FunctionsReturnString)
+            {
+                mySqlDbType = MySqlDbType.VarString;
+                binaryOk = false;
+            }
+
             // if our type is an unsigned number, then we need
             // to bump it up into our unsigned types
             // we're trusting that the server is not going to set the UNSIGNED

@@ -10,8 +10,7 @@
     <authorization>
       <deny users="?" />
     </authorization>
-    <membership defaultProvider="MySQLProvider"
-      userIsOnlineTimeWindow="15">
+    <membership defaultProvider="MySQLProvider" userIsOnlineTimeWindow="15">
       <providers>
         <add
           name="MySQLProvider"

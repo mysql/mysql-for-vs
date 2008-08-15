@@ -20,6 +20,7 @@
 
 using System;
 using System.Diagnostics;
+using MySql.Data.MySqlClient.Properties;
 
 namespace MySql.Data.MySqlClient
 {

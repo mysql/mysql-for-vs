@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MySql.Data.MySqlClient {
+namespace MySql.Data.MySqlClient.Properties {
     using System;
     
     
@@ -246,6 +246,33 @@ namespace MySql.Data.MySqlClient {
         public static string ErrorCreatingSocket {
             get {
                 return ResourceManager.GetString("ErrorCreatingSocket", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fatal error encountered during command execution..
+        /// </summary>
+        public static string FatalErrorDuringExecute {
+            get {
+                return ResourceManager.GetString("FatalErrorDuringExecute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fatal error encountered during data read..
+        /// </summary>
+        public static string FatalErrorDuringRead {
+            get {
+                return ResourceManager.GetString("FatalErrorDuringRead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fatal error encountered attempting to read the resultset..
+        /// </summary>
+        public static string FatalErrorReadingResult {
+            get {
+                return ResourceManager.GetString("FatalErrorReadingResult", resourceCulture);
             }
         }
         

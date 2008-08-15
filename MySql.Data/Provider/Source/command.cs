@@ -30,6 +30,7 @@ using System.Threading;
 using System.Diagnostics;
 using System.Globalization;
 using System.Collections.Generic;
+using MySql.Data.MySqlClient.Properties;
 
 namespace MySql.Data.MySqlClient
 {
@@ -285,10 +286,12 @@ namespace MySql.Data.MySqlClient
 		/// </summary>
 		private void CheckState()
 		{
-			// There must be a valid and open connection.
-			if ((connection == null || connection.State != ConnectionState.Open) && 
-                !connection.SoftClosed)
-				throw new InvalidOperationException("Connection must be valid and open");
+            // There must be a valid and open connection.
+            if (connection == null)
+                throw new InvalidOperationException("Connection must be valid and open.");
+
+            if (connection.State != ConnectionState.Open && !connection.SoftClosed)
+                throw new InvalidOperationException("Connection must be valid and open.");
 
 			// Data readers have to be closed first
 			if (connection.Reader != null && cursorPageSize == 0)
@@ -431,6 +434,8 @@ namespace MySql.Data.MySqlClient
                 }
                 if (ex.IsFatal)
                     Connection.Close();
+                if (ex.Number == 0)
+                    throw new MySqlException(Resources.FatalErrorDuringExecute, ex);
                 throw;
             }
             finally

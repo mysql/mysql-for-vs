@@ -12,6 +12,7 @@
         <Component Id="Providers" Guid="8578813e-e123-45ad-9c92-565382a058b6">
           <File Id="MySqlWeb" Name="MySql.Web.dll" DiskId="1"
                 Source="..\MySql.Web\providers\bin\release\mysql.web.dll"/>
+          <RemoveFile Id="RemoveWebStateFile" Name="*.InstallState" On="uninstall"/>
         </Component>
       </Directory>
     </DirectoryRef>
@@ -30,9 +31,9 @@
     </InstallExecuteSequence>
 
     <CustomAction Id="ManagedWebInstallSetup" Property="ManagedWebInstall"
-                  Value='"[WindowsFolder]\Microsoft.NET\Framework\v2.0.50727\installUtil.exe" /LogToConsole=false  "[#MySqlWeb]"'/>
+                  Value='"[WindowsFolder]\Microsoft.NET\Framework\v2.0.50727\installUtil.exe" /LogToConsole=false /LogFile=  "[#MySqlWeb]"'/>
     <CustomAction Id='ManagedWebUnInstallSetup' Property="ManagedWebUnInstall"
-                  Value='"[WindowsFolder]\Microsoft.NET\Framework\v2.0.50727\installUtil.exe" /LogToConsole=false /u "[#MySqlWeb]"'/>
+                  Value='"[WindowsFolder]\Microsoft.NET\Framework\v2.0.50727\installUtil.exe" /LogToConsole=false /LogFile= /u "[#MySqlWeb]"'/>
     <CustomAction Id="ManagedWebInstall" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
     <CustomAction Id="ManagedWebUnInstall" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
   </Fragment>

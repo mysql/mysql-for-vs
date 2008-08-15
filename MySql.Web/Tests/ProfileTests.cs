@@ -31,6 +31,7 @@ using System.Configuration.Provider;
 using System.Configuration;
 using MySql.Web.Profile;
 using System.Web.Profile;
+using System.Reflection;
 
 namespace MySql.Web.Tests
 {
@@ -113,6 +114,7 @@ namespace MySql.Web.Tests
         public void StringCollectionAsProperty()
         {
             ProfileBase profile = ProfileBase.Create("foo", true);
+            ResetAppId(profile.Providers["MySqlProfileProvider"] as MySQLProfileProvider);
             StringCollection colors = new StringCollection();
             colors.Add("red");
             colors.Add("green");
@@ -152,6 +154,7 @@ namespace MySql.Web.Tests
         public void AuthenticatedDateTime()
         {
             ProfileBase profile = ProfileBase.Create("foo", true);
+            ResetAppId(profile.Providers["MySqlProfileProvider"] as MySQLProfileProvider);
             DateTime date = DateTime.Now;
             profile["BirthDate"] = date;
             profile.Save();
@@ -173,10 +176,28 @@ namespace MySql.Web.Tests
             Assert.AreEqual(date, getValue1.PropertyValue);
         }
 
+        /// <summary>
+        /// We have to manually reset the app id because our profile provider is loaded from
+        /// previous tests but we are destroying our database between tests.  This means that 
+        /// our provider thinks we have an application in our database when we really don't.
+        /// Doing this will force the provider to generate a new app id.
+        /// Note that this is not really a problem in a normal app that is not destroying
+        /// the database behind the back of the provider.
+        /// </summary>
+        /// <param name="p"></param>
+        private void ResetAppId(MySQLProfileProvider p)
+        {
+            Type t = p.GetType();
+            FieldInfo fi = t.GetField("applicationId",
+                BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.GetField);
+            fi.SetValue(p, -1);
+        }
+
         [Test]
         public void AuthenticatedStringProperty()
         {
             ProfileBase profile = ProfileBase.Create("foo", true);
+            ResetAppId(profile.Providers["MySqlProfileProvider"] as MySQLProfileProvider);
             profile["Name"] = "Fred Flintstone";
             profile.Save();
 

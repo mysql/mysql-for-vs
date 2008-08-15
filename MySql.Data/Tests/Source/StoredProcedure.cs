@@ -29,6 +29,23 @@ using System.Data.Common;
 
 namespace MySql.Data.MySqlClient.Tests
 {
+    [TestFixture]
+    public class StoredProcedureAccess : StoredProcedure
+    {
+        public override void Setup()
+        {
+            base.Setup();
+            SetAccountPerms(true);
+        }
+
+        protected override string GetConnectionInfo()
+        {
+            string info = base.GetConnectionInfo();
+            info = info.Replace("use procedure bodies=false", "");
+            return info;
+        }
+    }
+
 	/// <summary>
 	/// Summary description for StoredProcedure.
 	/// </summary>
@@ -96,7 +113,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
 
         /// <summary>
-        /// Bug #17814  	Stored procedure fails unless DbType set explicitly
+        /// Bug #17814 Stored procedure fails unless DbType set explicitly
         /// Bug #23749 VarChar field size over 255 causes a System.OverflowException 
         /// </summary>
         [Test]
@@ -104,14 +121,19 @@ namespace MySql.Data.MySqlClient.Tests
         {
             if (Version < new Version(5, 0)) return;
 
+            // we don't want to run this test under no access
+            string connInfo = GetConnectionInfo();
+            if (connInfo.IndexOf("use procedure bodies=false") != -1) return;
+
             // create our procedure
-            execSQL("CREATE PROCEDURE spCount(out value VARCHAR(350), OUT intVal INT, " +
+            execSQL("CREATE PROCEDURE spTest(out value VARCHAR(350), OUT intVal INT, " +
                 "OUT dateVal TIMESTAMP, OUT floatVal FLOAT, OUT noTypeVarChar VARCHAR(20), " +
                 "OUT noTypeInt INT) " +
                 "BEGIN  SET value='42';  SET intVal=33; SET dateVal='2004-06-05 07:58:09'; " +
                 "SET floatVal = 1.2; SET noTypeVarChar='test'; SET noTypeInt=66; END");
 
-            MySqlCommand cmd = new MySqlCommand("spCount", conn);
+            // we use rootConn here since we are using parameters
+            MySqlCommand cmd = new MySqlCommand("spTest", rootConn);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.Add(new MySqlParameter("?value", MySqlDbType.VarChar));
             cmd.Parameters.Add(new MySqlParameter("?intVal", MySqlDbType.Int32));
@@ -163,7 +185,7 @@ namespace MySql.Data.MySqlClient.Tests
         {
             if (Version < new Version(5, 0)) return;
 
-            execSQL("CREATE PROCEDURE spTest(p1 INT) BEGIN SELECT 1; END");
+            suExecSQL("CREATE PROCEDURE spTest(p1 INT) BEGIN SELECT 1; END");
             try
             {
                 MySqlCommand cmd = new MySqlCommand("spTest", conn);
@@ -183,7 +205,7 @@ namespace MySql.Data.MySqlClient.Tests
             if (Version < new Version(5, 0)) return;
 
             // create our procedure
-            execSQL("CREATE PROCEDURE spTest( valin varchar(50) ) BEGIN  SELECT valin;  END");
+            suExecSQL("CREATE PROCEDURE spTest( valin varchar(50) ) BEGIN  SELECT valin;  END");
 
             MySqlCommand cmd = new MySqlCommand("spTest", conn);
             cmd.CommandType = CommandType.StoredProcedure;
@@ -198,7 +220,7 @@ namespace MySql.Data.MySqlClient.Tests
             if (Version < new Version(5, 0)) return;
 
             // create our procedure
-            execSQL("CREATE PROCEDURE spTest( INOUT strVal VARCHAR(50), INOUT numVal INT, OUT outVal INT UNSIGNED ) " +
+            suExecSQL("CREATE PROCEDURE spTest( INOUT strVal VARCHAR(50), INOUT numVal INT, OUT outVal INT UNSIGNED ) " +
                 "BEGIN  SET strVal = CONCAT(strVal,'ending'); SET numVal=numVal * 2;  SET outVal=99; END");
 
             MySqlCommand cmd = new MySqlCommand("spTest", conn);
@@ -239,7 +261,7 @@ namespace MySql.Data.MySqlClient.Tests
             if (Version < new Version(5, 0)) return;
 
             // create our procedure
-            execSQL("CREATE PROCEDURE spTest( IN valin VARCHAR(50), OUT valout VARCHAR(50) ) " +
+            suExecSQL("CREATE PROCEDURE spTest( IN valin VARCHAR(50), OUT valout VARCHAR(50) ) " +
                 "BEGIN  SET valout=valin;  SELECT 'Test'; END");
 
             MySqlCommand cmd = new MySqlCommand("spTest", conn);
@@ -261,7 +283,7 @@ namespace MySql.Data.MySqlClient.Tests
             if (Version < new Version(5, 0)) return;
 
             // create our procedure
-            execSQL("CREATE PROCEDURE spTest() " +
+            suExecSQL("CREATE PROCEDURE spTest() " +
                  "BEGIN  DECLARE myVar1 INT; SET myVar1 := 1; SELECT myVar1; END");
 
             MySqlCommand cmd = new MySqlCommand("spTest", conn);
@@ -277,7 +299,7 @@ namespace MySql.Data.MySqlClient.Tests
             if (Version < new Version(5, 0)) return;
 
             // create our procedure
-            execSQL("CREATE PROCEDURE spTest(OUT p INT) " +
+            suExecSQL("CREATE PROCEDURE spTest(OUT p INT) " +
                 "BEGIN SELECT 1; SET p=2; END");
 
             MySqlCommand cmd = new MySqlCommand("spTest", conn);
@@ -314,7 +336,7 @@ namespace MySql.Data.MySqlClient.Tests
             if (Version < new Version(5, 0)) return;
 
             // create our procedure
-            execSQL("CREATE PROCEDURE spTest() " +
+            suExecSQL("CREATE PROCEDURE spTest() " +
                 "BEGIN  SELECT 1; SELECT 2; END");
 
             MySqlCommand cmd = new MySqlCommand("spTest", conn);
@@ -354,7 +376,7 @@ namespace MySql.Data.MySqlClient.Tests
         {
             if (Version < new Version(5, 0)) return;
 
-            execSQL("CREATE FUNCTION fnTest() RETURNS CHAR(50)" +
+            suExecSQL("CREATE FUNCTION fnTest() RETURNS CHAR(50)" +
                 " LANGUAGE SQL DETERMINISTIC BEGIN  RETURN \"Test\"; END");
 
             MySqlCommand cmd = new MySqlCommand("SELECT fnTest()", conn);
@@ -368,7 +390,7 @@ namespace MySql.Data.MySqlClient.Tests
         {
             if (Version < new Version(5, 0)) return;
 
-            execSQL("CREATE FUNCTION fnTest( val1 INT, val2 CHAR(40) ) RETURNS INT " +
+            suExecSQL("CREATE FUNCTION fnTest( val1 INT, val2 CHAR(40) ) RETURNS INT " +
                 " LANGUAGE SQL DETERMINISTIC BEGIN  RETURN val1 + LENGTH(val2);  END");
 
             MySqlCommand cmd = new MySqlCommand("SELECT fnTest(22, 'Test')", conn);
@@ -385,7 +407,7 @@ namespace MySql.Data.MySqlClient.Tests
             // create our procedure
             string sql = "CREATE PROCEDURE spTest(IN var INT) BEGIN  SELECT var; END; call spTest(?v)";
 
-            MySqlCommand cmd = new MySqlCommand(sql, conn);
+            MySqlCommand cmd = new MySqlCommand(sql, rootConn);
             cmd.Parameters.Add(new MySqlParameter("?v", 33));
             object val = cmd.ExecuteScalar();
             Assert.AreEqual(33, val);
@@ -400,7 +422,7 @@ namespace MySql.Data.MySqlClient.Tests
             if (Version < new Version(5, 0)) return;
 
             // create our procedure
-            execSQL("CREATE PROCEDURE spTest(IN \r\nvalin DECIMAL(10,2),\nIN val2 INT) " +
+            suExecSQL("CREATE PROCEDURE spTest(IN \r\nvalin DECIMAL(10,2),\nIN val2 INT) " +
                 "SQL SECURITY INVOKER BEGIN  SELECT valin; END");
 
             MySqlCommand cmd = new MySqlCommand("spTest", conn);
@@ -412,8 +434,8 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(d, val);
 
             // create our second procedure
-            execSQL("DROP PROCEDURE IF EXISTS spTest");
-            execSQL("CREATE PROCEDURE spTest( \r\n) BEGIN  SELECT 4; END");
+            suExecSQL("DROP PROCEDURE IF EXISTS spTest");
+            suExecSQL("CREATE PROCEDURE spTest( \r\n) BEGIN  SELECT 4; END");
             cmd.Parameters.Clear();
             object val1 = cmd.ExecuteScalar();
             Assert.AreEqual(4, val1);
@@ -429,7 +451,7 @@ namespace MySql.Data.MySqlClient.Tests
         {
             if (Version < new Version(5, 0)) return;
 
-            execSQL("CREATE FUNCTION fnTest(valin int) RETURNS INT " +
+            suExecSQL("CREATE FUNCTION fnTest(valin int) RETURNS INT " +
                 " LANGUAGE SQL DETERMINISTIC BEGIN return valin * 2; END");
             MySqlCommand cmd = new MySqlCommand("fnTest", conn);
             cmd.CommandType = CommandType.StoredProcedure;
@@ -452,7 +474,7 @@ namespace MySql.Data.MySqlClient.Tests
             if (Version < new Version(5, 0)) return;
 
             // create our procedure
-            execSQL("CREATE PROCEDURE spTest() BEGIN  SELECT 4; END");
+            suExecSQL("CREATE PROCEDURE spTest() BEGIN  SELECT 4; END");
 
             string newConnStr = GetConnectionString(false);
             using (MySqlConnection c = new MySqlConnection(newConnStr))
@@ -595,7 +617,7 @@ namespace MySql.Data.MySqlClient.Tests
         {
             if (Version < new Version(5, 0)) return;
 
-            execSQL("CREATE PROCEDURE spTest(IN d DECIMAL(19,4)) BEGIN SELECT d; END");
+            suExecSQL("CREATE PROCEDURE spTest(IN d DECIMAL(19,4)) BEGIN SELECT d; END");
 
             MySqlCommand cmd = new MySqlCommand("spTest", conn);
             cmd.CommandType = CommandType.StoredProcedure;
@@ -612,7 +634,7 @@ namespace MySql.Data.MySqlClient.Tests
         {
             if (Version < new Version(5, 0)) return;
 
-            execSQL("CREATE PROCEDURE spTest(P longtext character set utf8) " +
+            suExecSQL("CREATE PROCEDURE spTest(P longtext character set utf8) " +
                 "BEGIN SELECT P; END");
 
             MySqlCommand cmd = new MySqlCommand("spTest", conn);
@@ -882,7 +904,7 @@ namespace MySql.Data.MySqlClient.Tests
         {
             if (Version < new Version(5, 0)) return;
 
-            execSQL("CREATE PROCEDURE spTest(IN p_paramname INT) BEGIN SELECT p_paramname; END");
+            suExecSQL("CREATE PROCEDURE spTest(IN p_paramname INT) BEGIN SELECT p_paramname; END");
             CultureInfo uiCulture = Thread.CurrentThread.CurrentUICulture;
             CultureInfo culture = Thread.CurrentThread.CurrentCulture;
             Thread.CurrentThread.CurrentCulture = new CultureInfo("tr-TR");
@@ -954,6 +976,11 @@ namespace MySql.Data.MySqlClient.Tests
         public void RunWithoutSelectPrivsThrowException()
         {
             if (Version < new Version(5, 0)) return;
+
+            // we don't want this test to run in our all access fixture
+            string connInfo = GetConnectionInfo();
+            if (connInfo.IndexOf("use procedure bodies=false") == -1)
+                return;
 
             suExecSQL(String.Format(
                 "GRANT ALL ON `{0}`.* to 'testuser'@'%' identified by 'testuser'",

@@ -23,6 +23,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
+using MySql.Data.MySqlClient.Properties;
 
 namespace MySql.Data.MySqlClient
 {
@@ -126,7 +127,7 @@ namespace MySql.Data.MySqlClient
             if (!driver.Ping())
             {
                 driver.Close();
-                return null;
+                driver = CreateNewPooledConnection();
             }
 
             // if the user asks us to ping/reset pooled connections

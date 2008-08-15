@@ -86,7 +86,11 @@ namespace MySql.Data.MySqlClient.Tests
                 cmd.CommandText = "SELECT now()";
                 cmd.ExecuteScalar();
             }
-            catch (Exception) { }
+            catch (Exception ex) 
+            { 
+                Assert.IsTrue(ex.Message.StartsWith("Fatal"));
+            }
+
             Assert.AreEqual(1, stateChangeCount);
             Assert.AreEqual(ConnectionState.Closed, c.State);
 
@@ -140,7 +144,7 @@ namespace MySql.Data.MySqlClient.Tests
             if (Version < new Version(5, 0)) return;
 
             // first we need a routine that will run for a bit
-            execSQL(@"CREATE PROCEDURE spTest(duration INT) 
+            suExecSQL(@"CREATE PROCEDURE spTest(duration INT) 
                 BEGIN 
                     SELECT SLEEP(duration);
                 END");

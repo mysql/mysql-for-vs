@@ -1079,6 +1079,13 @@
               Should this session be considered interactive?
             </td>
           </tr>
+          <tr>
+            <td>Functions Return String</td>
+            <td>false</td>
+            <td>
+              Set this option to true to force the return value of SQL functions to be string.
+            </td>
+          </tr>
         </table>
       </div>
       <para>

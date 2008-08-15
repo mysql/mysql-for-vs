@@ -24,6 +24,7 @@ using System.IO;
 using System.Text;
 using MySql.Data.Common;
 using System.Data;
+using MySql.Data.MySqlClient.Properties;
 
 namespace MySql.Data.MySqlClient
 {
@@ -276,7 +277,8 @@ namespace MySql.Data.MySqlClient
                     delim = c;
                 else if (c == '\\')
                     escaped = !escaped;
-                else if ((c == '@' || c == '?') && delim == Char.MinValue && !escaped)
+                else if ((c == '@' || c == '?') && 
+                    delim == Char.MinValue && !escaped)
                 {
                     tokens.Add(sql.Substring(startIndex, i - startIndex));
                     startIndex = i;

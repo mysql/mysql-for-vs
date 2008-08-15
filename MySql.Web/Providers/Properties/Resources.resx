@@ -232,4 +232,10 @@
   <data name="schema4" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>schema4.sql;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
+  <data name="IllegalRoleName" xml:space="preserve">
+    <value>Role names must not be null or empty.</value>
+  </data>
+  <data name="IllegalUserName" xml:space="preserve">
+    <value>User names must not be null or empty.</value>
+  </data>
 </root>

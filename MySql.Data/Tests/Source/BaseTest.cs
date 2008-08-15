@@ -37,7 +37,7 @@ namespace MySql.Data.MySqlClient.Tests
     {
         //statics
         protected static int maxPacketSize;
-        private static MySqlConnection rootConn;
+        protected static MySqlConnection rootConn;
         protected static string host;
         protected static string user;
         protected static string password;
@@ -48,7 +48,7 @@ namespace MySql.Data.MySqlClient.Tests
         protected static string rootPassword;
         protected static string database0;
         protected static string database1;
-        private static Version version;
+        protected static Version version;
 
         protected bool pooling;
         protected string table;
@@ -134,7 +134,7 @@ namespace MySql.Data.MySqlClient.Tests
 
         protected virtual string GetConnectionInfo()
         {
-            return String.Format("protocol=sockets;port={0}", port);
+            return String.Format("protocol=sockets;port={0};use procedure bodies=false", port);
         }
 
         protected string GetConnectionStringBasic(bool includedb)
@@ -176,6 +176,28 @@ namespace MySql.Data.MySqlClient.Tests
             conn.Open();
         }
 
+        protected void SetAccountPerms(bool includeProc)
+        {
+            // now allow our user to access them
+            suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'localhost' 
+				identified by 'test'", database0));
+            suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'localhost' 
+				identified by 'test'", database1));
+            suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'%' 
+				identified by 'test'", database0));
+            suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'%' 
+				identified by 'test'", database1));
+
+            if (includeProc)
+            {
+                // now allow our user to access them
+                suExecSQL(@"GRANT ALL ON mysql.proc to 'test'@'localhost' identified by 'test'");
+                suExecSQL(@"GRANT ALL ON mysql.proc to 'test'@'%' identified by 'test'");
+            }
+            
+            suExecSQL("FLUSH PRIVILEGES");
+        }
+
         [SetUp]
         public virtual void Setup()
         {
@@ -185,6 +207,7 @@ namespace MySql.Data.MySqlClient.Tests
             string sql = sr.ReadToEnd();
             sr.Close();
 
+                SetAccountPerms(false);
             sql = sql.Replace("[database0]", database0);
             sql = sql.Replace("[database1]", database1);
 
@@ -219,6 +242,15 @@ namespace MySql.Data.MySqlClient.Tests
             int threadId = c.ServerThread;
             MySqlCommand cmd = new MySqlCommand("KILL " + threadId, conn);
             cmd.ExecuteNonQuery();
+
+            // the kill flag might need a little prodding to do its thing
+            try
+            {
+                cmd.CommandText = "SELECT 1";
+                cmd.Connection = c;
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception) { }
 
             // now wait till the process dies
             bool processStillAlive = false;

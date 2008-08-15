@@ -72,10 +72,22 @@ namespace MySql.Web.Tests
 			ps.Parameters.Add("passwordStrengthRegularExpression", "");
 			ms.Providers.Add(ps);
 
+            RoleManagerSection rs = (RoleManagerSection)config.SectionGroups["system.web"].Sections["roleManager"];
+            rs.DefaultProvider = "MySQLRoleProvider";
+            rs.Enabled = true;
+            ps = new ProviderSettings();
+            ps.Name = "MySQLRoleProvider";
+            a = Assembly.GetAssembly(typeof(MySQLRoleProvider));
+            ps.Type = "MySql.Web.Security.MySQLRoleProvider, " + a.FullName;
+            ps.Parameters.Add("connectionStringName", "LocalMySqlServer");
+            ps.Parameters.Add("applicationName", "/");
+            rs.Providers.Add(ps);
+
 			config.Save();
 			ConfigurationManager.RefreshSection("connectionStrings");
 			ConfigurationManager.RefreshSection("system.web/membership");
-		}
+            ConfigurationManager.RefreshSection("system.web/roleManager");
+        }
 
         public override void Setup()
         {

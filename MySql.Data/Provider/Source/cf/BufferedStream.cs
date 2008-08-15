@@ -21,6 +21,7 @@
 using System;
 using System.IO;
 using MySql.Data.MySqlClient;
+using MySql.Data.MySqlClient.Properties;
 
 namespace MySql.Data.Common
 {

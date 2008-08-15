@@ -27,6 +27,7 @@ using System.Diagnostics;
 using System.Data.SqlTypes;
 using MySql.Data.Types;
 using System.Collections;
+using MySql.Data.MySqlClient.Properties;
 
 namespace MySql.Data.MySqlClient
 {
@@ -215,7 +216,7 @@ namespace MySql.Data.MySqlClient
 
         private string GetProcedureParameterLine(DataRow isRow)
         {
-            string sql = "SHOW CREATE {0} {1}.{2}";
+            string sql = "SHOW CREATE {0} `{1}`.`{2}`";
             sql = String.Format(sql, isRow["ROUTINE_TYPE"], isRow["ROUTINE_SCHEMA"],
                 isRow["ROUTINE_NAME"]);
             MySqlCommand cmd = new MySqlCommand(sql, connection);

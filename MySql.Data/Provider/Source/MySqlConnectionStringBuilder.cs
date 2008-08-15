@@ -25,6 +25,7 @@ using System.Data.Common;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
+using MySql.Data.MySqlClient.Properties;
 
 namespace MySql.Data.MySqlClient
 {
@@ -54,6 +55,7 @@ namespace MySql.Data.MySqlClient
         bool allowUserVariables;
         bool clearing;
         bool interactiveSession;
+        bool functionsReturnString;
 
         static MySqlConnectionStringBuilder()
         {
@@ -95,6 +97,7 @@ namespace MySql.Data.MySqlClient
             defaultValues.Add(Keyword.TreatTinyAsBoolean, true);
             defaultValues.Add(Keyword.AllowUserVariables, false);
             defaultValues.Add(Keyword.InteractiveSession, false);
+            defaultValues.Add(Keyword.FunctionsReturnString, false);
         }
 
         /// <summary>
@@ -703,6 +706,23 @@ namespace MySql.Data.MySqlClient
                 interactiveSession = value;
             }
         }
+
+#if !CF && !MONO
+        [Category("Advanced")]
+        [DisplayName("Functions Return String")]
+        [Description("Should all server functions be treated as returning string?")]
+        [DefaultValue(false)]
+#endif
+        public bool FunctionsReturnString
+        {
+            get { return functionsReturnString; }
+            set
+            {
+                SetValue("Functions Return String", value);
+                functionsReturnString = value;
+            }
+        }
+
         #endregion
 
         #region Pooling Properties
@@ -1132,6 +1152,8 @@ namespace MySql.Data.MySqlClient
                 case "interactive":
                 case "interactive session":
                     return Keyword.InteractiveSession;
+                case "functions return string":
+                    return Keyword.FunctionsReturnString;
             }
             throw new ArgumentException(Resources.KeywordNotSupported, key);
         }
@@ -1216,6 +1238,8 @@ namespace MySql.Data.MySqlClient
                     return allowUserVariables;
                 case Keyword.InteractiveSession:
                     return interactiveSession;
+                case Keyword.FunctionsReturnString:
+                    return functionsReturnString;
                 default:
                     return null; /* this will never happen */
             }
@@ -1322,6 +1346,8 @@ namespace MySql.Data.MySqlClient
                     allowUserVariables = ConvertToBool(value); break;
                 case Keyword.InteractiveSession:
                     interactiveSession = ConvertToBool(value); break;
+                case Keyword.FunctionsReturnString:
+                    functionsReturnString = ConvertToBool(value); break;
             }
         }
 
@@ -1502,6 +1528,7 @@ namespace MySql.Data.MySqlClient
         DefaultCommandTimeout,
         TreatTinyAsBoolean,
         AllowUserVariables,
-        InteractiveSession
+        InteractiveSession,
+        FunctionsReturnString
     }
 }

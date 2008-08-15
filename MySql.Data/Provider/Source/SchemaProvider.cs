@@ -30,6 +30,7 @@ using MySql.Data.Types;
 using System.Collections.Specialized;
 using System.Collections;
 using System.Text.RegularExpressions;
+using MySql.Data.MySqlClient.Properties;
 
 namespace MySql.Data.MySqlClient
 {
@@ -48,7 +49,7 @@ namespace MySql.Data.MySqlClient
             if (connection.State != ConnectionState.Open)
                 throw new MySqlException("GetSchema can only be called on an open connection.");
 
-            collection = collection.ToLower(CultureInfo.CurrentCulture);
+            collection = collection.ToLower(CultureInfo.InvariantCulture);
 
             DataTable dt = GetSchemaInternal(collection, restrictions);
 
@@ -560,36 +561,36 @@ namespace MySql.Data.MySqlClient
                         " AND type LIKE '{0}'", restrictions[3]);
             }
 
-            MySqlDataAdapter da = new MySqlDataAdapter(sql.ToString(), connection);
-            DataTable procs = new DataTable();
-            da.Fill(procs);
-
-            foreach (DataRow procRow in procs.Rows)
+            MySqlCommand cmd = new MySqlCommand(sql.ToString(), connection);
+            using (MySqlDataReader reader = cmd.ExecuteReader())
             {
-                DataRow row = dt.NewRow();
-                row["SPECIFIC_NAME"] = procRow["specific_name"];
-                row["ROUTINE_CATALOG"] = DBNull.Value;
-                row["ROUTINE_SCHEMA"] = procRow["db"];
-                row["ROUTINE_NAME"] = procRow["name"];
-                row["ROUTINE_TYPE"] = procRow["type"];
-                row["DTD_IDENTIFIER"] =
-                    procRow["type"].ToString().ToLower(CultureInfo.InvariantCulture) == "function" ?
-                    procRow["returns"] : DBNull.Value;
-                row["ROUTINE_BODY"] = "SQL";
-                row["ROUTINE_DEFINITION"] = procRow["body"];
-                row["EXTERNAL_NAME"] = DBNull.Value;
-                row["EXTERNAL_LANGUAGE"] = DBNull.Value;
-                row["PARAMETER_STYLE"] = "SQL";
-                row["IS_DETERMINISTIC"] = procRow["is_deterministic"];
-                row["SQL_DATA_ACCESS"] = procRow["sql_data_access"];
-                row["SQL_PATH"] = DBNull.Value;
-                row["SECURITY_TYPE"] = procRow["security_type"];
-                row["CREATED"] = procRow["created"];
-                row["LAST_ALTERED"] = procRow["modified"];
-                row["SQL_MODE"] = procRow["sql_mode"];
-                row["ROUTINE_COMMENT"] = procRow["comment"];
-                row["DEFINER"] = procRow["definer"];
-                dt.Rows.Add(row);
+                while (reader.Read())
+                {
+                    DataRow row = dt.NewRow();
+                    row["SPECIFIC_NAME"] = reader.GetString("specific_name");
+                    row["ROUTINE_CATALOG"] = DBNull.Value;
+                    row["ROUTINE_SCHEMA"] = reader.GetString("db");
+                    row["ROUTINE_NAME"] = reader.GetString("name");
+                    string routineType = reader.GetString("type");
+                    row["ROUTINE_TYPE"] = routineType;
+                    row["DTD_IDENTIFIER"] = routineType.ToLower(CultureInfo.InvariantCulture) == "function" ?
+                        (object)reader.GetString("returns") : DBNull.Value;
+                    row["ROUTINE_BODY"] = "SQL";
+                    row["ROUTINE_DEFINITION"] = reader.GetString("body");
+                    row["EXTERNAL_NAME"] = DBNull.Value;
+                    row["EXTERNAL_LANGUAGE"] = DBNull.Value;
+                    row["PARAMETER_STYLE"] = "SQL";
+                    row["IS_DETERMINISTIC"] = reader.GetString("is_deterministic");
+                    row["SQL_DATA_ACCESS"] = reader.GetString("sql_data_access");
+                    row["SQL_PATH"] = DBNull.Value;
+                    row["SECURITY_TYPE"] = reader.GetString("security_type");
+                    row["CREATED"] = reader.GetDateTime("created");
+                    row["LAST_ALTERED"] = reader.GetDateTime("modified");
+                    row["SQL_MODE"] = reader.GetString("sql_mode");
+                    row["ROUTINE_COMMENT"] = reader.GetString("comment");
+                    row["DEFINER"] = reader.GetString("definer");
+                    dt.Rows.Add(row);
+                }
             }
 
             return dt;

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Text;
 using System.IO;
 using MySql.Data.Common;
+using MySql.Data.MySqlClient.Properties;
 
 namespace MySql.Data.MySqlClient
 {

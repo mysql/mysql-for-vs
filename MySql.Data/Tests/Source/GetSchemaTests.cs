@@ -565,7 +565,7 @@ namespace MySql.Data.MySqlClient.Tests
 			string[] restrictions = new string[4];
 			restrictions[1] = database0;
 			restrictions[2] = "test1";
-			DataTable dt = conn.GetSchema("Triggers", restrictions);
+			DataTable dt = rootConn.GetSchema("Triggers", restrictions);
 			Assert.IsTrue(dt.Rows.Count == 1);
 			Assert.AreEqual("Triggers", dt.TableName);
 			Assert.AreEqual("trigger1", dt.Rows[0]["TRIGGER_NAME"]);

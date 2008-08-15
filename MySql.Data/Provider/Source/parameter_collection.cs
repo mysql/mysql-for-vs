@@ -23,6 +23,7 @@ using System.Data.Common;
 using System.Collections;
 using System.ComponentModel;
 using System.Collections.Generic;
+using MySql.Data.MySqlClient.Properties;
 
 namespace MySql.Data.MySqlClient
 {
@@ -488,15 +489,15 @@ namespace MySql.Data.MySqlClient
 
         internal MySqlParameter GetParameterFlexible(string parameterName, bool throwOnNotFound)
         {
-            char firstChar = parameterName[0];
-            string baseName = parameterName;
-            if ('@' == firstChar || '?' == firstChar)
-                baseName = baseName.Substring(1);
-            int index = IndexOf("@" + baseName);
+            int index = IndexOf(parameterName);
             if (-1 == index)
-                index = IndexOf("?" + baseName);
+                index = IndexOf("?" + parameterName);
             if (-1 == index)
-                index = IndexOf(baseName);
+                index = IndexOf("@" + parameterName);
+            if (-1 == index)
+            {   if (parameterName.StartsWith("@") || parameterName.StartsWith("?"))
+                    index = IndexOf(parameterName.Substring(1));
+            }
             if (-1 != index)
                 return this[index];
             if (throwOnNotFound)

@@ -25,6 +25,7 @@ using System.IO;
 using MySql.Data.Common;
 using MySql.Data.Types;
 using System.Security.Cryptography.X509Certificates;
+using MySql.Data.MySqlClient.Properties;
 #if !CF
 using System.Net.Security;
 using System.Security.Authentication;
@@ -668,6 +669,7 @@ namespace MySql.Data.MySqlClient
         {
             MySqlField field;
 
+            stream.Encoding = encoding;
             if (version.isAtLeast(4, 1, 0))
                 field = GetFieldMetaData41();
             else

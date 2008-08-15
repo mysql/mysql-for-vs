@@ -650,33 +650,25 @@ namespace MySql.Data.MySqlClient.Tests
             DataTable dt = new DataTable();
             da.Fill(dt);
 
-            DataRow row = dt.NewRow();
-            row["id"] = 1;
-            row["name"] = "name 1";
-            dt.Rows.Add(row);
+            for (int i = 1; i <= 100; i++)
+            {
+                DataRow row = dt.NewRow();
+                row["id"] = i;
+                row["name"] = "name " + i;
+                dt.Rows.Add(row);
+            }
 
-            row = dt.NewRow();
-            row["id"] = 2;
-            row["name"] = "name 2";
-            dt.Rows.Add(row);
-
-            row = dt.NewRow();
-            row["id"] = 3;
-            row["name"] = "name 3";
-            dt.Rows.Add(row);
-
-            da.UpdateBatchSize = 0;
+            da.UpdateBatchSize = 10;
             da.Update(dt);
 
             dt.Rows.Clear();
             da.Fill(dt);
-            Assert.AreEqual(3, dt.Rows.Count);
-            Assert.AreEqual(1, dt.Rows[0]["id"]);
-            Assert.AreEqual(2, dt.Rows[1]["id"]);
-            Assert.AreEqual(3, dt.Rows[2]["id"]);
-            Assert.AreEqual("name 1", dt.Rows[0]["name"]);
-            Assert.AreEqual("name 2", dt.Rows[1]["name"]);
-            Assert.AreEqual("name 3", dt.Rows[2]["name"]);
+            Assert.AreEqual(100, dt.Rows.Count);
+            for (int i = 0; i < 100; i++)
+            {
+                Assert.AreEqual(i+1, dt.Rows[i]["id"]);
+                Assert.AreEqual("name " + (i+1), dt.Rows[i]["name"]);
+            }
         }
 
         [Test]
@@ -799,6 +791,23 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(numRows, dt.Rows.Count);
             for (int i=0; i < numRows; i++)
                 Assert.AreEqual(i, dt.Rows[i]["id"]);
+        }
+
+        [Test]
+        public void FunctionsReturnString()
+        {
+            string connStr = GetConnectionString(true) + ";functions return string=yes";
+
+            using (MySqlConnection c = new MySqlConnection(connStr))
+            {
+                c.Open();
+                MySqlDataAdapter da = new MySqlDataAdapter("SELECT CONCAT(1,2)", c);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                Assert.AreEqual(1, dt.Rows.Count);
+                Assert.AreEqual("12", dt.Rows[0][0]);
+                Assert.IsTrue(dt.Rows[0][0] is string);
+            }
         }
     }
 }

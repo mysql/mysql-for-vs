@@ -4,7 +4,7 @@ Version 5.3
 - Fixed possible overflow bug in MySqlPacket.ReadLong (bug #36997)
 - Added UDF schema collection
 
-Version 5.2.3
+Version 5.2.3 - 8/14/08
 - Increased the speed of MySqlDataReader.GetOrdinal dramatically by using a couple
   of hashes for lookups
 - Fixed problem where some tables that support the web providers used the latin1
@@ -23,7 +23,17 @@ Version 5.2.3
 - Fixed documentation surrounding use of ? vs @ for parameters (bug #37349)
 - Reduced network traffic for the normal case where the web provider schema is up
   to date (bug #37469)
-
+- Improved error reporting when a timeout occurs.  It no longer uses a message like 
+  'reading from stream failed'.  (bug #38119)
+- fixed problem where adding a non-existent user to a role would not auto-create the 
+  user record (bug #38243)
+- moved string escaping routine from the MySqlString class to the MySqlHelper class
+  and made it public and static.  (bug #36205)
+- Fixed problem where column metadata was not being read with the correct characterset
+  (bug #38721) 
+- Fixed problem where the uninstall was not cleaning up the state files (bug #38534)
+- Added 'Functions Return String' connection string option  
+  
 Version 5.2.2 - 
 - Fixed profile provider that would throw an exception if you were updating
   a profile that already existed.
@@ -91,7 +101,9 @@ Version 5.1.7
  - Improved documentation concerning autoincrement columns and the DataColumn class (bug #37350)
  - Fixed problem where executing a command that results in a fatal exception would not
    close the connection.  (bug #37991)
-
+ - Fixed problem where executing a command with a null connection object would result in
+   a null reference exception instead of an InvalidOp (bug #38276)
+   
 Version 5.1.6 
  - Fixed problem where parameters lists were not showing when you tried to alter a routine 
    in server explorer.  (bug #34359)
@@ -233,6 +245,10 @@ Version 5.0.10 -
     close the connection.  (bug #37991)
   - Fixed problem with byte and unsigned byte values writing more too many bytes when
     using prepared statements (bug #37968)      
+  - Fixed writing of single and double values to write out the proper number of digits
+    (bug #33322)
+  - Fixed GetSchema to work properly when querying for a collection with non-English
+    locale (bug #35459)
         
 Version 5.0.9 - 4/14/08
 

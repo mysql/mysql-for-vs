@@ -52,7 +52,7 @@ namespace MySql.Web.Security
     /// </para>
     /// </remarks>
     /// <example>
-    /// <code lang="" source="CodeExamples\MembershipCodeExample2.xml"/>
+    /// <code source="CodeExamples/MembershipCodeExample2.xml"/>
     /// </example>
     public sealed class MySQLMembershipProvider : MembershipProvider
     {
@@ -196,7 +196,7 @@ namespace MySql.Web.Security
         /// <example>
         /// The following example shows the membership element being used in an applications web.config file.
         /// The application name setting is being used.
-        /// <code lang="" source="CodeExamples\MembershipCodeExample1.xml"/>
+        /// <code source="CodeExamples/MembershipCodeExample1.xml"/>
         /// </example>
         public override string ApplicationName
         {
@@ -213,7 +213,7 @@ namespace MySql.Web.Security
         /// retrieved.</remarks>
         /// <example>
         /// The following example shows the membership element being used in an applications web.config file.
-        /// <code source="CodeExamples\MembershipCodeExample1.xml"/>
+        /// <code source="CodeExamples/MembershipCodeExample1.xml"/>
         /// </example>
         public override bool EnablePasswordReset
         {
@@ -231,7 +231,7 @@ namespace MySql.Web.Security
         /// set to true then a <see cref="ProviderException"/> is thrown.</remarks>
         /// <example>
         /// The following example shows the membership element being used in an applications web.config file.
-        /// <code source="CodeExamples\MembershipCodeExample1.xml"/>
+        /// <code source="CodeExamples/MembershipCodeExample1.xml"/>
         /// </example>
         public override bool EnablePasswordRetrieval
         {
@@ -247,7 +247,7 @@ namespace MySql.Web.Security
         /// reset and retrieval; otherwise, false. The default is false.</value>
         /// <example>
         /// The following example shows the membership element being used in an applications web.config file.
-        /// <code source="CodeExamples\MembershipCodeExample1.xml"/>
+        /// <code source="CodeExamples/MembershipCodeExample1.xml"/>
         /// </example>
         public override bool RequiresQuestionAndAnswer
         {
@@ -262,7 +262,7 @@ namespace MySql.Web.Security
         /// otherwise, false. The default is true.</value>
         /// <example>
         /// The following example shows the membership element being used in an applications web.config file.
-        /// <code source="CodeExamples\MembershipCodeExample1.xml"/>
+        /// <code source="CodeExamples/MembershipCodeExample1.xml"/>
         /// </example>
         public override bool RequiresUniqueEmail
         {
@@ -277,7 +277,7 @@ namespace MySql.Web.Security
         /// before the membership user is locked out.</value>
         /// <example>
         /// The following example shows the membership element being used in an applications web.config file.
-        /// <code source="CodeExamples\MembershipCodeExample1.xml"/>
+        /// <code source="CodeExamples/MembershipCodeExample1.xml"/>
         /// </example>
         public override int MaxInvalidPasswordAttempts
         {
@@ -292,7 +292,7 @@ namespace MySql.Web.Security
         /// password-answer attempts are allowed before the membership user is locked out.</value>
         /// <example>
         /// The following example shows the membership element being used in an applications web.config file.
-        /// <code source="CodeExamples\MembershipCodeExample1.xml"/>
+        /// <code source="CodeExamples/MembershipCodeExample1.xml"/>
         /// </example>
         public override int PasswordAttemptWindow
         {
@@ -306,7 +306,7 @@ namespace MySql.Web.Security
         /// values indicating the format for storing passwords in the data store.</value>
         /// <example>
         /// The following example shows the membership element being used in an applications web.config file.
-        /// <code source="CodeExamples\MembershipCodeExample1.xml"/>
+        /// <code source="CodeExamples/MembershipCodeExample1.xml"/>
         /// </example>
         public override MembershipPasswordFormat PasswordFormat
         {
@@ -320,7 +320,7 @@ namespace MySql.Web.Security
         /// in a valid password.</value>
         /// <example>
         /// The following example shows the membership element being used in an applications web.config file.
-        /// <code source="CodeExamples\MembershipCodeExample1.xml"/>
+        /// <code source="CodeExamples/MembershipCodeExample1.xml"/>
         /// </example>
         public override int MinRequiredNonAlphanumericCharacters
         {
@@ -333,7 +333,7 @@ namespace MySql.Web.Security
         /// <value>The minimum length required for a password. </value>
         /// <example>
         /// The following example shows the membership element being used in an applications web.config file.
-        /// <code source="CodeExamples\MembershipCodeExample1.xml"/>
+        /// <code source="CodeExamples/MembershipCodeExample1.xml"/>
         /// </example>
         public override int MinRequiredPasswordLength
         {
@@ -353,7 +353,7 @@ namespace MySql.Web.Security
         /// <list>Contains at least one digit.</list>
         /// <list>Contains at least one special (non-alphanumeric) character.</list>
         /// </ul>
-        /// <code source="CodeExamples\MembershipCodeExample1.xml"/>
+        /// <code source="CodeExamples/MembershipCodeExample1.xml"/>
         /// </example>
         public override string PasswordStrengthRegularExpression
         {
