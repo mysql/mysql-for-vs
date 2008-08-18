@@ -68,7 +68,7 @@ namespace MySql.Data.MySqlClient
         {
             // strip out names from parameter markers
             string text;
-            ArrayList parameter_names = PrepareCommandText(out text);
+            List<string> parameter_names = PrepareCommandText(out text);
 
             // ask our connection to send the prepare command
             MySqlField[] paramList = null;
@@ -176,26 +176,24 @@ namespace MySql.Data.MySqlClient
         /// the parameterMap array list that includes all the paramter names in the
         /// order they appeared in the SQL
         /// </remarks>
-        private ArrayList PrepareCommandText(out string stripped_sql)
+        private List<string> PrepareCommandText(out string stripped_sql)
         {
             StringBuilder newSQL = new StringBuilder();
-            ArrayList parameterMap = new ArrayList();
+            List<string> parameterMap = new List<string>();
 
-            // tokenize the sql first
-            ArrayList tokens = TokenizeSql(ResolvedCommandText);
-            parameterMap.Clear();
-
-            foreach (string token in tokens)
+            int startPos = 0;
+            string sql = ResolvedCommandText;
+            MySqlTokenizer tokenizer = new MySqlTokenizer(sql);
+            string parameter = tokenizer.NextParameter();
+            while (parameter != null)
             {
-                if (token[0] != '@' && token[0] != '?')
-                    newSQL.Append(token);
-                else
-                {
-                    parameterMap.Add(token);
-                    newSQL.Append("?");
-                }
+                newSQL.Append(sql.Substring(startPos, tokenizer.StartIndex - startPos));
+                newSQL.Append("?");
+                parameterMap.Add(parameter);
+                startPos = tokenizer.StopIndex;
+                parameter = tokenizer.NextParameter();
             }
-
+            newSQL.Append(sql.Substring(startPos));
             stripped_sql = newSQL.ToString();
             return parameterMap;
         }

@@ -231,14 +231,14 @@ namespace MySql.Data.MySqlClient
                 string sql_mode = reader.GetString(1);
 
                 string body = reader.GetString(2);
-                SqlTokenizer tokenizer = new SqlTokenizer(body);
+                MySqlTokenizer tokenizer = new MySqlTokenizer(body);
                 tokenizer.AnsiQuotes = sql_mode.IndexOf("ANSI_QUOTES") != -1;
                 tokenizer.BackslashEscapes = sql_mode.IndexOf("NO_BACKSLASH_ESCAPES") == -1;
 
                 string token = tokenizer.NextToken();
                 while (token != "(")
                     token = tokenizer.NextToken();
-                int start = tokenizer.Index + 1;
+                int start = tokenizer.StartIndex + 1;
                 token = tokenizer.NextToken();
                 while (token != ")" || tokenizer.Quoted)
                 {
@@ -252,7 +252,7 @@ namespace MySql.Data.MySqlClient
                         token = tokenizer.NextToken();
                     }
                 }
-                return body.Substring(start, tokenizer.Index - start);
+                return body.Substring(start, tokenizer.StartIndex - start);
             }
         }
 
@@ -431,10 +431,10 @@ namespace MySql.Data.MySqlClient
             string sqlMode = row["SQL_MODE"].ToString();
 
             int pos = 1;
-            SqlTokenizer tokenizer = new SqlTokenizer(body);
+            MySqlTokenizer tokenizer = new MySqlTokenizer(body);
             tokenizer.AnsiQuotes = sqlMode.IndexOf("ANSI_QUOTES") != -1;
             tokenizer.BackslashEscapes = sqlMode.IndexOf("NO_BACKSLASH_ESCAPES") == -1;
-
+            tokenizer.ReturnComments = false;
             string token = tokenizer.NextToken();
 
             // this block will scan for the opening paren while also determining
@@ -466,6 +466,8 @@ namespace MySql.Data.MySqlClient
                     parmRow["PARAMETER_MODE"] = mode;
                     token = tokenizer.NextToken();
                 }
+                if (tokenizer.Quoted)
+                    token = token.Substring(1, token.Length - 2);
                 parmRow["PARAMETER_NAME"] = token;
 
                 // now parse data type
@@ -506,7 +508,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         ///  Parses out the elements of a procedure parameter data type.
         /// </summary>
-        private string ParseDataType(DataRow row, SqlTokenizer tokenizer)
+        private string ParseDataType(DataRow row, MySqlTokenizer tokenizer)
         {
             StringBuilder dtd = new StringBuilder(
                 tokenizer.NextToken().ToUpper(CultureInfo.InvariantCulture));
@@ -514,9 +516,10 @@ namespace MySql.Data.MySqlClient
             string type = row["DATA_TYPE"].ToString();
 
             string token = tokenizer.NextToken();
-            if (tokenizer.IsSize)
+            if (token == "(")
             {
-                dtd.AppendFormat(CultureInfo.InvariantCulture, "({0})", token);
+                token = tokenizer.ReadParenthesis();
+                dtd.AppendFormat(CultureInfo.InvariantCulture, "{0}", token);
                 if (type != "ENUM" && type != "SET")
                     ParseDataTypeSize(row, token);
                 token = tokenizer.NextToken();

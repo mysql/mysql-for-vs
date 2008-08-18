@@ -244,7 +244,7 @@ namespace MySql.Data.MySqlClient
             int startPos = 0;
             List<ScriptStatement> statements = new List<ScriptStatement>();
             List<int> lineNumbers = BreakScriptIntoLines();
-            SqlTokenizer tokenizer = new SqlTokenizer(query);
+            MySqlTokenizer tokenizer = new MySqlTokenizer(query);
 
             tokenizer.AnsiQuotes = ansiQuotes;
             tokenizer.BackslashEscapes = !noBackslashEscapes;
@@ -252,14 +252,14 @@ namespace MySql.Data.MySqlClient
             string token = tokenizer.NextToken();
             while (token != null)
             {
-                if (!tokenizer.Quoted &&
-                    !tokenizer.IsSize)
+                if (!tokenizer.Quoted) // &&
+                    //!tokenizer.IsSize)
                 {
                     int delimiterPos = token.IndexOf(Delimiter);
                     if (delimiterPos != -1)
                     {
-                        int endPos = tokenizer.Index - token.Length + delimiterPos;
-                        if (tokenizer.Index == query.Length-1)
+                        int endPos = tokenizer.StopIndex - token.Length + delimiterPos;
+                        if (tokenizer.StopIndex == query.Length-1)
                             endPos++;
                         string currentQuery = query.Substring(startPos, endPos-startPos);
                         ScriptStatement statement = new ScriptStatement();
@@ -274,7 +274,7 @@ namespace MySql.Data.MySqlClient
             }
 
             // now clean up the last statement
-            if (tokenizer.Index > startPos)
+            if (tokenizer.StartIndex > startPos)
             {
                 string sqlLeftOver = query.Substring(startPos).Trim();
                 if (!String.IsNullOrEmpty(sqlLeftOver))

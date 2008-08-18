@@ -219,7 +219,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Source\common\Cache.cs" />
-    <Compile Include="Source\common\SqlTokenizer.cs" />
+    <Compile Include="Source\common\MySqlTokenizer.cs" />
     <Compile Include="Source\BulkLoader.cs" />
     <Compile Include="Source\MySqlPacket.cs" />
     <Compile Include="Source\MySqlScript.cs" />

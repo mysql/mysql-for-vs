@@ -413,7 +413,7 @@ namespace MySql.Data.MySqlClient
                 lowerBody = body.ToLower(CultureInfo.InvariantCulture);
             }
 
-            SqlTokenizer tokenizer = new SqlTokenizer(lowerBody);
+            MySqlTokenizer tokenizer = new MySqlTokenizer(lowerBody);
             tokenizer.AnsiQuotes = sqlMode.IndexOf("ANSI_QUOTES") != -1;
             tokenizer.BackslashEscapes = sqlMode.IndexOf("NO_BACKSLASH_ESCAPES") != -1;
             
@@ -430,7 +430,7 @@ namespace MySql.Data.MySqlClient
         }
 
         private static void ParseConstraint(DataTable fkTable, DataRow table, 
-            SqlTokenizer tokenizer, bool includeColumns)
+            MySqlTokenizer tokenizer, bool includeColumns)
         {
             string name = tokenizer.NextToken();
             DataRow row = fkTable.NewRow();
@@ -448,7 +448,7 @@ namespace MySql.Data.MySqlClient
             row["TABLE_SCHEMA"] = table["TABLE_SCHEMA"];
             row["TABLE_NAME"] = table["TABLE_NAME"];
             row["REFERENCED_TABLE_CATALOG"] = null;
-            row["CONSTRAINT_NAME"] = name;
+            row["CONSTRAINT_NAME"] = name.Trim(new char[] { '\'', '`' });
 
             ArrayList srcColumns = includeColumns ? ParseColumns(tokenizer) : null;
 
@@ -460,13 +460,13 @@ namespace MySql.Data.MySqlClient
             if (target2.StartsWith("."))
             {
                 row["REFERENCED_TABLE_SCHEMA"] = target1;
-                row["REFERENCED_TABLE_NAME"] = target2.Substring(1);
+                row["REFERENCED_TABLE_NAME"] = target2.Substring(1).Trim(new char[] { '\'', '`' });
                 tokenizer.NextToken();  // read off the '('
             }
             else
             {
                 row["REFERENCED_TABLE_SCHEMA"] = table["TABLE_SCHEMA"];
-                row["REFERENCED_TABLE_NAME"] = target1;
+                row["REFERENCED_TABLE_NAME"] = target1.Substring(1).Trim(new char[] { '\'', '`' }); ;
             }
 
             // if we are supposed to include columns, read the target columns
@@ -478,7 +478,7 @@ namespace MySql.Data.MySqlClient
                 fkTable.Rows.Add(row);
         }
 
-        private static ArrayList ParseColumns(SqlTokenizer tokenizer)
+        private static ArrayList ParseColumns(MySqlTokenizer tokenizer)
         {
             ArrayList sc = new ArrayList();
             string token = tokenizer.NextToken();

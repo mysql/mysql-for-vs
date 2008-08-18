@@ -753,13 +753,13 @@ namespace MySql.Data.MySqlClient
                 {
                     MySqlCommand cmd = new MySqlCommand("SELECT @@sql_mode", Connection);
                     string sql_mode = cmd.ExecuteScalar().ToString().ToUpper(CultureInfo.InvariantCulture);
-                    SqlTokenizer tokenizer = new SqlTokenizer(CommandText);
+                    MySqlTokenizer tokenizer = new MySqlTokenizer(CommandText);
                     tokenizer.AnsiQuotes = sql_mode.IndexOf("ANSI_QUOTES") != -1;
                     tokenizer.BackslashEscapes = sql_mode.IndexOf("NO_BACKSLASH_ESCAPES") == -1;
                     string token = tokenizer.NextToken().ToLower(CultureInfo.InvariantCulture);
                     while (token != null)
                     {
-                        if (token.ToLower(CultureInfo.InvariantCulture) == "values" && 
+                        if (token.ToUpper(CultureInfo.InvariantCulture) == "VALUES" && 
                             !tokenizer.Quoted)
                         {
                             token = tokenizer.NextToken();
@@ -773,7 +773,7 @@ namespace MySql.Data.MySqlClient
                                 batchableCommandText += token;
                             token = tokenizer.NextToken();
                             if (token != null && (token == "," || 
-                                token.ToLower(CultureInfo.InvariantCulture) == "on"))
+                                token.ToUpper(CultureInfo.InvariantCulture) == "ON"))
                             {
                                 batchableCommandText = null;
                                 break;

@@ -25,6 +25,7 @@ using System.Text;
 using MySql.Data.Common;
 using System.Data;
 using MySql.Data.MySqlClient.Properties;
+using System.Collections.Generic;
 
 namespace MySql.Data.MySqlClient
 {
@@ -149,9 +150,6 @@ namespace MySql.Data.MySqlClient
         private void InternalBindParameters(string sql, MySqlParameterCollection parameters, 
             MySqlPacket packet)
         {
-            // tokenize the sql
-            ArrayList tokenArray = TokenizeSql(sql);
-
             if (packet == null)
             {
                 packet = new MySqlPacket(Driver.Encoding);
@@ -159,34 +157,21 @@ namespace MySql.Data.MySqlClient
                 packet.WriteByte(0);
             }
 
-            // make sure our token array ends with a ;
-            string lastToken = (string) tokenArray[tokenArray.Count - 1];
-            if (lastToken != ";")
-                tokenArray.Add(";");
-
-            foreach (String token in tokenArray)
+            int startPos = 0;
+            MySqlTokenizer tokenizer = new MySqlTokenizer(sql);
+            tokenizer.ReturnComments = true;
+            string parameter = tokenizer.NextParameter();
+            while (parameter != null)
             {
-                if (token.Trim().Length == 0)
-                    continue;
-                if (token == ";")
-                {
-                    buffers.Add(packet);
-                    packet = new MySqlPacket(Driver.Encoding);
-                    packet.WriteByte(0);
-                    packet.Version = Driver.Version;
-                    continue;
-                }
-                if (token.Length >= 2 && 
-                    ((token[0] == '@' && token[1] != '@') || 
-                    token[0] == '?'))
-                {
-                    if (SerializeParameter(parameters, packet, token))
-                        continue;
-                }
-
-                // our fall through case is to write the token to the byte stream
-                packet.WriteStringNoNull(token);
+                packet.WriteStringNoNull(sql.Substring(startPos, tokenizer.StartIndex - startPos));
+                bool serialized = SerializeParameter(parameters, packet, parameter);
+                startPos = tokenizer.StopIndex;
+                if (!serialized)
+                    startPos = tokenizer.StartIndex;
+                parameter = tokenizer.NextParameter();
             }
+            packet.WriteStringNoNull(sql.Substring(startPos));
+            buffers.Add(packet);
         }
 
         /// <summary>
@@ -249,50 +234,5 @@ namespace MySql.Data.MySqlClient
             parameter.Serialize(packet, false);
             return true;
         }
-
-        public ArrayList TokenizeSql(string sql)
-        {
-            bool batch = Connection.Settings.AllowBatch && Driver.SupportsBatch;
-            char delim = Char.MinValue;
-            bool escaped = false;
-            ArrayList tokens = new ArrayList();
-
-            sql = sql.Trim(';');
-            int startIndex = 0;
-            for (int i = 0; i < sql.Length; i++)
-            {
-                char c = sql[i];
-                if (escaped)
-                    escaped = false;
-                else if (c == delim)
-                    delim = Char.MinValue;
-                else if (c == ';' && !escaped && delim == Char.MinValue && !batch)
-                {
-                    tokens.Add(sql.Substring(startIndex, i - startIndex));
-                    tokens.Add(";");
-                    startIndex = i + 1;
-                    continue;
-                }
-                else if ((c == '\'' || c == '\"' || c == '`') && !escaped && delim == Char.MinValue)
-                    delim = c;
-                else if (c == '\\')
-                    escaped = !escaped;
-                else if ((c == '@' || c == '?') && 
-                    delim == Char.MinValue && !escaped)
-                {
-                    tokens.Add(sql.Substring(startIndex, i - startIndex));
-                    startIndex = i;
-                }
-                else if (i > startIndex && (sql[startIndex] == '@' || sql[startIndex] == '?') &&
-                         !Char.IsLetterOrDigit(c) && c != '_' && c != '.' && c != '$')
-                {
-                    tokens.Add(sql.Substring(startIndex, i - startIndex));
-                    startIndex = i;
-                }
-            }
-            tokens.Add(sql.Substring(startIndex, sql.Length - startIndex));
-            return tokens;
-        }
-
     }
 }
