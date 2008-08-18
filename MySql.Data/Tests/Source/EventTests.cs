@@ -35,13 +35,22 @@ namespace MySql.Data.MySqlClient.Tests
 		{
             if (Version < new Version(4, 1)) return;
 
-			conn.InfoMessage += new MySqlInfoMessageEventHandler(WarningsInfoMessage);
-
             execSQL("CREATE TABLE Test (name VARCHAR(10))");
 
-			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES ('12345678901')", conn);
-            using (MySqlDataReader reader = cmd.ExecuteReader())
+            string connStr = GetConnectionString(true);
+            using (MySqlConnection c = new MySqlConnection(connStr))
             {
+                c.Open();
+
+                MySqlCommand cmd = new MySqlCommand("SET SQL_MODE=''", c);
+                cmd.ExecuteNonQuery();
+
+			    c.InfoMessage += new MySqlInfoMessageEventHandler(WarningsInfoMessage);
+
+			    cmd.CommandText = "INSERT INTO Test VALUES ('12345678901')";
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                }
             }
 		}
 

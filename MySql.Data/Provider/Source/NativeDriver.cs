@@ -466,7 +466,7 @@ namespace MySql.Data.MySqlClient
         {
             if (Settings.Logging)
                 Logger.LogCommand(DBCmd.QUERY, encoding.GetString(
-                    queryPacket.Buffer, 5, queryPacket.Length-4));
+                    queryPacket.Buffer, 5, queryPacket.Length-5));
 
             queryPacket.Buffer[4] = (byte)DBCmd.QUERY;
             ExecutePacket(queryPacket);

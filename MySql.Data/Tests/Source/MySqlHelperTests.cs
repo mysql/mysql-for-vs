@@ -31,28 +31,5 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture]
 	public class MySqlHelperTests : BaseTest
 	{
-        public override void Setup()
-        {
-            base.Setup();
-            execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(250), PRIMARY KEY(id))");
-        }
-
-		/// <summary>
-		/// Bug #11490  	certain incorrect queries trigger connection must be valid and open message
-		/// </summary>
-		[Test]
-		public void Bug11490()
-		{
-            if (Version < new Version(4, 1)) return;
-
-            StringBuilder sb = new StringBuilder();
-            for (int i=0; i < 254; i++)
-                sb.Append('a');
-            string sql = "INSERT INTO Test (name) VALUES ('" + sb.ToString() + "')";
-            using (MySqlDataReader reader = MySqlHelper.ExecuteReader(this.GetConnectionString(true), sql))
-            {
-            }
-		}
-
 	}
 }

@@ -85,7 +85,7 @@ namespace MySql.Data.Types
 			if (binary)
                 packet.Write(BitConverter.GetBytes(v));
 			else
-                packet.WriteStringNoNull(v.ToString(
+                packet.WriteStringNoNull(v.ToString("R", 
 					 CultureInfo.InvariantCulture));
 		}
 

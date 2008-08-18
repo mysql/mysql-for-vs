@@ -32,14 +32,6 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture] 
 	public class DataTypeTests : BaseTest
 	{
-//		[SetUp]
-//		public override void Setup() 
-//		{
-//			base.Setup();
-        //
-		//	execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(100), d DATE, dt DATETIME, tm TIME,  PRIMARY KEY(id))");
-		//}
-
 		[Test]
 		public void BytesAndBooleans() 
 		{
@@ -700,7 +692,7 @@ namespace MySql.Data.MySqlClient.Tests
         {
             if (Version < new Version(5, 0)) return;
 
-            execSQL("CREATE TABLE Test (id INT, g BINARY(16), c VARBINARY(16), c1 BINARY(17))");
+            execSQL("CREATE TABLE Test (id INT, g BINARY(16), c VARBINARY(16), c1 BINARY(40))");
 
             Guid g = Guid.NewGuid();
             byte[] bytes = g.ToByteArray();
@@ -788,8 +780,7 @@ namespace MySql.Data.MySqlClient.Tests
         {
             if (Version < new Version(5, 0)) return;
 
-            execSQL(@"CREATE TABLE Test (ID int(11) NOT NULL,
-                ogc_geom geometry NOT NULL default '',
+            execSQL(@"CREATE TABLE Test (ID int(11) NOT NULL, ogc_geom geometry NOT NULL,
                 PRIMARY KEY  (`ID`))");
             execSQL(@"INSERT INTO Test VALUES (1, 
                 GeomFromText('GeometryCollection(Point(1 1), LineString(2 2, 3 3))'))");
