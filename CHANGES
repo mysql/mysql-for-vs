@@ -5,6 +5,8 @@ Version 5.3
 - Added UDF schema collection
 - Fixed lingering problem related to bug #37239.  If two columns had the same name but
   different case then an exception would be thrown.
+- Developed and integrated a new sql tokenizer.  This tokenizer now recognizes all comment 
+  types and is approx. 40% faster.
 
 Version 5.2.3 - 8/14/08
 - Increased the speed of MySqlDataReader.GetOrdinal dramatically by using a couple
