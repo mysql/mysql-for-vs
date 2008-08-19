@@ -721,6 +721,14 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.AreEqual(name1, name2);
                 Assert.AreEqual(name1, "test");
             }
+
+            cmd.CommandText = "SELECT 'a' AS XYZ, 'b' as Xyz";
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                reader.Read();
+                string name1 = reader.GetString(0);
+                string name2 = reader.GetString(1);
+            }
         }
     }
 }

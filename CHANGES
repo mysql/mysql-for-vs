@@ -3,6 +3,8 @@ Version 5.3
 - Improved sql tokenizing speed greatly.  Patch submitted by Maxim Mass (bug #36836)
 - Fixed possible overflow bug in MySqlPacket.ReadLong (bug #36997)
 - Added UDF schema collection
+- Fixed lingering problem related to bug #37239.  If two columns had the same name but
+  different case then an exception would be thrown.
 
 Version 5.2.3 - 8/14/08
 - Increased the speed of MySqlDataReader.GetOrdinal dramatically by using a couple

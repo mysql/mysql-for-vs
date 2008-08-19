@@ -860,10 +860,9 @@ namespace MySql.Data.MySqlClient
 				{
                     string columnName = fields[i].ColumnName;
                     if (!fieldHashCS.ContainsKey(columnName))
-                    {
                         fieldHashCS.Add(columnName, i);
+                    if (!fieldHashCI.ContainsKey(columnName))
                         fieldHashCI.Add(columnName, i);
-                    }
 					values[i] = fields[i].GetValueObject();
 				}
 				hasRead = false;
