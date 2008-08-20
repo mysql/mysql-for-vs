@@ -1,4 +1,4 @@
-Version 5.1.7
+Version 5.1.7 - 8/20/08
  - Fixed problem with DDEX provider that could sometimes prevent table altering when working with
    4.1 servers (bug #30603)
  - Fixed problem with pooling code where connections pooled from the pool were added

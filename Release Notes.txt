@@ -1,7 +1,7 @@
-Connector/Net 5.1.5 Release Notes
+Connector/Net 5.1 Release Notes
 ------------------------------------
 
-Welcome to the release notes for Connector/Net 5.1.5
+Welcome to the release notes for Connector/Net 5.1
 
 This is a fairly minor change however we encourage you to review the changelog 
 to see the specific changes.
