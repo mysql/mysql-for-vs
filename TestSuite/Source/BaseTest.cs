@@ -34,7 +34,7 @@ namespace MySql.Data.MySqlClient.Tests
     public class BaseTest
     {
         protected MySqlConnection conn;
-        private MySqlConnection rootConn;
+        protected MySqlConnection rootConn;
         protected string table;
         protected string csAdditions = String.Empty;
         protected static string host;
@@ -278,6 +278,15 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.Fail(ex.Message);
             }
 
+            // the kill flag might need a little prodding to do its thing
+            try
+            {
+                cmd.CommandText = "SELECT 1";
+                cmd.Connection = c;
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception) { }
+
             // now wait till the process dies
             bool processStillAlive = false;
             while (true)
@@ -289,7 +298,7 @@ namespace MySql.Data.MySqlClient.Tests
                     if (row["Id"].Equals(threadId))
                         processStillAlive = true;
                 if (!processStillAlive) break;
-                System.Threading.Thread.Sleep(500); 
+                System.Threading.Thread.Sleep(500);
             }
         }
 

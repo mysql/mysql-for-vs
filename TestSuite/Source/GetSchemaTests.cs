@@ -604,24 +604,17 @@ namespace MySql.Data.MySqlClient.Tests
 			suExecSQL("CREATE TRIGGER trigger1 AFTER INSERT ON test1 FOR EACH ROW BEGIN " +
 				"UPDATE test2 SET count = count+1; END");
 
-			try
-			{
-				string[] restrictions = new string[4];
-				restrictions[1] = database0;
-				restrictions[2] = "test1";
-				DataTable dt = conn.GetSchema("Triggers", restrictions);
-				Assert.IsTrue(dt.Rows.Count == 1);
-				Assert.AreEqual("Triggers", dt.TableName);
-				Assert.AreEqual("trigger1", dt.Rows[0]["TRIGGER_NAME"]);
-				Assert.AreEqual("INSERT", dt.Rows[0]["EVENT_MANIPULATION"]);
-				Assert.AreEqual("test1", dt.Rows[0]["EVENT_OBJECT_TABLE"]);
-				Assert.AreEqual("ROW", dt.Rows[0]["ACTION_ORIENTATION"]);
-				Assert.AreEqual("AFTER", dt.Rows[0]["ACTION_TIMING"]);
-			}
-			catch (Exception ex)
-			{
-				Assert.Fail(ex.Message);
-			}
+			string[] restrictions = new string[4];
+			restrictions[1] = database0;
+			restrictions[2] = "test1";
+			DataTable dt = rootConn.GetSchema("Triggers", restrictions);
+			Assert.IsTrue(dt.Rows.Count == 1);
+			Assert.AreEqual("Triggers", dt.TableName);
+			Assert.AreEqual("trigger1", dt.Rows[0]["TRIGGER_NAME"]);
+			Assert.AreEqual("INSERT", dt.Rows[0]["EVENT_MANIPULATION"]);
+			Assert.AreEqual("test1", dt.Rows[0]["EVENT_OBJECT_TABLE"]);
+			Assert.AreEqual("ROW", dt.Rows[0]["ACTION_ORIENTATION"]);
+			Assert.AreEqual("AFTER", dt.Rows[0]["ACTION_TIMING"]);
 		}
 
 		[Test]
