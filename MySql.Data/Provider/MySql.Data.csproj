@@ -218,6 +218,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Source\ClientAPI.cs" />
+    <Compile Include="Source\ClientDriver.cs" />
     <Compile Include="Source\common\Cache.cs" />
     <Compile Include="Source\common\MySqlTokenizer.cs" />
     <Compile Include="Source\BulkLoader.cs" />

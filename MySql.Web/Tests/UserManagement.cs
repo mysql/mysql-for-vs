@@ -417,6 +417,42 @@ namespace MySql.Web.Tests
             GetPasswordHelper(true, true, "blue");
         }
 
+        /// <summary>
+        /// Bug #38939 MembershipUser.GetPassword(string answer) fails when incorrect answer is passed.
+        /// </summary>
+        [Test]
+        public void GetPasswordWithWrongAnswer()
+        {
+            MembershipCreateStatus status;
+            provider = new MySQLMembershipProvider();
+            NameValueCollection config = new NameValueCollection();
+            config.Add("connectionStringName", "LocalMySqlServer");
+            config.Add("requiresQuestionAndAnswer", "true");
+            config.Add("enablePasswordRetrieval", "true");
+            config.Add("passwordFormat", "Encrypted");
+            config.Add("applicationName", "/");
+            provider.Initialize(null, config);
+            provider.CreateUser("foo", "barbar!", "foo@bar.com", "color", "blue", true, null, out status);
+
+            MySQLMembershipProvider provider2 = new MySQLMembershipProvider();
+            NameValueCollection config2 = new NameValueCollection();
+            config2.Add("connectionStringName", "LocalMySqlServer");
+            config2.Add("requiresQuestionAndAnswer", "true");
+            config2.Add("enablePasswordRetrieval", "true");
+            config2.Add("passwordFormat", "Encrypted");
+            config2.Add("applicationName", "/");
+            provider2.Initialize(null, config2);
+
+            try
+            {
+                string pw = provider2.GetPassword("foo", "wrong");
+                Assert.Fail("Should have  failed");
+            }
+            catch (MembershipPasswordException)
+            {
+            }
+        }
+
         [Test]
         public void GetUser()
         {

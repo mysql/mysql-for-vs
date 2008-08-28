@@ -734,8 +734,8 @@ namespace MySql.Web.Security
                         string password = reader.GetString("Password");
                         string passwordAnswer = reader.GetValue(reader.GetOrdinal("PasswordAnswer")).ToString();
                         string passwordKey = reader.GetString("PasswordKey");
-                        MembershipPasswordFormat format = (MembershipPasswordFormat)
-                            reader.GetInt32(3);
+                        MembershipPasswordFormat format = (MembershipPasswordFormat)reader.GetInt32(3);
+                        reader.Close();
 
                         if (RequiresQuestionAndAnswer &&
                             !(CheckPassword(answer, passwordAnswer, passwordKey, format)))
