@@ -11,7 +11,8 @@ Version 5.3
   throw the appropriate exception (bug #38939)
 - fixed web providers autogenerateschema option where it would fail if no schema is
   present at all (bug #39072)
-
+- fixed problem with installer where it would fail silently if the visual studio paths
+  do not exist or match what is in the registry. (bug #39019)
 
 Version 5.2.3 - 8/14/08
 - Increased the speed of MySqlDataReader.GetOrdinal dramatically by using a couple

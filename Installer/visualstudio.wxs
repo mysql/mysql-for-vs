@@ -8,8 +8,6 @@
         <Component Id='VS_Common' Guid='75F9BFA2-4D6E-4cb3-97E6-B27C478CDE44'>
           <File Id='MySQL.VisualStudio' Name='MySQL.VisualStudio.dll' DiskId='1'
                 Source='..\MySql.VisualStudio\bin\release\MySQL.VisualStudio.dll' />
-          <File Id='MySql.VisualStudio.dll.config' Name='MySql.VisualStudio.dll.config' DiskId='1'
-                Source='..\MySql.VisualStudio\bin\release\MySql.VisualStudio.dll.config' />
           <File Id='GlobalInstaller' Name='GlobalInstaller.exe' DiskId='1' Source='Binary\GlobalInstaller.exe' />
         </Component>
       </Directory>
@@ -33,11 +31,11 @@
 
     
     <CustomAction Id="VS_2005_SETUP" Property="VS_2005_SETUP_EXEC" Value='"[VS_2005_PATH]\devenv.com" /setup'/>
-    <CustomAction Id="VS_2005_SETUP_EXEC" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
+    <CustomAction Id="VS_2005_SETUP_EXEC" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="ignore" Execute='deferred' Impersonate='no'/>
     <CustomAction Id="VS_2005_INSTALL" Property="VS_2005_INSTALL_EXEC" Value='"[#GlobalInstaller]" "[#MySQL.VisualStudio]" version=VS2005'/>
-    <CustomAction Id="VS_2005_INSTALL_EXEC" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
+    <CustomAction Id="VS_2005_INSTALL_EXEC" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="ignore" Execute='deferred' Impersonate='no'/>
     <CustomAction Id="VS_2005_REMOVE"  Property="VS_2005_REMOVE_EXEC" Value='"[#GlobalInstaller]" /u "[#MySQL.VisualStudio]" version=VS2005'/>
-    <CustomAction Id="VS_2005_REMOVE_EXEC" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
+    <CustomAction Id="VS_2005_REMOVE_EXEC" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="ignore" Execute='deferred' Impersonate='no'/>
     
     <!-- Visual Studio 2008 integration actions -->
     <Property Id='VS_2008_PATH'>
@@ -45,11 +43,11 @@
           Name='EnvironmentDirectory' Type='raw'/>
     </Property>
     <CustomAction Id="VS_2008_SETUP" Property="VS_2008_SETUP_EXEC" Value='"[VS_2008_PATH]\devenv.com" /setup'/>
-    <CustomAction Id="VS_2008_SETUP_EXEC" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
+    <CustomAction Id="VS_2008_SETUP_EXEC" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="ignore" Execute='deferred' Impersonate='no'/>
     <CustomAction Id="VS_2008_INSTALL" Property="VS_2008_INSTALL_EXEC" Value='"[#GlobalInstaller]" "[#MySQL.VisualStudio]" version=VS2008'/>
-    <CustomAction Id="VS_2008_INSTALL_EXEC" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
+    <CustomAction Id="VS_2008_INSTALL_EXEC" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="ignore" Execute='deferred' Impersonate='no'/>
     <CustomAction Id="VS_2008_REMOVE"  Property="VS_2008_REMOVE_EXEC" Value='"[#GlobalInstaller]" /u "[#MySQL.VisualStudio]" version=VS2008'/>
-    <CustomAction Id="VS_2008_REMOVE_EXEC" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
+    <CustomAction Id="VS_2008_REMOVE_EXEC" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="ignore" Execute='deferred' Impersonate='no'/>
 
     <InstallExecuteSequence>
       <!-- vs2005 scheduling -->
