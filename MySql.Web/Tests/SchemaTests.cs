@@ -31,6 +31,7 @@ using System.Data;
 using System;
 using System.IO;
 using System.Configuration.Provider;
+using System.Web.Security;
 
 namespace MySql.Web.Tests
 {
@@ -315,6 +316,26 @@ namespace MySql.Web.Tests
             Assert.AreEqual(3, dt.Rows[2]["roleid"]);
             Assert.AreEqual(4, dt.Rows[3]["userid"]);
             Assert.AreEqual(4, dt.Rows[3]["roleid"]);
+        }
+
+        /// <summary>
+        /// Bug #39072 Web provider does not work
+        /// </summary>
+        [Test]
+        public void AutoGenerateSchema()
+        {
+            MySQLMembershipProvider provider = new MySQLMembershipProvider();
+            NameValueCollection config = new NameValueCollection();
+            config.Add("connectionStringName", "LocalMySqlServer");
+            config.Add("autogenerateschema", "true");
+            config.Add("applicationName", "/");
+            config.Add("passwordFormat", "Clear");
+
+            provider.Initialize(null, config);
+
+            MembershipCreateStatus status;
+            MembershipUser user = provider.CreateUser("boo", "password", "email@email.com",
+                "question", "answer", true, null, out status);
         }
     }
 }

@@ -114,7 +114,7 @@ namespace MySql.Web.Common
                     if (dt.Rows.Count == 1)
                         return Convert.ToInt32(dt.Rows[0]["TABLE_COMMENT"]);
                 }
-                throw new ProviderException(Resources.MissingOrWrongSchema);
+                return 0;
             }
         }
 

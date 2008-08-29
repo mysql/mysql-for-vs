@@ -1,3 +1,8 @@
+Version 5.2.4 - 
+- fixed web providers autogenerateschema option where it would fail if no schema is
+  present at all (bug #39072)
+  
+  
 Version 5.2.3 - 8/14/08
 - Increased the speed of MySqlDataReader.GetOrdinal dramatically by using a couple
   of hashes for lookups
