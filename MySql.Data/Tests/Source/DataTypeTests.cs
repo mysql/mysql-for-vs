@@ -126,55 +126,6 @@ namespace MySql.Data.MySqlClient.Tests
 		}
 
 		[Test]
-		public void TestGuid()
-		{
-            execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(100), d DATE, dt DATETIME, tm TIME,  PRIMARY KEY(id))");
-
-			Guid g = Guid.NewGuid();
-            MySqlCommand cmd = new MySqlCommand(
-                "INSERT INTO Test VALUES (?id, ?guid, NULL, NULL, NULL)", conn);
-			cmd.Parameters.Add(new MySqlParameter("?id", 1));
-			cmd.Parameters.Add(new MySqlParameter("?guid", g));
-			cmd.ExecuteNonQuery();
-
-			cmd.Parameters[0].Value = 2;
-			cmd.Parameters[1].Value = g.ToString("N");
-			cmd.ExecuteNonQuery();
-
-			cmd.Parameters[0].Value = 3;
-			cmd.Parameters[1].Value = g.ToString("D");
-			cmd.ExecuteNonQuery();
-
-			cmd.Parameters[0].Value = 4;
-			cmd.Parameters[1].Value = g.ToString("B");
-			cmd.ExecuteNonQuery();
-
-			cmd.Parameters[0].Value = 5;
-			cmd.Parameters[1].Value = g.ToString("P");
-			cmd.ExecuteNonQuery();
-
-			cmd.CommandText = "SELECT * FROM Test";
-			using (MySqlDataReader reader = cmd.ExecuteReader())
-            {
-				Assert.AreEqual(true, reader.Read());
-				Guid newG = reader.GetGuid(1);
-				Assert.AreEqual(g, newG);
-
-				Assert.AreEqual(true, reader.Read());
-				newG = reader.GetGuid(1);
-				Assert.AreEqual(g, newG);
-
-				Assert.AreEqual(true, reader.Read());
-				newG = reader.GetGuid(1);
-				Assert.AreEqual(g, newG);
-
-				Assert.AreEqual(true, reader.Read());
-				newG = reader.GetGuid(1);
-				Assert.AreEqual(g, newG);
-			}
-		}
-
-		[Test]
 		public void TestTime()
 		{
             execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(100), d DATE, dt DATETIME, tm TIME,  PRIMARY KEY(id))");
@@ -815,6 +766,25 @@ namespace MySql.Data.MySqlClient.Tests
                 double d = reader.GetDouble(0);
                 Assert.AreEqual(Math.PI, d);
             }
+        }
+
+        [Test]
+        public void NewGuidDataType()
+        {
+            execSQL("CREATE TABLE Test(id INT, g BINARY(16))");
+
+            Guid guid = Guid.NewGuid();
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES(1, @g)", conn);
+            cmd.Parameters.Add(new MySqlParameter("@g", MySqlDbType.Guid));
+            cmd.Parameters[0].Value = guid;
+            cmd.ExecuteNonQuery();
+
+            DataTable dt = new DataTable();
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
+            da.Fill(dt);
+            Assert.AreEqual(1, dt.Rows.Count);
+            Assert.AreEqual(1, dt.Rows[0]["id"]);
+            Assert.AreEqual(guid, dt.Rows[0]["g"]);
         }
     }
 }

@@ -269,7 +269,10 @@ namespace MySql.Data.MySqlClient
                          type == MySqlDbType.VarString)
                     mySqlDbType = MySqlDbType.VarBinary;
             }
-		}
+
+            if (Type == MySqlDbType.Binary && ColumnLength == 16)
+                mySqlDbType = MySqlDbType.Guid;
+        }
 
         private void CheckForExceptions()
         {
@@ -289,12 +292,6 @@ namespace MySql.Data.MySqlClient
             {
                 MySqlByte b = (MySqlByte)v;
                 b.TreatAsBoolean = true;
-                v = b;
-            }
-            else if (Type == MySqlDbType.Binary && ColumnLength == 16)
-            {
-                MySqlBinary b = (MySqlBinary)v;
-                b.IsGuid = true;
                 v = b;
             }
             return v;
@@ -358,6 +355,8 @@ namespace MySql.Data.MySqlClient
                 case MySqlDbType.Binary:
                 case MySqlDbType.VarBinary:
                     return new MySqlBinary(type, true);
+                case MySqlDbType.Guid:
+                    return new MySqlGuid();
                 default:
                     throw new MySqlException("Unknown data type");
             }

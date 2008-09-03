@@ -30,14 +30,12 @@ namespace MySql.Data.Types
 		private MySqlDbType type;
 		private byte[] mValue;
 		private bool isNull;
-        internal bool IsGuid;
 
 		public MySqlBinary(MySqlDbType type, bool isNull)
 		{
 			this.type = type;
 			this.isNull = isNull;
 			mValue = null;
-            IsGuid = false;
 		}
 
 		public MySqlBinary(MySqlDbType type, byte[] val)
@@ -45,7 +43,6 @@ namespace MySql.Data.Types
 			this.type = type;
 			this.isNull = false;
 			mValue = val;
-            IsGuid = false;
 		}
 
 		#region IMySqlValue Members
@@ -62,18 +59,12 @@ namespace MySql.Data.Types
 
 		DbType IMySqlValue.DbType
 		{
-			get { return IsGuid ? DbType.Guid : DbType.Binary; }
+			get { return DbType.Binary; }
 		}
 
 		object IMySqlValue.Value
 		{
-			get 
-            { 
-                if (IsGuid)
-                    return new Guid(mValue) as object;
-                else
-                    return mValue; 
-            }
+			get { return mValue; }
 		}
 
 		public byte[] Value
@@ -83,7 +74,7 @@ namespace MySql.Data.Types
 
 		Type IMySqlValue.SystemType
 		{
-			get { return IsGuid ? typeof(Guid) : typeof(byte[]); }
+			get { return typeof(byte[]); }
 		}
 
 		string IMySqlValue.MySqlTypeName
@@ -146,9 +137,6 @@ namespace MySql.Data.Types
 
 		private static void EscapeByteArray(byte[] bytes, int length, MySqlPacket packet)
 		{
-			//	System.IO.MemoryStream ms = (System.IO.MemoryStream)stream.Stream;
-			//	ms.Capacity += (length * 2);
-
 			for (int x = 0; x < length; x++)
 			{
 				byte b = bytes[x];
@@ -182,7 +170,6 @@ namespace MySql.Data.Types
                 packet.Read(newBuff, 0, (int)length);
                 b = new MySqlBinary(type, newBuff);
             }
-            b.IsGuid = this.IsGuid;
             return b;
 		}
 

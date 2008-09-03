@@ -13,6 +13,7 @@ Version 5.3
   present at all (bug #39072)
 - fixed problem with installer where it would fail silently if the visual studio paths
   do not exist or match what is in the registry. (bug #39019)
+- Better support for the Guid data type.
 
 Version 5.2.3 - 8/14/08
 - Increased the speed of MySqlDataReader.GetOrdinal dramatically by using a couple

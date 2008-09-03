@@ -278,7 +278,11 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// A text column with a maximum length of 65535 (2^16 - 1) characters.
         /// </summary>
-        Text = 752
+        Text = 752,
+        /// <summary>
+        /// A guid column
+        /// </summary>
+        Guid = 800
     } ;
 
 

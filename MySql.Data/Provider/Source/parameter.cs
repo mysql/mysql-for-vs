@@ -449,6 +449,9 @@ namespace MySql.Data.MySqlClient
                 case MySqlDbType.String:
                     dbType = DbType.StringFixedLength;
                     break;
+                case MySqlDbType.Guid:
+                    dbType = DbType.Guid;
+                    break;
             }
         }
 
@@ -458,6 +461,9 @@ namespace MySql.Data.MySqlClient
             switch (dbType)
             {
                 case DbType.Guid:
+                    mySqlDbType = MySqlDbType.Guid;
+                    break;
+
                 case DbType.AnsiString:
                 case DbType.String:
                     mySqlDbType = MySqlDbType.VarChar;
@@ -535,7 +541,7 @@ namespace MySql.Data.MySqlClient
             if (paramValue == null || paramValue == DBNull.Value) return;
 
             if (paramValue is Guid)
-                DbType = DbType.String;
+                DbType = DbType.Guid;
             else if (paramValue is TimeSpan)
                 DbType = DbType.Time;
             else if (paramValue is bool)

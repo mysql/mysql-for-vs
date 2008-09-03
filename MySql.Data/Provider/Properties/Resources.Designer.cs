@@ -223,6 +223,15 @@ namespace MySql.Data.MySqlClient.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The given value was not in a supported format..
+        /// </summary>
+        public static string DataNotInSupportedFormat {
+            get {
+                return ResourceManager.GetString("DataNotInSupportedFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to There is already an open DataReader associated with this Connection which must be closed first..
         /// </summary>
         public static string DataReaderOpen {

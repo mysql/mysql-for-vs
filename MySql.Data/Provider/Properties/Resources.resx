@@ -345,4 +345,7 @@
   <data name="UnableToEnumerateUDF" xml:space="preserve">
     <value>An error occured attempting to enumerate the user-defined functions.  Do you have SELECT privileges on the mysql.func table?</value>
   </data>
+  <data name="DataNotInSupportedFormat" xml:space="preserve">
+    <value>The given value was not in a supported format.</value>
+  </data>
 </root>

@@ -225,6 +225,12 @@
     <Compile Include="Source\BulkLoader.cs" />
     <Compile Include="Source\MySqlPacket.cs" />
     <Compile Include="Source\MySqlScript.cs" />
+    <Compile Include="Source\Types\MySqlGuid.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\CHANGES">
+      <Link>CHANGES</Link>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
