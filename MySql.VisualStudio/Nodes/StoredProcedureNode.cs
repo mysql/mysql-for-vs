@@ -19,16 +19,17 @@ using MySql.Data.VisualStudio.Properties;
 
 namespace MySql.Data.VisualStudio
 {
-	class StoredProcedureNode : DocumentNode
+	class StoredProcedureNode : DocumentNode, IVsTextBufferProvider
 	{
 		private string sql_mode;
 		private bool isFunction;
         private TextBufferEditor editor;
 
-		public StoredProcedureNode(DataViewHierarchyAccessor hierarchyAccessor, int id) : 
+		public StoredProcedureNode(DataViewHierarchyAccessor hierarchyAccessor, int id, bool isFunc) : 
 			base(hierarchyAccessor, id)
 		{
-            NodeId = "StoredProcedure";
+            NodeId = isFunc ? "storedfunction" : "StoredProcedure";
+            isFunction = isFunc;
             NameIndex = 3;
             editor = new TextBufferEditor();
         }
@@ -53,9 +54,9 @@ namespace MySql.Data.VisualStudio
 
         #endregion
 
-        public static void CreateNew(DataViewHierarchyAccessor HierarchyAccessor)
+        public static void CreateNew(DataViewHierarchyAccessor HierarchyAccessor, bool isFunc)
         {
-            StoredProcedureNode node = new StoredProcedureNode(HierarchyAccessor, 0);
+            StoredProcedureNode node = new StoredProcedureNode(HierarchyAccessor, 0, isFunc);
             node.Edit();
         }
 
@@ -75,10 +76,26 @@ namespace MySql.Data.VisualStudio
             return editor.Text;
         }
 
+        private string GetNewRoutineText()
+        {
+            StringBuilder sb = new StringBuilder("CREATE ");
+            sb.AppendFormat("{0} {1}\r\n", isFunction ? "FUNCTION" : "PROCEDURE", Name);
+            sb.Append("/*\r\n(\r\n");
+            sb.Append("parameter1 INT\r\nOUT parameter2 datatype\r\n");
+            sb.Append(")\r\n*/\r\n");
+            if (isFunction)
+                sb.Append("RETURNS /* datatype */\r\n");
+            sb.Append("BEGIN\r\n");
+            if (isFunction)
+                sb.Append("RETURN /* return value */\r\n");
+            sb.Append("END");
+            return sb.ToString();
+        }
+
         protected override void  Load()
         {
             if (IsNew)
-                editor.Text = "CREATE PROCEDURE " + Name + "() BEGIN END";
+                editor.Text = GetNewRoutineText(); 
             else
             {
                 try
@@ -174,5 +191,35 @@ namespace MySql.Data.VisualStudio
             string procName = sql.Substring(pos, end - pos).Trim();
             Name = procName;
         }
+
+        #region IVsTextBufferProvider Members
+
+        private IVsTextLines buffer;
+
+        int IVsTextBufferProvider.GetTextBuffer(out IVsTextLines ppTextBuffer)
+        {
+            if (buffer == null)
+            {
+                Type bufferType = typeof(IVsTextLines);
+                Guid riid = bufferType.GUID;
+                Guid clsid = typeof(VsTextBufferClass).GUID;
+                buffer = (IVsTextLines)MySqlDataProviderPackage.Instance.CreateInstance(
+                                     ref clsid, ref riid, typeof(object));
+            }
+            ppTextBuffer = buffer;
+            return VSConstants.S_OK;
+        }
+
+        int IVsTextBufferProvider.LockTextBuffer(int fLock)
+        {
+            return VSConstants.S_OK;
+        }
+
+        int IVsTextBufferProvider.SetTextBuffer(IVsTextLines pTextBuffer)
+        {
+            return VSConstants.S_OK;
+        }
+
+        #endregion
     }
 }

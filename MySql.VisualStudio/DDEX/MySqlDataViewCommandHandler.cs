@@ -164,7 +164,10 @@ namespace MySql.Data.VisualStudio
                     TableNode.CreateNew(DataViewHierarchyAccessor);
                     return true;
                 case PkgCmdIDList.cmdCreateProcedure:
-                    StoredProcedureNode.CreateNew(DataViewHierarchyAccessor);
+                    StoredProcedureNode.CreateNew(DataViewHierarchyAccessor, false);
+                    return true;
+                case PkgCmdIDList.cmdCreateFunction:
+                    StoredProcedureNode.CreateNew(DataViewHierarchyAccessor, true);
                     return true;
                 case PkgCmdIDList.cmdCreateView:
                     ViewNode.CreateNew(DataViewHierarchyAccessor);
@@ -215,12 +218,14 @@ namespace MySql.Data.VisualStudio
 					newNode = new TableNode(DataViewHierarchyAccessor, id);
 					break;
 				case "storedprocedure":
-				case "storedfunction":
-                case "storedprocedures":
-                case "functions":
-                    newNode = new StoredProcedureNode(DataViewHierarchyAccessor, id);
+//                case "storedprocedures":
+  //              case "functions":
+                    newNode = new StoredProcedureNode(DataViewHierarchyAccessor, id, false);
 					break;
-				case "view":
+                case "storedfunction":
+                    newNode = new StoredProcedureNode(DataViewHierarchyAccessor, id, true);
+                    break;
+                case "view":
 					newNode = new ViewNode(DataViewHierarchyAccessor, id);
 					break;
                 case "udf":
