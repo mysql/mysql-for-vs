@@ -205,10 +205,9 @@
             <SelectionNode nid="StoredProcedure">
               <Icon name="StoredProcedure" />
               <Children>
-                <Selection type="StoredProcedureParameter" 
+                <Selection type="StoredProcedureParameter"
                            restrictions="null,{StoredProcedure.Database},{StoredProcedure.Name},PROCEDURE">
                   <SelectionNode>
-                    <Icon when="{IsResult} = 'YES'" name="ReturnValue" />
                     <Icon when="{Mode} = 'IN'" name="InputParameter" />
                     <Icon when="{Mode} = 'OUT'" name="OutputParameter" />
                     <Icon when="{Mode} = 'INOUT'" name="OutputParameter" />
@@ -251,12 +250,16 @@
           </CommandBinding>
         </CommandBindings>
         <Children>
-          <Selection type="StoredProcedure" restrictions="{Root.Database},{Root.Schema},null,FUNCTION" minSourceVersion="5.0.0">
+          <Selection type="StoredProcedure" 
+                     restrictions="{Root.Database},{Root.Schema},null,FUNCTION" 
+                     minSourceVersion="5.0.0">
             <SelectionNode nid="StoredFunction">
               <Icon name="ScalarValuedFunction" />
               <Children>
-                <Selection type="StoredProcedureParameter" restrictions="{StoredProcedure.Database},{StoredProcedure.Schema},{StoredProcedure.Name},FUNCTION" minSourceVersion="5.0.0">
-                  <SelectionNode hideWhen="true">
+                <Selection type="StoredProcedureParameter" 
+                           restrictions="null,{StoredFunction.Database},{StoredFunction.Name},FUNCTION" 
+                           filter="Ordinal > 0">
+                  <SelectionNode>
                     <Icon when="{IsResult} = 'YES'" name="ReturnValue" />
                     <Icon when="{Mode} = 'IN'" name="InputParameter" />
                     <Icon when="{Mode} = 'OUT'" name="OutputParameter" />
@@ -1063,11 +1066,6 @@
           <Category resource="Category_DataType" />
           <Description resource="Description_Object_MySqlType" />
         </Property>
-        <Property name="Flags">
-          <DisplayName resource="DisplayName_Object_Flags" />
-          <Category resource="Category_DataType" />
-          <Description resource="Description_Object_Flags" />
-        </Property>
         <Property name="CharacterSet">
           <DisplayName resource="DisplayName_Object_CharacterSet" />
           <Category resource="Category_DataType" />
@@ -1096,15 +1094,6 @@
             <StandardValue value="IN" resource="Value_IN" />
             <StandardValue value="OUT" resource="Value_OUT" />
             <StandardValue value="INOUT" resource="Value_INOUT" />
-          </StandardValues>
-        </Property>
-        <Property name="IsResult">
-          <DisplayName resource="DisplayName_Parameter_IsResult" />
-          <Category resource="Category_Base" />
-          <Description resource="Description_Parameter_IsResult" />
-          <StandardValues>
-            <StandardValue value="YES" resource="Value_Yes" />
-            <StandardValue value="NO" resource="Value_No" />
           </StandardValues>
         </Property>
       </Properties>

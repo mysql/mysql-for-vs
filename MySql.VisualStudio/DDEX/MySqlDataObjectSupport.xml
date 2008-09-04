@@ -660,17 +660,17 @@
         <Concept name="FunctionParameter" restrictions="null, {Schema}, {StoredProcedure}, FUNCTION, {Name}" />
       </Concepts>
       <Identifier>
-        <Part name="Database" itemName="ROUTINE_CATALOG">
+        <Part name="Database" itemName="SPECIFIC_CATALOG">
           <Concepts>
             <Concept name="Identifier0" />
           </Concepts>
         </Part>
-        <Part name="Schema" itemName="ROUTINE_SCHEMA">
+        <Part name="Schema" itemName="SPECIFIC_SCHEMA">
           <Concepts>
             <Concept name="Identifier1" />
           </Concepts>
         </Part>
-        <Part name="StoredProcedure" itemName="ROUTINE_NAME">
+        <Part name="StoredProcedure" itemName="SPECIFIC_NAME">
           <Concepts>
             <Concept name="Identifier2" />
           </Concepts>
@@ -707,8 +707,7 @@
             </Concept>
           </Concepts>
         </Property>
-        <Property name="Flags" type="System.String" itemName="FLAGS"/>
-        <Property name="CharacterSet" type="System.String" itemName="CHARACTER_SET" />
+        <Property name="CharacterSet" type="System.String" itemName="CHARACTER_SET_NAME" />
         <Property name="Length" type="System.Int32" itemName="CHARACTER_MAXIMUM_LENGTH">
           <Concepts>
             <Concept name="Length"/>
@@ -729,16 +728,15 @@
           </Concepts>
         </Property>
         <Property name="Mode" type="System.String" itemName="PARAMETER_MODE"/>
-        <Property name="IsResult" type="System.String" itemName="IS_RESULT"/>
         <AggregatedConcepts>
           <!--
-            In order to correctly identify the direction of a parameter as required
-            by the Direction concept, we must use both the Mode and IsResult
-            properties.  Hence this is an aggregated concept.
+          In order to correctly identify the direction of a parameter as required
+          by the Direction concept, we must use both the Mode and IsResult
+          properties.  Hence this is an aggregated concept.
           -->
-          <AggregatedConcept name="Direction" fromData="IsResult, Mode">
+          <AggregatedConcept name="Direction" fromData="Ordinal,Mode">
             <Conversion>
-              <Calculate expr="IIF({0} = 'NO',IIF({1}='IN','IN',IIF({1}='OUT','OUT','IN/OUT')),'RETVAL')" type="System.String"/>
+              <Calculate expr="IIF({0} = '0','RETVAL',IIF({1}='IN','IN',IIF({1}='OUT','OUT','IN/OUT')))" type="System.String"/>
             </Conversion>
           </AggregatedConcept>
         </AggregatedConcepts>
@@ -917,7 +915,8 @@
     <Type name="Index" defaultSort="Schema,Table,Name">
       <Concepts>
         <Concept name="TableIndex" restrictions="null,{Schema},{Table},{Name}"/>
-        <Concept name="TableUniqueKey" restrictions="null,{Schema},{Table},{Name}" filter="IsUnique = true"/>
+        <Concept name="TableUniqueKey" restrictions="null,{Schema},{Table},{Name}" 
+                 filter="IsUnique = true"/>
       </Concepts>
       <Identifier>
         <Part name="Catalog" itemName="INDEX_CATALOG">

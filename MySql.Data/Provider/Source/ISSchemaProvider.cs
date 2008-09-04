@@ -258,15 +258,7 @@ namespace MySql.Data.MySqlClient
 
         private DataTable GetParametersFromIS(string[] restrictions)
         {
-            StringBuilder sql = new StringBuilder(@"SELECT r.ROUTINE_TYPE, p.* FROM 
-                INFORMATION_SCHEMA.ROUTINES r, INFORMATION_SCHEMA.PARAMETERS p");
-            // if the user is not trying to restrict by routine type then we
-            // don't need the join.  However we understand that since 'PARAMETERS'
-            // isn't keyed to routines then we can't tell the difference between
-            // procedures and functions with the same name
-            if (restrictions == null || restrictions.Length < 4 ||
-                restrictions[3] == null)
-                sql = new StringBuilder("SELECT * FROM INFORMATION_SCHEMA.PARAMETERS");
+            StringBuilder sql = new StringBuilder(@"SELECT * FROM INFORMATION_SCHEMA.PARAMETERS ");
 
             string[] keys = new string[5];
             keys[0] = "SPECIFIC_CATALOG";
@@ -313,6 +305,7 @@ namespace MySql.Data.MySqlClient
                 dt.Columns.Add("CHARACTER_SET_NAME", typeof(string));
                 dt.Columns.Add("COLLATION_NAME", typeof(string));
                 dt.Columns.Add("DTD_IDENTIFIER", typeof(string));
+                dt.Columns.Add("ROUTINE_TYPE", typeof(string));
                 GetParametersFromShowCreate(dt, restrictions, routines);
 
                 return dt;
@@ -503,6 +496,7 @@ namespace MySql.Data.MySqlClient
             parameter["SPECIFIC_NAME"] = procedure["ROUTINE_NAME"];
             parameter["PARAMETER_MODE"] = "IN";
             parameter["ORDINAL_POSITION"] = 0;
+            parameter["ROUTINE_TYPE"] = procedure["ROUTINE_TYPE"];
         }
 
         /// <summary>
