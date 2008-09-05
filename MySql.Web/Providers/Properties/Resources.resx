@@ -238,4 +238,7 @@
   <data name="IllegalUserName" xml:space="preserve">
     <value>User names must not be null or empty.</value>
   </data>
+  <data name="MonoDoesNotSupportHash" xml:space="preserve">
+    <value>The mono runtime did not support hashed passwords.  Please use clear or encrypted passwords.</value>
+  </data>
 </root>

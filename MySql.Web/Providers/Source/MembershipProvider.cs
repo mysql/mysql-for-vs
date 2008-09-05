@@ -119,6 +119,7 @@ namespace MySql.Web.Security
             requiresUniqueEmail = Convert.ToBoolean(GetConfigValue(config["requiresUniqueEmail"], "True"));
             writeExceptionsToEventLog = Convert.ToBoolean(GetConfigValue(config["writeExceptionsToEventLog"], "True"));
             string temp_format = config["passwordFormat"];
+
             if (temp_format == null)
                 temp_format = "hashed";
             else
@@ -135,8 +136,13 @@ namespace MySql.Web.Security
 
             // if the user is asking for the ability to retrieve hashed passwords, then let
             // them know we can't
-            if (PasswordFormat == MembershipPasswordFormat.Hashed && EnablePasswordRetrieval)
-                throw new ProviderException(Resources.CannotRetrieveHashedPasswords);
+            if (PasswordFormat == MembershipPasswordFormat.Hashed)
+            {
+                if (EnablePasswordRetrieval)
+                    throw new ProviderException(Resources.CannotRetrieveHashedPasswords);
+                if (Runtime.IsMono)
+                    throw new ProviderException(Resources.MonoDoesNotSupportHash);
+            }
 
             ConnectionStringSettings ConnectionStringSettings = ConfigurationManager.ConnectionStrings[
                 config["connectionStringName"]];
@@ -561,16 +567,19 @@ namespace MySql.Web.Security
                         @failedPasswordAttemptWindowStart, @failedPasswordAnswerAttemptCount, 
                         @failedPasswordAnswerAttemptWindowStart)",
                         connection);
+             Console.WriteLine("point 1");
                     cmd.Parameters.AddWithValue("@userId", userId);
                     cmd.Parameters.AddWithValue("@email", email);
                     cmd.Parameters.AddWithValue("@comment", "");
                     cmd.Parameters.AddWithValue("@password",
                         EncodePassword(password, passwordKey, PasswordFormat));
+            Console.WriteLine("point 2");
                     cmd.Parameters.AddWithValue("@passwordKey", passwordKey);
                     cmd.Parameters.AddWithValue("@passwordFormat", PasswordFormat);
                     cmd.Parameters.AddWithValue("@passwordQuestion", passwordQuestion);
                     cmd.Parameters.AddWithValue("@passwordAnswer",
                         EncodePassword(passwordAnswer, passwordKey, PasswordFormat));
+              Console.WriteLine("point 3");
                     cmd.Parameters.AddWithValue("@isApproved", isApproved);
                     cmd.Parameters.AddWithValue("@lastActivityDate", createDate);
                     cmd.Parameters.AddWithValue("@lastLoginDate", createDate);
@@ -1230,6 +1239,18 @@ namespace MySql.Web.Security
             return Convert.ToBase64String(key);
         }
 
+        /// <summary>
+        /// this method is only necessary because early versions of Mono did not support
+        /// the HashAlgorithmType property
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <returns></returns>
+        private string HashPasswordBytes(byte[] bytes)
+        {
+            HashAlgorithm hash = HashAlgorithm.Create(Membership.HashAlgorithmType);
+            return Convert.ToBase64String(hash.ComputeHash(bytes));
+        }
+
         private string EncodePassword(string password, string passwordKey,
             MembershipPasswordFormat format)
         {
@@ -1250,10 +1271,7 @@ namespace MySql.Web.Security
                 return Convert.ToBase64String(encryptedBytes);
             }
             else if (format == MembershipPasswordFormat.Hashed)
-            {
-                HashAlgorithm hash = HashAlgorithm.Create(Membership.HashAlgorithmType);
-                return Convert.ToBase64String(hash.ComputeHash(keyedBytes));
-            }
+                return HashPasswordBytes(keyedBytes);
             else
                 throw new ProviderException(Resources.UnsupportedPasswordFormat);
         }
