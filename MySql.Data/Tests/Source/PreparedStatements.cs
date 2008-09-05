@@ -818,6 +818,60 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(2, dt.Rows[0][2]);
             Assert.AreEqual(3, dt.Rows[0][3]);
         }
+
+        /// <summary>
+        /// Bug #39275	Inserting negative time value through the use of MySqlParameter throws exception
+        /// </summary>
+        [Test]
+        public void NegativeTimePrepared()
+        {
+            NegativeTime(true);
+        }
+
+        /// <summary>
+        /// Bug #39275	Inserting negative time value through the use of MySqlParameter throws exception
+        /// </summary>
+        [Test]
+        public void NegativeTimeNonPrepared()
+        {
+            NegativeTime(false);
+        }
+
+        [Test]
+        public void NegativeTime(bool prepared)
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL(@"CREATE TABLE Test(id int, t time)");
+
+            MySqlCommand cmd = new MySqlCommand(@"INSERT INTO Test VALUES (1, @t)", conn);
+            cmd.Parameters.Add("@t", MySqlDbType.Time);
+            TimeSpan t1 = new TimeSpan(-10, 0, 0);
+            TimeSpan t2 = new TimeSpan(2, -5, 10, 20);
+            TimeSpan t3 = new TimeSpan(20, -10, 10);
+            if (prepared)
+                cmd.Prepare();
+            cmd.Parameters[0].Value = t1;
+            cmd.ExecuteNonQuery();
+            cmd.Parameters[0].Value = t2;
+            cmd.ExecuteNonQuery();
+            cmd.Parameters[0].Value = t3;
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "SELECT * FROM Test";
+            cmd.Parameters.Clear();
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                reader.Read();
+                TimeSpan t = reader.GetTimeSpan(1);
+                Assert.AreEqual(t1, t);
+                reader.Read();
+                t = reader.GetTimeSpan(1);
+                Assert.AreEqual(t2, t);
+                reader.Read();
+                t = reader.GetTimeSpan(1);
+                Assert.AreEqual(t3, t);
+            }
+        }
     }
 
     #region Configs

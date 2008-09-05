@@ -88,6 +88,7 @@ namespace MySql.Data.Types
 			{
 				stream.WriteByte(8);
 				stream.WriteByte((byte)(ts.TotalSeconds < 0 ? 1 : 0));
+                ts = ts.Duration();
 				stream.WriteInteger(ts.Days, 4);
 				stream.WriteByte((byte)ts.Hours);
 				stream.WriteByte((byte)ts.Minutes);
@@ -95,8 +96,13 @@ namespace MySql.Data.Types
 			}
 			else
 			{
-				stream.WriteStringNoNull(String.Format("'{0} {1:00}:{2:00}:{3:00}.{4}'",
-			  ts.Days, ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds));
+                string s = String.Format("'{0} {1:00}:{2:00}:{3:00}.{4}'",
+                    ts.Days, ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds);
+                if (ts.Days == 0)
+                    s = String.Format("'{0:00}:{1:00}:{2:00}.{3}'",
+			            ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds);
+
+				stream.WriteStringNoNull(s);
 			}
 		}
 
