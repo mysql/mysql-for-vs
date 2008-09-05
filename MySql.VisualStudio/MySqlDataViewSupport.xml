@@ -140,7 +140,6 @@
                                restrictions="{StoredProcedure.Database},{StoredProcedure.Schema},{StoredProcedure.Name},PROCEDURE" 
                                hideWhen="False AND False">
                       <SelectionNode>
-                        <Icon when="{IsResult} = 'YES'" name="ReturnValue" />
                         <Icon when="{Mode} = 'IN'" name="InputParameter" />
                         <Icon when="{Mode} = 'OUT'" name="OutputParameter" />
                         <Icon when="{Mode} = 'INOUT'" name="OutputParameter" />

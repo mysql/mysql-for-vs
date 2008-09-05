@@ -3,6 +3,7 @@ Version 5.2.4 -
   present at all (bug #39072)
 - backported fix for lingering problem related to bug #37239.  If two columns had the same name but
   different case then an exception would be thrown.  
+- fixed stored procedure parameter parsing when used inside server explorer.  (bug #39252)
   
 Version 5.2.3 - 8/14/08
 - Increased the speed of MySqlDataReader.GetOrdinal dramatically by using a couple
