@@ -849,31 +849,30 @@ namespace MySql.Data.MySqlClient.Tests
 
             MySqlCommand cmd = new MySqlCommand(@"INSERT INTO Test VALUES (1, @t)", conn);
             cmd.Parameters.Add("@t", MySqlDbType.Time);
-            TimeSpan t1 = new TimeSpan(-10, 0, 0);
-            TimeSpan t2 = new TimeSpan(2, -5, 10, 20);
-            TimeSpan t3 = new TimeSpan(20, -10, 10);
+
+            TimeSpan[] times = new TimeSpan[8] { 
+                new TimeSpan(-10, 0, 0), new TimeSpan(2, -5, 10, 20),
+                new TimeSpan(20, -10, 10), new TimeSpan(0, -15, 25),
+                new TimeSpan(-4, -10, 20, -10), new TimeSpan(3, 17, 23, 6),
+                new TimeSpan(-1,-2,-3,-4), new TimeSpan(0,0,0,-15) };
             if (prepared)
                 cmd.Prepare();
-            cmd.Parameters[0].Value = t1;
-            cmd.ExecuteNonQuery();
-            cmd.Parameters[0].Value = t2;
-            cmd.ExecuteNonQuery();
-            cmd.Parameters[0].Value = t3;
-            cmd.ExecuteNonQuery();
+            foreach (TimeSpan ts in times)
+            {
+                cmd.Parameters[0].Value = ts;
+                cmd.ExecuteNonQuery();
+            }
 
             cmd.CommandText = "SELECT * FROM Test";
             cmd.Parameters.Clear();
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {
-                reader.Read();
-                TimeSpan t = reader.GetTimeSpan(1);
-                Assert.AreEqual(t1, t);
-                reader.Read();
-                t = reader.GetTimeSpan(1);
-                Assert.AreEqual(t2, t);
-                reader.Read();
-                t = reader.GetTimeSpan(1);
-                Assert.AreEqual(t3, t);
+                foreach (TimeSpan ts in times)
+                {
+                    reader.Read();
+                    TimeSpan t = reader.GetTimeSpan(1);
+                    Assert.AreEqual(ts, t);
+                }
             }
         }
 
