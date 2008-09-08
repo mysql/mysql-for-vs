@@ -821,20 +821,24 @@ namespace MySql.Data.MySqlClient.Tests
 
         /// <summary>
         /// Bug #39275	Inserting negative time value through the use of MySqlParameter throws exception
+        /// Bug #39294	Reading negative time value greater than -01:00:00 return positive value
         /// </summary>
         [Test]
         public void NegativeTimePrepared()
         {
             NegativeTime(true);
+            ReadNegativeTime(true);
         }
 
         /// <summary>
         /// Bug #39275	Inserting negative time value through the use of MySqlParameter throws exception
+        /// Bug #39294	Reading negative time value greater than -01:00:00 return positive value
         /// </summary>
         [Test]
         public void NegativeTimeNonPrepared()
         {
             NegativeTime(false);
+            ReadNegativeTime(false);
         }
 
         [Test]
@@ -870,6 +874,25 @@ namespace MySql.Data.MySqlClient.Tests
                 reader.Read();
                 t = reader.GetTimeSpan(1);
                 Assert.AreEqual(t3, t);
+            }
+        }
+
+        private void ReadNegativeTime(bool prepared)
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test(id int, t time)");
+            execSQL("INSERT INTO Test VALUES (1, '-00:10:00')");
+
+            MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test", conn);
+            if (prepared)
+                cmd.Prepare();
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                reader.Read();
+                TimeSpan ts = reader.GetTimeSpan(1);
+                Assert.AreEqual(0, ts.Hours);
+                Assert.AreEqual(-10, ts.Minutes);
+                Assert.AreEqual(0, ts.Seconds);
             }
         }
     }

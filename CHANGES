@@ -7,6 +7,8 @@ Version 5.2.4 -
 - fixed time data type so that negative values are handled properly (bug #39275)
 - added runtime check for the mono platform to our Membership provider.  The mono runtime
   as of 1.9.1 did not support the methods needed for hashed passwords (bug #38895)
+- fixed problem where negative time values with a zero hour would return as postive
+  values (bug #39294)  
   
 Version 5.2.3 - 8/14/08
 - Increased the speed of MySqlDataReader.GetOrdinal dramatically by using a couple

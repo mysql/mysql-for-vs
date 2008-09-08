@@ -193,7 +193,7 @@ namespace MySql.Data.Types
 			int hours = Int32.Parse(parts[0]);
 			int mins = Int32.Parse(parts[1]);
 			int secs = Int32.Parse(parts[2]);
-            if (hours < 0)
+            if (hours < 0 || parts[0].StartsWith("-"))
             {
                 mins *= -1;
                 secs *= -1;
