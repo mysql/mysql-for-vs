@@ -90,13 +90,13 @@ namespace MySql.Data.VisualStudio.Descriptors
         public static new class Attributes
         {
             [Field(FieldType = TypeCode.String)]
-            public const string Database = "ROUTINE_CATALOG";            
+            public const string Database = "SPECIFIC_CATALOG";            
             [Identifier(IsSchema = true)]
             [Field(FieldType = TypeCode.String)]
-            public const string Schema = "ROUTINE_SCHEMA";
+            public const string Schema = "SPECIFIC_SCHEMA";
             [Identifier]
             [Field(FieldType = TypeCode.String)]
-            public const string RoutineName = "ROUTINE_NAME";
+            public const string RoutineName = "SPECIFIC_NAME";
             [Identifier]
             [Field(FieldType = TypeCode.String)]
             public const string RoutineType = "ROUTINE_TYPE";
@@ -107,14 +107,10 @@ namespace MySql.Data.VisualStudio.Descriptors
             public const string OrdinalPosition = "ORDINAL_POSITION";
             [Field(FieldType = TypeCode.String)]
             public const string Mode = "PARAMETER_MODE";
-            [Field(FieldType = TypeCode.Boolean)]
-            public const string IsResult = "IS_RESULT";
             [Field(FieldType = TypeCode.String)]
             public const string DataType = "DATA_TYPE";
             [Field(FieldType = TypeCode.String)]
-            public const string Flags = "FLAGS";
-            [Field(FieldType = TypeCode.String)]
-            public const string CharacterSet = "CHARACTER_SET";
+            public const string CharacterSet = "CHARACTER_SET_NAME";
             [Field(FieldType = TypeCode.Int64)]
             public const string CharacterMaxLength = "CHARACTER_MAXIMUM_LENGTH";
             [Field(FieldType = TypeCode.Int64)]
