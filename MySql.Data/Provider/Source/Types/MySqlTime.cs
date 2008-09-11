@@ -84,10 +84,13 @@ namespace MySql.Data.Types
 				throw new MySqlException("Only TimeSpan objects can be serialized by MySqlTimeSpan");
 
 			TimeSpan ts = (TimeSpan)val;
+            bool negative = ts.TotalMilliseconds < 0;
+            ts = ts.Duration();
+
 			if (binary)
 			{
                 packet.WriteByte(8);
-                packet.WriteByte((byte)(ts.TotalSeconds < 0 ? 1 : 0));
+				packet.WriteByte((byte)(negative ? 1 : 0));
                 packet.WriteInteger(ts.Days, 4);
                 packet.WriteByte((byte)ts.Hours);
                 packet.WriteByte((byte)ts.Minutes);
@@ -95,8 +98,10 @@ namespace MySql.Data.Types
 			}
 			else
 			{
-                packet.WriteStringNoNull(String.Format("'{0} {1:00}:{2:00}:{3:00}.{4}'",
-			  ts.Days, ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds));
+                String s = String.Format("'{0}{1} {2:00}:{3:00}:{4:00}.{5}'",
+                    negative ? "-" : "", ts.Days, ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds);
+
+				packet.WriteStringNoNull(s);
 			}
 		}
 
@@ -187,7 +192,7 @@ namespace MySql.Data.Types
 			int hours = Int32.Parse(parts[0]);
 			int mins = Int32.Parse(parts[1]);
 			int secs = Int32.Parse(parts[2]);
-            if (hours < 0)
+            if (hours < 0 || parts[0].StartsWith("-"))
             {
                 mins *= -1;
                 secs *= -1;

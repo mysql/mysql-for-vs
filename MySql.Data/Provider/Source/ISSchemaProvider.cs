@@ -258,7 +258,7 @@ namespace MySql.Data.MySqlClient
 
         private DataTable GetParametersFromIS(string[] restrictions)
         {
-            StringBuilder sql = new StringBuilder(@"SELECT * FROM INFORMATION_SCHEMA.PARAMETERS ");
+            StringBuilder sql = new StringBuilder(@"SELECT * FROM INFORMATION_SCHEMA.PARAMETERS");
 
             string[] keys = new string[5];
             keys[0] = "SPECIFIC_CATALOG";

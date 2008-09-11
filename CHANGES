@@ -15,6 +15,24 @@ Version 5.3
   do not exist or match what is in the registry. (bug #39019)
 - Better support for the Guid data type.
 
+
+
+
+
+
+
+
+- backported fix for lingering problem related to bug #37239.  If two columns had the same name but
+  different case then an exception would be thrown.  
+- fixed stored procedure parameter parsing when used inside server explorer.  (bug #39252)
+- fixed time data type so that negative values are handled properly (bug #39275)
+- added runtime check for the mono platform to our Membership provider.  The mono runtime
+  as of 1.9.1 did not support the methods needed for hashed passwords (bug #38895)
+- fixed problem where negative time values with a zero hour would return as postive
+  values (bug #39294)  
+- fixed problem where using a stored procedure with parameters with a table adapter
+  was no longer working after our parameter schema changes (bug #39252)  
+  
 Version 5.2.3 - 8/14/08
 - Increased the speed of MySqlDataReader.GetOrdinal dramatically by using a couple
   of hashes for lookups

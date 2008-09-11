@@ -698,6 +698,82 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(2, dt.Rows[0][2]);
             Assert.AreEqual(3, dt.Rows[0][3]);
         }
+
+        /// <summary>
+        /// Bug #39275	Inserting negative time value through the use of MySqlParameter throws exception
+        /// Bug #39294	Reading negative time value greater than -01:00:00 return positive value
+        /// </summary>
+        [Test]
+        public void NegativeTimePrepared()
+        {
+            NegativeTime(true);
+            ReadNegativeTime(true);
+        }
+
+        /// <summary>
+        /// Bug #39275	Inserting negative time value through the use of MySqlParameter throws exception
+        /// Bug #39294	Reading negative time value greater than -01:00:00 return positive value
+        /// </summary>
+        [Test]
+        public void NegativeTimeNonPrepared()
+        {
+            NegativeTime(false);
+            ReadNegativeTime(false);
+        }
+
+        [Test]
+        public void NegativeTime(bool prepared)
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL(@"CREATE TABLE Test(id int, t time)");
+
+            MySqlCommand cmd = new MySqlCommand(@"INSERT INTO Test VALUES (1, @t)", conn);
+            cmd.Parameters.Add("@t", MySqlDbType.Time);
+
+            TimeSpan[] times = new TimeSpan[8] { 
+                new TimeSpan(-10, 0, 0), new TimeSpan(2, -5, 10, 20),
+                new TimeSpan(20, -10, 10), new TimeSpan(0, -15, 25),
+                new TimeSpan(-4, -10, 20, -10), new TimeSpan(3, 17, 23, 6),
+                new TimeSpan(-1,-2,-3,-4), new TimeSpan(0,0,0,-15) };
+            if (prepared)
+                cmd.Prepare();
+            foreach (TimeSpan ts in times)
+            {
+                cmd.Parameters[0].Value = ts;
+                cmd.ExecuteNonQuery();
+            }
+
+            cmd.CommandText = "SELECT * FROM Test";
+            cmd.Parameters.Clear();
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                foreach (TimeSpan ts in times)
+                {
+                    reader.Read();
+                    TimeSpan t = reader.GetTimeSpan(1);
+                    Assert.AreEqual(ts, t);
+                }
+            }
+        }
+
+        private void ReadNegativeTime(bool prepared)
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test(id int, t time)");
+            execSQL("INSERT INTO Test VALUES (1, '-00:10:00')");
+
+            MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test", conn);
+            if (prepared)
+                cmd.Prepare();
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                reader.Read();
+                TimeSpan ts = reader.GetTimeSpan(1);
+                Assert.AreEqual(0, ts.Hours);
+                Assert.AreEqual(-10, ts.Minutes);
+                Assert.AreEqual(0, ts.Seconds);
+            }
+        }
     }
 
     #region Configs
