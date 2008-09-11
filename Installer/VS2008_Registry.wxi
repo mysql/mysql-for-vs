@@ -27,4 +27,20 @@
     <RegistryValue Value="{79a115c9-b133-4891-9e7b-242509dad272}" Type="string"/>
     <RegistryValue Name="Name" Value="MySQL Provider Object Factory" Type="string" />
   </RegistryKey>
+
+  <RegistryKey Root="HKLM" Action="createAndRemoveOnUninstall"
+               Key="Software\Microsoft\VisualStudio\9.0\Languages\Language Services\MySQL">
+    <RegistryValue Value="{fa498a2d-116a-4f25-9b55-7938e8e6dda7}" Type="string"/>
+    <RegistryValue Name="Package" Value="{79a115c9-b133-4891-9e7b-242509dad272}" Type="string" />
+    <RegistryValue Name="LangResID" Value="101" Type="integer" />
+    <RegistryValue Name="RequestStockColors" Value="1" Type="integer" />
+  </RegistryKey>
+
+  <RegistryKey Root="HKLM" Action="createAndRemoveOnUninstall"
+               Key="Software\Microsoft\VisualStudio\9.0\Services\{fa498a2d-116a-4f25-9b55-7938e8e6dda7}">
+    
+    <RegistryValue Value="{79a115c9-b133-4891-9e7b-242509dad272}" Type="string"/>
+    <RegistryValue Name="Name" Value="MySqlLanguageService" Type="string" />
+  </RegistryKey>
+
 </Include>
