@@ -10,7 +10,16 @@
                 Source='..\MySql.VisualStudio\bin\release\MySQL.VisualStudio.dll' />
           <File Id='MySql.VisualStudio.dll.config' Name='MySql.VisualStudio.dll.config' DiskId='1'
                 Source='..\MySql.VisualStudio\bin\release\MySql.VisualStudio.dll.config' />
-          <File Id='GlobalInstaller' Name='GlobalInstaller.exe' DiskId='1' Source='Binary\GlobalInstaller.exe' />
+        </Component>
+
+        <Component Id='VS_2005_Registry' Guid='B99FF3E3-F742-47af-B1FE-BBF2CDC4B95D'>
+		  <?include VS2005_Registry.wxi?>
+          <?include VS2005_Data.wxi ?>
+        </Component>
+        
+        <Component Id='VS_2008_Registry' Guid='84AE8C43-294D-4e48-B75D-D9172396C2FD'>
+		  <?include VS2008_Registry.wxi?>
+          <?include VS2008_Data.wxi?>
         </Component>
       </Directory>
     </DirectoryRef>
@@ -18,11 +27,13 @@
     <Feature Id='VS2005Int' Level='1' Title='Visual Studio 2005'>
       <Condition Level='0'>Not VS_2005_PATH</Condition>
       <ComponentRef Id='VS_Common'/>
+      <ComponentRef Id='VS_2005_Registry'/>
     </Feature>
 
     <Feature Id='VS2008Int' Level='1' Title='Visual Studio 2008'>
       <Condition Level='0'>Not VS_2008_PATH</Condition>
       <ComponentRef Id='VS_Common'/>
+      <ComponentRef Id='VS_2008_Registry'/>
     </Feature>
 
     <!-- Visual Studio 2005 integration actions -->
@@ -30,14 +41,8 @@
       <RegistrySearch Id='Find_VS2005_Path' Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\8.0\Setup\VS'
           Name='EnvironmentDirectory' Type='raw'/>
     </Property>
-
-    
     <CustomAction Id="VS_2005_SETUP" Property="VS_2005_SETUP_EXEC" Value='"[VS_2005_PATH]\devenv.com" /setup'/>
     <CustomAction Id="VS_2005_SETUP_EXEC" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
-    <CustomAction Id="VS_2005_INSTALL" Property="VS_2005_INSTALL_EXEC" Value='"[#GlobalInstaller]" "[#MySQL.VisualStudio]" version=VS2005'/>
-    <CustomAction Id="VS_2005_INSTALL_EXEC" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
-    <CustomAction Id="VS_2005_REMOVE"  Property="VS_2005_REMOVE_EXEC" Value='"[#GlobalInstaller]" /u "[#MySQL.VisualStudio]" version=VS2005'/>
-    <CustomAction Id="VS_2005_REMOVE_EXEC" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
     
     <!-- Visual Studio 2008 integration actions -->
     <Property Id='VS_2008_PATH'>
@@ -46,29 +51,13 @@
     </Property>
     <CustomAction Id="VS_2008_SETUP" Property="VS_2008_SETUP_EXEC" Value='"[VS_2008_PATH]\devenv.com" /setup'/>
     <CustomAction Id="VS_2008_SETUP_EXEC" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
-    <CustomAction Id="VS_2008_INSTALL" Property="VS_2008_INSTALL_EXEC" Value='"[#GlobalInstaller]" "[#MySQL.VisualStudio]" version=VS2008'/>
-    <CustomAction Id="VS_2008_INSTALL_EXEC" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
-    <CustomAction Id="VS_2008_REMOVE"  Property="VS_2008_REMOVE_EXEC" Value='"[#GlobalInstaller]" /u "[#MySQL.VisualStudio]" version=VS2008'/>
-    <CustomAction Id="VS_2008_REMOVE_EXEC" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
 
     <InstallExecuteSequence>
       <!-- vs2005 scheduling -->
-      <Custom Action='VS_2005_INSTALL' Before='InstallFinalize'>(&amp;VS2005Int=3) AND NOT(!VS2005Int=3)</Custom>
-      <Custom Action='VS_2005_INSTALL_EXEC' After='VS_2005_INSTALL'>(&amp;VS2005Int=3) AND NOT(!VS2005Int=3)</Custom>
-
-      <Custom Action='VS_2005_REMOVE' Before="RemoveFiles">&amp;VS2005Int=2</Custom>
-      <Custom Action='VS_2005_REMOVE_EXEC' After='VS_2005_REMOVE'>&amp;VS2005Int=2</Custom>
-
       <Custom Action='VS_2005_SETUP' Before='InstallFinalize'>(&amp;VS2005Int=2) OR (&amp;VS2005Int=3)</Custom>
       <Custom Action='VS_2005_SETUP_EXEC' After='VS_2005_SETUP'>(&amp;VS2005Int=2) OR (&amp;VS2005Int=3)</Custom>
 
       <!-- now vs2008 scheduling -->
-      <Custom Action='VS_2008_INSTALL' Before='InstallFinalize'>(&amp;VS2008Int=3) AND NOT(!VS2008Int=3)</Custom>
-      <Custom Action='VS_2008_INSTALL_EXEC' After='VS_2008_INSTALL'>(&amp;VS2008Int=3) AND NOT(!VS2008Int=3)</Custom>
-
-      <Custom Action='VS_2008_REMOVE' Before="RemoveFiles">&amp;VS2008Int=2</Custom>
-      <Custom Action='VS_2008_REMOVE_EXEC' After='VS_2008_REMOVE'>&amp;VS2008Int=2</Custom>
-      
       <Custom Action='VS_2008_SETUP' Before='InstallFinalize'>(&amp;VS2008Int=2) OR (&amp;VS2008Int=3)</Custom>
       <Custom Action='VS_2008_SETUP_EXEC' After='VS_2008_SETUP'>(&amp;VS2008Int=2) OR (&amp;VS2008Int=3)</Custom>
     </InstallExecuteSequence>
