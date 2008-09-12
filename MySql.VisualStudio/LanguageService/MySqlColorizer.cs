@@ -4,8 +4,7 @@ using System.Text;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.Package;
 using Microsoft.VisualStudio.TextManager.Interop;
-using MySql.Data.Common;
-using MySql.Data.VisualStudio.LanguageService;
+using MySql.Data.MySqlClient;
 
 namespace MySql.Data.VisualStudio 
 {
@@ -15,14 +14,12 @@ namespace MySql.Data.VisualStudio
         private IVsTextLines buffer;
         private List<TokenInfo>[] tokenList;
         private string savedSqlText;
-        private SqlTokenizer tokenizer;
 
         public MySqlColorizer(LanguageService service, IVsTextLines buffer, IScanner scanner)
             : base(service, buffer, scanner)
         {
             this.scanner = scanner;
             this.buffer = buffer;
-            tokenizer = new SqlTokenizer();
         }
 
         public override TokenInfo[] GetLineInfo(IVsTextLines buffer, int line, IVsTextColorState colorState)
@@ -93,7 +90,7 @@ namespace MySql.Data.VisualStudio
                 buffer.GetLengthOfLine(line, out length);
 
                 buffer.GetLineText(line, 0, line, length, out lines[line]);
-                lines[line] = lines[line].Replace(@"\r\n", " ").Replace(@"\n", " ");
+                //lines[line] = lines[line].Replace(@"\r\n", " ").Replace(@"\n", " ");
             }
 
             // now reformat the buffer to have new lines where VS wants them to be
@@ -110,26 +107,41 @@ namespace MySql.Data.VisualStudio
             for (int i = 0; i < lineCount; i++)
                 tokenList[i] = new List<TokenInfo>();
 
-            tokenizer.Text = sqlText;
+            MySqlTokenizer tokenizer = new MySqlTokenizer(sqlText);
             tokenizer.ReturnComments = true;
 
             string token = tokenizer.NextToken();
 
             while (token != null)
             {
-                int startLine = tokenizer.StartLine;
-                int endLine = tokenizer.StopLine;
+                int startIndex = tokenizer.StartIndex;
+                int stopIndex = tokenizer.StopIndex;
+                int startLine = GetLineAndIndex(lines, ref startIndex);
+                int endLine = GetLineAndIndex(lines, ref stopIndex);
 
                 for (int line = startLine; line <= endLine; line++)
                 {
                     TokenInfo ti = Configuration.GetTokenInfo(token, tokenizer);
-                    ti.StartIndex = line == startLine ? tokenizer.StartIndex : 0;
-                    ti.EndIndex = line == endLine ? tokenizer.StopIndex : lines[line].Length;
+                    ti.StartIndex = line == startLine ? startIndex : 0;
+                    ti.EndIndex = line == endLine ? stopIndex : lines[line].Length;
                     tokenList[line].Add(ti);
                 }
 
                 token = tokenizer.NextToken();
             }
+        }
+
+        private int GetLineAndIndex(string[] lines, ref int index)
+        {
+            if (lines == null || lines.Length == 0) return -1;
+
+            int line = 0;
+            int len = lines[line].Length;
+            while (index > len)
+                len += lines[++line].Length;
+
+            index -= len;
+            return line;
         }
     }
 }

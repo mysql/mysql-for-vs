@@ -13,7 +13,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio;
 using System.Reflection;
 using MySql.Data.VisualStudio.Properties;
-using EnvDTE;
+using MySql.Data.VisualStudio.Editors;
 
 namespace MySql.Data.VisualStudio
 {
@@ -31,11 +31,15 @@ namespace MySql.Data.VisualStudio
     // This attribute tells the registration utility (regpkg.exe) that this class needs
     // to be registered as package.
     [PackageRegistration(UseManagedResourcesOnly = true)]
-    // A Visual Studio component can be registered under different regitry roots; for instance
+    // A Visual Studio component can be registered under different registry roots; for instance
     // when you debug your package you want to register it in the experimental hive. This
     // attribute specifies the registry root to use if no one is provided to regpkg.exe with
     // the /root switch.
+#if DEBUG
+    [DefaultRegistryRoot("Software\\Microsoft\\VisualStudio\\9.0Exp")]
+#else
     [DefaultRegistryRoot("Software\\Microsoft\\VisualStudio\\9.0")]
+#endif
     // This attribute is used to register the informations needed to show the this package
     // in the Help/About dialog of Visual Studio.
     [InstalledProductRegistration(true, null, null, null)]
@@ -45,8 +49,8 @@ namespace MySql.Data.VisualStudio
     // package has a load key embedded in its resources.
 	[ProvideService(typeof(MySqlProviderObjectFactory), ServiceName = "MySQL Provider Object Factory")]
     [ProvideService(typeof(MySqlLanguageService))]
-    [ProvideLanguageService(typeof(MySqlLanguageService), MySqlLanguageService.LanguageName, 0,
-        EnableCommenting=true)]
+    [ProvideLanguageService(typeof(MySqlLanguageService), MySqlLanguageService.LanguageName, 101,
+        RequestStockColors=true)]
 	[ProvideMenuResource(1000, 1)]
 	[ProvideLoadKey("Standard", "1.0", "MySQL Tools for Visual Studio", "MySQL AB c/o MySQL, Inc.", 100)]
     [Guid(GuidList.PackageGUIDString)]
@@ -127,7 +131,11 @@ namespace MySql.Data.VisualStudio
 
         int IVsInstalledProduct.ProductID(out string pbstrPID)
         {
-            pbstrPID = "5.2";
+			string fullname = Assembly.GetExecutingAssembly().FullName;
+			string[] parts = fullname.Split(new char[] { '=' });
+			string[] versionParts = parts[1].Split(new char[] { '.' });
+
+            pbstrPID = String.Format("{0}.{1}.{2}", versionParts[0], versionParts[1], versionParts[2]);
             return VSConstants.S_OK;
         }
 

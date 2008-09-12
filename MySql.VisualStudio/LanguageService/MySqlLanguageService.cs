@@ -1,6 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Package;
 using Microsoft.VisualStudio.TextManager.Interop;
+using System;
 
 namespace MySql.Data.VisualStudio
 {
@@ -12,18 +13,23 @@ namespace MySql.Data.VisualStudio
     class MySqlLanguageService : LanguageService
     {
         private LanguagePreferences preferences;
-        private MySqlScanner scanner;
+        private IScanner scanner;
 
         public const string LanguageName = "MySQL";
 
         public override AuthoringScope ParseSource(ParseRequest req)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public override string Name
         {
             get { return LanguageName; }
+        }
+
+        public override string GetFormatFilterList()
+        {
+            return String.Empty;
         }
 
         public override IScanner GetScanner(IVsTextLines buffer)

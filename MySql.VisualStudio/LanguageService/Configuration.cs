@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.Package;
-using MySql.Data.Common;
 using System.Collections.Generic;
+using MySql.Data.MySqlClient;
 
 namespace MySql.Data.VisualStudio
 {
@@ -86,7 +86,7 @@ namespace MySql.Data.VisualStudio
             keywords.Add("REPLACE");
         }
 
-        public static TokenInfo GetTokenInfo(string token, SqlTokenizer tokenizer)
+        public static TokenInfo GetTokenInfo(string token, MySqlTokenizer tokenizer)
         {
             TokenInfo ti = new TokenInfo();
             if (tokenizer.Quoted)
