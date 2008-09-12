@@ -63,6 +63,7 @@
     <Compile Include="Source\ProfileProvider.cs" />
     <Compile Include="Source\MembershipProvider.cs" />
     <Compile Include="Source\RoleProvider.cs" />
+    <Compile Include="Source\Runtime.cs" />
     <Compile Include="Source\SchemaManager.cs" />
   </ItemGroup>
   <ItemGroup>
