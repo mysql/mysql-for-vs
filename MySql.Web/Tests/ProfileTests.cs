@@ -110,6 +110,40 @@ namespace MySql.Web.Tests
             Assert.AreEqual(0, dt.Rows.Count);
         }
 
+        /// <summary>
+        /// Bug #39330	Attempt to update a previously saved Profile property failed
+        /// </summary>
+        [Test]
+        public void AnonymousUserSettingAndUpdatingAnonymousProperty()
+        {
+            MySQLProfileProvider provider = InitProfileProvider();
+            SettingsContext ctx = new SettingsContext();
+            ctx.Add("IsAuthenticated", false);
+            ctx.Add("UserName", "user1");
+
+            SettingsPropertyValueCollection values = new SettingsPropertyValueCollection();
+            SettingsProperty property1 = new SettingsProperty("color");
+            property1.PropertyType = typeof(string);
+            property1.Attributes["AllowAnonymous"] = true;
+            SettingsPropertyValue value = new SettingsPropertyValue(property1);
+            value.PropertyValue = "blue";
+            values.Add(value);
+
+            provider.SetPropertyValues(ctx, values);
+
+            SettingsPropertyCollection props = new SettingsPropertyCollection();
+            props.Add(property1);
+            values = provider.GetPropertyValues(ctx, props);
+            Assert.AreEqual(1, values.Count);
+            Assert.AreEqual("blue", values["color"].PropertyValue);
+
+            values["color"].PropertyValue = "red";
+            provider.SetPropertyValues(ctx, values);
+            values = provider.GetPropertyValues(ctx, props);
+            Assert.AreEqual(1, values.Count);
+            Assert.AreEqual("red", values["color"].PropertyValue);
+        }
+
         [Test]
         public void StringCollectionAsProperty()
         {

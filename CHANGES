@@ -11,6 +11,8 @@ Version 5.2.4 -
   values (bug #39294)  
 - fixed problem where using a stored procedure with parameters with a table adapter
   was no longer working after our parameter schema changes (bug #39252)  
+- fixed problem with profile provider where INSERT .. ON DUPLICATE UPDATE syntax would not
+  work correctly with some older server versions (bug #39330)  
   
 Version 5.2.3 - 8/14/08
 - Increased the speed of MySqlDataReader.GetOrdinal dramatically by using a couple

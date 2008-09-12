@@ -502,17 +502,28 @@ namespace MySql.Web.Profile
                         int userId = SchemaManager.CreateOrFetchUserId(connection, username, 
                             applicationId, isAuthenticated);
 
-                        MySqlCommand cmd = new MySqlCommand(
-                            @"INSERT INTO my_aspnet_Profiles  
-                            VALUES (@userId, @index, @stringData, @binaryData, NULL) ON DUPLICATE KEY UPDATE
-                            valueindex=VALUES(valueindex), stringdata=VALUES(stringdata),
-                            binarydata=VALUES(binarydata)", connection);
-                        cmd.Parameters.Clear();
-                        cmd.Parameters.AddWithValue("@userId", userId);
-                        cmd.Parameters.AddWithValue("@index", index);
-                        cmd.Parameters.AddWithValue("@stringData", stringData);
-                        cmd.Parameters.AddWithValue("@binaryData", binaryData);
-                        count = cmd.ExecuteNonQuery();
+                        MySqlDataAdapter da = new MySqlDataAdapter(
+                            "SELECT * FROM my_aspnet_Profiles WHERE userId=@id", connection);
+                        da.SelectCommand.Parameters.AddWithValue("@id", userId);
+                        MySqlCommandBuilder cb =new MySqlCommandBuilder(da);
+                        DataTable dt = new DataTable();
+                        da.Fill(dt);
+
+                        DataRow row;
+                        if (dt.Rows.Count == 0)
+                        {
+                            row = dt.NewRow();
+                            dt.Rows.Add(row);
+                        }
+                        else
+                            row = dt.Rows[0];
+
+                        row["userId"] = userId;
+                        row["valueIndex"] = index;
+                        row["stringdata"] = stringData;
+                        row["binarydata"] = binaryData;
+
+                        count = da.Update(dt);
                         if (count == 0)
                             throw new Exception(Resources.ProfileUpdateFailed);
                         ts.Complete();
