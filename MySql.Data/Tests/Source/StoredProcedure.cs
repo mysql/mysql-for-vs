@@ -56,7 +56,7 @@ namespace MySql.Data.MySqlClient.Tests
 
         public StoredProcedure()
         {
-            csAdditions = ";procedure cache size=0;";
+            csAdditions = ";procedure cache size=0;logging=true;";
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace MySql.Data.MySqlClient.Tests
         {
             if (Version < new Version(5, 0)) return;
 
-            suExecSQL("CREATE PROCEDURE spTest(p1 INT) BEGIN SELECT 1; END");
+            execSQL("CREATE PROCEDURE spTest(p1 INT) BEGIN SELECT 1; END");
             try
             {
                 MySqlCommand cmd = new MySqlCommand("spTest", conn);
@@ -205,7 +205,7 @@ namespace MySql.Data.MySqlClient.Tests
             if (Version < new Version(5, 0)) return;
 
             // create our procedure
-            suExecSQL("CREATE PROCEDURE spTest( valin varchar(50) ) BEGIN  SELECT valin;  END");
+            execSQL("CREATE PROCEDURE spTest( valin varchar(50) ) BEGIN  SELECT valin;  END");
 
             MySqlCommand cmd = new MySqlCommand("spTest", conn);
             cmd.CommandType = CommandType.StoredProcedure;
@@ -220,7 +220,7 @@ namespace MySql.Data.MySqlClient.Tests
             if (Version < new Version(5, 0)) return;
 
             // create our procedure
-            suExecSQL("CREATE PROCEDURE spTest( INOUT strVal VARCHAR(50), INOUT numVal INT, OUT outVal INT UNSIGNED ) " +
+            execSQL("CREATE PROCEDURE spTest( INOUT strVal VARCHAR(50), INOUT numVal INT, OUT outVal INT UNSIGNED ) " +
                 "BEGIN  SET strVal = CONCAT(strVal,'ending'); SET numVal=numVal * 2;  SET outVal=99; END");
 
             MySqlCommand cmd = new MySqlCommand("spTest", conn);
@@ -261,7 +261,7 @@ namespace MySql.Data.MySqlClient.Tests
             if (Version < new Version(5, 0)) return;
 
             // create our procedure
-            suExecSQL("CREATE PROCEDURE spTest( IN valin VARCHAR(50), OUT valout VARCHAR(50) ) " +
+            execSQL("CREATE PROCEDURE spTest( IN valin VARCHAR(50), OUT valout VARCHAR(50) ) " +
                 "BEGIN  SET valout=valin;  SELECT 'Test'; END");
 
             MySqlCommand cmd = new MySqlCommand("spTest", conn);
@@ -283,7 +283,7 @@ namespace MySql.Data.MySqlClient.Tests
             if (Version < new Version(5, 0)) return;
 
             // create our procedure
-            suExecSQL("CREATE PROCEDURE spTest() " +
+            execSQL("CREATE PROCEDURE spTest() " +
                  "BEGIN  DECLARE myVar1 INT; SET myVar1 := 1; SELECT myVar1; END");
 
             MySqlCommand cmd = new MySqlCommand("spTest", conn);
@@ -299,7 +299,7 @@ namespace MySql.Data.MySqlClient.Tests
             if (Version < new Version(5, 0)) return;
 
             // create our procedure
-            suExecSQL("CREATE PROCEDURE spTest(OUT p INT) " +
+            execSQL("CREATE PROCEDURE spTest(OUT p INT) " +
                 "BEGIN SELECT 1; SET p=2; END");
 
             MySqlCommand cmd = new MySqlCommand("spTest", conn);
@@ -336,7 +336,7 @@ namespace MySql.Data.MySqlClient.Tests
             if (Version < new Version(5, 0)) return;
 
             // create our procedure
-            suExecSQL("CREATE PROCEDURE spTest() " +
+            execSQL("CREATE PROCEDURE spTest() " +
                 "BEGIN  SELECT 1; SELECT 2; END");
 
             MySqlCommand cmd = new MySqlCommand("spTest", conn);
@@ -376,7 +376,7 @@ namespace MySql.Data.MySqlClient.Tests
         {
             if (Version < new Version(5, 0)) return;
 
-            suExecSQL("CREATE FUNCTION fnTest() RETURNS CHAR(50)" +
+            execSQL("CREATE FUNCTION fnTest() RETURNS CHAR(50)" +
                 " LANGUAGE SQL DETERMINISTIC BEGIN  RETURN \"Test\"; END");
 
             MySqlCommand cmd = new MySqlCommand("SELECT fnTest()", conn);
@@ -390,7 +390,7 @@ namespace MySql.Data.MySqlClient.Tests
         {
             if (Version < new Version(5, 0)) return;
 
-            suExecSQL("CREATE FUNCTION fnTest( val1 INT, val2 CHAR(40) ) RETURNS INT " +
+            execSQL("CREATE FUNCTION fnTest( val1 INT, val2 CHAR(40) ) RETURNS INT " +
                 " LANGUAGE SQL DETERMINISTIC BEGIN  RETURN val1 + LENGTH(val2);  END");
 
             MySqlCommand cmd = new MySqlCommand("SELECT fnTest(22, 'Test')", conn);
@@ -407,7 +407,7 @@ namespace MySql.Data.MySqlClient.Tests
             // create our procedure
             string sql = "CREATE PROCEDURE spTest(IN var INT) BEGIN  SELECT var; END; call spTest(?v)";
 
-            MySqlCommand cmd = new MySqlCommand(sql, rootConn);
+            MySqlCommand cmd = new MySqlCommand(sql, conn);
             cmd.Parameters.Add(new MySqlParameter("?v", 33));
             object val = cmd.ExecuteScalar();
             Assert.AreEqual(33, val);
@@ -422,7 +422,7 @@ namespace MySql.Data.MySqlClient.Tests
             if (Version < new Version(5, 0)) return;
 
             // create our procedure
-            suExecSQL("CREATE PROCEDURE spTest(IN \r\nvalin DECIMAL(10,2),\nIN val2 INT) " +
+            execSQL("CREATE PROCEDURE spTest(IN \r\nvalin DECIMAL(10,2),\nIN val2 INT) " +
                 "SQL SECURITY INVOKER BEGIN  SELECT valin; END");
 
             MySqlCommand cmd = new MySqlCommand("spTest", conn);
@@ -434,8 +434,8 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(d, val);
 
             // create our second procedure
-            suExecSQL("DROP PROCEDURE IF EXISTS spTest");
-            suExecSQL("CREATE PROCEDURE spTest( \r\n) BEGIN  SELECT 4; END");
+            execSQL("DROP PROCEDURE IF EXISTS spTest");
+            execSQL("CREATE PROCEDURE spTest( \r\n) BEGIN  SELECT 4; END");
             cmd.Parameters.Clear();
             object val1 = cmd.ExecuteScalar();
             Assert.AreEqual(4, val1);
@@ -451,7 +451,7 @@ namespace MySql.Data.MySqlClient.Tests
         {
             if (Version < new Version(5, 0)) return;
 
-            suExecSQL("CREATE FUNCTION fnTest(valin int) RETURNS INT " +
+            execSQL("CREATE FUNCTION fnTest(valin int) RETURNS INT " +
                 " LANGUAGE SQL DETERMINISTIC BEGIN return valin * 2; END");
             MySqlCommand cmd = new MySqlCommand("fnTest", conn);
             cmd.CommandType = CommandType.StoredProcedure;
@@ -474,7 +474,7 @@ namespace MySql.Data.MySqlClient.Tests
             if (Version < new Version(5, 0)) return;
 
             // create our procedure
-            suExecSQL("CREATE PROCEDURE spTest() BEGIN  SELECT 4; END");
+            execSQL("CREATE PROCEDURE spTest() BEGIN  SELECT 4; END");
 
             string newConnStr = GetConnectionString(false);
             using (MySqlConnection c = new MySqlConnection(newConnStr))
@@ -617,7 +617,7 @@ namespace MySql.Data.MySqlClient.Tests
         {
             if (Version < new Version(5, 0)) return;
 
-            suExecSQL("CREATE PROCEDURE spTest(IN d DECIMAL(19,4)) BEGIN SELECT d; END");
+            execSQL("CREATE PROCEDURE spTest(IN d DECIMAL(19,4)) BEGIN SELECT d; END");
 
             MySqlCommand cmd = new MySqlCommand("spTest", conn);
             cmd.CommandType = CommandType.StoredProcedure;
@@ -634,7 +634,7 @@ namespace MySql.Data.MySqlClient.Tests
         {
             if (Version < new Version(5, 0)) return;
 
-            suExecSQL("CREATE PROCEDURE spTest(P longtext character set utf8) " +
+            execSQL("CREATE PROCEDURE spTest(P longtext character set utf8) " +
                 "BEGIN SELECT P; END");
 
             MySqlCommand cmd = new MySqlCommand("spTest", conn);
@@ -904,7 +904,7 @@ namespace MySql.Data.MySqlClient.Tests
         {
             if (Version < new Version(5, 0)) return;
 
-            suExecSQL("CREATE PROCEDURE spTest(IN p_paramname INT) BEGIN SELECT p_paramname; END");
+            execSQL("CREATE PROCEDURE spTest(IN p_paramname INT) BEGIN SELECT p_paramname; END");
             CultureInfo uiCulture = Thread.CurrentThread.CurrentUICulture;
             CultureInfo culture = Thread.CurrentThread.CurrentCulture;
             Thread.CurrentThread.CurrentCulture = new CultureInfo("tr-TR");
@@ -1112,7 +1112,7 @@ namespace MySql.Data.MySqlClient.Tests
 
             string sql = String.Format("CREATE PROCEDURE `{0}`.`spTest`(in1 INT, INOUT inout1 INT, OUT out1 INT ) " +
                 "BEGIN SET inout1 = inout1+2; SET out1=inout1-3; SELECT in1; END", database0);
-            suExecSQL(sql);
+            execSQL(sql);
 
             string connStr = GetConnectionString(true) + "; use procedure bodies=false";
             using (MySqlConnection c = new MySqlConnection(connStr))
