@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{DC3517FF-AC26-4755-9B7A-EF658FF69593}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -91,7 +91,6 @@
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
@@ -249,9 +248,6 @@
     <Compile Include="Commands\DropCommand.cs" />
     <Compile Include="Enumerators\StoredProcedureColumnEnumerator.cs" />
     <Compile Include="GuidList.cs" />
-    <Compile Include="MyInstaller.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="MySqlDataConnectionPromptDialog.cs">
       <SubType>Form</SubType>
     </Compile>
