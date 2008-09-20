@@ -92,7 +92,7 @@ namespace MySql.Data.MySqlClient
 
             MySqlPacket packet = (MySqlPacket)buffers[0];
             //MemoryStream ms = stream.InternalBuffer;
-            Driver.Query(packet);
+            Driver.SendQuery(packet);
             buffers.RemoveAt(0);
             return true;
         }

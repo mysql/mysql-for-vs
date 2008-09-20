@@ -24,15 +24,25 @@ namespace MySql.Data.MySqlClient
 
         private int pos;
 
-        public MySqlTokenizer(string input)
+        public MySqlTokenizer()
         {
-            sql = input;
             backslashEscapes = true;
             multiLine = true;
             pos = 0;
         }
 
+        public MySqlTokenizer(string input) : this()
+        {
+            sql = input;
+        }
+
         #region Properties
+
+        public string Text
+        {
+            get { return sql; }
+            set { sql = value; pos = 0; }
+        }
 
         public bool AnsiQuotes
         {
@@ -51,11 +61,6 @@ namespace MySql.Data.MySqlClient
             get { return multiLine; }
             set { multiLine = value; }
         }
-
-/*        public bool IsSize
-        {
-            get { return isSize; }
-        }*/
 
         public bool Quoted
         {

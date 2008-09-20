@@ -24,6 +24,12 @@ namespace MySql.Data.MySqlClient
             this.encoding = encoding;
         }
 
+        public MySqlPacket(MemoryStream stream)
+            : this()
+        {
+            buffer = stream;
+        }
+
         #region Properties
 
         public Encoding Encoding

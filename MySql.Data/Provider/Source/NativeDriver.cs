@@ -462,7 +462,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Query is the method that is called to send all queries to the server
         /// </summary>
-        public override void Query(MySqlPacket queryPacket)
+        public override void SendQuery(MySqlPacket queryPacket)
         {
             if (Settings.Logging)
                 Logger.LogCommand(DBCmd.QUERY, encoding.GetString(
