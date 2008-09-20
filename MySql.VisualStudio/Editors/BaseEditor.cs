@@ -9,9 +9,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.OLE.Interop;
-using EnvDTE;
 using Microsoft.VisualStudio.CommandBars;
-using EnvDTE80;
 
 namespace MySql.Data.VisualStudio.Editors
 {

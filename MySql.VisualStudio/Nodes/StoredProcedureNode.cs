@@ -8,7 +8,6 @@ using Microsoft.VisualStudio.TextManager.Interop;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
-using EnvDTE;
 using Microsoft.VisualStudio.Package;
 using Microsoft.VisualStudio.Shell.Interop;
 using System.Diagnostics;

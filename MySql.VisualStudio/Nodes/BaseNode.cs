@@ -43,7 +43,7 @@ namespace MySql.Data.VisualStudio
                 ItemId = hierarchyAccessor.CreateObjectNode();
 
             NameIndex = 2;
-            commandGroupGuid = Guid.Empty; // VSConstants.GUID_TextEditorFactory;
+            commandGroupGuid = VSConstants.GUID_TextEditorFactory;
 			editorGuid = Guid.Empty;
 		}
 
@@ -213,6 +213,7 @@ namespace MySql.Data.VisualStudio
 
 			IntPtr viewPunk = Marshal.GetIUnknownForObject(coreEditor);
 			IntPtr dataPunk = Marshal.GetIUnknownForObject(this);
+            Guid viewGuid = VSConstants.LOGVIEWID_TextView;
 
 			// Initialize IDE editor infrastracture
 			int result = shell.InitializeEditorInstance(
@@ -222,7 +223,7 @@ namespace MySql.Data.VisualStudio
 				Moniker,                // Document moniker
 				ref editorGuid,         // GUID of the editor type
 				null,                   // Name of the physical view. We use default
-				ref editorGuid,         // GUID identifying the logical view.
+				ref viewGuid,           // GUID identifying the logical view.
 				null,                   // Initial caption defined by the document owner. Will be initialized by the editor later
 				null,                   // Initial caption defined by the document editor. Will be initialized by the editor later
 				// Pointer to the IVsUIHierarchy interface of the project that contains the document
