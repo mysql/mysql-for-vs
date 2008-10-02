@@ -61,6 +61,7 @@ namespace MySql.Data.MySqlClient
             serverCharSetIndex = -1;
             serverCharSet = null;
             hasWarnings = false;
+            maxPacketSize = 1024;
         }
 
         #region Properties
