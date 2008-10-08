@@ -103,7 +103,7 @@ namespace MySql.Data.MySqlClient.Tests
             MySqlConnectionStringBuilder s = new MySqlConnectionStringBuilder();
             s["database"] = "test";
             s["database"] = "test2";
-            Assert.AreEqual("database=test2", s.GetConnectionString(false));
+            Assert.AreEqual("database=test2", s.ConnectionString);
         }
     }
 }

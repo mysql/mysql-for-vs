@@ -1015,7 +1015,7 @@ namespace MySql.Data.MySqlClient
         /// stripping out the password info
         /// </summary>
         /// <returns></returns>
-        public string GetConnectionString(bool includePass)
+        internal string GetConnectionString(bool includePass)
         {
             if (includePass)
                 return originalConnectionString;

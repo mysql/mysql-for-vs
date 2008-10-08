@@ -15,7 +15,9 @@ Version 5.2.4 -
   work correctly with some older server versions (bug #39330)  
 - Defaulting max allowed packet to 1024 to account for the possible case where the
   value doesn't come in as a server variable  
-
+- fixed bug #39728 by making MySqlConnectionStringBuilder.GetConnectionString an internal method.
+  It should not have been publicly available anyway.  It is used internally by the 
+  MySqlConnection.ConnectionString property
   
 Version 5.2.3 - 8/14/08
 - Increased the speed of MySqlDataReader.GetOrdinal dramatically by using a couple
