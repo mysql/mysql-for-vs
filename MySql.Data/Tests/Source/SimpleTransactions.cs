@@ -24,6 +24,7 @@ using System.IO;
 using NUnit.Framework;
 #if NET20
 using System.Data.Common;
+using System.Reflection;
 #endif
 
 namespace MySql.Data.MySqlClient.Tests
@@ -84,10 +85,6 @@ namespace MySql.Data.MySqlClient.Tests
             catch (InvalidOperationException)
             {
             }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
             finally 
             {
                 t1.Rollback();
@@ -138,12 +135,31 @@ namespace MySql.Data.MySqlClient.Tests
                     trans.Commit();
                     Assert.Fail("Should have thrown an exception");
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                 }
                 Assert.AreEqual(ConnectionState.Closed, c.State);
                 c.Close();    // this should work even though we are closed
             }
+        }
+
+        /// <summary>
+        /// Bug #39817	Transaction Dispose does not roll back
+        /// </summary>
+        [Test]
+        public void DisposingCallsRollback()
+        {
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES ('a', 'b', 'c')", conn);
+            MySqlTransaction txn = conn.BeginTransaction();
+            using (txn)
+            {
+                cmd.ExecuteNonQuery();
+            }
+            // the txn should be closed now as a rollback should have happened.
+            Type t = txn.GetType();
+            FieldInfo fi = t.GetField("open", BindingFlags.Instance | BindingFlags.NonPublic);
+            bool isOpen = (bool)fi.GetValue(txn);
+            Assert.IsFalse(isOpen);
         }
     }
 }

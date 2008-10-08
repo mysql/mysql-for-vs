@@ -18,6 +18,8 @@ Version 5.2.4 -
 - fixed bug #39728 by making MySqlConnectionStringBuilder.GetConnectionString an internal method.
   It should not have been publicly available anyway.  It is used internally by the 
   MySqlConnection.ConnectionString property
+- implemented Disposable pattern on MySqlTransaction class so including one in a using statement
+  and then not calling commit will cause a rollback when the using exits (bug #39817)
   
 Version 5.2.3 - 8/14/08
 - Increased the speed of MySqlDataReader.GetOrdinal dramatically by using a couple
