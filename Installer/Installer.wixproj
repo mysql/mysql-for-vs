@@ -97,7 +97,7 @@
     </WixVariables>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'GPL|x86' ">
-    <DefineConstants>Version=5.2.3;IsGPL=1</DefineConstants>
+    <DefineConstants>Version=5.2.4;IsGPL=1</DefineConstants>
     <WixVariables>
     </WixVariables>
   </PropertyGroup>
@@ -128,6 +128,12 @@
     <WixExtension Include="WixVSExtension">
       <HintPath>C:\Program Files (x86)\Windows Installer XML v3\bin\WixVSExtension.dll</HintPath>
     </WixExtension>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="VS2005_Data.wxi" />
+    <Content Include="VS2005_Registry.wxi" />
+    <Content Include="VS2008_Data.wxi" />
+    <Content Include="VS2008_Registry.wxi" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.0\Wix.targets" />
 </Project>
