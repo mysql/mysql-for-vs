@@ -20,6 +20,8 @@ Version 5.2.4 -
   MySqlConnection.ConnectionString property
 - implemented Disposable pattern on MySqlTransaction class so including one in a using statement
   and then not calling commit will cause a rollback when the using exits (bug #39817)
+- fixed MySqlScript object so that it handles scripts with user variables
+  
   
 Version 5.2.3 - 8/14/08
 - Increased the speed of MySqlDataReader.GetOrdinal dramatically by using a couple

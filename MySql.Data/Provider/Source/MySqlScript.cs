@@ -145,6 +145,13 @@ namespace MySql.Data.MySqlClient
                 connection.Open();
             }
 
+            // since we don't allow setting of parameters on a script we can 
+            // therefore safely allow the use of user variables.  no one should be using
+            // this connection while we are using it so we can temporarily tell it
+            // to allow the use of user variables
+            bool allowUserVars = connection.Settings.AllowUserVariables;
+            connection.Settings.AllowUserVariables = true;
+
             try
             {
                 string mode = connection.driver.Property("sql_mode");
@@ -179,6 +186,7 @@ namespace MySql.Data.MySqlClient
             }
             finally
             {
+                connection.Settings.AllowUserVariables = allowUserVars;
                 if (openedConnection)
                 {
                     connection.Close();
