@@ -21,6 +21,9 @@ Version 5.2.4 -
 - implemented Disposable pattern on MySqlTransaction class so including one in a using statement
   and then not calling commit will cause a rollback when the using exits (bug #39817)
 - fixed MySqlScript object so that it handles scripts with user variables
+- fixed bug where specifying 'functions return string=yes' would cause strings to be returned
+  using the 'binary' charset which would not properly render some characters.  Now the 
+  connection character set is used. (bug #40076)  
   
   
 Version 5.2.3 - 8/14/08

@@ -132,6 +132,11 @@ namespace MySql.Data.MySqlClient
             get { return maxPacketSize; }
         }
 
+        internal int ConnectionCharSetIndex
+        {
+            get { return serverCharSetIndex; }
+        }
+
         #endregion
 
         public string Property(string key)
