@@ -254,9 +254,11 @@ namespace MySql.Data.MySqlClient
 			if (!connection.driver.Version.isAtLeast(5, 0, 0))
 				throw new NotSupportedException(Resources.CancelNotSupported);
 
-			using(MySqlConnection c = new MySqlConnection(connection.Settings.GetConnectionString(true)))
+            MySqlConnectionStringBuilder cb = new MySqlConnectionStringBuilder(
+                connection.Settings.GetConnectionString(true));
+            cb.Pooling = false;
+			using(MySqlConnection c = new MySqlConnection(cb.ConnectionString))
 			{
-                c.Settings.Pooling = false;
                 c.Open();
                 MySqlCommand cmd = new MySqlCommand(String.Format("KILL QUERY {0}",
                      connection.ServerThread), c);

@@ -24,6 +24,8 @@ Version 5.2.4 -
 - fixed bug where specifying 'functions return string=yes' would cause strings to be returned
   using the 'binary' charset which would not properly render some characters.  Now the 
   connection character set is used. (bug #40076)  
+- fixed problem that caused in use connection strings to be modified when a pooled connection
+  timed out and was cancelled.  (bug #40091)
   
   
 Version 5.2.3 - 8/14/08
