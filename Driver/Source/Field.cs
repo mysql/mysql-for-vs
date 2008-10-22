@@ -262,7 +262,9 @@ namespace MySql.Data.MySqlClient
                          type == MySqlDbType.VarString)
                     mySqlDbType = MySqlDbType.VarBinary;
             }
-		}
+            if (CharacterSetIndex == 63)
+                CharacterSetIndex = connection.driver.ConnectionCharSetIndex;
+        }
 
         private void CheckForExceptions()
         {

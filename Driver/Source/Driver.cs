@@ -120,6 +120,11 @@ namespace MySql.Data.MySqlClient
             get { return isOpen; }
         }
 
+        internal int ConnectionCharSetIndex
+        {
+            get { return serverCharSetIndex; }
+        }        
+        
         #endregion
 
         public string Property(string key)

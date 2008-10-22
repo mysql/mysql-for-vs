@@ -5,7 +5,9 @@ Version 5.1.8
     and then not calling commit will cause a rollback when the using exits (bug #39817)
   - fixed problem that caused in use connection strings to be modified when a pooled connection
     timed out and was cancelled.  (bug #40091)
-
+  - fixed problem where using respect binary flags would not use the connection char set
+    and therefore return strings with a bad encoding.
+  
 Version 5.1.7 - 8/20/08
  - Fixed problem with DDEX provider that could sometimes prevent table altering when working with
    4.1 servers (bug #30603)
