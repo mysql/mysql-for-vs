@@ -26,6 +26,8 @@ Version 5.2.4 -
   connection character set is used. (bug #40076)  
 - fixed problem that caused in use connection strings to be modified when a pooled connection
   timed out and was cancelled.  (bug #40091)
+- fixed problem where using respect binary flags would not use the connection char set
+  and therefore return strings with a bad encoding.
   
   
 Version 5.2.3 - 8/14/08
