@@ -286,7 +286,7 @@ namespace MySql.Data.MySqlClient
         public virtual DataTable GetProcedureParameters(string[] restrictions,
             DataTable routines)
         {
-            if (connection.driver.Version.isAtLeast(6, 0, 0))
+            if (connection.driver.Version.isAtLeast(6, 0, 6))
                 return GetParametersFromIS(restrictions);
             else
             {

@@ -28,6 +28,8 @@ Version 5.2.4 -
   timed out and was cancelled.  (bug #40091)
 - fixed problem where using respect binary flags would not use the connection char set
   and therefore return strings with a bad encoding.
+- fixed bug where provider was attempting to use the new parameters I_S view on servers
+  that didn't have it (bug #40382)
   
   
 Version 5.2.3 - 8/14/08
