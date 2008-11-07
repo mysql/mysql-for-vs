@@ -243,6 +243,30 @@ namespace MySql.Data.MySqlClient
 				return (byte)((MySqlByte)v).Value;
 		}
 
+        /// <summary>
+        /// Gets the value of the specified column as a sbyte.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public byte GetSByte(string name)
+        {
+            return GetByte(GetOrdinal(name));
+        }
+
+        /// <summary>
+        /// Gets the value of the specified column as a sbyte.
+        /// </summary>
+        /// <param name="i"></param>
+        /// <returns></returns>
+        public sbyte GetSByte(int i)
+        {
+            IMySqlValue v = GetFieldValue(i, false);
+            if (v is MySqlByte)
+                return ((MySqlByte)v).Value;
+            else
+                return (sbyte)((MySqlByte)v).Value;
+        }
+
 		/// <summary>
 		/// Reads a stream of bytes from the specified column offset into the buffer an array starting at the given buffer offset.
 		/// </summary>

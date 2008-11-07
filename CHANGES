@@ -33,7 +33,7 @@ Version 5.2.4 -
 - fixed problem where CharSetMap.GetDefaultCollation and CharSetMap.GetMaxLengths
   might have a thread sync issue on high load systems.  They were not locking
   the static collections there were initializing. (bug #40231)  
-  
+- added GetSByte to the reader for returning tinyint columns (bug #40571)
   
 Version 5.2.3 - 8/14/08
 - Increased the speed of MySqlDataReader.GetOrdinal dramatically by using a couple
