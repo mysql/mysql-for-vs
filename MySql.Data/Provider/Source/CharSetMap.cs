@@ -166,8 +166,11 @@ namespace MySql.Data.MySqlClient
 
         internal static string GetDefaultCollation(string charset, MySqlConnection connection)
         {
-            if (defaultCollations == null)
-                InitCollections(connection);
+            lock (defaultCollations)
+            {
+                if (defaultCollations == null)
+                    InitCollections(connection);
+            }
             if (!defaultCollations.ContainsKey(charset))
                 return null;
             return defaultCollations[charset];
@@ -175,8 +178,13 @@ namespace MySql.Data.MySqlClient
 
         internal static int GetMaxLength(string charset, MySqlConnection connection)
         {
-            if (maxLengths == null)
-                InitCollections(connection);
+            // we lock on defaultCollations here too so GetDefaultCollation
+            // is on the same lock as us.
+            lock (defaultCollations)
+            {
+                if (maxLengths == null)
+                    InitCollections(connection);
+            }
 
             if (!maxLengths.ContainsKey(charset))
                 return 1;

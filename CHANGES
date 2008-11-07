@@ -30,6 +30,9 @@ Version 5.2.4 -
   and therefore return strings with a bad encoding.
 - fixed bug where provider was attempting to use the new parameters I_S view on servers
   that didn't have it (bug #40382)
+- fixed problem where CharSetMap.GetDefaultCollation and CharSetMap.GetMaxLengths
+  might have a thread sync issue on high load systems.  They were not locking
+  the static collections there were initializing. (bug #40231)  
   
   
 Version 5.2.3 - 8/14/08
