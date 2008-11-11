@@ -841,8 +841,7 @@ namespace MySql.Data.MySqlClient.Tests
             ReadNegativeTime(false);
         }
 
-        [Test]
-        public void NegativeTime(bool prepared)
+        private void NegativeTime(bool prepared)
         {
             execSQL("DROP TABLE IF EXISTS Test");
             execSQL(@"CREATE TABLE Test(id int, t time)");

@@ -2,7 +2,7 @@
 <project name="MySqlPackage" default="all" xmlns="http://nant.sf.net/schemas/nant-0.85.win32.net-1.0.xsd">
 	<description>Package script for MySQLClient Managed Provider for MySQL</description>
 
-	<include buildfile="Client.build"/>
+<!--	<include buildfile="Client.build"/>-->
 
 	<!-- first remove all previous packages -->
 	<delete dir="packages" failonerror="false"/>
@@ -24,14 +24,7 @@
 
 
 	<!-- packaging targets -->
-	<target name="all" depends="GPL, Commercial">
-		<checksum algorithm="MD5" fileext="MD5">
-			<fileset>
-				<include name="packages/**/*.exe"/>
-				<include name="packages/**/*.zip"/>
-			</fileset>
-		</checksum>
-	</target>
+	<target name="all" depends="GPL, Commercial"/>
 	
 	<!-- Commercial package target -->
 	<target name="Commercial">
@@ -80,7 +73,7 @@
 		<exec workingdir="Installer" program="light"
                       commandline="-sval -ext WixNetFxExtension -ext WixUIExtension -ext WixUtilExtension -cultures:en-us main.wixobj samples.wixobj visualstudio.wixobj webproviders.wixobj ui.wixobj cf.wixobj core.wixobj -out MySql.Data.msi"/>
 
-		<zip zipfile="packages/mysql-connector-net-${version}${postfix}.zip">
+	    	<zip zipfile="packages/mysql-connector-net-${version}${postfix}.zip">
 			<fileset basedir="Installer">			
 				<include name="mysql.data.msi"/>
 			</fileset>

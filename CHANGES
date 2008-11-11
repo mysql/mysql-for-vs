@@ -1,4 +1,4 @@
-Version 5.2.4 - 
+Version 5.2.4 - 11/11/2008  (Happy Birthday to me!)
 - fixed web providers autogenerateschema option where it would fail if no schema is
   present at all (bug #39072)
 - backported fix for lingering problem related to bug #37239.  If two columns had the same name but

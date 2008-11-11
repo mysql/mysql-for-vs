@@ -367,7 +367,6 @@ namespace MySql.Web.Security
                     WriteToEventLog(ex, "GetUsersInRole");
                 throw;
             }
-            return new string[0];
         }
 
         /// <summary>

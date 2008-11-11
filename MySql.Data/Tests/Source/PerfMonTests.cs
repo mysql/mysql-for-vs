@@ -53,7 +53,7 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void ProcedureFromCache()
 		{
-            return;
+#if false
             if (version < new Version(5, 0)) return;
 
             execSQL("DROP PROCEDURE IF EXISTS spTest");
@@ -82,6 +82,7 @@ namespace MySql.Data.MySqlClient.Tests
 
 			Assert.AreEqual(hardCount, hardQuery.RawValue);
 			Assert.AreEqual(softCount + 1, softQuery.RawValue);
+#endif
 		}
 
 	}
