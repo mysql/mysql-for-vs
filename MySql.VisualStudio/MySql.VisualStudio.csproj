@@ -73,24 +73,36 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.VisualStudio.Data, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.VisualStudio.TextManager.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <Reference Include="Microsoft.Data.ConnectionUI, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <Reference Include="Microsoft.Data.ConnectionUI, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Visual Studio 2005 SDK\2007.02\VisualStudioIntegration\Common\Assemblies\Microsoft.Data.ConnectionUI.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Data, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Visual Studio 2005 SDK\2007.02\VisualStudioIntegration\Common\Assemblies\Microsoft.VisualStudio.Data.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Visual Studio 2005 SDK\2007.02\VisualStudioIntegration\Common\Assemblies\Microsoft.VisualStudio.OLE.Interop.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.VisualStudio.Shell, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <Reference Include="Microsoft.VisualStudio.Shell, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Visual Studio 2005 SDK\2007.02\VisualStudioIntegration\Common\Assemblies\Microsoft.VisualStudio.Shell.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Visual Studio 2005 SDK\2007.02\VisualStudioIntegration\Common\Assemblies\Microsoft.VisualStudio.Shell.Interop.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Visual Studio 2005 SDK\2007.02\VisualStudioIntegration\Common\Assemblies\Microsoft.VisualStudio.Shell.Interop.8.0.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TextManager.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Visual Studio 2005 SDK\2007.02\VisualStudioIntegration\Common\Assemblies\Microsoft.VisualStudio.TextManager.Interop.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
@@ -248,6 +260,9 @@
     <Compile Include="Commands\DropCommand.cs" />
     <Compile Include="Enumerators\StoredProcedureColumnEnumerator.cs" />
     <Compile Include="GuidList.cs" />
+    <Compile Include="MyInstaller.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="MySqlDataConnectionPromptDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -307,7 +322,6 @@
     <None Include="DocumentView\DocumentViewFactory.cd" />
     <None Include="DocumentView\DocumentViewInterfaces.cd" />
     <None Include="DocumentView\Editors\Editors.cd" />
-    <None Include="Installer\License.rtf" />
     <None Include="VSDataObjectSupport.xsd">
       <SubType>
       </SubType>
@@ -425,13 +439,6 @@
     <Content Include="Documentation\Script\helpstudio.js" />
     <Content Include="Documentation\stopwordlist.txt" />
     <Content Include="Documentation\Stylesheets\helpstudio.css" />
-    <Content Include="Installer\Bitmaps\bannrbmp.bmp" />
-    <Content Include="Installer\Bitmaps\dlgbmp.bmp" />
-    <Content Include="Installer\Bitmaps\exclamic.ico" />
-    <Content Include="Installer\Bitmaps\info.ico" />
-    <Content Include="Installer\Bitmaps\New.ico" />
-    <Content Include="Installer\Bitmaps\Up.ico" />
-    <Content Include="Installer\main.wxs" />
     <None Include="app.config" />
     <None Include="Documentation\Build\Default\COL_Documentation.HxC" />
     <None Include="Documentation\Build\Default\COL_Documentation.hxt" />
@@ -451,11 +458,6 @@
     <None Include="Documentation\Documentation.bak" />
     <None Include="Documentation\Documentation.doc" />
     <None Include="Documentation\Documentation.hsp" />
-    <None Include="Installer\HTML_Help_Registration__RTL_X86_---.msm" />
-    <None Include="Installer\Register.reg" />
-    <None Include="Installer\Release notes.doc">
-    </None>
-    <None Include="Installer\VSIPCC_Collection_Files_RTL_---_---.msm" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -486,8 +488,18 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <PropertyGroup>
+    <RegisterOutputPackage>false</RegisterOutputPackage>
+    <RegisterWithCodebase>true</RegisterWithCodebase>
+    <!-- Make sure we are 2005 compatible, and don't rely on RegPkg.exe 
+         of VS2008 which uses Microsoft.VisualStudio.Shell.9.0 -->
+    <UseVS2005MPF>true</UseVS2005MPF>
+    <!-- Don't try to run as a normal user (RANA), 
+         create experimental hive in HKEY_LOCAL_MACHINE -->
+    <RegisterWithRanu>false</RegisterWithRanu>
+  </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(VS_SDK_PATH)\VisualStudioIntegration\Tools\Build\Microsoft.VsSDK.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\VSSDK\Microsoft.VsSDK.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
