@@ -34,8 +34,8 @@ namespace MySql.Data.MySqlClient
     internal class CharSetMap
     {
 #if NET20
-        private static Dictionary<string, string> defaultCollations;
-        private static Dictionary<string, int> maxLengths;
+        private static Dictionary<string, string> defaultCollations = new Dictionary<string, string>();
+        private static Dictionary<string, int> maxLengths = new Dictionary<string, int>();
         private static Dictionary<string, CharacterSet> mapping;
 #else
         private static Hashtable mapping;
@@ -150,9 +150,6 @@ namespace MySql.Data.MySqlClient
 
         internal static void InitCollections(MySqlConnection connection)
         {
-            defaultCollations = new Dictionary<string, string>();
-            maxLengths = new Dictionary<string, int>();
-
             MySqlCommand cmd = new MySqlCommand("SHOW CHARSET", connection);
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {
@@ -168,7 +165,7 @@ namespace MySql.Data.MySqlClient
         {
             lock (defaultCollations)
             {
-                if (defaultCollations == null)
+                if (defaultCollations.Count == 0)
                     InitCollections(connection);
             }
             if (!defaultCollations.ContainsKey(charset))
@@ -182,7 +179,7 @@ namespace MySql.Data.MySqlClient
             // is on the same lock as us.
             lock (defaultCollations)
             {
-                if (maxLengths == null)
+                if (maxLengths.Count == 0)
                     InitCollections(connection);
             }
 
