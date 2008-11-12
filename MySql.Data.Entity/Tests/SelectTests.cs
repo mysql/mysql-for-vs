@@ -22,11 +22,11 @@ using System;
 using System.Data;
 using System.Threading;
 using MySql.Data.MySqlClient;
-using MbUnit.Framework;
 using MySql.Data.MySqlClient.Tests;
 using MySql.Web.Security.Tests;
 using System.Data.EntityClient;
 using System.Data.Common;
+using NUnit.Framework;
 
 namespace MySql.Data.MySqlClient.Edm.Tests
 {
@@ -36,9 +36,10 @@ namespace MySql.Data.MySqlClient.Edm.Tests
 	[TestFixture]
 	public class SelectTests : BaseEdmTest
 	{
-        public override void Setup()
+        public SelectTests()
+            : base()
         {
-            base.Setup();
+            csAdditions += ";logging=true;";
         }
 
         private EntityConnection GetEntityConnection()
@@ -50,38 +51,55 @@ namespace MySql.Data.MySqlClient.Edm.Tests
         }
 
         [Test]
-        public void SelectWithParameter()
+        public void SimpleSelect()
         {
-            try
+            using (EntityConnection connection = GetEntityConnection())
             {
-                using (EntityConnection connection = GetEntityConnection())
-                {
-                    connection.Open();
+                connection.Open();
 
-                    using (EntityCommand cmd = new EntityCommand(
-                        "SELECT C.FirstName FROM TestDB.Employee AS C", connection))
+                using (EntityCommand cmd = new EntityCommand(
+                    "SELECT C.FirstName FROM TestDB.Employee AS C", connection))
+                {
+                    using (DbDataReader reader = cmd.ExecuteReader(CommandBehavior.SequentialAccess))
                     {
-                        using (DbDataReader reader = cmd.ExecuteReader(CommandBehavior.SequentialAccess))
-                        {
-                            Assert.IsTrue(reader.HasRows);
-                            reader.Read();
-                            Assert.AreEqual("Fred", reader.GetString(0));
-                            reader.Read();
-                            Assert.AreEqual("Wilma", reader.GetString(0));
-                            reader.Read();
-                            Assert.AreEqual("Barney", reader.GetString(0));
-                            reader.Read();
-                            Assert.AreEqual("Betty", reader.GetString(0));
-                            Assert.IsFalse(reader.Read());
-                        }
+                        Assert.IsTrue(reader.HasRows);
+                        reader.Read();
+                        Assert.AreEqual("Fred", reader.GetString(0));
+                        reader.Read();
+                        Assert.AreEqual("Wilma", reader.GetString(0));
+                        reader.Read();
+                        Assert.AreEqual("Barney", reader.GetString(0));
+                        reader.Read();
+                        Assert.AreEqual("Betty", reader.GetString(0));
+                        Assert.IsFalse(reader.Read());
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
         }
 
+        [Test]
+        public void SelectWithParam()
+        {
+            using (EntityConnection connection = GetEntityConnection())
+            {
+                connection.Open();
+
+                using (EntityCommand cmd = new EntityCommand(
+                    "SELECT C.FirstName FROM TestDB.Employee AS C WHERE C.LastName = @lastname", connection))
+                {
+                    cmd.Parameters.Add("lastname", DbType.String);
+                    cmd.Parameters[0].Value = "Flintstone";
+                    using (DbDataReader reader = cmd.ExecuteReader(CommandBehavior.SequentialAccess))
+                    {
+                        Assert.IsTrue(reader.HasRows);
+                        reader.Read();
+                        Assert.AreEqual("Fred", reader.GetString(0));
+                        reader.Read();
+                        Assert.AreEqual("Wilma", reader.GetString(0));
+                        Assert.IsFalse(reader.Read());
+                    }
+                }
+            }
+        }
     }
 }

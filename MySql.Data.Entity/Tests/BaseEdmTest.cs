@@ -31,9 +31,9 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using MySql.Data.MySqlClient.Tests;
 using System.Resources;
-using MbUnit.Framework;
 using System.Xml;
 using System.IO;
+using NUnit.Framework;
 
 namespace MySql.Web.Security.Tests
 {
@@ -47,6 +47,8 @@ namespace MySql.Web.Security.Tests
 
 			Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             string filename = config.FilePath;
+
+            database0 = database1 = "test";
 
             XmlDocument configDoc = new XmlDocument();
             configDoc.PreserveWhitespace = true;
@@ -71,34 +73,9 @@ namespace MySql.Web.Security.Tests
             configDoc.Save(filename);
 
 			ConfigurationManager.RefreshSection("system.data");
-
-/*
-			MembershipSection ms = (MembershipSection)config.SectionGroups["system.web"].Sections["membership"];
-			ms.DefaultProvider = "MySQLMembershipProvider";
-			ProviderSettings ps = new ProviderSettings();
-			ps.Name = "MySQLMembershipProvider";
-			Assembly a = Assembly.GetAssembly(typeof(MySQLMembershipProvider));
-			ps.Type = "MySql.Web.Security.MySQLMembershipProvider, " + a.FullName;
-			ps.Parameters.Add("connectionStringName", "LocalMySqlServer");
-			ps.Parameters.Add("enablePasswordRetrieval", "false");
-			ps.Parameters.Add("enablePasswordReset", "true");
-			ps.Parameters.Add("requiresQuestionAndAnswer", "true");
-			ps.Parameters.Add("applicationName", "/");
-			ps.Parameters.Add("requiresUniqueEmail", "false");
-			ps.Parameters.Add("passwordFormat", "Hashed");
-			ps.Parameters.Add("maxInvalidPasswordAttempts", "5");
-			ps.Parameters.Add("minRequiredPasswordLength", "7");
-			ps.Parameters.Add("minRequiredNonalphanumericCharacters", "1");
-			ps.Parameters.Add("passwordAttemptWindow", "10");
-			ps.Parameters.Add("passwordStrengthRegularExpression", "");
-			ms.Providers.Add(ps);
-
-			config.Save();
-			ConfigurationManager.RefreshSection("connectionStrings");
-			ConfigurationManager.RefreshSection("system.web/membership");*/
 		}
- 
 
+        [SetUp]
         public override void Setup()
         {
             base.Setup();
@@ -112,12 +89,6 @@ namespace MySql.Web.Security.Tests
             // if we have not already done so, we need to save out our
             // schema files and update the storage file to reflect the database
             SaveSchemaFiles();
-        }
-
-        [TestFixtureSetUp]
-        public override void FixtureSetup()
-        {
-            base.FixtureSetup();
         }
 
         void SaveSchemaFiles()
