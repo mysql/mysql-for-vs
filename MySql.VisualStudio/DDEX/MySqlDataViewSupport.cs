@@ -22,7 +22,6 @@ using Microsoft.VisualStudio.Data;
 using System.IO;
 using System.Reflection;
 using System.Xml;
-using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 
 namespace MySql.Data.VisualStudio
@@ -51,11 +50,11 @@ namespace MySql.Data.VisualStudio
 
             // if we are running under VS 2008 then we need to switch out a couple
             // of command handlers
-            DTE dte = Package.GetGlobalService(typeof(DTE)) as DTE;
+/*            DTE dte = Package.GetGlobalService(typeof(DTE)) as DTE;
             if (dte.Version.StartsWith("9"))
                 xml = xml.Replace("Microsoft.VisualStudio.DataTools.DBPackage.VDT_OLEDB_CommandHandler_TableTools",
                     "884DD964-5327-461f-9F06-6484DD540F8F");
-
+            */
             MemoryStream ms = new MemoryStream(xml.Length);
             StreamWriter writer = new StreamWriter(ms);
             writer.Write(xml);

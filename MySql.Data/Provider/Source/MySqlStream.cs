@@ -115,11 +115,9 @@ namespace MySql.Data.MySqlClient
 		/// </summary>
 		public MySqlPacket ReadPacket()
 		{
-//			if (HasMoreData)
-//			{
-//				SkipBytes((int)(inLength - inPos));
-//			}
-			// make sure we have read all the data from the previous packet
+            //Debug.Assert(packet.Position == packet.Length);
+
+            // make sure we have read all the data from the previous packet
 			//Debug.Assert(HasMoreData == false, "HasMoreData is true in OpenPacket");
 
 			LoadPacket();
