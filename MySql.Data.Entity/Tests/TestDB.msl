@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="urn:schemas-microsoft-com:windows:storage:mapping:CS">
+	<EntityContainerMapping StorageEntityContainer="!dbname" CdmEntityContainer="TestDB">
+
+<!--		<EntitySetMapping Name="Employee">
+			<EntityTypeMapping TypeName="TestDB.Employee">
+				<MappingFragment StoreEntitySet="Employees" >
+					<ScalarProperty Name="Id" ColumnName="Id" />
+					<ScalarProperty Name="LastName" ColumnName="LastName" />
+					<ScalarProperty Name="FirstName" ColumnName="FirstName" />
+				</MappingFragment>
+			</EntityTypeMapping>
+		</EntitySetMapping>-->
+
+    <EntitySetMapping Name="Employees">
+      <!-- 
+      The IsTypeOf keyword tells the mapping that the following mapping applies to all subtypes of 
+      the given Type (in this case, InternationalOrder as well as Order)
+      -->
+      <EntityTypeMapping TypeName="IsTypeOf(TestDB.Employee)">
+        <MappingFragment StoreEntitySet="Employees" >
+          <ScalarProperty Name="EmployeeId" ColumnName="employeeId" />
+          <ScalarProperty Name="LastName" ColumnName="lastName" />
+          <ScalarProperty Name="FirstName" ColumnName="firstName" />
+          <ScalarProperty Name="Age" ColumnName ="age"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+      
+      <EntityTypeMapping TypeName ="TestDB.SalariedEmployee">
+        <MappingFragment StoreEntitySet="SalariedEmployees">
+          <ScalarProperty Name="EmployeeId" ColumnName="employeeId" />
+          <ScalarProperty Name="Salary" ColumnName="salary" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>    
+    
+    
+    <EntitySetMapping Name="Children">
+      <EntityTypeMapping TypeName="TestDB.Children">
+        <MappingFragment StoreEntitySet="EmployeeChildren" >
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+
+
+  </EntityContainerMapping>
+</Mapping>

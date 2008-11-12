@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="TestDB" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2006/04/edm">
+
+  <EntityContainer Name="TestDB">
+    <EntitySet Name="Employees" EntityType="Self.Employee" />
+    <EntitySet Name="Children" EntityType="Self.Children" />
+  </EntityContainer>
+
+  <EntityType Name="Employee">
+    <Key>
+      <PropertyRef Name="EmployeeId" />
+    </Key>
+    <Property Name="EmployeeId" Type="Int32" Nullable="false" />
+    <Property Name="LastName" Type="String" Nullable="false" MaxLength="20" />
+    <Property Name="FirstName" Type="String" Nullable="false" MaxLength="10" />
+    <Property Name="Age" Type="Int32" Nullable="true"/>
+  </EntityType>
+
+  <EntityType Name="SalariedEmployee" BaseType ="Self.Employee">
+    <Property Name="Salary" Type="Int32" Nullable="false"  />
+  </EntityType>
+
+  <EntityType Name="Children">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="EmployeeID" Type="Int32" Nullable="false" />
+    <Property Name="LastName" Type="String" Nullable="false" MaxLength="20" />
+    <Property Name="FirstName" Type="String" Nullable="false" MaxLength="10" />
+  </EntityType>
+  
+</Schema>
