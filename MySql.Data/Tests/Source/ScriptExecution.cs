@@ -151,5 +151,15 @@ namespace MySql.Data.MySqlClient.Tests
             args.Ignore = false;
             statementCount++;
         }
+
+        [Test]
+        public void ExecuteScriptWithUserVariables()
+        {
+            string scriptText = "SET @myvar = 1";
+            MySqlScript script = new MySqlScript(scriptText);
+            script.Connection = conn;
+            int count = script.Execute();
+            Assert.AreEqual(2, count);
+        }
     }
 }
