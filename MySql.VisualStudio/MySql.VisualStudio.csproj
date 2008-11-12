@@ -77,7 +77,6 @@
       <HintPath>C:\Program Files (x86)\Visual Studio 2005 SDK\2007.02\VisualStudioIntegration\Common\Assemblies\Microsoft.VisualStudio.TextManager.Interop.8.0.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
@@ -162,9 +161,6 @@
     <Compile Include="Guids.cs" />
     <Compile Include="LanguageService\MySqlScanner.cs" />
     <Compile Include="LanguageService\Source.cs" />
-    <Compile Include="MyInstaller.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="MySqlProviderObjectFactory.cs" />
     <Compile Include="Nodes\BaseNode.cs" />
     <Compile Include="DbObjects\Column.cs" />

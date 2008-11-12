@@ -77,6 +77,13 @@ namespace MySql.Data.MySqlClient
 
         #endregion
 
+        protected override void Dispose(bool disposing)
+        {
+            if ((conn != null && conn.State == ConnectionState.Open || conn.SoftClosed) && open)
+                Rollback();
+            base.Dispose(disposing);
+        }
+
         /// <include file='docs/MySqlTransaction.xml' path='docs/Commit/*'/>
         public override void Commit()
         {

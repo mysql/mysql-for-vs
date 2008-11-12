@@ -32,6 +32,27 @@ Version 5.3
   values (bug #39294)  
 - fixed problem where using a stored procedure with parameters with a table adapter
   was no longer working after our parameter schema changes (bug #39252)  
+- Defaulting max allowed packet to 1024 to account for the possible case where the
+  value doesn't come in as a server variable  
+- fixed bug #39728 by making MySqlConnectionStringBuilder.GetConnectionString an internal method.
+  It should not have been publicly available anyway.  It is used internally by the 
+  MySqlConnection.ConnectionString property
+- implemented Disposable pattern on MySqlTransaction class so including one in a using statement
+  and then not calling commit will cause a rollback when the using exits (bug #39817)
+- fixed MySqlScript object so that it handles scripts with user variables
+- fixed bug where specifying 'functions return string=yes' would cause strings to be returned
+  using the 'binary' charset which would not properly render some characters.  Now the 
+  connection character set is used. (bug #40076)  
+- fixed problem that caused in use connection strings to be modified when a pooled connection
+  timed out and was cancelled.  (bug #40091)
+- fixed problem where using respect binary flags would not use the connection char set
+  and therefore return strings with a bad encoding.
+- fixed bug where provider was attempting to use the new parameters I_S view on servers
+  that didn't have it (bug #40382)
+- fixed problem where CharSetMap.GetDefaultCollation and CharSetMap.GetMaxLengths
+  might have a thread sync issue on high load systems.  They were not locking
+  the static collections there were initializing. (bug #40231)  
+- added GetSByte to the reader for returning tinyint columns (bug #40571)
   
 Version 5.2.3 - 8/14/08
 - Increased the speed of MySqlDataReader.GetOrdinal dramatically by using a couple

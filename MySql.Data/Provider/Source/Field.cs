@@ -190,6 +190,9 @@ namespace MySql.Data.MySqlClient
                 connection.Settings.FunctionsReturnString)
             {
                 mySqlDbType = MySqlDbType.VarString;
+                // we are treating a binary as string so we have to choose some
+                // charset index.  Connection seems logical.
+                CharacterSetIndex = connection.driver.ConnectionCharSetIndex;
                 binaryOk = false;
             }
 
@@ -269,6 +272,9 @@ namespace MySql.Data.MySqlClient
                          type == MySqlDbType.VarString)
                     mySqlDbType = MySqlDbType.VarBinary;
             }
+
+            if (CharacterSetIndex == 63)
+                CharacterSetIndex = connection.driver.ConnectionCharSetIndex;
 
             if (Type == MySqlDbType.Binary && ColumnLength == 16)
                 mySqlDbType = MySqlDbType.Guid;

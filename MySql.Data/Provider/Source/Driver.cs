@@ -59,6 +59,7 @@ namespace MySql.Data.MySqlClient
             connectionString = settings;
             threadId = -1;
             serverCharSetIndex = -1;
+            maxPacketSize = 1024;
         }
 
         #region Properties
@@ -127,6 +128,11 @@ namespace MySql.Data.MySqlClient
         public long MaxPacketSize
         {
             get { return maxPacketSize; }
+        }
+
+        internal int ConnectionCharSetIndex
+        {
+            get { return serverCharSetIndex; }
         }
 
         #endregion

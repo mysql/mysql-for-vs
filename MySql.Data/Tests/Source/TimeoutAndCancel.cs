@@ -23,6 +23,7 @@ using System.Data;
 using System.IO;
 using System.Threading;
 using NUnit.Framework;
+using System.Globalization;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -210,5 +211,35 @@ namespace MySql.Data.MySqlClient.Tests
             }
             Assert.IsTrue(rows < 10000);
         }        
+
+        /// <summary>
+        /// Bug #40091	mysql driver 5.2.3.0 connection pooling issue
+        /// </summary>
+        [Test]
+        public void ConnectionStringModifiedAfterCancel()
+        {
+            bool isPooling = pooling;
+            pooling = true;
+            string connStr = GetConnectionString(true);
+            pooling = isPooling;
+            connStr = connStr.Replace("persist security info=true", "persist security info=false");
+
+            using (MySqlConnection c = new MySqlConnection(connStr))
+            {
+                c.Open();
+                string connStr1 = c.ConnectionString;
+
+                MySqlCommand cmd = new MySqlCommand("SELECT SLEEP(10)", c);
+                cmd.CommandTimeout = 5;
+
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    string connStr2 = c.ConnectionString.ToLower(CultureInfo.InvariantCulture);
+                    Assert.AreEqual(-1, connStr2.IndexOf("pooling=true"));
+                    Assert.AreEqual(-1, connStr2.IndexOf("pooling=false"));
+                    reader.Read();
+                }
+            }
+        }
     }
 }

@@ -155,11 +155,18 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void ExecuteScriptWithUserVariables()
         {
-            string scriptText = "SET @myvar = 1";
-            MySqlScript script = new MySqlScript(scriptText);
-            script.Connection = conn;
-            int count = script.Execute();
-            Assert.AreEqual(2, count);
+            string connStr = conn.ConnectionString.ToLowerInvariant();
+            connStr = connStr.Replace("allow user variables=true",
+                "allow user variables=false");
+            using (MySqlConnection c = new MySqlConnection(connStr))
+            {
+                c.Open();
+                string scriptText = "SET @myvar = 1";
+                MySqlScript script = new MySqlScript(scriptText);
+                script.Connection = c;
+                int count = script.Execute();
+                Assert.AreEqual(1, count);
+            }
         }
     }
 }

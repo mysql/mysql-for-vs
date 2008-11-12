@@ -768,6 +768,26 @@ namespace MySql.Data.MySqlClient.Tests
             }
         }
 
+        /// <summary>
+        /// Bug #40571  	Add GetSByte to the list of public methods supported by MySqlDataReader
+        /// </summary>
+        [Test]
+        public void SByteFromReader()
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (c1 TINYINT, c2 TINYINT UNSIGNED)");
+            execSQL("INSERT INTO Test VALUES (99, 217)");
+
+            MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test", conn);
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                reader.Read();
+                Assert.AreEqual(99, reader.GetSByte(0));
+                Assert.AreEqual(217, reader.GetByte(1));
+                Assert.AreEqual(99, reader.GetByte(0));
+            }
+        }
+
         [Test]
         public void NewGuidDataType()
         {
