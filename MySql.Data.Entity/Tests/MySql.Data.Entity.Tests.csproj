@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{77EC4E20-293A-48BA-8415-D0AD869D91FA}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -31,7 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MbUnit.Framework, Version=1.0.2700.29885, Culture=neutral, PublicKeyToken=5e72ecd30bc408d5" />
+    <Reference Include="nunit.framework, Version=2.4.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core">
@@ -52,8 +52,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseEdmTest.cs" />
+    <Compile Include="AggregateTests.cs" />
+    <Compile Include="InsertTests.cs" />
+    <Compile Include="UpdateTests.cs" />
+    <Compile Include="DeleteTests.cs" />
     <Compile Include="SelectTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestDB.ObjectLayer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\MySql.Data\Provider\MySql.Data.csproj">
@@ -64,10 +69,17 @@
       <Project>{F29E5B3D-7F76-4CF9-BF5E-8E3A1377B1E4}</Project>
       <Name>MySql.Data.Tests</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Provider\MySql.Data.Entity.csproj">
+      <Project>{A8E799B1-D6AC-42BD-907E-B213D7E9B3C5}</Project>
+      <Name>MySql.Data.Entity</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config" />
     <None Include="Properties\schema.sql" />
+    <EmbeddedResource Include="TestDB.csdl" />
+    <EmbeddedResource Include="TestDB.msl" />
+    <EmbeddedResource Include="TestDB.ssdl" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -85,4 +97,10 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PreBuildEvent>edmgen /mode:EntityClassGeneration /incsdl:$(ProjectDir)TestDb.csdl /project:TestDB /namespace:MySql.Data.Entity.Tests
+move *.cs $(ProjectDir)
+
+</PreBuildEvent>
+  </PropertyGroup>
 </Project>
