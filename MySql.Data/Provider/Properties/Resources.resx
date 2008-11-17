@@ -339,4 +339,7 @@
   <data name="FatalErrorReadingResult" xml:space="preserve">
     <value>Fatal error encountered attempting to read the resultset.</value>
   </data>
+  <data name="RoutineNotFound" xml:space="preserve">
+    <value>Routine '{0}' cannot be found. Either check the spelling or make sure you have sufficient rights to execute the routine.</value>
+  </data>
 </root>

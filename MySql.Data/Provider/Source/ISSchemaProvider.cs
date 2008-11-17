@@ -189,7 +189,17 @@ namespace MySql.Data.MySqlClient
             // if the user has said that we have access to mysql.proc then
             // we use that as it is a lot faster
             if (connection.Settings.UseProcedureBodies)
-                return base.GetProcedures(restrictions);
+            {
+                try
+                {
+                    return base.GetProcedures(restrictions);
+                }
+                catch (MySqlException ex)
+                {
+                    if (ex.Number == (int)MySqlErrorCode.TableAccessDenied)
+                        throw new InvalidOperationException(Resources.UnableToRetrieveSProcData, ex);
+                }
+            }
 
             string[] keys = new string[4];
             keys[0] = "ROUTINE_CATALOG";

@@ -1441,5 +1441,63 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.AreEqual(22, cmd.Parameters[1].Value);
             }
         }
+
+        /// <summary>
+        /// Bug #40139	ExecuteNonQuery hangs
+        /// </summary>
+        [Test]
+        public void CallingStoredProcWithOnlyExecPrivs()
+        {
+            if (version < new Version(5, 0)) return;
+
+            
+            execSQL("CREATE PROCEDURE spTest() BEGIN SELECT 1; END");
+            execSQL("CREATE PROCEDURE spTest2() BEGIN SELECT 1; END");
+            suExecSQL("CREATE USER abc IDENTIFIED BY 'abc'");
+            try
+            {
+                suExecSQL(String.Format("GRANT SELECT ON `{0}`.* TO 'abc'@'%'", database0));
+                suExecSQL(String.Format("GRANT EXECUTE ON PROCEDURE `{0}`.spTest TO abc", database0));
+
+                string connStr = GetConnectionStringEx("abc", "abc", true);
+                connStr = connStr.Replace("use procedure bodies=false", "");
+                using (MySqlConnection c = new MySqlConnection(connStr))
+                {
+                    c.Open();
+                    MySqlCommand cmd = new MySqlCommand("spTest", c);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    try
+                    {
+                        object o = cmd.ExecuteScalar();
+                        Assert.Fail();
+                    }
+                    catch (InvalidOperationException)
+                    {
+                    }
+                    catch (Exception)
+                    {
+                        Assert.Fail();
+                    }
+
+                    try 
+                    {
+                        cmd.CommandText = "spTest2";
+                        cmd.ExecuteScalar();
+                    }
+                    catch (InvalidOperationException)
+                    {
+                    }
+                    catch (Exception)
+                    {
+                        Assert.Fail();
+                    }
+
+                }
+            }
+            finally
+            {
+                suExecSQL("DROP USER abc");
+            }
+        }
     }
 }
