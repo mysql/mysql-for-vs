@@ -28,103 +28,17 @@ using Microsoft.VisualStudio.Data.AdoDotNet;
 using System.Globalization;
 using MySql.Data.VisualStudio.Properties;
 using System.Text;
+using System.Windows.Forms;
 
 
 namespace MySql.Data.VisualStudio
 {
     public class MySqlConnectionSupport : AdoDotNetConnectionSupport
     {
-
         public MySqlConnectionSupport()
             : base(MySqlConnectionProperties.InvariantName) 
 		{
 		} 
-
-        public override void Close()
-        {
-            IDbConnection providerObjectVal = ProviderObject as IDbConnection;
-            Debug.Assert(providerObjectVal != null, "Provider object is not initialized!");
-
-            // check connection, if it's not valid - recreate it
-/*            if (!TryToPingConnection(providerObjectVal))
-            {
-                // connection is brooken and we should kill this connection
-                providerObjectVal.Dispose();
-                Initialize(null);
-            }
-            else
-            {
-                // connection is OK, just close it normaly
-                providerObjectVal.Close();
-            }*/
-			base.Close();
-        }
-
-        /// <summary>
-        /// Opens the specified connection.  
-        /// </summary>
-        /// <param name="doPromptCheck">
-        /// Indicates whether the call to the Open method should return false 
-        /// for specific errors that relate to missing connection information, 
-        /// as opposed to simply throwing an error in all cases of failure. 
-        /// Data providers that do not implement a prompt dialog (or have 
-        /// their own prompting mechanism) should ignore this parameter, 
-        /// and always assume a value of false.
-        /// </param>
-        /// <returns>
-        /// Returns true if the connection was opened successfully and does 
-        /// not require a prompt. Returns false if the connection is missing 
-        /// required connection information and a prompt should be displayed 
-        /// to obtain the missing information from the user. You should return 
-        /// this value only when a data provider has also implemented the 
-        /// DataConnectionPromptDialog class.
-        /// </returns>
-/*        public override bool Open(bool doPromptCheck)
-        {
-            // Open connection
-            try
-            {
-                // Call base method first
-                returnif (!base.Open(doPromptCheck))
-                    return false;
-				return true;
-            }
-            catch (DbException)
-            {
-                // If can't prompt user for new authentication data, re-throw exception
-                if (!doPromptCheck)
-                    throw;
-
-                // Else return false to display prompt dialog
-                return false;
-            }            
-
-            // Extract provider object (withou lock, because nobody knows about it yet)
-/*            DbConnection providerObjectVal = ProviderObject as DbConnection;            
-            if (providerObjectVal == null)
-            {
-                Debug.Fail("Provider object is not initialized!");
-                return false;
-            }
-
-            try
-            {
-                // Validate server version (may throw an exception)
-                ValidateVersion(providerObjectVal);
-            }
-            catch
-            {
-                // Version is invalid. close the connection
-                providerObjectVal.Close();
-                // Re-throw exception for upper code
-                throw;
-            }
-
-            // Rreturn true if everything is ok
-//			if (sourceInformation != null)
-//				sourceInformation.Refresh();*/
-//            return true;
-  //      }
 
         /// <summary>
         /// Retrieves a service of the specified type. Following services are 
@@ -141,27 +55,15 @@ namespace MySql.Data.VisualStudio
         {
             if (serviceType == typeof(DataViewSupport))
             {
-//                if (viewSupport == null)
-  //              {
-                    return new MySqlDataViewSupport();
-    //            }
-                //return viewSupport;
+                return new MySqlDataViewSupport();
             }
             else if (serviceType == typeof(DataObjectSupport))
             {
-      //          if (objectSupport == null)
-        //        {
-                    return new MySqlDataObjectSupport();
-          //      }
-                //return objectSupport;
+                return new MySqlDataObjectSupport();
             }
             else if (serviceType == typeof(DataSourceInformation))
             {
-//                if (sourceInformation == null)
-  //              {
-                    sourceInformation = new MySqlDataSourceInformation(Site as DataConnection);
-      //          }
-                return sourceInformation;
+                return new MySqlDataSourceInformation(Site as DataConnection);
             }
 			else return base.GetServiceImpl(serviceType);
         }

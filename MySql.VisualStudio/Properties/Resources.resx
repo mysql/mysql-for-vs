@@ -1027,4 +1027,15 @@
   <data name="UnableToExecuteProcScript" xml:space="preserve">
     <value>Unable to execute the create script.  SQL batch must begin with CREATE or ALTER.</value>
   </data>
+  <data name="UnableToRetrieveDatabaseList" xml:space="preserve">
+    <value>Unable to retrieve the list of databases</value>
+  </data>
+  <data name="UnknownDbPromptCreate" xml:space="preserve">
+    <value>The database '{0}' does not exist or you do not have permission to see it.
+
+Would you like to create it?</value>
+  </data>
+  <data name="ErrorAttemptingToCreateDB" xml:space="preserve">
+    <value>There was an error attempting to create the database '{0}'</value>
+  </data>
 </root>
