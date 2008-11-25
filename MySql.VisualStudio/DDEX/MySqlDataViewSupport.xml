@@ -435,7 +435,6 @@
           <Parameter value="Table"/>
         </CommandBinding>
         <CommandBinding name="CreateTrigger" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="320" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
-        <CommandBinding name="CloneTable" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="259" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
         <CommandBinding name="Browse_Data" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="12384"
                         handler="Microsoft.VisualStudio.DataTools.DBPackage.VDT_OLEDB_CommandHandler_TableTools">
           <Parameter value="Open"/>
@@ -537,7 +536,6 @@
           <Parameter value="View"/>
         </CommandBinding>
 
-        <CommandBinding name="CloneView" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="275" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
         <CommandBinding name="BrowseOrEditData" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="352" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
         <CommandBinding name="Browse_Data" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="12384" 
                         handler="Microsoft.VisualStudio.DataTools.DBPackage.VDT_OLEDB_CommandHandler_TableTools">
@@ -992,7 +990,6 @@
       <CommandBindings defaultCommand="AlterStoredProcedure">
         <CommandBinding name="AlterStoredProcedure" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="289" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
         <CommandBinding name="DeleteProcedure" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="337" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
-        <CommandBinding name="CloneStoredProcedure" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="291" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
         <!-- global data menus -->
         <CommandBinding name="NewQuery" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="13608" handler="884DD964-5327-461f-9F06-6484DD540F8F">
           <Parameter value="NewQuery"/>

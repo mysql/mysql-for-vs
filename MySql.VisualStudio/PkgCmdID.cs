@@ -8,16 +8,13 @@ namespace MySql.Data.VisualStudio
     {
         public const uint cmdCreateTable =        0x100;
         public const uint cmdAlterTable =        0x101;
-        public const uint cmdCloneTable =        0x103;
 
 		public const uint cmdCreateView = 0x110;
 		public const uint cmdAlterView = 0x111;
 		public const uint cmdDropView = 0x112;
-		public const uint cmdCloneView = 0x113;
 
 		public const uint cmdCreateProcedure = 0x120;
 		public const uint cmdAlterProcedure = 0x121;
-		public const uint cmdCloneProcedure = 0x123;
 
 		public const uint cmdCreateFunction = 0x130;
 

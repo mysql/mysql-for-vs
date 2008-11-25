@@ -107,12 +107,6 @@ namespace MySql.Data.VisualStudio
                 case PkgCmdIDList.cmdDelete:
 					Drop();
 					break;
-
-				case PkgCmdIDList.cmdCloneTable:
-				case PkgCmdIDList.cmdCloneProcedure:
-				case PkgCmdIDList.cmdCloneView:
-					Clone();
-					break;
 			}
 		}
 
@@ -166,10 +160,6 @@ namespace MySql.Data.VisualStudio
             }
         }
 
-        public virtual void Clone() 
-        { 
-        }
-
         protected virtual string GenerateUniqueName()
         {
             DbConnection conn = (DbConnection)HierarchyAccessor.Connection.GetLockedProviderObject();
@@ -208,12 +198,15 @@ namespace MySql.Data.VisualStudio
 			IVsWindowFrame winFrame = null;
 
 			object editor = GetEditor();
+            editorGuid = editor.GetType().GUID;
             object coreEditor = (editor is TextBufferEditor) ?
                 (editor as TextBufferEditor).CodeWindow : editor;
 
 			IntPtr viewPunk = Marshal.GetIUnknownForObject(coreEditor);
 			IntPtr dataPunk = Marshal.GetIUnknownForObject(this);
             Guid viewGuid = VSConstants.LOGVIEWID_TextView;
+
+            commandGroupGuid = editorGuid;
 
 			// Initialize IDE editor infrastracture
 			int result = shell.InitializeEditorInstance(
@@ -292,8 +285,5 @@ namespace MySql.Data.VisualStudio
         }
 
         #endregion
-
-
-
 	}
 }

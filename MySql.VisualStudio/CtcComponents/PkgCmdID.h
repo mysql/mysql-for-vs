@@ -21,14 +21,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Commands
 #define cmdidCreateTable 0x0100
-#define cmdidCloneTable  0x0103
 
 #define cmdidAlterView  0x0111
-#define cmdidCloneView  0x0113
 
 #define cmdidCreateProcedure 0x0120
 #define cmdidAlterProcedure  0x0121
-#define cmdidCloneProcedure  0x0123
 
 #define cmdidCreateFunction 0x0130
 

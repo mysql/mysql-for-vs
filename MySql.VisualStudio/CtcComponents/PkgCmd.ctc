@@ -110,5 +110,6 @@ CMDPLACEMENT_SECTION
 CMDPLACEMENT_END
 
 VISIBILITY_SECTION
-	DavinciCommandSet:29, TableEditorGuid;
+	CMDSETID_StandardCommandSet97:109, TableEditorGuid;
+	TableDesignerToolbar:107, TableEditorGuid;
 VISIBILITY_END
