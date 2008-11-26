@@ -35,15 +35,17 @@
             this.refTable = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.updateAction = new System.Windows.Forms.ComboBox();
-            this.deleteAction = new System.Windows.Forms.ComboBox();
+            this.updateAction = new MyComboBox();
+            this.deleteAction = new MyComboBox();
             this.columnGrid = new System.Windows.Forms.DataGridView();
-            this.column = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.fkColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.closeButton = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.fkName = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.dataGridViewComboBoxColumn1 = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.dataGridViewComboBoxColumn2 = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.column = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.fkColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.columnGrid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -115,7 +117,6 @@
             // updateAction
             // 
             this.updateAction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.updateAction.Enabled = false;
             this.updateAction.FormattingEnabled = true;
             this.updateAction.Items.AddRange(new object[] {
             "RESTRICT",
@@ -129,6 +130,7 @@
             // 
             // deleteAction
             // 
+            this.deleteAction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.deleteAction.Items.AddRange(new object[] {
             "RESTRICT",
             "CASCADE",
@@ -155,20 +157,6 @@
             this.columnGrid.ShowEditingIcon = false;
             this.columnGrid.Size = new System.Drawing.Size(321, 165);
             this.columnGrid.TabIndex = 10;
-            // 
-            // column
-            // 
-            this.column.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
-            this.column.DisplayStyleForCurrentCellOnly = true;
-            this.column.HeaderText = "Column";
-            this.column.Name = "column";
-            // 
-            // fkColumn
-            // 
-            this.fkColumn.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
-            this.fkColumn.DisplayStyleForCurrentCellOnly = true;
-            this.fkColumn.HeaderText = "Foreign Column";
-            this.fkColumn.Name = "fkColumn";
             // 
             // closeButton
             // 
@@ -205,6 +193,36 @@
             this.label4.Size = new System.Drawing.Size(38, 13);
             this.label4.TabIndex = 15;
             this.label4.Text = "Name:";
+            // 
+            // dataGridViewComboBoxColumn1
+            // 
+            this.dataGridViewComboBoxColumn1.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
+            this.dataGridViewComboBoxColumn1.DisplayStyleForCurrentCellOnly = true;
+            this.dataGridViewComboBoxColumn1.HeaderText = "Column";
+            this.dataGridViewComboBoxColumn1.Name = "dataGridViewComboBoxColumn1";
+            this.dataGridViewComboBoxColumn1.Width = 159;
+            // 
+            // dataGridViewComboBoxColumn2
+            // 
+            this.dataGridViewComboBoxColumn2.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
+            this.dataGridViewComboBoxColumn2.DisplayStyleForCurrentCellOnly = true;
+            this.dataGridViewComboBoxColumn2.HeaderText = "Foreign Column";
+            this.dataGridViewComboBoxColumn2.Name = "dataGridViewComboBoxColumn2";
+            this.dataGridViewComboBoxColumn2.Width = 159;
+            // 
+            // column
+            // 
+            this.column.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
+            this.column.DisplayStyleForCurrentCellOnly = true;
+            this.column.HeaderText = "Column";
+            this.column.Name = "column";
+            // 
+            // fkColumn
+            // 
+            this.fkColumn.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
+            this.fkColumn.DisplayStyleForCurrentCellOnly = true;
+            this.fkColumn.HeaderText = "Foreign Column";
+            this.fkColumn.Name = "fkColumn";
             // 
             // ForeignKeyDialog
             // 
@@ -246,8 +264,8 @@
         private System.Windows.Forms.ComboBox refTable;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.ComboBox updateAction;
-        private System.Windows.Forms.ComboBox deleteAction;
+        private MyComboBox updateAction;
+        private MyComboBox deleteAction;
         private System.Windows.Forms.DataGridView columnGrid;
         private System.Windows.Forms.Button closeButton;
         private System.Windows.Forms.Label label5;
@@ -255,5 +273,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.DataGridViewComboBoxColumn column;
         private System.Windows.Forms.DataGridViewComboBoxColumn fkColumn;
+        private System.Windows.Forms.DataGridViewComboBoxColumn dataGridViewComboBoxColumn1;
+        private System.Windows.Forms.DataGridViewComboBoxColumn dataGridViewComboBoxColumn2;
     }
 }

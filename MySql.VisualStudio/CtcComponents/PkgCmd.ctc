@@ -41,14 +41,11 @@ CMDS_SECTION guidMySqlProviderPkg
 
     BUTTONS_BEGIN
         guidMySqlProviderCmdSet:cmdidCreateTable, Group_Undefined:0, 0x0000, OI_NOID, BUTTON, DIS_DEF, "&Create Table";
-        guidMySqlProviderCmdSet:cmdidCloneTable,  Group_Undefined:0, 0x0000, OI_NOID, BUTTON, DIS_DEF, "&Clone Table";
 
         guidMySqlProviderCmdSet:cmdidAlterView,  Group_Undefined:0, 0x0000, OI_NOID, BUTTON, DIS_DEF, "&Alter View";
-        guidMySqlProviderCmdSet:cmdidCloneView,  Group_Undefined:0, 0x0000, OI_NOID, BUTTON, DIS_DEF, "&Clone View";   
 
         guidMySqlProviderCmdSet:cmdidCreateProcedure, Group_Undefined:0, 0x0000, OI_NOID, BUTTON, DIS_DEF, "&Create Routine";
         guidMySqlProviderCmdSet:cmdidAlterProcedure, Group_Undefined:0, 0x0000, OI_NOID, BUTTON, DIS_DEF, "&Alter Routine";
-        guidMySqlProviderCmdSet:cmdidCloneProcedure, Group_Undefined:0, 0x0000, OI_NOID, BUTTON, DIS_DEF, "&Clone Routine";   
 
         guidMySqlProviderCmdSet:cmdidCreateFunction, Group_Undefined:0, 0x0000, OI_NOID, BUTTON, DIS_DEF, "&Create Routine";
 
@@ -74,15 +71,12 @@ CMDPLACEMENT_SECTION
 	guidMySqlProviderCmdSet:cmdidDelete,  guidVSData:IDG_DV_OBJECT, 0x0999;
 	
     guidMySqlProviderCmdSet:cmdidCreateTable,  guidVSData:IDG_DV_STATIC, 0x0100;
-    guidMySqlProviderCmdSet:cmdidCloneTable,   guidVSData:IDG_DV_OBJECT, 0x0100;
 
     guidMySqlProviderCmdSet:cmdidAlterView,  guidVSData:IDG_DV_OBJECT, 0x0100;
-    guidMySqlProviderCmdSet:cmdidCloneView,  guidVSData:IDG_DV_OBJECT, 0x0100;
 
     guidMySqlProviderCmdSet:cmdidCreateProcedure, guidVSData:IDG_DV_STATIC, 0x0100;
     guidMySqlProviderCmdSet:cmdidCreateProcedure, guidVSData:IDG_DV_CONNECTION, 0x0100;
     guidMySqlProviderCmdSet:cmdidAlterProcedure,  guidVSData:IDG_DV_OBJECT, 0x0100;
-    guidMySqlProviderCmdSet:cmdidCloneProcedure,   guidVSData:IDG_DV_OBJECT, 0x0100;
 
     guidMySqlProviderCmdSet:cmdidCreateFunction, guidVSData:IDG_DV_STATIC, 0x0100;
 
@@ -109,7 +103,4 @@ CMDPLACEMENT_SECTION
 	
 CMDPLACEMENT_END
 
-VISIBILITY_SECTION
-	CMDSETID_StandardCommandSet97:109, TableEditorGuid;
-	TableDesignerToolbar:107, TableEditorGuid;
-VISIBILITY_END
+

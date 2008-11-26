@@ -10,26 +10,33 @@ using System.ComponentModel;
 using Microsoft.VisualStudio.OLE.Interop;
 using MySql.Data.VisualStudio.DbObjects;
 using System.Runtime.InteropServices;
+using System.ComponentModel.Design;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio;
 
 namespace MySql.Data.VisualStudio
 {
-    [Guid("7363513B-298D-49eb-B9D9-264CE6C47540")]
-	class TableEditor : BaseEditor
+	class TableEditor : UserControl
 	{
         private DataGridView columnGrid;
-        private VS2005PropertyGrid columnProperties;
         private TableNode tableNode;
         private BindingSource columnBindingSource;
-        private SplitContainer splitContainer1;
+        private System.ComponentModel.IContainer components;
+        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private DataGridViewComboBoxColumn dataGridViewComboBoxColumn1;
+        private DataGridViewTextBoxColumn NameColumn;
+        private DataGridViewComboBoxColumn TypeColumn;
+        private DataGridViewCheckBoxColumn AllowNullColumn;
+        private MySplitter splitter1;
         private TabControl tabControl1;
         private TabPage tabPage1;
-        private MyDataGridViewTextBoxColumn NameColumn;
-        private MyDataGridViewComboBoxColumn TypeColumn;
-        private DataGridViewCheckBoxColumn AllowNullColumn;
-        private System.ComponentModel.IContainer components;
+        private VS2005PropertyGrid columnProperties;
+        private Panel panel1;
+        private TableEditorPane pane;
 
-		public TableEditor(TableNode node)
+		public TableEditor(TableEditorPane pane, TableNode node)
 		{
+            this.pane = pane;
 			tableNode = node;
 			InitializeComponent();
 			columnGrid.AutoGenerateColumns = false;
@@ -37,6 +44,8 @@ namespace MySql.Data.VisualStudio
             TypeColumn.Items.AddRange((object[])types); //Metadata.GetDataTypes(false));
             columnGrid.EditingPanel.BackColor = Color.Red;
             tableNode.DataLoaded += new EventHandler(OnDataLoaded);
+
+            SetupCommands();
 		}
 
 		void OnDataLoaded(object sender, EventArgs e)
@@ -44,29 +53,31 @@ namespace MySql.Data.VisualStudio
             columnBindingSource.DataSource = tableNode.Table;
             columnBindingSource.DataMember = "Columns";
             columnGrid.DataSource = columnBindingSource;
-            SelectObject(tableNode.Table);
+            pane.SelectObject(tableNode.Table);
 		}
 
 		private void InitializeComponent()
 		{
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.columnGrid = new System.Windows.Forms.DataGridView();
+            this.NameColumn = new DataGridViewTextBoxColumn();
+            this.TypeColumn = new DataGridViewComboBoxColumn();
+            this.AllowNullColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.columnBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.columnProperties = new MySql.Data.VisualStudio.Editors.VS2005PropertyGrid();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.splitter1 = new MySql.Data.VisualStudio.Editors.MySplitter();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.NameColumn = new MySql.Data.VisualStudio.Editors.MyDataGridViewTextBoxColumn();
-            this.TypeColumn = new MyDataGridViewComboBoxColumn();
-            this.AllowNullColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.columnProperties = new MySql.Data.VisualStudio.Editors.VS2005PropertyGrid();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewComboBoxColumn1 = new System.Windows.Forms.DataGridViewComboBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.columnGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.columnBindingSource)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // columnGrid
@@ -74,92 +85,43 @@ namespace MySql.Data.VisualStudio
             this.columnGrid.AllowUserToResizeRows = false;
             this.columnGrid.BackgroundColor = System.Drawing.SystemColors.Window;
             this.columnGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.columnGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.columnGrid.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.columnGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.columnGrid.ColumnHeadersHeight = 24;
+            this.columnGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.columnGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.NameColumn,
             this.TypeColumn,
             this.AllowNullColumn});
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.ActiveCaption;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.columnGrid.DefaultCellStyle = dataGridViewCellStyle1;
-            this.columnGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.ActiveCaption;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.columnGrid.DefaultCellStyle = dataGridViewCellStyle2;
+            this.columnGrid.Dock = System.Windows.Forms.DockStyle.Top;
             this.columnGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
+            this.columnGrid.GridColor = System.Drawing.SystemColors.Control;
             this.columnGrid.Location = new System.Drawing.Point(0, 0);
             this.columnGrid.Margin = new System.Windows.Forms.Padding(0);
             this.columnGrid.MultiSelect = false;
             this.columnGrid.Name = "columnGrid";
-            this.columnGrid.RowHeadersWidth = 30;
+            this.columnGrid.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            this.columnGrid.RowHeadersWidth = 24;
             this.columnGrid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.columnGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.columnGrid.Size = new System.Drawing.Size(620, 170);
+            this.columnGrid.Size = new System.Drawing.Size(624, 130);
             this.columnGrid.TabIndex = 1;
-            this.columnGrid.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.columnGrid_CellValueChanged);
-            this.columnGrid.CellValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.columnGrid_CellValidated);
-            this.columnGrid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.columnGrid_CellValidating);
             this.columnGrid.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.columnGrid_EditingControlShowing);
-            this.columnGrid.CurrentCellDirtyStateChanged += new System.EventHandler(this.columnGrid_CurrentCellDirtyStateChanged);
-            this.columnGrid.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.columnGrid_CellEnter);
-            this.columnGrid.SelectionChanged += new System.EventHandler(this.columnGrid_SelectionChanged);
-            // 
-            // columnBindingSource
-            // 
-            this.columnBindingSource.ListChanged += new System.ComponentModel.ListChangedEventHandler(this.columnBindingSource_ListChanged);
-            // 
-            // columnProperties
-            // 
-            this.columnProperties.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.columnProperties.Location = new System.Drawing.Point(3, 3);
-            this.columnProperties.Name = "columnProperties";
-            this.columnProperties.Size = new System.Drawing.Size(596, 203);
-            this.columnProperties.TabIndex = 0;
-            // 
-            // splitContainer1
-            // 
-            this.splitContainer1.BackColor = System.Drawing.SystemColors.Control;
-            this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.columnGrid);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.BackColor = System.Drawing.SystemColors.Control;
-            this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
-            this.splitContainer1.Panel2.Padding = new System.Windows.Forms.Padding(5);
-            this.splitContainer1.Size = new System.Drawing.Size(624, 427);
-            this.splitContainer1.SplitterDistance = 174;
-            this.splitContainer1.TabIndex = 7;
-            // 
-            // tabControl1
-            // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(5, 5);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(610, 235);
-            this.tabControl1.TabIndex = 1;
-            // 
-            // tabPage1
-            // 
-            this.tabPage1.Controls.Add(this.columnProperties);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(602, 209);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Column Properties";
-            this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // NameColumn
             // 
@@ -171,7 +133,7 @@ namespace MySql.Data.VisualStudio
             // TypeColumn
             // 
             this.TypeColumn.DataPropertyName = "DataType";
-            this.TypeColumn.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
+            this.TypeColumn.DisplayStyleForCurrentCellOnly = true;
             this.TypeColumn.HeaderText = "Data Type";
             this.TypeColumn.Name = "TypeColumn";
             // 
@@ -181,100 +143,176 @@ namespace MySql.Data.VisualStudio
             this.AllowNullColumn.DataPropertyName = "AllowNull";
             this.AllowNullColumn.HeaderText = "Allow Nulls";
             this.AllowNullColumn.Name = "AllowNullColumn";
-            this.AllowNullColumn.Width = 64;
+            this.AllowNullColumn.Width = 74;
+            // 
+            // columnBindingSource
+            // 
+            this.columnBindingSource.ListChanged += new System.ComponentModel.ListChangedEventHandler(this.columnBindingSource_ListChanged);
+            // 
+            // splitter1
+            // 
+            this.splitter1.BackColor = System.Drawing.SystemColors.Control;
+            this.splitter1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.splitter1.Location = new System.Drawing.Point(0, 130);
+            this.splitter1.MaximumSize = new System.Drawing.Size(0, 6);
+            this.splitter1.MinimumSize = new System.Drawing.Size(0, 6);
+            this.splitter1.Name = "splitter1";
+            this.splitter1.Size = new System.Drawing.Size(624, 6);
+            this.splitter1.TabIndex = 8;
+            this.splitter1.TabStop = false;
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl1.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tabControl1.Location = new System.Drawing.Point(6, 6);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(612, 279);
+            this.tabControl1.TabIndex = 1;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage1.Controls.Add(this.columnProperties);
+            this.tabPage1.Location = new System.Drawing.Point(4, 24);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(604, 251);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Column Properties";
+            // 
+            // columnProperties
+            // 
+            this.columnProperties.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.columnProperties.Location = new System.Drawing.Point(3, 3);
+            this.columnProperties.Name = "columnProperties";
+            this.columnProperties.Size = new System.Drawing.Size(598, 245);
+            this.columnProperties.TabIndex = 0;
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.SystemColors.Control;
+            this.panel1.Controls.Add(this.tabControl1);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(0, 136);
+            this.panel1.Name = "panel1";
+            this.panel1.Padding = new System.Windows.Forms.Padding(6);
+            this.panel1.Size = new System.Drawing.Size(624, 291);
+            this.panel1.TabIndex = 9;
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.DataPropertyName = "ColumnName";
+            this.dataGridViewTextBoxColumn1.HeaderText = "Column Name";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.Width = 150;
+            // 
+            // dataGridViewComboBoxColumn1
+            // 
+            this.dataGridViewComboBoxColumn1.DataPropertyName = "DataType";
+            this.dataGridViewComboBoxColumn1.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
+            this.dataGridViewComboBoxColumn1.DisplayStyleForCurrentCellOnly = true;
+            this.dataGridViewComboBoxColumn1.HeaderText = "Data Type";
+            this.dataGridViewComboBoxColumn1.Name = "dataGridViewComboBoxColumn1";
             // 
             // TableEditor
             // 
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.Controls.Add(this.splitContainer1);
+            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.splitter1);
+            this.Controls.Add(this.columnGrid);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "TableEditor";
             this.Size = new System.Drawing.Size(624, 427);
             ((System.ComponentModel.ISupportInitialize)(this.columnGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.columnBindingSource)).EndInit();
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
-		}
-
-        public override OLECMDF GetCommandStatus(Guid group, uint cmdId)
-        {
-            bool show = false;
-            if (group == GuidList.DavinciCommandSet && cmdId == SharedCommands.cmdidIndexesAndKeys)
-                show = true;
-            else if (group == GuidList.DavinciCommandSet && cmdId == SharedCommands.cmdidForeignKeys)
-                show = true;
-            else if (group == GuidList.StandardCommandSet && cmdId == SharedCommands.cmdidPrimaryKey)
-                show = true;
-            else if (group == GuidList.StandardCommandSet && cmdId == SharedCommands.cmdidGenerateChangeScript)
-                show = true;
-            if (show)
-            {
-                return OLECMDF.OLECMDF_ENABLED | OLECMDF.OLECMDF_SUPPORTED;
-            }
-            return base.GetCommandStatus(group, cmdId);
         }
 
-        public override void ExecuteCommand(Guid group, uint cmdId)
+        #region Command Handling
+
+        private void SetupCommands()
         {
-            if (group == GuidList.DavinciCommandSet && cmdId == SharedCommands.cmdidIndexesAndKeys)
-            {
-                TableIndexDialog dlg = new TableIndexDialog(tableNode);
-                dlg.ShowDialog();
-            }
-            else if (group == GuidList.DavinciCommandSet && cmdId == SharedCommands.cmdidForeignKeys)
-            {
-                ForeignKeyDialog dlg = new ForeignKeyDialog(tableNode);
-                dlg.ShowDialog();
-            }
-            else if (group == GuidList.StandardCommandSet && cmdId == SharedCommands.cmdidGenerateChangeScript)
-            {
-                GenerateChangeScriptDialog dlg = new GenerateChangeScriptDialog(tableNode);
-                dlg.ShowDialog();
-            }
+            pane.AddCommand(GuidList.DavinciCommandSet, SharedCommands.cmdidIndexesAndKeys,
+                new EventHandler(OnIndexesAndKeys), null);
+            pane.AddCommand(GuidList.DavinciCommandSet, SharedCommands.cmdidForeignKeys,
+                new EventHandler(OnForeignKeys), null);
+            pane.AddCommand(VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.PrimaryKey,
+                new EventHandler(OnPrimaryKey), new EventHandler(OnQueryPrimaryKey));
+            pane.AddCommand(VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.GenerateChangeScript,
+                new EventHandler(OnGenerateChangeScript), null);
         }
 
-        public override void Showing(int showing)
+        private void OnQueryPrimaryKey(object sender, EventArgs e)
         {
-            //ShowToolBar("Table Designer", showing == 1);
+            OleMenuCommand cmd = sender as OleMenuCommand;
+            cmd.Enabled = false;
         }
+
+        private void OnPrimaryKey(object sender, EventArgs e)
+        {
+        }
+
+        private void OnIndexesAndKeys(object sender, EventArgs e)
+        {
+            TableIndexDialog dlg = new TableIndexDialog(tableNode);
+            dlg.ShowDialog();
+        }
+
+        private void OnForeignKeys(object sender, EventArgs e)
+        {
+            ForeignKeyDialog dlg = new ForeignKeyDialog(tableNode);
+            dlg.ShowDialog();
+        }
+
+        private void OnGenerateChangeScript(object sender, EventArgs e)
+        {
+            GenerateChangeScriptDialog dlg = new GenerateChangeScriptDialog(tableNode);
+            dlg.ShowDialog();
+        }
+
+        #endregion
 
 		private void columnGrid_SelectionChanged(object sender, EventArgs e)
 		{
-/*			if (columnGrid.SelectedCells.Count == 0) return;
+			if (columnGrid.SelectedCells.Count == 0) return;
 
 			if (columnGrid.SelectedCells.Count > 1)
 				columnProperties.SelectedObject = null;
-			columnProperties.SelectedObject =
-				tableNode.Columns[columnGrid.SelectedCells[0].RowIndex];*/
+//			columnProperties.SelectedObject =
+//				tableNode.Columns[columnGrid.SelectedCells[0].RowIndex];
 		}
 
         private void columnGrid_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
             Type t = e.Control.GetType();
-            if (e.Control.GetType() != typeof(DataGridViewComboBoxEditingControl)) return;
-
-            DataGridViewComboBoxEditingControl ec = e.Control as DataGridViewComboBoxEditingControl;
-            ec.DrawMode = DrawMode.OwnerDrawFixed;
-            ec.DrawItem += new DrawItemEventHandler(ec_DrawItem);
+            if (t == typeof(DataGridViewComboBoxEditingControl))
+            {
+                DataGridViewComboBoxEditingControl ec = e.Control as DataGridViewComboBoxEditingControl;
+                ec.DropDownStyle = ComboBoxStyle.DropDown;
+            }
+            else if (t == typeof(DataGridViewTextBoxEditingControl))
+            {
+                DataGridViewTextBoxEditingControl tec = e.Control as DataGridViewTextBoxEditingControl;
+                tec.Multiline = true;
+                tec.Dock = DockStyle.Fill;
+                tec.BorderStyle = BorderStyle.Fixed3D;
+            }
         }
 
-        void ec_DrawItem(object sender, DrawItemEventArgs e)
-        {
-            MyComboBox.DrawComboBox(sender as ComboBox, e);
-        }
-
-        void ec_KeyUp(object sender, KeyEventArgs e)
-        {
+//        void ec_KeyUp(object sender, KeyEventArgs e)
+  //      {
 //            if (e.KeyCode == Keys.Tab)
   //          {
     //            columnGrid.EndEdit();
       //      }
-        }
+    //    }
 
 /*        void columnTypeValidating(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -291,7 +329,7 @@ namespace MySql.Data.VisualStudio
             }
         }
         */
-        private string newValue;
+/*        private string newValue;
 
         private void columnGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
@@ -320,7 +358,7 @@ namespace MySql.Data.VisualStudio
                     e.Cancel = true;
                 }
             }
-        }
+        }*/
 
 //            if (e.ColumnIndex != 1) return;
   //          DataGridViewComboBoxCell cell = columnGrid.Rows[e.RowIndex].Cells[e.ColumnIndex] as
@@ -330,27 +368,27 @@ namespace MySql.Data.VisualStudio
            // newValue = (string)e.FormattedValue;
 //        }
 
-        private void columnGrid_CellValidated(object sender, DataGridViewCellEventArgs e)
-        {
+//        private void columnGrid_CellValidated(object sender, DataGridViewCellEventArgs e)
+  //      {
 //            if (e.ColumnIndex != 1) return;
   //          DataGridViewComboBoxCell cell = columnGrid.Rows[e.RowIndex].Cells[e.ColumnIndex] as
     //            DataGridViewComboBoxCell;
       //      cell.Items.Add(newValue);
         //    cell.Value = newValue;
-        }
+    //    }
 
-        private void columnGrid_CurrentCellDirtyStateChanged(object sender, EventArgs e)
-        {
+//        private void columnGrid_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+  //      {
           //  columnGrid.EndEdit();
-        }
+    //    }
 
-        private void columnGrid_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
+      //  private void columnGrid_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        //{
 //            if (e.RowIndex == -1) return;
 
   //                  columnGrid.CurrentCell = columnGrid.Rows[e.RowIndex].Cells[e.ColumnIndex + 1];
-        }
-
+        //}
+        /*
         private void columnGrid_CellEnter(object sender, DataGridViewCellEventArgs e)
         {
             if (tableNode.Table.Columns.Count <= e.RowIndex) return;
@@ -360,7 +398,7 @@ namespace MySql.Data.VisualStudio
             else
                 columnProperties.SelectedObject = c;
         }
-
+        */
         /// <summary>
         /// This notifies us that we have added a column to our table.  We do it this way
         /// because we have to set the owning table of new columns and handling the
@@ -373,6 +411,31 @@ namespace MySql.Data.VisualStudio
             if (e.ListChangedType != ListChangedType.ItemAdded) return;
             Column c = tableNode.Table.Columns[e.NewIndex];
             c.OwningTable = tableNode.Table;
+        }
+
+        private void columnGrid_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void columnGrid_CellValidated(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void columnGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+
+        }
+
+        private void columnGrid_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void columnGrid_CellEnter(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
 	}
 }

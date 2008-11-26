@@ -29,9 +29,9 @@ namespace MySql.Data.VisualStudio
 
     static class SharedCommands 
     {
-        public const uint cmdidPrimaryKey = 109;
-        public const uint cmdidIndexesAndKeys = 675;
-        public const uint cmdidForeignKeys = 676;
-        public const uint cmdidGenerateChangeScript = 173;
+        public const int cmdidPrimaryKey = 109;
+        public const int cmdidIndexesAndKeys = 675;
+        public const int cmdidForeignKeys = 676;
+        public const int cmdidGenerateChangeScript = 173;
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Runtime.InteropServices;
 
 namespace MySql.Data.VisualStudio.Editors
 {
@@ -30,6 +31,7 @@ namespace MySql.Data.VisualStudio.Editors
         {
             Rectangle editingControlBounds = PositionEditingPanel(cellBounds, cellClip, cellStyle, singleVerticalBorderAdded, singleHorizontalBorderAdded, isFirstDisplayedColumn, isFirstDisplayedRow);
             DataGridViewTextBoxEditingControl ec = (DataGridView.EditingControl as DataGridViewTextBoxEditingControl);
+
             ec.Dock = DockStyle.Fill;
             ec.BorderStyle = BorderStyle.Fixed3D;
             ec.Multiline = true;
@@ -74,15 +76,29 @@ namespace MySql.Data.VisualStudio.Editors
         public MyDataGridViewComboBoxCell()
             : base()
         {
+            //this.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox;
+            this.DisplayStyleForCurrentCellOnly = true;
         }
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = false)]
+        static extern IntPtr SendMessage(HandleRef hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
         public override void PositionEditingControl(bool setLocation, bool setSize,
             Rectangle cellBounds, Rectangle cellClip, DataGridViewCellStyle cellStyle,
             bool singleVerticalBorderAdded, bool singleHorizontalBorderAdded,
             bool isFirstDisplayedColumn, bool isFirstDisplayedRow)
         {
+            DataGridViewComboBoxEditingControl ec = DataGridView.EditingControl as DataGridViewComboBoxEditingControl;
             Rectangle editingControlBounds = PositionEditingPanel(cellBounds, cellClip, cellStyle, singleVerticalBorderAdded, singleHorizontalBorderAdded, isFirstDisplayedColumn, isFirstDisplayedRow);
-            base.DataGridView.EditingControl.Dock = DockStyle.Fill;
+
+            HandleRef hr = new HandleRef(this, ec.Handle);
+            IntPtr wParam = new IntPtr(-1);
+            IntPtr lParam = new IntPtr(editingControlBounds.Height);
+            //IntPtr result = SendMessage(hr, 0x153, wParam, lParam);
+
+//            ec.Dock = DockStyle.Fill;
+            //ec.IntegralHeight = false;
+
         }
 
         public override Rectangle PositionEditingPanel(Rectangle cellBounds, Rectangle cellClip,

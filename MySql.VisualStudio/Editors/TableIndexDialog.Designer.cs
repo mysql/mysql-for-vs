@@ -33,11 +33,11 @@
             this.addButton = new System.Windows.Forms.Button();
             this.deleteButton = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
-            this.indexType = new System.Windows.Forms.ComboBox();
+            this.indexType = new MySql.Data.VisualStudio.Editors.MyComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.keyBlockSize = new System.Windows.Forms.NumericUpDown();
-            this.storageType = new System.Windows.Forms.ComboBox();
+            this.storageType = new MySql.Data.VisualStudio.Editors.MyComboBox();
             this.columnGrid = new System.Windows.Forms.DataGridView();
             this.Column = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.Length = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -45,7 +45,6 @@
             this.closeButton = new System.Windows.Forms.Button();
             this.indexName = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.keyBlockSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.columnGrid)).BeginInit();
             this.SuspendLayout();
@@ -98,8 +97,8 @@
             // 
             // indexType
             // 
+            this.indexType.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.indexType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.indexType.Enabled = false;
             this.indexType.FormattingEnabled = true;
             this.indexType.Items.AddRange(new object[] {
             "INDEX",
@@ -108,6 +107,7 @@
             "SPATIAL",
             "PRIMARY"});
             this.indexType.Location = new System.Drawing.Point(296, 60);
+            this.indexType.MinimumSize = new System.Drawing.Size(4, 10);
             this.indexType.Name = "indexType";
             this.indexType.Size = new System.Drawing.Size(108, 21);
             this.indexType.TabIndex = 1;
@@ -142,14 +142,15 @@
             // 
             // storageType
             // 
+            this.storageType.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.storageType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.storageType.Enabled = false;
             this.storageType.FormattingEnabled = true;
             this.storageType.Items.AddRange(new object[] {
             "BTREE",
             "HASH",
             "RTREE"});
             this.storageType.Location = new System.Drawing.Point(463, 60);
+            this.storageType.MinimumSize = new System.Drawing.Size(4, 10);
             this.storageType.Name = "storageType";
             this.storageType.Size = new System.Drawing.Size(75, 21);
             this.storageType.TabIndex = 2;
@@ -218,20 +219,11 @@
             this.label5.Text = "Name:";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // textBox1
-            // 
-            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox1.Location = new System.Drawing.Point(254, 311);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
-            this.textBox1.TabIndex = 10;
-            // 
             // TableIndexDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(560, 346);
-            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.indexName);
             this.Controls.Add(this.closeButton);
@@ -267,11 +259,11 @@
         private System.Windows.Forms.Button addButton;
         private System.Windows.Forms.Button deleteButton;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox indexType;
+        private MyComboBox indexType;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.NumericUpDown keyBlockSize;
-        private System.Windows.Forms.ComboBox storageType;
+        private MyComboBox storageType;
         private System.Windows.Forms.DataGridView columnGrid;
         private System.Windows.Forms.Button closeButton;
         private System.Windows.Forms.TextBox indexName;
@@ -279,6 +271,5 @@
         private System.Windows.Forms.DataGridViewComboBoxColumn Column;
         private System.Windows.Forms.DataGridViewTextBoxColumn Length;
         private System.Windows.Forms.DataGridViewComboBoxColumn Sort;
-        private System.Windows.Forms.TextBox textBox1;
     }
 }
