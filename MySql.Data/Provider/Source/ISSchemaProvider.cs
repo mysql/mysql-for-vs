@@ -544,7 +544,8 @@ namespace MySql.Data.MySqlClient
                 row["DTD_IDENTIFIER"] = dtd.ToString();
 
             // now default the collation if one wasn't given
-            if (row["COLLATION_NAME"].ToString().Length == 0)
+            if (row["COLLATION_NAME"].ToString().Length == 0 &&
+                row["CHARACTER_SET_NAME"].ToString().Length > 0)
                 row["COLLATION_NAME"] = CharSetMap.GetDefaultCollation(
                     row["CHARACTER_SET_NAME"].ToString(), connection);
 
