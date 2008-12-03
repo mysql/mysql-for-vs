@@ -3,6 +3,8 @@ Version 5.2.6
   on the routine (bug #40139)
 - fixed problem with datetime formatting that causes an extra space to be included between the
   date and time when sent to the server (bug #41021)
+- fixed sproc parameter parsing so that a space between the type and size spec would not cause a problem
+  (bug #41034)
       
 Version 5.2.5 - 11/14/2008
 - fixed problem with package registration that kept the DDEX provider from working (bug #40726)

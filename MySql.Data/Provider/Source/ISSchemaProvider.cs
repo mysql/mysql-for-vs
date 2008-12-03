@@ -518,12 +518,26 @@ namespace MySql.Data.MySqlClient
             string type = row["DATA_TYPE"].ToString();
 
             string token = tokenizer.NextToken();
-            if (tokenizer.IsSize)
+            if (tokenizer.IsSize || token == "(")
             {
+                string oldToken = token;
+                if (token == "(")
+                {
+                    token = String.Empty;
+                    string newTok = tokenizer.NextToken();
+                    while (newTok != ")")
+                    {
+                        token += newTok;
+                        newTok = tokenizer.NextToken();
+                    }
+                }
                 dtd.AppendFormat(CultureInfo.InvariantCulture, "({0})", token);
                 if (type != "ENUM" && type != "SET")
                     ParseDataTypeSize(row, token);
-                token = tokenizer.NextToken();
+                if (oldToken != "(")
+                    token = tokenizer.NextToken();
+                else
+                    token = ")";
             }
             else
                 dtd.Append(GetDataTypeDefaults(type, row));

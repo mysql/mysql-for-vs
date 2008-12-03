@@ -1499,5 +1499,29 @@ namespace MySql.Data.MySqlClient.Tests
                 suExecSQL("DROP USER abc");
             }
         }
+
+        /// <summary>
+        /// Bug #41034 .net parameter not found in the collection
+        /// </summary>
+        [Test]
+        public void SPWithSpaceInParameterType()
+        {
+            if (version < new Version(5, 0)) return;
+
+            execSQL("CREATE PROCEDURE spTest(myparam decimal  (8,2)) BEGIN SELECT 1; END");
+
+            string connStr = GetConnectionString(true);
+            connStr = connStr.Replace("use procedure bodies=false", "");
+            using (MySqlConnection c = new MySqlConnection(connStr))
+            {
+                c.Open();
+
+                MySqlCommand cmd = new MySqlCommand("spTest", c);
+                cmd.Parameters.Add("@myparam", MySqlDbType.Decimal).Value = 20;
+                cmd.CommandType = CommandType.StoredProcedure;
+                object o = cmd.ExecuteScalar();
+                Assert.AreEqual(1, o);
+            }
+        }
     }
 }
