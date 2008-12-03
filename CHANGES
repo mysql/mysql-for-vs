@@ -5,6 +5,8 @@ Version 5.2.6
   date and time when sent to the server (bug #41021)
 - fixed sproc parameter parsing so that a space between the type and size spec would not cause a problem
   (bug #41034)
+- removed code from profile provider that overrode Name and Description properties in error.  This had the
+  effect of not allowing you to override those values in the web.config (bug #40871)    
       
 Version 5.2.5 - 11/14/2008
 - fixed problem with package registration that kept the DDEX provider from working (bug #40726)

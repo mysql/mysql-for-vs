@@ -393,26 +393,6 @@ namespace MySql.Web.Profile
         }
 
         /// <summary>
-        /// Gets the friendly name used to refer to the provider during configuration.
-        /// </summary>
-        /// <value></value>
-        /// <returns>The friendly name used to refer to the provider during configuration.</returns>
-        public override string Name
-        {
-            get { return "MySQLProfileProvider"; }
-        }
-
-        /// <summary>
-        /// Gets a brief, friendly description suitable for display in administrative tools or other user interfaces (UIs).
-        /// </summary>
-        /// <value></value>
-        /// <returns>A brief, friendly description suitable for display in administrative tools or other UIs.</returns>
-        public override string Description
-        {
-            get { return "MySQL Profile provider"; }
-        }
-
-        /// <summary>
         /// Returns the collection of settings property values for the specified application instance and settings property group.
         /// </summary>
         /// <param name="context">A <see cref="T:System.Configuration.SettingsContext"/> describing the current application use.</param>
