@@ -1,7 +1,9 @@
 Version 5.2.6
 - cleaned up how stored procedure execution operated when the user does or does not have execute privs
   on the routine (bug #40139)
-  
+- fixed problem with datetime formatting that causes an extra space to be included between the
+  date and time when sent to the server (bug #41021)
+      
 Version 5.2.5 - 11/14/2008
 - fixed problem with package registration that kept the DDEX provider from working (bug #40726)
 
