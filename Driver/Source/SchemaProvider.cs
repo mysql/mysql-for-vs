@@ -538,7 +538,8 @@ namespace MySql.Data.MySqlClient
                     new object[] {"Users", 1, 1},
                     new object[] {"Foreign Keys", 4, 3},
                     new object[] {"IndexColumns", 5, 4},
-                    new object[] {"Indexes", 4, 3}
+                    new object[] {"Indexes", 4, 3},
+                    new object[] {"Foreign Key Columns", 4, 3} 
                 };
 
             DataTable dt = new DataTable("MetaDataCollections");
