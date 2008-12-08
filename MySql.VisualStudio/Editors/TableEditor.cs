@@ -90,6 +90,7 @@ namespace MySql.Data.VisualStudio
             this.tabControl1.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabControl1.Location = new System.Drawing.Point(6, 10);
             this.tabControl1.Name = "tabControl1";
+            this.tabControl1.Padding = new System.Drawing.Point(6, 6);
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(612, 308);
             this.tabControl1.TabIndex = 1;
@@ -98,10 +99,10 @@ namespace MySql.Data.VisualStudio
             // 
             this.tabPage1.BackColor = System.Drawing.SystemColors.Control;
             this.tabPage1.Controls.Add(this.columnProperties);
-            this.tabPage1.Location = new System.Drawing.Point(4, 24);
+            this.tabPage1.Location = new System.Drawing.Point(4, 30);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(604, 280);
+            this.tabPage1.Size = new System.Drawing.Size(604, 274);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Column Properties";
             // 
@@ -110,7 +111,7 @@ namespace MySql.Data.VisualStudio
             this.columnProperties.Dock = System.Windows.Forms.DockStyle.Fill;
             this.columnProperties.Location = new System.Drawing.Point(3, 3);
             this.columnProperties.Name = "columnProperties";
-            this.columnProperties.Size = new System.Drawing.Size(598, 274);
+            this.columnProperties.Size = new System.Drawing.Size(598, 268);
             this.columnProperties.TabIndex = 0;
             // 
             // panel1
@@ -263,7 +264,7 @@ namespace MySql.Data.VisualStudio
             bool allKeys = columnGrid.SelectedRows.Count == 0 ? false : true;
 
             foreach (DataGridViewRow row in columnGrid.SelectedRows)
-                if (!tableNode.Table.Columns[row.Index].IsPrimaryKey)
+                if (!tableNode.Table.Columns[row.Index].PrimaryKey)
                 {
                     allKeys = false;
                     break;
@@ -278,11 +279,11 @@ namespace MySql.Data.VisualStudio
             OleMenuCommand primaryKey = sender as OleMenuCommand;
 
             foreach (Column c in tableNode.Table.Columns)
-                c.IsPrimaryKey = false;
+                c.PrimaryKey = false;
             // if not checked then we are setting the key columns
             if (!primaryKey.Checked)
                 foreach (DataGridViewRow row in columnGrid.SelectedRows)
-                    tableNode.Table.Columns[row.Index].IsPrimaryKey = true;
+                    tableNode.Table.Columns[row.Index].PrimaryKey = true;
             columnGrid.Refresh();
         }
 

@@ -113,7 +113,7 @@
     <Compile Include="DDEX\MySqlDataSourceInformation.cs" />
     <Compile Include="DDEX\MySqlDataViewCommandHandler.cs" />
     <Compile Include="DDEX\MySqlDataViewSupport.cs" />
-    <Compile Include="Editors\ColumnTypeDescriptor.cs" />
+    <Compile Include="Editors\ColumnWithTypeDescriptor.cs" />
     <Compile Include="Editors\CustomPropertyDescriptor.cs" />
     <Compile Include="Editors\ForeignKeyDialog.cs">
       <SubType>Form</SubType>
@@ -154,6 +154,7 @@
     <Compile Include="Editors\VS2005PropertyGrid.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Editors\YesNoTypeConverter.cs" />
     <Compile Include="LanguageService\Configuration.cs" />
     <Compile Include="LanguageService\MySqlColorizer.cs" />
     <Compile Include="LanguageService\MySqlLanguageService.cs" />

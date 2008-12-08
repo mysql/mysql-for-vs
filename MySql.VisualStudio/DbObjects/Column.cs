@@ -51,14 +51,17 @@ namespace MySql.Data.VisualStudio
             set { dataType = value; }
         }
 
+        [TypeConverter(typeof(YesNoTypeConverter))]
         [Category("Options")]
         [DisplayName("Allow Nulls")]
         public bool AllowNull { get; set; }
 
+        [TypeConverter(typeof(YesNoTypeConverter))]
         [Category("Options")]
         [DisplayName("Is Unsigned")]
         public bool IsUnsigned { get; set; }
 
+        [TypeConverter(typeof(YesNoTypeConverter))]
         [Category("Options")]
         [DisplayName("Is Zerofill")]
         public bool IsZerofill { get; set; }
@@ -67,10 +70,12 @@ namespace MySql.Data.VisualStudio
 		[DisplayName("Default Value")]
 		public string DefaultValue { get; set; }
 
+        [TypeConverter(typeof(YesNoTypeConverter))]
         [Category("Options")]
         [DisplayName("Autoincrement")]
         public bool AutoIncrement { get; set; }
 
+        [TypeConverter(typeof(YesNoTypeConverter))]
         [Category("Options")]
         [DisplayName("Primary Key")]
         public bool PrimaryKey { get; set; }
@@ -98,9 +103,6 @@ namespace MySql.Data.VisualStudio
 
         [Category("Miscellaneous")]
         public string Comment { get; set; }
-
-        [Browsable(false)]
-        public bool IsPrimaryKey { get; set; }
 
 		#endregion
 
@@ -138,5 +140,22 @@ namespace MySql.Data.VisualStudio
             unsigned = columnType.EndsWith("unsigned"); */
         }
 
+        #region Methods needed so PropertyGrid won't bold our values
+
+        private bool ShouldSerializeColumnName() { return false; }
+        private bool ShouldSerializeDataType() { return false; }
+        private bool ShouldSerializeAllowNull() { return false; }
+        private bool ShouldSerializeIsUnsigned() { return false; }
+        private bool ShouldSerializeIsZerofill() { return false; }
+        private bool ShouldSerializeDefaultValue() { return false; }
+        private bool ShouldSerializeAutoIncrement() { return false; }
+        private bool ShouldSerializePrimaryKey() { return false; }
+        private bool ShouldSerializePrecision() { return false; }
+        private bool ShouldSerializeScale() { return false; }
+        private bool ShouldSerializeCharacterSet() { return false; }
+        private bool ShouldSerializeCollation() { return false; }
+        private bool ShouldSerializeComment() { return false; }
+
+        #endregion
     }
 }

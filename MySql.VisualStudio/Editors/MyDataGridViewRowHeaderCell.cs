@@ -24,7 +24,7 @@ namespace MySql.Data.VisualStudio.Editors
             if (Columns.Count > rowIndex)
             {
                 Column c = Columns[rowIndex];
-                if (c.IsPrimaryKey)
+                if (c.PrimaryKey)
                 {
                     Bitmap bmp = rowIndex == DataGridView.CurrentRow.Index ? 
                         Resources.ArrowKey : Resources.Key;
