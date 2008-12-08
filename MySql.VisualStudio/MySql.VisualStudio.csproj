@@ -113,6 +113,7 @@
     <Compile Include="DDEX\MySqlDataSourceInformation.cs" />
     <Compile Include="DDEX\MySqlDataViewCommandHandler.cs" />
     <Compile Include="DDEX\MySqlDataViewSupport.cs" />
+    <Compile Include="Editors\ColumnTypeDescriptor.cs" />
     <Compile Include="Editors\CustomPropertyDescriptor.cs" />
     <Compile Include="Editors\ForeignKeyDialog.cs">
       <SubType>Form</SubType>
@@ -130,6 +131,7 @@
     <Compile Include="Editors\MyComboBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Editors\MyDataGridViewRowHeaderCell.cs" />
     <Compile Include="Editors\MyDescriptionAttribute.cs" />
     <Compile Include="Editors\MySplitter.cs">
       <SubType>Component</SubType>
@@ -218,6 +220,8 @@
       <DependentUpon>UDFEditor.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="Resources\ArrowKey.bmp" />
+    <None Include="Resources\Key.bmp" />
     <Content Include="Resources\Package.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -226,6 +230,8 @@
     </CtcFile>
     <None Include="CtcComponents\Guids.h" />
     <None Include="CtcComponents\PkgCmdID.h" />
+    <None Include="Properties\DataSources\Column.datasource" />
+    <None Include="Properties\DataSources\MySql.Data.VisualStudio.Editors.MyColumn.datasource" />
     <None Include="Properties\DataSources\TableNode.datasource" />
   </ItemGroup>
   <PropertyGroup>

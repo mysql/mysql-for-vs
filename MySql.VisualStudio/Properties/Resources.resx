@@ -1038,4 +1038,10 @@ Would you like to create it?</value>
   <data name="ErrorAttemptingToCreateDB" xml:space="preserve">
     <value>There was an error attempting to create the database '{0}'</value>
   </data>
+  <data name="ArrowKey" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ArrowKey.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Key" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Key.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>
