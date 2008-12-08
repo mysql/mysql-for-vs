@@ -33,14 +33,17 @@ namespace MySql.Data.VisualStudio
         private DataGridViewComboBoxColumn TypeColumn;
         private DataGridViewCheckBoxColumn AllowNullColumn;
         private BindingSource columnBindingSource;
+        private string[] dataTypes;
 
 		public TableEditor(TableEditorPane pane, TableNode node)
 		{
             this.pane = pane;
 			tableNode = node;
 			InitializeComponent();
-            string[] types = Metadata.GetDataTypes(false);
-            TypeColumn.Items.AddRange((object[])types); //Metadata.GetDataTypes(false));
+
+            dataTypes = Metadata.GetDataTypes(true);
+            TypeColumn.Items.AddRange((object[])dataTypes);
+
             tableNode.DataLoaded += new EventHandler(OnDataLoaded);
             columnGrid.RowTemplate.HeaderCell = new MyDataGridViewRowHeaderCell();
             SetupCommands();
@@ -174,6 +177,7 @@ namespace MySql.Data.VisualStudio
             this.columnGrid.ShowRowErrors = false;
             this.columnGrid.Size = new System.Drawing.Size(624, 103);
             this.columnGrid.TabIndex = 2;
+            this.columnGrid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.columnGrid_CellValidating);
             this.columnGrid.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.columnGrid_EditingControlShowing);
             // 
             // NameColumn
@@ -314,6 +318,15 @@ namespace MySql.Data.VisualStudio
             {
                 DataGridViewComboBoxEditingControl ec = e.Control as DataGridViewComboBoxEditingControl;
                 ec.DropDownStyle = ComboBoxStyle.DropDown;
+                columnGrid.NotifyCurrentCellDirty(true);
+                ec.Items.Clear();
+                foreach (string s in dataTypes)
+                    ec.Items.Add(s);
+                if (tableNode.Table.Columns.Count > columnGrid.CurrentRow.Index)
+                {
+                    Column c = tableNode.Table.Columns[columnGrid.CurrentRow.Index];
+                    AdjustComboBox(ec, c.DataType);
+                }
             }
             else if (t == typeof(DataGridViewTextBoxEditingControl))
             {
@@ -324,104 +337,62 @@ namespace MySql.Data.VisualStudio
             }
         }
 
-//        void ec_KeyUp(object sender, KeyEventArgs e)
-  //      {
-//            if (e.KeyCode == Keys.Tab)
-  //          {
-    //            columnGrid.EndEdit();
-      //      }
-    //    }
-
-/*        void columnTypeValidating(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            DataGridViewComboBoxEditingControl cbo = sender as DataGridViewComboBoxEditingControl;
-            DataGridView grid = cbo.EditingControlDataGridView;
-            string value = cbo.Text;
-            if (true)  // replace this with a test that checks the validity of the type
-            {
-                DataGridViewComboBoxColumn cboCol = grid.Columns[grid.CurrentCell.ColumnIndex] as DataGridViewComboBoxColumn;
-                // Must add to both the current combobox as well as the template, to avoid duplicate entries...
-                cbo.Items.Add(value);
-                cboCol.Items.Add(value);
-                grid.CurrentCell.Value = value;
-            }
-        }
-        */
-/*        private string newValue;
-
-        private void columnGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
-        {
-            // if we are not in the first cell then we are not interested
-            if (e.ColumnIndex == 0)
-                ValidatingColumnName(e);
-//            else if (e.ColumnIndex == 1)
- //               ValidatingColumnType(e);
-        }
-
-        private void ValidatingColumnName(DataGridViewCellValidatingEventArgs e)
-        {
-            DataGridViewCell cell = columnGrid.Rows[e.RowIndex].Cells[e.ColumnIndex];
-            object cellValue = cell.EditedFormattedValue;
-            Column column = tableNode.Table.Columns[e.RowIndex];
-            if (String.IsNullOrEmpty(cellValue as string) && !String.IsNullOrEmpty(column.ColumnName))
-            {
-                DialogResult result = MessageBox.Show(Resources.ColumnWillBeDeleted, "MySQL",
-                    MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
-                if (result == DialogResult.OK)
-                    columnBindingSource.RemoveCurrent();
-                else
-                {
-                    cell.Value = tableNode.Table.Columns[e.RowIndex].ColumnName;
-                    columnGrid.BeginEdit(true);
-                    e.Cancel = true;
-                }
-            }
-        }*/
-
-//            if (e.ColumnIndex != 1) return;
-  //          DataGridViewComboBoxCell cell = columnGrid.Rows[e.RowIndex].Cells[e.ColumnIndex] as
-    //            DataGridViewComboBoxCell;
-      //      cell.Items.Add(e.FormattedValue);
-        ///    cell.Value = e.FormattedValue;
-           // newValue = (string)e.FormattedValue;
-//        }
-
-//        private void columnGrid_CellValidated(object sender, DataGridViewCellEventArgs e)
-  //      {
-//            if (e.ColumnIndex != 1) return;
-  //          DataGridViewComboBoxCell cell = columnGrid.Rows[e.RowIndex].Cells[e.ColumnIndex] as
-    //            DataGridViewComboBoxCell;
-      //      cell.Items.Add(newValue);
-        //    cell.Value = newValue;
-    //    }
-
-//        private void columnGrid_CurrentCellDirtyStateChanged(object sender, EventArgs e)
-  //      {
-          //  columnGrid.EndEdit();
-    //    }
-
-      //  private void columnGrid_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        //{
-//            if (e.RowIndex == -1) return;
-
-  //                  columnGrid.CurrentCell = columnGrid.Rows[e.RowIndex].Cells[e.ColumnIndex + 1];
-        //}
-        /*
-        private void columnGrid_CellEnter(object sender, DataGridViewCellEventArgs e)
-        {
-            if (tableNode.Table.Columns.Count <= e.RowIndex) return;
-            Column c = tableNode.Table.Columns[e.RowIndex];
-            if (String.IsNullOrEmpty(c.ColumnName))
-                columnProperties.SelectedObject = null;
-            else
-                columnProperties.SelectedObject = c;
-        }
-        */
-
         private void columnBindingSource_CurrentChanged(object sender, EventArgs e)
         {
             Column currentObject = columnBindingSource.Current as Column;
             columnProperties.SelectedObject = currentObject;
+        }
+
+
+        private void AdjustComboBox(ComboBox cb, string type)
+        {
+            if (String.IsNullOrEmpty(type)) return;
+            int index = type.IndexOf("(");
+            if (index == -1)
+                cb.Items.Add(type);
+            else
+            {
+                string baseType = type.Substring(0, index);
+                for (int i = 0; i < cb.Items.Count; i++)
+                {
+                    string item = cb.Items[i] as string;
+                    if (item.StartsWith(baseType))
+                    {
+                        cb.Items[i] = type;
+                        break;
+                    }
+                }
+            }
+        }
+
+        private bool InsertType(string type)
+        {
+            int index = type.IndexOf("(");
+            if (index == -1) return false;
+
+            string baseType = type.Substring(0, index);
+            for (int i = 0; i < TypeColumn.Items.Count; i++)
+            {
+                string s = TypeColumn.Items[i] as string;
+                if (s.StartsWith(baseType))
+                {
+                    TypeColumn.Items[i] = type;
+                    break;
+                }
+            }
+            return true;
+        }
+
+        private void columnGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            if (e.ColumnIndex != 1) return;
+            string type = e.FormattedValue as string;
+            if (String.IsNullOrEmpty(type)) return;
+            if (TypeColumn.Items.Contains(type)) return;
+
+            if (!InsertType(type))
+                TypeColumn.Items.Add(type);
+            columnGrid.CurrentCell.Value = e.FormattedValue;
         }
 	}
 }
