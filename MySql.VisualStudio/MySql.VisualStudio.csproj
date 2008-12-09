@@ -91,6 +91,7 @@
     <Compile Include="DbObjects\CollationTypeConverter.cs" />
     <Compile Include="DbObjects\CharacterSetTypeConverter.cs" />
     <Compile Include="DbObjects\DataTypeConverter.cs" />
+    <Compile Include="DbObjects\Index.cs" />
     <Compile Include="DbObjects\Metadata.cs" />
     <Compile Include="DbObjects\NumericTypeConverter.cs" />
     <Compile Include="DbObjects\ObjectComparer.cs" />

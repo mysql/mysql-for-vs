@@ -38,26 +38,26 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 9);
+            this.label1.Location = new System.Drawing.Point(14, 10);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(85, 13);
+            this.label1.Size = new System.Drawing.Size(94, 15);
             this.label1.TabIndex = 0;
             this.label1.Text = "Current changes";
             // 
             // sqlBox
             // 
-            this.sqlBox.Location = new System.Drawing.Point(15, 36);
+            this.sqlBox.Location = new System.Drawing.Point(17, 42);
             this.sqlBox.Multiline = true;
             this.sqlBox.Name = "sqlBox";
             this.sqlBox.ReadOnly = true;
-            this.sqlBox.Size = new System.Drawing.Size(495, 254);
+            this.sqlBox.Size = new System.Drawing.Size(577, 292);
             this.sqlBox.TabIndex = 1;
             // 
             // noButton
             // 
-            this.noButton.Location = new System.Drawing.Point(435, 308);
+            this.noButton.Location = new System.Drawing.Point(507, 355);
             this.noButton.Name = "noButton";
-            this.noButton.Size = new System.Drawing.Size(75, 23);
+            this.noButton.Size = new System.Drawing.Size(87, 27);
             this.noButton.TabIndex = 2;
             this.noButton.Text = "No";
             this.noButton.UseVisualStyleBackColor = true;
@@ -65,9 +65,9 @@
             // 
             // yesButton
             // 
-            this.yesButton.Location = new System.Drawing.Point(354, 308);
+            this.yesButton.Location = new System.Drawing.Point(413, 355);
             this.yesButton.Name = "yesButton";
-            this.yesButton.Size = new System.Drawing.Size(75, 23);
+            this.yesButton.Size = new System.Drawing.Size(87, 27);
             this.yesButton.TabIndex = 3;
             this.yesButton.Text = "Yes";
             this.yesButton.UseVisualStyleBackColor = true;
@@ -76,22 +76,23 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(102, 313);
+            this.label2.Location = new System.Drawing.Point(119, 361);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(221, 13);
+            this.label2.Size = new System.Drawing.Size(239, 15);
             this.label2.TabIndex = 4;
             this.label2.Text = "Do you want to save these changes to a file?";
             // 
             // GenerateChangeScriptDialog
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(522, 343);
+            this.ClientSize = new System.Drawing.Size(609, 396);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.yesButton);
             this.Controls.Add(this.noButton);
             this.Controls.Add(this.sqlBox);
             this.Controls.Add(this.label1);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

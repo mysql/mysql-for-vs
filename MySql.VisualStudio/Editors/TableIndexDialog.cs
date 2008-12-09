@@ -5,12 +5,14 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using MySql.Data.VisualStudio.DbObjects;
 
 namespace MySql.Data.VisualStudio.Editors
 {
     partial class TableIndexDialog : Form
     {
         private TableNode tableNode;
+        List<Index> indexes;
 
         public TableIndexDialog(TableNode node)
         {
@@ -21,11 +23,6 @@ namespace MySql.Data.VisualStudio.Editors
         private void indexList_SelectedIndexChanged(object sender, EventArgs e)
         {
             bool good = indexList.SelectedIndex != -1;
-            columnGrid.Enabled = good;
-            storageType.Enabled = good;
-            indexType.Enabled = good;
-            keyBlockSize.Enabled = good;
-            indexName.Enabled = good;
         }
 
         private void closeButton_Click(object sender, EventArgs e)
@@ -45,6 +42,12 @@ namespace MySql.Data.VisualStudio.Editors
         void ec_DrawItem(object sender, DrawItemEventArgs e)
         {
             MyComboBox.DrawComboBox(sender as ComboBox, e);
+        }
+
+        private void addButton_Click(object sender, EventArgs e)
+        {
+            Index i = new Index();
+            indexProps.SelectedObject = i;
         }
     }
 }

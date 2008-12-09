@@ -33,5 +33,10 @@ namespace MySql.Data.VisualStudio.Editors
             //deleteAction.Enabled = good;
             columnGrid.Enabled = good;
         }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

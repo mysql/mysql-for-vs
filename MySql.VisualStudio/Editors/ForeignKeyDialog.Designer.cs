@@ -35,71 +35,71 @@
             this.refTable = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.updateAction = new MyComboBox();
-            this.deleteAction = new MyComboBox();
             this.columnGrid = new System.Windows.Forms.DataGridView();
+            this.column = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.fkColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.closeButton = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.fkName = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.dataGridViewComboBoxColumn1 = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.dataGridViewComboBoxColumn2 = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.column = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.fkColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.deleteAction = new MySql.Data.VisualStudio.Editors.MyComboBox();
+            this.updateAction = new MySql.Data.VisualStudio.Editors.MyComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.columnGrid)).BeginInit();
             this.SuspendLayout();
             // 
             // fkList
             // 
             this.fkList.FormattingEnabled = true;
-            this.fkList.Location = new System.Drawing.Point(12, 30);
+            this.fkList.ItemHeight = 15;
+            this.fkList.Location = new System.Drawing.Point(14, 36);
             this.fkList.Name = "fkList";
-            this.fkList.Size = new System.Drawing.Size(156, 251);
+            this.fkList.Size = new System.Drawing.Size(181, 304);
             this.fkList.TabIndex = 0;
             this.fkList.SelectedIndexChanged += new System.EventHandler(this.fkList_SelectedIndexChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 9);
+            this.label1.Location = new System.Drawing.Point(10, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(118, 13);
+            this.label1.Size = new System.Drawing.Size(122, 15);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Selected Relationships:";
+            this.label1.Text = "Selected Relationship:";
             // 
             // addButton
             // 
-            this.addButton.Location = new System.Drawing.Point(12, 288);
+            this.addButton.Location = new System.Drawing.Point(14, 347);
             this.addButton.Name = "addButton";
-            this.addButton.Size = new System.Drawing.Size(75, 23);
+            this.addButton.Size = new System.Drawing.Size(87, 27);
             this.addButton.TabIndex = 2;
             this.addButton.Text = "Add";
             this.addButton.UseVisualStyleBackColor = true;
             // 
             // deleteButton
             // 
-            this.deleteButton.Location = new System.Drawing.Point(93, 288);
+            this.deleteButton.Location = new System.Drawing.Point(108, 347);
             this.deleteButton.Name = "deleteButton";
-            this.deleteButton.Size = new System.Drawing.Size(75, 23);
+            this.deleteButton.Size = new System.Drawing.Size(87, 27);
             this.deleteButton.TabIndex = 3;
             this.deleteButton.Text = "Delete";
             this.deleteButton.UseVisualStyleBackColor = true;
             // 
             // refTable
             // 
-            this.refTable.Enabled = false;
             this.refTable.FormattingEnabled = true;
-            this.refTable.Location = new System.Drawing.Point(293, 56);
+            this.refTable.Location = new System.Drawing.Point(342, 66);
             this.refTable.Name = "refTable";
-            this.refTable.Size = new System.Drawing.Size(215, 21);
+            this.refTable.Size = new System.Drawing.Size(301, 23);
             this.refTable.TabIndex = 4;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(194, 60);
+            this.label2.Location = new System.Drawing.Point(235, 66);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(96, 13);
+            this.label2.Size = new System.Drawing.Size(101, 15);
             this.label2.TabIndex = 5;
             this.label2.Text = "Referenced Table:";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -107,39 +107,13 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(210, 90);
+            this.label3.Location = new System.Drawing.Point(288, 101);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(45, 13);
+            this.label3.Size = new System.Drawing.Size(48, 15);
             this.label3.TabIndex = 6;
             this.label3.Text = "Update:";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // updateAction
-            // 
-            this.updateAction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.updateAction.FormattingEnabled = true;
-            this.updateAction.Items.AddRange(new object[] {
-            "RESTRICT",
-            "CASCADE",
-            "SET NULL",
-            "NO ACTION"});
-            this.updateAction.Location = new System.Drawing.Point(260, 86);
-            this.updateAction.Name = "updateAction";
-            this.updateAction.Size = new System.Drawing.Size(92, 21);
-            this.updateAction.TabIndex = 8;
-            // 
-            // deleteAction
-            // 
-            this.deleteAction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.deleteAction.Items.AddRange(new object[] {
-            "RESTRICT",
-            "CASCADE",
-            "SET NULL",
-            "NO ACTION"});
-            this.deleteAction.Location = new System.Drawing.Point(416, 86);
-            this.deleteAction.Name = "deleteAction";
-            this.deleteAction.Size = new System.Drawing.Size(92, 21);
-            this.deleteAction.TabIndex = 9;
+            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // columnGrid
             // 
@@ -150,19 +124,33 @@
             this.column,
             this.fkColumn});
             this.columnGrid.Enabled = false;
-            this.columnGrid.Location = new System.Drawing.Point(187, 116);
+            this.columnGrid.Location = new System.Drawing.Point(218, 134);
             this.columnGrid.MultiSelect = false;
             this.columnGrid.Name = "columnGrid";
             this.columnGrid.RowHeadersVisible = false;
             this.columnGrid.ShowEditingIcon = false;
-            this.columnGrid.Size = new System.Drawing.Size(321, 165);
+            this.columnGrid.Size = new System.Drawing.Size(425, 189);
             this.columnGrid.TabIndex = 10;
+            // 
+            // column
+            // 
+            this.column.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
+            this.column.DisplayStyleForCurrentCellOnly = true;
+            this.column.HeaderText = "Column";
+            this.column.Name = "column";
+            // 
+            // fkColumn
+            // 
+            this.fkColumn.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
+            this.fkColumn.DisplayStyleForCurrentCellOnly = true;
+            this.fkColumn.HeaderText = "Foreign Column";
+            this.fkColumn.Name = "fkColumn";
             // 
             // closeButton
             // 
-            this.closeButton.Location = new System.Drawing.Point(433, 288);
+            this.closeButton.Location = new System.Drawing.Point(556, 347);
             this.closeButton.Name = "closeButton";
-            this.closeButton.Size = new System.Drawing.Size(75, 23);
+            this.closeButton.Size = new System.Drawing.Size(87, 27);
             this.closeButton.TabIndex = 12;
             this.closeButton.Text = "Close";
             this.closeButton.UseVisualStyleBackColor = true;
@@ -171,26 +159,26 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(372, 90);
+            this.label5.Location = new System.Drawing.Point(487, 101);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(41, 13);
+            this.label5.Size = new System.Drawing.Size(43, 15);
             this.label5.TabIndex = 13;
             this.label5.Text = "Delete:";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // fkName
             // 
-            this.fkName.Location = new System.Drawing.Point(293, 30);
+            this.fkName.Location = new System.Drawing.Point(342, 36);
             this.fkName.Name = "fkName";
-            this.fkName.Size = new System.Drawing.Size(215, 20);
+            this.fkName.Size = new System.Drawing.Size(301, 23);
             this.fkName.TabIndex = 14;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(252, 34);
+            this.label4.Location = new System.Drawing.Point(294, 38);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(38, 13);
+            this.label4.Size = new System.Drawing.Size(42, 15);
             this.label4.TabIndex = 15;
             this.label4.Text = "Name:";
             // 
@@ -210,25 +198,42 @@
             this.dataGridViewComboBoxColumn2.Name = "dataGridViewComboBoxColumn2";
             this.dataGridViewComboBoxColumn2.Width = 159;
             // 
-            // column
+            // deleteAction
             // 
-            this.column.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
-            this.column.DisplayStyleForCurrentCellOnly = true;
-            this.column.HeaderText = "Column";
-            this.column.Name = "column";
+            this.deleteAction.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.deleteAction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.deleteAction.Items.AddRange(new object[] {
+            "RESTRICT",
+            "CASCADE",
+            "SET NULL",
+            "NO ACTION"});
+            this.deleteAction.Location = new System.Drawing.Point(536, 95);
+            this.deleteAction.MinimumSize = new System.Drawing.Size(4, 10);
+            this.deleteAction.Name = "deleteAction";
+            this.deleteAction.Size = new System.Drawing.Size(107, 24);
+            this.deleteAction.TabIndex = 9;
             // 
-            // fkColumn
+            // updateAction
             // 
-            this.fkColumn.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
-            this.fkColumn.DisplayStyleForCurrentCellOnly = true;
-            this.fkColumn.HeaderText = "Foreign Column";
-            this.fkColumn.Name = "fkColumn";
+            this.updateAction.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.updateAction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.updateAction.FormattingEnabled = true;
+            this.updateAction.Items.AddRange(new object[] {
+            "RESTRICT",
+            "CASCADE",
+            "SET NULL",
+            "NO ACTION"});
+            this.updateAction.Location = new System.Drawing.Point(342, 95);
+            this.updateAction.MinimumSize = new System.Drawing.Size(4, 10);
+            this.updateAction.Name = "updateAction";
+            this.updateAction.Size = new System.Drawing.Size(107, 24);
+            this.updateAction.TabIndex = 8;
             // 
             // ForeignKeyDialog
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(522, 323);
+            this.ClientSize = new System.Drawing.Size(655, 386);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.fkName);
             this.Controls.Add(this.label5);
@@ -243,6 +248,7 @@
             this.Controls.Add(this.addButton);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.fkList);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
