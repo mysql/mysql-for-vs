@@ -2,7 +2,7 @@ using MySql.Data.VisualStudio.DbObjects;
 using System.ComponentModel;
 using System.Collections.Generic;
 
-namespace MySql.Data.VisualStudio
+namespace MySql.Data.VisualStudio.DbObjects
 {
 	internal class DataTypeConverter : StringConverter 
 	{

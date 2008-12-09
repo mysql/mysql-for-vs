@@ -7,7 +7,7 @@ using MySql.Data.VisualStudio.Editors;
 using MySql.Data.VisualStudio.DbObjects;
 using System.Windows.Forms.Design;
 
-namespace MySql.Data.VisualStudio
+namespace MySql.Data.VisualStudio.DbObjects
 {
     class Column : Object
 	{

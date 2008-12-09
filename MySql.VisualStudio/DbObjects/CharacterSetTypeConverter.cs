@@ -6,7 +6,7 @@ using System.ComponentModel;
 using System.Collections;
 using System.Diagnostics;
 
-namespace MySql.Data.VisualStudio
+namespace MySql.Data.VisualStudio.DbObjects
 {
 	internal class CharacterSetTypeConverter : StringConverter 
 	{

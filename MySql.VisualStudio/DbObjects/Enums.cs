@@ -4,7 +4,7 @@ using System.Text;
 using System.Data;
 using System.ComponentModel;
 
-namespace MySql.Data.VisualStudio
+namespace MySql.Data.VisualStudio.DbObjects
 {
     internal enum RowFormat
     {

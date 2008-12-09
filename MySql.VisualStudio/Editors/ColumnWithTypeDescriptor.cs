@@ -2,8 +2,9 @@
 using System;
 using System.Collections.Generic;
 using MySql.Data.VisualStudio.DbObjects;
+using MySql.Data.VisualStudio.Editors;
 
-namespace MySql.Data.VisualStudio.Editors
+namespace MySql.Data.VisualStudio.DbObjects
 {
     class ColumnWithTypeDescriptor : Column, ICustomTypeDescriptor
     {

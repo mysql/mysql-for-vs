@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System;
+using MySql.Data.VisualStudio.DbObjects;
 
 namespace MySql.Data.VisualStudio.Editors
 {

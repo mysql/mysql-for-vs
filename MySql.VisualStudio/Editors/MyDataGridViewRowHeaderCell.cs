@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Collections.Generic;
 using MySql.Data.VisualStudio.Properties;
+using MySql.Data.VisualStudio.DbObjects;
 
 namespace MySql.Data.VisualStudio.Editors
 {
