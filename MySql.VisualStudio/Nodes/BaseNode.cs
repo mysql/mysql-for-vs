@@ -24,6 +24,7 @@ namespace MySql.Data.VisualStudio
 		protected Guid editorGuid;
 		protected Guid commandGroupGuid;
         protected string name;
+        private static string defaultStorageEngine;
 
 		public BaseNode(DataViewHierarchyAccessor hierarchyAccessor, int id)
 		{
@@ -88,6 +89,20 @@ namespace MySql.Data.VisualStudio
             }
         }
 
+        public string DefaultStorageEngine
+        {
+            get
+            {
+                if (defaultStorageEngine == null)
+                {
+                    DataTable dt = GetDataTable("SHOW VARIABLES LIKE 'storage_engine'");
+                    defaultStorageEngine = "MyISAM";
+                    if (dt != null && dt.Rows.Count == 1)
+                        defaultStorageEngine = (string)dt.Rows[0][1];
+                }
+                return defaultStorageEngine;
+            }
+        }
 
     	#endregion
 
@@ -178,6 +193,7 @@ namespace MySql.Data.VisualStudio
                         uniqueIndex++;
                 }
                 Name = String.Format("{0}{1}", NodeId, uniqueIndex).Replace(" ", "");
+                HierarchyAccessor.SetProperty(ItemId, (int)__VSHPROPID.VSHPROPID_Name, Name);
                 return Name;
             }
             finally
