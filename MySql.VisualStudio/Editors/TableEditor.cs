@@ -49,6 +49,20 @@ namespace MySql.Data.VisualStudio
             SetupCommands();
 		}
 
+#region Properties
+
+        List<Index> Indexes 
+        {
+            get { return tableNode.Table.Indexes; }
+        }
+
+        List<Column> Columns 
+        {
+            get { return tableNode.Table.Columns; }
+        }
+
+#endregion 
+
 		void OnDataLoaded(object sender, EventArgs e)
 		{
             columnBindingSource.DataSource = tableNode.Table.Columns;
@@ -195,7 +209,7 @@ namespace MySql.Data.VisualStudio
             // 
             // columnBindingSource
             // 
-            this.columnBindingSource.DataSource = typeof(MySql.Data.VisualStudio.Column);
+            this.columnBindingSource.DataSource = typeof(Column);
             this.columnBindingSource.CurrentChanged += new System.EventHandler(this.columnBindingSource_CurrentChanged);
             // 
             // dataGridViewTextBoxColumn1
@@ -274,12 +288,32 @@ namespace MySql.Data.VisualStudio
         {
             OleMenuCommand primaryKey = sender as OleMenuCommand;
 
-            foreach (Column c in tableNode.Table.Columns)
+            foreach (Column c in Columns)
                 c.PrimaryKey = false;
+            tableNode.Table.DeleteKey(null);
+
             // if not checked then we are setting the key columns
             if (!primaryKey.Checked)
+            {
+                Index index = tableNode.Table.CreateIndexWithUniqueName(true);
+
+                List<int> rows = new List<int>();
+
                 foreach (DataGridViewRow row in columnGrid.SelectedRows)
-                    tableNode.Table.Columns[row.Index].PrimaryKey = true;
+                    rows.Add(row.Index);
+                if (columnGrid.SelectedRows.Count == 0)
+                    rows.Add(columnGrid.CurrentCell.RowIndex);
+                foreach (int row in rows)
+                {
+                    Columns[row].PrimaryKey = true;
+                    IndexColumn ic = new IndexColumn();
+                    ic.ColumnName = Columns[row].ColumnName;
+                    ic.Ascending = true;
+                    index.Columns.Add(ic);
+                }
+                if (index.Columns.Count > 0)
+                    Indexes.Add(index);
+            }
             columnGrid.Refresh();
         }
 

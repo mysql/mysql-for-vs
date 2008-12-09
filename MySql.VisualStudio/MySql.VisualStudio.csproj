@@ -92,6 +92,7 @@
     <Compile Include="DbObjects\CharacterSetTypeConverter.cs" />
     <Compile Include="DbObjects\DataTypeConverter.cs" />
     <Compile Include="DbObjects\Index.cs" />
+    <Compile Include="DbObjects\IndexColumnTypeConverter.cs" />
     <Compile Include="DbObjects\Metadata.cs" />
     <Compile Include="DbObjects\NumericTypeConverter.cs" />
     <Compile Include="DbObjects\ObjectComparer.cs" />
@@ -114,7 +115,7 @@
     <Compile Include="DDEX\MySqlDataSourceInformation.cs" />
     <Compile Include="DDEX\MySqlDataViewCommandHandler.cs" />
     <Compile Include="DDEX\MySqlDataViewSupport.cs" />
-    <Compile Include="Editors\ColumnWithTypeDescriptor.cs" />
+    <Compile Include="DbObjects\ColumnWithTypeDescriptor.cs" />
     <Compile Include="Editors\CustomPropertyDescriptor.cs" />
     <Compile Include="Editors\ForeignKeyDialog.cs">
       <SubType>Form</SubType>

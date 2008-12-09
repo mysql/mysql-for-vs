@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.OLE.Interop;
 using MySql.Data.VisualStudio.Editors;
 using System.Windows.Forms;
 
-namespace MySql.Data.VisualStudio
+namespace MySql.Data.VisualStudio.DbObjects
 {
     public enum InsertMethod
     {
@@ -26,11 +26,16 @@ namespace MySql.Data.VisualStudio
         private TableNode owningNode;
         private string schema;
         private List<Column> columns = new List<Column>();
+        private List<Index> indexes = new List<Index>();
         private bool isNew;
 
 		public Table(TableNode node, DataRow row, DataTable columns)
 		{
             owningNode = node;
+
+            // set some defaults that may be overridden with actual table data
+            Engine = node.DefaultStorageEngine;
+
             if (row != null)
               ParseTableData(row);
             if (columns != null)
@@ -84,6 +89,12 @@ namespace MySql.Data.VisualStudio
             get { return columns; }
         }
 
+        [Browsable(false)]
+        public List<Index> Indexes
+        {
+            get { return indexes; }
+        }
+
         #endregion
 
         #region Storage options
@@ -119,6 +130,7 @@ namespace MySql.Data.VisualStudio
         [DisplayName("Compute Checksum")]
         [MyDescription("TableCheckSumDesc")]
         [DefaultValue(false)]
+        [TypeConverter(typeof(YesNoTypeConverter))]
         public bool CheckSum { get; set; }
 
         [Category("Row")]
@@ -152,6 +164,61 @@ namespace MySql.Data.VisualStudio
         public InsertMethod InsertMethod { get; set; }
 
         #endregion
+
+        #region ShouldSerializeMethods
+
+        bool ShouldSerializeName() { return false; }
+        bool ShouldSerializeSchema() { return false; }
+        bool ShouldSerializeComment() { return false; }
+        bool ShouldSerializeCharacterSet() { return false; }
+        bool ShouldSerializeCollation() { return false; }
+        bool ShouldSerializeAutoInc() { return false; }
+        bool ShouldSerializeEngine() { return false; }
+        bool ShouldSerializeDataDirectory() { return false; }
+        bool ShouldSerializeIndexDirectory() { return false; }
+        bool ShouldSerializeRowFormat() { return false; }
+        bool ShouldSerializeCheckSum() { return false; }
+        bool ShouldSerializeAvgRowLength() { return false; }
+        bool ShouldSerializeMinRows() { return false; }
+        bool ShouldSerializeMaxRows() { return false; }
+        bool ShouldSerializePackKeys() { return false; }
+        bool ShouldSerializeInsertMethod() { return false; }
+
+        #endregion
+
+        public void DeleteKey(string keyName)
+        {
+            for (int i = indexes.Count - 1; i >= 0; i--)
+            {
+                if ((keyName != null && indexes[i].Name == keyName) ||
+                    (keyName == null && indexes[i].IsPrimary))
+                {
+                    indexes.RemoveAt(i);
+                    break;
+                }
+            }
+        }
+
+        private bool KeyExists(string keyName)
+        {
+            foreach (Index i in indexes)
+                if (String.Compare(i.Name, keyName, true) == 0) return true;
+            return false;
+        }
+
+        public Index CreateIndexWithUniqueName(bool primary)
+        {
+            Index newIndex = new Index(this);
+            newIndex.IsPrimary = primary;
+            string baseName = String.Format("{0}_{1}", primary ? "PK" : "IX",
+                Name);
+            string name = baseName;
+            int uniqueIndex = 0;
+            while (KeyExists(name))
+                name = String.Format("{0}_{1}", baseName, ++uniqueIndex);
+            newIndex.Name = name;
+            return newIndex;
+        }
 
         private void ParseTableData(DataRow tableRow)
         {

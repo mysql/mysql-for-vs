@@ -12,17 +12,30 @@ namespace MySql.Data.VisualStudio.Editors
     partial class TableIndexDialog : Form
     {
         private TableNode tableNode;
-        List<Index> indexes;
 
         public TableIndexDialog(TableNode node)
         {
             tableNode = node;
             InitializeComponent();
+
+            foreach (Index i in tableNode.Table.Indexes)
+                indexList.Items.Add(i.Name);
+
+            bool isOk = tableNode.Table.Columns.Count > 0 &&
+                        !String.IsNullOrEmpty(tableNode.Table.Columns[0].ColumnName) &&
+                        !String.IsNullOrEmpty(tableNode.Table.Columns[0].DataType);
+            addButton.Enabled = isOk;
+            deleteButton.Enabled = false;
+            indexList.Enabled = isOk;
         }
 
         private void indexList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            bool good = indexList.SelectedIndex != -1;
+            if (indexList.SelectedIndex == -1)
+                indexProps.SelectedObject = null;
+            else
+                indexProps.SelectedObject = tableNode.Table.Indexes[indexList.SelectedIndex];
+            deleteButton.Enabled = indexList.SelectedIndex != -1;
         }
 
         private void closeButton_Click(object sender, EventArgs e)
@@ -30,24 +43,26 @@ namespace MySql.Data.VisualStudio.Editors
             Close();
         }
 
-        private void columnGrid_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
-        {
-            if (e.Control.GetType() != typeof(DataGridViewComboBoxEditingControl)) return;
-
-            DataGridViewComboBoxEditingControl ec = e.Control as DataGridViewComboBoxEditingControl;
-            ec.DrawMode = DrawMode.OwnerDrawFixed;
-            ec.DrawItem += new DrawItemEventHandler(ec_DrawItem);
-        }
-
-        void ec_DrawItem(object sender, DrawItemEventArgs e)
-        {
-            MyComboBox.DrawComboBox(sender as ComboBox, e);
-        }
-
         private void addButton_Click(object sender, EventArgs e)
         {
-            Index i = new Index();
-            indexProps.SelectedObject = i;
+            Index index = tableNode.Table.CreateIndexWithUniqueName(false);
+            IndexColumn ic = new IndexColumn();
+            ic.ColumnName = tableNode.Table.Columns[0].ColumnName;
+            ic.Ascending = true;
+            index.Columns.Add(ic);
+            tableNode.Table.Indexes.Add(index);
+            indexList.SelectedIndex = indexList.Items.Add(index.Name);
+        }
+
+        private void deleteButton_Click(object sender, EventArgs e)
+        {
+            int index = indexList.SelectedIndex;
+            tableNode.Table.Indexes.RemoveAt(index);
+            indexList.Items.RemoveAt(index);
+            index --;
+            if (index == -1 && indexList.Items.Count > 0)
+                index = 0;
+            indexList.SelectedIndex = index;
         }
     }
 }

@@ -1,11 +1,20 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Collections.Generic;
 using MySql.Data.VisualStudio.Editors;
 
 namespace MySql.Data.VisualStudio.DbObjects
 {
-    class Index
+    class Index : Object, ICustomTypeDescriptor
     {
+        Table table;
+        List<IndexColumn> indexColumns = new List<IndexColumn>();
+
+        public Index(Table t)
+        {
+            table = t;
+        }
+
         [Category("Identity")]
         [DisplayName("(Name)")]
         [Description("The name of this index/key")]
@@ -17,7 +26,11 @@ namespace MySql.Data.VisualStudio.DbObjects
 
         [Category("(General)")]
         [Description("The columns of this index/key and their associated sort order")]
-        public List<Column> Columns { get; set; }
+        [TypeConverter(typeof(IndexColumnTypeConverter))]
+        public List<IndexColumn> Columns
+        {
+            get { return indexColumns; }
+        }
 
         [Category("(General)")]
         [Description("Specifies if this object is an index or key")]
@@ -28,6 +41,9 @@ namespace MySql.Data.VisualStudio.DbObjects
         [Description("Specifies if this index/key uniquely identifies every row")]
         [TypeConverter(typeof(YesNoTypeConverter))]
         public bool IsUnique { get; set; }
+
+        [Browsable(false)]
+        public bool IsPrimary { get; set; }
 
         [Category("Storage")]
         [DisplayName("Index Algorithm")]
@@ -45,11 +61,13 @@ namespace MySql.Data.VisualStudio.DbObjects
         [DisplayName("Is Full-text Index/Key")]
         [Description("Specifies if this is a full-text index or key.  This is only supported on MyISAM tables.")]
         [TypeConverter(typeof(YesNoTypeConverter))]
+        [RefreshProperties(RefreshProperties.All)]
         public bool FullText { get; set; }
 
         [DisplayName("Is Spatial Index/Key")]
         [Description("Specifies if this is a spatial index or key.  This is only supported on MyISAM tables.")]
         [TypeConverter(typeof(YesNoTypeConverter))]
+        [RefreshProperties(RefreshProperties.All)]
         public bool Spatial { get; set; }
 
         #region ShouldSerialize
@@ -66,6 +84,106 @@ namespace MySql.Data.VisualStudio.DbObjects
         bool ShouldSerializeSpatial() { return false; }
 
         #endregion
+
+        #region ICustomTypeDescriptor Members
+
+        public TypeConverter GetConverter()
+        {
+            return TypeDescriptor.GetConverter(this, true);
+        }
+
+        public EventDescriptorCollection GetEvents(Attribute[] attributes)
+        {
+            return TypeDescriptor.GetEvents(this, attributes, true);
+        }
+
+        EventDescriptorCollection System.ComponentModel.ICustomTypeDescriptor.GetEvents()
+        {
+            return TypeDescriptor.GetEvents(this, true);
+        }
+
+        public string GetComponentName()
+        {
+            return TypeDescriptor.GetComponentName(this, true);
+        }
+
+        public object GetPropertyOwner(PropertyDescriptor pd)
+        {
+            return this;
+        }
+
+        public AttributeCollection GetAttributes()
+        {
+            return TypeDescriptor.GetAttributes(this, true);
+        }
+
+        public PropertyDescriptorCollection GetProperties(Attribute[] attributes)
+        {
+            PropertyDescriptorCollection coll =
+                TypeDescriptor.GetProperties(this, attributes, true);
+
+            List<PropertyDescriptor> props = new List<PropertyDescriptor>();
+
+            foreach (PropertyDescriptor pd in coll)
+            {
+                if (!pd.IsBrowsable) continue;
+
+                if (pd.Name == "IsUnique")
+                {
+                    if (IsPrimary)
+                    {
+                        CustomPropertyDescriptor newPd = new CustomPropertyDescriptor(pd);
+                        newPd.SetValue(this, true);
+                        newPd.SetReadOnly(true);
+                        props.Add(newPd);
+                    }
+                }
+                else if (pd.Name == "FullText" && (Spatial ||
+                         String.Compare(table.Engine, "myisam", true) != 0))
+                {
+                    CustomPropertyDescriptor newPd = new CustomPropertyDescriptor(pd);
+                    newPd.SetReadOnly(true);
+                    props.Add(newPd);
+                }
+                else if (pd.Name == "Spatial" && (FullText ||
+                         String.Compare(table.Engine, "myisam", true) != 0))
+                {
+                    CustomPropertyDescriptor newPd = new CustomPropertyDescriptor(pd);
+                    newPd.SetReadOnly(true);
+                    props.Add(newPd);
+                }
+                else
+                    props.Add(pd);
+            }
+            return new PropertyDescriptorCollection(props.ToArray());
+        }
+
+        PropertyDescriptorCollection System.ComponentModel.ICustomTypeDescriptor.GetProperties()
+        {
+            return TypeDescriptor.GetProperties(this, true);
+        }
+
+        public object GetEditor(Type editorBaseType)
+        {
+            return TypeDescriptor.GetEditor(this, editorBaseType, true);
+        }
+
+        public PropertyDescriptor GetDefaultProperty()
+        {
+            return TypeDescriptor.GetDefaultProperty(this, true);
+        }
+
+        public EventDescriptor GetDefaultEvent()
+        {
+            return TypeDescriptor.GetDefaultEvent(this, true);
+        }
+
+        public string GetClassName()
+        {
+            return TypeDescriptor.GetClassName(this, true);
+        }
+
+        #endregion
     }
 
     enum IndexType
@@ -76,5 +194,11 @@ namespace MySql.Data.VisualStudio.DbObjects
     enum IndexUsingType
     {
         BTREE, HASH, RTREE
+    }
+
+    struct IndexColumn
+    {
+        public string ColumnName;
+        public bool Ascending;
     }
 }
