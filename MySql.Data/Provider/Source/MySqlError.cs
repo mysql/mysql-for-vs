@@ -133,8 +133,9 @@ namespace MySql.Data.MySqlClient
         AccessDenied = 1045,
             /*                ER_NO_DB_ERROR 1046
                             ER_UNKNOWN_COM_ERROR 1047
-                            ER_BAD_NULL_ERROR 1048
-                            ER_BAD_DB_ERROR 1049
+                            ER_BAD_NULL_ERROR 1048*/
+        UnknownDatabase = 1049,
+                            /*ER_BAD_DB_ERROR 1049
                             ER_TABLE_EXISTS_ERROR 1050
                             ER_BAD_TABLE_ERROR 1051
                             ER_NON_UNIQ_ERROR 1052
