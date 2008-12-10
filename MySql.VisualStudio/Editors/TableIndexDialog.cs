@@ -47,8 +47,9 @@ namespace MySql.Data.VisualStudio.Editors
         {
             Index index = tableNode.Table.CreateIndexWithUniqueName(false);
             IndexColumn ic = new IndexColumn();
+            ic.OwningIndex = index;
             ic.ColumnName = tableNode.Table.Columns[0].ColumnName;
-            ic.Ascending = true;
+            ic.SortOrder = IndexSortOrder.Ascending;
             index.Columns.Add(ic);
             tableNode.Table.Indexes.Add(index);
             indexList.SelectedIndex = indexList.Items.Add(index.Name);

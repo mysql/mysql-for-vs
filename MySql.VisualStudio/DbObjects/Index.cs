@@ -15,6 +15,12 @@ namespace MySql.Data.VisualStudio.DbObjects
             table = t;
         }
 
+        [Browsable(false)]
+        public Table Table
+        {
+            get { return table; }
+        }
+
         [Category("Identity")]
         [DisplayName("(Name)")]
         [Description("The name of this index/key")]
@@ -27,6 +33,7 @@ namespace MySql.Data.VisualStudio.DbObjects
         [Category("(General)")]
         [Description("The columns of this index/key and their associated sort order")]
         [TypeConverter(typeof(IndexColumnTypeConverter))]
+        [Editor(typeof(IndexColumnEditor), typeof(System.Drawing.Design.UITypeEditor))]
         public List<IndexColumn> Columns
         {
             get { return indexColumns; }
@@ -196,9 +203,16 @@ namespace MySql.Data.VisualStudio.DbObjects
         BTREE, HASH, RTREE
     }
 
-    struct IndexColumn
+    public enum IndexSortOrder
     {
-        public string ColumnName;
-        public bool Ascending;
+        Ascending,
+        Descending
+    }
+
+    class IndexColumn
+    {
+        public Index OwningIndex { get; set; }
+        public string ColumnName { get; set; }
+        public IndexSortOrder SortOrder { get; set; }
     }
 }

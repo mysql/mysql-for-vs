@@ -19,7 +19,7 @@ namespace MySql.Data.VisualStudio.DbObjects
                 foreach (IndexColumn ic in cols)
                 {
                     str.AppendFormat("{2}{0} ({1})", ic.ColumnName,
-                        ic.Ascending ? "ASC" : "DESC", separator);
+                        ic.SortOrder == IndexSortOrder.Ascending ? "ASC" : "DESC", separator);
                     separator = ",";
                 }
                 return str.ToString();

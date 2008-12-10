@@ -307,8 +307,9 @@ namespace MySql.Data.VisualStudio
                 {
                     Columns[row].PrimaryKey = true;
                     IndexColumn ic = new IndexColumn();
+                    ic.OwningIndex = index;
                     ic.ColumnName = Columns[row].ColumnName;
-                    ic.Ascending = true;
+                    ic.SortOrder = IndexSortOrder.Ascending;
                     index.Columns.Add(ic);
                 }
                 if (index.Columns.Count > 0)
