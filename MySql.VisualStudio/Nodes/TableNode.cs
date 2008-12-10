@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.Data;
 using MySql.Data.VisualStudio.DbObjects;
 using System.Text;
 using System.Windows.Forms;
+using MySql.Data.VisualStudio.Editors;
 
 namespace MySql.Data.VisualStudio
 {
@@ -76,7 +77,7 @@ namespace MySql.Data.VisualStudio
 
 		public override object GetEditor()
 		{
-			return new TableEditor(this);
+            return new TableEditorPane(this);
 		}
 
         private bool TablesAreEqual()
