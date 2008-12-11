@@ -262,7 +262,7 @@ namespace MySql.Data.VisualStudio
             pane.AddCommand(GuidList.DavinciCommandSet, SharedCommands.cmdidIndexesAndKeys,
                 new EventHandler(OnIndexesAndKeys), null);
             pane.AddCommand(GuidList.DavinciCommandSet, SharedCommands.cmdidForeignKeys,
-                new EventHandler(OnForeignKeys), null);
+                new EventHandler(OnForeignKeys), new EventHandler(OnQueryForeignKeys));
             pane.AddCommand(VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.PrimaryKey,
                 new EventHandler(OnPrimaryKey), new EventHandler(OnQueryPrimaryKey));
             pane.AddCommand(VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.GenerateChangeScript,
@@ -322,6 +322,12 @@ namespace MySql.Data.VisualStudio
         {
             TableIndexDialog dlg = new TableIndexDialog(tableNode);
             dlg.ShowDialog();
+        }
+
+        private void OnQueryForeignKeys(object sender, EventArgs e)
+        {
+            OleMenuCommand foreignKey = sender as OleMenuCommand;
+            foreignKey.Enabled = tableNode.Table.SupportsFK;
         }
 
         private void OnForeignKeys(object sender, EventArgs e)

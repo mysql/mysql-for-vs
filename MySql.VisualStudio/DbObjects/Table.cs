@@ -49,6 +49,15 @@ namespace MySql.Data.VisualStudio.DbObjects
             get { return owningNode; }
         }
 
+        internal bool SupportsFK
+        {
+            get
+            {
+                string engine = Engine.ToLowerInvariant();
+                return engine == "innodb" || engine == "falcon";
+            }
+        }
+
         #region Table options
 
         [Category("(Identity)")]
