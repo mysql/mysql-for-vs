@@ -27,6 +27,7 @@ namespace MySql.Data.VisualStudio.DbObjects
         private string schema;
         private List<Column> columns = new List<Column>();
         private List<Index> indexes = new List<Index>();
+        private List<ForeignKey> fkeys = new List<ForeignKey>();
         private bool isNew;
 
 		public Table(TableNode node, DataRow row, DataTable columns)
@@ -102,6 +103,12 @@ namespace MySql.Data.VisualStudio.DbObjects
         public List<Index> Indexes
         {
             get { return indexes; }
+        }
+
+        [Browsable(false)]
+        public List<ForeignKey> ForeignKeys
+        {
+            get { return fkeys; }
         }
 
         #endregion
@@ -227,6 +234,28 @@ namespace MySql.Data.VisualStudio.DbObjects
                 name = String.Format("{0}_{1}", baseName, ++uniqueIndex);
             newIndex.Name = name;
             return newIndex;
+        }
+
+        public ForeignKey CreateForeignKeyWithUniqueName()
+        {
+            ForeignKey fk = new ForeignKey(this);
+            string baseName = String.Format("FK_{0}_{0}", Name);
+            string proposedName = baseName;
+            int uniqueIndex = 0;
+            while (true)
+            {
+                bool found = false;
+                foreach (ForeignKey k in fkeys)
+                    if (k.Name == proposedName)
+                    {
+                        found = true;
+                        break;
+                    }
+                if (!found) break;
+                proposedName = String.Format("{0}_{1}", baseName, ++uniqueIndex);
+            }
+            fk.Name = proposedName;
+            return fk;
         }
 
         private void ParseTableData(DataRow tableRow)

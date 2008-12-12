@@ -91,6 +91,7 @@
     <Compile Include="DbObjects\CollationTypeConverter.cs" />
     <Compile Include="DbObjects\CharacterSetTypeConverter.cs" />
     <Compile Include="DbObjects\DataTypeConverter.cs" />
+    <Compile Include="DbObjects\ForeignKey.cs" />
     <Compile Include="DbObjects\Index.cs" />
     <Compile Include="DbObjects\IndexColumnTypeConverter.cs" />
     <Compile Include="DbObjects\Metadata.cs" />
@@ -243,6 +244,7 @@
     <None Include="CtcComponents\Guids.h" />
     <None Include="CtcComponents\PkgCmdID.h" />
     <None Include="Properties\DataSources\Column.datasource" />
+    <None Include="Properties\DataSources\MySql.Data.VisualStudio.DbObjects.ForeignKey.datasource" />
     <None Include="Properties\DataSources\MySql.Data.VisualStudio.DbObjects.IndexColumn.datasource" />
     <None Include="Properties\DataSources\TableNode.datasource" />
   </ItemGroup>

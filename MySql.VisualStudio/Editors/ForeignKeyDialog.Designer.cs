@@ -1,4 +1,7 @@
-﻿namespace MySql.Data.VisualStudio.Editors
+﻿using System;
+using MySql.Data.VisualStudio.DbObjects;
+using System.Windows.Forms;
+namespace MySql.Data.VisualStudio.Editors
 {
     partial class ForeignKeyDialog
     {
@@ -28,24 +31,30 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.fkList = new System.Windows.Forms.ListBox();
+            this.foreignKeyBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label1 = new System.Windows.Forms.Label();
             this.addButton = new System.Windows.Forms.Button();
             this.deleteButton = new System.Windows.Forms.Button();
-            this.refTable = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.columnGrid = new System.Windows.Forms.DataGridView();
-            this.column = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.fkColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.colGridColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.fkGridColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.closeButton = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.fkName = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.dataGridViewComboBoxColumn1 = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.dataGridViewComboBoxColumn2 = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.matchType = new MySql.Data.VisualStudio.Editors.MyComboBox();
             this.deleteAction = new MySql.Data.VisualStudio.Editors.MyComboBox();
             this.updateAction = new MySql.Data.VisualStudio.Editors.MyComboBox();
+            this.refTable = new MySql.Data.VisualStudio.Editors.MyComboBox();
+            ((System.ComponentModel.ISupportInitialize)(this.foreignKeyBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.columnGrid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -58,6 +67,10 @@
             this.fkList.Size = new System.Drawing.Size(181, 304);
             this.fkList.TabIndex = 0;
             this.fkList.SelectedIndexChanged += new System.EventHandler(this.fkList_SelectedIndexChanged);
+            // 
+            // foreignKeyBindingSource
+            // 
+            this.foreignKeyBindingSource.AllowNew = false;
             // 
             // label1
             // 
@@ -76,6 +89,7 @@
             this.addButton.TabIndex = 2;
             this.addButton.Text = "Add";
             this.addButton.UseVisualStyleBackColor = true;
+            this.addButton.Click += new System.EventHandler(this.addButton_Click);
             // 
             // deleteButton
             // 
@@ -85,19 +99,12 @@
             this.deleteButton.TabIndex = 3;
             this.deleteButton.Text = "Delete";
             this.deleteButton.UseVisualStyleBackColor = true;
-            // 
-            // refTable
-            // 
-            this.refTable.FormattingEnabled = true;
-            this.refTable.Location = new System.Drawing.Point(342, 66);
-            this.refTable.Name = "refTable";
-            this.refTable.Size = new System.Drawing.Size(301, 23);
-            this.refTable.TabIndex = 4;
+            this.deleteButton.Click += new System.EventHandler(this.deleteButton_Click);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(235, 66);
+            this.label2.Location = new System.Drawing.Point(235, 75);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(101, 15);
             this.label2.TabIndex = 5;
@@ -107,44 +114,48 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(288, 101);
+            this.label3.Location = new System.Drawing.Point(288, 104);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(48, 15);
             this.label3.TabIndex = 6;
             this.label3.Text = "Update:";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // columnGrid
             // 
             this.columnGrid.AllowUserToResizeRows = false;
             this.columnGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.columnGrid.BackgroundColor = System.Drawing.SystemColors.Window;
+            this.columnGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.columnGrid.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             this.columnGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.columnGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.column,
-            this.fkColumn});
+            this.colGridColumn,
+            this.fkGridColumn});
             this.columnGrid.Enabled = false;
-            this.columnGrid.Location = new System.Drawing.Point(218, 134);
+            this.columnGrid.GridColor = System.Drawing.SystemColors.ControlLight;
+            this.columnGrid.Location = new System.Drawing.Point(218, 163);
             this.columnGrid.MultiSelect = false;
             this.columnGrid.Name = "columnGrid";
+            this.columnGrid.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             this.columnGrid.RowHeadersVisible = false;
             this.columnGrid.ShowEditingIcon = false;
-            this.columnGrid.Size = new System.Drawing.Size(425, 189);
+            this.columnGrid.Size = new System.Drawing.Size(425, 177);
             this.columnGrid.TabIndex = 10;
             // 
-            // column
+            // colGridColumn
             // 
-            this.column.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
-            this.column.DisplayStyleForCurrentCellOnly = true;
-            this.column.HeaderText = "Column";
-            this.column.Name = "column";
+            this.colGridColumn.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
+            this.colGridColumn.DisplayStyleForCurrentCellOnly = true;
+            this.colGridColumn.HeaderText = "Column";
+            this.colGridColumn.Name = "colGridColumn";
             // 
-            // fkColumn
+            // fkGridColumn
             // 
-            this.fkColumn.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
-            this.fkColumn.DisplayStyleForCurrentCellOnly = true;
-            this.fkColumn.HeaderText = "Foreign Column";
-            this.fkColumn.Name = "fkColumn";
+            this.fkGridColumn.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
+            this.fkGridColumn.DisplayStyleForCurrentCellOnly = true;
+            this.fkGridColumn.HeaderText = "Foreign Column";
+            this.fkGridColumn.Name = "fkGridColumn";
             // 
             // closeButton
             // 
@@ -159,7 +170,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(487, 101);
+            this.label5.Location = new System.Drawing.Point(488, 104);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(43, 15);
             this.label5.TabIndex = 13;
@@ -172,11 +183,12 @@
             this.fkName.Name = "fkName";
             this.fkName.Size = new System.Drawing.Size(301, 23);
             this.fkName.TabIndex = 14;
+            this.fkName.DataBindings.Add(new Binding("Text", foreignKeyBindingSource, "Name"));
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(294, 38);
+            this.label4.Location = new System.Drawing.Point(294, 44);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(42, 15);
             this.label4.TabIndex = 15;
@@ -198,42 +210,84 @@
             this.dataGridViewComboBoxColumn2.Name = "dataGridViewComboBoxColumn2";
             this.dataGridViewComboBoxColumn2.Width = 159;
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(488, 134);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(44, 15);
+            this.label6.TabIndex = 17;
+            this.label6.Text = "Match:";
+            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(215, 145);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(55, 15);
+            this.label7.TabIndex = 18;
+            this.label7.Text = "Columns";
+            // 
+            // matchType
+            // 
+            this.matchType.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.matchType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.matchType.DataSource = Enum.GetValues(typeof(MatchOption));
+            this.matchType.Location = new System.Drawing.Point(536, 125);
+            this.matchType.MinimumSize = new System.Drawing.Size(4, 10);
+            this.matchType.Name = "matchType";
+            this.matchType.Size = new System.Drawing.Size(107, 24);
+            this.matchType.TabIndex = 16;
+            this.matchType.DataBindings.Add(new Binding("SelectedItem", foreignKeyBindingSource, "Match"));
+            // 
             // deleteAction
             // 
             this.deleteAction.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.deleteAction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.deleteAction.Items.AddRange(new object[] {
-            "RESTRICT",
-            "CASCADE",
-            "SET NULL",
-            "NO ACTION"});
+            this.deleteAction.DataSource = Enum.GetValues(typeof(ReferenceOption));
             this.deleteAction.Location = new System.Drawing.Point(536, 95);
             this.deleteAction.MinimumSize = new System.Drawing.Size(4, 10);
             this.deleteAction.Name = "deleteAction";
             this.deleteAction.Size = new System.Drawing.Size(107, 24);
             this.deleteAction.TabIndex = 9;
+            this.deleteAction.DataBindings.Add(new Binding("SelectedItem", foreignKeyBindingSource, "DeleteAction"));
             // 
             // updateAction
             // 
             this.updateAction.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.updateAction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.updateAction.FormattingEnabled = true;
-            this.updateAction.Items.AddRange(new object[] {
-            "RESTRICT",
-            "CASCADE",
-            "SET NULL",
-            "NO ACTION"});
+            this.updateAction.DataSource = Enum.GetValues(typeof(ReferenceOption));
             this.updateAction.Location = new System.Drawing.Point(342, 95);
             this.updateAction.MinimumSize = new System.Drawing.Size(4, 10);
             this.updateAction.Name = "updateAction";
             this.updateAction.Size = new System.Drawing.Size(107, 24);
             this.updateAction.TabIndex = 8;
+            this.updateAction.DataBindings.Add(new Binding("SelectedItem", foreignKeyBindingSource, "UpdateAction"));
+
+            // 
+            // refTable
+            // 
+            this.refTable.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.refTable.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.refTable.FormattingEnabled = true;
+            this.refTable.Location = new System.Drawing.Point(342, 66);
+            this.refTable.MinimumSize = new System.Drawing.Size(4, 10);
+            this.refTable.Name = "refTable";
+            this.refTable.Size = new System.Drawing.Size(301, 24);
+            this.refTable.TabIndex = 4;
+            this.refTable.SelectedIndexChanged += new System.EventHandler(this.refTable_SelectedIndexChanged);
+            this.refTable.DataBindings.Add(new Binding("SelectedItem", foreignKeyBindingSource, "ReferencedTable"));
             // 
             // ForeignKeyDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(655, 386);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.matchType);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.fkName);
             this.Controls.Add(this.label5);
@@ -255,6 +309,7 @@
             this.Name = "ForeignKeyDialog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Foreign Key Relationships";
+            ((System.ComponentModel.ISupportInitialize)(this.foreignKeyBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.columnGrid)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -267,7 +322,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button addButton;
         private System.Windows.Forms.Button deleteButton;
-        private System.Windows.Forms.ComboBox refTable;
+        private MyComboBox refTable;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private MyComboBox updateAction;
@@ -277,9 +332,13 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox fkName;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.DataGridViewComboBoxColumn column;
-        private System.Windows.Forms.DataGridViewComboBoxColumn fkColumn;
         private System.Windows.Forms.DataGridViewComboBoxColumn dataGridViewComboBoxColumn1;
         private System.Windows.Forms.DataGridViewComboBoxColumn dataGridViewComboBoxColumn2;
+        private System.Windows.Forms.Label label6;
+        private MyComboBox matchType;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.DataGridViewComboBoxColumn colGridColumn;
+        private System.Windows.Forms.DataGridViewComboBoxColumn fkGridColumn;
+        private System.Windows.Forms.BindingSource foreignKeyBindingSource;
     }
 }
