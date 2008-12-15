@@ -179,11 +179,12 @@ namespace MySql.Data.VisualStudio.Editors
             // 
             // fkName
             // 
+            this.fkName.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.foreignKeyBindingSource, "Name", true));
             this.fkName.Location = new System.Drawing.Point(342, 36);
             this.fkName.Name = "fkName";
             this.fkName.Size = new System.Drawing.Size(301, 23);
             this.fkName.TabIndex = 14;
-            this.fkName.DataBindings.Add(new Binding("Text", foreignKeyBindingSource, "Name"));
+            this.fkName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.fkName_KeyPress);
             // 
             // label4
             // 
@@ -231,44 +232,55 @@ namespace MySql.Data.VisualStudio.Editors
             // 
             // matchType
             // 
+            this.matchType.DataBindings.Add(new System.Windows.Forms.Binding("SelectedItem", this.foreignKeyBindingSource, "Match", true));
             this.matchType.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.matchType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.matchType.DataSource = Enum.GetValues(typeof(MatchOption));
+            this.matchType.Items.AddRange(new object[] {
+            MySql.Data.VisualStudio.DbObjects.MatchOption.Full,
+            MySql.Data.VisualStudio.DbObjects.MatchOption.Partial,
+            MySql.Data.VisualStudio.DbObjects.MatchOption.Simple});
             this.matchType.Location = new System.Drawing.Point(536, 125);
             this.matchType.MinimumSize = new System.Drawing.Size(4, 10);
             this.matchType.Name = "matchType";
             this.matchType.Size = new System.Drawing.Size(107, 24);
             this.matchType.TabIndex = 16;
-            this.matchType.DataBindings.Add(new Binding("SelectedItem", foreignKeyBindingSource, "Match"));
             // 
             // deleteAction
             // 
+            this.deleteAction.DataBindings.Add(new System.Windows.Forms.Binding("SelectedItem", this.foreignKeyBindingSource, "DeleteAction", true));
             this.deleteAction.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.deleteAction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.deleteAction.DataSource = Enum.GetValues(typeof(ReferenceOption));
+            this.deleteAction.Items.AddRange(new object[] {
+            MySql.Data.VisualStudio.DbObjects.ReferenceOption.NoAction,
+            MySql.Data.VisualStudio.DbObjects.ReferenceOption.Cascade,
+            MySql.Data.VisualStudio.DbObjects.ReferenceOption.Restrict,
+            MySql.Data.VisualStudio.DbObjects.ReferenceOption.SetNull});
             this.deleteAction.Location = new System.Drawing.Point(536, 95);
             this.deleteAction.MinimumSize = new System.Drawing.Size(4, 10);
             this.deleteAction.Name = "deleteAction";
             this.deleteAction.Size = new System.Drawing.Size(107, 24);
             this.deleteAction.TabIndex = 9;
-            this.deleteAction.DataBindings.Add(new Binding("SelectedItem", foreignKeyBindingSource, "DeleteAction"));
             // 
             // updateAction
             // 
+            this.updateAction.DataBindings.Add(new System.Windows.Forms.Binding("SelectedItem", this.foreignKeyBindingSource, "UpdateAction", true));
             this.updateAction.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.updateAction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.updateAction.FormattingEnabled = true;
-            this.updateAction.DataSource = Enum.GetValues(typeof(ReferenceOption));
+            this.updateAction.Items.AddRange(new object[] {
+            MySql.Data.VisualStudio.DbObjects.ReferenceOption.NoAction,
+            MySql.Data.VisualStudio.DbObjects.ReferenceOption.Cascade,
+            MySql.Data.VisualStudio.DbObjects.ReferenceOption.Restrict,
+            MySql.Data.VisualStudio.DbObjects.ReferenceOption.SetNull});
             this.updateAction.Location = new System.Drawing.Point(342, 95);
             this.updateAction.MinimumSize = new System.Drawing.Size(4, 10);
             this.updateAction.Name = "updateAction";
             this.updateAction.Size = new System.Drawing.Size(107, 24);
             this.updateAction.TabIndex = 8;
-            this.updateAction.DataBindings.Add(new Binding("SelectedItem", foreignKeyBindingSource, "UpdateAction"));
-
             // 
             // refTable
             // 
+            this.refTable.DataBindings.Add(new System.Windows.Forms.Binding("SelectedItem", this.foreignKeyBindingSource, "ReferencedTable", true));
             this.refTable.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.refTable.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.refTable.FormattingEnabled = true;
@@ -278,7 +290,6 @@ namespace MySql.Data.VisualStudio.Editors
             this.refTable.Size = new System.Drawing.Size(301, 24);
             this.refTable.TabIndex = 4;
             this.refTable.SelectedIndexChanged += new System.EventHandler(this.refTable_SelectedIndexChanged);
-            this.refTable.DataBindings.Add(new Binding("SelectedItem", foreignKeyBindingSource, "ReferencedTable"));
             // 
             // ForeignKeyDialog
             // 

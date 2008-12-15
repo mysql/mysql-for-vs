@@ -9,6 +9,7 @@ namespace MySql.Data.VisualStudio.DbObjects
         public ForeignKey(Table t)
         {
             Table = t;
+            SetName(String.Format("FK_{0}_{0}", t.Name), true);
         }
 
         private Table Table { get; set; }
@@ -22,6 +23,30 @@ namespace MySql.Data.VisualStudio.DbObjects
         public override string ToString()
         {
             return Name;
+        }
+        public bool NameSet { get; set; }
+
+        public void SetName(string name, bool makeUnique)
+        {
+            string proposedName = name;
+            int uniqueIndex = 0;
+
+            if (makeUnique)
+            {
+                while (true)
+                {
+                    bool found = false;
+                    foreach (ForeignKey k in Table.ForeignKeys)
+                        if (k.Name == proposedName)
+                        {
+                            found = true;
+                            break;
+                        }
+                    if (!found) break;
+                    proposedName = String.Format("{0}_{1}", name, ++uniqueIndex);
+                }
+            }
+            Name = proposedName;
         }
     }
 

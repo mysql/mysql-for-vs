@@ -61,7 +61,7 @@ namespace MySql.Data.VisualStudio.Editors
 
         private void addButton_Click(object sender, EventArgs e)
         {
-            ForeignKey key = tableNode.Table.CreateForeignKeyWithUniqueName();
+            ForeignKey key = new ForeignKey(tableNode.Table);
             foreignKeyBindingSource.Add(key);
         }
 
@@ -93,7 +93,20 @@ namespace MySql.Data.VisualStudio.Editors
 
         private void refTable_SelectedIndexChanged(object sender, EventArgs e)
         {
-            fkGridColumn.HeaderText = refTable.Items[refTable.SelectedIndex].ToString();
+            string refTableName = refTable.Items[refTable.SelectedIndex].ToString();
+            fkGridColumn.HeaderText = refTableName;
+            if (foreignKeyBindingSource.Current == null) return;
+
+            ForeignKey key = foreignKeyBindingSource.Current as ForeignKey;
+            if (key.NameSet) return;
+            string name = String.Format("FK_{0}_{1}", tableNode.Table.Name, refTableName);
+            key.SetName(name, true);
+        }
+
+        private void fkName_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            ForeignKey key = foreignKeyBindingSource.Current as ForeignKey;
+            key.NameSet = true;
         }
     }
 }

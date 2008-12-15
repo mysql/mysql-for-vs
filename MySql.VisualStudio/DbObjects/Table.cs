@@ -236,28 +236,6 @@ namespace MySql.Data.VisualStudio.DbObjects
             return newIndex;
         }
 
-        public ForeignKey CreateForeignKeyWithUniqueName()
-        {
-            ForeignKey fk = new ForeignKey(this);
-            string baseName = String.Format("FK_{0}_{0}", Name);
-            string proposedName = baseName;
-            int uniqueIndex = 0;
-            while (true)
-            {
-                bool found = false;
-                foreach (ForeignKey k in fkeys)
-                    if (k.Name == proposedName)
-                    {
-                        found = true;
-                        break;
-                    }
-                if (!found) break;
-                proposedName = String.Format("{0}_{1}", baseName, ++uniqueIndex);
-            }
-            fk.Name = proposedName;
-            return fk;
-        }
-
         private void ParseTableData(DataRow tableRow)
         {
 /*            dt.Columns.Add("TABLE_TYPE", typeof(string));
