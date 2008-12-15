@@ -1044,4 +1044,10 @@ Would you like to create it?</value>
   <data name="Key" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Key.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="FKColumnsNotMatched" xml:space="preserve">
+    <value>Both sides of a relationship must have the same number of columns.</value>
+  </data>
+  <data name="FKNeedColumn" xml:space="preserve">
+    <value>Expected column name.</value>
+  </data>
 </root>

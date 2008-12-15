@@ -10,6 +10,7 @@ namespace MySql.Data.VisualStudio.DbObjects
         {
             Table = t;
             SetName(String.Format("FK_{0}_{0}", t.Name), true);
+            Columns = new List<FKColumnPair>();
         }
 
         private Table Table { get; set; }
@@ -18,7 +19,7 @@ namespace MySql.Data.VisualStudio.DbObjects
         public MatchOption Match { get; set; }
         public ReferenceOption UpdateAction { get; set; }
         public ReferenceOption DeleteAction { get; set; }
-        List<FKColumnPair> Columns { get; set; }
+        public List<FKColumnPair> Columns { get; set; }
 
         public override string ToString()
         {
@@ -60,9 +61,9 @@ namespace MySql.Data.VisualStudio.DbObjects
         NoAction, Cascade, Restrict, SetNull
     }
 
-    struct FKColumnPair
+    class FKColumnPair
     {
-        public string parentTable;
-        public string childTable;
+        public string ParentTable { get; set; }
+        public string ChildTable { get; set; }
     }
 }

@@ -215,13 +215,6 @@ namespace MySql.Data.VisualStudio.DbObjects
             }
         }
 
-        private bool KeyExists(string keyName)
-        {
-            foreach (Index i in indexes)
-                if (String.Compare(i.Name, keyName, true) == 0) return true;
-            return false;
-        }
-
         public Index CreateIndexWithUniqueName(bool primary)
         {
             Index newIndex = new Index(this);
@@ -234,6 +227,43 @@ namespace MySql.Data.VisualStudio.DbObjects
                 name = String.Format("{0}_{1}", baseName, ++uniqueIndex);
             newIndex.Name = name;
             return newIndex;
+        }
+
+        public List<string> GetColumnNames()
+        {
+            string sql = @"SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE 
+                TABLE_SCHEMA='{0}' AND TABLE_NAME='{1}'";
+            DataTable dt = owningNode.GetDataTable(String.Format(sql, owningNode.Database, Name));
+            List<string> cols =new List<string>();
+            foreach (DataRow row in dt.Rows)
+                cols.Add(row[0].ToString());
+            return cols;
+        }
+
+        public string GetSql(Table fromTable)
+        {
+
+            StringBuilder sql = new StringBuilder();
+            if (isNew)
+                sql.AppendFormat("CREATE TABLE `{0}` (", Name);
+            else
+                sql.AppendFormat("ALTER TABLE `{0}` ", fromTable.Name);
+
+            //            foreach (Column c in Columns)
+            //              sql.Append(c.GetSql(), IsNew);
+
+            if (isNew) sql.Append(") ");
+            sql.Append(GetTableOptionSql(fromTable));
+            return sql.ToString();
+        }
+
+        #region Private methods
+
+        private bool KeyExists(string keyName)
+        {
+            foreach (Index i in indexes)
+                if (String.Compare(i.Name, keyName, true) == 0) return true;
+            return false;
         }
 
         private void ParseTableData(DataRow tableRow)
@@ -294,23 +324,6 @@ namespace MySql.Data.VisualStudio.DbObjects
             }
         }
 
-        public string GetSql(Table fromTable)
-        {
-
-            StringBuilder sql = new StringBuilder();
-            if (isNew)
-                sql.AppendFormat("CREATE TABLE `{0}` (", Name);
-            else
-                sql.AppendFormat("ALTER TABLE `{0}` ", fromTable.Name);
-
-//            foreach (Column c in Columns)
-  //              sql.Append(c.GetSql(), IsNew);
-
-            if (isNew) sql.Append(") ");
-            sql.Append(GetTableOptionSql(fromTable));
-            return sql.ToString();
-        }
-
         private string GetTableOptionSql(Table fromTable)
         {
             StringBuilder sql = new StringBuilder();
@@ -334,6 +347,8 @@ namespace MySql.Data.VisualStudio.DbObjects
 
             return sql.ToString();
         }
+
+        #endregion
 
         #region ICustomTypeDescriptor Members
 

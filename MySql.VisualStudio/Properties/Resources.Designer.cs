@@ -2423,6 +2423,24 @@ namespace MySql.Data.VisualStudio.Properties {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to Both sides of a relationship must have the same number of columns..
+        /// </summary>
+        public static string FKColumnsNotMatched {
+            get {
+                return ResourceManager.GetString("FKColumnsNotMatched", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expected column name..
+        /// </summary>
+        public static string FKNeedColumn {
+            get {
+                return ResourceManager.GetString("FKNeedColumn", resourceCulture);
+            }
+        }
+        
         public static System.Drawing.Bitmap Key {
             get {
                 object obj = ResourceManager.GetObject("Key", resourceCulture);

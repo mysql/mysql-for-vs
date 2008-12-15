@@ -48,7 +48,6 @@ namespace MySql.Data.VisualStudio.Editors
             Type t = e.Control.GetType();
             if (t != typeof(DataGridViewComboBoxEditingControl)) return;
 
-            System.Diagnostics.Trace.WriteLine("EditControlShowing starting");
             DataGridViewComboBoxEditingControl ec = e.Control as DataGridViewComboBoxEditingControl;
             ec.DrawMode = DrawMode.OwnerDrawFixed;
             ec.DrawItem += new DrawItemEventHandler(dropdown_DrawItem);
@@ -75,15 +74,12 @@ namespace MySql.Data.VisualStudio.Editors
                 int index = ec.FindStringExact(indexGrid.CurrentRow.Cells[0].Value as string);
                 if (index > 0)
                     ec.SelectedIndex = index;
-                System.Diagnostics.Trace.WriteLine("EditControlShowing_leaving");
             }
         }
 
         void dropdown_DrawItem(object sender, DrawItemEventArgs e)
         {
-            System.Diagnostics.Trace.WriteLine("DrawItem starting");
             MyComboBox.DrawComboBox(sender as ComboBox, e);
-            System.Diagnostics.Trace.WriteLine("DrawItem leaving");
         }
 
         private void okButton_Click(object sender, EventArgs e)
@@ -120,7 +116,6 @@ namespace MySql.Data.VisualStudio.Editors
                     gr.SortOrder = "Ascending";
                 sortCell.Value = gr.SortOrder;
             }
-            System.Diagnostics.Trace.WriteLine("Validating leaving");
         }
 
         private void cancelButton_Click(object sender, EventArgs e)
