@@ -13,13 +13,12 @@ namespace MySql.Data.VisualStudio
     class MySqlLanguageService : LanguageService
     {
         private LanguagePreferences preferences;
-        private IScanner scanner;
 
         public const string LanguageName = "MySQL";
 
         public override AuthoringScope ParseSource(ParseRequest req)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public override string Name
@@ -34,9 +33,7 @@ namespace MySql.Data.VisualStudio
 
         public override IScanner GetScanner(IVsTextLines buffer)
         {
-            if (scanner == null)
-                scanner = new MySqlScanner();
-            return scanner;
+            return new MySqlScanner();
         }
 
         public override LanguagePreferences GetLanguagePreferences()
@@ -48,23 +45,6 @@ namespace MySql.Data.VisualStudio
                 preferences.Init();
             }
             return preferences;
-        }
-
-        /// <summary>
-        /// We override this method because we are using an Antlr grammer and 
-        /// need to lex the entire buffer before returning our color info
-        /// </summary>
-        /// <param name="buffer"></param>
-        /// <returns></returns>
-        public override Colorizer GetColorizer(IVsTextLines buffer)
-        {
-            return new MySqlColorizer(this, buffer, new MySqlScanner());
-        }
-
-        public override Source CreateSource(IVsTextLines buffer)
-        {
-            MySqlSource src = new MySqlSource(this, buffer, GetColorizer(buffer));
-            return src;
         }
     }
 }

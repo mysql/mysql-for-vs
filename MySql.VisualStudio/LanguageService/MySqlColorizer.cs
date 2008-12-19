@@ -10,33 +10,41 @@ namespace MySql.Data.VisualStudio
 {
     internal class MySqlColorizer : Colorizer
     {
-        private IScanner scanner;
-        private IVsTextLines buffer;
-        private List<TokenInfo>[] tokenList;
-        private string savedSqlText;
+//        private IScanner scanner;
+  //      private IVsTextLines buffer;
+    //    private List<TokenInfo>[] tokenList;
+      //  private string savedSqlText;
 
         public MySqlColorizer(LanguageService service, IVsTextLines buffer, IScanner scanner)
             : base(service, buffer, scanner)
         {
-            this.scanner = scanner;
-            this.buffer = buffer;
+            (scanner as MySqlScanner).Colorizer = this;
+//            this.scanner = scanner;
+  //          this.buffer = buffer;
         }
 
-        public override TokenInfo[] GetLineInfo(IVsTextLines buffer, int line, IVsTextColorState colorState)
-        {
-            LexBuffer();
-            return tokenList[line].ToArray();
-        }
+//        public override TokenInfo[] GetLineInfo(IVsTextLines buffer, int line, IVsTextColorState colorState)
+  //      {
+    //        LexBuffer();
+      //      return tokenList[line].ToArray();
+        //}
 
-        public override int GetColorInfo(string line, int length, int state)
-        {
-            return 0; 
-        }
+//        public override int GetColorInfo(string line, int length, int state)
+  //      {
+    //        return 0; 
+      //  }
+
+        public int CurrentLine { get; set; }
 
         public override int ColorizeLine(int line, int length, System.IntPtr ptr, 
             int state, uint[] attrs)
         {
-            int linepos = 0;
+            System.Diagnostics.Trace.WriteLine("colorizing line # " + line);
+
+            CurrentLine = line;
+            return base.ColorizeLine(line, length, ptr, state, attrs);
+/*            int linepos = 0;
+
 
             // only relex if we need to
             LexBuffer();
@@ -68,7 +76,7 @@ namespace MySql.Data.VisualStudio
                 for (; linepos < length; linepos++)
                     attrs[linepos] = (uint)TokenColor.Text;
             }
-            return 0;
+            return 0;*/
         }
 
         /// <summary>
@@ -76,7 +84,7 @@ namespace MySql.Data.VisualStudio
         ///  of TokenInfo structs. It compares the buffer lines to a cached
         ///  copy and only re-lexes if there are changes
         /// </summary>
-        private void LexBuffer()
+/*        private void LexBuffer()
         {
             int lineCount;
             buffer.GetLineCount(out lineCount);
@@ -142,6 +150,6 @@ namespace MySql.Data.VisualStudio
 
             index -= len;
             return line;
-        }
+        }*/
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.Package;
 using System.Collections.Generic;
-using MySql.Data.MySqlClient;
 
 namespace MySql.Data.VisualStudio
 {

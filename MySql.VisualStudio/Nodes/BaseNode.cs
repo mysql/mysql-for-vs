@@ -222,8 +222,6 @@ namespace MySql.Data.VisualStudio
 			IntPtr dataPunk = Marshal.GetIUnknownForObject(this);
             Guid viewGuid = VSConstants.LOGVIEWID_TextView;
 
-            commandGroupGuid = editorGuid;
-
 			// Initialize IDE editor infrastracture
 			int result = shell.InitializeEditorInstance(
 				(uint)0,                // Initialization flags. We need default behavior here

@@ -106,6 +106,13 @@ namespace MySql.Data.VisualStudio
             ipKey.SetValue("Package", GuidList.PackageGUID.ToString("B"));
             ipKey.SetValue("UseInterface", 1);
 
+            keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\Languages\Language Services\MySQL", version);
+            RegistryKey langKey = Registry.LocalMachine.CreateSubKey(keyPath);
+            langKey.SetValue(null, "{fa498a2d-116a-4f25-9b55-7938e8e6dda7}");
+            langKey.SetValue("Package", "{79a115c9-b133-4891-9e7b-242509dad272}");
+            langKey.SetValue("LangResID", 101);
+            langKey.SetValue("RequestStockColors", 1);
+
             // Package
             keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\Packages\{1}",
                 version, GuidList.PackageGUID.ToString("B"));
@@ -174,6 +181,15 @@ namespace MySql.Data.VisualStudio
             {
                 key.Close();
                 Registry.LocalMachine.DeleteSubKeyTree(keyPath);
+            }
+
+            keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\Languages\Language Services\MySQL",
+                assemblyVersion);
+            key = Registry.LocalMachine.OpenSubKey(keyPath);
+            if (key != null)
+            {
+                key.Close();
+                Registry.LocalMachine.DeleteSubKey(keyPath);
             }
 
             // Package

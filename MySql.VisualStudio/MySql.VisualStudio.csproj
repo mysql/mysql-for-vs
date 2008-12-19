@@ -85,9 +85,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\MySql.Data\Provider\Source\common\MySqlTokenizer.cs">
-      <Link>LanguageService\MySqlTokenizer.cs</Link>
-    </Compile>
     <Compile Include="DbObjects\CollationTypeConverter.cs" />
     <Compile Include="DbObjects\CharacterSetTypeConverter.cs" />
     <Compile Include="DbObjects\DataTypeConverter.cs" />
@@ -164,15 +161,13 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Editors\YesNoTypeConverter.cs" />
-    <Compile Include="LanguageService\Configuration.cs" />
-    <Compile Include="LanguageService\MySqlColorizer.cs" />
     <Compile Include="LanguageService\MySqlLanguageService.cs" />
     <Compile Include="Editors\TableEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Guids.cs" />
     <Compile Include="LanguageService\MySqlScanner.cs" />
-    <Compile Include="LanguageService\Source.cs" />
+    <Compile Include="LanguageService\Tokenizer.cs" />
     <Compile Include="MyInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -244,6 +239,7 @@
     <None Include="CtcComponents\Guids.h" />
     <None Include="CtcComponents\PkgCmdID.h" />
     <None Include="Properties\DataSources\Column.datasource" />
+    <None Include="Properties\DataSources\MySql.Data.VisualStudio.DbObjects.FKColumnPair.datasource" />
     <None Include="Properties\DataSources\MySql.Data.VisualStudio.DbObjects.ForeignKey.datasource" />
     <None Include="Properties\DataSources\MySql.Data.VisualStudio.DbObjects.IndexColumn.datasource" />
     <None Include="Properties\DataSources\TableNode.datasource" />
