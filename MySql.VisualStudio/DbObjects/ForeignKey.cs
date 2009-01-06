@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Data;
 
 namespace MySql.Data.VisualStudio.DbObjects
 {
@@ -11,6 +12,27 @@ namespace MySql.Data.VisualStudio.DbObjects
             Table = t;
             SetName(String.Format("FK_{0}_{0}", t.Name), true);
             Columns = new List<FKColumnPair>();
+        }
+
+        public ForeignKey(Table t, DataRow keyData) : this (t)
+        {
+            Name = keyData["CONSTRAINT_NAME"].ToString();
+            ReferencedTable = keyData["REFERENCED_TABLE_NAME"].ToString();
+            Match = (MatchOption)Enum.Parse(typeof(MatchOption), keyData["MATCH_OPTION"].ToString());
+            UpdateAction = (ReferenceOption)Enum.Parse(typeof(ReferenceOption),
+                keyData["UPDATE_RULE"].ToString());
+            DeleteAction = (ReferenceOption)Enum.Parse(typeof(ReferenceOption),
+                keyData["DELETE_RULE"].ToString());
+
+            string[] restrictions = new string[4] { null, Table.OwningNode.Database, Table.Name, Name };
+            DataTable cols = Table.OwningNode.GetSchema("Foreign Key Columns", restrictions);
+            foreach (DataRow row in cols.Rows)
+            {
+                FKColumnPair colPair = new FKColumnPair();
+                colPair.ParentTable = row["COLUMN_NAME"].ToString();
+                colPair.ChildTable = row["REFERENCED_COLUMN_NAME"].ToString();
+                Columns.Add(colPair);
+            }
         }
 
         private Table Table { get; set; }

@@ -192,6 +192,15 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to True if you want to delay key updates until the table is closed.  (MyISAM only).
+        /// </summary>
+        public static string DelayKeyWriteDesc {
+            get {
+                return ResourceManager.GetString("DelayKeyWriteDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Allows execution of multiple SQL commands in a single statement.
         /// </summary>
         public static string Description_AllowBatch {

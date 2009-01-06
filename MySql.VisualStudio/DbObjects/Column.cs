@@ -106,17 +106,6 @@ namespace MySql.Data.VisualStudio.DbObjects
 
 		#endregion
 
-/*            dt.Columns.Add("ORDINAL_POSITION", typeof (long));
-            dt.Columns.Add("DATA_TYPE", typeof (string));
-            dt.Columns.Add("CHARACTER_MAXIMUM_LENGTH", typeof (long));
-            dt.Columns.Add("CHARACTER_OCTET_LENGTH", typeof (long));
-            dt.Columns.Add("NUMERIC_PRECISION", typeof (long));
-            dt.Columns.Add("NUMERIC_SCALE", typeof (long));
-            dt.Columns.Add("COLUMN_TYPE", typeof (string));
-            dt.Columns.Add("COLUMN_KEY", typeof (string));
-            dt.Columns.Add("EXTRA", typeof (string));
-            dt.Columns.Add("PRIVILEGES", typeof (string));*/
-
         private void ParseColumnInfo(DataRow row)
         {
             ColumnName = row["COLUMN_NAME"].ToString();
@@ -126,18 +115,23 @@ namespace MySql.Data.VisualStudio.DbObjects
             CharacterSet = row["CHARACTER_SET_NAME"].ToString();
             DefaultValue = row["COLUMN_DEFAULT"].ToString();
 
-/*            string extra = (string)dataRow["EXTRA"];
-            if (String.IsNullOrEmpty(extra)) return;
+            string columnType = row["COLUMN_TYPE"].ToString().ToLowerInvariant();
+            int index = columnType.IndexOf(' ');
+            if (index == -1)
+                index = columnType.Length;
+            DataType = columnType.Substring(0, index);
 
-            string columnType = (string)dataRow["COLUMN_TYPE"];
+            columnType = columnType.Substring(index);
+            IsUnsigned = columnType.IndexOf("unsigned") != -1;
+            IsZerofill = columnType.IndexOf("zerofill") != -1;
 
-            autoInc = extra.IndexOf("auto_increment") != -1;
-            // the following works because zero fill always appears last in
-            // the column type
-            zeroFill = columnType.EndsWith("zerofill");
-            if (zeroFill)
-                columnType = columnType.Substring(0, columnType.Length - "zeroFill".Length - 1);
-            unsigned = columnType.EndsWith("unsigned"); */
+            PrimaryKey = row["COLUMN_KEY"].ToString() == "PRI";
+            Precision = (int)row["NUMERIC_PRECISION"];
+            Scale = (int)row["NUMERIC_SCALE"];
+
+            string extra = row["EXTRA"].ToString().ToLowerInvariant();
+            if (extra != null)
+                AutoIncrement = extra.IndexOf("auto_increment") != -1;
         }
 
         #region Methods needed so PropertyGrid won't bold our values

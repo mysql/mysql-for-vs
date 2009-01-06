@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Collections.Generic;
 using MySql.Data.VisualStudio.Editors;
+using System.Data;
 
 namespace MySql.Data.VisualStudio.DbObjects
 {
@@ -13,6 +14,44 @@ namespace MySql.Data.VisualStudio.DbObjects
         public Index(Table t)
         {
             table = t;
+        }
+
+        public Index(Table t, DataRow indexData) : this(t)
+        {
+            Name = indexData["INDEX_NAME"].ToString();
+            IsPrimary = (bool)indexData["PRIMARY"];
+            IsUnique = (bool)indexData["UNIQUE"];
+            Comment = indexData["COMMENT"].ToString();
+            string type = indexData["TYPE"].ToString();
+            switch (type)
+            {
+                case "BTREE": IndexUsing = IndexUsingType.BTREE; break;
+                case "RTREE": IndexUsing = IndexUsingType.RTREE; break;
+                case "HASH": IndexUsing = IndexUsingType.HASH; break;
+            }
+            FullText = type == "FULLTEXT";
+            Spatial = type == "SPATIAL";
+
+            string[] restrictions = new string[5] { null, t.OwningNode.Database, t.Name, Name, null };
+            DataTable dt = t.OwningNode.GetSchema("IndexColumns", restrictions);
+            foreach (DataRow row in dt.Rows)
+            {
+                IndexColumn col = new IndexColumn();
+                col.OwningIndex = this;
+                col.ColumnName = row["COLUMN_NAME"].ToString();
+                string sortOrder = row["SORT_ORDER"].ToString();
+//                if (sortOrder == "D")
+  //                  col.SortOrder = IndexSortOrder.Descending;
+    //            else if (sortOrder == null)
+      //              col.SortOrder = IndexSortOrder.Unsorted;
+        //        else
+                    col.SortOrder = IndexSortOrder.Ascending;
+                Columns.Add(col);
+            }
+
+            //KeyBlockSize
+            //TYpe
+            //Parser
         }
 
         [Browsable(false)]
@@ -205,8 +244,7 @@ namespace MySql.Data.VisualStudio.DbObjects
 
     public enum IndexSortOrder
     {
-        Ascending,
-        Descending
+        Ascending
     }
 
     class IndexColumn

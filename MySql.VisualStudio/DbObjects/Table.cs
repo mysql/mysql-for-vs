@@ -36,11 +36,15 @@ namespace MySql.Data.VisualStudio.DbObjects
 
             // set some defaults that may be overridden with actual table data
             Engine = node.DefaultStorageEngine;
+            PackKeys = PackKeysMethod.Default;
 
             if (row != null)
               ParseTableData(row);
             if (columns != null)
               ParseColumns(columns);
+            LoadIndexes();
+            LoadForeignKeys();
+
             schema = node.Database;
             isNew = row == null;
         }
@@ -179,6 +183,11 @@ namespace MySql.Data.VisualStudio.DbObjects
         [DefaultValue(InsertMethod.First)]
         public InsertMethod InsertMethod { get; set; }
 
+        [Category("Row")]
+        [DisplayName("Delay Key Write")]
+        [MyDescription("DelayKeyWriteDesc")]
+        public bool DelayKeyWrite { get; set; }
+
         #endregion
 
         #region ShouldSerializeMethods
@@ -268,19 +277,21 @@ namespace MySql.Data.VisualStudio.DbObjects
 
         private void ParseTableData(DataRow tableRow)
         {
-/*            dt.Columns.Add("TABLE_TYPE", typeof(string));
-            dt.Columns.Add("VERSION", typeof(long));
-            dt.Columns.Add("ROW_FORMAT", typeof(string));
-            dt.Columns.Add("TABLE_ROWS", typeof(long));
-            dt.Columns.Add("CREATE_OPTIONS", typeof(string));*/
-
             schema = tableRow["TABLE_SCHEMA"].ToString();
             Name = tableRow["TABLE_NAME"].ToString();
-            Comment = tableRow["TABLE_COMMENT"].ToString();
-//            AutoInc = (ulong)tableRow["AUTO_INCREMENT"];   
-            Collation = tableRow["TABLE_COLLATION"].ToString();
             Engine = tableRow["ENGINE"].ToString();
-            
+            RowFormat = (RowFormat)Enum.Parse(typeof(RowFormat), tableRow["ROW_FORMAT"].ToString());
+            AvgRowLength = (ulong)tableRow["AVG_ROW_LENGTH"];
+            AutoInc = (ulong)tableRow["AUTO_INCREMENT"];   
+            Comment = tableRow["TABLE_COMMENT"].ToString();
+            Collation = tableRow["TABLE_COLLATION"].ToString();
+            if (Collation != null)
+            {
+                int index = Collation.IndexOf("_");
+                if (index != -1)
+                    CharacterSet = Collation.Substring(0, index);
+            }
+
             string createOpt = (string)tableRow["CREATE_OPTIONS"];
             if (String.IsNullOrEmpty(createOpt))
                 ParseCreateOptions(createOpt.ToLowerInvariant());
@@ -301,15 +312,18 @@ namespace MySql.Data.VisualStudio.DbObjects
                     case "max_rows":
                         MaxRows = UInt64.Parse(parts[1]);
                         break;
-                    case "avg_row_length":
-                        AvgRowLength = UInt64.Parse(parts[1]);
-                        break;
                     case "checksum":
                         CheckSum = Boolean.Parse(parts[1]);
                         break;
-//                    case "delay_key_write":
-  //                      delayKeyWrite = parts[1] == "1";
-    //                    break;
+                    case "pack_keys":
+                        PackKeys = parts[1] == "1" ? PackKeysMethod.Full : PackKeysMethod.None;
+                        break;
+                    case "delay_key_write":
+                        DelayKeyWrite = parts[1] == "1";
+                        break;
+                    // data directory
+                    // index directory
+                    // insert method
                 }
             }
         }
@@ -321,6 +335,28 @@ namespace MySql.Data.VisualStudio.DbObjects
                 Column c = new Column(row);
                 c.OwningTable = this;
                 columns.Add(c);
+            }
+        }
+
+        private void LoadIndexes()
+        {
+            string[] restrictions = new string[4] { null, owningNode.Database, Name, null };
+            DataTable dt = owningNode.GetSchema("Indexes", restrictions);
+            foreach (DataRow row in dt.Rows)
+            {
+                Index i = new Index(this, row);
+                indexes.Add(i);
+            }
+        }
+
+        private void LoadForeignKeys()
+        {
+            string[] restrictions = new string[4] { null, owningNode.Database, Name, null };
+            DataTable dt = owningNode.GetSchema("Foreign Keys", restrictions);
+            foreach (DataRow row in dt.Rows)
+            {
+                ForeignKey key = new ForeignKey(this, row);
+                ForeignKeys.Add(key);
             }
         }
 
@@ -388,6 +424,8 @@ namespace MySql.Data.VisualStudio.DbObjects
 
             List<PropertyDescriptor> props = new List<PropertyDescriptor>();
 
+            bool engineIsMyIsam = Engine.ToLowerInvariant() == "myisam";
+
             foreach (PropertyDescriptor pd in coll)
             {
                 if (!pd.IsBrowsable) continue;
@@ -395,8 +433,11 @@ namespace MySql.Data.VisualStudio.DbObjects
                 if (pd.Name == "DataDirectory" || pd.Name == "IndexDirectory")
                 {
                     CustomPropertyDescriptor newPd = new CustomPropertyDescriptor(pd);
-                    newPd.SetReadOnly(Engine.ToLowerInvariant() != "myisam");
+                    newPd.SetReadOnly(!engineIsMyIsam);
                     props.Add(newPd);
+                }
+                else if (pd.Name == "DelayKeyWrite" && !engineIsMyIsam)
+                {
                 }
                 else
                     props.Add(pd);
