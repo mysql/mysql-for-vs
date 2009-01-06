@@ -10,9 +10,12 @@ namespace MySql.Data.MySqlClient
 {
     internal class MySqlProviderManifest : DbXmlEnabledProviderManifest
     {
-        public MySqlProviderManifest()
+        string manifestToken;
+
+        public MySqlProviderManifest(string version)
             : base(GetManifest())
         {
+            manifestToken = version;
         }
 
         private static XmlReader GetManifest()
@@ -37,12 +40,12 @@ namespace MySql.Data.MySqlClient
 
         private XmlReader GetStoreSchemaMapping()
         {
-            return GetXmlResource("MySql.Data.Entity.Properties.SchemaMapping.msl");
+            return GetMappingResource("SchemaMapping.msl");
         }
 
         private XmlReader GetStoreSchemaDescription()
         {
-            return GetXmlResource("MySql.Data.Entity.Properties.SchemaMapping.ssdl");
+            return GetMappingResource("SchemaDefinition.ssdl");
         }
 
         public override TypeUsage GetEdmType(TypeUsage storeType)
@@ -67,16 +70,32 @@ namespace MySql.Data.MySqlClient
             throw new NotImplementedException();
         }
 
-        public override string Token
-        {
-            get { throw new NotImplementedException(); }
-        }
-
         private static XmlReader GetXmlResource(string resourceName)
         {
             Assembly executingAssembly = Assembly.GetExecutingAssembly();
             Stream stream = executingAssembly.GetManifestResourceStream(resourceName);
             return XmlReader.Create(stream);
+        }
+
+        private static XmlReader GetMappingResource(string resourceBaseName)
+        {
+            string rez = GetResourceAsString(
+                String.Format("MySql.Data.Entity.Properties.{0}", resourceBaseName));
+
+            StringReader sr = new StringReader(rez);
+            return XmlReader.Create(sr);
+
+        }
+
+        private static string GetResourceAsString(string resourceName)
+        {
+            Assembly executingAssembly = Assembly.GetExecutingAssembly();
+            Stream s = executingAssembly.GetManifestResourceStream(resourceName);
+            StreamReader sr = new StreamReader(s);
+            string resourceAsString = sr.ReadToEnd();
+            sr.Close();
+            s.Close();
+            return resourceAsString;
         }
     }
 }

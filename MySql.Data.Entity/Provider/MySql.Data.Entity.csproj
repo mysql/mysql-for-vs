@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A8E799B1-D6AC-42BD-907E-B213D7E9B3C5}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -43,9 +43,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ProviderManifest.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProviderServices.cs" />
     <Compile Include="SQL Generation\DmlSqlGenerator.cs" />
     <Compile Include="SQL Generation\ISqlFragment.cs" />
     <Compile Include="SQL Generation\JoinSymbol.cs" />
@@ -58,13 +55,25 @@
     <Compile Include="SQL Generation\SymbolPair.cs" />
     <Compile Include="SQL Generation\SymbolTable.cs" />
     <Compile Include="SQL Generation\TopClause.cs" />
+    <EmbeddedResource Include="Properties\SchemaMapping.msl" />
+    <EmbeddedResource Include="Properties\SchemaDefinition.ssdl" />
+    <None Include="UpdateGenerator.cs" />
+    <None Include="SelectGenerator.cs" />
+    <None Include="SqlGenerator.cs" />
+    <None Include="DeleteGenerator.cs" />
+    <None Include="InsertGenerator.cs" />
+    <Compile Include="ProviderManifest.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProviderServices.cs" />
+    <None Include="OldSelectGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\ProviderManifest.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\SchemaDefinition.ssdl" />
-    <EmbeddedResource Include="Properties\SchemaMapping.msl" />
+    <None Include="Properties\Version6SchemaDef.ssdl" />
+    <None Include="Properties\Version4SchemaDef.ssdl" />
+    <None Include="Properties\Version4Mapping.msl" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\MySql.Data\Provider\MySql.Data.csproj">
@@ -80,4 +89,9 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PostBuildEvent>call "$(DevEnvDir)..\Tools\vsvars32.bat"
+gacutil /u mysql.data.entity
+gacutil /i mysql.data.entity.dll</PostBuildEvent>
+  </PropertyGroup>
 </Project>
