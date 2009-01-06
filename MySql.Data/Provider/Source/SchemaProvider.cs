@@ -256,6 +256,8 @@ namespace MySql.Data.MySqlClient
             dt.Columns.Add("TABLE_NAME", typeof (string));
             dt.Columns.Add("UNIQUE", typeof (bool));
             dt.Columns.Add("PRIMARY", typeof (bool));
+            dt.Columns.Add("TYPE", typeof(string));
+            dt.Columns.Add("COMMENT", typeof(string));
 
             DataTable tables = GetTables(restrictions);
             foreach (DataRow table in tables.Rows)
@@ -279,6 +281,8 @@ namespace MySql.Data.MySqlClient
                     row["TABLE_NAME"] = index["TABLE"];
                     row["UNIQUE"] = (long) index["NON_UNIQUE"] == 0;
                     row["PRIMARY"] = index["KEY_NAME"].Equals("PRIMARY");
+                    row["TYPE"] = index["INDEX_TYPE"];
+                    row["COMMENT"] = index["COMMENT"];
                     dt.Rows.Add(row);
                 }
             }
@@ -295,6 +299,7 @@ namespace MySql.Data.MySqlClient
             dt.Columns.Add("TABLE_NAME", typeof (string));
             dt.Columns.Add("COLUMN_NAME", typeof (string));
             dt.Columns.Add("ORDINAL_POSITION", typeof (int));
+            dt.Columns.Add("SORT_ORDER", typeof(string));
 
             string[] tableRestrictions = new string[Math.Max(restrictions.Length, 4)]; 
             restrictions.CopyTo(tableRestrictions, 0);
@@ -327,6 +332,7 @@ namespace MySql.Data.MySqlClient
                         row["TABLE_NAME"] = GetString(reader, reader.GetOrdinal("TABLE"));
                         row["COLUMN_NAME"] = col_name;
                         row["ORDINAL_POSITION"] = reader.GetValue(reader.GetOrdinal("SEQ_IN_INDEX"));
+                        row["SORT_ORDER"] = reader.GetString("COLLATION");
                         dt.Rows.Add(row);
                     }
                 }
@@ -335,7 +341,7 @@ namespace MySql.Data.MySqlClient
             return dt;
         }
 
-        public virtual DataTable GetForeignKeys(string[] restrictions, bool includeColumns)
+        public virtual DataTable GetForeignKeys(string[] restrictions)
         {
             DataTable dt = new DataTable("Foreign Keys");
             dt.Columns.Add("CONSTRAINT_CATALOG", typeof (string));
@@ -344,16 +350,12 @@ namespace MySql.Data.MySqlClient
             dt.Columns.Add("TABLE_CATALOG", typeof(string));
             dt.Columns.Add("TABLE_SCHEMA", typeof (string));
             dt.Columns.Add("TABLE_NAME", typeof (string));
-            if (includeColumns)
-            {
-                dt.Columns.Add("COLUMN_NAME", typeof(string));
-                dt.Columns.Add("ORDINAL_POSITION", typeof(int));
-            }
+            dt.Columns.Add("MATCH_OPTION", typeof(string));
+            dt.Columns.Add("UPDATE_RULE", typeof(string));
+            dt.Columns.Add("DELETE_RULE", typeof(string));
             dt.Columns.Add("REFERENCED_TABLE_CATALOG", typeof (string));
             dt.Columns.Add("REFERENCED_TABLE_SCHEMA", typeof (string));
             dt.Columns.Add("REFERENCED_TABLE_NAME", typeof (string));
-            if (includeColumns)
-                dt.Columns.Add("REFERENCED_COLUMN_NAME", typeof(string));
 
             // first we use our restrictions to get a list of tables that should be
             // consulted.  We save the keyname restriction since GetTables doesn't 
@@ -370,10 +372,46 @@ namespace MySql.Data.MySqlClient
             // now for each table retrieved, we call our helper function to
             // parse it's foreign keys
             foreach (DataRow table in tables.Rows)
-                GetForeignKeysOnTable(dt, table, keyName, includeColumns);
+                GetForeignKeysOnTable(dt, table, keyName, false);
 
             return dt;
         }
+
+        public virtual DataTable GetForeignKeyColumns(string[] restrictions)
+        {
+            DataTable dt = new DataTable("Foreign Keys");
+            dt.Columns.Add("CONSTRAINT_CATALOG", typeof(string));
+            dt.Columns.Add("CONSTRAINT_SCHEMA", typeof(string));
+            dt.Columns.Add("CONSTRAINT_NAME", typeof(string));
+            dt.Columns.Add("TABLE_CATALOG", typeof(string));
+            dt.Columns.Add("TABLE_SCHEMA", typeof(string));
+            dt.Columns.Add("TABLE_NAME", typeof(string));
+            dt.Columns.Add("COLUMN_NAME", typeof(string));
+            dt.Columns.Add("ORDINAL_POSITION", typeof(int));
+            dt.Columns.Add("REFERENCED_TABLE_CATALOG", typeof(string));
+            dt.Columns.Add("REFERENCED_TABLE_SCHEMA", typeof(string));
+            dt.Columns.Add("REFERENCED_TABLE_NAME", typeof(string));
+            dt.Columns.Add("REFERENCED_COLUMN_NAME", typeof(string));
+
+            // first we use our restrictions to get a list of tables that should be
+            // consulted.  We save the keyname restriction since GetTables doesn't 
+            // understand that.
+            string keyName = null;
+            if (restrictions != null && restrictions.Length >= 4)
+            {
+                keyName = restrictions[3];
+                restrictions[3] = null;
+            }
+
+            DataTable tables = GetTables(restrictions);
+
+            // now for each table retrieved, we call our helper function to
+            // parse it's foreign keys
+            foreach (DataRow table in tables.Rows)
+                GetForeignKeysOnTable(dt, table, keyName, true); 
+            return dt;
+        }
+
 
         private string GetSqlMode()
         {
@@ -952,10 +990,10 @@ namespace MySql.Data.MySqlClient
                 case "INDEXCOLUMNS":
                     return GetIndexColumns(restrictions);
                 case "FOREIGN KEYS":
-                    return GetForeignKeys(restrictions, false);
+                    return GetForeignKeys(restrictions);
                 case "FOREIGN KEY COLUMNS":
-                    return GetForeignKeys(restrictions, true);
-            }
+                    return GetForeignKeyColumns(restrictions);
+            } 
             return null;
         }
     }

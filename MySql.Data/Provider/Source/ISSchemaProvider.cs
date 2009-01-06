@@ -376,6 +376,56 @@ namespace MySql.Data.MySqlClient
             return table;
         }
 
+        public override DataTable GetForeignKeys(string[] restrictions)
+        {
+            if (!connection.driver.Version.isAtLeast(5, 1, 16))
+                return base.GetForeignKeys(restrictions);
+
+            string sql = @"SELECT rc.constraint_catalog, rc.constraint_schema,
+                rc.constraint_name, kcu.table_catalog, kcu.table_schema, rc.table_name,
+                rc.match_option, rc.update_rule, rc.delete_rule, 
+                kcu.referenced_table_schema, rc.referenced_table_name 
+                FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS rc
+                LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE kcu ON 
+                kcu.constraint_catalog <=> rc.constraint_catalog AND
+                kcu.constraint_schema <=> rc.constraint_schema AND 
+                kcu.constraint_name <=> rc.constraint_name AND
+                kcu.ORDINAL_POSITION=1 WHERE 1=1";
+
+            StringBuilder where =new StringBuilder();
+            if (restrictions.Length >= 2 && !String.IsNullOrEmpty(restrictions[1]))
+                where.AppendFormat(" AND rc.constraint_schema LIKE '{0}'", restrictions[1]);
+            if (restrictions.Length >= 3 && !String.IsNullOrEmpty(restrictions[2]))
+                where.AppendFormat(" AND rc.table_name LIKE '{0}'", restrictions[2]);
+            if (restrictions.Length >= 4 && !String.IsNullOrEmpty(restrictions[3]))
+                where.AppendFormat(" AND rc.constraint_name LIKE '{0}'", restrictions[2]);
+
+            sql += where.ToString();
+
+            return GetTable(sql);
+        }
+
+        public override DataTable GetForeignKeyColumns(string[] restrictions)
+        {
+            if (!connection.driver.Version.isAtLeast(5, 0, 6))
+                return base.GetForeignKeyColumns(restrictions);
+
+            string sql = @"SELECT kcu.* FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE kcu
+                WHERE kcu.referenced_table_name IS NOT NULL";
+
+            StringBuilder where = new StringBuilder();
+            if (restrictions.Length >= 2 && !String.IsNullOrEmpty(restrictions[1]))
+                where.AppendFormat(" AND kcu.constraint_schema LIKE '{0}'", restrictions[1]);
+            if (restrictions.Length >= 3 && !String.IsNullOrEmpty(restrictions[2]))
+                where.AppendFormat(" AND kcu.table_name LIKE '{0}'", restrictions[2]);
+            if (restrictions.Length >= 4 && !String.IsNullOrEmpty(restrictions[3]))
+                where.AppendFormat(" AND kcu.constraint_name LIKE '{0}'", restrictions[2]);
+
+            sql += where.ToString();
+
+            return GetTable(sql);
+        }
+
         #region Procedures Support Rouines
 
         internal void GetParametersFromShowCreate(DataTable parametersTable,
