@@ -4,178 +4,204 @@ using System.Diagnostics;
 using System.Data.Common.CommandTrees;
 using System.Data.Metadata.Edm;
 using System.Collections.Generic;
+using MySql.Data.MySqlClient;
+using System.Data;
 
-namespace MySql.Data.MySqlClient.Generator
+namespace MySql.Data.Entity
 {
     class SelectGenerator : SqlGenerator 
     {
-        private StringBuilder input;
-        private StringBuilder projection;
+        Stack<SelectStatement> selectStatements = new Stack<SelectStatement>();
+
+        #region Properties 
+
+        protected override BaseStatement Current
+        {
+            get { return selectStatements.Count == 0 ? null : selectStatements.Peek(); }
+        }
+
+        private SelectStatement CurrentSelect
+        {
+            get { return Current as SelectStatement; }
+        }
+
+        #endregion
 
         public override string GenerateSQL(DbCommandTree tree)
         {
             DbQueryCommandTree commandTree = tree as DbQueryCommandTree;
 
-            input = new StringBuilder();
-            projection = new StringBuilder();
+            SqlFragment fragment = null;
 
             DbExpression e = commandTree.Query;
             switch (commandTree.Query.ExpressionKind)
             {
                 case DbExpressionKind.Project:
-                    e.Accept(this);
+                    scope.Push(null);
+                    fragment = e.Accept(this);
                     break;
             }
 
-            return String.Format("SELECT {0} FROM {1}", projection, input);
+            return fragment.GenerateSQL();
         }
 
-        public override void Visit(DbConstantExpression expression)
+        public override SqlFragment Visit(DbFilterExpression expression)
         {
-            Trace.WriteLine(String.Format("{0}{1}", tabs, "ConstantExpress"));
-            //            current.Append(expression.Value);
+            scope.Push(expression.Input.VariableName);
+            SqlFragment input = expression.Input.Expression.Accept(this);
 
-            // create a parameter and save it for later when we are 
-            // making our command that will be returned.
-            MySqlParameter p = new MySqlParameter();
-            p.ParameterName = CreateUniqueParameterName();
-            p.DbType = GetDbType(expression.ResultType);
-            p.Value = expression.Value;
-            Parameters.Add(p);
+            (Current as SelectStatement).Where.Add(expression.Predicate.Accept(this));
 
-            // now add the parameter name to our SQL stream
-            current.Append(p.ParameterName);
+            return input;
         }
 
-        public override void Visit(DbFilterExpression expression)
+        public override SqlFragment Visit(DbGroupByExpression expression)
         {
-            Trace.WriteLine(String.Format("{0}{1}-{2}", tabs, "FilterExpression", ""));
-            tabs += "-";
-            expression.Input.Expression.Accept(this);
-            //current.AppendFormat(" AS {0}", expression.Input.VariableName);
-
-            current.Append(" WHERE ");
-            expression.Predicate.Accept(this);
-            tabs = tabs.Substring(1);
-        }
-
-        public override void Visit(DbGroupByExpression expression)
-        {
-            StringBuilder i = new StringBuilder();
-            current = i;
-            expression.Input.Expression.Accept(this);
+            scope.Push(expression.Input.VariableName);
+            SqlFragment input = expression.Input.Expression.Accept(this);
 
             CollectionType ct = (CollectionType)expression.ResultType.EdmType;
             RowType rt = (RowType)ct.TypeUsage.EdmType;
 //            RowType groupByType = MetadataHelpers.GetEdmType<RowType>(MetadataHelpers.GetEdmType<CollectionType>(e.ResultType).TypeUsage);
 
-
+            List<string> names = new List<string>();
             using (IEnumerator<EdmProperty> members = rt.Properties.GetEnumerator())
             {
                 members.MoveNext();
+                names.Add(members.Current.Name);
             }
 
-
-            foreach (DbExpression key in expression.Keys)
-            {
+//            foreach (DbExpression key in expression.Keys)
+  //          {
 //                key.
-            }
+    //        }
 
             Trace.WriteLine(String.Format("{0}{1}", tabs, "GroupByExpression"));
-            foreach (DbAggregate a in expression.Aggregates)
+
+            for (int agg = 0; agg <= expression.Aggregates.Count; agg++)
             {
+                DbAggregate a = expression.Aggregates[agg];
                 DbFunctionAggregate fa = a as DbFunctionAggregate;
                 if (fa == null) throw new NotSupportedException();
 
-                current.Append(fa.Function.Name);
-                current.Append("(");
+                ListFragment lf = new ListFragment("");
+                string sql = fa.Function.Name + "(";
+                lf.Items.Add(new SqlFragment(fa.Function.Name + "("));
                 if (fa.Distinct)
-                    current.Append("DISTINCT ");
+                    sql += " DISTINCT ";
                 Push();
-                fa.Arguments[0].Accept(this);
+                lf.Items.Add(new SqlFragment(sql));
+                lf.Items.Add(fa.Arguments[0].Accept(this));
+                lf.Items.Add(new SqlFragment(")"));
+                //Current.HashFragment(scope.Peek() + "." + names[agg], lf);
                 Pop();
-                current.Append(")");
             }
+            scope.Pop();
+            return input;
         }
 
-        public override void Visit(DbJoinExpression expression)
+        public override SqlFragment Visit(DbJoinExpression expression)
         {
-            Trace.WriteLine(String.Format("{0}{1}-{2}", tabs, "JoinExpression", ""));
-            Push();
-            expression.Left.Expression.Accept(this);
-            current.AppendFormat(" AS `{0}`", expression.Left.VariableName);
+            JoinFragment join = new JoinFragment();
+            join.Name = scope.Peek();
+            join.JoinType = Metadata.GetOperator(expression.ExpressionKind);
 
-            current.Append(" INNER JOIN ");
-            expression.Right.Expression.Accept(this);
-            current.AppendFormat(" AS `{0}`", expression.Right.VariableName);
+            scope.Push(expression.Left.VariableName);
+            join.Left = expression.Left.Expression.Accept(this);
+            Current.IndexFragment(join.Left, scope.Peek());
+
+            scope.Push(expression.Right.VariableName);
+            join.Right = expression.Right.Expression.Accept(this);
+            Current.IndexFragment(join.Right, scope.Pop());
 
             // now handle the ON case
-            current.Append(" ON ");
-            expression.JoinCondition.Accept(this);
-            Pop();
+            join.Condition = expression.JoinCondition.Accept(this);
+            return join;
         }
 
-        public override void Visit(DbNewInstanceExpression expression)
+        public override SqlFragment Visit(DbLimitExpression expression)
         {
-            Trace.WriteLine(String.Format("{0}{1}-{2}", tabs, "NewInstanceExpression", ""));
-            Push();
+            CurrentSelect.Limit = expression.Limit.Accept(this);
+            return expression.Argument.Accept(this);
+        }
+
+        public override SqlFragment Visit(DbNewInstanceExpression expression)
+        {
+            if (expression.ResultType.EdmType.BuiltInTypeKind == BuiltInTypeKind.CollectionType)
+                return HandleNewInstanceAsInput(expression);
+
             RowType row = expression.ResultType.EdmType as RowType;
 
-            string separator = "";
+            ListFragment list = new ListFragment(", ");
+
             for (int i = 0; i < expression.Arguments.Count; i++)
             {
-                // let the expression do its thing
-                current.Append(separator);
-                expression.Arguments[i].Accept(this);
-                current.AppendFormat(" AS {0}", QuoteIdentifier(row.Properties[i].Name));
-                separator = ", ";
+                SqlFragment fragment = expression.Arguments[i].Accept(this);
+                if (row != null)
+                    fragment.Name = row.Properties[i].Name;
+                list.Items.Add(fragment);
             }
-            Pop();
+            return list;
         }
 
-        public override void Visit(DbParameterReferenceExpression expression)
+        private SqlFragment HandleNewInstanceAsInput(DbNewInstanceExpression expression)
         {
-            Trace.WriteLine(String.Format("{0}{1}-{2}", tabs, "ParameterReferenceExpression", expression.ParameterName));
-            current.AppendFormat("@{0}", expression.ParameterName);
+            SelectStatement statement = new SelectStatement(CurrentSelect);
+            statement.Name = scope.Pop();
+
+            if (expression.Arguments.Count == 0)
+            {
+                statement.Output = new SqlFragment("NULL");
+            }
+            else
+            {
+                statement.Output = expression.Arguments[0].Accept(this);
+            }
+            statement.Output.Name = "X";
+            return statement;
         }
 
-        public override void Visit(DbProjectExpression expression)
+        public override SqlFragment Visit(DbProjectExpression expression)
         {
-            Trace.WriteLine(String.Format("{0}{1}-{2}", tabs, "ProjectExpression", ""));
-            Push();
+            SelectStatement statement = new SelectStatement(Current as SelectStatement);
+            statement.Name = scope.Pop();
+            selectStatements.Push(statement);
 
             // handle from clause
-            current = input;
-            expression.Input.Expression.Accept(this);
-            current.AppendFormat(" AS {0}", QuoteIdentifier(expression.Input.VariableName));
-
+            scope.Push(expression.Input.VariableName);
+            statement.Input = expression.Input.Expression.Accept(this);
+            
             // now handle projection
-            current = projection;
-            expression.Projection.Accept(this);
-            Pop();
+            statement.Output = expression.Projection.Accept(this);
+
+            selectStatements.Pop();
+            return statement;
         }
 
-        public override void Visit(DbPropertyExpression expression)
+        public override SqlFragment Visit(DbSortExpression expression)
         {
-            Trace.WriteLine(String.Format("{0}{1}-{2}", tabs, "PropertyExpression", expression.Property.Name));
-            Push();
-            expression.Instance.Accept(this);
-            current.Append(QuoteIdentifier(expression.Property.Name));
-            Pop();
+            ListFragment list = new ListFragment(" ");
+
+            scope.Push(expression.Input.VariableName);
+            list.Items.Add(expression.Input.Expression.Accept(this));
+            list.Items.Add(new SqlFragment("ORDER BY"));
+
+            ListFragment clauses = new ListFragment(", ");
+            foreach (DbSortClause sortClause in expression.SortOrder)
+            {
+                ListFragment clause = new ListFragment(" ");
+                clause.Items.Add(sortClause.Expression.Accept(this));
+                clause.Items.Add(new SqlFragment(sortClause.Ascending ? "ASC" : "DESC"));
+                clauses.Items.Add(clause);
+            }
+            list.Items.Add(clauses);
+            return list;
         }
 
-        public override void Visit(DbScanExpression expression)
+        public override SqlFragment Visit(DbSkipExpression expression)
         {
-            Trace.WriteLine(String.Format("{0}{1}-{2}", tabs, "ScanExpression", expression.Target.Name));
-            EntitySetBase target = expression.Target;
-            current.AppendFormat("`{0}`.`{1}`", target.EntityContainer, target.Name);
-        }
-
-        public override void Visit(DbVariableReferenceExpression expression)
-        {
-            Trace.WriteLine(String.Format("{0}{1}-{2}", tabs, "VariableRefExpression", expression.VariableName));
-            current.AppendFormat("{0}.",
-                QuoteIdentifier(expression.VariableName));
+            CurrentSelect.Skip = expression.Count.Accept(this);
+            return expression.Input.Expression.Accept(this);
         }
     }
 }

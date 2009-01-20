@@ -39,6 +39,7 @@ PROCESS
       <FacetDescriptions>
         <MaxLength DefaultValue="8" Constant="true" />
         <FixedLength DefaultValue="true" Constant="true" />
+        <Precision DefaultValue="0" Constant="true" />
       </FacetDescriptions>
     </Type>
     <Type Name="datetime" PrimitiveTypeKind="DateTime">

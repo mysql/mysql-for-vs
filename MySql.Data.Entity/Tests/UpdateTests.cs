@@ -27,8 +27,6 @@ using MySql.Data.MySqlClient.Tests;
 using System.Data.EntityClient;
 using System.Data.Common;
 using System.Data.Objects;
-using MySql.Web.Security.Tests;
-using TestDB;
 
 namespace MySql.Data.Entity.Tests
 {
@@ -38,19 +36,22 @@ namespace MySql.Data.Entity.Tests
        [Test]
        public void UpdateAllRows()
        {
-           using (TestDB.TestDB db = new TestDB.TestDB())
+           using (testEntities context = new testEntities())
            {
-               foreach (Employee e in db.Employees)
-                   e.LastName = "Doe";
-               db.SaveChanges();
+               using (EntityConnection ec = context.Connection as EntityConnection)
+               {
+                   ec.Open();
+                   MySqlCommand cmd = new MySqlCommand("SELECT COUNT(*) FROM toys", (MySqlConnection)ec.StoreConnection);
+                   object count = cmd.ExecuteScalar();
 
-               EntityConnection ec = db.Connection as EntityConnection;
-               MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM employees", (MySqlConnection)ec.StoreConnection);
-               DataTable dt = new DataTable();
-               da.Fill(dt);
-               Assert.AreEqual(4, dt.Rows.Count);
-               foreach (DataRow row in dt.Rows)
-                   Assert.AreEqual("Doe", row["LastName"]);
+                   foreach (Toys t in context.Toys)
+                       t.Name = "Top";
+                   context.SaveChanges();
+
+                   cmd.CommandText = "SELECT COUNT(*) FROM toys WHERE name='Top'";
+                   object newCount = cmd.ExecuteScalar();
+                   Assert.AreEqual(count, newCount);
+               }
            }
        }
     }

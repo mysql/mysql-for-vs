@@ -43,29 +43,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SQL Generation\DmlSqlGenerator.cs" />
-    <Compile Include="SQL Generation\ISqlFragment.cs" />
-    <Compile Include="SQL Generation\JoinSymbol.cs" />
-    <Compile Include="SQL Generation\MetadataHelpers.cs" />
-    <Compile Include="SQL Generation\SqlBuilder.cs" />
-    <Compile Include="SQL Generation\SqlGenerator.cs" />
-    <Compile Include="SQL Generation\SqlSelectStatement.cs" />
-    <Compile Include="SQL Generation\SqlWriter.cs" />
-    <Compile Include="SQL Generation\Symbol.cs" />
-    <Compile Include="SQL Generation\SymbolPair.cs" />
-    <Compile Include="SQL Generation\SymbolTable.cs" />
-    <Compile Include="SQL Generation\TopClause.cs" />
     <EmbeddedResource Include="Properties\SchemaMapping.msl" />
     <EmbeddedResource Include="Properties\SchemaDefinition.ssdl" />
-    <None Include="UpdateGenerator.cs" />
-    <None Include="SelectGenerator.cs" />
-    <None Include="SqlGenerator.cs" />
-    <None Include="DeleteGenerator.cs" />
-    <None Include="InsertGenerator.cs" />
+    <Compile Include="DeleteStatement.cs" />
+    <Compile Include="Generators\FunctionGenerator.cs" />
+    <Compile Include="InsertStatement.cs" />
+    <Compile Include="ListFragment.cs" />
+    <Compile Include="Statements\BaseStatement.cs" />
+    <Compile Include="Statements\JoinFragment.cs" />
+    <Compile Include="TableFragment.cs" />
+    <Compile Include="Metadata.cs" />
+    <Compile Include="SelectStatement.cs" />
+    <Compile Include="SqlFragment.cs" />
+    <Compile Include="UpdateGenerator.cs" />
+    <Compile Include="SelectGenerator.cs" />
+    <Compile Include="SqlGenerator.cs" />
+    <Compile Include="DeleteGenerator.cs" />
+    <Compile Include="InsertGenerator.cs" />
     <Compile Include="ProviderManifest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProviderServices.cs" />
-    <None Include="OldSelectGenerator.cs" />
+    <Compile Include="SymbolFragment.cs" />
+    <Compile Include="UpdateStatement.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\ProviderManifest.xml" />
@@ -80,6 +79,9 @@
       <Project>{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}</Project>
       <Name>MySql.Data</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Fragments\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

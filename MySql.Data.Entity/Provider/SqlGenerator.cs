@@ -5,15 +5,17 @@ using System.Data;
 using System.Collections.Generic;
 using System.Data.Common.CommandTrees;
 using System.Data.Metadata.Edm;
+using MySql.Data.MySqlClient;
 
-namespace MySql.Data.MySqlClient.Generator
+namespace MySql.Data.Entity
 {
-    abstract class SqlGenerator : DbExpressionVisitor
+    abstract class SqlGenerator : DbExpressionVisitor<SqlFragment>
     {
         private List<MySqlParameter> parameters;
-        protected StringBuilder current;
         protected string tabs = String.Empty;
         private int parameterCount = 1;
+        protected Stack<string> scope = new Stack<string>();
+        private BaseStatement current;
 
         public SqlGenerator()
         {
@@ -25,6 +27,11 @@ namespace MySql.Data.MySqlClient.Generator
         public List<MySqlParameter> Parameters
         {
             get { return parameters; }
+        }
+
+        protected virtual BaseStatement Current 
+        { 
+            get { return current; }
         }
 
         #endregion
@@ -39,39 +46,9 @@ namespace MySql.Data.MySqlClient.Generator
             tabs = tabs.Substring(1);
         }
 
-        public abstract string GenerateSQL(DbCommandTree commandTree);
-
-        protected string QuoteIdentifier(string id)
+        public virtual string GenerateSQL(DbCommandTree commandTree)
         {
-            return String.Format("`{0}`", id);
-        }
-
-        protected DbType GetDbType(TypeUsage typeUsage)
-        {
-            PrimitiveType pt = (PrimitiveType)typeUsage.EdmType;
-            
-            switch (pt.PrimitiveTypeKind)
-            {
-                case PrimitiveTypeKind.Binary: return DbType.Binary;
-                case PrimitiveTypeKind.Boolean: return DbType.Boolean;
-                case PrimitiveTypeKind.Byte: return DbType.Byte;
-                case PrimitiveTypeKind.DateTime: return DbType.DateTime;
-                case PrimitiveTypeKind.Decimal: return DbType.Decimal;
-                case PrimitiveTypeKind.Double: return DbType.Double;
-                case PrimitiveTypeKind.Single: return DbType.Single;
-                case PrimitiveTypeKind.Guid: return DbType.Guid;
-                case PrimitiveTypeKind.Int16: return DbType.Int16;
-                case PrimitiveTypeKind.Int32: return DbType.Int32;
-                case PrimitiveTypeKind.Int64: return DbType.Int64;
-                case PrimitiveTypeKind.SByte: return DbType.SByte;
-                case PrimitiveTypeKind.String: return DbType.String;
-//                case PrimitiveTypeKind.UInt16: return DbType.UInt16;
-//                case PrimitiveTypeKind.UInt32: return DbType.UInt32;
-//                case PrimitiveTypeKind.UInt64: return DbType.UInt64;
-                default:
-                    throw new InvalidOperationException(
-                        string.Format("Unknown PrimitiveTypeKind {0}", pt.PrimitiveTypeKind));
-            }            
+            throw new NotImplementedException();
         }
 
         protected string CreateUniqueParameterName()
@@ -79,223 +56,279 @@ namespace MySql.Data.MySqlClient.Generator
             return String.Format("@p{0}", parameterCount++);
         }
 
-        #region DbExpressionVisitor Abstract methods
+        #region DbExpressionVisitor Base Implementations
 
-//        public override void Visit(DbViewExpression expression)
-//        {
-//            throw new System.NotImplementedException();
-//        }
-
-        public override void Visit(DbVariableReferenceExpression expression)
+        public override SqlFragment Visit(DbVariableReferenceExpression expression)
         {
-            throw new System.NotImplementedException();
+            Trace.WriteLine(String.Format("{0}{1}-{2}", tabs, "VariableRefExpression", expression.VariableName));
+            SymbolFragment f = new SymbolFragment();
+            f.Variable = expression.VariableName;
+            return f;
         }
 
-        public override void Visit(DbUnionAllExpression expression)
+        public override SqlFragment Visit(DbScanExpression expression)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public override void Visit(DbTreatExpression expression)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override void Visit(DbSortExpression expression)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override void Visit(DbSkipExpression expression)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override void Visit(DbScanExpression expression)
-        {
-            Trace.WriteLine(String.Format("{0}{1}-{2}", tabs, "ScanExpression", expression.Target.Name));
             EntitySetBase target = expression.Target;
-            current.AppendFormat("`{0}`.`{1}`", target.EntityContainer, target.Name);
+            TableFragment fragment = new TableFragment();
+
+            MetadataProperty property;
+            if (target.MetadataProperties.TryGetValue("DefiningQuery", true, out property))
+                fragment.Text = String.Format("({0})", property.Value);
+            else
+            {
+                string schema = target.EntityContainer.Name;
+                string table = target.Name;
+
+                if (target.MetadataProperties.TryGetValue("Schema", true, out property))
+                    schema = property.Value as string;
+                if (target.MetadataProperties.TryGetValue("Table", true, out property))
+                    table = property.Value as string;
+                fragment.Text = String.Format("`{0}`.`{1}`", schema, table);
+            }
+            fragment.Name = scope.Pop();
+
+            return fragment;
         }
 
-        public override void Visit(DbRelationshipNavigationExpression expression)
+        public override SqlFragment Visit(DbPropertyExpression expression)
         {
-            throw new System.NotImplementedException();
+            Trace.WriteLine(String.Format("{0}{1}-{2}", tabs, "PropertyExpression", expression.Property.Name));
+            Push();
+
+            SqlFragment f = expression.Instance.Accept(this);
+            SymbolFragment symbolFragment = f as SymbolFragment;
+            symbolFragment.Properties.Add(expression.Property.Name);
+            Pop();
+            return symbolFragment;
         }
 
-        public override void Visit(DbRefExpression expression)
+        public override SqlFragment Visit(DbParameterReferenceExpression expression)
         {
-            throw new System.NotImplementedException();
+            return new SqlFragment("@" + expression.ParameterName);
         }
 
-        public override void Visit(DbQuantifierExpression expression)
+        public override SqlFragment Visit(DbNotExpression expression)
         {
-            throw new System.NotImplementedException();
+            SqlFragment f = expression.Argument.Accept(this);
+            return f;
         }
 
-        public override void Visit(DbPropertyExpression expression)
+        public override SqlFragment Visit(DbIsEmptyExpression expression)
         {
-            throw new System.NotImplementedException();
+            SqlFragment f = expression.Argument.Accept(this);
+            return f;
         }
 
-        public override void Visit(DbProjectExpression expression)
+        public override SqlFragment Visit(DbFunctionExpression expression)
         {
-            throw new System.NotImplementedException();
+            FunctionGenerator gen = new FunctionGenerator();
+            return gen.Generate(expression, this);
         }
 
-        public override void Visit(DbParameterReferenceExpression expression)
+        public override SqlFragment Visit(DbConstantExpression expression)
         {
-            throw new System.NotImplementedException();
+            Trace.WriteLine(String.Format("{0}{1}", tabs, "ConstantExpress"));
+
+            SqlFragment f = new SqlFragment();
+            if (Metadata.IsNumericType(expression.ResultType))
+                f.Text = expression.Value.ToString();
+            else
+            {
+                // use a parameter for non-numeric types so we get proper
+                // quoting
+                MySqlParameter p = new MySqlParameter();
+                p.ParameterName = CreateUniqueParameterName();
+                p.DbType = Metadata.GetDbType(expression.ResultType);
+                p.Value = expression.Value;
+                Parameters.Add(p);
+                f.Text = p.ParameterName;
+            }
+            return f;
         }
 
-        public override void Visit(DbOrExpression expression)
+        public override SqlFragment Visit(DbComparisonExpression expression)
         {
-            throw new System.NotImplementedException();
+            SqlFragment left = expression.Left.Accept(this);
+            SqlFragment right = expression.Right.Accept(this);
+
+            ListFragment l = new ListFragment(" ");
+            l.Items.Add(left);
+            l.Items.Add(new SqlFragment(Metadata.GetOperator(expression.ExpressionKind)));
+            l.Items.Add(right);
+            return l;
         }
 
-        public override void Visit(DbOfTypeExpression expression)
+        public override SqlFragment Visit(DbAndExpression expression)
         {
-            throw new System.NotImplementedException();
+            SqlFragment left = expression.Left.Accept(this);
+            SqlFragment right = expression.Right.Accept(this);
+            return left;
         }
 
-        public override void Visit(DbNullExpression expression)
+        #endregion
+
+        #region DBExpressionVisitor methods normally overridden
+
+        public override SqlFragment Visit(DbUnionAllExpression expression)
         {
-            throw new System.NotImplementedException();
+            expression.
+            throw new NotImplementedException();
         }
 
-        public override void Visit(DbNotExpression expression)
+
+        public override SqlFragment Visit(DbTreatExpression expression)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override void Visit(DbNewInstanceExpression expression)
+        public override SqlFragment Visit(DbSortExpression expression)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override void Visit(DbLimitExpression expression)
+        public override SqlFragment Visit(DbSkipExpression expression)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override void Visit(DbLikeExpression expression)
+        public override SqlFragment Visit(DbRelationshipNavigationExpression expression)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override void Visit(DbJoinExpression expression)
+        public override SqlFragment Visit(DbRefExpression expression)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override void Visit(DbIsOfExpression expression)
+        public override SqlFragment Visit(DbQuantifierExpression expression)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override void Visit(DbIsNullExpression expression)
+        public override SqlFragment Visit(DbProjectExpression expression)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override void Visit(DbIsEmptyExpression expression)
+        public override SqlFragment Visit(DbOrExpression expression)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override void Visit(DbIntersectExpression expression)
+        public override SqlFragment Visit(DbOfTypeExpression expression)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override void Visit(DbGroupByExpression expression)
+        public override SqlFragment Visit(DbNullExpression expression)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override void Visit(DbRefKeyExpression expression)
+        public override SqlFragment Visit(DbNewInstanceExpression expression)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override void Visit(DbEntityRefExpression expression)
+        public override SqlFragment Visit(DbLimitExpression expression)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override void Visit(DbFunctionExpression expression)
+        public override SqlFragment Visit(DbLikeExpression expression)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override void Visit(DbFilterExpression expression)
+        public override SqlFragment Visit(DbJoinExpression expression)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override void Visit(DbExceptExpression expression)
+        public override SqlFragment Visit(DbIsOfExpression expression)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override void Visit(DbElementExpression expression)
+        public override SqlFragment Visit(DbIsNullExpression expression)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override void Visit(DbDistinctExpression expression)
+        public override SqlFragment Visit(DbIntersectExpression expression)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override void Visit(DbDerefExpression expression)
+        public override SqlFragment Visit(DbGroupByExpression expression)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override void Visit(DbCrossJoinExpression expression)
+        public override SqlFragment Visit(DbRefKeyExpression expression)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override void Visit(DbConstantExpression expression)
+        public override SqlFragment Visit(DbEntityRefExpression expression)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override void Visit(DbComparisonExpression expression)
+        public override SqlFragment Visit(DbFilterExpression expression)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override void Visit(DbCastExpression expression)
+        public override SqlFragment Visit(DbExceptExpression expression)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override void Visit(DbCaseExpression expression)
+        public override SqlFragment Visit(DbElementExpression expression)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override void Visit(DbArithmeticExpression expression)
+        public override SqlFragment Visit(DbDistinctExpression expression)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override void Visit(DbApplyExpression expression)
+        public override SqlFragment Visit(DbDerefExpression expression)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override void Visit(DbAndExpression expression)
+        public override SqlFragment Visit(DbCrossJoinExpression expression)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override void Visit(DbExpression expression)
+        public override SqlFragment Visit(DbCastExpression expression)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
+        }
+
+        public override SqlFragment Visit(DbCaseExpression expression)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override SqlFragment Visit(DbArithmeticExpression expression)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override SqlFragment Visit(DbApplyExpression expression)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override SqlFragment Visit(DbExpression expression)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

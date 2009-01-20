@@ -4,7 +4,8 @@ using System.Data.Common.CommandTrees;
 using System.Collections.Generic;
 using System.Data.Metadata.Edm;
 using System.Data;
-using MySql.Data.MySqlClient.SQLGeneration;
+//using MySql.Data.MySqlClient.SQLGeneration;
+using MySql.Data.Entity;
 
 namespace MySql.Data.MySqlClient
 {
@@ -18,7 +19,7 @@ namespace MySql.Data.MySqlClient
         }
 
 
-        protected override DbCommandDefinition CreateDbCommandDefinition(DbProviderManifest providerManifest, DbCommandTree commandTree)
+/*        protected override DbCommandDefinition CreateDbCommandDefinition(DbProviderManifest providerManifest, DbCommandTree commandTree)
         {
             List<DbParameter> parameters;
             CommandType commandType;
@@ -41,9 +42,9 @@ namespace MySql.Data.MySqlClient
                     cmd.Parameters.Add(p);
 
             return CreateCommandDefinition(cmd);
-        }
+        }*/
 
-/*        protected override DbCommandDefinition CreateDbCommandDefinition(
+        protected override DbCommandDefinition CreateDbCommandDefinition(
             DbProviderManifest providerManifest, DbCommandTree commandTree)
         {
             if (commandTree == null)
@@ -77,7 +78,7 @@ namespace MySql.Data.MySqlClient
                 cmd.Parameters.Add(p);
             return CreateCommandDefinition(cmd);
         }
-        */
+        
 
         protected override string GetDbProviderManifestToken(DbConnection connection)
         {
@@ -92,7 +93,7 @@ namespace MySql.Data.MySqlClient
             string version = connection.ServerVersion;
             if (shouldClose)
                 connection.Close();
-
+            return "5";
             if (version.StartsWith("5")) return "5";
             return "6";
         }

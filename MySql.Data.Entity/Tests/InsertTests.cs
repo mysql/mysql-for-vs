@@ -27,35 +27,35 @@ using MySql.Data.MySqlClient.Tests;
 using System.Data.EntityClient;
 using System.Data.Common;
 using System.Data.Objects;
-using MySql.Web.Security.Tests;
-using TestDB;
 
 namespace MySql.Data.Entity.Tests
 {
-	[TestFixture]
-	public class InsertTests : BaseEdmTest
-	{
-       [Test]
+    [TestFixture]
+    public class InsertTests : BaseEdmTest
+    {
+        [Test]
         public void InsertSingleRow()
         {
-           using (TestDB.TestDB db = new TestDB.TestDB())
-           {
-                Employee e = new Employee();
-                e.EmployeeId = 3;
-                e.FirstName = "John";
-                e.LastName = "Doe";
-                db.AddToEmployees(e);
-                int result = db.SaveChanges();
-
-                EntityConnection ec = db.Connection as EntityConnection;
-                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM employees", (MySqlConnection)ec.StoreConnection);
+            using (testEntities context = new testEntities())
+            {
+                EntityConnection ec = context.Connection as EntityConnection;
+                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM toys", (MySqlConnection)ec.StoreConnection);
                 DataTable dt = new DataTable();
                 da.Fill(dt);
-                Assert.AreEqual(3, dt.Rows.Count);
-                DataRow row = dt.Rows[2];
-                Assert.AreEqual(3, row["id"]);
-                Assert.AreEqual("Doe", row["LastName"]);
-                Assert.AreEqual("John", row["FirstName"]);
+
+                Toys t = new Toys();
+                t.Id = 5;
+                t.Name = "Yoyo";
+                t.MinAge = 5;
+                context.AddToToys(t);
+                int result = context.SaveChanges();
+
+                DataTable afterInsert = new DataTable();
+                da.Fill(afterInsert);
+                Assert.AreEqual(dt.Rows.Count + 1, afterInsert.Rows.Count);
+                Assert.AreEqual(5, dt.Rows[4]["id"]);
+                Assert.AreEqual("Yoyo", dt.Rows[4]["name"]);
+                Assert.AreEqual(5, dt.Rows[4]["minage"]);
             }
         }
     }

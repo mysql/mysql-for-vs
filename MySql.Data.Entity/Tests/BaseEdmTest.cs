@@ -35,7 +35,7 @@ using System.Xml;
 using System.IO;
 using NUnit.Framework;
 
-namespace MySql.Web.Security.Tests
+namespace MySql.Data.Entity.Tests
 {
     public class BaseEdmTest : BaseTest
     {

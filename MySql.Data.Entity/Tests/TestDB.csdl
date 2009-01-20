@@ -2,11 +2,19 @@
 <Schema Namespace="TestDB" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2006/04/edm">
 
   <EntityContainer Name="TestDB">
-    <EntitySet Name="Employees" EntityType="Self.Employee" />
-    <EntitySet Name="Children" EntityType="Self.Children" />
+    <EntitySet Name="Employees" EntityType="TestDB.Employees" />
+    <EntitySet Name="Children" EntityType="TestDB.Children" />
+    <EntitySet Name="Companies" EntityType ="TestDB.Companies"/>
+    <EntitySet Name="Toys" EntityType ="TestDB.Toys"/>
+    <AssociationSet Name="FK_Toys_Companies" Association ="TestDB.FK_Toys_Companies">
+      <End Role="Companies" EntitySet ="Companies"/>
+      <End Role="Toys" EntitySet ="Toys"/>
+    </AssociationSet>
+    <EntitySet Name="Stores" EntityType ="TestDB.Stores"/>
+    <EntitySet Name="Orders" EntityType ="TestDB.Orders"/>
   </EntityContainer>
 
-  <EntityType Name="Employee">
+  <EntityType Name="Employees">
     <Key>
       <PropertyRef Name="EmployeeId" />
     </Key>
@@ -16,7 +24,7 @@
     <Property Name="Age" Type="Int32" Nullable="true"/>
   </EntityType>
 
-  <EntityType Name="SalariedEmployee" BaseType ="Self.Employee">
+  <EntityType Name="SalariedEmployee" BaseType ="TestDB.Employees">
     <Property Name="Salary" Type="Int32" Nullable="false"  />
   </EntityType>
 
@@ -29,5 +37,56 @@
     <Property Name="LastName" Type="String" Nullable="false" MaxLength="20" />
     <Property Name="FirstName" Type="String" Nullable="false" MaxLength="10" />
   </EntityType>
+
+  <EntityType Name="Companies">
+    <Key>
+      <PropertyRef Name="Id"/>
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable ="false"/>
+    <Property Name="Name" Type="String" Nullable ="false" MaxLength ="100"/>
+    <Property Name="DateBegan" Type="DateTime" Nullable ="true"/>
+    <Property Name="NumEmployees" Type="Int32" Nullable ="true"/>
+    <Property Name="Address" Type="TestDB.CommonAddress" Nullable="false"/>
+    <NavigationProperty Name="Toys" Relationship ="TestDB.FK_Toys_Companies" FromRole ="Companies" ToRole ="Toys"/>
+  </EntityType>
   
+  <EntityType Name="Toys">
+    <Key>
+      <PropertyRef Name="Id"/>
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable ="false"/>
+    <Property Name="Name" Type="String" MaxLength="100" Nullable ="false"/>
+    <Property Name="MinAge" Type="Int32" Nullable ="false"/>
+    <NavigationProperty Name="Companies" Relationship ="TestDB.FK_Toys_Companies" FromRole="Toys" ToRole="Companies"/>
+  </EntityType>
+
+  <Association Name="FK_Toys_Companies">
+    <End Role="Companies" Type="TestDB.Companies" Multiplicity="1" />
+    <End Role="Toys" Type="TestDB.Toys" Multiplicity="*" />
+  </Association>
+
+  <!-- Complex type -->
+  <ComplexType Name="CommonAddress" >
+    <Property Name ="Address" Type="String"  />
+    <Property Name ="City" Type="String" />
+    <Property Name ="State" Type="String" />
+    <Property Name ="ZipCode" Type="String" />
+  </ComplexType>
+
+  <EntityType Name="Stores">
+    <Key>
+      <PropertyRef Name="Id"/>
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable ="false"/>
+    <Property Name="Name" Type="String" MaxLength="50" Nullable ="false"/>
+  </EntityType>
+
+  <EntityType Name="Orders">
+    <Key>
+      <PropertyRef Name="Id"/>
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable ="false"/>
+    <Property Name="StoreId" Type="Int32" Nullable ="false"/>
+    <Property Name="Freight" Type="Double" Nullable ="false"/>
+  </EntityType>
 </Schema>

@@ -1,9 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Schema Namespace="TestDB" Alias="Self" Provider="MySql.Data.MySqlClient" ProviderManifestToken="" xmlns="http://schemas.microsoft.com/ado/2006/04/edm/ssdl">
+<Schema Namespace="TestDB.Store" Alias="Self" Provider="MySql.Data.MySqlClient" ProviderManifestToken="" xmlns="http://schemas.microsoft.com/ado/2006/04/edm/ssdl">
   <EntityContainer Name="!dbname">
-    <EntitySet Name="Employees" EntityType="Self.Employees" />
-    <EntitySet Name="EmployeeChildren" EntityType="Self.EmployeeChildren" />
-    <EntitySet Name="SalariedEmployees" EntityType ="Self.SalariedEmployees"/>
+    <EntitySet Name="Employees" EntityType="TestDB.Store.Employees" />
+    <EntitySet Name="EmployeeChildren" EntityType="TestDB.Store.EmployeeChildren" />
+    <EntitySet Name="SalariedEmployees" EntityType ="TestDB.Store.SalariedEmployees"/>
+    <EntitySet Name="Toys" EntityType ="TestDB.Store.Toys"/>
+    <EntitySet Name="Companies" EntityType ="TestDB.Store.Companies"/>
+    <AssociationSet Name="FK_Toys_Companies" Association ="TestDB.Store.FK_Toys_Companies">
+      <End Role="Companies" EntitySet ="Companies"/>
+      <End Role="Toys" EntitySet ="Toys"/>
+    </AssociationSet>
+    <EntitySet Name="Stores" EntityType ="TestDB.Store.Stores"/>
+    <EntitySet Name="Orders" EntityType ="TestDB.Store.Orders"/>
   </EntityContainer>
 
   <EntityType Name="Employees">
@@ -34,4 +42,57 @@
     <Property Name="FirstName" Type="nvarchar" Nullable="false" MaxLength="10" />
   </EntityType>
 
+  <EntityType Name="Companies">
+    <Key>
+      <PropertyRef Name="Id"/>
+    </Key>
+    <Property Name="Id" Type="int" Nullable ="false"/>
+    <Property Name="Name" Type="varchar" MaxLength ="100" Nullable ="false"/>
+    <Property Name="DateBegan" Type="date" Nullable ="true"/>
+    <Property Name="NumEmployees" Type="int" Nullable ="true"/>
+    <Property Name ="Address" Type="varchar" MaxLength="50"/>
+    <Property Name ="City" Type="varchar" MaxLength ="50"/>
+    <Property Name ="State" Type="char" MaxLength ="2" />
+    <Property Name ="ZipCode" Type="char" MaxLength ="9"/>
+  </EntityType>
+  
+  <EntityType Name="Toys">
+    <Key>
+      <PropertyRef Name="Id"/>
+    </Key>
+    <Property Name="Id" Type="int" Nullable ="false"/>
+    <Property Name="Name" Type="varchar" MaxLength="100" Nullable ="false"/>
+    <Property Name="MinAge" Type="int" Nullable ="false"/>
+    <Property Name="MakerId" Type="int" Nullable ="false"/>
+  </EntityType>
+
+  <Association Name="FK_Toys_Companies">
+    <End Role="Companies" Type="TestDB.Store.Companies" Multiplicity ="1"/>
+    <End Role="Toys" Type="TestDB.Store.Toys" Multiplicity ="*"/>
+    <ReferentialConstraint>
+      <Principal Role="Companies">
+        <PropertyRef Name="Id"/>
+      </Principal>
+      <Dependent Role="Toys">
+        <PropertyRef Name="MakerId"/>
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+
+  <EntityType Name="Stores">
+    <Key>
+      <PropertyRef Name="Id"/>
+    </Key>
+    <Property Name="Id" Type="int" Nullable ="false"/>
+    <Property Name="Name" Type="varchar" MaxLength="50" Nullable ="false"/>
+  </EntityType>
+
+  <EntityType Name="Orders">
+    <Key>
+      <PropertyRef Name="Id"/>
+    </Key>
+    <Property Name="Id" Type="int" Nullable ="false"/>
+    <Property Name="StoreId" Type="int" Nullable ="false"/>
+    <Property Name="Freight" Type="double" Nullable ="false"/>
+  </EntityType>
 </Schema>

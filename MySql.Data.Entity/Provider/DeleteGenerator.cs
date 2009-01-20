@@ -1,12 +1,13 @@
 ﻿using System.Text;
 using System.Data.Common.CommandTrees;
 using System.Data.Metadata.Edm;
+using MySql.Data.MySqlClient;
 
-namespace MySql.Data.MySqlClient.Generator
+namespace MySql.Data.Entity
 {
     class DeleteGenerator : SqlGenerator 
     {
-        private StringBuilder sql;
+        //private StringBuilder sql;
 
         public override string GenerateSQL(DbCommandTree tree)
         {
@@ -16,14 +17,13 @@ namespace MySql.Data.MySqlClient.Generator
             //ExpressionTranslator translator = new ExpressionTranslator(commandText, tree,
                 //null != tree.Returning);
 
-            sql = new StringBuilder();
-            sql.Append("DELETE FROM ");
+            DeleteStatement statement = new DeleteStatement();
+            statement.Target = commandTree.Target.Expression.Accept(this);
+            statement.Target.Name = commandTree.Target.VariableName;
 
-            current = sql;
-            commandTree.Target.Expression.Accept(this);
+            statement.Where = commandTree.Predicate.Accept(this);
 
-            sql.Append(" WHERE ");
-            commandTree.Predicate.Accept(this);
+            return statement.GenerateSQL();
 
 /*            sql.Append("(");
             foreach (DbSetClause setClause in commandTree.SetClauses)
@@ -50,44 +50,7 @@ namespace MySql.Data.MySqlClient.Generator
 
             parameters = translator.Parameters;
             return commandText.ToString();*/
-            return sql.ToString();
-        }
-
-        public override void Visit(DbPropertyExpression expression)
-        {
-            current.Append(QuoteIdentifier(expression.Property.Name));
-        }
-
-        public override void Visit(DbConstantExpression expression)
-        {
-            // create a parameter and save it for later when we are 
-            // making our command that will be returned.
-            MySqlParameter p = new MySqlParameter();
-            p.ParameterName = CreateUniqueParameterName();
-            p.DbType = GetDbType(expression.ResultType);
-            p.Value = expression.Value;
-            Parameters.Add(p);
-
-            // now add the parameter name to our SQL stream
-            current.Append(p.ParameterName);
-        }
-
-        public override void Visit(DbComparisonExpression expression)
-        {
-            expression.Left.Accept(this);
-            switch (expression.ExpressionKind)
-            {
-                case DbExpressionKind.Equals:
-                    current.Append("=");
-                    break;
-                case DbExpressionKind.LessThan:
-                    current.Append("<");
-                    break;
-                case DbExpressionKind.GreaterThan:
-                    current.Append(">");
-                    break;
-            }
-            expression.Right.Accept(this);
+            //return sql.ToString();
         }
     }
 }

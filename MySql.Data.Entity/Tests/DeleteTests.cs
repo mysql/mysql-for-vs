@@ -27,24 +27,62 @@ using MySql.Data.MySqlClient.Tests;
 using System.Data.EntityClient;
 using System.Data.Common;
 using System.Data.Objects;
-using MySql.Web.Security.Tests;
-using TestDB;
 
 namespace MySql.Data.Entity.Tests
 {
 	[TestFixture]
 	public class DeleteTests : BaseEdmTest
-	{
+    {
+        [Test]
+        public void SimpleDeleteAllRows()
+        {
+            using (testEntities context = new testEntities())
+            {
+                foreach (Toys t in context.Toys)
+                    context.DeleteObject(t);
+                context.SaveChanges();
+
+                EntityConnection ec = context.Connection as EntityConnection;
+                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM toys",
+                    (MySqlConnection)ec.StoreConnection);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                Assert.AreEqual(0, dt.Rows.Count);
+            }
+        }
+
+        [Test]
+        public void SimpleDeleteRowByParameter()
+        {
+            using (testEntities context = new testEntities())
+            {
+                EntityConnection ec = context.Connection as EntityConnection;
+                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM toys WHERE minage=3", (MySqlConnection)ec.StoreConnection);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                Assert.IsTrue(dt.Rows.Count > 0);
+
+                ObjectQuery<Toys> toys = context.Toys.Where("it.MinAge = @age", new ObjectParameter("age", 3));
+                foreach (Toys t in toys)
+                    context.DeleteObject(t);
+                context.SaveChanges();
+
+                dt.Clear();
+                da.Fill(dt);
+                Assert.AreEqual(0, dt.Rows.Count);
+            }
+        }
+
        [Test]
        public void DeleteAllRowsParameter()
        {
-           using (TestDB.TestDB db = new TestDB.TestDB())
+           using (testEntities context = new testEntities())
            {
-               foreach (Employee e in db.Employees)
-                   db.DeleteObject(e);
-               db.SaveChanges();
+               foreach (Employees e in context.Employees)
+                   context.DeleteObject(e);
+               context.SaveChanges();
 
-               EntityConnection ec = db.Connection as EntityConnection;
+               EntityConnection ec = context.Connection as EntityConnection;
                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM employees",
                    (MySqlConnection)ec.StoreConnection);
                DataTable dt = new DataTable();
@@ -56,14 +94,14 @@ namespace MySql.Data.Entity.Tests
        [Test]
        public void DeleteRowByParameter()
        {
-           using (TestDB.TestDB db = new TestDB.TestDB())
+           using (testEntities context = new testEntities())
            {
-               ObjectQuery<Employee> emp = db.Employees.Where("it.ID = @id", new ObjectParameter("id", 1));
-               foreach (Employee e in emp)
-                   db.DeleteObject(e);
-               db.SaveChanges();
+               ObjectQuery<Employees> emp = context.Employees.Where("it.ID = @id", new ObjectParameter("id", 1));
+               foreach (Employees e in emp)
+                   context.DeleteObject(e);
+               context.SaveChanges();
 
-               EntityConnection ec = db.Connection as EntityConnection;
+               EntityConnection ec = context.Connection as EntityConnection;
                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM employees", (MySqlConnection)ec.StoreConnection);
                DataTable dt = new DataTable();
                da.Fill(dt);

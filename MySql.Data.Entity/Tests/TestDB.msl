@@ -17,7 +17,7 @@
       The IsTypeOf keyword tells the mapping that the following mapping applies to all subtypes of 
       the given Type (in this case, InternationalOrder as well as Order)
       -->
-      <EntityTypeMapping TypeName="IsTypeOf(TestDB.Employee)">
+      <EntityTypeMapping TypeName="IsTypeOf(TestDB.Employees)">
         <MappingFragment StoreEntitySet="Employees" >
           <ScalarProperty Name="EmployeeId" ColumnName="employeeId" />
           <ScalarProperty Name="LastName" ColumnName="lastName" />
@@ -46,6 +46,60 @@
       </EntityTypeMapping>
     </EntitySetMapping>
 
+    <EntitySetMapping Name="Companies">
+      <EntityTypeMapping TypeName="IsTypeOf(TestDB.Companies)">
+        <MappingFragment StoreEntitySet="Companies" >
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="DateBegan" ColumnName="DateBegan" />
+          <ScalarProperty Name="NumEmployees" ColumnName="NumEmployees" />
+          <ComplexProperty Name ="Address" TypeName ="TestDB.CommonAddress" >
+            <ScalarProperty Name="Address" ColumnName="Address" />
+            <ScalarProperty Name="City" ColumnName="City" />
+            <ScalarProperty Name="State" ColumnName="State" />
+            <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
+          </ComplexProperty >        
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+
+    <EntitySetMapping Name="Toys">
+      <EntityTypeMapping TypeName="IsTypeOf(TestDB.Toys)">
+        <MappingFragment StoreEntitySet="Toys" >
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="MinAge" ColumnName="MinAge" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+
+    <AssociationSetMapping Name="FK_Toys_Companies" TypeName="TestDB.FK_Toys_Companies" StoreEntitySet="Toys">
+      <EndProperty Name="Companies">
+        <ScalarProperty Name="Id" ColumnName="MakerId" />
+      </EndProperty>
+      <EndProperty Name="Toys">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+
+    <EntitySetMapping Name="Stores">
+      <EntityTypeMapping TypeName="IsTypeOf(TestDB.Stores)">
+        <MappingFragment StoreEntitySet="Stores" >
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+
+    <EntitySetMapping Name="Orders">
+      <EntityTypeMapping TypeName="IsTypeOf(TestDB.Orders)">
+        <MappingFragment StoreEntitySet="Orders" >
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="StoreId" ColumnName="StoreId" />
+          <ScalarProperty Name="Freight" ColumnName="Freight" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
 
   </EntityContainerMapping>
 </Mapping>
