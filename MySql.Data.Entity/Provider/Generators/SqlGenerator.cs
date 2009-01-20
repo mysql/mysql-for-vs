@@ -171,7 +171,6 @@ namespace MySql.Data.Entity
 
         public override SqlFragment Visit(DbUnionAllExpression expression)
         {
-            expression.
             throw new NotImplementedException();
         }
 
