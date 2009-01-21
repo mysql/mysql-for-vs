@@ -54,6 +54,7 @@
     <Compile Include="BaseEdmTest.cs" />
     <Compile Include="AggregateOperators.cs" />
     <Compile Include="CanonicalFunctions.cs" />
+    <Compile Include="RelationalOperators.cs" />
     <Compile Include="SetOperators.cs" />
     <Compile Include="Paging.cs" />
     <Compile Include="OrderingAndGrouping.cs" />
@@ -61,13 +62,12 @@
     <Compile Include="TestModel.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>TestModel.edmx</DependentUpon>
+      <DependentUpon>TestModel.csdl</DependentUpon>
     </Compile>
     <Compile Include="UpdateTests.cs" />
     <Compile Include="DeleteTests.cs" />
     <Compile Include="RestrictionOperators.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="TestDB.ObjectLayer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\MySql.Data\Provider\MySql.Data.csproj">
@@ -86,13 +86,12 @@
   <ItemGroup>
     <None Include="App.Config" />
     <None Include="Properties\schema.sql" />
-    <EntityDeploy Include="TestModel.edmx">
+    <EmbeddedResource Include="TestModel.csdl">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>TestModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="TestDB.csdl" />
-    <None Include="TestDB.msl" />
-    <None Include="TestDB.ssdl" />
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestModel.msl" />
+    <EmbeddedResource Include="TestModel.ssdl" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -111,9 +110,7 @@
   </Target>
   -->
   <PropertyGroup>
-    <PreBuildEvent>rem call "$(DevEnvDir)..\Tools\vsvars32.bat"
-rem edmgen /mode:EntityClassGeneration /incsdl:$(ProjectDir)TestDb.csdl /project:TestDB /namespace:MySql.Data.Entity.Tests
-rem move *.cs $(ProjectDir)
+    <PreBuildEvent>
 
 </PreBuildEvent>
   </PropertyGroup>

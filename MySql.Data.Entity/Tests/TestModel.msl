@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Mapping Space="C-S" xmlns="urn:schemas-microsoft-com:windows:storage:mapping:CS">
-	<EntityContainerMapping StorageEntityContainer="!dbname" CdmEntityContainer="TestDB">
+	<EntityContainerMapping StorageEntityContainer="testModelStoreContainer" CdmEntityContainer="testEntities">
 
 <!--		<EntitySetMapping Name="Employee">
 			<EntityTypeMapping TypeName="TestDB.Employee">
@@ -17,7 +17,7 @@
       The IsTypeOf keyword tells the mapping that the following mapping applies to all subtypes of 
       the given Type (in this case, InternationalOrder as well as Order)
       -->
-      <EntityTypeMapping TypeName="IsTypeOf(TestDB.Employees)">
+      <EntityTypeMapping TypeName="IsTypeOf(testModel.Employees)">
         <MappingFragment StoreEntitySet="Employees" >
           <ScalarProperty Name="EmployeeId" ColumnName="employeeId" />
           <ScalarProperty Name="LastName" ColumnName="lastName" />
@@ -26,7 +26,7 @@
         </MappingFragment>
       </EntityTypeMapping>
       
-      <EntityTypeMapping TypeName ="TestDB.SalariedEmployee">
+      <EntityTypeMapping TypeName ="IsTypeOf(testModel.SalariedEmployee)">
         <MappingFragment StoreEntitySet="SalariedEmployees">
           <ScalarProperty Name="EmployeeId" ColumnName="employeeId" />
           <ScalarProperty Name="Salary" ColumnName="salary" />
@@ -36,7 +36,7 @@
     
     
     <EntitySetMapping Name="Children">
-      <EntityTypeMapping TypeName="TestDB.Children">
+      <EntityTypeMapping TypeName="IsTypeOf(testModel.Children)">
         <MappingFragment StoreEntitySet="EmployeeChildren" >
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
@@ -47,7 +47,7 @@
     </EntitySetMapping>
 
     <EntitySetMapping Name="Companies">
-      <EntityTypeMapping TypeName="IsTypeOf(TestDB.Companies)">
+      <EntityTypeMapping TypeName="IsTypeOf(testModel.Companies)">
         <MappingFragment StoreEntitySet="Companies" >
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Name" ColumnName="Name" />
@@ -64,7 +64,7 @@
     </EntitySetMapping>
 
     <EntitySetMapping Name="Toys">
-      <EntityTypeMapping TypeName="IsTypeOf(TestDB.Toys)">
+      <EntityTypeMapping TypeName="IsTypeOf(testModel.Toys)">
         <MappingFragment StoreEntitySet="Toys" >
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Name" ColumnName="Name" />
@@ -73,7 +73,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
 
-    <AssociationSetMapping Name="FK_Toys_Companies" TypeName="TestDB.FK_Toys_Companies" StoreEntitySet="Toys">
+    <AssociationSetMapping Name="FK_Toys_Companies" TypeName="testModel.FK_Toys_Companies" StoreEntitySet="Toys">
       <EndProperty Name="Companies">
         <ScalarProperty Name="Id" ColumnName="MakerId" />
       </EndProperty>
@@ -83,7 +83,7 @@
     </AssociationSetMapping>
 
     <EntitySetMapping Name="Stores">
-      <EntityTypeMapping TypeName="IsTypeOf(TestDB.Stores)">
+      <EntityTypeMapping TypeName="IsTypeOf(testModel.Stores)">
         <MappingFragment StoreEntitySet="Stores" >
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Name" ColumnName="Name" />
@@ -92,7 +92,7 @@
     </EntitySetMapping>
 
     <EntitySetMapping Name="Orders">
-      <EntityTypeMapping TypeName="IsTypeOf(TestDB.Orders)">
+      <EntityTypeMapping TypeName="IsTypeOf(testModel.Orders)">
         <MappingFragment StoreEntitySet="Orders" >
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="StoreId" ColumnName="StoreId" />

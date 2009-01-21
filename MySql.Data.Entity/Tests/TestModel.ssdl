@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Schema Namespace="TestDB.Store" Alias="Self" Provider="MySql.Data.MySqlClient" ProviderManifestToken="" xmlns="http://schemas.microsoft.com/ado/2006/04/edm/ssdl">
-  <EntityContainer Name="!dbname">
-    <EntitySet Name="Employees" EntityType="TestDB.Store.Employees" />
-    <EntitySet Name="EmployeeChildren" EntityType="TestDB.Store.EmployeeChildren" />
-    <EntitySet Name="SalariedEmployees" EntityType ="TestDB.Store.SalariedEmployees"/>
-    <EntitySet Name="Toys" EntityType ="TestDB.Store.Toys"/>
-    <EntitySet Name="Companies" EntityType ="TestDB.Store.Companies"/>
-    <AssociationSet Name="FK_Toys_Companies" Association ="TestDB.Store.FK_Toys_Companies">
+<Schema Namespace="testModel.Store" Alias="Self" Provider="MySql.Data.MySqlClient" ProviderManifestToken="" xmlns="http://schemas.microsoft.com/ado/2006/04/edm/ssdl">
+  <EntityContainer Name="testModelStoreContainer">
+    <EntitySet Name="Employees" EntityType="testModel.Store.Employees" />
+    <EntitySet Name="EmployeeChildren" EntityType="testModel.Store.EmployeeChildren" />
+    <EntitySet Name="SalariedEmployees" EntityType ="testModel.Store.SalariedEmployees"/>
+    <EntitySet Name="Toys" EntityType ="testModel.Store.Toys"/>
+    <EntitySet Name="Companies" EntityType ="testModel.Store.Companies"/>
+    <AssociationSet Name="FK_Toys_Companies" Association ="testModel.Store.FK_Toys_Companies">
       <End Role="Companies" EntitySet ="Companies"/>
       <End Role="Toys" EntitySet ="Toys"/>
     </AssociationSet>
-    <EntitySet Name="Stores" EntityType ="TestDB.Store.Stores"/>
-    <EntitySet Name="Orders" EntityType ="TestDB.Store.Orders"/>
+    <EntitySet Name="Stores" EntityType ="testModel.Store.Stores"/>
+    <EntitySet Name="Orders" EntityType ="testModel.Store.Orders"/>
   </EntityContainer>
 
   <EntityType Name="Employees">
@@ -67,8 +67,8 @@
   </EntityType>
 
   <Association Name="FK_Toys_Companies">
-    <End Role="Companies" Type="TestDB.Store.Companies" Multiplicity ="1"/>
-    <End Role="Toys" Type="TestDB.Store.Toys" Multiplicity ="*"/>
+    <End Role="Companies" Type="testModel.Store.Companies" Multiplicity ="1"/>
+    <End Role="Toys" Type="testModel.Store.Toys" Multiplicity ="*"/>
     <ReferentialConstraint>
       <Principal Role="Companies">
         <PropertyRef Name="Id"/>

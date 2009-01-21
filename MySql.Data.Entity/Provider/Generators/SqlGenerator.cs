@@ -14,7 +14,7 @@ namespace MySql.Data.Entity
         private List<MySqlParameter> parameters;
         protected string tabs = String.Empty;
         private int parameterCount = 1;
-        protected Stack<string> scope = new Stack<string>();
+        //protected Stack<string> scope = new Stack<string>();
         private BaseStatement current;
 
         public SqlGenerator()
@@ -85,7 +85,6 @@ namespace MySql.Data.Entity
                     table = property.Value as string;
                 fragment.Text = String.Format("`{0}`.`{1}`", schema, table);
             }
-            fragment.Name = scope.Pop();
 
             return fragment;
         }
@@ -171,7 +170,19 @@ namespace MySql.Data.Entity
 
         public override SqlFragment Visit(DbUnionAllExpression expression)
         {
-            throw new NotImplementedException();
+            ListFragment list = new ListFragment(" ");
+
+            SqlFragment left = expression.Left.Accept(this);
+            Debug.Assert(left is SelectStatement);
+            list.Items.Add(left);
+
+            list.Items.Add(new SqlFragment("UNION ALL"));
+
+            SqlFragment right = expression.Right.Accept(this);
+            Debug.Assert(right is SelectStatement);
+            list.Items.Add(right);
+
+            return list;
         }
 
 

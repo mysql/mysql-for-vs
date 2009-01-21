@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Schema Namespace="TestDB" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2006/04/edm">
+<Schema Namespace="testModel" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2006/04/edm">
 
-  <EntityContainer Name="TestDB">
-    <EntitySet Name="Employees" EntityType="TestDB.Employees" />
-    <EntitySet Name="Children" EntityType="TestDB.Children" />
-    <EntitySet Name="Companies" EntityType ="TestDB.Companies"/>
-    <EntitySet Name="Toys" EntityType ="TestDB.Toys"/>
-    <AssociationSet Name="FK_Toys_Companies" Association ="TestDB.FK_Toys_Companies">
+  <EntityContainer Name="testEntities">
+    <EntitySet Name="Employees" EntityType="testModel.Employees" />
+    <EntitySet Name="Children" EntityType="testModel.Children" />
+    <EntitySet Name="Companies" EntityType ="testModel.Companies"/>
+    <EntitySet Name="Toys" EntityType ="testModel.Toys"/>
+    <AssociationSet Name="FK_Toys_Companies" Association ="testModel.FK_Toys_Companies">
       <End Role="Companies" EntitySet ="Companies"/>
       <End Role="Toys" EntitySet ="Toys"/>
     </AssociationSet>
-    <EntitySet Name="Stores" EntityType ="TestDB.Stores"/>
-    <EntitySet Name="Orders" EntityType ="TestDB.Orders"/>
+    <EntitySet Name="Stores" EntityType ="testModel.Stores"/>
+    <EntitySet Name="Orders" EntityType ="testModel.Orders"/>
   </EntityContainer>
 
   <EntityType Name="Employees">
@@ -24,7 +24,7 @@
     <Property Name="Age" Type="Int32" Nullable="true"/>
   </EntityType>
 
-  <EntityType Name="SalariedEmployee" BaseType ="TestDB.Employees">
+  <EntityType Name="SalariedEmployee" BaseType ="testModel.Employees">
     <Property Name="Salary" Type="Int32" Nullable="false"  />
   </EntityType>
 
@@ -46,8 +46,8 @@
     <Property Name="Name" Type="String" Nullable ="false" MaxLength ="100"/>
     <Property Name="DateBegan" Type="DateTime" Nullable ="true"/>
     <Property Name="NumEmployees" Type="Int32" Nullable ="true"/>
-    <Property Name="Address" Type="TestDB.CommonAddress" Nullable="false"/>
-    <NavigationProperty Name="Toys" Relationship ="TestDB.FK_Toys_Companies" FromRole ="Companies" ToRole ="Toys"/>
+    <Property Name="Address" Type="testModel.CommonAddress" Nullable="false"/>
+    <NavigationProperty Name="Toys" Relationship ="testModel.FK_Toys_Companies" FromRole ="Companies" ToRole ="Toys"/>
   </EntityType>
   
   <EntityType Name="Toys">
@@ -57,12 +57,12 @@
     <Property Name="Id" Type="Int32" Nullable ="false"/>
     <Property Name="Name" Type="String" MaxLength="100" Nullable ="false"/>
     <Property Name="MinAge" Type="Int32" Nullable ="false"/>
-    <NavigationProperty Name="Companies" Relationship ="TestDB.FK_Toys_Companies" FromRole="Toys" ToRole="Companies"/>
+    <NavigationProperty Name="Companies" Relationship ="testModel.FK_Toys_Companies" FromRole="Toys" ToRole="Companies"/>
   </EntityType>
 
   <Association Name="FK_Toys_Companies">
-    <End Role="Companies" Type="TestDB.Companies" Multiplicity="1" />
-    <End Role="Toys" Type="TestDB.Toys" Multiplicity="*" />
+    <End Role="Companies" Type="testModel.Companies" Multiplicity="1" />
+    <End Role="Toys" Type="testModel.Toys" Multiplicity="*" />
   </Association>
 
   <!-- Complex type -->

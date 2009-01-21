@@ -48,7 +48,9 @@ namespace MySql.Data.Entity
                     sql.AppendFormat("{0}", Limit);
             }
             if (Parent != null)
-                sql.AppendFormat(") AS {0}", QuoteIdentifier(Name));
+                sql.Append(")");
+            if (Name != null)
+                sql.AppendFormat("AS {0}", QuoteIdentifier(Name));
             return sql.ToString();
         }
     }

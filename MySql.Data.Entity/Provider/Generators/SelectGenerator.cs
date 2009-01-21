@@ -37,7 +37,6 @@ namespace MySql.Data.Entity
             switch (commandTree.Query.ExpressionKind)
             {
                 case DbExpressionKind.Project:
-                    scope.Push(null);
                     fragment = e.Accept(this);
                     break;
             }
@@ -47,8 +46,8 @@ namespace MySql.Data.Entity
 
         public override SqlFragment Visit(DbFilterExpression expression)
         {
-            scope.Push(expression.Input.VariableName);
             SqlFragment input = expression.Input.Expression.Accept(this);
+            input.Name = expression.Input.VariableName;
 
             (Current as SelectStatement).Where.Add(expression.Predicate.Accept(this));
 
@@ -57,8 +56,8 @@ namespace MySql.Data.Entity
 
         public override SqlFragment Visit(DbGroupByExpression expression)
         {
-            scope.Push(expression.Input.VariableName);
             SqlFragment input = expression.Input.Expression.Accept(this);
+            input.Name = expression.Input.VariableName;
 
             CollectionType ct = (CollectionType)expression.ResultType.EdmType;
             RowType rt = (RowType)ct.TypeUsage.EdmType;
@@ -96,23 +95,19 @@ namespace MySql.Data.Entity
                 //Current.HashFragment(scope.Peek() + "." + names[agg], lf);
                 Pop();
             }
-            scope.Pop();
             return input;
         }
 
         public override SqlFragment Visit(DbJoinExpression expression)
         {
             JoinFragment join = new JoinFragment();
-            join.Name = scope.Peek();
             join.JoinType = Metadata.GetOperator(expression.ExpressionKind);
 
-            scope.Push(expression.Left.VariableName);
             join.Left = expression.Left.Expression.Accept(this);
-            Current.IndexFragment(join.Left, scope.Peek());
+            join.Left.Name = expression.Left.VariableName;
 
-            scope.Push(expression.Right.VariableName);
             join.Right = expression.Right.Expression.Accept(this);
-            Current.IndexFragment(join.Right, scope.Pop());
+            join.Right.Name = expression.Right.VariableName;
 
             // now handle the ON case
             join.Condition = expression.JoinCondition.Accept(this);
@@ -147,7 +142,6 @@ namespace MySql.Data.Entity
         private SqlFragment HandleNewInstanceAsInput(DbNewInstanceExpression expression)
         {
             SelectStatement statement = new SelectStatement(CurrentSelect);
-            statement.Name = scope.Pop();
 
             if (expression.Arguments.Count == 0)
             {
@@ -164,12 +158,11 @@ namespace MySql.Data.Entity
         public override SqlFragment Visit(DbProjectExpression expression)
         {
             SelectStatement statement = new SelectStatement(Current as SelectStatement);
-            statement.Name = scope.Pop();
             selectStatements.Push(statement);
 
             // handle from clause
-            scope.Push(expression.Input.VariableName);
             statement.Input = expression.Input.Expression.Accept(this);
+            statement.Input.Name = expression.Input.VariableName;
             
             // now handle projection
             statement.Output = expression.Projection.Accept(this);
@@ -182,8 +175,9 @@ namespace MySql.Data.Entity
         {
             ListFragment list = new ListFragment(" ");
 
-            scope.Push(expression.Input.VariableName);
-            list.Items.Add(expression.Input.Expression.Accept(this));
+            SqlFragment fragment = expression.Input.Expression.Accept(this);
+            fragment.Name = expression.Input.VariableName;
+            list.Items.Add(fragment);
             list.Items.Add(new SqlFragment("ORDER BY"));
 
             ListFragment clauses = new ListFragment(", ");
