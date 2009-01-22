@@ -54,7 +54,7 @@ namespace MySql.Data.Entity.Tests
 
             using (testEntities context = new testEntities())
             {
-                string sql = "SELECT VALUE Count(t.Id) FROM TestDB.Toys AS t";
+                string sql = "SELECT VALUE Count(t.Id) FROM Toys AS t";
                 ObjectQuery<Int32> q = context.CreateQuery<Int32>(sql);
 
                 foreach (int count in q)
@@ -73,7 +73,7 @@ namespace MySql.Data.Entity.Tests
                 connection.Open();
 
                 using (EntityCommand cmd = new EntityCommand(
-                    "SELECT VALUE Count(t.Id) FROM TestDB.Toys AS t WHERE t.MinAge > 3", connection))
+                    "SELECT VALUE Count(t.Id) FROM Toys AS t WHERE t.MinAge > 3", connection))
                 {
                     object count = cmd.ExecuteScalar();
                     Assert.AreEqual(trueCount, count);

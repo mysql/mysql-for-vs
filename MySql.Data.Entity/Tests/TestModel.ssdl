@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Schema Namespace="testModel.Store" Alias="Self" Provider="MySql.Data.MySqlClient" ProviderManifestToken="" xmlns="http://schemas.microsoft.com/ado/2006/04/edm/ssdl">
-  <EntityContainer Name="testModelStoreContainer">
+  <EntityContainer Name="test">
     <EntitySet Name="Employees" EntityType="testModel.Store.Employees" />
     <EntitySet Name="EmployeeChildren" EntityType="testModel.Store.EmployeeChildren" />
     <EntitySet Name="SalariedEmployees" EntityType ="testModel.Store.SalariedEmployees"/>

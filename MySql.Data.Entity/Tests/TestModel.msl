@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Mapping Space="C-S" xmlns="urn:schemas-microsoft-com:windows:storage:mapping:CS">
-	<EntityContainerMapping StorageEntityContainer="testModelStoreContainer" CdmEntityContainer="testEntities">
+	<EntityContainerMapping StorageEntityContainer="test" CdmEntityContainer="testEntities">
 
 <!--		<EntitySetMapping Name="Employee">
 			<EntityTypeMapping TypeName="TestDB.Employee">
@@ -53,7 +53,7 @@
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="DateBegan" ColumnName="DateBegan" />
           <ScalarProperty Name="NumEmployees" ColumnName="NumEmployees" />
-          <ComplexProperty Name ="Address" TypeName ="TestDB.CommonAddress" >
+          <ComplexProperty Name ="Address" TypeName ="testModel.CommonAddress" >
             <ScalarProperty Name="Address" ColumnName="Address" />
             <ScalarProperty Name="City" ColumnName="City" />
             <ScalarProperty Name="State" ColumnName="State" />

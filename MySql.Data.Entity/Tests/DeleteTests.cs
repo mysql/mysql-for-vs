@@ -56,8 +56,7 @@ namespace MySql.Data.Entity.Tests
         {
             using (testEntities context = new testEntities())
             {
-                EntityConnection ec = context.Connection as EntityConnection;
-                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM toys WHERE minage=3", (MySqlConnection)ec.StoreConnection);
+                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM toys WHERE minage=3", conn);
                 DataTable dt = new DataTable();
                 da.Fill(dt);
                 Assert.IsTrue(dt.Rows.Count > 0);

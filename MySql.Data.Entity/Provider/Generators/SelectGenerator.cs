@@ -35,14 +35,15 @@ namespace MySql.Data.Entity
 
         #region Properties 
 
-        protected override BaseStatement Current
-        {
-            get { return selectStatements.Count == 0 ? null : selectStatements.Peek(); }
-        }
+//        protected override SelectStatementBaseStatement Current
+  //      {
+    //        get { return selectStatements.Count == 0 ? null : selectStatements.Peek(); }
+      //  }
 
         private SelectStatement CurrentSelect
         {
-            get { return Current as SelectStatement; }
+            get { return selectStatements.Count == 0 ? null : selectStatements.Peek(); }
+            //get { return Current as SelectStatement; }
         }
 
         #endregion
@@ -58,26 +59,27 @@ namespace MySql.Data.Entity
             {
                 case DbExpressionKind.Project:
                     fragment = e.Accept(this);
+                    Debug.Assert(fragment is SelectStatement);
                     break;
             }
 
-            return fragment.GenerateSQL();
+            return fragment.ToString();
         }
 
         public override SqlFragment Visit(DbFilterExpression expression)
         {
+            scope.Push(expression.Input.VariableName);
             SqlFragment input = expression.Input.Expression.Accept(this);
-            input.Name = expression.Input.VariableName;
 
-            (Current as SelectStatement).Where.Add(expression.Predicate.Accept(this));
+            CurrentSelect.Where.Add(expression.Predicate.Accept(this));
 
             return input;
         }
 
         public override SqlFragment Visit(DbGroupByExpression expression)
         {
+            scope.Push(expression.Input.VariableName);
             SqlFragment input = expression.Input.Expression.Accept(this);
-            input.Name = expression.Input.VariableName;
 
             CollectionType ct = (CollectionType)expression.ResultType.EdmType;
             RowType rt = (RowType)ct.TypeUsage.EdmType;
@@ -97,7 +99,7 @@ namespace MySql.Data.Entity
 
             Trace.WriteLine(String.Format("{0}{1}", tabs, "GroupByExpression"));
 
-            for (int agg = 0; agg <= expression.Aggregates.Count; agg++)
+            for (int agg = 0; agg < expression.Aggregates.Count; agg++)
             {
                 DbAggregate a = expression.Aggregates[agg];
                 DbFunctionAggregate fa = a as DbFunctionAggregate;
@@ -108,12 +110,9 @@ namespace MySql.Data.Entity
                 lf.Items.Add(new SqlFragment(fa.Function.Name + "("));
                 if (fa.Distinct)
                     sql += " DISTINCT ";
-                Push();
                 lf.Items.Add(new SqlFragment(sql));
                 lf.Items.Add(fa.Arguments[0].Accept(this));
                 lf.Items.Add(new SqlFragment(")"));
-                //Current.HashFragment(scope.Peek() + "." + names[agg], lf);
-                Pop();
             }
             return input;
         }
@@ -123,10 +122,10 @@ namespace MySql.Data.Entity
             JoinFragment join = new JoinFragment();
             join.JoinType = Metadata.GetOperator(expression.ExpressionKind);
 
-            join.Left = expression.Left.Expression.Accept(this);
+            join.Left = (InputFragment)expression.Left.Expression.Accept(this);
             join.Left.Name = expression.Left.VariableName;
 
-            join.Right = expression.Right.Expression.Accept(this);
+            join.Right = (InputFragment)expression.Right.Expression.Accept(this);
             join.Right.Name = expression.Right.VariableName;
 
             // now handle the ON case
@@ -147,45 +146,42 @@ namespace MySql.Data.Entity
 
             RowType row = expression.ResultType.EdmType as RowType;
 
-            ListFragment list = new ListFragment(", ");
-
             for (int i = 0; i < expression.Arguments.Count; i++)
             {
                 SqlFragment fragment = expression.Arguments[i].Accept(this);
                 if (row != null)
                     fragment.Name = row.Properties[i].Name;
-                list.Items.Add(fragment);
+                CurrentSelect.Output.Items.Add(fragment);
             }
-            return list;
+            return null;
         }
 
         private SqlFragment HandleNewInstanceAsInput(DbNewInstanceExpression expression)
         {
             SelectStatement statement = new SelectStatement(CurrentSelect);
+            statement.Name = scope.Pop();
 
-            if (expression.Arguments.Count == 0)
-            {
-                statement.Output = new SqlFragment("NULL");
-            }
-            else
-            {
-                statement.Output = expression.Arguments[0].Accept(this);
-            }
-            statement.Output.Name = "X";
+            SqlFragment output = new SqlFragment("NULL");
+            if (expression.Arguments.Count != 0)
+                output = expression.Arguments[0].Accept(this);
+            output.Name = "X";
+            statement.Output.Items.Add(output);
             return statement;
         }
 
         public override SqlFragment Visit(DbProjectExpression expression)
         {
-            SelectStatement statement = new SelectStatement(Current as SelectStatement);
+            SelectStatement statement = new SelectStatement(CurrentSelect);
+            if (scope.Count > 0)
+                statement.Name = scope.Pop();
             selectStatements.Push(statement);
 
             // handle from clause
-            statement.Input = expression.Input.Expression.Accept(this);
-            statement.Input.Name = expression.Input.VariableName;
+            scope.Push(expression.Input.VariableName);
+            statement.Input = (InputFragment)expression.Input.Expression.Accept(this);
             
             // now handle projection
-            statement.Output = expression.Projection.Accept(this);
+            expression.Projection.Accept(this);
 
             selectStatements.Pop();
             return statement;
@@ -193,23 +189,17 @@ namespace MySql.Data.Entity
 
         public override SqlFragment Visit(DbSortExpression expression)
         {
-            ListFragment list = new ListFragment(" ");
+            scope.Push(expression.Input.VariableName);
+            SqlFragment input = expression.Input.Expression.Accept(this);
 
-            SqlFragment fragment = expression.Input.Expression.Accept(this);
-            fragment.Name = expression.Input.VariableName;
-            list.Items.Add(fragment);
-            list.Items.Add(new SqlFragment("ORDER BY"));
-
-            ListFragment clauses = new ListFragment(", ");
             foreach (DbSortClause sortClause in expression.SortOrder)
             {
                 ListFragment clause = new ListFragment(" ");
                 clause.Items.Add(sortClause.Expression.Accept(this));
                 clause.Items.Add(new SqlFragment(sortClause.Ascending ? "ASC" : "DESC"));
-                clauses.Items.Add(clause);
+                CurrentSelect.OrderBy.Add(clause);
             }
-            list.Items.Add(clauses);
-            return list;
+            return input;
         }
 
         public override SqlFragment Visit(DbSkipExpression expression)

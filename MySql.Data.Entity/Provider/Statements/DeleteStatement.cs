@@ -26,13 +26,12 @@ namespace MySql.Data.Entity
         public SqlFragment Target { get; set; }
         public SqlFragment Where { get; set; }
 
-        public override string GenerateSQL()
+        public override string ToString()
         {
-            StringBuilder sb = new StringBuilder("DELETE");
-            sb.AppendFormat(" {0} FROM {1}", QuoteIdentifier(Target.Name), 
-                Target.GenerateSQL());
+            StringBuilder sb = new StringBuilder("DELETE FROM ");
+            sb.AppendFormat("{0}", Target);
             if (Where != null)
-                sb.AppendFormat(" WHERE {0}", Where.GenerateSQL());
+                sb.AppendFormat(" WHERE {0}", Where);
             return sb.ToString();
         }
     }

@@ -45,17 +45,17 @@
   <ItemGroup>
     <EmbeddedResource Include="Properties\SchemaMapping.msl" />
     <EmbeddedResource Include="Properties\SchemaDefinition.ssdl" />
+    <Compile Include="Fragments\InputFragment.cs" />
     <Compile Include="Fragments\ListFragment.cs" />
     <Compile Include="Fragments\SqlFragment.cs" />
     <Compile Include="Fragments\SymbolFragment.cs" />
-    <Compile Include="Fragments\TableFragment.cs" />
     <Compile Include="Generators\DeleteGenerator.cs" />
     <Compile Include="Generators\FunctionGenerator.cs" />
     <Compile Include="Generators\InsertGenerator.cs" />
     <Compile Include="Generators\SelectGenerator.cs" />
     <Compile Include="Generators\SqlGenerator.cs" />
     <Compile Include="Generators\UpdateGenerator.cs" />
-    <Compile Include="Statements\BaseStatement.cs" />
+    <None Include="Statements\BaseStatement.cs" />
     <Compile Include="Statements\DeleteStatement.cs" />
     <Compile Include="Statements\InsertStatement.cs" />
     <Compile Include="Statements\JoinFragment.cs" />

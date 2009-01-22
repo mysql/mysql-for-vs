@@ -18,15 +18,22 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace MySql.Data.Entity
 {
-    class TableFragment : SqlFragment 
+    class JoinFragment : InputFragment
     {
+        public InputFragment Left;
+        public InputFragment Right;
+        public SqlFragment Condition;
+        public string JoinType;
 
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("{0} {1} {2} ON {3}", Left, JoinType, Right, Condition);
+            return sb.ToString();
+        }
     }
 }

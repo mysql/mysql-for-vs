@@ -95,9 +95,9 @@ namespace MySql.Data.Entity.Tests
         {
             if (schemaDone) return;
 
-            SaveSchemaFile("TestDB.csdl");
-            SaveSchemaFile("TestDB.msl");
-            SaveSchemaFile("TestDB.ssdl");
+            SaveSchemaFile("TestModel.csdl");
+            SaveSchemaFile("TestModel.msl");
+            SaveSchemaFile("TestModel.ssdl");
 
             schemaDone = true;
         }

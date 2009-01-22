@@ -35,20 +35,19 @@ namespace MySql.Data.Entity
         public List<SqlFragment> Values { get; private set; }
         public SqlFragment Where { get; set; }
 
-        public override string GenerateSQL()
+        public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendFormat("UPDATE {0} SET ", Target.GenerateSQL());
+            sb.AppendFormat("UPDATE {0} SET ", Target);
             string seperator = "";
             for (int i = 0; i < Properties.Count; i++)
             {
-                sb.AppendFormat("{0}{1}={2}", seperator, 
-                    Properties[i].GenerateSQL(), Values[i].GenerateSQL());
+                sb.AppendFormat("{0}{1}={2}", seperator, Properties[i], Values[i]);
                 seperator = ", ";
             }
             if (Where != null)
-                sb.AppendFormat(" WHERE {0}", Where.GenerateSQL());
+                sb.AppendFormat(" WHERE {0}", Where);
 
             return sb.ToString();
         }

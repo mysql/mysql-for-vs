@@ -18,23 +18,46 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace MySql.Data.Entity
 {
-    class JoinFragment : TableFragment
+    class InputFragment : SqlFragment 
     {
-        public SqlFragment Left;
-        public SqlFragment Right;
-        public SqlFragment Condition;
-        public string JoinType;
+        private List<SqlFragment> inputs;
 
-        public override string GenerateSQL()
+        public List<SqlFragment> Inputs
         {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("{0} {1} {2} ON {3}", Left.GenerateSQL(),
-                JoinType, Right.GenerateSQL(), Condition.GenerateSQL());
-            return sb.ToString();
+            get
+            {
+                if (inputs == null)
+                    inputs = new List<SqlFragment>();
+                return inputs;
+            }
+        }
+
+        protected override string InnerText
+        {
+            get
+            {
+                if (Inputs.Count == 0) return base.InnerText;
+
+                StringBuilder sql = new StringBuilder();
+                if (Inputs.Count > 1)
+                    sql.Append("(");
+                string delimiter = "";
+                foreach (SqlFragment f in Inputs)
+                {
+                    sql.AppendFormat("{0}{1}", delimiter, f);
+                    delimiter = " ";
+                }
+                if (Inputs.Count > 1)
+                    sql.Append(")");
+                return sql.ToString();
+            }
         }
     }
 }

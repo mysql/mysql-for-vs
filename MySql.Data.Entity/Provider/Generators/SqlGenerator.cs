@@ -34,8 +34,8 @@ namespace MySql.Data.Entity
         private List<MySqlParameter> parameters;
         protected string tabs = String.Empty;
         private int parameterCount = 1;
-        //protected Stack<string> scope = new Stack<string>();
-        private BaseStatement current;
+        protected Stack<string> scope = new Stack<string>();
+//        private BaseStatement current;
 
         public SqlGenerator()
         {
@@ -49,10 +49,10 @@ namespace MySql.Data.Entity
             get { return parameters; }
         }
 
-        protected virtual BaseStatement Current 
-        { 
-            get { return current; }
-        }
+  //      protected virtual BaseStatement Current 
+    //    { 
+      //      get { return current; }
+        //}
 
         #endregion
 
@@ -89,23 +89,26 @@ namespace MySql.Data.Entity
         public override SqlFragment Visit(DbScanExpression expression)
         {
             EntitySetBase target = expression.Target;
-            TableFragment fragment = new TableFragment();
+            InputFragment fragment = new InputFragment();
 
             MetadataProperty property;
-            if (target.MetadataProperties.TryGetValue("DefiningQuery", true, out property))
+            bool propExists = target.MetadataProperties.TryGetValue("DefiningQuery", true, out property);
+            if (propExists && property.Value != null)
                 fragment.Text = String.Format("({0})", property.Value);
             else
             {
                 string schema = target.EntityContainer.Name;
                 string table = target.Name;
 
-                if (target.MetadataProperties.TryGetValue("Schema", true, out property))
+                propExists = target.MetadataProperties.TryGetValue("Schema", true, out property);
+                if (propExists && property.Value != null)
                     schema = property.Value as string;
-                if (target.MetadataProperties.TryGetValue("Table", true, out property))
+                propExists = target.MetadataProperties.TryGetValue("Table", true, out property);
+                if (propExists && property.Value != null)
                     table = property.Value as string;
                 fragment.Text = String.Format("`{0}`.`{1}`", schema, table);
             }
-
+            fragment.Name = scope.Pop();
             return fragment;
         }
 
@@ -179,9 +182,12 @@ namespace MySql.Data.Entity
 
         public override SqlFragment Visit(DbAndExpression expression)
         {
-            SqlFragment left = expression.Left.Accept(this);
-            SqlFragment right = expression.Right.Accept(this);
-            return left;
+            return VisitBinaryExpression(expression.Left, expression.Right, "AND");
+        }
+
+        public override SqlFragment Visit(DbOrExpression expression)
+        {
+            return VisitBinaryExpression(expression.Left, expression.Right, "OR");
         }
 
         #endregion
@@ -190,19 +196,19 @@ namespace MySql.Data.Entity
 
         public override SqlFragment Visit(DbUnionAllExpression expression)
         {
-            ListFragment list = new ListFragment(" ");
+            InputFragment input = new InputFragment();
 
             SqlFragment left = expression.Left.Accept(this);
             Debug.Assert(left is SelectStatement);
-            list.Items.Add(left);
+            input.Inputs.Add(left);
 
-            list.Items.Add(new SqlFragment("UNION ALL"));
+            input.Inputs.Add(new SqlFragment("UNION ALL"));
 
             SqlFragment right = expression.Right.Accept(this);
             Debug.Assert(right is SelectStatement);
-            list.Items.Add(right);
+            input.Inputs.Add(right);
 
-            return list;
+            return input;
         }
 
 
@@ -237,11 +243,6 @@ namespace MySql.Data.Entity
         }
 
         public override SqlFragment Visit(DbProjectExpression expression)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override SqlFragment Visit(DbOrExpression expression)
         {
             throw new NotImplementedException();
         }
@@ -359,6 +360,19 @@ namespace MySql.Data.Entity
         public override SqlFragment Visit(DbExpression expression)
         {
             throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region Private methods
+
+        private ListFragment VisitBinaryExpression(DbExpression left, DbExpression right, string op)
+        {
+            ListFragment list = new ListFragment(" ");
+            list.Items.Add(left.Accept(this));
+            list.Items.Add(new SqlFragment(op));
+            list.Items.Add(right.Accept(this));
+            return list;
         }
 
         #endregion

@@ -24,13 +24,24 @@ namespace MySql.Data.Entity
 {
     class InsertStatement : SqlFragment 
     {
-        public SqlFragment Target { get; set; }
-
-        public override string GenerateSQL()
+        public InsertStatement()
         {
-            StringBuilder sb = new StringBuilder("INSERT ");
-            sb.Append(Target.GenerateSQL());
+            Sets = new ListFragment(", ");
+            Values = new ListFragment(", ");
+        }
 
+        public SqlFragment Target { get; set; }
+        public ListFragment Sets { get; private set; }
+        public ListFragment Values { get; private set; }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder("INSERT INTO ");
+            sb.Append(Target);
+            if (Sets.Items.Count > 0)
+                sb.AppendFormat("({0})", Sets);
+            sb.Append(" VALUES ");
+            sb.AppendFormat("({0})", Values);
             return sb.ToString();
         }
     }

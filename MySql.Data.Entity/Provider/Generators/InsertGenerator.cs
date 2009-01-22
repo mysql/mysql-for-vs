@@ -34,42 +34,19 @@ namespace MySql.Data.Entity
             DbInsertCommandTree commandTree = tree as DbInsertCommandTree;
 
             InsertStatement statement = new InsertStatement();
-       //     StringBuilder commandText = new StringBuilder(s_commandTextBuilderInitialCapacity);
-            //ExpressionTranslator translator = new ExpressionTranslator(commandText, tree,
-                //null != tree.Returning);
 
-//            sql = new StringBuilder();
-  //          sql.Append("INSERT  ");
-
-    //        current = sql;
+            scope.Push(null); //commandTree.Target.VariableName);
             statement.Target = commandTree.Target.Expression.Accept(this);
             
-      //      sql.Append("(");
+            foreach (DbSetClause setClause in commandTree.SetClauses)
+                statement.Sets.Items.Add(setClause.Property.Accept(this));
+
             foreach (DbSetClause setClause in commandTree.SetClauses)
             {
-                setClause.Property.Accept(this);
-        //        sql.Append(",");
+                statement.Values.Items.Add(setClause.Value.Accept(this));
             }
-          //  sql[sql.Length-1] = ')';
 
-            // values c1, c2, ...
-            //first = true;
-//            sql.Append(" VALUES (");
-            foreach (DbSetClause setClause in commandTree.SetClauses)
-            {
-                setClause.Value.Accept(this);
-  //              sql.Append(",");
-
-                //translator.RegisterMemberValue(setClause.Property, setClause.Value);
-            }
-    //        sql[sql.Length - 1] = ')';
-
-            // generate returning sql
-/*            GenerateReturningSql(commandText, tree, translator, tree.Returning); 
-
-            parameters = translator.Parameters;
-            return commandText.ToString();*/
-            return statement.GenerateSQL();
+            return statement.ToString();
         }
     }
 }

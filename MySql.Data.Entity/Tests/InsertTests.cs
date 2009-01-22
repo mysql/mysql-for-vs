@@ -38,24 +38,39 @@ namespace MySql.Data.Entity.Tests
         {
             using (testEntities context = new testEntities())
             {
-                EntityConnection ec = context.Connection as EntityConnection;
-                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM toys", (MySqlConnection)ec.StoreConnection);
+                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM companies", conn);
                 DataTable dt = new DataTable();
                 da.Fill(dt);
+                DataRow lastRow = dt.Rows[dt.Rows.Count - 1];
+                int lastId = (int)lastRow["id"];
+                DateTime dateBegan = DateTime.Now;
 
-                Toys t = new Toys();
-                t.Id = 5;
-                t.Name = "Yoyo";
-                t.MinAge = 5;
-                context.AddToToys(t);
+                Companies c = new Companies();
+                c.Id = lastId + 1;
+                c.Name = "Yoyo";
+                c.NumEmployees = 486;
+                c.DateBegan = dateBegan;
+                c.Address.Address = "212 My Street.";
+                c.Address.City = "Helena";
+                c.Address.State = "MT";
+                c.Address.ZipCode = "44558";
+                context.AddToCompanies(c);
                 int result = context.SaveChanges();
 
                 DataTable afterInsert = new DataTable();
                 da.Fill(afterInsert);
+                lastRow = afterInsert.Rows[afterInsert.Rows.Count - 1];
+
                 Assert.AreEqual(dt.Rows.Count + 1, afterInsert.Rows.Count);
-                Assert.AreEqual(5, dt.Rows[4]["id"]);
-                Assert.AreEqual("Yoyo", dt.Rows[4]["name"]);
-                Assert.AreEqual(5, dt.Rows[4]["minage"]);
+                Assert.AreEqual(lastId+1, lastRow["id"]);
+                Assert.AreEqual("Yoyo", lastRow["name"]);
+                Assert.AreEqual(486, lastRow["numemployees"]);
+                DateTime insertedDT = (DateTime)lastRow["dateBegan"];
+                Assert.AreEqual(dateBegan.Date, insertedDT.Date);
+                Assert.AreEqual("212 My Street.", lastRow["address"]);
+                Assert.AreEqual("Helena", lastRow["city"]);
+                Assert.AreEqual("MT", lastRow["state"]);
+                Assert.AreEqual("44558", lastRow["zipcode"]);
             }
         }
     }

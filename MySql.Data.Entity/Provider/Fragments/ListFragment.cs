@@ -34,17 +34,20 @@ namespace MySql.Data.Entity
         public List<SqlFragment> Items { get; private set; }
         public string Seperator { get; set; }
 
-        public override string GenerateSQL()
+        protected override string InnerText
         {
-            string seperator = "";
-            StringBuilder sb = new StringBuilder();
-
-            foreach (SqlFragment f in Items)
+            get
             {
-                sb.AppendFormat("{0}{1}", seperator, f.GenerateSQL());
-                seperator = Seperator;
+                string seperator = "";
+                StringBuilder sb = new StringBuilder();
+
+                foreach (SqlFragment f in Items)
+                {
+                    sb.AppendFormat("{0}{1}", seperator, f);
+                    seperator = Seperator;
+                }
+                return sb.ToString();
             }
-            return sb.ToString();
         }
     }
 }

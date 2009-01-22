@@ -38,20 +38,16 @@ namespace MySql.Data.Entity.Tests
        {
            using (testEntities context = new testEntities())
            {
-               using (EntityConnection ec = context.Connection as EntityConnection)
-               {
-                   ec.Open();
-                   MySqlCommand cmd = new MySqlCommand("SELECT COUNT(*) FROM toys", (MySqlConnection)ec.StoreConnection);
-                   object count = cmd.ExecuteScalar();
+               MySqlCommand cmd = new MySqlCommand("SELECT COUNT(*) FROM toys", conn);
+               object count = cmd.ExecuteScalar();
 
-                   foreach (Toys t in context.Toys)
-                       t.Name = "Top";
-                   context.SaveChanges();
+               foreach (Toys t in context.Toys)
+                   t.Name = "Top";
+               context.SaveChanges();
 
-                   cmd.CommandText = "SELECT COUNT(*) FROM toys WHERE name='Top'";
-                   object newCount = cmd.ExecuteScalar();
-                   Assert.AreEqual(count, newCount);
-               }
+               cmd.CommandText = "SELECT COUNT(*) FROM Toys WHERE name='Top'";
+               object newCount = cmd.ExecuteScalar();
+               Assert.AreEqual(count, newCount);
            }
        }
     }

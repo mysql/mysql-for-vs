@@ -35,18 +35,15 @@ namespace MySql.Data.Entity
 
         #region Properties
 
+        protected virtual string InnerText
+        {
+            get { return Text; }
+        }
+
         public string Text { get; set; }
         public string Name { get; set; }
 
         #endregion
-
-        public virtual string GenerateSQL()
-        {
-            if (String.IsNullOrEmpty(Name))
-                return Text;
-            return String.Format("{0} AS {1}",
-                Text, QuoteIdentifier(Name));
-        }
 
         protected string QuoteIdentifier(string id)
         {
@@ -55,7 +52,9 @@ namespace MySql.Data.Entity
 
         public override string ToString()
         {
-            return GenerateSQL();
+            if (Name == null)
+                return InnerText;
+            return InnerText + " AS " + QuoteIdentifier(Name);
         }
     }
 }

@@ -34,8 +34,8 @@ namespace MySql.Data.Entity
 
             UpdateStatement statement = new UpdateStatement();
 
+            scope.Push(commandTree.Target.VariableName);
             statement.Target = commandTree.Target.Expression.Accept(this);
-            statement.Target.Name = commandTree.Target.VariableName;
 
             foreach (DbSetClause setClause in commandTree.SetClauses)
             {
@@ -45,7 +45,7 @@ namespace MySql.Data.Entity
 
             statement.Where = commandTree.Predicate.Accept(this);
 
-            return statement.GenerateSQL();
+            return statement.ToString();
         }
     }
 }

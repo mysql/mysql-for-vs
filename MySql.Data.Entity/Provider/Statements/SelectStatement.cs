@@ -24,39 +24,66 @@ using System;
 
 namespace MySql.Data.Entity
 {
-    class SelectStatement : BaseStatement 
+    class SelectStatement : InputFragment
     {
+        private List<SqlFragment> output;
+
         public SelectStatement(SelectStatement parent)
         {
             Parent = parent;
+            Output = new ListFragment(", ");
             Where = new List<SqlFragment>();
+            OrderBy = new List<SqlFragment>();
         }
 
         private SelectStatement Parent { get; set; }
-        public SqlFragment Input  { get; set; }
-        public SqlFragment Output { get; set; }
+        public InputFragment Input { get; set; }
+        public ListFragment Output { get; set; }
+
         public List<SqlFragment> Where { get; private set; }
         public SqlFragment Limit { get; set; }
         public SqlFragment Skip { get; set; }
+        public List<SqlFragment> OrderBy { get; private set; }
 
-        public override string GenerateSQL()
+        protected override string InnerText
+        {
+            get
+            {
+                return GenerateSql();
+            }
+        }
+
+        private string GenerateSql()
         {
             StringBuilder sql = new StringBuilder();
             if (Parent != null)
                 sql.Append("(");
-            sql.AppendFormat("SELECT {0}", Output.GenerateSQL());
+            sql.AppendFormat("SELECT {0}", Output);
             if (Input != null)
-                sql.AppendFormat(" FROM {0}", Input.GenerateSQL());
+                sql.AppendFormat(" FROM {0}", Input);
             if (Where.Count > 0)
             {
                 sql.Append(" WHERE ");
                 string seperator = "";
                 foreach (SqlFragment f in Where)
                 {
-                    sql.AppendFormat("{0} {1}", seperator, f.GenerateSQL());
-                    seperator = " AND";
+                    sql.AppendFormat("{0}{1}", seperator, f);
+                    seperator = " AND ";
                 }
             }
+
+            // now do the sorting
+            if (OrderBy.Count > 0)
+            {
+                string delimiter = "";
+                sql.Append(" ORDER BY ");
+                foreach (SqlFragment fragment in OrderBy)
+                {
+                    sql.AppendFormat("{0}{1}", delimiter, fragment);
+                    delimiter = ",";
+                }
+            }
+
             if (Limit != null || Skip != null)
             {
                 sql.Append(" LIMIT ");
@@ -69,8 +96,6 @@ namespace MySql.Data.Entity
             }
             if (Parent != null)
                 sql.Append(")");
-            if (Name != null)
-                sql.AppendFormat("AS {0}", QuoteIdentifier(Name));
             return sql.ToString();
         }
     }
