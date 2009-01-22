@@ -35,15 +35,9 @@ namespace MySql.Data.Entity
 
         #region Properties 
 
-//        protected override SelectStatementBaseStatement Current
-  //      {
-    //        get { return selectStatements.Count == 0 ? null : selectStatements.Peek(); }
-      //  }
-
         private SelectStatement CurrentSelect
         {
             get { return selectStatements.Count == 0 ? null : selectStatements.Peek(); }
-            //get { return Current as SelectStatement; }
         }
 
         #endregion
@@ -121,12 +115,13 @@ namespace MySql.Data.Entity
         {
             JoinFragment join = new JoinFragment();
             join.JoinType = Metadata.GetOperator(expression.ExpressionKind);
+            join.Name = scope.Pop();
 
+            scope.Push(expression.Left.VariableName);
             join.Left = (InputFragment)expression.Left.Expression.Accept(this);
-            join.Left.Name = expression.Left.VariableName;
 
+            scope.Push(expression.Right.VariableName);
             join.Right = (InputFragment)expression.Right.Expression.Accept(this);
-            join.Right.Name = expression.Right.VariableName;
 
             // now handle the ON case
             join.Condition = expression.JoinCondition.Accept(this);

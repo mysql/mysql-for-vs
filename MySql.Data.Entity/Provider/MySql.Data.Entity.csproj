@@ -46,6 +46,7 @@
     <EmbeddedResource Include="Properties\SchemaMapping.msl" />
     <EmbeddedResource Include="Properties\SchemaDefinition.ssdl" />
     <Compile Include="Fragments\InputFragment.cs" />
+    <Compile Include="Fragments\JoinFragment.cs" />
     <Compile Include="Fragments\ListFragment.cs" />
     <Compile Include="Fragments\SqlFragment.cs" />
     <Compile Include="Fragments\SymbolFragment.cs" />
@@ -58,7 +59,6 @@
     <None Include="Statements\BaseStatement.cs" />
     <Compile Include="Statements\DeleteStatement.cs" />
     <Compile Include="Statements\InsertStatement.cs" />
-    <Compile Include="Statements\JoinFragment.cs" />
     <Compile Include="Metadata.cs" />
     <Compile Include="ProviderManifest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

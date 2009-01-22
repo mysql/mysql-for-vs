@@ -278,6 +278,19 @@ namespace MySql.Data.VisualStudio
 			}
 		}
 
+        public DataTable GetSchema(string schemaName, string[] restrictions)
+        {
+            DbConnection conn = (DbConnection)HierarchyAccessor.Connection.GetLockedProviderObject();
+            try
+            {
+                return conn.GetSchema(schemaName, restrictions);
+            }
+            finally
+            {
+                HierarchyAccessor.Connection.UnlockProviderObject();
+            }
+        }
+
         public DataTable GetDataTable(string sql)
         {
             DbConnection conn = (DbConnection)HierarchyAccessor.Connection.GetLockedProviderObject();

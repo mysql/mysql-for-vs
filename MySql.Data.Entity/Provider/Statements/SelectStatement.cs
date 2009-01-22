@@ -36,7 +36,7 @@ namespace MySql.Data.Entity
             OrderBy = new List<SqlFragment>();
         }
 
-        private SelectStatement Parent { get; set; }
+        public SelectStatement Parent { get; set; }
         public InputFragment Input { get; set; }
         public ListFragment Output { get; set; }
 

@@ -190,26 +190,85 @@ namespace MySql.Data.Entity
             return VisitBinaryExpression(expression.Left, expression.Right, "OR");
         }
 
-        #endregion
-
-        #region DBExpressionVisitor methods normally overridden
+        public override SqlFragment Visit(DbCastExpression expression)
+        {
+            //TODO: handle casting
+            return expression.Argument.Accept(this);
+        }
 
         public override SqlFragment Visit(DbUnionAllExpression expression)
         {
             InputFragment input = new InputFragment();
+            input.Name = scope.Pop();
 
+            scope.Push(null);
             SqlFragment left = expression.Left.Accept(this);
             Debug.Assert(left is SelectStatement);
+            (left as SelectStatement).Parent = null;
             input.Inputs.Add(left);
 
             input.Inputs.Add(new SqlFragment("UNION ALL"));
 
+            scope.Push(null);
             SqlFragment right = expression.Right.Accept(this);
             Debug.Assert(right is SelectStatement);
+            (right as SelectStatement).Parent = null;
             input.Inputs.Add(right);
 
             return input;
         }
+
+        public override SqlFragment Visit(DbLikeExpression expression)
+        {
+            ListFragment list = new ListFragment(" ");
+            list.Items.Add(expression.Argument.Accept(this));
+            list.Items.Add(new SqlFragment(" LIKE "));
+            list.Items.Add(expression.Pattern.Accept(this));
+
+            if (expression.Escape.ExpressionKind != DbExpressionKind.Null)
+            {
+                list.Items.Add(new SqlFragment(" ESCAPE "));
+                list.Items.Add(expression.Escape.Accept(this));
+            }
+
+            return list;
+        }
+
+        public override SqlFragment Visit(DbCaseExpression expression)
+        {
+            ListFragment list = new ListFragment("");
+
+            Debug.Assert(expression.When.Count == expression.Then.Count);
+
+            list.Append("CASE");
+            for (int i = 0; i < expression.When.Count; ++i)
+            {
+                list.Append(" WHEN (");
+                list.Append(expression.When[i].Accept(this));
+                list.Append(") THEN ");
+                list.Append(expression.Then[i].Accept(this));
+            }
+            if (expression.Else != null && !(expression.Else is DbNullExpression))
+            {
+                list.Append(" ELSE ");
+                list.Append(expression.Else.Accept(this));
+            }
+
+            list.Append(" END");
+            return list;
+        }
+
+        public override SqlFragment Visit(DbIsNullExpression expression)
+        {
+            ListFragment list = new ListFragment("");
+            list.Append(expression.Argument.Accept(this));
+            list.Append(" IS NULL");
+            return list;
+        }
+
+        #endregion
+
+        #region DBExpressionVisitor methods normally overridden
 
 
         public override SqlFragment Visit(DbTreatExpression expression)
@@ -267,22 +326,12 @@ namespace MySql.Data.Entity
             throw new NotImplementedException();
         }
 
-        public override SqlFragment Visit(DbLikeExpression expression)
-        {
-            throw new NotImplementedException();
-        }
-
         public override SqlFragment Visit(DbJoinExpression expression)
         {
             throw new NotImplementedException();
         }
 
         public override SqlFragment Visit(DbIsOfExpression expression)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override SqlFragment Visit(DbIsNullExpression expression)
         {
             throw new NotImplementedException();
         }
@@ -333,16 +382,6 @@ namespace MySql.Data.Entity
         }
 
         public override SqlFragment Visit(DbCrossJoinExpression expression)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override SqlFragment Visit(DbCastExpression expression)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override SqlFragment Visit(DbCaseExpression expression)
         {
             throw new NotImplementedException();
         }

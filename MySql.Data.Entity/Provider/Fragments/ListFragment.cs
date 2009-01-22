@@ -34,6 +34,16 @@ namespace MySql.Data.Entity
         public List<SqlFragment> Items { get; private set; }
         public string Seperator { get; set; }
 
+        public void Append(string s)
+        {
+            Items.Add(new SqlFragment(s));
+        }
+
+        public void Append(SqlFragment s)
+        {
+            Items.Add(s);
+        }
+
         protected override string InnerText
         {
             get
