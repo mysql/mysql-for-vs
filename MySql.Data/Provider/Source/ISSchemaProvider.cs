@@ -394,11 +394,14 @@ namespace MySql.Data.MySqlClient
 
             StringBuilder where =new StringBuilder();
             if (restrictions.Length >= 2 && !String.IsNullOrEmpty(restrictions[1]))
-                where.AppendFormat(" AND rc.constraint_schema LIKE '{0}'", restrictions[1]);
+                where.AppendFormat(CultureInfo.InvariantCulture, 
+                    " AND rc.constraint_schema LIKE '{0}'", restrictions[1]);
             if (restrictions.Length >= 3 && !String.IsNullOrEmpty(restrictions[2]))
-                where.AppendFormat(" AND rc.table_name LIKE '{0}'", restrictions[2]);
+                where.AppendFormat(CultureInfo.InvariantCulture, 
+                    " AND rc.table_name LIKE '{0}'", restrictions[2]);
             if (restrictions.Length >= 4 && !String.IsNullOrEmpty(restrictions[3]))
-                where.AppendFormat(" AND rc.constraint_name LIKE '{0}'", restrictions[2]);
+                where.AppendFormat(CultureInfo.InvariantCulture, 
+                    " AND rc.constraint_name LIKE '{0}'", restrictions[2]);
 
             sql += where.ToString();
 
@@ -415,11 +418,14 @@ namespace MySql.Data.MySqlClient
 
             StringBuilder where = new StringBuilder();
             if (restrictions.Length >= 2 && !String.IsNullOrEmpty(restrictions[1]))
-                where.AppendFormat(" AND kcu.constraint_schema LIKE '{0}'", restrictions[1]);
+                where.AppendFormat(CultureInfo.InvariantCulture, 
+                    " AND kcu.constraint_schema LIKE '{0}'", restrictions[1]);
             if (restrictions.Length >= 3 && !String.IsNullOrEmpty(restrictions[2]))
-                where.AppendFormat(" AND kcu.table_name LIKE '{0}'", restrictions[2]);
+                where.AppendFormat(CultureInfo.InvariantCulture, 
+                    " AND kcu.table_name LIKE '{0}'", restrictions[2]);
             if (restrictions.Length >= 4 && !String.IsNullOrEmpty(restrictions[3]))
-                where.AppendFormat(" AND kcu.constraint_name LIKE '{0}'", restrictions[2]);
+                where.AppendFormat(CultureInfo.InvariantCulture, 
+                    " AND kcu.constraint_name LIKE '{0}'", restrictions[2]);
 
             sql += where.ToString();
 
