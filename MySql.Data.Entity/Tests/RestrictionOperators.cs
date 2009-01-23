@@ -27,6 +27,7 @@ using System.Data.EntityClient;
 using System.Data.Common;
 using NUnit.Framework;
 using System.Data.Objects;
+using System.Collections.Generic;
 
 namespace MySql.Data.Entity.Tests
 {
@@ -124,49 +125,36 @@ namespace MySql.Data.Entity.Tests
         [Test]
         public void SelectWithComplexType()
         {
-            using (EntityConnection connection = GetEntityConnection())
-            {
-                connection.Open();
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT c.LastName FROM Employees AS c WHERE c.Age > 20", conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
 
-                using (EntityCommand cmd = new EntityCommand(
-                    "SELECT C.LastName FROM TestDB.Employees AS C WHERE C.Age>20", connection))
-                {
-                    using (DbDataReader reader = cmd.ExecuteReader(CommandBehavior.SequentialAccess))
-                    {
-                        Assert.IsTrue(reader.HasRows);
-                        reader.Read();
-                        Assert.AreEqual("Fintstone", reader.GetString(0));
-                        reader.Read();
-                        Assert.AreEqual("Rubiks Cube", reader.GetString(0));
-                        reader.Read();
-                        Assert.AreEqual("Lincoln Logs", reader.GetString(0));
-                        reader.Read();
-                        Assert.AreEqual("Legos", reader.GetString(0));
-                        Assert.IsFalse(reader.Read());
-                    }
-                }
+            using (testEntities context = new testEntities())
+            {
+                string sql = @"SELECT c.LastName FROM Employees AS c WHERE c.Age > 20";
+                ObjectQuery<DbDataRecord> query = context.CreateQuery<DbDataRecord>(sql);
+
+                int i = 0;
+                foreach (DbDataRecord s in query)
+                    Assert.AreEqual(dt.Rows[i++][0], s.GetString(0));
             }
         }
 
         [Test]
         public void WhereLiteralOnRelation()
         {
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT id FROM Companies WHERE city = 'Dallas'", conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+
             using (testEntities context = new testEntities())
             {
-                using (EntityConnection ec = context.Connection as EntityConnection)
-                {
-                    ec.Open();
-                    MySqlCommand cmd = new MySqlCommand("SELECT id FROM Companies c WHERE c.City = 'Dallas'", 
-                        (MySqlConnection)ec.StoreConnection);
-                    object id = cmd.ExecuteScalar();
+                string sql = "SELECT VALUE c FROM Companies AS c WHERE c.Address.City = 'Dallas'";
+                ObjectQuery<Companies> query = context.CreateQuery<Companies>(sql);
 
-                    string sql = "SELECT VALUE c FROM Companies AS c WHERE c.Address.City = 'Dallas'";
-                    ObjectQuery<Companies> query = context.CreateQuery<Companies>(sql);
-
-                    // should just be one
-                    foreach (Companies c in query)
-                        Assert.AreEqual(id, c.Id);
-                }
+                int i = 0;
+                foreach (Companies c in query)
+                    Assert.AreEqual(dt.Rows[i++]["id"], c.Id);
             }
         }
 
