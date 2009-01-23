@@ -39,6 +39,13 @@ namespace MySql.Data.Entity
             }
         }
 
+        public virtual SqlFragment GetProperty(string name)
+        {
+            foreach (SqlFragment f in Inputs)
+                if (f.Name == name) return f;
+            return null;
+        }
+
         protected override string InnerText
         {
             get

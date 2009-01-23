@@ -55,8 +55,8 @@
     <Compile Include="Generators\InsertGenerator.cs" />
     <Compile Include="Generators\SelectGenerator.cs" />
     <Compile Include="Generators\SqlGenerator.cs" />
+    <Compile Include="Generators\SymbolTable.cs" />
     <Compile Include="Generators\UpdateGenerator.cs" />
-    <None Include="Statements\BaseStatement.cs" />
     <Compile Include="Statements\DeleteStatement.cs" />
     <Compile Include="Statements\InsertStatement.cs" />
     <Compile Include="Metadata.cs" />

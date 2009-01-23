@@ -31,7 +31,7 @@ namespace MySql.Data.Entity
         public SelectStatement(SelectStatement parent)
         {
             Parent = parent;
-            Output = new ListFragment(", ");
+            Output = new ListFragment("," + Environment.NewLine);
             Where = new List<SqlFragment>();
             OrderBy = new List<SqlFragment>();
         }

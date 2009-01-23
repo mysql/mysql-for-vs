@@ -55,17 +55,23 @@ INSERT INTO toys VALUES (4, 4, 'Legos', 4);
 DROP TABLE IF EXISTS Stores;
 CREATE TABLE Stores (
 	id INT PRIMARY KEY,
-	`name` VARCHAR(50) NOT NULL) ENGINE=InnoDB;
-INSERT INTO Stores VALUES (1, 'Target');
-INSERT INTO Stores VALUES (2, 'K-Mart');
-INSERT INTO Stores VALUES (3, 'Wal-Mart');	
+	`name` VARCHAR(50) NOT NULL,
+	address VARCHAR(50),
+	city VARCHAR(50),
+	state CHAR(2),
+	zipcode CHAR(9)	
+	) ENGINE=InnoDB;
+INSERT INTO Stores VALUES (1, 'Target', '2417 N. Haskell Ave', 'Dallas', 'TX', '75204');
+INSERT INTO Stores VALUES (2, 'K-Mart', '4225 W. Indian School Rd.', 'Phoenix', 'AZ', '85019');
+INSERT INTO Stores VALUES (3, 'Wal-Mart', '1238 Putty Hill Ave', 'Towson', 'MD', '21286');	
 	
 	
 DROP TABLE IF EXISTS Orders;
 CREATE TABLE Orders (
 	id INT PRIMARY KEY,
 	storeId INT NOT NULL,
-	freight DOUBLE NOT NULL) ENGINE=InnoDB;
+	freight DOUBLE NOT NULL,
+	FOREIGN KEY (storeId) REFERENCES Stores(id)) ENGINE=InnoDB;
 INSERT INTO Orders VALUES (1, 1, 65.3);
 INSERT INTO Orders VALUES (2, 2, 127.8);
 INSERT INTO Orders VALUES (3, 3, 254.78);	

@@ -6,12 +6,16 @@
     <EntitySet Name="SalariedEmployees" EntityType ="testModel.Store.SalariedEmployees"/>
     <EntitySet Name="Toys" EntityType ="testModel.Store.Toys"/>
     <EntitySet Name="Companies" EntityType ="testModel.Store.Companies"/>
+    <EntitySet Name="Stores" EntityType ="testModel.Store.Stores"/>
+    <EntitySet Name="Orders" EntityType ="testModel.Store.Orders"/>
     <AssociationSet Name="FK_Toys_Companies" Association ="testModel.Store.FK_Toys_Companies">
       <End Role="Companies" EntitySet ="Companies"/>
       <End Role="Toys" EntitySet ="Toys"/>
     </AssociationSet>
-    <EntitySet Name="Stores" EntityType ="testModel.Store.Stores"/>
-    <EntitySet Name="Orders" EntityType ="testModel.Store.Orders"/>
+    <AssociationSet Name="FK_Orders_Stores" Association ="testModel.Store.FK_Orders_Stores">
+      <End Role="Stores" EntitySet ="Stores"/>
+      <End Role="Orders" EntitySet ="Orders"/>
+    </AssociationSet>
   </EntityContainer>
 
   <EntityType Name="Employees">
@@ -85,6 +89,10 @@
     </Key>
     <Property Name="Id" Type="int" Nullable ="false"/>
     <Property Name="Name" Type="varchar" MaxLength="50" Nullable ="false"/>
+    <Property Name ="Address" Type="varchar" MaxLength="50"/>
+    <Property Name ="City" Type="varchar" MaxLength ="50"/>
+    <Property Name ="State" Type="char" MaxLength ="2" />
+    <Property Name ="ZipCode" Type="char" MaxLength ="9"/>
   </EntityType>
 
   <EntityType Name="Orders">
@@ -95,4 +103,17 @@
     <Property Name="StoreId" Type="int" Nullable ="false"/>
     <Property Name="Freight" Type="double" Nullable ="false"/>
   </EntityType>
+
+  <Association Name="FK_Orders_Stores">
+    <End Role="Stores" Type="testModel.Store.Stores" Multiplicity ="1"/>
+    <End Role="Orders" Type="testModel.Store.Orders" Multiplicity ="*"/>
+    <ReferentialConstraint>
+      <Principal Role="Stores">
+        <PropertyRef Name="Id"/>
+      </Principal>
+      <Dependent Role="Orders">
+        <PropertyRef Name="StoreId"/>
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema>

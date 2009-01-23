@@ -31,28 +31,20 @@ namespace MySql.Data.Entity
 {
     abstract class SqlGenerator : DbExpressionVisitor<SqlFragment>
     {
-        private List<MySqlParameter> parameters;
         protected string tabs = String.Empty;
         private int parameterCount = 1;
         protected Stack<string> scope = new Stack<string>();
-//        private BaseStatement current;
 
         public SqlGenerator()
         {
-            parameters = new List<MySqlParameter>();
+            Parameters = new List<MySqlParameter>();
+            Symbols = new SymbolTable();
         }
 
         #region Properties
 
-        public List<MySqlParameter> Parameters
-        {
-            get { return parameters; }
-        }
-
-  //      protected virtual BaseStatement Current 
-    //    { 
-      //      get { return current; }
-        //}
+        public List<MySqlParameter> Parameters { get; private set; }
+        protected SymbolTable Symbols { get; private set; }
 
         #endregion
 
@@ -80,10 +72,19 @@ namespace MySql.Data.Entity
 
         public override SqlFragment Visit(DbVariableReferenceExpression expression)
         {
-            Trace.WriteLine(String.Format("{0}{1}-{2}", tabs, "VariableRefExpression", expression.VariableName));
-            SymbolFragment f = new SymbolFragment();
-            f.Variable = expression.VariableName;
-            return f;
+            return Symbols.Lookup(expression.VariableName);
+        }
+
+        public override SqlFragment Visit(DbPropertyExpression expression)
+        {
+            InputFragment parent = (InputFragment)expression.Instance.Accept(this);
+            InputFragment f = (InputFragment)parent.GetProperty(expression.Property.Name);
+            if (f != null) return f;
+
+            SymbolFragment sym = new SymbolFragment();
+            sym.Fragment = parent;
+            sym.Property = expression.Property.Name;
+            return sym;
         }
 
         public override SqlFragment Visit(DbScanExpression expression)
@@ -108,20 +109,8 @@ namespace MySql.Data.Entity
                     table = property.Value as string;
                 fragment.Text = String.Format("`{0}`.`{1}`", schema, table);
             }
-            fragment.Name = scope.Pop();
+            //fragment.Name = scope.Pop();
             return fragment;
-        }
-
-        public override SqlFragment Visit(DbPropertyExpression expression)
-        {
-            Trace.WriteLine(String.Format("{0}{1}-{2}", tabs, "PropertyExpression", expression.Property.Name));
-            Push();
-
-            SqlFragment f = expression.Instance.Accept(this);
-            SymbolFragment symbolFragment = f as SymbolFragment;
-            symbolFragment.Properties.Add(expression.Property.Name);
-            Pop();
-            return symbolFragment;
         }
 
         public override SqlFragment Visit(DbParameterReferenceExpression expression)

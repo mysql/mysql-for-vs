@@ -62,8 +62,9 @@ namespace MySql.Data.Entity
 
         public override SqlFragment Visit(DbFilterExpression expression)
         {
-            scope.Push(expression.Input.VariableName);
+            //scope.Push(expression.Input.VariableName);
             SqlFragment input = expression.Input.Expression.Accept(this);
+            Symbols.Add(expression.Input.VariableName, input);
 
             CurrentSelect.Where.Add(expression.Predicate.Accept(this));
 
@@ -115,13 +116,15 @@ namespace MySql.Data.Entity
         {
             JoinFragment join = new JoinFragment();
             join.JoinType = Metadata.GetOperator(expression.ExpressionKind);
-            join.Name = scope.Pop();
+//            join.Name = scope.Pop();
 
-            scope.Push(expression.Left.VariableName);
+  //          scope.Push(expression.Left.VariableName);
             join.Left = (InputFragment)expression.Left.Expression.Accept(this);
+            Symbols.Add(expression.Left.VariableName, join.Left);
 
-            scope.Push(expression.Right.VariableName);
+            //scope.Push(expression.Right.VariableName);
             join.Right = (InputFragment)expression.Right.Expression.Accept(this);
+            Symbols.Add(expression.Right.VariableName, join.Right);
 
             // now handle the ON case
             join.Condition = expression.JoinCondition.Accept(this);
@@ -167,13 +170,14 @@ namespace MySql.Data.Entity
         public override SqlFragment Visit(DbProjectExpression expression)
         {
             SelectStatement statement = new SelectStatement(CurrentSelect);
-            if (scope.Count > 0)
-                statement.Name = scope.Pop();
+//            if (scope.Count > 0)
+  //              statement.Name = scope.Pop();
             selectStatements.Push(statement);
 
             // handle from clause
-            scope.Push(expression.Input.VariableName);
+            //scope.Push(expression.Input.VariableName);
             statement.Input = (InputFragment)expression.Input.Expression.Accept(this);
+            Symbols.Add(expression.Input.VariableName, statement.Input);
             
             // now handle projection
             expression.Projection.Accept(this);

@@ -29,6 +29,17 @@ namespace MySql.Data.Entity
         public SqlFragment Condition;
         public string JoinType;
 
+        public override SqlFragment GetProperty(string name)
+        {
+            if (Left.Name == name) return Left;
+            if (Right.Name == name) return Right;
+
+            SqlFragment f = Left.GetProperty(name);
+            if (f == null)
+                f = Right.GetProperty(name);
+            return f;
+        }
+
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();

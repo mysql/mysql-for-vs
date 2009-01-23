@@ -6,12 +6,16 @@
     <EntitySet Name="Children" EntityType="testModel.Children" />
     <EntitySet Name="Companies" EntityType ="testModel.Companies"/>
     <EntitySet Name="Toys" EntityType ="testModel.Toys"/>
+    <EntitySet Name="Stores" EntityType ="testModel.Stores"/>
+    <EntitySet Name="Orders" EntityType ="testModel.Orders"/>
     <AssociationSet Name="FK_Toys_Companies" Association ="testModel.FK_Toys_Companies">
       <End Role="Companies" EntitySet ="Companies"/>
       <End Role="Toys" EntitySet ="Toys"/>
     </AssociationSet>
-    <EntitySet Name="Stores" EntityType ="testModel.Stores"/>
-    <EntitySet Name="Orders" EntityType ="testModel.Orders"/>
+    <AssociationSet Name="FK_Orders_Stores" Association ="testModel.FK_Orders_Stores">
+      <End Role="Stores" EntitySet ="Stores"/>
+      <End Role="Orders" EntitySet ="Orders"/>
+    </AssociationSet>
   </EntityContainer>
 
   <EntityType Name="Employees">
@@ -57,7 +61,7 @@
     <Property Name="Id" Type="Int32" Nullable ="false"/>
     <Property Name="Name" Type="String" MaxLength="100" Nullable ="false"/>
     <Property Name="MinAge" Type="Int32" Nullable ="false"/>
-    <NavigationProperty Name="Companies" Relationship ="testModel.FK_Toys_Companies" FromRole="Toys" ToRole="Companies"/>
+    <NavigationProperty Name="Company" Relationship ="testModel.FK_Toys_Companies" FromRole="Toys" ToRole="Companies"/>
   </EntityType>
 
   <Association Name="FK_Toys_Companies">
@@ -79,6 +83,7 @@
     </Key>
     <Property Name="Id" Type="Int32" Nullable ="false"/>
     <Property Name="Name" Type="String" MaxLength="50" Nullable ="false"/>
+    <Property Name="Address" Type="testModel.CommonAddress" Nullable="false"/>
   </EntityType>
 
   <EntityType Name="Orders">
@@ -86,7 +91,12 @@
       <PropertyRef Name="Id"/>
     </Key>
     <Property Name="Id" Type="Int32" Nullable ="false"/>
-    <Property Name="StoreId" Type="Int32" Nullable ="false"/>
     <Property Name="Freight" Type="Double" Nullable ="false"/>
+    <NavigationProperty Name="Store" Relationship ="testModel.FK_Orders_Stores" FromRole="Orders" ToRole="Stores"/>
   </EntityType>
+
+  <Association Name="FK_Orders_Stores">
+    <End Role="Stores" Type="testModel.Stores" Multiplicity="1" />
+    <End Role="Orders" Type="testModel.Orders" Multiplicity="*" />
+  </Association>
 </Schema>

@@ -22,20 +22,29 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 
 namespace MySql.Data.Entity
 {
     class BaseStatement : SqlFragment
     {
-        private Dictionary<string, List<SqlFragment>> namespaces = new Dictionary<string, List<SqlFragment>>();
+        public BaseStatement(BaseStatement parent)
+        {
+            Parent = parent;
+            if (Parent == null)
+                Variables = new Dictionary<string, SqlFragment>();
+            else
+                Variables = Parent.Variables;
+        }
+
+        protected BaseStatement Parent { get; set; }
+        protected Dictionary<string, SqlFragment> Variables { get; private set; }
 
         public void IndexFragment(SqlFragment fragment, string name)
         {
-            if (!namespaces.ContainsKey(name))
-                namespaces.Add(name, new List<SqlFragment>());
+            Debug.Assert(!Variables.ContainsKey(name));
 
-            List<SqlFragment> list = namespaces[name];
-            namespaces[name].Add(fragment);
+            Variables.Add(name, fragment);
         }
     }
 }

@@ -28,20 +28,17 @@ namespace MySql.Data.Entity
     {
         public SymbolFragment() : base()
         {
-            Properties = new List<string>();
         }
 
-        public List<string> Properties { get; private set; }
-        public string Variable { get; set; }
+        public string Property { get; set; }
+        public SqlFragment Fragment { get; set; }
 
         protected override string  InnerText
         {
 	        get 
-	        { 
-                StringBuilder sb = new StringBuilder(QuoteIdentifier(Properties[0]));
-                if (Properties.Count == 2)
-                    sb.AppendFormat(".{0}", QuoteIdentifier(Properties[1]));
-                return sb.ToString();
+	        {
+                return String.Format("{0}.{1}", QuoteIdentifier(Fragment.Name), 
+                    QuoteIdentifier(Property));
 	        }
         }
     }
