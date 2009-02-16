@@ -22,6 +22,7 @@ using System;
 using System.Data;
 using System.Data.Metadata.Edm;
 using System.Data.Common.CommandTrees;
+using System.Collections.Generic;
 
 namespace MySql.Data.Entity
 {
@@ -33,7 +34,6 @@ namespace MySql.Data.Entity
 
             switch (pt.PrimitiveTypeKind)
             {
-                case PrimitiveTypeKind.Boolean:
                 case PrimitiveTypeKind.Byte:
                 case PrimitiveTypeKind.Decimal:
                 case PrimitiveTypeKind.Double:
@@ -92,6 +92,17 @@ namespace MySql.Data.Entity
                 case DbExpressionKind.FullOuterJoin: return "OUTER JOIN";
             }
             throw new NotSupportedException("expression kind not supported");
+        }
+
+        internal static IList<EdmProperty> GetProperties(EdmType type)
+        {
+            if (type is EntityType)
+                return ((EntityType)type).Properties;
+            if (type is ComplexType)
+                return ((ComplexType)type).Properties;
+            if (type is RowType)
+                return ((RowType)type).Properties;
+            throw new NotSupportedException();
         }
     }
 }

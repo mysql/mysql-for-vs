@@ -1,35 +1,36 @@
-CREATE TABLE employees(
-	employeeId INT PRIMARY KEY,
-	lastName NVARCHAR(20), 
-	firstName NVARCHAR(10),
-	age INT) ENGINE=InnoDB;
+CREATE TABLE Employees(
+	Id INT NOT NULL PRIMARY KEY,
+	LastName NVARCHAR(20) NOT NULL, 
+	FirstName NVARCHAR(10) NOT NULL,
+	Age INT) ENGINE=InnoDB;
 
-INSERT INTO employees VALUES (1, 'Flintstone', 'Fred', 43);
-INSERT INTO employees VALUES (2, 'Flintstone', 'Wilma', 37);
-INSERT INTO employees VALUES (3, 'Rubble', 'Barney', 41);
-INSERT INTO employees VALUES (4, 'Rubble', 'Betty', 35);
-INSERT INTO employees VALUES (5, 'Slate', 'S', 62);
-INSERT INTO employees VALUES (6, 'Doo', 'Scooby', 7);
-INSERT INTO employees VALUES (7, 'Underdog', 'J', 12);
+INSERT INTO Employees VALUES (1, 'Flintstone', 'Fred', 43);
+INSERT INTO Employees VALUES (2, 'Flintstone', 'Wilma', 37);
+INSERT INTO Employees VALUES (3, 'Rubble', 'Barney', 41);
+INSERT INTO Employees VALUES (4, 'Rubble', 'Betty', 35);
+INSERT INTO Employees VALUES (5, 'Slate', 'S', 62);
+INSERT INTO Employees VALUES (6, 'Doo', 'Scooby', 7);
+INSERT INTO Employees VALUES (7, 'Underdog', 'J', 12);
 
-CREATE TABLE salariedEmployees(
-	employeeId INT PRIMARY KEY,
-	salary INT,
-	CONSTRAINT FOREIGN KEY (employeeId) REFERENCES employees (employeeId)) Engine=InnoDB;
+CREATE TABLE SalariedEmployees(
+	EmployeeId INT NOT NULL PRIMARY KEY,
+	Salary INT NOT NULL,
+	CONSTRAINT FOREIGN KEY (EmployeeId) REFERENCES Employees (Id)) Engine=InnoDB;
 	
 INSERT INTO salariedEmployees VALUES (5, 500);
 INSERT INTO salariedEmployees VALUES (7, 50);
 
 DROP TABLE IF EXISTS Companies;
 CREATE TABLE Companies (
-	id INT PRIMARY KEY,
-	`name` VARCHAR(100) NOT NULL,
-	dateBegan DATETIME,
-	numEmployees INT,
-	address VARCHAR(50),
-	city VARCHAR(50),
-	state CHAR(2),
-	zipcode CHAR(9)) ENGINE=InnoDB;
+	`Id` INT NOT NULL AUTO_INCREMENT,
+	`Name` VARCHAR(100) NOT NULL,
+	`DateBegan` DATETIME,
+	`NumEmployees` INT,
+	`Address` VARCHAR(50),
+	`City` VARCHAR(50),
+	`State` CHAR(2),
+	`ZipCode` CHAR(9),
+	CONSTRAINT PK_Companies PRIMARY KEY (Id)) ENGINE=InnoDB;
 
 INSERT INTO Companies VALUES (1, 'Hasbro', '1996-11-15 5:18:23', 200, '123 My Street', 'Nashville', 'TN', 12345);
 INSERT INTO Companies VALUES (2, 'Acme', NULL, 55, '45 The Lane', 'St. Louis', 'MO', 44332);
@@ -39,18 +40,20 @@ INSERT INTO Companies VALUES (5, 'Mattel', NULL, 888, '111 Parkwood Ave', 'San J
 INSERT INTO Companies VALUES (6, 'K''NEX', NULL, 382, '7812 N. 51st', 'Dallas', 'TX', 11239);
 INSERT INTO Companies VALUES (7, 'Playmobil', NULL, 541, '546 Main St.', 'Omaha', 'NE', 78439);
 
-DROP TABLE IF EXISTS toys;
-CREATE TABLE toys (
-	id INT PRIMARY KEY,
-	makerId INT,
-	`name` varchar(100) NOT NULL,
-	minage int NOT NULL,
-	FOREIGN KEY (makerId) REFERENCES Companies(id) ) ENGINE=InnoDB;
+DROP TABLE IF EXISTS Toys;
+CREATE TABLE Toys (
+	`Id` INT NOT NULL AUTO_INCREMENT,
+	`SupplierId` INT NOT NULL,
+	`Name` varchar(100) NOT NULL,
+	`MinAge` int NOT NULL,
+	CONSTRAINT PK_Toys PRIMARY KEY (Id),
+	KEY `SupplierId` (`SupplierId`),
+	FOREIGN KEY (SupplierId) REFERENCES Companies(Id) ) ENGINE=InnoDB;
 	
-INSERT INTO toys VALUES (1, 3, 'Slinky', 2);	
-INSERT INTO toys VALUES (2, 2, 'Rubiks Cube', 5);	
-INSERT INTO toys VALUES (3, 1, 'Lincoln Logs', 3);	
-INSERT INTO toys VALUES (4, 4, 'Legos', 4);	
+INSERT INTO Toys VALUES (1, 3, 'Slinky', 2);	
+INSERT INTO Toys VALUES (2, 2, 'Rubiks Cube', 5);	
+INSERT INTO Toys VALUES (3, 1, 'Lincoln Logs', 3);	
+INSERT INTO Toys VALUES (4, 4, 'Legos', 4);	
 
 DROP TABLE IF EXISTS Stores;
 CREATE TABLE Stores (

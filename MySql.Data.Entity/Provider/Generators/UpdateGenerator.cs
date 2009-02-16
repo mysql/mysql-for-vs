@@ -34,7 +34,7 @@ namespace MySql.Data.Entity
 
             UpdateStatement statement = new UpdateStatement();
 
-            scope.Push(commandTree.Target.VariableName);
+            //scope.Push(commandTree.Target.VariableName);
             statement.Target = commandTree.Target.Expression.Accept(this);
 
             foreach (DbSetClause setClause in commandTree.SetClauses)

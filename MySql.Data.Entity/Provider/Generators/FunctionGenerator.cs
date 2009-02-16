@@ -97,7 +97,7 @@ namespace MySql.Data.Entity
 
             sql.AppendFormat(" {0} ({1})", bitwiseFunctions[e.Function.Name],
                 e.Arguments[arg].Accept(callingGenerator));
-            return new SqlFragment(sql.ToString());
+            return new LiteralFragment(sql.ToString());
         }
 
         private SqlFragment GenericFunction(Dictionary<string,string> funcs, 
@@ -109,7 +109,7 @@ namespace MySql.Data.Entity
                 frags[i] = e.Arguments[i].Accept(callingGenerator);
 
             string sql = String.Format(funcs[e.Function.Name], frags);
-            return new SqlFragment(sql);
+            return new LiteralFragment(sql);
         }
     }
 }

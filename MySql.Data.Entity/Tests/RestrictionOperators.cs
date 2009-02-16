@@ -46,7 +46,7 @@ namespace MySql.Data.Entity.Tests
         private EntityConnection GetEntityConnection()
         {
             string connectionString = String.Format(
-                "metadata=TestDB.csdl|TestDB.msl|TestDB.ssdl;provider=MySql.Data.MySqlClient; provider connection string=\"{0}\"", GetConnectionString(true));
+                "metadata=TestModel.csdl|TestModel.msl|TestModel.ssdl;provider=MySql.Data.MySqlClient; provider connection string=\"{0}\"", GetConnectionString(true));
             EntityConnection connection = new EntityConnection(connectionString);
             return connection;
         }
@@ -61,8 +61,8 @@ namespace MySql.Data.Entity.Tests
 
             using (testEntities context = new testEntities())
             {
-                var query = context.CreateQuery<Toys>("SELECT VALUE c FROM Toys AS c");
-                foreach (Toys t in query)
+                var query = context.CreateQuery<Toy>("SELECT VALUE c FROM Toys AS c");
+                foreach (Toy t in query)
                 {
                     Assert.AreEqual(toys.Rows[i++]["name"], t.Name);
                 }
@@ -79,8 +79,8 @@ namespace MySql.Data.Entity.Tests
 
             using (testEntities context = new testEntities())
             {
-                var query = context.CreateQuery<Toys>("SELECT VALUE t FROM Toys AS t WHERE t.MinAge=4");
-                foreach (Toys t in query)
+                var query = context.CreateQuery<Toy>("SELECT VALUE t FROM Toys AS t WHERE t.MinAge=4");
+                foreach (Toy t in query)
                 {
                     Assert.AreEqual(toys.Rows[i++]["name"], t.Name);
                 }
@@ -97,10 +97,10 @@ namespace MySql.Data.Entity.Tests
 
             using (testEntities context = new testEntities())
             {
-                var query = context.CreateQuery<Toys>("SELECT VALUE t FROM Toys AS t WHERE t.MinAge>@age");
+                var query = context.CreateQuery<Toy>("SELECT VALUE t FROM Toys AS t WHERE t.MinAge>@age");
                 query.Parameters.Add(new ObjectParameter("age", 3));
 
-                foreach (Toys t in query)
+                foreach (Toy t in query)
                 {
                     Assert.AreEqual(toys.Rows[i++]["name"], t.Name);
                 }
@@ -117,10 +117,10 @@ namespace MySql.Data.Entity.Tests
             using (testEntities context = new testEntities())
             {
                 string sql = "SELECT VALUE c FROM Companies AS c WHERE c.Address.City = 'Dallas'";
-                ObjectQuery<Companies> query = context.CreateQuery<Companies>(sql);
+                ObjectQuery<Company> query = context.CreateQuery<Company>(sql);
 
                 int i = 0;
-                foreach (Companies c in query)
+                foreach (Company c in query)
                     Assert.AreEqual(dt.Rows[i++]["id"], c.Id);
             }
         }
@@ -147,17 +147,17 @@ namespace MySql.Data.Entity.Tests
         public void WhereWithRelatedEntities1()
         {
             MySqlDataAdapter da = new MySqlDataAdapter(
-                "SELECT c.* FROM Toys t LEFT JOIN Companies c ON c.id=t.MakerId WHERE c.State='TX'", conn);
+                "SELECT c.* FROM Toys t LEFT JOIN Companies c ON c.id=t.SupplierId WHERE c.State='TX'", conn);
             DataTable dt = new DataTable();
             da.Fill(dt);
 
             using (testEntities context = new testEntities())
             {
-                string sql = "SELECT VALUE t FROM Toys AS t WHERE t.Company.Address.State = 'TX'";
-                ObjectQuery<Toys> query = context.CreateQuery<Toys>(sql);
+                string sql = "SELECT VALUE t FROM Toys AS t WHERE t.Supplier.Address.State = 'TX'";
+                ObjectQuery<Toy> query = context.CreateQuery<Toy>(sql);
 
                 int i = 0;
-                foreach (Toys t in query)
+                foreach (Toy t in query)
                 {
                     Assert.AreEqual(dt.Rows[i++]["id"], t.Id);
                 }
@@ -168,17 +168,19 @@ namespace MySql.Data.Entity.Tests
         public void WhereWithRelatedEntities2()
         {
             MySqlDataAdapter da = new MySqlDataAdapter(
-                "SELECT c.* FROM Toys t LEFT JOIN Companies c ON c.id=t.MakerId WHERE c.State<>'TX' AND c.State<>'TN'", conn);
+                @"SELECT c.* FROM Toys t LEFT JOIN Companies c ON c.Id=t.SupplierId 
+                    WHERE c.State<>'TX' AND c.State<>'AZ'", conn);
             DataTable dt = new DataTable();
             da.Fill(dt);
 
             using (testEntities context = new testEntities())
             {
-                string sql = "SELECT VALUE t FROM Toys AS t WHERE t.Company.Address.State<>'TX' AND t.Company.Address.State<>'TN'";
-                ObjectQuery<Toys> query = context.CreateQuery<Toys>(sql);
+                string sql = @"SELECT VALUE t FROM Toys AS t 
+                    WHERE t.Supplier.Address.State<>'TX' AND t.Supplier.Address.State <> 'AZ'";
+                ObjectQuery<Toy> query = context.CreateQuery<Toy>(sql);
 
                 int i = 0;
-                foreach (Toys t in query)
+                foreach (Toy t in query)
                 {
                     Assert.AreEqual(dt.Rows[i++]["id"], t.Id);
                 }
@@ -188,27 +190,21 @@ namespace MySql.Data.Entity.Tests
         [Test]
         public void Exists()
         {
+            MySqlDataAdapter da = new MySqlDataAdapter(
+                @"SELECT c.* FROM Companies c WHERE EXISTS 
+                    (SELECT * FROM Toys t WHERE t.SupplierId=c.Id && t.MinAge < 4)", conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+
             using (testEntities context = new testEntities())
             {
-                using (EntityConnection ec = context.Connection as EntityConnection)
-                {
-                    ec.Open();
+                string sql = @"SELECT VALUE c FROM Companies AS c WHERE EXISTS(
+                    SELECT p FROM c.Toys AS p WHERE p.MinAge < 4)";
+                ObjectQuery<Company> query = context.CreateQuery<Company>(sql);
 
-                    using (EntityCommand cmd = new EntityCommand(
-                        @"SELECT VALUE c FROM TestDB.Companies AS c WHERE EXISTS(
-                    SELECT p FROM c.Toys AS p WHERE p.MinAge < 4)", ec))
-                    {
-                        using (DbDataReader reader = cmd.ExecuteReader(CommandBehavior.SequentialAccess))
-                        {
-                            Assert.IsTrue(reader.HasRows);
-                            reader.Read();
-                            Assert.AreEqual(1, reader.GetInt32(0));
-                            reader.Read();
-                            Assert.AreEqual(3, reader.GetInt32(0));
-                            Assert.IsFalse(reader.Read());
-                        }
-                    }
-                }
+                int i = 0;
+                foreach(Company c in query)
+                    Assert.AreEqual(dt.Rows[i++]["id"], c.Id);
             }
         }
     }

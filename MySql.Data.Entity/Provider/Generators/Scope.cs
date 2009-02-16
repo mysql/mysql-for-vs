@@ -18,43 +18,49 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
-using System.Text;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
 namespace MySql.Data.Entity
 {
-    class UpdateStatement : SqlFragment 
+    class Scope
     {
-        public UpdateStatement()
+        private Dictionary<string, InputFragment> scopeTable = new Dictionary<string, InputFragment>();
+
+        public void Add(string name, InputFragment fragment)
         {
-            Properties = new List<SqlFragment>();
-            Values = new List<SqlFragment>();
+            scopeTable.Add(name, fragment);
         }
 
-        public SqlFragment Target { get; set; }
-        public List<SqlFragment> Properties { get; private set; }
-        public List<SqlFragment> Values { get; private set; }
-        public SqlFragment Where { get; set; }
-
-        public override void WriteSql(StringBuilder sql)
+        public void Remove(InputFragment fragment)
         {
-            sql.Append("UPDATE ");
-            Target.WriteSql(sql);
-            sql.Append(" SET ");
+            if (fragment == null) return;
+            if (fragment.Name != null)
+                scopeTable.Remove(fragment.Name);
 
-            string seperator = "";
-            for (int i = 0; i < Properties.Count; i++)
+            if (fragment is SelectStatement)
+                Remove((fragment as SelectStatement).From);
+            else if (fragment is JoinFragment)
             {
-                sql.Append(seperator);
-                Properties[i].WriteSql(sql);
-                sql.Append("=");
-                Values[i].WriteSql(sql);
-                seperator = ", ";
+                JoinFragment j = fragment as JoinFragment;
+                Remove(j.Left);
+                Remove(j.Right);
             }
-            if (Where != null)
+            else if (fragment is UnionFragment)
             {
-                sql.Append(" WHERE ");
-                Where.WriteSql(sql);
+                UnionFragment u = fragment as UnionFragment;
+                Remove(u.Left);
+                Remove(u.Right);
             }
+        }
+
+        public InputFragment GetFragment(string name)
+        {
+            if (!scopeTable.ContainsKey(name))
+                return null;
+            return scopeTable[name];
         }
     }
 }

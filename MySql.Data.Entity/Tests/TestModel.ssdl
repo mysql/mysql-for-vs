@@ -8,32 +8,32 @@
     <EntitySet Name="Companies" EntityType ="testModel.Store.Companies"/>
     <EntitySet Name="Stores" EntityType ="testModel.Store.Stores"/>
     <EntitySet Name="Orders" EntityType ="testModel.Store.Orders"/>
-    <AssociationSet Name="FK_Toys_Companies" Association ="testModel.Store.FK_Toys_Companies">
-      <End Role="Companies" EntitySet ="Companies"/>
+    <AssociationSet Name="FK_Toys_Supplier" Association ="testModel.Store.FK_Toys_Supplier">
+      <End Role="Supplier" EntitySet ="Companies"/>
       <End Role="Toys" EntitySet ="Toys"/>
     </AssociationSet>
-    <AssociationSet Name="FK_Orders_Stores" Association ="testModel.Store.FK_Orders_Stores">
+<!--    <AssociationSet Name="FK_Orders_Stores" Association ="testModel.Store.FK_Orders_Stores">
       <End Role="Stores" EntitySet ="Stores"/>
       <End Role="Orders" EntitySet ="Orders"/>
-    </AssociationSet>
+    </AssociationSet>-->
   </EntityContainer>
 
   <EntityType Name="Employees">
     <Key>
-      <PropertyRef Name="employeeId" />
+      <PropertyRef Name="Id" />
     </Key>
-    <Property Name="employeeId" Type="int" Nullable="false"/>
-    <Property Name="lastName" Type="nvarchar" Nullable="false" MaxLength="20" />
-    <Property Name="firstName" Type="nvarchar" Nullable="false" MaxLength="10" />
-    <Property Name="age" Type="int" Nullable="true"/>
+    <Property Name="Id" Type="int" Nullable="false"/>
+    <Property Name="LastName" Type="nvarchar" Nullable="false" MaxLength="20" />
+    <Property Name="FirstName" Type="nvarchar" Nullable="false" MaxLength="10" />
+    <Property Name="Age" Type="int" Nullable="true"/>
   </EntityType>
 
   <EntityType Name="SalariedEmployees" >
     <Key>
-      <PropertyRef Name="employeeId" />
+      <PropertyRef Name="EmployeeId" />
     </Key>
-    <Property Name="employeeId" Type="int" Nullable="false" />
-    <Property Name="salary" Type="int" Nullable="false" />
+    <Property Name="EmployeeId" Type="int" Nullable="false" />
+    <Property Name="Salary" Type="int" Nullable="false" />
   </EntityType>
 
   <EntityType Name="EmployeeChildren">
@@ -50,7 +50,7 @@
     <Key>
       <PropertyRef Name="Id"/>
     </Key>
-    <Property Name="Id" Type="int" Nullable ="false"/>
+    <Property Name="Id" Type="int" Nullable ="false" StoreGeneratedPattern="Identity"/>
     <Property Name="Name" Type="varchar" MaxLength ="100" Nullable ="false"/>
     <Property Name="DateBegan" Type="date" Nullable ="true"/>
     <Property Name="NumEmployees" Type="int" Nullable ="true"/>
@@ -64,21 +64,21 @@
     <Key>
       <PropertyRef Name="Id"/>
     </Key>
-    <Property Name="Id" Type="int" Nullable ="false"/>
+    <Property Name="Id" Type="int" Nullable ="false" StoreGeneratedPattern="Identity"/>
+    <Property Name="SupplierId" Type="int" Nullable="false"/>
     <Property Name="Name" Type="varchar" MaxLength="100" Nullable ="false"/>
     <Property Name="MinAge" Type="int" Nullable ="false"/>
-    <Property Name="MakerId" Type="int" Nullable ="false"/>
   </EntityType>
 
-  <Association Name="FK_Toys_Companies">
-    <End Role="Companies" Type="testModel.Store.Companies" Multiplicity ="1"/>
+  <Association Name="FK_Toys_Supplier">
+    <End Role="Supplier" Type="testModel.Store.Companies" Multiplicity ="1"/>
     <End Role="Toys" Type="testModel.Store.Toys" Multiplicity ="*"/>
     <ReferentialConstraint>
-      <Principal Role="Companies">
+      <Principal Role="Supplier">
         <PropertyRef Name="Id"/>
       </Principal>
       <Dependent Role="Toys">
-        <PropertyRef Name="MakerId"/>
+        <PropertyRef Name="SupplierId"/>
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -100,12 +100,12 @@
       <PropertyRef Name="Id"/>
     </Key>
     <Property Name="Id" Type="int" Nullable ="false"/>
-    <Property Name="StoreId" Type="int" Nullable ="false"/>
+    <Property Name="StoreId" Type="int"/>
     <Property Name="Freight" Type="double" Nullable ="false"/>
   </EntityType>
 
-  <Association Name="FK_Orders_Stores">
-    <End Role="Stores" Type="testModel.Store.Stores" Multiplicity ="1"/>
+<!--  <Association Name="FK_Orders_Store">
+    <End Role="Store" Type="testModel.Store.Stores" Multiplicity ="1"/>
     <End Role="Orders" Type="testModel.Store.Orders" Multiplicity ="*"/>
     <ReferentialConstraint>
       <Principal Role="Stores">
@@ -115,5 +115,5 @@
         <PropertyRef Name="StoreId"/>
       </Dependent>
     </ReferentialConstraint>
-  </Association>
+  </Association>-->
 </Schema>

@@ -15,28 +15,27 @@
     <EntitySetMapping Name="Employees">
       <!-- 
       The IsTypeOf keyword tells the mapping that the following mapping applies to all subtypes of 
-      the given Type (in this case, InternationalOrder as well as Order)
+      the given Type (in this case, SalariedEmployee as well as Employee)
       -->
-      <EntityTypeMapping TypeName="IsTypeOf(testModel.Employees)">
+      <EntityTypeMapping TypeName="IsTypeOf(testModel.Employee)">
         <MappingFragment StoreEntitySet="Employees" >
-          <ScalarProperty Name="EmployeeId" ColumnName="employeeId" />
-          <ScalarProperty Name="LastName" ColumnName="lastName" />
-          <ScalarProperty Name="FirstName" ColumnName="firstName" />
-          <ScalarProperty Name="Age" ColumnName ="age"/>
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="Age" ColumnName ="Age"/>
         </MappingFragment>
       </EntityTypeMapping>
       
-      <EntityTypeMapping TypeName ="IsTypeOf(testModel.SalariedEmployee)">
+      <EntityTypeMapping TypeName ="testModel.SalariedEmployee">
         <MappingFragment StoreEntitySet="SalariedEmployees">
-          <ScalarProperty Name="EmployeeId" ColumnName="employeeId" />
-          <ScalarProperty Name="Salary" ColumnName="salary" />
+          <ScalarProperty Name="Id" ColumnName="EmployeeId" />
+          <ScalarProperty Name="Salary" ColumnName="Salary" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>    
     
-    
     <EntitySetMapping Name="Children">
-      <EntityTypeMapping TypeName="IsTypeOf(testModel.Children)">
+      <EntityTypeMapping TypeName="testModel.Child">
         <MappingFragment StoreEntitySet="EmployeeChildren" >
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
@@ -46,25 +45,21 @@
       </EntityTypeMapping>
     </EntitySetMapping>
 
-    <EntitySetMapping Name="Companies">
-      <EntityTypeMapping TypeName="IsTypeOf(testModel.Companies)">
-        <MappingFragment StoreEntitySet="Companies" >
-          <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="DateBegan" ColumnName="DateBegan" />
-          <ScalarProperty Name="NumEmployees" ColumnName="NumEmployees" />
-          <ComplexProperty Name ="Address" TypeName ="testModel.CommonAddress" >
-            <ScalarProperty Name="Address" ColumnName="Address" />
-            <ScalarProperty Name="City" ColumnName="City" />
-            <ScalarProperty Name="State" ColumnName="State" />
-            <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
-          </ComplexProperty >        
-        </MappingFragment>
-      </EntityTypeMapping>
+    <EntitySetMapping Name="Companies" StoreEntitySet ="Companies" TypeName="testModel.Company">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+        <ScalarProperty Name="Name" ColumnName="Name" />
+        <ScalarProperty Name="DateBegan" ColumnName="DateBegan" />
+        <ScalarProperty Name="NumEmployees" ColumnName="NumEmployees" />
+        <ComplexProperty Name ="Address" TypeName ="testModel.CommonAddress" >
+          <ScalarProperty Name="Address" ColumnName="Address" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="State" ColumnName="State" />
+          <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
+        </ComplexProperty >        
     </EntitySetMapping>
 
     <EntitySetMapping Name="Toys">
-      <EntityTypeMapping TypeName="IsTypeOf(testModel.Toys)">
+      <EntityTypeMapping TypeName="testModel.Toy">
         <MappingFragment StoreEntitySet="Toys" >
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Name" ColumnName="Name" />
@@ -73,9 +68,9 @@
       </EntityTypeMapping>
     </EntitySetMapping>
 
-    <AssociationSetMapping Name="FK_Toys_Companies" TypeName="testModel.FK_Toys_Companies" StoreEntitySet="Toys">
-      <EndProperty Name="Companies">
-        <ScalarProperty Name="Id" ColumnName="MakerId" />
+    <AssociationSetMapping Name="FK_Toys_Supplier" TypeName="testModel.FK_Toys_Supplier" StoreEntitySet="Toys">
+      <EndProperty Name="Supplier">
+        <ScalarProperty Name="Id" ColumnName="SupplierId" />
       </EndProperty>
       <EndProperty Name="Toys">
         <ScalarProperty Name="Id" ColumnName="Id" />
@@ -83,22 +78,20 @@
     </AssociationSetMapping>
 
     <EntitySetMapping Name="Stores">
-      <EntityTypeMapping TypeName="IsTypeOf(testModel.Stores)">
+      <EntityTypeMapping TypeName="testModel.Store">
         <MappingFragment StoreEntitySet="Stores" >
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Name" ColumnName="Name" />
-          <ComplexProperty Name ="Address" TypeName ="testModel.CommonAddress" >
-            <ScalarProperty Name="Address" ColumnName="Address" />
-            <ScalarProperty Name="City" ColumnName="City" />
-            <ScalarProperty Name="State" ColumnName="State" />
-            <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
-          </ComplexProperty >
+          <ScalarProperty Name="Address" ColumnName="Address" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="State" ColumnName="State" />
+          <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
 
     <EntitySetMapping Name="Orders">
-      <EntityTypeMapping TypeName="IsTypeOf(testModel.Orders)">
+      <EntityTypeMapping TypeName="testModel.Order">
         <MappingFragment StoreEntitySet="Orders" >
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Freight" ColumnName="Freight" />
@@ -106,13 +99,14 @@
       </EntityTypeMapping>
     </EntitySetMapping>
 
-    <AssociationSetMapping Name="FK_Orders_Stores" TypeName="testModel.FK_Orders_Stores" StoreEntitySet="Orders">
-      <EndProperty Name="Stores">
+    <AssociationSetMapping Name="FK_Orders_Store" TypeName="testModel.FK_Orders_Store" StoreEntitySet="Orders">
+      <EndProperty Name="Store">
         <ScalarProperty Name="Id" ColumnName="StoreId" />
       </EndProperty>
       <EndProperty Name="Orders">
         <ScalarProperty Name="Id" ColumnName="Id" />
       </EndProperty>
+      <Condition ColumnName ="StoreId" IsNull ="false"/>
     </AssociationSetMapping>
   </EntityContainerMapping>
 </Mapping>

@@ -64,10 +64,10 @@ namespace MySql.Data.Entity.Tests
                     da.Fill(dt);
 
                     string sql = "SELECT VALUE c FROM Companies AS c ORDER BY c.Name";
-                    ObjectQuery<Companies> query = context.CreateQuery<Companies>(sql);
+                    ObjectQuery<Company> query = context.CreateQuery<Company>(sql);
 
                     int i = 0;
-                    foreach (Companies c in query)
+                    foreach (Company c in query)
                         Assert.AreEqual(dt.Rows[i++][0], c.Id);
                 }
             }
@@ -87,10 +87,10 @@ namespace MySql.Data.Entity.Tests
                     da.Fill(dt);
 
                     string sql = "SELECT VALUE c FROM Companies AS c WHERE c.NumEmployees > 100 ORDER BY c.Name";
-                    ObjectQuery<Companies> query = context.CreateQuery<Companies>(sql);
+                    ObjectQuery<Company> query = context.CreateQuery<Company>(sql);
 
                     int i = 0;
-                    foreach (Companies c in query)
+                    foreach (Company c in query)
                         Assert.AreEqual(dt.Rows[i++][0], c.Id);
                 }
             }

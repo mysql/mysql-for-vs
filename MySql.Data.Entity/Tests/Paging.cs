@@ -57,7 +57,7 @@ namespace MySql.Data.Entity.Tests
 
                 int i = 0;
                 var query = context.Companies.Top("2");
-                foreach (Companies c in query)
+                foreach (Company c in query)
                 {
                     Assert.AreEqual(dt.Rows[i++]["id"], c.Id);
                 }
@@ -75,7 +75,7 @@ namespace MySql.Data.Entity.Tests
 
                 int i = 0;
                 var query = context.Companies.Skip("it.Id", "3");
-                foreach (Companies c in query)
+                foreach (Company c in query)
                 {
                     Assert.AreEqual(dt.Rows[i++]["id"], c.Id);
                 }
@@ -93,7 +93,7 @@ namespace MySql.Data.Entity.Tests
 
                 int i = 0;
                 var query = context.Companies.Skip("it.Id", "2").Top("2");
-                foreach (Companies c in query)
+                foreach (Company c in query)
                 {
                     Assert.AreEqual(dt.Rows[i++]["id"], c.Id);
                 }

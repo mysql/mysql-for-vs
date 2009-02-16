@@ -41,7 +41,7 @@ namespace MySql.Data.Entity.Tests
                MySqlCommand cmd = new MySqlCommand("SELECT COUNT(*) FROM toys", conn);
                object count = cmd.ExecuteScalar();
 
-               foreach (Toys t in context.Toys)
+               foreach (Toy t in context.Toys)
                    t.Name = "Top";
                context.SaveChanges();
 

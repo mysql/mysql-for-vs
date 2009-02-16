@@ -59,6 +59,7 @@ namespace MySql.Data.MySqlClient
         List<MySqlCommand> batch;
         private string batchableCommandText;
         internal string parameterHash;
+        internal bool EFCrap;
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ctor1/*'/>
 		public MySqlCommand()
@@ -727,6 +728,7 @@ namespace MySql.Data.MySqlClient
             clone.CommandType = CommandType;
             clone.CommandTimeout = CommandTimeout;
             clone.batchableCommandText = batchableCommandText;
+            clone.EFCrap = EFCrap;
 
 			foreach (MySqlParameter p in parameters)
 			{

@@ -19,42 +19,267 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
+using System.Text;
+using System.Collections.Generic;
+using System.Collections;
+using System.Diagnostics;
 
 namespace MySql.Data.Entity
 {
-    public class SqlFragment
+    internal abstract class SqlFragment
     {
-        public SqlFragment()
-        {
-        }
-
-        public SqlFragment(string text)
-        {
-            Text = text;
-        }
-
-        #region Properties
-
-        protected virtual string InnerText
-        {
-            get { return Text; }
-        }
-
-        public string Text { get; set; }
-        public string Name { get; set; }
-
-        #endregion
-
         protected string QuoteIdentifier(string id)
         {
             return String.Format("`{0}`", id);
         }
 
+        public abstract void WriteSql(StringBuilder sql);
+
         public override string ToString()
         {
-            if (Name == null)
-                return InnerText;
-            return InnerText + " AS " + QuoteIdentifier(Name);
+            StringBuilder sqlText = new StringBuilder();
+            WriteSql(sqlText);
+            return sqlText.ToString();
+        }
+
+        protected void WriteList(IEnumerable list, StringBuilder sql)
+        {
+            string sep = "";
+            foreach (SqlFragment s in list)
+            {
+                sql.Append(sep);
+                s.WriteSql(sql);
+                sep = ",\r\n";
+            }
+        }
+    }
+
+    internal class BinaryFragment : NegatableFragment
+    {
+        public SqlFragment Left { get; set; }
+        public SqlFragment Right { get; set; }
+        public string Operator { get; set; }
+
+        public override void WriteSql(StringBuilder sql)
+        {
+            if (IsNegated)
+                sql.Append("NOT ");
+            sql.Append("(");
+            Left.WriteSql(sql);
+            sql.AppendFormat(" {0} ", Operator);
+            Right.WriteSql(sql);
+            sql.Append(")");
+        }
+    }
+
+    internal class CaseFragment : SqlFragment
+    {
+        public List<SqlFragment> When = new List<SqlFragment>();
+        public List<SqlFragment> Then = new List<SqlFragment>();
+        public SqlFragment Else = null;
+
+        public override void WriteSql(StringBuilder sql)
+        {
+            sql.Append("CASE");
+            for (int i = 0; i < When.Count; i++)
+            {
+                sql.Append(" WHEN (");
+                When[i].WriteSql(sql);
+                sql.Append(") THEN (");
+                Then[i].WriteSql(sql);
+                sql.Append(") ");
+            }
+            if (Else != null)
+            {
+                sql.Append(" ELSE (");
+                Else.WriteSql(sql);
+                sql.Append(") ");
+            }
+            sql.Append("END");
+        }
+    }
+
+    internal class ColumnFragment : SqlFragment
+    {
+        public ColumnFragment(string table, string name)
+        {
+            TableAlias = TableName = table;
+            ColumnName = name;
+        }
+
+        public SqlFragment Literal { get; set; }
+        public string TableName { get; set; }
+        public string TableAlias { get; set; }
+        public string ColumnName { get; set; }
+        public string ColumnAlias { get; set; }
+
+        public override void WriteSql(StringBuilder sql)
+        {
+            if (Literal != null)
+            {
+                Debug.Assert(ColumnAlias != null);
+                Literal.WriteSql(sql);
+            }
+            else
+            {
+                if (TableAlias != null)
+                    sql.AppendFormat("{0}.", QuoteIdentifier(TableAlias));
+                sql.AppendFormat("{0}", QuoteIdentifier(ColumnName));
+            }
+            if (ColumnAlias != null && ColumnAlias != ColumnName)
+                sql.AppendFormat(" AS {0}", QuoteIdentifier(ColumnAlias));
+        }
+    }
+
+    internal class ExistsFragment : NegatableFragment
+    {
+        public SqlFragment Argument;
+
+        public ExistsFragment(SqlFragment f)
+        {
+            Argument = f;
+        }
+
+        public override void WriteSql(StringBuilder sql)
+        {
+            sql.Append(IsNegated ? "NOT " : "");
+            sql.Append("EXISTS(");
+            Argument.WriteSql(sql);
+            sql.Append(")");
+        }
+
+    }
+
+    internal class FunctionFragment : SqlFragment
+    {
+        public bool Distinct;
+        public SqlFragment Argmument;
+        public string Name;
+
+        public override void WriteSql(StringBuilder sql)
+        {
+            sql.AppendFormat("{0}({1}", Name, Distinct ? "DISTINCT " : "");
+            Argmument.WriteSql(sql);
+            sql.Append(")");
+        }
+    }
+
+    internal class IsNullFragment : NegatableFragment
+    {
+        public SqlFragment Argument;
+
+        public override void WriteSql(StringBuilder sql)
+        {
+            Argument.WriteSql(sql);
+            sql.AppendFormat(" IS {0} NULL", IsNegated ? "NOT" : "");
+        }
+    }
+
+    internal class LikeFragment : NegatableFragment
+    {
+        public SqlFragment Argument;
+        public SqlFragment Pattern;
+        public SqlFragment Escape;
+
+        public override void WriteSql(StringBuilder sql)
+        {
+            Argument.WriteSql(sql);
+            if (IsNegated)
+                sql.Append(" NOT ");
+            sql.Append(" LIKE ");
+            Pattern.WriteSql(sql);
+            if (Escape != null)
+            {
+                sql.Append(" ESCAPE ");
+                Escape.WriteSql(sql);
+            }
+        }
+    }
+
+    internal class NegatableFragment : SqlFragment
+    {
+        public bool IsNegated;
+
+        public void Negate()
+        {
+            IsNegated = !IsNegated;
+        }
+
+        public override void  WriteSql(StringBuilder sql)
+        {
+            Debug.Fail("This method should be overridden");
+        }   
+    }
+
+    internal class LiteralFragment : SqlFragment
+    {
+        public bool IsBool;
+        public string Literal;
+
+        public LiteralFragment(string literal)
+        {
+            Literal = literal;
+        }
+
+        public override void WriteSql(StringBuilder sql)
+        {
+            sql.Append(Literal);
+        }
+    }
+
+    internal class PropertyFragment : SqlFragment
+    {
+        public PropertyFragment()
+        {
+            Properties = new List<string>();
+        }
+
+        public List<string> Properties { get; private set; }
+
+        public override void WriteSql(StringBuilder sql)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class SortFragment : SqlFragment
+    {
+        public SortFragment(SqlFragment column, bool ascending)
+        {
+            Column = column;
+            Ascending = ascending;
+        }
+
+        public SqlFragment Column { get; set; }
+        public bool Ascending { get; set; }
+
+        public override void WriteSql(StringBuilder sql)
+        {
+            Debug.Assert(Column is ColumnFragment);
+            ColumnFragment f = Column as ColumnFragment;
+            sql.AppendFormat("{0} {1}", QuoteIdentifier(f.ColumnName), Ascending ? "ASC" : "DESC");
+        }
+    }
+
+    internal class UnionFragment : InputFragment
+    {
+        public bool Distinct;
+
+        public override void Wrap(Scope scope)
+        {
+            base.Wrap(scope);
+
+            if (Left != null)
+                scope.Remove(Left);
+            if (Right != null)
+                scope.Remove(Right);
+        }
+
+        public override void WriteInnerSql(StringBuilder sql)
+        {
+            Left.WriteSql(sql);
+            sql.Append(Distinct ? " UNION DISTINCT " : " UNION ALL ");
+            Right.WriteSql(sql);
         }
     }
 }

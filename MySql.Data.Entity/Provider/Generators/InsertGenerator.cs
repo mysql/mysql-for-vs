@@ -35,16 +35,14 @@ namespace MySql.Data.Entity
 
             InsertStatement statement = new InsertStatement();
 
-            scope.Push(null); //commandTree.Target.VariableName);
-            statement.Target = commandTree.Target.Expression.Accept(this);
+            DbExpressionBinding e = commandTree.Target;
+            statement.Target = (InputFragment)e.Expression.Accept(this);
             
             foreach (DbSetClause setClause in commandTree.SetClauses)
-                statement.Sets.Items.Add(setClause.Property.Accept(this));
+                statement.Sets.Add(setClause.Property.Accept(this));
 
             foreach (DbSetClause setClause in commandTree.SetClauses)
-            {
-                statement.Values.Items.Add(setClause.Value.Accept(this));
-            }
+                statement.Values.Add(setClause.Value.Accept(this));
 
             return statement.ToString();
         }

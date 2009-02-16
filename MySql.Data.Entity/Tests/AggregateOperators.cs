@@ -63,21 +63,34 @@ namespace MySql.Data.Entity.Tests
         }
 
         [Test]
+        public void BigCountSimple()
+        {
+            MySqlCommand trueCmd = new MySqlCommand("SELECT COUNT(*) FROM Toys", conn);
+            object trueCount = trueCmd.ExecuteScalar();
+
+            using (testEntities context = new testEntities())
+            {
+                string sql = "SELECT VALUE BigCount(t.Id) FROM Toys AS t";
+                ObjectQuery<Int32> q = context.CreateQuery<Int32>(sql);
+
+                foreach (int count in q)
+                    Assert.AreEqual(trueCount, count);
+            }
+        }
+
+        [Test]
         public void CountWithPredicate()
         {
             MySqlCommand trueCmd = new MySqlCommand("SELECT COUNT(*) FROM Toys AS t WHERE t.MinAge > 3", conn);
             object trueCount = trueCmd.ExecuteScalar();
 
-            using (EntityConnection connection = GetEntityConnection())
+            using (testEntities context = new testEntities())
             {
-                connection.Open();
+                string sql = "SELECT VALUE Count(t.Id) FROM Toys AS t WHERE t.MinAge > 3";
+                ObjectQuery<Int32> q = context.CreateQuery<Int32>(sql);
 
-                using (EntityCommand cmd = new EntityCommand(
-                    "SELECT VALUE Count(t.Id) FROM Toys AS t WHERE t.MinAge > 3", connection))
-                {
-                    object count = cmd.ExecuteScalar();
+                foreach (int count in q)
                     Assert.AreEqual(trueCount, count);
-                }
             }
         }
 
@@ -87,16 +100,13 @@ namespace MySql.Data.Entity.Tests
             MySqlCommand trueCmd = new MySqlCommand("SELECT MIN(minage) FROM Toys", conn);
             int trueMin = (int)trueCmd.ExecuteScalar();
 
-            using (EntityConnection connection = GetEntityConnection())
+            using (testEntities context = new testEntities())
             {
-                connection.Open();
+                string sql = "SELECT VALUE MIN(t.MinAge) FROM Toys AS t";
+                ObjectQuery<Int32> q = context.CreateQuery<Int32>(sql);
 
-                using (EntityCommand cmd = new EntityCommand(
-                    "SELECT MIN(t.MinAge) FROM TestDB.Toys AS t", connection))
-                {
-                    object minId = cmd.ExecuteScalar();
-                    Assert.AreEqual(trueMin, minId);
-                }
+                foreach (int age in q)
+                    Assert.AreEqual(trueMin, age);
             }
         }
 
@@ -108,25 +118,32 @@ namespace MySql.Data.Entity.Tests
 
             using (testEntities context = new testEntities())
             {
-                string sql = "SELECT VALUE Min(o.Freight) FROM Orders AS o WHERE o.StoreId = 2";
-                ObjectQuery<Double> q = context.CreateQuery<Double>(sql);
+                string sql = "SELECT Min(o.Freight) FROM Orders AS o WHERE o.Store.Id = 2";
+                ObjectQuery<DbDataRecord> q = context.CreateQuery<DbDataRecord>(sql);
 
-                Assert.AreEqual(freight, q);
+                foreach (DbDataRecord r in q)
+                {
+                    Assert.AreEqual(freight, r.GetDouble(0));
+                }
             }
         }
 
         [Test]
         public void MinWithGrouping()
         {
-            MySqlCommand trueCmd = new MySqlCommand("SELECT MIN(Freight) FROM Orders WHERE storeId=2", conn);
+            MySqlDataAdapter da = new MySqlDataAdapter(
+                "SELECT MIN(Freight) FROM Orders GROUP BY storeId", conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
 
             using (testEntities context = new testEntities())
             {
-                string sql = "SELECT Min(o.Freight) FROM Orders AS o GROUP BY o.StoreId";
+                string sql = "SELECT VALUE Min(o.Freight) FROM Orders AS o GROUP BY o.Store.Id";
                 ObjectQuery<Double> q = context.CreateQuery<Double>(sql);
 
+                int i = 0;
                 foreach (double freight in q)
-                    Assert.AreEqual(2, freight);
+                    Assert.AreEqual(Convert.ToInt32(dt.Rows[i++][0]), Convert.ToInt32(freight));
             }
         }
 
@@ -136,16 +153,13 @@ namespace MySql.Data.Entity.Tests
             MySqlCommand trueCmd = new MySqlCommand("SELECT MAX(minage) FROM Toys", conn);
             int trueMax = (int)trueCmd.ExecuteScalar();
 
-            using (EntityConnection connection = GetEntityConnection())
+            using (testEntities context = new testEntities())
             {
-                connection.Open();
+                string sql = "SELECT VALUE MAX(t.MinAge) FROM Toys AS t";
+                ObjectQuery<Int32> q = context.CreateQuery<Int32>(sql);
 
-                using (EntityCommand cmd = new EntityCommand(
-                    "SELECT MAX(t.MinAge) FROM TestDB.Toys AS t", connection))
-                {
-                    object maxId = cmd.ExecuteScalar();
-                    Assert.AreEqual(trueMax, maxId);
-                }
+                foreach (int max in q)
+                    Assert.AreEqual(trueMax, max);
             }
         }
 
@@ -157,44 +171,46 @@ namespace MySql.Data.Entity.Tests
 
             using (testEntities context = new testEntities())
             {
-                string sql = "SELECT VALUE MAX(o.Freight) FROM Orders AS o WHERE o.StoreId = 1";
-                ObjectQuery<Double> q = context.CreateQuery<Double>(sql);
+                string sql = "SELECT MAX(o.Freight) FROM Orders AS o WHERE o.Store.Id = 1";
+                ObjectQuery<DbDataRecord> q = context.CreateQuery<DbDataRecord>(sql);
 
-                Assert.AreEqual(freight, q);
+                foreach (DbDataRecord r in q)
+                    Assert.AreEqual(freight, r.GetDouble(0));
             }
         }
 
         [Test]
         public void MaxWithGrouping()
         {
-            MySqlCommand trueCmd = new MySqlCommand("SELECT MAX(Freight) FROM Orders GROUP BY StoreId", conn);
+            MySqlDataAdapter da = new MySqlDataAdapter(
+                "SELECT MAX(Freight) FROM Orders GROUP BY StoreId", conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
 
             using (testEntities context = new testEntities())
             {
-                string sql = "SELECT MAX(o.Freight) FROM Orders AS o GROUP BY o.StoreId";
+                string sql = "SELECT VALUE MAX(o.Freight) FROM Orders AS o GROUP BY o.Store.Id";
                 ObjectQuery<Double> q = context.CreateQuery<Double>(sql);
 
+                int i = 0;
                 foreach (double freight in q)
-                    Assert.AreEqual(2, freight);
+                    Assert.AreEqual(Convert.ToInt32(dt.Rows[i++][0]), Convert.ToInt32(freight));
             }
         }
 
         [Test]
         public void AverageSimple()
         {
-            MySqlCommand trueCmd = new MySqlCommand("SELECT AVG(minAge) FROM Employees", conn);
+            MySqlCommand trueCmd = new MySqlCommand("SELECT AVG(minAge) FROM Toys", conn);
             object avgAge = trueCmd.ExecuteScalar();
 
-            using (EntityConnection connection = GetEntityConnection())
+            using (testEntities context = new testEntities())
             {
-                connection.Open();
+                string sql = "SELECT VALUE Avg(t.MinAge) FROM Toys AS t";
+                ObjectQuery<Decimal> q = context.CreateQuery<Decimal>(sql);
 
-                using (EntityCommand cmd = new EntityCommand(
-                    "SELECT VALUE Avg(t.MinAge) FROM TestDB.Toys AS t", connection))
-                {
-                    object avg = cmd.ExecuteScalar();
-                    Assert.AreEqual(avgAge, avg);
-                }
+                foreach (Decimal r in q)
+                    Assert.AreEqual(avgAge, r);
             }
         }
 
@@ -202,29 +218,34 @@ namespace MySql.Data.Entity.Tests
         public void AverageWithPredicate()
         {
             MySqlCommand trueCmd = new MySqlCommand("SELECT AVG(Freight) FROM Orders WHERE storeId=3", conn);
-            object freight = trueCmd.ExecuteScalar();
+            Double freight = (Double)trueCmd.ExecuteScalar();
 
             using (testEntities context = new testEntities())
             {
-                string sql = "SELECT VALUE AVG(o.Freight) FROM Orders AS o WHERE o.StoreId = 3";
+                string sql = "SELECT VALUE AVG(o.Freight) FROM Orders AS o WHERE o.Store.Id = 3";
                 ObjectQuery<Double> q = context.CreateQuery<Double>(sql);
 
-                Assert.AreEqual(freight, q);
+                foreach (Double r in q)
+                    Assert.AreEqual(Convert.ToInt32(freight), Convert.ToInt32(r));
             }
         }
 
         [Test]
         public void AverageWithGrouping()
         {
-            MySqlCommand trueCmd = new MySqlCommand("SELECT AVG(Freight) FROM Orders GROUP BY StoreId", conn);
+            MySqlDataAdapter da = new MySqlDataAdapter(
+                "SELECT AVG(Freight) FROM Orders GROUP BY StoreId", conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
 
             using (testEntities context = new testEntities())
             {
-                string sql = "SELECT AVG(o.Freight) FROM Orders AS o GROUP BY o.StoreId";
+                string sql = "SELECT VALUE AVG(o.Freight) FROM Orders AS o GROUP BY o.Store.Id";
                 ObjectQuery<Double> q = context.CreateQuery<Double>(sql);
 
+                int i = 0;
                 foreach (double freight in q)
-                    Assert.AreEqual(2, freight);
+                    Assert.AreEqual(Convert.ToInt32(dt.Rows[i++][0]), Convert.ToInt32(freight));
             }
         }
 
@@ -234,16 +255,13 @@ namespace MySql.Data.Entity.Tests
             MySqlCommand trueCmd = new MySqlCommand("SELECT SUM(minage) FROM Toys", conn);
             object sumAge = trueCmd.ExecuteScalar();
 
-            using (EntityConnection connection = GetEntityConnection())
+            using (testEntities context = new testEntities())
             {
-                connection.Open();
+                string sql = "SELECT VALUE Sum(t.MinAge) FROM Toys AS t";
+                ObjectQuery<Int32> q = context.CreateQuery<Int32>(sql);
 
-                using (EntityCommand cmd = new EntityCommand(
-                    "SELECT VALUE Sum(t.MinAge) FROM TestDB.Toys AS t", connection))
-                {
-                    object sum = cmd.ExecuteScalar();
-                    Assert.AreEqual(sumAge, sum);
-                }
+                foreach (int r in q)
+                    Assert.AreEqual(sumAge, r);
             }
         }
 
@@ -255,57 +273,70 @@ namespace MySql.Data.Entity.Tests
 
             using (testEntities context = new testEntities())
             {
-                string sql = "SELECT VALUE SUM(o.Freight) FROM Orders AS o WHERE o.StoreId = 2";
+                string sql = "SELECT VALUE SUM(o.Freight) FROM Orders AS o WHERE o.Store.Id = 2";
                 ObjectQuery<Double> q = context.CreateQuery<Double>(sql);
 
-                Assert.AreEqual(freight, q);
+                foreach (Double r in q)
+                    Assert.AreEqual(freight, r);
             }
         }
 
         [Test]
         public void SumWithGrouping()
         {
-            MySqlCommand trueCmd = new MySqlCommand("SELECT SUM(Freight) FROM Orders GROUP BY StoreId", conn);
+            MySqlDataAdapter da = new MySqlDataAdapter(
+                "SELECT SUM(Freight) FROM Orders GROUP BY StoreId", conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
 
             using (testEntities context = new testEntities())
             {
-                string sql = "SELECT SUM(o.Freight) FROM Orders AS o GROUP BY o.StoreId";
+                string sql = "SELECT VALUE SUM(o.Freight) FROM Orders AS o GROUP BY o.Store.Id";
                 ObjectQuery<Double> q = context.CreateQuery<Double>(sql);
 
+                int i = 0;
                 foreach (double freight in q)
-                    Assert.AreEqual(2, freight);
+                    Assert.AreEqual(Convert.ToInt32(dt.Rows[i++][0]), Convert.ToInt32(freight));
             }
         }
 
         [Test]
         public void MaxInSubQuery1()
         {
-            MySqlCommand trueCmd = new MySqlCommand(
-                "SELECT s.* FROM Stores AS s WHERE s.id=SELECT MAX(o.storeId) FROM Orders AS o", conn);
+            MySqlDataAdapter da= new MySqlDataAdapter(
+                "SELECT s.* FROM Stores AS s WHERE s.id=(SELECT MAX(o.storeId) FROM Orders AS o)", conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
 
             using (testEntities context = new testEntities())
             {
-                string sql = @"SELECT VALUE s FROM Stores AS s WHERE s.Id = MAX(SELECT VALUE o.StoreId FROM Orders As o)";
-                ObjectQuery<Stores> q = context.CreateQuery<Stores>(sql);
+                string sql = @"SELECT VALUE s FROM Stores AS s WHERE s.Id = 
+                                MAX(SELECT VALUE o.Store.Id FROM Orders As o)";
+                ObjectQuery<Store> q = context.CreateQuery<Store>(sql);
 
-//                foreach (double freight in q)
-  //                  Assert.AreEqual(2, freight);
+                int i = 0;
+                foreach (Store s in q)
+                    Assert.AreEqual(dt.Rows[i++]["id"], s.Id);
             }
         }
 
         [Test]
         public void MaxInSubQuery2()
         {
-            MySqlCommand trueCmd = new MySqlCommand(
-                "SELECT s.* FROM Stores AS s WHERE s.id=SELECT MAX(o.storeId) FROM Orders AS o", conn);
+            MySqlDataAdapter da = new MySqlDataAdapter(
+                "SELECT s.* FROM Stores AS s WHERE s.id=(SELECT MAX(o.storeId) FROM Orders AS o)", conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
 
             using (testEntities context = new testEntities())
             {
-                string sql = @"SELECT VALUE s FROM Stores AS s WHERE s.Id = ANYELEMENT(SELECT VALUE MAX(o.StoreId) FROM Orders As o)";
-                ObjectQuery<Stores> q = context.CreateQuery<Stores>(sql);
+                string sql = @"SELECT VALUE s FROM Stores AS s WHERE s.Id = 
+                                ANYELEMENT(SELECT VALUE MAX(o.Store.Id) FROM Orders As o)";
+                ObjectQuery<Store> q = context.CreateQuery<Store>(sql);
 
-     //           foreach (double freight in q)
-    // /               Assert.AreEqual(2, freight);
+                int i = 0;
+                foreach (Store s in q)
+                    Assert.AreEqual(dt.Rows[i++]["id"], s.Id);
             }
         }
     }

@@ -38,7 +38,7 @@ namespace MySql.Data.Entity.Tests
         {
             using (testEntities context = new testEntities())
             {
-                foreach (Toys t in context.Toys)
+                foreach (Toy t in context.Toys)
                     context.DeleteObject(t);
                 context.SaveChanges();
 
@@ -61,8 +61,8 @@ namespace MySql.Data.Entity.Tests
                 da.Fill(dt);
                 Assert.IsTrue(dt.Rows.Count > 0);
 
-                ObjectQuery<Toys> toys = context.Toys.Where("it.MinAge = @age", new ObjectParameter("age", 3));
-                foreach (Toys t in toys)
+                ObjectQuery<Toy> toys = context.Toys.Where("it.MinAge = @age", new ObjectParameter("age", 3));
+                foreach (Toy t in toys)
                     context.DeleteObject(t);
                 context.SaveChanges();
 
@@ -71,43 +71,5 @@ namespace MySql.Data.Entity.Tests
                 Assert.AreEqual(0, dt.Rows.Count);
             }
         }
-
-       [Test]
-       public void DeleteAllRowsParameter()
-       {
-           using (testEntities context = new testEntities())
-           {
-               foreach (Employees e in context.Employees)
-                   context.DeleteObject(e);
-               context.SaveChanges();
-
-               EntityConnection ec = context.Connection as EntityConnection;
-               MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM employees",
-                   (MySqlConnection)ec.StoreConnection);
-               DataTable dt = new DataTable();
-               da.Fill(dt);
-               Assert.AreEqual(0, dt.Rows.Count);
-           }
-       }
-
-       [Test]
-       public void DeleteRowByParameter()
-       {
-           using (testEntities context = new testEntities())
-           {
-               ObjectQuery<Employees> emp = context.Employees.Where("it.ID = @id", new ObjectParameter("id", 1));
-               foreach (Employees e in emp)
-                   context.DeleteObject(e);
-               context.SaveChanges();
-
-               EntityConnection ec = context.Connection as EntityConnection;
-               MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM employees", (MySqlConnection)ec.StoreConnection);
-               DataTable dt = new DataTable();
-               da.Fill(dt);
-               Assert.AreEqual(1, dt.Rows.Count);
-               DataRow row = dt.Rows[0];
-               Assert.AreEqual("Rubble", row["LastName"]);
-           }
-       }
     }
 }

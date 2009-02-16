@@ -8,11 +8,11 @@
     
     <EntitySet Name="STables" EntityType="Self.Table">
       <DefiningQuery>
-		  SELECT
-		  CONCAT('`', TABLE_SCHEMA, '`.`', TABLE_NAME, '`') `Id`,
-		  TABLE_CATALOG as `Catalog`,
-		  TABLE_SCHEMA  as `Schema`,
-		  TABLE_NAME    as `Name`
+		  SELECT /* Tables */
+		  CONCAT('`', TABLE_SCHEMA, '`.`', TABLE_NAME, '`') AS `Id`,
+		  TABLE_CATALOG AS `Catalog`,
+		  TABLE_SCHEMA  AS `Schema`,
+		  TABLE_NAME    AS `Name`
 		  FROM INFORMATION_SCHEMA.TABLES
 		  WHERE TABLE_TYPE = 'BASE TABLE'
       AND TABLE_SCHEMA=schema()
@@ -21,162 +21,167 @@
     
     <EntitySet Name="STableColumns" EntityType="Self.TableColumn">
       <DefiningQuery>
-        SELECT
-        CONCAT('`', TABLE_SCHEMA, '`.`', TABLE_NAME, '`.`', COLUMN_NAME, '`') `Id`,
-        CONCAT('`', TABLE_SCHEMA, '`.`', TABLE_NAME, '`') `ParentId`,
-        COLUMN_NAME `Name`,
-        ORDINAL_POSITION `Ordinal`,
-        CASE IS_NULLABLE WHEN 'YES' THEN 1 ELSE 0 END `IsNullable`,
-        DATA_TYPE `TypeName`,
-        CHARACTER_MAXIMUM_LENGTH as `MaxLength`,
-        NUMERIC_PRECISION as `Precision`,
+        SELECT /* Table columns */
+        CONCAT('`', TABLE_SCHEMA, '`.`', TABLE_NAME, '`.`', COLUMN_NAME, '`') AS `Id`,
+        CONCAT('`', TABLE_SCHEMA, '`.`', TABLE_NAME, '`') AS `ParentId`,
+        COLUMN_NAME AS `Name`,
+        ORDINAL_POSITION AS `Ordinal`,
+        CASE IS_NULLABLE WHEN 'YES' THEN 1 ELSE 0 END AS `IsNullable`,
+        DATA_TYPE AS `TypeName`,
+        CHARACTER_MAXIMUM_LENGTH AS `MaxLength`,
+        NUMERIC_PRECISION AS `Precision`,
         0 AS `DateTimePrecision`,
-        NUMERIC_SCALE as `Scale`,
+        NUMERIC_SCALE AS `Scale`,
         NULL AS `CollationCatalog`,
         NULL AS `CollationSchema`,
-        COLLATION_NAME as `CollationName`,
+        COLLATION_NAME AS `CollationName`,
         NULL AS `CharacterSetCatalog`,
         NULL AS `CharacterSetSchema`,
-        CHARACTER_SET_NAME as `CharacterSetName`,
+        CHARACTER_SET_NAME AS `CharacterSetName`,
         0 AS `IsMultiSet`,
-        CASE WHEN EXTRA LIKE '%auto%' THEN 1 ELSE 0 END `IsIdentity`,
-        CASE WHEN EXTRA LIKE '%auto%' THEN 1 ELSE 0 END `IsStoreGenerated`,
-        COLUMN_DEFAULT as `Default`
+        CASE WHEN EXTRA LIKE '%auto%' THEN 1 ELSE 0 END AS `IsIdentity`,
+        CASE WHEN EXTRA LIKE '%auto%' THEN 1 ELSE 0 END AS `IsStoreGenerated`,
+        COLUMN_DEFAULT AS `Default`
         FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA=schema()
       </DefiningQuery>
     </EntitySet>
 
     <EntitySet Name="SViews" EntityType="Self.View">
       <DefiningQuery>
-        SELECT
-        CONCAT('`', TABLE_SCHEMA, '`.`', TABLE_NAME, '`') `Id`,
-        TABLE_CATALOG `CatalogName`,
-        TABLE_SCHEMA `SchemaName`,
-        TABLE_NAME `Name`,
-        VIEW_DEFINITION `ViewDefinition`,
-        CASE IS_UPDATABLE WHEN 'YES' THEN 1 ELSE 0 END `IsUpdatable`
+        SELECT /* Views */
+        CONCAT('`', TABLE_SCHEMA, '`.`', TABLE_NAME, '`') AS `Id`,
+        TABLE_CATALOG AS`CatalogName`,
+        TABLE_SCHEMA AS `SchemaName`,
+        TABLE_NAME AS `Name`,
+        VIEW_DEFINITION AS `ViewDefinition`,
+        CASE IS_UPDATABLE WHEN 'YES' THEN 1 ELSE 0 END AS `IsUpdatable`
         FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_SCHEMA=schema()
       </DefiningQuery>
     </EntitySet>
 
     <EntitySet Name="SViewColumns" EntityType="Self.ViewColumn">
       <DefiningQuery>
-        SELECT
-        CONCAT('`', TABLE_SCHEMA, '`.`', TABLE_NAME, '`.`', COLUMN_NAME, '`') `Id`,
-        CONCAT('`', TABLE_SCHEMA, '`.`', TABLE_NAME, '`') `ParentId`,
-        COLUMN_NAME `Name`,
-        ORDINAL_POSITION `Ordinal`,
-        CASE IS_NULLABLE WHEN 'YES' THEN 1 ELSE 0 END as IsNullable,
-        DATA_TYPE `TypeName`,
-        CHARACTER_MAXIMUM_LENGTH `MaxLength`,
-        NUMERIC_PRECISION `Precision`,
+        SELECT /* View columns */
+        CONCAT('`', TABLE_SCHEMA, '`.`', TABLE_NAME, '`.`', COLUMN_NAME, '`') AS `Id`,
+        CONCAT('`', TABLE_SCHEMA, '`.`', TABLE_NAME, '`') AS `ParentId`,
+        COLUMN_NAME AS `Name`,
+        ORDINAL_POSITION AS `Ordinal`,
+        CASE IS_NULLABLE WHEN 'YES' THEN 1 ELSE 0 END AS `IsNullable`,
+        DATA_TYPE AS `TypeName`,
+        CHARACTER_MAXIMUM_LENGTH AS `MaxLength`,
+        NUMERIC_PRECISION AS `Precision`,
         0 AS `DateTimePrecision`,
-        NUMERIC_SCALE `Scale`,
+        NUMERIC_SCALE AS `Scale`,
         NULL AS `CollationCatalog`,
         NULL AS `CollationSchema`,
-        COLLATION_NAME `CollationName`,
+        COLLATION_NAME AS `CollationName`,
         NULL AS `CharacterSetCatalog`,
         NULL AS `CharacterSetSchema`,
-        CHARACTER_SET_NAME `CharacterSetName`,
+        CHARACTER_SET_NAME AS `CharacterSetName`,
         0 AS `IsMultiSet`,
-        CASE WHEN EXTRA LIKE '%auto%' THEN 1 ELSE 0 END `IsIdentity`,
-        CASE WHEN EXTRA LIKE '%auto%' THEN 1 ELSE 0 END `IsStoreGenerated`,
-        COLUMN_DEFAULT `Default`
+        CASE WHEN EXTRA LIKE '%auto%' THEN 1 ELSE 0 END AS `IsIdentity`,
+        CASE WHEN EXTRA LIKE '%auto%' THEN 1 ELSE 0 END AS `IsStoreGenerated`,
+        COLUMN_DEFAULT AS `Default`
         FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA=schema()
       </DefiningQuery>
     </EntitySet>
 
     <EntitySet Name="SFunctions" EntityType="Self.Function">
       <DefiningQuery>
-        SELECT NULL `Id`,
-        NULL `CatalogName`,
-        NULL `SchemaName`,
-        NULL `Name`,
-        NULL `ReturnTypeName`,
-        NULL `ReturnMaxLength`,
-        NULL `ReturnPrecision`,
-        0 `ReturnDateTimePrecision`,
-        NULL `ReturnScale`,
-        NULL `ReturnCollationCatalog`,
-        NULL `ReturnCollationSchema`,
-        NULL `ReturnCollationName`,
-        NULL `ReturnCharacterSetCatalog`,
-        NULL `ReturnCharacterSetSchema`,
-        NULL `ReturnCharacterSetName`,
-        NULL `ReturnIsMultiSet`,
-        NULL `IsAggregate`,
-        NULL `IsBuiltIn`,
-        NULL `IsNiladic`
+        SELECT /* Functions */
+        CONCAT('`', ROUTINE_SCHEMA, '`.`', SPECIFIC_NAME, '`') AS `Id`,
+        ROUTINE_CATALOG AS `CatalogName`,
+        ROUTINE_SCHEMA AS `SchemaName`,
+        ROUTINE_NAME AS `Name`,
+        SUBSTRING_INDEX(DTD_IDENTIFIER, '(', 1) AS `ReturnTypeName`,
+        NULL AS `ReturnMaxLength`,
+        NULL AS `ReturnPrecision`,
+        0 AS `ReturnDateTimePrecision`,
+        NULL AS `ReturnScale`,
+        NULL AS `ReturnCollationCatalog`,
+        NULL AS `ReturnCollationSchema`,
+        NULL AS `ReturnCollationName`,
+        NULL AS `ReturnCharacterSetCatalog`,
+        NULL AS `ReturnCharacterSetSchema`,
+        NULL AS `ReturnCharacterSetName`,
+        NULL AS `ReturnIsMultiSet`,
+        NULL AS `IsAggregate`,
+        NULL AS `IsBuiltIn`,
+        NULL AS `IsNiladic`
+        FROM INFORMATION_SCHEMA.ROUTINES
+        WHERE ROUTINE_TYPE='FUNCTION'
       </DefiningQuery>
     </EntitySet>
 
     <EntitySet Name="SFunctionParameters" EntityType="Self.Parameter">
       <DefiningQuery>
-        SELECT 
-        NULL `Id`,
-        NULL `ParentId`,
-        NULL `Name`,
-        NULL `Ordinal`,
-        NULL `TypeName`,
-        NULL `MaxLength`,
-        NULL `Precision`,
-        NULL `DateTimePrecision`,
-        NULL `Scale`,
-        NULL `CollatioCatalog`,
-        NULL `CollationSchema`,
-        NULL `CollationName`,
-        NULL `CharacterSetCatalog`,
-        NULL `CharacterSetSchema`,
-        NULL `CharacterSetName`,
-        NULL `IsMultiSet`,
-        NULL `Mode`,
-        NULL `Default`
+        SELECT /* Function parameters */
+        NULL AS `Id`,
+        NULL AS `ParentId`,
+        NULL AS `Name`,
+        NULL AS `Ordinal`,
+        NULL AS `TypeName`,
+        NULL AS `MaxLength`,
+        NULL AS `Precision`,
+        NULL AS `DateTimePrecision`,
+        NULL AS `Scale`,
+        NULL AS `CollatioCatalog`,
+        NULL AS `CollationSchema`,
+        NULL AS `CollationName`,
+        NULL AS `CharacterSetCatalog`,
+        NULL AS `CharacterSetSchema`,
+        NULL AS `CharacterSetName`,
+        NULL AS `IsMultiSet`,
+        NULL AS `Mode`,
+        NULL AS `Default`
       </DefiningQuery>
     </EntitySet>
 
     <EntitySet Name="SProcedures" EntityType="Self.Procedure">
       <DefiningQuery>
-        SELECT
-        NULL `Id`,
-        NULL `CatalogName`,
-        NULL `SchemaName`,
-        NULL `Name`
+        SELECT /* Procedures */
+        CONCAT('`', ROUTINE_SCHEMA, '`.`', SPECIFIC_NAME, '`') AS `Id`,
+        ROUTINE_CATALOG AS `CatalogName`,
+        ROUTINE_SCHEMA AS `SchemaName`,
+        ROUTINE_NAME AS `Name`
+        FROM INFORMATION_SCHEMA.ROUTINES
+        WHERE ROUTINE_TYPE='PROCEDURE'
       </DefiningQuery>
     </EntitySet>
 
     <EntitySet Name="SProcedureParameters" EntityType="Self.Parameter">
       <DefiningQuery>
-        SELECT 
-        NULL `Id`,
-        NULL `ParentId`,
-        NULL `Name`,
-        NULL `Ordinal`,
-        NULL `TypeName`,
-        NULL `MaxLength`,
-        NULL `Precision`,
-        NULL `DateTimePrecision`,
-        NULL `Scale`,
-        NULL `CollatioCatalog`,
-        NULL `CollationSchema`,
-        NULL `CollationName`,
-        NULL `CharacterSetCatalog`,
-        NULL `CharacterSetSchema`,
-        NULL `CharacterSetName`,
-        NULL `IsMultiSet`,
-        NULL `Mode`,
-        NULL `Default`
+        SELECT /* Procedure parameters */
+        NULL AS `Id`,
+        NULL AS `ParentId`,
+        NULL AS `Name`,
+        NULL AS `Ordinal`,
+        NULL AS `TypeName`,
+        NULL AS `MaxLength`,
+        NULL AS `Precision`,
+        NULL AS `DateTimePrecision`,
+        NULL AS `Scale`,
+        NULL AS `CollatioCatalog`,
+        NULL AS `CollationSchema`,
+        NULL AS `CollationName`,
+        NULL AS `CharacterSetCatalog`,
+        NULL AS `CharacterSetSchema`,
+        NULL AS `CharacterSetName`,
+        NULL AS `IsMultiSet`,
+        NULL AS `Mode`,
+        NULL AS `Default`
       </DefiningQuery>
     </EntitySet>
 
     <EntitySet Name="SConstraints" EntityType="Self.Constraint">
       <DefiningQuery>
-        SELECT
-        CONCAT('`', CONSTRAINT_SCHEMA, '`.`', CONSTRAINT_NAME, '`') `Id`,
-        CONCAT('`', TABLE_SCHEMA, '`.`', TABLE_NAME, '`') `ParentId`,
-        CONSTRAINT_NAME `Name`,
-        CONSTRAINT_TYPE `ConstraintType`,
-        0 `IsDeferrable`,
-        0 `IsInitiallyDeferred`
+        SELECT  /* Constraints */
+        CONCAT('`', CONSTRAINT_SCHEMA, '`.`', TABLE_NAME, '`.`', CONSTRAINT_NAME, '`') AS `Id`,
+        CONCAT('`', TABLE_SCHEMA, '`.`', TABLE_NAME, '`') AS `ParentId`,
+        CONSTRAINT_NAME AS `Name`,
+        CONSTRAINT_TYPE AS `ConstraintType`,
+        0 AS `IsDeferrable`,
+        0 AS `IsInitiallyDeferred`
         FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
         WHERE CONSTRAINT_TYPE != 'CHECK' AND TABLE_SCHEMA=schema()
       </DefiningQuery>
@@ -184,55 +189,81 @@
 
     <EntitySet Name="SCheckConstraints" EntityType="Self.CheckConstraint">
       <DefiningQuery>
-        SELECT
-        NULL `Id`,
-        NULL `Expression`
+        SELECT  /* Check constraints */
+        NULL AS `Id`,
+        NULL AS `Expression`
       </DefiningQuery>
     </EntitySet>
 
     <EntitySet Name="SConstraintColumns" EntityType="Self.ConstraintColumn">
       <DefiningQuery>
-        SELECT
-        CONCAT('`', CONSTRAINT_SCHEMA, '`.`', CONSTRAINT_NAME, '`') `ConstraintId`,
-        CONCAT('`', TABLE_SCHEMA, '`.`', TABLE_NAME, '`.`', COLUMN_NAME, '`') `ColumnId`
+        SELECT  /* Constraint columns */
+        CONCAT('`', CONSTRAINT_SCHEMA, '`.`', TABLE_NAME, '`.`', CONSTRAINT_NAME, '`') AS `ConstraintId`,
+        CONCAT('`', TABLE_SCHEMA, '`.`', TABLE_NAME, '`.`', COLUMN_NAME, '`') AS `ColumnId`
         FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA=schema()
-      </DefiningQuery>
-    </EntitySet>
-
-    <EntitySet Name="SForeignKeyConstraints" EntityType="Self.ForeignKeyConstraint">
-      <DefiningQuery>
-        SELECT
-        CONCAT('`', TABLE_SCHEMA, '`.`', CONSTRAINT_NAME, '`') `Id`,
-        'NO ACTION' `UpdateRule`,
-        'NO ACTION' `DeleteRule`
-        FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
-        WHERE CONSTRAINT_TYPE = 'FOREIGN KEY' AND TABLE_SCHEMA=schema()
       </DefiningQuery>
     </EntitySet>
 
 <!--
     <EntitySet Name="SForeignKeyConstraints" EntityType="Self.ForeignKeyConstraint">
       <DefiningQuery>
+        SELECT /* Foreign key constraints */
+        CONCAT('`', TABLE_SCHEMA, '`.`', CONSTRAINT_NAME, '`') AS `Id`,
+        'NO ACTION' AS `UpdateRule`,
+        'NO ACTION' AS `DeleteRule`
+        FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
+        WHERE CONSTRAINT_TYPE = 'FOREIGN KEY' AND TABLE_SCHEMA=schema()
+      </DefiningQuery>
+    </EntitySet>
+-->
+
+    <EntitySet Name="SForeignKeyConstraints" EntityType="Self.ForeignKeyConstraint">
+      <DefiningQuery>
         SELECT
-        CONCAT('`', CONSTRAINT_SCHEMA, '`.`', CONSTRAINT_NAME, '`') `Id`,
-        UPDATE_RULE `UpdateRule`
-        DELETE_RULE `DeleteRule`
+        CONCAT('`', CONSTRAINT_SCHEMA, '`.`', CONSTRAINT_NAME, '`') AS `Id`,
+        UPDATE_RULE AS `UpdateRule`,
+        DELETE_RULE AS `DeleteRule`
         FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS
       </DefiningQuery>
-    </EntitySet>-->
+    </EntitySet>
 
     <EntitySet Name="SForeignKeys" EntityType="Self.ForeignKey">
       <DefiningQuery>
         SELECT
+        CONCAT('`', FC.CONSTRAINT_SCHEMA, '`.`', FC.CONSTRAINT_NAME, '`.`', FC.ORDINAL_POSITION, '`') AS `Id`,
+        CONCAT('`', PC.TABLE_SCHEMA, '`.`', PC.TABLE_NAME, '`.`', PC.COLUMN_NAME, '`') AS `ToColumnId`,
+        CONCAT('`', FC.TABLE_SCHEMA, '`.`', FC.TABLE_NAME, '`.`', FC.COLUMN_NAME, '`') AS `FromColumnId`,
+        CONCAT('`', FC.CONSTRAINT_SCHEMA, '`.`', FC.CONSTRAINT_NAME, '`') AS `ConstraintId`,
+        FC.ORDINAL_POSITION AS `Ordinal`
+        FROM
+        INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS AS RC
+        INNER JOIN
+        INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS PC /* PRIMARY KEY COLS*/
+        ON       RC.UNIQUE_CONSTRAINT_SCHEMA =  PC.CONSTRAINT_SCHEMA
+        AND      RC.UNIQUE_CONSTRAINT_NAME    = PC.CONSTRAINT_NAME
+        AND      RC.REFERENCED_TABLE_NAME     = PC.TABLE_NAME
+        INNER JOIN
+        INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS FC /* FOREIGN KEY COLS*/
+        ON       RC.CONSTRAINT_SCHEMA  = FC.CONSTRAINT_SCHEMA
+        AND      RC.CONSTRAINT_NAME    = FC.CONSTRAINT_NAME
+        AND      RC.TABLE_NAME         = FC.TABLE_NAME
+        AND      PC.ORDINAL_POSITION   = FC.ORDINAL_POSITION
+<!--        WHERE FC.CONSTRAINT_SCHEMA='test3'-->
+      </DefiningQuery>
+    </EntitySet>    
+    
+    <!--<EntitySet Name="SForeignKeys" EntityType="Self.ForeignKey">
+      <DefiningQuery>
+        SELECT  /* Foreign keys */
         CONCAT('`', KEYCOLS.TABLE_SCHEMA, '`.`', KEYCOLS.TABLE_NAME, '`.`',
-               KEYCOLS.CONSTRAINT_NAME, '`.`', KEYCOLS.COLUMN_NAME) `Id`,
+               KEYCOLS.CONSTRAINT_NAME, '`.`', KEYCOLS.COLUMN_NAME, '`') AS `Id`,
         CONCAT('`', KEYCOLS.REFERENCED_TABLE_SCHEMA, '`.`', 
                KEYCOLS.REFERENCED_TABLE_NAME, '`.`', 
-               KEYCOLS.REFERENCED_COLUMN_NAME, '`') `ToColumnId`,
-        CONCAT('`', KEYCOLS.TABLE_SCHEMA, '`.`', KEYCOLS.TABLE_NAME, '`.`', KEYCOLS.COLUMN_NAME, '`') `FromColumnId`,
-        KEYCOLS.COLUMN_NAME `Name`,
-        CONCAT('`', KEYCOLS.TABLE_SCHEMA, '`.`', KEYCOLS.CONSTRAINT_NAME, '`') `ConstraintId`,
-        KEYCOLS.ORDINAL_POSITION `Ordinal`
+               KEYCOLS.REFERENCED_COLUMN_NAME, '`') AS `ToColumnId`,
+        CONCAT('`', KEYCOLS.TABLE_SCHEMA, '`.`', KEYCOLS.TABLE_NAME, '`.`', KEYCOLS.COLUMN_NAME, '`') AS `FromColumnId`,
+        KEYCOLS.COLUMN_NAME AS `Name`,
+        CONCAT('`', KEYCOLS.TABLE_SCHEMA, '`.`', KEYCOLS.CONSTRAINT_NAME, '`') AS `ConstraintId`,
+        KEYCOLS.ORDINAL_POSITION AS `Ordinal`
         FROM
         INFORMATION_SCHEMA.TABLE_CONSTRAINTS TC
         INNER JOIN
@@ -243,37 +274,37 @@
         AND TC.CONSTRAINT_NAME = KEYCOLS.CONSTRAINT_NAME
         AND TC.TABLE_SCHEMA = schema()
       </DefiningQuery>
-    </EntitySet>
+    </EntitySet>-->
 
     <EntitySet Name="SViewConstraints" EntityType="Self.ViewConstraint">
       <DefiningQuery>
-        SELECT
-        NULL `Id`,
-        NULL `ParentId`,
-        NULL `Name`,
-        NULL `ConstraintType`,
-        NULL `Expression`,
-        NULL `UpdateRule`,
-        NULL `DeleteRule`
+        SELECT /* View constraints */
+        NULL AS `Id`,
+        NULL AS `ParentId`,
+        NULL AS `Name`,
+        NULL AS `ConstraintType`,
+        NULL AS `Expression`,
+        NULL AS `UpdateRule`,
+        NULL AS `DeleteRule`
       </DefiningQuery>
     </EntitySet>
 
     <EntitySet Name="SViewConstraintColumns" EntityType="Self.ConstraintColumn">
       <DefiningQuery>
-        SELECT
-        NULL `ConstraintId`,
-        NULL `ColumnId`
+        SELECT  /* View constraint columns */
+        NULL AS `ConstraintId`,
+        NULL AS `ColumnId`
       </DefiningQuery>
     </EntitySet>
 
     <EntitySet Name="SViewForeignKeys" EntityType="Self.ForeignKey">
       <DefiningQuery>
-        SELECT
-        NULL `Id`,
-        NULL `ToColumnId`,
-        NULL `FromColumnId`,
-        NULL `ConstraintId`,
-        0 `Ordinal`
+        SELECT /* View foreign keys */
+        NULL AS `Id`,
+        NULL AS `ToColumnId`,
+        NULL AS `FromColumnId`,
+        NULL AS `ConstraintId`,
+        0 AS `Ordinal`
       </DefiningQuery>
     </EntitySet>
 

@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Data.Metadata.Edm;
 
 namespace MySql.Data.Entity
 {
@@ -33,13 +34,13 @@ namespace MySql.Data.Entity
         public string Property { get; set; }
         public SqlFragment Fragment { get; set; }
 
-        protected override string  InnerText
-        {
-	        get 
-	        {
-                return String.Format("{0}.{1}", QuoteIdentifier(Fragment.Name), 
-                    QuoteIdentifier(Property));
-	        }
-        }
+        //protected override string  InnerText
+        //{
+        //    get 
+        //    {
+        //        return String.Format("{0}.{1}", QuoteIdentifier(Fragment.Name), 
+        //            QuoteIdentifier(Property));
+        //    }
+        //}
     }
 }

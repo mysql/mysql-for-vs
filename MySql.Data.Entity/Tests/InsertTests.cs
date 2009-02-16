@@ -33,20 +33,26 @@ namespace MySql.Data.Entity.Tests
     [TestFixture]
     public class InsertTests : BaseEdmTest
     {
+        public InsertTests()
+            : base()
+        {
+            csAdditions += ";logging=true;";
+        }
+
         [Test]
         public void InsertSingleRow()
         {
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM companies", conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            DataRow lastRow = dt.Rows[dt.Rows.Count - 1];
+            int lastId = (int)lastRow["id"];
+            DateTime dateBegan = DateTime.Now;
+
             using (testEntities context = new testEntities())
             {
-                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM companies", conn);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-                DataRow lastRow = dt.Rows[dt.Rows.Count - 1];
-                int lastId = (int)lastRow["id"];
-                DateTime dateBegan = DateTime.Now;
-
-                Companies c = new Companies();
-                c.Id = lastId + 1;
+                Company c = new Company();
+                //c.Id = lastId + 1;
                 c.Name = "Yoyo";
                 c.NumEmployees = 486;
                 c.DateBegan = dateBegan;
@@ -54,8 +60,18 @@ namespace MySql.Data.Entity.Tests
                 c.Address.City = "Helena";
                 c.Address.State = "MT";
                 c.Address.ZipCode = "44558";
+
                 context.AddToCompanies(c);
-                int result = context.SaveChanges();
+                try
+                {
+                    int result = context.SaveChanges();
+                }
+                catch (OptimisticConcurrencyException ex)
+                {
+                    context.Refresh(RefreshMode.StoreWins, c);
+                    context.SaveChanges();
+                }
+
 
                 DataTable afterInsert = new DataTable();
                 da.Fill(afterInsert);

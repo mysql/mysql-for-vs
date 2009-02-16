@@ -25,46 +25,50 @@ using System.Text;
 
 namespace MySql.Data.Entity
 {
-    class InputFragment : SqlFragment 
+    abstract class InputFragment : SqlFragment 
     {
-        private List<SqlFragment> inputs;
+        // not all input classes will support two inputs but union and join do
+        // in cases where only one input is used, Left is it
+        public InputFragment Left;
+        public InputFragment Right;
 
-        public List<SqlFragment> Inputs
+        public InputFragment()
         {
-            get
-            {
-                if (inputs == null)
-                    inputs = new List<SqlFragment>();
-                return inputs;
-            }
         }
 
-        public virtual SqlFragment GetProperty(string name)
+        public InputFragment(string name)
         {
-            foreach (SqlFragment f in Inputs)
-                if (f.Name == name) return f;
+            Name = name;
+        }
+
+        public string Name { get; set; }
+        public bool IsWrapped { get; private set; }
+
+        public virtual SqlFragment GetProperty(string propertyName)
+        {
+            if (Left != null && Left.Name == propertyName) return Left;
+            if (Right != null && Right.Name == propertyName) return Right;
             return null;
         }
 
-        protected override string InnerText
+        public virtual void Wrap(Scope scope)
         {
-            get
-            {
-                if (Inputs.Count == 0) return base.InnerText;
+            IsWrapped = true;
+        }
 
-                StringBuilder sql = new StringBuilder();
-                if (Inputs.Count > 1)
-                    sql.Append("(");
-                string delimiter = "";
-                foreach (SqlFragment f in Inputs)
-                {
-                    sql.AppendFormat("{0}{1}", delimiter, f);
-                    delimiter = " ";
-                }
-                if (Inputs.Count > 1)
-                    sql.Append(")");
-                return sql.ToString();
-            }
+        public virtual void WriteInnerSql(StringBuilder sql)
+        {
+        }
+
+        public override void WriteSql(StringBuilder sql)
+        {
+            if (IsWrapped)
+                sql.Append("(");
+            WriteInnerSql(sql);
+            if (IsWrapped)
+                sql.Append(")");
+            if (Name != null)
+                sql.AppendFormat(" AS {0}", QuoteIdentifier(Name));
         }
     }
 }

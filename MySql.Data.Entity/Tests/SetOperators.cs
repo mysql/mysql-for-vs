@@ -38,14 +38,6 @@ namespace MySql.Data.Entity.Tests
         {
         }
 
-        private EntityConnection GetEntityConnection()
-        {
-            string connectionString = String.Format(
-                "metadata=TestDB.csdl|TestDB.msl|TestDB.ssdl;provider=MySql.Data.MySqlClient; provider connection string=\"{0}\"", GetConnectionString(true));
-            EntityConnection connection = new EntityConnection(connectionString);
-            return connection;
-        }
-
         [Test]
         public void FirstSimple()
         {
@@ -81,7 +73,7 @@ namespace MySql.Data.Entity.Tests
 
                 int i = 0;
                 var query = context.Companies.Top("2");
-                foreach (Companies c in query)
+                foreach (Company c in query)
                 {
                     Assert.AreEqual(dt.Rows[i++]["id"], c.Id);
                 }

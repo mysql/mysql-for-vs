@@ -19,32 +19,34 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System.Text;
+using System.Diagnostics;
 
 namespace MySql.Data.Entity
 {
     class JoinFragment : InputFragment
     {
-        public InputFragment Left;
-        public InputFragment Right;
         public SqlFragment Condition;
         public string JoinType;
 
-        public override SqlFragment GetProperty(string name)
+        public override void WriteInnerSql(StringBuilder sql)
         {
-            if (Left.Name == name) return Left;
-            if (Right.Name == name) return Right;
-
-            SqlFragment f = Left.GetProperty(name);
-            if (f == null)
-                f = Right.GetProperty(name);
-            return f;
+            Left.WriteSql(sql);
+            sql.AppendFormat(" {0} ", JoinType);
+            Right.WriteSql(sql);
+            if (Condition != null)
+            {
+                sql.Append(" ON ");
+                Condition.WriteSql(sql);
+            }
         }
 
-        public override string ToString()
+        public override void WriteSql(StringBuilder sql)
         {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("{0} {1} {2} ON {3}", Left, JoinType, Right, Condition);
-            return sb.ToString();
+            // we don't want our join to write out its name
+            string name = Name;
+            Name = null;
+            base.WriteSql(sql);
+            Name = name;
         }
     }
 }

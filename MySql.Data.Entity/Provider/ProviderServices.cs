@@ -26,6 +26,7 @@ using System.Data.Metadata.Edm;
 using System.Data;
 //using MySql.Data.MySqlClient.SQLGeneration;
 using MySql.Data.Entity;
+using System.Reflection;
 
 namespace MySql.Data.MySqlClient
 {
@@ -82,7 +83,10 @@ namespace MySql.Data.MySqlClient
 
             string sql = generator.GenerateSQL(commandTree);
 
-            MySqlCommand cmd = new MySqlCommand(sql); 
+            MySqlCommand cmd = new MySqlCommand(sql);
+
+            FieldInfo fi = cmd.GetType().GetField("EFCrap", BindingFlags.NonPublic | BindingFlags.Instance);
+            fi.SetValue(cmd, true);
 
             // Now make sure we populate the command's parameters from the CQT's parameters:
             foreach (KeyValuePair<string, TypeUsage> queryParameter in commandTree.Parameters)
@@ -96,6 +100,17 @@ namespace MySql.Data.MySqlClient
             // Now add parameters added as part of SQL gen 
             foreach (DbParameter p in generator.Parameters)
                 cmd.Parameters.Add(p);
+
+            if (commandTree is DbInsertCommandTree)
+            {
+                MySqlConnection c = new MySqlConnection("server=localhost;uid=root;database=test");
+                c.Open();
+                cmd.Connection = c;
+                MySqlDataReader reader = cmd.ExecuteReader(CommandBehavior.SequentialAccess);
+                reader.Close();
+                int i = reader.RecordsAffected;
+            }
+
             return CreateCommandDefinition(cmd);
         }
         

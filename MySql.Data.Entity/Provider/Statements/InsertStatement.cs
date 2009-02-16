@@ -19,6 +19,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System.Text;
+using System.Collections.Generic;
 
 namespace MySql.Data.Entity 
 {
@@ -26,23 +27,28 @@ namespace MySql.Data.Entity
     {
         public InsertStatement()
         {
-            Sets = new ListFragment(", ");
-            Values = new ListFragment(", ");
+            Sets = new List<SqlFragment>();
+            Values = new List<SqlFragment>();
         }
 
-        public SqlFragment Target { get; set; }
-        public ListFragment Sets { get; private set; }
-        public ListFragment Values { get; private set; }
+        public InputFragment Target { get; set; }
+        public List<SqlFragment> Sets { get; private set; }
+        public List<SqlFragment> Values { get; private set; }
 
-        public override string ToString()
+        public override void WriteSql(StringBuilder sql)
         {
-            StringBuilder sb = new StringBuilder("INSERT INTO ");
-            sb.Append(Target);
-            if (Sets.Items.Count > 0)
-                sb.AppendFormat("({0})", Sets);
-            sb.Append(" VALUES ");
-            sb.AppendFormat("({0})", Values);
-            return sb.ToString();
+            sql.Append("INSERT INTO ");
+            Target.WriteSql(sql);
+            if (Sets.Count > 0)
+            {
+                sql.Append("(");
+                WriteList(Sets, sql);
+                sql.Append(")");
+            }
+            sql.Append(" VALUES ");
+            sql.Append("(");
+            WriteList(Values, sql);
+            sql.Append(")");
         }
     }
 }

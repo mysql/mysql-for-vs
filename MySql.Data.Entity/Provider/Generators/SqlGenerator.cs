@@ -33,18 +33,21 @@ namespace MySql.Data.Entity
     {
         protected string tabs = String.Empty;
         private int parameterCount = 1;
-        protected Stack<string> scope = new Stack<string>();
+//        protected Stack<string> inputVars = new Stack<string>();
+  //      protected Dictionary<string, string> varMap = new Dictionary<string, string>();
+        protected Scope scope = new Scope();
+        protected int propertyLevel;
+        public List<ColumnFragment> BoolOverrides = new List<ColumnFragment>();
 
         public SqlGenerator()
         {
             Parameters = new List<MySqlParameter>();
-            Symbols = new SymbolTable();
         }
 
         #region Properties
 
         public List<MySqlParameter> Parameters { get; private set; }
-        protected SymbolTable Symbols { get; private set; }
+//        protected SymbolTable Symbols { get; private set; }
 
         #endregion
 
@@ -65,68 +68,85 @@ namespace MySql.Data.Entity
 
         protected string CreateUniqueParameterName()
         {
-            return String.Format("@p{0}", parameterCount++);
+            return String.Format("@gp{0}", parameterCount++);
         }
 
         #region DbExpressionVisitor Base Implementations
 
         public override SqlFragment Visit(DbVariableReferenceExpression expression)
         {
-            return Symbols.Lookup(expression.VariableName);
+            PropertyFragment fragment = new PropertyFragment();
+            fragment.Properties.Add(expression.VariableName);
+            return fragment;
         }
 
         public override SqlFragment Visit(DbPropertyExpression expression)
         {
-            InputFragment parent = (InputFragment)expression.Instance.Accept(this);
-            InputFragment f = (InputFragment)parent.GetProperty(expression.Property.Name);
-            if (f != null) return f;
+            propertyLevel++;
+            PropertyFragment fragment = expression.Instance.Accept(this) as PropertyFragment;
+            fragment.Properties.Add(expression.Property.Name);
+            propertyLevel--;
 
-            SymbolFragment sym = new SymbolFragment();
-            sym.Fragment = parent;
-            sym.Property = expression.Property.Name;
-            return sym;
+            // if we are not at the top level property then just return
+            if (propertyLevel > 0) return fragment;
+
+            // we are at the top level property so now we can do our work
+            ColumnFragment column = GetColumnFromPropertyTree(fragment);
+
+            for (int i = fragment.Properties.Count - 1; i >= 0; --i)
+            {
+                InputFragment inputFragment = scope.GetFragment(fragment.Properties[i]);
+                if (inputFragment != null)
+                {
+                    column.TableAlias = inputFragment.Name;
+                    break;
+                }
+            }
+            return column;
         }
 
         public override SqlFragment Visit(DbScanExpression expression)
         {
             EntitySetBase target = expression.Target;
-            InputFragment fragment = new InputFragment();
+            TableFragment fragment = new TableFragment();
 
             MetadataProperty property;
             bool propExists = target.MetadataProperties.TryGetValue("DefiningQuery", true, out property);
             if (propExists && property.Value != null)
-                fragment.Text = String.Format("({0})", property.Value);
+                fragment.DefiningQuery = new LiteralFragment(property.Value as string);
             else
             {
-                string schema = target.EntityContainer.Name;
-                string table = target.Name;
+                fragment.Schema = target.EntityContainer.Name;
+                fragment.Table = target.Name;
 
                 propExists = target.MetadataProperties.TryGetValue("Schema", true, out property);
                 if (propExists && property.Value != null)
-                    schema = property.Value as string;
+                    fragment.Schema = property.Value as string;
                 propExists = target.MetadataProperties.TryGetValue("Table", true, out property);
                 if (propExists && property.Value != null)
-                    table = property.Value as string;
-                fragment.Text = String.Format("`{0}`.`{1}`", schema, table);
+                    fragment.Table = property.Value as string;
             }
-            //fragment.Name = scope.Pop();
             return fragment;
         }
 
         public override SqlFragment Visit(DbParameterReferenceExpression expression)
         {
-            return new SqlFragment("@" + expression.ParameterName);
+            return new LiteralFragment("@" + expression.ParameterName);
         }
 
         public override SqlFragment Visit(DbNotExpression expression)
         {
             SqlFragment f = expression.Argument.Accept(this);
-            return f;
+            Debug.Assert(f is NegatableFragment);
+            NegatableFragment nf = f as NegatableFragment;
+            nf.Negate();
+            return nf;
         }
 
         public override SqlFragment Visit(DbIsEmptyExpression expression)
         {
-            SqlFragment f = expression.Argument.Accept(this);
+            ExistsFragment f = new ExistsFragment(expression.Argument.Accept(this));
+            f.Negate();
             return f;
         }
 
@@ -138,11 +158,12 @@ namespace MySql.Data.Entity
 
         public override SqlFragment Visit(DbConstantExpression expression)
         {
-            Trace.WriteLine(String.Format("{0}{1}", tabs, "ConstantExpress"));
-
-            SqlFragment f = new SqlFragment();
+            PrimitiveTypeKind pt = ((PrimitiveType)expression.ResultType.EdmType).PrimitiveTypeKind;
             if (Metadata.IsNumericType(expression.ResultType))
-                f.Text = expression.Value.ToString();
+                return new LiteralFragment(expression.Value.ToString());
+            else if (pt == PrimitiveTypeKind.Boolean)
+                return new LiteralFragment(String.Format("cast({0} as decimal(0,0))",
+                    (bool)expression.Value ? 1 : 0));
             else
             {
                 // use a parameter for non-numeric types so we get proper
@@ -152,21 +173,14 @@ namespace MySql.Data.Entity
                 p.DbType = Metadata.GetDbType(expression.ResultType);
                 p.Value = expression.Value;
                 Parameters.Add(p);
-                f.Text = p.ParameterName;
+                return new LiteralFragment(p.ParameterName);
             }
-            return f;
         }
 
         public override SqlFragment Visit(DbComparisonExpression expression)
         {
-            SqlFragment left = expression.Left.Accept(this);
-            SqlFragment right = expression.Right.Accept(this);
-
-            ListFragment l = new ListFragment(" ");
-            l.Items.Add(left);
-            l.Items.Add(new SqlFragment(Metadata.GetOperator(expression.ExpressionKind)));
-            l.Items.Add(right);
-            return l;
+            return VisitBinaryExpression(expression.Left, expression.Right,
+                Metadata.GetOperator(expression.ExpressionKind));
         }
 
         public override SqlFragment Visit(DbAndExpression expression)
@@ -176,7 +190,7 @@ namespace MySql.Data.Entity
 
         public override SqlFragment Visit(DbOrExpression expression)
         {
-            return VisitBinaryExpression(expression.Left, expression.Right, "OR");
+            return VisitBinaryExpression(expression.Left, expression.Right, "AND");
         }
 
         public override SqlFragment Visit(DbCastExpression expression)
@@ -185,80 +199,55 @@ namespace MySql.Data.Entity
             return expression.Argument.Accept(this);
         }
 
-        public override SqlFragment Visit(DbUnionAllExpression expression)
-        {
-            InputFragment input = new InputFragment();
-            input.Name = scope.Pop();
-
-            scope.Push(null);
-            SqlFragment left = expression.Left.Accept(this);
-            Debug.Assert(left is SelectStatement);
-            (left as SelectStatement).Parent = null;
-            input.Inputs.Add(left);
-
-            input.Inputs.Add(new SqlFragment("UNION ALL"));
-
-            scope.Push(null);
-            SqlFragment right = expression.Right.Accept(this);
-            Debug.Assert(right is SelectStatement);
-            (right as SelectStatement).Parent = null;
-            input.Inputs.Add(right);
-
-            return input;
-        }
-
         public override SqlFragment Visit(DbLikeExpression expression)
         {
-            ListFragment list = new ListFragment(" ");
-            list.Items.Add(expression.Argument.Accept(this));
-            list.Items.Add(new SqlFragment(" LIKE "));
-            list.Items.Add(expression.Pattern.Accept(this));
+            LikeFragment f = new LikeFragment();
+
+            f.Argument = expression.Argument.Accept(this);
+            f.Pattern = expression.Pattern.Accept(this);
 
             if (expression.Escape.ExpressionKind != DbExpressionKind.Null)
-            {
-                list.Items.Add(new SqlFragment(" ESCAPE "));
-                list.Items.Add(expression.Escape.Accept(this));
-            }
+                f.Escape = expression.Escape.Accept(this);
 
-            return list;
+            return f;
         }
 
         public override SqlFragment Visit(DbCaseExpression expression)
         {
-            ListFragment list = new ListFragment("");
+            CaseFragment c = new CaseFragment();
 
             Debug.Assert(expression.When.Count == expression.Then.Count);
 
-            list.Append("CASE");
             for (int i = 0; i < expression.When.Count; ++i)
             {
-                list.Append(" WHEN (");
-                list.Append(expression.When[i].Accept(this));
-                list.Append(") THEN ");
-                list.Append(expression.Then[i].Accept(this));
+                c.When.Add(expression.When[i].Accept(this));
+                c.Then.Add(expression.Then[i].Accept(this));
             }
             if (expression.Else != null && !(expression.Else is DbNullExpression))
-            {
-                list.Append(" ELSE ");
-                list.Append(expression.Else.Accept(this));
-            }
-
-            list.Append(" END");
-            return list;
+                c.Else = expression.Else.Accept(this);
+            return c;
         }
 
         public override SqlFragment Visit(DbIsNullExpression expression)
         {
-            ListFragment list = new ListFragment("");
-            list.Append(expression.Argument.Accept(this));
-            list.Append(" IS NULL");
-            return list;
+            IsNullFragment f = new IsNullFragment();
+            f.Argument = expression.Argument.Accept(this);
+            return f;
+        }
+
+        public override SqlFragment Visit(DbNullExpression expression)
+        {
+            return new LiteralFragment("NULL");
         }
 
         #endregion
 
         #region DBExpressionVisitor methods normally overridden
 
+        public override SqlFragment Visit(DbUnionAllExpression expression)
+        {
+            throw new NotImplementedException();
+        }
 
         public override SqlFragment Visit(DbTreatExpression expression)
         {
@@ -296,11 +285,6 @@ namespace MySql.Data.Entity
         }
 
         public override SqlFragment Visit(DbOfTypeExpression expression)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override SqlFragment Visit(DbNullExpression expression)
         {
             throw new NotImplementedException();
         }
@@ -392,17 +376,60 @@ namespace MySql.Data.Entity
 
         #endregion
 
-        #region Private methods
-
-        private ListFragment VisitBinaryExpression(DbExpression left, DbExpression right, string op)
+        protected InputFragment VisitInputExpression(DbExpression e, string name, TypeUsage type)
         {
-            ListFragment list = new ListFragment(" ");
-            list.Items.Add(left.Accept(this));
-            list.Items.Add(new SqlFragment(op));
-            list.Items.Add(right.Accept(this));
-            return list;
+            SqlFragment f = e.Accept(this);
+            Debug.Assert(f is InputFragment);
+
+            InputFragment inputFragment = f as InputFragment;
+            inputFragment.Name = name;
+
+            if (inputFragment is TableFragment && type != null)
+                (inputFragment as TableFragment).Type = type;
+
+            SelectStatement select = inputFragment as SelectStatement;
+            if (name != null)
+            {
+                if (select != null &&  !select.IsWrapped)
+                    scope.Add(name, select.From);
+                else
+                    scope.Add(name, inputFragment);
+            }
+
+            return inputFragment;
+        }
+
+        #region Private Methods
+
+        SqlFragment VisitBinaryExpression(DbExpression left, DbExpression right, string op)
+        {
+            BinaryFragment f = new BinaryFragment();
+            f.Operator = op;
+            f.Left = left.Accept(this);
+            f.Right = right.Accept(this);
+            return f;
+        }
+
+        ColumnFragment GetColumnFromPropertyTree(PropertyFragment fragment)
+        {
+            int lastIndex = fragment.Properties.Count-1;
+            SqlFragment currentFragment = scope.GetFragment(fragment.Properties[0]);
+            if (currentFragment != null)
+            {
+                for (int i = 1; i < fragment.Properties.Count; i++)
+                {
+                    SqlFragment f = (currentFragment as InputFragment).GetProperty(fragment.Properties[i]);
+                    if (f == null) break;
+                    currentFragment = f;
+                }
+                if (currentFragment is ColumnFragment)
+                    return currentFragment as ColumnFragment;
+            }
+            ColumnFragment col = new ColumnFragment(null, fragment.Properties[lastIndex]);
+            return col;
         }
 
         #endregion
+
     }
 }

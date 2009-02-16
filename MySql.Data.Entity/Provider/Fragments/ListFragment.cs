@@ -44,7 +44,7 @@ namespace MySql.Data.Entity
             Items.Add(s);
         }
 
-        protected override string InnerText
+/*        protected override string InnerText
         {
             get
             {
@@ -58,6 +58,6 @@ namespace MySql.Data.Entity
                 }
                 return sb.ToString();
             }
-        }
+        }*/
     }
 }

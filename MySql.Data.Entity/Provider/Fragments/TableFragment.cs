@@ -18,26 +18,37 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using System;
+using System.Collections.Generic;
 using System.Text;
-using System.Data.Common.CommandTrees;
 using System.Data.Metadata.Edm;
-using MySql.Data.MySqlClient;
+using System.Diagnostics;
 
 namespace MySql.Data.Entity
 {
-    class DeleteGenerator : SqlGenerator 
+    class TableFragment : InputFragment
     {
-        public override string GenerateSQL(DbCommandTree tree)
+        public string Schema;
+        public string Table;
+        public SqlFragment DefiningQuery;
+        public TypeUsage Type;
+        public List<ColumnFragment> Columns;
+
+        public override SqlFragment GetProperty(string propertyName)
         {
-            DbDeleteCommandTree commandTree = tree as DbDeleteCommandTree;
+            if (Columns == null) return null;
+            foreach (ColumnFragment col in Columns)
+                if (col.ColumnName == propertyName) return col;
+            return null;
+        }
 
-            DeleteStatement statement = new DeleteStatement();
-            //scope.Push(null);
-            statement.Target = commandTree.Target.Expression.Accept(this);
-
-            statement.Where = commandTree.Predicate.Accept(this);
-
-            return statement.ToString();
+        public override void WriteSql(StringBuilder sql)
+        {
+            if (DefiningQuery != null)
+                sql.AppendFormat("({0})", DefiningQuery);
+            else
+                sql.AppendFormat("{0}.{1}", QuoteIdentifier(Schema), QuoteIdentifier(Table));
+            base.WriteSql(sql);
         }
     }
 }
