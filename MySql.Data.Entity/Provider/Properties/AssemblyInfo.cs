@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("MySQL")]
 [assembly: AssemblyProduct("MySql.Data.Entity")]
-[assembly: AssemblyCopyright("Copyright © MySQL 2008")]
+[assembly: AssemblyCopyright("Copyright © Sun Microsystems 2008-2009")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -31,6 +31,6 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("5.3")]
+[assembly: AssemblyVersion("6.0")]
 [assembly: AssemblyDelaySign(false)]
 [assembly: AssemblyKeyName("ConnectorNet")]
