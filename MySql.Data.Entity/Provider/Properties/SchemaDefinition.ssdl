@@ -220,7 +220,7 @@
     <EntitySet Name="SForeignKeyConstraints" EntityType="Self.ForeignKeyConstraint">
       <DefiningQuery>
         SELECT
-        CONCAT('`', CONSTRAINT_SCHEMA, '`.`', CONSTRAINT_NAME, '`') AS `Id`,
+        CONCAT('`', CONSTRAINT_SCHEMA, '`.`', TABLE_NAME, '`.`', CONSTRAINT_NAME, '`') AS `Id`,
         UPDATE_RULE AS `UpdateRule`,
         DELETE_RULE AS `DeleteRule`
         FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS
@@ -233,7 +233,7 @@
         CONCAT('`', FC.CONSTRAINT_SCHEMA, '`.`', FC.CONSTRAINT_NAME, '`.`', FC.ORDINAL_POSITION, '`') AS `Id`,
         CONCAT('`', PC.TABLE_SCHEMA, '`.`', PC.TABLE_NAME, '`.`', PC.COLUMN_NAME, '`') AS `ToColumnId`,
         CONCAT('`', FC.TABLE_SCHEMA, '`.`', FC.TABLE_NAME, '`.`', FC.COLUMN_NAME, '`') AS `FromColumnId`,
-        CONCAT('`', FC.CONSTRAINT_SCHEMA, '`.`', FC.CONSTRAINT_NAME, '`') AS `ConstraintId`,
+        CONCAT('`', FC.CONSTRAINT_SCHEMA, '`.`', FC.TABLE_NAME, '`.`', FC.CONSTRAINT_NAME, '`') AS `ConstraintId`,
         FC.ORDINAL_POSITION AS `Ordinal`
         FROM
         INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS AS RC

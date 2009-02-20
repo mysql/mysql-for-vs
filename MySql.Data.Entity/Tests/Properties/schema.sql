@@ -1,3 +1,13 @@
+DROP TABLE IF EXISTS SalariedEmployees;
+DROP TABLE IF EXISTS Employees;
+DROP TABLE IF EXISTS Toys;
+DROP TABLE IF EXISTS Companies;
+DROP TABLE IF EXISTS Orders;
+DROP TABLE IF EXISTS Stores;
+DROP TABLE IF EXISTS Books;
+DROP TABLE IF EXISTS Authors;
+DROP TABLE IF EXISTS Publishers;
+
 CREATE TABLE Employees(
 	Id INT NOT NULL PRIMARY KEY,
 	LastName NVARCHAR(20) NOT NULL, 
@@ -20,7 +30,6 @@ CREATE TABLE SalariedEmployees(
 INSERT INTO salariedEmployees VALUES (5, 500);
 INSERT INTO salariedEmployees VALUES (7, 50);
 
-DROP TABLE IF EXISTS Companies;
 CREATE TABLE Companies (
 	`Id` INT NOT NULL AUTO_INCREMENT,
 	`Name` VARCHAR(100) NOT NULL,
@@ -40,7 +49,6 @@ INSERT INTO Companies VALUES (5, 'Mattel', NULL, 888, '111 Parkwood Ave', 'San J
 INSERT INTO Companies VALUES (6, 'K''NEX', NULL, 382, '7812 N. 51st', 'Dallas', 'TX', 11239);
 INSERT INTO Companies VALUES (7, 'Playmobil', NULL, 541, '546 Main St.', 'Omaha', 'NE', 78439);
 
-DROP TABLE IF EXISTS Toys;
 CREATE TABLE Toys (
 	`Id` INT NOT NULL AUTO_INCREMENT,
 	`SupplierId` INT NOT NULL,
@@ -55,7 +63,6 @@ INSERT INTO Toys VALUES (2, 2, 'Rubiks Cube', 5);
 INSERT INTO Toys VALUES (3, 1, 'Lincoln Logs', 3);	
 INSERT INTO Toys VALUES (4, 4, 'Legos', 4);	
 
-DROP TABLE IF EXISTS Stores;
 CREATE TABLE Stores (
 	id INT PRIMARY KEY,
 	`name` VARCHAR(50) NOT NULL,
@@ -69,7 +76,6 @@ INSERT INTO Stores VALUES (2, 'K-Mart', '4225 W. Indian School Rd.', 'Phoenix', 
 INSERT INTO Stores VALUES (3, 'Wal-Mart', '1238 Putty Hill Ave', 'Towson', 'MD', '21286');	
 	
 	
-DROP TABLE IF EXISTS Orders;
 CREATE TABLE Orders (
 	id INT PRIMARY KEY,
 	storeId INT NOT NULL,
@@ -84,4 +90,31 @@ INSERT INTO Orders VALUES (6, 3, 98.5);
 INSERT INTO Orders VALUES (7, 1, 222.3);
 INSERT INTO Orders VALUES (8, 2, 125);
 INSERT INTO Orders VALUES (9, 3, 126.4);	
+
+CREATE TABLE Authors(
+	id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	`name` VARCHAR(20) NOT NULL,
+	age INT) ENGINE=InnoDB;
+INSERT INTO Authors VALUES (1, 'Tom Clancy', 65);
+INSERT INTO Authors VALUES (2, 'Stephen King', 57);
+INSERT INTO Authors VALUES (3, 'John Grisham', 49);
+
+CREATE TABLE Publishers(
+	id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	`name` VARCHAR(20) NOT NULL) ENGINE=InnoDB;
+INSERT INTO Publishers VALUES (1, 'Acme Publishing');
 	
+CREATE TABLE Books (
+	id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	`name` VARCHAR(20) NOT NULL,
+	pages int,
+	author_id int NOT NULL,
+	publisher_id int NOT NULL,
+	FOREIGN KEY (author_id) REFERENCES Authors(id),
+	FOREIGN KEY (publisher_id) REFERENCES Publishers(id)) ENGINE=InnoDB;
+INSERT INTO Books VALUES (1, 'Debt of Honor', 200, 1, 1);
+INSERT INTO Books VALUES (2, 'Insomnia', 350, 2, 1);
+INSERT INTO Books VALUES (3, 'Rainmaker', 475, 3, 1);
+	
+	
+		

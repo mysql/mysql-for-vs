@@ -54,6 +54,12 @@ namespace MySql.Data.Entity
         public virtual void Wrap(Scope scope)
         {
             IsWrapped = true;
+
+            if (scope == null) return;
+            if (Left != null)
+                scope.Remove(Left);
+            if (Right != null)
+                scope.Remove(Right);
         }
 
         public virtual void WriteInnerSql(StringBuilder sql)
@@ -67,7 +73,9 @@ namespace MySql.Data.Entity
             WriteInnerSql(sql);
             if (IsWrapped)
                 sql.Append(")");
-            if (Name != null)
+            if (Name == null) return;
+            if (this is TableFragment ||
+                (IsWrapped && !(this is JoinFragment)))
                 sql.AppendFormat(" AS {0}", QuoteIdentifier(Name));
         }
     }

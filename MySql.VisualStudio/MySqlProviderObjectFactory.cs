@@ -23,14 +23,16 @@ namespace MySql.Data.VisualStudio
 
 		public override object CreateObject(Type objType)
 		{
-			if (objType == typeof(DataConnectionUIControl))
-				return new MySqlDataConnectionUI();
-			else if (objType == typeof(DataConnectionProperties))
-				return new MySqlConnectionProperties();
-			else if (objType == typeof(DataConnectionSupport))
-				return new MySqlConnectionSupport();
-			else
-				return base.CreateObject(objType);
+            if (objType == typeof(DataConnectionUIControl))
+                return new MySqlDataConnectionUI();
+            else if (objType == typeof(DataConnectionProperties))
+                return new MySqlConnectionProperties();
+            else if (objType == typeof(DataConnectionSupport))
+                return new MySqlConnectionSupport();
+//            else if (objType == typeof(DataConnectionPromptDialog))
+  //              return new MySqlConnectionPromptDialog();
+            else
+                return base.CreateObject(objType);
 		}
 	}
 }

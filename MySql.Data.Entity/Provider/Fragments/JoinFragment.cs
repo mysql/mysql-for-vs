@@ -40,13 +40,13 @@ namespace MySql.Data.Entity
             }
         }
 
-        public override void WriteSql(StringBuilder sql)
-        {
-            // we don't want our join to write out its name
-            string name = Name;
-            Name = null;
-            base.WriteSql(sql);
-            Name = name;
-        }
+        //public override void WriteSql(StringBuilder sql)
+        //{
+        //    // we don't want our join to write out its name
+        //    string name = Name;
+        //    Name = null;
+        //    base.WriteSql(sql);
+        //    Name = name;
+        //}
     }
 }

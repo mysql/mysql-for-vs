@@ -190,7 +190,7 @@ namespace MySql.Data.Entity
 
         public override SqlFragment Visit(DbOrExpression expression)
         {
-            return VisitBinaryExpression(expression.Left, expression.Right, "AND");
+            return VisitBinaryExpression(expression.Left, expression.Right, "OR");
         }
 
         public override SqlFragment Visit(DbCastExpression expression)
@@ -239,6 +239,37 @@ namespace MySql.Data.Entity
         {
             return new LiteralFragment("NULL");
         }
+
+        public override SqlFragment Visit(DbArithmeticExpression expression)
+        {
+            if (expression.ExpressionKind == DbExpressionKind.UnaryMinus)
+            {
+                ListFragment f = new ListFragment();
+                f.Append("-(");
+                f.Append(expression.Arguments[0].Accept(this));
+                f.Append(")");
+                return f;
+            }
+
+            string op = String.Empty;
+            switch (expression.ExpressionKind)
+            {
+                case DbExpressionKind.Divide:
+                    op = "/"; break;
+                case DbExpressionKind.Minus:
+                    op = "-"; break;
+                case DbExpressionKind.Modulo:
+                    op = "%"; break;
+                case DbExpressionKind.Multiply:
+                    op = "*"; break;
+                case DbExpressionKind.Plus:
+                    op = "+"; break;
+                default:
+                    throw new NotSupportedException();
+            }
+            return VisitBinaryExpression(expression.Arguments[0], expression.Arguments[1], op);
+        }
+
 
         #endregion
 
@@ -359,11 +390,6 @@ namespace MySql.Data.Entity
             throw new NotImplementedException();
         }
 
-        public override SqlFragment Visit(DbArithmeticExpression expression)
-        {
-            throw new NotImplementedException();
-        }
-
         public override SqlFragment Visit(DbApplyExpression expression)
         {
             throw new NotImplementedException();
@@ -406,8 +432,22 @@ namespace MySql.Data.Entity
             BinaryFragment f = new BinaryFragment();
             f.Operator = op;
             f.Left = left.Accept(this);
+            f.WrapLeft = ShouldWrapExpression(left);
             f.Right = right.Accept(this);
+            f.WrapRight = ShouldWrapExpression(right);
             return f;
+        }
+
+        private bool ShouldWrapExpression(DbExpression e)
+        {
+            switch (e.ExpressionKind)
+            {
+                case DbExpressionKind.Property:
+                case DbExpressionKind.ParameterReference:
+                case DbExpressionKind.Constant:
+                    return false;
+            }
+            return true;
         }
 
         ColumnFragment GetColumnFromPropertyTree(PropertyFragment fragment)

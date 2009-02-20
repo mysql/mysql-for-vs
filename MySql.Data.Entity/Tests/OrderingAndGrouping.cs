@@ -53,23 +53,19 @@ namespace MySql.Data.Entity.Tests
         [Test]
         public void OrderBySimple()
         {
+            MySqlDataAdapter da = new MySqlDataAdapter(
+                "SELECT id FROM Companies c ORDER BY c.Name", conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+
             using (testEntities context = new testEntities())
             {
-                using (EntityConnection ec = context.Connection as EntityConnection)
-                {
-                    ec.Open();
-                    MySqlDataAdapter da = new MySqlDataAdapter(
-                        "SELECT id FROM Companies c ORDER BY c.Name", conn);
-                    DataTable dt = new DataTable();
-                    da.Fill(dt);
+                string sql = "SELECT VALUE c FROM Companies AS c ORDER BY c.Name";
+                ObjectQuery<Company> query = context.CreateQuery<Company>(sql);
 
-                    string sql = "SELECT VALUE c FROM Companies AS c ORDER BY c.Name";
-                    ObjectQuery<Company> query = context.CreateQuery<Company>(sql);
-
-                    int i = 0;
-                    foreach (Company c in query)
-                        Assert.AreEqual(dt.Rows[i++][0], c.Id);
-                }
+                int i = 0;
+                foreach (Company c in query)
+                    Assert.AreEqual(dt.Rows[i++][0], c.Id);
             }
         }
 

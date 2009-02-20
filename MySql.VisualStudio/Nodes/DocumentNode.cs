@@ -60,7 +60,8 @@ namespace MySql.Data.VisualStudio
 
         public int Close()
         {
-            throw new Exception("The method or operation is not implemented.");
+            //throw new Exception("The method or operation is not implemented.");
+            return VSConstants.S_OK;
         }
 
         public int GetGuidEditorType(out Guid pClassID)

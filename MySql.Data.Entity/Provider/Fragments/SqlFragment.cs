@@ -48,27 +48,41 @@ namespace MySql.Data.Entity
             foreach (SqlFragment s in list)
             {
                 sql.Append(sep);
+                sql.Append("\r\n");
                 s.WriteSql(sql);
-                sep = ",\r\n";
+                sep = ", ";
             }
         }
     }
 
     internal class BinaryFragment : NegatableFragment
     {
-        public SqlFragment Left { get; set; }
-        public SqlFragment Right { get; set; }
-        public string Operator { get; set; }
+        public SqlFragment Left;
+        public SqlFragment Right;
+        public string Operator;
+        public bool WrapLeft;
+        public bool WrapRight;
 
         public override void WriteSql(StringBuilder sql)
         {
             if (IsNegated)
                 sql.Append("NOT ");
-            sql.Append("(");
+
+            // do left arg
+            if (WrapLeft)
+                sql.Append("(");
             Left.WriteSql(sql);
+            if (WrapLeft)
+                sql.Append(")");
+
             sql.AppendFormat(" {0} ", Operator);
+
+            // now right arg
+            if (WrapRight)
+                sql.Append("(");
             Right.WriteSql(sql);
-            sql.Append(")");
+            if (WrapRight)
+                sql.Append(")");
         }
     }
 
@@ -196,6 +210,27 @@ namespace MySql.Data.Entity
         }
     }
 
+    internal class ListFragment : SqlFragment
+    {
+        public List<SqlFragment> Fragments = new List<SqlFragment>();
+
+        public void Append(string s)
+        {
+            Fragments.Add(new LiteralFragment(s));
+        }
+
+        public void Append(SqlFragment s)
+        {
+            Fragments.Add(s);
+        }
+
+        public override void WriteSql(StringBuilder sql)
+        {
+            foreach (SqlFragment f in Fragments)
+                f.WriteSql(sql);
+        }
+    }
+
     internal class NegatableFragment : SqlFragment
     {
         public bool IsNegated;
@@ -264,16 +299,6 @@ namespace MySql.Data.Entity
     internal class UnionFragment : InputFragment
     {
         public bool Distinct;
-
-        public override void Wrap(Scope scope)
-        {
-            base.Wrap(scope);
-
-            if (Left != null)
-                scope.Remove(Left);
-            if (Right != null)
-                scope.Remove(Right);
-        }
 
         public override void WriteInnerSql(StringBuilder sql)
         {

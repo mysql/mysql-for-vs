@@ -53,16 +53,16 @@ namespace MySql.Data.Entity
             dateFunctions.Add("Minute", "MINUTE({0})");
             dateFunctions.Add("Second", "SECOND({0})");
 
-            stringFunctions.Add("Concat", "CONCAT({0},{1})");
-            stringFunctions.Add("IndexOf", "LOCATE({0},{1})");
-            stringFunctions.Add("Left", "LEFT({0},{1})");
+            stringFunctions.Add("Concat", "CONCAT({0}, {1})");
+            stringFunctions.Add("IndexOf", "LOCATE({0}, {1})");
+            stringFunctions.Add("Left", "LEFT({0}, {1})");
             stringFunctions.Add("Length", "LENGTH({0})");
             stringFunctions.Add("LTrim", "LTRIM({0})");
-            stringFunctions.Add("Replace", "REPLACE({0},{1},{2})");
+            stringFunctions.Add("Replace", "REPLACE({0}, {1}, {2})");
             stringFunctions.Add("Reverse", "REVERSE({0})");
-            stringFunctions.Add("Right", "RIGHT({0},{1})");
+            stringFunctions.Add("Right", "RIGHT({0}, {1})");
             stringFunctions.Add("RTrim", "RTRIM({0})");
-            stringFunctions.Add("Substring", "SUBSTR({0},{1},{2})");
+            stringFunctions.Add("Substring", "SUBSTR({0}, {1}, {2})");
             stringFunctions.Add("ToLower", "LOWER({0})");
             stringFunctions.Add("ToUpper", "UPPER({0})");
             stringFunctions.Add("Trim", "TRIM({0})");

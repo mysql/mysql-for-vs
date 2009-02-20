@@ -37,13 +37,14 @@ namespace MySql.Data.Entity
             Columns = new List<ColumnFragment>();
         }
 
-        public InputFragment From { get; set; }
+        public InputFragment From;
         public List<ColumnFragment> Columns { get; private set;  }
-        public SqlFragment Where { get; set; }
-        public SqlFragment Limit { get; set; }
-        public SqlFragment Skip { get; set; }
+        public SqlFragment Where;
+        public SqlFragment Limit;
+        public SqlFragment Skip;
         public List<SqlFragment> GroupBy { get; private set; }
         public List<SortFragment> OrderBy { get; private set; }
+        public bool IsDistinct;
 
         public void AddGroupBy(SqlFragment f)
         {
@@ -65,14 +66,18 @@ namespace MySql.Data.Entity
             return From;
         }
 
-        public override void WriteInnerSql(StringBuilder sql)
+        public override void WriteSql(StringBuilder sql)
         {
-            sql.Append("SELECT ");
+            if (IsWrapped)
+                sql.Append("(");
+            sql.Append("SELECT");
+            if (IsDistinct)
+                sql.Append(" DISTINCT ");
             WriteList(Columns, sql);
 
             if (From != null)
             {
-                sql.Append("\r\n FROM ");
+                sql.Append("\r\nFROM ");
                 From.WriteSql(sql);
             }
             if (Where != null)
@@ -99,6 +104,12 @@ namespace MySql.Data.Entity
                     sql.Append("18446744073709551615");
                 else
                     sql.AppendFormat("{0}", Limit);
+            }
+            if (IsWrapped)
+            {
+                sql.Append(")");
+                if (Name != null)
+                    sql.AppendFormat(" AS {0}", QuoteIdentifier(Name));
             }
         }
 
@@ -185,7 +196,14 @@ namespace MySql.Data.Entity
                 case DbExpressionKind.Skip:
                     return Skip == null;
                 case DbExpressionKind.Sort:
-                    return OrderBy == null;
+                    return Columns.Count == 0 &&
+                        GroupBy == null &&
+                        OrderBy == null;
+                case DbExpressionKind.GroupBy:
+                    return Columns.Count == 0 &&
+                        GroupBy == null &&
+                        OrderBy == null &&
+                        Limit == null;
             }
             throw new InvalidOperationException();
         }

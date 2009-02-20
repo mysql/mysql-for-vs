@@ -60,6 +60,13 @@ namespace MySql.Data.Entity
             return fragment.ToString();
         }
 
+        public override SqlFragment Visit(DbDistinctExpression expression)
+        {
+            SelectStatement select = VisitInputExpressionEnsureSelect(expression.Argument, null, null);
+            select.IsDistinct = true;
+            return select;
+        }
+
         public override SqlFragment Visit(DbFilterExpression expression)
         {
             SelectStatement select = VisitInputExpressionEnsureSelect(expression.Input.Expression, 
@@ -73,7 +80,11 @@ namespace MySql.Data.Entity
         {
             // first process the input
             DbGroupExpressionBinding e = expression.Input;
-            SelectStatement select = VisitInputExpressionEnsureSelect(e.Expression, e.VariableName, e.VariableType);
+            SelectStatement innerSelect = VisitInputExpressionEnsureSelect(e.Expression, e.VariableName, e.VariableType);
+            innerSelect = WrapIfNotCompatible(innerSelect, expression.ExpressionKind);
+
+            // for now we are just going to wrap the select
+            SelectStatement select = new SelectStatement();
 
             CollectionType ct = (CollectionType)expression.ResultType.EdmType;
             RowType rt = (RowType)ct.TypeUsage.EdmType;
@@ -91,15 +102,25 @@ namespace MySql.Data.Entity
                 DbFunctionAggregate fa = a as DbFunctionAggregate;
                 if (fa == null) throw new NotSupportedException();
 
-                ColumnFragment col = new ColumnFragment(null, null);
-                col.Literal = HandleFunction(fa);
-                col.ColumnAlias = rt.Properties[propIndex++].Name;
-                select.Columns.Add(col);
+                string alias = rt.Properties[propIndex++].Name;
+                ColumnFragment innerCol = new ColumnFragment(null, null);
+                innerCol.Literal = a.Arguments[0].Accept(this);
+                innerCol.ColumnAlias = alias;
+                innerSelect.Columns.Add(innerCol);
+
+                ColumnFragment outerCol = new ColumnFragment(null, null);
+                outerCol.ColumnAlias = alias;
+                LiteralFragment arg = new LiteralFragment(
+                    String.Format("`{0}`.`{1}`", innerSelect.Name, alias));
+                outerCol.Literal = HandleFunction(fa, arg);
+                select.Columns.Add(outerCol);
             }
+            innerSelect.Wrap(scope);
+            select.From = innerSelect;
             return select;
         }
 
-        private SqlFragment HandleFunction(DbFunctionAggregate fa)
+        private SqlFragment HandleFunction(DbFunctionAggregate fa, SqlFragment arg)
         {
             Debug.Assert(fa.Arguments.Count == 1);
 
@@ -112,25 +133,38 @@ namespace MySql.Data.Entity
                 fragment.Name = "Count";
 
             fragment.Distinct = fa.Distinct;
-            fragment.Argmument = fa.Arguments[0].Accept(this);
+            fragment.Argmument = arg;
             return fragment;
             //return new CastExpression(aggregate, GetDbType(functionAggregate.ResultType.EdmType));
         }
 
+        public override SqlFragment Visit(DbCrossJoinExpression expression)
+        {
+            Debug.Assert(expression.Inputs.Count == 2);
+            return HandleJoinExpression(expression.Inputs[0], expression.Inputs[1],
+                expression.ExpressionKind, null);
+        }
+
         public override SqlFragment Visit(DbJoinExpression expression)
         {
-            JoinFragment join = new JoinFragment();
-            join.JoinType = Metadata.GetOperator(expression.ExpressionKind);
+            return HandleJoinExpression(expression.Left, expression.Right, 
+                expression.ExpressionKind, expression.JoinCondition);
+        }
 
-            join.Left = VisitInputExpression(expression.Left.Expression,
-                expression.Left.VariableName, expression.Left.VariableType);
-            WrapJoinInputIfNecessary(join.Left);
-            join.Right = VisitInputExpression(expression.Right.Expression,
-                expression.Right.VariableName, expression.Right.VariableType);
-            WrapJoinInputIfNecessary(join.Right);
+        private SqlFragment HandleJoinExpression(DbExpressionBinding left, DbExpressionBinding right, 
+            DbExpressionKind joinType, DbExpression joinCondition)
+        {
+            JoinFragment join = new JoinFragment();
+            join.JoinType = Metadata.GetOperator(joinType);
+
+            join.Left = VisitInputExpression(left.Expression, left.VariableName, left.VariableType);
+            WrapJoinInputIfNecessary(join.Left, false);
+            join.Right = VisitInputExpression(right.Expression, right.VariableName, right.VariableType);
+            WrapJoinInputIfNecessary(join.Right, true);
 
             // now handle the ON case
-            join.Condition = expression.JoinCondition.Accept(this);
+            if (joinCondition != null)
+                join.Condition = joinCondition.Accept(this);
             return join;
         }
 
@@ -143,12 +177,13 @@ namespace MySql.Data.Entity
             return newSelect;
         }
 
-        private void WrapJoinInputIfNecessary(InputFragment fragment)
+        private void WrapJoinInputIfNecessary(InputFragment fragment, bool isRightPart)
         {
             if (fragment is SelectStatement ||
-                fragment is UnionFragment ||
-                fragment is JoinFragment)
+                fragment is UnionFragment)
                 fragment.Wrap(scope);
+            else if (fragment is JoinFragment && isRightPart)
+                fragment.Wrap(null);
         }
 
         public override SqlFragment Visit(DbNewInstanceExpression expression)
@@ -221,10 +256,19 @@ namespace MySql.Data.Entity
             return s;
         }
 
+        public override SqlFragment Visit(DbElementExpression expression)
+        {
+            SelectStatement s = VisitInputExpressionEnsureSelect(expression.Argument, null, null);
+            s.Wrap(scope);
+            return s;
+        }
+
         public override SqlFragment Visit(DbSortExpression expression)
         {
             SelectStatement select = VisitInputExpressionEnsureSelect(expression.Input.Expression, 
                 expression.Input.VariableName, expression.Input.VariableType);
+
+            select = WrapIfNotCompatible(select, expression.ExpressionKind);
 
             foreach (DbSortClause sortClause in expression.SortOrder)
             {
@@ -260,11 +304,11 @@ namespace MySql.Data.Entity
 
             SelectStatement left = VisitInputExpressionEnsureSelect(expression.Left, null, null);
             Debug.Assert(left.Name == null);
-            left.Wrap(scope);
+            left.Wrap(null);
 
             SelectStatement right = VisitInputExpressionEnsureSelect(expression.Right, null, null);
             Debug.Assert(right.Name == null);
-            right.Wrap(scope);
+            right.Wrap(null);
 
             f.Left = left;
             f.Right = right;

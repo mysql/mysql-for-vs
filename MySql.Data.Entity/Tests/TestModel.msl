@@ -108,5 +108,53 @@
       </EndProperty>
       <Condition ColumnName ="StoreId" IsNull ="false"/>
     </AssociationSetMapping>
+
+    <EntitySetMapping Name="Books">
+      <EntityTypeMapping TypeName="testModel.Book">
+        <MappingFragment StoreEntitySet="Books" >
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Pages" ColumnName="Pages" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+
+    <EntitySetMapping Name="Authors">
+      <EntityTypeMapping TypeName="testModel.Author">
+        <MappingFragment StoreEntitySet="Authors" >
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Age" ColumnName="Age" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+
+    <EntitySetMapping Name="Publishers">
+      <EntityTypeMapping TypeName="testModel.Publisher">
+        <MappingFragment StoreEntitySet="Publishers">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    
+    <AssociationSetMapping Name="FK_Books_Authors" TypeName="testModel.FK_Books_Authors" StoreEntitySet="Books">
+      <EndProperty Name="Authors">
+        <ScalarProperty Name="Id" ColumnName="Author_id" />
+      </EndProperty>
+      <EndProperty Name="Books">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+
+    <AssociationSetMapping Name="FK_Books_Publishers" TypeName="testModel.FK_Books_Publishers" StoreEntitySet="Books">
+      <EndProperty Name="Publishers">
+        <ScalarProperty Name="id" ColumnName="Publisher_id" />
+      </EndProperty>
+      <EndProperty Name="Books">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>  
+  
   </EntityContainerMapping>
 </Mapping>

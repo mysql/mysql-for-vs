@@ -16,6 +16,17 @@
       <End Role="Store" EntitySet ="Stores"/>
       <End Role="Orders" EntitySet ="Orders"/>
     </AssociationSet>
+    <EntitySet Name="Books" EntityType ="testModel.Book"/>
+    <EntitySet Name="Authors" EntityType ="testModel.Author"/>
+    <EntitySet Name="Publishers" EntityType="testModel.Publisher" />
+    <AssociationSet Name="FK_Books_Authors" Association="testModel.FK_Books_Authors">
+      <End Role="Authors" EntitySet="Authors" />
+      <End Role="Books" EntitySet="Books" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Books_Publishers" Association="testModel.FK_Books_Publishers">
+      <End Role="Publishers" EntitySet="Publishers" />
+      <End Role="Books" EntitySet="Books" />
+    </AssociationSet>
   </EntityContainer>
 
   <EntityType Name="Employee">
@@ -101,5 +112,44 @@
   <Association Name="FK_Orders_Store">
     <End Role="Store" Type="testModel.Store" Multiplicity="1" />
     <End Role="Orders" Type="testModel.Order" Multiplicity="*" />
+  </Association>
+
+  <EntityType Name="Book">
+    <Key>
+      <PropertyRef Name="Id"/>
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable ="false"/>
+    <Property Name="Name" Type="String" Nullable ="false"/>
+    <Property Name="Pages" Type="Int32" Nullable ="false"/>
+    <NavigationProperty Name="Author" Relationship="testModel.FK_Books_Authors" FromRole="Books" ToRole="Authors" />
+    <NavigationProperty Name="Publisher" Relationship="testModel.FK_Books_Publishers" FromRole="Books" ToRole="Publishers" />
+  </EntityType>
+  
+  <EntityType Name="Author">
+    <Key>
+      <PropertyRef Name="Id"/>
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable ="false"/>
+    <Property Name="Name" Type="String" Nullable ="false"/>
+    <Property Name="Age" Type="Int32"/>
+    <NavigationProperty Name="Books" Relationship="testModel.FK_Books_Authors" FromRole="Authors" ToRole="Books" />
+  </EntityType>
+
+  <EntityType Name="Publisher">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" />
+    <Property Name="name" Type="String" Nullable="false" MaxLength="20" Unicode="false" FixedLength="false" />
+    <NavigationProperty Name="Books" Relationship="testModel.FK_Books_Publishers" FromRole="Publishers" ToRole="Books" />
+  </EntityType>  
+  
+  <Association Name="FK_Books_Authors">
+    <End Role="Authors" Type="testModel.Author" Multiplicity="1" />
+    <End Role="Books" Type="testModel.Book" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_Books_Publishers">
+    <End Role="Publishers" Type="testModel.Publisher" Multiplicity="1" />
+    <End Role="Books" Type="testModel.Book" Multiplicity="*" />
   </Association>
 </Schema>
