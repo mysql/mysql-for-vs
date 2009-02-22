@@ -113,6 +113,19 @@
       </DefiningQuery>
     </EntitySet>
 
+    <EntitySet Name="SProcedures" EntityType="Self.Procedure">
+      <DefiningQuery>
+        SELECT /* Procedures */
+        CONCAT('`', ROUTINE_SCHEMA, '`.`', SPECIFIC_NAME, '`') AS `Id`,
+        ROUTINE_CATALOG AS `CatalogName`,
+        ROUTINE_SCHEMA AS `SchemaName`,
+        ROUTINE_NAME AS `Name`
+        FROM INFORMATION_SCHEMA.ROUTINES
+        WHERE ROUTINE_TYPE='PROCEDURE'
+      </DefiningQuery>
+    </EntitySet>
+    
+<!-- 6.0 -->
     <EntitySet Name="SFunctionParameters" EntityType="Self.Parameter">
       <DefiningQuery>
         SELECT /* Function parameters */
@@ -134,18 +147,6 @@
         NULL AS `IsMultiSet`,
         NULL AS `Mode`,
         NULL AS `Default`
-      </DefiningQuery>
-    </EntitySet>
-
-    <EntitySet Name="SProcedures" EntityType="Self.Procedure">
-      <DefiningQuery>
-        SELECT /* Procedures */
-        CONCAT('`', ROUTINE_SCHEMA, '`.`', SPECIFIC_NAME, '`') AS `Id`,
-        ROUTINE_CATALOG AS `CatalogName`,
-        ROUTINE_SCHEMA AS `SchemaName`,
-        ROUTINE_NAME AS `Name`
-        FROM INFORMATION_SCHEMA.ROUTINES
-        WHERE ROUTINE_TYPE='PROCEDURE'
       </DefiningQuery>
     </EntitySet>
 
@@ -172,7 +173,8 @@
         NULL AS `Default`
       </DefiningQuery>
     </EntitySet>
-
+<!-- End 6.0 -->
+    
     <EntitySet Name="SConstraints" EntityType="Self.Constraint">
       <DefiningQuery>
         SELECT  /* Constraints */

@@ -128,9 +128,9 @@ namespace MySql.Data.MySqlClient
             string version = connection.ServerVersion;
             if (shouldClose)
                 connection.Close();
-            return "5";
-            if (version.StartsWith("5")) return "5";
-            return "6";
+            if (version.StartsWith("6")) return "6.0";
+            if (version.StartsWith("5")) return "5.0";
+            throw new NotSupportedException("Versions of MySQL prior to 5.0 are not currently supported");
         }
 
         protected override DbProviderManifest GetDbProviderManifest(string manifestToken)

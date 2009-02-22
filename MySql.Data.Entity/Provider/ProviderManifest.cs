@@ -66,7 +66,12 @@ namespace MySql.Data.MySqlClient
 
         private XmlReader GetStoreSchemaDescription()
         {
-            return GetMappingResource("SchemaDefinition.ssdl");
+            if (manifestToken == "5.0")
+                return GetMappingResource("SchemaDefinition-5.0.ssdl");
+            else if (manifestToken == "6.0")
+                return GetMappingResource("SchemaDefinition-6.0.ssdl");
+            else
+                throw new NotSupportedException("Your version of MySQL is not currently supported");
         }
 
         public override TypeUsage GetEdmType(TypeUsage storeType)

@@ -98,6 +98,8 @@ CREATE TABLE Authors(
 INSERT INTO Authors VALUES (1, 'Tom Clancy', 65);
 INSERT INTO Authors VALUES (2, 'Stephen King', 57);
 INSERT INTO Authors VALUES (3, 'John Grisham', 49);
+INSERT INTO Authors VALUES (4, 'Dean Koontz', 52);
+INSERT INTO Authors VALUES (5, 'Don Box', 44);
 
 CREATE TABLE Publishers(
 	id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,

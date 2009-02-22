@@ -33,8 +33,6 @@ namespace MySql.Data.Entity
     {
         protected string tabs = String.Empty;
         private int parameterCount = 1;
-//        protected Stack<string> inputVars = new Stack<string>();
-  //      protected Dictionary<string, string> varMap = new Dictionary<string, string>();
         protected Scope scope = new Scope();
         protected int propertyLevel;
         public List<ColumnFragment> BoolOverrides = new List<ColumnFragment>();
@@ -50,16 +48,6 @@ namespace MySql.Data.Entity
 //        protected SymbolTable Symbols { get; private set; }
 
         #endregion
-
-        protected void Push()
-        {
-            tabs += "-";
-        }
-
-        protected void Pop()
-        {
-            tabs = tabs.Substring(1);
-        }
 
         public virtual string GenerateSQL(DbCommandTree commandTree)
         {
@@ -235,6 +223,11 @@ namespace MySql.Data.Entity
             return f;
         }
 
+        public override SqlFragment Visit(DbIntersectExpression expression)
+        {
+            throw new NotSupportedException();
+        }
+
         public override SqlFragment Visit(DbNullExpression expression)
         {
             return new LiteralFragment("NULL");
@@ -270,17 +263,66 @@ namespace MySql.Data.Entity
             return VisitBinaryExpression(expression.Arguments[0], expression.Arguments[1], op);
         }
 
+        public override SqlFragment Visit(DbTreatExpression expression)
+        {
+            throw new NotSupportedException();
+        }
+
+        public override SqlFragment Visit(DbRelationshipNavigationExpression expression)
+        {
+            throw new NotSupportedException();
+        }
+
+        public override SqlFragment Visit(DbRefExpression expression)
+        {
+            throw new NotSupportedException();
+        }
+
+        public override SqlFragment Visit(DbOfTypeExpression expression)
+        {
+            throw new NotSupportedException();
+        }
+
+        public override SqlFragment Visit(DbIsOfExpression expression)
+        {
+            throw new NotSupportedException();
+        }
+
+        public override SqlFragment Visit(DbRefKeyExpression expression)
+        {
+            throw new NotSupportedException();
+        }
+
+        public override SqlFragment Visit(DbEntityRefExpression expression)
+        {
+            throw new NotSupportedException();
+        }
+
+        public override SqlFragment Visit(DbExceptExpression expression)
+        {
+            throw new NotSupportedException();
+        }
+
+        public override SqlFragment Visit(DbExpression expression)
+        {
+            throw new InvalidOperationException();
+        }
+
+        public override SqlFragment Visit(DbDerefExpression expression)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override SqlFragment Visit(DbApplyExpression expression)
+        {
+            throw new NotSupportedException();
+        }
 
         #endregion
 
         #region DBExpressionVisitor methods normally overridden
 
         public override SqlFragment Visit(DbUnionAllExpression expression)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override SqlFragment Visit(DbTreatExpression expression)
         {
             throw new NotImplementedException();
         }
@@ -295,27 +337,12 @@ namespace MySql.Data.Entity
             throw new NotImplementedException();
         }
 
-        public override SqlFragment Visit(DbRelationshipNavigationExpression expression)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override SqlFragment Visit(DbRefExpression expression)
-        {
-            throw new NotImplementedException();
-        }
-
         public override SqlFragment Visit(DbQuantifierExpression expression)
         {
             throw new NotImplementedException();
         }
 
         public override SqlFragment Visit(DbProjectExpression expression)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override SqlFragment Visit(DbOfTypeExpression expression)
         {
             throw new NotImplementedException();
         }
@@ -335,37 +362,12 @@ namespace MySql.Data.Entity
             throw new NotImplementedException();
         }
 
-        public override SqlFragment Visit(DbIsOfExpression expression)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override SqlFragment Visit(DbIntersectExpression expression)
-        {
-            throw new NotImplementedException();
-        }
-
         public override SqlFragment Visit(DbGroupByExpression expression)
         {
             throw new NotImplementedException();
         }
 
-        public override SqlFragment Visit(DbRefKeyExpression expression)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override SqlFragment Visit(DbEntityRefExpression expression)
-        {
-            throw new NotImplementedException();
-        }
-
         public override SqlFragment Visit(DbFilterExpression expression)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override SqlFragment Visit(DbExceptExpression expression)
         {
             throw new NotImplementedException();
         }
@@ -380,22 +382,7 @@ namespace MySql.Data.Entity
             throw new NotImplementedException();
         }
 
-        public override SqlFragment Visit(DbDerefExpression expression)
-        {
-            throw new NotImplementedException();
-        }
-
         public override SqlFragment Visit(DbCrossJoinExpression expression)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override SqlFragment Visit(DbApplyExpression expression)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override SqlFragment Visit(DbExpression expression)
         {
             throw new NotImplementedException();
         }
