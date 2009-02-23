@@ -120,12 +120,29 @@
     </EntitySetMapping>
 
     <EntitySetMapping Name="Authors">
-      <EntityTypeMapping TypeName="testModel.Author">
+      <EntityTypeMapping TypeName="IsTypeOf(testModel.Author)">
         <MappingFragment StoreEntitySet="Authors" >
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="Age" ColumnName="Age" />
         </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="testModel.Author">
+        <ModificationFunctionMapping>
+          <InsertFunction FunctionName="testModel.Store.AddAuthor">
+            <ScalarProperty Name="Age" ParameterName="theage" />
+            <ScalarProperty Name="Name" ParameterName="thename" />
+            <ScalarProperty Name="Id" ParameterName="theid" />
+          </InsertFunction>
+          <UpdateFunction FunctionName="testModel.Store.UpdateAuthor" >
+            <ScalarProperty Name="Age" ParameterName="theage" Version="Current" />
+            <ScalarProperty Name="Name" ParameterName="thename" Version="Current" />
+            <ScalarProperty Name="Id" ParameterName="theid" Version="Current" />
+          </UpdateFunction>
+          <DeleteFunction FunctionName="testModel.Store.DeleteAuthor" >
+            <ScalarProperty Name="Id" ParameterName="theid" />
+          </DeleteFunction>
+        </ModificationFunctionMapping>
       </EntityTypeMapping>
     </EntitySetMapping>
 

@@ -36,19 +36,19 @@ namespace MySql.Data.Entity.Tests
        [Test]
        public void UpdateAllRows()
        {
+           MySqlCommand cmd = new MySqlCommand("SELECT COUNT(*) FROM toys", conn);
+           object count = cmd.ExecuteScalar();
+
            using (testEntities context = new testEntities())
            {
-               MySqlCommand cmd = new MySqlCommand("SELECT COUNT(*) FROM toys", conn);
-               object count = cmd.ExecuteScalar();
-
                foreach (Toy t in context.Toys)
                    t.Name = "Top";
                context.SaveChanges();
-
-               cmd.CommandText = "SELECT COUNT(*) FROM Toys WHERE name='Top'";
-               object newCount = cmd.ExecuteScalar();
-               Assert.AreEqual(count, newCount);
            }
+
+           cmd.CommandText = "SELECT COUNT(*) FROM Toys WHERE name='Top'";
+           object newCount = cmd.ExecuteScalar();
+           Assert.AreEqual(count, newCount);
        }
     }
 }

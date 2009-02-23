@@ -8,6 +8,7 @@ DROP TABLE IF EXISTS Books;
 DROP TABLE IF EXISTS Authors;
 DROP TABLE IF EXISTS Publishers;
 
+
 CREATE TABLE Employees(
 	Id INT NOT NULL PRIMARY KEY,
 	LastName NVARCHAR(20) NOT NULL, 
@@ -101,6 +102,7 @@ INSERT INTO Authors VALUES (3, 'John Grisham', 49);
 INSERT INTO Authors VALUES (4, 'Dean Koontz', 52);
 INSERT INTO Authors VALUES (5, 'Don Box', 44);
 
+
 CREATE TABLE Publishers(
 	id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
 	`name` VARCHAR(20) NOT NULL) ENGINE=InnoDB;
@@ -117,6 +119,4 @@ CREATE TABLE Books (
 INSERT INTO Books VALUES (1, 'Debt of Honor', 200, 1, 1);
 INSERT INTO Books VALUES (2, 'Insomnia', 350, 2, 1);
 INSERT INTO Books VALUES (3, 'Rainmaker', 475, 3, 1);
-	
-	
-		
+

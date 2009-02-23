@@ -27,6 +27,7 @@ using System.Data.EntityClient;
 using System.Data.Common;
 using NUnit.Framework;
 using System.Data.Objects;
+using System.Linq;
 
 namespace MySql.Data.Entity.Tests
 {
@@ -39,27 +40,53 @@ namespace MySql.Data.Entity.Tests
         }
 
         [Test]
+        public void Any()
+        {
+            MySqlDataAdapter da = new MySqlDataAdapter(
+                @"SELECT a.id FROM authors a WHERE NOT EXISTS(SELECT * FROM books b WHERE b.author_id=a.id)", conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+
+            int i = 0;
+            // find all authors that are in our db with no books
+            using (testEntities context = new testEntities())
+            {
+                var authors = from a in context.Authors where !a.Books.Any() select a;
+                string sql = authors.ToTraceString();
+                foreach (Author a in authors)
+                    Assert.AreEqual(dt.Rows[i++]["id"], a.Id);
+            }
+        }
+
+        [Test]
         public void FirstSimple()
         {
-/*            using (TestDB.TestDB db = new TestDB.TestDB())
-            {
-                var q = from c in db.Companies where 
-                var query = from o in db.Orders
-                            where o.StoreId = 3
-                            select o;
+            MySqlCommand cmd = new MySqlCommand("SELECT id FROM orders", conn);
+            int id = (int)cmd.ExecuteScalar();
 
-                var result = query.First();
-            }*/
+            using (testEntities context = new testEntities())
+            {
+                var q = from o in context.Orders 
+                            select o;
+                Order order = q.First() as Order;
+                Assert.AreEqual(id, order.Id);
+            }
         }
 
         [Test]
         public void FirstPredicate()
         {
-        }
+            MySqlCommand cmd = new MySqlCommand("SELECT id FROM orders WHERE freight > 100", conn);
+            int id = (int)cmd.ExecuteScalar();
 
-        [Test]
-        public void FirstOrdered()
-        {
+            using (testEntities context = new testEntities())
+            {
+                var q = from o in context.Orders
+                        where o.Freight > 100
+                        select o;
+                Order order = q.First() as Order;
+                Assert.AreEqual(id, order.Id);
+            }
         }
 
         [Test]

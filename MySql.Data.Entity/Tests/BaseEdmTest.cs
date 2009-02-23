@@ -86,6 +86,13 @@ namespace MySql.Data.Entity.Tests
             script.Query = schema;
             script.Execute();
 
+            // now create our procs
+            schema = r.GetString("procs");
+            script = new MySqlScript(conn);
+            script.Delimiter = "$$";
+            script.Query = schema;
+            script.Execute();
+
             // if we have not already done so, we need to save out our
             // schema files and update the storage file to reflect the database
             SaveSchemaFiles();

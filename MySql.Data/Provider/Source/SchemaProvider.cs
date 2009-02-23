@@ -996,5 +996,28 @@ namespace MySql.Data.MySqlClient
             } 
             return null;
         }
+
+        internal string[] CleanRestrictions(string[] restrictionValues)
+        {
+            string[] restrictions = null;
+            if (restrictionValues != null)
+            {
+                restrictions = (string[])restrictionValues.Clone();
+
+                for (int x = 0; x < restrictions.Length; x++)
+                {
+                    string s = restrictions[x];
+                    if (s != null)
+                    {
+                        if (s.StartsWith("`"))
+                            s = s.Substring(1);
+                        if (s.EndsWith("`"))
+                            s = s.Substring(0, s.Length - 1);
+                        restrictions[x] = s;
+                    }
+                }
+            }
+            return restrictions;
+        }
     }
 }

@@ -57,6 +57,8 @@
     <Compile Include="BaseEdmTest.cs" />
     <Compile Include="AggregateOperators.cs" />
     <Compile Include="CanonicalFunctions.cs" />
+    <Compile Include="ProceduresAndFunctions.cs" />
+    <Compile Include="JoinTests.cs" />
     <Compile Include="SchemaInformation.cs" />
     <Compile Include="Wizard.cs" />
     <Compile Include="RelationalOperators.cs" />
@@ -90,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config" />
+    <None Include="Properties\procs.sql" />
     <None Include="Properties\schema.sql" />
     <EmbeddedResource Include="TestModel.csdl">
       <Generator>EntityModelCodeGenerator</Generator>

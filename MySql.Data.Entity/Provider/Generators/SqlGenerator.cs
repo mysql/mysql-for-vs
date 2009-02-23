@@ -140,7 +140,7 @@ namespace MySql.Data.Entity
 
         public override SqlFragment Visit(DbFunctionExpression expression)
         {
-            FunctionGenerator gen = new FunctionGenerator();
+            FunctionProcessor gen = new FunctionProcessor();
             return gen.Generate(expression, this);
         }
 

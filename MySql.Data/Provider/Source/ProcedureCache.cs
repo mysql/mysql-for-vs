@@ -129,8 +129,8 @@ namespace MySql.Data.MySqlClient
             // query of procedures and we don't need that since we already
             // know the procedure we care about.
             ISSchemaProvider isp = new ISSchemaProvider(connection);
-            DataTable parametersTable = isp.GetProcedureParameters(
-                restrictions, procTable);
+            string[] rest = isp.CleanRestrictions(restrictions);
+            DataTable parametersTable = isp.GetProcedureParameters(rest, procTable);
 
             DataSet ds = new DataSet();
             ds.Tables.Add(procTable);

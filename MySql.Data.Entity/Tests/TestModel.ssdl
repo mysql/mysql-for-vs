@@ -180,5 +180,20 @@
         <PropertyRef Name="Publisher_id" />
       </Dependent>
     </ReferentialConstraint>
-  </Association>  
+  </Association>
+
+  <Function Name="AddAuthor" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="test">
+    <Parameter Name="theid" Type="int" Mode="In" />
+    <Parameter Name="thename" Type="varchar" Mode="In" />
+    <Parameter Name="theage" Type="int" Mode="In" />
+  </Function>
+  <Function Name="DeleteAuthor" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="test">
+    <Parameter Name="theid" Type="int" Mode="In" />
+  </Function>
+  <Function Name="UpdateAuthor" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="test">
+    <Parameter Name="theid" Type="int" Mode="In" />
+    <Parameter Name="thename" Type="varchar" Mode="In" />
+    <Parameter Name="theage" Type="int" Mode="In" />
+  </Function>
+
 </Schema>

@@ -110,6 +110,7 @@
         NULL AS `IsNiladic`
         FROM INFORMATION_SCHEMA.ROUTINES
         WHERE ROUTINE_TYPE='FUNCTION'
+        AND ROUTINE_SCHEMA=schema()
       </DefiningQuery>
     </EntitySet>
 
@@ -122,6 +123,7 @@
         ROUTINE_NAME AS `Name`
         FROM INFORMATION_SCHEMA.ROUTINES
         WHERE ROUTINE_TYPE='PROCEDURE'
+        AND ROUTINE_SCHEMA=schema()
       </DefiningQuery>
     </EntitySet>
 
@@ -153,7 +155,7 @@
         f.SPECIFIC_NAME = r.SPECIFIC_NAME AND
         r.ROUTINE_TYPE = 'FUNCTION'
         WHERE
-        f.ORDINAL_POSITION > 0
+        r.ROUTINE_SCHEMA=schema() AND f.ORDINAL_POSITION > 0
       </DefiningQuery>
     </EntitySet>
 
@@ -185,7 +187,7 @@
         f.SPECIFIC_NAME = r.SPECIFIC_NAME AND
         r.ROUTINE_TYPE = 'PROCEDURE'
         WHERE
-        f.ORDINAL_POSITION > 0
+        r.ROUTINE_SCHEMA=schema() AND f.ORDINAL_POSITION > 0
       </DefiningQuery>
     </EntitySet>
 

@@ -110,6 +110,7 @@
         NULL AS `IsNiladic`
         FROM INFORMATION_SCHEMA.ROUTINES
         WHERE ROUTINE_TYPE='FUNCTION'
+        AND ROUTINE_SCHEMA=schema()
       </DefiningQuery>
     </EntitySet>
 
@@ -122,6 +123,7 @@
         ROUTINE_NAME AS `Name`
         FROM INFORMATION_SCHEMA.ROUTINES
         WHERE ROUTINE_TYPE='PROCEDURE'
+        AND ROUTINE_SCHEMA=schema()
       </DefiningQuery>
     </EntitySet>
     

@@ -44,13 +44,15 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\SchemaMapping.msl" />
-    <EmbeddedResource Include="Properties\SchemaDefinition.ssdl" />
     <Compile Include="Fragments\TableFragment.cs" />
     <Compile Include="Fragments\InputFragment.cs" />
     <Compile Include="Fragments\JoinFragment.cs" />
     <Compile Include="Fragments\SqlFragment.cs" />
     <Compile Include="Generators\DeleteGenerator.cs" />
-    <Compile Include="Generators\FunctionGenerator.cs" />
+    <Compile Include="Generators\FunctionGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Generators\FunctionProcessor.cs" />
     <Compile Include="Generators\InsertGenerator.cs" />
     <Compile Include="Generators\Scope.cs" />
     <Compile Include="Generators\SelectGenerator.cs" />
@@ -69,15 +71,17 @@
     <EmbeddedResource Include="Properties\ProviderManifest.xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Properties\Version6SchemaDef.ssdl" />
-    <None Include="Properties\Version4SchemaDef.ssdl" />
-    <None Include="Properties\Version4Mapping.msl" />
+    <EmbeddedResource Include="Properties\SchemaDefinition-5.0.ssdl" />
+    <EmbeddedResource Include="Properties\SchemaDefinition-6.0.ssdl" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\MySql.Data\Provider\MySql.Data.csproj">
       <Project>{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}</Project>
       <Name>MySql.Data</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Generators\FunctionProcessor" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

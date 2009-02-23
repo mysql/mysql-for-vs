@@ -39,32 +39,6 @@ namespace MySql.Data.MySqlClient
             Instance = new MySqlProviderServices();
         }
 
-
-/*        protected override DbCommandDefinition CreateDbCommandDefinition(DbProviderManifest providerManifest, DbCommandTree commandTree)
-        {
-            List<DbParameter> parameters;
-            CommandType commandType;
-
-            string sql = SqlGenerator.GenerateSql(commandTree, out parameters, out commandType);
-            MySqlCommand cmd = new MySqlCommand(sql);
-
-            // Now make sure we populate the command's parameters from the CQT's parameters:
-            foreach (KeyValuePair<string, TypeUsage> queryParameter in commandTree.Parameters)
-            {
-                DbParameter parameter = cmd.CreateParameter();
-                parameter.ParameterName = queryParameter.Key;
-                parameter.Direction = ParameterDirection.Input;
-                cmd.Parameters.Add(parameter);
-            }
-
-            // Now add parameters added as part of SQL gen 
-            if (parameters != null)
-                foreach (DbParameter p in parameters)
-                    cmd.Parameters.Add(p);
-
-            return CreateCommandDefinition(cmd);
-        }*/
-
         protected override DbCommandDefinition CreateDbCommandDefinition(
             DbProviderManifest providerManifest, DbCommandTree commandTree)
         {
@@ -80,10 +54,14 @@ namespace MySql.Data.MySqlClient
                 generator = new UpdateGenerator();
             else if (commandTree is DbDeleteCommandTree)
                 generator = new DeleteGenerator();
+            else if (commandTree is DbFunctionCommandTree)
+                generator = new FunctionGenerator();
 
             string sql = generator.GenerateSQL(commandTree);
 
             MySqlCommand cmd = new MySqlCommand(sql);
+            if (generator is FunctionGenerator)
+                cmd.CommandType = (generator as FunctionGenerator).CommandType;
 
             FieldInfo fi = cmd.GetType().GetField("EFCrap", BindingFlags.NonPublic | BindingFlags.Instance);
             fi.SetValue(cmd, true);
