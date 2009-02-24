@@ -248,7 +248,6 @@ namespace MySql.Data.Entity
 
     internal class LiteralFragment : SqlFragment
     {
-        public bool IsBool;
         public string Literal;
 
         public LiteralFragment(string literal)

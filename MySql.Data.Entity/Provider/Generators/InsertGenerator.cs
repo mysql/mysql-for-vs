@@ -27,8 +27,6 @@ namespace MySql.Data.Entity
 {
     class InsertGenerator : SqlGenerator 
     {
-        private StringBuilder sql;
-
         public override string GenerateSQL(DbCommandTree tree)
         {
             DbInsertCommandTree commandTree = tree as DbInsertCommandTree;

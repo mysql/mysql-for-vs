@@ -81,10 +81,7 @@ namespace MySql.Data.Entity
             // first process the input
             DbGroupExpressionBinding e = expression.Input;
             SelectStatement innerSelect = VisitInputExpressionEnsureSelect(e.Expression, e.VariableName, e.VariableType);
-            innerSelect = WrapIfNotCompatible(innerSelect, expression.ExpressionKind);
-
-            // for now we are just going to wrap the select
-            SelectStatement select = new SelectStatement();
+            SelectStatement select = WrapIfNotCompatible(innerSelect, expression.ExpressionKind);
 
             CollectionType ct = (CollectionType)expression.ResultType.EdmType;
             RowType rt = (RowType)ct.TypeUsage.EdmType;
@@ -103,20 +100,12 @@ namespace MySql.Data.Entity
                 if (fa == null) throw new NotSupportedException();
 
                 string alias = rt.Properties[propIndex++].Name;
-                ColumnFragment innerCol = new ColumnFragment(null, null);
-                innerCol.Literal = a.Arguments[0].Accept(this);
-                innerCol.ColumnAlias = alias;
-                innerSelect.Columns.Add(innerCol);
-
-                ColumnFragment outerCol = new ColumnFragment(null, null);
-                outerCol.ColumnAlias = alias;
-                LiteralFragment arg = new LiteralFragment(
-                    String.Format("`{0}`.`{1}`", innerSelect.Name, alias));
-                outerCol.Literal = HandleFunction(fa, arg);
-                select.Columns.Add(outerCol);
+                ColumnFragment functionCol = new ColumnFragment(null, null);
+                functionCol.Literal = HandleFunction(fa, a.Arguments[0].Accept(this));
+                functionCol.ColumnAlias = alias;
+                select.Columns.Add(functionCol);
             }
-            innerSelect.Wrap(scope);
-            select.From = innerSelect;
+
             return select;
         }
 
