@@ -35,7 +35,8 @@ namespace MySql.Data.Entity
         private int parameterCount = 1;
         protected Scope scope = new Scope();
         protected int propertyLevel;
-        public List<ColumnFragment> BoolOverrides = new List<ColumnFragment>();
+//        public List<ColumnFragment> BoolOverrides = new List<ColumnFragment>();
+        protected Dictionary<EdmMember, SqlFragment> values;
 
         public SqlGenerator()
         {
@@ -263,6 +264,31 @@ namespace MySql.Data.Entity
             return VisitBinaryExpression(expression.Arguments[0], expression.Arguments[1], op);
         }
 
+        protected void VisitNewInstanceExpression(SelectStatement select,
+            DbNewInstanceExpression expression)
+        {
+            Debug.Assert(expression.ResultType.EdmType is RowType);
+
+            RowType row = expression.ResultType.EdmType as RowType;
+
+            for (int i = 0; i < expression.Arguments.Count; i++)
+            {
+                ColumnFragment col = null;
+
+                SqlFragment fragment = expression.Arguments[i].Accept(this);
+                if (fragment is ColumnFragment)
+                    col = fragment as ColumnFragment;
+                else
+                {
+                    col = new ColumnFragment(null, null);
+                    col.Literal = fragment;
+                }
+
+                col.ColumnAlias = row.Properties[i].Name;
+                select.Columns.Add(col);
+            }
+        }
+
         public override SqlFragment Visit(DbTreatExpression expression)
         {
             throw new NotSupportedException();
@@ -410,6 +436,37 @@ namespace MySql.Data.Entity
             }
 
             return inputFragment;
+        }
+
+        protected SelectStatement GenerateReturningSql(DbModificationCommandTree tree, DbExpression returning)
+        {
+            SelectStatement select = new SelectStatement();
+
+            Debug.Assert(returning is DbNewInstanceExpression);
+            VisitNewInstanceExpression(select, returning as DbNewInstanceExpression);
+
+            select.From = (InputFragment)tree.Target.Expression.Accept(this);
+
+            ListFragment where = new ListFragment();
+            where.Append(" row_count() > 0");
+
+            EntitySetBase table = ((DbScanExpression)tree.Target.Expression).Target;
+            bool foundIdentity = false;
+            foreach (EdmMember keyMember in table.ElementType.KeyMembers)
+            {
+                SqlFragment value;
+                if (!values.TryGetValue(keyMember, out value))
+                {
+                    if (foundIdentity)
+                        throw new NotSupportedException();
+                    foundIdentity = true;
+                    value = new LiteralFragment("last_insert_id()");
+                }
+                where.Append(String.Format(" AND `{0}`=", keyMember));
+                where.Append(value);
+            }
+            select.Where = where;
+            return select;
         }
 
         #region Private Methods

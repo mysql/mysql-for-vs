@@ -13,8 +13,7 @@ BEGIN
 	DELETE FROM authors WHERE id=theid;
 END $$
 
-CREATE FUNCTION UpdateAuthor(theid int, thename varchar(20), theage int) RETURNS INT
+CREATE PROCEDURE UpdateAuthor(theid int, thename varchar(20), theage int) 
 BEGIN
 	UPDATE authors SET `name`=thename, age=theage WHERE id=theid;
-	RETURN 0;
 END $$

@@ -191,31 +191,6 @@ namespace MySql.Data.Entity
             return s;
         }
 
-        private void VisitNewInstanceExpression(SelectStatement select, 
-            DbNewInstanceExpression expression)
-        {
-            Debug.Assert(expression.ResultType.EdmType is RowType);
-
-            RowType row = expression.ResultType.EdmType as RowType;
-
-            for (int i = 0; i < expression.Arguments.Count; i++)
-            {
-                ColumnFragment col = null;
-
-                SqlFragment fragment = expression.Arguments[i].Accept(this);
-                if (fragment is ColumnFragment)
-                    col = fragment as ColumnFragment;
-                else
-                {
-                    col = new ColumnFragment(null, null);
-                    col.Literal = fragment;
-                }
-
-                col.ColumnAlias = row.Properties[i].Name;
-                select.Columns.Add(col);
-            }
-        }
-
         public override SqlFragment Visit(DbProjectExpression expression)
         {
             SelectStatement select = VisitInputExpressionEnsureSelect(expression.Input.Expression, 

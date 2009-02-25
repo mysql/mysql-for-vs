@@ -37,6 +37,7 @@ namespace MySql.Data.MySqlClient
         private static Dictionary<string, string> defaultCollations;
         private static Dictionary<string, int> maxLengths;
         private static Dictionary<string, CharacterSet> mapping;
+        private static object lockObject;
 #else
         private static Hashtable mapping;
 #endif
@@ -45,6 +46,7 @@ namespace MySql.Data.MySqlClient
         // the mapping once
         static CharSetMap()
         {
+            lockObject = new Object();
             InitializeMapping();
         }
 
@@ -166,7 +168,7 @@ namespace MySql.Data.MySqlClient
 
         internal static string GetDefaultCollation(string charset, MySqlConnection connection)
         {
-            lock (defaultCollations)
+            lock (lockObject)
             {
                 if (defaultCollations == null)
                     InitCollections(connection);
@@ -178,9 +180,7 @@ namespace MySql.Data.MySqlClient
 
         internal static int GetMaxLength(string charset, MySqlConnection connection)
         {
-            // we lock on defaultCollations here too so GetDefaultCollation
-            // is on the same lock as us.
-            lock (defaultCollations)
+            lock (lockObject)
             {
                 if (maxLengths == null)
                     InitCollections(connection);

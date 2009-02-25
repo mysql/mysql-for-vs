@@ -26,7 +26,7 @@ using System.Data.Common.CommandTrees;
 
 namespace MySql.Data.Entity
 {
-    class FunctionFragment 
+    class FunctionProcessor 
     {
         private static readonly Dictionary<string, string> bitwiseFunctions = 
             new Dictionary<string, string>();
@@ -38,7 +38,7 @@ namespace MySql.Data.Entity
             new Dictionary<string, string>();
         private SqlGenerator callingGenerator;
 
-        static FunctionFragment()
+        static FunctionProcessor()
         {
             bitwiseFunctions.Add("BitwiseAnd", "&");
             bitwiseFunctions.Add("BitwiseNot", "!");

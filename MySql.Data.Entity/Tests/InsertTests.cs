@@ -52,7 +52,7 @@ namespace MySql.Data.Entity.Tests
             using (testEntities context = new testEntities())
             {
                 Company c = new Company();
-                //c.Id = lastId + 1;
+                c.Id = 23;
                 c.Name = "Yoyo";
                 c.NumEmployees = 486;
                 c.DateBegan = dateBegan;
@@ -62,16 +62,7 @@ namespace MySql.Data.Entity.Tests
                 c.Address.ZipCode = "44558";
 
                 context.AddToCompanies(c);
-                try
-                {
-                    int result = context.SaveChanges();
-                }
-                catch (OptimisticConcurrencyException ex)
-                {
-                    context.Refresh(RefreshMode.StoreWins, c);
-                    context.SaveChanges();
-                }
-
+                int result = context.SaveChanges();
 
                 DataTable afterInsert = new DataTable();
                 da.Fill(afterInsert);

@@ -79,16 +79,6 @@ namespace MySql.Data.MySqlClient
             foreach (DbParameter p in generator.Parameters)
                 cmd.Parameters.Add(p);
 
-            if (commandTree is DbInsertCommandTree)
-            {
-                MySqlConnection c = new MySqlConnection("server=localhost;uid=root;database=test");
-                c.Open();
-                cmd.Connection = c;
-                MySqlDataReader reader = cmd.ExecuteReader(CommandBehavior.SequentialAccess);
-                reader.Close();
-                int i = reader.RecordsAffected;
-            }
-
             return CreateCommandDefinition(cmd);
         }
         

@@ -23,6 +23,7 @@ using System.Text;
 using System.Data.Common.CommandTrees;
 using System.Data.Metadata.Edm;
 using MySql.Data.MySqlClient;
+using System.Collections.Generic;
 
 namespace MySql.Data.Entity
 {
@@ -40,10 +41,24 @@ namespace MySql.Data.Entity
             foreach (DbSetClause setClause in commandTree.SetClauses)
             {
                 statement.Properties.Add(setClause.Property.Accept(this));
-                statement.Values.Add(setClause.Value.Accept(this));
+                DbExpression value = setClause.Value;
+                SqlFragment valueFragment = value.Accept(this);
+                statement.Values.Add(valueFragment);
+
+                if (values == null)
+                    values = new Dictionary<EdmMember, SqlFragment>();
+
+                if (value.ExpressionKind != DbExpressionKind.Null)
+                {
+                    EdmMember property = ((DbPropertyExpression)setClause.Property).Property;
+                    values.Add(property, valueFragment);
+                }
             }
 
             statement.Where = commandTree.Predicate.Accept(this);
+
+            if (commandTree.Returning != null)
+                statement.ReturningSelect = GenerateReturningSql(commandTree, commandTree.Returning);
 
             return statement.ToString();
         }

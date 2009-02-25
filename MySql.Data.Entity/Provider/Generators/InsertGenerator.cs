@@ -19,9 +19,13 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System.Text;
+using System.Collections.Generic;
 using System.Data.Common.CommandTrees;
 using System.Data.Metadata.Edm;
 using MySql.Data.MySqlClient;
+using System.Data.Common;
+using System.Diagnostics;
+using System;
 
 namespace MySql.Data.Entity
 {
@@ -40,7 +44,23 @@ namespace MySql.Data.Entity
                 statement.Sets.Add(setClause.Property.Accept(this));
 
             foreach (DbSetClause setClause in commandTree.SetClauses)
-                statement.Values.Add(setClause.Value.Accept(this));
+            {
+                DbExpression value = setClause.Value;
+                SqlFragment valueFragment = value.Accept(this);
+                statement.Values.Add(valueFragment);
+
+                if (values == null)
+                    values = new Dictionary<EdmMember, SqlFragment>();
+
+                if (value.ExpressionKind != DbExpressionKind.Null)
+                {
+                    EdmMember property = ((DbPropertyExpression)setClause.Property).Property;
+                    values.Add(property, valueFragment);
+                }
+            }
+
+            if (commandTree.Returning != null)
+                statement.ReturningSelect = GenerateReturningSql(commandTree, commandTree.Returning);
 
             return statement.ToString();
         }

@@ -34,6 +34,7 @@ namespace MySql.Data.Entity
         public InputFragment Target { get; set; }
         public List<SqlFragment> Sets { get; private set; }
         public List<SqlFragment> Values { get; private set; }
+        public SelectStatement ReturningSelect;
 
         public override void WriteSql(StringBuilder sql)
         {
@@ -49,6 +50,12 @@ namespace MySql.Data.Entity
             sql.Append("(");
             WriteList(Values, sql);
             sql.Append(")");
+
+            if (ReturningSelect != null)
+            {
+                sql.Append(";\r\n");
+                ReturningSelect.WriteSql(sql);
+            }
         }
     }
 }

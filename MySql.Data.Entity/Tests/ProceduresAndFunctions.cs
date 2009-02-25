@@ -37,6 +37,7 @@ namespace MySql.Data.Entity.Tests
         public ProceduresAndFunctions()
             : base()
         {
+            csAdditions += ";logging=true;";
         }
 
         [Test]
@@ -76,7 +77,7 @@ namespace MySql.Data.Entity.Tests
                 var q = from a in context.Authors
                         where a.Name == "Don Box"
                         select a;
-               foreach (Author a in context.Authors)
+               foreach (Author a in q)
                    a.Name = "Dummy";
                context.SaveChanges();
             }
