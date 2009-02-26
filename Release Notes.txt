@@ -1,9 +1,12 @@
-Connector/Net 5.3  Release Notes
+Connector/Net 6.0  Release Notes
 ------------------------------------
 
-Welcome to the release notes for Connector/Net 5.3
+Welcome to the release notes for Connector/Net 6.0
 
-
+This release introduces initial support for entity framework.  This release is alpha quality and we are
+certain that some databases will not reverse engineer to a model correctly.  We are also aware that some
+models may not execute correctly.  Please let us know about any issues you have and we'll address it
+quickly.
 
 We hope you enjoy this release and encourage you to test this release with your applications
 and let us know any problems you find.

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" 
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
      xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
   <Fragment Id='CoreFragment'>
 
@@ -22,28 +22,28 @@
     </DirectoryRef>
 
     <!-- .Net 2.0 Binaries -->
-    <DirectoryRef Id='BinNet20'>
+    <DirectoryRef Id='Assemblies'>
       <Component Id="Net20" Guid="0e8af006-273c-49bb-b7c1-ec1737260a5a">
         <File Id="MySqlData" Name="MySql.Data.dll"
-              Source="..\mysql.data\provider\bin\net-2.0\release\mysql.data.dll" DiskId="1"/>
+              Source="..\mysql.data\provider\bin\release\mysql.data.dll" DiskId="1"/>
         <RegistryKey Id="VSRegistry" Root="HKLM" Action="createAndRemoveOnUninstall"
                      Key="SOFTWARE\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\MySQL Connector Net $(var.Version)">
           <RegistryValue Id="VSRegistryValue" Value="[BinNet20]" Type="string" Action="write"/>
         </RegistryKey>
-        
-        <util:PerformanceCategory Id="PMDataCategoryId" Name=".NET Data Provider for MySQL" 
+
+        <util:PerformanceCategory Id="PMDataCategoryId" Name=".NET Data Provider for MySQL"
                                   MultiInstance="no" Help="This category includes a series of counters for MySQL.">
-            <util:PerformanceCounter Name="HardProcedureQueries" Type="numberOfItems32" Help="The number of times a procedures metadata had to be queried from the server." />
-            <util:PerformanceCounter Name="SoftProcedureQueries" Type="rateOfCountsPerSecond32" Help="The number of times a procedures metadata was retrieved from the client-side cache." /> 
+          <util:PerformanceCounter Name="HardProcedureQueries" Type="numberOfItems32" Help="The number of times a procedures metadata had to be queried from the server." />
+          <util:PerformanceCounter Name="SoftProcedureQueries" Type="rateOfCountsPerSecond32" Help="The number of times a procedures metadata was retrieved from the client-side cache." />
         </util:PerformanceCategory>
 
         <RemoveFile Id="RemoveStateFile" Name="*.InstallState" On="uninstall"/>
-        
-        </Component>
+
+      </Component>
       <Directory Id="MySql.Data.DummyDir" Name="GAC">
         <Component Id="GAC20" Guid="58f70e4a-96f7-4b67-bdab-9b77a60f9c09">
           <File Id="MySql.Data.GAC" Name="MySql.Data.dll"
-                Source="..\mysql.data\provider\bin\net-2.0\release\mysql.data.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
+                Source="..\mysql.data\provider\bin\release\mysql.data.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
         </Component>
       </Directory>
     </DirectoryRef>
@@ -51,7 +51,8 @@
     <!-- Start menu junk -->
     <DirectoryRef Id='ShortCutDir'>
       <Component Id="StartMenuComponent" Guid="31e1c7c6-e06d-4214-82ca-58e67e5232e2">
-        <CreateFolder/>  <!-- Clear ICE18 error -->
+        <CreateFolder/>
+        <!-- Clear ICE18 error -->
         <Shortcut Id="S100" Name="Documentation" Description="Complete documentation for the connector"
 					Target="[DocsDir]/MySql.Data.chm" Directory="ShortCutDir" />
         <Shortcut Id="S101" Name="ChangeLog" Description="Complete changelog for the connector"
@@ -67,6 +68,25 @@
       <ComponentRef Id="Net20"/>
       <ComponentRef Id="GAC20"/>
       <ComponentRef Id="StartMenuComponent"/>
+    </Feature>
+
+    <!-- Entity framework feature -->
+    <DirectoryRef Id='Assemblies'>
+      <Component Id="InstallEF" Guid="AB734C75-F5DC-491e-A2BC-52D5061881B7" DiskId="1">
+        <File Id="MySql.Data.EF" Name="MySql.Data.Entity.dll"
+              Source="..\mysql.data.entity\provider\bin\release\mysql.data.entity.dll" DiskId="1"/>
+      </Component>
+      <Component Id="GACEF" Guid="12218CCC-B085-46af-AA5F-FB9306FE621E" DiskId="1">
+        <File Id="MySql.Data.EF.GAC" Name="MySql.Data.Entity.dll"
+              Source="..\mysql.data.entity\provider\bin\release\mysql.data.entity.dll" DiskId="1"
+              Assembly=".net" KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+
+    <Feature Id="EntityFramework" Level="1" Title="Entity Framework Support"
+             Description="Support for the entity framework">
+      <ComponentRef Id="InstallEF"/>
+      <ComponentRef Id="GACEF"/>
     </Feature>
 
     <InstallExecuteSequence>

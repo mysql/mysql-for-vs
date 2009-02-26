@@ -37,9 +37,7 @@
       <Directory Id='ProgramFilesFolder' Name='PFiles'>
         <Directory Id='CompanyDir' Name='MySQL'>
           <Directory Id='INSTALLDIR' Name='$(var.ProductName)'>
-            <Directory Id='Binaries' Name='Binaries'>
-              <Directory Id='BinNet20' Name='.NET 2.0'/>
-            </Directory>
+            <Directory Id='Assemblies' Name='Assemblies'/>
             <Directory Id='DocsDir' Name='Documentation'/>
             <Directory Id='DriverDir' Name='Driver'/>
             <Directory Id='SampleDir' Name='Samples'/>
@@ -75,6 +73,7 @@
     <FeatureRef Id='Core.Feature'/>
     <FeatureRef Id="WebProviders"/>
     <FeatureRef Id="CompactFramework"/>
+    <FeatureRef Id="EntityFramework"/>
     <Feature Id='VSIntegration' Level='1' Display='10'
              Title='Visual Studio Integration' Description='DDEX and Server Explorer Integration'>
       <FeatureRef Id='VS2005Int'/>

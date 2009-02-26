@@ -1,4 +1,6 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask AssemblyFile="Binary\MyTasks.dll" TaskName="GetVersion"/>
+
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <ProductVersion>3.0</ProductVersion>
@@ -97,12 +99,11 @@
     </WixVariables>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'GPL|x86' ">
-    <DefineConstants>Version=5.2.4;IsGPL=1</DefineConstants>
-    <WixVariables>
-    </WixVariables>
+    <DefineConstants>IsGPL=1</DefineConstants>
+    <WixVariables></WixVariables>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Commercial|x86' ">
-    <DefineConstants>Version=5.2.3;IsGPL=0</DefineConstants>
+    <DefineConstants>IsGPL=0</DefineConstants>
     <WixVariables>
     </WixVariables>
   </PropertyGroup>
@@ -115,6 +116,14 @@
     <Compile Include="visualstudio.wxs" />
     <Compile Include="webproviders.wxs" />
   </ItemGroup>
+  <Target Name="RetrieveIdentities">
+    <GetVersion Assembly="..\MySql.Data\Provider\bin\release\mysql.data.dll" Format="{0}.{1}.{2}">
+      <Output TaskParameter="AsString" PropertyName="CurrentVersion" />
+    </GetVersion>
+    <CreateProperty Value="Version=$(CurrentVersion);$(DefineConstants)">
+      <Output TaskParameter="Value" PropertyName="DefineConstants" />
+    </CreateProperty>
+  </Target>
   <ItemGroup>
     <WixExtension Include="WixUtilExtension">
       <HintPath>$(WixExtDir)\WixUtilExtension.dll</HintPath>
@@ -136,4 +145,8 @@
     <Content Include="VS2008_Registry.wxi" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.0\Wix.targets" />
+  <PropertyGroup>
+    <BuildDependsOn>RetrieveIdentities;$(BuildDependsOn)</BuildDependsOn>
+  </PropertyGroup>
+
 </Project>
