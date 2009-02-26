@@ -135,6 +135,9 @@ namespace MySql.Data.MySqlClient
             DataTable procTable = ds.Tables["procedures"];
             parametersTable = ds.Tables["procedure parameters"];
 
+            if (procTable.Rows.Count == 0)
+                throw new InvalidOperationException(String.Format(Resources.RoutineNotFound, spName));
+
             StringBuilder sqlStr = new StringBuilder();
             StringBuilder setStr = new StringBuilder();
             outSelect = String.Empty;

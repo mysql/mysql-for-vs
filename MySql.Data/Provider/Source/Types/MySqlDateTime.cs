@@ -256,7 +256,7 @@ namespace MySql.Data.Types
 				val = String.Format("{0:0000}-{1:00}-{2:00}",
                     value.Year, value.Month, value.Day);
                 if (type != MySqlDbType.Date)
-                    val = String.Format("{0}  {1:00}:{2:00}:{3:00}", val,
+                    val = String.Format("{0} {1:00}:{2:00}:{3:00}", val,
                         value.Hour, value.Minute, value.Second);
 			}
             packet.WriteStringNoNull("'" + val + "'");

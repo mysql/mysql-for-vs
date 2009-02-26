@@ -1,14 +1,18 @@
-Version 5.3
-- Massive speedups
-- Improved sql tokenizing speed greatly.  Patch submitted by Maxim Mass (bug #36836)
-- Fixed possible overflow bug in MySqlPacket.ReadLong (bug #36997)
-- Added UDF schema collection
-- Fixed lingering problem related to bug #37239.  If two columns had the same name but
-  different case then an exception would be thrown.
-- Developed and integrated a new sql tokenizer.  This tokenizer now recognizes all comment 
-  types and is approx. 40% faster.
-- fixed membership provider so that calling GetPassword with an incorrect password will
-  throw the appropriate exception (bug #38939)
+Version 6.0- Massive speedups- Improved sql tokenizing speed greatly.  Patch submitted by Maxim Mass (bug #36836)- Fixed possible overflow bug in MySqlPacket.ReadLong (bug #36997)- Added UDF schema collection- Fixed lingering problem related to bug #37239.  If two columns had the same name but  different case then an exception would be thrown.- Developed and integrated a new sql tokenizer.  This tokenizer now recognizes all comment   types and is approx. 40% faster.- fixed membership provider so that calling GetPassword with an incorrect password will  throw the appropriate exception (bug #38939)Version 5.2.6
+- cleaned up how stored procedure execution operated when the user does or does not have execute privs
+  on the routine (bug #40139)
+- fixed problem with datetime formatting that causes an extra space to be included between the
+  date and time when sent to the server (bug #41021)
+- fixed sproc parameter parsing so that a space between the type and size spec would not cause a problem
+  (bug #41034)
+- removed code from profile provider that overrode Name and Description properties in error.  This had the
+  effect of not allowing you to override those values in the web.config (ug #40871)    
+- fixed "metadatacollections" collection to include foreign key columns
+      
+Version 5.2.5 - 11/14/2008
+- fixed problem with package registration that kept the DDEX provider from working (bug #40726)
+
+Version 5.2.4 - 11/11/2008  (Happy Birthday to me!)
 - fixed web providers autogenerateschema option where it would fail if no schema is
   present at all (bug #39072)
 - fixed problem with installer where it would fail silently if the visual studio paths

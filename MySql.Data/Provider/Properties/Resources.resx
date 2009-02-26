@@ -339,13 +339,7 @@
   <data name="FatalErrorReadingResult" xml:space="preserve">
     <value>Fatal error encountered attempting to read the resultset.</value>
   </data>
-  <data name="ParameterNotFoundDuringPrepare" xml:space="preserve">
+  <data name="RoutineNotFound" xml:space="preserve">    <value>Routine '{0}' cannot be found. Either check the spelling or make sure you have sufficient rights to execute the routine.</value>  </data>  <data name="ParameterNotFoundDuringPrepare" xml:space="preserve">
     <value>Parameter '{0}' was not found during prepare.</value>
   </data>
-  <data name="UnableToEnumerateUDF" xml:space="preserve">
-    <value>An error occured attempting to enumerate the user-defined functions.  Do you have SELECT privileges on the mysql.func table?</value>
-  </data>
-  <data name="DataNotInSupportedFormat" xml:space="preserve">
-    <value>The given value was not in a supported format.</value>
-  </data>
-</root>
+  <data name="UnableToEnumerateUDF" xml:space="preserve">    <value>An error occured attempting to enumerate the user-defined functions.  Do you have SELECT privileges on the mysql.func table?</value>  </data>  <data name="DataNotInSupportedFormat" xml:space="preserve">    <value>The given value was not in a supported format.</value>  </data></root>
