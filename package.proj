@@ -1,0 +1,95 @@
+<Project DefaultTargets="Package" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask AssemblyFile="Installer\Binary\MyTasks.dll" TaskName="GetVersion"/>
+
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">GPL</Configuration>
+    <ProductVersion>3.0</ProductVersion>
+    <ProjectGuid>{910C89AD-F695-42c1-B9E5-EF01F80A14BC}</ProjectGuid>
+    <SchemaVersion>2.0</SchemaVersion>
+    <Postfix></Postfix>
+    <ProductConfig>Release</ProductConfig>
+    <OutputName>MySql.Data</OutputName>
+    <OutputType>Package</OutputType>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition=" '$(Configuration)' == 'Commercial' ">
+    <Postfix>-com</Postfix>
+  </PropertyGroup>
+
+  <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
+
+  <Target Name="Package" DependsOnTargets="PackageClean;PackageInstall;PackageZip;PackageSource">
+  </Target>
+
+  <Target Name="PackageClean">
+    <RemoveDir Directories ="bin/$(Configuration)" ContinueOnError ="true"/>
+    <MakeDir Directories ="bin/$(Configuration)" ContinueOnError ="true"/>
+  </Target>
+  
+  <Target Name="PackageInstall">
+    <GetVersion Assembly="MySql.Data/Provider/bin/release/mysql.data.dll" Format="{0}.{1}.{2}">
+      <Output TaskParameter = "AsString" PropertyName="Version"/>
+    </GetVersion>
+    <Zip Flatten ="true"
+         ZipFileName="bin/$(Configuration)/mysql-connector-net-$(Version)$(Postfix).zip"
+         Files="Installer/bin/$(Configuration)/mysql.data.msi"/>
+  </Target>
+
+  <ItemGroup>
+    <SourceFiles Include="**/**"
+          Exclude="**/tmp/**;**/bin/**;**/obj/**;**/packages/**;**/.svn/**;**/output/**;
+          **/user;**/debug/**;**/release/**;**/*.suo;**/cnet.snk;**/*.wixobj;
+          **/*.msi;**/*.msm;*.Design.*;*-banner.txt;Design/**;**/doc.xml;
+          **/installer/**;**/documentation/**;**/PackageLoadKey.txt;**/*.cache;
+          **/*.proj;**/COPYING;**/EXCEPTIONS"/>
+    <SourceFiles Include="COPYING" Condition=" '$(Configuration)' == 'GPL' "/>
+    <SourceFiles Include="EXCEPTIONS" Condition=" '$(Configuration)' == 'GPL' "/>
+  </ItemGroup>
+  
+  <Target Name="PackageSource">
+    <!--    <RemoveDir Directories="tmp" ContinueOnError="true"/>
+    <MakeDir Directories ="tmp"/>
+    <Copy SourceFiles ="@(SourceFiles)" DestinationFolder="tmp/%(RecursiveDir)"/>
+
+    <ItemGroup>
+      <TmpFiles Include="tmp/**"/>
+    </ItemGroup>-->
+    <Zip ZipFileName="bin/$(Configuration)/mysql-connector-net-$(Version)$(Postfix)-src.zip"
+         Files="@(SourceFiles)"/>
+<!--    <Zip ZipFileName="bin/$(Configuration)/mysql-connector-net-$(Version)$(Postfix)-src.zip"
+         Files="@(SourceFiles)" WorkingDirectory="tmp"/>-->
+    <!--    <RemoveDir Directories="tmp"/>-->
+    <!-- if we are not doing GPL, then we need to replace license text -->
+<!--    <if test="true" unless="${IsGPL}">
+      <replacetext>
+        <section fromfile="gpl-banner.txt" tofile="commercial-banner.txt"/>
+        <files basedir="tmp">
+          <include name="./**/*.cs"/>
+        </files>
+      </replacetext>
+    </if>-->
+
+    </Target>
+
+  <ItemGroup>
+    <BinaryFiles Include="MySql.Data\Provider\bin\release\mysql.data.dll"/>
+    <BinaryFiles Include="MySql.Data\Provider\bin\release\mysql.data.cf.dll"/>
+    <BinaryFiles Include="MySql.Web\Providers\bin\release\mysql.web.dll"/>
+    <BinaryFiles Include="MySql.Data.Entity\Provider\bin\release\mysql.data.entity.dll"/>
+    <BinaryFiles Include="MySql.VisualStudio\bin\release\mysql.visualstudio.dll"/>
+    <BinaryFiles Include="Documentation\Output\MySql.Data.chm"/>
+    <BinaryFiles Include="Documentation\Output\MySql.Data.chm"/>
+    <BinaryFiles Include="Documentation\Output\MySql.Data.chm"/>
+    <BinaryFiles Include="COPYING" Condition=" '$(Configuration)' == 'GPL' "/>
+    <BinaryFiles Include="EXCEPTIONS" Condition=" '$(Configuration)' == 'GPL' "/>
+    <BinaryFiles Include="License.txt" Condition=" '$(Configuration)' == 'Commercial' "/>
+    <BinaryFiles Include="README"/>
+    <BinaryFiles Include="Release Notes.txt"/>
+    <BinaryFiles Include="CHANGES"/>
+  </ItemGroup>
+  
+  <Target Name="PackageZip">
+    <Zip ZipFileName="bin/$(Configuration)/mysql-connector-net-$(Version)$(Postfix)-noinstall.zip"
+         Files="@(BinaryFiles)"/>
+  </Target>
+</Project>
