@@ -610,6 +610,15 @@ namespace MySql.Data.MySqlClient.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Routine &apos;{0}&apos; cannot be found. Either check the spelling or make sure you have sufficient rights to execute the routine..
+        /// </summary>
+        public static string RoutineNotFound {
+            get {
+                return ResourceManager.GetString("RoutineNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Socket streams do not support seeking.
         /// </summary>
         public static string SocketNoSeek {

@@ -247,12 +247,7 @@ namespace MySql.Data.MySqlClient
 			ER_INVALID_USE_OF_NULL 1138
 			ER_REGEXP_ERROR 1139
 			ER_MIX_OF_GROUP_FUNC_AND_FIELDS 1140
-			ER_NONEXISTING_GRANT 1141*/
-        TableAccessDenied = 1142,
-        ColumnAccessDenied = 1143,
-        IllegalGrantForTable = 1144,
-/*			ER_GRANT_WRONG_HOST_OR_USER 1145 */
-        NoSuchTable = 1146,
+			ER_NONEXISTING_GRANT 1141*/        TableAccessDenied = 1142,        ColumnAccessDenied = 1143,        IllegalGrantForTable = 1144,/*			ER_GRANT_WRONG_HOST_OR_USER 1145 */        NoSuchTable = 1146,
         NonExistingTableGrant = 1147,
 
 /*			ER_NOT_ALLOWED_COMMAND 1148
