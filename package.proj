@@ -78,8 +78,6 @@
     <BinaryFiles Include="MySql.Data.Entity\Provider\bin\release\mysql.data.entity.dll"/>
     <BinaryFiles Include="MySql.VisualStudio\bin\release\mysql.visualstudio.dll"/>
     <BinaryFiles Include="Documentation\Output\MySql.Data.chm"/>
-    <BinaryFiles Include="Documentation\Output\MySql.Data.chm"/>
-    <BinaryFiles Include="Documentation\Output\MySql.Data.chm"/>
     <BinaryFiles Include="COPYING" Condition=" '$(Configuration)' == 'GPL' "/>
     <BinaryFiles Include="EXCEPTIONS" Condition=" '$(Configuration)' == 'GPL' "/>
     <BinaryFiles Include="License.txt" Condition=" '$(Configuration)' == 'Commercial' "/>
@@ -89,7 +87,8 @@
   </ItemGroup>
   
   <Target Name="PackageZip">
-    <Zip ZipFileName="bin/$(Configuration)/mysql-connector-net-$(Version)$(Postfix)-noinstall.zip"
+    <Zip Flatten="true" 
+         ZipFileName="bin/$(Configuration)/mysql-connector-net-$(Version)$(Postfix)-noinstall.zip"
          Files="@(BinaryFiles)"/>
   </Target>
 </Project>
