@@ -11,7 +11,7 @@
     <RegistryValue Value="MySQL Connector Net $(var.Version)" Type="string"/>
     <RegistryValue Name="InprocServer32" Value="[SystemFolder]mscoree.dll" Type="string" />
     <RegistryValue Name="Class" Value="MySql.Data.VisualStudio.MySqlDataProviderPackage" Type="string" />
-    <RegistryValue Name="Assembly" Value="MySql.VisualStudio, Version=$(var.Version), Culture=neutral, PublicKeyToken=null" Type="string" />
+    <RegistryValue Name="CodeBase" Value="[#MySQL.VisualStudio]" Type="string"/>
     <RegistryValue Name="ID" Value="100" Type="integer" />
     <RegistryValue Name="MinEdition" Value="Standard" Type="string" />
     <RegistryValue Name="ProductVersion" Value="1.1" Type="string" />

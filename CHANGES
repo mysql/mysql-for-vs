@@ -1,4 +1,14 @@
-Version 6.0- Massive speedups- Improved sql tokenizing speed greatly.  Patch submitted by Maxim Mass (bug #36836)- Fixed possible overflow bug in MySqlPacket.ReadLong (bug #36997)- Added UDF schema collection- Fixed lingering problem related to bug #37239.  If two columns had the same name but  different case then an exception would be thrown.- Developed and integrated a new sql tokenizer.  This tokenizer now recognizes all comment   types and is approx. 40% faster.- fixed membership provider so that calling GetPassword with an incorrect password will  throw the appropriate exception (bug #38939)Version 5.2.6
+Version 6.0
+- Massive speedups
+- Improved sql tokenizing speed greatly.  Patch submitted by Maxim Mass (bug #36836)
+- Fixed possible overflow bug in MySqlPacket.ReadLong (bug #36997)
+- Added UDF schema collection
+- Fixed lingering problem related to bug #37239.  If two columns had the same name but  different case then an exception would be thrown.
+- Developed and integrated a new sql tokenizer.  This tokenizer now recognizes all comment types and is approx. 40% faster.
+- fixed membership provider so that calling GetPassword with an incorrect password will throw the appropriate exception (bug #38939)
+- Implemented initial entity framework support
+
+Version 5.2.6
 - cleaned up how stored procedure execution operated when the user does or does not have execute privs
   on the routine (bug #40139)
 - fixed problem with datetime formatting that causes an extra space to be included between the
@@ -18,14 +28,6 @@ Version 5.2.4 - 11/11/2008  (Happy Birthday to me!)
 - fixed problem with installer where it would fail silently if the visual studio paths
   do not exist or match what is in the registry. (bug #39019)
 - Better support for the Guid data type.
-
-
-
-
-
-
-
-
 - backported fix for lingering problem related to bug #37239.  If two columns had the same name but
   different case then an exception would be thrown.  
 - fixed stored procedure parameter parsing when used inside server explorer.  (bug #39252)
