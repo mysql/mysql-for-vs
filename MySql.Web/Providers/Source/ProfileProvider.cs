@@ -635,8 +635,9 @@ namespace MySql.Web.Profile
                 c.Open();
 
                 MySqlCommand cmd = new MySqlCommand(
-                @"SELECT p.*, LENGTH(p.stringdata) + LENGTH(p.binarydata) AS profilesize, 
-                u.name FROM my_aspnet_Profiles p 
+                @"SELECT p.*, u.name, u.isAnonymous, u.lastActivityDate,
+                LENGTH(p.stringdata) + LENGTH(p.binarydata) AS profilesize
+                FROM my_aspnet_Profiles p 
                 JOIN my_aspnet_Users u ON u.id = p.userId 
                 WHERE u.applicationId = @appId", c);
                 cmd.Parameters.AddWithValue("@appId", applicationId);
@@ -667,13 +668,13 @@ namespace MySql.Web.Profile
                             reader.GetString("name"),
                             reader.GetBoolean("isAnonymous"),
                             reader.GetDateTime("lastActivityDate"),
-                            reader.GetDateTime("lastUpdatdDate"),
+                            reader.GetDateTime("lastUpdatedDate"),
                             reader.GetInt32("profilesize"));
                         pic.Add(pi);
                     }
                 }
                 cmd.CommandText = "SELECT FOUND_ROWS()";
-                totalRecords = (int)cmd.ExecuteScalar();
+                totalRecords = Convert.ToInt32(cmd.ExecuteScalar());
                 return pic;
             }
         }

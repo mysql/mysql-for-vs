@@ -250,5 +250,32 @@ namespace MySql.Web.Tests
             SettingsPropertyValue getValue1 = getValues["Name"];
             Assert.AreEqual("Fred Flintstone", getValue1.PropertyValue);
         }
+
+        /// <summary>
+        /// Bug #41654	FindProfilesByUserName error into Connector .NET
+        /// </summary>
+        [Test]
+        public void GetAllProfiles()
+        {
+            ProfileBase profile = ProfileBase.Create("foo", true);
+            ResetAppId(profile.Providers["MySqlProfileProvider"] as MySQLProfileProvider);
+            profile["Name"] = "Fred Flintstone";
+            profile.Save();
+
+            SettingsPropertyCollection getProps = new SettingsPropertyCollection();
+            SettingsProperty getProp1 = new SettingsProperty("Name");
+            getProp1.PropertyType = typeof(String);
+            getProps.Add(getProp1);
+
+            MySQLProfileProvider provider = InitProfileProvider();
+            SettingsContext ctx = new SettingsContext();
+            ctx.Add("IsAuthenticated", true);
+            ctx.Add("UserName", "foo");
+
+            int total;
+            ProfileInfoCollection profiles = provider.GetAllProfiles(
+                ProfileAuthenticationOption.All, 0, 10, out total);
+            Assert.AreEqual(1, total);
+        }
     }
 }
