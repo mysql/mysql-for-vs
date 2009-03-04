@@ -157,5 +157,44 @@ namespace MySql.Web.Tests
             Roles.AddUserToRole("eve", "Administrator");
             Assert.IsTrue(Roles.IsUserInRole("eve", "Administrator"));
         }
+
+        [Test]
+        public void IsUserInRoleCrossDomain()
+        {
+            MySQLMembershipProvider provider = new MySQLMembershipProvider();
+            NameValueCollection config1 = new NameValueCollection();
+            config1.Add("connectionStringName", "LocalMySqlServer");
+            config1.Add("applicationName", "/");
+            config1.Add("passwordStrengthRegularExpression", "bar.*");
+            config1.Add("passwordFormat", "Clear");
+            provider.Initialize(null, config1);
+            MembershipCreateStatus status;
+            provider.CreateUser("foo", "bar!bar", null, null, null, true, null, out status);
+
+            MySQLMembershipProvider provider2 = new MySQLMembershipProvider();
+            NameValueCollection config2 = new NameValueCollection();
+            config2.Add("connectionStringName", "LocalMySqlServer");
+            config2.Add("applicationName", "/myapp");
+            config2.Add("passwordStrengthRegularExpression", ".*");
+            config2.Add("passwordFormat", "Clear");
+            provider2.Initialize(null, config2);
+
+            roleProvider = new MySQLRoleProvider();
+            NameValueCollection config = new NameValueCollection();
+            config.Add("connectionStringName", "LocalMySqlServer");
+            config.Add("applicationName", "/");
+            roleProvider.Initialize(null, config);
+
+            MySQLRoleProvider r2 = new MySQLRoleProvider();
+            NameValueCollection configr2 = new NameValueCollection();
+            configr2.Add("connectionStringName", "LocalMySqlServer");
+            configr2.Add("applicationName", "/myapp");
+            r2.Initialize(null, configr2);
+
+            roleProvider.CreateRole("Administrator");
+            roleProvider.AddUsersToRoles(new string[] { "foo" },
+                new string[] { "Administrator" });
+            Assert.IsFalse(r2.IsUserInRole("foo", "Administrator"));
+        }
     }
 }

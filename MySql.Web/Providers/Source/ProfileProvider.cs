@@ -39,6 +39,7 @@ using System.Transactions;
 using System.Web.Security;
 using MySql.Web.Common;
 using MySql.Web.Properties;
+using MySql.Web.General;
 
 namespace MySql.Web.Profile
 {
@@ -47,9 +48,8 @@ namespace MySql.Web.Profile
     /// </summary>
     public class MySQLProfileProvider : ProfileProvider
     {
-        private string applicationName;
         private string connectionString;
-        private int applicationId;
+        private Application app;
 
         #region Abstract Members
 
@@ -63,7 +63,6 @@ namespace MySql.Web.Profile
         /// <exception cref="T:System.InvalidOperationException">An attempt is made to call <see cref="M:System.Configuration.Provider.ProviderBase.Initialize(System.String,System.Collections.Specialized.NameValueCollection)"/> on a provider after the provider has already been initialized.</exception>
         public override void Initialize(string name, NameValueCollection config)
         {
-            applicationId = -1;
             if (config == null)
                 throw new ArgumentNullException("config");
 
@@ -79,30 +78,20 @@ namespace MySql.Web.Profile
 
             try
             {
-                applicationName = GetConfigValue(config["applicationName"], HostingEnvironment.ApplicationVirtualPath);
+                string applicationName = GetConfigValue(config["applicationName"], HostingEnvironment.ApplicationVirtualPath);
 
+                connectionString = "";
                 ConnectionStringSettings ConnectionStringSettings = ConfigurationManager.ConnectionStrings[
                     config["connectionStringName"]];
                 if (ConnectionStringSettings != null)
                     connectionString = ConnectionStringSettings.ConnectionString.Trim();
-                else
-                    connectionString = "";
 
                 if (String.IsNullOrEmpty(connectionString)) return;
 
                 // make sure our schema is up to date
                 SchemaManager.CheckSchema(connectionString, config);
 
-                // now pre-cache the applicationId
-                using (MySqlConnection conn = new MySqlConnection(connectionString))
-                {
-                    conn.Open();
-                    MySqlCommand cmd = new MySqlCommand("SELECT id FROM my_aspnet_Applications WHERE name=@name", conn);
-                    cmd.Parameters.AddWithValue("@name", applicationName);
-                    object appIdValue = cmd.ExecuteScalar();
-                    if (appIdValue != null)
-                        applicationId = Convert.ToInt32(appIdValue);
-                }
+                app = new Application(applicationName, base.Description);
             }
             catch (Exception ex)
             {
@@ -140,7 +129,7 @@ namespace MySql.Web.Profile
                     WHERE applicationId=@appId AND 
                     lastActivityDate < @lastActivityDate",
                     c);
-                queryCmd.Parameters.AddWithValue("@appId", applicationId);
+                queryCmd.Parameters.AddWithValue("@appId", app.FetchId(c));
                 queryCmd.Parameters.AddWithValue("@lastActivityDate", userInactiveSinceDate);
                 if (authenticationOption == ProfileAuthenticationOption.Anonymous)
                     queryCmd.CommandText += " AND isAnonymous = 1";
@@ -186,7 +175,7 @@ namespace MySql.Web.Profile
                 MySqlCommand queryCmd = new MySqlCommand(
                     @"SELECT * FROM my_aspnet_Users  
                     WHERE applicationId=@appId AND name = @name", c);
-                queryCmd.Parameters.AddWithValue("@appId", applicationId);
+                queryCmd.Parameters.AddWithValue("@appId", app.FetchId(c));
                 queryCmd.Parameters.Add("@name", MySqlDbType.VarChar);
 
                 MySqlCommand deleteCmd = new MySqlCommand(
@@ -371,7 +360,7 @@ namespace MySql.Web.Profile
                     WHERE applicationId = @appId AND 
                     lastActivityDate < @lastActivityDate",
                     c);
-                queryCmd.Parameters.AddWithValue("@appId", applicationId);
+                queryCmd.Parameters.AddWithValue("@appId", app.FetchId(c));
                 queryCmd.Parameters.AddWithValue("@lastActivityDate", userInactiveSinceDate);
                 if (authenticationOption == ProfileAuthenticationOption.Anonymous)
                     queryCmd.CommandText += " AND isAnonymous = 1";
@@ -388,8 +377,8 @@ namespace MySql.Web.Profile
         /// <returns>A <see cref="T:System.String"/> that contains the application's shortened name, which does not contain a full path or extension, for example, SimpleAppSettings.</returns>
         public override string ApplicationName
         {
-            get { return applicationName; }
-            set { applicationName = value; }
+            get { return app.Name; }
+            set { app.Name = value; }
         }
 
         /// <summary>
@@ -425,19 +414,24 @@ namespace MySql.Web.Profile
             // retrieve encoded profile data from the database
             try
             {
-                MySqlConnection c = new MySqlConnection(connectionString);
-                MySqlCommand cmd = new MySqlCommand(@"SELECT * FROM my_aspnet_Profiles p
-                JOIN my_aspnet_Users u ON u.id = p.userId
-                WHERE u.applicationId = @appId AND u.name = @name", c);
-                cmd.Parameters.AddWithValue("@appId", applicationId);
-                cmd.Parameters.AddWithValue("@name", username);
-                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
 
-                if (dt.Rows.Count > 0)
-                    DecodeProfileData(dt.Rows[0], values);
-                return values;
+                using (MySqlConnection c = new MySqlConnection(connectionString))
+                {
+                    c.Open();
+                    MySqlCommand cmd = new MySqlCommand(
+                        @"SELECT * FROM my_aspnet_Profiles p
+                    JOIN my_aspnet_Users u ON u.id = p.userId
+                    WHERE u.applicationId = @appId AND u.name = @name", c);
+                    cmd.Parameters.AddWithValue("@appId", app.FetchId(c));
+                    cmd.Parameters.AddWithValue("@name", username);
+                    MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+
+                    if (dt.Rows.Count > 0)
+                        DecodeProfileData(dt.Rows[0], values);
+                    return values;
+                }
             }
             catch (Exception ex)
             {
@@ -474,13 +468,9 @@ namespace MySql.Web.Profile
                     {
                         connection.Open();
 
-                        // create or fetch a new application id
-                        SchemaManager.CreateOrFetchApplicationId(applicationName,
-                            ref applicationId, base.Description, connection);
-
                         // either create a new user or fetch the existing user id
                         int userId = SchemaManager.CreateOrFetchUserId(connection, username, 
-                            applicationId, isAuthenticated);
+                            app.EnsureId(connection), isAuthenticated);
 
                         MySqlDataAdapter da = new MySqlDataAdapter(
                             "SELECT * FROM my_aspnet_Profiles WHERE userId=@id", connection);
@@ -640,7 +630,7 @@ namespace MySql.Web.Profile
                 FROM my_aspnet_Profiles p 
                 JOIN my_aspnet_Users u ON u.id = p.userId 
                 WHERE u.applicationId = @appId", c);
-                cmd.Parameters.AddWithValue("@appId", applicationId);
+                cmd.Parameters.AddWithValue("@appId", app.FetchId(c));
 
                 if (usernameToMatch != null)
                 {

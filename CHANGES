@@ -8,6 +8,12 @@ Version 5.2.6
 - removed code from profile provider that overrode Name and Description properties in error.  This had the
   effect of not allowing you to override those values in the web.config (ug #40871)    
 - fixed "metadatacollections" collection to include foreign key columns
+- fixed GetAllProfiles (which is used by several methods).  It had a typo in the SQL and was not
+  including several important columns (bug #41654)      
+- fixed problem where the core method GetUser was not properly checking the application id
+  when retrieving user id values.  This would mean that in some cases methods like
+  ValidateUser would return success when they shouldn't.  (bug #42574)  This triggered several
+  other cleanups in all the providers   
       
 Version 5.2.5 - 11/14/2008
 - fixed problem with package registration that kept the DDEX provider from working (bug #40726)

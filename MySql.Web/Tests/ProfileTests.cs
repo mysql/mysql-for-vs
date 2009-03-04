@@ -222,9 +222,12 @@ namespace MySql.Web.Tests
         private void ResetAppId(MySQLProfileProvider p)
         {
             Type t = p.GetType();
-            FieldInfo fi = t.GetField("applicationId",
+            FieldInfo fi = t.GetField("app",
                 BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.GetField);
-            fi.SetValue(p, -1);
+            object appObject = fi.GetValue(p);
+            Type appType = appObject.GetType();
+            PropertyInfo pi = appType.GetProperty("Id");
+            pi.SetValue(appObject, -1, null);
         }
 
         [Test]

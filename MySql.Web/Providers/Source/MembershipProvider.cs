@@ -39,6 +39,7 @@ using MySql.Web.Profile;
 using MySql.Web.Common;
 using System.Transactions;
 using System.Text.RegularExpressions;
+using MySql.Web.General;
 
 namespace MySql.Web.Security
 {
@@ -63,7 +64,6 @@ namespace MySql.Web.Security
         private string connectionString;
         private int minRequiredPasswordLength;
         private bool writeExceptionsToEventLog;
-        private string applicationName;
         private bool enablePasswordReset;
         private bool enablePasswordRetrieval;
         private bool requiresQuestionAndAnswer;
@@ -73,7 +73,7 @@ namespace MySql.Web.Security
         private MembershipPasswordFormat passwordFormat;
         private int minRequiredNonAlphanumericCharacters;
         private string passwordStrengthRegularExpression;
-        private int applicationId;
+        private Application app;
 
         /// <summary>
         /// Initializes the MySQL membership provider with the property values specified in the 
@@ -103,7 +103,7 @@ namespace MySql.Web.Security
             }
             base.Initialize(name, config);
 
-            applicationName = GetConfigValue(config["applicationName"], 
+            string applicationName = GetConfigValue(config["applicationName"], 
                 HostingEnvironment.ApplicationVirtualPath);
             maxInvalidPasswordAttempts = Convert.ToInt32(GetConfigValue(config["maxInvalidPasswordAttempts"], "5"));
             passwordAttemptWindow = Convert.ToInt32(GetConfigValue(config["passwordAttemptWindow"], "10"));
@@ -156,23 +156,7 @@ namespace MySql.Web.Security
             // make sure we have the correct schema
             SchemaManager.CheckSchema(connectionString, config);
 
-            try
-            {
-                // now pre-cache the applicationId
-                using (MySqlConnection conn = new MySqlConnection(connectionString))
-                {
-                    conn.Open();
-                    MySqlCommand cmd = new MySqlCommand("SELECT id FROM my_aspnet_Applications WHERE name=@name", conn);
-                    cmd.Parameters.AddWithValue("@name", applicationName);
-                    object appId = cmd.ExecuteScalar();
-                    if (appId != null)
-                        applicationId = Convert.ToInt32(appId);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new ProviderException(Resources.ErrorInitOfMembershipProvider, ex);
-            }
+            app = new Application(applicationName, base.Description);
         }
 
         private static string GetConfigValue(string configValue, string defaultValue)
@@ -206,8 +190,8 @@ namespace MySql.Web.Security
         /// </example>
         public override string ApplicationName
         {
-            get { return applicationName; }
-            set { applicationName = value; }
+            get { return app.Name; }
+            set { app.Name = value; }
         }
 
         /// <summary>
@@ -550,12 +534,9 @@ namespace MySql.Web.Security
                     connection.Open();
                     transaction = connection.BeginTransaction();
 
-                    // create or fetch a new application id
-                    SchemaManager.CreateOrFetchApplicationId(applicationName, 
-                        ref applicationId, base.Description, connection);
                     // either create a new user or fetch the existing user id
                     int userId = SchemaManager.CreateOrFetchUserId(connection, username, 
-                        applicationId, true);
+                        app.EnsureId(connection), true);
 
                     MySqlCommand cmd = new MySqlCommand(
                         @"INSERT INTO my_aspnet_Membership 
@@ -642,7 +623,7 @@ namespace MySql.Web.Security
 
                     MySqlCommand cmd = new MySqlCommand(
                         String.Format(sql, deleteAllRelatedData ? "u," : ""), conn);
-                    cmd.Parameters.AddWithValue("@appId", applicationId);
+                    cmd.Parameters.AddWithValue("@appId", app.FetchId(conn));
                     cmd.Parameters.AddWithValue("@userId", userId);
                     return cmd.ExecuteNonQuery() > 0;
                 }
@@ -691,7 +672,7 @@ namespace MySql.Web.Security
                         ON m.userId=u.id WHERE m.LastActivityDate > @date AND u.applicationId=@appId", 
                         connection);
                     cmd.Parameters.AddWithValue("@date", compareTime);
-                    cmd.Parameters.AddWithValue("@appId", applicationId);
+                    cmd.Parameters.AddWithValue("@appId", app.FetchId(connection));
                     return Convert.ToInt32(cmd.ExecuteScalar());
                 }
             }
@@ -909,7 +890,7 @@ namespace MySql.Web.Security
                         WHERE m.Email like @email AND u.applicationId=@appId";
                     MySqlCommand cmd = new MySqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@email", email);
-                    cmd.Parameters.AddWithValue("@appId", applicationId);
+                    cmd.Parameters.AddWithValue("@appId", app.FetchId(conn));
                     return (string)cmd.ExecuteScalar();
                 }
             }
@@ -1036,7 +1017,7 @@ namespace MySql.Web.Security
                     cmd.Parameters.AddWithValue("@lastLoginDate", user.LastLoginDate);
                     cmd.Parameters.AddWithValue("@lastActivityDate", user.LastActivityDate);
                     cmd.Parameters.AddWithValue("@name", user.UserName);
-                    cmd.Parameters.AddWithValue("@appId", applicationId);
+                    cmd.Parameters.AddWithValue("@appId", app.FetchId(conn));
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -1074,7 +1055,6 @@ namespace MySql.Web.Security
                             Islockedout FROM my_aspnet_Membership WHERE userId=@userId";
                     MySqlCommand cmd = new MySqlCommand(sql, connection);
                     cmd.Parameters.AddWithValue("@userId", userId);
-                    cmd.Parameters.AddWithValue("@appId", applicationId);
 
                     using (MySqlDataReader reader = cmd.ExecuteReader(CommandBehavior.SingleRow))
                     {
@@ -1103,7 +1083,6 @@ namespace MySql.Web.Security
                             updateCmd.Parameters.AddWithValue("@lastLoginDate", currentDate);
                             updateCmd.Parameters.AddWithValue("@date", currentDate);
                             updateCmd.Parameters.AddWithValue("@userid", userId);
-                            updateCmd.Parameters.AddWithValue("@appId", applicationId);
                             updateCmd.ExecuteNonQuery();
                         }
                     }
@@ -1157,8 +1136,9 @@ namespace MySql.Web.Security
         private int GetUserId(MySqlConnection connection, string username)
         {
             MySqlCommand cmd = new MySqlCommand(
-                "SELECT id FROM my_aspnet_Users WHERE name LIKE @name", connection);
+                "SELECT id FROM my_aspnet_Users WHERE name LIKE @name AND applicationId=@appId", connection);
             cmd.Parameters.AddWithValue("@name", username);
+            cmd.Parameters.AddWithValue("@appId", app.FetchId(connection));
             object id = cmd.ExecuteScalar();
             if (id == null) return -1;
             return (int)id;
@@ -1427,7 +1407,7 @@ namespace MySql.Web.Security
                     }
                     sql += " ORDER BY u.id ASC LIMIT {0},{1}";
                     cmd.CommandText = String.Format(sql, pageIndex * pageSize, pageSize);
-                    cmd.Parameters.AddWithValue("@appId", applicationId);
+                    cmd.Parameters.AddWithValue("@appId", app.FetchId(connection));
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
