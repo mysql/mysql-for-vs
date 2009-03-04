@@ -17,6 +17,8 @@ Version 5.2.6
 - fixed problem with execution of LOAD DATA LOCAL INFILE (which also affected MySqlBulkLoader).
   When the driver encountered some type of error opening the local file for transport it would
   still attempt to close the file which would yield a null reference exception (bug #43332)      
+- fixed Sql null value exception when an attempt was made to reset the password and 
+  require question and answer was false.  (bug #41408)  
       
 Version 5.2.5 - 11/14/2008
 - fixed problem with package registration that kept the DDEX provider from working (bug #40726)

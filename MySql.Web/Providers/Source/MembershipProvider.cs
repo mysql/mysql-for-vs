@@ -954,16 +954,18 @@ namespace MySql.Web.Security
                         if (reader.GetBoolean("IsLockedOut"))
                             throw new MembershipPasswordException(Resources.UserIsLockedOut);
 
-                        string passwordAnswer = reader.GetString("PasswordAnswer");
+                        object passwordAnswer = reader.GetValue(reader.GetOrdinal("PasswordAnswer"));
                         passwordKey = reader.GetString("PasswordKey");
                         format = (MembershipPasswordFormat)reader.GetByte("PasswordFormat");
                         reader.Close();
 
-                        if (RequiresQuestionAndAnswer &&
-                            !CheckPassword(answer, passwordAnswer, passwordKey, format))
+                        if (RequiresQuestionAndAnswer)
                         {
-                            UpdateFailureCount(userId, "PasswordAnswer", connection);
-                            throw new MembershipPasswordException(Resources.IncorrectPasswordAnswer);
+                            if (!CheckPassword(answer, (string)passwordAnswer, passwordKey, format))
+                            {
+                                UpdateFailureCount(userId, "PasswordAnswer", connection);
+                                throw new MembershipPasswordException(Resources.IncorrectPasswordAnswer);
+                            }
                         }
                     }
 

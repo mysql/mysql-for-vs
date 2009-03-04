@@ -600,5 +600,27 @@ namespace MySql.Web.Tests
             bool worked = provider2.ValidateUser("foo", "bar!bar");
             Assert.AreEqual(false, worked);
         }
+
+        /// <summary>
+        /// Bug #41408	PasswordReset not possible when requiresQuestionAndAnswer="false"
+        /// </summary>
+        [Test]
+        public void ResetPassword()
+        {
+            provider = new MySQLMembershipProvider();
+            NameValueCollection config = new NameValueCollection();
+            config.Add("connectionStringName", "LocalMySqlServer");
+            config.Add("applicationName", "/");
+            config.Add("passwordStrengthRegularExpression", "bar.*");
+            config.Add("passwordFormat", "Clear");
+            config.Add("requiresQuestionAndAnswer", "false");
+            provider.Initialize(null, config);
+
+            MembershipCreateStatus status;
+            provider.CreateUser("foo", "bar!bar", null, null, null, true, null, out status);
+
+            MembershipUser u = provider.GetUser("foo", false);
+            string newpw = provider.ResetPassword("foo", null);
+        }
     }
 }
