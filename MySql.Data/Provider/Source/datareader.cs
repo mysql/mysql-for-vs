@@ -490,7 +490,18 @@ namespace MySql.Data.MySqlClient
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetGuid/*'/>
 		public override Guid GetGuid(int i)
 		{
-			return new Guid(GetString(i));
+            object v = GetValue(i);
+            if (v is Guid)
+                return (Guid)v;
+            if (v is string)
+                return new Guid(v as string);
+            if (v is byte[])
+            {
+                byte[] bytes = (byte[])v;
+                if (bytes.Length == 16)
+                    return new Guid(bytes);
+            }
+            throw new MySqlException(Resources.ValueNotSupportedForGuid);
 		}
 
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetInt16S/*'/>

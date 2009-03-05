@@ -342,4 +342,7 @@
   <data name="RoutineNotFound" xml:space="preserve">
     <value>Routine '{0}' cannot be found. Either check the spelling or make sure you have sufficient rights to execute the routine.</value>
   </data>
+  <data name="ValueNotSupportedForGuid" xml:space="preserve">
+    <value>The requested column value could not be treated as or conveted to a Guid.</value>
+  </data>
 </root>

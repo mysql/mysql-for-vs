@@ -718,6 +718,15 @@ namespace MySql.Data.MySqlClient.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The requested column value could not be treated as or conveted to a Guid..
+        /// </summary>
+        public static string ValueNotSupportedForGuid {
+            get {
+                return ResourceManager.GetString("ValueNotSupportedForGuid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Writing to the stream failed..
         /// </summary>
         public static string WriteToStreamFailed {
