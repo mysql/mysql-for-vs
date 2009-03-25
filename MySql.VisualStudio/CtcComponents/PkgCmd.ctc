@@ -40,8 +40,9 @@ CMDS_SECTION guidMySqlProviderPkg
 	NEWGROUPS_END
 
     BUTTONS_BEGIN
-        guidMySqlProviderCmdSet:cmdidCreateTable, Group_Undefined:0, 0x0000, OI_NOID, BUTTON, DIS_DEF, "&Create Table";
+        guidMySqlProviderCmdSet:cmdidCreateTable, Group_Undefined:0, 0x0000, OI_NOID, BUTTON, DIS_DEF, "Create Table";
 
+        guidMySqlProviderCmdSet:cmdidCreateView, Group_Undefined:0, 0x0000, OI_NOID, BUTTON, DIS_DEF, "Create View";
         guidMySqlProviderCmdSet:cmdidAlterView,  Group_Undefined:0, 0x0000, OI_NOID, BUTTON, DIS_DEF, "&Alter View";
 
         guidMySqlProviderCmdSet:cmdidCreateProcedure, Group_Undefined:0, 0x0000, OI_NOID, BUTTON, DIS_DEF, "&Create Routine";
@@ -72,7 +73,8 @@ CMDPLACEMENT_SECTION
 	
     guidMySqlProviderCmdSet:cmdidCreateTable,  guidVSData:IDG_DV_STATIC, 0x0100;
 
-    guidMySqlProviderCmdSet:cmdidAlterView,  guidVSData:IDG_DV_OBJECT, 0x0100;
+    guidMySqlProviderCmdSet:cmdidCreateView,  guidVSData:IDG_DV_STATIC, 0x0100;
+    guidMySqlProviderCmdSet:cmdidAlterView,  guidVSData:IDG_DV_OBJECT, 0x0101;
 
     guidMySqlProviderCmdSet:cmdidCreateProcedure, guidVSData:IDG_DV_STATIC, 0x0100;
     guidMySqlProviderCmdSet:cmdidCreateProcedure, guidVSData:IDG_DV_CONNECTION, 0x0100;

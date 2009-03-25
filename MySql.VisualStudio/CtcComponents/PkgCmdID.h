@@ -22,6 +22,7 @@
 // Commands
 #define cmdidCreateTable 0x0100
 
+#define cmdidCreateView 0x0110
 #define cmdidAlterView  0x0111
 
 #define cmdidCreateProcedure 0x0120
