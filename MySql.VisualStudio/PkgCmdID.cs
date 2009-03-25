@@ -6,8 +6,8 @@ namespace MySql.Data.VisualStudio
 {
     static class PkgCmdIDList
     {
-        public const uint cmdCreateTable =        0x100;
-        public const uint cmdAlterTable =        0x101;
+        public const uint cmdCreateTable = 0x100;
+        public const uint cmdAlterTable = 0x101;
 
 		public const uint cmdCreateView = 0x110;
 		public const uint cmdAlterView = 0x111;

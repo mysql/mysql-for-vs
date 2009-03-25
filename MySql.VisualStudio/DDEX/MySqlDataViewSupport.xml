@@ -124,6 +124,10 @@
             <Parameter value="NewQuery"/>
             <Parameter value="Query"/>
           </CommandBinding>
+          <CommandBinding name="CreateView"
+                          guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
+                          cmdid="272"
+                          handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
           <CommandBinding name="New" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="13601"  handler="Microsoft.VisualStudio.DataTools.DBPackage.VDT_CommandHandler_TableTools">
             <Parameter value="New"/>
             <Parameter value="View"/>

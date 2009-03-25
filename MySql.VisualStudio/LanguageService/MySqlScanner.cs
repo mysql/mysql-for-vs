@@ -100,6 +100,8 @@ namespace MySql.Data.VisualStudio
             keywords.Add("IN");
             keywords.Add("BEGIN");
             keywords.Add("END");
+            keywords.Add("VIEW");
+            keywords.Add("AS");
 
             // update
             keywords.Add("UPDATE");
