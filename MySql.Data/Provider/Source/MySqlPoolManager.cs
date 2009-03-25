@@ -87,6 +87,9 @@ namespace MySql.Data.MySqlClient
         {
             lock (pools.SyncRoot)
             {
+                // if pools doesn't have it, then this pool must already have been cleared
+                if (!pools.ContainsKey(key)) return;
+
                 // add the pool to our list of pools being cleared
                 MySqlPool pool = (pools[key] as MySqlPool);
                 clearingPools.Add(pool);

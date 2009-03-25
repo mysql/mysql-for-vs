@@ -20,6 +20,7 @@ Version 5.2.6
 - fixed Sql null value exception when an attempt was made to reset the password and 
   require question and answer was false.  (bug #41408)  
 - fixed MySqlDataReader.GetGuid to be more robust in how it attempts to read guid values (bug #41452)     
+- fixed bug where attempting to clear a pool twice would result in a null reference exception (bug #42801)    
       
 Version 5.2.5 - 11/14/2008
 - fixed problem with package registration that kept the DDEX provider from working (bug #40726)
