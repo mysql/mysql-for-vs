@@ -320,9 +320,9 @@ namespace MySql.Data.MySqlClient
 
                         if (restrictions != null)
                         {
-                            if (restrictions.Length == 4 && restrictions[3] != null &&
+                            if (restrictions.Length >= 4 && restrictions[3] != null &&
                                 key_name != restrictions[3]) continue;
-                            if (restrictions.Length == 5 && restrictions[4] != null &&
+                            if (restrictions.Length >= 5 && restrictions[4] != null &&
                                 col_name != restrictions[4]) continue;
                         }
                         DataRow row = dt.NewRow();
