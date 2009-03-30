@@ -97,6 +97,9 @@ namespace MySql.Web.Tests
             roleProvider.AddUsersToRoles(new string[] { "eve" },
                 new string[] { "Administrator" });
             Assert.IsTrue(roleProvider.IsUserInRole("eve", "Administrator"));
+
+            roleProvider.RemoveUsersFromRoles(new string[] { "eve" }, new string[] { "Administrator" });
+            Assert.IsFalse(roleProvider.IsUserInRole("eve", "Administrator"));
         }
 
         /// <summary>

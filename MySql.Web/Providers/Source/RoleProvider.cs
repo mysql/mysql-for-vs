@@ -270,6 +270,7 @@ namespace MySql.Web.Security
                             AND applicationId=@appId";
                         cmd.ExecuteNonQuery();
                     }
+                    ts.Complete();
                 }
             }
             catch (Exception ex)
@@ -444,6 +445,7 @@ namespace MySql.Web.Security
                             }
                         }
                     }
+                    ts.Complete();
                 }
             }
             catch (MySqlException e)

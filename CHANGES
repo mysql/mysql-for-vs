@@ -22,6 +22,9 @@ Version 5.2.6
 - fixed MySqlDataReader.GetGuid to be more robust in how it attempts to read guid values (bug #41452)     
 - fixed bug where attempting to clear a pool twice would result in a null reference exception (bug #42801)    
 - Fixed problem with index column schema collection
+- Fixed RemoveUsersFromRoles and DeleteRole where they were not calling transactionscope.Complete.
+  This meant that on systems where the provider tables are transaction aware the changes could be
+  rolled back in every case (bug #43553)   
       
 Version 5.2.5 - 11/14/2008
 - fixed problem with package registration that kept the DDEX provider from working (bug #40726)
