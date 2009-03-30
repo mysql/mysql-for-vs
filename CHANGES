@@ -1,3 +1,7 @@
+Version 6.0.1
+- Fixed problem with the foreign key columns schema collection
+- Fixed problem with index column schema collection
+
 Version 6.0
 - Massive speedups
 - Improved sql tokenizing speed greatly.  Patch submitted by Maxim Mass (bug #36836)

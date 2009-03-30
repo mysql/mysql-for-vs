@@ -425,7 +425,7 @@ namespace MySql.Data.MySqlClient
                     " AND kcu.table_name LIKE '{0}'", restrictions[2]);
             if (restrictions.Length >= 4 && !String.IsNullOrEmpty(restrictions[3]))
                 where.AppendFormat(CultureInfo.InvariantCulture, 
-                    " AND kcu.constraint_name LIKE '{0}'", restrictions[2]);
+                    " AND kcu.constraint_name LIKE '{0}'", restrictions[3]);
 
             sql += where.ToString();
 
