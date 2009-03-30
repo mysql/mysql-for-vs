@@ -36,6 +36,7 @@ namespace MySql.Data.VisualStudio.DbObjects
                 (instance as Table) : (instance as Column).OwningTable;
             DataTable data = table.OwningNode.GetDataTable("SHOW CHARSET");
             charSets = new List<string>();
+            charSets.Add(String.Empty);
             foreach (DataRow row in data.Rows)
                 charSets.Add(row["charset"].ToString());
         }

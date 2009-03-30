@@ -54,7 +54,7 @@ namespace MySql.Data.VisualStudio.Editors
 
         private void addButton_Click(object sender, EventArgs e)
         {
-            ForeignKey key = new ForeignKey(tableNode.Table);
+            ForeignKey key = new ForeignKey(tableNode.Table, null);
             if (refTable.SelectedValue != null)
                 key.SetName(String.Format("FK_{0}_{1}", tableNode.Table.Name,
                     refTable.SelectedValue), true);

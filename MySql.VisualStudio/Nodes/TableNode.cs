@@ -7,13 +7,14 @@ using MySql.Data.VisualStudio.DbObjects;
 using System.Text;
 using System.Windows.Forms;
 using MySql.Data.VisualStudio.Editors;
+using System.Diagnostics;
 
 namespace MySql.Data.VisualStudio
 {
 	class TableNode : DocumentNode
 	{
         private Table table;
-        private Table originalTable;
+        private bool isDirty;
 
 		public TableNode(DataViewHierarchyAccessor hierarchyAccessor, int id) : 
 			base(hierarchyAccessor, id)
@@ -31,10 +32,30 @@ namespace MySql.Data.VisualStudio
 
         public override bool Dirty
         {
-            get { return !TablesAreEqual(); }
+            get
+            {
+                Debug.Assert(table != null);
+
+                return table.HasChanges(); // if (!isDirty)
+                    //isDirty = table.HasChanges();
+                //return isDirty;
+            }
         }
 
         #endregion
+
+        protected override bool Save()
+        {
+            if (table.IsNew && table.Name == Name)
+            {
+                TableNamePromptDialog dlg = new TableNamePromptDialog();
+                dlg.TableName = table.Name;
+                if (DialogResult.Cancel == dlg.ShowDialog()) return false;
+                table.Name = dlg.TableName;
+            }
+
+            return base.Save();
+        }
 
         public static void CreateNew(DataViewHierarchyAccessor HierarchyAccessor)
 		{
@@ -47,9 +68,7 @@ namespace MySql.Data.VisualStudio
             if (IsNew)
             {
                 table = new Table(this, null, null);
-                originalTable = new Table(this, null, null);
                 table.Name = Name;
-                originalTable.Name = Name;
             }
             else
             {
@@ -59,7 +78,6 @@ namespace MySql.Data.VisualStudio
 
                 DataTable dt = connection.GetSchema("Tables", restrictions);
                 table = new Table(this, dt.Rows[0], columnsTable);
-                originalTable = new Table(this, dt.Rows[0], columnsTable);
 
                 HierarchyAccessor.Connection.UnlockProviderObject();
             }
@@ -67,7 +85,7 @@ namespace MySql.Data.VisualStudio
 
         public override string GetSaveSql()
         {
-            return Table.GetSql(originalTable);
+            return Table.GetSql();
         }
 
 		public override void ExecuteCommand(int command)
@@ -80,16 +98,5 @@ namespace MySql.Data.VisualStudio
             return new TableEditorPane(this);
 		}
 
-        private bool TablesAreEqual()
-        {
-            if (table.Columns.Count != originalTable.Columns.Count)
-                return false;
-            if (!ObjectComparer.AreEqual(table, originalTable))
-                return false;
-            for (int i = 0; i < table.Columns.Count; i++)
-                if (!ObjectComparer.AreEqual(table.Columns[i],
-                    originalTable.Columns[i])) return false;
-            return true;
-        }
     }
 }

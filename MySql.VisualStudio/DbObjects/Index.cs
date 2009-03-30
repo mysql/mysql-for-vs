@@ -3,24 +3,39 @@ using System.ComponentModel;
 using System.Collections.Generic;
 using MySql.Data.VisualStudio.Editors;
 using System.Data;
+using System.Text;
 
 namespace MySql.Data.VisualStudio.DbObjects
 {
-    class Index : Object, ICustomTypeDescriptor
+    class Index : Object, ICustomTypeDescriptor, ITablePart
     {
         Table table;
         List<IndexColumn> indexColumns = new List<IndexColumn>();
+        bool isNew;
+        Index oldIndex;
 
-        public Index(Table t)
+        private Index(Table t)
         {
             table = t;
+            isNew = true;
         }
 
         public Index(Table t, DataRow indexData) : this(t)
         {
+            isNew = indexData == null;
+            oldIndex = new Index(t);
+            if (!isNew)
+            {
+                ParseIndexInfo(indexData);
+                (this as ITablePart).Saved();
+            }
+        }
+
+        private void ParseIndexInfo(DataRow indexData)
+        {
             Name = indexData["INDEX_NAME"].ToString();
             IsPrimary = (bool)indexData["PRIMARY"];
-            IsUnique = (bool)indexData["UNIQUE"];
+            IsUnique = (bool)indexData["UNIQUE"] || IsPrimary;
             Comment = indexData["COMMENT"].ToString();
             string type = indexData["TYPE"].ToString();
             switch (type)
@@ -32,8 +47,9 @@ namespace MySql.Data.VisualStudio.DbObjects
             FullText = type == "FULLTEXT";
             Spatial = type == "SPATIAL";
 
-            string[] restrictions = new string[5] { null, t.OwningNode.Database, t.Name, Name, null };
-            DataTable dt = t.OwningNode.GetSchema("IndexColumns", restrictions);
+            string[] restrictions = 
+                new string[5] { null, table.OwningNode.Database, table.Name, Name, null };
+            DataTable dt = table.OwningNode.GetSchema("IndexColumns", restrictions);
             foreach (DataRow row in dt.Rows)
             {
                 IndexColumn col = new IndexColumn();
@@ -49,13 +65,17 @@ namespace MySql.Data.VisualStudio.DbObjects
                 Columns.Add(col);
             }
 
+            if (IsPrimary)
+                Type = IndexType.Key;
+
             //KeyBlockSize
-            //TYpe
             //Parser
         }
 
+        #region Properties
+
         [Browsable(false)]
-        public Table Table
+        public Table Table  
         {
             get { return table; }
         }
@@ -116,6 +136,8 @@ namespace MySql.Data.VisualStudio.DbObjects
         [RefreshProperties(RefreshProperties.All)]
         public bool Spatial { get; set; }
 
+        #endregion
+
         #region ShouldSerialize
 
         bool ShouldSerializeName() { return false; }
@@ -174,12 +196,11 @@ namespace MySql.Data.VisualStudio.DbObjects
             {
                 if (!pd.IsBrowsable) continue;
 
-                if (pd.Name == "IsUnique")
+                if (pd.Name == "IsUnique" || pd.Name == "Name" || pd.Name == "Type")
                 {
                     if (IsPrimary)
                     {
                         CustomPropertyDescriptor newPd = new CustomPropertyDescriptor(pd);
-                        newPd.SetValue(this, true);
                         newPd.SetReadOnly(true);
                         props.Add(newPd);
                     }
@@ -230,11 +251,107 @@ namespace MySql.Data.VisualStudio.DbObjects
         }
 
         #endregion
+
+        #region ITablePart Members
+
+        void ITablePart.Saved()
+        {
+            oldIndex.Comment = Comment;
+            oldIndex.FullText = FullText;
+            oldIndex.IndexUsing = IndexUsing;
+            oldIndex.IsPrimary = IsPrimary;
+            oldIndex.IsUnique = IsUnique;
+            oldIndex.KeyBlockSize = KeyBlockSize;
+            oldIndex.Name = Name;
+            oldIndex.Parser = Parser;
+            oldIndex.Spatial = Spatial;
+            oldIndex.Type = Type;
+
+            // now we need to copy the columns
+            oldIndex.Columns.Clear();
+
+            foreach (IndexColumn ic in Columns)
+            {
+                IndexColumn old = new IndexColumn();
+                old.ColumnName = ic.ColumnName;
+                old.SortOrder = ic.SortOrder;
+                old.OwningIndex = oldIndex;
+                oldIndex.Columns.Add(old);
+            }
+        }
+
+        bool ITablePart.HasChanges()
+        {
+            if (!ObjectHelper.AreEqual(this, oldIndex)) return true;
+            if (Columns.Count != oldIndex.Columns.Count) return true;
+            foreach (IndexColumn ic in Columns)
+            {
+                int i = 0;
+                for (; i < oldIndex.Columns.Count; i++)
+                {
+                    IndexColumn oic = oldIndex.Columns[i];
+                    if (oic.ColumnName == ic.ColumnName && oic.SortOrder == ic.SortOrder) break;
+                }
+                if (i == oldIndex.Columns.Count) return true;
+            }
+            return false;
+        }
+
+        string ITablePart.GetDropSql()
+        {
+            if (IsPrimary)
+                return "DROP PRIMARY KEY";
+            return String.Format("DROP KEY `{0}`", Name);
+        }
+
+        string ITablePart.GetSql(bool newTable)
+        {
+            StringBuilder sql = new StringBuilder();
+
+            // if we don't have any changes then just return null
+            ITablePart part = this as ITablePart;
+            if (!part.HasChanges()) return null;
+
+            if (!newTable)
+            {
+                if (!String.IsNullOrEmpty(oldIndex.Name))
+                    sql.AppendFormat("DROP INDEX `{0}`, ", oldIndex.Name);
+                sql.Append("ADD ");
+            }
+            if (IsPrimary)
+                sql.Append("PRIMARY KEY ");
+            else if (IsUnique)
+                sql.Append("UNIQUE ");
+            else if (FullText)
+                sql.Append("FULLTEXT ");
+            else if (Spatial)
+                sql.Append("SPATIAL ");
+
+            if (!IsPrimary)
+                sql.AppendFormat("{0} ", Type.ToString().ToUpperInvariant());
+            sql.AppendFormat("`{0}` (", Name);
+            string delimiter = "";
+            foreach (IndexColumn c in Columns)
+            {
+                sql.AppendFormat("{0}{1}", delimiter, c.ColumnName);
+                delimiter = ", ";
+            }
+            sql.Append(")");
+            
+            return sql.ToString();
+        }
+
+        bool ITablePart.IsNew()
+        {
+            return isNew;
+        }
+
+        #endregion
     }
 
     enum IndexType
     {
-        Index, Key
+        Index, Key, Primary
     }
 
     enum IndexUsingType

@@ -9,47 +9,40 @@ using System.Windows.Forms.Design;
 
 namespace MySql.Data.VisualStudio.DbObjects
 {
-    class Column : Object
+    internal class Column : Object, ITablePart
 	{
-        private Table owningTable;
         private string characterSet;
-        private string name;
-        private string dataType;
+        internal Column OldColumn;
+        private bool isNew;
 
-        public Column()
+        private Column()
         {
+            AllowNull = true;
         }
 
 		public Column(DataRow row) : this()
 		{
+            isNew = row == null;
             if (row != null)
                 ParseColumnInfo(row);
+            OldColumn = new Column();
+            ObjectHelper.Copy(this, OldColumn);
 		}
 
         #region Properties
 
         [Browsable(false)]
-        internal Table OwningTable
-        {
-            get { return owningTable; }
-            set { owningTable = value; }
-        }
+        internal Table OwningTable { get; set; }
 
         [Category("General")]
-        public string ColumnName
-        {
-            get { return name; }
-            set { name = value; }
-        }
+        [Description("The name of this column")]
+        public string ColumnName { get; set; }
 
         [Category("General")]
         [DisplayName("Data Type")]
         [TypeConverter(typeof(DataTypeConverter))]
         [RefreshProperties(RefreshProperties.All)]
-        public string DataType { 
-            get { return dataType; }
-            set { dataType = value; }
-        }
+        public string DataType { get; set; }
 
         [TypeConverter(typeof(YesNoTypeConverter))]
         [Category("Options")]
@@ -75,9 +68,11 @@ namespace MySql.Data.VisualStudio.DbObjects
         [DisplayName("Autoincrement")]
         public bool AutoIncrement { get; set; }
 
-        [TypeConverter(typeof(YesNoTypeConverter))]
-        [Category("Options")]
-        [DisplayName("Primary Key")]
+        //[TypeConverter(typeof(YesNoTypeConverter))]
+        //[Category("Options")]
+        //[DisplayName("Primary Key")]
+        //[RefreshProperties(RefreshProperties.All)]
+        [Browsable(false)]
         public bool PrimaryKey { get; set; }
 
         public int Precision { get; set; }
@@ -120,18 +115,27 @@ namespace MySql.Data.VisualStudio.DbObjects
             if (index == -1)
                 index = columnType.Length;
             DataType = columnType.Substring(0, index);
+            CleanDataType();
 
             columnType = columnType.Substring(index);
             IsUnsigned = columnType.IndexOf("unsigned") != -1;
             IsZerofill = columnType.IndexOf("zerofill") != -1;
 
             PrimaryKey = row["COLUMN_KEY"].ToString() == "PRI";
-            Precision = (int)row["NUMERIC_PRECISION"];
-            Scale = (int)row["NUMERIC_SCALE"];
+            Precision = DataRowHelpers.GetValueAsInt32(row, "NUMERIC_PRECISION");
+            Scale = DataRowHelpers.GetValueAsInt32(row, "NUMERIC_SCALE");
 
             string extra = row["EXTRA"].ToString().ToLowerInvariant();
             if (extra != null)
                 AutoIncrement = extra.IndexOf("auto_increment") != -1;
+        }
+
+        private void CleanDataType()
+        {
+            if (DataType.Contains("char") || DataType.Contains("binary")) return;
+            int index = DataType.IndexOf("(");
+            if (index == -1) return;
+            DataType = DataType.Substring(0, index);
         }
 
         #region Methods needed so PropertyGrid won't bold our values
@@ -149,6 +153,83 @@ namespace MySql.Data.VisualStudio.DbObjects
         private bool ShouldSerializeCharacterSet() { return false; }
         private bool ShouldSerializeCollation() { return false; }
         private bool ShouldSerializeComment() { return false; }
+
+        #endregion
+
+        #region ITablePart Members
+
+        void ITablePart.Saved()
+        {
+            ObjectHelper.Copy(this, OldColumn);
+        }
+
+        bool ITablePart.HasChanges()
+        {
+            return !ObjectHelper.AreEqual(this, OldColumn);
+        }
+
+        bool ITablePart.IsNew()
+        {
+            return isNew;
+        }
+
+        string ITablePart.GetDropSql()
+        {
+            return String.Format("DROP `{0}`", ColumnName);
+        }
+
+        string ITablePart.GetSql(bool newTable)
+        {
+            if (OldColumn != null &&
+                OldColumn.ColumnName != null &&
+                ObjectHelper.AreEqual(this, OldColumn))
+                return null;
+
+            if (String.IsNullOrEmpty(ColumnName)) return null;
+
+            StringBuilder props = new StringBuilder();
+            int changes = 0;
+
+            if (DataType != OldColumn.DataType)
+                props.AppendFormat(" {0}", DataType);
+            if (CharacterSet != OldColumn.CharacterSet)
+                props.AppendFormat(" CHARACTER SET '{0}'", CharacterSet);
+            if (Collation != OldColumn.Collation)
+                props.AppendFormat(" COLLATE '{0}'", Collation);
+            if (AllowNull != OldColumn.AllowNull) 
+                props.Append(AllowNull ? " NULL" : " NOT NULL");
+            if (IsUnsigned != OldColumn.IsUnsigned)
+            {
+                changes++;
+                if (IsUnsigned) props.Append(" UNSIGNED");
+            }
+            if (IsZerofill != OldColumn.IsZerofill)
+            {
+                changes++;
+                if (IsZerofill) props.Append(" ZEROFILL");
+            }
+            if (AutoIncrement != OldColumn.AutoIncrement)
+            {
+                changes++;
+                if (AutoIncrement) props.Append(" AUTO_INCREMENT");
+            }
+            if (DefaultValue != OldColumn.DefaultValue) 
+                props.AppendFormat(" DEFAULT '{0}'", DefaultValue);
+            if (Comment != OldColumn.Comment) 
+                props.AppendFormat(" COMMENT '{0}'", Comment);
+
+            if (props.Length == 0 && 
+                changes == 0 && 
+                ColumnName.ToLowerInvariant()  == OldColumn.ColumnName.ToLowerInvariant())
+                return null;
+
+            if (newTable)
+                return String.Format("`{0}`{1}", ColumnName, props.ToString());
+            if (isNew)
+                return String.Format("ADD `{0}`{1}", ColumnName, props.ToString());
+            return String.Format("CHANGE `{0}` `{1}` {2}{3}", 
+                OldColumn.ColumnName, ColumnName, DataType, props.ToString());
+        }
 
         #endregion
     }

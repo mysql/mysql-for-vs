@@ -84,7 +84,15 @@ namespace MySql.Data.VisualStudio.Editors
 
         private void okButton_Click(object sender, EventArgs e)
         {
-            int i = 0;
+            indexColumns.Clear();
+            foreach (IndexColumnGridRow row in gridRows)
+            {
+                if (String.IsNullOrEmpty(row.ColumnName)) continue;
+                IndexColumn ic = new IndexColumn();
+                ic.ColumnName = row.ColumnName;
+                ic.SortOrder = (IndexSortOrder)Enum.Parse(typeof(IndexSortOrder), row.SortOrder);
+                indexColumns.Add(ic);
+            }
         }
 
         private void indexGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
@@ -153,8 +161,21 @@ namespace MySql.Data.VisualStudio.Editors
             IServiceProvider provider, object value)
         {
             List<IndexColumn> ic = value as List<IndexColumn>;
+            Index index = ic[0].OwningIndex;
+            Table t = index.Table;
             IndexColumnEditorDialog dlg = new IndexColumnEditorDialog(ic);
             DialogResult result = dlg.ShowDialog();
+            if (index.Type != IndexType.Primary) return value;
+            foreach (Column c in t.Columns)
+                c.PrimaryKey = false;
+            foreach (IndexColumn i in ic)
+            {
+                i.OwningIndex = index;
+                foreach (Column c in t.Columns)
+                    if (c.ColumnName == i.ColumnName)
+                        c.PrimaryKey = true;
+            }
+            t.NotifyUpdate();
             return value;
         }
     }

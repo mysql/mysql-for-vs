@@ -87,6 +87,7 @@
   <ItemGroup>
     <Compile Include="DbObjects\CollationTypeConverter.cs" />
     <Compile Include="DbObjects\CharacterSetTypeConverter.cs" />
+    <Compile Include="DbObjects\DataRowHelpers.cs" />
     <Compile Include="DbObjects\DataTypeConverter.cs" />
     <Compile Include="DbObjects\ForeignKey.cs" />
     <Compile Include="DbObjects\Index.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="DbObjects\TableEngineTypeConverters.cs" />
     <Compile Include="DbObjects\Enums.cs" />
     <Compile Include="DbObjects\Table.cs" />
+    <Compile Include="DbObjects\TablePartCollection.cs" />
     <Compile Include="DDEX\MySqlConnectionPromptDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -148,6 +150,12 @@
     </Compile>
     <Compile Include="Editors\TableIndexDialog.Designer.cs">
       <DependentUpon>TableIndexDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\TableNamePromptDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\TableNamePromptDialog.Designer.cs">
+      <DependentUpon>TableNamePromptDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Editors\TextBufferEditor.cs" />
     <Compile Include="Editors\UDFEditor.cs">
@@ -223,6 +231,9 @@
     <EmbeddedResource Include="Editors\TableIndexDialog.resx">
       <DependentUpon>TableIndexDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\TableNamePromptDialog.resx">
+      <DependentUpon>TableNamePromptDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\UDFEditor.resx">
       <DependentUpon>UDFEditor.cs</DependentUpon>

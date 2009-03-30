@@ -66,13 +66,30 @@ namespace MySql.Data.VisualStudio
 		void OnDataLoaded(object sender, EventArgs e)
 		{
             columnBindingSource.DataSource = tableNode.Table.Columns;
+
+            // if our type column doesn't already contain our data types then we add 
+            // them so our grid won't complain about unsupported values
+            foreach (Column c in tableNode.Table.Columns)
+                if (!TypeColumn.Items.Contains(c.DataType))
+                    TypeColumn.Items.Add(c.DataType);
+
             columnBindingSource.AddingNew += new AddingNewEventHandler(columnBindingSource_AddingNew);
             pane.SelectObject(tableNode.Table);
-		}
+            tableNode.Table.DataUpdated += new EventHandler(Table_DataUpdated);
+        }
+
+        void Table_DataUpdated(object sender, EventArgs e)
+        {
+            columnGrid.Refresh();
+        }
 
         void columnBindingSource_AddingNew(object sender, AddingNewEventArgs e)
         {
-            e.NewObject = new ColumnWithTypeDescriptor();
+            //Column c = new Column(null);
+            ColumnWithTypeDescriptor c = new ColumnWithTypeDescriptor();
+            c.OwningTable = tableNode.Table;
+            e.NewObject = c;
+
         }
 
 		private void InitializeComponent()
@@ -129,6 +146,7 @@ namespace MySql.Data.VisualStudio
             this.columnProperties.Name = "columnProperties";
             this.columnProperties.Size = new System.Drawing.Size(598, 268);
             this.columnProperties.TabIndex = 0;
+            this.columnProperties.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.columnProperties_PropertyValueChanged);
             // 
             // panel1
             // 
@@ -171,7 +189,7 @@ namespace MySql.Data.VisualStudio
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.columnGrid.DefaultCellStyle = dataGridViewCellStyle2;
             this.columnGrid.Dock = System.Windows.Forms.DockStyle.Top;
-            this.columnGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
+            this.columnGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.columnGrid.GridColor = System.Drawing.SystemColors.ControlLight;
             this.columnGrid.Location = new System.Drawing.Point(0, 0);
             this.columnGrid.Name = "columnGrid";
@@ -182,8 +200,13 @@ namespace MySql.Data.VisualStudio
             this.columnGrid.ShowRowErrors = false;
             this.columnGrid.Size = new System.Drawing.Size(624, 103);
             this.columnGrid.TabIndex = 2;
+            this.columnGrid.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.columnGrid_UserDeletingRow);
+            this.columnGrid.CellLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.columnGrid_CellLeave);
             this.columnGrid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.columnGrid_CellValidating);
+            this.columnGrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.columnGrid_CellClick);
             this.columnGrid.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.columnGrid_EditingControlShowing);
+            this.columnGrid.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.columnGrid_CellEnter);
+            this.columnGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.columnGrid_CellContentClick);
             // 
             // NameColumn
             // 
@@ -209,7 +232,8 @@ namespace MySql.Data.VisualStudio
             // 
             // columnBindingSource
             // 
-            this.columnBindingSource.DataSource = typeof(Column);
+            this.columnBindingSource.AllowNew = true;
+            this.columnBindingSource.DataSource = typeof(MySql.Data.VisualStudio.DbObjects.Column);
             this.columnBindingSource.CurrentChanged += new System.EventHandler(this.columnBindingSource_CurrentChanged);
             // 
             // dataGridViewTextBoxColumn1
@@ -279,6 +303,7 @@ namespace MySql.Data.VisualStudio
                     allKeys = false;
                     break;
                 }
+
 
             OleMenuCommand primaryKey = sender as OleMenuCommand;
             primaryKey.Checked = allKeys;
@@ -426,6 +451,48 @@ namespace MySql.Data.VisualStudio
             if (!InsertType(type))
                 TypeColumn.Items.Add(type);
             columnGrid.CurrentCell.Value = e.FormattedValue;
+        }
+
+        private void columnGrid_CellEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            if (columnGrid.SelectedCells.Count == 1)
+                columnGrid.BeginEdit(true);
+        }
+
+        private void columnGrid_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == -1)
+                columnGrid.EndEdit();
+            else
+                columnGrid.BeginEdit(true);
+        }
+
+        private void columnGrid_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
+        {
+            Column c = Columns[e.Row.Index];
+            if (c.OldColumn != null)
+                tableNode.Table.Columns.Delete(c);
+        }
+
+        private void columnGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex != 2) return;
+            DataGridViewCheckBoxCell cell = columnGrid[e.ColumnIndex, e.RowIndex] as DataGridViewCheckBoxCell;
+            Column c = Columns[e.RowIndex];
+            c.AllowNull = (bool)cell.EditingCellFormattedValue;
+        }
+
+        private void columnProperties_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+        {
+            if (e.ChangedItem.PropertyDescriptor.Name == "PrimaryKey")
+                columnGrid.Refresh();
+        }
+
+        private void columnGrid_CellLeave(object sender, DataGridViewCellEventArgs e)
+        {
+            int index = columnGrid.CurrentRow.Index;
+            if (index >= 0 && tableNode.Table.Columns.Count >= index)
+                columnProperties.SelectedObject = tableNode.Table.Columns[index];
         }
 	}
 }

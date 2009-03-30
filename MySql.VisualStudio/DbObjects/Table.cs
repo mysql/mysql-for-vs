@@ -24,30 +24,59 @@ namespace MySql.Data.VisualStudio.DbObjects
 	internal class Table : ICustomTypeDescriptor
 	{
         private TableNode owningNode;
-        private string schema;
-        private List<Column> columns = new List<Column>();
-        private List<Index> indexes = new List<Index>();
-        private List<ForeignKey> fkeys = new List<ForeignKey>();
-        private bool isNew;
+        internal Table OldTable;
+        private string characterSet;
+
+        private Table()
+        {
+        }
 
 		public Table(TableNode node, DataRow row, DataTable columns)
 		{
             owningNode = node;
+            IsNew = row == null;
+
+            Columns = new TablePartCollection<Column>();
+            Indexes = new TablePartCollection<Index>();
+            ForeignKeys = new TablePartCollection<ForeignKey>();
 
             // set some defaults that may be overridden with actual table data
             Engine = node.DefaultStorageEngine;
             PackKeys = PackKeysMethod.Default;
+            Schema = node.Database;
 
             if (row != null)
               ParseTableData(row);
             if (columns != null)
               ParseColumns(columns);
-            LoadIndexes();
-            LoadForeignKeys();
+            if (!IsNew)
+            {
+                LoadIndexes();
+                LoadForeignKeys();
+            }
 
-            schema = node.Database;
-            isNew = row == null;
+            // now save our current values as old
+            OldTable = new Table();
+            ObjectHelper.Copy(this, OldTable);
+            node.DataSaved += new EventHandler(node_DataSaved);
         }
+
+        void node_DataSaved(object sender, EventArgs e)
+        {
+            ObjectHelper.Copy(this, OldTable);
+            Columns.Saved();
+            Indexes.Saved();
+            ForeignKeys.Saved();
+        }
+
+        [Browsable(false)]
+        public bool IsNew { get; private set; }
+        [Browsable(false)]
+        public TablePartCollection<Column> Columns { get; private set; }
+        [Browsable(false)]
+        public TablePartCollection<Index> Indexes { get; private set; }
+        [Browsable(false)]
+        public TablePartCollection<ForeignKey> ForeignKeys { get; private set; }
 
         internal TableNode OwningNode
         {
@@ -71,10 +100,7 @@ namespace MySql.Data.VisualStudio.DbObjects
 
         [Category("(Identity)")]
         [MyDescription("TableSchemaDesc")]
-        public string Schema
-        {
-            get { return schema; }
-        }
+        public string Schema { get; private set; }
 
         [MyDescription("TableCommentDesc")]
         public string Comment { get; set; }
@@ -84,7 +110,16 @@ namespace MySql.Data.VisualStudio.DbObjects
         [TypeConverter(typeof(CharacterSetTypeConverter))]
         [RefreshProperties(RefreshProperties.All)]
         [MyDescription("TableCharSetDesc")]
-        public string CharacterSet { get; set; }
+        public string CharacterSet
+        {
+            get { return characterSet; }
+            set
+            {
+                if (value != characterSet)
+                    Collation = String.Empty;
+                characterSet = value;
+            }
+        }
 
         [Category("Table Options")]
         [DisplayName("Collation")]
@@ -96,24 +131,6 @@ namespace MySql.Data.VisualStudio.DbObjects
         [DisplayName("Auto Increment")]
         [MyDescription("TableAutoIncStartDesc")]
         public ulong AutoInc { get; set; }
-
-        [Browsable(false)]
-        public List<Column> Columns
-        {
-            get { return columns; }
-        }
-
-        [Browsable(false)]
-        public List<Index> Indexes
-        {
-            get { return indexes; }
-        }
-
-        [Browsable(false)]
-        public List<ForeignKey> ForeignKeys
-        {
-            get { return fkeys; }
-        }
 
         #endregion
 
@@ -142,7 +159,6 @@ namespace MySql.Data.VisualStudio.DbObjects
 
         [Category("Row")]
         [DisplayName("Row Format")]
-        [DefaultValue(RowFormat.Default)]
         [MyDescription("TableRowFormatDesc")]
         public RowFormat RowFormat { get; set; }
 
@@ -211,14 +227,19 @@ namespace MySql.Data.VisualStudio.DbObjects
 
         #endregion
 
+        public void NotifyUpdate()
+        {
+            OnDataUpdated();
+        }
+
         public void DeleteKey(string keyName)
         {
-            for (int i = indexes.Count - 1; i >= 0; i--)
+            for (int i = Indexes.Count - 1; i >= 0; i--)
             {
-                if ((keyName != null && indexes[i].Name == keyName) ||
-                    (keyName == null && indexes[i].IsPrimary))
+                if ((keyName != null && Indexes[i].Name == keyName) ||
+                    (keyName == null && Indexes[i].IsPrimary))
                 {
-                    indexes.RemoveAt(i);
+                    Indexes.Delete(i);
                     break;
                 }
             }
@@ -226,7 +247,7 @@ namespace MySql.Data.VisualStudio.DbObjects
 
         public Index CreateIndexWithUniqueName(bool primary)
         {
-            Index newIndex = new Index(this);
+            Index newIndex = new Index(this, null);
             newIndex.IsPrimary = primary;
             string baseName = String.Format("{0}_{1}", primary ? "PK" : "IX",
                 Name);
@@ -249,40 +270,61 @@ namespace MySql.Data.VisualStudio.DbObjects
             return cols;
         }
 
-        public string GetSql(Table fromTable)
+        public string GetSql()
         {
-
             StringBuilder sql = new StringBuilder();
-            if (isNew)
+            if (IsNew)
                 sql.AppendFormat("CREATE TABLE `{0}` (", Name);
             else
-                sql.AppendFormat("ALTER TABLE `{0}` ", fromTable.Name);
+                sql.AppendFormat("ALTER TABLE `{0}` ", OldTable.Name);
 
-            //            foreach (Column c in Columns)
-            //              sql.Append(c.GetSql(), IsNew);
-
-            if (isNew) sql.Append(") ");
-            sql.Append(GetTableOptionSql(fromTable));
+            string[] parts = new string[3];
+            parts[0] = Columns.GetSql(IsNew);
+            parts[1] = Indexes.GetSql(IsNew);
+            parts[2] = ForeignKeys.GetSql(IsNew);
+            string delimiter = "";
+            foreach (string s in parts)
+            {
+                if (!String.IsNullOrEmpty(s))
+                {
+                    sql.AppendFormat("{0}{1}", delimiter, s);
+                    delimiter = ", ";
+                }
+            }
+            if (IsNew)
+                sql.Append(")");
+            sql.Append(GetTableOptionSql(true));
             return sql.ToString();
+        }
+
+        public bool HasChanges()
+        {
+            // first compare our top level properties
+            if (!ObjectHelper.AreEqual(this, OldTable))
+                return true;
+            if (Columns.HasChanges()) return true;
+            if (Indexes.HasChanges()) return true;
+            if (ForeignKeys.HasChanges()) return true;
+            return false;
         }
 
         #region Private methods
 
         private bool KeyExists(string keyName)
         {
-            foreach (Index i in indexes)
+            foreach (Index i in Indexes)
                 if (String.Compare(i.Name, keyName, true) == 0) return true;
             return false;
         }
 
         private void ParseTableData(DataRow tableRow)
         {
-            schema = tableRow["TABLE_SCHEMA"].ToString();
+            Schema = tableRow["TABLE_SCHEMA"].ToString();
             Name = tableRow["TABLE_NAME"].ToString();
             Engine = tableRow["ENGINE"].ToString();
             RowFormat = (RowFormat)Enum.Parse(typeof(RowFormat), tableRow["ROW_FORMAT"].ToString());
-            AvgRowLength = (ulong)tableRow["AVG_ROW_LENGTH"];
-            AutoInc = (ulong)tableRow["AUTO_INCREMENT"];   
+            AvgRowLength = DataRowHelpers.GetValueAsUInt64(tableRow, "AVG_ROW_LENGTH");
+            AutoInc = DataRowHelpers.GetValueAsUInt64(tableRow, "AUTO_INCREMENT");
             Comment = tableRow["TABLE_COMMENT"].ToString();
             Collation = tableRow["TABLE_COLLATION"].ToString();
             if (Collation != null)
@@ -334,7 +376,7 @@ namespace MySql.Data.VisualStudio.DbObjects
             {
                 Column c = new Column(row);
                 c.OwningTable = this;
-                columns.Add(c);
+                Columns.Add(c);
             }
         }
 
@@ -345,7 +387,7 @@ namespace MySql.Data.VisualStudio.DbObjects
             foreach (DataRow row in dt.Rows)
             {
                 Index i = new Index(this, row);
-                indexes.Add(i);
+                Indexes.Add(i);
             }
         }
 
@@ -360,28 +402,62 @@ namespace MySql.Data.VisualStudio.DbObjects
             }
         }
 
-        private string GetTableOptionSql(Table fromTable)
+        private string GetTableOptionSql(bool newTable)
         {
-            StringBuilder sql = new StringBuilder();
-            if (Name != fromTable.Name)
-                sql.AppendFormat("RENAME TO `{0}` ", Name);
-            if (AvgRowLength != fromTable.AvgRowLength)
-                sql.AppendFormat("AVG_ROW_LENGTH={0} ", AvgRowLength);
-            if (Comment != fromTable.Comment)
-                sql.AppendFormat("COMMENT='{0}' ", Comment);
-            if (Engine != fromTable.Engine)
-                sql.AppendFormat("ENGINE={0} ", Engine);
+            List<string> options = new List<string>();
+            StringBuilder sql = new StringBuilder(" ");
 
-            if (MaxRows != fromTable.MaxRows)
-                sql.AppendFormat("MAX_ROWS={0} ", MaxRows);
-            if (MinRows != fromTable.MinRows)
-                sql.AppendFormat("MIN_ROWS={0} ", MinRows);
-            if (DataDirectory != fromTable.DataDirectory)
-                sql.AppendFormat("DATA DIRECTORY='{0}' ", DataDirectory);
-            if (IndexDirectory != fromTable.IndexDirectory)
-                sql.AppendFormat("INDEX DIRECTORY='{0}' ", IndexDirectory);
+            if (!newTable)
+            {
+                if (Name != OldTable.Name)
+                    options.Add(String.Format("RENAME TO `{0}` ", Name));
+            }
+            if (AutoInc != OldTable.AutoInc)
+                options.Add(String.Format("AUTO_INCREMENT={0}", AutoInc));
+            if (AvgRowLength != OldTable.AvgRowLength)
+                options.Add(String.Format("AVG_ROW_LENGTH={0}", AvgRowLength));
+            if (CheckSum != OldTable.CheckSum)
+                options.Add(String.Format("CHECKSUM={0}", CheckSum ? 1 : 0));
+            if (Engine != OldTable.Engine)
+                options.Add(String.Format("ENGINE={0}", Engine));
+            if (InsertMethod != OldTable.InsertMethod)
+                options.Add(String.Format("INSERT_METHOD={0}", InsertMethod.ToString()));
+            if (MaxRows != OldTable.MaxRows)
+                options.Add(String.Format("MAX_ROWS={0}", MaxRows));
+            if (MinRows != OldTable.MinRows)
+                options.Add(String.Format("MIN_ROWS={0}", MinRows));
+            if (PackKeys != OldTable.PackKeys)
+                options.Add(String.Format("PACK_KEYS={0}", PackKeys.ToString()));
+            if (RowFormat != OldTable.RowFormat)
+                options.Add(String.Format("ROW_FORMAT={0}", RowFormat.ToString()));
+            if (StringPropertyHasChanged(Comment, OldTable.Comment))
+                options.Add(String.Format("COMMENT='{0}'", Comment));
+            if (StringPropertyHasChanged(CharacterSet, OldTable.CharacterSet))
+                options.Add(String.IsNullOrEmpty(CharacterSet) ? "DEFAULT CHARACTER SET" :
+                    String.Format("CHARACTER SET='{0}'", CharacterSet));
+            if (StringPropertyHasChanged(Collation, OldTable.Collation))
+                options.Add(String.IsNullOrEmpty(Collation) ? "DEFAULT COLLATE" :
+                    String.Format("COLLATE='{0}'", Collation));
+            if (StringPropertyHasChanged(DataDirectory, OldTable.DataDirectory))
+                options.Add(String.Format("DATA DIRECTORY='{0}' ", DataDirectory));
+            if (StringPropertyHasChanged(IndexDirectory, OldTable.IndexDirectory))
+                options.Add(String.Format("INDEX DIRECTORY='{0}' ", IndexDirectory));
 
+            string delimiter = "";
+            foreach (string option in options)
+            {
+                sql.AppendFormat("{0}{1}", delimiter, option);
+                delimiter = ",\r\n";
+            }
             return sql.ToString();
+        }
+
+        private bool StringPropertyHasChanged(string newVal, string oldVal)
+        {
+            if (newVal == oldVal) return false;
+            if (newVal != null && newVal.Length > 0) return true;
+            if (oldVal != null && oldVal.Length > 0) return true;
+            return false;
         }
 
         #endregion
@@ -424,7 +500,8 @@ namespace MySql.Data.VisualStudio.DbObjects
 
             List<PropertyDescriptor> props = new List<PropertyDescriptor>();
 
-            bool engineIsMyIsam = Engine.ToLowerInvariant() == "myisam";
+            string engine = Engine.ToLowerInvariant();
+            bool engineIsMyIsam = engine == "myisam";
 
             foreach (PropertyDescriptor pd in coll)
             {
@@ -436,9 +513,11 @@ namespace MySql.Data.VisualStudio.DbObjects
                     newPd.SetReadOnly(!engineIsMyIsam);
                     props.Add(newPd);
                 }
-                else if (pd.Name == "DelayKeyWrite" && !engineIsMyIsam)
+                else if ((pd.Name == "DelayKeyWrite" || pd.Name == "CheckSum" || pd.Name=="PackKeys") && 
+                        !engineIsMyIsam)
                 {
                 }
+                else if (pd.Name == "InsertMethod" && engine != "mrg_myisam") { }
                 else
                     props.Add(pd);
             }
@@ -470,6 +549,16 @@ namespace MySql.Data.VisualStudio.DbObjects
             return TypeDescriptor.GetClassName(this, true);
         }
 
+        #endregion
+
+        #region Events
+        public event EventHandler DataUpdated;
+
+        private void OnDataUpdated()
+        {
+            if (DataUpdated != null)
+                DataUpdated(this, null);
+        }
         #endregion
     }
 }
