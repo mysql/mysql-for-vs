@@ -8,6 +8,11 @@ namespace MySql.Data.VisualStudio.DbObjects
 {
     class ColumnWithTypeDescriptor : Column, ICustomTypeDescriptor
     {
+        public ColumnWithTypeDescriptor()
+            : base(null)
+        {
+        }
+
         #region ICustomTypeDescriptor Members
 
         public TypeConverter GetConverter()

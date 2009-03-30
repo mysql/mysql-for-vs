@@ -12,10 +12,12 @@ namespace MySql.Data.VisualStudio.Editors
     partial class TableIndexDialog : Form
     {
         private TableNode tableNode;
+        private Table table;
 
         public TableIndexDialog(TableNode node)
         {
             tableNode = node;
+            table = tableNode.Table;
             InitializeComponent();
 
             foreach (Index i in tableNode.Table.Indexes)
@@ -45,20 +47,20 @@ namespace MySql.Data.VisualStudio.Editors
 
         private void addButton_Click(object sender, EventArgs e)
         {
-            Index index = tableNode.Table.CreateIndexWithUniqueName(false);
+            Index index = table.CreateIndexWithUniqueName(false);
             IndexColumn ic = new IndexColumn();
             ic.OwningIndex = index;
-            ic.ColumnName = tableNode.Table.Columns[0].ColumnName;
+            ic.ColumnName = table.Columns[0].ColumnName;
             ic.SortOrder = IndexSortOrder.Ascending;
             index.Columns.Add(ic);
-            tableNode.Table.Indexes.Add(index);
+            table.Indexes.Add(index);
             indexList.SelectedIndex = indexList.Items.Add(index.Name);
         }
 
         private void deleteButton_Click(object sender, EventArgs e)
         {
             int index = indexList.SelectedIndex;
-            tableNode.Table.Indexes.RemoveAt(index);
+            table.Indexes.RemoveAt(index);
             indexList.Items.RemoveAt(index);
             index --;
             if (index == -1 && indexList.Items.Count > 0)

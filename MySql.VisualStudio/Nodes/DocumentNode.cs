@@ -43,6 +43,7 @@ namespace MySql.Data.VisualStudio
                 ExecuteSQL(sql);
                 Dirty = false;
                 IsNew = false;
+                OnDataSaved();
                 return true;
             }
             catch (Exception ex)
@@ -128,6 +129,7 @@ namespace MySql.Data.VisualStudio
 
         public event EventHandler DataLoaded;
         public event EventHandler DataChanged;
+        public event EventHandler DataSaved;
 
         private void OnDataLoaded()
         {
@@ -139,6 +141,12 @@ namespace MySql.Data.VisualStudio
         {
             if (DataChanged != null)
                 DataChanged(this, null);
+        }
+
+        private void OnDataSaved()
+        {
+            if (DataSaved != null)
+                DataSaved(this, null);
         }
 
         #endregion
