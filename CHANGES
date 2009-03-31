@@ -1,6 +1,7 @@
 Version 6.0.1
 - Fixed problem with the foreign key columns schema collection
 - Fixed problem with index column schema collection
+- Fixed problem with generation of medium and longtext columns in entity models
 
 Version 6.0
 - Massive speedups
