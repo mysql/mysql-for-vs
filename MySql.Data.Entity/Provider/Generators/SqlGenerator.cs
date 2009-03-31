@@ -35,7 +35,6 @@ namespace MySql.Data.Entity
         private int parameterCount = 1;
         protected Scope scope = new Scope();
         protected int propertyLevel;
-//        public List<ColumnFragment> BoolOverrides = new List<ColumnFragment>();
         protected Dictionary<EdmMember, SqlFragment> values;
 
         public SqlGenerator()

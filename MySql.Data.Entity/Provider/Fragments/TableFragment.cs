@@ -47,7 +47,7 @@ namespace MySql.Data.Entity
             if (DefiningQuery != null)
                 sql.AppendFormat("({0})", DefiningQuery);
             else
-                sql.AppendFormat("{0}.{1}", QuoteIdentifier(Schema), QuoteIdentifier(Table));
+                sql.AppendFormat("{0}", QuoteIdentifier(Table));
             base.WriteSql(sql);
         }
     }
