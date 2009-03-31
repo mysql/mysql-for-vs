@@ -5,6 +5,8 @@ Version 6.0.1
 - Changed entity framework generation so that schemas are not written out.  This allows
   a single model to swing from one database to another by just changing the connection
   string (bug #43274)
+- fixed problem in sql generation that caused decimal values to be generated incorrectly
+  when using a certain cultures (bug #43574)
 
 Version 6.0
 - Massive speedups

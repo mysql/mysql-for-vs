@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Data.Common.CommandTrees;
 using System.Data.Metadata.Edm;
 using MySql.Data.MySqlClient;
+using System.Globalization;
 
 namespace MySql.Data.Entity
 {
@@ -149,6 +150,11 @@ namespace MySql.Data.Entity
             PrimitiveTypeKind pt = ((PrimitiveType)expression.ResultType.EdmType).PrimitiveTypeKind;
             if (Metadata.IsNumericType(expression.ResultType))
                 return new LiteralFragment(expression.Value.ToString());
+            else if (pt == PrimitiveTypeKind.Decimal)
+            {
+                decimal val = (decimal)expression.Value;
+                return new LiteralFragment(val.ToString(CultureInfo.InvariantCulture));
+            }
             else if (pt == PrimitiveTypeKind.Boolean)
                 return new LiteralFragment(String.Format("cast({0} as decimal(0,0))",
                     (bool)expression.Value ? 1 : 0));
