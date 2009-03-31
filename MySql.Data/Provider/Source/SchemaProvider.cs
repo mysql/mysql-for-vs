@@ -256,7 +256,14 @@ namespace MySql.Data.MySqlClient
             dt.Columns.Add("UNIQUE", typeof (bool));
             dt.Columns.Add("PRIMARY", typeof (bool));
 
-            DataTable tables = GetTables(restrictions);
+            // Get the list of tables first
+            int max = restrictions == null ? 4 : restrictions.Length;
+            string[] tableRestrictions = new string[Math.Max(max, 4)];
+            if (restrictions != null)
+                restrictions.CopyTo(tableRestrictions, 0);
+            tableRestrictions[3] = "BASE TABLE";
+            DataTable tables = GetTables(tableRestrictions);
+
             foreach (DataRow table in tables.Rows)
             {
                 string sql = String.Format("SHOW INDEX FROM `{0}`.`{1}`",
@@ -295,8 +302,10 @@ namespace MySql.Data.MySqlClient
             dt.Columns.Add("COLUMN_NAME", typeof (string));
             dt.Columns.Add("ORDINAL_POSITION", typeof (int));
 
-            string[] tableRestrictions = new string[Math.Max(restrictions.Length, 4)]; 
-            restrictions.CopyTo(tableRestrictions, 0);
+            int max = restrictions == null ? 4 : restrictions.Length;
+            string[] tableRestrictions = new string[Math.Max(max, 4)];
+            if (restrictions != null)
+                restrictions.CopyTo(tableRestrictions, 0);
             tableRestrictions[3] = "BASE TABLE";
             DataTable tables = GetTables(tableRestrictions);
 

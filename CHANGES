@@ -27,6 +27,8 @@ Version 5.2.6
   rolled back in every case (bug #43553)   
 - Fixed typo in the collection returned when you request the MetaDataCollections collection.  The
   NumberOfRestrictions column was missing the trailing s. (bug #43990)      
+- fixed index and index column schema collections that would fail if you specified the
+  any restrictions more specific than table name (bug #43991)      
       
 Version 5.2.5 - 11/14/2008
 - fixed problem with package registration that kept the DDEX provider from working (bug #40726)
