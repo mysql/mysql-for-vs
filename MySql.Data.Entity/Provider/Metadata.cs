@@ -35,7 +35,6 @@ namespace MySql.Data.Entity
             switch (pt.PrimitiveTypeKind)
             {
                 case PrimitiveTypeKind.Byte:
-                case PrimitiveTypeKind.Decimal:
                 case PrimitiveTypeKind.Double:
                 case PrimitiveTypeKind.Single:
                 case PrimitiveTypeKind.Int16:
