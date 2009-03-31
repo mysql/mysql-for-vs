@@ -616,7 +616,7 @@ namespace MySql.Data.MySqlClient
 
             DataTable dt = new DataTable("MetaDataCollections");
             dt.Columns.Add(new DataColumn("CollectionName", typeof (string)));
-            dt.Columns.Add(new DataColumn("NumberOfRestriction", typeof (int)));
+            dt.Columns.Add(new DataColumn("NumberOfRestrictions", typeof(int)));
             dt.Columns.Add(new DataColumn("NumberOfIdentifierParts", typeof (int)));
 
             FillTable(dt, collections);
