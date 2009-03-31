@@ -10,6 +10,11 @@ Version 5.1.8
   - fixed problem with datetime formatting that causes an extra space to be included between the
     date and time when sent to the server (bug #41021)
   - fixed "metadatacollections" collection to include foreign key columns
+  - fixed problem with execution of LOAD DATA LOCAL INFILE (which also affected MySqlBulkLoader).
+    When the driver encountered some type of error opening the local file for transport it would
+    still attempt to close the file which would yield a null reference exception (bug #43332)      
+  - fixed index and index column schema collections that would fail if you specified the
+    any restrictions more specific than table name (bug #43991)
   
 Version 5.1.7 - 8/20/08
  - Fixed problem with DDEX provider that could sometimes prevent table altering when working with
