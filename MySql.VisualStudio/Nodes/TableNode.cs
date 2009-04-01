@@ -14,7 +14,6 @@ namespace MySql.Data.VisualStudio
 	class TableNode : DocumentNode
 	{
         private Table table;
-        private bool isDirty;
 
 		public TableNode(DataViewHierarchyAccessor hierarchyAccessor, int id) : 
 			base(hierarchyAccessor, id)
@@ -36,9 +35,7 @@ namespace MySql.Data.VisualStudio
             {
                 Debug.Assert(table != null);
 
-                return table.HasChanges(); // if (!isDirty)
-                    //isDirty = table.HasChanges();
-                //return isDirty;
+                return table.HasChanges();
             }
         }
 
@@ -87,11 +84,6 @@ namespace MySql.Data.VisualStudio
         {
             return Table.GetSql();
         }
-
-		public override void ExecuteCommand(int command)
-		{
-    		Edit();
-		}
 
 		public override object GetEditor()
 		{

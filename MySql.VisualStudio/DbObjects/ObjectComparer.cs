@@ -12,7 +12,7 @@ namespace MySql.Data.VisualStudio.DbObjects
         {
             Type firstType = one.GetType();
             Type secondType = two.GetType();
-            if (firstType != secondType) return false;
+    //        if (firstType != secondType) return false;
 
             PropertyInfo[] properties = firstType.GetProperties(
                 BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public);

@@ -44,6 +44,7 @@ namespace MySql.Data.VisualStudio
                 Dirty = false;
                 IsNew = false;
                 OnDataSaved();
+                RefreshServerExplorer();
                 return true;
             }
             catch (Exception ex)

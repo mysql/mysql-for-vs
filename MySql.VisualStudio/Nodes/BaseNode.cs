@@ -16,6 +16,7 @@ using Microsoft.VisualStudio.Data.AdoDotNet;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.OLE.Interop;
 using MySql.Data.VisualStudio.Editors;
+using Microsoft.VisualStudio.Shell;
 
 namespace MySql.Data.VisualStudio
 {
@@ -112,6 +113,7 @@ namespace MySql.Data.VisualStudio
 		{
 			switch ((uint)command)
 			{
+                case 12291:  // design
 				case PkgCmdIDList.cmdAlterTable:
 				case PkgCmdIDList.cmdAlterTrigger:
 				case PkgCmdIDList.cmdAlterProcedure:
@@ -119,7 +121,7 @@ namespace MySql.Data.VisualStudio
 					Alter();
 					break;
 
-                case PkgCmdIDList.cmdDelete:
+                case (uint)VSConstants.VSStd97CmdID.Delete:
 					Drop();
 					break;
 			}
@@ -309,6 +311,79 @@ namespace MySql.Data.VisualStudio
             {
                 HierarchyAccessor.Connection.UnlockProviderObject();
             }
+        }
+
+        /// <summary>
+        /// Selects connection node in the Server Explorer window.
+        /// </summary>
+        private void SelectConnectionNode()
+        {
+            //MySqlDataProviderPackage package = MySqlDataProviderPackage.Instance;
+            // Extracts connection mamanger global service
+            DataExplorerConnectionManager manager = Package.GetGlobalService(typeof(DataExplorerConnectionManager))
+                as DataExplorerConnectionManager;
+            if (manager == null)
+            {
+                Debug.Fail("Failed to get connection manager!");
+                return;
+            }
+            
+            // Searches for connection using connection string for current connection
+            DataExplorerConnection connection = manager.FindConnection(
+                GuidList.ProviderGUID, HierarchyAccessor.Connection.EncryptedConnectionString, true);
+            if (connection == null)
+            {
+                Debug.Fail("Failed to find proper connection node!");
+                return;
+            }
+
+            // Select connection node
+            manager.SelectConnection(connection);
+        }
+
+        public void RefreshServerExplorer()
+        {
+            // Select connection node to have all content refreshed. 
+            SelectConnectionNode();
+
+            // Predefined IDs (constans are available only in H files)             
+            Guid seToolWindow = new Guid("{74946827-37A0-11D2-A273-00C04F8EF4FF}");
+            Guid cmdGroup = new Guid("{74D21311-2AEE-11d1-8BFB-00A0C90F26F7}");
+
+            // Get server explorer window
+            IVsUIShell uiShell = Package.GetGlobalService(typeof(IVsUIShell)) as IVsUIShell;
+
+            IVsWindowFrame frame;
+            uiShell.FindToolWindow(0, ref seToolWindow, out frame);
+            if (frame == null)
+                return;
+
+            // Determine if server explorer window is currently visible
+            bool isVisible = frame.IsVisible() == 0;
+
+            // Display server explorer window, if not visible
+            if (!isVisible)
+                frame.ShowNoActivate();
+
+            // Get OLE command target
+            IOleCommandTarget target = frame as IOleCommandTarget;
+            if (target == null)
+                return;
+
+            // Executes command for selected node (connection node should be selected - only 
+            // in this case all content will be refreshed)
+            int result = target.Exec(
+                ref cmdGroup,
+                0x03004,
+                0,
+                IntPtr.Zero,
+                IntPtr.Zero);
+
+            // Hide server explorer if should be hidden
+            if (!isVisible)
+                frame.Hide();
+
+            Debug.Assert(ErrorHandler.Succeeded(result), "Error while executing refresh command for server explorer!");
         }
 
         #endregion
