@@ -46,6 +46,7 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("Foreign Keys", dt.Rows[row++][0]);
             Assert.AreEqual("IndexColumns", dt.Rows[row++][0]);
             Assert.AreEqual("Indexes", dt.Rows[row++][0]);
+            Assert.AreEqual("Foreign Key Columns", dt.Rows[row++][0]);
             Assert.AreEqual("UDF", dt.Rows[row++][0]);
 
             if (Version >= new Version(5, 0))
