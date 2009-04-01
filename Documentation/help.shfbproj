@@ -1,0 +1,112 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <!-- The configuration and platform will be used to determine which
+         assemblies to include from solution and project documentation
+         sources -->
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5c97df05-1229-4b30-9711-789d0d6ff81b}</ProjectGuid>
+    <SHFBSchemaVersion>1.8.0.0</SHFBSchemaVersion>
+    <!-- AssemblyName, Name, and RootNamespace are not used by SHFB but Visual
+         Studio adds them anyway -->
+    <AssemblyName>Documentation</AssemblyName>
+    <RootNamespace>Documentation</RootNamespace>
+    <Name>Documentation</Name>
+    <!-- SHFB properties -->
+    <OutputPath>.\Output\</OutputPath>
+    <HtmlHelpName>MySql.Data</HtmlHelpName>
+    <ApiFilter>
+      <Filter entryType="Namespace" fullName="MySql.Data.MySqlClient" isExposed="True" xmlns="">
+        <Filter entryType="Class" fullName="MySql.Data.MySqlClient.CustomInstaller" filterName="CustomInstaller" isExposed="False" />
+      </Filter>
+      <Filter entryType="Namespace" fullName="MySql.Web.Security" isExposed="True" xmlns="">
+        <Filter entryType="Class" fullName="MySql.Web.Security.CustomInstaller" filterName="CustomInstaller" isExposed="False" />
+      </Filter>
+    </ApiFilter>
+    <ProjectSummary>
+    </ProjectSummary>
+    <MissingTags>Summary, Parameter, Returns, TypeParameter</MissingTags>
+    <VisibleItems>InheritedMembers, InheritedFrameworkMembers, Protected, SealedProtected</VisibleItems>
+    <HtmlHelp1xCompilerPath>
+    </HtmlHelp1xCompilerPath>
+    <HtmlHelp2xCompilerPath>
+    </HtmlHelp2xCompilerPath>
+    <SandcastlePath>
+    </SandcastlePath>
+    <WorkingPath>
+    </WorkingPath>
+    <CleanIntermediates>False</CleanIntermediates>
+    <BuildLogFile>
+    </BuildLogFile>
+    <HelpFileFormat>Help1xAndHelp2x</HelpFileFormat>
+    <FrameworkVersion>2.0.50727</FrameworkVersion>
+    <RootNamespaceContainer>True</RootNamespaceContainer>
+    <RootNamespaceTitle>Reference</RootNamespaceTitle>
+    <HelpTitle>MySQL Connector/Net</HelpTitle>
+    <CopyrightHref>http://www.mysql.com</CopyrightHref>
+    <CopyrightText>&amp;#169%3b 2004-2008 MySQL AB. All rights reserved.</CopyrightText>
+    <FeedbackEMailAddress>support%40mysql.com</FeedbackEMailAddress>
+    <PresentationStyle>vs2005</PresentationStyle>
+    <NamingMethod>MemberName</NamingMethod>
+    <DocumentationSources>
+      <DocumentationSource sourceFile="..\MySql.Data\Provider\MySql.Data.csproj" />
+<DocumentationSource sourceFile="..\MySql.Web\Providers\MySql.Web.csproj" /></DocumentationSources>
+    <NamespaceSummaries>
+      <NamespaceSummaryItem name="(global)" isDocumented="False" xmlns="" />
+      <NamespaceSummaryItem name="MySql.Data.Common" isDocumented="False" xmlns="" />
+      <NamespaceSummaryItem name="MySql.Data.MySqlClient" isDocumented="True" xmlns="" />
+      <NamespaceSummaryItem name="MySql.Data.Types" isDocumented="True" xmlns="" />
+      <NamespaceSummaryItem name="zlib" isDocumented="False" xmlns="" />
+    </NamespaceSummaries>
+  </PropertyGroup>
+  <!-- There are no properties for these two groups but they need to appear in
+       order for Visual Studio to perform the build. -->
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Guide\Advanced Topics\" />
+    <Folder Include="Guide\Integration\Visual Studio 2005\Editing Tables\" />
+    <Folder Include="Guide\Integration\Visual Studio 2005\" />
+    <Folder Include="Guide\Integration\" />
+    <Folder Include="Guide\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Guide\Advanced Topics\Providers.html" />
+    <Content Include="Guide\Advanced Topics\Medium Trust.html" />
+    <Content Include="Guide\Advanced Topics\Character Sets.html" />
+    <Content Include="Guide\Advanced Topics\Binary Issues.html" />
+    <Content Include="Guide\Advanced Topics\aspnetconfig.jpg" />
+    <Content Include="Guide\Requirements.html" />
+    <Content Include="Guide\Installation.html" />
+    <Content Include="Guide\Integration\Visual Studio 2005\Editing Tables\Table Properties.html" />
+    <Content Include="Guide\Integration\Visual Studio 2005\Editing Tables\Indexes.html" />
+    <Content Include="Guide\Integration\Visual Studio 2005\Editing Tables\Image4.jpg" />
+    <Content Include="Guide\Integration\Visual Studio 2005\Editing Tables\Foreign Keys.html" />
+    <Content Include="Guide\Integration\Visual Studio 2005\Editing Tables\Editing Tables.html" />
+    <Content Include="Guide\Integration\Visual Studio 2005\Editing Tables\Column Editor.html" />
+    <Content Include="Guide\Integration\Visual Studio 2005\Editing Tables\Column Details.html" />
+    <Content Include="Guide\Integration\Visual Studio 2005\Visual Studio 2005.html" />
+    <Content Include="Guide\Integration\Visual Studio 2005\Using the provider.html" />
+    <Content Include="Guide\Integration\Visual Studio 2005\seealso.gif" />
+    <Content Include="Guide\Integration\Visual Studio 2005\Making a Connection.html" />
+    <Content Include="Guide\Integration\Visual Studio 2005\Image3.jpg" />
+    <Content Include="Guide\Integration\Visual Studio 2005\Image2.jpg" />
+    <Content Include="Guide\Integration\Visual Studio 2005\Image1.jpg" />
+    <Content Include="Guide\Integration\Visual Studio 2005\Editing Views.html" />
+    <Content Include="Guide\Integration\Visual Studio 2005\Editing User Defined Functions (UDF).html" />
+    <Content Include="Guide\Integration\Visual Studio 2005\Editing Triggers.html" />
+    <Content Include="Guide\Integration\Visual Studio 2005\Editing Table Data.html" />
+    <Content Include="Guide\Integration\Visual Studio 2005\Editing Stored Procedures and Functions.html" />
+    <Content Include="Guide\Integration\Visual Studio 2005\Dropping Database Objects.html" />
+    <Content Include="Guide\Integration\Visual Studio 2005\Cloing Database Objects.html" />
+    <Content Include="Guide\Integration\Integration.html" />
+    <Content Include="Guide\Whats New.html" />
+    <Content Include="Guide\support.html" />
+    <Content Include="Guide\Compatibility.html" />
+  </ItemGroup>
+  <!-- Import the SHFB build targets -->
+  <Import Project="$(SHFBROOT)\SandcastleHelpFileBuilder.targets" />
+</Project>
