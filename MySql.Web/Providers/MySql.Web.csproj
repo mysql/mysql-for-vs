@@ -57,6 +57,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Source\Application.cs" />
     <Compile Include="Source\Install.cs">
       <SubType>Component</SubType>
     </Compile>

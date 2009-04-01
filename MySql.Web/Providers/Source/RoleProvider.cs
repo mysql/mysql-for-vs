@@ -35,6 +35,7 @@ using System.Collections.Generic;
 using MySql.Web.Common;
 using MySql.Web.Properties;
 using System.Web;
+using MySql.Web.General;
 
 namespace MySql.Web.Security
 {
@@ -49,8 +50,7 @@ namespace MySql.Web.Security
         private ConnectionStringSettings pConnectionStringSettings;
         private string connectionString;
         private bool pWriteExceptionsToEventLog = false;
-        private string applicationName;
-        private int applicationId;
+        private Application app;
 
         /// <summary>
         /// Initializes the provider.
@@ -77,9 +77,8 @@ namespace MySql.Web.Security
             }
             base.Initialize(name, config);
 
-            if (config["applicationName"] == null || config["applicationName"].Trim() == "")
-                applicationName = HostingEnvironment.ApplicationVirtualPath;
-            else
+            string applicationName = HostingEnvironment.ApplicationVirtualPath;
+            if (!String.IsNullOrEmpty(config["applicationName"]))
                 applicationName = config["applicationName"];
 
             if (!(config["writeExceptionsToEventLog"] == null))
@@ -100,23 +99,7 @@ namespace MySql.Web.Security
             // make sure our schema is up to date
             SchemaManager.CheckSchema(connectionString, config);
 
-            try
-            {
-                // now pre-cache the applicationId
-                using (MySqlConnection conn = new MySqlConnection(connectionString))
-                {
-                    conn.Open();
-                    MySqlCommand cmd = new MySqlCommand("SELECT id FROM my_aspnet_Applications WHERE name=@name", conn);
-                    cmd.Parameters.AddWithValue("@name", applicationName);
-                    object appId = cmd.ExecuteScalar();
-                    if (appId != null)
-                        applicationId = Convert.ToInt32(appId);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new ProviderException(Resources.ErrorInitOfRoleProvider, ex);
-            }
+            app = new Application(applicationName, Description);
         }
 
         #region Properties
@@ -130,8 +113,8 @@ namespace MySql.Web.Security
         /// </example>
         public override string ApplicationName
         {
-            get { return applicationName; }
-            set { applicationName = value; }
+            get { return app.Name; }
+            set { app.Name = value; }
         }
 
         /// <summary>
@@ -160,6 +143,9 @@ namespace MySql.Web.Security
         /// <param name="rolenames">The rolenames.</param>
         public override void AddUsersToRoles(string[] usernames, string[] rolenames)
         {
+            if (rolenames == null || rolenames.Length == 0) return;
+            if (usernames == null || usernames.Length == 0) return;
+
             foreach (string rolename in rolenames)
             {
                 if (String.IsNullOrEmpty(rolename))
@@ -197,7 +183,7 @@ namespace MySql.Web.Security
                         {
                             // either create a new user or fetch the existing user id
                             int userId = SchemaManager.CreateOrFetchUserId(connection,
-                                username, applicationId, true);
+                                username, app.Id, true);
                             foreach (string rolename in rolenames)
                             {
                                 int roleId = GetRoleId(connection, rolename);
@@ -235,13 +221,9 @@ namespace MySql.Web.Security
                 {
                     connection.Open();
 
-                    // create or fetch a new application id
-                    SchemaManager.CreateOrFetchApplicationId(applicationName,
-                        ref applicationId, base.Description, connection);
-
                     MySqlCommand cmd = new MySqlCommand(
                             @"INSERT INTO my_aspnet_Roles Values(NULL, @appId, @name)", connection);
-                    cmd.Parameters.AddWithValue("@appId", applicationId);
+                    cmd.Parameters.AddWithValue("@appId", app.EnsureId(connection));
                     cmd.Parameters.AddWithValue("@name", rolename);
                     cmd.ExecuteNonQuery();
                 }
@@ -280,7 +262,7 @@ namespace MySql.Web.Security
                             my_aspnet_Roles r ON uir.roleId=r.id 
                             WHERE r.name LIKE @rolename AND r.applicationId=@appId", connection);
                         cmd.Parameters.AddWithValue("@rolename", rolename);
-                        cmd.Parameters.AddWithValue("@appId", applicationId);
+                        cmd.Parameters.AddWithValue("@appId", app.Id);
                         cmd.ExecuteNonQuery();
 
                         // now delete the role itself
@@ -288,6 +270,7 @@ namespace MySql.Web.Security
                             AND applicationId=@appId";
                         cmd.ExecuteNonQuery();
                     }
+                    ts.Complete();
                 }
             }
             catch (Exception ex)
@@ -352,7 +335,7 @@ namespace MySql.Web.Security
                     WHERE u.applicationId=@appId";
                     MySqlCommand cmd = new MySqlCommand(sql, connection);
                     cmd.Parameters.AddWithValue("@roleId", roleId);
-                    cmd.Parameters.AddWithValue("@appId", applicationId);
+                    cmd.Parameters.AddWithValue("@appId", app.Id);
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
@@ -382,14 +365,20 @@ namespace MySql.Web.Security
         {
             try
             {
+                // this will refresh the app id if necessary
+                if (!RoleExists(rolename)) return false;
+
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
                     connection.Open();
+
                     string sql = @"SELECT COUNT(*) FROM my_aspnet_UsersInRoles uir 
                         JOIN my_aspnet_Users u ON uir.userId=u.id
                         JOIN my_aspnet_Roles r ON uir.roleId=r.id
-                        WHERE u.name LIKE @userName AND r.name LIKE @roleName";
+                        WHERE u.applicationId=@appId AND 
+                        u.name LIKE @userName AND r.name LIKE @roleName";
                     MySqlCommand cmd = new MySqlCommand(sql, connection);
+                    cmd.Parameters.AddWithValue("@appId", app.Id);
                     cmd.Parameters.AddWithValue("@userName", username);
                     cmd.Parameters.AddWithValue("@roleName", rolename);
                     int count = Convert.ToInt32(cmd.ExecuteScalar());
@@ -411,6 +400,9 @@ namespace MySql.Web.Security
         /// <param name="rolenames">The rolenames.</param>
         public override void RemoveUsersFromRoles(string[] usernames, string[] rolenames)
         {
+            if (rolenames == null || rolenames.Length == 0) return;
+            if (usernames == null || usernames.Length == 0) return;
+
             foreach (string rolename in rolenames)
             {
                 if (!(RoleExists(rolename)))
@@ -442,7 +434,7 @@ namespace MySql.Web.Security
                         MySqlCommand cmd = new MySqlCommand(sql, connection);
                         cmd.Parameters.Add("@username", MySqlDbType.VarChar, 255);
                         cmd.Parameters.Add("@rolename", MySqlDbType.VarChar, 255);
-                        cmd.Parameters.AddWithValue("@appId", applicationId);
+                        cmd.Parameters.AddWithValue("@appId", app.Id);
 
                         foreach (string username in usernames)
                         {
@@ -454,6 +446,7 @@ namespace MySql.Web.Security
                             }
                         }
                     }
+                    ts.Complete();
                 }
             }
             catch (MySqlException e)
@@ -479,7 +472,7 @@ namespace MySql.Web.Security
                     MySqlCommand cmd = new MySqlCommand(
                         @"SELECT COUNT(*) FROM my_aspnet_Roles WHERE applicationId=@appId 
                         AND name LIKE @name", connection);
-                    cmd.Parameters.AddWithValue("@appId", applicationId);
+                    cmd.Parameters.AddWithValue("@appId", app.FetchId(connection));
                     cmd.Parameters.AddWithValue("@name", rolename);
                     int count = Convert.ToInt32(cmd.ExecuteScalar());
                     return count != 0;
@@ -502,9 +495,13 @@ namespace MySql.Web.Security
         /// user name matches usernameToMatch and the user is a member of the specified role. </returns>
         public override string[] FindUsersInRole(string rolename, string usernameToMatch)
         {
-            List<string> users =new List<string>();
+            if (!RoleExists(rolename))
+                throw new ProviderException(Resources.RoleNameNotFound);
 
-            try {
+            List<string> users = new List<string>();
+
+            try
+            {
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
                     connection.Open();
@@ -519,7 +516,7 @@ namespace MySql.Web.Security
                     MySqlCommand cmd = new MySqlCommand(sql, connection);
                     cmd.Parameters.AddWithValue("@username", usernameToMatch);
                     cmd.Parameters.AddWithValue("@rolename", rolename);
-                    cmd.Parameters.AddWithValue("@appId", applicationId);
+                    cmd.Parameters.AddWithValue("@appId", app.Id);
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
@@ -560,7 +557,7 @@ namespace MySql.Web.Security
                         GetUserId(connection, username);
                 sql += " WHERE r.applicationId=@appId";
                 MySqlCommand cmd = new MySqlCommand(sql, connection);
-                cmd.Parameters.AddWithValue("@appId", applicationId);
+                cmd.Parameters.AddWithValue("@appId", app.Id);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -582,7 +579,7 @@ namespace MySql.Web.Security
                 "SELECT id FROM my_aspnet_Users WHERE name=@name AND applicationId=@appId",
                 connection);
             cmd.Parameters.AddWithValue("@name", username);
-            cmd.Parameters.AddWithValue("@appId", applicationId);
+            cmd.Parameters.AddWithValue("@appId", app.Id);
             object id = cmd.ExecuteScalar();
             return Convert.ToInt32(id);
         }
@@ -593,7 +590,7 @@ namespace MySql.Web.Security
                 "SELECT id FROM my_aspnet_Roles WHERE name=@name AND applicationId=@appId",
                 connection);
             cmd.Parameters.AddWithValue("@name", rolename);
-            cmd.Parameters.AddWithValue("@appId", applicationId);
+            cmd.Parameters.AddWithValue("@appId", app.Id);
             return (int)cmd.ExecuteScalar();
         }
 

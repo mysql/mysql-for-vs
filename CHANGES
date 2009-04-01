@@ -28,6 +28,27 @@ Version 5.2.6
 - removed code from profile provider that overrode Name and Description properties in error.  This had the
   effect of not allowing you to override those values in the web.config (ug #40871)    
 - fixed "metadatacollections" collection to include foreign key columns
+- fixed GetAllProfiles (which is used by several methods).  It had a typo in the SQL and was not
+  including several important columns (bug #41654)      
+- fixed problem where the core method GetUser was not properly checking the application id
+  when retrieving user id values.  This would mean that in some cases methods like
+  ValidateUser would return success when they shouldn't.  (bug #42574)  This triggered several
+  other cleanups in all the providers   
+- fixed problem with execution of LOAD DATA LOCAL INFILE (which also affected MySqlBulkLoader).
+  When the driver encountered some type of error opening the local file for transport it would
+  still attempt to close the file which would yield a null reference exception (bug #43332)      
+- fixed Sql null value exception when an attempt was made to reset the password and 
+  require question and answer was false.  (bug #41408)  
+- fixed MySqlDataReader.GetGuid to be more robust in how it attempts to read guid values (bug #41452)     
+- fixed bug where attempting to clear a pool twice would result in a null reference exception (bug #42801)    
+- Fixed problem with index column schema collection
+- Fixed RemoveUsersFromRoles and DeleteRole where they were not calling transactionscope.Complete.
+  This meant that on systems where the provider tables are transaction aware the changes could be
+  rolled back in every case (bug #43553)   
+- Fixed typo in the collection returned when you request the MetaDataCollections collection.  The
+  NumberOfRestrictions column was missing the trailing s. (bug #43990)      
+- fixed index and index column schema collections that would fail if you specified the
+  any restrictions more specific than table name (bug #43991)      
       
 Version 5.2.5 - 11/14/2008
 - fixed problem with package registration that kept the DDEX provider from working (bug #40726)

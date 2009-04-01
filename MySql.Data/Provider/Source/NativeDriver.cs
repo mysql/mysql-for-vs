@@ -581,28 +581,25 @@ namespace MySql.Data.MySqlClient
         private void SendFileToServer(string filename)
         {
             byte[] buffer = new byte[8196];
-            FileStream fs = null;
 
             long len = 0;
             try
             {
-                fs = new FileStream(filename, FileMode.Open);
-                len = fs.Length;
-                while (len > 0)
+                using (FileStream fs = new FileStream(filename, FileMode.Open))
                 {
-                    int count = fs.Read(buffer, 4, (int)(len > 8192 ? 8192 : len));
-                    stream.SendEntirePacketDirectly(buffer, count);
-                    len -= count;
+                    len = fs.Length;
+                    while (len > 0)
+                    {
+                        int count = fs.Read(buffer, 4, (int)(len > 8192 ? 8192 : len));
+                        stream.SendEntirePacketDirectly(buffer, count);
+                        len -= count;
+                    }
+                    stream.SendEntirePacketDirectly(buffer, 0);
                 }
-                stream.SendEntirePacketDirectly(buffer, 0);
             }
             catch (Exception ex)
             {
                 throw new MySqlException("Error during LOAD DATA LOCAL INFILE", ex);
-            }
-            finally
-            {
-                fs.Close();
             }
         }
 
