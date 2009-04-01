@@ -149,37 +149,5 @@ namespace MySql.Web.Common
             cmd.CommandText = "SELECT LAST_INSERT_ID()";
             return Convert.ToInt32(cmd.ExecuteScalar());
         }
-
-        /// <summary>
-        /// Creates the or fetch application id.
-        /// </summary>
-        /// <param name="applicationName">Name of the application.</param>
-        /// <param name="applicationId">The application id.</param>
-        /// <param name="applicationDesc">The application desc.</param>
-        /// <param name="connection">The connection.</param>
-        internal static void CreateOrFetchApplicationId(string applicationName, 
-            ref int applicationId, string applicationDesc, MySqlConnection connection)
-        {
-            // no need to create another one
-            if (applicationId > 0) return;
-
-            MySqlCommand cmd = new MySqlCommand(@"SELECT id FROM my_aspnet_Applications
-                WHERE name = @appName", connection);
-            cmd.Parameters.AddWithValue("@appName", applicationName);
-            object appId = cmd.ExecuteScalar();
-            if (appId == null)
-            {
-                cmd.CommandText = @"INSERT INTO my_aspnet_Applications VALUES (NULL, @appName, @appDesc)";
-                cmd.Parameters.AddWithValue("@appDesc", applicationDesc);
-                int recordsAffected = cmd.ExecuteNonQuery();
-                if (recordsAffected != 1)
-                    throw new ProviderException(Resources.UnableToCreateApplication);
-
-                cmd.CommandText = "SELECT LAST_INSERT_ID()";
-                appId = cmd.ExecuteScalar();
-            }
-            applicationId = Convert.ToInt32(appId);
-        }
-
     }
 }

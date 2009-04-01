@@ -29,6 +29,7 @@ using System.Data;
 using System;
 using System.Configuration.Provider;
 using MySql.Web.Security;
+using MySql.Data.MySqlClient;
 
 namespace MySql.Web.Tests
 {
@@ -606,6 +607,56 @@ namespace MySql.Web.Tests
 
             string pw = provider.GetPassword("foo", null);
             Assert.AreEqual("barbar!", pw);
+        }
+
+        /// <summary>
+        /// Bug #42574	ValidateUser does not use the application id, allowing cross application login
+        /// </summary>
+        [Test]
+        public void CrossAppLogin()
+        {
+            provider = new MySQLMembershipProvider();
+            NameValueCollection config = new NameValueCollection();
+            config.Add("connectionStringName", "LocalMySqlServer");
+            config.Add("applicationName", "/");
+            config.Add("passwordStrengthRegularExpression", "bar.*");
+            config.Add("passwordFormat", "Clear");
+            provider.Initialize(null, config);
+            MembershipCreateStatus status;
+            provider.CreateUser("foo", "bar!bar", null, null, null, true, null, out status);
+
+            MySQLMembershipProvider provider2 = new MySQLMembershipProvider();
+            NameValueCollection config2 = new NameValueCollection();
+            config2.Add("connectionStringName", "LocalMySqlServer");
+            config2.Add("applicationName", "/myapp");
+            config2.Add("passwordStrengthRegularExpression", ".*");
+            config2.Add("passwordFormat", "Clear");
+            provider2.Initialize(null, config2);
+
+            bool worked = provider2.ValidateUser("foo", "bar!bar");
+            Assert.AreEqual(false, worked);
+        }
+
+        /// <summary>
+        /// Bug #41408	PasswordReset not possible when requiresQuestionAndAnswer="false"
+        /// </summary>
+        [Test]
+        public void ResetPassword()
+        {
+            provider = new MySQLMembershipProvider();
+            NameValueCollection config = new NameValueCollection();
+            config.Add("connectionStringName", "LocalMySqlServer");
+            config.Add("applicationName", "/");
+            config.Add("passwordStrengthRegularExpression", "bar.*");
+            config.Add("passwordFormat", "Clear");
+            config.Add("requiresQuestionAndAnswer", "false");
+            provider.Initialize(null, config);
+
+            MembershipCreateStatus status;
+            provider.CreateUser("foo", "bar!bar", null, null, null, true, null, out status);
+
+            MembershipUser u = provider.GetUser("foo", false);
+            string newpw = provider.ResetPassword("foo", null);
         }
     }
 }

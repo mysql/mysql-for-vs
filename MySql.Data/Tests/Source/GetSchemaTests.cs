@@ -327,6 +327,14 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual(false, dt.Rows[0]["PRIMARY"]);
 			Assert.AreEqual(true, dt.Rows[0]["UNIQUE"]);
 
+            restrictions[3] = "key2";
+            dt = conn.GetSchema("Indexes", restrictions);
+            Assert.AreEqual(1, dt.Rows.Count);
+            Assert.AreEqual("test", dt.Rows[0]["TABLE_NAME"]);
+            Assert.AreEqual("key2", dt.Rows[0]["INDEX_NAME"]);
+            Assert.AreEqual(false, dt.Rows[0]["PRIMARY"]);
+            Assert.AreEqual(true, dt.Rows[0]["UNIQUE"]);
+
 			execSQL("DROP TABLE IF EXISTS test");
 			execSQL("CREATE TABLE test (id int, name varchar(50), " +
 				"KEY key2 (name))");
@@ -363,6 +371,13 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual("id2", dt.Rows[0]["COLUMN_NAME"]);
 			Assert.AreEqual(2, dt.Rows[0]["ORDINAL_POSITION"]);
 
+            restrictions[3] = "key1";
+            dt = conn.GetSchema("IndexColumns", restrictions);
+            Assert.AreEqual(1, dt.Rows.Count);
+            Assert.AreEqual("test", dt.Rows[0]["TABLE_NAME"]);
+            Assert.AreEqual("id2", dt.Rows[0]["COLUMN_NAME"]);
+            Assert.AreEqual(2, dt.Rows[0]["ORDINAL_POSITION"]);
+
 			restrictions = new string[3];
 			restrictions[1] = database0;
 			restrictions[2] = "test";
@@ -374,7 +389,15 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual("test", dt.Rows[1]["TABLE_NAME"]);
 			Assert.AreEqual("id2", dt.Rows[1]["COLUMN_NAME"]);
 			Assert.AreEqual(2, dt.Rows[1]["ORDINAL_POSITION"]);
-		}
+
+            restrictions = new string[4];
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test (id int primary key, id1 int, KEY key1 (id1))");
+            restrictions[2] = "test";
+            restrictions[1] = database0;
+            restrictions[3] = "PRIMARY";
+            dt = conn.GetSchema("IndexColumns", restrictions);
+        }
 
 		[Test]
 		public void Views()

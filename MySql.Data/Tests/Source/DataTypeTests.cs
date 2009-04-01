@@ -643,7 +643,8 @@ namespace MySql.Data.MySqlClient.Tests
         {
             if (Version < new Version(5, 0)) return;
 
-            execSQL("CREATE TABLE Test (id INT, g BINARY(16), c VARBINARY(16), c1 BINARY(40))");
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id INT, g BINARY(16), c VARBINARY(16), c1 BINARY(255))");
 
             Guid g = Guid.NewGuid();
             byte[] bytes = g.ToByteArray();
@@ -662,6 +663,21 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.IsTrue(dt.Rows[0][3] is byte[]);
 
             Assert.AreEqual(g, dt.Rows[0][1]);
+
+            string s = BitConverter.ToString(bytes);
+
+            s = s.Replace("-", "");
+            string sql = String.Format("TRUNCATE TABLE Test;INSERT INTO Test VALUES(1,0x{0},NULL,NULL)", s);
+            execSQL(sql);
+
+            cmd.CommandText = "SELECT * FROM Test";
+            cmd.Parameters.Clear();
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                reader.Read();
+                Guid g1 = reader.GetGuid(1);
+                Assert.AreEqual(g, g1);
+            }
         }
 
         /// <summary>

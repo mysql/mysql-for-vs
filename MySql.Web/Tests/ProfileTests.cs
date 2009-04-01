@@ -188,9 +188,12 @@ namespace MySql.Web.Tests
         private void ResetAppId(MySQLProfileProvider p)
         {
             Type t = p.GetType();
-            FieldInfo fi = t.GetField("applicationId",
+            FieldInfo fi = t.GetField("app",
                 BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.GetField);
-            fi.SetValue(p, -1);
+            object appObject = fi.GetValue(p);
+            Type appType = appObject.GetType();
+            PropertyInfo pi = appType.GetProperty("Id");
+            pi.SetValue(appObject, -1, null);
         }
 
         [Test]
@@ -215,6 +218,33 @@ namespace MySql.Web.Tests
             Assert.AreEqual(1, getValues.Count);
             SettingsPropertyValue getValue1 = getValues["Name"];
             Assert.AreEqual("Fred Flintstone", getValue1.PropertyValue);
+        }
+
+        /// <summary>
+        /// Bug #41654	FindProfilesByUserName error into Connector .NET
+        /// </summary>
+        [Test]
+        public void GetAllProfiles()
+        {
+            ProfileBase profile = ProfileBase.Create("foo", true);
+            ResetAppId(profile.Providers["MySqlProfileProvider"] as MySQLProfileProvider);
+            profile["Name"] = "Fred Flintstone";
+            profile.Save();
+
+            SettingsPropertyCollection getProps = new SettingsPropertyCollection();
+            SettingsProperty getProp1 = new SettingsProperty("Name");
+            getProp1.PropertyType = typeof(String);
+            getProps.Add(getProp1);
+
+            MySQLProfileProvider provider = InitProfileProvider();
+            SettingsContext ctx = new SettingsContext();
+            ctx.Add("IsAuthenticated", true);
+            ctx.Add("UserName", "foo");
+
+            int total;
+            ProfileInfoCollection profiles = provider.GetAllProfiles(
+                ProfileAuthenticationOption.All, 0, 10, out total);
+            Assert.AreEqual(1, total);
         }
     }
 }
