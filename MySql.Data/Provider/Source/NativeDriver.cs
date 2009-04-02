@@ -195,8 +195,6 @@ namespace MySql.Data.MySqlClient
 #if !CF
                 }
 #endif
-                if (baseStream == null)
-                    throw new Exception();
             }
             catch (Exception ex)
             {
@@ -205,7 +203,8 @@ namespace MySql.Data.MySqlClient
             }
 
             if (baseStream == null)
-                throw new MySqlException("Unable to connect to any of the specified MySQL hosts");
+                throw new MySqlException(Resources.UnableToConnectToHost,
+                    (int)MySqlErrorCode.UnableToConnectToHost, ex);
 
             int maxSinglePacket = 255*255*255;
             stream = new MySqlStream(baseStream, encoding, false);
