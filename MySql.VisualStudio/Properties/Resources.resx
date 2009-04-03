@@ -914,7 +914,7 @@
     <value>Views</value>
   </data>
   <data name="ProductDetails" xml:space="preserve">
-    <value>Data design and management tools for MySQL.  Copyright © 2007 MySQL AB</value>
+    <value>Data design and management tools for MySQL.  Copyright © 2007-2009 MySQL AB</value>
   </data>
   <data name="ProductName" xml:space="preserve">
     <value>MySQL Connector/Net</value>
@@ -1052,5 +1052,8 @@ Would you like to create it?</value>
   </data>
   <data name="DelayKeyWriteDesc" xml:space="preserve">
     <value>True if you want to delay key updates until the table is closed.  (MyISAM only)</value>
+  </data>
+  <data name="100" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PackageLoadKey.txt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
 </root>

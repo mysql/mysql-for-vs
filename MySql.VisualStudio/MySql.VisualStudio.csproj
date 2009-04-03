@@ -242,6 +242,7 @@
     <None Include="Resources\ArrowKey.bmp" />
     <None Include="Resources\Key.bmp" />
     <Content Include="Resources\Package.ico" />
+    <None Include="Resources\PackageLoadKey.txt" />
   </ItemGroup>
   <ItemGroup>
     <CtcFile Include="CtcComponents\PkgCmd.ctc">
