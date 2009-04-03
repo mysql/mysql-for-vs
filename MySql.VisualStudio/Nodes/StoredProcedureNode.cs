@@ -27,7 +27,7 @@ namespace MySql.Data.VisualStudio
 		public StoredProcedureNode(DataViewHierarchyAccessor hierarchyAccessor, int id, bool isFunc) : 
 			base(hierarchyAccessor, id)
 		{
-            NodeId = isFunc ? "storedfunction" : "StoredProcedure";
+            NodeId = isFunc ? "StoredFunction" : "StoredProcedure";
             isFunction = isFunc;
             NameIndex = 3;
             editor = new TextBufferEditor();

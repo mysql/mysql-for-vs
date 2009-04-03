@@ -993,7 +993,9 @@
       </Properties>
       <CommandBindings defaultCommand="AlterStoredProcedure">
         <CommandBinding name="AlterStoredProcedure" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="289" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
-        <CommandBinding name="DeleteProcedure" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="337" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
+        <CommandBinding name="DropProcedure" guid="5efc7975-14bc-11cf-9b2b-00aa00573819" cmdid="17" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+          <Parameter value="StoredProcedure"/>
+        </CommandBinding>        
         <!-- global data menus -->
         <CommandBinding name="NewQuery" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="13608" handler="884DD964-5327-461f-9F06-6484DD540F8F">
           <Parameter value="NewQuery"/>
