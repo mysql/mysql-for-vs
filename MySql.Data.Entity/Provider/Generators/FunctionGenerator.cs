@@ -49,7 +49,7 @@ namespace MySql.Data.Entity
                 if (String.IsNullOrEmpty(functionName))
                     functionName = function.Name;
 
-                return String.Format("`{0}`.`{1}`", schema, functionName);
+                return String.Format("`{0}`", functionName);
             }
             else
             {
