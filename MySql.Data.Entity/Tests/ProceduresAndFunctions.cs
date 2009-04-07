@@ -37,7 +37,6 @@ namespace MySql.Data.Entity.Tests
         public ProceduresAndFunctions()
             : base()
         {
-            csAdditions += ";logging=true;";
         }
 
         [Test]
