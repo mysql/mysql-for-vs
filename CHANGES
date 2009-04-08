@@ -1,6 +1,8 @@
 Version 6.0.3
 - fixed broken connection prompting
 - fixed installer that was no longer referencing the right folders for Visual Studio assemblies [bug #44141]
+- made integer column types returned with table and column collections use the same data type
+  when referencing MySql 4.1 servers and MySql 5.0+ servers (bug #44123)
 
 Version 6.0.2
 - fixed registration problem with Visual studio (bug #44064)

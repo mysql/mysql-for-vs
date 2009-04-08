@@ -166,6 +166,15 @@ namespace MySql.Data.MySqlClient.Tests
 			restrictions[1] = database0;
 			restrictions[2] = "test1";
 			DataTable dt = conn.GetSchema("Tables", restrictions);
+            Assert.IsTrue(dt.Columns["VERSION"].DataType == typeof(UInt64));
+            Assert.IsTrue(dt.Columns["TABLE_ROWS"].DataType == typeof(UInt64));
+            Assert.IsTrue(dt.Columns["AVG_ROW_LENGTH"].DataType == typeof(UInt64));
+            Assert.IsTrue(dt.Columns["DATA_LENGTH"].DataType == typeof(UInt64));
+            Assert.IsTrue(dt.Columns["MAX_DATA_LENGTH"].DataType == typeof(UInt64));
+            Assert.IsTrue(dt.Columns["INDEX_LENGTH"].DataType == typeof(UInt64));
+            Assert.IsTrue(dt.Columns["DATA_FREE"].DataType == typeof(UInt64));
+            Assert.IsTrue(dt.Columns["AUTO_INCREMENT"].DataType == typeof(UInt64));
+            Assert.IsTrue(dt.Columns["CHECKSUM"].DataType == typeof(UInt64));
 			Assert.IsTrue(dt.Rows.Count == 1);
 			Assert.AreEqual("Tables", dt.TableName);
 			Assert.AreEqual("test1", dt.Rows[0][2]);
@@ -183,6 +192,10 @@ namespace MySql.Data.MySqlClient.Tests
 			DataTable dt = conn.GetSchema("Columns", restrictions);
 			Assert.AreEqual(4, dt.Rows.Count);
 			Assert.AreEqual("Columns", dt.TableName);
+            Assert.IsTrue(dt.Columns["ORDINAL_POSITION"].DataType == typeof(UInt64));
+            Assert.IsTrue(dt.Columns["CHARACTER_MAXIMUM_LENGTH"].DataType == typeof(UInt64));
+            Assert.IsTrue(dt.Columns["NUMERIC_PRECISION"].DataType == typeof(UInt64));
+            Assert.IsTrue(dt.Columns["NUMERIC_SCALE"].DataType == typeof(UInt64));
 			
 			// first column
 			Assert.AreEqual(database0.ToUpper(), dt.Rows[0]["TABLE_SCHEMA"].ToString().ToUpper());
