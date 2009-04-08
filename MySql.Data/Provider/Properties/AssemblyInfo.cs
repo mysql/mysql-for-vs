@@ -29,7 +29,6 @@ using System.Security;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
-[assembly: AssemblyTitle("MySQL.Data.dll")]
 [assembly: AssemblyDescription("ADO.Net driver for MySQL")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("MySQL AB")]
@@ -40,7 +39,10 @@ using System.Security;
 [assembly: ComVisible(false)]
 [assembly: CLSCompliant(false)]
 #if !CF
+[assembly: AssemblyTitle("MySql.Data.dll")]
 [assembly: AllowPartiallyTrustedCallers()]
+#else
+[assembly: AssemblyTitle("MySql.Data.CF.dll")]
 #endif
 //
 // Version information for an assembly consists of the following four values:

@@ -22,13 +22,13 @@
     </DirectoryRef>
 
     <!-- .Net 2.0 Binaries -->
-    <DirectoryRef Id='Assemblies'>
+    <DirectoryRef Id='AssembliesDir'>
       <Component Id="Net20" Guid="0e8af006-273c-49bb-b7c1-ec1737260a5a">
         <File Id="MySqlData" Name="MySql.Data.dll"
               Source="..\mysql.data\provider\bin\release\mysql.data.dll" DiskId="1"/>
         <RegistryKey Id="VSRegistry" Root="HKLM" Action="createAndRemoveOnUninstall"
                      Key="SOFTWARE\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\MySQL Connector Net $(var.Version)">
-          <RegistryValue Id="VSRegistryValue" Value="[BinNet20]" Type="string" Action="write"/>
+          <RegistryValue Id="VSRegistryValue" Value="[AssembliesDir]" Type="string" Action="write"/>
         </RegistryKey>
 
         <util:PerformanceCategory Id="PMDataCategoryId" Name=".NET Data Provider for MySQL"
@@ -71,7 +71,7 @@
     </Feature>
 
     <!-- Entity framework feature -->
-    <DirectoryRef Id='Assemblies'>
+    <DirectoryRef Id='AssembliesDir'>
       <Component Id="InstallEF" Guid="AB734C75-F5DC-491e-A2BC-52D5061881B7" DiskId="1">
         <File Id="MySql.Data.EF" Name="MySql.Data.Entity.dll"
               Source="..\mysql.data.entity\provider\bin\release\mysql.data.entity.dll" DiskId="1"/>

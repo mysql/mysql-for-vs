@@ -37,9 +37,9 @@
       <Directory Id='ProgramFilesFolder' Name='PFiles'>
         <Directory Id='CompanyDir' Name='MySQL'>
           <Directory Id='INSTALLDIR' Name='$(var.ProductName)'>
-            <Directory Id='Assemblies' Name='Assemblies'/>
+            <Directory Id='AssembliesDir' Name='Assemblies'/>
+            <Directory Id='IntegrationDir' Name='Integration'/>
             <Directory Id='DocsDir' Name='Documentation'/>
-            <Directory Id='DriverDir' Name='Driver'/>
             <Directory Id='SampleDir' Name='Samples'/>
           </Directory>
         </Directory>
