@@ -2,7 +2,7 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment Id='VSFragment'>
 
-    <DirectoryRef Id='Assemblies'>
+    <DirectoryRef Id='IntegrationDir'>
       <!-- common DDEX component to be installed if VS2005 or VS2008 is selected -->
       <Component Id='VS_Common' Guid='75F9BFA2-4D6E-4cb3-97E6-B27C478CDE44'>
         <File Id='MySQL.VisualStudio' Name='MySQL.VisualStudio.dll' DiskId='1'
