@@ -29,8 +29,10 @@ namespace MySql.Data.VisualStudio
                 return new MySqlConnectionProperties();
             else if (objType == typeof(DataConnectionSupport))
                 return new MySqlConnectionSupport();
-//            else if (objType == typeof(DataConnectionPromptDialog))
-  //              return new MySqlConnectionPromptDialog();
+            if (objType == typeof(DataSourceSpecializer))
+                return new MySqlDataSourceSpecializer();
+            else if (objType == typeof(DataConnectionPromptDialog))
+                return new MySqlDataConnectionPromptDialog();
             else
                 return base.CreateObject(objType);
 		}
