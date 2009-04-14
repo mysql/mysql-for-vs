@@ -1086,6 +1086,15 @@
               Set this option to true to force the return value of SQL functions to be string.
             </td>
           </tr>
+          <tr>
+            <td>Use Affected Rows</td>
+            <td>false</td>
+            <td>
+              Set this option to true to cause the affected rows reported to reflect only the 
+              rows that are actually changed.  By default, the number of rows that are matched 
+              is returned.
+            </td>
+          </tr>
         </table>
       </div>
       <para>

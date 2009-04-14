@@ -332,7 +332,11 @@ namespace MySql.Data.MySqlClient
         /// </summary>
         private void SetConnectionFlags()
         {
-            ClientFlags flags = ClientFlags.FOUND_ROWS;
+            // allow load data local infile
+            ClientFlags flags = ClientFlags.LOCAL_FILES;
+
+            if (!Settings.UseAffectedRows)
+                flags |= ClientFlags.FOUND_ROWS;
 
             if (version.isAtLeast(4, 1, 1))
             {
@@ -362,9 +366,6 @@ namespace MySql.Data.MySqlClient
                 flags |= ClientFlags.LONG_PASSWORD; // for long passwords
             else
                 flags &= ~ClientFlags.LONG_PASSWORD;
-
-            // allow load data local infile
-            flags |= ClientFlags.LOCAL_FILES;
 
             // did the user request an interactive session?
             if (Settings.InteractiveSession)

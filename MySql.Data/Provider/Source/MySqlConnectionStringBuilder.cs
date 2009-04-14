@@ -56,6 +56,7 @@ namespace MySql.Data.MySqlClient
         bool clearing;
         bool interactiveSession;
         bool functionsReturnString;
+        bool useAffectedRows;
 
         static MySqlConnectionStringBuilder()
         {
@@ -98,6 +99,7 @@ namespace MySql.Data.MySqlClient
             defaultValues.Add(Keyword.AllowUserVariables, false);
             defaultValues.Add(Keyword.InteractiveSession, false);
             defaultValues.Add(Keyword.FunctionsReturnString, false);
+            defaultValues.Add(Keyword.UseAffectedRows, false);
         }
 
         /// <summary>
@@ -723,6 +725,22 @@ namespace MySql.Data.MySqlClient
             }
         }
 
+#if !CF && !MONO
+        [Category("Advanced")]
+        [DisplayName("Use Affected Rows")]
+        [Description("Should the returned affected row count reflect affected rows instead of found rows?")]
+        [DefaultValue(false)]
+#endif
+        public bool UseAffectedRows
+        {
+            get { return useAffectedRows; }
+            set
+            {
+                SetValue("Use Affected Rows", value);
+                useAffectedRows = value;
+            }
+        }
+
         #endregion
 
         #region Pooling Properties
@@ -1154,6 +1172,8 @@ namespace MySql.Data.MySqlClient
                     return Keyword.InteractiveSession;
                 case "functions return string":
                     return Keyword.FunctionsReturnString;
+                case "use affected rows":
+                    return Keyword.UseAffectedRows;
             }
             throw new ArgumentException(Resources.KeywordNotSupported, key);
         }
@@ -1240,6 +1260,8 @@ namespace MySql.Data.MySqlClient
                     return interactiveSession;
                 case Keyword.FunctionsReturnString:
                     return functionsReturnString;
+                case Keyword.UseAffectedRows:
+                    return useAffectedRows;
                 default:
                     return null; /* this will never happen */
             }
@@ -1348,6 +1370,8 @@ namespace MySql.Data.MySqlClient
                     interactiveSession = ConvertToBool(value); break;
                 case Keyword.FunctionsReturnString:
                     functionsReturnString = ConvertToBool(value); break;
+                case Keyword.UseAffectedRows:
+                    useAffectedRows = ConvertToBool(value); break;
             }
         }
 
@@ -1529,6 +1553,7 @@ namespace MySql.Data.MySqlClient
         TreatTinyAsBoolean,
         AllowUserVariables,
         InteractiveSession,
-        FunctionsReturnString
+        FunctionsReturnString,
+        UseAffectedRows
     }
 }
