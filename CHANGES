@@ -8,6 +8,8 @@ Version 6.0.2
 - fixed registration problem with Visual studio (bug #44064)
 - fixed problem where stored procedures and functions could not be deleted from server explorer
 - changed function generation so that it ignores schema just like we did with tables in 6.0.1
+- fixed problem with new tokenizer that caused some values with equals to not be parsed
+  correctly (bug #44318)
 
 Version 6.0.1
 - Fixed problem with the foreign key columns schema collection

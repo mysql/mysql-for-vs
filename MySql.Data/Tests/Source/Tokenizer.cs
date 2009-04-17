@@ -124,10 +124,12 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("FROM", tokenizer.NextToken());
             Assert.AreEqual("Test", tokenizer.NextToken());
             Assert.AreEqual("WHERE", tokenizer.NextToken());
-            Assert.AreEqual("id=", tokenizer.NextToken());
+            Assert.AreEqual("id", tokenizer.NextToken());
+            Assert.AreEqual("=", tokenizer.NextToken());
             Assert.AreEqual("@id", tokenizer.NextToken());
             Assert.AreEqual("AND", tokenizer.NextToken());
-            Assert.AreEqual("id2=", tokenizer.NextToken());
+            Assert.AreEqual("id2", tokenizer.NextToken());
+            Assert.AreEqual("=", tokenizer.NextToken());
             Assert.AreEqual("?id2", tokenizer.NextToken());
             Assert.IsNull(tokenizer.NextToken());
         }
@@ -154,7 +156,8 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("FROM", tokenizer.NextToken());
             Assert.AreEqual("Test", tokenizer.NextToken());
             Assert.AreEqual("WHERE", tokenizer.NextToken());
-            Assert.AreEqual("id=", tokenizer.NextToken());
+            Assert.AreEqual("id", tokenizer.NextToken());
+            Assert.AreEqual("=", tokenizer.NextToken());
             Assert.AreEqual("@id_$123", tokenizer.NextToken());
             Assert.IsNull(tokenizer.NextToken());
         }
@@ -234,5 +237,27 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.IsNull(tokenizer.NextToken());
         }
 #endif
+
+        /// <summary>
+        /// Bug #44318	Tokenizer
+        /// </summary>
+        [Test]
+        public void NoSpaceAroundEquals()
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test(name VARCHAR(40))");
+
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test SET name='test -- test';", conn);
+            cmd.ExecuteNonQuery();
+            cmd.CommandText = "SELECT name FROM Test";
+            object o = cmd.ExecuteScalar();
+            Assert.AreEqual("test -- test", o);
+
+            cmd.CommandText = "UPDATE Test SET name='Can you explain this ?';";
+            cmd.ExecuteNonQuery();
+            cmd.CommandText = "SELECT name FROM Test";
+            o = cmd.ExecuteScalar();
+            Assert.AreEqual("Can you explain this ?", o);
+        }
     }
 }
