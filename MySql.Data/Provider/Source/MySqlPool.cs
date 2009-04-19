@@ -111,32 +111,6 @@ namespace MySql.Data.MySqlClient
         #endregion
 
         /// <summary>
-        /// CheckoutConnection handles the process of pulling a driver
-        /// from the idle pool, possibly resetting its state,
-        /// and adding it to the in use pool.  We assume that this method is only
-        /// called inside an active lock so there is no need to acquire a new lock.
-        /// </summary>
-        /// <returns>An idle driver object</returns>
-		private Driver CheckoutConnection()
-		{
-            Driver driver = (Driver)idlePool.Dequeue();
- 
-            // first check to see that the server is still alive
-            if (!driver.Ping())
-            {
-                driver.Close();
-                driver = CreateNewPooledConnection();
-            }
-
-            // if the user asks us to ping/reset pooled connections
-			// do so now
-			if (settings.ConnectionReset)
-				driver.Reset();
-
-			return driver;
-		}
-
-        /// <summary>
         /// It is assumed that this method is only called from inside an active lock.
         /// </summary>
         private Driver GetPooledConnection()
@@ -147,11 +121,25 @@ namespace MySql.Data.MySqlClient
             // one, then create it here.
             lock ((idlePool as ICollection).SyncRoot)
             {
-                if (!HasIdleConnections)
-                    driver = CreateNewPooledConnection();
-                else
-                    driver = CheckoutConnection();
+                if (HasIdleConnections)
+                    driver = (Driver)idlePool.Dequeue();
             }
+
+            if (driver != null)
+            {
+                // first check to see that the server is still alive
+                if (!driver.Ping())
+                {
+                    driver.Close();
+                    driver = null;
+                }
+                else if (settings.ConnectionReset)
+                    // if the user asks us to ping/reset pooled connections
+                    // do so now
+                    driver.Reset();
+            }
+            if (driver == null)
+                driver = CreateNewPooledConnection();
 
             Debug.Assert(driver != null);
             lock ((inUsePool as ICollection).SyncRoot)
