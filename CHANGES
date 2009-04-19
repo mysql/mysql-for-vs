@@ -7,7 +7,7 @@ Version 5.2.6
   (bug #41034)
 - removed code from profile provider that overrode Name and Description properties in error.  This had the
   effect of not allowing you to override those values in the web.config (ug #40871)    
-- fixed "metadatacollections" collection to include foreign key columns
+- fixed "metadatacollections" collection to include foreign key columns      
 - fixed GetAllProfiles (which is used by several methods).  It had a typo in the SQL and was not
   including several important columns (bug #41654)      
 - fixed problem where the core method GetUser was not properly checking the application id
@@ -31,6 +31,8 @@ Version 5.2.6
   any restrictions more specific than table name (bug #43991)      
 - removed a couple of unnecessary lines from NativeDriver.Open() (bug #44028)      
 - added connection string option 'use affected rows'.  (bug #44194)      
+- changed MySqlPool so that a freshly pulled connection will issue it's ping and reset 
+  outside of the idlepool lock.  This lessens some of the contention on the idle pool.
       
 Version 5.2.5 - 11/14/2008
 - fixed problem with package registration that kept the DDEX provider from working (bug #40726)
