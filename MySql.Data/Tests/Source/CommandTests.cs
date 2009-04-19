@@ -362,6 +362,28 @@ namespace MySql.Data.MySqlClient.Tests
             {
             }
         }
+
+        /// <summary>
+        /// Bug #44194	ExecuteNonQuery for update commands does not match actual rows updated
+        /// </summary>
+        [Test]
+        public void UseAffectedRows()
+        {
+            execSQL("INSERT INTO Test VALUES (1, 'A')");
+            execSQL("INSERT INTO Test VALUES (2, 'B')");
+            execSQL("INSERT INTO Test VALUES (3, 'C')");
+
+            MySqlCommand cmd = new MySqlCommand("UPDATE Test SET name='C' WHERE id=3", conn);
+            Assert.AreEqual(1, cmd.ExecuteNonQuery());
+
+            string conn_str = GetConnectionString(true) + ";use affected rows=true";
+            using (MySqlConnection c = new MySqlConnection(conn_str))
+            {
+                c.Open();
+                cmd.Connection = c;
+                Assert.AreEqual(0, cmd.ExecuteNonQuery());
+            }
+        }
     }
 
 
