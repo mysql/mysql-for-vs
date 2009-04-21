@@ -1,4 +1,4 @@
-// Copyright © 2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+// Copyright (c) 2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
 //
 // This file is part of MySQL Tools for Visual Studio.
 // MySQL Tools for Visual Studio is free software; you can redistribute it 
