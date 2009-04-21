@@ -1,4 +1,20 @@
-ï»¿using System;
+// Copyright © 2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+//
+// This file is part of MySQL Tools for Visual Studio.
+// MySQL Tools for Visual Studio is free software; you can redistribute it 
+// and/or modify it under the terms of the GNU Lesser General Public 
+// License version 2.1 as published by the Free Software Foundation
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -56,8 +72,11 @@ namespace MySql.Data.VisualStudio.Editors
         {
             ForeignKey key = new ForeignKey(tableNode.Table, null);
             if (refTable.SelectedValue != null)
+            {
                 key.SetName(String.Format("FK_{0}_{1}", tableNode.Table.Name,
                     refTable.SelectedValue), true);
+                key.ReferencedTable = refTable.SelectedValue.ToString();
+            }
             foreignKeyBindingSource.Add(key);
         }
 
@@ -122,8 +141,8 @@ namespace MySql.Data.VisualStudio.Editors
                 bool alreadyUsed = false;
                 if (s != (string)columnGrid.CurrentCell.Value)
                     foreach (FKColumnPair pair in key.Columns)
-                        if ((index == 0 && pair.ParentTable == s) ||
-                            (index == 1 && pair.ChildTable == s))
+                        if ((index == 0 && pair.ReferencedColumn == s) ||
+                            (index == 1 && pair.Column == s))
                         {
                             alreadyUsed = true;
                             break;
@@ -165,9 +184,9 @@ namespace MySql.Data.VisualStudio.Editors
             {
                 cell.Value = null;
                 if (index == 0)
-                    pair.ParentTable = null;
+                    pair.ReferencedColumn = null;
                 else
-                    pair.ChildTable = null;
+                    pair.Column = null;
             }
             else
                 cell.Value = e.FormattedValue as string;
