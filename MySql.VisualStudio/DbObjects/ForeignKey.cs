@@ -1,4 +1,20 @@
-ï»¿using System;
+// Copyright © 2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+//
+// This file is part of MySQL Tools for Visual Studio.
+// MySQL Tools for Visual Studio is free software; you can redistribute it 
+// and/or modify it under the terms of the GNU Lesser General Public 
+// License version 2.1 as published by the Free Software Foundation
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Data;
@@ -20,7 +36,6 @@ namespace MySql.Data.VisualStudio.DbObjects
         public ForeignKey(Table t, DataRow keyData) : this (t)
         {
             isNew = keyData == null;
-            oldFk = new ForeignKey(t);
             if (!isNew)
             {
                 ParseFKInfo(keyData);
@@ -32,19 +47,22 @@ namespace MySql.Data.VisualStudio.DbObjects
         {
             Name = keyData["CONSTRAINT_NAME"].ToString();
             ReferencedTable = keyData["REFERENCED_TABLE_NAME"].ToString();
-            Match = (MatchOption)Enum.Parse(typeof(MatchOption), keyData["MATCH_OPTION"].ToString(), true);
-            UpdateAction = (ReferenceOption)Enum.Parse(typeof(ReferenceOption),
-                keyData["UPDATE_RULE"].ToString(), true);
-            DeleteAction = (ReferenceOption)Enum.Parse(typeof(ReferenceOption),
-                keyData["DELETE_RULE"].ToString(), true);
+            if (keyData["MATCH_OPTION"] != DBNull.Value)
+                Match = (MatchOption)Enum.Parse(typeof(MatchOption), keyData["MATCH_OPTION"].ToString(), true);
+            if (keyData["UPDATE_RULE"] != DBNull.Value)
+                UpdateAction = (ReferenceOption)Enum.Parse(typeof(ReferenceOption),
+                    keyData["UPDATE_RULE"].ToString(), true);
+            if (keyData["DELETE_RULE"] != DBNull.Value)
+                DeleteAction = (ReferenceOption)Enum.Parse(typeof(ReferenceOption),
+                    keyData["DELETE_RULE"].ToString(), true);
 
             string[] restrictions = new string[4] { null, Table.OwningNode.Database, Table.Name, Name };
             DataTable cols = Table.OwningNode.GetSchema("Foreign Key Columns", restrictions);
             foreach (DataRow row in cols.Rows)
             {
                 FKColumnPair colPair = new FKColumnPair();
-                colPair.ParentTable = row["COLUMN_NAME"].ToString();
-                colPair.ChildTable = row["REFERENCED_COLUMN_NAME"].ToString();
+                colPair.Column = row["COLUMN_NAME"].ToString();
+                colPair.ReferencedColumn = row["REFERENCED_COLUMN_NAME"].ToString();
                 Columns.Add(colPair);
             }
         }
@@ -90,6 +108,8 @@ namespace MySql.Data.VisualStudio.DbObjects
 
         void ITablePart.Saved()
         {
+            if (oldFk == null)
+                oldFk = new ForeignKey(Table);
             // copy over the top level properties
             oldFk.DeleteAction = DeleteAction;
             oldFk.Match = Match;
@@ -103,8 +123,8 @@ namespace MySql.Data.VisualStudio.DbObjects
             foreach (FKColumnPair fc in Columns)
             {
                 FKColumnPair old = new FKColumnPair();
-                old.ParentTable = fc.ParentTable;
-                old.ChildTable = fc.ChildTable;
+                old.ReferencedColumn = fc.ReferencedColumn;
+                old.Column = fc.Column;
                 oldFk.Columns.Add(old);
             }
         }
@@ -120,8 +140,8 @@ namespace MySql.Data.VisualStudio.DbObjects
                 for (; i < oldFk.Columns.Count; i++)
                 {
                     FKColumnPair ofc = oldFk.Columns[i];
-                    if (ofc.ParentTable == fc.ParentTable && 
-                        ofc.ChildTable == fc.ChildTable) break;
+                    if (ofc.ReferencedColumn == fc.ReferencedColumn && 
+                        ofc.Column == fc.Column) break;
                 }
                 if (i == oldFk.Columns.Count) return true;
             }
@@ -141,25 +161,25 @@ namespace MySql.Data.VisualStudio.DbObjects
             StringBuilder sql = new StringBuilder();
             if (!newTable)
             {
-                if (!String.IsNullOrEmpty(oldFk.Name))
+                if (oldFk != null)
                     sql.AppendFormat("DROP FOREIGN KEY `{0}`, ", oldFk.Name);
                 sql.Append("ADD ");
             } 
-            sql.AppendFormat("FOREIGN KEY '{0}'", Name);
+            sql.AppendFormat("FOREIGN KEY `{0}`", Name);
 
             sql.Append("(");
             string delimiter = "";
             foreach (FKColumnPair c in Columns)
             {
-                sql.AppendFormat("{0}{1}", delimiter, c.ChildTable);
+                sql.AppendFormat("{0}{1}", delimiter, c.Column);
                 delimiter = ", ";
             }
             sql.Append(")");
-            sql.Append(" REFERENCES (");
+            sql.AppendFormat(" REFERENCES `{0}`(", ReferencedTable);
             delimiter = "";
             foreach (FKColumnPair c in Columns)
             {
-                sql.AppendFormat("{0}{1}", delimiter, c.ParentTable);
+                sql.AppendFormat("{0}{1}", delimiter, c.ReferencedColumn);
                 delimiter = ", ";
             }
             sql.Append(")");
@@ -187,7 +207,7 @@ namespace MySql.Data.VisualStudio.DbObjects
 
     class FKColumnPair
     {
-        public string ParentTable { get; set; }
-        public string ChildTable { get; set; }
+        public string ReferencedColumn { get; set; }
+        public string Column { get; set; }
     }
 }

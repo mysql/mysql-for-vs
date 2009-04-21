@@ -1,3 +1,19 @@
+// Copyright © 2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+//
+// This file is part of MySQL Tools for Visual Studio.
+// MySQL Tools for Visual Studio is free software; you can redistribute it 
+// and/or modify it under the terms of the GNU Lesser General Public 
+// License version 2.1 as published by the Free Software Foundation
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -290,7 +306,7 @@ namespace MySql.Data.VisualStudio
             pane.AddCommand(VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.PrimaryKey,
                 new EventHandler(OnPrimaryKey), new EventHandler(OnQueryPrimaryKey));
             pane.AddCommand(VSConstants.GUID_VSStandardCommandSet97, (int)VSConstants.VSStd97CmdID.GenerateChangeScript,
-                new EventHandler(OnGenerateChangeScript), null);
+                new EventHandler(OnGenerateChangeScript), new EventHandler(OnQueryGenerateChangeScript));
         }
 
         private void OnQueryPrimaryKey(object sender, EventArgs e)
@@ -359,6 +375,13 @@ namespace MySql.Data.VisualStudio
         {
             ForeignKeyDialog dlg = new ForeignKeyDialog(tableNode);
             dlg.ShowDialog();
+        }
+
+        private void OnQueryGenerateChangeScript(object sender, EventArgs e)
+        {
+            bool hasChanges = tableNode.Table.HasChanges();
+            OleMenuCommand gcsKey = sender as OleMenuCommand;
+            gcsKey.Enabled = hasChanges;
         }
 
         private void OnGenerateChangeScript(object sender, EventArgs e)

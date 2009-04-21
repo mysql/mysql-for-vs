@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using MySql.Data.VisualStudio.DbObjects;
 using System.Windows.Forms;
 namespace MySql.Data.VisualStudio.Editors
@@ -151,7 +151,7 @@ namespace MySql.Data.VisualStudio.Editors
             // 
             // colGridColumn
             // 
-            this.colGridColumn.DataPropertyName = "parentTable";
+            this.colGridColumn.DataPropertyName = "Column";
             this.colGridColumn.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
             this.colGridColumn.DisplayStyleForCurrentCellOnly = true;
             this.colGridColumn.HeaderText = "Column";
@@ -159,7 +159,7 @@ namespace MySql.Data.VisualStudio.Editors
             // 
             // fkGridColumn
             // 
-            this.fkGridColumn.DataPropertyName = "childTable";
+            this.fkGridColumn.DataPropertyName = "ReferencedColumn";
             this.fkGridColumn.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
             this.fkGridColumn.DisplayStyleForCurrentCellOnly = true;
             this.fkGridColumn.HeaderText = "Foreign Column";
