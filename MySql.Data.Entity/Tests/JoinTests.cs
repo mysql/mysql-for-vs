@@ -1,4 +1,4 @@
-// Copyright (C) 2008-2009 Sun Microsystems, Inc.
+// Copyright © 2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -34,8 +34,8 @@ namespace MySql.Data.Entity.Tests
 	[TestFixture]
 	public class JoinTests : BaseEdmTest
     {
-        //[Test]
-/*        public void SimpleJoin()
+        [Test]
+        public void SimpleJoin()
         {
             MySqlDataAdapter da = new MySqlDataAdapter(
                 @"SELECT b.id,b.name,a.name as author_name from books b JOIN
@@ -47,7 +47,7 @@ namespace MySql.Data.Entity.Tests
             {
                 var q = from b in context.Books
                         join a in context.Authors
-                        on b.Author_id equals a.Id
+                        on b.Author.Id equals a.Id
                         select new
                         {
                             bookId = b.Id,
@@ -60,9 +60,9 @@ namespace MySql.Data.Entity.Tests
                     Assert.AreEqual(dt.Rows[i++][0], o.bookId);
                 Assert.AreEqual(dt.Rows.Count, i);
             }
-        }*/
+        }
 
-        /*[Test]
+        [Test]
         public void SimpleJoinWithPredicate()
         {
             MySqlDataAdapter da = new MySqlDataAdapter(
@@ -75,7 +75,7 @@ namespace MySql.Data.Entity.Tests
             {
                 var q = from b in context.Books
                         join a in context.Authors
-                        on b.Author_id equals a.Id
+                        on b.Author.Id equals a.Id
                         where b.Pages > 300
                         select new
                         {
@@ -83,54 +83,12 @@ namespace MySql.Data.Entity.Tests
                             bookName = b.Name,
                             authorName = a.Name
                         };
-                string s = q.ToTraceString();
 
                 int i = 0;
                 foreach (var o in q)
                     Assert.AreEqual(dt.Rows[i++][0], o.bookId);
                 Assert.AreEqual(dt.Rows.Count, i);
             }
-        }*/
-
-//        [Test]
-  //      public void UnionSelects()
-    //    {
-//            MySqlDataAdapter da = new MySqlDataAdapter(
-//                @"SELECT b.id,b.name,a.name as author_name from books b JOIN
-//                    authors a ON b.author_id=a.id WHERE b.pages > 300", conn);
-//            DataTable dt = new DataTable();
-//            da.Fill(dt);
-
-            //using (testEntities context = new testEntities())
-            //{
-            //    var OldAuthors = from a in context.Authors
-            //                     where a.Age > 50
-            //                     select a;
-            //    var BigBooks = from b in context.Books
-            //                   where b.Pages > 300
-            //                   select b;
-            //    var q = from o in OldAuthors
-            //            join p in BigBooks
-            //            on o.Id equals p.Author_id
-            //            where p.Name == "Insomnia"
-            //            select o;
-            //    string s = q.ToTraceString();
-
-                //var q = from b in BigBooks
-                //        join a in OldAuthors
-                //        on b.author equals a.authorId
-                //        select new
-                //        {
-                //            bookId = b.bookId,
-                //            bookName = b.bookName,
-                //            authorName = a.authorName
-                //        };
-
-                //int i = 0;
-                //foreach (var o in q)
-                //    Assert.AreEqual(dt.Rows[i++][0], o.bookId);
-                //Assert.AreEqual(dt.Rows.Count, i);
-//            }
-  //      }
+        }
     }
 }
