@@ -89,8 +89,7 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>call "$(DevEnvDir)..\Tools\vsvars32.bat"
-gacutil /u mysql.data.entity
-gacutil /i mysql.data.entity.dll</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

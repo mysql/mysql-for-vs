@@ -309,7 +309,7 @@ namespace MySql.Data.VisualStudio.DbObjects
             }
             if (IsNew)
                 sql.Append(")");
-            sql.Append(GetTableOptionSql(true));
+            sql.Append(GetTableOptionSql(IsNew));
             return sql.ToString();
         }
 
