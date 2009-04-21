@@ -82,13 +82,19 @@ namespace MySql.Data.VisualStudio
 
 		public override string GetDropSQL()
 		{
-			return String.Format("DROP {0} `{1}`.`{2}`", 
-				IsFunction ? "FUNCTION" : "PROCEDURE", Database, Name);
+            return GetDropSQL(Name);
 		}
 
         public override string GetSaveSql()
         {
             return editor.Text;
+        }
+
+        private string GetDropSQL(string procName)
+        {
+            procName = procName.Trim('`');
+            return String.Format("DROP {0} `{1}`.`{2}`",
+                IsFunction ? "FUNCTION" : "PROCEDURE", Database, procName);
         }
 
         private string GetNewRoutineText()
@@ -175,6 +181,8 @@ namespace MySql.Data.VisualStudio
             try
             {
                 ExecuteSQL(sql);
+                sql = GetDropSQL(GetCurrentName());
+                ExecuteSQL(sql);
             }
             catch (Exception ex)
             {
@@ -192,19 +200,14 @@ namespace MySql.Data.VisualStudio
             return type + sql.Substring(index);
         }
 
-        /// <summary>
-        /// Parse the name of the procedure out of the sql block.  We have to do this
-        /// because we need the name of the proc for our node path but the user has
-        /// probably change the name from the default
-        /// </summary>
-        /// <param name="sql">The sql block to parse</param>
-        private void ParseName(string sql)
+        protected override string GetCurrentName()
         {
+            string sql = editor.Text.Trim();
             string lowerSql = sql.ToLowerInvariant();
             int pos = lowerSql.IndexOf("procedure") + 9;
             int end = lowerSql.IndexOf("(", pos);
             string procName = sql.Substring(pos, end - pos).Trim();
-            Name = procName;
+            return procName.Trim('`');
         }
 
         #region IVsTextBufferProvider Members

@@ -58,6 +58,16 @@ namespace MySql.Data.VisualStudio
 
         #endregion
 
+        protected override string GetCurrentName()
+        {
+            return table.Name;
+        }
+
+        /// <summary>
+        /// We override Save here because we want to prompt for a new name if this table is new and the user has
+        /// not changed the default name
+        /// </summary>
+        /// <returns></returns>
         protected override bool Save()
         {
             if (table.IsNew && table.Name == Name)
@@ -66,8 +76,8 @@ namespace MySql.Data.VisualStudio
                 dlg.TableName = table.Name;
                 if (DialogResult.Cancel == dlg.ShowDialog()) return false;
                 table.Name = dlg.TableName;
-                Name = table.Name;
-                HierarchyAccessor.SetProperty(ItemId, (int)__VSHPROPID.VSHPROPID_Name, Name);
+                //Name = table.Name;
+                //HierarchyAccessor.SetProperty(ItemId, (int)__VSHPROPID.VSHPROPID_Name, Name);
                 //TODO: refresh open editor window
             }
 

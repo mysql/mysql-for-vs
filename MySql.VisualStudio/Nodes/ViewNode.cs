@@ -73,6 +73,18 @@ namespace MySql.Data.VisualStudio
             return sb.ToString();
         }
 
+        protected override string GetCurrentName()
+        {
+            string sql = editor.Text.Trim();
+            string lowerSql = sql.ToLowerInvariant();
+            int pos = lowerSql.IndexOf("view") + 9;
+            int end = lowerSql.IndexOf("as", pos);
+            int end2 = lowerSql.IndexOf("(", pos);
+            end = Math.Min(end, end2);
+            string procName = sql.Substring(pos, end - pos).Trim();
+            return procName.Trim('`');
+        }
+
         protected override void Load()
         {
             if (IsNew)

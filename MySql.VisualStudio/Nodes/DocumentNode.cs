@@ -29,6 +29,7 @@ using MySql.Data.VisualStudio.Properties;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Package;
 using MySql.Data.VisualStudio.Editors;
+using Microsoft.VisualStudio.Shell;
 
 namespace MySql.Data.VisualStudio
 {
@@ -49,18 +50,24 @@ namespace MySql.Data.VisualStudio
 
         protected abstract void Load();
         public abstract string GetSaveSql();
+        protected abstract string GetCurrentName();
 
         protected virtual bool Save()
         {
             DbConnection conn = (DbConnection)HierarchyAccessor.Connection.GetLockedProviderObject();
             try
             {
+                // first we get the sql that creates/updates the object
                 string sql = GetSaveSql();
                 ExecuteSQL(sql);
+
+                // then mark the document has clean and unchanged
                 Dirty = false;
                 IsNew = false;
+
+                //notify any listeners that our save is done
                 OnDataSaved();
-                RefreshServerExplorer();
+
                 return true;
             }
             catch (Exception ex)
@@ -120,17 +127,25 @@ namespace MySql.Data.VisualStudio
 
         public int RenameDocData(uint grfAttribs, IVsHierarchy pHierNew, uint itemidNew, string pszMkDocumentNew)
         {
-            throw new Exception("The method or operation is not implemented.");
+            return VSConstants.S_OK;
         }
 
         public int SaveDocData(VSSAVEFLAGS dwSave, out string pbstrMkDocumentNew, out int pfSaveCanceled)
         {
+            string oldMoniker = Moniker;
+
             pfSaveCanceled = Save() ? 0 : 1;
             pbstrMkDocumentNew = null;
+
             if (pfSaveCanceled == 0)
             {
-                if (IsNew) SaveNode();
+                Name = GetCurrentName();
+                pbstrMkDocumentNew = String.Format("/Connection/{0}s/{1}", NodeId, Name);
+                VsShellUtilities.RenameDocument(MySqlDataProviderPackage.Instance, oldMoniker, Moniker);
+
                 Dirty = false;
+                // update server explorer
+                RefreshServerExplorer();
             }
             return VSConstants.S_OK;
         }
