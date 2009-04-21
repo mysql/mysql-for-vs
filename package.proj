@@ -1,5 +1,6 @@
 <Project DefaultTargets="Package" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <UsingTask AssemblyFile="Installer\Binary\MyTasks.dll" TaskName="GetVersion"/>
+  <UsingTask AssemblyFile="Installer\Binary\MyTasks.dll" TaskName="ReplaceText"/>
 
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">GPL</Configuration>
@@ -41,35 +42,34 @@
           **/user;**/debug/**;**/release/**;**/*.suo;**/cnet.snk;**/*.wixobj;
           **/*.msi;**/*.msm;*.Design.*;*-banner.txt;Design/**;**/doc.xml;
           **/installer/**;**/documentation/**;**/PackageLoadKey.txt;**/*.cache;
-          **/*.proj;**/COPYING;**/EXCEPTIONS"/>
+          **/*.proj;**/COPYING;**/EXCEPTIONS;**/*.bak;**/*.user;**/*.SourceAnalysis;
+	  **/MySql.Data.xml;**/*.InstallLog;**/*.bat;**/*.reg"/>
     <SourceFiles Include="COPYING" Condition=" '$(Configuration)' == 'GPL' "/>
     <SourceFiles Include="EXCEPTIONS" Condition=" '$(Configuration)' == 'GPL' "/>
   </ItemGroup>
   
   <Target Name="PackageSource">
-    <!--    <RemoveDir Directories="tmp" ContinueOnError="true"/>
+    <RemoveDir Directories="tmp" ContinueOnError="true"/>
     <MakeDir Directories ="tmp"/>
     <Copy SourceFiles ="@(SourceFiles)" DestinationFolder="tmp/%(RecursiveDir)"/>
 
     <ItemGroup>
-      <TmpFiles Include="tmp/**"/>
-    </ItemGroup>-->
-    <Zip ZipFileName="bin/$(Configuration)/mysql-connector-net-$(Version)$(Postfix)-src.zip"
-         Files="@(SourceFiles)"/>
-<!--    <Zip ZipFileName="bin/$(Configuration)/mysql-connector-net-$(Version)$(Postfix)-src.zip"
-         Files="@(SourceFiles)" WorkingDirectory="tmp"/>-->
-    <!--    <RemoveDir Directories="tmp"/>-->
-    <!-- if we are not doing GPL, then we need to replace license text -->
-<!--    <if test="true" unless="${IsGPL}">
-      <replacetext>
-        <section fromfile="gpl-banner.txt" tofile="commercial-banner.txt"/>
-        <files basedir="tmp">
-          <include name="./**/*.cs"/>
-        </files>
-      </replacetext>
-    </if>-->
+      <TmpFiles Include="tmp/**/*.cs"/>
+    </ItemGroup>
 
-    </Target>
+    <!-- if we are not doing GPL, then we need to replace license text -->
+    <ReplaceText HeaderFile="Installer\GPL-Banner.txt" 
+		   NewHeaderFile="Installer\Commercial-Banner.txt"
+		   Files="@(TmpFiles)" Condition=" '$(Configuration)' == 'Commercial' "/>
+
+    <ItemGroup>
+	<FilesToZip Include="tmp/**"/>
+    </ItemGroup>
+    <Zip ZipFileName="bin/$(Configuration)/mysql-connector-net-$(Version)$(Postfix)-src.zip"
+         Files="@(FilesToZip)" WorkingDirectory="tmp"/>
+
+<!--    <RemoveDir Directories="tmp"/>-->
+  </Target>
 
   <ItemGroup>
     <BinaryFiles Include="MySql.Data\Provider\bin\release\mysql.data.dll"/>
