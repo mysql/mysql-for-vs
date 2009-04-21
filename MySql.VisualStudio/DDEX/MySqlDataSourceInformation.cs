@@ -1,4 +1,4 @@
-// Copyright (C) 2006-2007 MySQL AB
+// Copyright Â© 2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
 //
 // This file is part of MySQL Tools for Visual Studio.
 // MySQL Tools for Visual Studio is free software; you can redistribute it 
@@ -12,7 +12,7 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA using System;
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /*
  * This file contains class with data source specific information.
@@ -87,8 +87,8 @@ namespace MySql.Data.VisualStudio
 
         /// <summary>
         /// Called to retrieve property value. Supports following custom properties:
-        /// DataSource – MySQL server name.
-        /// Database – default schema name.
+        /// DataSource ï¿½ MySQL server name.
+        /// Database ï¿½ default schema name.
         /// </summary>
         /// <param name="propertyName">Name of property to retrieve.</param>
         /// <returns>Property value</returns>
