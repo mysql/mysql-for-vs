@@ -22,6 +22,7 @@ using System;
 using System.Data;
 using MySql.Data.MySqlClient;
 using NUnit.Framework;
+using System.Globalization;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -459,43 +460,44 @@ namespace MySql.Data.MySqlClient.Tests
 			DataTable procs = conn.GetSchema("PROCEDURES", restrictions);
 			Assert.AreEqual(1, procs.Rows.Count);
 			Assert.AreEqual("spTest", procs.Rows[0][0]);
-			Assert.AreEqual(database0.ToLower(), procs.Rows[0][2].ToString().ToLower());
+            Assert.AreEqual(database0.ToLower(), procs.Rows[0][2].ToString().ToLower(CultureInfo.InvariantCulture));
 			Assert.AreEqual("spTest", procs.Rows[0][3]);
 
 			DataTable parameters = conn.GetSchema("PROCEDURE PARAMETERS", restrictions);
 			Assert.AreEqual(4, parameters.Rows.Count);
 
             DataRow row = parameters.Rows[0];
-            Assert.AreEqual(database0.ToLower(), row["SPECIFIC_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual(database0.ToLower(CultureInfo.InvariantCulture),
+                row["SPECIFIC_SCHEMA"].ToString().ToLower(CultureInfo.InvariantCulture));
             Assert.AreEqual("spTest", row["SPECIFIC_NAME"]);
             Assert.AreEqual(1, row["ORDINAL_POSITION"]);
             Assert.AreEqual("IN", row["PARAMETER_MODE"]);
             Assert.AreEqual("id", row["PARAMETER_NAME"]);
-            Assert.AreEqual("INT", row["DATA_TYPE"].ToString().ToUpperInvariant());
+            Assert.AreEqual("INT", row["DATA_TYPE"].ToString().ToUpper(CultureInfo.InvariantCulture));
 
             row = parameters.Rows[1];
-            Assert.AreEqual(database0.ToLower(), row["SPECIFIC_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual(database0.ToLower(CultureInfo.InvariantCulture), row["SPECIFIC_SCHEMA"].ToString().ToLower(CultureInfo.InvariantCulture));
             Assert.AreEqual("spTest", row["SPECIFIC_NAME"]);
             Assert.AreEqual(2, row["ORDINAL_POSITION"]);
             Assert.AreEqual("IN", row["PARAMETER_MODE"]);
             Assert.AreEqual("id2", row["PARAMETER_NAME"]);
-            Assert.AreEqual("INT", row["DATA_TYPE"].ToString().ToUpperInvariant());
+            Assert.AreEqual("INT", row["DATA_TYPE"].ToString().ToUpper(CultureInfo.InvariantCulture));
 
             row = parameters.Rows[2];
-            Assert.AreEqual(database0.ToLower(), row["SPECIFIC_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual(database0.ToLower(CultureInfo.InvariantCulture), row["SPECIFIC_SCHEMA"].ToString().ToLower(CultureInfo.InvariantCulture));
             Assert.AreEqual("spTest", row["SPECIFIC_NAME"]);
             Assert.AreEqual(3, row["ORDINAL_POSITION"]);
             Assert.AreEqual("INOUT", row["PARAMETER_MODE"]);
             Assert.AreEqual("io1", row["PARAMETER_NAME"]);
-            Assert.AreEqual("VARCHAR", row["DATA_TYPE"].ToString().ToUpperInvariant());
+            Assert.AreEqual("VARCHAR", row["DATA_TYPE"].ToString().ToUpper(CultureInfo.InvariantCulture));
 
             row = parameters.Rows[3];
-            Assert.AreEqual(database0.ToLower(), row["SPECIFIC_SCHEMA"].ToString().ToLower());
+            Assert.AreEqual(database0.ToLower(CultureInfo.InvariantCulture), row["SPECIFIC_SCHEMA"].ToString().ToLower(CultureInfo.InvariantCulture));
             Assert.AreEqual("spTest", row["SPECIFIC_NAME"]);
             Assert.AreEqual(4, row["ORDINAL_POSITION"]);
             Assert.AreEqual("OUT", row["PARAMETER_MODE"]);
             Assert.AreEqual("out1", row["PARAMETER_NAME"]);
-            Assert.AreEqual("FLOAT", row["DATA_TYPE"].ToString().ToUpperInvariant());
+            Assert.AreEqual("FLOAT", row["DATA_TYPE"].ToString().ToUpper(CultureInfo.InvariantCulture));
 		}
 
 		[Test]

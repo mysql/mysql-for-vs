@@ -1469,14 +1469,14 @@ namespace MySql.Data.MySqlClient.Tests
                     try
                     {
                         object o = cmd.ExecuteScalar();
-                        Assert.Fail();
+                        Assert.Fail("fail");
                     }
                     catch (InvalidOperationException)
                     {
                     }
                     catch (Exception)
                     {
-                        Assert.Fail();
+                        Assert.Fail("fail");
                     }
 
                     try 
@@ -1489,7 +1489,7 @@ namespace MySql.Data.MySqlClient.Tests
                     }
                     catch (Exception)
                     {
-                        Assert.Fail();
+                        Assert.Fail("fail");
                     }
 
                 }
