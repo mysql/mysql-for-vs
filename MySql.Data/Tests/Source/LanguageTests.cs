@@ -337,7 +337,8 @@ namespace MySql.Data.MySqlClient.Tests
         {
             if (version < new Version(4, 1)) return;
 
-            execSQL("CREATE TABLE `test_tbl` ( `test` VARCHAR( 255 ) NOT NULL) CHARACTER SET utf8 COLLATE utf8_swedish_ci TYPE = MYISAM");
+            createTable(@"CREATE TABLE `test_tbl`(`test` VARCHAR(255) NOT NULL) 
+                            CHARACTER SET utf8 COLLATE utf8_swedish_ci", "MYISAM");
             execSQL("INSERT INTO test_tbl VALUES ('myval')");
             try
             {

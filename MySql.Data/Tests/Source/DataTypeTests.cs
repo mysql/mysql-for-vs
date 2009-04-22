@@ -320,6 +320,9 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void Timestamp() 
 		{
+            // don't run this test on 6 and higher
+            if (Version.Major >= 6) return;
+
 			execSQL("DROP TABLE IF EXISTS Test");
 			execSQL("CREATE TABLE Test (id int, dt DATETIME, ts2 TIMESTAMP(2), ts4 TIMESTAMP(4), " + 
 				"ts6 TIMESTAMP(6), ts8 TIMESTAMP(8), ts10 TIMESTAMP(10), ts12 TIMESTAMP(12), " +

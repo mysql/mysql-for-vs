@@ -466,40 +466,36 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual(4, parameters.Rows.Count);
 
             DataRow row = parameters.Rows[0];
-            Assert.AreEqual(DBNull.Value, row["SPECIFIC_CATALOG"]);
             Assert.AreEqual(database0.ToLower(), row["SPECIFIC_SCHEMA"].ToString().ToLower());
             Assert.AreEqual("spTest", row["SPECIFIC_NAME"]);
             Assert.AreEqual(1, row["ORDINAL_POSITION"]);
             Assert.AreEqual("IN", row["PARAMETER_MODE"]);
             Assert.AreEqual("id", row["PARAMETER_NAME"]);
-            Assert.AreEqual("INT", row["DATA_TYPE"]);
+            Assert.AreEqual("INT", row["DATA_TYPE"].ToString().ToUpperInvariant());
 
             row = parameters.Rows[1];
-            Assert.AreEqual(DBNull.Value, row["SPECIFIC_CATALOG"]);
             Assert.AreEqual(database0.ToLower(), row["SPECIFIC_SCHEMA"].ToString().ToLower());
             Assert.AreEqual("spTest", row["SPECIFIC_NAME"]);
             Assert.AreEqual(2, row["ORDINAL_POSITION"]);
             Assert.AreEqual("IN", row["PARAMETER_MODE"]);
             Assert.AreEqual("id2", row["PARAMETER_NAME"]);
-            Assert.AreEqual("INT", row["DATA_TYPE"]);
+            Assert.AreEqual("INT", row["DATA_TYPE"].ToString().ToUpperInvariant());
 
             row = parameters.Rows[2];
-            Assert.AreEqual(DBNull.Value, row["SPECIFIC_CATALOG"]);
             Assert.AreEqual(database0.ToLower(), row["SPECIFIC_SCHEMA"].ToString().ToLower());
             Assert.AreEqual("spTest", row["SPECIFIC_NAME"]);
             Assert.AreEqual(3, row["ORDINAL_POSITION"]);
             Assert.AreEqual("INOUT", row["PARAMETER_MODE"]);
             Assert.AreEqual("io1", row["PARAMETER_NAME"]);
-            Assert.AreEqual("VARCHAR", row["DATA_TYPE"]);
+            Assert.AreEqual("VARCHAR", row["DATA_TYPE"].ToString().ToUpperInvariant());
 
             row = parameters.Rows[3];
-            Assert.AreEqual(DBNull.Value, row["SPECIFIC_CATALOG"]);
             Assert.AreEqual(database0.ToLower(), row["SPECIFIC_SCHEMA"].ToString().ToLower());
             Assert.AreEqual("spTest", row["SPECIFIC_NAME"]);
             Assert.AreEqual(4, row["ORDINAL_POSITION"]);
             Assert.AreEqual("OUT", row["PARAMETER_MODE"]);
             Assert.AreEqual("out1", row["PARAMETER_NAME"]);
-            Assert.AreEqual("FLOAT", row["DATA_TYPE"]);
+            Assert.AreEqual("FLOAT", row["DATA_TYPE"].ToString().ToUpperInvariant());
 		}
 
 		[Test]
@@ -517,10 +513,8 @@ namespace MySql.Data.MySqlClient.Tests
 			DataTable dt = conn.GetSchema("Foreign Keys", restrictions);
 			Assert.AreEqual(1, dt.Rows.Count);
 			DataRow row = dt.Rows[0];
-			Assert.AreEqual(DBNull.Value, row["CONSTRAINT_CATALOG"]);
 			Assert.AreEqual(database0.ToLower(), row["CONSTRAINT_SCHEMA"].ToString().ToLower());
 			Assert.AreEqual("c1", row["CONSTRAINT_NAME"]);
-			Assert.AreEqual(DBNull.Value, row["TABLE_CATALOG"]);
 			Assert.AreEqual(database0.ToLower(), row["TABLE_SCHEMA"].ToString().ToLower());
 			Assert.AreEqual("child", row["TABLE_NAME"]);
 			Assert.AreEqual(database0.ToLower(), row["REFERENCED_TABLE_SCHEMA"].ToString().ToLower());
@@ -579,20 +573,16 @@ namespace MySql.Data.MySqlClient.Tests
 			DataTable dt = conn.GetSchema("Foreign Keys", restrictions);
 			Assert.AreEqual(2, dt.Rows.Count);
 			DataRow row = dt.Rows[0];
-			Assert.AreEqual(DBNull.Value, row["CONSTRAINT_CATALOG"]);
 			Assert.AreEqual(database0.ToLower(), row["CONSTRAINT_SCHEMA"].ToString().ToLower());
 			Assert.AreEqual("product_order_ibfk_1", row["CONSTRAINT_NAME"]);
-			Assert.AreEqual(DBNull.Value, row["TABLE_CATALOG"]);
 			Assert.AreEqual(database0.ToLower(), row["TABLE_SCHEMA"].ToString().ToLower());
 			Assert.AreEqual("product_order", row["TABLE_NAME"]);
 			Assert.AreEqual(database0.ToLower(), row["REFERENCED_TABLE_SCHEMA"].ToString().ToLower());
 			Assert.AreEqual("product", row["REFERENCED_TABLE_NAME"]);
 
 			row = dt.Rows[1];
-			Assert.AreEqual(DBNull.Value, row["CONSTRAINT_CATALOG"]);
 			Assert.AreEqual(database0.ToLower(), row["CONSTRAINT_SCHEMA"].ToString().ToLower());
 			Assert.AreEqual("product_order_ibfk_2", row["CONSTRAINT_NAME"]);
-			Assert.AreEqual(DBNull.Value, row["TABLE_CATALOG"]);
 			Assert.AreEqual(database0.ToLower(), row["TABLE_SCHEMA"].ToString().ToLower());
 			Assert.AreEqual("product_order", row["TABLE_NAME"]);
 			Assert.AreEqual(database0.ToLower(), row["REFERENCED_TABLE_SCHEMA"].ToString().ToLower());
