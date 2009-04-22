@@ -102,9 +102,6 @@ namespace MySql.Data.MySqlClient.Tests
 			MySqlConnection c = new MySqlConnection(connString);
 			c.Open();
 
-            MySqlCommand cmd = new MySqlCommand("SET max_allowed_packet=250000000", c);
-            cmd.ExecuteNonQuery();
-
 			string path = Path.GetTempFileName();
 			StreamWriter sw = new StreamWriter(path);
 			for (int i = 0; i < 2000000; i++) 
@@ -113,7 +110,8 @@ namespace MySql.Data.MySqlClient.Tests
 			sw.Close();
 
 			path = path.Replace(@"\", @"\\");
-			cmd.CommandText = "LOAD DATA LOCAL INFILE '" + path + "' INTO TABLE Test FIELDS TERMINATED BY ','";
+			MySqlCommand cmd = new MySqlCommand(
+                "LOAD DATA LOCAL INFILE '" + path + "' INTO TABLE Test FIELDS TERMINATED BY ','", conn);
 			cmd.CommandTimeout = 0;
 
 			object cnt = 0;
@@ -164,21 +162,6 @@ namespace MySql.Data.MySqlClient.Tests
             {
                 while (reader.Read()) { }
             }
-		}
-
-		[Test]
-		public void CharFunction() 
-		{
-            //TODO: fix this  
-            return;
-			execSQL("CREATE TABLE Test (id tinyint,val1	tinyint,val2 tinyint)");
-			execSQL("INSERT INTO Test VALUES (65,1,1),(65,1,1)");
-
-			MySqlDataAdapter da = new MySqlDataAdapter("SELECT CHAR(id) FROM Test GROUP BY val1,val2", conn);
-			DataTable dt = new DataTable();
-			da.Fill(dt);
-            Assert.IsTrue(dt.Rows[0][0].GetType() == typeof(string));
-			Assert.AreEqual("A", dt.Rows[0][0]);
 		}
 
 		[Test]

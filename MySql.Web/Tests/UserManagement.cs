@@ -402,6 +402,11 @@ namespace MySql.Web.Tests
                     Assert.Fail("This should have thrown an exception");
                 Assert.AreEqual("barbar!", password);
             }
+            catch (MembershipPasswordException)
+            {
+                if (requireQA && answer != null)
+                    Assert.Fail("This should not have thrown an exception");
+            }
             catch (ProviderException)
             {
                 if (requireQA && answer != null)

@@ -44,6 +44,68 @@ namespace MySql.Data.MySqlClient.Tests
             info = info.Replace("use procedure bodies=false", "");
             return info;
         }
+
+        /// <summary>
+        /// Bug #40139	ExecuteNonQuery hangs
+        /// </summary>
+        [Test]
+        public void CallingStoredProcWithOnlyExecPrivs()
+        {
+            if (Version < new Version(5, 0)) return;
+            
+            execSQL("CREATE PROCEDURE spTest() BEGIN SELECT 1; END");
+            execSQL("CREATE PROCEDURE spTest2() BEGIN SELECT 1; END");
+            suExecSQL("CREATE USER abc IDENTIFIED BY 'abc'");
+            try
+            {
+                suExecSQL(String.Format("GRANT SELECT ON `{0}`.* TO 'abc'@'%'", database0));
+                suExecSQL(String.Format("GRANT EXECUTE ON PROCEDURE `{0}`.spTest TO abc", database0));
+
+                string connStr = GetConnectionStringEx("abc", "abc", true);
+                using (MySqlConnection c = new MySqlConnection(connStr))
+                {
+                    c.Open();
+                    MySqlCommand cmd = new MySqlCommand("spTest", c);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    try
+                    {
+                        object o = cmd.ExecuteScalar();
+                        Assert.Fail("This should fail");
+                    }
+                    catch (InvalidOperationException)
+                    {
+                    }
+                    catch (MySqlException)
+                    {
+                    }
+                    catch (Exception)
+                    {
+                        Assert.Fail("A more specific exception should have been thrown");
+                    }
+
+                    try 
+                    {
+                        cmd.CommandText = "spTest2";
+                        cmd.ExecuteScalar();
+                    }
+                    catch (InvalidOperationException)
+                    {
+                    }
+                    catch (MySqlException ex)
+                    {
+                        string s = ex.Message;
+                    }
+                    catch (Exception)
+                    {
+                        Assert.Fail("This should have thrown a more specific exception");
+                    }
+                }
+            }
+            finally
+            {
+                suExecSQL("DROP USER abc");
+            }
+        }
     }
 
 	/// <summary>
@@ -56,7 +118,7 @@ namespace MySql.Data.MySqlClient.Tests
 
         public StoredProcedure()
         {
-            csAdditions = ";procedure cache size=0;logging=true;";
+            csAdditions = ";procedure cache size=0;";
         }
 
         /// <summary>
@@ -133,7 +195,7 @@ namespace MySql.Data.MySqlClient.Tests
                 "SET floatVal = 1.2; SET noTypeVarChar='test'; SET noTypeInt=66; END");
 
             // we use rootConn here since we are using parameters
-            MySqlCommand cmd = new MySqlCommand("spTest", rootConn);
+            MySqlCommand cmd = new MySqlCommand("spTest", conn);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.Add(new MySqlParameter("?value", MySqlDbType.VarChar));
             cmd.Parameters.Add(new MySqlParameter("?intVal", MySqlDbType.Int32));
@@ -1329,64 +1391,6 @@ namespace MySql.Data.MySqlClient.Tests
 
                 Assert.AreEqual(0, rowsAffected);
                 Assert.AreEqual(22, cmd.Parameters[1].Value);
-            }
-        }
-
-        /// <summary>
-        /// Bug #40139	ExecuteNonQuery hangs
-        /// </summary>
-        [Test]
-        public void CallingStoredProcWithOnlyExecPrivs()
-        {
-            if (version < new Version(5, 0)) return;
-
-            
-            execSQL("CREATE PROCEDURE spTest() BEGIN SELECT 1; END");
-            execSQL("CREATE PROCEDURE spTest2() BEGIN SELECT 1; END");
-            suExecSQL("CREATE USER abc IDENTIFIED BY 'abc'");
-            try
-            {
-                suExecSQL(String.Format("GRANT SELECT ON `{0}`.* TO 'abc'@'%'", database0));
-                suExecSQL(String.Format("GRANT EXECUTE ON PROCEDURE `{0}`.spTest TO abc", database0));
-
-                string connStr = GetConnectionStringEx("abc", "abc", true);
-                connStr = connStr.Replace("use procedure bodies=false", "");
-                using (MySqlConnection c = new MySqlConnection(connStr))
-                {
-                    c.Open();
-                    MySqlCommand cmd = new MySqlCommand("spTest", c);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    try
-                    {
-                        object o = cmd.ExecuteScalar();
-                        Assert.Fail("This should fail");
-                    }
-                    catch (InvalidOperationException)
-                    {
-                    }
-                    catch (Exception)
-                    {
-                        Assert.Fail("This should fail");
-                    }
-
-                    try 
-                    {
-                        cmd.CommandText = "spTest2";
-                        cmd.ExecuteScalar();
-                    }
-                    catch (InvalidOperationException)
-                    {
-                    }
-                    catch (Exception)
-                    {
-                        Assert.Fail("This should fail");
-                    }
-
-                }
-            }
-            finally
-            {
-                suExecSQL("DROP USER abc");
             }
         }
 

@@ -1174,7 +1174,7 @@ namespace MySql.Data.MySqlClient
                     return Keyword.InteractiveSession;
                 case "FUNCTIONS RETURN STRING":
                     return Keyword.FunctionsReturnString;
-                case "use affected rows":
+                case "USE AFFECTED ROWS":
                     return Keyword.UseAffectedRows;
             }
             throw new ArgumentException(Resources.KeywordNotSupported, key);

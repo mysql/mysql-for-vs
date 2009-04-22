@@ -282,7 +282,7 @@ namespace MySql.Data.MySqlClient
             }
 
             // now clean up the last statement
-            if (tokenizer.StartIndex > startPos)
+            if (startPos < query.Length-1)
             {
                 string sqlLeftOver = query.Substring(startPos).Trim();
                 if (!String.IsNullOrEmpty(sqlLeftOver))
