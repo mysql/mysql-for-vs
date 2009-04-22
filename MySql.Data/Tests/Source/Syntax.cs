@@ -128,9 +128,6 @@ namespace MySql.Data.MySqlClient.Tests
 			MySqlConnection c = new MySqlConnection(connString);
 			c.Open();
 
-            MySqlCommand cmd = new MySqlCommand("SET max_allowed_packet=250000000", c);
-            cmd.ExecuteNonQuery();
-
 			string path = Path.GetTempFileName();
 			StreamWriter sw = new StreamWriter(path);
 			for (int i = 0; i < 2000000; i++) 
@@ -139,7 +136,8 @@ namespace MySql.Data.MySqlClient.Tests
 			sw.Close();
 
 			path = path.Replace(@"\", @"\\");
-			cmd.CommandText = "LOAD DATA LOCAL INFILE '" + path + "' INTO TABLE Test FIELDS TERMINATED BY ','";
+            MySqlCommand cmd = new MySqlCommand(
+                "LOAD DATA LOCAL INFILE '" + path + "' INTO TABLE Test FIELDS TERMINATED BY ','", conn);
 			cmd.CommandTimeout = 0;
 
 			object cnt = 0;

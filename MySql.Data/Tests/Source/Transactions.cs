@@ -175,7 +175,7 @@ namespace MySql.Data.MySqlClient.Tests
         public void RollingBackOnClose()
         {
             execSQL("DROP TABLE IF EXISTS Test");
-            execSQL("CREATE TABLE Test (id INT) TYPE=InnoDB");
+            createTable("CREATE TABLE Test (id INT)","InnoDB");
 
             string connStr = GetConnectionString(true) + ";pooling=true;";
             MySqlConnection c = new MySqlConnection(connStr);

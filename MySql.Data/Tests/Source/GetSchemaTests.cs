@@ -45,14 +45,15 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual("Foreign Keys", dt.Rows[9][0]);
 			Assert.AreEqual("IndexColumns", dt.Rows[10][0]);
 			Assert.AreEqual("Indexes", dt.Rows[11][0]);
+            Assert.AreEqual("Foreign Key Columns", dt.Rows[12][0]);
 
 			if (version >= new Version(5, 0))
 			{
-				Assert.AreEqual("Views", dt.Rows[12][0]);
-				Assert.AreEqual("ViewColumns", dt.Rows[13][0]);
-				Assert.AreEqual("Procedure Parameters", dt.Rows[14][0]);
-				Assert.AreEqual("Procedures", dt.Rows[15][0]);
-				Assert.AreEqual("Triggers", dt.Rows[16][0]);
+				Assert.AreEqual("Views", dt.Rows[13][0]);
+				Assert.AreEqual("ViewColumns", dt.Rows[14][0]);
+				Assert.AreEqual("Procedure Parameters", dt.Rows[15][0]);
+				Assert.AreEqual("Procedures", dt.Rows[16][0]);
+				Assert.AreEqual("Triggers", dt.Rows[17][0]);
 			}
 		}
 
@@ -506,9 +507,9 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 			execSQL("DROP TABLE IF EXISTS child");
 			execSQL("DROP TABLE IF EXISTS parent");
-			execSQL("CREATE TABLE parent (id INT NOT NULL, PRIMARY KEY (id)) TYPE=INNODB");
-			execSQL("CREATE TABLE child (id INT, parent_id INT, INDEX par_ind (parent_id), " +
-				"CONSTRAINT c1 FOREIGN KEY (parent_id) REFERENCES parent(id) ON DELETE CASCADE) TYPE=INNODB");
+            createTable("CREATE TABLE parent (id INT NOT NULL, PRIMARY KEY (id))", "INNODB");
+			createTable("CREATE TABLE child (id INT, parent_id INT, INDEX par_ind (parent_id), " +
+				"CONSTRAINT c1 FOREIGN KEY (parent_id) REFERENCES parent(id) ON DELETE CASCADE)","INNODB");
 			string[] restrictions = new string[4];
 			restrictions[0] = null;
 			restrictions[1] = database0;
@@ -535,15 +536,15 @@ namespace MySql.Data.MySqlClient.Tests
 			execSQL("DROP TABLE IF EXISTS product_order");
 			execSQL("DROP TABLE IF EXISTS product");
 			execSQL("DROP TABLE IF EXISTS customer");
-			execSQL("CREATE TABLE product (category INT NOT NULL, id INT NOT NULL, " +
-					  "price DECIMAL, PRIMARY KEY(category, id)) TYPE=INNODB");
-			execSQL("CREATE TABLE customer (id INT NOT NULL, PRIMARY KEY (id)) TYPE=INNODB");
-			execSQL("CREATE TABLE product_order (no INT NOT NULL AUTO_INCREMENT, " +
-				"product_category INT NOT NULL, product_id INT NOT NULL, customer_id INT NOT NULL, " +
-				"PRIMARY KEY(no), INDEX (product_category, product_id), " +
-				"FOREIGN KEY (product_category, product_id) REFERENCES product(category, id) " +
-				"ON UPDATE CASCADE ON DELETE RESTRICT, INDEX (customer_id), " +
-				"FOREIGN KEY (customer_id) REFERENCES customer(id)) TYPE=INNODB");
+			createTable("CREATE TABLE product (category INT NOT NULL, id INT NOT NULL, " +
+					  "price DECIMAL, PRIMARY KEY(category, id))","INNODB");
+			createTable("CREATE TABLE customer (id INT NOT NULL, PRIMARY KEY (id))","INNODB");
+			createTable(@"CREATE TABLE product_order (no INT NOT NULL AUTO_INCREMENT, 
+				product_category INT NOT NULL, product_id INT NOT NULL, customer_id INT NOT NULL, 
+				PRIMARY KEY(no), INDEX (product_category, product_id), 
+				FOREIGN KEY (product_category, product_id) REFERENCES product(category, id) 
+				ON UPDATE CASCADE ON DELETE RESTRICT, INDEX (customer_id), 
+				FOREIGN KEY (customer_id) REFERENCES customer(id))","INNODB");
 
 			try 
 			{
@@ -561,15 +562,15 @@ namespace MySql.Data.MySqlClient.Tests
 			execSQL("DROP TABLE IF EXISTS product_order");
 			execSQL("DROP TABLE IF EXISTS product");
 			execSQL("DROP TABLE IF EXISTS customer");
-			execSQL("CREATE TABLE product (category INT NOT NULL, id INT NOT NULL, " +
-					  "price DECIMAL, PRIMARY KEY(category, id)) TYPE=INNODB");
-			execSQL("CREATE TABLE customer (id INT NOT NULL, PRIMARY KEY (id)) TYPE=INNODB");
-			execSQL("CREATE TABLE product_order (no INT NOT NULL AUTO_INCREMENT, " +
-				"product_category INT NOT NULL, product_id INT NOT NULL, customer_id INT NOT NULL, " +
-				"PRIMARY KEY(no), INDEX (product_category, product_id), " +
-				"FOREIGN KEY (product_category, product_id) REFERENCES product(category, id) " +
-				"ON UPDATE CASCADE ON DELETE RESTRICT, INDEX (customer_id), " +
-				"FOREIGN KEY (customer_id) REFERENCES customer(id)) TYPE=INNODB");
+			createTable("CREATE TABLE product (category INT NOT NULL, id INT NOT NULL, " +
+					  "price DECIMAL, PRIMARY KEY(category, id))","INNODB");
+			createTable("CREATE TABLE customer (id INT NOT NULL, PRIMARY KEY (id))","INNODB");
+			createTable(@"CREATE TABLE product_order (no INT NOT NULL AUTO_INCREMENT, 
+				product_category INT NOT NULL, product_id INT NOT NULL, customer_id INT NOT NULL, 
+				PRIMARY KEY(no), INDEX (product_category, product_id), 
+				FOREIGN KEY (product_category, product_id) REFERENCES product(category, id) 
+				ON UPDATE CASCADE ON DELETE RESTRICT, INDEX (customer_id), 
+			    FOREIGN KEY (customer_id) REFERENCES customer(id))","INNODB");
 
 			string[] restrictions = new string[4];
 			restrictions[0] = null;
