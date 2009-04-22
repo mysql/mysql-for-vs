@@ -211,14 +211,14 @@ namespace MySql.Web.Tests
         {
             LoadSchema(1);
             LoadSchema(2);
-            execSQL(@"INSERT INTO mysql_membership (pkid, username, applicationname, lastactivitydate) 
-                VALUES('1', 'user1', 'app1', '2007-01-01')");
-            execSQL(@"INSERT INTO mysql_membership (pkid, username, applicationname, lastactivitydate) 
-                VALUES('2', 'user2', 'app1', '2007-01-01')");
-            execSQL(@"INSERT INTO mysql_membership (pkid, username, applicationname, lastactivitydate) 
-                VALUES('3', 'user1', 'app2', '2007-01-01')");
-            execSQL(@"INSERT INTO mysql_membership (pkid, username, applicationname, lastactivitydate) 
-                VALUES('4', 'user2', 'app2', '2007-01-01')");
+            execSQL(@"INSERT INTO mysql_membership (pkid, username, password, applicationname, lastactivitydate) 
+                VALUES('1', 'user1', '', 'app1', '2007-01-01')");
+            execSQL(@"INSERT INTO mysql_membership (pkid, username, password, applicationname, lastactivitydate) 
+                VALUES('2', 'user2', '', 'app1', '2007-01-01')");
+            execSQL(@"INSERT INTO mysql_membership (pkid, username, password, applicationname, lastactivitydate) 
+                VALUES('3', 'user1', '', 'app2', '2007-01-01')");
+            execSQL(@"INSERT INTO mysql_membership (pkid, username, password, applicationname, lastactivitydate) 
+                VALUES('4', 'user2', '', 'app2', '2007-01-01')");
             execSQL(@"INSERT INTO mysql_roles VALUES ('role1', 'app1')");
             execSQL(@"INSERT INTO mysql_roles VALUES ('role2', 'app1')");
             execSQL(@"INSERT INTO mysql_roles VALUES ('role1', 'app2')");

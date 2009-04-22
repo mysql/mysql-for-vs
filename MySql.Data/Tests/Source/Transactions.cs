@@ -153,7 +153,7 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void RollingBackOnClose()
         {
-            execSQL("CREATE TABLE Test (id INT) TYPE=InnoDB");
+            execSQL("CREATE TABLE Test (id INT) ENGINE=InnoDB");
 
             string connStr = GetConnectionString(true) + ";pooling=true;";
             MySqlConnection c = new MySqlConnection(connStr);

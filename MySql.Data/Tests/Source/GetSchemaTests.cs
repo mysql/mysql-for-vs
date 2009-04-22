@@ -165,16 +165,19 @@ namespace MySql.Data.MySqlClient.Tests
 			string[] restrictions = new string[4];
 			restrictions[1] = database0;
 			restrictions[2] = "test1";
-			DataTable dt = conn.GetSchema("Tables", restrictions);
-            Assert.IsTrue(dt.Columns["VERSION"].DataType == typeof(UInt64));
-            Assert.IsTrue(dt.Columns["TABLE_ROWS"].DataType == typeof(UInt64));
-            Assert.IsTrue(dt.Columns["AVG_ROW_LENGTH"].DataType == typeof(UInt64));
-            Assert.IsTrue(dt.Columns["DATA_LENGTH"].DataType == typeof(UInt64));
-            Assert.IsTrue(dt.Columns["MAX_DATA_LENGTH"].DataType == typeof(UInt64));
-            Assert.IsTrue(dt.Columns["INDEX_LENGTH"].DataType == typeof(UInt64));
-            Assert.IsTrue(dt.Columns["DATA_FREE"].DataType == typeof(UInt64));
-            Assert.IsTrue(dt.Columns["AUTO_INCREMENT"].DataType == typeof(UInt64));
-            Assert.IsTrue(dt.Columns["CHECKSUM"].DataType == typeof(UInt64));
+            DataTable dt = conn.GetSchema("Tables", restrictions);
+            if (Version.Major >= 5 && Version.Minor >= 1)
+            {
+                Assert.IsTrue(dt.Columns["VERSION"].DataType == typeof(UInt64));
+                Assert.IsTrue(dt.Columns["TABLE_ROWS"].DataType == typeof(UInt64));
+                Assert.IsTrue(dt.Columns["AVG_ROW_LENGTH"].DataType == typeof(UInt64));
+                Assert.IsTrue(dt.Columns["DATA_LENGTH"].DataType == typeof(UInt64));
+                Assert.IsTrue(dt.Columns["MAX_DATA_LENGTH"].DataType == typeof(UInt64));
+                Assert.IsTrue(dt.Columns["INDEX_LENGTH"].DataType == typeof(UInt64));
+                Assert.IsTrue(dt.Columns["DATA_FREE"].DataType == typeof(UInt64));
+                Assert.IsTrue(dt.Columns["AUTO_INCREMENT"].DataType == typeof(UInt64));
+                Assert.IsTrue(dt.Columns["CHECKSUM"].DataType == typeof(UInt64));
+            }
 			Assert.IsTrue(dt.Rows.Count == 1);
 			Assert.AreEqual("Tables", dt.TableName);
 			Assert.AreEqual("test1", dt.Rows[0][2]);
@@ -192,10 +195,13 @@ namespace MySql.Data.MySqlClient.Tests
 			DataTable dt = conn.GetSchema("Columns", restrictions);
 			Assert.AreEqual(4, dt.Rows.Count);
 			Assert.AreEqual("Columns", dt.TableName);
-            Assert.IsTrue(dt.Columns["ORDINAL_POSITION"].DataType == typeof(UInt64));
-            Assert.IsTrue(dt.Columns["CHARACTER_MAXIMUM_LENGTH"].DataType == typeof(UInt64));
-            Assert.IsTrue(dt.Columns["NUMERIC_PRECISION"].DataType == typeof(UInt64));
-            Assert.IsTrue(dt.Columns["NUMERIC_SCALE"].DataType == typeof(UInt64));
+            if (Version.Major >= 5 && Version.Minor >= 1)
+            {
+                Assert.IsTrue(dt.Columns["ORDINAL_POSITION"].DataType == typeof(UInt64));
+                Assert.IsTrue(dt.Columns["CHARACTER_MAXIMUM_LENGTH"].DataType == typeof(UInt64));
+                Assert.IsTrue(dt.Columns["NUMERIC_PRECISION"].DataType == typeof(UInt64));
+                Assert.IsTrue(dt.Columns["NUMERIC_SCALE"].DataType == typeof(UInt64));
+            }
 			
 			// first column
 			Assert.AreEqual(database0.ToUpper(), dt.Rows[0]["TABLE_SCHEMA"].ToString().ToUpper());
@@ -508,9 +514,9 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void SingleForeignKey()
 		{
-			execSQL("CREATE TABLE parent (id INT NOT NULL, PRIMARY KEY (id)) TYPE=INNODB");
+			execSQL("CREATE TABLE parent (id INT NOT NULL, PRIMARY KEY (id)) ENGINE=INNODB");
 			execSQL("CREATE TABLE child (id INT, parent_id INT, INDEX par_ind (parent_id), " +
-				"CONSTRAINT c1 FOREIGN KEY (parent_id) REFERENCES parent(id) ON DELETE CASCADE) TYPE=INNODB");
+				"CONSTRAINT c1 FOREIGN KEY (parent_id) REFERENCES parent(id) ON DELETE CASCADE) ENGINE=INNODB");
 			string[] restrictions = new string[4];
 			restrictions[0] = null;
 			restrictions[1] = database0;
@@ -535,14 +541,14 @@ namespace MySql.Data.MySqlClient.Tests
 		public void ForeignKeys()
 		{
 			execSQL("CREATE TABLE product (category INT NOT NULL, id INT NOT NULL, " +
-					  "price DECIMAL, PRIMARY KEY(category, id)) TYPE=INNODB");
-			execSQL("CREATE TABLE customer (id INT NOT NULL, PRIMARY KEY (id)) TYPE=INNODB");
+					  "price DECIMAL, PRIMARY KEY(category, id)) ENGINE=INNODB");
+			execSQL("CREATE TABLE customer (id INT NOT NULL, PRIMARY KEY (id)) ENGINE=INNODB");
 			execSQL("CREATE TABLE product_order (no INT NOT NULL AUTO_INCREMENT, " +
 				"product_category INT NOT NULL, product_id INT NOT NULL, customer_id INT NOT NULL, " +
 				"PRIMARY KEY(no), INDEX (product_category, product_id), " +
 				"FOREIGN KEY (product_category, product_id) REFERENCES product(category, id) " +
 				"ON UPDATE CASCADE ON DELETE RESTRICT, INDEX (customer_id), " +
-				"FOREIGN KEY (customer_id) REFERENCES customer(id)) TYPE=INNODB");
+				"FOREIGN KEY (customer_id) REFERENCES customer(id)) ENGINE=INNODB");
 
 			conn.GetSchema("Foreign Keys");
 		}
@@ -551,14 +557,14 @@ namespace MySql.Data.MySqlClient.Tests
 		public void MultiSingleForeignKey()
 		{
 			execSQL("CREATE TABLE product (category INT NOT NULL, id INT NOT NULL, " +
-					  "price DECIMAL, PRIMARY KEY(category, id)) TYPE=INNODB");
-			execSQL("CREATE TABLE customer (id INT NOT NULL, PRIMARY KEY (id)) TYPE=INNODB");
+					  "price DECIMAL, PRIMARY KEY(category, id)) ENGINE=INNODB");
+			execSQL("CREATE TABLE customer (id INT NOT NULL, PRIMARY KEY (id)) ENGINE=INNODB");
 			execSQL("CREATE TABLE product_order (no INT NOT NULL AUTO_INCREMENT, " +
 				"product_category INT NOT NULL, product_id INT NOT NULL, customer_id INT NOT NULL, " +
 				"PRIMARY KEY(no), INDEX (product_category, product_id), " +
 				"FOREIGN KEY (product_category, product_id) REFERENCES product(category, id) " +
 				"ON UPDATE CASCADE ON DELETE RESTRICT, INDEX (customer_id), " +
-				"FOREIGN KEY (customer_id) REFERENCES customer(id)) TYPE=INNODB");
+				"FOREIGN KEY (customer_id) REFERENCES customer(id)) ENGINE=INNODB");
 
 			string[] restrictions = new string[4];
 			restrictions[0] = null;

@@ -137,7 +137,7 @@ namespace MySql.Data.MySqlClient.Tests
 		public void TableWithOVer100Columns()
 		{
 			string sql = "create table IF NOT EXISTS zvan (id int(8) primary key " + 
-				"unique auto_increment, name varchar(250)) TYPE=INNODB;  ";
+				"unique auto_increment, name varchar(250)) ENGINE=INNODB;  ";
 /*				"create table IF NOT EXISTS ljudyna (id int(8) primary key " +
 				"unique auto_increment, name varchar(250), data_narod date, " +
 				"id_in_zvan int(8), kandidat varchar(250), tel_rob_vn varchar(250), " +
@@ -369,6 +369,7 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void UseAffectedRows()
         {
+            execSQL("CREATE TABLE Test (id INT, name VARCHAR(20))");
             execSQL("INSERT INTO Test VALUES (1, 'A')");
             execSQL("INSERT INTO Test VALUES (2, 'B')");
             execSQL("INSERT INTO Test VALUES (3, 'C')");

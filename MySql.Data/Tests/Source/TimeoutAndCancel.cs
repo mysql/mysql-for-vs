@@ -109,7 +109,7 @@ namespace MySql.Data.MySqlClient.Tests
             stateChangeCount++;
         }
 
-/*        [Test]
+        [Test]
         public void TimeoutExpiring()
         {
             if (version < new Version(5, 0)) return;
@@ -137,7 +137,6 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.IsTrue(ex.Message.StartsWith("Timeout expired"), "Message is wrong");
             }
         }
-        */
 
         [Test]
         public void TimeoutNotExpiring()
