@@ -145,16 +145,16 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void Bug6135() 
 		{
-			string sql = "CREATE TABLE `KLANT` (`KlantNummer` int(11) NOT NULL auto_increment, " +
-				"`Username` varchar(50) NOT NULL default '', `Password` varchar(100) NOT NULL default '', " + 
-				"`Naam` varchar(100) NOT NULL default '', `Voornaam` varchar(100) NOT NULL default '', " +
-				"`Straat` varchar(100) NOT NULL default '', `StraatNr` varchar(10) NOT NULL default '', " +
-				"`Gemeente` varchar(100) NOT NULL default '', `Postcode` varchar(10) NOT NULL default '', " +
-				"`DefaultMail` varchar(255) default '', 	`BtwNr` varchar(50) default '', " + 
-				"`ReceiveMail` tinyint(1) NOT NULL default '0',	`Online` tinyint(1) NOT NULL default '0', " +
-				"`LastVisit` timestamp(14) NOT NULL, `Categorie` int(11) NOT NULL default '0', " +
-				"PRIMARY KEY  (`KlantNummer`),	UNIQUE KEY `UniqueUsername` (`Username`), " +
-				"UNIQUE KEY `UniqueDefaultMail` (`DefaultMail`)	)";
+			string sql = @"CREATE TABLE `KLANT` (`KlantNummer` int(11) NOT NULL auto_increment, 
+				`Username` varchar(50) NOT NULL default '', `Password` varchar(100) NOT NULL default '', 
+				`Naam` varchar(100) NOT NULL default '', `Voornaam` varchar(100) NOT NULL default '',
+				`Straat` varchar(100) NOT NULL default '', `StraatNr` varchar(10) NOT NULL default '',
+				`Gemeente` varchar(100) NOT NULL default '', `Postcode` varchar(10) NOT NULL default '',
+				`DefaultMail` varchar(255) default '', 	`BtwNr` varchar(50) default '',
+				`ReceiveMail` tinyint(1) NOT NULL default '0',	`Online` tinyint(1) NOT NULL default '0',
+				`LastVisit` timestamp NOT NULL, `Categorie` int(11) NOT NULL default '0',
+				PRIMARY KEY  (`KlantNummer`),	UNIQUE KEY `UniqueUsername` (`Username`),
+				UNIQUE KEY `UniqueDefaultMail` (`DefaultMail`)	)";
 			createTable(sql, "MyISAM");
 
 			MySqlCommand cmd = new MySqlCommand("SELECT * FROM KLANT", conn);

@@ -256,9 +256,9 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-        private DataTable GetParametersFromIS(string[] restrictions)
+        private void GetParametersForRoutineFromIS(DataTable dt, string[] restrictions)
         {
-            StringBuilder sql = new StringBuilder(@"SELECT * FROM INFORMATION_SCHEMA.PARAMETERS");
+            Debug.Assert(dt != null);
 
             string[] keys = new string[5];
             keys[0] = "SPECIFIC_CATALOG";
@@ -267,15 +267,40 @@ namespace MySql.Data.MySqlClient
             keys[3] = "ROUTINE_TYPE";
             keys[4] = "PARAMETER_NAME";
 
+            StringBuilder sql = new StringBuilder(@"SELECT * FROM INFORMATION_SCHEMA.PARAMETERS");
             // now get our where clause and append it if there is one
             string where = GetWhereClause(null, keys, restrictions);
             if (!String.IsNullOrEmpty(where))
                 sql.AppendFormat(CultureInfo.InvariantCulture, " WHERE {0}", where);
 
-            DataTable dt = GetTable(sql.ToString());
-            dt.TableName = "Procedure Parameters";
+            MySqlDataAdapter da = new MySqlDataAdapter(sql.ToString(), connection);
+            da.Fill(dt);
+        }
 
-            return dt;
+        private DataTable GetParametersFromIS(string[] restrictions, DataTable routines)
+        {
+            DataTable parms = new DataTable();
+
+            if (routines == null || routines.Rows.Count == 0)
+            {
+                if (restrictions == null)
+                {
+                    // first fill our table with the proper structure
+                    MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM INFORMATION_SCHEMA.PARAMETERS WHERE 1=2", connection);
+                    da.Fill(parms);
+                }
+                else
+                    GetParametersForRoutineFromIS(parms, restrictions);
+            }
+            else foreach (DataRow routine in routines.Rows)
+            {
+                if (restrictions != null && restrictions.Length >= 3)
+                    restrictions[2] = routine["ROUTINE_NAME"].ToString();
+
+                GetParametersForRoutineFromIS(parms, restrictions);
+            }
+            parms.TableName = "Procedure Parameters";
+            return parms;
         }
 
         /// <summary>
@@ -287,7 +312,7 @@ namespace MySql.Data.MySqlClient
             DataTable routines)
         {
             if (connection.driver.Version.isAtLeast(6, 0, 6))
-                return GetParametersFromIS(restrictions);
+                return GetParametersFromIS(restrictions, routines);
             else
             {
                 DataTable dt = new DataTable("Procedure Parameters");

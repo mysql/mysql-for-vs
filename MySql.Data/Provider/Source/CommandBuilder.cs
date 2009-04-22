@@ -116,6 +116,8 @@ namespace MySql.Data.MySqlClient
             {
                 MySqlParameter p = new MySqlParameter();
                 p.ParameterName = String.Format("@{0}", row["PARAMETER_NAME"]);
+                if (row["ORDINAL_POSITION"].Equals(0) && p.ParameterName == "@")
+                    p.ParameterName = "@RETURN_VALUE";
                 p.Direction = GetDirection(row);
                 bool unsigned = StoredProcedure.GetFlags(row["DTD_IDENTIFIER"].ToString()).IndexOf("UNSIGNED") != -1;
                 bool real_as_float = procTable.Rows[0]["SQL_MODE"].ToString().IndexOf("REAL_AS_FLOAT") != -1;
@@ -124,9 +126,9 @@ namespace MySql.Data.MySqlClient
                 if (!row["CHARACTER_MAXIMUM_LENGTH"].Equals(DBNull.Value))
                     p.Size = (int)row["CHARACTER_MAXIMUM_LENGTH"];
                 if (!row["NUMERIC_PRECISION"].Equals(DBNull.Value))
-                    p.Precision = (byte)row["NUMERIC_PRECISION"];
+                    p.Precision = Convert.ToByte(row["NUMERIC_PRECISION"]);
                 if (!row["NUMERIC_SCALE"].Equals(DBNull.Value))
-                    p.Scale = (byte)(int)row["NUMERIC_SCALE"];
+                    p.Scale = Convert.ToByte(row["NUMERIC_SCALE"]);
                 command.Parameters.Add(p);
             }
         }

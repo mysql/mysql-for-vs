@@ -24,6 +24,7 @@ using System.Text;
 using MySql.Data.Common;
 #if NET20
 using System.Collections.Generic;
+using System.Data;
 #endif
 
 namespace MySql.Data.MySqlClient
@@ -118,7 +119,7 @@ namespace MySql.Data.MySqlClient
             mapping.Add("win1250", mapping["cp1250"]);
             mapping.Add("latin5", new CharacterSet("latin5", 1));
             mapping.Add("armscii8", mapping["latin1"]);
-            mapping.Add("utf8", new CharacterSet("utf-8", 3));
+            mapping.Add("utf8", new CharacterSet("utf-8", 4));
             mapping.Add("ucs2", new CharacterSet("UTF-16BE", 2));
             mapping.Add("cp866", new CharacterSet("cp866", 1));
             mapping.Add("keybcs2", mapping["latin1"]);
