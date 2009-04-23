@@ -208,25 +208,12 @@
       </DefiningQuery>
     </EntitySet>
 
-<!--
-    <EntitySet Name="SForeignKeyConstraints" EntityType="Self.ForeignKeyConstraint">
-      <DefiningQuery>
-        SELECT /* Foreign key constraints */
-        CONCAT('`', TABLE_SCHEMA, '`.`', CONSTRAINT_NAME, '`') AS `Id`,
-        'NO ACTION' AS `UpdateRule`,
-        'NO ACTION' AS `DeleteRule`
-        FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
-        WHERE CONSTRAINT_TYPE = 'FOREIGN KEY' AND TABLE_SCHEMA=schema()
-      </DefiningQuery>
-    </EntitySet>
--->
-
     <EntitySet Name="SForeignKeyConstraints" EntityType="Self.ForeignKeyConstraint">
       <DefiningQuery>
         SELECT
         CONCAT('`', CONSTRAINT_SCHEMA, '`.`', TABLE_NAME, '`.`', CONSTRAINT_NAME, '`') AS `Id`,
-        NULL AS `UpdateRule`,
-        NULL AS `DeleteRule`
+        'NO ACTION' AS `UpdateRule`,
+        'NO ACTION' AS `DeleteRule`
         FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_TYPE='FOREIGN KEY'
       </DefiningQuery>
     </EntitySet>

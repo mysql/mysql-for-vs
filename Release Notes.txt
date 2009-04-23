@@ -3,9 +3,26 @@ Connector/Net 6.0  Release Notes
 
 Welcome to the release notes for Connector/Net 6.0
 
-This release introduces initial support for entity framework.  This is our beta release.  We know of 
-some minor issues with the new visual studio integration and these will be corrected for our GA release.
-Please let us know about any issues you have and we'll address them quickly.
+Known Issues
+------------
+* The table editor in the Visual Studio integration will shorten the window name when you save.  This has no
+real effect on the function of the editor but it is not quite correct.
+
+* Our visual studio editors are completely rewritten and we expect to find some 1.0 type bugs after release.  We will
+update these quickly and we ask for your patience.
+
+* Our sql editor does not correctly display items with comments properly.  This is easily worked around and will be
+fixed in the next release
+
+* Currently unsigned int values are not supported in our entity framework support.  We are planning on adding
+this in the next release.
+
+* This release does not treat tinyint(1) columns as boolean in entity framework.  It is uncertain if we will
+even be able to support bool in this way and may have to use a different column spec for bool.  We are working
+to fix this in the next release.
+
+We understand that the last two issues above can effect a great number of people and so we are working hard to 
+update the release very quickly.  
 
 We hope you enjoy this release and encourage you to test this release with your applications
 and let us know any problems you find.

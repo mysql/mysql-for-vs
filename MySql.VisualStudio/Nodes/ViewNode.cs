@@ -77,10 +77,13 @@ namespace MySql.Data.VisualStudio
         {
             string sql = editor.Text.Trim();
             string lowerSql = sql.ToLowerInvariant();
-            int pos = lowerSql.IndexOf("view") + 9;
-            int end = lowerSql.IndexOf("as", pos);
-            int end2 = lowerSql.IndexOf("(", pos);
-            end = Math.Min(end, end2);
+            int pos = lowerSql.IndexOf("view") + 4;
+            int end = pos;
+            while (++end < sql.Length)
+            {
+                if (lowerSql[end] == '(') break;
+                if (Char.IsWhiteSpace(lowerSql[end])) break;
+            }
             string procName = sql.Substring(pos, end - pos).Trim();
             return procName.Trim('`');
         }
@@ -101,6 +104,7 @@ namespace MySql.Data.VisualStudio
                         throw new Exception(String.Format("There is no view with the name '{0}'", Name));
                     editor.Text = String.Format("ALTER VIEW `{0}` AS \r\n{1}",
                         Name, views.Rows[0]["VIEW_DEFINITION"].ToString());
+                    Dirty = false;
                 }
                 catch (Exception ex)
                 {
