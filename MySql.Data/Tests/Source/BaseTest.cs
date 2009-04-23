@@ -106,9 +106,12 @@ namespace MySql.Data.MySqlClient.Tests
             rootConn = new MySqlConnection(connStr + ";database=mysql");
             rootConn.Open();
 
-            // run all tests in strict mode
-            MySqlCommand cmd = new MySqlCommand("SET GLOBAL SQL_MODE=STRICT_ALL_TABLES", rootConn);
-		    cmd.ExecuteNonQuery();
+            if (rootConn.ServerVersion.StartsWith("5"))
+            {
+                // run all tests in strict mode
+                MySqlCommand cmd = new MySqlCommand("SET GLOBAL SQL_MODE=STRICT_ALL_TABLES", rootConn);
+                cmd.ExecuteNonQuery();
+            }
 		}
 
         #region Properties

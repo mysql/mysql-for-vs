@@ -24,7 +24,6 @@ using System.Data.Common.CommandTrees;
 using System.Collections.Generic;
 using System.Data.Metadata.Edm;
 using System.Data;
-//using MySql.Data.MySqlClient.SQLGeneration;
 using MySql.Data.Entity;
 using System.Reflection;
 
@@ -97,7 +96,8 @@ namespace MySql.Data.MySqlClient
             if (shouldClose)
                 connection.Close();
             if (version.StartsWith("6")) return "6.0";
-            if (version.StartsWith("5")) return "5.0";
+            if (version.StartsWith("5.1")) return "5.1";
+            if (version.StartsWith("5.0")) return "5.0";
             throw new NotSupportedException("Versions of MySQL prior to 5.0 are not currently supported");
         }
 
