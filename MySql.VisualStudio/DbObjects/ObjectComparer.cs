@@ -30,10 +30,8 @@ namespace MySql.Data.VisualStudio.DbObjects
             if (one != null && two == null) return false;
             Type firstType = one.GetType();
             Type secondType = two.GetType();
-    //        if (firstType != secondType) return false;
 
-            PropertyInfo[] properties = firstType.GetProperties(
-                BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public);
+            PropertyInfo[] properties = firstType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
             foreach (PropertyInfo property in properties)
             {
                 object firstValue = property.GetValue(one, null);

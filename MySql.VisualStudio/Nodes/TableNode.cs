@@ -76,11 +76,7 @@ namespace MySql.Data.VisualStudio
                 dlg.TableName = table.Name;
                 if (DialogResult.Cancel == dlg.ShowDialog()) return false;
                 table.Name = dlg.TableName;
-                //Name = table.Name;
-                //HierarchyAccessor.SetProperty(ItemId, (int)__VSHPROPID.VSHPROPID_Name, Name);
-                //TODO: refresh open editor window
             }
-
             return base.Save();
         }
 

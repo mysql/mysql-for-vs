@@ -127,6 +127,7 @@ namespace MySql.Data.VisualStudio
                     sql_mode = dt.Rows[0][1] as string;
                     string sql = dt.Rows[0][2] as string;
                     editor.Text = ChangeSqlTypeTo(sql, "ALTER");
+                    Dirty = false;
                 }
                 catch (Exception ex)
                 {
@@ -142,22 +143,22 @@ namespace MySql.Data.VisualStudio
         /// <returns></returns>
         protected override bool Save()
         {
-            // if we are a new sproc then we don't need to do any of our
-            // alter "magic" (see below)
-            if (IsNew) return SaveAsNew();
-
             // since MySQL doesn't support altering the body of a proc we have
             // to do some "magic"
 
-            // first we need to check the syntax of our changes.  THis will throw
-            // an exception if the syntax is bad
             try
             {
-                CheckSyntax();
+                string sql = editor.Text.Trim();
+                if (!IsNew)
+                {
+                    // first we need to check the syntax of our changes.  THis will throw
+                    // an exception if the syntax is bad
+                    CheckSyntax();
 
-                string createSql = ChangeSqlTypeTo(editor.Text.Trim(), "CREATE");
-                ExecuteSQL(String.Format("DROP PROCEDURE IF EXISTS `{0}`.`{1}`", Database, Name));
-                ExecuteSQL(createSql);
+                    sql = ChangeSqlTypeTo(editor.Text.Trim(), "CREATE");
+                    ExecuteSQL(GetDropSQL(Name));
+                }
+                ExecuteSQL(sql);
                 return true;
             }
             catch (Exception ex)
@@ -165,13 +166,6 @@ namespace MySql.Data.VisualStudio
                 MessageBox.Show(ex.Message, "MySQL", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
-        }
-
-        private bool SaveAsNew()
-        {
-            bool saveOk = base.Save();
-            editor.Text = ChangeSqlTypeTo(editor.Text.Trim(), "ALTER");
-            return saveOk;
         }
 
         private void CheckSyntax()
@@ -205,7 +199,14 @@ namespace MySql.Data.VisualStudio
             string sql = editor.Text.Trim();
             string lowerSql = sql.ToLowerInvariant();
             int pos = lowerSql.IndexOf("procedure") + 9;
-            int end = lowerSql.IndexOf("(", pos);
+            if (IsFunction)
+                pos = lowerSql.IndexOf("function") + 8;
+            int end = pos;
+            while (++end < sql.Length)
+            {
+                if (lowerSql[end] == '(') break;
+                if (Char.IsWhiteSpace(lowerSql[end])) break;
+            }
             string procName = sql.Substring(pos, end - pos).Trim();
             return procName.Trim('`');
         }

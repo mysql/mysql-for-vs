@@ -28,10 +28,8 @@
     </ProjectSummary>
     <MissingTags>Summary, Parameter, Returns, TypeParameter</MissingTags>
     <VisibleItems>InheritedMembers, InheritedFrameworkMembers, Protected, SealedProtected</VisibleItems>
-    <HtmlHelp1xCompilerPath>
-    </HtmlHelp1xCompilerPath>
-    <HtmlHelp2xCompilerPath>
-    </HtmlHelp2xCompilerPath>
+    <HtmlHelp1xCompilerPath>..\..\..\..\Program Files\HTML Help Workshop\</HtmlHelp1xCompilerPath>
+    <HtmlHelp2xCompilerPath>..\..\..\..\Program Files\Common Files\Microsoft Shared\Help 2.0 Compiler\</HtmlHelp2xCompilerPath>
     <SandcastlePath>
     </SandcastlePath>
     <WorkingPath>
@@ -51,7 +49,8 @@
     <NamingMethod>MemberName</NamingMethod>
     <DocumentationSources>
       <DocumentationSource sourceFile="..\MySql.Data\Provider\MySql.Data.csproj" />
-<DocumentationSource sourceFile="..\MySql.Web\Providers\MySql.Web.csproj" /></DocumentationSources>
+      <DocumentationSource sourceFile="..\MySql.Web\Providers\MySql.Web.csproj" />
+    </DocumentationSources>
     <NamespaceSummaries>
       <NamespaceSummaryItem name="(global)" isDocumented="False" xmlns="" />
       <NamespaceSummaryItem name="MySql.Data.Common" isDocumented="False" xmlns="" />

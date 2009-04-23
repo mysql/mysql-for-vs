@@ -54,31 +54,8 @@ namespace MySql.Data.VisualStudio
 
         protected virtual bool Save()
         {
-            DbConnection conn = (DbConnection)HierarchyAccessor.Connection.GetLockedProviderObject();
-            try
-            {
-                // first we get the sql that creates/updates the object
-                string sql = GetSaveSql();
-                ExecuteSQL(sql);
-
-                // then mark the document has clean and unchanged
-                Dirty = false;
-                IsNew = false;
-
-                //notify any listeners that our save is done
-                OnDataSaved();
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Unable to save object with error: " + ex.Message);
-                return false;
-            }
-            finally
-            {
-                HierarchyAccessor.Connection.UnlockProviderObject();
-            }
+            ExecuteSQL(GetSaveSql());
+            return true;
         }
 
         #region IVsPersistDocData Members
@@ -133,19 +110,37 @@ namespace MySql.Data.VisualStudio
         public int SaveDocData(VSSAVEFLAGS dwSave, out string pbstrMkDocumentNew, out int pfSaveCanceled)
         {
             string oldMoniker = Moniker;
-
-            pfSaveCanceled = Save() ? 0 : 1;
+            pfSaveCanceled = 1;
             pbstrMkDocumentNew = null;
+
+            try
+            {
+                // Call out to the derived nodes to do the save work
+                if (Save())
+                    pfSaveCanceled = 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unable to save object with error: " + ex.Message);
+                return VSConstants.S_OK;
+            }
 
             if (pfSaveCanceled == 0)
             {
+                // then mark the document has clean and unchanged
+                Dirty = false;
+                IsNew = false;
+
+                //notify any listeners that our save is done
+                OnDataSaved();
+
                 Name = GetCurrentName();
                 pbstrMkDocumentNew = String.Format("/Connection/{0}s/{1}", NodeId, Name);
                 VsShellUtilities.RenameDocument(MySqlDataProviderPackage.Instance, oldMoniker, Moniker);
 
-                Dirty = false;
                 // update server explorer
                 RefreshServerExplorer();
+                Load();
             }
             return VSConstants.S_OK;
         }
