@@ -148,11 +148,11 @@ namespace MySql.Data.MySqlClient
             while (FindToken())
             {
                 if ((stopIndex - startIndex) < 2) continue;
-         string token = sql.Substring(startIndex, stopIndex - startIndex).Trim();
+                string token = sql.Substring(startIndex, stopIndex - startIndex).Trim();
                 char c1 = sql[startIndex];
                 char c2 = sql[startIndex+1];
-                if (c1 != '@' && c1 != '?') continue;
-                if (c1 == '@' && c2 == '@') continue;
+                if (c1 == '?' ||
+                    (c1 == '@' && c2 != '@'))
                 return sql.Substring(startIndex, stopIndex - startIndex);
             }
             return null;
@@ -168,7 +168,7 @@ namespace MySql.Data.MySqlClient
                 char c = sql[pos++];
                 if (Char.IsWhiteSpace(c)) continue;
                 
-                if (c == '`' || c == '\'' || (c == '"' && AnsiQuotes))
+                if (c == '`' || c == '\'' || c == '"') //(c == '"' && AnsiQuotes))
                     ReadQuotedToken(c);
                 else if (c == '#' || c == '-' || c == '/')
                     AttemptToReadComment(c);
@@ -240,10 +240,6 @@ namespace MySql.Data.MySqlClient
                     char c = sql[pos];
                     if (Char.IsWhiteSpace(c)) break;
                     if (IsSpecialCharacter(c)) break;
-                    if (IsParameterMarker(c))
-                    {
-                        if (c != '@' || pos > startIndex + 1 || sql[startIndex] != '@') break;
-                    }
                     pos++;
                 }
             }
@@ -282,7 +278,7 @@ namespace MySql.Data.MySqlClient
 
         private bool IsQuoteChar(char c)
         {
-            return c == '`' || c == '\'' || (c == '\"' && AnsiQuotes);
+            return c == '`' || c == '\'' || c == '\"'; // (c == '\"' && AnsiQuotes);
         }
 
         private bool IsParameterMarker(char c)
@@ -292,14 +288,10 @@ namespace MySql.Data.MySqlClient
 
         private bool IsSpecialCharacter(char c)
         {
-            return c == '=' || 
-                   c == '(' || 
-                   c == ')' || 
-                   c == ',' || 
-                   c == ';' || 
-                   c == '-' || 
-                   c == '/' || 
-                   c == '#';
+            if (Char.IsLetterOrDigit(c) || 
+                c == '$' || c == '_' || c == '.') return false;
+            if (IsParameterMarker(c)) return false;
+            return true;
         }
     }
 }

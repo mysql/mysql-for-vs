@@ -118,7 +118,7 @@ namespace MySql.Data.MySqlClient.Tests
 
         public StoredProcedure()
         {
-            csAdditions = ";procedure cache size=0;";
+            csAdditions = ";procedure cache size=0;logging=true;";
         }
 
         /// <summary>
@@ -1133,6 +1133,8 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void GetSchema2()
         {
+            if (Version.Major < 5) return;
+
             execSQL(@"CREATE TABLE Test(id INT AUTO_INCREMENT, PRIMARY KEY (id)) ");
             execSQL(@"CREATE PROCEDURE spTest (OUT id INT)
                 BEGIN INSERT INTO Test VALUES (NULL); SET id=520; END");

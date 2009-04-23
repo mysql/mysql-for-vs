@@ -66,7 +66,9 @@ namespace MySql.Data.MySqlClient
 
         private XmlReader GetStoreSchemaDescription()
         {
-            if (manifestToken == "5.0")
+            if (manifestToken == "5.1")
+                return GetMappingResource("SchemaDefinition-5.1.ssdl");
+            else if (manifestToken == "5.0")
                 return GetMappingResource("SchemaDefinition-5.0.ssdl");
             else if (manifestToken == "6.0")
                 return GetMappingResource("SchemaDefinition-6.0.ssdl");

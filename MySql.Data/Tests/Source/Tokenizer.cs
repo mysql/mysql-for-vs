@@ -203,7 +203,7 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.IsTrue(tokenizer.Quoted);
             Assert.AreEqual(",", tokenizer.NextToken());
             Assert.AreEqual("\"a\"", tokenizer.NextToken());
-            Assert.IsFalse(tokenizer.Quoted);
+            Assert.IsTrue(tokenizer.Quoted);
             Assert.AreEqual(",", tokenizer.NextToken());
             Assert.AreEqual("`a`", tokenizer.NextToken());
             Assert.IsTrue(tokenizer.Quoted);
