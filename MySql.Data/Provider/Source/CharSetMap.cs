@@ -49,7 +49,7 @@ namespace MySql.Data.MySqlClient
             InitializeMapping();
         }
 
-        public static CharacterSet GetChararcterSet(DBVersion version, string CharSetName)
+        public static CharacterSet GetCharacterSet(DBVersion version, string CharSetName)
         {
             CharacterSet cs = (CharacterSet) mapping[CharSetName];
             if (cs == null)
@@ -67,7 +67,7 @@ namespace MySql.Data.MySqlClient
         {
             try
             {
-                CharacterSet cs = GetChararcterSet(version, CharSetName);
+                CharacterSet cs = GetCharacterSet(version, CharSetName);
                 return Encoding.GetEncoding(cs.name);
             }
             catch (NotSupportedException)
@@ -117,7 +117,7 @@ namespace MySql.Data.MySqlClient
             mapping.Add("win1250", mapping["cp1250"]);
             mapping.Add("latin5", new CharacterSet("latin5", 1));
             mapping.Add("armscii8", mapping["latin1"]);
-            mapping.Add("utf8", new CharacterSet("utf-8", 4));
+            mapping.Add("utf8", new CharacterSet("utf-8", 3));
             mapping.Add("ucs2", new CharacterSet("UTF-16BE", 2));
             mapping.Add("cp866", new CharacterSet("cp866", 1));
             mapping.Add("keybcs2", mapping["latin1"]);
