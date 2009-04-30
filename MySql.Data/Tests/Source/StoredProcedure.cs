@@ -58,7 +58,7 @@ namespace MySql.Data.MySqlClient.Tests
         public override void FixtureSetup()
         {
             pooling = false;
-            csAdditions = ";procedure cache size=0;";
+            csAdditions = ";procedure cache size=0;logging=true;";
             base.FixtureSetup();
         }
 
@@ -1521,6 +1521,36 @@ namespace MySql.Data.MySqlClient.Tests
                 cmd.CommandType = CommandType.StoredProcedure;
                 object o = cmd.ExecuteScalar();
                 Assert.AreEqual(1, o);
+            }
+        }
+
+        [Test]
+        public void ParametersInReverseOrder()
+        {
+            execSQL(@"CREATE PROCEDURE spTest(IN p_1 VARCHAR(5), IN p_2 VARCHAR(5))
+                        BEGIN SELECT p_1 AS P1, p_2 AS P2; END");
+            MySqlCommand cmd = new MySqlCommand("spTest", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandTimeout = 0;
+            cmd.Parameters.AddWithValue("?p_2", ("World"));
+            cmd.Parameters[0].DbType = DbType.AnsiString;
+            cmd.Parameters[0].Direction = ParameterDirection.Input;
+            cmd.Parameters.AddWithValue("?p_1", ("Hello"));
+            cmd.Parameters[1].DbType = DbType.AnsiString;
+            cmd.Parameters[1].Direction = ParameterDirection.Input;
+            MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            string s = GetConnectionString(true);
+            if (s.Contains("use procedure bodies=false"))
+            {
+                Assert.AreEqual("World", dt.Rows[0]["P1"]);
+                Assert.AreEqual("Hello", dt.Rows[0]["P2"]);
+            }
+            else
+            {
+                Assert.AreEqual("Hello", dt.Rows[0]["P1"]);
+                Assert.AreEqual("World", dt.Rows[0]["P2"]);
             }
         }
     }

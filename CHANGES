@@ -1,3 +1,7 @@
+Version 5.2.7
+- fixed procedure parameters collection so that an exception is thrown if we can't get the 
+  parameters.  Also used this to optimize the procedure cache optimization
+  
 Version 5.2.6
 - cleaned up how stored procedure execution operated when the user does or does not have execute privs
   on the routine (bug #40139)
