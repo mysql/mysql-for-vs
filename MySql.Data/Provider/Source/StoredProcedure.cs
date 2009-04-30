@@ -64,25 +64,17 @@ namespace MySql.Data.MySqlClient
         private DataSet GetParameters(string procName)
         {
             // if we can use mysql.proc, then do so
-            if (Connection.Settings.UseProcedureBodies)
-                return Connection.ProcedureCache.GetProcedure(Connection, procName);
+            //if (Connection.Settings.UseProcedureBodies)
+            DataSet ds = Connection.ProcedureCache.GetProcedure(Connection, procName);
 
-            // we can't use mysql.proc so we attempt to "make do"
-            DataSet ds = new DataSet();
-            string[] restrictions = new string[4];
-            int dotIndex = procName.IndexOf('.');
-            restrictions[1] = procName.Substring(0, dotIndex++);
-            restrictions[2] = procName.Substring(dotIndex, procName.Length - dotIndex);
-            ds.Tables.Add(Connection.GetSchema("procedures", restrictions));
+            // if we got both proc and parameter data then just return
+            if (ds.Tables.Count == 2) return ds;
 
-            // we use an internal method to create our procedure parameters table.  We pass
-            // in a non-null routines table and this will prevent the code from attempting
-            // a show create. It will process zero routine records but will return an empty
-            // parameters table we can then fill.
-            DataTable zeroRoutines = new DataTable();
+            // we were not able to retrieve parameter data so we have to make do by
+            // adding the parameters from the command object to our table
+            // we use an internal method to create our procedure parameters table.  
             ISSchemaProvider sp = new ISSchemaProvider(Connection);
-            DataTable pTable = sp.GetProcedureParameters(null, zeroRoutines);
-            pTable.TableName = "procedure parameters";
+            DataTable pTable = sp.CreateParametersTable(); 
             ds.Tables.Add(pTable);
 
             // now we run through the parameters that were set and fill in the parameters table

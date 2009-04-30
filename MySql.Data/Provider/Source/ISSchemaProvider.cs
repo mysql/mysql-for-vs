@@ -313,6 +313,34 @@ namespace MySql.Data.MySqlClient
             return parms;
         }
 
+        internal DataTable CreateParametersTable()
+        {
+            DataTable dt = new DataTable("Procedure Parameters");
+            dt.Columns.Add("SPECIFIC_CATALOG", typeof(string));
+            dt.Columns.Add("SPECIFIC_SCHEMA", typeof(string));
+            dt.Columns.Add("SPECIFIC_NAME", typeof(string));
+            dt.Columns.Add("ORDINAL_POSITION", typeof(Int32));
+            dt.Columns.Add("PARAMETER_MODE", typeof(string));
+            dt.Columns.Add("PARAMETER_NAME", typeof(string));
+            dt.Columns.Add("DATA_TYPE", typeof(string));
+            dt.Columns.Add("CHARACTER_MAXIMUM_LENGTH", typeof(Int32));
+            dt.Columns.Add("CHARACTER_OCTET_LENGTH", typeof(Int32));
+            dt.Columns.Add("NUMERIC_PRECISION", typeof(byte));
+            dt.Columns.Add("NUMERIC_SCALE", typeof(Int32));
+            dt.Columns.Add("CHARACTER_SET_NAME", typeof(string));
+            dt.Columns.Add("COLLATION_NAME", typeof(string));
+            dt.Columns.Add("DTD_IDENTIFIER", typeof(string));
+            dt.Columns.Add("ROUTINE_TYPE", typeof(string));
+            return dt;
+        }
+
+        internal bool CanRetrieveProcedureParameters()
+        {
+            if (connection.driver.Version.isAtLeast(6, 0, 6) ||
+                connection.Settings.UseProcedureBodies) return true;
+            return false;
+        }
+
         /// <summary>
         /// Return schema information about parameters for procedures and functions
         /// Restrictions supported are:
@@ -323,28 +351,14 @@ namespace MySql.Data.MySqlClient
         {
             if (connection.driver.Version.isAtLeast(6, 0, 6))
                 return GetParametersFromIS(restrictions, routines);
-            else
+            else if (connection.Settings.UseProcedureBodies)
             {
-                DataTable dt = new DataTable("Procedure Parameters");
-                dt.Columns.Add("SPECIFIC_CATALOG", typeof(string));
-                dt.Columns.Add("SPECIFIC_SCHEMA", typeof(string));
-                dt.Columns.Add("SPECIFIC_NAME", typeof(string));
-                dt.Columns.Add("ORDINAL_POSITION", typeof(Int32));
-                dt.Columns.Add("PARAMETER_MODE", typeof(string));
-                dt.Columns.Add("PARAMETER_NAME", typeof(string));
-                dt.Columns.Add("DATA_TYPE", typeof(string));
-                dt.Columns.Add("CHARACTER_MAXIMUM_LENGTH", typeof(Int32));
-                dt.Columns.Add("CHARACTER_OCTET_LENGTH", typeof(Int32));
-                dt.Columns.Add("NUMERIC_PRECISION", typeof(byte));
-                dt.Columns.Add("NUMERIC_SCALE", typeof(Int32));
-                dt.Columns.Add("CHARACTER_SET_NAME", typeof(string));
-                dt.Columns.Add("COLLATION_NAME", typeof(string));
-                dt.Columns.Add("DTD_IDENTIFIER", typeof(string));
-                dt.Columns.Add("ROUTINE_TYPE", typeof(string));
+                DataTable dt = CreateParametersTable();
                 GetParametersFromShowCreate(dt, restrictions, routines);
-
                 return dt;
             }
+            else
+                throw new InvalidOperationException(Resources.UnableToRetrieveParameters);
         }
 
         protected override DataTable GetSchemaInternal(string collection, string[] restrictions)
