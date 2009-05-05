@@ -1,6 +1,8 @@
 Version 5.2.7
 - fixed procedure parameters collection so that an exception is thrown if we can't get the 
   parameters.  Also used this to optimize the procedure cache optimization
+- Added "nvarchar" and "nchar" to possible data types returned by the DataSourceInformation
+  schema collection so procs that use those types with parameters will work (bug #39409)
 - fixed problem where the connector would incorrectly report the length of utf8 columns on servers
   6.0 and later.  This was caused by 6.0 now using 4 bytes for utf8 columns  
   
