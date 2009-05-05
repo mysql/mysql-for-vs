@@ -120,6 +120,7 @@
     <Compile Include="DDEX\MySqlDataViewCommandHandler.cs" />
     <Compile Include="DDEX\MySqlDataViewSupport.cs" />
     <Compile Include="DbObjects\ColumnWithTypeDescriptor.cs" />
+    <Compile Include="DDEX\StoredProcedureColumnEnumerator.cs" />
     <Compile Include="Editors\CustomPropertyDescriptor.cs" />
     <Compile Include="Editors\ForeignKeyDialog.cs">
       <SubType>Form</SubType>

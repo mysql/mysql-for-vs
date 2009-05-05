@@ -1,3 +1,6 @@
+Version 6.0.4
+- fixed regression where using stored procs with datasets (bug #44460)
+
 Version 6.0.3 - 4/22/09
 - fixed broken connection prompting
 - fixed installer that was no longer referencing the right folders for Visual Studio assemblies [bug #44141]
