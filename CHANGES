@@ -5,6 +5,8 @@ Version 5.2.7
   schema collection so procs that use those types with parameters will work (bug #39409)
 - fixed problem where the connector would incorrectly report the length of utf8 columns on servers
   6.0 and later.  This was caused by 6.0 now using 4 bytes for utf8 columns  
+- fixed bug in role provider that was causing it to not correctly fetch the application
+  id which caused it to incorrectly report roles (bug #44414)
   
 Version 5.2.6
 - cleaned up how stored procedure execution operated when the user does or does not have execute privs
