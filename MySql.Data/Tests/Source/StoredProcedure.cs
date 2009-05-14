@@ -1542,7 +1542,7 @@ namespace MySql.Data.MySqlClient.Tests
             DataTable dt = new DataTable();
             da.Fill(dt);
             string s = GetConnectionString(true);
-            if (s.Contains("use procedure bodies=false"))
+            if (s.IndexOf("use procedure bodies=false") != -1)
             {
                 Assert.AreEqual("World", dt.Rows[0]["P1"]);
                 Assert.AreEqual("Hello", dt.Rows[0]["P2"]);
