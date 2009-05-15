@@ -23,6 +23,17 @@ namespace MySql.Data.VisualStudio
     class Tokenizer
     {
         private string text;
+        private int Pos;
+        private string LastToken;
+        private int _startIndex;
+        private int _stopIndex;
+        private bool _lineComment;
+        private bool _quoted;
+
+        public bool AnsiQuotes;
+        public bool BackslashEscapes;
+        public bool ReturnComments;
+        public bool BlockComment;
 
         #region Properties
 
@@ -32,16 +43,29 @@ namespace MySql.Data.VisualStudio
             set { text = value; Pos = 0; }
         }
 
-        public bool AnsiQuotes { get; set; }
-        public bool BackslashEscapes { get; set; }
-        public int StartIndex { get; private set; }
-        public int StopIndex { get; private set; }
-        public bool ReturnComments { get; set; }
-        public bool LineComment { get; private set; }
-        public bool BlockComment { get; set; }
-        public bool Quoted { get; private set; }
-        private int Pos { get; set; }
-        private string LastToken { get; set; }
+        public int StartIndex 
+        {
+            get { return _startIndex; }
+            private set { _startIndex = value; }
+        }
+
+        public int StopIndex 
+        {
+            get { return _stopIndex; }
+            private set { _stopIndex = value; }
+        }
+
+        public bool LineComment 
+        {
+            get { return _lineComment; }
+            private set { _lineComment = value; }
+        }
+
+        public bool Quoted 
+        {
+            get { return _quoted; }
+            private set { _quoted = value; }
+        }
 
         #endregion
 

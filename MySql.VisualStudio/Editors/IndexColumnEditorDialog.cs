@@ -198,8 +198,19 @@ namespace MySql.Data.VisualStudio.Editors
 
     public class IndexColumnGridRow
     {
-        public string ColumnName { get; set; }
-        public string SortOrder { get; set; }
+        private string _columnName;
+        public string ColumnName
+        {
+            get { return _columnName; }
+            set { _columnName = value; }
+        }
+
+        private string _sortOrder;
+        public string SortOrder
+        {
+            get { return _sortOrder; }
+            set { _sortOrder = value; }
+        }
     }
 
 }

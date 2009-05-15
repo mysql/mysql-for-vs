@@ -42,6 +42,8 @@ namespace MySql.Data.VisualStudio
 		protected Guid commandGroupGuid;
         protected string name;
         private static string defaultStorageEngine;
+        public DataViewHierarchyAccessor HierarchyAccessor;
+        public bool IsNew;
 
 		public BaseNode(DataViewHierarchyAccessor hierarchyAccessor, int id)
 		{
@@ -81,20 +83,52 @@ namespace MySql.Data.VisualStudio
             }
         }
 
-        public bool IsNew { get; set; }
-        public int ItemId { get; protected set; }
-        public string NodeId { get; protected set; }
-		public DataViewHierarchyAccessor HierarchyAccessor { get; set; }
-        public string Server { get; private set; }
-        public string Database { get; private set; }
-        public virtual bool Dirty { get; protected set; }
+        private int _itemId;
+        public int ItemId 
+        {
+            get { return _itemId; }
+            protected set { _itemId = value; }
+        }
+
+        private string _nodeId;
+        public string NodeId 
+        {
+            get { return _nodeId; }
+            protected set { _nodeId = value; }
+        }
+
+        private string _server;
+        public string Server 
+        {
+            get { return _server; }
+            private set { _server = value; }
+        }
+
+        private string _database;
+        public string Database 
+        {
+            get { return _database; }
+            private set { _database = value; }
+        }
+
+        private bool _dirty;
+        public virtual bool Dirty 
+        {
+            get { return _dirty; }
+            protected set { _dirty = value; }
+        }
 
         protected string Moniker 
         { 
             get { return String.Format("mysql://{0}/{1}/{2}", Server, Database, Name); }
         }
 
-        public int NameIndex { get; protected set; }
+        private int _nameIndex;
+        public int NameIndex 
+        {
+            get { return _nameIndex; }
+            protected set { _nameIndex = value; }
+        }
 
         public virtual string SchemaCollection
         {

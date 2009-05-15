@@ -25,6 +25,7 @@ namespace MySql.Data.VisualStudio.DbObjects
     {
         bool isNew;
         ForeignKey oldFk;
+        Table Table;
 
         private ForeignKey(Table t)
         {
@@ -67,19 +68,54 @@ namespace MySql.Data.VisualStudio.DbObjects
             }
         }
 
-        private Table Table { get; set; }
-        public string Name { get; set; }
-        public string ReferencedTable { get; set; }
-        public MatchOption Match { get; set; }
-        public ReferenceOption UpdateAction { get; set; }
-        public ReferenceOption DeleteAction { get; set; }
-        public List<FKColumnPair> Columns { get; set; }
+        private string _name;
+        public string Name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
+
+        private string _referencedTable;
+        public string ReferencedTable
+        {
+            get { return _referencedTable; }
+            set { _referencedTable = value; }
+        }
+
+        private MatchOption _match;
+        public MatchOption Match
+        {
+            get { return _match; }
+            set { _match = value; }
+        }
+
+        private ReferenceOption _updateAction;
+        public ReferenceOption UpdateAction
+        {
+            get { return _updateAction; }
+            set { _updateAction = value; }
+        }
+
+        private ReferenceOption _deleteAction;
+        public ReferenceOption DeleteAction
+        {
+            get { return _deleteAction; }
+            set { _deleteAction = value; }
+        }
+
+        private List<FKColumnPair> _columns;
+        public List<FKColumnPair> Columns
+        {
+            get { return _columns; }
+            set { _columns = value; }
+        }
+
+        public bool NameSet;
 
         public override string ToString()
         {
             return Name;
         }
-        public bool NameSet { get; set; }
 
         public void SetName(string name, bool makeUnique)
         {
@@ -207,7 +243,7 @@ namespace MySql.Data.VisualStudio.DbObjects
 
     class FKColumnPair
     {
-        public string ReferencedColumn { get; set; }
-        public string Column { get; set; }
+        public string ReferencedColumn;
+        public string Column;
     }
 }
