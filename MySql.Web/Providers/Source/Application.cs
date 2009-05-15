@@ -9,16 +9,27 @@ namespace MySql.Web.General
 {
     internal class Application
     {
+        private int _id;
+        private string _desc;
+
         public Application(string name, string desc)
         {
             Id = -1;
             Name = name;
             Description = desc;
         }
-
-        public int Id { get; private set; }
+        public int Id 
+        { 
+            get { return _id; }
+            private set { _id = value; }
+        }
         public string Name;
-        public string Description { get; private set; }
+
+        public string Description
+        { 
+            get { return _desc; }
+            private set { _desc = value; } 
+        }
 
         public int FetchId(MySqlConnection connection)
         {
