@@ -122,11 +122,12 @@ namespace MySql.Data.Types
 
 		internal static void SetDSInfo(DataTable dsTable)
 		{
-			string[] types = new string[] { "CHAR", "VARCHAR", "SET", "ENUM", 
-                "TINYTEXT", "TEXT", "MEDIUMTEXT", "LONGTEXT" };
-			MySqlDbType[] dbtype = new MySqlDbType[] { MySqlDbType.String, 
-                MySqlDbType.VarChar, MySqlDbType.Set, MySqlDbType.Enum, MySqlDbType.TinyText,
-                MySqlDbType.Text, MySqlDbType.MediumText, MySqlDbType.LongText };
+			string[] types = new string[] { "CHAR", "NCHAR", "VARCHAR", "NVARCHAR", "SET", 
+                "ENUM", "TINYTEXT", "TEXT", "MEDIUMTEXT", "LONGTEXT" };
+            MySqlDbType[] dbtype = new MySqlDbType[] { MySqlDbType.String, MySqlDbType.String,
+                MySqlDbType.VarChar, MySqlDbType.VarChar, MySqlDbType.Set, MySqlDbType.Enum, 
+                MySqlDbType.TinyText, MySqlDbType.Text, MySqlDbType.MediumText, 
+                MySqlDbType.LongText };
 
 			// we use name indexing because this method will only be called
 			// when GetSchema is called for the DataSourceInformation 
@@ -137,8 +138,8 @@ namespace MySql.Data.Types
 				row["TypeName"] = types[x];
 				row["ProviderDbType"] = dbtype[x];
 				row["ColumnSize"] = 0;
-                row["CreateFormat"] = x < 2 ? types[x] + "({0})" : types[x];
-				row["CreateParameters"] = x < 2 ? "size" : null;
+                row["CreateFormat"] = x < 4 ? types[x] + "({0})" : types[x];
+				row["CreateParameters"] = x < 4 ? "size" : null;
 				row["DataType"] = "System.String";
 				row["IsAutoincrementable"] = false;
 				row["IsBestMatch"] = true;

@@ -125,16 +125,20 @@ namespace MySql.Data.MySqlClient
             if (procTable.Rows.Count == 0)
                 throw new MySqlException(String.Format(Resources.InvalidProcName, name, schema));
 
+            DataSet ds = new DataSet();
+            ds.Tables.Add(procTable);
+
             // we don't use GetSchema here because that would cause another
             // query of procedures and we don't need that since we already
             // know the procedure we care about.
             ISSchemaProvider isp = new ISSchemaProvider(connection);
             string[] rest = isp.CleanRestrictions(restrictions);
-            DataTable parametersTable = isp.GetProcedureParameters(rest, procTable);
+            if (isp.CanRetrieveProcedureParameters())
+            {
+                DataTable parametersTable = isp.GetProcedureParameters(rest, procTable);
+                ds.Tables.Add(parametersTable);
+            }
 
-            DataSet ds = new DataSet();
-            ds.Tables.Add(procTable);
-            ds.Tables.Add(parametersTable);
             return ds;
         }
     }

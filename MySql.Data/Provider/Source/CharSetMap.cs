@@ -51,7 +51,7 @@ namespace MySql.Data.MySqlClient
             InitializeMapping();
         }
 
-        public static CharacterSet GetChararcterSet(DBVersion version, string CharSetName)
+        public static CharacterSet GetCharacterSet(DBVersion version, string CharSetName)
         {
             CharacterSet cs = (CharacterSet) mapping[CharSetName];
             if (cs == null)
@@ -69,7 +69,7 @@ namespace MySql.Data.MySqlClient
         {
             try
             {
-                CharacterSet cs = GetChararcterSet(version, CharSetName);
+                CharacterSet cs = GetCharacterSet(version, CharSetName);
                 return Encoding.GetEncoding(cs.name);
             }
             catch (NotSupportedException)
