@@ -48,51 +48,97 @@ namespace MySql.Data.VisualStudio.DbObjects
         #region Properties
 
         [Browsable(false)]
-        internal Table OwningTable { get; set; }
+        internal Table OwningTable;
 
+        private string _columnName;
         [Category("General")]
         [Description("The name of this column")]
-        public string ColumnName { get; set; }
+        public string ColumnName 
+        {
+            get { return _columnName; }
+            set { _columnName = value; }
+        }
 
+        private string _dataType;
         [Category("General")]
         [DisplayName("Data Type")]
         [TypeConverter(typeof(DataTypeConverter))]
         [RefreshProperties(RefreshProperties.All)]
-        public string DataType { get; set; }
+        public string DataType 
+        {
+            get { return _dataType; }
+            set { _dataType = value; }
+        }
 
+        private bool _allowNull;
         [TypeConverter(typeof(YesNoTypeConverter))]
         [Category("Options")]
         [DisplayName("Allow Nulls")]
-        public bool AllowNull { get; set; }
+        public bool AllowNull 
+        {
+            get { return _allowNull; }
+            set { _allowNull = value; }
+        }
 
+        private bool _isUnsigned;
         [TypeConverter(typeof(YesNoTypeConverter))]
         [Category("Options")]
         [DisplayName("Is Unsigned")]
-        public bool IsUnsigned { get; set; }
+        public bool IsUnsigned 
+        {
+            get { return _isUnsigned; }
+            set { _isUnsigned = value; }
+        }
 
+        private bool _isZeroFill;
         [TypeConverter(typeof(YesNoTypeConverter))]
         [Category("Options")]
         [DisplayName("Is Zerofill")]
-        public bool IsZerofill { get; set; }
+        public bool IsZerofill 
+        {
+            get { return _isZeroFill; }
+            set { _isZeroFill = value; }
+        }
 
+        private string _defaultValue;
 		[Category("General")]
 		[DisplayName("Default Value")]
-		public string DefaultValue { get; set; }
+		public string DefaultValue 
+        {
+            get { return _defaultValue; }
+            set { _defaultValue = value; }
+        }
 
+        private bool _autoIncrement;
         [TypeConverter(typeof(YesNoTypeConverter))]
         [Category("Options")]
         [DisplayName("Autoincrement")]
-        public bool AutoIncrement { get; set; }
+        public bool AutoIncrement 
+        {
+            get { return _autoIncrement; }
+            set { _autoIncrement = value; }
+        }
 
         //[TypeConverter(typeof(YesNoTypeConverter))]
         //[Category("Options")]
         //[DisplayName("Primary Key")]
         //[RefreshProperties(RefreshProperties.All)]
         [Browsable(false)]
-        public bool PrimaryKey { get; set; }
+        public bool PrimaryKey;
 
-        public int Precision { get; set; }
-        public int Scale { get; set; }
+        private int _precision;
+        public int Precision 
+        {
+            get { return _precision; }
+            set { _precision = value; }
+        }
+
+        private int _scale;
+        public int Scale 
+        {
+            get { return _scale; }
+            set { _scale = value; }
+        }
 
         [Category("Encoding")]
         [DisplayName("Character Set")]
@@ -108,12 +154,22 @@ namespace MySql.Data.VisualStudio.DbObjects
             }
         }
 
+        private string _collation;
         [Category("Encoding")]
         [TypeConverter(typeof(CollationTypeConverter))]
-        public string Collation { get; set; }
+        public string Collation 
+        {
+            get { return _collation; }
+            set { _collation = value; }
+        }
 
+        private string _comment;
         [Category("Miscellaneous")]
-        public string Comment { get; set; }
+        public string Comment 
+        {
+            get { return _comment; }
+            set { _comment = value; }
+        }
 
 		#endregion
 
