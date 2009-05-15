@@ -36,6 +36,7 @@ namespace MySql.Data.MySqlClient
         // reading fields
         private byte[] localByte;
         private byte[] inBuffer;
+        private byte[] lengthBytes;
         private WeakReference inBufferRef;
         private int inPos;
         private int maxInPos;
@@ -45,6 +46,7 @@ namespace MySql.Data.MySqlClient
         {
             this.baseStream = baseStream;
             localByte = new byte[1];
+            lengthBytes = new byte[7];
 			cache = new MemoryStream();
             inBufferRef = new WeakReference(inBuffer, false);
         }
@@ -93,8 +95,15 @@ namespace MySql.Data.MySqlClient
 
         public override int ReadByte()
         {
-            Read(localByte, 0, 1);
-            return localByte[0];
+            try
+            {
+                Read(localByte, 0, 1);
+                return localByte[0];
+            }
+            catch (EndOfStreamException)
+            {
+                return -1;
+            }
         }
 
         public override int Read(byte[] buffer, int offset, int count)
@@ -131,14 +140,11 @@ namespace MySql.Data.MySqlClient
         private void PrepareNextPacket()
         {
             // read off the uncompressed and compressed lengths
-            byte b1 = (byte) baseStream.ReadByte();
-            byte b2 = (byte) baseStream.ReadByte();
-            byte b3 = (byte) baseStream.ReadByte();
-            int compressedLength = b1 + (b2 << 8) + (b3 << 16);
-
-            baseStream.ReadByte(); // seq
-            int unCompressedLength = baseStream.ReadByte() + (baseStream.ReadByte() << 8) +
-                                     (baseStream.ReadByte() << 16);
+            ReadFully(lengthBytes, 7);
+            int compressedLength = lengthBytes[0] + (lengthBytes[1] << 8) + (lengthBytes[2] << 16);
+            // lengthBytes[3] is seq
+            int unCompressedLength =lengthBytes[4] + (lengthBytes[5] << 8) +
+                                     (lengthBytes[6] << 16);
 
             if (unCompressedLength == 0)
             {
@@ -162,11 +168,20 @@ namespace MySql.Data.MySqlClient
             inBuffer = (byte[])inBufferRef.Target;
             if (inBuffer == null || inBuffer.Length < len)
                 inBuffer = new byte[len];
+            ReadFully(inBuffer, len);
+        }
+
+        private void ReadFully(byte[] buffer, int len)
+        {
             int numRead = 0;
             int numToRead = len;
             while (numToRead > 0)
             {
-                int read = baseStream.Read(inBuffer, numRead, numToRead);
+                int read = baseStream.Read(buffer, numRead, numToRead);
+                if (read == 0)
+                {
+                    throw new EndOfStreamException();
+                }
                 numRead += read;
                 numToRead -= read;
             }

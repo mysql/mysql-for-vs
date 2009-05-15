@@ -15,6 +15,8 @@ Version 5.1.8
     still attempt to close the file which would yield a null reference exception (bug #43332)      
   - fixed index and index column schema collections that would fail if you specified the
     any restrictions more specific than table name (bug #43991)
+  - fixed potential endless loop in CompressedStream in case where end of stream occurs before 
+    packet is fully read (bug #43678)
   
 Version 5.1.7 - 8/20/08
  - Fixed problem with DDEX provider that could sometimes prevent table altering when working with
