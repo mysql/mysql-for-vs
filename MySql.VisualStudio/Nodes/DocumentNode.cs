@@ -42,11 +42,7 @@ namespace MySql.Data.VisualStudio
         {
         }
 
-        #region Properties
-
-        private uint DocumentCookie { get; set; }
-
-        #endregion
+        private uint DocumentCookie;
 
         protected abstract void Load();
         public abstract string GetSaveSql();

@@ -11,7 +11,7 @@
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
-    <ProjectGuid>{E7E48744-7BB3-463E-9A9A-7B4553D79C0E}</ProjectGuid>
+    <ProjectGuid>{DC3517FF-AC26-4755-9B7A-EF658FF69593}</ProjectGuid>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>2.0</OldToolsVersion>
@@ -85,6 +85,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\MySql.Data\Provider\Properties\VersionInfo.cs">
+      <Link>Properties\VersionInfo.cs</Link>
+    </Compile>
     <Compile Include="DbObjects\CollationTypeConverter.cs" />
     <Compile Include="DbObjects\CharacterSetTypeConverter.cs" />
     <Compile Include="DbObjects\DataRowHelpers.cs" />
@@ -120,6 +123,7 @@
     <Compile Include="DDEX\MySqlDataViewCommandHandler.cs" />
     <Compile Include="DDEX\MySqlDataViewSupport.cs" />
     <Compile Include="DbObjects\ColumnWithTypeDescriptor.cs" />
+    <Compile Include="DDEX\StoredProcedureColumnEnumerator.cs" />
     <Compile Include="Editors\CustomPropertyDescriptor.cs" />
     <Compile Include="Editors\ForeignKeyDialog.cs">
       <SubType>Form</SubType>

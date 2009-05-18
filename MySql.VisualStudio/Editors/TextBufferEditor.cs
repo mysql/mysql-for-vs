@@ -33,8 +33,19 @@ namespace MySql.Data.VisualStudio.Editors
             CreateCodeEditor();
         }
 
-        public IVsCodeWindow CodeWindow { get; private set; }
-        public IVsTextBuffer TextBuffer { get; private set; }
+        private IVsCodeWindow _codeWindow;
+        public IVsCodeWindow CodeWindow 
+        {
+            get { return _codeWindow; }
+            private set { _codeWindow = value; }
+        }
+
+        private IVsTextBuffer _textBuffer;
+        public IVsTextBuffer TextBuffer 
+        {
+            get { return _textBuffer; }
+            private set { _textBuffer = value; }
+        }
 
         private void CreateCodeEditor()
         {

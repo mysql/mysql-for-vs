@@ -96,14 +96,24 @@ namespace MySql.Data.VisualStudio.DbObjects
             get { return table; }
         }
 
+        private string _name;
         [Category("Identity")]
         [DisplayName("(Name)")]
         [Description("The name of this index/key")]
-        public string Name { get; set; }
+        public string Name 
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
 
+        private string _comment;
         [Category("Identity")]
         [Description("A description or comment about this index/key")]
-        public string Comment { get; set; }
+        public string Comment 
+        {
+            get { return _comment; }
+            set { _comment = value; }
+        }
 
         [Category("(General)")]
         [Description("The columns of this index/key and their associated sort order")]
@@ -114,43 +124,83 @@ namespace MySql.Data.VisualStudio.DbObjects
             get { return indexColumns; }
         }
 
+        private IndexType _indexType;
         [Category("(General)")]
         [Description("Specifies if this object is an index or key")]
-        public IndexType Type { get; set; }
+        public IndexType Type 
+        {
+            get { return _indexType; }
+            set { _indexType = value; }
+        }
 
+        private bool _isUnique;
         [Category("(General)")]
         [DisplayName("Is Unique")]
         [Description("Specifies if this index/key uniquely identifies every row")]
         [TypeConverter(typeof(YesNoTypeConverter))]
-        public bool IsUnique { get; set; }
+        public bool IsUnique 
+        {
+            get { return _isUnique; }
+            set { _isUnique = value; }
+        }
 
+        private bool _isPrimary;
         [Browsable(false)]
-        public bool IsPrimary { get; set; }
+        public bool IsPrimary 
+        {
+            get { return _isPrimary; }
+            set { _isPrimary = value; }
+        }
 
+        private IndexUsingType _indexUsing;
         [Category("Storage")]
         [DisplayName("Index Algorithm")]
         [Description("Specifies the algorithm that should be used for storing the index/key")]
-        public IndexUsingType IndexUsing { get; set; }
+        public IndexUsingType IndexUsing 
+        {
+            get { return _indexUsing; }
+            set { _indexUsing = value; }
+        }
 
+        private int _keyBlockSize;
         [Category("Storage")]
         [DisplayName("Key Block Size")]
         [Description("Suggested size in bytes to use for index key blocks.  A zero value means to use the storage engine default.")]
-        public int KeyBlockSize { get; set; }
+        public int KeyBlockSize 
+        {
+            get { return _keyBlockSize; }
+            set { _keyBlockSize = value; }
+        }
 
+        private string _parser;
         [Description("Specifies a parser plugin to be used for this index/key.  This is only valid for full-text indexes or keys.")]
-        public string Parser { get; set; }
+        public string Parser 
+        {
+            get { return _parser; }
+            set { _parser = value; }
+        }
 
+        private bool _fullText;
         [DisplayName("Is Full-text Index/Key")]
         [Description("Specifies if this is a full-text index or key.  This is only supported on MyISAM tables.")]
         [TypeConverter(typeof(YesNoTypeConverter))]
         [RefreshProperties(RefreshProperties.All)]
-        public bool FullText { get; set; }
+        public bool FullText 
+        {
+            get { return _fullText; }
+            set { _fullText = value; }
+        }
 
+        private bool _spatial;
         [DisplayName("Is Spatial Index/Key")]
         [Description("Specifies if this is a spatial index or key.  This is only supported on MyISAM tables.")]
         [TypeConverter(typeof(YesNoTypeConverter))]
         [RefreshProperties(RefreshProperties.All)]
-        public bool Spatial { get; set; }
+        public bool Spatial 
+        {
+            get { return _spatial; }
+            set { _spatial = value; }
+        }
 
         #endregion
 
@@ -382,8 +432,8 @@ namespace MySql.Data.VisualStudio.DbObjects
 
     class IndexColumn
     {
-        public Index OwningIndex { get; set; }
-        public string ColumnName { get; set; }
-        public IndexSortOrder SortOrder { get; set; }
+        public Index OwningIndex;
+        public string ColumnName;
+        public IndexSortOrder SortOrder;
     }
 }
