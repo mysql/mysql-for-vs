@@ -638,5 +638,13 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual("test1", dt.Rows[0][2]);
 			Assert.AreEqual("`test1`", restrictions[2]);
 		}
+
+        [Test]
+        public void ReservedWords()
+        {
+            DataTable dt = conn.GetSchema("ReservedWords");
+            foreach (DataRow row in dt.Rows)
+                Assert.IsFalse(String.IsNullOrEmpty(row[0] as string));
+        }
 	}
 }

@@ -782,7 +782,7 @@ namespace MySql.Data.MySqlClient
         private static DataTable GetReservedWords()
         {
             DataTable dt = new DataTable("ReservedWords");
-            dt.Columns.Add(new DataColumn("Reserved Word", typeof (string)));
+            dt.Columns.Add(new DataColumn(DbMetaDataColumnNames.ReservedWord, typeof(string)));
 
             Stream str = Assembly.GetExecutingAssembly().GetManifestResourceStream(
                 "MySql.Data.MySqlClient.Properties.ReservedWords.txt");
@@ -793,6 +793,7 @@ namespace MySql.Data.MySqlClient
                 string[] keywords = line.Split(new char[] {' '});
                 foreach (string s in keywords)
                 {
+                    if (String.IsNullOrEmpty(s)) continue;
                     DataRow row = dt.NewRow();
                     row[0] = s;
                     dt.Rows.Add(row);

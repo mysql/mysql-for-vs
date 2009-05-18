@@ -8,6 +8,10 @@ Version 5.2.7
 - fixed bug in role provider that was causing it to not correctly fetch the application
   id which caused it to incorrectly report roles (bug #44414)
 - fixed Visual Studio 2005 solution so that it builds  
+- fixed potential endless loop in CompressedStream in case where end of stream occurs before 
+  packet is fully read (bug #43678)
+- fixed ReservedWords schema collection to not incorrectly include blank words and to use the
+  right column name
   
 Version 5.2.6
 - cleaned up how stored procedure execution operated when the user does or does not have execute privs
