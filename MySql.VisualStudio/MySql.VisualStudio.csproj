@@ -111,6 +111,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\MySql.Data\Provider\Properties\VersionInfo.cs">
+      <Link>Properties\VersionInfo.cs</Link>
+    </Compile>
     <Compile Include="Commands\CloneCommand.cs" />
     <Compile Include="Commands\CommandHandlerAttribute.cs" />
     <Compile Include="Commands\CreateNewFunctionCommand.cs" />
