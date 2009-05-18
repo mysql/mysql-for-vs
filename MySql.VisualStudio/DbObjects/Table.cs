@@ -38,7 +38,7 @@ namespace MySql.Data.VisualStudio.DbObjects
     }
 
 	internal class Table : ICustomTypeDescriptor
-	{
+    {
         private TableNode owningNode;
         internal Table OldTable;
         private string characterSet;
@@ -85,14 +85,37 @@ namespace MySql.Data.VisualStudio.DbObjects
             ForeignKeys.Saved();
         }
 
+        private bool _isNew;
         [Browsable(false)]
-        public bool IsNew { get; private set; }
+        public bool IsNew 
+        {
+            get { return _isNew; }
+            private set { _isNew = value; }
+        }
+
+        private TablePartCollection<Column> _columns;
         [Browsable(false)]
-        public TablePartCollection<Column> Columns { get; private set; }
+        public TablePartCollection<Column> Columns 
+        {
+            get { return _columns; }
+            private set { _columns = value; }
+        }
+
+        private TablePartCollection<Index> _indexes;
         [Browsable(false)]
-        public TablePartCollection<Index> Indexes { get; private set; }
+        public TablePartCollection<Index> Indexes 
+        {
+            get { return _indexes; }
+            private set { _indexes = value; }
+        }
+
+        private TablePartCollection<ForeignKey> _foreignKeys;
         [Browsable(false)]
-        public TablePartCollection<ForeignKey> ForeignKeys { get; private set; }
+        public TablePartCollection<ForeignKey> ForeignKeys 
+        {
+            get { return _foreignKeys; }
+            private set { _foreignKeys = value; }
+        }
 
         internal TableNode OwningNode
         {
@@ -110,16 +133,31 @@ namespace MySql.Data.VisualStudio.DbObjects
 
         #region Table options
 
+        private string _name;
         [Category("(Identity)")]
         [MyDescription("TableNameDesc")]
-        public string Name { get; set; }
+        public string Name 
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
 
+        private string _schema;
         [Category("(Identity)")]
         [MyDescription("TableSchemaDesc")]
-        public string Schema { get; private set; }
+        public string Schema 
+        {
+            get { return _schema; }
+            private set { _schema = value; }
+        }
 
+        private string _comment;
         [MyDescription("TableCommentDesc")]
-        public string Comment { get; set; }
+        public string Comment 
+        {
+            get { return _comment; }
+            set { _comment = value; }
+        }
 
         [Category("Table Options")]
         [DisplayName("Character Set")]
@@ -137,88 +175,153 @@ namespace MySql.Data.VisualStudio.DbObjects
             }
         }
 
+        private string _collation;
         [Category("Table Options")]
         [DisplayName("Collation")]
         [TypeConverter(typeof(CollationTypeConverter))]
         [MyDescription("TableCollationDesc")]
-        public string Collation { get; set; }
+        public string Collation 
+        {
+            get { return _collation; }
+            set { _collation = value; }
+        }
 
+        private ulong _autoInc;
         [Category("Table")]
         [DisplayName("Auto Increment")]
         [MyDescription("TableAutoIncStartDesc")]
-        public ulong AutoInc { get; set; }
+        public ulong AutoInc 
+        {
+            get { return _autoInc; }
+            set { _autoInc = value; }
+        }
 
         #endregion
 
         #region Storage options
 
+        private string _engine;
         [Category("Storage")]
         [DisplayName("Storage Engine")]
         [MyDescription("TableEngineDescription")]
         [TypeConverter(typeof(TableEngineTypeConverter))]
         [RefreshProperties(RefreshProperties.All)]
-        public string Engine { get; set; }
+        public string Engine 
+        {
+            get { return _engine; }
+            set { _engine = value; }
+        }
 
+        private string _dataDirectory;
         [Category("Storage")]
         [DisplayName("Data Directory")]
         [MyDescription("TableDataDirDesc")]
-        public string DataDirectory { get; set; }
+        public string DataDirectory 
+        {
+            get { return _dataDirectory; }
+            set { _dataDirectory = value; }
+        }
 
+        private string _indexDirectory;
         [Category("Storage")]
         [DisplayName("Index Directory")]
         [MyDescription("TableIndexDirDesc")]
-        public string IndexDirectory { get; set; }
+        public string IndexDirectory 
+        {
+            get { return _indexDirectory; }
+            set { _indexDirectory = value; }
+        }
 
         #endregion
 
         #region Row options
 
+        private RowFormat _rowFormat;
         [Category("Row")]
         [DisplayName("Row Format")]
         [MyDescription("TableRowFormatDesc")]
-        public RowFormat RowFormat { get; set; }
+        public RowFormat RowFormat 
+        {
+            get { return _rowFormat; }
+            set { _rowFormat = value; }
+        }
 
+        private bool _checkSum;
         [Category("Row")]
         [DisplayName("Compute Checksum")]
         [MyDescription("TableCheckSumDesc")]
         [DefaultValue(false)]
         [TypeConverter(typeof(YesNoTypeConverter))]
-        public bool CheckSum { get; set; }
+        public bool CheckSum 
+        {
+            get { return _checkSum; }
+            set { _checkSum = value; }
+        }
 
+        private ulong _avgRowLength;
         [Category("Row")]
         [DisplayName("Average Row Length")]
         [MyDescription("TableAvgRowLengthDesc")]
         [TypeConverter(typeof(NumericTypeConverter))]
-        public ulong AvgRowLength { get; set; }
+        public ulong AvgRowLength 
+        {
+            get { return _avgRowLength; }
+            set { _avgRowLength = value; }
+        }
 
+        private ulong _minRows;
         [Category("Row")]
         [DisplayName("Minimum Rows")]
         [MyDescription("TableMinRowsDesc")]
         [TypeConverter(typeof(NumericTypeConverter))]
-        public ulong MinRows { get; set; }
+        public ulong MinRows 
+        {
+            get { return _minRows; }
+            set { _minRows = value; }
+        }
 
+        private UInt64 _maxRows;
         [Category("Row")]
         [DisplayName("Maximum Rows")]
         [MyDescription("TableMaxRowsDesc")]
         [TypeConverter(typeof(NumericTypeConverter))]
-        public UInt64 MaxRows { get; set; }
+        public UInt64 MaxRows 
+        {
+            get { return _maxRows; }
+            set { _maxRows = value; }
+        }
 
+        private PackKeysMethod _packKeys;
         [Category("Row")]
         [DisplayName("Pack Keys")]
         [MyDescription("TablePackKeysDesc")]
         [DefaultValue(PackKeysMethod.Default)]
-        public PackKeysMethod PackKeys { get; set; }
+        public PackKeysMethod PackKeys 
+        {
+            get { return _packKeys; }
+            set { _packKeys = value; }
+        }
 
+        private InsertMethod _insertMethod;
         [Category("Row")]
         [DisplayName("Insert method")]
         [MyDescription("TableInsertMethodDesc")]
         [DefaultValue(InsertMethod.First)]
-        public InsertMethod InsertMethod { get; set; }
+        public InsertMethod InsertMethod 
+        {
+            get { return _insertMethod; }
+            set { _insertMethod = value; }
+        }
 
+        private bool _delayKeyWrite;
         [Category("Row")]
         [DisplayName("Delay Key Write")]
         [MyDescription("DelayKeyWriteDesc")]
-        public bool DelayKeyWrite { get; set; }
+        public bool DelayKeyWrite 
+        {
+            get { return _delayKeyWrite; }
+            set { _delayKeyWrite = value; }
+        }
 
         #endregion
 

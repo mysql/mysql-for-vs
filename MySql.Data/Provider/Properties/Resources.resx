@@ -345,6 +345,9 @@
   <data name="ValueNotSupportedForGuid" xml:space="preserve">
     <value>The requested column value could not be treated as or conveted to a Guid.</value>
   </data>
+  <data name="UnableToRetrieveParameters" xml:space="preserve">
+    <value>Unable to retrieve stored routine parameters.  Either grant access to the routine or add the 'Use Procedure Bodies=false' option to your connection string.</value>
+  </data>
   <data name="UnableToEnumerateUDF" xml:space="preserve">    
     <value>An error occured attempting to enumerate the user-defined functions.  Do you have SELECT privileges on the mysql.func table?</value>  
   </data>

@@ -1,3 +1,7 @@
+Version 6.0.4
+- fixed regression where using stored procs with datasets (bug #44460)
+- fixed compilation under VS 2005 (bug #44822)
+
 Version 6.0.3 - 4/22/09
 - fixed broken connection prompting
 - fixed installer that was no longer referencing the right folders for Visual Studio assemblies [bug #44141]
@@ -32,6 +36,21 @@ Version 6.0
 - fixed membership provider so that calling GetPassword with an incorrect password will throw the appropriate exception (bug #38939)
 - Implemented initial entity framework support
 
+Version 5.2.7
+- fixed procedure parameters collection so that an exception is thrown if we can't get the 
+  parameters.  Also used this to optimize the procedure cache optimization
+- Added "nvarchar" and "nchar" to possible data types returned by the DataSourceInformation
+  schema collection so procs that use those types with parameters will work (bug #39409)
+- fixed problem where the connector would incorrectly report the length of utf8 columns on servers
+  6.0 and later.  This was caused by 6.0 now using 4 bytes for utf8 columns  
+- fixed bug in role provider that was causing it to not correctly fetch the application
+  id which caused it to incorrectly report roles (bug #44414)
+- fixed Visual Studio 2005 solution so that it builds  
+- fixed potential endless loop in CompressedStream in case where end of stream occurs before 
+  packet is fully read (bug #43678)
+- fixed ReservedWords schema collection to not incorrectly include blank words and to use the
+  right column name
+  
 Version 5.2.6
 - cleaned up how stored procedure execution operated when the user does or does not have execute privs
   on the routine (bug #40139)

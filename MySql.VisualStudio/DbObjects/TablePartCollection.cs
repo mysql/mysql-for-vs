@@ -36,7 +36,12 @@ namespace MySql.Data.VisualStudio.DbObjects
             Deleted = new List<T>();
         }
 
-        public List<T> Deleted { get; private set; }
+        private List<T> _deleted;
+        public List<T> Deleted 
+        {
+            get { return _deleted; }
+            private set { _deleted = value; }
+        }
 
         public void Delete(T t)
         {

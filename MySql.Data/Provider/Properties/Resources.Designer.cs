@@ -727,6 +727,15 @@ namespace MySql.Data.MySqlClient.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to retrieve stored routine parameters.  Either grant access to the routine or add the &apos;Use Procedure Bodies=false&apos; option to your connection string..
+        /// </summary>
+        public static string UnableToRetrieveParameters {
+            get {
+                return ResourceManager.GetString("UnableToRetrieveParameters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unable to retrieve stored procedure metadata.  Either grant  SELECT privilege to mysql.proc for this user or use &quot;use procedure bodies=false&quot; with  your connection string..
         /// </summary>
         public static string UnableToRetrieveSProcData {
