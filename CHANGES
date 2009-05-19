@@ -1,6 +1,7 @@
 Version 6.0.4
 - fixed regression where using stored procs with datasets (bug #44460)
 - fixed compilation under VS 2005 (bug #44822)
+- fixed support for bool data type in entity framework support
 
 Version 6.0.3 - 4/22/09
 - fixed broken connection prompting
