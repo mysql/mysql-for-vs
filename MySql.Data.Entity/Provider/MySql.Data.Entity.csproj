@@ -44,6 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\SchemaMapping.msl" />
+    <Compile Include="..\..\MySql.Data\Provider\Properties\VersionInfo.cs">
+      <Link>Properties\VersionInfo.cs</Link>
+    </Compile>
     <Compile Include="Fragments\TableFragment.cs" />
     <Compile Include="Fragments\InputFragment.cs" />
     <Compile Include="Fragments\JoinFragment.cs" />
