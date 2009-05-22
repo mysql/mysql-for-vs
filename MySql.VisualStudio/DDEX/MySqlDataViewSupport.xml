@@ -95,18 +95,19 @@
           </CommandBinding>
         </CommandBindings>
         <Children>
-          <Selection type="Table" restrictions="null,{Root.Schema}">
+          <Selection type="Table" restrictions="null,{Root.Schema}" hideWhen="False AND False">
             <SelectionNode nid="Table">
               <Icon name="Table"/>
               <Children>
-                <Selection type="Column" restrictions="null,{Table.Schema},{Table.Name}">
+                <Selection type="Column" restrictions="null,{Table.Schema},{Table.Name}" hideWhen="False AND False">
                   <SelectionNode>
                     <Icon name="Column"/>
                   </SelectionNode>
                 </Selection>
                 <Selection type="Trigger" restrictions="null,{Table.Schema},{Table.Name}"
-                           minSourceVersion="5.0.0">
-                  <SelectionNode>
+                           minSourceVersion="5.0.0" hideWhen="False AND False">
+                  <SelectionNode nid="Trigger">
+                    <DisplayName>{Name}</DisplayName>
                     <Icon name="Trigger"/>
                   </SelectionNode>
                 </Selection>
@@ -154,11 +155,11 @@
           </CommandBinding>
         </CommandBindings>
         <Children>
-          <Selection type="View" restrictions="{Root.Database},{Root.Schema},null">
+          <Selection type="View" restrictions="{Root.Database},{Root.Schema},null" hideWhen="False AND False">
             <SelectionNode nid="View">
               <Icon name="View" />
               <Children>
-                <Selection type="ViewColumn" restrictions="{View.Database},{View.Schema},{View.Name}">
+                <Selection type="ViewColumn" restrictions="{View.Database},{View.Schema},{View.Name}" hideWhen="False AND False">
                   <SelectionNode>
                     <Icon name="Column" />
                   </SelectionNode>
@@ -205,12 +206,13 @@
         </CommandBindings>
         <Children>
           <Selection type="StoredProcedure"
-                     restrictions="null,{Root.Database},null,PROCEDURE">
+                     restrictions="null,{Root.Database},null,PROCEDURE" hideWhen="False AND False">
             <SelectionNode nid="StoredProcedure">
               <Icon name="StoredProcedure" />
               <Children>
                 <Selection type="StoredProcedureParameter"
-                           restrictions="null,{StoredProcedure.Database},{StoredProcedure.Name},PROCEDURE">
+                           restrictions="null,{StoredProcedure.Database},{StoredProcedure.Name},PROCEDURE" 
+                           hideWhen="False AND False">
                   <SelectionNode>
                     <Icon when="{Mode} = 'IN'" name="InputParameter" />
                     <Icon when="{Mode} = 'OUT'" name="OutputParameter" />
@@ -255,14 +257,14 @@
         </CommandBindings>
         <Children>
           <Selection type="StoredProcedure" 
-                     restrictions="{Root.Database},{Root.Schema},null,FUNCTION" 
-                     minSourceVersion="5.0.0">
+                     restrictions="{Root.Database},{Root.Schema},null,FUNCTION"
+                     minSourceVersion="5.0.0" hideWhen="False AND False">
             <SelectionNode nid="StoredFunction">
               <Icon name="ScalarValuedFunction" />
               <Children>
                 <Selection type="StoredProcedureParameter" 
-                           restrictions="null,{StoredFunction.Database},{StoredFunction.Name},FUNCTION" 
-                           filter="Ordinal > 0">
+                           restrictions="null,{StoredFunction.Database},{StoredFunction.Name},FUNCTION"
+                           filter="Ordinal > 0" hideWhen="False AND False">
                   <SelectionNode>
                     <Icon when="{IsResult} = 'YES'" name="ReturnValue" />
                     <Icon when="{Mode} = 'IN'" name="InputParameter" />
