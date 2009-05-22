@@ -12,6 +12,7 @@ Version 5.2.7
   packet is fully read (bug #43678)
 - fixed ReservedWords schema collection to not incorrectly include blank words and to use the
   right column name
+- fixed display of trigger names  
   
 Version 5.2.6
 - cleaned up how stored procedure execution operated when the user does or does not have execute privs
