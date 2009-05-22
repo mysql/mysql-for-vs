@@ -6,6 +6,7 @@ Version 6.0.4
 - made some fixes to the syntax coloring of sql inside visual studio
 - fixed display name of triggers inside server explorer
 - fixed trigger editing
+- fixed tokenization of escaped backslashes (bug #44960)
 
 Version 6.0.3 - 4/22/09
 - fixed broken connection prompting
