@@ -116,5 +116,14 @@ namespace MySql.Data.VisualStudio
             return new TableEditorPane(this);
 		}
 
+        public override void ExecuteCommand(int command)
+        {
+            if (command == PkgCmdIDList.cmdCreateTrigger)
+            {
+                TriggerNode.CreateNew(HierarchyAccessor, this);
+            }
+            else
+                base.ExecuteCommand(command);
+        }
     }
 }
