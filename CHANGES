@@ -4,6 +4,7 @@ Version 6.0.4
 - fixed support for bool data type in entity framework support
 - fixed regression where a user could no longer call GetBytes on a guid column (bug #44507)
 - made some fixes to the syntax coloring of sql inside visual studio
+- fixed display name of triggers inside server explorer
 
 Version 6.0.3 - 4/22/09
 - fixed broken connection prompting
