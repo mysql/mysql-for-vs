@@ -267,7 +267,7 @@ namespace MySql.Data.MySqlClient
 
                 if (escaped)
                     escaped = false;
-                if (c == '\\' && BackslashEscapes)
+                else if (c == '\\' && BackslashEscapes)
                     escaped = true;
                 pos++;
             }
@@ -278,7 +278,7 @@ namespace MySql.Data.MySqlClient
 
         private bool IsQuoteChar(char c)
         {
-            return c == '`' || c == '\'' || c == '\"'; // (c == '\"' && AnsiQuotes);
+            return c == '`' || c == '\'' || c == '\"';
         }
 
         private bool IsParameterMarker(char c)
