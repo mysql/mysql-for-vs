@@ -218,8 +218,6 @@ namespace MySql.Data.VisualStudio
 					newNode = new TableNode(DataViewHierarchyAccessor, id);
 					break;
 				case "storedprocedure":
-//                case "storedprocedures":
-  //              case "functions":
                     newNode = new StoredProcedureNode(DataViewHierarchyAccessor, id, false);
 					break;
                 case "storedfunction":
@@ -230,6 +228,9 @@ namespace MySql.Data.VisualStudio
 					break;
                 case "udf":
                     newNode = new UDFNode(DataViewHierarchyAccessor, id);
+                    break;
+                case "trigger":
+                    newNode = new TriggerNode(DataViewHierarchyAccessor, id);
                     break;
 				default:
                     throw new NotSupportedException("Node type not supported");

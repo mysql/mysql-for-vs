@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>10.0.20506</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -18,6 +18,21 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -90,6 +105,9 @@
   <ItemGroup>
     <Compile Include="..\MySql.Data\Provider\Properties\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\MySql.Data\Provider\Source\common\MySqlTokenizer.cs">
+      <Link>LanguageService\MySqlTokenizer.cs</Link>
     </Compile>
     <Compile Include="DbObjects\CollationTypeConverter.cs" />
     <Compile Include="DbObjects\CharacterSetTypeConverter.cs" />
@@ -193,6 +211,7 @@
     <Compile Include="MySqlProviderObjectFactory.cs" />
     <Compile Include="Nodes\BaseNode.cs" />
     <Compile Include="DbObjects\Column.cs" />
+    <Compile Include="Nodes\TriggerNode.cs" />
     <Compile Include="Nodes\UDFNode.cs" />
     <Compile Include="Nodes\DocumentNode.cs" />
     <Compile Include="Nodes\ViewNode.cs" />
@@ -266,6 +285,33 @@
     <None Include="Properties\DataSources\MySql.Data.VisualStudio.DbObjects.ForeignKey.datasource" />
     <None Include="Properties\DataSources\MySql.Data.VisualStudio.DbObjects.IndexColumn.datasource" />
     <None Include="Properties\DataSources\TableNode.datasource" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <PropertyGroup>
     <RegisterOutputPackage>false</RegisterOutputPackage>

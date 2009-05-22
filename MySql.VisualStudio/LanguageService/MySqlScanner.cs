@@ -45,6 +45,7 @@ namespace MySql.Data.VisualStudio
             string token = tokenizer.NextToken();
             if (token == null) return false;
 
+            token = token.Trim();
             tokenInfo.StartIndex = tokenizer.StartIndex;
             tokenInfo.EndIndex = tokenizer.StopIndex;
             tokenInfo.Type = GetTokenType(token);
