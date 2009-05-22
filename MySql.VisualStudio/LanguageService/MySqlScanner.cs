@@ -49,10 +49,7 @@ namespace MySql.Data.VisualStudio
             tokenInfo.EndIndex = tokenizer.StopIndex;
             tokenInfo.Type = GetTokenType(token);
             tokenInfo.Color = GetTokenColor(tokenInfo);
-            if (state == 1 && token == "*/")
-                state = 0;
-            else
-                state = tokenizer.BlockComment ? 1 : 0;
+            state = (tokenizer.BlockComment && !token.EndsWith("*/")) ? 1 : 0;
             return true;
         }
 
@@ -118,6 +115,7 @@ namespace MySql.Data.VisualStudio
             keywords.Add("END");
             keywords.Add("VIEW");
             keywords.Add("AS");
+            keywords.Add("TRIGGER");
 
             // update
             keywords.Add("UPDATE");
@@ -173,6 +171,15 @@ namespace MySql.Data.VisualStudio
             // functions
             keywords.Add("COUNT");
             keywords.Add("REPLACE");
+
+            // trigger keywords
+            keywords.Add("BEFORE");
+            keywords.Add("AFTER");
+            keywords.Add("INSERT");
+            keywords.Add("ON");
+            keywords.Add("EACH");
+            keywords.Add("ROW");
+            keywords.Add("SET");
         }
 
         #endregion
