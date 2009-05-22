@@ -76,7 +76,8 @@
                 <SelectionNode nid="Table">
                   <Icon name="Table" />
                   <Children>
-                    <Selection type="Column" restrictions="null,{Table.Schema},{Table.Name}" hideWhen="False AND False">
+                    <Selection type="Column" restrictions="null,{Table.Schema},{Table.Name}" 
+                               hideWhen="False AND False">
                       <SelectionNode>
                         <Icon name="Column" />
                       </SelectionNode>
@@ -84,6 +85,7 @@
                     <Selection type="Trigger" restrictions="null,{Table.Schema},{Table.Name}"
                                minSourceVersion="5.0.0" hideWhen="False AND False">
                       <SelectionNode>
+                        <DisplayName>{Name}</DisplayName>
                         <Icon name="Trigger" />
                       </SelectionNode>
                     </Selection>
