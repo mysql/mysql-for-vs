@@ -7,6 +7,7 @@ Version 6.0.4
 - fixed display name of triggers inside server explorer
 - fixed trigger editing
 - fixed tokenization of escaped backslashes (bug #44960)
+- fixed conversion of binary(16) type to guid for entity framework models (bug #44986)
 
 Version 6.0.3 - 4/22/09
 - fixed broken connection prompting

@@ -27,7 +27,7 @@
         COLUMN_NAME AS `Name`,
         ORDINAL_POSITION AS `Ordinal`,
         CASE IS_NULLABLE WHEN 'YES' THEN 1 ELSE 0 END AS `IsNullable`,
-        IF(LOWER(COLUMN_TYPE) = 'tinyint(1)', 'bool', DATA_TYPE) AS `TypeName`,
+        IF(LOWER(COLUMN_TYPE) = 'tinyint(1)', 'bool', IF (LOWER(COLUMN_TYPE) = 'binary(16)', 'guid', DATA_TYPE)) AS `TypeName`,
         IF (CHARACTER_MAXIMUM_LENGTH > 2147483647, 2147483647, CHARACTER_MAXIMUM_LENGTH) AS `MaxLength`,
         NUMERIC_PRECISION AS `Precision`,
         0 AS `DateTimePrecision`,
