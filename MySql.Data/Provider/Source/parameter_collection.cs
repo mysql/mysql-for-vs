@@ -42,12 +42,7 @@ namespace MySql.Data.MySqlClient
 
 		internal MySqlParameterCollection(MySqlCommand cmd)
 		{
-#if NET20
 			indexHash = new Hashtable(StringComparer.CurrentCultureIgnoreCase);
-#else
-			indexHash = new Hashtable(new CaseInsensitiveHashCodeProvider(),
-			    new CaseInsensitiveComparer());
-#endif
             Clear();
             owningCommand = cmd;
 		}

@@ -74,20 +74,12 @@ namespace MySql.Data.Common
 			AutoResetEvent connectRequest = new AutoResetEvent(false);
 			IntPtr handle = OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, false,
 			memoryName + "_" + "CONNECT_REQUEST");
-#if NET20
 			connectRequest.SafeWaitHandle = new SafeWaitHandle(handle, true);
-#else
-			connectRequest.Handle = handle;
-#endif
 
 			AutoResetEvent connectAnswer = new AutoResetEvent(false);
 			handle = OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, false,
 			memoryName + "_" + "CONNECT_ANSWER");
-#if NET20
 			connectAnswer.SafeWaitHandle = new SafeWaitHandle(handle, true);
-#else
-			connectAnswer.Handle = handle;
-#endif
 
 			IntPtr connectFileMap = OpenFileMapping(FILE_MAP_WRITE, false,
 				memoryName + "_" + "CONNECT_DATA");
@@ -115,41 +107,25 @@ namespace MySql.Data.Common
 			IntPtr handle = OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, false,
 				 dataMemoryName + "_SERVER_WROTE");
 			Debug.Assert(handle != IntPtr.Zero);
-#if NET20
 			serverWrote.SafeWaitHandle = new SafeWaitHandle(handle, true);
-#else
-			serverWrote.Handle = handle;
-#endif
 
 			serverRead = new AutoResetEvent(false);
 			handle = OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, false,
 			dataMemoryName + "_SERVER_READ");
 			Debug.Assert(handle != IntPtr.Zero);
-#if NET20
 			serverRead.SafeWaitHandle = new SafeWaitHandle(handle, true);
-#else
-			serverRead.Handle = handle;
-#endif
 
 			clientWrote = new AutoResetEvent(false);
 			handle = OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, false,
 			dataMemoryName + "_CLIENT_WROTE");
 			Debug.Assert(handle != IntPtr.Zero);
-#if NET20
 			clientWrote.SafeWaitHandle = new SafeWaitHandle(handle, true);
-#else
-			clientWrote.Handle = handle;
-#endif
 
 			clientRead = new AutoResetEvent(false);
 			handle = OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, false,
 			dataMemoryName + "_CLIENT_READ");
 			Debug.Assert(handle != IntPtr.Zero);
-#if NET20
 			clientRead.SafeWaitHandle = new SafeWaitHandle(handle, true);
-#else
-			clientRead.Handle = handle;
-#endif
 
 			// tell the server we are ready
 			serverRead.Set();
