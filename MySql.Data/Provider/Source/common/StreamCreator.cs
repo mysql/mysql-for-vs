@@ -62,35 +62,39 @@ namespace MySql.Data.Common
 
             while (pos < dnsHosts.Length)
             {
-#if !CF
-				if (usePipe)
-					stream = CreateNamedPipeStream(dnsHosts[index]);
-				else
-#endif
+                try
                 {
-#if NET20
-                    IPHostEntry ipHE = GetHostEntry(dnsHosts[index]);
-#else
-				    IPHostEntry ipHE = Dns.GetHostByName(dnsHosts[index]);
-#endif
-
-                    foreach (IPAddress address in ipHE.AddressList)
+                    if (usePipe)
                     {
-                        // MySQL doesn't currently support IPv6 addresses
-                        if (address.AddressFamily == AddressFamily.InterNetworkV6)
-                            continue;
-
-                        stream = CreateSocketStream(address, false);
-                        if (stream != null)
-                            break;
+#if !CF
+                        stream = NamedPipeStream.Create(pipeName, dnsHosts[index]);
+#endif
                     }
+                    else
+                    {
+                        IPHostEntry ipHE = GetHostEntry(dnsHosts[index]);
+                        foreach (IPAddress address in ipHE.AddressList)
+                        {
+                            // MySQL doesn't currently support IPv6 addresses
+                            if (address.AddressFamily == AddressFamily.InterNetworkV6)
+                                continue;
+                            stream = CreateSocketStream(address, false);
+                            if (stream != null) break;
+                        }
+                    }
+                    if (stream != null)
+                        break;
+                    index++;
+                    if (index == dnsHosts.Length)
+                        index = 0;
+                    pos++;
                 }
-                if (stream != null)
-                    break;
-                index++;
-                if (index == dnsHosts.Length)
-                    index = 0;
-                pos++;
+                catch (Exception)
+                {
+                    // if on last host then throw
+                    if (pos >= dnsHosts.Length - 1) throw;
+                    // else continue
+                }
             }
 
             return stream;
@@ -114,24 +118,11 @@ namespace MySql.Data.Common
         }
 
 #if !CF
-		private Stream CreateNamedPipeStream(string hostname)
-		{
-			string pipePath;
-			if (0 == String.Compare(hostname, "localhost", true))
-				pipePath = @"\\.\pipe\" + pipeName;
-			else
-				pipePath = String.Format(@"\\{0}\pipe\{1}", hostname, pipeName);
-			return new NamedPipeStream(pipePath, FileAccess.ReadWrite);
-		}
 
 		private static EndPoint CreateUnixEndPoint(string host)
 		{
 			// first we need to load the Mono.posix assembly
-#if NET20
 			Assembly a = Assembly.Load("Mono.Posix");
-#else
-			Assembly a = Assembly.LoadWithPartialName("Mono.Posix");
-#endif
 
 			// then we need to construct a UnixEndPoint object
 			EndPoint ep = (EndPoint)a.CreateInstance("Mono.Posix.UnixEndPoint",
@@ -167,7 +158,7 @@ namespace MySql.Data.Common
 			catch (Exception)
 			{
 				socket.Close();
-				return null;
+                throw;
 			}
             NetworkStream stream = new NetworkStream(socket, true);
             GC.SuppressFinalize(socket);

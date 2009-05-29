@@ -31,7 +31,6 @@ namespace MySql.Data.Common
 	/// </summary>
 	internal class NamedPipeStream : Stream
 	{
-
 		int			pipeHandle;
 		FileAccess	_mode;
 
@@ -191,6 +190,16 @@ namespace MySql.Data.Common
 		{
 			throw new NotSupportedException(Resources.NamedPipeNoSeek);
 		}
+
+        internal static NamedPipeStream Create(string pipeName, string hostname)
+        {
+            string pipePath;
+            if (0 == String.Compare(hostname, "localhost", true))
+                pipePath = @"\\.\pipe\" + pipeName;
+            else
+                pipePath = String.Format(@"\\{0}\pipe\{1}", hostname, pipeName);
+            return new NamedPipeStream(pipePath, FileAccess.ReadWrite);
+        }
 	}
 }
 
