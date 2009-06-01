@@ -161,18 +161,23 @@ namespace MySql.Data.VisualStudio
             switch ((uint)commandId)
             {
                 case PkgCmdIDList.cmdCreateTable:
+                case PkgCmdIDList.cmdidGlobalCreateTable:
                     TableNode.CreateNew(DataViewHierarchyAccessor);
                     return true;
                 case PkgCmdIDList.cmdCreateProcedure:
+                case PkgCmdIDList.cmdidGlobalCreateProcedure:
                     StoredProcedureNode.CreateNew(DataViewHierarchyAccessor, false);
                     return true;
                 case PkgCmdIDList.cmdCreateFunction:
+                case PkgCmdIDList.cmdidGlobalCreateFunction:
                     StoredProcedureNode.CreateNew(DataViewHierarchyAccessor, true);
                     return true;
                 case PkgCmdIDList.cmdCreateView:
+                case PkgCmdIDList.cmdidGlobalCreateView:
                     ViewNode.CreateNew(DataViewHierarchyAccessor);
                     return true;
                 case PkgCmdIDList.cmdCreateUDF:
+                case PkgCmdIDList.cmdidGlobalCreateUDF:
                     UDFNode.CreateNew(DataViewHierarchyAccessor);
                     return true;
             }
@@ -209,7 +214,8 @@ namespace MySql.Data.VisualStudio
 
 		private BaseNode MakeNewNode(int id)
 		{
-			string nodeId = DataViewHierarchyAccessor.GetNodeId(id).ToLowerInvariant();
+            string nodeId = DataViewHierarchyAccessor.GetNodeId(id);
+			nodeId = nodeId.ToLowerInvariant();
 
 			BaseNode newNode = null;
 			switch (nodeId)
