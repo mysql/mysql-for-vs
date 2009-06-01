@@ -283,27 +283,30 @@ namespace MySql.Data.MySqlClient
 
 			IMySqlValue val = GetFieldValue(i, false);
 
-			if (!(val is MySqlBinary))
-				throw new MySqlException("GetBytes can only be called on binary columns");
+			if (!(val is MySqlBinary) && !(val is MySqlGuid))
+				throw new MySqlException("GetBytes can only be called on binary or guid columns");
 
-			MySqlBinary binary = (MySqlBinary)val;
+            byte[] bytes = null;
+            if (val is MySqlBinary)
+                bytes = ((MySqlBinary)val).Value;
+            else
+                bytes = ((MySqlGuid)val).Bytes;
+
 			if (buffer == null)
-				return (long)binary.Value.Length;
+                return bytes.Length;
 
 			if (bufferoffset >= buffer.Length || bufferoffset < 0)
 				throw new IndexOutOfRangeException("Buffer index must be a valid index in buffer");
 			if (buffer.Length < (bufferoffset + length))
 				throw new ArgumentException("Buffer is not large enough to hold the requested data");
 			if (fieldOffset < 0 ||
-				((ulong)fieldOffset >= (ulong)binary.Value.Length && (ulong)binary.Value.Length > 0))
+				((ulong)fieldOffset >= (ulong)bytes.Length && (ulong)bytes.Length > 0))
 				throw new IndexOutOfRangeException("Data index must be a valid index in the field");
 
-			byte[] bytes = (byte[])binary.Value;
-
 			// adjust the length so we don't run off the end
-			if ((ulong)binary.Value.Length < (ulong)(fieldOffset + length))
+			if ((ulong)bytes.Length < (ulong)(fieldOffset + length))
 			{
-				length = (int)((ulong)binary.Value.Length - (ulong)fieldOffset);
+				length = (int)((ulong)bytes.Length - (ulong)fieldOffset);
 			}
 
 			Buffer.BlockCopy(bytes, (int)fieldOffset, buffer, (int)bufferoffset, (int)length);

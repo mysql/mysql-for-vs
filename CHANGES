@@ -1,6 +1,17 @@
 Version 6.0.4
 - fixed regression where using stored procs with datasets (bug #44460)
 - fixed compilation under VS 2005 (bug #44822)
+- fixed support for bool data type in entity framework support
+- fixed regression where a user could no longer call GetBytes on a guid column (bug #44507)
+- made some fixes to the syntax coloring of sql inside visual studio
+- fixed display name of triggers inside server explorer
+- fixed trigger editing
+- fixed tokenization of escaped backslashes (bug #44960)
+- fixed conversion of binary(16) type to guid for entity framework models (bug #44986)
+- migrated from CTC to VSCT for our menus and buttons.  Also the VisualStudio project will also
+  now load and builder under VS2005 or VS2008 loading the proper targets files as needed
+- fixed global Add New menu options with the Visual STudio integration
+- improved ad-hoc registration utility so that it handles VS 2005 and VS 2008 properly
 
 Version 6.0.3 - 4/22/09
 - fixed broken connection prompting

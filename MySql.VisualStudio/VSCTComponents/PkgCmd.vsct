@@ -1,0 +1,260 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable">
+  <!--  This is the file that defines the actual layout and type of the commands.
+        It is divided in different sections (e.g. command definition, command
+        placement, ...), with each defining a specific set of properties.
+        See the comment before each section for more details about how to
+        use it. -->
+
+  <!--  The VSCT compiler (the tool that translates this file into the binary 
+        format that VisualStudio will consume) has the ability to run a preprocessor 
+        on the vsct file; this preprocessor is (usually) the C++ preprocessor, so 
+        it is possible to define includes and macros with the same syntax used 
+        in C++ files. Using this ability of the compiler here, we include some files 
+        defining some of the constants that we will use inside the file. -->
+
+  <!-- The following includes are commented out because we have defined all the value
+       at the bottom of this file.  We do this because we are using VSCT compilation 
+       even under VS2005.  The VS2005 SDK doesn't include these files and so they
+       would fail -->
+  <!--This is the file that defines the IDs for all the commands exposed by VisualStudio. -->
+  <!--<Extern href="stdidcmd.h"/>-->
+
+  <!--This header contains the command ids for the menus provided by the shell. -->
+  <!--<Extern href="vsshlids.h"/>-->
+
+  <!--Definition of some VSCT specific constants. In this sample we use it for the IDs inside the guidOfficeIcon group. -->
+  <!--  <Extern href="msobtnid.h"/>-->
+
+  <!--The Commands section is where we the commands, menus and menu groups are defined.
+      This section uses a Guid to identify the package that provides the command defined inside it. -->
+  <Commands package="guidMySqlProviderPkg">
+    <!-- Inside this section we have different sub-sections: one for the menus, another  
+    for the menu groups, one for the buttons (the actual commands), one for the combos 
+    and the last one for the bitmaps used. Each element is identified by a command id that  
+    is a unique pair of guid and numeric identifier; the guid part of the identifier is usually  
+    called "command set" and is used to group different command inside a logically related  
+    group; your package should define its own command set in order to avoid collisions  
+    with command ids defined by other packages. -->
+    <Menus>
+      <Menu guid ="guidMySqlProviderCmdSet" id="menuGlobal" type="Menu" priority ="0x100">
+        <Parent guid="guidVSData" id="IDG_DV_GLOBAL1" />
+        <Strings>
+          <ButtonText>&amp;Add New</ButtonText>
+        </Strings>
+      </Menu>
+      <!-- we have to define two menus because they have a different guid:id parent -->
+      <Menu guid ="guidMySqlProviderCmdSet" id="menuGlobal2005" type="Menu" priority ="0x100">
+        <Parent guid="guidVSData2005" id="IDG_DV_GLOBAL1" />
+        <Strings>
+          <ButtonText>&amp;Add New</ButtonText>
+        </Strings>
+      </Menu>
+    </Menus>
+
+    <Groups>
+      <!-- we only use one group however and put all our commands into this group -->
+      <Group guid="guidMySqlProviderCmdSet" id="groupGlobal" priority ="0x100"/>
+    </Groups>
+
+    <Buttons>
+      <!-- these are our global create commands -->
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidGlobalCreateTable" type="Button" priority ="0x100">
+        <Parent guid="guidMySqlProviderCmdSet" id="groupGlobal"/>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
+        <Strings>
+          <ButtonText>&amp;Table</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidGlobalCreateView" type="Button" priority ="0x101">
+        <Parent guid="guidMySqlProviderCmdSet" id="groupGlobal"/>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
+        <Strings>
+          <ButtonText>&amp;View</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidGlobalCreateProcedure" type="Button" priority ="0x102">
+        <Parent guid="guidMySqlProviderCmdSet" id="groupGlobal"/>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
+        <Strings>
+          <ButtonText>Stored &amp;Procedure</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidGlobalCreateFunction" type="Button" priority ="0x103">
+        <Parent guid="guidMySqlProviderCmdSet" id="groupGlobal"/>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
+        <Strings>
+          <ButtonText>Stored &amp;Function</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidGlobalCreateUDF" type="Button" priority ="0x104">
+        <Parent guid="guidMySqlProviderCmdSet" id="groupGlobal"/>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
+        <Strings>
+          <ButtonText>&amp;UDF</ButtonText>
+        </Strings>
+      </Button>
+
+      <!-- static create nodes -->
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidCreateTable" type="Button" priority ="0x100">
+        <Parent guid="guidVSData" id="IDG_DV_STATIC_NODE"/>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
+        <Strings>
+          <ButtonText>Create Table</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidCreateView" type="Button" priority ="0x100">
+        <Parent guid="guidVSData" id="IDG_DV_STATIC_NODE"/>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
+        <Strings>
+          <ButtonText>Create View</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidCreateProcedure" type="Button" priority ="0x100">
+        <Parent guid="guidVSData" id="IDG_DV_STATIC_NODE"/>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
+        <Strings>
+          <ButtonText>Create Stored Procedure</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidCreateFunction" type="Button" priority ="0x100">
+        <Parent guid="guidVSData" id="IDG_DV_STATIC_NODE"/>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
+        <Strings>
+          <ButtonText>Create Stored Function</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidCreateUDF" type="Button" priority ="0x100">
+        <Parent guid="guidVSData" id="IDG_DV_STATIC_NODE"/>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
+        <Strings>
+          <ButtonText>Create UDF</ButtonText>
+        </Strings>
+      </Button>
+
+      <!-- non-static node commands -->
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidCreateTrigger" type="Button" priority ="0x100">
+        <Parent guid="guidVSData" id="IDG_DV_OBJECT_NODE"/>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
+        <Strings>
+          <ButtonText>Create Trigger</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidAlterView" type="Button" priority ="0x100">
+        <Parent guid="guidVSData" id="IDG_DV_OBJECT_NODE"/>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
+        <Strings>
+          <ButtonText>Alter View</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidAlterRoutine" type="Button" priority ="0x100">
+        <Parent guid="guidVSData" id="IDG_DV_OBJECT_NODE"/>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
+        <Strings>
+          <ButtonText>Alter Routine</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidAlterTrigger" type="Button" priority ="0x100">
+        <Parent guid="guidVSData" id="IDG_DV_OBJECT_NODE"/>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
+        <Strings>
+          <ButtonText>Alter Trigger</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+  </Commands>
+
+  <CommandPlacements>
+    <!-- we have to place our group under each of our two menus -->
+    <CommandPlacement guid="guidMySqlProviderCmdSet" id="groupGlobal" priority="0x0100">
+      <Parent guid="guidMySqlProviderCmdSet" id="menuGlobal" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidMySqlProviderCmdSet" id="groupGlobal" priority="0x0100">
+      <Parent guid="guidMySqlProviderCmdSet" id="menuGlobal2005" />
+    </CommandPlacement>
+
+    <!-- no real idea what is going on here.  We need to place this guid:id parent under
+         the IDG_DV_GLOBAL1 object to make it work -->
+    <CommandPlacement guid="WhoKnows" id="WhoKnowsId" priority="0x1001">
+      <Parent guid="guidVSData2005" id="IDG_DV_GLOBAL1" />
+    </CommandPlacement>
+    <CommandPlacement guid="WhoKnows" id="WhoKnowsId" priority="0x1001">
+      <Parent guid="guidVSData" id="IDG_DV_GLOBAL1" />
+    </CommandPlacement>
+  </CommandPlacements>
+
+  <Symbols>
+    <GuidSymbol name="guidMySqlProviderPkg" value="{79a115c9-b133-4891-9e7b-242590dad272}" />
+    <GuidSymbol name="guidMySqlProviderCmdSet" value="{B87CB51F-8A01-4c5e-BF3E-5D0565D5397D}">
+      <IDSymbol name="menuGlobal" value="0x1000"/>
+      <IDSymbol name="menuGlobal2005" value="0x1001"/>
+      <IDSymbol name="groupGlobal" value="0x1002"/>
+      <IDSymbol name="groupGlobal2005" value="0x1003"/>
+      <IDSymbol name="cmdidGlobalCreateTable" value="500" />
+      <IDSymbol name="cmdidGlobalCreateView" value="501" />
+      <IDSymbol name="cmdidGlobalCreateProcedure" value="502" />
+      <IDSymbol name="cmdidGlobalCreateFunction" value="503" />
+      <IDSymbol name="cmdidGlobalCreateUDF" value="504" />
+      <IDSymbol name="cmdidCreateTable" value="0x100" />
+      <IDSymbol name="cmdidCreateView" value="0x110" />
+      <IDSymbol name="cmdidCreateProcedure" value="0x120" />
+      <IDSymbol name="cmdidCreateFunction" value="0x130" />
+      <IDSymbol name="cmdidCreateTrigger" value="0x140" />
+      <IDSymbol name="cmdidCreateUDF" value="0x150" />
+      <IDSymbol name="cmdidAlterView" value="0x111" />
+      <IDSymbol name="cmdidAlterRoutine" value="0x121" />
+      <IDSymbol name="cmdidAlterTrigger" value="0x141" />
+    </GuidSymbol>
+    <GuidSymbol name="guidVSStd97" value="{5efc7975-14bc-11cf-9b2b-00aa00573819}" />
+    <GuidSymbol name="guidSHLMainMenu" value="{d309f791-903f-11d0-9efc-00a0c911004f}">
+      <IDSymbol name="IDM_VS_TOOL_PROJWIN" value="0x0003" />
+    </GuidSymbol>
+    <GuidSymbol name="guidOfficeIcon" value="{d309f794-903f-11d0-9efc-00a0c911004f}">
+      <IDSymbol name="msotcidGraph" value="0x0011" />
+      <IDSymbol name="msotcidNoIcon" value="0x02EA" />
+      <IDSymbol name="msotcidZoom" value="0x0019" />
+    </GuidSymbol>
+    <GuidSymbol name="guidVSData" value="{4614107f-217d-4bbf-9dfe-b9e165c65572}">
+      <IDSymbol name="IDG_DV_GLOBAL1" value="0x4001"/>
+      <IDSymbol name="IDG_DV_OBJECT_NODE" value="0x4301"/>
+      <IDSymbol name="IDG_DV_STATIC_NODE" value="0x4401"/>
+      <IDSymbol name="IDG_DV_STATIC_NODES" value="0x4701"/>
+    </GuidSymbol>
+    <GuidSymbol name="guidVSData2005" value="{501822e5-b5af-11d0-b4dc-00a0c91506ef}">
+      <IDSymbol name="IDG_DV_GLOBAL1" value="0x2202"/>
+    </GuidSymbol>
+    <GuidSymbol name="WhoKnows" value="{501822e1-b5af-11d0-b4dc-00a0c91506ef}">
+      <IDSymbol name="WhoKnowsId" value="0x3528"/>
+    </GuidSymbol>
+  </Symbols>
+
+</CommandTable>
+
