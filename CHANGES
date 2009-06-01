@@ -8,6 +8,8 @@ Version 6.0.4
 - fixed trigger editing
 - fixed tokenization of escaped backslashes (bug #44960)
 - fixed conversion of binary(16) type to guid for entity framework models (bug #44986)
+- migrated from CTC to VSCT for our menus and buttons.  Also the VisualStudio project will also
+  now load and builder under VS2005 or VS2008 loading the proper targets files as needed
 
 Version 6.0.3 - 4/22/09
 - fixed broken connection prompting

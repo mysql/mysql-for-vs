@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -272,19 +272,20 @@
     <None Include="Resources\ArrowKey.bmp" />
     <None Include="Resources\Key.bmp" />
     <Content Include="Resources\Package.ico" />
+    <Content Include="VSCTComponents\pkgcmd.h" />
     <None Include="Resources\PackageLoadKey.txt" />
   </ItemGroup>
   <ItemGroup>
-    <CtcFile Include="CtcComponents\PkgCmd.ctc">
-      <ResourceName>1000</ResourceName>
-    </CtcFile>
-    <None Include="CtcComponents\Guids.h" />
-    <None Include="CtcComponents\PkgCmdID.h" />
     <None Include="Properties\DataSources\Column.datasource" />
     <None Include="Properties\DataSources\MySql.Data.VisualStudio.DbObjects.FKColumnPair.datasource" />
     <None Include="Properties\DataSources\MySql.Data.VisualStudio.DbObjects.ForeignKey.datasource" />
     <None Include="Properties\DataSources\MySql.Data.VisualStudio.DbObjects.IndexColumn.datasource" />
     <None Include="Properties\DataSources\TableNode.datasource" />
+  </ItemGroup>
+  <ItemGroup>
+    <VSCTCompile Include="VSCTComponents\PkgCmd.vsct">
+      <ResourceName>1000</ResourceName>
+    </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -324,7 +325,12 @@
     <RegisterWithRanu>false</RegisterWithRanu>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\VSSDK\Microsoft.VsSDK.targets" />
+  <Import Project="C:\Program Files\Visual Studio 2005 SDK\2007.02\VisualStudioIntegration\Tools\Build\Microsoft.VsSDK.targets" 
+          Condition="!Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\VSSDK\Microsoft.VsSDK.targets')" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\VSSDK\Microsoft.VsSDK.targets" 
+          Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\VSSDK\Microsoft.VsSDK.targets')" />
+  <Import Project="VSCT_overrides.targets"
+          Condition="!Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\VSSDK\Microsoft.VsSDK.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
