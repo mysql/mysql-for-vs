@@ -41,6 +41,12 @@ namespace MySql.Data.VisualStudio
 		public const uint cmdDelete = 0x151;
 
 		public const uint cmdEditTableData = 0x160;
+
+        public const uint cmdidGlobalCreateTable=500;
+        public const uint cmdidGlobalCreateView=501;
+        public const uint cmdidGlobalCreateProcedure=502;
+        public const uint cmdidGlobalCreateFunction=503;
+        public const uint cmdidGlobalCreateUDF=504;
     };
 
     static class SharedCommands 

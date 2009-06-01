@@ -9,7 +9,8 @@ PROCESS
 -->
 <ProviderManifest Namespace="MySql" xmlns="http://schemas.microsoft.com/ado/2006/04/edm/providermanifest">
   <Types>
-    <Type Name="boolean" PrimitiveTypeKind="Boolean"/>
+    <Type Name ="guid" PrimitiveTypeKind ="Guid"/>
+    <Type Name="bool" PrimitiveTypeKind="Boolean"/>
     <Type Name="tinyint" PrimitiveTypeKind="Byte"/>
     <Type Name="smallint" PrimitiveTypeKind="Int16"/>
     <Type Name="mediumint" PrimitiveTypeKind="Int32"/>

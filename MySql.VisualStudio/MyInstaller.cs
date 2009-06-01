@@ -32,8 +32,16 @@ namespace MySql.Data.VisualStudio
         {
             string root = String.Empty;
 
+            bool ranu = false;
+            if (Context.Parameters["RANU"] == "true")
+                ranu = true;
+
             if (Context.Parameters["version"] == "VS2005")
+            {
+                if (ranu) 
+                    throw new NotSupportedException("RANU not supported for Visual Studio 2005");
                 root = "8.0";
+            }
             else if (Context.Parameters["version"] == "VS2008")
                 root = "9.0";
             else
@@ -41,6 +49,8 @@ namespace MySql.Data.VisualStudio
 
             if (Context.Parameters["debug"] == "true")
                 root += "Exp";
+            if (ranu)
+                root += @"\Configuration";
             return root;
         }
 
@@ -58,12 +68,21 @@ namespace MySql.Data.VisualStudio
             UnInstallInternal(root);
         }
 
+        private RegistryKey GetRootKey()
+        {
+            if (Context.Parameters["RANU"] == "true")
+                return Registry.CurrentUser;
+            return Registry.LocalMachine;
+        }
+
         private void InstallInternal(string version)
         {
+            RegistryKey rootKey = GetRootKey();
+
             // Data Source
             string keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\DataSources\{1}",
                 version, "{98FBE4D8-5583-4233-B219-70FF8C7FBBBD}");
-            RegistryKey dsKey = Registry.LocalMachine.CreateSubKey(keyPath);
+            RegistryKey dsKey = rootKey.CreateSubKey(keyPath);
             dsKey.SetValue(null, "MySQL Server");
             RegistryKey dsSubKey = dsKey.CreateSubKey("SupportingProviders").CreateSubKey(
                 GuidList.ProviderGUID.ToString("B"));
@@ -78,7 +97,7 @@ namespace MySql.Data.VisualStudio
             // Data Provider
             keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\DataProviders\{1}",
                 version, GuidList.ProviderGUID.ToString("B"));
-            RegistryKey dpKey = Registry.LocalMachine.CreateSubKey(keyPath);
+            RegistryKey dpKey = rootKey.CreateSubKey(keyPath);
             dpKey.SetValue(null, ".NET Framework Data Provider for MySQL");
             dpKey.SetValue("DisplayName",
                 "Provider_DisplayName, MySql.Data.VisualStudio.Properties.Resources");
@@ -100,13 +119,13 @@ namespace MySql.Data.VisualStudio
 
             // Menus
             keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\Menus", version);
-            RegistryKey menuKey = Registry.LocalMachine.OpenSubKey(keyPath, true);
+            RegistryKey menuKey = rootKey.OpenSubKey(keyPath, true);
             menuKey.SetValue(GuidList.PackageGUID.ToString("B"), ",1000,1");
 
             // Service
             keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\Services\{1}",
                 version, GuidList.EditorFactoryCLSID.ToString("B"));
-            RegistryKey srvKey = Registry.LocalMachine.CreateSubKey(keyPath);
+            RegistryKey srvKey = rootKey.CreateSubKey(keyPath);
             srvKey.SetValue(null, GuidList.PackageGUID.ToString("B"));
             srvKey.SetValue("Name", "MySQL Provider Object Factory");
 
@@ -117,13 +136,13 @@ namespace MySql.Data.VisualStudio
             // Installed products
             keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\InstalledProducts\MySQL Connector Net {1}",
                 version, assemblyVersion);
-            RegistryKey ipKey = Registry.LocalMachine.CreateSubKey(keyPath);
+            RegistryKey ipKey = rootKey.CreateSubKey(keyPath);
             ipKey.SetValue(null, String.Format("MySQL Connector Net {0}", assemblyVersion));
             ipKey.SetValue("Package", GuidList.PackageGUID.ToString("B"));
             ipKey.SetValue("UseInterface", 1);
 
             keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\Languages\Language Services\MySQL", version);
-            RegistryKey langKey = Registry.LocalMachine.CreateSubKey(keyPath);
+            RegistryKey langKey = rootKey.CreateSubKey(keyPath);
             langKey.SetValue(null, "{fa498a2d-116a-4f25-9b55-7938e8e6dda7}");
             langKey.SetValue("Package", "{79a115c9-b133-4891-9e7b-242509dad272}");
             langKey.SetValue("LangResID", 101);
@@ -132,7 +151,7 @@ namespace MySql.Data.VisualStudio
             // Package
             keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\Packages\{1}",
                 version, GuidList.PackageGUID.ToString("B"));
-            RegistryKey packageKey = Registry.LocalMachine.CreateSubKey(keyPath);
+            RegistryKey packageKey = rootKey.CreateSubKey(keyPath);
             packageKey.SetValue(null, String.Format("MySQL Connector Net {0}", assemblyVersion));
             packageKey.SetValue("InprocServer32", 
                 String.Format(@"{0}\system32\mscoree.dll", 
@@ -151,39 +170,41 @@ namespace MySql.Data.VisualStudio
 
         private void UnInstallInternal(string version)
         {
+            RegistryKey rootKey = GetRootKey();
+
             // Data Source
             string keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\DataSources\{1}",
                 version, "{98FBE4D8-5583-4233-B219-70FF8C7FBBBD}");
-            RegistryKey key = Registry.LocalMachine.OpenSubKey(keyPath);
+            RegistryKey key = rootKey.OpenSubKey(keyPath);
             if (key != null)
             {
                 key.Close();
-                Registry.LocalMachine.DeleteSubKeyTree(keyPath);
+                rootKey.DeleteSubKeyTree(keyPath);
             }
 
             // Data Provider
             keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\DataProviders\{1}",
                 version, GuidList.ProviderGUID.ToString("B"));
-            key = Registry.LocalMachine.OpenSubKey(keyPath);
+            key = rootKey.OpenSubKey(keyPath);
             if (key != null)
             {
                 key.Close();
-                Registry.LocalMachine.DeleteSubKeyTree(keyPath);
+                rootKey.DeleteSubKeyTree(keyPath);
             }
 
             // Menus
             keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\Menus", version);
-            RegistryKey menuKey = Registry.LocalMachine.OpenSubKey(keyPath, true);
+            RegistryKey menuKey = rootKey.OpenSubKey(keyPath, true);
             menuKey.DeleteValue(GuidList.PackageGUID.ToString("B"), false);
 
             // Service
             keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\Services\{1}",
                 version, GuidList.EditorFactoryCLSID.ToString("B"));
-            key = Registry.LocalMachine.OpenSubKey(keyPath);
+            key = rootKey.OpenSubKey(keyPath);
             if (key != null)
             {
                 key.Close();
-                Registry.LocalMachine.DeleteSubKeyTree(keyPath);
+                rootKey.DeleteSubKeyTree(keyPath);
             }
 
             Assembly a = Assembly.GetExecutingAssembly();
@@ -192,30 +213,30 @@ namespace MySql.Data.VisualStudio
             // Installed products
             keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\InstalledProducts\MySQL Connector/Net {1}",
                 version, assemblyVersion);
-            key = Registry.LocalMachine.OpenSubKey(keyPath);
+            key = rootKey.OpenSubKey(keyPath);
             if (key != null)
             {
                 key.Close();
-                Registry.LocalMachine.DeleteSubKeyTree(keyPath);
+                rootKey.DeleteSubKeyTree(keyPath);
             }
 
             keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\Languages\Language Services\MySQL",
                 assemblyVersion);
-            key = Registry.LocalMachine.OpenSubKey(keyPath);
+            key = rootKey.OpenSubKey(keyPath);
             if (key != null)
             {
                 key.Close();
-                Registry.LocalMachine.DeleteSubKey(keyPath);
+                rootKey.DeleteSubKey(keyPath);
             }
 
             // Package
             keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\Packages\{1}",
                 version, GuidList.PackageGUID.ToString("B"));
-            key = Registry.LocalMachine.OpenSubKey(keyPath);
+            key = rootKey.OpenSubKey(keyPath);
             if (key != null)
             {
                 key.Close();
-                Registry.LocalMachine.DeleteSubKeyTree(keyPath);
+                rootKey.DeleteSubKeyTree(keyPath);
             }
         }
     }

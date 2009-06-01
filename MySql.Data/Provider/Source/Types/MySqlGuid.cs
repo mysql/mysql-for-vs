@@ -30,11 +30,18 @@ namespace MySql.Data.Types
 	{
         Guid mValue;
         private bool isNull;
+        private byte[] bytes;
 
-        public MySqlGuid(Guid g)
+        public MySqlGuid(byte[] buff)
         {
-            mValue = g;
+            mValue = new Guid(buff);
             isNull = false;
+            bytes = buff;
+        }
+
+        public byte[] Bytes
+        {
+            get { return bytes; }
         }
 
 		#region IMySqlValue Members
@@ -145,9 +152,9 @@ namespace MySql.Data.Types
                 if (length == -1)
                     length = (long)packet.ReadFieldLength();
 
-                byte[] newBuff = new byte[length];
-                packet.Read(newBuff, 0, (int)length);
-                g = new MySqlGuid(new Guid(newBuff));
+                byte[] buff = new byte[length];
+                packet.Read(buff, 0, (int)length);
+                g = new MySqlGuid(buff);
             }
             return g;
 		}

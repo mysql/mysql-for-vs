@@ -1056,4 +1056,7 @@ Would you like to create it?</value>
   <data name="100" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\PackageLoadKey.txt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
+  <data name="AlterTriggerOnWrongTable" xml:space="preserve">
+    <value>Cannot alter trigger '{0}' on '{1}' because this trigger does not belong to this object. Specify the correct trigger name or the correct target object name.</value>
+  </data>
 </root>

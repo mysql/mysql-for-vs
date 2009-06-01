@@ -826,5 +826,34 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(1, dt.Rows[0]["id"]);
             Assert.AreEqual(guid, dt.Rows[0]["g"]);
         }
+
+        /// <summary>
+        /// Bug #44507 Binary(16) considered as Guid 
+        /// </summary>
+        [Test]
+        public void ReadBinary16AsBinary()
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id INT, guid BINARY(16))");
+
+            Guid g = new Guid("32A48AC5-285A-46c6-A0D4-158E6E39729C");
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (1, ?guid)", conn);
+            cmd.Parameters.AddWithValue("?guid", g);
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "SELECT * FROM Test";
+            cmd.Parameters.Clear();
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                reader.Read();
+
+                object o = reader.GetValue(1);
+                Assert.IsTrue(o is Guid);
+
+                byte[] bytes = new byte[16];
+                long size = reader.GetBytes(1, 0, bytes, 0, 16);
+                Assert.AreEqual(16, size);
+            }
+        }
     }
 }

@@ -192,13 +192,13 @@ namespace MySql.Data.VisualStudio
 
         private string ExtractToken(bool preserveLast)
         {
+            StopIndex = Math.Min(Text.Length-1, Pos - 1);
             if (preserveLast) Pos--;
-
-            StopIndex = Pos - 1;
-            if (Pos < Text.Length)
-                return Text.Substring(StartIndex, StopIndex - StartIndex + 1);
-            StopIndex = Pos;
-            return Text.Substring(StartIndex, StopIndex - StartIndex);
+            return Text.Substring(StartIndex, StopIndex - StartIndex+1);
+            //if (Pos < Text.Length)
+            //    return Text.Substring(StartIndex, StopIndex - StartIndex + 1);
+            //StopIndex = Pos;
+            //return Text.Substring(StartIndex, StopIndex - StartIndex);
         }
 
         #endregion

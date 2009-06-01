@@ -70,6 +70,18 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(-1, cmd.LastInsertedId);
         }
 
+        /// <summary>
+        /// Bug #44960	backslash in string - connector return exeption
+        /// </summary>
+        [Test]
+        public void EscapedBackslash()
+        {
+            execSQL("CREATE TABLE Test(id INT, name VARCHAR(20))");
+
+            MySqlCommand cmd = new MySqlCommand(@"INSERT INTO Test VALUES (1, '\\=\\')", conn);
+            cmd.ExecuteNonQuery();
+        }
+
 /*        [Category("NotWorking")]
         [Test]
         public void TestCase()
