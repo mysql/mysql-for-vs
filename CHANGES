@@ -11,6 +11,7 @@ Version 6.0.4
 - migrated from CTC to VSCT for our menus and buttons.  Also the VisualStudio project will also
   now load and builder under VS2005 or VS2008 loading the proper targets files as needed
 - fixed global Add New menu options with the Visual STudio integration
+- improved ad-hoc registration utility so that it handles VS 2005 and VS 2008 properly
 
 Version 6.0.3 - 4/22/09
 - fixed broken connection prompting
