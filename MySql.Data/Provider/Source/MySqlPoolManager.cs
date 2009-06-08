@@ -30,11 +30,7 @@ namespace MySql.Data.MySqlClient
     internal class MySqlPoolManager
     {
         private static Hashtable pools = new Hashtable();
-#if NET20
         private static List<MySqlPool> clearingPools = new List<MySqlPool>();
-#else
-        private static ArrayList clearingPools = new ArrayList();
-#endif
 
         public static MySqlPool GetPool(MySqlConnectionStringBuilder settings)
         {
