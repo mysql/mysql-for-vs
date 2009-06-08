@@ -99,7 +99,8 @@
             <SelectionNode nid="Table">
               <Icon name="Table"/>
               <Children>
-                <Selection type="Column" restrictions="null,{Table.Schema},{Table.Name}" hideWhen="False AND False">
+                <Selection type="Column" restrictions="null,{Table.Schema},{Table.Name}" 
+                           hideWhen="False AND False">
                   <SelectionNode>
                     <Icon name="Column"/>
                   </SelectionNode>
