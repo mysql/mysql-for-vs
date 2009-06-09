@@ -548,19 +548,16 @@ namespace MySql.Web.Security
                         @failedPasswordAttemptWindowStart, @failedPasswordAnswerAttemptCount, 
                         @failedPasswordAnswerAttemptWindowStart)",
                         connection);
-             Console.WriteLine("point 1");
                     cmd.Parameters.AddWithValue("@userId", userId);
                     cmd.Parameters.AddWithValue("@email", email);
                     cmd.Parameters.AddWithValue("@comment", "");
                     cmd.Parameters.AddWithValue("@password",
                         EncodePassword(password, passwordKey, PasswordFormat));
-            Console.WriteLine("point 2");
                     cmd.Parameters.AddWithValue("@passwordKey", passwordKey);
                     cmd.Parameters.AddWithValue("@passwordFormat", PasswordFormat);
                     cmd.Parameters.AddWithValue("@passwordQuestion", passwordQuestion);
                     cmd.Parameters.AddWithValue("@passwordAnswer",
                         EncodePassword(passwordAnswer, passwordKey, PasswordFormat));
-              Console.WriteLine("point 3");
                     cmd.Parameters.AddWithValue("@isApproved", isApproved);
                     cmd.Parameters.AddWithValue("@lastActivityDate", createDate);
                     cmd.Parameters.AddWithValue("@lastLoginDate", createDate);
