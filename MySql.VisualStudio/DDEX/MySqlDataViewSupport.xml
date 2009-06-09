@@ -67,12 +67,6 @@
                           guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
                           cmdid="256"
                           handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
-
-
-<!--          <CommandBinding name="New" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="13600"  handler="Microsoft.VisualStudio.DataTools.DBPackage.VDT_CommandHandler_TableTools">
-            <Parameter value="New"/>
-            <Parameter value="Table"/>
-          </CommandBinding>-->
           <CommandBinding name="AddNewTable" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
                           cmdid="500" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
@@ -438,7 +432,7 @@
         <CommandBinding name="Design" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="12291" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
           <Parameter value="Design"/>
         </CommandBinding>
-        <CommandBinding name="DropTable" guid="5efc7975-14bc-11cf-9b2b-00aa00573819" cmdid="17" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+        <CommandBinding name="DropTable" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="352" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
           <Parameter value="Table"/>
         </CommandBinding>
         <CommandBinding name="CreateTrigger" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="320" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
@@ -539,11 +533,10 @@
       <CommandBindings defaultCommand="AlterView">
         <CommandBinding name="AlterView" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="273" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
 
-        <CommandBinding name="DropView" guid="5efc7975-14bc-11cf-9b2b-00aa00573819" cmdid="17" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+        <CommandBinding name="DropView" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="352" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
           <Parameter value="View"/>
         </CommandBinding>
 
-        <CommandBinding name="BrowseOrEditData" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="352" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
         <CommandBinding name="Browse_Data" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="12384" 
                         handler="Microsoft.VisualStudio.DataTools.DBPackage.VDT_OLEDB_CommandHandler_TableTools">
           <Parameter value="Open"/>
@@ -996,7 +989,7 @@
       </Properties>
       <CommandBindings defaultCommand="AlterStoredProcedure">
         <CommandBinding name="AlterStoredProcedure" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="289" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
-        <CommandBinding name="DropProcedure" guid="5efc7975-14bc-11cf-9b2b-00aa00573819" cmdid="17" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+        <CommandBinding name="DropProcedure" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="352" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
           <Parameter value="StoredProcedure"/>
         </CommandBinding>        
         <!-- global data menus -->
@@ -1245,7 +1238,7 @@
       </Properties>
       <CommandBindings defaultCommand="AlterTrigger">
         <CommandBinding name="AlterTrigger" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="321" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
-        <CommandBinding name="DropTrigger" guid="5efc7975-14bc-11cf-9b2b-00aa00573819" cmdid="17" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+        <CommandBinding name="DropTrigger" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="352" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
           <Parameter value="Trigger"/>
         </CommandBinding>
         <!-- global data menus -->
@@ -1303,10 +1296,6 @@
       </Properties>
       <CommandBindings defaultCommand="DeleteUDF">
         <CommandBinding name="DeleteUDF" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="337" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
-
-        <!--        <CommandBinding name="DeleteUDF" guid="5efc7975-14bc-11cf-9b2b-00aa00573819" cmdid="337" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
-          <Parameter value="UDF"/>
-        </CommandBinding>-->
         <!-- global data menus -->
         <CommandBinding name="AddNewTable" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
                         cmdid="500" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">

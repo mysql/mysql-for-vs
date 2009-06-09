@@ -174,7 +174,7 @@ namespace MySql.Data.VisualStudio
 					Alter();
 					break;
 
-                case (uint)VSConstants.VSStd97CmdID.Delete:
+                case PkgCmdIDList.cmdDelete:
 					Drop();
 					break;
 			}

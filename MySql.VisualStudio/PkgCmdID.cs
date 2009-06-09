@@ -27,7 +27,6 @@ namespace MySql.Data.VisualStudio
 
 		public const uint cmdCreateView = 0x110;
 		public const uint cmdAlterView = 0x111;
-		public const uint cmdDropView = 0x112;
 
 		public const uint cmdCreateProcedure = 0x120;
 		public const uint cmdAlterProcedure = 0x121;
@@ -38,9 +37,7 @@ namespace MySql.Data.VisualStudio
 		public const uint cmdAlterTrigger = 0x141;
 
 		public const uint cmdCreateUDF = 0x150;
-		public const uint cmdDelete = 0x151;
-
-		public const uint cmdEditTableData = 0x160;
+		public const uint cmdDelete = 0x160;
 
         public const uint cmdidGlobalCreateTable=500;
         public const uint cmdidGlobalCreateView=501;
