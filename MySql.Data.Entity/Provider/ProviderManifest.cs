@@ -84,6 +84,7 @@ namespace MySql.Data.MySqlClient
             }
 
             string storeTypeName = storeType.EdmType.Name.ToLowerInvariant();
+
             if (!base.StoreTypeNameToEdmPrimitiveType.ContainsKey(storeTypeName))
             {
                 throw new ArgumentException(String.Format("The underlying provider does not support the type '{0}'.", storeTypeName));
