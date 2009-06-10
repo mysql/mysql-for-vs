@@ -271,57 +271,7 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual("spFunc", dt.Rows[0][3]);
 		}
 
-		[Test]
-		public void ProcedureParameters()
-		{
-            if (Version < new Version(5, 0)) return;
-
-			execSQL("DROP PROCEDURE IF EXISTS spTest");
-			execSQL("CREATE PROCEDURE spTest (id int, name varchar(50)) BEGIN SELECT 1; END");
-
-			string[] restrictions = new string[5];
-			restrictions[1] = database0;
-			restrictions[2] = "spTest";
-			DataTable dt = conn.GetSchema("Procedure Parameters", restrictions);
-			Assert.IsTrue(dt.Rows.Count == 2);
-			Assert.AreEqual("Procedure Parameters", dt.TableName);
-			Assert.AreEqual(database0.ToLower(), dt.Rows[0]["SPECIFIC_SCHEMA"].ToString().ToLower());
-			Assert.AreEqual("sptest", dt.Rows[0]["SPECIFIC_NAME"].ToString().ToLower());
-			Assert.AreEqual("id", dt.Rows[0]["PARAMETER_NAME"].ToString().ToLower());
-			Assert.AreEqual(1, dt.Rows[0]["ORDINAL_POSITION"]);
-			Assert.AreEqual("IN", dt.Rows[0]["PARAMETER_MODE"]);
-
-			restrictions[4] = "name";
-			dt.Clear();
-			dt = conn.GetSchema("Procedure Parameters", restrictions);
-			Assert.AreEqual(1, dt.Rows.Count);
-			Assert.AreEqual(database0.ToLower(), dt.Rows[0]["SPECIFIC_SCHEMA"].ToString().ToLower());
-			Assert.AreEqual("sptest", dt.Rows[0]["SPECIFIC_NAME"].ToString().ToLower());
-			Assert.AreEqual("name", dt.Rows[0]["PARAMETER_NAME"].ToString().ToLower());
-			Assert.AreEqual(2, dt.Rows[0]["ORDINAL_POSITION"]);
-			Assert.AreEqual("IN", dt.Rows[0]["PARAMETER_MODE"]);
-
-			execSQL("DROP FUNCTION IF EXISTS spFunc");
-			execSQL("CREATE FUNCTION spFunc (id int) RETURNS INT BEGIN RETURN 1; END");
-
-			restrictions[4] = null;
-			restrictions[1] = database0;
-			restrictions[2] = "spFunc";
-			dt = conn.GetSchema("Procedure Parameters", restrictions);
-			Assert.IsTrue(dt.Rows.Count == 2);
-			Assert.AreEqual("Procedure Parameters", dt.TableName);
-			Assert.AreEqual(database0.ToLower(), dt.Rows[0]["SPECIFIC_SCHEMA"].ToString().ToLower());
-			Assert.AreEqual("spfunc", dt.Rows[0]["SPECIFIC_NAME"].ToString().ToLower());
-            Assert.AreEqual(0, dt.Rows[0]["ORDINAL_POSITION"]);
-
-            Assert.AreEqual(database0.ToLower(), dt.Rows[1]["SPECIFIC_SCHEMA"].ToString().ToLower());
-            Assert.AreEqual("spfunc", dt.Rows[1]["SPECIFIC_NAME"].ToString().ToLower());
-            Assert.AreEqual("id", dt.Rows[1]["PARAMETER_NAME"].ToString().ToLower());
-			Assert.AreEqual(1, dt.Rows[1]["ORDINAL_POSITION"]);
-			Assert.AreEqual("IN", dt.Rows[1]["PARAMETER_MODE"]);
-		}
-
-		[Test]
+        [Test]
 		public void Indexes()
 		{
             if (Version < new Version(5, 0)) return;
@@ -453,60 +403,6 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual(database0.ToLower(), dt.Rows[0]["VIEW_SCHEMA"].ToString().ToLower());
 			Assert.AreEqual("vw", dt.Rows[0]["VIEW_NAME"]);
 			Assert.AreEqual("theTime", dt.Rows[0]["COLUMN_NAME"]);
-		}
-
-		[Test]
-		public void SingleProcedureParameters()
-		{
-            if (Version < new Version(5, 0)) return;
-
-			execSQL("DROP PROCEDURE IF EXISTS spTest");
-			execSQL("CREATE PROCEDURE spTest(id int, IN id2 INT(11), " +
-				"INOUT io1 VARCHAR(20), OUT out1 FLOAT) BEGIN END");
-			string[] restrictions = new string[4];
-			restrictions[1] = database0;
-			restrictions[2] = "spTest";
-			DataTable procs = conn.GetSchema("PROCEDURES", restrictions);
-			Assert.AreEqual(1, procs.Rows.Count);
-			Assert.AreEqual("spTest", procs.Rows[0][0]);
-            Assert.AreEqual(database0.ToLower(), procs.Rows[0][2].ToString().ToLower(CultureInfo.InvariantCulture));
-			Assert.AreEqual("spTest", procs.Rows[0][3]);
-
-			DataTable parameters = conn.GetSchema("PROCEDURE PARAMETERS", restrictions);
-			Assert.AreEqual(4, parameters.Rows.Count);
-
-            DataRow row = parameters.Rows[0];
-            Assert.AreEqual(database0.ToLower(CultureInfo.InvariantCulture),
-                row["SPECIFIC_SCHEMA"].ToString().ToLower(CultureInfo.InvariantCulture));
-            Assert.AreEqual("spTest", row["SPECIFIC_NAME"]);
-            Assert.AreEqual(1, row["ORDINAL_POSITION"]);
-            Assert.AreEqual("IN", row["PARAMETER_MODE"]);
-            Assert.AreEqual("id", row["PARAMETER_NAME"]);
-            Assert.AreEqual("INT", row["DATA_TYPE"].ToString().ToUpper(CultureInfo.InvariantCulture));
-
-            row = parameters.Rows[1];
-            Assert.AreEqual(database0.ToLower(CultureInfo.InvariantCulture), row["SPECIFIC_SCHEMA"].ToString().ToLower(CultureInfo.InvariantCulture));
-            Assert.AreEqual("spTest", row["SPECIFIC_NAME"]);
-            Assert.AreEqual(2, row["ORDINAL_POSITION"]);
-            Assert.AreEqual("IN", row["PARAMETER_MODE"]);
-            Assert.AreEqual("id2", row["PARAMETER_NAME"]);
-            Assert.AreEqual("INT", row["DATA_TYPE"].ToString().ToUpper(CultureInfo.InvariantCulture));
-
-            row = parameters.Rows[2];
-            Assert.AreEqual(database0.ToLower(CultureInfo.InvariantCulture), row["SPECIFIC_SCHEMA"].ToString().ToLower(CultureInfo.InvariantCulture));
-            Assert.AreEqual("spTest", row["SPECIFIC_NAME"]);
-            Assert.AreEqual(3, row["ORDINAL_POSITION"]);
-            Assert.AreEqual("INOUT", row["PARAMETER_MODE"]);
-            Assert.AreEqual("io1", row["PARAMETER_NAME"]);
-            Assert.AreEqual("VARCHAR", row["DATA_TYPE"].ToString().ToUpper(CultureInfo.InvariantCulture));
-
-            row = parameters.Rows[3];
-            Assert.AreEqual(database0.ToLower(CultureInfo.InvariantCulture), row["SPECIFIC_SCHEMA"].ToString().ToLower(CultureInfo.InvariantCulture));
-            Assert.AreEqual("spTest", row["SPECIFIC_NAME"]);
-            Assert.AreEqual(4, row["ORDINAL_POSITION"]);
-            Assert.AreEqual("OUT", row["PARAMETER_MODE"]);
-            Assert.AreEqual("out1", row["PARAMETER_NAME"]);
-            Assert.AreEqual("FLOAT", row["DATA_TYPE"].ToString().ToUpper(CultureInfo.InvariantCulture));
 		}
 
 		[Test]
