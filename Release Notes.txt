@@ -3,6 +3,17 @@ Connector/Net 6.0  Release Notes
 
 Welcome to the release notes for Connector/Net 6.0
 
+What's new in 6.0.4?
+--------------------
+This is the first post-GA release of 6.0 and we really wanted to address some of the bugs that were in the
+initial GA release.  Here are the highlights:
+
+* Added bool and guid support to our entity framework bits
+* Added SunConnect registration to the installer.  Please register!
+* Our Visual Studio integration bits should compile better under VS2005
+* Unsigned values are not supported with our entity framework bits
+* Many other significant bug fixes.  Check the change log!
+
 Known Issues In 6.0.4
 ---------------------
 * The table editor in the Visual Studio integration will shorten the window name when you save.  This has no
