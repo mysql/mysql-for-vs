@@ -174,10 +174,10 @@ namespace MySql.Data.VisualStudio
 					Alter();
 					break;
 
-                case PkgCmdIDList.cmdDelete:
-					Drop();
-					break;
-			}
+                case (uint)VSConstants.VSStd97CmdID.Delete:
+                    Drop();
+                    break;
+            }
 		}
 
 
@@ -211,7 +211,8 @@ namespace MySql.Data.VisualStudio
                 String.Format(Resources.DropConfirmationCaption, typeString),
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
-            if (result == DialogResult.No) return;
+            if (result == DialogResult.No)
+                throw new OperationCanceledException();
 
             string sql = GetDropSQL();
             try
