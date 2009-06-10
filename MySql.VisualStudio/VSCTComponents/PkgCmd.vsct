@@ -189,27 +189,7 @@
           <ButtonText>Alter Trigger</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidMySqlProviderCmdSet" id="cmdidDelete" type="Button" priority ="0x100">
-        <Parent guid="guidVSData" id="IDG_DV_OBJECT_NODE"/>
-        <CommandFlag>DynamicVisibility</CommandFlag>
-        <CommandFlag>DefaultInvisible</CommandFlag>
-        <Icon guid="guidImages" id="bmpPicX" />
-        <Strings>
-          <ButtonText>&amp;Drop</ButtonText>
-        </Strings>
-      </Button>
    </Buttons>
-    
-    <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
-    <Bitmaps>
-      <!--  The bitmap id is defined in a way that is a little bit different from the others: 
-            the declaration starts with a guid for the bitmap strip, then there is the resource id of the 
-            bitmap strip containing the bitmaps and then there are the numeric ids of the elements used 
-            inside a button definition. An important aspect of this declaration is that the element id 
-            must be the actual index (1-based) of the bitmap inside the bitmap strip. -->
-      <Bitmap guid="guidImages" href="..\Resources\Images_32bit.bmp" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows"/>
-    </Bitmaps>
-
   </Commands>
 
   <CommandPlacements>
@@ -230,10 +210,6 @@
       <Parent guid="guidVSData" id="IDG_DV_GLOBAL1" />
     </CommandPlacement>
   </CommandPlacements>
-
-  <UsedCommands>
-    <UsedCommand guid="guidVSStd97" id="cmdidDelete"/>
-  </UsedCommands>
 
   <Symbols>
     <GuidSymbol name="guidMySqlProviderPkg" value="{79a115c9-b133-4891-9e7b-242590dad272}" />
@@ -258,9 +234,7 @@
       <IDSymbol name="cmdidAlterTrigger" value="0x141" />
       <IDSymbol name="cmdidDelete" value="0x160"/>
     </GuidSymbol>
-    <GuidSymbol name="guidVSStd97" value="{5efc7975-14bc-11cf-9b2b-00aa00573819}">
-      <IDSymbol name="cmdidDelete" value="17"/>
-    </GuidSymbol>
+    <GuidSymbol name="guidVSStd97" value="{5efc7975-14bc-11cf-9b2b-00aa00573819}"/>
     <GuidSymbol name="guidSHLMainMenu" value="{d309f791-903f-11d0-9efc-00a0c911004f}">
       <IDSymbol name="IDM_VS_TOOL_PROJWIN" value="0x0003" />
     </GuidSymbol>
