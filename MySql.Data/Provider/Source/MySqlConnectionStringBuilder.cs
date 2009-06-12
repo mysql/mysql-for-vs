@@ -42,10 +42,11 @@ namespace MySql.Data.MySqlClient
         uint procCacheSize, connectionLifetime;
         MySqlConnectionProtocol protocol;
         MySqlDriverType driverType;
+        MySqlSslMode sslMode;
         bool compress, connectionReset, allowBatch, logging;
         bool oldSyntax, persistSI, usePerfMon, pooling;
         bool allowZeroDatetime, convertZeroDatetime;
-        bool useUsageAdvisor, useSSL;
+        bool useUsageAdvisor;
         bool ignorePrepare, useProcedureBodies;
         bool autoEnlist, respectBinaryFlags, treatBlobsAsUTF8;
         string blobAsUtf8IncludePattern, blobAsUtf8ExcludePattern;
@@ -86,7 +87,7 @@ namespace MySql.Data.MySqlClient
             defaultValues.Add(Keyword.AllowZeroDatetime, false);
             defaultValues.Add(Keyword.UsePerformanceMonitor, false);
             defaultValues.Add(Keyword.ProcedureCacheSize, 25);
-            defaultValues.Add(Keyword.UseSSL, false);
+            defaultValues.Add(Keyword.Encrypt, false);
             defaultValues.Add(Keyword.IgnorePrepare, true);
             defaultValues.Add(Keyword.UseProcedureBodies, true);
             defaultValues.Add(Keyword.AutoEnlist, true);
@@ -100,6 +101,7 @@ namespace MySql.Data.MySqlClient
             defaultValues.Add(Keyword.InteractiveSession, false);
             defaultValues.Add(Keyword.FunctionsReturnString, false);
             defaultValues.Add(Keyword.UseAffectedRows, false);
+            defaultValues.Add(Keyword.SslMode, MySqlSslMode.None);
         }
 
         /// <summary>
@@ -465,19 +467,20 @@ namespace MySql.Data.MySqlClient
             }
         }
 
+
 #if !CF && !MONO
         [Category("Authentication")]
-        [Description("Should the connection use SSL.  This currently has no effect.")]
+        [Description("Should the connection use SSL.")]
         [DefaultValue(false)]
-        [RefreshProperties(RefreshProperties.All)]
+        [Obsolete("Use Ssl Mode instead.")]
 #endif
-            internal bool UseSSL
+        internal bool Encrypt
         {
-            get { return useSSL; }
+            get { return SslMode != MySqlSslMode.None; }
             set
             {
-                SetValue("UseSSL", value); 
-                useSSL = value;
+                SetValue("Encrypt", value);
+                sslMode = value ? MySqlSslMode.Prefered : MySqlSslMode.None;
             }
         }
 
@@ -930,6 +933,24 @@ namespace MySql.Data.MySqlClient
             }
         }
 
+#if !CF
+        /// <summary>
+        /// Indicates whether to use SSL connections and how to handle server certificate errors.
+        /// </summary>
+        [DisplayName("SslMode")]
+        [Category("Security")]
+        [Description("SSL properties for connection")]
+#endif
+        public MySqlSslMode SslMode
+        {
+            get { return sslMode; }
+            set
+            {
+                SetValue("Ssl Mode", value);
+                sslMode = value;
+            }
+        }
+
         #endregion
 
         #region Conversion Routines
@@ -1000,6 +1021,13 @@ namespace MySql.Data.MySqlClient
             if (value is MySqlDriverType) return (MySqlDriverType) value;
             return (MySqlDriverType) Enum.Parse(
                                          typeof (MySqlDriverType), value.ToString(), true);
+        }
+
+        private static MySqlSslMode ConvertToSslMode(object value)
+        {
+            if (value is MySqlSslMode)
+                return (MySqlSslMode)value;
+            return (MySqlSslMode)Enum.Parse(typeof(MySqlSslMode), value.ToString(), true);
         }
 
         #endregion
@@ -1148,7 +1176,7 @@ namespace MySql.Data.MySqlClient
                 case "IGNORE PREPARE":
                     return Keyword.IgnorePrepare;
                 case "ENCRYPT":
-                    return Keyword.UseSSL;
+                    return Keyword.Encrypt;
                 case "PROCEDURE BODIES":
                 case "USE PROCEDURE BODIES":
                     return Keyword.UseProcedureBodies;
@@ -1176,6 +1204,8 @@ namespace MySql.Data.MySqlClient
                     return Keyword.FunctionsReturnString;
                 case "USE AFFECTED ROWS":
                     return Keyword.UseAffectedRows;
+                case "SSL MODE":
+                    return Keyword.SslMode;
             }
             throw new ArgumentException(Resources.KeywordNotSupported, key);
         }
@@ -1238,8 +1268,8 @@ namespace MySql.Data.MySqlClient
                     return UsePerformanceMonitor;
                 case Keyword.IgnorePrepare:
                     return IgnorePrepare;
-                case Keyword.UseSSL:
-                    return UseSSL;
+                case Keyword.Encrypt:
+                    return Encrypt;
                 case Keyword.UseProcedureBodies:
                     return UseProcedureBodies;
                 case Keyword.AutoEnlist:
@@ -1264,6 +1294,8 @@ namespace MySql.Data.MySqlClient
                     return functionsReturnString;
                 case Keyword.UseAffectedRows:
                     return useAffectedRows;
+                case Keyword.SslMode:
+                    return sslMode;
                 default:
                     return null; /* this will never happen */
             }
@@ -1349,8 +1381,11 @@ namespace MySql.Data.MySqlClient
                     procCacheSize = ConvertToUInt(value); break;
                 case Keyword.IgnorePrepare: 
                     ignorePrepare = ConvertToBool(value); break;
-                case Keyword.UseSSL: 
-                    useSSL = ConvertToBool(value); break;
+                case Keyword.Encrypt: 
+                    if (!clearing)
+                        Logger.LogWarning("Encrypt is now obsolete. Use Ssl Mode instead");
+                    sslMode = ConvertToBool(value)?MySqlSslMode.Prefered:MySqlSslMode.None;
+                    break;
                 case Keyword.UseProcedureBodies: 
                     useProcedureBodies = ConvertToBool(value); break;
                 case Keyword.AutoEnlist:
@@ -1375,6 +1410,8 @@ namespace MySql.Data.MySqlClient
                     functionsReturnString = ConvertToBool(value); break;
                 case Keyword.UseAffectedRows:
                     useAffectedRows = ConvertToBool(value); break;
+                case Keyword.SslMode:
+                    sslMode = ConvertToSslMode(value); break;
             }
         }
 
@@ -1545,7 +1582,7 @@ namespace MySql.Data.MySqlClient
         UsePerformanceMonitor,
         ProcedureCacheSize,
         IgnorePrepare,
-        UseSSL,
+        Encrypt,
         UseProcedureBodies,
         AutoEnlist,
         RespectBinaryFlags,
@@ -1557,6 +1594,7 @@ namespace MySql.Data.MySqlClient
         AllowUserVariables,
         InteractiveSession,
         FunctionsReturnString,
-        UseAffectedRows
+        UseAffectedRows,
+        SslMode
     }
 }

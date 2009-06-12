@@ -338,6 +338,34 @@ namespace MySql.Data.MySqlClient
     }
 
     /// <summary>
+    /// SSL options for connection.
+    /// </summary>
+    public enum MySqlSslMode
+    {
+        /// <summary>
+        /// Do not use SSL.
+        /// </summary>
+        None,
+        /// <summary>
+        /// Use SSL, if server supports it.
+        /// </summary>
+        Prefered,
+        /// <summary>
+        /// Always use SSL. Deny connection if server does not support SSL.
+        /// Do not perform server certificate validation. 
+        /// </summary>
+        Required,
+        /// <summary>
+        /// Always use SSL. Validate server SSL certificate, but different host name mismatch.
+        /// </summary>
+        VerifyCA,
+        /// <summary>
+        /// Always use SSL and perform full certificate validation.
+        /// </summary>
+        VerifyFull
+    }
+
+    /// <summary>
     /// Specifies the connection types supported
     /// </summary>
     public enum MySqlDriverType

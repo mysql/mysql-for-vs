@@ -1,3 +1,5 @@
+- Add "SSL Mode" option for connections that indicates whether to use SSL connections and how
+  to validate server certificate. Deprecated use of "encrypt" in connection strings(bug#38700)
 Version 6.0.4
 - fixed regression where using stored procs with datasets (bug #44460)
 - fixed compilation under VS 2005 (bug #44822)
