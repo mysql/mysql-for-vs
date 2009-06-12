@@ -68,6 +68,7 @@
       <ComponentRef Id="Net20"/>
       <ComponentRef Id="GAC20"/>
       <ComponentRef Id="StartMenuComponent"/>
+      <ComponentRef Id="Registration"/>
     </Feature>
 
     <!-- Entity framework feature -->

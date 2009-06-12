@@ -32,13 +32,8 @@ namespace MySql.Data.MySqlClient
 	/// </summary>
 	internal sealed class MySqlPool
 	{
-#if NET20
         private List<Driver> inUsePool;
         private Queue<Driver> idlePool;
-#else
-		private ArrayList inUsePool;
-		private Queue idlePool;
-#endif
 		private MySqlConnectionStringBuilder settings;
 		private uint minSize;
 		private uint maxSize;
@@ -58,13 +53,8 @@ namespace MySql.Data.MySqlClient
             if (minSize > maxSize)
                 minSize = maxSize;
 			this.settings = settings;
-#if NET20
             inUsePool = new List<Driver>((int)maxSize);
             idlePool = new Queue<Driver>((int)maxSize);
-#else
-			inUsePool =new ArrayList((int)maxSize);
-			idlePool = new Queue((int)maxSize);
-#endif
 
 			// prepopulate the idle pool to minSize
             for (int i = 0; i < minSize; i++)

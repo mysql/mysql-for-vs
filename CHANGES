@@ -12,6 +12,9 @@ Version 6.0.4
   now load and builder under VS2005 or VS2008 loading the proper targets files as needed
 - fixed global Add New menu options with the Visual STudio integration
 - improved ad-hoc registration utility so that it handles VS 2005 and VS 2008 properly
+- added SunConnect registration
+- fixed sql that is generated for commands in data set (bug #44512)
+- unsigned values are now handled.  Please read the release notes!
 
 Version 6.0.3 - 4/22/09
 - fixed broken connection prompting
@@ -61,6 +64,9 @@ Version 5.2.7
   packet is fully read (bug #43678)
 - fixed ReservedWords schema collection to not incorrectly include blank words and to use the
   right column name
+- fixed display of trigger names  
+- restructured the connection open error handling so that socket exceptions come through 
+  as the inner exception (bug #45021)  
   
 Version 5.2.6
 - cleaned up how stored procedure execution operated when the user does or does not have execute privs

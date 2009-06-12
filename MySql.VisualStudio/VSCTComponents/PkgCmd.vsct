@@ -189,7 +189,7 @@
           <ButtonText>Alter Trigger</ButtonText>
         </Strings>
       </Button>
-    </Buttons>
+   </Buttons>
   </Commands>
 
   <CommandPlacements>
@@ -232,8 +232,9 @@
       <IDSymbol name="cmdidAlterView" value="0x111" />
       <IDSymbol name="cmdidAlterRoutine" value="0x121" />
       <IDSymbol name="cmdidAlterTrigger" value="0x141" />
+      <IDSymbol name="cmdidDelete" value="0x160"/>
     </GuidSymbol>
-    <GuidSymbol name="guidVSStd97" value="{5efc7975-14bc-11cf-9b2b-00aa00573819}" />
+    <GuidSymbol name="guidVSStd97" value="{5efc7975-14bc-11cf-9b2b-00aa00573819}"/>
     <GuidSymbol name="guidSHLMainMenu" value="{d309f791-903f-11d0-9efc-00a0c911004f}">
       <IDSymbol name="IDM_VS_TOOL_PROJWIN" value="0x0003" />
     </GuidSymbol>
@@ -253,6 +254,13 @@
     </GuidSymbol>
     <GuidSymbol name="WhoKnows" value="{501822e1-b5af-11d0-b4dc-00a0c91506ef}">
       <IDSymbol name="WhoKnowsId" value="0x3528"/>
+    </GuidSymbol>
+    <GuidSymbol name="guidImages" value="{db91e508-7dbc-49d4-a0b3-5e4920e43655}" >
+      <IDSymbol name="bmpPic1" value="1" />
+      <IDSymbol name="bmpPic2" value="2" />
+      <IDSymbol name="bmpPicSearch" value="3" />
+      <IDSymbol name="bmpPicX" value="4" />
+      <IDSymbol name="bmpPicArrows" value="5" />
     </GuidSymbol>
   </Symbols>
 

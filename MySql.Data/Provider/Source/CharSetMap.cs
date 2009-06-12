@@ -22,10 +22,8 @@ using System;
 using System.Collections;
 using System.Text;
 using MySql.Data.Common;
-#if NET20
 using System.Collections.Generic;
 using System.Data;
-#endif
 
 namespace MySql.Data.MySqlClient
 {
@@ -34,14 +32,10 @@ namespace MySql.Data.MySqlClient
     /// </summary>
     internal class CharSetMap
     {
-#if NET20
         private static Dictionary<string, string> defaultCollations;
         private static Dictionary<string, int> maxLengths;
         private static Dictionary<string, CharacterSet> mapping;
         private static object lockObject;
-#else
-        private static Hashtable mapping;
-#endif
 
         // we use a static constructor here since we only want to init
         // the mapping once
@@ -88,11 +82,7 @@ namespace MySql.Data.MySqlClient
 
         private static void LoadCharsetMap()
         {
-#if NET20
 			mapping = new Dictionary<string, CharacterSet>();
-#else
-            mapping = new Hashtable();
-#endif
 
             mapping.Add("latin1", new CharacterSet("latin1", 1));
             mapping.Add("big5", new CharacterSet("big5", 2));

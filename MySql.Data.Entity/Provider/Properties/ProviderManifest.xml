@@ -11,12 +11,26 @@ PROCESS
   <Types>
     <Type Name ="guid" PrimitiveTypeKind ="Guid"/>
     <Type Name="bool" PrimitiveTypeKind="Boolean"/>
-    <Type Name="tinyint" PrimitiveTypeKind="Byte"/>
+    <!-- signed types -->
+    <Type Name="tinyint" PrimitiveTypeKind="SByte"/>
     <Type Name="smallint" PrimitiveTypeKind="Int16"/>
     <Type Name="mediumint" PrimitiveTypeKind="Int32"/>
-    <Type Name="year" PrimitiveTypeKind="Int16"/>
     <Type Name="int" PrimitiveTypeKind ="Int32"/>
     <Type Name="bigint" PrimitiveTypeKind="Int64"/>
+    <!-- unsigned types are mapped to signed value big enough to hold it 
+         since EF doesn't support unsigned types directly -->
+    <Type Name="utinyint" PrimitiveTypeKind="Byte"/>
+    <Type Name="usmallint" PrimitiveTypeKind="Int32"/>
+    <Type Name="umediumint" PrimitiveTypeKind="Int32"/>
+    <Type Name="uint" PrimitiveTypeKind ="Int64"/>
+    <Type Name="ubigint" PrimitiveTypeKind="Decimal">
+      <FacetDescriptions>
+        <Precision Minimum="20" Maximum="20" DefaultValue="20" Constant="true" />
+        <Scale Minimum="0" Maximum="0" DefaultValue="0" Constant="true" />
+      </FacetDescriptions>
+    </Type>
+    
+    <Type Name="year" PrimitiveTypeKind="Int16"/>
     <Type Name="float" PrimitiveTypeKind="Single"/>
     <Type Name="double" PrimitiveTypeKind="Double"/>
     <Type Name="decimal" PrimitiveTypeKind="Decimal">

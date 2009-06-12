@@ -838,7 +838,10 @@ namespace MySql.Data.MySqlClient.Tests
 
             Guid g = new Guid("32A48AC5-285A-46c6-A0D4-158E6E39729C");
             MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (1, ?guid)", conn);
-            cmd.Parameters.AddWithValue("?guid", g);
+            MySqlParameter p = new MySqlParameter();
+            p.ParameterName = "guid";
+            p.Value = Guid.NewGuid();
+            cmd.Parameters.Add(p);
             cmd.ExecuteNonQuery();
 
             cmd.CommandText = "SELECT * FROM Test";

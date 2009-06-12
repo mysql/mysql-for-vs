@@ -29,85 +29,6 @@ using System.Data.Common;
 
 namespace MySql.Data.MySqlClient.Tests
 {
-    [TestFixture]
-    public class StoredProcedureAccess : StoredProcedure
-    {
-        public override void Setup()
-        {
-            base.Setup();
-            SetAccountPerms(true);
-        }
-
-        protected override string GetConnectionInfo()
-        {
-            string info = base.GetConnectionInfo();
-            info = info.Replace("use procedure bodies=false", "");
-            return info;
-        }
-
-        /// <summary>
-        /// Bug #40139	ExecuteNonQuery hangs
-        /// </summary>
-        [Test]
-        public void CallingStoredProcWithOnlyExecPrivs()
-        {
-            if (Version < new Version(5, 0)) return;
-            
-            execSQL("CREATE PROCEDURE spTest() BEGIN SELECT 1; END");
-            execSQL("CREATE PROCEDURE spTest2() BEGIN SELECT 1; END");
-            suExecSQL("CREATE USER abc IDENTIFIED BY 'abc'");
-            try
-            {
-                suExecSQL(String.Format("GRANT SELECT ON `{0}`.* TO 'abc'@'%'", database0));
-                suExecSQL(String.Format("GRANT EXECUTE ON PROCEDURE `{0}`.spTest TO abc", database0));
-
-                string connStr = GetConnectionStringEx("abc", "abc", true);
-                using (MySqlConnection c = new MySqlConnection(connStr))
-                {
-                    c.Open();
-                    MySqlCommand cmd = new MySqlCommand("spTest", c);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    try
-                    {
-                        object o = cmd.ExecuteScalar();
-                        Assert.Fail("This should fail");
-                    }
-                    catch (InvalidOperationException)
-                    {
-                    }
-                    catch (MySqlException)
-                    {
-                    }
-                    catch (Exception)
-                    {
-                        Assert.Fail("A more specific exception should have been thrown");
-                    }
-
-                    try 
-                    {
-                        cmd.CommandText = "spTest2";
-                        cmd.ExecuteScalar();
-                    }
-                    catch (InvalidOperationException)
-                    {
-                    }
-                    catch (MySqlException ex)
-                    {
-                        string s = ex.Message;
-                    }
-                    catch (Exception)
-                    {
-                        Assert.Fail("This should have thrown a more specific exception");
-                    }
-                }
-            }
-            finally
-            {
-                suExecSQL("DROP USER abc");
-            }
-        }
-    }
-
 	/// <summary>
 	/// Summary description for StoredProcedure.
 	/// </summary>
@@ -576,101 +497,6 @@ namespace MySql.Data.MySqlClient.Tests
                     Assert.IsTrue(val is Int32, "Checking type");
                 }
         */
-        /// <summary>
-        /// Bug #13632  	the MySQLCommandBuilder.deriveparameters has not been updated for MySQL 5
-        /// Bug #15077  	Error MySqlCommandBuilder.DeriveParameters for sp without parameters.
-        /// Bug #19515  	DiscoverParameters fails on numeric datatype
-        /// </summary>
-        [Test]
-        public void DeriveParameters()
-        {
-            if (Version < new Version(5, 0)) return;
-
-            execSQL("CREATE TABLE test2 (c CHAR(20))");
-            execSQL("INSERT INTO test2 values ( 'xxxx')");
-            MySqlCommand cmd2 = new MySqlCommand("SELECT * FROM test2", conn);
-            using (MySqlDataReader reader = cmd2.ExecuteReader())
-            {
-            }
-
-            execSQL("CREATE PROCEDURE spTest(IN \r\nvalin DECIMAL(10,2), " +
-                "\nIN val2 INT, INOUT val3 FLOAT, OUT val4 DOUBLE, INOUT val5 BIT, " +
-                "val6 VARCHAR(155), val7 SET('a','b'), val8 CHAR, val9 NUMERIC(10,2)) " +
-                     "BEGIN SELECT 1; END");
-
-            MySqlCommand cmd = new MySqlCommand("spTest", conn);
-            cmd.CommandType = CommandType.StoredProcedure;
-            MySqlCommandBuilder.DeriveParameters(cmd);
-
-            Assert.AreEqual(9, cmd.Parameters.Count);
-            Assert.AreEqual("@valin", cmd.Parameters[0].ParameterName);
-            Assert.AreEqual(ParameterDirection.Input, cmd.Parameters[0].Direction);
-            Assert.AreEqual(MySqlDbType.NewDecimal, cmd.Parameters[0].MySqlDbType);
-
-            Assert.AreEqual("@val2", cmd.Parameters[1].ParameterName);
-            Assert.AreEqual(ParameterDirection.Input, cmd.Parameters[1].Direction);
-            Assert.AreEqual(MySqlDbType.Int32, cmd.Parameters[1].MySqlDbType);
-
-            Assert.AreEqual("@val3", cmd.Parameters[2].ParameterName);
-            Assert.AreEqual(ParameterDirection.InputOutput, cmd.Parameters[2].Direction);
-            Assert.AreEqual(MySqlDbType.Float, cmd.Parameters[2].MySqlDbType);
-
-            Assert.AreEqual("@val4", cmd.Parameters[3].ParameterName);
-            Assert.AreEqual(ParameterDirection.Output, cmd.Parameters[3].Direction);
-            Assert.AreEqual(MySqlDbType.Double, cmd.Parameters[3].MySqlDbType);
-
-            Assert.AreEqual("@val5", cmd.Parameters[4].ParameterName);
-            Assert.AreEqual(ParameterDirection.InputOutput, cmd.Parameters[4].Direction);
-            Assert.AreEqual(MySqlDbType.Bit, cmd.Parameters[4].MySqlDbType);
-
-            Assert.AreEqual("@val6", cmd.Parameters[5].ParameterName);
-            Assert.AreEqual(ParameterDirection.Input, cmd.Parameters[5].Direction);
-            Assert.AreEqual(MySqlDbType.VarChar, cmd.Parameters[5].MySqlDbType);
-
-            Assert.AreEqual("@val7", cmd.Parameters[6].ParameterName);
-            Assert.AreEqual(ParameterDirection.Input, cmd.Parameters[6].Direction);
-            Assert.AreEqual(MySqlDbType.Set, cmd.Parameters[6].MySqlDbType);
-
-            Assert.AreEqual("@val8", cmd.Parameters[7].ParameterName);
-            Assert.AreEqual(ParameterDirection.Input, cmd.Parameters[7].Direction);
-            Assert.AreEqual(MySqlDbType.String, cmd.Parameters[7].MySqlDbType);
-
-            Assert.AreEqual("@val9", cmd.Parameters[8].ParameterName);
-            Assert.AreEqual(ParameterDirection.Input, cmd.Parameters[8].Direction);
-            Assert.AreEqual(MySqlDbType.NewDecimal, cmd.Parameters[8].MySqlDbType);
-
-            execSQL("DROP PROCEDURE spTest");
-            execSQL("CREATE PROCEDURE spTest() BEGIN END");
-            cmd.CommandText = "spTest";
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.Clear();
-            MySqlCommandBuilder.DeriveParameters(cmd);
-            Assert.AreEqual(0, cmd.Parameters.Count);
-        }
-
-        /// <summary>
-        /// Bug #13632  	the MySQLCommandBuilder.deriveparameters has not been updated for MySQL 5
-        /// </summary>
-        [Test]
-        public void DeriveParametersForFunction()
-        {
-            if (Version < new Version(5, 0)) return;
-
-            execSQL("CREATE FUNCTION fnTest(v1 DATETIME) RETURNS INT " +
-                "  LANGUAGE SQL DETERMINISTIC BEGIN RETURN 1; END");
-
-            MySqlCommand cmd = new MySqlCommand("fnTest", conn);
-            cmd.CommandType = CommandType.StoredProcedure;
-            MySqlCommandBuilder.DeriveParameters(cmd);
-
-            Assert.AreEqual(2, cmd.Parameters.Count);
-            Assert.AreEqual("@v1", cmd.Parameters[1].ParameterName);
-            Assert.AreEqual(ParameterDirection.Input, cmd.Parameters[1].Direction);
-            Assert.AreEqual(MySqlDbType.DateTime, cmd.Parameters[1].MySqlDbType);
-
-            Assert.AreEqual(ParameterDirection.ReturnValue, cmd.Parameters[0].Direction);
-            Assert.AreEqual(MySqlDbType.Int32, cmd.Parameters[0].MySqlDbType);
-        }
 
         /// <summary>
         /// Bug #11386  	Numeric parameters with Precision and Scale not taken into account by Connector
@@ -1015,21 +841,6 @@ namespace MySql.Data.MySqlClient.Tests
                 reader.Read();
                 Assert.AreEqual("P", reader.GetString(0));
             }
-        }
-
-        [Test]
-        public void CheckNameOfReturnParameter()
-        {
-            if (Version < new Version(5, 0)) return;
-
-            execSQL("CREATE FUNCTION fnTest() RETURNS CHAR(50)" +
-                " LANGUAGE SQL DETERMINISTIC BEGIN  RETURN \"Test\"; END");
-
-            MySqlCommand cmd = new MySqlCommand("fnTest", conn);
-            cmd.CommandType = CommandType.StoredProcedure;
-            MySqlCommandBuilder.DeriveParameters(cmd);
-            Assert.AreEqual(1, cmd.Parameters.Count);
-            Assert.AreEqual("@RETURN_VALUE", cmd.Parameters[0].ParameterName);
         }
 
         /// <summary>
@@ -1403,7 +1214,7 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void SPWithSpaceInParameterType()
         {
-            if (version < new Version(5, 0)) return;
+            if (Version < new Version(5, 0)) return;
 
             execSQL("CREATE PROCEDURE spTest(myparam decimal  (8,2)) BEGIN SELECT 1; END");
 
@@ -1424,6 +1235,8 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void ParametersInReverseOrder()
         {
+            if (Version.Major != 5) return;
+
             execSQL(@"CREATE PROCEDURE spTest(IN p_1 VARCHAR(5), IN p_2 VARCHAR(5))
                         BEGIN SELECT p_1 AS P1, p_2 AS P2; END");
             MySqlCommand cmd = new MySqlCommand("spTest", conn);
