@@ -254,12 +254,21 @@ namespace MySql.Data.MySqlClient
                                 version.isAtLeast(4, 1, 0) ? 4 : 2);
 
 #if !CF
-            if (connectionString.UseSSL && (serverCaps & ClientFlags.SSL) != 0)
+            if ((serverCaps & ClientFlags.SSL) ==0)
+            {
+                if ((connectionString.SslMode != MySqlSslMode.None)
+                && (connectionString.SslMode != MySqlSslMode.Prefered))
+                {
+                    // Client requires SSL connections.
+                    string message = String.Format(Resources.NoServerSSLSupport,
+                        Settings.Server);
+                    throw new MySqlException(message);
+                }
+            }
+            else if (connectionString.SslMode != MySqlSslMode.None)
             {
                 stream.SendPacket(packet);
-
                 StartSSL();
-
                 packet.Clear();
                 packet.WriteInteger((int) connectionFlags,
                                     version.isAtLeast(4, 1, 0) ? 4 : 2);
@@ -297,39 +306,40 @@ namespace MySql.Data.MySqlClient
 
         private void StartSSL()
         {
-            RemoteCertificateValidationCallback sslValidateCallback;
-
-            sslValidateCallback = new RemoteCertificateValidationCallback(NoServerCheckValidation);
+            RemoteCertificateValidationCallback sslValidateCallback =
+                new RemoteCertificateValidationCallback(ServerCheckValidation);
             SslStream ss = new SslStream(baseStream, true, sslValidateCallback, null);
-            try
-            {
-                X509CertificateCollection certs = new X509CertificateCollection();
-                ss.AuthenticateAsClient(String.Empty, certs, SslProtocols.Default, false);
-                baseStream = ss;
-                stream = new MySqlStream(ss, encoding, false);
-                stream.SequenceByte = 2;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            X509CertificateCollection certs = new X509CertificateCollection();
+            ss.AuthenticateAsClient(Settings.Server, certs, SslProtocols.Default, false);
+            baseStream = ss;
+            stream = new MySqlStream(ss, encoding, false);
+            stream.SequenceByte = 2;
+
         }
 
-/*        private static bool ServerCheckValidation(object sender, X509Certificate certificate,
+        private bool ServerCheckValidation(object sender, X509Certificate certificate,
                                                   X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
             if (sslPolicyErrors == SslPolicyErrors.None)
                 return true;
 
-            // Do not allow this client to communicate with unauthenticated servers.
+            if (Settings.SslMode == MySqlSslMode.Prefered ||
+                Settings.SslMode == MySqlSslMode.Required)
+            {
+                //Tolerate all certificate errors.
+                return true;
+            }
+
+            if (Settings.SslMode == MySqlSslMode.VerifyCA && 
+                sslPolicyErrors == SslPolicyErrors.RemoteCertificateNameMismatch)
+            {
+                // Tolerate name mismatch in certificate, if full validation is not requested.
+                return true;
+            }
+
             return false;
         }
-        */
-        private static bool NoServerCheckValidation(object sender, X509Certificate certificate,
-                                                    X509Chain chain, SslPolicyErrors sslPolicyErrors)
-        {
-            return true;
-        }
+
 
         #endregion
 
@@ -393,7 +403,7 @@ namespace MySql.Data.MySqlClient
                 flags |= ClientFlags.SECURE_CONNECTION;
 
             // if the server is capable of SSL and the user is requesting SSL
-            if ((serverCaps & ClientFlags.SSL) != 0 && connectionString.UseSSL)
+            if ((serverCaps & ClientFlags.SSL) != 0 && connectionString.SslMode != MySqlSslMode.None)
                 flags |= ClientFlags.SSL;
 
             connectionFlags = flags;
