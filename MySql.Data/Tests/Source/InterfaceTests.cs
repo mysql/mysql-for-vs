@@ -26,7 +26,7 @@ using System.Data.Common;
 
 namespace MySql.Data.MySqlClient.Tests
 {
-	[NUnit.Framework.TestFixture]
+	[TestFixture]
 	public class InterfaceTests : BaseTest
 	{
 #if !CF
@@ -42,7 +42,7 @@ namespace MySql.Data.MySqlClient.Tests
 
             DbCommand cmd = f.CreateCommand();
             cmd.Connection = c;
-            cmd.CommandText = "SHOW TABLES FROM test";
+            cmd.CommandText = "SELECT 1";
             cmd.CommandType = CommandType.Text;
             using (DbDataReader reader = cmd.ExecuteReader())
             {

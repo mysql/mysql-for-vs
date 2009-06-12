@@ -26,7 +26,7 @@
     </ApiFilter>
     <ProjectSummary>
     </ProjectSummary>
-    <MissingTags>Summary, Parameter, Returns, TypeParameter</MissingTags>
+    <MissingTags>None</MissingTags>
     <VisibleItems>InheritedMembers, InheritedFrameworkMembers, Protected, SealedProtected</VisibleItems>
     <HtmlHelp1xCompilerPath>..\..\..\..\Program Files\HTML Help Workshop\</HtmlHelp1xCompilerPath>
     <HtmlHelp2xCompilerPath>..\..\..\..\Program Files\Common Files\Microsoft Shared\Help 2.0 Compiler\</HtmlHelp2xCompilerPath>

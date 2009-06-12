@@ -67,12 +67,6 @@
                           guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
                           cmdid="256"
                           handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
-
-
-<!--          <CommandBinding name="New" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="13600"  handler="Microsoft.VisualStudio.DataTools.DBPackage.VDT_CommandHandler_TableTools">
-            <Parameter value="New"/>
-            <Parameter value="Table"/>
-          </CommandBinding>-->
           <CommandBinding name="AddNewTable" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
                           cmdid="500" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
             <Parameter value="HighLevel"/>
@@ -99,7 +93,8 @@
             <SelectionNode nid="Table">
               <Icon name="Table"/>
               <Children>
-                <Selection type="Column" restrictions="null,{Table.Schema},{Table.Name}" hideWhen="False AND False">
+                <Selection type="Column" restrictions="null,{Table.Schema},{Table.Name}" 
+                           hideWhen="False AND False">
                   <SelectionNode>
                     <Icon name="Column"/>
                   </SelectionNode>
@@ -441,7 +436,7 @@
           <Parameter value="Table"/>
         </CommandBinding>
         <CommandBinding name="CreateTrigger" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="320" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
-        <CommandBinding name="Browse_Data" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="12384"
+        <CommandBinding name="Browse_Data" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="12384" 
                         handler="Microsoft.VisualStudio.DataTools.DBPackage.VDT_OLEDB_CommandHandler_TableTools">
           <Parameter value="Open"/>
         </CommandBinding>
@@ -542,13 +537,13 @@
           <Parameter value="View"/>
         </CommandBinding>
 
-        <CommandBinding name="BrowseOrEditData" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="352" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
         <CommandBinding name="Browse_Data" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="12384" 
                         handler="Microsoft.VisualStudio.DataTools.DBPackage.VDT_OLEDB_CommandHandler_TableTools">
           <Parameter value="Open"/>
         </CommandBinding>
         <!-- global data menus -->
-        <CommandBinding name="NewQuery" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="13608" handler="884DD964-5327-461f-9F06-6484DD540F8F">
+        <CommandBinding name="NewQuery" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="13608" 
+                        handler="884DD964-5327-461f-9F06-6484DD540F8F">
           <Parameter value="NewQuery"/>
           <Parameter value="Query"/>
         </CommandBinding>
@@ -1302,10 +1297,6 @@
       </Properties>
       <CommandBindings defaultCommand="DeleteUDF">
         <CommandBinding name="DeleteUDF" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="337" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
-
-        <!--        <CommandBinding name="DeleteUDF" guid="5efc7975-14bc-11cf-9b2b-00aa00573819" cmdid="337" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
-          <Parameter value="UDF"/>
-        </CommandBinding>-->
         <!-- global data menus -->
         <CommandBinding name="AddNewTable" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
                         cmdid="500" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">

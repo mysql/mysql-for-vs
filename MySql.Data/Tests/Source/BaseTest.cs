@@ -122,7 +122,7 @@ namespace MySql.Data.MySqlClient.Tests
             {
                 if (version == null)
                 {
-                    string versionString = conn.ServerVersion;
+                    string versionString = rootConn.ServerVersion;
                     int i = 0;
                     while (i < versionString.Length && 
                         (Char.IsDigit(versionString[i]) || versionString[i] == '.'))

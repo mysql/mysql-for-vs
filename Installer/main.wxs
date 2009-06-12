@@ -97,6 +97,13 @@
 
     <CustomAction Id="RegisterHelp" ExeCommand='-r -q CmdFile="[#H2Reg.ini]"' BinaryKey="H2Reg" Execute="deferred" Return="check" Impersonate="no"/>
     <CustomAction Id="UnRegisterHelp" ExeCommand='-u -q CmdFile="[#H2Reg.ini]"' BinaryKey="H2Reg" Execute="deferred" Return="check" Impersonate="no"/>
+
+    <!-- 
+    The product urn is specific to each version 
+    The registration package should be the name of the MSI
+    -->
+    <Property Id="ProductURN">MSQZN-600-ZZZZ</Property>
+    <Property Id="RegistrationPackage">mysql-connector-net-$(var.Version)$(var.PackageSuffix).zip</Property>
   </Product>
 </Wix>
 

@@ -1,6 +1,5 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <UsingTask AssemblyFile="Binary\MyTasks.dll" TaskName="GetVersion"/>
-
+  <UsingTask AssemblyFile="Binary\MyTasks.dll" TaskName="GetVersion" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <ProductVersion>3.0</ProductVersion>
@@ -8,7 +7,6 @@
     <SchemaVersion>2.0</SchemaVersion>
     <OutputName>MySql.Data</OutputName>
     <OutputType>Package</OutputType>
-    <WixToolPath>C:\Program Files (x86)\Windows Installer XML v3\bin\</WixToolPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'GPL' ">
     <IntermediateOutputPath>obj\GPL\</IntermediateOutputPath>
@@ -99,11 +97,10 @@
     </WixVariables>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'GPL|x86' ">
-    <DefineConstants>IsGPL=1</DefineConstants>
-    <WixVariables></WixVariables>
+    <DefineConstants>IsGPL=1;PackageSuffix=</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Commercial|x86' ">
-    <DefineConstants>IsGPL=0</DefineConstants>
+    <DefineConstants>IsGPL=0;PackageSuffix=-com</DefineConstants>
     <WixVariables>
     </WixVariables>
   </PropertyGroup>
@@ -115,6 +112,7 @@
     <Compile Include="ui.wxs" />
     <Compile Include="visualstudio.wxs" />
     <Compile Include="webproviders.wxs" />
+    <Compile Include="registration.wxs" />
   </ItemGroup>
   <Target Name="RetrieveIdentities">
     <GetVersion Assembly="..\MySql.Data\Provider\bin\release\mysql.data.dll" Format="{0}.{1}.{2}">
@@ -129,24 +127,31 @@
       <HintPath>$(WixExtDir)\WixUtilExtension.dll</HintPath>
     </WixExtension>
     <WixExtension Include="WixNetFxExtension">
-      <HintPath>C:\Program Files (x86)\Windows Installer XML v3\bin\WixNetFxExtension.dll</HintPath>
+      <HintPath>$(WixExtDir)\WixNetFxExtension.dll</HintPath>
     </WixExtension>
     <WixExtension Include="WixUIExtension">
-      <HintPath>C:\Program Files (x86)\Windows Installer XML v3\bin\WixUIExtension.dll</HintPath>
+      <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
     </WixExtension>
     <WixExtension Include="WixVSExtension">
-      <HintPath>C:\Program Files (x86)\Windows Installer XML v3\bin\WixVSExtension.dll</HintPath>
+      <HintPath>$(WixExtDir)\WixVSExtension.dll</HintPath>
     </WixExtension>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="registration\loginhdr.jpg" />
+    <Content Include="registration\mysql_ca.dll" />
+    <Content Include="registration\register.htm" />
+    <Content Include="registration\svctag.xml" />
+    <Content Include="registration\webpage.ico" />
     <Content Include="VS2005_Data.wxi" />
     <Content Include="VS2005_Registry.wxi" />
     <Content Include="VS2008_Data.wxi" />
     <Content Include="VS2008_Registry.wxi" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="registration\" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.0\Wix.targets" />
   <PropertyGroup>
     <BuildDependsOn>RetrieveIdentities;$(BuildDependsOn)</BuildDependsOn>
   </PropertyGroup>
-
 </Project>
