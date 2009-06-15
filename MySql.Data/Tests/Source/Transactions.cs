@@ -30,9 +30,6 @@ namespace MySql.Data.MySqlClient.Tests
     [TestFixture]
     public class Transactions : BaseTest
     {
-
-#if NET20
-
         void TransactionScopeInternal(bool commit)
         {
             createTable("CREATE TABLE Test (key2 VARCHAR(1), name VARCHAR(100), name2 VARCHAR(100))", "INNODB");
@@ -145,8 +142,6 @@ namespace MySql.Data.MySqlClient.Tests
             }
         }
 
-#endif
-
         /// <summary>
         /// Bug #27289 Transaction is not rolledback when connection close 
         /// </summary>
@@ -171,8 +166,6 @@ namespace MySql.Data.MySqlClient.Tests
             c2.Close();
             Assert.AreEqual(0, count);
         }
-
-#if NET20
 
         /// <summary>
         /// Bug #22042 mysql-connector-net-5.0.0-alpha BeginTransaction 
@@ -414,7 +407,5 @@ namespace MySql.Data.MySqlClient.Tests
             ReusingSameConnection(false, false);
       //      Assert.AreEqual(processes + 1, CountProcesses());
         }
-#endif
-
     }
 }
