@@ -15,6 +15,8 @@ Version 5.2.7
 - fixed display of trigger names  
 - restructured the connection open error handling so that socket exceptions come through 
   as the inner exception (bug #45021)  
+- added workaround for an apparent problem with WeakReferences and threads in the mono runtime
+  (bug #45463)
   
 Version 5.2.6
 - cleaned up how stored procedure execution operated when the user does or does not have execute privs
