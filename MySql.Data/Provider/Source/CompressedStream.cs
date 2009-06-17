@@ -22,6 +22,7 @@ using System;
 using System.IO;
 using zlib;
 using MySql.Data.MySqlClient.Properties;
+using MySql.Data.Common;
 
 namespace MySql.Data.MySqlClient
 {
@@ -131,8 +132,11 @@ namespace MySql.Data.MySqlClient
             if (inPos == maxInPos)
             {
                 zInStream = null;
-                inBufferRef.Target = inBuffer;
-                inBuffer = null;
+                if (!Platform.IsMono())
+                {
+                    inBufferRef = new WeakReference(inBuffer, false);
+                    inBuffer = null;
+                }
             }
 
             return countRead;
@@ -165,7 +169,9 @@ namespace MySql.Data.MySqlClient
 
         private void ReadNextPacket(int len)
         {
-            inBuffer = (byte[])inBufferRef.Target;
+            if (!Platform.IsMono())
+                inBuffer = inBufferRef.Target as byte[];
+
             if (inBuffer == null || inBuffer.Length < len)
                 inBuffer = new byte[len];
             ReadFully(inBuffer, len);
