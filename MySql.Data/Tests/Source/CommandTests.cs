@@ -385,6 +385,21 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.AreEqual(0, cmd.ExecuteNonQuery());
             }
         }
+
+        /// <summary>
+        /// Bug #45502 error if "Allow Batch=False" 
+        /// </summary>
+        [Test]
+        public void DontAllowBatching()
+        {
+            string connStr = GetConnectionString(true) + ";allow batch=false;character set=utf8";
+            using (MySqlConnection c = new MySqlConnection(connStr))
+            {
+                c.Open();
+                MySqlCommand cmd = new MySqlCommand("SELECT 1", c);
+                cmd.ExecuteScalar();
+            }
+        }
     }
 
 
