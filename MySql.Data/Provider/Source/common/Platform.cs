@@ -24,6 +24,9 @@ namespace MySql.Data.Common
 {
 	internal class Platform
 	{
+        private static bool inited;
+        private static bool isMono;
+
 		/// <summary>
 		/// By creating a private ctor, we keep the compiler from creating a default ctor
 		/// </summary>
@@ -43,5 +46,18 @@ namespace MySql.Data.Common
 			}
 				return false;
 		}
+
+        public static bool IsMono()
+        {
+            if (!inited)
+                Init();
+            return isMono;
+        }
+
+        private static void Init()
+        {
+            Type t = Type.GetType("Mono.Runtime");
+            isMono = t != null;
+        }
 	}
 }

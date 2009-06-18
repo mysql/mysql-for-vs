@@ -1053,10 +1053,10 @@ Would you like to create it?</value>
   <data name="DelayKeyWriteDesc" xml:space="preserve">
     <value>True if you want to delay key updates until the table is closed.  (MyISAM only)</value>
   </data>
-  <data name="100" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\PackageLoadKey.txt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
   <data name="AlterTriggerOnWrongTable" xml:space="preserve">
     <value>Cannot alter trigger '{0}' on '{1}' because this trigger does not belong to this object. Specify the correct trigger name or the correct target object name.</value>
+  </data>
+  <data name="100" xml:space="preserve">
+    <value>H1PZDDC3CDP8CDKAH1HRAPE2ZQZECRQER1PEIKDCEKD9CMKPDKJZMKPZZIRHEIE2EQZHH9JTJED0ZDPTQ2I8RHJMCQRIZ1MDM9Q9Z1MZE8M2JQHTI1MCA2M3ZDRTEZAR</value>
   </data>
 </root>
