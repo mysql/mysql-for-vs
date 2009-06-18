@@ -1,4 +1,4 @@
-// Copyright (c) 2004-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+// Copyright (C) 2004-2007 MySQL AB
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -39,12 +39,10 @@ namespace MySql.Data.MySqlClient
         private byte[] localByte;
         private byte[] inBuffer;
         private byte[] lengthBytes;
-//        private WeakReference inBufferRef;
-        private byte[] tmpBuffer;
-  //      private WeakReference tmpBufferRef;
+        private WeakReference inBufferRef;
         private int inPos;
         private int maxInPos;
-        //private ZInputStream zInStream;
+        private ZInputStream zInStream;
 
         public CompressedStream(Stream baseStream)
         {
@@ -52,8 +50,7 @@ namespace MySql.Data.MySqlClient
             localByte = new byte[1];
             lengthBytes = new byte[7];
 			cache = new MemoryStream();
-//            inBufferRef = new WeakReference(inBuffer, false);
-  //          tmpBufferRef = new WeakReference(tmpBuffer, false);
+            inBufferRef = new WeakReference(inBuffer, false);
         }
 
         #region Properties
@@ -124,24 +121,11 @@ namespace MySql.Data.MySqlClient
                 PrepareNextPacket();
 
             int countToRead = Math.Min(count, maxInPos - inPos);
-            int countRead = countToRead;
-            try
-            {
-                Buffer.BlockCopy(inBuffer, inPos, buffer, offset, countToRead);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("inPos = " + inPos);
-                Console.WriteLine("offset = " + offset);
-                Console.WriteLine("count = " + countToRead);
-                throw;
-            }
-
-            //int countRead;
-            //if (zInStream != null)
-            //    countRead = zInStream.read(buffer, offset, countToRead);
-            //else
-            //    countRead = baseStream.Read(buffer, offset, countToRead);
+            int countRead;
+            if (zInStream != null)
+                countRead = zInStream.read(buffer, offset, countToRead);
+            else
+                countRead = baseStream.Read(buffer, offset, countToRead);
             inPos += countRead;
 
             // release the weak reference
@@ -166,53 +150,21 @@ namespace MySql.Data.MySqlClient
             int unCompressedLength = lengthBytes[4] + (lengthBytes[5] << 8) +
                                      (lengthBytes[6] << 16);
 
-            bool compressed = unCompressedLength != 0;
             if (unCompressedLength == 0)
+            {
                 unCompressedLength = compressedLength;
-
-            //inBuffer = (byte[])inBufferRef.Target;
-            if (inBuffer == null || inBuffer.Length < unCompressedLength)
-                inBuffer = new byte[unCompressedLength];
-
-            if (compressed)
-                DecompressPacket(compressedLength, unCompressedLength);
+                zInStream = null;
+            }
             else
             {
-                ReadFully(inBuffer, compressedLength);
+                ReadNextPacket(compressedLength);
+                MemoryStream ms = new MemoryStream(inBuffer);
+                zInStream = new ZInputStream(ms);
+                zInStream.maxInput = compressedLength;
             }
-
-            //    ReadNextPacket(compressedLength);
-            //    MemoryStream ms = new MemoryStream(inBuffer);
-            //    zInStream = new ZInputStream(ms);
-            //    zInStream.maxInput = compressedLength;
-            //}
 
             inPos = 0;
             maxInPos = unCompressedLength;
-        }
-
-        private void DecompressPacket(int compressedLength, int uncompressedLength)
-        {
-            // read the compressed bytes into
-            //tmpBuffer = (byte[])tmpBufferRef.Target;
-            if (tmpBuffer == null || tmpBuffer.Length < compressedLength)
-                tmpBuffer = new byte[compressedLength];
-
-            byte[] buf = new byte[compressedLength];
-            ReadFully(buf, compressedLength);
-            MemoryStream ms = new MemoryStream(buf);
-            ms.Position = 0;
-            ZInputStream zs = new ZInputStream(ms);
-
-            int pos = 0;
-            int lengthToRead = uncompressedLength;
-            int read = zs.read(inBuffer, pos, lengthToRead);
-            //while (read > 0)
-            //{
-            //    pos += read;
-            //    lengthToRead -= read;
-            //    read = zs.read(inBuffer, pos, lengthToRead);
-            //}
         }
 
         private void ReadNextPacket(int len)
