@@ -263,7 +263,8 @@ namespace MySql.Data.MySqlClient
                 if ((clientCharSet != null && clientCharSet.ToString() != charSet) ||
                     (connCharSet != null && connCharSet.ToString() != charSet))
                 {
-                    cmd.CommandText = "SET NAMES " + charSet + ";" + cmd.CommandText;
+                    MySqlCommand setNamesCmd = new MySqlCommand("SET NAMES " + charSet, connection);
+                    setNamesCmd.ExecuteNonQuery();
                 }
                 cmd.ExecuteNonQuery();
             }

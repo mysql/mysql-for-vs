@@ -1,3 +1,6 @@
+Version 6.0.5
+- fixed bug where our internal driver was using a batched command even if the user had added
+  'allow batch=false' to their connection string (bug #45502)
 - Add "SSL Mode" option for connections that indicates whether to use SSL connections and how
   to validate server certificate. Deprecated use of "encrypt" in connection strings(bug#38700)
 Version 6.0.4
@@ -69,6 +72,8 @@ Version 5.2.7
 - fixed display of trigger names  
 - restructured the connection open error handling so that socket exceptions come through 
   as the inner exception (bug #45021)  
+- added workaround for an apparent problem with WeakReferences and threads in the mono runtime
+  (bug #45463)
   
 Version 5.2.6
 - cleaned up how stored procedure execution operated when the user does or does not have execute privs
