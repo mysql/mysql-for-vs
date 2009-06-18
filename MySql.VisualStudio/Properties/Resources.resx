@@ -1485,9 +1485,6 @@ No – return to editor and resolve this conflict manually.
   <data name="Error_EnumeratingAllColumns" xml:space="preserve">
     <value>Enumerating of columns for all tables are not supported by this MySQL server version!</value>
   </data>
-  <data name="100" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\PackageLoadKey.txt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
   <data name="101" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon1.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -1499,5 +1496,8 @@ No – return to editor and resolve this conflict manually.
   </data>
   <data name="MySqlClientNotRegistered" xml:space="preserve">
     <value>Connector/Net is not properly installed and configured.  MySQL Tools for Visual Studio will not function correctly.</value>
+  </data>
+  <data name="100" xml:space="preserve">
+    <value>H1PZDDC3CDP8CDKAH1HRAPE2ZQZECRQER1PEIKDCEKD9CMKPDKJZMKPZZIRHEIE2EQZHH9JTJED0ZDPTQ2I8RHJMCQRIZ1MDM9Q9Z1MZE8M2JQHTI1MCA2M3ZDRTEZAR</value>
   </data>
 </root>
