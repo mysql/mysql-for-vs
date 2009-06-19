@@ -22,10 +22,8 @@ using System;
 using System.Data;
 using System.IO;
 using NUnit.Framework;
-#if NET20
 using System.Data.Common;
 using System.Reflection;
-#endif
 
 namespace MySql.Data.MySqlClient.Tests
 {

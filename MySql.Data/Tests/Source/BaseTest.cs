@@ -67,17 +67,11 @@ namespace MySql.Data.MySqlClient.Tests
 			rootUser = "root";
 			rootPassword = "";
 
-#if NET20
 			host = ConfigurationManager.AppSettings["host"];
 			string strPort = ConfigurationManager.AppSettings["port"];
 			pipeName = ConfigurationManager.AppSettings["pipename"];
 			memoryName = ConfigurationManager.AppSettings["memory_name"];
-#else
-            host = ConfigurationSettings.AppSettings["host"];
-            string strPort = ConfigurationSettings.AppSettings["port"];
-            pipeName = ConfigurationSettings.AppSettings["pipename"];
-            memoryName = ConfigurationSettings.AppSettings["memory_name"];
-#endif
+
 			if (strPort != null)
 				port = Int32.Parse(strPort);
 			if (host == null)

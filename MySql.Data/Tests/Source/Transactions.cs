@@ -41,7 +41,6 @@ namespace MySql.Data.MySqlClient.Tests
             baseProcessCount = CountProcesses();
         }
 
-#if NET20
 
         void TransactionScopeInternal(bool commit)
         {
@@ -166,8 +165,6 @@ namespace MySql.Data.MySqlClient.Tests
             }
         }
 
-#endif
-
         /// <summary>
         /// Bug #27289 Transaction is not rolledback when connection close 
         /// </summary>
@@ -194,7 +191,6 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(0, count);
         }
 
-#if NET20
 
         /// <summary>
         /// Bug #22042 mysql-connector-net-5.0.0-alpha BeginTransaction 
@@ -456,7 +452,5 @@ namespace MySql.Data.MySqlClient.Tests
             ReusingSameConnection(false, false);
       //      Assert.AreEqual(processes + 1, CountProcesses());
         }
-#endif
-
     }
 }
