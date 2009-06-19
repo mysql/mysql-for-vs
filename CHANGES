@@ -17,6 +17,8 @@ Version 5.2.7
   as the inner exception (bug #45021)  
 - added workaround for an apparent problem with WeakReferences and threads in the mono runtime
   (bug #45463)
+- removed our homebrew implemenation of CompilerGeneratedAttribute as it was interfering with
+  the compiler in VS2005 (bug #42261)
   
 Version 5.2.6
 - cleaned up how stored procedure execution operated when the user does or does not have execute privs
