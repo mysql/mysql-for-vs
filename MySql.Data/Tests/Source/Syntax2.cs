@@ -90,6 +90,24 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(-1, cmd.LastInsertedId);
         }
 
+        [Test]
+        public void ParsingBugTest()
+        {
+            execSQL("DROP FUNCTION IF EXISTS `TestFunction`");
+            execSQL(@"CREATE FUNCTION `TestFunction`(A INTEGER (11), B INTEGER (11), C VARCHAR (20)) 
+			      RETURNS int(11)
+			      RETURN 1");
+
+            MySqlCommand command = new MySqlCommand("TestFunction", conn);
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "TestFunction";
+            command.Parameters.AddWithValue("?A", 1);
+            command.Parameters.AddWithValue("?B", 2);
+            command.Parameters.AddWithValue("?C", "test");
+            command.ExecuteNonQuery();
+        }
+
+
 /*        [Category("NotWorking")]
         [Test]
         public void TestCase()
