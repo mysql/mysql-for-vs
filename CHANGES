@@ -21,6 +21,7 @@ Version 5.2.7
   the compiler in VS2005 (bug #42261)
 - fix small bug in SchemaManager that would prevent the schema from being updated if the
   autogenerateschema option was given in anything but lower case  
+- applied performance improvement to MySqlHelper.EscapeString (thanks Franco!) (bug #45699) 
   
 Version 5.2.6
 - cleaned up how stored procedure execution operated when the user does or does not have execute privs

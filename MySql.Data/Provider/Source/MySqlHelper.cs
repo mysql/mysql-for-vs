@@ -20,6 +20,7 @@
 
 using System.Data;
 using MySql.Data.MySqlClient;
+using System.Text;
 
 namespace MySql.Data.MySqlClient
 {
@@ -369,14 +370,21 @@ namespace MySql.Data.MySqlClient
         /// <returns>The string with all quotes escaped.</returns>
 		public static string EscapeString(string value)
 		{
-			value = value.Replace("\\", "\\\\");
-			value = value.Replace("\'", "\\\'");
-			value = value.Replace("\"", "\\\"");
-			value = value.Replace("`", "\\`");
-			value = value.Replace("´", "\\´");
-			value = value.Replace("’", "\\’");
-			value = value.Replace("‘", "\\‘");
-			return value;
+            StringBuilder sb = new StringBuilder();
+            foreach (char c in value)
+            {
+                if (c == '\\' ||
+                    c == '\'' ||
+                    c == '\"' ||
+                    c == '`'  ||
+                    c == '´'  ||
+                    c == '’'  ||
+                    c == '‘')
+                    sb.Append("\\");
+                sb.Append(c);
+            }
+            return sb.ToString();
+
 		}
 
         #endregion
