@@ -348,4 +348,7 @@
   <data name="UnableToRetrieveParameters" xml:space="preserve">
     <value>Unable to retrieve stored routine parameters.  Either grant access to the routine or add the 'Use Procedure Bodies=false' option to your connection string.</value>
   </data>
+  <data name="DefaultEncodingNotFound" xml:space="preserve">
+    <value>The default connection encoding was not found. Please report this as a bug along with your connection string and system details.</value>
+  </data>
 </root>
