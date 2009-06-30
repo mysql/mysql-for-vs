@@ -19,6 +19,8 @@ Version 5.2.7
   (bug #45463)
 - removed our homebrew implemenation of CompilerGeneratedAttribute as it was interfering with
   the compiler in VS2005 (bug #42261)
+- fix small bug in SchemaManager that would prevent the schema from being updated if the
+  autogenerateschema option was given in anything but lower case  
   
 Version 5.2.6
 - cleaned up how stored procedure execution operated when the user does or does not have execute privs

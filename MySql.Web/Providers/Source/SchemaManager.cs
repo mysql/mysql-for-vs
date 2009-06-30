@@ -57,7 +57,7 @@ namespace MySql.Web.Common
                 int ver = GetSchemaVersion(connectionString);
                 if (ver == Version) return;
 
-                if (config["autogenerateschema"] == "true")
+                if (String.Compare(config["autogenerateschema"], "true", true) == 0)
                     UpgradeToCurrent(connectionString, ver);
                 else
                     throw new ProviderException(Resources.MissingOrWrongSchema);
