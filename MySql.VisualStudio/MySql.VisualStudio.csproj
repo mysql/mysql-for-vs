@@ -97,10 +97,12 @@
       <HintPath>c:\Program Files\Visual Studio 2005 SDK\2007.02\VisualStudioIntegration\Common\Assemblies\Microsoft.VisualStudio.TextManager.Interop.8.0.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -227,6 +229,29 @@
     </Compile>
     <Compile Include="VsPkg.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WebConfig\ConnectionStringEditorDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WebConfig\ConnectionStringEditorDlg.Designer.cs">
+      <DependentUpon>ConnectionStringEditorDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WebConfig\GenericConfig.cs" />
+    <Compile Include="WebConfig\MembershipConfig.cs" />
+    <Compile Include="WebConfig\MembershipOptionsDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WebConfig\MembershipOptionsDlg.Designer.cs">
+      <DependentUpon>MembershipOptionsDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WebConfig\ProfileConfig.cs" />
+    <Compile Include="WebConfig\RoleConfig.cs" />
+    <Compile Include="WebConfig\WebConfig.cs" />
+    <Compile Include="WebConfig\WebConfigDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WebConfig\WebConfigDlg.Designer.cs">
+      <DependentUpon>WebConfigDlg.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -271,8 +296,18 @@
       <DependentUpon>UDFEditor.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="WebConfig\ConnectionStringEditorDlg.resx">
+      <DependentUpon>ConnectionStringEditorDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WebConfig\MembershipOptionsDlg.resx">
+      <DependentUpon>MembershipOptionsDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WebConfig\WebConfigDlg.resx">
+      <DependentUpon>WebConfigDlg.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Resources\ArrowKey.bmp" />
     <None Include="Resources\Key.bmp" />
+    <None Include="Resources\bannrbmp.bmp" />
     <Content Include="Resources\Package.ico" />
     <Content Include="VSCTComponents\pkgcmd.h" />
     <None Include="Resources\PackageLoadKey.txt" />
