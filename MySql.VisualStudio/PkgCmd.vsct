@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable">
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
   <!--  This is the file that defines the actual layout and type of the commands.
         It is divided in different sections (e.g. command definition, command
         placement, ...), with each defining a specific set of properties.
@@ -13,10 +14,6 @@
         in C++ files. Using this ability of the compiler here, we include some files 
         defining some of the constants that we will use inside the file. -->
 
-  <!-- The following includes are commented out because we have defined all the value
-       at the bottom of this file.  We do this because we are using VSCT compilation 
-       even under VS2005.  The VS2005 SDK doesn't include these files and so they
-       would fail -->
   <!--This is the file that defines the IDs for all the commands exposed by VisualStudio. -->
   <!--<Extern href="stdidcmd.h"/>-->
 
@@ -24,7 +21,10 @@
   <!--<Extern href="vsshlids.h"/>-->
 
   <!--Definition of some VSCT specific constants. In this sample we use it for the IDs inside the guidOfficeIcon group. -->
-  <!--  <Extern href="msobtnid.h"/>-->
+  <!--<Extern href="msobtnid.h"/>-->
+
+
+
 
   <!--The Commands section is where we the commands, menus and menu groups are defined.
       This section uses a Guid to identify the package that provides the command defined inside it. -->
@@ -36,6 +36,7 @@
     called "command set" and is used to group different command inside a logically related  
     group; your package should define its own command set in order to avoid collisions  
     with command ids defined by other packages. -->
+
     <Menus>
       <Menu guid ="guidMySqlProviderCmdSet" id="menuGlobal" type="Menu" priority ="0x100">
         <Parent guid="guidVSData" id="IDG_DV_GLOBAL1" />
@@ -43,20 +44,30 @@
           <ButtonText>&amp;Add New</ButtonText>
         </Strings>
       </Menu>
-      <!-- we have to define two menus because they have a different guid:id parent -->
-      <Menu guid ="guidMySqlProviderCmdSet" id="menuGlobal2005" type="Menu" priority ="0x100">
-        <Parent guid="guidVSData2005" id="IDG_DV_GLOBAL1" />
-        <Strings>
-          <ButtonText>&amp;Add New</ButtonText>
-        </Strings>
-      </Menu>
     </Menus>
 
-    <Groups>
-      <!-- we only use one group however and put all our commands into this group -->
-      <Group guid="guidMySqlProviderCmdSet" id="groupGlobal" priority ="0x100"/>
-    </Groups>
 
+    <!-- In this section you can define new menu groups. A menu group is a container for 
+         other menus or buttons (commands); from a visual point of view you can see the 
+         group as the part of a menu contained between two lines. The parent of a group 
+         must be a menu. -->
+    <Groups>
+      <Group guid="guidMySqlProviderCmdSet" id="groupGlobal" priority ="0x100"/>
+      <Group guid="guidMySqlProviderCmdSet" id="groupConfig" priority="0x0600">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_TOOL_PROJWIN"/>
+      </Group>
+    </Groups>
+    
+    <!--Buttons section. -->
+    <!--This section defines the elements the user can interact with, like a menu command or a button 
+        or combo box in a toolbar. -->
+    <!--To define a menu group you have to specify its ID, the parent menu and its display priority. 
+          The command is visible and enabled by default. If you need to change the visibility, status, etc, you can use
+          the CommandFlag node.
+          You can add more than one CommandFlag node e.g.:
+              <CommandFlag>DefaultInvisible</CommandFlag>
+              <CommandFlag>DynamicVisibility</CommandFlag>
+          If you do not want an image next to your command, remove the Icon node or set it to <Icon guid="guidOfficeIcon" id="msotcidNoIcon" /> -->
     <Buttons>
       <!-- these are our global create commands -->
       <Button guid="guidMySqlProviderCmdSet" id="cmdidGlobalCreateTable" type="Button" priority ="0x100">
@@ -189,35 +200,53 @@
           <ButtonText>Alter Trigger</ButtonText>
         </Strings>
       </Button>
-   </Buttons>
+
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidConfig" priority="0x0100" type="Button">
+        <Parent guid="guidMySqlProviderCmdSet" id="groupConfig"/>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <!--<CommandFlag>DefaultInvisible</CommandFlag>-->
+        <Icon guid="guidOfficeIcon" id="msotcidGears" />
+        <Strings>
+          <CommandName>cmdidConfig</CommandName>
+          <ButtonText>MySQL Website Configuration</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
   </Commands>
+
 
   <CommandPlacements>
     <!-- we have to place our group under each of our two menus -->
     <CommandPlacement guid="guidMySqlProviderCmdSet" id="groupGlobal" priority="0x0100">
       <Parent guid="guidMySqlProviderCmdSet" id="menuGlobal" />
     </CommandPlacement>
-    <CommandPlacement guid="guidMySqlProviderCmdSet" id="groupGlobal" priority="0x0100">
+    <!--<CommandPlacement guid="guidMySqlProviderCmdSet" id="groupGlobal" priority="0x0100">
       <Parent guid="guidMySqlProviderCmdSet" id="menuGlobal2005" />
-    </CommandPlacement>
+    </CommandPlacement>-->
 
     <!-- no real idea what is going on here.  We need to place this guid:id parent under
          the IDG_DV_GLOBAL1 object to make it work -->
-    <CommandPlacement guid="WhoKnows" id="WhoKnowsId" priority="0x1001">
+    <!--<CommandPlacement guid="WhoKnows" id="WhoKnowsId" priority="0x1001">
       <Parent guid="guidVSData2005" id="IDG_DV_GLOBAL1" />
-    </CommandPlacement>
+    </CommandPlacement>-->
     <CommandPlacement guid="WhoKnows" id="WhoKnowsId" priority="0x1001">
       <Parent guid="guidVSData" id="IDG_DV_GLOBAL1" />
     </CommandPlacement>
   </CommandPlacements>
 
+
+
   <Symbols>
-    <GuidSymbol name="guidMySqlProviderPkg" value="{79a115c9-b133-4891-9e7b-242590dad272}" />
+    <!-- This is the package guid. -->
+    <GuidSymbol name="guidMySqlProviderPkg" value="{79A115C9-B133-4891-9E7B-242509DAD272}" />
+    
+    <!-- This is the guid used to group the menu commands together -->
     <GuidSymbol name="guidMySqlProviderCmdSet" value="{B87CB51F-8A01-4c5e-BF3E-5D0565D5397D}">
       <IDSymbol name="menuGlobal" value="0x1000"/>
       <IDSymbol name="menuGlobal2005" value="0x1001"/>
       <IDSymbol name="groupGlobal" value="0x1002"/>
       <IDSymbol name="groupGlobal2005" value="0x1003"/>
+      <IDSymbol name="groupConfig" value="0x1004"/>
       <IDSymbol name="cmdidGlobalCreateTable" value="500" />
       <IDSymbol name="cmdidGlobalCreateView" value="501" />
       <IDSymbol name="cmdidGlobalCreateProcedure" value="502" />
@@ -233,15 +262,29 @@
       <IDSymbol name="cmdidAlterRoutine" value="0x121" />
       <IDSymbol name="cmdidAlterTrigger" value="0x141" />
       <IDSymbol name="cmdidDelete" value="0x160"/>
+      <IDSymbol name="cmdidConfig" value="0x800"/>
+    </GuidSymbol>
+    <GuidSymbol name="guidSharedMenuGroup" value="{234A7FC1-CFE9-4335-9E82-061F86E402C1}">
+      <IDSymbol name="IDG_VS_PROJ_ADMIN"    value="0x014E"/>
+      <IDSymbol name="IDG_VS_PROJ_TOOLBAR4" value="0x01D6"/>
+      <IDSymbol name="IDG_VS_PROJ_TOOLBAR5" value="0x01D7"/>
     </GuidSymbol>
     <GuidSymbol name="guidVSStd97" value="{5efc7975-14bc-11cf-9b2b-00aa00573819}"/>
     <GuidSymbol name="guidSHLMainMenu" value="{d309f791-903f-11d0-9efc-00a0c911004f}">
-      <IDSymbol name="IDM_VS_TOOL_PROJWIN" value="0x0003" />
+      <IDSymbol name="IDM_VS_TOOL_PROJWIN"  value="0x0003" />
+      <IDSymbol name="IDG_VS_PROJ_WEB1"     value="0x0148"/>
+      <IDSymbol name="IDG_VS_PROJ_WEB2"     value="0x0149"/>
+      <IDSymbol name="IDG_VS_PROJ_TOOLBAR5" value="0x01D7"/>
+      <IDSymbol name="IDG_VS_PROJ_TOOLBAR1" value="0x014A"/>
+      <IDSymbol name="IDG_VS_PROJ_TOOLBAR2" value="0x014B"/>
+      <IDSymbol name="IDG_VS_PROJ_TOOLBAR3" value="0x01D5"/>
+      <IDSymbol name="IDM_VS_MENU_PROJECT"  value="0x0083"/>
     </GuidSymbol>
     <GuidSymbol name="guidOfficeIcon" value="{d309f794-903f-11d0-9efc-00a0c911004f}">
       <IDSymbol name="msotcidGraph" value="0x0011" />
       <IDSymbol name="msotcidNoIcon" value="0x02EA" />
       <IDSymbol name="msotcidZoom" value="0x0019" />
+      <IDSymbol name="msotcidGears" value="2144" />
     </GuidSymbol>
     <GuidSymbol name="guidVSData" value="{4614107f-217d-4bbf-9dfe-b9e165c65572}">
       <IDSymbol name="IDG_DV_GLOBAL1" value="0x4001"/>
@@ -255,14 +298,6 @@
     <GuidSymbol name="WhoKnows" value="{501822e1-b5af-11d0-b4dc-00a0c91506ef}">
       <IDSymbol name="WhoKnowsId" value="0x3528"/>
     </GuidSymbol>
-    <GuidSymbol name="guidImages" value="{db91e508-7dbc-49d4-a0b3-5e4920e43655}" >
-      <IDSymbol name="bmpPic1" value="1" />
-      <IDSymbol name="bmpPic2" value="2" />
-      <IDSymbol name="bmpPicSearch" value="3" />
-      <IDSymbol name="bmpPicX" value="4" />
-      <IDSymbol name="bmpPicArrows" value="5" />
-    </GuidSymbol>
   </Symbols>
 
 </CommandTable>
-

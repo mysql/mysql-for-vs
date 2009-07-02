@@ -1,20 +1,4 @@
-﻿// Copyright (c) 2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
-//
-// This file is part of MySQL Tools for Visual Studio.
-// MySQL Tools for Visual Studio is free software; you can redistribute it 
-// and/or modify it under the terms of the GNU Lesser General Public 
-// License version 2.1 as published by the Free Software Foundation
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU Lesser General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-// VsPkg.cs : Implementation of MySqlDataPackage
+﻿// VsPkg.cs : Implementation of VSPackage3
 //
 
 using System;
@@ -27,9 +11,10 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio;
-using System.Reflection;
 using MySql.Data.VisualStudio.Properties;
-using MySql.Data.VisualStudio.Editors;
+using System.Reflection;
+using EnvDTE;
+using Microsoft.VisualStudio.CommandBars;
 
 namespace MySql.Data.VisualStudio
 {
@@ -43,32 +28,30 @@ namespace MySql.Data.VisualStudio
     /// IVsPackage interface and uses the registration attributes defined in the framework to 
     /// register itself and its components with the shell.
     /// </summary>
-	[ComVisible(true)]
+    [ComVisible(true)]
     // This attribute tells the registration utility (regpkg.exe) that this class needs
     // to be registered as package.
     [PackageRegistration(UseManagedResourcesOnly = true)]
-    // A Visual Studio component can be registered under different registry roots; for instance
+    // A Visual Studio component can be registered under different regitry roots; for instance
     // when you debug your package you want to register it in the experimental hive. This
     // attribute specifies the registry root to use if no one is provided to regpkg.exe with
     // the /root switch.
-#if DEBUG
     [DefaultRegistryRoot("Software\\Microsoft\\VisualStudio\\9.0Exp")]
-#else
-    [DefaultRegistryRoot("Software\\Microsoft\\VisualStudio\\9.0")]
-#endif
     // This attribute is used to register the informations needed to show the this package
     // in the Help/About dialog of Visual Studio.
     [InstalledProductRegistration(true, null, null, null)]
+    [ProvideService(typeof(MySqlProviderObjectFactory), ServiceName = "MySQL Provider Object Factory")]
+    [ProvideService(typeof(MySqlLanguageService))]
+    [ProvideLanguageService(typeof(MySqlLanguageService), MySqlLanguageService.LanguageName, 101,
+        RequestStockColors = true)]
     // In order be loaded inside Visual Studio in a machine that has not the VS SDK installed, 
     // package needs to have a valid load key (it can be requested at 
     // http://msdn.microsoft.com/vstudio/extend/). This attributes tells the shell that this 
     // package has a load key embedded in its resources.
-	[ProvideService(typeof(MySqlProviderObjectFactory), ServiceName = "MySQL Provider Object Factory")]
-    [ProvideService(typeof(MySqlLanguageService))]
-    [ProvideLanguageService(typeof(MySqlLanguageService), MySqlLanguageService.LanguageName, 101,
-        RequestStockColors=true)]
-	[ProvideMenuResource(1000, 1)]
-	[ProvideLoadKey("Standard", "1.0", "MySQL Tools for Visual Studio", "MySQL AB c/o MySQL, Inc.", 100)]
+    [ProvideLoadKey("Standard", "1.0", "MySQL Tools for Visual Studio", "MySQL AB c/o MySQL, Inc.", 100)]
+    // This attribute is needed to let the shell know that this package exposes some menus.
+    [ProvideMenuResource(1000, 1)]
+    // This attribute registers a tool window exposed by this package.
     [Guid(GuidList.PackageGUIDString)]
     public sealed class MySqlDataProviderPackage : Package, IVsInstalledProduct
     {
@@ -102,12 +85,24 @@ namespace MySql.Data.VisualStudio
         {
             Trace.WriteLine (string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString()));
 
-			MySqlProviderObjectFactory factory = new MySqlProviderObjectFactory();
+            MySqlProviderObjectFactory factory = new MySqlProviderObjectFactory();
 
-			((IServiceContainer)this).AddService(
-				typeof(MySqlProviderObjectFactory), factory, true);
+            ((IServiceContainer)this).AddService(
+                typeof(MySqlProviderObjectFactory), factory, true);
 
-			base.Initialize();
+            base.Initialize();
+
+            // Add our command handlers for menu (commands must exist in the .vsct file)
+            OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
+            if (null != mcs)
+            {
+                // Create the command for the menu item.
+                CommandID menuCommandID = new CommandID(GuidList.guidMySqlDataPackageCmdSet,
+                    (int)PkgCmdIDList.cmdidConfig);
+                OleMenuCommand menuItem = new OleMenuCommand(MenuItemCallback, menuCommandID);
+                menuItem.BeforeQueryStatus += new EventHandler(menuItem_BeforeQueryStatus);
+                mcs.AddCommand(menuItem);
+            }
 
             languageService = new MySqlLanguageService();
             languageService.SetSite(this);
@@ -116,8 +111,31 @@ namespace MySql.Data.VisualStudio
             serviceContainer.AddService(typeof(MySqlLanguageService), languageService, true);
         }
 
+        void menuItem_BeforeQueryStatus(object sender, EventArgs e)
+        {
+            OleMenuCommand configButton = sender as OleMenuCommand;
+            configButton.Visible = false;
+
+            DTE dte = GetService(typeof(DTE)) as DTE;
+            Array a = (Array)dte.ActiveSolutionProjects;
+            if (a.Length != 1) return;
+
+            Project p = (Project)a.GetValue(0);
+            configButton.Visible = p.Kind == "{E24C65DC-7377-472b-9ABA-BC803B73C61A}";
+        }
+
         #endregion
 
+        /// <summary>
+        /// This function is the callback used to execute a command when the a menu item is clicked.
+        /// See the Initialize method to see how the menu item is associated to this function using
+        /// the OleMenuCommandService service and the MenuCommand class.
+        /// </summary>
+        private void MenuItemCallback(object sender, EventArgs e)
+        {
+            WebConfig.WebConfigDlg w = new WebConfig.WebConfigDlg();
+            w.ShowDialog();
+        }
 
         #region IVsInstalledProduct Members
 
@@ -147,9 +165,9 @@ namespace MySql.Data.VisualStudio
 
         int IVsInstalledProduct.ProductID(out string pbstrPID)
         {
-			string fullname = Assembly.GetExecutingAssembly().FullName;
-			string[] parts = fullname.Split(new char[] { '=' });
-			string[] versionParts = parts[1].Split(new char[] { '.' });
+            string fullname = Assembly.GetExecutingAssembly().FullName;
+            string[] parts = fullname.Split(new char[] { '=' });
+            string[] versionParts = parts[1].Split(new char[] { '.' });
 
             pbstrPID = String.Format("{0}.{1}.{2}", versionParts[0], versionParts[1], versionParts[2]);
             return VSConstants.S_OK;

@@ -22,6 +22,8 @@ namespace MySql.Data.VisualStudio
 {
     static class PkgCmdIDList
     {
+        public const uint cmdidConfig = 0x800;
+
         public const uint cmdCreateTable = 0x100;
         public const uint cmdAlterTable = 0x101;
 
@@ -38,6 +40,8 @@ namespace MySql.Data.VisualStudio
 
 		public const uint cmdCreateUDF = 0x150;
 		public const uint cmdDelete = 0x160;
+
+        //public const uint cmdidConfig = 0x170;
 
         public const uint cmdidGlobalCreateTable=500;
         public const uint cmdidGlobalCreateView=501;
