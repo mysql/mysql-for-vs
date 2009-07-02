@@ -28,9 +28,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("MySQL Tools for Visual Studio")]
 [assembly: AssemblyCopyright("Copyright © MySQL AB 2007-2008")]
 [assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]   
+[assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly : Guid("5860AC5F-9DE5-4e2b-9FDA-D2AC4B1D6FA5")]
+[assembly: Guid("5860AC5F-9DE5-4e2b-9FDA-D2AC4B1D6FA5")]
 [assembly: AssemblyKeyName("ConnectorNet")]

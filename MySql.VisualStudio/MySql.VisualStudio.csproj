@@ -309,18 +309,9 @@
     <None Include="Resources\Key.bmp" />
     <None Include="Resources\bannrbmp.bmp" />
     <Content Include="Resources\Package.ico" />
-    <Content Include="VSCTComponents\pkgcmd.h" />
-    <None Include="Resources\PackageLoadKey.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Properties\DataSources\Column.datasource" />
-    <None Include="Properties\DataSources\MySql.Data.VisualStudio.DbObjects.FKColumnPair.datasource" />
-    <None Include="Properties\DataSources\MySql.Data.VisualStudio.DbObjects.ForeignKey.datasource" />
-    <None Include="Properties\DataSources\MySql.Data.VisualStudio.DbObjects.IndexColumn.datasource" />
-    <None Include="Properties\DataSources\TableNode.datasource" />
-  </ItemGroup>
-  <ItemGroup>
-    <VSCTCompile Include="VSCTComponents\PkgCmd.vsct">
+    <VSCTCompile Include="PkgCmd.vsct">
       <ResourceName>1000</ResourceName>
     </VSCTCompile>
   </ItemGroup>
