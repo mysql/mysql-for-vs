@@ -351,4 +351,7 @@
   <data name="DefaultEncodingNotFound" xml:space="preserve">
     <value>The default connection encoding was not found. Please report this as a bug along with your connection string and system details.</value>
   </data>
+  <data name="GetHostEntryFailed" xml:space="preserve">
+    <value>Call to GetHostEntry failed after {0} while querying for hostname '{1}': SocketErrorCode={2}, ErrorCode={3}, NativeErrorCode={4}.</value>
+  </data>
 </root>

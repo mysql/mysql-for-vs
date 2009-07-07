@@ -24,6 +24,8 @@ Version 5.2.7
 - applied performance improvement to MySqlHelper.EscapeString (thanks Franco!) (bug #45699) 
 - we are now throwing an exception if the default connection encoding can't be created.
   This shouldn't happen but we saw one report that may have been this. (bug #45589)
+- integrated user supplied patch that provides some additional debugging into in the case
+  of a DNS error  
   
 Version 5.2.6
 - cleaned up how stored procedure execution operated when the user does or does not have execute privs
