@@ -304,6 +304,15 @@ namespace MySql.Data.MySqlClient.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Call to GetHostEntry failed after {0} while querying for hostname &apos;{1}&apos;: SocketErrorCode={2}, ErrorCode={3}, NativeErrorCode={4}..
+        /// </summary>
+        public static string GetHostEntryFailed {
+            get {
+                return ResourceManager.GetString("GetHostEntryFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Retrieving procedure metadata for {0} from server..
         /// </summary>
         public static string HardProcQuery {
