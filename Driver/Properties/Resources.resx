@@ -330,4 +330,7 @@
   <data name="DistributedTxnNotSupported" xml:space="preserve">
     <value>MySQL Connector/Net does not currently support distributed transactions.</value>
   </data>
+  <data name="TimeoutExpiredNullObject" xml:space="preserve">
+    <value>Timeout expired but command object was null.  This should not happen.</value>
+  </data>
 </root>

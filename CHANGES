@@ -22,6 +22,8 @@ Version 5.1.8
     packet is fully read (bug #43678)
   - fixed ReservedWords schema collection to not incorrectly include blank words and to use the
     right column name
+  - added null check in TimeoutExpired handler.  This should not ever happen but it apparently
+    is in some cases (bug #  40005)
   
 Version 5.1.7 - 8/20/08
  - Fixed problem with DDEX provider that could sometimes prevent table altering when working with

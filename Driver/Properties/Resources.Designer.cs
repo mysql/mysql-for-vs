@@ -625,6 +625,14 @@ namespace MySql.Data.MySqlClient {
                 return ResourceManager.GetString("Timeout", resourceCulture);
             }
         }
+
+        internal static string TimeoutExpiredNullObject
+        {
+            get
+            {
+                return ResourceManager.GetString("TimeoutExpiredNullObject", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to error connecting: Timeout expired.  The timeout period elapsed prior to obtaining a connection from the pool.  This may have occurred because all pooled connections were in use and max pool size was reached..

@@ -331,6 +331,11 @@ namespace MySql.Data.MySqlClient
 		private void TimeoutExpired(object commandObject)
 		{
 			MySqlCommand cmd = (commandObject as MySqlCommand);
+            if (cmd == null)
+            {
+                Logger.LogWarning(Resources.TimeoutExpiredNullObject);
+                return;
+            }
 
             cmd.timedOut = true;
             try
