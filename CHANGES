@@ -1,6 +1,8 @@
 Version 6.0.5
 - fixed bug where our internal driver was using a batched command even if the user had added
   'allow batch=false' to their connection string (bug #45502)
+- we are now throwing an exception when DeriveParameters is unable to successfully populate
+  the parameters array.  This exception explains what is wrong (bug #45952)  
   
 Version 6.0.4
 - fixed regression where using stored procs with datasets (bug #44460)
