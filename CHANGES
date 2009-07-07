@@ -1,3 +1,6 @@
+  - fixed problem where failing ExecuteReader with CommandBehavior set to SchemaOnly leaves
+  connection in a bad state ,limiting number of rows for each subsequent query to 0
+  (bug #30518)
 Version 5.1.8
   - Defaulting max allowed packet to 1024 to account for the possible case where the
     value doesn't come in as a server variable   

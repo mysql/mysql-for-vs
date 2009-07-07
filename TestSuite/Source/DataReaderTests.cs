@@ -902,5 +902,50 @@ namespace MySql.Data.MySqlClient.Tests
 				c2.Dispose();
 			}
 		}
+
+        /// <summary>
+        /// Test that using command behavior SchemaOnly does not hose the connection
+        /// by leaving SQL_SELECT_LIMIT set to 0 after the error (and in normal
+        /// case too)
+        /// 
+        /// Bug#30518
+        /// </summary>
+        [Test]
+        public void CommandBehaviorSchemaOnly()
+        {
+            
+            MySqlConnection c = new MySqlConnection(conn.ConnectionString);
+            c.Open();
+            MySqlCommand cmd = new MySqlCommand("select * from doesnotexist",c);
+            MySqlDataReader reader;
+            try 
+            {
+                reader = cmd.ExecuteReader(CommandBehavior.SchemaOnly);
+                Assert.Fail("should have failed");
+            }
+            catch(MySqlException)
+            {
+            }
+
+            // Check that failed ExecuteReader did not leave SQL_SELECT_LIMIT
+            // set to 0.
+            cmd.CommandText = "select now()";
+            reader = cmd.ExecuteReader();
+            Assert.IsTrue(reader.Read());
+            reader.Close();
+
+
+            // Check that CommandBehavior.SchemaOnly does not return rows
+            reader = cmd.ExecuteReader(CommandBehavior.SchemaOnly);
+            Assert.IsFalse(reader.Read());
+            reader.Close();
+
+
+            reader = cmd.ExecuteReader();
+            // Check that prior setting of CommandBehavior did not 
+            // leave SQL_SELECT_LIMIT set to 0
+            Assert.IsTrue(reader.Read());
+            reader.Close();
+        }
 	}
 }

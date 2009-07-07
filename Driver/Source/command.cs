@@ -308,7 +308,14 @@ namespace MySql.Data.MySqlClient
 		{
 			if (statement != null)
 				statement.Close();
+            ResetSqlSelectLimit();
+        }
 
+        /// <summary>
+        /// Reset SQL_SELECT_LIMIT that could have been modified by CommandBehavior.
+        /// </summary>
+        internal void ResetSqlSelectLimit()
+        {
             // if we are supposed to reset the sql select limit, do that here
             if (resetSqlSelect)
                 new MySqlCommand("SET SQL_SELECT_LIMIT=-1", connection).ExecuteNonQuery();
@@ -412,6 +419,13 @@ namespace MySql.Data.MySqlClient
             }
             catch (MySqlException ex)
             {
+                try
+                {
+                    ResetSqlSelectLimit();
+                }
+                catch (Exception)
+                {
+                }
                 // if we caught an exception because of a cancel, then just return null
                 if (ex.Number == 1317)
                 {
