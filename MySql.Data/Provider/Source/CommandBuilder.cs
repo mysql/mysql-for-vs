@@ -108,6 +108,8 @@ namespace MySql.Data.MySqlClient
             if (spName.IndexOf(".") == -1)
                 spName = command.Connection.Database + "." + spName;
             DataSet ds = command.Connection.ProcedureCache.GetProcedure(command.Connection, spName);
+            if (!ds.Tables.Contains("Procedure Parameters"))
+                throw new MySqlException(Resources.UnableToDeriveParameters);
 
             DataTable parameters = ds.Tables["Procedure Parameters"];
             DataTable procTable = ds.Tables["Procedures"];
