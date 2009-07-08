@@ -444,6 +444,27 @@ namespace MySql.Data.MySqlClient.Tests
             {
             }
         }
+
+        /// <summary>
+        /// Bug #45941	SQL-Injection attack
+        /// </summary>
+        [Test]
+        public void SqlInjection1()
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test(name VARCHAR(100)) ENGINE=MyISAM DEFAULT CHARSET=utf8");
+            execSQL("INSERT INTO Test VALUES ('name1'), ('name2'), ('name3')");
+
+            MySqlCommand cnt = new MySqlCommand("SELECT COUNT(*) FROM Test", conn);
+            Int64 count = (Int64)cnt.ExecuteScalar();
+
+            MySqlCommand cmd = new MySqlCommand("DELETE FROM Test WHERE name=?name", conn);
+            cmd.Parameters.Add("?name", MySqlDbType.VarChar);
+            cmd.Parameters[0].Value = "\u2032 OR 1=1;-- --";
+            cmd.ExecuteNonQuery();
+
+            Assert.AreEqual(count, (Int64)cnt.ExecuteScalar());
+        }
     }
 
 

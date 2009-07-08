@@ -20,6 +20,7 @@
 
 using System.Data;
 using MySql.Data.MySqlClient;
+using System.Text;
 
 namespace MySql.Data.MySqlClient
 {
@@ -28,6 +29,9 @@ namespace MySql.Data.MySqlClient
 	/// </summary>
 	public sealed class MySqlHelper
 	{
+        private static string stringOfQuoteChars = 
+            "\u0027\u00b4\u02b9\u02ba\u02bb\u02bc\u02c8\u02ca\u02cb\u02d9\u0300\u0301\u2018\u2019\u201a\u2032\u2035\u275b\u275c\uff07";
+
 		// this class provides only static methods
 		private MySqlHelper()
 		{
@@ -359,5 +363,27 @@ namespace MySql.Data.MySqlClient
 		}
 
 		#endregion
+
+
+        #region Utility methods
+
+        /// <summary>
+        /// Escapes the string.
+        /// </summary>
+        /// <param name="value">The string to escape</param>
+        /// <returns>The string with all quotes escaped.</returns>
+        public static string EscapeString(string value)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (char c in value)
+            {
+                if (stringOfQuoteChars.IndexOf(c) >= 0)
+                    sb.Append("\\");
+                sb.Append(c);
+            }
+            return sb.ToString();
+        }
+
+        #endregion
 	}
 }
