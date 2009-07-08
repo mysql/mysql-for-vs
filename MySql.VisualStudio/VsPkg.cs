@@ -99,7 +99,7 @@ namespace MySql.Data.VisualStudio
                 // Create the command for the menu item.
                 CommandID menuCommandID = new CommandID(GuidList.guidMySqlDataPackageCmdSet,
                     (int)PkgCmdIDList.cmdidConfig);
-                OleMenuCommand menuItem = new OleMenuCommand(MenuItemCallback, menuCommandID);
+                OleMenuCommand menuItem = new OleMenuCommand(ConfigCallback, menuCommandID);
                 menuItem.BeforeQueryStatus += new EventHandler(menuItem_BeforeQueryStatus);
                 mcs.AddCommand(menuItem);
             }
@@ -110,6 +110,8 @@ namespace MySql.Data.VisualStudio
             IServiceContainer serviceContainer = (IServiceContainer)this;
             serviceContainer.AddService(typeof(MySqlLanguageService), languageService, true);
         }
+
+        #endregion
 
         void menuItem_BeforeQueryStatus(object sender, EventArgs e)
         {
@@ -124,14 +126,7 @@ namespace MySql.Data.VisualStudio
             configButton.Visible = p.Kind == "{E24C65DC-7377-472b-9ABA-BC803B73C61A}";
         }
 
-        #endregion
-
-        /// <summary>
-        /// This function is the callback used to execute a command when the a menu item is clicked.
-        /// See the Initialize method to see how the menu item is associated to this function using
-        /// the OleMenuCommandService service and the MenuCommand class.
-        /// </summary>
-        private void MenuItemCallback(object sender, EventArgs e)
+        private void ConfigCallback(object sender, EventArgs e)
         {
             WebConfig.WebConfigDlg w = new WebConfig.WebConfigDlg();
             w.ShowDialog();

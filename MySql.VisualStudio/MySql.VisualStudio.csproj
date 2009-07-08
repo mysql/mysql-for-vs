@@ -308,6 +308,7 @@
     <None Include="Resources\ArrowKey.bmp" />
     <None Include="Resources\Key.bmp" />
     <None Include="Resources\bannrbmp.bmp" />
+    <Content Include="Resources\icon.bmp" />
     <Content Include="Resources\Package.ico" />
   </ItemGroup>
   <ItemGroup>
