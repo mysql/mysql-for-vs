@@ -117,18 +117,20 @@ namespace MySql.Data.Common
             return ipHE;
         }
 
-        private IPHostEntry GetHostEntry(string hostname)
+#if CF
+        IPHostEntry GetDnsHostEntry(string hostname)
         {
-            IPHostEntry ipHE = ParseIPAddress(hostname);
-            if (ipHE != null) return ipHE;
-
+            return Dns.GetHostEntry(hostname);
+        }
+#else
+        IPHostEntry GetDnsHostEntry(string hostname)
+        {
             Stopwatch stopwatch = new Stopwatch();
 
             try
             {
                 stopwatch.Start();
-                ipHE = Dns.GetHostEntry(hostname);
-                return ipHE;
+                return Dns.GetHostEntry(hostname);
             }
             catch (SocketException ex)
             {
@@ -141,6 +143,14 @@ namespace MySql.Data.Common
             {
                 stopwatch.Stop();
             }
+        }
+#endif
+
+        private IPHostEntry GetHostEntry(string hostname)
+        {
+            IPHostEntry ipHE = ParseIPAddress(hostname);
+            if (ipHE != null) return ipHE;
+            return GetDnsHostEntry(hostname);
         }
 
 #if !CF
