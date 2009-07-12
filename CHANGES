@@ -1,8 +1,3 @@
-  - fixed problem where failing ExecuteReader with CommandBehavior set to SchemaOnly leaves
-  connection in a bad state ,limiting number of rows for each subsequent query to 0
-  (bug #30518)
-  - fixed sql injection bug (bug #45941)
-  
 Version 5.1.8
   - Defaulting max allowed packet to 1024 to account for the possible case where the
     value doesn't come in as a server variable   
@@ -26,6 +21,9 @@ Version 5.1.8
     right column name
   - added null check in TimeoutExpired handler.  This should not ever happen but it apparently
     is in some cases (bug #  40005)
+  - fixed problem where failing ExecuteReader with CommandBehavior set to SchemaOnly leaves
+    connection in a bad state ,limiting number of rows for each subsequent query to 0 (bug #30518)
+  - fixed sql injection bug (bug #45941)
   
 Version 5.1.7 - 8/20/08
  - Fixed problem with DDEX provider that could sometimes prevent table altering when working with
