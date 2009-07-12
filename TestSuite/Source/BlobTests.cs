@@ -361,38 +361,6 @@ namespace MySql.Data.MySqlClient.Tests
 					reader.Close();
 			}
 		}
-
-		[Test]
-		public void BlobBiggerThanMaxPacket()
-		{
-			execSQL("set max_allowed_packet=500000");
-
-			execSQL("DROP TABLE IF EXISTS test");
-			execSQL("CREATE TABLE test (id INT(10), image BLOB)");
-
-			MySqlConnection c = new MySqlConnection(GetConnectionString(true));
-			try
-			{
-				c.Open();
-                MySqlCommand cmd = new MySqlCommand("SET max_allowed_packet=500000", c);
-                cmd.ExecuteNonQuery();
-
-				byte[] image = Utils.CreateBlob(1000000);
-                cmd.CommandText = "INSERT INTO test VALUES(NULL, ?image)";
-				cmd.Parameters.AddWithValue("?image", image);
-				cmd.ExecuteNonQuery();
-				Assert.Fail("This should have thrown an exception");
-			}
-			catch (Exception)
-			{
-				Assert.AreEqual(ConnectionState.Open, c.State);
-			}
-			finally
-			{
-				if (c != null)
-					c.Close();
-			}
-		}
 	}
 
 	#region Configs

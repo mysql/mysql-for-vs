@@ -124,13 +124,6 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void LoadDataLocalInfile() 
 		{
-			string connString = conn.ConnectionString + ";pooling=false";
-			MySqlConnection c = new MySqlConnection(connString);
-			c.Open();
-
-            MySqlCommand cmd = new MySqlCommand("SET max_allowed_packet=250000000", c);
-            cmd.ExecuteNonQuery();
-
 			string path = Path.GetTempFileName();
 			StreamWriter sw = new StreamWriter(path);
 			for (int i = 0; i < 2000000; i++) 
@@ -139,25 +132,17 @@ namespace MySql.Data.MySqlClient.Tests
 			sw.Close();
 
 			path = path.Replace(@"\", @"\\");
-			cmd.CommandText = "LOAD DATA LOCAL INFILE '" + path + "' INTO TABLE Test FIELDS TERMINATED BY ','";
+			MySqlCommand cmd = new MySqlCommand(
+                "LOAD DATA LOCAL INFILE '" + path + "' INTO TABLE Test FIELDS TERMINATED BY ','", conn);
 			cmd.CommandTimeout = 0;
 
 			object cnt = 0;
-			try 
-			{
-				cnt = cmd.ExecuteNonQuery();
-			}
-			catch (Exception ex) 
-			{
-				Assert.Fail(ex.Message);
-			}
+			cnt = cmd.ExecuteNonQuery();
 			Assert.AreEqual(2000000, cnt);
 
 			cmd.CommandText = "SELECT COUNT(*) FROM Test";
 			cnt = cmd.ExecuteScalar();
 			Assert.AreEqual(2000000, cnt);
-
-			c.Close();
 		}
 
 		[Test]

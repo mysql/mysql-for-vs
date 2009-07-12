@@ -236,6 +236,8 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void ConnectionStringModifiedAfterCancel()
         {
+            if (Version.Major < 5) return;
+
             bool isPooling = pooling;
             pooling = true;
             string connStr = GetConnectionString(true);

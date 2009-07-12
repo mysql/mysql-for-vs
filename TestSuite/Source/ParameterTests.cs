@@ -46,19 +46,10 @@ namespace MySql.Data.MySqlClient.Tests
 			cmd.ExecuteNonQuery();
 
 			cmd.CommandText = "SELECT @myvar";
-			MySqlDataReader reader = cmd.ExecuteReader();
-			try 
+			using (MySqlDataReader reader = cmd.ExecuteReader())
 			{
 				Assert.AreEqual( true, reader.Read());
 				Assert.AreEqual( "test", reader.GetValue(0));
-			}
-			catch (Exception ex)
-			{
-				Assert.Fail( ex.Message );
-			}
-			finally 
-			{
-				reader.Close();
 			}
 		}
 
@@ -84,14 +75,12 @@ namespace MySql.Data.MySqlClient.Tests
 			cmd.ExecuteNonQuery();
 
 			cmd.Parameters[0].Value = 5;
-			cmd.Parameters[1].Value = @"my \ value";
+			cmd.Parameters[1].Value = @"my \\ value";
 			cmd.ExecuteNonQuery();
 
 			cmd.CommandText = "SELECT * FROM Test";
-			MySqlDataReader reader = null;
-			try 
+			using (MySqlDataReader reader = cmd.ExecuteReader())
 			{
-				reader = cmd.ExecuteReader();
 				reader.Read();
 				Assert.AreEqual( "my ' value", reader.GetString(1));
 				reader.Read();
@@ -102,14 +91,6 @@ namespace MySql.Data.MySqlClient.Tests
 				Assert.AreEqual( "my ´ value", reader.GetString(1));
 				reader.Read();
 				Assert.AreEqual( @"my \ value", reader.GetString(1));
-			}
-			catch (Exception ex) 
-			{
-				Assert.Fail( ex.Message );
-			}
-			finally 
-			{
-				if (reader != null) reader.Close();
 			}
 		}
 
@@ -178,58 +159,42 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void SetDbType()
         {
-            try
-            {
-                IDbCommand cmd = conn.CreateCommand();
-                IDbDataParameter prm = cmd.CreateParameter();
-                prm.DbType = DbType.Int64;
-                Assert.AreEqual(DbType.Int64, prm.DbType);
-                prm.Value = 3;
-                Assert.AreEqual(DbType.Int64, prm.DbType);
+            IDbCommand cmd = conn.CreateCommand();
+            IDbDataParameter prm = cmd.CreateParameter();
+            prm.DbType = DbType.Int64;
+            Assert.AreEqual(DbType.Int64, prm.DbType);
+            prm.Value = 3;
+            Assert.AreEqual(DbType.Int64, prm.DbType);
 
-                MySqlParameter p = new MySqlParameter("name", MySqlDbType.Int64);
-                Assert.AreEqual(DbType.Int64, p.DbType);
-                Assert.AreEqual(MySqlDbType.Int64, p.MySqlDbType);
-                p.Value = 3;
-                Assert.AreEqual(DbType.Int64, p.DbType);
-                Assert.AreEqual(MySqlDbType.Int64, p.MySqlDbType);
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
+            MySqlParameter p = new MySqlParameter("name", MySqlDbType.Int64);
+            Assert.AreEqual(DbType.Int64, p.DbType);
+            Assert.AreEqual(MySqlDbType.Int64, p.MySqlDbType);
+            p.Value = 3;
+            Assert.AreEqual(DbType.Int64, p.DbType);
+            Assert.AreEqual(MySqlDbType.Int64, p.MySqlDbType);
         }
 
 		[Test]
 		public void UseOldSyntax() 
 		{
 			string connStr = conn.ConnectionString + ";old syntax=yes;pooling=false";
-			MySqlConnection conn2 = new MySqlConnection(connStr);
-			conn2.Open();
+            using (MySqlConnection conn2 = new MySqlConnection(connStr))
+            {
+                conn2.Open();
 
-			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id, name) VALUES (@id, @name)", conn2);
-			cmd.Parameters.AddWithValue( "@id", 33 );
-			cmd.Parameters.AddWithValue( "@name", "Test" );
-			cmd.ExecuteNonQuery();
+                MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id, name) VALUES (@id, @name)", conn2);
+                cmd.Parameters.AddWithValue("@id", 33);
+                cmd.Parameters.AddWithValue("@name", "Test");
+                cmd.ExecuteNonQuery();
 
-			MySqlDataReader reader = null;
-			try 
-			{
-				cmd.CommandText = "SELECT * FROM Test";
-				reader = cmd.ExecuteReader();
-				reader.Read();
-				Assert.AreEqual( 33, reader.GetInt32(0) );
-				Assert.AreEqual( "Test", reader.GetString(1) );
-			}
-			catch( Exception ex) 
-			{
-				Assert.Fail( ex.Message );
-			}
-			finally 
-			{
-				if (reader != null) reader.Close(); 
-				conn2.Close();
-			}
+                cmd.CommandText = "SELECT * FROM Test";
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    reader.Read();
+                    Assert.AreEqual(33, reader.GetInt32(0));
+                    Assert.AreEqual("Test", reader.GetString(1));
+                }
+            }
 		}
 
 		[Test]
