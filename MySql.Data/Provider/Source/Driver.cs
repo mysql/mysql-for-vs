@@ -24,6 +24,7 @@ using System.Globalization;
 using System.Text;
 using MySql.Data.Common;
 using MySql.Data.Types;
+using MySql.Data.MySqlClient.Properties;
 
 namespace MySql.Data.MySqlClient
 {
@@ -58,6 +59,8 @@ namespace MySql.Data.MySqlClient
         public Driver(MySqlConnectionStringBuilder settings)
         {
             encoding = Encoding.GetEncoding(1252);
+            if (encoding == null)
+                throw new MySqlException(Resources.DefaultEncodingNotFound);
             connectionString = settings;
             threadId = -1;
             serverCharSetIndex = -1;

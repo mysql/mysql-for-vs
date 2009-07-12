@@ -64,7 +64,6 @@
     <Compile Include="Source\base\DbConnectionStringBuilder.cs" />
     <Compile Include="Source\base\DbException.cs" />
     <Compile Include="Source\cf\BufferedStream.cs" />
-    <Compile Include="Source\cf\CompilerGeneratedAttribute.cs" />
     <Compile Include="Source\cf\WinCE.cs" />
     <Compile Include="Source\CharSetMap.cs" />
     <Compile Include="Source\command.cs">
@@ -110,6 +109,7 @@
     <Compile Include="Source\parameter_collection.cs" />
     <Compile Include="Source\PreparableStatement.cs" />
     <Compile Include="Source\ProcedureCache.cs" />
+    <Compile Include="Source\ResultSet.cs" />
     <Compile Include="Source\SchemaProvider.cs" />
     <Compile Include="Source\Statement.cs" />
     <Compile Include="Source\StoredProcedure.cs" />

@@ -171,7 +171,7 @@ namespace MySql.Data.MySqlClient
                 if (p.Direction == ParameterDirection.Input || 
                     (Connection.driver.SupportsOutputParameters && preparing))
                 {
-                    sqlStr.AppendFormat("{0}@{1}", sqlDelimiter, baseName);
+                    sqlStr.AppendFormat(CultureInfo.InvariantCulture, "{0}@{1}", sqlDelimiter, baseName);
                     sqlDelimiter = ", ";
                 }
                 else
@@ -179,7 +179,7 @@ namespace MySql.Data.MySqlClient
                     Connection.driver.ExecuteDirect(String.Format(
                         "SET @{0}{1}={2}", parameterHash, baseName,
                         p.Direction == ParameterDirection.Output ? "NULL" : p.Value.ToString()));
-                    outSql.AppendFormat("{0}@{1}{2}", outDelimiter, parameterHash, baseName);
+                    outSql.AppendFormat(CultureInfo.InvariantCulture, "{0}@{1}{2}", outDelimiter, parameterHash, baseName);
                     outDelimiter = ", ";
                 }
             }

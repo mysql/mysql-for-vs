@@ -4,6 +4,8 @@ Version 6.1.0
 Version 6.0.5
 - fixed bug where our internal driver was using a batched command even if the user had added
   'allow batch=false' to their connection string (bug #45502)
+- we are now throwing an exception when DeriveParameters is unable to successfully populate
+  the parameters array.  This exception explains what is wrong (bug #45952)  
 - Add "SSL Mode" option for connections that indicates whether to use SSL connections and how
   to validate server certificate. Deprecated use of "encrypt" in connection strings(bug#38700)
 Version 6.0.4
@@ -77,6 +79,21 @@ Version 5.2.7
   as the inner exception (bug #45021)  
 - added workaround for an apparent problem with WeakReferences and threads in the mono runtime
   (bug #45463)
+- removed our homebrew implemenation of CompilerGeneratedAttribute as it was interfering with
+  the compiler in VS2005 (bug #42261)
+- fix small bug in SchemaManager that would prevent the schema from being updated if the
+  autogenerateschema option was given in anything but lower case  
+- applied performance improvement to MySqlHelper.EscapeString (thanks Franco!) (bug #45699) 
+- we are now throwing an exception if the default connection encoding can't be created.
+  This shouldn't happen but we saw one report that may have been this. (bug #45589)
+- integrated user supplied patch that provides some additional debugging into in the case
+  of a DNS error    
+- fixed problem where failing ExecuteReader with CommandBehavior set to SchemaOnly leaves
+  connection in a bad state ,limiting number of rows for each subsequent query to 0
+  (bug #30518)
+- added null check in TimeoutExpired handler.  This should not ever happen but it apparently
+    is in some cases (bug #  40005)
+- fixed sql injection bug (bug #45941)  
   
 Version 5.2.6
 - cleaned up how stored procedure execution operated when the user does or does not have execute privs

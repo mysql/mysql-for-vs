@@ -23,6 +23,8 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
+using System.Diagnostics;
+using MySql.Data.MySqlClient.Properties;
 
 namespace MySql.Data.Common
 {
@@ -100,9 +102,9 @@ namespace MySql.Data.Common
             return stream;
         }
 
-        private static IPHostEntry GetHostEntry(string hostname)
+        private IPHostEntry ParseIPAddress(string hostname)
         {
-            IPHostEntry ipHE;
+            IPHostEntry ipHE = null;
 #if !CF
             IPAddress addr;
             if (IPAddress.TryParse(hostname, out addr))
@@ -111,10 +113,44 @@ namespace MySql.Data.Common
                 ipHE.AddressList = new IPAddress[1];
                 ipHE.AddressList[0] = addr;
             }
-            else
 #endif
-            ipHE = Dns.GetHostEntry(hostname);
             return ipHE;
+        }
+
+#if CF
+        IPHostEntry GetDnsHostEntry(string hostname)
+        {
+            return Dns.GetHostEntry(hostname);
+        }
+#else
+        IPHostEntry GetDnsHostEntry(string hostname)
+        {
+            Stopwatch stopwatch = new Stopwatch();
+
+            try
+            {
+                stopwatch.Start();
+                return Dns.GetHostEntry(hostname);
+            }
+            catch (SocketException ex)
+            {
+                string message = String.Format(Resources.GetHostEntryFailed,
+                stopwatch.Elapsed, hostname, ex.SocketErrorCode,
+                ex.ErrorCode, ex.NativeErrorCode);
+                throw new Exception(message, ex);
+            }
+            finally
+            {
+                stopwatch.Stop();
+            }
+        }
+#endif
+
+        private IPHostEntry GetHostEntry(string hostname)
+        {
+            IPHostEntry ipHE = ParseIPAddress(hostname);
+            if (ipHE != null) return ipHE;
+            return GetDnsHostEntry(hostname);
         }
 
 #if !CF
