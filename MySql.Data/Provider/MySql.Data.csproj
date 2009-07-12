@@ -245,6 +245,7 @@
     <Compile Include="Source\BulkLoader.cs" />
     <Compile Include="Source\MySqlPacket.cs" />
     <Compile Include="Source\MySqlScript.cs" />
+    <Compile Include="Source\ResultSet.cs" />
     <Compile Include="Source\Types\MySqlGuid.cs" />
   </ItemGroup>
   <ItemGroup>

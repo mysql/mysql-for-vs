@@ -26,7 +26,7 @@ namespace MySql.Data.MySqlClient
     /// Summary description for ClientParam.
     /// </summary>
     [Flags]
-    internal enum ClientFlags
+    internal enum ClientFlags : ulong
     {
         LONG_PASSWORD = 1, // new more secure passwords
         FOUND_ROWS = 2, // found instead of affected rows
@@ -42,10 +42,11 @@ namespace MySql.Data.MySqlClient
         SSL = 2048, // Switch to SSL after handshake
         IGNORE_SIGPIPE = 4096, // IGNORE sigpipes
         TRANSACTIONS = 8192, // Client knows about transactions
-        RESERVED = 16384, // old 4.1 protocol flag
-        SECURE_CONNECTION = 32768, // new 4.1 authentication
-        MULTI_STATEMENTS = 65536, // Allow multi-stmt support
-        MULTI_RESULTS = 131072 // Allow multiple resultsets
+        RESERVED = 16384,               // old 4.1 protocol flag
+        SECURE_CONNECTION = 32768,      // new 4.1 authentication
+        MULTI_STATEMENTS = 65536,       // Allow multi-stmt support
+        MULTI_RESULTS = 131072,         // Allow multiple resultsets
+        PS_MULTI_RESULTS = 1UL << 18    // allow multi results using PS protocol
     }
 
     [Flags]
@@ -58,7 +59,8 @@ namespace MySql.Data.MySqlClient
         BadIndex = 16,
         NoIndex = 32,
         CursorExists = 64,
-        LastRowSent = 128
+        LastRowSent = 128,
+        OutputParameters = 4096
     }
 
 

@@ -406,6 +406,10 @@ namespace MySql.Data.MySqlClient
             if ((serverCaps & ClientFlags.SSL) != 0 && connectionString.SslMode != MySqlSslMode.None)
                 flags |= ClientFlags.SSL;
 
+            // if the server supports output parameters, then we do too
+            //if ((serverCaps & ClientFlags.PS_MULTI_RESULTS) != 0)
+                flags |= ClientFlags.PS_MULTI_RESULTS;
+
             connectionFlags = flags;
         }
 
@@ -475,6 +479,8 @@ namespace MySql.Data.MySqlClient
         /// </summary>
         public override void SendQuery(MySqlPacket queryPacket)
         {
+            lastInsertId = -1;
+            affectedRows = 0;
             if (Settings.Logging)
                 Logger.LogCommand(DBCmd.QUERY, encoding.GetString(
                     queryPacket.Buffer, 5, queryPacket.Length-5));
@@ -537,21 +543,26 @@ namespace MySql.Data.MySqlClient
             }
         }
 
+        public override void ExecuteDirect(string sql)
+        {
+            MySqlPacket p = new MySqlPacket();
+            p.WriteString(sql);
+            SendQuery(p);
+            ReadResult();
+        }
+
         /// <summary>
         /// ReadResult will attempt to read a single result from the server.  Note that it is not 
         /// reading all the rows of the result set but simple determining what type of result it is
         /// and returning values appropriately.
         /// </summary>
-        /// <param name="affectedRows">Set to the number of rows affected in this result, 0 for selects</param>
-        /// <param name="lastInsertId">Set to the id of the row inserted by this result, 0 for non-inserts</param>
         /// <returns>Number of columns in the resultset, 0 for non-selects, -1 for no more resultsets</returns>
-        public override long ReadResult(ref ulong affectedRows, ref long lastInsertId)
+        public override long ReadResult()
         {
             // if there is not another query or resultset, then return -1
             if ((serverStatus & (ServerStatusFlags.AnotherQuery | ServerStatusFlags.MoreResults)) == 0)
                 return -1;
 
-            lastInsertId = -1;
             packet = stream.ReadPacket();
 
             long fieldCount = packet.ReadFieldLength();
@@ -563,14 +574,14 @@ namespace MySql.Data.MySqlClient
                 string filename = packet.ReadString();
                 SendFileToServer(filename);
 
-                return ReadResult(ref affectedRows, ref lastInsertId);
+                return ReadResult();
             }
 
             // the code to read last packet will set these server status vars 
             // again if necessary.
             serverStatus &= ~(ServerStatusFlags.AnotherQuery |
                               ServerStatusFlags.MoreResults);
-            affectedRows = (ulong) packet.ReadFieldLength();
+            affectedRows += (long)packet.ReadFieldLength();
             lastInsertId = packet.ReadFieldLength();
             if (version.isAtLeast(4, 1, 0))
             {
@@ -774,6 +785,8 @@ namespace MySql.Data.MySqlClient
 
         public void ExecuteStatement(MySqlPacket packetToExecute)
         {
+            lastInsertId = -1;
+            affectedRows = 0;
             packetToExecute.Buffer[4] = (byte)DBCmd.EXECUTE;
             ExecutePacket(packetToExecute);
             serverStatus |= ServerStatusFlags.AnotherQuery;

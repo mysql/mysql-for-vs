@@ -70,11 +70,11 @@ namespace MySql.Data.MySqlClient
 
         #endregion
 
-        public virtual void Close()
+        public virtual void Close(MySqlDataReader reader)
         {
         }
 
-        public virtual void Resolve()
+        public virtual void Resolve(bool preparing)
         {
         }
 
