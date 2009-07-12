@@ -58,6 +58,7 @@ namespace MySql.Data.MySqlClient
         bool interactiveSession;
         bool functionsReturnString;
         bool useAffectedRows;
+        bool oldGuids;
 
         static MySqlConnectionStringBuilder()
         {
@@ -102,6 +103,7 @@ namespace MySql.Data.MySqlClient
             defaultValues.Add(Keyword.FunctionsReturnString, false);
             defaultValues.Add(Keyword.UseAffectedRows, false);
             defaultValues.Add(Keyword.SslMode, MySqlSslMode.None);
+            defaultValues.Add(Keyword.OldGuids, false);
         }
 
         /// <summary>
@@ -744,6 +746,22 @@ namespace MySql.Data.MySqlClient
             }
         }
 
+#if !CF && !MONO
+        [Category("Advanced")]
+        [DisplayName("Old Guids")]
+        [Description("Treat binary(16) columns as guids")]
+        [DefaultValue(false)]
+#endif
+        public bool OldGuids
+        {
+            get { return oldGuids; }
+            set
+            {
+                SetValue("Old Guids", value);
+                oldGuids = value;
+            }
+        }
+
         #endregion
 
         #region Pooling Properties
@@ -1206,6 +1224,8 @@ namespace MySql.Data.MySqlClient
                     return Keyword.UseAffectedRows;
                 case "SSL MODE":
                     return Keyword.SslMode;
+                case "OLD GUIDS":
+                    return Keyword.OldGuids;
             }
             throw new ArgumentException(Resources.KeywordNotSupported, key);
         }
@@ -1296,6 +1316,8 @@ namespace MySql.Data.MySqlClient
                     return useAffectedRows;
                 case Keyword.SslMode:
                     return sslMode;
+                case Keyword.OldGuids:
+                    return oldGuids;
                 default:
                     return null; /* this will never happen */
             }
@@ -1412,6 +1434,8 @@ namespace MySql.Data.MySqlClient
                     useAffectedRows = ConvertToBool(value); break;
                 case Keyword.SslMode:
                     sslMode = ConvertToSslMode(value); break;
+                case Keyword.OldGuids:
+                    oldGuids = ConvertToBool(value); break;
             }
         }
 
@@ -1595,6 +1619,7 @@ namespace MySql.Data.MySqlClient
         InteractiveSession,
         FunctionsReturnString,
         UseAffectedRows,
-        SslMode
+        SslMode,
+        OldGuids
     }
 }

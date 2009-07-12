@@ -262,6 +262,10 @@ namespace MySql.Data.MySqlClient
             // now determine if we really should be binary
             if (connection.Settings.RespectBinaryFlags)
                 CheckForExceptions();
+
+            if (Type == MySqlDbType.String && ColumnLength == 32 && !connection.Settings.OldGuids)
+                mySqlDbType = MySqlDbType.Guid;
+
             if (!IsBinary) return;
 
             if (connection.Settings.RespectBinaryFlags)
@@ -276,7 +280,7 @@ namespace MySql.Data.MySqlClient
             if (CharacterSetIndex == 63)
                 CharacterSetIndex = connection.driver.ConnectionCharSetIndex;
 
-            if (Type == MySqlDbType.Binary && ColumnLength == 16)
+            if (Type == MySqlDbType.Binary && ColumnLength == 16 && connection.Settings.OldGuids)
                 mySqlDbType = MySqlDbType.Guid;
         }
 
