@@ -30,6 +30,8 @@ namespace MySql.Data.MySqlClient.Tests
     [TestFixture]
     public class Transactions : BaseTest
     {
+
+
         void TransactionScopeInternal(bool commit)
         {
             createTable("CREATE TABLE Test (key2 VARCHAR(1), name VARCHAR(100), name2 VARCHAR(100))", "INNODB");
@@ -166,6 +168,7 @@ namespace MySql.Data.MySqlClient.Tests
             c2.Close();
             Assert.AreEqual(0, count);
         }
+
 
         /// <summary>
         /// Bug #22042 mysql-connector-net-5.0.0-alpha BeginTransaction 

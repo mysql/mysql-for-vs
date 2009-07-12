@@ -1263,5 +1263,25 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.AreEqual("World", dt.Rows[0]["P2"]);
             }
         }
+
+        [Test]
+        public void DeriveParameters()
+        {
+            if (Version < new Version(5, 0)) return;
+            if (Version > new Version(6, 0, 6)) return;
+
+            execSQL(@"CREATE  PROCEDURE spTest (id INT, name VARCHAR(20))
+                    BEGIN SELECT name; END");
+            MySqlCommand cmd = new MySqlCommand("spTest", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            try
+            {
+                MySqlCommandBuilder.DeriveParameters(cmd);
+                Assert.Fail("This should have failed");
+            }
+            catch (MySqlException ex)
+            {
+            }
+        }
     }
 }

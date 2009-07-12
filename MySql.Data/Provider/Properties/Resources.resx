@@ -348,11 +348,23 @@
   <data name="ValueNotSupportedForGuid" xml:space="preserve">
     <value>The requested column value could not be treated as or conveted to a Guid.</value>
   </data>
+  <data name="UnableToDeriveParameters" xml:space="preserve">
+    <value>Unable to derive stored routine parameters.  The 'Parameters' information schema table is not available and access to the stored procedure body has been disabled.</value>
+  </data>
   <data name="UnableToRetrieveParameters" xml:space="preserve">
     <value>Unable to retrieve stored routine parameters.  Either grant access to the routine or add the 'Use Procedure Bodies=false' option to your connection string.</value>
   </data>
-  <data name="UnableToEnumerateUDF" xml:space="preserve">
-    <value>An error occured attempting to enumerate the user-defined functions.  Do you have SELECT privileges on the mysql.func table?</value>
+  <data name="DefaultEncodingNotFound" xml:space="preserve">
+    <value>The default connection encoding was not found. Please report this as a bug along with your connection string and system details.</value>
+  </data>
+  <data name="GetHostEntryFailed" xml:space="preserve">
+    <value>Call to GetHostEntry failed after {0} while querying for hostname '{1}': SocketErrorCode={2}, ErrorCode={3}, NativeErrorCode={4}.</value>
+  </data>
+  <data name="TimeoutExpiredNullObject" xml:space="preserve">
+    <value>Timeout expired but command object was null.  This should not happen.</value>
+  </data>
+  <data name="UnableToEnumerateUDF" xml:space="preserve">    
+    <value>An error occured attempting to enumerate the user-defined functions.  Do you have SELECT privileges on the mysql.func table?</value>  
   </data>
   <data name="DataNotInSupportedFormat" xml:space="preserve">
     <value>The given value was not in a supported format.</value>
@@ -378,4 +390,16 @@
   <data name="MoreThanOneOPRow" xml:space="preserve">
     <value>INTERNAL ERROR:  More than one output parameter row detected.</value>
   </data>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
 </root>
