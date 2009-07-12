@@ -1,42 +1,8 @@
-Connector/Net 6.0  Release Notes
+Connector/Net 6.1  Release Notes
 ------------------------------------
 
-Welcome to the release notes for Connector/Net 6.0
+Welcome to the release notes for Connector/Net 6.1
 
-What's new in 6.0.4?
+What's new in 6.1
 --------------------
-This is the first post-GA release of 6.0 and we really wanted to address some of the bugs that were in the
-initial GA release.  Here are the highlights:
-
-* Added bool and guid support to our entity framework bits
-* Added SunConnect registration to the installer.  Please register!
-* Our Visual Studio integration bits should compile better under VS2005
-* Unsigned values are not supported with our entity framework bits
-* Many other significant bug fixes.  Check the change log!
-
-Known Issues In 6.0.4
----------------------
-* The table editor in the Visual Studio integration will shorten the window name when you save.  This has no
-real effect on the function of the editor but it is not quite correct.
-
-* Our visual studio editors are completely rewritten and we expect to find some 1.0 type bugs after release.  We will
-update these quickly and we ask for your patience.
-
-
-Data type support in Entity Framework
--------------------------------------
-tinyint(1) columns are transparently treated as boolean columns
-
-binary(16) columns are transparently treated as guid columns
-
-unsigned data types are now supported
-Unsigned integer types are not directly supported in the entity framework.  We are working around
-that by mapping those columns to the next higher signed integer type.
-
-For example, an unsigned integer column will appear in an entity framework model as a
-Int64 column.  This allows  your application to set a value up to the maximum value for 
-an unsigned int32 column and preserve the value.  However, be aware that if you set a signed 
-value or exceed the maximum value for your underlying database column, data truncation will occur.
-The moral of the story is if you are going to use unsigned types (discouraged) then know what
-your underlying column types are and don't exceed their max sizes.
-
+<to be written>
