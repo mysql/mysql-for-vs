@@ -23,6 +23,7 @@ using System.Data;
 using System.IO;
 using System.Threading;
 using NUnit.Framework;
+using System.Globalization;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -251,7 +252,7 @@ namespace MySql.Data.MySqlClient.Tests
 
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
-                    string connStr2 = c.ConnectionString.ToLowerInvariant();
+                    string connStr2 = c.ConnectionString.ToLower(CultureInfo.InvariantCulture);
                     Assert.AreEqual(-1, connStr2.IndexOf("pooling=true"));
                     Assert.AreEqual(-1, connStr2.IndexOf("pooling=false"));
                     reader.Read();
