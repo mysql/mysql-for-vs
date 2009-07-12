@@ -25,7 +25,13 @@ Version 5.2.7
 - we are now throwing an exception if the default connection encoding can't be created.
   This shouldn't happen but we saw one report that may have been this. (bug #45589)
 - integrated user supplied patch that provides some additional debugging into in the case
-  of a DNS error  
+  of a DNS error    
+- fixed problem where failing ExecuteReader with CommandBehavior set to SchemaOnly leaves
+  connection in a bad state ,limiting number of rows for each subsequent query to 0
+  (bug #30518)
+- added null check in TimeoutExpired handler.  This should not ever happen but it apparently
+    is in some cases (bug #  40005)
+- fixed sql injection bug (bug #45941)  
   
 Version 5.2.6
 - cleaned up how stored procedure execution operated when the user does or does not have execute privs
