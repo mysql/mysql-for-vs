@@ -1,5 +1,10 @@
 Version 6.1.0
 - Added new MySQL Website Configuration Wizard
+- Now supports native inout and output parameters when in prepared mode and running against a server
+  that supports it
+- Changed our native guid support to char(32)
+- Added a connection string option 'old guids=yes|no' to allow users who have older applications
+  to continue using binary(16) guids
 
 Version 6.0.5
 - fixed bug where our internal driver was using a batched command even if the user had added
@@ -8,6 +13,7 @@ Version 6.0.5
   the parameters array.  This exception explains what is wrong (bug #45952)  
 - Add "SSL Mode" option for connections that indicates whether to use SSL connections and how
   to validate server certificate. Deprecated use of "encrypt" in connection strings(bug#38700)
+  
 Version 6.0.4
 - fixed regression where using stored procs with datasets (bug #44460)
 - fixed compilation under VS 2005 (bug #44822)
