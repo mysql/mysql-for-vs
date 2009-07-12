@@ -773,6 +773,51 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.AreEqual(0, ts.Seconds);
             }
         }
+
+        [Test]
+        public void SprocOutputParams()
+        {
+            if (Version < new Version(5, 4, 0)) return;
+
+            execSQL("CREATE PROCEDURE spTest(id INT, OUT age INT) BEGIN SET age=id; END");
+
+            MySqlCommand cmd = new MySqlCommand("spTest", conn);
+            cmd.Parameters.Add("@id", MySqlDbType.Int32);
+            cmd.Parameters.Add("@age", MySqlDbType.Int32).Direction = ParameterDirection.Output;
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Prepare();
+
+            cmd.Parameters[0].Value = 20;
+            Assert.AreEqual(0, cmd.ExecuteNonQuery());
+            Assert.AreEqual(20, cmd.Parameters[1].Value);
+
+            execSQL("DROP PROCEDURE IF EXISTS spTest");
+            execSQL("CREATE PROCEDURE spTest(id INT, OUT age INT) BEGIN SET age=age*2; END");
+
+            cmd.Parameters[0].Value = 1;
+            cmd.Parameters[1].Value = 20;
+            Assert.AreEqual(0, cmd.ExecuteNonQuery());
+            Assert.AreEqual(20, cmd.Parameters[1].Value);
+        }
+
+        [Test]
+        public void SprocInputOutputParams()
+        {
+            if (Version < new Version(6, 0, 8)) return;
+
+            execSQL("CREATE PROCEDURE spTest(id INT, INOUT age INT) BEGIN SET age=age*2; END");
+
+            MySqlCommand cmd = new MySqlCommand("spTest", conn);
+            cmd.Parameters.Add("@id", MySqlDbType.Int32);
+            cmd.Parameters.Add("@age", MySqlDbType.Int32).Direction = ParameterDirection.InputOutput;
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Prepare();
+
+            cmd.Parameters[0].Value = 1;
+            cmd.Parameters[1].Value = 20;
+            Assert.AreEqual(0, cmd.ExecuteNonQuery());
+            Assert.AreEqual(40, cmd.Parameters[1].Value);
+        }
     }
 
     #region Configs

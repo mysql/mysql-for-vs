@@ -79,6 +79,15 @@ namespace MySql.Data.MySqlClient.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid attempt to access a field before calling Read().
+        /// </summary>
+        public static string AttemptToAccessBeforeRead {
+            get {
+                return ResourceManager.GetString("AttemptToAccessBeforeRead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Version string not in acceptable format.
         /// </summary>
         public static string BadVersionFormat {
@@ -201,6 +210,15 @@ namespace MySql.Data.MySqlClient.Properties {
         public static string ConnectionNotSet {
             get {
                 return ResourceManager.GetString("ConnectionNotSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find specified column in results.
+        /// </summary>
+        public static string CouldNotFindColumnName {
+            get {
+                return ResourceManager.GetString("CouldNotFindColumnName", resourceCulture);
             }
         }
         
@@ -349,6 +367,15 @@ namespace MySql.Data.MySqlClient.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You have specified an invalid column ordinal..
+        /// </summary>
+        public static string InvalidColumnOrdinal {
+            get {
+                return ResourceManager.GetString("InvalidColumnOrdinal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Procedure or function &apos;{0}&apos; cannot be found in database &apos;{1}&apos;..
         /// </summary>
         public static string InvalidProcName {
@@ -381,6 +408,15 @@ namespace MySql.Data.MySqlClient.Properties {
         public static string MixingUpdatedRowSource {
             get {
                 return ResourceManager.GetString("MixingUpdatedRowSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to INTERNAL ERROR:  More than one output parameter row detected..
+        /// </summary>
+        public static string MoreThanOneOPRow {
+            get {
+                return ResourceManager.GetString("MoreThanOneOPRow", resourceCulture);
             }
         }
         
@@ -619,6 +655,15 @@ namespace MySql.Data.MySqlClient.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid attempt to read a prior column using SequentialAccess.
+        /// </summary>
+        public static string ReadingPriorColumnUsingSeqAccess {
+            get {
+                return ResourceManager.GetString("ReadingPriorColumnUsingSeqAccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Routine &apos;{0}&apos; cannot be found. Either check the spelling or make sure you have sufficient rights to execute the routine..
         /// </summary>
         public static string RoutineNotFound {
@@ -750,6 +795,15 @@ namespace MySql.Data.MySqlClient.Properties {
         public static string UnableToRetrieveSProcData {
             get {
                 return ResourceManager.GetString("UnableToRetrieveSProcData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to start a second async operation while one is running..
+        /// </summary>
+        public static string UnableToStartSecondAsyncOp {
+            get {
+                return ResourceManager.GetString("UnableToStartSecondAsyncOp", resourceCulture);
             }
         }
         

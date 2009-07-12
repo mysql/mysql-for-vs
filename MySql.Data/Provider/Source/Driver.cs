@@ -47,6 +47,8 @@ namespace MySql.Data.MySqlClient
         protected Hashtable charSets;
         protected bool hasWarnings;
         protected long maxPacketSize;
+        protected int lastInsertId;
+        protected long affectedRows;
 #if !CF
         protected MySqlPromotableTransaction currentTransaction;
         protected bool inActiveUse;
@@ -133,6 +135,26 @@ namespace MySql.Data.MySqlClient
         internal int ConnectionCharSetIndex
         {
             get { return serverCharSetIndex; }
+        }
+
+        public long AffectedRows
+        {
+            get { return affectedRows; }
+        }
+
+        public int LastInsertedId
+        {
+            get { return lastInsertId; }
+        }
+
+        public bool MoreResults
+        {
+            get { return (serverStatus & (ServerStatusFlags.AnotherQuery | ServerStatusFlags.MoreResults)) != 0; }
+        }
+
+        public bool SupportsOutputParameters 
+        {
+            get { return Version.isAtLeast(6,0,8); }
         }
 
         #endregion
@@ -337,7 +359,7 @@ namespace MySql.Data.MySqlClient
         public abstract int PrepareStatement(string sql, ref MySqlField[] parameters);
         public abstract void Reset();
         public abstract void SendQuery(MySqlPacket packet);
-        public abstract long ReadResult(ref ulong affectedRows, ref long lastInsertId);
+        public abstract long ReadResult();
         public abstract bool FetchDataRow(int statementId, int pageSize, int columns);
         public abstract bool SkipDataRow();
         public abstract IMySqlValue ReadColumnValue(int index, MySqlField field, IMySqlValue value);
@@ -346,6 +368,7 @@ namespace MySql.Data.MySqlClient
         public abstract MySqlField[] ReadColumnMetadata(int count);
         public abstract bool Ping();
         public abstract void CloseStatement(int id);
+        public abstract void ExecuteDirect(string sql);
 
 		#endregion
 

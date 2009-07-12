@@ -34,7 +34,7 @@ using MySql.Data.MySqlClient.Properties;
 
 namespace MySql.Data.MySqlClient
 {
-	/// <include file='docs/mysqlcommand.xml' path='docs/ClassSummary/*'/>
+	/// <include file='docs/mysqlcommand.xml' path='docs/ClassSummary/*'/> 
 #if !CF
 	[System.Drawing.ToolboxBitmap(typeof(MySqlCommand), "MySqlClient.resources.command.bmp")]
 	[System.ComponentModel.DesignerCategory("Code")]
@@ -126,11 +126,6 @@ namespace MySql.Data.MySqlClient
 				}
 
 			}
-		}
-
-		internal int UpdateCount
-		{
-			get { return (int)updatedRowCount; }
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/CommandTimeout/*'/>
@@ -305,23 +300,18 @@ namespace MySql.Data.MySqlClient
 		/// <include file='docs/mysqlcommand.xml' path='docs/ExecuteNonQuery/*'/>
 		public override int ExecuteNonQuery()
 		{
-			lastInsertedId = -1;
-			updatedRowCount = -1;
+            MySqlDataReader reader = null;
+            using (reader = ExecuteReader())
+            { 
+            }
 
-			MySqlDataReader reader = ExecuteReader();
-			if (reader != null)
-			{
-				reader.Close();
-				lastInsertedId = reader.InsertedId;
-				updatedRowCount = reader.RecordsAffected;
-			}
-			return (int)updatedRowCount;
+            return reader.RecordsAffected;
 		}
 
-		internal void Close()
+		internal void Close(MySqlDataReader reader)
 		{
 			if (statement != null)
-				statement.Close();
+				statement.Close(reader);
 
             // if we are supposed to reset the sql select limit, do that here
             if (resetSqlSelect)
@@ -389,7 +379,7 @@ namespace MySql.Data.MySqlClient
 			}
 
             // stored procs are the only statement type that need do anything during resolve
-            statement.Resolve();
+            statement.Resolve(false);
 
             // Now that we have completed our resolve step, we can handle our
             // command behaviors
@@ -411,7 +401,7 @@ namespace MySql.Data.MySqlClient
 
                 // start a timeout timer
                 if (connection.driver.Version.isAtLeast(5, 0, 0) &&
-                     commandTimeout > 0)
+                     commandTimeout == 0)
                 {
                     TimerCallback timerDelegate =
                          new TimerCallback(TimeoutExpired);
@@ -452,22 +442,12 @@ namespace MySql.Data.MySqlClient
             lastInsertedId = -1;
             object val = null;
 
-            MySqlDataReader reader = ExecuteReader();
-            if (reader == null) return null;
-
-            try
+            using (MySqlDataReader reader = ExecuteReader())
             {
+                if (reader == null) return null;
+
                 if (reader.Read())
                     val = reader.GetValue(0);
-            }
-            finally
-            {
-                if (reader != null)
-                {
-                    reader.Close();
-                    lastInsertedId = reader.InsertedId;
-                }
-                reader = null;
             }
 
             return val;
@@ -504,6 +484,7 @@ namespace MySql.Data.MySqlClient
 			else
 				statement = new PreparableStatement(this, CommandText);
 
+            statement.Resolve(true);
 			statement.Prepare();
 		}
 
@@ -524,7 +505,8 @@ namespace MySql.Data.MySqlClient
 
 		#region Async Methods
 
-		internal delegate void AsyncDelegate(int type, CommandBehavior behavior);
+		internal delegate object AsyncDelegate(int type, CommandBehavior behavior);
+        internal AsyncDelegate caller = null;
 		internal Exception thrownException;
 
 		private static string TrimSemicolons(string sql)
@@ -540,20 +522,20 @@ namespace MySql.Data.MySqlClient
 			return sb.ToString(start, end - start + 1);
 		}
 
-		internal void AsyncExecuteWrapper(int type, CommandBehavior behavior)
+		internal object AsyncExecuteWrapper(int type, CommandBehavior behavior)
 		{
 			thrownException = null;
 			try
 			{
-				if (type == 1)
-					ExecuteReader(behavior);
-				else
-					ExecuteNonQuery();
+                if (type == 1)
+                    return ExecuteReader(behavior);
+                return ExecuteNonQuery();
 			}
 			catch (Exception ex)
 			{
 				thrownException = ex;
 			}
+            return null;
 		}
 
 		/// <summary>
@@ -583,8 +565,11 @@ namespace MySql.Data.MySqlClient
 		/// the returned rows. </returns>
 		public IAsyncResult BeginExecuteReader(CommandBehavior behavior)
 		{
-			AsyncDelegate del = new AsyncDelegate(AsyncExecuteWrapper);
-			asyncResult = del.BeginInvoke(1, behavior, null, null);
+            if (caller != null)
+                throw new MySqlException(Resources.UnableToStartSecondAsyncOp);
+
+			caller = new AsyncDelegate(AsyncExecuteWrapper);
+			asyncResult = caller.BeginInvoke(1, behavior, null, null);
 			return asyncResult;
 		}
 
@@ -598,9 +583,11 @@ namespace MySql.Data.MySqlClient
 		public MySqlDataReader EndExecuteReader(IAsyncResult result)
 		{
 			result.AsyncWaitHandle.WaitOne();
-			if (thrownException != null)
-				throw thrownException;
-			return connection.Reader;
+            AsyncDelegate c = caller;
+            caller = null;
+            if (thrownException != null)
+                throw thrownException;
+            return (MySqlDataReader)c.EndInvoke(result);
 		}
 
 		/// <summary>
@@ -619,8 +606,11 @@ namespace MySql.Data.MySqlClient
 		/// which returns the number of affected rows. </returns>
 		public IAsyncResult BeginExecuteNonQuery(AsyncCallback callback, object stateObject)
 		{
-			AsyncDelegate del = new AsyncDelegate(AsyncExecuteWrapper);
-			asyncResult = del.BeginInvoke(2, CommandBehavior.Default, 
+            if (caller != null)
+                throw new MySqlException(Resources.UnableToStartSecondAsyncOp);
+
+            caller = new AsyncDelegate(AsyncExecuteWrapper);
+			asyncResult = caller.BeginInvoke(2, CommandBehavior.Default, 
 				callback, stateObject);
 			return asyncResult;
 		}
@@ -634,8 +624,11 @@ namespace MySql.Data.MySqlClient
 		/// which returns the number of affected rows. </returns>
 		public IAsyncResult BeginExecuteNonQuery()
 		{
-			AsyncDelegate del = new AsyncDelegate(AsyncExecuteWrapper);
-			asyncResult = del.BeginInvoke(2, CommandBehavior.Default, null, null);
+            if (caller != null)
+                throw new MySqlException(Resources.UnableToStartSecondAsyncOp);
+
+            caller = new AsyncDelegate(AsyncExecuteWrapper);
+			asyncResult = caller.BeginInvoke(2, CommandBehavior.Default, null, null);
 			return asyncResult;
 		}
 
@@ -648,9 +641,11 @@ namespace MySql.Data.MySqlClient
 		public int EndExecuteNonQuery(IAsyncResult asyncResult)
 		{
 			asyncResult.AsyncWaitHandle.WaitOne();
-			if (thrownException != null)
-				throw thrownException;
-			return (int)updatedRowCount;
+            AsyncDelegate c = caller;
+            caller = null;
+            if (thrownException != null)
+                throw thrownException;
+            return (int)c.EndInvoke(asyncResult);
 		}
 
 		#endregion
