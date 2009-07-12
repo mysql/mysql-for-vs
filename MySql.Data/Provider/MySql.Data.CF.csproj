@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{587A47FB-C1CC-459D-93B6-179D95E41EFB}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -64,7 +64,6 @@
     <Compile Include="Source\base\DbConnectionStringBuilder.cs" />
     <Compile Include="Source\base\DbException.cs" />
     <Compile Include="Source\cf\BufferedStream.cs" />
-    <Compile Include="Source\cf\CompilerGeneratedAttribute.cs" />
     <Compile Include="Source\cf\WinCE.cs" />
     <Compile Include="Source\CharSetMap.cs" />
     <Compile Include="Source\command.cs">
