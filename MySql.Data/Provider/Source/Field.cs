@@ -263,7 +263,7 @@ namespace MySql.Data.MySqlClient
             if (connection.Settings.RespectBinaryFlags)
                 CheckForExceptions();
 
-            if (Type == MySqlDbType.String && ColumnLength == 32 && !connection.Settings.OldGuids)
+            if (Type == MySqlDbType.String && ColumnLength == 36 && !connection.Settings.OldGuids)
                 mySqlDbType = MySqlDbType.Guid;
 
             if (!IsBinary) return;
@@ -303,6 +303,12 @@ namespace MySql.Data.MySqlClient
                 MySqlByte b = (MySqlByte)v;
                 b.TreatAsBoolean = true;
                 v = b;
+            }
+            else if (v is MySqlGuid)
+            {
+                MySqlGuid g = (MySqlGuid)v;
+                g.OldGuids = connection.Settings.OldGuids;
+                v = g;
             }
             return v;
         }

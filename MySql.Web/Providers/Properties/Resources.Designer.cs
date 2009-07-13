@@ -19,7 +19,7 @@ namespace MySql.Web.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "2.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -354,6 +354,31 @@ namespace MySql.Web.Properties {
         public static string schema4 {
             get {
                 return ResourceManager.GetString("schema4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CREATE TABLE my_aspnet_Sessions
+        ///(
+        ///  SessionId       varchar(255)  NOT NULL,
+        ///  ApplicationId   int       NOT NULL,
+        ///  Created         datetime  NOT NULL,
+        ///  Expires         datetime  NOT NULL,
+        ///  LockDate        datetime  NOT NULL,
+        ///  LockId          int       NOT NULL,
+        ///  Timeout         int       NOT NULL,
+        ///  Locked          tinyint(1)   NOT NULL,
+        ///  SessionItems    BLOB,
+        ///  Flags           int   NOT NULL,
+        ///  primary key (SessionId,ApplicationId)
+        ///)  DEFAULT CHARSET=latin1;
+        ///
+        ////*
+        ///  Cleaning up timed ou [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string schema5 {
+            get {
+                return ResourceManager.GetString("schema5", resourceCulture);
             }
         }
         

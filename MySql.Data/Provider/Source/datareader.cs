@@ -157,9 +157,6 @@ namespace MySql.Data.MySqlClient
 		{
 			if (!isOpen) return;
 
-            Command.lastInsertedId = driver.LastInsertedId;
-            affectedRows = driver.AffectedRows;
-
 			bool shouldCloseConnection = (commandBehavior & CommandBehavior.CloseConnection) != 0;
 			commandBehavior = CommandBehavior.Default;
 			connection.Reader = null;

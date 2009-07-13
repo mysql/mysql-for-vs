@@ -231,7 +231,7 @@ namespace MySql.Data.MySqlClient
                 throw new MySqlException(
                     String.Format(Resources.ParameterMustBeDefined, parmName));
             }
-            parameter.Serialize(packet, false);
+            parameter.Serialize(packet, false, Connection.Settings);
             return true;
         }
     }

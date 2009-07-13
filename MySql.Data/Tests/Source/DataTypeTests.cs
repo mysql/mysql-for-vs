@@ -650,37 +650,42 @@ namespace MySql.Data.MySqlClient.Tests
             execSQL("DROP TABLE IF EXISTS Test");
             execSQL("CREATE TABLE Test (id INT, g BINARY(16), c VARBINARY(16), c1 BINARY(255))");
 
-            Guid g = Guid.NewGuid();
-            byte[] bytes = g.ToByteArray();
-
-            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (1, @g, @c, @c1)", conn);
-            cmd.Parameters.AddWithValue("@g", bytes);
-            cmd.Parameters.AddWithValue("@c", bytes);
-            cmd.Parameters.AddWithValue("@c1", g.ToString());
-            cmd.ExecuteNonQuery();
-
-            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-            Assert.IsTrue(dt.Rows[0][1] is Guid);
-            Assert.IsTrue(dt.Rows[0][2] is byte[]);
-            Assert.IsTrue(dt.Rows[0][3] is byte[]);
-
-            Assert.AreEqual(g, dt.Rows[0][1]);
-
-            string s = BitConverter.ToString(bytes);
-
-            s = s.Replace("-", "");
-            string sql = String.Format("TRUNCATE TABLE Test;INSERT INTO Test VALUES(1,0x{0},NULL,NULL)", s);
-            execSQL(sql);
-
-            cmd.CommandText = "SELECT * FROM Test";
-            cmd.Parameters.Clear();
-            using (MySqlDataReader reader = cmd.ExecuteReader())
+            string connStr = GetConnectionString(true) + ";old guids=true";
+            using (MySqlConnection c = new MySqlConnection(connStr))
             {
-                reader.Read();
-                Guid g1 = reader.GetGuid(1);
-                Assert.AreEqual(g, g1);
+                c.Open();
+                Guid g = Guid.NewGuid();
+                byte[] bytes = g.ToByteArray();
+
+                MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (1, @g, @c, @c1)", c);
+                cmd.Parameters.AddWithValue("@g", bytes);
+                cmd.Parameters.AddWithValue("@c", bytes);
+                cmd.Parameters.AddWithValue("@c1", g.ToString());
+                cmd.ExecuteNonQuery();
+
+                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", c);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                Assert.IsTrue(dt.Rows[0][1] is Guid);
+                Assert.IsTrue(dt.Rows[0][2] is byte[]);
+                Assert.IsTrue(dt.Rows[0][3] is byte[]);
+
+                Assert.AreEqual(g, dt.Rows[0][1]);
+
+                string s = BitConverter.ToString(bytes);
+
+                s = s.Replace("-", "");
+                string sql = String.Format("TRUNCATE TABLE Test;INSERT INTO Test VALUES(1,0x{0},NULL,NULL)", s);
+                execSQL(sql);
+
+                cmd.CommandText = "SELECT * FROM Test";
+                cmd.Parameters.Clear();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    reader.Read();
+                    Guid g1 = reader.GetGuid(1);
+                    Assert.AreEqual(g, g1);
+                }
             }
         }
 
@@ -813,18 +818,23 @@ namespace MySql.Data.MySqlClient.Tests
         {
             execSQL("CREATE TABLE Test(id INT, g BINARY(16))");
 
-            Guid guid = Guid.NewGuid();
-            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES(1, @g)", conn);
-            cmd.Parameters.Add(new MySqlParameter("@g", MySqlDbType.Guid));
-            cmd.Parameters[0].Value = guid;
-            cmd.ExecuteNonQuery();
+            string connStr = GetConnectionString(true) + ";old guids=true";
+            using (MySqlConnection c = new MySqlConnection(connStr))
+            {
+                c.Open();
+                Guid guid = Guid.NewGuid();
+                MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES(1, @g)", c);
+                cmd.Parameters.Add(new MySqlParameter("@g", MySqlDbType.Guid));
+                cmd.Parameters[0].Value = guid;
+                cmd.ExecuteNonQuery();
 
-            DataTable dt = new DataTable();
-            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
-            da.Fill(dt);
-            Assert.AreEqual(1, dt.Rows.Count);
-            Assert.AreEqual(1, dt.Rows[0]["id"]);
-            Assert.AreEqual(guid, dt.Rows[0]["g"]);
+                DataTable dt = new DataTable();
+                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", c);
+                da.Fill(dt);
+                Assert.AreEqual(1, dt.Rows.Count);
+                Assert.AreEqual(1, dt.Rows[0]["id"]);
+                Assert.AreEqual(guid, dt.Rows[0]["g"]);
+            }
         }
 
         /// <summary>
@@ -836,27 +846,65 @@ namespace MySql.Data.MySqlClient.Tests
             execSQL("DROP TABLE IF EXISTS Test");
             execSQL("CREATE TABLE Test (id INT, guid BINARY(16))");
 
-            Guid g = new Guid("32A48AC5-285A-46c6-A0D4-158E6E39729C");
-            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (1, ?guid)", conn);
-            MySqlParameter p = new MySqlParameter();
-            p.ParameterName = "guid";
-            p.Value = Guid.NewGuid();
-            cmd.Parameters.Add(p);
+            string connStr = GetConnectionString(true) + ";old guids=true";
+            using (MySqlConnection c = new MySqlConnection(connStr))
+            {
+                c.Open();
+
+                Guid g = new Guid("32A48AC5-285A-46c6-A0D4-158E6E39729C");
+                MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (1, ?guid)", c);
+                MySqlParameter p = new MySqlParameter();
+                p.ParameterName = "guid";
+                p.Value = Guid.NewGuid();
+                cmd.Parameters.Add(p);
+                cmd.ExecuteNonQuery();
+
+                cmd.CommandText = "SELECT * FROM Test";
+                cmd.Parameters.Clear();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    reader.Read();
+
+                    object o = reader.GetValue(1);
+                    Assert.IsTrue(o is Guid);
+
+                    byte[] bytes = new byte[16];
+                    long size = reader.GetBytes(1, 0, bytes, 0, 16);
+                    Assert.AreEqual(16, size);
+                }
+            }
+        }
+
+        [Test]
+        public void ReadingUUIDAsGuid()
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id INT, guid CHAR(36))");
+            execSQL("INSERT INTO Test VALUES (1, UUID())");
+
+            MySqlCommand cmd = new MySqlCommand("SELECT CONCAT('A', guid) FROM Test", conn);
+            string serverGuidStr = cmd.ExecuteScalar().ToString().Substring(1);
+            Guid serverGuid = new Guid(serverGuidStr);
+
+            cmd.CommandText = "SELECT guid FROM Test";
+            Guid g = (Guid)cmd.ExecuteScalar();
+            Assert.AreEqual(serverGuid, g);
+        }
+
+        [Test]
+        public void NewGuidType()
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id INT, guid CHAR(36))");
+
+            Guid g = Guid.NewGuid();
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES(1, @g)", conn);
+            cmd.Parameters.AddWithValue("@g", g);
             cmd.ExecuteNonQuery();
 
-            cmd.CommandText = "SELECT * FROM Test";
-            cmd.Parameters.Clear();
-            using (MySqlDataReader reader = cmd.ExecuteReader())
-            {
-                reader.Read();
-
-                object o = reader.GetValue(1);
-                Assert.IsTrue(o is Guid);
-
-                byte[] bytes = new byte[16];
-                long size = reader.GetBytes(1, 0, bytes, 0, 16);
-                Assert.AreEqual(16, size);
-            }
+            cmd.CommandText = "SELECT guid FROM Test";
+            Guid readG = (Guid)cmd.ExecuteScalar();
+            Assert.AreEqual(g, readG);
         }
     }
 }

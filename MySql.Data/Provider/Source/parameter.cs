@@ -370,12 +370,20 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-        internal void Serialize(MySqlPacket packet, bool binary)
+        internal void Serialize(MySqlPacket packet, bool binary, MySqlConnectionStringBuilder settings)
         {
             if (!binary && (paramValue == null || paramValue == DBNull.Value))
                 packet.WriteStringNoNull("NULL");
             else
+            {
+                if (ValueObject.MySqlDbType == MySqlDbType.Guid)
+                {
+                    MySqlGuid g = (MySqlGuid)ValueObject;
+                    g.OldGuids = settings.OldGuids;
+                    valueObject = g;
+                }
                 ValueObject.WriteValue(packet, binary, paramValue, size);
+            }
         }
 
         private void SetMySqlDbType(MySqlDbType mysql_dbtype)

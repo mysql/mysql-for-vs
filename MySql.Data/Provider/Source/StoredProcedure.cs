@@ -173,26 +173,33 @@ namespace MySql.Data.MySqlClient
             foreach (DataRow param in parametersTable.Rows)
             {
                 MySqlParameter p = GetAndFixParameter(param, realAsFloat);
+                if (p == null) continue;
 
                 string baseName = p.ParameterName;
+                string pName = baseName;
                 if (baseName.StartsWith("@") || baseName.StartsWith("?"))
                     baseName = baseName.Substring(1);
-
-                // if input then we just send the parameter normally
-                if (p.Direction == ParameterDirection.Input || 
-                    (Connection.driver.SupportsOutputParameters && preparing))
-                {
-                    sqlStr.AppendFormat(CultureInfo.InvariantCulture, "{0}@{1}", sqlDelimiter, baseName);
-                    sqlDelimiter = ", ";
-                }
                 else
+                    pName = "@" + pName;
+
+                string inputVar = pName;
+                if (p.Direction != ParameterDirection.Input &&
+                    !(Connection.driver.SupportsOutputParameters || preparing))
                 {
-                    Connection.driver.ExecuteDirect(String.Format(
-                        "SET @{0}{1}={2}", parameterHash, baseName,
-                        p.Direction == ParameterDirection.Output ? "NULL" : p.Value.ToString()));
-                    outSql.AppendFormat(CultureInfo.InvariantCulture, "{0}@{1}{2}", outDelimiter, parameterHash, baseName);
+                    // set a user variable to our current value
+                    string sql = String.Format("SET @{0}{1}={2}", parameterHash, baseName, pName);
+                    MySqlCommand cmd = new MySqlCommand(sql, Connection);
+                    cmd.parameterHash = command.parameterHash;
+                    cmd.Parameters.Add(p);
+                    cmd.ExecuteNonQuery();
+
+                    inputVar = String.Format("@{0}{1}", parameterHash, baseName);
+
+                    outSql.AppendFormat(CultureInfo.InvariantCulture, "{0}{1}", outDelimiter, inputVar);
                     outDelimiter = ", ";
                 }
+                sqlStr.AppendFormat(CultureInfo.InvariantCulture, "{0}{1}", sqlDelimiter, inputVar);
+                sqlDelimiter = ", ";
             }
 
             string sqlCmd = sqlStr.ToString().TrimEnd(' ', ',');
@@ -236,7 +243,11 @@ namespace MySql.Data.MySqlClient
                 MySqlParameter parameter = Parameters.GetParameterFlexible(fieldName, true);
                 results.SetValueObject(i, MySqlField.GetIMySqlValue(parameter.MySqlDbType));
             }
-            if (!reader.Read()) return null;
+            if (!reader.Read())
+            {
+                reader.Close();
+                return null;
+            }
             return reader;
         }
 
@@ -253,13 +264,19 @@ namespace MySql.Data.MySqlClient
                 reader = rdr;
             }
 
-            for (int i = 0; i < reader.FieldCount; i++)
+            using (reader)
             {
-                string fieldName = reader.GetName(i);
-                if (fieldName.StartsWith(command.parameterHash))
-                    fieldName = fieldName.Remove(0, command.parameterHash.Length + 1);
-                MySqlParameter parameter = Parameters.GetParameterFlexible(fieldName, true);
-                parameter.Value = reader.GetValue(i);
+                string hash = "@" + command.parameterHash;
+
+                for (int i = 0; i < reader.FieldCount; i++)
+                {
+                    string fieldName = reader.GetName(i);
+                    if (fieldName.StartsWith(hash))
+                        fieldName = fieldName.Remove(0, hash.Length);
+                    MySqlParameter parameter = Parameters.GetParameterFlexible(fieldName, true);
+                    parameter.Value = reader.GetValue(i);
+                }
+                reader.Close();
             }
 		}
 	}

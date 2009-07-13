@@ -31,9 +31,11 @@ namespace MySql.Data.Types
         Guid mValue;
         private bool isNull;
         private byte[] bytes;
+        private bool oldGuids;
 
         public MySqlGuid(byte[] buff)
         {
+            oldGuids = false;
             mValue = new Guid(buff);
             isNull = false;
             bytes = buff;
@@ -42,6 +44,12 @@ namespace MySql.Data.Types
         public byte[] Bytes
         {
             get { return bytes; }
+        }
+
+        public bool OldGuids
+        {
+            get { return oldGuids; }
+            set { oldGuids = value; }
         }
 
 		#region IMySqlValue Members
@@ -78,7 +86,7 @@ namespace MySql.Data.Types
 
 		string IMySqlValue.MySqlTypeName
 		{
-            get { return "BINARY(16)"; }
+            get { return OldGuids ? "BINARY(16)" : "CHAR(36)"; }
 		}
 
 		void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val, int length)
@@ -104,23 +112,38 @@ namespace MySql.Data.Types
                 }
             }
 
+            if (OldGuids)
+                WriteOldGuid(packet, guid, binary);
+            else
+            {
+                guid.ToString("D");
+
+                if (binary)
+                    packet.WriteLenString(guid.ToString("D"));
+                else
+                    packet.WriteStringNoNull("'" + MySqlHelper.EscapeString(guid.ToString("D")) + "'");
+            }
+		}
+
+        private void WriteOldGuid(MySqlPacket packet, Guid guid, bool binary)
+        {
             byte[] bytes = guid.ToByteArray();
 
-			if (binary)
-			{
+            if (binary)
+            {
                 packet.WriteLength(bytes.Length);
                 packet.Write(bytes);
-			}
-			else
-			{
+            }
+            else
+            {
                 if (packet.Version.isAtLeast(4, 1, 0))
                     packet.WriteStringNoNull("_binary ");
 
                 packet.WriteByte((byte)'\'');
-				EscapeByteArray(bytes, bytes.Length, packet);
+                EscapeByteArray(bytes, bytes.Length, packet);
                 packet.WriteByte((byte)'\'');
-			}
-		}
+            }
+        }
 
 		private static void EscapeByteArray(byte[] bytes, int length, MySqlPacket packet)
 		{
@@ -143,18 +166,34 @@ namespace MySql.Data.Types
 			}
 		}
 
+        private MySqlGuid ReadOldGuid(MySqlPacket packet, long length)
+        {
+            if (length == -1)
+                length = (long)packet.ReadFieldLength();
+
+            byte[] buff = new byte[length];
+            packet.Read(buff, 0, (int)length);
+            MySqlGuid g = new MySqlGuid(buff);
+            g.OldGuids = OldGuids;
+            return g;
+        }
+
 		IMySqlValue IMySqlValue.ReadValue(MySqlPacket packet, long length, bool nullVal)
 		{
             MySqlGuid g = new MySqlGuid();
             g.isNull = true;
             if (!nullVal)
             {
+                if (OldGuids)
+                    return ReadOldGuid(packet, length);
+                string s = String.Empty;
                 if (length == -1)
-                    length = (long)packet.ReadFieldLength();
-
-                byte[] buff = new byte[length];
-                packet.Read(buff, 0, (int)length);
-                g = new MySqlGuid(buff);
+                    s = packet.ReadLenString();
+                else
+                    s = packet.ReadString(length);
+                g.mValue = new Guid(s);
+                g.OldGuids = OldGuids;
+                g.isNull = false;
             }
             return g;
 		}

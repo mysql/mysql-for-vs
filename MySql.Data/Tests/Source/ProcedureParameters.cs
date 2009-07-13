@@ -28,15 +28,6 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture]
 	public class ProcedureParameterTests : BaseTest
 	{
-        protected override string GetConnectionInfo()
-        {
-            string info = base.GetConnectionInfo();
-            if (rootConn != null)
-                if (Version.Major == 5)
-                    info = info.Replace("use procedure bodies=false", "");
-            return info;
-        }
-
         [Test]
         public void ProcedureParameters()
         {

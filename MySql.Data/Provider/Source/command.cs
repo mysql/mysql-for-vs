@@ -413,7 +413,7 @@ namespace MySql.Data.MySqlClient
 
                 // start a timeout timer
                 if (connection.driver.Version.isAtLeast(5, 0, 0) &&
-                     commandTimeout == 0)
+                     commandTimeout > 0)
                 {
                     TimerCallback timerDelegate =
                          new TimerCallback(TimeoutExpired);

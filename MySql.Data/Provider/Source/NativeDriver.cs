@@ -563,7 +563,15 @@ namespace MySql.Data.MySqlClient
             if ((serverStatus & (ServerStatusFlags.AnotherQuery | ServerStatusFlags.MoreResults)) == 0)
                 return -1;
 
-            packet = stream.ReadPacket();
+            try
+            {
+                packet = stream.ReadPacket();
+            }
+            catch (Exception)
+            {
+                serverStatus = 0;
+                throw;
+            }
 
             long fieldCount = packet.ReadFieldLength();
             if (fieldCount > 0)
