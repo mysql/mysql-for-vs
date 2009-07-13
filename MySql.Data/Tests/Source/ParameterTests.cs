@@ -61,7 +61,7 @@ namespace MySql.Data.MySqlClient.Tests
 			cmd.ExecuteNonQuery();
 
 			cmd.Parameters[0].Value = 5;
-			cmd.Parameters[1].Value = @"my \\ value";
+			cmd.Parameters[1].Value = @"my \ value";
 			cmd.ExecuteNonQuery();
 
 			cmd.CommandText = "SELECT * FROM Test";
