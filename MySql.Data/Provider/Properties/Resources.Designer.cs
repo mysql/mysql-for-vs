@@ -21,9 +21,7 @@ namespace MySql.Data.MySqlClient.Properties {
     // with the /str option, or rebuild your VS project.
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "2.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-#if !CF
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-#endif
     public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
@@ -774,7 +772,7 @@ namespace MySql.Data.MySqlClient.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable to retrieve stored procedure metadata.  Either grant  SELECT privilege to mysql.proc for this user or use &quot;use procedure bodies=false&quot; with  your connection string..
+        ///   Looks up a localized string similar to Unable to retrieve stored procedure metadata for routine &apos;{0}&apos;.  Either grant  SELECT privilege to mysql.proc for this user or use &quot;use procedure bodies=false&quot; with  your connection string..
         /// </summary>
         public static string UnableToRetrieveSProcData {
             get {
