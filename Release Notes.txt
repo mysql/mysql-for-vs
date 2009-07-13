@@ -35,5 +35,9 @@ What we know may be broken
   also to set us up for future features such as client side query caching.  What I saying
   is that we may have broken some fairly major stuff so be sure and test against safe 
   data and please don't deploy until we are GA and you are confident.
+- The button for bringing up the website config wizard doesn't appear unless you have created
+  a data connection to a MySQL server in server explorer. 
+- The website configuration wizard is a bit fragile when it launches.  You should have a
+  website project loaded and selected and it should work.   
 
 Please let us know what else we broke and how we can make it better!
