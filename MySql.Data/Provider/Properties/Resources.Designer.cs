@@ -828,7 +828,7 @@ namespace MySql.Data.MySqlClient.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable to retrieve stored procedure metadata.  Either grant  SELECT privilege to mysql.proc for this user or use &quot;use procedure bodies=false&quot; with  your connection string..
+        ///   Looks up a localized string similar to Unable to retrieve stored procedure metadata for routine &apos;{0}&apos;.  Either grant  SELECT privilege to mysql.proc for this user or use &quot;use procedure bodies=false&quot; with  your connection string..
         /// </summary>
         public static string UnableToRetrieveSProcData {
             get {
