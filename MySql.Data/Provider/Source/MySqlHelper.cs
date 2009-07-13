@@ -29,6 +29,7 @@ namespace MySql.Data.MySqlClient
 	/// </summary>
 	public sealed class MySqlHelper
 	{
+        private static string stringOfBackslashChars = "\u005c\u00a5\u0160\u20a9\u2216\ufe68\uff3c";
         private static string stringOfQuoteChars =
             "\u0027\u00b4\u02b9\u02ba\u02bb\u02bc\u02c8\u02ca\u02cb\u02d9\u0300\u0301\u2018\u2019\u201a\u2032\u2035\u275b\u275c\uff07";
 
@@ -376,7 +377,8 @@ namespace MySql.Data.MySqlClient
             StringBuilder sb = new StringBuilder();
             foreach (char c in value)
             {
-                if (stringOfQuoteChars.IndexOf(c) >= 0)
+                if (stringOfQuoteChars.IndexOf(c) >= 0 ||
+                    stringOfBackslashChars.IndexOf(c) >= 0)
                     sb.Append("\\");
                 sb.Append(c);
             }
