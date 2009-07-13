@@ -113,14 +113,25 @@ namespace MySql.Data.MySqlClient
             return dtd.Substring(x).ToUpper(CultureInfo.InvariantCulture);
         }
 
+        private string FixProcedureName(string name)
+        {
+            string[] parts = name.Split('.');
+            for (int i = 0; i < parts.Length; i++)
+                if (!parts[i].StartsWith("`"))
+                    parts[i] = String.Format("`{0}`", parts[i]);
+            if (parts.Length == 1) return parts[0];
+            return String.Format("{0}.{1}", parts[0], parts[1]);
+        }
+
         public override void Resolve()
         {
             // first retrieve the procedure definition from our
             // procedure cache
             string spName = commandText;
             string parameterHash = command.parameterHash;
-            if (spName.IndexOf(".") == -1)
+            if (spName.IndexOf(".") == -1 && !String.IsNullOrEmpty(Connection.Database))
                 spName = Connection.Database + "." + spName;
+            spName = FixProcedureName(spName);
 
             DataSet ds = GetParameters(spName);
 
@@ -184,14 +195,14 @@ namespace MySql.Data.MySqlClient
             string sqlCmd = sqlStr.ToString().TrimEnd(' ', ',');
             outSelect = outSelect.TrimEnd(' ', ',');
             if (procTable.Rows[0]["ROUTINE_TYPE"].Equals("PROCEDURE"))
-                sqlCmd = String.Format("call {0} ({1})", commandText, sqlCmd);
+                sqlCmd = String.Format("call {0} ({1})", spName, sqlCmd);
             else
             {
                 if (retParm == null)
                     retParm = parameterHash + "dummy";
                 else
                     outSelect = String.Format("@{0}", retParm);
-                sqlCmd = String.Format("SET @{0}={1}({2})", retParm, commandText, sqlCmd);
+                sqlCmd = String.Format("SET @{0}={1}({2})", retParm, spName, sqlCmd);
             }
 
             if (setStr.Length > 0)
