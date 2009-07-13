@@ -178,18 +178,16 @@ namespace MySql.Data.MySqlClient.Tests
             // now allow our user to access them
             suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'localhost' 
 				identified by 'test'", database0));
-            suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'localhost' 
+            suExecSQL(String.Format(@"GRANT SELECT ON `{0}`.* to 'test'@'localhost' 
 				identified by 'test'", database1));
-            suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'%' 
-				identified by 'test'", database0));
-            suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'%' 
-				identified by 'test'", database1));
+            if (Version.Major >= 5)
+                suExecSQL(String.Format(@"GRANT EXECUTE ON `{0}`.* to 'test'@'localhost' 
+				    identified by 'test'", database1));
 
             if (includeProc)
             {
                 // now allow our user to access them
                 suExecSQL(@"GRANT ALL ON mysql.proc to 'test'@'localhost' identified by 'test'");
-                suExecSQL(@"GRANT ALL ON mysql.proc to 'test'@'%' identified by 'test'");
             }
             
             suExecSQL("FLUSH PRIVILEGES");
