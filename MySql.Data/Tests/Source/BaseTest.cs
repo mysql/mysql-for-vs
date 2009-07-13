@@ -180,8 +180,9 @@ namespace MySql.Data.MySqlClient.Tests
 				identified by 'test'", database0));
             suExecSQL(String.Format(@"GRANT SELECT ON `{0}`.* to 'test'@'localhost' 
 				identified by 'test'", database1));
-            suExecSQL(String.Format(@"GRANT EXECUTE ON `{0}`.* to 'test'@'localhost' 
-				identified by 'test'", database1));
+            if (Version.Major >= 5)
+                suExecSQL(String.Format(@"GRANT EXECUTE ON `{0}`.* to 'test'@'localhost' 
+				    identified by 'test'", database1));
 
             if (includeProc)
             {
