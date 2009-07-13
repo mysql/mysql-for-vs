@@ -8,7 +8,6 @@
     <SchemaVersion>2.0</SchemaVersion>
     <OutputName>MySql.Data</OutputName>
     <OutputType>Package</OutputType>
-    <WixToolPath>C:\Program Files (x86)\Windows Installer XML v3\bin\</WixToolPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'GPL' ">
     <IntermediateOutputPath>obj\GPL\</IntermediateOutputPath>
