@@ -32,6 +32,11 @@ namespace MySql.Data.MySqlClient.Tests
     [TestFixture]
     public class StoredProcedureAccess : StoredProcedure
     {
+        public StoredProcedureAccess() : base()
+        {
+            hasAccess = true;
+        }
+
         public override void Setup()
         {
             base.Setup();

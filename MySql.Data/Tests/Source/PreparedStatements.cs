@@ -777,7 +777,7 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void SprocOutputParams()
         {
-            if (Version < new Version(5, 4, 0)) return;
+            if (Version < new Version(6, 0, 8)) return;
 
             execSQL("CREATE PROCEDURE spTest(id INT, OUT age INT) BEGIN SET age=id; END");
 

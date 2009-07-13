@@ -36,11 +36,13 @@ namespace MySql.Data.MySqlClient.Tests
     public class StoredProcedure : BaseTest
     {
         private static string fillError = null;
+        protected bool hasAccess;
 
         public StoredProcedure()
         {
             pooling = false;
-            csAdditions = ";procedure cache size=0;logging=true;";
+            hasAccess = false;
+            csAdditions = ";procedure cache size=0;";
         }
 
         /// <summary>
@@ -1266,17 +1268,23 @@ namespace MySql.Data.MySqlClient.Tests
             if (Version < new Version(5, 0)) return;
             if (Version > new Version(6, 0, 6)) return;
 
-            execSQL(@"CREATE  PROCEDURE spTest (id INT, name VARCHAR(20))
+            rootConn.ChangeDatabase(database1);
+            suExecSQL(@"CREATE  PROCEDURE spTest (id INT, name VARCHAR(20))
                     BEGIN SELECT name; END");
-            MySqlCommand cmd = new MySqlCommand("spTest", conn);
+            rootConn.ChangeDatabase(database0);
+
+            MySqlCommand cmd = new MySqlCommand(database1 + ".spTest", conn);
             cmd.CommandType = CommandType.StoredProcedure;
             try
             {
                 MySqlCommandBuilder.DeriveParameters(cmd);
-                Assert.Fail("This should have failed");
+                if (!hasAccess)
+                    Assert.Fail("This should have failed");
             }
             catch (MySqlException ex)
             {
+                if (hasAccess)
+                    Assert.Fail("This should have not failed");
             }
         }
     }

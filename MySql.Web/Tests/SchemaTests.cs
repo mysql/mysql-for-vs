@@ -149,6 +149,30 @@ namespace MySql.Web.Tests
             try
             {
                 provider.Initialize(null, config);
+                Assert.Fail("Should have failed");
+            }
+            catch (ProviderException)
+            {
+            }
+        }
+
+        [Test]
+        public void SchemaV5Present()
+        {
+            MySQLMembershipProvider provider = new MySQLMembershipProvider();
+            NameValueCollection config = new NameValueCollection();
+            config.Add("connectionStringName", "LocalMySqlServer");
+            config.Add("applicationName", "/");
+            config.Add("passwordFormat", "Clear");
+
+            LoadSchema(1);
+            LoadSchema(2);
+            LoadSchema(3);
+            LoadSchema(4);
+            LoadSchema(5);
+            try
+            {
+                provider.Initialize(null, config);
             }
             catch (ProviderException)
             {

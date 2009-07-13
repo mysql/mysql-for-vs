@@ -193,7 +193,6 @@ namespace MySql.Data.MySqlClient
 
         public int ReadInteger(int numbytes)
         {
-            Debug.Assert(numbytes <= 4);
             return (int)ReadULong(numbytes);
         }
 

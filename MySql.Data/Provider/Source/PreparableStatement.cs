@@ -151,7 +151,7 @@ namespace MySql.Data.MySqlClient
                     p.Direction == ParameterDirection.Output;
                 if (nullMap[i]) continue;
                 packet.Encoding = p.Encoding;
-                p.Serialize(packet, true);
+                p.Serialize(packet, true, Connection.Settings);
             }
             if (nullMap != null)
                 nullMap.CopyTo(packet.Buffer, nullMapPosition);

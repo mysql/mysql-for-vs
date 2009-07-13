@@ -28,7 +28,7 @@
         ORDINAL_POSITION AS `Ordinal`,
         CASE IS_NULLABLE WHEN 'YES' THEN 1 ELSE 0 END AS `IsNullable`,
         IF(LEFT(COLUMN_TYPE,10) = 'tinyint(1)', 'bool',
-          IF (LEFT(COLUMN_TYPE,10) = 'binary(16)', 'guid',
+          IF (LEFT(COLUMN_TYPE,10) = 'binary(16)' OR LEFT(COLUMN_TYPE,8) = 'char(36)', 'guid',
             IF (INSTR(COLUMN_TYPE, 'unsigned') = 0, DATA_TYPE,
               CONCAT('u', DATA_TYPE)))) AS `TypeName`,
         IF (CHARACTER_MAXIMUM_LENGTH > 2147483647, 2147483647, CHARACTER_MAXIMUM_LENGTH) AS `MaxLength`,
