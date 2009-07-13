@@ -98,9 +98,15 @@ namespace MySql.Data.MySqlClient
 
         private static DataSet GetProcData(MySqlConnection connection, string spName)
         {
+            string schema = String.Empty;
+            string name = spName;
+
             int dotIndex = spName.IndexOf(".");
-            string schema = spName.Substring(0, dotIndex);
-            string name = spName.Substring(dotIndex + 1, spName.Length - dotIndex - 1);
+            if (dotIndex != -1)
+            {
+                schema = spName.Substring(0, dotIndex);
+                name = spName.Substring(dotIndex + 1, spName.Length - dotIndex - 1);
+            }
 
             string[] restrictions = new string[4];
             restrictions[1] = schema.Length > 0 ? schema : connection.CurrentDatabase();
@@ -119,11 +125,12 @@ namespace MySql.Data.MySqlClient
             // know the procedure we care about.
             ISSchemaProvider isp = new ISSchemaProvider(connection);
             string[] rest = isp.CleanRestrictions(restrictions);
-            if (isp.CanRetrieveProcedureParameters())
+            try
             {
                 DataTable parametersTable = isp.GetProcedureParameters(rest, procTable);
                 ds.Tables.Add(parametersTable);
             }
+            catch (Exception) { }
 
             return ds;
         }

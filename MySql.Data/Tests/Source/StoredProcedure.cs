@@ -1218,28 +1218,24 @@ namespace MySql.Data.MySqlClient.Tests
 
             execSQL("CREATE PROCEDURE spTest(myparam decimal  (8,2)) BEGIN SELECT 1; END");
 
-            string connStr = GetConnectionString(true);
-            connStr = connStr.Replace("use procedure bodies=false", "");
-            using (MySqlConnection c = new MySqlConnection(connStr))
-            {
-                c.Open();
-
-                MySqlCommand cmd = new MySqlCommand("spTest", c);
-                cmd.Parameters.Add("@myparam", MySqlDbType.Decimal).Value = 20;
-                cmd.CommandType = CommandType.StoredProcedure;
-                object o = cmd.ExecuteScalar();
-                Assert.AreEqual(1, o);
-            }
+            MySqlCommand cmd = new MySqlCommand("spTest", conn);
+            cmd.Parameters.Add("@myparam", MySqlDbType.Decimal).Value = 20;
+            cmd.CommandType = CommandType.StoredProcedure;
+            object o = cmd.ExecuteScalar();
+            Assert.AreEqual(1, o);
         }
 
         [Test]
         public void ParametersInReverseOrder()
         {
-            if (Version.Major != 5) return;
+            if (Version.Major < 5) return;
 
-            execSQL(@"CREATE PROCEDURE spTest(IN p_1 VARCHAR(5), IN p_2 VARCHAR(5))
+            rootConn.ChangeDatabase(database1);
+            suExecSQL(@"CREATE PROCEDURE spTest(IN p_1 VARCHAR(5), IN p_2 VARCHAR(5))
                         BEGIN SELECT p_1 AS P1, p_2 AS P2; END");
-            MySqlCommand cmd = new MySqlCommand("spTest", conn);
+            rootConn.ChangeDatabase(database0);
+
+            MySqlCommand cmd = new MySqlCommand(database1 + ".spTest", conn);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.CommandTimeout = 0;
             cmd.Parameters.AddWithValue("?p_2", ("World"));
@@ -1254,8 +1250,8 @@ namespace MySql.Data.MySqlClient.Tests
             string s = GetConnectionString(true);
             if (s.IndexOf("use procedure bodies=false") != -1)
             {
-                Assert.AreEqual("World", dt.Rows[0]["P1"]);
-                Assert.AreEqual("Hello", dt.Rows[0]["P2"]);
+                Assert.AreEqual("World", dt.Rows[0][0]);
+                Assert.AreEqual("Hello", dt.Rows[0][1]);
             }
             else
             {

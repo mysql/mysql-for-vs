@@ -324,13 +324,6 @@ namespace MySql.Data.MySqlClient
             return dt;
         }
 
-        internal bool CanRetrieveProcedureParameters()
-        {
-            if (connection.driver.Version.isAtLeast(6, 0, 6) ||
-                connection.Settings.UseProcedureBodies) return true;
-            return false;
-        }
-
         /// <summary>
         /// Return schema information about parameters for procedures and functions
         /// Restrictions supported are:
@@ -341,14 +334,16 @@ namespace MySql.Data.MySqlClient
         {
             if (connection.driver.Version.isAtLeast(6, 0, 6))
                 return GetParametersFromIS(restrictions, routines);
-            else if (connection.Settings.UseProcedureBodies)
+            try
             {
                 DataTable dt = CreateParametersTable();
                 GetParametersFromShowCreate(dt, restrictions, routines);
                 return dt;
             }
-            else
-                throw new InvalidOperationException(Resources.UnableToRetrieveParameters);
+            catch (InvalidOperationException ioe)
+            {
+                throw new InvalidOperationException(Resources.UnableToRetrieveParameters, ioe);
+            }
         }
 
         protected override DataTable GetSchemaInternal(string collection, string[] restrictions)
@@ -506,7 +501,8 @@ namespace MySql.Data.MySqlClient
                 }
                 catch (SqlNullValueException snex)
                 {
-                    throw new InvalidOperationException(Resources.UnableToRetrieveSProcData, snex);
+                    throw new InvalidOperationException(
+                        String.Format(Resources.UnableToRetrieveSProcData, routine["ROUTINE_NAME"]), snex);
                 }
             }
         }
@@ -616,7 +612,10 @@ namespace MySql.Data.MySqlClient
             else
                 dtd.Append(GetDataTypeDefaults(type, row));
 
-            while (token != ")" && token != "," && String.Compare(token, "begin", true) != 0)
+            while (token != ")" && 
+                   token != "," && 
+                   String.Compare(token, "begin", true) != 0 &&
+                   String.Compare(token, "return", true) != 0)
             {
                 if (String.Compare(token, "CHARACTER", true) == 0 ||
                     String.Compare(token, "BINARY", true) == 0)
