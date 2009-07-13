@@ -102,6 +102,7 @@ namespace MySql.Data.MySqlClient.Tests
             connStr += GetConnectionInfo();
             rootConn = new MySqlConnection(connStr);
             rootConn.Open();
+
         }
 
         [TestFixtureTearDown]
@@ -114,7 +115,19 @@ namespace MySql.Data.MySqlClient.Tests
 
         protected Version Version
         {
-            get { return version; }
+            get
+            {
+                if (version == null)
+                {
+                    string versionString = rootConn.ServerVersion;
+                    int i = 0;
+                    while (i < versionString.Length &&
+                        (Char.IsDigit(versionString[i]) || versionString[i] == '.'))
+                        i++;
+                    version = new Version(versionString.Substring(0, i));
+                }
+                return version;
+            }
         }
 
         #endregion
@@ -164,19 +177,6 @@ namespace MySql.Data.MySqlClient.Tests
                 string connString = GetConnectionString(true);
                 conn = new MySqlConnection(connString);
                 conn.Open();
-
-
-                string ver = conn.ServerVersion;
-
-                int x = 0;
-                foreach (char c in ver)
-                {
-                    if (!Char.IsDigit(c) && c != '.')
-                        break;
-                    x++;
-                }
-                ver = ver.Substring(0, x);
-                version = new Version(ver);
             }
             catch (Exception ex)
             {
@@ -205,6 +205,12 @@ namespace MySql.Data.MySqlClient.Tests
 
         protected void SetAccountPerms(bool includeProc)
         {
+            try
+            {
+                suExecSQL("DROP USER 'test'@'localhost'");
+            }
+            catch (Exception) { }
+
             // now allow our user to access them
             suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'localhost' 
 				identified by 'test'", database0));
