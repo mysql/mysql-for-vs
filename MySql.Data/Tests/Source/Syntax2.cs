@@ -93,6 +93,8 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void ParsingBugTest()
         {
+            if (Version.Major < 5) return;
+
             execSQL("DROP FUNCTION IF EXISTS `TestFunction`");
             execSQL(@"CREATE FUNCTION `TestFunction`(A INTEGER (11), B INTEGER (11), C VARCHAR (20)) 
 			      RETURNS int(11)
@@ -101,9 +103,9 @@ namespace MySql.Data.MySqlClient.Tests
             MySqlCommand command = new MySqlCommand("TestFunction", conn);
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "TestFunction";
-            command.Parameters.AddWithValue("?A", 1);
-            command.Parameters.AddWithValue("?B", 2);
-            command.Parameters.AddWithValue("?C", "test");
+            command.Parameters.AddWithValue("@A", 1);
+            command.Parameters.AddWithValue("@B", 2);
+            command.Parameters.AddWithValue("@C", "test");
             command.ExecuteNonQuery();
         }
 
