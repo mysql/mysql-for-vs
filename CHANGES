@@ -1,3 +1,5 @@
+  - fixed situation where TreatTinyAsBoolean had no effect with default database character set to UTF8
+    (bug#46205)
 Version 5.1.8
   - Defaulting max allowed packet to 1024 to account for the possible case where the
     value doesn't come in as a server variable   

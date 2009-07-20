@@ -92,6 +92,35 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
+        [Test]
+        // Bug#46205 - tinyint as boolean does not work for utf8 database character set.
+        // mysqld needs to be started with --default-character-set=utf8 for the bug to occur.
+        public void TreatTinyAsBool()
+        {
+            if (version < new Version(4, 1)) return;
+            execSQL("CREATE TABLE Test2(i TINYINT(1))");
+            execSQL("INSERT INTO Test2 VALUES(1)");
+            execSQL("INSERT INTO Test2 VALUES(0)");
+            execSQL("INSERT INTO Test2 VALUES(2)");
+            MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder(conn.ConnectionString);
+            Assert.IsTrue(builder.TreatTinyAsBoolean);
+
+            MySqlCommand cmd = new MySqlCommand("SELECT * from Test2", conn);
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                bool b;
+                Assert.IsTrue(reader.Read());
+                b = (bool)reader.GetValue(0);
+                Assert.IsTrue(b);
+                Assert.IsTrue(reader.Read());
+                b = (bool)reader.GetValue(0);
+                Assert.IsFalse(b);
+                Assert.IsTrue(reader.Read());
+                b = (bool)reader.GetValue(0);
+                Assert.IsTrue(b);
+            }
+        }
+
 		[Test]
 		public void TestFloat() 
 		{
