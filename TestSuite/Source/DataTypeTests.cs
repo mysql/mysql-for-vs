@@ -92,9 +92,17 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 
+
+        /// <summary>
+        /// Bug#46205 - tinyint as boolean does not work for utf8 default database character set.
+        /// </summary>
+        ///<remarks>
+        /// Original bug occured only with mysqld started with --default-character-set=utf8.
+        /// It does not seem  possible to reproduce the original buggy behavior´otherwise
+        /// Neither "set global character_set_server = utf8" , nor  "create table /database with character set "
+        /// were sufficient.
+        ///</remarks>
         [Test]
-        // Bug#46205 - tinyint as boolean does not work for utf8 database character set.
-        // mysqld needs to be started with --default-character-set=utf8 for the bug to occur.
         public void TreatTinyAsBool()
         {
             if (version < new Version(4, 1)) return;
