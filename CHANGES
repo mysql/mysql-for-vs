@@ -1,4 +1,8 @@
-Version 5.2.7
+Version 5.2.8
+- fixed situation where TreatTinyAsBoolean had no effect with default database character set to UTF8
+    (bug#46205)
+
+Version 5.2.7 7/13/09
 - fixed procedure parameters collection so that an exception is thrown if we can't get the 
   parameters.  Also used this to optimize the procedure cache optimization
 - Added "nvarchar" and "nchar" to possible data types returned by the DataSourceInformation
