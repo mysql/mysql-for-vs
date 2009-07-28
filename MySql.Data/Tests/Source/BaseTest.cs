@@ -175,6 +175,12 @@ namespace MySql.Data.MySqlClient.Tests
 
         protected void SetAccountPerms(bool includeProc)
         {
+            try
+            {
+                suExecSQL("DROP USER 'test'@'localhost'");
+            }
+            catch (Exception) { }
+
             // now allow our user to access them
             suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'localhost' 
 				identified by 'test'", database0));
