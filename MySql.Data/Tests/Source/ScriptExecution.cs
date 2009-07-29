@@ -19,6 +19,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
+using System.Text;
 using System.Data;
 using System.IO;
 using NUnit.Framework;
@@ -168,6 +169,26 @@ namespace MySql.Data.MySqlClient.Tests
                 int count = script.Execute();
                 Assert.AreEqual(1, count);
             }
+        }
+         
+        /// <summary>
+        /// Bug #46429 use DELIMITER command in MySql.Data.MySqlClient.MySqlScript  
+        /// </summary>
+        [Test]
+        public void ScriptWithDelimiterStatements()
+        {
+            StringBuilder sql = new StringBuilder();
+
+            sql.AppendFormat("{0}DELIMITER $${0}", Environment.NewLine);
+            sql.AppendFormat(statementTemplate1, 1, "$$");
+            sql.AppendFormat("{0}DELIMITER //{0}", Environment.NewLine);
+            sql.AppendFormat(statementTemplate1, 2, "//");
+
+            MySqlScript s = new MySqlScript();
+            s.Query = sql.ToString();
+            s.Delimiter = "XX";
+            s.Connection = conn;
+            int count = s.Execute();
         }
     }
 }

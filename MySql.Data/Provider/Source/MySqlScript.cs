@@ -51,7 +51,7 @@ namespace MySql.Data.MySqlClient
         /// </summary>
         public MySqlScript()
         {
-            delimiter = ";";
+            Delimiter = ";";
         }
 
         /// <summary>
@@ -249,6 +249,7 @@ namespace MySql.Data.MySqlClient
 
         private List<ScriptStatement> BreakIntoStatements(bool ansiQuotes, bool noBackslashEscapes)
         {
+            string currentDelimiter = Delimiter;
             int startPos = 0;
             List<ScriptStatement> statements = new List<ScriptStatement>();
             List<int> lineNumbers = BreakScriptIntoLines();
@@ -263,19 +264,27 @@ namespace MySql.Data.MySqlClient
                 if (!tokenizer.Quoted &&
                     !tokenizer.IsSize)
                 {
-                    int delimiterPos = token.IndexOf(Delimiter);
-                    if (delimiterPos != -1)
+                    if (token.ToLowerInvariant() == "delimiter")
                     {
-                        int endPos = tokenizer.Index - token.Length + delimiterPos;
-                        if (tokenizer.Index == query.Length-1)
-                            endPos++;
-                        string currentQuery = query.Substring(startPos, endPos-startPos);
-                        ScriptStatement statement = new ScriptStatement();
-                        statement.text = currentQuery.Trim();
-                        statement.line = FindLineNumber(startPos, lineNumbers);
-                        statement.position = startPos - lineNumbers[statement.line];
-                        statements.Add(statement);
-                        startPos = endPos + delimiter.Length;
+                        currentDelimiter = tokenizer.NextToken();
+                        startPos = tokenizer.Index;
+                    }
+                    else
+                    {
+                        int delimiterPos = token.IndexOf(currentDelimiter);
+                        if (delimiterPos != -1)
+                        {
+                            int endPos = tokenizer.Index - token.Length + delimiterPos;
+                            if (tokenizer.Index == query.Length - 1)
+                                endPos++;
+                            string currentQuery = query.Substring(startPos, endPos - startPos);
+                            ScriptStatement statement = new ScriptStatement();
+                            statement.text = currentQuery.Trim();
+                            statement.line = FindLineNumber(startPos, lineNumbers);
+                            statement.position = startPos - lineNumbers[statement.line];
+                            statements.Add(statement);
+                            startPos = endPos + delimiter.Length;
+                        }
                     }
                 }
                 token = tokenizer.NextToken();
