@@ -141,6 +141,31 @@ namespace MySql.Data.MySqlClient
             return packet;
 		}
 
+         /// <summary>
+         /// Reads the specified number of bytes from the stream and stores them at given 
+         /// offset in the buffer.
+         /// Throws EndOfStreamException if not all bytes can be read.
+         /// </summary>
+         /// <param name="stream">Stream to read from</param>
+         /// <param name="buffer"> Array to store bytes read from the stream </param>
+         /// <param name="offset">The offset in buffer at which to begin storing the data read from the current stream. </param>
+         /// <param name="count">Number of bytes to read</param>
+         internal static void ReadFully(Stream stream, byte[] buffer, int offset, int count)
+         {
+             int numRead = 0;
+             int numToRead = count;
+             while (numToRead > 0)
+             {
+                 int read = stream.Read(buffer, offset + numRead, numToRead);
+                 if (read == 0)
+                 {
+                     throw new EndOfStreamException();
+                 }
+                 numRead += read;
+                 numToRead -= read;
+             }
+         }
+
 		/// <summary>
 		/// LoadPacket loads up and decodes the header of the incoming packet.
 		/// </summary>
@@ -163,17 +188,13 @@ namespace MySql.Data.MySqlClient
 
                     sequenceByte = (byte)++seqByte;
                     int length = (int)(b1 + (b2 << 8) + (b3 << 16));
-                    int leftToRead = length;
-
+ 
                     // make roo for the next block
                     packet.Length += length;
 
-                    while (leftToRead > 0)
-                    {
-                        int read = inStream.Read(packet.Buffer, offset, leftToRead);
-                        leftToRead -= read;
-                        offset += read;
-                    }
+                    ReadFully(inStream, packet.Buffer, offset, length);
+                    offset += length;
+
                     // if this block was < maxBlock then it's last one in a multipacket series
                     if (length < maxBlockSize) break;
                 }
