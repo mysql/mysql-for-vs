@@ -226,6 +226,21 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual("TINYINT", dt.Rows[3]["DATA_TYPE"].ToString().ToUpper());
 		}
 
+        /// <summary> 
+        /// Bug #46270 connection.GetSchema("Columns") fails on MySQL 4.1  
+        /// </summary> 
+        [Test]
+        public void EnumAndSetColumns()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test (col1 set('A','B','C'), col2 enum('A','B','C'))");
+
+            DataTable dt = conn.GetSchema("Columns", new string[] { null, null, "test", null });
+            Assert.AreEqual(2, dt.Rows.Count);
+            Assert.AreEqual("set('A','B','C')", dt.Rows[0]["DATA_TYPE"]);
+            Assert.AreEqual("enum('A','B','C')", dt.Rows[1]["DATA_TYPE"]);
+        } 
+
 		[Test]
 		public void Procedures()
 		{
