@@ -3,6 +3,7 @@ Version 6.0.5
   'allow batch=false' to their connection string (bug #45502)
 - we are now throwing an exception when DeriveParameters is unable to successfully populate
   the parameters array.  This exception explains what is wrong (bug #45952)  
+- fixed potential infinite loop in LoadPacket(), when read from a stream returns 0. (bug#46308)
   
 Version 6.0.4
 - fixed regression where using stored procs with datasets (bug #44460)
