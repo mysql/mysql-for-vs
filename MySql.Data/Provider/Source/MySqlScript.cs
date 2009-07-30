@@ -266,15 +266,15 @@ namespace MySql.Data.MySqlClient
                     if (token.ToLowerInvariant() == "delimiter")
                     {
                         currentDelimiter = tokenizer.NextToken();
-                        startPos = tokenizer.Index;
+                        startPos = tokenizer.StopIndex;
                     }
                     else
                     {
                         int delimiterPos = token.IndexOf(currentDelimiter);
                         if (delimiterPos != -1)
                         {
-                            int endPos = tokenizer.Index - token.Length + delimiterPos;
-                            if (tokenizer.Index == query.Length - 1)
+                            int endPos = tokenizer.StopIndex - token.Length + delimiterPos;
+                            if (tokenizer.StopIndex == query.Length - 1)
                                 endPos++;
                             string currentQuery = query.Substring(startPos, endPos - startPos);
                             ScriptStatement statement = new ScriptStatement();
