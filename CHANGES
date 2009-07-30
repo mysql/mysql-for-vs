@@ -13,6 +13,7 @@ Version 6.0.5
   the parameters array.  This exception explains what is wrong (bug #45952)  
 - Add "SSL Mode" option for connections that indicates whether to use SSL connections and how
   to validate server certificate. Deprecated use of "encrypt" in connection strings(bug#38700)
+- fixed potential infinite loop in LoadPacket(), when read from a stream returns 0. (bug#46308)
   
 Version 6.0.4
 - fixed regression where using stored procs with datasets (bug #44460)
