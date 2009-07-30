@@ -40,7 +40,7 @@ namespace MySql.Data.MySqlClient.Tests
         public StoredProcedure()
         {
             pooling = false;
-            csAdditions = ";procedure cache size=0;logging=true;";
+            csAdditions = ";procedure cache size=0;";
         }
 
         /// <summary>
@@ -1225,17 +1225,24 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(1, o);
         }
 
-        [Test]
-        public void ParametersInReverseOrder()
+        private void ParametersInReverseOrderInternal(bool isOwner)
         {
             if (Version.Major < 5) return;
 
-            rootConn.ChangeDatabase(database1);
-            suExecSQL(@"CREATE PROCEDURE spTest(IN p_1 VARCHAR(5), IN p_2 VARCHAR(5))
-                        BEGIN SELECT p_1 AS P1, p_2 AS P2; END");
-            rootConn.ChangeDatabase(database0);
+            string sql = @"CREATE PROCEDURE spTest(IN p_1 VARCHAR(5), IN p_2 VARCHAR(5))
+                        BEGIN SELECT p_1 AS P1, p_2 AS P2; END";
+            string spName = "spTest";
+            if (!isOwner)
+            {
+                rootConn.ChangeDatabase(database1);
+                suExecSQL(sql);
+                rootConn.ChangeDatabase(database0);
+                spName = database1 + ".spTest";
+            }
+            else
+                execSQL(sql);
 
-            MySqlCommand cmd = new MySqlCommand(database1 + ".spTest", conn);
+            MySqlCommand cmd = new MySqlCommand(spName, conn);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.CommandTimeout = 0;
             cmd.Parameters.AddWithValue("?p_2", ("World"));
@@ -1258,6 +1265,18 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.AreEqual("Hello", dt.Rows[0]["P1"]);
                 Assert.AreEqual("World", dt.Rows[0]["P2"]);
             }
+        }
+
+        [Test]
+        public void ParametersInReverseOrderNotOwner()
+        {
+            ParametersInReverseOrderInternal(false);
+        }
+
+        [Test]
+        public void ParametersInReverseOrderOwner()
+        {
+            ParametersInReverseOrderInternal(true);
         }
 
         [Test]
