@@ -144,7 +144,7 @@ namespace MySql.Data.MySqlClient
 
         private void PrepareNextPacket()
         {
-            ReadFully(lengthBytes, 7);
+            MySqlStream.ReadFully(baseStream, lengthBytes, 0, 7);
             int compressedLength = lengthBytes[0] + (lengthBytes[1] << 8) + (lengthBytes[2] << 16);
             // lengthBytes[3] is seq
             int unCompressedLength = lengthBytes[4] + (lengthBytes[5] << 8) +
@@ -174,23 +174,7 @@ namespace MySql.Data.MySqlClient
 
             if (inBuffer == null || inBuffer.Length < len)
                 inBuffer = new byte[len];
-            ReadFully(inBuffer, len);
-        }
-        
-        private void ReadFully(byte[] buffer, int len)
-        {
-            int numRead = 0;
-            int numToRead = len;
-            while (numToRead > 0)
-            {
-                int read = baseStream.Read(buffer, numRead, numToRead);
-                if (read == 0)
-                {
-                    throw new EndOfStreamException();
-                }
-                numRead += read;
-                numToRead -= read;
-            }
+            MySqlStream.ReadFully(baseStream, inBuffer, 0, len);
         }
 
         private MemoryStream CompressCache()
