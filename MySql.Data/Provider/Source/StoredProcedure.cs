@@ -67,8 +67,16 @@ namespace MySql.Data.MySqlClient
             //if (Connection.Settings.UseProcedureBodies)
             DataSet ds = Connection.ProcedureCache.GetProcedure(Connection, procName);
 
-            // if we got both proc and parameter data then just return
-            if (ds.Tables.Count == 2) return ds;
+            if(ds.Tables.Count == 2)
+            {
+                // if we got our parameters and our user says it is ok to use proc bodies
+                // then just return them
+                if (Connection.Settings.UseProcedureBodies) return ds;
+
+                // we got the parameters, but ignore them.
+                if(ds.Tables.Contains("Procedure Parameters"))
+                    ds.Tables.Remove("Procedure Parameters");
+            }
 
             // we were not able to retrieve parameter data so we have to make do by
             // adding the parameters from the command object to our table
