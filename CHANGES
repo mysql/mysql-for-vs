@@ -61,6 +61,8 @@ Version 5.2.8
     (bug#46205)
 - fixed MySqlScript class so that it respects delimiter statements (bug #46429)
 - fixed "column" schema collection so that it will return set and enum datatypes correctly (bug #46270)
+- fixed bug calling procedures that the user has body access to with parameters that are
+  out of order while using the 'use procedure bodies=false' option would fail (bug #46213)
 
 Version 5.2.7  7/13/09
 - fixed procedure parameters collection so that an exception is thrown if we can't get the 
