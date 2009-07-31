@@ -41,14 +41,12 @@ namespace MySql.Data.MySqlClient
         //private ArrayList items = new ArrayList();
         private Hashtable indexHashCS;
         private Hashtable indexHashCI;
-        private MySqlCommand owningCommand;
 
 		internal MySqlParameterCollection(MySqlCommand cmd)
 		{
             indexHashCS = new Hashtable();
 			indexHashCI = new Hashtable(StringComparer.CurrentCultureIgnoreCase);
             Clear();
-            owningCommand = cmd;
 		}
 
 		#region Public Methods
