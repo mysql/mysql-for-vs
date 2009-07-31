@@ -19,6 +19,7 @@ namespace MySql.Web.Security
 
         private static void Init()
         {
+            inited = true;
             Type t = Type.GetType("Mono.Runtime");
             isMono = t != null;
         }
