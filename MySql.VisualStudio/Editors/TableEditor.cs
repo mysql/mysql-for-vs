@@ -446,32 +446,12 @@ namespace MySql.Data.VisualStudio
             }
         }
 
-        private bool InsertType(string type)
-        {
-            int index = type.IndexOf("(");
-            if (index == -1) return false;
-
-            string baseType = type.Substring(0, index);
-            for (int i = 0; i < TypeColumn.Items.Count; i++)
-            {
-                string s = TypeColumn.Items[i] as string;
-                if (s.StartsWith(baseType))
-                {
-                    TypeColumn.Items[i] = type;
-                    break;
-                }
-            }
-            return true;
-        }
-
         private void columnGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
             if (e.ColumnIndex != 1) return;
             string type = e.FormattedValue as string;
             if (String.IsNullOrEmpty(type)) return;
-            if (TypeColumn.Items.Contains(type)) return;
-
-            if (!InsertType(type))
+            if (!TypeColumn.Items.Contains(type))
                 TypeColumn.Items.Add(type);
             columnGrid.CurrentCell.Value = e.FormattedValue;
         }
