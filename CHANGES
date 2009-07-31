@@ -4,6 +4,9 @@ Version 6.0.5
 - we are now throwing an exception when DeriveParameters is unable to successfully populate
   the parameters array.  This exception explains what is wrong (bug #45952)  
 - fixed potential infinite loop in LoadPacket(), when read from a stream returns 0. (bug#46308)
+- fixed bug where editing a table and giving a size based type that is different than
+  the default (i.e. varchar(20)) would cause other columns that have the default
+  to fail (bug #46100)
   
 Version 6.0.4
 - fixed regression where using stored procs with datasets (bug #44460)
