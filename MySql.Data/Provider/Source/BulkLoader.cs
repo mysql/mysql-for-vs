@@ -46,7 +46,6 @@ namespace MySql.Data.MySqlClient
         private string filename;
         private int timeout;
         private bool local;
-        private int numLinesToSkip;
         private string linePrefix;
         private char fieldQuotationCharacter;
         private bool fieldQuotationOptional;
