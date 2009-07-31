@@ -290,10 +290,8 @@ namespace MySql.Data.MySqlClient
 
             sql = sql.TrimStart(';').TrimEnd(';');
             char c = Char.MinValue;
-            char lastChar;
             for (int i = 0; i < sql.Length; i++)
             {
-                lastChar = c;
                 c = sql[i];
                 if (escaped)
                     escaped = !escaped;

@@ -38,13 +38,11 @@ namespace MySql.Data.MySqlClient
 	{
         private ArrayList items = new ArrayList();
         private Hashtable indexHash;
-        private MySqlCommand owningCommand;
 
 		internal MySqlParameterCollection(MySqlCommand cmd)
 		{
 			indexHash = new Hashtable(StringComparer.CurrentCultureIgnoreCase);
             Clear();
-            owningCommand = cmd;
 		}
 
 		#region Public Methods
