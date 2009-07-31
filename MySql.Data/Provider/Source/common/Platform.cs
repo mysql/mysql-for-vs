@@ -56,6 +56,7 @@ namespace MySql.Data.Common
 
         private static void Init()
         {
+            inited = true;
             Type t = Type.GetType("Mono.Runtime");
             isMono = t != null;
         }
