@@ -245,6 +245,8 @@ namespace MySql.Data.MySqlClient
 		/// </remarks>
 		public override void Cancel()
 		{
+            if (canceled) return;
+
 			if (!connection.driver.Version.isAtLeast(5, 0, 0))
 				throw new NotSupportedException(Resources.CancelNotSupported);
 
