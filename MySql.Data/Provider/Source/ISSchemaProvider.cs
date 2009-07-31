@@ -555,7 +555,6 @@ namespace MySql.Data.MySqlClient
             string token = tokenizer.NextToken();
             if (tokenizer.IsSize || token == "(")
             {
-                string oldToken = token;
                 if (token == "(")
                 {
                     token = String.Empty;

@@ -134,7 +134,7 @@ namespace MySql.Data.MySqlClient
         /// Gets or sets the name of the server.
         /// </summary>
         /// <value>The server.</value>
-#if !CF && !MONO
+#if !CF 
         [Category("Connection")]
         [Description("Server to connect to")]
         [RefreshProperties(RefreshProperties.All)]
@@ -153,7 +153,7 @@ namespace MySql.Data.MySqlClient
         /// Gets or sets the name of the database the connection should 
         /// initially connect to.
         /// </summary>
-#if !CF && !MONO
+#if !CF 
         [Category("Connection")]
         [Description("Database to use initially")]
         [RefreshProperties(RefreshProperties.All)]
@@ -172,7 +172,7 @@ namespace MySql.Data.MySqlClient
         /// Gets or sets the protocol that should be used for communicating
         /// with MySQL.
         /// </summary>
-#if !CF && !MONO
+#if !CF 
         [Category("Connection")]
         [DisplayName("Connection Protocol")]
         [Description("Protocol to use for connection to MySQL")]
@@ -193,7 +193,7 @@ namespace MySql.Data.MySqlClient
         /// Gets or sets the name of the named pipe that should be used
         /// for communicating with MySQL.
         /// </summary>
-#if !CF && !MONO
+#if !CF 
         [Category("Connection")]
         [DisplayName("Pipe Name")]
         [Description("Name of pipe to use when connecting with named pipes (Win32 only)")]
@@ -214,7 +214,7 @@ namespace MySql.Data.MySqlClient
         /// Gets or sets a boolean value that indicates whether this connection
         /// should use compression.
         /// </summary>
-#if !CF && !MONO
+#if !CF 
         [Category("Connection")]
         [DisplayName("Use Compression")]
         [Description("Should the connection ues compression")]
@@ -235,7 +235,7 @@ namespace MySql.Data.MySqlClient
         /// Gets or sets a boolean value that indicates whether this connection will allow
         /// commands to send multiple SQL statements in one execution.
         /// </summary>
-#if !CF && !MONO
+#if !CF 
         [Category("Connection")]
         [DisplayName("Allow Batch")]
         [Description("Allows execution of multiple SQL commands in a single statement")]
@@ -255,7 +255,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Gets or sets a boolean value that indicates whether logging is enabled.
         /// </summary>
-#if !CF && !MONO
+#if !CF 
         [Category("Connection")]
         [Description("Enables output of diagnostic messages")]
         [DefaultValue(false)]
@@ -275,7 +275,7 @@ namespace MySql.Data.MySqlClient
         /// Gets or sets the base name of the shared memory objects used to 
         /// communicate with MySQL when the shared memory protocol is being used.
         /// </summary>
-#if !CF && !MONO
+#if !CF 
         [Category("Connection")]
         [DisplayName("Shared Memory Name")]
         [Description("Name of the shared memory object to use")]
@@ -296,7 +296,7 @@ namespace MySql.Data.MySqlClient
         /// Gets or sets a boolean value that indicates whether this connection uses
         /// the old style (@) parameter markers or the new (?) style.
         /// </summary>
-#if !CF && !MONO
+#if !CF 
         [Category("Connection")]
         [DisplayName("Use Old Syntax")]
         [Description("Allows the use of old style @ syntax for parameters")]
@@ -320,7 +320,7 @@ namespace MySql.Data.MySqlClient
         /// <remarks>
         /// There is only one valid value for this setting currently.
         /// </remarks>
-#if !CF && !MONO
+#if !CF 
         [Category("Connection")]
         [DisplayName("Driver Type")]
         [Description("Specifies the type of driver to use for this connection")]
@@ -342,7 +342,7 @@ namespace MySql.Data.MySqlClient
         /// Gets or sets the port number that is used when the socket
         /// protocol is being used.
         /// </summary>
-#if !CF && !MONO
+#if !CF 
         [Category("Connection")]
         [Description("Port to use for TCP/IP connections")]
         [DefaultValue(3306)]
@@ -361,7 +361,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Gets or sets the connection timeout.
         /// </summary>
-#if !CF && !MONO
+#if !CF 
         [Category("Connection")]
         [DisplayName("Connect Timeout")]
         [Description("The length of time (in seconds) to wait for a connection " +
@@ -382,7 +382,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Gets or sets the default command timeout.
         /// </summary>
-#if !CF && !MONO
+#if !CF 
         [Category("Connection")]
         [DisplayName("Default Command Timeout")]
         [Description(@"The default timeout that MySqlCommand objects will use
@@ -408,7 +408,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Gets or sets the user id that should be used to connect with.
         /// </summary>
-#if !CF && !MONO
+#if !CF 
         [Category("Security")]
         [DisplayName("User Id")]
         [Description("Indicates the user ID to be used when connecting to the data source.")]
@@ -427,7 +427,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Gets or sets the password that should be used to connect with.
         /// </summary>
-#if !CF && !MONO
+#if !CF 
         [Category("Security")]
         [Description("Indicates the password to be used when connecting to the data source.")]
         [PasswordPropertyText(true)]
@@ -447,7 +447,7 @@ namespace MySql.Data.MySqlClient
         /// Gets or sets a boolean value that indicates if the password should be persisted
         /// in the connection string.
         /// </summary>
-#if !CF && !MONO
+#if !CF 
         [Category("Security")]
         [DisplayName("Persist Security Info")]
         [Description("When false, security-sensitive information, such as the password, " +
@@ -465,7 +465,7 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-#if !CF && !MONO
+#if !CF 
         [Category("Authentication")]
         [Description("Should the connection use SSL.  This currently has no effect.")]
         [DefaultValue(false)]
@@ -488,7 +488,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Gets or sets a boolean value that indicates if zero date time values are supported.
         /// </summary>
-#if !CF && !MONO
+#if !CF 
         [Category("Advanced")]
         [DisplayName("Allow Zero Datetime")]
         [Description("Should zero datetimes be supported")]
@@ -509,7 +509,7 @@ namespace MySql.Data.MySqlClient
         /// Gets or sets a boolean value indicating if zero datetime values should be 
         /// converted to DateTime.MinValue.
         /// </summary>
-#if !CF && !MONO
+#if !CF 
         [Category("Advanced")]
         [DisplayName("Convert Zero Datetime")]
         [Description("Should illegal datetime values be converted to DateTime.MinValue")]
@@ -529,7 +529,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Gets or sets a boolean value indicating if the Usage Advisor should be enabled.
         /// </summary>
-#if !CF && !MONO
+#if !CF 
         [Category("Advanced")]
         [DisplayName("Use Usage Advisor")]
         [Description("Logs inefficient database operations")]
@@ -549,7 +549,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Gets or sets the size of the stored procedure cache.
         /// </summary>
-#if !CF && !MONO
+#if !CF 
         [Category("Advanced")]
         [DisplayName("Procedure Cache Size")]
         [Description("Indicates how many stored procedures can be cached at one time. " +
@@ -570,7 +570,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Gets or sets a boolean value indicating if the permon hooks should be enabled.
         /// </summary>
-#if !CF && !MONO
+#if !CF 
         [Category("Advanced")]
         [DisplayName("Use Performance Monitor")]
         [Description("Indicates that performance counters should be updated during execution.")]
@@ -590,7 +590,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Gets or sets a boolean value indicating if calls to Prepare() should be ignored.
         /// </summary>
-#if !CF && !MONO
+#if !CF 
         [Category("Advanced")]
         [DisplayName("Ignore Prepare")]
         [Description("Instructs the provider to ignore any attempts to prepare a command.")]
@@ -607,7 +607,7 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-#if !CF && !MONO
+#if !CF 
         [Category("Advanced")]
         [DisplayName("Use Procedure Bodies")]
         [Description("Indicates if stored procedure bodies will be available for parameter detection.")]
@@ -624,7 +624,7 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-#if !CF && !MONO
+#if !CF 
         [Category("Advanced")]
         [DisplayName("Auto Enlist")]
         [Description("Should the connetion automatically enlist in the active connection, if there are any.")]
@@ -641,7 +641,7 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-#if !CF && !MONO
+#if !CF 
         [Category("Advanced")]
         [DisplayName("Respect Binary Flags")]
         [Description("Should binary flags on column metadata be respected.")]
@@ -658,7 +658,7 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-#if !CF && !MONO
+#if !CF 
         [Category("Advanced")]
         [DisplayName("Treat Tiny As Boolean")]
         [Description("Should the provider treat TINYINT(1) columns as boolean.")]
@@ -675,7 +675,7 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-#if !CF && !MONO
+#if !CF 
         [Category("Advanced")]
         [DisplayName("Allow User Variables")]
         [Description("Should the provider expect user variables to appear in the SQL.")]
@@ -692,7 +692,7 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-#if !CF && !MONO
+#if !CF 
         [Category("Advanced")]
         [DisplayName("Interactive Session")]
         [Description("Should this session be considered interactive?")]
@@ -709,7 +709,7 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-#if !CF && !MONO
+#if !CF 
         [Category("Advanced")]
         [DisplayName("Functions Return String")]
         [Description("Should all server functions be treated as returning string?")]
@@ -725,7 +725,7 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-#if !CF && !MONO
+#if !CF 
         [Category("Advanced")]
         [DisplayName("Use Affected Rows")]
         [Description("Should the returned affected row count reflect affected rows instead of found rows?")]
@@ -748,7 +748,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Gets or sets the lifetime of a pooled connection.
         /// </summary>
-#if !CF && !MONO
+#if !CF 
         [Category("Pooling")]
         [DisplayName("Connection Lifetime")]
         [Description("The minimum amount of time (in seconds) for this connection to " +
@@ -769,7 +769,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Gets or sets a boolean value indicating if connection pooling is enabled.
         /// </summary>
-#if !CF && !MONO
+#if !CF 
         [Category("Pooling")]
         [Description("When true, the connection object is drawn from the appropriate " +
                      "pool, or if necessary, is created and added to the appropriate pool.")]
@@ -789,7 +789,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Gets the minimum connection pool size.
         /// </summary>
-#if !CF && !MONO
+#if !CF 
         [Category("Pooling")]
         [DisplayName("Minimum Pool Size")]
         [Description("The minimum number of connections allowed in the pool.")]
@@ -809,7 +809,7 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Gets or sets the maximum connection pool setting.
         /// </summary>
-#if !CF && !MONO
+#if !CF 
         [Category("Pooling")]
         [DisplayName("Maximum Pool Size")]
         [Description("The maximum number of connections allowed in the pool.")]
@@ -830,7 +830,7 @@ namespace MySql.Data.MySqlClient
         /// Gets or sets a boolean value indicating if the connection should be reset when retrieved
         /// from the pool.
         /// </summary>
-#if !CF && !MONO
+#if !CF 
         [Category("Pooling")]
         [DisplayName("Connection Reset")]
         [Description("When true, indicates the connection state is reset when " +
@@ -852,7 +852,7 @@ namespace MySql.Data.MySqlClient
 
         #region Language and Character Set Properties
 
-#if !CF && !MONO
+#if !CF 
         /// <summary>
         /// Gets or sets the character set that should be used for sending queries to the server.
         /// </summary>
@@ -871,7 +871,7 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-#if !CF && !MONO
+#if !CF 
         /// <summary>
         /// Indicates whether the driver should treat binary blobs as UTF8
         /// </summary>
@@ -890,7 +890,7 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-#if !CF && !MONO
+#if !CF 
         /// <summary>
         /// Gets or sets the pattern that matches the columns that should be treated as UTF8
         /// </summary>
@@ -910,7 +910,7 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-#if !CF && !MONO
+#if !CF 
         /// <summary>
         /// Gets or sets the pattern that matches the columns that should not be treated as UTF8
         /// </summary>
