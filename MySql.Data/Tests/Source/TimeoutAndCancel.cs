@@ -109,8 +109,7 @@ namespace MySql.Data.MySqlClient.Tests
             stateChangeCount++;
         }
 
-        [Test]
-        public void TimeoutExpiring()
+        private void TimeoutExpiring(MySqlConnectionProtocol protocol)
         {
             if (version < new Version(5, 0)) return;
 
@@ -120,25 +119,49 @@ namespace MySql.Data.MySqlClient.Tests
                     SELECT SLEEP(duration);
                 END");
 
-            DateTime start = DateTime.Now;
-            try
+            MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder(conn.ConnectionString);
+            builder.ConnectionProtocol = protocol;
+            using (MySqlConnection connection = new MySqlConnection(builder.ConnectionString))
             {
-                MySqlCommand cmd = new MySqlCommand("spTest", conn);
-                cmd.Parameters.AddWithValue("duration", 60);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandTimeout = 5;
-                cmd.ExecuteNonQuery();
-                Assert.Fail("Should not get to this point");
-            }
-            catch (MySqlException ex)
-            {
-                TimeSpan ts = DateTime.Now.Subtract(start);
-                Assert.IsTrue(ts.TotalSeconds <= 10);
-                Assert.IsTrue(ex.Message.StartsWith("Timeout expired"), "Message is wrong");
+                connection.Open();
+
+                DateTime start = DateTime.Now;
+                try
+                {
+                    MySqlCommand cmd = new MySqlCommand("spTest", connection);
+                    cmd.Parameters.AddWithValue("duration", 60);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandTimeout = 5;
+                    cmd.ExecuteNonQuery();
+                    Assert.Fail("Should not get to this point");
+                }
+                catch (MySqlException ex)
+                {
+                    TimeSpan ts = DateTime.Now.Subtract(start);
+                    Assert.IsTrue(ts.TotalSeconds <= 10);
+                    Assert.IsTrue(ex.Message.StartsWith("Timeout expired"), "Message is wrong");
+                }
             }
         }
 
         [Test]
+        public void TimeoutExpiringSockets()
+        {
+            TimeoutExpiring(MySqlConnectionProtocol.Sockets);
+        }
+
+        [Test]
+        public void TimeoutExpiringSharedMemory()
+        {
+            TimeoutExpiring(MySqlConnectionProtocol.SharedMemory);
+        }
+
+        [Test]
+        public void TimeoutExpiringNamedPipe()
+        {
+            TimeoutExpiring(MySqlConnectionProtocol.NamedPipe);
+        }
+
         public void TimeoutNotExpiring()
         {
             if (Version < new Version(5, 0)) return;
@@ -149,6 +172,7 @@ namespace MySql.Data.MySqlClient.Tests
                     SELECT SLEEP(duration);
                 END");
 
+            conn.Open();
             MySqlCommand cmd = new MySqlCommand("spTest", conn);
             cmd.Parameters.AddWithValue("duration", 10);
             cmd.CommandType = CommandType.StoredProcedure;
@@ -230,16 +254,23 @@ namespace MySql.Data.MySqlClient.Tests
                 c.Open();
                 string connStr1 = c.ConnectionString;
 
-                MySqlCommand cmd = new MySqlCommand("SELECT SLEEP(10)", c);
-                cmd.CommandTimeout = 5;
+                MySqlCommand cmd = new MySqlCommand("SELECT SLEEP(2)", c);
+                cmd.CommandTimeout = 1;
 
-                using (MySqlDataReader reader = cmd.ExecuteReader())
+                try
                 {
-                    string connStr2 = c.ConnectionString.ToLower(CultureInfo.InvariantCulture);
-                    Assert.AreEqual(-1, connStr2.IndexOf("pooling=true"));
-                    Assert.AreEqual(-1, connStr2.IndexOf("pooling=false"));
-                    reader.Read();
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                    }
                 }
+                catch (MySqlException ex)
+                {
+                    Assert.IsTrue(ex.InnerException is TimeoutException);
+                    Assert.IsTrue(c.State == ConnectionState.Closed);
+                }
+                string connStr2 = c.ConnectionString.ToLower(CultureInfo.InvariantCulture);
+                Assert.AreEqual(-1, connStr2.IndexOf("pooling=true"));
+                Assert.AreEqual(-1, connStr2.IndexOf("pooling=false"));
             }
         }
     }

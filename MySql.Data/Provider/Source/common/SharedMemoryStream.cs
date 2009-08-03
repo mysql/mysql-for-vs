@@ -51,6 +51,8 @@ namespace MySql.Data.Common
 //		private const uint EVENT_ALL_ACCESS = 0x001F0003;
 		private const uint FILE_MAP_WRITE = 0x2;
 		private const int BUFFERLENGTH = 16004;
+		private int readTimeout = System.Threading.Timeout.Infinite;
+		private int writeTimeout = System.Threading.Timeout.Infinite;
 
 		public SharedMemoryStream(string memName)
 		{
@@ -74,6 +76,17 @@ namespace MySql.Data.Common
 			AutoResetEvent connectRequest = new AutoResetEvent(false);
             IntPtr handle = NativeMethods.OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, false,
 			memoryName + "_" + "CONNECT_REQUEST");
+			if (handle == IntPtr.Zero)
+			{
+				// If server runs as service, its shared memory is global 
+				// And if connector runs in user session, it needs to prefix
+				// shared memory name with "Global\"
+				string prefixedMemoryName= @"Global\" + memoryName;
+				handle = NativeMethods.OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, false,
+					prefixedMemoryName + "_" + "CONNECT_REQUEST");
+				if (handle != IntPtr.Zero)
+					memoryName = prefixedMemoryName;
+			}
 			connectRequest.SafeWaitHandle = new SafeWaitHandle(handle, true);
 
 			AutoResetEvent connectAnswer = new AutoResetEvent(false);
@@ -181,11 +194,20 @@ namespace MySql.Data.Common
 
 		public override int Read(byte[] buffer, int offset, int count)
 		{
+			Stopwatch stopwatch = new Stopwatch();
+			int timeLeft = readTimeout;
 			while (bytesLeft == 0)
 			{
-				while (!serverWrote.WaitOne(500, false))
+				if (IsClosed()) return 0;
+				if (!serverWrote.WaitOne(timeLeft, false))
 				{
-					if (IsClosed()) return 0;
+					throw new TimeoutException();
+				}
+				if (readTimeout != System.Threading.Timeout.Infinite)
+				{
+					timeLeft = readTimeout - (int)stopwatch.ElapsedMilliseconds;
+					if (timeLeft < 0)
+							throw new TimeoutException();
 				}
 
 				bytesLeft = Marshal.ReadInt32(dataView);
@@ -216,11 +238,19 @@ namespace MySql.Data.Common
 			int leftToDo = count;
 			int buffPos = offset;
 
+			Stopwatch stopwatch = new Stopwatch();
+			int timeLeft = writeTimeout;
+
 			while (leftToDo > 0)
 			{
-				if (!serverRead.WaitOne())
-					throw new MySqlException("Writing to shared memory failed");
-
+				if (!serverRead.WaitOne(timeLeft))
+					throw new TimeoutException();
+				if (writeTimeout != System.Threading.Timeout.Infinite)
+				{
+					timeLeft = writeTimeout - (int)stopwatch.ElapsedMilliseconds;
+					if (timeLeft < 0)
+						throw new TimeoutException();
+				}
 				int bytesToDo = Math.Min(leftToDo, BUFFERLENGTH);
 
 				long baseMem = dataView.ToInt64() + 4;
@@ -237,6 +267,39 @@ namespace MySql.Data.Common
 		{
 			throw new NotSupportedException("SharedMemoryStream does not support seeking");
 		}
-	}
+
+        public override bool CanTimeout
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        public override int ReadTimeout
+        {
+            get
+            {
+                return readTimeout;
+            }
+            set
+            {
+                readTimeout = value;
+            }
+        }
+
+        public override int WriteTimeout
+        {
+            get
+            {
+                return writeTimeout;
+            }
+            set
+            {
+                writeTimeout = value;
+            }
+        }
+
+    }
 #endif
 }

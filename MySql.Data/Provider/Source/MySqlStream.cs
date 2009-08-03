@@ -37,8 +37,7 @@ namespace MySql.Data.MySqlClient
 		private MemoryStream bufferStream;
 		private int maxBlockSize;
 		private ulong maxPacketSize;
-		private Stream inStream;
-		private Stream outStream;
+		private TimedStream stream;
 		private byte[] tempBuffer = new byte[4];
         MySqlPacket packet = new MySqlPacket();
 
@@ -61,19 +60,19 @@ namespace MySql.Data.MySqlClient
         public MySqlStream(Stream baseStream, Encoding encoding, bool compress)
             : this(encoding)
         {
-
-            inStream = new BufferedStream(baseStream);
-            outStream = baseStream;
             if (compress)
             {
-                inStream = new CompressedStream(inStream);
-                outStream = new CompressedStream(outStream);
+                stream = new TimedStream(new CompressedStream(baseStream), true, false);
+            }
+            else
+            {
+                stream = new TimedStream(baseStream, true, false);
             }
         }
 
 		public void Close()
 		{
-			inStream.Close();
+			stream.Close();
             // no need to close outStream because closing
             // inStream closes the underlying network stream
             // for us.
@@ -86,6 +85,11 @@ namespace MySql.Data.MySqlClient
 			get { return encoding; }
 			set { encoding = value; }
 		}
+
+        public void ResetTimeout(int timeout)
+        {
+            stream.ResetTimeout(timeout);
+        }
 
 		public byte SequenceByte
 		{
@@ -177,10 +181,10 @@ namespace MySql.Data.MySqlClient
                 int offset = 0;
                 while (true)
                 {
-                    int b1 = inStream.ReadByte();
-                    int b2 = inStream.ReadByte();
-                    int b3 = inStream.ReadByte();
-                    int seqByte = inStream.ReadByte();
+                    int b1 = stream.ReadByte();
+                    int b2 = stream.ReadByte();
+                    int b3 = stream.ReadByte();
+                    int seqByte = stream.ReadByte();
 
                     if (b1 == -1 || b2 == -1 || b3 == -1 || seqByte == -1)
                         throw new MySqlException(
@@ -192,7 +196,7 @@ namespace MySql.Data.MySqlClient
                     // make roo for the next block
                     packet.Length += length;
 
-                    ReadFully(inStream, packet.Buffer, offset, length);
+                    ReadFully(stream, packet.Buffer, offset, length);
                     offset += length;
 
                     // if this block was < maxBlock then it's last one in a multipacket series
@@ -223,8 +227,8 @@ namespace MySql.Data.MySqlClient
                 buffer[offset+2] = (byte)((lenToSend >> 16) & 0xff);
                 buffer[offset+3] = sequenceByte++;
 
-                outStream.Write(buffer, offset, lenToSend + 4);
-                outStream.Flush();
+                stream.Write(buffer, offset, lenToSend + 4);
+                stream.Flush();
                 length -= lenToSend;
                 offset += lenToSend;
             }
@@ -250,8 +254,8 @@ namespace MySql.Data.MySqlClient
             buffer[1] = (byte)((count >> 8) & 0xff);
             buffer[2] = (byte)((count >> 16) & 0xff);
             buffer[3] = sequenceByte++;
-            outStream.Write(buffer, 0, count + 4);
-            outStream.Flush();
+            stream.Write(buffer, 0, count + 4);
+            stream.Flush();
         }
 
         /// <summary>
