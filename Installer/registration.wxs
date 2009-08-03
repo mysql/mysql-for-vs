@@ -72,7 +72,7 @@
     <CustomAction Id='GenRegistryUrn' BinaryKey='mysqlca' DllEntry='CACreateURN' Execute='immediate' Return='ignore' />
     <CustomAction Id='SetRegistryUrn' Property='RegistryUrn' Value='[NewURN]' />
     <!-- Set registration Date Time -->
-    <CustomAction Id='SetDateTime' BinaryKey='mysqlca' DllEntry='CASetRegDateTime' Execute='immediate' Return='check' />
+    <CustomAction Id='SetDateTime' BinaryKey='mysqlca' DllEntry='CASetRegDateTime' Execute='immediate' Return='ignore' />
     <!-- Update Offline Registration -->
     <CustomAction Id="UpdateRegistration.SetProperty" Return="check" Property="UpdateRegistration" Value="[INSTALLDIR]" />
     <CustomAction Id="UpdateRegistration" BinaryKey="mysqlca" DllEntry="CAUpdateOfflineReg" Execute="deferred" Return="ignore" HideTarget="yes" Impersonate="no"/>
