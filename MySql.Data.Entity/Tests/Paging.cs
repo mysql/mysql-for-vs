@@ -23,6 +23,7 @@ using System.Data;
 using System.Threading;
 using MySql.Data.MySqlClient;
 using MySql.Data.MySqlClient.Tests;
+using System.Linq;
 using System.Data.EntityClient;
 using System.Data.Common;
 using NUnit.Framework;
@@ -98,6 +99,25 @@ namespace MySql.Data.Entity.Tests
                     Assert.AreEqual(dt.Rows[i++]["id"], c.Id);
                 }
                 Assert.AreEqual(2, i);
+            }
+        }
+
+        /// <summary>
+        /// Bug #45723 Entity Framework DbSortExpression not processed when using Skip & Take  
+        /// </summary>
+        [Test]
+        public void SkipAndTakeWithOrdering()
+        {
+            using (testEntities context = new testEntities())
+            {
+                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Companies ORDER BY Name DESC LIMIT 2,2", conn);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                int i = 0;
+                var query = context.Companies.OrderByDescending(q => q.Name).Skip(2).Take(2).ToList();
+                foreach (Company c in query)
+                    Assert.AreEqual(dt.Rows[i++]["Name"], c.Name);
             }
         }
     }
