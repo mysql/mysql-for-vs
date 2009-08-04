@@ -201,7 +201,8 @@ namespace MySql.Data.MySqlClient
                     string pipeName = Settings.PipeName;
                     if (Settings.ConnectionProtocol != MySqlConnectionProtocol.NamedPipe)
                         pipeName = null;
-                    StreamCreator sc = new StreamCreator(Settings.Server, Settings.Port, pipeName);
+                    StreamCreator sc = new StreamCreator(Settings.Server, Settings.Port, pipeName,
+                        Settings.Keepalive);
                     baseStream = sc.GetStream(Settings.ConnectionTimeout);
 #if !CF
                 }

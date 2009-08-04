@@ -449,5 +449,19 @@ namespace MySql.Data.MySqlClient.Tests
             MySqlConnection c = new MySqlConnection();
             c.ConnectionString = null;
         }
+
+        /// <summary>
+        /// Test if keepalive parameters work.
+        /// </summary>
+        [Test]
+        public void Keepalive()
+        {
+            string connstr = GetConnectionStringEx("test","test",true);
+            connstr += ";keepalive=1;pooling=true";
+            using (MySqlConnection c = new MySqlConnection(connstr))
+            {
+                c.Open();
+            }
+        }
     }
 }

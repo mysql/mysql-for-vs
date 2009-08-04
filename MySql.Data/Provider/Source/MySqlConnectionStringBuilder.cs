@@ -59,6 +59,7 @@ namespace MySql.Data.MySqlClient
         bool functionsReturnString;
         bool useAffectedRows;
         bool oldGuids;
+        uint keepalive;
 
         static MySqlConnectionStringBuilder()
         {
@@ -104,6 +105,7 @@ namespace MySql.Data.MySqlClient
             defaultValues.Add(Keyword.UseAffectedRows, false);
             defaultValues.Add(Keyword.SslMode, MySqlSslMode.None);
             defaultValues.Add(Keyword.OldGuids, false);
+            defaultValues.Add(Keyword.Keepalive,0);
         }
 
         /// <summary>
@@ -745,7 +747,8 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-#if !CF && !MONO
+
+#if !CF
         [Category("Advanced")]
         [DisplayName("Old Guids")]
         [Description("Treat binary(16) columns as guids")]
@@ -754,10 +757,24 @@ namespace MySql.Data.MySqlClient
         public bool OldGuids
         {
             get { return oldGuids; }
-            set
+            set 
             {
                 SetValue("Old Guids", value);
                 oldGuids = value;
+            }
+        }
+
+        [DisplayName("Keepalive")]
+        [Description("For TCP connections, idle connection time measured in seconds, before the first keepalive packet is sent." +
+            "A value of 0 indicates that keepalive is not used.")]
+        [DefaultValue(0)]
+        public uint Keepalive
+        {
+            get { return keepalive;}
+            set 
+            {
+                SetValue("Keepalive", value);
+                keepalive = value;
             }
         }
 
@@ -1225,6 +1242,8 @@ namespace MySql.Data.MySqlClient
                     return Keyword.SslMode;
                 case "OLD GUIDS":
                     return Keyword.OldGuids;
+                case "KEEPALIVE":
+                    return Keyword.Keepalive;
             }
             throw new ArgumentException(Resources.KeywordNotSupported, key);
         }
@@ -1317,6 +1336,8 @@ namespace MySql.Data.MySqlClient
                     return sslMode;
                 case Keyword.OldGuids:
                     return oldGuids;
+                case Keyword.Keepalive:
+                    return keepalive;
                 default:
                     return null; /* this will never happen */
             }
@@ -1435,6 +1456,8 @@ namespace MySql.Data.MySqlClient
                     sslMode = ConvertToSslMode(value); break;
                 case Keyword.OldGuids:
                     oldGuids = ConvertToBool(value); break;
+                case Keyword.Keepalive:
+                    keepalive = ConvertToUInt(value); break;
             }
         }
 
@@ -1619,6 +1642,7 @@ namespace MySql.Data.MySqlClient
         FunctionsReturnString,
         UseAffectedRows,
         SslMode,
-        OldGuids
+        OldGuids,
+        Keepalive
     }
 }
