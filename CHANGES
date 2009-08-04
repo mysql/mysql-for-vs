@@ -20,6 +20,8 @@ Version 6.0.5
 - fixed mono compilation by removing the space delimited warning list from the project file
   and including a solution that builds with MonoDevelop 2.0. (bug #42411)
 - fixed 'can't find svctag.xml' installer bug (thanks Iggy!)  (bug #45474)
+- fixed DbSkipExpression so that it would respect any sort clauses that are attached
+  (thanks Lynn!) (bug #45723)
   
 Version 6.0.4
 - fixed regression where using stored procs with datasets (bug #44460)
