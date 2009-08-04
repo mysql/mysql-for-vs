@@ -1,4 +1,6 @@
 Version 6.0.5
+- added keepalive connection option that can be used to detect network outages faster 
+  and prevent firewalls from dropping idle connections (bug#40684)
 - fixed bug where our internal driver was using a batched command even if the user had added
   'allow batch=false' to their connection string (bug #45502)
 - we are now throwing an exception when DeriveParameters is unable to successfully populate

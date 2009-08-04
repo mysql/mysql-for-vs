@@ -57,6 +57,7 @@ namespace MySql.Data.MySqlClient
         bool interactiveSession;
         bool functionsReturnString;
         bool useAffectedRows;
+        uint keepalive;
 
         static MySqlConnectionStringBuilder()
         {
@@ -100,6 +101,7 @@ namespace MySql.Data.MySqlClient
             defaultValues.Add(Keyword.InteractiveSession, false);
             defaultValues.Add(Keyword.FunctionsReturnString, false);
             defaultValues.Add(Keyword.UseAffectedRows, false);
+            defaultValues.Add(Keyword.Keepalive,0);
         }
 
         /// <summary>
@@ -741,6 +743,23 @@ namespace MySql.Data.MySqlClient
             }
         }
 
+#if !CF
+        [Category("Advanced")]
+        [DisplayName("Keepalive")]
+        [Description("For TCP connections, idle connection time measured in seconds, before the first keepalive packet is sent." +
+            "A value of 0 indicates that keepalive is not used.")]
+        [DefaultValue(0)]
+#endif
+        public uint Keepalive
+        {
+            get { return keepalive;}
+            set 
+            {
+                SetValue("Keepalive", value);
+                keepalive = value;
+            }
+        }
+
         #endregion
 
         #region Pooling Properties
@@ -1176,6 +1195,8 @@ namespace MySql.Data.MySqlClient
                     return Keyword.FunctionsReturnString;
                 case "USE AFFECTED ROWS":
                     return Keyword.UseAffectedRows;
+                case "KEEPALIVE":
+                    return Keyword.Keepalive;
             }
             throw new ArgumentException(Resources.KeywordNotSupported, key);
         }
@@ -1264,6 +1285,8 @@ namespace MySql.Data.MySqlClient
                     return functionsReturnString;
                 case Keyword.UseAffectedRows:
                     return useAffectedRows;
+                case Keyword.Keepalive:
+                    return keepalive;
                 default:
                     return null; /* this will never happen */
             }
@@ -1375,6 +1398,8 @@ namespace MySql.Data.MySqlClient
                     functionsReturnString = ConvertToBool(value); break;
                 case Keyword.UseAffectedRows:
                     useAffectedRows = ConvertToBool(value); break;
+                case Keyword.Keepalive:
+                    keepalive = ConvertToUInt(value); break;
             }
         }
 
@@ -1557,6 +1582,7 @@ namespace MySql.Data.MySqlClient
         AllowUserVariables,
         InteractiveSession,
         FunctionsReturnString,
-        UseAffectedRows
+        UseAffectedRows,
+        Keepalive
     }
 }

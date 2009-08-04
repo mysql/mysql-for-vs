@@ -25,6 +25,7 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Diagnostics;
 using MySql.Data.MySqlClient.Properties;
+using System.Runtime.InteropServices;
 
 namespace MySql.Data.Common
 {
@@ -37,14 +38,16 @@ namespace MySql.Data.Common
         uint port;
         string pipeName;
         uint timeOut;
+        uint keepalive;
 
-        public StreamCreator(string hosts, uint port, string pipeName)
+        public StreamCreator(string hosts, uint port, string pipeName, uint keepalive)
         {
             hostList = hosts;
             if (hostList == null || hostList.Length == 0)
                 hostList = "localhost";
             this.port = port;
             this.pipeName = pipeName;
+            this.keepalive = keepalive;
         }
 
         public Stream GetStream(uint timeout)
@@ -181,6 +184,10 @@ namespace MySql.Data.Common
 			Socket socket = unix ?
 				new Socket(AddressFamily.Unix, SocketType.Stream, ProtocolType.IP) :
 				new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            if (keepalive > 0)
+            {
+                SetKeepAlive(socket, keepalive);
+            }
 			IAsyncResult ias = socket.BeginConnect(endPoint, null, null);
 			if (!ias.AsyncWaitHandle.WaitOne((int)timeOut * 1000, false))
 			{
@@ -202,5 +209,56 @@ namespace MySql.Data.Common
             return stream;
 		}
 
+
+
+        /// <summary>
+        /// Set keepalive + timeout on socket.
+        /// </summary>
+        /// <param name="s">socket</param>
+        /// <param name="time">keepalive timeout, in seconds</param>
+        private static void SetKeepAlive(Socket s, uint time)
+        {
+
+#if !CF
+            uint on = 1;
+            uint interval = 1000; // default interval = 1 sec
+
+            uint timeMilliseconds;
+            if (time > UInt32.MaxValue / 1000)
+                timeMilliseconds = UInt32.MaxValue;
+            else
+                timeMilliseconds = time * 1000;
+
+            // Use Socket.IOControl to implement equivalent of
+            // WSAIoctl with  SOL_KEEPALIVE_VALS 
+
+            // the native structure passed to WSAIoctl is
+            //struct tcp_keepalive {
+            //    ULONG onoff;
+            //    ULONG keepalivetime;
+            //    ULONG keepaliveinterval;
+            //};
+            // marshal the equivalent of the native structure into a byte array
+
+            byte[] inOptionValues = new byte[12];
+            BitConverter.GetBytes(on).CopyTo(inOptionValues, 0);
+            BitConverter.GetBytes(time).CopyTo(inOptionValues, 4);
+            BitConverter.GetBytes(interval).CopyTo(inOptionValues, 8);
+            try
+            {
+                // call WSAIoctl via IOControl
+                s.IOControl(IOControlCode.KeepAliveValues, inOptionValues, null);
+                return;
+            }
+            catch (NotImplementedException)
+            {
+                // Mono throws not implemented currently
+            }
+#endif
+            // Fallback if Socket.IOControl is not available ( Compact Framework )
+            // or not implemented ( Mono ). Keepalive option will still be set, but
+            // with timeout is kept default.
+            s.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+        }
     }
 }
