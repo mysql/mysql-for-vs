@@ -35,7 +35,7 @@ namespace MySql.Data.MySqlClient.Tests
             sb = new MySqlConnectionStringBuilder();
             sb.ConnectionString = "server=localhost;uid=reggie;pwd=pass;port=1111;" +
                 "connection timeout=23; pooling=true; min pool size=33; " +
-                "max pool size=66";
+                "max pool size=66;keepalive=1";
             Assert.AreEqual("localhost", sb.Server);
             Assert.AreEqual("reggie", sb.UserID);
             Assert.AreEqual("pass", sb.Password);
@@ -44,6 +44,7 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.IsTrue(sb.Pooling);
             Assert.AreEqual(33, sb.MinimumPoolSize);
             Assert.AreEqual(66, sb.MaximumPoolSize);
+            Assert.AreEqual(sb.Keepalive, 1);
 
             try
             {
@@ -81,6 +82,7 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.IsFalse(sb.AllowZeroDateTime);
             Assert.IsFalse(sb.UsePerformanceMonitor);
             Assert.AreEqual(25, sb.ProcedureCacheSize);
+            Assert.AreEqual(0, sb.Keepalive);
         }
 
         /// <summary>
