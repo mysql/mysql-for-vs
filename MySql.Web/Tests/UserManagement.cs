@@ -391,6 +391,7 @@ namespace MySql.Web.Tests
             config.Add("enablePasswordRetrieval", enablePasswordRetrieval ? "true" : "false");
             config.Add("passwordFormat", "clear");
             config.Add("applicationName", "/");
+            config.Add("writeExceptionsToEventLog", "false");
             provider.Initialize(null, config);
 
             provider.CreateUser("foo", "barbar!", "foo@bar.com", "color", "blue", true, null, out status);
