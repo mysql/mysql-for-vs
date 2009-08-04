@@ -11,6 +11,9 @@ Version 6.0.5
   to fail (bug #46100)
 - fixed mono compilation by removing the space delimited warning list from the project file
   and including a solution that builds with MonoDevelop 2.0. (bug #42411)
+- fixed 'can't find svctag.xml' installer bug (thanks Iggy!)  (bug #45474)
+- fixed DbSkipExpression so that it would respect any sort clauses that are attached
+  (thanks Lynn!) (bug #45723)
   
 Version 6.0.4
 - fixed regression where using stored procs with datasets (bug #44460)
@@ -71,6 +74,11 @@ Version 5.2.8
 - fixed "column" schema collection so that it will return set and enum datatypes correctly (bug #46270)
 - fixed bug calling procedures that the user has body access to with parameters that are
   out of order while using the 'use procedure bodies=false' option would fail (bug #46213)
+- fixed mono compilation by removing the space delimited warning list from the project file
+  and including a solution that builds with MonoDevelop 2.0. (bug #42411)
+- removed usage of TransactionScope from web providers so that they work properly
+  on Mono 2.0 (bug #46375)
+- fixed a small documentation bug related to our server compatibility
 
 Version 5.2.7  7/13/09
 - fixed procedure parameters collection so that an exception is thrown if we can't get the 
