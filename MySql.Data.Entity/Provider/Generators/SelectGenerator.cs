@@ -255,6 +255,13 @@ namespace MySql.Data.Entity
             SelectStatement select = VisitInputExpressionEnsureSelect(expression.Input.Expression, expression.Input.VariableName,
                 expression.Input.VariableType);
 
+            foreach (DbSortClause sortClause in expression.SortOrder)
+            {
+                select.AddOrderBy(
+                    new SortFragment(sortClause.Expression.Accept(this), sortClause.Ascending));
+            }
+
+
             select = WrapIfNotCompatible(select, expression.ExpressionKind);
             select.Skip = expression.Count.Accept(this);
             return select;
