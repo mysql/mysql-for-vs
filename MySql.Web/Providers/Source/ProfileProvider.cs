@@ -35,7 +35,6 @@ using System.Text;
 using System.Data;
 using System.IO;
 using System.Globalization;
-using System.Transactions;
 using System.Web.Security;
 using MySql.Web.Common;
 using MySql.Web.Properties;
@@ -459,39 +458,40 @@ namespace MySql.Web.Profile
             int count = EncodeProfileData(collection, isAuthenticated, ref index, ref stringData, ref binaryData);
             if (count < 1) return;
 
+            MySqlTransaction txn = null;
             // save the encoded profile data to the database
-            try
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                using (TransactionScope ts = new TransactionScope())
+                try
                 {
-                    using (MySqlConnection connection = new MySqlConnection(connectionString))
-                    {
-                        connection.Open();
+                    connection.Open();
+                    txn = connection.BeginTransaction();
 
-                        // either create a new user or fetch the existing user id
-                        int userId = SchemaManager.CreateOrFetchUserId(connection, username, 
-                            app.EnsureId(connection), isAuthenticated);
+                    // either create a new user or fetch the existing user id
+                    int userId = SchemaManager.CreateOrFetchUserId(connection, username, 
+                        app.EnsureId(connection), isAuthenticated);
 
-                        MySqlCommand cmd = new MySqlCommand(
-                            @"INSERT INTO my_aspnet_Profiles  
-                            VALUES (@userId, @index, @stringData, @binaryData, NULL) ON DUPLICATE KEY UPDATE
-                            valueindex=VALUES(valueindex), stringdata=VALUES(stringdata),
-                            binarydata=VALUES(binarydata)", connection);
-                        cmd.Parameters.Clear();
-                        cmd.Parameters.AddWithValue("@userId", userId);
-                        cmd.Parameters.AddWithValue("@index", index);
-                        cmd.Parameters.AddWithValue("@stringData", stringData);
-                        cmd.Parameters.AddWithValue("@binaryData", binaryData);
-                        count = cmd.ExecuteNonQuery();
-                        if (count == 0)
-                            throw new Exception(Resources.ProfileUpdateFailed);
-                        ts.Complete();
-                    }
+                    MySqlCommand cmd = new MySqlCommand(
+                        @"INSERT INTO my_aspnet_Profiles  
+                        VALUES (@userId, @index, @stringData, @binaryData, NULL) ON DUPLICATE KEY UPDATE
+                        valueindex=VALUES(valueindex), stringdata=VALUES(stringdata),
+                        binarydata=VALUES(binarydata)", connection);
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.AddWithValue("@userId", userId);
+                    cmd.Parameters.AddWithValue("@index", index);
+                    cmd.Parameters.AddWithValue("@stringData", stringData);
+                    cmd.Parameters.AddWithValue("@binaryData", binaryData);
+                    count = cmd.ExecuteNonQuery();
+                    if (count == 0)
+                        throw new Exception(Resources.ProfileUpdateFailed);
+                    txn.Commit();
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new ProviderException(Resources.ProfileUpdateFailed, ex);
+                catch (Exception ex)
+                {
+                    if (txn != null)
+                        txn.Rollback();
+                    throw new ProviderException(Resources.ProfileUpdateFailed, ex);
+                }
             }
         }
 
