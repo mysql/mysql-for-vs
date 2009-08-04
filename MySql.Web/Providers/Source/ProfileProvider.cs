@@ -35,7 +35,6 @@ using System.Text;
 using System.Data;
 using System.IO;
 using System.Globalization;
-using System.Transactions;
 using System.Web.Security;
 using MySql.Web.Common;
 using MySql.Web.Properties;
@@ -459,50 +458,53 @@ namespace MySql.Web.Profile
             int count = EncodeProfileData(collection, isAuthenticated, ref index, ref stringData, ref binaryData);
             if (count < 1) return;
 
+            MySqlTransaction txn = null;
+
             // save the encoded profile data to the database
-            try
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                using (TransactionScope ts = new TransactionScope())
+                try
                 {
-                    using (MySqlConnection connection = new MySqlConnection(connectionString))
+                    connection.Open();
+
+                    txn = connection.BeginTransaction();
+
+                    // either create a new user or fetch the existing user id
+                    int userId = SchemaManager.CreateOrFetchUserId(connection, username, 
+                        app.EnsureId(connection), isAuthenticated);
+
+                    MySqlDataAdapter da = new MySqlDataAdapter(
+                        "SELECT * FROM my_aspnet_Profiles WHERE userId=@id", connection);
+                    da.SelectCommand.Parameters.AddWithValue("@id", userId);
+                    MySqlCommandBuilder cb =new MySqlCommandBuilder(da);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+
+                    DataRow row;
+                    if (dt.Rows.Count == 0)
                     {
-                        connection.Open();
-
-                        // either create a new user or fetch the existing user id
-                        int userId = SchemaManager.CreateOrFetchUserId(connection, username, 
-                            app.EnsureId(connection), isAuthenticated);
-
-                        MySqlDataAdapter da = new MySqlDataAdapter(
-                            "SELECT * FROM my_aspnet_Profiles WHERE userId=@id", connection);
-                        da.SelectCommand.Parameters.AddWithValue("@id", userId);
-                        MySqlCommandBuilder cb =new MySqlCommandBuilder(da);
-                        DataTable dt = new DataTable();
-                        da.Fill(dt);
-
-                        DataRow row;
-                        if (dt.Rows.Count == 0)
-                        {
-                            row = dt.NewRow();
-                            dt.Rows.Add(row);
-                        }
-                        else
-                            row = dt.Rows[0];
-
-                        row["userId"] = userId;
-                        row["valueIndex"] = index;
-                        row["stringdata"] = stringData;
-                        row["binarydata"] = binaryData;
-
-                        count = da.Update(dt);
-                        if (count == 0)
-                            throw new Exception(Resources.ProfileUpdateFailed);
-                        ts.Complete();
+                        row = dt.NewRow();
+                        dt.Rows.Add(row);
                     }
+                    else
+                        row = dt.Rows[0];
+
+                    row["userId"] = userId;
+                    row["valueIndex"] = index;
+                    row["stringdata"] = stringData;
+                    row["binarydata"] = binaryData;
+
+                    count = da.Update(dt);
+                    if (count == 0)
+                        throw new Exception(Resources.ProfileUpdateFailed);
+                    txn.Commit();
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new ProviderException(Resources.ProfileUpdateFailed, ex);
+                catch (Exception ex)
+                {
+                    if (txn != null)
+                        txn.Rollback();
+                    throw new ProviderException(Resources.ProfileUpdateFailed, ex);
+                }
             }
         }
 
