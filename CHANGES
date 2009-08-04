@@ -74,6 +74,7 @@ Version 5.2.8
   and including a solution that builds with MonoDevelop 2.0. (bug #42411)
 - removed usage of TransactionScope from web providers so that they work properly
   on Mono 2.0 (bug #46375)
+- fixed a small documentation bug related to our server compatibility
 
 Version 5.2.7  7/13/09
 - fixed procedure parameters collection so that an exception is thrown if we can't get the 
