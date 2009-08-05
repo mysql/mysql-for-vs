@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS SalariedEmployees;
 DROP TABLE IF EXISTS Employees;
+DROP TABLE IF EXISTS EmployeeChildren;
 DROP TABLE IF EXISTS Toys;
 DROP TABLE IF EXISTS Companies;
 DROP TABLE IF EXISTS Orders;
@@ -30,6 +31,13 @@ CREATE TABLE SalariedEmployees(
 	
 INSERT INTO salariedEmployees VALUES (5, 500);
 INSERT INTO salariedEmployees VALUES (7, 50);
+
+CREATE TABLE EmployeeChildren(
+	Id INT NOT NULL PRIMARY KEY,
+	EmployeeId INT NOT NULL,
+	LastName NVARCHAR(20) NOT NULL,
+	FirstName NVARCHAR(10) NOT NULL,
+	BirthTime TIME);
 
 CREATE TABLE Companies (
 	`Id` INT NOT NULL AUTO_INCREMENT,
