@@ -66,6 +66,7 @@ namespace MySql.Data.Entity
                 case PrimitiveTypeKind.Int64: return DbType.Int64;
                 case PrimitiveTypeKind.SByte: return DbType.SByte;
                 case PrimitiveTypeKind.String: return DbType.String;
+                case PrimitiveTypeKind.Time: return DbType.Time;
                 //                case PrimitiveTypeKind.UInt16: return DbType.UInt16;
                 //                case PrimitiveTypeKind.UInt32: return DbType.UInt32;
                 //                case PrimitiveTypeKind.UInt64: return DbType.UInt64;

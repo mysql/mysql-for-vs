@@ -51,6 +51,7 @@
     <Property Name="EmployeeID" Type="Int32" Nullable="false" />
     <Property Name="LastName" Type="String" Nullable="false" MaxLength="20" />
     <Property Name="FirstName" Type="String" Nullable="false" MaxLength="10" />
+    <Property Name="BirthTime" Type="Time" Nullable="true"/>
   </EntityType>
 
   <EntityType Name="Company">
