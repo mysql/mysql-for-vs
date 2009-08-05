@@ -26,6 +26,7 @@ Version 6.0.5
 - fixed 'can't find svctag.xml' installer bug (thanks Iggy!)  (bug #45474)
 - fixed DbSkipExpression so that it would respect any sort clauses that are attached
   (thanks Lynn!) (bug #45723)
+- fixed bug that caused our TIME type to not be supported (bug #45457)
   
 Version 6.0.4
 - fixed regression where using stored procs with datasets (bug #44460)
