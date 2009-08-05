@@ -7,6 +7,8 @@ Version 6.1.0
   to continue using binary(16) guids
 
 Version 6.0.5
+- workaround for .NET compact framework problems when writing behind the end of MemoryStream 
+(contributed by Nicholas Piasecki) (bug#43736)
 - added keepalive connection option that can be used to detect network outages faster 
   and prevent firewalls from dropping idle connections (bug#40684)
 - fixed bug where our internal driver was using a batched command even if the user had added
