@@ -31,7 +31,7 @@ namespace MySql.Data.MySqlClient
     {
         private byte[] tempBuffer = new byte[256];
         private Encoding encoding;
-        private MemoryStream buffer = new MemoryStream();
+        private MemoryStream buffer = new MemoryStream(5);
         private DBVersion version;
 
         public MySqlPacket()
