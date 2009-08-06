@@ -334,28 +334,6 @@ namespace MySql.Data.MySqlClient
 			return ExecuteReader(CommandBehavior.Default);
 		}
 
-		private void TimeoutExpired(object commandObject)
-		{
-			MySqlCommand cmd = (commandObject as MySqlCommand);
-            if (cmd == null)
-            {
-                Logger.LogWarning(Resources.TimeoutExpiredNullObject);
-                return;
-            }
-
-            cmd.timedOut = true;
-            try
-            {
-                cmd.Cancel();
-            }
-            catch (Exception ex)
-            {
-                // if something goes wrong, we log it and eat it.  There's really nothing
-                // else we can do.
-                if (connection.Settings.Logging)
-                    Logger.LogException(ex);
-            }
-		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ExecuteReader1/*'/>
 		public new MySqlDataReader ExecuteReader(CommandBehavior behavior)
@@ -400,33 +378,27 @@ namespace MySql.Data.MySqlClient
             HandleCommandBehaviors(behavior);
 
 			updatedRowCount = -1;
-
-            Timer timer = null;
             try
             {
+                connection.driver.ResetTimeout(commandTimeout * 1000);
                 MySqlDataReader reader = new MySqlDataReader(this, statement, behavior);
-
-                // start a threading timer on our command timeout 
-                timedOut = false;
-                canceled = false;
-
                 // execute the statement
                 statement.Execute();
-
-                // start a timeout timer
-                if (connection.driver.Version.isAtLeast(5, 0, 0) &&
-                     commandTimeout > 0)
-                {
-                    TimerCallback timerDelegate =
-                         new TimerCallback(TimeoutExpired);
-                    timer = new Timer(timerDelegate, this, this.CommandTimeout * 1000, Timeout.Infinite);
-                }
-
                 // wait for data to return
                 reader.NextResult();
-                
                 connection.Reader = reader;
                 return reader;
+            }
+            catch (TimeoutException tex)
+            {
+                try
+                {
+                    Connection.Abort();
+                }
+                catch (Exception)
+                {
+                }
+                throw new MySqlException(Resources.Timeout,true, tex);
             }
             catch (MySqlException ex)
             {
@@ -439,8 +411,6 @@ namespace MySql.Data.MySqlClient
                 // if we caught an exception because of a cancel, then just return null
                 if (ex.Number == 1317)
                 {
-                    if (TimedOut)
-                        throw new MySqlException(Resources.Timeout);
                     return null;
                 }
                 if (ex.IsFatal)
@@ -448,11 +418,6 @@ namespace MySql.Data.MySqlClient
                 if (ex.Number == 0)
                     throw new MySqlException(Resources.FatalErrorDuringExecute, ex);
                 throw;
-            }
-            finally
-            {
-                if (timer != null)
-                    timer.Dispose();
             }
 		}
 

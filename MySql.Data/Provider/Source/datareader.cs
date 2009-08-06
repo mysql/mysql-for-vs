@@ -818,13 +818,22 @@ namespace MySql.Data.MySqlClient
             // single result means we only return a single resultset.  If we have already
             // returned one, then we return false;
             if (resultSet.ResultsIndex == 0 && (commandBehavior & CommandBehavior.SingleResult) != 0)
+            {
+                // Command is completed, clear the IO timeouts for the stream
+                connection.driver.ResetTimeout(0);
                 return false;
+            }
 
 			// tell our command to continue execution of the SQL batch until it its
 			// another resultset
 			try
 			{
-                if (!resultSet.NextResult()) return false;
+                if (!resultSet.NextResult())
+                {
+                    // Command is completed, clear the IO timeouts for the stream
+                    connection.driver.ResetTimeout(0);
+                    return false;
+                }
 
 				// issue any requested UA warnings
 				if (connection.Settings.UseUsageAdvisor)
@@ -841,8 +850,6 @@ namespace MySql.Data.MySqlClient
             {
 				if (ex.IsFatal)
 					connection.Abort();
-                if (command.TimedOut)
-                    throw new MySqlException(Resources.Timeout);
                 if (ex.Number == 0)
                     throw new MySqlException(Resources.FatalErrorReadingResult, ex);
                 throw;

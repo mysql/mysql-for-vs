@@ -372,7 +372,7 @@ namespace MySql.Data.MySqlClient
         public abstract bool Ping();
         public abstract void CloseStatement(int id);
         public abstract void ExecuteDirect(string sql);
-
+        public abstract void ResetTimeout(int timeoutMilliseconds);
 		#endregion
 
 
