@@ -1,4 +1,4 @@
-// Copyright (c) 2004-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+// Copyright (c) 2009 Sun Microsystems, Inc.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -22,176 +22,174 @@ using System;
 using System.IO;
 using MySql.Data.MySqlClient;
 using MySql.Data.MySqlClient.Properties;
+using Microsoft.Win32.SafeHandles;
+using System.Threading;
+using System.Diagnostics;
+
 
 
 namespace MySql.Data.Common
 {
-	/// <summary>
-	/// Summary description for API.
-	/// </summary>
-	internal class NamedPipeStream : Stream
-	{
-		int			pipeHandle;
-		FileAccess	_mode;
+    /// <summary>
+    /// Summary description for API.
+    /// </summary>
+    internal class NamedPipeStream : Stream
+    {
 
-		public NamedPipeStream(string host, FileAccess mode)
-		{
-			Open(host, mode);
-		}
+        Stream fileStream;
+        int readTimeout = Timeout.Infinite;
+        int writeTimeout = Timeout.Infinite;
 
-		public void Open( string host, FileAccess mode )
-		{
-			_mode = mode;
-			uint pipemode = 0;
 
-			if ((mode & FileAccess.Read) > 0)
-				pipemode |= NativeMethods.GENERIC_READ;
-			if ((mode & FileAccess.Write) > 0)
-				pipemode |= NativeMethods.GENERIC_WRITE;
+        public NamedPipeStream(string path, FileAccess mode)
+        {
+            Open(path, mode);
+        }
 
-			pipeHandle = NativeMethods.CreateFile( host, pipemode,
-						0, null, NativeMethods.OPEN_EXISTING, 0, 0 );
-		}
+        public void Open( string path, FileAccess mode )
+        {
+           SafeFileHandle handle = new SafeFileHandle(NativeMethods.CreateFile(path, NativeMethods.GENERIC_READ | NativeMethods.GENERIC_WRITE,
+                        0, null, NativeMethods.OPEN_EXISTING, NativeMethods.FILE_FLAG_OVERLAPPED, 0),true);
+           fileStream = new FileStream(handle, mode,4096 , true);
+        }
 
-		public override bool CanRead
-		{
-			get { return (_mode & FileAccess.Read) > 0; }
-		}
+        public override bool CanRead
+        {
+            get { return fileStream.CanRead; }
+        }
 
-		public override bool CanWrite
-		{
-			get { return (_mode & FileAccess.Write) > 0; }
-		}
+        public override bool CanWrite
+        {
+            get { return fileStream.CanWrite; }
+        }
 
-		public override bool CanSeek
-		{
-			get { throw new NotSupportedException(Resources.NamedPipeNoSeek); }
-		}
+        public override bool CanSeek
+        {
+            get { throw new NotSupportedException(Resources.NamedPipeNoSeek); }
+        }
 
-		public override long Length
-		{
-			get { throw new NotSupportedException(Resources.NamedPipeNoSeek); }
-		}
+        public override long Length
+        {
+            get { throw new NotSupportedException(Resources.NamedPipeNoSeek); }
+        }
 
-		public override long Position 
-		{
-			get { throw new NotSupportedException(Resources.NamedPipeNoSeek); }
-			set { }
-		}
+        public override long Position 
+        {
+            get { throw new NotSupportedException(Resources.NamedPipeNoSeek); }
+            set { }
+        }
 
-		public override void Flush() 
-		{
-			if (pipeHandle != 0)
-				NativeMethods.FlushFileBuffers((IntPtr)pipeHandle);
-		}
+        public override void Flush() 
+        {
+            fileStream.Flush();
+        }
 
-		public override int Read(byte[] buffer, int offset, int count)
-		{
-			if (buffer == null) 
-				throw new ArgumentNullException("buffer", 
-					Resources.BufferCannotBeNull);
-			if (buffer.Length < (offset + count))
-				throw new ArgumentException(
-					Resources.BufferNotLargeEnough);
-			if (offset < 0) 
-				throw new ArgumentOutOfRangeException("offset", offset, 
-					Resources.OffsetCannotBeNegative);
-			if (count < 0)
-				throw new ArgumentOutOfRangeException("count", count, 
-					Resources.CountCannotBeNegative);
-			if (! CanRead)
-				throw new NotSupportedException(Resources.StreamNoRead);
-			if (pipeHandle == 0) 
-				throw new ObjectDisposedException("NamedPipeStream", 
-					Resources.StreamAlreadyClosed);
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            if(readTimeout == Timeout.Infinite)
+            {
+                return fileStream.Read(buffer, offset, count);
+            }
+            IAsyncResult result = fileStream.BeginRead(buffer, offset, count, null, null);
+            if (result.CompletedSynchronously)
+                return fileStream.EndRead(result);
+            int timeLeft = readTimeout;
 
-			// first read the data into an internal buffer since ReadFile cannot read into a buf at
-			// a specified offset
-			uint read;
-			byte[] buf = new Byte[count];
-			bool result = NativeMethods.ReadFile((IntPtr)pipeHandle, buf, 
-				(uint)count, out read, IntPtr.Zero); 
-			
-			if (! result)
-			{
-				Close();
-				throw new MySqlException(Resources.ReadFromStreamFailed, true, null);
-			}
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
 
-			Array.Copy(buf, (int)0, buffer, (int)offset, (int)read);
-			return (int)read;
-		}
+            while(!result.IsCompleted)
+            {
+                bool signaled = result.AsyncWaitHandle.WaitOne(readTimeout);
+                if (!signaled)
+                    throw new TimeoutException();
+                timeLeft -= (int)stopwatch.ElapsedMilliseconds;
+                if (timeLeft < 0)
+                    throw new TimeoutException();
+            }
+            int bytesRead = fileStream.EndRead(result);
 
-		public override void Close()
-		{
-			if (pipeHandle != 0)
-			{
-				NativeMethods.CloseHandle((IntPtr)pipeHandle);
-				pipeHandle = 0;
-			}
-		}
+            return bytesRead;
+        }
 
-		public override void SetLength(long length)
-		{
-			throw new NotSupportedException(Resources.NamedPipeNoSetLength);
-		}
 
-		public override void Write(byte[] buffer, int offset, int count)
-		{
-			if (buffer == null) 
-				throw new ArgumentNullException("buffer", Resources.BufferCannotBeNull);
-			if (buffer.Length < (offset + count))
-				throw new ArgumentException(Resources.BufferNotLargeEnough, "buffer");
-			if (offset < 0) 
-				throw new ArgumentOutOfRangeException("offset", offset, 
-					Resources.OffsetCannotBeNegative);
-			if (count < 0)
-				throw new ArgumentOutOfRangeException("count", count, 
-					Resources.CountCannotBeNegative);
-			if (! CanWrite)
-				throw new NotSupportedException(Resources.StreamNoWrite);
-			if (pipeHandle == 0)
-				throw new ObjectDisposedException("NamedPipeStream", 
-					Resources.StreamAlreadyClosed);
-			
-			// copy data to internal buffer to allow writing from a specified offset
-			uint bytesWritten = 0;
-			bool result;
+        public override void Write(byte[] buffer, int offset, int count)
+        {
+            if (readTimeout == Timeout.Infinite)
+            {
+                fileStream.Write(buffer, offset, count);
+                return;
+            }
+            IAsyncResult result = fileStream.BeginWrite(buffer, offset, count, null, null);
+            if (result.CompletedSynchronously)
+            {
+                fileStream.EndWrite(result);
+            }
+            int timeLeft = writeTimeout;
 
-			if (offset == 0  && count <= 65535)
-				result = NativeMethods.WriteFile((IntPtr)pipeHandle, buffer, (uint)count, out bytesWritten, IntPtr.Zero);
-			else
-			{
-				byte[] localBuf = new byte[65535];
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            while (!result.IsCompleted)
+            {
+                bool signaled = result.AsyncWaitHandle.WaitOne(timeLeft);
+                if (!signaled)
+                    throw new TimeoutException();
+                timeLeft -= (int)stopwatch.ElapsedMilliseconds;
+                if (timeLeft < 0)
+                    throw new TimeoutException();
+            }
+            fileStream.EndWrite(result);
+        }
 
-				result = true;
-				while (count != 0 && result)
-				{
-                    uint thisWritten;
-                    int cnt = Math.Min(count, 65535);
-					Array.Copy( buffer, offset, localBuf, 0, cnt );
-					result = NativeMethods.WriteFile((IntPtr)pipeHandle, localBuf, (uint)cnt, out thisWritten, IntPtr.Zero);
-					bytesWritten += thisWritten;
-					count -= cnt;
-					offset += cnt;
-				}
-			}
+        public override void Close()
+        {
+            fileStream.Close();
+        }
 
-			if (! result)
-			{
-				Close();
-				throw new MySqlException(Resources.WriteToStreamFailed, true, null);
-			}
-			if (bytesWritten < count)
-				throw new IOException("Unable to write entire buffer to stream");
-		}
+        public override void SetLength(long length)
+        {
+            throw new NotSupportedException(Resources.NamedPipeNoSetLength);
+        }
 
-		public override long Seek( long offset, SeekOrigin origin )
-		{
-			throw new NotSupportedException(Resources.NamedPipeNoSeek);
-		}
 
-        internal static NamedPipeStream Create(string pipeName, string hostname)
+        public override bool CanTimeout
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        public override int ReadTimeout
+        {
+            get
+            {
+                return readTimeout;
+            }
+            set
+            {
+                readTimeout = value;
+            }
+        }
+
+        public override  int WriteTimeout
+        {
+            get
+            {
+                return writeTimeout;
+            }
+            set
+            {
+                writeTimeout = value;
+            }
+        }
+
+        public override long Seek( long offset, SeekOrigin origin )
+        {
+            throw new NotSupportedException(Resources.NamedPipeNoSeek);
+        }
+     
+        internal static Stream Create(string pipeName, string hostname)
         {
             string pipePath;
             if (0 == String.Compare(hostname, "localhost", true))
@@ -200,7 +198,7 @@ namespace MySql.Data.Common
                 pipePath = String.Format(@"\\{0}\pipe\{1}", hostname, pipeName);
             return new NamedPipeStream(pipePath, FileAccess.ReadWrite);
         }
-	}
+    }
 }
 
 

@@ -58,7 +58,7 @@ namespace MySql.Data.Common
 		}
 
 		[DllImport("Kernel32", CharSet=CharSet.Unicode)]
-		static extern public int CreateFile(
+		static extern public IntPtr CreateFile(
             String fileName,
 			uint desiredAccess,
 			uint shareMode, 

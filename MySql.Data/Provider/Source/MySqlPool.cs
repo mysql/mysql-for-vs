@@ -115,6 +115,20 @@ namespace MySql.Data.MySqlClient
                     driver = (Driver)idlePool.Dequeue();
             }
 
+            // Obey the connection timeout
+            if (driver != null)
+            {
+                try
+                {
+                    driver.ResetTimeout((int)Settings.ConnectionTimeout * 1000);
+                }
+                catch (Exception)
+                {
+                    driver.Close();
+                    driver = null;
+                }
+            }
+            
             if (driver != null)
             {
                 // first check to see that the server is still alive

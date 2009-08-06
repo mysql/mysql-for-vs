@@ -221,6 +221,8 @@ namespace MySql.Data.MySqlClient
             int maxSinglePacket = 255*255*255;
             stream = new MySqlStream(baseStream, encoding, false);
 
+            stream.ResetTimeout((int)Settings.ConnectionTimeout*1000);
+
             // read off the welcome packet and parse out it's values
             packet = stream.ReadPacket();
             protocol = packet.ReadByte();
@@ -943,5 +945,16 @@ namespace MySql.Data.MySqlClient
             stream.SendPacket(packet);
         }
 
-	}
+        /// <summary>
+        /// Execution timeout, in milliseconds. When the accumulated time for network IO exceeds this value
+        /// TimeoutException is thrown. This timeout needs to be reset for every new command
+        /// </summary>
+        /// 
+        public override void ResetTimeout(int timeout)
+        {
+            stream.ResetTimeout(timeout);
+        }
+
+    }
+ 
 }
