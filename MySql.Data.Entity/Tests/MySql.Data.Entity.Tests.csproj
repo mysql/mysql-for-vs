@@ -67,17 +67,17 @@
     <Compile Include="ProceduresAndFunctions.cs" />
     <Compile Include="JoinTests.cs" />
     <Compile Include="SchemaInformation.cs" />
+    <Compile Include="TestModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TestModel.csdl</DependentUpon>
+    </Compile>
     <Compile Include="Wizard.cs" />
     <Compile Include="RelationalOperators.cs" />
     <Compile Include="SetOperators.cs" />
     <Compile Include="Paging.cs" />
     <Compile Include="OrderingAndGrouping.cs" />
     <Compile Include="InsertTests.cs" />
-    <Compile Include="TestModel.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>TestModel.csdl</DependentUpon>
-    </Compile>
     <Compile Include="UpdateTests.cs" />
     <Compile Include="DeleteTests.cs" />
     <Compile Include="RestrictionOperators.cs" />
