@@ -92,7 +92,11 @@ namespace MySql.Data.Entity.Tests
             {
                 using (testEntities context = new testEntities())
                 {
-                    Child c = Child.CreateChild(20, 1, "Rubble", "Bam bam");
+                    Child c = new Child();
+                    c.Id = 20;
+                    c.EmployeeID = 1;
+                    c.FirstName = "Bam bam";
+                    c.LastName = "Rubble";
                     c.BirthWeight = 8.65;
                     context.AddToChildren(c);
                     context.SaveChanges();
@@ -102,6 +106,26 @@ namespace MySql.Data.Entity.Tests
             {
                 Thread.CurrentThread.CurrentCulture = curCulture;
                 Thread.CurrentThread.CurrentUICulture = curUICulture;
+            }
+        }
+
+        /// <summary>
+        /// Bug #46311	TimeStamp table column Entity Framework issue.
+        /// </summary>
+        [Test]
+        public void TimestampColumn()
+        {
+            DateTime now = DateTime.Now;
+
+            using (testEntities context = new testEntities())
+            {
+                Child c = context.Children.First();
+                DateTime dt = c.Modified;
+                c.Modified = now;
+                context.SaveChanges();
+
+                c = context.Children.First();
+                Assert.AreEqual(now, c.Modified);
             }
         }
     }
