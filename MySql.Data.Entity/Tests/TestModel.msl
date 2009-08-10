@@ -43,6 +43,7 @@
           <ScalarProperty Name="FirstName" ColumnName="FirstName" />
           <ScalarProperty Name="BirthTime" ColumnName="BirthTime"/>
           <ScalarProperty Name="BirthWeight" ColumnName="Weight"/>
+          <ScalarProperty Name="Modified" ColumnName ="LastModified"/>
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
