@@ -33,11 +33,13 @@ INSERT INTO salariedEmployees VALUES (5, 500);
 INSERT INTO salariedEmployees VALUES (7, 50);
 
 CREATE TABLE EmployeeChildren(
-	Id INT NOT NULL PRIMARY KEY,
+	Id INT UNSIGNED NOT NULL PRIMARY KEY,
 	EmployeeId INT NOT NULL,
 	LastName NVARCHAR(20) NOT NULL,
 	FirstName NVARCHAR(10) NOT NULL,
 	BirthTime TIME);
+
+INSERT INTO EmployeeChildren VALUES (1, 1, 'Flintstone', 'Pebbles', NULL);
 
 CREATE TABLE Companies (
 	`Id` INT NOT NULL AUTO_INCREMENT,
