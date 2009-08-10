@@ -28,6 +28,7 @@ using MySql.Data.MySqlClient.Tests;
 using System.Data.EntityClient;
 using System.Data.Common;
 using System.Data.Objects;
+using System.Globalization;
 
 namespace MySql.Data.Entity.Tests
 {
@@ -72,6 +73,35 @@ namespace MySql.Data.Entity.Tests
                 var row = context.Children.First();
                 context.Detach(row);
                 context.Attach(row);
+            }
+        }
+
+        /// <summary>
+        /// Bug #44455	insert and update error with entity framework
+        /// </summary>
+        [Test]
+        public void DoubleValuesNonEnglish()
+        {
+            CultureInfo curCulture = Thread.CurrentThread.CurrentCulture;
+            CultureInfo curUICulture = Thread.CurrentThread.CurrentUICulture;
+            CultureInfo newCulture = new CultureInfo("da-DK");
+            Thread.CurrentThread.CurrentCulture = newCulture;
+            Thread.CurrentThread.CurrentUICulture = newCulture;
+
+            try
+            {
+                using (testEntities context = new testEntities())
+                {
+                    Child c = Child.CreateChild(20, 1, "Rubble", "Bam bam");
+                    c.BirthWeight = 8.65;
+                    context.AddToChildren(c);
+                    context.SaveChanges();
+                }
+            }
+            finally
+            {
+                Thread.CurrentThread.CurrentCulture = curCulture;
+                Thread.CurrentThread.CurrentUICulture = curUICulture;
             }
         }
     }
