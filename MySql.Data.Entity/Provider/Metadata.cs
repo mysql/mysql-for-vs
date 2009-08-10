@@ -23,11 +23,32 @@ using System.Data;
 using System.Data.Metadata.Edm;
 using System.Data.Common.CommandTrees;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace MySql.Data.Entity
 {
     class Metadata
     {
+        public static string GetNumericLiteral(PrimitiveTypeKind type, object value)
+        {
+            switch (type)
+            {
+                case PrimitiveTypeKind.Byte:
+                case PrimitiveTypeKind.Int16:
+                case PrimitiveTypeKind.Int32:
+                case PrimitiveTypeKind.Int64:
+                case PrimitiveTypeKind.SByte:
+                    return value.ToString();
+                case PrimitiveTypeKind.Double:
+                    return ((double)value).ToString("R", CultureInfo.InvariantCulture);
+                case PrimitiveTypeKind.Single:
+                    return ((float)value).ToString("R", CultureInfo.InvariantCulture);
+                case PrimitiveTypeKind.Decimal:
+                    return ((decimal)value).ToString(CultureInfo.InvariantCulture);
+            }
+            return null;
+        }
+
         public static bool IsNumericType(TypeUsage typeUsage)
         {
             PrimitiveType pt = (PrimitiveType)typeUsage.EdmType;

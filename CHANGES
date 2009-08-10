@@ -28,6 +28,8 @@ Version 6.0.5
   (thanks Lynn!) (bug #45723)
 - fixed bug that caused our TIME type to not be supported (bug #45457)
 - fixed unsigned type problems with entity framework (bug #45077)  
+- fixed formatting of single, double, and decimal values when used with entity framework
+  in cultures that use the comma as a decimal separator (bug #44455)  
   
 Version 6.0.4
 - fixed regression where using stored procs with datasets (bug #44460)
