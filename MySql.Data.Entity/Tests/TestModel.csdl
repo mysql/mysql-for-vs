@@ -47,7 +47,7 @@
     <Key>
       <PropertyRef Name="Id" />
     </Key>
-    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="Id" Type="Int64" Nullable="false" />
     <Property Name="EmployeeID" Type="Int32" Nullable="false" />
     <Property Name="LastName" Type="String" Nullable="false" MaxLength="20" />
     <Property Name="FirstName" Type="String" Nullable="false" MaxLength="10" />
