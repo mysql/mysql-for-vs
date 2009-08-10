@@ -58,12 +58,33 @@ namespace MySql.Data.MySqlClient
 
             string sql = generator.GenerateSQL(commandTree);
 
-            MySqlCommand cmd = new MySqlCommand(sql);
+            EFMySqlCommand cmd = new EFMySqlCommand();
+            cmd.CommandText = sql;
             if (generator is FunctionGenerator)
                 cmd.CommandType = (generator as FunctionGenerator).CommandType;
 
-            FieldInfo fi = cmd.GetType().GetField("EFCrap", BindingFlags.NonPublic | BindingFlags.Instance);
-            fi.SetValue(cmd, true);
+            DbQueryCommandTree queryTree = commandTree as DbQueryCommandTree;
+            if (queryTree != null)
+            {
+                DbProjectExpression projectExpression = queryTree.Query as DbProjectExpression;
+                if (projectExpression != null)
+                {
+                    EdmType resultsType = projectExpression.Projection.ResultType.EdmType;
+
+                    StructuralType resultsAsStructuralType = resultsType as StructuralType;
+                    if (resultsAsStructuralType != null)
+                    {
+                        cmd.ColumnTypes = new PrimitiveType[resultsAsStructuralType.Members.Count];
+
+                        for (int ordinal = 0; ordinal < resultsAsStructuralType.Members.Count; ordinal++)
+                        {
+                            EdmMember member = resultsAsStructuralType.Members[ordinal];
+                            PrimitiveType primitiveType = member.TypeUsage.EdmType as PrimitiveType;
+                            cmd.ColumnTypes[ordinal] = primitiveType;
+                        }
+                    }
+                }
+            }
 
             // Now make sure we populate the command's parameters from the CQT's parameters:
             foreach (KeyValuePair<string, TypeUsage> queryParameter in commandTree.Parameters)

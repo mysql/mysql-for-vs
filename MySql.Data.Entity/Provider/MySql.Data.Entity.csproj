@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>10.0.20506</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A8E799B1-D6AC-42BD-907E-B213D7E9B3C5}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -53,6 +53,10 @@
     <Compile Include="..\..\MySql.Data\Provider\Properties\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
+    <Compile Include="EFMySqlCommand.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="EFMySqlDataReader.cs" />
     <Compile Include="Fragments\TableFragment.cs" />
     <Compile Include="Fragments\InputFragment.cs" />
     <Compile Include="Fragments\JoinFragment.cs" />
