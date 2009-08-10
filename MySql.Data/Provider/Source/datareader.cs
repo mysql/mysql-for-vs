@@ -247,9 +247,9 @@ namespace MySql.Data.MySqlClient
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public byte GetSByte(string name)
+        public sbyte GetSByte(string name)
         {
-            return GetByte(GetOrdinal(name));
+            return GetSByte(GetOrdinal(name));
         }
 
         /// <summary>
