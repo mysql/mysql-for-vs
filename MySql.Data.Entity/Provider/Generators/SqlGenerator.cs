@@ -148,13 +148,9 @@ namespace MySql.Data.Entity
         public override SqlFragment Visit(DbConstantExpression expression)
         {
             PrimitiveTypeKind pt = ((PrimitiveType)expression.ResultType.EdmType).PrimitiveTypeKind;
-            if (Metadata.IsNumericType(expression.ResultType))
-                return new LiteralFragment(expression.Value.ToString());
-            else if (pt == PrimitiveTypeKind.Decimal)
-            {
-                decimal val = (decimal)expression.Value;
-                return new LiteralFragment(val.ToString(CultureInfo.InvariantCulture));
-            }
+            string literal = Metadata.GetNumericLiteral(pt, expression.Value);
+            if (literal != null)
+                return new LiteralFragment(literal);
             else if (pt == PrimitiveTypeKind.Boolean)
                 return new LiteralFragment(String.Format("cast({0} as decimal(0,0))",
                     (bool)expression.Value ? 1 : 0));

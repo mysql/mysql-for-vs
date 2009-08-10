@@ -37,9 +37,10 @@ CREATE TABLE EmployeeChildren(
 	EmployeeId INT NOT NULL,
 	LastName NVARCHAR(20) NOT NULL,
 	FirstName NVARCHAR(10) NOT NULL,
-	BirthTime TIME);
+	BirthTime TIME,
+	Weight DOUBLE);
 
-INSERT INTO EmployeeChildren VALUES (1, 1, 'Flintstone', 'Pebbles', NULL);
+INSERT INTO EmployeeChildren VALUES (1, 1, 'Flintstone', 'Pebbles', NULL, NULL);
 
 CREATE TABLE Companies (
 	`Id` INT NOT NULL AUTO_INCREMENT,
