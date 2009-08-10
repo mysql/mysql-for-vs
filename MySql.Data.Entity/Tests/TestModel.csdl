@@ -52,6 +52,7 @@
     <Property Name="LastName" Type="String" Nullable="false" MaxLength="20" />
     <Property Name="FirstName" Type="String" Nullable="false" MaxLength="10" />
     <Property Name="BirthTime" Type="Time" Nullable="true"/>
+    <Property Name="BirthWeight" Type="Double" Nullable="true"/>
   </EntityType>
 
   <EntityType Name="Company">

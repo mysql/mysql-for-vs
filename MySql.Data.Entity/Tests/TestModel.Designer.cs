@@ -15,7 +15,7 @@
 [assembly: global::System.Data.Objects.DataClasses.EdmRelationshipAttribute("testModel", "FK_Books_Publishers", "Publishers", global::System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(MySql.Data.Entity.Tests.Publisher), "Books", global::System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(MySql.Data.Entity.Tests.Book))]
 
 // Original file name:
-// Generation date: 8/10/2009 10:31:31 AM
+// Generation date: 8/10/2009 12:38:36 PM
 namespace MySql.Data.Entity.Tests
 {
     
@@ -560,6 +560,29 @@ namespace MySql.Data.Entity.Tests
         private global::System.Nullable<global::System.TimeSpan> _BirthTime;
         partial void OnBirthTimeChanging(global::System.Nullable<global::System.TimeSpan> value);
         partial void OnBirthTimeChanged();
+        /// <summary>
+        /// There are no comments for Property BirthWeight in the schema.
+        /// </summary>
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute()]
+        [global::System.Runtime.Serialization.DataMemberAttribute()]
+        public global::System.Nullable<double> BirthWeight
+        {
+            get
+            {
+                return this._BirthWeight;
+            }
+            set
+            {
+                this.OnBirthWeightChanging(value);
+                this.ReportPropertyChanging("BirthWeight");
+                this._BirthWeight = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value);
+                this.ReportPropertyChanged("BirthWeight");
+                this.OnBirthWeightChanged();
+            }
+        }
+        private global::System.Nullable<double> _BirthWeight;
+        partial void OnBirthWeightChanging(global::System.Nullable<double> value);
+        partial void OnBirthWeightChanged();
     }
     /// <summary>
     /// There are no comments for testModel.Company in the schema.
