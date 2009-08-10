@@ -31,6 +31,7 @@ Version 6.0.5
 - fixed formatting of single, double, and decimal values when used with entity framework
   in cultures that use the comma as a decimal separator (bug #44455)  
 - fixed GetSByte method to actually return an sbyte  (bug #46620)
+- fixed timestamp columns with entity framework (bug #46311)  
   
 Version 6.0.4
 - fixed regression where using stored procs with datasets (bug #44460)
