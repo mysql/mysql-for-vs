@@ -15,7 +15,7 @@
 [assembly: global::System.Data.Objects.DataClasses.EdmRelationshipAttribute("testModel", "FK_Books_Publishers", "Publishers", global::System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(MySql.Data.Entity.Tests.Publisher), "Books", global::System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(MySql.Data.Entity.Tests.Book))]
 
 // Original file name:
-// Generation date: 8/10/2009 11:51:12 AM
+// Generation date: 8/10/2009 4:14:43 PM
 namespace MySql.Data.Entity.Tests
 {
     
@@ -436,13 +436,15 @@ namespace MySql.Data.Entity.Tests
         /// <param name="employeeID">Initial value of EmployeeID.</param>
         /// <param name="lastName">Initial value of LastName.</param>
         /// <param name="firstName">Initial value of FirstName.</param>
-        public static Child CreateChild(long id, int employeeID, string lastName, string firstName)
+        /// <param name="modified">Initial value of Modified.</param>
+        public static Child CreateChild(long id, int employeeID, string lastName, string firstName, global::System.DateTime modified)
         {
             Child child = new Child();
             child.Id = id;
             child.EmployeeID = employeeID;
             child.LastName = lastName;
             child.FirstName = firstName;
+            child.Modified = modified;
             return child;
         }
         /// <summary>
@@ -583,6 +585,29 @@ namespace MySql.Data.Entity.Tests
         private global::System.Nullable<double> _BirthWeight;
         partial void OnBirthWeightChanging(global::System.Nullable<double> value);
         partial void OnBirthWeightChanged();
+        /// <summary>
+        /// There are no comments for Property Modified in the schema.
+        /// </summary>
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
+        [global::System.Runtime.Serialization.DataMemberAttribute()]
+        public global::System.DateTime Modified
+        {
+            get
+            {
+                return this._Modified;
+            }
+            set
+            {
+                this.OnModifiedChanging(value);
+                this.ReportPropertyChanging("Modified");
+                this._Modified = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value);
+                this.ReportPropertyChanged("Modified");
+                this.OnModifiedChanged();
+            }
+        }
+        private global::System.DateTime _Modified;
+        partial void OnModifiedChanging(global::System.DateTime value);
+        partial void OnModifiedChanged();
     }
     /// <summary>
     /// There are no comments for testModel.Company in the schema.
