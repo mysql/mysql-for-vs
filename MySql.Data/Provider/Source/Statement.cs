@@ -201,7 +201,7 @@ namespace MySql.Data.MySqlClient
         {
             if (Connection.Settings.AllowUserVariables)
                 return true;
-            if (command.parameterHash != null && parameterName.StartsWith("@" + command.parameterHash))
+            if (parameterName.StartsWith("@" +StoredProcedure.ParameterPrefix))
                 return true;
             if (parameterName.Length > 1 &&
                 (parameterName[1] == '`' || parameterName[1] == '\''))
