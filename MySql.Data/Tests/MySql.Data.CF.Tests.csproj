@@ -78,7 +78,6 @@
     <Compile Include="Source\GetSchemaTests.cs" />
     <Compile Include="Source\InterfaceTests.cs" />
     <Compile Include="Source\LanguageTests.cs" />
-    <Compile Include="Source\MySqlHelperTests.cs" />
     <Compile Include="Source\ParameterTests.cs" />
     <Compile Include="Source\PoolingTests.cs" />
     <Compile Include="Source\PreparedStatements.cs" />
