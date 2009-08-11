@@ -747,7 +747,6 @@ namespace MySql.Data.MySqlClient
             clone.CommandType = CommandType;
             clone.CommandTimeout = CommandTimeout;
             clone.batchableCommandText = batchableCommandText;
-            clone.EFCrap = EFCrap;
 
 			foreach (MySqlParameter p in parameters)
 			{

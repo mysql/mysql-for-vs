@@ -263,7 +263,7 @@ namespace MySql.Data.MySqlClient
             {
                 if (!tokenizer.Quoted)
                 {
-                    if (token.ToLowerInvariant() == "delimiter")
+                    if (token.ToLower(CultureInfo.InvariantCulture) == "delimiter")
                     {
                         currentDelimiter = tokenizer.NextToken();
                         startPos = tokenizer.StopIndex;
