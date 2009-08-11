@@ -36,12 +36,12 @@ namespace MySql.Data.MySqlClient
         private DataTable parametersTable;
         private string resolvedCommandText;
 
+        // Prefix used for to generate inout or output parameters names
+        internal const string ParameterPrefix = "_cnet_param_";
+
         public StoredProcedure(MySqlCommand cmd, string text)
             : base(cmd, text)
         {
-            // set our parameter hash to something very unique
-            uint code = (uint) DateTime.Now.GetHashCode();
-            cmd.parameterHash = code.ToString();
         }
 
         private string GetReturnParameter()
@@ -51,7 +51,7 @@ namespace MySql.Data.MySqlClient
                     if (p.Direction == ParameterDirection.ReturnValue)
                     {
                         string pName = p.ParameterName.Substring(1);
-                        return command.parameterHash + pName;
+                        return ParameterPrefix + pName;
                     }
             return null;
         }
@@ -136,7 +136,6 @@ namespace MySql.Data.MySqlClient
             // first retrieve the procedure definition from our
             // procedure cache
             string spName = commandText;
-            string parameterHash = command.parameterHash;
             if (spName.IndexOf(".") == -1 && !String.IsNullOrEmpty(Connection.Database))
                 spName = Connection.Database + "." + spName;
             spName = FixProcedureName(spName);
@@ -174,7 +173,7 @@ namespace MySql.Data.MySqlClient
                 string basePName = pName;
                 if (pName.StartsWith("@") || pName.StartsWith("?"))
                     basePName = pName.Substring(1);
-                string vName = string.Format("@{0}{1}", parameterHash, basePName);
+                string vName = string.Format("@{0}{1}", ParameterPrefix, basePName);
 
                 // if our parameter doesn't have a leading marker then we need to give it one
                 pName = p.ParameterName;
@@ -207,7 +206,7 @@ namespace MySql.Data.MySqlClient
             else
             {
                 if (retParm == null)
-                    retParm = parameterHash + "dummy";
+                    retParm = ParameterPrefix + "dummy";
                 else
                     outSelect = String.Format("@{0}", retParm);
                 sqlCmd = String.Format("SET @{0}={1}({2})", retParm, spName, sqlCmd);
@@ -227,11 +226,7 @@ namespace MySql.Data.MySqlClient
 
             MySqlCommand cmd = new MySqlCommand("SELECT " + outSelect, Connection);
 
-            // set the parameter hash for this new command to our current parameter hash
-            // so the inout and out parameters won't cause a problem
-            string parameterHash = command.parameterHash;
-            cmd.parameterHash = parameterHash;
-
+            // Read output parameters
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {
                 // since MySQL likes to return user variables as strings
@@ -241,7 +236,7 @@ namespace MySql.Data.MySqlClient
                 for (int i = 0; i < reader.FieldCount; i++)
                 {
                     string fieldName = reader.GetName(i);
-                    fieldName = fieldName.Remove(0, parameterHash.Length + 1);
+                    fieldName = fieldName.Remove(0, ParameterPrefix.Length + 1);
                     MySqlParameter parameter = Parameters.GetParameterFlexible(fieldName, true);
                     reader.values[i] = MySqlField.GetIMySqlValue(parameter.MySqlDbType);
                 }
@@ -251,7 +246,7 @@ namespace MySql.Data.MySqlClient
                     for (int i = 0; i < reader.FieldCount; i++)
                     {
                         string fieldName = reader.GetName(i);
-                        fieldName = fieldName.Remove(0, parameterHash.Length + 1);
+                        fieldName = fieldName.Remove(0, ParameterPrefix.Length + 1);
                         MySqlParameter parameter = Parameters.GetParameterFlexible(fieldName, true);
                         parameter.Value = reader.GetValue(i);
                     }
