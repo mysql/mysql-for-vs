@@ -41,7 +41,7 @@ namespace MySql.Data.VisualStudio.WebConfig
         private Solution2 solution;
         private Project project;
         private int page;
-        private WizardPage[] pages = new WizardPage[3];
+        private WizardPage[] pages = new WizardPage[4];
 
         public WebConfigDlg()
         {
@@ -83,6 +83,7 @@ namespace MySql.Data.VisualStudio.WebConfig
             LoadInitialMembershipState();
             LoadInitialRoleState();
             LoadInitialProfileState();
+            LoadInitialSessionState();
 
             foreach (WizardPage page in pages)
                 page.ProviderConfig.Initialize(wc);
@@ -110,6 +111,14 @@ namespace MySql.Data.VisualStudio.WebConfig
             pages[2].Description = "Set options for use with the profile provider";
             pages[2].EnabledString = "Use MySQL to manage my profiles";
             pages[2].ProviderConfig = new ProfileConfig();
+        }
+
+        private void LoadInitialSessionState()
+        {
+            pages[3].Title = "Session State";
+            pages[3].Description = "Set options for use with the session state provider";
+            pages[3].EnabledString = "Use MySQL to manage my ASP.Net session date";
+            pages[3].ProviderConfig = new SessionStateConfig();
         }
 
         private void advancedBtn_Click(object sender, EventArgs e)
@@ -204,6 +213,7 @@ namespace MySql.Data.VisualStudio.WebConfig
             pages[0].ProviderConfig.Save(w);
             pages[1].ProviderConfig.Save(w);
             pages[2].ProviderConfig.Save(w);
+            pages[3].ProviderConfig.Save(w);
             w.Save();
             Close();
         }
