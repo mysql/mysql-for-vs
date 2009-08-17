@@ -100,7 +100,7 @@ namespace MySql.Data.VisualStudio
                 CommandID menuCommandID = new CommandID(GuidList.guidMySqlDataPackageCmdSet,
                     (int)PkgCmdIDList.cmdidConfig);
                 OleMenuCommand menuItem = new OleMenuCommand(ConfigCallback, menuCommandID);
-                menuItem.BeforeQueryStatus += new EventHandler(menuItem_BeforeQueryStatus);
+                menuItem.BeforeQueryStatus += new EventHandler(configWizard_BeforeQueryStatus);
                 mcs.AddCommand(menuItem);
             }
 
@@ -113,7 +113,7 @@ namespace MySql.Data.VisualStudio
 
         #endregion
 
-        void menuItem_BeforeQueryStatus(object sender, EventArgs e)
+        void configWizard_BeforeQueryStatus(object sender, EventArgs e)
         {
             OleMenuCommand configButton = sender as OleMenuCommand;
             configButton.Visible = false;
@@ -123,7 +123,15 @@ namespace MySql.Data.VisualStudio
             if (a.Length != 1) return;
 
             Project p = (Project)a.GetValue(0);
-            configButton.Visible = p.Kind == "{E24C65DC-7377-472b-9ABA-BC803B73C61A}";
+            configButton.Visible = false;
+            foreach (Property prop in p.Properties)
+            {
+                if (prop.Name == "WebSiteType")
+                {
+                    configButton.Visible = true;
+                    break;
+                }
+            }
         }
 
         private void ConfigCallback(object sender, EventArgs e)
