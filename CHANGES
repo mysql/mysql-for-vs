@@ -1,3 +1,7 @@
+Version 6.1.1
+- lots of bug fixes merged up from 6.0.5
+- fixed website config wizard so that it shows for all web types
+
 Version 6.1.0
 - Added new MySQL Website Configuration Wizard
 - Now supports native inout and output parameters when in prepared mode and running against a server
