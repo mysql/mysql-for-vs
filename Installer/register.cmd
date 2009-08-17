@@ -26,8 +26,8 @@ REM If we are not on 2005 then register the entity assembly
 if NOT %1 == 2005 gacutil /i MySql.Data.Entity\provider\bin\debug\mysql.data.entity.dll
 
 REm Now register the visual studio bits
-set cmd=version=VS%1 debug=true ranu=true
-if %1 == 2005 SET cmd=version=VS2005 debug=true
+set cmd=version=VS%1 debug=%2 ranu=%3
+if %1 == 2005 SET cmd=version=VS2005 debug=%2
 installer\binary\globalinstaller mysql.visualstudio\bin\debug\mysql.visualstudio.dll %cmd%
 EXIT /B 0
 
