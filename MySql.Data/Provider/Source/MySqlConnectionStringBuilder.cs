@@ -764,10 +764,12 @@ namespace MySql.Data.MySqlClient
             }
         }
 
+#if !CF
         [DisplayName("Keepalive")]
         [Description("For TCP connections, idle connection time measured in seconds, before the first keepalive packet is sent." +
             "A value of 0 indicates that keepalive is not used.")]
         [DefaultValue(0)]
+#endif
         public uint Keepalive
         {
             get { return keepalive;}
