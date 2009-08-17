@@ -260,47 +260,28 @@ namespace MySql.Data.VisualStudio.DbObjects
             if (String.IsNullOrEmpty(ColumnName)) return null;
 
             StringBuilder props = new StringBuilder();
-            int changes = 0;
 
-            if (DataType != OldColumn.DataType)
-                props.AppendFormat(" {0}", DataType);
-            if (CharacterSet != OldColumn.CharacterSet)
+            props.AppendFormat(" {0}", DataType);
+            if (!String.IsNullOrEmpty(CharacterSet))
                 props.AppendFormat(" CHARACTER SET '{0}'", CharacterSet);
-            if (Collation != OldColumn.Collation)
+            if (!String.IsNullOrEmpty(Collation))
                 props.AppendFormat(" COLLATE '{0}'", Collation);
-            if (AllowNull != OldColumn.AllowNull) 
-                props.Append(AllowNull ? " NULL" : " NOT NULL");
-            if (IsUnsigned != OldColumn.IsUnsigned)
-            {
-                changes++;
-                if (IsUnsigned) props.Append(" UNSIGNED");
-            }
-            if (IsZerofill != OldColumn.IsZerofill)
-            {
-                changes++;
-                if (IsZerofill) props.Append(" ZEROFILL");
-            }
-            if (AutoIncrement != OldColumn.AutoIncrement)
-            {
-                changes++;
-                if (AutoIncrement) props.Append(" AUTO_INCREMENT");
-            }
-            if (DefaultValue != OldColumn.DefaultValue) 
+            if (!String.IsNullOrEmpty(DefaultValue))
                 props.AppendFormat(" DEFAULT '{0}'", DefaultValue);
-            if (Comment != OldColumn.Comment) 
+            if (!String.IsNullOrEmpty(Comment))
                 props.AppendFormat(" COMMENT '{0}'", Comment);
 
-            if (props.Length == 0 && 
-                changes == 0 && 
-                ColumnName.ToLowerInvariant()  == OldColumn.ColumnName.ToLowerInvariant())
-                return null;
+            if (!AllowNull) props.Append(" NOT NULL");
+            if (IsUnsigned) props.Append(" UNSIGNED");
+            if (IsZerofill) props.Append(" ZEROFILL");
+            if (AutoIncrement) props.Append(" AUTO_INCREMENT");
 
             if (newTable)
                 return String.Format("`{0}`{1}", ColumnName, props.ToString());
             if (isNew)
                 return String.Format("ADD `{0}`{1}", ColumnName, props.ToString());
-            return String.Format("CHANGE `{0}` `{1}` {2}{3}", 
-                OldColumn.ColumnName, ColumnName, DataType, props.ToString());
+            return String.Format("CHANGE `{0}` `{1}` {2}", 
+                OldColumn.ColumnName, ColumnName, props.ToString());
         }
 
         #endregion
