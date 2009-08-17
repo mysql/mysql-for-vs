@@ -34,6 +34,8 @@ Version 6.0.5
   in cultures that use the comma as a decimal separator (bug #44455)  
 - fixed GetSByte method to actually return an sbyte  (bug #46620)
 - fixed timestamp columns with entity framework (bug #46311)  
+- fixed sql generation bug with table editor. This bug would cause the data type
+  to be repeated in some cases when a table was altered.  
   
 Version 6.0.4
 - fixed regression where using stored procs with datasets (bug #44460)
