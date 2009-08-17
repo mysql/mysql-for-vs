@@ -67,7 +67,8 @@ namespace MySql.Data.VisualStudio.WebConfig
 
             foreach (XmlNode node in el.ChildNodes)
             {
-                if (node.Name == "remove") continue;
+                if (String.Compare(node.Name, "remove", true) == 0 || 
+                    String.Compare(node.Name, "clear", true) == 0) continue;
                 string typeName = node.Attributes["type"].Value;
                 if (typeName.StartsWith("MySql.Web.")) return node as XmlElement;
             }
@@ -174,6 +175,7 @@ namespace MySql.Data.VisualStudio.WebConfig
             List<XmlNode> toBeDeleted = new List<XmlNode>();
             foreach (XmlNode node in providers.ChildNodes)
             {
+                if (String.Compare("clear", node.Name, true) == 0) continue;
                 string nodeName = node.Attributes["name"].Value;
                 if ((node.Name == "remove" && String.Compare(nodeName, defaultName, true) == 0) ||
                     String.Compare(nodeName, name, true) == 0)
@@ -185,7 +187,7 @@ namespace MySql.Data.VisualStudio.WebConfig
                 section.ParentNode.RemoveChild(section);
         }
 
-        private XmlNode GetSystemWebNode(string name, bool createTopNode, bool createProvidersNode)
+        public XmlNode GetSystemWebNode(string name, bool createTopNode, bool createProvidersNode)
         {
             XmlNode webNode = null;
             XmlNode systemWebNode = webDoc.GetElementsByTagName("system.web")[0];

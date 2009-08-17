@@ -1,6 +1,7 @@
 Version 6.1.1
 - lots of bug fixes merged up from 6.0.5
 - fixed website config wizard so that it shows for all web types
+- integrated session state provider into config wizard
 
 Version 6.1.0
 - Added new MySQL Website Configuration Wizard
