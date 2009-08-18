@@ -1,0 +1,10 @@
+*.obj
+*.csproj.user
+*.suo
+**/obj/**
+**/bin/**
+**/bin
+**/obj
+MySql.Data/Provider/MySql.Data.xml
+MySql.VisualStudio/Documentation/Build
+MySql.Data.Entity/Tests/Service References
