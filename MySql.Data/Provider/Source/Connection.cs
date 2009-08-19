@@ -324,8 +324,8 @@ namespace MySql.Data.MySqlClient
 
                 // there is an existing driver and it's not being currently used.
                 // now we need to see if it is using the same connection string
-                string text1 = existingDriver.Settings.GetConnectionString(true);
-                string text2 = Settings.GetConnectionString(true);
+                string text1 = existingDriver.Settings.ConnectionString;
+                string text2 = Settings.ConnectionString;
                 if (String.Compare(text1, text2, true) != 0)
                     throw new NotSupportedException(Resources.MultipleConnectionsInTransactionNotSupported);
 
@@ -524,7 +524,7 @@ namespace MySql.Data.MySqlClient
         object ICloneable.Clone()
         {
             MySqlConnection clone = new MySqlConnection();
-            string connectionString = settings.GetConnectionString(true);
+            string connectionString = settings.ConnectionString;
             if (connectionString != null)
                 clone.ConnectionString = connectionString;
             return clone;
