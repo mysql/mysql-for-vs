@@ -77,7 +77,6 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.IsFalse(sb.ConvertZeroDateTime);
             Assert.AreEqual("MYSQL", sb.SharedMemoryName);
             Assert.AreEqual(String.Empty, sb.Database);
-            Assert.AreEqual(MySqlDriverType.Native, sb.DriverType);
             Assert.AreEqual(MySqlConnectionProtocol.Sockets, sb.ConnectionProtocol);
             Assert.IsFalse(sb.AllowZeroDateTime);
             Assert.IsFalse(sb.UsePerformanceMonitor);

@@ -249,7 +249,7 @@ namespace MySql.Data.MySqlClient
 				throw new NotSupportedException(Resources.CancelNotSupported);
 
             MySqlConnectionStringBuilder cb = new MySqlConnectionStringBuilder(
-                connection.Settings.GetConnectionString(true));
+                connection.Settings.ConnectionString);
             cb.Pooling = false;
 			using(MySqlConnection c = new MySqlConnection(cb.ConnectionString))
 			{
