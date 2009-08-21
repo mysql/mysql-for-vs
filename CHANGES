@@ -45,6 +45,8 @@ Version 6.0.5
 - fixed sql generation bug with table editor. This bug would cause the data type
   to be repeated in some cases when a table was altered.  
 - sped up MySqlPacket.ReadString slightly by avoiding creating a new temp buffer each time  
+- fixed sql bug in our 6.0 table column ssdl.  I don't see how this would affect 
+  stored procedure parameters but bug #44985 is now fixed
   
 Version 6.0.4
 - fixed regression where using stored procs with datasets (bug #44460)
