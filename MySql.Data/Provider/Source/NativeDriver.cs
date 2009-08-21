@@ -596,6 +596,8 @@ namespace MySql.Data.MySqlClient
 
         public override bool SkipDataRow()
         {
+            if (stream == null) return false;
+
             bool result = true;
             if (!stream.HasMoreData)
                 result = FetchDataRow(-1, 0, 0);
