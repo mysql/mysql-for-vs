@@ -265,5 +265,56 @@ namespace MySql.Data.MySqlClient.Tests
                 }
             }
         }
+
+        /// <summary>
+        /// Bug #45978	Silent problem when net_write_timeout is exceeded
+        /// </summary>
+        [Test]
+        public void NetWriteTimeoutExpiring()
+        {
+            execSQL("CREATE TABLE Test(id int, blob1 longblob)");
+
+            byte[] b1 = Utils.CreateBlob(5000);
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (@id, @b1)", conn);
+            cmd.Parameters.Add("@id", MySqlDbType.Int32);
+            cmd.Parameters.AddWithValue("@name", b1);
+            for (int i = 0; i < 10000; i++)
+            {
+                cmd.Parameters[0].Value = i;
+                cmd.ExecuteNonQuery();
+            }
+
+            string connStr = GetConnectionString(true);
+            using (MySqlConnection c = new MySqlConnection(connStr))
+            {
+                c.Open();
+                cmd.Connection = c;
+                cmd.Parameters.Clear();
+                cmd.CommandText = "SET net_write_timeout = 1";
+                cmd.ExecuteNonQuery();
+
+                cmd.CommandText = "SELECT * FROM Test LIMIT 100000";
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    Thread.Sleep(2000);
+                    // after this several cycles of DataReader.Read() are executed 
+                    // normally and then the problem, described above, occurs
+                    int i = 0;
+                    try
+                    {
+                        while (reader.Read())
+                        {
+                            object o = reader[0];
+                            Assert.AreEqual(i++, o);
+                        }
+                        Assert.Fail("This should have failed");
+                    }
+                    catch (Exception ex)
+                    {
+                        string s = ex.Message;
+                    }
+                }
+            }
+        }
     }
 }

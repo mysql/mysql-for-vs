@@ -12,6 +12,8 @@ Version 5.2.8
   on Mono 2.0 (bug #46375)
 - fixed a small documentation bug related to our server compatibility
 - fixed GetSByte method to actually return an sbyte  (bug #46620)
+- changed MySqlStream.Read to throw an exception if the stream end is reached.  This is not ideal
+  but we can't change it too much here in 5.2.8.  We'll look at a bigger change in 6.2. (bug #45978)
 
 Version 5.2.7 7/13/09
 - fixed procedure parameters collection so that an exception is thrown if we can't get the 

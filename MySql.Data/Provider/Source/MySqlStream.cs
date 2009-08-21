@@ -357,8 +357,8 @@ namespace MySql.Data.MySqlClient
 					// we don't throw an exception here even though this probably
 					// indicates a broken connection.  We leave that to the 
 					// caller.
-					if (read == 0)
-						break;
+                    if (read == 0)
+                        throw new MySqlException(Resources.ReadFromStreamFailed, true, null);
 
 					count -= read;
 					offset += read;
