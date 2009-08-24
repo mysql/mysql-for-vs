@@ -59,6 +59,7 @@ namespace MySql.Data.MySqlClient
         List<MySqlCommand> batch;
         private string batchableCommandText;
         internal string parameterHash;
+        internal string RefreshSelect;
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ctor1/*'/>
 		public MySqlCommand()
@@ -125,8 +126,13 @@ namespace MySql.Data.MySqlClient
 					cmdText = cmdText.Substring(0, cmdText.Length - 14);
 					cmdText = cmdText + "() VALUES ()";
 				}
-
-			}
+                // this is a nasty hack to work around severe limitations with DbCommandBuilder
+                if (cmdText.StartsWith("INSERT INTO") && RefreshSelect != null)
+                {
+                    cmdText += RefreshSelect;
+                    RefreshSelect = null;
+                }
+            }
 		}
 
 		internal int UpdateCount
