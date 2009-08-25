@@ -318,9 +318,6 @@
   <data name="ParameterMustBeDefined" xml:space="preserve">
     <value>Parameter '{0}' must be defined.</value>
   </data>
-  <data name="MixingUpdatedRowSource" xml:space="preserve">
-    <value>When MySqlCommandBuilder.ReturnGeneratedIdentifiers is true, MySqlCommand.UpdatedRowSource must be set to None.</value>
-  </data>
   <data name="ObjectDisposed" xml:space="preserve">
     <value>The object is not open or has been disposed.</value>
   </data>
@@ -363,8 +360,8 @@
   <data name="TimeoutExpiredNullObject" xml:space="preserve">
     <value>Timeout expired but command object was null.  This should not happen.</value>
   </data>
-  <data name="UnableToEnumerateUDF" xml:space="preserve">    
-    <value>An error occured attempting to enumerate the user-defined functions.  Do you have SELECT privileges on the mysql.func table?</value>  
+  <data name="UnableToEnumerateUDF" xml:space="preserve">
+    <value>An error occured attempting to enumerate the user-defined functions.  Do you have SELECT privileges on the mysql.func table?</value>
   </data>
   <data name="DataNotInSupportedFormat" xml:space="preserve">
     <value>The given value was not in a supported format.</value>
@@ -390,16 +387,4 @@
   <data name="MoreThanOneOPRow" xml:space="preserve">
     <value>INTERNAL ERROR:  More than one output parameter row detected.</value>
   </data>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
 </root>

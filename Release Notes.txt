@@ -24,6 +24,14 @@ CHAR(36).  We are doing this because we feel users will want to use the server U
 to populate a guid table and UUID generates a 36 character string.  Developers of older
 applications can add 'old guids=true' to the connection string and the old binary(16) type will be used.
 
+Functionality changes
+----------------------------
+We are now treating the command builder just like SqlClient.  This means that if you want to
+return an autoincrement value back to your dataset, you will need to clone the generated command
+and manually add the proper SQL onto the end of your command text.  The command builder 
+was not designed to handle this.  In previous versions we have tried to support this but
+it is causing more headaches than it is solving.
+
 What we know may be broken
 ----------------------------
 - Documentation is not updated yet.

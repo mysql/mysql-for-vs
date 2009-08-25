@@ -27,6 +27,11 @@ namespace MySql.Data.MySqlClient.Tests
     [TestFixture]
     public class CommandBuilderTests : BaseTest
     {
+        public CommandBuilderTests()
+        {
+            csAdditions += ";logging=true;";
+        }
+
         [Test]
         public void MultiWord()
         {
@@ -243,6 +248,10 @@ namespace MySql.Data.MySqlClient.Tests
             MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
             MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
 
+            da.InsertCommand = cb.GetInsertCommand();
+            da.InsertCommand.CommandText += "; SELECT last_insert_id()";
+            da.InsertCommand.UpdatedRowSource = UpdateRowSource.FirstReturnedRecord;
+
             DataTable dt = new DataTable();
             da.Fill(dt);
             dt.Columns[0].AutoIncrement = true;
@@ -273,7 +282,11 @@ namespace MySql.Data.MySqlClient.Tests
                 "AUTO_INCREMENT PRIMARY KEY, name VARCHAR(20))");
             MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
             MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
-            cb.ReturnGeneratedIdentifiers = true;
+
+            MySqlCommand cmd = (MySqlCommand)(cb.GetInsertCommand() as ICloneable).Clone();
+            cmd.CommandText += "; SELECT last_insert_id() as id";
+            cmd.UpdatedRowSource = UpdateRowSource.FirstReturnedRecord;
+            da.InsertCommand = cmd;
 
             DataTable dt = new DataTable();
             da.Fill(dt);
