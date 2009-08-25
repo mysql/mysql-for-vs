@@ -879,5 +879,38 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.IsTrue(dt.Rows[0][0] is string);
             }
         }
+
+        /// <summary>
+        /// Bug #34657	MySqlDataAdapter.Update(DataRow[] rows) fails with MySqlCommandBuilder
+        /// </summary>
+        [Test]
+        public void ConnectionNotOpenForInsert()
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL(@"CREATE TABLE Test (id int(11) NOT NULL default '0',
+                txt varchar(100) default NULL, val decimal(11,2) default NULL,
+                PRIMARY KEY(id)) ENGINE=InnoDB DEFAULT CHARSET=latin1");
+            execSQL("INSERT INTO Test VALUES (1, 'name', 23.2)");
+
+            string connStr = GetConnectionString(true);
+            using (MySqlConnection c = new MySqlConnection(connStr))
+            {
+                string sql = "SELECT * FROM Test";
+                MySqlDataAdapter da = new MySqlDataAdapter(sql, c);
+                MySqlCommandBuilder bld = new MySqlCommandBuilder(da);
+                DataSet ds = new DataSet();
+                da.Fill(ds);
+
+                ds.Tables[0].Rows[0]["val"] = 99.9M;
+                da.Update(new DataRow[] { ds.Tables[0].Rows[0] });
+
+                DataRow r = ds.Tables[0].NewRow();
+                r["id"] = 4;
+                r["txt"] = "sds";
+                r["val"] = 113.2M;
+                ds.Tables[0].Rows.Add(r);
+                da.Update(new DataRow[] { r });
+            }
+        }
     }
 }

@@ -297,9 +297,23 @@ namespace MySql.Data.MySqlClient
         {
             StringBuilder select = new StringBuilder();
 
-            DataTable dt = GetSchemaTable(DataAdapter.SelectCommand);
+            MySqlConnection c = DataAdapter.SelectCommand.Connection;
+            DataTable schema = null;
+            bool isOpen = c.State == ConnectionState.Open;
 
-            foreach (DataRow row in dt.Rows)
+            try
+            {
+                if (!isOpen)
+                    c.Open();
+                schema = GetSchemaTable(DataAdapter.SelectCommand);
+            }
+            finally
+            {
+                if (!isOpen)
+                    c.Close();
+            }
+
+            foreach (DataRow row in schema.Rows)
             {
                 if (!(bool)row["IsAutoIncrement"])
                     continue;
