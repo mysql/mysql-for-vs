@@ -29,6 +29,8 @@ Version 6.0.5
 - sped up MySqlPacket.ReadString slightly by avoiding creating a new temp buffer each time  
 - fixed sql bug in our 6.0 table column ssdl.  I don't see how this would affect 
   stored procedure parameters but bug #44985 is now fixed
+- fixed bug that causes a 'connection not open' error when using a commandbuilder with
+  a data adapter and inserts are used (bug #34657)
   
 Version 6.0.4
 - fixed regression where using stored procs with datasets (bug #44460)
