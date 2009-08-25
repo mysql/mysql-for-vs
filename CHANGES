@@ -1,6 +1,10 @@
 Version 6.2.0
 - completely refactored MySqlConnectionStringBuilder
 
+Version 6.1.2
+- removed ReturnGeneratedIdentifiers.  We are now treating the command builder exactly
+  the same way SqlClient does
+  
 Version 6.1.1
 - lots of bug fixes merged up from 6.0.5
 - fixed website config wizard so that it shows for all web types
