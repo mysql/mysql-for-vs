@@ -195,76 +195,6 @@ namespace MySql.Data.MySqlClient
 
         #endregion
 
-        /*		protected override int Fill(DataTable dataTable, IDataReader dataReader)
-		{
-			int result = base.Fill (dataTable, dataReader);
-			//LoadDefaultValues(dataTable, dataReader);
-			return result;
-		}
-
-		protected override int Fill(DataSet dataSet, string srcTable, IDataReader dataReader, int startRecord, int maxRecords)
-		{
-			int result = base.Fill (dataSet, srcTable, dataReader, startRecord, maxRecords);
-			//LoadDefaultValues(dataSet.Tables[srcTable], dataReader);
-			return result;
-		}
-
-*/
-/*		private void LoadDefaultValues(DataTable dataTable, IDataReader reader)
-		{
-			if (! loadingDefaults) return;
-			if (dataTable.ExtendedProperties["DefaultsChecked"] != null) return;
-			if (this.MissingSchemaAction != MissingSchemaAction.Add &&
-				this.MissingSchemaAction != MissingSchemaAction.AddWithKey) return;
-			
-			DataTable schemaTable = reader.GetSchemaTable();
-			reader.Close();
-
-			DatabaseMetaData dmd = new DatabaseMetaData(this.SelectCommand.Connection);
-
-			foreach (DataRow row in schemaTable.Rows)
-			{
-				DataRow dmdRow = dmd.GetColumn(row["BaseCatalogName"].ToString(), 
-					null, row["BaseTableName"].ToString(), row["BaseColumnName"].ToString() );
-				object defaultVal = dmdRow["COLUMN_DEFAULT"];
-				DataColumn col = dataTable.Columns[row["ColumnName"].ToString()];
-				if (defaultVal != System.DBNull.Value)
-				{
-					if (! col.AllowDBNull) col.ExtendedProperties.Add("UseDefault", true);
-					col.AllowDBNull = true;
-					mayUseDefault = true;
-				}
-			}
-
-			dataTable.ExtendedProperties.Add("DefaultsChecked", true);
-		}
-
-*/
-
-/*		private void FixupStatementDefaults(RowUpdatingEventArgs args)
-		{
-			DataTable table = args.Row.Table;
-			DataRow row = args.Row;
-
-			savedSql = args.Command.CommandText;
-			string newSql = savedSql;
-
-			if (mayUseDefault)
-				this.InsertCommand.Unprepare();
-
-			foreach (IDataParameter p in args.Command.Parameters)
-			{
-				if (row[p.SourceColumn] != DBNull.Value) continue;
-				DataColumn col = table.Columns[p.SourceColumn];
-				if (! col.ExtendedProperties.ContainsKey("UseDefault")) continue;
-				newSql = newSql.Replace("?"+p.ParameterName, "DEFAULT");
-			}
-			args.Command.CommandText = newSql;
-		}
-*/		
-		/*
-		* Implement abstract methods inherited from DbDataAdapter.
-		*/
 		/// <summary>
 		/// Overridden. See <see cref="DbDataAdapter.CreateRowUpdatedEvent"/>.
 		/// </summary>
@@ -297,18 +227,8 @@ namespace MySql.Data.MySqlClient
 		/// <param name="value">A MySqlRowUpdatingEventArgs that contains the event data.</param>
 		override protected void OnRowUpdating(RowUpdatingEventArgs value)
 		{
-	//		MySqlRowUpdatingEventArgs args = (value as MySqlRowUpdatingEventArgs);
-			//			if (args.StatementType == StatementType.Insert)
-//				FixupStatementDefaults(args);
-
             if (RowUpdating != null)
                 RowUpdating(this, (value as MySqlRowUpdatingEventArgs));
-
-//			MySqlRowUpdatingEventHandler handler = (MySqlRowUpdatingEventHandler) Events[EventRowUpdating];
-//			if ((null != handler) && (margs != null)) 
-//			{
-//				handler(this, margs);
-//			}
 		}
 
 		/// <summary>
@@ -317,17 +237,8 @@ namespace MySql.Data.MySqlClient
 		/// <param name="value">A MySqlRowUpdatedEventArgs that contains the event data. </param>
 		override protected void OnRowUpdated(RowUpdatedEventArgs value)
 		{
-//			MySqlRowUpdatedEventArgs margs = (value as MySqlRowUpdatedEventArgs);
-			//args.Command.CommandText = savedSql;
-
             if (RowUpdated != null)
                 RowUpdated(this, (value as MySqlRowUpdatedEventArgs));
-
-  //          MySqlRowUpdatedEventHandler handler = (MySqlRowUpdatedEventHandler)Events[EventRowUpdated];
-	//		if ((null != handler) && (margs != null))
-	//		{
-	//			handler(this, margs);
-	//		}
 		}
 	}
 
