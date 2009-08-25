@@ -241,19 +241,7 @@ namespace MySql.Data.MySqlClient
 
         protected override DbCommand InitializeCommand(DbCommand command)
         {
-            MySqlCommand cmd = (MySqlCommand)base.InitializeCommand(command);
-            // if command is null then we assume we are auto-generated.  We
-            // are breaking with SqlClient and using FirstReturnedRecord as the
-            // default and then using a nasty hack to add a refresh select to the
-            // end of our insert statement
-            if (command == null)
-            {
-                cmd.UpdatedRowSource = UpdateRowSource.FirstReturnedRecord;
-                if (finalSelect == null)
-                    CreateFinalSelect();
-                cmd.RefreshSelect = finalSelect;
-            }
-            return cmd; 
+            return base.InitializeCommand(command);
         }
 
 
