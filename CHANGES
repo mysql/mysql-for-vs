@@ -4,6 +4,8 @@ Version 6.2.0
 Version 6.1.2
 - removed ReturnGeneratedIdentifiers.  We are now treating the command builder exactly
   the same way SqlClient does
+- fixed some bugs with session state provider
+- fixed typo in asp.net config wizard  
   
 Version 6.1.1
 - lots of bug fixes merged up from 6.0.5
