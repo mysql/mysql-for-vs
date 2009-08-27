@@ -132,8 +132,8 @@ namespace MySql.Web.SessionState
                 applicationName = config["applicationName"];
 
             // Get <sessionState> configuration element.
-            sessionStateConfig = (SessionStateSection)WebConfigurationManager.OpenWebConfiguration(applicationName).
-                GetSection("system.web/sessionState");
+            Configuration webConfig = WebConfigurationManager.OpenWebConfiguration(null);
+            sessionStateConfig = (SessionStateSection)webConfig.SectionGroups["system.web"].Sections["sessionState"];
 
             // Initialize connection.
             connectionStringSettings = ConfigurationManager.ConnectionStrings[config["connectionStringName"]];
@@ -308,7 +308,7 @@ namespace MySql.Web.SessionState
                 using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
                     MySqlCommand cmd = new MySqlCommand(
-                        "UPDATE my_aspnet_Sessions SET Locked = 0, Expires = NOW() + INTERVAL @Timeout MINUTE" +
+                        "UPDATE my_aspnet_Sessions SET Locked = 0, Expires = NOW() + INTERVAL @Timeout MINUTE " +
                         "WHERE SessionId = @SessionId AND ApplicationId = @ApplicationId AND LockId = @LockId",
                         conn);
 
