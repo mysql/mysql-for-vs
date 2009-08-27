@@ -259,5 +259,17 @@ namespace MySql.Data.MySqlClient.Tests
             o = cmd.ExecuteScalar();
             Assert.AreEqual("Can you explain this ?", o);
         }
+
+        [Test]
+        public void Slash()
+        {
+            string sql = "AND // OR";
+            SqlTokenizer tokenizer = new SqlTokenizer(sql);
+            tokenizer.AnsiQuotes = false;
+            Assert.AreEqual("AND", tokenizer.NextToken());
+            Assert.AreEqual("//", tokenizer.NextToken());
+            Assert.AreEqual("OR", tokenizer.NextToken());
+            Assert.IsNull(tokenizer.NextToken());
+        }
     }
 }
