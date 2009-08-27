@@ -237,8 +237,10 @@ namespace MySql.Data.MySqlClient.Tests
 
             DataTable dt = conn.GetSchema("Columns", new string[] { null, null, "test", null });
             Assert.AreEqual(2, dt.Rows.Count);
-            Assert.AreEqual("set('A','B','C')", dt.Rows[0]["DATA_TYPE"]);
-            Assert.AreEqual("enum('A','B','C')", dt.Rows[1]["DATA_TYPE"]);
+            Assert.AreEqual("set", dt.Rows[0]["DATA_TYPE"]);
+            Assert.AreEqual("enum", dt.Rows[1]["DATA_TYPE"]);
+            Assert.AreEqual("set('A','B','C')", dt.Rows[0]["COLUMN_TYPE"]);
+            Assert.AreEqual("enum('A','B','C')", dt.Rows[1]["COLUMN_TYPE"]);
         } 
 
 		[Test]

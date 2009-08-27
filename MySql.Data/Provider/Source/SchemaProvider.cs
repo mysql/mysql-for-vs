@@ -235,13 +235,11 @@ namespace MySql.Data.MySqlClient
             int stop = dataType.IndexOf(')', index);
             string dataLen = dataType.Substring(index + 1, stop - (index + 1));
             string lowerType = row["DATA_TYPE"].ToString().ToLower();
-            if (lowerType == "set" || lowerType == "enum")
-                row["DATA_TYPE"] = dataType; 
-            else if (lowerType == "char" || lowerType == "varchar")
+            if (lowerType == "char" || lowerType == "varchar")
                 row["CHARACTER_MAXIMUM_LENGTH"] = dataLen;
-            else
+            else if (lowerType == "real" || lowerType == "decimal")
             {
-                string[] lenparts = dataLen.Split(new char[] {','});
+                string[] lenparts = dataLen.Split(new char[] { ',' });
                 row["NUMERIC_PRECISION"] = lenparts[0];
                 if (lenparts.Length == 2)
                     row["NUMERIC_SCALE"] = lenparts[1];
