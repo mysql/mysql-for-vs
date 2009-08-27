@@ -284,6 +284,8 @@ namespace MySql.Data.MySqlClient
         {
             if (length == 0)
                 return String.Empty;
+            if (tempBuffer == null || length > tempBuffer.Length)
+                tempBuffer = new byte[length];
             Read(tempBuffer, 0, (int)length);
             return encoding.GetString(tempBuffer, 0, (int)length);
         }
