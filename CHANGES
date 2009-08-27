@@ -33,6 +33,8 @@ Version 6.0.5
   a data adapter and inserts are used (bug #34657)
 - fixed problem with tokenizer that would cause it to not return some tokens when they start with 
   a character that could possibly start a comment but doesn't
+- fixed problem with non-IS column parsing that caused data type and column type to be equal when
+  parsing set and enum columns
   
 Version 6.0.4
 - fixed regression where using stored procs with datasets (bug #44460)
