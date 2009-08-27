@@ -117,7 +117,7 @@ namespace MySql.Data.VisualStudio.WebConfig
         {
             pages[3].Title = "Session State";
             pages[3].Description = "Set options for use with the session state provider";
-            pages[3].EnabledString = "Use MySQL to manage my ASP.Net session date";
+            pages[3].EnabledString = "Use MySQL to manage my ASP.Net session state";
             pages[3].ProviderConfig = new SessionStateConfig();
         }
 
