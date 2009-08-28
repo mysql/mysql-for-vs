@@ -26,6 +26,8 @@ using System.Data.Metadata.Edm;
 using System.Data;
 using MySql.Data.Entity;
 using System.Reflection;
+using System.Diagnostics;
+using MySql.Data.Entity.Properties;
 
 namespace MySql.Data.MySqlClient
 {
@@ -63,28 +65,11 @@ namespace MySql.Data.MySqlClient
             if (generator is FunctionGenerator)
                 cmd.CommandType = (generator as FunctionGenerator).CommandType;
 
-            DbQueryCommandTree queryTree = commandTree as DbQueryCommandTree;
-            if (queryTree != null)
-            {
-                DbProjectExpression projectExpression = queryTree.Query as DbProjectExpression;
-                if (projectExpression != null)
-                {
-                    EdmType resultsType = projectExpression.Projection.ResultType.EdmType;
+            SetExpectedTypes(commandTree, cmd);
 
-                    StructuralType resultsAsStructuralType = resultsType as StructuralType;
-                    if (resultsAsStructuralType != null)
-                    {
-                        cmd.ColumnTypes = new PrimitiveType[resultsAsStructuralType.Members.Count];
-
-                        for (int ordinal = 0; ordinal < resultsAsStructuralType.Members.Count; ordinal++)
-                        {
-                            EdmMember member = resultsAsStructuralType.Members[ordinal];
-                            PrimitiveType primitiveType = member.TypeUsage.EdmType as PrimitiveType;
-                            cmd.ColumnTypes[ordinal] = primitiveType;
-                        }
-                    }
-                }
-            }
+            EdmFunction function = null;
+            if (commandTree is DbFunctionCommandTree)
+                function = (commandTree as DbFunctionCommandTree).EdmFunction;
 
             // Now make sure we populate the command's parameters from the CQT's parameters:
             foreach (KeyValuePair<string, TypeUsage> queryParameter in commandTree.Parameters)
@@ -92,6 +77,16 @@ namespace MySql.Data.MySqlClient
                 DbParameter parameter = cmd.CreateParameter();
                 parameter.ParameterName = queryParameter.Key;
                 parameter.Direction = ParameterDirection.Input;
+                parameter.DbType = Metadata.GetDbType(queryParameter.Value);
+
+                FunctionParameter funcParam;
+                if (function != null &&
+                    function.Parameters.TryGetValue(queryParameter.Key, false, out funcParam))
+                {
+                    parameter.ParameterName = funcParam.Name;
+                    parameter.Direction = Metadata.ModeToDirection(funcParam.Mode);
+                    parameter.DbType = Metadata.GetDbType(funcParam.TypeUsage);
+                }
                 cmd.Parameters.Add(parameter);
             }
 
@@ -101,7 +96,80 @@ namespace MySql.Data.MySqlClient
 
             return CreateCommandDefinition(cmd);
         }
-        
+
+        /// <summary>
+        /// Sets the expected column types
+        /// </summary>
+        private void SetExpectedTypes(DbCommandTree commandTree, EFMySqlCommand cmd)
+        {
+            if (commandTree is DbQueryCommandTree)
+                SetQueryExpectedTypes(commandTree as DbQueryCommandTree, cmd);
+            else if (commandTree is DbFunctionCommandTree)
+                SetFunctionExpectedTypes(commandTree as DbFunctionCommandTree, cmd);
+        }
+
+        /// <summary>
+        /// Sets the expected column types for a given query command tree
+        /// </summary>
+        private void SetQueryExpectedTypes(DbQueryCommandTree tree, EFMySqlCommand cmd)
+        {
+            DbProjectExpression projectExpression = tree.Query as DbProjectExpression;
+            if (projectExpression != null)
+            {
+                EdmType resultsType = projectExpression.Projection.ResultType.EdmType;
+
+                StructuralType resultsAsStructuralType = resultsType as StructuralType;
+                if (resultsAsStructuralType != null)
+                {
+                    cmd.ColumnTypes = new PrimitiveType[resultsAsStructuralType.Members.Count];
+
+                    for (int ordinal = 0; ordinal < resultsAsStructuralType.Members.Count; ordinal++)
+                    {
+                        EdmMember member = resultsAsStructuralType.Members[ordinal];
+                        PrimitiveType primitiveType = member.TypeUsage.EdmType as PrimitiveType;
+                        cmd.ColumnTypes[ordinal] = primitiveType;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sets the expected column types for a given function command tree
+        /// </summary>
+        private void SetFunctionExpectedTypes(DbFunctionCommandTree tree, EFMySqlCommand cmd)
+        {
+            if (tree.ResultType != null)
+            {
+                Debug.Assert(tree.ResultType.EdmType.BuiltInTypeKind == BuiltInTypeKind.CollectionType,
+                    Resources.WrongFunctionResultType);
+
+                CollectionType collectionType = (CollectionType)(tree.ResultType.EdmType);
+                EdmType elementType = collectionType.TypeUsage.EdmType; 
+
+                if (elementType.BuiltInTypeKind == BuiltInTypeKind.RowType) 
+                {
+                    ReadOnlyMetadataCollection<EdmMember> members = ((RowType)elementType).Members;
+                    cmd.ColumnTypes = new PrimitiveType[members.Count];
+
+                    for (int ordinal = 0; ordinal < members.Count; ordinal++)
+                    {
+                        EdmMember member = members[ordinal];
+                        PrimitiveType primitiveType = (PrimitiveType)member.TypeUsage.EdmType;
+                        cmd.ColumnTypes[ordinal] = primitiveType;
+                    }
+
+                }
+                else if (elementType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType) 
+                {
+                    cmd.ColumnTypes = new PrimitiveType[1];
+                    cmd.ColumnTypes[0] = (PrimitiveType)elementType;
+                }
+                else
+                {
+                    Debug.Fail(Resources.WrongFunctionResultType);
+                }
+            }
+        }
 
         protected override string GetDbProviderManifestToken(DbConnection connection)
         {
