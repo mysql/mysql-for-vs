@@ -24,6 +24,7 @@ using System.Data.Metadata.Edm;
 using System.Data.Common.CommandTrees;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Diagnostics;
 
 namespace MySql.Data.Entity
 {
@@ -94,6 +95,19 @@ namespace MySql.Data.Entity
                 default:
                     throw new InvalidOperationException(
                         string.Format("Unknown PrimitiveTypeKind {0}", pt.PrimitiveTypeKind));
+            }
+        }
+
+        public static ParameterDirection ModeToDirection(ParameterMode mode)
+        {
+            switch (mode)
+            {
+                case ParameterMode.In: return ParameterDirection.Input;
+                case ParameterMode.Out: return ParameterDirection.Output;
+                case ParameterMode.InOut: return ParameterDirection.InputOutput;
+                default:
+                    Debug.Assert(mode == ParameterMode.ReturnValue);
+                    return ParameterDirection.ReturnValue;
             }
         }
 
