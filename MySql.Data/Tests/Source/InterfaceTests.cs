@@ -34,19 +34,21 @@ namespace MySql.Data.MySqlClient.Tests
         public void ClientFactory()
         {
             DbProviderFactory f = new MySqlClientFactory();
-            DbConnection c = f.CreateConnection();
-            DbConnectionStringBuilder cb = f.CreateConnectionStringBuilder();
-            cb.ConnectionString = GetConnectionString(true);
-            c.ConnectionString = cb.ConnectionString;
-            c.Open();
-
-            DbCommand cmd = f.CreateCommand();
-            cmd.Connection = c;
-            cmd.CommandText = "SELECT 1";
-            cmd.CommandType = CommandType.Text;
-            using (DbDataReader reader = cmd.ExecuteReader())
+            using (DbConnection c = f.CreateConnection())
             {
-                reader.Read();
+                DbConnectionStringBuilder cb = f.CreateConnectionStringBuilder();
+                cb.ConnectionString = GetConnectionString(true);
+                c.ConnectionString = cb.ConnectionString;
+                c.Open();
+
+                DbCommand cmd = f.CreateCommand();
+                cmd.Connection = c;
+                cmd.CommandText = "SELECT 1";
+                cmd.CommandType = CommandType.Text;
+                using (DbDataReader reader = cmd.ExecuteReader())
+                {
+                    reader.Read();
+                }
             }
         }
 #endif
