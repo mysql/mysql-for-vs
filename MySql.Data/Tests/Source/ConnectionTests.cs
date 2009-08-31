@@ -113,7 +113,7 @@ namespace MySql.Data.MySqlClient.Tests
             c.Close();
 
             // this shouldn't work
-            connStr = GetConnectionStringEx(user, "bad_password", true);
+            connStr = GetConnectionString(user, "bad_password", true);
             c = new MySqlConnection(connStr);
             try
             {
@@ -193,12 +193,12 @@ namespace MySql.Data.MySqlClient.Tests
             suExecSQL("FLUSH PRIVILEGES");
 
             // connect with no password
-            connStr2 = GetConnectionStringEx("nopass", null, false);
+            connStr2 = GetConnectionString("nopass", null, false);
             c = new MySqlConnection(connStr2);
             c.Open();
             c.Close();
 
-            connStr2 = GetConnectionStringEx("nopass", "", false);
+            connStr2 = GetConnectionString("nopass", "", false);
             c = new MySqlConnection(connStr2);
             c.Open();
             c.Close();
@@ -315,7 +315,7 @@ namespace MySql.Data.MySqlClient.Tests
         {
             suExecSQL("GRANT ALL ON *.* to 'quotedUser'@'%' IDENTIFIED BY '\"'");
             suExecSQL("GRANT ALL ON *.* to 'quotedUser'@'localhost' IDENTIFIED BY '\"'");
-            string connStr = GetConnectionStringEx("quotedUser", null, false);
+            string connStr = GetConnectionString("quotedUser", null, false);
             connStr += ";pwd='\"'";
             using (MySqlConnection c = new MySqlConnection(connStr))
             {
@@ -421,7 +421,7 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void CaseSensitiveUserId()
         {
-            string connStr = GetConnectionStringEx("Test", "test", true);
+            string connStr = GetConnectionString("Test", "test", true);
             using (MySqlConnection c = new MySqlConnection(connStr))
             {
                 try
@@ -433,7 +433,7 @@ namespace MySql.Data.MySqlClient.Tests
                 }
             }
 
-            connStr = GetConnectionStringEx("test", "test", true);
+            connStr = GetConnectionString("test", "test", true);
             using (MySqlConnection c = new MySqlConnection(connStr))
             {
                 c.Open();
@@ -456,8 +456,8 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void Keepalive()
         {
-            string connstr = GetConnectionStringEx("test","test",true);
-            connstr += ";keepalive=1;pooling=true";
+            string connstr = GetConnectionString("test", "test", true);
+            connstr += ";keepalive=1;";
             using (MySqlConnection c = new MySqlConnection(connstr))
             {
                 c.Open();

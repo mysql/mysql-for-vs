@@ -50,10 +50,10 @@ namespace MySql.Data.MySqlClient.Tests
         protected static string database1;
         protected static Version version;
 
-        protected bool pooling;
         protected string table;
         protected string csAdditions = String.Empty;
         protected MySqlConnection conn;
+        protected bool accessToMySqlDb;
 
         public BaseTest()
         {
@@ -96,7 +96,7 @@ namespace MySql.Data.MySqlClient.Tests
 				database1 = String.Format("db{0}{1}{2}-b", versionParts[0], versionParts[1], port - 3300);
 			}
 
-            string connStr = GetConnectionStringEx(rootUser, rootPassword, false);
+            string connStr = GetConnectionString(rootUser, rootPassword, false);
             rootConn = new MySqlConnection(connStr + ";database=mysql");
             rootConn.Open();
 
@@ -134,36 +134,31 @@ namespace MySql.Data.MySqlClient.Tests
             return String.Format("protocol=sockets;port={0};use procedure bodies=false", port);
         }
 
-        protected string GetConnectionStringBasic(bool includedb)
+        protected string GetConnectionString(string userId, string pw, bool includedb)
         {
-            string connStr = String.Format("server={0};user id={1};password={2};" +
+            Debug.Assert(userId != null);
+            string connStr = String.Format("server={0};user id={1};pooling=false;" +
                  "persist security info=true;connection reset=true;allow user variables=true;", 
-                 host, user, password);
+                 host, userId);
+            if (pw != null)
+                connStr += String.Format(";password={0};", pw);
             if (includedb)
                 connStr += String.Format("database={0};", database0);
-            if (!pooling)
-                connStr += ";pooling=false;";
             connStr += GetConnectionInfo();
+            connStr += csAdditions;
             return connStr;
         }
 
         protected string GetConnectionString(bool includedb)
         {
-            string connStr = String.Format("{0};{1}", 
-                GetConnectionStringBasic(includedb), csAdditions);
-            return connStr;
+            return GetConnectionString(user, password, includedb);
         }
 
-        protected string GetConnectionStringEx(string user, string pw, bool includedb)
+        protected string GetPoolingConnectionString()
         {
-            string connStr = String.Format("server={0};user id={1};" +
-                 "persist security info=true;{2}", host, user, csAdditions);
-            if (includedb)
-                connStr += String.Format("database={0};", database0);
-            if (pw != null)
-                connStr += String.Format("password={0};", pw);
-            connStr += GetConnectionInfo();
-            return connStr;
+            string s = GetConnectionString(true);
+            s = s.Replace("pooling=false", "pooling=true");
+            return s;
         }
 
         protected void Open()
@@ -175,12 +170,6 @@ namespace MySql.Data.MySqlClient.Tests
 
         protected void SetAccountPerms(bool includeProc)
         {
-            try
-            {
-                suExecSQL("DROP USER 'test'@'localhost'");
-            }
-            catch (Exception) { }
-
             // now allow our user to access them
             suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'localhost' 
 				identified by 'test'", database0));
@@ -208,7 +197,7 @@ namespace MySql.Data.MySqlClient.Tests
             string sql = sr.ReadToEnd();
             sr.Close();
 
-                SetAccountPerms(false);
+            SetAccountPerms(accessToMySqlDb);
             sql = sql.Replace("[database0]", database0);
             sql = sql.Replace("[database1]", database1);
 
@@ -218,24 +207,45 @@ namespace MySql.Data.MySqlClient.Tests
 
         protected void ExecuteSQLAsRoot(string sql)
         {
-            string connStr = GetConnectionStringEx(rootUser, rootPassword, false);
-            using (MySqlConnection c = new MySqlConnection(connStr))
-            {
-                c.Open();
-
-                MySqlScript s = new MySqlScript(c, sql);
-                s.Execute();
-            }
+            MySqlScript s = new MySqlScript(rootConn, sql);
+            s.Execute();
         }
 
         [TearDown]
         public virtual void Teardown()
         {
-            string sql = String.Format(
-                @"DROP DATABASE IF EXISTS `{0}`; DROP DATABASE IF EXISTS `{1}`;",
-                database0, database1);
-            ExecuteSQLAsRoot(sql);
             conn.Close();
+            suExecSQL("DROP USER 'test'@'localhost'");
+
+            // wait up to 5 seconds for our connection to close
+            int procs = 0;
+            for (int x=0; x < 50; x++)
+            {
+                procs = CountProcesses();
+                if (procs == 1) break;
+                System.Threading.Thread.Sleep(100);
+            }
+            Assert.AreEqual(1, procs, "Too many processes still running");
+
+            DropDatabase(database0);
+            DropDatabase(database1);
+        }
+
+        private void DropDatabase(string name)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                try
+                {
+                    suExecSQL(String.Format("DROP DATABASE IF EXISTS `{0}`", name));
+                    return;
+                }
+                catch (Exception)
+                {
+                    System.Threading.Thread.Sleep(1000);
+                }
+            }
+            Assert.Fail("Unable to drop database " + name);
         }
 
         protected void KillConnection(MySqlConnection c)
@@ -268,6 +278,13 @@ namespace MySql.Data.MySqlClient.Tests
             }
         }
 
+        protected void KillPooledConnection(string connStr)
+        {
+            MySqlConnection c = new MySqlConnection(connStr);
+            c.Open();
+            KillConnection(c);
+        }
+
         protected void createTable(string sql, string engine)
         {
             if (Version >= new Version(4,1))
@@ -298,7 +315,7 @@ namespace MySql.Data.MySqlClient.Tests
 
         protected int CountProcesses()
         {
-            MySqlDataAdapter da = new MySqlDataAdapter("SHOW PROCESSLIST", conn);
+            MySqlDataAdapter da = new MySqlDataAdapter("SHOW PROCESSLIST", rootConn);
             DataTable dt = new DataTable();
             da.Fill(dt);
             return dt.Rows.Count;
