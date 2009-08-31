@@ -347,10 +347,20 @@ namespace MySql.Data.MySqlClient
             }
             catch (Exception ex)
             {
-                // if something goes wrong, we log it and eat it.  There's really nothing
-                // else we can do.
+                // if something goes wrong, we log it and try to close the connection. 
+                // There's really nothing else we can do.
                 if (connection.Settings.Logging)
                     Logger.LogException(ex);
+
+                try
+                {
+                    cmd.Connection.Close();
+                }
+                catch (Exception ex1)
+                {
+                    if (connection.Settings.Logging)
+                        Logger.LogException(ex1);
+                }
             }
 		}
 
