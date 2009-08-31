@@ -496,28 +496,30 @@ namespace MySql.Data.MySqlClient.Tests
             execSQL("CREATE TABLE Test (id INT, PRIMARY KEY(id))");
             execSQL("INSERT INTO Test VALUES(1)");
 
-            MySqlConnection c = new MySqlConnection(GetConnectionString(true));
-            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", c);
-            MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
-            Assert.IsTrue(c.State == ConnectionState.Closed);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-            Assert.IsTrue(c.State == ConnectionState.Closed);
-            Assert.AreEqual(1, dt.Rows.Count);
+            using (MySqlConnection c = new MySqlConnection(GetConnectionString(true)))
+            {
+                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", c);
+                MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
+                Assert.IsTrue(c.State == ConnectionState.Closed);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                Assert.IsTrue(c.State == ConnectionState.Closed);
+                Assert.AreEqual(1, dt.Rows.Count);
 
-            dt.Rows[0][0] = 2;
-            DataRow[] rows = new DataRow[1];
-            rows[0] = dt.Rows[0];
-            da.Update(dt);
-            Assert.IsTrue(c.State == ConnectionState.Closed);
+                dt.Rows[0][0] = 2;
+                DataRow[] rows = new DataRow[1];
+                rows[0] = dt.Rows[0];
+                da.Update(dt);
+                Assert.IsTrue(c.State == ConnectionState.Closed);
 
-            dt.Clear();
-            c.Open();
-            Assert.IsTrue(c.State == ConnectionState.Open);
-            da.Fill(dt);
-            Assert.IsTrue(c.State == ConnectionState.Open);
-            Assert.AreEqual(1, dt.Rows.Count);
-            cb.Dispose();
+                dt.Clear();
+                c.Open();
+                Assert.IsTrue(c.State == ConnectionState.Open);
+                da.Fill(dt);
+                Assert.IsTrue(c.State == ConnectionState.Open);
+                Assert.AreEqual(1, dt.Rows.Count);
+                cb.Dispose();
+            }
         }
 
         [Test]
