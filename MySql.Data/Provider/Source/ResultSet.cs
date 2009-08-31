@@ -241,7 +241,7 @@ namespace MySql.Data.MySqlClient
         {
             if (readDone) return;
 
-            while (driver.SkipDataRow()) { }
+            while (!reader.Command.Canceled && driver.SkipDataRow()) { }
             readDone = true;
 
             MySqlConnection connection = reader.Command.Connection;
