@@ -19,6 +19,8 @@ Version 6.1.0
   to continue using binary(16) guids
 
 Version 6.0.5
+- ensure that MySqlPacket always has a valid encoding. This prevents null reference exceptions in ReadString()
+  (bug#46844)
 - fixed memory leak in server when calling stored procedure with output parameter many times 
   in the same session (bug#36027)
 - workaround for .NET compact framework problems when writing behind the end of MemoryStream 

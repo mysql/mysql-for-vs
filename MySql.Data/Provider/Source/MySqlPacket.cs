@@ -34,14 +34,14 @@ namespace MySql.Data.MySqlClient
         private MemoryStream buffer = new MemoryStream(5);
         private DBVersion version;
 
-        public MySqlPacket()
+        private MySqlPacket()
         {
             Clear();
         }
 
-        public MySqlPacket(Encoding encoding) : this()
+        public MySqlPacket(Encoding enc) : this()
         {
-            this.encoding = encoding;
+            Encoding = enc;
         }
 
         public MySqlPacket(MemoryStream stream)
@@ -55,7 +55,11 @@ namespace MySql.Data.MySqlClient
         public Encoding Encoding
         {
             get { return encoding; }
-            set { encoding = value; }
+            set 
+            {
+                Debug.Assert(value != null);
+                encoding = value; 
+            }
         }
 
         public bool HasMoreData
