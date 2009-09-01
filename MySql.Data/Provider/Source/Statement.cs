@@ -174,29 +174,6 @@ namespace MySql.Data.MySqlClient
             buffers.Add(packet);
         }
 
-        /// <summary>
-        /// We use a separate method here because we want to support using parameter
-        /// names with and without a leading marker but we don't want the indexing
-        /// methods of MySqlParameterCollection to support that.
-        /// </summary>
-        /// <param name="parameters"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
-/*        private MySqlParameter GetParameter(MySqlParameterCollection parameters, string name)
-        {
-            MySqlParameter parameter = parameters.GetParameterFlexible(name, false);
-            int index = parameters.IndexOf(name);
-            if (index == -1)
-            {
-                name = name.Substring(1);
-                index = Parameters.IndexOf(name);
-                if (index == -1)
-                    return null;
-            }
-            return parameters[index];
-        }
-        */
-
         protected virtual bool ShouldIgnoreMissingParameter(string parameterName)
         {
             if (Connection.Settings.AllowUserVariables)
