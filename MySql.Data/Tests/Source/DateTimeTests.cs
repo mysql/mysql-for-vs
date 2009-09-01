@@ -414,12 +414,12 @@ namespace MySql.Data.MySqlClient.Tests
         {
             DateTime dt = DateTime.Now;
             MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES(1, ?dt, NULL, NULL, NULL)", conn);
-            cmd.Parameters.Add("?dt", dt);
+            cmd.Parameters.AddWithValue("?dt", dt);
             cmd.ExecuteNonQuery();
 
             cmd.CommandText = "SELECT dt FROM Test WHERE DATE_FORMAT(DATE(dt), GET_FORMAT(DATETIME, 'ISO'))=?datefilter";
             cmd.Parameters.Clear();
-            cmd.Parameters.Add("?datefilter", dt.Date);
+            cmd.Parameters.AddWithValue("?datefilter", dt.Date);
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {
                 Assert.IsTrue(reader.Read());
