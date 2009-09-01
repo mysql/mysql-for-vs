@@ -75,7 +75,6 @@ namespace MySql.Data.VisualStudio.Editors
             this.indexGrid.TabIndex = 1;
             this.indexGrid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.indexGrid_CellValidating);
             this.indexGrid.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.indexGrid_EditingControlShowing);
-            this.indexGrid.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.indexGrid_DataError);
             // 
             // cancelButton
             // 
@@ -86,7 +85,6 @@ namespace MySql.Data.VisualStudio.Editors
             this.cancelButton.TabIndex = 2;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
-            this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
             // okButton
             // 
@@ -139,8 +137,6 @@ namespace MySql.Data.VisualStudio.Editors
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Index Columns";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.IndexColumnEditorDialog_FormClosed);
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.IndexColumnEditorDialog_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.indexGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.indexColumnBindingSource)).EndInit();
             this.ResumeLayout(false);
