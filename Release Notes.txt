@@ -32,14 +32,4 @@ and manually add the proper SQL onto the end of your command text.  The command 
 was not designed to handle this.  In previous versions we have tried to support this but
 it is causing more headaches than it is solving.
 
-What we know may be broken
-----------------------------
-- Documentation is not updated yet.
-- Our entity framework support currently treats both binary(16) and char(36) columns as 
-  guids.   
-- We have refactored a good bit of the internal piping to support output parameters but
-  also to set us up for future features such as client side query caching.  What I saying
-  is that we may have broken some fairly major stuff so be sure and test against safe 
-  data and please don't deploy until we are GA and you are confident.
-
 Please let us know what else we broke and how we can make it better!
