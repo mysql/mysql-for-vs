@@ -161,7 +161,7 @@ namespace MySql.Data.Entity
                 MySqlParameter p = new MySqlParameter();
                 p.ParameterName = CreateUniqueParameterName();
                 p.DbType = Metadata.GetDbType(expression.ResultType);
-                p.Value = expression.Value;
+                p.Value = Metadata.NormalizeValue(expression.ResultType, expression.Value);
                 Parameters.Add(p);
                 return new LiteralFragment(p.ParameterName);
             }

@@ -57,7 +57,7 @@
     <Property Name="FirstName" Type="nvarchar" Nullable="false" MaxLength="10" />
     <Property Name="BirthTime" Type="time" Nullable="true"/>
     <Property Name="Weight" Type="double" Nullable ="true"/>
-    <Property Name="LastModified" Type="datetime" Nullable ="false"/>
+    <Property Name="LastModified" Type="timestamp" Nullable ="false"/>
   </EntityType>
 
   <EntityType Name="Companies">

@@ -79,6 +79,7 @@ namespace MySql.Data.Entity
                 case PrimitiveTypeKind.Boolean: return DbType.Boolean;
                 case PrimitiveTypeKind.Byte: return DbType.Byte;
                 case PrimitiveTypeKind.DateTime: return DbType.DateTime;
+                case PrimitiveTypeKind.DateTimeOffset: return DbType.DateTime;
                 case PrimitiveTypeKind.Decimal: return DbType.Decimal;
                 case PrimitiveTypeKind.Double: return DbType.Double;
                 case PrimitiveTypeKind.Single: return DbType.Single;
@@ -96,6 +97,17 @@ namespace MySql.Data.Entity
                     throw new InvalidOperationException(
                         string.Format("Unknown PrimitiveTypeKind {0}", pt.PrimitiveTypeKind));
             }
+        }
+
+        public static object NormalizeValue(TypeUsage type, object value)
+        {
+            PrimitiveType pt = (PrimitiveType)type.EdmType;
+            if (pt.PrimitiveTypeKind != PrimitiveTypeKind.DateTimeOffset) return value;
+            DateTimeOffset dto = (DateTimeOffset)value;
+            DateTime dt = dto.DateTime;
+            if (dt.Year < 1970)
+                return new DateTime(1970, 1, 1, 0, 0, 1);
+            return dt;
         }
 
         public static ParameterDirection ModeToDirection(ParameterMode mode)
