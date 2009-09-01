@@ -249,9 +249,10 @@ namespace MySql.Data.MySqlClient.Tests
         public void ManualEnlistment()
         {
             createTable("CREATE TABLE Test (key2 VARCHAR(1), name VARCHAR(100), name2 VARCHAR(100))", "INNODB");
+            string connStr = GetConnectionString(true) + ";auto enlist=false";
+
             using (TransactionScope ts = new TransactionScope())
             {
-                string connStr = GetConnectionString(true) + ";auto enlist=false";
                 MySqlConnection c = new MySqlConnection(connStr);
                 c.Open();
 
@@ -260,6 +261,8 @@ namespace MySql.Data.MySqlClient.Tests
             }
             MySqlCommand cmd2 = new MySqlCommand("SELECT COUNT(*) FROM Test", conn);
             Assert.AreEqual(1, cmd2.ExecuteScalar());
+
+            KillPooledConnection(connStr);
         }
 
         private void ManuallyEnlistingInitialConnection(bool complete)

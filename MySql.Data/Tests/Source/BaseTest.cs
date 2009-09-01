@@ -215,7 +215,10 @@ namespace MySql.Data.MySqlClient.Tests
         public virtual void Teardown()
         {
             conn.Close();
-            suExecSQL("DROP USER 'test'@'localhost'");
+            if (Version.Major < 5)
+                suExecSQL("REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'test'");
+            else
+                suExecSQL("DROP USER 'test'@'localhost'"); 
 
             // wait up to 5 seconds for our connection to close
             int procs = 0;
