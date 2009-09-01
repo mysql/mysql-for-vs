@@ -220,7 +220,7 @@ namespace MySql.Data.MySqlClient.Tests
         /// Bug #19515  	DiscoverParameters fails on numeric datatype
         /// </summary>
         [Test]
-        public void DeriveParameters()
+        public new void DeriveParameters()
         {
             if (Version < new Version(5, 0)) return;
 

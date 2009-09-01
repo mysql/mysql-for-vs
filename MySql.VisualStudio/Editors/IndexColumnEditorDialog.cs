@@ -141,29 +141,6 @@ namespace MySql.Data.VisualStudio.Editors
                 sortCell.Value = gr.SortOrder;
             }
         }
-
-        private void cancelButton_Click(object sender, EventArgs e)
-        {
-            String s = "my value";
-            int i = 0;
-        }
-
-        private void IndexColumnEditorDialog_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            int i = 0;
-            CloseReason r = e.CloseReason;
-        }
-
-        private void indexGrid_DataError(object sender, DataGridViewDataErrorEventArgs e)
-        {
-            int i = e.ColumnIndex;
-        }
-
-        private void IndexColumnEditorDialog_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            int i = 0;
-            CloseReason r = e.CloseReason;
-        }
     }
 
     public class IndexColumnEditor : UITypeEditor
