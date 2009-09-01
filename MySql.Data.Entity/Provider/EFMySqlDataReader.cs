@@ -198,10 +198,25 @@ namespace MySql.Data.Entity
             {
                 if (!(value is DBNull) && value.GetType()
                     != types[ordinal].ClrEquivalentType)
-                    value = Convert.ChangeType(value, types[ordinal].ClrEquivalentType, CultureInfo.InvariantCulture);
+                    value = ChangeType(value, types[ordinal].ClrEquivalentType);
             }
             return value;
         }
+
+        private object ChangeType(object sourceValue, Type targetType)
+        {
+            if (sourceValue is byte[] && targetType == typeof(Guid))
+            {
+                return new Guid((byte[])sourceValue);
+            }
+
+            if (sourceValue is DateTime && targetType == typeof(DateTimeOffset))
+            {
+                return new DateTimeOffset((DateTime)sourceValue);
+            }
+
+            return Convert.ChangeType(sourceValue, targetType, CultureInfo.InvariantCulture);
+        } 
 
         public override int GetValues(object[] values)
         {
