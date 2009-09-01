@@ -120,12 +120,13 @@ namespace MySql.Data.Entity.Tests
             using (testEntities context = new testEntities())
             {
                 Child c = context.Children.First();
-                DateTime dt = c.Modified;
+                DateTime dt = c.Modified.DateTime;
                 c.Modified = now;
                 context.SaveChanges();
 
                 c = context.Children.First();
-                Assert.AreEqual(now, c.Modified);
+                dt = c.Modified.DateTime;
+                Assert.AreEqual(now, dt);
             }
         }
     }
