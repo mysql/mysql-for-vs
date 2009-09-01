@@ -30,8 +30,6 @@ namespace MySql.Data.MySqlClient
     {
         private string sql;
 
-        private int startLine;
-        private int stopLine;
         private int startIndex;
         private int stopIndex;
 
@@ -102,16 +100,6 @@ namespace MySql.Data.MySqlClient
         public int StopIndex
         {
             get { return stopIndex; }
-        }
-
-        public int StartLine
-        {
-            get { return startLine; }
-        }
-
-        public int StopLine
-        {
-            get { return stopLine; }
         }
 
         public bool ReturnComments
