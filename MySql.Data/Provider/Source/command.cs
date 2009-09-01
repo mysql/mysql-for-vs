@@ -230,11 +230,6 @@ namespace MySql.Data.MySqlClient
             get { return batchableCommandText; }
         }
 
-        internal bool Canceled
-        {
-            get { return canceled; }
-        }
-
 		#endregion
 
 		#region Methods
