@@ -1284,12 +1284,10 @@ namespace MySql.Data.MySqlClient.Tests
             if (Version < new Version(5, 0)) return;
             if (Version > new Version(6, 0, 6)) return;
 
-            rootConn.ChangeDatabase(database1);
-            suExecSQL(@"CREATE  PROCEDURE spTest (id INT, name VARCHAR(20))
+            execSQL(@"CREATE  PROCEDURE spTest (id INT, name VARCHAR(20))
                     BEGIN SELECT name; END");
-            rootConn.ChangeDatabase(database0);
 
-            MySqlCommand cmd = new MySqlCommand(database1 + ".spTest", conn);
+            MySqlCommand cmd = new MySqlCommand("spTest", conn);
             cmd.CommandType = CommandType.StoredProcedure;
             MySqlCommandBuilder.DeriveParameters(cmd);
             Assert.AreEqual(2, cmd.Parameters.Count);
