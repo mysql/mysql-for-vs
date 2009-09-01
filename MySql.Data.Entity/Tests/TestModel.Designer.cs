@@ -15,7 +15,7 @@
 [assembly: global::System.Data.Objects.DataClasses.EdmRelationshipAttribute("testModel", "FK_Books_Publishers", "Publishers", global::System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(MySql.Data.Entity.Tests.Publisher), "Books", global::System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(MySql.Data.Entity.Tests.Book))]
 
 // Original file name:
-// Generation date: 8/10/2009 4:18:18 PM
+// Generation date: 8/31/2009 8:01:37 PM
 namespace MySql.Data.Entity.Tests
 {
     
@@ -437,7 +437,7 @@ namespace MySql.Data.Entity.Tests
         /// <param name="lastName">Initial value of LastName.</param>
         /// <param name="firstName">Initial value of FirstName.</param>
         /// <param name="modified">Initial value of Modified.</param>
-        public static Child CreateChild(long id, int employeeID, string lastName, string firstName, global::System.DateTime modified)
+        public static Child CreateChild(long id, int employeeID, string lastName, string firstName, global::System.DateTimeOffset modified)
         {
             Child child = new Child();
             child.Id = id;
@@ -590,7 +590,7 @@ namespace MySql.Data.Entity.Tests
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public global::System.DateTime Modified
+        public global::System.DateTimeOffset Modified
         {
             get
             {
@@ -605,8 +605,8 @@ namespace MySql.Data.Entity.Tests
                 this.OnModifiedChanged();
             }
         }
-        private global::System.DateTime _Modified;
-        partial void OnModifiedChanging(global::System.DateTime value);
+        private global::System.DateTimeOffset _Modified;
+        partial void OnModifiedChanging(global::System.DateTimeOffset value);
         partial void OnModifiedChanged();
     }
     /// <summary>

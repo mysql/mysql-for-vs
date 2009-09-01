@@ -34,21 +34,15 @@ using System.Configuration;
 
 namespace MySql.Data.Entity.Tests
 {
-	[TestFixture]
+    // This test unit covers the tests that the wizard runs when generating a model
+    // from an existing database
+    [TestFixture]
 	public class WizardTests : BaseEdmTest
 	{
-        // This test unit covers the tests that the wizard runs when generating a model
-        // from an existing database
-        public WizardTests()
-            : base()
-        {
-            csAdditions = ";logging=true;";
-        }
-
         private EntityConnection GetConnection()
         {
             return EntityStoreSchemaGenerator.CreateStoreSchemaConnection(
-                "MySql.Data.MySqlClient", @"server=localhost;uid=root;database=test");
+                "MySql.Data.MySqlClient", @"server=localhost;uid=root;database=test;pooling=false");
         }
 
         [Test]
