@@ -60,37 +60,16 @@ namespace MySql.Data.MySqlClient.Tests
                     c.Open();
                     MySqlCommand cmd = new MySqlCommand("spTest", c);
                     cmd.CommandType = CommandType.StoredProcedure;
-                    try
-                    {
                         object o = cmd.ExecuteScalar();
-                        Assert.Fail("This should fail");
-                    }
-                    catch (InvalidOperationException)
-                    {
-                    }
-                    catch (MySqlException)
-                    {
-                    }
-                    catch (Exception)
-                    {
-                        Assert.Fail("A more specific exception should have been thrown");
-                    }
 
                     try 
                     {
                         cmd.CommandText = "spTest2";
                         cmd.ExecuteScalar();
                     }
-                    catch (InvalidOperationException)
-                    {
-                    }
                     catch (MySqlException ex)
                     {
                         string s = ex.Message;
-                    }
-                    catch (Exception)
-                    {
-                        Assert.Fail("This should have thrown a more specific exception");
                     }
                 }
             }
