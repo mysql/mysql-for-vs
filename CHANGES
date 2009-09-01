@@ -2,6 +2,8 @@ Version 6.2.0
 - completely refactored MySqlConnectionStringBuilder
 
 Version 6.1.2
+- fixed hanging after losing network connectivity to server (bug#43761) 
+  Better fix is planned for 6.2
 - removed ReturnGeneratedIdentifiers.  We are now treating the command builder exactly
   the same way SqlClient does
 - fixed some bugs with session state provider
