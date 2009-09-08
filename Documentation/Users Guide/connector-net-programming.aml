@@ -1678,6 +1678,11 @@ else
           Profile Provider
         </para>
           </listItem>
+          <listItem>
+            <para>
+          Session State Provider ( 6.1 and later)
+        </para>
+          </listItem>
         </list>
         <para>
       The following table shows the supported providers, their default
@@ -1795,20 +1800,20 @@ else
   &lt;membership&gt;
     &lt;providers&gt;
       &lt;add name="AspNetSqlMembershipProvider" type="System.Web.Security.SqlMembershipProvider, System.Web, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" connectionStringName="LocalSqlServer" enablePasswordRetrieval="false" enablePasswordReset="true" requiresQuestionAndAnswer="true" applicationName="/" requiresUniqueEmail="false" passwordFormat="Hashed" maxInvalidPasswordAttempts="5" minRequiredPasswordLength="7" minRequiredNonalphanumericCharacters="1" passwordAttemptWindow="10" passwordStrengthRegularExpression="" /&gt;
-      &lt;add name="MySQLMembershipProvider" type="MySql.Web.Security.MySQLMembershipProvider, MySql.Web, Version=6.0.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d" connectionStringName="LocalMySqlServer" enablePasswordRetrieval="false" enablePasswordReset="true" requiresQuestionAndAnswer="true" applicationName="/" requiresUniqueEmail="false" passwordFormat="Clear" maxInvalidPasswordAttempts="5" minRequiredPasswordLength="7" minRequiredNonalphanumericCharacters="1" passwordAttemptWindow="10" passwordStrengthRegularExpression="" /&gt;
+      &lt;add name="MySQLMembershipProvider" type="MySql.Web.Security.MySQLMembershipProvider, MySql.Web, Version=6.1.1.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d" connectionStringName="LocalMySqlServer" enablePasswordRetrieval="false" enablePasswordReset="true" requiresQuestionAndAnswer="true" applicationName="/" requiresUniqueEmail="false" passwordFormat="Clear" maxInvalidPasswordAttempts="5" minRequiredPasswordLength="7" minRequiredNonalphanumericCharacters="1" passwordAttemptWindow="10" passwordStrengthRegularExpression="" /&gt;
     &lt;/providers&gt;
   &lt;/membership&gt;
   &lt;profile&gt;
     &lt;providers&gt;
       &lt;add name="AspNetSqlProfileProvider" connectionStringName="LocalSqlServer" applicationName="/" type="System.Web.Profile.SqlProfileProvider, System.Web, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" /&gt;
-      &lt;add name="MySQLProfileProvider" type="MySql.Web.Profile.MySQLProfileProvider, MySql.Web, Version=6.0.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d" connectionStringName="LocalMySqlServer" applicationName="/" /&gt;
+      &lt;add name="MySQLProfileProvider" type="MySql.Web.Profile.MySQLProfileProvider, MySql.Web, Version=6.1.1.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d" connectionStringName="LocalMySqlServer" applicationName="/" /&gt;
     &lt;/providers&gt;
   &lt;/profile&gt;
   &lt;roleManager&gt;
     &lt;providers&gt;
       &lt;add name="AspNetSqlRoleProvider" connectionStringName="LocalSqlServer" applicationName="/" type="System.Web.Security.SqlRoleProvider, System.Web, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" /&gt;
       &lt;add name="AspNetWindowsTokenRoleProvider" applicationName="/" type="System.Web.Security.WindowsTokenRoleProvider, System.Web, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" /&gt;
-      &lt;add name="MySQLRoleProvider" type="MySql.Web.Security.MySQLRoleProvider, MySql.Web, Version=6.0.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d" connectionStringName="LocalMySqlServer" applicationName="/" /&gt;
+      &lt;add name="MySQLRoleProvider" type="MySql.Web.Security.MySQLRoleProvider, MySql.Web, Version=6.1.1.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d" connectionStringName="LocalMySqlServer" applicationName="/" /&gt;
     &lt;/providers&gt;
   &lt;/roleManager&gt;
 &lt;/system.web&gt;
@@ -1828,7 +1833,7 @@ else
         <code>
 &lt;sessionState&gt;
   &lt;providers&gt;
-    &lt;add name="MySqlSessionStateStore" type="MySql.Web.SessionState.MySqlSessionStateStore, MySql.Web, Version=6.0.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d" connectionStringName="LocalMySqlServer" applicationName="/" /&gt;
+    &lt;add name="MySqlSessionStateStore" type="MySql.Web.SessionState.MySqlSessionStateStore, MySql.Web, Version=6.1.1.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d" connectionStringName="LocalMySqlServer" applicationName="/" /&gt;
   &lt;/providers&gt;
 &lt;/sessionState&gt;
 </code>
@@ -1886,6 +1891,16 @@ else
   &lt;remove name="LocalMySqlServer"/&gt;
   &lt;add name="LocalMySqlServer" connectionString="server=xxx;uid=xxx;pwd=xxx"/&gt;
 &lt;/connectionStrings&gt;</code>
+        <para>
+      Rather than manually editing configuration files it is recommended
+      that you use the MySQL Website Configuration tool to config your
+      desired provider setup. From  6.1.1 onwards all providers
+      can be selected and configured from this wizard. The tool will
+      modify your <legacyBold>website.config</legacyBold> file to the
+      desired configuration. A tutorial on doing this is available in
+      the following section
+      <link xlink:href="9f3f194e-ad35-4379-b04d-5dce4b34ce6a#connector-net-website-config">MySQL Website Configuration Tool</link>.
+    </para>
         <para>
       A tutorial demonstrating how to use the Membership and Role
       Providers can be found in the following section
@@ -2316,13 +2331,268 @@ else
     </para>
       </content>
     </section>
-        <section address="connector-net-programming-tutorial-asp-provider-profile">
+    <section address="connector-net-programming-tutorial-asp-provider-session-state">
+      <title>Tutorial:  ASP.NET Session State Provider</title>
+      <content>
+        <para>
+       from version 6.1 has included a MySQL Session State
+      Provider. This provider allows you to store session state in a
+      MySQL database. The following tutorial shows you how to prepare to
+      use the MySQL Session State Provider, and then store session data
+      into the MySQL database. This tutorial uses Microsoft Visual
+      Studio 2008 Professional Edition,  6.1.1 and MySQL Server
+      5.1. This tutorial also assumes you have created an empty
+      database, for example <literal>test</literal>, where you will
+      store session data. You could do this using the MySQL Command Line
+      Client tool.
+    </para>
+        <list class="ordered">
+          <listItem>
+            <para>
+          In Visual Studio create a new ASP.NET web site. If you are not
+          sure how to do this refer to the tutorial
+          <link xlink:href="9f3f194e-ad35-4379-b04d-5dce4b34ce6a#connector-net-visual-studio-entity-framework-tutorial-databinding-linq-entities">Tutorial: Databinding in ASP.NET using LINQ on Entities</link>
+          which demonstrates how to do this.
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Launch the MySQL MySQL Website Configuration tool. Due to a
+          bug in 6.1.1 this may not appear unless you are connected to a
+          server in the Server Explorer. If you are unfamiliar with the
+          MySQL Website Configuration tool it is suggested that you
+          first work through the following tutorial
+          <link xlink:href="9f3f194e-ad35-4379-b04d-5dce4b34ce6a#connector-net-website-config">MySQL Website Configuration Tool</link>.
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Navigate through the wizard to the Session State page. Make
+          sure the checkbox  is seected.
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          On the same page configure the connection string to the
+          database that will contain your session data. This database
+          can be empty as  will create the schema required to
+          store session data.
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Ensure that the checkbox  is selected so that  will create the
+          schema in your database to store the session data correctly.
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Enter the name of your application.
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Click <math>Finish</math>. The MySQL Website
+          Configuration tool will now update your application's
+          <legacyBold>web.config</legacyBold> file with information about
+          the connection string and default providers to be used. In
+          this case we have selected the MySQL Session State Provider.
+        </para>
+          </listItem>
+        </list>
+        <para>
+      At this point you are ready to use the MySQL database to store
+      session data. To test that the set up has worked you can write a
+      simple program that uses session variables.
+    </para>
+        <list class="ordered">
+          <listItem>
+            <para>
+          Open <legacyBold>Default.aspx.cs</legacyBold>. In the Page_Load
+          method add the following code:
+        </para>
+            <codeInline>Session["SessionVariable1"] = "Test string";</codeInline>
+          </listItem>
+          <listItem>
+            <para>
+          Build your solution.
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Run the solution (without debugging). When the application
+          runs, the provider will autogenerate tables required in the
+          database you chose when setting up the application.
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Check that the schema was in fact created. Using the MySQL
+          Command Line Client use the target database and then type
+          <literal>SHOW TABLES;</literal>. You will see that  has
+          created the required schema automatically, as we selected this
+          to happen in the MySQL Website Configuration tool.
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Now view the contents of these tables by typing
+          <literal>SELECT * FROM my_aspnet_sessions;</literal> in the
+          MySQL Command Line Client. This will display the session data
+          our application used. Note that this is stored in binary
+          format so some data may not display as expected.
+        </para>
+          </listItem>
+        </list>
+        <para>
+      At this point you have installed the Session State Provider and
+      carried out a preliminary test of the installation. You will now
+      work a bit more with the Session State Provider.
+    </para>
+        <para>
+      In this part of the tutorial you will set and retrieve a session
+      variable. You can work with your existing project.
+    </para>
+        <list class="ordered">
+          <listItem>
+            <para>
+          Select the <legacyBold>Default.aspx</legacyBold> and switch to
+          Design View. Add a text box and three buttons. Change the text
+          property for the buttons to , , and
+          . These will be
+          <literal>Button1</literal>, <literal>Button2</literal> and
+          <literal>Button3</literal> respectively. Build your solution
+          to ensure that no errors have been introduced.
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Still in the Design View, double click
+          <literal>Button1</literal>. Now to the
+          <literal>Button1_Click</literal> event handler add code some
+          the handler resembles the following:
+        </para>
+            <code>
+protected void Button1_Click(object sender, EventArgs e)
+{
+    Session["SessionString"] = TextBox1.Text;
+}
+</code>
+            <para>
+          You have created a new Session variable accessed using the key
+          . This will be set to the text
+          that was entered into the text box when
+          <literal>Button1</literal> is clicked.
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          In Design View double click <literal>Button2</literal> to add
+          its click event handler. This button needs to clear text from
+          the text box. The code to do this is as follows:
+        </para>
+            <code>
+protected void Button2_Click(object sender, EventArgs e)
+{
+    TextBox1.Text = "";
+}
+</code>
+            <para>
+          The code simply assigns an empty string to the
+          <literal>Text</literal> property of the text box.
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          In the Desin View double click <literal>Button3</literal> and
+          modify the click handler as follows:
+        </para>
+            <code>
+protected void Button3_Click(object sender, EventArgs e)
+{
+    TextBox1.Text = (String)Session["SessionString"];
+}
+</code>
+            <para>
+          This will retrieve the session string and display it in the
+          text box.
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Now modify the <literal>Page_Load</literal> method as follows:
+        </para>
+            <code>
+protected void Page_Load(object sender, EventArgs e)
+{
+    if (!IsPostBack)
+    {
+       TextBox1.Text = "Enter some text"; 
+    }
+}
+</code>
+            <para>
+          This ensures that when the page loads the text box
+          <literal>Text</literal> property is reset.
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Ensure that the solution is saved and then rebuild the
+          solution.
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Run the solution without debugging.
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          The form will be displayed. Enter some text into the text box.
+          Now click <math>Store Session Variable</math>. At
+          this point you have stored the string in a session variable.
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Now click <math>Clear Text</math> to clear the text
+          box.
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Now click <math>Show Session Variable</math> to
+          retrieve and display the session variable.
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Refresh the page to destroy the form and display a new form.
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Click <math>Show Session Variable</math> the text
+          box will display the stored session variable, demonstrating
+          that the refreshing the page does not destroy the session
+          variable.
+        </para>
+          </listItem>
+        </list>
+        <para>
+      This illustrates that the session state data is not destroyed when
+      a page is reloaded.
+    </para>
+      </content>
+    </section>
+    <section address="connector-net-programming-tutorial-asp-provider-profile">
       <title>Tutorial:  ASP.NET Profile Provider</title>
       <content>
         <para>
       This tutorial shows you how to use the MySQL Profile Provider to
       store user profile information in a MySQL database. The tutorial
-      uses  6.0.4, MySQL Server 5.1 and Microsoft Visual Studio
+      uses  6.1.1, MySQL Server 5.1 and Microsoft Visual Studio
       2008 Professional Edition.
     </para>
         <para>
@@ -2338,9 +2608,57 @@ else
       that have not been accessed since a specific date to be deleted.
     </para>
         <para>
-      Setup the profile provider using the same steps as with the MySQL Membership
-	  Provider only replacing MySqlMembershipProvider with MySqlProfileProvider. With 
-	  the following steps you can carry out a preliminary
+      The following steps show you how you can select the MySQL Profile
+      Provider.
+    </para>
+        <list class="ordered">
+          <listItem>
+            <para>
+          Create a new ASP.NET web project.
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Select the MySQL Website Configuration tool. Due to a bug in
+          6.1.1 you may have to first connect to a server in Server
+          Explorer before the tool's icon will display in the toolbar of
+          the Solution Explorer.
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          In the MySQL Website Configuration tool navigate through the
+          tool to the Profiles page.
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Select the  checkbox.
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Select the  checkbox.
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Click the <math>Edit...</math> button and configure
+          a connection string for the database that will be used to
+          store user profile information.
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Navigate to the last page of the tool and click
+          <math>Finish</math> to save your changes and exit
+          the tool.
+        </para>
+          </listItem>
+        </list>
+        <para>
+      At this point you are now ready to start using the MySQL Profile
+      Provider. With the following steps you can carry out a preliminary
       test of your installation.
     </para>
         <list class="ordered">
