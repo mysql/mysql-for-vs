@@ -1,0 +1,111 @@
+<topic id="052f4a92-cf0f-4dcb-a79d-6770047e150f" revisionNumber="1">
+  <developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <section address="connector-net">
+      <title>MySQL Connector/NET</title>
+      <content>
+        <autoOutline />
+        <para>
+    Connector/NET enables developers to easily create .NET applications
+    that require secure, high-performance data connectivity with MySQL.
+    It implements the required ADO.NET interfaces and integrates into
+    ADO.NET aware tools. Developers can build applications using their
+    choice of .NET languages. Connector/NET is a fully managed ADO.NET
+    driver written in 100% pure C#.
+  </para>
+        <para>
+    Connector/NET includes full support for:
+  </para>
+        <list class="bullet">
+          <listItem>
+            <para>
+        MySQL 6.0 features
+      </para>
+          </listItem>
+          <listItem>
+            <para>
+        MySQL 5.1 features
+      </para>
+          </listItem>
+          <listItem>
+            <para>
+        MySQL 5.0 features (such as stored procedures)
+      </para>
+          </listItem>
+          <listItem>
+            <para>
+        MySQL 4.1 features (server-side prepared statements, Unicode,
+        and shared memory access, and so forth)
+      </para>
+          </listItem>
+          <listItem>
+            <para>
+        Large-packet support for sending and receiving rows and BLOBs up
+        to 2 gigabytes in size.
+      </para>
+          </listItem>
+          <listItem>
+            <para>
+        Protocol compression which allows for compressing the data
+        stream between the client and server.
+      </para>
+          </listItem>
+          <listItem>
+            <para>
+        Support for connecting using TCP/IP sockets, named pipes, or
+        shared memory on Windows.
+      </para>
+          </listItem>
+          <listItem>
+            <para>
+        Support for connecting using TCP/IP sockets or Unix sockets on
+        Unix.
+      </para>
+          </listItem>
+          <listItem>
+            <para>
+        Support for the Open Source Mono framework developed by Novell.
+      </para>
+          </listItem>
+          <listItem>
+            <para>
+        Fully managed, does not utilize the MySQL client library.
+      </para>
+          </listItem>
+        </list>
+        <para>
+    This document is intended as a user's guide to Connector/NET and
+    includes a full syntax reference. Syntax information is also
+    included within the <legacyBold>Documentation.chm</legacyBold> file
+    included with the Connector/NET distribution.
+  </para>
+        <para>
+    If you are using MySQL 5.0 or later, and Visual Studio as your
+    development environment, you may want also want to use the MySQL
+    Visual Studio Plugin. The plugin acts as a DDEX (Data Designer
+    Extensibility) provider, enabling you to use the data design tools
+    within Visual Studio to manipulate the schema and objects within a
+    MySQL database. For more information, see
+    <link xlink:href="9f3f194e-ad35-4379-b04d-5dce4b34ce6a"></link>.
+  </para>
+        <alert class="note">
+          <para>
+      Connector/NET 5.1.2 and later include the Visual Studio Plugin by
+      default.
+    </para>
+        </alert>
+        <para>
+          <legacyBold>Key topics:</legacyBold>
+        </para>
+        <list class="bullet">
+          <listItem>
+            <para>
+        For connection string properties when using the
+         class, see
+        <link xlink:href="c26b6c1a-1652-4d9d-ac74-96cee9531a3b"></link>.
+      </para>
+          </listItem>
+        </list>
+      </content>
+    </section>
+  </developerConceptualDocument>
+</topic>
