@@ -1,0 +1,142 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Image Include="Users Guide\media\connector-net-visual-studio-add-connection.png">
+      <ImageId>connector-net-visual-studio-add-connection</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-choose-data-source.png">
+      <ImageId>connector-net-visual-studio-choose-data-source</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-add-connection-dialog.png">
+      <ImageId>connector-net-visual-studio-add-connection-dialog</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-new-data-connection.png">
+      <ImageId>connector-net-visual-studio-new-data-connection</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-editing-new-table.png">
+      <ImageId>connector-net-visual-studio-editing-new-table</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-choose-table-name.png">
+      <ImageId>connector-net-visual-studio-choose-table-name</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-newly-created-table.png">
+      <ImageId>connector-net-visual-studio-newly-created-table</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-table-designer-menu-item.png">
+      <ImageId>connector-net-visual-studio-table-desginer-menu-item</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-indexes-dialog.png">
+      <ImageId>connector-net-visual-studio-indexes-dialog</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-foreign-key-relationships.png">
+      <ImageId>connector-net-visual-studio-foreign-key-relationships</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-table-properties-menu.png">
+      <ImageId>connector-net-visual-studio-table-properties-menu</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-selecting-table-properties.png">
+      <ImageId>connector-net-visual-studio-selecting-table-properties</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-views-edit-sql.png">
+      <ImageId>connector-net-visual-studio-views-edit-sql</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-views-sql-added.png">
+      <ImageId>connector-net-visual-studio-views-sql-added</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-views-sql-saved.png">
+      <ImageId>connector-net-visual-studio-views-sql-saved</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-stored-procedure-edit.png">
+      <ImageId>connector-net-visual-studio-stored-procedure-edit</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-stored-procedure-saved.png">
+      <ImageId>connector-net-visual-studio-stored-procedure-saved</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-entity-framework-add-entity-data-model.png">
+      <ImageId>connector-net-visual-studio-entity-framework-add-entity-data-model</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-entity-framework-entity-data-model-wizard-1.png">
+      <ImageId>connector-net-visual-studio-entity-framework-entity-data-model-wizard-1</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-entity-framework-entity-data-model-wizard-2.png">
+      <ImageId>connector-net-visual-studio-entity-framework-entity-data-model-wizard-2</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-entity-framework-entity-data-model-wizard-3.png">
+      <ImageId>connector-net-visual-studio-entity-framework-entity-data-model-wizard-3</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-entity-framework-entity-data-model-diagram.png">
+      <ImageId>connector-net-visual-studio-entity-framework-entity-data-model-diagram</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-entity-framework-data-source-configuration-wizard-1.png">
+      <ImageId>connector-net-visual-studio-entity-framework-data-source-configuration-wizard-1</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-entity-framework-data-source-configuration-wizard-2.png">
+      <ImageId>connector-net-visual-studio-entity-framework-data-source-configuration-wizard-2</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-entity-framework-data-source-configuration-wizard-3.png">
+      <ImageId>connector-net-visual-studio-entity-framework-data-source-configuration-wizard-3</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-entity-framework-data-sources.png">
+      <ImageId>connector-net-visual-studio-entity-framework-data-sources</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-entity-framework-data-form-design.png">
+      <ImageId>connector-net-visual-studio-entity-framework-data-form-design</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-entity-framework-form-add-code.png">
+      <ImageId>connector-net-visual-studio-entity-framework-form-add-code</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-entity-framework-app-running-1.png">
+      <ImageId>connector-net-visual-studio-entity-framework-app-running-1</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-entity-framework-save-enabled.png">
+      <ImageId>connector-net-visual-studio-entity-framework-save-enabled</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-entity-framework-form-add-code-save.png">
+      <ImageId>connector-net-visual-studio-entity-framework-form-add-code-save</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-entity-framework-tutorial-linq-1.png">
+      <ImageId>connector-net-visual-studio-entity-framework-tutorial-linq-1</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-entity-framework-tutorial-linq-2.png">
+      <ImageId>connector-net-visual-studio-entity-framework-tutorial-linq-2</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-entity-framework-tutorial-linq-3.png">
+      <ImageId>connector-net-visual-studio-entity-framework-tutorial-linq-3</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-entity-framework-tutorial-linq-4.png">
+      <ImageId>connector-net-visual-studio-entity-framework-tutorial-linq-4</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-entity-framework-tutorial-linq-5.png">
+      <ImageId>connector-net-visual-studio-entity-framework-tutorial-linq-5</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-entity-framework-tutorial-linq-6.png">
+      <ImageId>connector-net-visual-studio-entity-framework-tutorial-linq-6</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-visual-studio-entity-framework-tutorial-linq-7.png">
+      <ImageId>connector-net-visual-studio-entity-framework-tutorial-linq-7</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-programming-tutorial-authentication-type.png">
+      <ImageId>connector-net-programming-tutorial-authentication-type</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-programming-tutorial-select-provider.png">
+      <ImageId>connector-net-programming-tutorial-select-provider</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-programming-tutorial-tables.png">
+      <ImageId>connector-net-programming-tutorial-tables</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-programming-tutorial-security-tab.png">
+      <ImageId>connector-net-programming-tutorial-security-tab</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-programming-tutorial-create-user.png">
+      <ImageId>connector-net-programming-tutorial-create-user</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-programming-tutorial-users-roles-tables.png">
+      <ImageId>connector-net-programming-tutorial-users-roles-tables</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-programming-tutorial-asp-provider-profile-simple-app.png">
+      <ImageId>connector-net-programming-tutorial-asp-provider-profile-simple-app</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-programming-tutorial-1.png">
+      <ImageId>connector-net-programming-tutorial-1</ImageId>
+    </Image>
+  </ItemGroup>
+</Project>
