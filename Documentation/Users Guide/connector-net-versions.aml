@@ -50,6 +50,14 @@
         MySQL 6.0.
       </para>
           </listItem>
+          <listItem>
+            <para>
+        Connector/NET 6.1 includes support for MySQL 5.0, MySQL 5.1,
+        MySQL 5.4 and MySQL 6.0. Important new features include the
+        MySQL Website Configuration Tool and a Session State Provider.
+        Connector/NET 6.1 is currently available as an Alpha release.
+      </para>
+          </listItem>
         </list>
         <para>
     The latest source code for Connector/NET can be downloaded from the
@@ -151,6 +159,20 @@
             </entry>
             <entry>
               <para>5.0, 5.1, 6.0</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>6.1</para>
+            </entry>
+            <entry>
+              <para>2.x+</para>
+            </entry>
+            <entry>
+              <para>2.x+</para>
+            </entry>
+            <entry>
+              <para>5.0, 5.1, 5.4, 6.0</para>
             </entry>
           </row>
         </table>

@@ -304,6 +304,28 @@
           <row>
             <entry>
               <para>
+                <literal>Old Guids</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>false</para>
+            </entry>
+            <entry>
+              <para>This option was introduced in Connector/NET 6.1.1. The backend
+            representation of a GUID type was changed from
+            <literal>BINARY(16)</literal> to
+            <literal>CHAR(36)</literal>. This was done to allow
+            developers to use the server function
+            <literal>UUID()</literal> to populate a GUID table -
+            <literal>UUID()</literal> generates a 36-character string.
+            Developers of older applications can add 'Old Guids=true' to
+            the connection string in order to use a GUID of data type
+            <literal>BINARY(16)</literal>.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
                 <literal>Old Syntax</literal>, <literal>OldSyntax</literal></para>
             </entry>
             <entry>
