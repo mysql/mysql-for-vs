@@ -43,7 +43,8 @@
           **/*.msi;**/*.msm;*.Design.*;*-banner.txt;Design/**;**/doc.xml;
           **/installer/**;**/documentation/**;**/PackageLoadKey.txt;**/*.cache;
           **/*.proj;**/COPYING;**/EXCEPTIONS;**/*.bak;**/*.user;**/*.SourceAnalysis;
-	  **/MySql.Data.xml;**/*.InstallLog;**/*.bat;**/*.reg;**/thumbs.db"/>
+	  **/MySql.Data.xml;**/*.InstallLog;**/*.bat;**/*.reg;**/thumbs.db;**/.bzr/**;
+	  **/.bzr-mysql/**;**/*.bzrignore;**/*.~??"/>
     <SourceFiles Include="COPYING" Condition=" '$(Configuration)' == 'GPL' "/>
     <SourceFiles Include="EXCEPTIONS" Condition=" '$(Configuration)' == 'GPL' "/>
   </ItemGroup>
