@@ -1,0 +1,715 @@
+<topic id="c26b6c1a-1652-4d9d-ac74-96cee9531a3b" revisionNumber="1">
+  <developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <section address="connector-net-programming-connection-options">
+      <title>Connector/NET Connection String Options Reference</title>
+      <content>
+        <table>
+          <row>
+            <entry>
+              <para>Name</para>
+            </entry>
+            <entry>
+              <para>Default</para>
+            </entry>
+            <entry>
+              <para>Description</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Allow Batch</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>true</para>
+            </entry>
+            <entry>
+              <para>When true, multiple SQL statements can be sent with one command
+            execution. -Note- Starting with MySQL 4.1.1, batch
+            statements should be separated by the server-defined
+            separator character. Commands sent to earlier versions of
+            MySQL should be separated with ';'.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Allow User Variables</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>false</para>
+            </entry>
+            <entry>
+              <para>Setting this to <literal>true</literal> indicates that the provider
+            expects user variables in the SQL. This option was added in
+            Connector/NET version 5.2.2.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Allow Zero Datetime</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>false</para>
+            </entry>
+            <entry>
+              <para>True to have MySqlDataReader.GetValue() return a MySqlDateTime for date
+            or datetime columns that have illegal values. False will
+            cause a <literal>System.DateTime</literal> object to be
+            returned for legal values and an exception will be thrown
+            for illegal values.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>AutoEnlist</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>true</para>
+            </entry>
+            <entry>
+              <para>
+              </para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>BlobAsUTF8ExcludePattern</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>null</para>
+            </entry>
+            <entry>
+              <para>
+              </para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>BlobAsUTF8IncludePattern</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>null</para>
+            </entry>
+            <entry>
+              <para>
+              </para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>CharSet</literal>, <literal>Character Set</literal></para>
+            </entry>
+            <entry>
+              <para>
+              </para>
+            </entry>
+            <entry>
+              <para>Specifies the character set that should be used to encode all queries
+            sent to the server. Resultsets are still returned in the
+            character set of the data returned.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Connect Timeout</literal>, <literal>Connection
+            Timeout</literal></para>
+            </entry>
+            <entry>
+              <para>15</para>
+            </entry>
+            <entry>
+              <para>The length of time (in seconds) to wait for a connection to the server
+            before terminating the attempt and generating an error.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Connection Reset</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>false</para>
+            </entry>
+            <entry>
+              <para>
+              </para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Convert Zero Datetime</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>false</para>
+            </entry>
+            <entry>
+              <para>True to have <literal>MySqlDataReader.GetValue()</literal> and
+            <literal>MySqlDataReader.GetDateTime()</literal> return
+            DateTime.MinValue for date or datetime columns that have
+            illegal values.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Default Command Timeout</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>
+              </para>
+            </entry>
+            <entry>
+              <para>Sets the default value of the command timeout to be used. This does not
+            supercede the individual command timeout property on an
+            individual command object. If you set the command timeout
+            property, that will be used. This option was added in
+            Connector/NET 5.1.4</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Encrypt</literal>, <literal>UseSSL</literal></para>
+            </entry>
+            <entry>
+              <para>false</para>
+            </entry>
+            <entry>
+              <para>For Connector/NET 5.0.3 and later, when <literal>true</literal>, SSL
+            encryption is used for all data sent between the client and
+            server if the server has a certificate installed. Recognized
+            values are <literal>true</literal>,
+            <literal>false</literal>, <literal>yes</literal>, and
+            <literal>no</literal>. In versions before 5.0.3, this option
+            had no effect.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>FunctionsReturnString</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>false</para>
+            </entry>
+            <entry>
+              <para>This will cause the connector to return binary/varbinary values as
+            strings, if they do not have a tablename in the metadata.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Host</literal>, <literal>Server</literal>, <literal>Data
+            Source</literal>, <literal>DataSource</literal>,
+            <literal>Address</literal>, <literal>Addr</literal>,
+            <literal>Network Address</literal></para>
+            </entry>
+            <entry>
+              <para>localhost</para>
+            </entry>
+            <entry>
+              <para>The name or network address of the instance of MySQL to which to
+            connect. Multiple hosts can be specified separated by &amp;.
+            This can be useful where multiple MySQL servers are
+            configured for replication and you are not concerned about
+            the precise server you are connecting to. No attempt is made
+            by the provider to synchronize writes to the database so
+            care should be taken when using this option. In Unix
+            environment with Mono, this can be a fully qualified path to
+            MySQL socket file name. With this configuration, the Unix
+            socket will be used instead of TCP/IP socket. Currently only
+            a single socket name can be given so accessing MySQL in a
+            replicated environment using Unix sockets is not currently
+            supported.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Ignore Prepare</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>true</para>
+            </entry>
+            <entry>
+              <para>When true, instructs the provider to ignore any calls to
+            <literal>MySqlCommand.Prepare()</literal>. This option is
+            provided to prevent issues with corruption of the statements
+            when use with server side prepared statements. If you want
+            to use server-side prepare statements, set this option to
+            false. This option was added in Connector/NET 5.0.3 and
+            Connector/NET 1.0.9.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Initial Catalog</literal>, <literal>Database</literal></para>
+            </entry>
+            <entry>
+              <para>mysql</para>
+            </entry>
+            <entry>
+              <para>The name of the database to use intially</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>InteractiveSession</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>false</para>
+            </entry>
+            <entry>
+              <para>
+              </para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Logging</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>false</para>
+            </entry>
+            <entry>
+              <para>When true, various pieces of information is output to any configured
+            TraceListeners.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Old Syntax</literal>, <literal>OldSyntax</literal></para>
+            </entry>
+            <entry>
+              <para>false</para>
+            </entry>
+            <entry>
+              <para>This option was deprecated in Connector/NET 5.2.2. All code should now
+            be written using the '@' symbol as the parameter marker.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Password</literal>, <literal>pwd</literal></para>
+            </entry>
+            <entry>
+              <para>
+              </para>
+            </entry>
+            <entry>
+              <para>The password for the MySQL account being used.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Persist Security Info</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>false</para>
+            </entry>
+            <entry>
+              <para>When set to <literal>false</literal> or <literal>no</literal> (strongly
+            recommended), security-sensitive information, such as the
+            password, is not returned as part of the connection if the
+            connection is open or has ever been in an open state.
+            Resetting the connection string resets all connection string
+            values including the password. Recognized values are
+            <literal>true</literal>, <literal>false</literal>,
+            <literal>yes</literal>, and <literal>no</literal>.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Pipe Name</literal>, <literal>Pipe</literal></para>
+            </entry>
+            <entry>
+              <para>mysql</para>
+            </entry>
+            <entry>
+              <para>When set to the name of a named pipe, the
+            <literal>MySqlConnection</literal> will attempt to connect
+            to MySQL on that named pipe.This settings only applies to
+            the Windows platform.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Port</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>3306</para>
+            </entry>
+            <entry>
+              <para>The port MySQL is using to listen for connections. This value is ignored
+            if Unix socket is used.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Procedure Cache Size</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>25</para>
+            </entry>
+            <entry>
+              <para>Sets the size of the stored procedure cache. By default, Connector/NET
+            will store the metadata (input/output datatypes) about the
+            last 25 stored procedures used. To disable the stored
+            procedure cache, set the value to zero (0). This option was
+            added in Connector/NET 5.0.2 and Connector/NET 1.0.9.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Protocol</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>socket</para>
+            </entry>
+            <entry>
+              <para>Specifies the type of connection to make to the server. Values can be:
+            <literal>socket</literal> or <literal>tcp</literal> for a
+            socket connection, <literal>pipe</literal> for a named pipe
+            connection, <literal>unix</literal> for a Unix socket
+            connection, <literal>memory</literal> to use MySQL shared
+            memory.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Respect Binary Flags</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>true</para>
+            </entry>
+            <entry>
+              <para>Setting this option to <literal>false</literal> means that Connector/NET
+            will ignore a column's binary flags as set by the server.
+            This option was added in Connector/NET version 5.1.3.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Shared Memory Name</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>MYSQL</para>
+            </entry>
+            <entry>
+              <para>The name of the shared memory object to use for communication if the
+            connection protocol is set to memory.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>TreatBlobsAsUTF8</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>false</para>
+            </entry>
+            <entry>
+              <para>
+              </para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Treat Tiny As Boolean</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>true</para>
+            </entry>
+            <entry>
+              <para>Setting this value to <literal>false</literal> indicates that
+            <literal>TINYINT(1)</literal> will be treated as an
+            <literal>INT</literal>. See also
+            <link xlink:href="numeric-type-overview"></link> for a further
+            explanation of the <literal>TINYINT</literal>
+            and <literal>BOOL</literal> data types.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Use Affected Rows</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>false</para>
+            </entry>
+            <entry>
+              <para>When <literal>true</literal> the connection will report changed rows
+            instead of found rows. This option was added in
+            Connector/NET version 5.2.6.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Use Procedure Bodies</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>true</para>
+            </entry>
+            <entry>
+              <para>Setting this option to <literal>false</literal> indicates that the user
+            connecting to the database does not have the
+            <literal>SELECT</literal> privileges for the
+            <literal>mysql.proc</literal> (stored procedures) table.
+            When to set to <literal>false</literal>, Connector/NET will
+            not rely on this information being available when the
+            procedure is called. Because Connector/NET will be unable to
+            determine this information, you should explicitly set the
+            types of the all the parameters before the call and the
+            parameters should be added to the command in the exact same
+            order as they appear in the procedure definition. This
+            option was added in Connector/NET 5.0.4 and Connector/NET
+            1.0.10.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>User Id</literal>, <literal>Username</literal>,
+            <literal>Uid</literal>, <literal>User name</literal></para>
+            </entry>
+            <entry>
+              <para>
+              </para>
+            </entry>
+            <entry>
+              <para>The MySQL login account being used.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Use Compression</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>false</para>
+            </entry>
+            <entry>
+              <para>
+                <para>
+              Setting this option to <literal>true</literal> enables
+              compression of packets exchanged between the client and
+              the server. This exchange is defined by the MySQL
+              client-server protocol.
+            </para>
+                <para>
+              Compression is used if both client and server support ZLIB
+              compression, and the client has requested compression
+              using this option.
+            </para>
+                <para>
+              A compressed packet header is: packet length (3 bytes),
+              packet number (1 byte), and Uncompressed Packet Length (3
+              bytes). The Uncompressed Packet Length is the number of
+              bytes in the original, uncompressed packet. If this is
+              zero then the data in this packet has not been compressed.
+              When the compression protocol is in use, either the client
+              or the server may compress packets. However, compression
+              will not occur if the compressed length is greater than
+              the original length. Thus, some packets will contain
+              compressed data while other packets will not.
+            </para>
+              </para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Use Usage Advisor</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>false</para>
+            </entry>
+            <entry>
+              <para>
+              </para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Use Performance Monitor</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>false</para>
+            </entry>
+            <entry>
+              <para>
+              </para>
+            </entry>
+          </row>
+        </table>
+        <para>
+    The following table lists the valid names for connection pooling
+    values within the <literal>ConnectionString</literal>. For more
+    information about connection pooling, see Connection Pooling for the
+    MySQL Data Provider.
+  </para>
+        <table>
+          <row>
+            <entry>
+              <para>Name</para>
+            </entry>
+            <entry>
+              <para>Default</para>
+            </entry>
+            <entry>
+              <para>Description</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Cache Server Configuration</literal>,
+            <literal>CacheServerConfiguration</literal>,
+            <literal>CacheServerConfig</literal></para>
+            </entry>
+            <entry>
+              <para>false</para>
+            </entry>
+            <entry>
+              <para>Specifies whether server variables should be updated when a pooled
+            connection is returned. Turning this one will yeild faster
+            opens but will also not catch any server changes made by
+            other connections.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Connection Lifetime</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>0</para>
+            </entry>
+            <entry>
+              <para>When a connection is returned to the pool, its creation time is compared
+            with the current time, and the connection is destroyed if
+            that time span (in seconds) exceeds the value specified by
+            <literal>Connection Lifetime</literal>. This is useful in
+            clustered configurations to force load balancing between a
+            running server and a server just brought online. A value of
+            zero (0) causes pooled connections to have the maximum
+            connection timeout.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Max Pool Size</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>100</para>
+            </entry>
+            <entry>
+              <para>The maximum number of connections allowed in the pool.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Min Pool Size</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>0</para>
+            </entry>
+            <entry>
+              <para>The minimum number of connections allowed in the pool.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Pooling</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>true</para>
+            </entry>
+            <entry>
+              <para>When <literal>true</literal>, the <literal>MySqlConnection</literal>
+            object is drawn from the appropriate pool, or if necessary,
+            is created and added to the appropriate pool. Recognized
+            values are <literal>true</literal>,
+            <literal>false</literal>, <literal>yes</literal>, and
+            <literal>no</literal>.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Reset Pooled Connections</literal>,
+            <literal>ResetConnections</literal>,
+            <literal>ResetPooledConnections</literal></para>
+            </entry>
+            <entry>
+              <para>true</para>
+            </entry>
+            <entry>
+              <para>Specifies whether a ping and a reset should be sent to the server before
+            a pooled connection is returned. Not resetting will yield
+            faster connection opens but also will not clear out session
+            items such as temp tables.</para>
+            </entry>
+          </row>
+        </table>
+      </content>
+    </section>
+  </developerConceptualDocument>
+</topic>
