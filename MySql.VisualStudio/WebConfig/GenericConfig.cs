@@ -35,7 +35,7 @@ namespace MySql.Data.VisualStudio.WebConfig
 
     internal abstract class GenericConfig
     {
-        private bool OriginallyEnabled;
+        protected bool OriginallyEnabled;
 
         protected string sectionName;
         protected string typeName;
@@ -46,7 +46,7 @@ namespace MySql.Data.VisualStudio.WebConfig
         public string ProviderType;
 
         protected Options defaults = new Options();
-        private Options values;
+        protected Options values;
 
         public Options GenericOptions
         {
@@ -67,13 +67,13 @@ namespace MySql.Data.VisualStudio.WebConfig
             defaults.WriteExceptionToLog = GetBoolValue(p.Parameters["writeExceptionsToEventLog"], false);
         }
 
-        private string GetStringValue(string s)
+        protected string GetStringValue(string s)
         {
             if (String.IsNullOrEmpty(s)) return "";
             return s;
         }
 
-        private bool GetBoolValue(string s, bool defaultValue)
+        protected bool GetBoolValue(string s, bool defaultValue)
         {
             if (!String.IsNullOrEmpty(s))
             {
@@ -111,7 +111,8 @@ namespace MySql.Data.VisualStudio.WebConfig
                     values.AutoGenSchema = GetBoolValue(e.GetAttribute("autogenerateschema"), false);
             }
             values.ConnectionString = wc.GetConnectionString(values.ConnectionStringName);
-            Enabled = OriginallyEnabled = (DefaultProvider == values.ProviderName ||
+            Enabled = OriginallyEnabled = DefaultProvider != null && 
+                (DefaultProvider == values.ProviderName ||
                 DefaultProvider == defaults.ProviderName);
         }
 

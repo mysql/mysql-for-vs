@@ -1,3 +1,19 @@
+Version 6.2.0
+- completely refactored MySqlConnectionStringBuilder
+
+Version 6.1.2
+- fixed hanging after losing network connectivity to server (bug#43761) 
+  Better fix is planned for 6.2
+- removed ReturnGeneratedIdentifiers.  We are now treating the command builder exactly
+  the same way SqlClient does
+- fixed some bugs with session state provider
+- fixed typo in asp.net config wizard  
+  
+Version 6.1.1
+- lots of bug fixes merged up from 6.0.5
+- fixed website config wizard so that it shows for all web types
+- integrated session state provider into config wizard
+
 Version 6.1.0
 - Added new MySQL Website Configuration Wizard
 - Now supports native inout and output parameters when in prepared mode and running against a server
@@ -7,6 +23,10 @@ Version 6.1.0
   to continue using binary(16) guids
 
 Version 6.0.5
+- ensure that MySqlPacket always has a valid encoding. This prevents null reference exceptions in ReadString()
+  (bug#46844)
+- fixed memory leak in server when calling stored procedure with output parameter many times 
+  in the same session (bug#36027)
 - workaround for .NET compact framework problems when writing behind the end of MemoryStream 
 (contributed by Nicholas Piasecki) (bug#43736)
 - added keepalive connection option that can be used to detect network outages faster 
@@ -27,6 +47,22 @@ Version 6.0.5
 - fixed DbSkipExpression so that it would respect any sort clauses that are attached
   (thanks Lynn!) (bug #45723)
 - fixed bug that caused our TIME type to not be supported (bug #45457)
+- fixed unsigned type problems with entity framework (bug #45077)  
+- fixed formatting of single, double, and decimal values when used with entity framework
+  in cultures that use the comma as a decimal separator (bug #44455)  
+- fixed GetSByte method to actually return an sbyte  (bug #46620)
+- fixed timestamp columns with entity framework (bug #46311)  
+- fixed sql generation bug with table editor. This bug would cause the data type
+  to be repeated in some cases when a table was altered.  
+- sped up MySqlPacket.ReadString slightly by avoiding creating a new temp buffer each time  
+- fixed sql bug in our 6.0 table column ssdl.  I don't see how this would affect 
+  stored procedure parameters but bug #44985 is now fixed
+- fixed bug that causes a 'connection not open' error when using a commandbuilder with
+  a data adapter and inserts are used (bug #34657)
+- fixed problem with tokenizer that would cause it to not return some tokens when they start with 
+  a character that could possibly start a comment but doesn't
+- fixed problem with non-IS column parsing that caused data type and column type to be equal when
+  parsing set and enum columns
   
 Version 6.0.4
 - fixed regression where using stored procs with datasets (bug #44460)

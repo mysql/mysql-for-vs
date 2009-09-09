@@ -178,13 +178,7 @@ namespace MySql.Data.MySqlClient
 
         public static Driver Create(MySqlConnectionStringBuilder settings)
         {
-            Driver d = null;
-            switch (settings.DriverType)
-            {
-                case MySqlDriverType.Native:
-                    d = new NativeDriver(settings);
-                    break;
-            }
+            Driver d = new NativeDriver(settings);
             d.Open();
             return d;
         }

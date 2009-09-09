@@ -1,43 +1,7 @@
-Connector/Net 6.1  Release Notes
+Connector/Net 6.2  Release Notes
 ------------------------------------
 
-Welcome to the release notes for Connector/Net 6.1
+Welcome to the release notes for Connector/Net 6.2
 
-What's new in 6.1
+What's new in 6.2
 --------------------
-This release introduces a couple of exciting new features.
-
-Website Configuration Dialog -- This is a new wizard that is activated by clicking
-a button on the toolbar at the top of the solution explorer.  It is meant to work in
-conjunction with the ASP.Net administration pages.  It makes it easier to activate 
-and set advanced options for the different web providers we include.
-
-Session State Provider -- We are now including a session state provider that allows
-you to store your websites state in a MySql server.  
-
-Support for native output parameters -- With this release we now support native output
-parameters when connected to a server that supports them.  Currently we know that includes
-6.0.8 and later servers.  It also will include 5.4 servers.
-
-Changed GUID type -- We have changed our backend representation of a guid type to be
-CHAR(36).  We are doing this because we feel users will want to use the server UUID() function
-to populate a guid table and UUID generates a 36 character string.  Developers of older
-applications can add 'old guids=true' to the connection string and the old binary(16) type will be used.
-
-What we know may be broken
-----------------------------
-- Documentation is not updated yet.
-- Although the session provider is included in the web providers it is currently not
-  included in the website configuration wizard.
-- Our entity framework support currently treats both binary(16) and char(36) columns as 
-  guids.   
-- We have refactored a good bit of the internal piping to support output parameters but
-  also to set us up for future features such as client side query caching.  What I saying
-  is that we may have broken some fairly major stuff so be sure and test against safe 
-  data and please don't deploy until we are GA and you are confident.
-- The button for bringing up the website config wizard doesn't appear unless you have created
-  a data connection to a MySQL server in server explorer. 
-- The website configuration wizard is a bit fragile when it launches.  You should have a
-  website project loaded and selected and it should work.   
-
-Please let us know what else we broke and how we can make it better!

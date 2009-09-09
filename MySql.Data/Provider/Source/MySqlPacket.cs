@@ -34,14 +34,14 @@ namespace MySql.Data.MySqlClient
         private MemoryStream buffer = new MemoryStream(5);
         private DBVersion version;
 
-        public MySqlPacket()
+        private MySqlPacket()
         {
             Clear();
         }
 
-        public MySqlPacket(Encoding encoding) : this()
+        public MySqlPacket(Encoding enc) : this()
         {
-            this.encoding = encoding;
+            Encoding = enc;
         }
 
         public MySqlPacket(MemoryStream stream)
@@ -55,7 +55,11 @@ namespace MySql.Data.MySqlClient
         public Encoding Encoding
         {
             get { return encoding; }
-            set { encoding = value; }
+            set 
+            {
+                Debug.Assert(value != null);
+                encoding = value; 
+            }
         }
 
         public bool HasMoreData
@@ -279,13 +283,24 @@ namespace MySql.Data.MySqlClient
             return ReadString(len);
         }
 
+        public string ReadAsciiString(long length)
+        {
+            if (length == 0)
+                return String.Empty;
+            //            byte[] buf = new byte[length];
+            Read(tempBuffer, 0, (int)length);
+            return ASCIIEncoding.ASCII.GetString(tempBuffer, 0, (int)length);
+            //return encoding.GetString(tempBuffer, 0, (int)length); //buf.Length);
+        }
+
         public string ReadString(long length)
         {
             if (length == 0)
                 return String.Empty;
-            byte[] buf = new byte[length];
-            Read(buf, 0, (int)length);
-            return encoding.GetString(buf, 0, buf.Length);
+            if (tempBuffer == null || length > tempBuffer.Length)
+                tempBuffer = new byte[length];
+            Read(tempBuffer, 0, (int)length);
+            return encoding.GetString(tempBuffer, 0, (int)length);
         }
 
         public string ReadString()
@@ -304,18 +319,5 @@ namespace MySql.Data.MySqlClient
         }
 
         #endregion        
-
-/*        public void EnsureCapacity(int newLength)
-        {
-            if (buffer == null)
-                buffer = new byte[newLength];
-            else
-            {
-                if (buffer.Length >= newLength) return;
-                byte[] newBuffer = new byte[newLength];
-                System.Buffer.BlockCopy(buffer, pos, newBuffer, pos, len - pos);
-                buffer = newBuffer;
-            }
-        }*/
     }
 }

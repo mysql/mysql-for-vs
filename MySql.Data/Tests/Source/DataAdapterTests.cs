@@ -496,28 +496,30 @@ namespace MySql.Data.MySqlClient.Tests
             execSQL("CREATE TABLE Test (id INT, PRIMARY KEY(id))");
             execSQL("INSERT INTO Test VALUES(1)");
 
-            MySqlConnection c = new MySqlConnection(GetConnectionString(true));
-            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", c);
-            MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
-            Assert.IsTrue(c.State == ConnectionState.Closed);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-            Assert.IsTrue(c.State == ConnectionState.Closed);
-            Assert.AreEqual(1, dt.Rows.Count);
+            using (MySqlConnection c = new MySqlConnection(GetConnectionString(true)))
+            {
+                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", c);
+                MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
+                Assert.IsTrue(c.State == ConnectionState.Closed);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                Assert.IsTrue(c.State == ConnectionState.Closed);
+                Assert.AreEqual(1, dt.Rows.Count);
 
-            dt.Rows[0][0] = 2;
-            DataRow[] rows = new DataRow[1];
-            rows[0] = dt.Rows[0];
-            da.Update(dt);
-            Assert.IsTrue(c.State == ConnectionState.Closed);
+                dt.Rows[0][0] = 2;
+                DataRow[] rows = new DataRow[1];
+                rows[0] = dt.Rows[0];
+                da.Update(dt);
+                Assert.IsTrue(c.State == ConnectionState.Closed);
 
-            dt.Clear();
-            c.Open();
-            Assert.IsTrue(c.State == ConnectionState.Open);
-            da.Fill(dt);
-            Assert.IsTrue(c.State == ConnectionState.Open);
-            Assert.AreEqual(1, dt.Rows.Count);
-            cb.Dispose();
+                dt.Clear();
+                c.Open();
+                Assert.IsTrue(c.State == ConnectionState.Open);
+                da.Fill(dt);
+                Assert.IsTrue(c.State == ConnectionState.Open);
+                Assert.AreEqual(1, dt.Rows.Count);
+                cb.Dispose();
+            }
         }
 
         [Test]
@@ -809,5 +811,38 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.IsTrue(dt.Rows[0][0] is string);
             }
         }
+
+        /// <summary> 
+        /// Bug #34657	MySqlDataAdapter.Update(DataRow[] rows) fails with MySqlCommandBuilder 
+        /// </summary> 
+        [Test]
+        public void ConnectionNotOpenForInsert()
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL(@"CREATE TABLE Test (id int(11) NOT NULL default '0', 
+                txt varchar(100) default NULL, val decimal(11,2) default NULL, 
+                PRIMARY KEY(id)) ENGINE=InnoDB DEFAULT CHARSET=latin1");
+            execSQL("INSERT INTO Test VALUES (1, 'name', 23.2)");
+
+            string connStr = GetConnectionString(true);
+            using (MySqlConnection c = new MySqlConnection(connStr))
+            {
+                string sql = "SELECT * FROM Test";
+                MySqlDataAdapter da = new MySqlDataAdapter(sql, c);
+                MySqlCommandBuilder bld = new MySqlCommandBuilder(da);
+                DataSet ds = new DataSet();
+                da.Fill(ds);
+
+                ds.Tables[0].Rows[0]["val"] = 99.9M;
+                da.Update(new DataRow[] { ds.Tables[0].Rows[0] });
+
+                DataRow r = ds.Tables[0].NewRow();
+                r["id"] = 4;
+                r["txt"] = "sds";
+                r["val"] = 113.2M;
+                ds.Tables[0].Rows.Add(r);
+                da.Update(new DataRow[] { r });
+            }
+        } 
     }
 }

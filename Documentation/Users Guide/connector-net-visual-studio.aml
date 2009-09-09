@@ -1,0 +1,1664 @@
+<topic id="9f3f194e-ad35-4379-b04d-5dce4b34ce6a" revisionNumber="1">
+  <developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <section address="connector-net-visual-studio">
+      <title> Visual Studio Integration</title>
+      <content>
+        <autoOutline />
+      </content>
+    </section>
+    <section address="connector-net-visual-studio-making-a-connection">
+      <title>Making a connection</title>
+      <content>
+        <para>
+      Once the connector is installed, you can use it to create, modify,
+      and delete connections to MySQL databases. To create a connection
+      with a MySQL database, perform the following steps:
+    </para>
+        <list class="bullet">
+          <listItem>
+            <para>
+          Start Visual Studio, and open the Server Explorer window
+          (<ui>View</ui>, <ui>Server Explorer</ui>
+          option in the main Visual Studio menu, or
+          +, 
+          hot keys).
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Right-click on the Data Connections node, and choose the
+          <ui>Add Connection...</ui> menu item.
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Add Connection dialog opens. Press the
+          <math>Change</math> button to choose MySQL Database
+          as a data source.
+
+          <mediaLink><para /><caption>Add Connection Context Menu</caption><image xlink:href="connector-net-visual-studio-add-connection" /></mediaLink><para /></para>
+          </listItem>
+          <listItem>
+            <para>
+          Change Data Source dialog opens. Choose MySQL Database in the
+          list of data sources (or the 
+          option, if MySQL Database is absent), and then choose .NET
+          Framework Data Provider for MySQL in the combo box of data
+          providers.
+
+          <mediaLink><para /><caption>Choose Data Source</caption><image xlink:href="connector-net-visual-studio-choose-data-source" /></mediaLink><para /></para>
+          </listItem>
+          <listItem>
+            <para>
+          Input the connection settings: the server host name (for
+          example, localhost if the MySQL server is installed on the
+          local machine), the user name, the password, and the default
+          schema name. Note that you must specify the default schema
+          name to open the connection.
+
+          <mediaLink><para /><caption>Add Connection Dialog</caption><image xlink:href="connector-net-visual-studio-add-connection-dialog" /></mediaLink><para /></para>
+          </listItem>
+          <listItem>
+            <para>
+          You can also set the port to connect with the MySQL server by
+          pressing the <math>Advanced</math> button. To test
+          connection with the MySQL server, set the server host name,
+          the user name, and the password, and press the <math>Test
+          Connection</math> button. If the test succeeds, the
+          success confirmation dialog opens.
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          After you set all settings and test the connection, press
+          <math>OK</math>. The newly created connection is
+          displayed in Server Explorer. Now you can work with the MySQL
+          server through standard Server Explorer GUI.
+
+          <mediaLink><para /><caption>New Data Connection</caption><image xlink:href="connector-net-visual-studio-new-data-connection" /></mediaLink><para /></para>
+          </listItem>
+        </list>
+        <para>
+      After the connection is successfully established, all settings are
+      saved for future use. When you start Visual Studio for the next
+      time, just open the connection node in Server Explorer to
+      establish a connection to the MySQL server again.
+    </para>
+        <para>
+      To modify and delete a connection, use the Server Explorer context
+      menu for the corresponding node. You can modify any of the
+      settings just by overwriting the existing values with new ones.
+      Note that the connection may be modified or deleted only if no
+      active editor for its objects is opened: otherwise you may loose
+      your data.
+    </para>
+      </content>
+    </section>
+    <section address="connector-net-visual-studio-editing-tables">
+      <title>Editing Tables</title>
+      <content>
+        <autoOutline />
+        <para>
+      Connector/Net contains a table editor, which enables the visual
+      creation and modification of tables.
+    </para>
+        <para>
+      The Table Designer can be accessed through a mouse action on
+      table-type node of Server Explorer. To create a new table,
+      right-click on the  node (under the
+      connection node) and choose the <ui>Create Table</ui>
+      command from the context menu.
+    </para>
+        <para>
+      To modify an existing table, double-click on the node of the table
+      you wish to modify, or right-click on this node and choose the
+      <ui>Design</ui> item from the context menu. Either of
+      the commands opens the Table Designer.
+    </para>
+        <para>
+      The table editor is implemented in the manner of the well-known
+      Query Browser Table Editor, but with minor differences.
+    </para>
+        <mediaLink>
+          <para />
+          <caption>Editing New Table</caption>
+          <image xlink:href="connector-net-visual-studio-editing-new-table" />
+        </mediaLink>
+        <para />
+        <para>
+      Table Designer consists of the following parts:
+    </para>
+        <list class="bullet">
+          <listItem>
+            <para>
+          Columns Editor - a data grid on top of the Table Designer. Use
+          the Columns grid for column creation, modification, and
+          deletion.
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Indexes tab - a tab on bottom of the Table Designer. Use the
+          Indexes tab for indexes management.
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Foreign Keys tab - a tab on bottom of the Table Designer. Use
+          the Foreign Keys tab for foreign keys management.
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Column Details tab - a tab on bottom of the Table Designer.
+          Use the Column Details tab to set advanced column options.
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Properties window - a standard Visual Studio Properties
+          window, where the properties of the edited table are
+          displayed. Use the Properties window to set the table
+          properties.
+        </para>
+          </listItem>
+        </list>
+        <para>
+      Each of these areas is discussed in more detail in subsequent
+      sections.
+    </para>
+        <para>
+      To save changes you have made in the Table Designer, use either
+      <math>Save</math> or <math>Save All</math>
+      button of the Visual Studio main toolbar, or just press
+      +. If you have not already
+      named the table you will be prompted to do so.
+    </para>
+        <mediaLink>
+          <para />
+          <caption>Choose Table Name</caption>
+          <image xlink:href="connector-net-visual-studio-choose-table-name" />
+        </mediaLink>
+        <para />
+        <para>
+      Once created you can view the table in the Server Explorer.
+    </para>
+        <mediaLink>
+          <para />
+          <caption>Newly Created Table</caption>
+          <image xlink:href="connector-net-visual-studio-newly-created-table" />
+        </mediaLink>
+        <para />
+        <para>
+      The Table Designer main menu allows you to set a Primary Key
+      column, edit Relationships such as Foreign Keys, and create
+      Indexes.
+    </para>
+        <mediaLink>
+          <para />
+          <caption>Table Designer Main Menu</caption>
+          <image xlink:href="connector-net-visual-studio-table-desginer-menu-item" />
+        </mediaLink>
+        <para />
+      </content>
+    </section>
+    <section address="connector-net-visual-studio-editing-tables-column-editor">
+      <title>Column Editor</title>
+      <content>
+        <para>
+        You can use the Column Editor to set or change the name, data
+        type, default value, and other properties of a table column. To
+        set the focus to a needed cell of a grid, use the mouse click.
+        Also you can move through the grid using 
+        and + keys.
+      </para>
+        <para>
+        To set or change the name, data type, default value and comment
+        of a column, activate the appropriate cell and type the desired
+        value.
+      </para>
+        <para>
+        To set or unset flag-type column properties (<literal>NOT
+        NULL</literal>, auto incremented, flags), check or uncheck the
+        corresponding check boxes. Note that the set of column flags
+        depends on its data type.
+      </para>
+        <para>
+        To reorder columns, index columns or foreign key columns in the
+        Column Editor, select the whole column you wish to reorder by
+        clicking on the selector column on the left of the column grid.
+        Then move the column by using
+        + (to move the column
+        up) or + (to move the
+        column down) keys.
+      </para>
+        <para>
+        To delete a column, select it by clicking on the selector column
+        on the left of the column grid, then press the
+         button on a keyboard.
+      </para>
+      </content>
+    </section>
+    <section address="connector-net-visual-studio-editing-tables-indexes">
+      <title>Editing Indexes</title>
+      <content>
+        <para>
+        Indexes management is performed via the
+         dialog.
+      </para>
+        <para>
+        To add an index, select <ui>Table Designer</ui>,
+        <ui>Indexes/Keys...</ui> from the main menu, and click
+        <ui>Add</ui> to add a new index. You can then set the
+        index name, index kind, index type, and a set of index columns.
+      </para>
+        <mediaLink>
+          <para />
+          <caption>Indexes Dialog</caption>
+          <image xlink:href="connector-net-visual-studio-indexes-dialog" />
+        </mediaLink>
+        <para />
+        <para>
+        To remove an index, select it in the list box on the left, and
+        click the <math>Delete</math> button.
+      </para>
+        <para>
+        To change index settings, select the needed index in the list
+        box on the left. The detailed information about the index is
+        displayed in the panel on the right hand side. Change the
+        desired values.
+      </para>
+      </content>
+    </section>
+    <section address="connector-net-visual-studio-editing-tables-foreign-keys">
+      <title>Editing Foreign Keys</title>
+      <content>
+        <para>
+        Foreign Keys management is performed via the  dialog.
+      </para>
+        <para>
+        To add a foreign key, select <ui>Table Designer</ui>,
+        <ui>Relationships...</ui> from the main menu. This
+        displays the 
+        dialog. Click <math>Add</math>. You can then set the
+        foreign key name, referenced table name, foreign key columns,
+        and actions upon update and delete.
+      </para>
+        <para>
+        To remove a foreign key, select it in the list box on the left,
+        and click the <math>Delete</math> button.
+      </para>
+        <para>
+        To change foreign key settings, select the required foreign key
+        in the list box on the left. The detailed information about the
+        foreign key is displayed in the right hand panel. Change the
+        desired values.
+      </para>
+        <mediaLink>
+          <para />
+          <caption>Foreign Key Relationships Dialog</caption>
+          <image xlink:href="connector-net-visual-studio-foreign-key-relationships" />
+        </mediaLink>
+        <para />
+      </content>
+    </section>
+    <section address="connector-net-visual-studio-editing-tables-column-details">
+      <title>Column Properties</title>
+      <content>
+        <para>
+        The  tab can be used to
+        set column options. In addition to the general column properties
+        presented in the Column Editor, in the  tab you can set additional properties such
+        as Character Set, Collation and Precision.
+      </para>
+      </content>
+    </section>
+    <section address="connector-net-visual-studio-editing-tables-table-properties">
+      <title>Table Properties</title>
+      <content>
+        <para>
+        To bring up Table Properties select the table and right click to
+        activate the context menu. Select <ui>Properties</ui>.
+        The  dockable window will
+        be displayed.
+      </para>
+        <mediaLink>
+          <para />
+          <caption>Table Properties Menu Item</caption>
+          <image xlink:href="connector-net-visual-studio-table-properties-menu" />
+        </mediaLink>
+        <para />
+        <para>
+        The following table properties can be set:
+      </para>
+        <list class="bullet">
+          <listItem>
+            <para>
+            Auto Increment
+          </para>
+          </listItem>
+          <listItem>
+            <para>
+            Average Row Length
+          </para>
+          </listItem>
+          <listItem>
+            <para>
+            Character Set
+          </para>
+          </listItem>
+          <listItem>
+            <para>
+            Collation
+          </para>
+          </listItem>
+          <listItem>
+            <para>
+            Comment
+          </para>
+          </listItem>
+          <listItem>
+            <para>
+            Data Directory
+          </para>
+          </listItem>
+          <listItem>
+            <para>
+            Index Directory
+          </para>
+          </listItem>
+          <listItem>
+            <para>
+            Maximum Rows
+          </para>
+          </listItem>
+          <listItem>
+            <para>
+            Minimum Rows
+          </para>
+          </listItem>
+          <listItem>
+            <para>
+            Name
+          </para>
+          </listItem>
+          <listItem>
+            <para>
+            Row Format
+          </para>
+          </listItem>
+          <listItem>
+            <para>
+            Schema
+          </para>
+          </listItem>
+          <listItem>
+            <para>
+            Storage Engine
+          </para>
+          </listItem>
+        </list>
+        <para>
+        The property <literal>Schema</literal> is read only.
+      </para>
+        <mediaLink>
+          <para />
+          <caption>Table Properties</caption>
+          <image xlink:href="connector-net-visual-studio-selecting-table-properties" />
+        </mediaLink>
+        <para />
+      </content>
+    </section>
+    <section address="connector-net-visual-studio-editing-views">
+      <title>Editing Views</title>
+      <content>
+        <para>
+      To create a new view, right click the Views node under the
+      connection node in Server Explorer. From the node's context menu,
+      choose the <ui>Create View</ui> command. This command
+      opens the SQL Editor.
+    </para>
+        <mediaLink>
+          <para />
+          <caption>Editing View SQL</caption>
+          <image xlink:href="connector-net-visual-studio-views-edit-sql" />
+        </mediaLink>
+        <para />
+        <para>
+      You can then enter the SQL for your view.
+    </para>
+        <mediaLink>
+          <para />
+          <caption>View SQL Added</caption>
+          <image xlink:href="connector-net-visual-studio-views-sql-added" />
+        </mediaLink>
+        <para />
+        <para>
+      To modify an existing view, double click on a node of the view you
+      wish to modify, or right click on this node and choose the
+      <ui>Alter View</ui> command from a context menu. Either
+      of the commands opens the SQL Editor.
+    </para>
+        <para>
+      All other view properties can be set in the Properties window.
+      These properties are:
+    </para>
+        <list class="bullet">
+          <listItem>
+            <para>
+          Catalog
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Check Option
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Definer
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Definition
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Definer
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Is Updateable
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Name
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Schema
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Security Type
+        </para>
+          </listItem>
+        </list>
+        <para>
+      Some of these properties can have arbitrary text values, others
+      accept values from a predefined set. In the latter case you set
+      the desired value with an embedded combobox.
+    </para>
+        <para>
+      The properties <literal>Is Updatable</literal> and
+      <literal>Schema</literal> are readonly.
+    </para>
+        <para>
+      To save changes you have made, use either
+      <math>Save</math> or <math>Save All</math>
+      buttons of the Visual Studio main toolbar, or just press
+      +.
+    </para>
+        <mediaLink>
+          <para />
+          <caption>View SQL Saved</caption>
+          <image xlink:href="connector-net-visual-studio-views-sql-saved" />
+        </mediaLink>
+        <para />
+      </content>
+    </section>
+    <section address="connector-net-visual-studio-editing-stored-procedures-and-functions">
+      <title>Editing Stored Procedures and Functions</title>
+      <content>
+        <para>
+      To create a new stored procedure, right-click on the
+       node under the connection
+      node in Server Explorer. From the node's context menu, choose the
+       command. This command opens
+      the SQL Editor.
+    </para>
+        <mediaLink>
+          <para />
+          <caption>Edit Stored Procedure SQL</caption>
+          <image xlink:href="connector-net-visual-studio-stored-procedure-edit" />
+        </mediaLink>
+        <para />
+        <para>
+      To create a new stored function, right-click on the
+       node under the connection node in
+      Server Explorer. From the node's context menu, choose the
+       command.
+    </para>
+        <para>
+      To modify an existing stored routine (procedure or function),
+      double-click on the node of the routine you wish to modify, or
+      right-click on this node and choose the  command from the context menu. Either of the
+      commands opens the SQL Editor.
+    </para>
+        <para>
+      To create or alter the routine definition using SQL Editor, type
+      this definition in the SQL Editor using standard SQL. All other
+      routine properties can be set in the Properties window. These
+      properties are:
+    </para>
+        <list class="bullet">
+          <listItem>
+            <para>
+          Body
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Catalog
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Comment
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Creation Time
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Data Access
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Definer
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Definition
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          External Name
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          External Language
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Is Deterministic
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Last Modified
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Name
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Parameter Style
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Returns
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Schema
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Security Type
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Specific Name
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          SQL Mode
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          SQL Path
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Type
+        </para>
+          </listItem>
+        </list>
+        <para>
+      Some of these properties can have arbitrary text values, others
+      accept values from a predefined set. In the latter case set the
+      desired value using the embedded combo box.
+    </para>
+        <para>
+      You can also set all the options directly in the SQL Editor, using
+      the standard <literal>CREATE PROCEDURE</literal> or
+      <literal>CREATE FUNCTION</literal> statement. However, it is
+      recommended to use the Properties window instead.
+    </para>
+        <para>
+      To save changes you have made, use either
+       or  buttons
+      of the Visual Studio main toolbar, or just press
+      +.
+    </para>
+        <mediaLink>
+          <para />
+          <caption>Stored Procedure SQL Saved</caption>
+          <image xlink:href="connector-net-visual-studio-stored-procedure-saved" />
+        </mediaLink>
+        <para />
+      </content>
+    </section>
+    <section address="connector-net-visual-studio-editing-triggers">
+      <title>Editing Triggers</title>
+      <content>
+        <para>
+      To create a new trigger, right-click on the node of the table, for
+      which you wish to add a trigger. From the node's context menu,
+      choose the  command. This
+      command opens the SQL Editor.
+    </para>
+        <para>
+      To modify an existing trigger, double-click on the node of the
+      trigger you wish to modify, or right-click on this node and choose
+      the  command from the context
+      menu. Either of the commands opens the SQL Editor.
+    </para>
+        <para>
+      To create or alter the trigger definition using SQL Editor, type
+      the trigger statement in the SQL Editor using standard SQL.
+    </para>
+        <alert class="note">
+          <para>
+        You should enter only the trigger statement, that is, the part
+        of the <literal>CREATE TRIGGER</literal> query that is placed
+        after the <literal>FOR EACH ROW</literal> clause.
+      </para>
+        </alert>
+        <para>
+      All other trigger properties are set in the Properties window.
+      These properties are:
+    </para>
+        <list class="bullet">
+          <listItem>
+            <para>
+          Definer
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Event Manipulation
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Name
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Timing
+        </para>
+          </listItem>
+        </list>
+        <para>
+      Some of these properties can have arbitrary text values, others
+      accept values from a predefined set. In the latter case set the
+      desired value using the embedded combo box.
+    </para>
+        <para>
+      The properties <literal>Event Table</literal>,
+      <literal>Schema</literal>, and <literal>Server</literal> in the
+      Properties window are read only.
+    </para>
+        <para>
+      To save changes you have made, use either
+      <math>Save</math> or <math>Save All</math>
+      buttons of the Visual Studio main toolbar, or just press
+      +. Before changes are
+      saved, you will be asked to confirm the execution of the
+      corresponding SQL query in a confirmation dialog.
+    </para>
+      </content>
+    </section>
+    <section address="connector-net-visual-studio-editing-user-defined-functions-udf">
+      <title>Editing User Defined Functions (UDF)</title>
+      <content>
+        <para>
+      To create a new User Defined Function (UDF), right-click on the
+       node under the connection node in Server
+      Explorer. From the node's context menu, choose the <ui>Create
+      UDF</ui> command. This command opens the UDF Editor.
+    </para>
+        <para>
+      To modify an existing UDF, double-click on the node of the UDF you
+      wish to modify, or right-click on this node and choose the
+      <ui>Alter UDF</ui> command from the context menu. Either
+      of the commands opens the UDF Editor.
+    </para>
+        <para>
+      The UDF editor allows you to set the following properties:
+    </para>
+        <list class="bullet">
+          <listItem>
+            <para>
+          Name
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          So-name (DLL name)
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Return type
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          Is Aggregate
+        </para>
+          </listItem>
+        </list>
+        <para>
+      There are text fields for both names, a combo box for the return
+      type, and a check box to indicate if the UDF is aggregate. All
+      these options are also accessible via the Properties window.
+    </para>
+        <para>
+      The property <literal>Server</literal> in the Properties window is
+      read only.
+    </para>
+        <para>
+      To save changes you have made, use either
+      <math>Save</math> or <math>Save All</math>
+      buttons of the Visual Studio main toolbar, or just press
+      +. Before changes are
+      saved, you will be asked to confirm the execution of the
+      corresponding SQL query in a confirmation dialog.
+    </para>
+      </content>
+    </section>
+    <section address="connector-net-visual-studio-cloning-database-objects">
+      <title>Cloning Database Objects</title>
+      <content>
+        <para>
+      Tables, views, stored procedures, and functions can be cloned
+      using the appropriate Clone command from the context menu:
+      <ui>Clone Table</ui>, <ui>Clone View</ui>,
+      <ui>Clone Routine</ui>. The clone commands open the
+      corresponding editor for a new object: the  for cloning a table, and the  for cloning a view or a routine.
+    </para>
+        <para>
+      The editor is filled with values of the original object. You can
+      modify these values in a usual manner.
+    </para>
+        <para>
+      To save the cloned object, use either Save or Save All buttons of
+      the Visual Studio main toolbar, or just press
+      +. Before changes are
+      saved, you will be asked to confirm the execution of the
+      corresponding SQL query in a confirmation dialog.
+    </para>
+      </content>
+    </section>
+    <section address="connector-net-visual-studio-dropping-database-objects">
+      <title>Dropping Database Objects</title>
+      <content>
+        <para>
+      Tables, views, stored routines, triggers, and UDFs can be dropped
+      with the appropriate Drop command selected from its context menu:
+      <ui>Drop Table</ui>, <ui>Drop View</ui>,
+      <ui>Drop Routine</ui>, <ui>Drop Trigger</ui>,
+      <ui>Drop UDF</ui>.
+    </para>
+        <para>
+      You will be asked to confirm the execution of the corresponding
+      drop query in a confirmation dialog.
+    </para>
+        <para>
+      Dropping of multiple objects is not supported.
+    </para>
+      </content>
+    </section>
+    <section address="connector-net-visual-studio-entity-framework">
+      <title>Using the ADO.NET Entity Framework</title>
+      <content>
+        <autoOutline />
+        <para>
+      Connector/NET 6.0 introduced support for the ADO.NET Entity
+      Framework. ADO.NET Entity Framework was included with .NET
+      Framework 3.5 Service Pack 1, and Visual Studio 2008 Service Pack
+      1. ADO.NET Entity Framework was released on 11th August 2008.
+    </para>
+        <para>
+      ADO.NET Entity Framework provides an Object Relational Mapping
+      (ORM) service, mapping the relational database schema to objects.
+      The ADO.NET Entity Framework defines several layers, these can be
+      summarized as:
+    </para>
+        <list class="bullet">
+          <listItem>
+            <para>
+              <legacyBold>Logical</legacyBold> - this layer defines
+          the relational data and is defined by the Store Schema
+          Definition Language (SSDL).
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+              <legacyBold>Conceptual</legacyBold> - this layer
+          defines the .NET classes and is defined by the Conceptual
+          Schema Definition Language (CSDL)
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+              <legacyBold>Mapping</legacyBold> - this layer defines
+          the mapping from .NET classes to relational tables and
+          associations, and is defined by Mapping Specification Language
+          (MSL).
+        </para>
+          </listItem>
+        </list>
+        <para>
+      Connector/NET integrates with Visual Studio 2008 to provide a
+      range of helpful tools to assist the developer.
+    </para>
+        <para>
+      A full treatment of ADO.NET Entity Framework is beyond the scope
+      of this manual. You are encouraged to review the
+      <externalLink><linkText>Microsoft
+      ADO.NET Entity Framework documentation</linkText><linkUri>http://msdn.microsoft.com/en-us/library/aa697427(VS.80).aspx</linkUri></externalLink>.
+    </para>
+      </content>
+    </section>
+    <section address="connector-net-visual-studio-entity-framework-tutorial-winform-data-source">
+      <title>Tutorial: Using an Entity Framework Entity as a Windows Forms Data
+        Source</title>
+      <content>
+        <para>
+        In this tutorial you will learn how to create a Windows Forms
+        Data Source from an Entity in an Entity Data Model. This
+        tutorial assumes that you have installed the World example
+        database, which can be downloaded from the
+        <externalLink><linkText>MySQL Documentation
+        page</linkText><linkUri>http://dev.mysql.com/doc/</linkUri></externalLink>. You can also find details on how to install the
+        database on the same page. It will also be convenient for you to
+        create a connection to the World database after it is installed.
+        For instructions on how to do this see
+        <link xlink:href="9f3f194e-ad35-4379-b04d-5dce4b34ce6a#connector-net-visual-studio-making-a-connection">Making a connection</link>.
+      </para>
+        <para>
+          <legacyBold>Creating a new Windows Forms
+        application</legacyBold>
+        </para>
+        <para>
+        The first step is to create a new Windows Forms application.
+      </para>
+        <list class="ordered">
+          <listItem>
+            <para>
+            In Visual Studio, select <ui>File</ui>,
+            <ui>New</ui>, <ui>Project</ui> from the
+            main menu.
+          </para>
+          </listItem>
+          <listItem>
+            <para>
+            Choose the 
+            installed template. Click <math>OK</math>. The
+            solution is created.
+          </para>
+          </listItem>
+        </list>
+        <para>
+          <legacyBold>Adding an Entity Data Model</legacyBold>
+        </para>
+        <para>
+        You will now add an Entity Data Model to your solution.
+      </para>
+        <list class="ordered">
+          <listItem>
+            <para>
+            In the Solution Explorer, right click on your application
+            and select <ui>Add</ui>, <ui>New
+            Item...</ui>. From  select . Click <math>Add</math>.
+          </para>
+            <mediaLink>
+              <para />
+              <caption>Add Entity Data Model</caption>
+              <image xlink:href="connector-net-visual-studio-entity-framework-add-entity-data-model" />
+            </mediaLink>
+            <para />
+          </listItem>
+          <listItem>
+            <para>
+            You will now see the Entity Data Model Wizard. You will use
+            the wizard to generate the Entity Data Model from the world
+            example database. Select the icon . Click <math>Next</math>.
+          </para>
+            <mediaLink>
+              <para />
+              <caption>Entity Data Model Wizard Screen 1</caption>
+              <image xlink:href="connector-net-visual-studio-entity-framework-entity-data-model-wizard-1" />
+            </mediaLink>
+            <para />
+          </listItem>
+          <listItem>
+            <para>
+            You can now select the connection you made earlier to the
+            World database. If you have not already done so, you can
+            create the new connection at this time by clicking on
+            <math>New Connection...</math>. For further
+            instructions on creating a connection to a database see
+            <link xlink:href="9f3f194e-ad35-4379-b04d-5dce4b34ce6a#connector-net-visual-studio-making-a-connection">Making a connection</link>.
+          </para>
+            <mediaLink>
+              <para />
+              <caption>Entity Data Model Wizard Screen 2</caption>
+              <image xlink:href="connector-net-visual-studio-entity-framework-entity-data-model-wizard-2" />
+            </mediaLink>
+            <para />
+          </listItem>
+          <listItem>
+            <para>
+            Make a note of the entity connection settings to be used in
+            App.Config, as these will be used later to write the
+            necessary control code.
+          </para>
+          </listItem>
+          <listItem>
+            <para>
+            Click <math>Next</math>.
+          </para>
+          </listItem>
+          <listItem>
+            <para>
+            The Entity Data Model Wizard connects to the database. You
+            are then presented with a tree structure of the database.
+            From this you can select the object you would like to
+            include in your model. If you had created Views and Stored
+            Routines these will be displayed along with any tables. In
+            this example you just need to select the tables. Click
+            <math>Finish</math> to create the model and exit
+            the wizard.
+          </para>
+            <mediaLink>
+              <para />
+              <caption>Entity Data Model Wizard Screen 3</caption>
+              <image xlink:href="connector-net-visual-studio-entity-framework-entity-data-model-wizard-3" />
+            </mediaLink>
+            <para />
+          </listItem>
+          <listItem>
+            <para>
+            Visual Studio will generate the model and then display it.
+          </para>
+            <mediaLink>
+              <para />
+              <caption>Entity Data Model Diagram</caption>
+              <image xlink:href="connector-net-visual-studio-entity-framework-entity-data-model-diagram" />
+            </mediaLink>
+            <para />
+          </listItem>
+          <listItem>
+            <para>
+            From the Visual Studio main menu select
+            <ui>Build</ui>, <ui>Build Solution</ui>,
+            to ensure that everything compiles correctly so far.
+          </para>
+          </listItem>
+        </list>
+        <para>
+          <legacyBold>Adding a new Data Source</legacyBold>
+        </para>
+        <para>
+        You will now add a new Data Source to your project and see how
+        it can be used to read and write to the database.
+      </para>
+        <list class="ordered">
+          <listItem>
+            <para>
+            From the Visual Studio main menu select
+            <ui>Data</ui>, <ui>Add New Data
+            Source...</ui>. You will be presented with the Data
+            Source Configuration Wizard.
+          </para>
+            <mediaLink>
+              <para />
+              <caption>Entity Data Source Configuration Wizard Screen 1</caption>
+              <image xlink:href="connector-net-visual-studio-entity-framework-data-source-configuration-wizard-1" />
+            </mediaLink>
+            <para />
+          </listItem>
+          <listItem>
+            <para>
+            Select the  icon. Click
+            <math>Next</math>.
+          </para>
+          </listItem>
+          <listItem>
+            <para>
+            You will now select the Object you wish to bind to. Expand
+            the tree. In this tutorial you will select the city table.
+            Once the city table has been selected click
+            <math>Next</math>.
+          </para>
+            <mediaLink>
+              <para />
+              <caption>Entity Data Source Configuration Wizard Screen 2</caption>
+              <image xlink:href="connector-net-visual-studio-entity-framework-data-source-configuration-wizard-2" />
+            </mediaLink>
+            <para />
+          </listItem>
+          <listItem>
+            <para>
+            The wizard will confirm that the city object is to be added.
+            Click <math>Finish</math>.
+          </para>
+            <mediaLink>
+              <para />
+              <caption>Entity Data Source Configuration Wizard Screen 3</caption>
+              <image xlink:href="connector-net-visual-studio-entity-framework-data-source-configuration-wizard-3" />
+            </mediaLink>
+            <para />
+          </listItem>
+          <listItem>
+            <para>
+            The city object will be display in the Data Sources panel.
+            If the Data Sources panel is not displayed, select
+            <ui>Data</ui>, <ui>Show Data
+            Sources</ui> from the Visual Studio main menu. The
+            docked panel will then be displayed.
+          </para>
+            <mediaLink>
+              <para />
+              <caption>Data Sources</caption>
+              <image xlink:href="connector-net-visual-studio-entity-framework-data-sources" />
+            </mediaLink>
+            <para />
+          </listItem>
+        </list>
+        <para>
+          <legacyBold>Using the Data Source in a Windows
+        Form</legacyBold>
+        </para>
+        <para>
+        You will now learn how to use the Data Source in a Windows Form.
+      </para>
+        <list class="ordered">
+          <listItem>
+            <para>
+            In the Data Sources panel select the Data Source you just
+            created and drag and drop it onto the Form Designer. By
+            default the Data Source object will be added as a Data Grid
+            View control. Note that the Data Grid View control is bound
+            to the <literal>cityBindingSource</literal> and the
+            Navigator control is bound to
+            <literal>cityBindingNavigator</literal>.
+          </para>
+            <mediaLink>
+              <para />
+              <caption>Data Form Designer</caption>
+              <image xlink:href="connector-net-visual-studio-entity-framework-data-form-design" />
+            </mediaLink>
+            <para />
+          </listItem>
+          <listItem>
+            <para>
+            Save and rebuild the solution before continuing.
+          </para>
+          </listItem>
+        </list>
+        <para>
+          <legacyBold>Adding Code to Populate the Data Grid
+        View</legacyBold>
+        </para>
+        <para>
+        You are now ready to add code to ensure that the Data Grid View
+        control will be populated with data from the City database
+        table.
+      </para>
+        <list class="ordered">
+          <listItem>
+            <para>
+            Double click the form to access its code.
+          </para>
+          </listItem>
+          <listItem>
+            <para>
+            Add code to instatiate the Entity Data Model's
+            EntityContainer object and retrieve data from the database
+            to populate the control.
+          </para>
+            <mediaLink>
+              <para />
+              <caption>Adding Code to the Form</caption>
+              <image xlink:href="connector-net-visual-studio-entity-framework-form-add-code" />
+            </mediaLink>
+            <para />
+          </listItem>
+          <listItem>
+            <para>
+            Save and rebuild the solution.
+          </para>
+          </listItem>
+          <listItem>
+            <para>
+            Run the solution. Ensure the grid is populated and you can
+            navigate the database.
+          </para>
+            <mediaLink>
+              <para />
+              <caption>The Populated Grid Control</caption>
+              <image xlink:href="connector-net-visual-studio-entity-framework-app-running-1" />
+            </mediaLink>
+            <para />
+          </listItem>
+        </list>
+        <para>
+          <legacyBold>Adding Code to Save Changes to the
+        Database</legacyBold>
+        </para>
+        <para>
+        You will now add code to enable you to save changes to the
+        database.
+      </para>
+        <para>
+        The Binding source component ensures that changes made in the
+        Data Grid View control are also made to the Entity classes bound
+        to it. However, that data needs to be saved back from the
+        entities to the database itself. This can be achieved by the
+        enabling of the Save button in the Navigator control, and the
+        addition of some code.
+      </para>
+        <list class="ordered">
+          <listItem>
+            <para>
+            In the Form Designer click on the Save icon in the Form
+            toolbar and ensure that its Enabled property is set to True.
+          </para>
+            <mediaLink>
+              <para />
+              <caption>Save Button Enabled</caption>
+              <image xlink:href="connector-net-visual-studio-entity-framework-save-enabled" />
+            </mediaLink>
+            <para />
+          </listItem>
+          <listItem>
+            <para>
+            Double click the Save icon in the Form toolbar to display
+            its code.
+          </para>
+          </listItem>
+          <listItem>
+            <para>
+            You now need to add code to ensure that data is saved to the
+            database when the save button is click in the application.
+          </para>
+            <mediaLink>
+              <para />
+              <caption>Adding Save Code to the Form</caption>
+              <image xlink:href="connector-net-visual-studio-entity-framework-form-add-code-save" />
+            </mediaLink>
+            <para />
+          </listItem>
+          <listItem>
+            <para>
+            Once the code has been added, save the solution and rebuild
+            it. Run the application and verify that changes made in the
+            grid are saved.
+          </para>
+          </listItem>
+        </list>
+      </content>
+    </section>
+    <section address="connector-net-visual-studio-entity-framework-tutorial-databinding-linq-entities">
+      <title>Tutorial: Databinding in ASP.NET using LINQ on Entities</title>
+      <content>
+        <para>
+        In this tutorial you create an ASP.NET web page that binds LINQ
+        queries to entities using the Entity Framework mapping.
+      </para>
+        <para>
+        If you have not already done so, you should install the World
+        example database prior to attempting this tutorial. Instructions
+        on where to obtain the database and instructions on how to
+        install it where given in the tutorial
+        <link xlink:href="9f3f194e-ad35-4379-b04d-5dce4b34ce6a#connector-net-visual-studio-entity-framework-tutorial-winform-data-source">Tutorial: Using an Entity Framework Entity as a Windows Forms Data
+        Source</link>.
+      </para>
+        <para>
+          <legacyBold>Creating an ASP.NET web site</legacyBold>
+        </para>
+        <para>
+        In this part of the tutorial you will create an ASP.NET web
+        site. The web site will use the World database. The main web
+        page will feature a drop down list from which you can select a
+        country, data about that country's cities will then be displayed
+        in a grid view control.
+      </para>
+        <list class="ordered">
+          <listItem>
+            <para>
+            From the Visual Studio main menu select
+            <ui>File</ui>, <ui>New</ui>,
+            <ui>Web Site...</ui>.
+          </para>
+          </listItem>
+          <listItem>
+            <para>
+            From the Visual Studio installed templates select
+            . Click
+            <math>OK</math>. You will be presented with the
+            Source view of your web page by default.
+          </para>
+          </listItem>
+          <listItem>
+            <para>
+            Click the Design view tab situated underneath the Source
+            view panel.
+          </para>
+            <mediaLink>
+              <para />
+              <caption>The Design Tab</caption>
+              <image xlink:href="connector-net-visual-studio-entity-framework-tutorial-linq-1" />
+            </mediaLink>
+            <para />
+          </listItem>
+          <listItem>
+            <para>
+            In the Design view panel, enter some text to decorate the
+            blank web page.
+          </para>
+          </listItem>
+          <listItem>
+            <para>
+            Click on Toolbox. From the list of controls select
+            . Drag and drop the control
+            to a location beneath the text on your web page.
+          </para>
+            <mediaLink>
+              <para />
+              <caption>Drop Down List</caption>
+              <image xlink:href="connector-net-visual-studio-entity-framework-tutorial-linq-2" />
+            </mediaLink>
+            <para />
+          </listItem>
+          <listItem>
+            <para>
+            From the  control's context
+            menu, ensure that the  check box is enabled. This will
+            ensure the control's event handler is called when an item is
+            selected. The user's choice will in turn be used to populate
+            the  control.
+          </para>
+            <mediaLink>
+              <para />
+              <caption>Enable AutoPostBack</caption>
+              <image xlink:href="connector-net-visual-studio-entity-framework-tutorial-linq-3" />
+            </mediaLink>
+            <para />
+          </listItem>
+          <listItem>
+            <para>
+            From the Toolbox select the 
+            control.
+          </para>
+            <mediaLink>
+              <para />
+              <caption>Grid View Control</caption>
+              <image xlink:href="connector-net-visual-studio-entity-framework-tutorial-linq-4" />
+            </mediaLink>
+            <para />
+            <para>
+            Drag and drop the Grid Vew control to a location just below
+            the Drop Down List you already placed.
+          </para>
+            <mediaLink>
+              <para />
+              <caption>Placed Grid Vew Control</caption>
+              <image xlink:href="connector-net-visual-studio-entity-framework-tutorial-linq-5" />
+            </mediaLink>
+            <para />
+          </listItem>
+          <listItem>
+            <para>
+            At this point it is recommended that you save your solution,
+            and build the solution to ensure that there are no errors.
+          </para>
+          </listItem>
+          <listItem>
+            <para>
+            If you run the solution you will see that the text and drop
+            down list are displayed, but the list is empty. Also, the
+            grid view does not appear at all. Adding this functionality
+            is described in the following sections.
+          </para>
+          </listItem>
+        </list>
+        <para>
+        At this stage you have a web site that will build, but further
+        functionality is required. The next step will be to use the
+        Entity Framework to create a mapping from the World database
+        into entities that you can control programmatically.
+      </para>
+        <para>
+          <legacyBold>Creating an ADO.NET Entity Data
+        Model</legacyBold>
+        </para>
+        <para>
+        In this stage of the tutorial you will add an ADO.NET Entity
+        Data Model to your project, using the World database at the
+        storage level. The procedure for doing this is described in the
+        tutorial
+        <link xlink:href="9f3f194e-ad35-4379-b04d-5dce4b34ce6a#connector-net-visual-studio-entity-framework-tutorial-winform-data-source">Tutorial: Using an Entity Framework Entity as a Windows Forms Data
+        Source</link>,
+        and so will not be repeated here.
+      </para>
+        <para>
+          <legacyBold>Populating a Drop Data List Box with using
+        the results of a entity LINQ query</legacyBold>
+        </para>
+        <para>
+        In this part of the tutorial you will write code to populate the
+        DropDownList control. When the web page loads the data to
+        populate the list will be achieved by using the results of a
+        LINQ query on the model created previously.
+      </para>
+        <list class="ordered">
+          <listItem>
+            <para>
+            In the Design view panel, double click on any blank area.
+            This brings up the 
+            method.
+          </para>
+          </listItem>
+          <listItem>
+            <para>
+            Modify the relevant section of code according to the
+            following listing:
+          </para>
+            <code>
+...
+public partial class _Default : System.Web.UI.Page
+{
+    worldModel.worldEntities we;
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        we = new worldModel.worldEntities();
+
+        if (!IsPostBack)
+        {
+            var countryQuery = from c in we.country
+                               orderby c.Name
+                               select new { c.Code, c.Name };
+            DropDownList1.DataValueField = "Code";
+            DropDownList1.DataTextField = "Name";
+            DropDownList1.DataSource = countryQuery;
+            DataBind();
+        }
+    }
+...
+</code>
+            <para>
+            Note that the list control only needs to be populated when
+            the page first loads. The conditional code ensures that if
+            the page is subsequently reloaded, the list control is not
+            repopulated, which would cause the user selection to be
+            lost.
+          </para>
+          </listItem>
+          <listItem>
+            <para>
+            Save the solution, build it and run it. You should see the
+            list control has been populated. You can select an item, but
+            as yet the grid view control does not apear.
+          </para>
+          </listItem>
+        </list>
+        <para>
+        At this point you have a working Drop Down List control,
+        populated by a LINQ query on your entity data model.
+      </para>
+        <para>
+          <legacyBold>Populating a Grid View control using an
+        entity LINQ query</legacyBold>
+        </para>
+        <para>
+        In the last part of this tutorial you will populate the Grid
+        View Control using a LINQ query on your entity data model.
+      </para>
+        <list class="ordered">
+          <listItem>
+            <para>
+            In the Design view double click on the
+             control. This causes its
+             code to be
+            displayed. This method is called when a user selects an item
+            in the list control and thus fires an AutoPostBack event.
+          </para>
+          </listItem>
+          <listItem>
+            <para>
+            Modify the relevant section of code accordingly to the
+            following listing:
+          </para>
+            <code>
+...
+    protected void DropDownList1_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        var cityQuery = from c in we.city
+                        where c.CountryCode == DropDownList1.SelectedValue
+                        orderby c.Name
+                        select new { c.Name, c.Population, c.CountryCode };
+        GridView1.DataSource = cityQuery;
+        DataBind();
+    }
+...
+</code>
+            <para>
+            The grid view control is populated from the result of the
+            LINQ query on the entity data model.
+          </para>
+          </listItem>
+          <listItem>
+            <para>
+            As a check compare your code to that shown in the following
+            screenshot:
+          </para>
+            <mediaLink>
+              <para />
+              <caption>Source Code</caption>
+              <image xlink:href="connector-net-visual-studio-entity-framework-tutorial-linq-6" />
+            </mediaLink>
+            <para />
+          </listItem>
+          <listItem>
+            <para>
+            Save, build and run the solution. As you select a country
+            you will see its cities are displayed in the grid view
+            control.
+          </para>
+            <mediaLink>
+              <para />
+              <caption>The Working Web Site</caption>
+              <image xlink:href="connector-net-visual-studio-entity-framework-tutorial-linq-7" />
+            </mediaLink>
+            <para />
+          </listItem>
+        </list>
+        <para>
+        In this tutorial you have seen how to create an ASP.NET web
+        site, you have also seen how you can access a MySQL database via
+        LINQ queries on an entity data model.
+      </para>
+      </content>
+    </section>
+    <section address="connector-net-website-config">
+      <title>MySQL Website Configuration Tool</title>
+      <content>
+        <para>
+       6.1 introduced the MySQL Website Configuration Tool. This
+      is a facility available in Visual Studio that allows you to
+      configure the Membership, Role, Session State and Profile
+      Provider, without having to resort to editing configuration files.
+      You simply run the tool, set your configuration options, and the
+      tool will modify your <legacyBold>web.config</legacyBold> file
+      accordingly.
+    </para>
+        <para>
+      The MySQL Website Configuration Tool appears as a small icon on
+      the Solution Explorer toolbar in Visual Studio, as show by the
+      following screenshot:
+    </para>
+        <mediaLink>
+          <para />
+          <caption>MySQL Website Configuration Tool</caption>
+          <image xlink:href="connector-net-website-config-tool" />
+        </mediaLink>
+        <para />
+        <para>
+      Clicking on the Website Configuration Tool icon launches the
+      wizard and displays the first screen:
+    </para>
+        <mediaLink>
+          <para />
+          <caption>MySQL Website Configuration Tool - Membership</caption>
+          <image xlink:href="connector-net-website-config-tool-membership" />
+        </mediaLink>
+        <para />
+        <para>
+      This allows you to enable use of the MySQL Membership Provider.
+      Simply click the checkbox to enable this. You can now enter the
+      name of the application that you are creating the configuration
+      for. You can also enter a description for the application.
+    </para>
+        <para>
+      You can then click the <math>Edit...</math> button to
+      launch the Connection String Editor:
+    </para>
+        <mediaLink>
+          <para />
+          <caption>MySQL Website Configuration Tool - Connection String Editor</caption>
+          <image xlink:href="connector-net-website-config-tool-string-editor" />
+        </mediaLink>
+        <para />
+        <para>
+      Note that if you have already defined a connection string for the
+      providers manually in <legacyBold>web.config</legacyBold>, or
+      previously using the tool, this will be automatically loaded and
+      displayed, and can then be modified in this dialog.
+    </para>
+        <para>
+      You can also ensure that the necessary schema are created
+      automatically for you by selecting the Autogenerate Schema
+      checkbox. These schema are used to store membership information.
+      The database used to storage is the one specified in the
+      connection string.
+    </para>
+        <para>
+      You can also ensure that exceptions generated by the application
+      will be written to the event log by selecting the  checkbox.
+    </para>
+        <para>
+      Clicking the <math>Advanced...</math> button launches a
+      dialog that allows you to set Membership Options. These options
+      dictate such variables as password length required when a user
+      signs up, whether the password is encrypted and whether the user
+      can reset their password or not.
+    </para>
+        <mediaLink>
+          <para />
+          <caption>MySQL Website Configuration Tool - Advanced Options</caption>
+          <image xlink:href="connector-net-website-config-tool-options" />
+        </mediaLink>
+        <para />
+        <para>
+      Once information has been set up as required for configuration of
+      the Membership Provider the <math>Next</math> button can
+      be clicked to display the Roles Provider screen:
+    </para>
+        <mediaLink>
+          <para />
+          <caption>MySQL Website Configuration Tool - Roles</caption>
+          <image xlink:href="connector-net-website-config-tool-roles" />
+        </mediaLink>
+        <para />
+        <para>
+      Again the connection string can be edited, a description added and
+      Autogenerate Schema can be enabled before clicking
+      <math>Next</math> to go to the Profiles Provider screen:
+    </para>
+        <mediaLink>
+          <para />
+          <caption>MySQL Website Configuration Tool - Profiles</caption>
+          <image xlink:href="connector-net-website-config-tool-profiles" />
+        </mediaLink>
+        <para />
+        <para>
+      This screen display similar options to the previous screens.
+    </para>
+        <para>
+      Click <math>Next</math> to proceed to the Session State
+      configuration page:
+    </para>
+        <mediaLink>
+          <para />
+          <caption>MySQL Website Configuration Tool - Session State</caption>
+          <image xlink:href="connector-net-website-config-tool-session-state" />
+        </mediaLink>
+        <para />
+        <para>
+      Once you have set up the Session State Provider as required, click
+      <math>Finish</math> to exit the wizard.
+    </para>
+        <para>
+      At this point it is necessary to select the Authentication Type to
+      From Internet. This can be done by launching the ASP.NET
+      Configuration Tool, and selecting the Security tab. Click the
+      Select authentication type link and ensure that the From the
+      internet radio button is selected. You can now examine the
+      database you created to store membership information. All the
+      necessary tables will have been created for you:
+    </para>
+        <mediaLink>
+          <para />
+          <caption>MySQL Website Configuration Tool - Tables</caption>
+          <image xlink:href="connector-net-website-config-tool-tables" />
+        </mediaLink>
+        <para />
+        <para>
+        </para>
+      </content>
+    </section>
+  </developerConceptualDocument>
+</topic>

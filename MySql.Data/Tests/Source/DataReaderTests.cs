@@ -714,9 +714,7 @@ namespace MySql.Data.MySqlClient.Tests
         public void CommandBehaviorSchemaOnly()
         {
 
-            MySqlConnection c = new MySqlConnection(conn.ConnectionString);
-            c.Open();
-            MySqlCommand cmd = new MySqlCommand("select * from doesnotexist", c);
+            MySqlCommand cmd = new MySqlCommand("select * from doesnotexist", conn);
             MySqlDataReader reader;
             try
             {

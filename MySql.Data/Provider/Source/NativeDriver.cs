@@ -95,36 +95,6 @@ namespace MySql.Data.MySqlClient
             return packet; 
         }
 
-        /// <summary>
-        /// ExecuteCommand does the work of writing the actual command bytes to the writer
-        /// We break it out into a function since it is used in several places besides query
-        /// </summary>
-        /// <param name="cmd">The cmd that we are sending</param>
-        /// <param name="bytes">The bytes of the command, can be null</param>
-        /// <param name="length">The number of bytes to send</param>
-/*        private void ExecuteCommand(DBCmd cmd, byte[] bytes, int length)
-        {
-            Debug.Assert(length == 0 || bytes != null);
-
-            try
-            {
-                stream.StartOutput((ulong) length + 1, true);
-                stream.WriteByte((byte) cmd);
-                if (length > 0)
-                    stream.Write(bytes, 0, length);
-                stream.Flush();
-            }
-            catch (MySqlException ex)
-            {
-                if (ex.IsFatal)
-                {
-                    isOpen = false;
-                    Close();
-                }
-                throw;
-            }
-        }*/
-
         private void ReadOk(bool read)
         {
             try
@@ -548,7 +518,7 @@ namespace MySql.Data.MySqlClient
 
         public override void ExecuteDirect(string sql)
         {
-            MySqlPacket p = new MySqlPacket();
+            MySqlPacket p = new MySqlPacket(Connection.Encoding);
             p.WriteString(sql);
             SendQuery(p);
             ReadResult();

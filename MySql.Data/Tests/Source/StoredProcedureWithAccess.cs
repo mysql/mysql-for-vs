@@ -32,22 +32,10 @@ namespace MySql.Data.MySqlClient.Tests
     [TestFixture]
     public class StoredProcedureAccess : StoredProcedure
     {
-        public StoredProcedureAccess() : base()
-        {
-            hasAccess = true;
-        }
-
         public override void Setup()
         {
+            accessToMySqlDb = true;
             base.Setup();
-            SetAccountPerms(true);
-        }
-
-        protected override string GetConnectionInfo()
-        {
-            string info = base.GetConnectionInfo();
-            info = info.Replace("use procedure bodies=false", "");
-            return info;
         }
 
         /// <summary>
@@ -66,43 +54,22 @@ namespace MySql.Data.MySqlClient.Tests
                 suExecSQL(String.Format("GRANT SELECT ON `{0}`.* TO 'abc'@'%'", database0));
                 suExecSQL(String.Format("GRANT EXECUTE ON PROCEDURE `{0}`.spTest TO abc", database0));
 
-                string connStr = GetConnectionStringEx("abc", "abc", true);
+                string connStr = GetConnectionString("abc", "abc", true);
                 using (MySqlConnection c = new MySqlConnection(connStr))
                 {
                     c.Open();
                     MySqlCommand cmd = new MySqlCommand("spTest", c);
                     cmd.CommandType = CommandType.StoredProcedure;
-                    try
-                    {
                         object o = cmd.ExecuteScalar();
-                        Assert.Fail("This should fail");
-                    }
-                    catch (InvalidOperationException)
-                    {
-                    }
-                    catch (MySqlException)
-                    {
-                    }
-                    catch (Exception)
-                    {
-                        Assert.Fail("A more specific exception should have been thrown");
-                    }
 
                     try 
                     {
                         cmd.CommandText = "spTest2";
                         cmd.ExecuteScalar();
                     }
-                    catch (InvalidOperationException)
-                    {
-                    }
                     catch (MySqlException ex)
                     {
                         string s = ex.Message;
-                    }
-                    catch (Exception)
-                    {
-                        Assert.Fail("This should have thrown a more specific exception");
                     }
                 }
             }

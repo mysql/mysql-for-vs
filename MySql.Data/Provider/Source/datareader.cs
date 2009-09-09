@@ -228,9 +228,9 @@ namespace MySql.Data.MySqlClient
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public byte GetSByte(string name)
+        public sbyte GetSByte(string name)
         {
-            return GetByte(GetOrdinal(name));
+            return GetSByte(GetOrdinal(name));
         }
 
         /// <summary>
@@ -705,15 +705,6 @@ namespace MySql.Data.MySqlClient
 					return dt.GetDateTime();
 			}
 
-            if (command.EFCrap)
-            {
-                if (val is MySqlDecimal)
-                {
-                    MySqlDecimal d = (MySqlDecimal)val;
-                    if (d.Precision == 0 && d.Scale == 0)
-                        return d.Value > 0;
-                }
-            }
 			return val.Value;
 		}
 

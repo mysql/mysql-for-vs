@@ -68,39 +68,43 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void WaitTimeoutExpiring()
         {
-            MySqlConnection c = new MySqlConnection(GetConnectionString(true));
-            c.Open();
-            c.StateChange += new StateChangeEventHandler(c_StateChange);
-
-            // set the session wait timeout on this new connection
-            MySqlCommand cmd = new MySqlCommand("SET SESSION interactive_timeout=10", c);
-            cmd.ExecuteNonQuery();
-            cmd.CommandText = "SET SESSION wait_timeout=10";
-            cmd.ExecuteNonQuery();
-
-            stateChangeCount = 0;
-            // now wait 10 seconds
-            Thread.Sleep(15000);
-
-            try
+            using (MySqlConnection c = new MySqlConnection(GetConnectionString(true)))
             {
-                cmd.CommandText = "SELECT now()";
-                cmd.ExecuteScalar();
-            }
-            catch (Exception ex) 
-            { 
-                Assert.IsTrue(ex.Message.StartsWith("Fatal"));
+                c.Open();
+                c.StateChange += new StateChangeEventHandler(c_StateChange);
+
+                // set the session wait timeout on this new connection
+                MySqlCommand cmd = new MySqlCommand("SET SESSION interactive_timeout=10", c);
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = "SET SESSION wait_timeout=10";
+                cmd.ExecuteNonQuery();
+
+                stateChangeCount = 0;
+                // now wait 10 seconds
+                Thread.Sleep(15000);
+
+                try
+                {
+                    cmd.CommandText = "SELECT now()";
+                    cmd.ExecuteScalar();
+                }
+                catch (Exception ex)
+                {
+                    Assert.IsTrue(ex.Message.StartsWith("Fatal"));
+                }
+
+                Assert.AreEqual(1, stateChangeCount);
+                Assert.AreEqual(ConnectionState.Closed, c.State);
             }
 
-            Assert.AreEqual(1, stateChangeCount);
-            Assert.AreEqual(ConnectionState.Closed, c.State);
-
-            c = new MySqlConnection(GetConnectionString(true));
-            c.Open();
-            cmd = new MySqlCommand("SELECT now() as thetime, database() as db", c);
-            using (MySqlDataReader r = cmd.ExecuteReader())
+            using (MySqlConnection c = new MySqlConnection(GetConnectionString(true)))
             {
-                Assert.IsTrue(r.Read());
+                c.Open();
+                MySqlCommand cmd = new MySqlCommand("SELECT now() as thetime, database() as db", c);
+                using (MySqlDataReader r = cmd.ExecuteReader())
+                {
+                    Assert.IsTrue(r.Read());
+                }
             }
         }
 
@@ -167,7 +171,7 @@ namespace MySql.Data.MySqlClient.Tests
             if (Version < new Version(5, 0)) return;
 
             // first we need a routine that will run for a bit
-            suExecSQL(@"CREATE PROCEDURE spTest(duration INT) 
+            execSQL(@"CREATE PROCEDURE spTest(duration INT) 
                 BEGIN 
                     SELECT SLEEP(duration);
                 END");
@@ -243,10 +247,7 @@ namespace MySql.Data.MySqlClient.Tests
         {
             if (Version.Major < 5) return;
 
-            bool isPooling = pooling;
-            pooling = true;
-            string connStr = GetConnectionString(true);
-            pooling = isPooling;
+            string connStr = GetPoolingConnectionString();
             connStr = connStr.Replace("persist security info=true", "persist security info=false");
 
             using (MySqlConnection c = new MySqlConnection(connStr))
@@ -269,9 +270,11 @@ namespace MySql.Data.MySqlClient.Tests
                     Assert.IsTrue(c.State == ConnectionState.Closed);
                 }
                 string connStr2 = c.ConnectionString.ToLower(CultureInfo.InvariantCulture);
-                Assert.AreEqual(-1, connStr2.IndexOf("pooling=true"));
-                Assert.AreEqual(-1, connStr2.IndexOf("pooling=false"));
+                Assert.AreEqual(connStr1, connStr2);
             }
+            MySqlConnection c1 = new MySqlConnection(connStr);
+            c1.Open();
+            KillConnection(c1);
         }
     }
 }

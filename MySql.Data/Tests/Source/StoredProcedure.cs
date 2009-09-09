@@ -36,12 +36,9 @@ namespace MySql.Data.MySqlClient.Tests
     public class StoredProcedure : BaseTest
     {
         private static string fillError = null;
-        protected bool hasAccess;
 
         public StoredProcedure()
         {
-            pooling = false;
-            hasAccess = false;
             csAdditions = ";procedure cache size=0;";
         }
 
@@ -869,7 +866,7 @@ namespace MySql.Data.MySqlClient.Tests
             execSQL("CREATE PROCEDURE spTest(id int, OUT outid int, INOUT inoutid int) " +
                 "BEGIN SET outid=id+inoutid; SET inoutid=inoutid+id; END");
 
-            string s = GetConnectionStringEx("testuser", "testuser", true);
+            string s = GetConnectionString("testuser", "testuser", true);
             MySqlConnection c = new MySqlConnection(s);
             c.Open();
 
@@ -1287,24 +1284,13 @@ namespace MySql.Data.MySqlClient.Tests
             if (Version < new Version(5, 0)) return;
             if (Version > new Version(6, 0, 6)) return;
 
-            rootConn.ChangeDatabase(database1);
-            suExecSQL(@"CREATE  PROCEDURE spTest (id INT, name VARCHAR(20))
+            execSQL(@"CREATE  PROCEDURE spTest (id INT, name VARCHAR(20))
                     BEGIN SELECT name; END");
-            rootConn.ChangeDatabase(database0);
 
-            MySqlCommand cmd = new MySqlCommand(database1 + ".spTest", conn);
+            MySqlCommand cmd = new MySqlCommand("spTest", conn);
             cmd.CommandType = CommandType.StoredProcedure;
-            try
-            {
-                MySqlCommandBuilder.DeriveParameters(cmd);
-                if (!hasAccess)
-                    Assert.Fail("This should have failed");
-            }
-            catch (MySqlException ex)
-            {
-                if (hasAccess)
-                    Assert.Fail("This should have not failed");
-            }
+            MySqlCommandBuilder.DeriveParameters(cmd);
+            Assert.AreEqual(2, cmd.Parameters.Count);
         }
     }
 }
