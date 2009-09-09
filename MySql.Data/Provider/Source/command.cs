@@ -48,7 +48,6 @@ namespace MySql.Data.MySqlClient
 		long updatedRowCount;
 		UpdateRowSource updatedRowSource;
 		MySqlParameterCollection parameters;
-		private int cursorPageSize;
 		private IAsyncResult asyncResult;
 		private bool designTimeVisible;
 		internal Int64 lastInsertedId;
@@ -58,8 +57,6 @@ namespace MySql.Data.MySqlClient
         private bool resetSqlSelect;
         List<MySqlCommand> batch;
         private string batchableCommandText;
-        internal string parameterHash;
-        internal bool EFCrap;
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ctor1/*'/>
 		public MySqlCommand()
@@ -124,7 +121,6 @@ namespace MySql.Data.MySqlClient
 					cmdText = cmdText.Substring(0, cmdText.Length - 14);
 					cmdText = cmdText + "() VALUES ()";
 				}
-
 			}
 		}
 
@@ -251,7 +247,7 @@ namespace MySql.Data.MySqlClient
 				throw new NotSupportedException(Resources.CancelNotSupported);
 
             MySqlConnectionStringBuilder cb = new MySqlConnectionStringBuilder(
-                connection.Settings.GetConnectionString(true));
+                connection.Settings.ConnectionString);
             cb.Pooling = false;
 			using(MySqlConnection c = new MySqlConnection(cb.ConnectionString))
 			{
@@ -292,7 +288,7 @@ namespace MySql.Data.MySqlClient
                 throw new InvalidOperationException("Connection must be valid and open.");
 
 			// Data readers have to be closed first
-			if (connection.Reader != null && cursorPageSize == 0)
+			if (connection.Reader != null)
 				throw new MySqlException("There is already an open DataReader associated with this Connection which must be closed first.");
 
 			if (CommandType == CommandType.StoredProcedure && !connection.driver.Version.isAtLeast(5, 0, 0))
@@ -333,7 +329,6 @@ namespace MySql.Data.MySqlClient
 		{
 			return ExecuteReader(CommandBehavior.Default);
 		}
-
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ExecuteReader1/*'/>
 		public new MySqlDataReader ExecuteReader(CommandBehavior behavior)
@@ -708,7 +703,6 @@ namespace MySql.Data.MySqlClient
             clone.CommandType = CommandType;
             clone.CommandTimeout = CommandTimeout;
             clone.batchableCommandText = batchableCommandText;
-            clone.EFCrap = EFCrap;
 
 			foreach (MySqlParameter p in parameters)
 			{

@@ -22,6 +22,7 @@ using System;
 using System.Text;
 using System.IO;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace MySql.Data.MySqlClient
 {
@@ -29,8 +30,6 @@ namespace MySql.Data.MySqlClient
     {
         private string sql;
 
-        private int startLine;
-        private int stopLine;
         private int startIndex;
         private int stopIndex;
 
@@ -103,16 +102,6 @@ namespace MySql.Data.MySqlClient
             get { return stopIndex; }
         }
 
-        public int StartLine
-        {
-            get { return startLine; }
-        }
-
-        public int StopLine
-        {
-            get { return stopLine; }
-        }
-
         public bool ReturnComments
         {
             get { return returnComments; }
@@ -171,7 +160,10 @@ namespace MySql.Data.MySqlClient
                 if (c == '`' || c == '\'' || c == '"') //(c == '"' && AnsiQuotes))
                     ReadQuotedToken(c);
                 else if (c == '#' || c == '-' || c == '/')
-                    AttemptToReadComment(c);
+                {
+                    if (!ReadComment(c))
+                        ReadSpecialToken();
+                }
                 else
                     ReadUnquotedToken();
                 if (startIndex != -1) return true;
@@ -195,11 +187,11 @@ namespace MySql.Data.MySqlClient
             return sb.ToString();
         }
 
-        private void AttemptToReadComment(char c)
+        private bool ReadComment(char c)
         {
             // make sure the comment starts correctly
-            if (c == '/' && (pos >= sql.Length || sql[pos] != '*')) return;
-            if (c == '-' && ((pos + 1) >= sql.Length || sql[pos] != '-' || sql[pos + 1] != ' ')) return;
+            if (c == '/' && (pos >= sql.Length || sql[pos] != '*')) return false;
+            if (c == '-' && ((pos + 1) >= sql.Length || sql[pos] != '-' || sql[pos + 1] != ' ')) return false;
 
             string endingPattern = "\n";
             if (sql[pos] == '*')
@@ -220,6 +212,7 @@ namespace MySql.Data.MySqlClient
                 stopIndex = index;
                 isComment = true;
             }
+            return true;
         }
 
         private void CalculatePosition(int start, int stop)
@@ -246,6 +239,18 @@ namespace MySql.Data.MySqlClient
 
             Quoted = false;
             stopIndex = pos;
+        }
+
+        private void ReadSpecialToken()
+        {
+            startIndex = pos - 1;
+
+            Debug.Assert(IsSpecialCharacter(sql[startIndex]));
+
+            while (pos < sql.Length && IsSpecialCharacter(sql[pos]))
+                pos++;
+            stopIndex = pos;
+            Quoted = false;
         }
 
         /// <summary>

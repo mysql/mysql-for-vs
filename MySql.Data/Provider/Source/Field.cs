@@ -229,8 +229,8 @@ namespace MySql.Data.MySqlClient
                 if (IsBinary && connection.Settings.TreatBlobsAsUTF8)
                 {
                     bool convertBlob = false;
-                    Regex includeRegex = connection.Settings.BlobAsUTF8IncludeRegex;
-                    Regex excludeRegex = connection.Settings.BlobAsUTF8ExcludeRegex;
+                    Regex includeRegex = connection.Settings.GetBlobAsUTF8IncludeRegex();
+                    Regex excludeRegex = connection.Settings.GetBlobAsUTF8ExcludeRegex();
                     if (includeRegex != null && includeRegex.IsMatch(ColumnName))
                         convertBlob = true;
                     else if (includeRegex == null && excludeRegex != null &&

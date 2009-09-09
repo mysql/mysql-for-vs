@@ -34,7 +34,7 @@ namespace MySql.Data.MySqlClient
 
         public static MySqlPool GetPool(MySqlConnectionStringBuilder settings)
         {
-            string text = settings.GetConnectionString(true);
+            string text = settings.ConnectionString;
 
             lock (pools.SyncRoot)
             {
@@ -76,7 +76,7 @@ namespace MySql.Data.MySqlClient
         {
             Debug.Assert(settings != null);
 
-            string text = settings.GetConnectionString(true);
+            string text = settings.ConnectionString;
             ClearPoolByText(text);
         }
 

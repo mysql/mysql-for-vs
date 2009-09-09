@@ -81,7 +81,6 @@ namespace MySql.Data.Types
 		/// <summary>
 		/// Enables the contruction of a <b>MySqlDateTime</b> object by parsing a string.
 		/// </summary>
-		/// <param name="s"></param>
 		public MySqlDateTime(string dateTime)
 			: this(MySqlDateTime.Parse(dateTime))
 		{

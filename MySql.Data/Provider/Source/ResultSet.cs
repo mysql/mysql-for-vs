@@ -163,7 +163,17 @@ namespace MySql.Data.MySqlClient
             // if we are at row index >= 0 then we need to fetch the data row and load it
             if (rowIndex >= 0)
             {
-                if (!driver.FetchDataRow(reader.Statement.StatementId, 0, Size))
+                bool fetched = false;
+                try
+                {
+                    fetched = driver.FetchDataRow(reader.Statement.StatementId, 0, Size);
+                }
+                catch (MySqlException ex)
+                {
+                    if (ex.Number == 1317) fetched = false;
+                }
+
+                if (!fetched)
                 {
                     readDone = true;
                     return false;
@@ -226,10 +236,12 @@ namespace MySql.Data.MySqlClient
                     return true;
                 }
             }
-			catch (MySqlException)
+			catch (MySqlException ex)
 			{
                 hasRows = false;
                 readDone = true;
+                if (this.reader.Command.TimedOut)
+                    throw new MySqlException(Resources.Timeout, ex);
                 throw;
             }
         }

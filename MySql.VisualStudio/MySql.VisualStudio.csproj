@@ -130,11 +130,13 @@
     <Compile Include="DDEX\MySqlConnectionProperties.cs" />
     <Compile Include="DDEX\MySqlConnectionSupport.cs" />
     <Compile Include="DDEX\MySqlConnectionUIControl.cs">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="DDEX\MySqlConnectionUIControl.designer.cs">
       <DependentUpon>MySqlConnectionUIControl.cs</DependentUpon>
     </Compile>
     <Compile Include="DDEX\MySqlDataConnectionPromptDialog.cs">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="DDEX\MySqlDataConnectionPromptDialog.Designer.cs">
       <DependentUpon>MySqlDataConnectionPromptDialog.cs</DependentUpon>
@@ -243,6 +245,7 @@
     </Compile>
     <Compile Include="WebConfig\ProfileConfig.cs" />
     <Compile Include="WebConfig\RoleConfig.cs" />
+    <Compile Include="WebConfig\SessionStateConfig.cs" />
     <Compile Include="WebConfig\WebConfig.cs" />
     <Compile Include="WebConfig\WebConfigDlg.cs">
       <SubType>Form</SubType>

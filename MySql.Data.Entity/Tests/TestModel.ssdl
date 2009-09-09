@@ -51,11 +51,13 @@
     <Key>
       <PropertyRef Name="Id" />
     </Key>
-    <Property Name="Id" Type="int" Nullable="false"/>
+    <Property Name="Id" Type="uint" Nullable="false"/>
     <Property Name="EmployeeID" Type="int" Nullable="false"/>
     <Property Name="LastName" Type="nvarchar" Nullable="false" MaxLength="20" />
     <Property Name="FirstName" Type="nvarchar" Nullable="false" MaxLength="10" />
     <Property Name="BirthTime" Type="time" Nullable="true"/>
+    <Property Name="Weight" Type="double" Nullable ="true"/>
+    <Property Name="LastModified" Type="timestamp" Nullable ="false"/>
   </EntityType>
 
   <EntityType Name="Companies">
