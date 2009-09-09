@@ -22,6 +22,7 @@ using System;
 using System.IO;
 using System.Net.Sockets;
 using System.Diagnostics;
+using MySql.Data.Common;
 
 namespace MySql.Data.MySqlClient
 {

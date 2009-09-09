@@ -22,10 +22,15 @@ using System;
 
 namespace MySql.Data.Common
 {
+    /// <summary>
+    /// Port of Stopwatch class from Compact framework.
+    /// The implementation uses Tick counts rather then DateTime.Now
+    /// (DateTime.Now can go back when daylight savings are changed)
+    /// </summary>
     class Stopwatch
     {
         long millis;
-        DateTime startTime;
+        long startTime;
         public Stopwatch()
         {
             millis = 0;
@@ -36,12 +41,15 @@ namespace MySql.Data.Common
         }
         public void Start()
         {
-            startTime = DateTime.Now;
+            startTime = Environment.TickCount;
         }
 
         public void Stop()
         {
-            millis += (long)DateTime.Now.Subtract(startTime).TotalMilliseconds;
+            long now = Environment.TickCount;
+            // Calculate time different, handle possible overflow
+            long elapsed = (now < startTime)?Int32.MaxValue - startTime + now : now - startTime;
+            millis += elapsed;
         }
 
         public void Reset()
