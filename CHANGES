@@ -59,7 +59,8 @@ Version 6.0.5
   a character that could possibly start a comment but doesn't
 - fixed problem with non-IS column parsing that caused data type and column type to be equal when
   parsing set and enum columns
-  
+- fixed mono compilation problem (bug #47048)
+    
 Version 6.0.4
 - fixed regression where using stored procs with datasets (bug #44460)
 - fixed compilation under VS 2005 (bug #44822)
