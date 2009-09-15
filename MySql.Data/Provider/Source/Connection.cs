@@ -275,15 +275,16 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-#if !CF
+#if !CF && !__MonoCS__
 
-//        protected override DbProviderFactory DbProviderFactory
-//        {
-//            get
-//            {
-//                return MySqlClientFactory.Instance;
-//            }
-//        }
+        protected override DbProviderFactory DbProviderFactory
+        {
+            get
+            {
+                return MySqlClientFactory.Instance;
+            }
+        }
+		
 #endif
 
         #endregion
