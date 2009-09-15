@@ -277,13 +277,13 @@ namespace MySql.Data.MySqlClient
 
 #if !CF
 
-        protected override DbProviderFactory DbProviderFactory
-        {
-            get
-            {
-                return MySqlClientFactory.Instance;
-            }
-        }
+//        protected override DbProviderFactory DbProviderFactory
+//        {
+//            get
+//            {
+//                return MySqlClientFactory.Instance;
+//            }
+//        }
 #endif
 
         #endregion
