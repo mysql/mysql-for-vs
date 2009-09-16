@@ -387,4 +387,7 @@
   <data name="MoreThanOneOPRow" xml:space="preserve">
     <value>INTERNAL ERROR:  More than one output parameter row detected.</value>
   </data>
+  <data name="TableDirectNotSupported" xml:space="preserve">
+    <value>TableDirect command type is not supported.</value>
+  </data>
 </root>
