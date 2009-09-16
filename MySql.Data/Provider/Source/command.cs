@@ -133,7 +133,24 @@ namespace MySql.Data.MySqlClient
 		public override int CommandTimeout
 		{
 			get { return commandTimeout == 0 ? 30 : commandTimeout; }
-			set { commandTimeout = value; }
+			set 
+			{
+				if (commandTimeout < 0)
+					throw new ArgumentException("Command timeout must not be negative");
+
+				// Timeout in milliseconds should not exceed maximum for 32 bit
+				// signed integer (~24 days), because underlying driver (and streams)
+				// use milliseconds expressed ints for timeout values.
+				// Hence, truncate the value.
+				int timeout = Math.Min(value, Int32.MaxValue / 1000);
+				if (timeout != value)
+				{
+					Logger.LogWarning("Command timeout value too large ("
+					+ value + " seconds). Changed to max. possible value (" 
+					+ timeout + " seconds)");
+				}
+				commandTimeout = timeout;
+			}
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/CommandType/*'/>
@@ -217,11 +234,6 @@ namespace MySql.Data.MySqlClient
         internal List<MySqlCommand> Batch
         {
             get { return batch; }
-        }
-
-        internal bool TimedOut
-        {
-            get { return timedOut; }
         }
 
         internal string BatchableCommandText
@@ -393,10 +405,20 @@ namespace MySql.Data.MySqlClient
                 catch (Exception)
                 {
                 }
-                throw new MySqlException(Resources.Timeout,true, tex);
+                throw new MySqlException(String.Format(Resources.Timeout,tex.Message),true, tex);
             }
             catch (MySqlException ex)
             {
+                // Rethrow timeout exception that might come from NextResult()
+                // Connection will be already closed.
+                Exception exception = ex;
+                while (exception.InnerException != null)
+                {
+                    if (exception.InnerException is TimeoutException)
+                        throw exception;
+                    exception = exception.InnerException;
+                }
+
                 try
                 {
                     ResetSqlSelectLimit();

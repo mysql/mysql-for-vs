@@ -55,6 +55,7 @@ namespace MySql.Data.MySqlClient
         private PerformanceMonitor perfMonitor;
 #endif
         private bool isExecutingBuggyQuery;
+        private bool ignoreKill;
         private string database;
 
         /// <include file='docs/MySqlConnection.xml' path='docs/InfoMessage/*'/>
@@ -567,6 +568,22 @@ namespace MySql.Data.MySqlClient
             catch (Exception)
             {
             }
+
+
+            if (Settings.ConnectionProtocol == MySqlConnectionProtocol.SharedMemory)
+            {
+                // Unfortunately server does not detect dead  shared memory 
+                // connections. We must kill the connection to prevent 
+                // connection leaks on the server side.
+                try
+                {
+                    Kill();
+                }
+                catch (Exception e)
+                {
+                    Logger.LogException(e);
+                }
+            }
             SetState(ConnectionState.Closed, true);
         }
 
@@ -620,6 +637,29 @@ namespace MySql.Data.MySqlClient
 			MySqlCommand cmd = new MySqlCommand("SELECT database()", this);
 			return cmd.ExecuteScalar().ToString();
 		}
+
+        private void Kill()
+        {
+            if (ignoreKill)
+            {
+                Logger.LogWarning("Connection.Kill() is ignored");
+                return;
+            }
+
+            MySqlConnectionStringBuilder cb = new MySqlConnectionStringBuilder(
+                Settings.ConnectionString);
+            cb.Pooling = false;
+            using(MySqlConnection c = new MySqlConnection(cb.ConnectionString))
+            {
+                // prevent recursive spawning new connections, 
+                // in the very unlikely case "kill" command times out.
+                c.ignoreKill = true; 
+                c.Open();
+                MySqlCommand cmd = new MySqlCommand(String.Format("KILL {1}",
+                    ServerThread), c);
+                cmd.ExecuteNonQuery();
+            }
+        }
 
         #region GetSchema Support
 
