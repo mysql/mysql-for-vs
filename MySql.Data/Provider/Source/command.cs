@@ -291,6 +291,9 @@ namespace MySql.Data.MySqlClient
 			if (connection.Reader != null)
 				throw new MySqlException("There is already an open DataReader associated with this Connection which must be closed first.");
 
+            if (CommandType == CommandType.TableDirect)
+                throw new InvalidOperationException(Resources.TableDirectNotSupported);
+
 			if (CommandType == CommandType.StoredProcedure && !connection.driver.Version.isAtLeast(5, 0, 0))
 				throw new MySqlException("Stored procedures are not supported on this version of MySQL");
 		}
