@@ -425,15 +425,20 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void TableCommandType()
         {
-            MySqlCommand cmd = new MySqlCommand("Mytable", conn);
+            execSQL("CREATE TABLE Test (id INT, name VARCHAR(20))");
+            execSQL("INSERT INTO Test VALUES (1, 'A')");
+            execSQL("CREATE TABLE Test1 (id INT, name VARCHAR(20))");
+            execSQL("INSERT INTO Test1 VALUES (2, 'B')");
+
+            MySqlCommand cmd = new MySqlCommand("Test,Test1", conn);
             cmd.CommandType = CommandType.TableDirect;
-            try
+            using (MySqlDataReader reader = cmd.ExecuteReader())
             {
-                cmd.ExecuteReader();
-                Assert.Fail("This should have failed");
-            }
-            catch (InvalidOperationException ex)
-            {
+                reader.Read();
+                Assert.AreEqual(1, reader.GetInt32(0));
+                Assert.AreEqual("A", reader.GetString(1));
+                Assert.AreEqual(2, reader.GetInt32(2));
+                Assert.AreEqual("B", reader.GetString(3));
             }
         }
     }

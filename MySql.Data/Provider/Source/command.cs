@@ -291,9 +291,6 @@ namespace MySql.Data.MySqlClient
 			if (connection.Reader != null)
 				throw new MySqlException("There is already an open DataReader associated with this Connection which must be closed first.");
 
-            if (CommandType == CommandType.TableDirect)
-                throw new InvalidOperationException(Resources.TableDirectNotSupported);
-
 			if (CommandType == CommandType.StoredProcedure && !connection.driver.Version.isAtLeast(5, 0, 0))
 				throw new MySqlException("Stored procedures are not supported on this version of MySQL");
 		}
@@ -377,6 +374,9 @@ namespace MySql.Data.MySqlClient
 				throw new InvalidOperationException(Resources.CommandTextNotInitialized);
 
 			string sql = TrimSemicolons(cmdText);
+
+            if (CommandType == CommandType.TableDirect)
+                sql = "SELECT * FROM " + sql;
 
             // now we check to see if we are executing a query that is buggy
             // in 4.1
