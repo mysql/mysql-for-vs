@@ -738,6 +738,15 @@ namespace MySql.Data.MySqlClient.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to TableDirect command type is not supported..
+        /// </summary>
+        public static string TableDirectNotSupported {
+            get {
+                return ResourceManager.GetString("TableDirectNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Timeout expired.  The timeout period elapsed prior to completion of the operation or the server is not responding..
         /// </summary>
         public static string Timeout {

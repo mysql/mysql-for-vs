@@ -516,7 +516,7 @@ namespace MySql.Data.MySqlClient
 
         public override void ExecuteDirect(string sql)
         {
-            MySqlPacket p = new MySqlPacket();
+            MySqlPacket p = new MySqlPacket(Encoding);
             p.WriteString(sql);
             SendQuery(p);
             ReadResult();
