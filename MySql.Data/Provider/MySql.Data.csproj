@@ -1,4 +1,5 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
     <ProductVersion>9.0.30729</ProductVersion>
@@ -213,6 +214,14 @@
     <Compile Include="Source\zlib\ZOutputStream.cs" />
     <Compile Include="Source\zlib\ZStream.cs" />
     <Compile Include="Source\zlib\ZStreamException.cs" />
+    <Compile Include="Properties\VersionInfo.cs" />
+    <Compile Include="Source\common\Cache.cs" />
+    <Compile Include="Source\common\MySqlTokenizer.cs" />
+    <Compile Include="Source\BulkLoader.cs" />
+    <Compile Include="Source\MySqlPacket.cs" />
+    <Compile Include="Source\MySqlScript.cs" />
+    <Compile Include="Source\Types\MySqlGuid.cs" />
+    <Compile Include="Source\ResultSet.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\ReservedWords.txt" />
@@ -239,14 +248,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Properties\VersionInfo.cs" />
-    <Compile Include="Source\common\Cache.cs" />
-    <Compile Include="Source\common\MySqlTokenizer.cs" />
-    <Compile Include="Source\BulkLoader.cs" />
-    <Compile Include="Source\MySqlPacket.cs" />
-    <Compile Include="Source\MySqlScript.cs" />
-    <Compile Include="Source\ResultSet.cs" />
-    <Compile Include="Source\Types\MySqlGuid.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\CHANGES">
