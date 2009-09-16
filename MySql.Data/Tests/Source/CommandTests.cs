@@ -421,6 +421,21 @@ namespace MySql.Data.MySqlClient.Tests
                 cmd.ExecuteScalar();
             }
         }
+
+        [Test]
+        public void TableCommandType()
+        {
+            MySqlCommand cmd = new MySqlCommand("Mytable", conn);
+            cmd.CommandType = CommandType.TableDirect;
+            try
+            {
+                cmd.ExecuteReader();
+                Assert.Fail("This should have failed");
+            }
+            catch (InvalidOperationException ex)
+            {
+            }
+        }
     }
 
 
