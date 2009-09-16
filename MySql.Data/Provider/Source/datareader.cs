@@ -856,25 +856,29 @@ namespace MySql.Data.MySqlClient
 			if (!isOpen)
 				throw new MySqlException("Invalid attempt to Read when reader is closed.");
 
-			try
-			{
+            try
+            {
                 return resultSet.NextRow(commandBehavior);
-			}
-			catch (MySqlException ex)
-			{
-				if (ex.IsFatal)
-					connection.Abort();
+            }
+            catch (TimeoutException tex)
+            {
+                connection.Abort();
+                throw new MySqlException(
+                    String.Format(Resources.Timeout, tex.Message), true, tex);
+            }
+            catch (MySqlException ex)
+            {
+                if (ex.IsFatal)
+                    connection.Abort();
 
                 // if we get a query interrupted then our resultset is done
                 if (ex.Number == 1317)
                 {
-                    if (command.TimedOut)
-                        throw new MySqlException(Resources.Timeout);
                     return false;
                 }
 
                 throw new MySqlException(Resources.FatalErrorDuringRead, ex);
-			}
+            }
 		}
 
 

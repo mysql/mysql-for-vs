@@ -481,9 +481,17 @@ namespace MySql.Data.MySqlClient
                 {
                     if (isOpen)
                     {
-                        packet.Clear();
-                        packet.WriteByte((byte)DBCmd.QUIT);
-                        ExecutePacket(packet);
+                        try
+                        {
+                            packet.Clear();
+                            packet.WriteByte((byte)DBCmd.QUIT);
+                            ExecutePacket(packet);
+                        }
+                        catch (Exception)
+                        {
+                            // Eat exception here. We should try to closing 
+                            // the stream anyway.
+                        }
                     }
 
                     if (stream != null)

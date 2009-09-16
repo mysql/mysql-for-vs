@@ -201,13 +201,13 @@ namespace MySql.Data.Common
 				if (IsClosed()) return 0;
 				if (!serverWrote.WaitOne(timeLeft, false))
 				{
-					throw new TimeoutException();
+					throw new TimeoutException("Timeout when reading from shared memory");
 				}
 				if (readTimeout != System.Threading.Timeout.Infinite)
 				{
 					timeLeft = readTimeout - (int)stopwatch.ElapsedMilliseconds;
 					if (timeLeft < 0)
-							throw new TimeoutException();
+						throw new TimeoutException("Timeout when reading from shared memory");
 				}
 
 				bytesLeft = Marshal.ReadInt32(dataView);
@@ -244,12 +244,12 @@ namespace MySql.Data.Common
 			while (leftToDo > 0)
 			{
 				if (!serverRead.WaitOne(timeLeft))
-					throw new TimeoutException();
+					throw new TimeoutException("Timeout when writing to shared memory");
 				if (writeTimeout != System.Threading.Timeout.Infinite)
 				{
 					timeLeft = writeTimeout - (int)stopwatch.ElapsedMilliseconds;
 					if (timeLeft < 0)
-						throw new TimeoutException();
+						throw new TimeoutException("Timeout when writing to shared memory");
 				}
 				int bytesToDo = Math.Min(leftToDo, BUFFERLENGTH);
 

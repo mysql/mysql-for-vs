@@ -72,9 +72,6 @@ namespace MySql.Data.MySqlClient
 		public void Close()
 		{
 			stream.Close();
-            // no need to close outStream because closing
-            // inStream closes the underlying network stream
-            // for us.
 		}
 
 		#region Properties

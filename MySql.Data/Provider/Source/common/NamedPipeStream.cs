@@ -1,4 +1,4 @@
-// Copyright (c) 2009 Sun Microsystems, Inc.
+// Copyright (c) 2004-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -100,12 +100,12 @@ namespace MySql.Data.Common
 
             while(!result.IsCompleted)
             {
-                bool signaled = result.AsyncWaitHandle.WaitOne(readTimeout);
+                bool signaled = result.AsyncWaitHandle.WaitOne(timeLeft);
                 if (!signaled)
-                    throw new TimeoutException();
+                    throw new TimeoutException("Timeout when reading from named pipe");
                 timeLeft -= (int)stopwatch.ElapsedMilliseconds;
                 if (timeLeft < 0)
-                    throw new TimeoutException();
+                    throw new TimeoutException("Timeout when reading from named pipe");
             }
             int bytesRead = fileStream.EndRead(result);
 
@@ -115,7 +115,7 @@ namespace MySql.Data.Common
 
         public override void Write(byte[] buffer, int offset, int count)
         {
-            if (readTimeout == Timeout.Infinite)
+            if (writeTimeout == Timeout.Infinite)
             {
                 fileStream.Write(buffer, offset, count);
                 return;
@@ -133,10 +133,10 @@ namespace MySql.Data.Common
             {
                 bool signaled = result.AsyncWaitHandle.WaitOne(timeLeft);
                 if (!signaled)
-                    throw new TimeoutException();
+                    throw new TimeoutException("Timeout when writing to named pipe");
                 timeLeft -= (int)stopwatch.ElapsedMilliseconds;
                 if (timeLeft < 0)
-                    throw new TimeoutException();
+                    throw new TimeoutException("Timeout when writing to named pipe");
             }
             fileStream.EndWrite(result);
         }

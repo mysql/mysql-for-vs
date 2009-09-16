@@ -77,12 +77,14 @@ namespace MySql.Data.MySqlClient
 
             if (timeout != System.Threading.Timeout.Infinite)
             {
-                // Normally, a timeout exception would be thrown  by stream itself, since we set the read/write timeout 
-                // for the stream.  However there is a gap between  end of IO operation and stopping the stop watch, 
-                // and it makes it possible for timeout to exceed even after IO completed successfully.
+                // Normally, a timeout exception would be thrown  by stream itself, 
+                // since we set the read/write timeout  for the stream.  However 
+                // there is a gap between  end of IO operation and stopping the 
+                // stop watch,  and it makes it possible for timeout to exceed 
+                // even after IO completed successfully.
                 if (stopwatch.ElapsedMilliseconds > timeout)
                 {
-                    throw new TimeoutException();
+                    throw new TimeoutException("Timeout in IO operation");
                 }
             }
         }
@@ -217,6 +219,7 @@ namespace MySql.Data.MySqlClient
         {
             if (isClosed)
                 return;
+            isClosed = true;
             baseStream.Close();
             if (inStream != baseStream)
             {
@@ -226,17 +229,11 @@ namespace MySql.Data.MySqlClient
             {
                 outStream.Close();
             }
-            isClosed = true;
         }
 
         public void ResetTimeout(int newTimeout)
         {
-
-            if (newTimeout == System.Threading.Timeout.Infinite)
-                timeout = newTimeout;
-            else if (newTimeout < 0)
-                throw new ArgumentException("Invalid timeout value");
-            else if (newTimeout == 0)
+            if (newTimeout == System.Threading.Timeout.Infinite || newTimeout == 0)
                 timeout = System.Threading.Timeout.Infinite;
             else
                 timeout = newTimeout;

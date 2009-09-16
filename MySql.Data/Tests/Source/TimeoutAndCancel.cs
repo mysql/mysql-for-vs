@@ -51,7 +51,7 @@ namespace MySql.Data.MySqlClient.Tests
 
             MySqlCommand cmd = new MySqlCommand("spTest", conn);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("duration", 60);
+            cmd.Parameters.AddWithValue("duration", 10);
 
             // now we start execution of the command
             CommandInvokerDelegate d = new CommandInvokerDelegate(CommandRunner);
@@ -68,7 +68,14 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void WaitTimeoutExpiring()
         {
-            using (MySqlConnection c = new MySqlConnection(GetConnectionString(true)))
+            string connStr = GetConnectionString(true);
+            MySqlConnectionStringBuilder sb = new MySqlConnectionStringBuilder(connStr);
+
+            if (sb.ConnectionProtocol != MySqlConnectionProtocol.Sockets)
+                // wait timeout does not work for non-TCP connections
+                return;
+
+            using (MySqlConnection c = new MySqlConnection(connStr))
             {
                 c.Open();
                 c.StateChange += new StateChangeEventHandler(c_StateChange);
@@ -97,7 +104,7 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.AreEqual(ConnectionState.Closed, c.State);
             }
 
-            using (MySqlConnection c = new MySqlConnection(GetConnectionString(true)))
+            using (MySqlConnection c = new MySqlConnection(connStr))
             {
                 c.Open();
                 MySqlCommand cmd = new MySqlCommand("SELECT now() as thetime, database() as db", c);
@@ -113,74 +120,34 @@ namespace MySql.Data.MySqlClient.Tests
             stateChangeCount++;
         }
 
-        private void TimeoutExpiring(MySqlConnectionProtocol protocol)
+        [Test]
+        public void TimeoutExpiring()
         {
             if (version < new Version(5, 0)) return;
 
-            // first we need a routine that will run for a bit
-            execSQL(@"CREATE PROCEDURE spTest(duration INT) 
-                BEGIN 
-                    SELECT SLEEP(duration);
-                END");
-
-            MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder(conn.ConnectionString);
-            builder.ConnectionProtocol = protocol;
-            using (MySqlConnection connection = new MySqlConnection(builder.ConnectionString))
+            DateTime start = DateTime.Now;
+            try
             {
-                connection.Open();
-
-                DateTime start = DateTime.Now;
-                try
-                {
-                    MySqlCommand cmd = new MySqlCommand("spTest", connection);
-                    cmd.Parameters.AddWithValue("duration", 60);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.CommandTimeout = 5;
-                    cmd.ExecuteNonQuery();
-                    Assert.Fail("Should not get to this point");
-                }
-                catch (MySqlException ex)
-                {
-                    TimeSpan ts = DateTime.Now.Subtract(start);
-                    Assert.IsTrue(ts.TotalSeconds <= 10);
-                    Assert.IsTrue(ex.Message.StartsWith("Timeout expired"), "Message is wrong");
-                }
+                MySqlCommand cmd = new MySqlCommand("SELECT SLEEP(2)", conn);
+                cmd.CommandTimeout = 1;
+                cmd.ExecuteNonQuery();
+                Assert.Fail("Should not get to this point");
+            }
+            catch (MySqlException ex)
+            {
+                TimeSpan ts = DateTime.Now.Subtract(start);
+                Assert.IsTrue(ts.TotalSeconds <= 2);
+                Assert.IsTrue(ex.Message.StartsWith("Timeout expired"), "Message is wrong");
             }
         }
 
         [Test]
-        public void TimeoutExpiringSockets()
-        {
-            TimeoutExpiring(MySqlConnectionProtocol.Sockets);
-        }
-
-        [Test]
-        public void TimeoutExpiringSharedMemory()
-        {
-            TimeoutExpiring(MySqlConnectionProtocol.SharedMemory);
-        }
-
-        [Test]
-        public void TimeoutExpiringNamedPipe()
-        {
-            TimeoutExpiring(MySqlConnectionProtocol.NamedPipe);
-        }
-
         public void TimeoutNotExpiring()
         {
             if (Version < new Version(5, 0)) return;
 
-            // first we need a routine that will run for a bit
-            execSQL(@"CREATE PROCEDURE spTest(duration INT) 
-                BEGIN 
-                    SELECT SLEEP(duration);
-                END");
-
-            conn.Open();
-            MySqlCommand cmd = new MySqlCommand("spTest", conn);
-            cmd.Parameters.AddWithValue("duration", 10);
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandTimeout = 15;
+            MySqlCommand cmd = new MySqlCommand("SELECT SLEEP(1)", conn);
+            cmd.CommandTimeout = 2;
             cmd.ExecuteNonQuery();
         }
 
@@ -197,8 +164,8 @@ namespace MySql.Data.MySqlClient.Tests
             execSQL("CREATE TABLE test (id INT)");
 
             MySqlCommand cmd = new MySqlCommand(
-                "call spTest(60);INSERT INTO test VALUES(4)", conn);
-            cmd.CommandTimeout = 5;
+                "call spTest(5);INSERT INTO test VALUES(4)", conn);
+            cmd.CommandTimeout = 2;
             try
             {
                 cmd.ExecuteNonQuery();
@@ -208,9 +175,7 @@ namespace MySql.Data.MySqlClient.Tests
             {
                 Assert.IsTrue(ex.Message.StartsWith("Timeout expired"), "Message is wrong");
             }
-
-            cmd.CommandText = "SELECT COUNT(*) FROM test";
-            Assert.AreEqual(0, cmd.ExecuteScalar());
+            Assert.AreEqual(conn.State , ConnectionState.Closed);
         }
         
         [Test]
@@ -270,11 +235,43 @@ namespace MySql.Data.MySqlClient.Tests
                     Assert.IsTrue(c.State == ConnectionState.Closed);
                 }
                 string connStr2 = c.ConnectionString.ToLower(CultureInfo.InvariantCulture);
-                Assert.AreEqual(connStr1, connStr2);
+                Assert.AreEqual(connStr1.ToLower(CultureInfo.InvariantCulture), connStr2);
             }
             MySqlConnection c1 = new MySqlConnection(connStr);
             c1.Open();
             KillConnection(c1);
         }
     }
+
+    #region Configs
+
+    public class TimeoutAndCancelSocketCompressed : TimeoutAndCancel
+    {
+        protected override string GetConnectionInfo()
+        {
+            return String.Format("port={0};compress=true", port);
+        }
+    }
+#if !CF
+    [Category("Pipe")]
+    public class TimeoutAndCancelPipe : TimeoutAndCancel
+    {
+        protected override string GetConnectionInfo()
+        {
+            return String.Format("protocol=namedpipe;pipe name={0}", pipeName);
+        }
+    }
+
+    [Category("SharedMemory")]
+    public class TimeoutAndCancelSharedMemory : TimeoutAndCancel
+    {
+        protected override string GetConnectionInfo()
+        {
+            return String.Format("protocol=sharedmemory; shared memory name={0}", memoryName);
+        }
+    }
+#endif
+
+    #endregion
+
 }
