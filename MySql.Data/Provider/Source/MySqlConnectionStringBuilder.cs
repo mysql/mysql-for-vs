@@ -664,13 +664,13 @@ namespace MySql.Data.MySqlClient
 
         internal Regex GetBlobAsUTF8IncludeRegex()
         {
-            if (BlobAsUTF8IncludePattern == null) return null;
+            if (String.IsNullOrEmpty(BlobAsUTF8IncludePattern)) return null;
             return new Regex(BlobAsUTF8IncludePattern);
         }
 
         internal Regex GetBlobAsUTF8ExcludeRegex()
         {
-            if (BlobAsUTF8ExcludePattern == null) return null;
+            if (String.IsNullOrEmpty(BlobAsUTF8ExcludePattern)) return null;
             return new Regex(BlobAsUTF8ExcludePattern);
         }
 
@@ -745,9 +745,22 @@ namespace MySql.Data.MySqlClient
             if (value is string && defaultValues[keyword].DefaultValue is Enum)
                 val = Enum.Parse(defaultValues[keyword].Type, (string)value, true);
             else
-                val = Convert.ChangeType(value, defaultValues[keyword].Type, CultureInfo.CurrentCulture);
+                val = ChangeType(value, defaultValues[keyword].Type);
             values[keyword] = val;
             base[keyword] = val;
+        }
+
+        private object ChangeType(object value, Type t)
+        {
+            if (t == typeof(bool) && value is string)
+            {
+                string s = value.ToString().ToLower(CultureInfo.InvariantCulture);
+                if (s == "yes" || s == "true") return true;
+                if (s == "no" || s == "false") return false;
+                throw new FormatException(String.Format(Resources.InvalidValueForBoolean, value));
+            }
+            else
+                return Convert.ChangeType(value, t, CultureInfo.CurrentCulture);
         }
 
         private void ValidateKeyword(string keyword)
