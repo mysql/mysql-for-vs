@@ -64,7 +64,6 @@ namespace MySql.Data.MySqlClient
 			driver = connection.driver;
 			affectedRows = -1;
 			this.statement = statement;
-            resultSet = new ResultSet(this);
 		}
 
 		#region Properties
@@ -162,7 +161,7 @@ namespace MySql.Data.MySqlClient
 			connection.Reader = null;
 
             // clear all remaining resultsets
-            resultSet.ClearAll();
+            while (NextResult()) { }
 
 			// we now give the command a chance to terminate.  In the case of
 			// stored procedures it needs to update out and inout parameters
@@ -794,6 +793,30 @@ namespace MySql.Data.MySqlClient
 			return DBNull.Value == GetValue(i);
 		}
 
+        private void CloseCurrentResults()
+        {
+            if (resultSet == null) return;
+
+            resultSet.Close();
+
+            MySqlConnection connection = Command.Connection;
+
+            if (!connection.Settings.UseUsageAdvisor) return;
+
+            // we were asked to run the usage advisor so report if the resultset
+            // was not entirely read.
+            connection.UsageAdvisor.ReadPartialResultSet(Command.CommandText);
+
+            // now see if all fields were accessed
+            List<string> fieldsNotAccessed = new List<string>();
+            bool readAll = true;
+            for (int i=0; i<resultSet.Size; i++)
+                if (!resultSet.FieldRead(i))
+                    fieldsNotAccessed.Add(resultSet.Fields[i].ColumnName);
+            if (!readAll)
+                connection.UsageAdvisor.ReadPartialRowSet(Command.CommandText, fieldsNotAccessed);
+        }
+
 		/// <summary>
 		/// Advances the data reader to the next result, when reading the results of batch SQL statements.
 		/// </summary>
@@ -804,25 +827,35 @@ namespace MySql.Data.MySqlClient
                 throw new MySqlException(Resources.NextResultIsClosed);
 
             // this will clear out any unread data
-            resultSet.Close();
+            CloseCurrentResults();
 
             // single result means we only return a single resultset.  If we have already
             // returned one, then we return false;
-            if (resultSet.ResultsIndex == 0 && (commandBehavior & CommandBehavior.SingleResult) != 0)
+            if (resultSet != null && (commandBehavior & CommandBehavior.SingleResult) != 0)
                 return false;
 
-			// tell our command to continue execution of the SQL batch until it its
-			// another resultset
+            // next load up the next resultset if any
 			try
 			{
-                if (!resultSet.NextResult()) return false;
+                resultSet = driver.NextResult(Statement.StatementId);
+                if (resultSet == null) return false;
+                if (resultSet.IsOutputParameters) return false;
+
+                if (resultSet.Size == 0)
+                {
+                    Command.lastInsertedId = resultSet.InsertedId;
+                    if (affectedRows == -1)
+                        affectedRows = resultSet.AffectedRows;
+                    else
+                        affectedRows += resultSet.AffectedRows;
+                }
 
 				// issue any requested UA warnings
 				if (connection.Settings.UseUsageAdvisor)
 				{
-					if ((connection.driver.ServerStatus & ServerStatusFlags.NoIndex) != 0)
+					if (connection.driver.HasStatus(ServerStatusFlags.NoIndex))
 						connection.UsageAdvisor.UsingNoIndex(command.CommandText);
-					if ((connection.driver.ServerStatus & ServerStatusFlags.BadIndex) != 0)
+					if (connection.driver.HasStatus(ServerStatusFlags.BadIndex))
 						connection.UsageAdvisor.UsingBadIndex(command.CommandText);
 				}
 
