@@ -18,6 +18,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using System.Collections.Generic;
 namespace MySql.Data.MySqlClient
 {
     internal class UsageAdvisor
@@ -62,16 +63,15 @@ namespace MySql.Data.MySqlClient
             LogUAFooter();
         }
 
-		public void ReadPartialRowSet(string cmdText, bool[] uaFieldsUsed, MySqlField[] fields)
+		public void ReadPartialRowSet(string cmdText, List<string> fieldsNotAccessed)
 		{
             if (!conn.Settings.UseUsageAdvisor) return;
 
             LogUAHeader(cmdText);
 			Logger.WriteLine("Reason: Every column was not accessed.  Consider a more focused query.");
 			Logger.Write("Fields not accessed: ");
-			for (int i = 0; i < uaFieldsUsed.Length; i++)
-				if (!uaFieldsUsed[i])
-					Logger.Write(" " + fields[i].ColumnName);
+			foreach (string name in fieldsNotAccessed)
+				Logger.Write(" " + name);
 			Logger.WriteLine(" ");
 			LogUAFooter();
 		}

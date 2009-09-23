@@ -387,4 +387,7 @@
   <data name="MoreThanOneOPRow" xml:space="preserve">
     <value>INTERNAL ERROR:  More than one output parameter row detected.</value>
   </data>
+  <data name="InvalidValueForBoolean" xml:space="preserve">
+    <value>'{0}' is an illegal value for a boolean option.</value>
+  </data>
 </root>

@@ -66,6 +66,11 @@ namespace MySql.Data.MySqlClient
 			get { return connectionFlags; }
 		}
 
+        public override bool HasStatus(ServerStatusFlags flag)
+        {
+            return (serverStatus & flag) != 0;
+        }
+
         /// <summary>
         /// Returns true if this connection can handle batch SQL natively
         /// This means MySQL 4.1.1 or later.
@@ -450,8 +455,6 @@ namespace MySql.Data.MySqlClient
         /// </summary>
         public override void SendQuery(MySqlPacket queryPacket)
         {
-            lastInsertId = -1;
-            affectedRows = 0;
             if (Settings.Logging)
                 Logger.LogCommand(DBCmd.QUERY, encoding.GetString(
                     queryPacket.Buffer, 5, queryPacket.Length-5));
@@ -519,20 +522,19 @@ namespace MySql.Data.MySqlClient
             MySqlPacket p = new MySqlPacket(Encoding);
             p.WriteString(sql);
             SendQuery(p);
-            ReadResult();
+            NextResult(0);
         }
 
         /// <summary>
-        /// ReadResult will attempt to read a single result from the server.  Note that it is not 
+        /// NextResult will attempt to read a single result from the server.  Note that it is not 
         /// reading all the rows of the result set but simple determining what type of result it is
         /// and returning values appropriately.
         /// </summary>
-        /// <returns>Number of columns in the resultset, 0 for non-selects, -1 for no more resultsets</returns>
-        public override long ReadResult()
+        public override ResultSet NextResult(int statementId)
         {
             // if there is not another query or resultset, then return -1
             if ((serverStatus & (ServerStatusFlags.AnotherQuery | ServerStatusFlags.MoreResults)) == 0)
-                return -1;
+                return null;
 
             try
             {
@@ -546,22 +548,21 @@ namespace MySql.Data.MySqlClient
 
             long fieldCount = packet.ReadFieldLength();
             if (fieldCount > 0)
-                return fieldCount;
+                return new ResultSet(this, statementId, (int)fieldCount);
 
             if (-1 == fieldCount)
             {
                 string filename = packet.ReadString();
                 SendFileToServer(filename);
 
-                return ReadResult();
+                return NextResult(statementId);
             }
 
             // the code to read last packet will set these server status vars 
             // again if necessary.
             serverStatus &= ~(ServerStatusFlags.AnotherQuery |
                               ServerStatusFlags.MoreResults);
-            affectedRows += (long)packet.ReadFieldLength();
-            lastInsertId = packet.ReadFieldLength();
+            ResultSet rs = new ResultSet((int)packet.ReadFieldLength(), (int)packet.ReadFieldLength());
             if (version.isAtLeast(4, 1, 0))
             {
                 serverStatus = (ServerStatusFlags) packet.ReadInteger(2);
@@ -571,7 +572,7 @@ namespace MySql.Data.MySqlClient
                     packet.ReadLenString(); //TODO: server message
                 }
             }
-            return fieldCount;
+            return rs;
         }
 
         /// <summary>
@@ -651,7 +652,7 @@ namespace MySql.Data.MySqlClient
                 valObject.SkipValue(packet);
         }
 
-        public override MySqlField[] ReadColumnMetadata(int count)
+        public override MySqlField[] GetColumns(int count)
         {
             MySqlField[] fields = new MySqlField[count];
 
@@ -661,7 +662,6 @@ namespace MySql.Data.MySqlClient
             ReadEOF();
             return fields;
         }
-
 
         private MySqlField GetFieldMetaData()
         {
@@ -764,8 +764,6 @@ namespace MySql.Data.MySqlClient
 
         public void ExecuteStatement(MySqlPacket packetToExecute)
         {
-            lastInsertId = -1;
-            affectedRows = 0;
             packetToExecute.Buffer[4] = (byte)DBCmd.EXECUTE;
             ExecutePacket(packetToExecute);
             serverStatus |= ServerStatusFlags.AnotherQuery;
@@ -831,7 +829,9 @@ namespace MySql.Data.MySqlClient
             packet.ReadInteger(3);
             if (numParams > 0)
             {
-                parameters = ReadColumnMetadata(numParams);
+                parameters = new MySqlField[numParams];
+                for (int i=0; i < numParams; i++)
+                    parameters[i] = GetFieldMetaData();
 
                 // we set the encoding for each parameter back to our connection encoding
                 // since we can't trust what is coming back from the server
