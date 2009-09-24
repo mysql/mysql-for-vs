@@ -257,9 +257,10 @@ namespace MySql.Data.MySqlClient
 		{
             base.Close(reader);
 
+            ResultSet rs = reader.ResultSet;
             // if our closing reader doesn't have output parameters then we may have to
             // use the user variable hack
-            if (!reader.ResultSet.HasOutputParameters)
+            if (rs == null || !rs.IsOutputParameters)
             {
                 MySqlDataReader rdr = GetHackedOuputParameters();
                 if (rdr == null) return;

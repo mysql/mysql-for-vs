@@ -64,7 +64,6 @@ namespace MySql.Data.MySqlClient
 			driver = connection.driver;
 			affectedRows = -1;
 			this.statement = statement;
-            resultSet = new ResultSet(this);
 		}
 
 		#region Properties
@@ -156,7 +155,6 @@ namespace MySql.Data.MySqlClient
 		public override void Close()
 		{
 			if (!isOpen) return;
-            isOpen = false;
 
 			bool shouldCloseConnection = (commandBehavior & CommandBehavior.CloseConnection) != 0;
 			commandBehavior = CommandBehavior.Default;
@@ -165,7 +163,7 @@ namespace MySql.Data.MySqlClient
             // clear all remaining resultsets
             try
             {
-                resultSet.ClearAll();
+              while (NextResult()) { }
             }
             catch (MySqlException ex)
             {
@@ -181,6 +179,7 @@ namespace MySql.Data.MySqlClient
 
 			command = null;
 			connection = null;
+            isOpen = false;
 		}
 
 		#region TypeSafe Accessors
@@ -800,6 +799,30 @@ namespace MySql.Data.MySqlClient
 			return DBNull.Value == GetValue(i);
 		}
 
+        private void CloseCurrentResults()
+        {
+            if (resultSet == null) return;
+
+            resultSet.Close();
+
+            MySqlConnection connection = Command.Connection;
+
+            if (!connection.Settings.UseUsageAdvisor) return;
+
+            // we were asked to run the usage advisor so report if the resultset
+            // was not entirely read.
+            connection.UsageAdvisor.ReadPartialResultSet(Command.CommandText);
+
+            // now see if all fields were accessed
+            List<string> fieldsNotAccessed = new List<string>();
+            bool readAll = true;
+            for (int i=0; i<resultSet.Size; i++)
+                if (!resultSet.FieldRead(i))
+                    fieldsNotAccessed.Add(resultSet.Fields[i].ColumnName);
+            if (!readAll)
+                connection.UsageAdvisor.ReadPartialRowSet(Command.CommandText, fieldsNotAccessed);
+        }
+
 		/// <summary>
 		/// Advances the data reader to the next result, when reading the results of batch SQL statements.
 		/// </summary>
@@ -810,34 +833,41 @@ namespace MySql.Data.MySqlClient
                 throw new MySqlException(Resources.NextResultIsClosed);
 
             // this will clear out any unread data
-            resultSet.Close();
+            CloseCurrentResults();
 
             // single result means we only return a single resultset.  If we have already
             // returned one, then we return false;
-            if (resultSet.ResultsIndex == 0 && (commandBehavior & CommandBehavior.SingleResult) != 0)
+            if (resultSet != null && (commandBehavior & CommandBehavior.SingleResult) != 0)
             {
                 // Command is completed, clear the IO timeouts for the stream
-                connection.driver.ResetTimeout(0);
+                driver.ResetTimeout(0);
                 return false;
             }
 
-			// tell our command to continue execution of the SQL batch until it its
-			// another resultset
-			try
-			{
-                if (!resultSet.NextResult())
+
+            // next load up the next resultset if any
+            try
+            {
+                resultSet = driver.NextResult(Statement.StatementId);
+                if (resultSet == null) return false;
+                if (resultSet.IsOutputParameters) return false;
+
+                if (resultSet.Size == 0)
                 {
-                    // Command is completed, clear the IO timeouts for the stream
                     connection.driver.ResetTimeout(0);
-                    return false;
+                    Command.lastInsertedId = resultSet.InsertedId;
+                    if (affectedRows == -1)
+                        affectedRows = resultSet.AffectedRows;
+                    else
+                        affectedRows += resultSet.AffectedRows;
                 }
 
 				// issue any requested UA warnings
 				if (connection.Settings.UseUsageAdvisor)
 				{
-					if ((connection.driver.ServerStatus & ServerStatusFlags.NoIndex) != 0)
+					if (connection.driver.HasStatus(ServerStatusFlags.NoIndex))
 						connection.UsageAdvisor.UsingNoIndex(command.CommandText);
-					if ((connection.driver.ServerStatus & ServerStatusFlags.BadIndex) != 0)
+					if (connection.driver.HasStatus(ServerStatusFlags.BadIndex))
 						connection.UsageAdvisor.UsingBadIndex(command.CommandText);
 				}
 

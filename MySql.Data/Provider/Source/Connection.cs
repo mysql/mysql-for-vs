@@ -276,7 +276,7 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-#if !CF
+#if !CF && !__MonoCS__
 
         protected override DbProviderFactory DbProviderFactory
         {
@@ -285,6 +285,7 @@ namespace MySql.Data.MySqlClient
                 return MySqlClientFactory.Instance;
             }
         }
+		
 #endif
 
         #endregion
@@ -363,7 +364,7 @@ namespace MySql.Data.MySqlClient
                 throw new InvalidOperationException(Resources.ConnectionNotOpen);
 
             // First check to see if we are in a current transaction
-            if ((driver.ServerStatus & ServerStatusFlags.InTransaction) != 0)
+            if (driver.HasStatus(ServerStatusFlags.InTransaction))
                 throw new InvalidOperationException(Resources.NoNestedTransactions);
 
             MySqlTransaction t = new MySqlTransaction(this, iso);
@@ -576,7 +577,7 @@ namespace MySql.Data.MySqlClient
             if (settings.Pooling && driver.IsOpen)
             {
                 // if we are in a transaction, roll it back
-                if ((driver.ServerStatus & ServerStatusFlags.InTransaction) != 0)
+                if (driver.HasStatus(ServerStatusFlags.InTransaction))
                 {
                     MySqlTransaction t = new MySqlTransaction(this, IsolationLevel.Unspecified);
                     t.Rollback();
