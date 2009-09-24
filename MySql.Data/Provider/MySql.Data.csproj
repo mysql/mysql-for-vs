@@ -241,6 +241,7 @@
     </Compile>
     <Compile Include="Properties\VersionInfo.cs" />
     <Compile Include="Source\common\Cache.cs" />
+    <Compile Include="Source\common\MyNetworkStream.cs" />
     <Compile Include="Source\common\MySqlTokenizer.cs" />
     <Compile Include="Source\BulkLoader.cs" />
     <Compile Include="Source\MySqlPacket.cs" />

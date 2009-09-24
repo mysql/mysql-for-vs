@@ -28,10 +28,11 @@ namespace MySql.Data.MySqlClient
 {
     /// <summary>
     /// Stream that supports timeout of IO operations.
-    /// This class is used is used to support timeouts for SQL command, where a typical operation involves several network reads/writes. 
+    /// This class is used is used to support timeouts for SQL command, where a 
+    /// typical operation involves several network reads/writes. 
     /// Timeout here is defined as the accumulated duration of all IO operations.
     /// </summary>
-    /// <remarks> Any IO exception or timeout exception closes the stream </remarks>
+    
     internal class TimedStream : Stream
     {
         Stream baseStream;
@@ -84,6 +85,7 @@ namespace MySql.Data.MySqlClient
                 // even after IO completed successfully.
                 if (stopwatch.ElapsedMilliseconds > timeout)
                 {
+                    ResetTimeout(System.Threading.Timeout.Infinite);
                     throw new TimeoutException("Timeout in IO operation");
                 }
             }
@@ -113,7 +115,7 @@ namespace MySql.Data.MySqlClient
             }
             catch (Exception e)
             {
-                HandleTimeout(e);
+                HandleException(e);
             }
         }
 
@@ -153,7 +155,7 @@ namespace MySql.Data.MySqlClient
             }
             catch (Exception e)
             {
-                HandleTimeout(e);
+                HandleException(e);
                 throw;
             }
         }
@@ -169,7 +171,7 @@ namespace MySql.Data.MySqlClient
             }
             catch (Exception e)
             {
-                HandleTimeout(e);
+                HandleException(e);
                 throw;
             }
         }
@@ -194,7 +196,7 @@ namespace MySql.Data.MySqlClient
             }
             catch (Exception e)
             {
-                HandleTimeout(e);
+                HandleException(e);
                 throw;
             }
         }
@@ -242,33 +244,16 @@ namespace MySql.Data.MySqlClient
 
 
         /// <summary>
-        /// Examine the exception chain for exceptions throw during read/write operations
-        /// If timeout exception is detected in the chain, new TimeoutException is thrown.
+        /// Common handler for IO exceptions.
+        /// Resets timeout to infinity if timeout exception is 
+        /// detected and stops the times.
         /// </summary>
         /// <param name="e">original exception</param>
-        void HandleTimeout(Exception e)
+        void HandleException(Exception e)
         {
             stopwatch.Stop();
-            Close();
-            Exception currentException = e;
-
-            while (currentException != null)
-            {
-                if (currentException is SocketException)
-                {
-                    SocketException socketException = (SocketException)currentException;
-#if CF
-                    if (socketException.NativeErrorCode == 10060)
-#else
-                    if (socketException.SocketErrorCode == SocketError.TimedOut)
-#endif
-                    {
-                        throw new TimeoutException(e.Message, e);
-                    }
-                }
-                currentException = currentException.InnerException;
-            }
+            ResetTimeout(-1);
+            throw e;
         }
-
     }
 }

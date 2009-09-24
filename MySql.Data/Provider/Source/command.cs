@@ -53,7 +53,6 @@ namespace MySql.Data.MySqlClient
 		internal Int64 lastInsertedId;
 		private PreparableStatement statement;
 		private int commandTimeout;
-		private bool timedOut, canceled;
         private bool resetSqlSelect;
         List<MySqlCommand> batch;
         private string batchableCommandText;
@@ -246,30 +245,15 @@ namespace MySql.Data.MySqlClient
 		#region Methods
 
 		/// <summary>
-		/// Attempts to cancel the execution of a MySqlCommand.
+		/// Attempts to cancel the execution of a currently active command
 		/// </summary>
 		/// <remarks>
 		/// Cancelling a currently active query only works with MySQL versions 5.0.0 and higher.
 		/// </remarks>
-		public override void Cancel()
-		{
-            if (canceled) return;
-
-			if (!connection.driver.Version.isAtLeast(5, 0, 0))
-				throw new NotSupportedException(Resources.CancelNotSupported);
-
-            MySqlConnectionStringBuilder cb = new MySqlConnectionStringBuilder(
-                connection.Settings.ConnectionString);
-            cb.Pooling = false;
-			using(MySqlConnection c = new MySqlConnection(cb.ConnectionString))
-			{
-                c.Open();
-                MySqlCommand cmd = new MySqlCommand(String.Format("KILL QUERY {0}",
-                     connection.ServerThread), c);
-                cmd.ExecuteNonQuery();
-                canceled = true;
-			}
-		}
+        public override void Cancel()
+        {
+            connection.CancelQuery(connection.ConnectionTimeout);
+        }
 
 		/// <summary>
 		/// Creates a new instance of a <see cref="MySqlParameter"/> object.
@@ -388,48 +372,39 @@ namespace MySql.Data.MySqlClient
             try
             {
                 connection.driver.ResetTimeout(commandTimeout * 1000);
-                MySqlDataReader reader = new MySqlDataReader(this, statement, behavior);
+                MySqlDataReader reader  = new MySqlDataReader(this, statement, behavior);
                 // execute the statement
                 statement.Execute();
                 // wait for data to return
-                reader.NextResult();
                 connection.Reader = reader;
+                reader.NextResult();
                 return reader;
             }
             catch (TimeoutException tex)
             {
-                try
-                {
-                    Connection.Abort();
-                }
-                catch (Exception)
-                {
-                }
-                throw new MySqlException(String.Format(Resources.Timeout,tex.Message),true, tex);
+                connection.HandleTimeout(tex);
+                return null;
             }
             catch (MySqlException ex)
             {
-                // Rethrow timeout exception that might come from NextResult()
-                // Connection will be already closed.
-                Exception exception = ex;
-                while (exception.InnerException != null)
-                {
-                    if (exception.InnerException is TimeoutException)
-                        throw exception;
-                    exception = exception.InnerException;
-                }
+                if (ex.InnerException is TimeoutException)
+                    throw ex; // already handled
 
                 try
                 {
                     ResetSqlSelectLimit();
                 }
-                catch (Exception) { }
+                catch (Exception) 
+                {
+                    // Reset SqlLimit did not work, connection is hosed.
+                    Connection.Close();
+                    throw new MySqlException(ex.Message, true, ex);
+                }
 
                 // if we caught an exception because of a cancel, then just return null
                 if (ex.Number == 1317)
-                {
                     return null;
-                }
+
                 if (ex.IsFatal)
                     Connection.Close();
                 if (ex.Number == 0)

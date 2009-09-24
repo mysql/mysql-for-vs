@@ -55,7 +55,7 @@ namespace MySql.Data.MySqlClient
         private PerformanceMonitor perfMonitor;
 #endif
         private bool isExecutingBuggyQuery;
-        private bool ignoreKill;
+        private bool abortOnTimeout;
         private string database;
 
         /// <include file='docs/MySqlConnection.xml' path='docs/InfoMessage/*'/>
@@ -568,22 +568,6 @@ namespace MySql.Data.MySqlClient
             catch (Exception)
             {
             }
-
-
-            if (Settings.ConnectionProtocol == MySqlConnectionProtocol.SharedMemory)
-            {
-                // Unfortunately server does not detect dead  shared memory 
-                // connections. We must kill the connection to prevent 
-                // connection leaks on the server side.
-                try
-                {
-                    Kill();
-                }
-                catch (Exception e)
-                {
-                    Logger.LogException(e);
-                }
-            }
             SetState(ConnectionState.Closed, true);
         }
 
@@ -638,28 +622,77 @@ namespace MySql.Data.MySqlClient
 			return cmd.ExecuteScalar().ToString();
 		}
 
-        private void Kill()
+
+
+        internal void HandleTimeout(TimeoutException tex)
         {
-            if (ignoreKill)
+            bool isFatal = false;
+
+            if (abortOnTimeout)
             {
-                Logger.LogWarning("Connection.Kill() is ignored");
-                return;
+                // Special connection started to cancel a query.
+                // Timeout handler is disabled to prevent recursive connection
+                // spawning when original query and KILL time out.
+                Abort();
+                throw new MySqlException(Resources.Timeout, true , tex);
             }
+
+            try
+            {
+
+                // Do a fast cancel.The reason behind small values for connection
+                // and command timeout is that we do not want user to wait longer
+                // after command has already expired.
+                // Microsoft's SqlClient seems to be using 5 seconds timeouts 
+                // here as well.
+                // Read the  error packet with "interrupted" message.
+                CancelQuery(5);
+                driver.ResetTimeout(5000);
+                if (Reader != null)
+                {
+                    Reader.Close();
+                    Reader = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.LogWarning("Could not kill query in timeout handler, " +
+                    " aborting connection. Exception was " + ex.Message);
+                Abort();
+                isFatal = true;
+            }
+            finally
+            {
+                if (driver != null)
+                {
+                   driver.ResetTimeout(0);
+                }
+            }
+            throw new MySqlException(Resources.Timeout, isFatal, tex);
+        }
+
+        public void CancelQuery(int timeout)
+        {
+
+            if (!driver.Version.isAtLeast(5, 0, 0))
+                throw new NotSupportedException(Resources.CancelNotSupported);
 
             MySqlConnectionStringBuilder cb = new MySqlConnectionStringBuilder(
                 Settings.ConnectionString);
             cb.Pooling = false;
+            cb.ConnectionTimeout = (uint) timeout;
+          
             using(MySqlConnection c = new MySqlConnection(cb.ConnectionString))
             {
-                // prevent recursive spawning new connections, 
-                // in the very unlikely case "kill" command times out.
-                c.ignoreKill = true; 
+                c.abortOnTimeout = true;
                 c.Open();
-                MySqlCommand cmd = new MySqlCommand(String.Format("KILL {1}",
-                    ServerThread), c);
+                string commandText = "KILL QUERY " + ServerThread;
+                MySqlCommand cmd = new MySqlCommand(commandText, c);
+                cmd.CommandTimeout = timeout;
                 cmd.ExecuteNonQuery();
             }
         }
+
 
         #region GetSchema Support
 

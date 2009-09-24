@@ -76,11 +76,11 @@
     </Compile>
     <Compile Include="Source\common\Cache.cs" />
     <Compile Include="Source\common\ContextString.cs" />
+    <Compile Include="Source\common\MyNetworkStream.cs" />
     <Compile Include="Source\common\MySqlTokenizer.cs" />
     <Compile Include="Source\common\NativeMethods.cs" />
     <Compile Include="Source\common\Platform.cs" />
     <Compile Include="Source\common\SHA1.cs" />
-    <Compile Include="Source\common\SocketStream.cs" />
     <Compile Include="Source\common\StreamCreator.cs" />
     <Compile Include="Source\common\Version.cs" />
     <Compile Include="Source\CompressedStream.cs" />
