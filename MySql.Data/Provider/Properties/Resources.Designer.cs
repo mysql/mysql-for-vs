@@ -402,6 +402,15 @@ namespace MySql.Data.MySqlClient.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; is an illegal value for a boolean option..
+        /// </summary>
+        public static string InvalidValueForBoolean {
+            get {
+                return ResourceManager.GetString("InvalidValueForBoolean", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Keyword does not allow null values..
         /// </summary>
         public static string KeywordNoNull {

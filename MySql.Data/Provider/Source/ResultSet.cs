@@ -29,7 +29,6 @@ namespace MySql.Data.MySqlClient
 {
     internal class ResultSet
     {
-        private MySqlDataReader reader;
         private Driver driver;
         private bool hasRows;
         private bool[] uaFieldsUsed;
@@ -38,20 +37,30 @@ namespace MySql.Data.MySqlClient
         private Hashtable fieldHashCS;
         private Hashtable fieldHashCI;
         private int rowIndex;
-        private int resultsIndex;
         private bool readDone;
         private bool isSequential;
         private int seqIndex;
-        private bool hasOutputParameters;
+        private bool isOutputParameters;
+        private int affectedRows;
+        private int insertedId;
+        private int statementId;
 
-        public ResultSet(MySqlDataReader reader)
+        public ResultSet(int affectedRows, int insertedId)
         {
-            resultsIndex = -1;
+            this.affectedRows = affectedRows;
+            this.insertedId = insertedId;
             readDone = true;
-            this.reader = reader;
-            driver = reader.driver;
-            fieldHashCS = new Hashtable();
-            fieldHashCI = new Hashtable(StringComparer.InvariantCultureIgnoreCase);
+        }
+
+        public ResultSet(Driver d, int statementId, int numCols)
+        {
+            driver = d;
+            this.statementId = statementId;
+            rowIndex = -1;
+            LoadColumns(numCols);
+            isOutputParameters = driver.HasStatus(ServerStatusFlags.OutputParameters);
+            hasRows = driver.FetchDataRow(statementId, 0, numCols);
+            readDone = !hasRows;
         }
 
         #region Properties
@@ -64,11 +73,6 @@ namespace MySql.Data.MySqlClient
         public int RowIndex
         {
             get { return rowIndex; }
-        }
-
-        public int ResultsIndex
-        {
-            get { return resultsIndex; }
         }
 
         public int Size
@@ -86,9 +90,20 @@ namespace MySql.Data.MySqlClient
             get { return values; }
         }
 
-        public bool HasOutputParameters
+        public bool IsOutputParameters
         {
-            get { return hasOutputParameters; }
+            get { return isOutputParameters; }
+            set { isOutputParameters = value; }
+        }
+
+        public int AffectedRows
+        {
+            get { return affectedRows; }
+        }
+
+        public int InsertedId
+        {
+            get { return insertedId; }
         }
 
         #endregion
@@ -112,13 +127,6 @@ namespace MySql.Data.MySqlClient
 
             // Throw an exception if the ordinal cannot be found.
             throw new IndexOutOfRangeException(Resources.CouldNotFindColumnName);
-        }
-
-        public void ClearAll()
-        {
-            Close();
-            while (NextResult())
-                Close();
         }
 
         /// <summary>
@@ -166,7 +174,7 @@ namespace MySql.Data.MySqlClient
                 bool fetched = false;
                 try
                 {
-                    fetched = driver.FetchDataRow(reader.Statement.StatementId, 0, Size);
+                    fetched = driver.FetchDataRow(statementId, 0, Size);
                 }
                 catch (MySqlException ex)
                 {
@@ -186,72 +194,6 @@ namespace MySql.Data.MySqlClient
         }
 
         /// <summary>
-        /// Attempt to get the next resultset from the server
-        /// </summary>
-        /// <returns>true if a resultset was loaded, false otherwise</returns>
-        public bool NextResult()
-        {
-            if (!driver.MoreResults)
-                return false;
-
-            rowIndex = -1;
-            readDone = true;
-            hasRows = false;
-            hasOutputParameters = false;
-            try
-            {
-                // see if resultset is on wire
-                long count = 0;
-                while (true)  //count <= 0 && driver.MoreResults)
-                {
-                    if (!driver.MoreResults) return false;
-                    count = driver.ReadResult();
-                    if (count == -1) continue;
-                    if (count > 0) break;
-                    reader.Command.lastInsertedId = driver.LastInsertedId;
-                    reader.affectedRows = driver.AffectedRows;
-                }
-
-                uaFieldsUsed = new bool[count];
-                LoadMetaData();
-
-                // we know if we are in output parameters here
-                bool inOutputParams = (driver.ServerStatus & ServerStatusFlags.OutputParameters) != 0;
-                bool rowExists = driver.FetchDataRow(reader.Statement.StatementId, 0, fields.Length);
-                if (rowIndex == -1 && !inOutputParams)
-                    hasRows = rowExists;
-
-                // if we are in the output parameters resultset then we are going to return false to our caller
-                // so we go ahead and read the parameters now
-                if (inOutputParams)
-                {
-                    ReadColumnData(true);
-                    hasOutputParameters = true;
-                    return false;
-                }
-                else
-                {
-                    resultsIndex++;
-                    readDone = !rowExists;
-                    return true;
-                }
-            }
-            catch (TimeoutException tex)
-            {
-                hasRows = false;
-                readDone = false;
-                reader.Command.Connection.HandleTimeout(tex);
-                throw;
-            }
-            catch (MySqlException)
-            {
-                hasRows = false;
-                readDone = true;
-                throw;
-            }
-        }
-
-        /// <summary>
         /// Closes the current resultset, dumping any data still on the wire
         /// </summary>
         public void Close()
@@ -260,21 +202,12 @@ namespace MySql.Data.MySqlClient
 
             while (driver.SkipDataRow()) { }
             readDone = true;
+        }
 
-            MySqlConnection connection = reader.Command.Connection;
-
-            if (!connection.Settings.UseUsageAdvisor) return;
-
-            // we were asked to run the usage advisor so report if the resultset
-            // was not entirely read.
-            connection.UsageAdvisor.ReadPartialResultSet(reader.Command.CommandText);
-       
-            // now see if all fields were accessed
-            bool readAll = true;
-            foreach (bool b in uaFieldsUsed)
-                readAll &= b;
-            if (!readAll)
-                connection.UsageAdvisor.ReadPartialRowSet(reader.Command.CommandText, uaFieldsUsed, fields);
+        public bool FieldRead(int index)
+        {
+            Debug.Assert(Size > index);
+            return uaFieldsUsed[index];
         }
 
         public void SetValueObject(int i, IMySqlValue valueObject)
@@ -287,12 +220,15 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Loads the column metadata for the current resultset
         /// </summary>
-        private void LoadMetaData()
+        private void LoadColumns(int numCols)
         {
-            fields = driver.ReadColumnMetadata(uaFieldsUsed.Length);
-            fieldHashCS.Clear();
-            fieldHashCI.Clear();
-            values = new IMySqlValue[fields.Length];
+            fields = driver.GetColumns(numCols);
+
+            values = new IMySqlValue[numCols];
+            uaFieldsUsed = new bool[numCols];
+            fieldHashCS = new Hashtable();
+            fieldHashCI = new Hashtable(StringComparer.InvariantCultureIgnoreCase);
+
             for (int i = 0; i < fields.Length; i++)
             {
                 string columnName = fields[i].ColumnName;
@@ -310,7 +246,7 @@ namespace MySql.Data.MySqlClient
                 values[i] = driver.ReadColumnValue(i, fields[i], values[i]);
             if (outputParms)
             {
-                bool rowExists = driver.FetchDataRow(reader.Statement.StatementId, 0, fields.Length);
+                bool rowExists = driver.FetchDataRow(statementId, 0, fields.Length);
                 rowIndex = 0;
                 if (rowExists)
                     throw new MySqlException(Resources.MoreThanOneOPRow);

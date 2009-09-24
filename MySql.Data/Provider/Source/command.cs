@@ -338,6 +338,9 @@ namespace MySql.Data.MySqlClient
 
 			string sql = TrimSemicolons(cmdText);
 
+            if (CommandType == CommandType.TableDirect)
+                sql = "SELECT * FROM " + sql;
+
             // now we check to see if we are executing a query that is buggy
             // in 4.1
             connection.IsExecutingBuggyQuery = false;

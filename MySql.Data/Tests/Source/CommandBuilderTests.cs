@@ -29,7 +29,6 @@ namespace MySql.Data.MySqlClient.Tests
     {
         public CommandBuilderTests()
         {
-            csAdditions += ";logging=true;";
         }
 
         [Test]

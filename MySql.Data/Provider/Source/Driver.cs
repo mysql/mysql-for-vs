@@ -48,8 +48,6 @@ namespace MySql.Data.MySqlClient
         protected Hashtable charSets;
         protected bool hasWarnings;
         protected long maxPacketSize;
-        protected int lastInsertId;
-        protected long affectedRows;
 #if !CF
         protected MySqlPromotableTransaction currentTransaction;
         protected bool inActiveUse;
@@ -96,11 +94,6 @@ namespace MySql.Data.MySqlClient
             set { encoding = value; }
         }
 
-        public ServerStatusFlags ServerStatus
-        {
-            get { return serverStatus; }
-        }
-
         public bool HasWarnings
         {
             get { return hasWarnings; }
@@ -138,16 +131,6 @@ namespace MySql.Data.MySqlClient
         internal int ConnectionCharSetIndex
         {
             get { return serverCharSetIndex; }
-        }
-
-        public long AffectedRows
-        {
-            get { return affectedRows; }
-        }
-
-        public int LastInsertedId
-        {
-            get { return lastInsertId; }
         }
 
         public bool MoreResults
@@ -356,17 +339,18 @@ namespace MySql.Data.MySqlClient
         public abstract int PrepareStatement(string sql, ref MySqlField[] parameters);
         public abstract void Reset();
         public abstract void SendQuery(MySqlPacket packet);
-        public abstract long ReadResult();
+        public abstract ResultSet NextResult(int statementId);
         public abstract bool FetchDataRow(int statementId, int pageSize, int columns);
         public abstract bool SkipDataRow();
         public abstract IMySqlValue ReadColumnValue(int index, MySqlField field, IMySqlValue value);
         public abstract void ExecuteStatement(byte[] bytes);
         public abstract void SkipColumnValue(IMySqlValue valObject);
-        public abstract MySqlField[] ReadColumnMetadata(int count);
+        public abstract MySqlField[] GetColumns(int count);
         public abstract bool Ping();
         public abstract void CloseStatement(int id);
         public abstract void ExecuteDirect(string sql);
         public abstract void ResetTimeout(int timeoutMilliseconds);
+        public abstract bool HasStatus(ServerStatusFlags flag);
 		#endregion
 
 
