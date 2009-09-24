@@ -262,7 +262,7 @@
     <value>Canceling an active query is only supported on MySQL 5.0.0 and above. </value>
   </data>
   <data name="Timeout" xml:space="preserve">
-    <value>Timeout expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. Details : {0}</value>
+    <value>Timeout expired.  The timeout period elapsed prior to completion of the operation or the server is not responding.</value>
   </data>
   <data name="CancelNeeds50" xml:space="preserve">
     <value>Canceling an executing query requires MySQL 5.0 or higher.</value>
@@ -356,9 +356,6 @@
   </data>
   <data name="GetHostEntryFailed" xml:space="preserve">
     <value>Call to GetHostEntry failed after {0} while querying for hostname '{1}': SocketErrorCode={2}, ErrorCode={3}, NativeErrorCode={4}.</value>
-  </data>
-  <data name="TimeoutExpiredNullObject" xml:space="preserve">
-    <value>Timeout expired but command object was null.  This should not happen.</value>
   </data>
   <data name="UnableToEnumerateUDF" xml:space="preserve">
     <value>An error occured attempting to enumerate the user-defined functions.  Do you have SELECT privileges on the mysql.func table?</value>

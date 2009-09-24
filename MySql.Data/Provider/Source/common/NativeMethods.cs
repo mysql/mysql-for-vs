@@ -90,6 +90,10 @@ namespace MySql.Data.Common
 		[DllImport("kernel32.dll", SetLastError=true)]
 		public static extern bool CloseHandle(IntPtr handle);
 
+        [return: MarshalAs(UnmanagedType.Bool)]
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool CancelIo(IntPtr handle);
+
 		[return:MarshalAs(UnmanagedType.Bool)]
 		[DllImport("kernel32.dll", SetLastError=true)]
 		public static extern bool FlushFileBuffers(IntPtr handle);

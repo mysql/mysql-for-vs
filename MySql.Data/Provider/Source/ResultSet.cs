@@ -236,11 +236,12 @@ namespace MySql.Data.MySqlClient
                     return true;
                 }
             }
-            catch(TimeoutException tex)
+            catch (TimeoutException tex)
             {
-                reader.Command.Connection.Abort();
-                throw new MySqlException(
-                   String.Format(Resources.Timeout,tex.Message),true, tex);
+                hasRows = false;
+                readDone = false;
+                reader.Command.Connection.HandleTimeout(tex);
+                throw;
             }
             catch (MySqlException)
             {

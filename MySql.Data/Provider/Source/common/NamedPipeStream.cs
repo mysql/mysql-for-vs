@@ -25,6 +25,7 @@ using MySql.Data.MySqlClient.Properties;
 using Microsoft.Win32.SafeHandles;
 using System.Threading;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 
 
@@ -35,7 +36,7 @@ namespace MySql.Data.Common
     /// </summary>
     internal class NamedPipeStream : Stream
     {
-
+        SafeFileHandle handle;
         Stream fileStream;
         int readTimeout = Timeout.Infinite;
         int writeTimeout = Timeout.Infinite;
@@ -46,11 +47,17 @@ namespace MySql.Data.Common
             Open(path, mode);
         }
 
+        void CancelIo()
+        {
+            bool ok = NativeMethods.CancelIo(handle.DangerousGetHandle());
+            if (!ok)
+                throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error());
+        }
         public void Open( string path, FileAccess mode )
         {
-           SafeFileHandle handle = new SafeFileHandle(NativeMethods.CreateFile(path, NativeMethods.GENERIC_READ | NativeMethods.GENERIC_WRITE,
-                        0, null, NativeMethods.OPEN_EXISTING, NativeMethods.FILE_FLAG_OVERLAPPED, 0),true);
-           fileStream = new FileStream(handle, mode,4096 , true);
+            handle = new SafeFileHandle( NativeMethods.CreateFile(path, NativeMethods.GENERIC_READ | NativeMethods.GENERIC_WRITE,
+                         0, null, NativeMethods.OPEN_EXISTING, NativeMethods.FILE_FLAG_OVERLAPPED, 0),true);
+            fileStream = new FileStream(handle, mode, 4096, true);
         }
 
         public override bool CanRead
@@ -84,6 +91,29 @@ namespace MySql.Data.Common
             fileStream.Flush();
         }
 
+
+        private int CompleteAsyncIO(IAsyncResult result, int timeout,
+            bool isRead)
+        {
+
+            if (!result.AsyncWaitHandle.WaitOne(timeout))
+            {
+                CancelIo();
+                try
+                {
+                    if (isRead)
+                        fileStream.EndRead(result);
+                }
+                catch (Exception) { }
+                throw new TimeoutException("Timeout in named pipe IO");
+            }
+            if(isRead)
+                return fileStream.EndRead(result);
+
+            fileStream.EndWrite(result);
+            return 0; // write IO is always complete, return value does not matter 
+        }
+
         public override int Read(byte[] buffer, int offset, int count)
         {
             if(readTimeout == Timeout.Infinite)
@@ -93,23 +123,7 @@ namespace MySql.Data.Common
             IAsyncResult result = fileStream.BeginRead(buffer, offset, count, null, null);
             if (result.CompletedSynchronously)
                 return fileStream.EndRead(result);
-            int timeLeft = readTimeout;
-
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-
-            while(!result.IsCompleted)
-            {
-                bool signaled = result.AsyncWaitHandle.WaitOne(timeLeft);
-                if (!signaled)
-                    throw new TimeoutException("Timeout when reading from named pipe");
-                timeLeft -= (int)stopwatch.ElapsedMilliseconds;
-                if (timeLeft < 0)
-                    throw new TimeoutException("Timeout when reading from named pipe");
-            }
-            int bytesRead = fileStream.EndRead(result);
-
-            return bytesRead;
+            return CompleteAsyncIO(result, readTimeout, true);
         }
 
 
@@ -125,25 +139,23 @@ namespace MySql.Data.Common
             {
                 fileStream.EndWrite(result);
             }
-            int timeLeft = writeTimeout;
 
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-            while (!result.IsCompleted)
-            {
-                bool signaled = result.AsyncWaitHandle.WaitOne(timeLeft);
-                if (!signaled)
-                    throw new TimeoutException("Timeout when writing to named pipe");
-                timeLeft -= (int)stopwatch.ElapsedMilliseconds;
-                if (timeLeft < 0)
-                    throw new TimeoutException("Timeout when writing to named pipe");
-            }
-            fileStream.EndWrite(result);
+            CompleteAsyncIO(result, writeTimeout, false);
         }
 
         public override void Close()
         {
-            fileStream.Close();
+            if (handle != null && !handle.IsInvalid && !handle.IsClosed)
+            {
+                fileStream.Close();
+                try
+                {
+                    handle.Close();
+                }
+                catch (Exception)
+                {
+                }
+            }
         }
 
         public override void SetLength(long length)

@@ -440,7 +440,7 @@ namespace MySql.Data.MySqlClient.Tests
     {
         protected override string GetConnectionInfo()
         {
-            return String.Format("protocol=pipe;pipe name={0}", pipeName);
+            return String.Format("protocol=namedpipe;pipe name={0}", pipeName);
         }
     }
 
@@ -450,7 +450,7 @@ namespace MySql.Data.MySqlClient.Tests
     {
         protected override string GetConnectionInfo()
         {
-            return String.Format("protocol=pipe;pipe name={0};compress=true", pipeName);
+            return String.Format("protocol=namedpipe;pipe name={0};compress=true", pipeName);
         }
     }
 
@@ -459,7 +459,7 @@ namespace MySql.Data.MySqlClient.Tests
     {
         protected override string GetConnectionInfo()
         {
-            return String.Format("protocol=memory; shared memory name={0}", memoryName);
+            return String.Format("protocol=sharedmemory; shared memory name={0}", memoryName);
         }
     }
 
@@ -469,7 +469,7 @@ namespace MySql.Data.MySqlClient.Tests
     {
         protected override string GetConnectionInfo()
         {
-            return String.Format("protocol=memory; shared memory name={0};compress=true", memoryName);
+            return String.Format("protocol=sharedmemory; shared memory name={0};compress=true", memoryName);
         }
     }
 #endif

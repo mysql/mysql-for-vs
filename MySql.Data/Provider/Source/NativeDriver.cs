@@ -483,6 +483,7 @@ namespace MySql.Data.MySqlClient
                     {
                         try
                         {
+                            ResetTimeout(1000);
                             packet.Clear();
                             packet.WriteByte((byte)DBCmd.QUIT);
                             ExecutePacket(packet);
@@ -738,7 +739,8 @@ namespace MySql.Data.MySqlClient
                 packet.ReadInteger(2); // reserved
             }
 
-            if (charSets != null && field.CharacterSetIndex != -1)
+            if (charSets != null && field.CharacterSetIndex != -1
+                && charSets[field.CharacterSetIndex] != null)
             {
                 CharacterSet cs = CharSetMap.GetCharacterSet(Version, (string) charSets[field.CharacterSetIndex]);
                 // starting with 6.0.4 utf8 has a maxlen of 4 instead of 3.  The old
@@ -930,7 +932,8 @@ namespace MySql.Data.MySqlClient
         /// 
         public override void ResetTimeout(int timeout)
         {
-            stream.ResetTimeout(timeout);
+            if (stream != null)
+                stream.ResetTimeout(timeout);
         }
 
     }

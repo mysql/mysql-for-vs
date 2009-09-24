@@ -156,14 +156,22 @@ namespace MySql.Data.MySqlClient
 		public override void Close()
 		{
 			if (!isOpen) return;
+            isOpen = false;
 
 			bool shouldCloseConnection = (commandBehavior & CommandBehavior.CloseConnection) != 0;
 			commandBehavior = CommandBehavior.Default;
 			connection.Reader = null;
 
             // clear all remaining resultsets
-            resultSet.ClearAll();
-
+            try
+            {
+                resultSet.ClearAll();
+            }
+            catch (MySqlException ex)
+            {
+                if (ex.Number != 1317)
+                    throw;
+            }
 			// we now give the command a chance to terminate.  In the case of
 			// stored procedures it needs to update out and inout parameters
 			command.Close(this);
@@ -173,8 +181,6 @@ namespace MySql.Data.MySqlClient
 
 			command = null;
 			connection = null;
-
-			isOpen = false;
 		}
 
 		#region TypeSafe Accessors
@@ -839,6 +845,10 @@ namespace MySql.Data.MySqlClient
 			}
             catch (MySqlException ex)
             {
+                if (ex.InnerException is TimeoutException)
+                    // already handled
+                    throw ex;
+
 				if (ex.IsFatal)
 					connection.Abort();
                 if (ex.Number == 0)
@@ -862,9 +872,8 @@ namespace MySql.Data.MySqlClient
             }
             catch (TimeoutException tex)
             {
-                connection.Abort();
-                throw new MySqlException(
-                    String.Format(Resources.Timeout, tex.Message), true, tex);
+                connection.HandleTimeout(tex);
+                return false; // unreached
             }
             catch (MySqlException ex)
             {
