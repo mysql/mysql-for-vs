@@ -840,7 +840,6 @@ namespace MySql.Data.MySqlClient
             if (resultSet != null && (commandBehavior & CommandBehavior.SingleResult) != 0)
             {
                 // Command is completed, clear the IO timeouts for the stream
-                driver.ResetTimeout(0);
                 return false;
             }
 
@@ -854,7 +853,6 @@ namespace MySql.Data.MySqlClient
 
                 if (resultSet.Size == 0)
                 {
-                    connection.driver.ResetTimeout(0);
                     Command.lastInsertedId = resultSet.InsertedId;
                     if (affectedRows == -1)
                         affectedRows = resultSet.AffectedRows;
@@ -875,10 +873,6 @@ namespace MySql.Data.MySqlClient
 			}
             catch (MySqlException ex)
             {
-                if (ex.InnerException is TimeoutException)
-                    // already handled
-                    throw ex;
-
 				if (ex.IsFatal)
 					connection.Abort();
                 if (ex.Number == 0)

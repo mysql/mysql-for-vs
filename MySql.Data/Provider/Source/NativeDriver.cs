@@ -553,9 +553,8 @@ namespace MySql.Data.MySqlClient
             }
             catch (TimeoutException)
             {
-                // If read was interrupted because of timeout,
-                // allow NextResult to reenter here
-                serverStatus = ServerStatusFlags.MoreResults;
+                // Do not reset serverStatus, allow to reenter, e.g when
+                // ResultSet is closed.
                 throw;
             }
             catch (Exception)
