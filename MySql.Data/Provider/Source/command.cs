@@ -56,6 +56,8 @@ namespace MySql.Data.MySqlClient
         private bool resetSqlSelect;
         List<MySqlCommand> batch;
         private string batchableCommandText;
+        CommandTimer commandTimer;
+
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ctor1/*'/>
 		public MySqlCommand()
@@ -302,11 +304,21 @@ namespace MySql.Data.MySqlClient
             return reader.RecordsAffected;
 		}
 
-		internal void Close(MySqlDataReader reader)
-		{
-			if (statement != null)
-				statement.Close(reader);
+        internal void ClearCommandTimer()
+        {
+            if (commandTimer != null)
+            {
+                commandTimer.Dispose();
+                commandTimer = null;
+            }
+        }
+
+        internal void Close(MySqlDataReader reader)
+        {
+            if (statement != null)
+                statement.Close(reader);
             ResetSqlSelectLimit();
+            ClearCommandTimer();
         }
 
         /// <summary>
@@ -316,8 +328,10 @@ namespace MySql.Data.MySqlClient
         {
             // if we are supposed to reset the sql select limit, do that here
             if (resetSqlSelect)
+            {
+                resetSqlSelect = false;
                 new MySqlCommand("SET SQL_SELECT_LIMIT=-1", connection).ExecuteNonQuery();
-            resetSqlSelect = false;
+            }
         }
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ExecuteReader/*'/>
@@ -326,15 +340,19 @@ namespace MySql.Data.MySqlClient
 			return ExecuteReader(CommandBehavior.Default);
 		}
 
-		/// <include file='docs/mysqlcommand.xml' path='docs/ExecuteReader1/*'/>
-		public new MySqlDataReader ExecuteReader(CommandBehavior behavior)
-		{
-			lastInsertedId = -1;
-			CheckState();
 
-			if (cmdText == null ||
-				 cmdText.Trim().Length == 0)
-				throw new InvalidOperationException(Resources.CommandTextNotInitialized);
+        /// <include file='docs/mysqlcommand.xml' path='docs/ExecuteReader1/*'/>
+        public new MySqlDataReader ExecuteReader (CommandBehavior behavior)
+        {
+
+            CheckState();
+
+            commandTimer = new CommandTimer(connection, CommandTimeout);
+
+            lastInsertedId = -1;
+            if (cmdText == null ||
+                 cmdText.Trim().Length == 0)
+                throw new InvalidOperationException(Resources.CommandTextNotInitialized);
 
 			string sql = TrimSemicolons(cmdText);
 
@@ -374,8 +392,7 @@ namespace MySql.Data.MySqlClient
 			updatedRowCount = -1;
             try
             {
-                connection.driver.ResetTimeout(commandTimeout * 1000);
-                MySqlDataReader reader  = new MySqlDataReader(this, statement, behavior);
+                MySqlDataReader reader = new MySqlDataReader(this, statement, behavior);
                 // execute the statement
                 statement.Execute();
                 // wait for data to return
@@ -397,10 +414,10 @@ namespace MySql.Data.MySqlClient
                 {
                     ResetSqlSelectLimit();
                 }
-                catch (Exception) 
+                catch (Exception)
                 {
                     // Reset SqlLimit did not work, connection is hosed.
-                    Connection.Close();
+                    Connection.Abort();
                     throw new MySqlException(ex.Message, true, ex);
                 }
 
@@ -414,7 +431,19 @@ namespace MySql.Data.MySqlClient
                     throw new MySqlException(Resources.FatalErrorDuringExecute, ex);
                 throw;
             }
-		}
+            finally
+            {
+                if (connection != null && connection.Reader == null)
+                {
+                    // Comething want seriously wrong,  and reader would not be 
+                    // able to clear timeout on closing.
+                    // So we clear timeout here.
+                    ClearCommandTimer();
+                }
+            }
+        }
+ 
+ 
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ExecuteScalar/*'/>
 		public override object ExecuteScalar()
@@ -447,26 +476,29 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-		/// <include file='docs/mysqlcommand.xml' path='docs/Prepare2/*'/>
-		private void Prepare(int cursorPageSize)
-		{
-			if (!connection.driver.Version.isAtLeast(5, 0, 0) && cursorPageSize > 0)
-				throw new InvalidOperationException("Nested commands are only supported on MySQL 5.0 and later");
+        /// <include file='docs/mysqlcommand.xml' path='docs/Prepare2/*'/>
+        private void Prepare(int cursorPageSize)
+        {
+            if (!connection.driver.Version.isAtLeast(5, 0, 0) && cursorPageSize > 0)
+                throw new InvalidOperationException("Nested commands are only supported on MySQL 5.0 and later");
 
-			// if the length of the command text is zero, then just return
-			string psSQL = CommandText;
-			if (psSQL == null ||
-				 psSQL.Trim().Length == 0)
-				return;
+            using (new CommandTimer(Connection, CommandTimeout))
+            {
+                // if the length of the command text is zero, then just return
+                string psSQL = CommandText;
+                if (psSQL == null ||
+                     psSQL.Trim().Length == 0)
+                    return;
 
-			if (CommandType == CommandType.StoredProcedure)
-				statement = new StoredProcedure(this, CommandText);
-			else
-				statement = new PreparableStatement(this, CommandText);
+                if (CommandType == CommandType.StoredProcedure)
+                    statement = new StoredProcedure(this, CommandText);
+                else
+                    statement = new PreparableStatement(this, CommandText);
 
-            statement.Resolve(true);
-			statement.Prepare();
-		}
+                statement.Resolve(true);
+                statement.Prepare();
+            }
+        }
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/Prepare/*'/>
 		public override void Prepare()

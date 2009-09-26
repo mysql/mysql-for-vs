@@ -128,9 +128,9 @@ namespace MySql.Data.MySqlClient.Tests
             DateTime start = DateTime.Now;
             try
             {
-                MySqlCommand cmd = new MySqlCommand("SELECT SLEEP(2)", conn);
+                MySqlCommand cmd = new MySqlCommand("SELECT SLEEP(200)", conn);
                 cmd.CommandTimeout = 1;
-                cmd.ExecuteNonQuery();
+                cmd.ExecuteReader(CommandBehavior.SingleRow);
                 Assert.Fail("Should not get to this point");
             }
             catch (MySqlException ex)
@@ -139,6 +139,10 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.IsTrue(ts.TotalSeconds <= 2);
                 Assert.IsTrue(ex.Message.StartsWith("Timeout expired"), "Message is wrong " +ex.Message);
             }
+
+            long x = (long)(new MySqlCommand("select 10", conn).ExecuteScalar());
+            Assert.AreEqual(10, x);
+
         }
 
         [Test]

@@ -61,13 +61,18 @@ namespace MySql.Data.MySqlClient
                 outStream = new BufferedStream(baseStream);
             else
                 outStream = baseStream;
-            timeout = System.Threading.Timeout.Infinite;
+            timeout = baseStream.ReadTimeout;
             isClosed = false;
             stopwatch = new Stopwatch();
         }
 
         private void StartTimer()
         {
+            // We expect all IO calls to be timed.
+            // If assertion happens here, the caller has
+            // forgot to set the appropriate timeout.         
+            Debug.Assert(timeout != System.Threading.Timeout.Infinite);
+
             baseStream.ReadTimeout = baseStream.WriteTimeout =
                 timeout;
             stopwatch.Start();
@@ -116,6 +121,7 @@ namespace MySql.Data.MySqlClient
             catch (Exception e)
             {
                 HandleException(e);
+                throw;
             }
         }
 
@@ -253,7 +259,6 @@ namespace MySql.Data.MySqlClient
         {
             stopwatch.Stop();
             ResetTimeout(-1);
-            throw e;
         }
     }
 }

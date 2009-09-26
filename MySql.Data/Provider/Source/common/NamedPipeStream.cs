@@ -91,29 +91,6 @@ namespace MySql.Data.Common
             fileStream.Flush();
         }
 
-
-        private int CompleteAsyncIO(IAsyncResult result, int timeout,
-            bool isRead)
-        {
-
-            if (!result.AsyncWaitHandle.WaitOne(timeout))
-            {
-                CancelIo();
-                try
-                {
-                    if (isRead)
-                        fileStream.EndRead(result);
-                }
-                catch (Exception) { }
-                throw new TimeoutException("Timeout in named pipe IO");
-            }
-            if(isRead)
-                return fileStream.EndRead(result);
-
-            fileStream.EndWrite(result);
-            return 0; // write IO is always complete, return value does not matter 
-        }
-
         public override int Read(byte[] buffer, int offset, int count)
         {
             if(readTimeout == Timeout.Infinite)
@@ -123,7 +100,13 @@ namespace MySql.Data.Common
             IAsyncResult result = fileStream.BeginRead(buffer, offset, count, null, null);
             if (result.CompletedSynchronously)
                 return fileStream.EndRead(result);
-            return CompleteAsyncIO(result, readTimeout, true);
+
+            if (!result.AsyncWaitHandle.WaitOne(readTimeout))
+            {
+                CancelIo();
+                throw new TimeoutException("Timeout in named pipe read");
+            }
+            return fileStream.EndRead(result);
         }
 
 
@@ -140,7 +123,12 @@ namespace MySql.Data.Common
                 fileStream.EndWrite(result);
             }
 
-            CompleteAsyncIO(result, writeTimeout, false);
+            if (!result.AsyncWaitHandle.WaitOne(readTimeout))
+            {
+                CancelIo();
+                throw new TimeoutException("Timeout in named pipe write");
+            }
+            fileStream.EndWrite(result);
         }
 
         public override void Close()
