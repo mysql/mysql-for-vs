@@ -838,10 +838,7 @@ namespace MySql.Data.MySqlClient
             // single result means we only return a single resultset.  If we have already
             // returned one, then we return false;
             if (resultSet != null && (commandBehavior & CommandBehavior.SingleResult) != 0)
-            {
-                // Command is completed, clear the IO timeouts for the stream
                 return false;
-            }
 
 
             // next load up the next resultset if any
