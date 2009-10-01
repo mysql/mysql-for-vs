@@ -2,7 +2,7 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>10.0.20826</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -217,6 +217,7 @@
     <Compile Include="Properties\VersionInfo.cs" />
     <Compile Include="Source\common\Cache.cs" />
     <Compile Include="Source\common\MySqlTokenizer.cs" />
+    <Compile Include="Source\common\MyNetworkStream.cs" />
     <Compile Include="Source\BulkLoader.cs" />
     <Compile Include="Source\MySqlPacket.cs" />
     <Compile Include="Source\MySqlScript.cs" />
@@ -248,6 +249,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Source\TimedStream.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\CHANGES">

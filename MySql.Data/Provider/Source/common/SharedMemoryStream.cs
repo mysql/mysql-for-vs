@@ -24,219 +24,327 @@ using System.Threading;
 using System.IO;
 using MySql.Data.MySqlClient;
 using System.Diagnostics;
-using Microsoft.Win32.SafeHandles;
+
 
 namespace MySql.Data.Common
 {
 #if !PocketPC
-	/// <summary>
-	/// Summary description for SharedMemoryStream.
-	/// </summary>
-	internal class SharedMemoryStream : Stream
-	{
-		private string memoryName;
-		private AutoResetEvent serverRead;
-		private AutoResetEvent serverWrote;
-		private AutoResetEvent clientRead;
-		private AutoResetEvent clientWrote;
-		private IntPtr dataMap;
-		private IntPtr dataView;
-		private int bytesLeft;
-		private int position;
-		private int connectNumber;
 
-		private const uint SYNCHRONIZE = 0x00100000;
-//		private const uint READ_CONTROL = 0x00020000;
-		private const uint EVENT_MODIFY_STATE = 0x2;
-//		private const uint EVENT_ALL_ACCESS = 0x001F0003;
-		private const uint FILE_MAP_WRITE = 0x2;
-		private const int BUFFERLENGTH = 16004;
+    /// <summary>
+    /// Helper class to encapsulate shared memory functionality
+    /// Also cares of proper cleanup of file mapping object and cew
+    /// </summary>
+    internal class SharedMemory : IDisposable
+    {
+        private const uint FILE_MAP_WRITE = 0x0002;
 
-		public SharedMemoryStream(string memName)
-		{
-			memoryName = memName;
-		}
+        IntPtr fileMapping;
+        IntPtr view;
 
-		public void Open(uint timeOut)
-		{
-			GetConnectNumber(timeOut);
-			SetupEvents();
-		}
+        public SharedMemory(string name, IntPtr size)
+        {
+            fileMapping = NativeMethods.OpenFileMapping(FILE_MAP_WRITE, false,
+                name);
+            if (fileMapping == IntPtr.Zero)
+            {
+                throw new MySqlException("Cannot open file mapping " + name);
+            }
+            view = NativeMethods.MapViewOfFile(fileMapping, FILE_MAP_WRITE, 0, 0, size);
+        }
 
-		public override void Close()
-		{
-			NativeMethods.UnmapViewOfFile(dataView);
-            NativeMethods.CloseHandle(dataMap);
-		}
+        public IntPtr View
+        {
+            get { return view; }
+        }
 
-		private void GetConnectNumber(uint timeOut)
-		{
-			AutoResetEvent connectRequest = new AutoResetEvent(false);
-            IntPtr handle = NativeMethods.OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, false,
-			memoryName + "_" + "CONNECT_REQUEST");
-			connectRequest.SafeWaitHandle = new SafeWaitHandle(handle, true);
+        public void Dispose() 
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
-			AutoResetEvent connectAnswer = new AutoResetEvent(false);
-            handle = NativeMethods.OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, false,
-			memoryName + "_" + "CONNECT_ANSWER");
-			connectAnswer.SafeWaitHandle = new SafeWaitHandle(handle, true);
 
-            IntPtr connectFileMap = NativeMethods.OpenFileMapping(FILE_MAP_WRITE, false,
-				memoryName + "_" + "CONNECT_DATA");
-            IntPtr connectView = NativeMethods.MapViewOfFile(connectFileMap, FILE_MAP_WRITE,
-				0, 0, (IntPtr)4);
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (view != IntPtr.Zero)
+                {
+                    NativeMethods.UnmapViewOfFile(view);
+                    view = IntPtr.Zero;
+                }
+                if (fileMapping != IntPtr.Zero)
+                {
+                    // Free the handle
+                    NativeMethods.CloseHandle(fileMapping);
+                    fileMapping = IntPtr.Zero;
+                }
+            }
+        }
 
-			// now start the connection
-			if (!connectRequest.Set())
-				throw new MySqlException("Failed to open shared memory connection");
+    }
+    /// <summary>
+    /// Summary description for SharedMemoryStream.
+    /// </summary>
+    internal class SharedMemoryStream : Stream
+    {
+        private string memoryName;
+        private EventWaitHandle serverRead;
+        private EventWaitHandle serverWrote;
+        private EventWaitHandle clientRead;
+        private EventWaitHandle clientWrote;
+        private EventWaitHandle connectionClosed;
+        private SharedMemory data;
+        private int bytesLeft;
+        private int position;
+        private int connectNumber;
 
-			connectAnswer.WaitOne((int)(timeOut * 1000), false);
+        private const int BUFFERLENGTH = 16004;
 
-			connectNumber = Marshal.ReadInt32(connectView);
-		}
+        private int readTimeout = System.Threading.Timeout.Infinite;
+        private int writeTimeout = System.Threading.Timeout.Infinite;
 
-		private void SetupEvents()
-		{
-			string dataMemoryName = memoryName + "_" + connectNumber;
-            dataMap = NativeMethods.OpenFileMapping(FILE_MAP_WRITE, false,
-				dataMemoryName + "_DATA");
-            dataView = (IntPtr)NativeMethods.MapViewOfFile(dataMap, FILE_MAP_WRITE,
-					 0, 0, (IntPtr)(int)BUFFERLENGTH);
+        public SharedMemoryStream(string memName)
+        {
+            memoryName = memName;
+        }
 
-			serverWrote = new AutoResetEvent(false);
-            IntPtr handle = NativeMethods.OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, false,
-				 dataMemoryName + "_SERVER_WROTE");
-			Debug.Assert(handle != IntPtr.Zero);
-			serverWrote.SafeWaitHandle = new SafeWaitHandle(handle, true);
+        public void Open(uint timeOut)
+        {
+            if (connectionClosed != null)
+            {
+                Debug.Assert(false, "Connection is already open");
+            }
+            GetConnectNumber(timeOut);
+            SetupEvents();
+        }
 
-			serverRead = new AutoResetEvent(false);
-            handle = NativeMethods.OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, false,
-			dataMemoryName + "_SERVER_READ");
-			Debug.Assert(handle != IntPtr.Zero);
-			serverRead.SafeWaitHandle = new SafeWaitHandle(handle, true);
+        public override void Close()
+        {
+            if (connectionClosed != null)
+            {
+                bool isClosed = connectionClosed.WaitOne(0);
+                if (!isClosed)
+                {
+                    connectionClosed.Set();
+                    connectionClosed.Close();
+                }
+                connectionClosed = null;
+                EventWaitHandle[] handles = 
+                {serverRead, serverWrote, clientRead, clientWrote};
 
-			clientWrote = new AutoResetEvent(false);
-            handle = NativeMethods.OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, false,
-			dataMemoryName + "_CLIENT_WROTE");
-			Debug.Assert(handle != IntPtr.Zero);
-			clientWrote.SafeWaitHandle = new SafeWaitHandle(handle, true);
+                for(int i=0; i< handles.Length; i++)
+                {
+                    if(handles[i] != null)
+                        handles[i].Close();
+                }
+                if (data != null)
+                {
+                    data.Dispose();
+                    data = null;
+                }
+            }
+        }
 
-			clientRead = new AutoResetEvent(false);
-            handle = NativeMethods.OpenEvent(SYNCHRONIZE | EVENT_MODIFY_STATE, false,
-			dataMemoryName + "_CLIENT_READ");
-			Debug.Assert(handle != IntPtr.Zero);
-			clientRead.SafeWaitHandle = new SafeWaitHandle(handle, true);
+        private void GetConnectNumber(uint timeOut)
+        {
+            EventWaitHandle connectRequest;
+            try
+            {
+                connectRequest =
+                    EventWaitHandle.OpenExisting(memoryName + "_CONNECT_REQUEST");
+               
+            }
+            catch (Exception)
+            {
+                // If server runs as service, its shared memory is global 
+                // And if connector runs in user session, it needs to prefix
+                // shared memory name with "Global\"
+                string prefixedMemoryName = @"Global\" + memoryName;
+                connectRequest =
+                    EventWaitHandle.OpenExisting(prefixedMemoryName + "_CONNECT_REQUEST");
+                memoryName = prefixedMemoryName;
+            }
+            EventWaitHandle connectAnswer =
+               EventWaitHandle.OpenExisting(memoryName + "_CONNECT_ANSWER");
+            using (SharedMemory connectData =
+                new SharedMemory(memoryName + "_CONNECT_DATA", (IntPtr)4))
+            {
+                // now start the connection
+                if (!connectRequest.Set())
+                    throw new MySqlException("Failed to open shared memory connection");
+                if (!connectAnswer.WaitOne((int)(timeOut * 1000), false))
+                    throw new MySqlException("Timeout during connection");
+                connectNumber = Marshal.ReadInt32(connectData.View);
+            }
+        }
 
-			// tell the server we are ready
-			serverRead.Set();
-		}
 
-		#region Properties
-		public override bool CanRead
-		{
-			get { return true; }
-		}
+        private void SetupEvents()
+        {
+            string prefix = memoryName + "_" + connectNumber;
+            data = new SharedMemory(prefix + "_DATA", (IntPtr)BUFFERLENGTH);
+            serverWrote = EventWaitHandle.OpenExisting(prefix + "_SERVER_WROTE");
+            serverRead  = EventWaitHandle.OpenExisting(prefix + "_SERVER_READ");
+            clientWrote = EventWaitHandle.OpenExisting(prefix + "_CLIENT_WROTE");
+            clientRead  = EventWaitHandle.OpenExisting(prefix + "_CLIENT_READ");
+            connectionClosed = EventWaitHandle.OpenExisting(prefix + "_CONNECTION_CLOSED");
 
-		public override bool CanSeek
-		{
-			get { return false; }
-		}
+            // tell the server we are ready
+            serverRead.Set();
+        }
 
-		public override bool CanWrite
-		{
-			get { return true; }
-		}
+        #region Properties
+        public override bool CanRead
+        {
+            get { return true; }
+        }
 
-		public override long Length
-		{
-			get { throw new NotSupportedException("SharedMemoryStream does not support seeking - length"); }
-		}
+        public override bool CanSeek
+        {
+            get { return false; }
+        }
 
-		public override long Position
-		{
-			get { throw new NotSupportedException("SharedMemoryStream does not support seeking - postition"); }
-			set { }
-		}
+        public override bool CanWrite
+        {
+            get { return true; }
+        }
 
-		#endregion
+        public override long Length
+        {
+            get { throw new NotSupportedException("SharedMemoryStream does not support seeking - length"); }
+        }
 
-		public override void Flush()
-		{
-            NativeMethods.FlushViewOfFile(dataView, 0);
-		}
+        public override long Position
+        {
+            get { throw new NotSupportedException("SharedMemoryStream does not support seeking - position"); }
+            set { }
+        }
 
-		public bool IsClosed()
-		{
-			try
-			{
-                dataView = NativeMethods.MapViewOfFile(dataMap, FILE_MAP_WRITE, 0, 0, (IntPtr)(int)BUFFERLENGTH);
-				if (dataView == IntPtr.Zero) return true;
-				return false;
-			}
-			catch (Exception)
-			{
-				return true;
-			}
-		}
+        #endregion
 
-		public override int Read(byte[] buffer, int offset, int count)
-		{
-			while (bytesLeft == 0)
-			{
-				while (!serverWrote.WaitOne(500, false))
-				{
-					if (IsClosed()) return 0;
-				}
+        public override void Flush()
+        {
+            // No need to flush anything to disk ,as our shared memory is backed 
+            // by the page file
+        }
 
-				bytesLeft = Marshal.ReadInt32(dataView);
-				position = 4;
-			}
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            int timeLeft = readTimeout;
+            WaitHandle[] waitHandles = { serverWrote, connectionClosed };
+            Stopwatch stopwatch = new Stopwatch();
+            while (bytesLeft == 0)
+            {
 
-			int len = Math.Min(count, bytesLeft);
-			long baseMem = dataView.ToInt64() + position;
+                int index = WaitHandle.WaitAny(waitHandles, timeLeft);
+                if (index == WaitHandle.WaitTimeout)
+                    throw new TimeoutException("Timeout when reading from shared memory");
 
-			for (int i = 0; i < len; i++, position++)
-				buffer[offset + i] = Marshal.ReadByte((IntPtr)(baseMem + i));
+                if (waitHandles[index] == connectionClosed)
+                    throw new MySqlException("Connection to server lost",true, null);
 
-			bytesLeft -= len;
+                if (readTimeout != System.Threading.Timeout.Infinite)
+                {
+                    timeLeft = readTimeout - (int)stopwatch.ElapsedMilliseconds;
+                    if (timeLeft < 0)
+                        throw new TimeoutException("Timeout when reading from shared memory");
+                }
 
-			if (bytesLeft == 0)
-				clientRead.Set();
+                bytesLeft = Marshal.ReadInt32(data.View);
+                position = 4;
+            }
 
-			return len;
-		}
+            int len = Math.Min(count, bytesLeft);
+            long baseMem = data.View.ToInt64() + position;
 
-		public override long Seek(long offset, SeekOrigin origin)
-		{
-			throw new NotSupportedException("SharedMemoryStream does not support seeking");
-		}
+            for (int i = 0; i < len; i++, position++)
+                buffer[offset + i] = Marshal.ReadByte((IntPtr)(baseMem + i));
 
-		public override void Write(byte[] buffer, int offset, int count)
-		{
-			int leftToDo = count;
-			int buffPos = offset;
+            bytesLeft -= len;
+            if (bytesLeft == 0)
+                clientRead.Set();
 
-			while (leftToDo > 0)
-			{
-				if (!serverRead.WaitOne())
-					throw new MySqlException("Writing to shared memory failed");
+            return len;
+        }
 
-				int bytesToDo = Math.Min(leftToDo, BUFFERLENGTH);
+        public override long Seek(long offset, SeekOrigin origin)
+        {
+            throw new NotSupportedException("SharedMemoryStream does not support seeking");
+        }
 
-				long baseMem = dataView.ToInt64() + 4;
-				Marshal.WriteInt32(dataView, bytesToDo);
-				for (int i = 0; i < bytesToDo; i++, buffPos++)
-					Marshal.WriteByte((IntPtr)(baseMem + i), buffer[buffPos]);
-				leftToDo -= bytesToDo;
-				if (!clientWrote.Set())
-					throw new MySqlException("Writing to shared memory failed");
-			}
-		}
+        public override void Write(byte[] buffer, int offset, int count)
+        {
+            int leftToDo = count;
+            int buffPos = offset;
+            WaitHandle[] waitHandles = { serverRead, connectionClosed };
+            Stopwatch stopwatch = new Stopwatch();
+            int timeLeft = writeTimeout;
 
-		public override void SetLength(long value)
-		{
-			throw new NotSupportedException("SharedMemoryStream does not support seeking");
-		}
-	}
+            while (leftToDo > 0)
+            {
+
+                int index = WaitHandle.WaitAny(waitHandles, timeLeft);
+
+                if (waitHandles[index] == connectionClosed)
+                    throw new MySqlException("Connection to server lost",true, null);
+
+                if (index == WaitHandle.WaitTimeout)
+                    throw new TimeoutException("Timeout when reading from shared memory");
+
+                if (writeTimeout != System.Threading.Timeout.Infinite)
+                {
+                    timeLeft = writeTimeout - (int)stopwatch.ElapsedMilliseconds;
+                    if (timeLeft < 0)
+                        throw new TimeoutException("Timeout when writing to shared memory");
+                }
+                int bytesToDo = Math.Min(leftToDo, BUFFERLENGTH);
+                long baseMem = data.View.ToInt64() + 4;
+                Marshal.WriteInt32(data.View, bytesToDo);
+                Marshal.Copy(buffer, offset, (IntPtr)baseMem, bytesToDo);
+                leftToDo -= bytesToDo;
+                if (!clientWrote.Set())
+                    throw new MySqlException("Writing to shared memory failed");
+            }
+        }
+
+        public override void SetLength(long value)
+        {
+            throw new NotSupportedException("SharedMemoryStream does not support seeking");
+        }
+
+        public override bool CanTimeout
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        public override int ReadTimeout
+        {
+            get
+            {
+                return readTimeout;
+            }
+            set
+            {
+                readTimeout = value;
+            }
+        }
+
+        public override int WriteTimeout
+        {
+            get
+            {
+                return writeTimeout;
+            }
+            set
+            {
+                writeTimeout = value;
+            }
+        }
+
+    }
 #endif
 }

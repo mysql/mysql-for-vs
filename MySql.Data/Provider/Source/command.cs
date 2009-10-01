@@ -53,10 +53,11 @@ namespace MySql.Data.MySqlClient
 		internal Int64 lastInsertedId;
 		private PreparableStatement statement;
 		private int commandTimeout;
-		private bool timedOut, canceled;
         private bool resetSqlSelect;
         List<MySqlCommand> batch;
         private string batchableCommandText;
+        CommandTimer commandTimer;
+
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ctor1/*'/>
 		public MySqlCommand()
@@ -133,7 +134,24 @@ namespace MySql.Data.MySqlClient
 		public override int CommandTimeout
 		{
 			get { return commandTimeout == 0 ? 30 : commandTimeout; }
-			set { commandTimeout = value; }
+			set 
+			{
+				if (commandTimeout < 0)
+					throw new ArgumentException("Command timeout must not be negative");
+
+				// Timeout in milliseconds should not exceed maximum for 32 bit
+				// signed integer (~24 days), because underlying driver (and streams)
+				// use milliseconds expressed ints for timeout values.
+				// Hence, truncate the value.
+				int timeout = Math.Min(value, Int32.MaxValue / 1000);
+				if (timeout != value)
+				{
+					Logger.LogWarning("Command timeout value too large ("
+					+ value + " seconds). Changed to max. possible value (" 
+					+ timeout + " seconds)");
+				}
+				commandTimeout = timeout;
+			}
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/CommandType/*'/>
@@ -219,11 +237,6 @@ namespace MySql.Data.MySqlClient
             get { return batch; }
         }
 
-        internal bool TimedOut
-        {
-            get { return timedOut; }
-        }
-
         internal string BatchableCommandText
         {
             get { return batchableCommandText; }
@@ -234,30 +247,15 @@ namespace MySql.Data.MySqlClient
 		#region Methods
 
 		/// <summary>
-		/// Attempts to cancel the execution of a MySqlCommand.
+		/// Attempts to cancel the execution of a currently active command
 		/// </summary>
 		/// <remarks>
 		/// Cancelling a currently active query only works with MySQL versions 5.0.0 and higher.
 		/// </remarks>
-		public override void Cancel()
-		{
-            if (canceled) return;
-
-			if (!connection.driver.Version.isAtLeast(5, 0, 0))
-				throw new NotSupportedException(Resources.CancelNotSupported);
-
-            MySqlConnectionStringBuilder cb = new MySqlConnectionStringBuilder(
-                connection.Settings.ConnectionString);
-            cb.Pooling = false;
-			using(MySqlConnection c = new MySqlConnection(cb.ConnectionString))
-			{
-                c.Open();
-                MySqlCommand cmd = new MySqlCommand(String.Format("KILL QUERY {0}",
-                     connection.ServerThread), c);
-                cmd.ExecuteNonQuery();
-                canceled = true;
-			}
-		}
+        public override void Cancel()
+        {
+            connection.CancelQuery(connection.ConnectionTimeout);
+        }
 
 		/// <summary>
 		/// Creates a new instance of a <see cref="MySqlParameter"/> object.
@@ -306,11 +304,21 @@ namespace MySql.Data.MySqlClient
             return reader.RecordsAffected;
 		}
 
-		internal void Close(MySqlDataReader reader)
-		{
-			if (statement != null)
-				statement.Close(reader);
+        internal void ClearCommandTimer()
+        {
+            if (commandTimer != null)
+            {
+                commandTimer.Dispose();
+                commandTimer = null;
+            }
+        }
+
+        internal void Close(MySqlDataReader reader)
+        {
+            if (statement != null)
+                statement.Close(reader);
             ResetSqlSelectLimit();
+            ClearCommandTimer();
         }
 
         /// <summary>
@@ -320,8 +328,10 @@ namespace MySql.Data.MySqlClient
         {
             // if we are supposed to reset the sql select limit, do that here
             if (resetSqlSelect)
+            {
+                resetSqlSelect = false;
                 new MySqlCommand("SET SQL_SELECT_LIMIT=-1", connection).ExecuteNonQuery();
-            resetSqlSelect = false;
+            }
         }
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ExecuteReader/*'/>
@@ -330,48 +340,19 @@ namespace MySql.Data.MySqlClient
 			return ExecuteReader(CommandBehavior.Default);
 		}
 
-		private void TimeoutExpired(object commandObject)
-		{
-			MySqlCommand cmd = (commandObject as MySqlCommand);
-            if (cmd == null)
-            {
-                Logger.LogWarning(Resources.TimeoutExpiredNullObject);
-                return;
-            }
 
-            cmd.timedOut = true;
-            try
-            {
-                cmd.Cancel();
-            }
-            catch (Exception ex)
-            {
-                // if something goes wrong, we log it and try to close the connection. 
-                // There's really nothing else we can do.
-                if (connection.Settings.Logging)
-                    Logger.LogException(ex);
+        /// <include file='docs/mysqlcommand.xml' path='docs/ExecuteReader1/*'/>
+        public new MySqlDataReader ExecuteReader (CommandBehavior behavior)
+        {
 
-                try
-                {
-                    cmd.Connection.Close();
-                }
-                catch (Exception ex1)
-                {
-                    if (connection.Settings.Logging)
-                        Logger.LogException(ex1);
-                }
-            }
-		}
+            CheckState();
 
-		/// <include file='docs/mysqlcommand.xml' path='docs/ExecuteReader1/*'/>
-		public new MySqlDataReader ExecuteReader(CommandBehavior behavior)
-		{
-			lastInsertedId = -1;
-			CheckState();
+            commandTimer = new CommandTimer(connection, CommandTimeout);
 
-			if (cmdText == null ||
-				 cmdText.Trim().Length == 0)
-				throw new InvalidOperationException(Resources.CommandTextNotInitialized);
+            lastInsertedId = -1;
+            if (cmdText == null ||
+                 cmdText.Trim().Length == 0)
+                throw new InvalidOperationException(Resources.CommandTextNotInitialized);
 
 			string sql = TrimSemicolons(cmdText);
 
@@ -409,49 +390,41 @@ namespace MySql.Data.MySqlClient
             HandleCommandBehaviors(behavior);
 
 			updatedRowCount = -1;
-
-            Timer timer = null;
             try
             {
                 MySqlDataReader reader = new MySqlDataReader(this, statement, behavior);
-
-                // start a threading timer on our command timeout 
-                timedOut = false;
-                canceled = false;
-
                 // execute the statement
                 statement.Execute();
-
-                // start a timeout timer
-                if (connection.driver.Version.isAtLeast(5, 0, 0) &&
-                     commandTimeout > 0)
-                {
-                    TimerCallback timerDelegate =
-                         new TimerCallback(TimeoutExpired);
-                    timer = new Timer(timerDelegate, this, this.CommandTimeout * 1000, Timeout.Infinite);
-                }
-
                 // wait for data to return
-                reader.NextResult();
-                
                 connection.Reader = reader;
+                reader.NextResult();
                 return reader;
+            }
+            catch (TimeoutException tex)
+            {
+                connection.HandleTimeout(tex);
+                return null;
             }
             catch (MySqlException ex)
             {
+                if (ex.InnerException is TimeoutException)
+                    throw ex; // already handled
+
                 try
                 {
                     ResetSqlSelectLimit();
                 }
-                catch (Exception) { }
+                catch (Exception)
+                {
+                    // Reset SqlLimit did not work, connection is hosed.
+                    Connection.Abort();
+                    throw new MySqlException(ex.Message, true, ex);
+                }
 
                 // if we caught an exception because of a cancel, then just return null
                 if (ex.Number == 1317)
-                {
-                    if (TimedOut)
-                        throw new MySqlException(Resources.Timeout);
                     return null;
-                }
+
                 if (ex.IsFatal)
                     Connection.Close();
                 if (ex.Number == 0)
@@ -460,10 +433,17 @@ namespace MySql.Data.MySqlClient
             }
             finally
             {
-                if (timer != null)
-                    timer.Dispose();
+                if (connection != null && connection.Reader == null)
+                {
+                    // Comething want seriously wrong,  and reader would not be 
+                    // able to clear timeout on closing.
+                    // So we clear timeout here.
+                    ClearCommandTimer();
+                }
             }
-		}
+        }
+ 
+ 
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ExecuteScalar/*'/>
 		public override object ExecuteScalar()
@@ -496,26 +476,29 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-		/// <include file='docs/mysqlcommand.xml' path='docs/Prepare2/*'/>
-		private void Prepare(int cursorPageSize)
-		{
-			if (!connection.driver.Version.isAtLeast(5, 0, 0) && cursorPageSize > 0)
-				throw new InvalidOperationException("Nested commands are only supported on MySQL 5.0 and later");
+        /// <include file='docs/mysqlcommand.xml' path='docs/Prepare2/*'/>
+        private void Prepare(int cursorPageSize)
+        {
+            if (!connection.driver.Version.isAtLeast(5, 0, 0) && cursorPageSize > 0)
+                throw new InvalidOperationException("Nested commands are only supported on MySQL 5.0 and later");
 
-			// if the length of the command text is zero, then just return
-			string psSQL = CommandText;
-			if (psSQL == null ||
-				 psSQL.Trim().Length == 0)
-				return;
+            using (new CommandTimer(Connection, CommandTimeout))
+            {
+                // if the length of the command text is zero, then just return
+                string psSQL = CommandText;
+                if (psSQL == null ||
+                     psSQL.Trim().Length == 0)
+                    return;
 
-			if (CommandType == CommandType.StoredProcedure)
-				statement = new StoredProcedure(this, CommandText);
-			else
-				statement = new PreparableStatement(this, CommandText);
+                if (CommandType == CommandType.StoredProcedure)
+                    statement = new StoredProcedure(this, CommandText);
+                else
+                    statement = new PreparableStatement(this, CommandText);
 
-            statement.Resolve(true);
-			statement.Prepare();
-		}
+                statement.Resolve(true);
+                statement.Prepare();
+            }
+        }
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/Prepare/*'/>
 		public override void Prepare()

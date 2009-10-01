@@ -203,7 +203,7 @@ namespace MySql.Data.Common
 				socket.Close();
                 throw;
 			}
-            NetworkStream stream = new NetworkStream(socket, true);
+            MyNetworkStream stream = new MyNetworkStream(socket, true);
             GC.SuppressFinalize(socket);
             GC.SuppressFinalize(stream);
             return stream;

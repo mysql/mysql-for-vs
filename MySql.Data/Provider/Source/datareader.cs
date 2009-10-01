@@ -161,8 +161,15 @@ namespace MySql.Data.MySqlClient
 			connection.Reader = null;
 
             // clear all remaining resultsets
-            while (NextResult()) { }
-
+            try
+            {
+              while (NextResult()) { }
+            }
+            catch (MySqlException ex)
+            {
+                if (ex.Number != 1317)
+                    throw;
+            }
 			// we now give the command a chance to terminate.  In the case of
 			// stored procedures it needs to update out and inout parameters
 			command.Close(this);
@@ -172,8 +179,7 @@ namespace MySql.Data.MySqlClient
 
 			command = null;
 			connection = null;
-
-			isOpen = false;
+            isOpen = false;
 		}
 
 		#region TypeSafe Accessors
@@ -834,9 +840,10 @@ namespace MySql.Data.MySqlClient
             if (resultSet != null && (commandBehavior & CommandBehavior.SingleResult) != 0)
                 return false;
 
+
             // next load up the next resultset if any
-			try
-			{
+            try
+            {
                 resultSet = driver.NextResult(Statement.StatementId);
                 if (resultSet == null) return false;
                 if (resultSet.IsOutputParameters) return false;
@@ -865,8 +872,6 @@ namespace MySql.Data.MySqlClient
             {
 				if (ex.IsFatal)
 					connection.Abort();
-                if (command.TimedOut)
-                    throw new MySqlException(Resources.Timeout);
                 if (ex.Number == 0)
                     throw new MySqlException(Resources.FatalErrorReadingResult, ex);
                 throw;
@@ -882,25 +887,28 @@ namespace MySql.Data.MySqlClient
 			if (!isOpen)
 				throw new MySqlException("Invalid attempt to Read when reader is closed.");
 
-			try
-			{
+            try
+            {
                 return resultSet.NextRow(commandBehavior);
-			}
-			catch (MySqlException ex)
-			{
-				if (ex.IsFatal)
-					connection.Abort();
+            }
+            catch (TimeoutException tex)
+            {
+                connection.HandleTimeout(tex);
+                return false; // unreached
+            }
+            catch (MySqlException ex)
+            {
+                if (ex.IsFatal)
+                    connection.Abort();
 
                 // if we get a query interrupted then our resultset is done
                 if (ex.Number == 1317)
                 {
-                    if (command.TimedOut)
-                        throw new MySqlException(Resources.Timeout);
                     return false;
                 }
 
                 throw new MySqlException(Resources.FatalErrorDuringRead, ex);
-			}
+            }
 		}
 
 

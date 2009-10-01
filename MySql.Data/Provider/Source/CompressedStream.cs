@@ -108,6 +108,38 @@ namespace MySql.Data.MySqlClient
             }
         }
 
+        public override bool CanTimeout
+        {
+            get
+            {
+               return baseStream.CanTimeout;
+            }
+        }
+
+        public override int ReadTimeout
+        {
+            get
+            {
+                return baseStream.ReadTimeout;
+            }
+            set
+            {
+                baseStream.ReadTimeout = value;
+            }
+        }
+
+        public override int WriteTimeout
+        {
+            get
+            {
+                return baseStream.WriteTimeout;
+            }
+            set
+            {
+                baseStream.WriteTimeout = value;
+            }
+        }
+
         public override int Read(byte[] buffer, int offset, int count)
         {
             if (buffer == null)

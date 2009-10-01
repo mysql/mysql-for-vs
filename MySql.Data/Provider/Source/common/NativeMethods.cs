@@ -58,7 +58,7 @@ namespace MySql.Data.Common
 		}
 
 		[DllImport("Kernel32", CharSet=CharSet.Unicode)]
-		static extern public int CreateFile(
+		static extern public IntPtr CreateFile(
             String fileName,
 			uint desiredAccess,
 			uint shareMode, 
@@ -89,6 +89,10 @@ namespace MySql.Data.Common
 		[return:MarshalAs(UnmanagedType.Bool)]
 		[DllImport("kernel32.dll", SetLastError=true)]
 		public static extern bool CloseHandle(IntPtr handle);
+
+        [return: MarshalAs(UnmanagedType.Bool)]
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool CancelIo(IntPtr handle);
 
 		[return:MarshalAs(UnmanagedType.Bool)]
 		[DllImport("kernel32.dll", SetLastError=true)]

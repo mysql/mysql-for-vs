@@ -55,7 +55,9 @@ namespace MySql.Data.MySqlClient
         private PerformanceMonitor perfMonitor;
 #endif
         private bool isExecutingBuggyQuery;
+        private bool abortOnTimeout;
         private string database;
+        private int commandTimeout;
 
         /// <include file='docs/MySqlConnection.xml' path='docs/InfoMessage/*'/>
         public event MySqlInfoMessageEventHandler InfoMessage;
@@ -408,7 +410,12 @@ namespace MySql.Data.MySqlClient
             if (State != ConnectionState.Open)
                 throw new InvalidOperationException(Resources.ConnectionNotOpen);
 
-            driver.SetDatabase(databaseName);
+
+            // We use default command timeout for SetDatabase
+            using (new CommandTimer(this, (int)Settings.DefaultCommandTimeout))
+            {
+                driver.SetDatabase(databaseName);
+            }
             this.database = databaseName;
         }
 
@@ -622,6 +629,135 @@ namespace MySql.Data.MySqlClient
 			return cmd.ExecuteScalar().ToString();
 		}
 
+
+
+        internal void HandleTimeout(TimeoutException tex)
+        {
+            bool isFatal = false;
+
+            if (abortOnTimeout)
+            {
+                // Special connection started to cancel a query.
+                // Timeout handler is disabled to prevent recursive connection
+                // spawning when original query and KILL time out.
+                Abort();
+                throw new MySqlException(Resources.Timeout, true , tex);
+            }
+
+            try
+            {
+
+                // Do a fast cancel.The reason behind small values for connection
+                // and command timeout is that we do not want user to wait longer
+                // after command has already expired.
+                // Microsoft's SqlClient seems to be using 5 seconds timeouts 
+                // here as well.
+                // Read the  error packet with "interrupted" message.
+                CancelQuery(5);
+                driver.ResetTimeout(5000);
+                if (Reader != null)
+                {
+                    Reader.Close();
+                    Reader = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.LogWarning("Could not kill query in timeout handler, " +
+                    " aborting connection. Exception was " + ex.Message);
+                Abort();
+                isFatal = true;
+            }
+            throw new MySqlException(Resources.Timeout, isFatal, tex);
+        }
+
+        public void CancelQuery(int timeout)
+        {
+
+            if (!driver.Version.isAtLeast(5, 0, 0))
+                throw new NotSupportedException(Resources.CancelNotSupported);
+
+            MySqlConnectionStringBuilder cb = new MySqlConnectionStringBuilder(
+                Settings.ConnectionString);
+            cb.Pooling = false;
+            cb.ConnectionTimeout = (uint) timeout;
+          
+            using(MySqlConnection c = new MySqlConnection(cb.ConnectionString))
+            {
+                c.abortOnTimeout = true;
+                c.Open();
+                string commandText = "KILL QUERY " + ServerThread;
+                MySqlCommand cmd = new MySqlCommand(commandText, c);
+                cmd.CommandTimeout = timeout;
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+#region Routines for timeout support.
+
+        // Problem description:
+        // Sometimes, ExecuteReader is called recursively. This is the case if
+        // command behaviors are used and we issue "set sql_select_limit" 
+        // before and after command. This is also the case with prepared 
+        // statements , where we set session variables. In these situations, we 
+        // have to prevent  recursive ExecuteReader calls from overwriting 
+        // timeouts set by the top level command.
+        
+        // To solve the problem, SetCommandTimeout() and ClearCommandTimeout() are 
+        // introduced . Query timeout here is  "sticky", that is once set with 
+        // SetCommandTimeout, it only be overwritten after ClearCommandTimeout 
+        // (SetCommandTimeout would return false if it timeout has not been 
+        // cleared).
+
+        // The proposed usage pattern of there routines is following: 
+        // When timed operations starts, issue SetCommandTimeout(). When it 
+        // finishes, issue ClearCommandTimeout(), but _only_ if call to 
+        // SetCommandTimeout() was successful.
+
+       
+        /// <summary>
+        /// Sets query timeout. If timeout has been set prior and not
+        /// yet cleared ClearCommandTimeout(), it has no effect.
+        /// </summary>
+        /// <param name="value">timeout in seconds</param>
+        /// <returns>true if </returns>
+        internal bool SetCommandTimeout(int value)
+        {
+            if (!hasBeenOpen)
+                // Connection timeout is handled by driver
+                return false;
+
+            if (commandTimeout != 0)
+                // someone is trying to set a timeout while command is already
+                // running. It could be for example recursive call to ExecuteReader
+                // Ignore the request, as only top-level (non-recursive commands)
+                // can set timeouts.
+                return false;
+
+            if (driver == null)
+                return false;
+
+            commandTimeout = value;
+            driver.ResetTimeout(commandTimeout * 1000);
+            return true;
+        }
+
+        /// <summary>
+        /// Clears query timeout, allowing next SetCommandTimeout() to succeed.
+        /// </summary>
+        internal void ClearCommandTimeout()
+        {
+            if (!hasBeenOpen)
+                return;
+            commandTimeout = 0;
+            if (driver != null)
+            {
+                driver.ResetTimeout(0);
+            }
+        }
+#endregion
+
+
         #region GetSchema Support
 
         /// <summary>
@@ -699,5 +835,36 @@ namespace MySql.Data.MySqlClient
         /// 
         /// </summary>
         public MySqlError[] errors;
+    }
+
+    /// <summary>
+    /// IDisposable wrapper around SetCommandTimeout and ClearCommandTimeout
+    /// functionality
+    /// </summary>
+    internal class CommandTimer:IDisposable
+    {
+        bool timeoutSet;
+        MySqlConnection connection;
+
+        public CommandTimer(MySqlConnection connection, int timeout)
+        {
+            this.connection = connection;
+            if (connection != null)
+            {
+                timeoutSet = connection.SetCommandTimeout(timeout);
+            }
+        }
+
+        #region IDisposable Members
+        public void Dispose()
+        {
+            if (timeoutSet)
+            {
+                timeoutSet = false;
+                connection.ClearCommandTimeout();
+                connection = null;
+            }
+        }
+        #endregion
     }
 }
