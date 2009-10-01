@@ -224,7 +224,21 @@ namespace MySql.Data.MySqlClient
         public uint ConnectionTimeout
         {
             get { return (uint)values["Connect Timeout"]; }
-            set { SetValue("Connect Timeout", value); }
+            
+            set 
+            {
+                // Timeout in milliseconds should not exceed maximum for 32 bit
+                // signed integer (~24 days). We truncate the value if it exceeds 
+                // maximum (MySqlCommand.CommandTimeout uses the same technique
+                uint timeout = Math.Min(value, Int32.MaxValue / 1000);
+                if (timeout != value)
+                {
+                   Logger.LogWarning("Connection timeout value too large (" 
+                       + value + " seconds). Changed to max. possible value" + 
+                       + timeout + " seconds)");
+                }
+                SetValue("Connect Timeout", timeout); 
+            }
         }
 
         /// <summary>

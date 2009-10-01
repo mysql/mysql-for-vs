@@ -357,9 +357,6 @@
   <data name="GetHostEntryFailed" xml:space="preserve">
     <value>Call to GetHostEntry failed after {0} while querying for hostname '{1}': SocketErrorCode={2}, ErrorCode={3}, NativeErrorCode={4}.</value>
   </data>
-  <data name="TimeoutExpiredNullObject" xml:space="preserve">
-    <value>Timeout expired but command object was null.  This should not happen.</value>
-  </data>
   <data name="UnableToEnumerateUDF" xml:space="preserve">
     <value>An error occured attempting to enumerate the user-defined functions.  Do you have SELECT privileges on the mysql.func table?</value>
   </data>

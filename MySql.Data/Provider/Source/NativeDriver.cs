@@ -196,6 +196,8 @@ namespace MySql.Data.MySqlClient
             int maxSinglePacket = 255*255*255;
             stream = new MySqlStream(baseStream, encoding, false);
 
+            stream.ResetTimeout((int)Settings.ConnectionTimeout*1000);
+
             // read off the welcome packet and parse out it's values
             packet = stream.ReadPacket();
             protocol = packet.ReadByte();
@@ -482,9 +484,18 @@ namespace MySql.Data.MySqlClient
                 {
                     if (isOpen)
                     {
-                        packet.Clear();
-                        packet.WriteByte((byte)DBCmd.QUIT);
-                        ExecutePacket(packet);
+                        try
+                        {
+                            ResetTimeout(1000);
+                            packet.Clear();
+                            packet.WriteByte((byte)DBCmd.QUIT);
+                            ExecutePacket(packet);
+                        }
+                        catch (Exception)
+                        {
+                            // Eat exception here. We should try to closing 
+                            // the stream anyway.
+                        }
                     }
 
                     if (stream != null)
@@ -539,6 +550,12 @@ namespace MySql.Data.MySqlClient
             try
             {
                 packet = stream.ReadPacket();
+            }
+            catch (TimeoutException)
+            {
+                // Do not reset serverStatus, allow to reenter, e.g when
+                // ResultSet is closed.
+                throw;
             }
             catch (Exception)
             {
@@ -728,7 +745,8 @@ namespace MySql.Data.MySqlClient
                 packet.ReadInteger(2); // reserved
             }
 
-            if (charSets != null && field.CharacterSetIndex != -1)
+            if (charSets != null && field.CharacterSetIndex != -1
+                && charSets[field.CharacterSetIndex] != null)
             {
                 CharacterSet cs = CharSetMap.GetCharacterSet(Version, (string) charSets[field.CharacterSetIndex]);
                 // starting with 6.0.4 utf8 has a maxlen of 4 instead of 3.  The old
@@ -913,5 +931,17 @@ namespace MySql.Data.MySqlClient
             stream.SendPacket(packet);
         }
 
-	}
+        /// <summary>
+        /// Execution timeout, in milliseconds. When the accumulated time for network IO exceeds this value
+        /// TimeoutException is thrown. This timeout needs to be reset for every new command
+        /// </summary>
+        /// 
+        public override void ResetTimeout(int timeout)
+        {
+            if (stream != null)
+                stream.ResetTimeout(timeout);
+        }
+
+    }
+ 
 }

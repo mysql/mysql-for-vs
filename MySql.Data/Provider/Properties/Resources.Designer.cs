@@ -21,9 +21,6 @@ namespace MySql.Data.MySqlClient.Properties {
     // with the /str option, or rebuild your VS project.
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "2.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-#if !CF
-    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-#endif
     public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
@@ -752,15 +749,6 @@ namespace MySql.Data.MySqlClient.Properties {
         public static string Timeout {
             get {
                 return ResourceManager.GetString("Timeout", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Timeout expired but command object was null.  This should not happen..
-        /// </summary>
-        public static string TimeoutExpiredNullObject {
-            get {
-                return ResourceManager.GetString("TimeoutExpiredNullObject", resourceCulture);
             }
         }
         
