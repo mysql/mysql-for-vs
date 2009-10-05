@@ -48,11 +48,23 @@ namespace MySql.Data.MySqlClient
         protected Hashtable charSets;
         protected bool hasWarnings;
         protected long maxPacketSize;
+        private DateTime idleSince;
+
 #if !CF
         protected MySqlPromotableTransaction currentTransaction;
         protected bool inActiveUse;
 #endif
         protected MySqlPool pool;
+
+        /// <summary>
+        /// For pooled connections, time when the driver was
+        /// put into idle queue
+        /// </summary>
+        public DateTime IdleSince
+        {
+            get { return idleSince; }
+            set { idleSince = value; }
+        }
 
         public Driver(MySqlConnectionStringBuilder settings)
         {
@@ -150,7 +162,7 @@ namespace MySql.Data.MySqlClient
             return (string) serverProps[key];
         }
 
-        public bool IsTooOld()
+        public bool ConnectionLifetimeExpired()
         {
             TimeSpan ts = DateTime.Now.Subtract(creationTime);
             if (Settings.ConnectionLifeTime != 0 &&
