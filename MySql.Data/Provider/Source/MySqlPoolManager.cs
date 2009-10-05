@@ -21,6 +21,7 @@
 using System.Collections;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace MySql.Data.MySqlClient
 {
@@ -31,6 +32,14 @@ namespace MySql.Data.MySqlClient
     {
         private static Hashtable pools = new Hashtable();
         private static List<MySqlPool> clearingPools = new List<MySqlPool>();
+
+        // Timeout in seconds, after which an unused (idle) connection 
+        // should be closed.
+        static internal int maxConnectionIdleTime = 180;
+
+
+        private static Timer timer = new Timer(new TimerCallback(CleanIdleConnections),
+            null, maxConnectionIdleTime*1000, maxConnectionIdleTime*1000);
 
         public static MySqlPool GetPool(MySqlConnectionStringBuilder settings)
         {
@@ -119,6 +128,26 @@ namespace MySql.Data.MySqlClient
         {
             Debug.Assert(clearingPools.Contains(pool));
             clearingPools.Remove(pool);
+        }
+
+        /// <summary>
+        /// Remove drivers that have been idle for too long.
+        /// </summary>
+        public static void CleanIdleConnections(object obj)
+        {
+            List<Driver> oldDrivers = new List<Driver>();
+            lock (pools.SyncRoot)
+            {
+                foreach (string key in pools.Keys)
+                {
+                    MySqlPool pool = (pools[key] as MySqlPool);
+                    oldDrivers.AddRange(pool.RemoveOldIdleConnections());
+                }
+            }
+            foreach(Driver driver in oldDrivers)
+            {
+                driver.Close();
+            }
         }
     }
 }

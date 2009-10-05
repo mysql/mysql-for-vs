@@ -25,7 +25,7 @@ using NUnit.Framework;
 using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
-
+ 
 namespace MySql.Data.MySqlClient.Tests
 {
 	/// <summary>
@@ -297,6 +297,74 @@ namespace MySql.Data.MySqlClient.Tests
 						c.Close();*/
 		}
 
+        bool IsConnectionAlive(int serverThread)
+        {
+            MySqlDataAdapter da = new MySqlDataAdapter("SHOW PROCESSLIST", conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            foreach (DataRow row in dt.Rows)
+                if ((long)row["Id"] == serverThread)
+                    return true;
+            return false;
+        }
+
+        [Test]
+        public void CleanIdleConnections()
+        {
+            string assemblyName = typeof(MySqlConnection).Assembly.FullName;
+            string pmName = String.Format("MySql.Data.MySqlClient.MySqlPoolManager, {0}", assemblyName);
+
+            Type poolManager = Type.GetType(pmName, false);
+            FieldInfo poolManagerTimerField = poolManager.GetField("timer",
+                BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+            FieldInfo poolManagerMaxConnectionIdleTime = 
+                poolManager.GetField ("maxConnectionIdleTime", 
+                BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+
+            Timer poolManagerTimer = (Timer)poolManagerTimerField.GetValue(null);
+            int origMaxConnectionIdleTime = (int) poolManagerMaxConnectionIdleTime.GetValue(null);
+
+
+            try
+            {
+                // Normally, idle connection would expire after 3 minutes and would
+                // be cleaned up by timer that also runs every 3 minutes.
+                // Since we do not want to wait that long during a unit tests,
+                // we use tricks.
+                // - temporarily  reduce max.idle time for connections down to 1
+                // second
+                // - temporarily change cleanup timer to run each second.
+
+                poolManagerMaxConnectionIdleTime.SetValue(null, 1);
+                poolManagerTimer.Change(1000,1000);
+
+                int threadId = -1;
+                using (MySqlConnection c = new MySqlConnection(GetPoolingConnectionString()))
+                {
+                    c.Open();
+                    threadId = c.ServerThread;
+                }
+
+                // Pooled connection should be still alive
+                Assert.IsTrue(IsConnectionAlive(threadId));
+
+                // Let the idle connection expire and let cleanup timer run.
+                Thread.Sleep(2500);
+
+                // The connection that was pooled must be dead now
+                Assert.IsFalse(IsConnectionAlive(threadId));
+
+            }
+            finally
+            {
+                // restore values for connection idle time and timer interval
+                poolManagerMaxConnectionIdleTime.SetValue(null, origMaxConnectionIdleTime);
+                poolManagerTimer.Change(origMaxConnectionIdleTime*1000, 
+                    origMaxConnectionIdleTime*1000);
+            }
+        }
+
+
 		[Test]
 		public void ClearPool()
 		{
@@ -396,5 +464,6 @@ namespace MySql.Data.MySqlClient.Tests
             MySqlConnection.ClearPool(c1);
             MySqlConnection.ClearPool(c2);
         }
+
     }
 }

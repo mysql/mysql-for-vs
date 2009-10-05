@@ -27,6 +27,8 @@ using MySql.Data.MySqlClient.Properties;
 
 namespace MySql.Data.MySqlClient
 {
+
+
 	/// <summary>
 	/// Summary description for MySqlPool.
 	/// </summary>
@@ -42,6 +44,11 @@ namespace MySql.Data.MySqlClient
         private int available;
         private AutoResetEvent autoEvent;
 
+        private void EnqueueIdle(Driver driver)
+        {
+            driver.IdleSince = DateTime.Now;
+            idlePool.Enqueue(driver);
+        }
 		public MySqlPool(MySqlConnectionStringBuilder settings)
 		{
 			minSize = settings.MinimumPoolSize;
@@ -58,7 +65,7 @@ namespace MySql.Data.MySqlClient
 
 			// prepopulate the idle pool to minSize
             for (int i = 0; i < minSize; i++)
-                idlePool.Enqueue(CreateNewPooledConnection());
+               EnqueueIdle(CreateNewPooledConnection());
 
             procedureCache = new ProcedureCache((int)settings.ProcedureCacheSize);
         }
@@ -112,7 +119,7 @@ namespace MySql.Data.MySqlClient
             lock ((idlePool as ICollection).SyncRoot)
             {
                 if (HasIdleConnections)
-                    driver = (Driver)idlePool.Dequeue();
+                    driver = idlePool.Dequeue();
             }
 
             // Obey the connection timeout
@@ -173,7 +180,7 @@ namespace MySql.Data.MySqlClient
                     inUsePool.Remove(driver);
             }
 
-            if (driver.IsTooOld() || beingCleared)
+            if (driver.ConnectionLifetimeExpired() || beingCleared)
             {
                 driver.Close();
                 Debug.Assert(!idlePool.Contains(driver));
@@ -182,7 +189,7 @@ namespace MySql.Data.MySqlClient
             {
                 lock ((idlePool as ICollection).SyncRoot)
                 {
-                    idlePool.Enqueue(driver);
+                    EnqueueIdle(driver);
                 }
             }
 
@@ -280,5 +287,45 @@ namespace MySql.Data.MySqlClient
                 // be destroyed.
             }
         }
-	}
+
+        /// <summary>
+        /// Remove expired drivers from the idle pool
+        /// </summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Closing driver is a potentially lengthy operation involving network
+        /// IO. Therefore we do not close expired drivers while holding 
+        /// idlePool.SyncRoot lock. We just remove the old drivers from the idle
+        /// queue and return them to the caller. The caller will need to close 
+        /// them (or let GC close them)
+        /// </remarks>
+        internal List<Driver> RemoveOldIdleConnections()
+        {
+            List<Driver> oldDrivers = new List<Driver>();
+            DateTime now = DateTime.Now;
+
+            lock ((idlePool as ICollection).SyncRoot)
+            {
+                // The drivers appear to be ordered by their age, i.e it is
+                // sufficient to remove them until the first element is not
+                // too old.
+                while(idlePool.Count > minSize)
+                {
+                    Driver d = idlePool.Peek();
+                    DateTime expirationTime = d.IdleSince.Add(
+                        new TimeSpan(0,0, MySqlPoolManager.maxConnectionIdleTime));
+                    if (expirationTime.CompareTo(now) < 0)
+                    {
+                        oldDrivers.Add(d);
+                        idlePool.Dequeue();
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            return oldDrivers;
+        }
+    }
 }
