@@ -301,7 +301,8 @@ namespace MySql.Data.Common
                 int bytesToDo = Math.Min(leftToDo, BUFFERLENGTH);
                 long baseMem = data.View.ToInt64() + 4;
                 Marshal.WriteInt32(data.View, bytesToDo);
-                Marshal.Copy(buffer, offset, (IntPtr)baseMem, bytesToDo);
+                Marshal.Copy(buffer, buffPos, (IntPtr)baseMem, bytesToDo);
+                buffPos += bytesToDo;
                 leftToDo -= bytesToDo;
                 if (!clientWrote.Set())
                     throw new MySqlException("Writing to shared memory failed");
