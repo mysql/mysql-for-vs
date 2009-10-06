@@ -249,6 +249,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Source\common\Utilities.cs" />
     <Compile Include="Source\TimedStream.cs" />
   </ItemGroup>
   <ItemGroup>

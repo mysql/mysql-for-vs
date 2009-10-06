@@ -757,11 +757,26 @@ namespace MySql.Data.MySqlClient
 
             object val = null;
             if (value is string && defaultValues[keyword].DefaultValue is Enum)
-                val = Enum.Parse(defaultValues[keyword].Type, (string)value, true);
+                val = ParseEnum(defaultValues[keyword].Type, (string)value, keyword);
             else
                 val = ChangeType(value, defaultValues[keyword].Type);
             values[keyword] = val;
             base[keyword] = val;
+        }
+
+        private object ParseEnum(Type t, string requestedValue, string key)
+        {
+            object value;
+
+            if (Utilities.EnumTryParse(t, requestedValue, out value))
+                return value;
+            foreach (string enumValue in Enum.GetNames(t))
+            {
+                if (enumValue.ToLower(CultureInfo.InvariantCulture).Contains(requestedValue))
+                    return Enum.Parse(t, enumValue);
+            }
+            throw new InvalidOperationException(String.Format(
+                Resources.InvalidConnectionStringValue, requestedValue, key));
         }
 
         private object ChangeType(object value, Type t)
