@@ -128,7 +128,7 @@ namespace MySql.Data.Common
 #else
         IPHostEntry GetDnsHostEntry(string hostname)
         {
-            Stopwatch stopwatch = new Stopwatch();
+            LowResolutionStopwatch stopwatch = new LowResolutionStopwatch();
 
             try
             {

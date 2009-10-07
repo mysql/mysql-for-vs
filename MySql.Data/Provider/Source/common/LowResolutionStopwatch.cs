@@ -23,15 +23,20 @@ using System;
 namespace MySql.Data.Common
 {
     /// <summary>
-    /// Port of Stopwatch class from Compact framework.
-    /// The implementation uses Tick counts rather then DateTime.Now
-    /// (DateTime.Now can go back when daylight savings are changed)
+    /// This class is modeled after .NET Stopwatch. It provides better
+    /// performance (no system calls).It is however less precise than
+    /// .NET Stopwatch, measuring in milliseconds. It is adequate to use
+    /// when high-precision is not required (e.g for measuring IO timeouts),
+    /// but not for other tasks.
     /// </summary>
-    class Stopwatch
+    class LowResolutionStopwatch
     {
         long millis;
         long startTime;
-        public Stopwatch()
+        public static readonly long Frequency = 1000; // measure in milliseconds
+        public static readonly bool isHighResolution = false;
+
+        public LowResolutionStopwatch()
         {
             millis = 0;
         }
@@ -55,6 +60,32 @@ namespace MySql.Data.Common
         public void Reset()
         {
             millis = 0;
+            startTime = 0;
+        }
+
+        public TimeSpan Elapsed
+        {
+            get
+            {
+                return new TimeSpan(0, 0, 0, 0, (int)millis);
+            }
+        }
+
+        public static LowResolutionStopwatch StartNew()
+        {
+            LowResolutionStopwatch sw = new LowResolutionStopwatch();
+            sw.Start();
+            return sw;
+        }
+
+        public static long GetTimestamp()
+        {
+            return Environment.TickCount;
+        }
+
+        bool IsRunning()
+        {
+            return (startTime != 0);
         }
     }
 }
