@@ -55,7 +55,7 @@ namespace MySql.Data.MySqlClient
 #if !CF
                 conn.PerfMonitor.AddHardProcedureQuery();
 #endif
-                conn.LogEvent(TraceEventType.Information, 
+                MySqlTrace.LogInformation(
                     String.Format(Resources.HardProcQuery, spName));
             }
             else
@@ -63,7 +63,7 @@ namespace MySql.Data.MySqlClient
 #if !CF
                 conn.PerfMonitor.AddSoftProcedureQuery();
 #endif
-                conn.LogEvent(TraceEventType.Information,
+                MySqlTrace.LogInformation(
                     String.Format(Resources.SoftProcQuery, spName));
             }
             return ds;

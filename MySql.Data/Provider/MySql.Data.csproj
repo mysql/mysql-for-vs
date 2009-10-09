@@ -248,7 +248,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Source\common\LowResolutionStopwatch.cs" />
-    <Compile Include="Source\common\Utilities.cs" />
     <Compile Include="Source\MySqlTrace.cs" />
     <Compile Include="Source\TimedStream.cs" />
     <Compile Include="Source\TracingDriver.cs" />

@@ -25,43 +25,35 @@ using System.Diagnostics;
 
 namespace MySql.Data.MySqlClient
 {
-    public class MySqlTrace
+    internal class MySqlTrace
     {
-        internal static TraceSource Source;
-        public static bool Enabled;
-
         static MySqlTrace()
         {
-            Source = new TraceSource("MySQL", SourceLevels.All);
-            // check the app.config to see if we have any listeners registered for
-            // the mysql source
-            // if so then we have tracing enabled globally
         }
 
-        public static TraceListenerCollection Listeners
+        public static void LogInformation(string msg)
         {
-            get { return Source.Listeners; }
+#if !CF
+            Trace.TraceInformation(
+                String.Format("[{0}] - {1}", DateTime.Now, msg));
+#endif
         }
 
         public static void LogWarning(string msg)
         {
-            Source.TraceEvent(TraceEventType.Warning, 0, 
+#if !CF
+            Trace.TraceWarning(
                 String.Format("[{0}] - {1}", DateTime.Now, msg));
+#endif
         }
 
         public static void LogError(string msg)
         {
-            Source.TraceEvent(TraceEventType.Error, 0,
+#if !CF
+            Trace.TraceError(
                 String.Format("[{0}] - {1}", DateTime.Now, msg));
+#endif
         }
-
-        //public static void EnableEnterpriseMonitoring()
-        //{
-        //}
-
-        //public static void DisableEnterpriseMonitoring()
-        //{
-        //}
     }
 
     internal enum UsageAdvisorFlags
@@ -71,6 +63,7 @@ namespace MySql.Data.MySqlClient
         PartialRowSet = 4
     }
 
+#if !CF
     internal class MySqlTraceResultInfo
     {
         public int RowsRead;
@@ -141,4 +134,5 @@ namespace MySql.Data.MySqlClient
             return msg.ToString();
         }
     }
+#endif
 }

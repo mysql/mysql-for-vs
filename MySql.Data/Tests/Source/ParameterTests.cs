@@ -174,8 +174,9 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void UseOldSyntaxGivesWarning() 
 		{
+            Trace.Listeners.Clear();
             GenericListener listener = new GenericListener();
-            MySqlTrace.Listeners.Add(listener);
+            Trace.Listeners.Add(listener);
 
             string connStr = conn.ConnectionString + ";old syntax=yes;pooling=false";
 			MySqlConnection conn2 = new MySqlConnection(connStr);

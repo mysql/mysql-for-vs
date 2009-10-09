@@ -766,17 +766,15 @@ namespace MySql.Data.MySqlClient
 
         private object ParseEnum(Type t, string requestedValue, string key)
         {
-            object value;
-
-            if (Utilities.EnumTryParse(t, requestedValue, out value))
-                return value;
-            foreach (string enumValue in Enum.GetNames(t))
+            try
             {
-                if (enumValue.ToLower(CultureInfo.InvariantCulture).Contains(requestedValue))
-                    return Enum.Parse(t, enumValue);
+                return Enum.Parse(t, requestedValue, true);
             }
-            throw new InvalidOperationException(String.Format(
-                Resources.InvalidConnectionStringValue, requestedValue, key));
+            catch (ArgumentException)
+            {
+                throw new InvalidOperationException(String.Format(
+                    Resources.InvalidConnectionStringValue, requestedValue, key));
+            }
         }
 
         private object ChangeType(object value, Type t)

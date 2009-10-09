@@ -26,6 +26,7 @@ using MySql.Data.Common;
 using MySql.Data.Types;
 using System.Security.Cryptography.X509Certificates;
 using MySql.Data.MySqlClient.Properties;
+using System.Text;
 #if !CF
 using System.Net.Security;
 using System.Security.Authentication;

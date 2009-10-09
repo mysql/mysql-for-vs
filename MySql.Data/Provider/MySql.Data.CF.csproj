@@ -96,7 +96,6 @@
     <Compile Include="Source\Exception.cs" />
     <Compile Include="Source\Field.cs" />
     <Compile Include="Source\ISSchemaProvider.cs" />
-    <Compile Include="Source\Logger.cs" />
     <Compile Include="Source\MySqlConnectionStringBuilder.cs" />
     <Compile Include="Source\MysqlDefs.cs" />
     <Compile Include="Source\MySqlError.cs" />
@@ -106,6 +105,7 @@
     <Compile Include="Source\MySqlPoolManager.cs" />
     <Compile Include="Source\MySqlScript.cs" />
     <Compile Include="Source\MySqlStream.cs" />
+    <Compile Include="Source\MySqlTrace.cs" />
     <Compile Include="Source\NativeDriver.cs" />
     <Compile Include="Source\parameter.cs" />
     <Compile Include="Source\parameter_collection.cs" />
@@ -137,7 +137,6 @@
     <Compile Include="Source\Types\MySqlUInt32.cs" />
     <Compile Include="Source\Types\MySqlUInt64.cs" />
     <Compile Include="Source\Types\MySqlValue.cs" />
-    <Compile Include="Source\UsageAdvisor.cs" />
     <Compile Include="Source\zlib\Adler32.cs" />
     <Compile Include="Source\zlib\Deflate.cs" />
     <Compile Include="Source\zlib\InfBlocks.cs" />

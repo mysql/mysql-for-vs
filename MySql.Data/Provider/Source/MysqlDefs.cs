@@ -324,19 +324,24 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// TCP/IP style connection.  Works everywhere.
         /// </summary>
-        Sockets,
+        Sockets = 1,
+        Socket = 1,
+        Tcp = 1,
         /// <summary>
         /// Named pipe connection.  Works only on Windows systems.
         /// </summary>
-        NamedPipe,
+        Pipe = 2,
+        NamedPipe = 2,
         /// <summary>
         /// Unix domain socket connection.  Works only with Unix systems.
         /// </summary>
-        UnixSocket,
+        UnixSocket = 3,
+        Unix = 3,
         /// <summary>
         /// Shared memory connection.  Currently works only with Windows systems.
         /// </summary>
-        SharedMemory
+        SharedMemory = 4,
+        Memory = 4
     }
 
     /// <summary>

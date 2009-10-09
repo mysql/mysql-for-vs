@@ -47,7 +47,7 @@ namespace MySql.Data.MySqlClient
                 }
                 catch (Exception ex)
                 {
-                    connection.LogEvent(TraceEventType.Error, ex.Message);
+                    MySqlTrace.LogError(ex.Message);
                 }
             }
         }
