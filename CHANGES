@@ -1,4 +1,6 @@
 Version 6.2.0
+- refactored handling of connection and command timeouts
+  to use timeout on the underlying stream
 - completely refactored MySqlConnectionStringBuilder
 - now supporting TableDirect command type
 

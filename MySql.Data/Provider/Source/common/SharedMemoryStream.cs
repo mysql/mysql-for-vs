@@ -233,11 +233,12 @@ namespace MySql.Data.Common
         {
             int timeLeft = readTimeout;
             WaitHandle[] waitHandles = { serverWrote, connectionClosed };
-            Stopwatch stopwatch = new Stopwatch();
+            LowResolutionStopwatch stopwatch = new LowResolutionStopwatch();
             while (bytesLeft == 0)
             {
-
+                stopwatch.Start();
                 int index = WaitHandle.WaitAny(waitHandles, timeLeft);
+                stopwatch.Stop();
                 if (index == WaitHandle.WaitTimeout)
                     throw new TimeoutException("Timeout when reading from shared memory");
 
@@ -278,13 +279,14 @@ namespace MySql.Data.Common
             int leftToDo = count;
             int buffPos = offset;
             WaitHandle[] waitHandles = { serverRead, connectionClosed };
-            Stopwatch stopwatch = new Stopwatch();
+            LowResolutionStopwatch stopwatch = new LowResolutionStopwatch();
             int timeLeft = writeTimeout;
 
             while (leftToDo > 0)
             {
-
+                stopwatch.Start();
                 int index = WaitHandle.WaitAny(waitHandles, timeLeft);
+                stopwatch.Stop();
 
                 if (waitHandles[index] == connectionClosed)
                     throw new MySqlException("Connection to server lost",true, null);
@@ -301,7 +303,8 @@ namespace MySql.Data.Common
                 int bytesToDo = Math.Min(leftToDo, BUFFERLENGTH);
                 long baseMem = data.View.ToInt64() + 4;
                 Marshal.WriteInt32(data.View, bytesToDo);
-                Marshal.Copy(buffer, offset, (IntPtr)baseMem, bytesToDo);
+                Marshal.Copy(buffer, buffPos, (IntPtr)baseMem, bytesToDo);
+                buffPos += bytesToDo;
                 leftToDo -= bytesToDo;
                 if (!clientWrote.Set())
                     throw new MySqlException("Writing to shared memory failed");

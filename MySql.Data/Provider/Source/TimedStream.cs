@@ -36,63 +36,102 @@ namespace MySql.Data.MySqlClient
     internal class TimedStream : Stream
     {
         Stream baseStream;
-        Stream inStream;
-        Stream outStream;
+
         int timeout;
-        Stopwatch stopwatch;
+        int lastReadTimeout;
+        int lastWriteTimeout;
+        LowResolutionStopwatch stopwatch;
         bool isClosed;
 
+
+        enum IOKind
+        {
+            Read,
+            Write
+        };
 
         /// <summary>
         /// Construct a TimedStream
         /// </summary>
         /// <param name="baseStream"> Undelying stream</param>
-        /// <param name="bufferedInput">If input buffering should be used</param>
-        /// <param name="bufferedOutput">If output buffering should be used</param>
-        public TimedStream(Stream baseStream, bool bufferedInput, bool bufferedOutput)
+        public TimedStream(Stream baseStream)
         {
             this.baseStream = baseStream;
-            if (bufferedInput)
-                inStream = new BufferedStream(baseStream);
-            else
-                inStream = baseStream;
-
-            if (bufferedOutput)
-                outStream = new BufferedStream(baseStream);
-            else
-                outStream = baseStream;
             timeout = baseStream.ReadTimeout;
             isClosed = false;
-            stopwatch = new Stopwatch();
+            stopwatch = new LowResolutionStopwatch();
         }
 
-        private void StartTimer()
-        {
-            // We expect all IO calls to be timed.
-            // If assertion happens here, the caller has
-            // forgot to set the appropriate timeout.         
-            Debug.Assert(timeout != System.Threading.Timeout.Infinite);
 
-            baseStream.ReadTimeout = baseStream.WriteTimeout =
-                timeout;
+        /// <summary>
+        /// Figure out whether it is necessary to reset timeout on stream.
+        /// We track the current value of timeout and try to avoid
+        /// changing it too often, because setting Read/WriteTimeout property
+        /// on network stream maybe a slow operation that involves a system call 
+        /// (setsockopt). Therefore, we allow a small difference, and do not 
+        /// reset timeout if current value is slightly greater than the requested
+        /// one (within 0.1 second).
+        /// </summary>
+
+        private bool ShouldResetStreamTimeout(int currentValue, int newValue)
+        {
+            if (newValue == System.Threading.Timeout.Infinite
+                && currentValue != newValue)
+                return true;
+            if (newValue > currentValue)
+                return true;
+            if (currentValue>= newValue + 100)
+                return true;
+
+            return false;
+
+        }
+        private void StartTimer(IOKind op)
+        {
+
+            int streamTimeout;
+
+            if (timeout == System.Threading.Timeout.Infinite)
+                streamTimeout = System.Threading.Timeout.Infinite;
+            else
+                streamTimeout = timeout - (int)stopwatch.ElapsedMilliseconds;
+
+            if (op == IOKind.Read)
+            {
+                if (ShouldResetStreamTimeout(lastReadTimeout, streamTimeout))
+                {
+                    baseStream.ReadTimeout = lastReadTimeout = streamTimeout;
+                }
+            }
+            else
+            {
+                if (ShouldResetStreamTimeout(lastWriteTimeout, streamTimeout))
+                {
+                    baseStream.WriteTimeout = lastWriteTimeout = streamTimeout;
+                }
+            }
+
+            if (timeout == System.Threading.Timeout.Infinite)
+                return;
+
             stopwatch.Start();
         }
         private void StopTimer()
         {
+            if (timeout == System.Threading.Timeout.Infinite)
+                return;
+
             stopwatch.Stop();
 
-            if (timeout != System.Threading.Timeout.Infinite)
+            // Normally, a timeout exception would be thrown  by stream itself, 
+            // since we set the read/write timeout  for the stream.  However 
+            // there is a gap between  end of IO operation and stopping the 
+            // stop watch,  and it makes it possible for timeout to exceed 
+            // even after IO completed successfully.
+            if (stopwatch.ElapsedMilliseconds > timeout)
             {
-                // Normally, a timeout exception would be thrown  by stream itself, 
-                // since we set the read/write timeout  for the stream.  However 
-                // there is a gap between  end of IO operation and stopping the 
-                // stop watch,  and it makes it possible for timeout to exceed 
-                // even after IO completed successfully.
-                if (stopwatch.ElapsedMilliseconds > timeout)
-                {
-                    ResetTimeout(System.Threading.Timeout.Infinite);
-                    throw new TimeoutException("Timeout in IO operation");
-                }
+                ResetTimeout(System.Threading.Timeout.Infinite);
+                throw new TimeoutException("Timeout in IO operation");
             }
         }
         public override bool CanRead
@@ -114,8 +153,8 @@ namespace MySql.Data.MySqlClient
         {
             try
             {
-                StartTimer();
-                outStream.Flush();
+                StartTimer(IOKind.Write);
+                baseStream.Flush();
                 StopTimer();
             }
             catch (Exception e)
@@ -139,14 +178,6 @@ namespace MySql.Data.MySqlClient
             set
             {
                 baseStream.Position = value;
-                if (inStream != baseStream)
-                {
-                    inStream.Position = value;
-                }
-                if (outStream != baseStream)
-                {
-                    outStream.Position = value;
-                }
             }
         }
 
@@ -154,8 +185,8 @@ namespace MySql.Data.MySqlClient
         {
             try
             {
-                StartTimer();
-                int retval = inStream.Read(buffer, offset, count);
+                StartTimer(IOKind.Read);
+                int retval = baseStream.Read(buffer, offset, count);
                 StopTimer();
                 return retval;
             }
@@ -170,8 +201,8 @@ namespace MySql.Data.MySqlClient
         {
             try
             {
-                StartTimer();
-                int retval = inStream.ReadByte();
+                StartTimer(IOKind.Read);
+                int retval = baseStream.ReadByte();
                 StopTimer();
                 return retval;
             }
@@ -196,8 +227,8 @@ namespace MySql.Data.MySqlClient
         {
             try
             {
-                StartTimer();
-                outStream.Write(buffer, offset, count);
+                StartTimer(IOKind.Write);
+                baseStream.Write(buffer, offset, count);
                 StopTimer();
             }
             catch (Exception e)
@@ -214,13 +245,13 @@ namespace MySql.Data.MySqlClient
 
         public override int ReadTimeout
         {
-            get { return inStream.ReadTimeout; }
-            set { inStream.ReadTimeout = value; }
+            get { return baseStream.ReadTimeout; }
+            set { baseStream.ReadTimeout = value; }
         }
         public override int WriteTimeout
         {
-            get { return outStream.WriteTimeout; }
-            set { outStream.WriteTimeout = value; }
+            get { return baseStream.WriteTimeout; }
+            set { baseStream.WriteTimeout = value; }
         }
 
         public override void Close()
@@ -229,14 +260,6 @@ namespace MySql.Data.MySqlClient
                 return;
             isClosed = true;
             baseStream.Close();
-            if (inStream != baseStream)
-            {
-                inStream.Close();
-            }
-            if (outStream != baseStream)
-            {
-                outStream.Close();
-            }
         }
 
         public void ResetTimeout(int newTimeout)

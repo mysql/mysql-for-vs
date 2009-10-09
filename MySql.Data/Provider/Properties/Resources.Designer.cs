@@ -393,6 +393,15 @@ namespace MySql.Data.MySqlClient.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The requested value &apos;{0}&apos; is invalid for the given keyword &apos;{1}&apos;..
+        /// </summary>
+        public static string InvalidConnectionStringValue {
+            get {
+                return ResourceManager.GetString("InvalidConnectionStringValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Procedure or function &apos;{0}&apos; cannot be found in database &apos;{1}&apos;..
         /// </summary>
         public static string InvalidProcName {
@@ -686,6 +695,15 @@ namespace MySql.Data.MySqlClient.Properties {
         public static string RoutineNotFound {
             get {
                 return ResourceManager.GetString("RoutineNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connector/Net no longer supports server versions prior to 4.1.
+        /// </summary>
+        public static string ServerTooOld {
+            get {
+                return ResourceManager.GetString("ServerTooOld", resourceCulture);
             }
         }
         
