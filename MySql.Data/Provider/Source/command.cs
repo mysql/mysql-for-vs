@@ -146,7 +146,8 @@ namespace MySql.Data.MySqlClient
 				int timeout = Math.Min(value, Int32.MaxValue / 1000);
 				if (timeout != value)
 				{
-					Logger.LogWarning("Command timeout value too large ("
+					connection.LogEvent(TraceEventType.Warning, 
+                    "Command timeout value too large ("
 					+ value + " seconds). Changed to max. possible value (" 
 					+ timeout + " seconds)");
 				}
@@ -396,8 +397,8 @@ namespace MySql.Data.MySqlClient
                 // execute the statement
                 statement.Execute();
                 // wait for data to return
-                connection.Reader = reader;
                 reader.NextResult();
+                connection.Reader = reader;
                 return reader;
             }
             catch (TimeoutException tex)
@@ -414,7 +415,7 @@ namespace MySql.Data.MySqlClient
                 {
                     ResetSqlSelectLimit();
                 }
-                catch (Exception)
+                catch (Exception ex2)
                 {
                     // Reset SqlLimit did not work, connection is hosed.
                     Connection.Abort();
@@ -507,8 +508,7 @@ namespace MySql.Data.MySqlClient
 				throw new InvalidOperationException("The connection property has not been set.");
 			if (connection.State != ConnectionState.Open)
 				throw new InvalidOperationException("The connection is not open.");
-			if (!connection.driver.Version.isAtLeast(4, 1, 0) ||
-				 connection.Settings.IgnorePrepare)
+			if (connection.Settings.IgnorePrepare)
 				return;
 
 			Prepare(0);

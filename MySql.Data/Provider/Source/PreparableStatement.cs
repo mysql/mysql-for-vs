@@ -158,7 +158,7 @@ namespace MySql.Data.MySqlClient
 
             executionCount++;
 
-            (Driver as NativeDriver).ExecuteStatement(packet);
+            Driver.ExecuteStatement(packet);
         }
 
         public override bool ExecuteNext()

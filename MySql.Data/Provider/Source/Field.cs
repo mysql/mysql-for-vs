@@ -159,9 +159,7 @@ namespace MySql.Data.MySqlClient
         {
             get
             {
-                if (connVersion.isAtLeast(4, 1, 0))
-                    return binaryOk && (CharacterSetIndex == 63);
-                return binaryOk && ((colFlags & ColumnFlags.BINARY) > 0);
+                return binaryOk && (CharacterSetIndex == 63);
             }
         }
 

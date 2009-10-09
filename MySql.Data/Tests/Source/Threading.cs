@@ -26,19 +26,25 @@ using System.Threading;
 using System.Collections;
 using System.Diagnostics;
 using System.Text;
+using System.Collections.Specialized;
 
 namespace MySql.Data.MySqlClient.Tests
 {
 	class GenericListener : TraceListener
 	{
-		System.Collections.Specialized.StringCollection strings;
+		StringCollection strings;
 		StringBuilder partial;
 
 		public GenericListener()
 		{
-			strings = new System.Collections.Specialized.StringCollection();
+			strings = new StringCollection();
 			partial = new StringBuilder();
 		}
+
+        public StringCollection Strings
+        {
+            get { return strings; }
+        }
 
 		public int Find(string sToFind)
 		{
@@ -55,7 +61,7 @@ namespace MySql.Data.MySqlClient.Tests
 			strings.Clear();
 		}
 
-		public override void Write(string message)
+        public override void Write(string message)
 		{
 			partial.Append(message);
 		}

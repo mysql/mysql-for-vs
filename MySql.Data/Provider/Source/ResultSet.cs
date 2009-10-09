@@ -44,6 +44,8 @@ namespace MySql.Data.MySqlClient
         private int affectedRows;
         private int insertedId;
         private int statementId;
+        private int totalRows;
+        private int skippedRows;
 
         public ResultSet(int affectedRows, int insertedId)
         {
@@ -54,12 +56,14 @@ namespace MySql.Data.MySqlClient
 
         public ResultSet(Driver d, int statementId, int numCols)
         {
+            affectedRows = -1;
+            insertedId = -1;
             driver = d;
             this.statementId = statementId;
             rowIndex = -1;
             LoadColumns(numCols);
             isOutputParameters = driver.HasStatus(ServerStatusFlags.OutputParameters);
-            hasRows = driver.FetchDataRow(statementId, 0, numCols);
+            hasRows = GetNextRow();
             readDone = !hasRows;
         }
 
@@ -68,11 +72,6 @@ namespace MySql.Data.MySqlClient
         public bool HasRows
         {
             get { return hasRows; }
-        }
-
-        public int RowIndex
-        {
-            get { return rowIndex; }
         }
 
         public int Size
@@ -104,6 +103,16 @@ namespace MySql.Data.MySqlClient
         public int InsertedId
         {
             get { return insertedId; }
+        }
+
+        public int TotalRows
+        {
+            get { return totalRows; }
+        }
+
+        public int SkippedRows
+        {
+            get { return skippedRows; }
         }
 
         #endregion
@@ -158,6 +167,15 @@ namespace MySql.Data.MySqlClient
             }
         }
 
+        private bool GetNextRow()
+        {
+            bool fetched = driver.FetchDataRow(statementId, Size);
+            if (fetched)
+                totalRows++;
+            return fetched;
+        }
+
+
         public bool NextRow(CommandBehavior behavior)
         {
             if (readDone) return false;
@@ -174,7 +192,7 @@ namespace MySql.Data.MySqlClient
                 bool fetched = false;
                 try
                 {
-                    fetched = driver.FetchDataRow(statementId, 0, Size);
+                    fetched = GetNextRow();
                 }
                 catch (MySqlException ex)
                 {
@@ -200,7 +218,14 @@ namespace MySql.Data.MySqlClient
         {
             if (readDone) return;
 
-            while (driver.SkipDataRow()) { }
+            // if we have rows but the user didn't read the first one then mark it as skipped
+            if (HasRows && rowIndex == -1)
+                skippedRows++;
+            while (driver.SkipDataRow()) 
+            {
+                totalRows++;
+                skippedRows++;
+            }
             readDone = true;
         }
 
@@ -246,7 +271,7 @@ namespace MySql.Data.MySqlClient
                 values[i] = driver.ReadColumnValue(i, fields[i], values[i]);
             if (outputParms)
             {
-                bool rowExists = driver.FetchDataRow(statementId, 0, fields.Length);
+                bool rowExists = driver.FetchDataRow(statementId, fields.Length);
                 rowIndex = 0;
                 if (rowExists)
                     throw new MySqlException(Resources.MoreThanOneOPRow);
