@@ -1,4 +1,5 @@
 Version 6.2.0
+- we now cleanup idle connections in the pool, if they were not used for too long
 - refactored handling of connection and command timeouts
   to use timeout on the underlying stream
 - completely refactored MySqlConnectionStringBuilder
