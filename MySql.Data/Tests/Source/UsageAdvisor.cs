@@ -46,8 +46,9 @@ namespace MySql.Data.MySqlClient.Tests
             execSQL("INSERT INTO Test VALUES (3, 'Test3')");
             execSQL("INSERT INTO Test VALUES (4, 'Test4')");
 
+            Trace.Listeners.Clear();
             GenericListener listener = new GenericListener();
-            MySqlTrace.Listeners.Add(listener);
+            Trace.Listeners.Add(listener);
 
             string sql = "SELECT * FROM Test; SELECT * FROM Test WHERE id > 2";
             MySqlCommand cmd = new MySqlCommand(sql, conn);
@@ -79,8 +80,9 @@ namespace MySql.Data.MySqlClient.Tests
             execSQL("INSERT INTO Test VALUES (3, 'Test3')");
             execSQL("INSERT INTO Test VALUES (4, 'Test4')");
 
+            Trace.Listeners.Clear();
             GenericListener listener = new GenericListener();
-            MySqlTrace.Listeners.Add(listener);
+            Trace.Listeners.Add(listener);
 
             MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test; SELECT * FROM Test WHERE id > 2", conn);
             using (MySqlDataReader reader = cmd.ExecuteReader())

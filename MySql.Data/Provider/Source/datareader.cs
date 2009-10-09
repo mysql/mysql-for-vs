@@ -302,9 +302,11 @@ namespace MySql.Data.MySqlClient
 
         private object ChangeType(IMySqlValue value, int fieldIndex, Type newType)
         {
+#if !CF
             if (connection.Settings.UseUsageAdvisor)
                 (driver as TracingDriver).ReportTypeConversion(GetName(fieldIndex), value.MySqlDbType, newType);
-            return Convert.ChangeType(value.Value, newType);
+#endif
+            return Convert.ChangeType(value.Value, newType, CultureInfo.InvariantCulture);
         }
 
 		/// <summary>

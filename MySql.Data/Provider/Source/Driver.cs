@@ -200,9 +200,11 @@ namespace MySql.Data.MySqlClient
         {
             Driver d = null;
 
-            if (MySqlTrace.Enabled || settings.Logging || settings.UseUsageAdvisor)
+#if !CF
+            if (settings.Logging || settings.UseUsageAdvisor)
                 d = new TracingDriver(settings);
             else
+#endif
                 d = new Driver(settings);
             d.Open();
             return d;
@@ -251,7 +253,7 @@ namespace MySql.Data.MySqlClient
                     }
                     catch (Exception ex)
                     {
-                        connection.LogEvent(TraceEventType.Error, ex.Message);
+                        MySqlTrace.LogError(ex.Message);
                         throw;
                     }
                 }
@@ -327,7 +329,7 @@ namespace MySql.Data.MySqlClient
             }
             catch (Exception ex)
             {
-                connection.LogEvent(TraceEventType.Error, ex.Message);
+                MySqlTrace.LogError(ex.Message);
                 throw;
             }
         }

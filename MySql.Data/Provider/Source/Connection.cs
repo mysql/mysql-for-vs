@@ -133,12 +133,6 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-        internal void LogEvent(TraceEventType type, string msg)
-        {
-            if (Settings.Logging)
-                MySqlTrace.Source.TraceEvent(type, driver.ThreadID, msg);
-        }
-
         #endregion
 
         #region Properties
@@ -471,7 +465,7 @@ namespace MySql.Data.MySqlClient
 
             // if the user is using old syntax, let them know
             if (driver.Settings.UseOldSyntax)
-                LogEvent(TraceEventType.Warning, 
+                MySqlTrace.LogWarning(
                     "You are using old syntax that will be removed in future versions");
 
             SetState(ConnectionState.Open, false);
@@ -648,7 +642,7 @@ namespace MySql.Data.MySqlClient
             }
             catch (Exception ex)
             {
-                LogEvent(TraceEventType.Warning, "Could not kill query in timeout handler, " +
+                MySqlTrace.LogWarning("Could not kill query in timeout handler, " +
                     " aborting connection. Exception was " + ex.Message);
                 Abort();
                 isFatal = true;
