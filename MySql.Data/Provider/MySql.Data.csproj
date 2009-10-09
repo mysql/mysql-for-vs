@@ -160,7 +160,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Source\ISSchemaProvider.cs" />
-    <Compile Include="Source\Logger.cs" />
     <Compile Include="Source\MySqlClientFactory.cs" />
     <Compile Include="Source\MySqlConnectionStringBuilder.cs" />
     <Compile Include="Source\MysqlDefs.cs" />
@@ -199,7 +198,6 @@
     <Compile Include="Source\Types\MySqlUInt32.cs" />
     <Compile Include="Source\Types\MySqlUInt64.cs" />
     <Compile Include="Source\Types\MySqlValue.cs" />
-    <Compile Include="Source\UsageAdvisor.cs" />
     <Compile Include="Source\zlib\Adler32.cs" />
     <Compile Include="Source\zlib\Deflate.cs" />
     <Compile Include="Source\zlib\InfBlocks.cs" />
@@ -251,7 +249,9 @@
     </Compile>
     <Compile Include="Source\common\LowResolutionStopwatch.cs" />
     <Compile Include="Source\common\Utilities.cs" />
+    <Compile Include="Source\MySqlTrace.cs" />
     <Compile Include="Source\TimedStream.cs" />
+    <Compile Include="Source\TracingDriver.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\CHANGES">

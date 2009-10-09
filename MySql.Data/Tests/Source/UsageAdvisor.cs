@@ -46,27 +46,29 @@ namespace MySql.Data.MySqlClient.Tests
             execSQL("INSERT INTO Test VALUES (3, 'Test3')");
             execSQL("INSERT INTO Test VALUES (4, 'Test4')");
 
-            Trace.Listeners.Clear();
             GenericListener listener = new GenericListener();
-            Trace.Listeners.Add(listener);
+            MySqlTrace.Listeners.Add(listener);
 
-            MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test; SELECT * FROM Test WHERE id > 2", conn);
+            string sql = "SELECT * FROM Test; SELECT * FROM Test WHERE id > 2";
+            MySqlCommand cmd = new MySqlCommand(sql, conn);
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {
                 reader.Read();
                 reader.GetInt32(0);  // access  the first field
                 reader.Read();
-
                 Assert.IsTrue(reader.NextResult());
-                Assert.IsTrue(listener.Find("Fields not accessed:  name") != 0);
-
                 reader.Read();
-                listener.Clear();
-
                 Assert.AreEqual("Test3", reader.GetString(1));
                 Assert.IsFalse(reader.NextResult());
-                Assert.IsTrue(listener.Find("Fields not accessed:  id") > 0);
             }
+            string log = listener.Strings[0];
+            Assert.IsTrue(log.Contains(sql));
+            Assert.IsTrue(log.Contains("Rows returned: 4"));
+            Assert.IsTrue(log.Contains("Rows returned: 2"));
+            Assert.IsTrue(log.Contains("some fields not accessed (name)"));
+            Assert.IsTrue(log.Contains("some fields not accessed (id)"));
+            Assert.IsTrue(log.Contains("UA Warning: not all rows were read.  Skipped 2 rows"));
+            Assert.IsTrue(log.Contains("UA Warning: not all rows were read.  Skipped 1 rows"));
         }
 
         [Test]
@@ -77,27 +79,20 @@ namespace MySql.Data.MySqlClient.Tests
             execSQL("INSERT INTO Test VALUES (3, 'Test3')");
             execSQL("INSERT INTO Test VALUES (4, 'Test4')");
 
-            Trace.Listeners.Clear();
             GenericListener listener = new GenericListener();
-            Trace.Listeners.Add(listener);
+            MySqlTrace.Listeners.Add(listener);
 
             MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test; SELECT * FROM Test WHERE id > 2", conn);
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {
                 reader.Read();
                 reader.Read();
-
-                listener.Clear();
                 Assert.IsTrue(reader.NextResult());
-                Assert.IsTrue(listener.Find("Reason: Not all rows in resultset were read.") > 0);
-
                 reader.Read();
                 reader.Read();
-                listener.Clear();
-
                 Assert.IsFalse(reader.NextResult());
-                Assert.IsTrue(listener.Find("Reason: Not all rows in resultset were read.") > 0);
             }
+            Assert.IsTrue(listener.Find("UA Warning: not all rows were read") > 0);
         }
 
     }

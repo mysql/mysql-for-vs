@@ -23,6 +23,7 @@ using System.Collections;
 using System.Data;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient.Properties;
+using System.Diagnostics;
 
 namespace MySql.Data.MySqlClient
 {
@@ -54,18 +55,16 @@ namespace MySql.Data.MySqlClient
 #if !CF
                 conn.PerfMonitor.AddHardProcedureQuery();
 #endif
-                if (conn.Settings.Logging)
-                    Logger.LogInformation(String.Format(
-                                              Resources.HardProcQuery, spName));
+                conn.LogEvent(TraceEventType.Information, 
+                    String.Format(Resources.HardProcQuery, spName));
             }
             else
             {
 #if !CF
                 conn.PerfMonitor.AddSoftProcedureQuery();
 #endif
-                if (conn.Settings.Logging)
-                    Logger.LogInformation(String.Format(
-                                              Resources.SoftProcQuery, spName));
+                conn.LogEvent(TraceEventType.Information,
+                    String.Format(Resources.SoftProcQuery, spName));
             }
             return ds;
         }

@@ -25,18 +25,16 @@ using System.Text;
 using MySql.Data.Common;
 using MySql.Data.Types;
 using MySql.Data.MySqlClient.Properties;
+using System.Diagnostics;
 
 namespace MySql.Data.MySqlClient
 {
 	/// <summary>
 	/// Summary description for BaseDriver.
 	/// </summary>
-	internal abstract class Driver : IDisposable 
+	internal class Driver : IDisposable 
     {
-        protected int threadId;
-        protected DBVersion version;
         protected Encoding encoding;
-        protected ServerStatusFlags serverStatus;
         protected MySqlConnectionStringBuilder connectionString;
         protected ClientFlags serverCaps;
         protected bool isOpen;
@@ -55,6 +53,8 @@ namespace MySql.Data.MySqlClient
         protected bool inActiveUse;
 #endif
         protected MySqlPool pool;
+        private bool firstResult;
+        protected IDriver handler;
 
         /// <summary>
         /// For pooled connections, time when the driver was
@@ -72,9 +72,15 @@ namespace MySql.Data.MySqlClient
             if (encoding == null)
                 throw new MySqlException(Resources.DefaultEncodingNotFound);
             connectionString = settings;
-            threadId = -1;
+            serverCharSet = "latin1";
             serverCharSetIndex = -1;
             maxPacketSize = 1024;
+            handler = new NativeDriver(this);
+        }
+
+        ~Driver()
+        {
+            Close();
         }
 
         #region Properties
@@ -86,12 +92,12 @@ namespace MySql.Data.MySqlClient
 
         public int ThreadID
         {
-            get { return threadId; }
+            get { return handler.ThreadId; }
         }
 
         public DBVersion Version
         {
-            get { return version; }
+            get { return handler.Version; }
         }
 
         public MySqlConnectionStringBuilder Settings
@@ -145,14 +151,33 @@ namespace MySql.Data.MySqlClient
             get { return serverCharSetIndex; }
         }
 
-        public bool MoreResults
-        {
-            get { return (serverStatus & (ServerStatusFlags.AnotherQuery | ServerStatusFlags.MoreResults)) != 0; }
-        }
-
         public bool SupportsOutputParameters 
         {
             get { return Version.isAtLeast(6,0,8); }
+        }
+
+        /// <summary>
+        /// Returns true if this connection can handle batch SQL natively
+        /// This means MySQL 4.1.1 or later.
+        /// </summary>
+        public bool SupportsBatch
+        {
+            get
+            {
+                if ((handler.Flags & ClientFlags.MULTI_STATEMENTS) != 0)
+                {
+                    if (Version.isAtLeast(4, 1, 0) && !Version.isAtLeast(4, 1, 10))
+                    {
+                        object qtType = serverProps["query_cache_type"];
+                        object qtSize = serverProps["query_cache_size"];
+                        if (qtType != null && qtType.Equals("ON") &&
+                            (qtSize != null && !qtSize.Equals("0")))
+                            return false;
+                    }
+                    return true;
+                }
+                return false;
+            }
         }
 
         #endregion
@@ -173,31 +198,30 @@ namespace MySql.Data.MySqlClient
 
         public static Driver Create(MySqlConnectionStringBuilder settings)
         {
-            Driver d = new NativeDriver(settings);
+            Driver d = null;
+
+            if (MySqlTrace.Enabled || settings.Logging || settings.UseUsageAdvisor)
+                d = new TracingDriver(settings);
+            else
+                d = new Driver(settings);
             d.Open();
             return d;
+        }
+
+        public bool HasStatus(ServerStatusFlags flag)
+        {
+            return (handler.ServerStatus & flag) != 0;
         }
 
         public virtual void Open()
         {
             creationTime = DateTime.Now;
-        }
-
-        public virtual void SafeClose()
-        {
-            try
-            {
-                Close();
-            }
-            catch (Exception)
-            {
-            }
+            handler.Open();
         }
 
 		public virtual void Close()
 		{
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            Dispose();
 		}
 
         public virtual void Configure(MySqlConnection connection)
@@ -227,7 +251,7 @@ namespace MySql.Data.MySqlClient
                     }
                     catch (Exception ex)
                     {
-                        Logger.LogException(ex);
+                        connection.LogEvent(TraceEventType.Error, ex.Message);
                         throw;
                     }
                 }
@@ -252,41 +276,32 @@ namespace MySql.Data.MySqlClient
             string charSet = connectionString.CharacterSet;
             if (charSet == null || charSet.Length == 0)
             {
-                if (!version.isAtLeast(4, 1, 0))
-                {
-                    if (serverProps.Contains("character_set"))
-                        charSet = serverProps["character_set"].ToString();
-                }
+                if (serverCharSetIndex >= 0)
+                    charSet = (string) charSets[serverCharSetIndex];
                 else
-                {
-                    if (serverCharSetIndex >= 0)
-                        charSet = (string) charSets[serverCharSetIndex];
-                    else
-                        charSet = serverCharSet;
-                }
+                    charSet = serverCharSet;
             }
 
             // now tell the server which character set we will send queries in and which charset we
             // want results in
-            if (version.isAtLeast(4, 1, 0))
+            MySqlCommand charSetCmd = new MySqlCommand("SET character_set_results=NULL",
+                                                connection);
+            object clientCharSet = serverProps["character_set_client"];
+            object connCharSet = serverProps["character_set_connection"];
+            if ((clientCharSet != null && clientCharSet.ToString() != charSet) ||
+                (connCharSet != null && connCharSet.ToString() != charSet))
             {
-                MySqlCommand cmd = new MySqlCommand("SET character_set_results=NULL",
-                                                    connection);
-                object clientCharSet = serverProps["character_set_client"];
-                object connCharSet = serverProps["character_set_connection"];
-                if ((clientCharSet != null && clientCharSet.ToString() != charSet) ||
-                    (connCharSet != null && connCharSet.ToString() != charSet))
-                {
-                    MySqlCommand setNamesCmd = new MySqlCommand("SET NAMES " + charSet, connection);
-                    setNamesCmd.ExecuteNonQuery();
-                }
-                cmd.ExecuteNonQuery();
+                MySqlCommand setNamesCmd = new MySqlCommand("SET NAMES " + charSet, connection);
+                setNamesCmd.ExecuteNonQuery();
             }
+            charSetCmd.ExecuteNonQuery();
 
             if (charSet != null)
-                Encoding = CharSetMap.GetEncoding(version, charSet);
+                Encoding = CharSetMap.GetEncoding(Version, charSet);
             else
-                Encoding = CharSetMap.GetEncoding(version, "latin1");
+                Encoding = CharSetMap.GetEncoding(Version, "latin1");
+
+            handler.Configure();
         }
 
         /// <summary>
@@ -295,8 +310,6 @@ namespace MySql.Data.MySqlClient
         /// </summary>
         private void LoadCharacterSets()
         {
-            if (!version.isAtLeast(4, 1, 0)) return;
-
             MySqlCommand cmd = new MySqlCommand("SHOW COLLATION", connection);
 
             // now we load all the currently active collations
@@ -314,7 +327,7 @@ namespace MySql.Data.MySqlClient
             }
             catch (Exception ex)
             {
-                Logger.LogException(ex);
+                connection.LogEvent(TraceEventType.Error, ex.Message);
                 throw;
             }
         }
@@ -344,32 +357,140 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-        #region Abstract Methods
+        public virtual void SendQuery(MySqlPacket p)
+        {
+            handler.SendQuery(p);
+            firstResult = true;
+        }
 
-        public abstract bool SupportsBatch { get; }
-        public abstract void SetDatabase(string dbName);
-        public abstract int PrepareStatement(string sql, ref MySqlField[] parameters);
-        public abstract void Reset();
-        public abstract void SendQuery(MySqlPacket packet);
-        public abstract ResultSet NextResult(int statementId);
-        public abstract bool FetchDataRow(int statementId, int pageSize, int columns);
-        public abstract bool SkipDataRow();
-        public abstract IMySqlValue ReadColumnValue(int index, MySqlField field, IMySqlValue value);
-        public abstract void ExecuteStatement(byte[] bytes);
-        public abstract void SkipColumnValue(IMySqlValue valObject);
-        public abstract MySqlField[] GetColumns(int count);
-        public abstract bool Ping();
-        public abstract void CloseStatement(int id);
-        public abstract void ExecuteDirect(string sql);
-        public abstract void ResetTimeout(int timeoutMilliseconds);
-        public abstract bool HasStatus(ServerStatusFlags flag);
-		#endregion
+        public virtual ResultSet NextResult(int statementId)
+        {
+            if (!firstResult && !HasStatus(ServerStatusFlags.AnotherQuery | ServerStatusFlags.MoreResults))
+                return null;
+            firstResult = false;
 
+            int affectedRows = -1, insertedId = -1;
+            int fieldCount = GetResult(ref affectedRows, ref insertedId);
+            if (fieldCount == -1)
+                return null;
+            if (fieldCount > 0)
+                return new ResultSet(this, statementId, fieldCount);
+            else
+                return new ResultSet(affectedRows, insertedId);
+        }
+
+        protected virtual int GetResult(ref int affectedRows, ref int insertedId)
+        {
+            return handler.GetResult(ref affectedRows, ref insertedId);
+        }
+
+        public virtual bool FetchDataRow(int statementId, int columns)
+        {
+            return handler.FetchDataRow(statementId, columns);
+        }
+
+        public virtual bool SkipDataRow()
+        {
+            return FetchDataRow(-1, 0);
+        }
+
+        public void ExecuteDirect(string sql)
+        {
+            MySqlPacket p = new MySqlPacket(Encoding);
+            p.WriteString(sql);
+            SendQuery(p);
+            NextResult(0);
+        }
+
+        private void SetFieldEncoding(MySqlField f)
+        {
+            if (charSets == null || f.CharacterSetIndex == -1) return;
+            if (charSets[f.CharacterSetIndex] == null) return;
+
+            CharacterSet cs = CharSetMap.GetCharacterSet(Version, (string) charSets[f.CharacterSetIndex]);
+            // starting with 6.0.4 utf8 has a maxlen of 4 instead of 3.  The old
+            // 3 byte utf8 is utf8mb3
+            if (cs.name.ToLower(System.Globalization.CultureInfo.InvariantCulture) == "utf-8" &&
+                Version.Major >= 6)
+                f.MaxLength = 4;
+            else
+                f.MaxLength = cs.byteCount;
+            f.Encoding = CharSetMap.GetEncoding(Version, (string) charSets[f.CharacterSetIndex]);
+        }
+
+        public MySqlField[] GetColumns(int count)
+        {
+            MySqlField[] fields = new MySqlField[count];
+            for (int i = 0; i < count; i++)
+                fields[i] = new MySqlField(connection);
+            handler.GetColumnsData(fields);
+            for (int i = 0; i < count; i++)
+                SetFieldEncoding(fields[i]);
+
+            return fields;
+        }
+
+        public int PrepareStatement(string sql, ref MySqlField[] parameters)
+        {
+            return handler.PrepareStatement(sql, ref parameters);
+        }
+
+        public IMySqlValue ReadColumnValue(int index, MySqlField field, IMySqlValue value)
+        {
+            return handler.ReadColumnValue(index, field, value);
+        }
+
+        public void SkipColumnValue(IMySqlValue valObject)
+        {
+            handler.SkipColumnValue(valObject);
+        }
+
+        public void ResetTimeout(int timeoutMilliseconds)
+        {
+            handler.ResetTimeout(timeoutMilliseconds);
+        }
+
+        public bool Ping()
+        {
+            return handler.Ping();
+        }
+
+        public void SetDatabase(string dbName)
+        {
+            handler.SetDatabase(dbName);
+        }
+
+        public void ExecuteStatement(MySqlPacket packetToExecute)
+        {
+            handler.ExecuteStatement(packetToExecute);
+        }
+
+
+        public void CloseStatement(int id)
+        {
+            handler.CloseStatement(id);
+        }
+
+        public void Reset()
+        {
+            handler.Reset();
+        }
+
+        private void LogQuery()
+        {
+            //if (Settings.Logging)
+            //    Logger.LogCommand(DBCmd.QUERY, encoding.GetString(
+            //        queryPacket.Buffer, 5, queryPacket.Length - 5));
+        }
 
         #region IDisposable Members
 
         protected virtual void Dispose(bool disposing)
         {
+            ResetTimeout(1000);
+            if (disposing)
+                handler.Close(isOpen);
+
             // if we are pooling, then release ourselves
             if (connectionString.Pooling)
                 MySqlPoolManager.RemoveConnection(this);
@@ -384,5 +505,29 @@ namespace MySql.Data.MySqlClient
         }
 
         #endregion
+    }
+
+    internal interface IDriver
+    {
+        int ThreadId { get; }
+        DBVersion Version { get; }
+        ServerStatusFlags ServerStatus { get; }
+        ClientFlags Flags { get; }
+        void Configure();
+        void Open();
+        void SendQuery(MySqlPacket packet);
+        void Close(bool isOpen);
+        bool Ping();
+        int GetResult(ref int affectedRows, ref int insertedId);
+        bool FetchDataRow(int statementId, int columns);
+        int PrepareStatement(string sql, ref MySqlField[] parameters);
+        void ExecuteStatement(MySqlPacket packet);
+        void CloseStatement(int statementId);
+        void SetDatabase(string dbName);
+        void Reset();
+        IMySqlValue ReadColumnValue(int index, MySqlField field, IMySqlValue valObject);
+        void SkipColumnValue(IMySqlValue valueObject);
+        void GetColumnsData(MySqlField[] columns);
+        void ResetTimeout(int timeout);
     }
 }

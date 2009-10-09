@@ -47,7 +47,6 @@ namespace MySql.Data.MySqlClient
         internal Driver driver;
         private MySqlDataReader dataReader;
         private MySqlConnectionStringBuilder settings;
-        private UsageAdvisor advisor;
         private bool hasBeenOpen;
         private SchemaProvider schemaProvider;
         private ProcedureCache procedureCache;
@@ -70,7 +69,6 @@ namespace MySql.Data.MySqlClient
         {
             //TODO: add event data to StateChange docs
             settings = new MySqlConnectionStringBuilder();
-            advisor = new UsageAdvisor(this);
             database = String.Empty;
         }
 
@@ -135,17 +133,15 @@ namespace MySql.Data.MySqlClient
             }
         }
 
+        internal void LogEvent(TraceEventType type, string msg)
+        {
+            if (Settings.Logging)
+                MySqlTrace.Source.TraceEvent(type, driver.ThreadID, msg);
+        }
+
         #endregion
 
         #region Properties
-
-#if !CF
-        [Browsable(false)]
-#endif
-            internal UsageAdvisor UsageAdvisor
-        {
-            get { return advisor; }
-        }
 
         /// <summary>
         /// Returns the id of the server thread this connection is executing on
@@ -215,18 +211,6 @@ namespace MySql.Data.MySqlClient
         {
             get { return driver.Version.ToString(); }
         }
-
-        internal Encoding Encoding
-        {
-            get
-            {
-                if (driver == null)
-                    return Encoding.Default;
-                else
-                    return driver.Encoding;
-            }
-        }
-
 
         /// <include file='docs/MySqlConnection.xml' path='docs/ConnectionString/*'/>
 #if !CF
@@ -487,7 +471,8 @@ namespace MySql.Data.MySqlClient
 
             // if the user is using old syntax, let them know
             if (driver.Settings.UseOldSyntax)
-                Logger.LogWarning("You are using old syntax that will be removed in future versions");
+                LogEvent(TraceEventType.Warning, 
+                    "You are using old syntax that will be removed in future versions");
 
             SetState(ConnectionState.Open, false);
             driver.Configure(this);
@@ -663,7 +648,7 @@ namespace MySql.Data.MySqlClient
             }
             catch (Exception ex)
             {
-                Logger.LogWarning("Could not kill query in timeout handler, " +
+                LogEvent(TraceEventType.Warning, "Could not kill query in timeout handler, " +
                     " aborting connection. Exception was " + ex.Message);
                 Abort();
                 isFatal = true;
