@@ -72,7 +72,7 @@ namespace MySql.Data.Common
                     if (usePipe)
                     {
 #if !CF
-                        stream = NamedPipeStream.Create(pipeName, dnsHosts[index]);
+                        stream = NamedPipeStream.Create(pipeName, dnsHosts[index], timeout);
 #endif
                     }
                     else

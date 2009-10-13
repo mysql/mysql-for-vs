@@ -26,6 +26,7 @@ using Microsoft.Win32.SafeHandles;
 using System.Threading;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.ComponentModel;
 
 
 
@@ -40,11 +41,12 @@ namespace MySql.Data.Common
         Stream fileStream;
         int readTimeout = Timeout.Infinite;
         int writeTimeout = Timeout.Infinite;
+        const int ERROR_PIPE_BUSY = 231;
+        const int ERROR_SEM_TIMEOUT = 121;
 
-
-        public NamedPipeStream(string path, FileAccess mode)
+        public NamedPipeStream(string path, FileAccess mode, uint timeout)
         {
-            Open(path, mode);
+            Open(path, mode, timeout);
         }
 
         void CancelIo()
@@ -53,10 +55,40 @@ namespace MySql.Data.Common
             if (!ok)
                 throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error());
         }
-        public void Open( string path, FileAccess mode )
+        public void Open( string path, FileAccess mode ,uint timeout )
         {
-            handle = new SafeFileHandle( NativeMethods.CreateFile(path, NativeMethods.GENERIC_READ | NativeMethods.GENERIC_WRITE,
-                         0, null, NativeMethods.OPEN_EXISTING, NativeMethods.FILE_FLAG_OVERLAPPED, 0),true);
+            IntPtr nativeHandle;
+            for (; ; )
+            {
+                nativeHandle = NativeMethods.CreateFile(path, NativeMethods.GENERIC_READ | NativeMethods.GENERIC_WRITE,
+                             0, null, NativeMethods.OPEN_EXISTING, NativeMethods.FILE_FLAG_OVERLAPPED, 0);
+                if (nativeHandle != IntPtr.Zero)
+                    break;
+
+                if (Marshal.GetLastWin32Error() != ERROR_PIPE_BUSY)
+                {
+                    throw new Win32Exception(Marshal.GetLastWin32Error(),
+                        "Error opening pipe");
+                }
+                LowResolutionStopwatch sw = LowResolutionStopwatch.StartNew();
+                bool success = NativeMethods.WaitNamedPipe(path, timeout);
+                sw.Stop();
+                if (!success)
+                {
+                    if (timeout < sw.ElapsedMilliseconds || 
+                        Marshal.GetLastWin32Error() == ERROR_SEM_TIMEOUT)
+                    {
+                        throw new TimeoutException("Timeout waiting for named pipe");
+                    }
+                    else
+                    {
+                        throw new Win32Exception(Marshal.GetLastWin32Error(), 
+                            "Error waiting for pipe");
+                    }
+                }
+                timeout -= (uint)sw.ElapsedMilliseconds;
+            }
+            handle = new SafeFileHandle(nativeHandle, true);
             fileStream = new FileStream(handle, mode, 4096, true);
         }
 
@@ -189,14 +221,14 @@ namespace MySql.Data.Common
             throw new NotSupportedException(Resources.NamedPipeNoSeek);
         }
      
-        internal static Stream Create(string pipeName, string hostname)
+        internal static Stream Create(string pipeName, string hostname, uint timeout)
         {
             string pipePath;
             if (0 == String.Compare(hostname, "localhost", true))
                 pipePath = @"\\.\pipe\" + pipeName;
             else
                 pipePath = String.Format(@"\\{0}\pipe\{1}", hostname, pipeName);
-            return new NamedPipeStream(pipePath, FileAccess.ReadWrite);
+            return new NamedPipeStream(pipePath, FileAccess.ReadWrite, timeout);
         }
     }
 }
