@@ -120,6 +120,8 @@ namespace MySql.Data.Common
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern int FlushViewOfFile(IntPtr address, uint numBytes);
 
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool WaitNamedPipe(string namedPipeName, uint timeOut);
 		#region Winsock functions
 
 		// SOcket routines
