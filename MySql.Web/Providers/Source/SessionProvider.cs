@@ -132,7 +132,7 @@ namespace MySql.Web.SessionState
                 applicationName = config["applicationName"];
 
             // Get <sessionState> configuration element.
-            Configuration webConfig = WebConfigurationManager.OpenWebConfiguration(null);
+            Configuration webConfig = WebConfigurationManager.OpenWebConfiguration(HostingEnvironment.ApplicationVirtualPath);
             sessionStateConfig = (SessionStateSection)webConfig.SectionGroups["system.web"].Sections["sessionState"];
 
             // Initialize connection.
