@@ -3,6 +3,8 @@ Version 6.1.3
 - fixed compilation problem in NativeDriver inside ExecuteDirect  (bug #47354)
 - fixed default collation bug with session provider table (bug #47332)
 - in sessionState provider, timeout value was read from the wrong (root) web.config (bug#47815)
+- fixed crash that can occur when oldGuids are used and binary(16) column  used for GUID 
+  contains a null value (thanks Troy!) (bug#47928)
 
 Version 6.1.2
 - fixed hanging after losing network connectivity to server (bug#43761) 
