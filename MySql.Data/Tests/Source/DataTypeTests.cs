@@ -889,10 +889,10 @@ namespace MySql.Data.MySqlClient.Tests
 
                 Guid g = new Guid("32A48AC5-285A-46c6-A0D4-158E6E39729C");
                 MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (1, ?guid)", c);
-                MySqlParameter p = new MySqlParameter();
-                p.ParameterName = "guid";
-                p.Value = Guid.NewGuid();
-                cmd.Parameters.Add(p);
+                //MySqlParameter p = new MySqlParameter();
+                //p.ParameterName = "guid";
+                //p.Value = Guid.NewGuid();
+                cmd.Parameters.AddWithValue("guid", Guid.NewGuid());
                 cmd.ExecuteNonQuery();
 
                 cmd.CommandText = "SELECT * FROM Test";
@@ -941,6 +941,43 @@ namespace MySql.Data.MySqlClient.Tests
             cmd.CommandText = "SELECT guid FROM Test";
             Guid readG = (Guid)cmd.ExecuteScalar();
             Assert.AreEqual(g, readG);
+        }
+
+        /// <summary>
+        /// Bug #47928 Old Guids=true setting is lost after null value is
+        /// encountered in a Binary(16) 
+        /// </summary>
+        [Test]
+        public void OldGuidsWithNull()
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id INT, guid BINARY(16))");
+
+            string connStr = GetConnectionString(true) + ";old guids=true";
+            using (MySqlConnection c = new MySqlConnection(connStr))
+            {
+                c.Open();
+
+                MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (1, ?guid)", c);
+                cmd.Parameters.AddWithValue("guid", Guid.NewGuid());
+                cmd.ExecuteNonQuery();
+
+                cmd.Parameters["guid"].Value = null;
+                cmd.ExecuteNonQuery();
+                cmd.Parameters["guid"].Value = Guid.NewGuid();
+                cmd.ExecuteNonQuery();
+
+                cmd.CommandText = "SELECT guid FROM Test";
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    //In Bug #47928, following loop will crash after encountering
+                    // null value.
+                    while (reader.Read())
+                    {
+                        object o = reader.GetValue(0);
+                    }
+                }
+            }
         }
     }
 }

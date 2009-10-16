@@ -182,6 +182,7 @@ namespace MySql.Data.Types
 		{
             MySqlGuid g = new MySqlGuid();
             g.isNull = true;
+            g.OldGuids = OldGuids;
             if (!nullVal)
             {
                 if (OldGuids)
@@ -192,7 +193,6 @@ namespace MySql.Data.Types
                 else
                     s = packet.ReadString(length);
                 g.mValue = new Guid(s);
-                g.OldGuids = OldGuids;
                 g.isNull = false;
             }
             return g;
