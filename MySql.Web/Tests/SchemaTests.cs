@@ -32,6 +32,7 @@ using System;
 using System.IO;
 using System.Configuration.Provider;
 using System.Web.Security;
+using MySql.Web.Common;
 
 namespace MySql.Web.Tests
 {
@@ -42,7 +43,11 @@ namespace MySql.Web.Tests
         public override void Setup()
         {
 			base.Setup();
+            DropAllTables();
+        }
 
+        private void DropAllTables()
+        {
             DataTable dt = conn.GetSchema("Tables");
             foreach (DataRow row in dt.Rows)
                 execSQL(String.Format("DROP TABLE IF EXISTS {0}", row["TABLE_NAME"]));
@@ -52,131 +57,32 @@ namespace MySql.Web.Tests
         /// Bug #37469 autogenerateschema optimizing
         /// </summary>
         [Test]
-        public void SchemaNotPresent()
+        public void SchemaCheck()
         {
-            MySQLMembershipProvider provider = new MySQLMembershipProvider();
-            NameValueCollection config = new NameValueCollection();
-            config.Add("connectionStringName", "LocalMySqlServer");
-            config.Add("applicationName", "/");
-            config.Add("passwordFormat", "Clear");
+            for (int i = 0; i <= SchemaManager.Version; i++)
+            {
+                DropAllTables();
+                MySQLMembershipProvider provider = new MySQLMembershipProvider();
+                NameValueCollection config = new NameValueCollection();
+                config.Add("connectionStringName", "LocalMySqlServer");
+                config.Add("applicationName", "/");
+                config.Add("passwordFormat", "Clear");
 
-            try
-            {
-                provider.Initialize(null, config);
-                Assert.Fail("Should have failed");
-            }
-            catch (ProviderException)
-            {
-            }
-        }
+                if (i > 0)
+                    for (int x = 1; x <= i; x++)
+                        LoadSchema(x);
 
-        [Test]
-        public void SchemaV1Present()
-        {
-            MySQLMembershipProvider provider = new MySQLMembershipProvider();
-            NameValueCollection config = new NameValueCollection();
-            config.Add("connectionStringName", "LocalMySqlServer");
-            config.Add("applicationName", "/");
-            config.Add("passwordFormat", "Clear");
-
-            LoadSchema(1);
-            try
-            {
-                provider.Initialize(null, config);
-                Assert.Fail("Should have failed");
-            }
-            catch (ProviderException)
-            {
-            }
-        }
-
-        [Test]
-        public void SchemaV2Present()
-        {
-            MySQLMembershipProvider provider = new MySQLMembershipProvider();
-            NameValueCollection config = new NameValueCollection();
-            config.Add("connectionStringName", "LocalMySqlServer");
-            config.Add("applicationName", "/");
-            config.Add("passwordFormat", "Clear");
-
-            LoadSchema(1);
-            LoadSchema(2);
-            try
-            {
-                provider.Initialize(null, config);
-                Assert.Fail("Should have failed");
-            }
-            catch (ProviderException)
-            {
-            }
-        }
-
-        [Test]
-        public void SchemaV3Present()
-        {
-            MySQLMembershipProvider provider = new MySQLMembershipProvider();
-            NameValueCollection config = new NameValueCollection();
-            config.Add("connectionStringName", "LocalMySqlServer");
-            config.Add("applicationName", "/");
-            config.Add("passwordFormat", "Clear");
-
-            LoadSchema(1);
-            LoadSchema(2);
-            LoadSchema(3);
-            try
-            {
-                provider.Initialize(null, config);
-                Assert.Fail("Should have failed");
-            }
-            catch (ProviderException)
-            {
-            }
-        }
-
-        [Test]
-        public void SchemaV4Present()
-        {
-            MySQLMembershipProvider provider = new MySQLMembershipProvider();
-            NameValueCollection config = new NameValueCollection();
-            config.Add("connectionStringName", "LocalMySqlServer");
-            config.Add("applicationName", "/");
-            config.Add("passwordFormat", "Clear");
-
-            LoadSchema(1);
-            LoadSchema(2);
-            LoadSchema(3);
-            LoadSchema(4);
-            try
-            {
-                provider.Initialize(null, config);
-                Assert.Fail("Should have failed");
-            }
-            catch (ProviderException)
-            {
-            }
-        }
-
-        [Test]
-        public void SchemaV5Present()
-        {
-            MySQLMembershipProvider provider = new MySQLMembershipProvider();
-            NameValueCollection config = new NameValueCollection();
-            config.Add("connectionStringName", "LocalMySqlServer");
-            config.Add("applicationName", "/");
-            config.Add("passwordFormat", "Clear");
-
-            LoadSchema(1);
-            LoadSchema(2);
-            LoadSchema(3);
-            LoadSchema(4);
-            LoadSchema(5);
-            try
-            {
-                provider.Initialize(null, config);
-            }
-            catch (ProviderException)
-            {
-                Assert.Fail("Should not have failed");
+                try
+                {
+                    provider.Initialize(null, config);
+                    if (i < SchemaManager.Version)
+                        Assert.Fail("Should have failed");
+                }
+                catch (ProviderException)
+                {
+                    if (i == SchemaManager.Version)
+                        Assert.Fail("This should not have failed");
+                }
             }
         }
 

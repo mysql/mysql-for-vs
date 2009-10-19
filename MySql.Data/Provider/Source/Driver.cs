@@ -219,6 +219,7 @@ namespace MySql.Data.MySqlClient
         {
             creationTime = DateTime.Now;
             handler.Open();
+            isOpen = true;
         }
 
 		public virtual void Close()

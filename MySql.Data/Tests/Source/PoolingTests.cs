@@ -334,12 +334,9 @@ namespace MySql.Data.MySqlClient.Tests
                 // - temporarily  reduce max.idle time for connections down to 1
                 // second
                 // - temporarily change cleanup timer to run each second.
-
-                poolManagerMaxConnectionIdleTime.SetValue(null, 1);
-                poolManagerTimer.Change(1000,1000);
-
                 int threadId = -1;
-                using (MySqlConnection c = new MySqlConnection(GetPoolingConnectionString()))
+                string connStr = GetPoolingConnectionString();
+                using (MySqlConnection c = new MySqlConnection(connStr))
                 {
                     c.Open();
                     threadId = c.ServerThread;
@@ -348,12 +345,14 @@ namespace MySql.Data.MySqlClient.Tests
                 // Pooled connection should be still alive
                 Assert.IsTrue(IsConnectionAlive(threadId));
 
+                poolManagerMaxConnectionIdleTime.SetValue(null, 1);
+                poolManagerTimer.Change(1000, 1000);
+
                 // Let the idle connection expire and let cleanup timer run.
                 Thread.Sleep(2500);
 
                 // The connection that was pooled must be dead now
                 Assert.IsFalse(IsConnectionAlive(threadId));
-
             }
             finally
             {
@@ -364,11 +363,11 @@ namespace MySql.Data.MySqlClient.Tests
             }
         }
 
-
 		[Test]
 		public void ClearPool()
 		{
 			string connStr = GetPoolingConnectionString() + ";min pool size=10";
+            MySqlConnectionStringBuilder settings = new MySqlConnectionStringBuilder(connStr);
 			MySqlConnection[] connections = new MySqlConnection[10];
 			connections[0] = new MySqlConnection(connStr);
 			connections[0].Open();
@@ -387,13 +386,13 @@ namespace MySql.Data.MySqlClient.Tests
             // now we need to investigate
             string poolName = String.Format("MySql.Data.MySqlClient.MySqlPool, {0}", assemblyName);
             Type poolType = Type.GetType(poolName, false);
-            
+
             FieldInfo inUsePool = poolType.GetField("inUsePool", BindingFlags.NonPublic | BindingFlags.Instance);
-            ICollection inUseList = (ICollection)inUsePool.GetValue(poolHash[connStr]);
+            ICollection inUseList = (ICollection)inUsePool.GetValue(poolHash[settings.ConnectionString]);
             Assert.AreEqual(1, inUseList.Count);
 
             FieldInfo idlePool = poolType.GetField("idlePool", BindingFlags.NonPublic | BindingFlags.Instance);
-            ICollection idleList = (ICollection)idlePool.GetValue(poolHash[connStr]);
+            ICollection idleList = (ICollection)idlePool.GetValue(poolHash[settings.ConnectionString]);
             Assert.AreEqual(9, idleList.Count);
 
 			// now open 4 more of these.  Now we shoudl have 5 open and five

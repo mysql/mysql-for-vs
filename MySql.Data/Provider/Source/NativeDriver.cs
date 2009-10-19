@@ -143,6 +143,7 @@ namespace MySql.Data.MySqlClient
         public void Configure()
         {
             stream.MaxPacketSize = (ulong)owner.MaxPacketSize;
+            stream.Encoding = Encoding;
         }
 
         public void Open()
