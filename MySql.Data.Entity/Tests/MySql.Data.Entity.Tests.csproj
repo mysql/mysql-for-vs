@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -60,6 +60,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\MySql.Data\Provider\Properties\VersionInfo.cs">
+      <Link>Properties\VersionInfo.cs</Link>
+    </Compile>
     <Compile Include="BaseEdmTest.cs" />
     <Compile Include="AggregateOperators.cs" />
     <Compile Include="CanonicalFunctions.cs" />
@@ -89,6 +92,10 @@
     <ProjectReference Include="..\..\MySql.Data\Tests\MySql.Data.Tests.csproj">
       <Project>{F29E5B3D-7F76-4CF9-BF5E-8E3A1377B1E4}</Project>
       <Name>MySql.Data.Tests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Provider\MySql.Data.Entity.csproj">
+      <Project>{A8E799B1-D6AC-42BD-907E-B213D7E9B3C5}</Project>
+      <Name>MySql.Data.Entity</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

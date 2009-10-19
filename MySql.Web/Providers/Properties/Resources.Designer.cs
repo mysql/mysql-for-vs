@@ -383,6 +383,18 @@ namespace MySql.Web.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ALTER TABLE my_aspnet_Sessions CONVERT TO CHARACTER SET DEFAULT;
+        ///ALTER TABLE my_aspnet_Sessions MODIFY SessionItems LONGBLOB;
+        ///
+        ///UPDATE my_aspnet_SchemaVersion SET version=6;.
+        /// </summary>
+        public static string schema6 {
+            get {
+                return ResourceManager.GetString("schema6", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unable to create application..
         /// </summary>
         public static string UnableToCreateApplication {
