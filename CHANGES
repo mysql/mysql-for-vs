@@ -39,6 +39,7 @@ Version 6.0.5
   parsing set and enum columns
 - fixed mono compilation problem (bug #47048)
 - we are now throwing an InvalidOperationException is the TableDirect command type is used    
+- fixed indexes schema collection so that it still works with bad table names such as b``a`d (bug #48101)
     
 Version 6.0.4
 - fixed regression where using stored procs with datasets (bug #44460)
