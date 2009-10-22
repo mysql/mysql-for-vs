@@ -1,3 +1,6 @@
+Version 6.2.1
+- fixed indexes schema collection so that it still works with bad table names such as b``a`d (bug #48101)
+
 Version 6.2.0
 - we now cleanup idle connections in the pool, if they were not used for too long
 - refactored handling of connection and command timeouts
