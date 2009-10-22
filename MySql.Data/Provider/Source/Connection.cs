@@ -645,14 +645,6 @@ namespace MySql.Data.MySqlClient
         /// <returns>A <see cref="DataTable"/> that contains schema information.</returns>
         public override DataTable GetSchema(string collectionName, string[] restrictionValues)
         {
-/*            string msg = String.Format("collection name2 = {0}", collectionName);
-            if (restrictionValues != null)
-                foreach (string s in restrictionValues)
-                {
-                    msg += String.Format(" res={0}", s);
-                }
-            System.Windows.Forms.MessageBox.Show(msg);
-            */
             if (collectionName == null)
                 collectionName = SchemaProvider.MetaCollection;
 
@@ -664,14 +656,9 @@ namespace MySql.Data.MySqlClient
                 for (int x = 0; x < restrictions.Length; x++)
                 {
                     string s = restrictions[x];
-                    if (s != null)
-                    {
-                        if (s.StartsWith("`"))
-                            s = s.Substring(1);
-                        if (s.EndsWith("`"))
-                            s = s.Substring(0, s.Length - 1);
-                        restrictions[x] = s;
-                    }
+                    if (s == null) continue;
+                    s = s.Trim('`');
+                    restrictions[x] = s;
                 }
             }
 
