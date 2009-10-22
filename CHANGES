@@ -17,6 +17,7 @@ Version 5.2.8
   a data adapter and inserts are used (bug #34657)
 - fixed problem with non-IS column parsing that caused data type and column type to be equal when
   parsing set and enum columns
+- fixed indexes schema collection so that it still works with bad table names such as b``a`d (bug #48101)
 
 Version 5.2.7 7/13/09
 - fixed procedure parameters collection so that an exception is thrown if we can't get the 
