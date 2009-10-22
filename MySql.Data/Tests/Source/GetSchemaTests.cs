@@ -322,13 +322,17 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(false, dt.Rows[0]["PRIMARY"]);
             Assert.AreEqual(true, dt.Rows[0]["UNIQUE"]);
 
-			execSQL("DROP TABLE IF EXISTS test");
-			execSQL("CREATE TABLE test (id int, name varchar(50), " +
-				"KEY key2 (name))");
+            /// <summary> 
+            /// Bug #48101	MySqlConnection.GetSchema on "Indexes" throws when there's a table named "b`a`d" 
+            /// </summary> 
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL(@"CREATE TABLE `te``s``t` (id int, name varchar(50), " +
+                "KEY key2 (name))");
 
-			dt = conn.GetSchema("Indexes", restrictions);
+            restrictions[2] = "te`s`t"; 
+            dt = conn.GetSchema("Indexes", restrictions);
 			Assert.AreEqual(1, dt.Rows.Count);
-			Assert.AreEqual("test", dt.Rows[0]["TABLE_NAME"]);
+            Assert.AreEqual("te`s`t", dt.Rows[0]["TABLE_NAME"]);
 			Assert.AreEqual("key2", dt.Rows[0]["INDEX_NAME"]);
 			Assert.AreEqual(false, dt.Rows[0]["PRIMARY"]);
 			Assert.AreEqual(false, dt.Rows[0]["UNIQUE"]);
