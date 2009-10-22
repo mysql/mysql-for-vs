@@ -156,28 +156,9 @@ namespace MySql.Data.MySqlClient
             get { return Version.isAtLeast(6,0,8); }
         }
 
-        /// <summary>
-        /// Returns true if this connection can handle batch SQL natively
-        /// This means MySQL 4.1.1 or later.
-        /// </summary>
         public bool SupportsBatch
         {
-            get
-            {
-                if ((handler.Flags & ClientFlags.MULTI_STATEMENTS) != 0)
-                {
-                    if (Version.isAtLeast(4, 1, 0) && !Version.isAtLeast(4, 1, 10))
-                    {
-                        object qtType = serverProps["query_cache_type"];
-                        object qtSize = serverProps["query_cache_size"];
-                        if (qtType != null && qtType.Equals("ON") &&
-                            (qtSize != null && !qtSize.Equals("0")))
-                            return false;
-                    }
-                    return true;
-                }
-                return false;
-            }
+            get { return (handler.Flags & ClientFlags.MULTI_STATEMENTS) != 0; }
         }
 
         #endregion

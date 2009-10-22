@@ -191,7 +191,7 @@ namespace MySql.Data.MySqlClient
             int protocol = packet.ReadByte();
             string versionString = packet.ReadString();
             version = DBVersion.Parse(versionString);
-            if (!version.isAtLeast(4, 1, 1))
+            if (!version.isAtLeast(5, 0, 0))
                 throw new NotSupportedException(Resources.ServerTooOld);
             threadId = packet.ReadInteger(4);
             encryptionSeed = packet.ReadString();

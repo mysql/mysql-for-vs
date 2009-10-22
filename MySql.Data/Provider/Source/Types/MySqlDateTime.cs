@@ -247,17 +247,11 @@ namespace MySql.Data.Types
 		{
 			string val = String.Empty;
 
-            if (type == MySqlDbType.Timestamp && !packet.Version.isAtLeast(4, 1, 0))
-				val = String.Format("{0:0000}{1:00}{2:00}{3:00}{4:00}{5:00}",
-					value.Year, value.Month, value.Day, value.Hour, value.Minute, value.Second);
-			else
-			{
-				val = String.Format("{0:0000}-{1:00}-{2:00}",
-                    value.Year, value.Month, value.Day);
-                if (type != MySqlDbType.Date)
-                    val = String.Format("{0} {1:00}:{2:00}:{3:00}", val,
-                        value.Hour, value.Minute, value.Second);
-			}
+			val = String.Format("{0:0000}-{1:00}-{2:00}",
+                value.Year, value.Month, value.Day);
+            if (type != MySqlDbType.Date)
+                val = String.Format("{0} {1:00}:{2:00}:{3:00}", val,
+                    value.Hour, value.Minute, value.Second);
             packet.WriteStringNoNull("'" + val + "'");
 		}
 
@@ -307,67 +301,20 @@ namespace MySql.Data.Types
                 packet.WriteInteger(dtValue.Millisecond, 4);
 		}
 
-		private MySqlDateTime Parse40Timestamp(string s)
-		{
-			int pos = 0;
-			year = month = day = 1;
-			hour = minute = second = 0;
-
-			if (s.Length == 14 || s.Length == 8)
-			{
-				year = int.Parse(s.Substring(pos, 4));
-				pos += 4;
-			}
-			else
-			{
-				year = int.Parse(s.Substring(pos, 2));
-				pos += 2;
-				if (year >= 70)
-					year += 1900;
-				else
-					year += 2000;
-			}
-
-			if (s.Length > 2)
-			{
-				month = int.Parse(s.Substring(pos, 2));
-				pos += 2;
-			}
-			if (s.Length > 4)
-			{
-				day = int.Parse(s.Substring(pos, 2));
-				pos += 2;
-			}
-			if (s.Length > 8)
-			{
-				hour = int.Parse(s.Substring(pos, 2));
-				minute = int.Parse(s.Substring(pos + 2, 2));
-				pos += 4;
-			}
-			if (s.Length > 10)
-				second = int.Parse(s.Substring(pos, 2));
-
-			return new MySqlDateTime(type, year, month, day, hour,
-					 minute, second);
-		}
-
 		static internal MySqlDateTime Parse(string s)
 		{
 			MySqlDateTime dt = new MySqlDateTime();
-			return dt.ParseMySql(s, true);
+			return dt.ParseMySql(s);
 		}
 
 		static internal MySqlDateTime Parse(string s, Common.DBVersion version)
 		{
 			MySqlDateTime dt = new MySqlDateTime();
-			return dt.ParseMySql(s, version.isAtLeast(4, 1, 0));
+			return dt.ParseMySql(s);
 		}
 
-		private MySqlDateTime ParseMySql(string s, bool is41)
+		private MySqlDateTime ParseMySql(string s)
 		{
-			if (type == MySqlDbType.Timestamp && !is41)
-				return Parse40Timestamp(s);
-
 			string[] parts = s.Split('-', ' ', ':', '/');
 
 			int year = int.Parse(parts[0]);
@@ -392,7 +339,7 @@ namespace MySql.Data.Types
 			if (length >= 0)
 			{
                 string value = packet.ReadString(length);
-                return ParseMySql(value, packet.Version.isAtLeast(4, 1, 0));
+                return ParseMySql(value);
 			}
 
             long bufLength = packet.ReadByte();

@@ -289,8 +289,6 @@ namespace MySql.Data.MySqlClient
 				colName = OriginalColumnName.ToUpper(CultureInfo.InvariantCulture);
             if (colName.StartsWith("CHAR("))
                 binaryOk = false;
-            else if (connection.IsExecutingBuggyQuery)
-                binaryOk = false;
         }
 
         public IMySqlValue GetValueObject()

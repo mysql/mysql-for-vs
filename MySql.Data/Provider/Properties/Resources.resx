@@ -388,7 +388,7 @@
     <value>'{0}' is an illegal value for a boolean option.</value>
   </data>
   <data name="ServerTooOld" xml:space="preserve">
-    <value>Connector/Net no longer supports server versions prior to 4.1</value>
+    <value>Connector/Net no longer supports server versions prior to 5.0</value>
   </data>
   <data name="InvalidConnectionStringValue" xml:space="preserve">
     <value>The requested value '{0}' is invalid for the given keyword '{1}'.</value>
