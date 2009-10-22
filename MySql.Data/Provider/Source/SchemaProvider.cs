@@ -267,7 +267,8 @@ namespace MySql.Data.MySqlClient
             foreach (DataRow table in tables.Rows)
             {
                 string sql = String.Format("SHOW INDEX FROM `{0}`.`{1}`",
-                                           table["TABLE_SCHEMA"], table["TABLE_NAME"]);
+                    MySqlHelper.EscapeString((string)table["TABLE_SCHEMA"]), 
+                    MySqlHelper.EscapeString((string)table["TABLE_NAME"]));
                 MySqlDataAdapter da = new MySqlDataAdapter(sql, connection);
                 DataTable indexes = new DataTable();
                 da.Fill(indexes);
