@@ -113,7 +113,7 @@ namespace MySql.Data.Types
 			if (length >= 0)
 			{
                 string value = packet.ReadString(length);
-				ParseMySql(value, packet.Version.isAtLeast(4, 1, 0));
+				ParseMySql(value);
 				return this;
 			}
 
@@ -186,7 +186,7 @@ namespace MySql.Data.Types
 				mValue.Days, mValue.Hours, mValue.Minutes, mValue.Seconds, mValue.Milliseconds);
 		}
 
-		private void ParseMySql(string s, bool is41)
+		private void ParseMySql(string s)
 		{
 			string[] parts = s.Split(':');
 			int hours = Int32.Parse(parts[0]);

@@ -49,15 +49,11 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("Indexes", dt.Rows[row++][0]);
             Assert.AreEqual("Foreign Key Columns", dt.Rows[row++][0]);
             Assert.AreEqual("UDF", dt.Rows[row++][0]);
-
-            if (Version >= new Version(5, 0))
-			{
-                Assert.AreEqual("Views", dt.Rows[row++][0]);
-                Assert.AreEqual("ViewColumns", dt.Rows[row++][0]);
-                Assert.AreEqual("Procedure Parameters", dt.Rows[row++][0]);
-                Assert.AreEqual("Procedures", dt.Rows[row++][0]);
-                Assert.AreEqual("Triggers", dt.Rows[row++][0]);
-			}
+            Assert.AreEqual("Views", dt.Rows[row++][0]);
+            Assert.AreEqual("ViewColumns", dt.Rows[row++][0]);
+            Assert.AreEqual("Procedure Parameters", dt.Rows[row++][0]);
+            Assert.AreEqual("Procedures", dt.Rows[row++][0]);
+            Assert.AreEqual("Triggers", dt.Rows[row++][0]);
 		}
 
 		/// <summary>
