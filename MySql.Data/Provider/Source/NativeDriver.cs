@@ -260,12 +260,61 @@ namespace MySql.Data.MySqlClient
 
         #region SSL
 
+        /// <summary>
+        /// Retrieve client SSL certificates. Dependent on connection string 
+        /// settings we use either file or store based certificates.
+        /// </summary>
+        private X509CertificateCollection GetClientCertificates()
+        {
+            X509CertificateCollection certs = new X509CertificateCollection();
+
+            // Check for file-based certificate
+            if (Settings.CertificateFile != null)
+            {
+                X509Certificate2 clientCert = new X509Certificate2(Settings.CertificateFile,
+                    Settings.CertificatePassword);
+                certs.Add(clientCert);
+                return certs;
+            }
+
+            if (Settings.CertificateStoreLocation == MySqlCertificateStoreLocation.None)
+                return certs;
+
+            StoreLocation location =
+                (Settings.CertificateStoreLocation == MySqlCertificateStoreLocation.CurrentUser) ?
+                StoreLocation.CurrentUser : StoreLocation.LocalMachine;
+
+            // Check for store-based certificate
+            X509Store store = new X509Store(StoreName.My, location);
+            store.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
+
+
+            if (Settings.CertificateThumbprint == null)
+            {
+                // Return all certificates from the store.
+                certs.AddRange(store.Certificates);
+                return certs;
+            }
+
+            // Find certificate with given thumbprint
+            certs.AddRange(store.Certificates.Find(X509FindType.FindByThumbprint,
+                      Settings.CertificateThumbprint, true));
+
+            if (certs.Count == 0)
+            {
+                throw new MySqlException("Certificate with Thumbprint " +
+                   Settings.CertificateThumbprint + " not found");
+            }
+            return certs;
+        }
+
+
         private void StartSSL()
         {
             RemoteCertificateValidationCallback sslValidateCallback =
                 new RemoteCertificateValidationCallback(ServerCheckValidation);
             SslStream ss = new SslStream(baseStream, true, sslValidateCallback, null);
-            X509CertificateCollection certs = new X509CertificateCollection();
+            X509CertificateCollection certs = GetClientCertificates();
             ss.AuthenticateAsClient(Settings.Server, certs, SslProtocols.Default, false);
             baseStream = ss;
             stream = new MySqlStream(ss, Encoding, false);
