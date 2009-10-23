@@ -151,6 +151,11 @@ namespace MySql.Data.MySqlClient
             get { return serverCharSetIndex; }
         }
 
+        internal Hashtable CharacterSets
+        {
+            get { return charSets; }
+        }
+
         public bool SupportsOutputParameters 
         {
             get { return Version.isAtLeast(6,0,8); }
@@ -386,30 +391,12 @@ namespace MySql.Data.MySqlClient
             NextResult(0);
         }
 
-        private void SetFieldEncoding(MySqlField f)
-        {
-            if (charSets == null || f.CharacterSetIndex == -1) return;
-            if (charSets[f.CharacterSetIndex] == null) return;
-
-            CharacterSet cs = CharSetMap.GetCharacterSet(Version, (string) charSets[f.CharacterSetIndex]);
-            // starting with 6.0.4 utf8 has a maxlen of 4 instead of 3.  The old
-            // 3 byte utf8 is utf8mb3
-            if (cs.name.ToLower(System.Globalization.CultureInfo.InvariantCulture) == "utf-8" &&
-                Version.Major >= 6)
-                f.MaxLength = 4;
-            else
-                f.MaxLength = cs.byteCount;
-            f.Encoding = CharSetMap.GetEncoding(Version, (string) charSets[f.CharacterSetIndex]);
-        }
-
         public MySqlField[] GetColumns(int count)
         {
             MySqlField[] fields = new MySqlField[count];
             for (int i = 0; i < count; i++)
                 fields[i] = new MySqlField(connection);
             handler.GetColumnsData(fields);
-            for (int i = 0; i < count; i++)
-                SetFieldEncoding(fields[i]);
 
             return fields;
         }
