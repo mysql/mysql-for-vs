@@ -1,4 +1,5 @@
 Version 6.2.1
+- implemented support for client SSL certificates
 - fixed indexes schema collection so that it still works with bad table names such as b``a`d (bug #48101)
 
 Version 6.2.0
