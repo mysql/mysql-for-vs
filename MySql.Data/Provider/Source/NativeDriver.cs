@@ -717,12 +717,7 @@ namespace MySql.Data.MySqlClient
                 colFlags = (ColumnFlags)packet.ReadInteger(2);
             else
                 colFlags = (ColumnFlags)packet.ReadByte();
-
-            field.SetTypeAndFlags(type, colFlags);
-
             field.Scale = (byte)packet.ReadByte();
-
-
             if (packet.HasMoreData)
             {
                 packet.ReadInteger(2); // reserved
@@ -730,7 +725,7 @@ namespace MySql.Data.MySqlClient
 
             if (charSets != null && field.CharacterSetIndex != -1)
             {
-                CharacterSet cs = CharSetMap.GetCharacterSet(Version, (string) charSets[field.CharacterSetIndex]);
+                CharacterSet cs = CharSetMap.GetCharacterSet(Version, (string)charSets[field.CharacterSetIndex]);
                 // starting with 6.0.4 utf8 has a maxlen of 4 instead of 3.  The old
                 // 3 byte utf8 is utf8mb3
                 if (cs.name.ToLower(System.Globalization.CultureInfo.InvariantCulture) == "utf-8" &&
@@ -738,9 +733,10 @@ namespace MySql.Data.MySqlClient
                     field.MaxLength = 4;
                 else
                     field.MaxLength = cs.byteCount;
-                field.Encoding = CharSetMap.GetEncoding(version, (string) charSets[field.CharacterSetIndex]);
+                field.Encoding = CharSetMap.GetEncoding(version, (string)charSets[field.CharacterSetIndex]);
             }
 
+            field.SetTypeAndFlags(type, colFlags);
             return field;
         }
 

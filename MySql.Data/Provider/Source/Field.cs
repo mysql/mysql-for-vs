@@ -179,6 +179,11 @@ namespace MySql.Data.MySqlClient
 			}
 		}
 
+        public int CharacterLength
+        {
+            get { return ColumnLength / MaxLength; }
+        }
+
         #endregion
 
         public void SetTypeAndFlags(MySqlDbType type, ColumnFlags flags)
@@ -263,7 +268,7 @@ namespace MySql.Data.MySqlClient
             if (connection.Settings.RespectBinaryFlags)
                 CheckForExceptions();
 
-            if (Type == MySqlDbType.String && ColumnLength == 36 && !connection.Settings.OldGuids)
+            if (Type == MySqlDbType.String && CharacterLength == 36 && !connection.Settings.OldGuids)
                 mySqlDbType = MySqlDbType.Guid;
 
             if (!IsBinary) return;
