@@ -6,6 +6,8 @@ Version 6.1.3
 - fixed crash that can occur when oldGuids are used and binary(16) column  used for GUID 
   contains a null value (thanks Troy!) (bug#47928)
 - fixed indexes schema collection so that it still works with bad table names such as b``a`d (bug #48101)
+- fixed guid type so that multi-byte character sets will not effect how it works.  A column would be
+  considered a guid if it has a *character* length of 36, not a *byte* length of 36 (bug #47985)
 
 Version 6.1.2
 - fixed hanging after losing network connectivity to server (bug#43761) 
