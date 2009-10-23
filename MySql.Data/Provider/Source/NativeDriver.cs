@@ -444,6 +444,7 @@ namespace MySql.Data.MySqlClient
 
         public override void Reset()
         {
+            stream.Encoding = this.Encoding;
             stream.StartOutput(0, true);
             stream.WriteByte((byte) DBCmd.CHANGE_USER);
             Authenticate();
