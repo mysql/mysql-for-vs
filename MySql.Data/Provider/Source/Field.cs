@@ -24,6 +24,7 @@ using MySql.Data.Types;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System;
+using System.Collections;
 
 namespace MySql.Data.MySqlClient
 {
@@ -87,7 +88,7 @@ namespace MySql.Data.MySqlClient
         public int CharacterSetIndex
         {
             get { return charSetIndex; }
-            set { charSetIndex = value; }
+            set { charSetIndex = value; SetFieldEncoding();  }
         }
 
         public MySqlDbType Type
@@ -177,6 +178,11 @@ namespace MySql.Data.MySqlClient
 			}
 		}
 
+        public int CharacterLength
+        {
+            get { return ColumnLength / MaxLength; }
+        }
+
         #endregion
 
         public void SetTypeAndFlags(MySqlDbType type, ColumnFlags flags)
@@ -261,7 +267,7 @@ namespace MySql.Data.MySqlClient
             if (connection.Settings.RespectBinaryFlags)
                 CheckForExceptions();
 
-            if (Type == MySqlDbType.String && ColumnLength == 36 && !connection.Settings.OldGuids)
+            if (Type == MySqlDbType.String && CharacterLength == 36 && !connection.Settings.OldGuids)
                 mySqlDbType = MySqlDbType.Guid;
 
             if (!IsBinary) return;
@@ -372,6 +378,25 @@ namespace MySql.Data.MySqlClient
                 default:
                     throw new MySqlException("Unknown data type");
             }
+        }
+
+        private void SetFieldEncoding()
+        {
+            Hashtable charSets = connection.driver.CharacterSets;
+            DBVersion version = connection.driver.Version;
+
+            if (charSets == null || CharacterSetIndex == -1) return;
+            if (charSets[CharacterSetIndex] == null) return;
+
+            CharacterSet cs = CharSetMap.GetCharacterSet(version, (string)charSets[CharacterSetIndex]);
+            // starting with 6.0.4 utf8 has a maxlen of 4 instead of 3.  The old
+            // 3 byte utf8 is utf8mb3
+            if (cs.name.ToLower(System.Globalization.CultureInfo.InvariantCulture) == "utf-8" &&
+                version.Major >= 6)
+                MaxLength = 4;
+            else
+                MaxLength = cs.byteCount;
+            Encoding = CharSetMap.GetEncoding(version, (string)charSets[CharacterSetIndex]);
         }
     }
 }

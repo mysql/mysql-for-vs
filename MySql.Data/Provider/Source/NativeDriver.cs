@@ -676,13 +676,12 @@ namespace MySql.Data.MySqlClient
                 colFlags = (ColumnFlags)packet.ReadInteger(2);
             else
                 colFlags = (ColumnFlags)packet.ReadByte();
-            field.SetTypeAndFlags(type, colFlags);
             field.Scale = (byte)packet.ReadByte();
-
             if (packet.HasMoreData)
             {
                 packet.ReadInteger(2); // reserved
             }
+            field.SetTypeAndFlags(type, colFlags);
         }
 
         private void ExecutePacket(MySqlPacket packetToExecute)
