@@ -321,6 +321,59 @@ namespace MySql.Data.MySqlClient
             }
         }
 
+        [Category("Authentication")]
+        [DisplayName("Certificate File")]
+        [Description("Certificate file in PKCS#12 format (.pfx)")]
+        [DefaultValue(null)]
+        public string CertificateFile
+        {
+            get { return (string) values["Certificate File"];}
+            set
+            {
+                SetValue("Certificate File", value);
+            }
+        }
+
+        [Category("Authentication")]
+        [DisplayName("Certificate Password")]
+        [Description("Password for certificate file")]
+        [DefaultValue(null)]
+        public string CertificatePassword
+        {
+            get { return (string)values["Certificate Password"];}
+            set
+            {
+                SetValue("Certificate Password", value);
+            }
+        }
+
+        [Category("Authentication")]
+        [DisplayName("Certificate Store Location")]
+        [Description("Certificate Store Location for client certificates")]
+        [DefaultValue(MySqlCertificateStoreLocation.None)]
+        public MySqlCertificateStoreLocation CertificateStoreLocation
+        {
+            get { return (MySqlCertificateStoreLocation)values["Certificate Store Location"]; }
+            set
+            {
+                SetValue("Certificate Store Location", value);
+            }
+        }
+
+        [Category("Authentication")]
+        [DisplayName("Certificate Thumbprint")]
+        [Description("Certificate thumbprint. Can be used together with Certificate "+ 
+            "Store Location parameter to uniquely identify certificate to be used "+
+            "for SSL authentication.")]
+        [DefaultValue(null)]
+        public string CertificateThumbprint
+        {
+            get { return (string)values["Certificate Thumbprint"]; }
+            set
+            {
+                SetValue("Certificate Thumbprint", value);
+            }
+        }
         #endregion
 
         #region Other Properties
