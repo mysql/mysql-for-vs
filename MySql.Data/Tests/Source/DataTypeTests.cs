@@ -979,5 +979,30 @@ namespace MySql.Data.MySqlClient.Tests
                 }
             }
         }
+
+        /// <summary>
+        /// Bug #47985	UTF-8 String Length Issue (guids etc)
+        /// </summary>
+        [Test]
+        public void UTF8Char12AsGuid()
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id INT, name CHAR(12) CHARSET utf8)");
+            execSQL("INSERT INTO Test VALUES (1, 'Name')");
+
+            string connStr = GetConnectionString(true) + ";charset=utf8";
+            using (MySqlConnection c = new MySqlConnection(connStr))
+            {
+                c.Open();
+
+                MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test", c);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    reader.Read();
+                    string s = reader.GetString(1);
+                    Assert.AreEqual("Name", s);
+                }
+            }
+        }
     }
 }
