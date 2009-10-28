@@ -71,6 +71,8 @@
     <Compile Include="JoinTests.cs" />
     <Compile Include="SchemaInformation.cs" />
     <Compile Include="TestModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
       <DependentUpon>TestModel.csdl</DependentUpon>
     </Compile>
     <Compile Include="Wizard.cs" />
@@ -104,6 +106,7 @@
     <None Include="Properties\schema.sql" />
     <EmbeddedResource Include="TestModel.csdl">
       <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>TestModel.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="TestModel.msl" />
     <EmbeddedResource Include="TestModel.ssdl" />
