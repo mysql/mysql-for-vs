@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -68,6 +68,8 @@
     <Compile Include="JoinTests.cs" />
     <Compile Include="SchemaInformation.cs" />
     <Compile Include="TestModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
       <DependentUpon>TestModel.csdl</DependentUpon>
     </Compile>
     <Compile Include="Wizard.cs" />
@@ -97,6 +99,7 @@
     <None Include="Properties\schema.sql" />
     <EmbeddedResource Include="TestModel.csdl">
       <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>TestModel.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="TestModel.msl" />
     <EmbeddedResource Include="TestModel.ssdl" />
