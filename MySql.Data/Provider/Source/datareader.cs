@@ -401,6 +401,16 @@ namespace MySql.Data.MySqlClient
 				return dt.GetDateTime();
 		}
 
+        public MySqlDecimal GetMySqlDecimal(string column)
+        {
+            return GetMySqlDecimal(GetOrdinal(column));
+        }
+
+        public MySqlDecimal GetMySqlDecimal(int i)
+        {
+			return (MySqlDecimal)GetFieldValue(i, false);
+        }
+
 		/// <include file='docs/MySqlDataReader.xml' path='docs/GetDecimalS/*'/>
 		public Decimal GetDecimal(string column)
 		{

@@ -26,21 +26,21 @@ using System.Globalization;
 namespace MySql.Data.Types
 {
 
-	internal struct MySqlDecimal : IMySqlValue
+	public struct MySqlDecimal : IMySqlValue
 	{
 		private byte precision;
 		private byte scale;
-		private Decimal mValue;
+        private string mValue;
 		private bool isNull;
 
-		public MySqlDecimal(bool isNull)
+		internal MySqlDecimal(bool isNull)
 		{
 			this.isNull = isNull;
-			mValue = 0;
+            mValue = null;
 			precision = scale = 0;
 		}
 
-		public MySqlDecimal(decimal val)
+		internal MySqlDecimal(string val)
 		{
 			this.isNull = false;
 			precision = scale = 0;
@@ -84,8 +84,18 @@ namespace MySql.Data.Types
 
 		public decimal Value
 		{
-			get { return mValue; }
+			get { return Convert.ToDecimal(mValue); }
 		}
+
+        public double ToDouble()
+        {
+            return Double.Parse(mValue);
+        }
+
+        public override string ToString()
+        {
+            return mValue;
+        }
 
 		Type IMySqlValue.SystemType
 		{
@@ -112,18 +122,12 @@ namespace MySql.Data.Types
 			if (nullVal)
 				return new MySqlDecimal(true);
 
+            string s = String.Empty;
 			if (length == -1)
-			{
-                string s = packet.ReadLenString();
-				return new MySqlDecimal(Decimal.Parse(s,
-					 CultureInfo.InvariantCulture));
-			}
-			else
-			{
-                string s = packet.ReadString(length);
-				return new MySqlDecimal(Decimal.Parse(s,
-					 CultureInfo.InvariantCulture));
-			}
+                s = packet.ReadLenString();
+            else 
+                s = packet.ReadString(length);
+			return new MySqlDecimal(s);
 		}
 
         void IMySqlValue.SkipValue(MySqlPacket packet)
