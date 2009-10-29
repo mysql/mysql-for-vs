@@ -4,6 +4,7 @@ Version 6.2.1
 - fixed guid type so that multi-byte character sets will not effect how it works.  A column would be
   considered a guid if it has a *character* length of 36, not a *byte* length of 36 (bug #47985)
 - fixed unsigned types in views when used as entities (bug # 47872) 
+- now exposing the MySqlDecimal type along with GetMySqlDecimal methods on data reader (bug #48100)    
 
 Version 6.2.0
 - we now cleanup idle connections in the pool, if they were not used for too long
