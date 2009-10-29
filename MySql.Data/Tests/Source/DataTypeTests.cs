@@ -894,5 +894,34 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.AreEqual(16, size);
             }
         }
+
+        /// <summary>
+        /// Bug #48100	Impossible to retrieve decimal value if it doesn't fit into .Net System.Decimal
+        /// </summary>
+        [Test]
+        public void MySqlDecimal()
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test (id INT, dec1 DECIMAL(36,2))");
+            execSQL("INSERT INTO Test VALUES (1, 9999999999999999999999999999999999.99)");
+
+            MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test", conn);
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                reader.Read();
+                MySqlDecimal dec = reader.GetMySqlDecimal(1);
+                string s = dec.ToString();
+                Assert.AreEqual(9999999999999999999999999999999999.99, dec.ToDouble());
+                Assert.AreEqual("9999999999999999999999999999999999.99", dec.ToString());
+                try
+                {
+                    decimal d = dec.Value;
+                    Assert.Fail("this should have failed");
+                }
+                catch (Exception ex) 
+                {
+                }
+            }
+        }
     }
 }
