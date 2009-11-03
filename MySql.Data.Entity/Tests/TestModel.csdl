@@ -27,6 +27,7 @@
       <End Role="Publishers" EntitySet="Publishers" />
       <End Role="Books" EntitySet="Books" />
     </AssociationSet>
+    <EntitySet Name="DataTypeTests" EntityType="testModel.DataTypeTest"/>
   </EntityContainer>
 
   <EntityType Name="Employee">
@@ -155,4 +156,13 @@
     <End Role="Publishers" Type="testModel.Publisher" Multiplicity="1" />
     <End Role="Books" Type="testModel.Book" Multiplicity="*" />
   </Association>
+
+  <EntityType Name="DataTypeTest">
+    <Key>
+      <PropertyRef Name="id"/>
+    </Key>
+    <Property Name="id" Type="Guid" Nullable="false"/>
+    <Property Name="id2" Type="Guid" Nullable ="false"/>
+    <Property Name="idAsChar" Type="String" Nullable="true"/>
+  </EntityType>
 </Schema>
