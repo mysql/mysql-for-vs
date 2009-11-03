@@ -128,9 +128,9 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void CloneCommand() 
 		{
-			IDbCommand cmd = new MySqlCommand();
-			IDbCommand cmd2 = ((ICloneable)cmd).Clone() as IDbCommand;
-			cmd2.ToString();
+			MySqlCommand cmd = new MySqlCommand();
+            MySqlCommand newCommand = cmd.Clone();
+            IDbCommand newCommand2 = (IDbCommand)(cmd as ICloneable).Clone();
 		}
 
 		[Test]
