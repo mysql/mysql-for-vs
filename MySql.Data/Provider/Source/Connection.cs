@@ -522,13 +522,18 @@ namespace MySql.Data.MySqlClient
         /// Creates a new MySqlConnection object with the exact same ConnectionString value
         /// </summary>
         /// <returns>A cloned MySqlConnection object</returns>
-        object ICloneable.Clone()
+        public MySqlConnection Clone()
         {
             MySqlConnection clone = new MySqlConnection();
             string connectionString = settings.GetConnectionString(true);
             if (connectionString != null)
                 clone.ConnectionString = connectionString;
             return clone;
+        }
+
+        object ICloneable.Clone()
+        {
+            return this.Clone();
         }
 
         #endregion
