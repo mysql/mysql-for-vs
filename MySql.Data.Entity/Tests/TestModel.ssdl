@@ -27,6 +27,7 @@
       <End Role="Publishers" EntitySet="Publishers" />
       <End Role="Books" EntitySet="Books" />
     </AssociationSet>
+    <EntitySet Name="DataTypeTests" EntityType="testModel.Store.DataTypeTests"/>
   </EntityContainer>
 
   <EntityType Name="Employees">
@@ -199,4 +200,12 @@
     <Parameter Name="theage" Type="int" Mode="In" />
   </Function>
 
+  <EntityType Name="DataTypeTests">
+    <Key>
+      <PropertyRef Name="id"/>
+    </Key>
+    <Property Name="id" Type="guid" Nullable="false"/>
+    <Property Name="id2" Type="guid" Nullable ="false"/>
+    <Property Name="idAsChar" Type="varchar" MaxLength="36" Nullable="true"/>
+  </EntityType>  
 </Schema>
