@@ -736,24 +736,32 @@ namespace MySql.Data.MySqlClient
 		#endregion
 
 		#region ICloneable
+
 		/// <summary>
 		/// Creates a clone of this MySqlCommand object.  CommandText, Connection, and Transaction properties
 		/// are included as well as the entire parameter list.
 		/// </summary>
 		/// <returns>The cloned MySqlCommand object</returns>
-		object ICloneable.Clone()
+		public MySqlCommand Clone()
 		{
 			MySqlCommand clone = new MySqlCommand(cmdText, connection, curTransaction);
             clone.CommandType = CommandType;
             clone.CommandTimeout = CommandTimeout;
             clone.batchableCommandText = batchableCommandText;
+            clone.UpdatedRowSource = UpdatedRowSource;
 
 			foreach (MySqlParameter p in parameters)
 			{
-				clone.Parameters.Add((p as ICloneable).Clone());
+				clone.Parameters.Add(p.Clone());
 			}
 			return clone;
 		}
+
+        object ICloneable.Clone()
+        {
+            return this.Clone();
+        }
+
 		#endregion
 
         #region Batching support
