@@ -521,7 +521,7 @@ namespace MySql.Web.SessionState
                     // Retrieve the current session item information.
                     cmd = new MySqlCommand(
                       "SELECT (NOW() > Expires) as Expired, SessionItems, LockId,  Flags, Timeout, " +
-                      "  TIMESTAMPDIFF(SECOND, LockDate, NOW()) as lockAge " +
+                      "  TIME_TO_SEC(NOW() - LockDate) as lockAge " +
                       "  FROM my_aspnet_Sessions" +
                       "  WHERE SessionId = @SessionId AND ApplicationId = @ApplicationId", conn);
 
