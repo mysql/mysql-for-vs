@@ -15,7 +15,7 @@
 [assembly: global::System.Data.Objects.DataClasses.EdmRelationshipAttribute("testModel", "FK_Books_Publishers", "Publishers", global::System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(MySql.Data.Entity.Tests.Publisher), "Books", global::System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(MySql.Data.Entity.Tests.Book))]
 
 // Original file name:
-// Generation date: 10/28/2009 11:00:34 AM
+// Generation date: 11/3/2009 9:33:22 AM
 namespace MySql.Data.Entity.Tests
 {
     
@@ -185,6 +185,21 @@ namespace MySql.Data.Entity.Tests
         }
         private global::System.Data.Objects.ObjectQuery<Publisher> _Publishers;
         /// <summary>
+        /// There are no comments for DataTypeTests in the schema.
+        /// </summary>
+        public global::System.Data.Objects.ObjectQuery<DataTypeTest> DataTypeTests
+        {
+            get
+            {
+                if ((this._DataTypeTests == null))
+                {
+                    this._DataTypeTests = base.CreateQuery<DataTypeTest>("[DataTypeTests]");
+                }
+                return this._DataTypeTests;
+            }
+        }
+        private global::System.Data.Objects.ObjectQuery<DataTypeTest> _DataTypeTests;
+        /// <summary>
         /// There are no comments for Employees in the schema.
         /// </summary>
         public void AddToEmployees(Employee employee)
@@ -246,6 +261,13 @@ namespace MySql.Data.Entity.Tests
         public void AddToPublishers(Publisher publisher)
         {
             base.AddObject("Publishers", publisher);
+        }
+        /// <summary>
+        /// There are no comments for DataTypeTests in the schema.
+        /// </summary>
+        public void AddToDataTypeTests(DataTypeTest dataTypeTest)
+        {
+            base.AddObject("DataTypeTests", dataTypeTest);
         }
     }
     /// <summary>
@@ -1653,5 +1675,98 @@ namespace MySql.Data.Entity.Tests
                 }
             }
         }
+    }
+    /// <summary>
+    /// There are no comments for testModel.DataTypeTest in the schema.
+    /// </summary>
+    /// <KeyProperties>
+    /// id
+    /// </KeyProperties>
+    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName="testModel", Name="DataTypeTest")]
+    [global::System.Runtime.Serialization.DataContractAttribute(IsReference=true)]
+    [global::System.Serializable()]
+    public partial class DataTypeTest : global::System.Data.Objects.DataClasses.EntityObject
+    {
+        /// <summary>
+        /// Create a new DataTypeTest object.
+        /// </summary>
+        /// <param name="id">Initial value of id.</param>
+        /// <param name="id2">Initial value of id2.</param>
+        public static DataTypeTest CreateDataTypeTest(global::System.Guid id, global::System.Guid id2)
+        {
+            DataTypeTest dataTypeTest = new DataTypeTest();
+            dataTypeTest.id = id;
+            dataTypeTest.id2 = id2;
+            return dataTypeTest;
+        }
+        /// <summary>
+        /// There are no comments for Property id in the schema.
+        /// </summary>
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [global::System.Runtime.Serialization.DataMemberAttribute()]
+        public global::System.Guid id
+        {
+            get
+            {
+                return this._id;
+            }
+            set
+            {
+                this.OnidChanging(value);
+                this.ReportPropertyChanging("id");
+                this._id = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value);
+                this.ReportPropertyChanged("id");
+                this.OnidChanged();
+            }
+        }
+        private global::System.Guid _id;
+        partial void OnidChanging(global::System.Guid value);
+        partial void OnidChanged();
+        /// <summary>
+        /// There are no comments for Property id2 in the schema.
+        /// </summary>
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
+        [global::System.Runtime.Serialization.DataMemberAttribute()]
+        public global::System.Guid id2
+        {
+            get
+            {
+                return this._id2;
+            }
+            set
+            {
+                this.Onid2Changing(value);
+                this.ReportPropertyChanging("id2");
+                this._id2 = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value);
+                this.ReportPropertyChanged("id2");
+                this.Onid2Changed();
+            }
+        }
+        private global::System.Guid _id2;
+        partial void Onid2Changing(global::System.Guid value);
+        partial void Onid2Changed();
+        /// <summary>
+        /// There are no comments for Property idAsChar in the schema.
+        /// </summary>
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute()]
+        [global::System.Runtime.Serialization.DataMemberAttribute()]
+        public string idAsChar
+        {
+            get
+            {
+                return this._idAsChar;
+            }
+            set
+            {
+                this.OnidAsCharChanging(value);
+                this.ReportPropertyChanging("idAsChar");
+                this._idAsChar = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value, true);
+                this.ReportPropertyChanged("idAsChar");
+                this.OnidAsCharChanged();
+            }
+        }
+        private string _idAsChar;
+        partial void OnidAsCharChanging(string value);
+        partial void OnidAsCharChanged();
     }
 }

@@ -129,5 +129,20 @@ namespace MySql.Data.Entity.Tests
                 Assert.AreEqual(now, dt);
             }
         }
+
+        /// <summary>
+        /// Bug #48417	Invalid cast from 'System.String' to 'System.Guid'
+        /// </summary>
+        [Test]
+        public void GuidType()
+        {
+            using (testEntities context = new testEntities())
+            {
+                DataTypeTest dtt = context.DataTypeTests.First();
+                string guidAsChar = dtt.idAsChar;
+                Assert.AreEqual(guidAsChar, dtt.id.ToString());
+                Assert.AreEqual(guidAsChar, dtt.id2.ToString());
+            }
+        }
     }
 }

@@ -174,7 +174,16 @@
       <EndProperty Name="Books">
         <ScalarProperty Name="Id" ColumnName="Id" />
       </EndProperty>
-    </AssociationSetMapping>  
-  
+    </AssociationSetMapping>
+
+    <EntitySetMapping Name="DataTypeTests">
+      <EntityTypeMapping TypeName="testModel.DataTypeTest">
+        <MappingFragment StoreEntitySet="DataTypeTests">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="id2" ColumnName="id2" />
+          <ScalarProperty Name="idAsChar" ColumnName="idAsChar"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>
