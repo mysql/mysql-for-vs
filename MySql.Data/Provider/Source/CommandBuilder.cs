@@ -28,6 +28,7 @@ using System.Collections;
 using MySql.Data.Types;
 using System.Globalization;
 using MySql.Data.MySqlClient.Properties;
+using System.Collections.Generic;
 
 namespace MySql.Data.MySqlClient
 {
@@ -103,8 +104,45 @@ namespace MySql.Data.MySqlClient
                     p.Precision = Convert.ToByte(row["NUMERIC_PRECISION"]);
                 if (!row["NUMERIC_SCALE"].Equals(DBNull.Value))
                     p.Scale = Convert.ToByte(row["NUMERIC_SCALE"]);
+                if (p.MySqlDbType == MySqlDbType.Set || p.MySqlDbType == MySqlDbType.Enum)
+                    p.PossibleValues = GetPossibleValues(row);
                 command.Parameters.Add(p);
             }
+        }
+
+        private static List<string> GetPossibleValues(DataRow row)
+        {
+            string[] types = new string[] { "ENUM", "SET" };
+			string dtdIdentifier = row["DTD_IDENTIFIER"].ToString().Trim();
+
+            int index = 0;
+            for (; index < 2; index++)
+                if (dtdIdentifier.StartsWith(types[index], StringComparison.InvariantCultureIgnoreCase))
+                    break;
+            if (index == 2) return null;
+            dtdIdentifier = dtdIdentifier.Substring(types[index].Length).Trim();
+            dtdIdentifier = dtdIdentifier.Trim('(', ')').Trim();
+
+            List<string> values = new List<string>();
+            MySqlTokenizer tokenzier = new MySqlTokenizer(dtdIdentifier);
+            string token = tokenzier.NextToken();
+            int start = tokenzier.StartIndex;
+            while (true)
+            {
+                if (token == null || token == ",")
+                {
+                    int end = dtdIdentifier.Length - 1;
+                    if (token == ",")
+                        end = tokenzier.StartIndex;
+
+                    string value = dtdIdentifier.Substring(start, end - start).Trim('\'', '\"').Trim();
+                    values.Add(value);
+                    start = tokenzier.StopIndex;
+                }
+                if (token == null) break;
+                token = tokenzier.NextToken();
+            }
+            return values;
         }
 
         private static ParameterDirection GetDirection(DataRow row)
