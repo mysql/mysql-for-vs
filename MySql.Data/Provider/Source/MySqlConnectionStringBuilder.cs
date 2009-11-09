@@ -858,34 +858,42 @@ namespace MySql.Data.MySqlClient
         {
             PropertyInfo[] properties = typeof(MySqlConnectionStringBuilder).GetProperties();
             foreach (PropertyInfo pi in properties)
-            {
-                string name = pi.Name.ToLower(CultureInfo.InvariantCulture);
-                string displayName = name;
+                AddKeywordFromProperty(pi);
 
-                // now see if we have defined a display name for this property
-                object[] attr = pi.GetCustomAttributes(false);
-                foreach (Attribute a in attr)
-                    if (a is DisplayNameAttribute)
-                    {
-                        displayName = (a as DisplayNameAttribute).DisplayName;
-                        break;
-                    }
+            // remove this starting with 6.4
+            PropertyInfo encrypt = typeof(MySqlConnectionStringBuilder).GetProperty(
+                "Encrypt", BindingFlags.Instance | BindingFlags.NonPublic);
+            AddKeywordFromProperty(encrypt);
+        }
 
-                validKeywords[name] = displayName;
-                validKeywords[displayName] = displayName;
+        private static void AddKeywordFromProperty(PropertyInfo pi)
+        {
+            string name = pi.Name.ToLower(CultureInfo.InvariantCulture);
+            string displayName = name;
 
-                foreach (Attribute a in attr)
+            // now see if we have defined a display name for this property
+            object[] attr = pi.GetCustomAttributes(false);
+            foreach (Attribute a in attr)
+                if (a is DisplayNameAttribute)
                 {
-                    if (a is ValidKeywordsAttribute)
-                    {
-                        foreach (string keyword in (a as ValidKeywordsAttribute).Keywords)
-                            validKeywords[keyword.ToLower(CultureInfo.InvariantCulture).Trim()] = displayName;
-                    }
-                    else if (a is DefaultValueAttribute)
-                    {
-                        defaultValues[displayName] = new PropertyDefaultValue(pi.PropertyType, 
-                                Convert.ChangeType((a as DefaultValueAttribute).Value, pi.PropertyType, CultureInfo.CurrentCulture));
-                    }
+                    displayName = (a as DisplayNameAttribute).DisplayName;
+                    break;
+                }
+
+            validKeywords[name] = displayName;
+            validKeywords[displayName] = displayName;
+
+            foreach (Attribute a in attr)
+            {
+                if (a is ValidKeywordsAttribute)
+                {
+                    foreach (string keyword in (a as ValidKeywordsAttribute).Keywords)
+                        validKeywords[keyword.ToLower(CultureInfo.InvariantCulture).Trim()] = displayName;
+                }
+                else if (a is DefaultValueAttribute)
+                {
+                    defaultValues[displayName] = new PropertyDefaultValue(pi.PropertyType, 
+                            Convert.ChangeType((a as DefaultValueAttribute).Value, pi.PropertyType, CultureInfo.CurrentCulture));
                 }
             }
         }
