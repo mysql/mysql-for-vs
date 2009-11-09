@@ -95,5 +95,12 @@ namespace MySql.Data.MySqlClient.Tests
             s["database"] = "test2";
             Assert.AreEqual("database=test2", s.ConnectionString);
         }
+
+        [Test]
+        public void EncryptKeyword()
+        {
+            string connStr = "database=test;uid=root;server=localhost;encrypt=yes";
+            MySqlConnectionStringBuilder sb = new MySqlConnectionStringBuilder(connStr);
+        }
     }
 }
