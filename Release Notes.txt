@@ -3,24 +3,18 @@ Connector/Net 6.0  Release Notes
 
 Welcome to the release notes for Connector/Net 6.0
 
-What's new in 6.0.4?
+What's new in 6.0.5?
 --------------------
-This is the first post-GA release of 6.0 and we really wanted to address some of the bugs that were in the
-initial GA release.  Here are the highlights:
+- Added Keepalive connection option
+- Fixed some problems with our unsigned type support in entity framework
+- Added methods to allow type-safe cloning on connection, parameter, and command objects
+- We now expose the MySqlDecimal type to support decimal values greater than what System.Decimal can handle
+- Lots of bug fixes (check the changelog)
 
-* Added bool and guid support to our entity framework bits
-* Added SunConnect registration to the installer.  Please register!
-* Our Visual Studio integration bits should compile better under VS2005
-* Unsigned values are not supported with our entity framework bits
-* Many other significant bug fixes.  Check the change log!
-
-Known Issues In 6.0.4
+Known Issues In 6.0.5
 ---------------------
 * The table editor in the Visual Studio integration will shorten the window name when you save.  This has no
 real effect on the function of the editor but it is not quite correct.
-
-* Our visual studio editors are completely rewritten and we expect to find some 1.0 type bugs after release.  We will
-update these quickly and we ask for your patience.
 
 
 Data type support in Entity Framework
