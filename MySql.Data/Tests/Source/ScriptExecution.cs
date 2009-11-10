@@ -176,6 +176,8 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void ScriptWithDelimiterStatements()
         {
+            if (Version < new Version(5, 0)) return;
+
             StringBuilder sql = new StringBuilder();
 
             sql.AppendFormat("{0}DELIMITER $${0}", Environment.NewLine);
