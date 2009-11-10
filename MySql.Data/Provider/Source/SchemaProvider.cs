@@ -270,8 +270,8 @@ namespace MySql.Data.MySqlClient
             foreach (DataRow table in tables.Rows)
             {
                 string sql = String.Format("SHOW INDEX FROM `{0}`.`{1}`",
-                    MySqlHelper.EscapeString((string)table["TABLE_SCHEMA"]), 
-                    MySqlHelper.EscapeString((string)table["TABLE_NAME"]));
+                    MySqlHelper.DoubleQuoteString((string)table["TABLE_SCHEMA"]), 
+                    MySqlHelper.DoubleQuoteString((string)table["TABLE_NAME"]));
                 MySqlDataAdapter da = new MySqlDataAdapter(sql, connection);
                 DataTable indexes = new DataTable();
                 da.Fill(indexes);
@@ -1020,7 +1020,7 @@ namespace MySql.Data.MySqlClient
                 {
                     string s = restrictions[x];
                     if (s == null) continue;
-                    s = s.Trim('`');
+                    restrictions[x] = s.Trim('`');
                 }
             }
             return restrictions;
