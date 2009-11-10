@@ -168,7 +168,7 @@ namespace MySql.Data.VisualStudio
             packageKey.SetValue("ID", 100);
 
             // our package should autoload if a solution exists
-            keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\AutoLoadPackages\{F1536EF8-92EC-443C-9ED7-FDADF150DA82}",
+            keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\AutoLoadPackages\{{F1536EF8-92EC-443C-9ED7-FDADF150DA82}}",
                 version);
             RegistryKey autoLoadKey = rootKey.OpenSubKey(keyPath, true);
             autoLoadKey.SetValue(GuidList.PackageGUID.ToString("B"), 0);
@@ -246,7 +246,7 @@ namespace MySql.Data.VisualStudio
             }
 
             // Autoload
-            keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\AutoLoadPackages\{F1536EF8-92EC-443C-9ED7-FDADF150DA82}",
+            keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\AutoLoadPackages\{{F1536EF8-92EC-443C-9ED7-FDADF150DA82}}",
                 version);
             RegistryKey autoLoadKey = rootKey.OpenSubKey(keyPath, true);
             autoLoadKey.DeleteValue(GuidList.PackageGUID.ToString("B"), false);
