@@ -42,7 +42,7 @@ namespace MySql.Web.Tests
         [SetUp]
         public override void Setup()
         {
-			base.Setup();
+            base.Setup();
             DropAllTables();
         }
 

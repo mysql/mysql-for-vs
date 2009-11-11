@@ -26,9 +26,9 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
 using System.Text;
+using System.Collections;
 #if !CF
 using System.ComponentModel.Design.Serialization;
-using System.Collections.Generic;
 #endif
 
 namespace MySql.Data.MySqlClient
@@ -58,7 +58,7 @@ namespace MySql.Data.MySqlClient
         private MySqlParameterCollection collection;
         IMySqlValue valueObject;
         private Encoding encoding;
-        private List<string> possibleValues;
+        private IList possibleValues;
 
         #region Constructors
 
@@ -344,7 +344,7 @@ namespace MySql.Data.MySqlClient
         /// Returns the possible values for this parameter if this parameter is of type
         /// SET or ENUM.  Returns null otherwise.
         /// </summary>
-        public List<string> PossibleValues
+        public IList PossibleValues
         {
             get { return possibleValues; }
             internal set { possibleValues = value; }
