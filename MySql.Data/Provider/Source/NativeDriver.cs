@@ -723,20 +723,8 @@ namespace MySql.Data.MySqlClient
                 packet.ReadInteger(2); // reserved
             }
 
-            if (charSets != null && field.CharacterSetIndex != -1)
-            {
-                CharacterSet cs = CharSetMap.GetCharacterSet(Version, (string)charSets[field.CharacterSetIndex]);
-                // starting with 6.0.4 utf8 has a maxlen of 4 instead of 3.  The old
-                // 3 byte utf8 is utf8mb3
-                if (cs.name.ToLower(System.Globalization.CultureInfo.InvariantCulture) == "utf-8" &&
-                    Version.Major >= 6)
-                    field.MaxLength = 4;
-                else
-                    field.MaxLength = cs.byteCount;
-                field.Encoding = CharSetMap.GetEncoding(version, (string)charSets[field.CharacterSetIndex]);
-            }
-
             field.SetTypeAndFlags(type, colFlags);
+
             return field;
         }
 
