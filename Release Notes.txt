@@ -19,8 +19,9 @@ What's new in 6.2
 
 Issues in this release
 ----------------------
-This is an alpha release and, as such, we know of some test failures.  We are sure there are bugs
+This is a beta release and, as such, we know of some test failures.  We are sure there are bugs
 in this release so we encourage you to use this release to see and test the new features but do
 not use it in a production setting.
 
-The documentation has not been updated yet. This will be updated by beta.
+The documentation has not yet been completed.  We apologize for the delay in 6.2 documentation but
+we felt it was important to get the beta build out so users can test it.
