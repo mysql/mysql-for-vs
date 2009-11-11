@@ -149,6 +149,7 @@ namespace MySql.Data.MySqlClient
         internal int ConnectionCharSetIndex
         {
             get { return serverCharSetIndex; }
+            set { serverCharSetIndex = value; }
         }
 
         internal Hashtable CharacterSets

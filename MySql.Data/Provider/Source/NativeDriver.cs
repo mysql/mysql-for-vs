@@ -204,7 +204,7 @@ namespace MySql.Data.MySqlClient
                 serverCaps = (ClientFlags) packet.ReadInteger(2);
 
             /* New protocol with 16 bytes to describe server characteristics */
-            int serverCharSetIndex = (int)packet.ReadByte();
+            owner.ConnectionCharSetIndex = (int)packet.ReadByte();
 
             serverStatus = (ServerStatusFlags) packet.ReadInteger(2);
             packet.Position += 13;
