@@ -10,6 +10,7 @@ Version 6.2.1
 - applied user-suggested patch to enable type-safe cloning (bug #48460)
 - fixed encrypt keyword that was no longer supported in connection strings. It is obsolete so
   new code should use the 'ssl mode'.  Encrypt will be removed entirely starting with 6.4 (bug #48290)
+- implemented PossibleValues property on MySqlParameter for ENUM and Set types (48586)
 
 Version 6.2.0
 - we now cleanup idle connections in the pool, if they were not used for too long
