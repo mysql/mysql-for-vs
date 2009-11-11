@@ -140,6 +140,11 @@ namespace MySql.Data.MySqlClient
             get { return serverCharSetIndex; }
         }
 
+        internal Hashtable CharacterSets
+        {
+            get { return charSets; }
+        }
+
         public long AffectedRows
         {
             get { return affectedRows; }
