@@ -79,12 +79,12 @@ namespace MySql.Data.Types
 
 		object IMySqlValue.Value
 		{
-			get { return mValue; }
+            get { return this.Value; }
 		}
 
 		public decimal Value
 		{
-			get { return Convert.ToDecimal(mValue); }
+			get { return Convert.ToDecimal(mValue, CultureInfo.InvariantCulture); }
 		}
 
         public double ToDouble()

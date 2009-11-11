@@ -1011,6 +1011,8 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void MySqlDecimal()
         {
+            if (Version < new Version(5, 0)) return;
+
             execSQL("DROP TABLE IF EXISTS Test");
             execSQL("CREATE TABLE Test (id INT, dec1 DECIMAL(36,2))");
             execSQL("INSERT INTO Test VALUES (1, 9999999999999999999999999999999999.99)");

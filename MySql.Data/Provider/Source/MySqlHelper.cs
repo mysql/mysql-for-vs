@@ -377,6 +377,21 @@ namespace MySql.Data.MySqlClient
             StringBuilder sb = new StringBuilder();
             foreach (char c in value)
             {
+                if (stringOfQuoteChars.IndexOf(c) >= 0 ||
+                    //sb.Append(c);
+                //else if (
+                stringOfBackslashChars.IndexOf(c) >= 0)
+                    sb.Append("\\");
+                sb.Append(c);
+            }
+            return sb.ToString();
+        }
+
+        public static string DoubleQuoteString(string value)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (char c in value)
+            {
                 if (stringOfQuoteChars.IndexOf(c) >= 0)
                     sb.Append(c);
                 else if (stringOfBackslashChars.IndexOf(c) >= 0)
