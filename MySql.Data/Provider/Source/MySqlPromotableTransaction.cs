@@ -21,15 +21,59 @@
 using System;
 using System.Transactions;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 
 namespace MySql.Data.MySqlClient
 {
+    /// <summary>
+    /// Represents a single(not nested) TransactionScope
+    /// </summary>
+    internal class MySqlTransactionScope
+    {
+        public MySqlConnection connection;
+        public Transaction baseTransaction;
+        public MySqlTransaction simpleTransaction;
+        public MySqlTransactionScope(MySqlConnection con, Transaction trans, 
+            MySqlTransaction simpleTransaction)
+        {
+            connection = con;
+            baseTransaction = trans;
+            this.simpleTransaction = simpleTransaction;
+        }
+
+        public void Rollback(SinglePhaseEnlistment singlePhaseEnlistment)
+        {
+            simpleTransaction.Rollback();
+            singlePhaseEnlistment.Aborted();
+            DriverTransactionManager.RemoveDriverInTransaction(baseTransaction);
+            connection.driver.CurrentTransaction = null;
+            if (connection.State == ConnectionState.Closed)
+                connection.CloseFully();
+        }
+
+        public void SinglePhaseCommit(SinglePhaseEnlistment singlePhaseEnlistment)
+        {
+            simpleTransaction.Commit();
+            singlePhaseEnlistment.Committed();
+            DriverTransactionManager.RemoveDriverInTransaction(baseTransaction);
+            connection.driver.CurrentTransaction = null;
+
+            if (connection.State == ConnectionState.Closed)
+                connection.CloseFully();
+        }
+    }
+
     internal sealed class MySqlPromotableTransaction : IPromotableSinglePhaseNotification, ITransactionPromoter
     {
-        private MySqlConnection connection;
-        private Transaction baseTransaction;
-        private MySqlTransaction simpleTransaction;
+        // Per-thread stack to manage nested transaction scopes
+        [ThreadStatic]
+        static Stack<MySqlTransactionScope> globalScopeStack = new Stack<MySqlTransactionScope>();
+
+        MySqlConnection connection;
+        Transaction baseTransaction;
+        Stack<MySqlTransactionScope> scopeStack;
+
 
         public MySqlPromotableTransaction(MySqlConnection connection, Transaction baseTransaction)
         {
@@ -39,41 +83,39 @@ namespace MySql.Data.MySqlClient
 
         public Transaction BaseTransaction
         {
-            get { return baseTransaction; }
+            get 
+            {
+                if (scopeStack.Count > 0)
+                    return scopeStack.Peek().baseTransaction;
+                else
+                    return null;
+            }
         }
 
         void IPromotableSinglePhaseNotification.Initialize()
         {
-            string valueName = Enum.GetName(
-                typeof(System.Transactions.IsolationLevel), baseTransaction.IsolationLevel);
-            System.Data.IsolationLevel dataLevel = (System.Data.IsolationLevel)Enum.Parse(
+           string valueName = Enum.GetName(
+           typeof(System.Transactions.IsolationLevel), baseTransaction.IsolationLevel);
+           System.Data.IsolationLevel dataLevel = (System.Data.IsolationLevel)Enum.Parse(
                 typeof(System.Data.IsolationLevel), valueName);
+           MySqlTransaction simpleTransaction = connection.BeginTransaction(dataLevel);
 
-            simpleTransaction = connection.BeginTransaction(dataLevel);
+           // We need to save the per-thread scope stack locally.
+           // We cannot always use thread static variable in rollback: when scope
+           // times out, rollback is issued by another thread.
+           scopeStack = globalScopeStack;
+           scopeStack.Push(new MySqlTransactionScope(connection, baseTransaction, 
+              simpleTransaction));
         }
 
         void IPromotableSinglePhaseNotification.Rollback(SinglePhaseEnlistment singlePhaseEnlistment)
         {
-            simpleTransaction.Rollback();
-            singlePhaseEnlistment.Aborted();
-            DriverTransactionManager.RemoveDriverInTransaction(baseTransaction);
-
-            connection.driver.CurrentTransaction = null;
-
-            if (connection.State == ConnectionState.Closed)
-                connection.CloseFully();
+            scopeStack.Pop().Rollback(singlePhaseEnlistment);
         }
 
         void IPromotableSinglePhaseNotification.SinglePhaseCommit(SinglePhaseEnlistment singlePhaseEnlistment)
         {
-            simpleTransaction.Commit();
-            singlePhaseEnlistment.Committed();
-            DriverTransactionManager.RemoveDriverInTransaction(baseTransaction);
-
-            connection.driver.CurrentTransaction = null;
-
-            if (connection.State == ConnectionState.Closed)
-                connection.CloseFully();
+            scopeStack.Pop().SinglePhaseCommit(singlePhaseEnlistment);;
         }
 
         byte[] ITransactionPromoter.Promote()
