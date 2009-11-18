@@ -1,3 +1,5 @@
+Version 6.3.0
+- Implemented nested transaction scopes (bug #45098)
 Version 6.2.1
 - fixed SessionProvider to be compatible with 4.x MySQL, replaced TIMESTAMPDIFF with TIME_TO_SEC
   (bug#47219)
