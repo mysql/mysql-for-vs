@@ -233,7 +233,7 @@ namespace MySql.Data.MySqlClient
                 uint timeout = Math.Min(value, Int32.MaxValue / 1000);
                 if (timeout != value)
                 {
-                   MySqlTrace.LogWarning("Connection timeout value too large (" 
+                   MySqlTrace.LogWarning(-1, "Connection timeout value too large (" 
                        + value + " seconds). Changed to max. possible value" + 
                        + timeout + " seconds)");
                 }
@@ -849,9 +849,9 @@ namespace MySql.Data.MySqlClient
             if (!validKeywords.ContainsKey(key))
                 throw new ArgumentException(Resources.KeywordNotSupported, keyword);
             if (validKeywords[key] == "Use Old Syntax")
-                MySqlTrace.LogWarning("Use Old Syntax is now obsolete.  Please see documentation");
+                MySqlTrace.LogWarning(-1, "Use Old Syntax is now obsolete.  Please see documentation");
             if (validKeywords[key] == "Encrypt")
-                MySqlTrace.LogWarning("Encrypt is now obsolete. Use Ssl Mode instead");
+                MySqlTrace.LogWarning(-1, "Encrypt is now obsolete. Use Ssl Mode instead");
         }
 
         private static void Initialize()

@@ -21,9 +21,7 @@ namespace MySql.Data.MySqlClient.Properties {
     // with the /str option, or rebuild your VS project.
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-#if !CF
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-#endif
     public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
@@ -779,6 +777,105 @@ namespace MySql.Data.MySqlClient.Properties {
         public static string TimeoutGettingConnection {
             get {
                 return ResourceManager.GetString("TimeoutGettingConnection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {1}: Connection Closed.
+        /// </summary>
+        public static string TraceCloseConnection {
+            get {
+                return ResourceManager.GetString("TraceCloseConnection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {1}: Connection Opened: connection string = &apos;{2}&apos;.
+        /// </summary>
+        public static string TraceOpenConnection {
+            get {
+                return ResourceManager.GetString("TraceOpenConnection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {1}: Query Closed.
+        /// </summary>
+        public static string TraceQueryDone {
+            get {
+                return ResourceManager.GetString("TraceQueryDone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {1}: Query Opened: {2}.
+        /// </summary>
+        public static string TraceQueryText {
+            get {
+                return ResourceManager.GetString("TraceQueryText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {1}: Resultset Opened: field(s) = {2}, affected rows = {3}, inserted id = {4}.
+        /// </summary>
+        public static string TraceResult {
+            get {
+                return ResourceManager.GetString("TraceResult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {1}: Resultset Closed: {2} total rows, {3} skipped rows.
+        /// </summary>
+        public static string TraceResultClosed {
+            get {
+                return ResourceManager.GetString("TraceResultClosed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {1}: Set Database: {2}.
+        /// </summary>
+        public static string TraceSetDatabase {
+            get {
+                return ResourceManager.GetString("TraceSetDatabase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {1}: Usage Advisor Warning: Query is using a bad index.
+        /// </summary>
+        public static string TraceUAWarningBadIndex {
+            get {
+                return ResourceManager.GetString("TraceUAWarningBadIndex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {1}: Usage Advisor Warning: Query does not use an index.
+        /// </summary>
+        public static string TraceUAWarningNoIndex {
+            get {
+                return ResourceManager.GetString("TraceUAWarningNoIndex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {1}: Usage Advisor Warning: The following columns were not accessed: {3}.
+        /// </summary>
+        public static string TraceUAWarningSkippedColumns {
+            get {
+                return ResourceManager.GetString("TraceUAWarningSkippedColumns", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {1}: Usage Advisor Warning: Skipped {3} rows. Consider a more focused query..
+        /// </summary>
+        public static string TraceUAWarningSkippedRows {
+            get {
+                return ResourceManager.GetString("TraceUAWarningSkippedRows", resourceCulture);
             }
         }
         
