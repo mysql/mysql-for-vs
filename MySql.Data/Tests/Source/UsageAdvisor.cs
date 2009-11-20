@@ -46,9 +46,10 @@ namespace MySql.Data.MySqlClient.Tests
             execSQL("INSERT INTO Test VALUES (3, 'Test3')");
             execSQL("INSERT INTO Test VALUES (4, 'Test4')");
 
-            Trace.Listeners.Clear();
+            MySqlTrace.Listeners.Clear();
+            MySqlTrace.Switch.Level = SourceLevels.All;
             GenericListener listener = new GenericListener();
-            Trace.Listeners.Add(listener);
+            MySqlTrace.Listeners.Add(listener);
 
             string sql = "SELECT * FROM Test; SELECT * FROM Test WHERE id > 2";
             MySqlCommand cmd = new MySqlCommand(sql, conn);
@@ -62,14 +63,19 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.AreEqual("Test3", reader.GetString(1));
                 Assert.IsFalse(reader.NextResult());
             }
-            string log = listener.Strings[0];
-            Assert.IsTrue(log.Contains(sql));
-            Assert.IsTrue(log.Contains("Rows returned: 4"));
-            Assert.IsTrue(log.Contains("Rows returned: 2"));
-            Assert.IsTrue(log.Contains("some fields not accessed (name)"));
-            Assert.IsTrue(log.Contains("some fields not accessed (id)"));
-            Assert.IsTrue(log.Contains("UA Warning: not all rows were read.  Skipped 2 rows"));
-            Assert.IsTrue(log.Contains("UA Warning: not all rows were read.  Skipped 1 rows"));
+
+            Assert.AreEqual(11, listener.Strings.Count);
+            Assert.IsTrue(listener.Strings[0].Contains("Query Opened: SELECT * FROM Test; SELECT * FROM Test WHERE id > 2"));
+            Assert.IsTrue(listener.Strings[1].Contains("Resultset Opened: field(s) = 2, affected rows = -1, inserted id = -1"));
+            Assert.IsTrue(listener.Strings[2].Contains("Usage Advisor Warning: Skipped 2 rows. Consider a more focused query."));
+            Assert.IsTrue(listener.Strings[3].Contains("Usage Advisor Warning: The following columns were not accessed: name"));
+            Assert.IsTrue(listener.Strings[4].Contains("Resultset Closed: 4 total rows, 2 skipped rows"));
+            Assert.IsTrue(listener.Strings[5].Contains("Resultset Opened: field(s) = 2, affected rows = -1, inserted id = -1"));
+            Assert.IsTrue(listener.Strings[6].Contains("Usage Advisor Warning: Query does not use an index"));
+            Assert.IsTrue(listener.Strings[7].Contains("Usage Advisor Warning: Skipped 1 rows. Consider a more focused query."));
+            Assert.IsTrue(listener.Strings[8].Contains("Usage Advisor Warning: The following columns were not accessed: id"));
+            Assert.IsTrue(listener.Strings[9].Contains("Resultset Closed: 2 total rows, 1 skipped rows"));
+            Assert.IsTrue(listener.Strings[10].Contains("Query Closed"));
         }
 
         [Test]
@@ -80,9 +86,10 @@ namespace MySql.Data.MySqlClient.Tests
             execSQL("INSERT INTO Test VALUES (3, 'Test3')");
             execSQL("INSERT INTO Test VALUES (4, 'Test4')");
 
-            Trace.Listeners.Clear();
+            MySqlTrace.Listeners.Clear();
+            MySqlTrace.Switch.Level = SourceLevels.All;
             GenericListener listener = new GenericListener();
-            Trace.Listeners.Add(listener);
+            MySqlTrace.Listeners.Add(listener);
 
             MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test; SELECT * FROM Test WHERE id > 2", conn);
             using (MySqlDataReader reader = cmd.ExecuteReader())
@@ -94,7 +101,17 @@ namespace MySql.Data.MySqlClient.Tests
                 reader.Read();
                 Assert.IsFalse(reader.NextResult());
             }
-            Assert.IsTrue(listener.Find("UA Warning: not all rows were read") > 0);
+            Assert.AreEqual(10, listener.Strings.Count);
+            Assert.IsTrue(listener.Strings[0].Contains("Query Opened: SELECT * FROM Test; SELECT * FROM Test WHERE id > 2"));
+            Assert.IsTrue(listener.Strings[1].Contains("Resultset Opened: field(s) = 2, affected rows = -1, inserted id = -1"));
+            Assert.IsTrue(listener.Strings[2].Contains("Usage Advisor Warning: Skipped 2 rows. Consider a more focused query."));
+            Assert.IsTrue(listener.Strings[3].Contains("Usage Advisor Warning: The following columns were not accessed: id,name"));
+            Assert.IsTrue(listener.Strings[4].Contains("Resultset Closed: 4 total rows, 2 skipped rows"));
+            Assert.IsTrue(listener.Strings[5].Contains("Resultset Opened: field(s) = 2, affected rows = -1, inserted id = -1"));
+            Assert.IsTrue(listener.Strings[6].Contains("Usage Advisor Warning: Query does not use an index"));
+            Assert.IsTrue(listener.Strings[7].Contains("Usage Advisor Warning: The following columns were not accessed: id,name"));
+            Assert.IsTrue(listener.Strings[8].Contains("Resultset Closed: 2 total rows, 0 skipped rows"));
+            Assert.IsTrue(listener.Strings[9].Contains("Query Closed"));
         }
 
     }
