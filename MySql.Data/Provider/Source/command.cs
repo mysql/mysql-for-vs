@@ -146,7 +146,7 @@ namespace MySql.Data.MySqlClient
 				int timeout = Math.Min(value, Int32.MaxValue / 1000);
 				if (timeout != value)
 				{
-					MySqlTrace.LogWarning(
+					MySqlTrace.LogWarning(connection.ServerThread,
                     "Command timeout value too large ("
 					+ value + " seconds). Changed to max. possible value (" 
 					+ timeout + " seconds)");

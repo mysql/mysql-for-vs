@@ -458,7 +458,7 @@ namespace MySql.Data.MySqlClient
 
             // if the user is using old syntax, let them know
             if (driver.Settings.UseOldSyntax)
-                MySqlTrace.LogWarning(
+                MySqlTrace.LogWarning(ServerThread,
                     "You are using old syntax that will be removed in future versions");
 
             SetState(ConnectionState.Open, false);
@@ -637,7 +637,7 @@ namespace MySql.Data.MySqlClient
             }
             catch (Exception ex)
             {
-                MySqlTrace.LogWarning("Could not kill query in timeout handler, " +
+                MySqlTrace.LogWarning(ServerThread, "Could not kill query in timeout handler, " +
                     " aborting connection. Exception was " + ex.Message);
                 Abort();
                 isFatal = true;

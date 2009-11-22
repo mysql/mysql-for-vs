@@ -241,7 +241,7 @@ namespace MySql.Data.MySqlClient
                     }
                     catch (Exception ex)
                     {
-                        MySqlTrace.LogError(ex.Message);
+                        MySqlTrace.LogError(ThreadID, ex.Message);
                         throw;
                     }
                 }
@@ -317,7 +317,7 @@ namespace MySql.Data.MySqlClient
             }
             catch (Exception ex)
             {
-                MySqlTrace.LogError(ex.Message);
+                MySqlTrace.LogError(ThreadID, ex.Message);
                 throw;
             }
         }
@@ -360,7 +360,7 @@ namespace MySql.Data.MySqlClient
             firstResult = false;
 
             int affectedRows = -1, insertedId = -1;
-            int fieldCount = GetResult(ref affectedRows, ref insertedId);
+            int fieldCount = GetResult(statementId, ref affectedRows, ref insertedId);
             if (fieldCount == -1)
                 return null;
             if (fieldCount > 0)
@@ -369,7 +369,7 @@ namespace MySql.Data.MySqlClient
                 return new ResultSet(affectedRows, insertedId);
         }
 
-        protected virtual int GetResult(ref int affectedRows, ref int insertedId)
+        protected virtual int GetResult(int statementId, ref int affectedRows, ref int insertedId)
         {
             return handler.GetResult(ref affectedRows, ref insertedId);
         }
@@ -384,7 +384,7 @@ namespace MySql.Data.MySqlClient
             return FetchDataRow(-1, 0);
         }
 
-        public void ExecuteDirect(string sql)
+        public virtual void ExecuteDirect(string sql)
         {
             MySqlPacket p = new MySqlPacket(Encoding);
             p.WriteString(sql);
@@ -402,7 +402,7 @@ namespace MySql.Data.MySqlClient
             return fields;
         }
 
-        public int PrepareStatement(string sql, ref MySqlField[] parameters)
+        public virtual int PrepareStatement(string sql, ref MySqlField[] parameters)
         {
             return handler.PrepareStatement(sql, ref parameters);
         }
@@ -427,32 +427,25 @@ namespace MySql.Data.MySqlClient
             return handler.Ping();
         }
 
-        public void SetDatabase(string dbName)
+        public virtual void SetDatabase(string dbName)
         {
             handler.SetDatabase(dbName);
         }
 
-        public void ExecuteStatement(MySqlPacket packetToExecute)
+        public virtual void ExecuteStatement(MySqlPacket packetToExecute)
         {
             handler.ExecuteStatement(packetToExecute);
         }
 
 
-        public void CloseStatement(int id)
+        public virtual void CloseStatement(int id)
         {
             handler.CloseStatement(id);
         }
 
-        public void Reset()
+        public virtual void Reset()
         {
             handler.Reset();
-        }
-
-        private void LogQuery()
-        {
-            //if (Settings.Logging)
-            //    Logger.LogCommand(DBCmd.QUERY, encoding.GetString(
-            //        queryPacket.Buffer, 5, queryPacket.Length - 5));
         }
 
         #region IDisposable Members

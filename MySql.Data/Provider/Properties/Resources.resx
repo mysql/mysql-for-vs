@@ -393,4 +393,37 @@
   <data name="InvalidConnectionStringValue" xml:space="preserve">
     <value>The requested value '{0}' is invalid for the given keyword '{1}'.</value>
   </data>
+  <data name="TraceCloseConnection" xml:space="preserve">
+    <value>{1}: Connection Closed</value>
+  </data>
+  <data name="TraceOpenConnection" xml:space="preserve">
+    <value>{1}: Connection Opened: connection string = '{2}'</value>
+  </data>
+  <data name="TraceQueryText" xml:space="preserve">
+    <value>{1}: Query Opened: {2}</value>
+  </data>
+  <data name="TraceResult" xml:space="preserve">
+    <value>{1}: Resultset Opened: field(s) = {2}, affected rows = {3}, inserted id = {4}</value>
+  </data>
+  <data name="TraceQueryDone" xml:space="preserve">
+    <value>{1}: Query Closed</value>
+  </data>
+  <data name="TraceSetDatabase" xml:space="preserve">
+    <value>{1}: Set Database: {2}</value>
+  </data>
+  <data name="TraceUAWarningBadIndex" xml:space="preserve">
+    <value>{1}: Usage Advisor Warning: Query is using a bad index</value>
+  </data>
+  <data name="TraceUAWarningNoIndex" xml:space="preserve">
+    <value>{1}: Usage Advisor Warning: Query does not use an index</value>
+  </data>
+  <data name="TraceResultClosed" xml:space="preserve">
+    <value>{1}: Resultset Closed: {2} total rows, {3} skipped rows</value>
+  </data>
+  <data name="TraceUAWarningSkippedRows" xml:space="preserve">
+    <value>{1}: Usage Advisor Warning: Skipped {3} rows. Consider a more focused query.</value>
+  </data>
+  <data name="TraceUAWarningSkippedColumns" xml:space="preserve">
+    <value>{1}: Usage Advisor Warning: The following columns were not accessed: {3}</value>
+  </data>
 </root>

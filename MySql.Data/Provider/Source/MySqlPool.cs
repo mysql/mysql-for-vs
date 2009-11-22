@@ -237,7 +237,7 @@ namespace MySql.Data.MySqlClient
             }
             catch (Exception ex)
             {
-                MySqlTrace.LogError(ex.Message);
+                MySqlTrace.LogError(-1, ex.Message);
                 Interlocked.Increment(ref available);
                 throw;
             }
