@@ -25,114 +25,68 @@ using System.Diagnostics;
 
 namespace MySql.Data.MySqlClient
 {
-    internal class MySqlTrace
+    public class MySqlTrace
     {
-        static MySqlTrace()
+        private static TraceSource source = new TraceSource("mysql");
+
+        public static TraceListenerCollection Listeners
         {
+            get { return source.Listeners; }
         }
 
-        public static void LogInformation(string msg)
+        public static SourceSwitch Switch 
+        {
+            get { return source.Switch; }
+            set { source.Switch = value; }
+        }
+
+        internal static TraceSource Source
+        {
+            get { return source; }
+        }
+
+        internal static void LogInformation(int id, string msg)
         {
 #if !CF
-            Trace.TraceInformation(
-                String.Format("[{0}] - {1}", DateTime.Now, msg));
+            Source.TraceEvent(TraceEventType.Information, id, msg, MySqlTraceEventType.NonQuery, -1);
+            Trace.TraceInformation(msg);
 #endif
         }
 
-        public static void LogWarning(string msg)
+        internal static void LogWarning(int id, string msg)
         {
 #if !CF
-            Trace.TraceWarning(
-                String.Format("[{0}] - {1}", DateTime.Now, msg));
+            Source.TraceEvent(TraceEventType.Warning, id, msg, MySqlTraceEventType.NonQuery, -1);
+            Trace.TraceWarning(msg);
 #endif
         }
 
-        public static void LogError(string msg)
+        internal static void LogError(int id, string msg)
         {
 #if !CF
-            Trace.TraceError(
-                String.Format("[{0}] - {1}", DateTime.Now, msg));
+            Source.TraceEvent(TraceEventType.Error, id, msg, MySqlTraceEventType.NonQuery, -1);
+            Trace.TraceError(msg);
 #endif
         }
     }
 
-    internal enum UsageAdvisorFlags
+    public enum MySqlTraceEventType
     {
-        NoIndex = 1,
-        BadIndex = 2,
-        PartialRowSet = 4
+        ConnectionOpened = 1,
+        ConnectionClosed,
+        QuerySent,
+        ResultOpened,
+        ResultClosed,
+        QueryDone,
+        NonQuery,
+        UsageAdvisorWarning
     }
 
-#if !CF
-    internal class MySqlTraceResultInfo
+    public enum UsageAdvisorWarningFlags
     {
-        public int RowsRead;
-        public int RowsChanged;
-        public int RowsSkipped;
-        public int InsertedId;
-        public List<string> FieldsNotAccessed = new List<string>();
-        public UsageAdvisorFlags UAFlags;
-
-        public override string ToString()
-        {
-            StringBuilder msg = new StringBuilder();
-            msg.AppendLine("-- Result --");
-            if (RowsChanged > -1)
-                msg.AppendLine(String.Format("Rows affected: {0}", RowsChanged));
-            if (InsertedId > -1)
-                msg.AppendLine(String.Format("Inserted Id (if any): {0}", InsertedId));
-            if (RowsRead > 0)
-                msg.AppendLine(String.Format("Rows returned: {0}", RowsRead));
-            if (UAFlags != 0)
-            {
-                if (RowsSkipped > 0)
-                    msg.AppendLine(String.Format(
-                        "UA Warning: not all rows were read.  Skipped {0} rows", RowsSkipped));
-                if ((UAFlags & UsageAdvisorFlags.NoIndex) != 0)
-                    msg.AppendLine("UA Warning: query did not use an index");
-                if ((UAFlags & UsageAdvisorFlags.BadIndex) != 0)
-                    msg.AppendLine("UA Warning: query used a bad index");
-                if ((UAFlags & UsageAdvisorFlags.PartialRowSet) != 0)
-                {
-                    msg.Append("UA Warning: some fields not accessed (");
-                    string delimiter = "";
-                    foreach (string colName in FieldsNotAccessed)
-                    {
-                        msg.AppendFormat("{0}{1}", delimiter, colName);
-                        delimiter = ", ";
-                    }
-                    msg.AppendLine(")");
-                }
-            }
-            return msg.ToString();
-        }
+        NoIndex,
+        BadIndex,
+        SkippedRows,
+        SkippedColumns
     }
-
-    internal class MySqlTraceQueryInfo
-    {
-        public string CommandText;
-        public string Server;
-        public TimeSpan ExecutionTime;
-        public DateTime TimeOfQuery;
-        public List<MySqlTraceResultInfo> Results = new List<MySqlTraceResultInfo>();
-
-        public override string ToString()
-        {
-            StringBuilder msg = new StringBuilder();
-            msg.AppendLine();
-            msg.AppendLine("====== Query logged ======");
-            msg.AppendLine(String.Format("Time of query: {0}", TimeOfQuery));
-            msg.AppendLine(String.Format("host: {0}", Server));
-            msg.AppendLine(String.Format("time of execution: {0} seconds ({1} milliseconds",
-                ExecutionTime.TotalSeconds, ExecutionTime.TotalMilliseconds));
-
-            foreach (MySqlTraceResultInfo ri in Results)
-                msg.Append(ri.ToString());
-            msg.AppendLine("Command text:");
-            msg.AppendLine(CommandText);
-            msg.AppendLine("====== End of Query ======");
-            return msg.ToString();
-        }
-    }
-#endif
 }

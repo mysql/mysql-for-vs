@@ -46,20 +46,20 @@ namespace MySql.Data.MySqlClient.Tests
             execSQL("INSERT INTO Test VALUES (3, 'Test3')");
             execSQL("INSERT INTO Test VALUES (4, 'Test4')");
 
-            Trace.Listeners.Clear();
+            MySqlTrace.Listeners.Clear();
+            MySqlTrace.Switch.Level = SourceLevels.All;
             GenericListener listener = new GenericListener();
-            Trace.Listeners.Add(listener);
+            MySqlTrace.Listeners.Add(listener);
 
             MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test", conn);
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {
             }
-            Assert.AreEqual(1, listener.Strings.Count);
-            string s = listener.Strings[0];
-            Assert.IsTrue(s.Contains("Rows returned: 4"));
-            Assert.IsTrue(s.Contains("SELECT * FROM Test"));
-            Assert.IsTrue(s.Contains("UA Warning: some fields not accessed (id, name)"));
-            Assert.IsTrue(s.Contains("UA Warning: not all rows were read.  Skipped 4 rows"));
+            Assert.AreEqual(4, listener.Strings.Count);
+            Assert.IsTrue(listener.Strings[0].Contains("Query Opened: SELECT * FROM Test"));
+            Assert.IsTrue(listener.Strings[1].Contains("Resultset Opened: field(s) = 2, affected rows = -1, inserted id = -1"));
+            Assert.IsTrue(listener.Strings[2].Contains("Resultset Closed: 4 total rows, 4 skipped rows"));
+            Assert.IsTrue(listener.Strings[3].Contains("Query Closed"));
         }
     }
 }
