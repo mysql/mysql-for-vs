@@ -74,10 +74,10 @@ namespace MySql.Data.MySqlClient
     {
         ConnectionOpened = 1,
         ConnectionClosed,
-        QuerySent,
+        QueryOpened,
         ResultOpened,
         ResultClosed,
-        QueryDone,
+        QueryClosed,
         NonQuery,
         UsageAdvisorWarning
     }
