@@ -65,7 +65,7 @@ namespace MySql.Data.MySqlClient
             base.SendQuery(p);
 
             Source.TraceEvent(TraceEventType.Information, ThreadID, Resources.TraceQueryText,
-                MySqlTraceEventType.QuerySent, 0, cmdText);
+                MySqlTraceEventType.QueryOpened, 0, cmdText);
         }
 
         protected override int GetResult(int statementId, ref int affectedRows, ref int insertedId)
@@ -90,7 +90,7 @@ namespace MySql.Data.MySqlClient
                 if (Settings.UseUsageAdvisor)
                     ReportUsageAdvisorWarnings(statementId, oldRS);
                 Source.TraceEvent(TraceEventType.Information, ThreadID, Resources.TraceResultClosed,
-                    MySqlTraceEventType.ResultClosed, statementId, oldRS.TotalRows, oldRS.SkippedRows);
+                    MySqlTraceEventType.ResultClosed, statementId, oldRS.TotalRows, oldRS.SkippedRows, 0);
                 activeResults.Remove(statementId);
             }
 
@@ -102,7 +102,7 @@ namespace MySql.Data.MySqlClient
             }
             if (oldRS != null)
                 Source.TraceEvent(TraceEventType.Information, ThreadID, Resources.TraceQueryDone,
-                    MySqlTraceEventType.QueryDone, statementId);
+                    MySqlTraceEventType.QueryClosed, statementId);
             return null;
         }
 
