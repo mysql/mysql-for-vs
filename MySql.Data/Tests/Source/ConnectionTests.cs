@@ -366,6 +366,29 @@ namespace MySql.Data.MySqlClient.Tests
             }
         }
 
+
+        class ConnectionClosedCheck
+        {
+            public bool closed = false;
+            public void stateChangeHandler(object sender, StateChangeEventArgs e)
+            {
+                if (e.CurrentState == ConnectionState.Closed)
+                    closed = true;
+            }
+        }
+        [Test]
+        public void ConnectionCloseByGC()
+        {
+            ConnectionClosedCheck check = new ConnectionClosedCheck();
+            string connStr = GetConnectionString(true);
+            MySqlConnection c = new MySqlConnection(connStr);
+            c.StateChange += new StateChangeEventHandler(check.stateChangeHandler);
+            c.Open();
+            c = null;
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            Assert.IsTrue(check.closed);
+        }
 		/// <summary>
 		/// Bug #30964 StateChange imperfection 
 		/// </summary>

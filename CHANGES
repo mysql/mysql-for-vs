@@ -1,3 +1,5 @@
+- Always close connection in MySqlConnection.Dispose(), also when it is garbage-collected
+  so underlying driver can be reused in the connection pool (bug#31996)
 Version 6.2.1
 - fixed SessionProvider to be compatible with 4.x MySQL, replaced TIMESTAMPDIFF with TIME_TO_SEC
   (bug#47219)
