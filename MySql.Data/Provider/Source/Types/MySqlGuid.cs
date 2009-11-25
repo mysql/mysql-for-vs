@@ -136,7 +136,9 @@ namespace MySql.Data.Types
             }
             else
             {
-                packet.WriteStringNoNull("_binary ");
+                if (packet.Version.isAtLeast(4, 1, 0))
+                    packet.WriteStringNoNull("_binary "); 
+ 
                 packet.WriteByte((byte)'\'');
                 EscapeByteArray(bytes, bytes.Length, packet);
                 packet.WriteByte((byte)'\'');
