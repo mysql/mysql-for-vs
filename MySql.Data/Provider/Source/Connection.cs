@@ -528,7 +528,7 @@ namespace MySql.Data.MySqlClient
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing && State == ConnectionState.Open)
+            if (State == ConnectionState.Open)
                 Close();
             base.Dispose(disposing);
         }
