@@ -47,6 +47,7 @@ namespace MySql.Data.MySqlClient
         private void EnqueueIdle(Driver driver)
         {
             driver.IdleSince = DateTime.Now;
+            driver.Connection = null;
             idlePool.Enqueue(driver);
         }
 		public MySqlPool(MySqlConnectionStringBuilder settings)

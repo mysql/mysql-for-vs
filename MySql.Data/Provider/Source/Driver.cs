@@ -88,6 +88,7 @@ namespace MySql.Data.MySqlClient
         public MySqlConnection Connection
         {
             get { return connection; }
+            set { connection = value; }
         }
 
         public int ThreadID
