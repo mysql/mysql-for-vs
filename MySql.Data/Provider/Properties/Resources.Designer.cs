@@ -700,7 +700,7 @@ namespace MySql.Data.MySqlClient.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Connector/Net no longer supports server versions prior to 5.0.
+        ///   Looks up a localized string similar to Connector/Net no longer supports server versions prior to 4.1.
         /// </summary>
         public static string ServerTooOld {
             get {

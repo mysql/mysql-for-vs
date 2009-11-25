@@ -76,6 +76,10 @@ namespace MySql.Data.MySqlClient
         /// a valid stored procedure name.</exception>
         public static void DeriveParameters(MySqlCommand command)
         {
+            if (!command.Connection.driver.Version.isAtLeast(5, 0, 0))
+                throw new MySqlException("DeriveParameters is not supported on MySQL versions " +
+                    "prior to 5.0");
+
             // retrieve the proc definitino from the cache.
             string spName = command.CommandText;
             if (spName.IndexOf(".") == -1)

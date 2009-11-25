@@ -53,6 +53,7 @@ namespace MySql.Data.MySqlClient
 #if !CF
         private PerformanceMonitor perfMonitor;
 #endif
+        private bool isExecutingBuggyQuery;
         private bool abortOnTimeout;
         private string database;
         private int commandTimeout;
@@ -111,6 +112,12 @@ namespace MySql.Data.MySqlClient
                 InfoMessage(this, args);
             }
         }
+
+        internal bool IsExecutingBuggyQuery
+        {
+            get { return isExecutingBuggyQuery; }
+            set { isExecutingBuggyQuery = value; }
+        } 
 
         internal bool SoftClosed
         {
@@ -467,7 +474,10 @@ namespace MySql.Data.MySqlClient
                 ChangeDatabase(settings.Database);
 
             // setup our schema provider
-            schemaProvider = new ISSchemaProvider(this);
+            if (driver.Version.isAtLeast(5, 0, 0))
+                schemaProvider = new ISSchemaProvider(this);
+            else
+                schemaProvider = new SchemaProvider(this); 
 #if !CF
             perfMonitor = new PerformanceMonitor(this);
 #endif
@@ -647,6 +657,9 @@ namespace MySql.Data.MySqlClient
 
         public void CancelQuery(int timeout)
         {
+            if (!driver.Version.isAtLeast(5, 0, 0))
+                throw new NotSupportedException(Resources.CancelNotSupported); 
+
             MySqlConnectionStringBuilder cb = new MySqlConnectionStringBuilder(
                 Settings.ConnectionString);
             cb.Pooling = false;

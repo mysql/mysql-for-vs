@@ -289,6 +289,9 @@ namespace MySql.Data.MySqlClient
 			// Data readers have to be closed first
 			if (connection.Reader != null)
 				throw new MySqlException("There is already an open DataReader associated with this Connection which must be closed first.");
+
+            if (CommandType == CommandType.StoredProcedure && !connection.driver.Version.isAtLeast(5, 0, 0))
+                throw new MySqlException("Stored procedures are not supported on this version of MySQL"); 
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ExecuteNonQuery/*'/>
@@ -357,7 +360,22 @@ namespace MySql.Data.MySqlClient
             if (CommandType == CommandType.TableDirect)
                 sql = "SELECT * FROM " + sql;
 
-			if (statement == null || !statement.IsPrepared)
+            // now we check to see if we are executing a query that is buggy 
+            // in 4.1 
+            connection.IsExecutingBuggyQuery = false;
+            if (!connection.driver.Version.isAtLeast(5, 0, 0) &&
+                connection.driver.Version.isAtLeast(4, 1, 0))
+            {
+                string snippet = sql;
+                if (snippet.Length > 17)
+                    snippet = sql.Substring(0, 17);
+                snippet = snippet.ToUpper(CultureInfo.InvariantCulture);
+                connection.IsExecutingBuggyQuery =
+                    snippet.StartsWith("DESCRIBE") ||
+                    snippet.StartsWith("SHOW TABLE STATUS");
+            }
+
+            if (statement == null || !statement.IsPrepared)
 			{
 				if (CommandType == CommandType.StoredProcedure)
 					statement = new StoredProcedure(this, sql);
@@ -462,6 +480,9 @@ namespace MySql.Data.MySqlClient
         /// <include file='docs/mysqlcommand.xml' path='docs/Prepare2/*'/>
         private void Prepare(int cursorPageSize)
         {
+            if (!connection.driver.Version.isAtLeast(5, 0, 0) && cursorPageSize > 0)
+                throw new InvalidOperationException("Nested commands are only supported on MySQL 5.0 and later");
+
             using (new CommandTimer(Connection, CommandTimeout))
             {
                 // if the length of the command text is zero, then just return
