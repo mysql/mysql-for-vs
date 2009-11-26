@@ -379,15 +379,20 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void ConnectionCloseByGC()
         {
+            int threadId;
             ConnectionClosedCheck check = new ConnectionClosedCheck();
-            string connStr = GetConnectionString(true);
+            string connStr = GetConnectionString(true)+";pooling=true";
             MySqlConnection c = new MySqlConnection(connStr);
             c.StateChange += new StateChangeEventHandler(check.stateChangeHandler);
             c.Open();
+            threadId= c.ServerThread;
             c = null;
             GC.Collect();
             GC.WaitForPendingFinalizers();
             Assert.IsTrue(check.closed);
+            
+            MySqlCommand cmd = new MySqlCommand("KILL " + threadId, conn);
+            cmd.ExecuteNonQuery();
         }
 		/// <summary>
 		/// Bug #30964 StateChange imperfection 

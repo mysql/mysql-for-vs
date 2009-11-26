@@ -362,7 +362,7 @@ namespace MySql.Data.MySqlClient
 
             // now we check to see if we are executing a query that is buggy 
             // in 4.1 
-            connection.IsExecutingBuggyQuery = false;
+            connection.driver.IsExecutingBuggyQuery = false;
             if (!connection.driver.Version.isAtLeast(5, 0, 0) &&
                 connection.driver.Version.isAtLeast(4, 1, 0))
             {
@@ -370,7 +370,7 @@ namespace MySql.Data.MySqlClient
                 if (snippet.Length > 17)
                     snippet = sql.Substring(0, 17);
                 snippet = snippet.ToUpper(CultureInfo.InvariantCulture);
-                connection.IsExecutingBuggyQuery =
+                connection.driver.IsExecutingBuggyQuery =
                     snippet.StartsWith("DESCRIBE") ||
                     snippet.StartsWith("SHOW TABLE STATUS");
             }
