@@ -70,15 +70,15 @@ namespace MySql.Data.MySqlClient
         protected byte scale;
         protected MySqlDbType mySqlDbType;
         protected DBVersion connVersion;
-        protected MySqlConnection connection;
+        protected Driver driver;
         protected bool binaryOk;
 
         #endregion
 
-        public MySqlField(MySqlConnection connection)
+        public MySqlField(Driver driver)
         {
-            this.connection = connection;
-            connVersion = connection.driver.Version;
+            this.driver = driver;
+            connVersion = driver.Version;
             maxLength = 1;
             binaryOk = true;
         }
@@ -191,12 +191,12 @@ namespace MySql.Data.MySqlClient
             mySqlDbType = type;
 
             if (String.IsNullOrEmpty(TableName) && String.IsNullOrEmpty(RealTableName) &&
-                connection.Settings.FunctionsReturnString)
+                driver.Settings.FunctionsReturnString)
             {
                 mySqlDbType = MySqlDbType.VarString;
                 // we are treating a binary as string so we have to choose some
                 // charset index.  Connection seems logical.
-                CharacterSetIndex = connection.driver.ConnectionCharSetIndex;
+                CharacterSetIndex = driver.ConnectionCharSetIndex;
                 binaryOk = false;
             }
 
@@ -230,11 +230,11 @@ namespace MySql.Data.MySqlClient
             {
                 // handle blob to UTF8 conversion if requested.  This is only activated
                 // on binary blobs
-                if (IsBinary && connection.Settings.TreatBlobsAsUTF8)
+                if (IsBinary && driver.Settings.TreatBlobsAsUTF8)
                 {
                     bool convertBlob = false;
-                    Regex includeRegex = connection.Settings.GetBlobAsUTF8IncludeRegex();
-                    Regex excludeRegex = connection.Settings.GetBlobAsUTF8ExcludeRegex();
+                    Regex includeRegex = driver.Settings.GetBlobAsUTF8IncludeRegex();
+                    Regex excludeRegex = driver.Settings.GetBlobAsUTF8ExcludeRegex();
                     if (includeRegex != null && includeRegex.IsMatch(ColumnName))
                         convertBlob = true;
                     else if (includeRegex == null && excludeRegex != null &&
@@ -264,15 +264,15 @@ namespace MySql.Data.MySqlClient
             }
 
             // now determine if we really should be binary
-            if (connection.Settings.RespectBinaryFlags)
+            if (driver.Settings.RespectBinaryFlags)
                 CheckForExceptions();
 
-            if (Type == MySqlDbType.String && CharacterLength == 36 && !connection.Settings.OldGuids)
+            if (Type == MySqlDbType.String && CharacterLength == 36 && !driver.Settings.OldGuids)
                 mySqlDbType = MySqlDbType.Guid;
 
             if (!IsBinary) return;
 
-            if (connection.Settings.RespectBinaryFlags)
+            if (driver.Settings.RespectBinaryFlags)
             {
                 if (type == MySqlDbType.String)
                     mySqlDbType = MySqlDbType.Binary;
@@ -282,9 +282,9 @@ namespace MySql.Data.MySqlClient
             }
 
             if (CharacterSetIndex == 63)
-                CharacterSetIndex = connection.driver.ConnectionCharSetIndex;
+                CharacterSetIndex = driver.ConnectionCharSetIndex;
 
-            if (Type == MySqlDbType.Binary && ColumnLength == 16 && connection.Settings.OldGuids)
+            if (Type == MySqlDbType.Binary && ColumnLength == 16 && driver.Settings.OldGuids)
                 mySqlDbType = MySqlDbType.Guid;
         }
 
@@ -300,7 +300,7 @@ namespace MySql.Data.MySqlClient
         public IMySqlValue GetValueObject()
         {
             IMySqlValue v = GetIMySqlValue(Type);
-            if (v is MySqlByte && ColumnLength == 1 && connection.Settings.TreatTinyAsBoolean)
+            if (v is MySqlByte && ColumnLength == 1 && driver.Settings.TreatTinyAsBoolean)
             {
                 MySqlByte b = (MySqlByte)v;
                 b.TreatAsBoolean = true;
@@ -309,7 +309,7 @@ namespace MySql.Data.MySqlClient
             else if (v is MySqlGuid)
             {
                 MySqlGuid g = (MySqlGuid)v;
-                g.OldGuids = connection.Settings.OldGuids;
+                g.OldGuids = driver.Settings.OldGuids;
                 v = g;
             }
             return v;
@@ -382,8 +382,8 @@ namespace MySql.Data.MySqlClient
 
         private void SetFieldEncoding()
         {
-            Hashtable charSets = connection.driver.CharacterSets;
-            DBVersion version = connection.driver.Version;
+            Hashtable charSets = driver.CharacterSets;
+            DBVersion version = driver.Version;
 
             if (charSets == null || CharacterSetIndex == -1) return;
             if (charSets[CharacterSetIndex] == null) return;
