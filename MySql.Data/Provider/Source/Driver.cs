@@ -42,7 +42,6 @@ namespace MySql.Data.MySqlClient
         protected string serverCharSet;
         protected int serverCharSetIndex;
         protected Hashtable serverProps;
-        protected MySqlConnection connection;
         protected Hashtable charSets;
         protected bool hasWarnings;
         protected long maxPacketSize;
@@ -84,12 +83,6 @@ namespace MySql.Data.MySqlClient
         }
 
         #region Properties
-
-        public MySqlConnection Connection
-        {
-            get { return connection; }
-            set { connection = value; }
-        }
 
         public int ThreadID
         {
@@ -236,7 +229,6 @@ namespace MySql.Data.MySqlClient
 
         public virtual void Configure(MySqlConnection connection)
         {
-            this.connection = connection;
 
             bool firstConfigure = false;
             // if we have not already configured our server variables
@@ -269,7 +261,7 @@ namespace MySql.Data.MySqlClient
                 if (serverProps.Contains("max_allowed_packet"))
                     maxPacketSize = Convert.ToInt64(serverProps["max_allowed_packet"]);
 
-                LoadCharacterSets();
+                LoadCharacterSets(connection);
             }
 
 #if AUTHENTICATED
@@ -318,7 +310,7 @@ namespace MySql.Data.MySqlClient
         /// Loads all the current character set names and ids for this server 
         /// into the charSets hashtable
         /// </summary>
-        private void LoadCharacterSets()
+        private void LoadCharacterSets(MySqlConnection connection)
         {
             MySqlCommand cmd = new MySqlCommand("SHOW COLLATION", connection);
 
@@ -342,7 +334,7 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-        public void ReportWarnings()
+        public void ReportWarnings(MySqlConnection connection)
         {
             ArrayList errors = new ArrayList();
 
@@ -416,7 +408,7 @@ namespace MySql.Data.MySqlClient
         {
             MySqlField[] fields = new MySqlField[count];
             for (int i = 0; i < count; i++)
-                fields[i] = new MySqlField(connection);
+                fields[i] = new MySqlField(this);
             handler.GetColumnsData(fields);
 
             return fields;
@@ -489,6 +481,12 @@ namespace MySql.Data.MySqlClient
             GC.SuppressFinalize(this);
         }
 
+        internal bool isExecutingBuggyQuery;
+        internal bool IsExecutingBuggyQuery
+        {
+            get { return isExecutingBuggyQuery; }
+            set { isExecutingBuggyQuery = value; }
+        } 
         #endregion
     }
 

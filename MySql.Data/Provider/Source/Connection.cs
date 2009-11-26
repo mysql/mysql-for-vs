@@ -113,11 +113,6 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-        internal bool IsExecutingBuggyQuery
-        {
-            get { return isExecutingBuggyQuery; }
-            set { isExecutingBuggyQuery = value; }
-        } 
 
         internal bool SoftClosed
         {
