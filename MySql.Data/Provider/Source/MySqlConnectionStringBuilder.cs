@@ -483,7 +483,7 @@ namespace MySql.Data.MySqlClient
             set
             {
                 SetValue("Encrypt", value);
-                sslMode = value ? MySqlSslMode.Prefered : MySqlSslMode.None;
+                sslMode = value ? MySqlSslMode.Preferred : MySqlSslMode.None;
             }
         }
 
@@ -1428,7 +1428,7 @@ namespace MySql.Data.MySqlClient
                 case Keyword.Encrypt: 
                     if (!clearing)
                         Logger.LogWarning("Encrypt is now obsolete. Use Ssl Mode instead");
-                    sslMode = ConvertToBool(value)?MySqlSslMode.Prefered:MySqlSslMode.None;
+                    sslMode = ConvertToBool(value)?MySqlSslMode.Preferred:MySqlSslMode.None;
                     break;
                 case Keyword.UseProcedureBodies: 
                     useProcedureBodies = ConvertToBool(value); break;
