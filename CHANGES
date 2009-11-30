@@ -11,6 +11,8 @@ Version 6.1.3
 - fixed unsigned types in views when used as entities (bug # 47872) 
 - now exposing the MySqlDecimal type along with GetMySqlDecimal methods on data reader (bug #48100)    
 - applied user-suggested patch to enable type-safe cloning (bug #48460)
+- when sending file to server (LOAD DATA INFILE) open the file for read only, not for read/write
+ (bug #48944)
 
 Version 6.1.2
 - fixed hanging after losing network connectivity to server (bug#43761) 
