@@ -426,4 +426,7 @@
   <data name="TraceUAWarningSkippedColumns" xml:space="preserve">
     <value>{1}: Usage Advisor Warning: The following columns were not accessed: {3}</value>
   </data>
+  <data name="TraceUAWarningFieldConversion" xml:space="preserve">
+    <value>{1}: Usage Advisor Warning: The field '{3}' was converted to the following types: {4}</value>
+  </data>
 </root>

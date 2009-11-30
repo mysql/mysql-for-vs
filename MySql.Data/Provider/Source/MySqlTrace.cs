@@ -87,6 +87,7 @@ namespace MySql.Data.MySqlClient
         NoIndex,
         BadIndex,
         SkippedRows,
-        SkippedColumns
+        SkippedColumns,
+        FieldConversion
     }
 }

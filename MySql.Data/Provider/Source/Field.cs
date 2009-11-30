@@ -25,6 +25,7 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace MySql.Data.MySqlClient
 {
@@ -72,6 +73,7 @@ namespace MySql.Data.MySqlClient
         protected DBVersion connVersion;
         protected Driver driver;
         protected bool binaryOk;
+        protected List<Type> typeConversions = new List<Type>();
 
         #endregion
 
@@ -183,6 +185,11 @@ namespace MySql.Data.MySqlClient
             get { return ColumnLength / MaxLength; }
         }
 
+        public List<Type> TypeConversions
+        {
+            get { return typeConversions; }
+        }
+
         #endregion
 
         public void SetTypeAndFlags(MySqlDbType type, ColumnFlags flags)
@@ -286,6 +293,12 @@ namespace MySql.Data.MySqlClient
 
             if (Type == MySqlDbType.Binary && ColumnLength == 16 && driver.Settings.OldGuids)
                 mySqlDbType = MySqlDbType.Guid;
+        }
+
+        public void AddTypeConversion(Type t)
+        {
+            if (TypeConversions.Contains(t)) return;
+            TypeConversions.Add(t);
         }
 
         private void CheckForExceptions()

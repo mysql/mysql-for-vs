@@ -853,6 +853,15 @@ namespace MySql.Data.MySqlClient.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {1}: Usage Advisor Warning: The field &apos;{3}&apos; was converted to the following types: {4}.
+        /// </summary>
+        public static string TraceUAWarningFieldConversion {
+            get {
+                return ResourceManager.GetString("TraceUAWarningFieldConversion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {1}: Usage Advisor Warning: Query does not use an index.
         /// </summary>
         public static string TraceUAWarningNoIndex {
