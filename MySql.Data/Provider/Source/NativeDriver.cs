@@ -589,7 +589,8 @@ namespace MySql.Data.MySqlClient
             long len = 0;
             try
             {
-                using (FileStream fs = new FileStream(filename, FileMode.Open))
+                using (FileStream fs = new FileStream(filename, FileMode.Open,
+                    FileAccess.Read))
                 {
                     len = fs.Length;
                     while (len > 0)
