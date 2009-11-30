@@ -356,7 +356,8 @@ namespace MySql.Data.MySqlClient
         /// <summary>
         /// Use SSL, if server supports it.
         /// </summary>
-        Prefered,
+        Preferred,
+        Prefered = Preferred,
         /// <summary>
         /// Always use SSL. Deny connection if server does not support SSL.
         /// Do not perform server certificate validation. 
