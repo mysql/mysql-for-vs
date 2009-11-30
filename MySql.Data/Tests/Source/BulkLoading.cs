@@ -55,6 +55,44 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(200, dt.Rows.Count);
             Assert.AreEqual("'Test'", dt.Rows[0][1].ToString().Trim());
         }
+        
+        [Test]
+        public void BulkLoadReadOnlyFile()
+        {
+            execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(250), PRIMARY KEY(id))");
+
+            // first create the external file
+            string path = Path.GetTempFileName();
+            StreamWriter sw = new StreamWriter(path);
+            for (int i = 0; i < 200; i++)
+                sw.WriteLine(i + "\t'Test'");
+            sw.Flush();
+            sw.Close();
+
+            FileInfo fi = new FileInfo(path);
+            FileAttributes oldAttr = fi.Attributes;
+            fi.Attributes = fi.Attributes | FileAttributes.ReadOnly;
+            try
+            {
+                MySqlBulkLoader loader = new MySqlBulkLoader(conn);
+                loader.TableName = "Test";
+                loader.FileName = path;
+                loader.Timeout = 0;
+                int count = loader.Load();
+                Assert.AreEqual(200, count);
+
+                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                Assert.AreEqual(200, dt.Rows.Count);
+                Assert.AreEqual("'Test'", dt.Rows[0][1].ToString().Trim());
+            }
+            finally
+            {
+                fi.Attributes = oldAttr;
+                fi.Delete();
+            }
+        }
 
         [Test]
         public void BulkLoadSimple2()
