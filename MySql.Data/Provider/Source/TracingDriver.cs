@@ -135,11 +135,6 @@ namespace MySql.Data.MySqlClient
             return b;
         }
 
-        public void ReportTypeConversion(string fieldName, MySqlDbType originalType, Type newType)
-        {
-            if (!Settings.UseUsageAdvisor) return;
-        }
-
         private bool AllFieldsAccessed(ResultSet rs)
         {
             if (rs.Fields == null || rs.Fields.Length == 0) return true;
@@ -163,10 +158,12 @@ namespace MySql.Data.MySqlClient
             }
             else
             {
+                // report abandoned rows
                 if (rs.SkippedRows > 0)
                     Source.TraceEvent(TraceEventType.Warning, ThreadID, Resources.TraceUAWarningSkippedRows,
                             MySqlTraceEventType.UsageAdvisorWarning, statementId, UsageAdvisorWarningFlags.SkippedRows, rs.SkippedRows);
 
+                // report not all fields accessed
                 if (!AllFieldsAccessed(rs))
                 {
                     StringBuilder notAccessed = new StringBuilder("");
@@ -180,6 +177,25 @@ namespace MySql.Data.MySqlClient
                     Source.TraceEvent(TraceEventType.Warning, ThreadID, Resources.TraceUAWarningSkippedColumns,
                             MySqlTraceEventType.UsageAdvisorWarning, statementId, UsageAdvisorWarningFlags.SkippedColumns, 
                             notAccessed.ToString());
+                }
+
+                // report type conversions if any
+                if (rs.Fields != null)
+                {
+                    foreach (MySqlField f in rs.Fields)
+                    {
+                        StringBuilder s = new StringBuilder();
+                        string delimiter = "";
+                        foreach (Type t in f.TypeConversions)
+                        {
+                            s.AppendFormat("{0}{1}", delimiter, t.Name);
+                            delimiter = ",";
+                        }
+                        if (s.Length > 0)
+                            Source.TraceEvent(TraceEventType.Warning, ThreadID, Resources.TraceUAWarningFieldConversion,
+                                MySqlTraceEventType.UsageAdvisorWarning, statementId, UsageAdvisorWarningFlags.FieldConversion,
+                                f.ColumnName, s.ToString());
+                    }
                 }
             }
         }

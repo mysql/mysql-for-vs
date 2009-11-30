@@ -114,5 +114,31 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.IsTrue(listener.Strings[9].Contains("Query Closed"));
         }
 
+        [Test]
+        public void FieldConversion()
+        {
+            execSQL("INSERT INTO Test VALUES (1, 'Test1')");
+
+            MySqlTrace.Listeners.Clear();
+            MySqlTrace.Switch.Level = SourceLevels.All;
+            GenericListener listener = new GenericListener();
+            MySqlTrace.Listeners.Add(listener);
+
+            MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test", conn);
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                reader.Read();
+                short s = reader.GetInt16(0);
+                long l = reader.GetInt64(0);
+                string str = reader.GetString(1);
+            }
+            Assert.AreEqual(5, listener.Strings.Count);
+            Assert.IsTrue(listener.Strings[0].Contains("Query Opened: SELECT * FROM Test"));
+            Assert.IsTrue(listener.Strings[1].Contains("Resultset Opened: field(s) = 2, affected rows = -1, inserted id = -1"));
+            Assert.IsTrue(listener.Strings[2].Contains("Usage Advisor Warning: The field 'id' was converted to the following types: Int16,Int64"));
+            Assert.IsTrue(listener.Strings[3].Contains("Resultset Closed: 1 total rows, 0 skipped rows"));
+            Assert.IsTrue(listener.Strings[4].Contains("Query Closed"));
+        }
+
     }
 }
