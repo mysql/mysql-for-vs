@@ -394,10 +394,10 @@
     <value>The requested value '{0}' is invalid for the given keyword '{1}'.</value>
   </data>
   <data name="TraceCloseConnection" xml:space="preserve">
-    <value>{1}: Connection Closed</value>
+    <value>Connection Closed</value>
   </data>
   <data name="TraceOpenConnection" xml:space="preserve">
-    <value>{1}: Connection Opened: connection string = '{2}'</value>
+    <value>Connection Opened: connection string = '{1}'</value>
   </data>
   <data name="TraceQueryText" xml:space="preserve">
     <value>{1}: Query Opened: {2}</value>
