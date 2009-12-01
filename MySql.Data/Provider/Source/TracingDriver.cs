@@ -45,15 +45,14 @@ namespace MySql.Data.MySqlClient
         {
             base.Open();
             Source.TraceEvent(TraceEventType.Information, ThreadID, 
-                Resources.TraceOpenConnection, MySqlTraceEventType.ConnectionOpened, -1, 
-                Settings.ConnectionString);
+                Resources.TraceOpenConnection, MySqlTraceEventType.ConnectionOpened, Settings.ConnectionString);
         }
 
         public override void Close()
         {
             base.Close();
             Source.TraceEvent(TraceEventType.Information, ThreadID, Resources.TraceCloseConnection,
-                MySqlTraceEventType.ConnectionClosed, -1);
+                MySqlTraceEventType.ConnectionClosed);
         }
 
         public override void SendQuery(MySqlPacket p)

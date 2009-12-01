@@ -21,7 +21,9 @@ namespace MySql.Data.MySqlClient.Properties {
     // with the /str option, or rebuild your VS project.
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+#if !CF
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+#endif
     public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
@@ -781,7 +783,7 @@ namespace MySql.Data.MySqlClient.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {1}: Connection Closed.
+        ///   Looks up a localized string similar to Connection Closed.
         /// </summary>
         public static string TraceCloseConnection {
             get {
@@ -790,7 +792,7 @@ namespace MySql.Data.MySqlClient.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {1}: Connection Opened: connection string = &apos;{2}&apos;.
+        ///   Looks up a localized string similar to Connection Opened: connection string = &apos;{1}&apos;.
         /// </summary>
         public static string TraceOpenConnection {
             get {
