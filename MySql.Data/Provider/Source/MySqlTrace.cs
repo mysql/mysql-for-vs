@@ -79,12 +79,14 @@ namespace MySql.Data.MySqlClient
         ResultClosed,
         QueryClosed,
         NonQuery,
-        UsageAdvisorWarning
+        UsageAdvisorWarning,
+        Warning,
+        Error
     }
 
     public enum UsageAdvisorWarningFlags
     {
-        NoIndex,
+        NoIndex = 1,
         BadIndex,
         SkippedRows,
         SkippedColumns,
