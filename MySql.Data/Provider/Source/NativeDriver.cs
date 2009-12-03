@@ -84,6 +84,11 @@ namespace MySql.Data.MySqlClient
             get { return warnings; }
         }
 
+        public MySqlPacket Packet
+        {
+            get { return packet; }
+        }
+
         private MySqlConnectionStringBuilder Settings
         {
             get { return owner.Settings; }

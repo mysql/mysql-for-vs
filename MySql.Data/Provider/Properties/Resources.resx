@@ -418,7 +418,7 @@
     <value>{1}: Usage Advisor Warning: Query does not use an index</value>
   </data>
   <data name="TraceResultClosed" xml:space="preserve">
-    <value>{1}: Resultset Closed: {2} total rows, {3} skipped rows</value>
+    <value>{1}: Resultset Closed. Total rows={2}, skipped rows={3}, size (bytes)={4}</value>
   </data>
   <data name="TraceUAWarningSkippedRows" xml:space="preserve">
     <value>{1}: Usage Advisor Warning: Skipped {3} rows. Consider a more focused query.</value>
