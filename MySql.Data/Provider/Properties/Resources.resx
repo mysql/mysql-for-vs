@@ -429,4 +429,13 @@
   <data name="TraceUAWarningFieldConversion" xml:space="preserve">
     <value>{1}: Usage Advisor Warning: The field '{3}' was converted to the following types: {4}</value>
   </data>
+  <data name="TraceOpenResultError" xml:space="preserve">
+    <value>Error encountered attempting to open result: Number={1}, Message={2}</value>
+  </data>
+  <data name="TraceFetchError" xml:space="preserve">
+    <value>{1}: Error encountered during row fetch. Number = {2}, Message={3}</value>
+  </data>
+  <data name="TraceWarning" xml:space="preserve">
+    <value>{1}: MySql Warning: Level={2}, Code={3}, Message={4}ountered during open result</value>
+  </data>
 </root>

@@ -26,6 +26,7 @@ using MySql.Data.Common;
 using MySql.Data.Types;
 using MySql.Data.MySqlClient.Properties;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace MySql.Data.MySqlClient
 {
@@ -43,8 +44,8 @@ namespace MySql.Data.MySqlClient
         protected int serverCharSetIndex;
         protected Hashtable serverProps;
         protected Hashtable charSets;
-        protected bool hasWarnings;
         protected long maxPacketSize;
+        protected MySqlConnection connection;
         private DateTime idleSince;
 
 #if !CF
@@ -104,11 +105,6 @@ namespace MySql.Data.MySqlClient
         {
             get { return encoding; }
             set { encoding = value; }
-        }
-
-        public bool HasWarnings
-        {
-            get { return hasWarnings; }
         }
 
 #if !CF
@@ -229,7 +225,7 @@ namespace MySql.Data.MySqlClient
 
         public virtual void Configure(MySqlConnection connection)
         {
-
+            this.connection = connection;
             bool firstConfigure = false;
             // if we have not already configured our server variables
             // then do so now
@@ -334,29 +330,25 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-        public void ReportWarnings(MySqlConnection connection)
+        public virtual List<MySqlError> ReportWarnings()
         {
-            ArrayList errors = new ArrayList();
+            List<MySqlError> warnings = new List<MySqlError>();
 
             MySqlCommand cmd = new MySqlCommand("SHOW WARNINGS", connection);
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
                 {
-                    errors.Add(new MySqlError(reader.GetString(0),
+                    warnings.Add(new MySqlError(reader.GetString(0),
                                               reader.GetInt32(1), reader.GetString(2)));
                 }
-
-                hasWarnings = false;
-                // MySQL resets warnings before each statement, so a batch could indicate
-                // warnings when there aren't any
-                if (errors.Count == 0) return;
-
-                MySqlInfoMessageEventArgs args = new MySqlInfoMessageEventArgs();
-                args.errors = (MySqlError[]) errors.ToArray(typeof (MySqlError));
-                if (connection != null)
-                    connection.OnInfoMessage(args);
             }
+
+            MySqlInfoMessageEventArgs args = new MySqlInfoMessageEventArgs();
+            args.errors = warnings.ToArray();
+            if (connection != null)
+                connection.OnInfoMessage(args);
+            return warnings;
         }
 
         public virtual void SendQuery(MySqlPacket p)
@@ -371,7 +363,7 @@ namespace MySql.Data.MySqlClient
                 return null;
             firstResult = false;
 
-            int affectedRows = -1, insertedId = -1;
+            int affectedRows = -1, insertedId = -1, warnings = 0;
             int fieldCount = GetResult(statementId, ref affectedRows, ref insertedId);
             if (fieldCount == -1)
                 return null;
@@ -460,6 +452,12 @@ namespace MySql.Data.MySqlClient
             handler.Reset();
         }
 
+        public virtual void CloseQuery(int statementId)
+        {
+            if (handler.WarningCount > 0)
+                ReportWarnings();
+        }
+
         #region IDisposable Members
 
         protected virtual void Dispose(bool disposing)
@@ -512,5 +510,6 @@ namespace MySql.Data.MySqlClient
         void SkipColumnValue(IMySqlValue valueObject);
         void GetColumnsData(MySqlField[] columns);
         void ResetTimeout(int timeout);
+        int WarningCount { get; }
     }
 }
