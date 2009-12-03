@@ -31,6 +31,7 @@ namespace MySql.Data.MySqlClient
     {
         private int statementId;
         private ResultSet activeResult;
+        private int rowSizeInBytes;
 
         public TracingDriver(MySqlConnectionStringBuilder settings)
             : base(settings)
@@ -58,6 +59,7 @@ namespace MySql.Data.MySqlClient
 
         public override void SendQuery(MySqlPacket p)
         {
+            rowSizeInBytes = 0;
             string cmdText = Encoding.GetString(p.Buffer, 5, p.Length - 5);
             if (cmdText.Length > 300)
                 cmdText = cmdText.Substring(0, 300);
@@ -98,7 +100,8 @@ namespace MySql.Data.MySqlClient
                 if (Settings.UseUsageAdvisor)
                     ReportUsageAdvisorWarnings(statementId, activeResult);
                 Source.TraceEvent(TraceEventType.Information, ThreadID, Resources.TraceResultClosed,
-                    MySqlTraceEventType.ResultClosed, statementId, activeResult.TotalRows, activeResult.SkippedRows);
+                    MySqlTraceEventType.ResultClosed, statementId, activeResult.TotalRows, activeResult.SkippedRows, rowSizeInBytes);
+                rowSizeInBytes = 0;
                 activeResult = null;
             }
 
@@ -133,7 +136,10 @@ namespace MySql.Data.MySqlClient
         {
             try
             {
-                return base.FetchDataRow(statementId, columns);
+                bool b = base.FetchDataRow(statementId, columns);
+                if (b)
+                    rowSizeInBytes += (handler as NativeDriver).Packet.Length;
+                return b;
             }
             catch (MySqlException ex)
             {

@@ -846,7 +846,7 @@ namespace MySql.Data.MySqlClient.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {1}: Resultset Closed: {2} total rows, {3} skipped rows.
+        ///   Looks up a localized string similar to {1}: Resultset Closed. Total rows={2}, skipped rows={3}, size (bytes)={4}.
         /// </summary>
         public static string TraceResultClosed {
             get {
