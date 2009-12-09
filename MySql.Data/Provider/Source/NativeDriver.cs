@@ -719,9 +719,17 @@ namespace MySql.Data.MySqlClient
             else
                 colFlags = (ColumnFlags)packet.ReadByte();
             field.Scale = (byte)packet.ReadByte();
+
             if (packet.HasMoreData)
             {
                 packet.ReadInteger(2); // reserved
+            }
+
+            if (type == MySqlDbType.Decimal || type == MySqlDbType.NewDecimal)
+            {
+                field.Precision = (byte)(field.ColumnLength - (int)field.Scale);
+                if ((colFlags & ColumnFlags.UNSIGNED) != 0)
+                    field.Precision++;
             }
 
             field.SetTypeAndFlags(type, colFlags);
