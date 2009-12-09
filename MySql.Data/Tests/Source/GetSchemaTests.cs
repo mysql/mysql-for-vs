@@ -459,7 +459,8 @@ namespace MySql.Data.MySqlClient.Tests
 				"ON UPDATE CASCADE ON DELETE RESTRICT, INDEX (customer_id), " +
 				"FOREIGN KEY (customer_id) REFERENCES customer(id)) ENGINE=INNODB");
 
-			conn.GetSchema("Foreign Keys");
+			DataTable dt = conn.GetSchema("Foreign Keys");
+            Assert.IsTrue(dt.Columns.Contains("REFERENCED_TABLE_CATALOG"));
 		}
 
 		[Test]
