@@ -23,6 +23,7 @@ using MySql.Data.MySqlClient;
 using MySql.Data.Types;
 using System.Data;
 using NUnit.Framework;
+using System.Data.Common;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -1033,6 +1034,28 @@ namespace MySql.Data.MySqlClient.Tests
                 catch (Exception ex) 
                 {
                 }
+            }
+        }
+
+        /// <summary>
+        /// Bug #48171	MySqlDataReader.GetSchemaTable() returns 0 in "NumericPrecision" for newdecimal
+        /// </summary>
+        [Test]
+        public void DecimalPrecision()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test(a decimal(35,2), b decimal(36,2), c decimal(36,2) unsigned)");
+
+            MySqlCommand cmd = new MySqlCommand("SELECT * FROM test", conn);
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                DataTable dt = reader.GetSchemaTable();
+                DataRow columnDefinition = dt.Rows[0];
+                Assert.AreEqual(35, columnDefinition[SchemaTableColumn.NumericPrecision]);
+                columnDefinition = dt.Rows[1];
+                Assert.AreEqual(36, columnDefinition[SchemaTableColumn.NumericPrecision]);
+                columnDefinition = dt.Rows[2];
+                Assert.AreEqual(36, columnDefinition[SchemaTableColumn.NumericPrecision]);
             }
         }
     }
