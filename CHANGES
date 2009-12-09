@@ -1,5 +1,7 @@
 - When sending file to server (LOAD DATA INFILE) open the file for read only, not for read/write
  (bug #48944)
+- Fixed precision calculation on decimal and newdecimal columns (bug #48171)
+
 Version 6.0.5
 - ensure that MySqlPacket always has a valid encoding. This prevents null reference exceptions in ReadString()
   (bug#46844)
