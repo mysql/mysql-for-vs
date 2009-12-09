@@ -418,6 +418,7 @@ namespace MySql.Data.MySqlClient
             string sql = @"SELECT rc.constraint_catalog, rc.constraint_schema,
                 rc.constraint_name, kcu.table_catalog, kcu.table_schema, rc.table_name,
                 rc.match_option, rc.update_rule, rc.delete_rule, 
+                NULL as referenced_table_catalog,
                 kcu.referenced_table_schema, rc.referenced_table_name 
                 FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS rc
                 LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE kcu ON 
