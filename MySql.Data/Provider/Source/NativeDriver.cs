@@ -693,7 +693,12 @@ namespace MySql.Data.MySqlClient
             field.SetTypeAndFlags(type, colFlags);
 
             field.Scale = (byte)packet.ReadByte();
-
+            if (type == MySqlDbType.Decimal || type == MySqlDbType.NewDecimal)
+            {
+                field.Precision = (byte)(field.ColumnLength - (int)field.Scale);
+                if ((colFlags & ColumnFlags.UNSIGNED) != 0)
+                    field.Precision++;
+            }
 
             if (packet.HasMoreData)
             {
