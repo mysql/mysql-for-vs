@@ -27,6 +27,7 @@ namespace MySql.Data.MySqlClient
 {
     public class MySqlTrace
     {
+#if !CF
         private static TraceSource source = new TraceSource("mysql");
 
         public static TraceListenerCollection Listeners
@@ -44,6 +45,7 @@ namespace MySql.Data.MySqlClient
         {
             get { return source; }
         }
+#endif
 
         internal static void LogInformation(int id, string msg)
         {
