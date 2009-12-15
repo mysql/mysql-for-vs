@@ -54,6 +54,7 @@ namespace MySql.Data.MySqlClient
         protected MySqlPool pool;
         private bool firstResult;
         protected IDriver handler;
+        internal MySqlDataReader reader;
 
         /// <summary>
         /// For pooled connections, time when the driver was

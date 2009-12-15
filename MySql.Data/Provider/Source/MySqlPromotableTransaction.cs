@@ -48,20 +48,30 @@ namespace MySql.Data.MySqlClient
                 typeof(System.Transactions.IsolationLevel), baseTransaction.IsolationLevel);
             System.Data.IsolationLevel dataLevel = (System.Data.IsolationLevel)Enum.Parse(
                 typeof(System.Data.IsolationLevel), valueName);
-
             simpleTransaction = connection.BeginTransaction(dataLevel);
         }
 
         void IPromotableSinglePhaseNotification.Rollback(SinglePhaseEnlistment singlePhaseEnlistment)
         {
-            simpleTransaction.Rollback();
-            singlePhaseEnlistment.Aborted();
-            DriverTransactionManager.RemoveDriverInTransaction(baseTransaction);
+            // prevent commands in main thread to run concurrently
+            Driver driver = connection.driver;
+            lock (driver)
+            {
+                while (connection.Reader != null)
+                {
+                    // wait for reader to finish. Maybe we should not wait 
+                    // forever and cancel it after some time?
+                    System.Threading.Thread.Sleep(100);
+                }
+                simpleTransaction.Rollback();
+                singlePhaseEnlistment.Aborted();
+                DriverTransactionManager.RemoveDriverInTransaction(baseTransaction);
 
-            connection.driver.CurrentTransaction = null;
+                driver.CurrentTransaction = null;
 
-            if (connection.State == ConnectionState.Closed)
-                connection.CloseFully();
+                if (connection.State == ConnectionState.Closed)
+                    connection.CloseFully();
+            }
         }
 
         void IPromotableSinglePhaseNotification.SinglePhaseCommit(SinglePhaseEnlistment singlePhaseEnlistment)

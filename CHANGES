@@ -1,3 +1,4 @@
+- Fix race condition during TransactionScope rollback (bug#35330)
 - When sending file to server (LOAD DATA INFILE) open the file for read only, not for read/write
  (bug #48944)
 
