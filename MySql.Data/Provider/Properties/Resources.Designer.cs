@@ -792,11 +792,29 @@ namespace MySql.Data.MySqlClient.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {1}: Error encountered during row fetch. Number = {2}, Message={3}.
+        /// </summary>
+        public static string TraceFetchError {
+            get {
+                return ResourceManager.GetString("TraceFetchError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Connection Opened: connection string = &apos;{1}&apos;.
         /// </summary>
         public static string TraceOpenConnection {
             get {
                 return ResourceManager.GetString("TraceOpenConnection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error encountered attempting to open result: Number={1}, Message={2}.
+        /// </summary>
+        public static string TraceOpenResultError {
+            get {
+                return ResourceManager.GetString("TraceOpenResultError", resourceCulture);
             }
         }
         
@@ -828,7 +846,7 @@ namespace MySql.Data.MySqlClient.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {1}: Resultset Closed: {2} total rows, {3} skipped rows.
+        ///   Looks up a localized string similar to {1}: Resultset Closed. Total rows={2}, skipped rows={3}, size (bytes)={4}.
         /// </summary>
         public static string TraceResultClosed {
             get {
@@ -887,6 +905,15 @@ namespace MySql.Data.MySqlClient.Properties {
         public static string TraceUAWarningSkippedRows {
             get {
                 return ResourceManager.GetString("TraceUAWarningSkippedRows", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {1}: MySql Warning: Level={2}, Code={3}, Message={4}ountered during open result.
+        /// </summary>
+        public static string TraceWarning {
+            get {
+                return ResourceManager.GetString("TraceWarning", resourceCulture);
             }
         }
         

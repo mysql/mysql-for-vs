@@ -827,6 +827,7 @@ namespace MySql.Data.MySqlClient
             {
                 do
                 {
+                    resultSet = null;
                     resultSet = driver.NextResult(Statement.StatementId);
                     if (resultSet == null) return false;
                     if (resultSet.IsOutputParameters) return false;

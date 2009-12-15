@@ -1,6 +1,9 @@
 - Fix race condition during TransactionScope rollback (bug#35330)
 - When sending file to server (LOAD DATA INFILE) open the file for read only, not for read/write
  (bug #48944)
+- Fixed precision calculation on decimal and newdecimal columns (bug #48171)
+- Fixed problem caused by us not including a 'REFERENCED_TABLE_CATALOG' column in our
+  foreign keys collection (bug #48974)
 
 Version 6.2.1
 - fixed SessionProvider to be compatible with 4.x MySQL, replaced TIMESTAMPDIFF with TIME_TO_SEC
