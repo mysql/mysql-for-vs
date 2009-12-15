@@ -31,6 +31,9 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient.Properties;
+#if !CF
+using System.Transactions;
+#endif
 
 namespace MySql.Data.MySqlClient
 {
@@ -345,7 +348,29 @@ namespace MySql.Data.MySqlClient
         {
 
             CheckState();
+            Driver driver = connection.driver;
+            lock (driver)
+            {
+#if !CF
+            System.Transactions.Transaction curTrans = System.Transactions.Transaction.Current;
 
+            if (curTrans != null)
+            {
+                TransactionStatus status = TransactionStatus.InDoubt;
+                try
+                {
+                    // in some cases (during state transitions) this throws
+                    // an exception. Ignore exceptions, we're only interested 
+                    // whether transaction was aborted or not.
+                    status = curTrans.TransactionInformation.Status;
+                }
+                catch(TransactionException)
+                {
+                }
+                if (status == TransactionStatus.Aborted)
+                    throw new TransactionAbortedException();
+            }
+#endif
             commandTimer = new CommandTimer(connection, CommandTimeout);
 
             lastInsertedId = -1;
@@ -426,6 +451,8 @@ namespace MySql.Data.MySqlClient
                 }
             }
         }
+        }
+
  
  
 
