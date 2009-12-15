@@ -48,10 +48,10 @@ namespace MySql.Data.MySqlClient
         protected MySqlStream stream;
         protected Stream baseStream;
         private BitArray nullMap;
-        private int warningCount;
         private MySqlPacket packet;
         private ClientFlags connectionFlags;
         private Driver owner;
+        private int warnings;
 
         public NativeDriver(Driver owner)
         {
@@ -77,6 +77,16 @@ namespace MySql.Data.MySqlClient
         public ServerStatusFlags ServerStatus
         {
             get { return serverStatus; }
+        }
+
+        public int WarningCount
+        {
+            get { return warnings; }
+        }
+
+        public MySqlPacket Packet
+        {
+            get { return packet; }
         }
 
         private MySqlConnectionStringBuilder Settings
@@ -461,6 +471,7 @@ namespace MySql.Data.MySqlClient
 
         public void Reset()
         {
+            warnings = 0;
             stream.SequenceByte = 0;
             packet.Clear();
             packet.WriteByte((byte)DBCmd.CHANGE_USER);
@@ -472,6 +483,7 @@ namespace MySql.Data.MySqlClient
         /// </summary>
         public void SendQuery(MySqlPacket queryPacket)
         {
+            warnings = 0;
             queryPacket.Buffer[4] = (byte)DBCmd.QUERY;
             ExecutePacket(queryPacket);
             // the server will respond in one of several ways with the first byte indicating
@@ -568,7 +580,7 @@ namespace MySql.Data.MySqlClient
                 insertedId = (int)packet.ReadFieldLength();
 
                 serverStatus = (ServerStatusFlags)packet.ReadInteger(2);
-                warningCount = packet.ReadInteger(2);
+                warnings += packet.ReadInteger(2);
                 if (packet.HasMoreData)
                 {
                     packet.ReadLenString(); //TODO: server message
@@ -678,10 +690,19 @@ namespace MySql.Data.MySqlClient
             else
                 colFlags = (ColumnFlags)packet.ReadByte();
             field.Scale = (byte)packet.ReadByte();
+
             if (packet.HasMoreData)
             {
                 packet.ReadInteger(2); // reserved
             }
+
+            if (type == MySqlDbType.Decimal || type == MySqlDbType.NewDecimal)
+            {
+                field.Precision = (byte)(field.ColumnLength - (int)field.Scale);
+                if ((colFlags & ColumnFlags.UNSIGNED) != 0)
+                    field.Precision++;
+            }
+
             field.SetTypeAndFlags(type, colFlags);
         }
 
@@ -689,6 +710,7 @@ namespace MySql.Data.MySqlClient
         {
             try
             {
+                warnings = 0;
                 stream.SequenceByte = 0;
                 stream.SendPacket(packetToExecute);
             }
@@ -701,6 +723,7 @@ namespace MySql.Data.MySqlClient
 
         public void ExecuteStatement(MySqlPacket packetToExecute)
         {
+            warnings = 0;
             packetToExecute.Buffer[4] = (byte)DBCmd.EXECUTE;
             ExecutePacket(packetToExecute);
             serverStatus |= ServerStatusFlags.AnotherQuery;
@@ -715,7 +738,7 @@ namespace MySql.Data.MySqlClient
 
             if (packet.HasMoreData)
             {
-                warningCount = packet.ReadInteger(2);
+                warnings += packet.ReadInteger(2);
                 serverStatus = (ServerStatusFlags)packet.ReadInteger(2);
 
                 // if we are at the end of this cursor based resultset, then we remove

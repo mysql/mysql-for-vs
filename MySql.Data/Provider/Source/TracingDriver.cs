@@ -29,7 +29,9 @@ namespace MySql.Data.MySqlClient
 {
     internal class TracingDriver : Driver
     {
-        private Dictionary<int, ResultSet> activeResults = new Dictionary<int, ResultSet>();
+        private int statementId;
+        private ResultSet activeResult;
+        private int rowSizeInBytes;
 
         public TracingDriver(MySqlConnectionStringBuilder settings)
             : base(settings)
@@ -57,6 +59,7 @@ namespace MySql.Data.MySqlClient
 
         public override void SendQuery(MySqlPacket p)
         {
+            rowSizeInBytes = 0;
             string cmdText = Encoding.GetString(p.Buffer, 5, p.Length - 5);
             if (cmdText.Length > 300)
                 cmdText = cmdText.Substring(0, 300);
@@ -69,40 +72,41 @@ namespace MySql.Data.MySqlClient
 
         protected override int GetResult(int statementId, ref int affectedRows, ref int insertedId)
         {
-            int fieldCount = base.GetResult(statementId, ref affectedRows, ref insertedId);
+            try
+            {
+                this.statementId = statementId;
+                int fieldCount = base.GetResult(statementId, ref affectedRows, ref insertedId);
+                Source.TraceEvent(TraceEventType.Information, ThreadID, Resources.TraceResult,
+                        MySqlTraceEventType.ResultOpened, statementId, fieldCount, affectedRows, insertedId);
+                ReportUsageAdvisorWarnings(statementId, null);
 
-            Source.TraceEvent(TraceEventType.Information, ThreadID, Resources.TraceResult,
-                    MySqlTraceEventType.ResultOpened, statementId, fieldCount, affectedRows, insertedId);
-
-            ReportUsageAdvisorWarnings(statementId, null);
-
-            return fieldCount;
+                return fieldCount;
+            }
+            catch (MySqlException ex)
+            {
+                // we got an error so we report it
+                Source.TraceEvent(TraceEventType.Information, ThreadID, Resources.TraceOpenResultError,
+                        MySqlTraceEventType.Error, statementId, ex.Number, ex.Message);
+                throw ex;
+            }
         }
 
         public override ResultSet NextResult(int statementId)
         {
             // first let's see if we already have a resultset on this statementId
-            ResultSet oldRS = null;
-            if (activeResults.ContainsKey(statementId))
+            if (activeResult != null)
             {
-                oldRS = activeResults[statementId];
+                //oldRS = activeResults[statementId];
                 if (Settings.UseUsageAdvisor)
-                    ReportUsageAdvisorWarnings(statementId, oldRS);
+                    ReportUsageAdvisorWarnings(statementId, activeResult);
                 Source.TraceEvent(TraceEventType.Information, ThreadID, Resources.TraceResultClosed,
-                    MySqlTraceEventType.ResultClosed, statementId, oldRS.TotalRows, oldRS.SkippedRows, 0);
-                activeResults.Remove(statementId);
+                    MySqlTraceEventType.ResultClosed, statementId, activeResult.TotalRows, activeResult.SkippedRows, rowSizeInBytes);
+                rowSizeInBytes = 0;
+                activeResult = null;
             }
 
-            ResultSet rs = base.NextResult(statementId);
-            if (rs != null)
-            {
-                activeResults[statementId] = rs;
-                return rs;
-            }
-            if (oldRS != null)
-                Source.TraceEvent(TraceEventType.Information, ThreadID, Resources.TraceQueryDone,
-                    MySqlTraceEventType.QueryClosed, statementId);
-            return null;
+            activeResult = base.NextResult(statementId);
+            return activeResult;
         }
 
         public override int PrepareStatement(string sql, ref MySqlField[] parameters)
@@ -130,8 +134,36 @@ namespace MySql.Data.MySqlClient
 
         public override bool FetchDataRow(int statementId, int columns)
         {
-            bool b = base.FetchDataRow(statementId, columns);
-            return b;
+            try
+            {
+                bool b = base.FetchDataRow(statementId, columns);
+                if (b)
+                    rowSizeInBytes += (handler as NativeDriver).Packet.Length;
+                return b;
+            }
+            catch (MySqlException ex)
+            {
+                Source.TraceEvent(TraceEventType.Error, ThreadID, Resources.TraceFetchError,
+                    MySqlTraceEventType.Error, statementId, ex.Number, ex.Message);
+                throw ex;
+            }
+        }
+
+        public override void CloseQuery(int statementId)
+        {
+            base.CloseQuery(statementId);
+
+            Source.TraceEvent(TraceEventType.Information, ThreadID, Resources.TraceQueryDone,
+                MySqlTraceEventType.QueryClosed, statementId);
+        }
+
+        public override List<MySqlError> ReportWarnings()
+        {
+            List<MySqlError> warnings = base.ReportWarnings();
+            foreach (MySqlError warning in warnings)
+                Source.TraceEvent(TraceEventType.Warning, ThreadID, Resources.TraceWarning,
+                    MySqlTraceEventType.Warning, statementId, warning.Level, warning.Code, warning.Message);
+            return warnings;
         }
 
         private bool AllFieldsAccessed(ResultSet rs)
