@@ -24,6 +24,7 @@ using System.IO;
 using NUnit.Framework;
 using System.Transactions;
 using System.Data.Common;
+using System.Threading;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -250,10 +251,10 @@ namespace MySql.Data.MySqlClient.Tests
         {
             createTable("CREATE TABLE Test (key2 VARCHAR(1), name VARCHAR(100), name2 VARCHAR(100))", "INNODB");
             string connStr = GetConnectionString(true) + ";auto enlist=false";
-
+            MySqlConnection c = null;
             using (TransactionScope ts = new TransactionScope())
             {
-                MySqlConnection c = new MySqlConnection(connStr);
+                c = new MySqlConnection(connStr);
                 c.Open();
 
                 MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES ('a', 'name', 'name2')", c);
@@ -261,7 +262,7 @@ namespace MySql.Data.MySqlClient.Tests
             }
             MySqlCommand cmd2 = new MySqlCommand("SELECT COUNT(*) FROM Test", conn);
             Assert.AreEqual(1, cmd2.ExecuteScalar());
-
+            c.Dispose();
             KillPooledConnection(connStr);
         }
 
@@ -419,6 +420,87 @@ namespace MySql.Data.MySqlClient.Tests
 
             ReusingSameConnection(false, false);
       //      Assert.AreEqual(processes + 1, CountProcesses());
+        }
+
+        /// <summary>
+        /// bug#35330 - even if transaction scope has expired, rows can be inserted into
+        /// the table, due to race condition with the thread doing rollback
+        /// </summary>
+        [Test]
+        public void ScopeTimeoutWithMySqlHelper()
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            createTable("CREATE TABLE Test (id int)", "INNODB");
+            string connStr = GetConnectionString(true);
+            using (new TransactionScope(TransactionScopeOption.RequiresNew,TimeSpan.FromSeconds(1)))
+            {
+                try
+                {
+                    for (int i = 0; ; i++)
+                    {
+                        MySqlHelper.ExecuteNonQuery(connStr, String.Format("INSERT INTO Test VALUES({0})", i));;
+                    }
+                }
+                catch (Exception)
+                {
+                }
+            }
+            long count = (long)MySqlHelper.ExecuteScalar(connStr,"select count(*) from test");
+            Assert.AreEqual(0, count);
+        }
+
+         /// <summary>
+         /// Variation of previous test, with a single connection and maual enlistment.
+         /// Checks that  transaction rollback leaves the connection intact (does not close it) 
+         /// and  checks that no command is possible after scope has expired and 
+         /// rollback by timer thread is finished.
+         /// </summary>
+        [Test]
+        public void AttemptToUseConnectionAfterScopeTimeout()
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            createTable("CREATE TABLE Test (id int)", "INNODB");
+            string connStr = GetConnectionString(true);
+            using (MySqlConnection c = new MySqlConnection(connStr))
+            {
+                c.Open();
+                MySqlCommand cmd = new MySqlCommand("select 1", c);
+                using (new TransactionScope(TransactionScopeOption.RequiresNew,
+                    TimeSpan.FromSeconds(1)))
+                {
+                    c.EnlistTransaction(Transaction.Current);
+                    cmd = new MySqlCommand("select 1", c);
+                    try
+                    {
+                        for (int i = 0; ; i++)
+                        {
+                            cmd.CommandText = String.Format("INSERT INTO Test VALUES({0})", i);
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // Eat exception
+                    }
+
+                    // Here, scope is timed out and rollback is in progress.
+                    // Wait until timeout thread finishes rollback then try to 
+                    // use an aborted connection.
+                    Thread.Sleep(500);
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        Assert.Fail("Using aborted transaction");
+                    }
+                    catch (TransactionAbortedException)
+                    {
+                    }
+                }
+                Assert.IsTrue(c.State == ConnectionState.Open);
+                cmd.CommandText = "select count(*) from Test";
+                long count = (long)cmd.ExecuteScalar();
+                Assert.AreEqual(0, count);
+            }
         }
     }
 }

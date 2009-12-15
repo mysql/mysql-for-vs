@@ -45,7 +45,6 @@ namespace MySql.Data.MySqlClient
     {
         internal ConnectionState connectionState;
         internal Driver driver;
-        private MySqlDataReader dataReader;
         private MySqlConnectionStringBuilder settings;
         private bool hasBeenOpen;
         private SchemaProvider schemaProvider;
@@ -101,8 +100,18 @@ namespace MySql.Data.MySqlClient
 
         internal MySqlDataReader Reader
         {
-            get { return dataReader; }
-            set { dataReader = value; }
+            get 
+            { 
+                if (driver == null)
+                    return null;
+                return driver.reader;
+
+            }
+
+            set 
+            { 
+                driver.reader = value;
+            }
         }
 
         internal void OnInfoMessage(MySqlInfoMessageEventArgs args)
@@ -383,11 +392,22 @@ namespace MySql.Data.MySqlClient
             if (State != ConnectionState.Open)
                 throw new InvalidOperationException(Resources.ConnectionNotOpen);
 
-
-            // We use default command timeout for SetDatabase
-            using (new CommandTimer(this, (int)Settings.DefaultCommandTimeout))
+            // This lock  prevents promotable transaction rollback to run
+            // in parallel
+            lock (driver)
             {
-                driver.SetDatabase(databaseName);
+#if !CF
+                if (Transaction.Current != null &&
+                    Transaction.Current.TransactionInformation.Status == TransactionStatus.Aborted)
+                {
+                    throw new TransactionAbortedException();
+                }
+#endif
+                // We use default command timeout for SetDatabase
+                using (new CommandTimer(this, (int)Settings.DefaultCommandTimeout))
+                {
+                    driver.SetDatabase(databaseName);
+                }
             }
             this.database = databaseName;
         }
@@ -580,8 +600,8 @@ namespace MySql.Data.MySqlClient
         {
             if (State == ConnectionState.Closed) return;
 
-            if (dataReader != null)
-                dataReader.Close();
+            if (Reader != null)
+                Reader.Close();
 
 			// if the reader was opened with CloseConnection then driver
 			// will be null on the second time through
