@@ -351,6 +351,12 @@ namespace MySql.Data.MySqlClient
             Driver driver = connection.driver;
             lock (driver)
             {
+
+            // We have to recheck that there is no reader, after we got the lock
+            if (connection.Reader != null)
+            {
+               throw new  MySqlException(Resources.DataReaderOpen);
+            }
 #if !CF
             System.Transactions.Transaction curTrans = System.Transactions.Transaction.Current;
 
@@ -402,11 +408,11 @@ namespace MySql.Data.MySqlClient
             try
             {
                 MySqlDataReader reader = new MySqlDataReader(this, statement, behavior);
+                connection.Reader = reader;
                 // execute the statement
                 statement.Execute();
                 // wait for data to return
                 reader.NextResult();
-                connection.Reader = reader;
                 return reader;
             }
             catch (TimeoutException tex)
@@ -416,6 +422,7 @@ namespace MySql.Data.MySqlClient
             }
             catch (MySqlException ex)
             {
+                connection.Reader = null;
                 if (ex.InnerException is TimeoutException)
                     throw ex; // already handled
 
