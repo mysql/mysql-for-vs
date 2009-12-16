@@ -69,12 +69,12 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.IsTrue(listener.Strings[1].Contains("Resultset Opened: field(s) = 2, affected rows = -1, inserted id = -1"));
             Assert.IsTrue(listener.Strings[2].Contains("Usage Advisor Warning: Skipped 2 rows. Consider a more focused query."));
             Assert.IsTrue(listener.Strings[3].Contains("Usage Advisor Warning: The following columns were not accessed: name"));
-            Assert.IsTrue(listener.Strings[4].Contains("Resultset Closed: 4 total rows, 2 skipped rows"));
+            Assert.IsTrue(listener.Strings[4].Contains("Resultset Closed. Total rows=4, skipped rows=2, size (bytes)=32"));
             Assert.IsTrue(listener.Strings[5].Contains("Resultset Opened: field(s) = 2, affected rows = -1, inserted id = -1"));
             Assert.IsTrue(listener.Strings[6].Contains("Usage Advisor Warning: Query does not use an index"));
             Assert.IsTrue(listener.Strings[7].Contains("Usage Advisor Warning: Skipped 1 rows. Consider a more focused query."));
             Assert.IsTrue(listener.Strings[8].Contains("Usage Advisor Warning: The following columns were not accessed: id"));
-            Assert.IsTrue(listener.Strings[9].Contains("Resultset Closed: 2 total rows, 1 skipped rows"));
+            Assert.IsTrue(listener.Strings[9].Contains("Resultset Closed. Total rows=2, skipped rows=1, size (bytes)=16"));
             Assert.IsTrue(listener.Strings[10].Contains("Query Closed"));
         }
 
@@ -106,11 +106,11 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.IsTrue(listener.Strings[1].Contains("Resultset Opened: field(s) = 2, affected rows = -1, inserted id = -1"));
             Assert.IsTrue(listener.Strings[2].Contains("Usage Advisor Warning: Skipped 2 rows. Consider a more focused query."));
             Assert.IsTrue(listener.Strings[3].Contains("Usage Advisor Warning: The following columns were not accessed: id,name"));
-            Assert.IsTrue(listener.Strings[4].Contains("Resultset Closed: 4 total rows, 2 skipped rows"));
+            Assert.IsTrue(listener.Strings[4].Contains("Resultset Closed. Total rows=4, skipped rows=2, size (bytes)=32"));
             Assert.IsTrue(listener.Strings[5].Contains("Resultset Opened: field(s) = 2, affected rows = -1, inserted id = -1"));
             Assert.IsTrue(listener.Strings[6].Contains("Usage Advisor Warning: Query does not use an index"));
             Assert.IsTrue(listener.Strings[7].Contains("Usage Advisor Warning: The following columns were not accessed: id,name"));
-            Assert.IsTrue(listener.Strings[8].Contains("Resultset Closed: 2 total rows, 0 skipped rows"));
+            Assert.IsTrue(listener.Strings[8].Contains("Resultset Closed. Total rows=2, skipped rows=0, size (bytes)=16"));
             Assert.IsTrue(listener.Strings[9].Contains("Query Closed"));
         }
 
@@ -136,7 +136,7 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.IsTrue(listener.Strings[0].Contains("Query Opened: SELECT * FROM Test"));
             Assert.IsTrue(listener.Strings[1].Contains("Resultset Opened: field(s) = 2, affected rows = -1, inserted id = -1"));
             Assert.IsTrue(listener.Strings[2].Contains("Usage Advisor Warning: The field 'id' was converted to the following types: Int16,Int64"));
-            Assert.IsTrue(listener.Strings[3].Contains("Resultset Closed: 1 total rows, 0 skipped rows"));
+            Assert.IsTrue(listener.Strings[3].Contains("Resultset Closed. Total rows=1, skipped rows=0, size (bytes)=8"));
             Assert.IsTrue(listener.Strings[4].Contains("Query Closed"));
         }
 
