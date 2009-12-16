@@ -149,17 +149,17 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-        public override void CloseQuery(int statementId)
+        public override void CloseQuery(MySqlConnection connection, int statementId)
         {
-            base.CloseQuery(statementId);
+            base.CloseQuery(connection, statementId);
 
             Source.TraceEvent(TraceEventType.Information, ThreadID, Resources.TraceQueryDone,
                 MySqlTraceEventType.QueryClosed, statementId);
         }
 
-        public override List<MySqlError> ReportWarnings()
+        public override List<MySqlError> ReportWarnings(MySqlConnection connection)
         {
-            List<MySqlError> warnings = base.ReportWarnings();
+            List<MySqlError> warnings = base.ReportWarnings(connection);
             foreach (MySqlError warning in warnings)
                 Source.TraceEvent(TraceEventType.Warning, ThreadID, Resources.TraceWarning,
                     MySqlTraceEventType.Warning, statementId, warning.Level, warning.Code, warning.Message);

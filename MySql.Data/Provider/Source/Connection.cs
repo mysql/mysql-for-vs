@@ -52,7 +52,6 @@ namespace MySql.Data.MySqlClient
 #if !CF
         private PerformanceMonitor perfMonitor;
 #endif
-        private bool isExecutingBuggyQuery;
         private bool abortOnTimeout;
         private string database;
         private int commandTimeout;
