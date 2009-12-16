@@ -45,7 +45,6 @@ namespace MySql.Data.MySqlClient
         protected Hashtable serverProps;
         protected Hashtable charSets;
         protected long maxPacketSize;
-        protected MySqlConnection connection;
         private DateTime idleSince;
 
 #if !CF
@@ -207,7 +206,6 @@ namespace MySql.Data.MySqlClient
 
         public virtual void Configure(MySqlConnection connection)
         {
-            this.connection = connection;
             bool firstConfigure = false;
             // if we have not already configured our server variables
             // then do so now
@@ -312,7 +310,7 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-        public virtual List<MySqlError> ReportWarnings()
+        public virtual List<MySqlError> ReportWarnings(MySqlConnection connection)
         {
             List<MySqlError> warnings = new List<MySqlError>();
 
@@ -434,10 +432,10 @@ namespace MySql.Data.MySqlClient
             handler.Reset();
         }
 
-        public virtual void CloseQuery(int statementId)
+        public virtual void CloseQuery(MySqlConnection connection, int statementId)
         {
             if (handler.WarningCount > 0)
-                ReportWarnings();
+                ReportWarnings(connection);
         }
 
         #region IDisposable Members
@@ -447,11 +445,10 @@ namespace MySql.Data.MySqlClient
             ResetTimeout(1000);
             if (disposing)
                 handler.Close(isOpen);
-
             // if we are pooling, then release ourselves
             if (connectionString.Pooling)
                 MySqlPoolManager.RemoveConnection(this);
-
+            
             isOpen = false;
         }
 
