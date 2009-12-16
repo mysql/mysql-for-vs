@@ -18,23 +18,8 @@
         <list class="bullet">
           <listItem>
             <para>
-        MySQL 6.0 features
-      </para>
-          </listItem>
-          <listItem>
-            <para>
-        MySQL 5.1 features
-      </para>
-          </listItem>
-          <listItem>
-            <para>
-        MySQL 5.0 features (such as stored procedures)
-      </para>
-          </listItem>
-          <listItem>
-            <para>
-        MySQL 4.1 features (server-side prepared statements, Unicode,
-        and shared memory access, and so forth)
+        Features provided by MySQL Server up to and including MySQL
+        Server version 5.4.
       </para>
           </listItem>
           <listItem>

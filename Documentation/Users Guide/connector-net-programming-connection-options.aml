@@ -109,6 +109,73 @@
           <row>
             <entry>
               <para>
+                <literal>CertificateFile</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>null</para>
+            </entry>
+            <entry>
+              <para>This option specifies the path to a certificate file in PFX format. For
+            an example of usage see
+            <link xlink:href="34e3033f-b986-4073-95c8-945f73aa79b0#connector-net-tutorials-ssl">Tutorial: Using SSL with </link>. Was
+            introduced with 6.2.1.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>CertificatePassword</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>null</para>
+            </entry>
+            <entry>
+              <para>This option allows you to specify a password which is used in
+            conjunction with a certificate specified using the option
+            <literal>CertificateFile</literal>. For an example of usage
+            see <link xlink:href="34e3033f-b986-4073-95c8-945f73aa79b0#connector-net-tutorials-ssl">Tutorial: Using SSL with </link>. Was
+            introduced with 6.2.1.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Certificate Store Location</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>null</para>
+            </entry>
+            <entry>
+              <para>This option allows you to access a certificate held in a personal store,
+            rather than use a certificate file and password combination.
+            For an example of usage see
+            <link xlink:href="34e3033f-b986-4073-95c8-945f73aa79b0#connector-net-tutorials-ssl">Tutorial: Using SSL with </link>. Was
+            introduced with 6.2.1.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Certificate Thumbprint</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>null</para>
+            </entry>
+            <entry>
+              <para>This option allows you to specify a certificate thumbprint to ensure
+            correct identifcation of a certificate contained within a
+            personal store. For an example of usage see
+            <link xlink:href="34e3033f-b986-4073-95c8-945f73aa79b0#connector-net-tutorials-ssl">Tutorial: Using SSL with </link>. Was
+            introduced with 6.2.1.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
                 <literal>CharSet</literal>, <literal>Character Set</literal></para>
             </entry>
             <entry>
@@ -172,8 +239,7 @@
               </para>
             </entry>
             <entry>
-              <para>
-              </para>
+              <para>30</para>
             </entry>
             <entry>
               <para>Sets the default value of the command timeout to be used. This does not
@@ -198,7 +264,11 @@
             values are <literal>true</literal>,
             <literal>false</literal>, <literal>yes</literal>, and
             <literal>no</literal>. In versions before 5.0.3, this option
-            had no effect.</para>
+            had no effect. From version 6.2.1 this option is deprecated
+            and is replaced by <literal>SSL Mode</literal>. However, the
+            option is still supported if used. If this option is set to
+            true it is equivalent to <literal>SSL Mode =
+            Preferred</literal>.</para>
             </entry>
           </row>
           <row>
@@ -465,6 +535,34 @@
           <row>
             <entry>
               <para>
+                <literal>SSL Mode</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>None</para>
+            </entry>
+            <entry>
+              <para>This option has the following values:
+
+            <list class="bullet"><listItem><para><legacyBold>None</legacyBold> - do not use
+                  SSL.
+                </para></listItem><listItem><para><legacyBold>Preferred</legacyBold> - use SSL
+                  if the server supports it, but allow connection in all
+                  cases.
+                </para></listItem><listItem><para><legacyBold>Required</legacyBold> - Always use
+                  SSL. Deny connection if server does not support SSL.
+                </para></listItem><listItem><para><legacyBold>VerifyCA</legacyBold> - Always use
+                  SSL. Validate the CA but tolerate name mismatch.
+                </para></listItem><listItem><para><legacyBold>VerifyFull</legacyBold> - Always
+                  use SSL. Fail if the host name is not correct.
+                </para></listItem></list><para>
+              This option was introduced in  6.1.1.
+            </para></para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
                 <literal>TreatBlobsAsUTF8</literal>
               </para>
             </entry>
@@ -644,7 +742,7 @@
             </entry>
             <entry>
               <para>Specifies whether server variables should be updated when a pooled
-            connection is returned. Turning this one will yeild faster
+            connection is returned. Turning this on will yield faster
             opens but will also not catch any server changes made by
             other connections.</para>
             </entry>
