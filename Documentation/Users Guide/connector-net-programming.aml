@@ -343,6 +343,113 @@ MySqlConnection myConnection = new MySqlConnection("server=127.0.0.1;uid=root;" 
 </code>
       </content>
     </section>
+    <section address="connector-net-programming-mysqlcommand">
+      <title>Using MySqlCommand</title>
+      <content>
+        <para>
+      A MySqlCommand has the <literal>CommandText</literal> and
+      <literal>CommandType</literal> properties associated with it. The
+      <literal>CommandText</literal> will be handled differently
+      depending on the setting of <literal>CommandType</literal>.
+      <literal>CommandType</literal> can be one of:
+    </para>
+        <list class="ordered">
+          <listItem>
+            <para>
+          Text - A SQL text command (default)
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          StoredProcedure - The name of a Stored Procedure
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+          TableDirect - The name of a table (new in Connector/NET 6.2)
+        </para>
+          </listItem>
+        </list>
+        <para>
+      The default <literal>CommandType</literal>,
+      <literal>Text</literal>, is used for executing queries and other
+      SQL commands. Some example of this can be found in the following
+      section <link xlink:href="34e3033f-b986-4073-95c8-945f73aa79b0#connector-net-tutorials-sql-command">The MySqlCommand Object</link>.
+    </para>
+        <para>
+      If <literal>CommandType</literal> is set to
+      <literal>StoredProcedure</literal>, <literal>CommandText</literal>
+      should be set to the name of the Stored Procedure to access.
+    </para>
+        <para>
+      If <literal>CommandType</literal> is set to
+      <literal>TableDirect</literal>, all rows and columns of the named
+      table will be returned when you call one of the Execute methods.
+      In effect, this command performs a <literal>SELECT *</literal> on
+      the table specified. The <literal>CommandText</literal> property
+      is set to the name of the table you wish to query. This is
+      illustrated by the following code snippet:
+    </para>
+        <code>...
+MySqlCommand cmd = new MySqlCommand();
+cmd.CommandText = "mytable";
+cmd.Connection = someConnection;
+cmd.CommandType = CommandType.TableDirect;
+SqlDataReader reader = cmd.ExecuteReader();
+while (reader.Read())
+{
+   Console.WriteLn(reader[0], reader[1]...);
+}
+...</code>
+        <para>
+      Examples of using the CommandType of StoredProcedure can be found
+      in the section
+      <link xlink:href="8b7d06e8-0177-4dd0-acca-f9c9caaa1072#connector-net-programming-stored-calling">Calling a Stored Procedure from Connector/NET</link>.
+    </para>
+        <para>
+      Commands can have a timeout associated with them. This is useful
+      as you may not want a situation were a command takes up an
+      excessive amount of time. A timeout can be set using the
+      <literal>CommandTimeout</literal> property. The following code
+      snippet sets a timeout of one minute:
+    </para>
+        <code>
+MySqlCommand cmd = new MySqlCommand();
+cmd.CommandTimeout = 60;
+</code>
+        <para>
+      The default value is 30 secs. A value of 0 indicates an indefinite
+      wait and should be avoided. Note the default command timeout can
+      be changed using the connection string option <literal>Default
+      Command Timeout</literal>.
+    </para>
+        <para>
+      Prior to  6.2,
+      <literal>MySqlCommand.CommandTimeout</literal> included user
+      processing time, that is processing time not related to direct use
+      of the connector. Timeout was implemented through a .NET Timer,
+      that triggered after <literal>CommandTimeout</literal> seconds.
+      This timer consumed a thread.
+    </para>
+        <para>
+       6.2 introduced timeouts that are aligned with how Microsoft
+      handles <literal>SqlCommand.CommandTimeout</literal>. This
+      property is the cumulative timeout for all network reads and
+      writes during command execution or processing of the results. A
+      timeout can still occur in the <literal>MySqlReader.Read</literal>
+      method after the first row is returned, and does not include user
+      processing time, only IO operations. The 6.2 implementation uses
+      the underlying stream timeout facility, so is more efficient in
+      that it does not require the additional timer thread as was the
+      case with the previous implementation.
+    </para>
+        <para>
+      Further details on this can be found in the relevant
+      <externalLink><linkText>Microsoft
+      documentation</linkText><linkUri>http://msdn.microsoft.com/en-us/library/system.data.sqlclient.sqlcommand.commandtimeout.aspx</linkUri></externalLink>.
+    </para>
+      </content>
+    </section>
     <section address="connector-net-programming-connection-pooling">
       <title>Using Connector/NET with Connection Pooling</title>
       <content>
@@ -389,6 +496,22 @@ MySqlConnection myConnection = new MySqlConnection("server=127.0.0.1;uid=root;" 
       objects, you can use the static methods of the
       <literal>MySqlHelper</literal> class. These take a connection
       string as an argument, and they fully support connection pooling.
+    </para>
+        <para>
+      Starting with  6.2, there is a background job that runs
+      every three minutes and removes connections from pool that have
+      been idle (unused) for more than three minutes. The pool cleanup
+      frees resources on both client and server side. This is because on
+      the client side every connection uses a socket, and on the server
+      side every connection uses a socket and a thread.
+    </para>
+        <para>
+      Prior to this change, connections were never removed from the
+      pool, and the pool always contained the peak number of open
+      connections. For example, a web application that peaked at 1000
+      concurrent database connections would consume 1000 threads and
+      1000 open sockets at the server, without ever freeing up those
+      resources from the connection pool.
     </para>
       </content>
     </section>
@@ -1573,9 +1696,7 @@ catch (MySql.Data.MySqlClient.MySqlException ex)
         <literal>MySqlDateTime</literal> object for invalid dates, add
         the following line to your connection string:
       </para>
-        <code>
-  Allow Zero Datetime=True
-  </code>
+        <codeInline>Allow Zero Datetime=True</codeInline>
         <para>
         Please note that the use of the <literal>MySqlDateTime</literal>
         class can still be problematic. The following are some known
@@ -1685,9 +1806,12 @@ else
           </listItem>
         </list>
         <para>
-      The following table shows the supported providers, their default
-      provider and the corresponding MySQL provider:
+      The following tables show the supported providers, their default
+      provider and the corresponding MySQL provider.
     </para>
+        <para>
+          <legacyBold>Membership Provider</legacyBold>
+        </para>
         <table>
           <row>
             <entry>
@@ -1710,6 +1834,9 @@ else
             </entry>
           </row>
         </table>
+        <para>
+          <legacyBold>Role Provider</legacyBold>
+        </para>
         <table>
           <row>
             <entry>
@@ -1732,6 +1859,9 @@ else
             </entry>
           </row>
         </table>
+        <para>
+          <legacyBold>Profile Provider</legacyBold>
+        </para>
         <table>
           <row>
             <entry>
@@ -1754,6 +1884,9 @@ else
             </entry>
           </row>
         </table>
+        <para>
+          <legacyBold>SessionState Provider</legacyBold>
+        </para>
         <table>
           <row>
             <entry>
@@ -1779,7 +1912,7 @@ else
         <alert class="note">
           <para>
         The MySQL Session State provider uses slightly different
-        capitilzation on the class name compared to the other MySQL
+        capitalization on the class name compared to the other MySQL
         providers.
       </para>
         </alert>
@@ -1904,7 +2037,7 @@ else
         <para>
       A tutorial demonstrating how to use the Membership and Role
       Providers can be found in the following section
-      <link xlink:href="8b7d06e8-0177-4dd0-acca-f9c9caaa1072#connector-net-programming-tutorial-asp-roles">Tutorial:  ASP.NET Membership and Role Provider</link>.
+      <link xlink:href="34e3033f-b986-4073-95c8-945f73aa79b0#connector-net-tutorials-asp-roles">Tutorial:  ASP.NET Membership and Role Provider</link>.
     </para>
         <para>
           <legacyBold> Deployment</legacyBold>
@@ -2041,778 +2174,143 @@ else
     </para>
       </content>
     </section>
-    <section address="connector-net-programming-tutorial-asp-roles">
-      <title>Tutorial:  ASP.NET Membership and Role Provider</title>
+    <section address="connector-net-programming-tracing">
+      <title>Tracing</title>
       <content>
         <para>
-      Many web sites feature the facility for the user to create a user
-      account. They can then log into the web site and enjoy a
-      personalized experience. This requires that the developer creates
-      database tables to store user information, along with code to
-      gather and process this data. This represents a burden on the
-      developer, and there is the possibility for security issues to
-      creep into the developed code. However, ASP.NET 2.0 introduced the
-      Membership system. This system is designed around the concept of
-      Membership, Profile and Role Providers, which together provide all
-      of the functionality to implement a user system, that previously
-      would have to have been created by the developer from scratch.
+       6.2 introduced support for .NET 2.0 compatible tracing,
+      using <literal>TraceSource</literal> objects.
     </para>
         <para>
-      Currently,  provides Membership, Role, Profile and Session
-      State Providers.
+      The .NET 2.0 architecture consists of four main parts:
     </para>
-        <para>
-      This tutorial shows you how to set up your ASP.NET web application
-      to use the  Membership and Role Providers. It assumes that
-      you have MySQL Server installed, along with  and Microsoft
-      Visual Studio. This tutorial was tested with  6.0.4 and
-      Microsoft Visual Studio 2008 Professional Edition.
-    </para>
-        <list class="ordered">
+        <list class="bullet">
           <listItem>
             <para>
-          Create a new database in the MySQL Server using the MySQL
-          Command Line Client program (<literal>mysql</literal>), or
-          other suitable tool. It does not matter what name is used for
-          the database, but it should be noted down so that it can be
-          specified in the connection string constructed later in this
-          tutorial. This database will contain the tables, automatically
-          created for you later, used to store data about users and
-          roles.
+              <legacyBold>Source</legacyBold> - This is the originator of the
+          trace information. The source is used to send trace messages.
+          The name of the source provided by  is
+          <literal>mysql</literal>.
         </para>
           </listItem>
           <listItem>
             <para>
-          Create a new ASP.NET Web Site in Visual Studio. If you are not
-          sure how to do this, refer to the following tutorial:
-          <link xlink:href="9f3f194e-ad35-4379-b04d-5dce4b34ce6a#connector-net-visual-studio-entity-framework-tutorial-databinding-linq-entities">Tutorial: Databinding in ASP.NET using LINQ on Entities</link>,
-          which demonstrates how to create a simple ASP.NET web site.
+              <legacyBold>Switch</legacyBold> - This defines the level of trace
+          information to emit. Typically, this is specified in the
+          <legacyBold>app.config</legacyBold> file, so that it is not
+          necessary to recompile an application in order to change the
+          trace level.
         </para>
           </listItem>
           <listItem>
             <para>
-          Add References to <literal>MySql.Data</literal> and
-          <literal>MySql.Web</literal> to the web site project.
+              <legacyBold>Listener</legacyBold> - Trace listeners define where
+          the trace information will be written to. Supported listeners
+          include, for example, the Visual Studio Output window, the
+          Windows Event Log, and the console.
         </para>
           </listItem>
           <listItem>
             <para>
-          Locate the <legacyBold>machine.config</legacyBold> file on your
-          system, which is the configuration file for the .NET
-          Framework.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Search the <legacyBold>machine.config</legacyBold> file to find
-          the membership provider
-          <literal>MySQLMembershipProvider</literal>.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Add the attribute
-          <literal>autogenerateschema="true"</literal>. The appropriate
-          section should now resemble the following (note: for the sake
-          of brevity some information has been excluded):
-        </para>
-            <code>&lt;membership&gt;
- &lt;providers&gt;
-   &lt;add name="AspNetSqlMembershipProvider" 
-     type="System.Web.Security.SqlMembershipProvider" 
-     ... 
-     connectionStringName="LocalSqlServer" 
-     ... /&gt;
-   &lt;add name="MySQLMembershipProvider" 
-     autogenerateschema="true" 
-     type="MySql.Web.Security.MySQLMembershipProvider, MySql.Web, Version=6.0.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d" 
-     connectionStringName="LocalMySqlServer" 
-     ... /&gt;
- &lt;/providers&gt;
-&lt;/membership&gt;</code>
-            <para>
-          Note that the name for the connection string to be used to
-          connect to the server that contains the membership database is
-          <literal>LocalMySqlServer</literal>.
-        </para>
-            <para>
-          The <literal>autogenerateschema="true"</literal> attribute
-          will cause  to silently create, or upgrade, the schema
-          on the database server, to contain the required tables for
-          storing membership information.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          It is now necessary to create the connection string referenced
-          in the previous step. Load the web site's
-          <legacyBold>web.config</legacyBold> file into Visual Studio.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Locate the section marked
-          <literal>&lt;connectionStrings&gt;</literal>. Add the
-          following connection string information:
-        </para>
-            <code>&lt;connectionStrings&gt;
-  &lt;remove name="LocalMySqlServer"/&gt;
-  &lt;add name="LocalMySqlServer"
-       connectionString="Datasource=localhost;Database=users;uid=root;pwd=password;"
-       providerName="MySql.Data.MySqlClient"/&gt;
-&lt;/connectionStrings&gt;</code>
-            <para>
-          The database specified is the one created in the first step.
-          You could alternatively have used an existing database.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          At this point build the solution to ensure no errors are
-          present. This can be done by selecting
-          <ui>Build</ui>, <ui>Build Solution</ui>
-          from the main menu, or pressing .
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          ASP.NET supports the concept of locally and remotely
-          authenticated users. With local authentication the user is
-          validated using their Windows credentials when they attempt to
-          access the web site. This can be useful in an Intranet
-          environment. With remote authentication a user is prompted for
-          their login details when accessing the web site, and these
-          credentials are checked aganst the membership information
-          stored in a database server such as MySQL Server. You will now
-          see how to choose this form of authentication.
-        </para>
-            <para>
-          Start the ASP.NET Web Site Administration Tool. This can be
-          done quickly by clicking the small hammer/Earth icon in the
-          Solution Explorer. You can also launch this tool by selecting
-          <ui>Website</ui>, <ui>ASP.NET
-          Configuration</ui> from the main menu.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          In the ASP.NET Web Site Administration Tool click the
-           tab.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Now click the 
-          link.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Select the  radio
-          button. The web site will now need to provide a form to allow
-          the user to enter their login details. These will be checked
-          against membership information stored in the MySQL database.
-        </para>
-            <mediaLink>
-              <para />
-              <caption>Authentication Type</caption>
-              <image xlink:href="connector-net-programming-tutorial-authentication-type" />
-            </mediaLink>
-            <para />
-          </listItem>
-          <listItem>
-            <para>
-          You now need to specify the Role and Membership Provider to be
-          used. Click the  tab.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Click the  link.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Now select the 
-          and the  radio buttons.
-        </para>
-            <mediaLink>
-              <para />
-              <caption>Select Membership and Role Provider</caption>
-              <image xlink:href="connector-net-programming-tutorial-select-provider" />
-            </mediaLink>
-            <para />
-          </listItem>
-          <listItem>
-            <para>
-          In Visual Studio rebuild the solution by selecting
-          <ui>Build</ui>, <ui>Rebuild Solution</ui>
-          from the main menu.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Check that the necessary schema has been created. This can be
-          achieved using the MySQL Command Line Client program.
-        </para>
-            <mediaLink>
-              <para />
-              <caption>Membership and Role Provider Tables</caption>
-              <image xlink:href="connector-net-programming-tutorial-tables" />
-            </mediaLink>
-            <para />
-          </listItem>
-          <listItem>
-            <para>
-          Assuming all is present and correct you can now create users
-          and roles for your web application. The easiest way to do this
-          is with the ASP.NET Web Site Administration Tool. However,
-          many web applications contain their own modules for creating
-          roles and users. For simplicity the ASP.NET Web Site
-          Administration Tool will be used in this tutorial.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          In the ASP.NET Web Site Administration Tool click on the
-           tab. Now that both the
-          Membership and Role Provider are enabled you will see links
-          for creating roles and users. Click the  link.
-        </para>
-            <mediaLink>
-              <para />
-              <caption>Security Tab</caption>
-              <image xlink:href="connector-net-programming-tutorial-security-tab" />
-            </mediaLink>
-            <para />
-          </listItem>
-          <listItem>
-            <para>
-          You can now enter the name of a new Role and click
-          <math>Add Role</math> to create the new Role. Create
-          new Roles as required.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Click the <math>Back</math> button.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Click the  link. You can now
-          fill in information about the user to be created, and also
-          allocate that user to one or more Roles.
-        </para>
-            <mediaLink>
-              <para />
-              <caption>Create User</caption>
-              <image xlink:href="connector-net-programming-tutorial-create-user" />
-            </mediaLink>
-            <para />
-          </listItem>
-          <listItem>
-            <para>
-          Using the MySQL Command Line Client program you can check that
-          your database has been correctly populated with the Membership
-          and Role data.
-        </para>
-            <mediaLink>
-              <para />
-              <caption>Membership and Roles Table Contents</caption>
-              <image xlink:href="connector-net-programming-tutorial-users-roles-tables" />
-            </mediaLink>
-            <para />
-          </listItem>
-        </list>
-        <para>
-      In this tutorial you have seen how to set up the  Membership
-      and Role Providers for use in your ASP.NET web application.
-    </para>
-      </content>
-    </section>
-    <section address="connector-net-programming-tutorial-asp-provider-session-state">
-      <title>Tutorial:  ASP.NET Session State Provider</title>
-      <content>
-        <para>
-       from version 6.1 has included a MySQL Session State
-      Provider. This provider allows you to store session state in a
-      MySQL database. The following tutorial shows you how to prepare to
-      use the MySQL Session State Provider, and then store session data
-      into the MySQL database. This tutorial uses Microsoft Visual
-      Studio 2008 Professional Edition,  6.1.1 and MySQL Server
-      5.1. This tutorial also assumes you have created an empty
-      database, for example <literal>test</literal>, where you will
-      store session data. You could do this using the MySQL Command Line
-      Client tool.
-    </para>
-        <list class="ordered">
-          <listItem>
-            <para>
-          In Visual Studio create a new ASP.NET web site. If you are not
-          sure how to do this refer to the tutorial
-          <link xlink:href="9f3f194e-ad35-4379-b04d-5dce4b34ce6a#connector-net-visual-studio-entity-framework-tutorial-databinding-linq-entities">Tutorial: Databinding in ASP.NET using LINQ on Entities</link>
-          which demonstrates how to do this.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Launch the MySQL MySQL Website Configuration tool. Due to a
-          bug in 6.1.1 this may not appear unless you are connected to a
-          server in the Server Explorer. If you are unfamiliar with the
-          MySQL Website Configuration tool it is suggested that you
-          first work through the following tutorial
-          <link xlink:href="9f3f194e-ad35-4379-b04d-5dce4b34ce6a#connector-net-website-config">MySQL Website Configuration Tool</link>.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Navigate through the wizard to the Session State page. Make
-          sure the checkbox  is seected.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          On the same page configure the connection string to the
-          database that will contain your session data. This database
-          can be empty as  will create the schema required to
-          store session data.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Ensure that the checkbox  is selected so that  will create the
-          schema in your database to store the session data correctly.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Enter the name of your application.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Click <math>Finish</math>. The MySQL Website
-          Configuration tool will now update your application's
-          <legacyBold>web.config</legacyBold> file with information about
-          the connection string and default providers to be used. In
-          this case we have selected the MySQL Session State Provider.
+              <legacyBold>Filter</legacyBold> - filters can be attached to
+          listeners. Filters determine the level of trace information
+          that will be written. While a switch defines the level of
+          information that will be written to all listeners, a filter
+          can be applied on a per-listener basis, giving finer grained
+          control of trace information.
         </para>
           </listItem>
         </list>
         <para>
-      At this point you are ready to use the MySQL database to store
-      session data. To test that the set up has worked you can write a
-      simple program that uses session variables.
+      To use tracing a <literal>TraceSource</literal> object first needs
+      to be created. To create a <literal>TraceSource</literal> object
+      in  you would use code similar to the following:
     </para>
-        <list class="ordered">
-          <listItem>
-            <para>
-          Open <legacyBold>Default.aspx.cs</legacyBold>. In the Page_Load
-          method add the following code:
-        </para>
-            <codeInline>Session["SessionVariable1"] = "Test string";</codeInline>
-          </listItem>
-          <listItem>
-            <para>
-          Build your solution.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Run the solution (without debugging). When the application
-          runs, the provider will autogenerate tables required in the
-          database you chose when setting up the application.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Check that the schema was in fact created. Using the MySQL
-          Command Line Client use the target database and then type
-          <literal>SHOW TABLES;</literal>. You will see that  has
-          created the required schema automatically, as we selected this
-          to happen in the MySQL Website Configuration tool.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Now view the contents of these tables by typing
-          <literal>SELECT * FROM my_aspnet_sessions;</literal> in the
-          MySQL Command Line Client. This will display the session data
-          our application used. Note that this is stored in binary
-          format so some data may not display as expected.
-        </para>
-          </listItem>
-        </list>
+        <codeInline>TraceSource ts = new TraceSource("mysql");</codeInline>
         <para>
-      At this point you have installed the Session State Provider and
-      carried out a preliminary test of the installation. You will now
-      work a bit more with the Session State Provider.
+      To enable trace messages you also need to configure a trace
+      switch. There are three main switch classes,
+      <literal>BooleanSwitch</literal>, <literal>SourceSwitch</literal>,
+      and <literal>TraceSwitch</literal>. Trace switches also have
+      associated with them a trace level enumeration, these are
+      <literal>Off</literal>, <literal>Error</literal>,
+      <literal>Warning</literal>, <literal>Info</literal>, and
+      <literal>Verbose</literal>. The following code snippet illustrates
+      creating a switch:
     </para>
-        <para>
-      In this part of the tutorial you will set and retrieve a session
-      variable. You can work with your existing project.
-    </para>
-        <list class="ordered">
-          <listItem>
-            <para>
-          Select the <legacyBold>Default.aspx</legacyBold> and switch to
-          Design View. Add a text box and three buttons. Change the text
-          property for the buttons to , , and
-          . These will be
-          <literal>Button1</literal>, <literal>Button2</literal> and
-          <literal>Button3</literal> respectively. Build your solution
-          to ensure that no errors have been introduced.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Still in the Design View, double click
-          <literal>Button1</literal>. Now to the
-          <literal>Button1_Click</literal> event handler add code some
-          the handler resembles the following:
-        </para>
-            <code>
-protected void Button1_Click(object sender, EventArgs e)
-{
-    Session["SessionString"] = TextBox1.Text;
-}
+        <code>
+ts.Switch = new SourceSwitch("MySwitch", "Verbose");
 </code>
-            <para>
-          You have created a new Session variable accessed using the key
-          . This will be set to the text
-          that was entered into the text box when
-          <literal>Button1</literal> is clicked.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          In Design View double click <literal>Button2</literal> to add
-          its click event handler. This button needs to clear text from
-          the text box. The code to do this is as follows:
-        </para>
-            <code>
-protected void Button2_Click(object sender, EventArgs e)
-{
-    TextBox1.Text = "";
-}
-</code>
-            <para>
-          The code simply assigns an empty string to the
-          <literal>Text</literal> property of the text box.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          In the Desin View double click <literal>Button3</literal> and
-          modify the click handler as follows:
-        </para>
-            <code>
-protected void Button3_Click(object sender, EventArgs e)
-{
-    TextBox1.Text = (String)Session["SessionString"];
-}
-</code>
-            <para>
-          This will retrieve the session string and display it in the
-          text box.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Now modify the <literal>Page_Load</literal> method as follows:
-        </para>
-            <code>
-protected void Page_Load(object sender, EventArgs e)
-{
-    if (!IsPostBack)
-    {
-       TextBox1.Text = "Enter some text"; 
-    }
-}
-</code>
-            <para>
-          This ensures that when the page loads the text box
-          <literal>Text</literal> property is reset.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Ensure that the solution is saved and then rebuild the
-          solution.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Run the solution without debugging.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          The form will be displayed. Enter some text into the text box.
-          Now click <math>Store Session Variable</math>. At
-          this point you have stored the string in a session variable.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Now click <math>Clear Text</math> to clear the text
-          box.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Now click <math>Show Session Variable</math> to
-          retrieve and display the session variable.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Refresh the page to destroy the form and display a new form.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Click <math>Show Session Variable</math> the text
-          box will display the stored session variable, demonstrating
-          that the refreshing the page does not destroy the session
-          variable.
-        </para>
-          </listItem>
-        </list>
         <para>
-      This illustrates that the session state data is not destroyed when
-      a page is reloaded.
-    </para>
-      </content>
-    </section>
-    <section address="connector-net-programming-tutorial-asp-provider-profile">
-      <title>Tutorial:  ASP.NET Profile Provider</title>
-      <content>
-        <para>
-      This tutorial shows you how to use the MySQL Profile Provider to
-      store user profile information in a MySQL database. The tutorial
-      uses  6.1.1, MySQL Server 5.1 and Microsoft Visual Studio
-      2008 Professional Edition.
+      This creates a <literal>SourceSwitch</literal>, called
+      <literal>MySwitch</literal>, and sets the trace level to
+      <literal>Verbose</literal>, meaning that all trace messages will
+      be written.
     </para>
         <para>
-      Many modern web sites allow the user to create a personal profile.
-      This requires a significant amount of code, but ASP.NET reduces
-      this considerable by including the functionality in its Profile
-      classes. The Profile Provider provides an abstraction between
-      these classes and a data source. The MySQL Profile Provider allows
-      profile data to be stored in a MySQL database. This allows the
-      profile properties to be written to a persistent store, and be
-      retrieved when required. The Profile Provider also allows profile
-      data to be managed effectively, for example it allows profiles
-      that have not been accessed since a specific date to be deleted.
+      It is convenient to be able to change the trace level without
+      having to recompile the code. This is achieved by specifying the
+      trace level in application configuration file,
+      <legacyBold>app.config</legacyBold>. You then simply need to specify
+      the desired trace level in the configuration file and restart the
+      application. The trace source is configured within the
+      <literal>system.diagnostics</literal> section of the file. The
+      following XML snippet illustrates this:
+    </para>
+        <codeInline>
+        </codeInline>
+        <para>
+      By default trace information is written to the Output window of
+      Microsoft Visual Studio. However, there are a wide range of
+      listeners than can be attached to the trace source, so that trace
+      messages can be written out to various destinations. It is also
+      possible to create custom listeners to allow trace messages to be
+      written to other destinations as mobile devices and web services.
+      A commonly used example of a listener is
+      <literal>ConsoleTraceListener</literal>, which writes trace
+      messages to the console.
     </para>
         <para>
-      The following steps show you how you can select the MySQL Profile
-      Provider.
+      To add a listener at run time you can use code such as the
+      following:
     </para>
-        <list class="ordered">
-          <listItem>
-            <para>
-          Create a new ASP.NET web project.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Select the MySQL Website Configuration tool. Due to a bug in
-          6.1.1 you may have to first connect to a server in Server
-          Explorer before the tool's icon will display in the toolbar of
-          the Solution Explorer.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          In the MySQL Website Configuration tool navigate through the
-          tool to the Profiles page.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Select the  checkbox.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Select the  checkbox.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Click the <math>Edit...</math> button and configure
-          a connection string for the database that will be used to
-          store user profile information.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Navigate to the last page of the tool and click
-          <math>Finish</math> to save your changes and exit
-          the tool.
-        </para>
-          </listItem>
-        </list>
+        <codeInline>ts.Listeners.Add(new ConsoleTraceListener());</codeInline>
         <para>
-      At this point you are now ready to start using the MySQL Profile
-      Provider. With the following steps you can carry out a preliminary
-      test of your installation.
+      You can then call methods on trace source object to generate trace
+      information. For example, the
+      <literal>TraceInformation()</literal>,
+      <literal>TraceEvent()</literal>, or <literal>TraceData()</literal>
+      methods can be used.
     </para>
-        <list class="ordered">
-          <listItem>
-            <para>
-          Open your <legacyBold>web.config</legacyBold> file.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Add a simple profile such as the following:
-        </para>
-            <code>
-&lt;system.web&gt;
-  &lt;anonymousIdentification enabled="true"/&gt; 
-  &lt;profile defaultProvider="MySQLProfileProvider"&gt;
-    ...
-    &lt;properties&gt;
-      &lt;add name="Name" allowAnonymous="true"/&gt;
-      &lt;add name="Age" allowAnonymous="true" type="System.UInt16"/&gt;
-      &lt;group name="UI"&gt;
-        &lt;add name="Color" allowAnonymous="true" defaultValue="Blue"/&gt;
-        &lt;add name="Style" allowAnonymous="true" defaultValue="Plain"/&gt;
-      &lt;/group&gt;
-    &lt;/properties&gt;
-  &lt;/profile&gt;
-  ...
-</code>
-            <para>
-          Note that <literal>anonymousIdentification</literal> has been
-          set to true. This allows users who have not been authenticated
-          to use profiles. They are identified by a GUID in a cookie
-          rather than by user name.
-        </para>
-          </listItem>
-        </list>
         <para>
-      Now that the simple profile has been defined in
-      <legacyBold>web.config</legacyBold>, the next step is to write some
-      code to test the profile.
+      The <literal>TraceInformation()</literal> method simply prints a
+      string passed as a parameter. The <literal>TraceEvent()</literal>
+      method, as well as the optional informational string, requires a
+      <literal>TraceEventType</literal> value to be passed to indicate
+      the trace message type, and also an application specific ID. The
+      <literal>TraceEventType</literal> can have a value of
+      <literal>Verbose</literal>, <literal>Information</literal>,
+      <literal>Warning</literal>, <literal>Error</literal>, and
+      <literal>Critical</literal>. Using the
+      <literal>TraceData()</literal> method you can pass any object, for
+      example an exception object, instead of a message.
     </para>
-        <list class="ordered">
-          <listItem>
-            <para>
-          In Design View design a simple page with the following
-          controls:
-        </para>
-            <mediaLink>
-              <para />
-              <caption>Simple Profile Application</caption>
-              <image xlink:href="connector-net-programming-tutorial-asp-provider-profile-simple-app" />
-            </mediaLink>
-            <para />
-            <para>
-          These will allow the user to enter some profile information.
-          The user can also use the buttons to save their profile, clear
-          the page, and restore their profile data.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          In the Code View add code as follows:
-        </para>
-            <code>
+        <para>
+      To ensure than these generated trace messages gets flushed from
+      the trace source buffers to listeners, you need to invoke the
+      <literal>Flush()</literal> method. When you are finished using a
+      trace source, you should call the <literal>Close()</literal>
+      method. The <literal>Close()</literal> method first calls
+      <literal>Flush()</literal>, to ensure any remaining data is
+      written out. It then frees up resources, and closes the listeners
+      associated with the trace source.
+    </para>
+        <code>ts.TraceInformation("Informational message");
+ts.TraceEvent(TraceEventType.Error, 3, "Optional error message");
+ts.TraceData(TraceEventType.Error, 3, ex); // pass exception object
+ts.Flush();
 ...
-protected void Page_Load(object sender, EventArgs e)
-{
-    if (!IsPostBack)
-    {
-        TextBox1.Text = Profile.Name;
-        TextBox2.Text = Profile.Age.ToString();
-        Label1.Text = Profile.UI.Color;
-    }
-}
-    
-// Store Profile
-protected void Button1_Click(object sender, EventArgs e)
-{
-    Profile.Name = TextBox1.Text;
-    Profile.Age = UInt16.Parse(TextBox2.Text);
-}
-    
-// Clear Form
-protected void Button2_Click(object sender, EventArgs e)
-{
-    TextBox1.Text = "";
-    TextBox2.Text = "";
-    Label1.Text = "";
-}
-
-// Retrieve Profile
-protected void Button3_Click(object sender, EventArgs e)
-{
-    TextBox1.Text = Profile.Name;
-    TextBox2.Text = Profile.Age.ToString();
-    Label1.Text = Profile.UI.Color;
-}
-
-protected void DropDownList1_SelectedIndexChanged(object sender, EventArgs e)
-{
-    Profile.UI.Color = DropDownList1.SelectedValue;
-}
-...
-</code>
-          </listItem>
-          <listItem>
-            <para>
-          Save all files and build the solution to check that no errors
-          have been introduced.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Run the application.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Enter your name, age and select a color from the listbox. Now
-          store this information in your profile by clicking
-          <math>Store Profile</math>. Note that if you do not
-          select a color from the listbox your profile will use the
-          default color <literal>Blue</literal> that was specified in
-          the <legacyBold>web.config</legacyBold> file.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Click <math>Clear Form</math> to clear text from the
-          textboxes and the label that displays your chosen color.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Now click <math>Retrieve Profile</math> to restore
-          your profile data from the MySQL database.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Now exit the browser to terminate the application.
-        </para>
-          </listItem>
-          <listItem>
-            <para>
-          Run the application again. Note that when the page loads your
-          profile information is restored from the MySQL database.
-        </para>
-          </listItem>
-        </list>
-        <para>
-      In this tutorial you have seen how to using the MySQL Profile
-      Provider with .
-    </para>
+ts.Close();</code>
       </content>
     </section>
   </developerConceptualDocument>
