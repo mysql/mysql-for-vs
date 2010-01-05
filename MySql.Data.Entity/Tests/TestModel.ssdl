@@ -199,7 +199,12 @@
     <Parameter Name="thename" Type="varchar" Mode="In" />
     <Parameter Name="theage" Type="int" Mode="In" />
   </Function>
-
+  <Function Name="spFunc" Aggregate="false"
+      BuiltIn="false" NiladicFunction="false" IsComposable="true"
+      ParameterTypeSemantics="AllowImplicitConversion" Schema="test" ReturnType="int">
+    <Parameter Name="id" Type="int" Mode="In" />
+    <Parameter Name="name" Type="varchar" Mode="In" />
+  </Function>
   <EntityType Name="DataTypeTests">
     <Key>
       <PropertyRef Name="id"/>
