@@ -151,5 +151,13 @@ namespace MySql.Data.Entity
                 return ((RowType)type).Properties;
             throw new NotSupportedException();
         }
+
+        internal static T TryGetValueMetadataProperty<T>(MetadataItem  mi, string name)
+        {
+            MetadataProperty property;
+            bool exists = mi.MetadataProperties.TryGetValue(name, true, out property);
+            if (exists) return (T)property.Value;
+            return default(T);
+        }
     }
 }
