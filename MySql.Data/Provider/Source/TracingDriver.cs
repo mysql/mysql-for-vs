@@ -24,37 +24,35 @@ using MySql.Data.Types;
 using System.Diagnostics;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient.Properties;
+using System.Threading;
 
 namespace MySql.Data.MySqlClient
 {
     internal class TracingDriver : Driver
     {
-        private int statementId;
+        private static long driverCounter;
+        private long driverId;
         private ResultSet activeResult;
         private int rowSizeInBytes;
 
         public TracingDriver(MySqlConnectionStringBuilder settings)
             : base(settings)
         {
-        }
-
-        private TraceSource Source
-        {
-            get { return MySqlTrace.Source; }
+            driverId = Interlocked.Increment(ref driverCounter);
         }
 
         public override void Open()
         {
             base.Open();
-            Source.TraceEvent(TraceEventType.Information, ThreadID, 
-                Resources.TraceOpenConnection, MySqlTraceEventType.ConnectionOpened, Settings.ConnectionString);
+            MySqlTrace.TraceEvent(TraceEventType.Information, MySqlTraceEventType.ConnectionOpened, 
+                Resources.TraceOpenConnection, driverId, Settings.ConnectionString, ThreadID);
         }
 
         public override void Close()
         {
             base.Close();
-            Source.TraceEvent(TraceEventType.Information, ThreadID, Resources.TraceCloseConnection,
-                MySqlTraceEventType.ConnectionClosed);
+            MySqlTrace.TraceEvent(TraceEventType.Information, MySqlTraceEventType.ConnectionClosed, 
+                Resources.TraceCloseConnection, driverId);
         }
 
         public override void SendQuery(MySqlPacket p)
@@ -66,18 +64,17 @@ namespace MySql.Data.MySqlClient
 
             base.SendQuery(p);
 
-            Source.TraceEvent(TraceEventType.Information, ThreadID, Resources.TraceQueryText,
-                MySqlTraceEventType.QueryOpened, 0, cmdText);
+            MySqlTrace.TraceEvent(TraceEventType.Information, MySqlTraceEventType.QueryOpened, 
+                Resources.TraceQueryOpened, driverId, ThreadID, cmdText);
         }
 
         protected override int GetResult(int statementId, ref int affectedRows, ref int insertedId)
         {
             try
             {
-                this.statementId = statementId;
                 int fieldCount = base.GetResult(statementId, ref affectedRows, ref insertedId);
-                Source.TraceEvent(TraceEventType.Information, ThreadID, Resources.TraceResult,
-                        MySqlTraceEventType.ResultOpened, statementId, fieldCount, affectedRows, insertedId);
+                MySqlTrace.TraceEvent(TraceEventType.Information, MySqlTraceEventType.ResultOpened, 
+                    Resources.TraceResult, driverId, fieldCount, affectedRows, insertedId);
                 ReportUsageAdvisorWarnings(statementId, null);
 
                 return fieldCount;
@@ -85,8 +82,8 @@ namespace MySql.Data.MySqlClient
             catch (MySqlException ex)
             {
                 // we got an error so we report it
-                Source.TraceEvent(TraceEventType.Information, ThreadID, Resources.TraceOpenResultError,
-                        MySqlTraceEventType.Error, statementId, ex.Number, ex.Message);
+                MySqlTrace.TraceEvent(TraceEventType.Information, MySqlTraceEventType.Error, 
+                    Resources.TraceOpenResultError, driverId, ex.Number, ex.Message);
                 throw ex;
             }
         }
@@ -99,8 +96,9 @@ namespace MySql.Data.MySqlClient
                 //oldRS = activeResults[statementId];
                 if (Settings.UseUsageAdvisor)
                     ReportUsageAdvisorWarnings(statementId, activeResult);
-                Source.TraceEvent(TraceEventType.Information, ThreadID, Resources.TraceResultClosed,
-                    MySqlTraceEventType.ResultClosed, statementId, activeResult.TotalRows, activeResult.SkippedRows, rowSizeInBytes);
+                MySqlTrace.TraceEvent(TraceEventType.Information, MySqlTraceEventType.ResultClosed, 
+                    Resources.TraceResultClosed, driverId, activeResult.TotalRows, activeResult.SkippedRows, 
+                    rowSizeInBytes);
                 rowSizeInBytes = 0;
                 activeResult = null;
             }
@@ -112,24 +110,35 @@ namespace MySql.Data.MySqlClient
         public override int PrepareStatement(string sql, ref MySqlField[] parameters)
         {
             int statementId = base.PrepareStatement(sql, ref parameters);
+            MySqlTrace.TraceEvent(TraceEventType.Information, MySqlTraceEventType.StatementPrepared,
+                Resources.TraceStatementPrepared, driverId, sql, statementId);
             return statementId;
         }
 
         public override void CloseStatement(int id)
         {
             base.CloseStatement(id);
+            MySqlTrace.TraceEvent(TraceEventType.Information, MySqlTraceEventType.StatementClosed,
+                Resources.TraceStatementClosed, driverId, id);
         }
 
         public override void SetDatabase(string dbName)
         {
             base.SetDatabase(dbName);
-            Source.TraceEvent(TraceEventType.Information, ThreadID, Resources.TraceSetDatabase,
-                MySqlTraceEventType.NonQuery, -1, dbName);
+            MySqlTrace.TraceEvent(TraceEventType.Information, MySqlTraceEventType.NonQuery, 
+                Resources.TraceSetDatabase, driverId, dbName);
         }
 
         public override void ExecuteStatement(MySqlPacket packetToExecute)
         {
             base.ExecuteStatement(packetToExecute);
+            int pos = packetToExecute.Position;
+            packetToExecute.Position = 1;
+            int statementId = packetToExecute.ReadInteger(4);
+            packetToExecute.Position = pos;
+
+            MySqlTrace.TraceEvent(TraceEventType.Information, MySqlTraceEventType.StatementExecuted,
+                Resources.TraceStatementExecuted, driverId, statementId, ThreadID);
         }
 
         public override bool FetchDataRow(int statementId, int columns)
@@ -143,8 +152,8 @@ namespace MySql.Data.MySqlClient
             }
             catch (MySqlException ex)
             {
-                Source.TraceEvent(TraceEventType.Error, ThreadID, Resources.TraceFetchError,
-                    MySqlTraceEventType.Error, statementId, ex.Number, ex.Message);
+                MySqlTrace.TraceEvent(TraceEventType.Error, MySqlTraceEventType.Error, 
+                    Resources.TraceFetchError, driverId, ex.Number, ex.Message);
                 throw ex;
             }
         }
@@ -153,16 +162,16 @@ namespace MySql.Data.MySqlClient
         {
             base.CloseQuery(connection, statementId);
 
-            Source.TraceEvent(TraceEventType.Information, ThreadID, Resources.TraceQueryDone,
-                MySqlTraceEventType.QueryClosed, statementId);
+            MySqlTrace.TraceEvent(TraceEventType.Information, MySqlTraceEventType.QueryClosed, 
+                Resources.TraceQueryDone, driverId);
         }
 
         public override List<MySqlError> ReportWarnings(MySqlConnection connection)
         {
             List<MySqlError> warnings = base.ReportWarnings(connection);
             foreach (MySqlError warning in warnings)
-                Source.TraceEvent(TraceEventType.Warning, ThreadID, Resources.TraceWarning,
-                    MySqlTraceEventType.Warning, statementId, warning.Level, warning.Code, warning.Message);
+                MySqlTrace.TraceEvent(TraceEventType.Warning, MySqlTraceEventType.Warning, 
+                    Resources.TraceWarning, driverId, warning.Level, warning.Code, warning.Message);
             return warnings;
         }
 
@@ -181,18 +190,18 @@ namespace MySql.Data.MySqlClient
             if (rs == null)
             {
                 if (HasStatus(ServerStatusFlags.NoIndex))
-                    Source.TraceEvent(TraceEventType.Warning, ThreadID, Resources.TraceUAWarningNoIndex,
-                            MySqlTraceEventType.UsageAdvisorWarning, statementId, UsageAdvisorWarningFlags.NoIndex);
+                    MySqlTrace.TraceEvent(TraceEventType.Warning, MySqlTraceEventType.UsageAdvisorWarning, 
+                        Resources.TraceUAWarningNoIndex, driverId, UsageAdvisorWarningFlags.NoIndex);
                 else if (HasStatus(ServerStatusFlags.BadIndex))
-                    Source.TraceEvent(TraceEventType.Warning, ThreadID, Resources.TraceUAWarningBadIndex,
-                            MySqlTraceEventType.UsageAdvisorWarning, statementId, UsageAdvisorWarningFlags.BadIndex);
+                    MySqlTrace.TraceEvent(TraceEventType.Warning, MySqlTraceEventType.UsageAdvisorWarning, 
+                        Resources.TraceUAWarningBadIndex, driverId, UsageAdvisorWarningFlags.BadIndex);
             }
             else
             {
                 // report abandoned rows
                 if (rs.SkippedRows > 0)
-                    Source.TraceEvent(TraceEventType.Warning, ThreadID, Resources.TraceUAWarningSkippedRows,
-                            MySqlTraceEventType.UsageAdvisorWarning, statementId, UsageAdvisorWarningFlags.SkippedRows, rs.SkippedRows);
+                    MySqlTrace.TraceEvent(TraceEventType.Warning, MySqlTraceEventType.UsageAdvisorWarning, 
+                        Resources.TraceUAWarningSkippedRows, driverId, UsageAdvisorWarningFlags.SkippedRows, rs.SkippedRows);
 
                 // report not all fields accessed
                 if (!AllFieldsAccessed(rs))
@@ -205,8 +214,8 @@ namespace MySql.Data.MySqlClient
                             notAccessed.AppendFormat("{0}{1}", delimiter, rs.Fields[i].ColumnName);
                             delimiter = ",";
                         }
-                    Source.TraceEvent(TraceEventType.Warning, ThreadID, Resources.TraceUAWarningSkippedColumns,
-                            MySqlTraceEventType.UsageAdvisorWarning, statementId, UsageAdvisorWarningFlags.SkippedColumns, 
+                    MySqlTrace.TraceEvent(TraceEventType.Warning, MySqlTraceEventType.UsageAdvisorWarning, 
+                        Resources.TraceUAWarningSkippedColumns, driverId, UsageAdvisorWarningFlags.SkippedColumns, 
                             notAccessed.ToString());
                 }
 
@@ -223,8 +232,8 @@ namespace MySql.Data.MySqlClient
                             delimiter = ",";
                         }
                         if (s.Length > 0)
-                            Source.TraceEvent(TraceEventType.Warning, ThreadID, Resources.TraceUAWarningFieldConversion,
-                                MySqlTraceEventType.UsageAdvisorWarning, statementId, UsageAdvisorWarningFlags.FieldConversion,
+                            MySqlTrace.TraceEvent(TraceEventType.Warning, MySqlTraceEventType.UsageAdvisorWarning, 
+                                Resources.TraceUAWarningFieldConversion, driverId, UsageAdvisorWarningFlags.FieldConversion,
                                 f.ColumnName, s.ToString());
                     }
                 }

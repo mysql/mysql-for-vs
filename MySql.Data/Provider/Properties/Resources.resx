@@ -394,48 +394,60 @@
     <value>The requested value '{0}' is invalid for the given keyword '{1}'.</value>
   </data>
   <data name="TraceCloseConnection" xml:space="preserve">
-    <value>Connection Closed</value>
+    <value>{0}: Connection Closed</value>
   </data>
   <data name="TraceOpenConnection" xml:space="preserve">
-    <value>Connection Opened: connection string = '{1}'</value>
+    <value>{0}: Connection Opened: connection string = '{1}'</value>
   </data>
-  <data name="TraceQueryText" xml:space="preserve">
-    <value>{1}: Query Opened: {2}</value>
+  <data name="TraceQueryOpened" xml:space="preserve">
+    <value>{0}: Query Opened: {2}</value>
   </data>
   <data name="TraceResult" xml:space="preserve">
-    <value>{1}: Resultset Opened: field(s) = {2}, affected rows = {3}, inserted id = {4}</value>
+    <value>{0}: Resultset Opened: field(s) = {1}, affected rows = {2}, inserted id = {3}</value>
   </data>
   <data name="TraceQueryDone" xml:space="preserve">
-    <value>{1}: Query Closed</value>
+    <value>{0}: Query Closed</value>
   </data>
   <data name="TraceSetDatabase" xml:space="preserve">
-    <value>{1}: Set Database: {2}</value>
+    <value>{0}: Set Database: {1}</value>
   </data>
   <data name="TraceUAWarningBadIndex" xml:space="preserve">
-    <value>{1}: Usage Advisor Warning: Query is using a bad index</value>
+    <value>{0}: Usage Advisor Warning: Query is using a bad index</value>
   </data>
   <data name="TraceUAWarningNoIndex" xml:space="preserve">
-    <value>{1}: Usage Advisor Warning: Query does not use an index</value>
+    <value>{0}: Usage Advisor Warning: Query does not use an index</value>
   </data>
   <data name="TraceResultClosed" xml:space="preserve">
-    <value>{1}: Resultset Closed. Total rows={2}, skipped rows={3}, size (bytes)={4}</value>
+    <value>{0}: Resultset Closed. Total rows={1}, skipped rows={2}, size (bytes)={3}</value>
   </data>
   <data name="TraceUAWarningSkippedRows" xml:space="preserve">
-    <value>{1}: Usage Advisor Warning: Skipped {3} rows. Consider a more focused query.</value>
+    <value>{0}: Usage Advisor Warning: Skipped {2} rows. Consider a more focused query.</value>
   </data>
   <data name="TraceUAWarningSkippedColumns" xml:space="preserve">
-    <value>{1}: Usage Advisor Warning: The following columns were not accessed: {3}</value>
+    <value>{0}: Usage Advisor Warning: The following columns were not accessed: {2}</value>
   </data>
   <data name="TraceUAWarningFieldConversion" xml:space="preserve">
-    <value>{1}: Usage Advisor Warning: The field '{3}' was converted to the following types: {4}</value>
+    <value>{0}: Usage Advisor Warning: The field '{2}' was converted to the following types: {3}</value>
   </data>
   <data name="TraceOpenResultError" xml:space="preserve">
-    <value>Error encountered attempting to open result: Number={1}, Message={2}</value>
+    <value>{0}: Error encountered attempting to open result: Number={1}, Message={2}</value>
   </data>
   <data name="TraceFetchError" xml:space="preserve">
-    <value>{1}: Error encountered during row fetch. Number = {2}, Message={3}</value>
+    <value>{0}: Error encountered during row fetch. Number = {1}, Message={2}</value>
   </data>
   <data name="TraceWarning" xml:space="preserve">
-    <value>{1}: MySql Warning: Level={2}, Code={3}, Message={4}ountered during open result</value>
+    <value>{0}: MySql Warning: Level={1}, Code={2}, Message={3}</value>
+  </data>
+  <data name="TraceErrorMoreThanMaxValueConnections" xml:space="preserve">
+    <value>Unable to trace.  There are more than Int32.MaxValue connections in use.</value>
+  </data>
+  <data name="TraceStatementPrepared" xml:space="preserve">
+    <value>{0}: Statement prepared: sql='{1}', statement id={2}</value>
+  </data>
+  <data name="TraceStatementClosed" xml:space="preserve">
+    <value>{0}: Statement closed: statement id = {1}</value>
+  </data>
+  <data name="TraceStatementExecuted" xml:space="preserve">
+    <value>{0}: Statement executed: statement id = {1}</value>
   </data>
 </root>
