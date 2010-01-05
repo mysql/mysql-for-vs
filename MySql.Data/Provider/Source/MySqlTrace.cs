@@ -70,9 +70,17 @@ namespace MySql.Data.MySqlClient
             Trace.TraceError(msg);
 #endif
         }
+
+#if !CF
+        internal static void TraceEvent(TraceEventType eventType,
+            MySqlTraceEventType mysqlEventType, string msgFormat, params object[] args)
+        {
+            Source.TraceEvent(eventType, (int)mysqlEventType, msgFormat, args);
+        }
+#endif
     }
 
-    public enum MySqlTraceEventType
+    public enum MySqlTraceEventType : int
     {
         ConnectionOpened = 1,
         ConnectionClosed,
@@ -80,6 +88,9 @@ namespace MySql.Data.MySqlClient
         ResultOpened,
         ResultClosed,
         QueryClosed,
+        StatementPrepared,
+        StatementExecuted,
+        StatementClosed,
         NonQuery,
         UsageAdvisorWarning,
         Warning,
