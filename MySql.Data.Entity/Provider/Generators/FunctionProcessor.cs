@@ -84,7 +84,37 @@ namespace MySql.Data.Entity
                 return GenericFunction(stringFunctions, e);
             else if (mathFunctions.ContainsKey(e.Function.Name))
                 return GenericFunction(mathFunctions, e);
-            return null;
+            else
+                return UserDefinedFunction(e);
+        }
+
+        private SqlFragment UserDefinedFunction(DbFunctionExpression e)
+        {
+            FunctionFragment f = new FunctionFragment();
+            f.Name = Metadata.TryGetValueMetadataProperty<string>(e.Function, 
+                "StoreFunctionNameAttribute");
+
+            if (String.IsNullOrEmpty(f.Name))
+                f.Name = e.Function.Name;
+
+            f.Quoted = !Metadata.TryGetValueMetadataProperty<bool>(e.Function, "BuiltInAttribute");
+
+            bool isFuncNiladic = Metadata.TryGetValueMetadataProperty<bool>(e.Function, "NiladicFunctionAttribute");
+            if (isFuncNiladic && e.Arguments.Count > 0)
+                throw new InvalidOperationException("Niladic functions cannot have parameters");
+
+            ListFragment list = new ListFragment();
+            string delimiter = "";
+            foreach (DbExpression arg in e.Arguments)
+            {
+                if (delimiter.Length > 0)
+                    list.Append(new LiteralFragment(delimiter));
+                list.Append(arg.Accept(callingGenerator));
+                delimiter = ", ";
+            }
+            f.Argmument = list;
+
+            return f;
         }
 
         private SqlFragment BitwiseFunction(DbFunctionExpression e)
