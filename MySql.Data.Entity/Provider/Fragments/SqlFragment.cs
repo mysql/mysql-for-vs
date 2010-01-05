@@ -169,10 +169,12 @@ namespace MySql.Data.Entity
         public bool Distinct;
         public SqlFragment Argmument;
         public string Name;
+        public bool Quoted;
 
         public override void WriteSql(StringBuilder sql)
         {
-            sql.AppendFormat("{0}({1}", Name, Distinct ? "DISTINCT " : "");
+            string name = Quoted ? QuoteIdentifier(Name) : Name;
+            sql.AppendFormat("{0}({1}", name, Distinct ? "DISTINCT " : "");
             Argmument.WriteSql(sql);
             sql.Append(")");
         }
