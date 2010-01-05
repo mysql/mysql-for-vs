@@ -21,7 +21,9 @@ namespace MySql.Data.MySqlClient.Properties {
     // with the /str option, or rebuild your VS project.
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "2.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+#if !CF
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+#endif
     public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
@@ -835,7 +837,7 @@ namespace MySql.Data.MySqlClient.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0}: Query Opened: {1}.
+        ///   Looks up a localized string similar to {0}: Query Opened: {2}.
         /// </summary>
         public static string TraceQueryOpened {
             get {

@@ -71,13 +71,13 @@ namespace MySql.Data.MySqlClient
 #endif
         }
 
+#if !CF
         internal static void TraceEvent(TraceEventType eventType,
             MySqlTraceEventType mysqlEventType, string msgFormat, params object[] args)
         {
-#if !CF
             Source.TraceEvent(eventType, (int)mysqlEventType, msgFormat, args);
-#endif
         }
+#endif
     }
 
     public enum MySqlTraceEventType : int
