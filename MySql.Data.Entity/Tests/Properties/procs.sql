@@ -17,3 +17,9 @@ CREATE PROCEDURE UpdateAuthor(theid int, thename varchar(20), theage int)
 BEGIN
 	UPDATE authors SET `name`=thename, age=theage WHERE id=theid;
 END $$
+
+CREATE FUNCTION spFunc(id INT, name VARCHAR(20)) RETURNS INT
+BEGIN
+	RETURN id;
+END $$
+

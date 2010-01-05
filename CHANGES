@@ -3,6 +3,8 @@
 - Fixed precision calculation on decimal and newdecimal columns (bug #48171)
 - Fixed problem caused by us not including a 'REFERENCED_TABLE_CATALOG' column in our
   foreign keys collection (bug #48974)
+- fixed entity framework function processing so that it handles stored functions properly
+  (bug #45277)
 
 Version 6.1.3
 - fixed session state provider table definition to allow more than 64K per-session data (bug#47339)
