@@ -102,5 +102,26 @@ namespace MySql.Data.Entity.Tests
             da.Fill(dt);
             Assert.AreEqual(0, dt.Rows.Count);
         }
+
+        /// <summary>
+        /// Bug #45277	Calling User Defined Function using eSql causes NullReferenceException
+        /// </summary>
+        [Test]
+        public void UserDefinedFunction()
+        {
+            using (EntityConnection conn = new EntityConnection("name=testEntities"))
+            {
+                conn.Open();
+
+                string query = @"SELECT e.FirstName AS Name FROM testEntities.Employees AS e 
+                    WHERE testModel.Store.spFunc(e.Id, '') = 6";
+                using (EntityCommand cmd = new EntityCommand(query, conn))
+                {
+                    EntityDataReader reader = cmd.ExecuteReader();
+                    Assert.IsTrue(reader.Read());
+                    Assert.AreEqual(6, reader[0]);
+                }
+            }
+        }        
     }
 }

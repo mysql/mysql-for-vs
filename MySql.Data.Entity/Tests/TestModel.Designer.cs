@@ -15,7 +15,7 @@
 [assembly: global::System.Data.Objects.DataClasses.EdmRelationshipAttribute("testModel", "FK_Books_Publishers", "Publishers", global::System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(MySql.Data.Entity.Tests.Publisher), "Books", global::System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(MySql.Data.Entity.Tests.Book))]
 
 // Original file name:
-// Generation date: 11/3/2009 9:33:22 AM
+// Generation date: 1/5/2010 4:13:44 PM
 namespace MySql.Data.Entity.Tests
 {
     
