@@ -92,10 +92,10 @@ namespace MySql.Data.Types
 			if (nullVal)
 				return new MySqlUInt64(true);
 
-			if (length == -1)
-				return new MySqlUInt64(packet.ReadULong(8));
-			else
-				return new MySqlUInt64(UInt64.Parse(packet.ReadString(length)));
+            if (length == -1)
+                return new MySqlUInt64(packet.ReadULong(8));
+            else
+                return new MySqlUInt64(UInt64.Parse(packet.ReadString(length)));
 		}
 
 		void IMySqlValue.SkipValue(MySqlPacket packet)
