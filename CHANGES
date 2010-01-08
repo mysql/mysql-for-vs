@@ -1,5 +1,7 @@
 - fixed entity framework function processing so that it handles stored functions properly
   (bug #45277)
+- fixed a bug with prepared statements and unsigned bigint.  Patch also provided a nice speedup to reading
+  integer values from the wire (bug #49794)
 
 version 6.2.2
 - Fix race condition during TransactionScope rollback (bug#35330)
