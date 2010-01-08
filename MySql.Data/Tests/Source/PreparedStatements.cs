@@ -773,6 +773,31 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.AreEqual(0, ts.Seconds);
             }
         }
+
+        /// <summary>
+        /// Bug #49794	MySqlDataReader.GetUInt64 doesn't work for large BIGINT UNSIGNED
+        /// </summary>
+        [Test]
+        public void BigIntUnsigned()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL(@"CREATE TABLE test(id int(10) unsigned NOT NULL, testValue bigint(20) unsigned NOT NULL,
+                        PRIMARY KEY  USING BTREE (Id)) ENGINE=InnoDB DEFAULT CHARSET=latin1");
+            execSQL("INSERT INTO test(Id,TestValue) VALUES(1, 3000000000)");
+
+            MySqlCommand cmd = new MySqlCommand("SELECT testValue FROM test WHERE id=@Id", conn);
+            cmd.Parameters.Add("@id", MySqlDbType.UInt32);
+            cmd.Prepare();
+
+            cmd.Parameters["@id"].Value = 1;
+            using (MySqlDataReader rdr = cmd.ExecuteReader())
+            {
+                rdr.Read();
+                UInt64 v = rdr.GetUInt64(0);
+                Assert.AreEqual(3000000000, v);
+            }
+        }
+
     }
 
     #region Configs
