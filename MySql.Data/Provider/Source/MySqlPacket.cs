@@ -178,27 +178,49 @@ namespace MySql.Data.MySqlClient
             return value;
         }
 
+        public long ReadLong(int numbytes)
+        {
+            Debug.Assert((buffer.Position + numbytes) < buffer.Length);
+            byte[] bytes = buffer.GetBuffer();
+            int pos = (int)buffer.Position;
+            buffer.Position += numbytes;
+            switch (numbytes)
+            {
+                case 2: return BitConverter.ToInt16(bytes, pos);
+                case 4: return BitConverter.ToInt32(bytes, pos);
+                case 8: return BitConverter.ToInt64(bytes, pos);
+            }
+            throw new NotSupportedException("Only byte lengths of 2, 4, or 8 are supported");
+        }
+
         public ulong ReadULong(int numbytes)
         {
-            ulong value = 0;
+            return (ulong)ReadLong(numbytes);
+        }
+
+        public int Read3ByteInt()
+        {
+            int value = 0;
 
             int pos = (int)buffer.Position;
             byte[] bits = buffer.GetBuffer();
             int shift = 0;
 
-            for (int i = 0; i < numbytes; i++)
+            for (int i = 0; i < 3; i++)
             {
-                value |= (ulong)(bits[pos++] << shift);
+                value |= (int)(bits[pos++] << shift);
                 shift += 8;
             }
-            buffer.Position += numbytes;
+            buffer.Position += 3;
             return value;
         }
 
         public int ReadInteger(int numbytes)
         {
+            if (numbytes == 3)
+                return Read3ByteInt();
             Debug.Assert(numbytes <= 4);
-            return (int)ReadULong(numbytes);
+            return (int)ReadLong(numbytes);
         }
 
         /// <summary>
