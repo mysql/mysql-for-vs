@@ -362,19 +362,25 @@ namespace MySql.Data.MySqlClient
 
             if (curTrans != null)
             {
-                TransactionStatus status = TransactionStatus.InDoubt;
-                try
+                bool  inRollback = false;
+                if (driver.CurrentTransaction!= null)
+                    inRollback = driver.CurrentTransaction.InRollback;
+                if (!inRollback)
                 {
-                    // in some cases (during state transitions) this throws
-                    // an exception. Ignore exceptions, we're only interested 
-                    // whether transaction was aborted or not.
-                    status = curTrans.TransactionInformation.Status;
+                    TransactionStatus status = TransactionStatus.InDoubt;
+                    try
+                    {
+                        // in some cases (during state transitions) this throws
+                        // an exception. Ignore exceptions, we're only interested 
+                        // whether transaction was aborted or not.
+                        status = curTrans.TransactionInformation.Status;
+                    }
+                    catch (TransactionException)
+                    {
+                    }
+                    if (status == TransactionStatus.Aborted)
+                        throw new TransactionAbortedException();
                 }
-                catch(TransactionException)
-                {
-                }
-                if (status == TransactionStatus.Aborted)
-                    throw new TransactionAbortedException();
             }
 #endif
             commandTimer = new CommandTimer(connection, CommandTimeout);
