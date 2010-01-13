@@ -49,10 +49,7 @@ namespace MySql.Data.MySqlClient
             if (Parameters != null)
                 foreach (MySqlParameter p in Parameters)
                     if (p.Direction == ParameterDirection.ReturnValue)
-                    {
-                        string pName = p.ParameterName.Substring(1);
-                        return ParameterPrefix + pName;
-                    }
+                        return p.ParameterName.Substring(1);
             return null;
         }
 
@@ -155,9 +152,11 @@ namespace MySql.Data.MySqlClient
             string retParm = GetReturnParameter();
             foreach (DataRow param in parametersTable.Rows)
             {
-                if (param["ORDINAL_POSITION"].Equals(0)) continue;
                 string mode = (string) param["PARAMETER_MODE"];
                 string pName = (string) param["PARAMETER_NAME"];
+
+                if (param["ORDINAL_POSITION"].Equals(0))
+                    pName = retParm;
 
                 // make sure the parameters given to us have an appropriate
                 // type set if it's not already
@@ -169,6 +168,8 @@ namespace MySql.Data.MySqlClient
                     bool real_as_float = procTable.Rows[0]["SQL_MODE"].ToString().IndexOf("REAL_AS_FLOAT") != -1;
                     p.MySqlDbType = MetaData.NameToType(datatype, unsigned, real_as_float, Connection);
                 }
+
+                if (param["ORDINAL_POSITION"].Equals(0)) continue;
 
                 string basePName = pName;
                 if (pName.StartsWith("@") || pName.StartsWith("?"))
@@ -208,8 +209,8 @@ namespace MySql.Data.MySqlClient
                 if (retParm == null)
                     retParm = ParameterPrefix + "dummy";
                 else
-                    outSelect = String.Format("@{0}", retParm);
-                sqlCmd = String.Format("SET @{0}={1}({2})", retParm, spName, sqlCmd);
+                    outSelect = String.Format("@{0}{1}", ParameterPrefix, retParm);
+                sqlCmd = String.Format("SET @{0}{1}={2}({3})", ParameterPrefix, retParm, spName, sqlCmd);
             }
 
             if (setStr.Length > 0)
