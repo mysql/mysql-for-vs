@@ -309,5 +309,25 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(ParameterDirection.ReturnValue, cmd.Parameters[0].Direction);
             Assert.AreEqual(MySqlDbType.Int32, cmd.Parameters[0].MySqlDbType);
         }
+
+        /// <summary> 
+        /// Bug #49642	FormatException when returning empty string from a stored function 
+        /// </summary> 
+        [Test]
+        public void NotSpecifyingDataTypeOfReturnValue()
+        {
+            if (Version < new Version(5, 0)) return;
+
+            execSQL(@"CREATE FUNCTION `TestFunction`() 
+                RETURNS varchar(20) 
+                RETURN ''");
+            MySqlCommand cmd = new MySqlCommand("TestFunction", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            MySqlParameter returnParam = new MySqlParameter();
+            returnParam.ParameterName = "?RetVal_";
+            returnParam.Direction = ParameterDirection.ReturnValue;
+            cmd.Parameters.Add(returnParam);
+            cmd.ExecuteNonQuery();
+        } 
     }
 }
