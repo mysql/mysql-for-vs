@@ -49,10 +49,7 @@ namespace MySql.Data.MySqlClient
             if (Parameters != null)
                 foreach (MySqlParameter p in Parameters)
                     if (p.Direction == ParameterDirection.ReturnValue)
-                    {
-                        string pName = p.ParameterName.Substring(1);
-                        return ParameterPrefix + pName;
-                    }
+                        return p.ParameterName.Substring(1);
             return null;
         }
 
@@ -131,12 +128,13 @@ namespace MySql.Data.MySqlClient
             return String.Format("{0}.{1}", parts[0], parts[1]);
         }
 
-        private MySqlParameter GetAndFixParameter(DataRow param, bool realAsFloat)
+        private MySqlParameter GetAndFixParameter(DataRow param, bool realAsFloat, string returnParameter)
         {
-            if (param["ORDINAL_POSITION"].Equals(0)) return null;
-
             string mode = (string)param["PARAMETER_MODE"];
             string pName = (string)param["PARAMETER_NAME"];
+
+            if (param["ORDINAL_POSITION"].Equals(0))
+                pName = returnParameter;
 
             // make sure the parameters given to us have an appropriate
             // type set if it's not already
@@ -179,8 +177,11 @@ namespace MySql.Data.MySqlClient
             string retParm = GetReturnParameter();
             foreach (DataRow param in parametersTable.Rows)
             {
-                MySqlParameter p = GetAndFixParameter(param, realAsFloat);
+                MySqlParameter p = GetAndFixParameter(param, realAsFloat, retParm);
                 if (p == null) continue;
+
+                if (param["ORDINAL_POSITION"].Equals(0))
+                    continue;
 
                 string baseName = p.ParameterName;
                 string pName = baseName;
@@ -219,8 +220,8 @@ namespace MySql.Data.MySqlClient
                 if (retParm == null)
                     retParm = ParameterPrefix + "dummy";
                 else
-                    outSelect = String.Format("@{0}", retParm);
-                sqlCmd = String.Format("SET @{0}={1}({2})", retParm, spName, sqlCmd);
+                    outSelect = String.Format("@{0}{1}", ParameterPrefix, retParm);
+                sqlCmd = String.Format("SET @{0}{1}={2}({3})", ParameterPrefix, retParm, spName, sqlCmd);
             }
 
             resolvedCommandText = sqlCmd;
