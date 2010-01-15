@@ -71,5 +71,5 @@ using System.Security;
 //       documentation for more information on this.
 //
 [assembly: AssemblyDelaySign(false)]
-//[assembly: AssemblyKeyName("ConnectorNet")]
+[assembly: AssemblyKeyName("ConnectorNet")]
 
