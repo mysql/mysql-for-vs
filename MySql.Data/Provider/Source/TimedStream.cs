@@ -57,7 +57,11 @@ namespace MySql.Data.MySqlClient
         public TimedStream(Stream baseStream)
         {
             this.baseStream = baseStream;
+#if !CF
             timeout = baseStream.ReadTimeout;
+#else
+            timeout = System.Threading.Timeout.Infinite;
+#endif
             isClosed = false;
             stopwatch = new LowResolutionStopwatch();
         }
@@ -100,14 +104,20 @@ namespace MySql.Data.MySqlClient
             {
                 if (ShouldResetStreamTimeout(lastReadTimeout, streamTimeout))
                 {
-                    baseStream.ReadTimeout = lastReadTimeout = streamTimeout;
+#if !CF
+                    baseStream.ReadTimeout = streamTimeout;
+#endif
+                    lastReadTimeout = streamTimeout;
                 }
             }
             else
             {
                 if (ShouldResetStreamTimeout(lastWriteTimeout, streamTimeout))
                 {
-                    baseStream.WriteTimeout = lastWriteTimeout = streamTimeout;
+#if !CF
+                    baseStream.WriteTimeout = streamTimeout;
+#endif
+                    lastWriteTimeout = streamTimeout;
                 }
             }
 
