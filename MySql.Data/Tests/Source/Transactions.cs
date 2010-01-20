@@ -359,6 +359,141 @@ namespace MySql.Data.MySqlClient.Tests
             }
         }
 
+
+        private void NestedScopeInternalTest(
+            TransactionScopeOption nestedOption,
+            bool innerComplete,
+            bool outerComplete,
+            bool expectInnerChangesVisible,
+            bool expectOuterChangesVisible)
+        {
+            createTable("CREATE TABLE T(str varchar(10))", "INNODB");
+            try
+            {
+                using (TransactionScope outer = new TransactionScope())
+                {
+                    string connStr = GetConnectionString(true);
+                    using (MySqlConnection c1 = new MySqlConnection(connStr))
+                    {
+                        c1.Open();
+                        MySqlCommand cmd1 = new MySqlCommand("INSERT INTO T VALUES ('outer')", c1);
+                        cmd1.ExecuteNonQuery();
+                        using (TransactionScope inner = new TransactionScope(nestedOption))
+                        {
+                          
+                            MySqlConnection c2;
+                            if (nestedOption == TransactionScopeOption.Required)
+                            {
+                                // inner scope joins already running ambient
+                                // transaction, we cannot use new connection here
+                                c2 = c1;
+                            }
+                            else
+                            {
+                                // when TransactionScopeOption.RequiresNew or 
+                                // new TransactionScopeOption.Suppress is used,
+                                // we have to use a new transaction. We create a
+                                // new connection for it.
+                                c2 = new MySqlConnection(connStr);
+                                c2.Open();
+                            }
+
+                            MySqlCommand cmd2 =
+                                    new MySqlCommand("INSERT INTO T VALUES ('inner')", c2);
+                            cmd2.ExecuteNonQuery();
+
+                            if (innerComplete)
+                                inner.Complete();
+
+                            // Dispose connection if it was created.
+                            if (c2 != c1)
+                                c2.Dispose();
+                        }
+                    }
+                    if (outerComplete)
+                        outer.Complete();
+
+                }
+                bool innerChangesVisible =
+                   ((long)MySqlHelper.ExecuteScalar(conn, "select count(*) from T where str = 'inner'") == 1);
+                bool outerChangesVisible =
+                    ((long)MySqlHelper.ExecuteScalar(conn, "select count(*) from T where str = 'outer'") == 1);
+                Assert.AreEqual(innerChangesVisible, expectInnerChangesVisible);
+                Assert.AreEqual(outerChangesVisible, expectOuterChangesVisible);
+            }
+            finally
+            {
+                MySqlHelper.ExecuteNonQuery(conn, "DROP TABLE T");
+            }
+        }
+
+        /// <summary>
+        /// Test inner/outer scope behavior, with different scope options, 
+        /// completing either inner or outer scope, or both.
+        /// </summary>
+        [Test]
+        public void NestedScope()
+        {
+
+            // inner scope joins the ambient scope, neither inner not outer  scope completes
+            // Expect empty table.
+            NestedScopeInternalTest(TransactionScopeOption.Required, false, false, false, false);
+
+            // inner scope joins the ambient scope, inner does not complete, outer completes
+            // Expect exception while disposing outer transaction
+            try
+            {
+                NestedScopeInternalTest(TransactionScopeOption.Required, false, true, false, false);
+                Assert.Fail("expected TransactionAborted exception");
+            }
+            catch (TransactionAbortedException)
+            {
+            }
+
+            // inner scope joins the ambient scope, inner completes, outer does not
+            // Expect empty table.
+            NestedScopeInternalTest(TransactionScopeOption.Required, true, false, false, false);
+
+            // inner scope joins the ambient scope, both complete.
+            // Expect table with entries for inner and outer scope
+            NestedScopeInternalTest(TransactionScopeOption.Required, true, true, true, true);
+
+
+
+            // inner scope creates new transaction, neither inner not outer  scope completes
+            // Expect empty table.
+            NestedScopeInternalTest(TransactionScopeOption.RequiresNew, false, false, false, false);
+
+            // inner scope creates new transaction, inner does not complete, outer completes
+            // Expect changes by outer transaction visible ??
+            NestedScopeInternalTest(TransactionScopeOption.RequiresNew, false, true, false, true);
+
+            // inner scope creates new transactiion, inner completes, outer does not
+            // Expect changes by inner transaction visible
+            NestedScopeInternalTest(TransactionScopeOption.RequiresNew, true, false, true, false);
+
+            // inner scope creates new transaction, both complete
+            NestedScopeInternalTest(TransactionScopeOption.RequiresNew, true, true, true, true);
+
+
+            // inner scope suppresses transaction, neither inner not outer  scope completes
+            // Expect changes made by inner scope to be visible
+            NestedScopeInternalTest(TransactionScopeOption.Suppress, false, false, true, false);
+
+            // inner scope supresses transaction, inner does not complete, outer completes
+            // Expect changes by inner scope to be visible ??
+            NestedScopeInternalTest(TransactionScopeOption.Suppress,  true, false, true, false);
+
+            // inner scope supresses transaction, inner completes, outer does not
+            // Expect changes by inner transaction visible
+            NestedScopeInternalTest(TransactionScopeOption.Suppress, true, false, true, false);
+
+            // inner scope supresses transaction, both complete
+            NestedScopeInternalTest(TransactionScopeOption.Suppress, true, true, true, true);
+        }
+
+
+
         private void ReusingSameConnection(bool pooling, bool complete)
         {
             int c1Thread;
