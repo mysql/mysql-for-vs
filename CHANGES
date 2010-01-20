@@ -1,5 +1,6 @@
 - fixed InvalidOperationException when accessing Stream.ReadTimeout or Stream.WriteTimeout on CF
   (bug #50321)
+- implemented nested transaction scopes (bug #45098)
 - fixed entity framework function processing so that it handles stored functions properly
   (bug #45277)
 - fixed a bug with prepared statements and unsigned bigint.  Patch also provided a nice speedup to reading
