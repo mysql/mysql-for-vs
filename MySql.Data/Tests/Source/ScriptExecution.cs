@@ -191,5 +191,19 @@ namespace MySql.Data.MySqlClient.Tests
             s.Connection = conn;
             int count = s.Execute();
         }
+
+        /// <summary>
+        /// Bug #50344	MySqlScript.Execute() throws InvalidOperationException
+        /// </summary>
+        [Test]
+        public void EmptyLastLineWithScriptExecute()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("DROP FUNCTION IF EXISTS `BlaBla`;");
+            sb.AppendLine("DELIMITER ;;");
+            MySqlScript script = new MySqlScript(conn, sb.ToString());
+            // InvalidOperationException : The CommandText property has not been properly initialized.
+            script.Execute(); 
+        }
     }
 }
