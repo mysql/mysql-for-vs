@@ -166,6 +166,7 @@ namespace MySql.Data.MySqlClient
                 MySqlCommand cmd = new MySqlCommand(null, connection);
                 foreach (ScriptStatement statement in statements)
                 {
+                    if (String.IsNullOrEmpty(statement.text)) continue;
                     cmd.CommandText = statement.text;
                     try
                     {
