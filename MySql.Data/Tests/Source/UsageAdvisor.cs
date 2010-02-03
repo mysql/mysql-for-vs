@@ -140,5 +140,60 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.IsTrue(listener.Strings[4].Contains("Query Closed"));
         }
 
+        [Test]
+        public void NoIndexUsed()
+        {
+            execSQL("INSERT INTO Test VALUES (1, 'Test1')");
+            execSQL("INSERT INTO Test VALUES (2, 'Test1')");
+            execSQL("INSERT INTO Test VALUES (3, 'Test1')");
+            execSQL("INSERT INTO Test VALUES (4, 'Test1')");
+
+            MySqlTrace.Listeners.Clear();
+            MySqlTrace.Switch.Level = SourceLevels.All;
+            GenericListener listener = new GenericListener();
+            MySqlTrace.Listeners.Add(listener);
+
+            MySqlCommand cmd = new MySqlCommand("SELECT name FROM Test WHERE id=3", conn);
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                reader.Read();
+            }
+            Assert.AreEqual(6, listener.Strings.Count);
+            Assert.IsTrue(listener.Strings[0].Contains("Query Opened: SELECT name FROM Test WHERE id=3"));
+            Assert.IsTrue(listener.Strings[1].Contains("Resultset Opened: field(s) = 1, affected rows = -1, inserted id = -1"));
+            Assert.IsTrue(listener.Strings[2].Contains("Usage Advisor Warning: Query does not use an index"));
+            Assert.IsTrue(listener.Strings[3].Contains("Usage Advisor Warning: The following columns were not accessed: name"));
+            Assert.IsTrue(listener.Strings[4].Contains("Resultset Closed. Total rows=1, skipped rows=0, size (bytes)=6"));
+            Assert.IsTrue(listener.Strings[5].Contains("Query Closed"));
+        }
+
+        [Test]
+        public void BadIndexUsed()
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test(id INT, name VARCHAR(20) PRIMARY KEY)");
+            execSQL("INSERT INTO Test VALUES (1, 'Test1')");
+            execSQL("INSERT INTO Test VALUES (2, 'Test2')");
+            execSQL("INSERT INTO Test VALUES (3, 'Test3')");
+            execSQL("INSERT INTO Test VALUES (4, 'Test4')");
+
+            MySqlTrace.Listeners.Clear();
+            MySqlTrace.Switch.Level = SourceLevels.All;
+            GenericListener listener = new GenericListener();
+            MySqlTrace.Listeners.Add(listener);
+
+            MySqlCommand cmd = new MySqlCommand("SELECT name FROM Test WHERE id=3", conn);
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                reader.Read();
+            }
+            Assert.AreEqual(6, listener.Strings.Count);
+            Assert.IsTrue(listener.Strings[0].Contains("Query Opened: SELECT name FROM Test WHERE id=3"));
+            Assert.IsTrue(listener.Strings[1].Contains("Resultset Opened: field(s) = 1, affected rows = -1, inserted id = -1"));
+            Assert.IsTrue(listener.Strings[2].Contains("Usage Advisor Warning: Query does not use an index"));
+            Assert.IsTrue(listener.Strings[3].Contains("Usage Advisor Warning: The following columns were not accessed: name"));
+            Assert.IsTrue(listener.Strings[4].Contains("Resultset Closed. Total rows=1, skipped rows=0, size (bytes)=6"));
+            Assert.IsTrue(listener.Strings[5].Contains("Query Closed"));
+        }
     }
 }
