@@ -75,7 +75,6 @@ namespace MySql.Data.MySqlClient
                 int fieldCount = base.GetResult(statementId, ref affectedRows, ref insertedId);
                 MySqlTrace.TraceEvent(TraceEventType.Information, MySqlTraceEventType.ResultOpened, 
                     Resources.TraceResult, driverId, fieldCount, affectedRows, insertedId);
-                ReportUsageAdvisorWarnings(statementId, null);
 
                 return fieldCount;
             }
@@ -187,55 +186,51 @@ namespace MySql.Data.MySqlClient
         private void ReportUsageAdvisorWarnings(int statementId, ResultSet rs)
         {
             if (!Settings.UseUsageAdvisor) return;
-            if (rs == null)
-            {
-                if (HasStatus(ServerStatusFlags.NoIndex))
-                    MySqlTrace.TraceEvent(TraceEventType.Warning, MySqlTraceEventType.UsageAdvisorWarning, 
-                        Resources.TraceUAWarningNoIndex, driverId, UsageAdvisorWarningFlags.NoIndex);
-                else if (HasStatus(ServerStatusFlags.BadIndex))
-                    MySqlTrace.TraceEvent(TraceEventType.Warning, MySqlTraceEventType.UsageAdvisorWarning, 
-                        Resources.TraceUAWarningBadIndex, driverId, UsageAdvisorWarningFlags.BadIndex);
-            }
-            else
-            {
-                // report abandoned rows
-                if (rs.SkippedRows > 0)
-                    MySqlTrace.TraceEvent(TraceEventType.Warning, MySqlTraceEventType.UsageAdvisorWarning, 
-                        Resources.TraceUAWarningSkippedRows, driverId, UsageAdvisorWarningFlags.SkippedRows, rs.SkippedRows);
 
-                // report not all fields accessed
-                if (!AllFieldsAccessed(rs))
-                {
-                    StringBuilder notAccessed = new StringBuilder("");
-                    string delimiter = "";
-                    for (int i = 0; i < rs.Size; i++)
-                        if (!rs.FieldRead(i))
-                        {
-                            notAccessed.AppendFormat("{0}{1}", delimiter, rs.Fields[i].ColumnName);
-                            delimiter = ",";
-                        }
-                    MySqlTrace.TraceEvent(TraceEventType.Warning, MySqlTraceEventType.UsageAdvisorWarning, 
-                        Resources.TraceUAWarningSkippedColumns, driverId, UsageAdvisorWarningFlags.SkippedColumns, 
-                            notAccessed.ToString());
-                }
+            if (HasStatus(ServerStatusFlags.NoIndex))
+                MySqlTrace.TraceEvent(TraceEventType.Warning, MySqlTraceEventType.UsageAdvisorWarning, 
+                    Resources.TraceUAWarningNoIndex, driverId, UsageAdvisorWarningFlags.NoIndex);
+            else if (HasStatus(ServerStatusFlags.BadIndex))
+                MySqlTrace.TraceEvent(TraceEventType.Warning, MySqlTraceEventType.UsageAdvisorWarning, 
+                    Resources.TraceUAWarningBadIndex, driverId, UsageAdvisorWarningFlags.BadIndex);
 
-                // report type conversions if any
-                if (rs.Fields != null)
-                {
-                    foreach (MySqlField f in rs.Fields)
+            // report abandoned rows
+            if (rs.SkippedRows > 0)
+                MySqlTrace.TraceEvent(TraceEventType.Warning, MySqlTraceEventType.UsageAdvisorWarning, 
+                    Resources.TraceUAWarningSkippedRows, driverId, UsageAdvisorWarningFlags.SkippedRows, rs.SkippedRows);
+
+            // report not all fields accessed
+            if (!AllFieldsAccessed(rs))
+            {
+                StringBuilder notAccessed = new StringBuilder("");
+                string delimiter = "";
+                for (int i = 0; i < rs.Size; i++)
+                    if (!rs.FieldRead(i))
                     {
-                        StringBuilder s = new StringBuilder();
-                        string delimiter = "";
-                        foreach (Type t in f.TypeConversions)
-                        {
-                            s.AppendFormat("{0}{1}", delimiter, t.Name);
-                            delimiter = ",";
-                        }
-                        if (s.Length > 0)
-                            MySqlTrace.TraceEvent(TraceEventType.Warning, MySqlTraceEventType.UsageAdvisorWarning, 
-                                Resources.TraceUAWarningFieldConversion, driverId, UsageAdvisorWarningFlags.FieldConversion,
-                                f.ColumnName, s.ToString());
+                        notAccessed.AppendFormat("{0}{1}", delimiter, rs.Fields[i].ColumnName);
+                        delimiter = ",";
                     }
+                MySqlTrace.TraceEvent(TraceEventType.Warning, MySqlTraceEventType.UsageAdvisorWarning, 
+                    Resources.TraceUAWarningSkippedColumns, driverId, UsageAdvisorWarningFlags.SkippedColumns, 
+                        notAccessed.ToString());
+            }
+
+            // report type conversions if any
+            if (rs.Fields != null)
+            {
+                foreach (MySqlField f in rs.Fields)
+                {
+                    StringBuilder s = new StringBuilder();
+                    string delimiter = "";
+                    foreach (Type t in f.TypeConversions)
+                    {
+                        s.AppendFormat("{0}{1}", delimiter, t.Name);
+                        delimiter = ",";
+                    }
+                    if (s.Length > 0)
+                        MySqlTrace.TraceEvent(TraceEventType.Warning, MySqlTraceEventType.UsageAdvisorWarning, 
+                            Resources.TraceUAWarningFieldConversion, driverId, UsageAdvisorWarningFlags.FieldConversion,
+                            f.ColumnName, s.ToString());
                 }
             }
         }
