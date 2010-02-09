@@ -46,7 +46,7 @@ namespace MySql.Data.VisualStudio
             NodeId = isFunc ? "StoredFunction" : "StoredProcedure";
             isFunction = isFunc;
             NameIndex = 3;
-            editor = new TextBufferEditor();
+            editor = new TextBufferEditor(hierarchyAccessor.ServiceProvider);
         }
 
         #region Properties

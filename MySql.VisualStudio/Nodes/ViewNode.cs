@@ -35,7 +35,7 @@ namespace MySql.Data.VisualStudio
 			base(hierarchyAccessor, id)
 		{
             NodeId = "View";
-            editor = new TextBufferEditor();
+            editor = new TextBufferEditor(hierarchyAccessor.ServiceProvider);
         }
 
         public static void CreateNew(DataViewHierarchyAccessor HierarchyAccessor)

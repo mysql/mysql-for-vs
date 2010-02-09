@@ -50,7 +50,8 @@ namespace MySql.Data.VisualStudio
         {
             get
             {
-                Debug.Assert(table != null);
+                if (table == null)
+                    return false;
 
                 return table.HasChanges();
             }

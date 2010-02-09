@@ -45,7 +45,7 @@ namespace MySql.Data.VisualStudio
 		{
             NodeId = "Trigger";
             NameIndex = 2;
-            editor = new TextBufferEditor();
+            editor = new TextBufferEditor(hierarchyAccessor.ServiceProvider);
         }
 
         #region Properties
