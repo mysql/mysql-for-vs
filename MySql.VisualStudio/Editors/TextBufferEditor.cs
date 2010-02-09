@@ -26,9 +26,11 @@ namespace MySql.Data.VisualStudio.Editors
     internal class TextBufferEditor 
     {
         private bool noContent;
+        private Microsoft.VisualStudio.OLE.Interop.IServiceProvider psp;
 
-        public TextBufferEditor()
+        public TextBufferEditor(System.IServiceProvider sp)
         {
+            psp = sp as Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
             noContent = true;
             CreateCodeEditor();
         }
@@ -55,10 +57,15 @@ namespace MySql.Data.VisualStudio.Editors
                                  ref clsidTextBuffer,
                                  ref iidTextBuffer,
                                  typeof(object));
+            if (TextBuffer == null)
+                throw new Exception("Failed to create core editor");
 
             // first we need to site our buffer
-            IObjectWithSite ows = (IObjectWithSite)TextBuffer;
-            ows.SetSite(MySqlDataProviderPackage.Instance);
+            IObjectWithSite textBufferSite = TextBuffer as IObjectWithSite;
+            if (textBufferSite != null)
+            {
+                textBufferSite.SetSite(psp);
+            }
 
             // then we need to tell our buffer not to attempt to autodetect the
             // language settings
