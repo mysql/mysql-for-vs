@@ -70,7 +70,7 @@
     <Compile Include="TestModel.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>TestModel.csdl</DependentUpon>
+      <DependentUpon>TestModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="Wizard.cs" />
     <Compile Include="RelationalOperators.cs" />
@@ -99,20 +99,20 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config" />
-    <None Include="Properties\procs.sql" />
-    <None Include="Properties\schema.sql" />
-    <EmbeddedResource Include="TestModel.csdl">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>TestModel.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TestModel.msl" />
-    <EmbeddedResource Include="TestModel.ssdl" />
+    <EmbeddedResource Include="Properties\procs.sql" />
+    <EmbeddedResource Include="Properties\schema.sql" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References" />
+  </ItemGroup>
+  <ItemGroup>
+    <EntityDeploy Include="TestModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>TestModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
