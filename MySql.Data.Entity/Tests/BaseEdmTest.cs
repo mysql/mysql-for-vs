@@ -92,40 +92,6 @@ namespace MySql.Data.Entity.Tests
             script.Delimiter = "$$";
             script.Query = schema;
             script.Execute();
-
-            // if we have not already done so, we need to save out our
-            // schema files and update the storage file to reflect the database
-            SaveSchemaFiles();
-        }
-
-        void SaveSchemaFiles()
-        {
-            if (schemaDone) return;
-
-            SaveSchemaFile("TestModel.csdl");
-            SaveSchemaFile("TestModel.msl");
-            SaveSchemaFile("TestModel.ssdl");
-
-            schemaDone = true;
-        }
-
-        void SaveSchemaFile(string file)
-        {
-            Assembly executingAssembly = Assembly.GetExecutingAssembly();
-            Stream stream = executingAssembly.GetManifestResourceStream(
-                "MySql.Data.Entity.Tests." + file);
-
-            string path = Path.GetDirectoryName(executingAssembly.Location);
-
-            StreamReader sr = new StreamReader(stream);
-            string xml = sr.ReadToEnd();
-            sr.Close();
-
-            xml = xml.Replace("!dbname", database0);
-            StreamWriter sw = new StreamWriter(path + Path.DirectorySeparatorChar + file);
-            sw.Write(xml);
-            sw.Flush();
-            sw.Close();
         }
     }
 }
