@@ -35,8 +35,6 @@ namespace MySql.Data.VisualStudio
 {
 	abstract class DocumentNode : BaseNode, IVsPersistDocData
 	{
-        protected IEditor editor;
-
         public DocumentNode(DataViewHierarchyAccessor hierarchyAccessor, int id) :
             base(hierarchyAccessor, id)
         {

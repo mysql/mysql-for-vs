@@ -30,8 +30,8 @@ namespace MySql.Data.VisualStudio
         private bool _lineComment;
         private bool _quoted;
 
-        public bool AnsiQuotes;
-        public bool BackslashEscapes;
+        public bool AnsiQuotes = false;
+        public bool BackslashEscapes = true;
         public bool ReturnComments;
         public bool BlockComment;
 
@@ -68,7 +68,6 @@ namespace MySql.Data.VisualStudio
         }
 
         #endregion
-
 
         public string NextToken()
         {
