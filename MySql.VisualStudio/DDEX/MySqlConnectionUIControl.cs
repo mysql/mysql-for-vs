@@ -173,7 +173,7 @@ namespace MySql.Data.VisualStudio
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 MessageBox.Show(Resources.UnableToRetrieveDatabaseList);
             }
@@ -222,7 +222,7 @@ namespace MySql.Data.VisualStudio
                 }
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 MessageBox.Show(String.Format(Resources.ErrorAttemptingToCreateDB, dbList.Text));
                 return false;
