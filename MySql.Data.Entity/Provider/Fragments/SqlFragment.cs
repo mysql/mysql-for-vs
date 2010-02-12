@@ -299,7 +299,7 @@ namespace MySql.Data.Entity
 
     internal class UnionFragment : InputFragment
     {
-        public bool Distinct;
+        public bool Distinct = false;
 
         public override void WriteInnerSql(StringBuilder sql)
         {
