@@ -921,7 +921,7 @@ namespace MySql.Data.MySqlClient.Tests
                     decimal d = dec.Value;
                     Assert.Fail("this should have failed");
                 }
-                catch (Exception ex) 
+                catch (Exception) 
                 {
                 }
             }
