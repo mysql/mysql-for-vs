@@ -28,13 +28,13 @@ using System.IO;
 using Microsoft.Win32;
 using System.Xml;
 using System.Reflection;
+using System.Security.Permissions;
 
 namespace MySql.Web.Security
 {
-    /// <summary>
-    /// 
-    /// </summary>
     [RunInstaller(true)]
+    [PermissionSetAttribute(SecurityAction.InheritanceDemand, Name = "FullTrust")]
+    [PermissionSetAttribute(SecurityAction.LinkDemand, Name = "FullTrust")]
     public class CustomInstaller : Installer
     {
         /// <summary>
@@ -52,7 +52,6 @@ namespace MySql.Web.Security
         public override void Install(IDictionary stateSaver)
         {
             base.Install(stateSaver);
-
             AddProviderToMachineConfig();
         }
 
@@ -69,7 +68,6 @@ namespace MySql.Web.Security
         public override void Uninstall(IDictionary savedState)
         {
             base.Uninstall(savedState);
-
             RemoveProviderFromMachineConfig();
         }
 
@@ -93,8 +91,8 @@ namespace MySql.Web.Security
 
         private void AddProviderToMachineConfigInDir(string path)
         {
-            string configPath = String.Format(@"{0}v2.0.50727\CONFIG\machine.config",
-                path);
+            string configPath = String.Format(@"{0}{1}\CONFIG\machine.config",
+                path, Assembly.GetExecutingAssembly().ImageRuntimeVersion);
 
             // now read the config file into memory
             StreamReader sr = new StreamReader(configPath);
@@ -155,7 +153,8 @@ namespace MySql.Web.Security
 
             // add the type attribute by reflecting on the executing assembly
             Assembly a = Assembly.GetExecutingAssembly();
-            string type = String.Format("MySql.Web.Security.MySQLMembershipProvider, {0}", a.FullName);
+            string type = String.Format("MySql.Web.Security.MySQLMembershipProvider, {0}",
+                a.FullName.Replace("Installers", "Web"));
             newNode.SetAttribute("type", type);
 
             newNode.SetAttribute("connectionStringName", "LocalMySqlServer");
@@ -197,7 +196,8 @@ namespace MySql.Web.Security
 
             // add the type attribute by reflecting on the executing assembly
             Assembly a = Assembly.GetExecutingAssembly();
-            string type = String.Format("MySql.Web.Security.MySQLRoleProvider, {0}", a.FullName);
+            string type = String.Format("MySql.Web.Security.MySQLRoleProvider, {0}",
+                a.FullName.Replace("Installers", "Web"));
             newNode.SetAttribute("type", type);
 
             newNode.SetAttribute("connectionStringName", "LocalMySqlServer");
@@ -229,7 +229,8 @@ namespace MySql.Web.Security
 
             // add the type attribute by reflecting on the executing assembly
             Assembly a = Assembly.GetExecutingAssembly();
-            string type = String.Format("MySql.Web.Profile.MySQLProfileProvider, {0}", a.FullName);
+            string type = String.Format("MySql.Web.Profile.MySQLProfileProvider, {0}",
+                a.FullName.Replace("Installers", "Web"));
             newNode.SetAttribute("type", type);
 
             newNode.SetAttribute("connectionStringName", "LocalMySqlServer");
@@ -271,8 +272,8 @@ namespace MySql.Web.Security
 
         private void RemoveProviderFromMachineConfigInDir(string path)
         {
-            string configPath = String.Format(@"{0}v2.0.50727\CONFIG\machine.config",
-                path);
+            string configPath = String.Format(@"{0}{1}\CONFIG\machine.config",
+                path, Assembly.GetExecutingAssembly().ImageRuntimeVersion);
 
             // now read the config file into memory
             StreamReader sr = new StreamReader(configPath);

@@ -35,6 +35,7 @@ using System.Security;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: AllowPartiallyTrustedCallers()]
+[assembly: SecurityRules(SecurityRuleSet.Level1)]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
