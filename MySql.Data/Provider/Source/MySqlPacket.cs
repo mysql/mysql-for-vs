@@ -342,7 +342,7 @@ namespace MySql.Data.MySqlClient
             int end = (int)buffer.Position;
 
             while (end < (int)buffer.Length &&
-                bits[end] != 0 && bits[end] != -1)
+                bits[end] != 0 && (int)bits[end] != -1)
                 end++;
 
             string s = encoding.GetString(bits, 

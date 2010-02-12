@@ -35,7 +35,7 @@ namespace MySql.Data.VisualStudio
 {
     public class MySqlConnectionSupport : AdoDotNetConnectionSupport
     {
-        private MySqlDataSourceInformation sourceInformation;
+        private MySqlDataSourceInformation sourceInformation = null;
 
         public MySqlConnectionSupport()
             : base(MySqlConnectionProperties.InvariantName) 
