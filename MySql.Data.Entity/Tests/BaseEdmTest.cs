@@ -39,8 +39,6 @@ namespace MySql.Data.Entity.Tests
 {
     public class BaseEdmTest : BaseTest
     {
-        private static bool schemaDone;
-
 		protected override void LoadStaticConfiguration()
 		{
 			base.LoadStaticConfiguration();

@@ -262,25 +262,6 @@ namespace MySql.Data.VisualStudio
 
         #region Private Methods
 
-        private bool DocumentExists(string name)
-        {
-            IVsHierarchy hier;
-            IVsPersistDocData docData;
-            uint itemId = 0;
-            uint cookie;
-
-//            VsShellUtilities.GetRDTDocumentInfo(site, Moniker, out hier, out itemId, out docData, out cookie);
-            return itemId > 0;
-        }
-
-        private void SetOrChangeDocumentName(string name)
-        {
-            if (DocumentExists(name))
-            {
-  //              VsShellUtilities.RenameDocument(site, "a", "b");
-            }
-        }
-
 		private void OpenEditor()
 		{
 			IVsUIShellOpenDocument shell =
