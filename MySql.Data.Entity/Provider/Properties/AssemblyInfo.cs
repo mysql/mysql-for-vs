@@ -30,7 +30,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("MySQL")]
 [assembly: AssemblyProduct("MySql.Data.Entity")]
-[assembly: AssemblyCopyright("Copyright © Sun Microsystems 2008-2009")]
+[assembly: AssemblyCopyright("Copyright © Sun Microsystems 2008-2009, 2010 Oracle")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

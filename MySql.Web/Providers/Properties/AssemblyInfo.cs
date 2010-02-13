@@ -31,7 +31,7 @@ using System.Security;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("MySQL AB")]
 [assembly: AssemblyProduct("MySql.Web")]
-[assembly: AssemblyCopyright("Copyright 2004-2007, MySQL AB")]
+[assembly: AssemblyCopyright("Copyright 2004-2007, MySQL AB, 2008-2009 Sun Microsystems, Inc., 2010 Oracle, Inc.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: AllowPartiallyTrustedCallers()]
