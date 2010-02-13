@@ -31,9 +31,9 @@ using System.Security;
 //
 [assembly: AssemblyDescription("ADO.Net driver for MySQL")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("MySQL AB")]
+[assembly: AssemblyCompany("Oracle")]
 [assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("Copyright 2004-2007, MySQL AB")]
+[assembly: AssemblyCopyright("Copyright 2004-2007, MySQL AB, 2008-2009 Sun Microsystems, Inc., 2010 Oracle, Inc.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]

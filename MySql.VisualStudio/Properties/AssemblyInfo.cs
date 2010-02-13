@@ -26,7 +26,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("MySQL AB")]
 [assembly: AssemblyProduct("MySQL Tools for Visual Studio")]
-[assembly: AssemblyCopyright("Copyright © MySQL AB 2007-2008")]
+[assembly: AssemblyCopyright("Copyright © MySQL AB 2007, 2008-2009 Sun Microsystems, 2010 Oracle")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
