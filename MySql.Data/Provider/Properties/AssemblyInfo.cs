@@ -44,7 +44,6 @@ using System.Security;
 #else
 [assembly: AssemblyTitle("MySql.Data.CF.dll")]
 #endif
-[assembly: SecurityRules(SecurityRuleSet.Level1)]
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 

@@ -78,6 +78,7 @@
              Title='Visual Studio Integration' Description='DDEX and Server Explorer Integration'>
       <FeatureRef Id='VS2005Int'/>
       <FeatureRef Id='VS2008Int'/>
+      <FeatureRef Id='VS2010Int'/>
     </Feature>
     <FeatureRef Id="Samples"/>
 

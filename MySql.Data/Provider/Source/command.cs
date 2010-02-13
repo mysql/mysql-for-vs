@@ -436,7 +436,7 @@ namespace MySql.Data.MySqlClient
                 {
                     ResetSqlSelectLimit();
                 }
-                catch (Exception ex2)
+                catch (Exception)
                 {
                     // Reset SqlLimit did not work, connection is hosed.
                     Connection.Abort();

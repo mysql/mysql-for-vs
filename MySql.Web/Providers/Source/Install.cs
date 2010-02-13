@@ -78,24 +78,38 @@ namespace MySql.Web.Security
                 "InstallRoot", null);
             if (installRoot == null)
                 throw new Exception("Unable to retrieve install root for .NET framework");
-
-            AddProviderToMachineConfigInDir(installRoot.ToString());
+            UpdateMachineConfigs(installRoot.ToString(), true);
 
             string installRoot64 = installRoot.ToString();
             installRoot64 = installRoot64.Substring(0, installRoot64.Length - 1);
             installRoot64 = string.Format("{0}64{1}", installRoot64,
                 Path.DirectorySeparatorChar);
             if (Directory.Exists(installRoot64))
-                AddProviderToMachineConfigInDir(installRoot64);
+                UpdateMachineConfigs(installRoot64, true);
+        }
+
+        private void UpdateMachineConfigs(string rootPath, bool add)
+        {
+            string[] dirs = Directory.GetDirectories(rootPath);
+            foreach (string frameworkDir in dirs)
+            {
+                string configPath = String.Format(@"{0}\CONFIG", frameworkDir);
+                if (Directory.Exists(configPath))
+                {
+                    if (add)
+                        AddProviderToMachineConfigInDir(configPath);
+                    else
+                        RemoveProviderFromMachineConfigInDir(configPath);
+                }
+            }
         }
 
         private void AddProviderToMachineConfigInDir(string path)
         {
-            string configPath = String.Format(@"{0}{1}\CONFIG\machine.config",
-                path, Assembly.GetExecutingAssembly().ImageRuntimeVersion);
+            string configFile = String.Format(@"{0}\machine.config", path);
 
             // now read the config file into memory
-            StreamReader sr = new StreamReader(configPath);
+            StreamReader sr = new StreamReader(configFile);
             string configXML = sr.ReadToEnd();
             sr.Close();
 
@@ -109,7 +123,7 @@ namespace MySql.Web.Security
             AddProfileProvider(doc);
 
             // Save the document to a file and auto-indent the output.
-            XmlTextWriter writer = new XmlTextWriter(configPath, null);
+            XmlTextWriter writer = new XmlTextWriter(configFile, null);
             writer.Formatting = Formatting.Indented;
             doc.Save(writer);
             writer.Flush();
@@ -259,24 +273,22 @@ namespace MySql.Web.Security
                 "InstallRoot", null);
             if (installRoot == null)
                 throw new Exception("Unable to retrieve install root for .NET framework");
+            UpdateMachineConfigs(installRoot.ToString(), false);
 
             string installRoot64 = installRoot.ToString();
             installRoot64 = installRoot64.Substring(0, installRoot64.Length - 1);
             installRoot64 = string.Format("{0}64{1}", installRoot64,
                 Path.DirectorySeparatorChar);
             if (Directory.Exists(installRoot64))
-                RemoveProviderFromMachineConfigInDir(installRoot64);
-
-            RemoveProviderFromMachineConfigInDir(installRoot.ToString());
+                UpdateMachineConfigs(installRoot64, false);
         }
 
         private void RemoveProviderFromMachineConfigInDir(string path)
         {
-            string configPath = String.Format(@"{0}{1}\CONFIG\machine.config",
-                path, Assembly.GetExecutingAssembly().ImageRuntimeVersion);
+            string configFile = String.Format(@"{0}\machine.config", path);
 
             // now read the config file into memory
-            StreamReader sr = new StreamReader(configPath);
+            StreamReader sr = new StreamReader(configFile);
             string configXML = sr.ReadToEnd();
             sr.Close();
 
@@ -290,7 +302,7 @@ namespace MySql.Web.Security
             RemoveProfileProvider(doc);
 
             // Save the document to a file and auto-indent the output.
-            XmlTextWriter writer = new XmlTextWriter(configPath, null);
+            XmlTextWriter writer = new XmlTextWriter(configFile, null);
             writer.Formatting = Formatting.Indented;
             doc.Save(writer);
             writer.Flush();

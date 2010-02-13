@@ -2,6 +2,7 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment Id='VSFragment'>
 
+    <!-- integration of VS2005 and VS2008 -->
     <DirectoryRef Id='IntegrationDir'>
       <!-- common DDEX component to be installed if VS2005 or VS2008 is selected -->
       <Component Id='VS_Common' Guid='75F9BFA2-4D6E-4cb3-97E6-B27C478CDE44'>
@@ -10,13 +11,30 @@
       </Component>
 
       <Component Id='VS_2005_Registry' Guid='B99FF3E3-F742-47af-B1FE-BBF2CDC4B95D'>
+        <RegistryKey Id="VS_2005_RegistryKey" Root="HKLM" Action="createAndRemoveOnUninstall"
+                     Key="SOFTWARE\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\MySQL Connector Net $(var.Version)">
+          <RegistryValue Id="VS_2005_RegistryValue" Value="[AssembliesDir]" Type="string" Action="write"/>
+        </RegistryKey>
         <?include VS2005_Registry.wxi?>
         <?include VS2005_Data.wxi ?>
       </Component>
 
       <Component Id='VS_2008_Registry' Guid='84AE8C43-294D-4e48-B75D-D9172396C2FD'>
+        <RegistryKey Id="VS_2008_RegistryKey" Root="HKLM" Action="createAndRemoveOnUninstall"
+                     Key="SOFTWARE\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\MySQL Connector Net $(var.Version)">
+          <RegistryValue Id="VS_2008_RegistryValue" Value="[AssembliesDir]" Type="string" Action="write"/>
+        </RegistryKey>
         <?include VS2008_Registry.wxi?>
         <?include VS2008_Data.wxi?>
+      </Component>
+
+      <Component Id='VS_2010_Registry' Guid='84AE8C43-294D-4e48-B75D-D9172396C2FD'>
+        <RegistryKey Id="VS_2010_RegistryKey" Root="HKLM" Action="createAndRemoveOnUninstall"
+                     Key="SOFTWARE\Microsoft\.NETFramework\v4.0.30128\AssemblyFoldersEx\MySQL Connector Net $(var.Version)">
+          <RegistryValue Id="VS_2010_RegistryValue" Value="[AssembliesDir]" Type="string" Action="write"/>
+        </RegistryKey>
+        <?include VS2010_Registry.wxi?>
+        <?include VS2010_Data.wxi?>
       </Component>
     </DirectoryRef>
 
@@ -30,6 +48,12 @@
       <Condition Level='0'>Not VS_2008_PATH</Condition>
       <ComponentRef Id='VS_Common'/>
       <ComponentRef Id='VS_2008_Registry'/>
+    </Feature>
+
+    <Feature Id='VS2010Int' Level='1' Title='Visual Studio 2010'>
+      <Condition Level='0'>Not VS_2010_PATH</Condition>
+      <ComponentRef Id='VS_Common'/>
+      <ComponentRef Id='VS_2010_Registry'/>
     </Feature>
 
     <!-- Visual Studio 2005 integration actions -->
@@ -48,6 +72,14 @@
     <CustomAction Id="VS_2008_SETUP" Property="VS_2008_SETUP_EXEC" Value='"[VS_2008_PATH]\devenv.com" /setup'/>
     <CustomAction Id="VS_2008_SETUP_EXEC" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="ignore" Execute='deferred' Impersonate='no'/>
 
+    <!-- Visual Studio 2010 integration actions -->
+    <Property Id='VS_2010_PATH'>
+      <RegistrySearch Id='Find_VS2010_Path' Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\10.0\Setup\VS'
+          Name='EnvironmentDirectory' Type='raw'/>
+    </Property>
+    <CustomAction Id="VS_2010_SETUP" Property="VS_2010_SETUP_EXEC" Value='"[VS_2010_PATH]\devenv.com" /setup'/>
+    <CustomAction Id="VS_2010_SETUP_EXEC" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="ignore" Execute='deferred' Impersonate='no'/>
+
     <InstallExecuteSequence>
       <!-- vs2005 scheduling -->
       <Custom Action='VS_2005_SETUP' Before='InstallFinalize'>(&amp;VS2005Int=2) OR (&amp;VS2005Int=3)</Custom>
@@ -56,6 +88,10 @@
       <!-- now vs2008 scheduling -->
       <Custom Action='VS_2008_SETUP' Before='InstallFinalize'>(&amp;VS2008Int=2) OR (&amp;VS2008Int=3)</Custom>
       <Custom Action='VS_2008_SETUP_EXEC' After='VS_2008_SETUP'>(&amp;VS2008Int=2) OR (&amp;VS2008Int=3)</Custom>
+      
+      <!-- now vs2010 scheduling -->
+      <Custom Action='VS_2010_SETUP' Before='InstallFinalize'>(&amp;VS2010Int=2) OR (&amp;VS2010Int=3)</Custom>
+      <Custom Action='VS_2010_SETUP_EXEC' After='VS_2010_SETUP'>(&amp;VS2010Int=2) OR (&amp;VS2010Int=3)</Custom>
     </InstallExecuteSequence>
   </Fragment>
 </Wix>

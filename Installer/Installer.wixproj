@@ -146,6 +146,8 @@
     <Content Include="VS2005_Registry.wxi" />
     <Content Include="VS2008_Data.wxi" />
     <Content Include="VS2008_Registry.wxi" />
+    <Content Include="VS2010_Data.wxi" />
+    <Content Include="VS2010_Registry.wxi" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="registration\" />
