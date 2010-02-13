@@ -26,10 +26,6 @@
       <Component Id="Net20" Guid="0e8af006-273c-49bb-b7c1-ec1737260a5a">
         <File Id="MySqlData" Name="MySql.Data.dll"
               Source="..\mysql.data\provider\bin\release\mysql.data.dll" DiskId="1"/>
-        <RegistryKey Id="VSRegistry" Root="HKLM" Action="createAndRemoveOnUninstall"
-                     Key="SOFTWARE\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\MySQL Connector Net $(var.Version)">
-          <RegistryValue Id="VSRegistryValue" Value="[AssembliesDir]" Type="string" Action="write"/>
-        </RegistryKey>
 
         <util:PerformanceCategory Id="PMDataCategoryId" Name=".NET Data Provider for MySQL"
                                   MultiInstance="no" Help="This category includes a series of counters for MySQL.">

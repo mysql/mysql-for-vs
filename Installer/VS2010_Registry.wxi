@@ -1,0 +1,47 @@
+<Include>
+  <RegistryKey Root="HKLM" Action="createAndRemoveOnUninstall" 
+               Key="Software\Microsoft\VisualStudio\10.0\InstalledProducts\MySQL Connector Net $(var.Version)">
+    <RegistryValue Value="MySQL Connector Net $(var.Version)" Type="string"/>
+    <RegistryValue Name="Package" Value="{79a115c9-b133-4891-9e7b-242509dad272}" Type="string" />
+    <RegistryValue Name="UseInterface" Value="1" Type="integer" />
+  </RegistryKey>
+
+  <RegistryKey Root="HKLM" Action="createAndRemoveOnUninstall"
+               Key="Software\Microsoft\VisualStudio\10.0\Packages\{79a115c9-b133-4891-9e7b-242509dad272}">
+    <RegistryValue Value="MySQL Connector Net $(var.Version)" Type="string"/>
+    <RegistryValue Name="InprocServer32" Value="[SystemFolder]mscoree.dll" Type="string" />
+    <RegistryValue Name="Class" Value="MySql.Data.VisualStudio.MySqlDataProviderPackage" Type="string" />
+    <RegistryValue Name="CodeBase" Value="[#MySQL.VisualStudio]" Type="string"/>
+    <RegistryValue Name="ID" Value="100" Type="integer" />
+    <RegistryValue Name="MinEdition" Value="Standard" Type="string" />
+    <RegistryValue Name="ProductVersion" Value="1.1" Type="string" />
+    <RegistryValue Name="ProductName" Value="MySQL Tools for Visual Studio" Type="string" />
+    <RegistryValue Name="CompanyName" Value="MySQL AB c/o MySQL, Inc." Type="string" />
+  </RegistryKey>
+
+  <RegistryKey Root="HKLM" Key="Software\Microsoft\VisualStudio\10.0\Menus">
+    <RegistryValue Name="{79a115c9-b133-4891-9e7b-242509dad272}" Value=", 1000, 1" Type="string" />
+  </RegistryKey>
+
+  <RegistryKey Root="HKLM" Action="createAndRemoveOnUninstall"
+               Key="Software\Microsoft\VisualStudio\10.0\Services\{d949ea95-eda1-4b65-8a9e-266949a99360}" >
+    <RegistryValue Value="{79a115c9-b133-4891-9e7b-242509dad272}" Type="string"/>
+    <RegistryValue Name="Name" Value="MySQL Provider Object Factory" Type="string" />
+  </RegistryKey>
+
+  <RegistryKey Root="HKLM" Action="createAndRemoveOnUninstall"
+               Key="Software\Microsoft\VisualStudio\10.0\Languages\Language Services\MySQL">
+    <RegistryValue Value="{fa498a2d-116a-4f25-9b55-7938e8e6dda7}" Type="string"/>
+    <RegistryValue Name="Package" Value="{79a115c9-b133-4891-9e7b-242509dad272}" Type="string" />
+    <RegistryValue Name="LangResID" Value="101" Type="integer" />
+    <RegistryValue Name="RequestStockColors" Value="1" Type="integer" />
+  </RegistryKey>
+
+  <RegistryKey Root="HKLM" Action="createAndRemoveOnUninstall"
+               Key="Software\Microsoft\VisualStudio\10.0\Services\{fa498a2d-116a-4f25-9b55-7938e8e6dda7}">
+    
+    <RegistryValue Value="{79a115c9-b133-4891-9e7b-242509dad272}" Type="string"/>
+    <RegistryValue Name="Name" Value="MySqlLanguageService" Type="string" />
+  </RegistryKey>
+
+</Include>

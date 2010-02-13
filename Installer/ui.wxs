@@ -48,6 +48,7 @@
 
       <ProgressText Action="VS_2005_SETUP_EXEC">Reconfiguring Visual Studio 2005.  Please wait...</ProgressText>
       <ProgressText Action="VS_2008_SETUP_EXEC">Reconfiguring Visual Studio 2008.  Please wait...</ProgressText>
+      <ProgressText Action="VS_2010_SETUP_EXEC">Reconfiguring Visual Studio 2010.  Please wait...</ProgressText>
 
       <ProgressText Action="PMDataCategoryId">Registering performance counters</ProgressText>
 
@@ -58,6 +59,8 @@
       <ProgressText Action='VS_2005_REMOVE_EXEC'>Removing Visual Studio 2005 Integration</ProgressText>
       <ProgressText Action='VS_2008_INSTALL_EXEC'>Installing Visual Studio 2008 Integration</ProgressText>
       <ProgressText Action='VS_2008_REMOVE_EXEC'>Removing Visual Studio 2008 Integration</ProgressText>
+      <ProgressText Action='VS_2010_INSTALL_EXEC'>Installing Visual Studio 2010 Integration</ProgressText>
+      <ProgressText Action='VS_2010_REMOVE_EXEC'>Removing Visual Studio 2010 Integration</ProgressText>
     </UI>
 
     <UIRef Id="WixUI_Common" />
