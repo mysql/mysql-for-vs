@@ -1,3 +1,5 @@
+version 6.3.0
+- Added the ability to enable query analysis at runtime
 - fixed InvalidOperationException when accessing Stream.ReadTimeout or Stream.WriteTimeout on CF
   (bug #50321)
 - implemented nested transaction scopes (bug #45098)
@@ -9,6 +11,7 @@
   mistakenly use Decimal as the return type (bug #49642)
 - fixed bug where a scipt that had an empty last line would cause an InvalidOperationException (bug #50344)
 - fixed bug in logging that kept no index and bad index warnings from being sent
+- added VS2010 compatibility
 
 version 6.2.2
 - Fix race condition during TransactionScope rollback (bug#35330)
