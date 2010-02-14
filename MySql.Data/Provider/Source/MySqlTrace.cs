@@ -22,13 +22,30 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
+using System.Reflection;
+using MySql.Data.MySqlClient.Properties;
 
 namespace MySql.Data.MySqlClient
 {
     public class MySqlTrace
     {
+        private static string qaHost;
+        private static bool qaEnabled = false;
+
 #if !CF
         private static TraceSource source = new TraceSource("mysql");
+
+        static MySqlTrace()
+        {
+            foreach (TraceListener listener in source.Listeners)
+            {
+                if (listener.GetType().ToString().Contains("MySql.EMTrace.EMTraceListener"))
+                {
+                    qaEnabled = true;
+                    break;
+                }
+            }
+        }
 
         public static TraceListenerCollection Listeners
         {
@@ -39,6 +56,35 @@ namespace MySql.Data.MySqlClient
         {
             get { return source.Switch; }
             set { source.Switch = value; }
+        }
+
+        public static bool QueryAnalysisEnabled
+        {
+            get { return qaEnabled; }
+        }
+
+        public static void EnableQueryAnalyzer(string host, int postInterval)
+        {
+            if (qaEnabled) return;
+            // create a EMTraceListener and add it to our source
+            TraceListener l = (TraceListener)Activator.CreateInstance("MySql.EMTrace", 
+                "MySql.EMTrace.EMTraceListener", false, BindingFlags.CreateInstance,
+                null, new object[] { host, postInterval }, null, null, null).Unwrap();
+            if (l == null)
+                throw new MySqlException(Resources.UnableToEnableQueryAnalysis);
+            source.Listeners.Add(l);
+            Switch.Level = SourceLevels.All;
+        }
+
+        public static void DisableQueryAnalyzer()
+        {
+            qaEnabled = false;
+            foreach (TraceListener l in source.Listeners)
+                if (l.GetType().ToString().Contains("EMTraceListener"))
+                {
+                    source.Listeners.Remove(l);
+                    break;
+                }
         }
 
         internal static TraceSource Source
