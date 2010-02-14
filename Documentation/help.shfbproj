@@ -7,7 +7,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{5c97df05-1229-4b30-9711-789d0d6ff81b}</ProjectGuid>
-    <SHFBSchemaVersion>1.8.0.0</SHFBSchemaVersion>
+    <SHFBSchemaVersion>1.8.0.3</SHFBSchemaVersion>
     <!-- AssemblyName, Name, and RootNamespace are not used by SHFB but Visual
          Studio adds them anyway -->
     <AssemblyName>Documentation</AssemblyName>
@@ -28,8 +28,8 @@
     </ProjectSummary>
     <MissingTags>None</MissingTags>
     <VisibleItems>InheritedMembers, InheritedFrameworkMembers, Protected, SealedProtected</VisibleItems>
-    <HtmlHelp1xCompilerPath>..\..\..\Program Files\HTML Help Workshop\</HtmlHelp1xCompilerPath>
-    <HtmlHelp2xCompilerPath>..\..\..\Program Files\Common Files\microsoft shared\Help 2.0 Compiler\</HtmlHelp2xCompilerPath>
+    <HtmlHelp1xCompilerPath>C:\Program Files (x86)\HTML Help Workshop\</HtmlHelp1xCompilerPath>
+    <HtmlHelp2xCompilerPath>c:\Program Files (x86)\Common Files\microsoft shared\Help 2.0 Compiler\</HtmlHelp2xCompilerPath>
     <SandcastlePath>
     </SandcastlePath>
     <WorkingPath>
@@ -37,13 +37,13 @@
     <CleanIntermediates>False</CleanIntermediates>
     <BuildLogFile>
     </BuildLogFile>
-    <HelpFileFormat>Help1xAndHelp2x</HelpFileFormat>
+    <HelpFileFormat>HtmlHelp1, MSHelp2</HelpFileFormat>
     <FrameworkVersion>2.0.50727</FrameworkVersion>
     <RootNamespaceContainer>True</RootNamespaceContainer>
     <RootNamespaceTitle>Reference</RootNamespaceTitle>
     <HelpTitle>MySQL Connector/Net</HelpTitle>
     <CopyrightHref>http://www.mysql.com</CopyrightHref>
-    <CopyrightText>&amp;#169%3b 2004-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc. All rights reserved.</CopyrightText>
+    <CopyrightText>&amp;#169%3b 2004-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc., 2010 Oracle All rights reserved.</CopyrightText>
     <FeedbackEMailAddress>support%40mysql.com</FeedbackEMailAddress>
     <PresentationStyle>vs2005</PresentationStyle>
     <NamingMethod>MemberName</NamingMethod>
