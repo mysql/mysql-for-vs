@@ -178,7 +178,7 @@ namespace MySql.Data.MySqlClient
             Driver d = null;
 
 #if !CF
-            if (settings.Logging || settings.UseUsageAdvisor)
+            if (settings.Logging || settings.UseUsageAdvisor || MySqlTrace.QueryAnalysisEnabled)
                 d = new TracingDriver(settings);
             else
 #endif
