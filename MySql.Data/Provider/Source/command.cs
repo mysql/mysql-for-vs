@@ -548,15 +548,14 @@ namespace MySql.Data.MySqlClient
 
 		private static string TrimSemicolons(string sql)
 		{
-			System.Text.StringBuilder sb = new System.Text.StringBuilder(sql);
 			int start = 0;
-			while (sb[start] == ';')
+			while (sql[start] == ';')
 				start++;
 
-			int end = sb.Length - 1;
-			while (sb[end] == ';')
+			int end = sql.Length - 1;
+			while (sql[end] == ';')
 				end--;
-			return sb.ToString(start, end - start + 1);
+			return sql.Substring(start, end-start+1);
 		}
 
 		internal void AsyncExecuteWrapper(int type, CommandBehavior behavior)
