@@ -10,6 +10,7 @@
 - fixed problem where not specifying the data type of the return value of a function caused it to 
   mistakenly use Decimal as the return type (bug #49642)
 - fixed bug where a scipt that had an empty last line would cause an InvalidOperationException (bug #50344)
+- fixed bug where a connection could not be reused in the IDE in some circumstances (bug #41629)
 
 Version 6.0.5
 - ensure that MySqlPacket always has a valid encoding. This prevents null reference exceptions in ReadString()
