@@ -102,5 +102,17 @@ namespace MySql.Data.MySqlClient.Tests
             string connStr = "database=test;uid=root;server=localhost;encrypt=yes";
             MySqlConnectionStringBuilder sb = new MySqlConnectionStringBuilder(connStr);
         }
+
+        /// <summary>
+        /// Bug #51209	error on parameter without value on connectionstring
+        /// </summary>
+        [Test]
+        public void NoValueGivenForConnectionStringOption()
+        {
+            MySqlConnectionStringBuilder s = new MySqlConnectionStringBuilder();
+            s.ConnectionString = "compress=;pooling=";
+            Assert.IsFalse(s.UseCompression);
+            Assert.IsTrue(s.Pooling);
+        }
     }
 }

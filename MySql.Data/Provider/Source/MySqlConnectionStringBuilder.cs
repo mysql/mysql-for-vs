@@ -768,11 +768,12 @@ namespace MySql.Data.MySqlClient
         public override bool Remove(string keyword)
         {
             ValidateKeyword(keyword);
+            string primaryKey = validKeywords[keyword];
 
-            values.Remove(validKeywords[keyword]);
-            base.Remove(validKeywords[keyword]);
+            values.Remove(primaryKey);
+            base.Remove(primaryKey);
 
-            values[keyword] = defaultValues[validKeywords[keyword]].DefaultValue;
+            values[primaryKey] = defaultValues[primaryKey].DefaultValue;
             return true;
         }
 
