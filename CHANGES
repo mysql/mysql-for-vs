@@ -1,3 +1,7 @@
+Version 6.3.1
+- fixed bug where giving a connection string option like (option=) and then trying to read
+  the option back via the property would fail (bug #51209)
+
 version 6.3.0
 - Added the ability to enable query analysis at runtime
 - fixed InvalidOperationException when accessing Stream.ReadTimeout or Stream.WriteTimeout on CF
@@ -13,35 +17,3 @@ version 6.3.0
 - fixed bug in logging that kept no index and bad index warnings from being sent
 - added VS2010 compatibility
 
-version 6.2.2
-- Fix race condition during TransactionScope rollback (bug#35330)
-- When sending file to server (LOAD DATA INFILE) open the file for read only, not for read/write
- (bug #48944)
-- Always close connection in MySqlConnection.Dispose(), also when it is garbage-collected
-  so underlying driver can be reused in the connection pool (bug#31996)
-- Fixed precision calculation on decimal and newdecimal columns (bug #48171)
-- Fixed problem caused by us not including a 'REFERENCED_TABLE_CATALOG' column in our
-  foreign keys collection (bug #48974)
-
-Version 6.2.1
-- fixed SessionProvider to be compatible with 4.x MySQL, replaced TIMESTAMPDIFF with TIME_TO_SEC
-  (bug#47219)
-- implemented support for client SSL certificates
-- fixed indexes schema collection so that it still works with bad table names such as b``a`d (bug #48101)
-- fixed guid type so that multi-byte character sets will not effect how it works.  A column would be
-  considered a guid if it has a *character* length of 36, not a *byte* length of 36 (bug #47985)
-- fixed unsigned types in views when used as entities (bug # 47872) 
-- now exposing the MySqlDecimal type along with GetMySqlDecimal methods on data reader (bug #48100)    
-- applied user-suggested patch to enable type-safe cloning (bug #48460)
-- fixed encrypt keyword that was no longer supported in connection strings. It is obsolete so
-  new code should use the 'ssl mode'.  Encrypt will be removed entirely starting with 6.4 (bug #48290)
-- implemented PossibleValues property on MySqlParameter for ENUM and Set types (48586)
-
-Version 6.2.0
-- we now cleanup idle connections in the pool, if they were not used for too long
-- refactored handling of connection and command timeouts
-  to use timeout on the underlying stream
-- completely refactored MySqlConnectionStringBuilder
-- now supporting TableDirect command type
-- refactored logging system to increase peformance, increase clarity of log, and setup for
-  future features
