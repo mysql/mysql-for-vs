@@ -1,19 +1,12 @@
 Version 6.3.1
 - fixed bug where giving a connection string option like (option=) and then trying to read
   the option back via the property would fail (bug #51209)
+- fixed bug where a connection could not be reused in the IDE in some circumstances (bug #41629)
+- small performance fix (bug #51149)
+- fixed issue with script execution & multi-char delimiters (bug #46429)
+- fixed bug in table editor where clicking back on the last row added can sometimes
+  cause a ArgumentOutOfRange exception
 
 version 6.3.0
 - Added the ability to enable query analysis at runtime
-- fixed InvalidOperationException when accessing Stream.ReadTimeout or Stream.WriteTimeout on CF
-  (bug #50321)
-- implemented nested transaction scopes (bug #45098)
-- fixed entity framework function processing so that it handles stored functions properly
-  (bug #45277)
-- fixed a bug with prepared statements and unsigned bigint.  Patch also provided a nice speedup to reading
-  integer values from the wire (bug #49794)
-- fixed problem where not specifying the data type of the return value of a function caused it to 
-  mistakenly use Decimal as the return type (bug #49642)
-- fixed bug where a scipt that had an empty last line would cause an InvalidOperationException (bug #50344)
-- fixed bug in logging that kept no index and bad index warnings from being sent
 - added VS2010 compatibility
-

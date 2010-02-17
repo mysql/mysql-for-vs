@@ -193,6 +193,31 @@ namespace MySql.Data.MySqlClient.Tests
         }
 
         /// <summary>
+        /// Bug #46429	use DELIMITER command in MySql.Data.MySqlClient.MySqlScript
+        /// </summary>
+        [Test]
+        public void DelimiterInScriptV2()
+        {
+            var sql = new StringBuilder();
+
+            sql.AppendLine("DELIMITER MySuperDelimiter");
+            sql.AppendLine("CREATE PROCEDURE TestProcedure1()");
+            sql.AppendLine("BEGIN");
+            sql.AppendLine("  SELECT * FROM mysql.proc;");
+            sql.AppendLine("END MySuperDelimiter");
+            sql.AppendLine("CREATE PROCEDURE TestProcedure2()");
+            sql.AppendLine("BEGIN");
+            sql.AppendLine("  SELECT * FROM mysql.proc;");
+            sql.AppendLine("END mysuperdelimiter");
+
+            sql.AppendLine("DELIMITER ;");
+
+            var script = new MySqlScript(conn, sql.ToString());
+            script.Execute();
+        }
+
+
+        /// <summary>
         /// Bug #50344	MySqlScript.Execute() throws InvalidOperationException
         /// </summary>
         [Test]
