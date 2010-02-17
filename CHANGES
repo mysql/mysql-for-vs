@@ -1,3 +1,4 @@
+Version 6.2.3
 - fixed InvalidOperationException when accessing Stream.ReadTimeout or Stream.WriteTimeout on CF
   (bug #50321)
 - fixed entity framework function processing so that it handles stored functions properly
@@ -10,6 +11,11 @@
 - fixed bug in logging that kept no index and bad index warnings from being sent
 - fixed bug where giving a connection string option like (option=) and then trying to read
   the option back via the property would fail (bug #51209)
+- fixed bug where a connection could not be reused in the IDE in some circumstances (bug #41629)
+- small performance fix (bug #51149)
+- fixed issue with script execution & multi-char delimiters (bug #46429)
+- fixed bug in table editor where clicking back on the last row added can sometimes
+  cause a ArgumentOutOfRange exception
 
 Version 6.2.2
 - Fix race condition during TransactionScope rollback (bug#35330)
