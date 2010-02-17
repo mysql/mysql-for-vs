@@ -61,7 +61,8 @@ namespace MySql.Data.VisualStudio
 
 		internal void Refresh()
 		{
-			DbConnection c = (DbConnection)Connection.GetLockedProviderObject();
+            EnsureConnected();
+            DbConnection c = (DbConnection)Connection.GetLockedProviderObject();
 			values = c.GetSchema("DataSourceInformation");
 			Connection.UnlockProviderObject();
 		}
@@ -94,6 +95,7 @@ namespace MySql.Data.VisualStudio
         /// <returns>Property value</returns>
         protected override object RetrieveValue(string propertyName)
         {
+            EnsureConnected();
             if (propertyName.Equals(DataSource, StringComparison.InvariantCultureIgnoreCase))
             {
 				return (ProviderObject as DbConnection).DataSource;
@@ -107,23 +109,10 @@ namespace MySql.Data.VisualStudio
         } 
         #endregion
 
-        #region Connection wrapper
-        /// <summary>
-        /// Returns wrapper for the underlying connection. Creates it at the first call.
-        /// </summary>
-/*        private DataConnectionWrapper ConnectionWrapper
+        private void EnsureConnected()
         {
-            get
-            {
-                if (connectionWrapperRef == null)
-                    connectionWrapperRef = new DataConnectionWrapper(Connection);
-                return connectionWrapperRef;
-            }
+            if (Connection.State != DataConnectionState.Open)
+                Connection.Open();
         }
-        /// <summary>
-        /// Used to stroe connection wrapper.
-        /// </summary>
-        private DataConnectionWrapper connectionWrapperRef;*/
-        #endregion
 	}
 }
