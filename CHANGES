@@ -13,6 +13,8 @@
 - fixed bug where a connection could not be reused in the IDE in some circumstances (bug #41629)
 - small performance fix (bug #51149)
 - fixed issue with script execution & multi-char delimiters (bug #46429)
+- fixed bug in table editor where clicking back on the last row added can sometimes
+  cause a ArgumentOutOfRange exception
 
 Version 6.0.5
 - ensure that MySqlPacket always has a valid encoding. This prevents null reference exceptions in ReadString()
