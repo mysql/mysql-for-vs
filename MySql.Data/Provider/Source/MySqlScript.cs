@@ -271,7 +271,7 @@ namespace MySql.Data.MySqlClient
                     }
                     else
                     {
-                        int delimiterPos = token.IndexOf(currentDelimiter);
+                        int delimiterPos = token.IndexOf(currentDelimiter, StringComparison.InvariantCultureIgnoreCase);
                         if (delimiterPos != -1)
                         {
                             int endPos = tokenizer.StopIndex - token.Length + delimiterPos;
@@ -283,7 +283,7 @@ namespace MySql.Data.MySqlClient
                             statement.line = FindLineNumber(startPos, lineNumbers);
                             statement.position = startPos - lineNumbers[statement.line];
                             statements.Add(statement);
-                            startPos = endPos + delimiter.Length;
+                            startPos = tokenizer.StopIndex;
                         }				
 					}
                 }

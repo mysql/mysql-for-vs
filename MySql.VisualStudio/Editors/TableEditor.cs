@@ -494,7 +494,7 @@ namespace MySql.Data.VisualStudio
         private void columnGrid_CellLeave(object sender, DataGridViewCellEventArgs e)
         {
             int index = columnGrid.CurrentRow.Index;
-            if (index >= 0 && tableNode.Table.Columns.Count >= index)
+            if (index >= 0 && index < tableNode.Table.Columns.Count)
                 columnProperties.SelectedObject = tableNode.Table.Columns[index];
         }
 	}
