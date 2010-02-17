@@ -11,6 +11,10 @@
   mistakenly use Decimal as the return type (bug #49642)
 - fixed bug where a scipt that had an empty last line would cause an InvalidOperationException (bug #50344)
 - fixed bug where a connection could not be reused in the IDE in some circumstances (bug #41629)
+- small performance fix (bug #51149)
+- fixed issue with script execution & multi-char delimiters (bug #46429)
+- fixed bug in table editor where clicking back on the last row added can sometimes
+  cause a ArgumentOutOfRange exception
 
 Version 6.1.3
 - fixed session state provider table definition to allow more than 64K per-session data (bug#47339)
