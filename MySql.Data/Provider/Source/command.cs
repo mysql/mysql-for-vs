@@ -116,6 +116,7 @@ namespace MySql.Data.MySqlClient
 			{
 				cmdText = value;
 				statement = null;
+                batchableCommandText = null;
 				if (cmdText != null && cmdText.EndsWith("DEFAULT VALUES"))
 				{
 					cmdText = cmdText.Substring(0, cmdText.Length - 14);
@@ -816,8 +817,6 @@ namespace MySql.Data.MySqlClient
                         token = tokenizer.NextToken();
                     }
                 }
-                if (batchableCommandText == null)
-                    batchableCommandText = CommandText;
             }
 
             return batchableCommandText;
