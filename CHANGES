@@ -15,6 +15,10 @@
 - fixed issue with script execution & multi-char delimiters (bug #46429)
 - fixed bug in table editor where clicking back on the last row added can sometimes
   cause a ArgumentOutOfRange exception
+- fixed bug where a commands batchable command text was not getting reset when the 
+  command text was reset (bug #50444)
+- fixed bug where using a currently non-batchable command in a batch would throw an exception
+  (bug #50123)
 
 Version 6.0.5
 - ensure that MySqlPacket always has a valid encoding. This prevents null reference exceptions in ReadString()
