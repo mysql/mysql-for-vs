@@ -329,5 +329,67 @@ namespace MySql.Data.MySqlClient.Tests
             cmd.Parameters.Add(returnParam);
             cmd.ExecuteNonQuery();
         }
+
+        /// <summary>
+        /// Bug #50123	Batch updates bug when UpdateBatchSize > 1
+        /// Bug #50444	Parameters.Clear() not working
+        /// </summary>
+        [Test]
+        public void UpdateBatchSizeMoreThanOne()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL(@"CREATE TABLE test(fldID INT NOT NULL, 
+                fldValue VARCHAR(50) NOT NULL, PRIMARY KEY(fldID))");
+
+            MySqlDataAdapter adapter = new MySqlDataAdapter("SELECT * FROM test", conn);
+            DataTable data = new DataTable();
+            adapter.Fill(data);
+
+            MySqlCommand ins = new MySqlCommand(
+              "INSERT INTO test(fldID, fldValue) VALUES (?p1, ?p2)", conn);
+            ins.Parameters.Add("p1", MySqlDbType.Int32).SourceColumn = "fldID";
+            ins.Parameters.Add("p2", MySqlDbType.String).SourceColumn = "fldValue";
+
+            ins.UpdatedRowSource = UpdateRowSource.None;
+            adapter.InsertCommand = ins;
+            adapter.UpdateBatchSize = 10;
+
+            int numToInsert = 20;
+            for (int i = 0; i < numToInsert; i++)
+            {
+                DataRow row = data.NewRow();
+                row["fldID"] = i + 1;
+                row["fldValue"] = "ID = " + (i + 1);
+                data.Rows.Add(row);
+            }
+            Assert.AreEqual(numToInsert, adapter.Update(data));
+
+            //UPDATE VIA SP
+            MySqlCommand comm = new MySqlCommand("DROP PROCEDURE IF EXISTS pbug50123", conn);
+            comm.ExecuteNonQuery();
+            comm.CommandText = "CREATE PROCEDURE pbug50123(" +
+                "IN pfldID INT, IN pfldValue VARCHAR(50)) " +
+                "BEGIN INSERT INTO test(fldID, fldValue) " +
+                "VALUES(pfldID, pfldValue); END";
+            comm.ExecuteNonQuery();
+
+            // Set the Insert Command
+            ins.Parameters.Clear();
+            ins.CommandText = "pbug50123";
+            ins.CommandType = CommandType.StoredProcedure;
+            ins.Parameters.Add("pfldID", MySqlDbType.Int32).SourceColumn = "fldID";
+            ins.Parameters.Add("pfldValue", MySqlDbType.String).SourceColumn = "fldValue";
+            ins.UpdatedRowSource = UpdateRowSource.None;
+
+            for (int i = 21; i < 41; i++)
+            {
+                DataRow row = data.NewRow();
+                row["fldID"] = i + 1;
+                row["fldValue"] = "ID = " + (i + 1);
+                data.Rows.Add(row);
+            }
+            // Do the update
+            Assert.AreEqual(numToInsert, adapter.Update(data));
+        }
     }
 }

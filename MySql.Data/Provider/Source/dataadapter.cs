@@ -163,7 +163,8 @@ namespace MySql.Data.MySqlClient
                 for (int index2 = index; index2 < commandBatch.Count; index2++,index++)
                 {
                     MySqlCommand cmd2 = (MySqlCommand)commandBatch[index2];
-                    if (cmd2.CommandText != cmd.CommandText) break;
+                    if (cmd2.BatchableCommandText == null || 
+                        cmd2.CommandText != cmd.CommandText) break;
                     cmd.AddToBatch(cmd2);
                 }
                 recordsAffected += cmd.ExecuteNonQuery();
