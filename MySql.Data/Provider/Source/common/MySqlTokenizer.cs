@@ -37,6 +37,7 @@ namespace MySql.Data.MySqlClient
         private bool backslashEscapes;
         private bool returnComments;
         private bool multiLine;
+        private bool sqlServerMode;
 
         private bool quoted;
         private bool isComment;
@@ -79,6 +80,12 @@ namespace MySql.Data.MySqlClient
         {
             get { return multiLine; }
             set { multiLine = value; }
+        }
+
+        public bool SqlServerMode
+        {
+            get { return sqlServerMode; }
+            set { sqlServerMode = value; }
         }
 
         public bool Quoted
@@ -132,6 +139,14 @@ namespace MySql.Data.MySqlClient
             return null;
         }
 
+        public static bool IsParameter(string s)
+        {
+            if (String.IsNullOrEmpty(s)) return false;
+            if (s[0] == '?') return true;
+            if (s.Length > 1 && s[0] == '@' && s[1] != '@') return true;
+            return false;
+        }
+
         public string NextParameter()
         {
             while (FindToken())
@@ -157,7 +172,7 @@ namespace MySql.Data.MySqlClient
                 char c = sql[pos++];
                 if (Char.IsWhiteSpace(c)) continue;
                 
-                if (c == '`' || c == '\'' || c == '"') //(c == '"' && AnsiQuotes))
+                if (c == '`' || c == '\'' || c == '"' || (c == '[' && SqlServerMode))
                     ReadQuotedToken(c);
                 else if (c == '#' || c == '-' || c == '/')
                 {
@@ -260,6 +275,8 @@ namespace MySql.Data.MySqlClient
         /// <returns></returns>
         private void ReadQuotedToken(char quoteChar)
         {
+            if (quoteChar == '[')
+                quoteChar = ']';
             startIndex = pos-1;
             bool escaped = false;
 

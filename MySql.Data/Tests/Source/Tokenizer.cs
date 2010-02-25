@@ -271,5 +271,25 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("OR", tokenizer.NextToken());
             Assert.IsNull(tokenizer.NextToken());
         }
+
+        [Test]
+        public void SqlServerMode()
+        {
+            string sql = "SELECT `a`, [id], [name] FROM [test]";
+            SqlTokenizer tokenizer = new SqlTokenizer(sql);
+            tokenizer.SqlServerMode = true;
+            tokenizer.NextToken();
+            Assert.AreEqual("`a`", tokenizer.NextToken());
+            Assert.IsTrue(tokenizer.Quoted);
+            tokenizer.NextToken();  // read ,
+            Assert.AreEqual("[id]", tokenizer.NextToken());
+            Assert.IsTrue(tokenizer.Quoted);
+            tokenizer.NextToken();  // read ,
+            Assert.AreEqual("[name]", tokenizer.NextToken());
+            Assert.IsTrue(tokenizer.Quoted);
+            tokenizer.NextToken();  // read FROM
+            Assert.AreEqual("[test]", tokenizer.NextToken());
+            Assert.IsTrue(tokenizer.Quoted);
+        }
     }
 }
