@@ -437,7 +437,7 @@
         </CommandBinding>
         <CommandBinding name="CreateTrigger" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="320" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
         <CommandBinding name="Browse_Data" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="12384" 
-                        handler="Microsoft.VisualStudio.DataTools.DBPackage.VDT_OLEDB_CommandHandler_TableTools">
+                        handler="884DD964-5327-461f-9F06-6484DD540F8F">
           <Parameter value="Open"/>
         </CommandBinding>
         <CommandBinding name="NewQuery" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="13608" 
@@ -538,7 +538,7 @@
         </CommandBinding>
 
         <CommandBinding name="Browse_Data" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="12384" 
-                        handler="Microsoft.VisualStudio.DataTools.DBPackage.VDT_OLEDB_CommandHandler_TableTools">
+                        handler="884DD964-5327-461f-9F06-6484DD540F8F">
           <Parameter value="Open"/>
         </CommandBinding>
         <!-- global data menus -->
