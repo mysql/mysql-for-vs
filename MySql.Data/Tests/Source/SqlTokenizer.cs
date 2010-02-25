@@ -32,6 +32,15 @@ namespace MySql.Data.MySqlClient.Tests
             }
         }
 
+        public bool SqlServerMode
+        {
+            set
+            {
+                PropertyInfo pi = tokenizer.GetType().GetProperty("SqlServerMode");
+                pi.SetValue(tokenizer, value, null);
+            }
+        }
+
         public bool Quoted
         {
             get

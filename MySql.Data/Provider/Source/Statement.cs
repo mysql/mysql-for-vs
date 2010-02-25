@@ -150,6 +150,8 @@ namespace MySql.Data.MySqlClient
         private void InternalBindParameters(string sql, MySqlParameterCollection parameters, 
             MySqlPacket packet)
         {
+            bool sqlServerMode = command.Connection.Settings.SqlServerMode;
+
             if (packet == null)
             {
                 packet = new MySqlPacket(Driver.Encoding);
@@ -157,20 +159,30 @@ namespace MySql.Data.MySqlClient
                 packet.WriteByte(0);
             }
 
-            int startPos = 0;
             MySqlTokenizer tokenizer = new MySqlTokenizer(sql);
             tokenizer.ReturnComments = true;
-            string parameter = tokenizer.NextParameter();
-            while (parameter != null)
+            tokenizer.SqlServerMode = sqlServerMode;
+
+            int pos = 0;
+            string token = tokenizer.NextToken();
+            while (token != null)
             {
-                packet.WriteStringNoNull(sql.Substring(startPos, tokenizer.StartIndex - startPos));
-                bool serialized = SerializeParameter(parameters, packet, parameter);
-                startPos = tokenizer.StopIndex;
-                if (!serialized)
-                    startPos = tokenizer.StartIndex;
-                parameter = tokenizer.NextParameter();
+                // serialize everything that came before the token (i.e. whitespace)
+                packet.WriteStringNoNull(sql.Substring(pos, tokenizer.StartIndex - pos));
+                pos = tokenizer.StopIndex;
+                if (MySqlTokenizer.IsParameter(token))
+                {
+                    if (SerializeParameter(parameters, packet, token))
+                        token = null;
+                }
+                if (token != null)
+                {
+                    if (sqlServerMode && tokenizer.Quoted && token.StartsWith("["))
+                        token = String.Format("`{0}`", token.Substring(1, token.Length - 2));
+                    packet.WriteStringNoNull(token);
+                }
+                token = tokenizer.NextToken();
             }
-            packet.WriteStringNoNull(sql.Substring(startPos));
             buffers.Add(packet);
         }
 

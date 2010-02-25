@@ -576,6 +576,19 @@ namespace MySql.Data.MySqlClient
             set { SetValue("Keep Alive", value); }
         }
 
+        [Category("Advanced")]
+        [DisplayName("Sql Server Mode")]
+        [Description("Allow Sql Server syntax.  " +
+            "A value of yes allows symbols to be enclosed with [] instead of ``.  This does incur " +
+            "a performance hit so only use when necessary.")]
+        [DefaultValue(false)]
+        [ValidKeywords("sqlservermode, sql server mode")]
+        public bool SqlServerMode
+        {
+            get { return (bool)values["Sql Server Mode"]; }
+            set { SetValue("Sql Server Mode", value); }
+        }
+
         #endregion
 
         #region Pooling Properties
