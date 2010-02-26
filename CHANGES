@@ -20,6 +20,8 @@ Version 6.2.3
   command text was reset (bug #50444)
 - fixed bug where using a currently non-batchable command in a batch would throw an exception
   (bug #50123)
+- fixed bug where binary or blob columns would prevent columns after that from appearing in the
+  query builder (bug #50171)
 
 Version 6.2.2
 - Fix race condition during TransactionScope rollback (bug#35330)
