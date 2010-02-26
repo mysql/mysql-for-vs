@@ -183,9 +183,12 @@ namespace MySql.Data.Types
 
 		public static void SetDSInfo(DataTable dsTable)
 		{
-			string[] types = new string[] { "BLOB", "TINYBLOB", "MEDIUMBLOB", "LONGBLOB" };
+			string[] types = new string[] { "BLOB", "TINYBLOB", "MEDIUMBLOB", "LONGBLOB", "BINARY", "VARBINARY" };
 			MySqlDbType[] dbtype = new MySqlDbType[] { MySqlDbType.Blob, 
-                MySqlDbType.TinyBlob, MySqlDbType.MediumBlob, MySqlDbType.LongBlob };
+                MySqlDbType.TinyBlob, MySqlDbType.MediumBlob, MySqlDbType.LongBlob, MySqlDbType.Binary, MySqlDbType.VarBinary };
+            long[] sizes = new long[] { 65535L, 255L, 16777215L, 4294967295L, 255L, 65535L };
+            string[] format = new string[] { null, null, null, null, "binary({0})", "varbinary({0})" };
+            string[] parms = new string[] { null, null, null, null, "length", "length" };
 
 			// we use name indexing because this method will only be called
 			// when GetSchema is called for the DataSourceInformation 
@@ -195,27 +198,27 @@ namespace MySql.Data.Types
 				DataRow row = dsTable.NewRow();
 				row["TypeName"] = types[x];
 				row["ProviderDbType"] = dbtype[x];
-				row["ColumnSize"] = 0;
-				row["CreateFormat"] = types[x];
-				row["CreateParameters"] = null;
+				row["ColumnSize"] = sizes[x];
+				row["CreateFormat"] = format[x];
+                row["CreateParameters"] = parms[x];
 				row["DataType"] = "System.Byte[]";
 				row["IsAutoincrementable"] = false;
 				row["IsBestMatch"] = true;
 				row["IsCaseSensitive"] = false;
-				row["IsFixedLength"] = false;
-				row["IsFixedPrecisionScale"] = true;
-				row["IsLong"] = true;
+                row["IsFixedLength"] = x < 4 ? false : true;
+                row["IsFixedPrecisionScale"] = false;
+                row["IsLong"] = sizes[x] > 255;
 				row["IsNullable"] = true;
-				row["IsSearchable"] = true;
-				row["IsSearchableWithLike"] = true;
-				row["IsUnsigned"] = false;
-				row["MaximumScale"] = 0;
-				row["MinimumScale"] = 0;
-				row["IsConcurrencyType"] = DBNull.Value;
-				row["IsLiteralsSupported"] = false;
-				row["LiteralPrefix"] = null;
-				row["LiteralSuffix"] = null;
-				row["NativeDataType"] = null;
+				row["IsSearchable"] = false;  
+				row["IsSearchableWithLike"] = false;
+                row["IsUnsigned"] = DBNull.Value;
+                row["MaximumScale"] = DBNull.Value;
+                row["MinimumScale"] = DBNull.Value;
+                row["IsConcurrencyType"] = DBNull.Value;
+				row["IsLiteralSupported"] = false;
+				row["LiteralPrefix"] = "0x";
+                row["LiteralSuffix"] = DBNull.Value;
+                row["NativeDataType"] = DBNull.Value;
 				dsTable.Rows.Add(row);
 			}
 		}
