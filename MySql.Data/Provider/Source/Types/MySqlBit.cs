@@ -112,7 +112,7 @@ namespace MySql.Data.Types
 			row["ProviderDbType"] = MySqlDbType.Bit;
 			row["ColumnSize"] = 64;
 			row["CreateFormat"] = "BIT";
-			row["CreateParameters"] = null;
+            row["CreateParameters"] = DBNull.Value; ;
             row["DataType"] = typeof(UInt64).ToString();
 			row["IsAutoincrementable"] = false;
 			row["IsBestMatch"] = true;
@@ -127,10 +127,10 @@ namespace MySql.Data.Types
 			row["MaximumScale"] = 0;
 			row["MinimumScale"] = 0;
 			row["IsConcurrencyType"] = DBNull.Value;
-			row["IsLiteralsSupported"] = false;
-			row["LiteralPrefix"] = null;
-			row["LiteralSuffix"] = null;
-			row["NativeDataType"] = null;
+			row["IsLiteralSupported"] = false;
+            row["LiteralPrefix"] = DBNull.Value;
+            row["LiteralSuffix"] = DBNull.Value;
+            row["NativeDataType"] = DBNull.Value;
 			dsTable.Rows.Add(row);
 		}
 	}

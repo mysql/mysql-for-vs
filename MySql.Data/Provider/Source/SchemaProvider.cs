@@ -204,6 +204,7 @@ namespace MySql.Data.MySqlClient
                     row["IS_NULLABLE"] = reader.GetString(3);
                     row["DATA_TYPE"] = reader.GetString(1);
                     row["CHARACTER_MAXIMUM_LENGTH"] = DBNull.Value;
+                    row["CHARACTER_OCTET_LENGTH"] = DBNull.Value;
                     row["NUMERIC_PRECISION"] = DBNull.Value;
                     row["NUMERIC_SCALE"] = DBNull.Value;
                     row["CHARACTER_SET_NAME"] = reader.GetValue(2);
@@ -705,7 +706,7 @@ namespace MySql.Data.MySqlClient
             DataRow row = dt.NewRow();
             row["CompositeIdentifierSeparatorPattern"] = "\\.";
             row["DataSourceProductName"] = "MySQL";
-			row["DataSourceProductVersion"] = connection.ServerVersion;
+            row["DataSourceProductVersion"] = connection.ServerVersion;
             row["DataSourceProductVersionNormalized"] = ver;
             row["GroupByBehavior"] = GroupByBehavior.Unrelated;
             row["IdentifierPattern"] =
@@ -750,7 +751,7 @@ namespace MySql.Data.MySqlClient
             dt.Columns.Add(new DataColumn("MaximumScale", typeof (short)));
             dt.Columns.Add(new DataColumn("MinimumScale", typeof (short)));
             dt.Columns.Add(new DataColumn("IsConcurrencyType", typeof (bool)));
-            dt.Columns.Add(new DataColumn("IsLiteralsSupported", typeof (bool)));
+            dt.Columns.Add(new DataColumn("IsLiteralSupported", typeof (bool)));
             dt.Columns.Add(new DataColumn("LiteralPrefix", typeof (string)));
             dt.Columns.Add(new DataColumn("LiteralSuffix", typeof (string)));
             dt.Columns.Add(new DataColumn("NativeDataType", typeof (string)));
