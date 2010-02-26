@@ -163,7 +163,7 @@ namespace MySql.Data.Types
 			row["MaximumScale"] = 0;
 			row["MinimumScale"] = 0;
 			row["IsConcurrencyType"] = DBNull.Value;
-			row["IsLiteralsSupported"] = false;
+			row["IsLiteralSupported"] = false;
 			row["LiteralPrefix"] = null;
 			row["LiteralSuffix"] = null;
 			row["NativeDataType"] = null;

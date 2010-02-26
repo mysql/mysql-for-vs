@@ -12,6 +12,8 @@ Version 6.3.1
   (bug #50123)
 - fixed retrieve data command in server explorer so that it works in VS2010
 - added sql server mode to allow for [] style symbols in VS wizards
+- fixed bug where binary or blob columns would prevent columns after that from appearing in the
+  query builder (bug #50171)
 
 version 6.3.0
 - Added the ability to enable query analysis at runtime
