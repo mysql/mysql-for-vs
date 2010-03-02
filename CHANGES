@@ -21,6 +21,7 @@
   (bug #50123)
 - fixed bug where binary or blob columns would prevent columns after that from appearing in the
   query builder (bug #50171)
+- ScriptCompleted event handler now uses EventArgs.Empty instead of null
 
 Version 6.0.5
 - ensure that MySqlPacket always has a valid encoding. This prevents null reference exceptions in ReadString()
