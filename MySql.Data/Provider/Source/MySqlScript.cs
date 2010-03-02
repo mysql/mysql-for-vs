@@ -210,7 +210,7 @@ namespace MySql.Data.MySqlClient
         private void OnScriptCompleted()
         {
             if (ScriptCompleted != null)
-                ScriptCompleted(this, null);
+                ScriptCompleted(this, EventArgs.Empty);
         }
 
         private bool OnScriptError(Exception ex)
