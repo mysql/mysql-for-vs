@@ -267,7 +267,8 @@ namespace MySql.Data.MySqlClient.Tests
             SqlTokenizer tokenizer = new SqlTokenizer(sql);
             tokenizer.AnsiQuotes = false;
             Assert.AreEqual("AND", tokenizer.NextToken());
-            Assert.AreEqual("//", tokenizer.NextToken());
+            Assert.AreEqual("/", tokenizer.NextToken());
+            Assert.AreEqual("/", tokenizer.NextToken());
             Assert.AreEqual("OR", tokenizer.NextToken());
             Assert.IsNull(tokenizer.NextToken());
         }
