@@ -417,5 +417,28 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.AreEqual(1, cmd.ExecuteScalar());
             }
         }
+
+        /// <summary>
+        /// Bug #51610	Exception thrown inside Connector.NET
+        /// </summary>
+        [Test]
+        public void Bug51610()
+        {
+            MySqlCommand cmd = new MySqlCommand("SELECT 'ABC', (0/`QOH`) from (SELECT 1 as `QOH`) `d1`", conn);
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                reader.Read();
+                Assert.AreEqual("ABC", reader.GetString(0));
+                Assert.AreEqual(0, reader.GetInt32(1));
+            }
+
+            cmd.CommandText = "SELECT 'ABC', (0-`QOH`) from (SELECT 1 as `QOH`) `d1`";
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                reader.Read();
+                Assert.AreEqual("ABC", reader.GetString(0));
+                Assert.AreEqual(-1, reader.GetInt32(1));
+            }
+        }
     }
 }
