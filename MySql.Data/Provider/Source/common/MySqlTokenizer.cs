@@ -247,8 +247,6 @@ namespace MySql.Data.MySqlClient
 
             Debug.Assert(IsSpecialCharacter(sql[startIndex]));
 
-            while (pos < sql.Length && IsSpecialCharacter(sql[pos]))
-                pos++;
             stopIndex = pos;
             Quoted = false;
         }
