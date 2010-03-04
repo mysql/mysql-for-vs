@@ -15,6 +15,7 @@ Version 6.3.1
 - fixed bug where binary or blob columns would prevent columns after that from appearing in the
   query builder (bug #50171)
 - ScriptCompleted event handler now uses EventArgs.Empty instead of null
+- fixed parsing bug that was caused by special characters being jammed up beside a quoted identifier (bug #51610)
 
 version 6.3.0
 - Added the ability to enable query analysis at runtime
