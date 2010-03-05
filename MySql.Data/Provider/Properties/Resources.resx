@@ -450,4 +450,11 @@
   <data name="TraceStatementExecuted" xml:space="preserve">
     <value>{0}: Statement executed: statement id = {1}</value>
   </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="keywords" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>keywords.txt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="TraceQueryNormalized" xml:space="preserve">
+    <value>{0}: Query Normalized: {2}</value>
+  </data>
 </root>

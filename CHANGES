@@ -24,6 +24,8 @@ Version 6.2.3
   query builder (bug #50171)
 - ScriptCompleted event handler now uses EventArgs.Empty instead of null
 - fixed parsing bug that was caused by special characters being jammed up beside a quoted identifier (bug #51610)
+- added feature where sql queries that are longer than 300 chars are normalized and a new
+  query normalized log line is issues right after query opened to give the query normalized text
 
 Version 6.2.2
 - Fix race condition during TransactionScope rollback (bug#35330)
