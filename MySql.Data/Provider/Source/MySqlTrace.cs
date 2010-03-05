@@ -94,7 +94,8 @@ namespace MySql.Data.MySqlClient
         NonQuery,
         UsageAdvisorWarning,
         Warning,
-        Error
+        Error,
+        QueryNormalized
     }
 
     public enum UsageAdvisorWarningFlags
