@@ -33,7 +33,7 @@ using System.Security;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Oracle")]
 [assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("Copyright 2004-2007, MySQL AB, 2008-2009 Sun Microsystems, Inc., 2010 Oracle, Inc.")]
+[assembly: AssemblyCopyright("Copyright © 2004, 2010, Oracle and/or its affiliates. All rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
