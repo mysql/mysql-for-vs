@@ -21,6 +21,7 @@
 using System;
 using System.Diagnostics;
 using NUnit.Framework;
+using System.Text;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -87,5 +88,25 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.IsTrue(listener.Strings[7].Contains("MySql Warning: Level=Warning, Code=1265, Message=Data truncated for column 'name' at row 1"));
             Assert.IsTrue(listener.Strings[8].Contains("Query Closed"));
         }
+
+        [Test]
+        public void ProviderNormalizingQuery()
+        {
+            MySqlTrace.Listeners.Clear();
+            MySqlTrace.Switch.Level = SourceLevels.All;
+            GenericListener listener = new GenericListener();
+            MySqlTrace.Listeners.Add(listener);
+
+            StringBuilder sql = new StringBuilder("SELECT '");
+            for (int i=0; i < 400; i++)
+                sql.Append("a");
+            sql.Append("'");
+            MySqlCommand cmd = new MySqlCommand(sql.ToString(), conn);
+            cmd.ExecuteNonQuery();
+
+            Assert.AreEqual(5, listener.Strings.Count);
+            Assert.IsTrue(listener.Strings[1].EndsWith("SELECT ?"));
+        }
+
     }
 }
