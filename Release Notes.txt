@@ -13,6 +13,5 @@ What's new in 6.3
 
 What we know is broken
 ----------------------
-- The data editor is not available inside VS
 - Documentation has been been integrated into VS2010 yet
 
