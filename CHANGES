@@ -24,6 +24,8 @@
 - ScriptCompleted event handler now uses EventArgs.Empty instead of null
 - fixed parsing bug that was caused by special characters being jammed up beside a quoted identifier (bug #51610)
 - fixed bug in sql generation when using a negated binary fragment in EF (bug #49850)
+- fixed bug in tokenization where a nonterminated string in sql will cause a CLR exception
+  rather than throwing a syntax exception (bug #51788)
 
 Version 6.0.5
 - ensure that MySqlPacket always has a valid encoding. This prevents null reference exceptions in ReadString()
