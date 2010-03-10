@@ -27,6 +27,8 @@ Version 6.2.3
 - added feature where sql queries that are longer than 300 chars are normalized and a new
   query normalized log line is issues right after query opened to give the query normalized text
 - fixed bug in sql generation when using a negated binary fragment in EF (bug #49850)
+- fixed bug in tokenization where a nonterminated string in sql will cause a CLR exception
+  rather than throwing a syntax exception (bug #51788)
 
 Version 6.2.2
 - Fix race condition during TransactionScope rollback (bug#35330)
