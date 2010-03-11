@@ -29,6 +29,9 @@ Version 6.2.3
 - fixed bug in sql generation when using a negated binary fragment in EF (bug #49850)
 - fixed bug in tokenization where a nonterminated string in sql will cause a CLR exception
   rather than throwing a syntax exception (bug #51788)
+- added two requested features -- MySqlDataReader.GetFieldType(string columnname) &
+  MySqlDataReader.GetOrdinal() includes the name of the column in the exception when not found
+  (bug #47467)
 
 Version 6.2.2
 - Fix race condition during TransactionScope rollback (bug#35330)
