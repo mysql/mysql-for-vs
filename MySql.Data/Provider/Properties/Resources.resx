@@ -367,7 +367,7 @@
     <value>The host {0} does not support SSL connections.</value>
   </data>
   <data name="CouldNotFindColumnName" xml:space="preserve">
-    <value>Could not find specified column in results</value>
+    <value>Could not find specified column in results: {0}</value>
   </data>
   <data name="InvalidColumnOrdinal" xml:space="preserve">
     <value>You have specified an invalid column ordinal.</value>
