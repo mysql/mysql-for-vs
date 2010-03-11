@@ -135,7 +135,8 @@ namespace MySql.Data.MySqlClient
                 return (int)ordinal;
 
             // Throw an exception if the ordinal cannot be found.
-            throw new IndexOutOfRangeException(Resources.CouldNotFindColumnName);
+            throw new IndexOutOfRangeException(
+                String.Format(Resources.CouldNotFindColumnName, name));
         }
 
         /// <summary>

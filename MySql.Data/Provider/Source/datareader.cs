@@ -454,7 +454,12 @@ namespace MySql.Data.MySqlClient
 			return Convert.ToDouble(v.Value);
 		}
 
-		/// <summary>
+        public Type GetFieldType(string column)
+        {
+            return GetFieldType(GetOrdinal(column));
+        }
+
+        /// <summary>
 		/// Gets the Type that is the data type of the object.
 		/// </summary>
 		/// <param name="i"></param>
