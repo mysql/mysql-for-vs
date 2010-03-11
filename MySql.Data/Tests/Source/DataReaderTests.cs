@@ -773,5 +773,29 @@ namespace MySql.Data.MySqlClient.Tests
                 string name2 = reader.GetString(1);
             }
         }
+
+        /// <summary>
+        /// Bug #47467	Two simple changes for DataReader
+        /// </summary>
+        [Test]
+        public void Bug47467()
+        {
+            MySqlCommand cmd = new MySqlCommand("SELECT 1 as c1", conn);
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                reader.Read();
+                Type t = reader.GetFieldType("c1");
+
+                try
+                {
+                    reader.GetOrdinal("nocol");
+                    Assert.Fail("This should have failed");
+                }
+                catch (IndexOutOfRangeException ex)
+                {
+                    Assert.IsTrue(ex.Message.IndexOf("nocol") != -1);
+                }
+            }
+        }
     }
 }

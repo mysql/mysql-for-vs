@@ -459,6 +459,11 @@ namespace MySql.Data.MySqlClient
 			return Convert.ToDouble(v.Value);
 		}
 
+        public Type GetFieldType(string column)
+        {
+            return GetFieldType(GetOrdinal(column));
+        }
+
 		/// <summary>
 		/// Gets the Type that is the data type of the object.
 		/// </summary>
@@ -601,7 +606,7 @@ namespace MySql.Data.MySqlClient
 				return (int)ordinal;
 
 			// Throw an exception if the ordinal cannot be found.
-			throw new IndexOutOfRangeException("Could not find specified column in results");
+			throw new IndexOutOfRangeException("Could not find specified column in results: " + name);
 		}
 
 		/// <summary>
