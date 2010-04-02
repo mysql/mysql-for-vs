@@ -15,6 +15,7 @@ using MySql.Data.VisualStudio.Properties;
 using System.Reflection;
 using EnvDTE;
 using Microsoft.VisualStudio.CommandBars;
+using MySql.Data.VisualStudio.Editors;
 
 namespace MySql.Data.VisualStudio
 {
@@ -40,6 +41,14 @@ namespace MySql.Data.VisualStudio
     // This attribute is used to register the informations needed to show the this package
     // in the Help/About dialog of Visual Studio.
     [InstalledProductRegistration(true, null, null, null)]
+    [ProvideEditorFactory(typeof(SqlEditorFactory), 200, 
+        TrustLevel = __VSEDITORTRUSTLEVEL.ETL_AlwaysTrusted)]
+    [ProvideEditorExtension(typeof(SqlEditorFactory), ".mysql", 32, 
+        ProjectGuid = "{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}",
+        TemplateDir = @"..\..\Templates",
+        NameResourceID = 105,
+        DefaultName = "MySQL SQL Editor")]
+    [ProvideEditorLogicalView(typeof(SqlEditorFactory), "{7651a703-06e5-11d1-8ebd-00a0c90f26ea}")]
     [ProvideService(typeof(MySqlProviderObjectFactory), ServiceName = "MySQL Provider Object Factory")]
     [ProvideService(typeof(MySqlLanguageService))]
     [ProvideLanguageService(typeof(MySqlLanguageService), MySqlLanguageService.LanguageName, 101,
@@ -52,7 +61,7 @@ namespace MySql.Data.VisualStudio
     // This attribute is needed to let the shell know that this package exposes some menus.
     [ProvideMenuResource(1000, 1)]
     // This attribute registers a tool window exposed by this package.
-    [Guid(GuidList.PackageGUIDString)]
+    [Guid(GuidStrings.Package)]
     public sealed class MySqlDataProviderPackage : Package, IVsInstalledProduct
     {
         private MySqlLanguageService languageService;
@@ -92,13 +101,14 @@ namespace MySql.Data.VisualStudio
 
             base.Initialize();
 
+            RegisterEditorFactory(new SqlEditorFactory());
+
             // Add our command handlers for menu (commands must exist in the .vsct file)
             OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if (null != mcs)
             {
                 // Create the command for the menu item.
-                CommandID menuCommandID = new CommandID(GuidList.guidMySqlDataPackageCmdSet,
-                    (int)PkgCmdIDList.cmdidConfig);
+                CommandID menuCommandID = new CommandID(Guids.CmdSet, (int)PkgCmdIDList.cmdidConfig);
                 OleMenuCommand menuItem = new OleMenuCommand(ConfigCallback, menuCommandID);
                 menuItem.BeforeQueryStatus += new EventHandler(configWizard_BeforeQueryStatus);
                 mcs.AddCommand(menuItem);

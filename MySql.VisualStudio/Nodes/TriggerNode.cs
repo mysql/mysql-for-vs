@@ -31,21 +31,22 @@ using OleInterop = Microsoft.VisualStudio.OLE.Interop;
 using System.Data;
 using MySql.Data.VisualStudio.Editors;
 using MySql.Data.VisualStudio.Properties;
-using MySql.Data.MySqlClient; 
+using MySql.Data.MySqlClient;
+using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
 namespace MySql.Data.VisualStudio
 {
 	class TriggerNode : DocumentNode, IVsTextBufferProvider
 	{
 		private string sql_mode;
-        private TextBufferEditor editor;
+        private VSCodeEditor editor;
 
 		public TriggerNode(DataViewHierarchyAccessor hierarchyAccessor, int id) : 
 			base(hierarchyAccessor, id)
 		{
             NodeId = "Trigger";
             NameIndex = 2;
-            editor = new TextBufferEditor(hierarchyAccessor.ServiceProvider);
+            editor = new VSCodeEditor((IOleServiceProvider)hierarchyAccessor.ServiceProvider);
         }
 
         #region Properties
@@ -59,8 +60,8 @@ namespace MySql.Data.VisualStudio
 
         public override bool Dirty
         {
-            get { return (editor as TextBufferEditor).Dirty; }
-            protected set { (editor as TextBufferEditor).Dirty = value; }
+            get { return editor.Dirty; }
+            protected set { editor.Dirty = value; }
         }
 
         #endregion

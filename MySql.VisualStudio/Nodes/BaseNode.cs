@@ -270,9 +270,10 @@ namespace MySql.Data.VisualStudio
 			IVsWindowFrame winFrame = null;
 
 			object editor = GetEditor();
+            object coreEditor = editor;
             editorGuid = editor.GetType().GUID;
-            object coreEditor = (editor is TextBufferEditor) ?
-                (editor as TextBufferEditor).CodeWindow : editor;
+            if (editor is VSCodeEditor)
+                coreEditor = (editor as VSCodeEditor).CodeWindow;
 
 			IntPtr viewPunk = Marshal.GetIUnknownForObject(coreEditor);
 			IntPtr dataPunk = Marshal.GetIUnknownForObject(this);
@@ -303,12 +304,12 @@ namespace MySql.Data.VisualStudio
 						 ErrorHandler.Succeeded(result), "Failed to initialize editor");
 
             // if our editor is a text buffer then hook up our language service
-            if (editor is TextBufferEditor)
-            {
-                // now we tell our text buffer what language service to use
-                Guid langSvcGuid = typeof(MySqlLanguageService).GUID;
-                (editor as TextBufferEditor).TextBuffer.SetLanguageServiceID(ref langSvcGuid);
-            }
+            //if (editor is TextBufferEditor)
+            //{
+            //    // now we tell our text buffer what language service to use
+            //    Guid langSvcGuid = typeof(MySqlLanguageService).GUID;
+            //    (editor as TextBufferEditor).TextBuffer.SetLanguageServiceID(ref langSvcGuid);
+            //}
 
 			winFrame.Show();
 		}
@@ -384,7 +385,7 @@ namespace MySql.Data.VisualStudio
             
             // Searches for connection using connection string for current connection
             DataExplorerConnection connection = manager.FindConnection(
-                GuidList.ProviderGUID, HierarchyAccessor.Connection.EncryptedConnectionString, true);
+                Guids.Provider, HierarchyAccessor.Connection.EncryptedConnectionString, true);
             if (connection == null)
             {
                 Debug.Fail("Failed to find proper connection node!");

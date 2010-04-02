@@ -113,6 +113,9 @@
     <Compile Include="..\MySql.Data\Provider\Source\common\MySqlTokenizer.cs">
       <Link>LanguageService\MySqlTokenizer.cs</Link>
     </Compile>
+    <Compile Include="Editors\BaseEditorControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="DbObjects\CollationTypeConverter.cs" />
     <Compile Include="DbObjects\CharacterSetTypeConverter.cs" />
     <Compile Include="DbObjects\DataRowHelpers.cs" />
@@ -149,6 +152,15 @@
     <Compile Include="DDEX\MySqlDataViewSupport.cs" />
     <Compile Include="DbObjects\ColumnWithTypeDescriptor.cs" />
     <Compile Include="DDEX\StoredProcedureColumnEnumerator.cs" />
+    <Compile Include="Editors\VSCodeEditorUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\ConnectDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\ConnectDialog.Designer.cs">
+      <DependentUpon>ConnectDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Editors\CustomPropertyDescriptor.cs" />
     <Compile Include="Editors\ForeignKeyDialog.cs">
       <SubType>Form</SubType>
@@ -177,6 +189,15 @@
     <Compile Include="Editors\MySplitter.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Editors\ServiceBroker.cs" />
+    <Compile Include="Editors\SqlEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\SqlEditor.Designer.cs">
+      <DependentUpon>SqlEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\SqlEditorFactory.cs" />
+    <Compile Include="Editors\SqlEditorPane.cs" />
     <Compile Include="Editors\TableEditorPane.cs" />
     <Compile Include="Editors\TableIndexDialog.cs">
       <SubType>Form</SubType>
@@ -190,7 +211,6 @@
     <Compile Include="Editors\TableNamePromptDialog.Designer.cs">
       <DependentUpon>TableNamePromptDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\TextBufferEditor.cs" />
     <Compile Include="Editors\UDFEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -200,6 +220,10 @@
     <Compile Include="Editors\VS2005ColorTable.cs" />
     <Compile Include="Editors\VS2005PropertyGrid.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Editors\VSCodeEditor.cs" />
+    <Compile Include="Editors\VSCodeEditorWindow.cs">
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Editors\YesNoTypeConverter.cs" />
     <Compile Include="LanguageService\MySqlLanguageService.cs" />
@@ -272,6 +296,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DDEX\MySqlDataObjectSupport.xml" />
     <EmbeddedResource Include="DDEX\MySqlDataViewSupport.xml" />
+    <EmbeddedResource Include="Editors\ConnectDialog.resx">
+      <DependentUpon>ConnectDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Editors\ForeignKeyDialog.resx">
       <DependentUpon>ForeignKeyDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -281,6 +308,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\IndexColumnEditorDialog.resx">
       <DependentUpon>IndexColumnEditorDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\SqlEditor.resx">
+      <DependentUpon>SqlEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\TableEditor.resx">
       <SubType>Designer</SubType>
@@ -309,6 +339,19 @@
     <None Include="Resources\ArrowKey.bmp" />
     <None Include="Resources\Key.bmp" />
     <None Include="Resources\bannrbmp.bmp" />
+    <None Include="Resources\sql_editor_connect.bmp" />
+    <None Include="Resources\sql_editor_runsql.bmp" />
+    <None Include="Resources\sql_editor_validatesql.bmp" />
+    <None Include="Resources\sql_editor_executionplan.bmp" />
+    <None Include="Resources\sql_editor_banner.bmp" />
+    <None Include="Resources\sql_editor_disconnect.bmp" />
+    <Content Include="Templates\MySQL Script.mysql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\MySqlDataProviderPackage.vsdir">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Resources\401.ico" />
     <Content Include="Resources\icon.bmp" />
     <Content Include="Resources\Package.ico" />
   </ItemGroup>
@@ -343,6 +386,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MySql.Data\Provider\MySql.Data.csproj">
+      <Project>{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}</Project>
+      <Name>MySql.Data</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <RegisterOutputPackage>false</RegisterOutputPackage>

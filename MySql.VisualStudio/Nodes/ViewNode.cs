@@ -24,18 +24,19 @@ using System.Windows.Forms;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio;
+using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
 namespace MySql.Data.VisualStudio
 {
     class ViewNode : DocumentNode, IVsTextBufferProvider
 	{
-        private TextBufferEditor editor = null;
+        private VSCodeEditor editor = null;
 
         public ViewNode(DataViewHierarchyAccessor hierarchyAccessor, int id) : 
 			base(hierarchyAccessor, id)
 		{
             NodeId = "View";
-            editor = new TextBufferEditor(hierarchyAccessor.ServiceProvider);
+            editor = new VSCodeEditor((IOleServiceProvider)hierarchyAccessor.ServiceProvider);
         }
 
         public static void CreateNew(DataViewHierarchyAccessor HierarchyAccessor)
@@ -53,8 +54,8 @@ namespace MySql.Data.VisualStudio
 
         public override bool Dirty
         {
-            get { return (editor as TextBufferEditor).Dirty; }
-            protected set { (editor as TextBufferEditor).Dirty = value; }
+            get { return editor.Dirty; }
+            protected set { editor.Dirty = value; }
         }
 
         #endregion
