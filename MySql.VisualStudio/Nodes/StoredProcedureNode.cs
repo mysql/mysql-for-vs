@@ -30,7 +30,8 @@ using System.Diagnostics;
 using OleInterop = Microsoft.VisualStudio.OLE.Interop;
 using System.Data;
 using MySql.Data.VisualStudio.Editors;
-using MySql.Data.VisualStudio.Properties; 
+using MySql.Data.VisualStudio.Properties;
+using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
 namespace MySql.Data.VisualStudio
 {
@@ -38,7 +39,7 @@ namespace MySql.Data.VisualStudio
 	{
 		private string sql_mode;
 		private bool isFunction;
-        private TextBufferEditor editor;
+        private VSCodeEditor editor;
 
 		public StoredProcedureNode(DataViewHierarchyAccessor hierarchyAccessor, int id, bool isFunc) : 
 			base(hierarchyAccessor, id)
@@ -46,7 +47,7 @@ namespace MySql.Data.VisualStudio
             NodeId = isFunc ? "StoredFunction" : "StoredProcedure";
             isFunction = isFunc;
             NameIndex = 3;
-            editor = new TextBufferEditor(hierarchyAccessor.ServiceProvider);
+            editor = new VSCodeEditor((IOleServiceProvider)hierarchyAccessor.ServiceProvider);
         }
 
         #region Properties
@@ -58,8 +59,8 @@ namespace MySql.Data.VisualStudio
 
         public override bool Dirty
         {
-            get { return (editor as TextBufferEditor).Dirty; }
-            protected set { (editor as TextBufferEditor).Dirty = value; }
+            get { return editor.Dirty; }
+            protected set { editor.Dirty = value; }
         }
 
         private bool IsFunction

@@ -20,15 +20,26 @@ using System;
 
 namespace MySql.Data.VisualStudio
 {
+    static class GuidStrings 
+    {
+        public const string SqlEditorFactory = "CAA648E8-D6BD-465e-A1B3-2A0BF9DA5581";
+        //public const string SqlEditorCmdSet = "52C2F587-8E01-4333-BBD7-2BE0776207B8";
+        public const string Package = "79A115C9-B133-4891-9E7B-242509DAD272";
+        public const string CmdSet = "B87CB51F-8A01-4c5e-BF3E-5D0565D5397D";
+        public const string Provider = "C6882346-E592-4da5-80BA-D2EADCDA0359";
+    }
+
+    static class Guids
+    {
+        public static readonly Guid Package = new Guid(GuidStrings.Package);
+        public static readonly Guid Provider = new Guid(GuidStrings.Provider);
+        public static readonly Guid CmdSet = new Guid(GuidStrings.CmdSet);
+        public static readonly Guid SqlEditorFactory = new Guid(GuidStrings.SqlEditorFactory);
+        //public static readonly Guid SqlEditorCmdSet = new Guid(GuidStrings.SqlEditorCmdSet);
+    }
+
     static class GuidList
     {
-		public const string PackageGUIDString = "79A115C9-B133-4891-9E7B-242509DAD272";
-		public const string guidMySqlDataPackageCmdSetString = "B87CB51F-8A01-4c5e-BF3E-5D0565D5397D";
-        public const string ProviderGUIDString = "C6882346-E592-4da5-80BA-D2EADCDA0359";        
-
-        public static readonly Guid PackageGUID = new Guid(PackageGUIDString);
-        public static readonly Guid guidMySqlDataPackageCmdSet = new Guid(guidMySqlDataPackageCmdSetString);
-        public static readonly Guid ProviderGUID = new Guid(ProviderGUIDString);
         // TODO: This is wrong GUID, it must be CLSID of editor factory.
         public static readonly Guid EditorFactoryCLSID = new Guid(
             "D949EA95-EDA1-4b65-8A9E-266949A99360");

@@ -1068,4 +1068,37 @@ Would you like to create it?</value>
   <data name="WebConfigConnStrNoEmpty" xml:space="preserve">
     <value>The connection string must not be empty.</value>
   </data>
+  <data name="105" xml:space="preserve">
+    <value>MySQL</value>
+  </data>
+  <data name="106" xml:space="preserve">
+    <value>MySQL SQL Script</value>
+  </data>
+  <data name="107" xml:space="preserve">
+    <value>MySQL Script</value>
+  </data>
+  <data name="109" xml:space="preserve">
+    <value>MySQL SQL Script File (.mysql)</value>
+  </data>
+  <data name="401" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\401.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="sql_editor_connect" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\sql_editor_connect.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="sql_editor_executionplan" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\sql_editor_executionplan.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="sql_editor_runsql" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\sql_editor_runsql.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="sql_editor_validatesql" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\sql_editor_validatesql.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="sql_editor_banner" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\sql_editor_banner.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="sql_editor_disconnect" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\sql_editor_disconnect.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>
