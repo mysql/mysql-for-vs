@@ -255,7 +255,6 @@ Global
 		{77EC4E20-293A-48BA-8415-D0AD869D91FA}.Commercial|x64.ActiveCfg = Release|Any CPU
 		{77EC4E20-293A-48BA-8415-D0AD869D91FA}.Commercial|x86.ActiveCfg = Release|Any CPU
 		{77EC4E20-293A-48BA-8415-D0AD869D91FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{77EC4E20-293A-48BA-8415-D0AD869D91FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77EC4E20-293A-48BA-8415-D0AD869D91FA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{77EC4E20-293A-48BA-8415-D0AD869D91FA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{77EC4E20-293A-48BA-8415-D0AD869D91FA}.Debug|x64.ActiveCfg = Debug|Any CPU

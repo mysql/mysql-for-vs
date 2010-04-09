@@ -1,0 +1,89 @@
+<#
+// ++++++++++++++++++++++++++++++++++++++++++++++++++
+// NOTE: This include template also requires an assembly
+// reference to $(DevEnvDir)\Microsoft.Data.Entity.Design.DatabaseGeneration.dll
+// and a namespace reference to Microsoft.Data.Entity.Design.DatabaseGeneration 
+// in the parent template. Commented-out examples are provided below (replace '!' with '#'):
+// <!@ assembly name="$(DevEnvDir)Microsoft.Data.Entity.Design.DatabaseGeneration.dll" !>
+// <!@ import namespace="Microsoft.Data.Entity.Design.DatabaseGeneration" !>
+// ++++++++++++++++++++++++++++++++++++++++++++++++++
+#>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Data.Entity" #>
+<#@ assembly name="System.Data.Entity.Design" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Data.Entity.Design" #>
+<#@ import namespace="System.Data.Metadata.Edm" #>
+<#@ import namespace="System.Runtime.Remoting.Messaging" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++
+// Common Helper properties and methods for the T4 templates 
+// used by the 'Generate Database' feature
+// in the Entity Designer.
+// ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+private static readonly string PROVIDER_NAME_MYSQL = "MySql.Data.MySqlClient";
+
+/// <summary>
+/// Determine if the given provider invariant name is MySQL
+/// </summary>
+private bool IsMySql
+{
+    get
+    {
+        return (this.ProviderInvariantName.Equals(PROVIDER_NAME_MYSQL, StringComparison.Ordinal));
+    }
+}
+
+/// <summary>
+/// Escape identifiers enclosed by backticks within the template
+/// </summary>
+private static string MyId(string userIdentifier) 
+{
+    return userIdentifier.Replace("`", "``");
+}
+
+private static bool IsIdentity(EdmProperty property, Version targetVersion)
+{
+    return (property.GetStoreGeneratedPatternValue(targetVersion, DataSpace.SSpace) == StoreGeneratedPattern.Identity
+        && true == IsIntegerOrDecimalType(property));
+}
+
+private static string WriteMySqlType(EdmProperty property)
+{
+	if (property.TypeUsage.EdmType.Name == "guid")
+		return "CHAR(36) BINARY";
+	return property.ToStoreType();
+}
+
+/// <summary>
+/// If the property has a StoreGeneratedPattern=Identity annotation and
+/// is of an integer or decimal type, write 'IDENTITY(1,1)', otherwise an empty string
+/// </summary>
+private static string WriteMySqlIdentity(EdmProperty property, Version targetVersion)
+{
+    if (IsIdentity(property, targetVersion))
+    {
+        return "AUTO_INCREMENT PRIMARY KEY";
+    }
+    return String.Empty;
+}
+
+/// <summary>
+/// Write out the columns of a table given the Properties of an EntityType,
+/// escaping the identifier names.
+/// </summary>
+private static string WriteMySqlColumns(IEnumerable<EdmProperty> properties, char delimiter)
+{
+    StringBuilder serializedProperties = new StringBuilder();
+    foreach (EdmProperty property in properties)
+    {
+        serializedProperties.Append(string.Format("`{0}`", MyId(property.Name)));
+        serializedProperties.Append(delimiter + " ");
+    }
+    return serializedProperties.ToString().Trim().TrimEnd(delimiter);
+}
+
+#>
