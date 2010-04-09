@@ -61,6 +61,24 @@ namespace MySql.Data.Entity.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There is no store type corresponding to the EDM type &apos;{0}&apos; of primitive type &apos;{1}&apos;..
+        /// </summary>
+        internal static string NoStoreTypeForEdmType {
+            get {
+                return ResourceManager.GetString("NoStoreTypeForEdmType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The underlying provider does not support the type &apos;{0}&apos;..
+        /// </summary>
+        internal static string TypeNotSupported {
+            get {
+                return ResourceManager.GetString("TypeNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Result type of a function is expected to be a collection of RowType or PrimitiveType.
         /// </summary>
         internal static string WrongFunctionResultType {

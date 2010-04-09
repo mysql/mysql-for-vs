@@ -112,11 +112,17 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="NoStoreTypeForEdmType" xml:space="preserve">
+    <value>There is no store type corresponding to the EDM type '{0}' of primitive type '{1}'.</value>
+  </data>
+  <data name="TypeNotSupported" xml:space="preserve">
+    <value>The underlying provider does not support the type '{0}'.</value>
+  </data>
   <data name="WrongFunctionResultType" xml:space="preserve">
     <value>Result type of a function is expected to be a collection of RowType or PrimitiveType</value>
   </data>

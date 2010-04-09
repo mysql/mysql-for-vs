@@ -63,28 +63,28 @@ PROCESS
     </Type>
     <Type Name="nvarchar" PrimitiveTypeKind="String">
       <FacetDescriptions>
-        <MaxLength Minimum="1" Maximum="65535" Constant="false" />
+        <MaxLength Minimum="1" Maximum="65535" DefaultValue="1000" Constant="false" />
         <Unicode DefaultValue="true" Constant="true" />
         <FixedLength DefaultValue="false" Constant="true" />
       </FacetDescriptions>
     </Type>
     <Type Name="varchar" PrimitiveTypeKind="String">
       <FacetDescriptions>
-        <MaxLength Minimum="1" Maximum="65535" Constant="false" />
+        <MaxLength Minimum="1" Maximum="65535" DefaultValue="1000" Constant="false" />
         <Unicode DefaultValue="false" Constant="true" />
         <FixedLength DefaultValue="false" Constant="true" />
       </FacetDescriptions>
     </Type>
     <Type Name="char" PrimitiveTypeKind="String">
       <FacetDescriptions>
-        <MaxLength Minimum="1" Maximum="255" Constant="false" />
+        <MaxLength Minimum="1" Maximum="255" DefaultValue="255" Constant="false" />
         <Unicode DefaultValue="false" Constant="true" />
         <FixedLength DefaultValue="true" Constant="true" />
       </FacetDescriptions>
     </Type>
     <Type Name="nchar" PrimitiveTypeKind="String">
       <FacetDescriptions>
-        <MaxLength Minimum="1" Maximum="255" Constant="false" />
+        <MaxLength Minimum="1" Maximum="255" DefaultValue="255" Constant="false" />
         <Unicode DefaultValue="true" Constant="true" />
         <FixedLength DefaultValue="true" Constant="true" />
       </FacetDescriptions>
@@ -97,7 +97,7 @@ PROCESS
     </Type>
     <Type Name="varbinary" PrimitiveTypeKind="Binary">
       <FacetDescriptions>
-        <MaxLength Minimum="1" Maximum="65535" Constant="false" />
+        <MaxLength Minimum="1" Maximum="65535" DefaultValue="100" Constant="false" />
         <FixedLength DefaultValue="false" Constant="true" />
       </FacetDescriptions>
     </Type>
