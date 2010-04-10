@@ -79,7 +79,6 @@
     <Compile Include="Source\BulkLoading.cs" />
     <Compile Include="Source\SqlServerMode.cs" />
     <Compile Include="Source\Logging.cs" />
-    <Compile Include="Source\StoredProcedureWithAccess.cs" />
     <Compile Include="Source\ScriptExecution.cs" />
     <Compile Include="Source\SqlTokenizer.cs" />
     <Compile Include="Source\Tokenizer.cs" />
