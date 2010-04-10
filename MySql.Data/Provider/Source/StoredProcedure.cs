@@ -136,6 +136,8 @@ namespace MySql.Data.MySqlClient
             if (param["ORDINAL_POSITION"].Equals(0))
                 pName = returnParameter;
 
+            if (pName == null) return null;
+
             // make sure the parameters given to us have an appropriate
             // type set if it's not already
             MySqlParameter p = command.Parameters.GetParameterFlexible(pName, true);
