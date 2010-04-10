@@ -42,6 +42,7 @@ namespace MySql.Data.MySqlClient.Tests
 					BEGIN
 						SELECT 1,2,3;
 					END{1}";
+
         [Test]
         public void ExecuteScriptWithProcedures()
         {
