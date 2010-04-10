@@ -52,6 +52,25 @@ namespace MySql.Data.MySqlClient
             }
         }
 
+#if DEBUG
+        private void EnsurePerfCategoryExist()
+        {
+            CounterCreationDataCollection ccdc = new CounterCreationDataCollection();
+            CounterCreationData ccd = new CounterCreationData();
+            ccd.CounterType = PerformanceCounterType.NumberOfItems32;
+            ccd.CounterName = "HardProcedureQueries";
+            ccdc.Add(ccd);
+
+            ccd = new CounterCreationData();
+            ccd.CounterType = PerformanceCounterType.NumberOfItems32;
+            ccd.CounterName = "SoftProcedureQueries";
+            ccdc.Add(ccd);
+
+            if (!PerformanceCounterCategory.Exists(Resources.PerfMonCategoryName))
+                PerformanceCounterCategory.Create(Resources.PerfMonCategoryName, null, ccdc);
+        }
+#endif
+
         public void AddHardProcedureQuery()
         {
             if (!connection.Settings.UsePerformanceMonitor ||

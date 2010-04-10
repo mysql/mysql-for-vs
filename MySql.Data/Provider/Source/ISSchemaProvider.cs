@@ -188,8 +188,8 @@ namespace MySql.Data.MySqlClient
         {
             // if the user has said that we have access to mysql.proc then
             // we use that as it is a lot faster
-            if (connection.Settings.UseProcedureBodies)
-                return base.GetProcedures(restrictions);
+//            if (connection.HasProcAccess)
+  //              return base.GetProcedures(restrictions);
 
             string[] keys = new string[4];
             keys[0] = "ROUTINE_CATALOG";
