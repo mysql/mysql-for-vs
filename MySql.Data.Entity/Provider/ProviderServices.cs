@@ -28,10 +28,11 @@ using MySql.Data.Entity;
 using System.Reflection;
 using System.Diagnostics;
 using MySql.Data.Entity.Properties;
+using System.Text;
 
 namespace MySql.Data.MySqlClient
 {
-    internal class MySqlProviderServices : DbProviderServices
+    internal partial class MySqlProviderServices : DbProviderServices
     {
         internal static readonly MySqlProviderServices Instance;
 
