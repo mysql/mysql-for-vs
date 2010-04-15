@@ -55,16 +55,18 @@ namespace MySql.Data.MySqlClient
 #if !CF
                 conn.PerfMonitor.AddHardProcedureQuery();
 #endif
-                MySqlTrace.LogInformation(conn.ServerThread,
-                    String.Format(Resources.HardProcQuery, spName));
+                if (conn.Settings.Logging)
+                    MySqlTrace.LogInformation(conn.ServerThread,
+                        String.Format(Resources.HardProcQuery, spName));
             }
             else
             {
 #if !CF
                 conn.PerfMonitor.AddSoftProcedureQuery();
 #endif
-                MySqlTrace.LogInformation(conn.ServerThread, 
-                    String.Format(Resources.SoftProcQuery, spName));
+                if (conn.Settings.Logging)
+                    MySqlTrace.LogInformation(conn.ServerThread, 
+                        String.Format(Resources.SoftProcQuery, spName));
             }
             return ds;
         }

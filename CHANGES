@@ -6,6 +6,9 @@
 - added two requested features -- MySqlDataReader.GetFieldType(string columnname) &
   MySqlDataReader.GetOrdinal() includes the name of the column in the exception when not found
   (bug #47467)
+- Replaced check for Settings.Logging when logging information in the 
+  procedure cache.  This is already in 6.1 and 6.0 but got "misplaced" in 6.2
+  (bug #52475)
 
 Version 6.3.1
 - fixed bug where giving a connection string option like (option=) and then trying to read
