@@ -1,3 +1,8 @@
+Version 6.2.4
+- Replaced check for Settings.Logging when logging information in the 
+  procedure cache.  This is already in 6.1 and 6.0 but got "misplaced" in 6.2
+  (bug #52475)
+
 Version 6.2.3
 - fixed InvalidOperationException when accessing Stream.ReadTimeout or Stream.WriteTimeout on CF
   (bug #50321)
