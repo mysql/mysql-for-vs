@@ -570,8 +570,9 @@ namespace MySql.Data.MySqlClient
                 else
                     driver.Close();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+		MySqlTrace.LogWarning(ServerThread, String.Concat("Error occurred aborting the connection. Exception was: ", ex.Message));
             }
             SetState(ConnectionState.Closed, true);
         }
