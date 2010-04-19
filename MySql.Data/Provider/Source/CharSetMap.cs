@@ -84,7 +84,7 @@ namespace MySql.Data.MySqlClient
         {
 			mapping = new Dictionary<string, CharacterSet>();
 
-            mapping.Add("latin1", new CharacterSet("latin1", 1));
+            mapping.Add("latin1", new CharacterSet("windows-1252", 1));
             mapping.Add("big5", new CharacterSet("big5", 2));
             mapping.Add("dec8", mapping["latin1"]);
             mapping.Add("cp850", new CharacterSet("ibm850", 1));
