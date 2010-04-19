@@ -9,6 +9,7 @@
 - Replaced check for Settings.Logging when logging information in the 
   procedure cache.  This is already in 6.1 and 6.0 but got "misplaced" in 6.2
   (bug #52475)
+- changed mapping of latin1 from latin1 to windows-1252 (bug #51927)
 
 Version 6.3.1
 - fixed bug where giving a connection string option like (option=) and then trying to read
