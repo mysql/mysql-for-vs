@@ -30,6 +30,7 @@
   MySqlDataReader.GetOrdinal() includes the name of the column in the exception when not found
   (bug #47467)
 - Added trace message in exception blog in MySqlConnection.Abort() method (bug #52769)
+- changed mapping of latin1 from latin1 to windows-1252 (bug #51927)
 
 Version 6.0.5
 - ensure that MySqlPacket always has a valid encoding. This prevents null reference exceptions in ReadString()
