@@ -548,7 +548,12 @@ namespace MySql.Web.SessionState
 
                             object items = reader.GetValue(1);
                             serializedItems = (items is DBNull) ? null : (byte[])items;
-                            lockId = reader.GetInt32(2);
+                            lockId = reader.GetValue(2);
+                            if (lockId is DBNull)
+                            {
+                                lockId = (int)0;
+                            }
+
                             actionFlags = (SessionStateActions)(reader.GetInt32(3));
                             timeout = reader.GetInt32(4);
                             lockAge = new TimeSpan(0, 0, 0, reader.GetInt32(5));
