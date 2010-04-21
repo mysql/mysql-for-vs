@@ -247,8 +247,6 @@ namespace MySql.Data.MySqlClient
 
             Debug.Assert(IsSpecialCharacter(sql[startIndex]));
 
-            while (pos < sql.Length && IsSpecialCharacter(sql[pos]))
-                pos++;
             stopIndex = pos;
             Quoted = false;
         }
@@ -263,12 +261,16 @@ namespace MySql.Data.MySqlClient
             startIndex = pos-1;
             bool escaped = false;
 
+            bool found = false;
             while (pos < sql.Length)
             {
                 char c = sql[pos];
 
                 if (c == quoteChar && !escaped)
+                {
+                    found = true;
                     break;
+                }
 
                 if (escaped)
                     escaped = false;
@@ -276,8 +278,8 @@ namespace MySql.Data.MySqlClient
                     escaped = true;
                 pos++;
             }
-            pos++;
-            Quoted = true;
+            if (found) pos++;
+            Quoted = found;
             stopIndex = pos;
         }
 

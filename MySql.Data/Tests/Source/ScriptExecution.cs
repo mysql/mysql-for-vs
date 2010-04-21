@@ -191,5 +191,44 @@ namespace MySql.Data.MySqlClient.Tests
             s.Connection = conn;
             int count = s.Execute();
         }
+
+        /// <summary>
+        /// Bug #46429	use DELIMITER command in MySql.Data.MySqlClient.MySqlScript
+        /// </summary>
+        [Test]
+        public void DelimiterInScriptV2()
+        {
+            var sql = new StringBuilder();
+
+            sql.AppendLine("DELIMITER MySuperDelimiter");
+            sql.AppendLine("CREATE PROCEDURE TestProcedure1()");
+            sql.AppendLine("BEGIN");
+            sql.AppendLine("  SELECT * FROM mysql.proc;");
+            sql.AppendLine("END MySuperDelimiter");
+            sql.AppendLine("CREATE PROCEDURE TestProcedure2()");
+            sql.AppendLine("BEGIN");
+            sql.AppendLine("  SELECT * FROM mysql.proc;");
+            sql.AppendLine("END mysuperdelimiter");
+
+            sql.AppendLine("DELIMITER ;");
+
+            var script = new MySqlScript(conn, sql.ToString());
+            script.Execute();
+        }
+
+
+        /// <summary>
+        /// Bug #50344	MySqlScript.Execute() throws InvalidOperationException
+        /// </summary>
+        [Test]
+        public void EmptyLastLineWithScriptExecute()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("DROP FUNCTION IF EXISTS `BlaBla`;");
+            sb.AppendLine("DELIMITER ;;");
+            MySqlScript script = new MySqlScript(conn, sb.ToString());
+            // InvalidOperationException : The CommandText property has not been properly initialized.
+            script.Execute(); 
+        }
     }
 }

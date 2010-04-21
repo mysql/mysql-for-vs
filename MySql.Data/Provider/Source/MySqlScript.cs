@@ -166,6 +166,7 @@ namespace MySql.Data.MySqlClient
                 MySqlCommand cmd = new MySqlCommand(null, connection);
                 foreach (ScriptStatement statement in statements)
                 {
+                    if (String.IsNullOrEmpty(statement.text)) continue;
                     cmd.CommandText = statement.text;
                     try
                     {
@@ -209,7 +210,7 @@ namespace MySql.Data.MySqlClient
         private void OnScriptCompleted()
         {
             if (ScriptCompleted != null)
-                ScriptCompleted(this, null);
+                ScriptCompleted(this, EventArgs.Empty);
         }
 
         private bool OnScriptError(Exception ex)
@@ -270,7 +271,7 @@ namespace MySql.Data.MySqlClient
                     }
                     else
                     {
-                        int delimiterPos = token.IndexOf(currentDelimiter);
+                        int delimiterPos = token.IndexOf(currentDelimiter, StringComparison.InvariantCultureIgnoreCase);
                         if (delimiterPos != -1)
                         {
                             int endPos = tokenizer.StopIndex - token.Length + delimiterPos;
@@ -282,7 +283,7 @@ namespace MySql.Data.MySqlClient
                             statement.line = FindLineNumber(startPos, lineNumbers);
                             statement.position = startPos - lineNumbers[statement.line];
                             statements.Add(statement);
-                            startPos = endPos + delimiter.Length;
+                            startPos = tokenizer.StopIndex;
                         }				
 					}
                 }

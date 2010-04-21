@@ -432,7 +432,7 @@ namespace MySql.Data.MySqlClient.Tests
                 cmd.ExecuteReader();
                 Assert.Fail("This should have failed");
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException)
             {
             }
         }

@@ -66,7 +66,7 @@ namespace MySql.Data.Entity
         public override void WriteSql(StringBuilder sql)
         {
             if (IsNegated)
-                sql.Append("NOT ");
+                sql.Append("NOT (");
 
             // do left arg
             if (WrapLeft)
@@ -82,6 +82,8 @@ namespace MySql.Data.Entity
                 sql.Append("(");
             Right.WriteSql(sql);
             if (WrapRight)
+                sql.Append(")");
+            if (IsNegated)
                 sql.Append(")");
         }
     }
@@ -299,7 +301,7 @@ namespace MySql.Data.Entity
 
     internal class UnionFragment : InputFragment
     {
-        public bool Distinct;
+        public bool Distinct = false;
 
         public override void WriteInnerSql(StringBuilder sql)
         {

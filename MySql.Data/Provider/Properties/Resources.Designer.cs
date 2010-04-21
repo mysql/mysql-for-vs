@@ -21,9 +21,7 @@ namespace MySql.Data.MySqlClient.Properties {
     // with the /str option, or rebuild your VS project.
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "2.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-#if !CF
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-#endif
     public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
@@ -216,7 +214,7 @@ namespace MySql.Data.MySqlClient.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not find specified column in results.
+        ///   Looks up a localized string similar to Could not find specified column in results: {0}.
         /// </summary>
         public static string CouldNotFindColumnName {
             get {

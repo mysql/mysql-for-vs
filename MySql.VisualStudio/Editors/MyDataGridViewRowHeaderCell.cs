@@ -24,8 +24,6 @@ namespace MySql.Data.VisualStudio.Editors
 {
     class MyDataGridViewRowHeaderCell : DataGridViewRowHeaderCell
     {
-        TableNode tableNode;
-
         private List<Column> Columns
         {
             get { return (DataGridView.DataSource as BindingSource).DataSource as List<Column>; }

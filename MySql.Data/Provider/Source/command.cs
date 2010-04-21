@@ -116,6 +116,7 @@ namespace MySql.Data.MySqlClient
 			{
 				cmdText = value;
 				statement = null;
+                batchableCommandText = null;
 				if (cmdText != null && cmdText.EndsWith("DEFAULT VALUES"))
 				{
 					cmdText = cmdText.Substring(0, cmdText.Length - 14);
@@ -540,15 +541,14 @@ namespace MySql.Data.MySqlClient
 
 		private static string TrimSemicolons(string sql)
 		{
-			System.Text.StringBuilder sb = new System.Text.StringBuilder(sql);
 			int start = 0;
-			while (sb[start] == ';')
+			while (sql[start] == ';')
 				start++;
 
-			int end = sb.Length - 1;
-			while (sb[end] == ';')
+			int end = sql.Length - 1;
+			while (sql[end] == ';')
 				end--;
-			return sb.ToString(start, end - start + 1);
+			return sql.Substring(start, end-start+1);
 		}
 
 		internal object AsyncExecuteWrapper(int type, CommandBehavior behavior)
@@ -817,8 +817,6 @@ namespace MySql.Data.MySqlClient
                         token = tokenizer.NextToken();
                     }
                 }
-                if (batchableCommandText == null)
-                    batchableCommandText = CommandText;
             }
 
             return batchableCommandText;
