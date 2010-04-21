@@ -198,13 +198,9 @@ namespace MySql.Data.MySqlClient
             mySqlDbType = type;
 
             if (String.IsNullOrEmpty(TableName) && String.IsNullOrEmpty(RealTableName) &&
-                driver.Settings.FunctionsReturnString)
+                IsBinary && driver.Settings.FunctionsReturnString)
             {
-                mySqlDbType = MySqlDbType.VarString;
-                // we are treating a binary as string so we have to choose some
-                // charset index.  Connection seems logical.
                 CharacterSetIndex = driver.ConnectionCharSetIndex;
-                binaryOk = false;
             }
 
             // if our type is an unsigned number, then we need

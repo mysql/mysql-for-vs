@@ -42,6 +42,7 @@ Version 6.2.3
 - Added trace message in exception blog in MySqlConnection.Abort() method (bug #52769)
 - changed mapping of latin1 from latin1 to windows-1252 (bug #51927)
 - flushed out many more entires in error code enum (bug #51988)
+- changed how we respond when the user selects 'functions return string=true'.  Now we no longer force the type to var string but just let the underlying type come through but we strip the binary flag (bug #52187)
 
 Version 6.2.2
 - Fix race condition during TransactionScope rollback (bug#35330)
