@@ -135,6 +135,46 @@ namespace MySql.Data.MySqlClient.Tests
             Thread.CurrentThread.CurrentCulture = curCulture;
             Thread.CurrentThread.CurrentUICulture = curUICulture;
         }
+
+        /// <summary>
+        /// Bug #52187	FunctionsReturnString=true messes up decimal separator
+        /// </summary>
+        [Test]
+        public void FunctionsReturnStringAndDecimal()
+        {
+            execSQL("CREATE TABLE bug52187a (a decimal(5,2) not null)");
+            execSQL("CREATE TABLE bug52187b (b decimal(5,2) not null)");
+            execSQL("insert into bug52187a values (1.25)");
+            execSQL("insert into bug52187b values (5.99)");
+            
+            CultureInfo curCulture = Thread.CurrentThread.CurrentCulture;
+            CultureInfo curUICulture = Thread.CurrentThread.CurrentUICulture;
+            CultureInfo c = new CultureInfo("pt-PT");
+            Thread.CurrentThread.CurrentCulture = c;
+            Thread.CurrentThread.CurrentUICulture = c;
+
+            string connStr = GetConnectionString(true) + ";functions return string=true";
+            try
+            {
+                using (MySqlConnection con = new MySqlConnection(connStr))
+                {
+                    con.Open();
+                    MySqlDataAdapter da = new MySqlDataAdapter(
+                        "select *,(select b from bug52187b) as field_b from bug52187a", con);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    Assert.AreEqual(1, dt.Rows.Count);
+                    Assert.AreEqual(1.25, dt.Rows[0][0]);
+                    Assert.AreEqual(5.99, dt.Rows[0][1]);
+                }
+            }
+            finally
+            {
+                Thread.CurrentThread.CurrentCulture = curCulture;
+                Thread.CurrentThread.CurrentUICulture = curUICulture;
+            }
+
+        }
 #endif
     }
 }
