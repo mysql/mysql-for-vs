@@ -1237,7 +1237,7 @@ namespace MySql.Data.MySqlClient.Tests
                 connStr += ";use procedure bodies=false";
             using (MySqlConnection c = new MySqlConnection(connStr))
             {
-
+                c.Open();
                 MySqlCommand cmd = new MySqlCommand(spName, c);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("?p_2", ("World"));
@@ -1249,7 +1249,6 @@ namespace MySql.Data.MySqlClient.Tests
                 MySqlDataAdapter da = new MySqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
                 da.Fill(dt);
-                string s = GetConnectionString(true);
                 if (!isOwner)
                 {
                     Assert.AreEqual("World", dt.Rows[0][0]);
