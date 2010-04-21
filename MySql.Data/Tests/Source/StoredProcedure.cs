@@ -1228,41 +1228,37 @@ namespace MySql.Data.MySqlClient.Tests
         {
             if (Version.Major < 5) return;
 
-            string sql = @"CREATE PROCEDURE spTest(IN p_1 VARCHAR(5), IN p_2 VARCHAR(5))
-                        BEGIN SELECT p_1 AS P1, p_2 AS P2; END";
+            execSQL(@"CREATE PROCEDURE spTest(IN p_1 VARCHAR(5), IN p_2 VARCHAR(5))
+                        BEGIN SELECT p_1 AS P1, p_2 AS P2; END");
             string spName = "spTest";
+            string connStr = GetConnectionString(true);
             if (!isOwner)
+                connStr += ";use procedure bodies=false";
+            using (MySqlConnection c = new MySqlConnection(connStr))
             {
-                rootConn.ChangeDatabase(database1);
-                suExecSQL(sql);
-                rootConn.ChangeDatabase(database0);
-                spName = database1 + ".spTest";
-            }
-            else
-                execSQL(sql);
-
-            MySqlCommand cmd = new MySqlCommand(spName, conn);
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandTimeout = 0;
-            cmd.Parameters.AddWithValue("?p_2", ("World"));
-            cmd.Parameters[0].DbType = DbType.AnsiString;
-            cmd.Parameters[0].Direction = ParameterDirection.Input;
-            cmd.Parameters.AddWithValue("?p_1", ("Hello"));
-            cmd.Parameters[1].DbType = DbType.AnsiString;
-            cmd.Parameters[1].Direction = ParameterDirection.Input;
-            MySqlDataAdapter da = new MySqlDataAdapter(cmd);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-            string s = GetConnectionString(true);
-            if (s.IndexOf("use procedure bodies=false") != -1)
-            {
-                Assert.AreEqual("World", dt.Rows[0][0]);
-                Assert.AreEqual("Hello", dt.Rows[0][1]);
-            }
-            else
-            {
-                Assert.AreEqual("Hello", dt.Rows[0]["P1"]);
-                Assert.AreEqual("World", dt.Rows[0]["P2"]);
+                c.Open();
+                MySqlCommand cmd = new MySqlCommand(spName, c);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandTimeout = 0;
+                cmd.Parameters.AddWithValue("?p_2", ("World"));
+                cmd.Parameters[0].DbType = DbType.AnsiString;
+                cmd.Parameters[0].Direction = ParameterDirection.Input;
+                cmd.Parameters.AddWithValue("?p_1", ("Hello"));
+                cmd.Parameters[1].DbType = DbType.AnsiString;
+                cmd.Parameters[1].Direction = ParameterDirection.Input;
+                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                if (!isOwner)
+                {
+                    Assert.AreEqual("World", dt.Rows[0][0]);
+                    Assert.AreEqual("Hello", dt.Rows[0][1]);
+                }
+                else
+                {
+                    Assert.AreEqual("Hello", dt.Rows[0]["P1"]);
+                    Assert.AreEqual("World", dt.Rows[0]["P2"]);
+                }
             }
         }
 
