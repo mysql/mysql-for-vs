@@ -417,5 +417,56 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.AreEqual(1, cmd.ExecuteScalar());
             }
         }
+
+        /// <summary>
+        /// Bug #51610	Exception thrown inside Connector.NET
+        /// </summary>
+        [Test]
+        public void Bug51610()
+        {
+            MySqlCommand cmd = new MySqlCommand("SELECT 'ABC', (0/`QOH`) from (SELECT 1 as `QOH`) `d1`", conn);
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                reader.Read();
+                Assert.AreEqual("ABC", reader.GetString(0));
+                Assert.AreEqual(0, reader.GetInt32(1));
+            }
+
+            cmd.CommandText = "SELECT 'ABC', (0-`QOH`) from (SELECT 1 as `QOH`) `d1`";
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                reader.Read();
+                Assert.AreEqual("ABC", reader.GetString(0));
+                Assert.AreEqual(-1, reader.GetInt32(1));
+            }
+
+            cmd.CommandText = "SELECT 'test 2010-03-04 @ 10:14'";
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                reader.Read();
+                Assert.AreEqual("test 2010-03-04 @ 10:14", reader.GetString(0));
+            }
+
+        }
+
+        /// <summary>
+        /// Bug #51788	Error in SQL syntax not reported. A CLR exception was thrown instead,
+        /// </summary>
+        [Test]
+        public void NonTerminatedString()
+        {
+            execSQL("DROP TABLE IF EXISTS Test");
+            execSQL("CREATE TABLE Test(id INT, name1 VARCHAR(20), name2 VARCHAR(20))");
+
+            try
+            {
+                MySqlCommand cmd = new MySqlCommand(
+                    "INSERT INTO test VALUES (1, 'test 2010-03-04 @ 10:14, name2=' joe')", conn);
+                cmd.ExecuteNonQuery();
+            }
+            catch (MySqlException)
+            {
+            }
+        }
     }
 }
