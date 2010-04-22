@@ -80,7 +80,7 @@ namespace MySql.Data.MySqlClient
             string spName = command.CommandText;
             if (spName.IndexOf(".") == -1)
                 spName = command.Connection.Database + "." + spName;
-            DataSet ds = command.Connection.ProcedureCache.GetProcedure(command.Connection, spName);
+            DataSet ds = command.Connection.ProcedureCache.GetProcedure(command.Connection, spName, null);
             if (!ds.Tables.Contains("Procedure Parameters"))
                 throw new MySqlException(Resources.UnableToDeriveParameters);
 

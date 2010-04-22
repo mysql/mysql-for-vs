@@ -16,7 +16,8 @@
 - SessionProvider : Avoid SQLNullValueException if lockId returned by select is 
   NULL (bug#52175)
 - changed how we respond when the user selects 'functions return string=true'.  Now we no longer force the type to var string but just let the underlying type come through but we strip the binary flag (bug #52187)
-
+- improved our procedure caching so that if you drop and recreate a proc with a different number of parameters
+  it will find the new proc as long as your are actually using the right number of parameters (bug #52562)
 
 Version 6.3.1
 - fixed bug where giving a connection string option like (option=) and then trying to read
