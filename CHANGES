@@ -1,4 +1,3 @@
-test
 - When sending file to server (LOAD DATA INFILE) open the file for read only, not for read/write
  (bug #48944)
 - Fixed precision calculation on decimal and newdecimal columns (bug #48171)
@@ -34,6 +33,8 @@ test
 - changed mapping of latin1 from latin1 to windows-1252 (bug #51927)
 - flushed out many more entires in error code enum (bug #51988)
 - changed how we respond when the user selects 'functions return string=true'.  Now we no longer force the type to var string but just let the underlying type come through but we strip the binary flag (bug #52187)
+- improved our procedure caching so that if you drop and recreate a proc with a different number of parameters
+  it will find the new proc as long as your are actually using the right number of parameters (bug #52562)
 
 Version 6.0.5
 - ensure that MySqlPacket always has a valid encoding. This prevents null reference exceptions in ReadString()
