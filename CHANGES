@@ -1,9 +1,14 @@
-Version 6.2.4
+- Added trace message in exception blog in MySqlConnection.Abort() method (bug #52769)
+- changed mapping of latin1 from latin1 to windows-1252 (bug #51927)
+- flushed out many more entires in error code enum (bug #51988)
+- changed how we respond when the user selects 'functions return string=true'.  Now we no longer force the type to var string but just let the underlying type come through but we strip the binary flag (bug #52187)
 - Replaced check for Settings.Logging when logging information in the 
   procedure cache.  This is already in 6.1 and 6.0 but got "misplaced" in 6.2
   (bug #52475)
 - SessionProvider : Avoid SQLNullValueException if lockId returned by select is 
   NULL (bug#52175)
+- improved our procedure caching so that if you drop and recreate a proc with a different number of parameters
+  it will find the new proc as long as your are actually using the right number of parameters (bug #52562)
 
 Version 6.2.3
 - fixed InvalidOperationException when accessing Stream.ReadTimeout or Stream.WriteTimeout on CF
@@ -39,10 +44,6 @@ Version 6.2.3
 - added two requested features -- MySqlDataReader.GetFieldType(string columnname) &
   MySqlDataReader.GetOrdinal() includes the name of the column in the exception when not found
   (bug #47467)
-- Added trace message in exception blog in MySqlConnection.Abort() method (bug #52769)
-- changed mapping of latin1 from latin1 to windows-1252 (bug #51927)
-- flushed out many more entires in error code enum (bug #51988)
-- changed how we respond when the user selects 'functions return string=true'.  Now we no longer force the type to var string but just let the underlying type come through but we strip the binary flag (bug #52187)
 
 Version 6.2.2
 - Fix race condition during TransactionScope rollback (bug#35330)
