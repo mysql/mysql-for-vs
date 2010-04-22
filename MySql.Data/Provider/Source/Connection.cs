@@ -573,7 +573,7 @@ namespace MySql.Data.MySqlClient
             catch (Exception ex)
             {
                 if (Settings.Logging)
-                    Trace.TraceWarning(
+                    Logger.LogWarning(
                         String.Concat("Error occurred aborting the connection. Exception was: ", ex.Message));
             }
             SetState(ConnectionState.Closed, true);

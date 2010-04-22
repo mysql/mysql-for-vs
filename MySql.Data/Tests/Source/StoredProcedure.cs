@@ -1287,5 +1287,31 @@ namespace MySql.Data.MySqlClient.Tests
             MySqlCommandBuilder.DeriveParameters(cmd);
             Assert.AreEqual(2, cmd.Parameters.Count);
         }
+
+        /// <summary>
+        /// Bug #52562 Sometimes we need to reload cached function parameters 
+        /// </summary>
+        [Test]
+        public void ProcedureCacheMiss()
+        {
+            execSQL("CREATE PROCEDURE spTest(id INT) BEGIN SELECT 1; END");
+
+            string connStr = GetConnectionString(true) + ";procedure cache size=25";
+            using (MySqlConnection c = new MySqlConnection(connStr))
+            {
+                c.Open();
+                MySqlCommand cmd = new MySqlCommand("spTest", c);
+                cmd.Parameters.AddWithValue("@id", 1);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.ExecuteScalar();
+
+                execSQL("DROP PROCEDURE spTest");
+                execSQL("CREATE PROCEDURE spTest(id INT, id2 INT, id3 INT) BEGIN SELECT 1; END");
+
+                cmd.Parameters.AddWithValue("@id2", 2);
+                cmd.Parameters.AddWithValue("@id3", 3);
+                cmd.ExecuteScalar();
+            }
+        }
     }
 }
