@@ -58,11 +58,30 @@ namespace MySql.Data.MySqlClient
             get { return resolvedCommandText; }
         }
 
+        internal string GetCacheKey(string spName)
+        {
+            string retValue = String.Empty;
+            StringBuilder key = new StringBuilder(spName);
+            key.Append("(");
+            string delimiter = "";
+            foreach (MySqlParameter p in command.Parameters)
+            {
+                if (p.Direction == ParameterDirection.ReturnValue)
+                    retValue = "?=";
+                else
+                {
+                    key.AppendFormat(CultureInfo.InvariantCulture, "{0}?", delimiter);
+                    delimiter = ",";
+                }
+            }
+            key.Append(")");
+            return retValue + key.ToString();
+        }
+
         private DataSet GetParameters(string procName)
         {
-            // if we can use mysql.proc, then do so
-            //if (Connection.Settings.UseProcedureBodies)
-            DataSet ds = Connection.ProcedureCache.GetProcedure(Connection, procName);
+            string procCacheKey = GetCacheKey(procName);
+            DataSet ds = Connection.ProcedureCache.GetProcedure(Connection, procName, procCacheKey);
 
             if(ds.Tables.Count == 2)
             {

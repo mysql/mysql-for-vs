@@ -24,6 +24,8 @@ using System.Data;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient.Properties;
 using System.Diagnostics;
+using System.Text;
+using System.Globalization;
 
 namespace MySql.Data.MySqlClient
 {
@@ -40,14 +42,18 @@ namespace MySql.Data.MySqlClient
             procHash = new Hashtable(maxSize);
         }
 
-        public DataSet GetProcedure(MySqlConnection conn, string spName)
+        public DataSet GetProcedure(MySqlConnection conn, string spName, string cacheKey)
         {
-            int hash = spName.GetHashCode();
-
             DataSet ds = null;
-            lock (procHash.SyncRoot)
+
+            if (cacheKey != null)
             {
-                ds = (DataSet)procHash[hash];
+                int hash = cacheKey.GetHashCode();
+
+                lock (procHash.SyncRoot)
+                {
+                    ds = (DataSet)procHash[hash];
+                }
             }
             if (ds == null)
             {
@@ -71,12 +77,36 @@ namespace MySql.Data.MySqlClient
             return ds;
         }
 
+        internal string GetCacheKey(string spName, DataSet procData)
+        {
+            string retValue = String.Empty;
+            StringBuilder key = new StringBuilder(spName);
+            key.Append("(");
+            string delimiter = "";
+            if (procData.Tables.Contains("Procedure Parameters"))
+            {
+                foreach (DataRow row in procData.Tables["Procedure Parameters"].Rows)
+                {
+                    if (row["ORDINAL_POSITION"].Equals(0))
+                        retValue = "?=";
+                    else
+                    {
+                        key.AppendFormat(CultureInfo.InvariantCulture, "{0}?", delimiter);
+                        delimiter = ",";
+                    }
+                }
+            }
+            key.Append(")");
+            return retValue + key.ToString();
+        }
+
         private DataSet AddNew(MySqlConnection connection, string spName)
         {
             DataSet procData = GetProcData(connection, spName);
             if (maxSize > 0)
             {
-                int hash = spName.GetHashCode();
+                string cacheKey = GetCacheKey(spName, procData);
+                int hash = cacheKey.GetHashCode();
                 lock (procHash.SyncRoot)
                 {
                     if (procHash.Keys.Count >= maxSize)
