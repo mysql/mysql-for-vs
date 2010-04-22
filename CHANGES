@@ -1,3 +1,4 @@
+test
 - When sending file to server (LOAD DATA INFILE) open the file for read only, not for read/write
  (bug #48944)
 - Fixed precision calculation on decimal and newdecimal columns (bug #48171)
