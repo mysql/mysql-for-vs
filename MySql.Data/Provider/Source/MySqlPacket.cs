@@ -186,8 +186,8 @@ namespace MySql.Data.MySqlClient
             buffer.Position += numbytes;
             switch (numbytes)
             {
-                case 2: return BitConverter.ToInt16(bytes, pos);
-                case 4: return BitConverter.ToInt32(bytes, pos);
+                case 2: return BitConverter.ToUInt16(bytes, pos);
+                case 4: return BitConverter.ToUInt32(bytes, pos);
                 case 8: return BitConverter.ToInt64(bytes, pos);
             }
             throw new NotSupportedException("Only byte lengths of 2, 4, or 8 are supported");
