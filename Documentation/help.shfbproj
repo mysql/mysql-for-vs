@@ -43,7 +43,7 @@
     <RootNamespaceTitle>Reference</RootNamespaceTitle>
     <HelpTitle>MySQL Connector/Net</HelpTitle>
     <CopyrightHref>http://www.mysql.com</CopyrightHref>
-    <CopyrightText>Copyright &amp;#169%3b 2004,2008, Oracle and/or its affiliates.  All rights reserved.</CopyrightText>
+    <CopyrightText>Copyright &amp;#169%3b 2004,2010, Oracle and/or its affiliates.  All rights reserved.</CopyrightText>
     <FeedbackEMailAddress>support%40mysql.com</FeedbackEMailAddress>
     <PresentationStyle>vs2005</PresentationStyle>
     <NamingMethod>MemberName</NamingMethod>
