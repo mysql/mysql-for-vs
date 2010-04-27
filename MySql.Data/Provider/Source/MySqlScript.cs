@@ -1,4 +1,4 @@
-// Copyright (c) 2006-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+// Copyright © 2006,2010, Oracle and/or its affiliates.  All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -266,11 +266,29 @@ namespace MySql.Data.MySqlClient
                 {
                     if (token.ToLower(CultureInfo.InvariantCulture) == "delimiter")
                     {
-                        currentDelimiter = tokenizer.NextToken();
+                        tokenizer.NextToken();
+                        AdjustDelimiterEnd(tokenizer);
+                        currentDelimiter = query.Substring(tokenizer.StartIndex,
+                            tokenizer.StopIndex - tokenizer.StartIndex + 1).Trim();
                         startPos = tokenizer.StopIndex;
                     }
                     else
                     {
+                        // this handles the case where our tokenizer reads part of the 
+                        // delimiter 
+                        if (currentDelimiter.StartsWith(token))
+                        {
+                            if ((tokenizer.StartIndex + currentDelimiter.Length) <= query.Length)
+                            {
+                                if (query.Substring(tokenizer.StartIndex, currentDelimiter.Length) == currentDelimiter)
+                                {
+                                    token = currentDelimiter;
+                                    tokenizer.Position = tokenizer.StartIndex + currentDelimiter.Length;
+                                    tokenizer.StopIndex = tokenizer.Position;
+                                }
+                            }
+                        } 
+
                         int delimiterPos = token.IndexOf(currentDelimiter, StringComparison.InvariantCultureIgnoreCase);
                         if (delimiterPos != -1)
                         {
@@ -283,7 +301,7 @@ namespace MySql.Data.MySqlClient
                             statement.line = FindLineNumber(startPos, lineNumbers);
                             statement.position = startPos - lineNumbers[statement.line];
                             statements.Add(statement);
-                            startPos = tokenizer.StopIndex;
+                            startPos = endPos + currentDelimiter.Length;
                         }				
 					}
                 }
@@ -304,6 +322,19 @@ namespace MySql.Data.MySqlClient
                 }
             }
             return statements;
+        }
+
+        private void AdjustDelimiterEnd(MySqlTokenizer tokenizer)
+        {
+            int pos = tokenizer.StopIndex;
+            char c = query[pos];
+
+            while (!Char.IsWhiteSpace(c) && pos < (query.Length - 1))
+            {
+                c = query[++pos];
+            }
+            tokenizer.StopIndex = pos;
+            tokenizer.Position = pos;
         }
     }
 
