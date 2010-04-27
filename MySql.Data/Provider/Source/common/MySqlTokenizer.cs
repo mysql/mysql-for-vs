@@ -1,4 +1,4 @@
-// Copyright (c) 2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+// Copyright © 2004,2010, Oracle and/or its affiliates.  All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 2 as published by
@@ -95,11 +95,19 @@ namespace MySql.Data.MySqlClient
         public int StartIndex
         {
             get { return startIndex; }
+            set { startIndex = value; }
         }
 
         public int StopIndex
         {
             get { return stopIndex; }
+            set { stopIndex = value; }
+        }
+
+        public int Position
+        {
+            get { return pos; }
+            set { pos = value; }
         }
 
         public bool ReturnComments
