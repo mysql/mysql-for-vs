@@ -95,11 +95,19 @@ namespace MySql.Data.MySqlClient
         public int StartIndex
         {
             get { return startIndex; }
+            set { startIndex = value; }
         }
 
         public int StopIndex
         {
             get { return stopIndex; }
+            set { stopIndex = value; }
+        }
+
+        public int Position
+        {
+            get { return pos; }
+            set { pos = value; }
         }
 
         public bool ReturnComments

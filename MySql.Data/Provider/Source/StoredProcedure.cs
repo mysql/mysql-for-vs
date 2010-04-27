@@ -177,45 +177,48 @@ namespace MySql.Data.MySqlClient
                 if (param["ORDINAL_POSITION"].Equals(0))
                     pName = retParm;
 
-                // make sure the parameters given to us have an appropriate
-                // type set if it's not already
-                MySqlParameter p = command.Parameters.GetParameterFlexible(pName, true);
-                if (!p.TypeHasBeenSet)
+                if (pName != null)
                 {
-                    string datatype = (string) param["DATA_TYPE"];
-                    bool unsigned = GetFlags(param["DTD_IDENTIFIER"].ToString()).IndexOf("UNSIGNED") != -1;
-                    bool real_as_float = procTable.Rows[0]["SQL_MODE"].ToString().IndexOf("REAL_AS_FLOAT") != -1;
-                    p.MySqlDbType = MetaData.NameToType(datatype, unsigned, real_as_float, Connection);
-                }
+                    // make sure the parameters given to us have an appropriate
+                    // type set if it's not already
+                    MySqlParameter p = command.Parameters.GetParameterFlexible(pName, true);
+                    if (!p.TypeHasBeenSet)
+                    {
+                        string datatype = (string)param["DATA_TYPE"];
+                        bool unsigned = GetFlags(param["DTD_IDENTIFIER"].ToString()).IndexOf("UNSIGNED") != -1;
+                        bool real_as_float = procTable.Rows[0]["SQL_MODE"].ToString().IndexOf("REAL_AS_FLOAT") != -1;
+                        p.MySqlDbType = MetaData.NameToType(datatype, unsigned, real_as_float, Connection);
+                    }
 
-                if (param["ORDINAL_POSITION"].Equals(0)) continue;
+                    if (param["ORDINAL_POSITION"].Equals(0)) continue;
 
-                string basePName = pName;
-                if (pName.StartsWith("@") || pName.StartsWith("?"))
-                    basePName = pName.Substring(1);
-                string vName = string.Format("@{0}{1}", ParameterPrefix, basePName);
+                    string basePName = pName;
+                    if (pName.StartsWith("@") || pName.StartsWith("?"))
+                        basePName = pName.Substring(1);
+                    string vName = string.Format("@{0}{1}", ParameterPrefix, basePName);
 
-                // if our parameter doesn't have a leading marker then we need to give it one
-                pName = p.ParameterName;
-                if (!pName.StartsWith("@") && !pName.StartsWith("?"))
-                    pName = "@" + pName;
+                    // if our parameter doesn't have a leading marker then we need to give it one
+                    pName = p.ParameterName;
+                    if (!pName.StartsWith("@") && !pName.StartsWith("?"))
+                        pName = "@" + pName;
 
-                if (mode == "OUT" || mode == "INOUT")
-                {
-                    outSelect += vName + ", ";
-                    sqlStr.Append(vName);
-                    sqlStr.Append(", ");
-                }
-                else
-                {
-                    sqlStr.Append(pName);
-                    sqlStr.Append(", ");
-                }
+                    if (mode == "OUT" || mode == "INOUT")
+                    {
+                        outSelect += vName + ", ";
+                        sqlStr.Append(vName);
+                        sqlStr.Append(", ");
+                    }
+                    else
+                    {
+                        sqlStr.Append(pName);
+                        sqlStr.Append(", ");
+                    }
 
-                if (mode == "INOUT")
-                {
-                    setStr.AppendFormat(CultureInfo.InvariantCulture, "SET {0}={1};", vName, pName);
-                    outSelect += vName + ", ";
+                    if (mode == "INOUT")
+                    {
+                        setStr.AppendFormat(CultureInfo.InvariantCulture, "SET {0}={1};", vName, pName);
+                        outSelect += vName + ", ";
+                    }
                 }
             }
 
