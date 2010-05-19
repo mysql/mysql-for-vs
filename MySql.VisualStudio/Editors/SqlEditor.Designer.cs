@@ -35,7 +35,6 @@
             this.disconnectButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.runSqlButton = new System.Windows.Forms.ToolStripButton();
-            this.validateSqlButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.serverLabel = new System.Windows.Forms.ToolStripLabel();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -65,7 +64,6 @@
             this.disconnectButton,
             this.toolStripSeparator1,
             this.runSqlButton,
-            this.validateSqlButton,
             this.toolStripSeparator2,
             this.serverLabel,
             this.toolStripSeparator3,
@@ -82,7 +80,7 @@
             // 
             this.connectButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.connectButton.Image = global::MySql.Data.VisualStudio.Properties.Resources.sql_editor_connect;
-            this.connectButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.connectButton.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.connectButton.Name = "connectButton";
             this.connectButton.Size = new System.Drawing.Size(23, 22);
             this.connectButton.Text = "connectButton";
@@ -94,7 +92,7 @@
             this.disconnectButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.disconnectButton.Enabled = false;
             this.disconnectButton.Image = global::MySql.Data.VisualStudio.Properties.Resources.sql_editor_disconnect;
-            this.disconnectButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.disconnectButton.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.disconnectButton.Name = "disconnectButton";
             this.disconnectButton.Size = new System.Drawing.Size(23, 22);
             this.disconnectButton.Text = "Disconnect from MySQL";
@@ -110,24 +108,12 @@
             this.runSqlButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.runSqlButton.Enabled = false;
             this.runSqlButton.Image = global::MySql.Data.VisualStudio.Properties.Resources.sql_editor_runsql;
-            this.runSqlButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.runSqlButton.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.runSqlButton.Name = "runSqlButton";
             this.runSqlButton.Size = new System.Drawing.Size(23, 22);
             this.runSqlButton.Text = "runSqlButton";
             this.runSqlButton.ToolTipText = "Run SQL";
             this.runSqlButton.Click += new System.EventHandler(this.runSqlButton_Click);
-            // 
-            // validateSqlButton
-            // 
-            this.validateSqlButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.validateSqlButton.Enabled = false;
-            this.validateSqlButton.Image = global::MySql.Data.VisualStudio.Properties.Resources.sql_editor_validatesql;
-            this.validateSqlButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.validateSqlButton.Name = "validateSqlButton";
-            this.validateSqlButton.Size = new System.Drawing.Size(23, 22);
-            this.validateSqlButton.Text = "toolStripButton1";
-            this.validateSqlButton.ToolTipText = "Validate SQL";
-            this.validateSqlButton.Click += new System.EventHandler(this.validateSqlButton_Click);
             // 
             // toolStripSeparator2
             // 
@@ -277,7 +263,6 @@
         private System.Windows.Forms.ToolStripButton runSqlButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripButton validateSqlButton;
         private System.Windows.Forms.ToolStripButton disconnectButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripLabel userLabel;

@@ -2,10 +2,19 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment Id='VSFragment'>
 
+    <DirectoryRef Id='VSTemplatesDir'>
+      <Component Id='VSTemplates' Guid='CB74DD46-A5D0-402f-9413-63A8DEFB3A26'>
+        <File Id='ScriptTemplate' Name='MySQL Script.mysql' DiskId='1'
+              Source='..\MySql.VisualStudio\Templates\MySQL Script.mysql'/>
+        <File Id='ScriptTemplate.vsdir' Name='MySqlDataProviderPackage.vsdir' DiskId='1'
+              Source='..\MySql.VisualStudio\Templates\MySqlDataProviderPackage.vsdir'/>
+      </Component>  
+    </DirectoryRef>
+    
     <!-- integration of VS2005 and VS2008 -->
-    <DirectoryRef Id='IntegrationDir'>
+    <DirectoryRef Id='VS2008Integration'>
       <!-- common DDEX component to be installed if VS2005 or VS2008 is selected -->
-      <Component Id='VS_Common' Guid='75F9BFA2-4D6E-4cb3-97E6-B27C478CDE44'>
+      <Component Id='VS2008_Common' Guid='75F9BFA2-4D6E-4cb3-97E6-B27C478CDE44'>
         <File Id='MySQL.VisualStudio' Name='MySQL.VisualStudio.dll' DiskId='1'
               Source='..\MySql.VisualStudio\bin\release\MySQL.VisualStudio.dll' />
       </Component>
@@ -13,7 +22,7 @@
       <Component Id='VS_2005_Registry' Guid='B99FF3E3-F742-47af-B1FE-BBF2CDC4B95D'>
         <RegistryKey Id="VS_2005_RegistryKey" Root="HKLM" Action="createAndRemoveOnUninstall"
                      Key="SOFTWARE\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\MySQL Connector Net $(var.Version)">
-          <RegistryValue Id="VS_2005_RegistryValue" Value="[AssembliesDir]" Type="string" Action="write"/>
+          <RegistryValue Id="VS_2005_RegistryValue" Value="[assemblies_v2]" Type="string" Action="write"/>
         </RegistryKey>
         <?include VS2005_Registry.wxi?>
         <?include VS2005_Data.wxi ?>
@@ -22,16 +31,23 @@
       <Component Id='VS_2008_Registry' Guid='84AE8C43-294D-4e48-B75D-D9172396C2FD'>
         <RegistryKey Id="VS_2008_RegistryKey" Root="HKLM" Action="createAndRemoveOnUninstall"
                      Key="SOFTWARE\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\MySQL Connector Net $(var.Version)">
-          <RegistryValue Id="VS_2008_RegistryValue" Value="[AssembliesDir]" Type="string" Action="write"/>
+          <RegistryValue Id="VS_2008_RegistryValue" Value="[assemblies_v2]" Type="string" Action="write"/>
         </RegistryKey>
         <?include VS2008_Registry.wxi?>
         <?include VS2008_Data.wxi?>
       </Component>
+    </DirectoryRef>
 
+    <DirectoryRef Id='VS2010Integration'>
+      <Component Id='VS2010_Common' Guid='EC2420A0-ADD0-477f-99B5-FFA96EC557F4'>
+        <File Id='MySQL.VisualStudio.2010' Name='MySQL.VisualStudio.dll' DiskId='1'
+              Source='..\MySql.VisualStudio\bin-4.0\release\MySQL.VisualStudio.dll' />
+      </Component>
+      
       <Component Id='VS_2010_Registry' Guid='84AE8C43-294D-4e48-B75D-D9172396C2FD'>
         <RegistryKey Id="VS_2010_RegistryKey" Root="HKLM" Action="createAndRemoveOnUninstall"
                      Key="SOFTWARE\Microsoft\.NETFramework\v4.0.30128\AssemblyFoldersEx\MySQL Connector Net $(var.Version)">
-          <RegistryValue Id="VS_2010_RegistryValue" Value="[AssembliesDir]" Type="string" Action="write"/>
+          <RegistryValue Id="VS_2010_RegistryValue" Value="[assemblies_v4]" Type="string" Action="write"/>
         </RegistryKey>
         <?include VS2010_Registry.wxi?>
         <?include VS2010_Data.wxi?>
@@ -40,19 +56,22 @@
 
     <Feature Id='VS2005Int' Level='1' Title='Visual Studio 2005'>
       <Condition Level='0'>Not VS_2005_PATH</Condition>
-      <ComponentRef Id='VS_Common'/>
+      <ComponentRef Id='VS2008_Common'/>
+      <ComponentRef Id='VSTemplates'/>
       <ComponentRef Id='VS_2005_Registry'/>
     </Feature>
 
     <Feature Id='VS2008Int' Level='1' Title='Visual Studio 2008'>
       <Condition Level='0'>Not VS_2008_PATH</Condition>
-      <ComponentRef Id='VS_Common'/>
+      <ComponentRef Id='VS2008_Common'/>
+      <ComponentRef Id='VSTemplates'/>
       <ComponentRef Id='VS_2008_Registry'/>
     </Feature>
 
     <Feature Id='VS2010Int' Level='1' Title='Visual Studio 2010'>
       <Condition Level='0'>Not VS_2010_PATH</Condition>
-      <ComponentRef Id='VS_Common'/>
+      <ComponentRef Id='VS2010_Common'/>
+      <ComponentRef Id='VSTemplates'/>
       <ComponentRef Id='VS_2010_Registry'/>
     </Feature>
 

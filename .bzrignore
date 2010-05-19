@@ -10,3 +10,9 @@ MySql.VisualStudio/Documentation/Build
 MySql.Data.Entity/Tests/Service References
 **/*.InstallLog
 UpgradeLog.XML
+**/UpgradeLog*.*
+Documention/Output/**
+**/bin-4.0/**
+**/bin-4.0
+Documentation/Output
+_UpgradeReport_Files

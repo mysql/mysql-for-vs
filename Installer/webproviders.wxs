@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment Id='ProvidersFragment'>
-    <DirectoryRef Id='AssembliesDir'>
+    <DirectoryRef Id='assemblies_v2'>
       <Directory Id="MySql.Web.DummyDir" Name="GAC">
         <Component Id="ProvidersGAC" Guid="6b95d34b-91e1-41ff-9f3f-dcb5308a00ce">
           <File Id="ProviderAssemblyGAC" Name="MySql.Web.dll" ShortName="MW"

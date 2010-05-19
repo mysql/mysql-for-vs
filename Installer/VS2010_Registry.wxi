@@ -44,4 +44,27 @@
     <RegistryValue Name="Name" Value="MySqlLanguageService" Type="string" />
   </RegistryKey>
 
+  <RegistryKey Root="HKLM" Action="createAndRemoveOnUninstall"
+               Key="Software\Microsoft\VisualStudio\10.0\Projects\{a2fe74e1-b743-11d0-ae1a-00a0c90fffc3}\AddItemTemplates\TemplateDirs\{79a115c9-b133-4891-9e7b-242509dad272}">
+    <RegistryKey Key="/1">
+      <RegistryValue Value="#105" Type="string"/>
+      <RegistryValue Name="Package" Value="{79a115c9-b133-4891-9e7b-242509dad272}" Type="string"/>
+      <RegistryValue Name="SortPriority" Value="32" Type="integer"/>
+      <RegistryValue Name="TemplatesDir" Value="[VSTemplatesDir]" Type="string"/>
+    </RegistryKey>
+  </RegistryKey>
+
+  <RegistryKey Root="HKLM" Action="createAndRemoveOnUninstall"
+               Key="Software\Microsoft\VisualStudio\10.0\Editors\{CAA648E8-D6BD-465e-A1B3-2A0BF9DA5581}">
+    <RegistryValue Value="MySql Tools for Visual Studio" Type="string"/>
+    <RegistryValue Name="DisplayName" Value="#105" Type="string"/>
+    <RegistryValue Name="Package" Value="{79A115C9-B133-4891-9E7B-242509DAD272}" Type="string"/>
+    <RegistryKey Key="Extensions">
+      <RegistryValue Name="mysql" Value="32" Type="integer"/>
+    </RegistryKey>
+    <RegistryKey Key="LogicalViews">
+      <RegistryValue Name="{7651a703-06e5-11d1-8ebd-00a0c90f26ea}" Value="" Type="string"/>
+    </RegistryKey>
+  </RegistryKey>
+
 </Include>

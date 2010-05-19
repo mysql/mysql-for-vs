@@ -22,7 +22,7 @@
     </DirectoryRef>
 
     <!-- .Net 2.0 Binaries -->
-    <DirectoryRef Id='AssembliesDir'>
+    <DirectoryRef Id='assemblies_v2'>
       <Component Id="Net20" Guid="0e8af006-273c-49bb-b7c1-ec1737260a5a">
         <File Id="MySqlData" Name="MySql.Data.dll"
               Source="..\mysql.data\provider\bin\release\mysql.data.dll" DiskId="1"/>
@@ -64,26 +64,45 @@
       <ComponentRef Id="Net20"/>
       <ComponentRef Id="GAC20"/>
       <ComponentRef Id="StartMenuComponent"/>
-      <ComponentRef Id="Registration"/>
     </Feature>
 
-    <!-- Entity framework feature -->
-    <DirectoryRef Id='AssembliesDir'>
-      <Component Id="InstallEF" Guid="AB734C75-F5DC-491e-A2BC-52D5061881B7" DiskId="1">
+    <!-- Entity framework 2.0 feature -->
+    <DirectoryRef Id='assemblies_v2'>
+      <Component Id="EF.v2" Guid="AB734C75-F5DC-491e-A2BC-52D5061881B7" DiskId="1">
+        <Condition>NETFRAMEWORK20</Condition>
         <File Id="MySql.Data.EF" Name="MySql.Data.Entity.dll"
               Source="..\mysql.data.entity\provider\bin\release\mysql.data.entity.dll" DiskId="1"/>
       </Component>
-      <Component Id="GACEF" Guid="12218CCC-B085-46af-AA5F-FB9306FE621E" DiskId="1">
+      <Component Id="EF.v2.GAC" Guid="12218CCC-B085-46af-AA5F-FB9306FE621E" DiskId="1">
+        <Condition>NETFRAMEWORK20</Condition>
         <File Id="MySql.Data.EF.GAC" Name="MySql.Data.Entity.dll"
               Source="..\mysql.data.entity\provider\bin\release\mysql.data.entity.dll" DiskId="1"
               Assembly=".net" KeyPath="yes"/>
       </Component>
     </DirectoryRef>
 
+    <!-- Entity framework 4.0 feature -->
+    <DirectoryRef Id='assemblies_v4'>
+      <Component Id="EF.v4" Guid="E6B683F6-727A-43c9-B955-6BEE94EF61C7" DiskId="1">
+        <Condition>NETFRAMEWORK40FULL OR NETFRAMEWORK40CLIENT</Condition>
+        <File Id="MySql.Data.EF.v4" Name="MySql.Data.Entity.dll"
+              Source="..\mysql.data.entity\provider\bin\release\mysql.data.entity.dll" DiskId="1"/>
+      </Component>
+      <Component Id="EF.v4.GAC" Guid="A9C03468-5A59-443f-85DC-C0149EBB55C8" DiskId="1">
+        <Condition>NETFRAMEWORK40FULL OR NETFRAMEWORK40CLIENT</Condition>
+        <File Id="MySql.Data.EF.v4.GAC" Name="MySql.Data.Entity.dll"
+              Source="..\mysql.data.entity\provider\bin-4.0\release\mysql.data.entity.dll" DiskId="1"
+              Assembly=".net" KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+
     <Feature Id="EntityFramework" Level="1" Title="Entity Framework Support"
              Description="Support for the entity framework">
-      <ComponentRef Id="InstallEF"/>
-      <ComponentRef Id="GACEF"/>
+      <Condition Level='0'>Not NETFRAMEWORK20 AND Not NETFRAMEWORK40FULL And Not NETFRAMEWORK40CLIENT</Condition>
+      <ComponentRef Id="EF.v2"/>
+      <ComponentRef Id="EF.v2.GAC"/>
+      <ComponentRef Id="EF.v4"/>
+      <ComponentRef Id="EF.v4.GAC"/>
     </Feature>
 
     <InstallExecuteSequence>
