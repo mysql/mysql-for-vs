@@ -141,6 +141,8 @@ namespace MySql.Data.VisualStudio.Editors
             Guid guidVsTextBuffer = typeof(VsTextBufferClass).GUID;
             textBuffer = services.CreateObject(services.LocalRegistry, guidVsTextBuffer,
                 typeof(IVsTextBuffer).GUID) as IVsTextBuffer;
+            textBuffer.InitializeContent("ed", 2);
+
             Guid langSvc = new Guid("{fa498a2d-116a-4f25-9b55-7938e8e6dda7}");
 
             int hr = textBuffer.SetLanguageServiceID(ref langSvc);
@@ -151,9 +153,11 @@ namespace MySql.Data.VisualStudio.Editors
             if (hr != VSConstants.S_OK)
                 Marshal.ThrowExceptionForHR(hr);
 
+            // this is necessary for the adapters to work in VS2010
+            Initialize(String.Empty);
+
             // create pane window
             IVsWindowPane windowPane = codeWindow as IVsWindowPane;
-
             hr = windowPane.SetSite(services.IOleServiceProvider);
             if (hr != VSConstants.S_OK)
                 Marshal.ThrowExceptionForHR(hr);

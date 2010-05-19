@@ -14,9 +14,11 @@
       <![CDATA[ Privileged  ]]>
     </Condition>
 
-    <!-- First make sure that .NET 2.0 is installed -->
+    <!-- First make sure that .NET is installed -->
     <PropertyRef Id="NETFRAMEWORK20"/>
-    <Condition Message="The .NET Framework 2.0 must be installed before installing this package.">Installed OR NETFRAMEWORK20</Condition>
+    <PropertyRef Id="NETFRAMEWORK40FULL"/>
+    <PropertyRef Id="NETFRAMEWORK40CLIENT"/>
+    <Condition Message="The .NET Framework 2.0 or 4.0 must be installed before installing this package.">Installed OR NETFRAMEWORK20 OR NETFRAMEWORK40FULL OR NETFRAMEWORK40CLIENT</Condition>
 
     <!-- now make sure that we don't have an old version still around -->
     <Property Id="OLDVERSION">
@@ -37,8 +39,15 @@
       <Directory Id='ProgramFilesFolder' Name='PFiles'>
         <Directory Id='CompanyDir' Name='MySQL'>
           <Directory Id='INSTALLDIR' Name='$(var.ProductName)'>
-            <Directory Id='AssembliesDir' Name='Assemblies'/>
-            <Directory Id='IntegrationDir' Name='Integration'/>
+            <Directory Id='AssembliesDir' Name='Assemblies'>
+              <Directory Id='assemblies_v2' Name='v2.0'/>
+              <Directory Id='assemblies_v4' Name='v4.0'/>
+            </Directory>
+            <Directory Id='VSIntegrationDir' Name='Visual Studio Integration'>
+              <Directory Id='VSTemplatesDir' Name='Templates'/>
+              <Directory Id='VS2008Integration' Name='2005 and 2008'/>
+              <Directory Id='VS2010Integration' Name='2010'/>
+            </Directory>
             <Directory Id='DocsDir' Name='Documentation'/>
             <Directory Id='SampleDir' Name='Samples'/>
           </Directory>
@@ -50,6 +59,19 @@
           <Directory Id="ShortCutDir" Name="$(var.ProductName)"/>
         </Directory>
       </Directory>
+
+      <!-- Install the T4 DDL creation templates -->
+      <Directory Id="VS_2010_PATH" Name="VSPath">
+        <Directory Id="Entity.T4.ExtensionDir" Name="Extensions">
+          <Directory Id="Entity.T4.OracleDir" Name="Oracle">
+            <Directory Id="Entity.T4.EFToolsDir" Name="Entity Framework Tools">
+              <Directory Id="Entity.T4.DBGenDir" Name="DBGen"/>
+            </Directory>
+          </Directory>
+        </Directory>
+      </Directory>
+
+
     </Directory>
 
     <DirectoryRef Id='DocsDir'>
@@ -103,8 +125,8 @@
     The product urn is specific to each version 
     The registration package should be the name of the MSI
     -->
-    <Property Id="ProductURN">MSQZN-600-ZZZZ</Property>
-    <Property Id="RegistrationPackage">mysql-connector-net-$(var.Version)$(var.PackageSuffix).zip</Property>
+    <!--<Property Id="ProductURN">MSQZN-600-ZZZZ</Property>
+    <Property Id="RegistrationPackage">mysql-connector-net-$(var.Version)$(var.PackageSuffix).zip</Property>-->
   </Product>
 </Wix>
 
