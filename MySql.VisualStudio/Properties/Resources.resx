@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="DisplayName_ConvertZero" xml:space="preserve">
     <value>Convert Zero Datetime</value>
@@ -482,7 +482,7 @@ Would you like to create it?</value>
   <data name="Description_StoredProcedure_Comment" xml:space="preserve">
     <value>Comments</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="Key" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Key.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -1083,22 +1083,22 @@ Would you like to create it?</value>
   <data name="401" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\401.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="sql_editor_connect" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\sql_editor_connect.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="sql_editor_executionplan" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\sql_editor_executionplan.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="sql_editor_runsql" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\sql_editor_runsql.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="sql_editor_validatesql" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\sql_editor_validatesql.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="sql_editor_banner" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\sql_editor_banner.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="sql_editor_connect" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\sql_editor_connect.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="sql_editor_disconnect" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\sql_editor_disconnect.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\Resources\sql_editor_disconnect.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="sql_editor_runsql" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\sql_editor_runsql.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="sql_editor_validatesql" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\sql_editor_validatesql.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="sql_editor_executionplan" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\sql_editor_executionplan.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
