@@ -96,6 +96,16 @@
       </Component>
     </DirectoryRef>
 
+    <DirectoryRef Id="Entity.T4.DBGenDir">
+      <Component Id="EF.T4" Guid="6555D339-120C-4D62-B60C-08764D8CA739">
+        <Condition>VS_2010_PATH</Condition>
+        <File Id="SSDLToMySQL" Name="SSDLToMySQL.tt" DiskId="1"
+              Source="..\MySql.Data.Entity\T4Templates\SSDLToMySQL.tt"/>
+        <File Id="GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
+              Source="..\MySql.Data.Entity\T4Templates\GenerateMySQL.Utility.ttinclude"/>
+      </Component>
+    </DirectoryRef>    
+    
     <Feature Id="EntityFramework" Level="1" Title="Entity Framework Support"
              Description="Support for the entity framework">
       <Condition Level='0'>Not NETFRAMEWORK20 AND Not NETFRAMEWORK40FULL And Not NETFRAMEWORK40CLIENT</Condition>
@@ -103,6 +113,7 @@
       <ComponentRef Id="EF.v2.GAC"/>
       <ComponentRef Id="EF.v4"/>
       <ComponentRef Id="EF.v4.GAC"/>
+      <ComponentRef Id="EF.T4"/>
     </Feature>
 
     <InstallExecuteSequence>

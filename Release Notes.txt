@@ -9,9 +9,19 @@ What's new in 6.3
 - Support for Visual Studio 2010
 - Nested transaction scopes now work though they still must use the same connection (no XA)
 - The ability to enable query analysis at runtime
+- New SQL editor
 
 
 What we know is broken
 ----------------------
-- Documentation has been been integrated into VS2010 yet
+- Documentation has not been integrated into VS2010 yet
+- The Generate Database Wizard will work the first time you generate DDL for your database.
+  Every time after that it will throw an exception.  There is an easy workaround however.  Just
+  dismiss the exception dialog, click the Previous button in the wizard, and then click Next.
+  Your DDL will then be generated properly.  We will have this one resolved for beta 2!
+- The Generated Database Wizard will save the file with the extension .sql.  You will need to
+  manually change the extension to .mysql to use the new editor.  We hope to resolve this for beta 2.
+
+
+
 
