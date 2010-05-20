@@ -44,7 +44,7 @@
               Source='..\MySql.VisualStudio\bin-4.0\release\MySQL.VisualStudio.dll' />
       </Component>
       
-      <Component Id='VS_2010_Registry' Guid='84AE8C43-294D-4e48-B75D-D9172396C2FD'>
+      <Component Id='VS_2010_Registry' Guid='E602F4FD-4D11-4632-8204-C0CFE22F8C7C'>
         <RegistryKey Id="VS_2010_RegistryKey" Root="HKLM" Action="createAndRemoveOnUninstall"
                      Key="SOFTWARE\Microsoft\.NETFramework\v4.0.30128\AssemblyFoldersEx\MySQL Connector Net $(var.Version)">
           <RegistryValue Id="VS_2010_RegistryValue" Value="[assemblies_v4]" Type="string" Action="write"/>

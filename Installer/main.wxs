@@ -63,14 +63,13 @@
       <!-- Install the T4 DDL creation templates -->
       <Directory Id="VS_2010_PATH" Name="VSPath">
         <Directory Id="Entity.T4.ExtensionDir" Name="Extensions">
-          <Directory Id="Entity.T4.OracleDir" Name="Oracle">
+          <Directory Id="Entity.T4.OracleDir" Name="Microsoft">
             <Directory Id="Entity.T4.EFToolsDir" Name="Entity Framework Tools">
               <Directory Id="Entity.T4.DBGenDir" Name="DBGen"/>
             </Directory>
           </Directory>
         </Directory>
       </Directory>
-
 
     </Directory>
 
@@ -120,13 +119,6 @@
 
     <CustomAction Id="RegisterHelp" ExeCommand='-r -q CmdFile="[#H2Reg.ini]"' BinaryKey="H2Reg" Execute="deferred" Return="check" Impersonate="no"/>
     <CustomAction Id="UnRegisterHelp" ExeCommand='-u -q CmdFile="[#H2Reg.ini]"' BinaryKey="H2Reg" Execute="deferred" Return="check" Impersonate="no"/>
-
-    <!-- 
-    The product urn is specific to each version 
-    The registration package should be the name of the MSI
-    -->
-    <!--<Property Id="ProductURN">MSQZN-600-ZZZZ</Property>
-    <Property Id="RegistrationPackage">mysql-connector-net-$(var.Version)$(var.PackageSuffix).zip</Property>-->
   </Product>
 </Wix>
 
