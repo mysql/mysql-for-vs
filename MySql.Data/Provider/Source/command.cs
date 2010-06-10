@@ -323,7 +323,8 @@ namespace MySql.Data.MySqlClient
             if (statement != null)
                 statement.Close(reader);
             ResetSqlSelectLimit();
-            connection.driver.CloseQuery(connection, statement.StatementId);
+            if (statement != null)
+                connection.driver.CloseQuery(connection, statement.StatementId);
             ClearCommandTimer();
         }
 

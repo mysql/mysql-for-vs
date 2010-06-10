@@ -222,10 +222,18 @@ namespace MySql.Data.MySqlClient
             // if we have rows but the user didn't read the first one then mark it as skipped
             if (HasRows && rowIndex == -1)
                 skippedRows++;
-            while (driver.SkipDataRow()) 
+            try
             {
-                totalRows++;
-                skippedRows++;
+                while (driver.IsOpen && driver.SkipDataRow())
+                {
+                    totalRows++;
+                    skippedRows++;
+                }
+            }
+            catch (System.IO.IOException)
+            {
+                // it is ok to eat IO exceptions here, we just want to 
+                // close the result set
             }
             readDone = true;
         }
