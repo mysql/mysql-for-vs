@@ -973,7 +973,7 @@ namespace MySql.Data.MySqlClient
 					connection.Abort();
 
                 // if we get a query interrupted then our resultset is done
-                if (ex.Number == 1317)
+                if (ex.IsQueryAborted)
                 {
                     nextResultDone = true;
                     canRead = false;
