@@ -565,10 +565,7 @@ namespace MySql.Data.MySqlClient
         {
             try
             {
-                if (settings.Pooling)
-                    MySqlPoolManager.ReleaseConnection(driver);
-                else
-                    driver.Close();
+                driver.Close();
             }
             catch (Exception ex)
             {
