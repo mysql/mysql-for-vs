@@ -457,7 +457,7 @@ namespace MySql.Data.MySqlClient
                 }
 
                 // if we caught an exception because of a cancel, then just return null
-                if (ex.Number == 1317)
+                if (ex.IsQueryAborted)
                     return null;
 
                 if (ex.IsFatal)
