@@ -161,6 +161,29 @@ namespace MySql.Data.MySqlClient.Tests
                 KillConnection(c);
             }
 		}
+         
+        // Test that thread does not come to pool after abort
+        [Test]
+        public void TestAbort()
+        {
+            string connStr = GetPoolingConnectionString();
+            int threadId;
+            using (MySqlConnection c = new MySqlConnection(connStr))
+            {
+                c.Open();
+                threadId = c.ServerThread;
+                MethodInfo abort  = c.GetType().GetMethod("Abort", 
+                    BindingFlags.NonPublic | BindingFlags.Instance);
+                abort.Invoke(c, null); 
+            }
+            using (MySqlConnection c1 = new MySqlConnection(connStr))
+            {
+                c1.Open();
+                Assert.AreNotEqual(c1.ServerThread, threadId);
+                KillConnection(c1);
+            }
+        }
+
 
 		/// <summary>
 		/// Bug #25614 After connection is closed, and opened again UTF-8 characters are not read well 
