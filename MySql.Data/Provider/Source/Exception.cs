@@ -90,5 +90,14 @@ namespace MySql.Data.MySqlClient
 		{
 			get { return isFatal; }
 		}
+
+        internal bool IsQueryAborted
+        {
+            get
+            {
+                return (errorCode == (int)MySqlErrorCode.QueryInterrupted ||
+                    errorCode == (int)MySqlErrorCode.FileSortAborted);
+            }
+        }
 	}
 }
