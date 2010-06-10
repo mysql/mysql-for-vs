@@ -336,7 +336,7 @@ namespace MySql.Data.MySqlClient
             if (resetSqlSelect)
             {
                 resetSqlSelect = false;
-                new MySqlCommand("SET SQL_SELECT_LIMIT=-1", connection).ExecuteNonQuery();
+                new MySqlCommand("SET SQL_SELECT_LIMIT=DEFAULT", connection).ExecuteNonQuery();
             }
         }
 
