@@ -334,7 +334,7 @@ namespace MySql.Data.MySqlClient
         {
             // if we are supposed to reset the sql select limit, do that here
             if (resetSqlSelect)
-                new MySqlCommand("SET SQL_SELECT_LIMIT=-1", connection).ExecuteNonQuery();
+                new MySqlCommand("SET SQL_SELECT_LIMIT=DEFAULT", connection).ExecuteNonQuery();
             resetSqlSelect = false;
         }
 
