@@ -333,7 +333,7 @@ namespace MySql.Data.MySqlClient
             if (resetSqlSelect)
             {
                 resetSqlSelect = false;
-                new MySqlCommand("SET SQL_SELECT_LIMIT=-1", connection).ExecuteNonQuery();
+                new MySqlCommand("SET SQL_SELECT_LIMIT=DEFAULT", connection).ExecuteNonQuery();
             }
         }
 
@@ -445,7 +445,7 @@ namespace MySql.Data.MySqlClient
                 }
 
                 // if we caught an exception because of a cancel, then just return null
-                if (ex.Number == 1317)
+                if (ex.IsQueryAborted)
                     return null;
 
                 if (ex.IsFatal)

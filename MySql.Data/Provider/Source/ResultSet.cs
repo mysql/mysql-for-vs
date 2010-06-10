@@ -197,7 +197,7 @@ namespace MySql.Data.MySqlClient
                 }
                 catch (MySqlException ex)
                 {
-                    if (ex.Number == 1317) fetched = false;
+                    if (ex.IsQueryAborted) fetched = false;
                 }
 
                 if (!fetched)
