@@ -447,7 +447,7 @@ namespace MySql.Data.MySqlClient
                 catch (Exception) { }
 
                 // if we caught an exception because of a cancel, then just return null
-                if (ex.Number == 1317)
+                if (ex.IsQueryAborted)
                 {
                     if (TimedOut)
                         throw new MySqlException(Resources.Timeout);
