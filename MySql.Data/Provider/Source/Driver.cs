@@ -80,7 +80,7 @@ namespace MySql.Data.MySqlClient
 
         ~Driver()
         {
-            Close();
+            Dispose(false);
         }
 
         #region Properties
@@ -461,14 +461,25 @@ namespace MySql.Data.MySqlClient
 
         protected virtual void Dispose(bool disposing)
         {
-            ResetTimeout(1000);
-            if (disposing)
-                handler.Close(isOpen);
-            // if we are pooling, then release ourselves
-            if (connectionString.Pooling)
-                MySqlPoolManager.RemoveConnection(this);
-            
-            isOpen = false;
+            try
+            {
+                ResetTimeout(1000);
+                if (disposing)
+                    handler.Close(isOpen);
+                // if we are pooling, then release ourselves
+                if (connectionString.Pooling)
+                    MySqlPoolManager.RemoveConnection(this);
+            }
+            catch (Exception)
+            {
+                if (disposing)
+                    throw;
+            }
+            finally
+            {
+                reader = null;
+                isOpen = false;
+            }
         }
 
         public void Dispose()

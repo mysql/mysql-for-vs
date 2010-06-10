@@ -1,3 +1,4 @@
+- Try to avoid exception when Connection is closed by garbage collector (bug #53457)
 - Added trace message in exception blog in MySqlConnection.Abort() method (bug #52769)
 - changed mapping of latin1 from latin1 to windows-1252 (bug #51927)
 - flushed out many more entires in error code enum (bug #51988)
