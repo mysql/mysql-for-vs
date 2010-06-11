@@ -427,6 +427,8 @@ namespace MySql.Data.MySqlClient
         /// <returns></returns>
         public bool Ping()
         {
+            if(dataReader != null)
+                throw new MySqlException(Resources.DataReaderOpen);
             if (driver != null && driver.Ping())
                 return true;
             driver = null;
