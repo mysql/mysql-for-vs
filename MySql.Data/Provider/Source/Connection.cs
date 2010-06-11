@@ -426,6 +426,8 @@ namespace MySql.Data.MySqlClient
         /// <returns></returns>
         public bool Ping()
         {
+            if(dataReader != null)
+                throw new MySqlException(Resources.DataReaderOpen);
             if (driver != null && driver.Ping())
                 return true;
             driver = null;
@@ -561,10 +563,7 @@ namespace MySql.Data.MySqlClient
         {
             try
             {
-                if (settings.Pooling)
-                    MySqlPoolManager.ReleaseConnection(driver);
-                else
-                    driver.Close();
+                driver.Close();
             }
             catch (Exception ex)
             {
