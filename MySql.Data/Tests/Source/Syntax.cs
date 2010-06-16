@@ -468,5 +468,66 @@ namespace MySql.Data.MySqlClient.Tests
             {
             }
         }
+
+        /// <summary>
+        /// Bug #53865 : crash in QueryNormalizer, "IN" clause incomplete
+        /// </summary>
+        [Test]
+        public void QueryNormalizerCrash1()
+        {
+
+            execSQL(
+                "CREATE TABLE  extable_1 (x_coord int, y_coord int, z_coord int,"+
+                "edge_id int, life_id int)") ;
+            execSQL("CREATE TABLE  extable_2 (daset_id int, sect_id int, "+
+              "xyz_id  int, edge_id int, life_id int, another_id int, yetanother_id int)");
+
+            string connStr = GetConnectionString(true) + ";logging=true";
+            using (MySqlConnection c = new MySqlConnection(connStr))
+            {
+                c.Open();
+                MySqlCommand cmd = new MySqlCommand(
+                    "SELECT tblb.x_coord, tblb.y_coord, tblb.z_coord, " + 
+                    "tbl_c.x_coord, tbl_c.y_coord, tbl_c.z_coord, tbl_a.edge_id, " + 
+                    "tbl_a.life_id, tbl_a.daset_id, tbl_a.sect_id, tbl_a.yetanother_id," +
+                    " IFNULL(tbl_a.xyz_id,0) FROM extable_2 tbl_a, extable_1 tblb, " + 
+                    "extable_1 tbl_c WHERE tbl_a.daset_id=208 AND tbl_a.sect_id IN "+
+                    "(1,2,3,4,5,6,7)",
+                    c);
+                Console.WriteLine(cmd.ExecuteScalar());
+            }
+        }
+
+        /// <summary>
+        /// Bug #54152 : Crash in QueryNormalizer, VALUES incomplete
+        /// </summary>
+        [Test]
+        public void QueryNormalizerCrash2()
+        {
+             execSQL("CREATE TABLE bug54152 (id INT, expr INT,name VARCHAR(20),"+
+                 "fld4 VARCHAR(10), fld5 VARCHAR(10), fld6 VARCHAR(10),"+
+                 "fld7 VARCHAR(10), fld8 VARCHAR(10), fld9 VARCHAR(10),"+
+                 "fld10 VARCHAR(10), PRIMARY KEY(id))");
+
+            string connStr = GetConnectionString(true) + ";logging=true";
+            using (MySqlConnection c = new MySqlConnection(connStr))
+            {
+                c.Open();
+                string query =
+                    "INSERT INTO bug54152 VALUES "+
+                    "(1,1, 'name 1',1,1,1,1,1,1,1)," +
+                    "(2,2,'name 2',2,2,2,2,2,2,2)," +
+                    "(3,3,'name 3',3,3,3,3,3,3,3)," +
+                    "(4,4,'name 4',4,4,4,4,4,4,4)," +
+                    "(5,5,'name 5',5,5,5,5,5,5,5)," +
+                    "(6,6,'name 6',6,6,6,6,6,6,6)," +
+                    "(7,7,'name 7',7,7,7,7,7,7,7)," +
+                    "(8,8,'name 8',8,8,8,8,8,8,8)," +
+                    "(9,9,'name 9',9,9,9,9,9,9,9)," +
+                    "(10,10,'name 10',10,10,10,10,10,10,10)";
+                MySqlCommand cmd = new MySqlCommand(query, c);
+                cmd.ExecuteNonQuery();
+            }
+        }
     }
 }

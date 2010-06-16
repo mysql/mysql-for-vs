@@ -1,3 +1,4 @@
+- fix crashes on long queries, when logging is turned on (bug #53865, bug #54152)
 - try to avoid exception if Connection is garbage-collected (bug #53457)
 - when command is killed, e.g as result of timeout, error code returned from server 
 is not necessarily 1317 (QueryInterrupted). It might as well be 1028 (FileSortAborted).
