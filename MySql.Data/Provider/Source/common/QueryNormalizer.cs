@@ -154,8 +154,12 @@ namespace MySql.Data.Common
             {
                 // find the close ')'
                 while (++pos < tok.Count)
-                    if (tok[pos].Type == TokenType.Symbol && tok[pos].Text == ")") break;
-                Debug.Assert(pos < tok.Count);
+                {
+                    if (tok[pos].Type == TokenType.Symbol && tok[pos].Text == ")")
+                        break;
+                    if (pos == tok.Count-1)
+                        break;
+                }
                 parenIndices.Add(pos);
 
                 // now find the next "real" token
@@ -206,12 +210,14 @@ namespace MySql.Data.Common
         private void CollapseInList(List<Token> tok, ref int pos)
         {
             Token t = GetNextRealToken(tok, ref pos);
-            Debug.Assert(t.Text == "(");
+            // Debug.Assert(t.Text == "(");
+            if (t == null)
+                return;
 
             // if the first token is a keyword then we likely have a 
             // SELECT .. IN (SELECT ...)
             t = GetNextRealToken(tok, ref pos);
-            if (t.Type == TokenType.Keyword) return;
+            if (t == null || t.Type == TokenType.Keyword) return;
 
             int start = pos;
             // first find all the tokens that make up the in list
