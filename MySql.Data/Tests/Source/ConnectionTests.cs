@@ -21,6 +21,7 @@
 using System;
 using System.Data;
 using MySql.Data.MySqlClient;
+using MySql.Data.MySqlClient.Properties;
 using NUnit.Framework;
 using System.Configuration;
 
@@ -448,6 +449,29 @@ namespace MySql.Data.MySqlClient.Tests
         {
             MySqlConnection c = new MySqlConnection();
             c.ConnectionString = null;
+        }
+
+        /// <summary>
+        /// Bug #53097  	Connection.Ping() closes connection if executed on a connection with datareader
+        /// </summary>
+        [Test]
+        public void PingWhileReading()
+        {
+            MySqlCommand command = new MySqlCommand("USE mysql; SELECT * FROM help_topic", conn);
+
+            using (MySqlDataReader reader = command.ExecuteReader())
+            {
+                reader.Read();
+                try
+                {
+                    conn.Ping();
+                    Assert.Fail("Test Failed.");
+                }
+                catch (MySqlException ex)
+                {
+                    Assert.AreEqual(Resources.DataReaderOpen, ex.Message);
+                }
+            }
         }
 
         /// <summary>
