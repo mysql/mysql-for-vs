@@ -1,3 +1,5 @@
+- Fix problems with MySqlDataAdapter insert command, when batch size is > 1, and 
+  INSERT statement has expression with parentheses (e.g arithmetical expressions) (bug #54386)
 - fix crashes on long queries, when logging is turned on (bug #53865, bug #54152)
 - Try to avoid exception when Connection is closed by garbage collector (bug #53457)
 - Added trace message in exception blog in MySqlConnection.Abort() method (bug #52769)
