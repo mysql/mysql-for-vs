@@ -450,6 +450,43 @@ namespace MySql.Data.MySqlClient.Tests
         }
 
         /// <summary>
+        /// Bug #54386 : expression with parentheses in INSERT leads to invalid
+        /// query when using batching
+        /// </summary>
+        [Test]
+        public void TokenizerBatching()
+        {
+            execSQL("CREATE TABLE Test (id INT, expr INT,name VARCHAR(20), PRIMARY KEY(id))");
+
+
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", 
+                conn);
+            MySqlCommand ins = new MySqlCommand(
+                "INSERT INTO test (id, expr, name) VALUES(?p1, (?p2 * 2) + 3, ?p3)", 
+                conn);
+            da.InsertCommand = ins;
+            ins.UpdatedRowSource = UpdateRowSource.None;
+            ins.Parameters.Add("?p1", MySqlDbType.Int32).SourceColumn = "id";
+            ins.Parameters.Add("?p2", MySqlDbType.Int32).SourceColumn = "expr";
+            ins.Parameters.Add("?p3", MySqlDbType.VarChar, 20).SourceColumn = "name";
+
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+
+            for (int i = 1; i <= 100; i++)
+            {
+                DataRow row = dt.NewRow();
+                row["id"] = i;
+                row["expr"] = i;
+                row["name"] = "name " + i;
+                dt.Rows.Add(row);
+            }
+
+            da.UpdateBatchSize = 10;
+            da.Update(dt);
+
+        }
+        /// <summary>
         /// Bug #51788	Error in SQL syntax not reported. A CLR exception was thrown instead,
         /// </summary>
         [Test]

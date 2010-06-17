@@ -1,3 +1,5 @@
+- Fix problems with MySqlDataAdapter insert command, when batch size is > 1, and 
+  INSERT statement has expression with parentheses (e.g arithmetical expressions) (bug #54386)
 - fix crashes on long queries, when logging is turned on (bug #53865, bug #54152)
 - try to avoid exception if Connection is garbage-collected (bug #53457)
 - when command is killed, e.g as result of timeout, error code returned from server 
