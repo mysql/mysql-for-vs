@@ -1,3 +1,5 @@
+- Fix problems with MySqlDataAdapter insert command, when batch size is > 1, and 
+  INSERT statement has expression with parentheses (e.g arithmetical expressions) (bug #54386)
 - When command is killed, e.g as result of timeout, error code returned from server 
 is not necessarily 1317 (QueryInterrupted). It might as well be 1028 (FileSortAborted).
 Fix timeout handling to handle both error codes in the same fashion (bug #53357)

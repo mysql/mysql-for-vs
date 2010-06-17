@@ -799,11 +799,24 @@ namespace MySql.Data.MySqlClient
                         {
                             token = tokenizer.NextToken();
                             Debug.Assert(token == "(");
-                            while (token != null && token != ")")
+
+                            // find matching right paren, and ensure that parens 
+                            // are balanced.
+                            int openParenCount = 1;
+                            while (token != null)
                             {
                                 batchableCommandText += token;
                                 token = tokenizer.NextToken();
+
+                                if (token == "(")
+                                    openParenCount++;
+                                else if (token == ")")
+                                    openParenCount--;
+
+                                if (openParenCount == 0)
+                                    break;
                             }
+
                             if (token != null)
                                 batchableCommandText += token;
                             token = tokenizer.NextToken();
