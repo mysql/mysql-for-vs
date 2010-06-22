@@ -78,7 +78,8 @@ namespace MySql.Data.MySqlClient
             return retValue + key.ToString();
         }
 
-        private DataSet GetParameters(string procName)
+        private void GetParameters(string procName, out DataTable proceduresTable,
+            out DataTable parametersTable)
         {
             string procCacheKey = GetCacheKey(procName);
             DataSet ds = Connection.ProcedureCache.GetProcedure(Connection, procName, procCacheKey);
@@ -87,19 +88,26 @@ namespace MySql.Data.MySqlClient
             {
                 // if we got our parameters and our user says it is ok to use proc bodies
                 // then just return them
-                if (Connection.Settings.UseProcedureBodies) return ds;
-
-                // we got the parameters, but ignore them.
-                if(ds.Tables.Contains("Procedure Parameters"))
-                    ds.Tables.Remove("Procedure Parameters");
+                if (Connection.Settings.UseProcedureBodies)
+                {
+                    lock(ds)
+                    {
+                        proceduresTable = ds.Tables["procedures"];
+                        parametersTable = ds.Tables["procedure parameters"];
+                        return;
+                    }
+                }
             }
 
+             lock(ds)
+             {
+                proceduresTable = ds.Tables["procedures"];
+             }
             // we were not able to retrieve parameter data so we have to make do by
             // adding the parameters from the command object to our table
             // we use an internal method to create our procedure parameters table.  
             ISSchemaProvider sp = new ISSchemaProvider(Connection);
-            DataTable pTable = sp.CreateParametersTable(); 
-            ds.Tables.Add(pTable);
+            parametersTable = sp.CreateParametersTable(); 
 
             // now we run through the parameters that were set and fill in the parameters table
             // the best we can
@@ -110,7 +118,7 @@ namespace MySql.Data.MySqlClient
                 if (!p.TypeHasBeenSet)
                     throw new InvalidOperationException(Resources.NoBodiesAndTypeNotSet);
 
-                DataRow row = pTable.NewRow();
+                DataRow row = parametersTable.NewRow();
                 row["PARAMETER_NAME"] = p.ParameterName;
                 row["PARAMETER_MODE"] = "IN";
                 if (p.Direction == ParameterDirection.InputOutput)
@@ -124,9 +132,19 @@ namespace MySql.Data.MySqlClient
                 }
                 else
                     row["ORDINAL_POSITION"] = pos++;
-                pTable.Rows.Add(row);
+                parametersTable.Rows.Add(row);
             }
-            return ds;
+            if (Connection.Settings.UseProcedureBodies)
+            {
+                lock (ds)
+                {
+                    // we got the parameters, but ignore them.
+                    if (ds.Tables.Contains("Procedure Parameters"))
+                        ds.Tables.Remove("Procedure Parameters");
+
+                    ds.Tables.Add(parametersTable);
+                }
+            }
         }
 
         public static string GetFlags(string dtd)
@@ -181,10 +199,8 @@ namespace MySql.Data.MySqlClient
                 spName = Connection.Database + "." + spName;
             spName = FixProcedureName(spName);
 
-            DataSet ds = GetParameters(spName);
-
-            DataTable procTable = ds.Tables["procedures"];
-            parametersTable = ds.Tables["procedure parameters"];
+            DataTable procTable;
+            GetParameters(spName,out procTable, out parametersTable);
 
             if (procTable.Rows.Count == 0)
                 throw new InvalidOperationException(String.Format(Resources.RoutineNotFound, spName));
