@@ -487,5 +487,24 @@ namespace MySql.Data.MySqlClient.Tests
             MySqlConnection.ClearPool(c2);
         }
 
+        /// <summary>
+        /// Bug #49563  	Mysql Client wrongly communications with server when using pooled connections
+        /// </summary>
+        [Test]
+        public void OpenSecondPooledConnectionWithoutDatabase()
+        {
+            string connectionString = GetConnectionString(false);
+            connectionString = connectionString.Replace("pooling=false", "pooling=true");
+            using (MySqlConnection c1 = new MySqlConnection(connectionString))
+            {
+                c1.Open();
+                c1.Close();
+            }
+            using (MySqlConnection c2 = new MySqlConnection(connectionString))
+            {
+                c2.Open();
+                c2.Close();
+            }
+        }
     }
 }
