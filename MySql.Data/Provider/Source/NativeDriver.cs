@@ -431,6 +431,8 @@ namespace MySql.Data.MySqlClient
             packet.Write(Crypt.Get411Password(Settings.Password, encryptionSeed));
             if ((connectionFlags & ClientFlags.CONNECT_WITH_DB) != 0 && Settings.Database != null)
                 packet.WriteString(Settings.Database);
+            else
+                packet.WriteString(""); // Add a null termination to the string.
 
             stream.SendPacket(packet);
 
