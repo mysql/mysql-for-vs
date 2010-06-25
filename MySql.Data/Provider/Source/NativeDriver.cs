@@ -427,6 +427,7 @@ namespace MySql.Data.MySqlClient
 
         public override void Reset()
         {
+            stream.Encoding = this.Encoding;
             stream.SequenceByte = 0;
             packet.Clear();
             packet.WriteByte((byte)DBCmd.CHANGE_USER);
