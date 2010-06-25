@@ -16,6 +16,8 @@
 - improved our procedure caching so that if you drop and recreate a proc with a different number of parameters
   it will find the new proc as long as your are actually using the right number of parameters (bug #52562)
 - added public MySqlHelper.ExecuteDataReader method that takes an external connection (bug #54570)
+- applied patch from 5.x series that reset the connection to the base encoding when doing a 
+  connection reset (bug #47153)
 
 Version 6.2.3
 - fixed InvalidOperationException when accessing Stream.ReadTimeout or Stream.WriteTimeout on CF
