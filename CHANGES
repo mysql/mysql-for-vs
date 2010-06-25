@@ -1,4 +1,3 @@
-Version 6.3.3 (beta 2)
 - Fix race condition (concurrent reading/modification of the same DataSet) in StoredProcedure.GetParameters()
   (bug#49118)
 - Fix problems with MySqlDataAdapter insert command, when batch size is > 1, and 
@@ -9,6 +8,7 @@ Version 6.3.3 (beta 2)
   is not necessarily 1317 (QueryInterrupted). It might as well be 1028 (FileSortAborted).
   Fix timeout handling to handle both error codes in the same fashion (bug #53357)
 - changed installer code to skip over config folders that do not contain a machine.config (bug #52352)
+- added public MySqlHelper.ExecuteDataReader method that takes an external connection (bug #54570)
 
 Version 6.3.2 (beta 1)
 - added feature where sql queries that are longer than 300 chars are normalized and a new

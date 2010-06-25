@@ -263,6 +263,18 @@ namespace MySql.Data.MySqlClient
 			return ExecuteReader(connectionString, commandText, (MySqlParameter[])null);
 		}
 
+        /// <summary>
+        /// Executes a single command against a MySQL database.
+        /// </summary>
+        /// <param name="connection"><see cref="MySqlConnection"/> object to use for the command</param>
+        /// <param name="commandText">Command text to use</param>
+        /// <returns><see cref="MySqlDataReader"/> object ready to read the results of the command</returns>
+        public static MySqlDataReader ExecuteReader(MySqlConnection connection, string commandText)
+        {
+            //pass through the call providing null for the set of SqlParameters
+            return ExecuteReader(connection, null, commandText, (MySqlParameter[])null, true);
+        }
+
 		/// <summary>
 		/// Executes a single command against a MySQL database.
 		/// </summary>
