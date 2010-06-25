@@ -93,6 +93,7 @@ namespace MySql.Data.MySqlClient
         private static void AddProviderToMachineConfigInDir(string path)
         {
             string configFile = String.Format(@"{0}\machine.config", path);
+            if (!File.Exists(configFile)) return;
 
             // now read the config file into memory
             StreamReader sr = new StreamReader(configFile);
@@ -172,6 +173,7 @@ namespace MySql.Data.MySqlClient
         private static void RemoveProviderFromMachineConfigInDir(string path)
         {
             string configFile = String.Format(@"{0}\machine.config", path);
+            if (!File.Exists(configFile)) return;
 
             // now read the config file into memory
             StreamReader sr = new StreamReader(configFile);

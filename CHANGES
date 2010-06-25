@@ -1,3 +1,4 @@
+Version 6.3.3 (beta 2)
 - Fix race condition (concurrent reading/modification of the same DataSet) in StoredProcedure.GetParameters()
   (bug#49118)
 - Fix problems with MySqlDataAdapter insert command, when batch size is > 1, and 
@@ -5,9 +6,11 @@
 - fix crashes on long queries, when logging is turned on (bug #53865, bug #54152)
 - try to avoid exception if Connection is garbage-collected (bug #53457)
 - when command is killed, e.g as result of timeout, error code returned from server 
-is not necessarily 1317 (QueryInterrupted). It might as well be 1028 (FileSortAborted).
-Fix timeout handling to handle both error codes in the same fashion (bug #53357)
+  is not necessarily 1317 (QueryInterrupted). It might as well be 1028 (FileSortAborted).
+  Fix timeout handling to handle both error codes in the same fashion (bug #53357)
+- changed installer code to skip over config folders that do not contain a machine.config (bug #52352)
 
+Version 6.3.2 (beta 1)
 - added feature where sql queries that are longer than 300 chars are normalized and a new
   query normalized log line is issues right after query opened to give the query normalized text
 - fixed bug in sql generation when using a negated binary fragment in EF (bug #49850)
@@ -29,7 +32,7 @@ Fix timeout handling to handle both error codes in the same fashion (bug #53357)
 - improved our procedure caching so that if you drop and recreate a proc with a different number of parameters
   it will find the new proc as long as your are actually using the right number of parameters (bug #52562)
 
-Version 6.3.1
+Version 6.3.1 (alpha 2)
 - fixed bug where giving a connection string option like (option=) and then trying to read
   the option back via the property would fail (bug #51209)
 - fixed bug where a connection could not be reused in the IDE in some circumstances (bug #41629)
@@ -48,6 +51,6 @@ Version 6.3.1
 - ScriptCompleted event handler now uses EventArgs.Empty instead of null
 - fixed parsing bug that was caused by special characters being jammed up beside a quoted identifier (bug #51610)
 
-version 6.3.0
+version 6.3.0 (alpha 1)
 - Added the ability to enable query analysis at runtime
 - added VS2010 compatibility
