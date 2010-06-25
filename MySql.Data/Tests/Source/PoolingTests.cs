@@ -506,5 +506,36 @@ namespace MySql.Data.MySqlClient.Tests
                 c2.Close();
             }
         }
+
+        /// <summary>
+        /// Bug #47153	Connector/NET fails to reset connection when encoding has changed
+        /// </summary>
+        [Test]
+        public void ConnectionResetAfterUnicode()
+        {
+            execSQL("CREATE TABLE test (id INT, name VARCHAR(20) CHARSET UCS2)");
+            execSQL("INSERT INTO test VALUES (1, 'test')");
+
+            string connStr = GetPoolingConnectionString() + ";connection reset=true;min pool size=1; max pool size=1";
+            using (MySqlConnection c = new MySqlConnection(connStr))
+            {
+                c.Open();
+                MySqlCommand cmd = new MySqlCommand("SELECT * FROM test", c);
+                using (MySqlDataReader r = cmd.ExecuteReader())
+                {
+                    r.Read();
+                }
+                c.Close();
+
+                try
+                {
+                    c.Open();
+                }
+                finally
+                {
+                    KillConnection(c);
+                }
+            }
+        }
     }
 }
