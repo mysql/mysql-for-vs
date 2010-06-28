@@ -1,3 +1,4 @@
+- Cancel query in ThreadAbortException handler (Bug#54012)
 - Fix race condition (concurrent reading/modification of the same DataSet) in StoredProcedure.GetParameters()
   (bug#49118)
 - Fix problems with MySqlDataAdapter insert command, when batch size is > 1, and 

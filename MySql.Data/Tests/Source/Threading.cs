@@ -120,6 +120,48 @@ namespace MySql.Data.MySqlClient.Tests
 				x++;
 			}
 		}
-	}
+        /// <summary>
+        /// Bug #54012  	MySql Connector/NET is not hardened to deal with 
+        /// ThreadAbortException
+        /// </summary>
+        private void HardenedThreadAbortExceptionWorker()
+        {
+            try
+            {
+                using (MySqlConnection c = new MySqlConnection(GetConnectionString(true)))
+                {
 
+                    c.Open();
+                    MySqlCommand cmd = new MySqlCommand(
+                        "SELECT BENCHMARK(10000000000,ENCODE('hello','goodbye'))",
+                        c);
+                    // ThreadAbortException is not delivered, when thread is 
+                    // stuck in system call. To shorten test time, set command 
+                    // timeout to a small value. Note .shortening command timeout
+                    // means we could actually have timeout exception here too, 
+                    // but it seems like CLR delivers ThreadAbortException, if 
+                    // the  thread was aborted.
+                    cmd.CommandTimeout = 2;
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                Thread.ResetAbort();
+                return;
+            }
+            Assert.Fail("expected ThreadAbortException");
+        }
+
+        [Test]
+        public void HardenedThreadAbortException()
+        {
+            Thread t = new Thread(new ThreadStart(HardenedThreadAbortExceptionWorker));
+            t.Name = "Execute Query";
+            t.Start();
+            Thread.Sleep(500);
+            t.Abort();
+            t.Join();
+        }
+    }
 }
