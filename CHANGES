@@ -1,3 +1,4 @@
+- Ensure exceptions are not silently eaten inside MySqlDataReader.Read()  (Bug#53439)
 - Cancel query in ThreadAbortException handler (Bug#54012)
 - Fix race condition (concurrent reading/modification of the same DataSet) in StoredProcedure.GetParameters()
   (bug#49118)

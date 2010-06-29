@@ -255,6 +255,74 @@ namespace MySql.Data.MySqlClient.Tests
             }
             execSQL("kill " + threadId);
         }
+
+
+        /// <summary>
+        /// Bug #45978	Silent problem when net_write_timeout is exceeded
+        /// </summary>
+        [Test]
+        public void NetWriteTimeoutExpiring()
+        {
+            execSQL("CREATE TABLE Test(id int, blob1 longblob)");
+            int rows = 10000;
+            byte[] b1 = Utils.CreateBlob(5000);
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (@id, @b1)", conn);
+            cmd.Parameters.Add("@id", MySqlDbType.Int32);
+            cmd.Parameters.AddWithValue("@name", b1);
+            for (int i = 0; i < rows; i++)
+            {
+                cmd.Parameters[0].Value = i;
+                cmd.ExecuteNonQuery();
+            }
+           
+
+            string connStr = GetConnectionString(true);
+            using (MySqlConnection c = new MySqlConnection(connStr))
+            {
+                c.Open();
+                cmd.Connection = c;
+                cmd.Parameters.Clear();
+                cmd.CommandText = "SET net_write_timeout = 1";
+                cmd.ExecuteNonQuery();
+
+                cmd.CommandText = "SELECT * FROM Test LIMIT " + rows;
+                int i=0;
+                try
+                {
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+
+                        // after this several cycles of DataReader.Read() are executed 
+                        // normally and then the problem, described above, occurs
+                        for (; i < rows; i++)
+                        {
+
+                            if (!reader.Read())
+                                Assert.Fail("unexpected 'false' from reader.Read");
+                            if(i%10 == 0)
+                                Thread.Sleep(1);
+                            object v = reader.GetValue(1);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    bool seenEndOfStreamException = false;
+                    for (Exception nextException = e; e != null; e = e.InnerException)
+                    {
+                        if (e is System.IO.EndOfStreamException)
+                            seenEndOfStreamException = true;
+                    }
+                    if (!seenEndOfStreamException)
+                        throw;
+                    Assert.IsTrue(seenEndOfStreamException);
+                    return;
+                }
+                // IT is relatively hard to predict where
+                Console.WriteLine("Warning: all reads completed!");
+                Assert.IsTrue(i == rows);
+            }
+        }
     }
 
     #region Configs
