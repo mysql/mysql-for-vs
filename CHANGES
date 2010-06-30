@@ -11,6 +11,8 @@
 - added public MySqlHelper.ExecuteDataReader method that takes an external connection (bug #54570)
 - applied patch from 5.x series that reset the connection to the base encoding when doing a 
   connection reset (bug #47153)
+- fixed bug that caused the web site config wizard to not appear when working with web applications
+  as opposed to websites (bug #54571)
 
 Version 6.3.2 (beta 1)
 - added feature where sql queries that are longer than 300 chars are normalized and a new
