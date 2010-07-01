@@ -125,6 +125,20 @@ namespace MySql.Data.MySqlClient
 
 		#endregion
 
+        protected override int Update(DataRow[] dataRows, DataTableMapping tableMapping)
+        {
+            int ret = base.Update(dataRows, tableMapping);
+            // DbDataAdapter does automatically calls AcceptChanges on table.
+            // (even if  documentation states otherwise).
+            // Do AcceptsChanges() here, for SQL Server compatible behavior
+            // (see also Bug#5463)
+            foreach (DataRow row in dataRows)
+            {
+                row.Table.AcceptChanges();
+            }
+            return ret;
+        }
+
         #region Batching Support
 
         public override int UpdateBatchSize
