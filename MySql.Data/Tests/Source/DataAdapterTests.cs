@@ -843,6 +843,58 @@ namespace MySql.Data.MySqlClient.Tests
                 ds.Tables[0].Rows.Add(r);
                 da.Update(new DataRow[] { r });
             }
-        } 
+        }
+
+        /// <summary>
+        /// Bug#54863 : several datadapter.Update()s  with DataTable changes in
+        /// between can result into ConcurrencyException
+        /// </summary>
+        [Test]
+        public void AdapterConcurrentException()
+        {
+            execSQL(
+                "CREATE TABLE T (" +
+                "id_auto int(11) NOT NULL AUTO_INCREMENT," +
+                "field varchar(50) DEFAULT NULL," +
+                "PRIMARY KEY (id_auto))");
+
+            execSQL("CREATE  PROCEDURE sp_insert(" +
+                    " in p_field varchar(50)) " +
+                    " BEGIN " +
+                    " INSERT INTO T(field) VALUES(p_field);" +
+                    " SELECT * FROM T WHERE id_auto=@@IDENTITY;" +
+                    " END");
+
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM T", conn);
+            da.InsertCommand = conn.CreateCommand();
+            da.InsertCommand.CommandText = "sp_insert";
+            da.InsertCommand.CommandType = CommandType.StoredProcedure;
+            da.InsertCommand.Parameters.Add("p_field", MySqlDbType.VarChar, 50, "field");
+            da.InsertCommand.UpdatedRowSource = UpdateRowSource.FirstReturnedRecord;
+
+            da.DeleteCommand = conn.CreateCommand();
+            da.DeleteCommand.CommandText = "DELETE FROM T WHERE id_auto=@id_auto";
+            da.DeleteCommand.Parameters.Add("@id_auto", MySqlDbType.Int32, 4, "id_auto");
+
+            DataSet ds = new DataSet();
+            da.Fill(ds, "T");
+
+            DataTable table = ds.Tables["T"];
+            DataRow r = table.NewRow();
+            r["field"] = "row";
+            table.Rows.Add(r);
+            da.Update(table);
+
+            table.Rows[0].Delete();
+
+            r = table.NewRow();
+            r["field"] = "row2";
+            table.Rows.Add(r);
+
+            da.Update(table); // here was concurrencyviolation
+            da.Fill(ds);
+            Assert.AreEqual(ds.Tables["T"].Rows.Count, 1);
+            Assert.AreEqual(ds.Tables["T"].Rows[0]["field"], "row2");
+        }
     }
 }

@@ -425,8 +425,13 @@ namespace MySql.Data.MySqlClient
             }
             catch (TimeoutException tex)
             {
-                connection.HandleTimeout(tex);
-                return null;
+                connection.HandleTimeoutOrThreadAbort(tex);
+                throw; //unreached
+            }
+            catch (ThreadAbortException taex)
+            {
+                connection.HandleTimeoutOrThreadAbort(taex);
+                throw;
             }
             catch (MySqlException ex)
             {

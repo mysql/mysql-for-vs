@@ -52,7 +52,7 @@ namespace MySql.Data.MySqlClient
 #if !CF
         private PerformanceMonitor perfMonitor;
 #endif
-        private bool abortOnTimeout;
+        private bool isKillQueryConnection;
         private string database;
         private int commandTimeout;
 
@@ -625,17 +625,23 @@ namespace MySql.Data.MySqlClient
 
 
 
-        internal void HandleTimeout(TimeoutException tex)
+        internal void HandleTimeoutOrThreadAbort(Exception ex)
         {
             bool isFatal = false;
 
-            if (abortOnTimeout)
+            if (isKillQueryConnection)
             {
                 // Special connection started to cancel a query.
-                // Timeout handler is disabled to prevent recursive connection
-                // spawning when original query and KILL time out.
+                // Abort will prevent recursive connection spawning
                 Abort();
-                throw new MySqlException(Resources.Timeout, true , tex);
+                if (ex is TimeoutException)
+                {
+                    throw new MySqlException(Resources.Timeout, true, ex);
+                }
+                else
+                {
+                    return;
+                }
             }
 
             try
@@ -655,14 +661,17 @@ namespace MySql.Data.MySqlClient
                     Reader = null;
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex2)
             {
-                MySqlTrace.LogWarning(ServerThread, "Could not kill query in timeout handler, " +
-                    " aborting connection. Exception was " + ex.Message);
+                MySqlTrace.LogWarning(ServerThread, "Could not kill query, " +
+                    " aborting connection. Exception was " + ex2.Message);
                 Abort();
                 isFatal = true;
             }
-            throw new MySqlException(Resources.Timeout, isFatal, tex);
+            if (ex is TimeoutException)
+            {
+                throw new MySqlException(Resources.Timeout, isFatal, ex);
+            }
         }
 
         public void CancelQuery(int timeout)
@@ -674,7 +683,7 @@ namespace MySql.Data.MySqlClient
           
             using(MySqlConnection c = new MySqlConnection(cb.ConnectionString))
             {
-                c.abortOnTimeout = true;
+                c.isKillQueryConnection = true;
                 c.Open();
                 string commandText = "KILL QUERY " + ServerThread;
                 MySqlCommand cmd = new MySqlCommand(commandText, c);

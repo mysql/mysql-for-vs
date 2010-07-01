@@ -165,8 +165,31 @@ namespace MySql.Data.MySqlClient
             }
             catch (MySqlException ex)
             {
+                // Ignore aborted queries
                 if (!ex.IsQueryAborted)
-                    throw;
+                {
+                    // ignore IO exceptions.
+                    // We are closing or disposing reader, and  do not
+                    // want exception to be propagated to used. If socket is
+                    // is closed on the server side, next query will run into
+                    // IO exception. If reader is closed by GC, we also would 
+                    // like to avoid any exception here. 
+                    bool isIOException = false;
+                    for (Exception exception = ex; exception != null;
+                        exception = exception.InnerException)
+                    {
+                        if (exception is System.IO.IOException)
+                        {
+                            isIOException = true;
+                            break;
+                        }
+                    }
+                    if (!isIOException)
+                    {
+                        // Ordinary exception (neither IO nor query aborted)
+                        throw;
+                    }
+                }
             }
 
             connection.Reader = null;
@@ -876,8 +899,13 @@ namespace MySql.Data.MySqlClient
             }
             catch (TimeoutException tex)
             {
-                connection.HandleTimeout(tex);
-                return false; // unreached
+                connection.HandleTimeoutOrThreadAbort(tex);
+                throw; // unreached
+            }
+            catch (System.Threading.ThreadAbortException taex)
+            {
+                connection.HandleTimeoutOrThreadAbort(taex);
+                throw;
             }
             catch (MySqlException ex)
             {
