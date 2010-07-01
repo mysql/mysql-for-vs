@@ -20,6 +20,8 @@
 - added public MySqlHelper.ExecuteDataReader method that takes an external connection (bug #54570)
 - applied patch from 5.x series that reset the connection to the base encoding when doing a 
   connection reset (bug #47153)
+- fixed bug that caused the web site config wizard to not appear when working with web applications
+  as opposed to websites (bug #54571)
 
 Version 6.2.3
 - fixed InvalidOperationException when accessing Stream.ReadTimeout or Stream.WriteTimeout on CF
