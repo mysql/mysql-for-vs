@@ -887,6 +887,9 @@ namespace MySql.Data.MySqlClient
 
 						lastCommandResult = statementId;
 							*/
+            if (stream == null)
+                return false;
+
             packet = stream.ReadPacket();
             if (packet.IsLastPacket)
             {
