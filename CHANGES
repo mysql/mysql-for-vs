@@ -1,3 +1,5 @@
+- Call DataTable.AcceptChanges() for affected tables at the end of MySqlAdapter.Update, 
+  to match the documented IDataAdater behavior (bug#54863)
 - Fix race condition (concurrent reading/modification of the same DataSet) in StoredProcedure.GetParameters()
   (bug#49118)
 - Fix problems with MySqlDataAdapter insert command, when batch size is > 1, and 
