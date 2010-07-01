@@ -197,7 +197,10 @@ namespace MySql.Data.MySqlClient
                 }
                 catch (MySqlException ex)
                 {
-                    if (ex.IsQueryAborted) fetched = false;
+                    if (ex.IsQueryAborted)
+                        fetched = false;
+                    else
+                        throw;
                 }
 
                 if (!fetched)
