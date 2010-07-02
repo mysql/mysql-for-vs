@@ -143,6 +143,7 @@
       <DependentUpon>MySqlDataConnectionPromptDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="DDEX\MySqlDataObjectEnumerator.cs" />
+    <Compile Include="DDEX\MySqlDataObjectIdentifierConverter.cs" />
     <Compile Include="DDEX\MySqlDataObjectSupport.cs" />
     <Compile Include="DDEX\MySqlDataSourceInformation.cs" />
     <Compile Include="DDEX\MySqlDataSourceSpecializer.cs" />
