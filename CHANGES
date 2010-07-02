@@ -24,6 +24,9 @@
   connection reset (bug #47153)
 - fixed bug that caused the web site config wizard to not appear when working with web applications
   as opposed to websites (bug #54571)
+- changed DbCommandBuilder and added a MySqlDataObjectIdentifierConverter so we don't output
+  the databasename in our typed datasets.  This allows users to move the dataset to a new
+  database/server with no trouble (bug #33870)
 
 Version 6.2.3
 - fixed InvalidOperationException when accessing Stream.ReadTimeout or Stream.WriteTimeout on CF

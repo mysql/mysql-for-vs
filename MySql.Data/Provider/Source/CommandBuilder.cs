@@ -227,6 +227,17 @@ namespace MySql.Data.MySqlClient
 
         #endregion
 
+        protected override DataTable GetSchemaTable(DbCommand sourceCommand)
+        {
+            DataTable schemaTable = base.GetSchemaTable(sourceCommand);
+
+            foreach (DataRow row in schemaTable.Rows)
+                if (row["BaseSchemaName"].Equals(sourceCommand.Connection.Database))
+                    row["BaseSchemaName"] = null;
+
+            return schemaTable;
+        }
+
         /// <summary>
         /// 
         /// </summary>
