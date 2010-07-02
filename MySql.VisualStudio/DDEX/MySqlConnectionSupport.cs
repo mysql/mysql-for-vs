@@ -67,7 +67,10 @@ namespace MySql.Data.VisualStudio
             {
                 return new MySqlDataSourceInformation(Site as DataConnection);
             }
-			else return base.GetServiceImpl(serviceType);
+            else if (serviceType == typeof(DataObjectIdentifierConverter))
+                return new MySqlDataObjectIdentifierConverter(Site as DataConnection);
+            else 
+                return base.GetServiceImpl(serviceType);
         }
 
         public override bool Open(bool doPromptCheck)
