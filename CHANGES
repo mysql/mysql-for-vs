@@ -10,6 +10,9 @@
 - added public MySqlHelper.ExecuteDataReader method that takes an external connection (bug #54570)
 - applied patch from 5.x series that reset the connection to the base encoding when doing a 
   connection reset (bug #47153)
+- changed DbCommandBuilder and added a MySqlDataObjectIdentifierConverter so we don't output
+  the databasename in our typed datasets.  This allows users to move the dataset to a new
+  database/server with no trouble (bug #33870)
 
 Version 6.0.6
 - When sending file to server (LOAD DATA INFILE) open the file for read only, not for read/write
