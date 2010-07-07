@@ -637,5 +637,35 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.AreEqual(0, count);
             }
         }
+
+
+        /// <summary>
+        /// Bug#54681 : Null Reference exception when using transaction
+        /// scope in more that one thread
+        /// </summary>
+        [Test]
+        public void TransactionScopeWithThreads()
+        {
+            // use transaction scope in the current thread
+            DoThreadWork();
+
+            //use transaction scope in another thread (used to crash with null
+            // reference exception)
+            Thread t = new Thread(new ThreadStart(DoThreadWork));
+            t.Start();
+            t.Join();
+        }
+
+        private void DoThreadWork()
+        {
+            using (TransactionScope ts = new TransactionScope())
+            {
+                string connStr = GetConnectionString(true);
+                using (MySqlConnection c1 = new MySqlConnection(connStr))
+                {
+                    c1.Open();
+                }
+            }
+        }
     }
 }

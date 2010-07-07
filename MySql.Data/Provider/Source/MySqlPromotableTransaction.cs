@@ -86,7 +86,7 @@ namespace MySql.Data.MySqlClient
     {
         // Per-thread stack to manage nested transaction scopes
         [ThreadStatic]
-        static Stack<MySqlTransactionScope> globalScopeStack = new Stack<MySqlTransactionScope>();
+        static Stack<MySqlTransactionScope> globalScopeStack;
 
         MySqlConnection connection;
         Transaction baseTransaction;
@@ -136,6 +136,11 @@ namespace MySql.Data.MySqlClient
            // We need to save the per-thread scope stack locally.
            // We cannot always use thread static variable in rollback: when scope
            // times out, rollback is issued by another thread.
+           if (globalScopeStack == null)
+           {
+               globalScopeStack = new Stack<MySqlTransactionScope>();
+           }
+
            scopeStack = globalScopeStack;
            scopeStack.Push(new MySqlTransactionScope(connection, baseTransaction, 
               simpleTransaction));

@@ -1,3 +1,5 @@
+- Fix null reference exception when TransactionScope is used by multiple threads
+ (bug#54681, fix contributed by Erskine Thompson)
 - Ensure exceptions are not silently eaten inside MySqlDataReader.Read()  (Bug#53439)
 - Cancel query in ThreadAbortException handler (Bug#54012)
 - Call DataTable.AcceptChanges() for affected tables at the end of MySqlAdapter.Update, 
