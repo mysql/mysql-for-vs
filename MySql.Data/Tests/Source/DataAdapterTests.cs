@@ -896,5 +896,75 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(ds.Tables["T"].Rows.Count, 1);
             Assert.AreEqual(ds.Tables["T"].Rows[0]["field"], "row2");
         }
+
+        /// <summary>
+        /// Bug#54895
+        /// ConcurrencyException when trying to use UpdateRowSource.FirstReturnedRecord 
+        /// with UpdateCommand and stored procedure.
+        /// </summary>
+        [Test]
+        public void UpdateReturnFirstRecord()
+        {
+            string createTable = 
+            "CREATE TABLE `bugtable` ( " +
+              "`id_auto` int(11) NOT NULL AUTO_INCREMENT," +
+              "`field` varchar(50) DEFAULT NULL," +
+              "counter int NOT NULL DEFAULT 0," + 
+              "PRIMARY KEY (`id_auto`)" +
+            ")";
+
+            string procGetAll = 
+            "CREATE PROCEDURE sp_getall_bugtable()" +
+            " BEGIN " +
+                "select * from bugtable;" +
+            " END ";
+
+            string procUpdate = 
+            "CREATE PROCEDURE sp_updatebugtable(" +
+                "in p_id_auto int, " +
+                "in p_field varchar(50)) " +
+            "BEGIN " +
+                "update bugtable set field = p_field, counter = counter+1 where id_auto=p_id_auto; " +
+                "select * from bugtable where id_auto=p_id_auto; " + /*retrieve updated row*/
+            "END ";
+
+            execSQL(createTable);
+            execSQL(procGetAll);
+            execSQL(procUpdate);
+
+
+            /* Add one row to the table */
+            MySqlCommand cmd = new MySqlCommand(
+                "insert into bugtable(field) values('x')", conn);
+            cmd.ExecuteNonQuery();
+
+
+            DataSet ds = new DataSet();
+            MySqlDataAdapter da = new MySqlDataAdapter();
+
+            da.SelectCommand = conn.CreateCommand();
+            da.SelectCommand.CommandType = CommandType.StoredProcedure;
+            da.SelectCommand.CommandText = "sp_getall_bugtable";
+
+            da.UpdateCommand = conn.CreateCommand();
+            da.UpdateCommand.CommandType = CommandType.StoredProcedure;
+            da.UpdateCommand.CommandText = "sp_updatebugtable";
+            da.UpdateCommand.Parameters.Add("p_id_auto", MySqlDbType.Int32, 4, "id_auto");
+            da.UpdateCommand.Parameters.Add("p_field", MySqlDbType.VarChar, 4, "field");
+            da.UpdateCommand.UpdatedRowSource = UpdateRowSource.FirstReturnedRecord;
+           
+
+            da.Fill(ds, "bugtable");
+            DataTable table = ds.Tables["bugtable"];
+            DataRow row =  table.Rows[0];
+            row["field"] = "newvalue";
+            Assert.AreEqual(row.RowState, DataRowState.Modified);
+            Assert.AreEqual((int)row["counter"], 0);
+
+            da.Update(table);
+
+            // Verify that "counter" field was changed by updating stored procedure.
+            Assert.AreEqual((int)row["counter"], 1);
+        }
     }
 }
