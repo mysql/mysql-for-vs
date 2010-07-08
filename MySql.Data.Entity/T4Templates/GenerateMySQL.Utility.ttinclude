@@ -42,7 +42,8 @@ private bool IsMySql
 /// </summary>
 private static string MyId(string userIdentifier) 
 {
-    return userIdentifier.Replace("`", "``");
+	if (String.IsNullOrEmpty(userIdentifier)) return userIdentifier;
+	return userIdentifier.Replace("`", "``");
 }
 
 private static bool IsIdentity(EdmProperty property, Version targetVersion)
