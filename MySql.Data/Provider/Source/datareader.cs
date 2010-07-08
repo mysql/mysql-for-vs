@@ -44,6 +44,10 @@ namespace MySql.Data.MySqlClient
 		private PreparableStatement statement;
         private ResultSet resultSet;
 
+		// Used in special circumstances with stored procs to avoid exceptions from DbDataAdapter
+		// If set, AffectedRows returns -1 instead of 0.
+		private bool disableZeroAffectedRows; 
+
 		/* 
 		 * Keep track of the connection in order to implement the
 		 * CommandBehavior.CloseConnection flag. A null reference means
@@ -64,7 +68,13 @@ namespace MySql.Data.MySqlClient
 			driver = connection.driver;
 			affectedRows = -1;
 			this.statement = statement;
-            resultSet = new ResultSet(this);
+			resultSet = new ResultSet(this);
+
+			if (cmd.CommandType == CommandType.StoredProcedure &&
+			cmd.UpdatedRowSource == UpdateRowSource.FirstReturnedRecord)
+			{
+				disableZeroAffectedRows = true;
+			}
 		}
 
 		#region Properties
@@ -125,7 +135,21 @@ namespace MySql.Data.MySqlClient
 			// RecordsAffected returns the number of rows affected in batch
 			// statments from insert/delete/update statments.  This property
 			// is not completely accurate until .Close() has been called.
-			get { return (int)affectedRows; }
+			get 
+			{
+
+				if (disableZeroAffectedRows)
+				{
+					// In special case of updating stored procedure called from 
+					// within data adapter, we return -1 to avoid exceptions 
+					// (s. Bug#54895)
+					if (affectedRows == 0)
+						return -1;
+
+				}
+
+				return (int)affectedRows;
+			}
 		}
 
 		/// <summary>
