@@ -125,18 +125,74 @@ namespace MySql.Data.MySqlClient
 
 		#endregion
 
+        /// <summary>
+        /// Open connection if it was closed.
+        /// Necessary to workaround "connection must be open and valid" error
+        /// with batched updates.
+        /// </summary>
+        /// <param name="state">Row state</param>
+        /// <param name="openedConnections"> list of opened connections 
+        /// If connection is opened by this function, the list is updated
+        /// </param>
+        /// <returns>true if connection was opened</returns>
+        private void OpenConnectionIfClosed(DataRowState state,
+            List<MySqlConnection> openedConnections)
+        {
+            MySqlCommand cmd = null;
+            switch (state)
+            {
+                case DataRowState.Added:
+                    cmd = InsertCommand;
+                    break;
+                case DataRowState.Deleted:
+                    cmd = DeleteCommand;
+                    break;
+                case DataRowState.Modified:
+                    cmd = UpdateCommand;
+                    break;
+                default:
+                    return;
+            }
+
+            if (cmd != null && cmd.Connection != null &&
+                cmd.Connection.connectionState == ConnectionState.Closed)
+            {
+                cmd.Connection.Open();
+                openedConnections.Add(cmd.Connection);
+            }
+        }
+
+
         protected override int Update(DataRow[] dataRows, DataTableMapping tableMapping)
         {
-            int ret = base.Update(dataRows, tableMapping);
-            // DbDataAdapter does automatically calls AcceptChanges on table.
-            // (even if  documentation states otherwise).
-            // Do AcceptsChanges() here, for SQL Server compatible behavior
-            // (see also Bug#5463)
-            foreach (DataRow row in dataRows)
+            List<MySqlConnection> connectionsOpened = new List<MySqlConnection>();
+
+            try
             {
-                row.Table.AcceptChanges();
+                foreach(DataRow row in dataRows)
+                {
+                    OpenConnectionIfClosed(row.RowState, connectionsOpened);
+                }
+
+                int ret = base.Update(dataRows, tableMapping);
+
+                // DbDataAdapter does automatically calls AcceptChanges on table.
+                // (even if  documentation states otherwise).
+                // Do AcceptsChanges() here, for SQL Server compatible behavior
+                // (see also Bug#5463)
+                foreach (DataRow row in dataRows)
+                {
+                    row.Table.AcceptChanges();
+                }
+                return ret;
+
             }
-            return ret;
+            finally 
+            {
+                foreach(MySqlConnection c in connectionsOpened)
+                    c.Close();
+            }
+
         }
 
         #region Batching Support

@@ -1,3 +1,5 @@
+- Fix "Connection must be valid and open" exception When UpdateBatchSize > 1 
+  and MySqlDataAdapter is not using an open connection (Bug #38411)
 - Make sure MySqlDataAdapter.Update() works for custom stored procedure driven update commands 
   that make use of UpdateRowSource.FirstReturnedRecord (Bug#54895)
 - Call DataTable.AcceptChanges() for affected tables at the end of MySqlAdapter.Update, 
