@@ -898,6 +898,75 @@ namespace MySql.Data.MySqlClient.Tests
         }
 
         /// <summary>
+        /// Bug #38411, using closed connection with data adapter.
+        /// </summary>
+        [Test]
+        public void BatchingConnectionClosed()
+        {
+            execSQL("CREATE TABLE Test (id INT, name VARCHAR(20), PRIMARY KEY(id))");
+
+            MySqlConnection c = new MySqlConnection(GetConnectionString(true));
+            MySqlConnection c2 = new MySqlConnection(GetConnectionString(true));
+            MySqlConnection c3 = new MySqlConnection(GetConnectionString(true));
+
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", c);
+            MySqlCommand ins = new MySqlCommand("INSERT INTO test (id, name) VALUES (?p1, ?p2)", c);
+            da.InsertCommand = ins;
+            ins.UpdatedRowSource = UpdateRowSource.None;
+            ins.Parameters.Add("?p1", MySqlDbType.Int32).SourceColumn = "id";
+            ins.Parameters.Add("?p2", MySqlDbType.VarChar, 20).SourceColumn = "name";
+
+            MySqlCommand del = new MySqlCommand("delete from test where id=?p1", c2);
+            da.DeleteCommand = del;
+            del.UpdatedRowSource = UpdateRowSource.None;
+            del.Parameters.Add("?p1", MySqlDbType.Int32).SourceColumn = "id";
+
+
+            MySqlCommand upd = new MySqlCommand("update test set id=?p1, name=?p2  where id=?p1", c3);
+            da.UpdateCommand = upd;
+            upd.UpdatedRowSource = UpdateRowSource.None;
+            upd.Parameters.Add("?p1", MySqlDbType.Int32).SourceColumn = "id";
+            upd.Parameters.Add("?p2", MySqlDbType.VarChar, 20).SourceColumn = "name";
+
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+
+            for (int i = 1; i <= 100; i++)
+            {
+                DataRow row = dt.NewRow();
+                row["id"] = i;
+                row["name"] = "name " + i;
+                dt.Rows.Add(row);
+            }
+
+            da.UpdateBatchSize = 10;
+            da.Update(dt);
+
+            dt.Rows.Clear();
+            da.Fill(dt);
+            Assert.AreEqual(100, dt.Rows.Count);
+            for (int i = 0; i < 100; i++)
+            {
+                Assert.AreEqual(i + 1, dt.Rows[i]["id"]);
+                Assert.AreEqual("name " + (i + 1), dt.Rows[i]["name"]);
+            }
+
+            foreach (DataRow row in dt.Rows)
+            {
+                row["name"] = row["name"] + "_xxx";
+            }
+            da.Update(dt);
+            for (int i = 0; i < 100; i++)
+            {
+                dt.Rows[i].Delete();
+            }
+            da.Update(dt);
+            dt.Rows.Clear();
+            da.Fill(dt);
+            Assert.AreEqual(dt.Rows.Count, 0);
+
+        }
+        /// <summary>
         /// Bug#54895
         /// ConcurrencyException when trying to use UpdateRowSource.FirstReturnedRecord 
         /// with UpdateCommand and stored procedure.
