@@ -32,6 +32,7 @@
 - changed DbCommandBuilder and added a MySqlDataObjectIdentifierConverter so we don't output
   the databasename in our typed datasets.  This allows users to move the dataset to a new
   database/server with no trouble (bug #33870)
+- fixed recognition of char(36) columns to be guids when used in views with entity models (bug #52085)
 
 Version 6.2.3
 - fixed InvalidOperationException when accessing Stream.ReadTimeout or Stream.WriteTimeout on CF
