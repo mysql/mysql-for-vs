@@ -41,13 +41,17 @@
     <DirectoryRef Id='VS2010Integration'>
       <Component Id='VS2010_Common' Guid='EC2420A0-ADD0-477f-99B5-FFA96EC557F4'>
         <File Id='MySQL.VisualStudio.2010' Name='MySQL.VisualStudio.dll' DiskId='1'
-              Source='..\MySql.VisualStudio\bin-4.0\release\MySQL.VisualStudio.dll' />
+              Source='..\MySql.VisualStudio\bin\release-4.0\MySQL.VisualStudio.dll' />
       </Component>
       
       <Component Id='VS_2010_Registry' Guid='E602F4FD-4D11-4632-8204-C0CFE22F8C7C'>
         <RegistryKey Id="VS_2010_RegistryKey" Root="HKLM" Action="createAndRemoveOnUninstall"
-                     Key="SOFTWARE\Microsoft\.NETFramework\v4.0.30128\AssemblyFoldersEx\MySQL Connector Net $(var.Version)">
+                     Key="SOFTWARE\Microsoft\.NETFramework\v4.0.30319\AssemblyFoldersEx\MySQL Connector Net $(var.Version) v4.0">
           <RegistryValue Id="VS_2010_RegistryValue" Value="[assemblies_v4]" Type="string" Action="write"/>
+        </RegistryKey>
+        <RegistryKey Id="VS_2010_RegistryKey" Root="HKLM" Action="createAndRemoveOnUninstall"
+                     Key="SOFTWARE\Microsoft\.NETFramework\v4.0.30319\AssemblyFoldersEx\MySQL Connector Net $(var.Version) v2.0">
+          <RegistryValue Id="VS_2010_RegistryValue" Value="[assemblies_v2]" Type="string" Action="write"/>
         </RegistryKey>
         <?include VS2010_Registry.wxi?>
         <?include VS2010_Data.wxi?>

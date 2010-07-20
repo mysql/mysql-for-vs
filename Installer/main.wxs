@@ -109,6 +109,8 @@
     <UIRef Id="WixUI_MySQL"/>
     <WixVariable Id="WixUIBannerBmp" Value="Bitmaps/BannrBmp.bmp"/>
     <WixVariable Id="WixUIDialogBmp" Value="Bitmaps/DlgBmp.bmp"/>
+    <WixVariable Id="WixUICostingPopupOptOut" Value="true"/>
+
 
     <Icon Id="ChangeLogIcon" SourceFile="Bitmaps\document.ico"/>
 
