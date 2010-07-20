@@ -72,14 +72,12 @@ namespace MySql.Data.MySqlClient
 
         private static void UpdateMachineConfigs(string rootPath, bool add)
         {
-            string[] dirs = Directory.GetDirectories(rootPath);
+            string[] dirs = new string[2] { "v2.0.50727", "4.0.30319" };
             foreach (string frameworkDir in dirs)
             {
-                string[] pathElements = frameworkDir.Split(Path.DirectorySeparatorChar);
-                if (pathElements[pathElements.Length - 1].StartsWith("v1")) continue;
-                if (pathElements[pathElements.Length - 1].StartsWith("v3")) continue;
+                string path = rootPath + frameworkDir;
 
-                string configPath = String.Format(@"{0}\CONFIG", frameworkDir);
+                string configPath = String.Format(@"{0}\CONFIG", path);
                 if (Directory.Exists(configPath))
                 {
                     if (add)
