@@ -117,16 +117,20 @@
     </Feature>
 
     <InstallExecuteSequence>
+      <Custom Action="SetFWVersion_v2" After="CostFinalize">NOT INSTALLED or NETFRAMEWORK20</Custom>
+      <Custom Action="SetFWVersion_v4" After="SetFWVersion_v2">NOT INSTALLED or NETFRAMEWORK40CLIENT or NETFRAMEWORK40FULL</Custom>
       <Custom Action='ManagedDataInstallSetup' After="InstallFiles">NOT Installed</Custom>
       <Custom Action='ManagedDataInstall' After="ManagedDataInstallSetup">NOT Installed</Custom>
       <Custom Action='ManagedDataUnInstallSetup' Before="RemoveFiles">Installed</Custom>
       <Custom Action='ManagedDataUnInstall' After="ManagedDataUnInstallSetup">Installed</Custom>
     </InstallExecuteSequence>
 
+    <CustomAction Id="SetFWVersion_v2" Property="FrameworkVersion" Value="v2.0.50727"/>
+    <CustomAction Id="SetFWVersion_v4" Property="FrameworkVersion" Value="v4.0.30319"/>
     <CustomAction Id="ManagedDataInstallSetup" Property="ManagedDataInstall"
-                  Value='"[WindowsFolder]\Microsoft.NET\Framework\v2.0.50727\installUtil.exe" /LogToConsole=false /LogFile=  "[#MySqlData]"'/>
+                  Value='"[WindowsFolder]\Microsoft.NET\Framework\[FrameworkVersion]\installUtil.exe" /LogToConsole=false /LogFile=  "[#MySqlData]"'/>
     <CustomAction Id='ManagedDataUnInstallSetup' Property="ManagedDataUnInstall"
-                  Value='"[WindowsFolder]\Microsoft.NET\Framework\v2.0.50727\installUtil.exe" /LogToConsole=false /LogFile= /u "[#MySqlData]"'/>
+                  Value='"[WindowsFolder]\Microsoft.NET\Framework\[FrameworkVersion]\installUtil.exe" /LogToConsole=false /LogFile= /u "[#MySqlData]"'/>
     <CustomAction Id="ManagedDataInstall" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
     <CustomAction Id="ManagedDataUnInstall" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
   </Fragment>
