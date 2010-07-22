@@ -103,7 +103,7 @@
       The <literal>MySqlConnection</literal> object is configured using
       a connection string. A connection string contains sever key/value
       pairs, separated by semicolons. Each key/value pair is joined with
-      an equals sign.
+      an equal sign.
     </para>
         <para>
       The following is a sample connection string:
@@ -343,6 +343,237 @@ MySqlConnection myConnection = new MySqlConnection("server=127.0.0.1;uid=root;" 
 </code>
       </content>
     </section>
+    <section address="connector-net-programming-getschema">
+      <title>Using GetSchema on a Connection</title>
+      <content>
+        <autoOutline />
+        <para>
+        The <literal>GetSchema()</literal> method of the connection
+        object can be used to retrieve schema information about the
+        database currently connected to. The schema information is
+        returned in the form of a <literal>DataTable</literal>. The
+        schema information is organised into a number of collections.
+        Different forms of the <literal>GetSchema()</literal> method can
+        be used depending on the information required. There are three
+        forms of the <literal>GetSchema()</literal> method:
+      </para>
+        <list class="bullet">
+          <listItem>
+            <para>
+              <literal>GetSchema()</literal> - This call will return a
+            list of available collections.
+          </para>
+          </listItem>
+          <listItem>
+            <para>
+              <literal>GetSchema(String)</literal> - This call returns
+            information about the collection named in the string
+            parameter. If the string 
+            is used then a list of all available collections is
+            returned. This is the same as calling
+            <literal>GetSchema()</literal> without any parameters.
+          </para>
+          </listItem>
+          <listItem>
+            <para>
+              <literal>GetSchema(String, String[])</literal> - In this
+            call the first string parameter represents the collection
+            name, and the second parameter represents a string array of
+            restriction values. Restriction values limit the amount of
+            data that will be returned. Restriction values are explained
+            in more detail in the
+            <externalLink><linkText>Microsoft
+            .NET documentation</linkText><linkUri>http://msdn.microsoft.com/en-us/library/ms254934(VS.80).aspx</linkUri></externalLink>.
+          </para>
+          </listItem>
+        </list>
+      </content>
+    </section>
+    <section address="connector-net-programming-getschema-collections">
+      <title>Collections</title>
+      <content>
+        <para>
+          The collections can be broadly grouped into two types:
+          collections that are common to all data providers, and
+          collections specific to a particular provider.
+        </para>
+        <para>
+          <legacyBold>Common</legacyBold>
+        </para>
+        <para>
+          The following collections are common to all data providers:
+        </para>
+        <list class="bullet">
+          <listItem>
+            <para>
+              MetaDataCollections
+            </para>
+          </listItem>
+          <listItem>
+            <para>
+              DataSourceInformation
+            </para>
+          </listItem>
+          <listItem>
+            <para>
+              DataTypes
+            </para>
+          </listItem>
+          <listItem>
+            <para>
+              Restrictions
+            </para>
+          </listItem>
+          <listItem>
+            <para>
+              ReservedWords
+            </para>
+          </listItem>
+        </list>
+        <para>
+          <legacyBold>Provider-specific</legacyBold>
+        </para>
+        <para>
+          The following are the collections currently provided by
+          , in addition to the common collections above:
+        </para>
+        <list class="bullet">
+          <listItem>
+            <para>
+              Databases
+            </para>
+          </listItem>
+          <listItem>
+            <para>
+              Tables
+            </para>
+          </listItem>
+          <listItem>
+            <para>
+              Columns
+            </para>
+          </listItem>
+          <listItem>
+            <para>
+              Users
+            </para>
+          </listItem>
+          <listItem>
+            <para>
+              Foreign Keys
+            </para>
+          </listItem>
+          <listItem>
+            <para>
+              IndexColumns
+            </para>
+          </listItem>
+          <listItem>
+            <para>
+              Indexes
+            </para>
+          </listItem>
+          <listItem>
+            <para>
+              Foreign Key Columns
+            </para>
+          </listItem>
+          <listItem>
+            <para>
+              UDF
+            </para>
+          </listItem>
+          <listItem>
+            <para>
+              Views
+            </para>
+          </listItem>
+          <listItem>
+            <para>
+              ViewColumns
+            </para>
+          </listItem>
+          <listItem>
+            <para>
+              Procedure Parameters
+            </para>
+          </listItem>
+          <listItem>
+            <para>
+              Procedures
+            </para>
+          </listItem>
+          <listItem>
+            <para>
+              Triggers
+            </para>
+          </listItem>
+        </list>
+        <para>
+          <legacyBold>Example Code</legacyBold>
+        </para>
+        <para>
+          A list of available collections can be obtained using the
+          following code:
+        </para>
+        <code>
+using System;
+using System.Data;
+using System.Text;
+using MySql.Data;
+using MySql.Data.MySqlClient;
+
+namespace ConsoleApplication2
+{
+    class Program
+    {
+
+        private static void DisplayData(System.Data.DataTable table)
+        {
+            foreach (System.Data.DataRow row in table.Rows)
+            {
+                foreach (System.Data.DataColumn col in table.Columns)
+                {
+                    Console.WriteLine("{0} = {1}", col.ColumnName, row[col]);
+                }
+                Console.WriteLine("============================");
+            }
+        }
+
+        static void Main(string[] args)
+        {
+
+            string connStr = "server=localhost;user=root;database=world;port=3306;password=******;";
+            MySqlConnection conn = new MySqlConnection(connStr);
+
+            try
+            {
+                Console.WriteLine("Connecting to MySQL...");
+                conn.Open();
+
+                DataTable table = conn.GetSchema("MetaDataCollections");
+                //DataTable table = conn.GetSchema("UDF");
+                DisplayData(table);
+
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            Console.WriteLine("Done.");
+        }
+    }
+}
+</code>
+        <para>
+          Further information on the <literal>GetSchema()</literal>
+          method and schema collections can be found in the
+          <externalLink><linkText>Microsoft
+          .NET documentation</linkText><linkUri>http://msdn.microsoft.com/en-us/library/kcax58fh(VS.80).aspx</linkUri></externalLink>.
+        </para>
+      </content>
+    </section>
     <section address="connector-net-programming-mysqlcommand">
       <title>Using MySqlCommand</title>
       <content>
@@ -403,8 +634,7 @@ while (reader.Read())
 ...</code>
         <para>
       Examples of using the CommandType of StoredProcedure can be found
-      in the section
-      <link xlink:href="8b7d06e8-0177-4dd0-acca-f9c9caaa1072#connector-net-programming-stored-calling">Calling a Stored Procedure from Connector/NET</link>.
+      in the section <link xlink:href="8b7d06e8-0177-4dd0-acca-f9c9caaa1072#connector-net-programming-stored">Accessing Stored Procedures with Connector/NET</link>.
     </para>
         <para>
       Commands can have a timeout associated with them. This is useful
@@ -511,7 +741,10 @@ cmd.CommandTimeout = 60;
       connections. For example, a web application that peaked at 1000
       concurrent database connections would consume 1000 threads and
       1000 open sockets at the server, without ever freeing up those
-      resources from the connection pool.
+      resources from the connection pool. Note, connections, no matter
+      how old, will not be closed if the number of connections in the
+      pool is less than or equal to the value set by the <literal>Min
+      Pool Size</literal> connection string parameter.
     </para>
       </content>
     </section>
@@ -585,8 +818,8 @@ Try
    cmd.CommandText = "INSERT INTO myTable VALUES(NULL, @number, @text)"
    cmd.Prepare()
 
-   cmd.Parameters.Add("@number", 1)
-   cmd.Parameters.Add("@text", "One")
+   cmd.Parameters.AddWithValue("@number", 1)
+   cmd.Parameters.AddWithValue("@text", "One")
 
    For i = 1 To 1000
        cmd.Parameters["@number"].Value = i
@@ -617,8 +850,8 @@ try
     cmd.CommandText = "INSERT INTO myTable VALUES(NULL, @number, @text)";
     cmd.Prepare();
 
-    cmd.Parameters.Add("@number", 1);
-    cmd.Parameters.Add("@text", "One");
+    cmd.Parameters.AddWithValue("@number", 1);
+    cmd.Parameters.AddWithValue("@text", "One");
 
     for (int i=1; i &lt;= 1000; i++)
     {
@@ -680,7 +913,7 @@ catch (MySql.Data.MySqlClient.MySqlException ex)
         <para>
       Connector/NET supports the calling of stored procedures through
       the <literal>MySqlCommand</literal> object. Data can be passed in
-      and our of a MySQL stored procedure through use of the
+      and out of a MySQL stored procedure through use of the
       <literal>MySqlCommand.Parameters</literal> collection.
     </para>
         <alert class="note">
@@ -707,92 +940,32 @@ catch (MySql.Data.MySqlClient.MySqlException ex)
     </para>
       </content>
     </section>
-    <section address="connector-net-programming-stored-creating">
-      <title>Creating Stored Procedures from Connector/NET</title>
+    <section address="connector-net-programming-stored-using">
+      <title>Using Stored Routines from Connector/NET</title>
       <content>
         <para>
         Stored procedures in MySQL can be created using a variety of
         tools. First, stored procedures can be created using the
          command-line client. Second, stored
-        procedures can be created using the <literal>MySQL Query
-        Browser</literal> GUI client. Finally, stored procedures can be
-        created using the <literal>.ExecuteNonQuery</literal> method of
-        the <literal>MySqlCommand</literal> object:
+        procedures can be created using workbench. Finally, stored
+        procedures can be created using the
+        <literal>.ExecuteNonQuery</literal> method of the
+        <literal>MySqlCommand</literal> object.
       </para>
-        <para>
-        </para>
-        <code language="VB">
-Dim conn As New MySqlConnection
-Dim cmd As New MySqlCommand
-
-conn.ConnectionString = "server=127.0.0.1;" _
-    &amp; "uid=root;" _
-    &amp; "pwd=12345;" _
-    &amp; "database=test"
-
-Try
-    conn.Open()
-    cmd.Connection = conn
-
-    cmd.CommandText = "CREATE PROCEDURE add_emp(" _
-        &amp; "IN fname VARCHAR(20), IN lname VARCHAR(20), IN bday DATETIME, OUT empno INT) " _
-        &amp; "BEGIN INSERT INTO emp(first_name, last_name, birthdate) " _
-        &amp; "VALUES(fname, lname, DATE(bday)); SET empno = LAST_INSERT_ID(); END"
-
-    cmd.ExecuteNonQuery()
-Catch ex As MySqlException
-    MessageBox.Show("Error " &amp; ex.Number &amp; " has occurred: " &amp; ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-End Try
-</code>
-        <para>
-        </para>
-        <code language="C#">
-MySql.Data.MySqlClient.MySqlConnection conn;
-MySql.Data.MySqlClient.MySqlCommand cmd;
-
-conn = new MySql.Data.MySqlClient.MySqlConnection();
-cmd = new MySql.Data.MySqlClient.MySqlCommand();
-
-conn.ConnectionString = "server=127.0.0.1;uid=root;" +
-    "pwd=12345;database=test;";
-
-try
-{
-    conn.Open();
-    cmd.Connection = conn;
-
-    cmd.CommandText = "CREATE PROCEDURE add_emp(" +
-        "IN fname VARCHAR(20), IN lname VARCHAR(20), IN bday DATETIME, OUT empno INT) " +
-        "BEGIN INSERT INTO emp(first_name, last_name, birthdate) " +
-        "VALUES(fname, lname, DATE(bday)); SET empno = LAST_INSERT_ID(); END";
-
-    cmd.ExecuteNonQuery();
-}
-catch (MySql.Data.MySqlClient.MySqlException ex)
-{
-MessageBox.Show("Error " + ex.Number + " has occurred: " + ex.Message,
-    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-}
-</code>
         <para>
         It should be noted that, unlike the command-line and GUI
         clients, you are not required to specify a special delimiter
         when creating stored procedures in Connector/NET.
       </para>
-      </content>
-    </section>
-    <section address="connector-net-programming-stored-calling">
-      <title>Calling a Stored Procedure from Connector/NET</title>
-      <content>
         <para>
-        To call a stored procedure using Connector/NET, create a
+        To call a stored procedure using Connector/NET, you create a
         <literal>MySqlCommand</literal> object and pass the stored
         procedure name as the <literal>.CommandText</literal> property.
-        Set the <literal>.CommandType</literal> property to
+        You then set the <literal>.CommandType</literal> property to
         <literal>CommandType.StoredProcedure</literal>.
       </para>
         <para>
-        After the stored procedure is named, create one
+        After the stored procedure is named, you create one
         <literal>MySqlCommand</literal> parameter for every parameter in
         the stored procedure. <literal>IN</literal> parameters are
         defined with the parameter name and the object containing the
@@ -801,94 +974,116 @@ MessageBox.Show("Error " + ex.Number + " has occurred: " + ex.Message,
         All parameters need the parameter direction defined.
       </para>
         <para>
-        After defining parameters, call the stored procedure by using
-        the <literal>MySqlCommand.ExecuteNonQuery()</literal> method:
+        After defining the parameters, you call the stored procedure by
+        using the <literal>MySqlCommand.ExecuteNonQuery()</literal>
+        method.
       </para>
         <para>
-        </para>
-        <code language="VB">
-Dim conn As New MySqlConnection
-Dim cmd As New MySqlCommand
-
-conn.ConnectionString = "server=127.0.0.1;" _
-    &amp; "uid=root;" _
-    &amp; "pwd=12345;" _
-    &amp; "database=test"
-
-Try
-    conn.Open()
-    cmd.Connection = conn
-
-    cmd.CommandText = "add_emp"
-    cmd.CommandType = CommandType.StoredProcedure
-
-    cmd.Parameters.Add("@lname", 'Jones')
-    cmd.Parameters["@lname"].Direction = ParameterDirection.Input
-
-    cmd.Parameters.Add("@fname", 'Tom')
-    cmd.Parameters["@fname"].Direction = ParameterDirection.Input
-
-    cmd.Parameters.Add("@bday", #12/13/1977 2:17:36 PM#)
-    cmd.Parameters["@bday"].Direction = ParameterDirection.Input
-
-    cmd.Parameters.Add("@empno", MySqlDbType.Int32)
-    cmd.Parameters["@empno"].Direction = ParameterDirection.Output
-
-    cmd.ExecuteNonQuery()
-
-    MessageBox.Show(cmd.Parameters["@empno"].Value)
-Catch ex As MySqlException
-    MessageBox.Show("Error " &amp; ex.Number &amp; " has occurred: " &amp; ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-End Try
-</code>
-        <para>
-        </para>
-        <code language="C#">
-MySql.Data.MySqlClient.MySqlConnection conn;
-MySql.Data.MySqlClient.MySqlCommand cmd;
-
-conn = new MySql.Data.MySqlClient.MySqlConnection();
-cmd = new MySql.Data.MySqlClient.MySqlCommand();
-
-conn.ConnectionString = "server=127.0.0.1;uid=root;" +
-    "pwd=12345;database=test;";
-
-try
-{
-    conn.Open();
-    cmd.Connection = conn;
-
-    cmd.CommandText = "add_emp";
-    cmd.CommandType = CommandType.StoredProcedure;
-
-    cmd.Parameters.Add("@lname", "Jones");
-    cmd.Parameters["@lname"].Direction = ParameterDirection.Input;
-
-    cmd.Parameters.Add("@fname", "Tom");
-    cmd.Parameters["@fname"].Direction = ParameterDirection.Input;
-
-    cmd.Parameters.Add("@bday", DateTime.Parse("12/13/1977 2:17:36 PM"));
-    cmd.Parameters["@bday"].Direction = ParameterDirection.Input;
-
-    cmd.Parameters.Add("@empno", MySqlDbType.Int32);
-    cmd.Parameters["@empno"].Direction = ParameterDirection.Output;
-
-    cmd.ExecuteNonQuery();
-
-    MessageBox.Show(cmd.Parameters["@empno"].Value);
-}
-catch (MySql.Data.MySqlClient.MySqlException ex)
-{
-    MessageBox.Show("Error " + ex.Number + " has occurred: " + ex.Message,
-      "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-}
-</code>
-        <para>
-        Once the stored procedure is called, the values of output
+        Once the stored procedure is called, the values of the output
         parameters can be retrieved by using the
         <literal>.Value</literal> property of the
         <literal>MySqlConnector.Parameters</literal> collection.
       </para>
+        <alert class="note">
+          <para>
+          When a stored procedure is called using
+          <literal>MySqlCommand.ExecuteReader</literal>, and the stored
+          procedure has output parameters, the output parameters are
+          only set after the <literal>MySqlDataReader</literal> returned
+          by <literal>ExecuteReader</literal> is closed.
+        </para>
+        </alert>
+        <para>
+        The following C# example code demonstrates the use of stored
+        procedures. It assumes the database 'employees' has already been
+        created:
+      </para>
+        <code language="C#">
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+using System.Data;
+using MySql.Data;
+using MySql.Data.MySqlClient;
+
+namespace UsingStoredRoutines
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            MySqlConnection conn = new MySqlConnection();
+            conn.ConnectionString = "server=localhost;user=root;database=employees;port=3306;password=******;";
+            MySqlCommand cmd = new MySqlCommand();
+
+            try
+            {
+                Console.WriteLine("Connecting to MySQL...");
+                conn.Open();
+                cmd.Connection = conn;
+                cmd.CommandText = "DROP PROCEDURE IF EXISTS add_emp";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = "DROP TABLE IF EXISTS emp";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = "CREATE TABLE emp (empno INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, first_name VARCHAR(20), last_name VARCHAR(20), birthdate DATE)";
+                cmd.ExecuteNonQuery();
+
+                cmd.CommandText = "CREATE PROCEDURE add_emp(" +
+                                  "IN fname VARCHAR(20), IN lname VARCHAR(20), IN bday DATETIME, OUT empno INT)" +
+                                  "BEGIN INSERT INTO emp(first_name, last_name, birthdate) " +
+                                  "VALUES(fname, lname, DATE(bday)); SET empno = LAST_INSERT_ID(); END";
+
+                cmd.ExecuteNonQuery();
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine ("Error " + ex.Number + " has occurred: " + ex.Message);
+            }
+            conn.Close();
+            Console.WriteLine("Connection closed.");
+            try
+            {
+                Console.WriteLine("Connecting to MySQL...");
+                conn.Open();
+                cmd.Connection = conn;
+
+                cmd.CommandText = "add_emp";
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@lname", "Jones");
+                cmd.Parameters["@lname"].Direction = ParameterDirection.Input;
+
+                cmd.Parameters.AddWithValue("@fname", "Tom");
+                cmd.Parameters["@fname"].Direction = ParameterDirection.Input;
+
+                cmd.Parameters.AddWithValue("@bday", "1940-06-07");
+                cmd.Parameters["@bday"].Direction = ParameterDirection.Input;
+
+                cmd.Parameters.AddWithValue("@empno", MySqlDbType.Int32);
+                cmd.Parameters["@empno"].Direction = ParameterDirection.Output;
+
+                cmd.ExecuteNonQuery();
+
+                Console.WriteLine("Employee number: "+cmd.Parameters["@empno"].Value);
+                Console.WriteLine("Birthday: " + cmd.Parameters["@bday"].Value);
+            }
+            catch (MySql.Data.MySqlClient.MySqlException ex)
+            {
+                Console.WriteLine("Error " + ex.Number + " has occurred: " + ex.Message);
+            }
+            conn.Close();
+            Console.WriteLine("Done.");
+        }
+    }
+}
+</code>
+        <para>
+        The following code shows the same application in Visual Basic:
+      </para>
+        <code language="VB">
+        </code>
       </content>
     </section>
     <section address="connector-net-programming-blob">
@@ -952,8 +1147,8 @@ file MEDIUMBLOB NOT NULL);
         <para>
         The max_allowed_packet option can be modified using MySQL
         Administrator's Startup Variables screen. Adjust the Maximum
-        allowed option in the Memory section of the Networking tab to an
-        appropriate setting. After adjusting the value, click the
+        permitted option in the Memory section of the Networking tab to
+        an appropriate setting. After adjusting the value, click the
         <math>Apply Changes</math> button and restart the
         server using the <literal>Service Control</literal> screen of
         MySQL Administrator. You can also adjust this value directly in
@@ -1012,9 +1207,9 @@ Try
 
     cmd.Connection = conn
     cmd.CommandText = SQL
-    cmd.Parameters.Add("@FileName", strFileName)
-    cmd.Parameters.Add("@FileSize", FileSize)
-    cmd.Parameters.Add("@File", rawData)
+    cmd.Parameters.AddWithValue("@FileName", strFileName)
+    cmd.Parameters.AddWithValue("@FileSize", FileSize)
+    cmd.Parameters.AddWithValue("@File", rawData)
 
     cmd.ExecuteNonQuery()
 
@@ -1059,9 +1254,9 @@ try
 
     cmd.Connection = conn;
     cmd.CommandText = SQL;
-    cmd.Parameters.Add("@FileName", strFileName);
-    cmd.Parameters.Add("@FileSize", FileSize);
-    cmd.Parameters.Add("@File", rawData);
+    cmd.Parameters.AddWithValue("@FileName", strFileName);
+    cmd.Parameters.AddWithValue("@FileSize", FileSize);
+    cmd.Parameters.AddWithValue("@File", rawData);
 
     cmd.ExecuteNonQuery();
 
@@ -1498,7 +1693,7 @@ catch (MySql.Data.MySqlClient.MySqlException ex)
         <para>
         When a report is created from multiple tables using
         Connector/ODBC, a data set with multiple tables must be created
-        in our application. This allows each table in the report data
+        in our application. This enables each table in the report data
         source to be replaced with a report in the data set.
       </para>
         <para>
@@ -1776,8 +1971,8 @@ else
       <content>
         <para>
        provides support for the ASP.NET 2.0 provider model. This
-      model allows application developers to focus on the business logic
-      of their application instead of having to recreate such
+      model enables application developers to focus on the business
+      logic of their application instead of having to recreate such
       boilerplate items as membership and roles support.
     </para>
         <para>
@@ -2022,8 +2217,11 @@ else
         <code>
 &lt;connectionStrings&gt;
   &lt;remove name="LocalMySqlServer"/&gt;
-  &lt;add name="LocalMySqlServer" connectionString="server=xxx;uid=xxx;pwd=xxx"/&gt;
+  &lt;add name="LocalMySqlServer" connectionString="server=xxx;uid=xxx;pwd=xxx;database=xxx;"/&gt;
 &lt;/connectionStrings&gt;</code>
+        <para>
+      Note the database you want to connect to must be specified.
+    </para>
         <para>
       Rather than manually editing configuration files it is recommended
       that you use the MySQL Website Configuration tool to config your
@@ -2175,14 +2373,15 @@ else
       </content>
     </section>
     <section address="connector-net-programming-tracing">
-      <title>Tracing</title>
+      <title>Using the  Trace Source Object</title>
       <content>
+        <autoOutline />
         <para>
        6.2 introduced support for .NET 2.0 compatible tracing,
       using <literal>TraceSource</literal> objects.
     </para>
         <para>
-      The .NET 2.0 architecture consists of four main parts:
+      The .NET 2.0 tracing architecture consists of four main parts:
     </para>
         <list class="bullet">
           <listItem>
@@ -2212,7 +2411,7 @@ else
           </listItem>
           <listItem>
             <para>
-              <legacyBold>Filter</legacyBold> - filters can be attached to
+              <legacyBold>Filter</legacyBold> - Filters can be attached to
           listeners. Filters determine the level of trace information
           that will be written. While a switch defines the level of
           information that will be written to all listeners, a filter
@@ -2311,6 +2510,605 @@ ts.TraceData(TraceEventType.Error, 3, ex); // pass exception object
 ts.Flush();
 ...
 ts.Close();</code>
+      </content>
+    </section>
+    <section address="connector-net-programming-tracing-mysql">
+      <title>Viewing MySQL Trace Information</title>
+      <content>
+        <para>
+        This section describes how to set up your application to view
+        MySQL trace information.
+      </para>
+        <para>
+        The first thing you need to do is create a suitable
+        <legacyBold>app.config</legacyBold> file for your application. An
+        example is shown in the following code:
+      </para>
+        <codeInline>
+        </codeInline>
+        <para>
+        This ensures a suitable trace source is created, along with a
+        switch. The switch level in this case is set to
+        <literal>Verbose</literal> to display the maximum amount of
+        information.
+      </para>
+        <para>
+        In the application the only other step required is to add
+        <literal>logging=true</literal> to the connection string. An
+        example application could be:
+      </para>
+        <code>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Diagnostics;
+using MySql.Data;
+using MySql.Data.MySqlClient;
+using MySql.Web;
+
+
+namespace ConsoleApplication1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+
+            string connStr = "server=localhost;user=root;database=world;port=3306;password=******;logging=true;";
+            MySqlConnection conn = new MySqlConnection(connStr);
+            try
+            {
+                Console.WriteLine("Connecting to MySQL...");
+                conn.Open();
+
+                string sql = "SELECT Name, HeadOfState FROM Country WHERE Continent='Oceania'";
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+
+                while (rdr.Read())
+                {
+                    Console.WriteLine(rdr[0] + " -- " + rdr[1]);
+                }
+
+                rdr.Close();
+
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            Console.WriteLine("Done.");
+        }
+    }
+}
+</code>
+        <para>
+        Ths simple application will then generate the following output:
+      </para>
+        <code>
+Connecting to MySQL...
+mysql Information: 1 : 1: Connection Opened: connection string = 'server=localhost;User Id=root;database=world;port=3306
+;password=******;logging=True'
+mysql Information: 3 : 1: Query Opened: SHOW VARIABLES
+mysql Information: 4 : 1: Resultset Opened: field(s) = 2, affected rows = -1, inserted id = -1
+mysql Information: 5 : 1: Resultset Closed. Total rows=272, skipped rows=0, size (bytes)=7058
+mysql Information: 6 : 1: Query Closed
+mysql Information: 3 : 1: Query Opened: SHOW COLLATION
+mysql Information: 4 : 1: Resultset Opened: field(s) = 6, affected rows = -1, inserted id = -1
+mysql Information: 5 : 1: Resultset Closed. Total rows=127, skipped rows=0, size (bytes)=4102
+mysql Information: 6 : 1: Query Closed
+mysql Information: 3 : 1: Query Opened: SET character_set_results=NULL
+mysql Information: 4 : 1: Resultset Opened: field(s) = 0, affected rows = 0, inserted id = 0
+mysql Information: 5 : 1: Resultset Closed. Total rows=0, skipped rows=0, size (bytes)=0
+mysql Information: 6 : 1: Query Closed
+mysql Information: 10 : 1: Set Database: world
+mysql Information: 3 : 1: Query Opened: SELECT Name, HeadOfState FROM Country WHERE Continent='Oceania'
+mysql Information: 4 : 1: Resultset Opened: field(s) = 2, affected rows = -1, inserted id = -1
+American Samoa -- George W. Bush
+Australia -- Elisabeth II
+...
+Wallis and Futuna -- Jacques Chirac
+Vanuatu -- John Bani
+United States Minor Outlying Islands -- George W. Bush
+mysql Information: 5 : 1: Resultset Closed. Total rows=28, skipped rows=0, size (bytes)=788
+mysql Information: 6 : 1: Query Closed
+Done.
+mysql Information: 2 : 1: Connection Closed
+</code>
+        <para>
+        The first number displayed in the trace message corresponds to
+        the MySQL event type:
+      </para>
+        <table>
+          <row>
+            <entry>
+              <para>
+                <legacyBold>Event</legacyBold>
+              </para>
+            </entry>
+            <entry>
+              <para>
+                <legacyBold>Description</legacyBold>
+              </para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>1</para>
+            </entry>
+            <entry>
+              <para>ConnectionOpened: connection string</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>2</para>
+            </entry>
+            <entry>
+              <para>ConnectionClosed:</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>3</para>
+            </entry>
+            <entry>
+              <para>QueryOpened: mysql server thread id, query text</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>4</para>
+            </entry>
+            <entry>
+              <para>ResultOpened: field count, affected rows (-1 if select), inserted id (-1
+                if select)</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>5</para>
+            </entry>
+            <entry>
+              <para>ResultClosed: total rows read, rows skipped, size of resultset in bytes</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>6</para>
+            </entry>
+            <entry>
+              <para>QueryClosed:</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>7</para>
+            </entry>
+            <entry>
+              <para>StatementPrepared: prepared sql, statement id</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>8</para>
+            </entry>
+            <entry>
+              <para>StatementExecuted: statement id, mysql server thread id</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>9</para>
+            </entry>
+            <entry>
+              <para>StatementClosed: statement id</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>10</para>
+            </entry>
+            <entry>
+              <para>NonQuery: [varies]</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>11</para>
+            </entry>
+            <entry>
+              <para>UsageAdvisorWarning: usage advisor flag. NoIndex = 1, BadIndex = 2,
+                SkippedRows = 3, SkippedColumns = 4, FieldConversion =
+                5.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>12</para>
+            </entry>
+            <entry>
+              <para>Warning: level, code, message</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>13</para>
+            </entry>
+            <entry>
+              <para>Error: error number, error message</para>
+            </entry>
+          </row>
+        </table>
+        <para>
+        The second number displayed in the trace message is the
+        connection count.
+      </para>
+        <para>
+        Although this example uses the
+        <literal>ConsoleTraceListener</literal>, any of the other
+        standard listeners could have been used. Another possibility is
+        to create a custom listener that uses the information passed via
+        the <literal>TraceEvent</literal> method. For example, a custom
+        trace listener could be created to perform active monitoring of
+        the MySQL event messages, rather than simply writing these to an
+        output device.
+      </para>
+        <para>
+        It is also possible to add listeners to the MySQL Trace Source
+        at run time. This can be done with the following code:
+      </para>
+        <codeInline>MySqlTrace.Listeners.Add(new ConsoleTraceListener());</codeInline>
+        <para>
+         6.3.2 introduced the ability to switch tracing on and off
+        at run time. This can be achieved using the calls
+        <literal>MySqlTrace.EnableQueryAnalyzer(string host, int
+        postInterval)</literal> and
+        <literal>MySqlTrace.DisableQueryAnalyzer()</literal>. The
+        parameter <literal>host</literal> is the URL of the MySQL
+        Enterprise Monitor server to monitor. The parameter
+        <literal>postInterval</literal> is how often the data should be
+        periodically posted to MySQL Enterprise Monitor, in seconds.
+      </para>
+      </content>
+    </section>
+    <section address="connector-net-programming-tracing-mysql-custom-listeners">
+      <title>Building Custom Listeners</title>
+      <content>
+        <para>
+        In order to build custom listeners that work with the 
+        Trace Source, it is necessary to understand the key methods
+        used, and the event data formats used.
+      </para>
+        <para>
+        The main method involved in passing trace messages is the
+        <literal>TraceSource.TraceEvent</literal> method. This has the
+        prototype:
+      </para>
+        <code>
+public void TraceEvent(
+    TraceEventType eventType,
+    int id,
+    string format,
+    params Object[] args
+)
+</code>
+        <para>
+        This trace source method will process the list of attached
+        listeners and call the listener's TraceListener.TraceEvent
+        method. The prototype for the
+        <literal>TraceListener.TraceEvent</literal> method is as
+        follows:
+      </para>
+        <code>
+public virtual void TraceEvent(
+    TraceEventCache eventCache,
+    string source,
+    TraceEventType eventType,
+    int id,
+    string format,
+    params Object[] args
+)
+</code>
+        <para>
+        The first three parameters are used in the standard as
+        <externalLink><linkText>defined
+        by Microsoft</linkText><linkUri>http://msdn.microsoft.com/en-us/library/d193webf.aspx</linkUri></externalLink>. The last three parameters contain
+        MySQL-specifc trace information. Each of these parameters is now
+        discussed in more detail.
+      </para>
+        <para>
+          <legacyBold>int id</legacyBold>
+        </para>
+        <para>
+        This is a MySQL-specific identifier. It identifies the MySQL
+        event type that has occurred, resulting in a trace message being
+        generated. This value is defined by the
+        <literal>MySqlTraceEventType</literal> public enum contained in
+        the  code:
+      </para>
+        <code>
+public enum MySqlTraceEventType : int
+{
+    ConnectionOpened = 1,
+    ConnectionClosed,
+    QueryOpened,
+    ResultOpened,
+    ResultClosed,
+    QueryClosed,
+    StatementPrepared,
+    StatementExecuted,
+    StatementClosed,
+    NonQuery,
+    UsageAdvisorWarning,
+    Warning,
+    Error
+}
+</code>
+        <para>
+        The MySQL event type also determines the contents passed via the
+        parameter <literal>params Object[] args</literal>. The nature of
+        the <literal>args</literal> parameters are described in further
+        detail in the following material.
+      </para>
+        <para>
+          <legacyBold>string
+        format</legacyBold>
+        </para>
+        <para>
+        This is the format string that contains zero or more format
+        items, which correspond to objects in the args array. This would
+        be used by a listener such as
+        <literal>ConsoleTraceListener</literal> to write a message to
+        the output device.
+      </para>
+        <para>
+          <legacyBold>params Object[]
+        args</legacyBold>
+        </para>
+        <para>
+        This is a list of objects that depends on the MySQL event type,
+        <literal>id</literal>. However, the first parameter passed via
+        this list is always the driver id. The driver id is a unique
+        number that is incremented each time the connector is opened.
+        This enables groups of queries on the same connection to be
+        identified. The parameters that follow driver id depend of the
+        MySQL event id, and are as follows:
+      </para>
+        <table>
+          <row>
+            <entry>
+              <para>
+                <legacyBold>MySQL-specific event type</legacyBold>
+              </para>
+            </entry>
+            <entry>
+              <para>
+                <legacyBold>Arguments (params Object[] args)</legacyBold>
+              </para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>ConnectionOpened</para>
+            </entry>
+            <entry>
+              <para>Connection string</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>ConnectionClosed</para>
+            </entry>
+            <entry>
+              <para>No additional parameters</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>QueryOpened</para>
+            </entry>
+            <entry>
+              <para>mysql server thread id, query text</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>ResultOpened</para>
+            </entry>
+            <entry>
+              <para>field count, affected rows (-1 if select), inserted id (-1 if select)</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>ResultClosed</para>
+            </entry>
+            <entry>
+              <para>total rows read, rows skipped, size of resultset in bytes</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>QueryClosed</para>
+            </entry>
+            <entry>
+              <para>No additional parameters</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>StatementPrepared</para>
+            </entry>
+            <entry>
+              <para>prepared sql, statement id</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>StatementExecuted</para>
+            </entry>
+            <entry>
+              <para>statement id, mysql server thread id</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>StatementClosed</para>
+            </entry>
+            <entry>
+              <para>statement id</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>NonQuery</para>
+            </entry>
+            <entry>
+              <para>Varies</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>UsageAdvisorWarning</para>
+            </entry>
+            <entry>
+              <para>usage advisor flag. NoIndex = 1, BadIndex = 2, SkippedRows = 3,
+                SkippedColumns = 4, FieldConversion = 5.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>Warning</para>
+            </entry>
+            <entry>
+              <para>level, code, message</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>Error</para>
+            </entry>
+            <entry>
+              <para>error number, error message</para>
+            </entry>
+          </row>
+        </table>
+        <para>
+        This information will allow you to create custom trace listeners
+        that can actively monitor the MySQL-specific events.
+      </para>
+      </content>
+    </section>
+    <section address="connector-net-programming-bulk-loader">
+      <title>Using the Bulk Loader</title>
+      <content>
+        <para>
+       features a bulk loader class that wraps the MySQL statement
+      <literal>LOAD DATA INFILE</literal>. This gives  the ability
+      to load a data file from a local or remote host to the server. The
+      class concerned is <literal>MySqlBulkLoader</literal>. This class
+      has various methods, the main one being <literal>load</literal> to
+      cause the specified file to be loaded to the server. Various
+      parameters can be set to control how the data file is processed.
+      This is achieved through setting various properties of the class.
+      For example, the field separator used, such as comma or tab, can
+      be specified, along with the record terminator, such as newline.
+    </para>
+        <para>
+      The following code shows a simple example of using the
+      <literal>MySqlBulkLoader</literal> class. First an empty table
+      needs to be created, in this case in the <literal>test</literal>
+      database:
+    </para>
+        <code>
+CREATE TABLE Career (
+       Name VARCHAR(100) NOT NULL,
+       Age INTEGER,
+       Profession VARCHAR(200)
+);</code>
+        <para>
+      A simple tab-delimited data file is also created (it could use any
+      other field delimiter such as comma):
+    </para>
+        <code>
+Table Career in Test Database
+Name	Age	Profession
+
+Tony	47	Technical Writer
+Ana	43	Nurse
+Fred	21	IT Specialist
+Simon	45	Hairy Biker
+</code>
+        <para>
+      Note that with this test file the first three lines will need to
+      be ignored, as they do not contain table data. This can be
+      achieved using the <literal>NumberOfLinesToSkip</literal>
+      property. This file can then be loaded and used to populate the
+      <literal>Career</literal> table in the <literal>test</literal>
+      database:
+    </para>
+        <code>
+using System;
+using System.Text;
+using MySql.Data;
+using MySql.Data.MySqlClient;
+
+namespace ConsoleApplication1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+
+            string connStr = "server=localhost;user=root;database=test;port=3306;password=******;";
+            MySqlConnection conn = new MySqlConnection(connStr);
+
+            MySqlBulkLoader bl = new MySqlBulkLoader(conn);
+            bl.TableName = "Career";
+            bl.FieldTerminator = "\t";
+            bl.LineTerminator = "\n";
+            bl.FileName = "c:/career_data.txt";
+            bl.NumberOfLinesToSkip = 3;
+
+            try
+            {
+                Console.WriteLine("Connecting to MySQL...");
+                conn.Open();
+
+                // Upload data from file
+                int count = bl.Load();
+                Console.WriteLine(count + " lines uploaded.");
+
+                string sql = "SELECT Name, Age, Profession FROM Career";
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+
+                while (rdr.Read())
+                {
+                    Console.WriteLine(rdr[0] + " -- " + rdr[1] + " -- " + rdr[2]);
+                }
+
+                rdr.Close();
+
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            Console.WriteLine("Done.");
+        }
+    }
+}</code>
+        <para>
+      Further information on <literal>LOAD DATA INFILE</literal> can be
+      found in <link xlink:href="load-data"></link>. Further information on
+      <literal>MySqlBulkLoader</literal> can be found in the reference
+      documentation that was included with your connector.
+    </para>
       </content>
     </section>
   </developerConceptualDocument>

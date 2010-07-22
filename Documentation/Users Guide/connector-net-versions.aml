@@ -9,66 +9,71 @@
         <list class="bullet">
           <listItem>
             <para>
-        Connector/NET 1.0 includes support for MySQL 4.0, MySQL 4.1,
-        MySQL 5.0 features, and full compatibility with the ADO.NET
-        driver interface.
+        Connector/NET 1.0 includes support for MySQL Server 4.0, 4.1,
+        and 5.0 features, and full compatibility with the ADO.NET driver
+        interface.
       </para>
           </listItem>
           <listItem>
             <para>
-        Connector/NET 5.0 includes support for MySQL 4.0, MySQL 4.1,
-        MySQL 5.0 and MySQL 5.1 features. Connector/NET 5.0 also
-        includes full support for the ADO.Net 2.0 interfaces and
-        subclasses, includes support for the usage advisor and
-        performance monitor (PerfMon) hooks.
+        Connector/NET 5.0 includes support for MySQL Server 4.0, 4.1,
+        5.0 and 5.1 features. Connector/NET 5.0 also includes full
+        support for the ADO.Net 2.0 interfaces and subclasses, includes
+        support for the usage advisor and performance monitor (PerfMon)
+        hooks.
       </para>
           </listItem>
           <listItem>
             <para>
-        Connector/NET 5.1 includes support for MySQL 4.0, MySQL 4.1,
-        MySQL 5.0, MySQL 5.1 and MySQL 5.4 features. Connector/NET 5.1
-        also includes support for a new membership/role provider,
-        Compact Framework 2.0, a new stored procedure parser and
-        improvements to <literal>GetSchema</literal>. Connector/NET 5.1
-        also includes the Visual Studio Plugin as a standard installable
-        component.
+        Connector/NET 5.1 includes support for MySQL Server 4.0, 4.1,
+        5.0, 5.1, 5.4 and 5.5 features. Connector/NET 5.1 also includes
+        support for a new membership/role provider, Compact Framework
+        2.0, a new stored procedure parser and improvements to
+        <literal>GetSchema</literal>. Connector/NET 5.1 also includes
+        the Visual Studio Plugin as a standard installable component.
       </para>
           </listItem>
           <listItem>
             <para>
-        Connector/NET 5.2 includes support for MySQL 4.1, MySQL 5.0,
-        MySQL 5.1 and MySQL 5.4 features. Connector/NET 5.2 also
-        includes support for a new membership/role provider, Compact
-        Framework 2.0, a new stored procedure parser and improvements to
+        Connector/NET 5.2 includes support for MySQL Server 4.1, 5.0,
+        5.1, 5.4, and 5.5 features. Connector/NET 5.2 also includes
+        support for a new membership/role provider, Compact Framework
+        2.0, a new stored procedure parser and improvements to
         <literal>GetSchema</literal>. Connector/NET 5.2 also includes
         the Visual Studio Plugin as a standard installable component.
       </para>
           </listItem>
           <listItem>
             <para>
-        Connector/NET 6.0 includes support for MySQL 4.1, MySQL 5.0,
-        MySQL 5.1 and MySQL 5.4.
+        Connector/NET 6.0 includes support for MySQL Server 4.1, 5.0,
+        5.1, 5.4 and 5.5.
       </para>
           </listItem>
           <listItem>
             <para>
-        Connector/NET 6.1 includes support for MySQL 4.1, MySQL 5.0,
-        MySQL 5.1, MySQL 5.4. Important new features include the MySQL
+        Connector/NET 6.1 includes support for MySQL Server 4.1, 5.0,
+        5.1, 5.4, and 5.5. Important new features include the MySQL
         Website Configuration Tool and a Session State Provider.
       </para>
           </listItem>
           <listItem>
             <para>
-        Connector/NET 6.2 includes support for MySQL 4.1, MySQL 5.0,
-        MySQL 5.1, MySQL 5.4. Important new features include a new
-        logging system and client SSL certificates. Connector/NET 6.2 is
+        Connector/NET 6.2 includes support for MySQL Server 4.1, 5.0,
+        5.1, 5.4, and 5.5. Important new features include a new logging
+        system and client SSL certificates. Connector/NET 6.2 is
         currently available as a Beta release.
       </para>
           </listItem>
           <listItem>
             <para>
-        Connector/NET 6.3 includes support for MySQL 5.0, MySQL 5.1,
-        MySQL 5.4. Connector/NET 6.3 is not yet available.
+        Connector/NET 6.3 includes support for MySQL Server 5.0, 5.1,
+        5.4, and 5.5. Important new features include integration with
+        Visual Studio 2010, such as availability of DDL T4 template for
+        Entity Framework, and a custom MySQL SQL Editor. Other features
+        include refactored transaction scope: Connector/NET now supports
+        nested transactions in a scope where they use the same
+        connection string. Connector/NET 6.3 is available as a Beta
+        release.
       </para>
           </listItem>
         </list>
@@ -143,7 +148,7 @@
               <para>2.x+</para>
             </entry>
             <entry>
-              <para>4.0, 4.1, 5.0, 5.1, 5.4</para>
+              <para>4.0, 4.1, 5.0, 5.1, 5.4, 5.5</para>
             </entry>
           </row>
           <row>
@@ -157,7 +162,7 @@
               <para>2.x+</para>
             </entry>
             <entry>
-              <para>4.1, 5.0, 5.1, 5.4</para>
+              <para>4.1, 5.0, 5.1, 5.4, 5.5</para>
             </entry>
           </row>
           <row>
@@ -171,7 +176,7 @@
               <para>2.x+</para>
             </entry>
             <entry>
-              <para>4.1, 5.0, 5.1, 5.4</para>
+              <para>4.1, 5.0, 5.1, 5.4, 5.5</para>
             </entry>
           </row>
           <row>
@@ -185,7 +190,7 @@
               <para>2.x+</para>
             </entry>
             <entry>
-              <para>4.1, 5.0, 5.1, 5.4</para>
+              <para>4.1, 5.0, 5.1, 5.4, 5.5</para>
             </entry>
           </row>
           <row>
@@ -199,7 +204,7 @@
               <para>2.x+</para>
             </entry>
             <entry>
-              <para>4.1, 5.0, 5.1, 5.4</para>
+              <para>4.1, 5.0, 5.1, 5.4, 5.5</para>
             </entry>
           </row>
           <row>
@@ -210,10 +215,10 @@
               <para>2.x+</para>
             </entry>
             <entry>
-              <para>2.x+</para>
+              <para>2.x+, 4.x+ for VS 2010 support</para>
             </entry>
             <entry>
-              <para>5.0, 5.1, 5.4</para>
+              <para>5.0, 5.1, 5.4, 5.5</para>
             </entry>
           </row>
         </table>

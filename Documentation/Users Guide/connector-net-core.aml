@@ -19,7 +19,7 @@
           <listItem>
             <para>
         Features provided by MySQL Server up to and including MySQL
-        Server version 5.4.
+        Server version 5.5.
       </para>
           </listItem>
           <listItem>
@@ -30,8 +30,8 @@
           </listItem>
           <listItem>
             <para>
-        Protocol compression which allows for compressing the data
-        stream between the client and server.
+        Protocol compression which enables compressing the data stream
+        between the client and server.
       </para>
           </listItem>
           <listItem>
@@ -78,6 +78,13 @@
       default.
     </para>
         </alert>
+        <para>
+     supports full versions of Visual Studio 2005, 2008, and 2010,
+    although certain features are only available in Visual Studio 2010
+    when using  version 6.3.2 and later. Note that  does not
+    currently support Express versions of Microsoft products, including
+    Microsoft Visual Web Developer.
+  </para>
         <para>
           <legacyBold>Key topics:</legacyBold>
         </para>
