@@ -1,6 +1,6 @@
 <topic id="c26b6c1a-1652-4d9d-ac74-96cee9531a3b" revisionNumber="1">
   <developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <section address="connector-net-programming-connection-options">
+    <section address="connector-net-connection-options">
       <title>Connector/NET Connection String Options Reference</title>
       <content>
         <table>
@@ -57,11 +57,16 @@
               <para>false</para>
             </entry>
             <entry>
-              <para>True to have MySqlDataReader.GetValue() return a MySqlDateTime for date
-            or datetime columns that have illegal values. False will
-            cause a <literal>System.DateTime</literal> object to be
-            returned for legal values and an exception will be thrown
-            for illegal values.</para>
+              <para>If set to <literal>True</literal>,
+            <literal>MySqlDataReader.GetValue()</literal> will return a
+            <literal>MySqlDateTime</literal> object for date or datetime
+            columns that have illegal values, such as zero datetime
+            values, and a <literal>System.DateTime</literal> object for
+            legal values. If set to <literal>False</literal> (the
+            default setting) it will cause a
+            <literal>System.DateTime</literal> object to be returned for
+            all legal values and an exception to be thrown for illegal
+            values, such as zero datetime values.</para>
             </entry>
           </row>
           <row>
@@ -74,8 +79,13 @@
               <para>true</para>
             </entry>
             <entry>
-              <para>
-              </para>
+              <para>If <literal>AutoEnlist</literal> is set to <literal>true</literal>,
+            which is the default, a connection opened using
+            <literal>TransactionScope</literal> participates in this
+            scope, it commits when the scope commits and rolls back if
+            <literal>TransactionScope</literal> does not commit.
+            However, this feature is considered security sensitive and
+            therefore cannot be used in a medium trust environment.</para>
             </entry>
           </row>
           <row>
@@ -132,7 +142,7 @@
               <para>null</para>
             </entry>
             <entry>
-              <para>This option allows you to specify a password which is used in
+              <para>This option enables you to specify a password which is used in
             conjunction with a certificate specified using the option
             <literal>CertificateFile</literal>. For an example of usage
             see <link xlink:href="34e3033f-b986-4073-95c8-945f73aa79b0#connector-net-tutorials-ssl">Tutorial: Using SSL with </link>. Was
@@ -149,9 +159,9 @@
               <para>null</para>
             </entry>
             <entry>
-              <para>This option allows you to access a certificate held in a personal store,
-            rather than use a certificate file and password combination.
-            For an example of usage see
+              <para>This option enables you to access a certificate held in a personal
+            store, rather than use a certificate file and password
+            combination. For an example of usage see
             <link xlink:href="34e3033f-b986-4073-95c8-945f73aa79b0#connector-net-tutorials-ssl">Tutorial: Using SSL with </link>. Was
             introduced with 6.2.1.</para>
             </entry>
@@ -166,7 +176,7 @@
               <para>null</para>
             </entry>
             <entry>
-              <para>This option allows you to specify a certificate thumbprint to ensure
+              <para>This option enables you to specify a certificate thumbprint to ensure
             correct identifcation of a certificate contained within a
             personal store. For an example of usage see
             <link xlink:href="34e3033f-b986-4073-95c8-945f73aa79b0#connector-net-tutorials-ssl">Tutorial: Using SSL with </link>. Was
@@ -346,15 +356,22 @@
           <row>
             <entry>
               <para>
-                <literal>InteractiveSession</literal>
+                <literal>Interactive, InteractiveSession</literal>
               </para>
             </entry>
             <entry>
               <para>false</para>
             </entry>
             <entry>
-              <para>
-              </para>
+              <para>If set to true the client is interactive. An interactive client is one
+            where the server variable
+            <literal>CLIENT_INTERACTIVE</literal> is set. If an
+            interactive client is set, the
+            <literal>wait_timeout</literal> variable is set to the value
+            of <literal>interactive_timeout</literal>. The client will
+            then timeout after this period of inactivity. More details
+            can be found in the server manual
+            <link xlink:href="server-system-variables"></link>.</para>
             </entry>
           </row>
           <row>
@@ -368,7 +385,9 @@
             </entry>
             <entry>
               <para>When true, various pieces of information is output to any configured
-            TraceListeners.</para>
+            TraceListeners. See
+            <link xlink:href="8b7d06e8-0177-4dd0-acca-f9c9caaa1072#connector-net-programming-tracing">Using the  Trace Source Object</link> for
+            further details.</para>
             </entry>
           </row>
           <row>
@@ -535,6 +554,24 @@
           <row>
             <entry>
               <para>
+                <literal>Sql Server Mode</literal>
+              </para>
+            </entry>
+            <entry>
+              <para>false</para>
+            </entry>
+            <entry>
+              <para>Allow SQL Server syntax. When set to <literal>true</literal> enables
+            Connector/NET to support square brackets around symbols
+            instead of backticks. This enables Visual Studio wizards
+            that bracket symbols with [] to work with Connector/NET.
+            This option incurs a performance hit, so should only be used
+            if necessary. This option was added in version 6.3.1.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
                 <literal>SSL Mode</literal>
               </para>
             </entry>
@@ -556,7 +593,7 @@
                 </para></listItem><listItem><para><legacyBold>VerifyFull</legacyBold> - Always
                   use SSL. Fail if the host name is not correct.
                 </para></listItem></list><para>
-              This option was introduced in  6.1.1.
+              This option was introduced in  6.2.1.
             </para></para>
             </entry>
           </row>
@@ -617,19 +654,25 @@
               <para>true</para>
             </entry>
             <entry>
-              <para>Setting this option to <literal>false</literal> indicates that the user
-            connecting to the database does not have the
+              <para>When set to <literal>true</literal>, the default value,  expects
+            the body of the procedure to be viewable. This enables it to
+            determine the parameter types and order. The option should
+            be set to <literal>false</literal> when the user connecting
+            to the database does not have the
             <literal>SELECT</literal> privileges for the
-            <literal>mysql.proc</literal> (stored procedures) table.
-            When to set to <literal>false</literal>, Connector/NET will
-            not rely on this information being available when the
-            procedure is called. Because Connector/NET will be unable to
-            determine this information, you should explicitly set the
-            types of the all the parameters before the call and the
-            parameters should be added to the command in the exact same
-            order as they appear in the procedure definition. This
-            option was added in Connector/NET 5.0.4 and Connector/NET
-            1.0.10.</para>
+            <literal>mysql.proc</literal> (stored procedures) table, or
+            cannot view <literal>I_S.ROUTINES</literal>. In this case,
+             will not be able to determine the types and order of
+            the parameters, and must be alerted to this fact by setting
+            this option to <literal>false</literal>. When set to
+            <literal>false</literal>,  will not rely on this
+            information being available when the procedure is called.
+            Because  will not be able to determine this
+            information, you should explicitly set the types of all the
+            parameters before the call and the parameters should be
+            added to the command in the same order as they appear in the
+            procedure definition. This option was added in  5.0.4
+            and  1.0.10.</para>
             </entry>
           </row>
           <row>

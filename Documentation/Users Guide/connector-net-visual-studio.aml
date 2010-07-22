@@ -4,6 +4,54 @@
       <title>Connector/NET Visual Studio Integration</title>
       <content>
         <autoOutline />
+        <para>
+    When  is installed on Microsoft Windows, Visual Studio
+    integration components are also installed and initialized. This
+    enables the developer to work seamlessly with  in the familiar
+    Visual Studio environment, as described in the following sections of
+    the manual.
+  </para>
+        <para>
+     supports Visual Studio versions 2005, 2008, and 2010.
+    However, only  version 6.3 fully integrates with Visual Studio
+    2010, although applications using earlier versions of the connector
+    can be built with the Visual Studio 2010 environment using .NET 2.x
+    frameworks.
+  </para>
+        <para>
+    Visual Studio 2010 support was introduced with  6.3.2. From
+    version 6.3.2 the connector ships with both .NET 2.x and .NET 4.x
+    versions of the entity framework support files,
+    <legacyBold>mysql.data.ef.dll</legacyBold> and <legacyBold>
+    mysql.visualstudio.dll</legacyBold>. The .NET 4.x versions need to be
+    shipped to enable new integration features supported in Visual
+    Studio 2010, including:
+  </para>
+        <list class="bullet">
+          <listItem>
+            <para>
+        New DDL T4 template for the Entity Framework (EF) - This enables
+        developers to design an EF model from scratch and use the native
+        Visual Studio 2010 facility to generate MySQL DDL from that
+        model. This is done by creating the model, and with the model
+        open, choosing the SSDLToMySQL template in the properties
+        window. The correct DDL is then generated. The developer can
+        then save this code as a <legacyBold>.mysql</legacyBold> file in
+        their project and execute it against the MySQL server.
+      </para>
+          </listItem>
+          <listItem>
+            <para>
+        New SQL Editor - A new SQL editor has been included that enables
+        connections to servers to execute SQL. This is activated by
+        creating a new file with a <legacyBold>.mysql</legacyBold>
+        extension. A new template is also included to allow creation of
+        this file type using the Visual Studio 2010 main menu item
+        <ui>File</ui>, <ui>New</ui>. Note that the
+        MySQL SQL Editor is also available in 2005 and 2008.
+      </para>
+          </listItem>
+        </list>
       </content>
     </section>
     <section address="connector-net-visual-studio-making-a-connection">
@@ -26,7 +74,7 @@
           </listItem>
           <listItem>
             <para>
-          Right-click on the Data Connections node, and choose the
+          Right-click the Data Connections node, and choose the
           <ui>Add Connection...</ui> menu item.
         </para>
           </listItem>
@@ -105,13 +153,13 @@
         <para>
       The Table Designer can be accessed through a mouse action on
       table-type node of Server Explorer. To create a new table,
-      right-click on the  node (under the
+      right-click the  node (under the
       connection node) and choose the <ui>Create Table</ui>
       command from the context menu.
     </para>
         <para>
-      To modify an existing table, double-click on the node of the table
-      you wish to modify, or right-click on this node and choose the
+      To modify an existing table, double-click the node of the table
+      you wish to modify, or right-click this node and choose the
       <ui>Design</ui> item from the context menu. Either of
       the commands opens the Table Designer.
     </para>
@@ -190,7 +238,7 @@
         </mediaLink>
         <para />
         <para>
-      The Table Designer main menu allows you to set a Primary Key
+      The Table Designer main menu enables you to set a Primary Key
       column, edit Relationships such as Foreign Keys, and create
       Indexes.
     </para>
@@ -226,15 +274,15 @@
         <para>
         To reorder columns, index columns or foreign key columns in the
         Column Editor, select the whole column you wish to reorder by
-        clicking on the selector column on the left of the column grid.
+        clicking the selector column on the left of the column grid.
         Then move the column by using
         + (to move the column
         up) or + (to move the
         column down) keys.
       </para>
         <para>
-        To delete a column, select it by clicking on the selector column
-        on the left of the column grid, then press the
+        To delete a column, select it by clicking the selector column on
+        the left of the column grid, then press the
          button on a keyboard.
       </para>
       </content>
@@ -317,7 +365,7 @@
       <title>Table Properties</title>
       <content>
         <para>
-        To bring up Table Properties select the table and right click to
+        To bring up Table Properties select the table and right-click to
         activate the context menu. Select <ui>Properties</ui>.
         The  dockable window will
         be displayed.
@@ -413,7 +461,7 @@
       <title>Editing Views</title>
       <content>
         <para>
-      To create a new view, right click the Views node under the
+      To create a new view, right-click the Views node under the
       connection node in Server Explorer. From the node's context menu,
       choose the <ui>Create View</ui> command. This command
       opens the SQL Editor.
@@ -434,8 +482,8 @@
         </mediaLink>
         <para />
         <para>
-      To modify an existing view, double click on a node of the view you
-      wish to modify, or right click on this node and choose the
+      To modify an existing view, double-click a node of the view you
+      wish to modify, or right-click this node and choose the
       <ui>Alter View</ui> command from a context menu. Either
       of the commands opens the SQL Editor.
     </para>
@@ -517,9 +565,8 @@
       <title>Editing Stored Procedures and Functions</title>
       <content>
         <para>
-      To create a new stored procedure, right-click on the
-       node under the connection
-      node in Server Explorer. From the node's context menu, choose the
+      To create a new stored procedure, right-click the  node under the connection node in Server
+      Explorer. From the node's context menu, choose the
        command. This command opens
       the SQL Editor.
     </para>
@@ -530,15 +577,15 @@
         </mediaLink>
         <para />
         <para>
-      To create a new stored function, right-click on the
+      To create a new stored function, right-click the
        node under the connection node in
       Server Explorer. From the node's context menu, choose the
        command.
     </para>
         <para>
       To modify an existing stored routine (procedure or function),
-      double-click on the node of the routine you wish to modify, or
-      right-click on this node and choose the  command from the context menu. Either of the
+      double-click the node of the routine you wish to modify, or
+      right-click this node and choose the  command from the context menu. Either of the
       commands opens the SQL Editor.
     </para>
         <para>
@@ -678,14 +725,14 @@
       <title>Editing Triggers</title>
       <content>
         <para>
-      To create a new trigger, right-click on the node of the table, for
+      To create a new trigger, right-click the node of the table, for
       which you wish to add a trigger. From the node's context menu,
       choose the  command. This
       command opens the SQL Editor.
     </para>
         <para>
-      To modify an existing trigger, double-click on the node of the
-      trigger you wish to modify, or right-click on this node and choose
+      To modify an existing trigger, double-click the node of the
+      trigger you wish to modify, or right-click this node and choose
       the  command from the context
       menu. Either of the commands opens the SQL Editor.
     </para>
@@ -750,19 +797,19 @@
       <title>Editing User Defined Functions (UDF)</title>
       <content>
         <para>
-      To create a new User Defined Function (UDF), right-click on the
+      To create a new User Defined Function (UDF), right-click the
        node under the connection node in Server
       Explorer. From the node's context menu, choose the <ui>Create
       UDF</ui> command. This command opens the UDF Editor.
     </para>
         <para>
-      To modify an existing UDF, double-click on the node of the UDF you
-      wish to modify, or right-click on this node and choose the
+      To modify an existing UDF, double-click the node of the UDF you
+      wish to modify, or right-click this node and choose the
       <ui>Alter UDF</ui> command from the context menu. Either
       of the commands opens the UDF Editor.
     </para>
         <para>
-      The UDF editor allows you to set the following properties:
+      The UDF editor enables you to set the following properties:
     </para>
         <list class="bullet">
           <listItem>
@@ -911,7 +958,7 @@
       <content>
         <para>
        6.1 introduced the MySQL Website Configuration Tool. This
-      is a facility available in Visual Studio that allows you to
+      is a facility available in Visual Studio that enables you to
       configure the Membership, Role, Session State and Profile
       Provider, without having to resort to editing configuration files.
       You simply run the tool, set your configuration options, and the
@@ -930,8 +977,8 @@
         </mediaLink>
         <para />
         <para>
-      Clicking on the Website Configuration Tool icon launches the
-      wizard and displays the first screen:
+      Clicking the Website Configuration Tool icon launches the wizard
+      and displays the first screen:
     </para>
         <mediaLink>
           <para />
@@ -974,7 +1021,7 @@
     </para>
         <para>
       Clicking the <math>Advanced...</math> button launches a
-      dialog that allows you to set Membership Options. These options
+      dialog that enables you to set Membership Options. These options
       dictate such variables as password length required when a user
       signs up, whether the password is encrypted and whether the user
       can reset their password or not.
@@ -1039,6 +1086,72 @@
           <image xlink:href="connector-net-website-config-tool-tables" />
         </mediaLink>
         <para />
+      </content>
+    </section>
+    <section address="connector-net-sql-editor">
+      <title>MySQL SQL Editor</title>
+      <content>
+        <para>
+       6.3.2 introduced a new MySQL SQL Editor. The easiest way to
+      invoke the editor is by selecting the <ui>New</ui>,
+      <ui>File</ui> menu item from the Visual Studio main
+      menu. This displays the  dialog:
+    </para>
+        <mediaLink>
+          <para />
+          <caption>MySQL SQL Editor - New File</caption>
+          <image xlink:href="connector-net-sql-editor-new-file-dialog" />
+        </mediaLink>
+        <para />
+        <para>
+      From the  dialog select the MySQL
+      template, and then double-click the  document, or click the
+      <math>Open</math> button.
+    </para>
+        <para>
+      The MySQL SQL Editor will be displayed. You can now enter SQL code
+      as required, or connect to a MySQL server. Click the
+      <math>Connect to MySQL</math> button in the MySQL SQL
+      Editor toolbar. You can enter the connection details into the
+       dialog that is displayed.
+      You can enter the server name, user id, password and database to
+      connect to, or click the <math>Advanced</math> button to
+      select other connection string options. Click the
+      <math>Connect</math> button to connect to the MySQL
+      server. It is now possible to execute your SQL code against the
+      server by clicking the <math>Run SQL</math> button on
+      the toolbar.
+    </para>
+        <mediaLink>
+          <para />
+          <caption>MySQL SQL Editor - Query</caption>
+          <image xlink:href="connector-net-sql-editor-query" />
+        </mediaLink>
+        <para />
+        <para>
+      The results from any queries are displayed on the
+       tab. Any errors are displayed on the
+       tab.
+    </para>
+      </content>
+    </section>
+    <section address="connector-net-ddl-t4-ef">
+      <title>DDL T4 Template Macro</title>
+      <content>
+        <para>
+       6.3 introduced the ability to convert an Entity Framework
+      model to MySQL DDL code. Starting with a blank model, an entity
+      model can be developed in Visual Studio's designer. Once the model
+      has been created, the model's properties can be selected, and in
+      the Database Script Generation category of the model's properties,
+      the property  can be found. The
+      value  can then be selected
+      from the drop-down listbox. Right-clicking the model design area
+      will display a context-sensitive menu. Selecting
+       from the menu
+      will display the .
+      The wizard can then be used to generate MySQL DDL code.
+    </para>
       </content>
     </section>
   </developerConceptualDocument>

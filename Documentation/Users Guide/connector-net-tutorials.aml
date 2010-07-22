@@ -79,12 +79,12 @@ public class Tutorial1
             Console.WriteLine("Connecting to MySQL...");
             conn.Open();
             // Perform databse operations
-            conn.Close();
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.ToString());
         }
+        conn.Close();
         Console.WriteLine("Done.");
     }
 }</code>
@@ -178,14 +178,14 @@ public class Tutorial2
             {
                 Console.WriteLine(rdr[0]+" -- "+rdr[1]);
             }
-
             rdr.Close();
-            conn.Close();
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.ToString());
         }
+
+        conn.Close();
         Console.WriteLine("Done.");
     }
 }</code>
@@ -236,13 +236,13 @@ public class Tutorial3
             string sql = "INSERT INTO Country (Name, HeadOfState, Continent) VALUES ('Disneyland','Mickey Mouse', 'North America')";
             MySqlCommand cmd = new MySqlCommand(sql, conn);
             cmd.ExecuteNonQuery();
-
-            conn.Close();
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.ToString());
         }
+
+        conn.Close();
         Console.WriteLine("Done.");
     }
 }</code>
@@ -286,12 +286,13 @@ public class Tutorial4
                 Console.WriteLine("Number of countries in the World database is: " + r);
             }
 
-            conn.Close();
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.ToString());
         }
+
+        conn.Close();
         Console.WriteLine("Done.");
     }
 }</code>
@@ -547,9 +548,9 @@ namespace WindowsFormsApplication5
     </para>
         <para>
       Although it is possible to build SQL query strings directly from
-      user input, this is not advisable as it does not prevent from
-      erroneous or malicious information being entered. It is safer to
-      use parameters as they will be processed as field data only. For
+      user input, this is not advisable as it does not prevent erroneous
+      or malicious information being entered. It is safer to use
+      parameters as they will be processed as field data only. For
       example, imagine the following query was contructed from user
       input:
     </para>
@@ -557,7 +558,7 @@ namespace WindowsFormsApplication5
         <para>
       If the string <literal>user_continent</literal> came from a Text
       Box control, there would potentially be no control over the string
-      enetred by the user. The user could enter a string that generates
+      entered by the user. The user could enter a string that generates
       a run time error, or in the worst case actually harms the system.
       When using parameters it is not possible to do this because a
       parameter is only ever treated as a field parameter, rather than
@@ -573,25 +574,19 @@ namespace WindowsFormsApplication5
     </para>
         <para>
       As well as marking the position of the parameter in the query
-      string, it is necessary to create a parameter object that can be
-      passed to the Command object. In Connector/NET the class
-      <literal>MySqlParameter</literal> is used for this purpose. The
-      use of <literal>MySqlParameter</literal> is best illustrated by a
-      small code snippet:
+      string, it is necessary to add a parameter to the Command object.
+      This is illustrated by the following code snippet:
     </para>
-        <code>MySqlParameter param = new MySqlParameter();
-param.ParameterName = "@Continent";
-param.Value = "North America";
-cmd.Parameters.Add(param);</code>
+        <code>
+cmd.Parameters.AddWithValue("@Continent", "North America");
+</code>
         <para>
       In this example the string "North America" is supplied as the
       parameter value statically, but in a more practical example it
-      would come from a user input control. Once the parameter has its
-      name and value set it needs to be added to the Command object
-      using the <literal>Add</literal> method.
+      would come from a user input control.
     </para>
         <para>
-      A further example illustrates this:
+      A further example illustrates the complete process:
     </para>
         <code>
 using System;
@@ -617,10 +612,7 @@ public class Tutorial5
             Console.WriteLine("Enter a continent e.g. 'North America', 'Europe': ");
             string user_input = Console.ReadLine();
 
-            MySqlParameter param = new MySqlParameter();
-            param.ParameterName = "@Continent";
-            param.Value = user_input;
-            cmd.Parameters.Add(param);
+            cmd.Parameters.AddWithValue("@Continent", user_input);
 
             MySqlDataReader rdr = cmd.ExecuteReader();
 
@@ -628,13 +620,14 @@ public class Tutorial5
             {
                 Console.WriteLine(rdr["Name"]+" --- "+rdr["HeadOfState"]);
             }
-
-            conn.Close();
+            rdr.Close();
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.ToString());
         }
+
+        conn.Close();
         Console.WriteLine("Done.");
     }
 }</code>
@@ -668,7 +661,7 @@ BEGIN
 END //
 DELIMITER ;</code>
         <para>
-      Test the Stored Procedure wors as expec ted by typing the
+      Test the Stored Procedure works as expected by typing the
       following into the MySQL Client program:
     </para>
         <codeInline>CALL country_hos('Europe');</codeInline>
@@ -702,10 +695,8 @@ cmd.CommandType = CommandType.StoredProcedure;</code>
       shown in the following code snippet:
     </para>
         <code>
-MySqlParameter param = new MySqlParameter();
-param.ParameterName = "@con";
-param.Value = "Europe";
-cmd.Parameters.Add(param);</code>
+cmd.Parameters.AddWithValue("@con", "Europe");
+</code>
         <para>
       The value of the parameter <literal>@con</literal> could more
       realistically have come from a user input control, but for
@@ -743,22 +734,22 @@ public class Tutorial6
             string rtn = "country_hos";
             MySqlCommand cmd = new MySqlCommand(rtn, conn);
             cmd.CommandType = CommandType.StoredProcedure;
-            MySqlParameter param = new MySqlParameter();
-            param.ParameterName = "@con";
-            param.Value = "Europe";
-            cmd.Parameters.Add(param);
+
+            cmd.Parameters.AddWithValue("@con", "Europe");
 
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
                 Console.WriteLine(rdr[0] + " --- " + rdr[1]);
             }
-            conn.Close();
+            rdr.Close();
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.ToString());
         }
+
+        conn.Close();
         Console.WriteLine("Done.");
     }
 }</code>
@@ -794,7 +785,8 @@ public class Tutorial6
       to use the  Membership and Role Providers. It assumes that
       you have MySQL Server installed, along with  and Microsoft
       Visual Studio. This tutorial was tested with  6.0.4 and
-      Microsoft Visual Studio 2008 Professional Edition.
+      Microsoft Visual Studio 2008 Professional Edition. It is
+      recommmended you use 6.0.4 or above for this tutorial.
     </para>
         <list class="ordered">
           <listItem>
@@ -1002,7 +994,7 @@ public class Tutorial6
           </listItem>
           <listItem>
             <para>
-          In the ASP.NET Web Site Administration Tool click on the
+          In the ASP.NET Web Site Administration Tool, click the
            tab. Now that both the
           Membership and Role Provider are enabled you will see links
           for creating roles and users. Click the  link.
@@ -1064,7 +1056,7 @@ public class Tutorial6
       <content>
         <para>
        from version 6.1 has included a MySQL Session State
-      Provider. This provider allows you to store session state in a
+      Provider. This provider enables you to store session state in a
       MySQL database. The following tutorial shows you how to prepare to
       use the MySQL Session State Provider, and then store session data
       into the MySQL database. This tutorial uses Microsoft Visual
@@ -1195,7 +1187,7 @@ public class Tutorial6
           </listItem>
           <listItem>
             <para>
-          Still in the Design View, double click
+          Still in the Design View, double-click
           <literal>Button1</literal>. Now to the
           <literal>Button1_Click</literal> event handler add code some
           the handler resembles the following:
@@ -1215,7 +1207,7 @@ protected void Button1_Click(object sender, EventArgs e)
           </listItem>
           <listItem>
             <para>
-          In Design View double click <literal>Button2</literal> to add
+          In Design View double-click <literal>Button2</literal> to add
           its click event handler. This button needs to clear text from
           the text box. The code to do this is as follows:
         </para>
@@ -1232,7 +1224,7 @@ protected void Button2_Click(object sender, EventArgs e)
           </listItem>
           <listItem>
             <para>
-          In the Desin View double click <literal>Button3</literal> and
+          In the Design View double-click <literal>Button3</literal> and
           modify the click handler as follows:
         </para>
             <code>
@@ -1328,12 +1320,13 @@ protected void Page_Load(object sender, EventArgs e)
       This requires a significant amount of code, but ASP.NET reduces
       this considerable by including the functionality in its Profile
       classes. The Profile Provider provides an abstraction between
-      these classes and a data source. The MySQL Profile Provider allows
-      profile data to be stored in a MySQL database. This allows the
-      profile properties to be written to a persistent store, and be
-      retrieved when required. The Profile Provider also allows profile
-      data to be managed effectively, for example it allows profiles
-      that have not been accessed since a specific date to be deleted.
+      these classes and a data source. The MySQL Profile Provider
+      enables profile data to be stored in a MySQL database. This
+      enables the profile properties to be written to a persistent
+      store, and be retrieved when required. The Profile Provider also
+      enables profile data to be managed effectively, for example it
+      enables profiles that have not been accessed since a specific date
+      to be deleted.
     </para>
         <para>
       The following steps show you how you can select the MySQL Profile
@@ -1417,9 +1410,9 @@ protected void Page_Load(object sender, EventArgs e)
 </code>
             <para>
           Note that <literal>anonymousIdentification</literal> has been
-          set to true. This allows users who have not been authenticated
-          to use profiles. They are identified by a GUID in a cookie
-          rather than by user name.
+          set to true. This enables users who have not been
+          authenticated to use profiles. They are identified by a GUID
+          in a cookie rather than by user name.
         </para>
           </listItem>
         </list>
@@ -1591,7 +1584,7 @@ protected void DropDownList1_SelectedIndexChanged(object sender, EventArgs e)
         <list class="ordered">
           <listItem>
             <para>
-          In the Solution Explorer, right click on your application and
+          In the Solution Explorer, right-click your application and
           select <ui>Add</ui>, <ui>New Item...</ui>.
           From 
           select . Click
@@ -1621,7 +1614,7 @@ protected void DropDownList1_SelectedIndexChanged(object sender, EventArgs e)
             <para>
           You can now select the connection you made earlier to the
           World database. If you have not already done so, you can
-          create the new connection at this time by clicking on
+          create the new connection at this time by clicking
           <math>New Connection...</math>. For further
           instructions on creating a connection to a database see
           <link xlink:href="9f3f194e-ad35-4379-b04d-5dce4b34ce6a#connector-net-visual-studio-making-a-connection">Making a connection</link>.
@@ -1793,7 +1786,7 @@ protected void DropDownList1_SelectedIndexChanged(object sender, EventArgs e)
         <list class="ordered">
           <listItem>
             <para>
-          Double click the form to access its code.
+          Double-click the form to access its code.
         </para>
           </listItem>
           <listItem>
@@ -1845,8 +1838,8 @@ protected void DropDownList1_SelectedIndexChanged(object sender, EventArgs e)
         <list class="ordered">
           <listItem>
             <para>
-          In the Form Designer click on the Save icon in the Form
-          toolbar and ensure that its Enabled property is set to True.
+          In the Form Designer, click the Save icon in the Form toolbar
+          and ensure that its Enabled property is set to True.
         </para>
             <mediaLink>
               <para />
@@ -1857,14 +1850,14 @@ protected void DropDownList1_SelectedIndexChanged(object sender, EventArgs e)
           </listItem>
           <listItem>
             <para>
-          Double click the Save icon in the Form toolbar to display its
+          Double-click the Save icon in the Form toolbar to display its
           code.
         </para>
           </listItem>
           <listItem>
             <para>
           You now need to add code to ensure that data is saved to the
-          database when the save button is click in the application.
+          database when the save button is clicked in the application.
         </para>
             <mediaLink>
               <para />
@@ -1944,7 +1937,7 @@ protected void DropDownList1_SelectedIndexChanged(object sender, EventArgs e)
           </listItem>
           <listItem>
             <para>
-          Click on Toolbox. From the list of controls select
+          Click Toolbox. From the list of controls select
           . Drag and drop the control
           to a location beneath the text on your web page.
         </para>
@@ -2039,7 +2032,7 @@ protected void DropDownList1_SelectedIndexChanged(object sender, EventArgs e)
         <list class="ordered">
           <listItem>
             <para>
-          In the Design view panel, double click on any blank area. This
+          In the Design view panel, double-click any blank area. This
           brings up the  method.
         </para>
           </listItem>
@@ -2101,7 +2094,7 @@ public partial class _Default : System.Web.UI.Page
         <list class="ordered">
           <listItem>
             <para>
-          In the Design view double click on the
+          In the Design view, double-click the
            control. This causes its
            code to be
           displayed. This method is called when a user selects an item
@@ -2383,7 +2376,7 @@ ssl-key=path/to/repo/mysql-test/std_data/server-key.pem
     in the wrong certificate being used. To alleviate this situation,
     there is an optional Certificate Thumbprint parameter that can
     additionally be specified as part of the connection string. As
-    mentioned before, you can double-click on a certificate in the
+    mentioned before, you can double-click a certificate in the
     Microsoft Management Console to display the certificate's details.
     When the Certificate dialog is displayed click the
      tab and scroll down to see the
@@ -2403,6 +2396,403 @@ ssl-key=path/to/repo/mysql-test/std_data/server-key.pem
         <para>
     Spaces in the thumbprint parameter are optional and the value is
     case-insensitive.
+  </para>
+      </content>
+    </section>
+    <section address="connector-net-tutorials-mysqlscript">
+      <title>Tutorial: Using MySqlScript</title>
+      <content>
+        <autoOutline />
+        <para>
+    In this tutorial you will learn how to use the
+     class. This class enables you to
+    execute a series of statements. Depending on the circumstances, this
+    can be more convenient than using the
+     approach.
+  </para>
+        <para>
+    Further details of the  class can
+    be found in the reference documentation supplied with .
+  </para>
+        <para>
+    If you wish to run the example programs in this tutorial, you will
+    need to set up a simple test database and table. This can be achived
+    using the MySQL Command Line Client or MySql Workbench. Commands for
+    the MySQL Command Line Client are given here:
+  </para>
+        <list class="ordered">
+          <listItem>
+            <para>
+              <literal>CREATE DATABASE TestDB;</literal>
+            </para>
+          </listItem>
+          <listItem>
+            <para>
+              <literal>USE TestDB;</literal>
+            </para>
+          </listItem>
+          <listItem>
+            <para>
+              <literal>CREATE TABLE TestTable (id INT NOT NULL PRIMARY KEY
+        AUTO_INCREMENT, name VARCHAR(100));</literal>
+            </para>
+          </listItem>
+        </list>
+        <para>
+    The main method of the  class is
+    the  method. This method causes the
+    script (sequence of statements) assigned to the
+     property of the MySqlScript object to be
+    executed. Note the  property can be set
+    through the  constructor or via
+    the  property.
+     returns the number of statements
+    executed.
+  </para>
+        <para>
+    The  object will execute the
+    specified script on the connection set via the
+     property. Again, this property can
+    be set directly or through the 
+    constructor. The following code snipets illustrate this:
+  </para>
+        <code>
+string sql = "SELECT * FROM TestTable";
+...
+MySqlScript script = new MySqlScript(conn, sql);
+...
+MySqlScript script = new MySqlScript();
+script.Query = sql;
+script.Connection = conn;
+...
+script.Execute();
+</code>
+        <para>
+    The MySqlScript class has several events associated with it. There
+    are:
+  </para>
+        <list class="ordered">
+          <listItem>
+            <para>
+        Error - generated in an error occurs.
+      </para>
+          </listItem>
+          <listItem>
+            <para>
+        ScriptCompleted - generated when the script successfully
+        completes execution.
+      </para>
+          </listItem>
+          <listItem>
+            <para>
+        StatementExecuted - generated after each statement is executed.
+      </para>
+          </listItem>
+        </list>
+        <para>
+    It is possible to assign event handlers to each of these events.
+    These user-provided routies will be called back should the connected
+    event occur. The following code shows how the event handlers are set
+    up.
+  </para>
+        <code>
+script.Error += new MySqlScriptErrorEventHandler(script_Error);
+script.ScriptCompleted += new EventHandler(script_ScriptCompleted);
+script.StatementExecuted += new MySqlStatementExecutedEventHandler(script_StatementExecuted);
+</code>
+        <para>
+    In VisualStudio you can use tab completion to fill out stub routines
+    for you, to save typing. To do this start by typing, for example,
+    . Then press , and
+    then press  again. The assignment will be
+    completed, and a stub event handler created. A complete working
+    example is shown below:
+  </para>
+        <code>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+using System.Data;
+using MySql.Data;
+using MySql.Data.MySqlClient;
+
+namespace MySqlScriptTest
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string connStr = "server=localhost;user=root;database=TestDB;port=3306;password=******;";
+            MySqlConnection conn = new MySqlConnection(connStr);
+
+            try
+            {
+                Console.WriteLine("Connecting to MySQL...");
+                conn.Open();
+
+                string sql = "INSERT INTO TestTable(name) VALUES ('Superman');" +
+                             "INSERT INTO TestTable(name) VALUES ('Batman');" +
+                             "INSERT INTO TestTable(name) VALUES ('Wolverine');" +
+                             "INSERT INTO TestTable(name) VALUES ('Storm');";
+
+                MySqlScript script = new MySqlScript(conn, sql);
+                
+                script.Error += new MySqlScriptErrorEventHandler(script_Error);
+                script.ScriptCompleted += new EventHandler(script_ScriptCompleted);
+                script.StatementExecuted += new MySqlStatementExecutedEventHandler(script_StatementExecuted);
+                
+                int count = script.Execute();
+
+                Console.WriteLine("Executed " + count + " statement(s).");
+                Console.WriteLine("Delimiter: " + script.Delimiter);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
+            conn.Close();
+            Console.WriteLine("Done.");
+        }
+
+        static void script_StatementExecuted(object sender, MySqlScriptEventArgs args)
+        {
+            Console.WriteLine("script_StatementExecuted");    
+        }
+
+        static void script_ScriptCompleted(object sender, EventArgs e)
+        {
+            /// EventArgs e will be EventArgs.Empty for this method 
+            Console.WriteLine("script_ScriptCompleted!");
+        }
+
+        static void script_Error(Object sender, MySqlScriptErrorEventArgs args)
+        {
+            Console.WriteLine("script_Error: " + args.Exception.ToString());
+        }
+    }
+}
+</code>
+        <para>
+    Note that in the 
+    event handler, the  parameter
+    <literal>e</literal> will be <literal>EventArgs.Empty</literal>. In
+    the case of the <literal>ScriptCompleted</literal> event there is no
+    additional data to be obtained, which is why the event object is
+    <literal>EventArgs.Empty</literal>.
+  </para>
+      </content>
+    </section>
+    <section address="connector-net-tutorials-mysqlscript-delimiter">
+      <title>Using Delimiters with MySqlScript</title>
+      <content>
+        <para>
+      Depending on the nature of the script, you made need control of
+      the delimiter used to separate the statements that will make up a
+      script. The most common example of this is where you have a
+      multi-statement stored routine as part of your script. In this
+      case if the default delimiter of  is used you will
+      get an error when you attempt to execute the script. For example,
+      consider the following stored routine:
+    </para>
+        <code>
+CREATE PROCEDURE test_routine() 
+BEGIN 
+    SELECT name FROM TestTable ORDER BY name;
+    SELECT COUNT(name) FROM TestTable;
+END
+</code>
+        <para>
+      This routine actually needs to be executed on the MySQL Server as
+      a single statement. However, with the default delimiter of
+      , the  class
+      would interpret the above as two statements, the first being:
+    </para>
+        <code>
+CREATE PROCEDURE test_routine() 
+BEGIN 
+    SELECT name FROM TestTable ORDER BY name;
+</code>
+        <para>
+      Executing this as a statement would generate an error. To solve
+      this problem  supports the
+      ability to set a different delimiter. This is achieved through the
+       property. For example, you could
+      set the delimiter to , in which case the above
+      stored routine would no longer generate an error when executed.
+      Multiple statements can be delimited in the script, so for
+      example, you could have a three statement script such as:
+    </para>
+        <code>
+string sql = "DROP PROCEDURE IF EXISTS test_routine??" +
+             "CREATE PROCEDURE test_routine() " + 
+             "BEGIN " + 
+             "SELECT name FROM TestTable ORDER BY name;" + 
+             "SELECT COUNT(name) FROM TestTable;" +
+             "END??" +
+             "CALL test_routine()";
+</code>
+        <para>
+      You can change the delimiter back at any point by setting the
+       property. The following code shows
+      a complete working example:
+    </para>
+        <code>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+using MySql.Data;
+using MySql.Data.MySqlClient;
+
+namespace ConsoleApplication8
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string connStr = "server=localhost;user=root;database=TestDB;port=3306;password=******;";
+            MySqlConnection conn = new MySqlConnection(connStr);
+
+            try
+            {
+                Console.WriteLine("Connecting to MySQL...");
+                conn.Open();
+
+                string sql =    "DROP PROCEDURE IF EXISTS test_routine??" +
+                                "CREATE PROCEDURE test_routine() " + 
+                                "BEGIN " + 
+                                "SELECT name FROM TestTable ORDER BY name;" + 
+                                "SELECT COUNT(name) FROM TestTable;" +
+                                "END??" +
+                                "CALL test_routine()";
+
+                MySqlScript script = new MySqlScript(conn);
+            
+                script.Query = sql;
+                script.Delimiter = "??";
+                int count = script.Execute();
+                Console.WriteLine("Executed " + count + " statement(s)");
+                script.Delimiter = ";";
+                Console.WriteLine("Delimiter: " + script.Delimiter);
+                Console.WriteLine("Query: " + script.Query);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
+            conn.Close();
+            Console.WriteLine("Done.");
+        }
+    }
+}
+</code>
+      </content>
+    </section>
+    <section address="connector-net-tutorials-efmodel-ddl">
+      <title>Tutorial: Generating MySQL DDL from an Entity Framework Model</title>
+      <content>
+        <para>
+    In this tutorial you will learn how to create MySQL DDL from an
+    Entity Framework model. You will need to use Visual Studio 2010 and
+     6.3 to carry out this tutorial.
+  </para>
+        <list class="ordered">
+          <listItem>
+            <para>
+        Create a new console application in Visual Studio 2010.
+      </para>
+          </listItem>
+          <listItem>
+            <para>
+        Using the  add a reference
+        to <legacyBold>MySql.Data.Entity</legacyBold>.
+      </para>
+          </listItem>
+          <listItem>
+            <para>
+        From the  select
+        <ui>Add</ui>, <ui>New Item</ui>. In the
+         dialog select . Select  and click <math>Add</math>. The
+         dialog will be displayed.
+      </para>
+          </listItem>
+          <listItem>
+            <para>
+        In the  dialog select
+        . Click
+        <math>Finish</math>. A blank model will be created.
+      </para>
+          </listItem>
+          <listItem>
+            <para>
+        Create a simple model. A single Entity will do for the purposes
+        of this tutorial.
+      </para>
+          </listItem>
+          <listItem>
+            <para>
+        In the  panel select
+        <ui>ConceptualEntityModel</ui> from the drop-down
+        listbox.
+      </para>
+          </listItem>
+          <listItem>
+            <para>
+        In the  panel, locate the
+         in the category
+        .
+      </para>
+          </listItem>
+          <listItem>
+            <para>
+        For the  property select
+        <ui>SSDLToMySQL.tt(VS)</ui> from the drop-down
+        listbox.
+      </para>
+          </listItem>
+          <listItem>
+            <para>
+        Save the solution.
+      </para>
+          </listItem>
+          <listItem>
+            <para>
+        Right-click an empty space in the model design area. The
+        context-sensitive menu will be displayed.
+      </para>
+          </listItem>
+          <listItem>
+            <para>
+        From the context-sensitive menu select <ui>Generate
+        Database from Model</ui>. The  dialog will be displayed.
+      </para>
+          </listItem>
+          <listItem>
+            <para>
+        In the  dialog
+        select an existing connection, or create a new connection to a
+        server. Select an appropriate radio button to show or hide
+        sensitive data. For the purposes of this tutorial you can select
+         (although you may not want to do this
+        for commercial applications).
+      </para>
+          </listItem>
+          <listItem>
+            <para>
+        Click <math>Next</math>. MySQL compatible DDL code
+        will be generated. Click <math>Finish</math> to exit
+        the wizard.
+      </para>
+          </listItem>
+        </list>
+        <para>
+    You have seen how to create MySQL DDL code from an Entity Framework
+    model.
   </para>
       </content>
     </section>

@@ -56,9 +56,9 @@
         <list class="ordered">
           <listItem>
             <para>
-            Double click on the MSI installer file extracted from the
-            Zip you downloaded. Click <math>Next</math> to
-            start the installation.
+            Double-click the MSI installer file extracted from the Zip
+            you downloaded. Click <math>Next</math> to start
+            the installation.
           </para>
           </listItem>
           <listItem>
@@ -393,7 +393,7 @@
       Bazaar is supported by any platform that supports Python, and is
       therefore compatible with any Linux, Unix, Windows or Mac OS X
       host. Instructions for downloading and installing Bazaar on the
-      different platforms are available on the Bazaar website.
+      different platforms are available on the Bazaar Web site.
     </para>
         <para>
       The most recent development source tree is available from our
@@ -439,8 +439,8 @@
             <para>
           A Microsoft Visual Studio 2005 solution file is available to
           build the connector, this is called
-          <legacyBold>MySQL-VS2005.sln</legacyBold>. Click on this file to
-          load the solution into Visual Studio.
+          <legacyBold>MySQL-VS2005.sln</legacyBold>. Click this file to load
+          the solution into Visual Studio.
         </para>
           </listItem>
           <listItem>
