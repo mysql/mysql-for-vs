@@ -185,12 +185,12 @@ namespace MySql.Data.MySqlClient
             // clear all remaining resultsets
             try
             {
-              while (NextResult()) { }
+                while (NextResult()) { }
             }
             catch (MySqlException ex)
             {
                 // Ignore aborted queries
-                if (!ex.IsQueryAborted)
+                if (ex.IsQueryAborted)
                 {
                     // ignore IO exceptions.
                     // We are closing or disposing reader, and  do not
@@ -215,8 +215,16 @@ namespace MySql.Data.MySqlClient
                     }
                 }
             }
-
-            connection.Reader = null;
+            catch (System.IO.IOException)
+            {
+                // eat, on the same reason we eat IO exceptions wrapped into 
+                // MySqlExceptions reasons, described above.
+            }
+            finally
+            {
+                // always ensure internal reader is null (Bug #55558)
+                connection.Reader = null;
+            }
             // we now give the command a chance to terminate.  In the case of
 			// stored procedures it needs to update out and inout parameters
 			command.Close(this);
