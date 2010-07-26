@@ -1,3 +1,5 @@
+Version 6.3.3 (beta 2)
+
 - Fix membership provider creation failure, when default database character set is different from latin1 (Bug #53174)
 - Fix "Connection must be valid and open" exception When UpdateBatchSize > 1 
   and MySqlDataAdapter is not using an open connection (Bug #38411)
