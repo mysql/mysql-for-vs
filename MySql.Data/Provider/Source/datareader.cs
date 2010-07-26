@@ -190,7 +190,7 @@ namespace MySql.Data.MySqlClient
             catch (MySqlException ex)
             {
                 // Ignore aborted queries
-                if (ex.IsQueryAborted)
+                if (!ex.IsQueryAborted)
                 {
                     // ignore IO exceptions.
                     // We are closing or disposing reader, and  do not
