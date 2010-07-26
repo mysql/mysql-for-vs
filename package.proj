@@ -72,12 +72,21 @@
 <!--    <RemoveDir Directories="tmp"/>-->
   </Target>
 
+  <Target Name="PackageZip">
   <ItemGroup>
-    <BinaryFiles Include="MySql.Data\Provider\bin\release\mysql.data.dll"/>
-    <BinaryFiles Include="MySql.Data\Provider\bin\release\mysql.data.cf.dll"/>
-    <BinaryFiles Include="MySql.Web\Providers\bin\release\mysql.web.dll"/>
-    <BinaryFiles Include="MySql.Data.Entity\Provider\bin\release\mysql.data.entity.dll"/>
-    <BinaryFiles Include="MySql.VisualStudio\bin\release\mysql.visualstudio.dll"/>
+    <V2Assemblies Include="MySql.Data\Provider\bin\release\mysql.data.dll"/>
+    <V2Assemblies Include="MySql.Data\Provider\bin\release\mysql.data.cf.dll"/>
+    <V2Assemblies Include="MySql.Web\Providers\bin\release\mysql.web.dll"/>
+    <V2Assemblies Include="MySql.Data.Entity\Provider\bin\release\mysql.data.entity.dll"/>
+    <V2Assemblies Include="MySql.VisualStudio\bin\release\mysql.visualstudio.dll"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <V4Assemblies Include="MySql.Data.Entity\Provider\bin\release-4.0\mysql.data.entity.dll"/>
+    <V4Assemblies Include="MySql.VisualStudio\bin\release-4.0\mysql.visualstudio.dll"/>
+  </ItemGroup>
+
+  <ItemGroup>
     <BinaryFiles Include="Documentation\Output\MySql.Data.chm"/>
     <BinaryFiles Include="COPYING" Condition=" '$(Configuration)' == 'GPL' "/>
     <BinaryFiles Include="EXCEPTIONS" Condition=" '$(Configuration)' == 'GPL' "/>
@@ -87,9 +96,16 @@
     <BinaryFiles Include="CHANGES"/>
   </ItemGroup>
   
-  <Target Name="PackageZip">
-    <Zip Flatten="true" 
-         ZipFileName="bin/$(Configuration)/mysql-connector-net-$(Version)$(Postfix)-noinstall.zip"
-         Files="@(BinaryFiles)"/>
+    <RemoveDir Directories="tmp" ContinueOnError="true"/>
+    <MakeDir Directories ="tmp"/>
+    <Copy SourceFiles ="@(BinaryFiles)" DestinationFolder="tmp"/>
+    <Copy SourceFiles ="@(V2Assemblies)" DestinationFolder="tmp\v2"/>
+    <Copy SourceFiles ="@(V4Assemblies)" DestinationFolder="tmp\v4"/>
+
+    <ItemGroup>
+	<ZipFiles Include="tmp/**"/>
+    </ItemGroup>
+    <Zip ZipFileName="bin/$(Configuration)/mysql-connector-net-$(Version)$(Postfix)-noinstall.zip"
+         Files="@(ZipFiles)" workingDirectory="tmp"/>
   </Target>
 </Project>
