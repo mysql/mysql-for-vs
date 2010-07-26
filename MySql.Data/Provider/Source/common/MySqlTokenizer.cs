@@ -141,7 +141,7 @@ namespace MySql.Data.MySqlClient
         {
             while (FindToken())
             {
-                string token = sql.Substring(startIndex, stopIndex - startIndex).Trim();
+                string token = sql.Substring(startIndex, stopIndex - startIndex);
                 return token;
             }
             return null;
@@ -223,6 +223,8 @@ namespace MySql.Data.MySqlClient
             int startingIndex = pos-1;
 
             int index = sql.IndexOf(endingPattern, pos);
+            if (endingPattern == "\n")
+                index = sql.IndexOf('\n', pos);
             if (index == -1) 
                 index = sql.Length - 1;
             else 

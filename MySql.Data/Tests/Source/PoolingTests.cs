@@ -162,6 +162,7 @@ namespace MySql.Data.MySqlClient.Tests
             }
 		}
          
+#if !CF
         // Test that thread does not come to pool after abort
         [Test]
         public void TestAbort()
@@ -183,7 +184,7 @@ namespace MySql.Data.MySqlClient.Tests
                 KillConnection(c1);
             }
         }
-
+#endif
 
 		/// <summary>
 		/// Bug #25614 After connection is closed, and opened again UTF-8 characters are not read well 
@@ -495,16 +496,22 @@ namespace MySql.Data.MySqlClient.Tests
         {
             string connectionString = GetConnectionString(false);
             connectionString = connectionString.Replace("pooling=false", "pooling=true");
-            using (MySqlConnection c1 = new MySqlConnection(connectionString))
+
+            MySqlConnection c1 = new MySqlConnection(connectionString);
+            using (c1)
             {
                 c1.Open();
                 c1.Close();
             }
-            using (MySqlConnection c2 = new MySqlConnection(connectionString))
+
+            MySqlConnection c2 = new MySqlConnection(connectionString);
+            using (c2)
             {
                 c2.Open();
                 c2.Close();
             }
+
+            MySqlConnection.ClearAllPools();
         }
 
         /// <summary>

@@ -485,7 +485,7 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void PingWhileReading()
         {
-            MySqlCommand command = new MySqlCommand("USE mysql; SELECT * FROM help_topic", conn);
+            MySqlCommand command = new MySqlCommand("SELECT 1", conn);
 
             using (MySqlDataReader reader = command.ExecuteReader())
             {

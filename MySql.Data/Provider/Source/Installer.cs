@@ -72,7 +72,7 @@ namespace MySql.Data.MySqlClient
 
         private static void UpdateMachineConfigs(string rootPath, bool add)
         {
-            string[] dirs = new string[2] { "v2.0.50727", "4.0.30319" };
+            string[] dirs = new string[2] { "v2.0.50727", "v4.0.30319" };
             foreach (string frameworkDir in dirs)
             {
                 string path = rootPath + frameworkDir;
