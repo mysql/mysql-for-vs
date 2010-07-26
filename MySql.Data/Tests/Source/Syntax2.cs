@@ -28,6 +28,11 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture]
 	public class Syntax2 : BaseTest
 	{
+        public Syntax2()
+        {
+            csAdditions += ";logging=true;";
+        }
+
         [Test]
         public void CommentsInSQL()
         {
