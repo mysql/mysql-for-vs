@@ -86,7 +86,7 @@
       <Component Id="EF.v4" Guid="E6B683F6-727A-43c9-B955-6BEE94EF61C7" DiskId="1">
         <Condition>NETFRAMEWORK40FULL OR NETFRAMEWORK40CLIENT</Condition>
         <File Id="MySql.Data.EF.v4" Name="MySql.Data.Entity.dll"
-              Source="..\mysql.data.entity\provider\bin\release\mysql.data.entity.dll" DiskId="1"/>
+              Source="..\mysql.data.entity\provider\bin\release-4.0\mysql.data.entity.dll" DiskId="1"/>
       </Component>
       <Component Id="EF.v4.GAC" Guid="A9C03468-5A59-443f-85DC-C0149EBB55C8" DiskId="1">
         <Condition>NETFRAMEWORK40FULL OR NETFRAMEWORK40CLIENT</Condition>
