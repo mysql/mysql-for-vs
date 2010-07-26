@@ -34,6 +34,10 @@
     </Property>
     <Condition Message="A previous version of Connector/Net 5.0 or higher is already installed.  Please uninstall that version first.">Not OLDVERSION</Condition>
 
+    <Property Id="HLM_LOCATION">
+      <RegistrySearch Id="HLMRegSearch" Root="HKLM" Key="Software\Microsoft\Help\v1.0" Name="AppRoot" Type="raw"/>
+    </Property>
+    
     <!-- Our directory structure -->
     <Directory Id='TARGETDIR' Name='SourceDir'>
       <Directory Id='ProgramFilesFolder' Name='PFiles'>
@@ -84,6 +88,8 @@
         <File Id="docs7" Name="COL_Master_N.HxK" Source="..\Documentation\CollectionFiles\COL_Master_N.HxK" DiskId="1"/>
         <File Id="docs8" Name="MySql.Data.HxS" Source="..\Documentation\Output\MySql.Data.HxS" DiskId="1"/>
         <File Id="H2Reg.ini" Name="help.cmd" Source="Binary\h2reg.ini" DiskId="1"/>
+        <File Id="MSHA_File" Name="HelpContentSetup.msha" Source="..\Documentation\Output\MySql.Data.msha" DiskId="1"/>
+        <File Id="MSHC_File" Name="MySql.Data.mshc" Source="..\Documentation\Output\MySql.Data.mshc" DiskId="1"/>
       </Component>
     </DirectoryRef>
 
@@ -117,10 +123,24 @@
     <InstallExecuteSequence>
       <Custom Action='RegisterHelp' After="InstallFiles">(&amp;DocsFeature=3) AND NOT(!DocsFeature=3)</Custom>
       <Custom Action="UnRegisterHelp" Before="RemoveFiles">(&amp;DocsFeature=2) AND (!DocsFeature=3)</Custom>
+      
+      <!--<Custom Action="CleanVS2010Help" After="RegisterHelp">(&amp;DocsFeature=3) AND NOT(!DocsFeature=3) AND (VS2010Int=3)</Custom>
+      <Custom Action="InstallVS2010Help" After="CleanVS2010Help">(&amp;DocsFeature=3) AND NOT(!DocsFeature=3) AND (VS2010Int=3)</Custom>
+      <Custom Action="RemoveVS2010Help" After="UnRegisterHelp">(&amp;DocsFeature=2) AND (!DocsFeature=3) AND (!VS2010Int=3)</Custom>-->
     </InstallExecuteSequence>
 
     <CustomAction Id="RegisterHelp" ExeCommand='-r -q CmdFile="[#H2Reg.ini]"' BinaryKey="H2Reg" Execute="deferred" Return="check" Impersonate="no"/>
     <CustomAction Id="UnRegisterHelp" ExeCommand='-u -q CmdFile="[#H2Reg.ini]"' BinaryKey="H2Reg" Execute="deferred" Return="check" Impersonate="no"/>
+
+    <!--<CustomAction Id="InstallVS2010HelpSetup" Property="InstallVS2010Help"
+                  Value='"[HLM_LOCATION]\HelpLibManager.exe" /product VS /version 100 /locale en-us /silent /vendor "Oracle" /sourceMedia "[#MSHA_File]"'/>
+    <CustomAction Id="CleanVS2010HelpSetup" Property="CleanVS2010Help"
+                  Value='"[HLM_LOCATION]\HelpLibManager.exe" /product VS /version 100 /locale en-us /uninstall /silent /vendor "Oracle" /mediaBookList "MySQL Connector/Net" /productName "MySQL Connector/Net" > NUL'/>
+    <CustomAction Id="RemoveVS2010HelpSetup" Property="RemoveVS2010Help"
+                  Value='"[HLM_LOCATION]\HelpLibManager.exe" /product VS /version 100 /locale en-us /uninstall /silent /vendor "Oracle" /mediaBookList "MySQL Connector/Net" /productName "MySQL Connector/Net" > NUL'/>
+    <CustomAction Id="InstallVS2010Help" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
+    <CustomAction Id="RemoveVS2010Help" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
+    <CustomAction Id="CleanVS2010Help" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>-->
   </Product>
 </Wix>
 
