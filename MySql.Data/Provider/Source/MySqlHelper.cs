@@ -24,15 +24,26 @@ using System.Text;
 
 namespace MySql.Data.MySqlClient
 {
-	/// <summary>
-	/// Helper class that makes it easier to work with the provider.
-	/// </summary>
-	public sealed class MySqlHelper
-	{
+
+
+    /// <summary>
+    /// Helper class that makes it easier to work with the provider.
+    /// </summary>
+    public sealed class MySqlHelper
+    {
+        enum CharClass : byte
+        {
+            None,
+            Quote,
+            Backslash
+        }
+
         private static string stringOfBackslashChars = "\u005c\u00a5\u0160\u20a9\u2216\ufe68\uff3c";
         private static string stringOfQuoteChars =
             "\u0027\u0060\u00b4\u02b9\u02ba\u02bb\u02bc\u02c8\u02ca\u02cb\u02d9\u0300\u0301\u2018\u2019\u201a\u2032\u2035\u275b\u275c\uff07";
 
+        private static CharClass[] charClassArray = makeCharClassArray();
+       
         // this class provides only static methods
 		private MySqlHelper()
 		{
@@ -378,6 +389,32 @@ namespace MySql.Data.MySqlClient
 		#endregion
 
         #region Utility methods
+        private static CharClass[] makeCharClassArray()
+        {
+
+            CharClass[] a = new CharClass[65536];
+            foreach (char c in stringOfBackslashChars)
+            {
+                a[c] = CharClass.Backslash;
+            }
+            foreach (char c in stringOfQuoteChars)
+            {
+                a[c] = CharClass.Quote;
+            }
+            return a;
+        }
+
+        private static bool needsQuoting(string s)
+        {
+            foreach (char c in s)
+            {
+                if (charClassArray[c] != CharClass.None)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
         /// <summary>
         /// Escapes the string.
@@ -386,14 +423,18 @@ namespace MySql.Data.MySqlClient
         /// <returns>The string with all quotes escaped.</returns>
         public static string EscapeString(string value)
         {
+            if (!needsQuoting(value))
+                return value;
+
             StringBuilder sb = new StringBuilder();
+
             foreach (char c in value)
             {
-                if (stringOfQuoteChars.IndexOf(c) >= 0 ||
-                    //sb.Append(c);
-                //else if (
-                stringOfBackslashChars.IndexOf(c) >= 0)
+                CharClass charClass = charClassArray[c];
+                if (charClass != CharClass.None)
+                {
                     sb.Append("\\");
+                }
                 sb.Append(c);
             }
             return sb.ToString();
@@ -401,12 +442,16 @@ namespace MySql.Data.MySqlClient
 
         public static string DoubleQuoteString(string value)
         {
+            if (!needsQuoting(value))
+                return value;
+
             StringBuilder sb = new StringBuilder();
             foreach (char c in value)
             {
-                if (stringOfQuoteChars.IndexOf(c) >= 0)
+                CharClass charClass = charClassArray[c];
+                if (charClass == CharClass.Quote)
                     sb.Append(c);
-                else if (stringOfBackslashChars.IndexOf(c) >= 0)
+                else if (charClass == CharClass.Backslash)
                     sb.Append("\\");
                 sb.Append(c);
             }
