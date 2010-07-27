@@ -36,7 +36,6 @@ namespace MySql.Data.VisualStudio
         /// </summary>
         public MySqlConnectionProperties() : base(InvariantName)
         {
-            ConnectionStringBuilder["Respect Binary Flags"] = false;
         }
 
         /// <summary>
