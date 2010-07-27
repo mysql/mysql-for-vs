@@ -18,6 +18,8 @@
 - changed DbCommandBuilder and added a MySqlDataObjectIdentifierConverter so we don't output
   the databasename in our typed datasets.  This allows users to move the dataset to a new
   database/server with no trouble (bug #33870)
+- added code to default 'respect binary flags' in the visual studio wizard so that older
+  versions of MySQL will work when creating/editing stored procedures (bug #55170)
 
 Version 6.0.6
 - When sending file to server (LOAD DATA INFILE) open the file for read only, not for read/write
