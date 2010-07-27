@@ -121,20 +121,43 @@ namespace MySql.Data.VisualStudio
             {
                 try
                 {
-                    DataTable dt = GetDataTable(String.Format("SHOW CREATE {0} `{1}`.`{2}`",
-                            IsFunction ? "FUNCTION" : "PROCEDURE", Database, Name));
-
-                    sql_mode = dt.Rows[0][1] as string;
-                    string sql = dt.Rows[0][2] as string;
+                    string sql = GetStoredProcedureBody(String.Format(
+                        "SHOW CREATE {0} `{1}`.`{2}`", 
+                        IsFunction ? "FUNCTION" : "PROCEDURE", Database, Name), out sql_mode);
                     editor.Text = ChangeSqlTypeTo(sql, "ALTER");
                     Dirty = false;
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Unable to load object with error: " + ex.Message);
+                    MessageBox.Show("Unable to load the stored procedure for editing");
                 }
             }
 		}
+
+        private string GetStoredProcedureBody(string sql, out string sql_mode)
+        {
+            string body = null;
+
+            DbConnection conn = (DbConnection)HierarchyAccessor.Connection.GetLockedProviderObject();
+            try
+            {
+
+                DbCommand cmd = MySqlProviderObjectFactory.Factory.CreateCommand();
+                cmd.Connection = conn;
+                cmd.CommandText = sql;
+                using (DbDataReader reader = cmd.ExecuteReader())
+                {
+                    reader.Read();
+                    sql_mode = reader.GetString(1);
+                    body = reader.GetString(2);
+                }
+                return body;
+            }
+            finally
+            {
+                HierarchyAccessor.Connection.UnlockProviderObject();
+            }
+        }
 
         /// <summary>
         /// We override save here so we can change the sql from create to alter on
