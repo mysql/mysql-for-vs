@@ -1,3 +1,6 @@
+
+- fixed visual studio plugin so that stored procedure editing works on older versions of MySQL (bug #55170)
+
 Version 6.3.3 (beta 2)
 - fix "There is already an open DataReader..." after exceptions in DataReader.Close()
  (bug#55558)
