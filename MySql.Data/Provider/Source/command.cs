@@ -298,12 +298,11 @@ namespace MySql.Data.MySqlClient
 		/// <include file='docs/mysqlcommand.xml' path='docs/ExecuteNonQuery/*'/>
 		public override int ExecuteNonQuery()
 		{
-            MySqlDataReader reader = null;
-            using (reader = ExecuteReader())
-            { 
+            using (MySqlDataReader reader = ExecuteReader())
+            {
+                reader.Close();
+                return reader.RecordsAffected;
             }
-
-            return reader.RecordsAffected;
 		}
 
         internal void ClearCommandTimer()
