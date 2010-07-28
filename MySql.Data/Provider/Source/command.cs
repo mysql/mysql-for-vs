@@ -347,7 +347,7 @@ namespace MySql.Data.MySqlClient
         /// <include file='docs/mysqlcommand.xml' path='docs/ExecuteReader1/*'/>
         public new MySqlDataReader ExecuteReader (CommandBehavior behavior)
         {
-
+            bool success = false;
             CheckState();
             Driver driver = connection.driver;
             lock (driver)
@@ -420,6 +420,7 @@ namespace MySql.Data.MySqlClient
                 statement.Execute();
                 // wait for data to return
                 reader.NextResult();
+                success = true;
                 return reader;
             }
             catch (TimeoutException tex)
@@ -431,6 +432,11 @@ namespace MySql.Data.MySqlClient
             {
                 connection.HandleTimeoutOrThreadAbort(taex);
                 throw;
+            }
+            catch (IOException ioex)
+            {
+                connection.Abort(); // Closes connection without returning it to the pool
+                throw new MySqlException(Resources.FatalErrorDuringExecute, ioex);
             }
             catch (MySqlException ex)
             {
@@ -461,12 +467,22 @@ namespace MySql.Data.MySqlClient
             }
             finally
             {
-                if (connection != null && connection.Reader == null)
+                if (connection != null)
                 {
-                    // Comething want seriously wrong,  and reader would not be 
-                    // able to clear timeout on closing.
-                    // So we clear timeout here.
-                    ClearCommandTimer();
+                    if (connection.Reader == null)
+                    {
+                        // Something went seriously wrong,  and reader would not
+                        // be able to clear timeout on closing.
+                        // So we clear timeout here.
+                        ClearCommandTimer();
+                    }
+                    else if (!success)
+                    {
+                        // ExecuteReader failed. Reset Reader to null to 
+                        // prevent subsequent errors with DataReaderOpen
+                        connection.Reader.Close();
+                        connection.Reader = null;
+                    }
                 }
             }
         }
