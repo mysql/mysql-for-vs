@@ -1,4 +1,6 @@
-- Improve performance of MySqlHelper.EscapeString() (Bug#48243)
+- Improve performance of write operations (e.g insert) if compression is enabled
+  (Bug #48243)
+- Improve performance of MySqlHelper.EscapeString()
 - Fix membership provider creation failure, when default database character set is different from latin1 (Bug #53174)
 - Fix "Connection must be valid and open" exception When UpdateBatchSize > 1 
   and MySqlDataAdapter is not using an open connection (Bug #38411)
