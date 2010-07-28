@@ -209,35 +209,40 @@ namespace MySql.Data.MySqlClient
 
             // now we set our compressed and uncompressed lengths
             // based on if our compression is going to help or not
+            MemoryStream memStream;
+
             if (compressedBuffer == null)
             {
                 compressedLength = cache.Length;
                 uncompressedLength = 0;
+                memStream = cache;
             }
             else
             {
                 compressedLength = compressedBuffer.Length;
                 uncompressedLength = cache.Length;
+                memStream = compressedBuffer;
             }
 
-            baseStream.WriteByte((byte) (compressedLength & 0xff));
-            baseStream.WriteByte((byte) ((compressedLength >> 8) & 0xff));
-            baseStream.WriteByte((byte) ((compressedLength >> 16) & 0Xff));
-            baseStream.WriteByte(seq);
-            baseStream.WriteByte((byte) (uncompressedLength & 0xff));
-            baseStream.WriteByte((byte) ((uncompressedLength >> 8) & 0xff));
-            baseStream.WriteByte((byte) ((uncompressedLength >> 16) & 0Xff));
+            // Make space for length prefix (7 bytes) at the start of output
+            long dataLength = memStream.Length;
+            int bytesToWrite = (int)dataLength + 7;
+            memStream.SetLength(bytesToWrite);
 
-            if (compressedBuffer == null)
-                baseStream.Write(cacheBuffer, 0, (int) cache.Length);
-            else
-            {
-                byte[] compressedBytes = compressedBuffer.GetBuffer();
-                baseStream.Write(compressedBytes, 0, (int) compressedBuffer.Length);
-            }
+            byte[] buffer = memStream.GetBuffer();
+            Array.Copy(buffer, 0, buffer, 7, dataLength);
 
+            // Write length prefix
+            buffer[0] = (byte) (compressedLength & 0xff);
+            buffer[1] = (byte) ((compressedLength >> 8) & 0xff);
+            buffer[2] = (byte) ((compressedLength >> 16) & 0xff);
+            buffer[3] = seq;
+            buffer[4] = (byte) (uncompressedLength & 0xff);
+            buffer[5] = (byte) ((uncompressedLength >> 8) & 0xff);
+            buffer[6] = (byte) ((uncompressedLength >> 16) & 0xff);
+
+            baseStream.Write(buffer, 0, bytesToWrite);
             baseStream.Flush();
-
             cache.SetLength(0);
         }
 
