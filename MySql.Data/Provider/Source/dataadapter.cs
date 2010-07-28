@@ -169,9 +169,21 @@ namespace MySql.Data.MySqlClient
 
             try
             {
+                Dictionary<DataTable, bool> modifiedTables = new Dictionary<DataTable, bool>();
+
+                // Scan rows, lookiing for modified tables, we'll use them later 
+                // for AcceptChanges().
+                //
+                // Also open connections for insert/update/update commands, if 
+                // connections are closed.
                 foreach(DataRow row in dataRows)
                 {
                     OpenConnectionIfClosed(row.RowState, connectionsOpened);
+                    if (row.RowState != DataRowState.Unchanged &&
+                        row.RowState != DataRowState.Detached)
+                    {
+                        modifiedTables[row.Table] = true;
+                    }
                 }
 
                 int ret = base.Update(dataRows, tableMapping);
@@ -180,10 +192,10 @@ namespace MySql.Data.MySqlClient
                 // (even if  documentation states otherwise).
                 // Do AcceptsChanges() here, for SQL Server compatible behavior
                 // (see also Bug#5463)
-                foreach (DataRow row in dataRows)
-                {
-                    row.Table.AcceptChanges();
-                }
+                
+                foreach (DataTable table in modifiedTables.Keys)
+                    table.AcceptChanges();
+
                 return ret;
 
             }
@@ -194,6 +206,7 @@ namespace MySql.Data.MySqlClient
             }
 
         }
+
 
         #region Batching Support
 
