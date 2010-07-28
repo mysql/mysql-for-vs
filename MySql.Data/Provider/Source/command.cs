@@ -322,9 +322,22 @@ namespace MySql.Data.MySqlClient
             if (statement != null)
                 statement.Close(reader);
             ResetSqlSelectLimit();
-            if (statement != null)
+            if (statement != null && connection != null && connection.driver != null)
                 connection.driver.CloseQuery(connection, statement.StatementId);
             ClearCommandTimer();
+        }
+
+        /// <summary>
+        /// Reset reader to null, to avoid "There is already an open data reader"
+        /// on the next ExecuteReader(). Used in error handling scenarios.
+        /// </summary>
+        private void ResetReader()
+        {
+            if (connection != null && connection.Reader != null)
+            {
+                connection.Reader.Close();
+                connection.Reader = null;
+            }
         }
 
         /// <summary>
@@ -452,12 +465,13 @@ namespace MySql.Data.MySqlClient
             }
             catch (MySqlException ex)
             {
-                connection.Reader = null;
+
                 if (ex.InnerException is TimeoutException)
-                    throw ex; // already handled
+                    throw; // already handled
 
                 try
                 {
+                    ResetReader();
                     ResetSqlSelectLimit();
                 }
                 catch (Exception ex2)
@@ -488,12 +502,11 @@ namespace MySql.Data.MySqlClient
                         // So we clear timeout here.
                         ClearCommandTimer();
                     }
-                    else if (!success)
+                    if (!success)
                     {
-                        // ExecuteReader failed. Reset Reader to null to 
+                        // ExecuteReader failed.Close Reader and set to null to 
                         // prevent subsequent errors with DataReaderOpen
-                        connection.Reader.Close();
-                        connection.Reader = null;
+                        ResetReader();
                     }
                 }
             }
