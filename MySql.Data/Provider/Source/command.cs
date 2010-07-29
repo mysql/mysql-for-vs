@@ -304,6 +304,8 @@ namespace MySql.Data.MySqlClient
 		{
             using (MySqlDataReader reader = ExecuteReader())
             {
+                if (reader == null)
+                    return 0;
                 reader.Close();
                 return reader.RecordsAffected;
             }
