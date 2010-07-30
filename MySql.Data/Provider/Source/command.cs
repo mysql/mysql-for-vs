@@ -300,8 +300,6 @@ namespace MySql.Data.MySqlClient
 		{
             using (MySqlDataReader reader = ExecuteReader())
             {
-                if (reader == null)
-                    return 0;
                 reader.Close();
                 return reader.RecordsAffected;
             }
@@ -471,10 +469,6 @@ namespace MySql.Data.MySqlClient
                     throw new MySqlException(ex.Message, true, ex);
                 }
 
-                // if we caught an exception because of a cancel, then just return null
-                if (ex.IsQueryAborted)
-                    return null;
-
                 if (ex.IsFatal)
                     Connection.Close();
                 if (ex.Number == 0)
@@ -514,8 +508,6 @@ namespace MySql.Data.MySqlClient
 
             using (MySqlDataReader reader = ExecuteReader())
             {
-                if (reader == null) return null;
-
                 if (reader.Read())
                     val = reader.GetValue(0);
             }

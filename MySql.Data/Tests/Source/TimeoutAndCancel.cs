@@ -185,8 +185,8 @@ namespace MySql.Data.MySqlClient.Tests
             long res = (long)cmd2.ExecuteScalar();
             Assert.AreEqual(10, res);
         }
-        
-        //[Test]
+
+        [Test]
         public void CancelSelect()
         {
             if (Version < new Version(5, 0)) return;
@@ -204,9 +204,25 @@ namespace MySql.Data.MySqlClient.Tests
 
                 cmd.Cancel();
 
-                while (reader.Read())
+                while (true)
                 {
-                    rows++;
+
+                    try
+                    {
+                        if (!reader.Read())
+                            break;
+                        rows++;
+                    }
+                    catch (MySqlException ex)
+                    {
+                        Assert.IsTrue(ex.Number == (int)MySqlErrorCode.QueryInterrupted);
+                        if (rows < 10000)
+                        {
+                            bool readOK = reader.Read();
+                            Assert.IsFalse(readOK);
+                        }
+                    }
+
                 }
             }
             Assert.IsTrue(rows < 10000);

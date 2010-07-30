@@ -944,10 +944,9 @@ namespace MySql.Data.MySqlClient
                 if (ex.IsFatal)
                     connection.Abort();
 
-                // if we get a query interrupted then our resultset is done
                 if (ex.IsQueryAborted)
                 {
-                    return false;
+                    throw;
                 }
 
                 throw new MySqlException(Resources.FatalErrorDuringRead, ex);
