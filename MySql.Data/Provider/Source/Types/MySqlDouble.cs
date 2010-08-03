@@ -101,8 +101,23 @@ namespace MySql.Data.Types
                 packet.Read(b, 0, 8);
 				return new MySqlDouble(BitConverter.ToDouble(b, 0));
 			}
-            return new MySqlDouble(Double.Parse(packet.ReadString(length),
-					 CultureInfo.InvariantCulture));
+            string s = packet.ReadString();
+            double d;
+            try
+            {
+                d =  Double.Parse(s, CultureInfo.InvariantCulture);
+            }
+            catch (OverflowException)
+            {
+                // MySQL server < 5.5 can return values not compatible with
+                // Double.Parse(), i.e out of range for double.
+                
+                if (s.StartsWith("-"))
+                    d = double.MinValue;
+                else
+                    d = double.MaxValue;
+            }
+            return new MySqlDouble(d);
 		}
 
 		void IMySqlValue.SkipValue(MySqlPacket packet)
