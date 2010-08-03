@@ -520,8 +520,8 @@ namespace MySql.Web.SessionState
 
                     // Retrieve the current session item information.
                     cmd = new MySqlCommand(
-                      "SELECT (NOW() > Expires) as Expired, SessionItems, LockId,  Flags, Timeout, " +
-                      "  TIMESTAMPDIFF(SECOND, LockDate, NOW()) as lockAge " +
+                      "SELECT NOW(), Expires , SessionItems, LockId,  Flags, Timeout, " +
+                      "  LockDate " +
                       "  FROM my_aspnet_Sessions" +
                       "  WHERE SessionId = @SessionId AND ApplicationId = @ApplicationId", conn);
 
@@ -533,8 +533,9 @@ namespace MySql.Web.SessionState
                     {
                         if (reader.Read())
                         {
-                            bool expired = reader.GetBoolean(0);
-                            if (expired)
+                            DateTime now = reader.GetDateTime(0);
+                            DateTime expires = reader.GetDateTime(1);
+                            if (now.CompareTo(expires) > 0)
                             {
                                 //The record was expired. Mark it as not locked.
                                 locked = false;
@@ -546,17 +547,18 @@ namespace MySql.Web.SessionState
                                 foundRecord = true;
                             }
 
-                            object items = reader.GetValue(1);
+                            object items = reader.GetValue(2);
                             serializedItems = (items is DBNull) ? null : (byte[])items;
-                            lockId = reader.GetValue(2);
+                            lockId = reader.GetValue(3);
                             if (lockId is DBNull)
                             {
                                 lockId = (int)0;
                             }
 
-                            actionFlags = (SessionStateActions)(reader.GetInt32(3));
-                            timeout = reader.GetInt32(4);
-                            lockAge = new TimeSpan(0, 0, 0, reader.GetInt32(5));
+                            actionFlags = (SessionStateActions)(reader.GetInt32(4));
+                            timeout = reader.GetInt32(5);
+                            DateTime lockDate = reader.GetDateTime(6);
+                            lockAge = now.Subtract(lockDate);
                         }
                     }
 
