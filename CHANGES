@@ -1,3 +1,4 @@
+- Fix calculation of lockAge in SessionProvider (Bug #55701)
 - Handle cases where server returns unparsable (out-of-range) double values
   (Bug#55644)
 - Fix DataAdapter.Update() slowdown due to many superfluous DataTable.AcceptChanges() calls (Bug #55609)
@@ -5,7 +6,6 @@
 - Improve performance of write operaitons (e.g insert) if compression is enabled (Bug #48243)
 
 Version 6.3.3 (beta 2)
-- fix "There is already an open DataReader..." after exceptions in DataReader.Close()
 - fix "There is already an open DataReader..." after exceptions in DataReader.Close()
  (bug#55558)
 - Improve performance of MySqlHelper.EscapeString()
