@@ -1058,5 +1058,33 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.AreEqual(36, columnDefinition[SchemaTableColumn.NumericPrecision]);
             }
         }
+
+        /// <summary>
+        /// Bug #55644 Value was either too large or too small for a Double 
+        /// </summary>
+        [Test]
+        public void DoubleMinValue()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test(dbl double)");
+            MySqlCommand cmd = new MySqlCommand("insert into test values(?param1)");
+            cmd.Connection = conn;
+            cmd.Parameters.Add(new MySqlParameter("?param1", MySqlDbType.Double));
+            cmd.Parameters["?param1"].Value = Double.MinValue;
+            cmd.ExecuteNonQuery();
+            cmd.Parameters["?param1"].Value = Double.MaxValue;
+            cmd.ExecuteNonQuery();
+
+            cmd = new MySqlCommand("SELECT * FROM test", conn);
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                reader.Read();
+                double d = reader.GetDouble(0);
+                Assert.AreEqual(d, double.MinValue);
+                reader.Read();
+                d = reader.GetDouble(0);
+                Assert.AreEqual(d, double.MaxValue);
+            }
+        }
     }
 }

@@ -1,6 +1,8 @@
 - fix "There is already an open DataReader..." after exceptions in DataReader.Close()
  (bug#55558)
 - Improve performance of MySqlHelper.EscapeString()
+- Handle cases where server returns unparsable (out-of-range) double values
+  (Bug#55644)
 - Improve performance of write operations (e.g insert) if compression is enabled
   (Bug #48243)
 - Improve performance of MySqlHelper.EscapeString()
