@@ -1147,14 +1147,16 @@ namespace MySql.Web.Security
 
         private void WriteToEventLog(Exception e, string action)
         {
-            EventLog log = new EventLog();
-            log.Source = eventSource;
-            log.Log = eventLog;
-            string message = "An exception occurred communicating with the data source." +
-                             Environment.NewLine + Environment.NewLine;
-            message += "Action: " + action + Environment.NewLine + Environment.NewLine;
-            message += "Exception: " + e;
-            log.WriteEntry(message);
+            using (EventLog log = new EventLog())
+            {
+                log.Source = eventSource;
+                log.Log = eventLog;
+                string message = "An exception occurred communicating with the data source." +
+                                 Environment.NewLine + Environment.NewLine;
+                message += "Action: " + action + Environment.NewLine + Environment.NewLine;
+                message += "Exception: " + e;
+                log.WriteEntry(message);
+            }
         }
 
         private MembershipUser GetUserFromReader(MySqlDataReader reader)
