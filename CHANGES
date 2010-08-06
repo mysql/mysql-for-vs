@@ -1,3 +1,5 @@
+- Dispose EventLog after use in MySql.Web.dll provider classes, to avoid wasting resources
+  (Bug #55793)
 - Fix calculation of lockAge in SessionProvider (Bug #55701)
 - Handle cases where server returns unparsable (out-of-range) double values
   (Bug#55644)
