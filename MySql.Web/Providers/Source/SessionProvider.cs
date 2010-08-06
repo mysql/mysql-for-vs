@@ -94,14 +94,16 @@ namespace MySql.Web.SessionState
         {
             if (WriteExceptionsToEventLog)
             {
-                EventLog log = new EventLog();
-                log.Source = eventSource;
-                log.Log = eventLog;
+                using (EventLog log = new EventLog())
+                {
+                    log.Source = eventSource;
+                    log.Log = eventLog;
 
-                string message = "An exception occurred communicating with the data source.\n\n";
-                message += "Action: " + action;
-                message += "Exception: " + e.ToString();
-                log.WriteEntry(message);
+                    string message = "An exception occurred communicating with the data source.\n\n";
+                    message += "Action: " + action;
+                    message += "Exception: " + e.ToString();
+                    log.WriteEntry(message);
+                }
             }
             throw new ProviderException(exceptionMessage, e);
         }
@@ -734,10 +736,12 @@ namespace MySql.Web.SessionState
                                  "to improve performance,e.g with 'alter table my_aspnet_Sessions engine innodb'\n";
                             try
                             {
-                                EventLog log = new EventLog();
-                                log.Source = eventSource;
-                                log.Log = eventLog;
-                                log.WriteEntry(message);
+                                using (EventLog log = new EventLog())
+                                {
+                                    log.Source = eventSource;
+                                    log.Log = eventLog;
+                                    log.WriteEntry(message);
+                                }
                             }
                             catch (SecurityException)
                             {
