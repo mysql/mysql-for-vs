@@ -101,7 +101,7 @@ namespace MySql.Data.Types
                 packet.Read(b, 0, 8);
 				return new MySqlDouble(BitConverter.ToDouble(b, 0));
 			}
-            string s = packet.ReadString();
+            string s = packet.ReadString(length);
             double d;
             try
             {
