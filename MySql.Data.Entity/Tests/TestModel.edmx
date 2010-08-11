@@ -277,7 +277,7 @@
           <Property Name="FirstName" Type="String" Nullable="false" MaxLength="10" />
           <Property Name="BirthTime" Type="Time" Nullable="true"/>
           <Property Name="BirthWeight" Type="Double" Nullable="true"/>
-          <Property Name="Modified" Type="DateTimeOffset" Nullable ="false"/>
+          <Property Name="Modified" Type="DateTime" Nullable ="false"/>
         </EntityType>
 
         <EntityType Name="Company">
