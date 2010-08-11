@@ -39,9 +39,9 @@ PROCESS
         <Scale Minimum="0" Maximum="30" DefaultValue="0" Constant="false" />
       </FacetDescriptions>
     </Type>
-    <Type Name="timestamp" PrimitiveTypeKind="DateTimeOffset">
+    <Type Name="timestamp" PrimitiveTypeKind="DateTime">
       <FacetDescriptions>
-        <Precision Minimum="0" Maximum="9" DefaultValue="6" Constant="false" />
+        <Precision Minimum="0" Maximum="9" DefaultValue="3" Constant="false" />
       </FacetDescriptions>
     </Type>
     <Type Name="date" PrimitiveTypeKind="DateTime">
