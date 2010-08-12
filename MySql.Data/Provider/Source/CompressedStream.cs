@@ -230,7 +230,7 @@ namespace MySql.Data.MySqlClient
             memStream.SetLength(bytesToWrite);
 
             byte[] buffer = memStream.GetBuffer();
-            Array.Copy(buffer, 0, buffer, 7, dataLength);
+            Array.Copy(buffer, 0, buffer, 7, (int)dataLength);
 
             // Write length prefix
             buffer[0] = (byte) (compressedLength & 0xff);
