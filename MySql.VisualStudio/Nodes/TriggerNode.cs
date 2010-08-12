@@ -39,6 +39,7 @@ namespace MySql.Data.VisualStudio
 	{
 		private string sql_mode;
         private TextBufferEditor editor;
+        string table;
 
 		public TriggerNode(DataViewHierarchyAccessor hierarchyAccessor, int id) : 
 			base(hierarchyAccessor, id)
@@ -128,6 +129,7 @@ namespace MySql.Data.VisualStudio
                     MessageBox.Show("Unable to load object with error: " + ex.Message);
                 }
             }
+            table = GetTargetedTable(editor.Text);
 		}
 
         /// <summary>
@@ -142,7 +144,7 @@ namespace MySql.Data.VisualStudio
                 string sql = editor.Text.Trim();
                 if (!IsNew)
                 {
-                    MakeSureWeAreNotChangingTables();
+                    MakeSureWeAreNotChangingTables(sql);
 
                     // first we need to check the syntax of our changes.  THis will throw
                     // an exception if the syntax is bad
@@ -167,19 +169,18 @@ namespace MySql.Data.VisualStudio
         ///  this because we don't want the user using an 'ALTER' script to move a trigger to a 
         ///  different table
         /// </summary>
-        private void MakeSureWeAreNotChangingTables()
+        private void MakeSureWeAreNotChangingTables(string sql)
         {
-            string tableName = GetTargetedTable();
-            object parentItemId = HierarchyAccessor.GetProperty(ItemId, (int)__VSHPROPID.VSHPROPID_Parent);
-            string parentName = HierarchyAccessor.GetNodeName((int)parentItemId);
-            if (tableName.ToLowerInvariant() != parentName.ToLowerInvariant())
+            string newTable = GetTargetedTable(sql);
+            if (table != null && newTable != null && 
+                newTable.ToLowerInvariant() != table.ToLowerInvariant())
                 throw new InvalidOperationException(
-                    String.Format(Resources.AlterTriggerOnWrongTable, Name, tableName));
+                    String.Format(Resources.AlterTriggerOnWrongTable, Name, newTable));
         }
 
-        private string GetTargetedTable()
+        private string GetTargetedTable(string sql)
         {
-            MySqlTokenizer tokenizer = new MySqlTokenizer(editor.Text.Trim());
+            MySqlTokenizer tokenizer = new MySqlTokenizer(sql);
             tokenizer.ReturnComments = false;
             tokenizer.AnsiQuotes = sql_mode.ToLowerInvariant().Contains("ansi_quotes");
             tokenizer.BackslashEscapes = !sql_mode.ToLowerInvariant().Contains("no_backslash_escapes");
