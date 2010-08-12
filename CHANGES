@@ -1,3 +1,4 @@
+- Fix authorization popup after modifying stored procedure in VS (Bug #44715)
 - Dispose EventLog after use in MySql.Web.dll provider classes, to avoid wasting resources
   (Bug #55793)
 - Handle cases where server returns unparsable (out-of-range) double values
