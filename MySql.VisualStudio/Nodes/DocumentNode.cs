@@ -101,6 +101,7 @@ namespace MySql.Data.VisualStudio
             return VSConstants.S_OK;
         }
 
+
         public int SaveDocData(VSSAVEFLAGS dwSave, out string pbstrMkDocumentNew, out int pfSaveCanceled)
         {
             string oldMoniker = Moniker;
@@ -131,9 +132,10 @@ namespace MySql.Data.VisualStudio
                 Name = GetCurrentName();
                 pbstrMkDocumentNew = String.Format("/Connection/{0}s/{1}", NodeId, Name);
                 VsShellUtilities.RenameDocument(MySqlDataProviderPackage.Instance, oldMoniker, Moniker);
-
+                 
                 // update server explorer
-                RefreshServerExplorer();
+                Refresh();
+
                 Load();
             }
             return VSConstants.S_OK;
