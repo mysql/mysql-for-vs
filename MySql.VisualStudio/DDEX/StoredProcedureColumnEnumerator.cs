@@ -58,15 +58,19 @@ namespace MySql.Data.VisualStudio
                 using (IDataReader reader = cmd.ExecuteReader(CommandBehavior.SchemaOnly))
                 {
                     DataTable dt = reader.GetSchemaTable();
-                    dt.Columns.Add(new DataColumn("RoutineName", typeof(string)));
-                    foreach (DataRow row in dt.Rows)
+                    if (dt == null)
+                        dt = new DataTable();
+                    else
                     {
-                        row["RoutineName"] = restrictions[2];
-                        string basedb = row["BaseSchemaName"] as string;
-                        if (String.IsNullOrEmpty(basedb) || row["BaseSchemaName"] == DBNull.Value)
-                            row["BaseSchemaName"] = cmd.Connection.Database;
+                        dt.Columns.Add(new DataColumn("RoutineName", typeof(string)));
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            row["RoutineName"] = restrictions[2];
+                            string basedb = row["BaseSchemaName"] as string;
+                            if (String.IsNullOrEmpty(basedb) || row["BaseSchemaName"] == DBNull.Value)
+                                row["BaseSchemaName"] = cmd.Connection.Database;
+                        }
                     }
-
                     return new AdoDotNetDataTableReader(dt);
                 }
             }

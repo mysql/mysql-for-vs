@@ -33,6 +33,8 @@
 - fixed recognition of char(36) columns to be guids when used in views with entity models (bug #52085)
 - added code to default 'respect binary flags' in the visual studio wizard so that older
   versions of MySQL will work when creating/editing stored procedures (bug #55170)
+- fixed stored procedure enumeration code that would barf if a proc was used in a dataset
+  that did not actually return any resultsets (bug #50671)
 
 Version 6.1.4
 - SessionProvider : Avoid SQLNullValueException if lockId returned by select is 
