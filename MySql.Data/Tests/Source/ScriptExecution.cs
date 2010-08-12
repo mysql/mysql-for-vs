@@ -198,7 +198,7 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void DelimiterInScriptV2()
         {
-            var sql = new StringBuilder();
+            StringBuilder sql = new StringBuilder();
 
             sql.AppendLine("DELIMITER MySuperDelimiter");
             sql.AppendLine("CREATE PROCEDURE TestProcedure1()");
@@ -212,7 +212,7 @@ namespace MySql.Data.MySqlClient.Tests
 
             sql.AppendLine("DELIMITER ;");
 
-            var script = new MySqlScript(conn, sql.ToString());
+            MySqlScript script = new MySqlScript(conn, sql.ToString());
             script.Execute();
         }
 
