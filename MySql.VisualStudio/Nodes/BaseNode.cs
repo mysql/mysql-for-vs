@@ -396,51 +396,18 @@ namespace MySql.Data.VisualStudio
             manager.SelectConnection(connection);
         }
 
-        public void RefreshServerExplorer()
-        {
-            // Select connection node to have all content refreshed. 
-            SelectConnectionNode();
-
-            // Predefined IDs (constans are available only in H files)             
-            Guid seToolWindow = new Guid("{74946827-37A0-11D2-A273-00C04F8EF4FF}");
-            Guid cmdGroup = new Guid("{74D21311-2AEE-11d1-8BFB-00A0C90F26F7}");
-
-            // Get server explorer window
-            IVsUIShell uiShell = Package.GetGlobalService(typeof(IVsUIShell)) as IVsUIShell;
-
-            IVsWindowFrame frame;
-            uiShell.FindToolWindow(0, ref seToolWindow, out frame);
-            if (frame == null)
-                return;
-
-            // Determine if server explorer window is currently visible
-            bool isVisible = frame.IsVisible() == 0;
-
-            // Display server explorer window, if not visible
-            if (!isVisible)
-                frame.ShowNoActivate();
-
-            // Get OLE command target
-            IOleCommandTarget target = frame as IOleCommandTarget;
-            if (target == null)
-                return;
-
-            // Executes command for selected node (connection node should be selected - only 
-            // in this case all content will be refreshed)
-            int result = target.Exec(
-                ref cmdGroup,
-                0x03004,
-                0,
-                IntPtr.Zero,
-                IntPtr.Zero);
-
-            // Hide server explorer if should be hidden
-            if (!isVisible)
-                frame.Hide();
-
-            Debug.Assert(ErrorHandler.Succeeded(result), "Error while executing refresh command for server explorer!");
-        }
-
         #endregion
+
+        /// <summary>
+        /// Refresh database node in server explorer
+        /// </summary>
+        public void Refresh()
+        {
+            SelectConnectionNode();
+            IVsUIHierarchy hier = HierarchyAccessor.Hierarchy as IVsUIHierarchy;
+            Guid g = VSConstants.GUID_VSStandardCommandSet97;
+            hier.ExecCommand(VSConstants.VSITEMID_ROOT, ref g, (uint)VSConstants.VSStd97CmdID.Refresh, 
+                (uint)OleCommandExecutionOption.DoDefault, IntPtr.Zero, IntPtr.Zero);
+        }
 	}
 }
