@@ -16,8 +16,7 @@ Session State Provider -- We are now including a session state provider that all
 you to store your websites state in a MySql server.  
 
 Support for native output parameters -- With this release we now support native output
-parameters when connected to a server that supports them.  Currently we know that includes
-6.0.8 and later servers.  It also will include 5.4 servers.
+parameters when connected to a server that supports them.  
 
 Changed GUID type -- We have changed our backend representation of a guid type to be
 CHAR(36).  We are doing this because we feel users will want to use the server UUID() function
@@ -32,4 +31,3 @@ and manually add the proper SQL onto the end of your command text.  The command 
 was not designed to handle this.  In previous versions we have tried to support this but
 it is causing more headaches than it is solving.
 
-Please let us know what else we broke and how we can make it better!
