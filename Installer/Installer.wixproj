@@ -112,7 +112,6 @@
     <Compile Include="ui.wxs" />
     <Compile Include="visualstudio.wxs" />
     <Compile Include="webproviders.wxs" />
-    <Compile Include="registration.wxs" />
   </ItemGroup>
   <Target Name="RetrieveIdentities">
     <GetVersion Assembly="..\MySql.Data\Provider\bin\release\mysql.data.dll" Format="{0}.{1}.{2}">
@@ -141,20 +140,12 @@
     </WixExtension>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="registration\loginhdr.jpg" />
-    <Content Include="registration\mysql_ca.dll" />
-    <Content Include="registration\register.htm" />
-    <Content Include="registration\svctag.xml" />
-    <Content Include="registration\webpage.ico" />
     <Content Include="VS2005_Data.wxi" />
     <Content Include="VS2005_Registry.wxi" />
     <Content Include="VS2008_Data.wxi" />
     <Content Include="VS2008_Registry.wxi" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="registration\" />
-  </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.5\Wix.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.0\Wix.targets" />
   <PropertyGroup>
     <BuildDependsOn>RetrieveIdentities;$(BuildDependsOn)</BuildDependsOn>
   </PropertyGroup>
