@@ -30,9 +30,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("MySql.Data.Entity.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("MySQL")]
+[assembly: AssemblyCompany("Oracle")]
 [assembly: AssemblyProduct("MySql.Data.Entity.Tests")]
-[assembly: AssemblyCopyright("Copyright © MySQL 2008-2009")]
+[assembly: AssemblyCopyright("Copyright © 2008, 2010, Oracle and/or its affiliates. All rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
