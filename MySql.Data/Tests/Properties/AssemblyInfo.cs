@@ -31,9 +31,9 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle("MySqlClientTests")]
 [assembly: AssemblyDescription("Test fixtures for MySQL Connector/Net")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("MySQL AB")]
+[assembly: AssemblyCompany("Oracle")]
 [assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("Copyright 2004-2007, MySQL AB")]
+[assembly: AssemblyCopyright("Copyright 2004-2010, Oracle")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
 
