@@ -182,7 +182,7 @@ namespace MySql.Data.MySqlClient.Tests
             using (MySqlConnection c1 = new MySqlConnection(connStr))
             {
                 c1.Open();
-                Assert.AreNotEqual(c1.ServerThread, threadId);
+                Assert.IsTrue(c1.ServerThread != threadId);
                 KillConnection(c1);
             }
         }

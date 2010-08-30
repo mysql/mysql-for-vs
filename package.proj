@@ -44,7 +44,7 @@
           **/installer/**;**/documentation/**;**/PackageLoadKey.txt;**/*.cache;
           **/*.proj;**/COPYING;**/*.bak;**/*.user;**/*.SourceAnalysis;
 	  **/MySql.Data.xml;**/*.InstallLog;**/*.bat;**/*.reg;**/thumbs.db;**/.bzr/**;
-	  **/.bzr-mysql/**;**/*.bzrignore;**/*.~??"/>
+	  **/.bzr-mysql/**;**/UpgradeLog*.*;**/*.bzrignore;**/*.~??"/>
     <SourceFiles Include="COPYING" Condition=" '$(Configuration)' == 'GPL' "/>
   </ItemGroup>
 
@@ -52,6 +52,9 @@
     <RemoveDir Directories="tmp" ContinueOnError="true"/>
     <MakeDir Directories ="tmp"/>
     <Copy SourceFiles ="@(SourceFiles)" DestinationFolder="tmp/%(RecursiveDir)"/>
+    <Delete Files="tmp/Readme-commercial" Condition=" '$(Configuration)' == 'GPL' "/>
+    <Delete Files="tmp/Readme" Condition=" '$(Configuration)' == 'Commercial' "/>
+    <Move SourceFiles="tmp/README-Commercial" DestinationFiles="tmp/README" Condition=" '$(Configuration)' == 'Commercial' "/>
 
     <ItemGroup>
       <TmpFiles Include="tmp/**/*.cs"/>
@@ -99,7 +102,7 @@
     <Copy SourceFiles ="@(BinaryFiles)" DestinationFolder="tmp"/>
     <Copy SourceFiles ="@(V2Assemblies)" DestinationFolder="tmp\v2"/>
     <Copy SourceFiles ="@(V4Assemblies)" DestinationFolder="tmp\v4"/>
-    <Move SourceFiles="tmp/README-Commercial" DestinationFiles="tmp/README"/>
+    <Move SourceFiles="tmp/README-Commercial" DestinationFiles="tmp/README" Condition=" '$(Configuration)' == 'Commercial' "/>
     <ItemGroup>
       <ZipFiles Include="tmp/**"/>
     </ItemGroup>

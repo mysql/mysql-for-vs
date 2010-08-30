@@ -71,8 +71,6 @@
     <UI>
       <Dialog Id="MySQL_ExitDialog" Width="370" Height="270" Title="!(loc.ExitDialog_Title)">
         <Control Id="Finish" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Cancel="yes" Text="$(loc.WixUIFinish)">
-          <!--<Publish Event="DoAction" Value="PostRegistration.SetProperty">RegisterServer and not Installed and ACTION="INSTALL"</Publish>
-          <Publish Event="DoAction" Value="PostRegistration">RegisterServer and not Installed and ACTION="INSTALL"</Publish>-->
           <Publish Event="EndDialog" Value="Return">1</Publish>
         </Control>
         <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Disabled="yes" Text="!(loc.WixUICancel)" />
