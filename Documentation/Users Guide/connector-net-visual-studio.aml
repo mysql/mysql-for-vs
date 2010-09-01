@@ -1146,12 +1146,25 @@
       the Database Script Generation category of the model's properties,
       the property  can be found. The
       value  can then be selected
-      from the drop-down listbox. Right-clicking the model design area
-      will display a context-sensitive menu. Selecting
-       from the menu
-      will display the .
-      The wizard can then be used to generate MySQL DDL code.
+      from the drop-down listbox.
     </para>
+        <mediaLink>
+          <para />
+          <caption>DDL T4 Template Macro - Model Properties</caption>
+          <image xlink:href="connector-net-ddl-t4-ef-properties" />
+        </mediaLink>
+        <para />
+        <para>
+      Right-clicking the model design area will display a
+      context-sensitive menu. Selecting  from the menu will display the . The wizard can then be used to
+      generate MySQL DDL code.
+    </para>
+        <mediaLink>
+          <para />
+          <caption>DDL T4 Template Macro - Generate Database Wizard</caption>
+          <image xlink:href="connector-net-ddl-t4-ef-generate" />
+        </mediaLink>
+        <para />
       </content>
     </section>
   </developerConceptualDocument>

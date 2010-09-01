@@ -31,9 +31,8 @@
           </listItem>
           <listItem>
             <para>
-          Paid support is available from Sun Microsystems, Inc.
-          Additional information is available at
-          <externalLink><linkText>http://dev.mysql.com/support/</linkText><linkUri>http://dev.mysql.com/support/</linkUri></externalLink>.
+          Paid support is available from Oracle. Additional information
+          is available at <externalLink><linkText>http://dev.mysql.com/support/</linkText><linkUri>http://dev.mysql.com/support/</linkUri></externalLink>.
         </para>
           </listItem>
         </list>
