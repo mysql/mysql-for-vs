@@ -54,7 +54,7 @@ namespace MySql.Data.MySqlClient.Tests
             SqlTokenizer tokenizer = new SqlTokenizer(sql);
             tokenizer.ReturnComments = true;
             Assert.AreEqual("SELECT", tokenizer.NextToken());
-            Assert.AreEqual(comment.Trim(), tokenizer.NextToken());
+            Assert.AreEqual(comment, tokenizer.NextToken());
             Assert.AreEqual("*", tokenizer.NextToken());
             Assert.AreEqual("FROM", tokenizer.NextToken());
             Assert.AreEqual("Test", tokenizer.NextToken());
@@ -77,7 +77,7 @@ namespace MySql.Data.MySqlClient.Tests
             SqlTokenizer tokenizer = new SqlTokenizer(sql);
             tokenizer.ReturnComments = true;
             Assert.AreEqual("SELECT", tokenizer.NextToken());
-            Assert.AreEqual(comment.Trim(), tokenizer.NextToken());
+            Assert.AreEqual(comment, tokenizer.NextToken());
             Assert.AreEqual("*", tokenizer.NextToken());
             Assert.AreEqual("FROM", tokenizer.NextToken());
             Assert.AreEqual("Test", tokenizer.NextToken());

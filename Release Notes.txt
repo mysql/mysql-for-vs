@@ -14,9 +14,11 @@ What's new in 6.3
 
 What we know is broken
 ----------------------
-- Documentation has not been integrated into VS2010 yet
+- Documentation has not been integrated into VS2010 yet.  We are having trouble with silent integration
+  of documentation files.  We will include this in a future release.
+
 - The Generated Database Wizard will save the file with the extension .sql.  You will need to
-  manually change the extension to .mysql to use the new editor.  We hope to resolve this for GA
+  manually change the extension to .mysql to use the new editor.
 
 
 

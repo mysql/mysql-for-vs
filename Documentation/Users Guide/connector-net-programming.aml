@@ -1792,7 +1792,7 @@ catch (MySql.Data.MySqlClient.MySqlException ex)
  </code>
         <para>
         It is important to order the
-        <literal>SELECT</literal> queries in alphabetical
+        <literal>SELECT</literal> queries in alphabetic
         order, as this is the order the report will expect its source
         tables to be in. One SetDataSource statement is needed for each
         table in the report.
