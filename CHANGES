@@ -1,3 +1,5 @@
+- Added MySqlHelper.ExecuteReader that takes an external connection and array of paramters (bug #56755)
+
 Version 6.1.5
 - Fix authorization popup after modifying stored procedure in VS (Bug #44715)
 - Dispose EventLog after use in MySql.Web.dll provider classes, to avoid wasting resources
