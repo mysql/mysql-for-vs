@@ -1,4 +1,5 @@
 - Fix installer bug related to .NET FW 4.0 (bug #56580)
+- Added MySqlHelper.ExecuteReader that takes an external connection and array of paramters (bug #56755)
 
 Version 6.3.4
 - Fix authorization popup after modifying stored procedure in VS (Bug #44715)
