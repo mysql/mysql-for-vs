@@ -118,8 +118,8 @@
     </Feature>
 
     <InstallExecuteSequence>
-      <Custom Action="SetFWVersion_v2" After="CostFinalize">NOT INSTALLED or NETFRAMEWORK20</Custom>
-      <Custom Action="SetFWVersion_v4" After="SetFWVersion_v2">NOT INSTALLED or NETFRAMEWORK40CLIENT or NETFRAMEWORK40FULL</Custom>
+      <Custom Action="SetFWVersion_v2" After="CostFinalize">NETFRAMEWORK20</Custom>
+      <Custom Action="SetFWVersion_v4" After="SetFWVersion_v2">NETFRAMEWORK40CLIENT or NETFRAMEWORK40FULL</Custom>
       <Custom Action='ManagedDataInstallSetup' After="InstallFiles">NOT Installed</Custom>
       <Custom Action='ManagedDataInstall' After="ManagedDataInstallSetup">NOT Installed</Custom>
       <Custom Action='ManagedDataUnInstallSetup' Before="RemoveFiles">Installed</Custom>
