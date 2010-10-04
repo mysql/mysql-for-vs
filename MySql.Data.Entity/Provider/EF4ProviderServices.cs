@@ -31,6 +31,7 @@ using System.Reflection;
 using System.Diagnostics;
 using MySql.Data.Entity.Properties;
 using System.Text;
+using System.Linq;
 
 namespace MySql.Data.MySqlClient
 {
@@ -38,118 +39,103 @@ namespace MySql.Data.MySqlClient
     {
         protected override void DbCreateDatabase(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
+            if (connection == null)
+                throw new ArgumentNullException("connection");
+            MySqlConnection conn = connection as MySqlConnection;
+            if (conn == null)
+                throw new ArgumentException(Resources.ConnectionMustBeOfTypeMySqlConnection, "connection");
+
             string query = DbCreateDatabaseScript(null, storeItemCollection);
+
             using (MySqlConnection c = new MySqlConnection())
             {
-                string connStr = connection.ConnectionString;
-                MySqlConnectionStringBuilder sb = new MySqlConnectionStringBuilder(connStr);
+                MySqlConnectionStringBuilder sb = new MySqlConnectionStringBuilder(conn.ConnectionString);
+                string dbName = sb.Database;
                 sb.Database = "mysql";
                 c.ConnectionString = sb.ConnectionString;
                 c.Open();
 
-                MySqlScript s = new MySqlScript(c, query);
+                string fullQuery = String.Format("CREATE DATABASE `{0}`; USE `{0}`; {1}", dbName, query);
+                MySqlScript s = new MySqlScript(c, fullQuery);
                 s.Execute();
             }
         }
 
         protected override bool DbDatabaseExists(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
-            bool shouldClose = false;
+            if (connection == null)
+                throw new ArgumentNullException("connection");
+            MySqlConnection conn = connection as MySqlConnection;
+            if (conn == null)
+                throw new ArgumentException(Resources.ConnectionMustBeOfTypeMySqlConnection, "connection");
 
-            foreach (object o in storeItemCollection)
+            MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder();
+            builder.ConnectionString = conn.ConnectionString;
+            string dbName = builder.Database;
+            builder.Database = "mysql";
+
+            using (MySqlConnection c = new MySqlConnection(builder.ConnectionString))
             {
-                if (o is EntityContainer)
-                {
-                    EntityContainer ec = o as EntityContainer;
-
-                    try
-                    {
-                        if (connection.State != ConnectionState.Open)
-                        {
-                            connection.Open();
-                            shouldClose = true;
-                        }
-                        connection.ChangeDatabase(ec.Name);
-                        return true;
-                    }
-                    catch (MySqlException)
-                    {
-                        return false;
-                    }
-                    finally
-                    {
-                        if (shouldClose)
-                            connection.Close();
-                    }
-                }
+                c.Open();
+                DataTable table = c.GetSchema("Databases", new string[] { dbName });
+                if (table != null && table.Rows.Count == 1) return true;
+                return false;
             }
-            return false;
         }
 
         protected override void DbDeleteDatabase(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
-            bool shouldClose = false;
+            if (connection == null)
+                throw new ArgumentNullException("connection");
+            MySqlConnection conn = connection as MySqlConnection;
+            if (conn == null)
+                throw new ArgumentException(Resources.ConnectionMustBeOfTypeMySqlConnection, "connection");
 
-            foreach (object o in storeItemCollection)
+            MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder();
+            builder.ConnectionString = conn.ConnectionString;
+            string dbName = builder.Database;
+            builder.Database = "mysql";
+
+            using (MySqlConnection c = new MySqlConnection(builder.ConnectionString))
             {
-                if (o is EntityContainer)
-                {
-                    EntityContainer ec = o as EntityContainer;
-                    DbCommand cmd = connection.CreateCommand();
-                    if (commandTimeout.HasValue)
-                        cmd.CommandTimeout = commandTimeout.Value;
-                    cmd.CommandText = String.Format("DROP DATABASE IF EXISTS `{0}`", ec.Name);
-                    if (connection.State != ConnectionState.Open)
-                    {
-                        connection.Open();
-                        shouldClose = true;
-                    }
-                    try
-                    {
-                        cmd.ExecuteNonQuery();
-                    }
-                    finally
-                    {
-                        if (shouldClose)
-                            connection.Close();
-                    }
-                }
+                c.Open();
+                MySqlCommand cmd = new MySqlCommand(String.Format("DROP DATABASE IF EXISTS `{0}`", dbName), c);
+                if (commandTimeout.HasValue)
+                    cmd.CommandTimeout = commandTimeout.Value;
+                cmd.ExecuteNonQuery();
             }
         }
 
-        protected override string DbCreateDatabaseScript(string providerManifestToken, StoreItemCollection storeItemCollection)
+        protected override string DbCreateDatabaseScript(string providerManifestToken, 
+            StoreItemCollection storeItemCollection)
         {
             StringBuilder sql = new StringBuilder();
 
             sql.AppendLine("-- MySql script");
             sql.AppendLine("-- Created on " + DateTime.Now);
-            foreach (object o in storeItemCollection)
+
+            foreach (EntityContainer container in storeItemCollection.GetItems<EntityContainer>())
             {
-                if (o is EntityContainer)
+                // now output the tables
+                foreach (EntitySet es in container.BaseEntitySets.OfType<EntitySet>())
                 {
-                    EntityContainer ec = (o as EntityContainer);
-                    sql.AppendLine(String.Format("DROP DATABASE IF EXISTS `{0}`;", ec.Name));
-                    sql.AppendLine(String.Format("CREATE DATABASE `{0}`;", ec.Name));
-                    sql.AppendLine(String.Format("USE `{0}`;", ec.Name));
-                    sql.AppendLine();
+                    sql.Append(GetTableCreateScript(es));
                 }
-                else if (o is EntityType)
+
+                // now output the foreign keys
+                foreach (AssociationSet a in container.BaseEntitySets.OfType<AssociationSet>())
                 {
-                    EntityType e = o as EntityType;
-                    sql.Append(GetTableCreateScript(e));
-                }
-                else if (o is AssociationType)
-                {
-                    AssociationType a = o as AssociationType;
-                    sql.Append(GetAssociationCreateScript(a));
+                    sql.Append(GetAssociationCreateScript(a.ElementType));
                 }
             }
 
             return sql.ToString();
         }
 
-        private string GetTableCreateScript(EntityType e)
+        private string GetTableCreateScript(EntitySet entitySet)
         {
+            EntityType e = entitySet.ElementType;
+
             StringBuilder sql = new StringBuilder("CREATE TABLE ");
             sql.AppendFormat("`{0}`(", e.Name);
             string delimiter = "";

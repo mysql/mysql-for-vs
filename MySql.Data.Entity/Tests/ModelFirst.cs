@@ -35,17 +35,12 @@ namespace MySql.Data.Entity.Tests
 	[TestFixture]
 	public class ModelFirst : BaseEdmTest
 	{
-        public ModelFirst()
-            : base()
-        {
-        }
-
         [Test]
         public void CreateDatabase()
         {
-            using (testEntities ctx = new testEntities())
+            using (Model1Container ctx = new Model1Container())
             {
-                ctx.DeleteDatabase();
+                Assert.IsFalse(ctx.DatabaseExists());
                 ctx.CreateDatabase();
                 Assert.IsTrue(ctx.DatabaseExists());
             }
@@ -63,26 +58,23 @@ namespace MySql.Data.Entity.Tests
         [Test]
         public void DeleteDatabase()
         {
-            using (testEntities ctx = new testEntities())
+            using (Model1Container ctx = new Model1Container())
             {
+                Assert.IsFalse(ctx.DatabaseExists());
+                ctx.CreateDatabase();
+                Assert.IsTrue(ctx.DatabaseExists());
                 ctx.DeleteDatabase();
-            }
-
-            using (MySqlConnection c = new MySqlConnection("database=mysql;uid=root;pooling=false"))
-            {
-                c.Open();
-                MySqlDataAdapter da =new MySqlDataAdapter("SHOW DATABASES LIKE 'test'", c);
-                DataTable dt =new DataTable();
-                da.Fill(dt);
-                Assert.AreEqual(0, dt.Rows.Count);
+                Assert.IsFalse(ctx.DatabaseExists());
             }
         }
 
         [Test]
         public void DatabaseExists()
         {
-            using (testEntities ctx = new testEntities())
+            using (Model1Container ctx = new Model1Container())
             {
+                Assert.IsFalse(ctx.DatabaseExists());
+                ctx.CreateDatabase();
                 Assert.IsTrue(ctx.DatabaseExists());
                 ctx.DeleteDatabase();
                 Assert.IsFalse(ctx.DatabaseExists());
