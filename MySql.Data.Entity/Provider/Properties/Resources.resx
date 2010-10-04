@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ConnectionMustBeOfTypeMySqlConnection" xml:space="preserve">
+    <value>The connection parameter must reference an object of type MySql.Data.MySqlConnection</value>
+  </data>
   <data name="NoStoreTypeForEdmType" xml:space="preserve">
     <value>There is no store type corresponding to the EDM type '{0}' of primitive type '{1}'.</value>
   </data>

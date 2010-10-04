@@ -5,7 +5,7 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
       <Schema xmlns="http://schemas.microsoft.com/ado/2006/04/edm/ssdl" Namespace="testModel.Store" Alias="Self" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5">
-        <EntityContainer Name="test" >
+        <EntityContainer Name="testContainer" >
           <EntitySet Name="Employees" EntityType="testModel.Store.Employees" />
           <EntitySet Name="EmployeeChildren" EntityType="testModel.Store.EmployeeChildren" />
           <EntitySet Name="SalariedEmployees" EntityType ="testModel.Store.SalariedEmployees"/>
@@ -395,7 +395,7 @@
       <Mapping xmlns="urn:schemas-microsoft-com:windows:storage:mapping:CS" Space="C-S">
         <Alias Key="Model" Value="testModel" />
         <Alias Key="Target" Value="testModel.Store" />
-        <EntityContainerMapping CdmEntityContainer="testEntities" StorageEntityContainer="test">
+        <EntityContainerMapping CdmEntityContainer="testEntities" StorageEntityContainer="testContainer">
 
 
           <!--		<EntitySetMapping Name="Employee">

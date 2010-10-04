@@ -92,6 +92,18 @@ namespace MySql.Data.Entity.Tests
             script.Delimiter = "$$";
             script.Query = schema;
             script.Execute();
+
+            MySqlCommand cmd = new MySqlCommand("DROP DATABASE IF EXISTS `modeldb`", rootConn);
+            cmd.ExecuteNonQuery();
+        }
+
+        [TearDown]
+        public override void Teardown()
+        {
+            base.Teardown();
+
+            MySqlCommand cmd = new MySqlCommand("DROP DATABASE IF EXISTS `modeldb`", rootConn);
+            cmd.ExecuteNonQuery();
         }
     }
 }

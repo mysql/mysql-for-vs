@@ -84,7 +84,13 @@
     <Compile Include="BaseEdmTest.cs" />
     <Compile Include="AggregateOperators.cs" />
     <Compile Include="CanonicalFunctions.cs" />
+    <Compile Include="ModelFirst.cs" />
     <Compile Include="DataTypeTests.cs" />
+    <Compile Include="Model1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model1.edmx</DependentUpon>
+    </Compile>
     <Compile Include="ProceduresAndFunctions.cs" />
     <Compile Include="JoinTests.cs" />
     <Compile Include="SchemaInformation.cs" />
@@ -125,6 +131,10 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EntityDeploy Include="Model1.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Model1.Designer.cs</LastGenOutput>
+    </EntityDeploy>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References" />
