@@ -1,4 +1,5 @@
 - Added MySqlHelper.ExecuteReader that takes an external connection and array of paramters (bug #56755)
+- fixed problem with using bit parameters as output (bug #56756)
 
 Version 6.1.5
 - Fix authorization popup after modifying stored procedure in VS (Bug #44715)
