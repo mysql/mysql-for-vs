@@ -283,7 +283,16 @@ namespace MySql.Data.MySqlClient
                 string fieldName = reader.GetName(i);
                 fieldName = fieldName.Remove(0, ParameterPrefix.Length + 1);
                 MySqlParameter parameter = Parameters.GetParameterFlexible(fieldName, true);
-                results.SetValueObject(i, MySqlField.GetIMySqlValue(parameter.MySqlDbType));
+
+                IMySqlValue v = MySqlField.GetIMySqlValue(parameter.MySqlDbType);
+                if (v is MySqlBit)
+                {
+                    MySqlBit bit = (MySqlBit)v;
+                    bit.ReadAsString = true;
+                    results.SetValueObject(i, bit);
+                }
+                else
+                    results.SetValueObject(i, v);
             }
             if (!reader.Read())
             {
