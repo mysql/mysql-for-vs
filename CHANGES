@@ -1,3 +1,5 @@
+- fixed problem with using bit parameters as output (bug #56756)
+
 Version 6.0.7
 - Fix authorization popup after modifying stored procedure in VS (Bug #44715)
 - Dispose EventLog after use in MySql.Web.dll provider classes, to avoid wasting resources

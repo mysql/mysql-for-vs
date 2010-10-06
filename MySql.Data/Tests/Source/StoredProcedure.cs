@@ -1313,5 +1313,23 @@ namespace MySql.Data.MySqlClient.Tests
                 cmd.ExecuteScalar();
             }
         }
+
+        /// <summary>
+        /// Bug #56756	Output Parameter MySqlDbType.Bit get a wrong Value (48/49 for false or true)
+        /// </summary>
+        [Test]
+        public void BitTypeAsOutParameter()
+        {
+            execSQL(@"CREATE PROCEDURE `spTest`(out x bit(1))
+                BEGIN
+                Set x = 1; -- Outparameter value is 49
+                Set x = 0; -- Outparameter value is 48
+                END");
+            MySqlCommand cmd = new MySqlCommand("spTest", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("x", MySqlDbType.Bit).Direction = ParameterDirection.Output;
+            cmd.ExecuteNonQuery();
+            Assert.AreEqual(0, cmd.Parameters[0].Value);
+        }
     }
 }
