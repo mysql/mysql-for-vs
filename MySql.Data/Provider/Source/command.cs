@@ -62,7 +62,7 @@ namespace MySql.Data.MySqlClient
         List<MySqlCommand> batch;
         private string batchableCommandText;
         CommandTimer commandTimer;
-
+        private bool useDefaultTimeout;
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ctor1/*'/>
 		public MySqlCommand()
@@ -72,6 +72,7 @@ namespace MySql.Data.MySqlClient
 			parameters = new MySqlParameterCollection(this);
 			updatedRowSource = UpdateRowSource.Both;
 			cmdText = String.Empty;
+			useDefaultTimeout = true;
 		}
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ctor2/*'/>
@@ -139,7 +140,7 @@ namespace MySql.Data.MySqlClient
 #endif
 		public override int CommandTimeout
 		{
-			get { return commandTimeout == 0 ? 30 : commandTimeout; }
+			get { return useDefaultTimeout ? 30 : commandTimeout; }
 			set 
 			{
 				if (commandTimeout < 0)
@@ -158,6 +159,7 @@ namespace MySql.Data.MySqlClient
 					+ timeout + " seconds)");
 				}
 				commandTimeout = timeout;
+				useDefaultTimeout = false;
 			}
 		}
 
@@ -202,8 +204,12 @@ namespace MySql.Data.MySqlClient
 
                 // if the user has not already set the command timeout, then
                 // take the default from the connection
-                if (connection != null && commandTimeout == 0)
+                if (connection != null && useDefaultTimeout)
+                {
                     commandTimeout = (int)connection.Settings.DefaultCommandTimeout;
+                    useDefaultTimeout = false;
+                }
+
 			}
 		}
 
@@ -484,6 +490,7 @@ namespace MySql.Data.MySqlClient
                     Connection.Abort();
                     throw new MySqlException(ex.Message, true, ex);
                 }
+
 
                 // if we caught an exception because of a cancel, then just return null
                 if (ex.IsQueryAborted)

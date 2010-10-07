@@ -157,6 +157,16 @@ namespace MySql.Data.MySqlClient.Tests
             cmd.ExecuteNonQuery();
         }
 
+         [Test]
+        public void TimeoutNotExpiring2()
+        {
+            if (Version < new Version(5, 0)) return;
+
+            MySqlCommand cmd = new MySqlCommand("SELECT SLEEP(1)", conn);
+            cmd.CommandTimeout = 0; // infinite timeout
+            cmd.ExecuteNonQuery();
+        }
+
         [Test]
         public void TimeoutDuringBatch()
         {
