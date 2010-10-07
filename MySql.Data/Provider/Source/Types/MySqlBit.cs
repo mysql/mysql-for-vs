@@ -33,12 +33,20 @@ namespace MySql.Data.Types
 	{
 		private ulong mValue;
 		private bool isNull;
+        private bool readAsString;
 
 		public MySqlBit(bool isnull)
 		{
 			mValue = 0;
 			isNull = isnull;
+            readAsString = false;
 		}
+
+        public bool ReadAsString
+        {
+            get { return readAsString; }
+            set { readAsString = value; }
+        }
 
 		public bool IsNull
 		{
@@ -94,7 +102,10 @@ namespace MySql.Data.Types
 			if (length == -1)
                 length = packet.ReadFieldLength();
 
-            mValue = (UInt64)packet.ReadBitValue((int)length);
+            if (ReadAsString)
+                mValue = UInt64.Parse(packet.ReadString(length));
+            else
+                mValue = (UInt64)packet.ReadBitValue((int)length);
 			return this;
 		}
 
