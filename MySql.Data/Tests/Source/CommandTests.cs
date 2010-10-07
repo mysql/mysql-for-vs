@@ -343,6 +343,12 @@ namespace MySql.Data.MySqlClient.Tests
             cmd.CommandTimeout = 66;
             cmd.Connection = c;
             Assert.AreEqual(66, cmd.CommandTimeout);
+            cmd.CommandTimeout = 0;
+            Assert.AreEqual(0, cmd.CommandTimeout);
+
+            c = new MySqlConnection("server=localhost;default command timeout=0");
+            cmd = new MySqlCommand("", c);
+            Assert.AreEqual(0, cmd.CommandTimeout);
         }
 
         /// <summary>
