@@ -2,7 +2,9 @@
 - Handle MySqlCommand.CommandTimeout = 0 properly (Bug #57265)
 - Do not call AcceptChanged on tables in MySqlDataAdapter.Update(),
   but on individual rows (Bug #57092)
-
+- fixed problem with using bit parameters as output (bug #56756)
+- fixed MySqlCommand.Clone so that the default command timeoout functionality is not disabled when
+  you clone a command (bug #56806)
 
 Version 6.1.5
 - Fix authorization popup after modifying stored procedure in VS (Bug #44715)
