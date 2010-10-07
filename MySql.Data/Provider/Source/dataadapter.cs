@@ -165,46 +165,40 @@ namespace MySql.Data.MySqlClient
 
         protected override int Update(DataRow[] dataRows, DataTableMapping tableMapping)
         {
+
             List<MySqlConnection> connectionsOpened = new List<MySqlConnection>();
 
             try
             {
-                Dictionary<DataTable, bool> modifiedTables = new Dictionary<DataTable, bool>();
-
-                // Scan rows, lookiing for modified tables, we'll use them later 
-                // for AcceptChanges().
-                //
-                // Also open connections for insert/update/update commands, if 
+                // Open connections for insert/update/update commands, if 
                 // connections are closed.
                 foreach(DataRow row in dataRows)
                 {
                     OpenConnectionIfClosed(row.RowState, connectionsOpened);
-                    if (row.RowState != DataRowState.Unchanged &&
-                        row.RowState != DataRowState.Detached)
-                    {
-                        modifiedTables[row.Table] = true;
-                    }
                 }
 
                 int ret = base.Update(dataRows, tableMapping);
 
-                // DbDataAdapter does automatically calls AcceptChanges on table.
-                // (even if  documentation states otherwise).
-                // Do AcceptsChanges() here, for SQL Server compatible behavior
-                // (see also Bug#5463)
-                
-                foreach (DataTable table in modifiedTables.Keys)
-                    table.AcceptChanges();
+                // Following was a workaround for Bug#54863
+                // It  a good question whether we still needed it, it seems like
+                // .NET bug (DbDataAdapter not issuing AcceptChanges() for 
+                // modified rows) has already been fixed in .NET
+                foreach (DataRow row in dataRows)
+                {
+                    if (row.RowState != DataRowState.Unchanged &&
+                        row.RowState != DataRowState.Detached)
+                    {
+                        row.AcceptChanges();
+                    }
+                }
 
                 return ret;
-
             }
             finally 
             {
                 foreach(MySqlConnection c in connectionsOpened)
                     c.Close();
             }
-
         }
 
 
