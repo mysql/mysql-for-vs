@@ -298,21 +298,29 @@ namespace MySql.Data.MySqlClient
 		public static MySqlDataReader ExecuteReader(string connectionString, string commandText, params MySqlParameter[] commandParameters)
 		{
 			//create & open a SqlConnection
-			MySqlConnection cn = new MySqlConnection(connectionString);
-			cn.Open();
+			using (MySqlConnection cn = new MySqlConnection(connectionString))
+            {
+    			cn.Open();
 
-			try
-			{
 				//call the private overload that takes an internally owned connection in place of the connection string
-				return ExecuteReader(cn, null, commandText, commandParameters, false );
-			}
-			catch
-			{
-				//if we fail to return the SqlDatReader, we need to close the connection ourselves
-				cn.Close();
-				throw;
+				return ExecuteReader(cn, null, commandText, commandParameters, false);
 			}
 		}
+
+        /// <summary>
+        /// Executes a single command against a MySQL database.
+        /// </summary>
+        /// <param name="connection">Connection to use for the command</param>
+        /// <param name="commandText">Command text to use</param>
+        /// <param name="commandParameters">Array of <see cref="MySqlParameter"/> objects to use with the command</param>
+        /// <returns><see cref="MySqlDataReader"/> object ready to read the results of the command</returns>
+        public static MySqlDataReader ExecuteReader(MySqlConnection connection, string commandText, params MySqlParameter[] commandParameters)
+        {
+            //call the private overload that takes an internally owned connection in place of the connection string
+            return ExecuteReader(connection, null, commandText, commandParameters, true);
+        }
+
+
 		#endregion
 
 		#region ExecuteScalar
