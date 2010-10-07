@@ -754,7 +754,7 @@ namespace MySql.Data.MySqlClient
 		{
 			MySqlCommand clone = new MySqlCommand(cmdText, connection, curTransaction);
             clone.CommandType = CommandType;
-            clone.CommandTimeout = CommandTimeout;
+            clone.commandTimeout = commandTimeout;
             clone.batchableCommandText = batchableCommandText;
             clone.UpdatedRowSource = UpdatedRowSource;
 
