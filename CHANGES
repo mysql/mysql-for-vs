@@ -1,4 +1,8 @@
 - Added MySqlHelper.ExecuteReader that takes an external connection and array of paramters (bug #56755)
+- Handle MySqlCommand.CommandTimeout = 0 properly (Bug #57265)
+- Do not call AcceptChanged on tables in MySqlDataAdapter.Update(),
+  but on individual rows (Bug #57092)
+
 
 Version 6.1.5
 - Fix authorization popup after modifying stored procedure in VS (Bug #44715)

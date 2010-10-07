@@ -133,7 +133,9 @@ namespace MySql.Data.MySqlClient.Tests
                 cmd.Parameters.AddWithValue("duration", 60);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandTimeout = 5;
+                DateTime t0 = DateTime.Now;
                 cmd.ExecuteNonQuery();
+                Console.WriteLine("execution took " + (DateTime.Now.Ticks - t0.Ticks));
                 Assert.Fail("Should not get to this point");
             }
             catch (MySqlException ex)
@@ -159,6 +161,16 @@ namespace MySql.Data.MySqlClient.Tests
             cmd.Parameters.AddWithValue("duration", 10);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.CommandTimeout = 15;
+            cmd.ExecuteNonQuery();
+        }
+
+         [Test]
+        public void TimeoutNotExpiring2()
+        {
+            if (Version < new Version(5, 0)) return;
+
+            MySqlCommand cmd = new MySqlCommand("SELECT SLEEP(1)", conn);
+            cmd.CommandTimeout = 0; // infinite timeout
             cmd.ExecuteNonQuery();
         }
 
