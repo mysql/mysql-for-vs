@@ -122,6 +122,36 @@ namespace MySql.Data.Entity.Tests
                     Assert.AreEqual(6, reader[0]);
                 }
             }
-        }        
+        }
+
+        /// <summary>
+        /// Bug #56806	Default Command Timeout has no effect in connection string
+        /// </summary>
+        [Test]
+        public void CommandTimeout()
+        {
+            string connectionString = String.Format(
+                "metadata=res://*/TestModel.csdl|res://*/TestModel.ssdl|res://*/TestModel.msl;provider=MySql.Data.MySqlClient; provider connection string=\"{0};default command timeout=5\"", GetConnectionString(true));
+            EntityConnection connection = new EntityConnection(connectionString);
+
+            using (testEntities context = new testEntities(connection))
+            {
+                Author a = new Author();
+                a.Id = 66;  // special value to indicate the routine should take 30 seconds
+                a.Name = "Test name";
+                a.Age = 44;
+                context.AddToAuthors(a);
+                try
+                {
+                    context.SaveChanges();
+                    Assert.Fail("This should have timed out");
+                }
+                catch (Exception ex)
+                {
+                    string s = ex.Message;
+                }
+            }
+        }
+
     }
 }
