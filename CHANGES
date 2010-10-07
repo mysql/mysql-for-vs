@@ -1,4 +1,6 @@
 - fixed problem with using bit parameters as output (bug #56756)
+- fixed MySqlCommand.Clone so that the default command timeoout functionality is not disabled when
+  you clone a command (bug #56806)
 
 Version 6.0.7
 - Fix authorization popup after modifying stored procedure in VS (Bug #44715)
