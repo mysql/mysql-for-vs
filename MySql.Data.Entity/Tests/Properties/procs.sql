@@ -5,7 +5,11 @@ DROP PROCEDURE IF EXISTS UpdateAuthor$$
 
 CREATE PROCEDURE AddAuthor(theid INT, thename VARCHAR(20), theage INT) 
 BEGIN
-	INSERT INTO authors VALUES (theid, thename, theage);
+	IF theid = 66 THEN
+		SELECT SLEEP(30);
+	ELSE
+		INSERT INTO authors VALUES (theid, thename, theage);
+	END IF;
 END $$
 
 CREATE PROCEDURE DeleteAuthor(theid int)
