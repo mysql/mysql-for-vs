@@ -27,6 +27,8 @@ using System.Threading;
 
 namespace MySql.Data.MySqlClient
 {
+
+
     /// <summary>
     /// Summary description for MySqlPoolManager.
     /// </summary>
@@ -43,9 +45,44 @@ namespace MySql.Data.MySqlClient
         private static Timer timer = new Timer(new TimerCallback(CleanIdleConnections),
             null, maxConnectionIdleTime*1000, maxConnectionIdleTime*1000);
 
+        private static string GetKey(MySqlConnectionStringBuilder settings)
+        {
+            string key  = settings.ConnectionString;
+#if !CF
+            if(settings.IntegratedSecurity && !settings.ConnectionReset)
+            {
+                try
+                {
+                    // Append SID to the connection string to generate a key
+                    // With Integrated security different Windows users with the same
+                    // connection string may be mapped to different MySQL accounts.
+                    System.Security.Principal.WindowsIdentity id =
+                        System.Security.Principal.WindowsIdentity.GetCurrent();
+                    if (id != null)
+                    {
+                        key += ";" + id.User;
+                    }
+                }
+                catch (System.Security.SecurityException ex)
+                {
+                    // Documentation for WindowsIdentity.GetCurrent() states 
+                    // SecurityException can be thrown. In this case the 
+                    // connection can only be pooled if reset is done.
+                    throw new MySqlException(
+                        "Cannot retrieve Windows identity for current user " +
+                        "authentication using IntegratedSecurity" +
+                        "Connections that use  IntegratedSecurity cannot be " + 
+                        "pooled. Use either 'ConnectionReset=true' or " +
+                        "'Pooling=false' in the connection string" +
+                        "to fix", ex );
+                }
+            }
+#endif
+            return key;
+        }
         public static MySqlPool GetPool(MySqlConnectionStringBuilder settings)
         {
-            string text = settings.ConnectionString;
+            string text = GetKey(settings);
 
             lock (pools.SyncRoot)
             {
@@ -86,8 +123,17 @@ namespace MySql.Data.MySqlClient
         public static void ClearPool(MySqlConnectionStringBuilder settings)
         {
             Debug.Assert(settings != null);
-
-            string text = settings.ConnectionString;
+            string text;
+            try
+            {
+                text = GetKey(settings);
+            }
+            catch (MySqlException)
+            {
+                // Cannot retrieve windows identity for IntegratedSecurity=true
+                // This can be ignored.
+                return;
+            }
             ClearPoolByText(text);
         }
 

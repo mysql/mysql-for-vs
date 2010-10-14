@@ -338,7 +338,7 @@ namespace MySql.Data.MySqlClient
             return encoding.GetString(tempBuffer, 0, (int)length);
         }
 
-        public string ReadString()
+        public string ReadString(Encoding enc)
         {
             byte[] bits = buffer.GetBuffer();
             int end = (int)buffer.Position;
@@ -347,12 +347,16 @@ namespace MySql.Data.MySqlClient
                 bits[end] != 0 && (int)bits[end] != -1)
                 end++;
 
-            string s = encoding.GetString(bits, 
+            string s = enc.GetString(bits, 
                 (int)buffer.Position, end - (int)buffer.Position);
             buffer.Position = end + 1;
             return s;
         }
 
+        public string ReadString()
+        {
+            return ReadString(this.encoding);
+        }
         #endregion        
     }
 }

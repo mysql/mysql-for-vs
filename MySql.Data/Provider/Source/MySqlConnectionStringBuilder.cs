@@ -376,6 +376,27 @@ namespace MySql.Data.MySqlClient
                 SetValue("Certificate Thumbprint", value);
             }
         }
+
+        [Category("Authentication")]
+        [DisplayName("Integrated Security")]
+        [Description("Use windows authentication when connecting to server")]
+        [DefaultValue(false)]
+        public bool IntegratedSecurity
+        {
+            get 
+            {
+                object val = values["Integrated Security"];
+                return (bool)val;
+            }
+            set
+            {
+                if (!MySql.Data.Common.Platform.IsWindows())
+                    throw new MySqlException("IntegratedSecurity is supported on Windows only");
+
+                SetValue("Integrated Security", value);
+            }
+        }
+
         #endregion
 
         #region Other Properties
@@ -853,6 +874,10 @@ namespace MySql.Data.MySqlClient
                 string s = value.ToString().ToLower(CultureInfo.InvariantCulture);
                 if (s == "yes" || s == "true") return true;
                 if (s == "no" || s == "false") return false;
+
+                // Unclean, but we need IntegratedSecurity=SSPI to be
+                // the same as IntegratedSecurity=true, to match SqlClient
+                if (s == "sspi") return true;
                 throw new FormatException(String.Format(Resources.InvalidValueForBoolean, value));
             }
             else
