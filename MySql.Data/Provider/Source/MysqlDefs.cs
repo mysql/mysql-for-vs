@@ -48,7 +48,10 @@ namespace MySql.Data.MySqlClient
         SECURE_CONNECTION = 32768,      // new 4.1 authentication
         MULTI_STATEMENTS = 65536,       // Allow multi-stmt support
         MULTI_RESULTS = 131072,         // Allow multiple resultsets
-        PS_MULTI_RESULTS = 1UL << 18    // allow multi results using PS protocol
+        PS_MULTI_RESULTS = 1UL << 18,    // allow multi results using PS protocol
+        PLUGIN_AUTH = (1UL << 19), //Client supports plugin authentication
+        CLIENT_SSL_VERIFY_SERVER_CERT= (1UL << 30),
+        CLIENT_REMEMBER_OPTIONS= (1UL << 31)
     }
 
     [Flags]
