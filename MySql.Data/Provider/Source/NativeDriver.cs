@@ -122,7 +122,6 @@ namespace MySql.Data.MySqlClient
                 byte marker = (byte) packet.ReadByte();
                 if (marker != 0)
                 {
-                    string s = packet.ReadString();
                     throw new MySqlException("Out of sync with server", true, null);
                 }
 
@@ -228,13 +227,13 @@ namespace MySql.Data.MySqlClient
             owner.ConnectionCharSetIndex = (int)packet.ReadByte();
 
             serverStatus = (ServerStatusFlags) packet.ReadInteger(2);
+
+            // Since 5.5, high bits of server caps are stored after status.
+            // Previously, it was part of reserved always 0x00 13-byte filler.
             uint serverCapsHigh = (uint)packet.ReadInteger(2);
             serverCaps |= (ClientFlags)(serverCapsHigh << 16);
-           
 
-            int scrambleLength = (int)packet.ReadByte();
-
-            packet.Position += 10;
+            packet.Position += 11;
             string seedPart2 = packet.ReadString();
             encryptionSeed += seedPart2;
 
