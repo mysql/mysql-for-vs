@@ -24,6 +24,7 @@ using System.Collections;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Threading;
+using MySql.Data.MySqlClient.Properties;
 
 namespace MySql.Data.MySqlClient
 {
@@ -58,23 +59,15 @@ namespace MySql.Data.MySqlClient
                     // connection string may be mapped to different MySQL accounts.
                     System.Security.Principal.WindowsIdentity id =
                         System.Security.Principal.WindowsIdentity.GetCurrent();
-                    if (id != null)
-                    {
-                        key += ";" + id.User;
-                    }
+
+                    key += ";" + id.User;
                 }
                 catch (System.Security.SecurityException ex)
                 {
                     // Documentation for WindowsIdentity.GetCurrent() states 
                     // SecurityException can be thrown. In this case the 
                     // connection can only be pooled if reset is done.
-                    throw new MySqlException(
-                        "Cannot retrieve Windows identity for current user " +
-                        "authentication using IntegratedSecurity" +
-                        "Connections that use  IntegratedSecurity cannot be " + 
-                        "pooled. Use either 'ConnectionReset=true' or " +
-                        "'Pooling=false' in the connection string" +
-                        "to fix", ex );
+                    throw new MySqlException(Resources.NoWindowsIdentity, ex );
                 }
             }
 #endif

@@ -459,4 +459,7 @@
   <data name="TraceQueryNormalized" xml:space="preserve">
     <value>{0}: Query Normalized: {2}</value>
   </data>
+  <data name="NoWindowsIdentity" xml:space="preserve">
+    <value>Cannot retrieve Windows identity for current user. Connections that use  IntegratedSecurity cannot be  pooled. Use either 'ConnectionReset=true' or  'Pooling=false' in the connection string to fix.</value>
+  </data>
 </root>
