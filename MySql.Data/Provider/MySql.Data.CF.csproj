@@ -114,6 +114,7 @@
     <Compile Include="Source\ProcedureCache.cs" />
     <Compile Include="Source\ResultSet.cs" />
     <Compile Include="Source\SchemaProvider.cs" />
+    <Compile Include="Source\SSPI.cs" />
     <Compile Include="Source\Statement.cs" />
     <Compile Include="Source\StoredProcedure.cs" />
     <Compile Include="Source\TimedStream.cs" />
@@ -152,7 +153,6 @@
     <Compile Include="Source\zlib\ZOutputStream.cs" />
     <Compile Include="Source\zlib\ZStream.cs" />
     <Compile Include="Source\zlib\ZStreamException.cs" />
-    <Compile Include="SSPI.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

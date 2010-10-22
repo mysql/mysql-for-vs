@@ -21,7 +21,6 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System.Collections;
-using System.Security.Principal;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Net.Sockets;
@@ -223,7 +222,8 @@ namespace MySql.Data.MySqlClient
                 }
                 else
                 {
-                    String s = System.Text.Encoding.UTF8.GetString(serverBlob);
+                    String s = System.Text.Encoding.UTF8.GetString(serverBlob, 0, 
+                        serverBlob.Length);
                     SecBufferDesc serverBufferDesc = new SecBufferDesc(serverBlob);
 
                     try
