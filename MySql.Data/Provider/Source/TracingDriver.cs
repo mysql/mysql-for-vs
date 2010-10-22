@@ -66,9 +66,9 @@ namespace MySql.Data.MySqlClient
 
             if (cmdText.Length > 300)
             {
-                cmdText = cmdText.Substring(0, 300);
                 QueryNormalizer normalizer = new QueryNormalizer();
                 normalized_query = normalizer.Normalize(cmdText);
+                cmdText = cmdText.Substring(0, 300);
             }
 
             base.SendQuery(p);

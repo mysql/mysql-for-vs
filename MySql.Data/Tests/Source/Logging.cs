@@ -110,5 +110,24 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.IsTrue(listener.Strings[1].EndsWith("SELECT ?"));
         }
 
+        /// <summary>
+        /// Bug #57641	Substring out of range exception in ConsumeQuotedToken
+        /// </summary>
+        [Test]
+        public void QuotedTokenAt300()
+        {
+            MySqlTrace.Listeners.Clear();
+            MySqlTrace.Switch.Level = SourceLevels.All;
+            GenericListener listener = new GenericListener();
+            MySqlTrace.Listeners.Add(listener);
+
+            string sql = @"SELECT 1 AS `AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA1`,  2 AS `AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2`,
+                3 AS `AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA3`,  4 AS `AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4`,
+                5 AS `AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA5`,  6 AS `AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA6`;";
+            MySqlCommand cmd = new MySqlCommand(sql, conn);
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+            }
+        }
     }
 }
