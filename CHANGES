@@ -1,3 +1,8 @@
+Version 6.3.6
+- Fixed TracingDriver so that it normalizes long queries before truncation so we don't get exceptions when quoted
+  tokens land on the 300th character (bug #57641)
+
+Version 6.3.5
 - Fix installer bug related to .NET FW 4.0 (bug #56580)
 - Added MySqlHelper.ExecuteReader that takes an external connection and array of paramters (bug #56755)
 - fixed database methods in EF4 provider services to use the database name from the connection string (bug #56589)
