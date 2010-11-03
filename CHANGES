@@ -1,6 +1,8 @@
 Version 6.3.6
 - Fixed TracingDriver so that it normalizes long queries before truncation so we don't get exceptions when quoted
   tokens land on the 300th character (bug #57641)
+- added code that will attempt to enumerate procs via mysql.proc the first time. If we get an 1142 error then we
+  mark that we don't have access to that table and use IS from then on. (bug #36694)
 
 Version 6.3.5
 - Fix installer bug related to .NET FW 4.0 (bug #56580)
