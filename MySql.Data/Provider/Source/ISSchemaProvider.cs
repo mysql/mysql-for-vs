@@ -188,8 +188,18 @@ namespace MySql.Data.MySqlClient
         /// <returns></returns>
         public override DataTable GetProcedures(string[] restrictions)
         {
-            if (connection.Settings.UseProcedureBodies)
-                return base.GetProcedures(restrictions); 
+            try
+            {
+                if (connection.Settings.HasRootAccess)
+                    return base.GetProcedures(restrictions);
+            }
+            catch (MySqlException ex)
+            {
+                if (ex.Number == (int)MySqlErrorCode.TableAccessDenied)
+                    connection.Settings.HasRootAccess = false;
+                else
+                    throw;
+            }
             
             string[] keys = new string[4];
             keys[0] = "ROUTINE_CATALOG";

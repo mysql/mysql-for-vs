@@ -41,6 +41,7 @@ namespace MySql.Data.MySqlClient
             new Dictionary<string, PropertyDefaultValue>(StringComparer.OrdinalIgnoreCase);
         private Dictionary<string, object> values =
             new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+        private bool hasRootAccess = true;
 
         static MySqlConnectionStringBuilder()
         {
@@ -743,6 +744,12 @@ namespace MySql.Data.MySqlClient
         }
 
         #endregion
+
+        internal bool HasRootAccess
+        {
+            get { return hasRootAccess; }
+            set { hasRootAccess = value; }
+        }
 
         internal Regex GetBlobAsUTF8IncludeRegex()
         {
