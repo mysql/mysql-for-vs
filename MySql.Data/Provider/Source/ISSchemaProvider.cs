@@ -188,6 +188,9 @@ namespace MySql.Data.MySqlClient
         /// <returns></returns>
         public override DataTable GetProcedures(string[] restrictions)
         {
+            if (connection.Settings.UseProcedureBodies)
+                return base.GetProcedures(restrictions); 
+            
             string[] keys = new string[4];
             keys[0] = "ROUTINE_CATALOG";
             keys[1] = "ROUTINE_SCHEMA";
