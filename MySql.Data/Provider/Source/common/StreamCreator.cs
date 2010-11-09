@@ -160,8 +160,7 @@ namespace MySql.Data.Common
 
 		private static EndPoint CreateUnixEndPoint(string host)
 		{
-			// first we need to load the Mono.posix assembly
-			Assembly a = Assembly.Load("Mono.Posix");
+			// first we need to load the Mono.posix assembly			Assembly a = Assembly.Load(@"Mono.Posix, Version=2.0.0.0, 				Culture=neutral, PublicKeyToken=0738eb9f132ed756");
 
 			// then we need to construct a UnixEndPoint object
 			EndPoint ep = (EndPoint)a.CreateInstance("Mono.Posix.UnixEndPoint",
