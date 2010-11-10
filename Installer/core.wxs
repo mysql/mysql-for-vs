@@ -85,12 +85,12 @@
     <!-- Entity framework 4.0 feature -->
     <DirectoryRef Id='assemblies_v4'>
       <Component Id="EF.v4" Guid="E6B683F6-727A-43c9-B955-6BEE94EF61C7" DiskId="1">
-        <Condition>NETFRAMEWORK40FULL OR NETFRAMEWORK40CLIENT</Condition>
+        <Condition>NETFRAMEWORK40FULL</Condition>
         <File Id="MySql.Data.EF.v4" Name="MySql.Data.Entity.dll"
               Source="..\mysql.data.entity\provider\bin\release-4.0\mysql.data.entity.dll" DiskId="1"/>
       </Component>
       <Component Id="EF.v4.GAC" Guid="A9C03468-5A59-443f-85DC-C0149EBB55C8" DiskId="1">
-        <Condition>NETFRAMEWORK40FULL OR NETFRAMEWORK40CLIENT</Condition>
+        <Condition>NETFRAMEWORK40FULL</Condition>
         <File Id="MySql.Data.EF.v4.GAC" Name="MySql.Data.Entity.dll"
               Source="..\mysql.data.entity\provider\bin\release-4.0\mysql.data.entity.dll" DiskId="1"
               Assembly=".net" KeyPath="yes"/>
@@ -109,7 +109,7 @@
     
     <Feature Id="EntityFramework" Level="1" Title="Entity Framework Support"
              Description="Support for the entity framework">
-      <Condition Level='0'>Not NETFRAMEWORK20 AND Not NETFRAMEWORK40FULL And Not NETFRAMEWORK40CLIENT</Condition>
+      <Condition Level='0'>Not NETFRAMEWORK20 AND Not NETFRAMEWORK40FULL</Condition>
       <ComponentRef Id="EF.v2"/>
       <ComponentRef Id="EF.v2.GAC"/>
       <ComponentRef Id="EF.v4"/>
@@ -119,7 +119,7 @@
 
     <InstallExecuteSequence>
       <Custom Action="SetFWVersion_v2" After="CostFinalize">NETFRAMEWORK20</Custom>
-      <Custom Action="SetFWVersion_v4" After="SetFWVersion_v2">NETFRAMEWORK40CLIENT or NETFRAMEWORK40FULL</Custom>
+      <Custom Action="SetFWVersion_v4" After="SetFWVersion_v2">NETFRAMEWORK40FULL</Custom>
       <Custom Action='ManagedDataInstallSetup' After="InstallFiles">NOT Installed</Custom>
       <Custom Action='ManagedDataInstall' After="ManagedDataInstallSetup">NOT Installed</Custom>
       <Custom Action='ManagedDataUnInstallSetup' Before="RemoveFiles">Installed</Custom>
