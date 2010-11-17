@@ -1,21 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{A8E799B1-D6AC-42BD-907E-B213D7E9B3C5}</ProjectGuid>
+    <ProjectGuid>{C28B1166-1380-445D-AEC1-8A18B990DD18}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MySql.Data.Entity</RootNamespace>
-    <AssemblyName>MySql.Data.Entity</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <RootNamespace>MySql.Web</RootNamespace>
+    <AssemblyName>MySql.Web</AssemblyName>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
-    <UpgradeBackupLocation />
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
@@ -37,77 +40,73 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <BaseIntermediateOutputPath>obj\Debug-4.0</BaseIntermediateOutputPath>
     <OutputPath>bin\Debug-4.0\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoWarn>1699</NoWarn>
+    <DocumentationFile>
+    </DocumentationFile>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <BaseIntermediateOutputPath>obj\Release-4.0</BaseIntermediateOutputPath>
     <OutputPath>bin\Release-4.0\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoWarn>1699</NoWarn>
+    <DocumentationFile>bin\release\webdocs.xml</DocumentationFile>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.Entity" />
-    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\SchemaMapping.msl" />
     <Compile Include="..\..\MySql.Data\Provider\Properties\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
-    <Compile Include="EF4ProviderServices.cs" />
-    <Compile Include="EFMySqlCommand.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="EFMySqlDataReader.cs" />
-    <Compile Include="Fragments\TableFragment.cs" />
-    <Compile Include="Fragments\InputFragment.cs" />
-    <Compile Include="Fragments\JoinFragment.cs" />
-    <Compile Include="Fragments\SqlFragment.cs" />
-    <Compile Include="Generators\DeleteGenerator.cs" />
-    <Compile Include="Generators\FunctionGenerator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Generators\FunctionProcessor.cs" />
-    <Compile Include="Generators\InsertGenerator.cs" />
-    <Compile Include="Generators\Scope.cs" />
-    <Compile Include="Generators\SelectGenerator.cs" />
-    <Compile Include="Generators\SqlGenerator.cs" />
-    <Compile Include="Generators\UpdateGenerator.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Statements\DeleteStatement.cs" />
-    <Compile Include="Statements\InsertStatement.cs" />
-    <Compile Include="Metadata.cs" />
-    <Compile Include="ProviderManifest.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProviderServices.cs" />
-    <Compile Include="Statements\SelectStatement.cs" />
-    <Compile Include="Statements\UpdateStatement.cs" />
-    <EmbeddedResource Include="Properties\ProviderManifest.xml" />
-    <EmbeddedResource Include="Properties\SchemaDefinition-5.0.ssdl" />
-    <EmbeddedResource Include="Properties\SchemaDefinition-6.0.ssdl" />
-    <EmbeddedResource Include="Properties\SchemaDefinition-5.1.ssdl" />
+    <Compile Include="Source\Application.cs" />
+    <Compile Include="Source\Install.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Source\ProfileProvider.cs" />
+    <Compile Include="Source\MembershipProvider.cs" />
+    <Compile Include="Source\RoleProvider.cs" />
+    <Compile Include="Source\Runtime.cs" />
+    <Compile Include="Source\SchemaManager.cs" />
+    <Compile Include="Source\SessionProvider.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\schema6.sql" />
+    <None Include="Properties\schema1.sql" />
+    <None Include="Properties\schema4.sql" />
+    <None Include="Properties\schema2.sql" />
+    <None Include="Properties\schema3.sql" />
+    <None Include="Properties\schema5.sql" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -145,8 +144,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
 </Project>

@@ -1,21 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{A8E799B1-D6AC-42BD-907E-B213D7E9B3C5}</ProjectGuid>
+    <ProjectGuid>{DC704374-EC50-4167-93AA-8D262136502E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MySql.Data.Entity</RootNamespace>
-    <AssemblyName>MySql.Data.Entity</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <RootNamespace>MySql.Web.Tests</RootNamespace>
+    <AssemblyName>MySql.Web.Tests</AssemblyName>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
-    <UpgradeBackupLocation />
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
@@ -37,9 +37,8 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <BaseIntermediateOutputPath>obj\Debug-4.0</BaseIntermediateOutputPath>
     <OutputPath>bin\Debug-4.0\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -47,7 +46,6 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <BaseIntermediateOutputPath>obj\Release-4.0</BaseIntermediateOutputPath>
     <OutputPath>bin\Release-4.0\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -55,59 +53,28 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="nunit.framework" />
     <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.Entity" />
-    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\SchemaMapping.msl" />
     <Compile Include="..\..\MySql.Data\Provider\Properties\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
-    <Compile Include="EF4ProviderServices.cs" />
-    <Compile Include="EFMySqlCommand.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="EFMySqlDataReader.cs" />
-    <Compile Include="Fragments\TableFragment.cs" />
-    <Compile Include="Fragments\InputFragment.cs" />
-    <Compile Include="Fragments\JoinFragment.cs" />
-    <Compile Include="Fragments\SqlFragment.cs" />
-    <Compile Include="Generators\DeleteGenerator.cs" />
-    <Compile Include="Generators\FunctionGenerator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Generators\FunctionProcessor.cs" />
-    <Compile Include="Generators\InsertGenerator.cs" />
-    <Compile Include="Generators\Scope.cs" />
-    <Compile Include="Generators\SelectGenerator.cs" />
-    <Compile Include="Generators\SqlGenerator.cs" />
-    <Compile Include="Generators\UpdateGenerator.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Statements\DeleteStatement.cs" />
-    <Compile Include="Statements\InsertStatement.cs" />
-    <Compile Include="Metadata.cs" />
-    <Compile Include="ProviderManifest.cs" />
+    <Compile Include="BaseTest.cs" />
+    <Compile Include="ProfileTests.cs" />
+    <Compile Include="RoleManagement.cs" />
+    <Compile Include="SchemaTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProviderServices.cs" />
-    <Compile Include="Statements\SelectStatement.cs" />
-    <Compile Include="Statements\UpdateStatement.cs" />
-    <EmbeddedResource Include="Properties\ProviderManifest.xml" />
-    <EmbeddedResource Include="Properties\SchemaDefinition-5.0.ssdl" />
-    <EmbeddedResource Include="Properties\SchemaDefinition-6.0.ssdl" />
-    <EmbeddedResource Include="Properties\SchemaDefinition-5.1.ssdl" />
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <Compile Include="TestProfile.cs" />
+    <Compile Include="UserManagement.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -136,6 +103,14 @@
       <Project>{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}</Project>
       <Name>MySql.Data.VS2010</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\MySql.Data\Tests\MySql.Data.Tests.VS2010.csproj">
+      <Project>{F29E5B3D-7F76-4CF9-BF5E-8E3A1377B1E4}</Project>
+      <Name>MySql.Data.Tests.VS2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Providers\MySql.Web.VS2010.csproj">
+      <Project>{C28B1166-1380-445D-AEC1-8A18B990DD18}</Project>
+      <Name>MySql.Web.VS2010</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -145,8 +120,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
 </Project>
