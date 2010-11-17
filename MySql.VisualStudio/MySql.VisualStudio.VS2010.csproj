@@ -414,9 +414,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MySql.Data\Provider\MySql.Data.csproj">
+    <ProjectReference Include="..\MySql.Data\Provider\MySql.Data.VS2010.csproj">
       <Project>{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}</Project>
-      <Name>MySql.Data</Name>
+      <Name>MySql.Data.VS2010</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

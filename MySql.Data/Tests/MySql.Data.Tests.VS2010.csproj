@@ -1,21 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{A8E799B1-D6AC-42BD-907E-B213D7E9B3C5}</ProjectGuid>
+    <ProjectGuid>{F29E5B3D-7F76-4CF9-BF5E-8E3A1377B1E4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MySql.Data.Entity</RootNamespace>
-    <AssemblyName>MySql.Data.Entity</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <RootNamespace>MySql.Data.MySqlClient.Tests</RootNamespace>
+    <AssemblyName>MySql.Data.Tests</AssemblyName>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
-    <UpgradeBackupLocation />
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
@@ -37,17 +37,18 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <BaseIntermediateOutputPath>obj\Debug-4.0</BaseIntermediateOutputPath>
     <OutputPath>bin\Debug-4.0\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NUNIT</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRules>
+    </CodeAnalysisRules>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <BaseIntermediateOutputPath>obj\Release-4.0</BaseIntermediateOutputPath>
     <OutputPath>bin\Release-4.0\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -55,59 +56,60 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="nunit.framework" />
     <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.Entity" />
-    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\SchemaMapping.msl" />
-    <Compile Include="..\..\MySql.Data\Provider\Properties\VersionInfo.cs">
+    <Compile Include="..\Provider\Properties\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
-    <Compile Include="EF4ProviderServices.cs" />
-    <Compile Include="EFMySqlCommand.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="EFMySqlDataReader.cs" />
-    <Compile Include="Fragments\TableFragment.cs" />
-    <Compile Include="Fragments\InputFragment.cs" />
-    <Compile Include="Fragments\JoinFragment.cs" />
-    <Compile Include="Fragments\SqlFragment.cs" />
-    <Compile Include="Generators\DeleteGenerator.cs" />
-    <Compile Include="Generators\FunctionGenerator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Generators\FunctionProcessor.cs" />
-    <Compile Include="Generators\InsertGenerator.cs" />
-    <Compile Include="Generators\Scope.cs" />
-    <Compile Include="Generators\SelectGenerator.cs" />
-    <Compile Include="Generators\SqlGenerator.cs" />
-    <Compile Include="Generators\UpdateGenerator.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Statements\DeleteStatement.cs" />
-    <Compile Include="Statements\InsertStatement.cs" />
-    <Compile Include="Metadata.cs" />
-    <Compile Include="ProviderManifest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProviderServices.cs" />
-    <Compile Include="Statements\SelectStatement.cs" />
-    <Compile Include="Statements\UpdateStatement.cs" />
-    <EmbeddedResource Include="Properties\ProviderManifest.xml" />
-    <EmbeddedResource Include="Properties\SchemaDefinition-5.0.ssdl" />
-    <EmbeddedResource Include="Properties\SchemaDefinition-6.0.ssdl" />
-    <EmbeddedResource Include="Properties\SchemaDefinition-5.1.ssdl" />
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <Compile Include="Source\AsyncTests.cs" />
+    <Compile Include="Source\BaseTest.cs" />
+    <Compile Include="Source\BlobTests.cs" />
+    <Compile Include="Source\CharacterSetTests.cs" />
+    <Compile Include="Source\CommandBuilderTests.cs" />
+    <Compile Include="Source\CommandTests.cs" />
+    <Compile Include="Source\ConnectionStringBuilder.cs" />
+    <Compile Include="Source\ConnectionTests.cs" />
+    <Compile Include="Source\BulkLoading.cs" />
+    <Compile Include="Source\SqlServerMode.cs" />
+    <Compile Include="Source\Logging.cs" />
+    <Compile Include="Source\ScriptExecution.cs" />
+    <Compile Include="Source\SqlTokenizer.cs" />
+    <Compile Include="Source\Tokenizer.cs" />
+    <Compile Include="Source\CultureTests.cs" />
+    <Compile Include="Source\DataAdapterTests.cs" />
+    <Compile Include="Source\DataReaderTests.cs" />
+    <Compile Include="Source\DataTypeTests.cs" />
+    <Compile Include="Source\DateTimeTests.cs" />
+    <Compile Include="Source\EventTests.cs" />
+    <Compile Include="Source\ExceptionTests.cs" />
+    <Compile Include="Source\GetSchemaTests.cs" />
+    <Compile Include="Source\InterfaceTests.cs" />
+    <Compile Include="Source\LanguageTests.cs" />
+    <Compile Include="Source\ParameterTests.cs" />
+    <Compile Include="Source\PerfMonTests.cs" />
+    <Compile Include="Source\PoolingTests.cs" />
+    <Compile Include="Source\PreparedStatements.cs" />
+    <Compile Include="Source\ProcedureParameters.cs" />
+    <Compile Include="Source\SimpleTransactions.cs" />
+    <Compile Include="Source\StoredProcedure.cs" />
+    <Compile Include="Source\StressTests.cs" />
+    <Compile Include="Source\Syntax.cs" />
+    <Compile Include="Source\Syntax2.cs" />
+    <Compile Include="Source\Threading.cs" />
+    <Compile Include="Source\TimeoutAndCancel.cs" />
+    <Compile Include="Source\Transactions.cs" />
+    <Compile Include="Source\UsageAdvisor.cs" />
+    <Compile Include="Source\Utils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Setup.sql" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -132,7 +134,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\MySql.Data\Provider\MySql.Data.VS2010.csproj">
+    <ProjectReference Include="..\Provider\MySql.Data.VS2010.csproj">
       <Project>{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}</Project>
       <Name>MySql.Data.VS2010</Name>
     </ProjectReference>
@@ -145,8 +147,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
 </Project>
