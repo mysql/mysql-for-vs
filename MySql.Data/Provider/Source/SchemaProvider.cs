@@ -142,6 +142,19 @@ namespace MySql.Data.MySqlClient
             return dt;
         }
 
+        protected void QuoteDefaultValues(DataTable dt)
+        {
+            if (dt == null) return;
+            if (!dt.Columns.Contains("COLUMN_DEFAULT")) return;
+
+            foreach (DataRow row in dt.Rows)
+            {
+                object defaultValue = row["COLUMN_DEFAULT"];
+                if (MetaData.IsTextType(row["DATA_TYPE"].ToString()))
+                    row["COLUMN_DEFAULT"] = String.Format("'{0}'", defaultValue);
+            }
+        }
+
         public virtual DataTable GetColumns(string[] restrictions)
         {
             DataTable dt = new DataTable("Columns");
@@ -178,6 +191,7 @@ namespace MySql.Data.MySqlClient
                 LoadTableColumns(dt, row["TABLE_SCHEMA"].ToString(),
                                  row["TABLE_NAME"].ToString(), columnName);
 
+            QuoteDefaultValues(dt);
             return dt;
         }
 
