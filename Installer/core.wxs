@@ -24,8 +24,9 @@
 
     <!-- .Net 2.0 Binaries -->
     <DirectoryRef Id='assemblies_v2'>
-      <Component Id="Net20" Guid="0e8af006-273c-49bb-b7c1-ec1737260a5a">
-        <File Id="MySqlData" Name="MySql.Data.dll"
+      <Component Id="C.v2" Guid="0e8af006-273c-49bb-b7c1-ec1737260a5a">
+        <Condition>NETFRAMEWORK20</Condition>
+        <File Id="MySql.Data.v2" Name="MySql.Data.dll"
               Source="..\mysql.data\provider\bin\release\mysql.data.dll" DiskId="1"/>
 
         <util:PerformanceCategory Id="PMDataCategoryId" Name=".NET Data Provider for MySQL"
@@ -38,9 +39,35 @@
 
       </Component>
       <Directory Id="MySql.Data.DummyDir" Name="GAC">
-        <Component Id="GAC20" Guid="58f70e4a-96f7-4b67-bdab-9b77a60f9c09">
-          <File Id="MySql.Data.GAC" Name="MySql.Data.dll"
+        <Component Id="C.v2.GAC" Guid="58f70e4a-96f7-4b67-bdab-9b77a60f9c09">
+          <Condition>NETFRAMEWORK20</Condition>
+          <File Id="MySql.Data.v2.GAC" Name="MySql.Data.dll"
                 Source="..\mysql.data\provider\bin\release\mysql.data.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
+        </Component>
+      </Directory>
+    </DirectoryRef>
+
+    <!-- .Net 4.0 Binaries -->
+    <DirectoryRef Id='assemblies_v4'>
+      <Component Id="C.v4" Guid="C66D3DF6-A151-4F29-B388-A9803C89131A">
+        <Condition>NETFRAMEWORK40FULL</Condition>
+        <File Id="MySql.Data.v4" Name="MySql.Data.dll"
+              Source="..\mysql.data\provider\bin\release-4.0\mysql.data.dll" DiskId="1"/>
+
+        <util:PerformanceCategory Id="PMDataCategoryId" Name=".NET Data Provider for MySQL"
+                                  MultiInstance="no" Help="This category includes a series of counters for MySQL.">
+          <util:PerformanceCounter Name="HardProcedureQueries" Type="numberOfItems32" Help="The number of times a procedures metadata had to be queried from the server." />
+          <util:PerformanceCounter Name="SoftProcedureQueries" Type="rateOfCountsPerSecond32" Help="The number of times a procedures metadata was retrieved from the client-side cache." />
+        </util:PerformanceCategory>
+
+        <RemoveFile Id="RemoveStateFile" Name="*.InstallState" On="uninstall"/>
+
+      </Component>
+      <Directory Id="MySql.Data.DummyDir" Name="GAC">
+        <Component Id="C.v4.GAC" Guid="34B6C828-355D-405F-82BC-F18BBC13871D">
+          <Condition>NETFRAMEWORK40FULL</Condition>
+          <File Id="MySql.Data.v4.GAC" Name="MySql.Data.dll"
+                Source="..\mysql.data\provider\bin\release-4.0\mysql.data.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
         </Component>
       </Directory>
     </DirectoryRef>
@@ -62,78 +89,42 @@
     <Feature Id="Core.Feature" Level="1" Title="Core Components" Description="Core Components"
              ConfigurableDirectory ="INSTALLDIR" Absent="disallow" Display="2">
       <ComponentRef Id="BaseFiles"/>
-      <ComponentRef Id="Net20"/>
-      <ComponentRef Id="GAC20"/>
+      <ComponentRef Id="C.v2"/>
+      <ComponentRef Id="C.v2.GAC"/>
+      <ComponentRef Id="C.v4"/>
+      <ComponentRef Id="C.v4.GAC"/>
       <ComponentRef Id="StartMenuComponent"/>
     </Feature>
 
-    <!-- Entity framework 2.0 feature -->
-    <DirectoryRef Id='assemblies_v2'>
-      <Component Id="EF.v2" Guid="AB734C75-F5DC-491e-A2BC-52D5061881B7" DiskId="1">
-        <Condition>NETFRAMEWORK20</Condition>
-        <File Id="MySql.Data.EF" Name="MySql.Data.Entity.dll"
-              Source="..\mysql.data.entity\provider\bin\release\mysql.data.entity.dll" DiskId="1"/>
-      </Component>
-      <Component Id="EF.v2.GAC" Guid="12218CCC-B085-46af-AA5F-FB9306FE621E" DiskId="1">
-        <Condition>NETFRAMEWORK20</Condition>
-        <File Id="MySql.Data.EF.GAC" Name="MySql.Data.Entity.dll"
-              Source="..\mysql.data.entity\provider\bin\release\mysql.data.entity.dll" DiskId="1"
-              Assembly=".net" KeyPath="yes"/>
-      </Component>
-    </DirectoryRef>
-
-    <!-- Entity framework 4.0 feature -->
-    <DirectoryRef Id='assemblies_v4'>
-      <Component Id="EF.v4" Guid="E6B683F6-727A-43c9-B955-6BEE94EF61C7" DiskId="1">
-        <Condition>NETFRAMEWORK40FULL</Condition>
-        <File Id="MySql.Data.EF.v4" Name="MySql.Data.Entity.dll"
-              Source="..\mysql.data.entity\provider\bin\release-4.0\mysql.data.entity.dll" DiskId="1"/>
-      </Component>
-      <Component Id="EF.v4.GAC" Guid="A9C03468-5A59-443f-85DC-C0149EBB55C8" DiskId="1">
-        <Condition>NETFRAMEWORK40FULL</Condition>
-        <File Id="MySql.Data.EF.v4.GAC" Name="MySql.Data.Entity.dll"
-              Source="..\mysql.data.entity\provider\bin\release-4.0\mysql.data.entity.dll" DiskId="1"
-              Assembly=".net" KeyPath="yes"/>
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id="Entity.T4.DBGenDir">
-      <Component Id="EF.T4" Guid="6555D339-120C-4D62-B60C-08764D8CA739">
-        <Condition>VS_2010_PATH</Condition>
-        <File Id="SSDLToMySQL" Name="SSDLToMySQL.tt" DiskId="1"
-              Source="..\MySql.Data.Entity\T4Templates\SSDLToMySQL.tt"/>
-        <File Id="GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
-              Source="..\MySql.Data.Entity\T4Templates\GenerateMySQL.Utility.ttinclude"/>
-      </Component>
-    </DirectoryRef>    
-    
-    <Feature Id="EntityFramework" Level="1" Title="Entity Framework Support"
-             Description="Support for the entity framework">
-      <Condition Level='0'>Not NETFRAMEWORK20 AND Not NETFRAMEWORK40FULL</Condition>
-      <ComponentRef Id="EF.v2"/>
-      <ComponentRef Id="EF.v2.GAC"/>
-      <ComponentRef Id="EF.v4"/>
-      <ComponentRef Id="EF.v4.GAC"/>
-      <ComponentRef Id="EF.T4"/>
-    </Feature>
-
     <InstallExecuteSequence>
-      <Custom Action="SetFWVersion_v2" After="CostFinalize">NETFRAMEWORK20</Custom>
-      <Custom Action="SetFWVersion_v4" After="SetFWVersion_v2">NETFRAMEWORK40FULL</Custom>
-      <Custom Action='ManagedDataInstallSetup' After="InstallFiles">NOT Installed</Custom>
-      <Custom Action='ManagedDataInstall' After="ManagedDataInstallSetup">NOT Installed</Custom>
-      <Custom Action='ManagedDataUnInstallSetup' Before="RemoveFiles">Installed</Custom>
-      <Custom Action='ManagedDataUnInstall' After="ManagedDataUnInstallSetup">Installed</Custom>
+      <!-- v2 custom action scheduling -->
+      <Custom Action='ManagedDataInstallSetupv2' After="InstallFiles">NETFRAMEWORK20 AND NOT Installed</Custom>
+      <Custom Action='ManagedDataInstallv2' After="ManagedDataInstallSetupv2">NETFRAMEWORK20 AND NOT Installed</Custom>
+      <Custom Action='ManagedDataUnInstallSetupv2' Before="RemoveFiles">NETFRAMEWORK20 AND Installed</Custom>
+      <Custom Action='ManagedDataUnInstallv2' After="ManagedDataUnInstallSetupv2">NETFRAMEWORK20 AND Installed</Custom>
+
+      <!-- v4 custom action scheduling -->
+      <Custom Action='ManagedDataInstallSetupv4' After="InstallFiles">NETFRAMEWORK40FULL AND NOT Installed</Custom>
+      <Custom Action='ManagedDataInstallv4' After="ManagedDataInstallSetupv4">NETFRAMEWORK40FULL AND NOT Installed</Custom>
+      <Custom Action='ManagedDataUnInstallSetupv4' Before="RemoveFiles">NETFRAMEWORK40FULL AND Installed</Custom>
+      <Custom Action='ManagedDataUnInstallv4' After="ManagedDataUnInstallSetupv4">NETFRAMEWORK40FULL AND Installed</Custom>
     </InstallExecuteSequence>
 
-    <CustomAction Id="SetFWVersion_v2" Property="FrameworkVersion" Value="v2.0.50727"/>
-    <CustomAction Id="SetFWVersion_v4" Property="FrameworkVersion" Value="v4.0.30319"/>
-    <CustomAction Id="ManagedDataInstallSetup" Property="ManagedDataInstall"
-                  Value='"[WindowsFolder]\Microsoft.NET\Framework\[FrameworkVersion]\installUtil.exe" /LogToConsole=false /LogFile=  "[#MySqlData]"'/>
-    <CustomAction Id='ManagedDataUnInstallSetup' Property="ManagedDataUnInstall"
-                  Value='"[WindowsFolder]\Microsoft.NET\Framework\[FrameworkVersion]\installUtil.exe" /LogToConsole=false /LogFile= /u "[#MySqlData]"'/>
-    <CustomAction Id="ManagedDataInstall" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
-    <CustomAction Id="ManagedDataUnInstall" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
+    <!-- v2 custom actions -->
+    <CustomAction Id="ManagedDataInstallSetupv2" Property="ManagedDataInstallv2"
+                  Value='"[WindowsFolder]\Microsoft.NET\Framework\v2.0.50727\installUtil.exe" /LogToConsole=false /LogFile=  "[#MySql.Data.v2]"'/>
+    <CustomAction Id='ManagedDataUnInstallSetupv2' Property="ManagedDataUnInstallv2"
+                  Value='"[WindowsFolder]\Microsoft.NET\Framework\v2.0.50727\installUtil.exe" /LogToConsole=false /LogFile= /u "[#MySql.Data.v2]"'/>
+    <CustomAction Id="ManagedDataInstallv2" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
+    <CustomAction Id="ManagedDataUnInstallv2" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
+
+    <!-- v4 custom actions -->
+    <CustomAction Id="ManagedDataInstallSetupv4" Property="ManagedDataInstallv4"
+                  Value='"[WindowsFolder]\Microsoft.NET\Framework\v4.0.30319\installUtil.exe" /LogToConsole=false /LogFile=  "[#MySql.Data.v4]"'/>
+    <CustomAction Id='ManagedDataUnInstallSetupv4' Property="ManagedDataUnInstallv4"
+                  Value='"[WindowsFolder]\Microsoft.NET\Framework\v4.0.30319\installUtil.exe" /LogToConsole=false /LogFile= /u "[#MySql.Data.v4]"'/>
+    <CustomAction Id="ManagedDataInstallv4" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
+    <CustomAction Id="ManagedDataUnInstallv4" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
   </Fragment>
 </Wix>
 
