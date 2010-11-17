@@ -7,6 +7,7 @@ Version 6.3.6
 - fixed the installer to require .net 2.0 or .net 4.0 "full" profile since system.web is only supplied with
   the full profile (bug #57654)
 - starting delivering 4.0 variants of MySql.Data and MySql.Web.  This apparently helps Mono 2.8 (bug #56509)
+- adding mapping for UTF8MB4 charset introduced with 5.5.3 (bug #58244)
 
 Version 6.3.5
 - Fix installer bug related to .NET FW 4.0 (bug #56580)
