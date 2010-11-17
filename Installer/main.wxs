@@ -17,8 +17,7 @@
     <!-- First make sure that .NET is installed -->
     <PropertyRef Id="NETFRAMEWORK20"/>
     <PropertyRef Id="NETFRAMEWORK40FULL"/>
-    <PropertyRef Id="NETFRAMEWORK40CLIENT"/>
-    <Condition Message="The .NET Framework 2.0 or 4.0 must be installed before installing this package.">Installed OR NETFRAMEWORK20 OR NETFRAMEWORK40FULL OR NETFRAMEWORK40CLIENT</Condition>
+    <Condition Message="The .NET Framework 2.0 or 4.0 must be installed before installing this package.">Installed OR NETFRAMEWORK20 OR NETFRAMEWORK40FULL</Condition>
 
     <!-- now make sure that we don't have an old version still around -->
     <Property Id="OLDVERSION">

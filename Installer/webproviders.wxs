@@ -1,24 +1,45 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment Id='ProvidersFragment'>
+    
     <DirectoryRef Id='assemblies_v2'>
       <Directory Id="MySql.Web.DummyDir" Name="GAC">
-        <Component Id="ProvidersGAC" Guid="6b95d34b-91e1-41ff-9f3f-dcb5308a00ce">
+        <Component Id="C.Web.v2.GAC" Guid="6b95d34b-91e1-41ff-9f3f-dcb5308a00ce">
+          <Condition>NETFRAMEWORK20</Condition>
           <File Id="ProviderAssemblyGAC" Name="MySql.Web.dll" ShortName="MW"
                 Source="..\MySql.Web\providers\bin\release\mysql.web.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
         </Component>
       </Directory>
-      <Component Id="Providers" Guid="8578813e-e123-45ad-9c92-565382a058b6">
+      <Component Id="C.Web.v2" Guid="8578813e-e123-45ad-9c92-565382a058b6">
+        <Condition>NETFRAMEWORK20</Condition>
         <File Id="MySqlWeb" Name="MySql.Web.dll" DiskId="1"
               Source="..\MySql.Web\providers\bin\release\mysql.web.dll"/>
         <RemoveFile Id="RemoveWebStateFile" Name="*.InstallState" On="uninstall"/>
       </Component>
     </DirectoryRef>
 
+    <DirectoryRef Id='assemblies_v4'>
+      <Directory Id="MySql.Web.DummyDir.v4" Name="GAC">
+        <Component Id="C.Web.v4.GAC" Guid="A30C8C85-C943-4976-8C9C-4ACFBBCD0764">
+          <Condition>NETFRAMEWORK40FULL</Condition>
+          <File Id="ProviderAssemblyGAC" Name="MySql.Web.dll" ShortName="MW"
+                Source="..\MySql.Web\providers\bin\release-4.0\mysql.web.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
+        </Component>
+      </Directory>
+      <Component Id="C.Web.v4" Guid="64B61967-2AB9-4DCC-B82B-23CA348B3CCF">
+        <Condition>NETFRAMEWORK40FULL</Condition>
+        <File Id="MySqlWeb" Name="MySql.Web.dll" DiskId="1"
+              Source="..\MySql.Web\providers\bin\release-4.0\mysql.web.dll"/>
+        <RemoveFile Id="RemoveWebStateFile" Name="*.InstallState" On="uninstall"/>
+      </Component>
+    </DirectoryRef>
+
     <Feature Id='WebProviders' Display='7' Level='1' Title='Web Providers'
              Description='ASP.Net Web Providers'>
-      <ComponentRef Id='Providers'/>
-      <ComponentRef Id='ProvidersGAC'/>
+      <ComponentRef Id='C.Web.v2'/>
+      <ComponentRef Id='C.Web.v2.GAC'/>
+      <ComponentRef Id='C.Web.v4'/>
+      <ComponentRef Id='C.Web.v4.GAC'/>
     </Feature>
 
     <InstallExecuteSequence>
