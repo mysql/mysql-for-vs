@@ -119,6 +119,7 @@ namespace MySql.Data.MySqlClient
             DataTable dt = Query("COLUMNS", null, keys, restrictions);
             dt.Columns.Remove("CHARACTER_OCTET_LENGTH");
             dt.TableName = "Columns";
+            QuoteDefaultValues(dt);
             return dt;
         }
 
@@ -164,6 +165,7 @@ namespace MySql.Data.MySqlClient
             dt.Columns[0].ColumnName = "VIEW_CATALOG";
             dt.Columns[1].ColumnName = "VIEW_SCHEMA";
             dt.Columns[2].ColumnName  = "VIEW_NAME";
+            QuoteDefaultValues(dt);
             return dt;
         }
 

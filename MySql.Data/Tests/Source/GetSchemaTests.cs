@@ -189,14 +189,15 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void Columns()
 		{
-			execSQL("CREATE TABLE test (col1 int, col2 decimal(20,5), " +
-				"col3 varchar(50) character set utf8, col4 tinyint unsigned)");
+			execSQL(@"CREATE TABLE test (col1 int, col2 decimal(20,5), 
+				col3 varchar(50) character set utf8, col4 tinyint unsigned, 
+                col5 varchar(20) default 'boo')");
 
 			string[] restrictions = new string[4];
 			restrictions[1] = database0;
 			restrictions[2] = "test";
 			DataTable dt = conn.GetSchema("Columns", restrictions);
-			Assert.AreEqual(4, dt.Rows.Count);
+			Assert.AreEqual(5, dt.Rows.Count);
 			Assert.AreEqual("Columns", dt.TableName);
             if (Version.Major >= 5 && Version.Minor >= 1)
             {
@@ -237,7 +238,16 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual(4, dt.Rows[3]["ORDINAL_POSITION"]);
 			Assert.AreEqual("YES", dt.Rows[3]["IS_NULLABLE"]);
 			Assert.AreEqual("TINYINT", dt.Rows[3]["DATA_TYPE"].ToString().ToUpper());
-		}
+
+            // fifth column
+            Assert.AreEqual(database0.ToUpper(), dt.Rows[4]["TABLE_SCHEMA"].ToString().ToUpper());
+            Assert.AreEqual("COL5", dt.Rows[4]["COLUMN_NAME"].ToString().ToUpper());
+            Assert.AreEqual(5, dt.Rows[4]["ORDINAL_POSITION"]);
+            Assert.AreEqual("YES", dt.Rows[4]["IS_NULLABLE"]);
+            Assert.AreEqual("VARCHAR", dt.Rows[4]["DATA_TYPE"].ToString().ToUpper());
+            Assert.AreEqual("VARCHAR(20)", dt.Rows[4]["COLUMN_TYPE"].ToString().ToUpper());
+            Assert.AreEqual("'BOO'", dt.Rows[4]["COLUMN_DEFAULT"].ToString().ToUpper());
+        }
 
         /// <summary> 
         /// Bug #46270 connection.GetSchema("Columns") fails on MySQL 4.1  
