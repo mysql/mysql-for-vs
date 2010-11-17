@@ -8,6 +8,7 @@ Version 6.3.6
   the full profile (bug #57654)
 - starting delivering 4.0 variants of MySql.Data and MySql.Web.  This apparently helps Mono 2.8 (bug #56509)
 - adding mapping for UTF8MB4 charset introduced with 5.5.3 (bug #58244)
+- return default values for text columns as quoted (bug #58167)
 
 Version 6.3.5
 - Fix installer bug related to .NET FW 4.0 (bug #56580)
