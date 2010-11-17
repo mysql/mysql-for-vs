@@ -49,6 +49,26 @@ namespace MySql.Data.Types
             return false;
         }
 
+        public static bool IsTextType(string typename)
+        {
+            string lowerType = typename.ToLower(CultureInfo.InvariantCulture);
+            switch (lowerType)
+            {
+                case "varchar":
+                case "char":
+                case "text":
+                case "longtext":
+                case "tinytext":
+                case "mediumtext":
+                case "nchar":
+                case "nvarchar": 
+                case "enum":
+                case "set":
+                return true;
+            }
+            return false;
+        }
+
         public static bool SupportScale(string typename)
         {
             string lowerType = typename.ToLower(CultureInfo.InvariantCulture);
