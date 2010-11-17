@@ -6,6 +6,7 @@
 - fixed MySqlCommand.Clone so that the default command timeoout functionality is not disabled when
   you clone a command (bug #56806)
 - fixed loading of mono.posix assembly to use the right assembly (bug #56410)
+- adding mapping for UTF8MB4 charset introduced with 5.5.3 (bug #58244)
 
 Version 6.1.5
 - Fix authorization popup after modifying stored procedure in VS (Bug #44715)
