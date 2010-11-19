@@ -72,7 +72,17 @@ namespace MySql.Data.MySqlClient.Tests
 #if !CF  //No Security.Principal on CF
 
         [Test]
-        public void TestIntegratedSecurity()
+        public void TestIntegratedSecurityNoPooling()
+        {
+            TestIntegratedSecurity(false);
+        }
+
+        [Test]
+        public void TestIntegratedSecurityPooling()
+        {
+            TestIntegratedSecurity(true);
+        }
+        public void TestIntegratedSecurity(bool pooling)
         {
 
 
@@ -141,25 +151,41 @@ namespace MySql.Data.MySqlClient.Tests
 
                 // Finally, use IntegratedSecurity=true for the newly created user
                 string connStr = GetConnectionString(true) + ";Integrated Security=SSPI";
-                using (MySqlConnection c = new MySqlConnection(connStr))
+
+                /* If pooling is requested, we'll  run test twice, with connection reset in between */
+                if (pooling)
                 {
-                    c.Open();
+                    connStr += ";Connection Reset=true;Pooling=true";
+                }
+                int testIterations = pooling ? 2 : 1;
 
-                    MySqlCommand command = new MySqlCommand("SELECT 1", c);
-                    long ret = (long)command.ExecuteScalar();
-                    Assert.AreEqual(ret, 1);
+                int threadId = -1;
+                for (int i = 0; i < testIterations ;i++ )
+                {
+                    using (MySqlConnection c = new MySqlConnection(connStr))
+                    {
+                        c.Open();
+                        threadId = c.ServerThread;
+                        MySqlCommand command = new MySqlCommand("SELECT 1", c);
+                        long ret = (long)command.ExecuteScalar();
+                        Assert.AreEqual(ret, 1);
 
+                        command.CommandText = "select user()";
+                        string user = (string)command.ExecuteScalar();
+                        // Check if proxy user is correct
+                        Assert.IsTrue(user.StartsWith("auth_windows@"));
 
-                    command.CommandText = "select user()";
-                    string user = (string)command.ExecuteScalar();
-                    // Check if proxy user is correct
-                    Assert.IsTrue(user.StartsWith("auth_windows@"));
+                        // check if mysql user is correct 
+                        // (foo_user is mapped to current  OS user)
+                        command.CommandText = "select current_user()";
+                        string currentUser = (string)command.ExecuteScalar();
+                        Assert.IsTrue(currentUser.StartsWith("foo_user@"));
+                    }
+                }
 
-                    // check if mysql user is correct 
-                    // (foo_user is mapped to current  OS user)
-                    command.CommandText = "select current_user()";
-                    string currentUser = (string)command.ExecuteScalar();
-                    Assert.IsTrue(currentUser.StartsWith("foo_user@"));
+                if (pooling)
+                {
+                    suExecSQL("KILL " + threadId);
                 }
             }
             finally
