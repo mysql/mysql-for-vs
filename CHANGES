@@ -7,6 +7,8 @@
 - fixed loading of mono.posix assembly to use the right assembly (bug #56410)
 - adding mapping for UTF8MB4 charset introduced with 5.5.3 (bug #58244)
 - return default values for text columns as quoted (bug #58167)
+- fixed our DDEX code so that dragging tables from server explorer onto a typed data set
+  preserves the table name (bug #57894)
 
 Version 6.0.7
 - Fix authorization popup after modifying stored procedure in VS (Bug #44715)
