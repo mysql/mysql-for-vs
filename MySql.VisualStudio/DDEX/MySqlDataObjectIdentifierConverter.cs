@@ -24,25 +24,18 @@ namespace MySql.Data.VisualStudio
             if (typeName == "Table")
             {
                 DbConnection c = connection.ConnectionSupport.ProviderObject as DbConnection;
+                string dbName = FormatPart("Table", c.Database, true);
 
                 if (identifierParts.Length == 1) 
                     id = identifierParts[0];
-                if (identifierParts.Length == 2 && identifierParts[0] == c.Database)
+                if (identifierParts.Length == 2 && identifierParts[0] == dbName)
                     id = identifierParts[1];
-                if (identifierParts.Length == 3 && identifierParts[1] == c.Database)
+                if (identifierParts.Length == 3 && identifierParts[1] == dbName)
                     id = identifierParts[2];
             }
             if (id == String.Empty || forDisplay)
                 id = base.BuildString(typeName, identifierParts, forDisplay);
             return id;
-        }
-
-        protected override string FormatPart(string typeName, object identifierPart, bool withQuotes)
-        {
-            DbConnection c = connection.ConnectionSupport.ProviderObject as DbConnection;
-            if (typeName == "Table" && identifierPart.Equals(c.Database))
-                return null;
-            return base.FormatPart(typeName, identifierPart, withQuotes);
         }
     }
 }
