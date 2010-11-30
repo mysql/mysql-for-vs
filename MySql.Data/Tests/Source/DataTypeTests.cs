@@ -976,5 +976,24 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.AreEqual(d, double.MaxValue);
             }
         }
+
+        /// <summary>
+        /// Bug #58373	ReadInteger problem
+        /// </summary>
+        [Test]
+        public void BigIntAutoInc()
+        {
+            execSQL("DROP TABLE IF EXISTS test");
+            execSQL("CREATE TABLE test(ID bigint unsigned AUTO_INCREMENT NOT NULL PRIMARY KEY, name VARCHAR(20))");
+
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES (@id, 'boo')", conn);
+            ulong val = UInt64.MaxValue;
+            val -= 100;
+            cmd.Parameters.AddWithValue("@id", val);
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO test (name) VALUES ('boo2')";
+            cmd.ExecuteNonQuery();
+        }
     }
 }

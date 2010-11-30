@@ -109,7 +109,7 @@ namespace MySql.Data.Types
 
 		public void SkipValue(MySqlPacket packet)
 		{
-            int len = packet.ReadFieldLength();
+            int len = (int)packet.ReadFieldLength();
             packet.Position += len;
 		}
 
