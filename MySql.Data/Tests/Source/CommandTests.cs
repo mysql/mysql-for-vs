@@ -449,6 +449,21 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.AreEqual("B", reader.GetString(3));
             }
         }
+
+        /// <summary>
+        /// Bug #57501	MySql Connector/NET 6.3.5.0 fails to read from DataReader
+        /// </summary>
+        [Test]
+        public void HelperTest()
+        {
+            string connStr = GetConnectionString(true);
+            using (MySqlDataReader reader = MySqlHelper.ExecuteReader(connStr, "SHOW TABLES"))
+            {
+                while (reader.Read())
+                {
+                }
+            }
+        }
     }
 
 
