@@ -10,6 +10,7 @@
 - return default values for text columns as quoted (bug #58167)
 - fixed our DDEX code so that dragging tables from server explorer onto a typed data set
   preserves the table name (bug #57894)
+- fixed ReadFieldLength to return a long so bigint autoincrement columns can work (bug #58373)
 
 Version 6.1.5
 - Fix authorization popup after modifying stored procedure in VS (Bug #44715)
