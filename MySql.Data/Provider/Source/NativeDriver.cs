@@ -658,7 +658,7 @@ namespace MySql.Data.MySqlClient
             int length = -1;
             if (nullMap == null)
             {
-                length = packet.ReadFieldLength();
+                length = (int)packet.ReadFieldLength();
                 if (length == -1) return;
             }
             if (length > -1)
