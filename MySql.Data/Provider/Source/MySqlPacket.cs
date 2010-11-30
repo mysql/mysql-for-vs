@@ -148,7 +148,7 @@ namespace MySql.Data.MySqlClient
 
         #region Integer methods
 
-        public int ReadFieldLength()
+        public long ReadFieldLength()
         {
             byte c = ReadByte();
 
@@ -157,7 +157,7 @@ namespace MySql.Data.MySqlClient
                 case 251: return -1;
                 case 252: return ReadInteger(2);
                 case 253: return ReadInteger(3);
-                case 254: return ReadInteger(8);
+                case 254: return ReadLong(8);
                 default: return c;
             }
         }
