@@ -12,6 +12,8 @@ Version 6.3.6
 - fixed our DDEX code so that dragging tables from server explorer onto a typed data set
   preserves the table name (bug #57894)
 - fixed ReadFieldLength to return a long so bigint autoincrement columns can work (bug #58373)
+- fixed MySqlHelper.ExecuteReader bug where it was opening the connection inside a using block
+  which was closing the connection before we were really done with it (bug #57501)
 
 Version 6.3.5
 - Fix installer bug related to .NET FW 4.0 (bug #56580)

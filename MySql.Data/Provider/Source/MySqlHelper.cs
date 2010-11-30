@@ -298,13 +298,11 @@ namespace MySql.Data.MySqlClient
 		public static MySqlDataReader ExecuteReader(string connectionString, string commandText, params MySqlParameter[] commandParameters)
 		{
 			//create & open a SqlConnection
-			using (MySqlConnection cn = new MySqlConnection(connectionString))
-            {
-    			cn.Open();
+            MySqlConnection cn = new MySqlConnection(connectionString);
+  			cn.Open();
 
-				//call the private overload that takes an internally owned connection in place of the connection string
-				return ExecuteReader(cn, null, commandText, commandParameters, false);
-			}
+			//call the private overload that takes an internally owned connection in place of the connection string
+			return ExecuteReader(cn, null, commandText, commandParameters, false);
 		}
 
         /// <summary>
