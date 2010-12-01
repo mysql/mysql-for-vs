@@ -53,6 +53,7 @@
     <MakeDir Directories ="tmp"/>
     <Copy SourceFiles ="@(SourceFiles)" DestinationFolder="tmp/%(RecursiveDir)"/>
     <Delete Files="tmp/Readme-commercial" Condition=" '$(Configuration)' == 'GPL' "/>
+    <Delete Files="tmp/License.MYSQL" Condition=" '$(Configuration)' == 'GPL' "/>
     <Delete Files="tmp/Readme" Condition=" '$(Configuration)' == 'Commercial' "/>
     <Move SourceFiles="tmp/README-Commercial" DestinationFiles="tmp/README" Condition=" '$(Configuration)' == 'Commercial' "/>
 
@@ -86,6 +87,7 @@
       <BinaryFiles Include="COPYING" Condition=" '$(Configuration)' == 'GPL' "/>
       <BinaryFiles Include="README" Condition=" '$(Configuration)' == 'GPL' "/>
       <BinaryFiles Include="README-Commercial" Condition=" '$(Configuration)' == 'Commercial' "/>
+      <BinaryFiles Include="License.MYSQL" Condition=" '$(Configuration)' == 'Commercial' "/>
       <BinaryFiles Include="Release Notes.txt"/>
       <BinaryFiles Include="CHANGES"/>
     </ItemGroup>

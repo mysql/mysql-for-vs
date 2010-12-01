@@ -11,8 +11,9 @@
         <?if $(var.IsGPL) = 1 ?>
         <File Id="COPYING" Name="COPYING" Source="..\COPYING" DiskId="1" />
         <File Id="README1" Name="README" Source="..\README" DiskId="1"/>
-	<?else?>
+	      <?else?>
         <File Id="README2" Name="README" Source="..\README-Commercial" DiskId="1"/>
+        <File Id="License.MYSQL" Name="License.MYSQL" Source="..\License.MYSQL" DiskId="1"/>
         <?endif?>
         <RegistryKey Id="MySqlKey" Root="HKLM" Action="createAndRemoveOnUninstall"
                      Key="Software\MySQL AB\MySQL Connector/Net">
