@@ -1,61 +1,70 @@
-MySQL Connector/Net
-Oracle's ADO.Net Driver for MySQL
+MySQL Connector/Net 6.x
+
+This is a release of MySQL Connector/Net, Oracle's dual-
+license ADO.Net Driver for MySQL. For the avoidance of 
+doubt, this particular copy of the software is released 
+under the version 2 of the GNU General Public License. 
+MySQL Connector/Net is brought to you by the MySQL team 
+at Oracle.
+
 Copyright (c) 2004, 2010, Oracle and/or its affiliates. All rights reserved.
 
 CONTENTS
 
 * License
 * Documentation Location
-
+* Third-Party Component Notices
 
 LICENSE
 
-The MySQL Connector/Net is licensed under the terms of the GPLv2 <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most MySQL Connectors. There are special exceptions to the terms and conditions of the GPLv2 as it is applied to this software, see the FLOSS License Exception <http://www.mysql.com/about/legal/licensing/foss-exception.html>.
+The MySQL Connector/Net is licensed under the terms of the 
+GPLv2 <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, 
+like most MySQL Connectors. There are special exceptions to 
+the terms and conditions of the GPLv2 as it is applied to this
+software, see the FLOSS License Exception <http://www.mysql.com/about/legal/licensing/foss-exception.html>.
 
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; version 2 of the License.
+License information can be found in the COPYING file.
 
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+This program is free software; you can redistribute it and/or 
+modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; version 2 of the 
+License.
 
-You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+This program is distributed in the hope that it will be useful, 
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+GNU General Public License for more details.
 
+You should have received a copy of the GNU General Public License 
+along with this program; if not, write to the Free Software 
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 
+02110-1301  USA.
 
 DOCUMENTATION LOCATION
  
-The documentation currently exists in MSDN help format and is located in the 'doc' directory.
+The documentation currently exists in MSDN help format and is 
+located in the 'doc' directory.
 
 This software is OSI Certified Open Source Software.
 OSI Certified is a certification mark of the Open Source Initiative.
 
+***************************************************************
 
-INCLUDED SOFTWARE
+Third-Party Component Notices
 
-The following software may be included in this product:
-zlib
+****************************************************************
 
-Use of any of this software is governed by the terms of the license below:
+This distribution may include materials developed by third
+parties. For license and attribution notices for these
+materials, please refer to the documentation that accompanies
+this distribution.
 
-/* zlib.h -- interface of the 'zlib' general purpose compression library
-  version 1.2.3, July 18th, 2005
+GPLv2 Disclaimer
+For the avoidance of doubt, except that if any license choice
+other than GPL or LGPL is available it will apply instead, 
+Oracle elects to use only the General Public License version 2 
+(GPLv2) at this time for any software where a choice of GPL 
+license versions is made available with the language indicating 
+that GPLv2 or any later version may be used, or where a choice 
+of which version of the GPL is applied is otherwise unspecified.
 
-  Copyright (C) 1995-2005 Jean-loup Gailly and Mark Adler
-
-  This software is provided 'as-is', without any express or implied
-  warranty.  In no event will the authors be held liable for any damages
-  arising from the use of this software.
-
-  Permission is granted to anyone to use this software for any purpose,
-  including commercial applications, and to alter it and redistribute it
-  freely, subject to the following restrictions:
-
-  1. The origin of this software must not be misrepresented; you must not
-     claim that you wrote the original software. If you use this software
-     in a product, an acknowledgment in the product documentation would be
-     appreciated but is not required.
-  2. Altered source versions must be plainly marked as such, and must not be
-     misrepresented as being the original software.
-  3. This notice may not be removed or altered from any source distribution.
-
-  Jean-loup Gailly jloup@gzip.org
-  Mark Adler madler@alumni.caltech.edu
-
-*/
