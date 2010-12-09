@@ -11,6 +11,9 @@
 - fixed our DDEX code so that dragging tables from server explorer onto a typed data set
   preserves the table name (bug #57894)
 - fixed ReadFieldLength to return a long so bigint autoincrement columns can work (bug #58373)
+- fixed bug where older versions of MySQL would present cast(0 as decimal(0,0)) as string 
+  that caused our EF code to throw an exception as it tried to convert that to bool
+  (bug #55349)
 
 Version 6.2.4
 - Fix authorization popup after modifying stored procedure in VS (Bug #44715)
