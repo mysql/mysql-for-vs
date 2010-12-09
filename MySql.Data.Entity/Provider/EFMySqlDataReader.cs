@@ -27,6 +27,7 @@ using System.Collections;
 using System.Data;
 using System.Data.Metadata.Edm;
 using System.Globalization;
+using System.Text;
 
 namespace MySql.Data.Entity
 {
@@ -207,9 +208,15 @@ namespace MySql.Data.Entity
 
         private object ChangeType(object sourceValue, Type targetType)
         {
-            if (sourceValue is byte[] && targetType == typeof(Guid))
+            if (sourceValue is byte[])
             {
-                return new Guid((byte[])sourceValue);
+				if (targetType == typeof(Guid))
+					return new Guid((byte[])sourceValue);
+				else if (targetType == typeof(bool))
+				{
+					byte[] bytes = (byte[])sourceValue;
+					return bytes[0] == '1';
+				}
             }
 
             if (sourceValue is DateTime && targetType == typeof(DateTimeOffset))
