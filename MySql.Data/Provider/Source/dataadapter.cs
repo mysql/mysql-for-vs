@@ -179,19 +179,6 @@ namespace MySql.Data.MySqlClient
 
                 int ret = base.Update(dataRows, tableMapping);
 
-                // Following was a workaround for Bug#54863
-                // It  a good question whether we still needed it, it seems like
-                // .NET bug (DbDataAdapter not issuing AcceptChanges() for 
-                // modified rows) has already been fixed in .NET
-                foreach (DataRow row in dataRows)
-                {
-                    if (row.RowState != DataRowState.Unchanged &&
-                        row.RowState != DataRowState.Detached)
-                    {
-                        row.AcceptChanges();
-                    }
-                }
-
                 return ret;
             }
             finally 

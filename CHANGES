@@ -15,6 +15,8 @@
   (bug #55349)
 - change reader to close the connection if CommandBehavior.CloseConnection is given and an
   exception is generated (bug #58652)
+- removed extra call to Update in MySqlDataAdapter introduced with bug fix to bug #54863.
+  It seems to not be necessary (bug #58853)
 
 Version 6.0.7
 - Fix authorization popup after modifying stored procedure in VS (Bug #44715)

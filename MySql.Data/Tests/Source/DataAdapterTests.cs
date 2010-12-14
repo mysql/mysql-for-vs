@@ -858,18 +858,11 @@ namespace MySql.Data.MySqlClient.Tests
                 "field varchar(50) DEFAULT NULL," +
                 "PRIMARY KEY (id_auto))");
 
-            execSQL("CREATE  PROCEDURE sp_insert(" +
-                    " in p_field varchar(50)) " +
-                    " BEGIN " +
-                    " INSERT INTO T(field) VALUES(p_field);" +
-                    " SELECT * FROM T WHERE id_auto=@@IDENTITY;" +
-                    " END");
-
             MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM T", conn);
             da.InsertCommand = conn.CreateCommand();
-            da.InsertCommand.CommandText = "sp_insert";
-            da.InsertCommand.CommandType = CommandType.StoredProcedure;
-            da.InsertCommand.Parameters.Add("p_field", MySqlDbType.VarChar, 50, "field");
+            da.InsertCommand.CommandText = @"INSERT INTO T(field) VALUES (@p_field); 
+                                            SELECT * FROM T WHERE id_auto=@@IDENTITY"; 
+            da.InsertCommand.Parameters.Add("@p_field", MySqlDbType.VarChar, 50, "field");
             da.InsertCommand.UpdatedRowSource = UpdateRowSource.FirstReturnedRecord;
 
             da.DeleteCommand = conn.CreateCommand();
@@ -884,6 +877,8 @@ namespace MySql.Data.MySqlClient.Tests
             r["field"] = "row";
             table.Rows.Add(r);
             da.Update(table);
+
+            Assert.AreEqual(r.RowState, DataRowState.Unchanged);
 
             table.Rows[0].Delete();
 
