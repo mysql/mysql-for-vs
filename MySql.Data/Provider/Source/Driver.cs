@@ -50,7 +50,7 @@ namespace MySql.Data.MySqlClient
         protected Hashtable charSets;
         protected bool hasWarnings;
         protected long maxPacketSize;
-        protected int lastInsertId;
+        protected long lastInsertId;
         protected long affectedRows;
 #if !CF
         protected MySqlPromotableTransaction currentTransaction;
@@ -152,7 +152,7 @@ namespace MySql.Data.MySqlClient
             get { return affectedRows; }
         }
 
-        public int LastInsertedId
+        public long LastInsertedId
         {
             get { return lastInsertId; }
         }

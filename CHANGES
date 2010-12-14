@@ -14,6 +14,8 @@
 - fixed bug where older versions of MySQL would present cast(0 as decimal(0,0)) as string 
   that caused our EF code to throw an exception as it tried to convert that to bool
   (bug #55349)
+- change reader to close the connection if CommandBehavior.CloseConnection is given and an
+  exception is generated (bug #58652)
 
 Version 6.1.5
 - Fix authorization popup after modifying stored procedure in VS (Bug #44715)
