@@ -449,6 +449,29 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.AreEqual("B", reader.GetString(3));
             }
         }
+
+        /// <summary>
+        /// Bug #58652	ExecuteReader throws NullReferenceException when using CommandBehavior.Close
+        /// </summary>
+        [Test]
+        public void SyntaxErrorWithCloseConnection()
+        {
+            string connStr = GetConnectionString(true);
+            using (MySqlConnection c = new MySqlConnection(connStr))
+            {
+                c.Open();
+                MySqlCommand cmd = new MySqlCommand("SELE 1", c);
+                try
+                {
+                    cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                    Assert.Fail("This should have failed");
+                }
+                catch (MySqlException)
+                {
+                }
+                Assert.IsTrue(c.State == ConnectionState.Closed);
+            }
+        }
     }
 
 
