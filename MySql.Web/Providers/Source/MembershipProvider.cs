@@ -1227,9 +1227,15 @@ namespace MySql.Web.Security
         /// </summary>
         /// <param name="bytes"></param>
         /// <returns></returns>
-        private string HashPasswordBytes(byte[] bytes)
+        private string HashPasswordBytes(byte[] key, byte[] bytes)
         {
             HashAlgorithm hash = HashAlgorithm.Create(Membership.HashAlgorithmType);
+
+            if (hash is KeyedHashAlgorithm)
+            {
+                KeyedHashAlgorithm keyedHash = hash as KeyedHashAlgorithm;
+                keyedHash.Key = key;
+            }
             return Convert.ToBase64String(hash.ComputeHash(bytes));
         }
 
@@ -1253,7 +1259,7 @@ namespace MySql.Web.Security
                 return Convert.ToBase64String(encryptedBytes);
             }
             else if (format == MembershipPasswordFormat.Hashed)
-                return HashPasswordBytes(keyedBytes);
+                return HashPasswordBytes(keyBytes, keyedBytes);
             else
                 throw new ProviderException(Resources.UnsupportedPasswordFormat);
         }
