@@ -18,6 +18,7 @@
 - removed extra call to Update in MySqlDataAdapter introduced with bug fix to bug #54863.
   It seems to not be necessary (bug #58853)
 - fixed unnecessary string code in MySqlTokenizer (bug #58757)
+- fixed MembershipProvider to properly set a hash key when using a keyed hash alogrithm (bug #58906)
 
 Version 6.0.7
 - Fix authorization popup after modifying stored procedure in VS (Bug #44715)
