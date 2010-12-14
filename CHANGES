@@ -17,6 +17,8 @@ Version 6.3.6
 - fixed bug where older versions of MySQL would present cast(0 as decimal(0,0)) as string 
   that caused our EF code to throw an exception as it tried to convert that to bool
   (bug #55349)
+- change reader to close the connection if CommandBehavior.CloseConnection is given and an
+  exception is generated (bug #58652)
 
 Version 6.3.5
 - Fix installer bug related to .NET FW 4.0 (bug #56580)
