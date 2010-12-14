@@ -19,6 +19,10 @@ Version 6.3.6
   (bug #55349)
 - change reader to close the connection if CommandBehavior.CloseConnection is given and an
   exception is generated (bug #58652)
+- removed extra call to Update in MySqlDataAdapter introduced with bug fix to bug #54863.
+  It seems to not be necessary (bug #58853)
+- fixed unnecessary string code in MySqlTokenizer (bug #58757)
+- fixed MembershipProvider to properly set a hash key when using a keyed hash alogrithm (bug #58906)
 
 Version 6.3.5
 - Fix installer bug related to .NET FW 4.0 (bug #56580)
