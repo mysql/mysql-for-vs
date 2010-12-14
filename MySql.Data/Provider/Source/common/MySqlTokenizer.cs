@@ -145,7 +145,6 @@ namespace MySql.Data.MySqlClient
             while (FindToken())
             {
                 if ((stopIndex - startIndex) < 2) continue;
-                string token = sql.Substring(startIndex, stopIndex - startIndex).Trim();
                 char c1 = sql[startIndex];
                 char c2 = sql[startIndex+1];
                 if (c1 == '?' ||
