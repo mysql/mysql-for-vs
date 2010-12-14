@@ -912,6 +912,8 @@ namespace MySql.Data.MySqlClient
 					connection.Abort();
                 if (ex.Number == 0)
                     throw new MySqlException(Resources.FatalErrorReadingResult, ex);
+                if ((commandBehavior & CommandBehavior.CloseConnection) != 0)
+                    Close();
                 throw;
             }
 		}
