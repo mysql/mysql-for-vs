@@ -457,7 +457,7 @@ namespace MySql.Data.MySqlClient.Tests
                 try
                 {
                     cmd.ExecuteReader(CommandBehavior.CloseConnection);
-                    Assert.Fail();
+                    Assert.Fail("This should have failed");
                 }
                 catch (MySqlException)
                 {

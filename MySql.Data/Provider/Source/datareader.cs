@@ -958,7 +958,7 @@ namespace MySql.Data.MySqlClient
                     throw new MySqlException(Resources.Timeout);
                 if (ex.Number == 0)
                     throw new MySqlException(Resources.FatalErrorReadingResult, ex);
-                if ((Behavior & CommandBehavior.CloseConnection) != 0)
+                if ((commandBehavior & CommandBehavior.CloseConnection) != 0)
                     Close();
                 throw;
             }
