@@ -23,6 +23,7 @@ Version 6.3.6
   It seems to not be necessary (bug #58853)
 - fixed unnecessary string code in MySqlTokenizer (bug #58757)
 - fixed MembershipProvider to properly set a hash key when using a keyed hash alogrithm (bug #58906)
+- HelpLibManager is now launched during setup to integrate the docs into VS2010
 
 Version 6.3.5
 - Fix installer bug related to .NET FW 4.0 (bug #56580)
