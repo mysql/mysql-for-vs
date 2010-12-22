@@ -110,36 +110,37 @@
 
     <Binary Id="H2Reg" SourceFile="Binary\H2Reg.exe"/>
     <Property Id="WIXUI_INSTALLDIR" Value='INSTALLDIR'/>
+    <Property Id='INSTALLUTIL' Value='[NETFRAMEWORK20INSTALLROOTDIR]'/>
+    
     <!-- Remove the license agreement dialog -->
-    <UIRef Id="WixUI_MySQL"/>
+    <UIRef Id='WixUI_MySQL'/>
     <WixVariable Id="WixUIBannerBmp" Value="Bitmaps/BannrBmp.bmp"/>
     <WixVariable Id="WixUIDialogBmp" Value="Bitmaps/DlgBmp.bmp"/>
     <WixVariable Id="WixUICostingPopupOptOut" Value="true"/>
-
 
     <Icon Id="ChangeLogIcon" SourceFile="Bitmaps\document.ico"/>
 
     <InstallExecuteSequence>
       <Custom Action='RegisterHelp' After="InstallFiles">(&amp;DocsFeature=3) AND NOT(!DocsFeature=3)</Custom>
       <Custom Action="UnRegisterHelp" Before="RemoveFiles">(&amp;DocsFeature=2) AND (!DocsFeature=3)</Custom>
-      
-      <!--<Custom Action="CleanVS2010Help" After="RegisterHelp">(&amp;DocsFeature=3) AND NOT(!DocsFeature=3) AND (VS2010Int=3)</Custom>
-      <Custom Action="InstallVS2010Help" After="CleanVS2010Help">(&amp;DocsFeature=3) AND NOT(!DocsFeature=3) AND (VS2010Int=3)</Custom>
-      <Custom Action="RemoveVS2010Help" After="UnRegisterHelp">(&amp;DocsFeature=2) AND (!DocsFeature=3) AND (!VS2010Int=3)</Custom>-->
+
+      <Custom Action="SetHLMPath" After="AppSearch"></Custom>
+      <Custom Action="Register2010Help" After="PublishProduct">HLM_LOCATION AND (&amp;DocsFeature=3) AND NOT(!DocsFeature=3)</Custom>
+      <Custom Action="UnRegister2010Help" After="RemoveFiles">HLM_LOCATION AND (&amp;DocsFeature=2) AND (!DocsFeature=3)</Custom>
     </InstallExecuteSequence>
 
+    <!-- Custom actions for VS2005/VS2008 help -->
     <CustomAction Id="RegisterHelp" ExeCommand='-r -q CmdFile="[#H2Reg.ini]"' BinaryKey="H2Reg" Execute="deferred" Return="check" Impersonate="no"/>
     <CustomAction Id="UnRegisterHelp" ExeCommand='-u -q CmdFile="[#H2Reg.ini]"' BinaryKey="H2Reg" Execute="deferred" Return="check" Impersonate="no"/>
 
-    <!--<CustomAction Id="InstallVS2010HelpSetup" Property="InstallVS2010Help"
-                  Value='"[HLM_LOCATION]\HelpLibManager.exe" /product VS /version 100 /locale en-us /silent /vendor "Oracle" /sourceMedia "[#MSHA_File]"'/>
-    <CustomAction Id="CleanVS2010HelpSetup" Property="CleanVS2010Help"
-                  Value='"[HLM_LOCATION]\HelpLibManager.exe" /product VS /version 100 /locale en-us /uninstall /silent /vendor "Oracle" /mediaBookList "MySQL Connector/Net" /productName "MySQL Connector/Net" > NUL'/>
-    <CustomAction Id="RemoveVS2010HelpSetup" Property="RemoveVS2010Help"
-                  Value='"[HLM_LOCATION]\HelpLibManager.exe" /product VS /version 100 /locale en-us /uninstall /silent /vendor "Oracle" /mediaBookList "MySQL Connector/Net" /productName "MySQL Connector/Net" > NUL'/>
-    <CustomAction Id="InstallVS2010Help" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
-    <CustomAction Id="RemoveVS2010Help" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
-    <CustomAction Id="CleanVS2010Help" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>-->
+    <!-- custom actions for VS2010 help -->
+    <CustomAction Id="SetHLMPath" Property="HelpLibManager" Value="[HLM_LOCATION]HelpLibManager.exe"/>
+    <CustomAction Id="Register2010Help"
+                  ExeCommand ='/product VS /version 100 /locale en-us /brandingPackage Dev10.mshc /sourceMedia "[#MSHA_File]"'
+                  Property='HelpLibManager' Return='check'/>
+    <CustomAction Id="UnRegister2010Help"
+                  ExeCommand ='/product VS /version 100 /locale en-us /uninstall /silent /vendor "Oracle" /mediaBookList "MySQL Connector/Net" /productName "MySQL Connector/Net" > NUL'
+                  Property='HelpLibManager' Return='check'/>
   </Product>
 </Wix>
 

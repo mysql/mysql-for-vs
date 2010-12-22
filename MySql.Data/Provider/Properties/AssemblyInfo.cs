@@ -47,6 +47,10 @@ using System.Security;
 [assembly: AssemblyTitle("MySql.Data.CF.dll")]
 #endif
 
+#if CLR4
+[assembly: SecurityRules(SecurityRuleSet.Level1)]
+#endif
+
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 
 // Microsoft .NET Framework documentation for more information on assembly signing.
