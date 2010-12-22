@@ -55,8 +55,8 @@
       <ProgressText Action="RegisterHelp">Registering help collection</ProgressText>
       <ProgressText Action="UnRegisterHelp">Unregistering help collection</ProgressText>
 
-      <ProgressText Action="InstallVS2010Help">Registering help collection with Visual Studio 2010</ProgressText>
-      <ProgressText Action="RemoveVS2010Help">Unregistering help collection from Visual Studio 2010</ProgressText>
+      <ProgressText Action="Register2010Help">Registering help collection with Visual Studio 2010</ProgressText>
+      <ProgressText Action="UnRegister2010Help">Unregistering help collection from Visual Studio 2010</ProgressText>
 
       <ProgressText Action='VS_2005_INSTALL_EXEC'>Installing Visual Studio 2005 Integration</ProgressText>
       <ProgressText Action='VS_2005_REMOVE_EXEC'>Removing Visual Studio 2005 Integration</ProgressText>

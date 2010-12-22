@@ -43,6 +43,10 @@ using System.Security;
 // COM, set the ComVisible attribute to true on that type.
 [assembly: ComVisible(false)]
 
+#if CLR4
+[assembly: SecurityRules(SecurityRuleSet.Level1)]
+#endif
+
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 //[assembly: Guid("01520f33-9ecd-4574-96d0-5e6604e0f3aa")]
 

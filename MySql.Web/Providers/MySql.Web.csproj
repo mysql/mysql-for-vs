@@ -65,7 +65,7 @@
     <DebugSymbols>true</DebugSymbols>
     <IntermediateOutputPath>obj\Debug-4.0\</IntermediateOutputPath>
     <OutputPath>bin\Debug-4.0\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;CLR4</DefineConstants>
     <NoWarn>1699</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -78,7 +78,7 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <IntermediateOutputPath>obj\Release-4.0\</IntermediateOutputPath>
     <OutputPath>bin\Release-4.0\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;CLR4</DefineConstants>
     <DocumentationFile>bin\release\webdocs.xml</DocumentationFile>
     <Optimize>true</Optimize>
     <NoWarn>1699</NoWarn>
