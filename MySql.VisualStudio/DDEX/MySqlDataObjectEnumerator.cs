@@ -26,12 +26,12 @@ using System.Data.Common;
 
 namespace MySql.Data.VisualStudio
 {
-	/// <summary>
+    /// <summary>
     /// Implements custom database objects enumerator for MySQL databases. 
     /// Uses information_schema database to enumerate objects.
-	/// </summary>
-	public class MySqlDataObjectEnumerator : AdoDotNetObjectEnumerator
-	{
+    /// </summary>
+    public class MySqlDataObjectEnumerator : AdoDotNetObjectEnumerator
+    {
         /// <summary>
         /// Enumerates items for a set of data objects of the specified type 
         /// with the specified restrictions and sort string, if supported. 
@@ -69,83 +69,45 @@ namespace MySql.Data.VisualStudio
             if (typeName == null)
                 throw new ArgumentNullException("typeName");
 
-			Debug.Assert(typeName == String.Empty);
+            if (typeName == String.Empty)
+                return RootEnumeration();
 
-			DbConnection conn = (DbConnection)Connection.GetLockedProviderObject();
-			DataTable table = new DataTable();
-			table.Columns.Add("SERVER_NAME");
-			table.Columns.Add("CATALOG_NAME");
-			table.Columns.Add("SCHEMA_NAME");
-			DataRow row = table.NewRow();
-			row["SERVER_NAME"] = conn.DataSource;
-			row["SCHEMA_NAME"] = conn.Database;
-			table.Rows.Add(row);
-			Connection.UnlockProviderObject();
-
-			return new AdoDotNetDataTableReader(table);
-
-/*
-            // Chose restricitions array
-            object[] appliedRestrictions;
-            if (typeName.Equals(RootDescriptor.TypeName, StringComparison.InvariantCultureIgnoreCase))
-            {
-
-                appliedRestrictions = new object[] { 
-                                        ConnectionWrapper.ServerName, 
-                                        ConnectionWrapper.Schema 
-                                        };
-            }
-            else
-            {
-                appliedRestrictions = restrictions;
-            }
-
-            DataTable table;
+            Debug.Assert(typeName == "Table");
+            DbConnection conn = (DbConnection)Connection.GetLockedProviderObject();
             try
             {
-                // Enumerate objects into table
-                table = ObjectDescriptor.EnumerateObjects(ConnectionWrapper, typeName, appliedRestrictions, sort);
+                string[] rest = null;
+                if (restrictions != null)
+                {
+                    rest = new string[restrictions.Length];
+                    restrictions.CopyTo(rest, 0);
+                }
+                DataTable tables = conn.GetSchema((string)parameters[0], rest);
+                if (tables != null)
+                    foreach (DataRow row in tables.Rows)
+                        row["TABLE_CATALOG"] = DBNull.Value;
+                return new AdoDotNetDataTableReader(tables);
             }
-            catch (DbException e)
+            finally
             {
-                SqlErrorDialog.ShowError(e, ConnectionWrapper.GetFullStatus());
-                throw;
+                Connection.UnlockProviderObject();
             }
-            catch (Exception e)
-            {
-                UIHelper.ShowError(e);
-                throw;
-            }
-
-            // Validate table
-            if (table == null)
-            {
-                Debug.Fail("Failed to enumerate objects of type '" + typeName + "'!");
-                return null;
-            }
-
-            // Enumerete objects in to DataReader
-            return new AdoDotNetDataTableReader(table);*/
         }
 
-        #region Connection wrapper
-        /// <summary>
-        /// Returns wrapper for the underlying connection. Creates it at the first call.
-        /// </summary>
-/*        private DataConnectionWrapper ConnectionWrapper
+        private DataReader RootEnumeration()
         {
-            get
-            {
-                if (connectionWrapperRef == null)                
-                    connectionWrapperRef = new DataConnectionWrapper(Connection);
-                return connectionWrapperRef;
-            }
-        }
-        /// <summary>
-        /// Used to stroe connection wrapper.
-        /// </summary>
-        private DataConnectionWrapper connectionWrapperRef;*/
-        #endregion
+            DbConnection conn = (DbConnection)Connection.GetLockedProviderObject();
+            DataTable table = new DataTable();
+            table.Columns.Add("SERVER_NAME");
+            table.Columns.Add("CATALOG_NAME");
+            table.Columns.Add("SCHEMA_NAME");
+            DataRow row = table.NewRow();
+            row["SERVER_NAME"] = conn.DataSource;
+            row["SCHEMA_NAME"] = conn.Database;
+            table.Rows.Add(row);
+            Connection.UnlockProviderObject();
 
-	}
+            return new AdoDotNetDataTableReader(table);
+        }
+    }
 }
