@@ -19,6 +19,7 @@
   It seems to not be necessary (bug #58853)
 - fixed unnecessary string code in MySqlTokenizer (bug #58757)
 - fixed MembershipProvider to properly set a hash key when using a keyed hash alogrithm (bug #58906)
+- small code adjustment to make sure our object enumeration works with MySQL 5.5
 
 Version 6.0.7
 - Fix authorization popup after modifying stored procedure in VS (Bug #44715)
