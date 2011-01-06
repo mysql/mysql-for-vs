@@ -1,3 +1,6 @@
+Version 6.3.7
+- IPv6 connections are now supported 
+
 Version 6.3.6
 - Fixed TracingDriver so that it normalizes long queries before truncation so we don't get exceptions     
   when quoted tokens land on the 300th character (bug #57641)

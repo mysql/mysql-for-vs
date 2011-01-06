@@ -52,6 +52,40 @@ namespace MySql.Data.Common
             this.keepalive = keepalive;
         }
 
+        private Stream GetStreamFromHost(string pipeName, string hostName, uint timeout)
+        {
+            Stream stream = null;
+            if (pipeName != null && pipeName.Length != 0)
+            {
+#if !CF
+                stream = NamedPipeStream.Create(pipeName, hostName, timeout);
+#endif
+            }
+            else
+            {
+                IPHostEntry ipHE = GetHostEntry(hostName);
+                foreach (IPAddress address in ipHE.AddressList)
+                {
+                    try
+                    {
+                        stream = CreateSocketStream(address, false);
+                        if (stream != null) break;
+                    }
+                    catch (Exception ex)
+                    {
+                        SocketException socketException = ex as SocketException;
+                        // if the exception is a ConnectionRefused then we eat it as we may have other address
+                        // to attempt
+                        if (socketException == null) throw;
+#if !CF
+                        if (socketException.SocketErrorCode != SocketError.ConnectionRefused) throw;
+#endif
+                    }
+                }
+            }
+            return stream;
+        }
+
         public Stream GetStream(uint timeout)
         {
             timeOut = timeout;
@@ -64,46 +98,14 @@ namespace MySql.Data.Common
             Random random = new Random((int)DateTime.Now.Ticks);
             int index = random.Next(dnsHosts.Length);
             int pos = 0;
-            bool usePipe = (pipeName != null && pipeName.Length != 0);
             Stream stream = null;
 
-            while (pos < dnsHosts.Length)
+            while (stream == null && pos < dnsHosts.Length)
             {
-                try
-                {
-                    if (usePipe)
-                    {
-#if !CF
-                        stream = NamedPipeStream.Create(pipeName, dnsHosts[index], timeout);
-#endif
-                    }
-                    else
-                    {
-                        IPHostEntry ipHE = GetHostEntry(dnsHosts[index]);
-                        foreach (IPAddress address in ipHE.AddressList)
-                        {
-                            // MySQL doesn't currently support IPv6 addresses
-                            if (address.AddressFamily == AddressFamily.InterNetworkV6)
-                                continue;
-                            stream = CreateSocketStream(address, false);
-                            if (stream != null) break;
-                        }
-                    }
-                    if (stream != null)
-                        break;
-                    index++;
-                    if (index == dnsHosts.Length)
-                        index = 0;
-                    pos++;
-                }
-                catch (Exception)
-                {
-                    // if on last host then throw
-                    if (pos >= dnsHosts.Length - 1) throw;
-                    // else continue
-                }
+                stream = GetStreamFromHost(pipeName, dnsHosts[index++], timeout);
+                if (index == dnsHosts.Length) index = 0;
+                pos++;
             }
-
             return stream;
         }
 
