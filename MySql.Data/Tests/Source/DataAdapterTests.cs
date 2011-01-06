@@ -686,7 +686,7 @@ namespace MySql.Data.MySqlClient.Tests
             MySqlDataAdapter dummyDA = new MySqlDataAdapter("SELECT * FROM Test", conn);
             MySqlCommandBuilder cb = new MySqlCommandBuilder(dummyDA);
 
-            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test ORDER BY id ASC", conn);
             da.UpdateCommand = cb.GetUpdateCommand();
             da.UpdateCommand.UpdatedRowSource = UpdateRowSource.None;
 
@@ -704,11 +704,11 @@ namespace MySql.Data.MySqlClient.Tests
             dt.Rows.Clear();
             da.Fill(dt);
             Assert.AreEqual(3, dt.Rows.Count);
-            Assert.AreEqual(4, dt.Rows[0]["id"]);
-            Assert.AreEqual(2, dt.Rows[1]["id"]);
+            Assert.AreEqual(2, dt.Rows[0]["id"]);
+            Assert.AreEqual(4, dt.Rows[1]["id"]);
             Assert.AreEqual(6, dt.Rows[2]["id"]);
-            Assert.AreEqual("Test 1", dt.Rows[0]["name"]);
-            Assert.AreEqual("new test value", dt.Rows[1]["name"]);
+            Assert.AreEqual("new test value", dt.Rows[0]["name"]);
+            Assert.AreEqual("Test 1", dt.Rows[1]["name"]);
             Assert.AreEqual("new test value #2", dt.Rows[2]["name"]);
         }
 
