@@ -125,8 +125,8 @@
       <Custom Action="UnRegisterHelp" Before="RemoveFiles">(&amp;DocsFeature=2) AND (!DocsFeature=3)</Custom>
 
       <Custom Action="SetHLMPath" After="AppSearch"></Custom>
-      <Custom Action="Register2010Help" After="PublishProduct">HLM_LOCATION AND (&amp;DocsFeature=3) AND NOT(!DocsFeature=3)</Custom>
-      <Custom Action="UnRegister2010Help" After="RemoveFiles">HLM_LOCATION AND (&amp;DocsFeature=2) AND (!DocsFeature=3)</Custom>
+      <!--<Custom Action="Register2010Help" After="PublishProduct">HLM_LOCATION AND (&amp;DocsFeature=3) AND NOT(!DocsFeature=3)</Custom>
+      <Custom Action="UnRegister2010Help" After="RemoveFiles">HLM_LOCATION AND (&amp;DocsFeature=2) AND (!DocsFeature=3)</Custom>-->
     </InstallExecuteSequence>
 
     <!-- Custom actions for VS2005/VS2008 help -->
