@@ -244,7 +244,7 @@ namespace MySql.Data.MySqlClient.Tests
 		public void Timestamp() 
 		{
             // don't run this test on 6 and higher
-            if (Version.Major >= 6) return;
+            if (Version.Major >= 5 && Version.Minor >= 5) return;
 
 			execSQL("DROP TABLE IF EXISTS Test");
 			execSQL("CREATE TABLE Test (id int, dt DATETIME, ts2 TIMESTAMP(2), ts4 TIMESTAMP(4), " + 
