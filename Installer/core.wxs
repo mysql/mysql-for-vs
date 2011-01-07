@@ -93,6 +93,7 @@
 
     <InstallExecuteSequence>
       <!-- v2 custom action scheduling -->
+      <Custom Action="Setv2InstallUtil" After="InstallValidate"/>
       <Custom Action='Setv4InstallUtil' After='InstallValidate'>NETFRAMEWORK40FULL</Custom>
       <Custom Action='ManagedDataInstallSetup' After="InstallFiles">NOT Installed</Custom>
       <Custom Action='ManagedDataInstall' After="ManagedDataInstallSetup">NOT Installed</Custom>
@@ -101,11 +102,12 @@
     </InstallExecuteSequence>
 
     <!-- Custom Actions -->
-    <CustomAction Id="Setv4InstallUtil" Property="InstallUtil" Value="c:\windows\microsoft.net\framework\v4.0.30319"/>
+    <CustomAction Id="Setv2InstallUtil" Property="INSTALLUTIL" Value="[WindowsFolder]Microsoft.NET\Framework\v2.0.50727\installUtil.exe"/>
+    <CustomAction Id="Setv4InstallUtil" Property="INSTALLUTIL" Value="[WindowsFolder]Microsoft.NET\Framework\v4.0.30319\installUtil.exe"/>
     <CustomAction Id="ManagedDataInstallSetup" Property="ManagedDataInstall"
-                  Value='"[InstallUtil]\installUtil.exe" /LogToConsole=false /LogFile=  "[#MySql.Data.v2]"'/>
+                  Value='"[INSTALLUTIL]" /LogToConsole=false /LogFile=  "[#MySql.Data.v2]"'/>
     <CustomAction Id='ManagedDataUnInstallSetup' Property="ManagedDataUnInstall"
-                  Value='"[InstallUtil]\installUtil.exe" /LogToConsole=false /LogFile= /u "[#MySql.Data.v2]"'/>
+                  Value='"[INSTALLUTIL]" /LogToConsole=false /LogFile= /u "[#MySql.Data.v2]"'/>
     <CustomAction Id="ManagedDataInstall" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
     <CustomAction Id="ManagedDataUnInstall" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
   </Fragment>
