@@ -110,7 +110,6 @@
 
     <Binary Id="H2Reg" SourceFile="Binary\H2Reg.exe"/>
     <Property Id="WIXUI_INSTALLDIR" Value='INSTALLDIR'/>
-    <Property Id='INSTALLUTIL' Value='[NETFRAMEWORK20INSTALLROOTDIR]'/>
     
     <!-- Remove the license agreement dialog -->
     <UIRef Id='WixUI_MySQL'/>
