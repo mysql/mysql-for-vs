@@ -188,7 +188,7 @@ namespace MySql.Data.Common
 
 			Socket socket = unix ?
 				new Socket(AddressFamily.Unix, SocketType.Stream, ProtocolType.IP) :
-				new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+				new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             if (keepalive > 0)
             {
                 SetKeepAlive(socket, keepalive);
