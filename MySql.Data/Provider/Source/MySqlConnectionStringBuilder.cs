@@ -743,6 +743,20 @@ namespace MySql.Data.MySqlClient
             return new Regex(BlobAsUTF8ExcludePattern);
         }
 
+        public override bool ContainsKey(string keyword)
+        {
+            try
+            {
+                object value;
+                ValidateKeyword(keyword);
+                return values.TryGetValue(validKeywords[keyword], out value);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         public override object this[string keyword]
         {
             get { return values[validKeywords[keyword]]; }
