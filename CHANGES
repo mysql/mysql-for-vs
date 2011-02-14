@@ -1,5 +1,7 @@
 Version 6.3.7
 - IPv6 connections are now supported 
+- fixed exection of command ";" to throw a query was empty exception instead of IndexOutOfRangeException 
+  (MySQL bug #59537, Oracle bug #11766433)
 
 Version 6.3.6
 - Fixed TracingDriver so that it normalizes long queries before truncation so we don't get exceptions     
