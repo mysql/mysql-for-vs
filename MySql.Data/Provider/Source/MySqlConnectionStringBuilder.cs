@@ -1109,6 +1109,12 @@ namespace MySql.Data.MySqlClient
             return connStr.Remove(connStr.Length - 1, 1);
         }
 
+        public override bool ContainsKey(string keyword)
+        {
+            Keyword kw = GetKey(keyword);
+            return GetValue(kw) != null;
+        }
+
         /// <summary>
         /// Clears the contents of the <see cref="MySqlConnectionStringBuilder"/> instance. 
         /// </summary>

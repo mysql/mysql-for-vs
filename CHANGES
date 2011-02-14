@@ -25,6 +25,8 @@
   (MySQL bug #59537, Oracle bug #11766433)
 - fixed bug that prevented setting the membershipprovider's ApplicationName property at runtime
   (MySQL bug #59438, Oracle bug #11770465)
+- fixed MySqlConnectionStringBuilder.ContainsKey to return true for any alternative versions
+  of a keyword (MySQL bug #59835, Oracle bug #11766671)
 
 Version 6.1.5
 - Fix authorization popup after modifying stored procedure in VS (Bug #44715)
