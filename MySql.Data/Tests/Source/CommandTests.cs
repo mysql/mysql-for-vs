@@ -467,6 +467,33 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.IsTrue(c.State == ConnectionState.Closed);
             }
         }
+
+        /// <summary>
+        /// Bug #59537	Different behavior from console and
+        /// </summary>
+        [Test]
+        public void EmptyOrJustSemiCommand()
+        {
+            MySqlCommand cmd = new MySqlCommand("", conn);
+            try 
+            {
+                cmd.ExecuteNonQuery();
+                Assert.Fail();
+            }
+            catch (InvalidOperationException)
+            {
+            }
+
+            cmd.CommandText = ";";
+            try
+            {
+                cmd.ExecuteNonQuery();
+            }
+            catch (MySqlException)
+            {
+            }
+
+        }
     }
 
 
