@@ -192,7 +192,14 @@ namespace MySql.Web.Security
         public override string ApplicationName
         {
             get { return app.Name; }
-            set { app.Name = value; }
+            set 
+            {
+                lock (this)
+                {
+                    if (value.ToLowerInvariant() == app.Name.ToLowerInvariant()) return;
+                    app = new Application(value, String.Empty);
+                }
+            }
         }
 
         /// <summary>
