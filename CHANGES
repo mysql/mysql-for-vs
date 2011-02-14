@@ -23,6 +23,8 @@
 - small code adjustment to make sure our object enumeration works with MySQL 5.5
 - fixed exection of command ";" to throw a query was empty exception instead of IndexOutOfRangeException 
   (MySQL bug #59537, Oracle bug #11766433)
+- fixed bug that prevented setting the membershipprovider's ApplicationName property at runtime
+  (MySQL bug #59438, Oracle bug #11770465)
 
 Version 6.2.4
 - Fix authorization popup after modifying stored procedure in VS (Bug #44715)
