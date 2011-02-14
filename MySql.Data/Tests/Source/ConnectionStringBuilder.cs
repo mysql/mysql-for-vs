@@ -116,5 +116,20 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.IsFalse(s.UseCompression);
             Assert.IsTrue(s.Pooling);
         }
+
+        /// <summary>
+        /// Bug #59835	.Net Connector MySqlConnectionStringBuilder wrong result ContainsKey function
+        /// </summary>
+        [Test]
+        public void ContainsKey()
+        {
+            MySqlConnectionStringBuilder s = new MySqlConnectionStringBuilder();
+            s["database"] = "test";
+            Assert.IsTrue(s.ContainsKey("initial catalog"));
+            s["server"] = "myserver";
+            Assert.IsTrue(s.ContainsKey("server"));
+            Assert.IsTrue(s.ContainsKey("host"));
+            Assert.IsFalse(s.ContainsKey("badkey"));
+        }
     }
 }
