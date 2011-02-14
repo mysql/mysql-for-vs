@@ -96,5 +96,19 @@ namespace MySql.Data.MySqlClient.Tests
             s["database"] = "test2";
             Assert.AreEqual("database=test2", s.ConnectionString);
         }
+
+        /// <summary>
+        /// Bug #59835	.Net Connector MySqlConnectionStringBuilder wrong result ContainsKey function
+        /// </summary>
+        [Test]
+        public void ContainsKey()
+        {
+            MySqlConnectionStringBuilder s = new MySqlConnectionStringBuilder();
+            s["database"] = "test";
+            Assert.IsTrue(s.ContainsKey("initial catalog"));
+            s["server"] = "myserver";
+            Assert.IsTrue(s.ContainsKey("server"));
+            Assert.IsTrue(s.ContainsKey("host"));
+        }
     }
 }
