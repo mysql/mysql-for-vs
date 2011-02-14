@@ -21,6 +21,8 @@
 - fixed unnecessary string code in MySqlTokenizer (bug #58757)
 - fixed MembershipProvider to properly set a hash key when using a keyed hash alogrithm (bug #58906)
 - small code adjustment to make sure our object enumeration works with MySQL 5.5
+- fixed exection of command ";" to throw a query was empty exception instead of IndexOutOfRangeException 
+  (MySQL bug #59537, Oracle bug #11766433)
 
 Version 6.2.4
 - Fix authorization popup after modifying stored procedure in VS (Bug #44715)
