@@ -383,11 +383,11 @@ namespace MySql.Data.MySqlClient
 			lastInsertedId = -1;
 			CheckState();
 
-			if (cmdText == null ||
-				 cmdText.Trim().Length == 0)
+            cmdText = cmdText.Trim();
+			if (String.IsNullOrEmpty(cmdText))
 				throw new InvalidOperationException(Resources.CommandTextNotInitialized);
 
-			string sql = TrimSemicolons(cmdText);
+            string sql = cmdText.Trim(';');
 
             // now we check to see if we are executing a query that is buggy
             // in 4.1
@@ -557,18 +557,6 @@ namespace MySql.Data.MySqlClient
 
 		internal delegate void AsyncDelegate(int type, CommandBehavior behavior);
 		internal Exception thrownException;
-
-		private static string TrimSemicolons(string sql)
-		{
-			int start = 0;
-			while (sql[start] == ';')
-				start++;
-
-			int end = sql.Length - 1;
-			while (sql[end] == ';')
-				end--;
-			return sql.Substring(start, end-start+1);
-		}
 
 		internal void AsyncExecuteWrapper(int type, CommandBehavior behavior)
 		{
