@@ -410,11 +410,11 @@ namespace MySql.Data.MySqlClient
             commandTimer = new CommandTimer(connection, CommandTimeout);
 
             lastInsertedId = -1;
-            if (cmdText == null ||
-                 cmdText.Trim().Length == 0)
+            cmdText = cmdText.Trim();
+            if (String.IsNullOrEmpty(cmdText))
                 throw new InvalidOperationException(Resources.CommandTextNotInitialized);
 
-			string sql = TrimSemicolons(cmdText);
+            string sql = cmdText.Trim(';');
 
             if (CommandType == CommandType.TableDirect)
                 sql = "SELECT * FROM " + sql;
@@ -579,18 +579,6 @@ namespace MySql.Data.MySqlClient
 		internal delegate object AsyncDelegate(int type, CommandBehavior behavior);
         internal AsyncDelegate caller = null;
 		internal Exception thrownException;
-
-		private static string TrimSemicolons(string sql)
-		{
-			int start = 0;
-			while (sql[start] == ';')
-				start++;
-
-			int end = sql.Length - 1;
-			while (sql[end] == ';')
-				end--;
-			return sql.Substring(start, end-start+1);
-		}
 
 		internal object AsyncExecuteWrapper(int type, CommandBehavior behavior)
 		{
