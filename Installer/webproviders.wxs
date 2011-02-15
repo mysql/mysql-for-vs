@@ -48,9 +48,9 @@
     </InstallExecuteSequence>
 
     <CustomAction Id="ManagedWebInstallSetup" Property="ManagedWebInstall"
-                  Value='"[InstallUtil]\installUtil.exe" /LogToConsole=false /LogFile=  "[#MySqlWeb.v2]"'/>
+                  Value='"[INSTALLUTIL]" /LogToConsole=false /LogFile=  "[#MySqlWeb.v2]"'/>
     <CustomAction Id='ManagedWebUnInstallSetup' Property="ManagedWebUnInstall"
-                  Value='"[InstallUtil]\installUtil.exe" /LogToConsole=false /LogFile= /u "[#MySqlWeb.v2]"'/>
+                  Value='"[INSTALLUTIL]" /LogToConsole=false /LogFile= /u "[#MySqlWeb.v2]"'/>
     <CustomAction Id="ManagedWebInstall" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
     <CustomAction Id="ManagedWebUnInstall" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="check" Execute='deferred' Impersonate='no'/>
   </Fragment>
