@@ -703,7 +703,7 @@ namespace MySql.Data.MySqlClient
 
             if (type == MySqlDbType.Decimal || type == MySqlDbType.NewDecimal)
             {
-                field.Precision = (byte)(field.ColumnLength - (int)field.Scale);
+                field.Precision = (byte)(field.ColumnLength - 2);
                 if ((colFlags & ColumnFlags.UNSIGNED) != 0)
                     field.Precision++;
             }
