@@ -151,15 +151,19 @@ namespace MySql.Data.MySqlClient.Tests
             }
 		}
 
+        /// <summary>
+        /// Bug #59989	MysqlDataReader.GetSchemaTable returns incorrect Values an types
+        /// </summary>
 		[Test]
 		public void GetSchema() 
 		{
-			string sql = "CREATE TABLE test2(id INT UNSIGNED AUTO_INCREMENT " +
-                "NOT NULL, name VARCHAR(255) NOT NULL, name2 VARCHAR(40), fl FLOAT, " +
-                "dt DATETIME, PRIMARY KEY(id))";
+			string sql = @"CREATE TABLE test2(id INT UNSIGNED AUTO_INCREMENT 
+                NOT NULL, name VARCHAR(255) NOT NULL, name2 VARCHAR(40), fl FLOAT, 
+                dt DATETIME, `udec` DECIMAL(20,6) unsigned,
+                `dec` DECIMAL(44,3), bt boolean, PRIMARY KEY(id))";
 
 			execSQL(sql);
-			execSQL("INSERT INTO test2 VALUES(1,'Test', 'Test', 1.0, now())");
+			execSQL("INSERT INTO test2 VALUES(1,'Test', 'Test', 1.0, now(), 20.0, 12.324, True)");
 
 			MySqlCommand cmd = new MySqlCommand("SELECT * FROM test2", conn);
             using (MySqlDataReader reader = cmd.ExecuteReader())
@@ -172,6 +176,16 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.AreEqual(false, dt.Rows[1]["AllowDBNull"], "Checking AllowDBNull");
                 Assert.AreEqual(255, dt.Rows[1]["ColumnSize"]);
                 Assert.AreEqual(40, dt.Rows[2]["ColumnSize"]);
+
+                // udec column
+                Assert.AreEqual(21, dt.Rows[5]["ColumnSize"]);
+                Assert.AreEqual(20, dt.Rows[5]["NumericPrecision"]);
+                Assert.AreEqual(6, dt.Rows[5]["NumericScale"]);
+
+                // dec column
+                Assert.AreEqual(46, dt.Rows[6]["ColumnSize"]);
+                Assert.AreEqual(44, dt.Rows[6]["NumericPrecision"]);
+                Assert.AreEqual(3, dt.Rows[6]["NumericScale"]);
             }
 		}
 
