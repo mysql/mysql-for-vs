@@ -176,6 +176,66 @@ namespace MySql.Data.MySqlClient.Tests
             KillConnection(connection);
         }
 
+        /// <summary>
+        /// NullReferenceException thrown on TransactionScope dispose
+        /// </summary>
+        [Test]
+        public void LockedTable()
+        {
+            string connStr = GetConnectionString(true);
+
+            connStr = String.Format(@"Use Affected Rows=true;allow user variables=yes;Server=localhost;Port=3306;
+            Database={0};Uid=root;Connect Timeout=35;default command timeout=90;charset=utf8", database0);
+
+
+            execSQL(@"CREATE TABLE `t1` (
+                `Key` int(10) unsigned NOT NULL auto_increment,
+                `Val` varchar(100) NOT NULL,
+                `Val2` varchar(100) NOT NULL default '',
+                PRIMARY KEY  (`Key`)
+                ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1");
+            execSQL(@"CREATE TABLE `t2` (
+                `Key` int(10) unsigned NOT NULL auto_increment,
+                `Val` varchar(100) NOT NULL,
+                PRIMARY KEY  (`Key`)
+                ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1");
+
+            execSQL("lock tables t2 read");
+
+            using (TransactionScope scope = new TransactionScope())
+            {
+                using (MySqlConnection conn = new MySqlConnection(connStr))
+                using (MySqlCommand cmd = conn.CreateCommand())
+                {
+                    conn.Open();
+                    cmd.CommandText = @"insert into t1 (Val,Val2) values (?value1, ?value2)"; ;
+                    cmd.CommandTimeout = 5;
+                    cmd.Parameters.AddWithValue("?value1", new Random().Next());
+                    cmd.Parameters.AddWithValue("?value2", new Random().Next());
+                    cmd.ExecuteNonQuery();
+                }
+
+                using (MySqlConnection conn = new MySqlConnection(connStr))
+                using (MySqlCommand cmd = conn.CreateCommand())
+                {
+                    conn.Open();
+                    cmd.CommandText = @"insert into t2 (Val) values (?value)";
+                    cmd.CommandTimeout = 5;
+                    cmd.Parameters.AddWithValue("?value", new Random().Next());
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                    catch (MySqlException ex)
+                    {
+                        Assert.IsTrue(ex.InnerException is TimeoutException);
+                    }
+                }
+
+                scope.Complete();
+            }
+        }
+
 
         /// <summary>
         /// Bug #22042 mysql-connector-net-5.0.0-alpha BeginTransaction 

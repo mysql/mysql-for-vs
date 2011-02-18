@@ -688,6 +688,7 @@ namespace MySql.Data.MySqlClient
             MySqlConnectionStringBuilder cb = new MySqlConnectionStringBuilder(
                 Settings.ConnectionString);
             cb.Pooling = false;
+            cb.AutoEnlist = false;
             cb.ConnectionTimeout = (uint) timeout;
           
             using(MySqlConnection c = new MySqlConnection(cb.ConnectionString))
