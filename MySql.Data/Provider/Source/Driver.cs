@@ -209,35 +209,23 @@ namespace MySql.Data.MySqlClient
         public virtual void Configure(MySqlConnection connection)
         {
             bool firstConfigure = false;
+
             // if we have not already configured our server variables
             // then do so now
             if (serverProps == null)
             {
                 firstConfigure = true;
-                // load server properties
-                serverProps = new Hashtable();
-                MySqlCommand cmd = new MySqlCommand("SHOW VARIABLES", connection);
 
-                using (MySqlDataReader reader = cmd.ExecuteReader())
+                // if we are in a pool and the user has said it's ok to cache the
+                // properties, then grab it from the pool
+                if (Pool != null && Settings.CacheServerProperties)
                 {
-                    try
-                    {
-                        while (reader.Read())
-                        {
-                            string key = reader.GetString(0);
-                            string value = reader.GetString(1);
-                            serverProps[key] = value;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MySqlTrace.LogError(ThreadID, ex.Message);
-                        throw;
-                    }
+                    if (Pool.ServerProperties == null)
+                        Pool.ServerProperties = LoadServerProperties(connection);
+                    serverProps = Pool.ServerProperties;
                 }
-
-                if (serverProps.Contains("max_allowed_packet"))
-                    maxPacketSize = Convert.ToInt64(serverProps["max_allowed_packet"]);
+                else
+                    serverProps = LoadServerProperties(connection);
 
                 LoadCharacterSets(connection);
             }
@@ -282,6 +270,40 @@ namespace MySql.Data.MySqlClient
                 Encoding = CharSetMap.GetEncoding(Version, "latin1");
 
             handler.Configure();
+        }
+
+        /// <summary>
+        /// Loads the properties from the connected server into a hashtable
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <returns></returns>
+        private Hashtable LoadServerProperties(MySqlConnection connection)
+        {
+            // load server properties
+            Hashtable hash = new Hashtable();
+            MySqlCommand cmd = new MySqlCommand("SHOW VARIABLES", connection);
+
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                try
+                {
+                    while (reader.Read())
+                    {
+                        string key = reader.GetString(0);
+                        string value = reader.GetString(1);
+                        hash[key] = value;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MySqlTrace.LogError(ThreadID, ex.Message);
+                    throw;
+                }
+            }
+
+            if (hash.Contains("max_allowed_packet"))
+                maxPacketSize = Convert.ToInt64(hash["max_allowed_packet"]);
+            return hash;
         }
 
         /// <summary>

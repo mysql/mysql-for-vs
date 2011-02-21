@@ -74,6 +74,14 @@ namespace MySql.Data.MySqlClient.Tests
 			strings.Add(partial.ToString());
 			partial.Remove(0, partial.Length);
 		}
+
+        public int CountLinesContaining(string text)
+        {
+            int count = 0;
+            foreach (string s in strings)
+                if (s.Contains(text)) count++;
+            return count;
+        }
 	}
 
 	/// <summary>

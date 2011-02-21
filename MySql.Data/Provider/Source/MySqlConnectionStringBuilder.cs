@@ -671,6 +671,17 @@ namespace MySql.Data.MySqlClient
             set { SetValue("Connection Reset", value); }
         }
 
+        [Category("Pooling")]
+        [DisplayName("Cache Server Properties")]
+        [Description("When true, server properties will be cached after the first server in the pool is created")]
+        [DefaultValue(false)]
+        [RefreshProperties(RefreshProperties.All)]
+        public bool CacheServerProperties
+        {
+            get { return (bool)values["Cache Server Properties"]; }
+            set { SetValue("Cache Server Properties", value); }
+        }
+
         #endregion
 
         #region Language and Character Set Properties
@@ -763,6 +774,7 @@ namespace MySql.Data.MySqlClient
             return new Regex(BlobAsUTF8ExcludePattern);
         }
 
+#if !CF
         public override bool ContainsKey(string keyword)
         {
             try
@@ -776,6 +788,7 @@ namespace MySql.Data.MySqlClient
                 return false;
             }
         }
+#endif
 
         public override object this[string keyword]
         {
