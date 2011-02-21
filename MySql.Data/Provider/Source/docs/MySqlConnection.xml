@@ -1154,6 +1154,15 @@
               session not being cleared out.
             </td>
           </tr>
+          <tr>
+            <td>Cache Server Properties</td>
+            <td>false</td>
+            <td>
+              Specifies whether the server variables are cached between pooled connections.
+              On systems where the variables change infrequently and there are lots of
+              connection attempts, this can speed up things dramatically.
+            </td>
+          </tr>
         </table>
       </div>
       <para>

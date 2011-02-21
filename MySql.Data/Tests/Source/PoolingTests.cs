@@ -546,5 +546,35 @@ namespace MySql.Data.MySqlClient.Tests
                 }
             }
         }
+
+        private void CacheServerPropertiesInternal(bool cache)
+        {
+            string connStr = GetPoolingConnectionString() + 
+                String.Format(";logging=true;cache server properties={0}", cache);
+
+            GenericListener listener = new GenericListener();
+            MySqlTrace.Listeners.Add(listener);
+            MySqlTrace.Switch.Level = System.Diagnostics.SourceLevels.All;
+
+            using (MySqlConnection c = new MySqlConnection(connStr))
+            {
+                c.Open();
+                using (MySqlConnection c2 = new MySqlConnection(connStr))
+                {
+                    c2.Open();
+                    KillConnection(c2);
+                }
+                KillConnection(c);
+            }
+            int count = listener.CountLinesContaining("SHOW VARIABLES");
+            Assert.AreEqual(cache ? 1 : 2, count);
+        }
+
+        [Test]
+        public void CacheServerProperties()
+        {
+            CacheServerPropertiesInternal(true);
+            CacheServerPropertiesInternal(false);
+        }
     }
 }
