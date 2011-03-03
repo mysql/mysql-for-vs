@@ -28,9 +28,13 @@ namespace MySql.Data.Entity
 {
     internal abstract class SqlFragment
     {
+        static char[] quoteChars = new char[3] { '\'', '"', '`' };
+
         protected string QuoteIdentifier(string id)
         {
-            return String.Format("`{0}`", id);
+            if (id.IndexOfAny(quoteChars) >= 0)
+                return String.Format("`{0}`", id);
+            else return id;
         }
 
         public abstract void WriteSql(StringBuilder sql);
@@ -65,7 +69,7 @@ namespace MySql.Data.Entity
 
         public override void WriteSql(StringBuilder sql)
         {
-            if (IsNegated)
+            if (IsNegated && Operator != "=")
                 sql.Append("NOT (");
 
             // do left arg
@@ -75,7 +79,10 @@ namespace MySql.Data.Entity
             if (WrapLeft)
                 sql.Append(")");
 
-            sql.AppendFormat(" {0} ", Operator);
+            if (IsNegated && Operator == "=")
+                sql.Append(" != ");
+            else
+                sql.AppendFormat(" {0} ", Operator);
 
             // now right arg
             if (WrapRight)
@@ -83,7 +90,7 @@ namespace MySql.Data.Entity
             Right.WriteSql(sql);
             if (WrapRight)
                 sql.Append(")");
-            if (IsNegated)
+            if (IsNegated && Operator != "=")
                 sql.Append(")");
         }
     }
@@ -117,15 +124,14 @@ namespace MySql.Data.Entity
 
     internal class ColumnFragment : SqlFragment
     {
-        public ColumnFragment(string table, string name)
+        public ColumnFragment(string tableName, string columnName)
         {
-            TableAlias = TableName = table;
-            ColumnName = name;
+            TableName = tableName;
+            ColumnName = columnName;
         }
 
         public SqlFragment Literal { get; set; }
         public string TableName { get; set; }
-        public string TableAlias { get; set; }
         public string ColumnName { get; set; }
         public string ColumnAlias { get; set; }
 
@@ -136,12 +142,13 @@ namespace MySql.Data.Entity
                 Debug.Assert(ColumnAlias != null);
                 Literal.WriteSql(sql);
             }
-            else
+            else 
             {
-                if (TableAlias != null)
-                    sql.AppendFormat("{0}.", QuoteIdentifier(TableAlias));
+                if (TableName != null)
+                    sql.AppendFormat("{0}.", QuoteIdentifier(TableName));
                 sql.AppendFormat("{0}", QuoteIdentifier(ColumnName));
             }
+
             if (ColumnAlias != null && ColumnAlias != ColumnName)
                 sql.AppendFormat(" AS {0}", QuoteIdentifier(ColumnAlias));
         }
@@ -163,7 +170,6 @@ namespace MySql.Data.Entity
             Argument.WriteSql(sql);
             sql.Append(")");
         }
-
     }
 
     internal class FunctionFragment : SqlFragment
@@ -278,6 +284,11 @@ namespace MySql.Data.Entity
         {
             throw new NotImplementedException();
         }
+
+        public string LastProperty
+        {
+            get { return Properties.Count == 0 ? null : Properties[Properties.Count - 1]; }
+        }
     }
 
     internal class SortFragment : SqlFragment
@@ -288,14 +299,19 @@ namespace MySql.Data.Entity
             Ascending = ascending;
         }
 
-        public SqlFragment Column { get; set; }
+        public SqlFragment Column 
+        { 
+            get; 
+            set; 
+        }
         public bool Ascending { get; set; }
 
         public override void WriteSql(StringBuilder sql)
         {
-            Debug.Assert(Column is ColumnFragment);
-            ColumnFragment f = Column as ColumnFragment;
-            sql.AppendFormat("{0} {1}", QuoteIdentifier(f.ColumnName), Ascending ? "ASC" : "DESC");
+            ColumnFragment columnFragment = Column as ColumnFragment;
+            Debug.Assert(columnFragment != null);
+            columnFragment.WriteSql(sql);
+            sql.AppendFormat(" {0}", Ascending ? "ASC" : "DESC");
         }
     }
 

@@ -33,11 +33,6 @@ namespace MySql.Data.Entity.Tests
 	[TestFixture]
 	public class CanonicalFunctions : BaseEdmTest
 	{
-        public CanonicalFunctions()
-            : base()
-        {
-        }
-
         private EntityConnection GetEntityConnection()
         {
             string connectionString = String.Format(
