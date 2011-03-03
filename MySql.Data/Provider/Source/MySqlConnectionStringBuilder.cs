@@ -1062,6 +1062,7 @@ namespace MySql.Data.MySqlClient
             return connStr.Remove(connStr.Length - 1, 1);
         }
 
+#if !CF
         public override bool ContainsKey(string keyword)
         {
             try
@@ -1074,6 +1075,7 @@ namespace MySql.Data.MySqlClient
                 return false;
             }
         }
+#endif
 
         /// <summary>
         /// Clears the contents of the <see cref="MySqlConnectionStringBuilder"/> instance. 
