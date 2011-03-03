@@ -9,7 +9,7 @@
     <EntitySet Name="STables" EntityType="Self.Table">
       <DefiningQuery>
 		  SELECT /* Tables */
-		  CONCAT('`', TABLE_SCHEMA, '`.`', TABLE_NAME, '`') AS `Id`,
+		  CONCAT(TABLE_SCHEMA, '.', TABLE_NAME) AS `Id`,
 		  TABLE_CATALOG AS `Catalog`,
 		  TABLE_SCHEMA  AS `Schema`,
 		  TABLE_NAME    AS `Name`

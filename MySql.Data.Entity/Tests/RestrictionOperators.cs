@@ -30,29 +30,13 @@ using System.Data.Common;
 using NUnit.Framework;
 using System.Data.Objects;
 using System.Collections.Generic;
+using MySql.Data.Entity.Tests.Properties;
 
 namespace MySql.Data.Entity.Tests
 {
-	/// <summary>
-	/// Summary description for BlobTests.
-	/// </summary>
     [TestFixture]
     public class RestrictionOperators : BaseEdmTest
     {
-        public RestrictionOperators()
-            : base()
-        {
-            csAdditions += ";logging=true;";
-        }
-
-        private EntityConnection GetEntityConnection()
-        {
-            string connectionString = String.Format(
-                "metadata=TestModel.csdl|TestModel.msl|TestModel.ssdl;provider=MySql.Data.MySqlClient; provider connection string=\"{0}\"", GetConnectionString(true));
-            EntityConnection connection = new EntityConnection(connectionString);
-            return connection;
-        }
-
         [Test]
         public void SimpleSelect()
         {
@@ -64,6 +48,9 @@ namespace MySql.Data.Entity.Tests
             using (testEntities context = new testEntities())
             {
                 var query = context.CreateQuery<Toy>("SELECT VALUE c FROM Toys AS c");
+                string sql = query.ToTraceString();
+                CheckSql(sql, SQLSyntax.SimpleSelect);
+
                 foreach (Toy t in query)
                 {
                     Assert.AreEqual(toys.Rows[i++]["name"], t.Name);
@@ -82,10 +69,11 @@ namespace MySql.Data.Entity.Tests
             using (testEntities context = new testEntities())
             {
                 var query = context.CreateQuery<Toy>("SELECT VALUE t FROM Toys AS t WHERE t.MinAge=4");
+                string sql = query.ToTraceString();
+                CheckSql(sql, SQLSyntax.SimpleSelectWithFilter);
+
                 foreach (Toy t in query)
-                {
                     Assert.AreEqual(toys.Rows[i++]["name"], t.Name);
-                }
             }
         }
 
@@ -101,6 +89,8 @@ namespace MySql.Data.Entity.Tests
             {
                 var query = context.CreateQuery<Toy>("SELECT VALUE t FROM Toys AS t WHERE t.MinAge>@age");
                 query.Parameters.Add(new ObjectParameter("age", 3));
+                string sql = query.ToTraceString();
+                CheckSql(sql, SQLSyntax.SimpleSelectWithParam);
 
                 foreach (Toy t in query)
                 {
@@ -118,8 +108,11 @@ namespace MySql.Data.Entity.Tests
 
             using (testEntities context = new testEntities())
             {
-                string sql = "SELECT VALUE c FROM Companies AS c WHERE c.Address.City = 'Dallas'";
-                ObjectQuery<Company> query = context.CreateQuery<Company>(sql);
+                string eSql = "SELECT VALUE c FROM Companies AS c WHERE c.Address.City = 'Dallas'";
+                ObjectQuery<Company> query = context.CreateQuery<Company>(eSql);
+
+                string sql = query.ToTraceString();
+                CheckSql(sql, SQLSyntax.WhereLiteralOnRelation);
 
                 int i = 0;
                 foreach (Company c in query)
@@ -136,8 +129,11 @@ namespace MySql.Data.Entity.Tests
 
             using (testEntities context = new testEntities())
             {
-                string sql = @"SELECT c.LastName FROM Employees AS c WHERE c.Age > 20";
-                ObjectQuery<DbDataRecord> query = context.CreateQuery<DbDataRecord>(sql);
+                string eSql = @"SELECT c.LastName FROM Employees AS c WHERE c.Age > 20";
+                ObjectQuery<DbDataRecord> query = context.CreateQuery<DbDataRecord>(eSql);
+
+                string sql = query.ToTraceString();
+                CheckSql(sql, SQLSyntax.SelectWithComplexType);
 
                 int i = 0;
                 foreach (DbDataRecord s in query)
@@ -155,8 +151,11 @@ namespace MySql.Data.Entity.Tests
 
             using (testEntities context = new testEntities())
             {
-                string sql = "SELECT VALUE t FROM Toys AS t WHERE t.Supplier.Address.State = 'TX'";
-                ObjectQuery<Toy> query = context.CreateQuery<Toy>(sql);
+                string eSql = "SELECT VALUE t FROM Toys AS t WHERE t.Supplier.Address.State = 'TX'";
+                ObjectQuery<Toy> query = context.CreateQuery<Toy>(eSql);
+
+                string sql = query.ToTraceString();
+                CheckSql(sql, SQLSyntax.WhereWithRelatedEntities1);
 
                 int i = 0;
                 foreach (Toy t in query)
@@ -177,9 +176,12 @@ namespace MySql.Data.Entity.Tests
 
             using (testEntities context = new testEntities())
             {
-                string sql = @"SELECT VALUE t FROM Toys AS t 
+                string eSql = @"SELECT VALUE t FROM Toys AS t 
                     WHERE t.Supplier.Address.State<>'TX' AND t.Supplier.Address.State <> 'AZ'";
-                ObjectQuery<Toy> query = context.CreateQuery<Toy>(sql);
+                ObjectQuery<Toy> query = context.CreateQuery<Toy>(eSql);
+
+                string sql = query.ToTraceString();
+                CheckSql(sql, SQLSyntax.WhereWithRelatedEntities2);
 
                 int i = 0;
                 foreach (Toy t in query)
@@ -200,9 +202,12 @@ namespace MySql.Data.Entity.Tests
 
             using (testEntities context = new testEntities())
             {
-                string sql = @"SELECT VALUE c FROM Companies AS c WHERE EXISTS(
+                string eSql = @"SELECT VALUE c FROM Companies AS c WHERE EXISTS(
                     SELECT p FROM c.Toys AS p WHERE p.MinAge < 4)";
-                ObjectQuery<Company> query = context.CreateQuery<Company>(sql);
+                ObjectQuery<Company> query = context.CreateQuery<Company>(eSql);
+
+                string sql = query.ToTraceString();
+                CheckSql(sql, SQLSyntax.Exists);
 
                 int i = 0;
                 foreach(Company c in query)
