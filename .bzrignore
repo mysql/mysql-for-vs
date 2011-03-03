@@ -8,3 +8,4 @@
 MySql.Data/Provider/MySql.Data.xml
 MySql.VisualStudio/Documentation/Build
 MySql.Data.Entity/Tests/Service References
+**/*.InstallLog
