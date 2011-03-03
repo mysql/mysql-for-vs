@@ -36,6 +36,8 @@ using System.Resources;
 using System.Xml;
 using System.IO;
 using NUnit.Framework;
+using System.Text;
+using System.Data.EntityClient;
 
 namespace MySql.Data.Entity.Tests
 {
@@ -92,6 +94,27 @@ namespace MySql.Data.Entity.Tests
             script.Delimiter = "$$";
             script.Query = schema;
             script.Execute();
+        }
+
+        private EntityConnection GetEntityConnection()
+        {
+            string connectionString = String.Format(
+                "metadata=TestDB.csdl|TestDB.msl|TestDB.ssdl;provider=MySql.Data.MySqlClient; provider connection string=\"{0}\"", GetConnectionString(true));
+            EntityConnection connection = new EntityConnection(connectionString);
+            return connection;
+        }
+
+        protected void CheckSql(string sql, string refSql)
+        {
+            StringBuilder str1 = new StringBuilder();
+            StringBuilder str2 = new StringBuilder();
+            foreach (char c in sql)
+                if (!Char.IsWhiteSpace(c))
+                    str1.Append(c);
+            foreach (char c in refSql)
+                if (!Char.IsWhiteSpace(c))
+                    str2.Append(c);
+            Assert.AreEqual(0, String.Compare(str1.ToString(), str2.ToString(), true));
         }
     }
 }

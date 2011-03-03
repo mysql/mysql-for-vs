@@ -29,29 +29,13 @@ using System.Data.EntityClient;
 using System.Data.Common;
 using NUnit.Framework;
 using System.Data.Objects;
+using MySql.Data.Entity.Tests.Properties;
 
 namespace MySql.Data.Entity.Tests
 {
-	/// <summary>
-	/// Summary description for BlobTests.
-	/// </summary>
     [TestFixture]
     public class OrderingAndGrouping : BaseEdmTest
     {
-        public OrderingAndGrouping()
-            : base()
-        {
-            csAdditions += ";logging=true;";
-        }
-
-        private EntityConnection GetEntityConnection()
-        {
-            string connectionString = String.Format(
-                "metadata=TestDB.csdl|TestDB.msl|TestDB.ssdl;provider=MySql.Data.MySqlClient; provider connection string=\"{0}\"", GetConnectionString(true));
-            EntityConnection connection = new EntityConnection(connectionString);
-            return connection;
-        }
-
         [Test]
         public void OrderBySimple()
         {
@@ -62,8 +46,11 @@ namespace MySql.Data.Entity.Tests
 
             using (testEntities context = new testEntities())
             {
-                string sql = "SELECT VALUE c FROM Companies AS c ORDER BY c.Name";
-                ObjectQuery<Company> query = context.CreateQuery<Company>(sql);
+                string eSql = "SELECT VALUE c FROM Companies AS c ORDER BY c.Name";
+                ObjectQuery<Company> query = context.CreateQuery<Company>(eSql);
+
+                string sql = query.ToTraceString();
+                CheckSql(sql, SQLSyntax.OrderBySimple);
 
                 int i = 0;
                 foreach (Company c in query)
@@ -84,8 +71,11 @@ namespace MySql.Data.Entity.Tests
                     DataTable dt = new DataTable();
                     da.Fill(dt);
 
-                    string sql = "SELECT VALUE c FROM Companies AS c WHERE c.NumEmployees > 100 ORDER BY c.Name";
-                    ObjectQuery<Company> query = context.CreateQuery<Company>(sql);
+                    string eSql = "SELECT VALUE c FROM Companies AS c WHERE c.NumEmployees > 100 ORDER BY c.Name";
+                    ObjectQuery<Company> query = context.CreateQuery<Company>(eSql);
+
+                    string sql = query.ToTraceString();
+                    CheckSql(sql, SQLSyntax.OrderByWithPredicate);
 
                     int i = 0;
                     foreach (Company c in query)

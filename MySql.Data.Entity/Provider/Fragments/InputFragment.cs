@@ -45,17 +45,12 @@ namespace MySql.Data.Entity
 
         public string Name { get; set; }
         public bool IsWrapped { get; private set; }
-
-        public virtual SqlFragment GetProperty(string propertyName)
-        {
-            if (Left != null && Left.Name == propertyName) return Left;
-            if (Right != null && Right.Name == propertyName) return Right;
-            return null;
-        }
+        public bool Scoped { get; set; }
 
         public virtual void Wrap(Scope scope)
         {
             IsWrapped = true;
+            Scoped = true;
 
             if (scope == null) return;
             if (Left != null)
