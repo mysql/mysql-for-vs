@@ -29,6 +29,7 @@
   of a keyword (MySQL bug #59835, Oracle bug #11766671)
 - fixed calculation of precision and scale for decimal columns
   (MySQL bug #59989, Oracle bug #11776346)
+- small but important improvements in EF sql generation
 
 Version 6.1.5
 - Fix authorization popup after modifying stored procedure in VS (Bug #44715)
