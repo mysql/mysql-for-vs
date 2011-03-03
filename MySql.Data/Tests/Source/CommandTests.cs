@@ -476,7 +476,7 @@ namespace MySql.Data.MySqlClient.Tests
             try 
             {
                 cmd.ExecuteNonQuery();
-                Assert.Fail();
+                Assert.Fail("Should not get here");
             }
             catch (InvalidOperationException ex)
             {
