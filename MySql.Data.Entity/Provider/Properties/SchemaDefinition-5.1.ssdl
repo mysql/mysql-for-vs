@@ -9,7 +9,7 @@
     <EntitySet Name="STables" EntityType="Self.Table">
       <DefiningQuery>
 		  SELECT /* Tables */
-		  CONCAT('`', TABLE_SCHEMA, '`.`', TABLE_NAME, '`') AS `Id`,
+		  CONCAT(TABLE_SCHEMA, '.', TABLE_NAME) AS `Id`,
 		  TABLE_CATALOG AS `Catalog`,
 		  TABLE_SCHEMA  AS `Schema`,
 		  TABLE_NAME    AS `Name`
@@ -22,8 +22,8 @@
     <EntitySet Name="STableColumns" EntityType="Self.TableColumn">
       <DefiningQuery>
         SELECT /* Table columns */
-        CONCAT('`', TABLE_SCHEMA, '`.`', TABLE_NAME, '`.`', COLUMN_NAME, '`') AS `Id`,
-        CONCAT('`', TABLE_SCHEMA, '`.`', TABLE_NAME, '`') AS `ParentId`,
+        CONCAT(TABLE_SCHEMA, '.', TABLE_NAME, '.', COLUMN_NAME) AS `Id`,
+        CONCAT(TABLE_SCHEMA, '.', TABLE_NAME) AS `ParentId`,
         COLUMN_NAME AS `Name`,
         ORDINAL_POSITION AS `Ordinal`,
         CASE IS_NULLABLE WHEN 'YES' THEN 1 ELSE 0 END AS `IsNullable`,
@@ -52,7 +52,7 @@
     <EntitySet Name="SViews" EntityType="Self.View">
       <DefiningQuery>
         SELECT /* Views */
-        CONCAT('`', TABLE_SCHEMA, '`.`', TABLE_NAME, '`') AS `Id`,
+        CONCAT(TABLE_SCHEMA, '.', TABLE_NAME) AS `Id`,
         TABLE_CATALOG AS`CatalogName`,
         TABLE_SCHEMA AS `SchemaName`,
         TABLE_NAME AS `Name`,
@@ -65,8 +65,8 @@
     <EntitySet Name="SViewColumns" EntityType="Self.ViewColumn">
       <DefiningQuery>
         SELECT /* View columns */
-        CONCAT('`', TABLE_SCHEMA, '`.`', TABLE_NAME, '`.`', COLUMN_NAME, '`') AS `Id`,
-        CONCAT('`', TABLE_SCHEMA, '`.`', TABLE_NAME, '`') AS `ParentId`,
+        CONCAT(TABLE_SCHEMA, '.', TABLE_NAME, '.', COLUMN_NAME) AS `Id`,
+        CONCAT(TABLE_SCHEMA, '.', TABLE_NAME) AS `ParentId`,
         COLUMN_NAME AS `Name`,
         ORDINAL_POSITION AS `Ordinal`,
         CASE IS_NULLABLE WHEN 'YES' THEN 1 ELSE 0 END AS `IsNullable`,
@@ -95,7 +95,7 @@
     <EntitySet Name="SFunctions" EntityType="Self.Function">
       <DefiningQuery>
         SELECT /* Functions */
-        CONCAT('`', ROUTINE_SCHEMA, '`.`', SPECIFIC_NAME, '`') AS `Id`,
+        CONCAT(ROUTINE_SCHEMA, '.', SPECIFIC_NAME) AS `Id`,
         ROUTINE_CATALOG AS `CatalogName`,
         ROUTINE_SCHEMA AS `SchemaName`,
         ROUTINE_NAME AS `Name`,
@@ -123,7 +123,7 @@
     <EntitySet Name="SProcedures" EntityType="Self.Procedure">
       <DefiningQuery>
         SELECT /* Procedures */
-        CONCAT('`', ROUTINE_SCHEMA, '`.`', SPECIFIC_NAME, '`') AS `Id`,
+        CONCAT(ROUTINE_SCHEMA, '.', SPECIFIC_NAME) AS `Id`,
         ROUTINE_CATALOG AS `CatalogName`,
         ROUTINE_SCHEMA AS `SchemaName`,
         ROUTINE_NAME AS `Name`
@@ -186,8 +186,8 @@
     <EntitySet Name="SConstraints" EntityType="Self.Constraint">
       <DefiningQuery>
         SELECT  /* Constraints */
-        CONCAT('`', CONSTRAINT_SCHEMA, '`.`', TABLE_NAME, '`.`', CONSTRAINT_NAME, '`') AS `Id`,
-        CONCAT('`', TABLE_SCHEMA, '`.`', TABLE_NAME, '`') AS `ParentId`,
+        CONCAT(CONSTRAINT_SCHEMA, '.', TABLE_NAME, '.', CONSTRAINT_NAME) AS `Id`,
+        CONCAT(TABLE_SCHEMA, '.', TABLE_NAME) AS `ParentId`,
         CONSTRAINT_NAME AS `Name`,
         CONSTRAINT_TYPE AS `ConstraintType`,
         0 AS `IsDeferrable`,
@@ -208,8 +208,8 @@
     <EntitySet Name="SConstraintColumns" EntityType="Self.ConstraintColumn">
       <DefiningQuery>
         SELECT  /* Constraint columns */
-        CONCAT('`', CONSTRAINT_SCHEMA, '`.`', TABLE_NAME, '`.`', CONSTRAINT_NAME, '`') AS `ConstraintId`,
-        CONCAT('`', TABLE_SCHEMA, '`.`', TABLE_NAME, '`.`', COLUMN_NAME, '`') AS `ColumnId`
+        CONCAT(CONSTRAINT_SCHEMA, '.', TABLE_NAME, '.', CONSTRAINT_NAME) AS `ConstraintId`,
+        CONCAT(TABLE_SCHEMA, '.', TABLE_NAME, '.', COLUMN_NAME) AS `ColumnId`
         FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA=schema()
       </DefiningQuery>
     </EntitySet>
@@ -230,7 +230,7 @@
     <EntitySet Name="SForeignKeyConstraints" EntityType="Self.ForeignKeyConstraint">
       <DefiningQuery>
         SELECT
-        CONCAT('`', CONSTRAINT_SCHEMA, '`.`', TABLE_NAME, '`.`', CONSTRAINT_NAME, '`') AS `Id`,
+        CONCAT(CONSTRAINT_SCHEMA, '.', TABLE_NAME, '.', CONSTRAINT_NAME) AS `Id`,
         UPDATE_RULE AS `UpdateRule`,
         DELETE_RULE AS `DeleteRule`
         FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS
@@ -240,10 +240,10 @@
     <EntitySet Name="SForeignKeys" EntityType="Self.ForeignKey">
       <DefiningQuery>
         SELECT
-        CONCAT('`', FC.CONSTRAINT_SCHEMA, '`.`', FC.CONSTRAINT_NAME, '`.`', FC.ORDINAL_POSITION, '`') AS `Id`,
-        CONCAT('`', PC.TABLE_SCHEMA, '`.`', PC.TABLE_NAME, '`.`', PC.COLUMN_NAME, '`') AS `ToColumnId`,
-        CONCAT('`', FC.TABLE_SCHEMA, '`.`', FC.TABLE_NAME, '`.`', FC.COLUMN_NAME, '`') AS `FromColumnId`,
-        CONCAT('`', FC.CONSTRAINT_SCHEMA, '`.`', FC.TABLE_NAME, '`.`', FC.CONSTRAINT_NAME, '`') AS `ConstraintId`,
+        CONCAT(FC.CONSTRAINT_SCHEMA, '.', FC.CONSTRAINT_NAME, '.', FC.ORDINAL_POSITION) AS `Id`,
+        CONCAT(PC.TABLE_SCHEMA, '.', PC.TABLE_NAME, '.', PC.COLUMN_NAME) AS `ToColumnId`,
+        CONCAT(FC.TABLE_SCHEMA, '.', FC.TABLE_NAME, '.', FC.COLUMN_NAME) AS `FromColumnId`,
+        CONCAT(FC.CONSTRAINT_SCHEMA, '.', FC.TABLE_NAME, '.', FC.CONSTRAINT_NAME) AS `ConstraintId`,
         FC.ORDINAL_POSITION AS `Ordinal`
         FROM
         INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS AS RC

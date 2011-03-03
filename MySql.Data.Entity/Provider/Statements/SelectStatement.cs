@@ -60,12 +60,6 @@ namespace MySql.Data.Entity
             OrderBy.Add(f);
         }
 
-        public override SqlFragment GetProperty(string propertyName)
-        {
-            if (From == null || From.Name != propertyName) return null;
-            return From;
-        }
-
         public override void WriteSql(StringBuilder sql)
         {
             if (IsWrapped)
@@ -73,6 +67,7 @@ namespace MySql.Data.Entity
             sql.Append("SELECT");
             if (IsDistinct)
                 sql.Append(" DISTINCT ");
+
             WriteList(Columns, sql);
 
             if (From != null)
@@ -90,11 +85,7 @@ namespace MySql.Data.Entity
                 sql.Append("\r\n GROUP BY ");
                 WriteList(GroupBy, sql);
             }
-            if (OrderBy != null)
-            {
-                sql.Append("\r\n ORDER BY ");
-                WriteList(OrderBy, sql);
-            }
+            WriteOrderBy(sql);
             if (Limit != null || Skip != null)
             {
                 sql.Append(" LIMIT ");
@@ -111,6 +102,13 @@ namespace MySql.Data.Entity
                 if (Name != null)
                     sql.AppendFormat(" AS {0}", QuoteIdentifier(Name));
             }
+        }
+
+        private void WriteOrderBy(StringBuilder sql)
+        {
+            if (OrderBy == null) return;
+            sql.Append("\r\n ORDER BY ");
+            WriteList(OrderBy, sql);
         }
 
         public override void Wrap(Scope scope)

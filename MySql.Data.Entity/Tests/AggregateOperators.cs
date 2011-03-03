@@ -27,25 +27,13 @@ using System.Data.EntityClient;
 using System.Data.Common;
 using NUnit.Framework;
 using System.Data.Objects;
+using MySql.Data.Entity.Tests.Properties;
 
 namespace MySql.Data.Entity.Tests
 {
 	[TestFixture]
 	public class AggregateOperators : BaseEdmTest
 	{
-        public AggregateOperators()
-            : base()
-        {
-        }
-
-        private EntityConnection GetEntityConnection()
-        {
-            string connectionString = String.Format(
-                "metadata=TestDB.csdl|TestDB.msl|TestDB.ssdl;provider=MySql.Data.MySqlClient; provider connection string=\"{0}\"", GetConnectionString(true));
-            EntityConnection connection = new EntityConnection(connectionString);
-            return connection;
-        }
-
         [Test]
         public void CountSimple()
         {
@@ -54,8 +42,11 @@ namespace MySql.Data.Entity.Tests
 
             using (testEntities context = new testEntities())
             {
-                string sql = "SELECT VALUE Count(t.Id) FROM Toys AS t";
-                ObjectQuery<Int32> q = context.CreateQuery<Int32>(sql);
+                string eSql = "SELECT VALUE Count(t.Id) FROM Toys AS t";
+                ObjectQuery<Int32> q = context.CreateQuery<Int32>(eSql);
+
+                string sql = q.ToTraceString();
+                CheckSql(sql, SQLSyntax.CountSimple);
 
                 foreach (int count in q)
                     Assert.AreEqual(trueCount, count);
@@ -70,8 +61,11 @@ namespace MySql.Data.Entity.Tests
 
             using (testEntities context = new testEntities())
             {
-                string sql = "SELECT VALUE BigCount(t.Id) FROM Toys AS t";
-                ObjectQuery<Int32> q = context.CreateQuery<Int32>(sql);
+                string eSql = "SELECT VALUE BigCount(t.Id) FROM Toys AS t";
+                ObjectQuery<Int32> q = context.CreateQuery<Int32>(eSql);
+
+                string sql = q.ToTraceString();
+                CheckSql(sql, SQLSyntax.BigCountSimple);
 
                 foreach (int count in q)
                     Assert.AreEqual(trueCount, count);
@@ -86,8 +80,11 @@ namespace MySql.Data.Entity.Tests
 
             using (testEntities context = new testEntities())
             {
-                string sql = "SELECT VALUE Count(t.Id) FROM Toys AS t WHERE t.MinAge > 3";
-                ObjectQuery<Int32> q = context.CreateQuery<Int32>(sql);
+                string eSql = "SELECT VALUE Count(t.Id) FROM Toys AS t WHERE t.MinAge > 3";
+                ObjectQuery<Int32> q = context.CreateQuery<Int32>(eSql);
+
+                string sql = q.ToTraceString();
+                CheckSql(sql, SQLSyntax.CountWithPredicate);
 
                 foreach (int count in q)
                     Assert.AreEqual(trueCount, count);
@@ -102,8 +99,11 @@ namespace MySql.Data.Entity.Tests
 
             using (testEntities context = new testEntities())
             {
-                string sql = "SELECT VALUE MIN(t.MinAge) FROM Toys AS t";
-                ObjectQuery<Int32> q = context.CreateQuery<Int32>(sql);
+                string eSql = "SELECT VALUE MIN(t.MinAge) FROM Toys AS t";
+                ObjectQuery<Int32> q = context.CreateQuery<Int32>(eSql);
+
+                string sql = q.ToTraceString();
+                CheckSql(sql, SQLSyntax.MinSimple);
 
                 foreach (int age in q)
                     Assert.AreEqual(trueMin, age);
@@ -118,8 +118,11 @@ namespace MySql.Data.Entity.Tests
 
             using (testEntities context = new testEntities())
             {
-                string sql = "SELECT Min(o.Freight) FROM Orders AS o WHERE o.Store.Id = 2";
-                ObjectQuery<DbDataRecord> q = context.CreateQuery<DbDataRecord>(sql);
+                string eSql = "SELECT Min(o.Freight) FROM Orders AS o WHERE o.Store.Id = 2";
+                ObjectQuery<DbDataRecord> q = context.CreateQuery<DbDataRecord>(eSql);
+
+                string sql = q.ToTraceString();
+                CheckSql(sql, SQLSyntax.MinWithPredicate);
 
                 foreach (DbDataRecord r in q)
                 {
@@ -138,8 +141,11 @@ namespace MySql.Data.Entity.Tests
 
             using (testEntities context = new testEntities())
             {
-                string sql = "SELECT VALUE Min(o.Freight) FROM Orders AS o GROUP BY o.Store.Id";
-                ObjectQuery<Double> q = context.CreateQuery<Double>(sql);
+                string eSql = "SELECT VALUE Min(o.Freight) FROM Orders AS o GROUP BY o.Store.Id";
+                ObjectQuery<Double> q = context.CreateQuery<Double>(eSql);
+
+                string sql = q.ToTraceString();
+                CheckSql(sql, SQLSyntax.MinWithGrouping);
 
                 int i = 0;
                 foreach (double freight in q)
@@ -155,8 +161,11 @@ namespace MySql.Data.Entity.Tests
 
             using (testEntities context = new testEntities())
             {
-                string sql = "SELECT VALUE MAX(t.MinAge) FROM Toys AS t";
-                ObjectQuery<Int32> q = context.CreateQuery<Int32>(sql);
+                string eSql = "SELECT VALUE MAX(t.MinAge) FROM Toys AS t";
+                ObjectQuery<Int32> q = context.CreateQuery<Int32>(eSql);
+
+                string sql = q.ToTraceString();
+                CheckSql(sql, SQLSyntax.MaxSimple);
 
                 foreach (int max in q)
                     Assert.AreEqual(trueMax, max);
@@ -171,8 +180,11 @@ namespace MySql.Data.Entity.Tests
 
             using (testEntities context = new testEntities())
             {
-                string sql = "SELECT MAX(o.Freight) FROM Orders AS o WHERE o.Store.Id = 1";
-                ObjectQuery<DbDataRecord> q = context.CreateQuery<DbDataRecord>(sql);
+                string eSql = "SELECT MAX(o.Freight) FROM Orders AS o WHERE o.Store.Id = 1";
+                ObjectQuery<DbDataRecord> q = context.CreateQuery<DbDataRecord>(eSql);
+
+                string sql = q.ToTraceString();
+                CheckSql(sql, SQLSyntax.MaxWithPredicate);
 
                 foreach (DbDataRecord r in q)
                     Assert.AreEqual(freight, r.GetDouble(0));
@@ -189,8 +201,11 @@ namespace MySql.Data.Entity.Tests
 
             using (testEntities context = new testEntities())
             {
-                string sql = "SELECT VALUE MAX(o.Freight) FROM Orders AS o GROUP BY o.Store.Id";
-                ObjectQuery<Double> q = context.CreateQuery<Double>(sql);
+                string eSql = "SELECT VALUE MAX(o.Freight) FROM Orders AS o GROUP BY o.Store.Id";
+                ObjectQuery<Double> q = context.CreateQuery<Double>(eSql);
+
+                string sql = q.ToTraceString();
+                CheckSql(sql, SQLSyntax.MaxWithGrouping);
 
                 int i = 0;
                 foreach (double freight in q)
@@ -206,8 +221,11 @@ namespace MySql.Data.Entity.Tests
 
             using (testEntities context = new testEntities())
             {
-                string sql = "SELECT VALUE Avg(t.MinAge) FROM Toys AS t";
-                ObjectQuery<Decimal> q = context.CreateQuery<Decimal>(sql);
+                string eSql = "SELECT VALUE Avg(t.MinAge) FROM Toys AS t";
+                ObjectQuery<Decimal> q = context.CreateQuery<Decimal>(eSql);
+
+                string sql = q.ToTraceString();
+                CheckSql(sql, SQLSyntax.AverageSimple);
 
                 foreach (Decimal r in q)
                     Assert.AreEqual(avgAge, r);
@@ -222,8 +240,11 @@ namespace MySql.Data.Entity.Tests
 
             using (testEntities context = new testEntities())
             {
-                string sql = "SELECT VALUE AVG(o.Freight) FROM Orders AS o WHERE o.Store.Id = 3";
-                ObjectQuery<Double> q = context.CreateQuery<Double>(sql);
+                string eSql = "SELECT VALUE AVG(o.Freight) FROM Orders AS o WHERE o.Store.Id = 3";
+                ObjectQuery<Double> q = context.CreateQuery<Double>(eSql);
+
+                string sql = q.ToTraceString();
+                CheckSql(sql, SQLSyntax.AverageWithPredicate);
 
                 foreach (Double r in q)
                     Assert.AreEqual(Convert.ToInt32(freight), Convert.ToInt32(r));
@@ -240,8 +261,11 @@ namespace MySql.Data.Entity.Tests
 
             using (testEntities context = new testEntities())
             {
-                string sql = "SELECT VALUE AVG(o.Freight) FROM Orders AS o GROUP BY o.Store.Id";
-                ObjectQuery<Double> q = context.CreateQuery<Double>(sql);
+                string eSql = "SELECT VALUE AVG(o.Freight) FROM Orders AS o GROUP BY o.Store.Id";
+                ObjectQuery<Double> q = context.CreateQuery<Double>(eSql);
+
+                string sql = q.ToTraceString();
+                CheckSql(sql, SQLSyntax.AverageWithGrouping);
 
                 int i = 0;
                 foreach (double freight in q)
@@ -257,8 +281,11 @@ namespace MySql.Data.Entity.Tests
 
             using (testEntities context = new testEntities())
             {
-                string sql = "SELECT VALUE Sum(t.MinAge) FROM Toys AS t";
-                ObjectQuery<Int32> q = context.CreateQuery<Int32>(sql);
+                string eSql = "SELECT VALUE Sum(t.MinAge) FROM Toys AS t";
+                ObjectQuery<Int32> q = context.CreateQuery<Int32>(eSql);
+
+                string sql = q.ToTraceString();
+                CheckSql(sql, SQLSyntax.SumSimple);
 
                 foreach (int r in q)
                     Assert.AreEqual(sumAge, r);
@@ -273,8 +300,11 @@ namespace MySql.Data.Entity.Tests
 
             using (testEntities context = new testEntities())
             {
-                string sql = "SELECT VALUE SUM(o.Freight) FROM Orders AS o WHERE o.Store.Id = 2";
-                ObjectQuery<Double> q = context.CreateQuery<Double>(sql);
+                string eSql = "SELECT VALUE SUM(o.Freight) FROM Orders AS o WHERE o.Store.Id = 2";
+                ObjectQuery<Double> q = context.CreateQuery<Double>(eSql);
+
+                string sql = q.ToTraceString();
+                CheckSql(sql, SQLSyntax.SumWithPredicate);
 
                 foreach (Double r in q)
                     Assert.AreEqual(freight, r);
@@ -291,8 +321,11 @@ namespace MySql.Data.Entity.Tests
 
             using (testEntities context = new testEntities())
             {
-                string sql = "SELECT VALUE SUM(o.Freight) FROM Orders AS o GROUP BY o.Store.Id";
-                ObjectQuery<Double> q = context.CreateQuery<Double>(sql);
+                string eSql = "SELECT VALUE SUM(o.Freight) FROM Orders AS o GROUP BY o.Store.Id";
+                ObjectQuery<Double> q = context.CreateQuery<Double>(eSql);
+
+                string sql = q.ToTraceString();
+                CheckSql(sql, SQLSyntax.SumWithGrouping);
 
                 int i = 0;
                 foreach (double freight in q)
@@ -310,9 +343,12 @@ namespace MySql.Data.Entity.Tests
 
             using (testEntities context = new testEntities())
             {
-                string sql = @"SELECT VALUE s FROM Stores AS s WHERE s.Id = 
+                string eSql = @"SELECT VALUE s FROM Stores AS s WHERE s.Id = 
                                 MAX(SELECT VALUE o.Store.Id FROM Orders As o)";
-                ObjectQuery<Store> q = context.CreateQuery<Store>(sql);
+                ObjectQuery<Store> q = context.CreateQuery<Store>(eSql);
+
+                string sql = q.ToTraceString();
+                CheckSql(sql, SQLSyntax.MaxInSubQuery1);
 
                 int i = 0;
                 foreach (Store s in q)
@@ -330,9 +366,12 @@ namespace MySql.Data.Entity.Tests
 
             using (testEntities context = new testEntities())
             {
-                string sql = @"SELECT VALUE s FROM Stores AS s WHERE s.Id = 
+                string eSql = @"SELECT VALUE s FROM Stores AS s WHERE s.Id = 
                                 ANYELEMENT(SELECT VALUE MAX(o.Store.Id) FROM Orders As o)";
-                ObjectQuery<Store> q = context.CreateQuery<Store>(sql);
+                ObjectQuery<Store> q = context.CreateQuery<Store>(eSql);
+
+                string sql = q.ToTraceString();
+                CheckSql(sql, SQLSyntax.MaxInSubQuery2);
 
                 int i = 0;
                 foreach (Store s in q)

@@ -79,19 +79,32 @@ namespace MySql.Data.Entity
             // if we are not at the top level property then just return
             if (propertyLevel > 0) return fragment;
 
-            // we are at the top level property so now we can do our work
-            ColumnFragment column = GetColumnFromPropertyTree(fragment);
+            ColumnFragment column = new ColumnFragment(null, fragment.LastProperty);
+            column.TableName = FindInputFromProperties(fragment);
 
-            for (int i = fragment.Properties.Count - 1; i >= 0; --i)
+            return column;
+        }
+
+        private string FindInputFromProperties(PropertyFragment fragment)
+        {
+            Debug.Assert(fragment != null);
+            PropertyFragment propertyFragment = fragment as PropertyFragment;
+            Debug.Assert(propertyFragment != null);
+
+            if (propertyFragment.Properties.Count >= 2)
             {
-                InputFragment inputFragment = scope.GetFragment(fragment.Properties[i]);
-                if (inputFragment != null)
+                for (int x = propertyFragment.Properties.Count - 2; x >= 0; x--)
                 {
-                    column.TableAlias = inputFragment.Name;
-                    break;
+                    string reference = propertyFragment.Properties[x];
+                    InputFragment input = scope.GetFragment(reference);
+                    if (input == null) continue;
+                    if (input.Scoped) return input.Name;
+                    if (input is SelectStatement)
+                        return (input as SelectStatement).From.Name;
+                    continue;
                 }
             }
-            return column;
+            return null;
         }
 
         public override SqlFragment Visit(DbScanExpression expression)
@@ -152,8 +165,7 @@ namespace MySql.Data.Entity
             if (literal != null)
                 return new LiteralFragment(literal);
             else if (pt == PrimitiveTypeKind.Boolean)
-                return new LiteralFragment(String.Format("cast({0} as decimal(0,0))",
-                    (bool)expression.Value ? 1 : 0));
+                return new LiteralFragment((bool)expression.Value ? "1" : "0");
             else
             {
                 // use a parameter for non-numeric types so we get proper
@@ -274,7 +286,7 @@ namespace MySql.Data.Entity
 
             for (int i = 0; i < expression.Arguments.Count; i++)
             {
-                ColumnFragment col = null;
+                ColumnFragment col; 
 
                 SqlFragment fragment = expression.Arguments[i].Accept(this);
                 if (fragment is ColumnFragment)
@@ -422,19 +434,12 @@ namespace MySql.Data.Entity
             Debug.Assert(f is InputFragment);
 
             InputFragment inputFragment = f as InputFragment;
-            inputFragment.Name = name;
 
             if (inputFragment is TableFragment && type != null)
                 (inputFragment as TableFragment).Type = type;
 
-            SelectStatement select = inputFragment as SelectStatement;
             if (name != null)
-            {
-                if (select != null &&  !select.IsWrapped)
-                    scope.Add(name, select.From);
-                else
-                    scope.Add(name, inputFragment);
-            }
+                scope.Add(name, inputFragment);
 
             return inputFragment;
         }
@@ -493,25 +498,6 @@ namespace MySql.Data.Entity
                     return false;
             }
             return true;
-        }
-
-        ColumnFragment GetColumnFromPropertyTree(PropertyFragment fragment)
-        {
-            int lastIndex = fragment.Properties.Count-1;
-            SqlFragment currentFragment = scope.GetFragment(fragment.Properties[0]);
-            if (currentFragment != null)
-            {
-                for (int i = 1; i < fragment.Properties.Count; i++)
-                {
-                    SqlFragment f = (currentFragment as InputFragment).GetProperty(fragment.Properties[i]);
-                    if (f == null) break;
-                    currentFragment = f;
-                }
-                if (currentFragment is ColumnFragment)
-                    return currentFragment as ColumnFragment;
-            }
-            ColumnFragment col = new ColumnFragment(null, fragment.Properties[lastIndex]);
-            return col;
         }
 
         #endregion

@@ -28,6 +28,7 @@ using System.Data.EntityClient;
 using System.Data.Common;
 using System.Data.Objects;
 using System.Linq;
+using MySql.Data.Entity.Tests.Properties;
 
 namespace MySql.Data.Entity.Tests
 {
@@ -54,6 +55,9 @@ namespace MySql.Data.Entity.Tests
                             bookName = b.Name,
                             authorName = a.Name
                         };
+
+                string sql = q.ToTraceString();
+                CheckSql(sql, SQLSyntax.SimpleJoin);
 
                 int i = 0;
                 foreach (var o in q)
@@ -83,6 +87,9 @@ namespace MySql.Data.Entity.Tests
                             bookName = b.Name,
                             authorName = a.Name
                         };
+
+                string sql = q.ToTraceString();
+                CheckSql(sql, SQLSyntax.SimpleJoinWithPredicate);
 
                 int i = 0;
                 foreach (var o in q)

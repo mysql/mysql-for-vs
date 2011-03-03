@@ -33,12 +33,6 @@ namespace MySql.Data.Entity.Tests
     [TestFixture]
     public class InsertTests : BaseEdmTest
     {
-        public InsertTests()
-            : base()
-        {
-            csAdditions += ";logging=true;";
-        }
-
         [Test]
         public void InsertSingleRow()
         {

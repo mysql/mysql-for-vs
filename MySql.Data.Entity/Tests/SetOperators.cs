@@ -28,17 +28,13 @@ using System.Data.Common;
 using NUnit.Framework;
 using System.Data.Objects;
 using System.Linq;
+using MySql.Data.Entity.Tests.Properties;
 
 namespace MySql.Data.Entity.Tests
 {
 	[TestFixture]
 	public class SetOperators : BaseEdmTest
 	{
-        public SetOperators()
-            : base()
-        {
-        }
-
         [Test]
         public void Any()
         {
@@ -52,7 +48,10 @@ namespace MySql.Data.Entity.Tests
             using (testEntities context = new testEntities())
             {
                 var authors = from a in context.Authors where !a.Books.Any() select a;
+
                 string sql = authors.ToTraceString();
+                CheckSql(sql, SQLSyntax.Any);
+                
                 foreach (Author a in authors)
                     Assert.AreEqual(dt.Rows[i++]["id"], a.Id);
             }
@@ -69,6 +68,7 @@ namespace MySql.Data.Entity.Tests
                 var q = from o in context.Orders 
                             select o;
                 Order order = q.First() as Order;
+
                 Assert.AreEqual(id, order.Id);
             }
         }

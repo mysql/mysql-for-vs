@@ -27,25 +27,13 @@ using System.Data.EntityClient;
 using System.Data.Common;
 using NUnit.Framework;
 using System.Data.Objects;
+using MySql.Data.Entity.Tests.Properties;
 
 namespace MySql.Data.Entity.Tests
 {
 	[TestFixture]
 	public class RelationalOperators : BaseEdmTest
 	{
-        public RelationalOperators()
-            : base()
-        {
-        }
-
-        private EntityConnection GetEntityConnection()
-        {
-            string connectionString = String.Format(
-                "metadata=TestDB.csdl|TestDB.msl|TestDB.ssdl;provider=MySql.Data.MySqlClient; provider connection string=\"{0}\"", GetConnectionString(true));
-            EntityConnection connection = new EntityConnection(connectionString);
-            return connection;
-        }
-
         [Test]
         public void Except()
         {
@@ -88,6 +76,10 @@ namespace MySql.Data.Entity.Tests
                 string entitySQL = @"(SELECT t.Id, t.Name FROM Toys AS t) 
                 UNION ALL (SELECT c.Id, c.Name FROM Companies AS c)";
                 ObjectQuery<DbDataRecord> query = context.CreateQuery<DbDataRecord>(entitySQL);
+
+                string sql = query.ToTraceString();
+                CheckSql(sql, SQLSyntax.UnionAll);
+
                 int i = 0;
                 foreach (DbDataRecord r in query)
                 {
