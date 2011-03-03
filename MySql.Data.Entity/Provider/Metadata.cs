@@ -125,6 +125,20 @@ namespace MySql.Data.Entity
             }
         }
 
+        public static bool IsComparisonOperator(string op)
+        {
+            switch (op)
+            {
+                case "=":
+                case "<":
+                case ">":
+                case "<=":
+                case ">=":
+                case "!=": return true;
+                default: return false;
+            }
+        }
+
         public static string GetOperator(DbExpressionKind expressionKind)
         {
             switch (expressionKind)

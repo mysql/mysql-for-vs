@@ -36,12 +36,9 @@ namespace MySql.Data.Entity
         public TypeUsage Type;
         public List<ColumnFragment> Columns;
 
-        public override SqlFragment GetProperty(string propertyName)
+        public TableFragment()
         {
-            if (Columns == null) return null;
-            foreach (ColumnFragment col in Columns)
-                if (col.ColumnName == propertyName) return col;
-            return null;
+            Scoped = true;
         }
 
         public override void WriteSql(StringBuilder sql)
