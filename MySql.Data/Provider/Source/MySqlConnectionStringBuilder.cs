@@ -743,6 +743,7 @@ namespace MySql.Data.MySqlClient
             return new Regex(BlobAsUTF8ExcludePattern);
         }
 
+#if !CF
         public override bool ContainsKey(string keyword)
         {
             try
@@ -756,6 +757,7 @@ namespace MySql.Data.MySqlClient
                 return false;
             }
         }
+#endif
 
         public override object this[string keyword]
         {
