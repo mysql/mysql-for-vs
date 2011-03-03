@@ -99,6 +99,7 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("database=test2", s.ConnectionString);
         }
 
+#if !CF
         /// <summary>
         /// Bug #59835	.Net Connector MySqlConnectionStringBuilder wrong result ContainsKey function
         /// </summary>
@@ -113,5 +114,6 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.IsTrue(s.ContainsKey("host"));
             Assert.IsFalse(s.ContainsKey("badkey"));
         }
+#endif
     }
 }

@@ -83,6 +83,8 @@ namespace MySql.Data.Entity
             // first process the input
             DbGroupExpressionBinding e = expression.Input;
             SelectStatement innerSelect = VisitInputExpressionEnsureSelect(e.Expression, e.VariableName, e.VariableType);
+            scope.Add(e.GroupVariableName, innerSelect);
+
             SelectStatement select = WrapIfNotCompatible(innerSelect, expression.ExpressionKind);
 
             CollectionType ct = (CollectionType)expression.ResultType.EdmType;
@@ -121,7 +123,9 @@ namespace MySql.Data.Entity
             FunctionFragment fragment = new FunctionFragment();
             fragment.Name = fa.Function.Name;
             if (fa.Function.Name == "BigCount")
-                fragment.Name = "Count";
+                fragment.Name = "COUNT";
+            else
+                fragment.Name = fa.Function.Name.ToUpperInvariant();
 
             fragment.Distinct = fa.Distinct;
             fragment.Argmument = arg;
@@ -164,15 +168,18 @@ namespace MySql.Data.Entity
             if (select.IsCompatible(expressionKind)) return select;
             SelectStatement newSelect = new SelectStatement();
             select.Wrap(scope);
+            select.Scoped = true;
             newSelect.From = select;
             return newSelect;
         }
 
         private void WrapJoinInputIfNecessary(InputFragment fragment, bool isRightPart)
         {
-            if (fragment is SelectStatement ||
-                fragment is UnionFragment)
+            if (fragment is SelectStatement || fragment is UnionFragment)
+            {
                 fragment.Wrap(scope);
+                fragment.Scoped = true;
+            }
             else if (fragment is JoinFragment && isRightPart)
                 fragment.Wrap(null);
         }
@@ -246,10 +253,11 @@ namespace MySql.Data.Entity
 
         public override SqlFragment Visit(DbLimitExpression expression)
         {
-            SelectStatement statement = (SelectStatement)VisitInputExpressionEnsureSelect(
+            SelectStatement select = (SelectStatement)VisitInputExpressionEnsureSelect(
                 expression.Argument, null, null);
-            statement.Limit = expression.Limit.Accept(this);
-            return statement;
+            select = WrapIfNotCompatible(select, expression.ExpressionKind);
+            select.Limit = expression.Limit.Accept(this);
+            return select;
         }
 
         public override SqlFragment Visit(DbSkipExpression expression)
@@ -257,13 +265,15 @@ namespace MySql.Data.Entity
             SelectStatement select = VisitInputExpressionEnsureSelect(expression.Input.Expression, expression.Input.VariableName,
                 expression.Input.VariableType);
 
+            select = WrapIfNotCompatible(select, DbExpressionKind.Sort);
             foreach (DbSortClause sortClause in expression.SortOrder)
             {
                 select.AddOrderBy(
                     new SortFragment(sortClause.Expression.Accept(this), sortClause.Ascending));
             }
 
-
+            // if we wrapped above, then this wrap will not create a new one so there
+            // is no harm in calling it
             select = WrapIfNotCompatible(select, expression.ExpressionKind);
             select.Skip = expression.Count.Accept(this);
             return select;
@@ -277,11 +287,11 @@ namespace MySql.Data.Entity
 
             SelectStatement left = VisitInputExpressionEnsureSelect(expression.Left, null, null);
             Debug.Assert(left.Name == null);
-            left.Wrap(null);
+//            left.Wrap(null);
 
             SelectStatement right = VisitInputExpressionEnsureSelect(expression.Right, null, null);
             Debug.Assert(right.Name == null);
-            right.Wrap(null);
+  //          right.Wrap(null);
 
             f.Left = left;
             f.Right = right;

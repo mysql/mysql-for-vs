@@ -30,25 +30,13 @@ using System.Data.EntityClient;
 using System.Data.Common;
 using NUnit.Framework;
 using System.Data.Objects;
+using MySql.Data.Entity.Tests.Properties;
 
 namespace MySql.Data.Entity.Tests
 {
 	[TestFixture]
 	public class Paging : BaseEdmTest
 	{
-        public Paging()
-            : base()
-        {
-        }
-
-        private EntityConnection GetEntityConnection()
-        {
-            string connectionString = String.Format(
-                "metadata=TestDB.csdl|TestDB.msl|TestDB.ssdl;provider=MySql.Data.MySqlClient; provider connection string=\"{0}\"", GetConnectionString(true));
-            EntityConnection connection = new EntityConnection(connectionString);
-            return connection;
-        }
-
         [Test]
         public void Top()
         {
@@ -60,6 +48,9 @@ namespace MySql.Data.Entity.Tests
 
                 int i = 0;
                 var query = context.Companies.Top("2");
+                string sql = query.ToTraceString();
+                CheckSql(sql, SQLSyntax.Top);
+
                 foreach (Company c in query)
                 {
                     Assert.AreEqual(dt.Rows[i++]["id"], c.Id);
@@ -78,6 +69,9 @@ namespace MySql.Data.Entity.Tests
 
                 int i = 0;
                 var query = context.Companies.Skip("it.Id", "3");
+                string sql = query.ToTraceString();
+                CheckSql(sql, SQLSyntax.Skip);
+
                 foreach (Company c in query)
                 {
                     Assert.AreEqual(dt.Rows[i++]["id"], c.Id);
@@ -96,6 +90,9 @@ namespace MySql.Data.Entity.Tests
 
                 int i = 0;
                 var query = context.Companies.Skip("it.Id", "2").Top("2");
+                string sql = query.ToTraceString();
+                CheckSql(sql, SQLSyntax.SkipAndTakeSimple);
+
                 foreach (Company c in query)
                 {
                     Assert.AreEqual(dt.Rows[i++]["id"], c.Id);
@@ -117,7 +114,9 @@ namespace MySql.Data.Entity.Tests
                 da.Fill(dt);
 
                 int i = 0;
-                var query = context.Companies.OrderByDescending(q => q.Name).Skip(2).Take(2).ToList();
+                var query = context.Companies.OrderByDescending(q => q.Name).Skip(2).Take(2);
+                string sql = query.ToTraceString();
+                CheckSql(sql, SQLSyntax.SkipAndTakeWithOrdering);
                 foreach (Company c in query)
                     Assert.AreEqual(dt.Rows[i++]["Name"], c.Name);
             }
