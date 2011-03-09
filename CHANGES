@@ -10,6 +10,7 @@
 - fixed NullReferenceException when a timeout occurred inside a TransactionScope
   (MySQL bug #59346, Oracle bug #11766272)
 - small but important improvements in EF sql generation
+- added batching support for updates and deletes (bug #59616)
 
 Version 6.3.6
 - Fixed TracingDriver so that it normalizes long queries before truncation so we don't get exceptions     
