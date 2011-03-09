@@ -833,6 +833,8 @@ namespace MySql.Data.MySqlClient
                         token = tokenizer.NextToken();
                     }
                 }
+                // Otherwise use the command verbatim
+                else batchableCommandText = CommandText;
             }
 
             return batchableCommandText;

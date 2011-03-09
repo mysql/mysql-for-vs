@@ -25,6 +25,7 @@ using System.Data;
 using MySql.Data.MySqlClient;
 using NUnit.Framework;
 using System.Threading;
+using System.Diagnostics;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -492,7 +493,41 @@ namespace MySql.Data.MySqlClient.Tests
             catch (MySqlException)
             {
             }
+        }
 
+        /// <summary>
+        /// Bug #59616	Only INSERTs are batched
+        /// </summary>
+        [Test]
+        public void BatchUpdatesAndDeletes()
+        {
+            execSQL("CREATE TABLE test (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(20))");
+            execSQL("INSERT INTO test VALUES (1, 'boo'), (2, 'boo'), (3, 'boo')");
+
+            Trace.Listeners.Clear();
+            GenericListener listener = new GenericListener();
+            Trace.Listeners.Add(listener);
+
+            string connStr = GetConnectionString(true) + ";logging=true;allow batch=true";
+            using (MySqlConnection c = new MySqlConnection(connStr))
+            {
+                c.Open();
+                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM test", c);
+                MySqlCommandBuilder cb = new MySqlCommandBuilder(da);
+                da.UpdateCommand = cb.GetUpdateCommand();
+                da.UpdateCommand.UpdatedRowSource = UpdateRowSource.None;
+                da.UpdateBatchSize = 100;
+
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                dt.Rows[0]["name"] = "boo2";
+                dt.Rows[1]["name"] = "boo2";
+                dt.Rows[2]["name"] = "boo2";
+                da.Update(dt);
+            }
+
+            Assert.AreEqual(1, listener.Find("UPDATE"));
         }
     }
 
