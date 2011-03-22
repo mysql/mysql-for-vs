@@ -547,6 +547,7 @@ namespace MySql.Data.MySqlClient.Tests
             }
         }
 
+#if !CF
         private void CacheServerPropertiesInternal(bool cache)
         {
             string connStr = GetPoolingConnectionString() + 
@@ -576,5 +577,6 @@ namespace MySql.Data.MySqlClient.Tests
             CacheServerPropertiesInternal(true);
             CacheServerPropertiesInternal(false);
         }
+#endif
     }
 }
