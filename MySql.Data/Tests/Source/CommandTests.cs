@@ -500,6 +500,7 @@ namespace MySql.Data.MySqlClient.Tests
             }
         }
 
+#if !CF
         /// <summary>
         /// Bug #59616	Only INSERTs are batched
         /// </summary>
@@ -535,6 +536,7 @@ namespace MySql.Data.MySqlClient.Tests
 
             Assert.AreEqual(1, listener.Find("Query Opened: UPDATE"));
         }
+#endif
     }
 
 
