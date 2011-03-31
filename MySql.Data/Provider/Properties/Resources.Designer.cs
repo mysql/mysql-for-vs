@@ -587,6 +587,15 @@ namespace MySql.Data.MySqlClient.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot retrieve Windows identity for current user. Connections that use  IntegratedSecurity cannot be  pooled. Use either &apos;ConnectionReset=true&apos; or  &apos;Pooling=false&apos; in the connection string to fix..
+        /// </summary>
+        public static string NoWindowsIdentity {
+            get {
+                return ResourceManager.GetString("NoWindowsIdentity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The object is not open or has been disposed..
         /// </summary>
         public static string ObjectDisposed {
