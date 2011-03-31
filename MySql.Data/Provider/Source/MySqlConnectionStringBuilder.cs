@@ -896,7 +896,7 @@ namespace MySql.Data.MySqlClient
             // Integrated Security is a logically bool parameter, SSPI value 
             // for it is the same as "true" (SSPI is SQL Server legacy value
             if (keyword == "Integrated Security" && value is string &&
-                ((string)value).ToLowerInvariant() == "sspi")
+                ((string)value).ToLower(CultureInfo.InvariantCulture) == "sspi")
             {
                 value = true;
             }
