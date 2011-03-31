@@ -44,7 +44,13 @@ namespace MySql.Data.MySqlClient
         Stream inStream;
         Stream outStream;
 
-
+        internal Stream BaseStream
+        {
+            get
+            {
+                return timedStream;
+            }
+        }
 		public MySqlStream(Encoding encoding)
 		{
 			// we have no idea what the real value is so we start off with the max value

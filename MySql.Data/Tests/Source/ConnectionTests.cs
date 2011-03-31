@@ -69,6 +69,120 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(System.Data.ConnectionState.Closed, c.State, "State");
         }
 
+#if !CF  //No Security.Principal on CF
+
+        [Test]
+        public void TestIntegratedSecurity()
+        {
+
+
+            const string PluginName = "authentication_windows";
+
+
+            // Check if server has windows authentication plugin is installed
+            MySqlCommand cmd = new MySqlCommand("show plugins", rootConn);
+            bool haveWindowsAuthentication = false;
+            using (MySqlDataReader r = cmd.ExecuteReader())
+            {
+                while (r.Read())
+                {
+                    string name = (string)r["Name"];
+                    if (name == PluginName)
+                    {
+                        haveWindowsAuthentication = true;
+                        break;
+                    }
+                }
+            }
+            if(!haveWindowsAuthentication)
+                return;
+
+            bool haveAuthWindowsUser = false;
+            string pluginName = null;
+            string authenticationString = "";
+
+            // Check if predefined proxy user exists
+            cmd.CommandText =
+                "select plugin,authentication_string from mysql.user where user='auth_windows'";
+            using (MySqlDataReader r = cmd.ExecuteReader())
+            {
+                if (r.Read())
+                {
+                    haveAuthWindowsUser = true;
+                    pluginName = (string) r["plugin"];
+                    authenticationString = (string) r["authentication_string"];
+                }
+            }
+
+            // Create mapping for current Windows user=>foo_user
+            String windowsUser = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+            windowsUser = windowsUser.Replace("\\", "\\\\");
+            string userMapping = windowsUser+"=foo_user";
+
+            try
+            {
+                if (!haveAuthWindowsUser)
+                {
+                    suExecSQL(
+                        "CREATE USER auth_windows IDENTIFIED WITH " + PluginName +" as '" +
+                         userMapping + "'");
+                }
+                else
+                {
+                    // extend mapping string for current user
+                    suExecSQL(
+                        "UPDATE mysql.user SET authentication_string='" + userMapping +
+                        "," + authenticationString + "'");
+                }
+                suExecSQL("create user foo_user identified by 'pass'");
+                suExecSQL("grant all privileges on *.* to 'foo_user'@'%'");
+                suExecSQL("grant proxy on foo_user to auth_windows");
+
+
+                // Finally, use IntegratedSecurity=true for the newly created user
+                string connStr = GetConnectionString(true) + ";Integrated Security=SSPI";
+                using (MySqlConnection c = new MySqlConnection(connStr))
+                {
+                    c.Open();
+
+                    MySqlCommand command = new MySqlCommand("SELECT 1", c);
+                    long ret = (long)command.ExecuteScalar();
+                    Assert.AreEqual(ret, 1);
+
+
+                    command.CommandText = "select user()";
+                    string user = (string)command.ExecuteScalar();
+                    // Check if proxy user is correct
+                    Assert.IsTrue(user.StartsWith("auth_windows@"));
+
+                    // check if mysql user is correct 
+                    // (foo_user is mapped to current  OS user)
+                    command.CommandText = "select current_user()";
+                    string currentUser = (string)command.ExecuteScalar();
+                    Assert.IsTrue(currentUser.StartsWith("foo_user@"));
+                }
+            }
+            finally
+            {
+                // Cleanup
+
+                // Drop test user
+                suExecSQL("drop user foo_user");
+                if (!haveAuthWindowsUser)
+                {
+                    // drop proxy user if we created it
+                    suExecSQL("drop user auth_windows");
+                }
+                else
+                {
+                    // revert changes in the mapping string
+                    suExecSQL("UPDATE mysql.user SET authentication_string='" +
+                        authenticationString + "'");
+                }
+            }
+        }
+#endif
+
         [Test]
         public void TestConnectingSocketBadUserName()
         {

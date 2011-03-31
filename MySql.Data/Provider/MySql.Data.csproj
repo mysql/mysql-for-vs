@@ -173,6 +173,7 @@
     <Compile Include="Source\MySqlScript.cs" />
     <Compile Include="Source\Types\MySqlGuid.cs" />
     <Compile Include="Source\ResultSet.cs" />
+    <Compile Include="Source\SSPI.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\ReservedWords.txt" />
