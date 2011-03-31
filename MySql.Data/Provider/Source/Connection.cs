@@ -466,6 +466,7 @@ namespace MySql.Data.MySqlClient
                     if (driver == null)
                         driver = pool.GetConnection();
                     procedureCache = pool.ProcedureCache;
+                    
                 }
                 else
                 {

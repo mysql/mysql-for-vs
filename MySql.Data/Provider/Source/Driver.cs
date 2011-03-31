@@ -39,7 +39,6 @@ namespace MySql.Data.MySqlClient
     {
         protected Encoding encoding;
         protected MySqlConnectionStringBuilder connectionString;
-        protected ClientFlags serverCaps;
         protected bool isOpen;
         protected DateTime creationTime;
         protected string serverCharSet;
