@@ -879,6 +879,8 @@ namespace MySql.Data.MySqlClient
 
             Remove(keyword);
 
+            NormalizeValue(keyword, ref value);
+
             object val = null;
             if (value is string && defaultValues[keyword].DefaultValue is Enum)
                 val = ParseEnum(defaultValues[keyword].Type, (string)value, keyword);
@@ -886,6 +888,18 @@ namespace MySql.Data.MySqlClient
                 val = ChangeType(value, defaultValues[keyword].Type);
             values[keyword] = val;
             base[keyword] = val;
+        }
+
+        private static void NormalizeValue(string keyword, ref object value)
+        {
+            // Handle special case "Integrated Security=SSPI"
+            // Integrated Security is a logically bool parameter, SSPI value 
+            // for it is the same as "true" (SSPI is SQL Server legacy value
+            if (keyword == "Integrated Security" && value is string &&
+                ((string)value).ToLowerInvariant() == "sspi")
+            {
+                value = true;
+            }
         }
 
         private object ParseEnum(Type t, string requestedValue, string key)
@@ -909,9 +923,6 @@ namespace MySql.Data.MySqlClient
                 if (s == "yes" || s == "true") return true;
                 if (s == "no" || s == "false") return false;
 
-                // Unclean, but we need IntegratedSecurity=SSPI to be
-                // the same as IntegratedSecurity=true, to match SqlClient
-                if (s == "sspi") return true;
                 throw new FormatException(String.Format(Resources.InvalidValueForBoolean, value));
             }
             else
