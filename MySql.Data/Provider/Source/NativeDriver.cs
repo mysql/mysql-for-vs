@@ -486,7 +486,7 @@ namespace MySql.Data.MySqlClient
             }
 
             // Do SSPI authentication handshake
-            SSPI sspi = new SSPI(targetName, stream.BaseStream);
+            SSPI sspi = new SSPI(targetName, stream.BaseStream, stream.SequenceByte);
             sspi.AuthenticateClient();
 
             // read ok packet.
@@ -517,14 +517,15 @@ namespace MySql.Data.MySqlClient
             if (Settings.IntegratedSecurity)
             {
                 // Append authentication method after the database name in the 
-                // handshake authentication packet. Omit it, if we do connection
-                // reset (reset should use the same authentication method)
-                if (!reset)
+                // handshake authentication packet.If we're sending CHANGE_USER
+                // also write charset number after database name prior to plugin name
+                if (reset)
                 {
-                    packet.WriteString(AuthenticationWindowsPlugin);
+                    packet.WriteInteger(8, 2); // Charset number
                 }
+                packet.WriteString(AuthenticationWindowsPlugin);
                 stream.SendPacket(packet);
-                AuthenticateSSPI();
+                AuthenticateSSPI(reset);
                 return;
             }
             else
