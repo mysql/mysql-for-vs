@@ -114,12 +114,14 @@ namespace MySql.Data.MySqlClient
         [DllImport("secur32.Dll", CharSet = CharSet.Auto, SetLastError = false)]
         public static extern int DeleteSecurityContext(ref SECURITY_HANDLE pCred);
 
-        public SSPI(string targetName, Stream stream)
+
+
+        public SSPI(string targetName, Stream stream, int seqNo)
         {
             this.targetName = null;
             this.stream = stream;
             packetHeader = new byte[4];
-           
+            seq = seqNo;
         }
 
 
