@@ -525,7 +525,7 @@ namespace MySql.Data.MySqlClient
                 }
                 packet.WriteString(AuthenticationWindowsPlugin);
                 stream.SendPacket(packet);
-                AuthenticateSSPI(reset);
+                AuthenticateSSPI();
                 return;
             }
             else
