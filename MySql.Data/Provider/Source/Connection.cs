@@ -53,6 +53,7 @@ namespace MySql.Data.MySqlClient
         private bool hasBeenOpen;
         private SchemaProvider schemaProvider;
         private ProcedureCache procedureCache;
+        private bool isInUse;
 #if !CF
         private PerformanceMonitor perfMonitor;
 #endif
@@ -104,7 +105,11 @@ namespace MySql.Data.MySqlClient
         internal MySqlDataReader Reader
         {
             get { return dataReader; }
-            set { dataReader = value; }
+            set 
+            { 
+                dataReader = value;
+                isInUse = true;
+            }
         }
 
         internal void OnInfoMessage(MySqlInfoMessageEventArgs args)
@@ -133,6 +138,12 @@ namespace MySql.Data.MySqlClient
                 return false;            
 #endif
             }
+        }
+
+        internal bool IsInUse
+        {
+            get{ return isInUse; }
+            set{ isInUse = value; }
         }
 
         #endregion

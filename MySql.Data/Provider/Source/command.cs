@@ -60,6 +60,7 @@ namespace MySql.Data.MySqlClient
         List<MySqlCommand> batch;
         private string batchableCommandText;
         private bool useDefaultTimeout;
+        private bool internallyCreated;
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ctor1/*'/>
 		public MySqlCommand()
@@ -237,9 +238,20 @@ namespace MySql.Data.MySqlClient
             get { return timedOut; }
         }
 
+        internal bool Canceled
+        {
+            get { return canceled; }
+        }
+
         internal string BatchableCommandText
         {
             get { return batchableCommandText; }
+        }
+
+        internal bool InternallyCreated
+        {
+            get { return internallyCreated; }
+            set { internallyCreated = value; }
         }
 
 		#endregion
@@ -301,7 +313,7 @@ namespace MySql.Data.MySqlClient
                 throw new InvalidOperationException("Connection must be valid and open.");
 
 			// Data readers have to be closed first
-			if (connection.Reader != null)
+            if (connection.IsInUse && !this.internallyCreated)
 				throw new MySqlException("There is already an open DataReader associated with this Connection which must be closed first.");
 
             if (CommandType == CommandType.TableDirect)
@@ -327,6 +339,7 @@ namespace MySql.Data.MySqlClient
 		{
 			if (statement != null)
 				statement.Close(reader);
+
             ResetSqlSelectLimit();
         }
 
@@ -459,14 +472,14 @@ namespace MySql.Data.MySqlClient
                 }
                 catch (Exception) { }
 
-
                 // if we caught an exception because of a cancel, then just return null
                 if (ex.IsQueryAborted)
                 {
                     if (TimedOut)
                         throw new MySqlException(Resources.Timeout);
                     return null;
-                }
+                } 
+
                 if (ex.IsFatal)
                     Connection.Close();
                 if (ex.Number == 0)
