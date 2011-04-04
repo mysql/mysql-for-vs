@@ -31,6 +31,7 @@
   (MySQL bug #59989, Oracle bug #11776346)
 - small but important improvements in EF sql generation
 - added batching support for updates and deletes (bug #59616)
+- Introduced workaround to unexpected query aborts (server 5.1+) when executing a datareader after a command.Cancel() (MySQL bug#60541).
 
 Version 6.1.5
 - Fix authorization popup after modifying stored procedure in VS (Bug #44715)
