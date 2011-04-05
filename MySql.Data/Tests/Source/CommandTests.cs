@@ -530,6 +530,7 @@ namespace MySql.Data.MySqlClient.Tests
 
             Assert.AreEqual(1, listener.Find("UPDATE"));
         }
+#endif
 
         [Test]
         public void ExecuteReaderReturnsReaderAfterCancel()
@@ -555,11 +556,10 @@ namespace MySql.Data.MySqlClient.Tests
 
                 dataTableSchema = reader.GetSchemaTable();
                 Assert.AreEqual("PrimaryKey", dataTableSchema.Rows[0][dataTableSchema.Columns[0]]);
-                
+
                 reader.Close();
             }
         }
-#endif
     }
 
 
