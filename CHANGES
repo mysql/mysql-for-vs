@@ -11,6 +11,7 @@
   (MySQL bug #59346, Oracle bug #11766272)
 - small but important improvements in EF sql generation
 - added batching support for updates and deletes (bug #59616)
+- Introduced workaround to unexpected query aborts (server 5.1+) when executing a datareader after a command.Cancel() (MySQL bug#60541).
 
 Version 6.3.6
 - Fixed TracingDriver so that it normalizes long queries before truncation so we don't get exceptions     
