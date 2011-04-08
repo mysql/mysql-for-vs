@@ -613,6 +613,28 @@ namespace MySql.Data.MySqlClient
             set { SetValue("Sql Server Mode", value); }
         }
 
+        [Category("Advanced")]
+        [DisplayName("Table Cache")]
+        [Description(@"Enables or disables caching of TableDirect command.  
+            A value of yes enables the cache while no disables it.")]
+        [DefaultValue(false)]
+        [ValidKeywords("tablecache, table cache")]
+        public bool TableCaching
+        {
+            get { return (bool)values["Table Cache"]; }
+            set { SetValue("Table Cache", value); }
+        }
+
+        [Category("Advanced")]
+        [DisplayName("Default Table Cache Age")]
+        [Description(@"Specifies how long a TableDirect result should be cached in seconds.")]  
+        [DefaultValue(60)]
+        public int DefaultTableCacheAge
+        {
+            get { return (int)values["Default Table Cache Age"]; }
+            set { SetValue("Default Table Cache Age", value); }
+        }
+
         #endregion
 
         #region Pooling Properties

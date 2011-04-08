@@ -117,6 +117,7 @@
     <Compile Include="Source\SSPI.cs" />
     <Compile Include="Source\Statement.cs" />
     <Compile Include="Source\StoredProcedure.cs" />
+    <Compile Include="Source\TableCache.cs" />
     <Compile Include="Source\TimedStream.cs" />
     <Compile Include="Source\transaction.cs" />
     <Compile Include="Source\Types\MetaData.cs" />

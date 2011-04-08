@@ -1,3 +1,4 @@
 6.4.0
 - Implemented Cache Server Properties connection option
 - Implementd Windows authentication when used against a 5.5 server
+- Implementd table caching

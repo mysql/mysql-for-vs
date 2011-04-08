@@ -105,6 +105,7 @@
     <Compile Include="Source\ConnectionStringBuilder.cs" />
     <Compile Include="Source\ConnectionTests.cs" />
     <Compile Include="Source\BulkLoading.cs" />
+    <Compile Include="Source\TableCaching.cs" />
     <Compile Include="Source\SqlServerMode.cs" />
     <Compile Include="Source\Logging.cs" />
     <Compile Include="Source\ScriptExecution.cs" />
