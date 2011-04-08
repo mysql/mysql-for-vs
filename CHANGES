@@ -2,3 +2,4 @@
 - Implemented Cache Server Properties connection option
 - Implementd Windows authentication when used against a 5.5 server
 - Implementd table caching
+- Introduced workaround to unexpected query aborts (server 5.1+) when executing a datareader after a command.Cancel() (MySQL bug#60541).
