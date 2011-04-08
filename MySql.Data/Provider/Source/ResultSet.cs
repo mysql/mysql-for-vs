@@ -26,6 +26,7 @@ using System.Data;
 using MySql.Data.MySqlClient.Properties;
 using MySql.Data.Types;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace MySql.Data.MySqlClient
 {
@@ -48,6 +49,8 @@ namespace MySql.Data.MySqlClient
         private int statementId;
         private int totalRows;
         private int skippedRows;
+        private bool cached;
+        private List<IMySqlValue[]> cachedValues;
 
         public ResultSet(int affectedRows, int insertedId)
         {
@@ -117,6 +120,17 @@ namespace MySql.Data.MySqlClient
             get { return skippedRows; }
         }
 
+        public bool Cached
+        {
+            get { return cached; }
+            set 
+            { 
+                cached = value;
+                if (cached && cachedValues == null)
+                    cachedValues = new List<IMySqlValue[]>();
+            }
+        }
+
         #endregion
 
         /// <summary>
@@ -181,7 +195,11 @@ namespace MySql.Data.MySqlClient
 
         public bool NextRow(CommandBehavior behavior)
         {
-            if (readDone) return false;
+            if (readDone)
+            {
+                if (Cached) return CachedNextRow(behavior);
+                return false;
+            }
 
             if ((behavior & CommandBehavior.SingleRow) != 0 && rowIndex == 0)
                 return false;
@@ -219,30 +237,61 @@ namespace MySql.Data.MySqlClient
             return true;
         }
 
+        private bool CachedNextRow(CommandBehavior behavior)
+        {
+            if ((behavior & CommandBehavior.SingleRow) != 0 && rowIndex == 0)
+                return false;
+            if (rowIndex == (totalRows - 1)) return false;
+            rowIndex++;
+            values = cachedValues[rowIndex];
+            return true;
+        }
+
         /// <summary>
         /// Closes the current resultset, dumping any data still on the wire
         /// </summary>
         public void Close()
         {
-            if (readDone) return;
+            if (!readDone)
+            {
 
-            // if we have rows but the user didn't read the first one then mark it as skipped
-            if (HasRows && rowIndex == -1)
-                skippedRows++;
-            try
-            {
-                while (driver.IsOpen && driver.SkipDataRow())
-                {
-                    totalRows++;
+                // if we have rows but the user didn't read the first one then mark it as skipped
+                if (HasRows && rowIndex == -1)
                     skippedRows++;
+                try
+                {
+                    while (driver.IsOpen && driver.SkipDataRow())
+                    {
+                        totalRows++;
+                        skippedRows++;
+                    }
                 }
+                catch (System.IO.IOException)
+                {
+                    // it is ok to eat IO exceptions here, we just want to 
+                    // close the result set
+                }
+                readDone = true;
             }
-            catch (System.IO.IOException)
-            {
-                // it is ok to eat IO exceptions here, we just want to 
-                // close the result set
-            }
-            readDone = true;
+            else if (driver == null)
+                CacheClose();
+
+            driver = null;
+            if (Cached) CacheReset();
+        }
+
+        private void CacheClose()
+        {
+            skippedRows = totalRows - rowIndex - 1;
+        }
+
+        private void CacheReset()
+        {
+            if (!Cached) return;
+            rowIndex = -1;
+            affectedRows = -1;
+            insertedId = -1;
+            skippedRows = 0;
         }
 
         public bool FieldRead(int index)
@@ -285,6 +334,13 @@ namespace MySql.Data.MySqlClient
         {
             for (int i = 0; i < Size; i++)
                 values[i] = driver.ReadColumnValue(i, fields[i], values[i]);
+
+            // if we are caching then we need to save a copy of this row of data values
+            if (Cached)
+                cachedValues.Add((IMySqlValue[])values.Clone());
+
+            // we don't need to worry about caching the following since you won't have output
+            // params with TableDirect commands
             if (outputParms)
             {
                 bool rowExists = driver.FetchDataRow(statementId, fields.Length);

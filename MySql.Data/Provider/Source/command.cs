@@ -65,6 +65,8 @@ namespace MySql.Data.MySqlClient
         private string batchableCommandText;
         CommandTimer commandTimer;
         private bool useDefaultTimeout;
+        private bool shouldCache;
+        private int cacheAge;
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ctor1/*'/>
 		public MySqlCommand()
@@ -211,7 +213,8 @@ namespace MySql.Data.MySqlClient
                     commandTimeout = (int)connection.Settings.DefaultCommandTimeout;
                     useDefaultTimeout = false;
                 }
-
+                EnableCaching = connection.Settings.TableCaching;
+                CacheAge = connection.Settings.DefaultTableCacheAge;
 			}
 		}
 
@@ -236,6 +239,18 @@ namespace MySql.Data.MySqlClient
 			get { return curTransaction; }
 			set { curTransaction = value; }
 		}
+
+        public bool EnableCaching
+        {
+            get { return shouldCache; }
+            set { shouldCache = value; }
+        }
+
+        public int CacheAge
+        {
+            get { return cacheAge; }
+            set { cacheAge = value; }
+        }
 
 		/*		/// <include file='docs/mysqlcommand.xml' path='docs/UpdatedRowSource/*'/>
 		#if !CF
@@ -784,6 +799,8 @@ namespace MySql.Data.MySqlClient
             clone.useDefaultTimeout = useDefaultTimeout;
             clone.batchableCommandText = batchableCommandText;
             clone.UpdatedRowSource = UpdatedRowSource;
+            clone.EnableCaching = EnableCaching;
+            clone.CacheAge = CacheAge;
 
 			foreach (MySqlParameter p in parameters)
 			{

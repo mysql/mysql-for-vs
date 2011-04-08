@@ -875,13 +875,23 @@ namespace MySql.Data.MySqlClient
 			if (!isOpen)
                 throw new MySqlException(Resources.NextResultIsClosed);
 
+            bool isCaching = command.CommandType == CommandType.TableDirect && command.EnableCaching &&
+                (commandBehavior & CommandBehavior.SequentialAccess) == 0;
+
             // this will clear out any unread data
             if (resultSet != null)
+            {
                 resultSet.Close();
+                if (isCaching)
+                    TableCache.AddToCache(command.CommandText, resultSet);
+            }
 
             // single result means we only return a single resultset.  If we have already
-            // returned one, then we return false;
-            if (resultSet != null && (commandBehavior & CommandBehavior.SingleResult) != 0)
+            // returned one, then we return false
+            // TableDirect is basically a select * from a single table so it will generate
+            // a single result also
+            if (resultSet != null && 
+                ((commandBehavior & CommandBehavior.SingleResult) != 0 || isCaching))
                 return false;
 
             // next load up the next resultset if any
@@ -890,9 +900,18 @@ namespace MySql.Data.MySqlClient
                 do
                 {
                     resultSet = null;
-                    resultSet = driver.NextResult(Statement.StatementId);
-                    if (resultSet == null) return false;
-                    if (resultSet.IsOutputParameters) return false;
+                    // if we are table caching, then try to retrieve the resultSet from the cache
+                    if (isCaching)
+                        resultSet = TableCache.RetrieveFromCache(command.CommandText, 
+                            command.CacheAge);
+
+                    if (resultSet == null)
+                    {
+                        resultSet = driver.NextResult(Statement.StatementId);
+                        if (resultSet == null) return false;
+                        if (resultSet.IsOutputParameters) return false;
+                        resultSet.Cached = isCaching;
+                    }
 
                     if (resultSet.Size == 0)
                     {
