@@ -537,6 +537,35 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(1, listener.Find("Query Opened: UPDATE"));
         }
 #endif
+
+        [Test]
+        public void ExecuteReaderReturnsReaderAfterCancel()
+        {
+            execSQL("DROP TABLE IF EXISTS TableWithDateAsPrimaryKey");
+            execSQL("DROP TABLE IF EXISTS TableWithStringAsPrimaryKey");
+            createTable("CREATE TABLE TableWithDateAsPrimaryKey(PrimaryKey date NOT NULL, PRIMARY KEY  (PrimaryKey))", "InnoDB");
+            createTable("CREATE TABLE TableWithStringAsPrimaryKey(PrimaryKey nvarchar(50) NOT NULL, PRIMARY KEY  (PrimaryKey))", "InnoDB");
+
+            string connStr = GetConnectionString(true);
+            using (MySqlConnection connection = new MySqlConnection(connStr))
+            {
+                connection.Open();
+                MySqlCommand command = new MySqlCommand("SELECT PrimaryKey FROM TableWithDateAsPrimaryKey", connection);
+                IDataReader reader = command.ExecuteReader(CommandBehavior.KeyInfo);
+                DataTable dataTableSchema = reader.GetSchemaTable();
+                command.Cancel();
+                reader.Close();
+
+                command = new MySqlCommand("SELECT PrimaryKey FROM TableWithStringAsPrimaryKey", connection);
+                reader = command.ExecuteReader(CommandBehavior.KeyInfo);
+                Assert.IsNotNull(reader);
+
+                dataTableSchema = reader.GetSchemaTable();
+                Assert.AreEqual("PrimaryKey", dataTableSchema.Rows[0][dataTableSchema.Columns[0]]);
+
+                reader.Close();
+            }
+        }
     }
 
 
