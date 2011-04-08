@@ -317,6 +317,7 @@ namespace MySql.Data.MySqlClient
             List<MySqlError> warnings = new List<MySqlError>();
 
             MySqlCommand cmd = new MySqlCommand("SHOW WARNINGS", connection);
+            cmd.InternallyCreated = true;
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {
                 while (reader.Read())

@@ -29,6 +29,7 @@ using System.Data.SqlTypes;
 using System.Collections.Generic;
 using System.Globalization;
 using MySql.Data.MySqlClient.Properties;
+using MySql.Data.Common;
 
 namespace MySql.Data.MySqlClient
 {
@@ -231,10 +232,17 @@ namespace MySql.Data.MySqlClient
 			// stored procedures it needs to update out and inout parameters
 			command.Close(this);
 
+            if (this.command.Canceled && connection.driver.Version.isAtLeast(5, 1, 0))
+            {
+                // Issue dummy command to clear kill flag
+                ClearKillFlag();
+            }
+
 			if (shouldCloseConnection)
 				connection.Close();
 
 			command = null;
+            connection.IsInUse = false;
 			connection = null;
             isOpen = false;
 		}
@@ -970,6 +978,16 @@ namespace MySql.Data.MySqlClient
 
 			return v;
 		}
+
+
+        private void ClearKillFlag()
+        {
+            // This query will silently crash because of the Kill call that happened before.
+            string dummyStatement = "SELECT * FROM bogus_table LIMIT 0"; /* dummy query used to clear kill flag */
+            MySqlCommand dummyCommand = new MySqlCommand(dummyStatement, connection);
+            dummyCommand.InternallyCreated = true;
+            IDataReader reader = dummyCommand.ExecuteReader(); // ExecuteReader catches the exception and returns null, which is expected.
+        }
 
 		#region IEnumerator
 

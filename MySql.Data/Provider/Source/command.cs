@@ -60,11 +60,13 @@ namespace MySql.Data.MySqlClient
 		internal Int64 lastInsertedId;
 		private PreparableStatement statement;
 		private int commandTimeout;
+        private bool canceled;
         private bool resetSqlSelect;
         List<MySqlCommand> batch;
         private string batchableCommandText;
         CommandTimer commandTimer;
         private bool useDefaultTimeout;
+        private bool internallyCreated;
 
 		/// <include file='docs/mysqlcommand.xml' path='docs/ctor1/*'/>
 		public MySqlCommand()
@@ -252,9 +254,20 @@ namespace MySql.Data.MySqlClient
             get { return batch; }
         }
 
+        internal bool Canceled
+        {
+            get { return canceled; }
+        }
+
         internal string BatchableCommandText
         {
             get { return batchableCommandText; }
+        }
+
+        internal bool InternallyCreated
+        {
+            get { return internallyCreated; }
+            set { internallyCreated = value; }
         }
 
 		#endregion
@@ -270,6 +283,7 @@ namespace MySql.Data.MySqlClient
         public override void Cancel()
         {
             connection.CancelQuery(connection.ConnectionTimeout);
+            canceled = true;
         }
 
 		/// <summary>
@@ -301,7 +315,7 @@ namespace MySql.Data.MySqlClient
                 throw new InvalidOperationException("Connection must be valid and open.");
 
 			// Data readers have to be closed first
-			if (connection.Reader != null)
+            if (connection.IsInUse && !this.internallyCreated)
 				throw new MySqlException("There is already an open DataReader associated with this Connection which must be closed first.");
 		}
 
@@ -356,7 +370,9 @@ namespace MySql.Data.MySqlClient
             if (resetSqlSelect)
             {
                 resetSqlSelect = false;
-                new MySqlCommand("SET SQL_SELECT_LIMIT=DEFAULT", connection).ExecuteNonQuery();
+                MySqlCommand command = new MySqlCommand("SET SQL_SELECT_LIMIT=DEFAULT", connection);
+                command.internallyCreated = true;
+                command.ExecuteNonQuery();
             }
         }
 
@@ -439,6 +455,7 @@ namespace MySql.Data.MySqlClient
             {
                 MySqlDataReader reader = new MySqlDataReader(this, statement, behavior);
                 connection.Reader = reader;
+                canceled = false;
                 // execute the statement
                 statement.Execute();
                 // wait for data to return
@@ -479,6 +496,9 @@ namespace MySql.Data.MySqlClient
                     throw new MySqlException(ex.Message, true, ex);
                 }
 
+                // if we caught an exception because of a cancel, then just return null
+                if (ex.IsQueryAborted)
+                    return null;
                 if (ex.IsFatal)
                     Connection.Close();
                 if (ex.Number == 0)
