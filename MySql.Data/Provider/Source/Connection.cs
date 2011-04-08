@@ -51,6 +51,7 @@ namespace MySql.Data.MySqlClient
         private bool hasBeenOpen;
         private SchemaProvider schemaProvider;
         private ProcedureCache procedureCache;
+        private bool isInUse;
 #if !CF
         private PerformanceMonitor perfMonitor;
 #endif
@@ -106,12 +107,11 @@ namespace MySql.Data.MySqlClient
                 if (driver == null)
                     return null;
                 return driver.reader;
-
             }
-
             set 
             { 
                 driver.reader = value;
+                isInUse = driver.reader != null;
             }
         }
 
@@ -135,6 +135,12 @@ namespace MySql.Data.MySqlClient
                 return false;            
 #endif
             }
+        }
+
+        internal bool IsInUse
+        {
+            get{ return isInUse; }
+            set{ isInUse = value; }
         }
 
         #endregion
@@ -570,7 +576,11 @@ namespace MySql.Data.MySqlClient
             }
             catch (Exception ex)
             {
-		MySqlTrace.LogWarning(ServerThread, String.Concat("Error occurred aborting the connection. Exception was: ", ex.Message));
+                MySqlTrace.LogWarning(ServerThread, String.Concat("Error occurred aborting the connection. Exception was: ", ex.Message));
+            }
+            finally
+            {
+                this.isInUse = false;
             }
             SetState(ConnectionState.Closed, true);
         }
