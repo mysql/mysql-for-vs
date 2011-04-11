@@ -79,7 +79,7 @@ namespace MySql.Data.MySqlClient.Tests
                 MySqlCommand cmd = new MySqlCommand("test3", c);
                 cmd.CommandType = CommandType.TableDirect;
                 ConsumeReader(cmd);
-                Thread.Sleep(1000);
+                Thread.Sleep(1500);
                 // now run the query again but this time it should generate a call to the database
                 // since our next query is past the cache age of 1 second
                 ConsumeReader(cmd);
