@@ -210,13 +210,17 @@ namespace MySql.Data.MySqlClient
 
                 // if the user has not already set the command timeout, then
                 // take the default from the connection
-                if (connection != null && useDefaultTimeout)
+                if (connection != null)
                 {
-                    commandTimeout = (int)connection.Settings.DefaultCommandTimeout;
-                    useDefaultTimeout = false;
+                    if (useDefaultTimeout)
+                    {
+                        commandTimeout = (int)connection.Settings.DefaultCommandTimeout;
+                        useDefaultTimeout = false;
+                    }
+                    
+                    EnableCaching = connection.Settings.TableCaching;
+                    CacheAge = connection.Settings.DefaultTableCacheAge;
                 }
-                EnableCaching = connection.Settings.TableCaching;
-                CacheAge = connection.Settings.DefaultTableCacheAge;
 			}
 		}
 
