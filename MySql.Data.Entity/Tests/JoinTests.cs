@@ -97,5 +97,41 @@ namespace MySql.Data.Entity.Tests
                 Assert.AreEqual(dt.Rows.Count, i);
             }
         }
+
+        [Test]
+        public void JoinOnRightSideAsDerivedTable()
+        {
+            using (testEntities context = new testEntities())
+            {
+                var q = from child in context.Children
+                        join emp in context.Employees
+                        on child.EmployeeID equals emp.Id
+                        where child.BirthWeight > 7
+                        select child;
+                string sql = q.ToTraceString();
+                CheckSql(sql, SQLSyntax.JoinOnRightSideAsDerivedTable);
+
+                foreach (Child c in q)
+                {
+                }
+            }
+        }
+
+        [Test]
+        public void JoinOnRightSideNameClash()
+        {
+
+            using (testEntities context = new testEntities())
+            {
+                var inner = from a in context.Authors join s in context.Stores on a.Id equals s.Id select a;
+                var outer = from o in context.Orders join i in inner on o.Id equals i.Id select o;
+                string sql = outer.ToTraceString();
+                CheckSql(sql, SQLSyntax.JoinOnRightSideNameClash);
+                foreach (Order o in outer)
+                {
+                    double d = o.Freight;
+                }
+            }
+        }
     }
 }

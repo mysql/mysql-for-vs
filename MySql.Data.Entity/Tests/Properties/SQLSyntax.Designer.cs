@@ -195,6 +195,54 @@ namespace MySql.Data.Entity.Tests.Properties {
         /// <summary>
         ///   Looks up a localized string similar to SELECT
         ///Extent1.Id, 
+        ///Extent1.EmployeeID, 
+        ///Extent1.LastName, 
+        ///Extent1.FirstName, 
+        ///Extent1.BirthTime, 
+        ///Extent1.Weight, 
+        ///Extent1.LastModified
+        ///FROM EmployeeChildren AS Extent1 INNER JOIN (SELECT
+        ///Extent2.Id, 
+        ///Extent2.LastName, 
+        ///Extent2.FirstName, 
+        ///Extent2.Age, 
+        ///Extent3.EmployeeId, 
+        ///Extent3.Salary
+        ///FROM Employees AS Extent2 LEFT OUTER JOIN SalariedEmployees AS Extent3 ON Extent2.Id = Extent3.EmployeeId) AS Join1 ON (Extent1.EmployeeID = Join1.Id) OR ((Extent1.EmployeeID IS  NULL) AND (Join1.Id IS  NU [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string JoinOnRightSideAsDerivedTable {
+            get {
+                return ResourceManager.GetString("JoinOnRightSideAsDerivedTable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT
+        ///1 AS C1, 
+        ///Extent1.Id, 
+        ///Extent1.Freight, 
+        ///Extent1.StoreId
+        ///FROM Orders AS Extent1 INNER JOIN (SELECT
+        ///Extent2.Id, 
+        ///Extent2.Name, 
+        ///Extent2.Age, 
+        ///Extent3.Id AS Id1, 
+        ///Extent3.Name AS Name1, 
+        ///Extent3.Address, 
+        ///Extent3.City, 
+        ///Extent3.State, 
+        ///Extent3.ZipCode
+        ///FROM Authors AS Extent2 INNER JOIN Stores AS Extent3 ON (Extent2.Id = Extent3.Id) OR ((Extent2.Id IS  NULL) AND (Extent3.Id IS  NULL))) AS Join1 ON (Extent1.Id = Join1.Id) OR ((Extent1.Id IS  NULL) AND (Join1.Id IS  NULL)).
+        /// </summary>
+        internal static string JoinOnRightSideNameClash {
+            get {
+                return ResourceManager.GetString("JoinOnRightSideNameClash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT
+        ///Extent1.Id, 
         ///Extent1.Name, 
         ///Extent1.Address, 
         ///Extent1.City, 

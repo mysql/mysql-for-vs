@@ -134,6 +134,7 @@ namespace MySql.Data.Entity
         public string TableName { get; set; }
         public string ColumnName { get; set; }
         public string ColumnAlias { get; set; }
+        public PropertyFragment PropertyFragment { get; set; }
 
         public override void WriteSql(StringBuilder sql)
         {
@@ -151,6 +152,14 @@ namespace MySql.Data.Entity
 
             if (ColumnAlias != null && ColumnAlias != ColumnName)
                 sql.AppendFormat(" AS {0}", QuoteIdentifier(ColumnAlias));
+        }
+
+        public ColumnFragment Clone()
+        {
+            ColumnFragment cf = new ColumnFragment(TableName, ColumnName);
+            cf.ColumnAlias = ColumnAlias;
+            cf.Literal = Literal;
+            return cf;
         }
     }
 
