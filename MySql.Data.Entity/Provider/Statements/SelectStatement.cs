@@ -131,8 +131,14 @@ namespace MySql.Data.Entity
 
         void AddDefaultColumns()
         {
+//            List<PropertyFragment> properties = GetColumnPropertiesFromInput(From);
             AddDefaultColumnsForFragment(From);
         }
+
+        //private List<PropertyFragment> GetColumnPropertiesFromInput(InputFragment input)
+        //{
+        //    if (input is TableFragment)
+        //}
 
         void AddDefaultColumnsForFragment(InputFragment input)
         {
@@ -140,11 +146,23 @@ namespace MySql.Data.Entity
             {
                 AddDefaultColumnsForTable(input as TableFragment);
             }
-            else if (input is JoinFragment)
+            else if (input is JoinFragment || input is UnionFragment)
             {
-                JoinFragment j = input as JoinFragment;
-                AddDefaultColumnsForFragment(j.Left);
-                AddDefaultColumnsForFragment(j.Right);
+                if (input.Left != null)
+                    AddDefaultColumnsForFragment(input.Left);
+                if (input.Right != null)
+                AddDefaultColumnsForFragment(input.Right);
+
+                // if this input is scoped, then it is the base tablename for the columns
+                if (input.Scoped)
+                    foreach (ColumnFragment col in Columns)
+                        col.TableName = input.Name;
+            }
+            else if (input is SelectStatement)
+            {
+                SelectStatement select = input as SelectStatement;
+                foreach (ColumnFragment cf in select.Columns)
+                    Columns.Add(cf.Clone());
             }
             else
                 throw new NotImplementedException();
