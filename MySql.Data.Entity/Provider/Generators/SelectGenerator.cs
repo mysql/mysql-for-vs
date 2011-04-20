@@ -153,9 +153,17 @@ namespace MySql.Data.Entity
             join.JoinType = Metadata.GetOperator(joinType);
 
             join.Left = VisitInputExpression(left.Expression, left.VariableName, left.VariableType);
-            WrapJoinInputIfNecessary(join.Left, false);
+            join.Left = WrapJoinInputIfNecessary(join.Left, false);
+
             join.Right = VisitInputExpression(right.Expression, right.VariableName, right.VariableType);
-            WrapJoinInputIfNecessary(join.Right, true);
+            join.Right = WrapJoinInputIfNecessary(join.Right, true);
+
+            if (join.Right is SelectStatement)
+            {
+                SelectStatement select = join.Right as SelectStatement;
+                if (select.IsWrapped)
+                    select.Name = right.VariableName;
+            }
 
             // now handle the ON case
             if (joinCondition != null)
@@ -173,7 +181,7 @@ namespace MySql.Data.Entity
             return newSelect;
         }
 
-        private void WrapJoinInputIfNecessary(InputFragment fragment, bool isRightPart)
+        private InputFragment WrapJoinInputIfNecessary(InputFragment fragment, bool isRightPart)
         {
             if (fragment is SelectStatement || fragment is UnionFragment)
             {
@@ -181,7 +189,14 @@ namespace MySql.Data.Entity
                 fragment.Scoped = true;
             }
             else if (fragment is JoinFragment && isRightPart)
-                fragment.Wrap(null);
+            {
+                SelectStatement select = new SelectStatement();
+                select.From = fragment;
+                select.Name = fragment.Name;
+                select.Wrap(scope);
+                return select;
+            }
+            return fragment;
         }
 
         public override SqlFragment Visit(DbNewInstanceExpression expression)

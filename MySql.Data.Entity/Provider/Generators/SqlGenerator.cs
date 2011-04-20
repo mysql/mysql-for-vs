@@ -82,6 +82,7 @@ namespace MySql.Data.Entity
             if (propertyLevel > 0) return fragment;
 
             ColumnFragment column = new ColumnFragment(null, fragment.LastProperty);
+            column.PropertyFragment = fragment;
             column.TableName = FindInputFromProperties(fragment);
 
             return column;
@@ -436,6 +437,7 @@ namespace MySql.Data.Entity
             Debug.Assert(f is InputFragment);
 
             InputFragment inputFragment = f as InputFragment;
+            inputFragment.Name = name;
 
             if (inputFragment is TableFragment && type != null)
                 (inputFragment as TableFragment).Type = type;
