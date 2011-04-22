@@ -1,24 +1,39 @@
-Connector/Net 6.3  Release Notes
+Connector/Net 6.4  Release Notes
 ------------------------------------
 
-Welcome to the release notes for Connector/Net 6.3
+Welcome to the release notes for Connector/Net 6.4
 
-What's new in 6.3
+What's new in 6.4
 --------------------
 
-- Support for Visual Studio 2010
-- Nested transaction scopes now work though they still must use the same connection (no XA)
-- The ability to enable query analysis at runtime
-- New SQL editor
+- Support for Windows authentication in the driver
+- Support for table caching (see below)
+- Improved SQL generation from the Entity Framework provider
 
 
 What we know is broken
 ----------------------
-- Documentation has not been integrated into VS2010 yet.  We are having trouble with silent integration
-  of documentation files.  We will include this in a future release.
+- Documentation has not been updated yet.
 
 - The Generated Database Wizard will save the file with the extension .sql.  You will need to
   manually change the extension to .mysql to use the new editor.
+
+
+Table Caching
+-------------
+We have not yet updated the documentation so we write a few words on table caching here.
+
+Table Caching is a new feature that users can use to cache slow-changing datasets on the client side.  This is useful for apps
+that are designed to use readers but you still want to minimize trips to the server for slow-changing tables.
+
+It is transparent to the user.  It is not enabled by default.
+
+To enable caching, add 'table cache=true' to your connection string.  You can also use the 'Default Table Cache Age'
+connection string option to specify the number of seconds a table is cached before being discarded.  You can also
+set caching and cache age options on a per command basis.  Please note that the cache age property is in "seconds".
+
+In the future we may extend this feature to allow the end user to provide their own implementation or we may provide
+an implementation of table caching that can take advantage of services such as memcached or velocity.
 
 
 
