@@ -31,9 +31,8 @@
     <GetVersion Assembly="MySql.Data/Provider/bin/release/mysql.data.dll" Format="{0}.{1}.{2}">
       <Output TaskParameter = "AsString" PropertyName="Version"/>
     </GetVersion>
-    <Zip Flatten ="true"
-         ZipFileName="bin/$(Configuration)/mysql-connector-net-$(Version)$(Postfix).zip"
-         Files="Installer/bin/$(Configuration)/mysql.data.msi"/>
+    <Copy SourceFiles="Installer/bin/$(Configuration)/mysql.data.msi"
+          DestinationFiles="bin/$(Configuration)/mysql-connector-net-$(Version)$(Postfix).msi"/>
   </Target>
 
   <ItemGroup>
