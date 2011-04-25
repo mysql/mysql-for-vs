@@ -12,6 +12,7 @@
 - small but important improvements in EF sql generation
 - added batching support for updates and deletes (bug #59616)
 - Introduced workaround to unexpected query aborts (server 5.1+) when executing a datareader after a command.Cancel() (MySQL bug#60541).
+- Fixed SetSite issues with Visual Studio 2010 integration (MySQL bug#60723, Oracle bug #12394470)
 
 Version 6.3.6
 - Fixed TracingDriver so that it normalizes long queries before truncation so we don't get exceptions     
