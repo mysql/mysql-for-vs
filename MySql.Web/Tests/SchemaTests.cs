@@ -269,5 +269,34 @@ namespace MySql.Web.Tests
             MembershipUser user = provider.CreateUser("boo", "password", "email@email.com", 
                 "question", "answer", true, null, out status);
         }
+
+        [Test]
+        public void SchemaTablesUseSameEngine()
+        {
+            DropAllTables();
+
+            for (int x = 1; x <= SchemaManager.Version; x++)
+                LoadSchema(x);
+
+            string query = string.Format("SELECT TABLE_NAME, ENGINE FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{0}'", conn.Database);
+            MySqlCommand cmd = new MySqlCommand(query, conn);
+            string lastEngine = null;
+            string currentEngine;
+
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    currentEngine = reader.GetString("ENGINE");
+
+                    if (string.IsNullOrEmpty(lastEngine))
+                    {
+                        lastEngine = currentEngine;
+                    }
+
+                    Assert.AreEqual(lastEngine, currentEngine);
+                }
+            }
+        }
     }
 }
