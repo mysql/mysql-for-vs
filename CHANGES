@@ -4,3 +4,4 @@
 - Implementd table caching
 - Introduced workaround to unexpected query aborts (server 5.1+) when executing a datareader after a command.Cancel() (MySQL bug#60541).
 - Fixed SetSite issues with Visual Studio 2010 integration (MySQL bug#60723, Oracle bug #12394470)
+- modified schema1.sql in MySql.Web to remove ENGINE declaration on table creation (Oracle bug #12311974).
