@@ -32,6 +32,7 @@ using System;
 using System.IO;
 using System.Configuration.Provider;
 using System.Web.Security;
+using MySql.Web.Common;
 
 namespace MySql.Web.Tests
 {
@@ -336,6 +337,42 @@ namespace MySql.Web.Tests
             MembershipCreateStatus status;
             MembershipUser user = provider.CreateUser("boo", "password", "email@email.com", 
                 "question", "answer", true, null, out status);
+        }
+
+        [Test]
+        public void SchemaTablesUseSameEngine()
+        {
+            DropAllTables();
+
+            for (int x = 1; x <= SchemaManager.Version; x++)
+                LoadSchema(x);
+
+            string query = string.Format("SELECT TABLE_NAME, ENGINE FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{0}'", conn.Database);
+            MySqlCommand cmd = new MySqlCommand(query, conn);
+            string lastEngine = null;
+            string currentEngine;
+
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    currentEngine = reader.GetString("ENGINE");
+
+                    if (string.IsNullOrEmpty(lastEngine))
+                    {
+                        lastEngine = currentEngine;
+                    }
+
+                    Assert.AreEqual(lastEngine, currentEngine);
+                }
+            }
+        }
+
+        private void DropAllTables()
+        {
+            DataTable dt = conn.GetSchema("Tables");
+            foreach (DataRow row in dt.Rows)
+                execSQL(String.Format("DROP TABLE IF EXISTS {0}", row["TABLE_NAME"]));
         }
     }
 }
