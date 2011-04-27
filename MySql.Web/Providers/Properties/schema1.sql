@@ -18,16 +18,16 @@ CREATE TABLE  mysql_Membership(`PKID` varchar(36) NOT NULL,
               FailedPasswordAttemptWindowStart datetime default NULL,
               FailedPasswordAnswerAttemptCount int(10) unsigned default NULL,
               FailedPasswordAnswerAttemptWindowStart datetime default NULL,
-              PRIMARY KEY  (`PKID`)) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='1';
+              PRIMARY KEY  (`PKID`)) DEFAULT CHARSET=latin1 COMMENT='1';
               
 CREATE TABLE  mysql_UsersInRoles(`Username` varchar(255) NOT NULL,
                 `Rolename` varchar(255) NOT NULL, `ApplicationName` varchar(255) NOT NULL,
                 KEY `Username` (`Username`,`Rolename`,`ApplicationName`)
-                ) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
+                ) DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE mysql_Roles(`Rolename` varchar(255) NOT NULL,
                 `ApplicationName` varchar(255) NOT NULL, 
                 KEY `Rolename` (`Rolename`,`ApplicationName`)
-                ) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
+                ) DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
                 
                 
