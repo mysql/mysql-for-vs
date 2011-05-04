@@ -300,8 +300,8 @@
   <data name="UnableToConnectToHost" xml:space="preserve">
     <value>Unable to connect to any of the specified MySQL hosts.</value>
   </data>
-  <data name="UnableToRetrieveSProcData" xml:space="preserve">
-    <value>Unable to retrieve stored procedure metadata for routine '{0}'.  Either grant  SELECT privilege to mysql.proc for this user or use "use procedure bodies=false" with  your connection string.</value>
+  <data name="UnableToRetrieveParameters" xml:space="preserve">
+    <value>Unable to retrieve stored procedure metadata for routine '{0}'.  Either grant  SELECT privilege to mysql.proc for this user or use "check parameters=false" with  your connection string.</value>
   </data>
   <data name="NextResultIsClosed" xml:space="preserve">
     <value>Invalid attempt to call NextResult when the reader is closed.</value>
@@ -347,9 +347,6 @@
   </data>
   <data name="UnableToDeriveParameters" xml:space="preserve">
     <value>Unable to derive stored routine parameters.  The 'Parameters' information schema table is not available and access to the stored procedure body has been disabled.</value>
-  </data>
-  <data name="UnableToRetrieveParameters" xml:space="preserve">
-    <value>Unable to retrieve stored routine parameters.  Either grant access to the routine or add the 'Use Procedure Bodies=false' option to your connection string.</value>
   </data>
   <data name="DefaultEncodingNotFound" xml:space="preserve">
     <value>The default connection encoding was not found. Please report this as a bug along with your connection string and system details.</value>
@@ -453,6 +450,7 @@
   <data name="UnableToEnableQueryAnalysis" xml:space="preserve">
     <value>Unable to enable query analysis.  Be sure the MySql.Data.EMTrace assembly is properly located and registered.</value>
   </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="keywords" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>keywords.txt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
@@ -461,5 +459,11 @@
   </data>
   <data name="NoWindowsIdentity" xml:space="preserve">
     <value>Cannot retrieve Windows identity for current user. Connections that use  IntegratedSecurity cannot be  pooled. Use either 'ConnectionReset=true' or  'Pooling=false' in the connection string to fix.</value>
+  </data>
+  <data name="RoutineRequiresReturnParameter" xml:space="preserve">
+    <value>Attempt to call stored function '{0}' without specifying a return parameter</value>
+  </data>
+  <data name="CanNotDeriveParametersForTextCommands" xml:space="preserve">
+    <value>Parameters can only be derived for commands using the StoredProcedure command type.</value>
   </data>
 </root>
