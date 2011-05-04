@@ -192,13 +192,13 @@ namespace MySql.Data.MySqlClient
         {
             try
             {
-                if (connection.Settings.HasRootAccess)
+                if (connection.Settings.HasProcAccess)
                     return base.GetProcedures(restrictions);
             }
             catch (MySqlException ex)
             {
                 if (ex.Number == (int)MySqlErrorCode.TableAccessDenied)
-                    connection.Settings.HasRootAccess = false;
+                    connection.Settings.HasProcAccess = false;
                 else
                     throw;
             }
@@ -344,17 +344,21 @@ namespace MySql.Data.MySqlClient
         public virtual DataTable GetProcedureParameters(string[] restrictions,
             DataTable routines)
         {
-            if (connection.driver.Version.isAtLeast(6, 0, 6))
-                return GetParametersFromIS(restrictions, routines);
+            bool is55 = connection.driver.Version.isAtLeast(5, 5, 0);
+
             try
             {
+                // we want to avoid using IS if  we can as it is painfully slow
                 DataTable dt = CreateParametersTable();
                 GetParametersFromShowCreate(dt, restrictions, routines);
                 return dt;
             }
-            catch (InvalidOperationException ioe)
+            catch (Exception)
             {
-                throw new InvalidOperationException(Resources.UnableToRetrieveParameters, ioe);
+                if (!is55) throw;
+
+                // we get here by not having access and we are on 5.5 or later so just use IS
+                return GetParametersFromIS(restrictions, routines);
             }
         }
 
@@ -515,7 +519,7 @@ namespace MySql.Data.MySqlClient
                 catch (SqlNullValueException snex)
                 {
                     throw new InvalidOperationException(
-                        String.Format(Resources.UnableToRetrieveSProcData, routine["ROUTINE_NAME"]), snex);
+                        String.Format(Resources.UnableToRetrieveParameters, routine["ROUTINE_NAME"]), snex);
                 }
             }
         }

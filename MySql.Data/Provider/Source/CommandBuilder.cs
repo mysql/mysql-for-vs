@@ -78,37 +78,45 @@ namespace MySql.Data.MySqlClient
         /// a valid stored procedure name.</exception>
         public static void DeriveParameters(MySqlCommand command)
         {
-            // retrieve the proc definitino from the cache.
+            if (command.CommandType != CommandType.StoredProcedure)
+                throw new InvalidOperationException(Resources.CanNotDeriveParametersForTextCommands);
+
+            // retrieve the proc definition from the cache.
             string spName = command.CommandText;
             if (spName.IndexOf(".") == -1)
                 spName = command.Connection.Database + "." + spName;
-            DataSet ds = command.Connection.ProcedureCache.GetProcedure(command.Connection, spName, null);
-            if (!ds.Tables.Contains("Procedure Parameters"))
-                throw new MySqlException(Resources.UnableToDeriveParameters);
 
-            DataTable parameters = ds.Tables["Procedure Parameters"];
-            DataTable procTable = ds.Tables["Procedures"];
-            command.Parameters.Clear();
-            foreach (DataRow row in parameters.Rows)
+            try
             {
-                MySqlParameter p = new MySqlParameter();
-                p.ParameterName = String.Format("@{0}", row["PARAMETER_NAME"]);
-                if (row["ORDINAL_POSITION"].Equals(0) && p.ParameterName == "@")
-                    p.ParameterName = "@RETURN_VALUE";
-                p.Direction = GetDirection(row);
-                bool unsigned = StoredProcedure.GetFlags(row["DTD_IDENTIFIER"].ToString()).IndexOf("UNSIGNED") != -1;
-                bool real_as_float = procTable.Rows[0]["SQL_MODE"].ToString().IndexOf("REAL_AS_FLOAT") != -1;
-                p.MySqlDbType = MetaData.NameToType(row["DATA_TYPE"].ToString(),
-                    unsigned, real_as_float, command.Connection);
-                if (!row["CHARACTER_MAXIMUM_LENGTH"].Equals(DBNull.Value))
-                    p.Size = (int)row["CHARACTER_MAXIMUM_LENGTH"];
-                if (!row["NUMERIC_PRECISION"].Equals(DBNull.Value))
-                    p.Precision = Convert.ToByte(row["NUMERIC_PRECISION"]);
-                if (!row["NUMERIC_SCALE"].Equals(DBNull.Value))
-                    p.Scale = Convert.ToByte(row["NUMERIC_SCALE"]);
-                if (p.MySqlDbType == MySqlDbType.Set || p.MySqlDbType == MySqlDbType.Enum)
-                    p.PossibleValues = GetPossibleValues(row);
-                command.Parameters.Add(p);
+                DataSet ds = command.Connection.ProcedureCache.GetProcedure(command.Connection, spName, null);
+                DataTable parameters = ds.Tables["Procedure Parameters"];
+                DataTable procTable = ds.Tables["Procedures"];
+                command.Parameters.Clear();
+                foreach (DataRow row in parameters.Rows)
+                {
+                    MySqlParameter p = new MySqlParameter();
+                    p.ParameterName = String.Format("@{0}", row["PARAMETER_NAME"]);
+                    if (row["ORDINAL_POSITION"].Equals(0) && p.ParameterName == "@")
+                        p.ParameterName = "@RETURN_VALUE";
+                    p.Direction = GetDirection(row);
+                    bool unsigned = StoredProcedure.GetFlags(row["DTD_IDENTIFIER"].ToString()).IndexOf("UNSIGNED") != -1;
+                    bool real_as_float = procTable.Rows[0]["SQL_MODE"].ToString().IndexOf("REAL_AS_FLOAT") != -1;
+                    p.MySqlDbType = MetaData.NameToType(row["DATA_TYPE"].ToString(),
+                        unsigned, real_as_float, command.Connection);
+                    if (!row["CHARACTER_MAXIMUM_LENGTH"].Equals(DBNull.Value))
+                        p.Size = (int)row["CHARACTER_MAXIMUM_LENGTH"];
+                    if (!row["NUMERIC_PRECISION"].Equals(DBNull.Value))
+                        p.Precision = Convert.ToByte(row["NUMERIC_PRECISION"]);
+                    if (!row["NUMERIC_SCALE"].Equals(DBNull.Value))
+                        p.Scale = Convert.ToByte(row["NUMERIC_SCALE"]);
+                    if (p.MySqlDbType == MySqlDbType.Set || p.MySqlDbType == MySqlDbType.Enum)
+                        p.PossibleValues = GetPossibleValues(row);
+                    command.Parameters.Add(p);
+                }
+            }
+            catch (InvalidOperationException ioe)
+            {
+                throw new MySqlException(Resources.UnableToDeriveParameters, ioe); 
             }
         }
 

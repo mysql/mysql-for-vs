@@ -150,7 +150,7 @@ namespace MySql.Data.MySqlClient
 
         public bool SupportsOutputParameters 
         {
-            get { return Version.isAtLeast(6,0,8); }
+            get { return Version.isAtLeast(5,5,0); }
         }
 
         public bool SupportsBatch
