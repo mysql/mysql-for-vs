@@ -11,7 +11,6 @@ What's new in 6.3
 - The ability to enable query analysis at runtime
 - New SQL editor
 
-
 What we know is broken
 ----------------------
 - Documentation has not been integrated into VS2010 yet.  We are having trouble with silent integration
@@ -19,6 +18,31 @@ What we know is broken
 
 - The Generated Database Wizard will save the file with the extension .sql.  You will need to
   manually change the extension to .mysql to use the new editor.
+
+What we changed in 6.3.7
+------------------------
+We introduced a slight change in behavior with 6.3.7.  We did this as part of a larger change to address a performance
+issue.  It's a relatively minor change in behavior however we encourage you to read this section carefully and review your 
+application for areas that might be affected.
+
+We have made the Use Procedure Bodies flag obsolete and introduced the Check Parameters option.  They server mainly the
+same purpose.  The Check Parameters option is true by default.  Setting to false tells
+Connector/Net to not fetch any routine or parameter metadata and to simply trust what the user has specified.  This can greatly 
+increase performance but it also puts significant pressure on the application developer to give the parameters in the right
+order.
+
+The next change in behavior is that Connector/Net no longer allows you to call a stored function without specifying a return value.
+We are now using the presence of a return value parameter as a signal that we should execute the routine as a stored function.  If
+you don't care about the return value, then give a place holder value.
+
+The next change is that if you user has insufficient permissions to retrieve parameter metadata, 
+you are not connecting to server 5.5 or later, and you have specified Check Parameters then the connector will throw an 
+InvalidOperationException indicating that you have insufficient privileges to retrieve routine parameter metadata. In the past the
+connector would silently use the parameters you gave on the command.
+
+We apologize for introducing these changes in a GA product but we felt it was important as these changes greatly increase the
+speed that we execute stored routines.
+
 
 
 

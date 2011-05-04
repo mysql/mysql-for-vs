@@ -133,5 +133,19 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.IsFalse(s.ContainsKey("badkey"));
         }
 #endif
+
+        [Test]
+        public void UseProcedureBodiesSettingCheckParameters()
+        {
+            MySqlConnectionStringBuilder s = new MySqlConnectionStringBuilder("server=localhost;use procedure bodies=false");
+            Assert.IsFalse(s.CheckParameters);
+        }
+
+        [Test]
+        public void EncrpytSslmode()
+        {
+            MySqlConnectionStringBuilder s = new MySqlConnectionStringBuilder("server=localhost;encrypt=true");
+            Assert.AreEqual(s.SslMode, MySqlSslMode.Preferred);
+        }
     }
 }

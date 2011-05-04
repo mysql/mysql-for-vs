@@ -158,12 +158,8 @@ namespace MySql.Data.MySqlClient
             // know the procedure we care about.
             ISSchemaProvider isp = new ISSchemaProvider(connection);
             string[] rest = isp.CleanRestrictions(restrictions);
-            try
-            {
-                DataTable parametersTable = isp.GetProcedureParameters(rest, procTable);
-                ds.Tables.Add(parametersTable);
-            }
-            catch (Exception) { }
+            DataTable parametersTable = isp.GetProcedureParameters(rest, procTable);
+            ds.Tables.Add(parametersTable);
 
             return ds;
         }

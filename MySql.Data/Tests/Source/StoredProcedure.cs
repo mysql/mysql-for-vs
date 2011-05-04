@@ -912,8 +912,14 @@ namespace MySql.Data.MySqlClient.Tests
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("?p_kiosk", 2);
             cmd.Parameters.AddWithValue("?p_user", 4);
-            cmd.ExecuteNonQuery();
-            Assert.AreEqual(2, cmd.Parameters.Count);
+            try
+            {
+                cmd.ExecuteNonQuery();
+                Assert.Fail();
+            }
+            catch (InvalidOperationException)
+            {
+            }
         }
 
         /// <summary>
