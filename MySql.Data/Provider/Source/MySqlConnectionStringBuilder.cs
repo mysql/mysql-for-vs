@@ -41,7 +41,7 @@ namespace MySql.Data.MySqlClient
             new Dictionary<string, PropertyDefaultValue>(StringComparer.OrdinalIgnoreCase);
         private Dictionary<string, object> values =
             new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-        private bool hasRootAccess = true;
+        private bool hasProcAccess = true;
 
         static MySqlConnectionStringBuilder()
         {
@@ -496,11 +496,11 @@ namespace MySql.Data.MySqlClient
         [Description("Indicates if stored procedure bodies will be available for parameter detection.")]
         [DefaultValue(true)]
         [ValidKeywords("procedure bodies")]
-        [RefreshProperties(RefreshProperties.All)]
+        [Obsolete("Use CheckParameters instead")]
         public bool UseProcedureBodies
         {
-            get { return (bool)values["Use Procedure Bodies"]; }
-            set { SetValue("Use Procedure Bodies", value); }
+            get { return (bool)values["Check Parameters"]; }
+            set { SetValue("Check Parameters", value); }
         }
 
         [Category("Advanced")]
@@ -633,6 +633,16 @@ namespace MySql.Data.MySqlClient
         {
             get { return (int)values["Default Table Cache Age"]; }
             set { SetValue("Default Table Cache Age", value); }
+        }
+
+        [Category("Advanced")]
+        [DisplayName("Check Parameters")]
+        [Description("Indicates if stored routine parameters should be checked against the server.")]
+        [DefaultValue(true)]
+        public bool CheckParameters
+        {
+            get { return (bool)values["Check Parameters"]; }
+            set { SetValue("Check Parameters", value); }
         }
 
         #endregion
@@ -799,10 +809,10 @@ namespace MySql.Data.MySqlClient
 
         #endregion
 
-        internal bool HasRootAccess
+        internal bool HasProcAccess
         {
-            get { return hasRootAccess; }
-            set { hasRootAccess = value; }
+            get { return hasProcAccess; }
+            set { hasProcAccess = value; }
         }
 
         internal Regex GetBlobAsUTF8IncludeRegex()
@@ -908,6 +918,7 @@ namespace MySql.Data.MySqlClient
                 val = ParseEnum(defaultValues[keyword].Type, (string)value, keyword);
             else
                 val = ChangeType(value, defaultValues[keyword].Type);
+            HandleObsolete(keyword, val);
             values[keyword] = val;
             base[keyword] = val;
         }
@@ -921,6 +932,22 @@ namespace MySql.Data.MySqlClient
                 ((string)value).ToLower(CultureInfo.InvariantCulture) == "sspi")
             {
                 value = true;
+            }
+        }
+
+        private void HandleObsolete(string keyword, object value)
+        {
+            if (String.Compare(keyword, "Use Old Syntax", true) == 0)
+                MySqlTrace.LogWarning(-1, "Use Old Syntax is now obsolete.  Please see documentation");
+            else if (String.Compare(keyword, "Encrypt", true) == 0)
+            {
+                MySqlTrace.LogWarning(-1, "Encrypt is now obsolete. Use Ssl Mode instead");
+                Encrypt = (bool)value;
+            }
+            else if (String.Compare(keyword, "Use Procedure Bodies", true) == 0)
+            {
+                MySqlTrace.LogWarning(-1, "Use Procedure Bodies is now obsolete.  Use Check Parameters instead");
+                CheckParameters = (bool)value;
             }
         }
 
@@ -956,10 +983,6 @@ namespace MySql.Data.MySqlClient
             string key = keyword.ToLower(CultureInfo.InvariantCulture);
             if (!validKeywords.ContainsKey(key))
                 throw new ArgumentException(Resources.KeywordNotSupported, keyword);
-            if (validKeywords[key] == "Use Old Syntax")
-                MySqlTrace.LogWarning(-1, "Use Old Syntax is now obsolete.  Please see documentation");
-            if (validKeywords[key] == "Encrypt")
-                MySqlTrace.LogWarning(-1, "Encrypt is now obsolete. Use Ssl Mode instead");
         }
 
         private static void Initialize()

@@ -95,6 +95,11 @@ namespace MySql.Data.MySqlClient
             get { return resultSet; }
         }
 
+        internal CommandBehavior CommandBehavior
+        {
+            get { return commandBehavior; }
+        }
+
 		/// <summary>
 		/// Gets a value indicating the depth of nesting for the current row.  This method is not 
 		/// supported currently and always returns 0.
@@ -917,7 +922,11 @@ namespace MySql.Data.MySqlClient
                     {
                         resultSet = driver.NextResult(Statement.StatementId);
                         if (resultSet == null) return false;
-                        if (resultSet.IsOutputParameters) return false;
+                        if (resultSet.IsOutputParameters)
+                        {
+                            ProcessOutputParameters();
+                            return false;
+                        }
                         resultSet.Cached = isCaching;
                     }
 
@@ -1007,6 +1016,55 @@ namespace MySql.Data.MySqlClient
             dummyCommand.InternallyCreated = true;
             IDataReader reader = dummyCommand.ExecuteReader(); // ExecuteReader catches the exception and returns null, which is expected.
         }
+
+        private void ProcessOutputParameters()
+        {
+            // if we are not 5.5 or later or we are not prepared then we are simulating output parameters
+            // with user variables and they are also string so we have to work some magic with out
+            // column types before we read the data
+            if (!driver.SupportsOutputParameters || !command.IsPrepared)
+                AdjustOutputTypes();
+
+            // now read the output parameters data row
+            if ((commandBehavior & System.Data.CommandBehavior.SchemaOnly) != 0) return;
+            resultSet.NextRow(commandBehavior);
+
+            string prefix = "@" + StoredProcedure.ParameterPrefix;
+
+            for (int i = 0; i < FieldCount; i++)
+            {
+                string fieldName = GetName(i);
+                if (fieldName.StartsWith(prefix))
+                    fieldName = fieldName.Remove(0, prefix.Length);
+                MySqlParameter parameter = command.Parameters.GetParameterFlexible(fieldName, true);
+                parameter.Value = GetValue(i);
+            }
+        }
+
+        private void AdjustOutputTypes()
+        {
+            // since MySQL likes to return user variables as strings
+            // we reset the types of the readers internal value objects
+            // this will allow those value objects to parse the string based
+            // return values
+            for (int i = 0; i < FieldCount; i++)
+            {
+                string fieldName = GetName(i);
+                fieldName = fieldName.Remove(0, StoredProcedure.ParameterPrefix.Length + 1);
+                MySqlParameter parameter = command.Parameters.GetParameterFlexible(fieldName, true);
+
+                IMySqlValue v = MySqlField.GetIMySqlValue(parameter.MySqlDbType);
+                if (v is MySqlBit)
+                {
+                    MySqlBit bit = (MySqlBit)v;
+                    bit.ReadAsString = true;
+                    resultSet.SetValueObject(i, bit);
+                }
+                else
+                    resultSet.SetValueObject(i, v);
+            }
+        }
+
 
 		#region IEnumerator
 

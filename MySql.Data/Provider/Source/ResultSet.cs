@@ -67,7 +67,7 @@ namespace MySql.Data.MySqlClient
             this.statementId = statementId;
             rowIndex = -1;
             LoadColumns(numCols);
-            isOutputParameters = driver.HasStatus(ServerStatusFlags.OutputParameters);
+            isOutputParameters = IsOutputParameterResultSet();
             hasRows = GetNextRow();
             readDone = !hasRows;
         }
@@ -305,6 +305,17 @@ namespace MySql.Data.MySqlClient
             Debug.Assert(values != null);
             Debug.Assert(i < values.Length);
             values[i] = valueObject;
+        }
+
+        private bool IsOutputParameterResultSet()
+        {
+            if (driver.HasStatus(ServerStatusFlags.OutputParameters)) return true;
+
+            if (fields.Length == 0) return false;
+
+            for (int x = 0; x < fields.Length; x++)
+                if (!fields[x].ColumnName.StartsWith("@" + StoredProcedure.ParameterPrefix)) return false;
+            return true;
         }
 
         /// <summary>

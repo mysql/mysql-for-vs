@@ -30,12 +30,6 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture]
 	public class ProcedureParameterTests : BaseTest
 	{
-        public override void Setup()
-        {
-            accessToMySqlDb = true;
-           base.Setup();
-        }
-
         [Test]
         public void ProcedureParameters()
         {

@@ -180,6 +180,16 @@ namespace MySql.Data.MySqlClient
             set { encoding = value; }
         }
 
+        internal string BaseName
+        {
+            get
+            {
+                if (ParameterName.StartsWith("@") || ParameterName.StartsWith("?"))
+                    return ParameterName.Substring(1);
+                return ParameterName;
+            }
+        }
+
         /// <summary>
         /// Gets or sets the <see cref="DbType"/> of the parameter.
         /// </summary>
