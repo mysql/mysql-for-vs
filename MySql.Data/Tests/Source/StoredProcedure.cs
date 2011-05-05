@@ -915,7 +915,7 @@ namespace MySql.Data.MySqlClient.Tests
             try
             {
                 cmd.ExecuteNonQuery();
-                Assert.Fail();
+                Assert.Fail("This should fail");
             }
             catch (InvalidOperationException)
             {
