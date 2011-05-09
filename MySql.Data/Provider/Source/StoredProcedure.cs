@@ -194,7 +194,7 @@ namespace MySql.Data.MySqlClient
 
                 if (command.Connection.Settings.AllowBatch)
                 {
-                    setSql.AppendFormat("{0}{1}", delimiter, sql);
+                    setSql.AppendFormat(CultureInfo.InvariantCulture, "{0}{1}", delimiter, sql);
                     delimiter = "; ";
                 }
                 else
@@ -221,7 +221,7 @@ namespace MySql.Data.MySqlClient
                 string uName = "@" + ParameterPrefix + p.BaseName;
 
                 bool useRealVar = p.Direction == ParameterDirection.Input || serverProvidingOutputParameters;
-                callSql.AppendFormat("{0}{1}", delimiter, useRealVar ? pName : uName);
+                callSql.AppendFormat(CultureInfo.InvariantCulture, "{0}{1}", delimiter, useRealVar ? pName : uName);
                 delimiter = ", ";
             }
 
@@ -246,7 +246,7 @@ namespace MySql.Data.MySqlClient
                 string uName = "@" + ParameterPrefix + p.BaseName;
                 string sql = String.Format("SET {0}={1}", uName, pName);
 
-                outSql.AppendFormat("{0}{1}", delimiter, uName);
+                outSql.AppendFormat(CultureInfo.InvariantCulture, "{0}{1}", delimiter, uName);
                 delimiter = ", ";
             }
 
@@ -292,7 +292,7 @@ namespace MySql.Data.MySqlClient
             for (int i = 0; i < reader.FieldCount; i++)
             {
                 string fieldName = reader.GetName(i);
-                if (fieldName.Contains(StoredProcedure.ParameterPrefix))
+                if (fieldName.IndexOf(StoredProcedure.ParameterPrefix) != -1)
                     fieldName = fieldName.Remove(0, StoredProcedure.ParameterPrefix.Length + 1);
                 MySqlParameter parameter = command.Parameters.GetParameterFlexible(fieldName, true);
 
