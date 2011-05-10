@@ -33,6 +33,8 @@
 - added batching support for updates and deletes (bug #59616)
 - Introduced workaround to unexpected query aborts (server 5.1+) when executing a datareader after a command.Cancel() (MySQL bug#60541).
 - modified schema1.sql in MySql.Web to remove ENGINE declaration on table creation (Oracle bug #12311974).
+- fixed ISSchemaProvider to use the information schema to retrieve parameter metadata when running 
+  against server 5.5.3 or greater (MySQL bug #48007, Oracle bug #12539685).
 
 Version 6.1.5
 - Fix authorization popup after modifying stored procedure in VS (Bug #44715)
