@@ -181,13 +181,15 @@ namespace MySql.Data.MySqlClient
                 connection.Open();
                 shouldClose = true;
             }
-            string version = connection.ServerVersion;
+            double version = double.Parse(connection.ServerVersion.Substring(0, 3));
+            
             if (shouldClose)
                 connection.Close();
-            if (version.StartsWith("6")) return "6.0";
-            if (version.StartsWith("5.0")) return "5.0";
-            if (version.StartsWith("5")) return "5.1";
-            throw new NotSupportedException("Versions of MySQL prior to 5.0 are not currently supported");
+
+            if (version < 5.0) throw new NotSupportedException("Versions of MySQL prior to 5.0 are not currently supported");
+            if (version < 5.1) return "5.0";
+            if (version < 5.5) return "5.1";
+            return "5.5";            
         }
 
         protected override DbProviderManifest GetDbProviderManifest(string manifestToken)
