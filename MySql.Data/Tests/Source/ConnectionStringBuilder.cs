@@ -22,6 +22,8 @@ using System;
 using System.Data;
 using System.IO;
 using NUnit.Framework;
+using System.Configuration;
+using MySql.Data.Common;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -113,5 +115,14 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.IsFalse(s.ContainsKey("badkey"));
         }
 #endif
+
+        [Test]
+        [ExpectedException(typeof(ArgumentException))]
+        public void SettingInvalidKeyThrowsArgumentException()
+        {
+            MySqlConnectionStringBuilder s = new MySqlConnectionStringBuilder();
+            s["foo keyword"] = "foo";
+        }
+
     }
 }

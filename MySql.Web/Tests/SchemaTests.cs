@@ -33,6 +33,7 @@ using System.IO;
 using System.Configuration.Provider;
 using System.Web.Security;
 using MySql.Web.Common;
+using System.Configuration;
 
 namespace MySql.Web.Tests
 {
@@ -366,6 +367,23 @@ namespace MySql.Web.Tests
                     Assert.AreEqual(lastEngine, currentEngine);
                 }
             }
+        }
+
+        [Test]
+        [ExpectedException(typeof(ArgumentException))]
+        public void InitializeInvalidConnStringThrowsArgumentException()
+        {
+            Configuration configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            string fakeConnectionString = configFile.ConnectionStrings.ConnectionStrings["LocalMySqlServer"].ConnectionString.Replace("database", "fooKey");
+            configFile.ConnectionStrings.ConnectionStrings["LocalMySqlServer"].ConnectionString = fakeConnectionString;
+            configFile.Save();
+            ConfigurationManager.RefreshSection("connectionStrings");
+
+            MySQLMembershipProvider provider = new MySQLMembershipProvider();
+            NameValueCollection config = new NameValueCollection();
+            config.Add("connectionStringName", "LocalMySqlServer");
+
+            provider.Initialize(null, config);
         }
 
         private void DropAllTables()

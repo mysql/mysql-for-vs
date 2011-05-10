@@ -70,11 +70,14 @@ namespace MySql.Data.MySqlClient.Tests
 			port = 3306;
 			rootUser = "root";
 			rootPassword = "";
+            string strPort = null;
 
+#if !CF
 			host = ConfigurationManager.AppSettings["host"];
-			string strPort = ConfigurationManager.AppSettings["port"];
+			strPort = ConfigurationManager.AppSettings["port"];
 			pipeName = ConfigurationManager.AppSettings["pipename"];
 			memoryName = ConfigurationManager.AppSettings["memory_name"];
+#endif
 
 			if (strPort != null)
 				port = Int32.Parse(strPort);
@@ -192,7 +195,11 @@ namespace MySql.Data.MySqlClient.Tests
         public virtual void Setup()
         {
             Assembly executingAssembly = Assembly.GetExecutingAssembly();
+#if !CF
             Stream stream = executingAssembly.GetManifestResourceStream("MySql.Data.MySqlClient.Tests.Properties.Setup.sql");
+#else
+            Stream stream = executingAssembly.GetManifestResourceStream("MySql.Data.CF.Tests.Properties.Setup.sql");
+#endif
             StreamReader sr = new StreamReader(stream);
             string sql = sr.ReadToEnd();
             sr.Close();

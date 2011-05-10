@@ -31,6 +31,8 @@
 - small but important improvements in EF sql generation
 - added batching support for updates and deletes (bug #59616)
 - modified schema1.sql in MySql.Web to remove ENGINE declaration on table creation (Oracle bug #12311974).
+- Introduced more detailed exceptions for invalid connection strings errors (MySQL bug#44654, MySQL bug#53076).
+- Introduced the real NUnit framework to the CF test suite and fixed issues on BaseTest to properly run with CF libraries. 
 
 Version 6.0.7
 - Fix authorization popup after modifying stored procedure in VS (Bug #44715)
