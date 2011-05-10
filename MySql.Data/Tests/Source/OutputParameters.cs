@@ -42,12 +42,12 @@ namespace MySql.Data.MySqlClient.Tests
         public OutputParametersBatch()
         {
             csAdditions = ";procedure cache size=0;";
-            prepare = true;
+            prepare = false;
         }
 
         protected override string GetConnectionInfo()
         {
-            return "allow batch=true; ignore prepare=false";
+            return "allow batch=true; ignore prepare = false";
         }
 
         /// <summary>
@@ -560,23 +560,23 @@ namespace MySql.Data.MySqlClient.Tests
         }
     }
 
-    //public class OutputParametersBatchPrepared : OutputParametersBatch
-    //{
-    //    protected override string GetConnectionInfo()
-    //    {
-    //        prepare = true;
-    //        return "allow batch=false";
-    //    }
-    //}
+    public class OutputParametersBatchPrepared : OutputParametersBatch
+    {
+        protected override string GetConnectionInfo()
+        {
+            prepare = true;
+            return "allow batch=true; ignore prepare=false";
+        }
+    }
 
-    //public class OutputParametersNoBatchPrepared : OutputParametersBatch
-    //{
-    //    protected override string GetConnectionInfo()
-    //    {
-    //        prepare = true;
-    //        return "allow batch=false";
-    //    }
-    //}
+    public class OutputParametersNoBatchPrepared : OutputParametersBatch
+    {
+        protected override string GetConnectionInfo()
+        {
+            prepare = true;
+            return "allow batch=false; ignore prepare=false";
+        }
+    }
 
     #endregion
 }

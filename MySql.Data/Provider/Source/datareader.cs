@@ -903,14 +903,19 @@ namespace MySql.Data.MySqlClient
                 do
                 {
                     resultSet = null;
-                    resultSet = driver.NextResult(Statement.StatementId);
+                    resultSet = driver.NextResult(Statement.StatementId, false);
 
                     if (resultSet == null) return false;
 
                     if (resultSet.IsOutputParameters && command.CommandType == CommandType.StoredProcedure)
                     {
-                        (statement as StoredProcedure).ProcessOutputParameters(this);
-                        return false;
+                        StoredProcedure sp = statement as StoredProcedure;
+                        sp.ProcessOutputParameters(this);
+                        resultSet.Close();
+                        if (!sp.ServerProvidingOutputParameters) return false;
+                        // if we are using server side output parameters then we will get our ok packet
+                        // *after* the output parameters resultset
+                        resultSet = driver.NextResult(Statement.StatementId, true);
                     }
 
                     if (resultSet.Size == 0)

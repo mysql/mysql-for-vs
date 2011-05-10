@@ -56,6 +56,11 @@ namespace MySql.Data.MySqlClient
             return null;
         }
 
+        public bool ServerProvidingOutputParameters
+        {
+            get { return serverProvidingOutputParameters; }
+        }
+
         public override string ResolvedCommandText
         {
             get { return resolvedCommandText; }
@@ -171,13 +176,13 @@ namespace MySql.Data.MySqlClient
             MySqlParameterCollection parms = command.Connection.Settings.CheckParameters ?
                 CheckParameters(spName) : Parameters;
 
-            string setSql = SetUserVariables(parms);
+            string setSql = SetUserVariables(parms, preparing);
             string callSql = CreateCallStatement(spName, returnParameter, parms);
-            string outSql = CreateOutputSelect(parms);
+            string outSql = CreateOutputSelect(parms, preparing);
             resolvedCommandText = String.Format("{0}{1}{2}", setSql, callSql, outSql);
         }
 
-        private string SetUserVariables(MySqlParameterCollection parms)
+        private string SetUserVariables(MySqlParameterCollection parms, bool preparing)
         {
             StringBuilder setSql = new StringBuilder();
 
@@ -192,7 +197,7 @@ namespace MySql.Data.MySqlClient
                 string uName = "@" + ParameterPrefix + p.BaseName;
                 string sql = String.Format("SET {0}={1}", uName, pName);
 
-                if (command.Connection.Settings.AllowBatch)
+                if (command.Connection.Settings.AllowBatch && !preparing)
                 {
                     setSql.AppendFormat(CultureInfo.InvariantCulture, "{0}{1}", delimiter, sql);
                     delimiter = "; ";
@@ -212,6 +217,7 @@ namespace MySql.Data.MySqlClient
         private string CreateCallStatement(string spName, MySqlParameter returnParameter, MySqlParameterCollection parms)
         {
             StringBuilder callSql = new StringBuilder();
+
             string delimiter = String.Empty;
             foreach (MySqlParameter p in parms)
             {
@@ -231,26 +237,27 @@ namespace MySql.Data.MySqlClient
                 return String.Format("SET @{0}{1}={2}({3})", ParameterPrefix, returnParameter.BaseName, spName, callSql.ToString());
         }
 
-        private string CreateOutputSelect(MySqlParameterCollection parms)
+        private string CreateOutputSelect(MySqlParameterCollection parms, bool preparing)
         {
             StringBuilder outSql = new StringBuilder();
-
-            if (serverProvidingOutputParameters) return outSql.ToString();
 
             string delimiter = String.Empty;
             foreach (MySqlParameter p in parms)
             {
                 if (p.Direction == ParameterDirection.Input) continue;
-
+                if ((p.Direction == ParameterDirection.InputOutput ||
+                    p.Direction == ParameterDirection.Output) &&
+                    serverProvidingOutputParameters) continue;
                 string pName = "@" + p.BaseName;
                 string uName = "@" + ParameterPrefix + p.BaseName;
-                string sql = String.Format("SET {0}={1}", uName, pName);
 
                 outSql.AppendFormat(CultureInfo.InvariantCulture, "{0}{1}", delimiter, uName);
                 delimiter = ", ";
             }
 
-            if (command.Connection.Settings.AllowBatch)
+            if (outSql.Length == 0) return String.Empty;
+
+            if (command.Connection.Settings.AllowBatch && !preparing)
                 return String.Format(";SELECT {0}", outSql.ToString());
 
             outSelect = String.Format("SELECT {0}", outSql.ToString());
@@ -259,11 +266,9 @@ namespace MySql.Data.MySqlClient
 
         internal void ProcessOutputParameters(MySqlDataReader reader)
         {
-            // if we are not 5.5 or later or we are not prepared then we are simulating output parameters
-            // with user variables and they are also string so we have to work some magic with out
-            // column types before we read the data
-            //if (!command.Connection.driver.SupportsOutputParameters || !command.IsPrepared)
-                AdjustOutputTypes(reader);
+            // We apparently need to always adjust our output types since the server
+            // provided data types are not always right
+            AdjustOutputTypes(reader);
 
             // now read the output parameters data row
             CommandBehavior behavior = reader.CommandBehavior;

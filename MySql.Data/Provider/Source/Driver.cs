@@ -340,9 +340,9 @@ namespace MySql.Data.MySqlClient
             firstResult = true;
         }
 
-        public virtual ResultSet NextResult(int statementId)
+        public virtual ResultSet NextResult(int statementId, bool force)
         {
-            if (!firstResult && !HasStatus(ServerStatusFlags.AnotherQuery | ServerStatusFlags.MoreResults))
+            if (!force && !firstResult && !HasStatus(ServerStatusFlags.AnotherQuery | ServerStatusFlags.MoreResults))
                 return null;
             firstResult = false;
 
@@ -376,7 +376,7 @@ namespace MySql.Data.MySqlClient
             MySqlPacket p = new MySqlPacket(Encoding);
             p.WriteString(sql);
             SendQuery(p);
-            NextResult(0);
+            NextResult(0, false);
         }
 
         public MySqlField[] GetColumns(int count)
