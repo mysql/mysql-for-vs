@@ -83,11 +83,10 @@ namespace MySql.Data.MySqlClient
             {
                 //paramList[i].ColumnName = (string) parameter_names[i];
                 string parameterName = (string)parameter_names[i];
-                int index = Parameters.IndexOf(parameterName);
-                if (index == -1)
+                MySqlParameter p = Parameters.GetParameterFlexible(parameterName, false);
+                if (p == null)
                     throw new InvalidOperationException(
                         String.Format(Resources.ParameterNotFoundDuringPrepare, parameterName));
-                MySqlParameter p = Parameters[index];
                 p.Encoding = paramList[i].Encoding;
                 parametersToSend.Add(p);
             }
@@ -191,10 +190,13 @@ namespace MySql.Data.MySqlClient
             string parameter = tokenizer.NextParameter();
             while (parameter != null)
             {
-                newSQL.Append(sql.Substring(startPos, tokenizer.StartIndex - startPos));
-                newSQL.Append("?");
-                parameterMap.Add(parameter);
-                startPos = tokenizer.StopIndex;
+                if (!parameter.Contains(StoredProcedure.ParameterPrefix))
+                {
+                    newSQL.Append(sql.Substring(startPos, tokenizer.StartIndex - startPos));
+                    newSQL.Append("?");
+                    parameterMap.Add(parameter);
+                    startPos = tokenizer.StopIndex;
+                }
                 parameter = tokenizer.NextParameter();
             }
             newSQL.Append(sql.Substring(startPos));
