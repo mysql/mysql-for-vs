@@ -920,12 +920,17 @@ namespace MySql.Data.MySqlClient
 
                     if (resultSet == null)
                     {
-                        resultSet = driver.NextResult(Statement.StatementId);
+                        resultSet = driver.NextResult(Statement.StatementId, false);
                         if (resultSet == null) return false;
-                        if (resultSet.IsOutputParameters)
+                        if (resultSet.IsOutputParameters && command.CommandType == CommandType.StoredProcedure)
                         {
-                            ProcessOutputParameters();
-                            return false;
+                            StoredProcedure sp = statement as StoredProcedure;
+                            sp.ProcessOutputParameters(this);
+                            resultSet.Close();
+                            if (!sp.ServerProvidingOutputParameters) return false;
+                            // if we are using server side output parameters then we will get our ok packet
+                            // *after* the output parameters resultset
+                            resultSet = driver.NextResult(Statement.StatementId, true);
                         }
                         resultSet.Cached = isCaching;
                     }

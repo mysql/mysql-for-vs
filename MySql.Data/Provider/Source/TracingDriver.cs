@@ -99,7 +99,7 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-        public override ResultSet NextResult(int statementId)
+        public override ResultSet NextResult(int statementId, bool force)
         {
             // first let's see if we already have a resultset on this statementId
             if (activeResult != null)
@@ -114,7 +114,7 @@ namespace MySql.Data.MySqlClient
                 activeResult = null;
             }
 
-            activeResult = base.NextResult(statementId);
+            activeResult = base.NextResult(statementId, force);
             return activeResult;
         }
 

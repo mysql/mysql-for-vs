@@ -56,6 +56,11 @@ namespace MySql.Data.MySqlClient
             return null;
         }
 
+        public bool ServerProvidingOutputParameters
+        {
+            get { return serverProvidingOutputParameters; }
+        }
+
         public override string ResolvedCommandText
         {
             get { return resolvedCommandText; }
@@ -157,6 +162,8 @@ namespace MySql.Data.MySqlClient
             // check to see if we are already resolved
             if (resolvedCommandText != null) return;
 
+            serverProvidingOutputParameters = Driver.SupportsOutputParameters && preparing;
+
             // first retrieve the procedure definition from our
             // procedure cache
             string spName = commandText;
@@ -169,53 +176,154 @@ namespace MySql.Data.MySqlClient
             MySqlParameterCollection parms = command.Connection.Settings.CheckParameters ?
                 CheckParameters(spName) : Parameters;
 
-            StringBuilder setSql = new StringBuilder();
-            StringBuilder callSql = new StringBuilder();
-            StringBuilder selectSql = new StringBuilder();
-            string callDelimiter = String.Empty;
-            string selectDelimiter = String.Empty;
-            serverProvidingOutputParameters = Driver.SupportsOutputParameters && preparing;
+            string setSql = SetUserVariables(parms, preparing);
+            string callSql = CreateCallStatement(spName, returnParameter, parms);
+            string outSql = CreateOutputSelect(parms, preparing);
+            resolvedCommandText = String.Format("{0}{1}{2}", setSql, callSql, outSql);
+        }
 
+        private string SetUserVariables(MySqlParameterCollection parms, bool preparing)
+        {
+            StringBuilder setSql = new StringBuilder();
+
+            if (serverProvidingOutputParameters) return setSql.ToString();
+
+            string delimiter = String.Empty;
+            foreach (MySqlParameter p in parms)
+            {
+                if (p.Direction != ParameterDirection.InputOutput) continue;
+
+                string pName = "@" + p.BaseName;
+                string uName = "@" + ParameterPrefix + p.BaseName;
+                string sql = String.Format("SET {0}={1}", uName, pName);
+
+                if (command.Connection.Settings.AllowBatch && !preparing)
+                {
+                    setSql.AppendFormat(CultureInfo.InvariantCulture, "{0}{1}", delimiter, sql);
+                    delimiter = "; ";
+                }
+                else
+                {
+                    MySqlCommand cmd = new MySqlCommand(sql, command.Connection);
+                    cmd.Parameters.Add(p);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            if (setSql.Length > 0)
+                setSql.Append("; ");
+            return setSql.ToString();
+        }
+
+        private string CreateCallStatement(string spName, MySqlParameter returnParameter, MySqlParameterCollection parms)
+        {
+            StringBuilder callSql = new StringBuilder();
+
+            string delimiter = String.Empty;
             foreach (MySqlParameter p in parms)
             {
                 if (p.Direction == ParameterDirection.ReturnValue) continue;
 
-                string pName = p.ParameterName;
-                if (!pName.StartsWith("@") && !pName.StartsWith("?"))
-                    pName = "@" + pName;
-                string parameterName = pName;
-                if (p.Direction != ParameterDirection.Input && !serverProvidingOutputParameters)
-                {
-                    pName = String.Format("@{0}{1}", ParameterPrefix, p.BaseName);
-                    if (p.Direction == ParameterDirection.InputOutput)
-                        setSql.AppendFormat(CultureInfo.InvariantCulture, "SET {0}={1};", pName, parameterName);
-                    selectSql.AppendFormat(CultureInfo.InvariantCulture, "{0}{1}", selectDelimiter, pName);
-                    selectDelimiter = ", ";
-                }
-                callSql.AppendFormat(CultureInfo.InvariantCulture, "{0}{1}", callDelimiter, pName);
-                callDelimiter = ", ";            
-            }
+                string pName = "@" + p.BaseName;
+                string uName = "@" + ParameterPrefix + p.BaseName;
 
-            string sqlCmd = String.Empty;
+                bool useRealVar = p.Direction == ParameterDirection.Input || serverProvidingOutputParameters;
+                callSql.AppendFormat(CultureInfo.InvariantCulture, "{0}{1}", delimiter, useRealVar ? pName : uName);
+                delimiter = ", ";
+            }
 
             if (returnParameter == null)
-                sqlCmd = String.Format("CALL {0} ({1})", spName, callSql.ToString());
+                return String.Format("CALL {0}({1})", spName, callSql.ToString());
             else
+                return String.Format("SET @{0}{1}={2}({3})", ParameterPrefix, returnParameter.BaseName, spName, callSql.ToString());
+        }
+
+        private string CreateOutputSelect(MySqlParameterCollection parms, bool preparing)
+        {
+            StringBuilder outSql = new StringBuilder();
+
+            string delimiter = String.Empty;
+            foreach (MySqlParameter p in parms)
             {
-                string returnParameterName = returnParameter.BaseName;
-                if (String.IsNullOrEmpty(returnParameterName))
-                    returnParameterName = "dummy";
+                if (p.Direction == ParameterDirection.Input) continue;
+                if ((p.Direction == ParameterDirection.InputOutput ||
+                    p.Direction == ParameterDirection.Output) &&
+                    serverProvidingOutputParameters) continue;
+                string pName = "@" + p.BaseName;
+                string uName = "@" + ParameterPrefix + p.BaseName;
 
-                sqlCmd = String.Format("SET @{0}{1}={2}({3})", ParameterPrefix, returnParameterName, spName, callSql.ToString());
-                selectSql.AppendFormat(CultureInfo.InvariantCulture, 
-                    "{0}@{1}{2}", selectSql.ToString(), ParameterPrefix, returnParameterName);
+                outSql.AppendFormat(CultureInfo.InvariantCulture, "{0}{1}", delimiter, uName);
+                delimiter = ", ";
             }
-            if (setSql.Length > 0)
-                sqlCmd = String.Format("{0}{1}", setSql.ToString(), sqlCmd);
-            if (selectSql.Length > 0)
-                sqlCmd = String.Format("{0}; SELECT {1}", sqlCmd, selectSql.ToString());
 
-            resolvedCommandText = sqlCmd;
+            if (outSql.Length == 0) return String.Empty;
+
+            if (command.Connection.Settings.AllowBatch && !preparing)
+                return String.Format(";SELECT {0}", outSql.ToString());
+
+            outSelect = String.Format("SELECT {0}", outSql.ToString());
+            return String.Empty;
+        }
+
+        internal void ProcessOutputParameters(MySqlDataReader reader)
+        {
+            // We apparently need to always adjust our output types since the server
+            // provided data types are not always right
+            AdjustOutputTypes(reader);
+
+            // now read the output parameters data row
+            CommandBehavior behavior = reader.CommandBehavior;
+            if ((behavior & CommandBehavior.SchemaOnly) != 0) return;
+            reader.Read();
+            //reader.ResultSet.NextRow(behavior);
+
+            string prefix = "@" + StoredProcedure.ParameterPrefix;
+
+            for (int i = 0; i < reader.FieldCount; i++)
+            {
+                string fieldName = reader.GetName(i);
+                if (fieldName.StartsWith(prefix))
+                    fieldName = fieldName.Remove(0, prefix.Length);
+                MySqlParameter parameter = command.Parameters.GetParameterFlexible(fieldName, true);
+                parameter.Value = reader.GetValue(i);
+            }
+        }
+
+        private void AdjustOutputTypes(MySqlDataReader reader)
+        {
+            // since MySQL likes to return user variables as strings
+            // we reset the types of the readers internal value objects
+            // this will allow those value objects to parse the string based
+            // return values
+            for (int i = 0; i < reader.FieldCount; i++)
+            {
+                string fieldName = reader.GetName(i);
+                if (fieldName.IndexOf(StoredProcedure.ParameterPrefix) != -1)
+                    fieldName = fieldName.Remove(0, StoredProcedure.ParameterPrefix.Length + 1);
+                MySqlParameter parameter = command.Parameters.GetParameterFlexible(fieldName, true);
+
+                IMySqlValue v = MySqlField.GetIMySqlValue(parameter.MySqlDbType);
+                if (v is MySqlBit)
+                {
+                    MySqlBit bit = (MySqlBit)v;
+                    bit.ReadAsString = true;
+                    reader.ResultSet.SetValueObject(i, bit);
+                }
+                else
+                    reader.ResultSet.SetValueObject(i, v);
+            }
+        }
+
+        public override void Close(MySqlDataReader reader)
+        {
+            base.Close(reader);
+            if (String.IsNullOrEmpty(outSelect)) return;
+            if ((reader.CommandBehavior & CommandBehavior.SchemaOnly) != 0) return;
+
+            MySqlCommand cmd = new MySqlCommand(outSelect, command.Connection);
+            using (MySqlDataReader rdr = cmd.ExecuteReader(reader.CommandBehavior))
+            {
+                ProcessOutputParameters(rdr);
+            }
         }
 	}
 }
