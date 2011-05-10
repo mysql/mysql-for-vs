@@ -190,10 +190,13 @@ namespace MySql.Data.MySqlClient
             string parameter = tokenizer.NextParameter();
             while (parameter != null)
             {
-                newSQL.Append(sql.Substring(startPos, tokenizer.StartIndex - startPos));
-                newSQL.Append("?");
-                parameterMap.Add(parameter);
-                startPos = tokenizer.StopIndex;
+                if (!parameter.Contains(StoredProcedure.ParameterPrefix))
+                {
+                    newSQL.Append(sql.Substring(startPos, tokenizer.StartIndex - startPos));
+                    newSQL.Append("?");
+                    parameterMap.Add(parameter);
+                    startPos = tokenizer.StopIndex;
+                }
                 parameter = tokenizer.NextParameter();
             }
             newSQL.Append(sql.Substring(startPos));
