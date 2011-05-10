@@ -484,15 +484,15 @@ namespace MySql.Data.MySqlClient
 
         internal MySqlParameter GetParameterFlexible(string parameterName, bool throwOnNotFound)
         {
-            int index = IndexOf(parameterName);
+            string baseName = parameterName;
+            if (parameterName.StartsWith("@") || parameterName.StartsWith("?"))
+                baseName = parameterName.Substring(1);
+
+            int index = IndexOf(baseName);
             if (-1 == index)
-                index = IndexOf("?" + parameterName);
+                index = IndexOf("?" + baseName);
             if (-1 == index)
-                index = IndexOf("@" + parameterName);
-            if (-1 == index)
-            {   if (parameterName.StartsWith("@") || parameterName.StartsWith("?"))
-                    index = IndexOf(parameterName.Substring(1));
-            }
+                index = IndexOf("@" + baseName);
             if (-1 != index)
                 return this[index];
             if (throwOnNotFound)
