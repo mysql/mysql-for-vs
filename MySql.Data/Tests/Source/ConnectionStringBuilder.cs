@@ -27,9 +27,9 @@ using NUnit.Framework;
 
 namespace MySql.Data.MySqlClient.Tests
 {
-	[TestFixture]
-	public class ConnectionStringBuilder : BaseTest
-	{
+    [TestFixture]
+    public class ConnectionStringBuilder : BaseTest
+    {
         [Test]
         public void Simple()
         {
@@ -146,6 +146,14 @@ namespace MySql.Data.MySqlClient.Tests
         {
             MySqlConnectionStringBuilder s = new MySqlConnectionStringBuilder("server=localhost;encrypt=true");
             Assert.AreEqual(s.SslMode, MySqlSslMode.Preferred);
+        }
+
+        [Test]
+        [ExpectedException(typeof(ArgumentException))]
+        public void SettingInvalidKeyThrowsArgumentException()
+        {
+            MySqlConnectionStringBuilder s = new MySqlConnectionStringBuilder();
+            s["foo keyword"] = "foo";
         }
     }
 }

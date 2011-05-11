@@ -27,6 +27,8 @@ using NUnit.Framework;
 using System.Transactions;
 using System.Data.Common;
 using System.Threading;
+using System.Diagnostics;
+using System.Text;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -69,56 +71,56 @@ namespace MySql.Data.MySqlClient.Tests
         }
 
         // The following block is not currently supported
-/*        void TransactionScopeMultipleInternal(bool commit)
-        {
-            MySqlConnection c1 = new MySqlConnection(GetConnectionString(true));
-            MySqlConnection c2 = new MySqlConnection(GetConnectionString(true));
-            MySqlCommand cmd1 = new MySqlCommand("INSERT INTO Test VALUES ('a', 'name', 'name2')", c1);
-            MySqlCommand cmd2 = new MySqlCommand("INSERT INTO Test VALUES ('b', 'name', 'name2')", c1);
-
-            try
-            {
-                using (TransactionScope ts = new TransactionScope())
+        /*        void TransactionScopeMultipleInternal(bool commit)
                 {
-                    c1.Open();
-                    cmd1.ExecuteNonQuery();
+                    MySqlConnection c1 = new MySqlConnection(GetConnectionString(true));
+                    MySqlConnection c2 = new MySqlConnection(GetConnectionString(true));
+                    MySqlCommand cmd1 = new MySqlCommand("INSERT INTO Test VALUES ('a', 'name', 'name2')", c1);
+                    MySqlCommand cmd2 = new MySqlCommand("INSERT INTO Test VALUES ('b', 'name', 'name2')", c1);
 
-                    c2.Open();
-                    cmd2.ExecuteNonQuery();
+                    try
+                    {
+                        using (TransactionScope ts = new TransactionScope())
+                        {
+                            c1.Open();
+                            cmd1.ExecuteNonQuery();
 
-                    if (commit)
-                        ts.Complete();
+                            c2.Open();
+                            cmd2.ExecuteNonQuery();
+
+                            if (commit)
+                                ts.Complete();
+                        }
+
+                        cmd1.CommandText = "SELECT COUNT(*) FROM Test";
+                        object count = cmd1.ExecuteScalar();
+                        Assert.AreEqual(commit ? 2 : 0, count);
+                    }
+                    catch (Exception ex)
+                    {
+                        Assert.Fail(ex.Message);
+                    }
+                    finally
+                    {
+                        if (c1 != null)
+                            c1.Close();
+                        if (c2 != null)
+                            c2.Close();
+                    }
                 }
 
-                cmd1.CommandText = "SELECT COUNT(*) FROM Test";
-                object count = cmd1.ExecuteScalar();
-                Assert.AreEqual(commit ? 2 : 0, count);
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
-            finally
-            {
-                if (c1 != null)
-                    c1.Close();
-                if (c2 != null)
-                    c2.Close();
-            }
-        }
+                [Test]
+                public void TransactionScopeMultipleRollback()
+                {
+                    TransactionScopeMultipleInternal(false);
+                }
 
-        [Test]
-        public void TransactionScopeMultipleRollback()
-        {
-            TransactionScopeMultipleInternal(false);
-        }
-
-        [Test]
-        public void TransactionScopeMultipleCommit()
-        {
-            TransactionScopeMultipleInternal(true);
-        }
-*/
+                [Test]
+                public void TransactionScopeMultipleCommit()
+                {
+                    TransactionScopeMultipleInternal(true);
+                }
+        */
         /// <summary>
         /// Bug #34448 Connector .Net 5.2.0 with Transactionscope doesn´t use specified IsolationLevel 
         /// </summary>
@@ -442,7 +444,7 @@ namespace MySql.Data.MySqlClient.Tests
                         cmd1.ExecuteNonQuery();
                         using (TransactionScope inner = new TransactionScope(nestedOption))
                         {
-                          
+
                             MySqlConnection c2;
                             if (nestedOption == TransactionScopeOption.Required)
                             {
@@ -544,7 +546,7 @@ namespace MySql.Data.MySqlClient.Tests
 
             // inner scope supresses transaction, inner does not complete, outer completes
             // Expect changes by inner scope to be visible ??
-            NestedScopeInternalTest(TransactionScopeOption.Suppress,  true, false, true, false);
+            NestedScopeInternalTest(TransactionScopeOption.Suppress, true, false, true, false);
 
             // inner scope supresses transaction, inner completes, outer does not
             // Expect changes by inner transaction visible
@@ -607,16 +609,16 @@ namespace MySql.Data.MySqlClient.Tests
         {
             createTable("CREATE TABLE Test (key2 VARCHAR(1), name VARCHAR(100), name2 VARCHAR(100))", "INNODB");
             ReusingSameConnection(true, true);
-//            Assert.AreEqual(processes + 1, CountProcesses());
+            //            Assert.AreEqual(processes + 1, CountProcesses());
 
             ReusingSameConnection(true, false);
-  //          Assert.AreEqual(processes + 1, CountProcesses());
+            //          Assert.AreEqual(processes + 1, CountProcesses());
 
             ReusingSameConnection(false, true);
-    //        Assert.AreEqual(processes + 1, CountProcesses());
+            //        Assert.AreEqual(processes + 1, CountProcesses());
 
             ReusingSameConnection(false, false);
-      //      Assert.AreEqual(processes + 1, CountProcesses());
+            //      Assert.AreEqual(processes + 1, CountProcesses());
         }
 
         /// <summary>
@@ -629,29 +631,29 @@ namespace MySql.Data.MySqlClient.Tests
             execSQL("DROP TABLE IF EXISTS Test");
             createTable("CREATE TABLE Test (id int)", "INNODB");
             string connStr = GetConnectionString(true);
-            using (new TransactionScope(TransactionScopeOption.RequiresNew,TimeSpan.FromSeconds(1)))
+            using (new TransactionScope(TransactionScopeOption.RequiresNew, TimeSpan.FromSeconds(1)))
             {
                 try
                 {
                     for (int i = 0; ; i++)
                     {
-                        MySqlHelper.ExecuteNonQuery(connStr, String.Format("INSERT INTO Test VALUES({0})", i));;
+                        MySqlHelper.ExecuteNonQuery(connStr, String.Format("INSERT INTO Test VALUES({0})", i)); ;
                     }
                 }
                 catch (Exception)
                 {
                 }
             }
-            long count = (long)MySqlHelper.ExecuteScalar(connStr,"select count(*) from test");
+            long count = (long)MySqlHelper.ExecuteScalar(connStr, "select count(*) from test");
             Assert.AreEqual(0, count);
         }
 
-         /// <summary>
-         /// Variation of previous test, with a single connection and maual enlistment.
-         /// Checks that  transaction rollback leaves the connection intact (does not close it) 
-         /// and  checks that no command is possible after scope has expired and 
-         /// rollback by timer thread is finished.
-         /// </summary>
+        /// <summary>
+        /// Variation of previous test, with a single connection and maual enlistment.
+        /// Checks that  transaction rollback leaves the connection intact (does not close it) 
+        /// and  checks that no command is possible after scope has expired and 
+        /// rollback by timer thread is finished.
+        /// </summary>
         [Test]
         public void AttemptToUseConnectionAfterScopeTimeout()
         {
@@ -716,6 +718,158 @@ namespace MySql.Data.MySqlClient.Tests
             Thread t = new Thread(new ThreadStart(DoThreadWork));
             t.Start();
             t.Join();
+        }
+
+        /// <summary>
+        /// Ensures that a commit after heavy ammount of inserts does not timeout.
+        /// </summary>
+        [Test]
+        public void CommitDoesNotTimeout()
+        {
+            const int requiredNumberOfRuns = 1;
+            const int binarySize = 5000000;
+            const int requiredNumberOfRowsPerRun = 100;
+
+            Debug.WriteLine("Required Number Of Runs :" + requiredNumberOfRuns);
+            Debug.WriteLine("Required Number Of Rows Per Run :" + requiredNumberOfRowsPerRun);
+
+            suExecSQL("SET GLOBAL max_allowed_packet=64000000");
+
+            MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder();
+
+            using (MySqlConnection connection = new MySqlConnection(GetConnectionString(true)))
+            {
+                connection.Open();
+
+                using (MySqlCommand command = new MySqlCommand())
+                {
+                    command.Connection = connection;
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = "DROP TABLE IF EXISTS test_timeout;";
+                    command.ExecuteNonQuery();
+
+                    StringBuilder sqlCommand = new StringBuilder(512);
+
+                    sqlCommand.Append("CREATE TABLE test_timeout (");
+                    sqlCommand.Append("identity INT NOT NULL auto_increment, ");
+                    sqlCommand.Append("a INT NOT NULL, ");
+                    sqlCommand.Append("b INT NOT NULL, ");
+                    sqlCommand.Append("c INT NOT NULL, ");
+                    sqlCommand.Append("binary_data LONGBLOB NOT NULL, ");
+                    sqlCommand.Append("PRIMARY KEY(identity), ");
+                    sqlCommand.Append("KEY `abc` (`a`,`b`, `c`) ");
+                    sqlCommand.Append(") TYPE = INNODB");
+
+                    command.CommandText = sqlCommand.ToString();
+                    command.ExecuteNonQuery();
+                }
+
+                for (int numberOfRuns = 0; numberOfRuns < requiredNumberOfRuns; ++numberOfRuns)
+                {
+                    using (MySqlTransaction transaction = connection.BeginTransaction())
+                    {
+                        Stopwatch stopwatch = Stopwatch.StartNew();
+
+                        using (MySqlCommand command = new MySqlCommand())
+                        {
+                            command.Connection = connection;
+                            command.CommandText = "INSERT INTO test_timeout VALUES (?f1, ?f2, ?f3, ?f4, ?f5)";
+                            command.Parameters.Add("?f1", MySqlDbType.Int32);
+                            command.Parameters.Add("?f2", MySqlDbType.Int32);
+                            command.Parameters.Add("?f3", MySqlDbType.Int32);
+                            command.Parameters.Add("?f4", MySqlDbType.Int32);
+                            command.Parameters.Add("?f5", MySqlDbType.LongBlob);
+                            command.CommandTimeout = 0;
+                            command.Prepare();
+
+
+                            byte[] buffer;
+
+                            using (MemoryStream stream = new MemoryStream())
+                            {
+                                using (BinaryWriter binary = new BinaryWriter(stream))
+                                {
+                                    int count = 0;
+
+                                    while (stream.Position < binarySize)
+                                    {
+                                        binary.Write(++count);
+                                    }
+                                }
+
+                                buffer = stream.ToArray();
+                            }
+
+                            for (int i = 0; i < requiredNumberOfRowsPerRun; ++i)
+                            {
+                                command.Parameters[1].Value = i;
+                                command.Parameters[2].Value = i;
+                                command.Parameters[3].Value = i;
+                                command.Parameters[4].Value = buffer;
+                                command.ExecuteNonQuery();
+                            }
+                        }
+
+                        transaction.Commit();
+
+                        Assert.IsNotNull(transaction);
+
+                        stopwatch.Stop();
+
+                        double seconds = stopwatch.Elapsed.TotalSeconds;
+                        double recordsPerSecond = requiredNumberOfRowsPerRun / seconds;
+
+                        StringBuilder sb = new StringBuilder();
+                        sb.AppendFormat("Truncate Result : Insert {0} Took {1:F4}; Per Second {2:F1} ",
+                        requiredNumberOfRowsPerRun, seconds, recordsPerSecond);
+
+                        Debug.WriteLine(sb.ToString());
+                    }
+
+                    using (MySqlCommand command = new MySqlCommand())
+                    {
+                        command.Connection = connection;
+                        command.CommandText = "SELECT * FROM test_timeout";
+
+                        Stopwatch stopwatch = Stopwatch.StartNew();
+                        int count = 0;
+
+                        using (MySqlDataReader reader = command.ExecuteReader())
+                        {
+                            int previous = -1;
+
+                            while (reader.Read())
+                            {
+                                int current = reader.GetInt32(0);
+                                Assert.Greater(current, previous);
+                                previous = current;
+
+                                ++count;
+                            }
+                        }
+
+                        stopwatch.Stop();
+
+                        double seconds = stopwatch.Elapsed.TotalSeconds;
+                        double recordsPerSecond = count / seconds;
+
+                        StringBuilder sb = new StringBuilder();
+                        sb.AppendFormat("Test Result : Select {0} Took {1:F4}; Per Second {2:F1} ",
+                        count, seconds, recordsPerSecond);
+
+                        Debug.WriteLine(sb.ToString());
+                    }
+
+                    using (MySqlCommand command = new MySqlCommand())
+                    {
+                        command.Connection = connection;
+                        command.CommandText = "TRUNCATE TABLE test_timeout";
+                        command.ExecuteNonQuery();
+                    }
+                }
+
+                MySqlConnection.ClearPool(connection);
+            }
         }
 
         private void DoThreadWork()
