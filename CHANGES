@@ -1,6 +1,12 @@
 - modified schema1.sql in MySql.Web to remove ENGINE declaration on table creation (Oracle bug #12311974).
 - fixed performance issue with executing stored procedures with output parameters
   (MySQL bug #60366, Oracle bug#12425959)
+- Introduced more detailed exceptions for invalid connection strings errors (MySQL bug#44654, MySQL bug#53076).
+- Introduced the real NUnit framework to the CF test suite and fixed issues on BaseTest to properly run with CF libraries. 
+- Modified MySql.Data.Entity.ProviderServices to use the correct schema definition file when server is 5.5 or greater (Oracle bug #12407444).
+- Introduced a new unit test to ensure a commit will not timeout after a heavly load of inserts (MySQL bug #58004).
+- fixed ISSchemaProvider to use the information schema to retrieve parameter metadata when running 
+  against server 5.5.3 or greater (MySQL bug #48007, Oracle bug #12539685).
 
 6.4.0
 - Implemented Cache Server Properties connection option
