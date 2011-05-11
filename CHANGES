@@ -35,6 +35,8 @@
 - Introduced the real NUnit framework to the CF test suite and fixed issues on BaseTest to properly run with CF libraries. 
 - Modified MySql.Data.Entity.ProviderServices to use the correct schema definition file when server is 5.5 or greater (Oracle bug #12407444).
 - Introduced a new unit test to ensure a commit will not timeout after a heavly load of inserts (MySQL bug #58004).
+- Fixed MySqlProviderManifest.GetStoreSchemaDescription() to return the correct schema definition depending
+  on the server version.
 
 Version 6.0.7
 - Fix authorization popup after modifying stored procedure in VS (Bug #44715)
