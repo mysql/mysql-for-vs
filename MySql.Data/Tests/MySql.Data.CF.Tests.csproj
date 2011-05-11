@@ -51,6 +51,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
+    <Reference Include="nunit.framework, Version=2.5.10.11092, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\NUnit 2.5.10\bin\net-2.0\framework\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -63,7 +67,6 @@
     <Compile Include="Source\CharacterSetTests.cs" />
     <Compile Include="Source\CommandBuilderTests.cs" />
     <Compile Include="Source\CommandTests.cs" />
-    <Compile Include="Source\ConfigurationManager.cs" />
     <Compile Include="Source\ConnectionStringBuilder.cs" />
     <Compile Include="Source\ConnectionTests.cs">
       <SubType>Code</SubType>
@@ -87,8 +90,6 @@
     <Compile Include="Source\StressTests.cs" />
     <Compile Include="Source\Syntax.cs" />
     <Compile Include="Source\Syntax2.cs" />
-    <Compile Include="Source\Tester\TestClasses.cs" />
-    <Compile Include="Source\Tester\TestRunner.cs" />
     <Compile Include="Source\TimeoutAndCancel.cs" />
     <Compile Include="Source\Utils.cs" />
   </ItemGroup>
@@ -97,6 +98,9 @@
       <Project>{587A47FB-C1CC-459D-93B6-179D95E41EFB}</Project>
       <Name>MySql.Data.CF</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Setup.sql" />
   </ItemGroup>
   <Import Condition="'$(TargetFrameworkVersion)' == 'v1.0'" Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.v1.targets" />
   <Import Condition="'$(TargetFrameworkVersion)' == 'v2.0'" Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />

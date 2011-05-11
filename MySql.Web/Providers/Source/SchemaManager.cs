@@ -53,12 +53,12 @@ namespace MySql.Web.Common
         }
 
         internal static void CheckSchema(string connectionString, NameValueCollection config)
-        {
+        {            
+            int ver = GetSchemaVersion(connectionString);
+            if (ver == Version) return;
+
             try
             {
-                int ver = GetSchemaVersion(connectionString);
-                if (ver == Version) return;
-
                 if (String.Compare(config["autogenerateschema"], "true", true) == 0)
                     UpgradeToCurrent(connectionString, ver);
                 else
