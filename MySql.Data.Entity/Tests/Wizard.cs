@@ -30,6 +30,7 @@ using System.Data.Entity.Design;
 using System.Linq;
 using Store;
 using System.Configuration;
+using System.Xml;
 
 
 namespace MySql.Data.Entity.Tests
@@ -98,6 +99,18 @@ namespace MySql.Data.Entity.Tests
                 Assert.AreEqual("5.1", token);
             else 
                 Assert.AreEqual("5.5", token);
+        }
+
+        [Test]
+        public void GetStoreSchemaDescriptionDoesNotThrowForServer50OrGreater()
+        {
+            if (Version < new Version(5, 0)) return;
+
+            MySqlProviderManifest manifest = new MySqlProviderManifest(Version.Major + "." + Version.Minor);
+            using (XmlReader reader = manifest.GetInformation(DbProviderManifest.StoreSchemaDefinition))
+            {
+                Assert.IsNotNull(reader);    
+            }             
         }
     }
 
