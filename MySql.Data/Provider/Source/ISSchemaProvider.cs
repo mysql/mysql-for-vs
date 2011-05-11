@@ -344,7 +344,7 @@ namespace MySql.Data.MySqlClient
         public virtual DataTable GetProcedureParameters(string[] restrictions,
             DataTable routines)
         {
-            bool is55 = connection.driver.Version.isAtLeast(5, 5, 0);
+            bool is55 = connection.driver.Version.isAtLeast(5, 5, 3);
 
             try
             {
