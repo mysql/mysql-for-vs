@@ -85,6 +85,22 @@ namespace MySql.Data.Entity.Tests
                 }
             }
         }
+
+        [Test]
+        public void GetDbProviderManifestTokenReturnsCorrectSchemaVersion()
+        {
+            if (Version < new Version(5, 0)) return;
+
+            MySqlProviderServices services = new MySqlProviderServices();
+            string token = services.GetProviderManifestToken(conn);
+
+            if (Version < new Version(5, 1))
+                Assert.AreEqual("5.0", token);
+            else if (Version < new Version(5, 5))
+                Assert.AreEqual("5.1", token);
+            else 
+                Assert.AreEqual("5.5", token);
+        }
     }
 
     public static class ExtensionMethods

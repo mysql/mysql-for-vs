@@ -31,9 +31,9 @@ using System.Data.Common;
 
 namespace MySql.Data.MySqlClient.Tests
 {
-	/// <summary>
-	/// Summary description for StoredProcedure.
-	/// </summary>
+    /// <summary>
+    /// Summary description for StoredProcedure.
+    /// </summary>
     [TestFixture]
     public class StoredProcedure : BaseTest
     {
@@ -858,6 +858,38 @@ namespace MySql.Data.MySqlClient.Tests
                 cmd.Parameters.AddWithValue("@id2", 2);
                 cmd.Parameters.AddWithValue("@id3", 3);
                 cmd.ExecuteScalar();
+            }
+        }
+
+        /// <summary>
+        /// Verifies that GetProcedureParameters does not require SELECT permission on mysql.proc table.
+        /// </summary>
+        [Test]
+        public void GetProcedureParametersDoesNotRequireSelectFromMySqlProceduresTable()
+        {
+            if (Version < new Version(5, 5, 3)) return;
+
+            suExecSQL(String.Format("GRANT ALL ON `{0}`.* to 'simpleuser' identified by 'simpleuser'", database0));
+            execSQL("DROP PROCEDURE IF EXISTS spTest");
+            execSQL(@"CREATE  PROCEDURE spTest(id INT, name VARCHAR(20))
+                    BEGIN SELECT name; END");
+
+            string connStr = GetConnectionString("simpleuser", "simpleuser", true) + ";use procedure bodies=false";
+
+            using (MySqlConnection c = new MySqlConnection(connStr))
+            {
+                c.Open();
+
+                string[] restrictions = new string[4];
+                restrictions[1] = c.Database;
+                restrictions[2] = "spTest";
+                DataTable procTable = c.GetSchema("procedures", restrictions);
+                ISSchemaProvider isp = new ISSchemaProvider(c);
+                string[] rest = isp.CleanRestrictions(restrictions);
+
+                DataTable parametersTable = isp.GetProcedureParameters(rest, procTable);
+
+                Assert.IsNotNull(parametersTable);
             }
         }
     }
