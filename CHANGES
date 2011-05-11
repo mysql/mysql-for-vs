@@ -22,6 +22,8 @@
 - Introduced a new unit test to ensure a commit will not timeout after a heavly load of inserts (MySQL bug #58004).
 - fixed ISSchemaProvider to use the information schema to retrieve parameter metadata when running 
   against server 5.5.3 or greater (MySQL bug #48007, Oracle bug #12539685).
+- Fixed MySqlProviderManifest.GetStoreSchemaDescription() to return the correct schema definition depending
+  on the server version.
 
 Version 6.3.6
 - Fixed TracingDriver so that it normalizes long queries before truncation so we don't get exceptions     
