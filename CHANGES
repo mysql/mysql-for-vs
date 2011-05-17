@@ -24,6 +24,7 @@
   against server 5.5.3 or greater (MySQL bug #48007, Oracle bug #12539685).
 - Fixed MySqlProviderManifest.GetStoreSchemaDescription() to return the correct schema definition depending
   on the server version.
+- Fixed Driver creation to not crash when it can't instantiate MySqlTrace type because of missing permissions (MySQL bug #59202, Oracle bug #12548114).
 
 Version 6.3.6
 - Fixed TracingDriver so that it normalizes long queries before truncation so we don't get exceptions     
