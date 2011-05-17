@@ -26,6 +26,9 @@ using MySql.Data.MySqlClient;
 using MySql.Data.MySqlClient.Properties;
 using NUnit.Framework;
 using System.Configuration;
+using System.Security;
+using System.Security.Permissions;
+using System.Net;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -515,6 +518,40 @@ namespace MySql.Data.MySqlClient.Tests
             using (MySqlConnection c = new MySqlConnection(connstr))
             {
                 c.Open();
+            }
+        }
+
+        [Test]
+        public void CanOpenConnectionInMediumTrust()
+        {
+            AppDomain appDomain = PartialTrustSandbox.CreatePartialTrustDomain();
+
+            PartialTrustSandbox sandbox = (PartialTrustSandbox)appDomain.CreateInstanceAndUnwrap(
+                typeof(PartialTrustSandbox).Assembly.FullName,
+                typeof(PartialTrustSandbox).FullName);
+
+            try
+            {
+                MySqlConnection connection = sandbox.TryOpenConnection(GetConnectionString(true));
+                Assert.IsNotNull(connection);
+                Assert.IsTrue(connection.State == ConnectionState.Open);
+                connection.Close();
+
+                //Now try with logging enabled
+                connection = sandbox.TryOpenConnection(GetConnectionString(true) + ";logging=true");
+                Assert.IsNotNull(connection);
+                Assert.IsTrue(connection.State == ConnectionState.Open);
+                connection.Close();
+
+                //Now try with Usage Advisor enabled
+                connection = sandbox.TryOpenConnection(GetConnectionString(true) + ";Use Usage Advisor=true");
+                Assert.IsNotNull(connection);
+                Assert.IsTrue(connection.State == ConnectionState.Open);
+                connection.Close();
+            }
+            finally
+            {
+                AppDomain.Unload(appDomain);
             }
         }
     }

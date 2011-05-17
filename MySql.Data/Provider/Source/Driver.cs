@@ -29,6 +29,7 @@ using MySql.Data.Types;
 using MySql.Data.MySqlClient.Properties;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Security;
 
 namespace MySql.Data.MySqlClient
 {
@@ -178,13 +179,23 @@ namespace MySql.Data.MySqlClient
         public static Driver Create(MySqlConnectionStringBuilder settings)
         {
             Driver d = null;
-
 #if !CF
-            if (settings.Logging || settings.UseUsageAdvisor || MySqlTrace.QueryAnalysisEnabled)
-                d = new TracingDriver(settings);
-            else
+            try
+            {
+                if (MySqlTrace.QueryAnalysisEnabled || settings.Logging || settings.UseUsageAdvisor)
+                    d = new TracingDriver(settings);
+            }
+            catch (TypeInitializationException ex)
+            {
+                if (!(ex.InnerException is SecurityException))
+                    throw ex;
+                //Only rethrow if InnerException is not a SecurityException. If it is a SecurityException then 
+                //we couldn't initialize MySqlTrace because we don't have unmanaged code permissions. 
+            }
 #endif
+            if ( d == null )
                 d = new Driver(settings);
+
             d.Open();
             return d;
         }
