@@ -895,7 +895,7 @@ namespace MySql.Web.Security
 
                     string sql = @"SELECT u.name FROM my_aspnet_Users u
                         JOIN my_aspnet_Membership m ON m.userid=u.id
-                        WHERE m.Email like @email AND u.applicationId=@appId";
+                        WHERE m.Email = @email AND u.applicationId=@appId";
                     MySqlCommand cmd = new MySqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@email", email);
                     cmd.Parameters.AddWithValue("@appId", app.FetchId(conn));
@@ -1146,7 +1146,7 @@ namespace MySql.Web.Security
         private int GetUserId(MySqlConnection connection, string username)
         {
             MySqlCommand cmd = new MySqlCommand(
-                "SELECT id FROM my_aspnet_Users WHERE name LIKE @name AND applicationId=@appId", connection);
+                "SELECT id FROM my_aspnet_Users WHERE name = @name AND applicationId=@appId", connection);
             cmd.Parameters.AddWithValue("@name", username);
             cmd.Parameters.AddWithValue("@appId", app.FetchId(connection));
             object id = cmd.ExecuteScalar();
