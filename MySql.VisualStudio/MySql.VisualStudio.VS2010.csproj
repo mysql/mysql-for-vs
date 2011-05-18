@@ -364,6 +364,10 @@
     <None Include="Resources\sql_editor_validatesql.bmp" />
     <None Include="Resources\sql_editor_executionplan.bmp" />
     <None Include="Resources\sql_editor_banner.bmp" />
+    <Content Include="MySql.VisualStudio.pkgdef">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="Resources\sql_editor_connect.png" />
     <Content Include="Resources\sql_editor_disconnect.png" />
     <Content Include="Resources\sql_editor_runsql.png" />
