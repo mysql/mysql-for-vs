@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data.Common.CommandTrees;
+using System.Diagnostics;
 
 namespace MySql.Data.Entity
 {
@@ -72,7 +73,7 @@ namespace MySql.Data.Entity
             mathFunctions.Add("Abs", "ABS({0})");
             mathFunctions.Add("Ceiling", "CEILING({0})");
             mathFunctions.Add("Floor", "FLOOR({0})");
-            mathFunctions.Add("Round", "ROUND({0})");
+            mathFunctions.Add("Round", "ROUND");
         }
 
         public SqlFragment Generate(DbFunctionExpression e, SqlGenerator caller)
@@ -140,8 +141,45 @@ namespace MySql.Data.Entity
             for (int i=0; i < e.Arguments.Count; i++)
                 frags[i] = e.Arguments[i].Accept(callingGenerator);
 
-            string sql = String.Format(funcs[e.Function.Name], frags);
+            string sql;
+
+            switch (e.Function.Name)
+            {
+                case "Round":
+                    // Special handling for Round as it has more than one signature.
+                    sql = HandleFunctionRound(e);
+                    break;
+                default:
+                    sql = String.Format(funcs[e.Function.Name], frags);
+                    break;
+            }
+
             return new LiteralFragment(sql);
+        }
+
+        private string HandleFunctionRound(DbFunctionExpression e)
+        {
+            StringBuilder sqlBuilder = new StringBuilder();
+
+            sqlBuilder.Append(mathFunctions[e.Function.Name]);
+            sqlBuilder.Append("(");
+
+            Debug.Assert(e.Arguments.Count <= 2, "Round should have at most 2 arguments");
+            sqlBuilder.Append(e.Arguments[0].Accept(callingGenerator));
+            sqlBuilder.Append(", ");
+
+            if (e.Arguments.Count > 1)
+            {
+                sqlBuilder.Append(e.Arguments[1].Accept(callingGenerator));
+            }
+            else
+            {
+                sqlBuilder.Append("0");
+            }
+
+            sqlBuilder.Append(")");
+
+            return sqlBuilder.ToString();
         }
     }
 }
