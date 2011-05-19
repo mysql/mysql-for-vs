@@ -517,5 +517,64 @@ namespace MySql.Data.MySqlClient.Tests
                 c.Open();
             }
         }
+
+#if !CF
+        /// <summary>
+        /// A client can connect to MySQL server using SSL and a pfx file.
+        /// <remarks>
+        /// This test requires starting the server with SSL support. 
+        /// For instance, the following command line enables SSL in the server:
+        /// mysqld --no-defaults --standalone --console --ssl-ca='MySQLServerDir'\mysql-test\std_data\cacert.pem --ssl-cert='MySQLServerDir'\mysql-test\std_data\server-cert.pem --ssl-key='MySQLServerDir'\mysql-test\std_data\server-key.pem
+        /// </remarks>
+        /// </summary>
+        [Test]
+        public void CanConnectUsingFileBasedCertificate()
+        {
+            string connstr = GetConnectionString(true);
+            connstr += ";CertificateFile=client.pfx;CertificatePassword=pass;SSL Mode=Required;";
+            using (MySqlConnection c = new MySqlConnection(connstr))
+            {
+                c.Open();
+                Assert.AreEqual(ConnectionState.Open, c.State);
+            }
+        }
+#endif
+
+#if CF
+        /// <summary>
+        /// A client running in .NET Compact Framework can't connect to MySQL server using SSL and a pfx file.
+        /// <remarks>
+        /// This test requires starting the server with SSL support. 
+        /// For instance, the following command line enables SSL in the server:
+        /// mysqld --no-defaults --standalone --console --ssl-ca='MySQLServerDir'\mysql-test\std_data\cacert.pem --ssl-cert='MySQLServerDir'\mysql-test\std_data\server-cert.pem --ssl-key='MySQLServerDir'\mysql-test\std_data\server-key.pem
+        /// </remarks>
+        /// </summary>
+        [Test]
+        [ExpectedException(typeof(ArgumentException))]
+        public void CannotConnectUsingFileBasedCertificateInCF()
+        {
+            string connstr = GetConnectionString(true);
+            connstr += ";CertificateFile=client.pfx;CertificatePassword=pass;SSL Mode=Required;";
+
+            MySqlConnection c = new MySqlConnection(connstr);
+        }
+
+        public override void Teardown()
+        {
+            conn.Close();
+
+            // wait up to 10 seconds for our connection to close
+            int procs = 0;
+            for (int x = 0; x < 15; x++)
+            {
+                procs = CountProcesses();
+                if (procs == 1) break;
+                System.Threading.Thread.Sleep(1000);
+            }
+            Assert.AreEqual(1, procs, "Too many processes still running");
+
+            base.Teardown();
+        }
+#endif
     }
 }

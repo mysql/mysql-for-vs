@@ -43,6 +43,9 @@
   against server 5.5.3 or greater (MySQL bug #48007, Oracle bug #12539685).
 - Fixed MySqlProviderManifest.GetStoreSchemaDescription() to return the correct schema definition depending
   on the server version.
+- Introduced a connection string check and exception to notify that it is not possible to use SSL related 
+  keywords when running on the Compact Framework. Also all SSL related keywords in ConnectionStringBuilder
+  are now hidden when running on the Compact Framework (MySQL bug #60600).
 
 Version 6.2.4
 - Fix authorization popup after modifying stored procedure in VS (Bug #44715)
