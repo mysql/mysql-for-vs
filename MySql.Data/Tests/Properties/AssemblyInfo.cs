@@ -66,4 +66,6 @@ using System.Security;
 [assembly: AssemblyDelaySign(false)]
 [assembly: AssemblyKeyFile("")]
 [assembly: AssemblyKeyName("ConnectorNet")]
+#if !CF
 [assembly: AllowPartiallyTrustedCallers]
+#endif
