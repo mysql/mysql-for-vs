@@ -26,15 +26,18 @@ using MySql.Data.MySqlClient;
 using MySql.Data.MySqlClient.Properties;
 using NUnit.Framework;
 using System.Configuration;
+using System.Security;
+using System.Security.Permissions;
+using System.Net;
 
 namespace MySql.Data.MySqlClient.Tests
 {
-	/// <summary>
-	/// Summary description for ConnectionTests.
-	/// </summary>
-	[TestFixture] 
-	public class ConnectionTests : BaseTest
-	{
+    /// <summary>
+    /// Summary description for ConnectionTests.
+    /// </summary>
+    [TestFixture]
+    public class ConnectionTests : BaseTest
+    {
         [Test]
         public void TestConnectionStrings()
         {
@@ -284,11 +287,11 @@ namespace MySql.Data.MySqlClient.Tests
             c.Open();
             Assert.IsTrue(c.State == ConnectionState.Open);
 
-			Assert.AreEqual(database0.ToLower(), c.Database.ToLower());
+            Assert.AreEqual(database0.ToLower(), c.Database.ToLower());
 
-			c.ChangeDatabase(database1);
+            c.ChangeDatabase(database1);
 
-			Assert.AreEqual(database1.ToLower(), c.Database.ToLower());
+            Assert.AreEqual(database1.ToLower(), c.Database.ToLower());
 
             c.Close();
         }
@@ -350,7 +353,7 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void ConnectingAsUTF8()
         {
-            if (Version < new Version(4,1)) return;
+            if (Version < new Version(4, 1)) return;
 
             string connStr = GetConnectionString(true) + ";charset=utf8";
             using (MySqlConnection c = new MySqlConnection(connStr))
@@ -524,43 +527,43 @@ namespace MySql.Data.MySqlClient.Tests
         {
             int threadId;
             ConnectionClosedCheck check = new ConnectionClosedCheck();
-            string connStr = GetConnectionString(true)+";pooling=true";
+            string connStr = GetConnectionString(true) + ";pooling=true";
             MySqlConnection c = new MySqlConnection(connStr);
             c.StateChange += new StateChangeEventHandler(check.stateChangeHandler);
             c.Open();
-            threadId= c.ServerThread;
+            threadId = c.ServerThread;
             c = null;
             GC.Collect();
             GC.WaitForPendingFinalizers();
             Assert.IsTrue(check.closed);
-            
+
             MySqlCommand cmd = new MySqlCommand("KILL " + threadId, conn);
             cmd.ExecuteNonQuery();
         }
-		/// <summary>
-		/// Bug #30964 StateChange imperfection 
-		/// </summary>
-		MySqlConnection rqConnection;
-		[Test]
-		public void RunningAQueryFromStateChangeHandler()
-		{
-			string connStr = GetConnectionString(true);
-			using (rqConnection = new MySqlConnection(connStr))
-			{
-				rqConnection.StateChange += new StateChangeEventHandler(RunningQueryStateChangeHandler);
-				rqConnection.Open();
-			}
-		}
+        /// <summary>
+        /// Bug #30964 StateChange imperfection 
+        /// </summary>
+        MySqlConnection rqConnection;
+        [Test]
+        public void RunningAQueryFromStateChangeHandler()
+        {
+            string connStr = GetConnectionString(true);
+            using (rqConnection = new MySqlConnection(connStr))
+            {
+                rqConnection.StateChange += new StateChangeEventHandler(RunningQueryStateChangeHandler);
+                rqConnection.Open();
+            }
+        }
 
-		void RunningQueryStateChangeHandler(object sender, StateChangeEventArgs e)
-		{
-			if (e.CurrentState == ConnectionState.Open)
-			{
-				MySqlCommand cmd = new MySqlCommand("SELECT 1", rqConnection);
-				object o = cmd.ExecuteScalar();
-				Assert.AreEqual(1, o);
-			}
-		}
+        void RunningQueryStateChangeHandler(object sender, StateChangeEventArgs e)
+        {
+            if (e.CurrentState == ConnectionState.Open)
+            {
+                MySqlCommand cmd = new MySqlCommand("SELECT 1", rqConnection);
+                object o = cmd.ExecuteScalar();
+                Assert.AreEqual(1, o);
+            }
+        }
 
         /// <summary>
         /// Bug #31262 NullReferenceException in MySql.Data.MySqlClient.NativeDriver.ExecuteCommand 
@@ -657,5 +660,98 @@ namespace MySql.Data.MySqlClient.Tests
                 c.Open();
             }
         }
+
+#if !CF
+        [Test]
+        public void CanOpenConnectionInMediumTrust()
+        {
+            AppDomain appDomain = PartialTrustSandbox.CreatePartialTrustDomain();
+
+            PartialTrustSandbox sandbox = (PartialTrustSandbox)appDomain.CreateInstanceAndUnwrap(
+                typeof(PartialTrustSandbox).Assembly.FullName,
+                typeof(PartialTrustSandbox).FullName);
+
+            try
+            {
+                MySqlConnection connection = sandbox.TryOpenConnection(GetConnectionString(true));
+                Assert.IsNotNull(connection);
+                Assert.IsTrue(connection.State == ConnectionState.Open);
+                connection.Close();
+
+                //Now try with logging enabled
+                connection = sandbox.TryOpenConnection(GetConnectionString(true) + ";logging=true");
+                Assert.IsNotNull(connection);
+                Assert.IsTrue(connection.State == ConnectionState.Open);
+                connection.Close();
+
+                //Now try with Usage Advisor enabled
+                connection = sandbox.TryOpenConnection(GetConnectionString(true) + ";Use Usage Advisor=true");
+                Assert.IsNotNull(connection);
+                Assert.IsTrue(connection.State == ConnectionState.Open);
+                connection.Close();
+            }
+            finally
+            {
+                AppDomain.Unload(appDomain);
+            }
+        }
+
+        /// <summary>
+        /// A client can connect to MySQL server using SSL and a pfx file.
+        /// <remarks>
+        /// This test requires starting the server with SSL support. 
+        /// For instance, the following command line enables SSL in the server:
+        /// mysqld --no-defaults --standalone --console --ssl-ca='MySQLServerDir'\mysql-test\std_data\cacert.pem --ssl-cert='MySQLServerDir'\mysql-test\std_data\server-cert.pem --ssl-key='MySQLServerDir'\mysql-test\std_data\server-key.pem
+        /// </remarks>
+        /// </summary>
+        [Test]
+        public void CanConnectUsingFileBasedCertificate()
+        {
+            string connstr = GetConnectionString(true);
+            connstr += ";CertificateFile=client.pfx;CertificatePassword=pass;SSL Mode=Required;";
+            using (MySqlConnection c = new MySqlConnection(connstr))
+            {
+                c.Open();
+                Assert.AreEqual(ConnectionState.Open, c.State);
+            }
+        }
+#endif
+
+#if CF
+        /// <summary>
+        /// A client running in .NET Compact Framework can't connect to MySQL server using SSL and a pfx file.
+        /// <remarks>
+        /// This test requires starting the server with SSL support. 
+        /// For instance, the following command line enables SSL in the server:
+        /// mysqld --no-defaults --standalone --console --ssl-ca='MySQLServerDir'\mysql-test\std_data\cacert.pem --ssl-cert='MySQLServerDir'\mysql-test\std_data\server-cert.pem --ssl-key='MySQLServerDir'\mysql-test\std_data\server-key.pem
+        /// </remarks>
+        /// </summary>
+        [Test]
+        [ExpectedException(typeof(ArgumentException))]
+        public void CannotConnectUsingFileBasedCertificateInCF()
+        {
+            string connstr = GetConnectionString(true);
+            connstr += ";CertificateFile=client.pfx;CertificatePassword=pass;SSL Mode=Required;";
+
+            MySqlConnection c = new MySqlConnection(connstr);
+        }
+
+        public override void Teardown()
+        {
+            conn.Close();
+
+            // wait up to 10 seconds for our connection to close
+            int procs = 0;
+            for (int x = 0; x < 15; x++)
+            {
+                procs = CountProcesses();
+                if (procs == 1) break;
+                System.Threading.Thread.Sleep(1000);
+            }
+            Assert.AreEqual(1, procs, "Too many processes still running");
+
+            base.Teardown();
+        }
+#endif
     }
 }
