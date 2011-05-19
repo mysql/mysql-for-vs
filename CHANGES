@@ -25,6 +25,7 @@
 - Fixed MySqlProviderManifest.GetStoreSchemaDescription() to return the correct schema definition depending
   on the server version.
 - Fixed Driver creation to not crash when it can't instantiate MySqlTrace type because of missing permissions (MySQL bug #59202, Oracle bug #12548114).
+- Added entity framework support for MySQL Server Round(X, D) function (MySQL bug #58552, Oracle bug #11765569).
 
 Version 6.3.6
 - Fixed TracingDriver so that it normalizes long queries before truncation so we don't get exceptions     
