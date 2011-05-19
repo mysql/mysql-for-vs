@@ -3,8 +3,8 @@
   <Identifier Id="79A115C9-B133-4891-9E7B-242509DAD272">
     <Name>MySQL Tools for Visual Studio</Name>
     <Author>Oracle, Inc.</Author>
-    <Version>6.3</Version>
-    <Description xml:space="preserve">boo</Description>
+    <Version>6.4</Version>
+    <Description xml:space="preserve">Database design tools for MySQL</Description>
     <Locale>1033</Locale>
     <InstalledByMsi>false</InstalledByMsi>
     <SupportedProducts>
@@ -25,5 +25,6 @@
   </References>
   <Content>
     <VsPackage>|%CurrentProject%;PkgdefProjectOutputGroup|</VsPackage>
+    <VsPackage>MySql.VisualStudio.pkgdef</VsPackage>
   </Content>
 </Vsix>

@@ -698,5 +698,31 @@ namespace MySql.Web.Tests
             Assert.IsFalse(provider.ValidateUser("foo", "bar!bar"));
             Assert.IsTrue(provider.ValidateUser("foo2", "foo!foo"));
         }
+
+        [Test]
+        public void GetUserLooksForExactUsername()
+        {
+            MembershipCreateStatus status;
+            Membership.CreateUser("code", "thecode!", null, "question", "answer", true, out status);
+
+            MembershipUser user = Membership.GetUser("code");
+            Assert.AreEqual("code", user.UserName);
+
+            user = Membership.GetUser("co_e");
+            Assert.IsNull(user);
+        }
+
+        [Test]
+        public void GetUserNameByEmailLooksForExactEmail()
+        {
+            MembershipCreateStatus status;
+            Membership.CreateUser("code", "thecode!", "code@mysql.com", "question", "answer", true, out status);
+
+            string username = Membership.GetUserNameByEmail("code@mysql.com");
+            Assert.AreEqual("code", username);
+
+            username = Membership.GetUserNameByEmail("co_e@mysql.com");
+            Assert.IsNull(username);
+        }
     }
 }

@@ -141,12 +141,14 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.IsFalse(s.CheckParameters);
         }
 
+#if !CF
         [Test]
         public void EncrpytSslmode()
         {
             MySqlConnectionStringBuilder s = new MySqlConnectionStringBuilder("server=localhost;encrypt=true");
             Assert.AreEqual(s.SslMode, MySqlSslMode.Preferred);
         }
+#endif
 
         [Test]
         [ExpectedException(typeof(ArgumentException))]
