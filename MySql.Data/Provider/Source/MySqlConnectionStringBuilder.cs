@@ -310,6 +310,7 @@ namespace MySql.Data.MySqlClient
             set { SetValue("Persist Security Info", value); }
         }
 
+#if !CF
         [Category("Authentication")]
         [Description("Should the connection use SSL.")]
         [DefaultValue(false)]
@@ -376,6 +377,8 @@ namespace MySql.Data.MySqlClient
                 SetValue("Certificate Thumbprint", value);
             }
         }
+#endif
+
         #endregion
 
         #region Other Properties
@@ -716,6 +719,7 @@ namespace MySql.Data.MySqlClient
             set { SetValue("BlobAsUTF8ExcludePattern", value); }
         }
 
+#if !CF
         /// <summary>
         /// Indicates whether to use SSL connections and how to handle server certificate errors.
         /// </summary>
@@ -728,6 +732,7 @@ namespace MySql.Data.MySqlClient
             get { return (MySqlSslMode)values["Ssl Mode"]; }
             set { SetValue("Ssl Mode", value); }
         }
+#endif
 
         #endregion
 
@@ -871,6 +876,11 @@ namespace MySql.Data.MySqlClient
                 MySqlTrace.LogWarning(-1, "Use Old Syntax is now obsolete.  Please see documentation");
             if (validKeywords[key] == "Encrypt")
                 MySqlTrace.LogWarning(-1, "Encrypt is now obsolete. Use Ssl Mode instead");
+#if CF
+            if (validKeywords[key] == "Certificate File" || validKeywords[key] == "Certificate Password" || validKeywords[key] == "SSL Mode" 
+                || validKeywords[key] == "Encrypt" || validKeywords[key] == "Certificate Store Location" || validKeywords[key] == "Certificate Thumbprint")
+                throw new ArgumentException(Resources.KeywordNotSupported, validKeywords[key]);
+#endif
         }
 
         private static void Initialize()
@@ -879,10 +889,12 @@ namespace MySql.Data.MySqlClient
             foreach (PropertyInfo pi in properties)
                 AddKeywordFromProperty(pi);
 
+#if !CF
             // remove this starting with 6.4
             PropertyInfo encrypt = typeof(MySqlConnectionStringBuilder).GetProperty(
                 "Encrypt", BindingFlags.Instance | BindingFlags.NonPublic);
             AddKeywordFromProperty(encrypt);
+#endif
         }
 
         private static void AddKeywordFromProperty(PropertyInfo pi)

@@ -411,9 +411,11 @@ namespace MySql.Data.MySqlClient
             if ((serverCaps & ClientFlags.SECURE_CONNECTION) != 0)
                 flags |= ClientFlags.SECURE_CONNECTION;
 
+#if !CF
             // if the server is capable of SSL and the user is requesting SSL
             if ((serverCaps & ClientFlags.SSL) != 0 && Settings.SslMode != MySqlSslMode.None)
                 flags |= ClientFlags.SSL;
+#endif
 
             // if the server supports output parameters, then we do too
             //if ((serverCaps & ClientFlags.PS_MULTI_RESULTS) != 0)
