@@ -29,6 +29,7 @@ using System.Data.EntityClient;
 using System.Data.Common;
 using NUnit.Framework;
 using System.Data.Objects;
+using System.Linq;
 
 namespace MySql.Data.Entity.Tests
 {
@@ -240,5 +241,23 @@ namespace MySql.Data.Entity.Tests
                     Assert.AreEqual("abczzzghi", s);
             }
         }
+
+#if CLR4
+        [Test]
+        public void CanRoundToNonZeroDigits()
+        {
+
+            using (testEntities context = new testEntities())
+            {
+                DbDataRecord order = context.CreateQuery<DbDataRecord>(@"
+                                        SELECT o.Id, o.Freight, 
+                                        Round(o.Freight, 2) AS [Rounded Freight]
+                                        FROM Orders AS o WHERE o.Id=10").First();
+                
+                Assert.AreEqual(350.54721, order[1]);
+                Assert.AreEqual(350.55, order[2]);
+            }
+        }
+#endif
     }
 }
