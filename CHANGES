@@ -46,6 +46,8 @@
 - Introduced a connection string check and exception to notify that it is not possible to use SSL related 
   keywords when running on the Compact Framework. Also all SSL related keywords in ConnectionStringBuilder
   are now hidden when running on the Compact Framework (MySQL bug #60600).
+- Fixed MembershipProvider to only return exact matches when calling GetUser(string username) and 
+  GetUserNameByEmail (MySQL bug #61027, Oracle bug #12562287).
 
 Version 6.2.4
 - Fix authorization popup after modifying stored procedure in VS (Bug #44715)
