@@ -22,6 +22,7 @@
 
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Security;
 
 //
 // General Information about an assembly is controlled through the following 
@@ -65,3 +66,6 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyDelaySign(false)]
 [assembly: AssemblyKeyFile("")]
 [assembly: AssemblyKeyName("ConnectorNet")]
+#if !CF
+[assembly: AllowPartiallyTrustedCallers]
+#endif
