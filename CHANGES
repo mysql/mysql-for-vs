@@ -26,6 +26,11 @@
   on the server version.
 - Fixed Driver creation to not crash when it can't instantiate MySqlTrace type because of missing permissions (MySQL bug #59202, Oracle bug #12548114).
 - Added entity framework support for MySQL Server Round(X, D) function (MySQL bug #58552, Oracle bug #11765569).
+- Introduced a connection string check and exception to notify that it is not possible to use SSL related 
+  keywords when running on the Compact Framework. Also all SSL related keywords in ConnectionStringBuilder
+  are now hidden when running on the Compact Framework (MySQL bug #60600).
+- Fixed MembershipProvider to only return exact matches when calling GetUser(string username) and 
+  GetUserNameByEmail (MySQL bug #61027, Oracle bug #12562287).
 
 Version 6.3.6
 - Fixed TracingDriver so that it normalizes long queries before truncation so we don't get exceptions     
