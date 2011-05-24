@@ -118,20 +118,51 @@ namespace MySql.Data.Entity.Tests
         }
 
         [Test]
-        public void JoinOnRightSideNameClash()
+        public void JoinOfUnionsOnRightSideofJoin()
         {
-
             using (testEntities context = new testEntities())
             {
-                var inner = from a in context.Authors join s in context.Stores on a.Id equals s.Id select a;
-                var outer = from o in context.Orders join i in inner on o.Id equals i.Id select o;
-                string sql = outer.ToTraceString();
-                CheckSql(sql, SQLSyntax.JoinOnRightSideNameClash);
-                foreach (Order o in outer)
-                {
-                    double d = o.Freight;
-                }
+                string eSql = @"SELECT c.Id, c.Name, a.Id, a.Name, b.Id, b.Name FROM
+                                testEntities.Companies AS c JOIN (testEntities.Authors AS a
+                                JOIN testEntities.Books AS b ON a.Id = b.Id) ON c.Id = a.Id";
+                ObjectQuery<Company> query = context.CreateQuery<Company>(eSql);
+                string s= query.ToTraceString();
+
+
+                //var j1 = from store in context.Stores
+                //         join toy in context.Toys
+                //         on store.Id equals toy.Id
+                //         select new { store.Id, store.Name };
+                //var j2 = from a in context.Authors
+                //         join p in context.Publishers
+                //         on a.Id equals p.id
+                //         select new { a.Id, a.Name };
+                //var u1 = j1.Union(j2);
+                //var q = from book in context.Books
+                //        join u in j1.Union(j2)
+                //        on book.Id equals u.Id
+                //        select book;
+                //string sql = q.ToTraceString();
+                //CheckSql(sql, SQLSyntax.JoinOnRightSideAsDerivedTable);
             }
         }
+
+        [Test]
+        public void JoinOnRightSideNameClash()
+        {
+            using (testEntities context = new testEntities())
+            {
+                string eSql = @"SELECT c.Id, c.Name, a.Id, a.Name, b.Id, b.Name FROM
+                                testEntities.Companies AS c JOIN (testEntities.Authors AS a
+                                JOIN testEntities.Books AS b ON a.Id = b.Id) ON c.Id = a.Id";
+                ObjectQuery<DbDataRecord> query = context.CreateQuery<DbDataRecord>(eSql);
+                string sql = query.ToTraceString();
+                CheckSql(sql, SQLSyntax.JoinOnRightSideNameClash);
+                foreach (DbDataRecord record in query)
+                {
+                    Assert.AreEqual(6, record.FieldCount);
+                }
+            }
+       }
     }
 }

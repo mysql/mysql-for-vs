@@ -31,6 +31,7 @@ namespace MySql.Data.Entity
     class SelectStatement : InputFragment 
     {
         private Dictionary<string, ColumnFragment> columnHash;
+        private bool hasRenamedColumns;
 
         public SelectStatement() : base(null)
         {
@@ -130,7 +131,7 @@ namespace MySql.Data.Entity
         void AddDefaultColumns()
         {
 //            List<PropertyFragment> properties = GetColumnPropertiesFromInput(From);
-            AddDefaultColumnsForFragment(From);
+            AddDefaultColumnsForFragment(From, null);
         }
 
         //private List<PropertyFragment> GetColumnPropertiesFromInput(InputFragment input)
@@ -138,18 +139,22 @@ namespace MySql.Data.Entity
         //    if (input is TableFragment)
         //}
 
-        void AddDefaultColumnsForFragment(InputFragment input)
+        void AddDefaultColumnsForFragment(InputFragment input, PropertyFragment trail)
         {
+            if (trail == null)
+                trail = new PropertyFragment();
             if (input is TableFragment)
             {
-                AddDefaultColumnsForTable(input as TableFragment);
+                AddDefaultColumnsForTable(input as TableFragment, trail);
             }
             else if (input is JoinFragment || input is UnionFragment)
             {
+                trail.Properties.Add(input.Name);
                 if (input.Left != null)
-                    AddDefaultColumnsForFragment(input.Left);
+                    AddDefaultColumnsForFragment(input.Left, trail);
+                trail.Trim(input.Name);
                 if (input.Right != null)
-                AddDefaultColumnsForFragment(input.Right);
+                AddDefaultColumnsForFragment(input.Right, trail);
 
                 // if this input is scoped, then it is the base tablename for the columns
                 if (input.Scoped)
@@ -166,14 +171,19 @@ namespace MySql.Data.Entity
                 throw new NotImplementedException();
         }
 
-        void AddDefaultColumnsForTable(TableFragment table)
+        void AddDefaultColumnsForTable(TableFragment table, PropertyFragment trail)
         {
+            trail.Properties.Add(table.Name);
             if (columnHash == null)
                 columnHash = new Dictionary<string, ColumnFragment>();
 
             foreach (EdmProperty property in Metadata.GetProperties(table.Type.EdmType))
             {
+                PropertyFragment props = trail.Clone();
+                props.Properties.Add(property.Name);
+
                 ColumnFragment col = new ColumnFragment(table.Name, property.Name);
+                col.PropertyFragment = props;
                 if (table.Columns == null)
                     table.Columns = new List<ColumnFragment>();
                 table.Columns.Add(col);
@@ -191,12 +201,26 @@ namespace MySql.Data.Entity
         private string MakeColumnNameUnique(string baseName)
         {
             int i = 1;
+            hasRenamedColumns = true;
             while (true)
             {
                 string name = String.Format("{0}{1}", baseName, i);
                 if (!columnHash.ContainsKey(name)) return name;
                 i++;
             }
+        }
+
+        public bool HasDifferentNameForColumn(ColumnFragment column)
+        {
+            if (!hasRenamedColumns) return false;
+            foreach (ColumnFragment c in Columns)
+            {
+                if (!c.Equals(column)) continue;
+                if (String.IsNullOrEmpty(c.ColumnAlias)) return false;
+                column.ColumnName = c.ColumnAlias;
+                return true;
+            }
+            return false;
         }
 
         public bool IsCompatible(DbExpressionKind expressionKind)
