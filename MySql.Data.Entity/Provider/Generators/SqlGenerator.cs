@@ -81,12 +81,26 @@ namespace MySql.Data.Entity
 
             ColumnFragment column = new ColumnFragment(null, fragment.LastProperty);
             column.PropertyFragment = fragment;
-            column.TableName = FindInputFromProperties(fragment);
+            InputFragment input = FindInputFromProperties(fragment);
+            if (input != null)
+                column.TableName = input.Name;
 
+            // now we need to check if our column name was possibly renamed
+            if (input is TableFragment) return column;
+
+            SelectStatement select = input as SelectStatement;
+            UnionFragment union = input as UnionFragment;
+
+            if (select != null)
+                select.HasDifferentNameForColumn(column);
+            else if (union != null)
+                union.HasDifferentNameForColumn(column);
+
+            // input is a table, selectstatement, or unionstatement
             return column;
         }
 
-        private string FindInputFromProperties(PropertyFragment fragment)
+        private InputFragment FindInputFromProperties(PropertyFragment fragment)
         {
             Debug.Assert(fragment != null);
             PropertyFragment propertyFragment = fragment as PropertyFragment;
@@ -99,12 +113,13 @@ namespace MySql.Data.Entity
                     string reference = propertyFragment.Properties[x];
                     InputFragment input = scope.GetFragment(reference);
                     if (input == null) continue;
-                    if (input.Scoped) return input.Name;
+                    if (input.Scoped) return input;
                     if (input is SelectStatement)
-                        return (input as SelectStatement).From.Name;
+                        return (input as SelectStatement).From;
                     continue;
                 }
             }
+            Debug.Fail("Should have found an input");
             return null;
         }
 
