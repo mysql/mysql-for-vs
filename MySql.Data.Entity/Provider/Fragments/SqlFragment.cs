@@ -163,6 +163,18 @@ namespace MySql.Data.Entity
             cf.Literal = Literal;
             return cf;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is ColumnFragment)) return false;
+            ColumnFragment column = obj as ColumnFragment;
+            if (column.PropertyFragment != null && PropertyFragment != null)
+                return column.PropertyFragment.Equals(PropertyFragment);
+            if (column.TableName != TableName) return false;
+            if (column.ColumnName != ColumnName) return false;
+            if (column.ColumnAlias != ColumnAlias) return false;
+            return true;
+        }
     }
 
     internal class ExistsFragment : NegatableFragment
@@ -300,6 +312,33 @@ namespace MySql.Data.Entity
         {
             get { return Properties.Count == 0 ? null : Properties[Properties.Count - 1]; }
         }
+
+        public void Trim(string name)
+        {
+            int index = Properties.LastIndexOf(name);
+            Properties.RemoveRange(index + 1, Properties.Count - index - 1);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is PropertyFragment)) return false;
+            PropertyFragment prop = obj as PropertyFragment;
+            Debug.Assert(Properties != null &&  prop.Properties != null);
+
+            int aIndex = Properties.Count - 1;
+            int bIndex = prop.Properties.Count - 1;
+            while (aIndex >= 0 && bIndex >= 0)
+                if (String.Compare(Properties[aIndex--], prop.Properties[bIndex--], true) != 0) return false;
+            return true;
+        }
+
+        public PropertyFragment Clone()
+        {
+            PropertyFragment newPF = new PropertyFragment();
+            foreach (string prop in Properties)
+                newPF.Properties.Add(prop);
+            return newPF;
+        }
     }
 
     internal class SortFragment : SqlFragment
@@ -336,5 +375,16 @@ namespace MySql.Data.Entity
             sql.Append(Distinct ? " UNION DISTINCT " : " UNION ALL ");
             Right.WriteSql(sql);
         }
+
+        public bool HasDifferentNameForColumn(ColumnFragment column)
+        {
+            Debug.Assert(Left is SelectStatement);
+            Debug.Assert(Right is SelectStatement);
+            if ((Left as SelectStatement).HasDifferentNameForColumn(column))
+                return true;
+            return (Right as SelectStatement).HasDifferentNameForColumn(column);
+        }
     }
+
+
 }
