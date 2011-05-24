@@ -27,7 +27,7 @@ using System.Text;
 
 namespace MySql.Data.Entity
 {
-    abstract class InputFragment : SqlFragment 
+    abstract class InputFragment : SqlFragment
     {
         // not all input classes will support two inputs but union and join do
         // in cases where only one input is used, Left is it
@@ -75,5 +75,14 @@ namespace MySql.Data.Entity
                 (IsWrapped && !(this is JoinFragment)))
                 sql.AppendFormat(" AS {0}", QuoteIdentifier(Name));
         }
+
+        public ColumnFragment GetColumnFromProperties(PropertyFragment properties)
+        {
+            ColumnFragment col = Left.GetColumnFromProperties(properties);
+            if (col == null)
+                col = Right.GetColumnFromProperties(properties);
+            return col;
+        }
     }
 }
+
