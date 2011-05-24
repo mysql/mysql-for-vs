@@ -41,6 +41,7 @@
   against server 5.5.3 or greater (MySQL bug #48007, Oracle bug #12539685).
 - Fixed MySqlProviderManifest.GetStoreSchemaDescription() to return the correct schema definition depending
   on the server version.
+- added the ability to raise a join on the right side of a join to a derived table in EF code generation
 
 Version 6.1.5
 - Fix authorization popup after modifying stored procedure in VS (Bug #44715)
