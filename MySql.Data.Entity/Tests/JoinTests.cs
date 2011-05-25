@@ -124,28 +124,24 @@ namespace MySql.Data.Entity.Tests
         {
             using (testEntities context = new testEntities())
             {
-                string eSql = @"SELECT c.Id, c.Name, a.Id, a.Name, b.Id, b.Name FROM
-                                testEntities.Companies AS c JOIN (testEntities.Authors AS a
-                                JOIN testEntities.Books AS b ON a.Id = b.Id) ON c.Id = a.Id";
-                ObjectQuery<Company> query = context.CreateQuery<Company>(eSql);
-                string s= query.ToTraceString();
-
-
-                //var j1 = from store in context.Stores
-                //         join toy in context.Toys
-                //         on store.Id equals toy.Id
-                //         select new { store.Id, store.Name };
-                //var j2 = from a in context.Authors
-                //         join p in context.Publishers
-                //         on a.Id equals p.id
-                //         select new { a.Id, a.Name };
-                //var u1 = j1.Union(j2);
-                //var q = from book in context.Books
-                //        join u in j1.Union(j2)
-                //        on book.Id equals u.Id
-                //        select book;
-                //string sql = q.ToTraceString();
-                //CheckSql(sql, SQLSyntax.JoinOnRightSideAsDerivedTable);
+                string eSql = @"SELECT c.Id, c.Name, Union1.Id, Union1.Name, 
+                                Union2.Id, Union2.Name FROM 
+                                testEntities.Companies AS c JOIN (
+                                ((SELECT t.Id, t.Name FROM testEntities.Toys as t) 
+                                UNION ALL 
+                                (SELECT s.Id, s.Name FROM testEntities.Stores as s)) AS Union1
+                                JOIN 
+                                ((SELECT a.Id, a.Name FROM testEntities.Authors AS a) 
+                                UNION ALL 
+                                (SELECT b.Id, b.Name FROM testEntities.Books AS b)) AS Union2
+                                ON Union1.Id = Union2.Id) ON c.Id = Union1.Id";
+                ObjectQuery<DbDataRecord> query = context.CreateQuery<DbDataRecord>(eSql);
+                string sql = query.ToTraceString();
+                CheckSql(sql, SQLSyntax.JoinOfUnionsOnRightSideOfJoin);
+                foreach (DbDataRecord record in query)
+                {
+                    Assert.AreEqual(6, record.FieldCount);
+                }
             }
         }
 
