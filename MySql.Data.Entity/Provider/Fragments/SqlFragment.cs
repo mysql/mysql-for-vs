@@ -162,6 +162,13 @@ namespace MySql.Data.Entity
             return cf;
         }
 
+        public void PushInput(string inputName)
+        {
+            if (PropertyFragment == null)
+                PropertyFragment = new PropertyFragment();
+            PropertyFragment.PushProperty(inputName);
+        }
+
         public override bool Equals(object obj)
         {
             if (!(obj is ColumnFragment)) return false;
@@ -315,6 +322,11 @@ namespace MySql.Data.Entity
         {
             int index = Properties.LastIndexOf(name);
             Properties.RemoveRange(index + 1, Properties.Count - index - 1);
+        }
+
+        public void PushProperty(string property)
+        {
+            Properties.Insert(0, property);
         }
 
         public override bool Equals(object obj)
