@@ -41,6 +41,8 @@
   against server 5.5.3 or greater (MySQL bug #48007, Oracle bug #12539685).
 - Fixed MySqlProviderManifest.GetStoreSchemaDescription() to return the correct schema definition depending
   on the server version.
+- Fixed MembershipProvider to only return exact matches when calling GetUser(string username) and 
+  GetUserNameByEmail (MySQL bug #61027, Oracle bug #12562287).
 - added the ability to raise a join on the right side of a join to a derived table in EF code generation
 
 Version 6.1.5
