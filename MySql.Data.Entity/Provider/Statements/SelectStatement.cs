@@ -132,72 +132,73 @@ namespace MySql.Data.Entity
 
         void AddDefaultColumns()
         {
-//            List<PropertyFragment> properties = GetColumnPropertiesFromInput(From);
-            AddDefaultColumnsForFragment(From, null);
+            if (columnHash == null)
+                columnHash = new Dictionary<string, ColumnFragment>();
+
+            List<ColumnFragment> columns = GetDefaultColumnsForFragment(From);
+
+            foreach (ColumnFragment column in columns)
+            {
+                column.TableName = column.PropertyFragment.Properties[0];
+                if (columnHash.ContainsKey(column.ColumnName))
+                {
+                    column.ColumnAlias = MakeColumnNameUnique(column.ColumnName);
+                    columnHash.Add(column.ColumnAlias, column);
+                }
+                else
+                    columnHash.Add(column.ColumnName, column);
+                Columns.Add(column);
+            }
         }
 
-        //private List<PropertyFragment> GetColumnPropertiesFromInput(InputFragment input)
-        //{
-        //    if (input is TableFragment)
-        //}
-
-        void AddDefaultColumnsForFragment(InputFragment input, PropertyFragment trail)
+        List<ColumnFragment> GetDefaultColumnsForFragment(InputFragment input)
         {
-            if (trail == null)
-                trail = new PropertyFragment();
+            List<ColumnFragment> columns = new List<ColumnFragment>();
+
             if (input is TableFragment)
             {
-                AddDefaultColumnsForTable(input as TableFragment, trail);
+                return GetDefaultColumnsForTable(input as TableFragment);
             }
             else if (input is JoinFragment || input is UnionFragment)
             {
-                trail.Properties.Add(input.Name);
-                if (input.Left != null)
-                    AddDefaultColumnsForFragment(input.Left, trail);
-                trail.Trim(input.Name);
-                if (input.Right != null)
-                AddDefaultColumnsForFragment(input.Right, trail);
-
-                // if this input is scoped, then it is the base tablename for the columns
-                if (input.Scoped)
-                    foreach (ColumnFragment col in Columns)
-                        col.TableName = input.Name;
+                Debug.Assert(input.Left != null);
+                columns = GetDefaultColumnsForFragment(input.Left);
+                if (input is JoinFragment && input.Right != null)
+                {
+                    List<ColumnFragment> right = GetDefaultColumnsForFragment(input.Right);
+                    columns.AddRange(right);
+                }
             }
             else if (input is SelectStatement)
             {
                 SelectStatement select = input as SelectStatement;
                 foreach (ColumnFragment cf in select.Columns)
-                    Columns.Add(cf.Clone());
+                {
+                    ColumnFragment newColumn = new ColumnFragment(cf.TableName, cf.ColumnName);
+                    newColumn.PushInput(cf.ColumnName);
+                    columns.Add(newColumn);
+                }
             }
             else
                 throw new NotImplementedException();
+            if (!String.IsNullOrEmpty(input.Name) && input.Name != From.Name)
+                foreach (ColumnFragment c in columns)
+                    c.PushInput(input.Name);
+            return columns;
         }
 
-        void AddDefaultColumnsForTable(TableFragment table, PropertyFragment trail)
+        List<ColumnFragment> GetDefaultColumnsForTable(TableFragment table)
         {
-            trail.Properties.Add(table.Name);
-            if (columnHash == null)
-                columnHash = new Dictionary<string, ColumnFragment>();
+            List<ColumnFragment> columns = new List<ColumnFragment>();
 
             foreach (EdmProperty property in Metadata.GetProperties(table.Type.EdmType))
             {
-                PropertyFragment props = trail.Clone();
-                props.Properties.Add(property.Name);
-
                 ColumnFragment col = new ColumnFragment(table.Name, property.Name);
-                col.PropertyFragment = props;
-                if (table.Columns == null)
-                    table.Columns = new List<ColumnFragment>();
-                table.Columns.Add(col);
-                if (columnHash.ContainsKey(col.ColumnName))
-                {
-                    col.ColumnAlias = MakeColumnNameUnique(col.ColumnName);
-                    columnHash.Add(col.ColumnAlias, col);
-                }
-                else
-                    columnHash.Add(col.ColumnName, col);
-                Columns.Add(col);
+                col.PushInput(property.Name);
+                col.PushInput(table.Name);
+                columns.Add(col);
             }
+            return columns;
         }
 
         private string MakeColumnNameUnique(string baseName)
