@@ -194,6 +194,39 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
+        ///1 AS C1, 
+        ///Extent1.Id, 
+        ///Extent1.Name, 
+        ///Join1.Id AS C2, 
+        ///Join1.Name AS C3, 
+        ///Join1.Id1 AS C4, 
+        ///Join1.Name1 AS C5
+        ///FROM Companies AS Extent1 INNER JOIN (SELECT
+        ///UnionAll1.Id, 
+        ///UnionAll1.Name, 
+        ///UnionAll2.Id AS Id1, 
+        ///UnionAll2.Name AS Name1
+        ///FROM (SELECT
+        ///Extent2.Id, 
+        ///Extent2.Name
+        ///FROM Toys AS Extent2 UNION ALL SELECT
+        ///Extent3.Id, 
+        ///Extent3.Name
+        ///FROM Stores AS Extent3) AS UnionAll1 INNER JOIN (SELECT
+        ///Extent4.Id, 
+        ///Extent4.Name
+        ///FROM Authors AS Extent4 UNION ALL SELECT
+        ///Extent5.Id, 
+        ///Extent5.N [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string JoinOfUnionsOnRightSideOfJoin {
+            get {
+                return ResourceManager.GetString("JoinOfUnionsOnRightSideOfJoin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT
         ///Extent1.Id, 
         ///Extent1.EmployeeID, 
         ///Extent1.LastName, 
