@@ -116,19 +116,19 @@ namespace MySql.Data.Entity
         {
             base.Wrap(scope);
 
+            // now we need to add default columns if necessary
+            if (Columns.Count == 0)
+                AddDefaultColumns(scope);
+
             // next we need to remove child extents of the select from scope
             if (Name != null)
             {
                 scope.Remove(this);
                 scope.Add(Name, this);
             }
-
-            // now we need to add default columns if necessary
-            if (Columns.Count == 0)
-                AddDefaultColumns();
         }
 
-        void AddDefaultColumns()
+        void AddDefaultColumns(Scope scope)
         {
             if (columnHash == null)
                 columnHash = new Dictionary<string, ColumnFragment>();
@@ -137,7 +137,11 @@ namespace MySql.Data.Entity
 
             foreach (ColumnFragment column in columns)
             {
-                column.TableName = column.PropertyFragment.Properties[0];
+                // first we need to set the input for this column
+                InputFragment input = scope.FindInputFromProperties(column.PropertyFragment);
+                column.TableName = input.Name;
+
+                // then we rename the column if necessary
                 if (columnHash.ContainsKey(column.ColumnName))
                 {
                     column.ColumnAlias = MakeColumnNameUnique(column.ColumnName);
@@ -172,8 +176,8 @@ namespace MySql.Data.Entity
                 SelectStatement select = input as SelectStatement;
                 foreach (ColumnFragment cf in select.Columns)
                 {
-                    ColumnFragment newColumn = new ColumnFragment(cf.TableName, cf.ColumnName);
-                    newColumn.PushInput(cf.ColumnName);
+                    ColumnFragment newColumn = new ColumnFragment(cf.TableName, cf.ActualColumnName);
+                    newColumn.PushInput(cf.ActualColumnName);
                     columns.Add(newColumn);
                 }
             }
