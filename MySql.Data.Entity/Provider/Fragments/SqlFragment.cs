@@ -134,6 +134,10 @@ namespace MySql.Data.Entity
         public string TableName { get; set; }
         public string ColumnName { get; set; }
         public string ColumnAlias { get; set; }
+        public string ActualColumnName
+        {
+            get { return String.IsNullOrEmpty(ColumnName) ? ColumnAlias : ColumnName; }
+        }
         public PropertyFragment PropertyFragment { get; set; }
 
         public override void WriteSql(StringBuilder sql)

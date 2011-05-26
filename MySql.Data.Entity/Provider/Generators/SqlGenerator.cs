@@ -81,7 +81,7 @@ namespace MySql.Data.Entity
 
             ColumnFragment column = new ColumnFragment(null, fragment.LastProperty);
             column.PropertyFragment = fragment;
-            InputFragment input = FindInputFromProperties(fragment);
+            InputFragment input = scope.FindInputFromProperties(fragment);
             if (input != null)
                 column.TableName = input.Name;
 
@@ -98,29 +98,6 @@ namespace MySql.Data.Entity
 
             // input is a table, selectstatement, or unionstatement
             return column;
-        }
-
-        private InputFragment FindInputFromProperties(PropertyFragment fragment)
-        {
-            Debug.Assert(fragment != null);
-            PropertyFragment propertyFragment = fragment as PropertyFragment;
-            Debug.Assert(propertyFragment != null);
-
-            if (propertyFragment.Properties.Count >= 2)
-            {
-                for (int x = propertyFragment.Properties.Count - 2; x >= 0; x--)
-                {
-                    string reference = propertyFragment.Properties[x];
-                    InputFragment input = scope.GetFragment(reference);
-                    if (input == null) continue;
-                    if (input.Scoped) return input;
-                    if (input is SelectStatement)
-                        return (input as SelectStatement).From;
-                    continue;
-                }
-            }
-            Debug.Fail("Should have found an input");
-            return null;
         }
 
         public override SqlFragment Visit(DbScanExpression expression)
