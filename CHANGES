@@ -16,7 +16,7 @@
   are now hidden when running on the Compact Framework (MySQL bug #60600).
 - Fixed MembershipProvider to only return exact matches when calling GetUser(string username) and 
   GetUserNameByEmail (MySQL bug #61027, Oracle bug #12562287).
-- added the ability to raise a join on the right side of a join to a derived table in EF code generation
+- added the ability to raise a join on the right side of a join to a derived table in EF code generation (bug #48791)
 
 6.4.0
 - Implemented Cache Server Properties connection option
