@@ -44,6 +44,7 @@
 - Fixed MembershipProvider to only return exact matches when calling GetUser(string username) and 
   GetUserNameByEmail (MySQL bug #61027, Oracle bug #12562287).
 - added the ability to raise a join on the right side of a join to a derived table in EF code generation (bug #48791)
+- Added Visual Studio DDEX support for Compact Framework projects (MySQL bug #54607, Oracle bug #12605152).
 
 Version 6.1.5
 - Fix authorization popup after modifying stored procedure in VS (Bug #44715)

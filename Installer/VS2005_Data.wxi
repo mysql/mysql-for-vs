@@ -28,6 +28,28 @@
   <RegistryKey Root="HKLM" Action="createAndRemoveOnUninstall"
                Key="Software\Microsoft\VisualStudio\8.0\DataProviders\{c6882346-e592-4da5-80ba-d2eadcda0359}\SupportedObjects\DataViewSupport"/>
 
+  <!--Compact Framework Providers-->
+  <RegistryKey Root="HKLM" Action="createAndRemoveOnUninstall"
+             Key="Software\Microsoft\.NETCompactFramework\v2.0.3600\PocketPC\DataProviders\{c6882346-e592-4da5-80ba-d2eadcda0359}">
+    <RegistryValue Value=".NET Framework Data Provider for MySQL" Type="string"/>
+    <RegistryValue Name="InvariantName" Value="MySql.Data.MySqlClient" Type="string"/>
+    <RegistryValue Name="RuntimeAssembly" Value="MySql.Data.CF.dll" Type="string"/>
+  </RegistryKey>
+
+  <RegistryKey Root="HKLM" Action="createAndRemoveOnUninstall"
+           Key="Software\Microsoft\.NETCompactFramework\v2.0.3600\SmartPhone\DataProviders\{c6882346-e592-4da5-80ba-d2eadcda0359}">
+    <RegistryValue Value=".NET Framework Data Provider for MySQL" Type="string"/>
+    <RegistryValue Name="InvariantName" Value="MySql.Data.MySqlClient" Type="string"/>
+    <RegistryValue Name="RuntimeAssembly" Value="MySql.Data.CF.dll" Type="string"/>
+  </RegistryKey>
+
+  <RegistryKey Root="HKLM" Action="createAndRemoveOnUninstall"
+         Key="Software\Microsoft\.NETCompactFramework\v2.0.3600\WindowsCE\DataProviders\{c6882346-e592-4da5-80ba-d2eadcda0359}">
+    <RegistryValue Value=".NET Framework Data Provider for MySQL" Type="string"/>
+    <RegistryValue Name="InvariantName" Value="MySql.Data.MySqlClient" Type="string"/>
+    <RegistryValue Name="RuntimeAssembly" Value="MySql.Data.CF.dll" Type="string"/>
+  </RegistryKey>
+
   <!-- DataSources -->
   <RegistryKey Root="HKLM" Action="createAndRemoveOnUninstall"
                Key="Software\Microsoft\VisualStudio\8.0\DataSources\{98FBE4D8-5583-4233-B219-70FF8C7FBBBD}">
