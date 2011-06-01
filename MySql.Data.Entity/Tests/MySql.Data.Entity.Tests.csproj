@@ -109,6 +109,12 @@
     <Compile Include="AggregateOperators.cs" />
     <Compile Include="CanonicalFunctions.cs" />
     <Compile Include="DataTypeTests.cs" />
+    <Compile Include="Model1.Designer.cs" >
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model1.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="ProviderServicesTests.cs" />
     <Compile Include="ProceduresAndFunctions.cs" />
     <Compile Include="JoinTests.cs" />
     <Compile Include="SchemaInformation.cs" />
@@ -158,6 +164,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>SQLSyntax.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EntityDeploy Include="Model1.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Model1.Designer.cs</LastGenOutput>
+    </EntityDeploy>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References" />

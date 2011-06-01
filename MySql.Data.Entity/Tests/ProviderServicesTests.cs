@@ -33,11 +33,15 @@ using System.Data.Objects;
 namespace MySql.Data.Entity.Tests
 {
 	[TestFixture]
-	public class ModelFirst : BaseEdmTest
+    public class ProviderServicesTests : BaseEdmTest
 	{
+        #if CLR4
         [Test]
         public void CreateDatabase()
         {
+            suExecSQL("GRANT ALL ON `modeldb`.* to 'test'@'localhost'");
+            suExecSQL("FLUSH PRIVILEGES");
+
             using (Model1Container ctx = new Model1Container())
             {
                 Assert.IsFalse(ctx.DatabaseExists());
@@ -58,6 +62,9 @@ namespace MySql.Data.Entity.Tests
         [Test]
         public void DeleteDatabase()
         {
+            suExecSQL("GRANT ALL ON `modeldb`.* to 'test'@'localhost'");
+            suExecSQL("FLUSH PRIVILEGES");
+
             using (Model1Container ctx = new Model1Container())
             {
                 Assert.IsFalse(ctx.DatabaseExists());
@@ -71,6 +78,9 @@ namespace MySql.Data.Entity.Tests
         [Test]
         public void DatabaseExists()
         {
+            suExecSQL("GRANT ALL ON `modeldb`.* to 'test'@'localhost'");
+            suExecSQL("FLUSH PRIVILEGES");
+
             using (Model1Container ctx = new Model1Container())
             {
                 Assert.IsFalse(ctx.DatabaseExists());
@@ -80,5 +90,6 @@ namespace MySql.Data.Entity.Tests
                 Assert.IsFalse(ctx.DatabaseExists());
             }
         }
+#endif
     }
 }
