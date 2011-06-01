@@ -476,13 +476,13 @@ namespace MySql.Data.MySqlClient
                 if (settings.Pooling)
                 {
                     MySqlPool pool = MySqlPoolManager.GetPool(settings);
-                    if (driver == null)
+                    if (driver == null || !driver.IsOpen)
                         driver = pool.GetConnection();
                     procedureCache = pool.ProcedureCache;
                 }
                 else
                 {
-                    if (driver == null)
+                    if (driver == null || !driver.IsOpen)
                         driver = Driver.Create(settings);
                     procedureCache = new ProcedureCache((int) settings.ProcedureCacheSize);
                 }
@@ -580,10 +580,7 @@ namespace MySql.Data.MySqlClient
         {
             try
             {
-                if (settings.Pooling)
-                    MySqlPoolManager.ReleaseConnection(driver);
-                else
-                    driver.Close();
+                driver.Close();
             }
             catch (Exception ex)
             {
