@@ -9,6 +9,10 @@ DROP TABLE IF EXISTS Books;
 DROP TABLE IF EXISTS Authors;
 DROP TABLE IF EXISTS Publishers;
 DROP TABLE IF EXISTS DataTypeTests;
+DROP TABLE IF EXISTS DesktopComputers;
+DROP TABLE IF EXISTS LaptopComputers;
+DROP TABLE IF EXISTS TabletComputers;
+DROP TABLE IF EXISTS Computers;
 
 CREATE TABLE Employees(
 	Id INT NOT NULL PRIMARY KEY,
@@ -75,6 +79,53 @@ INSERT INTO Toys VALUES (1, 3, 'Slinky', 2);
 INSERT INTO Toys VALUES (2, 2, 'Rubiks Cube', 5);	
 INSERT INTO Toys VALUES (3, 1, 'Lincoln Logs', 3);	
 INSERT INTO Toys VALUES (4, 4, 'Legos', 4);	
+
+CREATE TABLE Computers (
+	`Id` INT NOT NULL AUTO_INCREMENT,
+	`Brand` varchar(100) NOT NULL,
+	CONSTRAINT PK_Computers PRIMARY KEY (Id)) ENGINE=InnoDB;
+
+INSERT INTO Computers VALUES (1, 'Dell');		
+INSERT INTO Computers VALUES (2, 'Acer');
+INSERT INTO Computers VALUES (3, 'Toshiba');		
+INSERT INTO Computers VALUES (4, 'Sony');
+INSERT INTO Computers VALUES (5, 'Apple');		
+INSERT INTO Computers VALUES (6, 'HP');
+
+CREATE TABLE DesktopComputers (
+  `IdDesktopComputer` INT NOT NULL ,
+  `Color` VARCHAR(15) NULL DEFAULT NULL ,
+  PRIMARY KEY (`IdDesktopComputer`) ,
+  CONSTRAINT FK_DesktopComputer_Computer
+    FOREIGN KEY (IdDesktopComputer)
+    REFERENCES Computers (Id)) ENGINE = InnoDB;
+    
+INSERT INTO DesktopComputers VALUES (1, 'White');
+INSERT INTO DesktopComputers VALUES (2, 'Black');
+
+CREATE TABLE LaptopComputers (
+  `IdLaptopComputer` INT NOT NULL ,
+  `Size` VARCHAR(45) NULL DEFAULT NULL ,
+  `IsCertified` BIT(1) NULL DEFAULT NULL ,
+  PRIMARY KEY (IdLaptopComputer) ,
+  CONSTRAINT FK_LaptopComputer_Computer
+    FOREIGN KEY (IdLaptopComputer)
+    REFERENCES Computers(Id)) ENGINE = InnoDB;
+
+INSERT INTO LaptopComputers VALUES (3, '13.2 x 9.4', 1);
+INSERT INTO LaptopComputers VALUES (4, '19.5 x 13', 0);
+
+CREATE TABLE TabletComputers (
+  `IdTabletComputer` INT NOT NULL ,
+  `IsAvailable` BIT(1) NULL DEFAULT NULL ,
+  `ReleaseDate` DATETIME NULL DEFAULT NULL ,
+  PRIMARY KEY (IdTabletComputer) ,
+  CONSTRAINT FK_TabletComputer_Computer
+    FOREIGN KEY (IdTabletComputer)
+    REFERENCES Computers(Id)) ENGINE = InnoDB;
+
+INSERT INTO TabletComputers VALUES (5, 1, '2011-05-04');
+INSERT INTO TabletComputers VALUES (6, 1, '2010-06-09');
 
 CREATE TABLE Stores (
 	id INT PRIMARY KEY,

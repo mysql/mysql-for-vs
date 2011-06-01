@@ -33,6 +33,22 @@
             <End Role="Books" EntitySet="Books" />
           </AssociationSet>
           <EntitySet Name="DataTypeTests" EntityType="testModel.Store.DataTypeTests"/>
+          <EntitySet Name="Computers" EntityType="testModel.Store.Computers" />
+          <EntitySet Name="DesktopComputers" EntityType="testModel.Store.DesktopComputers" />
+          <EntitySet Name="LaptopComputers" EntityType="testModel.Store.LaptopComputers" />
+          <EntitySet Name="TabletComputers" EntityType="testModel.Store.TabletComputers" />
+          <AssociationSet Name="FK_DesktopComputer_Computer" Association="testModel.Store.FK_DesktopComputer_Computer">
+            <End Role="Computers" EntitySet="Computers" />
+            <End Role="DesktopComputers" EntitySet="DesktopComputers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LaptopComputer_Computer" Association="testModel.Store.FK_LaptopComputer_Computer">
+            <End Role="Computers" EntitySet="Computers" />
+            <End Role="LaptopComputers" EntitySet="LaptopComputers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TabletComputer_Computer" Association="testModel.Store.FK_TabletComputer_Computer">
+            <End Role="Computers" EntitySet="Computers" />
+            <End Role="TabletComputers" EntitySet="TabletComputers" />
+          </AssociationSet>
         </EntityContainer>
 
         <EntityType Name="Employees">
@@ -218,6 +234,72 @@
           <Property Name="id2" Type="guid" Nullable ="false"/>
           <Property Name="idAsChar" Type="varchar" MaxLength="36" Nullable="true"/>
         </EntityType>
+        <EntityType Name="Computers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Brand" Type="varchar" Nullable="false" MaxLength="100" />
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="DesktopComputers">
+          <Key>
+            <PropertyRef Name="IdDesktopComputer" />
+          </Key>
+          <Property Name="Color" Type="varchar" MaxLength="15" />
+          <Property Name="IdDesktopComputer" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="LaptopComputers">
+          <Key>
+            <PropertyRef Name="IdLaptopComputer" />
+          </Key>
+          <Property Name="IdLaptopComputer" Type="int" Nullable="false" />
+          <Property Name="IsCertified" Type="bit" />
+          <Property Name="Size" Type="varchar" MaxLength="45" />
+        </EntityType>
+        <EntityType Name="TabletComputers">
+          <Key>
+            <PropertyRef Name="IdTabletComputer" />
+          </Key>
+          <Property Name="IdTabletComputer" Type="int" Nullable="false" />
+          <Property Name="IsAvailable" Type="bit" />
+          <Property Name="ReleaseDate" Type="datetime" />
+        </EntityType>
+        <Association Name="FK_DesktopComputer_Computer">
+          <End Role="Computers" Type="testModel.Store.Computers" Multiplicity="1" />
+          <End Role="DesktopComputers" Type="testModel.Store.DesktopComputers" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Computers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DesktopComputers">
+              <PropertyRef Name="IdDesktopComputer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LaptopComputer_Computer">
+          <End Role="Computers" Type="testModel.Store.Computers" Multiplicity="1" />
+          <End Role="LaptopComputers" Type="testModel.Store.LaptopComputers" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Computers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="LaptopComputers">
+              <PropertyRef Name="IdLaptopComputer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TabletComputer_Computer">
+          <End Role="Computers" Type="testModel.Store.Computers" Multiplicity="1" />
+          <End Role="TabletComputers" Type="testModel.Store.TabletComputers" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Computers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TabletComputers">
+              <PropertyRef Name="IdTabletComputer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>        
       </Schema>
     </edmx:StorageModels>
     
@@ -251,6 +333,7 @@
             <End Role="Books" EntitySet="Books" />
           </AssociationSet>
           <EntitySet Name="DataTypeTests" EntityType="testModel.DataTypeTest"/>
+          <EntitySet Name="Computers" EntityType="testModel.Computer" />
         </EntityContainer>
         
         <EntityType Name="Employee">
@@ -387,6 +470,28 @@
           <Property Name="id" Type="Guid" Nullable="false"/>
           <Property Name="id2" Type="Guid" Nullable ="false"/>
           <Property Name="idAsChar" Type="String" Nullable="true"/>
+        </EntityType>
+
+        <EntityType Name="Computer" Abstract="true">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Brand" Type="String" Nullable="false" />
+          <Property Name="Id" Type="Int32" Nullable="false" />
+        </EntityType>
+        
+        <EntityType Name="DesktopComputer" BaseType="testModel.Computer">
+          <Property Name="Color" Type="String" />
+        </EntityType>
+        
+        <EntityType Name="LaptopComputer" BaseType="testModel.Computer">
+          <Property Name="IsCertified" Type="Boolean" />
+          <Property Name="Size" Type="String" />
+        </EntityType>
+        
+        <EntityType Name="TabletComputer" BaseType="testModel.Computer">
+          <Property Name="IsAvailable" Type="Boolean" />
+          <Property Name="ReleaseDate" Type="DateTime" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -578,6 +683,35 @@
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="id2" ColumnName="id2" />
                 <ScalarProperty Name="idAsChar" ColumnName="idAsChar"/>
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+
+          <EntitySetMapping Name="Computers">
+            <EntityTypeMapping TypeName="IsTypeOf(testModel.Computer)">
+              <MappingFragment StoreEntitySet="Computers">
+                <ScalarProperty Name="Brand" ColumnName="Brand" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+            <EntityTypeMapping TypeName="IsTypeOf(testModel.DesktopComputer)">
+              <MappingFragment StoreEntitySet="DesktopComputers">
+                <ScalarProperty Name="Id" ColumnName="IdDesktopComputer" />
+                <ScalarProperty Name="Color" ColumnName="Color" />
+              </MappingFragment>
+            </EntityTypeMapping>
+            <EntityTypeMapping TypeName="IsTypeOf(testModel.LaptopComputer)">
+              <MappingFragment StoreEntitySet="LaptopComputers">
+                <ScalarProperty Name="Id" ColumnName="IdLaptopComputer" />
+                <ScalarProperty Name="IsCertified" ColumnName="IsCertified" />
+                <ScalarProperty Name="Size" ColumnName="Size" />
+              </MappingFragment>
+            </EntityTypeMapping>
+            <EntityTypeMapping TypeName="IsTypeOf(testModel.TabletComputer)">
+              <MappingFragment StoreEntitySet="TabletComputers">
+                <ScalarProperty Name="Id" ColumnName="IdTabletComputer" />
+                <ScalarProperty Name="IsAvailable" ColumnName="IsAvailable" />
+                <ScalarProperty Name="ReleaseDate" ColumnName="ReleaseDate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
