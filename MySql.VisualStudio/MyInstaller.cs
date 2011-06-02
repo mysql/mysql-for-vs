@@ -134,9 +134,9 @@ namespace MySql.Data.VisualStudio
 
             if (version.Equals("8.0") || version.Equals("9.0"))
             {
-                CreateCompactFrameworkKey(rootKey, cfVersion, "PocketPC", GuidList.ProviderGUID.ToString("B"));
-                CreateCompactFrameworkKey(rootKey, cfVersion, "SmartPhone", GuidList.ProviderGUID.ToString("B"));
-                CreateCompactFrameworkKey(rootKey, cfVersion, "WindowsCE", GuidList.ProviderGUID.ToString("B"));
+                CreateCompactFrameworkKey(rootKey, cfVersion, "PocketPC", Guids.Package.ToString("B"));
+                CreateCompactFrameworkKey(rootKey, cfVersion, "SmartPhone", Guids.Package.ToString("B"));
+                CreateCompactFrameworkKey(rootKey, cfVersion, "WindowsCE", Guids.Package.ToString("B"));
             }
 
             // Menus
@@ -263,9 +263,9 @@ namespace MySql.Data.VisualStudio
 
             if (!string.IsNullOrEmpty(cfVersion))
             {
-                RemoveCompactFrameworkKey(rootKey, cfVersion, "PocketPC", GuidList.ProviderGUID.ToString("B"));
-                RemoveCompactFrameworkKey(rootKey, cfVersion, "SmartPhone", GuidList.ProviderGUID.ToString("B"));
-                RemoveCompactFrameworkKey(rootKey, cfVersion, "WindowsCE", GuidList.ProviderGUID.ToString("B"));
+                RemoveCompactFrameworkKey(rootKey, cfVersion, "PocketPC", Guids.Package.ToString("B"));
+                RemoveCompactFrameworkKey(rootKey, cfVersion, "SmartPhone", Guids.Package.ToString("B"));
+                RemoveCompactFrameworkKey(rootKey, cfVersion, "WindowsCE", Guids.Package.ToString("B"));
             }
 
             // Menus
