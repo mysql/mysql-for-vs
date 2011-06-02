@@ -5,12 +5,14 @@ IF [%1] == [] GOTO Usage
 
 REM Make sure our files are ready
 IF NOT EXIST MySql.Data\provider\bin\debug\mysql.data.dll GOTO NOTREADY
+IF NOT EXIST MySql.Data\provider\bin\debug\mysql.data.CF.dll GOTO NOTREADY
 IF NOT EXIST MySql.Web\providers\bin\debug\mysql.web.dll GOTO NOTREADY
 IF NOT EXIST mysql.visualstudio\bin\debug\mysql.visualstudio.dll GOTO NOTREADY
 IF NOT %1 == 2005 AND NOT EXIST MySql.Data.Entity\provider\bin\debug\mysql.data.entity.dll GOTO NOTREADY
 
 REM Unregister our assemblies (this will work if they are not registered)
 gacutil /u mysql.data
+gacutil /u mysql.data.cf
 gacutil /u mysql.web
 
 REM Now uninstall the core assembly
