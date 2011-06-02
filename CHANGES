@@ -43,7 +43,9 @@
   on the server version.
 - Fixed MembershipProvider to only return exact matches when calling GetUser(string username) and 
   GetUserNameByEmail (MySQL bug #61027, Oracle bug #12562287).
-- added the ability to raise a join on the right side of a join to a derived table in EF code generation (bug #48791)
+- added the ability to raise a join on the right side of a join to a derived table in EF code generation (bug #48791)  
+- Modified EFMySqlDataReader to read byte[] values as booleans when the server incorrectly reports bits as binaries 
+  when they are members of internal EF UNIONS (MySQL bug #60652, Oracle bug #12593193).
 - Modified Connection.Open() to not reuse existing driver instance when that instance is closed. Also made Connection.Abort() 
   always close the current driver, even if the connection is pooled. (MySQL bug #58316, Oracle bug #12613102).
 
