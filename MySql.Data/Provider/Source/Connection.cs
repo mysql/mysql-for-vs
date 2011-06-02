@@ -469,14 +469,14 @@ namespace MySql.Data.MySqlClient
                 if (settings.Pooling)
                 {
                     MySqlPool pool = MySqlPoolManager.GetPool(settings);
-                    if (driver == null)
+                    if (driver == null || !driver.IsOpen)
                         driver = pool.GetConnection();
                     procedureCache = pool.ProcedureCache;
                     
                 }
                 else
                 {
-                    if (driver == null)
+                    if (driver == null || !driver.IsOpen)
                         driver = Driver.Create(settings);
                     procedureCache = new ProcedureCache((int) settings.ProcedureCacheSize);
                 }

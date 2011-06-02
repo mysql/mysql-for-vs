@@ -30,6 +30,7 @@ using System.Data.Common;
 using NUnit.Framework;
 using System.Data.Objects;
 using MySql.Data.Entity.Tests.Properties;
+using System.Linq;
 
 namespace MySql.Data.Entity.Tests
 {
@@ -88,6 +89,29 @@ namespace MySql.Data.Entity.Tests
                     i++;
                 }
                 Assert.AreEqual(dt.Rows.Count, i);
+            }
+        }
+
+        /// <summary>
+        /// Bug #60652	Query returns BLOB type but no BLOBs are in the database.        
+        /// </summary>
+        [Test]
+        public void UnionAllWithBitColumnsDoesNotThrow()
+        {
+            using (testEntities entities = new testEntities())
+            {
+                // Here, Computer is the base type of DesktopComputer, LaptopComputer and TabletComputer. 
+                // LaptopComputer and TabletComputer include the bit fields that would provoke
+                // an InvalidCastException (byte[] to bool) when participating in a UNION 
+                // created internally by the Connector/Net entity framework provider.
+                var computers = from c in entities.Computers
+                                select c;
+
+                foreach (Computer computer in computers)
+                {
+                    Assert.NotNull(computer);
+                    Assert.IsTrue(computer.Id > 0);
+                }
             }
         }
     }
