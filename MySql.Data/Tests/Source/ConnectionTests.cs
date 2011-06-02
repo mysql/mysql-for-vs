@@ -29,12 +29,12 @@ using System.Configuration;
 
 namespace MySql.Data.MySqlClient.Tests
 {
-	/// <summary>
-	/// Summary description for ConnectionTests.
-	/// </summary>
-	[TestFixture] 
-	public class ConnectionTests : BaseTest
-	{
+    /// <summary>
+    /// Summary description for ConnectionTests.
+    /// </summary>
+    [TestFixture]
+    public class ConnectionTests : BaseTest
+    {
         [Test]
         public void TestConnectionStrings()
         {
@@ -144,11 +144,11 @@ namespace MySql.Data.MySqlClient.Tests
             c.Open();
             Assert.IsTrue(c.State == ConnectionState.Open);
 
-			Assert.AreEqual(database0.ToLower(), c.Database.ToLower());
+            Assert.AreEqual(database0.ToLower(), c.Database.ToLower());
 
-			c.ChangeDatabase(database1);
+            c.ChangeDatabase(database1);
 
-			Assert.AreEqual(database1.ToLower(), c.Database.ToLower());
+            Assert.AreEqual(database1.ToLower(), c.Database.ToLower());
 
             c.Close();
         }
@@ -210,7 +210,7 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void ConnectingAsUTF8()
         {
-            if (Version < new Version(4,1)) return;
+            if (Version < new Version(4, 1)) return;
 
             string connStr = GetConnectionString(true) + ";charset=utf8";
             using (MySqlConnection c = new MySqlConnection(connStr))
@@ -384,43 +384,43 @@ namespace MySql.Data.MySqlClient.Tests
         {
             int threadId;
             ConnectionClosedCheck check = new ConnectionClosedCheck();
-            string connStr = GetConnectionString(true)+";pooling=true";
+            string connStr = GetConnectionString(true) + ";pooling=true";
             MySqlConnection c = new MySqlConnection(connStr);
             c.StateChange += new StateChangeEventHandler(check.stateChangeHandler);
             c.Open();
-            threadId= c.ServerThread;
+            threadId = c.ServerThread;
             c = null;
             GC.Collect();
             GC.WaitForPendingFinalizers();
             Assert.IsTrue(check.closed);
-            
+
             MySqlCommand cmd = new MySqlCommand("KILL " + threadId, conn);
             cmd.ExecuteNonQuery();
         }
-		/// <summary>
-		/// Bug #30964 StateChange imperfection 
-		/// </summary>
-		MySqlConnection rqConnection;
-		[Test]
-		public void RunningAQueryFromStateChangeHandler()
-		{
-			string connStr = GetConnectionString(true);
-			using (rqConnection = new MySqlConnection(connStr))
-			{
-				rqConnection.StateChange += new StateChangeEventHandler(RunningQueryStateChangeHandler);
-				rqConnection.Open();
-			}
-		}
+        /// <summary>
+        /// Bug #30964 StateChange imperfection 
+        /// </summary>
+        MySqlConnection rqConnection;
+        [Test]
+        public void RunningAQueryFromStateChangeHandler()
+        {
+            string connStr = GetConnectionString(true);
+            using (rqConnection = new MySqlConnection(connStr))
+            {
+                rqConnection.StateChange += new StateChangeEventHandler(RunningQueryStateChangeHandler);
+                rqConnection.Open();
+            }
+        }
 
-		void RunningQueryStateChangeHandler(object sender, StateChangeEventArgs e)
-		{
-			if (e.CurrentState == ConnectionState.Open)
-			{
-				MySqlCommand cmd = new MySqlCommand("SELECT 1", rqConnection);
-				object o = cmd.ExecuteScalar();
-				Assert.AreEqual(1, o);
-			}
-		}
+        void RunningQueryStateChangeHandler(object sender, StateChangeEventArgs e)
+        {
+            if (e.CurrentState == ConnectionState.Open)
+            {
+                MySqlCommand cmd = new MySqlCommand("SELECT 1", rqConnection);
+                object o = cmd.ExecuteScalar();
+                Assert.AreEqual(1, o);
+            }
+        }
 
         /// <summary>
         /// Bug #31262 NullReferenceException in MySql.Data.MySqlClient.NativeDriver.ExecuteCommand 
@@ -576,5 +576,21 @@ namespace MySql.Data.MySqlClient.Tests
             base.Teardown();
         }
 #endif
+
+        [Test]
+        public void CanOpenConnectionAfterAborting()
+        {
+            MySqlConnection connection = new MySqlConnection(GetConnectionString(true));
+            connection.Open();
+            Assert.AreEqual(ConnectionState.Open, connection.State);
+
+            connection.Abort();
+            Assert.AreEqual(ConnectionState.Closed, connection.State);
+
+            connection.Open();
+            Assert.AreEqual(ConnectionState.Open, connection.State);
+
+            connection.Close();
+        }
     }
 }
