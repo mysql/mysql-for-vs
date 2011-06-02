@@ -19,6 +19,11 @@
 - added the ability to raise a join on the right side of a join to a derived table in EF code generation (bug #48791)
 - Reintroduced implementations for DbCreateDatabase, DbDatabaseExists, DbDeleteDatabase and DbCreateDatabaseScript 
   in MySqlProviderServices. In this update none of those methods require access to the mysql database (MySQL bug #59168, Oracle bug #11766128).
+- Modified EFMySqlDataReader to read byte[] values as booleans when the server incorrectly reports bits as binaries 
+  when they are members of internal EF UNIONS (MySQL bug #60652, Oracle bug #12593193).
+- Modified Connection.Open() to not reuse existing driver instance when that instance is closed. Also made Connection.Abort() 
+  always close the current driver, even if the connection is pooled. (MySQL bug #58316, Oracle bug #12613102).
+- Added Visual Studio DDEX support for Compact Framework projects (MySQL bug #54607, Oracle bug #12605152).  
 
 6.4.0
 - Implemented Cache Server Properties connection option
