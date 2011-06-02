@@ -489,5 +489,21 @@ namespace MySql.Data.MySqlClient.Tests
                 c.Open();
             }
         }
+
+        [Test]
+        public void CanOpenConnectionAfterAborting()
+        {
+            MySqlConnection connection = new MySqlConnection(GetConnectionString(true));
+            connection.Open();
+            Assert.AreEqual(ConnectionState.Open, connection.State);
+
+            connection.Abort();
+            Assert.AreEqual(ConnectionState.Closed, connection.State);
+
+            connection.Open();
+            Assert.AreEqual(ConnectionState.Open, connection.State);
+
+            connection.Close();
+        }
     }
 }
