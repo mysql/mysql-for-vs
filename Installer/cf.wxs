@@ -4,7 +4,7 @@
     <DirectoryRef Id='assemblies_v2'>
       <Component Id="CFBinaries" Guid="5a9c32ad-62f5-4b24-a225-96acf42d88a1">
         <File Id="cf1" Name="MySql.Data.CF.dll"
-              Source="..\mysql.data\provider\bin\release\mysql.data.CF.dll" DiskId="1"/>
+              Source="..\mysql.data\provider\bin\release\mysql.data.CF.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
       </Component>
     </DirectoryRef>
 

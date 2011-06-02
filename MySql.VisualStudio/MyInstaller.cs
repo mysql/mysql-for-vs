@@ -125,6 +125,20 @@ namespace MySql.Data.VisualStudio
             dpKeySO.CreateSubKey("DataSourceInformation");
             dpKeySO.CreateSubKey("DataViewSupport");
 
+            // Data Provider for the Compact Framework
+            string cfVersion = null;
+            if (version.Equals("8.0"))
+                cfVersion = "v2.0.3600";
+            if (version.Equals("9.0"))
+                cfVersion = "v3.5.0.0";
+
+            if (version.Equals("8.0") || version.Equals("9.0"))
+            {
+                CreateCompactFrameworkKey(rootKey, cfVersion, "PocketPC", GuidList.ProviderGUID.ToString("B"));
+                CreateCompactFrameworkKey(rootKey, cfVersion, "SmartPhone", GuidList.ProviderGUID.ToString("B"));
+                CreateCompactFrameworkKey(rootKey, cfVersion, "WindowsCE", GuidList.ProviderGUID.ToString("B"));
+            }
+
             // Menus
             keyPath = String.Format(@"Software\Microsoft\VisualStudio\{0}\Menus", version);
             RegistryKey menuKey = rootKey.OpenSubKey(keyPath, true);
@@ -207,6 +221,15 @@ namespace MySql.Data.VisualStudio
             autoLoadKey.SetValue(Guids.Package.ToString("B"), 0);
         }
 
+        private static void CreateCompactFrameworkKey(RegistryKey rootKey, string version, string platform, string providerGuid)
+        {
+            string keyPath = String.Format(@"Software\Microsoft\.NETCompactFramework\{0}\{1}\DataProviders\{2}", version, platform, providerGuid);
+            RegistryKey dpKey = rootKey.CreateSubKey(keyPath);
+            dpKey.SetValue(null, ".NET Framework Data Provider for MySQL");
+            dpKey.SetValue("InvariantName", "MySql.Data.MySqlClient");
+            dpKey.SetValue("RuntimeAssembly", "MySql.Data.CF.dll");
+        }
+
         private void UnInstallInternal(string version)
         {
             RegistryKey rootKey = GetRootKey();
@@ -229,6 +252,20 @@ namespace MySql.Data.VisualStudio
             {
                 key.Close();
                 rootKey.DeleteSubKeyTree(keyPath);
+            }
+
+            // Data Provider for the Compact Framework
+            string cfVersion = null;
+            if (version.Equals("8.0"))
+                cfVersion = "v2.0.3600";
+            if (version.Equals("9.0"))
+                cfVersion = "v3.5.0.0";
+
+            if (!string.IsNullOrEmpty(cfVersion))
+            {
+                RemoveCompactFrameworkKey(rootKey, cfVersion, "PocketPC", GuidList.ProviderGUID.ToString("B"));
+                RemoveCompactFrameworkKey(rootKey, cfVersion, "SmartPhone", GuidList.ProviderGUID.ToString("B"));
+                RemoveCompactFrameworkKey(rootKey, cfVersion, "WindowsCE", GuidList.ProviderGUID.ToString("B"));
             }
 
             // Menus
@@ -304,6 +341,17 @@ namespace MySql.Data.VisualStudio
                 version);
             RegistryKey autoLoadKey = rootKey.OpenSubKey(keyPath, true);
             autoLoadKey.DeleteValue(Guids.Package.ToString("B"), false);
+        }
+
+        private static void RemoveCompactFrameworkKey(RegistryKey rootKey, string version, string platform, string providerGuid)
+        {
+            string keyPath = String.Format(@"Software\Microsoft\.NETCompactFramework\{0}\{1}\DataProviders\{2}", version, platform, providerGuid);
+            RegistryKey key = rootKey.OpenSubKey(keyPath);
+            if (key != null)
+            {
+                key.Close();
+                rootKey.DeleteSubKeyTree(keyPath);
+            }
         }
     }
 }
