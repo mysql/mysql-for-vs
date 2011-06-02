@@ -18,7 +18,7 @@
 // Generation date: 10/4/2010 12:55:49 PM
 namespace MySql.Data.Entity.Tests
 {
-    
+
     /// <summary>
     /// There are no comments for testEntities in the schema.
     /// </summary>
@@ -27,24 +27,24 @@ namespace MySql.Data.Entity.Tests
         /// <summary>
         /// Initializes a new testEntities object using the connection string found in the 'testEntities' section of the application configuration file.
         /// </summary>
-        public testEntities() : 
-                base("name=testEntities", "testEntities")
+        public testEntities() :
+            base("name=testEntities", "testEntities")
         {
             this.OnContextCreated();
         }
         /// <summary>
         /// Initialize a new testEntities object.
         /// </summary>
-        public testEntities(string connectionString) : 
-                base(connectionString, "testEntities")
+        public testEntities(string connectionString) :
+            base(connectionString, "testEntities")
         {
             this.OnContextCreated();
         }
         /// <summary>
         /// Initialize a new testEntities object.
         /// </summary>
-        public testEntities(global::System.Data.EntityClient.EntityConnection connection) : 
-                base(connection, "testEntities")
+        public testEntities(global::System.Data.EntityClient.EntityConnection connection) :
+            base(connection, "testEntities")
         {
             this.OnContextCreated();
         }
@@ -306,8 +306,8 @@ namespace MySql.Data.Entity.Tests
     /// <KeyProperties>
     /// Id
     /// </KeyProperties>
-    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName="testModel", Name="Employee")]
-    [global::System.Runtime.Serialization.DataContractAttribute(IsReference=true)]
+    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName = "testModel", Name = "Employee")]
+    [global::System.Runtime.Serialization.DataContractAttribute(IsReference = true)]
     [global::System.Serializable()]
     [global::System.Runtime.Serialization.KnownTypeAttribute(typeof(global::MySql.Data.Entity.Tests.SalariedEmployee))]
     public partial class Employee : global::System.Data.Objects.DataClasses.EntityObject
@@ -330,7 +330,7 @@ namespace MySql.Data.Entity.Tests
         /// <summary>
         /// There are no comments for property Id in the schema.
         /// </summary>
-        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(EntityKeyProperty = true, IsNullable = false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         public int Id
@@ -357,7 +357,7 @@ namespace MySql.Data.Entity.Tests
         /// <summary>
         /// There are no comments for property LastName in the schema.
         /// </summary>
-        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable = false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         public string LastName
@@ -384,7 +384,7 @@ namespace MySql.Data.Entity.Tests
         /// <summary>
         /// There are no comments for property FirstName in the schema.
         /// </summary>
-        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable = false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         public string FirstName
@@ -442,8 +442,8 @@ namespace MySql.Data.Entity.Tests
     /// <KeyProperties>
     /// Id
     /// </KeyProperties>
-    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName="testModel", Name="SalariedEmployee")]
-    [global::System.Runtime.Serialization.DataContractAttribute(IsReference=true)]
+    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName = "testModel", Name = "SalariedEmployee")]
+    [global::System.Runtime.Serialization.DataContractAttribute(IsReference = true)]
     [global::System.Serializable()]
     public partial class SalariedEmployee : Employee
     {
@@ -467,7 +467,7 @@ namespace MySql.Data.Entity.Tests
         /// <summary>
         /// There are no comments for property Salary in the schema.
         /// </summary>
-        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable = false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         public int Salary
@@ -498,8 +498,8 @@ namespace MySql.Data.Entity.Tests
     /// <KeyProperties>
     /// Id
     /// </KeyProperties>
-    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName="testModel", Name="Child")]
-    [global::System.Runtime.Serialization.DataContractAttribute(IsReference=true)]
+    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName = "testModel", Name = "Child")]
+    [global::System.Runtime.Serialization.DataContractAttribute(IsReference = true)]
     [global::System.Serializable()]
     public partial class Child : global::System.Data.Objects.DataClasses.EntityObject
     {
@@ -525,7 +525,7 @@ namespace MySql.Data.Entity.Tests
         /// <summary>
         /// There are no comments for property Id in the schema.
         /// </summary>
-        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(EntityKeyProperty = true, IsNullable = false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         public long Id
@@ -552,7 +552,7 @@ namespace MySql.Data.Entity.Tests
         /// <summary>
         /// There are no comments for property EmployeeID in the schema.
         /// </summary>
-        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable = false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         public int EmployeeID
@@ -579,7 +579,7 @@ namespace MySql.Data.Entity.Tests
         /// <summary>
         /// There are no comments for property LastName in the schema.
         /// </summary>
-        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable = false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         public string LastName
@@ -606,7 +606,7 @@ namespace MySql.Data.Entity.Tests
         /// <summary>
         /// There are no comments for property FirstName in the schema.
         /// </summary>
-        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable = false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         public string FirstName
@@ -687,7 +687,7 @@ namespace MySql.Data.Entity.Tests
         /// <summary>
         /// There are no comments for property Modified in the schema.
         /// </summary>
-        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable = false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         public global::System.DateTimeOffset Modified
@@ -718,8 +718,8 @@ namespace MySql.Data.Entity.Tests
     /// <KeyProperties>
     /// Id
     /// </KeyProperties>
-    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName="testModel", Name="Company")]
-    [global::System.Runtime.Serialization.DataContractAttribute(IsReference=true)]
+    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName = "testModel", Name = "Company")]
+    [global::System.Runtime.Serialization.DataContractAttribute(IsReference = true)]
     [global::System.Serializable()]
     public partial class Company : global::System.Data.Objects.DataClasses.EntityObject
     {
@@ -741,7 +741,7 @@ namespace MySql.Data.Entity.Tests
         /// <summary>
         /// There are no comments for property Id in the schema.
         /// </summary>
-        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(EntityKeyProperty = true, IsNullable = false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         public int Id
@@ -768,7 +768,7 @@ namespace MySql.Data.Entity.Tests
         /// <summary>
         /// There are no comments for property Name in the schema.
         /// </summary>
-        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable = false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         public string Name
@@ -851,8 +851,8 @@ namespace MySql.Data.Entity.Tests
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmComplexPropertyAttribute()]
         [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
-        [global::System.Xml.Serialization.XmlElement(IsNullable=true)]
-        [global::System.Xml.Serialization.SoapElement(IsNullable=true)]
+        [global::System.Xml.Serialization.XmlElement(IsNullable = true)]
+        [global::System.Xml.Serialization.SoapElement(IsNullable = true)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         public CommonAddress Address
@@ -910,8 +910,8 @@ namespace MySql.Data.Entity.Tests
     /// <KeyProperties>
     /// Id
     /// </KeyProperties>
-    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName="testModel", Name="Toy")]
-    [global::System.Runtime.Serialization.DataContractAttribute(IsReference=true)]
+    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName = "testModel", Name = "Toy")]
+    [global::System.Runtime.Serialization.DataContractAttribute(IsReference = true)]
     [global::System.Serializable()]
     public partial class Toy : global::System.Data.Objects.DataClasses.EntityObject
     {
@@ -933,7 +933,7 @@ namespace MySql.Data.Entity.Tests
         /// <summary>
         /// There are no comments for property Id in the schema.
         /// </summary>
-        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(EntityKeyProperty = true, IsNullable = false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         public int Id
@@ -960,7 +960,7 @@ namespace MySql.Data.Entity.Tests
         /// <summary>
         /// There are no comments for property Name in the schema.
         /// </summary>
-        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable = false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         public string Name
@@ -987,7 +987,7 @@ namespace MySql.Data.Entity.Tests
         /// <summary>
         /// There are no comments for property MinAge in the schema.
         /// </summary>
-        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable = false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         public int MinAge
@@ -1054,8 +1054,8 @@ namespace MySql.Data.Entity.Tests
     /// <summary>
     /// There are no comments for ComplexType testModel.CommonAddress in the schema.
     /// </summary>
-    [global::System.Data.Objects.DataClasses.EdmComplexTypeAttribute(NamespaceName="testModel", Name="CommonAddress")]
-    [global::System.Runtime.Serialization.DataContractAttribute(IsReference=true)]
+    [global::System.Data.Objects.DataClasses.EdmComplexTypeAttribute(NamespaceName = "testModel", Name = "CommonAddress")]
+    [global::System.Runtime.Serialization.DataContractAttribute(IsReference = true)]
     [global::System.Serializable()]
     public partial class CommonAddress : global::System.Data.Objects.DataClasses.ComplexObject
     {
@@ -1174,8 +1174,8 @@ namespace MySql.Data.Entity.Tests
     /// <KeyProperties>
     /// Id
     /// </KeyProperties>
-    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName="testModel", Name="Store")]
-    [global::System.Runtime.Serialization.DataContractAttribute(IsReference=true)]
+    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName = "testModel", Name = "Store")]
+    [global::System.Runtime.Serialization.DataContractAttribute(IsReference = true)]
     [global::System.Serializable()]
     public partial class Store : global::System.Data.Objects.DataClasses.EntityObject
     {
@@ -1195,7 +1195,7 @@ namespace MySql.Data.Entity.Tests
         /// <summary>
         /// There are no comments for property Id in the schema.
         /// </summary>
-        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(EntityKeyProperty = true, IsNullable = false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         public int Id
@@ -1222,7 +1222,7 @@ namespace MySql.Data.Entity.Tests
         /// <summary>
         /// There are no comments for property Name in the schema.
         /// </summary>
-        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable = false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         public string Name
@@ -1361,8 +1361,8 @@ namespace MySql.Data.Entity.Tests
     /// <KeyProperties>
     /// Id
     /// </KeyProperties>
-    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName="testModel", Name="Order")]
-    [global::System.Runtime.Serialization.DataContractAttribute(IsReference=true)]
+    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName = "testModel", Name = "Order")]
+    [global::System.Runtime.Serialization.DataContractAttribute(IsReference = true)]
     [global::System.Serializable()]
     public partial class Order : global::System.Data.Objects.DataClasses.EntityObject
     {
@@ -1382,7 +1382,7 @@ namespace MySql.Data.Entity.Tests
         /// <summary>
         /// There are no comments for property Id in the schema.
         /// </summary>
-        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(EntityKeyProperty = true, IsNullable = false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         public int Id
@@ -1409,7 +1409,7 @@ namespace MySql.Data.Entity.Tests
         /// <summary>
         /// There are no comments for property Freight in the schema.
         /// </summary>
-        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable = false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         public double Freight
@@ -1479,8 +1479,8 @@ namespace MySql.Data.Entity.Tests
     /// <KeyProperties>
     /// Id
     /// </KeyProperties>
-    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName="testModel", Name="Book")]
-    [global::System.Runtime.Serialization.DataContractAttribute(IsReference=true)]
+    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName = "testModel", Name = "Book")]
+    [global::System.Runtime.Serialization.DataContractAttribute(IsReference = true)]
     [global::System.Serializable()]
     public partial class Book : global::System.Data.Objects.DataClasses.EntityObject
     {
@@ -1502,7 +1502,7 @@ namespace MySql.Data.Entity.Tests
         /// <summary>
         /// There are no comments for property Id in the schema.
         /// </summary>
-        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(EntityKeyProperty = true, IsNullable = false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         public int Id
@@ -1529,7 +1529,7 @@ namespace MySql.Data.Entity.Tests
         /// <summary>
         /// There are no comments for property Name in the schema.
         /// </summary>
-        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable = false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         public string Name
@@ -1556,7 +1556,7 @@ namespace MySql.Data.Entity.Tests
         /// <summary>
         /// There are no comments for property Pages in the schema.
         /// </summary>
-        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable = false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         public int Pages
@@ -1665,8 +1665,8 @@ namespace MySql.Data.Entity.Tests
     /// <KeyProperties>
     /// Id
     /// </KeyProperties>
-    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName="testModel", Name="Author")]
-    [global::System.Runtime.Serialization.DataContractAttribute(IsReference=true)]
+    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName = "testModel", Name = "Author")]
+    [global::System.Runtime.Serialization.DataContractAttribute(IsReference = true)]
     [global::System.Serializable()]
     public partial class Author : global::System.Data.Objects.DataClasses.EntityObject
     {
@@ -1686,7 +1686,7 @@ namespace MySql.Data.Entity.Tests
         /// <summary>
         /// There are no comments for property Id in the schema.
         /// </summary>
-        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(EntityKeyProperty = true, IsNullable = false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         public int Id
@@ -1713,7 +1713,7 @@ namespace MySql.Data.Entity.Tests
         /// <summary>
         /// There are no comments for property Name in the schema.
         /// </summary>
-        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable = false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         public string Name
@@ -1793,8 +1793,8 @@ namespace MySql.Data.Entity.Tests
     /// <KeyProperties>
     /// id
     /// </KeyProperties>
-    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName="testModel", Name="Publisher")]
-    [global::System.Runtime.Serialization.DataContractAttribute(IsReference=true)]
+    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName = "testModel", Name = "Publisher")]
+    [global::System.Runtime.Serialization.DataContractAttribute(IsReference = true)]
     [global::System.Serializable()]
     public partial class Publisher : global::System.Data.Objects.DataClasses.EntityObject
     {
@@ -1814,7 +1814,7 @@ namespace MySql.Data.Entity.Tests
         /// <summary>
         /// There are no comments for property id in the schema.
         /// </summary>
-        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(EntityKeyProperty = true, IsNullable = false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         public int id
@@ -1841,7 +1841,7 @@ namespace MySql.Data.Entity.Tests
         /// <summary>
         /// There are no comments for property name in the schema.
         /// </summary>
-        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable = false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         public string name
@@ -1894,8 +1894,8 @@ namespace MySql.Data.Entity.Tests
     /// <KeyProperties>
     /// id
     /// </KeyProperties>
-    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName="testModel", Name="DataTypeTest")]
-    [global::System.Runtime.Serialization.DataContractAttribute(IsReference=true)]
+    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName = "testModel", Name = "DataTypeTest")]
+    [global::System.Runtime.Serialization.DataContractAttribute(IsReference = true)]
     [global::System.Serializable()]
     public partial class DataTypeTest : global::System.Data.Objects.DataClasses.EntityObject
     {
@@ -1915,7 +1915,7 @@ namespace MySql.Data.Entity.Tests
         /// <summary>
         /// There are no comments for property id in the schema.
         /// </summary>
-        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(EntityKeyProperty = true, IsNullable = false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         public global::System.Guid id
@@ -1942,7 +1942,7 @@ namespace MySql.Data.Entity.Tests
         /// <summary>
         /// There are no comments for property id2 in the schema.
         /// </summary>
-        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable = false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         public global::System.Guid id2
