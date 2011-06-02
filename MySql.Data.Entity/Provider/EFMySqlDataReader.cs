@@ -91,7 +91,7 @@ namespace MySql.Data.Entity
 
         public override bool GetBoolean(int ordinal)
         {
-            return reader.GetBoolean(ordinal);
+            return (bool)GetValue(ordinal);
         }
 
         public override byte GetByte(int ordinal)
