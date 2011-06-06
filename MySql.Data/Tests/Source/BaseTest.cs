@@ -54,6 +54,7 @@ namespace MySql.Data.MySqlClient.Tests
         protected string csAdditions = String.Empty;
         protected MySqlConnection conn;
         protected bool accessToMySqlDb;
+        private int numProcessesRunning;
 
         public BaseTest()
         {
@@ -210,6 +211,7 @@ namespace MySql.Data.MySqlClient.Tests
 
             ExecuteSQLAsRoot(sql);
             Open();
+            numProcessesRunning = CountProcesses();
         }
 
         protected void ExecuteSQLAsRoot(string sql)
@@ -221,21 +223,21 @@ namespace MySql.Data.MySqlClient.Tests
         [TearDown]
         public virtual void Teardown()
         {
+            // wait up to 5 seconds for our connection to close
+            int procs = CountProcesses();
+            for (int x = 0; x < 50; x++)
+            {
+                if (procs == numProcessesRunning) break;
+                System.Threading.Thread.Sleep(100);
+                procs = CountProcesses();
+            }
+            Assert.AreEqual(numProcessesRunning, procs, "Too many processes still running");
+
             conn.Close();
             if (Version.Major < 5)
                 suExecSQL("REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'test'");
             else
                 suExecSQL("DROP USER 'test'@'localhost'"); 
-
-            // wait up to 5 seconds for our connection to close
-            int procs = 0;
-            for (int x=0; x < 50; x++)
-            {
-                procs = CountProcesses();
-                if (procs == 1) break;
-                System.Threading.Thread.Sleep(100);
-            }
-            Assert.AreEqual(1, procs, "Too many processes still running");
 
             DropDatabase(database0);
             DropDatabase(database1);
