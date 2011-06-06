@@ -93,7 +93,7 @@ namespace MySql.Data.Common
             if (hostList.StartsWith("/", StringComparison.OrdinalIgnoreCase))
                 return CreateSocketStream(null, true);
 
-            string[] dnsHosts = hostList.Split('&');
+            string[] dnsHosts = hostList.Split(',');
 
             Random random = new Random((int)DateTime.Now.Ticks);
             int index = random.Next(dnsHosts.Length);

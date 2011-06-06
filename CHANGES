@@ -24,6 +24,8 @@
 - Modified Connection.Open() to not reuse existing driver instance when that instance is closed. Also made Connection.Abort() 
   always close the current driver, even if the connection is pooled. (MySQL bug #58316, Oracle bug #12613102).
 - Added Visual Studio DDEX support for Compact Framework projects (MySQL bug #54607, Oracle bug #12605152).  
+- Added Replication connection string option to indicate that the connection is using read-only replicated servers
+  This is the first step toward better replication support.
 
 6.4.0
 - Implemented Cache Server Properties connection option

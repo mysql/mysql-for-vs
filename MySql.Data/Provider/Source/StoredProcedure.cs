@@ -273,7 +273,7 @@ namespace MySql.Data.MySqlClient
             // now read the output parameters data row
             CommandBehavior behavior = reader.CommandBehavior;
             if ((behavior & CommandBehavior.SchemaOnly) != 0) return;
-            reader.Read();
+            if (!reader.Read()) return;
             //reader.ResultSet.NextRow(behavior);
 
             string prefix = "@" + StoredProcedure.ParameterPrefix;

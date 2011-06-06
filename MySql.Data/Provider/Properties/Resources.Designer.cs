@@ -785,6 +785,15 @@ namespace MySql.Data.MySqlClient.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Replicated connections allow only readonly statements..
+        /// </summary>
+        public static string ReplicatedConnectionsAllowOnlyReadonlyStatements {
+            get {
+                return ResourceManager.GetString("ReplicatedConnectionsAllowOnlyReadonlyStatements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Routine &apos;{0}&apos; cannot be found. Either check the spelling or make sure you have sufficient rights to execute the routine..
         /// </summary>
         public static string RoutineNotFound {
