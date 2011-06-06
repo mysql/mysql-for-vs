@@ -19,11 +19,9 @@ namespace MySql.Data.MySqlClient.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-#if !CF
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-#endif
     public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
@@ -781,6 +779,15 @@ namespace MySql.Data.MySqlClient.Properties {
         public static string ReadingPriorColumnUsingSeqAccess {
             get {
                 return ResourceManager.GetString("ReadingPriorColumnUsingSeqAccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replicated connections allow only readonly statements..
+        /// </summary>
+        public static string ReplicatedConnectionsAllowOnlyReadonlyStatements {
+            get {
+                return ResourceManager.GetString("ReplicatedConnectionsAllowOnlyReadonlyStatements", resourceCulture);
             }
         }
         

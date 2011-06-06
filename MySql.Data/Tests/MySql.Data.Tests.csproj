@@ -105,6 +105,7 @@
     <Compile Include="Source\ConnectionStringBuilder.cs" />
     <Compile Include="Source\ConnectionTests.cs" />
     <Compile Include="Source\BulkLoading.cs" />
+    <Compile Include="Source\ReplicationTests.cs" />
     <Compile Include="Source\TableCaching.cs" />
     <Compile Include="Source\OutputParameters.cs" />
     <Compile Include="Source\PartialTrustSandbox.cs" />

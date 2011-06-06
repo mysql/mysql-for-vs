@@ -264,12 +264,14 @@ namespace MySql.Data.MySqlClient
             // want results in
             MySqlCommand charSetCmd = new MySqlCommand("SET character_set_results=NULL",
                                                 connection);
+            charSetCmd.InternallyCreated = true;
             object clientCharSet = serverProps["character_set_client"];
             object connCharSet = serverProps["character_set_connection"];
             if ((clientCharSet != null && clientCharSet.ToString() != charSet) ||
                 (connCharSet != null && connCharSet.ToString() != charSet))
             {
                 MySqlCommand setNamesCmd = new MySqlCommand("SET NAMES " + charSet, connection);
+                setNamesCmd.InternallyCreated = true;
                 setNamesCmd.ExecuteNonQuery();
             }
             charSetCmd.ExecuteNonQuery();
