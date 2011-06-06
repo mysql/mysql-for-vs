@@ -647,6 +647,17 @@ namespace MySql.Data.MySqlClient
             set { SetValue("Check Parameters", value); }
         }
 
+        [Category("Advanced")]
+        [DisplayName("Replication")]
+        [Description("Indicates if this connection is to use replicated servers.")]
+        [DefaultValue(false)]
+        public bool Replication
+        {
+            get { return (bool)values["Replication"]; }
+            set { SetValue("Replication", value); }
+        }
+
+
         #endregion
 
         #region Pooling Properties

@@ -39,12 +39,6 @@ namespace MySql.Data.MySqlClient.Tests
     {
         protected bool prepare;
 
-        public OutputParametersBatch()
-        {
-            csAdditions = ";procedure cache size=0;";
-            prepare = false;
-        }
-
         protected override string GetConnectionInfo()
         {
             return "allow batch=true; ignore prepare = false";
