@@ -26,6 +26,7 @@
 - Added Visual Studio DDEX support for Compact Framework projects (MySQL bug #54607, Oracle bug #12605152).  
 - Added Replication connection string option to indicate that the connection is using read-only replicated servers
   This is the first step toward better replication support.
+- Fixed Entity Framework provider GROUP BY clause generation by adding all group by keys to the SELECT statement (MySQL bug #46742, Oracle bug #12622129).
 
 6.4.0
 - Implemented Cache Server Properties connection option

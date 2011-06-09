@@ -30,6 +30,7 @@ using System.Data.Common;
 using NUnit.Framework;
 using System.Data.Objects;
 using MySql.Data.Entity.Tests.Properties;
+using System.Linq;
 
 namespace MySql.Data.Entity.Tests
 {
@@ -80,6 +81,67 @@ namespace MySql.Data.Entity.Tests
                     int i = 0;
                     foreach (Company c in query)
                         Assert.AreEqual(dt.Rows[i++][0], c.Id);
+                }
+            }
+        }
+
+        [Test]
+        public void CanGroupBySingleColumn()
+        {
+            MySqlDataAdapter adapter = new MySqlDataAdapter(
+                "SELECT Name, COUNT(Id) as Count FROM Companies GROUP BY Name", conn);
+            DataTable table = new DataTable();
+            adapter.Fill(table);
+
+            using (testEntities context = new testEntities())
+            {
+                var companies = from c in context.Companies
+                                group c by c.Name into cgroup
+                                select new 
+                                { 
+                                    Name = cgroup.Key, 
+                                    Count = cgroup.Count() 
+                                };
+                string sql = companies.ToTraceString();
+                CheckSql(sql, SQLSyntax.CanGroupBySingleColumn);
+
+                int i = 0;
+                foreach (var company in companies)
+                {
+                    Assert.AreEqual(table.Rows[i][0], company.Name);
+                    Assert.AreEqual(table.Rows[i][1], company.Count);
+                    i++;
+                }
+            }
+        }
+
+        [Test]
+        public void CanGroupByMultipleColumns()
+        {
+            MySqlDataAdapter adapter = new MySqlDataAdapter(
+                "SELECT Name, COUNT(Id) as Count FROM Companies GROUP BY Name, NumEmployees, DateBegan", conn);
+            DataTable table = new DataTable();
+            adapter.Fill(table);
+
+            using (testEntities context = new testEntities())
+            {
+                var companies = from c in context.Companies
+                                group c by new { c.Name, c.NumEmployees, c.DateBegan } into cgroup
+                                select new
+                                {
+                                    Name = cgroup.Key.Name,
+                                    Count = cgroup.Count()
+                                };
+
+                string sql = companies.ToTraceString();
+                CheckSql(sql, SQLSyntax.CanGroupByMultipleColumns);
+
+                int i = 0;
+                foreach (var company in companies)
+                {
+                    Assert.AreEqual(table.Rows[i][0], company.Name);
+                    Assert.AreEqual(table.Rows[i][1], company.Count);
+                    i++;
                 }
             }
         }
