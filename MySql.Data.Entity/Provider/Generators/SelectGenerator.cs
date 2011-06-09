@@ -91,10 +91,21 @@ namespace MySql.Data.Entity
             RowType rt = (RowType)ct.TypeUsage.EdmType;
 
             int propIndex = 0;
+
             foreach (DbExpression key in expression.Keys)
             {
-                select.AddGroupBy(key.Accept(this));
+                var fragment = key.Accept(this);
+                select.AddGroupBy(fragment);
                 propIndex++;
+
+                var colFragment = fragment as ColumnFragment;
+
+                if (colFragment != null)
+                {
+                    colFragment = colFragment.Clone();
+                    colFragment.ColumnAlias = String.Format("K{0}", propIndex);
+                    select.Columns.Add(colFragment);
+                }        
             }
 
             for (int agg = 0; agg < expression.Aggregates.Count; agg++)
