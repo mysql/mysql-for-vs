@@ -138,7 +138,7 @@ namespace MySql.Data.MySqlClient.Tests
             catch (MySqlException ex)
             {
                 TimeSpan ts = DateTime.Now.Subtract(start);
-                Assert.IsTrue(ts.TotalSeconds <= 2);
+                Assert.IsTrue(ts.TotalSeconds <= 3);
                 Assert.IsTrue(ex.Message.StartsWith("Timeout expired"), "Message is wrong " +ex.Message);
             }
 

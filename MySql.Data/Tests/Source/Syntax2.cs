@@ -93,6 +93,7 @@ namespace MySql.Data.MySqlClient.Tests
             command.Parameters.AddWithValue("@A", 1);
             command.Parameters.AddWithValue("@B", 2);
             command.Parameters.AddWithValue("@C", "test");
+            command.Parameters.Add("@return", MySqlDbType.Int32).Direction = ParameterDirection.ReturnValue;
             command.ExecuteNonQuery();
         }
 
