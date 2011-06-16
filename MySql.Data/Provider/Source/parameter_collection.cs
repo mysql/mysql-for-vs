@@ -482,12 +482,8 @@ namespace MySql.Data.MySqlClient
             }
         }
 
-        internal MySqlParameter GetParameterFlexible(string parameterName, bool throwOnNotFound)
+        private MySqlParameter GetParameterFlexibleInternal(string baseName)
         {
-            string baseName = parameterName;
-            if (parameterName.StartsWith("@") || parameterName.StartsWith("?"))
-                baseName = parameterName.Substring(1);
-
             int index = IndexOf(baseName);
             if (-1 == index)
                 index = IndexOf("?" + baseName);
@@ -495,6 +491,20 @@ namespace MySql.Data.MySqlClient
                 index = IndexOf("@" + baseName);
             if (-1 != index)
                 return this[index];
+            return null;
+        }
+
+        internal MySqlParameter GetParameterFlexible(string parameterName, bool throwOnNotFound)
+        {
+            string baseName = parameterName;
+            MySqlParameter p = GetParameterFlexibleInternal(baseName);
+            if (p != null) return p;
+
+            if (parameterName.StartsWith("@") || parameterName.StartsWith("?"))
+                baseName = parameterName.Substring(1);
+            p = GetParameterFlexibleInternal(baseName);
+            if (p != null) return p;
+
             if (throwOnNotFound)
                 throw new ArgumentException("Parameter '" + parameterName + "' not found in the collection.");
             return null;
