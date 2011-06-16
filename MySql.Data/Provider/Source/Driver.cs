@@ -57,6 +57,7 @@ namespace MySql.Data.MySqlClient
         private bool firstResult;
         protected IDriver handler;
         internal MySqlDataReader reader;
+        private bool disposeInProgress;
 
         /// <summary>
         /// For pooled connections, time when the driver was
@@ -479,6 +480,12 @@ namespace MySql.Data.MySqlClient
 
         protected virtual void Dispose(bool disposing)
         {
+            // Avoid cyclic calls to Dispose.
+            if (disposeInProgress)
+                return;
+            
+            disposeInProgress = true; 
+
             try
             {
                 ResetTimeout(1000);
@@ -497,6 +504,7 @@ namespace MySql.Data.MySqlClient
             {
                 reader = null;
                 isOpen = false;
+                disposeInProgress = false;
             }
         }
 
