@@ -380,7 +380,7 @@ namespace MySql.Data.MySqlClient.Tests
                 execSQL("CREATE PROCEDURE spTest(\"@Param1\" text) BEGIN SELECT \"@Param1\"; END");
 
                 MySqlCommand cmd = new MySqlCommand("spTest", conn);
-                cmd.Parameters.AddWithValue("?@Param1", "This is my value");
+                cmd.Parameters.AddWithValue("@Param1", "This is my value");
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 string val = (string)cmd.ExecuteScalar();

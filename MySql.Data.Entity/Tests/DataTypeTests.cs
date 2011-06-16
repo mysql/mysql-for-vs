@@ -142,8 +142,8 @@ namespace MySql.Data.Entity.Tests
             {
                 DataTypeTest dtt = context.DataTypeTests.First();
                 string guidAsChar = dtt.idAsChar;
-                Assert.AreEqual(guidAsChar, dtt.id.ToString());
-                Assert.AreEqual(guidAsChar, dtt.id2.ToString());
+                Assert.AreEqual(0, String.Compare(guidAsChar, dtt.id.ToString(), true));
+                Assert.AreEqual(0, String.Compare(guidAsChar, dtt.id2.ToString(), true));
             }
         }
     }
