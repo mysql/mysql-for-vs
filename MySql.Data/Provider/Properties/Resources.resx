@@ -463,4 +463,7 @@
   <data name="CanNotDeriveParametersForTextCommands" xml:space="preserve">
     <value>Parameters can only be derived for commands using the StoredProcedure command type.</value>
   </data>
+  <data name="FileBasedCertificateNotSupported" xml:space="preserve">
+    <value>File based certificates are only supported when connecting to MySQL Server 5.1 or greater.</value>
+  </data>
 </root>

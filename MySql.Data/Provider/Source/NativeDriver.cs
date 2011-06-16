@@ -283,6 +283,9 @@ namespace MySql.Data.MySqlClient
             // Check for file-based certificate
             if (Settings.CertificateFile != null)
             {
+                if (!Version.isAtLeast(5, 1, 0))
+                    throw new MySqlException(Properties.Resources.FileBasedCertificateNotSupported);
+
                 X509Certificate2 clientCert = new X509Certificate2(Settings.CertificateFile,
                     Settings.CertificatePassword);
                 certs.Add(clientCert);

@@ -567,6 +567,8 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void CanConnectUsingFileBasedCertificate()
         {
+            if (Version < new Version(5, 1)) return;
+
             string connstr = GetConnectionString(true);
             connstr += ";CertificateFile=client.pfx;CertificatePassword=pass;SSL Mode=Required;";
             using (MySqlConnection c = new MySqlConnection(connstr))

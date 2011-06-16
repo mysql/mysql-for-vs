@@ -40,6 +40,7 @@
   always close the current driver, even if the connection is pooled. (MySQL bug #58316, Oracle bug #12613102).
 - Added Visual Studio DDEX support for Compact Framework projects (MySQL bug #54607, Oracle bug #12605152).  
 - Fixed Entity Framework provider GROUP BY clause generation by adding all group by keys to the SELECT statement (MySQL bug #46742, Oracle bug #12622129).
+- Removed support for file based certificates when connecting to MySQL Server 5.0 or below.
 
 Version 6.3.6
 - Fixed TracingDriver so that it normalizes long queries before truncation so we don't get exceptions     
