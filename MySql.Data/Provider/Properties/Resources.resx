@@ -457,4 +457,7 @@
   <data name="TraceQueryNormalized" xml:space="preserve">
     <value>{0}: Query Normalized: {2}</value>
   </data>
+  <data name="FileBasedCertificateNotSupported" xml:space="preserve">
+    <value>File based certificates are only supported when connecting to MySQL Server 5.1 or greater.</value>
+  </data>
 </root>
