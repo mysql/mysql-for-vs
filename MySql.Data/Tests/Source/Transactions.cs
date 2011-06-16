@@ -758,7 +758,7 @@ namespace MySql.Data.MySqlClient.Tests
                     sqlCommand.Append("binary_data LONGBLOB NOT NULL, ");
                     sqlCommand.Append("PRIMARY KEY(identity), ");
                     sqlCommand.Append("KEY `abc` (`a`,`b`, `c`) ");
-                    sqlCommand.Append(") TYPE = INNODB");
+                    sqlCommand.Append(") ENGINE = INNODB");
 
                     command.CommandText = sqlCommand.ToString();
                     command.ExecuteNonQuery();
