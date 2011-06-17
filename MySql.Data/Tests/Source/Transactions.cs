@@ -236,6 +236,8 @@ namespace MySql.Data.MySqlClient.Tests
 
                 scope.Complete();
             }
+
+            MySqlPoolManager.ClearAllPools();
         }
 
 
