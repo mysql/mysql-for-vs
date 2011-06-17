@@ -119,9 +119,9 @@ namespace MySql.Data.Entity.Tests
                     WHERE testModel.Store.spFunc(e.Id, '') = 6";
                 using (EntityCommand cmd = new EntityCommand(query, conn))
                 {
-                    EntityDataReader reader = cmd.ExecuteReader();
+                    EntityDataReader reader = cmd.ExecuteReader(CommandBehavior.SequentialAccess);
                     Assert.IsTrue(reader.Read());
-                    Assert.AreEqual(6, reader[0]);
+                    Assert.AreEqual("Scooby", reader[0]);
                 }
             }
         }
