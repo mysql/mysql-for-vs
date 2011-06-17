@@ -289,7 +289,7 @@ namespace MySql.Data.MySqlClient.Tests
         /// Bug #45978	Silent problem when net_write_timeout is exceeded
         /// </summary>
         [Test]
-        public virtual void NetWriteTimeoutExpiring()
+        public void NetWriteTimeoutExpiring()
         {
             execSQL("CREATE TABLE Test(id int, blob1 longblob)");
             int rows = 10000;
@@ -379,58 +379,6 @@ namespace MySql.Data.MySqlClient.Tests
         {
             return String.Format("protocol=sharedmemory; shared memory name={0}",
                 memoryName);
-        }
-
-        [Test]
-        [ExpectedException(typeof(MySqlException))]
-        public override void NetWriteTimeoutExpiring()
-        {
-            execSQL("CREATE TABLE Test(id int, blob1 longblob)");
-            int rows = 10000;
-            byte[] b1 = Utils.CreateBlob(5000);
-            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (@id, @b1)", conn);
-            cmd.Parameters.Add("@id", MySqlDbType.Int32);
-            cmd.Parameters.AddWithValue("@name", b1);
-            for (int i = 0; i < rows; i++)
-            {
-                cmd.Parameters[0].Value = i;
-                cmd.ExecuteNonQuery();
-            }
-
-            string connStr = GetConnectionString(true);
-            using (MySqlConnection c = new MySqlConnection(connStr))
-            {
-                c.Open();
-                cmd.Connection = c;
-                cmd.Parameters.Clear();
-                cmd.CommandText = "SET net_write_timeout = 1";
-                cmd.ExecuteNonQuery();
-
-                cmd.CommandText = "SELECT * FROM Test LIMIT " + rows;
-                int i = 0;
-                try
-                {
-                    using (MySqlDataReader reader = cmd.ExecuteReader())
-                    {
-
-                        // after this several cycles of DataReader.Read() are executed 
-                        // normally and then the problem, described above, occurs
-                        for (; i < rows; i++)
-                        {
-                            if (!reader.Read())
-                                Assert.Fail("unexpected 'false' from reader.Read");
-                            if (i % 10 == 0)
-                                Thread.Sleep(1);
-                            object v = reader.GetValue(1);
-                        }
-                    }
-                }
-                catch (MySqlException e)
-                {
-                    Assert.IsTrue(e.Message.StartsWith("Fatal"));
-                    throw e;
-                }
-            }
         }
     }
 #endif
