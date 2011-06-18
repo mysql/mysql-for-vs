@@ -263,7 +263,7 @@ namespace MySql.Data.Common
             // Fallback if Socket.IOControl is not available ( Compact Framework )
             // or not implemented ( Mono ). Keepalive option will still be set, but
             // with timeout is kept default.
-            s.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+            s.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, 1);
         }
     }
 }
