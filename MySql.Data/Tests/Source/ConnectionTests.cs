@@ -560,23 +560,6 @@ namespace MySql.Data.MySqlClient.Tests
 
             MySqlConnection c = new MySqlConnection(connstr);
         }
-
-        public override void Teardown()
-        {
-            conn.Close();
-
-            // wait up to 10 seconds for our connection to close
-            int procs = 0;
-            for (int x = 0; x < 15; x++)
-            {
-                procs = CountProcesses();
-                if (procs == 1) break;
-                System.Threading.Thread.Sleep(1000);
-            }
-            Assert.AreEqual(1, procs, "Too many processes still running");
-
-            base.Teardown();
-        }
 #endif
 
         [Test]
