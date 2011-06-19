@@ -595,12 +595,10 @@ namespace MySql.Data.MySqlClient
             set { SetValue("Sql Server Mode", value); }
         }
 
-#if !CF
         [Category("Advanced")]
         [DisplayName("Check Parameters")]
         [Description("Indicates if stored routine parameters should be checked against the server.")]
         [DefaultValue(true)]
-#endif
         public bool CheckParameters
         {
             get { return (bool)values["Check Parameters"]; }
