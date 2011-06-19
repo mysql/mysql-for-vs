@@ -865,6 +865,8 @@ namespace MySql.Data.MySqlClient
             object val = null;
             if (value is string && defaultValues[keyword].DefaultValue is Enum)
                 val = ParseEnum(defaultValues[keyword].Type, (string)value, keyword);
+            else if (value is string && string.IsNullOrEmpty(value.ToString()))
+                val = defaultValues[keyword].DefaultValue;
             else
                 val = ChangeType(value, defaultValues[keyword].Type);
             HandleObsolete(keyword, val);
