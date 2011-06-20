@@ -24,12 +24,12 @@ using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Text;
+using System.Globalization;
 
 namespace MySql.Data.MySqlClient
 {
     public class DbConnectionStringBuilder : IDictionary, ICollection, IEnumerable, ICustomTypeDescriptor
 	{
-        private string connectionString;
         private Hashtable hash;
         private bool browsable;
 
@@ -49,12 +49,11 @@ namespace MySql.Data.MySqlClient
         
         public string ConnectionString 
         {
-            get { return connectionString; }
+            get { return GetConnectionString(); }
             set 
             {
                 Clear();
                 ParseConnectionString(value);
-                connectionString = value; 
             }
         }
 
@@ -71,12 +70,10 @@ namespace MySql.Data.MySqlClient
         public void Add(object key, object value)
         {
             hash[key] = value;
-            //TODO: update connection string
         }
 
         public virtual void Clear()
         {
-            connectionString = null;
             hash.Clear();
         }
 
@@ -108,7 +105,6 @@ namespace MySql.Data.MySqlClient
         public void Remove(object key)
         {
             hash.Remove(key);
-            //TODO: update connection string
         }
 
         public ICollection Values
@@ -280,6 +276,19 @@ namespace MySql.Data.MySqlClient
                 value = value.Substring(0, value.Length - 1);
             }
             return value;
+        }
+
+        private string GetConnectionString()
+        {
+            StringBuilder builder = new StringBuilder();
+            string delimiter = "";
+            foreach (string key in this.Keys)
+            {
+                builder.AppendFormat(CultureInfo.CurrentCulture, "{0}{1}={2}",
+                    delimiter, key, this[key]);
+                delimiter = ";";
+            }
+            return builder.ToString();
         }
 
 /*        private void ParseConnectionString(string value)
