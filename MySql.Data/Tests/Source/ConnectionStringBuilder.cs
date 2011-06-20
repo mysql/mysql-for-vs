@@ -98,12 +98,14 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual("database=test2", s.ConnectionString);
         }
 
+#if !CF
         [Test]
         public void EncryptKeyword()
         {
             string connStr = "database=test;uid=root;server=localhost;encrypt=yes";
             MySqlConnectionStringBuilder sb = new MySqlConnectionStringBuilder(connStr);
         }
+#endif
 
         /// <summary>
         /// Bug #51209	error on parameter without value on connectionstring
