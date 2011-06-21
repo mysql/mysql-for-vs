@@ -68,21 +68,6 @@
     <Compile Include="..\..\..\Source\MySql.Data\Properties\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Source\MySql.Data\base\DbConnectionStringBuilder.cs">
-      <Link>base\DbConnectionStringBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\Source\MySql.Data\base\DbException.cs">
-      <Link>base\DbException.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\Source\MySql.Data\cf\BufferedStream.cs">
-      <Link>cf\BufferedStream.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\Source\MySql.Data\cf\MissingAttributes.cs">
-      <Link>cf\MissingAttributes.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\Source\MySql.Data\cf\WinCE.cs">
-      <Link>cf\WinCE.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\Source\MySql.Data\CharSetMap.cs" />
     <Compile Include="..\..\..\Source\MySql.Data\command.cs">
       <SubType>Component</SubType>
@@ -256,6 +241,11 @@
     <Compile Include="..\..\..\Source\MySql.Data\zlib\ZStreamException.cs">
       <Link>zlib\ZStreamException.cs</Link>
     </Compile>
+    <Compile Include="base\DbConnectionStringBuilder.cs" />
+    <Compile Include="base\DbException.cs" />
+    <Compile Include="cf\BufferedStream.cs" />
+    <Compile Include="cf\MissingAttributes.cs" />
+    <Compile Include="cf\WinCE.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\..\..\Source\MySql.Data\Properties\Resources.resx">

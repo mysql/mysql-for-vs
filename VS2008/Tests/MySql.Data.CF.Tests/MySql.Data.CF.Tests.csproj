@@ -99,7 +99,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Source\MySql.Data\MySql.Data.CF.csproj">
+    <ProjectReference Include="..\..\Source\MySql.Data.CF\MySql.Data.CF.csproj">
       <Project>{587A47FB-C1CC-459D-93B6-179D95E41EFB}</Project>
       <Name>MySql.Data.CF</Name>
     </ProjectReference>
