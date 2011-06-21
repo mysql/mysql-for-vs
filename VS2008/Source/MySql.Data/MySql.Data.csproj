@@ -305,6 +305,12 @@
       <Link>common\QueryNormalizer.cs</Link>
     </Compile>
     <Compile Include="..\..\..\Source\MySql.Data\MySqlTrace.cs" />
+    <Compile Include="..\..\..\Source\MySql.Data\SSPI.cs">
+      <Link>SSPI.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Source\MySql.Data\TableCache.cs">
+      <Link>TableCache.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\Source\MySql.Data\TimedStream.cs" />
     <Compile Include="..\..\..\Source\MySql.Data\TracingDriver.cs" />
   </ItemGroup>
