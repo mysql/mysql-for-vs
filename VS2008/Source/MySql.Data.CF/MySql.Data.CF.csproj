@@ -135,8 +135,14 @@
     <Compile Include="..\..\..\Source\MySql.Data\ProcedureCache.cs" />
     <Compile Include="..\..\..\Source\MySql.Data\ResultSet.cs" />
     <Compile Include="..\..\..\Source\MySql.Data\SchemaProvider.cs" />
+    <Compile Include="..\..\..\Source\MySql.Data\SSPI.cs">
+      <Link>SSPI.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\Source\MySql.Data\Statement.cs" />
     <Compile Include="..\..\..\Source\MySql.Data\StoredProcedure.cs" />
+    <Compile Include="..\..\..\Source\MySql.Data\TableCache.cs">
+      <Link>TableCache.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\Source\MySql.Data\TimedStream.cs" />
     <Compile Include="..\..\..\Source\MySql.Data\transaction.cs" />
     <Compile Include="..\..\..\Source\MySql.Data\Types\MetaData.cs">
