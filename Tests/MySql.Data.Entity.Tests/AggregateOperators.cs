@@ -48,7 +48,7 @@ namespace MySql.Data.Entity.Tests
                 ObjectQuery<Int32> q = context.CreateQuery<Int32>(eSql);
 
                 string sql = q.ToTraceString();
-                CheckSql(sql, "CountSimple");
+                CheckSql(sql, SQLSyntax.CountSimple);
 
                 foreach (int count in q)
                     Assert.AreEqual(trueCount, count);
@@ -67,7 +67,7 @@ namespace MySql.Data.Entity.Tests
                 ObjectQuery<Int32> q = context.CreateQuery<Int32>(eSql);
 
                 string sql = q.ToTraceString();
-                CheckSql(sql, "BigCountSimple");
+                CheckSql(sql, SQLSyntax.BigCountSimple);
 
                 foreach (int count in q)
                     Assert.AreEqual(trueCount, count);
@@ -86,7 +86,7 @@ namespace MySql.Data.Entity.Tests
                 ObjectQuery<Int32> q = context.CreateQuery<Int32>(eSql);
 
                 string sql = q.ToTraceString();
-                CheckSql(sql, "CountWithPredicate");
+                CheckSql(sql, SQLSyntax.CountWithPredicate);
 
                 foreach (int count in q)
                     Assert.AreEqual(trueCount, count);
@@ -105,7 +105,7 @@ namespace MySql.Data.Entity.Tests
                 ObjectQuery<Int32> q = context.CreateQuery<Int32>(eSql);
 
                 string sql = q.ToTraceString();
-                CheckSql(sql, "MinSimple");
+                CheckSql(sql, SQLSyntax.MinSimple);
 
                 foreach (int age in q)
                     Assert.AreEqual(trueMin, age);
@@ -124,7 +124,7 @@ namespace MySql.Data.Entity.Tests
                 ObjectQuery<DbDataRecord> q = context.CreateQuery<DbDataRecord>(eSql);
 
                 string sql = q.ToTraceString();
-                CheckSql(sql, "MinWithPredicate");
+                CheckSql(sql, SQLSyntax.MinWithPredicate);
 
                 foreach (DbDataRecord r in q)
                 {
@@ -147,7 +147,7 @@ namespace MySql.Data.Entity.Tests
                 ObjectQuery<Double> q = context.CreateQuery<Double>(eSql);
 
                 string sql = q.ToTraceString();
-                CheckSql(sql, "MinWithGrouping");
+                CheckSql(sql, SQLSyntax.MinWithGrouping);
 
                 int i = 0;
                 foreach (double freight in q)
@@ -167,7 +167,7 @@ namespace MySql.Data.Entity.Tests
                 ObjectQuery<Int32> q = context.CreateQuery<Int32>(eSql);
 
                 string sql = q.ToTraceString();
-                CheckSql(sql, "MaxSimple");
+                CheckSql(sql, SQLSyntax.MaxSimple);
 
                 foreach (int max in q)
                     Assert.AreEqual(trueMax, max);
@@ -186,7 +186,7 @@ namespace MySql.Data.Entity.Tests
                 ObjectQuery<DbDataRecord> q = context.CreateQuery<DbDataRecord>(eSql);
 
                 string sql = q.ToTraceString();
-                CheckSql(sql, "MaxWithPredicate");
+                CheckSql(sql, SQLSyntax.MaxWithPredicate);
 
                 foreach (DbDataRecord r in q)
                     Assert.AreEqual(freight, r.GetDouble(0));
@@ -207,7 +207,7 @@ namespace MySql.Data.Entity.Tests
                 ObjectQuery<Double> q = context.CreateQuery<Double>(eSql);
 
                 string sql = q.ToTraceString();
-                CheckSql(sql, "MaxWithGrouping");
+                CheckSql(sql, SQLSyntax.MaxWithGrouping);
 
                 int i = 0;
                 foreach (double freight in q)
@@ -227,7 +227,7 @@ namespace MySql.Data.Entity.Tests
                 ObjectQuery<Decimal> q = context.CreateQuery<Decimal>(eSql);
 
                 string sql = q.ToTraceString();
-                CheckSql(sql, "AverageSimple");
+                CheckSql(sql, SQLSyntax.AverageSimple);
 
                 foreach (Decimal r in q)
                     Assert.AreEqual(avgAge, r);
@@ -246,7 +246,7 @@ namespace MySql.Data.Entity.Tests
                 ObjectQuery<Double> q = context.CreateQuery<Double>(eSql);
 
                 string sql = q.ToTraceString();
-                CheckSql(sql, "AverageWithPredicate");
+                CheckSql(sql, SQLSyntax.AverageWithPredicate);
 
                 foreach (Double r in q)
                     Assert.AreEqual(Convert.ToInt32(freight), Convert.ToInt32(r));
@@ -267,7 +267,7 @@ namespace MySql.Data.Entity.Tests
                 ObjectQuery<DbDataRecord> q = context.CreateQuery<DbDataRecord>(eSql);
 
                 string sql = q.ToTraceString();
-                CheckSql(sql, "AverageWithGrouping");
+                CheckSql(sql, SQLSyntax.AverageWithGrouping);
 
                 foreach (object x in q)
                 {
@@ -293,7 +293,7 @@ namespace MySql.Data.Entity.Tests
                 ObjectQuery<Int32> q = context.CreateQuery<Int32>(eSql);
 
                 string sql = q.ToTraceString();
-                CheckSql(sql, "SumSimple");
+                CheckSql(sql, SQLSyntax.SumSimple);
 
                 foreach (int r in q)
                     Assert.AreEqual(sumAge, r);
@@ -312,7 +312,7 @@ namespace MySql.Data.Entity.Tests
                 ObjectQuery<Double> q = context.CreateQuery<Double>(eSql);
 
                 string sql = q.ToTraceString();
-                CheckSql(sql, "SumWithPredicate");
+                CheckSql(sql, SQLSyntax.SumWithPredicate);
 
                 foreach (Double r in q)
                     Assert.AreEqual(freight, r);
@@ -333,7 +333,7 @@ namespace MySql.Data.Entity.Tests
                 ObjectQuery<Double> q = context.CreateQuery<Double>(eSql);
 
                 string sql = q.ToTraceString();
-                CheckSql(sql, "SumWithGrouping");
+                CheckSql(sql, SQLSyntax.SumWithGrouping);
 
                 int i = 0;
                 foreach (double freight in q)
@@ -356,7 +356,7 @@ namespace MySql.Data.Entity.Tests
                 ObjectQuery<Store> q = context.CreateQuery<Store>(eSql);
 
                 string sql = q.ToTraceString();
-                CheckSql(sql, "MaxInSubQuery1");
+                CheckSql(sql, SQLSyntax.MaxInSubQuery1);
 
                 int i = 0;
                 foreach (Store s in q)
@@ -379,7 +379,7 @@ namespace MySql.Data.Entity.Tests
                 ObjectQuery<Store> q = context.CreateQuery<Store>(eSql);
 
                 string sql = q.ToTraceString();
-                CheckSql(sql, "MaxInSubQuery2");
+                CheckSql(sql, SQLSyntax.MaxInSubQuery2);
 
                 int i = 0;
                 foreach (Store s in q)

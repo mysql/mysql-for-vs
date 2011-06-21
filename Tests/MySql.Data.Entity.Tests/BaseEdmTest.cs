@@ -119,16 +119,12 @@ namespace MySql.Data.Entity.Tests
 
         protected void CheckSql(string sql, string refSql)
         {
-            string checkSql = SQLSyntax.ResourceManager.GetString(refSql);
-#if CLR4
-            checkSql = SQLSyntaxEF4.ResourceManager.GetString(refSql);
-#endif
             StringBuilder str1 = new StringBuilder();
             StringBuilder str2 = new StringBuilder();
             foreach (char c in sql)
                 if (!Char.IsWhiteSpace(c))
                     str1.Append(c);
-            foreach (char c in checkSql)
+            foreach (char c in refSql)
                 if (!Char.IsWhiteSpace(c))
                     str2.Append(c);
             Assert.AreEqual(0, String.Compare(str1.ToString(), str2.ToString(), true));
