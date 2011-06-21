@@ -13,11 +13,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Data.Entity", "Source
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Data.Entity.Tests", "Tests\MySql.Data.Entity.Tests\MySql.Data.Entity.Tests.csproj", "{D37B3572-767F-4622-A835-844B0EBEFD5B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Data.CF", "Source\MySql.Data\MySql.Data.CF.csproj", "{587A47FB-C1CC-459D-93B6-179D95E41EFB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Data.CF.Tests", "Tests\MySql.Data.Tests\MySql.Data.CF.Tests.csproj", "{710D9251-17A3-4429-9A91-63F03267F310}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.VisualStudio", "Source\MySql.VisualStudio\MySql.VisualStudio.csproj", "{DC3517FF-AC26-4755-9B7A-EF658FF69593}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Data.CF", "Source\MySql.Data.CF\MySql.Data.CF.csproj", "{587A47FB-C1CC-459D-93B6-179D95E41EFB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Data.CF.Tests", "Tests\MySql.Data.CF.Tests\MySql.Data.CF.Tests.csproj", "{710D9251-17A3-4429-9A91-63F03267F310}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +75,14 @@ Global
 		{D37B3572-767F-4622-A835-844B0EBEFD5B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D37B3572-767F-4622-A835-844B0EBEFD5B}.Release-4.0|Any CPU.ActiveCfg = Release|Any CPU
 		{D37B3572-767F-4622-A835-844B0EBEFD5B}.Release-4.0|Any CPU.Build.0 = Release|Any CPU
+		{DC3517FF-AC26-4755-9B7A-EF658FF69593}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC3517FF-AC26-4755-9B7A-EF658FF69593}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC3517FF-AC26-4755-9B7A-EF658FF69593}.Debug-4.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC3517FF-AC26-4755-9B7A-EF658FF69593}.Debug-4.0|Any CPU.Build.0 = Debug|Any CPU
+		{DC3517FF-AC26-4755-9B7A-EF658FF69593}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC3517FF-AC26-4755-9B7A-EF658FF69593}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC3517FF-AC26-4755-9B7A-EF658FF69593}.Release-4.0|Any CPU.ActiveCfg = Release|Any CPU
+		{DC3517FF-AC26-4755-9B7A-EF658FF69593}.Release-4.0|Any CPU.Build.0 = Release|Any CPU
 		{587A47FB-C1CC-459D-93B6-179D95E41EFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{587A47FB-C1CC-459D-93B6-179D95E41EFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{587A47FB-C1CC-459D-93B6-179D95E41EFB}.Debug-4.0|Any CPU.ActiveCfg = Debug|Any CPU
@@ -91,14 +99,6 @@ Global
 		{710D9251-17A3-4429-9A91-63F03267F310}.Release|Any CPU.Build.0 = Release|Any CPU
 		{710D9251-17A3-4429-9A91-63F03267F310}.Release-4.0|Any CPU.ActiveCfg = Release|Any CPU
 		{710D9251-17A3-4429-9A91-63F03267F310}.Release-4.0|Any CPU.Build.0 = Release|Any CPU
-		{DC3517FF-AC26-4755-9B7A-EF658FF69593}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DC3517FF-AC26-4755-9B7A-EF658FF69593}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DC3517FF-AC26-4755-9B7A-EF658FF69593}.Debug-4.0|Any CPU.ActiveCfg = Debug|Any CPU
-		{DC3517FF-AC26-4755-9B7A-EF658FF69593}.Debug-4.0|Any CPU.Build.0 = Debug|Any CPU
-		{DC3517FF-AC26-4755-9B7A-EF658FF69593}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DC3517FF-AC26-4755-9B7A-EF658FF69593}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DC3517FF-AC26-4755-9B7A-EF658FF69593}.Release-4.0|Any CPU.ActiveCfg = Release|Any CPU
-		{DC3517FF-AC26-4755-9B7A-EF658FF69593}.Release-4.0|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
