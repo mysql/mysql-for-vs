@@ -206,16 +206,6 @@ FROM Toys AS Extent1
   </data>
   <data name="Exists" xml:space="preserve">
     <value>SELECT
-Project1.Id, 
-Project1.Name, 
-Project1.DateBegan, 
-Project1.NumEmployees, 
-Project1.C1, 
-Project1.Address, 
-Project1.City, 
-Project1.State, 
-Project1.ZipCode
-FROM (SELECT
 Extent1.Id, 
 Extent1.Name, 
 Extent1.DateBegan, 
@@ -223,23 +213,21 @@ Extent1.NumEmployees,
 Extent1.Address, 
 Extent1.City, 
 Extent1.State, 
-Extent1.ZipCode, 
-1 AS C1
-FROM Companies AS Extent1) AS Project1
+Extent1.ZipCode
+FROM Companies AS Extent1
  WHERE EXISTS(SELECT
 1 AS C1
 FROM Toys AS Extent2
- WHERE (Project1.Id = Extent2.SupplierId) AND (Extent2.MinAge &lt; 4))</value>
+ WHERE (Extent1.Id = Extent2.SupplierId) AND (Extent2.MinAge &lt; 4))</value>
   </data>
   <data name="JoinOfUnionsOnRightSideOfJoin" xml:space="preserve">
     <value>SELECT
-1 AS C1, 
 Extent1.Id, 
 Extent1.Name, 
-Join1.Id AS C2, 
-Join1.Name AS C3, 
-Join1.Id1 AS C4, 
-Join1.Name1 AS C5
+Join1.Id AS C1, 
+Join1.Name AS C2, 
+Join1.Id1 AS C3, 
+Join1.Name1 AS C4
 FROM Companies AS Extent1 INNER JOIN (SELECT
 UnionAll1.Id, 
 UnionAll1.Name, 
@@ -275,12 +263,11 @@ Extent2.FirstName,
 Extent2.Age, 
 Extent3.EmployeeId, 
 Extent3.Salary
-FROM Employees AS Extent2 LEFT OUTER JOIN SalariedEmployees AS Extent3 ON Extent2.Id = Extent3.EmployeeId) AS Join1 ON (Extent1.EmployeeID = Join1.Id) OR ((Extent1.EmployeeID IS  NULL) AND (Join1.Id IS  NULL))
+FROM Employees AS Extent2 LEFT OUTER JOIN SalariedEmployees AS Extent3 ON Extent2.Id = Extent3.EmployeeId) AS Join1 ON Extent1.EmployeeID = Join1.Id
  WHERE Extent1.Weight &gt; 7</value>
   </data>
   <data name="JoinOnRightSideNameClash" xml:space="preserve">
     <value>SELECT
-1 AS C1, 
 Extent1.Id, 
 Extent1.Name, 
 Join1.Id AS Id1, 
@@ -376,16 +363,6 @@ FROM Orders AS Extent1
   </data>
   <data name="OrderBySimple" xml:space="preserve">
     <value>SELECT
-Project1.Id, 
-Project1.Name, 
-Project1.DateBegan, 
-Project1.NumEmployees, 
-Project1.C1, 
-Project1.Address, 
-Project1.City, 
-Project1.State, 
-Project1.ZipCode
-FROM (SELECT
 Extent1.Id, 
 Extent1.Name, 
 Extent1.DateBegan, 
@@ -393,24 +370,13 @@ Extent1.NumEmployees,
 Extent1.Address, 
 Extent1.City, 
 Extent1.State, 
-Extent1.ZipCode, 
-1 AS C1
-FROM Companies AS Extent1) AS Project1
+Extent1.ZipCode
+FROM Companies AS Extent1
  ORDER BY 
-Project1.Name ASC</value>
+Extent1.Name ASC</value>
   </data>
   <data name="OrderByWithPredicate" xml:space="preserve">
     <value>SELECT
-Project1.Id, 
-Project1.Name, 
-Project1.DateBegan, 
-Project1.NumEmployees, 
-Project1.C1, 
-Project1.Address, 
-Project1.City, 
-Project1.State, 
-Project1.ZipCode
-FROM (SELECT
 Extent1.Id, 
 Extent1.Name, 
 Extent1.DateBegan, 
@@ -418,40 +384,36 @@ Extent1.NumEmployees,
 Extent1.Address, 
 Extent1.City, 
 Extent1.State, 
-Extent1.ZipCode, 
-1 AS C1
+Extent1.ZipCode
 FROM Companies AS Extent1
- WHERE Extent1.NumEmployees &gt; 100) AS Project1
+ WHERE Extent1.NumEmployees &gt; 100
  ORDER BY 
-Project1.Name ASC</value>
+Extent1.Name ASC</value>
   </data>
   <data name="SelectWithComplexType" xml:space="preserve">
     <value>SELECT
-1 AS C1, 
+Extent1.Id, 
 Extent1.LastName
 FROM Employees AS Extent1 LEFT OUTER JOIN SalariedEmployees AS Extent2 ON Extent1.Id = Extent2.EmployeeId
  WHERE Extent1.Age &gt; 20</value>
   </data>
   <data name="SimpleJoin" xml:space="preserve">
     <value>SELECT
-1 AS C1, 
 Extent1.Id, 
 Extent1.Name, 
 Extent2.Name AS Name1
-FROM Books AS Extent1 INNER JOIN Authors AS Extent2 ON (Extent1.Author_id = Extent2.Id) OR ((Extent1.Author_id IS  NULL) AND (Extent2.Id IS  NULL))</value>
+FROM Books AS Extent1 INNER JOIN Authors AS Extent2 ON Extent1.Author_id = Extent2.Id</value>
   </data>
   <data name="SimpleJoinWithPredicate" xml:space="preserve">
     <value>SELECT
-1 AS C1, 
 Extent1.Id, 
 Extent1.Name, 
 Extent2.Name AS Name1
-FROM Books AS Extent1 INNER JOIN Authors AS Extent2 ON (Extent1.Author_id = Extent2.Id) OR ((Extent1.Author_id IS  NULL) AND (Extent2.Id IS  NULL))
+FROM Books AS Extent1 INNER JOIN Authors AS Extent2 ON Extent1.Author_id = Extent2.Id
  WHERE Extent1.Pages &gt; 300</value>
   </data>
   <data name="SimpleSelect" xml:space="preserve">
     <value>SELECT
-1 AS C1, 
 Extent1.Id, 
 Extent1.Name, 
 Extent1.MinAge, 
@@ -460,7 +422,6 @@ FROM Toys AS Extent1</value>
   </data>
   <data name="SimpleSelectWithFilter" xml:space="preserve">
     <value>SELECT
-1 AS C1, 
 Extent1.Id, 
 Extent1.Name, 
 Extent1.MinAge, 
@@ -470,7 +431,6 @@ FROM Toys AS Extent1
   </data>
   <data name="SimpleSelectWithParam" xml:space="preserve">
     <value>SELECT
-1 AS C1, 
 Extent1.Id, 
 Extent1.Name, 
 Extent1.MinAge, 
@@ -480,16 +440,6 @@ FROM Toys AS Extent1
   </data>
   <data name="Skip" xml:space="preserve">
     <value>SELECT
-Project1.Id, 
-Project1.Name, 
-Project1.DateBegan, 
-Project1.NumEmployees, 
-Project1.C1, 
-Project1.Address, 
-Project1.City, 
-Project1.State, 
-Project1.ZipCode
-FROM (SELECT
 Extent1.Id, 
 Extent1.Name, 
 Extent1.DateBegan, 
@@ -497,24 +447,13 @@ Extent1.NumEmployees,
 Extent1.Address, 
 Extent1.City, 
 Extent1.State, 
-Extent1.ZipCode, 
-1 AS C1
-FROM Companies AS Extent1) AS Project1
+Extent1.ZipCode
+FROM Companies AS Extent1
  ORDER BY 
-Project1.Id ASC LIMIT 3,18446744073709551615</value>
+Extent1.Id ASC LIMIT 3,18446744073709551615</value>
   </data>
   <data name="SkipAndTakeSimple" xml:space="preserve">
     <value>SELECT
-Project1.Id, 
-Project1.Name, 
-Project1.DateBegan, 
-Project1.NumEmployees, 
-Project1.C1, 
-Project1.Address, 
-Project1.City, 
-Project1.State, 
-Project1.ZipCode
-FROM (SELECT
 Extent1.Id, 
 Extent1.Name, 
 Extent1.DateBegan, 
@@ -522,24 +461,13 @@ Extent1.NumEmployees,
 Extent1.Address, 
 Extent1.City, 
 Extent1.State, 
-Extent1.ZipCode, 
-1 AS C1
-FROM Companies AS Extent1) AS Project1
+Extent1.ZipCode
+FROM Companies AS Extent1
  ORDER BY 
-Project1.Id ASC LIMIT 2,2</value>
+Extent1.Id ASC LIMIT 2,2</value>
   </data>
   <data name="SkipAndTakeWithOrdering" xml:space="preserve">
     <value>SELECT
-Project1.Id, 
-Project1.Name, 
-Project1.DateBegan, 
-Project1.NumEmployees, 
-Project1.C1, 
-Project1.Address, 
-Project1.City, 
-Project1.State, 
-Project1.ZipCode
-FROM (SELECT
 Extent1.Id, 
 Extent1.Name, 
 Extent1.DateBegan, 
@@ -547,11 +475,10 @@ Extent1.NumEmployees,
 Extent1.Address, 
 Extent1.City, 
 Extent1.State, 
-Extent1.ZipCode, 
-1 AS C1
-FROM Companies AS Extent1) AS Project1
+Extent1.ZipCode
+FROM Companies AS Extent1
  ORDER BY 
-Project1.Name DESC LIMIT 2,2</value>
+Extent1.Name DESC LIMIT 2,2</value>
   </data>
   <data name="String1" xml:space="preserve">
     <value />
@@ -583,39 +510,28 @@ FROM Orders AS Extent1
   </data>
   <data name="Top" xml:space="preserve">
     <value>SELECT
-Limit1.Id, 
-Limit1.Name, 
-Limit1.DateBegan, 
-Limit1.NumEmployees, 
-Limit1.C1, 
-Limit1.Address, 
-Limit1.City, 
-Limit1.State, 
-Limit1.ZipCode
-FROM (SELECT
-Extent1.Id, 
-Extent1.Name, 
-Extent1.DateBegan, 
-Extent1.NumEmployees, 
-Extent1.Address, 
-Extent1.City, 
-Extent1.State, 
-Extent1.ZipCode, 
-1 AS C1
-FROM Companies AS Extent1 LIMIT 2) AS Limit1</value>
+Id, 
+Name, 
+DateBegan, 
+NumEmployees, 
+Address, 
+City, 
+State, 
+ZipCode
+FROM Companies LIMIT 2</value>
   </data>
   <data name="UnionAll" xml:space="preserve">
     <value>SELECT
-UnionAll1.C1, 
-UnionAll1.Id AS C2, 
+UnionAll1.Id AS C1, 
+UnionAll1.Id1 AS C2, 
 UnionAll1.Name AS C3
 FROM (SELECT
-1 AS C1, 
 Extent1.Id, 
+Extent1.Id AS Id1, 
 Extent1.Name
 FROM Toys AS Extent1 UNION ALL SELECT
-1 AS C1, 
 Extent2.Id, 
+Extent2.Id AS Id1, 
 Extent2.Name
 FROM Companies AS Extent2) AS UnionAll1</value>
   </data>
@@ -625,7 +541,6 @@ Extent1.Id,
 Extent1.Name, 
 Extent1.DateBegan, 
 Extent1.NumEmployees, 
-1 AS C1, 
 Extent1.Address, 
 Extent1.City, 
 Extent1.State, 
@@ -635,7 +550,6 @@ FROM Companies AS Extent1
   </data>
   <data name="WhereWithRelatedEntities1" xml:space="preserve">
     <value>SELECT
-1 AS C1, 
 Extent1.Id, 
 Extent1.Name, 
 Extent1.MinAge, 
@@ -645,7 +559,6 @@ FROM Toys AS Extent1 INNER JOIN Companies AS Extent2 ON Extent1.SupplierId = Ext
   </data>
   <data name="WhereWithRelatedEntities2" xml:space="preserve">
     <value>SELECT
-1 AS C1, 
 Filter1.Id, 
 Filter1.Name, 
 Filter1.MinAge, 
@@ -663,7 +576,7 @@ Extent2.Address,
 Extent2.City, 
 Extent2.State, 
 Extent2.ZipCode
-FROM Toys AS Extent1 LEFT OUTER JOIN Companies AS Extent2 ON Extent1.SupplierId = Extent2.Id
+FROM Toys AS Extent1 INNER JOIN Companies AS Extent2 ON Extent1.SupplierId = Extent2.Id
  WHERE Extent2.State != @gp1) AS Filter1 LEFT OUTER JOIN Companies AS Extent3 ON Filter1.SupplierId = Extent3.Id
  WHERE Extent3.State != @gp2</value>
   </data>
