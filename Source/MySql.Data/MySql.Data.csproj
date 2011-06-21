@@ -112,8 +112,10 @@
     <Compile Include="Properties\VersionInfo.cs" />
     <Compile Include="ResultSet.cs" />
     <Compile Include="SchemaProvider.cs" />
+    <Compile Include="SSPI.cs" />
     <Compile Include="Statement.cs" />
     <Compile Include="StoredProcedure.cs" />
+    <Compile Include="TableCache.cs" />
     <Compile Include="TimedStream.cs" />
     <Compile Include="TracingDriver.cs" />
     <Compile Include="transaction.cs" />
