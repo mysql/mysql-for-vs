@@ -53,6 +53,7 @@ namespace MySql.Data.Entity.Tests
                 c.FirstName = "first";
                 c.LastName = "last";
                 c.BirthTime = birth;
+                c.Modified = DateTime.Now;
                 context.AddToChildren(c);
                 context.SaveChanges();
 
@@ -100,6 +101,7 @@ namespace MySql.Data.Entity.Tests
                     c.FirstName = "Bam bam";
                     c.LastName = "Rubble";
                     c.BirthWeight = 8.65;
+                    c.Modified = DateTime.Now;
                     context.AddToChildren(c);
                     context.SaveChanges();
                 }
@@ -122,12 +124,12 @@ namespace MySql.Data.Entity.Tests
             using (testEntities context = new testEntities())
             {
                 Child c = context.Children.First();
-                DateTime dt = c.Modified.DateTime;
+                DateTime dt = c.Modified;
                 c.Modified = now;
                 context.SaveChanges();
 
                 c = context.Children.First();
-                dt = c.Modified.DateTime;
+                dt = c.Modified;
                 Assert.AreEqual(now, dt);
             }
         }

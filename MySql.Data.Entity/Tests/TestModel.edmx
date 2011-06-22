@@ -49,6 +49,7 @@
             <End Role="Computers" EntitySet="Computers" />
             <End Role="TabletComputers" EntitySet="TabletComputers" />
           </AssociationSet>
+          <EntitySet Name="Products" EntityType="testModel.Store.Products" />
         </EntityContainer>
 
         <EntityType Name="Employees">
@@ -264,6 +265,14 @@
           <Property Name="IsAvailable" Type="bit" />
           <Property Name="ReleaseDate" Type="datetime" />
         </EntityType>
+        <EntityType Name="Products">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="varchar" Nullable="false" MaxLength="45" />
+          <Property Name="CreatedDate" Type="timestamp" Nullable="false" Precision="0" StoreGeneratedPattern="Computed" />
+        </EntityType>
         <Association Name="FK_DesktopComputer_Computer">
           <End Role="Computers" Type="testModel.Store.Computers" Multiplicity="1" />
           <End Role="DesktopComputers" Type="testModel.Store.DesktopComputers" Multiplicity="0..1" />
@@ -334,6 +343,7 @@
           </AssociationSet>
           <EntitySet Name="DataTypeTests" EntityType="testModel.DataTypeTest"/>
           <EntitySet Name="Computers" EntityType="testModel.Computer" />
+          <EntitySet Name="Products" EntityType="testModel.Product" />
         </EntityContainer>
         
         <EntityType Name="Employee">
@@ -360,7 +370,7 @@
           <Property Name="FirstName" Type="String" Nullable="false" MaxLength="10" />
           <Property Name="BirthTime" Type="Time" Nullable="true"/>
           <Property Name="BirthWeight" Type="Double" Nullable="true"/>
-          <Property Name="Modified" Type="DateTimeOffset" Nullable ="false"/>
+          <Property Name="Modified" Type="DateTime" Nullable ="false"/>
         </EntityType>
 
         <EntityType Name="Company">
@@ -492,6 +502,15 @@
         <EntityType Name="TabletComputer" BaseType="testModel.Computer">
           <Property Name="IsAvailable" Type="Boolean" />
           <Property Name="ReleaseDate" Type="DateTime" />
+        </EntityType>
+
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="false" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -712,6 +731,16 @@
                 <ScalarProperty Name="Id" ColumnName="IdTabletComputer" />
                 <ScalarProperty Name="IsAvailable" ColumnName="IsAvailable" />
                 <ScalarProperty Name="ReleaseDate" ColumnName="ReleaseDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+
+          <EntitySetMapping Name="Products">
+            <EntityTypeMapping TypeName="testModel.Product">
+              <MappingFragment StoreEntitySet="Products">
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
