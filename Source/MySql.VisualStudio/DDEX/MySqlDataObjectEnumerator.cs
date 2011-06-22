@@ -75,20 +75,60 @@ namespace MySql.Data.VisualStudio
             if (typeName == null)
                 throw new ArgumentNullException("typeName");
 
-			Debug.Assert(typeName == String.Empty);
+            if (typeName == String.Empty)
+                return EnumerateRoot();
+            else return EnumerateSchemaObjects(parameters[0] as string, restrictions);
+        }
 
-			DbConnection conn = (DbConnection)Connection.GetLockedProviderObject();
-			DataTable table = new DataTable();
-			table.Columns.Add("SERVER_NAME");
-			table.Columns.Add("CATALOG_NAME");
-			table.Columns.Add("SCHEMA_NAME");
-			DataRow row = table.NewRow();
-			row["SERVER_NAME"] = conn.DataSource;
-			row["SCHEMA_NAME"] = conn.Database;
-			table.Rows.Add(row);
-			Connection.UnlockProviderObject();
+        private DataReader EnumerateRoot()
+        {
+            DbConnection conn = (DbConnection)Connection.GetLockedProviderObject();
+            try
+            {
+                DataTable table = new DataTable();
+                table.Columns.Add("SERVER_NAME");
+                table.Columns.Add("CATALOG_NAME");
+                table.Columns.Add("SCHEMA_NAME");
+                DataRow row = table.NewRow();
+                row["SERVER_NAME"] = conn.DataSource;
+                row["SCHEMA_NAME"] = conn.Database;
+                table.Rows.Add(row);
+                return new AdoDotNetDataTableReader(table);
+            }
+            finally
+            {
+                Connection.UnlockProviderObject();
+            }
+        }
 
-			return new AdoDotNetDataTableReader(table);
+        private DataReader EnumerateSchemaObjects(string typeName, object[] restrictions)
+        {
+            DbConnection conn = (DbConnection)Connection.GetLockedProviderObject();
+            try
+            {
+                string[] rest;
+                DataTable tables = null;
+
+                if (restrictions != null)
+                {
+                    int i = 0;
+                    rest = new string[restrictions.Length];
+                    foreach (object o in restrictions)
+                        rest[i++] = (string)o;
+                    tables = conn.GetSchema(typeName, rest);
+                }
+                else
+                    tables = conn.GetSchema(typeName);
+
+                foreach (DataRow row in tables.Rows)
+                    row["TABLE_CATALOG"] = DBNull.Value;
+                return new AdoDotNetDataTableReader(tables);
+            }
+            finally
+            {
+                Connection.UnlockProviderObject();
+            }
+        }
 
 /*
             // Chose restricitions array
@@ -132,7 +172,6 @@ namespace MySql.Data.VisualStudio
 
             // Enumerete objects in to DataReader
             return new AdoDotNetDataTableReader(table);*/
-        }
 
         #region Connection wrapper
         /// <summary>
