@@ -6,12 +6,12 @@
       <Component Id="EF.v2" Guid="AB734C75-F5DC-491e-A2BC-52D5061881B7" DiskId="1">
         <Condition>NETFRAMEWORK20</Condition>
         <File Id="MySql.Data.EF" Name="MySql.Data.Entity.dll"
-              Source="..\mysql.data.entity\provider\bin\release\mysql.data.entity.dll" DiskId="1"/>
+              Source="..\VS2008\Source\mysql.data.entity\bin\release\mysql.data.entity.dll" DiskId="1"/>
       </Component>
       <Component Id="EF.v2.GAC" Guid="12218CCC-B085-46af-AA5F-FB9306FE621E" DiskId="1">
         <Condition>NETFRAMEWORK20</Condition>
         <File Id="MySql.Data.EF.GAC" Name="MySql.Data.Entity.dll"
-              Source="..\mysql.data.entity\provider\bin\release\mysql.data.entity.dll" DiskId="1"
+              Source="..\VS2008\Source\mysql.data.entity\bin\release\mysql.data.entity.dll" DiskId="1"
               Assembly=".net" KeyPath="yes"/>
       </Component>
     </DirectoryRef>
@@ -21,12 +21,12 @@
       <Component Id="EF.v4" Guid="E6B683F6-727A-43c9-B955-6BEE94EF61C7" DiskId="1">
         <Condition>NETFRAMEWORK40FULL</Condition>
         <File Id="MySql.Data.EF.v4" Name="MySql.Data.Entity.dll"
-              Source="..\mysql.data.entity\provider\bin\release-4.0\mysql.data.entity.dll" DiskId="1"/>
+              Source="..\Source\mysql.data.entity\bin\release\mysql.data.entity.dll" DiskId="1"/>
       </Component>
       <Component Id="EF.v4.GAC" Guid="A9C03468-5A59-443f-85DC-C0149EBB55C8" DiskId="1">
         <Condition>NETFRAMEWORK40FULL</Condition>
         <File Id="MySql.Data.EF.v4.GAC" Name="MySql.Data.Entity.dll"
-              Source="..\mysql.data.entity\provider\bin\release-4.0\mysql.data.entity.dll" DiskId="1"
+              Source="..\Source\mysql.data.entity\bin\release\mysql.data.entity.dll" DiskId="1"
               Assembly=".net" KeyPath="yes"/>
       </Component>
     </DirectoryRef>
@@ -35,9 +35,9 @@
       <Component Id="EF.T4" Guid="6555D339-120C-4D62-B60C-08764D8CA739">
         <Condition>VS_2010_PATH</Condition>
         <File Id="SSDLToMySQL" Name="SSDLToMySQL.tt" DiskId="1"
-              Source="..\MySql.Data.Entity\T4Templates\SSDLToMySQL.tt"/>
+              Source="..\Source\MySql.Data.Entity\T4Templates\SSDLToMySQL.tt"/>
         <File Id="GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
-              Source="..\MySql.Data.Entity\T4Templates\GenerateMySQL.Utility.ttinclude"/>
+              Source="..\Source\MySql.Data.Entity\T4Templates\GenerateMySQL.Utility.ttinclude"/>
       </Component>
     </DirectoryRef>
 

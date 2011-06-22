@@ -5,9 +5,9 @@
     <DirectoryRef Id='VSTemplatesDir'>
       <Component Id='VSTemplates' Guid='CB74DD46-A5D0-402f-9413-63A8DEFB3A26'>
         <File Id='ScriptTemplate' Name='MySQL Script.mysql' DiskId='1'
-              Source='..\MySql.VisualStudio\Templates\MySQL Script.mysql'/>
+              Source='..\Source\MySql.VisualStudio\Templates\MySQL Script.mysql'/>
         <File Id='ScriptTemplate.vsdir' Name='MySqlDataProviderPackage.vsdir' DiskId='1'
-              Source='..\MySql.VisualStudio\Templates\MySqlDataProviderPackage.vsdir'/>
+              Source='..\Source\MySql.VisualStudio\Templates\MySqlDataProviderPackage.vsdir'/>
       </Component>  
     </DirectoryRef>
     
@@ -16,7 +16,7 @@
       <!-- common DDEX component to be installed if VS2005 or VS2008 is selected -->
       <Component Id='VS2008_Common' Guid='75F9BFA2-4D6E-4cb3-97E6-B27C478CDE44'>
         <File Id='MySQL.VisualStudio' Name='MySQL.VisualStudio.dll' DiskId='1'
-              Source='..\MySql.VisualStudio\bin\release\MySQL.VisualStudio.dll' />
+              Source='..\VS2008\Source\MySql.VisualStudio\bin\release\MySQL.VisualStudio.dll' />
       </Component>
 
       <Component Id='VS_2005_Registry' Guid='B99FF3E3-F742-47af-B1FE-BBF2CDC4B95D'>
@@ -41,7 +41,7 @@
     <DirectoryRef Id='VS2010Integration'>
       <Component Id='VS2010_Common' Guid='EC2420A0-ADD0-477f-99B5-FFA96EC557F4'>
         <File Id='MySQL.VisualStudio.2010' Name='MySQL.VisualStudio.dll' DiskId='1'
-              Source='..\MySql.VisualStudio\bin\release-4.0\MySQL.VisualStudio.dll' />
+              Source='..\Source\MySql.VisualStudio\bin\release\MySQL.VisualStudio.dll' />
       </Component>
       
       <Component Id='VS_2010_Registry' Guid='E602F4FD-4D11-4632-8204-C0CFE22F8C7C'>
