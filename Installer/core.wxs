@@ -27,7 +27,7 @@
     <DirectoryRef Id='assemblies_v2'>
       <Component Id="C.v2" Guid="0e8af006-273c-49bb-b7c1-ec1737260a5a">
         <File Id="MySql.Data.v2" Name="MySql.Data.dll"
-              Source="..\mysql.data\provider\bin\release\mysql.data.dll" DiskId="1"/>
+              Source="..\VS2008\Source\MySql.Data\bin\release\mysql.data.dll" DiskId="1"/>
 
         <RemoveFile Id="RemoveStateFile.v2" Name="*.InstallState" On="uninstall"/>
 
@@ -36,7 +36,7 @@
         <Component Id="C.v2.GAC" Guid="58f70e4a-96f7-4b67-bdab-9b77a60f9c09">
           <Condition>NETFRAMEWORK20</Condition>
           <File Id="MySql.Data.v2.GAC" Name="MySql.Data.dll"
-                Source="..\mysql.data\provider\bin\release\mysql.data.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
+                Source="..\VS2008\Source\MySql.Data\bin\release\mysql.data.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
         </Component>
       </Directory>
     </DirectoryRef>
@@ -45,7 +45,7 @@
     <DirectoryRef Id='assemblies_v4'>
       <Component Id="C.v4" Guid="C66D3DF6-A151-4F29-B388-A9803C89131A">
         <File Id="MySql.Data.v4" Name="MySql.Data.dll"
-              Source="..\mysql.data\provider\bin\release-4.0\mysql.data.dll" DiskId="1"/>
+              Source="..\Source\MySql.Data\bin\release\mysql.data.dll" DiskId="1"/>
 
         <RemoveFile Id="RemoveStateFile.v4" Name="*.InstallState" On="uninstall"/>
 
@@ -54,7 +54,7 @@
         <Component Id="C.v4.GAC" Guid="34B6C828-355D-405F-82BC-F18BBC13871D">
           <Condition>NETFRAMEWORK40FULL</Condition>
           <File Id="MySql.Data.v4.GAC" Name="MySql.Data.dll"
-                Source="..\mysql.data\provider\bin\release-4.0\mysql.data.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
+                Source="..\Source\MySql.Data\bin\release\mysql.data.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
         </Component>
       </Directory>
     </DirectoryRef>
