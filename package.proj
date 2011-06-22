@@ -28,7 +28,7 @@
   </Target>
 
   <Target Name="PackageInstall">
-    <GetVersion Assembly="MySql.Data/Provider/bin/release/mysql.data.dll" Format="{0}.{1}.{2}">
+    <GetVersion Assembly="VS2008/Source/MySql.Data/bin/release/mysql.data.dll" Format="{0}.{1}.{2}">
       <Output TaskParameter = "AsString" PropertyName="Version"/>
     </GetVersion>
     <Copy SourceFiles="Installer/bin/$(Configuration)/mysql.data.msi"
@@ -76,16 +76,18 @@
 
   <Target Name="PackageZip">
     <ItemGroup>
-      <V2Assemblies Include="MySql.Data\Provider\bin\release\mysql.data.dll"/>
-      <V2Assemblies Include="MySql.Data\Provider\bin\release\mysql.data.cf.dll"/>
-      <V2Assemblies Include="MySql.Web\Providers\bin\release\mysql.web.dll"/>
-      <V2Assemblies Include="MySql.Data.Entity\Provider\bin\release\mysql.data.entity.dll"/>
-      <V2Assemblies Include="MySql.VisualStudio\bin\release\mysql.visualstudio.dll"/>
+      <V2Assemblies Include="VS2008\Source\MySql.Data\bin\release\mysql.data.dll"/>
+      <V2Assemblies Include="VS2008\Source\MySql.Data.CF\bin\release\mysql.data.cf.dll"/>
+      <V2Assemblies Include="VS2008\Source\MySql.Web\bin\release\mysql.web.dll"/>
+      <V2Assemblies Include="VS2008\Source\MySql.Data.Entity\bin\release\mysql.data.entity.dll"/>
+      <V2Assemblies Include="VS2008\Source\MySql.VisualStudio\bin\release\mysql.visualstudio.dll"/>
     </ItemGroup>
 
     <ItemGroup>
-      <V4Assemblies Include="MySql.Data.Entity\Provider\bin\release-4.0\mysql.data.entity.dll"/>
-      <V4Assemblies Include="MySql.VisualStudio\bin\release-4.0\mysql.visualstudio.dll"/>
+      <V4Assemblies Include="Source\MySql.Data\bin\release\mysql.data.dll"/>
+      <V4Assemblies Include="Source\MySql.Web\bin\release\mysql.web.dll"/>
+      <V4Assemblies Include="Source\MySql.Data.Entity\bin\release\mysql.data.entity.dll"/>
+      <V4Assemblies Include="Source\MySql.VisualStudio\bin\release\mysql.visualstudio.dll"/>
     </ItemGroup>
 
     <ItemGroup>
