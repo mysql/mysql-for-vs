@@ -1,14 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Installer.VS2010", "Installer\Installer.VS2010.wixproj", "{F533FC43-6C05-4A64-8AF6-72B690EB06C3}"
-	ProjectSection(ProjectDependencies) = postProject
-		{EDED3135-95D2-4BCE-A810-F3F2AD7935B7} = {EDED3135-95D2-4BCE-A810-F3F2AD7935B7}
-		{C28B1166-1380-445D-AEC1-8A18B990DD18} = {C28B1166-1380-445D-AEC1-8A18B990DD18}
-		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D} = {E9DF5ED1-4CBD-4226-B931-9A51610AC14D}
-		{DC3517FF-AC26-4755-9B7A-EF658FF69593} = {DC3517FF-AC26-4755-9B7A-EF658FF69593}
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Data", "Source\MySql.Data\MySql.Data.csproj", "{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Data.Tests", "Tests\MySql.Data.Tests\MySql.Data.Tests.csproj", "{F29E5B3D-7F76-4CF9-BF5E-8E3A1377B1E4}"
@@ -22,6 +14,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Data.Entity.Tests", "Tests\MySql.Data.Entity.Tests\MySql.Data.Entity.Tests.csproj", "{D37B3572-767F-4622-A835-844B0EBEFD5B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.VisualStudio", "Source\MySql.VisualStudio\MySql.VisualStudio.csproj", "{DC3517FF-AC26-4755-9B7A-EF658FF69593}"
+EndProject
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Installer", "Installer\Installer.wixproj", "{F533FC43-6C05-4A64-8AF6-72B690EB06C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,31 +37,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Commercial|Any CPU.ActiveCfg = Commercial|x86
-		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Commercial|Any CPU.Build.0 = Commercial|x86
-		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Commercial|Mixed Platforms.ActiveCfg = Commercial|x86
-		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Commercial|Mixed Platforms.Build.0 = Commercial|x86
-		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Commercial|x64.ActiveCfg = Commercial|x86
-		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Commercial|x86.ActiveCfg = Commercial|x86
-		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Commercial|x86.Build.0 = Commercial|x86
-		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Debug|Any CPU.ActiveCfg = Commercial|x86
-		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Debug|Mixed Platforms.ActiveCfg = Commercial|x86
-		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Debug|Mixed Platforms.Build.0 = Commercial|x86
-		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Debug|x64.ActiveCfg = Commercial|x86
-		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Debug|x86.ActiveCfg = Commercial|x86
-		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Debug|x86.Build.0 = Commercial|x86
-		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.GPL|Any CPU.ActiveCfg = GPL|x86
-		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.GPL|Any CPU.Build.0 = GPL|x86
-		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.GPL|Mixed Platforms.ActiveCfg = GPL|x86
-		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.GPL|Mixed Platforms.Build.0 = GPL|x86
-		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.GPL|x64.ActiveCfg = GPL|x86
-		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.GPL|x86.ActiveCfg = GPL|x86
-		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.GPL|x86.Build.0 = GPL|x86
-		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Release|Any CPU.ActiveCfg = Commercial|x86
-		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Release|Mixed Platforms.ActiveCfg = Commercial|x86
-		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Release|x64.ActiveCfg = Commercial|x86
-		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Release|x86.ActiveCfg = Commercial|x86
-		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Release|x86.Build.0 = Commercial|x86
 		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Commercial|Any CPU.ActiveCfg = Release|Any CPU
 		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Commercial|Any CPU.Build.0 = Release|Any CPU
 		{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}.Commercial|Mixed Platforms.ActiveCfg = Release|Any CPU
@@ -236,6 +205,31 @@ Global
 		{DC3517FF-AC26-4755-9B7A-EF658FF69593}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{DC3517FF-AC26-4755-9B7A-EF658FF69593}.Release|x64.ActiveCfg = Release|Any CPU
 		{DC3517FF-AC26-4755-9B7A-EF658FF69593}.Release|x86.ActiveCfg = Release|Any CPU
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Commercial|Any CPU.ActiveCfg = Commercial|x86
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Commercial|Mixed Platforms.ActiveCfg = Commercial|x86
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Commercial|Mixed Platforms.Build.0 = Commercial|x86
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Commercial|x64.ActiveCfg = Commercial|x86
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Commercial|x86.ActiveCfg = Commercial|x86
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Commercial|x86.Build.0 = Commercial|x86
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Debug|Any CPU.ActiveCfg = Commercial|x86
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Debug|Mixed Platforms.ActiveCfg = Commercial|x86
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Debug|Mixed Platforms.Build.0 = Commercial|x86
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Debug|x64.ActiveCfg = Commercial|x86
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Debug|x86.ActiveCfg = Commercial|x86
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Debug|x86.Build.0 = Commercial|x86
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.GPL|Any CPU.ActiveCfg = GPL|x86
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.GPL|Any CPU.Build.0 = GPL|x86
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.GPL|Mixed Platforms.ActiveCfg = GPL|x86
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.GPL|Mixed Platforms.Build.0 = GPL|x86
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.GPL|x64.ActiveCfg = GPL|x86
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.GPL|x86.ActiveCfg = GPL|x86
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.GPL|x86.Build.0 = GPL|x86
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Release|Any CPU.ActiveCfg = Commercial|x86
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Release|Mixed Platforms.ActiveCfg = Commercial|x86
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Release|Mixed Platforms.Build.0 = Commercial|x86
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Release|x64.ActiveCfg = Commercial|x86
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Release|x86.ActiveCfg = Commercial|x86
+		{F533FC43-6C05-4A64-8AF6-72B690EB06C3}.Release|x86.Build.0 = Commercial|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
