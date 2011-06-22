@@ -84,10 +84,9 @@
         <Property name="Comment" type="System.String" itemName="TABLE_COMMENT"/>
       </Properties>
       <Actions>
-        <Action name="Enumerate" guid="61CC0372-384D-42e5-9707-6D7C8DC5287A"
-                handler="Microsoft.VisualStudio.Data.AdoDotNet.AdoDotNetObjectEnumerator">
-          <Parameter value="Tables"/>
-        </Action>
+          <Action name="Enumerate" guid="61CC0372-384D-42e5-9707-6D7C8DC5287A" handler="MySql.Data.VisualStudio.MySqlDataObjectEnumerator">
+            <Parameter value="Tables"/>
+          </Action>
         <Action name="BuildDSRef" guid="7C030900-E8DD-471b-8F18-D83DA7036144"
                 handler="Microsoft.VisualStudio.Data.DSRefBuilder">
           <Parameter>
@@ -166,7 +165,7 @@
         <Property name="SecurityType" type="System.String" itemName="SECURITY_TYPE" />
       </Properties>
       <Actions>
-        <Action name="Enumerate" guid="61CC0372-384D-42e5-9707-6D7C8DC5287A" handler="Microsoft.VisualStudio.Data.AdoDotNet.AdoDotNetObjectEnumerator">
+        <Action name="Enumerate" guid="61CC0372-384D-42e5-9707-6D7C8DC5287A" handler="MySql.Data.VisualStudio.MySqlDataObjectEnumerator">
           <Parameter value="Views"/>
         </Action>
         <Action name="BuildDSRef" guid="7C030900-E8DD-471b-8F18-D83DA7036144" handler="Microsoft.VisualStudio.Data.DSRefBuilder">
@@ -300,7 +299,7 @@
         <Property name="Comment" type="System.String" itemName="COLUMN_COMMENT" />
       </Properties>
       <Actions>
-        <Action name="Enumerate" guid="61CC0372-384D-42e5-9707-6D7C8DC5287A" handler="Microsoft.VisualStudio.Data.AdoDotNet.AdoDotNetObjectEnumerator">
+        <Action name="Enumerate" guid="61CC0372-384D-42e5-9707-6D7C8DC5287A" handler="MySql.Data.VisualStudio.MySqlDataObjectEnumerator">
           <Parameter value="Columns"/>
         </Action>
         <Action name="BuildDSRef" guid="7C030900-E8DD-471b-8F18-D83DA7036144" handler="MySql.Data.VisualStudio.MyDSRefBuilder">
