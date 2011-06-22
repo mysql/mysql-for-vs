@@ -7,12 +7,12 @@
         <Component Id="C.Web.v2.GAC" Guid="6b95d34b-91e1-41ff-9f3f-dcb5308a00ce">
           <Condition>NETFRAMEWORK20</Condition>
           <File Id="ProviderAssemblyGAC.v2" Name="MySql.Web.dll" ShortName="MW"
-                Source="..\MySql.Web\providers\bin\release\mysql.web.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
+                Source="..\VS2008\Source\MySql.Web\bin\release\mysql.web.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
         </Component>
       </Directory>
       <Component Id="C.Web.v2" Guid="8578813e-e123-45ad-9c92-565382a058b6">
         <File Id="MySqlWeb.v2" Name="MySql.Web.dll" DiskId="1"
-              Source="..\MySql.Web\providers\bin\release\mysql.web.dll"/>
+              Source="..\VS2008\Source\MySql.Web\bin\release\mysql.web.dll"/>
         <RemoveFile Id="RemoveWebStateFile.v2" Name="*.InstallState" On="uninstall"/>
       </Component>
     </DirectoryRef>
@@ -22,12 +22,12 @@
         <Component Id="C.Web.v4.GAC" Guid="A30C8C85-C943-4976-8C9C-4ACFBBCD0764">
           <Condition>NETFRAMEWORK40FULL</Condition>
           <File Id="ProviderAssemblyGAC.v4" Name="MySql.Web.dll" ShortName="MW"
-                Source="..\MySql.Web\providers\bin\release-4.0\mysql.web.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
+                Source="..\Source\MySql.Web\bin\release\mysql.web.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
         </Component>
       </Directory>
       <Component Id="C.Web.v4" Guid="64B61967-2AB9-4DCC-B82B-23CA348B3CCF">
         <File Id="MySqlWeb.v4" Name="MySql.Web.dll" DiskId="1"
-              Source="..\MySql.Web\providers\bin\release-4.0\mysql.web.dll"/>
+              Source="..\Source\MySql.Web\bin\release\mysql.web.dll"/>
         <RemoveFile Id="RemoveWebStateFile.v4" Name="*.InstallState" On="uninstall"/>
       </Component>
     </DirectoryRef>
