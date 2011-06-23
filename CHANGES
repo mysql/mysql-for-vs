@@ -1,3 +1,5 @@
+- Modified ProviderManifest.xml to map TIMESTAMP db fields to the DateTime .NET type (MySQL bug #55351, Oracle bug #12652602).
+
 Version 6.3.7
 - IPv6 connections are now supported 
 - fixed exection of command ";" to throw a query was empty exception instead of IndexOutOfRangeException 
