@@ -82,20 +82,10 @@
     <Compile Include="..\..\..\Tests\MySql.Data.Entity.Tests\AggregateOperators.cs" />
     <Compile Include="..\..\..\Tests\MySql.Data.Entity.Tests\CanonicalFunctions.cs" />
     <Compile Include="..\..\..\Tests\MySql.Data.Entity.Tests\DataTypeTests.cs" />
-    <Compile Include="..\..\..\Tests\MySql.Data.Entity.Tests\Model1.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Model1.edmx</DependentUpon>
-    </Compile>
     <Compile Include="..\..\..\Tests\MySql.Data.Entity.Tests\ProviderServicesTests.cs" />
     <Compile Include="..\..\..\Tests\MySql.Data.Entity.Tests\ProceduresAndFunctions.cs" />
     <Compile Include="..\..\..\Tests\MySql.Data.Entity.Tests\JoinTests.cs" />
     <Compile Include="..\..\..\Tests\MySql.Data.Entity.Tests\SchemaInformation.cs" />
-    <Compile Include="..\..\..\Tests\MySql.Data.Entity.Tests\TestModel.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>TestModel.edmx</DependentUpon>
-    </Compile>
     <Compile Include="..\..\..\Tests\MySql.Data.Entity.Tests\Wizard.cs" />
     <Compile Include="..\..\..\Tests\MySql.Data.Entity.Tests\RelationalOperators.cs" />
     <Compile Include="..\..\..\Tests\MySql.Data.Entity.Tests\SetOperators.cs" />
@@ -108,10 +98,28 @@
     <Compile Include="..\..\..\Tests\MySql.Data.Entity.Tests\Properties\AssemblyInfo.cs">
       <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Model1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model1.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\SQLSyntax.Designer.cs" />
+    <Compile Include="TestModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TestModel.edmx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\Tests\MySql.Data.Entity.Tests\App.Config" />
+    <EntityDeploy Include="Model1.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Model1.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <EntityDeploy Include="TestModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>TestModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
     <EmbeddedResource Include="..\..\..\Tests\MySql.Data.Entity.Tests\Properties\procs.sql">
       <Link>Properties\procs.sql</Link>
     </EmbeddedResource>
@@ -123,16 +131,6 @@
       <Link>Properties\Resources.resx</Link>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\SQLSyntax.resx" />
-    <EntityDeploy Include="..\..\..\Tests\MySql.Data.Entity.Tests\Model1.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>Model1.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-  </ItemGroup>
-  <ItemGroup>
-    <EntityDeploy Include="..\..\..\Tests\MySql.Data.Entity.Tests\TestModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>TestModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Source\MySql.Data.Entity\MySql.Data.Entity.csproj">

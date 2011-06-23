@@ -76,5 +76,21 @@ namespace MySql.Data.Entity.Tests
                 Assert.AreEqual("44558", lastRow["zipcode"]);
             }
         }
+
+        [Test]
+        public void CanInsertRowWithDefaultTimeStamp()
+        {
+            using (testEntities context = new testEntities())
+            {
+                // The default timestamp is in the CreatedDate column.
+                Product product = new Product();
+                product.Name = "Coca Cola";
+
+                context.AddToProducts(product);
+                context.SaveChanges();
+
+                Assert.AreEqual(DateTime.Today.Day, product.CreatedDate.Day);
+            }
+        }
     }
 }
