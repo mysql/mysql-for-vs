@@ -382,6 +382,7 @@ namespace MySql.Data.MySqlClient.Tests
                     closed = true;
             }
         }
+
         [Test]
         public void ConnectionCloseByGC()
         {
@@ -400,6 +401,7 @@ namespace MySql.Data.MySqlClient.Tests
             MySqlCommand cmd = new MySqlCommand("KILL " + threadId, conn);
             cmd.ExecuteNonQuery();
         }
+
         /// <summary>
         /// Bug #30964 StateChange imperfection 
         /// </summary>
