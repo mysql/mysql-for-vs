@@ -60,7 +60,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\..\..\Source\MySql.Data.Entity\Properties\SchemaMapping.msl" />
+    <EmbeddedResource Include="..\..\..\Source\MySql.Data.Entity\Properties\SchemaMapping.msl">
+      <Link>Properties\SchemaMapping.msl</Link>
+    </EmbeddedResource>
     <Compile Include="..\..\..\Source\MySql.Data\Properties\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
