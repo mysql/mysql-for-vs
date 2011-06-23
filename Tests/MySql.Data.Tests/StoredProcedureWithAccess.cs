@@ -196,6 +196,7 @@ namespace MySql.Data.MySqlClient.Tests
             execSQL("CREATE PROCEDURE spTest(testid TINYINT UNSIGNED) BEGIN SELECT testid; END");
 
             MySqlCommand cmd = new MySqlCommand("spTest", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
             MySqlCommandBuilder.DeriveParameters(cmd);
             Assert.AreEqual(MySqlDbType.UByte, cmd.Parameters[0].MySqlDbType);
             Assert.AreEqual(DbType.Byte, cmd.Parameters[0].DbType);
