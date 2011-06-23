@@ -29,10 +29,6 @@ namespace MySql.Data.MySqlClient.Tests
     [TestFixture]
     public class CommandBuilderTests : BaseTest
     {
-        public CommandBuilderTests()
-        {
-        }
-
         [Test]
         public void MultiWord()
         {

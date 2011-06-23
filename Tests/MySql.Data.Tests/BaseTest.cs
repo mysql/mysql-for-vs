@@ -32,37 +32,37 @@ using System.IO;
 
 namespace MySql.Data.MySqlClient.Tests
 {
-    /// <summary>
-    /// Summary description for BaseTest.
-    /// </summary>
-    public class BaseTest
-    {
-        //statics
-        protected static int maxPacketSize;
-        protected static MySqlConnection rootConn;
-        protected static string host;
-        protected static string user;
-        protected static string password;
-        protected static int port;
-        protected static string pipeName;
-        protected static string memoryName;
-        protected static string rootUser;
-        protected static string rootPassword;
-        protected static string database0;
-        protected static string database1;
-        protected static Version version;
+	/// <summary>
+	/// Summary description for BaseTest.
+	/// </summary>
+	public class BaseTest
+	{
+		//statics
+		protected static int maxPacketSize;
+		protected static MySqlConnection rootConn;
+		protected static string host;
+		protected static string user;
+		protected static string password;
+		protected static int port;
+		protected static string pipeName;
+		protected static string memoryName;
+		protected static string rootUser;
+		protected static string rootPassword;
+		protected static string database0;
+		protected static string database1;
+		protected static Version version;
 
-        protected string table;
-        protected string csAdditions = String.Empty;
-        protected MySqlConnection conn;
-        protected bool accessToMySqlDb;
-        private int numProcessesRunning;
+		protected string table;
+		protected string csAdditions = String.Empty;
+		protected MySqlConnection conn;
+		protected bool accessToMySqlDb;
+		private int numProcessesRunning;
 
-        public BaseTest()
-        {
+		public BaseTest()
+		{
 			if (host == null)
 				LoadStaticConfiguration();
-        }
+		}
 
 		protected virtual void LoadStaticConfiguration()
 		{
@@ -73,7 +73,7 @@ namespace MySql.Data.MySqlClient.Tests
 			port = 3306;
 			rootUser = "root";
 			rootPassword = "";
-            string strPort = null;
+			string strPort = null;
 
 #if !CF
 			host = ConfigurationManager.AppSettings["host"];
@@ -102,253 +102,292 @@ namespace MySql.Data.MySqlClient.Tests
 				database1 = String.Format("db{0}{1}{2}-b", versionParts[0], versionParts[1], port - 3300);
 			}
 
-            string connStr = GetConnectionString(rootUser, rootPassword, false);
-            rootConn = new MySqlConnection(connStr + ";database=mysql");
-            rootConn.Open();
+			//string connStr = GetConnectionString(rootUser, rootPassword, false);
+			//rootConn = new MySqlConnection(connStr + ";database=mysql");
+			//rootConn.Open();
 
-            if (rootConn.ServerVersion.StartsWith("5"))
-            {
-                // run all tests in strict mode
-                MySqlCommand cmd = new MySqlCommand("SET GLOBAL SQL_MODE=STRICT_ALL_TABLES", rootConn);
-                cmd.ExecuteNonQuery();
-            }
+			//if (rootConn.ServerVersion.StartsWith("5"))
+			//{
+			//    // run all tests in strict mode
+			//    MySqlCommand cmd = new MySqlCommand("SET GLOBAL SQL_MODE=STRICT_ALL_TABLES", rootConn);
+			//    cmd.ExecuteNonQuery();
+			//}
 		}
 
-        #region Properties
+		#region Properties
 
-        protected Version Version
-        {
-            get 
-            {
-                if (version == null)
-                {
-                    string versionString = rootConn.ServerVersion;
-                    int i = 0;
-                    while (i < versionString.Length && 
-                        (Char.IsDigit(versionString[i]) || versionString[i] == '.'))
-                        i++;
-                    version = new Version(versionString.Substring(0, i));
-                }
-                return version; 
-            }
-        }
+		protected Version Version
+		{
+			get 
+			{
+				if (version == null)
+				{
+					string versionString = rootConn.ServerVersion;
+					int i = 0;
+					while (i < versionString.Length && 
+						(Char.IsDigit(versionString[i]) || versionString[i] == '.'))
+						i++;
+					version = new Version(versionString.Substring(0, i));
+				}
+				return version; 
+			}
+		}
 
-        #endregion
+		#endregion
 
-        protected virtual string GetConnectionInfo()
-        {
-            return String.Format("protocol=sockets;port={0};", port);
-        }
+		protected virtual string GetConnectionInfo()
+		{
+			return String.Format("protocol=sockets;port={0};", port);
+		}
 
-        protected string GetConnectionString(string userId, string pw, bool includedb)
-        {
-            Debug.Assert(userId != null);
-            string connStr = String.Format("server={0};user id={1};pooling=false;" +
-                 "persist security info=true;connection reset=true;allow user variables=true;", 
-                 host, userId);
-            if (pw != null)
-                connStr += String.Format(";password={0};", pw);
-            if (includedb)
-                connStr += String.Format("database={0};", database0);
-            connStr += GetConnectionInfo();
-            connStr += csAdditions;
-            return connStr;
-        }
+		protected string GetConnectionString(string userId, string pw, bool includedb)
+		{
+			Debug.Assert(userId != null);
+			string connStr = String.Format("server={0};user id={1};pooling=false;" +
+				 "persist security info=true;connection reset=true;allow user variables=true;", 
+				 host, userId);
+			if (pw != null)
+				connStr += String.Format(";password={0};", pw);
+			if (includedb)
+				connStr += String.Format("database={0};", database0);
+			connStr += GetConnectionInfo();
+			connStr += csAdditions;
+			return connStr;
+		}
 
-        protected string GetConnectionString(bool includedb)
-        {
-            return GetConnectionString(user, password, includedb);
-        }
+		protected string GetConnectionString(bool includedb)
+		{
+			return GetConnectionString(user, password, includedb);
+		}
 
-        protected string GetPoolingConnectionString()
-        {
-            string s = GetConnectionString(true);
-            s = s.Replace("pooling=false", "pooling=true");
-            return s;
-        }
+		protected string GetPoolingConnectionString()
+		{
+			string s = GetConnectionString(true);
+			s = s.Replace("pooling=false", "pooling=true");
+			return s;
+		}
 
-        protected void Open()
-        {
-            string connString = GetConnectionString(true);
-            conn = new MySqlConnection(connString);
-            conn.Open();
-        }
+		protected void Open()
+		{
+			string connString = GetConnectionString(true);
+			conn = new MySqlConnection(connString);
+			conn.Open();
+		}
 
-        protected void SetAccountPerms(bool includeProc)
-        {
-            // now allow our user to access them
-            suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'localhost' 
+		protected void SetAccountPerms(bool includeProc)
+		{
+			// now allow our user to access them
+			suExecSQL(String.Format(@"GRANT ALL ON `{0}`.* to 'test'@'localhost' 
 				identified by 'test'", database0));
-            suExecSQL(String.Format(@"GRANT SELECT ON `{0}`.* to 'test'@'localhost' 
+			suExecSQL(String.Format(@"GRANT SELECT ON `{0}`.* to 'test'@'localhost' 
 				identified by 'test'", database1));
-            if (Version.Major >= 5)
-                suExecSQL(String.Format(@"GRANT EXECUTE ON `{0}`.* to 'test'@'localhost' 
-				    identified by 'test'", database1));
+			if (Version.Major >= 5)
+				suExecSQL(String.Format(@"GRANT EXECUTE ON `{0}`.* to 'test'@'localhost' 
+					identified by 'test'", database1));
 
-            if (includeProc)
-            {
-                // now allow our user to access them
-                suExecSQL(@"GRANT ALL ON mysql.proc to 'test'@'localhost' identified by 'test'");
-            }
-            
-            suExecSQL("FLUSH PRIVILEGES");
-        }
+			if (includeProc)
+			{
+				// now allow our user to access them
+				suExecSQL(@"GRANT ALL ON mysql.proc to 'test'@'localhost' identified by 'test'");
+			}
+			
+			suExecSQL("FLUSH PRIVILEGES");
+		}
 
-        [SetUp]
-        public virtual void Setup()
-        {
-            Assembly executingAssembly = Assembly.GetExecutingAssembly();
+		[SetUp]
+		public virtual void Setup()
+		{
+			Assembly executingAssembly = Assembly.GetExecutingAssembly();
 #if !CF
-            Stream stream = executingAssembly.GetManifestResourceStream("MySql.Data.MySqlClient.Tests.Properties.Setup.sql");
+			Stream stream = executingAssembly.GetManifestResourceStream("MySql.Data.MySqlClient.Tests.Properties.Setup.sql");
 #else
-            Stream stream = executingAssembly.GetManifestResourceStream("MySql.Data.CF.Tests.Properties.Setup.sql");
+			Stream stream = executingAssembly.GetManifestResourceStream("MySql.Data.CF.Tests.Properties.Setup.sql");
 #endif
-            StreamReader sr = new StreamReader(stream);
-            string sql = sr.ReadToEnd();
-            sr.Close();
+			StreamReader sr = new StreamReader(stream);
+			string sql = sr.ReadToEnd();
+			sr.Close();
 
-            SetAccountPerms(accessToMySqlDb);
-            sql = sql.Replace("[database0]", database0);
-            sql = sql.Replace("[database1]", database1);
 
-            ExecuteSQLAsRoot(sql);
-            Open();
-            numProcessesRunning = CountProcesses();
-        }
+			string connStr = GetConnectionString(rootUser, rootPassword, false);
+			rootConn = new MySqlConnection(connStr + ";database=mysql");
+			rootConn.Open();
 
-        protected void ExecuteSQLAsRoot(string sql)
-        {
-            MySqlScript s = new MySqlScript(rootConn, sql);
-            s.Execute();
-        }
+			if (rootConn.ServerVersion.StartsWith("5"))
+			{
+				// run all tests in strict mode
+				MySqlCommand cmd = new MySqlCommand("SET GLOBAL SQL_MODE=STRICT_ALL_TABLES", rootConn);
+				cmd.ExecuteNonQuery();
+			}
 
-        [TearDown]
-        public virtual void Teardown()
-        {
-            // wait up to 5 seconds for our connection to close
-            int procs = CountProcesses();
-            for (int x = 0; x < 50; x++)
-            {
-                if (procs == numProcessesRunning) break;
-                System.Threading.Thread.Sleep(100);
-                procs = CountProcesses();
-            }
-            Assert.AreEqual(numProcessesRunning, procs, "Too many processes still running");
 
-            conn.Close();
-            if (Version.Major < 5)
-                suExecSQL("REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'test'");
-            else
-                suExecSQL("DROP USER 'test'@'localhost'"); 
+			SetAccountPerms(accessToMySqlDb);
+			sql = sql.Replace("[database0]", database0);
+			sql = sql.Replace("[database1]", database1);
 
-            DropDatabase(database0);
-            DropDatabase(database1);
-        }
+			ExecuteSQLAsRoot(sql);
+			Open();
+			numProcessesRunning = CountProcesses();
+		}
 
-        private void DropDatabase(string name)
-        {
-            for (int i = 0; i < 5; i++)
-            {
-                try
-                {
-                    suExecSQL(String.Format("DROP DATABASE IF EXISTS `{0}`", name));
-                    return;
-                }
-                catch (Exception)
-                {
-                    System.Threading.Thread.Sleep(1000);
-                }
-            }
-            Assert.Fail("Unable to drop database " + name);
-        }
+		protected void ExecuteSQLAsRoot(string sql)
+		{
+			MySqlScript s = new MySqlScript(rootConn, sql);
+			s.Execute();
+		}
 
-        protected void KillConnection(MySqlConnection c)
-        {
-            int threadId = c.ServerThread;
-            MySqlCommand cmd = new MySqlCommand("KILL " + threadId, conn);
-            cmd.ExecuteNonQuery();
+		private void CheckOrphanedConnections()
+		{
+			// wait up to 5 seconds for our connection to close
+			int procs = CountProcesses();
+			for (int x = 0; x < 50; x++)
+			{
+				if (procs == numProcessesRunning) break;
+				System.Threading.Thread.Sleep(100);
+				procs = CountProcesses();
+			}
+			if (procs > numProcessesRunning)
+			{
+				KillOrphanedConnections();
+				int temp = CountProcesses();
+				Assert.AreEqual(numProcessesRunning, temp, "Killing orphaned connections failed");
+				Assert.AreEqual(numProcessesRunning, procs, "Too many processes still running");
+			}
+		}
 
-            // the kill flag might need a little prodding to do its thing
-            try
-            {
-                cmd.CommandText = "SELECT 1";
-                cmd.Connection = c;
-                cmd.ExecuteNonQuery();
-            }
-            catch (Exception) { }
+		private void KillOrphanedConnections()
+		{
+			MySqlDataAdapter da = new MySqlDataAdapter("SHOW PROCESSLIST", rootConn);
+			DataTable dt = new DataTable();
+			da.Fill(dt);
+			foreach (DataRow row in dt.Rows)
+			{
+				long id = (long)row[0];
+				if (id == rootConn.ServerThread) continue;
+				if (id == conn.ServerThread) continue;
+				suExecSQL(String.Format("KILL {0}", id));
+			}
+		}
 
-            // now wait till the process dies
-            bool processStillAlive = false;
-            while (true)
-            {
-                MySqlDataAdapter da = new MySqlDataAdapter("SHOW PROCESSLIST", conn);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-                foreach (DataRow row in dt.Rows)
-                    if (row["Id"].Equals(threadId))
-                        processStillAlive = true;
-                if (!processStillAlive) break;
-                System.Threading.Thread.Sleep(500);
-            }
-        }
+		[TearDown]
+		public virtual void Teardown()
+		{
+			CheckOrphanedConnections();
 
-        protected void KillPooledConnection(string connStr)
-        {
-            MySqlConnection c = new MySqlConnection(connStr);
-            c.Open();
-            KillConnection(c);
-        }
+			conn.Close();
+			if (Version.Major < 5)
+				suExecSQL("REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'test'");
+			else
+				suExecSQL("DROP USER 'test'@'localhost'"); 
 
-        protected void createTable(string sql, string engine)
-        {
-            if (Version >= new Version(4,1))
-                sql += " ENGINE=" + engine;
-            else
-                sql += " TYPE=" + engine;
-            execSQL(sql);
-        }
+			DropDatabase(database0);
+			DropDatabase(database1);
+			rootConn.Close();
+		}
 
-        protected void suExecSQL(string sql)
-        {
-            Debug.Assert(rootConn != null);
-            MySqlCommand cmd = new MySqlCommand(sql, rootConn);
-            cmd.ExecuteNonQuery();
-        }
+		private void DropDatabase(string name)
+		{
+			for (int i = 0; i < 5; i++)
+			{
+				try
+				{
+					suExecSQL(String.Format("DROP DATABASE IF EXISTS `{0}`", name));
+					return;
+				}
+				catch (Exception)
+				{
+					System.Threading.Thread.Sleep(1000);
+				}
+			}
+			Assert.Fail("Unable to drop database " + name);
+		}
 
-        protected void execSQL(string sql)
-        {
-            MySqlCommand cmd = new MySqlCommand(sql, conn);
-            cmd.ExecuteNonQuery();
-        }
+		protected void KillConnection(MySqlConnection c)
+		{
+			int threadId = c.ServerThread;
+			MySqlCommand cmd = new MySqlCommand("KILL " + threadId, conn);
+			cmd.ExecuteNonQuery();
 
-        protected IDataReader execReader(string sql)
-        {
-            MySqlCommand cmd = new MySqlCommand(sql, conn);
-            return cmd.ExecuteReader();
-        }
+			// the kill flag might need a little prodding to do its thing
+			try
+			{
+				cmd.CommandText = "SELECT 1";
+				cmd.Connection = c;
+				cmd.ExecuteNonQuery();
+			}
+			catch (Exception) { }
 
-        protected int CountProcesses()
-        {
-            MySqlDataAdapter da = new MySqlDataAdapter("SHOW PROCESSLIST", rootConn);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-            return dt.Rows.Count;
-        }
+			// now wait till the process dies
+			bool processStillAlive = false;
+			while (true)
+			{
+				MySqlDataAdapter da = new MySqlDataAdapter("SHOW PROCESSLIST", conn);
+				DataTable dt = new DataTable();
+				da.Fill(dt);
+				foreach (DataRow row in dt.Rows)
+					if (row["Id"].Equals(threadId))
+						processStillAlive = true;
+				if (!processStillAlive) break;
+				System.Threading.Thread.Sleep(500);
+			}
+		}
 
-        protected bool TableExists(string tableName)
-        {
-            string[] restrictions = new string[4];
-            restrictions[2] = tableName;
-            DataTable dt = conn.GetSchema("Tables", restrictions);
-            return dt.Rows.Count > 0;
-        }
+		protected void KillPooledConnection(string connStr)
+		{
+			MySqlConnection c = new MySqlConnection(connStr);
+			c.Open();
+			KillConnection(c);
+		}
 
-        protected DataTable FillTable(string sql)
-        {
-            MySqlDataAdapter da = new MySqlDataAdapter(sql, conn);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-            return dt;
-        }
-    }
+		protected void createTable(string sql, string engine)
+		{
+			if (Version >= new Version(4,1))
+				sql += " ENGINE=" + engine;
+			else
+				sql += " TYPE=" + engine;
+			execSQL(sql);
+		}
+
+		protected void suExecSQL(string sql)
+		{
+			Debug.Assert(rootConn != null);
+			MySqlCommand cmd = new MySqlCommand(sql, rootConn);
+			cmd.ExecuteNonQuery();
+		}
+
+		protected void execSQL(string sql)
+		{
+			MySqlCommand cmd = new MySqlCommand(sql, conn);
+			cmd.ExecuteNonQuery();
+		}
+
+		protected IDataReader execReader(string sql)
+		{
+			MySqlCommand cmd = new MySqlCommand(sql, conn);
+			return cmd.ExecuteReader();
+		}
+
+		protected int CountProcesses()
+		{
+			MySqlDataAdapter da = new MySqlDataAdapter("SHOW PROCESSLIST", rootConn);
+			DataTable dt = new DataTable();
+			da.Fill(dt);
+			return dt.Rows.Count;
+		}
+
+		protected bool TableExists(string tableName)
+		{
+			string[] restrictions = new string[4];
+			restrictions[2] = tableName;
+			DataTable dt = conn.GetSchema("Tables", restrictions);
+			return dt.Rows.Count > 0;
+		}
+
+		protected DataTable FillTable(string sql)
+		{
+			MySqlDataAdapter da = new MySqlDataAdapter(sql, conn);
+			DataTable dt = new DataTable();
+			da.Fill(dt);
+			return dt;
+		}
+	}
 }

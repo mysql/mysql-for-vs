@@ -60,7 +60,7 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void ExecuteReader()
 		{
-            if (Version < new Version(5, 0)) return;
+			if (Version < new Version(5, 0)) return;
 
 			execSQL("CREATE TABLE test (id int)");
 			execSQL("CREATE PROCEDURE spTest() BEGIN INSERT INTO test VALUES(1); " +
@@ -77,7 +77,7 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 
 			using (MySqlDataReader reader = proc.EndExecuteReader(iar))
-            {
+			{
 				Assert.IsNotNull(reader);
 				Assert.IsTrue(count > 0, "count > 0");
 				Assert.IsTrue(reader.Read(), "can read");
@@ -100,10 +100,10 @@ namespace MySql.Data.MySqlClient.Tests
 			IAsyncResult r = cmd.BeginExecuteReader();
 			try
 			{
-                using (MySqlDataReader reader = cmd.EndExecuteReader(r))
-                {
-                    Assert.Fail("EndExecuteReader should have thrown an exception");
-                }
+				using (MySqlDataReader reader = cmd.EndExecuteReader(r))
+				{
+					Assert.Fail("EndExecuteReader should have thrown an exception");
+				}
 			}
 			catch (MySqlException)
 			{
