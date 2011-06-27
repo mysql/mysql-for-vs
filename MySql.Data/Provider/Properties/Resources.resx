@@ -390,4 +390,7 @@
   <data name="TableDirectNotSupported" xml:space="preserve">
     <value>TableDirect command type is not supported.</value>
   </data>
+  <data name="SnapshotNotSupported" xml:space="preserve">
+    <value>Snapshot isolation level is not supported.</value>
+  </data>
 </root>
