@@ -57,6 +57,8 @@
 - Fixed Entity Framework provider GROUP BY clause generation by adding all group by keys to the SELECT statement (MySQL bug #46742, Oracle bug #12622129).
 - Removed support for file based certificates when connecting to MySQL Server 5.0 or below.
 - Modified ProviderManifest.xml to map TIMESTAMP db fields to the DateTime .NET type (MySQL bug #55351, Oracle bug #12652602).
+- Modified MySqlConnection.BeginTransaction to throw a NotSupportedException when Snapshot isolation level 
+  is requested (MySQL bug #61589, Oracle bug #12698020).
 
 Version 6.2.4
 - Fix authorization popup after modifying stored procedure in VS (Bug #44715)
