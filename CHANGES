@@ -1,4 +1,6 @@
 - Modified ProviderManifest.xml to map TIMESTAMP db fields to the DateTime .NET type (MySQL bug #55351, Oracle bug #12652602).
+- Modified MySqlConnection.BeginTransaction to throw a NotSupportedException when Snapshot isolation level 
+  is requested (MySQL bug #61589, Oracle bug #12698020).
 
 Version 6.3.7
 - IPv6 connections are now supported 
