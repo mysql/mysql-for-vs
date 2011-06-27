@@ -472,4 +472,7 @@
   <data name="FileBasedCertificateNotSupported" xml:space="preserve">
     <value>File based certificates are only supported when connecting to MySQL Server 5.1 or greater.</value>
   </data>
+  <data name="SnapshotNotSupported" xml:space="preserve">
+    <value>Snapshot isolation level is not supported.</value>
+  </data>
 </root>
