@@ -377,6 +377,8 @@ namespace MySql.Data.MySqlClient
                     break;
                 case IsolationLevel.Chaos:
                     throw new NotSupportedException(Resources.ChaosNotSupported);
+                case IsolationLevel.Snapshot:
+                    throw new NotSupportedException(Resources.SnapshotNotSupported);
             }
 
             cmd.ExecuteNonQuery();
