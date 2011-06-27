@@ -720,5 +720,17 @@ namespace MySql.Data.MySqlClient.Tests
                 MySqlConnection.ClearPool(connection);
             }
         }
+
+        [Test]
+        [ExpectedException(typeof(NotSupportedException))]
+        public void SnapshotIsolationLevelThrowsNotSupportedException()
+        {
+            using (MySqlConnection connection = new MySqlConnection(GetConnectionString(true)))
+            {
+                connection.Open();
+                MySqlTransaction transaction = connection.BeginTransaction(System.Data.IsolationLevel.Snapshot);
+                transaction.Commit();
+            }
+        }
     }
 }
