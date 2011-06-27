@@ -103,10 +103,10 @@ namespace MySql.Data.Entity.Tests
         [TearDown]
         public override void Teardown()
         {
-            base.Teardown();
-
             MySqlCommand cmd = new MySqlCommand("DROP DATABASE IF EXISTS `modeldb`", rootConn);
             cmd.ExecuteNonQuery();
+
+            base.Teardown();            
         }
 
         private EntityConnection GetEntityConnection()
