@@ -874,6 +874,18 @@ namespace MySql.Data.MySqlClient.Tests
             }
         }
 
+        [Test]
+        [ExpectedException(typeof(NotSupportedException))]
+        public void SnapshotIsolationLevelThrowsNotSupportedException()
+        {
+            using (MySqlConnection connection = new MySqlConnection(GetConnectionString(true)))
+            {
+                connection.Open();
+                MySqlTransaction transaction = connection.BeginTransaction(System.Data.IsolationLevel.Snapshot);
+                transaction.Commit();
+            }
+        }
+
         private void DoThreadWork()
         {
             using (TransactionScope ts = new TransactionScope())

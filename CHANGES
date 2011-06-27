@@ -1,4 +1,3 @@
-- Modified ProviderManifest.xml to map TIMESTAMP db fields to the DateTime .NET type (MySQL bug #55351, Oracle bug #12652602).
 - modified schema1.sql in MySql.Web to remove ENGINE declaration on table creation (Oracle bug #12311974).
 - fixed performance issue with executing stored procedures with output parameters
   (MySQL bug #60366, Oracle bug#12425959)
@@ -28,6 +27,9 @@
 - Added Replication connection string option to indicate that the connection is using read-only replicated servers
   This is the first step toward better replication support.
 - Fixed Entity Framework provider GROUP BY clause generation by adding all group by keys to the SELECT statement (MySQL bug #46742, Oracle bug #12622129).
+- Modified ProviderManifest.xml to map TIMESTAMP db fields to the DateTime .NET type (MySQL bug #55351, Oracle bug #12652602).
+- Modified MySqlConnection.BeginTransaction to throw a NotSupportedException when Snapshot isolation level 
+  is requested (MySQL bug #61589, Oracle bug #12698020).
 
 6.4.0
 - Implemented Cache Server Properties connection option
