@@ -305,16 +305,27 @@ namespace MySql.Web.Tests
         public void InitializeInvalidConnStringThrowsArgumentException()
         {
             Configuration configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            string fakeConnectionString = configFile.ConnectionStrings.ConnectionStrings["LocalMySqlServer"].ConnectionString.Replace("database", "fooKey");
+            string originalConnectionString = configFile.ConnectionStrings.ConnectionStrings["LocalMySqlServer"].ConnectionString;
+            string fakeConnectionString = originalConnectionString.Replace("database", "fooKey");
             configFile.ConnectionStrings.ConnectionStrings["LocalMySqlServer"].ConnectionString = fakeConnectionString;
             configFile.Save();
             ConfigurationManager.RefreshSection("connectionStrings");
 
-            MySQLMembershipProvider provider = new MySQLMembershipProvider();
-            NameValueCollection config = new NameValueCollection();
-            config.Add("connectionStringName", "LocalMySqlServer");
+            try
+            {
+                MySQLMembershipProvider provider = new MySQLMembershipProvider();
+                NameValueCollection config = new NameValueCollection();
+                config.Add("connectionStringName", "LocalMySqlServer");
 
-            provider.Initialize(null, config);
+                provider.Initialize(null, config);
+            }
+            finally
+            {
+                configFile.ConnectionStrings.ConnectionStrings["LocalMySqlServer"].ConnectionString = originalConnectionString;
+                configFile.Save();
+                ConfigurationManager.RefreshSection("connectionStrings");
+            }
+            
         }
     }
 }
