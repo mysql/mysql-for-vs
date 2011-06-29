@@ -292,7 +292,7 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void BlobBiggerThanMaxPacket()
 		{
-			suExecSQL("SET GLOBAL max_allowed_packet=500000");
+			suExecSQL("SET GLOBAL max_allowed_packet=" + 500*1024);
 			execSQL("CREATE TABLE test (id INT(10), image BLOB)");
 
 			using (MySqlConnection c = new MySqlConnection(GetConnectionString(true)))
