@@ -53,6 +53,7 @@
 - Modified ProviderManifest.xml to map TIMESTAMP db fields to the DateTime .NET type (MySQL bug #55351, Oracle bug #12652602).
 - Modified MySqlConnection.BeginTransaction to throw a NotSupportedException when Snapshot isolation level 
   is requested (MySQL bug #61589, Oracle bug #12698020).
+- Modified SqlFragment.QuoteIdentifier to add MySQL quotes around identifiers (MySQL bug #61635, Oracle bug #12707285).
 
 Version 6.1.5
 - Fix authorization popup after modifying stored procedure in VS (Bug #44715)
