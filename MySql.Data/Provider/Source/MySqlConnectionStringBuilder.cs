@@ -62,6 +62,7 @@ namespace MySql.Data.MySqlClient
         bool useAffectedRows;
         bool oldGuids;
         uint keepalive;
+        bool hasProcAccess = true;
 
         static MySqlConnectionStringBuilder()
         {
@@ -1071,6 +1072,12 @@ namespace MySql.Data.MySqlClient
         #endregion
 
         #region Internal Properties
+
+        internal bool HasProcAccess
+        {
+            get { return hasProcAccess; }
+            set { hasProcAccess = value; }
+        }
 
         internal Regex BlobAsUTF8IncludeRegex
         {
