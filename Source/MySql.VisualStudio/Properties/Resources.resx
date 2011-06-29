@@ -511,7 +511,7 @@ Would you like to create it?</value>
     <value>The data length for the table.</value>
   </data>
   <data name="ProductDetails" xml:space="preserve">
-    <value>Data design and management tools for MySQL.  Copyright © 2007-2009 MySQL AB</value>
+    <value>Data design and management tools for MySQL.  Copyright © 2007-2011 Oracle, Inc.</value>
   </data>
   <data name="DisplayName_View_IsUpdatable" xml:space="preserve">
     <value>Is Updatable</value>

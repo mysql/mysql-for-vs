@@ -137,7 +137,8 @@ FROM Toys AS Extent1) AS GroupBy1</value>
   </data>
   <data name="AverageWithGrouping" xml:space="preserve">
     <value>SELECT
-GroupBy1.A1 AS C1
+1 AS C1, 
+GroupBy1.A1 AS C2
 FROM (SELECT
 Extent2.Id AS K1, 
 AVG(Extent1.Freight) AS A1
