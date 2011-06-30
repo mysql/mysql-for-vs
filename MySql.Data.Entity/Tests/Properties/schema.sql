@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS `Order`;
+DROP TABLE IF EXISTS Customer;
 DROP TABLE IF EXISTS Products;
 DROP TABLE IF EXISTS SalariedEmployees;
 DROP TABLE IF EXISTS Employees;
@@ -198,3 +200,25 @@ CREATE  TABLE Products (
   Name VARCHAR(45) NOT NULL,
   CreatedDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (Id));
+  
+CREATE TABLE Customer (
+  Id int(11) NOT NULL auto_increment,
+  Name varchar(255) default NULL,
+  PRIMARY KEY  (ID)
+) ENGINE=InnoDB AUTO_INCREMENT=5;
+
+insert  into Customer(Id,Name) 
+        values (1,'Fred'),(2,'Barney'),(3,'Wilma'),(4,'Betty');
+
+CREATE TABLE `Order` (
+  Id int(11) NOT NULL auto_increment,
+  Order_Date datetime NOT NULL,
+  Customer_Id int(11) default NULL,
+  PRIMARY KEY  (ID),
+  KEY FK_ORDER_CUSTOMER (CUSTOMER_ID),
+  CONSTRAINT FK_ORDER_CUSTOMER FOREIGN KEY (Customer_Id) REFERENCES Customer (Id)
+) ENGINE=InnoDB AUTO_INCREMENT=7;
+
+insert  into `Order`(Id,Order_Date,Customer_Id) 
+        values (1,'2011-06-24 00:00:00',1),(2,'2011-06-25 00:00:00',1),(3,'2011-06-26 00:00:00',1),
+               (4,'2011-06-01 00:00:00',2),(5,'2011-06-02 00:00:00',2),(6,'2011-06-03 00:00:00',3);  
