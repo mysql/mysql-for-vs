@@ -30,6 +30,8 @@
 - Modified ProviderManifest.xml to map TIMESTAMP db fields to the DateTime .NET type (MySQL bug #55351, Oracle bug #12652602).
 - Modified MySqlConnection.BeginTransaction to throw a NotSupportedException when Snapshot isolation level 
   is requested (MySQL bug #61589, Oracle bug #12698020).
+- Modified SqlFragment.QuoteIdentifier to add MySQL quotes around identifiers (MySQL bug #61635, Oracle bug #12707285).
+- Modified the SchemaDefinition-5.5.ssdl to treat char(36) columns as GUID (MySQL bug #61657, Oracle bug #12708208).
 
 6.4.0
 - Implemented Cache Server Properties connection option
