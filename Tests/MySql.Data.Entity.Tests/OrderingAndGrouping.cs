@@ -145,5 +145,17 @@ namespace MySql.Data.Entity.Tests
                 }
             }
         }
+
+        [Test]
+        public void OrdersTableDoesNotProvokeSyntaxError()
+        {
+            using (model2Entities context = new model2Entities())
+            {
+                var customers = from c in context.customer
+                                select c;
+
+                Assert.DoesNotThrow(delegate { customers.ToList().ForEach(c => c.order.Load()); });
+            }
+        }
     }
 }
