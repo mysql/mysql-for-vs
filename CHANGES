@@ -1,3 +1,8 @@
+- Modified SqlFragment.QuoteIdentifier to add MySQL quotes around identifiers (MySQL bug #61635, Oracle bug #12707285).
+- Modified the SchemaDefinition-5.5.ssdl to treat char(36) columns as GUID (MySQL bug #61657, Oracle bug #12708208).
+- Configured DataGridView to use VirtualMode and added some required events, so it can save back 
+  to the data source the grid changes (MySQL bug #61617, Oracle bug #12711786).
+
 Version 6.1.6
 - Added MySqlHelper.ExecuteReader that takes an external connection and array of paramters (bug #56755)
 - Handle MySqlCommand.CommandTimeout = 0 properly (Bug #57265)
@@ -54,8 +59,6 @@ Version 6.1.6
 - Modified ProviderManifest.xml to map TIMESTAMP db fields to the DateTime .NET type (MySQL bug #55351, Oracle bug #12652602).
 - Modified MySqlConnection.BeginTransaction to throw a NotSupportedException when Snapshot isolation level 
   is requested (MySQL bug #61589, Oracle bug #12698020).
-- Configured DataGridView to use VirtualMode and added some required events, so it can save back 
-  to the data source the grid changes (MySQL bug #61617, Oracle bug #12711786).
 
 
 Version 6.1.5
