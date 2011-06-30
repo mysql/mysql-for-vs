@@ -103,6 +103,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Model1.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Model2.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model2.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\SQLSyntax.Designer.cs" />
     <Compile Include="TestModel.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -112,6 +117,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\Tests\MySql.Data.Entity.Tests\App.Config" />
+    <EntityDeploy Include="Model2.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Model2.Designer.cs</LastGenOutput>
+    </EntityDeploy>
     <EntityDeploy Include="Model1.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>Model1.Designer.cs</LastGenOutput>
