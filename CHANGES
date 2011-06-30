@@ -54,6 +54,9 @@ Version 6.1.6
 - Modified ProviderManifest.xml to map TIMESTAMP db fields to the DateTime .NET type (MySQL bug #55351, Oracle bug #12652602).
 - Modified MySqlConnection.BeginTransaction to throw a NotSupportedException when Snapshot isolation level 
   is requested (MySQL bug #61589, Oracle bug #12698020).
+- Configured DataGridView to use VirtualMode and added some required events, so it can save back 
+  to the data source the grid changes (MySQL bug #61617, Oracle bug #12711786).
+
 
 Version 6.1.5
 - Fix authorization popup after modifying stored procedure in VS (Bug #44715)
