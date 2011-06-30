@@ -34,7 +34,7 @@ namespace MySql.Data.Entity
 
         protected string QuoteIdentifier(string id)
         {
-            if (id.IndexOfAny(quoteChars) >= 0)
+            if (id.IndexOfAny(quoteChars) < 0)
                 return String.Format("`{0}`", id);
             else return id;
         }
