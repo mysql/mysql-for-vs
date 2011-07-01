@@ -32,6 +32,9 @@
   is requested (MySQL bug #61589, Oracle bug #12698020).
 - Modified SqlFragment.QuoteIdentifier to add MySQL quotes around identifiers (MySQL bug #61635, Oracle bug #12707285).
 - Modified the SchemaDefinition-5.5.ssdl to treat char(36) columns as GUID (MySQL bug #61657, Oracle bug #12708208).
+- Configured DataGridView to use VirtualMode and added some required events, so it can save back 
+  to the data source the grid changes (MySQL bug #61617, Oracle bug #12711786).
+
 
 6.4.0
 - Implemented Cache Server Properties connection option
