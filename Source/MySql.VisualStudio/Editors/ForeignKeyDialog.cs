@@ -228,6 +228,46 @@ namespace MySql.Data.VisualStudio.Editors
                 e.Cancel = true;
                 return;
             }
+            FKColumnPair pair = fkColumnsBindingSource.Current as FKColumnPair;
+            pair.Column = parent;
+            pair.ReferencedColumn = child;
+            fkColumnsBindingSource.EndEdit();
+        }
+
+        private void columnGrid_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
+        {
+            FKColumnPair pair = fkColumnsBindingSource[ e.RowIndex ] as FKColumnPair;
+            switch( e.ColumnIndex ) { 
+                case 0:
+                    e.Value = pair.Column;
+                    break;
+                case 1:
+                    e.Value = pair.ReferencedColumn;
+                    break;
+            }
+        }
+
+        private void columnGrid_CellValuePushed(object sender, DataGridViewCellValueEventArgs e)
+        {
+            FKColumnPair fk;
+            if ((e.RowIndex == columnGrid.Rows.Count - 1) && (columnGrid.Rows.Count > fkColumnsBindingSource.Count))
+            {
+                fk = new FKColumnPair() { Column = "", ReferencedColumn = "" };
+                fkColumnsBindingSource.Add( fk );
+            }
+            else
+            {
+                fk = (fkColumnsBindingSource[e.RowIndex] as FKColumnPair);
+            }
+            switch (e.ColumnIndex)
+            {
+                case 0:
+                    fk.Column = (string)e.Value;
+                    break;
+                case 1:
+                    fk.ReferencedColumn = (string)e.Value;
+                    break;
+            }
         }
     }
 }
