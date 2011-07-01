@@ -987,7 +987,15 @@ namespace MySql.Data.MySqlClient
             string dummyStatement = "SELECT * FROM bogus_table LIMIT 0"; /* dummy query used to clear kill flag */
             MySqlCommand dummyCommand = new MySqlCommand(dummyStatement, connection);
             dummyCommand.InternallyCreated = true;
-            IDataReader reader = dummyCommand.ExecuteReader(); // ExecuteReader catches the exception and returns null, which is expected.
+            try
+            {
+                IDataReader reader = dummyCommand.ExecuteReader(); // ExecuteReader catches the exception and returns null, which is expected.
+            }
+            catch (MySqlException ex)
+            {
+                if (ex.Number != (int)MySqlErrorCode.NoSuchTable) throw;
+            }
+
         }
 
 		#region IEnumerator

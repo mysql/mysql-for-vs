@@ -41,6 +41,7 @@ namespace MySql.Data.MySqlClient
             new Dictionary<string, PropertyDefaultValue>(StringComparer.OrdinalIgnoreCase);
         private Dictionary<string, object> values =
             new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+        private bool hasProcAccess = true;
 
         static MySqlConnectionStringBuilder()
         {
@@ -735,6 +736,12 @@ namespace MySql.Data.MySqlClient
 #endif
 
         #endregion
+
+        internal bool HasProcAccess
+        {
+            get { return hasProcAccess; }
+            set { hasProcAccess = value; }
+        }
 
         internal Regex GetBlobAsUTF8IncludeRegex()
         {
