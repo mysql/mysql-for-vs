@@ -1,4 +1,4 @@
-CREATE TABLE my_aspnet_Sessions
+CREATE TABLE my_aspnet_sessions
 (
   SessionId       varchar(255)  NOT NULL,
   ApplicationId   int       NOT NULL,
@@ -18,13 +18,13 @@ CREATE TABLE my_aspnet_Sessions
   In 5.1 events provide a support for periodic jobs.
   In older version we need a do-it-yourself event.
 */
-CREATE TABLE my_aspnet_SessionCleanup
+CREATE TABLE my_aspnet_sessioncleanup
 (
   LastRun   datetime NOT NULL,
   IntervalMinutes int NOT NULL
 );
 
-INSERT INTO my_aspnet_SessionCleanup(LastRun,IntervalMinutes) values(NOW(), 10);
+INSERT INTO my_aspnet_sessioncleanup(LastRun,IntervalMinutes) values(NOW(), 10);
 
-UPDATE my_aspnet_SchemaVersion SET version=5;
+UPDATE my_aspnet_schemaversion SET version=5;
 
