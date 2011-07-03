@@ -56,7 +56,7 @@ namespace MySql.Data.MySqlClient.Tests
                 suExecSQL(String.Format("GRANT SELECT ON `{0}`.* TO 'abc'@'%'", database0));
                 suExecSQL(String.Format("GRANT EXECUTE ON PROCEDURE `{0}`.spTest TO abc", database0));
 
-                string connStr = GetConnectionString("abc", "abc", true);
+                string connStr = GetConnectionString("abc", "abc", true) + ";check parameters=false";
                 using (MySqlConnection c = new MySqlConnection(connStr))
                 {
                     c.Open();

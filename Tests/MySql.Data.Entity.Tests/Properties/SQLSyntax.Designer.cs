@@ -62,14 +62,14 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///Extent1.Id, 
-        ///Extent1.Name, 
-        ///Extent1.Age
-        ///FROM Authors AS Extent1
+        ///`Extent1`.`Id`, 
+        ///`Extent1`.`Name`, 
+        ///`Extent1`.`Age`
+        ///FROM `Authors` AS `Extent1`
         /// WHERE NOT EXISTS(SELECT
-        ///1 AS C1
-        ///FROM Books AS Extent2
-        /// WHERE Extent1.Id = Extent2.Author_id).
+        ///1 AS `C1`
+        ///FROM `Books` AS `Extent2`
+        /// WHERE `Extent1`.`Id` = `Extent2`.`Author_id`).
         /// </summary>
         internal static string Any {
             get {
@@ -79,10 +79,10 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///GroupBy1.A1 AS C1
+        ///`GroupBy1`.`A1` AS `C1`
         ///FROM (SELECT
-        ///Avg(Extent1.MinAge) AS A1
-        ///FROM Toys AS Extent1) AS GroupBy1.
+        ///AVG(`Extent1`.`MinAge`) AS `A1`
+        ///FROM `Toys` AS `Extent1`) AS `GroupBy1`.
         /// </summary>
         internal static string AverageSimple {
             get {
@@ -92,14 +92,14 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///1 AS C1, 
-        ///GroupBy1.A1 AS C2
+        ///1 AS `C1`, 
+        ///`GroupBy1`.`A1` AS `C2`
         ///FROM (SELECT
-        ///Extent1.StoreId AS K1, 
-        ///AVG(Extent1.Freight) AS A1
-        ///FROM Orders AS Extent1
+        ///`Extent1`.`StoreId` AS `K1`, 
+        ///AVG(`Extent1`.`Freight`) AS `A1`
+        ///FROM `Orders` AS `Extent1`
         /// GROUP BY 
-        ///Extent1.StoreId) AS GroupBy1.
+        ///`Extent1`.`StoreId`) AS `GroupBy1`.
         /// </summary>
         internal static string AverageWithGrouping {
             get {
@@ -109,11 +109,11 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///GroupBy1.A1 AS C1
+        ///`GroupBy1`.`A1` AS `C1`
         ///FROM (SELECT
-        ///AVG(Extent1.Freight) AS A1
-        ///FROM Orders AS Extent1
-        /// WHERE Extent1.StoreId = 3) AS GroupBy1.
+        ///AVG(`Extent1`.`Freight`) AS `A1`
+        ///FROM `Orders` AS `Extent1`
+        /// WHERE `Extent1`.`StoreId` = 3) AS `GroupBy1`.
         /// </summary>
         internal static string AverageWithPredicate {
             get {
@@ -123,10 +123,10 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///GroupBy1.A1 AS C1
+        ///`GroupBy1`.`A1` AS `C1`
         ///FROM (SELECT
-        ///Count(Extent1.Id) AS A1
-        ///FROM Toys AS Extent1) AS GroupBy1.
+        ///COUNT(`Extent1`.`Id`) AS `A1`
+        ///FROM `Toys` AS `Extent1`) AS `GroupBy1`.
         /// </summary>
         internal static string BigCountSimple {
             get {
@@ -136,19 +136,19 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///1 AS C1, 
-        ///GroupBy1.K1 AS Name, 
-        ///GroupBy1.A1 AS C2
+        ///1 AS `C1`, 
+        ///`GroupBy1`.`K1` AS `Name`, 
+        ///`GroupBy1`.`A1` AS `C2`
         ///FROM (SELECT
-        ///Extent1.Name AS K1, 
-        ///Extent1.DateBegan AS K2, 
-        ///Extent1.NumEmployees AS K3, 
-        ///COUNT(1) AS A1
-        ///FROM Companies AS Extent1
+        ///`Extent1`.`Name` AS `K1`, 
+        ///`Extent1`.`DateBegan` AS `K2`, 
+        ///`Extent1`.`NumEmployees` AS `K3`, 
+        ///COUNT(1) AS `A1`
+        ///FROM `Companies` AS `Extent1`
         /// GROUP BY 
-        ///Extent1.Name, 
-        ///Extent1.DateBegan, 
-        ///Extent1.NumEmployees) AS GroupBy1.
+        ///`Extent1`.`Name`, 
+        ///`Extent1`.`DateBegan`, 
+        ///`Extent1`.`NumEmployees`) AS `GroupBy1`.
         /// </summary>
         internal static string CanGroupByMultipleColumns {
             get {
@@ -158,15 +158,15 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///1 AS C1, 
-        ///GroupBy1.K1 AS Name, 
-        ///GroupBy1.A1 AS C2
+        ///1 AS `C1`, 
+        ///`GroupBy1`.`K1` AS `Name`, 
+        ///`GroupBy1`.`A1` AS `C2`
         ///FROM (SELECT
-        ///Extent1.Name AS K1, 
-        ///COUNT(1) AS A1
-        ///FROM Companies AS Extent1
+        ///`Extent1`.`Name` AS `K1`, 
+        ///COUNT(1) AS `A1`
+        ///FROM `Companies` AS `Extent1`
         /// GROUP BY 
-        ///Extent1.Name) AS GroupBy1.
+        ///`Extent1`.`Name`) AS `GroupBy1`.
         /// </summary>
         internal static string CanGroupBySingleColumn {
             get {
@@ -176,10 +176,10 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///GroupBy1.A1 AS C1
+        ///`GroupBy1`.`A1` AS `C1`
         ///FROM (SELECT
-        ///Count(Extent1.Id) AS A1
-        ///FROM Toys AS Extent1) AS GroupBy1.
+        ///COUNT(`Extent1`.`Id`) AS `A1`
+        ///FROM `Toys` AS `Extent1`) AS `GroupBy1`.
         /// </summary>
         internal static string CountSimple {
             get {
@@ -189,11 +189,11 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///GroupBy1.A1 AS C1
+        ///`GroupBy1`.`A1` AS `C1`
         ///FROM (SELECT
-        ///Count(Extent1.Id) AS A1
-        ///FROM Toys AS Extent1
-        /// WHERE Extent1.MinAge &gt; 3) AS GroupBy1.
+        ///COUNT(`Extent1`.`Id`) AS `A1`
+        ///FROM `Toys` AS `Extent1`
+        /// WHERE `Extent1`.`MinAge` &gt; 3) AS `GroupBy1`.
         /// </summary>
         internal static string CountWithPredicate {
             get {
@@ -203,19 +203,19 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///Extent1.Id, 
-        ///Extent1.Name, 
-        ///Extent1.DateBegan, 
-        ///Extent1.NumEmployees, 
-        ///Extent1.Address, 
-        ///Extent1.City, 
-        ///Extent1.State, 
-        ///Extent1.ZipCode
-        ///FROM Companies AS Extent1
+        ///`Extent1`.`Id`, 
+        ///`Extent1`.`Name`, 
+        ///`Extent1`.`DateBegan`, 
+        ///`Extent1`.`NumEmployees`, 
+        ///`Extent1`.`Address`, 
+        ///`Extent1`.`City`, 
+        ///`Extent1`.`State`, 
+        ///`Extent1`.`ZipCode`
+        ///FROM `Companies` AS `Extent1`
         /// WHERE EXISTS(SELECT
-        ///1 AS C1
-        ///FROM Toys AS Extent2
-        /// WHERE (Extent1.Id = Extent2.SupplierId) AND (Extent2.MinAge &lt; 4)).
+        ///1 AS `C1`
+        ///FROM `Toys` AS `Extent2`
+        /// WHERE (`Extent1`.`Id` = `Extent2`.`SupplierId`) AND (`Extent2`.`MinAge` &lt; 4)).
         /// </summary>
         internal static string Exists {
             get {
@@ -225,30 +225,26 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///Extent1.Id, 
-        ///Extent1.Name, 
-        ///Join1.Id AS C1, 
-        ///Join1.Name AS C2, 
-        ///Join1.Id1 AS C3, 
-        ///Join1.Name1 AS C4
-        ///FROM Companies AS Extent1 INNER JOIN (SELECT
-        ///UnionAll1.Id, 
-        ///UnionAll1.Name, 
-        ///UnionAll2.Id AS Id1, 
-        ///UnionAll2.Name AS Name1
+        ///`Extent1`.`Id`, 
+        ///`Extent1`.`Name`, 
+        ///`Join1`.`Id` AS `C1`, 
+        ///`Join1`.`Name` AS `C2`, 
+        ///`Join1`.`Id1` AS `C3`, 
+        ///`Join1`.`Name1` AS `C4`
+        ///FROM `Companies` AS `Extent1` INNER JOIN (SELECT
+        ///`UnionAll1`.`Id`, 
+        ///`UnionAll1`.`Name`, 
+        ///`UnionAll2`.`Id` AS `Id1`, 
+        ///`UnionAll2`.`Name` AS `Name1`
         ///FROM (SELECT
-        ///Extent2.Id, 
-        ///Extent2.Name
-        ///FROM Toys AS Extent2 UNION ALL SELECT
-        ///Extent3.Id, 
-        ///Extent3.Name
-        ///FROM Stores AS Extent3) AS UnionAll1 INNER JOIN (SELECT
-        ///Extent4.Id, 
-        ///Extent4.Name
-        ///FROM Authors AS Extent4 UNION ALL SELECT
-        ///Extent5.Id, 
-        ///Extent5.Name
-        ///FROM B [rest of string was truncated]&quot;;.
+        ///`Extent2`.`Id`, 
+        ///`Extent2`.`Name`
+        ///FROM `Toys` AS `Extent2` UNION ALL SELECT
+        ///`Extent3`.`Id`, 
+        ///`Extent3`.`Name`
+        ///FROM `Stores` AS `Extent3`) AS `UnionAll1` INNER JOIN (SELECT
+        ///`Extent4`.`Id`, 
+        ///`Ext [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string JoinOfUnionsOnRightSideOfJoin {
             get {
@@ -258,22 +254,21 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///Extent1.Id, 
-        ///Extent1.EmployeeID, 
-        ///Extent1.LastName, 
-        ///Extent1.FirstName, 
-        ///Extent1.BirthTime, 
-        ///Extent1.Weight, 
-        ///Extent1.LastModified
-        ///FROM EmployeeChildren AS Extent1 INNER JOIN (SELECT
-        ///Extent2.Id, 
-        ///Extent2.LastName, 
-        ///Extent2.FirstName, 
-        ///Extent2.Age, 
-        ///Extent3.EmployeeId, 
-        ///Extent3.Salary
-        ///FROM Employees AS Extent2 LEFT OUTER JOIN SalariedEmployees AS Extent3 ON Extent2.Id = Extent3.EmployeeId) AS Join1 ON Extent1.EmployeeID = Join1.Id
-        /// WHERE Extent1.Weight &gt; 7.
+        ///`Extent1`.`Id`, 
+        ///`Extent1`.`EmployeeID`, 
+        ///`Extent1`.`LastName`, 
+        ///`Extent1`.`FirstName`, 
+        ///`Extent1`.`BirthTime`, 
+        ///`Extent1`.`Weight`, 
+        ///`Extent1`.`LastModified`
+        ///FROM `EmployeeChildren` AS `Extent1` INNER JOIN (SELECT
+        ///`Extent2`.`Id`, 
+        ///`Extent2`.`LastName`, 
+        ///`Extent2`.`FirstName`, 
+        ///`Extent2`.`Age`, 
+        ///`Extent3`.`EmployeeId`, 
+        ///`Extent3`.`Salary`
+        ///FROM `Employees` AS `Extent2` LEFT OUTER JOIN `SalariedEmployees` AS `Extent3` ON `Extent2`.`Id` = `Extent3`.`EmployeeId`) AS `Join1` ON `Extent1`.`E [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string JoinOnRightSideAsDerivedTable {
             get {
@@ -283,22 +278,22 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///Extent1.Id, 
-        ///Extent1.Name, 
-        ///Join1.Id AS Id1, 
-        ///Join1.Name AS Name1, 
-        ///Join1.Id1 AS Id2, 
-        ///Join1.Name1 AS Name2
-        ///FROM Companies AS Extent1 INNER JOIN (SELECT
-        ///Extent2.Id, 
-        ///Extent2.Name, 
-        ///Extent2.Age, 
-        ///Extent3.Id AS Id1, 
-        ///Extent3.Name AS Name1, 
-        ///Extent3.Pages, 
-        ///Extent3.Author_id, 
-        ///Extent3.Publisher_id
-        ///FROM Authors AS Extent2 INNER JOIN Books AS Extent3 ON Extent2.Id = Extent3.Id) AS Join1 ON Extent1.Id = Join1.Id.
+        ///`Extent1`.`Id`, 
+        ///`Extent1`.`Name`, 
+        ///`Join1`.`Id` AS `Id1`, 
+        ///`Join1`.`Name` AS `Name1`, 
+        ///`Join1`.`Id1` AS `Id2`, 
+        ///`Join1`.`Name1` AS `Name2`
+        ///FROM `Companies` AS `Extent1` INNER JOIN (SELECT
+        ///`Extent2`.`Id`, 
+        ///`Extent2`.`Name`, 
+        ///`Extent2`.`Age`, 
+        ///`Extent3`.`Id` AS `Id1`, 
+        ///`Extent3`.`Name` AS `Name1`, 
+        ///`Extent3`.`Pages`, 
+        ///`Extent3`.`Author_id`, 
+        ///`Extent3`.`Publisher_id`
+        ///FROM `Authors` AS `Extent2` INNER JOIN `Books` AS `Extent3` ON `Extent2`.`Id` = `Extent3`.`Id`) AS `Join1` ON `Extent1`.` [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string JoinOnRightSideNameClash {
             get {
@@ -308,15 +303,15 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///Extent1.Id, 
-        ///Extent1.Name, 
-        ///Extent1.Address, 
-        ///Extent1.City, 
-        ///Extent1.State, 
-        ///Extent1.ZipCode
-        ///FROM Stores AS Extent1 INNER JOIN (SELECT
-        ///MAX(Extent2.StoreId) AS A1
-        ///FROM Orders AS Extent2) AS GroupBy1 ON Extent1.Id = GroupBy1.A1.
+        ///`Extent1`.`Id`, 
+        ///`Extent1`.`Name`, 
+        ///`Extent1`.`Address`, 
+        ///`Extent1`.`City`, 
+        ///`Extent1`.`State`, 
+        ///`Extent1`.`ZipCode`
+        ///FROM `Stores` AS `Extent1` INNER JOIN (SELECT
+        ///MAX(`Extent2`.`StoreId`) AS `A1`
+        ///FROM `Orders` AS `Extent2`) AS `GroupBy1` ON `Extent1`.`Id` = `GroupBy1`.`A1`.
         /// </summary>
         internal static string MaxInSubQuery1 {
             get {
@@ -326,15 +321,15 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///Extent1.Id, 
-        ///Extent1.Name, 
-        ///Extent1.Address, 
-        ///Extent1.City, 
-        ///Extent1.State, 
-        ///Extent1.ZipCode
-        ///FROM Stores AS Extent1 INNER JOIN (SELECT
-        ///MAX(Extent2.StoreId) AS A1
-        ///FROM Orders AS Extent2) AS GroupBy1 ON Extent1.Id = GroupBy1.A1.
+        ///`Extent1`.`Id`, 
+        ///`Extent1`.`Name`, 
+        ///`Extent1`.`Address`, 
+        ///`Extent1`.`City`, 
+        ///`Extent1`.`State`, 
+        ///`Extent1`.`ZipCode`
+        ///FROM `Stores` AS `Extent1` INNER JOIN (SELECT
+        ///MAX(`Extent2`.`StoreId`) AS `A1`
+        ///FROM `Orders` AS `Extent2`) AS `GroupBy1` ON `Extent1`.`Id` = `GroupBy1`.`A1`.
         /// </summary>
         internal static string MaxInSubQuery2 {
             get {
@@ -344,10 +339,10 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///GroupBy1.A1 AS C1
+        ///`GroupBy1`.`A1` AS `C1`
         ///FROM (SELECT
-        ///Max(Extent1.MinAge) AS A1
-        ///FROM Toys AS Extent1) AS GroupBy1.
+        ///MAX(`Extent1`.`MinAge`) AS `A1`
+        ///FROM `Toys` AS `Extent1`) AS `GroupBy1`.
         /// </summary>
         internal static string MaxSimple {
             get {
@@ -357,13 +352,13 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///GroupBy1.A1 AS C1
+        ///`GroupBy1`.`A1` AS `C1`
         ///FROM (SELECT
-        ///Extent1.StoreId AS K1, 
-        ///MAX(Extent1.Freight) AS A1
-        ///FROM Orders AS Extent1
+        ///`Extent1`.`StoreId` AS `K1`, 
+        ///MAX(`Extent1`.`Freight`) AS `A1`
+        ///FROM `Orders` AS `Extent1`
         /// GROUP BY 
-        ///Extent1.StoreId) AS GroupBy1.
+        ///`Extent1`.`StoreId`) AS `GroupBy1`.
         /// </summary>
         internal static string MaxWithGrouping {
             get {
@@ -373,12 +368,12 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///1 AS C1, 
-        ///GroupBy1.A1 AS C2
+        ///1 AS `C1`, 
+        ///`GroupBy1`.`A1` AS `C2`
         ///FROM (SELECT
-        ///MAX(Extent1.Freight) AS A1
-        ///FROM Orders AS Extent1
-        /// WHERE Extent1.StoreId = 1) AS GroupBy1.
+        ///MAX(`Extent1`.`Freight`) AS `A1`
+        ///FROM `Orders` AS `Extent1`
+        /// WHERE `Extent1`.`StoreId` = 1) AS `GroupBy1`.
         /// </summary>
         internal static string MaxWithPredicate {
             get {
@@ -388,10 +383,10 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///GroupBy1.A1 AS C1
+        ///`GroupBy1`.`A1` AS `C1`
         ///FROM (SELECT
-        ///Min(Extent1.MinAge) AS A1
-        ///FROM Toys AS Extent1) AS GroupBy1.
+        ///MIN(`Extent1`.`MinAge`) AS `A1`
+        ///FROM `Toys` AS `Extent1`) AS `GroupBy1`.
         /// </summary>
         internal static string MinSimple {
             get {
@@ -401,13 +396,13 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///GroupBy1.A1 AS C1
+        ///`GroupBy1`.`A1` AS `C1`
         ///FROM (SELECT
-        ///Extent1.StoreId AS K1, 
-        ///MIN(Extent1.Freight) AS A1
-        ///FROM Orders AS Extent1
+        ///`Extent1`.`StoreId` AS `K1`, 
+        ///MIN(`Extent1`.`Freight`) AS `A1`
+        ///FROM `Orders` AS `Extent1`
         /// GROUP BY 
-        ///Extent1.StoreId) AS GroupBy1.
+        ///`Extent1`.`StoreId`) AS `GroupBy1`.
         /// </summary>
         internal static string MinWithGrouping {
             get {
@@ -417,12 +412,12 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///1 AS C1, 
-        ///GroupBy1.A1 AS C2
+        ///1 AS `C1`, 
+        ///`GroupBy1`.`A1` AS `C2`
         ///FROM (SELECT
-        ///MIN(Extent1.Freight) AS A1
-        ///FROM Orders AS Extent1
-        /// WHERE Extent1.StoreId = 2) AS GroupBy1.
+        ///MIN(`Extent1`.`Freight`) AS `A1`
+        ///FROM `Orders` AS `Extent1`
+        /// WHERE `Extent1`.`StoreId` = 2) AS `GroupBy1`.
         /// </summary>
         internal static string MinWithPredicate {
             get {
@@ -432,17 +427,17 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///Extent1.Id, 
-        ///Extent1.Name, 
-        ///Extent1.DateBegan, 
-        ///Extent1.NumEmployees, 
-        ///Extent1.Address, 
-        ///Extent1.City, 
-        ///Extent1.State, 
-        ///Extent1.ZipCode
-        ///FROM Companies AS Extent1
+        ///`Extent1`.`Id`, 
+        ///`Extent1`.`Name`, 
+        ///`Extent1`.`DateBegan`, 
+        ///`Extent1`.`NumEmployees`, 
+        ///`Extent1`.`Address`, 
+        ///`Extent1`.`City`, 
+        ///`Extent1`.`State`, 
+        ///`Extent1`.`ZipCode`
+        ///FROM `Companies` AS `Extent1`
         /// ORDER BY 
-        ///Extent1.Name ASC.
+        ///`Extent1`.`Name` ASC.
         /// </summary>
         internal static string OrderBySimple {
             get {
@@ -452,18 +447,18 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///Extent1.Id, 
-        ///Extent1.Name, 
-        ///Extent1.DateBegan, 
-        ///Extent1.NumEmployees, 
-        ///Extent1.Address, 
-        ///Extent1.City, 
-        ///Extent1.State, 
-        ///Extent1.ZipCode
-        ///FROM Companies AS Extent1
-        /// WHERE Extent1.NumEmployees &gt; 100
+        ///`Extent1`.`Id`, 
+        ///`Extent1`.`Name`, 
+        ///`Extent1`.`DateBegan`, 
+        ///`Extent1`.`NumEmployees`, 
+        ///`Extent1`.`Address`, 
+        ///`Extent1`.`City`, 
+        ///`Extent1`.`State`, 
+        ///`Extent1`.`ZipCode`
+        ///FROM `Companies` AS `Extent1`
+        /// WHERE `Extent1`.`NumEmployees` &gt; 100
         /// ORDER BY 
-        ///Extent1.Name ASC.
+        ///`Extent1`.`Name` ASC.
         /// </summary>
         internal static string OrderByWithPredicate {
             get {
@@ -473,10 +468,10 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///Extent1.Id, 
-        ///Extent1.LastName
-        ///FROM Employees AS Extent1 LEFT OUTER JOIN SalariedEmployees AS Extent2 ON Extent1.Id = Extent2.EmployeeId
-        /// WHERE Extent1.Age &gt; 20.
+        ///`Extent1`.`Id`, 
+        ///`Extent1`.`LastName`
+        ///FROM `Employees` AS `Extent1` LEFT OUTER JOIN `SalariedEmployees` AS `Extent2` ON `Extent1`.`Id` = `Extent2`.`EmployeeId`
+        /// WHERE `Extent1`.`Age` &gt; 20.
         /// </summary>
         internal static string SelectWithComplexType {
             get {
@@ -486,10 +481,10 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///Extent1.Id, 
-        ///Extent1.Name, 
-        ///Extent2.Name AS Name1
-        ///FROM Books AS Extent1 INNER JOIN Authors AS Extent2 ON Extent1.Author_id = Extent2.Id.
+        ///`Extent1`.`Id`, 
+        ///`Extent1`.`Name`, 
+        ///`Extent2`.`Name` AS `Name1`
+        ///FROM `Books` AS `Extent1` INNER JOIN `Authors` AS `Extent2` ON `Extent1`.`Author_id` = `Extent2`.`Id`.
         /// </summary>
         internal static string SimpleJoin {
             get {
@@ -499,11 +494,11 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///Extent1.Id, 
-        ///Extent1.Name, 
-        ///Extent2.Name AS Name1
-        ///FROM Books AS Extent1 INNER JOIN Authors AS Extent2 ON Extent1.Author_id = Extent2.Id
-        /// WHERE Extent1.Pages &gt; 300.
+        ///`Extent1`.`Id`, 
+        ///`Extent1`.`Name`, 
+        ///`Extent2`.`Name` AS `Name1`
+        ///FROM `Books` AS `Extent1` INNER JOIN `Authors` AS `Extent2` ON `Extent1`.`Author_id` = `Extent2`.`Id`
+        /// WHERE `Extent1`.`Pages` &gt; 300.
         /// </summary>
         internal static string SimpleJoinWithPredicate {
             get {
@@ -513,11 +508,11 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///Extent1.Id, 
-        ///Extent1.Name, 
-        ///Extent1.MinAge, 
-        ///Extent1.SupplierId
-        ///FROM Toys AS Extent1.
+        ///`Extent1`.`Id`, 
+        ///`Extent1`.`Name`, 
+        ///`Extent1`.`MinAge`, 
+        ///`Extent1`.`SupplierId`
+        ///FROM `Toys` AS `Extent1`.
         /// </summary>
         internal static string SimpleSelect {
             get {
@@ -527,12 +522,12 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///Extent1.Id, 
-        ///Extent1.Name, 
-        ///Extent1.MinAge, 
-        ///Extent1.SupplierId
-        ///FROM Toys AS Extent1
-        /// WHERE Extent1.MinAge = 4.
+        ///`Extent1`.`Id`, 
+        ///`Extent1`.`Name`, 
+        ///`Extent1`.`MinAge`, 
+        ///`Extent1`.`SupplierId`
+        ///FROM `Toys` AS `Extent1`
+        /// WHERE `Extent1`.`MinAge` = 4.
         /// </summary>
         internal static string SimpleSelectWithFilter {
             get {
@@ -542,12 +537,12 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///Extent1.Id, 
-        ///Extent1.Name, 
-        ///Extent1.MinAge, 
-        ///Extent1.SupplierId
-        ///FROM Toys AS Extent1
-        /// WHERE Extent1.MinAge &gt; @age.
+        ///`Extent1`.`Id`, 
+        ///`Extent1`.`Name`, 
+        ///`Extent1`.`MinAge`, 
+        ///`Extent1`.`SupplierId`
+        ///FROM `Toys` AS `Extent1`
+        /// WHERE `Extent1`.`MinAge` &gt; @age.
         /// </summary>
         internal static string SimpleSelectWithParam {
             get {
@@ -557,17 +552,17 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///Extent1.Id, 
-        ///Extent1.Name, 
-        ///Extent1.DateBegan, 
-        ///Extent1.NumEmployees, 
-        ///Extent1.Address, 
-        ///Extent1.City, 
-        ///Extent1.State, 
-        ///Extent1.ZipCode
-        ///FROM Companies AS Extent1
+        ///`Extent1`.`Id`, 
+        ///`Extent1`.`Name`, 
+        ///`Extent1`.`DateBegan`, 
+        ///`Extent1`.`NumEmployees`, 
+        ///`Extent1`.`Address`, 
+        ///`Extent1`.`City`, 
+        ///`Extent1`.`State`, 
+        ///`Extent1`.`ZipCode`
+        ///FROM `Companies` AS `Extent1`
         /// ORDER BY 
-        ///Extent1.Id ASC LIMIT 3,18446744073709551615.
+        ///`Extent1`.`Id` ASC LIMIT 3,18446744073709551615.
         /// </summary>
         internal static string Skip {
             get {
@@ -577,17 +572,17 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///Extent1.Id, 
-        ///Extent1.Name, 
-        ///Extent1.DateBegan, 
-        ///Extent1.NumEmployees, 
-        ///Extent1.Address, 
-        ///Extent1.City, 
-        ///Extent1.State, 
-        ///Extent1.ZipCode
-        ///FROM Companies AS Extent1
+        ///`Extent1`.`Id`, 
+        ///`Extent1`.`Name`, 
+        ///`Extent1`.`DateBegan`, 
+        ///`Extent1`.`NumEmployees`, 
+        ///`Extent1`.`Address`, 
+        ///`Extent1`.`City`, 
+        ///`Extent1`.`State`, 
+        ///`Extent1`.`ZipCode`
+        ///FROM `Companies` AS `Extent1`
         /// ORDER BY 
-        ///Extent1.Id ASC LIMIT 2,2.
+        ///`Extent1`.`Id` ASC LIMIT 2,2.
         /// </summary>
         internal static string SkipAndTakeSimple {
             get {
@@ -597,17 +592,17 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///Extent1.Id, 
-        ///Extent1.Name, 
-        ///Extent1.DateBegan, 
-        ///Extent1.NumEmployees, 
-        ///Extent1.Address, 
-        ///Extent1.City, 
-        ///Extent1.State, 
-        ///Extent1.ZipCode
-        ///FROM Companies AS Extent1
+        ///`Extent1`.`Id`, 
+        ///`Extent1`.`Name`, 
+        ///`Extent1`.`DateBegan`, 
+        ///`Extent1`.`NumEmployees`, 
+        ///`Extent1`.`Address`, 
+        ///`Extent1`.`City`, 
+        ///`Extent1`.`State`, 
+        ///`Extent1`.`ZipCode`
+        ///FROM `Companies` AS `Extent1`
         /// ORDER BY 
-        ///Extent1.Name DESC LIMIT 2,2.
+        ///`Extent1`.`Name` DESC LIMIT 2,2.
         /// </summary>
         internal static string SkipAndTakeWithOrdering {
             get {
@@ -626,10 +621,10 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///GroupBy1.A1 AS C1
+        ///`GroupBy1`.`A1` AS `C1`
         ///FROM (SELECT
-        ///Sum(Extent1.MinAge) AS A1
-        ///FROM Toys AS Extent1) AS GroupBy1.
+        ///SUM(`Extent1`.`MinAge`) AS `A1`
+        ///FROM `Toys` AS `Extent1`) AS `GroupBy1`.
         /// </summary>
         internal static string SumSimple {
             get {
@@ -639,13 +634,13 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///GroupBy1.A1 AS C1
+        ///`GroupBy1`.`A1` AS `C1`
         ///FROM (SELECT
-        ///Extent1.StoreId AS K1, 
-        ///SUM(Extent1.Freight) AS A1
-        ///FROM Orders AS Extent1
+        ///`Extent1`.`StoreId` AS `K1`, 
+        ///SUM(`Extent1`.`Freight`) AS `A1`
+        ///FROM `Orders` AS `Extent1`
         /// GROUP BY 
-        ///Extent1.StoreId) AS GroupBy1.
+        ///`Extent1`.`StoreId`) AS `GroupBy1`.
         /// </summary>
         internal static string SumWithGrouping {
             get {
@@ -655,11 +650,11 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///GroupBy1.A1 AS C1
+        ///`GroupBy1`.`A1` AS `C1`
         ///FROM (SELECT
-        ///SUM(Extent1.Freight) AS A1
-        ///FROM Orders AS Extent1
-        /// WHERE Extent1.StoreId = 2) AS GroupBy1.
+        ///SUM(`Extent1`.`Freight`) AS `A1`
+        ///FROM `Orders` AS `Extent1`
+        /// WHERE `Extent1`.`StoreId` = 2) AS `GroupBy1`.
         /// </summary>
         internal static string SumWithPredicate {
             get {
@@ -669,15 +664,15 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///Id, 
-        ///Name, 
-        ///DateBegan, 
-        ///NumEmployees, 
-        ///Address, 
-        ///City, 
-        ///State, 
-        ///ZipCode
-        ///FROM Companies LIMIT 2.
+        ///`Id`, 
+        ///`Name`, 
+        ///`DateBegan`, 
+        ///`NumEmployees`, 
+        ///`Address`, 
+        ///`City`, 
+        ///`State`, 
+        ///`ZipCode`
+        ///FROM `Companies` LIMIT 2.
         /// </summary>
         internal static string Top {
             get {
@@ -687,18 +682,18 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///UnionAll1.Id AS C1, 
-        ///UnionAll1.Id1 AS C2, 
-        ///UnionAll1.Name AS C3
+        ///`UnionAll1`.`Id` AS `C1`, 
+        ///`UnionAll1`.`Id1` AS `C2`, 
+        ///`UnionAll1`.`Name` AS `C3`
         ///FROM (SELECT
-        ///Extent1.Id, 
-        ///Extent1.Id AS Id1, 
-        ///Extent1.Name
-        ///FROM Toys AS Extent1 UNION ALL SELECT
-        ///Extent2.Id, 
-        ///Extent2.Id AS Id1, 
-        ///Extent2.Name
-        ///FROM Companies AS Extent2) AS UnionAll1.
+        ///`Extent1`.`Id`, 
+        ///`Extent1`.`Id` AS `Id1`, 
+        ///`Extent1`.`Name`
+        ///FROM `Toys` AS `Extent1` UNION ALL SELECT
+        ///`Extent2`.`Id`, 
+        ///`Extent2`.`Id` AS `Id1`, 
+        ///`Extent2`.`Name`
+        ///FROM `Companies` AS `Extent2`) AS `UnionAll1`.
         /// </summary>
         internal static string UnionAll {
             get {
@@ -708,16 +703,16 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///Extent1.Id, 
-        ///Extent1.Name, 
-        ///Extent1.DateBegan, 
-        ///Extent1.NumEmployees, 
-        ///Extent1.Address, 
-        ///Extent1.City, 
-        ///Extent1.State, 
-        ///Extent1.ZipCode
-        ///FROM Companies AS Extent1
-        /// WHERE Extent1.City = @gp1.
+        ///`Extent1`.`Id`, 
+        ///`Extent1`.`Name`, 
+        ///`Extent1`.`DateBegan`, 
+        ///`Extent1`.`NumEmployees`, 
+        ///`Extent1`.`Address`, 
+        ///`Extent1`.`City`, 
+        ///`Extent1`.`State`, 
+        ///`Extent1`.`ZipCode`
+        ///FROM `Companies` AS `Extent1`
+        /// WHERE `Extent1`.`City` = @gp1.
         /// </summary>
         internal static string WhereLiteralOnRelation {
             get {
@@ -727,12 +722,12 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///Extent1.Id, 
-        ///Extent1.Name, 
-        ///Extent1.MinAge, 
-        ///Extent1.SupplierId
-        ///FROM Toys AS Extent1 INNER JOIN Companies AS Extent2 ON Extent1.SupplierId = Extent2.Id
-        /// WHERE Extent2.State = @gp1.
+        ///`Extent1`.`Id`, 
+        ///`Extent1`.`Name`, 
+        ///`Extent1`.`MinAge`, 
+        ///`Extent1`.`SupplierId`
+        ///FROM `Toys` AS `Extent1` INNER JOIN `Companies` AS `Extent2` ON `Extent1`.`SupplierId` = `Extent2`.`Id`
+        /// WHERE `Extent2`.`State` = @gp1.
         /// </summary>
         internal static string WhereWithRelatedEntities1 {
             get {
@@ -742,25 +737,25 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
-        ///Filter1.Id, 
-        ///Filter1.Name, 
-        ///Filter1.MinAge, 
-        ///Filter1.SupplierId
+        ///`Filter1`.`Id`, 
+        ///`Filter1`.`Name`, 
+        ///`Filter1`.`MinAge`, 
+        ///`Filter1`.`SupplierId`
         ///FROM (SELECT
-        ///Extent1.Id, 
-        ///Extent1.SupplierId, 
-        ///Extent1.Name, 
-        ///Extent1.MinAge, 
-        ///Extent2.Id AS Id1, 
-        ///Extent2.Name AS Name1, 
-        ///Extent2.DateBegan, 
-        ///Extent2.NumEmployees, 
-        ///Extent2.Address, 
-        ///Extent2.City, 
-        ///Extent2.State, 
-        ///Extent2.ZipCode
-        ///FROM Toys AS Extent1 INNER JOIN Companies AS Extent2 ON Extent1.SupplierId = Extent2.Id
-        /// WHERE Extent2.State != @gp1) AS Filter1 LEFT OUTER JOIN Companies AS Extent3 ON Filter1.SupplierId = E [rest of string was truncated]&quot;;.
+        ///`Extent1`.`Id`, 
+        ///`Extent1`.`SupplierId`, 
+        ///`Extent1`.`Name`, 
+        ///`Extent1`.`MinAge`, 
+        ///`Extent2`.`Id` AS `Id1`, 
+        ///`Extent2`.`Name` AS `Name1`, 
+        ///`Extent2`.`DateBegan`, 
+        ///`Extent2`.`NumEmployees`, 
+        ///`Extent2`.`Address`, 
+        ///`Extent2`.`City`, 
+        ///`Extent2`.`State`, 
+        ///`Extent2`.`ZipCode`
+        ///FROM `Toys` AS `Extent1` INNER JOIN `Companies` AS `Extent2` ON `Extent1`.`SupplierId` = `Extent2`.`Id`
+        /// WHERE `Extent2`.`S [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string WhereWithRelatedEntities2 {
             get {
