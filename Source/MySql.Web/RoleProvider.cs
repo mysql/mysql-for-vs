@@ -177,7 +177,7 @@ namespace MySql.Web.Security
                     connection.Open();
                     txn = connection.BeginTransaction();
                     MySqlCommand cmd = new MySqlCommand(
-                        "INSERT INTO my_aspnet_UsersInRoles VALUES(@userId, @roleId)", connection);
+                        "INSERT INTO my_aspnet_usersinroles VALUES(@userId, @roleId)", connection);
                     cmd.Parameters.Add("@userId", MySqlDbType.Int32);
                     cmd.Parameters.Add("@roleId", MySqlDbType.Int32);
                     foreach (string username in usernames)
@@ -224,7 +224,7 @@ namespace MySql.Web.Security
                     connection.Open();
 
                     MySqlCommand cmd = new MySqlCommand(
-                            @"INSERT INTO my_aspnet_Roles Values(NULL, @appId, @name)", connection);
+                            @"INSERT INTO my_aspnet_roles Values(NULL, @appId, @name)", connection);
                     cmd.Parameters.AddWithValue("@appId", app.EnsureId(connection));
                     cmd.Parameters.AddWithValue("@name", rolename);
                     cmd.ExecuteNonQuery();
@@ -261,15 +261,15 @@ namespace MySql.Web.Security
 
                     // first delete all the user/role mappings with that roleid
                     MySqlCommand cmd = new MySqlCommand(
-                        @"DELETE uir FROM my_aspnet_UsersInRoles uir JOIN 
-                        my_aspnet_Roles r ON uir.roleId=r.id 
+                        @"DELETE uir FROM my_aspnet_usersinroles uir JOIN 
+                        my_aspnet_roles r ON uir.roleId=r.id 
                         WHERE r.name LIKE @rolename AND r.applicationId=@appId", connection);
                     cmd.Parameters.AddWithValue("@rolename", rolename);
                     cmd.Parameters.AddWithValue("@appId", app.FetchId(connection));
                     cmd.ExecuteNonQuery();
 
                     // now delete the role itself
-                    cmd.CommandText = @"DELETE FROM my_aspnet_Roles WHERE name=@rolename 
+                    cmd.CommandText = @"DELETE FROM my_aspnet_roles WHERE name=@rolename 
                         AND applicationId=@appId";
                     cmd.ExecuteNonQuery();
                     txn.Commit();
@@ -334,8 +334,8 @@ namespace MySql.Web.Security
                     connection.Open();
                     int roleId = GetRoleId(connection, rolename);
 
-                    string sql = @"SELECT u.name FROM my_aspnet_Users u JOIN
-                    my_aspnet_UsersInRoles uir ON uir.userId=u.id AND uir.roleId=@roleId
+                    string sql = @"SELECT u.name FROM my_aspnet_users u JOIN
+                    my_aspnet_usersinroles uir ON uir.userId=u.id AND uir.roleId=@roleId
                     WHERE u.applicationId=@appId";
                     MySqlCommand cmd = new MySqlCommand(sql, connection);
                     cmd.Parameters.AddWithValue("@roleId", roleId);
@@ -375,9 +375,9 @@ namespace MySql.Web.Security
                 {
                     connection.Open();
 
-                    string sql = @"SELECT COUNT(*) FROM my_aspnet_UsersInRoles uir 
-                        JOIN my_aspnet_Users u ON uir.userId=u.id
-                        JOIN my_aspnet_Roles r ON uir.roleId=r.id
+                    string sql = @"SELECT COUNT(*) FROM my_aspnet_usersinroles uir 
+                        JOIN my_aspnet_users u ON uir.userId=u.id
+                        JOIN my_aspnet_roles r ON uir.roleId=r.id
                         WHERE u.applicationId=@appId AND 
                         u.name LIKE @userName AND r.name LIKE @roleName";
                     MySqlCommand cmd = new MySqlCommand(sql, connection);
@@ -429,9 +429,9 @@ namespace MySql.Web.Security
                     connection.Open();
                     txn = connection.BeginTransaction();
 
-                    string sql = @"DELETE uir FROM my_aspnet_UsersInRoles uir
-                            JOIN my_aspnet_Users u ON uir.userId=u.id 
-                            JOIN my_aspnet_Roles r ON uir.roleId=r.id
+                    string sql = @"DELETE uir FROM my_aspnet_usersinroles uir
+                            JOIN my_aspnet_users u ON uir.userId=u.id 
+                            JOIN my_aspnet_roles r ON uir.roleId=r.id
                             WHERE u.name LIKE @username AND r.name LIKE @rolename 
                             AND u.applicationId=@appId AND r.applicationId=@appId";
 
@@ -475,7 +475,7 @@ namespace MySql.Web.Security
                 {
                     connection.Open();
                     MySqlCommand cmd = new MySqlCommand(
-                        @"SELECT COUNT(*) FROM my_aspnet_Roles WHERE applicationId=@appId 
+                        @"SELECT COUNT(*) FROM my_aspnet_roles WHERE applicationId=@appId 
                         AND name LIKE @name", connection);
                     cmd.Parameters.AddWithValue("@appId", app.FetchId(connection));
                     cmd.Parameters.AddWithValue("@name", rolename);
@@ -511,9 +511,9 @@ namespace MySql.Web.Security
                 {
                     connection.Open();
 
-                    string sql = @"SELECT u.name FROM my_aspnet_UsersInRole uir
-                        JOIN my_aspnet_Users u ON uir.userId=u.id
-                        JOIN my_aspnet_Roles r ON uir.roleId=r.id
+                    string sql = @"SELECT u.name FROM my_aspnet_usersInRole uir
+                        JOIN my_aspnet_users u ON uir.userId=u.id
+                        JOIN my_aspnet_roles r ON uir.roleId=r.id
                         WHERE r.name LIKE @rolename AND
                         u.name LIKE @username AND
                         u.applicationId=@appId";
@@ -543,7 +543,7 @@ namespace MySql.Web.Security
         internal static void DeleteUserData(MySqlConnection connection, int userId)
         {
             MySqlCommand cmd = new MySqlCommand(
-                "DELETE FROM my_aspnet_UsersInRoles WHERE userId=@userId", connection);
+                "DELETE FROM my_aspnet_usersinroles WHERE userId=@userId", connection);
             cmd.Parameters.AddWithValue("@userId", userId);
             cmd.ExecuteNonQuery();
         }
@@ -556,9 +556,9 @@ namespace MySql.Web.Security
 
             try
             {
-                string sql = "SELECT r.name FROM my_aspnet_Roles r ";
+                string sql = "SELECT r.name FROM my_aspnet_roles r ";
                 if (username != null)
-                    sql += "JOIN my_aspnet_UsersInRoles uir ON uir.roleId=r.id AND uir.userId=" + 
+                    sql += "JOIN my_aspnet_usersinroles uir ON uir.roleId=r.id AND uir.userId=" + 
                         GetUserId(connection, username);
                 sql += " WHERE r.applicationId=@appId";
                 MySqlCommand cmd = new MySqlCommand(sql, connection);
@@ -581,7 +581,7 @@ namespace MySql.Web.Security
         private int GetUserId(MySqlConnection connection, string username)
         {
             MySqlCommand cmd = new MySqlCommand(
-                "SELECT id FROM my_aspnet_Users WHERE name=@name AND applicationId=@appId",
+                "SELECT id FROM my_aspnet_users WHERE name=@name AND applicationId=@appId",
                 connection);
             cmd.Parameters.AddWithValue("@name", username);
             cmd.Parameters.AddWithValue("@appId", app.FetchId(connection));
@@ -592,7 +592,7 @@ namespace MySql.Web.Security
         private int GetRoleId(MySqlConnection connection, string rolename)
         {
             MySqlCommand cmd = new MySqlCommand(
-                "SELECT id FROM my_aspnet_Roles WHERE name=@name AND applicationId=@appId",
+                "SELECT id FROM my_aspnet_roles WHERE name=@name AND applicationId=@appId",
                 connection);
             cmd.Parameters.AddWithValue("@name", rolename);
             cmd.Parameters.AddWithValue("@appId", app.FetchId(connection));

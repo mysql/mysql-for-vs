@@ -68,21 +68,21 @@ namespace MySql.Web.Tests
 
             provider.SetPropertyValues(ctx, values);
 
-            DataTable dt = FillTable("SELECT * FROM my_aspnet_Applications");
+            DataTable dt = FillTable("SELECT * FROM my_aspnet_applications");
             Assert.AreEqual(1, dt.Rows.Count);
-            dt = FillTable("SELECT * FROM my_aspnet_Users");
+            dt = FillTable("SELECT * FROM my_aspnet_users");
             Assert.AreEqual(1, dt.Rows.Count);
-            dt = FillTable("SELECT * FROM my_aspnet_Profiles");
+            dt = FillTable("SELECT * FROM my_aspnet_profiles");
             Assert.AreEqual(1, dt.Rows.Count);
 
             values["color"].PropertyValue = "green";
             provider.SetPropertyValues(ctx, values);
 
-            dt = FillTable("SELECT * FROM my_aspnet_Applications");
+            dt = FillTable("SELECT * FROM my_aspnet_applications");
             Assert.AreEqual(1, dt.Rows.Count);
-            dt = FillTable("SELECT * FROM my_aspnet_Users");
+            dt = FillTable("SELECT * FROM my_aspnet_users");
             Assert.AreEqual(1, dt.Rows.Count);
-            dt = FillTable("SELECT * FROM my_aspnet_Profiles");
+            dt = FillTable("SELECT * FROM my_aspnet_profiles");
             Assert.AreEqual(1, dt.Rows.Count);
         }
 
@@ -104,11 +104,11 @@ namespace MySql.Web.Tests
 
             provider.SetPropertyValues(ctx, values);
 
-            DataTable dt = FillTable("SELECT * FROM my_aspnet_Applications");
+            DataTable dt = FillTable("SELECT * FROM my_aspnet_applications");
             Assert.AreEqual(0, dt.Rows.Count);
-            dt = FillTable("SELECT * FROM my_aspnet_Users");
+            dt = FillTable("SELECT * FROM my_aspnet_users");
             Assert.AreEqual(0, dt.Rows.Count);
-            dt = FillTable("SELECT * FROM my_aspnet_Profiles");
+            dt = FillTable("SELECT * FROM my_aspnet_profiles");
             Assert.AreEqual(0, dt.Rows.Count);
         }
 
@@ -124,11 +124,11 @@ namespace MySql.Web.Tests
             profile["FavoriteColors"] = colors;
             profile.Save();
 
-            DataTable dt = FillTable("SELECT * FROM my_aspnet_Applications");
+            DataTable dt = FillTable("SELECT * FROM my_aspnet_applications");
             Assert.AreEqual(1, dt.Rows.Count);
-            dt = FillTable("SELECT * FROM my_aspnet_Users");
+            dt = FillTable("SELECT * FROM my_aspnet_users");
             Assert.AreEqual(1, dt.Rows.Count);
-            dt = FillTable("SELECT * FROM my_aspnet_Profiles");
+            dt = FillTable("SELECT * FROM my_aspnet_profiles");
             Assert.AreEqual(1, dt.Rows.Count);
 
             // now retrieve them

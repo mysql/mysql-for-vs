@@ -416,7 +416,7 @@ namespace MySql.Web.Security
                     GetPasswordInfo(connection, userId, out passwordKey, out passwordFormat);
 
                     MySqlCommand cmd = new MySqlCommand(
-                        @"UPDATE my_aspnet_Membership
+                        @"UPDATE my_aspnet_membership
                         SET Password = @pass, LastPasswordChangedDate = @lastPasswordChangedDate 
                         WHERE userId=@userId", connection);
                     cmd.Parameters.AddWithValue("@pass",
@@ -465,7 +465,7 @@ namespace MySql.Web.Security
 
 
                     MySqlCommand cmd = new MySqlCommand(
-                        @"UPDATE my_aspnet_Membership 
+                        @"UPDATE my_aspnet_membership 
                         SET PasswordQuestion = @passwordQuestion, PasswordAnswer = @passwordAnswer
                         WHERE userId=@userId", connection);
                     cmd.Parameters.AddWithValue("@passwordQuestion", newPwdQuestion);
@@ -547,7 +547,7 @@ namespace MySql.Web.Security
                         app.EnsureId(connection), true);
 
                     MySqlCommand cmd = new MySqlCommand(
-                        @"INSERT INTO my_aspnet_Membership 
+                        @"INSERT INTO my_aspnet_membership 
                         VALUES(@userId, @email, @comment, @password, @passwordKey, 
                         @passwordFormat, @passwordQuestion, @passwordAnswer, 
                         @isApproved, @lastActivityDate, @lastLoginDate,
@@ -626,7 +626,7 @@ namespace MySql.Web.Security
                     }
 
                     string sql = @"DELETE {0}m 
-                        FROM my_aspnet_Users u, my_aspnet_Membership m
+                        FROM my_aspnet_users u, my_aspnet_membership m
                         WHERE u.id=m.userId AND u.id=@userId";
 
                     MySqlCommand cmd = new MySqlCommand(
@@ -676,7 +676,7 @@ namespace MySql.Web.Security
                 {
                     connection.Open();
                     MySqlCommand cmd = new MySqlCommand(
-                        @"SELECT COUNT(*) FROM my_aspnet_Membership m JOIN my_aspnet_Users u
+                        @"SELECT COUNT(*) FROM my_aspnet_membership m JOIN my_aspnet_users u
                         ON m.userId=u.id WHERE m.LastActivityDate > @date AND u.applicationId=@appId", 
                         connection);
                     cmd.Parameters.AddWithValue("@date", compareTime);
@@ -716,7 +716,7 @@ namespace MySql.Web.Security
                         throw new ProviderException("Username not found.");
 
                     string sql = @"SELECT Password, PasswordAnswer, PasswordKey, PasswordFormat, 
-                    IsLockedOut FROM my_aspnet_Membership WHERE userId=@userId";
+                    IsLockedOut FROM my_aspnet_membership WHERE userId=@userId";
                     MySqlCommand cmd = new MySqlCommand(sql, connection);
                     cmd.Parameters.AddWithValue("@userId", userId);
 
@@ -810,16 +810,16 @@ namespace MySql.Web.Security
                     if (userIsOnline)
                     {
                         cmd.CommandText =
-                            @"UPDATE my_aspnet_Users SET lastActivityDate = @date WHERE id=@userId";
+                            @"UPDATE my_aspnet_users SET lastActivityDate = @date WHERE id=@userId";
                         cmd.Parameters.AddWithValue("@date", DateTime.Now);
                         cmd.ExecuteNonQuery();
 
-                        cmd.CommandText = "UPDATE my_aspnet_Membership SET LastActivityDate=@date WHERE userId=@userId";
+                        cmd.CommandText = "UPDATE my_aspnet_membership SET LastActivityDate=@date WHERE userId=@userId";
                         cmd.ExecuteNonQuery();
                     }
 
                     cmd.CommandText = @"SELECT m.*,u.name 
-                    FROM my_aspnet_Membership m JOIN my_aspnet_Users u ON m.userId=u.id 
+                    FROM my_aspnet_membership m JOIN my_aspnet_users u ON m.userId=u.id 
                     WHERE u.id=@userId";
 
                     MembershipUser user;
@@ -860,7 +860,7 @@ namespace MySql.Web.Security
                     int userId = GetUserId(conn, username);
                     if (-1 == userId) return false;
 
-                    string sql = @"UPDATE my_aspnet_Membership  
+                    string sql = @"UPDATE my_aspnet_membership  
                         SET IsLockedOut = false, LastLockedOutDate = @lastDate 
                         WHERE userId=@userId";
 
@@ -893,8 +893,8 @@ namespace MySql.Web.Security
                 {
                     conn.Open();
 
-                    string sql = @"SELECT u.name FROM my_aspnet_Users u
-                        JOIN my_aspnet_Membership m ON m.userid=u.id
+                    string sql = @"SELECT u.name FROM my_aspnet_users u
+                        JOIN my_aspnet_membership m ON m.userid=u.id
                         WHERE m.Email = @email AND u.applicationId=@appId";
                     MySqlCommand cmd = new MySqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@email", email);
@@ -951,7 +951,7 @@ namespace MySql.Web.Security
 
                     MySqlCommand cmd = new MySqlCommand(@"SELECT PasswordAnswer, 
                     PasswordKey, PasswordFormat, IsLockedOut 
-                    FROM my_aspnet_Membership WHERE userId=@userId", connection);
+                    FROM my_aspnet_membership WHERE userId=@userId", connection);
                     cmd.Parameters.AddWithValue("@userId", userId);
 
                     string passwordKey = String.Empty;
@@ -977,7 +977,7 @@ namespace MySql.Web.Security
                         }
                     }
 
-                    cmd.CommandText = @"UPDATE my_aspnet_Membership 
+                    cmd.CommandText = @"UPDATE my_aspnet_membership 
                         SET Password = @pass, LastPasswordChangedDate = @lastPassChange
                         WHERE userId=@userId";
 
@@ -1015,7 +1015,7 @@ namespace MySql.Web.Security
                     if (-1 == userId)
                         throw new ProviderException(Resources.UsernameNotFound);
 
-                    string sql = @"UPDATE my_aspnet_Membership m, my_aspnet_Users u 
+                    string sql = @"UPDATE my_aspnet_membership m, my_aspnet_users u 
                         SET m.Email=@email, m.Comment=@comment, m.IsApproved=@isApproved,
                         m.LastLoginDate=@lastLoginDate, u.lastActivityDate=@lastActivityDate,
                         m.LastActivityDate=@lastActivityDate
@@ -1062,7 +1062,7 @@ namespace MySql.Web.Security
                     if (-1 == userId) return false;
 
                     string sql = @"SELECT Password, PasswordKey, PasswordFormat, IsApproved,
-                            Islockedout FROM my_aspnet_Membership WHERE userId=@userId";
+                            Islockedout FROM my_aspnet_membership WHERE userId=@userId";
                     MySqlCommand cmd = new MySqlCommand(sql, connection);
                     cmd.Parameters.AddWithValue("@userId", userId);
 
@@ -1086,7 +1086,7 @@ namespace MySql.Web.Security
                             isValid = true;
                             DateTime currentDate = DateTime.Now;
                             MySqlCommand updateCmd = new MySqlCommand(
-                                @"UPDATE my_aspnet_Membership m, my_aspnet_Users u 
+                                @"UPDATE my_aspnet_membership m, my_aspnet_users u 
                                 SET m.LastLoginDate = @lastLoginDate, u.lastActivityDate = @date,
                                 m.LastActivityDate=@date 
                                 WHERE m.userId=@userid AND u.id=@userid", connection);
@@ -1146,7 +1146,7 @@ namespace MySql.Web.Security
         private int GetUserId(MySqlConnection connection, string username)
         {
             MySqlCommand cmd = new MySqlCommand(
-                "SELECT id FROM my_aspnet_Users WHERE name = @name AND applicationId=@appId", connection);
+                "SELECT id FROM my_aspnet_users WHERE name = @name AND applicationId=@appId", connection);
             cmd.Parameters.AddWithValue("@name", username);
             cmd.Parameters.AddWithValue("@appId", app.FetchId(connection));
             object id = cmd.ExecuteScalar();
@@ -1276,7 +1276,7 @@ namespace MySql.Web.Security
             MySqlCommand cmd = new MySqlCommand(
                 @"SELECT FailedPasswordAttemptCount, 
                 FailedPasswordAttemptWindowStart, FailedPasswordAnswerAttemptCount, 
-                FailedPasswordAnswerAttemptWindowStart FROM my_aspnet_Membership 
+                FailedPasswordAnswerAttemptWindowStart FROM my_aspnet_membership 
                 WHERE userId=@userId", connection);
             cmd.Parameters.AddWithValue("@userId", userId);
 
@@ -1308,7 +1308,7 @@ namespace MySql.Web.Security
                     if (failureType == "Password")
                     {
                         cmd.CommandText =
-                            @"UPDATE my_aspnet_Membership 
+                            @"UPDATE my_aspnet_membership 
                             SET FailedPasswordAttemptCount = @count, 
                             FailedPasswordAttemptWindowStart = @windowStart 
                             WHERE userId=@userId";
@@ -1316,7 +1316,7 @@ namespace MySql.Web.Security
                     if (failureType == "PasswordAnswer")
                     {
                         cmd.CommandText =
-                            @"UPDATE my_aspnet_Membership 
+                            @"UPDATE my_aspnet_membership 
                             SET FailedPasswordAnswerAttemptCount = @count, 
                             FailedPasswordAnswerAttemptWindowStart = @windowStart 
                             WHERE userId = @userId";
@@ -1334,7 +1334,7 @@ namespace MySql.Web.Security
                     if (failureCount >= MaxInvalidPasswordAttempts)
                     {
                         cmd.CommandText =
-                            @"UPDATE my_aspnet_Membership SET IsLockedOut = @isLockedOut, 
+                            @"UPDATE my_aspnet_membership SET IsLockedOut = @isLockedOut, 
                             LastLockedOutDate = @lastLockedOutDate WHERE userId=@userId";
                         cmd.Parameters.Clear();
                         cmd.Parameters.AddWithValue("@isLockedOut", true);
@@ -1348,13 +1348,13 @@ namespace MySql.Web.Security
                         if (failureType == "Password")
                         {
                             cmd.CommandText =
-                                @"UPDATE my_aspnet_Membership 
+                                @"UPDATE my_aspnet_membership 
                                 SET FailedPasswordAttemptCount = @count WHERE userId=@userId";
                         }
                         if (failureType == "PasswordAnswer")
                         {
                             cmd.CommandText =
-                                @"UPDATE my_aspnet_Membership 
+                                @"UPDATE my_aspnet_membership 
                                 SET FailedPasswordAnswerAttemptCount = @count 
                                 WHERE userId=@userId";
                         }
@@ -1385,7 +1385,7 @@ namespace MySql.Web.Security
             out string passwordKey, out MembershipPasswordFormat passwordFormat)
         {
             MySqlCommand cmd = new MySqlCommand(
-                @"SELECT PasswordKey, PasswordFormat FROM my_aspnet_Membership WHERE
+                @"SELECT PasswordKey, PasswordFormat FROM my_aspnet_membership WHERE
                   userId=@userId", connection);
             cmd.Parameters.AddWithValue("@userId", userId);
             using (MySqlDataReader reader = cmd.ExecuteReader())
@@ -1409,8 +1409,8 @@ namespace MySql.Web.Security
                     MySqlCommand cmd = new MySqlCommand();
                     cmd.Connection = connection;
 
-                    string sql = @"SELECT SQL_CALC_FOUND_ROWS u.name,m.* FROM my_aspnet_Users u
-                        JOIN my_aspnet_Membership m ON m.userId=u.id 
+                    string sql = @"SELECT SQL_CALC_FOUND_ROWS u.name,m.* FROM my_aspnet_users u
+                        JOIN my_aspnet_membership m ON m.userId=u.id 
                         WHERE u.applicationId=@appId";
 
                     if (username != null)
