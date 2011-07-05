@@ -63,7 +63,7 @@ namespace MySql.Web.Tests
             Assert.AreEqual(MembershipCreateStatus.Success, status);
 
             // verify that the password format is hashed.
-            DataTable table = FillTable("SELECT * FROM my_aspnet_Membership");
+            DataTable table = FillTable("SELECT * FROM my_aspnet_membership");
             MembershipPasswordFormat rowFormat =
                 (MembershipPasswordFormat)Convert.ToInt32(table.Rows[0]["PasswordFormat"]);
             Assert.AreEqual(format, rowFormat);
@@ -181,9 +181,9 @@ namespace MySql.Web.Tests
         {
             CreateUserWithHashedPassword();
             Assert.IsTrue(provider.DeleteUser("foo", true));
-            DataTable table = FillTable("SELECT * FROM my_aspnet_Membership");
+            DataTable table = FillTable("SELECT * FROM my_aspnet_membership");
             Assert.AreEqual(0, table.Rows.Count);
-            table = FillTable("SELECT * FROM my_aspnet_Users");
+            table = FillTable("SELECT * FROM my_aspnet_users");
             Assert.AreEqual(0, table.Rows.Count);
 
             CreateUserWithHashedPassword();
@@ -193,9 +193,9 @@ namespace MySql.Web.Tests
             config.Add("applicationName", "/");
             provider.Initialize(null, config);
             Assert.IsTrue(Membership.DeleteUser("foo", false));
-            table = FillTable("SELECT * FROM my_aspnet_Membership");
+            table = FillTable("SELECT * FROM my_aspnet_membership");
             Assert.AreEqual(0, table.Rows.Count);
-            table = FillTable("SELECT * FROM my_aspnet_Users");
+            table = FillTable("SELECT * FROM my_aspnet_users");
             Assert.AreEqual(1, table.Rows.Count);
         }
 

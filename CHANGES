@@ -1,3 +1,4 @@
+- Modified ASP.NET membership provider to create and query all related tables using lowercase names (MySQL bug #61108, Oracle bug #12702009).
 
 Version 6.2.5
 - Modified SqlFragment.QuoteIdentifier to add MySQL quotes around identifiers (MySQL bug #61635, Oracle bug #12707285).

@@ -126,7 +126,7 @@ namespace MySql.Web.Profile
                 c.Open();
 
                 MySqlCommand queryCmd = new MySqlCommand(
-                    @"SELECT * FROM my_aspnet_Users 
+                    @"SELECT * FROM my_aspnet_users 
                     WHERE applicationId=@appId AND 
                     lastActivityDate < @lastActivityDate",
                     c);
@@ -138,7 +138,7 @@ namespace MySql.Web.Profile
                     queryCmd.CommandText += " AND isAnonymous = 0";
 
                 MySqlCommand deleteCmd = new MySqlCommand(
-                    "DELETE FROM my_aspnet_Profiles WHERE userId = @userId", c);
+                    "DELETE FROM my_aspnet_profiles WHERE userId = @userId", c);
                 deleteCmd.Parameters.Add("@userId", MySqlDbType.UInt64);
 
                 List<ulong> uidList = new List<ulong>();
@@ -174,13 +174,13 @@ namespace MySql.Web.Profile
                 c.Open();
 
                 MySqlCommand queryCmd = new MySqlCommand(
-                    @"SELECT * FROM my_aspnet_Users  
+                    @"SELECT * FROM my_aspnet_users  
                     WHERE applicationId=@appId AND name = @name", c);
                 queryCmd.Parameters.AddWithValue("@appId", app.FetchId(c));
                 queryCmd.Parameters.Add("@name", MySqlDbType.VarChar);
 
                 MySqlCommand deleteCmd = new MySqlCommand(
-                    "DELETE FROM my_aspnet_Profiles WHERE userId = @userId", c);
+                    "DELETE FROM my_aspnet_profiles WHERE userId = @userId", c);
                 deleteCmd.Parameters.Add("@userId", MySqlDbType.UInt64);
 
                 int count = 0;
@@ -357,7 +357,7 @@ namespace MySql.Web.Profile
                 c.Open();
 
                 MySqlCommand queryCmd = new MySqlCommand(
-                    @"SELECT COUNT(*) FROM my_aspnet_Users
+                    @"SELECT COUNT(*) FROM my_aspnet_users
                     WHERE applicationId = @appId AND 
                     lastActivityDate < @lastActivityDate",
                     c);
@@ -420,8 +420,8 @@ namespace MySql.Web.Profile
                 {
                     c.Open();
                     MySqlCommand cmd = new MySqlCommand(
-                        @"SELECT * FROM my_aspnet_Profiles p
-                    JOIN my_aspnet_Users u ON u.id = p.userId
+                        @"SELECT * FROM my_aspnet_profiles p
+                    JOIN my_aspnet_users u ON u.id = p.userId
                     WHERE u.applicationId = @appId AND u.name = @name", c);
                     cmd.Parameters.AddWithValue("@appId", app.FetchId(c));
                     cmd.Parameters.AddWithValue("@name", username);
@@ -474,7 +474,7 @@ namespace MySql.Web.Profile
                         app.EnsureId(connection), isAuthenticated);
 
                     MySqlCommand cmd = new MySqlCommand(
-                        @"INSERT INTO my_aspnet_Profiles  
+                        @"INSERT INTO my_aspnet_profiles  
                         VALUES (@userId, @index, @stringData, @binaryData, NULL) ON DUPLICATE KEY UPDATE
                         valueindex=VALUES(valueindex), stringdata=VALUES(stringdata),
                         binarydata=VALUES(binarydata)", connection);
@@ -502,7 +502,7 @@ namespace MySql.Web.Profile
         internal static void DeleteUserData(MySqlConnection connection, int userId)
         {
             MySqlCommand cmd = new MySqlCommand(
-                "DELETE FROM my_aspnet_Profiles WHERE userId=@userId", connection);
+                "DELETE FROM my_aspnet_profiles WHERE userId=@userId", connection);
             cmd.Parameters.AddWithValue("@userId", userId);
             cmd.ExecuteNonQuery();
         }
@@ -618,8 +618,8 @@ namespace MySql.Web.Profile
                 MySqlCommand cmd = new MySqlCommand(
                 @"SELECT p.*, u.name, u.isAnonymous, u.lastActivityDate,
                 LENGTH(p.stringdata) + LENGTH(p.binarydata) AS profilesize
-                FROM my_aspnet_Profiles p 
-                JOIN my_aspnet_Users u ON u.id = p.userId 
+                FROM my_aspnet_profiles p 
+                JOIN my_aspnet_users u ON u.id = p.userId 
                 WHERE u.applicationId = @appId", c);
                 cmd.Parameters.AddWithValue("@appId", app.FetchId(c));
 
