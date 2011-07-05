@@ -102,7 +102,7 @@ namespace MySql.Web.Tests
             LoadSchema(3);
             LoadSchema(4);
 
-            MySqlCommand cmd = new MySqlCommand("SELECT * FROM my_aspnet_SchemaVersion", conn);
+            MySqlCommand cmd = new MySqlCommand("SELECT * FROM my_aspnet_schemaversion", conn);
             object ver = cmd.ExecuteScalar();
             Assert.AreEqual(4, ver);
 
@@ -171,7 +171,7 @@ namespace MySql.Web.Tests
         {
             LoadData();
 
-            DataTable apps = FillTable("SELECT * FROM my_aspnet_Applications");
+            DataTable apps = FillTable("SELECT * FROM my_aspnet_applications");
             Assert.AreEqual(2, apps.Rows.Count);
             Assert.AreEqual(1, apps.Rows[0]["id"]);
             Assert.AreEqual("app1", apps.Rows[0]["name"]);
@@ -184,7 +184,7 @@ namespace MySql.Web.Tests
         {
             LoadData();
 
-            DataTable dt = FillTable("SELECT * FROM my_aspnet_Users");
+            DataTable dt = FillTable("SELECT * FROM my_aspnet_users");
             Assert.AreEqual(4, dt.Rows.Count);
             Assert.AreEqual(1, dt.Rows[0]["id"]);
             Assert.AreEqual(1, dt.Rows[0]["applicationId"]);
@@ -199,13 +199,13 @@ namespace MySql.Web.Tests
             Assert.AreEqual(2, dt.Rows[3]["applicationId"]);
             Assert.AreEqual("user2", dt.Rows[3]["name"]);
         }
-           
+
         [Test]
         public void CheckRolesUpgrade()
         {
             LoadData();
 
-            DataTable dt = FillTable("SELECT * FROM my_aspnet_Roles");
+            DataTable dt = FillTable("SELECT * FROM my_aspnet_roles");
             Assert.AreEqual(4, dt.Rows.Count);
             Assert.AreEqual(1, dt.Rows[0]["id"]);
             Assert.AreEqual(1, dt.Rows[0]["applicationId"]);
@@ -226,7 +226,7 @@ namespace MySql.Web.Tests
         {
             LoadData();
 
-            DataTable dt = FillTable("SELECT * FROM my_aspnet_Membership");
+            DataTable dt = FillTable("SELECT * FROM my_aspnet_membership");
             Assert.AreEqual(4, dt.Rows.Count);
             Assert.AreEqual(1, dt.Rows[0]["userid"]);
             Assert.AreEqual(2, dt.Rows[1]["userid"]);
@@ -239,7 +239,7 @@ namespace MySql.Web.Tests
         {
             LoadData();
 
-            DataTable dt = FillTable("SELECT * FROM my_aspnet_UsersInRoles");
+            DataTable dt = FillTable("SELECT * FROM my_aspnet_usersinroles");
             Assert.AreEqual(4, dt.Rows.Count);
             Assert.AreEqual(1, dt.Rows[0]["userid"]);
             Assert.AreEqual(1, dt.Rows[0]["roleid"]);
@@ -267,7 +267,7 @@ namespace MySql.Web.Tests
             provider.Initialize(null, config);
 
             MembershipCreateStatus status;
-            MembershipUser user = provider.CreateUser("boo", "password", "email@email.com", 
+            MembershipUser user = provider.CreateUser("boo", "password", "email@email.com",
                 "question", "answer", true, null, out status);
         }
 

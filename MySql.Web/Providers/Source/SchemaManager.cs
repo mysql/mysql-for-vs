@@ -41,7 +41,7 @@ namespace MySql.Web.Common
     /// </summary>
     public static class SchemaManager
     {
-        private const int schemaVersion = 6;
+        private const int schemaVersion = 7;
 
         /// <summary>
         /// Gets the most recent version of the schema.
@@ -87,7 +87,23 @@ namespace MySql.Web.Common
                     string schema = r.GetString(String.Format("schema{0}", ver));
                     MySqlScript script = new MySqlScript(connection);
                     script.Query = schema;
-                    script.Execute();
+
+                    try
+                    {
+                        script.Execute();
+                    }
+                    catch (MySqlException ex)
+                    {
+                        if (ex.Number == 1050 && ver == 7)
+                        {
+                            // Schema7 performs several renames of tables to their lowercase representation. 
+                            // If the current server OS does not support renaming to lowercase, then let's just continue.
+                            script.Query = "UPDATE my_aspnet_schemaversion SET version=7";
+                            script.Execute();
+                            continue;
+                        }
+                        throw ex;
+                    }                    
                 }
             }
         }
@@ -99,7 +115,7 @@ namespace MySql.Web.Common
             {
                 conn.Open();
 
-                MySqlCommand cmd = new MySqlCommand("SELECT * FROM my_aspnet_SchemaVersion", conn);
+                MySqlCommand cmd = new MySqlCommand("SELECT * FROM my_aspnet_schemaversion", conn);
                 try
                 {
                     object ver = cmd.ExecuteScalar();
@@ -134,14 +150,14 @@ namespace MySql.Web.Common
             Debug.Assert(applicationId > 0);
 
             // first attempt to fetch an existing user id
-            MySqlCommand cmd = new MySqlCommand(@"SELECT id FROM my_aspnet_Users
+            MySqlCommand cmd = new MySqlCommand(@"SELECT id FROM my_aspnet_users
                 WHERE applicationId = @appId AND name = @name", connection);
             cmd.Parameters.AddWithValue("@appId", applicationId);
             cmd.Parameters.AddWithValue("@name", username);
             object userId = cmd.ExecuteScalar();
             if (userId != null) return (int)userId;
 
-            cmd.CommandText = @"INSERT INTO my_aspnet_Users VALUES 
+            cmd.CommandText = @"INSERT INTO my_aspnet_users VALUES 
                 (NULL, @appId, @name, @isAnon, Now())";
             cmd.Parameters.AddWithValue("@isAnon", !authenticated);
             int recordsAffected = cmd.ExecuteNonQuery();
