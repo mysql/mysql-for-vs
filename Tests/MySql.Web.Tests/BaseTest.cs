@@ -109,7 +109,21 @@ namespace MySql.Web.Tests
             string schema = r.GetString(String.Format("schema{0}", version));
             MySqlScript script = new MySqlScript(conn);
             script.Query = schema;
-            script.Execute();
+
+            try
+            {
+                script.Execute();
+            }
+            catch (MySqlException ex)
+            {
+                if (ex.Number == 1050 && version == 7)
+                {
+                    // Schema7 performs several renames of tables to their lowercase representation. 
+                    // If the current server OS does not support renaming to lowercase, then let's just continue.
+                    script.Query = "UPDATE my_aspnet_schemaversion SET version=7";
+                    script.Execute();
+                }
+            }                    
         }
     }
 }
