@@ -199,7 +199,7 @@ namespace MySql.Web.Tests
             Assert.AreEqual(2, dt.Rows[3]["applicationId"]);
             Assert.AreEqual("user2", dt.Rows[3]["name"]);
         }
-           
+
         [Test]
         public void CheckRolesUpgrade()
         {
@@ -267,7 +267,7 @@ namespace MySql.Web.Tests
             provider.Initialize(null, config);
 
             MembershipCreateStatus status;
-            MembershipUser user = provider.CreateUser("boo", "password", "email@email.com", 
+            MembershipUser user = provider.CreateUser("boo", "password", "email@email.com",
                 "question", "answer", true, null, out status);
         }
 
@@ -305,14 +305,14 @@ namespace MySql.Web.Tests
         public void InitializeInvalidConnStringThrowsArgumentException()
         {
             Configuration configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            string originalConnectionString = configFile.ConnectionStrings.ConnectionStrings["LocalMySqlServer"].ConnectionString;
-            string fakeConnectionString = originalConnectionString.Replace("database", "fooKey");
-            configFile.ConnectionStrings.ConnectionStrings["LocalMySqlServer"].ConnectionString = fakeConnectionString;
-            configFile.Save();
-            ConfigurationManager.RefreshSection("connectionStrings");
-
+            string connStr = configFile.ConnectionStrings.ConnectionStrings["LocalMySqlServer"].ConnectionString;
+            string fakeConnectionString = connStr.Replace("database", "fooKey");
             try
             {
+                configFile.ConnectionStrings.ConnectionStrings["LocalMySqlServer"].ConnectionString = fakeConnectionString;
+                configFile.Save();
+                ConfigurationManager.RefreshSection("connectionStrings");
+
                 MySQLMembershipProvider provider = new MySQLMembershipProvider();
                 NameValueCollection config = new NameValueCollection();
                 config.Add("connectionStringName", "LocalMySqlServer");
@@ -321,11 +321,10 @@ namespace MySql.Web.Tests
             }
             finally
             {
-                configFile.ConnectionStrings.ConnectionStrings["LocalMySqlServer"].ConnectionString = originalConnectionString;
+                configFile.ConnectionStrings.ConnectionStrings["LocalMySqlServer"].ConnectionString = connStr;
                 configFile.Save();
                 ConfigurationManager.RefreshSection("connectionStrings");
             }
-            
         }
     }
 }

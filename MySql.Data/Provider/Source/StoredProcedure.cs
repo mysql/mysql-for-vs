@@ -271,7 +271,7 @@ namespace MySql.Data.MySqlClient
             if (outSelect.Length == 0) return null;
 
             MySqlCommand cmd = new MySqlCommand("SELECT " + outSelect, Connection);
-
+            cmd.InternallyCreated = true;
             MySqlDataReader reader = cmd.ExecuteReader();
             // since MySQL likes to return user variables as strings
             // we reset the types of the readers internal value objects
