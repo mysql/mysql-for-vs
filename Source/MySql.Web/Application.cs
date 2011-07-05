@@ -36,7 +36,7 @@ namespace MySql.Web.General
             if (Id == -1)
             {
                 MySqlCommand cmd = new MySqlCommand(
-                    @"SELECT id FROM my_aspnet_Applications WHERE name=@name", connection);
+                    @"SELECT id FROM my_aspnet_applications WHERE name=@name", connection);
                 cmd.Parameters.AddWithValue("@name", Name);
                 object id = cmd.ExecuteScalar();
                 Id = id == null ? -1 : Convert.ToInt32(id);
@@ -57,7 +57,7 @@ namespace MySql.Web.General
             if (FetchId(connection) <= 0)
             {
                 MySqlCommand cmd = new MySqlCommand(
-                    "INSERT INTO my_aspnet_Applications VALUES (NULL, @appName, @appDesc)", connection);
+                    "INSERT INTO my_aspnet_applications VALUES (NULL, @appName, @appDesc)", connection);
                 cmd.Parameters.AddWithValue("@appName", Name);
                 cmd.Parameters.AddWithValue("@appDesc", Description);
                 int recordsAffected = cmd.ExecuteNonQuery();

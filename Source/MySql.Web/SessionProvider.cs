@@ -214,7 +214,7 @@ namespace MySql.Web.SessionState
                 using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
                     MySqlCommand cmd = new MySqlCommand(
-                       "INSERT INTO my_aspnet_Sessions" +
+                       "INSERT INTO my_aspnet_sessions" +
                        " (SessionId, ApplicationId, Created, Expires, LockDate," +
                        " LockId, Timeout, Locked, SessionItems, Flags)" +
                        " Values (@SessionId, @ApplicationId, NOW(), NOW() + INTERVAL @Timeout MINUTE, NOW()," +
@@ -312,7 +312,7 @@ namespace MySql.Web.SessionState
                 using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
                     MySqlCommand cmd = new MySqlCommand(
-                        "UPDATE my_aspnet_Sessions SET Locked = 0, Expires = NOW() + INTERVAL @Timeout MINUTE " +
+                        "UPDATE my_aspnet_sessions SET Locked = 0, Expires = NOW() + INTERVAL @Timeout MINUTE " +
                         "WHERE SessionId = @SessionId AND ApplicationId = @ApplicationId AND LockId = @LockId",
                         conn);
 
@@ -343,7 +343,7 @@ namespace MySql.Web.SessionState
             {
                 using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
-                    MySqlCommand cmd = new MySqlCommand("DELETE FROM my_aspnet_Sessions " +
+                    MySqlCommand cmd = new MySqlCommand("DELETE FROM my_aspnet_sessions " +
                         " WHERE SessionId = @SessionId AND ApplicationId = @ApplicationId AND LockId = @LockId",
                         conn);
 
@@ -375,7 +375,7 @@ namespace MySql.Web.SessionState
                 using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
                     MySqlCommand cmd = new MySqlCommand(
-                        "UPDATE my_aspnet_Sessions SET Expires = NOW() + INTERVAL @Timeout MINUTE" +
+                        "UPDATE my_aspnet_sessions SET Expires = NOW() + INTERVAL @Timeout MINUTE" +
                        " WHERE SessionId = @SessionId AND ApplicationId = @ApplicationId", conn);
 
                     cmd.Parameters.AddWithValue("@Timeout", sessionStateConfig.Timeout.TotalMinutes);
@@ -418,7 +418,7 @@ namespace MySql.Web.SessionState
                         //with the same SessionId and Application id, it will be removed
 
                         cmd = new MySqlCommand(
-                            "REPLACE INTO my_aspnet_Sessions (SessionId, ApplicationId, Created, Expires," +
+                            "REPLACE INTO my_aspnet_sessions (SessionId, ApplicationId, Created, Expires," +
                             " LockDate, LockId, Timeout, Locked, SessionItems, Flags)" +
                             " Values(@SessionId, @ApplicationId, NOW(), NOW() + INTERVAL @Timeout MINUTE, NOW()," +
                             " @LockId , @Timeout, @Locked, @SessionItems, @Flags)", conn);
@@ -434,7 +434,7 @@ namespace MySql.Web.SessionState
                     {
                         //Update the existing session item.
                         cmd = new MySqlCommand(
-                             "UPDATE my_aspnet_Sessions SET Expires = NOW() + INTERVAL @Timeout MINUTE," +
+                             "UPDATE my_aspnet_sessions SET Expires = NOW() + INTERVAL @Timeout MINUTE," +
                              " SessionItems = @SessionItems, Locked = @Locked " +
                              " WHERE SessionId = @SessionId AND ApplicationId = @ApplicationId AND LockId = @LockId",
                              conn);
@@ -502,7 +502,7 @@ namespace MySql.Web.SessionState
                     if (lockRecord)
                     {
                         cmd = new MySqlCommand(
-                          "UPDATE my_aspnet_Sessions SET " +
+                          "UPDATE my_aspnet_sessions SET " +
                           " Locked = 1, LockDate = NOW()" +
                           " WHERE SessionId = @SessionId AND ApplicationId = @ApplicationId AND" +
                           " Locked = 0 AND Expires > NOW()", conn);
@@ -526,7 +526,7 @@ namespace MySql.Web.SessionState
                     cmd = new MySqlCommand(
                       "SELECT NOW(), Expires , SessionItems, LockId,  Flags, Timeout, " +
                       "  LockDate " +
-                      "  FROM my_aspnet_Sessions" +
+                      "  FROM my_aspnet_sessions" +
                       "  WHERE SessionId = @SessionId AND ApplicationId = @ApplicationId", conn);
 
                     cmd.Parameters.AddWithValue("@SessionId", id);
@@ -568,7 +568,7 @@ namespace MySql.Web.SessionState
                     // delete the record from the data source.
                     if (deleteData)
                     {
-                        cmd = new MySqlCommand("DELETE FROM my_aspnet_Sessions" +
+                        cmd = new MySqlCommand("DELETE FROM my_aspnet_sessions" +
                         " WHERE SessionId = @SessionId AND ApplicationId = @ApplicationId", conn);
                         cmd.Parameters.AddWithValue("@SessionId", id);
                         cmd.Parameters.AddWithValue("@ApplicationId", ApplicationId);
@@ -586,7 +586,7 @@ namespace MySql.Web.SessionState
                     {
                         lockId = (int)(lockId) + 1;
 
-                        cmd = new MySqlCommand("UPDATE my_aspnet_Sessions SET" +
+                        cmd = new MySqlCommand("UPDATE my_aspnet_sessions SET" +
                           " LockId = @LockId, Flags = 0 " +
                           " WHERE SessionId = @SessionId AND ApplicationId = @ApplicationId", conn);
 
@@ -680,13 +680,13 @@ namespace MySql.Web.SessionState
                 {
                     con.Open();
                     MySqlCommand cmd = new MySqlCommand(
-                        "UPDATE my_aspnet_SessionCleanup SET LastRun=NOW() where" +
+                        "UPDATE my_aspnet_sessioncleanup SET LastRun=NOW() where" +
                         " LastRun + INTERVAL IntervalMinutes MINUTE < NOW()", con);
 
                     if (cmd.ExecuteNonQuery() > 0)
                     {
                         cmd = new MySqlCommand(
-                           "DELETE FROM my_aspnet_Sessions WHERE Expires < NOW()",
+                           "DELETE FROM my_aspnet_sessions WHERE Expires < NOW()",
                            con);
                         cmd.ExecuteNonQuery();
                     }
@@ -704,12 +704,12 @@ namespace MySql.Web.SessionState
 
         int GetCleanupInterval(MySqlConnection con)
         {
-            MySqlCommand cmd = new MySqlCommand("SELECT IntervalMinutes from my_aspnet_SessionCleanup", con);
+            MySqlCommand cmd = new MySqlCommand("SELECT IntervalMinutes from my_aspnet_sessioncleanup", con);
             return (int)cmd.ExecuteScalar();
         }
 
         /// <summary>
-        /// Check storage engine used by my_aspnet_Sessions.
+        /// Check storage engine used by my_aspnet_sessions.
         /// Warn if MyISAM is used - it does not handle concurrent updates well
         /// which is important for session provider, as each access to session 
         /// does an update to "expires" field.
@@ -721,7 +721,7 @@ namespace MySql.Web.SessionState
             try
             {
                 MySqlCommand cmd = new MySqlCommand(
-                    "SELECT ENGINE FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='my_aspnet_Sessions'",
+                    "SELECT ENGINE FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='my_aspnet_sessions'",
                     con);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -731,9 +731,9 @@ namespace MySql.Web.SessionState
                         if (engine == "MyISAM")
                         {
                             string message =
-                                "Storage engine for table my_aspnet_Sessions is MyISAM." +
+                                "Storage engine for table my_aspnet_sessions is MyISAM." +
                                 "If possible, please change it to a transactional storage engine " +
-                                 "to improve performance,e.g with 'alter table my_aspnet_Sessions engine innodb'\n";
+                                 "to improve performance,e.g with 'alter table my_aspnet_sessions engine innodb'\n";
                             try
                             {
                                 using (EventLog log = new EventLog())

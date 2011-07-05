@@ -107,6 +107,7 @@
     <None Include="Properties\schema2.sql" />
     <None Include="Properties\schema3.sql" />
     <None Include="Properties\schema5.sql" />
+    <None Include="Properties\schema7.sql" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MySql.Data\MySql.Data.csproj">
