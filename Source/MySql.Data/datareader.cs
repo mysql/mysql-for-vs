@@ -188,10 +188,13 @@ namespace MySql.Data.MySqlClient
 			if (!isOpen) return;
 
 			bool shouldCloseConnection = (commandBehavior & CommandBehavior.CloseConnection) != 0;
+            CommandBehavior originalBehavior = commandBehavior; 
 
             // clear all remaining resultsets
             try
             {
+                // Temporarily change to Default behavior to allow NextResult to finish properly.
+                commandBehavior = CommandBehavior.Default;
                 while (NextResult()) { }
             }
             catch (MySqlException ex)
@@ -231,6 +234,7 @@ namespace MySql.Data.MySqlClient
             {
                 // always ensure internal reader is null (Bug #55558)
                 connection.Reader = null;
+                commandBehavior = originalBehavior; 
             }
             // we now give the command a chance to terminate.  In the case of
 			// stored procedures it needs to update out and inout parameters
