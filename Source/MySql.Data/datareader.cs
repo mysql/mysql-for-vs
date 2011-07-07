@@ -180,19 +180,21 @@ namespace MySql.Data.MySqlClient
 
 		#endregion
 
-		/// <summary>
-		/// Closes the MySqlDataReader object.
-		/// </summary>
-		public override void Close()
-		{
-			if (!isOpen) return;
+        /// <summary>
+        /// Closes the MySqlDataReader object.
+        /// </summary>
+        public override void Close()
+        {
+            if (!isOpen) return;
 
-			bool shouldCloseConnection = (commandBehavior & CommandBehavior.CloseConnection) != 0;
-			commandBehavior = CommandBehavior.Default;
+            bool shouldCloseConnection = (commandBehavior & CommandBehavior.CloseConnection) != 0;
+            CommandBehavior originalBehavior = commandBehavior;
 
             // clear all remaining resultsets
             try
             {
+                // Temporarily change to Default behavior to allow NextResult to finish properly.
+                commandBehavior = CommandBehavior.Default;
                 while (NextResult()) { }
             }
             catch (MySqlException ex)
@@ -232,10 +234,12 @@ namespace MySql.Data.MySqlClient
             {
                 // always ensure internal reader is null (Bug #55558)
                 connection.Reader = null;
+                commandBehavior = originalBehavior;
             }
             // we now give the command a chance to terminate.  In the case of
-			// stored procedures it needs to update out and inout parameters
-			command.Close(this);
+            // stored procedures it needs to update out and inout parameters
+            command.Close(this);
+            commandBehavior = CommandBehavior.Default;
 
             if (this.command.Canceled && connection.driver.Version.isAtLeast(5, 1, 0))
             {
@@ -243,14 +247,14 @@ namespace MySql.Data.MySqlClient
                 ClearKillFlag();
             }
 
-			if (shouldCloseConnection)
-				connection.Close();
+            if (shouldCloseConnection)
+                connection.Close();
 
-			command = null;
+            command = null;
             connection.IsInUse = false;
-			connection = null;
+            connection = null;
             isOpen = false;
-		}
+        }
 
 		#region TypeSafe Accessors
 
