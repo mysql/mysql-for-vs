@@ -2,6 +2,8 @@
 - Modified the SchemaDefinition-5.5.ssdl to treat char(36) columns as GUID (MySQL bug #61657, Oracle bug #12708208).
 - Configured DataGridView to use VirtualMode and added some required events, so it can save back 
   to the data source the grid changes (MySQL bug #61617, Oracle bug #12711786).
+- Modified MySqlScript to enable correct processing of the DELIMITER command when
+  not followed by a new line (MySQL bug #61680, Oracle bug #12732279).
 
 Version 6.1.6
 - Added MySqlHelper.ExecuteReader that takes an external connection and array of paramters (bug #56755)
