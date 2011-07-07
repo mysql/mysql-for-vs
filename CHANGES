@@ -1,4 +1,5 @@
 - Modified ASP.NET membership provider to create and query all related tables using lowercase names (MySQL bug #61108, Oracle bug #12702009).
+- Modified MySqlDataReader.Close to use Default behavior when clearing remaining resultsets (MySQL bug #61690, Oracle bug #12723423).
 
 6.4.3 (ga)
 - Modified SqlFragment.QuoteIdentifier to add MySQL quotes around identifiers (MySQL bug #61635, Oracle bug #12707285).
