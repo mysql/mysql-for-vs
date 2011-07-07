@@ -6,6 +6,7 @@
 - Configured DataGridView to use VirtualMode and added some required events, so it can save back 
   to the data source the grid changes (MySQL bug #61617, Oracle bug #12711786).
 - Modified ASP.NET membership provider to create and query all related tables using lowercase names (MySQL bug #61108, Oracle bug #12702009).
+- Modified MySqlDataReader.Close to use Default behavior when clearing remaining resultsets (MySQL bug #61690, Oracle bug #12723423).
 
 Version 6.3.7
 - IPv6 connections are now supported 

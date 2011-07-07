@@ -1032,5 +1032,58 @@ namespace MySql.Data.MySqlClient.Tests
             // Verify that "counter" field was changed by updating stored procedure.
             Assert.AreEqual((int)row["counter"], 1);
         }
+
+        [Test]
+        public void FillFromStoredProcedureMultipleTimesCreatesExpectedRows()
+        {
+            execSQL("CREATE PROCEDURE SimpleSelect() BEGIN SELECT 'ADummyVal' as DummyVal; END");
+
+            using (MySqlConnection connection = new MySqlConnection(GetPoolingConnectionString()))
+            {
+                MySqlDataAdapter adapter = new MySqlDataAdapter("SimpleSelect", connection);
+                adapter.SelectCommand.CommandType = CommandType.StoredProcedure;
+                DataTable table = new DataTable();
+                adapter.Fill(table);
+                Assert.AreEqual(1, table.Rows.Count);
+
+                adapter = new MySqlDataAdapter("SimpleSelect", connection);
+                adapter.SelectCommand.CommandType = CommandType.StoredProcedure;
+                table = new DataTable();
+                adapter.Fill(table);
+                Assert.AreEqual(1, table.Rows.Count);
+
+                MySqlConnection.ClearPool(connection);
+            }
+        }
+
+        [Test]
+        public void ChangeStoredProcedureBasedSelectCommandDoesNotThrow()
+        {
+            execSQL("CREATE PROCEDURE SimpleSelect1() BEGIN SELECT 'ADummyVal' as DummyVal; END");
+            execSQL("CREATE PROCEDURE SimpleSelect2() BEGIN SELECT 'ADummyVal' as DummyVal; END");
+
+            using (MySqlConnection connection = new MySqlConnection(GetPoolingConnectionString()))
+            {
+                MySqlDataAdapter adapter = new MySqlDataAdapter("SimpleSelect1", connection);
+                adapter.SelectCommand.CommandType = CommandType.StoredProcedure;
+                DataTable table = new DataTable();
+                adapter.Fill(table);
+                Assert.AreEqual(1, table.Rows.Count);
+
+                adapter.SelectCommand = new MySqlCommand("SimpleSelect2", connection);
+                adapter.SelectCommand.CommandType = CommandType.StoredProcedure;
+                table = new DataTable();
+
+                try
+                {
+                    Assert.DoesNotThrow(delegate { adapter.Fill(table); });
+                    Assert.AreEqual(1, table.Rows.Count);
+                }
+                finally
+                {
+                    MySqlConnection.ClearPool(connection);
+                }
+            }
+        }
     }
 }
