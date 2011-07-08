@@ -47,35 +47,7 @@ namespace MySql.Data.Entity.Tests
         protected override void LoadStaticConfiguration()
         {
             base.LoadStaticConfiguration();
-
-            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            string filename = config.FilePath;
-
             database0 = database1 = "test";
-
-            XmlDocument configDoc = new XmlDocument();
-            configDoc.PreserveWhitespace = true;
-            configDoc.Load(filename);
-            XmlElement configNode = configDoc["configuration"];
-            configNode.RemoveAll();
-
-            XmlElement systemData = (XmlElement)configDoc.CreateNode(XmlNodeType.Element, "system.data", "");
-            XmlElement dbFactories = (XmlElement)configDoc.CreateNode(XmlNodeType.Element, "DbProviderFactories", "");
-            XmlElement provider = (XmlElement)configDoc.CreateNode(XmlNodeType.Element, "add", "");
-            provider.SetAttribute("name", "MySQL Data Provider");
-            provider.SetAttribute("description", ".Net Framework Data Provider for MySQL");
-            provider.SetAttribute("invariant", "MySql.Data.MySqlClient");
-
-            string fullname = String.Format("MySql.Data.MySqlClient.MySqlClientFactory, {0}",
-                typeof(MySqlConnection).Assembly.FullName);
-            provider.SetAttribute("type", fullname);
-
-            dbFactories.AppendChild(provider);
-            systemData.AppendChild(dbFactories);
-            configNode.AppendChild(systemData);
-            configDoc.Save(filename);
-
-            ConfigurationManager.RefreshSection("system.data");
         }
 
         [SetUp]
