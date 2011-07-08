@@ -43,6 +43,9 @@ namespace MySql.Data.Entity.Tests
 {
     public class BaseEdmTest : BaseTest
     {
+        // A trace listener to use during testing.
+        private AssertFailTraceListener asertFailListener = new AssertFailTraceListener();
+
 		protected override void LoadStaticConfiguration()
 		{
 			base.LoadStaticConfiguration();
@@ -53,6 +56,10 @@ namespace MySql.Data.Entity.Tests
         public override void Setup()
         {
             base.Setup();
+
+            // Replace existing listeners with listener for testing.
+            Trace.Listeners.Clear();
+            Trace.Listeners.Add(this.asertFailListener);
 
             ResourceManager r = new ResourceManager("MySql.Data.Entity.Tests.Properties.Resources", typeof(BaseEdmTest).Assembly);
             string schema = r.GetString("schema");
@@ -88,5 +95,19 @@ namespace MySql.Data.Entity.Tests
                     str2.Append(c);
             Assert.AreEqual(0, String.Compare(str1.ToString(), str2.ToString(), true));
         }
+
+        private class AssertFailTraceListener : DefaultTraceListener
+        {
+            public override void Fail(string message)
+            {
+                Assert.Fail("Assertion failure: " + message);
+            }
+
+            public override void Fail(string message, string detailMessage)
+            {
+                Assert.Fail("Assertion failure: " + detailMessage);
+            }
+        }
+
     }
 }
