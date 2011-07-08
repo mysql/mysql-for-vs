@@ -233,5 +233,12 @@ namespace MySql.Data.MySqlClient.Tests
             // InvalidOperationException : The CommandText property has not been properly initialized.
             script.Execute(); 
         }
+
+        [Test]
+        public void DelimiterCommandDoesNotThrow()
+        {
+            MySqlScript script = new MySqlScript(conn, "DELIMITER ;");
+            Assert.DoesNotThrow(delegate { script.Execute(); });
+        }
     }
 }

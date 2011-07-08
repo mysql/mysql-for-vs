@@ -271,7 +271,7 @@ namespace MySql.Data.MySqlClient
                         tokenizer.NextToken();
                         AdjustDelimiterEnd(tokenizer);
                         currentDelimiter = query.Substring(tokenizer.StartIndex,
-                            tokenizer.StopIndex - tokenizer.StartIndex + 1).Trim();
+                            tokenizer.StopIndex - tokenizer.StartIndex).Trim();
                         startPos = tokenizer.StopIndex;
                     }
                     else
@@ -328,15 +328,18 @@ namespace MySql.Data.MySqlClient
 
         private void AdjustDelimiterEnd(MySqlTokenizer tokenizer)
         {
-            int pos = tokenizer.StopIndex;
-            char c = query[pos];
-
-            while (!Char.IsWhiteSpace(c) && pos < (query.Length-1))
+            if (tokenizer.StopIndex < query.Length)
             {
-                c = query[++pos];
+                int pos = tokenizer.StopIndex;
+                char c = query[pos];
+
+                while (!Char.IsWhiteSpace(c) && pos < (query.Length - 1))
+                {
+                    c = query[++pos];
+                }
+                tokenizer.StopIndex = pos;
+                tokenizer.Position = pos;
             }
-            tokenizer.StopIndex = pos;
-            tokenizer.Position = pos;
         }
     }
 
