@@ -46,49 +46,19 @@ namespace MySql.Web.Tests
 		{
 			base.LoadStaticConfiguration();
 
+            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            config.ConnectionStrings.ConnectionStrings.Remove("LocalMySqlServer");
+            config.Save();
+            ConfigurationManager.RefreshSection("connectionStrings");
+
 			ConnectionStringSettings css = new ConnectionStringSettings();
 			css.ConnectionString = String.Format(
 				"server={0};uid={1};password={2};database={3};pooling=false",
 				BaseTest.host, BaseTest.user, BaseTest.password, BaseTest.database0);
 			css.Name = "LocalMySqlServer";
-			Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 			config.ConnectionStrings.ConnectionStrings.Add(css);
-
-			MembershipSection ms = (MembershipSection)config.SectionGroups["system.web"].Sections["membership"];
-			ms.DefaultProvider = "MySQLMembershipProvider";
-			ProviderSettings ps = new ProviderSettings();
-			ps.Name = "MySQLMembershipProvider";
-			Assembly a = Assembly.GetAssembly(typeof(MySQLMembershipProvider));
-			ps.Type = "MySql.Web.Security.MySQLMembershipProvider, " + a.FullName;
-			ps.Parameters.Add("connectionStringName", "LocalMySqlServer");
-			ps.Parameters.Add("enablePasswordRetrieval", "false");
-			ps.Parameters.Add("enablePasswordReset", "true");
-			ps.Parameters.Add("requiresQuestionAndAnswer", "true");
-			ps.Parameters.Add("applicationName", "/");
-			ps.Parameters.Add("requiresUniqueEmail", "false");
-			ps.Parameters.Add("passwordFormat", "Hashed");
-			ps.Parameters.Add("maxInvalidPasswordAttempts", "5");
-			ps.Parameters.Add("minRequiredPasswordLength", "7");
-			ps.Parameters.Add("minRequiredNonalphanumericCharacters", "1");
-			ps.Parameters.Add("passwordAttemptWindow", "10");
-			ps.Parameters.Add("passwordStrengthRegularExpression", "");
-			ms.Providers.Add(ps);
-
-            RoleManagerSection rs = (RoleManagerSection)config.SectionGroups["system.web"].Sections["roleManager"];
-            rs.DefaultProvider = "MySQLRoleProvider";
-            rs.Enabled = true;
-            ps = new ProviderSettings();
-            ps.Name = "MySQLRoleProvider";
-            a = Assembly.GetAssembly(typeof(MySQLRoleProvider));
-            ps.Type = "MySql.Web.Security.MySQLRoleProvider, " + a.FullName;
-            ps.Parameters.Add("connectionStringName", "LocalMySqlServer");
-            ps.Parameters.Add("applicationName", "/");
-            rs.Providers.Add(ps);
-
 			config.Save();
 			ConfigurationManager.RefreshSection("connectionStrings");
-			ConfigurationManager.RefreshSection("system.web/membership");
-            ConfigurationManager.RefreshSection("system.web/roleManager");
         }
 
         public override void Setup()
