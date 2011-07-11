@@ -50,12 +50,13 @@ namespace MySql.Data.Entity.Tests
         protected override void LoadStaticConfiguration()
         {
             base.LoadStaticConfiguration();
-            database0 = database1 = "test";
         }
 
         [SetUp]
         public override void Setup()
         {
+            database0 = database1 = "test";
+
             base.Setup();
 
             // Replace existing listeners with listener for testing.
