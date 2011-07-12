@@ -38,19 +38,19 @@ namespace MySql.Data.MySqlClient.Tests
     public class BaseTest
     {
         //statics
-        protected static int maxPacketSize;
-        protected static MySqlConnection rootConn;
-        protected static string host;
-        protected static string user;
-        protected static string password;
-        protected static int port;
-        protected static string pipeName;
-        protected static string memoryName;
-        protected static string rootUser;
-        protected static string rootPassword;
-        protected static string database0;
-        protected static string database1;
-        protected static Version version;
+        protected int maxPacketSize;
+        protected MySqlConnection rootConn;
+        protected string host;
+        protected string user;
+        protected string password;
+        protected int port;
+        protected string pipeName;
+        protected string memoryName;
+        protected string rootUser;
+        protected string rootPassword;
+        protected string database0;
+        protected string database1;
+        protected Version version;
 
         protected string table;
         protected string csAdditions = String.Empty;
@@ -60,14 +60,12 @@ namespace MySql.Data.MySqlClient.Tests
 
         public BaseTest()
         {
-			if (host == null)
-				LoadStaticConfiguration();
+            LoadBaseConfiguration();
+            Initialize();
         }
 
-		protected virtual void LoadStaticConfiguration()
+		protected void LoadBaseConfiguration()
 		{
-			Debug.Assert(host == null);
-
 			user = "test";
 			password = "test";
 			port = 3306;
@@ -90,29 +88,20 @@ namespace MySql.Data.MySqlClient.Tests
 				pipeName = "MYSQL";
 			if (memoryName == null)
 				memoryName = "MYSQL";
-
-			// we don't use FileVersion because it's not available
-			// on the compact framework
-			if (database0 == null)
-			{
-				string fullname = Assembly.GetExecutingAssembly().FullName;
-				string[] parts = fullname.Split(new char[] { '=' });
-				string[] versionParts = parts[1].Split(new char[] { '.' });
-				database0 = String.Format("db{0}{1}{2}-a", versionParts[0], versionParts[1], port - 3300);
-				database1 = String.Format("db{0}{1}{2}-b", versionParts[0], versionParts[1], port - 3300);
-			}
-
-            string connStr = GetConnectionString(rootUser, rootPassword, false);
-            rootConn = new MySqlConnection(connStr + ";database=mysql");
-            rootConn.Open();
-
-            if (rootConn.ServerVersion.StartsWith("5"))
-            {
-                // run all tests in strict mode
-                MySqlCommand cmd = new MySqlCommand("SET GLOBAL SQL_MODE=STRICT_ALL_TABLES", rootConn);
-                cmd.ExecuteNonQuery();
-            }
 		}
+
+        protected virtual void Initialize()
+        {
+            // we don't use FileVersion because it's not available
+            // on the compact framework
+            string fullname = Assembly.GetExecutingAssembly().FullName;
+            string[] parts = fullname.Split(new char[] { '=' });
+            string[] versionParts = parts[1].Split(new char[] { '.' });
+            database0 = String.Format("db{0}{1}{2}-a", versionParts[0], versionParts[1], port - 3300);
+            database1 = String.Format("db{0}{1}{2}-b", versionParts[0], versionParts[1], port - 3300);
+
+            MySqlConnection.ClearAllPools();
+        }
 
         #region Properties
 
@@ -197,6 +186,15 @@ namespace MySql.Data.MySqlClient.Tests
         [SetUp]
         public virtual void Setup()
         {
+            SetupRootConnection();
+
+            if (rootConn.ServerVersion.StartsWith("5"))
+            {
+                // run all tests in strict mode
+                MySqlCommand cmd = new MySqlCommand("SET GLOBAL SQL_MODE=STRICT_ALL_TABLES", rootConn);
+                cmd.ExecuteNonQuery();
+            }
+
             Assembly executingAssembly = Assembly.GetExecutingAssembly();
 #if !CF
             Stream stream = executingAssembly.GetManifestResourceStream("MySql.Data.MySqlClient.Tests.Properties.Setup.sql");
@@ -225,6 +223,8 @@ namespace MySql.Data.MySqlClient.Tests
         [TearDown]
         public virtual void Teardown()
         {
+            MySqlConnection.ClearAllPools();
+
             // wait up to 5 seconds for our connection to close
             int procs = CountProcesses();
             for (int x = 0; x < 50; x++)
@@ -243,6 +243,9 @@ namespace MySql.Data.MySqlClient.Tests
 
             DropDatabase(database0);
             DropDatabase(database1);
+
+            if (rootConn.State == ConnectionState.Open)
+                rootConn.Close();
         }
 
         private void DropDatabase(string name)
@@ -349,6 +352,13 @@ namespace MySql.Data.MySqlClient.Tests
             DataTable dt = new DataTable();
             da.Fill(dt);
             return dt;
+        }
+
+        private void SetupRootConnection()
+        {
+            string connStr = GetConnectionString(rootUser, rootPassword, false);
+            rootConn = new MySqlConnection(connStr + ";database=mysql");
+            rootConn.Open();
         }
     }
 }

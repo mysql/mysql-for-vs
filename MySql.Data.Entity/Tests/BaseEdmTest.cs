@@ -46,16 +46,15 @@ namespace MySql.Data.Entity.Tests
         // A trace listener to use during testing.
         private AssertFailTraceListener asertFailListener = new AssertFailTraceListener();
 
-		protected override void LoadStaticConfiguration()
-		{
-			base.LoadStaticConfiguration();
-		}
+        protected override void Initialize()
+        {
+            database0 = database1 = "test";
+            MySqlConnection.ClearAllPools();
+        }
 
         [SetUp]
         public override void Setup()
         {
-            database0 = database1 = "test";
-
             base.Setup();
 
             // Replace existing listeners with listener for testing.
