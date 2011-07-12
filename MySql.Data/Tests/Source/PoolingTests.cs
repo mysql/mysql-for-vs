@@ -391,26 +391,24 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void ClearPool()
 		{
+            // Start by clearing clearingPools for a clean test
+            List<MySqlPool> clearingPools = GetClearingPools();
+            clearingPools.Clear();
+
 			string connStr = GetPoolingConnectionString() + ";min pool size=10";
             MySqlConnectionStringBuilder settings = new MySqlConnectionStringBuilder(connStr);
+            
 			MySqlConnection[] connections = new MySqlConnection[10];
 			connections[0] = new MySqlConnection(connStr);
 			connections[0].Open();
 
-            string assemblyName = typeof(MySqlConnection).Assembly.FullName;
-            string pmName = String.Format("MySql.Data.MySqlClient.MySqlPoolManager, {0}", assemblyName);
-
-            Type poolManager = Type.GetType(pmName, false);
-            FieldInfo poolManagerHashTable = poolManager.GetField("pools",
+            Type poolManagerType = typeof(MySqlPoolManager);
+            FieldInfo poolManagerHashTable = poolManagerType.GetField("pools",
                 BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
             Hashtable poolHash = (Hashtable)poolManagerHashTable.GetValue(null);
-            FieldInfo clearingPoolsFI = poolManager.GetField("clearingPools",
-                BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
-            ICollection clearingPools = (ICollection)clearingPoolsFI.GetValue(null);
 
             // now we need to investigate
-            string poolName = String.Format("MySql.Data.MySqlClient.MySqlPool, {0}", assemblyName);
-            Type poolType = Type.GetType(poolName, false);
+            Type poolType = typeof(MySqlPool);
 
             FieldInfo inUsePool = poolType.GetField("inUsePool", BindingFlags.NonPublic | BindingFlags.Instance);
             ICollection inUseList = (ICollection)inUsePool.GetValue(poolHash[settings.ConnectionString]);
@@ -431,7 +429,9 @@ namespace MySql.Data.MySqlClient.Tests
             Assert.AreEqual(5, inUseList.Count);
             Assert.AreEqual(5, idleList.Count);
 
+            clearingPools = GetClearingPools();
             Assert.AreEqual(0, clearingPools.Count);
+
 			// now tell this connection to clear its pool
 			MySqlConnection.ClearPool(connections[0]);
             Assert.AreEqual(1, clearingPools.Count);
@@ -441,6 +441,14 @@ namespace MySql.Data.MySqlClient.Tests
 				connections[i].Close();
             Assert.AreEqual(0, clearingPools.Count);
 		}
+
+        private static List<MySqlPool> GetClearingPools()
+        {
+            Type poolManagerType = typeof(MySqlPoolManager);
+            FieldInfo clearingPoolsFI = poolManagerType.GetField("clearingPools",
+                BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+            return clearingPoolsFI.GetValue(null) as List<MySqlPool>;
+        }
 
 		[Test]
 		public void TestBadConnections()
@@ -495,8 +503,8 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void OpenSecondPooledConnectionWithoutDatabase()
         {
-            string connectionString = GetConnectionString(false);
-            connectionString = connectionString.Replace("pooling=false", "pooling=true");
+            string connectionString = GetPoolingConnectionString();
+
             using (MySqlConnection c1 = new MySqlConnection(connectionString))
             {
                 c1.Open();

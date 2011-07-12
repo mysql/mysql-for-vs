@@ -42,23 +42,11 @@ namespace MySql.Web.Tests
 {
     public class BaseWebTest : BaseTest
     {
-		protected override void LoadStaticConfiguration()
-		{
-			base.LoadStaticConfiguration();
-
-            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            config.ConnectionStrings.ConnectionStrings.Remove("LocalMySqlServer");
-            config.Save();
-            ConfigurationManager.RefreshSection("connectionStrings");
-
-			ConnectionStringSettings css = new ConnectionStringSettings();
-			css.ConnectionString = String.Format(
-				"server={0};uid={1};password={2};database={3};pooling=false",
-				BaseTest.host, BaseTest.user, BaseTest.password, BaseTest.database0);
-			css.Name = "LocalMySqlServer";
-			config.ConnectionStrings.ConnectionStrings.Add(css);
-			config.Save();
-			ConfigurationManager.RefreshSection("connectionStrings");
+        protected override void Initialize()
+        {
+            base.Initialize();
+            MySqlConnection.ClearAllPools();
+            AddConnectionStringToConfigFile();
         }
 
         public override void Setup()
@@ -94,6 +82,36 @@ namespace MySql.Web.Tests
                     script.Execute();
                 }
             }                    
+        }
+
+        private void SetupRootConnection()
+        {
+            string fullname = Assembly.GetExecutingAssembly().FullName;
+            string[] parts = fullname.Split(new char[] { '=' });
+            string[] versionParts = parts[1].Split(new char[] { '.' });
+            database0 = String.Format("db{0}{1}{2}-a", versionParts[0], versionParts[1], port - 3300);
+            database1 = String.Format("db{0}{1}{2}-b", versionParts[0], versionParts[1], port - 3300);
+
+            string connStr = GetConnectionString(rootUser, rootPassword, false);
+            rootConn = new MySqlConnection(connStr + ";database=mysql");
+            rootConn.Open();            
+        }
+
+        private void AddConnectionStringToConfigFile()
+        {
+            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            config.ConnectionStrings.ConnectionStrings.Remove("LocalMySqlServer");
+            config.Save();
+            ConfigurationManager.RefreshSection("connectionStrings");
+
+            ConnectionStringSettings css = new ConnectionStringSettings();
+            css.ConnectionString = String.Format(
+                "server={0};uid={1};password={2};database={3};pooling=false",
+                this.host, this.user, this.password, this.database0);
+            css.Name = "LocalMySqlServer";
+            config.ConnectionStrings.ConnectionStrings.Add(css);
+            config.Save();
+            ConfigurationManager.RefreshSection("connectionStrings");
         }
     }
 }
