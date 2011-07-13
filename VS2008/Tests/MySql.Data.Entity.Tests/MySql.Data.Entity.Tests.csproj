@@ -139,7 +139,9 @@
       <SubType>Designer</SubType>
       <Link>Properties\Resources.resx</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\SQLSyntax.resx" />
+    <EmbeddedResource Include="Properties\SQLSyntax.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Source\MySql.Data.Entity\MySql.Data.Entity.csproj">

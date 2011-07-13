@@ -11,14 +11,14 @@
           <EntitySet Name="SalariedEmployees" EntityType ="testModel.Store.SalariedEmployees"/>
           <EntitySet Name="Toys" EntityType ="testModel.Store.Toys"/>
           <EntitySet Name="Companies" EntityType ="testModel.Store.Companies"/>
-          <EntitySet Name="Stores" EntityType ="testModel.Store.Stores"/>
+          <EntitySet Name="Shops" EntityType ="testModel.Store.Shops"/>
           <EntitySet Name="Orders" EntityType ="testModel.Store.Orders"/>
           <AssociationSet Name="FK_Toys_Supplier" Association ="testModel.Store.FK_Toys_Supplier">
             <End Role="Supplier" EntitySet ="Companies"/>
             <End Role="Toys" EntitySet ="Toys"/>
           </AssociationSet>
-          <!--    <AssociationSet Name="FK_Orders_Stores" Association ="testModel.Store.FK_Orders_Stores">
-      <End Role="Stores" EntitySet ="Stores"/>
+          <!--    <AssociationSet Name="FK_Orders_Shops" Association ="testModel.Store.FK_Orders_Shops">
+      <End Role="Shops" EntitySet ="Shops"/>
       <End Role="Orders" EntitySet ="Orders"/>
     </AssociationSet>-->
           <EntitySet Name="Books" EntityType ="testModel.Store.Books"/>
@@ -120,7 +120,7 @@
           </ReferentialConstraint>
         </Association>
 
-        <EntityType Name="Stores">
+        <EntityType Name="Shops">
           <Key>
             <PropertyRef Name="Id"/>
           </Key>
@@ -137,19 +137,19 @@
             <PropertyRef Name="Id"/>
           </Key>
           <Property Name="Id" Type="int" Nullable ="false"/>
-          <Property Name="StoreId" Type="int"/>
+          <Property Name="ShopId" Type="int"/>
           <Property Name="Freight" Type="double" Nullable ="false"/>
         </EntityType>
 
-        <!--  <Association Name="FK_Orders_Store">
-    <End Role="Store" Type="testModel.Store.Stores" Multiplicity ="1"/>
+        <!--  <Association Name="FK_Orders_Shop">
+    <End Role="Shop" Type="testModel.Store.Shops" Multiplicity ="1"/>
     <End Role="Orders" Type="testModel.Store.Orders" Multiplicity ="*"/>
     <ReferentialConstraint>
-      <Principal Role="Stores">
+      <Principal Role="Shops">
         <PropertyRef Name="Id"/>
       </Principal>
       <Dependent Role="Orders">
-        <PropertyRef Name="StoreId"/>
+        <PropertyRef Name="ShopId"/>
       </Dependent>
     </ReferentialConstraint>
   </Association>-->
@@ -320,14 +320,14 @@
           <EntitySet Name="Children" EntityType="testModel.Child" />
           <EntitySet Name="Companies" EntityType ="testModel.Company"/>
           <EntitySet Name="Toys" EntityType ="testModel.Toy"/>
-          <EntitySet Name="Stores" EntityType ="testModel.Store"/>
+          <EntitySet Name="Shops" EntityType ="testModel.Shop"/>
           <EntitySet Name="Orders" EntityType ="testModel.Order"/>
           <AssociationSet Name="FK_Toys_Supplier" Association ="testModel.FK_Toys_Supplier">
             <End Role="Supplier" EntitySet ="Companies"/>
             <End Role="Toys" EntitySet ="Toys"/>
           </AssociationSet>
-          <AssociationSet Name="FK_Orders_Store" Association ="testModel.FK_Orders_Store">
-            <End Role="Store" EntitySet ="Stores"/>
+          <AssociationSet Name="FK_Orders_Shop" Association ="testModel.FK_Orders_Shop">
+            <End Role="Shop" EntitySet ="Shops"/>
             <End Role="Orders" EntitySet ="Orders"/>
           </AssociationSet>
           <EntitySet Name="Books" EntityType ="testModel.Book"/>
@@ -408,7 +408,7 @@
           <Property Name ="ZipCode" Type="String" />
         </ComplexType>
 
-        <EntityType Name="Store">
+        <EntityType Name="Shop">
           <Key>
             <PropertyRef Name="Id"/>
           </Key>
@@ -426,11 +426,11 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable ="false"/>
           <Property Name="Freight" Type="Double" Nullable ="false"/>
-          <NavigationProperty Name="Store" Relationship ="testModel.FK_Orders_Store" FromRole="Orders" ToRole="Store"/>
+          <NavigationProperty Name="Shop" Relationship ="testModel.FK_Orders_Shop" FromRole="Orders" ToRole="Shop"/>
         </EntityType>
 
-        <Association Name="FK_Orders_Store">
-          <End Role="Store" Type="testModel.Store" Multiplicity="1" />
+        <Association Name="FK_Orders_Shop">
+          <End Role="Shop" Type="testModel.Shop" Multiplicity="1" />
           <End Role="Orders" Type="testModel.Order" Multiplicity="*" />
         </Association>
 
@@ -518,7 +518,7 @@
     <edmx:Mappings>
       <Mapping xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs" Space="C-S">
         <Alias Key="Model" Value="testModel" />
-        <Alias Key="Target" Value="testModel.Store" />
+        <Alias Key="Target" Value="testModel.Shop" />
         <EntityContainerMapping CdmEntityContainer="testEntities" StorageEntityContainer="testContainer">
 
 
@@ -600,9 +600,9 @@
             </EndProperty>
           </AssociationSetMapping>
 
-          <EntitySetMapping Name="Stores">
-            <EntityTypeMapping TypeName="testModel.Store">
-              <MappingFragment StoreEntitySet="Stores" >
+          <EntitySetMapping Name="Shops">
+            <EntityTypeMapping TypeName="testModel.Shop">
+              <MappingFragment StoreEntitySet="Shops" >
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Address" ColumnName="Address" />
@@ -622,14 +622,14 @@
             </EntityTypeMapping>
           </EntitySetMapping>
 
-          <AssociationSetMapping Name="FK_Orders_Store" TypeName="testModel.FK_Orders_Store" StoreEntitySet="Orders">
-            <EndProperty Name="Store">
-              <ScalarProperty Name="Id" ColumnName="StoreId" />
+          <AssociationSetMapping Name="FK_Orders_Shop" TypeName="testModel.FK_Orders_Shop" StoreEntitySet="Orders">
+            <EndProperty Name="Shop">
+              <ScalarProperty Name="Id" ColumnName="ShopId" />
             </EndProperty>
             <EndProperty Name="Orders">
               <ScalarProperty Name="Id" ColumnName="Id" />
             </EndProperty>
-            <Condition ColumnName ="StoreId" IsNull ="false"/>
+            <Condition ColumnName ="ShopId" IsNull ="false"/>
           </AssociationSetMapping>
 
           <EntitySetMapping Name="Books">

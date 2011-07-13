@@ -119,6 +119,7 @@
     <EmbeddedResource Include="Properties\SQLSyntax.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>SQLSyntax.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EntityDeploy Include="Model1.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
