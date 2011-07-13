@@ -44,20 +44,20 @@ namespace MySql.Data.Common
 			srcString = s;
 		}
 
-        public int Major
-        {
-            get { return major; }
-        }
+		public int Major
+		{
+			get { return major; }
+		}
 
-        public int Minor
-        {
-            get { return minor; }
-        }
+		public int Minor
+		{
+			get { return minor; }
+		}
 
-        public int Build
-        {
-            get { return build; }
-        }
+		public int Build
+		{
+			get { return build; }
+		}
 
 		public static DBVersion Parse( string versionString )
 		{

@@ -1,4 +1,4 @@
-// Copyright (c) 2004-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+// Copyright © 2010, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -84,25 +84,25 @@ namespace MySql.Data.Types
 		{
 			int v = (val is UInt16) ? (UInt16)val : Convert.ToUInt16(val);
 			if (binary)
-                packet.WriteInteger((long)v, 2);
+				packet.WriteInteger((long)v, 2);
 			else
-                packet.WriteStringNoNull(v.ToString());
+				packet.WriteStringNoNull(v.ToString());
 		}
 
-        IMySqlValue IMySqlValue.ReadValue(MySqlPacket packet, long length, bool nullVal)
+		IMySqlValue IMySqlValue.ReadValue(MySqlPacket packet, long length, bool nullVal)
 		{
 			if (nullVal)
 				return new MySqlUInt16(true);
 
 			if (length == -1)
-                return new MySqlUInt16((ushort)packet.ReadInteger(2));
+				return new MySqlUInt16((ushort)packet.ReadInteger(2));
 			else
-                return new MySqlUInt16(UInt16.Parse(packet.ReadString(length)));
+				return new MySqlUInt16(UInt16.Parse(packet.ReadString(length)));
 		}
 
 		void IMySqlValue.SkipValue(MySqlPacket packet)
 		{
-            packet.Position += 2;
+			packet.Position += 2;
 		}
 
 		#endregion

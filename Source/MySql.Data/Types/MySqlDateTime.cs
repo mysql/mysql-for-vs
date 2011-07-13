@@ -1,4 +1,4 @@
-// Copyright (c) 2004-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+// Copyright © 2010, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -250,18 +250,18 @@ namespace MySql.Data.Types
 			string val = String.Empty;
 
 			val = String.Format("{0:0000}-{1:00}-{2:00}",
-                value.Year, value.Month, value.Day);
-            if (type != MySqlDbType.Date)
-                val = String.Format("{0} {1:00}:{2:00}:{3:00}", val,
-                    value.Hour, value.Minute, value.Second);
-            packet.WriteStringNoNull("'" + val + "'");
+				value.Year, value.Month, value.Day);
+			if (type != MySqlDbType.Date)
+				val = String.Format("{0} {1:00}:{2:00}:{3:00}", val,
+					value.Hour, value.Minute, value.Second);
+			packet.WriteStringNoNull("'" + val + "'");
 		}
 
-        void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object value, int length)
+		void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object value, int length)
 		{
 			MySqlDateTime dtValue;
 
-            string valueAsString = value as string;
+			string valueAsString = value as string;
 
 			if (value is DateTime)
 				dtValue = new MySqlDateTime(type, (DateTime)value);
@@ -274,33 +274,33 @@ namespace MySql.Data.Types
 
 			if (!binary)
 			{
-                SerializeText(packet, dtValue);
+				SerializeText(packet, dtValue);
 				return;
 			}
 
 			if (type == MySqlDbType.Timestamp)
-                packet.WriteByte(11);
+				packet.WriteByte(11);
 			else
-                packet.WriteByte(7);
+				packet.WriteByte(7);
 
-            packet.WriteInteger(dtValue.Year, 2);
-            packet.WriteByte((byte)dtValue.Month);
-            packet.WriteByte((byte)dtValue.Day);
+			packet.WriteInteger(dtValue.Year, 2);
+			packet.WriteByte((byte)dtValue.Month);
+			packet.WriteByte((byte)dtValue.Day);
 			if (type == MySqlDbType.Date)
 			{
-                packet.WriteByte(0);
-                packet.WriteByte(0);
-                packet.WriteByte(0);
+				packet.WriteByte(0);
+				packet.WriteByte(0);
+				packet.WriteByte(0);
 			}
 			else
 			{
-                packet.WriteByte((byte)dtValue.Hour);
-                packet.WriteByte((byte)dtValue.Minute);
-                packet.WriteByte((byte)dtValue.Second);
+				packet.WriteByte((byte)dtValue.Hour);
+				packet.WriteByte((byte)dtValue.Minute);
+				packet.WriteByte((byte)dtValue.Second);
 			}
 
 			if (type == MySqlDbType.Timestamp)
-                packet.WriteInteger(dtValue.Millisecond, 4);
+				packet.WriteInteger(dtValue.Millisecond, 4);
 		}
 
 		static internal MySqlDateTime Parse(string s)
@@ -340,38 +340,38 @@ namespace MySql.Data.Types
 
 			if (length >= 0)
 			{
-                string value = packet.ReadString(length);
-                return ParseMySql(value);
+				string value = packet.ReadString(length);
+				return ParseMySql(value);
 			}
 
-            long bufLength = packet.ReadByte();
+			long bufLength = packet.ReadByte();
 			int year = 0, month = 0, day = 0;
 			int hour = 0, minute = 0, second = 0;
 
 			if (bufLength >= 4)
 			{
-                year = packet.ReadInteger(2);
-                month = packet.ReadByte();
-                day = packet.ReadByte();
+				year = packet.ReadInteger(2);
+				month = packet.ReadByte();
+				day = packet.ReadByte();
 			}
 
 			if (bufLength > 4)
 			{
-                hour = packet.ReadByte();
-                minute = packet.ReadByte();
-                second = packet.ReadByte();
+				hour = packet.ReadByte();
+				minute = packet.ReadByte();
+				second = packet.ReadByte();
 			}
 
 			if (bufLength > 7)
-                packet.ReadInteger(4);
+				packet.ReadInteger(4);
 
 			return new MySqlDateTime(type, year, month, day, hour, minute, second);
 		}
 
 		void IMySqlValue.SkipValue(MySqlPacket packet)
 		{
-            int len = packet.ReadByte();
-            packet.Position += len;
+			int len = packet.ReadByte();
+			packet.Position += len;
 		}
 
 		#endregion
@@ -385,41 +385,41 @@ namespace MySql.Data.Types
 			return new DateTime(year, month, day, hour, minute, second);
 		}
 
-        private static string FormatDateCustom(string format, int monthVal, int dayVal, int yearVal)
-        {
-            format = format.Replace("MM", "{0:00}");
-            format = format.Replace("M", "{0}");
-            format = format.Replace("dd", "{1:00}");
-            format = format.Replace("d", "{1}");
-            format = format.Replace("yyyy", "{2:0000}");
-            format = format.Replace("yy", "{3:00}");
-            format = format.Replace("y", "{4:0}");
+		private static string FormatDateCustom(string format, int monthVal, int dayVal, int yearVal)
+		{
+			format = format.Replace("MM", "{0:00}");
+			format = format.Replace("M", "{0}");
+			format = format.Replace("dd", "{1:00}");
+			format = format.Replace("d", "{1}");
+			format = format.Replace("yyyy", "{2:0000}");
+			format = format.Replace("yy", "{3:00}");
+			format = format.Replace("y", "{4:0}");
 
-            int year2digit = yearVal - ((yearVal / 1000) * 1000);
-            year2digit -= ((year2digit / 100) * 100);
-            int year1digit = year2digit - ((year2digit / 10) * 10);
+			int year2digit = yearVal - ((yearVal / 1000) * 1000);
+			year2digit -= ((year2digit / 100) * 100);
+			int year1digit = year2digit - ((year2digit / 10) * 10);
 
-            return String.Format(format, monthVal, dayVal, yearVal, year2digit, year1digit);
-        }
+			return String.Format(format, monthVal, dayVal, yearVal, year2digit, year1digit);
+		}
 
-        /// <summary>Returns a MySQL specific string representation of this value</summary>
-        public override string ToString()
-        {
-            if (this.IsValidDateTime)
-            {
-                DateTime d = new DateTime(year, month, day, hour, minute, second);
-                return (type == MySqlDbType.Date) ? d.ToString("d") : d.ToString();
-            }
+		/// <summary>Returns a MySQL specific string representation of this value</summary>
+		public override string ToString()
+		{
+			if (this.IsValidDateTime)
+			{
+				DateTime d = new DateTime(year, month, day, hour, minute, second);
+				return (type == MySqlDbType.Date) ? d.ToString("d") : d.ToString();
+			}
 
-            string dateString = FormatDateCustom(
-                CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern, month, day, year);
-            if (type == MySqlDbType.Date)
-                return dateString;
+			string dateString = FormatDateCustom(
+				CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern, month, day, year);
+			if (type == MySqlDbType.Date)
+				return dateString;
 
-            DateTime dt = new DateTime(1, 2, 3, hour, minute, second);
-            dateString = String.Format("{0} {1}", dateString, dt.ToLongTimeString());
-            return dateString;
-        }
+			DateTime dt = new DateTime(1, 2, 3, hour, minute, second);
+			dateString = String.Format("{0} {1}", dateString, dt.ToLongTimeString());
+			return dateString;
+		}
 
 		/// <summary></summary>
 		/// <param name="val"></param>

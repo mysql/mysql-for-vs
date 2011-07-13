@@ -1,4 +1,4 @@
-// Copyright (c) 2004-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+// Copyright © 2010, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -85,39 +85,39 @@ namespace MySql.Data.Types
 		}
 
 
-        void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val, int length)
+		void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val, int length)
 		{
 			string v = val.ToString();
-            if (length > 0)
-            {
-                length = Math.Min(length, v.Length);
-                v = v.Substring(0, length);
-            }
+			if (length > 0)
+			{
+				length = Math.Min(length, v.Length);
+				v = v.Substring(0, length);
+			}
 
 			if (binary)
-                packet.WriteLenString(v);
+				packet.WriteLenString(v);
 			else
-                packet.WriteStringNoNull("'" + MySqlHelper.EscapeString(v) + "'");
+				packet.WriteStringNoNull("'" + MySqlHelper.EscapeString(v) + "'");
 		}
 
-        IMySqlValue IMySqlValue.ReadValue(MySqlPacket packet, long length, bool nullVal)
+		IMySqlValue IMySqlValue.ReadValue(MySqlPacket packet, long length, bool nullVal)
 		{
 			if (nullVal)
 				return new MySqlString(type, true);
 
 			string s = String.Empty;
 			if (length == -1)
-                s = packet.ReadLenString();
+				s = packet.ReadLenString();
 			else
-                s = packet.ReadString(length);
+				s = packet.ReadString(length);
 			MySqlString str = new MySqlString(type, s);
 			return str;
 		}
 
 		void IMySqlValue.SkipValue(MySqlPacket packet)
 		{
-            int len = (int)packet.ReadFieldLength();
-            packet.Position += len;
+			int len = (int)packet.ReadFieldLength();
+			packet.Position += len;
 		}
 
 		#endregion
@@ -125,11 +125,11 @@ namespace MySql.Data.Types
 		internal static void SetDSInfo(DataTable dsTable)
 		{
 			string[] types = new string[] { "CHAR", "NCHAR", "VARCHAR", "NVARCHAR", "SET", 
-                "ENUM", "TINYTEXT", "TEXT", "MEDIUMTEXT", "LONGTEXT" };
-            MySqlDbType[] dbtype = new MySqlDbType[] { MySqlDbType.String, MySqlDbType.String,
-                MySqlDbType.VarChar, MySqlDbType.VarChar, MySqlDbType.Set, MySqlDbType.Enum, 
-                MySqlDbType.TinyText, MySqlDbType.Text, MySqlDbType.MediumText, 
-                MySqlDbType.LongText };
+				"ENUM", "TINYTEXT", "TEXT", "MEDIUMTEXT", "LONGTEXT" };
+			MySqlDbType[] dbtype = new MySqlDbType[] { MySqlDbType.String, MySqlDbType.String,
+				MySqlDbType.VarChar, MySqlDbType.VarChar, MySqlDbType.Set, MySqlDbType.Enum, 
+				MySqlDbType.TinyText, MySqlDbType.Text, MySqlDbType.MediumText, 
+				MySqlDbType.LongText };
 
 			// we use name indexing because this method will only be called
 			// when GetSchema is called for the DataSourceInformation 
@@ -140,7 +140,7 @@ namespace MySql.Data.Types
 				row["TypeName"] = types[x];
 				row["ProviderDbType"] = dbtype[x];
 				row["ColumnSize"] = 0;
-                row["CreateFormat"] = x < 4 ? types[x] + "({0})" : types[x];
+				row["CreateFormat"] = x < 4 ? types[x] + "({0})" : types[x];
 				row["CreateParameters"] = x < 4 ? "size" : null;
 				row["DataType"] = "System.String";
 				row["IsAutoincrementable"] = false;

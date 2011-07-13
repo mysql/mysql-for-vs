@@ -1,4 +1,4 @@
-// Copyright (c) 2004-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+// Copyright © 2010, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -33,20 +33,20 @@ namespace MySql.Data.Types
 	{
 		private ulong mValue;
 		private bool isNull;
-        private bool readAsString;
+		private bool readAsString;
 
 		public MySqlBit(bool isnull)
 		{
 			mValue = 0;
 			isNull = isnull;
-            readAsString = false;
+			readAsString = false;
 		}
 
-        public bool ReadAsString
-        {
-            get { return readAsString; }
-            set { readAsString = value; }
-        }
+		public bool ReadAsString
+		{
+			get { return readAsString; }
+			set { readAsString = value; }
+		}
 
 		public bool IsNull
 		{
@@ -86,33 +86,33 @@ namespace MySql.Data.Types
 
 		public void WriteValue(MySqlPacket packet, bool binary, object value, int length)
 		{
-            ulong v = (value is UInt64) ? (UInt64)value : Convert.ToUInt64(value);
+			ulong v = (value is UInt64) ? (UInt64)value : Convert.ToUInt64(value);
 			if (binary)
-                packet.WriteInteger((long)v, 8);
+				packet.WriteInteger((long)v, 8);
 			else
-                packet.WriteStringNoNull(v.ToString());
+				packet.WriteStringNoNull(v.ToString());
 		}
 
-        public IMySqlValue ReadValue(MySqlPacket packet, long length, bool isNull)
+		public IMySqlValue ReadValue(MySqlPacket packet, long length, bool isNull)
 		{
-            this.isNull = isNull;
-            if (isNull)
-                return this;
+			this.isNull = isNull;
+			if (isNull)
+				return this;
 
 			if (length == -1)
-                length = packet.ReadFieldLength();
+				length = packet.ReadFieldLength();
 
-            if (ReadAsString)
-                mValue = UInt64.Parse(packet.ReadString(length));
-            else
-                mValue = (UInt64)packet.ReadBitValue((int)length);
+			if (ReadAsString)
+				mValue = UInt64.Parse(packet.ReadString(length));
+			else
+				mValue = (UInt64)packet.ReadBitValue((int)length);
 			return this;
 		}
 
 		public void SkipValue(MySqlPacket packet)
 		{
-            int len = (int)packet.ReadFieldLength();
-            packet.Position += len;
+			int len = (int)packet.ReadFieldLength();
+			packet.Position += len;
 		}
 
 		public static void SetDSInfo(DataTable dsTable)
@@ -125,8 +125,8 @@ namespace MySql.Data.Types
 			row["ProviderDbType"] = MySqlDbType.Bit;
 			row["ColumnSize"] = 64;
 			row["CreateFormat"] = "BIT";
-            row["CreateParameters"] = DBNull.Value; ;
-            row["DataType"] = typeof(UInt64).ToString();
+			row["CreateParameters"] = DBNull.Value; ;
+			row["DataType"] = typeof(UInt64).ToString();
 			row["IsAutoincrementable"] = false;
 			row["IsBestMatch"] = true;
 			row["IsCaseSensitive"] = false;
@@ -141,9 +141,9 @@ namespace MySql.Data.Types
 			row["MinimumScale"] = 0;
 			row["IsConcurrencyType"] = DBNull.Value;
 			row["IsLiteralSupported"] = false;
-            row["LiteralPrefix"] = DBNull.Value;
-            row["LiteralSuffix"] = DBNull.Value;
-            row["NativeDataType"] = DBNull.Value;
+			row["LiteralPrefix"] = DBNull.Value;
+			row["LiteralSuffix"] = DBNull.Value;
+			row["NativeDataType"] = DBNull.Value;
 			dsTable.Rows.Add(row);
 		}
 	}

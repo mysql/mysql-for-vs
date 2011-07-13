@@ -1,4 +1,4 @@
-// Copyright (c) 2004-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+// Copyright © 2010, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -82,27 +82,27 @@ namespace MySql.Data.Types
 
 		void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val, int length)
 		{
-            long v = (val is Int64) ? (Int64)val : Convert.ToInt64(val);
-            if (binary)
-                packet.WriteInteger(v, 8); 
+			long v = (val is Int64) ? (Int64)val : Convert.ToInt64(val);
+			if (binary)
+				packet.WriteInteger(v, 8); 
 			else
-                packet.WriteStringNoNull(v.ToString());
+				packet.WriteStringNoNull(v.ToString());
 		}
 
-        IMySqlValue IMySqlValue.ReadValue(MySqlPacket packet, long length, bool nullVal)
+		IMySqlValue IMySqlValue.ReadValue(MySqlPacket packet, long length, bool nullVal)
 		{
 			if (nullVal)
 				return new MySqlInt64(true);
 
 			if (length == -1)
-                return new MySqlInt64((long)packet.ReadULong(8));
+				return new MySqlInt64((long)packet.ReadULong(8));
 			else
-                return new MySqlInt64(Int64.Parse(packet.ReadString(length)));
+				return new MySqlInt64(Int64.Parse(packet.ReadString(length)));
 		}
 
-        void IMySqlValue.SkipValue(MySqlPacket packet)
+		void IMySqlValue.SkipValue(MySqlPacket packet)
 		{
-            packet.Position += 8;
+			packet.Position += 8;
 		}
 
 		#endregion

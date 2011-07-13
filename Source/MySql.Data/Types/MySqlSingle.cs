@@ -1,4 +1,4 @@
-// Copyright (c) 2004-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+// Copyright © 2010, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -85,13 +85,13 @@ namespace MySql.Data.Types
 		{
 			Single v = (val is Single) ? (Single)val : Convert.ToSingle(val);
 			if (binary)
-                packet.Write(BitConverter.GetBytes(v));
+				packet.Write(BitConverter.GetBytes(v));
 			else
-                packet.WriteStringNoNull(v.ToString("R", 
+				packet.WriteStringNoNull(v.ToString("R", 
 					 CultureInfo.InvariantCulture));
 		}
 
-        IMySqlValue IMySqlValue.ReadValue(MySqlPacket packet, long length, bool nullVal)
+		IMySqlValue IMySqlValue.ReadValue(MySqlPacket packet, long length, bool nullVal)
 		{
 			if (nullVal)
 				return new MySqlSingle(true);
@@ -99,16 +99,16 @@ namespace MySql.Data.Types
 			if (length == -1)
 			{
 				byte[] b = new byte[4];
-                packet.Read(b, 0, 4);
+				packet.Read(b, 0, 4);
 				return new MySqlSingle(BitConverter.ToSingle(b, 0));
 			}
-            return new MySqlSingle(Single.Parse(packet.ReadString(length),
+			return new MySqlSingle(Single.Parse(packet.ReadString(length),
 					 CultureInfo.InvariantCulture));
 		}
 
 		void IMySqlValue.SkipValue(MySqlPacket packet)
 		{
-            packet.Position += 4;
+			packet.Position += 4;
 		}
 
 		#endregion
