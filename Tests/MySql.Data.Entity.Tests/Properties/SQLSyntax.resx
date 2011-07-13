@@ -140,11 +140,11 @@ FROM `Toys` AS `Extent1`) AS `GroupBy1`</value>
 1 AS `C1`, 
 `GroupBy1`.`A1` AS `C2`
 FROM (SELECT
-`Extent1`.`StoreId` AS `K1`, 
+`Extent1`.`ShopId` AS `K1`, 
 AVG(`Extent1`.`Freight`) AS `A1`
 FROM `Orders` AS `Extent1`
  GROUP BY 
-`Extent1`.`StoreId`) AS `GroupBy1`</value>
+`Extent1`.`ShopId`) AS `GroupBy1`</value>
   </data>
   <data name="AverageWithPredicate" xml:space="preserve">
     <value>SELECT
@@ -152,7 +152,7 @@ FROM `Orders` AS `Extent1`
 FROM (SELECT
 AVG(`Extent1`.`Freight`) AS `A1`
 FROM `Orders` AS `Extent1`
- WHERE `Extent1`.`StoreId` = 3) AS `GroupBy1`</value>
+ WHERE `Extent1`.`ShopId` = 3) AS `GroupBy1`</value>
   </data>
   <data name="BigCountSimple" xml:space="preserve">
     <value>SELECT
@@ -239,7 +239,7 @@ FROM (SELECT
 FROM `Toys` AS `Extent2` UNION ALL SELECT
 `Extent3`.`Id`, 
 `Extent3`.`Name`
-FROM `Stores` AS `Extent3`) AS `UnionAll1` INNER JOIN (SELECT
+FROM `Shops` AS `Extent3`) AS `UnionAll1` INNER JOIN (SELECT
 `Extent4`.`Id`, 
 `Extent4`.`Name`
 FROM `Authors` AS `Extent4` UNION ALL SELECT
@@ -293,8 +293,8 @@ FROM `Authors` AS `Extent2` INNER JOIN `Books` AS `Extent3` ON `Extent2`.`Id` = 
 `Extent1`.`City`, 
 `Extent1`.`State`, 
 `Extent1`.`ZipCode`
-FROM `Stores` AS `Extent1` INNER JOIN (SELECT
-MAX(`Extent2`.`StoreId`) AS `A1`
+FROM `Shops` AS `Extent1` INNER JOIN (SELECT
+MAX(`Extent2`.`ShopId`) AS `A1`
 FROM `Orders` AS `Extent2`) AS `GroupBy1` ON `Extent1`.`Id` = `GroupBy1`.`A1`</value>
   </data>
   <data name="MaxInSubQuery2" xml:space="preserve">
@@ -305,8 +305,8 @@ FROM `Orders` AS `Extent2`) AS `GroupBy1` ON `Extent1`.`Id` = `GroupBy1`.`A1`</v
 `Extent1`.`City`, 
 `Extent1`.`State`, 
 `Extent1`.`ZipCode`
-FROM `Stores` AS `Extent1` INNER JOIN (SELECT
-MAX(`Extent2`.`StoreId`) AS `A1`
+FROM `Shops` AS `Extent1` INNER JOIN (SELECT
+MAX(`Extent2`.`ShopId`) AS `A1`
 FROM `Orders` AS `Extent2`) AS `GroupBy1` ON `Extent1`.`Id` = `GroupBy1`.`A1`</value>
   </data>
   <data name="MaxSimple" xml:space="preserve">
@@ -320,11 +320,11 @@ FROM `Toys` AS `Extent1`) AS `GroupBy1`</value>
     <value>SELECT
 `GroupBy1`.`A1` AS `C1`
 FROM (SELECT
-`Extent1`.`StoreId` AS `K1`, 
+`Extent1`.`ShopId` AS `K1`, 
 MAX(`Extent1`.`Freight`) AS `A1`
 FROM `Orders` AS `Extent1`
  GROUP BY 
-`Extent1`.`StoreId`) AS `GroupBy1`</value>
+`Extent1`.`ShopId`) AS `GroupBy1`</value>
   </data>
   <data name="MaxWithPredicate" xml:space="preserve">
     <value>SELECT
@@ -333,7 +333,7 @@ FROM `Orders` AS `Extent1`
 FROM (SELECT
 MAX(`Extent1`.`Freight`) AS `A1`
 FROM `Orders` AS `Extent1`
- WHERE `Extent1`.`StoreId` = 1) AS `GroupBy1`</value>
+ WHERE `Extent1`.`ShopId` = 1) AS `GroupBy1`</value>
   </data>
   <data name="MinSimple" xml:space="preserve">
     <value>SELECT
@@ -346,11 +346,11 @@ FROM `Toys` AS `Extent1`) AS `GroupBy1`</value>
     <value>SELECT
 `GroupBy1`.`A1` AS `C1`
 FROM (SELECT
-`Extent1`.`StoreId` AS `K1`, 
+`Extent1`.`ShopId` AS `K1`, 
 MIN(`Extent1`.`Freight`) AS `A1`
 FROM `Orders` AS `Extent1`
  GROUP BY 
-`Extent1`.`StoreId`) AS `GroupBy1`</value>
+`Extent1`.`ShopId`) AS `GroupBy1`</value>
   </data>
   <data name="MinWithPredicate" xml:space="preserve">
     <value>SELECT
@@ -359,7 +359,7 @@ FROM `Orders` AS `Extent1`
 FROM (SELECT
 MIN(`Extent1`.`Freight`) AS `A1`
 FROM `Orders` AS `Extent1`
- WHERE `Extent1`.`StoreId` = 2) AS `GroupBy1`</value>
+ WHERE `Extent1`.`ShopId` = 2) AS `GroupBy1`</value>
   </data>
   <data name="OrderBySimple" xml:space="preserve">
     <value>SELECT
@@ -494,11 +494,11 @@ FROM `Toys` AS `Extent1`) AS `GroupBy1`</value>
     <value>SELECT
 `GroupBy1`.`A1` AS `C1`
 FROM (SELECT
-`Extent1`.`StoreId` AS `K1`, 
+`Extent1`.`ShopId` AS `K1`, 
 SUM(`Extent1`.`Freight`) AS `A1`
 FROM `Orders` AS `Extent1`
  GROUP BY 
-`Extent1`.`StoreId`) AS `GroupBy1`</value>
+`Extent1`.`ShopId`) AS `GroupBy1`</value>
   </data>
   <data name="SumWithPredicate" xml:space="preserve">
     <value>SELECT
@@ -506,7 +506,7 @@ FROM `Orders` AS `Extent1`
 FROM (SELECT
 SUM(`Extent1`.`Freight`) AS `A1`
 FROM `Orders` AS `Extent1`
- WHERE `Extent1`.`StoreId` = 2) AS `GroupBy1`</value>
+ WHERE `Extent1`.`ShopId` = 2) AS `GroupBy1`</value>
   </data>
   <data name="Top" xml:space="preserve">
     <value>SELECT

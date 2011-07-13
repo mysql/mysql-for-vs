@@ -95,11 +95,11 @@ namespace MySql.Data.Entity.Tests.Properties {
         ///1 AS `C1`, 
         ///`GroupBy1`.`A1` AS `C2`
         ///FROM (SELECT
-        ///`Extent1`.`StoreId` AS `K1`, 
+        ///`Extent1`.`ShopId` AS `K1`, 
         ///AVG(`Extent1`.`Freight`) AS `A1`
         ///FROM `Orders` AS `Extent1`
         /// GROUP BY 
-        ///`Extent1`.`StoreId`) AS `GroupBy1`.
+        ///`Extent1`.`ShopId`) AS `GroupBy1`.
         /// </summary>
         internal static string AverageWithGrouping {
             get {
@@ -113,7 +113,7 @@ namespace MySql.Data.Entity.Tests.Properties {
         ///FROM (SELECT
         ///AVG(`Extent1`.`Freight`) AS `A1`
         ///FROM `Orders` AS `Extent1`
-        /// WHERE `Extent1`.`StoreId` = 3) AS `GroupBy1`.
+        /// WHERE `Extent1`.`ShopId` = 3) AS `GroupBy1`.
         /// </summary>
         internal static string AverageWithPredicate {
             get {
@@ -242,9 +242,9 @@ namespace MySql.Data.Entity.Tests.Properties {
         ///FROM `Toys` AS `Extent2` UNION ALL SELECT
         ///`Extent3`.`Id`, 
         ///`Extent3`.`Name`
-        ///FROM `Stores` AS `Extent3`) AS `UnionAll1` INNER JOIN (SELECT
+        ///FROM `Shops` AS `Extent3`) AS `UnionAll1` INNER JOIN (SELECT
         ///`Extent4`.`Id`, 
-        ///`Ext [rest of string was truncated]&quot;;.
+        ///`Exte [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string JoinOfUnionsOnRightSideOfJoin {
             get {
@@ -309,8 +309,8 @@ namespace MySql.Data.Entity.Tests.Properties {
         ///`Extent1`.`City`, 
         ///`Extent1`.`State`, 
         ///`Extent1`.`ZipCode`
-        ///FROM `Stores` AS `Extent1` INNER JOIN (SELECT
-        ///MAX(`Extent2`.`StoreId`) AS `A1`
+        ///FROM `Shops` AS `Extent1` INNER JOIN (SELECT
+        ///MAX(`Extent2`.`ShopId`) AS `A1`
         ///FROM `Orders` AS `Extent2`) AS `GroupBy1` ON `Extent1`.`Id` = `GroupBy1`.`A1`.
         /// </summary>
         internal static string MaxInSubQuery1 {
@@ -327,8 +327,8 @@ namespace MySql.Data.Entity.Tests.Properties {
         ///`Extent1`.`City`, 
         ///`Extent1`.`State`, 
         ///`Extent1`.`ZipCode`
-        ///FROM `Stores` AS `Extent1` INNER JOIN (SELECT
-        ///MAX(`Extent2`.`StoreId`) AS `A1`
+        ///FROM `Shops` AS `Extent1` INNER JOIN (SELECT
+        ///MAX(`Extent2`.`ShopId`) AS `A1`
         ///FROM `Orders` AS `Extent2`) AS `GroupBy1` ON `Extent1`.`Id` = `GroupBy1`.`A1`.
         /// </summary>
         internal static string MaxInSubQuery2 {
@@ -354,11 +354,11 @@ namespace MySql.Data.Entity.Tests.Properties {
         ///   Looks up a localized string similar to SELECT
         ///`GroupBy1`.`A1` AS `C1`
         ///FROM (SELECT
-        ///`Extent1`.`StoreId` AS `K1`, 
+        ///`Extent1`.`ShopId` AS `K1`, 
         ///MAX(`Extent1`.`Freight`) AS `A1`
         ///FROM `Orders` AS `Extent1`
         /// GROUP BY 
-        ///`Extent1`.`StoreId`) AS `GroupBy1`.
+        ///`Extent1`.`ShopId`) AS `GroupBy1`.
         /// </summary>
         internal static string MaxWithGrouping {
             get {
@@ -373,7 +373,7 @@ namespace MySql.Data.Entity.Tests.Properties {
         ///FROM (SELECT
         ///MAX(`Extent1`.`Freight`) AS `A1`
         ///FROM `Orders` AS `Extent1`
-        /// WHERE `Extent1`.`StoreId` = 1) AS `GroupBy1`.
+        /// WHERE `Extent1`.`ShopId` = 1) AS `GroupBy1`.
         /// </summary>
         internal static string MaxWithPredicate {
             get {
@@ -398,11 +398,11 @@ namespace MySql.Data.Entity.Tests.Properties {
         ///   Looks up a localized string similar to SELECT
         ///`GroupBy1`.`A1` AS `C1`
         ///FROM (SELECT
-        ///`Extent1`.`StoreId` AS `K1`, 
+        ///`Extent1`.`ShopId` AS `K1`, 
         ///MIN(`Extent1`.`Freight`) AS `A1`
         ///FROM `Orders` AS `Extent1`
         /// GROUP BY 
-        ///`Extent1`.`StoreId`) AS `GroupBy1`.
+        ///`Extent1`.`ShopId`) AS `GroupBy1`.
         /// </summary>
         internal static string MinWithGrouping {
             get {
@@ -417,7 +417,7 @@ namespace MySql.Data.Entity.Tests.Properties {
         ///FROM (SELECT
         ///MIN(`Extent1`.`Freight`) AS `A1`
         ///FROM `Orders` AS `Extent1`
-        /// WHERE `Extent1`.`StoreId` = 2) AS `GroupBy1`.
+        /// WHERE `Extent1`.`ShopId` = 2) AS `GroupBy1`.
         /// </summary>
         internal static string MinWithPredicate {
             get {
@@ -636,11 +636,11 @@ namespace MySql.Data.Entity.Tests.Properties {
         ///   Looks up a localized string similar to SELECT
         ///`GroupBy1`.`A1` AS `C1`
         ///FROM (SELECT
-        ///`Extent1`.`StoreId` AS `K1`, 
+        ///`Extent1`.`ShopId` AS `K1`, 
         ///SUM(`Extent1`.`Freight`) AS `A1`
         ///FROM `Orders` AS `Extent1`
         /// GROUP BY 
-        ///`Extent1`.`StoreId`) AS `GroupBy1`.
+        ///`Extent1`.`ShopId`) AS `GroupBy1`.
         /// </summary>
         internal static string SumWithGrouping {
             get {
@@ -654,7 +654,7 @@ namespace MySql.Data.Entity.Tests.Properties {
         ///FROM (SELECT
         ///SUM(`Extent1`.`Freight`) AS `A1`
         ///FROM `Orders` AS `Extent1`
-        /// WHERE `Extent1`.`StoreId` = 2) AS `GroupBy1`.
+        /// WHERE `Extent1`.`ShopId` = 2) AS `GroupBy1`.
         /// </summary>
         internal static string SumWithPredicate {
             get {

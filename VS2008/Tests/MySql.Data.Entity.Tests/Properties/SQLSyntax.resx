@@ -142,7 +142,7 @@ FROM `Toys` AS `Extent1`) AS `GroupBy1`</value>
 FROM (SELECT
 `Extent2`.`Id` AS `K1`, 
 AVG(`Extent1`.`Freight`) AS `A1`
-FROM `Orders` AS `Extent1` LEFT OUTER JOIN `Stores` AS `Extent2` ON `Extent1`.`StoreId` = `Extent2`.`Id`
+FROM `Orders` AS `Extent1` LEFT OUTER JOIN `Shops` AS `Extent2` ON `Extent1`.`ShopId` = `Extent2`.`Id`
  GROUP BY 
 `Extent2`.`Id`) AS `GroupBy1`</value>
   </data>
@@ -151,7 +151,7 @@ FROM `Orders` AS `Extent1` LEFT OUTER JOIN `Stores` AS `Extent2` ON `Extent1`.`S
 `GroupBy1`.`A1` AS `C1`
 FROM (SELECT
 AVG(`Extent1`.`Freight`) AS `A1`
-FROM `Orders` AS `Extent1` INNER JOIN `Stores` AS `Extent2` ON `Extent1`.`StoreId` = `Extent2`.`Id`
+FROM `Orders` AS `Extent1` INNER JOIN `Shops` AS `Extent2` ON `Extent1`.`ShopId` = `Extent2`.`Id`
  WHERE `Extent2`.`Id` = 3) AS `GroupBy1`</value>
   </data>
   <data name="BigCountSimple" xml:space="preserve">
@@ -251,7 +251,7 @@ FROM (SELECT
 FROM `Toys` AS `Extent2` UNION ALL SELECT
 `Extent3`.`Id`, 
 `Extent3`.`Name`
-FROM `Stores` AS `Extent3`) AS `UnionAll1` INNER JOIN (SELECT
+FROM `Shops` AS `Extent3`) AS `UnionAll1` INNER JOIN (SELECT
 `Extent4`.`Id`, 
 `Extent4`.`Name`
 FROM `Authors` AS `Extent4` UNION ALL SELECT
@@ -306,9 +306,9 @@ FROM `Authors` AS `Extent2` INNER JOIN `Books` AS `Extent3` ON `Extent2`.`Id` = 
 `Extent1`.`City`, 
 `Extent1`.`State`, 
 `Extent1`.`ZipCode`
-FROM `Stores` AS `Extent1` INNER JOIN (SELECT
+FROM `Shops` AS `Extent1` INNER JOIN (SELECT
 MAX(`Extent3`.`Id`) AS `A1`
-FROM `Orders` AS `Extent2` LEFT OUTER JOIN `Stores` AS `Extent3` ON `Extent2`.`StoreId` = `Extent3`.`Id`) AS `GroupBy1` ON `Extent1`.`Id` = `GroupBy1`.`A1`</value>
+FROM `Orders` AS `Extent2` LEFT OUTER JOIN `Shops` AS `Extent3` ON `Extent2`.`ShopId` = `Extent3`.`Id`) AS `GroupBy1` ON `Extent1`.`Id` = `GroupBy1`.`A1`</value>
   </data>
   <data name="MaxInSubQuery2" xml:space="preserve">
     <value>SELECT
@@ -318,9 +318,9 @@ FROM `Orders` AS `Extent2` LEFT OUTER JOIN `Stores` AS `Extent3` ON `Extent2`.`S
 `Extent1`.`City`, 
 `Extent1`.`State`, 
 `Extent1`.`ZipCode`
-FROM `Stores` AS `Extent1` INNER JOIN (SELECT
+FROM `Shops` AS `Extent1` INNER JOIN (SELECT
 MAX(`Extent3`.`Id`) AS `A1`
-FROM `Orders` AS `Extent2` LEFT OUTER JOIN `Stores` AS `Extent3` ON `Extent2`.`StoreId` = `Extent3`.`Id`) AS `GroupBy1` ON `Extent1`.`Id` = `GroupBy1`.`A1`</value>
+FROM `Orders` AS `Extent2` LEFT OUTER JOIN `Shops` AS `Extent3` ON `Extent2`.`ShopId` = `Extent3`.`Id`) AS `GroupBy1` ON `Extent1`.`Id` = `GroupBy1`.`A1`</value>
   </data>
   <data name="MaxSimple" xml:space="preserve">
     <value>SELECT
@@ -335,7 +335,7 @@ FROM `Toys` AS `Extent1`) AS `GroupBy1`</value>
 FROM (SELECT
 `Extent2`.`Id` AS `K1`, 
 MAX(`Extent1`.`Freight`) AS `A1`
-FROM `Orders` AS `Extent1` LEFT OUTER JOIN `Stores` AS `Extent2` ON `Extent1`.`StoreId` = `Extent2`.`Id`
+FROM `Orders` AS `Extent1` LEFT OUTER JOIN `Shops` AS `Extent2` ON `Extent1`.`ShopId` = `Extent2`.`Id`
  GROUP BY 
 `Extent2`.`Id`) AS `GroupBy1`</value>
   </data>
@@ -345,7 +345,7 @@ FROM `Orders` AS `Extent1` LEFT OUTER JOIN `Stores` AS `Extent2` ON `Extent1`.`S
 `GroupBy1`.`A1` AS `C2`
 FROM (SELECT
 MAX(`Extent1`.`Freight`) AS `A1`
-FROM `Orders` AS `Extent1` INNER JOIN `Stores` AS `Extent2` ON `Extent1`.`StoreId` = `Extent2`.`Id`
+FROM `Orders` AS `Extent1` INNER JOIN `Shops` AS `Extent2` ON `Extent1`.`ShopId` = `Extent2`.`Id`
  WHERE `Extent2`.`Id` = 1) AS `GroupBy1`</value>
   </data>
   <data name="MinSimple" xml:space="preserve">
@@ -361,7 +361,7 @@ FROM `Toys` AS `Extent1`) AS `GroupBy1`</value>
 FROM (SELECT
 `Extent2`.`Id` AS `K1`, 
 MIN(`Extent1`.`Freight`) AS `A1`
-FROM `Orders` AS `Extent1` LEFT OUTER JOIN `Stores` AS `Extent2` ON `Extent1`.`StoreId` = `Extent2`.`Id`
+FROM `Orders` AS `Extent1` LEFT OUTER JOIN `Shops` AS `Extent2` ON `Extent1`.`ShopId` = `Extent2`.`Id`
  GROUP BY 
 `Extent2`.`Id`) AS `GroupBy1`</value>
   </data>
@@ -371,7 +371,7 @@ FROM `Orders` AS `Extent1` LEFT OUTER JOIN `Stores` AS `Extent2` ON `Extent1`.`S
 `GroupBy1`.`A1` AS `C2`
 FROM (SELECT
 MIN(`Extent1`.`Freight`) AS `A1`
-FROM `Orders` AS `Extent1` INNER JOIN `Stores` AS `Extent2` ON `Extent1`.`StoreId` = `Extent2`.`Id`
+FROM `Orders` AS `Extent1` INNER JOIN `Shops` AS `Extent2` ON `Extent1`.`ShopId` = `Extent2`.`Id`
  WHERE `Extent2`.`Id` = 2) AS `GroupBy1`</value>
   </data>
   <data name="OrderBySimple" xml:space="preserve">
@@ -553,6 +553,9 @@ FROM `Companies` AS `Extent1`) AS `Project1`
  ORDER BY 
 `Project1`.`Name` DESC LIMIT 2,2</value>
   </data>
+  <data name="String1" xml:space="preserve">
+    <value />
+  </data>
   <data name="SumSimple" xml:space="preserve">
     <value>SELECT
 `GroupBy1`.`A1` AS `C1`
@@ -566,7 +569,7 @@ FROM `Toys` AS `Extent1`) AS `GroupBy1`</value>
 FROM (SELECT
 `Extent2`.`Id` AS `K1`, 
 SUM(`Extent1`.`Freight`) AS `A1`
-FROM `Orders` AS `Extent1` LEFT OUTER JOIN `Stores` AS `Extent2` ON `Extent1`.`StoreId` = `Extent2`.`Id`
+FROM `Orders` AS `Extent1` LEFT OUTER JOIN `Shops` AS `Extent2` ON `Extent1`.`ShopId` = `Extent2`.`Id`
  GROUP BY 
 `Extent2`.`Id`) AS `GroupBy1`</value>
   </data>
@@ -575,7 +578,7 @@ FROM `Orders` AS `Extent1` LEFT OUTER JOIN `Stores` AS `Extent2` ON `Extent1`.`S
 `GroupBy1`.`A1` AS `C1`
 FROM (SELECT
 SUM(`Extent1`.`Freight`) AS `A1`
-FROM `Orders` AS `Extent1` INNER JOIN `Stores` AS `Extent2` ON `Extent1`.`StoreId` = `Extent2`.`Id`
+FROM `Orders` AS `Extent1` INNER JOIN `Shops` AS `Extent2` ON `Extent1`.`ShopId` = `Extent2`.`Id`
  WHERE `Extent2`.`Id` = 2) AS `GroupBy1`</value>
   </data>
   <data name="Top" xml:space="preserve">
