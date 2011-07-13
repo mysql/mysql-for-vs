@@ -119,551 +119,551 @@
   </resheader>
   <data name="Any" xml:space="preserve">
     <value>SELECT
-Extent1.Id, 
-Extent1.Name, 
-Extent1.Age
-FROM Authors AS Extent1
+`Extent1`.`Id`, 
+`Extent1`.`Name`, 
+`Extent1`.`Age`
+FROM `Authors` AS `Extent1`
  WHERE NOT EXISTS(SELECT
-1 AS C1
-FROM Books AS Extent2
- WHERE Extent1.Id = Extent2.Author_id)</value>
+1 AS `C1`
+FROM `Books` AS `Extent2`
+ WHERE `Extent1`.`Id` = `Extent2`.`Author_id`)</value>
   </data>
   <data name="AverageSimple" xml:space="preserve">
     <value>SELECT
-GroupBy1.A1 AS C1
+`GroupBy1`.`A1` AS `C1`
 FROM (SELECT
-Avg(Extent1.MinAge) AS A1
-FROM Toys AS Extent1) AS GroupBy1</value>
+AVG(`Extent1`.`MinAge`) AS `A1`
+FROM `Toys` AS `Extent1`) AS `GroupBy1`</value>
   </data>
   <data name="AverageWithGrouping" xml:space="preserve">
     <value>SELECT
-GroupBy1.A1 AS C1
+`GroupBy1`.`A1` AS `C1`
 FROM (SELECT
-Extent2.Id AS K1, 
-AVG(Extent1.Freight) AS A1
-FROM Orders AS Extent1 LEFT OUTER JOIN Stores AS Extent2 ON Extent1.StoreId = Extent2.Id
+`Extent2`.`Id` AS `K1`, 
+AVG(`Extent1`.`Freight`) AS `A1`
+FROM `Orders` AS `Extent1` LEFT OUTER JOIN `Shops` AS `Extent2` ON `Extent1`.`ShopId` = `Extent2`.`Id`
  GROUP BY 
-Extent2.Id) AS GroupBy1</value>
+`Extent2`.`Id`) AS `GroupBy1`</value>
   </data>
   <data name="AverageWithPredicate" xml:space="preserve">
     <value>SELECT
-GroupBy1.A1 AS C1
+`GroupBy1`.`A1` AS `C1`
 FROM (SELECT
-Avg(Extent1.Freight) AS A1
-FROM Orders AS Extent1 INNER JOIN Stores AS Extent2 ON Extent1.StoreId = Extent2.Id
- WHERE Extent2.Id = 3) AS GroupBy1</value>
+AVG(`Extent1`.`Freight`) AS `A1`
+FROM `Orders` AS `Extent1` INNER JOIN `Shops` AS `Extent2` ON `Extent1`.`ShopId` = `Extent2`.`Id`
+ WHERE `Extent2`.`Id` = 3) AS `GroupBy1`</value>
   </data>
   <data name="BigCountSimple" xml:space="preserve">
     <value>SELECT
-GroupBy1.A1 AS C1
+`GroupBy1`.`A1` AS `C1`
 FROM (SELECT
-Count(Extent1.Id) AS A1
-FROM Toys AS Extent1) AS GroupBy1</value>
+COUNT(`Extent1`.`Id`) AS `A1`
+FROM `Toys` AS `Extent1`) AS `GroupBy1`</value>
   </data>
   <data name="CanGroupByMultipleColumns" xml:space="preserve">
     <value>SELECT
-1 AS C1, 
-GroupBy1.K1 AS Name, 
-GroupBy1.A1 AS C2
+1 AS `C1`, 
+`GroupBy1`.`K1` AS `Name`, 
+`GroupBy1`.`A1` AS `C2`
 FROM (SELECT
-Extent1.Name AS K1, 
-Extent1.DateBegan AS K2, 
-Extent1.NumEmployees AS K3, 
-COUNT(1) AS A1
-FROM Companies AS Extent1
+`Extent1`.`Name` AS `K1`, 
+`Extent1`.`DateBegan` AS `K2`, 
+`Extent1`.`NumEmployees` AS `K3`, 
+COUNT(1) AS `A1`
+FROM `Companies` AS `Extent1`
  GROUP BY 
-Extent1.Name, 
-Extent1.DateBegan, 
-Extent1.NumEmployees) AS GroupBy1</value>
+`Extent1`.`Name`, 
+`Extent1`.`DateBegan`, 
+`Extent1`.`NumEmployees`) AS `GroupBy1`</value>
   </data>
   <data name="CanGroupBySingleColumn" xml:space="preserve">
     <value>SELECT
-1 AS C1, 
-GroupBy1.K1 AS Name, 
-GroupBy1.A1 AS C2
+1 AS `C1`, 
+`GroupBy1`.`K1` AS `Name`, 
+`GroupBy1`.`A1` AS `C2`
 FROM (SELECT
-Extent1.Name AS K1, 
-COUNT(1) AS A1
-FROM Companies AS Extent1
+`Extent1`.`Name` AS `K1`, 
+COUNT(1) AS `A1`
+FROM `Companies` AS `Extent1`
  GROUP BY 
-Extent1.Name) AS GroupBy1</value>
+`Extent1`.`Name`) AS `GroupBy1`</value>
   </data>
   <data name="CountSimple" xml:space="preserve">
     <value>SELECT
-GroupBy1.A1 AS C1
+`GroupBy1`.`A1` AS `C1`
 FROM (SELECT
-Count(Extent1.Id) AS A1
-FROM Toys AS Extent1) AS GroupBy1</value>
+COUNT(`Extent1`.`Id`) AS `A1`
+FROM `Toys` AS `Extent1`) AS `GroupBy1`</value>
   </data>
   <data name="CountWithPredicate" xml:space="preserve">
     <value>SELECT
-GroupBy1.A1 AS C1
+`GroupBy1`.`A1` AS `C1`
 FROM (SELECT
-Count(Extent1.Id) AS A1
-FROM Toys AS Extent1
- WHERE Extent1.MinAge &gt; 3) AS GroupBy1</value>
+COUNT(`Extent1`.`Id`) AS `A1`
+FROM `Toys` AS `Extent1`
+ WHERE `Extent1`.`MinAge` &gt; 3) AS `GroupBy1`</value>
   </data>
   <data name="Exists" xml:space="preserve">
     <value>SELECT
-Project1.Id, 
-Project1.Name, 
-Project1.DateBegan, 
-Project1.NumEmployees, 
-Project1.C1, 
-Project1.Address, 
-Project1.City, 
-Project1.State, 
-Project1.ZipCode
+`Project1`.`Id`, 
+`Project1`.`Name`, 
+`Project1`.`DateBegan`, 
+`Project1`.`NumEmployees`, 
+`Project1`.`C1`, 
+`Project1`.`Address`, 
+`Project1`.`City`, 
+`Project1`.`State`, 
+`Project1`.`ZipCode`
 FROM (SELECT
-Extent1.Id, 
-Extent1.Name, 
-Extent1.DateBegan, 
-Extent1.NumEmployees, 
-Extent1.Address, 
-Extent1.City, 
-Extent1.State, 
-Extent1.ZipCode, 
-1 AS C1
-FROM Companies AS Extent1) AS Project1
+`Extent1`.`Id`, 
+`Extent1`.`Name`, 
+`Extent1`.`DateBegan`, 
+`Extent1`.`NumEmployees`, 
+`Extent1`.`Address`, 
+`Extent1`.`City`, 
+`Extent1`.`State`, 
+`Extent1`.`ZipCode`, 
+1 AS `C1`
+FROM `Companies` AS `Extent1`) AS `Project1`
  WHERE EXISTS(SELECT
-1 AS C1
-FROM Toys AS Extent2
- WHERE (Project1.Id = Extent2.SupplierId) AND (Extent2.MinAge &lt; 4))</value>
+1 AS `C1`
+FROM `Toys` AS `Extent2`
+ WHERE (`Project1`.`Id` = `Extent2`.`SupplierId`) AND (`Extent2`.`MinAge` &lt; 4))</value>
   </data>
   <data name="JoinOfUnionsOnRightSideOfJoin" xml:space="preserve">
     <value>SELECT
-1 AS C1, 
-Extent1.Id, 
-Extent1.Name, 
-Join1.Id AS C2, 
-Join1.Name AS C3, 
-Join1.Id1 AS C4, 
-Join1.Name1 AS C5
-FROM Companies AS Extent1 INNER JOIN (SELECT
-UnionAll1.Id, 
-UnionAll1.Name, 
-UnionAll2.Id AS Id1, 
-UnionAll2.Name AS Name1
+1 AS `C1`, 
+`Extent1`.`Id`, 
+`Extent1`.`Name`, 
+`Join1`.`Id` AS `C2`, 
+`Join1`.`Name` AS `C3`, 
+`Join1`.`Id1` AS `C4`, 
+`Join1`.`Name1` AS `C5`
+FROM `Companies` AS `Extent1` INNER JOIN (SELECT
+`UnionAll1`.`Id`, 
+`UnionAll1`.`Name`, 
+`UnionAll2`.`Id` AS `Id1`, 
+`UnionAll2`.`Name` AS `Name1`
 FROM (SELECT
-Extent2.Id, 
-Extent2.Name
-FROM Toys AS Extent2 UNION ALL SELECT
-Extent3.Id, 
-Extent3.Name
-FROM Stores AS Extent3) AS UnionAll1 INNER JOIN (SELECT
-Extent4.Id, 
-Extent4.Name
-FROM Authors AS Extent4 UNION ALL SELECT
-Extent5.Id, 
-Extent5.Name
-FROM Books AS Extent5) AS UnionAll2 ON UnionAll1.Id = UnionAll2.Id) AS Join1 ON Extent1.Id = Join1.Id</value>
+`Extent2`.`Id`, 
+`Extent2`.`Name`
+FROM `Toys` AS `Extent2` UNION ALL SELECT
+`Extent3`.`Id`, 
+`Extent3`.`Name`
+FROM `Shops` AS `Extent3`) AS `UnionAll1` INNER JOIN (SELECT
+`Extent4`.`Id`, 
+`Extent4`.`Name`
+FROM `Authors` AS `Extent4` UNION ALL SELECT
+`Extent5`.`Id`, 
+`Extent5`.`Name`
+FROM `Books` AS `Extent5`) AS `UnionAll2` ON `UnionAll1`.`Id` = `UnionAll2`.`Id`) AS `Join1` ON `Extent1`.`Id` = `Join1`.`Id`</value>
   </data>
   <data name="JoinOnRightSideAsDerivedTable" xml:space="preserve">
     <value>SELECT
-Extent1.Id, 
-Extent1.EmployeeID, 
-Extent1.LastName, 
-Extent1.FirstName, 
-Extent1.BirthTime, 
-Extent1.Weight, 
-Extent1.LastModified
-FROM EmployeeChildren AS Extent1 INNER JOIN (SELECT
-Extent2.Id, 
-Extent2.LastName, 
-Extent2.FirstName, 
-Extent2.Age, 
-Extent3.EmployeeId, 
-Extent3.Salary
-FROM Employees AS Extent2 LEFT OUTER JOIN SalariedEmployees AS Extent3 ON Extent2.Id = Extent3.EmployeeId) AS Join1 ON (Extent1.EmployeeID = Join1.Id) OR ((Extent1.EmployeeID IS  NULL) AND (Join1.Id IS  NULL))
- WHERE Extent1.Weight &gt; 7</value>
+`Extent1`.`Id`, 
+`Extent1`.`EmployeeID`, 
+`Extent1`.`LastName`, 
+`Extent1`.`FirstName`, 
+`Extent1`.`BirthTime`, 
+`Extent1`.`Weight`, 
+`Extent1`.`LastModified`
+FROM `EmployeeChildren` AS `Extent1` INNER JOIN (SELECT
+`Extent2`.`Id`, 
+`Extent2`.`LastName`, 
+`Extent2`.`FirstName`, 
+`Extent2`.`Age`, 
+`Extent3`.`EmployeeId`, 
+`Extent3`.`Salary`
+FROM `Employees` AS `Extent2` LEFT OUTER JOIN `SalariedEmployees` AS `Extent3` ON `Extent2`.`Id` = `Extent3`.`EmployeeId`) AS `Join1` ON (`Extent1`.`EmployeeID` = `Join1`.`Id`) OR ((`Extent1`.`EmployeeID` IS  NULL) AND (`Join1`.`Id` IS  NULL))
+ WHERE `Extent1`.`Weight` &gt; 7</value>
   </data>
   <data name="JoinOnRightSideNameClash" xml:space="preserve">
     <value>SELECT
-1 AS C1, 
-Extent1.Id, 
-Extent1.Name, 
-Join1.Id AS Id1, 
-Join1.Name AS Name1, 
-Join1.Id1 AS Id2, 
-Join1.Name1 AS Name2
-FROM Companies AS Extent1 INNER JOIN (SELECT
-Extent2.Id, 
-Extent2.Name, 
-Extent2.Age, 
-Extent3.Id AS Id1, 
-Extent3.Name AS Name1, 
-Extent3.Pages, 
-Extent3.Author_id, 
-Extent3.Publisher_id
-FROM Authors AS Extent2 INNER JOIN Books AS Extent3 ON Extent2.Id = Extent3.Id) AS Join1 ON Extent1.Id = Join1.Id</value>
+1 AS `C1`, 
+`Extent1`.`Id`, 
+`Extent1`.`Name`, 
+`Join1`.`Id` AS `Id1`, 
+`Join1`.`Name` AS `Name1`, 
+`Join1`.`Id1` AS `Id2`, 
+`Join1`.`Name1` AS `Name2`
+FROM `Companies` AS `Extent1` INNER JOIN (SELECT
+`Extent2`.`Id`, 
+`Extent2`.`Name`, 
+`Extent2`.`Age`, 
+`Extent3`.`Id` AS `Id1`, 
+`Extent3`.`Name` AS `Name1`, 
+`Extent3`.`Pages`, 
+`Extent3`.`Author_id`, 
+`Extent3`.`Publisher_id`
+FROM `Authors` AS `Extent2` INNER JOIN `Books` AS `Extent3` ON `Extent2`.`Id` = `Extent3`.`Id`) AS `Join1` ON `Extent1`.`Id` = `Join1`.`Id`</value>
   </data>
   <data name="MaxInSubQuery1" xml:space="preserve">
     <value>SELECT
-Extent1.Id, 
-Extent1.Name, 
-Extent1.Address, 
-Extent1.City, 
-Extent1.State, 
-Extent1.ZipCode
-FROM Stores AS Extent1 INNER JOIN (SELECT
-MAX(Extent3.Id) AS A1
-FROM Orders AS Extent2 LEFT OUTER JOIN Stores AS Extent3 ON Extent2.StoreId = Extent3.Id) AS GroupBy1 ON Extent1.Id = GroupBy1.A1</value>
+`Extent1`.`Id`, 
+`Extent1`.`Name`, 
+`Extent1`.`Address`, 
+`Extent1`.`City`, 
+`Extent1`.`State`, 
+`Extent1`.`ZipCode`
+FROM `Shops` AS `Extent1` INNER JOIN (SELECT
+MAX(`Extent3`.`Id`) AS `A1`
+FROM `Orders` AS `Extent2` LEFT OUTER JOIN `Shops` AS `Extent3` ON `Extent2`.`ShopId` = `Extent3`.`Id`) AS `GroupBy1` ON `Extent1`.`Id` = `GroupBy1`.`A1`</value>
   </data>
   <data name="MaxInSubQuery2" xml:space="preserve">
     <value>SELECT
-Extent1.Id, 
-Extent1.Name, 
-Extent1.Address, 
-Extent1.City, 
-Extent1.State, 
-Extent1.ZipCode
-FROM Stores AS Extent1 INNER JOIN (SELECT
-MAX(Extent3.Id) AS A1
-FROM Orders AS Extent2 LEFT OUTER JOIN Stores AS Extent3 ON Extent2.StoreId = Extent3.Id) AS GroupBy1 ON Extent1.Id = GroupBy1.A1</value>
+`Extent1`.`Id`, 
+`Extent1`.`Name`, 
+`Extent1`.`Address`, 
+`Extent1`.`City`, 
+`Extent1`.`State`, 
+`Extent1`.`ZipCode`
+FROM `Shops` AS `Extent1` INNER JOIN (SELECT
+MAX(`Extent3`.`Id`) AS `A1`
+FROM `Orders` AS `Extent2` LEFT OUTER JOIN `Shops` AS `Extent3` ON `Extent2`.`ShopId` = `Extent3`.`Id`) AS `GroupBy1` ON `Extent1`.`Id` = `GroupBy1`.`A1`</value>
   </data>
   <data name="MaxSimple" xml:space="preserve">
     <value>SELECT
-GroupBy1.A1 AS C1
+`GroupBy1`.`A1` AS `C1`
 FROM (SELECT
-Max(Extent1.MinAge) AS A1
-FROM Toys AS Extent1) AS GroupBy1</value>
+MAX(`Extent1`.`MinAge`) AS `A1`
+FROM `Toys` AS `Extent1`) AS `GroupBy1`</value>
   </data>
   <data name="MaxWithGrouping" xml:space="preserve">
     <value>SELECT
-GroupBy1.A1 AS C1
+`GroupBy1`.`A1` AS `C1`
 FROM (SELECT
-Extent2.Id AS K1, 
-MAX(Extent1.Freight) AS A1
-FROM Orders AS Extent1 LEFT OUTER JOIN Stores AS Extent2 ON Extent1.StoreId = Extent2.Id
+`Extent2`.`Id` AS `K1`, 
+MAX(`Extent1`.`Freight`) AS `A1`
+FROM `Orders` AS `Extent1` LEFT OUTER JOIN `Shops` AS `Extent2` ON `Extent1`.`ShopId` = `Extent2`.`Id`
  GROUP BY 
-Extent2.Id) AS GroupBy1</value>
+`Extent2`.`Id`) AS `GroupBy1`</value>
   </data>
   <data name="MaxWithPredicate" xml:space="preserve">
     <value>SELECT
-1 AS C1, 
-GroupBy1.A1 AS C2
+1 AS `C1`, 
+`GroupBy1`.`A1` AS `C2`
 FROM (SELECT
-Max(Extent1.Freight) AS A1
-FROM Orders AS Extent1 INNER JOIN Stores AS Extent2 ON Extent1.StoreId = Extent2.Id
- WHERE Extent2.Id = 1) AS GroupBy1</value>
+MAX(`Extent1`.`Freight`) AS `A1`
+FROM `Orders` AS `Extent1` INNER JOIN `Shops` AS `Extent2` ON `Extent1`.`ShopId` = `Extent2`.`Id`
+ WHERE `Extent2`.`Id` = 1) AS `GroupBy1`</value>
   </data>
   <data name="MinSimple" xml:space="preserve">
     <value>SELECT
-GroupBy1.A1 AS C1
+`GroupBy1`.`A1` AS `C1`
 FROM (SELECT
-Min(Extent1.MinAge) AS A1
-FROM Toys AS Extent1) AS GroupBy1</value>
+MIN(`Extent1`.`MinAge`) AS `A1`
+FROM `Toys` AS `Extent1`) AS `GroupBy1`</value>
   </data>
   <data name="MinWithGrouping" xml:space="preserve">
     <value>SELECT
-GroupBy1.A1 AS C1
+`GroupBy1`.`A1` AS `C1`
 FROM (SELECT
-Extent2.Id AS K1, 
-MIN(Extent1.Freight) AS A1
-FROM Orders AS Extent1 LEFT OUTER JOIN Stores AS Extent2 ON Extent1.StoreId = Extent2.Id
+`Extent2`.`Id` AS `K1`, 
+MIN(`Extent1`.`Freight`) AS `A1`
+FROM `Orders` AS `Extent1` LEFT OUTER JOIN `Shops` AS `Extent2` ON `Extent1`.`ShopId` = `Extent2`.`Id`
  GROUP BY 
-Extent2.Id) AS GroupBy1</value>
+`Extent2`.`Id`) AS `GroupBy1`</value>
   </data>
   <data name="MinWithPredicate" xml:space="preserve">
     <value>SELECT
-1 AS C1, 
-GroupBy1.A1 AS C2
+1 AS `C1`, 
+`GroupBy1`.`A1` AS `C2`
 FROM (SELECT
-Min(Extent1.Freight) AS A1
-FROM Orders AS Extent1 INNER JOIN Stores AS Extent2 ON Extent1.StoreId = Extent2.Id
- WHERE Extent2.Id = 2) AS GroupBy1</value>
+MIN(`Extent1`.`Freight`) AS `A1`
+FROM `Orders` AS `Extent1` INNER JOIN `Shops` AS `Extent2` ON `Extent1`.`ShopId` = `Extent2`.`Id`
+ WHERE `Extent2`.`Id` = 2) AS `GroupBy1`</value>
   </data>
   <data name="OrderBySimple" xml:space="preserve">
     <value>SELECT
-Project1.Id, 
-Project1.Name, 
-Project1.DateBegan, 
-Project1.NumEmployees, 
-Project1.C1, 
-Project1.Address, 
-Project1.City, 
-Project1.State, 
-Project1.ZipCode
+`Project1`.`Id`, 
+`Project1`.`Name`, 
+`Project1`.`DateBegan`, 
+`Project1`.`NumEmployees`, 
+`Project1`.`C1`, 
+`Project1`.`Address`, 
+`Project1`.`City`, 
+`Project1`.`State`, 
+`Project1`.`ZipCode`
 FROM (SELECT
-Extent1.Id, 
-Extent1.Name, 
-Extent1.DateBegan, 
-Extent1.NumEmployees, 
-Extent1.Address, 
-Extent1.City, 
-Extent1.State, 
-Extent1.ZipCode, 
-1 AS C1
-FROM Companies AS Extent1) AS Project1
+`Extent1`.`Id`, 
+`Extent1`.`Name`, 
+`Extent1`.`DateBegan`, 
+`Extent1`.`NumEmployees`, 
+`Extent1`.`Address`, 
+`Extent1`.`City`, 
+`Extent1`.`State`, 
+`Extent1`.`ZipCode`, 
+1 AS `C1`
+FROM `Companies` AS `Extent1`) AS `Project1`
  ORDER BY 
-Project1.Name ASC</value>
+`Project1`.`Name` ASC</value>
   </data>
   <data name="OrderByWithPredicate" xml:space="preserve">
     <value>SELECT
-Project1.Id, 
-Project1.Name, 
-Project1.DateBegan, 
-Project1.NumEmployees, 
-Project1.C1, 
-Project1.Address, 
-Project1.City, 
-Project1.State, 
-Project1.ZipCode
+`Project1`.`Id`, 
+`Project1`.`Name`, 
+`Project1`.`DateBegan`, 
+`Project1`.`NumEmployees`, 
+`Project1`.`C1`, 
+`Project1`.`Address`, 
+`Project1`.`City`, 
+`Project1`.`State`, 
+`Project1`.`ZipCode`
 FROM (SELECT
-Extent1.Id, 
-Extent1.Name, 
-Extent1.DateBegan, 
-Extent1.NumEmployees, 
-Extent1.Address, 
-Extent1.City, 
-Extent1.State, 
-Extent1.ZipCode, 
-1 AS C1
-FROM Companies AS Extent1
- WHERE Extent1.NumEmployees &gt; 100) AS Project1
+`Extent1`.`Id`, 
+`Extent1`.`Name`, 
+`Extent1`.`DateBegan`, 
+`Extent1`.`NumEmployees`, 
+`Extent1`.`Address`, 
+`Extent1`.`City`, 
+`Extent1`.`State`, 
+`Extent1`.`ZipCode`, 
+1 AS `C1`
+FROM `Companies` AS `Extent1`
+ WHERE `Extent1`.`NumEmployees` &gt; 100) AS `Project1`
  ORDER BY 
-Project1.Name ASC</value>
+`Project1`.`Name` ASC</value>
   </data>
   <data name="SelectWithComplexType" xml:space="preserve">
     <value>SELECT
-1 AS C1, 
-Extent1.LastName
-FROM Employees AS Extent1 LEFT OUTER JOIN SalariedEmployees AS Extent2 ON Extent1.Id = Extent2.EmployeeId
- WHERE Extent1.Age &gt; 20</value>
+1 AS `C1`, 
+`Extent1`.`LastName`
+FROM `Employees` AS `Extent1` LEFT OUTER JOIN `SalariedEmployees` AS `Extent2` ON `Extent1`.`Id` = `Extent2`.`EmployeeId`
+ WHERE `Extent1`.`Age` &gt; 20</value>
   </data>
   <data name="SimpleJoin" xml:space="preserve">
     <value>SELECT
-1 AS C1, 
-Extent1.Id, 
-Extent1.Name, 
-Extent2.Name AS Name1
-FROM Books AS Extent1 INNER JOIN Authors AS Extent2 ON (Extent1.Author_id = Extent2.Id) OR ((Extent1.Author_id IS  NULL) AND (Extent2.Id IS  NULL))</value>
+1 AS `C1`, 
+`Extent1`.`Id`, 
+`Extent1`.`Name`, 
+`Extent2`.`Name` AS `Name1`
+FROM `Books` AS `Extent1` INNER JOIN `Authors` AS `Extent2` ON (`Extent1`.`Author_id` = `Extent2`.`Id`) OR ((`Extent1`.`Author_id` IS  NULL) AND (`Extent2`.`Id` IS  NULL))</value>
   </data>
   <data name="SimpleJoinWithPredicate" xml:space="preserve">
     <value>SELECT
-1 AS C1, 
-Extent1.Id, 
-Extent1.Name, 
-Extent2.Name AS Name1
-FROM Books AS Extent1 INNER JOIN Authors AS Extent2 ON (Extent1.Author_id = Extent2.Id) OR ((Extent1.Author_id IS  NULL) AND (Extent2.Id IS  NULL))
- WHERE Extent1.Pages &gt; 300</value>
+1 AS `C1`, 
+`Extent1`.`Id`, 
+`Extent1`.`Name`, 
+`Extent2`.`Name` AS `Name1`
+FROM `Books` AS `Extent1` INNER JOIN `Authors` AS `Extent2` ON (`Extent1`.`Author_id` = `Extent2`.`Id`) OR ((`Extent1`.`Author_id` IS  NULL) AND (`Extent2`.`Id` IS  NULL))
+ WHERE `Extent1`.`Pages` &gt; 300</value>
   </data>
   <data name="SimpleSelect" xml:space="preserve">
     <value>SELECT
-1 AS C1, 
-Extent1.Id, 
-Extent1.Name, 
-Extent1.MinAge, 
-Extent1.SupplierId
-FROM Toys AS Extent1</value>
+1 AS `C1`, 
+`Extent1`.`Id`, 
+`Extent1`.`Name`, 
+`Extent1`.`MinAge`, 
+`Extent1`.`SupplierId`
+FROM `Toys` AS `Extent1`</value>
   </data>
   <data name="SimpleSelectWithFilter" xml:space="preserve">
     <value>SELECT
-1 AS C1, 
-Extent1.Id, 
-Extent1.Name, 
-Extent1.MinAge, 
-Extent1.SupplierId
-FROM Toys AS Extent1
- WHERE Extent1.MinAge = 4</value>
+1 AS `C1`, 
+`Extent1`.`Id`, 
+`Extent1`.`Name`, 
+`Extent1`.`MinAge`, 
+`Extent1`.`SupplierId`
+FROM `Toys` AS `Extent1`
+ WHERE `Extent1`.`MinAge` = 4</value>
   </data>
   <data name="SimpleSelectWithParam" xml:space="preserve">
     <value>SELECT
-1 AS C1, 
-Extent1.Id, 
-Extent1.Name, 
-Extent1.MinAge, 
-Extent1.SupplierId
-FROM Toys AS Extent1
- WHERE Extent1.MinAge &gt; @age</value>
+1 AS `C1`, 
+`Extent1`.`Id`, 
+`Extent1`.`Name`, 
+`Extent1`.`MinAge`, 
+`Extent1`.`SupplierId`
+FROM `Toys` AS `Extent1`
+ WHERE `Extent1`.`MinAge` &gt; @age</value>
   </data>
   <data name="Skip" xml:space="preserve">
     <value>SELECT
-Project1.Id, 
-Project1.Name, 
-Project1.DateBegan, 
-Project1.NumEmployees, 
-Project1.C1, 
-Project1.Address, 
-Project1.City, 
-Project1.State, 
-Project1.ZipCode
+`Project1`.`Id`, 
+`Project1`.`Name`, 
+`Project1`.`DateBegan`, 
+`Project1`.`NumEmployees`, 
+`Project1`.`C1`, 
+`Project1`.`Address`, 
+`Project1`.`City`, 
+`Project1`.`State`, 
+`Project1`.`ZipCode`
 FROM (SELECT
-Extent1.Id, 
-Extent1.Name, 
-Extent1.DateBegan, 
-Extent1.NumEmployees, 
-Extent1.Address, 
-Extent1.City, 
-Extent1.State, 
-Extent1.ZipCode, 
-1 AS C1
-FROM Companies AS Extent1) AS Project1
+`Extent1`.`Id`, 
+`Extent1`.`Name`, 
+`Extent1`.`DateBegan`, 
+`Extent1`.`NumEmployees`, 
+`Extent1`.`Address`, 
+`Extent1`.`City`, 
+`Extent1`.`State`, 
+`Extent1`.`ZipCode`, 
+1 AS `C1`
+FROM `Companies` AS `Extent1`) AS `Project1`
  ORDER BY 
-Project1.Id ASC LIMIT 3,18446744073709551615</value>
+`Project1`.`Id` ASC LIMIT 3,18446744073709551615</value>
   </data>
   <data name="SkipAndTakeSimple" xml:space="preserve">
     <value>SELECT
-Project1.Id, 
-Project1.Name, 
-Project1.DateBegan, 
-Project1.NumEmployees, 
-Project1.C1, 
-Project1.Address, 
-Project1.City, 
-Project1.State, 
-Project1.ZipCode
+`Project1`.`Id`, 
+`Project1`.`Name`, 
+`Project1`.`DateBegan`, 
+`Project1`.`NumEmployees`, 
+`Project1`.`C1`, 
+`Project1`.`Address`, 
+`Project1`.`City`, 
+`Project1`.`State`, 
+`Project1`.`ZipCode`
 FROM (SELECT
-Extent1.Id, 
-Extent1.Name, 
-Extent1.DateBegan, 
-Extent1.NumEmployees, 
-Extent1.Address, 
-Extent1.City, 
-Extent1.State, 
-Extent1.ZipCode, 
-1 AS C1
-FROM Companies AS Extent1) AS Project1
+`Extent1`.`Id`, 
+`Extent1`.`Name`, 
+`Extent1`.`DateBegan`, 
+`Extent1`.`NumEmployees`, 
+`Extent1`.`Address`, 
+`Extent1`.`City`, 
+`Extent1`.`State`, 
+`Extent1`.`ZipCode`, 
+1 AS `C1`
+FROM `Companies` AS `Extent1`) AS `Project1`
  ORDER BY 
-Project1.Id ASC LIMIT 2,2</value>
+`Project1`.`Id` ASC LIMIT 2,2</value>
   </data>
   <data name="SkipAndTakeWithOrdering" xml:space="preserve">
     <value>SELECT
-Project1.Id, 
-Project1.Name, 
-Project1.DateBegan, 
-Project1.NumEmployees, 
-Project1.C1, 
-Project1.Address, 
-Project1.City, 
-Project1.State, 
-Project1.ZipCode
+`Project1`.`Id`, 
+`Project1`.`Name`, 
+`Project1`.`DateBegan`, 
+`Project1`.`NumEmployees`, 
+`Project1`.`C1`, 
+`Project1`.`Address`, 
+`Project1`.`City`, 
+`Project1`.`State`, 
+`Project1`.`ZipCode`
 FROM (SELECT
-Extent1.Id, 
-Extent1.Name, 
-Extent1.DateBegan, 
-Extent1.NumEmployees, 
-Extent1.Address, 
-Extent1.City, 
-Extent1.State, 
-Extent1.ZipCode, 
-1 AS C1
-FROM Companies AS Extent1) AS Project1
+`Extent1`.`Id`, 
+`Extent1`.`Name`, 
+`Extent1`.`DateBegan`, 
+`Extent1`.`NumEmployees`, 
+`Extent1`.`Address`, 
+`Extent1`.`City`, 
+`Extent1`.`State`, 
+`Extent1`.`ZipCode`, 
+1 AS `C1`
+FROM `Companies` AS `Extent1`) AS `Project1`
  ORDER BY 
-Project1.Name DESC LIMIT 2,2</value>
+`Project1`.`Name` DESC LIMIT 2,2</value>
   </data>
   <data name="String1" xml:space="preserve">
     <value />
   </data>
   <data name="SumSimple" xml:space="preserve">
     <value>SELECT
-GroupBy1.A1 AS C1
+`GroupBy1`.`A1` AS `C1`
 FROM (SELECT
-Sum(Extent1.MinAge) AS A1
-FROM Toys AS Extent1) AS GroupBy1</value>
+SUM(`Extent1`.`MinAge`) AS `A1`
+FROM `Toys` AS `Extent1`) AS `GroupBy1`</value>
   </data>
   <data name="SumWithGrouping" xml:space="preserve">
     <value>SELECT
-GroupBy1.A1 AS C1
+`GroupBy1`.`A1` AS `C1`
 FROM (SELECT
-Extent2.Id AS K1, 
-SUM(Extent1.Freight) AS A1
-FROM Orders AS Extent1 LEFT OUTER JOIN Stores AS Extent2 ON Extent1.StoreId = Extent2.Id
+`Extent2`.`Id` AS `K1`, 
+SUM(`Extent1`.`Freight`) AS `A1`
+FROM `Orders` AS `Extent1` LEFT OUTER JOIN `Shops` AS `Extent2` ON `Extent1`.`ShopId` = `Extent2`.`Id`
  GROUP BY 
-Extent2.Id) AS GroupBy1</value>
+`Extent2`.`Id`) AS `GroupBy1`</value>
   </data>
   <data name="SumWithPredicate" xml:space="preserve">
     <value>SELECT
-GroupBy1.A1 AS C1
+`GroupBy1`.`A1` AS `C1`
 FROM (SELECT
-Sum(Extent1.Freight) AS A1
-FROM Orders AS Extent1 INNER JOIN Stores AS Extent2 ON Extent1.StoreId = Extent2.Id
- WHERE Extent2.Id = 2) AS GroupBy1</value>
+SUM(`Extent1`.`Freight`) AS `A1`
+FROM `Orders` AS `Extent1` INNER JOIN `Shops` AS `Extent2` ON `Extent1`.`ShopId` = `Extent2`.`Id`
+ WHERE `Extent2`.`Id` = 2) AS `GroupBy1`</value>
   </data>
   <data name="Top" xml:space="preserve">
     <value>SELECT
-Limit1.Id, 
-Limit1.Name, 
-Limit1.DateBegan, 
-Limit1.NumEmployees, 
-Limit1.C1, 
-Limit1.Address, 
-Limit1.City, 
-Limit1.State, 
-Limit1.ZipCode
+`Limit1`.`Id`, 
+`Limit1`.`Name`, 
+`Limit1`.`DateBegan`, 
+`Limit1`.`NumEmployees`, 
+`Limit1`.`C1`, 
+`Limit1`.`Address`, 
+`Limit1`.`City`, 
+`Limit1`.`State`, 
+`Limit1`.`ZipCode`
 FROM (SELECT
-Extent1.Id, 
-Extent1.Name, 
-Extent1.DateBegan, 
-Extent1.NumEmployees, 
-Extent1.Address, 
-Extent1.City, 
-Extent1.State, 
-Extent1.ZipCode, 
-1 AS C1
-FROM Companies AS Extent1 LIMIT 2) AS Limit1</value>
+`Extent1`.`Id`, 
+`Extent1`.`Name`, 
+`Extent1`.`DateBegan`, 
+`Extent1`.`NumEmployees`, 
+`Extent1`.`Address`, 
+`Extent1`.`City`, 
+`Extent1`.`State`, 
+`Extent1`.`ZipCode`, 
+1 AS `C1`
+FROM `Companies` AS `Extent1` LIMIT 2) AS `Limit1`</value>
   </data>
   <data name="UnionAll" xml:space="preserve">
     <value>SELECT
-UnionAll1.C1, 
-UnionAll1.Id AS C2, 
-UnionAll1.Name AS C3
+`UnionAll1`.`C1`, 
+`UnionAll1`.`Id` AS `C2`, 
+`UnionAll1`.`Name` AS `C3`
 FROM (SELECT
-1 AS C1, 
-Extent1.Id, 
-Extent1.Name
-FROM Toys AS Extent1 UNION ALL SELECT
-1 AS C1, 
-Extent2.Id, 
-Extent2.Name
-FROM Companies AS Extent2) AS UnionAll1</value>
+1 AS `C1`, 
+`Extent1`.`Id`, 
+`Extent1`.`Name`
+FROM `Toys` AS `Extent1` UNION ALL SELECT
+1 AS `C1`, 
+`Extent2`.`Id`, 
+`Extent2`.`Name`
+FROM `Companies` AS `Extent2`) AS `UnionAll1`</value>
   </data>
   <data name="WhereLiteralOnRelation" xml:space="preserve">
     <value>SELECT
-Extent1.Id, 
-Extent1.Name, 
-Extent1.DateBegan, 
-Extent1.NumEmployees, 
-1 AS C1, 
-Extent1.Address, 
-Extent1.City, 
-Extent1.State, 
-Extent1.ZipCode
-FROM Companies AS Extent1
- WHERE Extent1.City = @gp1</value>
+`Extent1`.`Id`, 
+`Extent1`.`Name`, 
+`Extent1`.`DateBegan`, 
+`Extent1`.`NumEmployees`, 
+1 AS `C1`, 
+`Extent1`.`Address`, 
+`Extent1`.`City`, 
+`Extent1`.`State`, 
+`Extent1`.`ZipCode`
+FROM `Companies` AS `Extent1`
+ WHERE `Extent1`.`City` = @gp1</value>
   </data>
   <data name="WhereWithRelatedEntities1" xml:space="preserve">
     <value>SELECT
-1 AS C1, 
-Extent1.Id, 
-Extent1.Name, 
-Extent1.MinAge, 
-Extent1.SupplierId
-FROM Toys AS Extent1 INNER JOIN Companies AS Extent2 ON Extent1.SupplierId = Extent2.Id
- WHERE Extent2.State = @gp1</value>
+1 AS `C1`, 
+`Extent1`.`Id`, 
+`Extent1`.`Name`, 
+`Extent1`.`MinAge`, 
+`Extent1`.`SupplierId`
+FROM `Toys` AS `Extent1` INNER JOIN `Companies` AS `Extent2` ON `Extent1`.`SupplierId` = `Extent2`.`Id`
+ WHERE `Extent2`.`State` = @gp1</value>
   </data>
   <data name="WhereWithRelatedEntities2" xml:space="preserve">
     <value>SELECT
-1 AS C1, 
-Filter1.Id, 
-Filter1.Name, 
-Filter1.MinAge, 
-Filter1.SupplierId
+1 AS `C1`, 
+`Filter1`.`Id`, 
+`Filter1`.`Name`, 
+`Filter1`.`MinAge`, 
+`Filter1`.`SupplierId`
 FROM (SELECT
-Extent1.Id, 
-Extent1.SupplierId, 
-Extent1.Name, 
-Extent1.MinAge, 
-Extent2.Id AS Id1, 
-Extent2.Name AS Name1, 
-Extent2.DateBegan, 
-Extent2.NumEmployees, 
-Extent2.Address, 
-Extent2.City, 
-Extent2.State, 
-Extent2.ZipCode
-FROM Toys AS Extent1 LEFT OUTER JOIN Companies AS Extent2 ON Extent1.SupplierId = Extent2.Id
- WHERE Extent2.State != @gp1) AS Filter1 LEFT OUTER JOIN Companies AS Extent3 ON Filter1.SupplierId = Extent3.Id
- WHERE Extent3.State != @gp2</value>
+`Extent1`.`Id`, 
+`Extent1`.`SupplierId`, 
+`Extent1`.`Name`, 
+`Extent1`.`MinAge`, 
+`Extent2`.`Id` AS `Id1`, 
+`Extent2`.`Name` AS `Name1`, 
+`Extent2`.`DateBegan`, 
+`Extent2`.`NumEmployees`, 
+`Extent2`.`Address`, 
+`Extent2`.`City`, 
+`Extent2`.`State`, 
+`Extent2`.`ZipCode`
+FROM `Toys` AS `Extent1` LEFT OUTER JOIN `Companies` AS `Extent2` ON `Extent1`.`SupplierId` = `Extent2`.`Id`
+ WHERE `Extent2`.`State` != @gp1) AS `Filter1` LEFT OUTER JOIN `Companies` AS `Extent3` ON `Filter1`.`SupplierId` = `Extent3`.`Id`
+ WHERE `Extent3`.`State` != @gp2</value>
   </data>
 </root>

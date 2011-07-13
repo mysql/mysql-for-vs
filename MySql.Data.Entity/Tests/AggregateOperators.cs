@@ -115,12 +115,12 @@ namespace MySql.Data.Entity.Tests
         [Test]
         public void MinWithPredicate()
         {
-            MySqlCommand trueCmd = new MySqlCommand("SELECT MIN(Freight) FROM Orders WHERE storeId=2", conn);
+            MySqlCommand trueCmd = new MySqlCommand("SELECT MIN(Freight) FROM Orders WHERE shopId=2", conn);
             object freight = trueCmd.ExecuteScalar();
 
             using (testEntities context = new testEntities())
             {
-                string eSql = "SELECT Min(o.Freight) FROM Orders AS o WHERE o.Store.Id = 2";
+                string eSql = "SELECT Min(o.Freight) FROM Orders AS o WHERE o.Shop.Id = 2";
                 ObjectQuery<DbDataRecord> q = context.CreateQuery<DbDataRecord>(eSql);
 
                 string sql = q.ToTraceString();
@@ -137,13 +137,13 @@ namespace MySql.Data.Entity.Tests
         public void MinWithGrouping()
         {
             MySqlDataAdapter da = new MySqlDataAdapter(
-                "SELECT MIN(Freight) FROM Orders GROUP BY storeId", conn);
+                "SELECT MIN(Freight) FROM Orders GROUP BY shopId", conn);
             DataTable dt = new DataTable();
             da.Fill(dt);
 
             using (testEntities context = new testEntities())
             {
-                string eSql = "SELECT VALUE Min(o.Freight) FROM Orders AS o GROUP BY o.Store.Id";
+                string eSql = "SELECT VALUE Min(o.Freight) FROM Orders AS o GROUP BY o.Shop.Id";
                 ObjectQuery<Double> q = context.CreateQuery<Double>(eSql);
 
                 string sql = q.ToTraceString();
@@ -177,12 +177,12 @@ namespace MySql.Data.Entity.Tests
         [Test]
         public void MaxWithPredicate()
         {
-            MySqlCommand trueCmd = new MySqlCommand("SELECT MAX(Freight) FROM Orders WHERE storeId=1", conn);
+            MySqlCommand trueCmd = new MySqlCommand("SELECT MAX(Freight) FROM Orders WHERE shopId=1", conn);
             object freight = trueCmd.ExecuteScalar();
 
             using (testEntities context = new testEntities())
             {
-                string eSql = "SELECT MAX(o.Freight) FROM Orders AS o WHERE o.Store.Id = 1";
+                string eSql = "SELECT MAX(o.Freight) FROM Orders AS o WHERE o.Shop.Id = 1";
                 ObjectQuery<DbDataRecord> q = context.CreateQuery<DbDataRecord>(eSql);
 
                 string sql = q.ToTraceString();
@@ -197,13 +197,13 @@ namespace MySql.Data.Entity.Tests
         public void MaxWithGrouping()
         {
             MySqlDataAdapter da = new MySqlDataAdapter(
-                "SELECT MAX(Freight) FROM Orders GROUP BY StoreId", conn);
+                "SELECT MAX(Freight) FROM Orders GROUP BY ShopId", conn);
             DataTable dt = new DataTable();
             da.Fill(dt);
 
             using (testEntities context = new testEntities())
             {
-                string eSql = "SELECT VALUE MAX(o.Freight) FROM Orders AS o GROUP BY o.Store.Id";
+                string eSql = "SELECT VALUE MAX(o.Freight) FROM Orders AS o GROUP BY o.Shop.Id";
                 ObjectQuery<Double> q = context.CreateQuery<Double>(eSql);
 
                 string sql = q.ToTraceString();
@@ -237,12 +237,12 @@ namespace MySql.Data.Entity.Tests
         [Test]
         public void AverageWithPredicate()
         {
-            MySqlCommand trueCmd = new MySqlCommand("SELECT AVG(Freight) FROM Orders WHERE storeId=3", conn);
+            MySqlCommand trueCmd = new MySqlCommand("SELECT AVG(Freight) FROM Orders WHERE shopId=3", conn);
             Double freight = (Double)trueCmd.ExecuteScalar();
 
             using (testEntities context = new testEntities())
             {
-                string eSql = "SELECT VALUE AVG(o.Freight) FROM Orders AS o WHERE o.Store.Id = 3";
+                string eSql = "SELECT VALUE AVG(o.Freight) FROM Orders AS o WHERE o.Shop.Id = 3";
                 ObjectQuery<Double> q = context.CreateQuery<Double>(eSql);
 
                 string sql = q.ToTraceString();
@@ -257,13 +257,13 @@ namespace MySql.Data.Entity.Tests
         public void AverageWithGrouping()
         {
             MySqlDataAdapter da = new MySqlDataAdapter(
-                "SELECT AVG(Freight) FROM Orders GROUP BY StoreId", conn);
+                "SELECT AVG(Freight) FROM Orders GROUP BY ShopId", conn);
             DataTable dt = new DataTable();
             da.Fill(dt);
 
             using (testEntities context = new testEntities())
             {
-                string eSql = "SELECT VALUE AVG(o.Freight) FROM Orders AS o GROUP BY o.Store.Id";
+                string eSql = "SELECT VALUE AVG(o.Freight) FROM Orders AS o GROUP BY o.Shop.Id";
                 ObjectQuery<Double> q = context.CreateQuery<Double>(eSql);
 
                 string sql = q.ToTraceString();
@@ -297,12 +297,12 @@ namespace MySql.Data.Entity.Tests
         [Test]
         public void SumWithPredicate()
         {
-            MySqlCommand trueCmd = new MySqlCommand("SELECT SUM(Freight) FROM Orders WHERE storeId=2", conn);
+            MySqlCommand trueCmd = new MySqlCommand("SELECT SUM(Freight) FROM Orders WHERE shopId=2", conn);
             object freight = trueCmd.ExecuteScalar();
 
             using (testEntities context = new testEntities())
             {
-                string eSql = "SELECT VALUE SUM(o.Freight) FROM Orders AS o WHERE o.Store.Id = 2";
+                string eSql = "SELECT VALUE SUM(o.Freight) FROM Orders AS o WHERE o.Shop.Id = 2";
                 ObjectQuery<Double> q = context.CreateQuery<Double>(eSql);
 
                 string sql = q.ToTraceString();
@@ -317,13 +317,13 @@ namespace MySql.Data.Entity.Tests
         public void SumWithGrouping()
         {
             MySqlDataAdapter da = new MySqlDataAdapter(
-                "SELECT SUM(Freight) FROM Orders GROUP BY StoreId", conn);
+                "SELECT SUM(Freight) FROM Orders GROUP BY ShopId", conn);
             DataTable dt = new DataTable();
             da.Fill(dt);
 
             using (testEntities context = new testEntities())
             {
-                string eSql = "SELECT VALUE SUM(o.Freight) FROM Orders AS o GROUP BY o.Store.Id";
+                string eSql = "SELECT VALUE SUM(o.Freight) FROM Orders AS o GROUP BY o.Shop.Id";
                 ObjectQuery<Double> q = context.CreateQuery<Double>(eSql);
 
                 string sql = q.ToTraceString();
@@ -339,21 +339,21 @@ namespace MySql.Data.Entity.Tests
         public void MaxInSubQuery1()
         {
             MySqlDataAdapter da= new MySqlDataAdapter(
-                "SELECT s.* FROM Stores AS s WHERE s.id=(SELECT MAX(o.storeId) FROM Orders AS o)", conn);
+                "SELECT s.* FROM Shops AS s WHERE s.id=(SELECT MAX(o.shopId) FROM Orders AS o)", conn);
             DataTable dt = new DataTable();
             da.Fill(dt);
 
             using (testEntities context = new testEntities())
             {
-                string eSql = @"SELECT VALUE s FROM Stores AS s WHERE s.Id = 
-                                MAX(SELECT VALUE o.Store.Id FROM Orders As o)";
-                ObjectQuery<Store> q = context.CreateQuery<Store>(eSql);
+                string eSql = @"SELECT VALUE s FROM Shops AS s WHERE s.Id = 
+                                MAX(SELECT VALUE o.Shop.Id FROM Orders As o)";
+                ObjectQuery<Shop> q = context.CreateQuery<Shop>(eSql);
 
                 string sql = q.ToTraceString();
                 CheckSql(sql, SQLSyntax.MaxInSubQuery1);
 
                 int i = 0;
-                foreach (Store s in q)
+                foreach (Shop s in q)
                     Assert.AreEqual(dt.Rows[i++]["id"], s.Id);
             }
         }
@@ -362,21 +362,21 @@ namespace MySql.Data.Entity.Tests
         public void MaxInSubQuery2()
         {
             MySqlDataAdapter da = new MySqlDataAdapter(
-                "SELECT s.* FROM Stores AS s WHERE s.id=(SELECT MAX(o.storeId) FROM Orders AS o)", conn);
+                "SELECT s.* FROM Shops AS s WHERE s.id=(SELECT MAX(o.shopId) FROM Orders AS o)", conn);
             DataTable dt = new DataTable();
             da.Fill(dt);
 
             using (testEntities context = new testEntities())
             {
-                string eSql = @"SELECT VALUE s FROM Stores AS s WHERE s.Id = 
-                                ANYELEMENT(SELECT VALUE MAX(o.Store.Id) FROM Orders As o)";
-                ObjectQuery<Store> q = context.CreateQuery<Store>(eSql);
+                string eSql = @"SELECT VALUE s FROM Shops AS s WHERE s.Id = 
+                                ANYELEMENT(SELECT VALUE MAX(o.Shop.Id) FROM Orders As o)";
+                ObjectQuery<Shop> q = context.CreateQuery<Shop>(eSql);
 
                 string sql = q.ToTraceString();
                 CheckSql(sql, SQLSyntax.MaxInSubQuery2);
 
                 int i = 0;
-                foreach (Store s in q)
+                foreach (Shop s in q)
                     Assert.AreEqual(dt.Rows[i++]["id"], s.Id);
             }
         }

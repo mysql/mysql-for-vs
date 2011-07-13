@@ -129,7 +129,7 @@ namespace MySql.Data.Entity.Tests
                                 testEntities.Companies AS c JOIN (
                                 ((SELECT t.Id, t.Name FROM testEntities.Toys as t) 
                                 UNION ALL 
-                                (SELECT s.Id, s.Name FROM testEntities.Stores as s)) AS Union1
+                                (SELECT s.Id, s.Name FROM testEntities.Shops as s)) AS Union1
                                 JOIN 
                                 ((SELECT a.Id, a.Name FROM testEntities.Authors AS a) 
                                 UNION ALL 

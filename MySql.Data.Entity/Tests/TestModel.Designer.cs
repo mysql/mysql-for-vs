@@ -10,12 +10,12 @@
 
 [assembly: global::System.Data.Objects.DataClasses.EdmSchemaAttribute()]
 [assembly: global::System.Data.Objects.DataClasses.EdmRelationshipAttribute("testModel", "FK_Toys_Supplier", "Supplier", global::System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(MySql.Data.Entity.Tests.Company), "Toys", global::System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(MySql.Data.Entity.Tests.Toy))]
-[assembly: global::System.Data.Objects.DataClasses.EdmRelationshipAttribute("testModel", "FK_Orders_Store", "Store", global::System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(MySql.Data.Entity.Tests.Store), "Orders", global::System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(MySql.Data.Entity.Tests.Order))]
+[assembly: global::System.Data.Objects.DataClasses.EdmRelationshipAttribute("testModel", "FK_Orders_Shop", "Shop", global::System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(MySql.Data.Entity.Tests.Shop), "Orders", global::System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(MySql.Data.Entity.Tests.Order))]
 [assembly: global::System.Data.Objects.DataClasses.EdmRelationshipAttribute("testModel", "FK_Books_Authors", "Authors", global::System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(MySql.Data.Entity.Tests.Author), "Books", global::System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(MySql.Data.Entity.Tests.Book))]
 [assembly: global::System.Data.Objects.DataClasses.EdmRelationshipAttribute("testModel", "FK_Books_Publishers", "Publishers", global::System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(MySql.Data.Entity.Tests.Publisher), "Books", global::System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(MySql.Data.Entity.Tests.Book))]
 
 // Original file name:
-// Generation date: 6/22/2011 3:55:21 PM
+// Generation date: 7/13/2011 11:59:42 AM
 namespace MySql.Data.Entity.Tests
 {
     
@@ -110,20 +110,20 @@ namespace MySql.Data.Entity.Tests
         }
         private global::System.Data.Objects.ObjectQuery<Toy> _Toys;
         /// <summary>
-        /// There are no comments for Stores in the schema.
+        /// There are no comments for Shops in the schema.
         /// </summary>
-        public global::System.Data.Objects.ObjectQuery<Store> Stores
+        public global::System.Data.Objects.ObjectQuery<Shop> Shops
         {
             get
             {
-                if ((this._Stores == null))
+                if ((this._Shops == null))
                 {
-                    this._Stores = base.CreateQuery<Store>("[Stores]");
+                    this._Shops = base.CreateQuery<Shop>("[Shops]");
                 }
-                return this._Stores;
+                return this._Shops;
             }
         }
-        private global::System.Data.Objects.ObjectQuery<Store> _Stores;
+        private global::System.Data.Objects.ObjectQuery<Shop> _Shops;
         /// <summary>
         /// There are no comments for Orders in the schema.
         /// </summary>
@@ -258,11 +258,11 @@ namespace MySql.Data.Entity.Tests
             base.AddObject("Toys", toy);
         }
         /// <summary>
-        /// There are no comments for Stores in the schema.
+        /// There are no comments for Shops in the schema.
         /// </summary>
-        public void AddToStores(Store store)
+        public void AddToShops(Shop shop)
         {
-            base.AddObject("Stores", store);
+            base.AddObject("Shops", shop);
         }
         /// <summary>
         /// There are no comments for Orders in the schema.
@@ -1078,27 +1078,27 @@ namespace MySql.Data.Entity.Tests
         partial void OnZipCodeChanged();
     }
     /// <summary>
-    /// There are no comments for testModel.Store in the schema.
+    /// There are no comments for testModel.Shop in the schema.
     /// </summary>
     /// <KeyProperties>
     /// Id
     /// </KeyProperties>
-    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName="testModel", Name="Store")]
+    [global::System.Data.Objects.DataClasses.EdmEntityTypeAttribute(NamespaceName="testModel", Name="Shop")]
     [global::System.Runtime.Serialization.DataContractAttribute(IsReference=true)]
     [global::System.Serializable()]
-    public partial class Store : global::System.Data.Objects.DataClasses.EntityObject
+    public partial class Shop : global::System.Data.Objects.DataClasses.EntityObject
     {
         /// <summary>
-        /// Create a new Store object.
+        /// Create a new Shop object.
         /// </summary>
         /// <param name="id">Initial value of Id.</param>
         /// <param name="name">Initial value of Name.</param>
-        public static Store CreateStore(int id, string name)
+        public static Shop CreateShop(int id, string name)
         {
-            Store store = new Store();
-            store.Id = id;
-            store.Name = name;
-            return store;
+            Shop shop = new Shop();
+            shop.Id = id;
+            shop.Name = name;
+            return shop;
         }
         /// <summary>
         /// There are no comments for Property Id in the schema.
@@ -1309,39 +1309,39 @@ namespace MySql.Data.Entity.Tests
         partial void OnFreightChanging(double value);
         partial void OnFreightChanged();
         /// <summary>
-        /// There are no comments for Store in the schema.
+        /// There are no comments for Shop in the schema.
         /// </summary>
-        [global::System.Data.Objects.DataClasses.EdmRelationshipNavigationPropertyAttribute("testModel", "FK_Orders_Store", "Store")]
+        [global::System.Data.Objects.DataClasses.EdmRelationshipNavigationPropertyAttribute("testModel", "FK_Orders_Shop", "Shop")]
         [global::System.Xml.Serialization.XmlIgnoreAttribute()]
         [global::System.Xml.Serialization.SoapIgnoreAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public Store Store
+        public Shop Shop
         {
             get
             {
-                return ((global::System.Data.Objects.DataClasses.IEntityWithRelationships)(this)).RelationshipManager.GetRelatedReference<Store>("testModel.FK_Orders_Store", "Store").Value;
+                return ((global::System.Data.Objects.DataClasses.IEntityWithRelationships)(this)).RelationshipManager.GetRelatedReference<Shop>("testModel.FK_Orders_Shop", "Shop").Value;
             }
             set
             {
-                ((global::System.Data.Objects.DataClasses.IEntityWithRelationships)(this)).RelationshipManager.GetRelatedReference<Store>("testModel.FK_Orders_Store", "Store").Value = value;
+                ((global::System.Data.Objects.DataClasses.IEntityWithRelationships)(this)).RelationshipManager.GetRelatedReference<Shop>("testModel.FK_Orders_Shop", "Shop").Value = value;
             }
         }
         /// <summary>
-        /// There are no comments for Store in the schema.
+        /// There are no comments for Shop in the schema.
         /// </summary>
         [global::System.ComponentModel.BrowsableAttribute(false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public global::System.Data.Objects.DataClasses.EntityReference<Store> StoreReference
+        public global::System.Data.Objects.DataClasses.EntityReference<Shop> ShopReference
         {
             get
             {
-                return ((global::System.Data.Objects.DataClasses.IEntityWithRelationships)(this)).RelationshipManager.GetRelatedReference<Store>("testModel.FK_Orders_Store", "Store");
+                return ((global::System.Data.Objects.DataClasses.IEntityWithRelationships)(this)).RelationshipManager.GetRelatedReference<Shop>("testModel.FK_Orders_Shop", "Shop");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((global::System.Data.Objects.DataClasses.IEntityWithRelationships)(this)).RelationshipManager.InitializeRelatedReference<Store>("testModel.FK_Orders_Store", "Store", value);
+                    ((global::System.Data.Objects.DataClasses.IEntityWithRelationships)(this)).RelationshipManager.InitializeRelatedReference<Shop>("testModel.FK_Orders_Shop", "Shop", value);
                 }
             }
         }
