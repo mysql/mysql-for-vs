@@ -37,20 +37,19 @@ namespace MySql.Data.MySqlClient.Tests
     /// </summary>
     public class BaseTest
     {
-        //statics
-        protected static int maxPacketSize;
-        protected static MySqlConnection rootConn;
-        protected static string host;
-        protected static string user;
-        protected static string password;
-        protected static int port;
-        protected static string pipeName;
-        protected static string memoryName;
-        protected static string rootUser;
-        protected static string rootPassword;
-        protected static string database0;
-        protected static string database1;
-        protected static Version version;
+        protected int maxPacketSize;
+        protected MySqlConnection rootConn;
+        protected string host;
+        protected string user;
+        protected string password;
+        protected int port;
+        protected string pipeName;
+        protected string memoryName;
+        protected string rootUser;
+        protected string rootPassword;
+        protected string database0;
+        protected string database1;
+        protected Version version;
 
         protected string table;
         protected string csAdditions = String.Empty;
@@ -60,76 +59,65 @@ namespace MySql.Data.MySqlClient.Tests
 
         public BaseTest()
         {
-			if (host == null)
-				LoadStaticConfiguration();
+            LoadBaseConfiguration();
+            Initialize();
         }
 
-		protected virtual void LoadStaticConfiguration()
-		{
-			Debug.Assert(host == null);
-
-			user = "test";
-			password = "test";
-			port = 3306;
-			rootUser = "root";
-			rootPassword = "";
+        protected void LoadBaseConfiguration()
+        {
+            user = "test";
+            password = "test";
+            port = 3306;
+            rootUser = "root";
+            rootPassword = "";
             string strPort = null;
 
 #if !CF
-			host = ConfigurationManager.AppSettings["host"];
-			strPort = ConfigurationManager.AppSettings["port"];
-			pipeName = ConfigurationManager.AppSettings["pipename"];
-			memoryName = ConfigurationManager.AppSettings["memory_name"];
+            host = ConfigurationManager.AppSettings["host"];
+            strPort = ConfigurationManager.AppSettings["port"];
+            pipeName = ConfigurationManager.AppSettings["pipename"];
+            memoryName = ConfigurationManager.AppSettings["memory_name"];
 #endif
 
-			if (strPort != null)
-				port = Int32.Parse(strPort);
-			if (host == null)
-				host = "localhost";
-			if (pipeName == null)
-				pipeName = "MYSQL";
-			if (memoryName == null)
-				memoryName = "MYSQL";
+            if (strPort != null)
+                port = Int32.Parse(strPort);
+            if (host == null)
+                host = "localhost";
+            if (pipeName == null)
+                pipeName = "MYSQL";
+            if (memoryName == null)
+                memoryName = "MYSQL";
+        }
 
-			// we don't use FileVersion because it's not available
-			// on the compact framework
-			if (database0 == null)
-			{
-				string fullname = Assembly.GetExecutingAssembly().FullName;
-				string[] parts = fullname.Split(new char[] { '=' });
-				string[] versionParts = parts[1].Split(new char[] { '.' });
-				database0 = String.Format("db{0}{1}{2}-a", versionParts[0], versionParts[1], port - 3300);
-				database1 = String.Format("db{0}{1}{2}-b", versionParts[0], versionParts[1], port - 3300);
-			}
+        protected virtual void Initialize()
+        {
+            // we don't use FileVersion because it's not available
+            // on the compact framework
+            string fullname = Assembly.GetExecutingAssembly().FullName;
+            string[] parts = fullname.Split(new char[] { '=' });
+            string[] versionParts = parts[1].Split(new char[] { '.' });
+            database0 = String.Format("db{0}{1}{2}-a", versionParts[0], versionParts[1], port - 3300);
+            database1 = String.Format("db{0}{1}{2}-b", versionParts[0], versionParts[1], port - 3300);
 
-            string connStr = GetConnectionString(rootUser, rootPassword, false);
-            rootConn = new MySqlConnection(connStr + ";database=mysql");
-            rootConn.Open();
-
-            if (rootConn.ServerVersion.StartsWith("5"))
-            {
-                // run all tests in strict mode
-                MySqlCommand cmd = new MySqlCommand("SET GLOBAL SQL_MODE=STRICT_ALL_TABLES", rootConn);
-                cmd.ExecuteNonQuery();
-            }
-		}
+            MySqlConnection.ClearAllPools();
+        }
 
         #region Properties
 
         protected Version Version
         {
-            get 
+            get
             {
                 if (version == null)
                 {
                     string versionString = rootConn.ServerVersion;
                     int i = 0;
-                    while (i < versionString.Length && 
+                    while (i < versionString.Length &&
                         (Char.IsDigit(versionString[i]) || versionString[i] == '.'))
                         i++;
                     version = new Version(versionString.Substring(0, i));
                 }
-                return version; 
+                return version;
             }
         }
 
@@ -144,7 +132,7 @@ namespace MySql.Data.MySqlClient.Tests
         {
             Debug.Assert(userId != null);
             string connStr = String.Format("server={0};user id={1};pooling=false;" +
-                 "persist security info=true;connection reset=true;allow user variables=true;", 
+                 "persist security info=true;connection reset=true;allow user variables=true;",
                  host, userId);
             if (pw != null)
                 connStr += String.Format(";password={0};", pw);
@@ -183,20 +171,29 @@ namespace MySql.Data.MySqlClient.Tests
 				identified by 'test'", database1));
             if (Version.Major >= 5)
                 suExecSQL(String.Format(@"GRANT EXECUTE ON `{0}`.* to 'test'@'localhost' 
-				    identified by 'test'", database1));
+					identified by 'test'", database1));
 
             if (includeProc)
             {
                 // now allow our user to access them
                 suExecSQL(@"GRANT ALL ON mysql.proc to 'test'@'localhost' identified by 'test'");
             }
-            
+
             suExecSQL("FLUSH PRIVILEGES");
         }
 
         [SetUp]
         public virtual void Setup()
         {
+            SetupRootConnection();
+
+            if (rootConn.ServerVersion.StartsWith("5"))
+            {
+                // run all tests in strict mode
+                MySqlCommand cmd = new MySqlCommand("SET GLOBAL SQL_MODE=STRICT_ALL_TABLES", rootConn);
+                cmd.ExecuteNonQuery();
+            }
+
             Assembly executingAssembly = Assembly.GetExecutingAssembly();
 #if !CF
             Stream stream = executingAssembly.GetManifestResourceStream("MySql.Data.MySqlClient.Tests.Properties.Setup.sql");
@@ -222,8 +219,7 @@ namespace MySql.Data.MySqlClient.Tests
             s.Execute();
         }
 
-        [TearDown]
-        public virtual void Teardown()
+        private void CheckOrphanedConnections()
         {
             // wait up to 5 seconds for our connection to close
             int procs = CountProcesses();
@@ -233,16 +229,47 @@ namespace MySql.Data.MySqlClient.Tests
                 System.Threading.Thread.Sleep(100);
                 procs = CountProcesses();
             }
-            Assert.AreEqual(numProcessesRunning, procs, "Too many processes still running");
+            if (procs > numProcessesRunning)
+            {
+                KillOrphanedConnections();
+                int temp = CountProcesses();
+                Assert.AreEqual(numProcessesRunning, temp, "Killing orphaned connections failed");
+                Assert.AreEqual(numProcessesRunning, procs, "Too many processes still running");
+            }
+        }
+
+        private void KillOrphanedConnections()
+        {
+            MySqlDataAdapter da = new MySqlDataAdapter("SHOW PROCESSLIST", rootConn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            foreach (DataRow row in dt.Rows)
+            {
+                long id = (long)row[0];
+                if (id == rootConn.ServerThread) continue;
+                if (id == conn.ServerThread) continue;
+                suExecSQL(String.Format("KILL {0}", id));
+            }
+        }
+
+        [TearDown]
+        public virtual void Teardown()
+        {
+            MySqlConnection.ClearAllPools();
+
+            CheckOrphanedConnections();
 
             conn.Close();
             if (Version.Major < 5)
                 suExecSQL("REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'test'");
             else
-                suExecSQL("DROP USER 'test'@'localhost'"); 
+                suExecSQL("DROP USER 'test'@'localhost'");
 
             DropDatabase(database0);
             DropDatabase(database1);
+
+            if (rootConn.State == ConnectionState.Open)
+                rootConn.Close();
         }
 
         private void DropDatabase(string name)
@@ -301,7 +328,7 @@ namespace MySql.Data.MySqlClient.Tests
 
         protected void createTable(string sql, string engine)
         {
-            if (Version >= new Version(4,1))
+            if (Version >= new Version(4, 1))
                 sql += " ENGINE=" + engine;
             else
                 sql += " TYPE=" + engine;
@@ -349,6 +376,13 @@ namespace MySql.Data.MySqlClient.Tests
             DataTable dt = new DataTable();
             da.Fill(dt);
             return dt;
+        }
+
+        private void SetupRootConnection()
+        {
+            string connStr = GetConnectionString(rootUser, rootPassword, false);
+            rootConn = new MySqlConnection(connStr + ";database=mysql");
+            rootConn.Open();
         }
     }
 }
