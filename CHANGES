@@ -9,6 +9,8 @@
 - Modified MySqlDataReader.Close to use Default behavior when clearing remaining resultsets (MySQL bug #61690, Oracle bug #12723423).
 - Modified MySqlScript to enable correct processing of the DELIMITER command when not followed by 
   a new line (MySQL bug #61680, Oracle bug #12732279).
+- On Model First changed column types generated in sql script to produce more suitable MySql types (MySql bug #59244, Oracle bug #12707104).
+
 
 Version 6.3.7
 - IPv6 connections are now supported 
