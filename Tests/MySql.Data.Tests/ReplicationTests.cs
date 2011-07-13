@@ -31,23 +31,22 @@ namespace MySql.Data.MySqlClient.Tests
     [TestFixture]
     public class ReplicationTests : BaseTest
     {
-        public ReplicationTests()
-        {
-            csAdditions += ";replication=yes";
-        }
-
         [Test]
         public void Simple()
         {
-            MySqlCommand cmd = new MySqlCommand("SET @v=1", conn);
-            try 
-            { 
-                cmd.ExecuteNonQuery();
-            }
-            catch (MySqlException ex)
+            using (MySqlConnection connection = new MySqlConnection(GetConnectionString(true) + ";replication=yes"))
             {
-                Assert.IsTrue(ex.Message.Contains("Replicated"));
-            }
+                MySqlCommand cmd = new MySqlCommand("SET @v=1", connection);
+                try
+                {
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (MySqlException ex)
+                {
+                    Assert.IsTrue(ex.Message.Contains("Replicated"));
+                }
+            }            
         }
     }
 }
