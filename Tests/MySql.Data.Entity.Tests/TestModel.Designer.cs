@@ -19,7 +19,7 @@ using System.Runtime.Serialization;
 #region EDM Relationship Metadata
 
 [assembly: EdmRelationshipAttribute("testModel", "FK_Toys_Supplier", "Supplier", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(MySql.Data.Entity.Tests.Company), "Toys", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(MySql.Data.Entity.Tests.Toy))]
-[assembly: EdmRelationshipAttribute("testModel", "FK_Orders_Store", "Store", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(MySql.Data.Entity.Tests.Store), "Orders", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(MySql.Data.Entity.Tests.Order))]
+[assembly: EdmRelationshipAttribute("testModel", "FK_Orders_Shop", "Shop", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(MySql.Data.Entity.Tests.Shop), "Orders", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(MySql.Data.Entity.Tests.Order))]
 [assembly: EdmRelationshipAttribute("testModel", "FK_Books_Authors", "Authors", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(MySql.Data.Entity.Tests.Author), "Books", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(MySql.Data.Entity.Tests.Book))]
 [assembly: EdmRelationshipAttribute("testModel", "FK_Books_Publishers", "Publishers", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(MySql.Data.Entity.Tests.Publisher), "Books", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(MySql.Data.Entity.Tests.Book))]
 
@@ -137,18 +137,18 @@ namespace MySql.Data.Entity.Tests
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<Store> Stores
+        public ObjectSet<Shop> Shops
         {
             get
             {
-                if ((_Stores == null))
+                if ((_Shops == null))
                 {
-                    _Stores = base.CreateObjectSet<Store>("Stores");
+                    _Shops = base.CreateObjectSet<Shop>("Shops");
                 }
-                return _Stores;
+                return _Shops;
             }
         }
-        private ObjectSet<Store> _Stores;
+        private ObjectSet<Shop> _Shops;
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -298,11 +298,11 @@ namespace MySql.Data.Entity.Tests
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the Stores EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// Deprecated Method for adding a new object to the Shops EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
-        public void AddToStores(Store store)
+        public void AddToShops(Shop shop)
         {
-            base.AddObject("Stores", store);
+            base.AddObject("Shops", shop);
         }
     
         /// <summary>
@@ -1606,16 +1606,16 @@ namespace MySql.Data.Entity.Tests
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("testModel", "FK_Orders_Store", "Store")]
-        public Store Store
+        [EdmRelationshipNavigationPropertyAttribute("testModel", "FK_Orders_Shop", "Shop")]
+        public Shop Shop
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Store>("testModel.FK_Orders_Store", "Store").Value;
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Shop>("testModel.FK_Orders_Shop", "Shop").Value;
             }
             set
             {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Store>("testModel.FK_Orders_Store", "Store").Value = value;
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Shop>("testModel.FK_Orders_Shop", "Shop").Value = value;
             }
         }
         /// <summary>
@@ -1623,17 +1623,17 @@ namespace MySql.Data.Entity.Tests
         /// </summary>
         [BrowsableAttribute(false)]
         [DataMemberAttribute()]
-        public EntityReference<Store> StoreReference
+        public EntityReference<Shop> ShopReference
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Store>("testModel.FK_Orders_Store", "Store");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Shop>("testModel.FK_Orders_Shop", "Shop");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Store>("testModel.FK_Orders_Store", "Store", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Shop>("testModel.FK_Orders_Shop", "Shop", value);
                 }
             }
         }
@@ -1915,24 +1915,24 @@ namespace MySql.Data.Entity.Tests
     /// <summary>
     /// No Metadata Documentation available.
     /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="testModel", Name="Store")]
+    [EdmEntityTypeAttribute(NamespaceName="testModel", Name="Shop")]
     [Serializable()]
     [DataContractAttribute(IsReference=true)]
-    public partial class Store : EntityObject
+    public partial class Shop : EntityObject
     {
         #region Factory Method
     
         /// <summary>
-        /// Create a new Store object.
+        /// Create a new Shop object.
         /// </summary>
         /// <param name="id">Initial value of the Id property.</param>
         /// <param name="name">Initial value of the Name property.</param>
-        public static Store CreateStore(global::System.Int32 id, global::System.String name)
+        public static Shop CreateShop(global::System.Int32 id, global::System.String name)
         {
-            Store store = new Store();
-            store.Id = id;
-            store.Name = name;
-            return store;
+            Shop shop = new Shop();
+            shop.Id = id;
+            shop.Name = name;
+            return shop;
         }
 
         #endregion
