@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS EmployeeChildren;
 DROP TABLE IF EXISTS Toys;
 DROP TABLE IF EXISTS Companies;
 DROP TABLE IF EXISTS Orders;
-DROP TABLE IF EXISTS Stores;
+DROP TABLE IF EXISTS Shops;
 DROP TABLE IF EXISTS Books;
 DROP TABLE IF EXISTS Authors;
 DROP TABLE IF EXISTS Publishers;
@@ -130,7 +130,7 @@ CREATE TABLE TabletComputers (
 INSERT INTO TabletComputers VALUES (5, 1, '2011-05-04');
 INSERT INTO TabletComputers VALUES (6, 1, '2010-06-09');
 
-CREATE TABLE Stores (
+CREATE TABLE Shops (
 	id INT PRIMARY KEY,
 	`name` VARCHAR(50) NOT NULL,
 	address VARCHAR(50),
@@ -138,16 +138,16 @@ CREATE TABLE Stores (
 	state CHAR(2),
 	zipcode CHAR(9)	
 	) ENGINE=InnoDB;
-INSERT INTO Stores VALUES (1, 'Target', '2417 N. Haskell Ave', 'Dallas', 'TX', '75204');
-INSERT INTO Stores VALUES (2, 'K-Mart', '4225 W. Indian School Rd.', 'Phoenix', 'AZ', '85019');
-INSERT INTO Stores VALUES (3, 'Wal-Mart', '1238 Putty Hill Ave', 'Towson', 'MD', '21286');	
+INSERT INTO Shops VALUES (1, 'Target', '2417 N. Haskell Ave', 'Dallas', 'TX', '75204');
+INSERT INTO Shops VALUES (2, 'K-Mart', '4225 W. Indian School Rd.', 'Phoenix', 'AZ', '85019');
+INSERT INTO Shops VALUES (3, 'Wal-Mart', '1238 Putty Hill Ave', 'Towson', 'MD', '21286');	
 	
 	
 CREATE TABLE Orders (
 	id INT PRIMARY KEY,
-	storeId INT NOT NULL,
+	shopId INT NOT NULL,
 	freight DOUBLE NOT NULL,
-	FOREIGN KEY (storeId) REFERENCES Stores(id)) ENGINE=InnoDB;
+	FOREIGN KEY (shopId) REFERENCES Shops(id)) ENGINE=InnoDB;
 INSERT INTO Orders VALUES (1, 1, 65.3);
 INSERT INTO Orders VALUES (2, 2, 127.8);
 INSERT INTO Orders VALUES (3, 3, 254.78);	
