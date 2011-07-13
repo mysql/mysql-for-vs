@@ -1,4 +1,4 @@
-// Copyright (c) 2004-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+// Copyright © 2010, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -82,16 +82,16 @@ namespace MySql.Data.Types
 			get { return "DOUBLE"; }
 		}
 
-        void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val, int length)
+		void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val, int length)
 		{
 			double v = (val is double) ? (double)val : Convert.ToDouble(val);
 			if (binary)
-                packet.Write(BitConverter.GetBytes(v));
+				packet.Write(BitConverter.GetBytes(v));
 			else
-                packet.WriteStringNoNull(v.ToString("R", CultureInfo.InvariantCulture));
+				packet.WriteStringNoNull(v.ToString("R", CultureInfo.InvariantCulture));
 		}
 
-        IMySqlValue IMySqlValue.ReadValue(MySqlPacket packet, long length,
+		IMySqlValue IMySqlValue.ReadValue(MySqlPacket packet, long length,
 				bool nullVal)
 		{
 			if (nullVal)
@@ -100,31 +100,31 @@ namespace MySql.Data.Types
 			if (length == -1)
 			{
 				byte[] b = new byte[8];
-                packet.Read(b, 0, 8);
+				packet.Read(b, 0, 8);
 				return new MySqlDouble(BitConverter.ToDouble(b, 0));
 			}
-            string s = packet.ReadString(length);
-            double d;
-            try
-            {
-                d =  Double.Parse(s, CultureInfo.InvariantCulture);
-            }
-            catch (OverflowException)
-            {
-                // MySQL server < 5.5 can return values not compatible with
-                // Double.Parse(), i.e out of range for double.
-                
-                if (s.StartsWith("-"))
-                    d = double.MinValue;
-                else
-                    d = double.MaxValue;
-            }
-            return new MySqlDouble(d);
+			string s = packet.ReadString(length);
+			double d;
+			try
+			{
+				d =  Double.Parse(s, CultureInfo.InvariantCulture);
+			}
+			catch (OverflowException)
+			{
+				// MySQL server < 5.5 can return values not compatible with
+				// Double.Parse(), i.e out of range for double.
+				
+				if (s.StartsWith("-"))
+					d = double.MinValue;
+				else
+					d = double.MaxValue;
+			}
+			return new MySqlDouble(d);
 		}
 
 		void IMySqlValue.SkipValue(MySqlPacket packet)
 		{
-            packet.Position += 8;
+			packet.Position += 8;
 		}
 
 		#endregion

@@ -1,4 +1,4 @@
-// Copyright (c) 2004-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+// Copyright © 2010, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -32,13 +32,13 @@ namespace MySql.Data.Types
 	{
 		private byte precision;
 		private byte scale;
-        private string mValue;
+		private string mValue;
 		private bool isNull;
 
 		internal MySqlDecimal(bool isNull)
 		{
 			this.isNull = isNull;
-            mValue = null;
+			mValue = null;
 			precision = scale = 0;
 		}
 
@@ -81,7 +81,7 @@ namespace MySql.Data.Types
 
 		object IMySqlValue.Value
 		{
-            get { return this.Value; }
+			get { return this.Value; }
 		}
 
 		public decimal Value
@@ -89,15 +89,15 @@ namespace MySql.Data.Types
 			get { return Convert.ToDecimal(mValue, CultureInfo.InvariantCulture); }
 		}
 
-        public double ToDouble()
-        {
-            return Double.Parse(mValue);
-        }
+		public double ToDouble()
+		{
+			return Double.Parse(mValue);
+		}
 
-        public override string ToString()
-        {
-            return mValue;
-        }
+		public override string ToString()
+		{
+			return mValue;
+		}
 
 		Type IMySqlValue.SystemType
 		{
@@ -114,28 +114,28 @@ namespace MySql.Data.Types
 			decimal v = (val is decimal) ? (decimal)val : Convert.ToDecimal(val);
 			string valStr = v.ToString(CultureInfo.InvariantCulture);
 			if (binary)
-                packet.WriteLenString(valStr);
+				packet.WriteLenString(valStr);
 			else
-                packet.WriteStringNoNull(valStr);
+				packet.WriteStringNoNull(valStr);
 		}
 
-        IMySqlValue IMySqlValue.ReadValue(MySqlPacket packet, long length, bool nullVal)
+		IMySqlValue IMySqlValue.ReadValue(MySqlPacket packet, long length, bool nullVal)
 		{
 			if (nullVal)
 				return new MySqlDecimal(true);
 
-            string s = String.Empty;
+			string s = String.Empty;
 			if (length == -1)
-                s = packet.ReadLenString();
-            else 
-                s = packet.ReadString(length);
+				s = packet.ReadLenString();
+			else 
+				s = packet.ReadString(length);
 			return new MySqlDecimal(s);
 		}
 
-        void IMySqlValue.SkipValue(MySqlPacket packet)
+		void IMySqlValue.SkipValue(MySqlPacket packet)
 		{
-            int len = (int)packet.ReadFieldLength();
-            packet.Position += len;
+			int len = (int)packet.ReadFieldLength();
+			packet.Position += len;
 		}
 
 		#endregion

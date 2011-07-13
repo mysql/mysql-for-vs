@@ -28,61 +28,61 @@ namespace MySql.Data.Types
 {
 	internal class MetaData
 	{
-        public static bool IsNumericType(string typename)
-        {
-            string lowerType = typename.ToLower(CultureInfo.InvariantCulture);
-            switch (lowerType)
-            {
-                case "int":
-                case "integer":
-                case "numeric":
-                case "decimal":
-                case "dec":
-                case "fixed":
-                case "tinyint":
-                case "mediumint":
-                case "bigint":
-                case "real":
-                case "double":
-                case "float":
-                case "serial":
-                case "smallint": return true;
-            }
-            return false;
-        }
+		public static bool IsNumericType(string typename)
+		{
+			string lowerType = typename.ToLower(CultureInfo.InvariantCulture);
+			switch (lowerType)
+			{
+				case "int":
+				case "integer":
+				case "numeric":
+				case "decimal":
+				case "dec":
+				case "fixed":
+				case "tinyint":
+				case "mediumint":
+				case "bigint":
+				case "real":
+				case "double":
+				case "float":
+				case "serial":
+				case "smallint": return true;
+			}
+			return false;
+		}
 
-        public static bool IsTextType(string typename)
-        {
-            string lowerType = typename.ToLower(CultureInfo.InvariantCulture);
-            switch (lowerType)
-            {
-                case "varchar":
-                case "char":
-                case "text":
-                case "longtext":
-                case "tinytext":
-                case "mediumtext":
-                case "nchar":
-                case "nvarchar": 
-                case "enum":
-                case "set":
-                return true;
-            }
-            return false;
-        }
+		public static bool IsTextType(string typename)
+		{
+			string lowerType = typename.ToLower(CultureInfo.InvariantCulture);
+			switch (lowerType)
+			{
+				case "varchar":
+				case "char":
+				case "text":
+				case "longtext":
+				case "tinytext":
+				case "mediumtext":
+				case "nchar":
+				case "nvarchar": 
+				case "enum":
+				case "set":
+				return true;
+			}
+			return false;
+		}
 
-        public static bool SupportScale(string typename)
-        {
-            string lowerType = typename.ToLower(CultureInfo.InvariantCulture);
-            switch (lowerType)
-            {
-                case "numeric":
-                case "decimal":
-                case "dec":
-                case "real": return true;
-            }
-            return false;
-        }
+		public static bool SupportScale(string typename)
+		{
+			string lowerType = typename.ToLower(CultureInfo.InvariantCulture);
+			switch (lowerType)
+			{
+				case "numeric":
+				case "decimal":
+				case "dec":
+				case "real": return true;
+			}
+			return false;
+		}
 
 		public static MySqlDbType NameToType(string typeName, bool unsigned,
 			 bool realAsFloat, MySqlConnection connection)
@@ -112,7 +112,7 @@ namespace MySql.Data.Types
 				case "BIT": return MySqlDbType.Bit;
 
 				case "TINYINT":
-                    return unsigned ? MySqlDbType.UByte : MySqlDbType.Byte;
+					return unsigned ? MySqlDbType.UByte : MySqlDbType.Byte;
 				case "BOOL":
 				case "BOOLEAN":
 					return MySqlDbType.Byte;
@@ -131,26 +131,26 @@ namespace MySql.Data.Types
 				case "DOUBLE": return MySqlDbType.Double;
 				case "REAL": return
 					 realAsFloat ? MySqlDbType.Float : MySqlDbType.Double;
-                case "TEXT":
-                    return MySqlDbType.Text;
-                case "BLOB":
+				case "TEXT":
+					return MySqlDbType.Text;
+				case "BLOB":
 					return MySqlDbType.Blob;
 				case "LONGBLOB":
-                    return MySqlDbType.LongBlob;
-                case "LONGTEXT":
-                    return MySqlDbType.LongText;
+					return MySqlDbType.LongBlob;
+				case "LONGTEXT":
+					return MySqlDbType.LongText;
 				case "MEDIUMBLOB":
-                    return MySqlDbType.MediumBlob;
-                case "MEDIUMTEXT":
-                    return MySqlDbType.MediumText;
+					return MySqlDbType.MediumBlob;
+				case "MEDIUMTEXT":
+					return MySqlDbType.MediumText;
 				case "TINYBLOB":
-                    return MySqlDbType.TinyBlob;
+					return MySqlDbType.TinyBlob;
 				case "TINYTEXT":
 					return MySqlDbType.TinyText;
-                case "BINARY":
-                    return MySqlDbType.Binary;
-                case "VARBINARY":
-                    return MySqlDbType.VarBinary;
+				case "BINARY":
+					return MySqlDbType.Binary;
+				case "VARBINARY":
+					return MySqlDbType.VarBinary;
 			}
 			throw new MySqlException("Unhandled type encountered");
 		}

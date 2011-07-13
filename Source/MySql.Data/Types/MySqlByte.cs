@@ -1,4 +1,4 @@
-// Copyright (c) 2004-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+// Copyright © 2010, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -31,21 +31,21 @@ namespace MySql.Data.Types
 	{
 		private sbyte mValue;
 		private bool isNull;
-        private bool treatAsBool;
+		private bool treatAsBool;
 
 		public MySqlByte(bool isNull)
 		{
 			this.isNull = isNull;
 			mValue = 0;
-            treatAsBool = false;
+			treatAsBool = false;
 		}
 
 		public MySqlByte(sbyte val)
 		{
 			this.isNull = false;
 			mValue = val;
-            treatAsBool = false;
-        }
+			treatAsBool = false;
+		}
 
 		#region IMySqlValue Members
 
@@ -62,37 +62,37 @@ namespace MySql.Data.Types
 		DbType IMySqlValue.DbType
 		{
 			get 
-            {
-                if (TreatAsBoolean)
-                    return DbType.Boolean;
-                return DbType.SByte; 
-            }
+			{
+				if (TreatAsBoolean)
+					return DbType.Boolean;
+				return DbType.SByte; 
+			}
 		}
 
 		object IMySqlValue.Value
 		{
 			get 
-            {
-                if (TreatAsBoolean)
-                    return Convert.ToBoolean(mValue); 
-                return mValue; 
-            }
+			{
+				if (TreatAsBoolean)
+					return Convert.ToBoolean(mValue); 
+				return mValue; 
+			}
 		}
 
 		public sbyte Value
 		{
 			get { return mValue; }
-            set { mValue = value; }
+			set { mValue = value; }
 		}
 
 		Type IMySqlValue.SystemType
 		{
 			get 
-            {
-                if (TreatAsBoolean)
-                    return typeof(Boolean); 
-                return typeof(sbyte); 
-            }
+			{
+				if (TreatAsBoolean)
+					return typeof(Boolean); 
+				return typeof(sbyte); 
+			}
 		}
 
 		string IMySqlValue.MySqlTypeName
@@ -100,43 +100,43 @@ namespace MySql.Data.Types
 			get { return "TINYINT"; }
 		}
 
-        void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val, int length)
+		void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object val, int length)
 		{
-            sbyte v = (val is sbyte) ? (sbyte)val : Convert.ToSByte(val);
+			sbyte v = (val is sbyte) ? (sbyte)val : Convert.ToSByte(val);
 			if (binary)
-                packet.WriteByte((byte)v);
+				packet.WriteByte((byte)v);
 			else
-                packet.WriteStringNoNull(v.ToString());
+				packet.WriteStringNoNull(v.ToString());
 		}
 
-        IMySqlValue IMySqlValue.ReadValue(MySqlPacket packet, long length, bool nullVal)
+		IMySqlValue IMySqlValue.ReadValue(MySqlPacket packet, long length, bool nullVal)
 		{
 			if (nullVal)
 				return new MySqlByte(true);
 
 			if (length == -1)
-                return new MySqlByte((sbyte)packet.ReadByte());
+				return new MySqlByte((sbyte)packet.ReadByte());
 			else
 			{
-                string s = packet.ReadString(length);
+				string s = packet.ReadString(length);
 				MySqlByte b = new MySqlByte(SByte.Parse(s, NumberStyles.Any, CultureInfo.InvariantCulture));
-                b.TreatAsBoolean = TreatAsBoolean;
-                return b;
+				b.TreatAsBoolean = TreatAsBoolean;
+				return b;
 			}
 		}
 
-        void IMySqlValue.SkipValue(MySqlPacket packet)
+		void IMySqlValue.SkipValue(MySqlPacket packet)
 		{
-            packet.ReadByte();
+			packet.ReadByte();
 		}
 
 		#endregion
 
-        internal bool TreatAsBoolean
-        {
-            get { return treatAsBool; }
-            set { treatAsBool = value; }
-        }
+		internal bool TreatAsBoolean
+		{
+			get { return treatAsBool; }
+			set { treatAsBool = value; }
+		}
 
 		internal static void SetDSInfo(DataTable dsTable)
 		{

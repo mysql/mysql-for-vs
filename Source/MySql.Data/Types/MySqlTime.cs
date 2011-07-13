@@ -1,4 +1,4 @@
-// Copyright (c) 2004-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+// Copyright © 2010, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -86,22 +86,22 @@ namespace MySql.Data.Types
 				throw new MySqlException("Only TimeSpan objects can be serialized by MySqlTimeSpan");
 
 			TimeSpan ts = (TimeSpan)val;
-            bool negative = ts.TotalMilliseconds < 0;
-            ts = ts.Duration();
+			bool negative = ts.TotalMilliseconds < 0;
+			ts = ts.Duration();
 
 			if (binary)
 			{
-                packet.WriteByte(8);
+				packet.WriteByte(8);
 				packet.WriteByte((byte)(negative ? 1 : 0));
-                packet.WriteInteger(ts.Days, 4);
-                packet.WriteByte((byte)ts.Hours);
-                packet.WriteByte((byte)ts.Minutes);
-                packet.WriteByte((byte)ts.Seconds);
+				packet.WriteInteger(ts.Days, 4);
+				packet.WriteByte((byte)ts.Hours);
+				packet.WriteByte((byte)ts.Minutes);
+				packet.WriteByte((byte)ts.Seconds);
 			}
 			else
 			{
-                String s = String.Format("'{0}{1} {2:00}:{3:00}:{4:00}.{5}'",
-                    negative ? "-" : "", ts.Days, ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds);
+				String s = String.Format("'{0}{1} {2:00}:{3:00}:{4:00}.{5}'",
+					negative ? "-" : "", ts.Days, ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds);
 
 				packet.WriteStringNoNull(s);
 			}
@@ -114,38 +114,38 @@ namespace MySql.Data.Types
 
 			if (length >= 0)
 			{
-                string value = packet.ReadString(length);
+				string value = packet.ReadString(length);
 				ParseMySql(value);
 				return this;
 			}
 
-            long bufLength = packet.ReadByte();
+			long bufLength = packet.ReadByte();
 			int negate = 0;
 			if (bufLength > 0)
-                negate = packet.ReadByte();
+				negate = packet.ReadByte();
 
 			isNull = false;
 			if (bufLength == 0)
 				isNull = true;
 			else if (bufLength == 5)
-                mValue = new TimeSpan(packet.ReadInteger(4), 0, 0, 0);
+				mValue = new TimeSpan(packet.ReadInteger(4), 0, 0, 0);
 			else if (bufLength == 8)
-                mValue = new TimeSpan(packet.ReadInteger(4),
-                     packet.ReadByte(), packet.ReadByte(), packet.ReadByte());
+				mValue = new TimeSpan(packet.ReadInteger(4),
+					 packet.ReadByte(), packet.ReadByte(), packet.ReadByte());
 			else
-                mValue = new TimeSpan(packet.ReadInteger(4),
-                     packet.ReadByte(), packet.ReadByte(), packet.ReadByte(),
-                     packet.ReadInteger(4) / 1000000);
+				mValue = new TimeSpan(packet.ReadInteger(4),
+					 packet.ReadByte(), packet.ReadByte(), packet.ReadByte(),
+					 packet.ReadInteger(4) / 1000000);
 
 			if (negate == 1)
 				mValue = mValue.Negate();
 			return this;
 		}
 
-        void IMySqlValue.SkipValue(MySqlPacket packet)
+		void IMySqlValue.SkipValue(MySqlPacket packet)
 		{
-            int len = packet.ReadByte();
-            packet.Position += len;
+			int len = packet.ReadByte();
+			packet.Position += len;
 		}
 
 		#endregion
@@ -194,11 +194,11 @@ namespace MySql.Data.Types
 			int hours = Int32.Parse(parts[0]);
 			int mins = Int32.Parse(parts[1]);
 			int secs = Int32.Parse(parts[2]);
-            if (hours < 0 || parts[0].StartsWith("-"))
-            {
-                mins *= -1;
-                secs *= -1;
-            }
+			if (hours < 0 || parts[0].StartsWith("-"))
+			{
+				mins *= -1;
+				secs *= -1;
+			}
 			int days = hours / 24;
 			hours = hours - (days * 24);
 			mValue = new TimeSpan(days, hours, mins, secs, 0);

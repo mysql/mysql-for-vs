@@ -1,4 +1,4 @@
-// Copyright (c) 2004-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+// Copyright © 2010, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -94,27 +94,27 @@ namespace MySql.Data.Types
 		{
 			uint val = (v is uint) ? (uint)v : Convert.ToUInt32(v);
 			if (binary)
-                packet.WriteInteger((long)val, is24Bit ? 3 : 4);
+				packet.WriteInteger((long)val, is24Bit ? 3 : 4);
 			else
-                packet.WriteStringNoNull(val.ToString());
+				packet.WriteStringNoNull(val.ToString());
 		}
 
-        IMySqlValue IMySqlValue.ReadValue(MySqlPacket packet, long length, bool nullVal)
+		IMySqlValue IMySqlValue.ReadValue(MySqlPacket packet, long length, bool nullVal)
 		{
 			if (nullVal)
 				return new MySqlUInt32((this as IMySqlValue).MySqlDbType, true);
 
 			if (length == -1)
 				return new MySqlUInt32((this as IMySqlValue).MySqlDbType,
-                     (uint)packet.ReadInteger(4));
+					 (uint)packet.ReadInteger(4));
 			else
 				return new MySqlUInt32((this as IMySqlValue).MySqlDbType,
-                     UInt32.Parse(packet.ReadString(length), NumberStyles.Any, CultureInfo.InvariantCulture));
+					 UInt32.Parse(packet.ReadString(length), NumberStyles.Any, CultureInfo.InvariantCulture));
 		}
 
-        void IMySqlValue.SkipValue(MySqlPacket packet)
+		void IMySqlValue.SkipValue(MySqlPacket packet)
 		{
-            packet.Position += 4;
+			packet.Position += 4;
 		}
 
 		#endregion
@@ -123,7 +123,7 @@ namespace MySql.Data.Types
 		{
 			string[] types = new string[] { "MEDIUMINT", "INT" };
 			MySqlDbType[] dbtype = new MySqlDbType[] { MySqlDbType.UInt24, 
-                MySqlDbType.UInt32 };
+				MySqlDbType.UInt32 };
 
 			// we use name indexing because this method will only be called
 			// when GetSchema is called for the DataSourceInformation 
