@@ -33,10 +33,12 @@ namespace MySql.Data.MySqlClient.Tests
 	public class TimeoutAndCancel : BaseTest
 	{
         private delegate void CommandInvokerDelegate(MySqlCommand cmdToRun);
+        private ManualResetEvent resetEvent = new ManualResetEvent(false);
 
         private void CommandRunner(MySqlCommand cmdToRun)
         {
             object o = cmdToRun.ExecuteScalar();
+            resetEvent.Set();
             Assert.IsNull(o);
         }
 
@@ -64,6 +66,8 @@ namespace MySql.Data.MySqlClient.Tests
 
             // now cancel the command
             cmd.Cancel();
+
+            resetEvent.WaitOne();
         }
 
         int stateChangeCount;
@@ -291,6 +295,9 @@ namespace MySql.Data.MySqlClient.Tests
         [Test]
         public void NetWriteTimeoutExpiring()
         {
+            // net_write_timeout did not apply to named pipes connections before MySQL 5.1.41.
+            if (Version < new Version(5, 1, 41) && (GetConnectionInfo().IndexOf("protocol=namedpipe") >= 0 || GetConnectionInfo().IndexOf("protocol=sharedmemory") >= 0)) return;
+
             execSQL("CREATE TABLE Test(id int, blob1 longblob)");
             int rows = 1000;
             byte[] b1 = Utils.CreateBlob(5000);
@@ -302,7 +309,6 @@ namespace MySql.Data.MySqlClient.Tests
                 cmd.Parameters[0].Value = i;
                 cmd.ExecuteNonQuery();
             }
-           
 
             string connStr = GetConnectionString(true);
             using (MySqlConnection c = new MySqlConnection(connStr))
@@ -315,11 +321,11 @@ namespace MySql.Data.MySqlClient.Tests
 
                 cmd.CommandText = "SELECT * FROM Test LIMIT " + rows;
                 int i=0;
+                
                 try
                 {
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
-
                         // after this several cycles of DataReader.Read() are executed 
                         // normally and then the problem, described above, occurs
                         for (; i < rows; i++)
@@ -335,17 +341,21 @@ namespace MySql.Data.MySqlClient.Tests
                 }
                 catch (Exception e)
                 {
-                    bool seenEndOfStreamException = false;
-                    for (Exception nextException = e; e != null; e = e.InnerException)
+                    Exception currentException = e;
+                    while(currentException != null)
                     {
-                        if (e is System.IO.EndOfStreamException)
-                            seenEndOfStreamException = true;
+                        if (currentException is EndOfStreamException)
+                            return;
+
+                        if ((GetConnectionInfo().IndexOf("protocol=namedpipe") >= 0 || GetConnectionInfo().IndexOf("protocol=sharedmemory") >= 0) && currentException is MySqlException)
+                            return;
+
+                        currentException = currentException.InnerException;
                     }
-                    if (!seenEndOfStreamException)
-                        throw;
-                    Assert.IsTrue(seenEndOfStreamException);
-                    return;
+
+                    throw e;
                 }
+
                 // IT is relatively hard to predict where
                 Console.WriteLine("Warning: all reads completed!");
                 Assert.IsTrue(i == rows);
