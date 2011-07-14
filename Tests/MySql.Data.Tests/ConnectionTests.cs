@@ -87,7 +87,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
         public void TestIntegratedSecurity(bool pooling)
         {
-            if (version.Major < 5 && version.Minor < 5) return;
+            if (Version < new Version(5, 5)) return;
 
             const string PluginName = "authentication_windows";
 
