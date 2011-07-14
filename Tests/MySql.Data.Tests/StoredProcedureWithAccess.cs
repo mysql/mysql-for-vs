@@ -50,29 +50,25 @@ namespace MySql.Data.MySqlClient.Tests
             
             execSQL("CREATE PROCEDURE spTest() BEGIN SELECT 1; END");
             execSQL("CREATE PROCEDURE spTest2() BEGIN SELECT 1; END");
-            suExecSQL("CREATE USER abc IDENTIFIED BY 'abc'");
+            suExecSQL(String.Format("GRANT USAGE ON `{0}`.* TO 'abc'@'%' IDENTIFIED BY 'abc'", database0));
+
             try
-            {
+            {                
                 suExecSQL(String.Format("GRANT SELECT ON `{0}`.* TO 'abc'@'%'", database0));
                 suExecSQL(String.Format("GRANT EXECUTE ON PROCEDURE `{0}`.spTest TO abc", database0));
 
-                string connStr = GetConnectionString("abc", "abc", true);
+                string connStr = GetConnectionString("abc", "abc", true) + "; check parameters=false";
                 using (MySqlConnection c = new MySqlConnection(connStr))
                 {
                     c.Open();
                     MySqlCommand cmd = new MySqlCommand("spTest", c);
                     cmd.CommandType = CommandType.StoredProcedure;
-                        object o = cmd.ExecuteScalar();
+                    object o = null;
+                    Assert.DoesNotThrow(delegate { o = cmd.ExecuteScalar(); });
+                    Assert.AreEqual(1, o);
 
-                    try 
-                    {
-                        cmd.CommandText = "spTest2";
-                        cmd.ExecuteScalar();
-                    }
-                    catch (MySqlException ex)
-                    {
-                        string s = ex.Message;
-                    }
+                    cmd.CommandText = "spTest2";
+                    Assert.Throws(typeof (MySqlException), delegate { cmd.ExecuteScalar(); });
                 }
             }
             finally
