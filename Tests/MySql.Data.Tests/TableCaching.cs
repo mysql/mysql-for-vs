@@ -34,6 +34,13 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture]
 	public class TableCaching : BaseTest
 	{
+        public override void Setup()
+        {
+            TableCache.DumpCache();
+
+            base.Setup();
+        }
+
         [Test]
         public void SimpleTableCaching()
         {
