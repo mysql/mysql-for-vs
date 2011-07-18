@@ -34,8 +34,9 @@ namespace MySql.Data.Entity
             DbDeleteCommandTree commandTree = tree as DbDeleteCommandTree;
 
             DeleteStatement statement = new DeleteStatement();
-            //scope.Push(null);
+            
             statement.Target = commandTree.Target.Expression.Accept(this);
+            scope.Add("target", statement.Target as InputFragment);
 
             statement.Where = commandTree.Predicate.Accept(this);
 
