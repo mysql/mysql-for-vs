@@ -338,7 +338,7 @@ namespace MySql.Data.MySqlClient.Tests
             execSQL("INSERT INTO Test VALUES (NULL,'094','55','2005-07-24 23:00:00'," +
                 "'2005-07-24 23:00:45','2005-07-24 23:22:23')");
 
-            DateTime date = DateTime.Parse("7/24/2005");
+            DateTime date = DateTime.Parse("7/24/2005", CultureInfo.GetCultureInfo("en-us"));
             StringBuilder sql = new StringBuilder();
             sql.AppendFormat(CultureInfo.InvariantCulture, 
                 @"SELECT ID, ANTENNAID, TEL_TIMESTAMP, LOS_TIMESTAMP FROM Test 
