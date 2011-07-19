@@ -41,6 +41,8 @@ namespace MySql.Data.Entity
 
             DbExpressionBinding e = commandTree.Target;
             statement.Target = (InputFragment)e.Expression.Accept(this);
+
+            scope.Add("target", statement.Target);
             
             foreach (DbSetClause setClause in commandTree.SetClauses)
                 statement.Sets.Add(setClause.Property.Accept(this));
