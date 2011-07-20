@@ -29,8 +29,8 @@
     </ProjectSummary>
     <MissingTags>None</MissingTags>
     <VisibleItems>InheritedMembers, InheritedFrameworkMembers, Protected, SealedProtected</VisibleItems>
-    <HtmlHelp1xCompilerPath>..\..\..\..\..\..\Program Files (x86)\HTML Help Workshop\</HtmlHelp1xCompilerPath>
-    <HtmlHelp2xCompilerPath>..\..\..\..\..\..\Program Files (x86)\Common Files\microsoft shared\Help 2.0 Compiler\</HtmlHelp2xCompilerPath>
+    <HtmlHelp1xCompilerPath>C:\Program Files (x86)\HTML Help Workshop\</HtmlHelp1xCompilerPath>
+    <HtmlHelp2xCompilerPath>C:\Program Files (x86)\Common Files\microsoft shared\Help 2.0 Compiler\</HtmlHelp2xCompilerPath>
     <SandcastlePath>
     </SandcastlePath>
     <WorkingPath>
@@ -39,7 +39,7 @@
     <BuildLogFile>
     </BuildLogFile>
     <HelpFileFormat>HtmlHelp1, MSHelp2, MSHelpViewer</HelpFileFormat>
-    <FrameworkVersion>.NET 2.0.50727</FrameworkVersion>
+    <FrameworkVersion>.NET 4.0.30319</FrameworkVersion>
     <RootNamespaceContainer>True</RootNamespaceContainer>
     <RootNamespaceTitle>Reference</RootNamespaceTitle>
     <HelpTitle>MySQL Connector/Net</HelpTitle>
@@ -50,9 +50,10 @@
     <NamingMethod>MemberName</NamingMethod>
     <DocumentationSources>
       <DocumentationSource sourceFile="..\Source\MySql.Data\bin\Release\MySql.Data.dll" />
-<DocumentationSource sourceFile="..\Source\MySql.Data\bin\Release\MySql.Data.xml" />
-<DocumentationSource sourceFile="..\Source\MySql.Web\bin\release\MySql.Web.dll" />
-<DocumentationSource sourceFile="..\Source\MySql.Web\bin\release\webdocs.xml" /></DocumentationSources>
+      <DocumentationSource sourceFile="..\Source\MySql.Data\bin\Release\MySql.Data.xml" />
+      <DocumentationSource sourceFile="..\Source\MySql.Web\bin\release\MySql.Web.dll" />
+      <DocumentationSource sourceFile="..\Source\MySql.Web\bin\release\webdocs.xml" />
+    </DocumentationSources>
     <NamespaceSummaries>
       <NamespaceSummaryItem name="(global)" isDocumented="False" xmlns="" />
       <NamespaceSummaryItem name="MySql.Data.Common" isDocumented="False" xmlns="" />
