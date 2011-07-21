@@ -1,4 +1,4 @@
-// Copyright (c) 2004-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+// Copyright © 2004, 2010, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -32,27 +32,27 @@ namespace MySql.Data.MySqlClient.Tests
 	public class InterfaceTests : BaseTest
 	{
 #if !CF
-        [Test]
-        public void ClientFactory()
-        {
-            DbProviderFactory f = new MySqlClientFactory();
-            using (DbConnection c = f.CreateConnection())
-            {
-                DbConnectionStringBuilder cb = f.CreateConnectionStringBuilder();
-                cb.ConnectionString = GetConnectionString(true);
-                c.ConnectionString = cb.ConnectionString;
-                c.Open();
+		[Test]
+		public void ClientFactory()
+		{
+			DbProviderFactory f = new MySqlClientFactory();
+			using (DbConnection c = f.CreateConnection())
+			{
+				DbConnectionStringBuilder cb = f.CreateConnectionStringBuilder();
+				cb.ConnectionString = GetConnectionString(true);
+				c.ConnectionString = cb.ConnectionString;
+				c.Open();
 
-                DbCommand cmd = f.CreateCommand();
-                cmd.Connection = c;
-                cmd.CommandText = "SELECT 1";
-                cmd.CommandType = CommandType.Text;
-                using (DbDataReader reader = cmd.ExecuteReader())
-                {
-                    reader.Read();
-                }
-            }
-        }
+				DbCommand cmd = f.CreateCommand();
+				cmd.Connection = c;
+				cmd.CommandText = "SELECT 1";
+				cmd.CommandType = CommandType.Text;
+				using (DbDataReader reader = cmd.ExecuteReader())
+				{
+					reader.Read();
+				}
+			}
+		}
 #endif
 	}
 }

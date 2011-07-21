@@ -1,4 +1,4 @@
-// Copyright (c) 2004-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+// Copyright © 2004, 2010, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -35,12 +35,12 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture] 
 	public class StressTests : BaseTest
 	{
-        public override void Setup()
-        {
-            base.Setup();
-            execSQL("CREATE TABLE Test (id INT NOT NULL, name varchar(100), blob1 LONGBLOB, text1 TEXT, " +
-                "PRIMARY KEY(id))");
-        }
+		public override void Setup()
+		{
+			base.Setup();
+			execSQL("CREATE TABLE Test (id INT NOT NULL, name varchar(100), blob1 LONGBLOB, text1 TEXT, " +
+				"PRIMARY KEY(id))");
+		}
 
 #if !CF
 
@@ -49,54 +49,54 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 			int len = 20000000;
 
-            suExecSQL("SET GLOBAL max_allowed_packet=64000000");
+			suExecSQL("SET GLOBAL max_allowed_packet=64000000");
 
-            // currently do not test this with compression
-            if (conn.UseCompression) return;
+			// currently do not test this with compression
+			if (conn.UseCompression) return;
 
-            using (MySqlConnection c = new MySqlConnection(GetConnectionString(true)))
-            {
-                c.Open();
-                byte[] dataIn = Utils.CreateBlob(len);
-                byte[] dataIn2 = Utils.CreateBlob(len);
+			using (MySqlConnection c = new MySqlConnection(GetConnectionString(true)))
+			{
+				c.Open();
+				byte[] dataIn = Utils.CreateBlob(len);
+				byte[] dataIn2 = Utils.CreateBlob(len);
 
-                MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (?id, NULL, ?blob, NULL )", c);
-                cmd.CommandTimeout = 0;
-                cmd.Parameters.Add(new MySqlParameter("?id", 1));
-                cmd.Parameters.Add(new MySqlParameter("?blob", dataIn));
-                cmd.ExecuteNonQuery();
+				MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (?id, NULL, ?blob, NULL )", c);
+				cmd.CommandTimeout = 0;
+				cmd.Parameters.Add(new MySqlParameter("?id", 1));
+				cmd.Parameters.Add(new MySqlParameter("?blob", dataIn));
+				cmd.ExecuteNonQuery();
 
-                cmd.Parameters[0].Value = 2;
-                cmd.Parameters[1].Value = dataIn2;
-                cmd.ExecuteNonQuery();
+				cmd.Parameters[0].Value = 2;
+				cmd.Parameters[1].Value = dataIn2;
+				cmd.ExecuteNonQuery();
 
-                cmd.CommandText = "SELECT * FROM Test";
+				cmd.CommandText = "SELECT * FROM Test";
 
-                using (MySqlDataReader reader = cmd.ExecuteReader())
-                {
-                    reader.Read();
-                    byte[] dataOut = new byte[len];
-                    long count = reader.GetBytes(2, 0, dataOut, 0, len);
-                    Assert.AreEqual(len, count);
-                    int i = 0;
-                    try
-                    {
-                        for (; i < len; i++)
-                            Assert.AreEqual(dataIn[i], dataOut[i]);
-                    }
-                    catch (Exception)
-                    {
-                        int z = i;
-                    }
+				using (MySqlDataReader reader = cmd.ExecuteReader())
+				{
+					reader.Read();
+					byte[] dataOut = new byte[len];
+					long count = reader.GetBytes(2, 0, dataOut, 0, len);
+					Assert.AreEqual(len, count);
+					int i = 0;
+					try
+					{
+						for (; i < len; i++)
+							Assert.AreEqual(dataIn[i], dataOut[i]);
+					}
+					catch (Exception)
+					{
+						int z = i;
+					}
 
-                    reader.Read();
-                    count = reader.GetBytes(2, 0, dataOut, 0, len);
-                    Assert.AreEqual(len, count);
+					reader.Read();
+					count = reader.GetBytes(2, 0, dataOut, 0, len);
+					Assert.AreEqual(len, count);
 
-                    for (int x=0; x < len; x++)
-                        Assert.AreEqual(dataIn2[x], dataOut[x]);
-                }
-            }
+					for (int x=0; x < len; x++)
+						Assert.AreEqual(dataIn2[x], dataOut[x]);
+				}
+			}
 		}
 
 #endif
@@ -104,7 +104,7 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void TestSequence()
 		{
-            MySqlCommand cmd = new MySqlCommand("insert into Test (id, name) values (?id, 'test')", conn);
+			MySqlCommand cmd = new MySqlCommand("insert into Test (id, name) values (?id, 'test')", conn);
 			cmd.Parameters.Add( new MySqlParameter("?id", 1));
 
 			for (int i=1; i <= 8000; i++)
@@ -129,58 +129,58 @@ namespace MySql.Data.MySqlClient.Tests
 				cmd.ExecuteNonQuery();
 			}
 		}
-    }
+	}
 
-    #region Configs
+	#region Configs
 
 #if !CF
 	[Category("Compressed")]
-    public class StressTestsSocketCompressed : StressTests
-    {
-        protected override string GetConnectionInfo()
-        {
-            return String.Format("port={0};compress=true", port);
-        }
-    }
+	public class StressTestsSocketCompressed : StressTests
+	{
+		protected override string GetConnectionInfo()
+		{
+			return String.Format("port={0};compress=true", port);
+		}
+	}
 
 	[Category("Pipe")]
-    public class StressTestsPipe : StressTests
-    {
-        protected override string GetConnectionInfo()
-        {
-            return String.Format("protocol=pipe;pipe name={0}", pipeName);
-        }
-    }
+	public class StressTestsPipe : StressTests
+	{
+		protected override string GetConnectionInfo()
+		{
+			return String.Format("protocol=pipe;pipe name={0}", pipeName);
+		}
+	}
 
-    [Category("Compressed")]
-    [Category("Pipe")]
-    public class StressTestsPipeCompressed : StressTests
-    {
-        protected override string GetConnectionInfo()
-        {
-            return String.Format("protocol=pipe;pipe name={0};compress=true", pipeName);
-        }
-    }
+	[Category("Compressed")]
+	[Category("Pipe")]
+	public class StressTestsPipeCompressed : StressTests
+	{
+		protected override string GetConnectionInfo()
+		{
+			return String.Format("protocol=pipe;pipe name={0};compress=true", pipeName);
+		}
+	}
 
-    [Category("SharedMemory")]
-    public class StressTestsSharedMemory : StressTests
-    {
-        protected override string GetConnectionInfo()
-        {
-            return String.Format("protocol=memory; shared memory name={0}", memoryName);
-        }
-    }
+	[Category("SharedMemory")]
+	public class StressTestsSharedMemory : StressTests
+	{
+		protected override string GetConnectionInfo()
+		{
+			return String.Format("protocol=memory; shared memory name={0}", memoryName);
+		}
+	}
 
-    [Category("Compressed")]
-    [Category("SharedMemory")]
-    public class StressTestsSharedMemoryCompressed : StressTests
-    {
-        protected override string GetConnectionInfo()
-        {
-            return String.Format("protocol=memory; shared memory name={0};compress=true", memoryName);
-        }
-    }
+	[Category("Compressed")]
+	[Category("SharedMemory")]
+	public class StressTestsSharedMemoryCompressed : StressTests
+	{
+		protected override string GetConnectionInfo()
+		{
+			return String.Format("protocol=memory; shared memory name={0};compress=true", memoryName);
+		}
+	}
 #endif
-    #endregion
+	#endregion
 
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2004-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+// Copyright © 2004, 2010, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -34,13 +34,13 @@ using MySql.Web.Security;
 
 namespace MySql.Web.Tests
 {
-    [TestFixture]
-    public class RoleManagement : BaseWebTest
-    {
-        private MySQLMembershipProvider membershipProvider;
-        private MySQLRoleProvider roleProvider;
+	[TestFixture]
+	public class RoleManagement : BaseWebTest
+	{
+		private MySQLMembershipProvider membershipProvider;
+		private MySQLRoleProvider roleProvider;
 
-        [SetUp]
+		[SetUp]
 		public override void Setup()
 		{
 			base.Setup();
@@ -55,151 +55,151 @@ namespace MySql.Web.Tests
 			membershipProvider.Initialize(null, config);
 		}
 
-        [Test]
-        public void CreateAndDeleteRoles()
-        {
-            roleProvider = new MySQLRoleProvider();
-            NameValueCollection config = new NameValueCollection();
-            config.Add("connectionStringName", "LocalMySqlServer");
-            config.Add("applicationName", "/");
-            roleProvider.Initialize(null, config);
+		[Test]
+		public void CreateAndDeleteRoles()
+		{
+			roleProvider = new MySQLRoleProvider();
+			NameValueCollection config = new NameValueCollection();
+			config.Add("connectionStringName", "LocalMySqlServer");
+			config.Add("applicationName", "/");
+			roleProvider.Initialize(null, config);
 
-            // Add the role
-            roleProvider.CreateRole("Administrator");
-            string[] roles = roleProvider.GetAllRoles();
-            Assert.AreEqual(1, roles.Length);
-            Assert.AreEqual("Administrator", roles[0]);
+			// Add the role
+			roleProvider.CreateRole("Administrator");
+			string[] roles = roleProvider.GetAllRoles();
+			Assert.AreEqual(1, roles.Length);
+			Assert.AreEqual("Administrator", roles[0]);
 
-            // now delete the role
-            roleProvider.DeleteRole("Administrator", false);
-            roles = roleProvider.GetAllRoles();
-            Assert.AreEqual(0, roles.Length);
-        }
+			// now delete the role
+			roleProvider.DeleteRole("Administrator", false);
+			roles = roleProvider.GetAllRoles();
+			Assert.AreEqual(0, roles.Length);
+		}
 
-        private void AddUser(string username, string password)
-        {
-            MembershipCreateStatus status;
-            membershipProvider.CreateUser(username, password, "foo@bar.com", null,
-                null, true, null, out status);
-            if (status != MembershipCreateStatus.Success)
-                Assert.Fail("User creation failed");
-        }
+		private void AddUser(string username, string password)
+		{
+			MembershipCreateStatus status;
+			membershipProvider.CreateUser(username, password, "foo@bar.com", null,
+				null, true, null, out status);
+			if (status != MembershipCreateStatus.Success)
+				Assert.Fail("User creation failed");
+		}
 
-        [Test]
-        public void AddUserToRole()
-        {
-            roleProvider = new MySQLRoleProvider();
-            NameValueCollection config = new NameValueCollection();
-            config.Add("connectionStringName", "LocalMySqlServer");
-            config.Add("applicationName", "/");
-            roleProvider.Initialize(null, config);
+		[Test]
+		public void AddUserToRole()
+		{
+			roleProvider = new MySQLRoleProvider();
+			NameValueCollection config = new NameValueCollection();
+			config.Add("connectionStringName", "LocalMySqlServer");
+			config.Add("applicationName", "/");
+			roleProvider.Initialize(null, config);
 
-            AddUser("eve", "eveeve!");
-            roleProvider.CreateRole("Administrator");
-            roleProvider.AddUsersToRoles(new string[] { "eve" },
-                new string[] { "Administrator" });
-            Assert.IsTrue(roleProvider.IsUserInRole("eve", "Administrator"));
+			AddUser("eve", "eveeve!");
+			roleProvider.CreateRole("Administrator");
+			roleProvider.AddUsersToRoles(new string[] { "eve" },
+				new string[] { "Administrator" });
+			Assert.IsTrue(roleProvider.IsUserInRole("eve", "Administrator"));
 
-            roleProvider.RemoveUsersFromRoles(new string[] { "eve" }, new string[] { "Administrator" });
-            Assert.IsFalse(roleProvider.IsUserInRole("eve", "Administrator"));
-        }
+			roleProvider.RemoveUsersFromRoles(new string[] { "eve" }, new string[] { "Administrator" });
+			Assert.IsFalse(roleProvider.IsUserInRole("eve", "Administrator"));
+		}
 
-        /// <summary>
-        /// Bug #38243 Not Handling non existing user when calling AddUsersToRoles method 
-        /// </summary>
-        [Test]
-        public void AddNonExistingUserToRole()
-        {
-            roleProvider = new MySQLRoleProvider();
-            NameValueCollection config = new NameValueCollection();
-            config.Add("connectionStringName", "LocalMySqlServer");
-            config.Add("applicationName", "/");
-            roleProvider.Initialize(null, config);
+		/// <summary>
+		/// Bug #38243 Not Handling non existing user when calling AddUsersToRoles method 
+		/// </summary>
+		[Test]
+		public void AddNonExistingUserToRole()
+		{
+			roleProvider = new MySQLRoleProvider();
+			NameValueCollection config = new NameValueCollection();
+			config.Add("connectionStringName", "LocalMySqlServer");
+			config.Add("applicationName", "/");
+			roleProvider.Initialize(null, config);
 
-            roleProvider.CreateRole("Administrator");
-            roleProvider.AddUsersToRoles(new string[] { "eve" },
-                new string[] { "Administrator" });
-            Assert.IsTrue(roleProvider.IsUserInRole("eve", "Administrator"));
-        }
+			roleProvider.CreateRole("Administrator");
+			roleProvider.AddUsersToRoles(new string[] { "eve" },
+				new string[] { "Administrator" });
+			Assert.IsTrue(roleProvider.IsUserInRole("eve", "Administrator"));
+		}
 
-        private void AttemptToAddUserToRole(string username, string role)
-        {
-            try
-            {
-                roleProvider.AddUsersToRoles(new string[] { username },
-                    new string[] { role });
-            }
-            catch (ArgumentException)
-            {
-            }
-        }
+		private void AttemptToAddUserToRole(string username, string role)
+		{
+			try
+			{
+				roleProvider.AddUsersToRoles(new string[] { username },
+					new string[] { role });
+			}
+			catch (ArgumentException)
+			{
+			}
+		}
 
-        [Test]
-        public void IllegalRoleAndUserNames()
-        {
-            roleProvider = new MySQLRoleProvider();
-            NameValueCollection config = new NameValueCollection();
-            config.Add("connectionStringName", "LocalMySqlServer");
-            config.Add("applicationName", "/");
-            roleProvider.Initialize(null, config);
+		[Test]
+		public void IllegalRoleAndUserNames()
+		{
+			roleProvider = new MySQLRoleProvider();
+			NameValueCollection config = new NameValueCollection();
+			config.Add("connectionStringName", "LocalMySqlServer");
+			config.Add("applicationName", "/");
+			roleProvider.Initialize(null, config);
 
-            AttemptToAddUserToRole("test", null);
-            AttemptToAddUserToRole("test", "");
-            roleProvider.CreateRole("Administrator");
-            AttemptToAddUserToRole(null, "Administrator");
-            AttemptToAddUserToRole("", "Administrator");
-        }
+			AttemptToAddUserToRole("test", null);
+			AttemptToAddUserToRole("test", "");
+			roleProvider.CreateRole("Administrator");
+			AttemptToAddUserToRole(null, "Administrator");
+			AttemptToAddUserToRole("", "Administrator");
+		}
 
-        [Test]
-        public void AddUserToRoleWithRoleClass()
-        {
-            Roles.CreateRole("Administrator");
-            MembershipCreateStatus status;
-            Membership.CreateUser("eve", "eve1@eve", "eve@boo.com", 
-                "question", "answer", true, null, out status);
-            Assert.AreEqual(MembershipCreateStatus.Success, status);
+		[Test]
+		public void AddUserToRoleWithRoleClass()
+		{
+			Roles.CreateRole("Administrator");
+			MembershipCreateStatus status;
+			Membership.CreateUser("eve", "eve1@eve", "eve@boo.com", 
+				"question", "answer", true, null, out status);
+			Assert.AreEqual(MembershipCreateStatus.Success, status);
 
-            Roles.AddUserToRole("eve", "Administrator");
-            Assert.IsTrue(Roles.IsUserInRole("eve", "Administrator"));
-        }
+			Roles.AddUserToRole("eve", "Administrator");
+			Assert.IsTrue(Roles.IsUserInRole("eve", "Administrator"));
+		}
 
-        [Test]
-        public void IsUserInRoleCrossDomain()
-        {
-            MySQLMembershipProvider provider = new MySQLMembershipProvider();
-            NameValueCollection config1 = new NameValueCollection();
-            config1.Add("connectionStringName", "LocalMySqlServer");
-            config1.Add("applicationName", "/");
-            config1.Add("passwordStrengthRegularExpression", "bar.*");
-            config1.Add("passwordFormat", "Clear");
-            provider.Initialize(null, config1);
-            MembershipCreateStatus status;
-            provider.CreateUser("foo", "bar!bar", null, null, null, true, null, out status);
+		[Test]
+		public void IsUserInRoleCrossDomain()
+		{
+			MySQLMembershipProvider provider = new MySQLMembershipProvider();
+			NameValueCollection config1 = new NameValueCollection();
+			config1.Add("connectionStringName", "LocalMySqlServer");
+			config1.Add("applicationName", "/");
+			config1.Add("passwordStrengthRegularExpression", "bar.*");
+			config1.Add("passwordFormat", "Clear");
+			provider.Initialize(null, config1);
+			MembershipCreateStatus status;
+			provider.CreateUser("foo", "bar!bar", null, null, null, true, null, out status);
 
-            MySQLMembershipProvider provider2 = new MySQLMembershipProvider();
-            NameValueCollection config2 = new NameValueCollection();
-            config2.Add("connectionStringName", "LocalMySqlServer");
-            config2.Add("applicationName", "/myapp");
-            config2.Add("passwordStrengthRegularExpression", ".*");
-            config2.Add("passwordFormat", "Clear");
-            provider2.Initialize(null, config2);
+			MySQLMembershipProvider provider2 = new MySQLMembershipProvider();
+			NameValueCollection config2 = new NameValueCollection();
+			config2.Add("connectionStringName", "LocalMySqlServer");
+			config2.Add("applicationName", "/myapp");
+			config2.Add("passwordStrengthRegularExpression", ".*");
+			config2.Add("passwordFormat", "Clear");
+			provider2.Initialize(null, config2);
 
-            roleProvider = new MySQLRoleProvider();
-            NameValueCollection config = new NameValueCollection();
-            config.Add("connectionStringName", "LocalMySqlServer");
-            config.Add("applicationName", "/");
-            roleProvider.Initialize(null, config);
+			roleProvider = new MySQLRoleProvider();
+			NameValueCollection config = new NameValueCollection();
+			config.Add("connectionStringName", "LocalMySqlServer");
+			config.Add("applicationName", "/");
+			roleProvider.Initialize(null, config);
 
-            MySQLRoleProvider r2 = new MySQLRoleProvider();
-            NameValueCollection configr2 = new NameValueCollection();
-            configr2.Add("connectionStringName", "LocalMySqlServer");
-            configr2.Add("applicationName", "/myapp");
-            r2.Initialize(null, configr2);
+			MySQLRoleProvider r2 = new MySQLRoleProvider();
+			NameValueCollection configr2 = new NameValueCollection();
+			configr2.Add("connectionStringName", "LocalMySqlServer");
+			configr2.Add("applicationName", "/myapp");
+			r2.Initialize(null, configr2);
 
-            roleProvider.CreateRole("Administrator");
-            roleProvider.AddUsersToRoles(new string[] { "foo" },
-                new string[] { "Administrator" });
-            Assert.IsFalse(r2.IsUserInRole("foo", "Administrator"));
-        }
-    }
+			roleProvider.CreateRole("Administrator");
+			roleProvider.AddUsersToRoles(new string[] { "foo" },
+				new string[] { "Administrator" });
+			Assert.IsFalse(r2.IsUserInRole("foo", "Administrator"));
+		}
+	}
 }

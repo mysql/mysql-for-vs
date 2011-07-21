@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2007 MySQL AB
+// Copyright © 2004, 2010, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -36,27 +36,27 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture]
 	public class PerfMonTests : BaseTest
 	{
-        public PerfMonTests()
-        {
-            csAdditions = ";use performance monitor=true;";
-        }
+		public PerfMonTests()
+		{
+			csAdditions = ";use performance monitor=true;";
+		}
 
-        public override void Setup()
-        {
-            base.Setup();
-            execSQL("CREATE TABLE Test (id INT, name VARCHAR(100))");
-        }
+		public override void Setup()
+		{
+			base.Setup();
+			execSQL("CREATE TABLE Test (id INT, name VARCHAR(100))");
+		}
 
-        /// <summary>
-        /// This test doesn't work from the CI setup currently
-        /// </summary>
+		/// <summary>
+		/// This test doesn't work from the CI setup currently
+		/// </summary>
 		[Test]
 		public void ProcedureFromCache()
 		{
-            return;
-            if (Version < new Version(5, 0)) return;
+			return;
+			if (Version < new Version(5, 0)) return;
 
-            execSQL("DROP PROCEDURE IF EXISTS spTest");
+			execSQL("DROP PROCEDURE IF EXISTS spTest");
 			execSQL("CREATE PROCEDURE spTest(id int) BEGIN END");
 
 			PerformanceCounter hardQuery = new PerformanceCounter(
