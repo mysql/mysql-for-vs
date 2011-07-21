@@ -1,4 +1,4 @@
-// Copyright (C) 2004-2007 MySQL AB
+// Copyright © 2004, 2011, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -43,10 +43,10 @@ namespace MySql.Data.MySqlClient.Tests
 			partial = new StringBuilder();
 		}
 
-        public StringCollection Strings
-        {
-            get { return strings; }
-        }
+		public StringCollection Strings
+		{
+			get { return strings; }
+		}
 
 		public int Find(string sToFind)
 		{
@@ -63,7 +63,7 @@ namespace MySql.Data.MySqlClient.Tests
 			strings.Clear();
 		}
 
-        public override void Write(string message)
+		public override void Write(string message)
 		{
 			partial.Append(message);
 		}
@@ -75,13 +75,13 @@ namespace MySql.Data.MySqlClient.Tests
 			partial.Remove(0, partial.Length);
 		}
 
-        public int CountLinesContaining(string text)
-        {
-            int count = 0;
-            foreach (string s in strings)
-                if (s.Contains(text)) count++;
-            return count;
-        }
+		public int CountLinesContaining(string text)
+		{
+			int count = 0;
+			foreach (string s in strings)
+				if (s.Contains(text)) count++;
+			return count;
+		}
 	}
 
 	/// <summary>
@@ -94,10 +94,10 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 			(ev as ManualResetEvent).WaitOne();
 
-            using (MySqlConnection c = new MySqlConnection(GetConnectionString(true)))
-            {
-                c.Open();
-            }
+			using (MySqlConnection c = new MySqlConnection(GetConnectionString(true)))
+			{
+				c.Open();
+			}
 		}
 
 		/// <summary>
@@ -130,48 +130,48 @@ namespace MySql.Data.MySqlClient.Tests
 				x++;
 			}
 		}
-        /// <summary>
-        /// Bug #54012  	MySql Connector/NET is not hardened to deal with 
-        /// ThreadAbortException
-        /// </summary>
-        private void HardenedThreadAbortExceptionWorker()
-        {
-            try
-            {
-                using (MySqlConnection c = new MySqlConnection(GetConnectionString(true)))
-                {
+		/// <summary>
+		/// Bug #54012  	MySql Connector/NET is not hardened to deal with 
+		/// ThreadAbortException
+		/// </summary>
+		private void HardenedThreadAbortExceptionWorker()
+		{
+			try
+			{
+				using (MySqlConnection c = new MySqlConnection(GetConnectionString(true)))
+				{
 
-                    c.Open();
-                    MySqlCommand cmd = new MySqlCommand(
-                        "SELECT BENCHMARK(10000000000,ENCODE('hello','goodbye'))",
-                        c);
-                    // ThreadAbortException is not delivered, when thread is 
-                    // stuck in system call. To shorten test time, set command 
-                    // timeout to a small value. Note .shortening command timeout
-                    // means we could actually have timeout exception here too, 
-                    // but it seems like CLR delivers ThreadAbortException, if 
-                    // the  thread was aborted.
-                    cmd.CommandTimeout = 2;
-                    cmd.ExecuteNonQuery();
-                }
-            }
-            catch (ThreadAbortException)
-            {
-                Thread.ResetAbort();
-                return;
-            }
-            Assert.Fail("expected ThreadAbortException");
-        }
+					c.Open();
+					MySqlCommand cmd = new MySqlCommand(
+						"SELECT BENCHMARK(10000000000,ENCODE('hello','goodbye'))",
+						c);
+					// ThreadAbortException is not delivered, when thread is 
+					// stuck in system call. To shorten test time, set command 
+					// timeout to a small value. Note .shortening command timeout
+					// means we could actually have timeout exception here too, 
+					// but it seems like CLR delivers ThreadAbortException, if 
+					// the  thread was aborted.
+					cmd.CommandTimeout = 2;
+					cmd.ExecuteNonQuery();
+				}
+			}
+			catch (ThreadAbortException)
+			{
+				Thread.ResetAbort();
+				return;
+			}
+			Assert.Fail("expected ThreadAbortException");
+		}
 
-        [Test]
-        public void HardenedThreadAbortException()
-        {
-            Thread t = new Thread(new ThreadStart(HardenedThreadAbortExceptionWorker));
-            t.Name = "Execute Query";
-            t.Start();
-            Thread.Sleep(500);
-            t.Abort();
-            t.Join();
-        }
-    }
+		[Test]
+		public void HardenedThreadAbortException()
+		{
+			Thread t = new Thread(new ThreadStart(HardenedThreadAbortExceptionWorker));
+			t.Name = "Execute Query";
+			t.Start();
+			Thread.Sleep(500);
+			t.Abort();
+			t.Join();
+		}
+	}
 }

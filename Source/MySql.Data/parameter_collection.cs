@@ -1,4 +1,4 @@
-// Copyright (c) 2004-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+// Copyright © 2004, 2011, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -39,16 +39,16 @@ namespace MySql.Data.MySqlClient
 #endif
 	public sealed class MySqlParameterCollection : DbParameterCollection
 	{
-        List<DbParameter> items = new List<DbParameter>();
-        //private ArrayList items = new ArrayList();
-        private Hashtable indexHashCS;
-        private Hashtable indexHashCI;
+		List<DbParameter> items = new List<DbParameter>();
+		//private ArrayList items = new ArrayList();
+		private Hashtable indexHashCS;
+		private Hashtable indexHashCI;
 
 		internal MySqlParameterCollection(MySqlCommand cmd)
 		{
-            indexHashCS = new Hashtable();
+			indexHashCS = new Hashtable();
 			indexHashCI = new Hashtable(StringComparer.CurrentCultureIgnoreCase);
-            Clear();
+			Clear();
 		}
 
 		#region Public Methods
@@ -81,7 +81,7 @@ namespace MySql.Data.MySqlClient
 		/// <returns>The newly added <see cref="MySqlParameter"/> object.</returns>
 		public MySqlParameter Add(MySqlParameter value)
 		{
-            return InternalAdd(value, -1);
+			return InternalAdd(value, -1);
 		}
 
 		/// <summary>
@@ -91,15 +91,15 @@ namespace MySql.Data.MySqlClient
 		/// <param name="value">The <see cref="MySqlParameter.Value"/> of the <see cref="MySqlParameter"/> to add to the collection.</param>
 		/// <returns>The newly added <see cref="MySqlParameter"/> object.</returns>
 		[Obsolete("Add(String parameterName, Object value) has been deprecated.  Use AddWithValue(String parameterName, Object value)")]
-        public MySqlParameter Add(string parameterName, object value)
+		public MySqlParameter Add(string parameterName, object value)
 		{
 			return Add(new MySqlParameter(parameterName, value));
 		}
 
-        public MySqlParameter AddWithValue(string parameterName, object value)
-        {
-            return Add(new MySqlParameter(parameterName, value));
-        }
+		public MySqlParameter AddWithValue(string parameterName, object value)
+		{
+			return Add(new MySqlParameter(parameterName, value));
+		}
 
 		/// <summary>
 		/// Adds a <see cref="MySqlParameter"/> to the <see cref="MySqlParameterCollection"/> given the parameter name and the data type.
@@ -141,10 +141,10 @@ namespace MySql.Data.MySqlClient
 
 		#region DbParameterCollection Implementation
 
-        /// <summary>
-        /// Adds an array of values to the end of the <see cref="MySqlParameterCollection"/>. 
-        /// </summary>
-        /// <param name="values"></param>
+		/// <summary>
+		/// Adds an array of values to the end of the <see cref="MySqlParameterCollection"/>. 
+		/// </summary>
+		/// <param name="values"></param>
 		public override void AddRange(Array values)
 		{
 			foreach (DbParameter p in values)
@@ -170,12 +170,12 @@ namespace MySql.Data.MySqlClient
 				// check to see if the user has added the parameter without a
 				// parameter marker.  If so, kindly tell them what they did.
 				if (parameterName.StartsWith("@") ||
-                    parameterName.StartsWith("?"))
+					parameterName.StartsWith("?"))
 				{
 					string newParameterName = parameterName.Substring(1);
 					index = IndexOf(newParameterName);
 					if (index != -1)
-                        return (DbParameter)items[index];
+						return (DbParameter)items[index];
 				}
 				throw new ArgumentException("Parameter '" + parameterName + "' not found in the collection.");
 			}
@@ -193,23 +193,23 @@ namespace MySql.Data.MySqlClient
 			int index = IndexOf(parameterName);
 			if (index < 0)
 				throw new ArgumentException("Parameter '" + parameterName + "' not found in the collection.");
-            SetParameter(index, value);
+			SetParameter(index, value);
 		}
 
 		protected override void SetParameter(int index, DbParameter value)
 		{
 			CheckIndex(index);
-            MySqlParameter p = (MySqlParameter)items[index];
-            
-            // first we remove the old parameter from our hashes
-            indexHashCS.Remove(p.ParameterName);
-            indexHashCI.Remove(p.ParameterName);
+			MySqlParameter p = (MySqlParameter)items[index];
 			
-            // then we add in the new parameter
-            items[index] = value;
-            indexHashCS.Add(value.ParameterName, index);
-            indexHashCI.Add(value.ParameterName, index);
-        }
+			// first we remove the old parameter from our hashes
+			indexHashCS.Remove(p.ParameterName);
+			indexHashCI.Remove(p.ParameterName);
+			
+			// then we add in the new parameter
+			items[index] = value;
+			indexHashCS.Add(value.ParameterName, index);
+			indexHashCI.Add(value.ParameterName, index);
+		}
 
 		/// <summary>
 		/// Adds the specified <see cref="MySqlParameter"/> object to the <see cref="MySqlParameterCollection"/>.
@@ -218,7 +218,7 @@ namespace MySql.Data.MySqlClient
 		/// <returns>The index of the new <see cref="MySqlParameter"/> object.</returns>
 		public override int Add(object value)
 		{
-            MySqlParameter parameter = value as MySqlParameter;
+			MySqlParameter parameter = value as MySqlParameter;
 			if (parameter == null)
 				throw new MySqlException("Only MySqlParameter objects may be stored");
 
@@ -234,11 +234,11 @@ namespace MySql.Data.MySqlClient
 		/// </summary>
 		public override void Clear()
 		{
-            foreach (MySqlParameter p in items)
-                p.Collection = null;
+			foreach (MySqlParameter p in items)
+				p.Collection = null;
 			items.Clear();
 			indexHashCS.Clear();
-            indexHashCI.Clear();
+			indexHashCI.Clear();
 		}
 
 		/// <summary>
@@ -259,9 +259,9 @@ namespace MySql.Data.MySqlClient
 		/// <overloads>Gets a value indicating whether a <see cref="MySqlParameter"/> exists in the collection.</overloads>
 		public override bool Contains(object value)
 		{
-            DbParameter parameter = value as DbParameter;
-            if (null == parameter)
-                throw new ArgumentException("Argument must be of type DbParameter", "value");
+			DbParameter parameter = value as DbParameter;
+			if (null == parameter)
+				throw new ArgumentException("Argument must be of type DbParameter", "value");
 			return items.Contains(parameter);
 		}
 
@@ -272,7 +272,7 @@ namespace MySql.Data.MySqlClient
 		/// <param name="index"></param>
 		public override void CopyTo(Array array, int index)
 		{
-            items.ToArray().CopyTo(array, index);
+			items.ToArray().CopyTo(array, index);
 		}
 
 		/// <summary>
@@ -283,10 +283,10 @@ namespace MySql.Data.MySqlClient
 			get { return items.Count; }
 		}
 
-        /// <summary>
-        /// Returns an enumerator that iterates through the <see cref="MySqlParameterCollection"/>. 
-        /// </summary>
-        /// <returns></returns>
+		/// <summary>
+		/// Returns an enumerator that iterates through the <see cref="MySqlParameterCollection"/>. 
+		/// </summary>
+		/// <returns></returns>
 		public override IEnumerator GetEnumerator()
 		{
 			return items.GetEnumerator();
@@ -299,12 +299,12 @@ namespace MySql.Data.MySqlClient
 		/// <returns>The zero-based location of the <see cref="MySqlParameter"/> in the collection.</returns>
 		public override int IndexOf(string parameterName)
 		{
-            object o = indexHashCS[parameterName];
-            if (o == null)
-                o = indexHashCI[parameterName];
-            if (o == null)
-                return -1;
-            return (int)o;
+			object o = indexHashCS[parameterName];
+			if (o == null)
+				o = indexHashCI[parameterName];
+			if (o == null)
+				return -1;
+			return (int)o;
 		}
 
 		/// <summary>
@@ -315,10 +315,10 @@ namespace MySql.Data.MySqlClient
 		/// <overloads>Gets the location of a <see cref="MySqlParameter"/> in the collection.</overloads>
 		public override int IndexOf(object value)
 		{
-            DbParameter parameter = value as DbParameter;
-            if (null == parameter)
-                throw new ArgumentException("Argument must be of type DbParameter", "value");
-            return items.IndexOf(parameter);
+			DbParameter parameter = value as DbParameter;
+			if (null == parameter)
+				throw new ArgumentException("Argument must be of type DbParameter", "value");
+			return items.IndexOf(parameter);
 		}
 
 		/// <summary>
@@ -328,34 +328,34 @@ namespace MySql.Data.MySqlClient
 		/// <param name="value"></param>
 		public override void Insert(int index, object value)
 		{
-            MySqlParameter parameter = value as MySqlParameter;
-            if (parameter == null)
-                throw new MySqlException("Only MySqlParameter objects may be stored");
-            InternalAdd(parameter, index);
+			MySqlParameter parameter = value as MySqlParameter;
+			if (parameter == null)
+				throw new MySqlException("Only MySqlParameter objects may be stored");
+			InternalAdd(parameter, index);
 		}
 
-        /// <summary>
-        /// Gets a value that indicates whether the <see cref="MySqlParameterCollection"/>
-        /// has a fixed size. 
-        /// </summary>
+		/// <summary>
+		/// Gets a value that indicates whether the <see cref="MySqlParameterCollection"/>
+		/// has a fixed size. 
+		/// </summary>
 		public override bool IsFixedSize
 		{
-            get { return (items as IList).IsFixedSize; }
+			get { return (items as IList).IsFixedSize; }
 		}
 
-        /// <summary>
-        /// Gets a value that indicates whether the <see cref="MySqlParameterCollection"/>
-        /// is read-only. 
-        /// </summary>
+		/// <summary>
+		/// Gets a value that indicates whether the <see cref="MySqlParameterCollection"/>
+		/// is read-only. 
+		/// </summary>
 		public override bool IsReadOnly
 		{
 			get { return (items as IList).IsReadOnly; }
 		}
 
-        /// <summary>
-        /// Gets a value that indicates whether the <see cref="MySqlParameterCollection"/>
-        /// is synchronized. 
-        /// </summary>
+		/// <summary>
+		/// Gets a value that indicates whether the <see cref="MySqlParameterCollection"/>
+		/// is synchronized. 
+		/// </summary>
 		public override bool IsSynchronized
 		{
 			get { return (items as IList).IsSynchronized; }
@@ -367,14 +367,14 @@ namespace MySql.Data.MySqlClient
 		/// <param name="value"></param>
 		public override void Remove(object value)
 		{
-            MySqlParameter p = (value as MySqlParameter);
-            p.Collection = null;
-            int index = IndexOf(p);
+			MySqlParameter p = (value as MySqlParameter);
+			p.Collection = null;
+			int index = IndexOf(p);
 			items.Remove(p);
 
-            indexHashCS.Remove(p.ParameterName);
-            indexHashCI.Remove(p.ParameterName);
-            AdjustHashes(index, false);
+			indexHashCS.Remove(p.ParameterName);
+			indexHashCI.Remove(p.ParameterName);
+			AdjustHashes(index, false);
 		}
 
 		/// <summary>
@@ -394,14 +394,14 @@ namespace MySql.Data.MySqlClient
 		/// <overloads>Removes the specified <see cref="MySqlParameter"/> from the collection.</overloads>
 		public override void RemoveAt(int index)
 		{
-            object o = items[index];
-            Remove(o);
+			object o = items[index];
+			Remove(o);
 		}
 
-        /// <summary>
-        /// Gets an object that can be used to synchronize access to the 
-        /// <see cref="MySqlParameterCollection"/>. 
-        /// </summary>
+		/// <summary>
+		/// Gets an object that can be used to synchronize access to the 
+		/// <see cref="MySqlParameterCollection"/>. 
+		/// </summary>
 		public override object SyncRoot
 		{
 			get { return (items as IList).SyncRoot; }
@@ -409,105 +409,105 @@ namespace MySql.Data.MySqlClient
 
 		#endregion
 
-        internal void ParameterNameChanged(MySqlParameter p, string oldName, string newName)
-        {
-            int index = IndexOf(oldName);
-            indexHashCS.Remove(oldName);
-            indexHashCI.Remove(oldName);
+		internal void ParameterNameChanged(MySqlParameter p, string oldName, string newName)
+		{
+			int index = IndexOf(oldName);
+			indexHashCS.Remove(oldName);
+			indexHashCI.Remove(oldName);
 
-            indexHashCS.Add(newName, index);
-            indexHashCI.Add(newName, index);
-        }
+			indexHashCS.Add(newName, index);
+			indexHashCI.Add(newName, index);
+		}
 
-        private MySqlParameter InternalAdd(MySqlParameter value, int index)
-        {
-            if (value == null)
-                throw new ArgumentException("The MySqlParameterCollection only accepts non-null MySqlParameter type objects.", "value");
+		private MySqlParameter InternalAdd(MySqlParameter value, int index)
+		{
+			if (value == null)
+				throw new ArgumentException("The MySqlParameterCollection only accepts non-null MySqlParameter type objects.", "value");
 
-            // make sure we don't already have a parameter with this name
-            if (IndexOf(value.ParameterName) >= 0)
-            {
-                throw new MySqlException(
-                    String.Format(Resources.ParameterAlreadyDefined, value.ParameterName));
-            }
-            else
-            {
-                string inComingName = value.ParameterName;
-                if (inComingName[0] == '@' || inComingName[0] == '?')
-                    inComingName = inComingName.Substring(1, inComingName.Length - 1);
-                if (IndexOf(inComingName) >= 0)
-                    throw new MySqlException(
-                        String.Format(Resources.ParameterAlreadyDefined, value.ParameterName));
-            }
+			// make sure we don't already have a parameter with this name
+			if (IndexOf(value.ParameterName) >= 0)
+			{
+				throw new MySqlException(
+					String.Format(Resources.ParameterAlreadyDefined, value.ParameterName));
+			}
+			else
+			{
+				string inComingName = value.ParameterName;
+				if (inComingName[0] == '@' || inComingName[0] == '?')
+					inComingName = inComingName.Substring(1, inComingName.Length - 1);
+				if (IndexOf(inComingName) >= 0)
+					throw new MySqlException(
+						String.Format(Resources.ParameterAlreadyDefined, value.ParameterName));
+			}
 
-            if (index == -1)
-            {
-                items.Add(value);
-                index = items.IndexOf(value);
-            }
-            else
-            {
-                items.Insert(index, value);
-                AdjustHashes(index, true);
-            }
+			if (index == -1)
+			{
+				items.Add(value);
+				index = items.IndexOf(value);
+			}
+			else
+			{
+				items.Insert(index, value);
+				AdjustHashes(index, true);
+			}
 
-            indexHashCS.Add(value.ParameterName, index);
-            indexHashCI.Add(value.ParameterName, index);
+			indexHashCS.Add(value.ParameterName, index);
+			indexHashCI.Add(value.ParameterName, index);
 
-            value.Collection = this;
-            return value;
-        }
+			value.Collection = this;
+			return value;
+		}
 
-        private static void AdjustHash(Hashtable hash, string parameterName, int keyIndex, bool addEntry)
-        {
-            if (!hash.ContainsKey(parameterName)) return;
-            int index = (int)hash[parameterName];
-            if (index < keyIndex) return;
-            hash[parameterName] = addEntry ? ++index : --index;
-        }
+		private static void AdjustHash(Hashtable hash, string parameterName, int keyIndex, bool addEntry)
+		{
+			if (!hash.ContainsKey(parameterName)) return;
+			int index = (int)hash[parameterName];
+			if (index < keyIndex) return;
+			hash[parameterName] = addEntry ? ++index : --index;
+		}
 
-        /// <summary>
-        /// This method will update all the items in the index hashes when
-        /// we insert a parameter somewhere in the middle
-        /// </summary>
-        /// <param name="keyIndex"></param>
-        /// <param name="addEntry"></param>
-        private void AdjustHashes(int keyIndex, bool addEntry)
-        {
-            for (int i = 0; i < Count; i++)
-            {
-                string name = (items[i] as MySqlParameter).ParameterName;
-                AdjustHash(indexHashCI, name, keyIndex, addEntry);
-                AdjustHash(indexHashCS, name, keyIndex, addEntry);
-            }
-        }
+		/// <summary>
+		/// This method will update all the items in the index hashes when
+		/// we insert a parameter somewhere in the middle
+		/// </summary>
+		/// <param name="keyIndex"></param>
+		/// <param name="addEntry"></param>
+		private void AdjustHashes(int keyIndex, bool addEntry)
+		{
+			for (int i = 0; i < Count; i++)
+			{
+				string name = (items[i] as MySqlParameter).ParameterName;
+				AdjustHash(indexHashCI, name, keyIndex, addEntry);
+				AdjustHash(indexHashCS, name, keyIndex, addEntry);
+			}
+		}
 
-        private MySqlParameter GetParameterFlexibleInternal(string baseName)
-        {
-            int index = IndexOf(baseName);
-            if (-1 == index)
-                index = IndexOf("?" + baseName);
-            if (-1 == index)
-                index = IndexOf("@" + baseName);
-            if (-1 != index)
-                return this[index];
-            return null;
-        }
+		private MySqlParameter GetParameterFlexibleInternal(string baseName)
+		{
+			int index = IndexOf(baseName);
+			if (-1 == index)
+				index = IndexOf("?" + baseName);
+			if (-1 == index)
+				index = IndexOf("@" + baseName);
+			if (-1 != index)
+				return this[index];
+			return null;
+		}
 
-        internal MySqlParameter GetParameterFlexible(string parameterName, bool throwOnNotFound)
-        {
-            string baseName = parameterName;
-            MySqlParameter p = GetParameterFlexibleInternal(baseName);
-            if (p != null) return p;
+		internal MySqlParameter GetParameterFlexible(string parameterName, bool throwOnNotFound)
+		{
+			string baseName = parameterName;
+			MySqlParameter p = GetParameterFlexibleInternal(baseName);
+			if (p != null) return p;
 
-            if (parameterName.StartsWith("@") || parameterName.StartsWith("?"))
-                baseName = parameterName.Substring(1);
-            p = GetParameterFlexibleInternal(baseName);
-            if (p != null) return p;
+			if (parameterName.StartsWith("@") || parameterName.StartsWith("?"))
+				baseName = parameterName.Substring(1);
+			p = GetParameterFlexibleInternal(baseName);
+			if (p != null) return p;
 
-            if (throwOnNotFound)
-                throw new ArgumentException("Parameter '" + parameterName + "' not found in the collection.");
-            return null;
-        }
+			if (throwOnNotFound)
+				throw new ArgumentException("Parameter '" + parameterName + "' not found in the collection.");
+			return null;
+		}
 	}
 }
