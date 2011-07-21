@@ -1,4 +1,4 @@
-// Copyright (c) 2004-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+// Copyright © 2004, 2010, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -31,11 +31,11 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture]
 	public class ExceptionTests : BaseTest
 	{
-        public override void Setup()
-        {
-            base.Setup();
-            execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(100))");
-        }
+		public override void Setup()
+		{
+			base.Setup();
+			execSQL("CREATE TABLE Test (id INT NOT NULL, name VARCHAR(100))");
+		}
 
 		[Test]
 		public void Timeout() 
@@ -70,22 +70,22 @@ namespace MySql.Data.MySqlClient.Tests
 			}
 		}
 #if !CF
-        /// <summary>
-        /// Bug #27436 Add the MySqlException.Number property value to the Exception.Data Dictionary  
-        /// </summary>
-        [Test]
-        public void ErrorData()
-        {
-            MySqlCommand cmd = new MySqlCommand("SELEDT 1", conn);
-            try
-            {
-                cmd.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                Assert.AreEqual(1064, ex.Data["Server Error Code"]);
-            }
-        }
+		/// <summary>
+		/// Bug #27436 Add the MySqlException.Number property value to the Exception.Data Dictionary  
+		/// </summary>
+		[Test]
+		public void ErrorData()
+		{
+			MySqlCommand cmd = new MySqlCommand("SELEDT 1", conn);
+			try
+			{
+				cmd.ExecuteNonQuery();
+			}
+			catch (Exception ex)
+			{
+				Assert.AreEqual(1064, ex.Data["Server Error Code"]);
+			}
+		}
 #endif
-    }
+	}
 }

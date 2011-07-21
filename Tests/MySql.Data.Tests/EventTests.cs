@@ -1,4 +1,4 @@
-// Copyright (c) 2004-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+// Copyright © 2004, 2010, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -35,25 +35,25 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void Warnings()
 		{
-            if (Version < new Version(4, 1)) return;
+			if (Version < new Version(4, 1)) return;
 
-            execSQL("CREATE TABLE Test (name VARCHAR(10))");
+			execSQL("CREATE TABLE Test (name VARCHAR(10))");
 
-            string connStr = GetConnectionString(true);
-            using (MySqlConnection c = new MySqlConnection(connStr))
-            {
-                c.Open();
+			string connStr = GetConnectionString(true);
+			using (MySqlConnection c = new MySqlConnection(connStr))
+			{
+				c.Open();
 
-                MySqlCommand cmd = new MySqlCommand("SET SQL_MODE=''", c);
-                cmd.ExecuteNonQuery();
+				MySqlCommand cmd = new MySqlCommand("SET SQL_MODE=''", c);
+				cmd.ExecuteNonQuery();
 
-			    c.InfoMessage += new MySqlInfoMessageEventHandler(WarningsInfoMessage);
+				c.InfoMessage += new MySqlInfoMessageEventHandler(WarningsInfoMessage);
 
-			    cmd.CommandText = "INSERT INTO Test VALUES ('12345678901')";
-                using (MySqlDataReader reader = cmd.ExecuteReader())
-                {
-                }
-            }
+				cmd.CommandText = "INSERT INTO Test VALUES ('12345678901')";
+				using (MySqlDataReader reader = cmd.ExecuteReader())
+				{
+				}
+			}
 		}
 
 		private void WarningsInfoMessage(object sender, MySqlInfoMessageEventArgs args)
