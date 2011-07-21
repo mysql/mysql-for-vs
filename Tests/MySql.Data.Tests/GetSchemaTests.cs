@@ -1,4 +1,4 @@
-// Copyright (c) 2004-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+// Copyright © 2004, 2010, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -36,26 +36,26 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 			DataTable dt = conn.GetSchema();
 
-            int row = 0;
+			int row = 0;
 			Assert.AreEqual("MetaDataCollections", dt.Rows[row++][0]);
-            Assert.AreEqual("DataSourceInformation", dt.Rows[row++][0]);
-            Assert.AreEqual("DataTypes", dt.Rows[row++][0]);
-            Assert.AreEqual("Restrictions", dt.Rows[row++][0]);
-            Assert.AreEqual("ReservedWords", dt.Rows[row++][0]);
-            Assert.AreEqual("Databases", dt.Rows[row++][0]);
-            Assert.AreEqual("Tables", dt.Rows[row++][0]);
-            Assert.AreEqual("Columns", dt.Rows[row++][0]);
-            Assert.AreEqual("Users", dt.Rows[row++][0]);
-            Assert.AreEqual("Foreign Keys", dt.Rows[row++][0]);
-            Assert.AreEqual("IndexColumns", dt.Rows[row++][0]);
-            Assert.AreEqual("Indexes", dt.Rows[row++][0]);
-            Assert.AreEqual("Foreign Key Columns", dt.Rows[row++][0]);
-            Assert.AreEqual("UDF", dt.Rows[row++][0]);
-            Assert.AreEqual("Views", dt.Rows[row++][0]);
-            Assert.AreEqual("ViewColumns", dt.Rows[row++][0]);
-            Assert.AreEqual("Procedure Parameters", dt.Rows[row++][0]);
-            Assert.AreEqual("Procedures", dt.Rows[row++][0]);
-            Assert.AreEqual("Triggers", dt.Rows[row++][0]);
+			Assert.AreEqual("DataSourceInformation", dt.Rows[row++][0]);
+			Assert.AreEqual("DataTypes", dt.Rows[row++][0]);
+			Assert.AreEqual("Restrictions", dt.Rows[row++][0]);
+			Assert.AreEqual("ReservedWords", dt.Rows[row++][0]);
+			Assert.AreEqual("Databases", dt.Rows[row++][0]);
+			Assert.AreEqual("Tables", dt.Rows[row++][0]);
+			Assert.AreEqual("Columns", dt.Rows[row++][0]);
+			Assert.AreEqual("Users", dt.Rows[row++][0]);
+			Assert.AreEqual("Foreign Keys", dt.Rows[row++][0]);
+			Assert.AreEqual("IndexColumns", dt.Rows[row++][0]);
+			Assert.AreEqual("Indexes", dt.Rows[row++][0]);
+			Assert.AreEqual("Foreign Key Columns", dt.Rows[row++][0]);
+			Assert.AreEqual("UDF", dt.Rows[row++][0]);
+			Assert.AreEqual("Views", dt.Rows[row++][0]);
+			Assert.AreEqual("ViewColumns", dt.Rows[row++][0]);
+			Assert.AreEqual("Procedure Parameters", dt.Rows[row++][0]);
+			Assert.AreEqual("Procedures", dt.Rows[row++][0]);
+			Assert.AreEqual("Triggers", dt.Rows[row++][0]);
 		}
 
 		/// <summary>
@@ -164,19 +164,19 @@ namespace MySql.Data.MySqlClient.Tests
 			string[] restrictions = new string[4];
 			restrictions[1] = database0;
 			restrictions[2] = "test1";
-            DataTable dt = conn.GetSchema("Tables", restrictions);
-            if (Version.Major >= 5 && Version.Minor >= 1)
-            {
-                Assert.IsTrue(dt.Columns["VERSION"].DataType == typeof(UInt64));
-                Assert.IsTrue(dt.Columns["TABLE_ROWS"].DataType == typeof(UInt64));
-                Assert.IsTrue(dt.Columns["AVG_ROW_LENGTH"].DataType == typeof(UInt64));
-                Assert.IsTrue(dt.Columns["DATA_LENGTH"].DataType == typeof(UInt64));
-                Assert.IsTrue(dt.Columns["MAX_DATA_LENGTH"].DataType == typeof(UInt64));
-                Assert.IsTrue(dt.Columns["INDEX_LENGTH"].DataType == typeof(UInt64));
-                Assert.IsTrue(dt.Columns["DATA_FREE"].DataType == typeof(UInt64));
-                Assert.IsTrue(dt.Columns["AUTO_INCREMENT"].DataType == typeof(UInt64));
-                Assert.IsTrue(dt.Columns["CHECKSUM"].DataType == typeof(UInt64));
-            }
+			DataTable dt = conn.GetSchema("Tables", restrictions);
+			if (Version.Major >= 5 && Version.Minor >= 1)
+			{
+				Assert.IsTrue(dt.Columns["VERSION"].DataType == typeof(UInt64));
+				Assert.IsTrue(dt.Columns["TABLE_ROWS"].DataType == typeof(UInt64));
+				Assert.IsTrue(dt.Columns["AVG_ROW_LENGTH"].DataType == typeof(UInt64));
+				Assert.IsTrue(dt.Columns["DATA_LENGTH"].DataType == typeof(UInt64));
+				Assert.IsTrue(dt.Columns["MAX_DATA_LENGTH"].DataType == typeof(UInt64));
+				Assert.IsTrue(dt.Columns["INDEX_LENGTH"].DataType == typeof(UInt64));
+				Assert.IsTrue(dt.Columns["DATA_FREE"].DataType == typeof(UInt64));
+				Assert.IsTrue(dt.Columns["AUTO_INCREMENT"].DataType == typeof(UInt64));
+				Assert.IsTrue(dt.Columns["CHECKSUM"].DataType == typeof(UInt64));
+			}
 			Assert.IsTrue(dt.Rows.Count == 1);
 			Assert.AreEqual("Tables", dt.TableName);
 			Assert.AreEqual("test1", dt.Rows[0][2]);
@@ -187,7 +187,7 @@ namespace MySql.Data.MySqlClient.Tests
 		{
 			execSQL(@"CREATE TABLE test (col1 int, col2 decimal(20,5), 
 				col3 varchar(50) character set utf8, col4 tinyint unsigned, 
-                col5 varchar(20) default 'boo')");
+				col5 varchar(20) default 'boo')");
 
 			string[] restrictions = new string[4];
 			restrictions[1] = database0;
@@ -195,13 +195,13 @@ namespace MySql.Data.MySqlClient.Tests
 			DataTable dt = conn.GetSchema("Columns", restrictions);
 			Assert.AreEqual(5, dt.Rows.Count);
 			Assert.AreEqual("Columns", dt.TableName);
-            if (Version.Major >= 5 && Version.Minor >= 1)
-            {
-                Assert.IsTrue(dt.Columns["ORDINAL_POSITION"].DataType == typeof(UInt64));
-                Assert.IsTrue(dt.Columns["CHARACTER_MAXIMUM_LENGTH"].DataType == typeof(UInt64));
-                Assert.IsTrue(dt.Columns["NUMERIC_PRECISION"].DataType == typeof(UInt64));
-                Assert.IsTrue(dt.Columns["NUMERIC_SCALE"].DataType == typeof(UInt64));
-            }
+			if (Version.Major >= 5 && Version.Minor >= 1)
+			{
+				Assert.IsTrue(dt.Columns["ORDINAL_POSITION"].DataType == typeof(UInt64));
+				Assert.IsTrue(dt.Columns["CHARACTER_MAXIMUM_LENGTH"].DataType == typeof(UInt64));
+				Assert.IsTrue(dt.Columns["NUMERIC_PRECISION"].DataType == typeof(UInt64));
+				Assert.IsTrue(dt.Columns["NUMERIC_SCALE"].DataType == typeof(UInt64));
+			}
 			
 			// first column
 			Assert.AreEqual(database0.ToUpper(), dt.Rows[0]["TABLE_SCHEMA"].ToString().ToUpper());
@@ -235,37 +235,37 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual("YES", dt.Rows[3]["IS_NULLABLE"]);
 			Assert.AreEqual("TINYINT", dt.Rows[3]["DATA_TYPE"].ToString().ToUpper());
 
-            // fifth column
-            Assert.AreEqual(database0.ToUpper(), dt.Rows[4]["TABLE_SCHEMA"].ToString().ToUpper());
-            Assert.AreEqual("COL5", dt.Rows[4]["COLUMN_NAME"].ToString().ToUpper());
-            Assert.AreEqual(5, dt.Rows[4]["ORDINAL_POSITION"]);
-            Assert.AreEqual("YES", dt.Rows[4]["IS_NULLABLE"]);
-            Assert.AreEqual("VARCHAR", dt.Rows[4]["DATA_TYPE"].ToString().ToUpper());
-            Assert.AreEqual("VARCHAR(20)", dt.Rows[4]["COLUMN_TYPE"].ToString().ToUpper());
-            Assert.AreEqual("'BOO'", dt.Rows[4]["COLUMN_DEFAULT"].ToString().ToUpper());
-        }
+			// fifth column
+			Assert.AreEqual(database0.ToUpper(), dt.Rows[4]["TABLE_SCHEMA"].ToString().ToUpper());
+			Assert.AreEqual("COL5", dt.Rows[4]["COLUMN_NAME"].ToString().ToUpper());
+			Assert.AreEqual(5, dt.Rows[4]["ORDINAL_POSITION"]);
+			Assert.AreEqual("YES", dt.Rows[4]["IS_NULLABLE"]);
+			Assert.AreEqual("VARCHAR", dt.Rows[4]["DATA_TYPE"].ToString().ToUpper());
+			Assert.AreEqual("VARCHAR(20)", dt.Rows[4]["COLUMN_TYPE"].ToString().ToUpper());
+			Assert.AreEqual("'BOO'", dt.Rows[4]["COLUMN_DEFAULT"].ToString().ToUpper());
+		}
 
-        /// <summary> 
-        /// Bug #46270 connection.GetSchema("Columns") fails on MySQL 4.1  
-        /// </summary> 
-        [Test]
-        public void EnumAndSetColumns()
-        {
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL("CREATE TABLE test (col1 set('A','B','C'), col2 enum('A','B','C'))");
+		/// <summary> 
+		/// Bug #46270 connection.GetSchema("Columns") fails on MySQL 4.1  
+		/// </summary> 
+		[Test]
+		public void EnumAndSetColumns()
+		{
+			execSQL("DROP TABLE IF EXISTS test");
+			execSQL("CREATE TABLE test (col1 set('A','B','C'), col2 enum('A','B','C'))");
 
-            DataTable dt = conn.GetSchema("Columns", new string[] { null, null, "test", null });
-            Assert.AreEqual(2, dt.Rows.Count);
-            Assert.AreEqual("set", dt.Rows[0]["DATA_TYPE"]);
-            Assert.AreEqual("enum", dt.Rows[1]["DATA_TYPE"]);
-            Assert.AreEqual("set('A','B','C')", dt.Rows[0]["COLUMN_TYPE"]);
-            Assert.AreEqual("enum('A','B','C')", dt.Rows[1]["COLUMN_TYPE"]);
-        } 
+			DataTable dt = conn.GetSchema("Columns", new string[] { null, null, "test", null });
+			Assert.AreEqual(2, dt.Rows.Count);
+			Assert.AreEqual("set", dt.Rows[0]["DATA_TYPE"]);
+			Assert.AreEqual("enum", dt.Rows[1]["DATA_TYPE"]);
+			Assert.AreEqual("set('A','B','C')", dt.Rows[0]["COLUMN_TYPE"]);
+			Assert.AreEqual("enum('A','B','C')", dt.Rows[1]["COLUMN_TYPE"]);
+		} 
 
 		[Test]
 		public void Procedures()
 		{
-            if (Version < new Version(5, 0)) return;
+			if (Version < new Version(5, 0)) return;
 
 			execSQL("DROP PROCEDURE IF EXISTS spTest");
 			execSQL("CREATE PROCEDURE spTest (id int) BEGIN SELECT 1; END");
@@ -282,7 +282,7 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void Functions()
 		{
-            if (Version < new Version(5, 0)) return;
+			if (Version < new Version(5, 0)) return;
 
 			execSQL("DROP FUNCTION IF EXISTS spFunc");
 			execSQL("CREATE FUNCTION spFunc (id int) RETURNS INT BEGIN RETURN 1; END");
@@ -296,10 +296,10 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual("spFunc", dt.Rows[0][3]);
 		}
 
-        [Test]
+		[Test]
 		public void Indexes()
 		{
-            if (Version < new Version(5, 0)) return;
+			if (Version < new Version(5, 0)) return;
 
 			execSQL("CREATE TABLE test (id int, PRIMARY KEY(id))");
 			string[] restrictions = new string[4];
@@ -322,25 +322,25 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual(false, dt.Rows[0]["PRIMARY"]);
 			Assert.AreEqual(true, dt.Rows[0]["UNIQUE"]);
 
-            restrictions[3] = "key2";
-            dt = conn.GetSchema("Indexes", restrictions);
-            Assert.AreEqual(1, dt.Rows.Count);
-            Assert.AreEqual("test", dt.Rows[0]["TABLE_NAME"]);
-            Assert.AreEqual("key2", dt.Rows[0]["INDEX_NAME"]);
-            Assert.AreEqual(false, dt.Rows[0]["PRIMARY"]);
-            Assert.AreEqual(true, dt.Rows[0]["UNIQUE"]);
-
-            /// <summary> 
-            /// Bug #48101	MySqlConnection.GetSchema on "Indexes" throws when there's a table named "b`a`d" 
-            /// </summary> 
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL(@"CREATE TABLE `te``s``t` (id int, name varchar(50), " +
-                "KEY key2 (name))");
-
-            restrictions[2] = "te`s`t"; 
-            dt = conn.GetSchema("Indexes", restrictions);
+			restrictions[3] = "key2";
+			dt = conn.GetSchema("Indexes", restrictions);
 			Assert.AreEqual(1, dt.Rows.Count);
-            Assert.AreEqual("te`s`t", dt.Rows[0]["TABLE_NAME"]);
+			Assert.AreEqual("test", dt.Rows[0]["TABLE_NAME"]);
+			Assert.AreEqual("key2", dt.Rows[0]["INDEX_NAME"]);
+			Assert.AreEqual(false, dt.Rows[0]["PRIMARY"]);
+			Assert.AreEqual(true, dt.Rows[0]["UNIQUE"]);
+
+			/// <summary> 
+			/// Bug #48101	MySqlConnection.GetSchema on "Indexes" throws when there's a table named "b`a`d" 
+			/// </summary> 
+			execSQL("DROP TABLE IF EXISTS test");
+			execSQL(@"CREATE TABLE `te``s``t` (id int, name varchar(50), " +
+				"KEY key2 (name))");
+
+			restrictions[2] = "te`s`t"; 
+			dt = conn.GetSchema("Indexes", restrictions);
+			Assert.AreEqual(1, dt.Rows.Count);
+			Assert.AreEqual("te`s`t", dt.Rows[0]["TABLE_NAME"]);
 			Assert.AreEqual("key2", dt.Rows[0]["INDEX_NAME"]);
 			Assert.AreEqual(false, dt.Rows[0]["PRIMARY"]);
 			Assert.AreEqual(false, dt.Rows[0]["UNIQUE"]);
@@ -370,12 +370,12 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual("id2", dt.Rows[0]["COLUMN_NAME"]);
 			Assert.AreEqual(2, dt.Rows[0]["ORDINAL_POSITION"]);
 
-            restrictions[3] = "key1";
-            dt = conn.GetSchema("IndexColumns", restrictions);
-            Assert.AreEqual(1, dt.Rows.Count);
-            Assert.AreEqual("test", dt.Rows[0]["TABLE_NAME"]);
-            Assert.AreEqual("id2", dt.Rows[0]["COLUMN_NAME"]);
-            Assert.AreEqual(2, dt.Rows[0]["ORDINAL_POSITION"]);
+			restrictions[3] = "key1";
+			dt = conn.GetSchema("IndexColumns", restrictions);
+			Assert.AreEqual(1, dt.Rows.Count);
+			Assert.AreEqual("test", dt.Rows[0]["TABLE_NAME"]);
+			Assert.AreEqual("id2", dt.Rows[0]["COLUMN_NAME"]);
+			Assert.AreEqual(2, dt.Rows[0]["ORDINAL_POSITION"]);
 
 			restrictions = new string[3];
 			restrictions[1] = database0;
@@ -389,19 +389,19 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual("id2", dt.Rows[1]["COLUMN_NAME"]);
 			Assert.AreEqual(2, dt.Rows[1]["ORDINAL_POSITION"]);
 
-            restrictions = new string[4];
-            execSQL("DROP TABLE IF EXISTS test");
-            execSQL("CREATE TABLE test (id int primary key, id1 int, KEY key1 (id1))");
-            restrictions[2] = "test";
-            restrictions[1] = database0;
-            restrictions[3] = "PRIMARY";
-            dt = conn.GetSchema("IndexColumns", restrictions);
-        }
+			restrictions = new string[4];
+			execSQL("DROP TABLE IF EXISTS test");
+			execSQL("CREATE TABLE test (id int primary key, id1 int, KEY key1 (id1))");
+			restrictions[2] = "test";
+			restrictions[1] = database0;
+			restrictions[3] = "PRIMARY";
+			dt = conn.GetSchema("IndexColumns", restrictions);
+		}
 
 		[Test]
 		public void Views()
 		{
-            if (Version < new Version(5, 0)) return;
+			if (Version < new Version(5, 0)) return;
 
 			execSQL("DROP VIEW IF EXISTS vw");
 			execSQL("CREATE VIEW vw AS SELECT Now() as theTime");
@@ -418,7 +418,7 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void ViewColumns()
 		{
-            if (Version < new Version(5, 0)) return;
+			if (Version < new Version(5, 0)) return;
 
 			execSQL("DROP VIEW IF EXISTS vw");
 			execSQL("CREATE VIEW vw AS SELECT Now() as theTime");
@@ -472,7 +472,7 @@ namespace MySql.Data.MySqlClient.Tests
 				"FOREIGN KEY (customer_id) REFERENCES customer(id)) ENGINE=INNODB");
 
 			DataTable dt = conn.GetSchema("Foreign Keys");
-            Assert.IsTrue(dt.Columns.Contains("REFERENCED_TABLE_CATALOG"));
+			Assert.IsTrue(dt.Columns.Contains("REFERENCED_TABLE_CATALOG"));
 		}
 
 		[Test]
@@ -514,14 +514,14 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void Triggers()
 		{
-            if (Version < new Version(5, 1, 6)) return;
+			if (Version < new Version(5, 1, 6)) return;
 
 			execSQL("CREATE TABLE test1 (id int)");
 			execSQL("CREATE TABLE test2 (count int)");
 			execSQL("INSERT INTO test2 VALUES (0)");
-            string sql = String.Format("CREATE TRIGGER `{0}`.trigger1 AFTER INSERT ON test1 FOR EACH ROW BEGIN " +
-                "UPDATE test2 SET count = count+1; END", database0);
-            suExecSQL(sql);
+			string sql = String.Format("CREATE TRIGGER `{0}`.trigger1 AFTER INSERT ON test1 FOR EACH ROW BEGIN " +
+				"UPDATE test2 SET count = count+1; END", database0);
+			suExecSQL(sql);
 
 			string[] restrictions = new string[4];
 			restrictions[1] = database0;
@@ -551,12 +551,12 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual("`test1`", restrictions[2]);
 		}
 
-        [Test]
-        public void ReservedWords()
-        {
-            DataTable dt = conn.GetSchema("ReservedWords");
-            foreach (DataRow row in dt.Rows)
-                Assert.IsFalse(String.IsNullOrEmpty(row[0] as string));
-        }
+		[Test]
+		public void ReservedWords()
+		{
+			DataTable dt = conn.GetSchema("ReservedWords");
+			foreach (DataRow row in dt.Rows)
+				Assert.IsFalse(String.IsNullOrEmpty(row[0] as string));
+		}
 	}
 }

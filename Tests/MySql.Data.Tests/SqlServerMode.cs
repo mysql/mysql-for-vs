@@ -1,4 +1,4 @@
-// Copyright (c) 2004-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+// Copyright © 2004, 2010, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -34,24 +34,24 @@ namespace MySql.Data.MySqlClient.Tests
 	[TestFixture]
 	public class SqlServerMode : BaseTest
 	{
-        public SqlServerMode()
-        {
-            csAdditions += ";sqlservermode=yes;";
-        }
+		public SqlServerMode()
+		{
+			csAdditions += ";sqlservermode=yes;";
+		}
 
-        [Test]
-        public void Simple()
-        {
-            execSQL("CREATE TABLE Test (id INT, name VARCHAR(20))");
-            execSQL("INSERT INTO Test VALUES (1, 'A')");
+		[Test]
+		public void Simple()
+		{
+			execSQL("CREATE TABLE Test (id INT, name VARCHAR(20))");
+			execSQL("INSERT INTO Test VALUES (1, 'A')");
 
-            MySqlCommand cmd = new MySqlCommand("SELECT [id], [name] FROM [Test]", conn);
-            using (MySqlDataReader reader = cmd.ExecuteReader())
-            {
-                reader.Read();
-                Assert.AreEqual(1, reader.GetInt32(0));
-                Assert.AreEqual("A", reader.GetString(1));
-            }
-        }
+			MySqlCommand cmd = new MySqlCommand("SELECT [id], [name] FROM [Test]", conn);
+			using (MySqlDataReader reader = cmd.ExecuteReader())
+			{
+				reader.Read();
+				Assert.AreEqual(1, reader.GetInt32(0));
+				Assert.AreEqual("A", reader.GetString(1));
+			}
+		}
 	}
 }

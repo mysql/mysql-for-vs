@@ -1,4 +1,4 @@
-// Copyright (c) 2004-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+// Copyright © 2004, 2010, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -57,19 +57,19 @@ namespace MySql.Data.MySqlClient
 			this.isFatal = isFatal;
 		}
 
-        internal MySqlException(string msg, int errno, Exception inner)
-            : this(msg, inner)
-        {
-            errorCode = errno;
+		internal MySqlException(string msg, int errno, Exception inner)
+			: this(msg, inner)
+		{
+			errorCode = errno;
 #if !CF
-            Data.Add("Server Error Code", errno);
+			Data.Add("Server Error Code", errno);
 #endif
-        }
+		}
 
-        internal MySqlException(string msg, int errno)
-            : this(msg, errno, null)
-        {
-        }
+		internal MySqlException(string msg, int errno)
+			: this(msg, errno, null)
+		{
+		}
 
 #if !CF
 		private MySqlException(SerializationInfo info, StreamingContext context) : base(info, context)
@@ -93,13 +93,13 @@ namespace MySql.Data.MySqlClient
 			get { return isFatal; }
 		}
 
-        internal bool IsQueryAborted
-        {
-            get
-            {
-                return (errorCode == (int)MySqlErrorCode.QueryInterrupted ||
-                    errorCode == (int)MySqlErrorCode.FileSortAborted);
-            }
-        }
+		internal bool IsQueryAborted
+		{
+			get
+			{
+				return (errorCode == (int)MySqlErrorCode.QueryInterrupted ||
+					errorCode == (int)MySqlErrorCode.FileSortAborted);
+			}
+		}
 	}
 }

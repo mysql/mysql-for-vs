@@ -1,4 +1,4 @@
-// Copyright (c) 2004-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+// Copyright © 2004, 2010, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -28,25 +28,25 @@ namespace MySql.Data.MySqlClient
 {
 
 
-    /// <summary>
-    /// Helper class that makes it easier to work with the provider.
-    /// </summary>
-    public sealed class MySqlHelper
-    {
-        enum CharClass : byte
-        {
-            None,
-            Quote,
-            Backslash
-        }
+	/// <summary>
+	/// Helper class that makes it easier to work with the provider.
+	/// </summary>
+	public sealed class MySqlHelper
+	{
+		enum CharClass : byte
+		{
+			None,
+			Quote,
+			Backslash
+		}
 
-        private static string stringOfBackslashChars = "\u005c\u00a5\u0160\u20a9\u2216\ufe68\uff3c";
-        private static string stringOfQuoteChars =
-            "\u0027\u0060\u00b4\u02b9\u02ba\u02bb\u02bc\u02c8\u02ca\u02cb\u02d9\u0300\u0301\u2018\u2019\u201a\u2032\u2035\u275b\u275c\uff07";
+		private static string stringOfBackslashChars = "\u005c\u00a5\u0160\u20a9\u2216\ufe68\uff3c";
+		private static string stringOfQuoteChars =
+			"\u0027\u0060\u00b4\u02b9\u02ba\u02bb\u02bc\u02c8\u02ca\u02cb\u02d9\u0300\u0301\u2018\u2019\u201a\u2032\u2035\u275b\u275c\uff07";
 
-        private static CharClass[] charClassArray = makeCharClassArray();
-       
-        // this class provides only static methods
+		private static CharClass[] charClassArray = makeCharClassArray();
+	   
+		// this class provides only static methods
 		private MySqlHelper()
 		{
 		}
@@ -276,17 +276,17 @@ namespace MySql.Data.MySqlClient
 			return ExecuteReader(connectionString, commandText, (MySqlParameter[])null);
 		}
 
-        /// <summary>
-        /// Executes a single command against a MySQL database.
-        /// </summary>
-        /// <param name="connection"><see cref="MySqlConnection"/> object to use for the command</param>
-        /// <param name="commandText">Command text to use</param>
-        /// <returns><see cref="MySqlDataReader"/> object ready to read the results of the command</returns>
-        public static MySqlDataReader ExecuteReader(MySqlConnection connection, string commandText)
-        {
-            //pass through the call providing null for the set of SqlParameters
-            return ExecuteReader(connection, null, commandText, (MySqlParameter[])null, true);
-        }
+		/// <summary>
+		/// Executes a single command against a MySQL database.
+		/// </summary>
+		/// <param name="connection"><see cref="MySqlConnection"/> object to use for the command</param>
+		/// <param name="commandText">Command text to use</param>
+		/// <returns><see cref="MySqlDataReader"/> object ready to read the results of the command</returns>
+		public static MySqlDataReader ExecuteReader(MySqlConnection connection, string commandText)
+		{
+			//pass through the call providing null for the set of SqlParameters
+			return ExecuteReader(connection, null, commandText, (MySqlParameter[])null, true);
+		}
 
 		/// <summary>
 		/// Executes a single command against a MySQL database.
@@ -298,25 +298,25 @@ namespace MySql.Data.MySqlClient
 		public static MySqlDataReader ExecuteReader(string connectionString, string commandText, params MySqlParameter[] commandParameters)
 		{
 			//create & open a SqlConnection
-            MySqlConnection cn = new MySqlConnection(connectionString);
-  			cn.Open();
+			MySqlConnection cn = new MySqlConnection(connectionString);
+			cn.Open();
 
 			//call the private overload that takes an internally owned connection in place of the connection string
 			return ExecuteReader(cn, null, commandText, commandParameters, false);
 		}
 
-        /// <summary>
-        /// Executes a single command against a MySQL database.
-        /// </summary>
-        /// <param name="connection">Connection to use for the command</param>
-        /// <param name="commandText">Command text to use</param>
-        /// <param name="commandParameters">Array of <see cref="MySqlParameter"/> objects to use with the command</param>
-        /// <returns><see cref="MySqlDataReader"/> object ready to read the results of the command</returns>
-        public static MySqlDataReader ExecuteReader(MySqlConnection connection, string commandText, params MySqlParameter[] commandParameters)
-        {
-            //call the private overload that takes an internally owned connection in place of the connection string
-            return ExecuteReader(connection, null, commandText, commandParameters, true);
-        }
+		/// <summary>
+		/// Executes a single command against a MySQL database.
+		/// </summary>
+		/// <param name="connection">Connection to use for the command</param>
+		/// <param name="commandText">Command text to use</param>
+		/// <param name="commandParameters">Array of <see cref="MySqlParameter"/> objects to use with the command</param>
+		/// <returns><see cref="MySqlDataReader"/> object ready to read the results of the command</returns>
+		public static MySqlDataReader ExecuteReader(MySqlConnection connection, string commandText, params MySqlParameter[] commandParameters)
+		{
+			//call the private overload that takes an internally owned connection in place of the connection string
+			return ExecuteReader(connection, null, commandText, commandParameters, true);
+		}
 
 
 		#endregion
@@ -396,76 +396,76 @@ namespace MySql.Data.MySqlClient
 
 		#endregion
 
-        #region Utility methods
-        private static CharClass[] makeCharClassArray()
-        {
+		#region Utility methods
+		private static CharClass[] makeCharClassArray()
+		{
 
-            CharClass[] a = new CharClass[65536];
-            foreach (char c in stringOfBackslashChars)
-            {
-                a[c] = CharClass.Backslash;
-            }
-            foreach (char c in stringOfQuoteChars)
-            {
-                a[c] = CharClass.Quote;
-            }
-            return a;
-        }
+			CharClass[] a = new CharClass[65536];
+			foreach (char c in stringOfBackslashChars)
+			{
+				a[c] = CharClass.Backslash;
+			}
+			foreach (char c in stringOfQuoteChars)
+			{
+				a[c] = CharClass.Quote;
+			}
+			return a;
+		}
 
-        private static bool needsQuoting(string s)
-        {
-            foreach (char c in s)
-            {
-                if (charClassArray[c] != CharClass.None)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+		private static bool needsQuoting(string s)
+		{
+			foreach (char c in s)
+			{
+				if (charClassArray[c] != CharClass.None)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
 
-        /// <summary>
-        /// Escapes the string.
-        /// </summary>
-        /// <param name="value">The string to escape</param>
-        /// <returns>The string with all quotes escaped.</returns>
-        public static string EscapeString(string value)
-        {
-            if (!needsQuoting(value))
-                return value;
+		/// <summary>
+		/// Escapes the string.
+		/// </summary>
+		/// <param name="value">The string to escape</param>
+		/// <returns>The string with all quotes escaped.</returns>
+		public static string EscapeString(string value)
+		{
+			if (!needsQuoting(value))
+				return value;
 
-            StringBuilder sb = new StringBuilder();
+			StringBuilder sb = new StringBuilder();
 
-            foreach (char c in value)
-            {
-                CharClass charClass = charClassArray[c];
-                if (charClass != CharClass.None)
-                {
-                    sb.Append("\\");
-                }
-                sb.Append(c);
-            }
-            return sb.ToString();
-        }
+			foreach (char c in value)
+			{
+				CharClass charClass = charClassArray[c];
+				if (charClass != CharClass.None)
+				{
+					sb.Append("\\");
+				}
+				sb.Append(c);
+			}
+			return sb.ToString();
+		}
 
-        public static string DoubleQuoteString(string value)
-        {
-            if (!needsQuoting(value))
-                return value;
+		public static string DoubleQuoteString(string value)
+		{
+			if (!needsQuoting(value))
+				return value;
 
-            StringBuilder sb = new StringBuilder();
-            foreach (char c in value)
-            {
-                CharClass charClass = charClassArray[c];
-                if (charClass == CharClass.Quote)
-                    sb.Append(c);
-                else if (charClass == CharClass.Backslash)
-                    sb.Append("\\");
-                sb.Append(c);
-            }
-            return sb.ToString();
-        }
+			StringBuilder sb = new StringBuilder();
+			foreach (char c in value)
+			{
+				CharClass charClass = charClassArray[c];
+				if (charClass == CharClass.Quote)
+					sb.Append(c);
+				else if (charClass == CharClass.Backslash)
+					sb.Append("\\");
+				sb.Append(c);
+			}
+			return sb.ToString();
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

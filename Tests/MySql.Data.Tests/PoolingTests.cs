@@ -1,4 +1,4 @@
-// Copyright (c) 2004-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+// Copyright © 2004, 2011, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -39,7 +39,7 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void Connection()
 		{
-            string connStr = GetPoolingConnectionString();
+			string connStr = GetPoolingConnectionString();
 
 			MySqlConnection c = new MySqlConnection(connStr);
 			c.Open();
@@ -87,7 +87,7 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void OpenKilled()
 		{ 
-            string connStr = GetPoolingConnectionString() + ";min pool size=1; max pool size=1";
+			string connStr = GetPoolingConnectionString() + ";min pool size=1; max pool size=1";
 			MySqlConnection c = new MySqlConnection(connStr);
 			c.Open();
 			int threadId = c.ServerThread;
@@ -109,7 +109,7 @@ namespace MySql.Data.MySqlClient.Tests
 		public void ReclaimBrokenConnection()
 		{
 			// now create a new connection string only allowing 1 connection in the pool
-            string connStr = GetPoolingConnectionString() + ";connect timeout=2;max pool size=1";
+			string connStr = GetPoolingConnectionString() + ";connect timeout=2;max pool size=1";
 
 			// now use up that connection
 			MySqlConnection c = new MySqlConnection(connStr);
@@ -138,54 +138,54 @@ namespace MySql.Data.MySqlClient.Tests
 			// Opening a connection now should work
 			MySqlConnection connection = new MySqlConnection(connStr);
 			connection.Open();
-            KillConnection(connection);
-            connection.Close();
+			KillConnection(connection);
+			connection.Close();
 		}
 
 		[Test]
 		public void TestUserReset()
 		{
-            string connStr = GetPoolingConnectionString();
-            using (MySqlConnection c = new MySqlConnection(connStr))
-            {
-                c.Open();
-                MySqlCommand cmd = new MySqlCommand("SET @testvar='5'", c);
-                cmd.ExecuteNonQuery();
+			string connStr = GetPoolingConnectionString();
+			using (MySqlConnection c = new MySqlConnection(connStr))
+			{
+				c.Open();
+				MySqlCommand cmd = new MySqlCommand("SET @testvar='5'", c);
+				cmd.ExecuteNonQuery();
 
-                cmd.CommandText = "SELECT @testvar";
-                object var = cmd.ExecuteScalar();
-                Assert.AreEqual("5", var);
-                c.Close();
+				cmd.CommandText = "SELECT @testvar";
+				object var = cmd.ExecuteScalar();
+				Assert.AreEqual("5", var);
+				c.Close();
 
-                c.Open();
-    			object var2 = cmd.ExecuteScalar();
-	    		Assert.AreEqual(DBNull.Value, var2);
-                KillConnection(c);
-            }
+				c.Open();
+				object var2 = cmd.ExecuteScalar();
+				Assert.AreEqual(DBNull.Value, var2);
+				KillConnection(c);
+			}
 		}
-         
+		 
 #if !CF
-        // Test that thread does not come to pool after abort
-        [Test]
-        public void TestAbort()
-        {
-            string connStr = GetPoolingConnectionString();
-            int threadId;
-            using (MySqlConnection c = new MySqlConnection(connStr))
-            {
-                c.Open();
-                threadId = c.ServerThread;
-                MethodInfo abort  = c.GetType().GetMethod("Abort", 
-                    BindingFlags.NonPublic | BindingFlags.Instance);
-                abort.Invoke(c, null); 
-            }
-            using (MySqlConnection c1 = new MySqlConnection(connStr))
-            {
-                c1.Open();
-                Assert.IsTrue(c1.ServerThread != threadId);
-                KillConnection(c1);
-            }
-        }
+		// Test that thread does not come to pool after abort
+		[Test]
+		public void TestAbort()
+		{
+			string connStr = GetPoolingConnectionString();
+			int threadId;
+			using (MySqlConnection c = new MySqlConnection(connStr))
+			{
+				c.Open();
+				threadId = c.ServerThread;
+				MethodInfo abort  = c.GetType().GetMethod("Abort", 
+					BindingFlags.NonPublic | BindingFlags.Instance);
+				abort.Invoke(c, null); 
+			}
+			using (MySqlConnection c1 = new MySqlConnection(connStr))
+			{
+				c1.Open();
+				Assert.IsTrue(c1.ServerThread != threadId);
+				KillConnection(c1);
+			}
+		}
 #endif
 
 		/// <summary>
@@ -201,28 +201,28 @@ namespace MySql.Data.MySqlClient.Tests
 				") ENGINE=MyISAM DEFAULT CHARSET=utf8");
 
 			string connStr = GetPoolingConnectionString() + ";charset=utf8";
-            using (MySqlConnection con = new MySqlConnection(connStr))
-            {
-                con.Open();
+			using (MySqlConnection con = new MySqlConnection(connStr))
+			{
+				con.Open();
 
-                MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES (1, '??????????')", con);
-                cmd.ExecuteNonQuery();
+				MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES (1, '??????????')", con);
+				cmd.ExecuteNonQuery();
 
-                cmd = new MySqlCommand("SELECT value FROM test WHERE id = 1", con);
-                string firstS = cmd.ExecuteScalar().ToString();
-                Assert.AreEqual(originalValue, firstS);
+				cmd = new MySqlCommand("SELECT value FROM test WHERE id = 1", con);
+				string firstS = cmd.ExecuteScalar().ToString();
+				Assert.AreEqual(originalValue, firstS);
 
-                con.Close();
-                con.Open();
+				con.Close();
+				con.Open();
 
-                //Does not work:
-                cmd = new MySqlCommand("SELECT value FROM test WHERE id = 1", con);
-                string secondS = cmd.ExecuteScalar().ToString();
+				//Does not work:
+				cmd = new MySqlCommand("SELECT value FROM test WHERE id = 1", con);
+				string secondS = cmd.ExecuteScalar().ToString();
 
-                KillConnection(con);
-                con.Close();
-                Assert.AreEqual(firstS, secondS);
-            }
+				KillConnection(con);
+				con.Close();
+				Assert.AreEqual(firstS, secondS);
+			}
 		}
 
 #if !CF
@@ -249,12 +249,12 @@ namespace MySql.Data.MySqlClient.Tests
 			Thread t = new Thread(ts);
 			t.Start(c);
 
-            using (MySqlConnection c2 = new MySqlConnection(connStr))
-            {
-                c2.Open();
-                KillConnection(c2);
-            }
-            c.Close();
+			using (MySqlConnection c2 = new MySqlConnection(connStr))
+			{
+				c2.Open();
+				KillConnection(c2);
+			}
+			c.Close();
 		}
 
 #endif
@@ -263,7 +263,7 @@ namespace MySql.Data.MySqlClient.Tests
 		[Test]
 		public void NewTest()
 		{
-            if (Version < new Version(5, 0)) return;
+			if (Version < new Version(5, 0)) return;
 
 			execSQL("CREATE TABLE Test (id INT, name VARCHAR(50))");
 			execSQL("CREATE PROCEDURE spTest(theid INT) BEGIN SELECT * FROM test WHERE id=theid; END");
@@ -272,7 +272,7 @@ namespace MySql.Data.MySqlClient.Tests
 			execSQL("INSERT INTO test VALUES (3, 'Third')");
 			execSQL("INSERT INTO test VALUES (4, 'Fourth')");
 
-            string connStr = GetPoolingConnectionString();
+			string connStr = GetPoolingConnectionString();
 
 			for (int i = 1; i < 5; i++)
 			{
@@ -280,7 +280,7 @@ namespace MySql.Data.MySqlClient.Tests
 				{
 					con.Open();
 					MySqlCommand reccmd = new MySqlCommand("spTest", con);
-                    reccmd.CommandTimeout = 0;
+					reccmd.CommandTimeout = 0;
 					reccmd.CommandType = CommandType.StoredProcedure;
 					MySqlParameter par = new MySqlParameter("@theid", MySqlDbType.String);
 					par.Value = i;
@@ -295,9 +295,9 @@ namespace MySql.Data.MySqlClient.Tests
 					}
 				}
 			}
-            MySqlConnection c = new MySqlConnection(connStr);
-            c.Open();
-            KillConnection(c);
+			MySqlConnection c = new MySqlConnection(connStr);
+			c.Open();
+			KillConnection(c);
 		}
 
 		/// <summary>
@@ -323,101 +323,101 @@ namespace MySql.Data.MySqlClient.Tests
 						c.Close();*/
 		}
 
-        bool IsConnectionAlive(int serverThread)
-        {
-            MySqlDataAdapter da = new MySqlDataAdapter("SHOW PROCESSLIST", conn);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-            foreach (DataRow row in dt.Rows)
-                if ((long)row["Id"] == serverThread)
-                    return true;
-            return false;
-        }
+		bool IsConnectionAlive(int serverThread)
+		{
+			MySqlDataAdapter da = new MySqlDataAdapter("SHOW PROCESSLIST", conn);
+			DataTable dt = new DataTable();
+			da.Fill(dt);
+			foreach (DataRow row in dt.Rows)
+				if ((long)row["Id"] == serverThread)
+					return true;
+			return false;
+		}
 
-        [Test]
-        public void CleanIdleConnections()
-        {
-            string assemblyName = typeof(MySqlConnection).Assembly.FullName;
-            string pmName = String.Format("MySql.Data.MySqlClient.MySqlPoolManager, {0}", assemblyName);
+		[Test]
+		public void CleanIdleConnections()
+		{
+			string assemblyName = typeof(MySqlConnection).Assembly.FullName;
+			string pmName = String.Format("MySql.Data.MySqlClient.MySqlPoolManager, {0}", assemblyName);
 
-            Type poolManager = Type.GetType(pmName, false);
-            FieldInfo poolManagerTimerField = poolManager.GetField("timer",
-                BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
-            FieldInfo poolManagerMaxConnectionIdleTime = 
-                poolManager.GetField ("maxConnectionIdleTime", 
-                BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+			Type poolManager = Type.GetType(pmName, false);
+			FieldInfo poolManagerTimerField = poolManager.GetField("timer",
+				BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+			FieldInfo poolManagerMaxConnectionIdleTime = 
+				poolManager.GetField ("maxConnectionIdleTime", 
+				BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
 
-            Timer poolManagerTimer = (Timer)poolManagerTimerField.GetValue(null);
-            int origMaxConnectionIdleTime = (int) poolManagerMaxConnectionIdleTime.GetValue(null);
+			Timer poolManagerTimer = (Timer)poolManagerTimerField.GetValue(null);
+			int origMaxConnectionIdleTime = (int) poolManagerMaxConnectionIdleTime.GetValue(null);
 
 
-            try
-            {
-                // Normally, idle connection would expire after 3 minutes and would
-                // be cleaned up by timer that also runs every 3 minutes.
-                // Since we do not want to wait that long during a unit tests,
-                // we use tricks.
-                // - temporarily  reduce max.idle time for connections down to 1
-                // second
-                // - temporarily change cleanup timer to run each second.
-                int threadId = -1;
-                string connStr = GetPoolingConnectionString();
-                using (MySqlConnection c = new MySqlConnection(connStr))
-                {
-                    c.Open();
-                    threadId = c.ServerThread;
-                }
+			try
+			{
+				// Normally, idle connection would expire after 3 minutes and would
+				// be cleaned up by timer that also runs every 3 minutes.
+				// Since we do not want to wait that long during a unit tests,
+				// we use tricks.
+				// - temporarily  reduce max.idle time for connections down to 1
+				// second
+				// - temporarily change cleanup timer to run each second.
+				int threadId = -1;
+				string connStr = GetPoolingConnectionString();
+				using (MySqlConnection c = new MySqlConnection(connStr))
+				{
+					c.Open();
+					threadId = c.ServerThread;
+				}
 
-                // Pooled connection should be still alive
-                Assert.IsTrue(IsConnectionAlive(threadId));
+				// Pooled connection should be still alive
+				Assert.IsTrue(IsConnectionAlive(threadId));
 
-                poolManagerMaxConnectionIdleTime.SetValue(null, 1);
-                poolManagerTimer.Change(1000, 1000);
+				poolManagerMaxConnectionIdleTime.SetValue(null, 1);
+				poolManagerTimer.Change(1000, 1000);
 
-                // Let the idle connection expire and let cleanup timer run.
-                Thread.Sleep(2500);
+				// Let the idle connection expire and let cleanup timer run.
+				Thread.Sleep(2500);
 
-                // The connection that was pooled must be dead now
-                Assert.IsFalse(IsConnectionAlive(threadId));
-            }
-            finally
-            {
-                // restore values for connection idle time and timer interval
-                poolManagerMaxConnectionIdleTime.SetValue(null, origMaxConnectionIdleTime);
-                poolManagerTimer.Change(origMaxConnectionIdleTime*1000, 
-                    origMaxConnectionIdleTime*1000);
-            }
-        }
+				// The connection that was pooled must be dead now
+				Assert.IsFalse(IsConnectionAlive(threadId));
+			}
+			finally
+			{
+				// restore values for connection idle time and timer interval
+				poolManagerMaxConnectionIdleTime.SetValue(null, origMaxConnectionIdleTime);
+				poolManagerTimer.Change(origMaxConnectionIdleTime*1000, 
+					origMaxConnectionIdleTime*1000);
+			}
+		}
 
 		[Test]
 		public void ClearPool()
 		{
-            // Start by clearing clearingPools for a clean test
-            List<MySqlPool> clearingPools = GetClearingPools();
-            clearingPools.Clear();
+			// Start by clearing clearingPools for a clean test
+			List<MySqlPool> clearingPools = GetClearingPools();
+			clearingPools.Clear();
 
 			string connStr = GetPoolingConnectionString() + ";min pool size=10";
-            MySqlConnectionStringBuilder settings = new MySqlConnectionStringBuilder(connStr);
-            
+			MySqlConnectionStringBuilder settings = new MySqlConnectionStringBuilder(connStr);
+			
 			MySqlConnection[] connections = new MySqlConnection[10];
 			connections[0] = new MySqlConnection(connStr);
 			connections[0].Open();
 
-            Type poolManagerType = typeof(MySqlPoolManager);
-            FieldInfo poolManagerHashTable = poolManagerType.GetField("pools",
-                BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
-            Hashtable poolHash = (Hashtable)poolManagerHashTable.GetValue(null);
+			Type poolManagerType = typeof(MySqlPoolManager);
+			FieldInfo poolManagerHashTable = poolManagerType.GetField("pools",
+				BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+			Hashtable poolHash = (Hashtable)poolManagerHashTable.GetValue(null);
 
-            // now we need to investigate
-            Type poolType = typeof(MySqlPool);
+			// now we need to investigate
+			Type poolType = typeof(MySqlPool);
 
-            FieldInfo inUsePool = poolType.GetField("inUsePool", BindingFlags.NonPublic | BindingFlags.Instance);
-            ICollection inUseList = (ICollection)inUsePool.GetValue(poolHash[settings.ConnectionString]);
-            Assert.AreEqual(1, inUseList.Count);
+			FieldInfo inUsePool = poolType.GetField("inUsePool", BindingFlags.NonPublic | BindingFlags.Instance);
+			ICollection inUseList = (ICollection)inUsePool.GetValue(poolHash[settings.ConnectionString]);
+			Assert.AreEqual(1, inUseList.Count);
 
-            FieldInfo idlePool = poolType.GetField("idlePool", BindingFlags.NonPublic | BindingFlags.Instance);
-            ICollection idleList = (ICollection)idlePool.GetValue(poolHash[settings.ConnectionString]);
-            Assert.AreEqual(9, idleList.Count);
+			FieldInfo idlePool = poolType.GetField("idlePool", BindingFlags.NonPublic | BindingFlags.Instance);
+			ICollection idleList = (ICollection)idlePool.GetValue(poolHash[settings.ConnectionString]);
+			Assert.AreEqual(9, idleList.Count);
 
 			// now open 4 more of these.  Now we shoudl have 5 open and five
 			// still in the pool
@@ -427,29 +427,29 @@ namespace MySql.Data.MySqlClient.Tests
 				connections[i].Open();
 			}
 
-            Assert.AreEqual(5, inUseList.Count);
-            Assert.AreEqual(5, idleList.Count);
+			Assert.AreEqual(5, inUseList.Count);
+			Assert.AreEqual(5, idleList.Count);
 
-            clearingPools = GetClearingPools();
-            Assert.AreEqual(0, clearingPools.Count);
+			clearingPools = GetClearingPools();
+			Assert.AreEqual(0, clearingPools.Count);
 
 			// now tell this connection to clear its pool
 			MySqlConnection.ClearPool(connections[0]);
-            Assert.AreEqual(1, clearingPools.Count);
+			Assert.AreEqual(1, clearingPools.Count);
 			Assert.AreEqual(0, idleList.Count);
 
 			for (int i = 0; i < 5; i++)
 				connections[i].Close();
-            Assert.AreEqual(0, clearingPools.Count);
+			Assert.AreEqual(0, clearingPools.Count);
 		}
 
-        private static List<MySqlPool> GetClearingPools()
-        {
-            Type poolManagerType = typeof(MySqlPoolManager);
-            FieldInfo clearingPoolsFI = poolManagerType.GetField("clearingPools",
-                BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
-            return clearingPoolsFI.GetValue(null) as List<MySqlPool>;
-        }
+		private static List<MySqlPool> GetClearingPools()
+		{
+			Type poolManagerType = typeof(MySqlPoolManager);
+			FieldInfo clearingPoolsFI = poolManagerType.GetField("clearingPools",
+				BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+			return clearingPoolsFI.GetValue(null) as List<MySqlPool>;
+		}
 
 		[Test]
 		public void TestBadConnections()
@@ -482,103 +482,103 @@ namespace MySql.Data.MySqlClient.Tests
 			MySqlConnection.ClearAllPools();
 		}
 
-        /// <summary>
-        /// Bug #42801  	ClearPool .Net connector : NullReferenceException
-        /// </summary>
-        [Test]
-        public void DoubleClearingConnectionPool()
-        {
-            MySqlConnection c1 = new MySqlConnection(GetConnectionString(true));
-            MySqlConnection c2 = new MySqlConnection(GetConnectionString(true));
-            c1.Open();
-            c2.Open();
-            c1.Close();
-            c2.Close();
-            MySqlConnection.ClearPool(c1);
-            MySqlConnection.ClearPool(c2);
-        }
+		/// <summary>
+		/// Bug #42801  	ClearPool .Net connector : NullReferenceException
+		/// </summary>
+		[Test]
+		public void DoubleClearingConnectionPool()
+		{
+			MySqlConnection c1 = new MySqlConnection(GetConnectionString(true));
+			MySqlConnection c2 = new MySqlConnection(GetConnectionString(true));
+			c1.Open();
+			c2.Open();
+			c1.Close();
+			c2.Close();
+			MySqlConnection.ClearPool(c1);
+			MySqlConnection.ClearPool(c2);
+		}
 
-        /// <summary>
-        /// Bug #49563  	Mysql Client wrongly communications with server when using pooled connections
-        /// </summary>
-        [Test]
-        public void OpenSecondPooledConnectionWithoutDatabase()
-        {
-            string connectionString = GetPoolingConnectionString();
+		/// <summary>
+		/// Bug #49563  	Mysql Client wrongly communications with server when using pooled connections
+		/// </summary>
+		[Test]
+		public void OpenSecondPooledConnectionWithoutDatabase()
+		{
+			string connectionString = GetPoolingConnectionString();
 
-            using (MySqlConnection c1 = new MySqlConnection(connectionString))
-            {
-                c1.Open();
-                c1.Close();
-            }
-            using (MySqlConnection c2 = new MySqlConnection(connectionString))
-            {
-                c2.Open();
-                c2.Close();
-            }
-        }
+			using (MySqlConnection c1 = new MySqlConnection(connectionString))
+			{
+				c1.Open();
+				c1.Close();
+			}
+			using (MySqlConnection c2 = new MySqlConnection(connectionString))
+			{
+				c2.Open();
+				c2.Close();
+			}
+		}
 
-        /// <summary>
-        /// Bug #47153	Connector/NET fails to reset connection when encoding has changed
-        /// </summary>
-        [Test]
-        public void ConnectionResetAfterUnicode()
-        {
-            execSQL("CREATE TABLE test (id INT, name VARCHAR(20) CHARSET UCS2)");
-            execSQL("INSERT INTO test VALUES (1, 'test')");
+		/// <summary>
+		/// Bug #47153	Connector/NET fails to reset connection when encoding has changed
+		/// </summary>
+		[Test]
+		public void ConnectionResetAfterUnicode()
+		{
+			execSQL("CREATE TABLE test (id INT, name VARCHAR(20) CHARSET UCS2)");
+			execSQL("INSERT INTO test VALUES (1, 'test')");
 
-            string connStr = GetPoolingConnectionString() + ";connection reset=true;min pool size=1; max pool size=1";
-            using (MySqlConnection c = new MySqlConnection(connStr))
-            {
-                c.Open();
-                MySqlCommand cmd = new MySqlCommand("SELECT * FROM test", c);
-                using (MySqlDataReader r = cmd.ExecuteReader())
-                {
-                    r.Read();
-                }
-                c.Close();
+			string connStr = GetPoolingConnectionString() + ";connection reset=true;min pool size=1; max pool size=1";
+			using (MySqlConnection c = new MySqlConnection(connStr))
+			{
+				c.Open();
+				MySqlCommand cmd = new MySqlCommand("SELECT * FROM test", c);
+				using (MySqlDataReader r = cmd.ExecuteReader())
+				{
+					r.Read();
+				}
+				c.Close();
 
-                try
-                {
-                    c.Open();
-                }
-                finally
-                {
-                    KillConnection(c);
-                }
-            }
-        }
+				try
+				{
+					c.Open();
+				}
+				finally
+				{
+					KillConnection(c);
+				}
+			}
+		}
 
 #if !CF
-        private void CacheServerPropertiesInternal(bool cache)
-        {
-            string connStr = GetPoolingConnectionString() + 
-                String.Format(";logging=true;cache server properties={0}", cache);
+		private void CacheServerPropertiesInternal(bool cache)
+		{
+			string connStr = GetPoolingConnectionString() + 
+				String.Format(";logging=true;cache server properties={0}", cache);
 
-            GenericListener listener = new GenericListener();
-            MySqlTrace.Listeners.Add(listener);
-            MySqlTrace.Switch.Level = System.Diagnostics.SourceLevels.All;
+			GenericListener listener = new GenericListener();
+			MySqlTrace.Listeners.Add(listener);
+			MySqlTrace.Switch.Level = System.Diagnostics.SourceLevels.All;
 
-            using (MySqlConnection c = new MySqlConnection(connStr))
-            {
-                c.Open();
-                using (MySqlConnection c2 = new MySqlConnection(connStr))
-                {
-                    c2.Open();
-                    KillConnection(c2);
-                }
-                KillConnection(c);
-            }
-            int count = listener.CountLinesContaining("SHOW VARIABLES");
-            Assert.AreEqual(cache ? 1 : 2, count);
-        }
+			using (MySqlConnection c = new MySqlConnection(connStr))
+			{
+				c.Open();
+				using (MySqlConnection c2 = new MySqlConnection(connStr))
+				{
+					c2.Open();
+					KillConnection(c2);
+				}
+				KillConnection(c);
+			}
+			int count = listener.CountLinesContaining("SHOW VARIABLES");
+			Assert.AreEqual(cache ? 1 : 2, count);
+		}
 
-        [Test]
-        public void CacheServerProperties()
-        {
-            CacheServerPropertiesInternal(true);
-            CacheServerPropertiesInternal(false);
-        }
+		[Test]
+		public void CacheServerProperties()
+		{
+			CacheServerPropertiesInternal(true);
+			CacheServerPropertiesInternal(false);
+		}
 #endif
-    }
+	}
 }
