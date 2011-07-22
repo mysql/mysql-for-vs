@@ -1,4 +1,4 @@
-// Copyright (c) 2004-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+// Copyright © 2004, 2010, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -37,8 +37,8 @@ namespace MySql.Data.MySqlClient
 	public sealed class MySqlDataAdapter : DbDataAdapter, IDbDataAdapter, IDataAdapter, ICloneable
 	{
 		private bool loadingDefaults;
-        private int updateBatchSize;
-        List<IDbCommand> commandBatch;
+		private int updateBatchSize;
+		List<IDbCommand> commandBatch;
 
 		/// <summary>
 		/// Occurs during Update before a command is executed against the data source. The attempt to update is made, so the event fires.
@@ -54,7 +54,7 @@ namespace MySql.Data.MySqlClient
 		public MySqlDataAdapter()
 		{
 			loadingDefaults = true;
-            updateBatchSize = 1;
+			updateBatchSize = 1;
 		}
 
 		/// <include file='docs/MySqlDataAdapter.xml' path='docs/Ctor1/*'/>
@@ -106,7 +106,7 @@ namespace MySql.Data.MySqlClient
 		public new MySqlCommand SelectCommand 
 		{
 			get { return (MySqlCommand)base.SelectCommand; }
-            set { base.SelectCommand = value; }
+			set { base.SelectCommand = value; }
 		}
 
 		/// <include file='docs/MySqlDataAdapter.xml' path='docs/UpdateCommand/*'/>
@@ -127,140 +127,140 @@ namespace MySql.Data.MySqlClient
 
 		#endregion
 
-        /// <summary>
-        /// Open connection if it was closed.
-        /// Necessary to workaround "connection must be open and valid" error
-        /// with batched updates.
-        /// </summary>
-        /// <param name="state">Row state</param>
-        /// <param name="openedConnections"> list of opened connections 
-        /// If connection is opened by this function, the list is updated
-        /// </param>
-        /// <returns>true if connection was opened</returns>
-        private void OpenConnectionIfClosed(DataRowState state,
-            List<MySqlConnection> openedConnections)
-        {
-            MySqlCommand cmd = null;
-            switch (state)
-            {
-                case DataRowState.Added:
-                    cmd = InsertCommand;
-                    break;
-                case DataRowState.Deleted:
-                    cmd = DeleteCommand;
-                    break;
-                case DataRowState.Modified:
-                    cmd = UpdateCommand;
-                    break;
-                default:
-                    return;
-            }
+		/// <summary>
+		/// Open connection if it was closed.
+		/// Necessary to workaround "connection must be open and valid" error
+		/// with batched updates.
+		/// </summary>
+		/// <param name="state">Row state</param>
+		/// <param name="openedConnections"> list of opened connections 
+		/// If connection is opened by this function, the list is updated
+		/// </param>
+		/// <returns>true if connection was opened</returns>
+		private void OpenConnectionIfClosed(DataRowState state,
+			List<MySqlConnection> openedConnections)
+		{
+			MySqlCommand cmd = null;
+			switch (state)
+			{
+				case DataRowState.Added:
+					cmd = InsertCommand;
+					break;
+				case DataRowState.Deleted:
+					cmd = DeleteCommand;
+					break;
+				case DataRowState.Modified:
+					cmd = UpdateCommand;
+					break;
+				default:
+					return;
+			}
 
-            if (cmd != null && cmd.Connection != null &&
-                cmd.Connection.connectionState == ConnectionState.Closed)
-            {
-                cmd.Connection.Open();
-                openedConnections.Add(cmd.Connection);
-            }
-        }
-
-
-        protected override int Update(DataRow[] dataRows, DataTableMapping tableMapping)
-        {
-
-            List<MySqlConnection> connectionsOpened = new List<MySqlConnection>();
-
-            try
-            {
-                // Open connections for insert/update/update commands, if 
-                // connections are closed.
-                foreach(DataRow row in dataRows)
-                {
-                    OpenConnectionIfClosed(row.RowState, connectionsOpened);
-                }
-
-                int ret = base.Update(dataRows, tableMapping);
-
-                return ret;
-            }
-            finally 
-            {
-                foreach(MySqlConnection c in connectionsOpened)
-                    c.Close();
-            }
-        }
+			if (cmd != null && cmd.Connection != null &&
+				cmd.Connection.connectionState == ConnectionState.Closed)
+			{
+				cmd.Connection.Open();
+				openedConnections.Add(cmd.Connection);
+			}
+		}
 
 
-        #region Batching Support
+		protected override int Update(DataRow[] dataRows, DataTableMapping tableMapping)
+		{
 
-        public override int UpdateBatchSize
-        {
-            get { return updateBatchSize; }
-            set { updateBatchSize = value; }
-        }
+			List<MySqlConnection> connectionsOpened = new List<MySqlConnection>();
 
-        protected override void InitializeBatching()
-        {
-            commandBatch = new List<IDbCommand>();
-        }
+			try
+			{
+				// Open connections for insert/update/update commands, if 
+				// connections are closed.
+				foreach(DataRow row in dataRows)
+				{
+					OpenConnectionIfClosed(row.RowState, connectionsOpened);
+				}
 
-        protected override int AddToBatch(IDbCommand command)
-        {
-            // the first time each command is asked to be batched, we ask
-            // that command to prepare its batchable command text.  We only want
-            // to do this one time for each command
-            MySqlCommand commandToBatch = (MySqlCommand)command;
-            if (commandToBatch.BatchableCommandText == null)
-                commandToBatch.GetCommandTextForBatching();
+				int ret = base.Update(dataRows, tableMapping);
 
-            IDbCommand cloneCommand = (IDbCommand)((ICloneable)command).Clone();
-            commandBatch.Add(cloneCommand);
+				return ret;
+			}
+			finally 
+			{
+				foreach(MySqlConnection c in connectionsOpened)
+					c.Close();
+			}
+		}
 
-            return commandBatch.Count - 1;
-        }
 
-        protected override int ExecuteBatch()
-        {
-            int recordsAffected = 0;
-            int index = 0;
-            while (index < commandBatch.Count)
-            {
-                MySqlCommand cmd = (MySqlCommand)commandBatch[index++];
-                for (int index2 = index; index2 < commandBatch.Count; index2++,index++)
-                {
-                    MySqlCommand cmd2 = (MySqlCommand)commandBatch[index2];
-                    if (cmd2.BatchableCommandText == null || 
-                        cmd2.CommandText != cmd.CommandText) break;
-                    cmd.AddToBatch(cmd2);
-                }
-                recordsAffected += cmd.ExecuteNonQuery();
-            }
-            return recordsAffected;
-        }
+		#region Batching Support
 
-        protected override void ClearBatch()
-        {
-            if (commandBatch.Count > 0)
-            {
-                MySqlCommand cmd = (MySqlCommand)commandBatch[0];
-                if (cmd.Batch != null)
-                    cmd.Batch.Clear();
-            }
-            commandBatch.Clear();
-        }
+		public override int UpdateBatchSize
+		{
+			get { return updateBatchSize; }
+			set { updateBatchSize = value; }
+		}
 
-        protected override void TerminateBatching()
-        {
-            ClearBatch();
-            commandBatch = null;
-        }
+		protected override void InitializeBatching()
+		{
+			commandBatch = new List<IDbCommand>();
+		}
 
-        protected override IDataParameter GetBatchedParameter(int commandIdentifier, int parameterIndex)
-        {
-            return (IDataParameter)commandBatch[commandIdentifier].Parameters[parameterIndex];
-        }
+		protected override int AddToBatch(IDbCommand command)
+		{
+			// the first time each command is asked to be batched, we ask
+			// that command to prepare its batchable command text.  We only want
+			// to do this one time for each command
+			MySqlCommand commandToBatch = (MySqlCommand)command;
+			if (commandToBatch.BatchableCommandText == null)
+				commandToBatch.GetCommandTextForBatching();
 
-        #endregion
+			IDbCommand cloneCommand = (IDbCommand)((ICloneable)command).Clone();
+			commandBatch.Add(cloneCommand);
+
+			return commandBatch.Count - 1;
+		}
+
+		protected override int ExecuteBatch()
+		{
+			int recordsAffected = 0;
+			int index = 0;
+			while (index < commandBatch.Count)
+			{
+				MySqlCommand cmd = (MySqlCommand)commandBatch[index++];
+				for (int index2 = index; index2 < commandBatch.Count; index2++,index++)
+				{
+					MySqlCommand cmd2 = (MySqlCommand)commandBatch[index2];
+					if (cmd2.BatchableCommandText == null || 
+						cmd2.CommandText != cmd.CommandText) break;
+					cmd.AddToBatch(cmd2);
+				}
+				recordsAffected += cmd.ExecuteNonQuery();
+			}
+			return recordsAffected;
+		}
+
+		protected override void ClearBatch()
+		{
+			if (commandBatch.Count > 0)
+			{
+				MySqlCommand cmd = (MySqlCommand)commandBatch[0];
+				if (cmd.Batch != null)
+					cmd.Batch.Clear();
+			}
+			commandBatch.Clear();
+		}
+
+		protected override void TerminateBatching()
+		{
+			ClearBatch();
+			commandBatch = null;
+		}
+
+		protected override IDataParameter GetBatchedParameter(int commandIdentifier, int parameterIndex)
+		{
+			return (IDataParameter)commandBatch[commandIdentifier].Parameters[parameterIndex];
+		}
+
+		#endregion
 
 		/// <summary>
 		/// Overridden. See <see cref="DbDataAdapter.CreateRowUpdatedEvent"/>.
@@ -294,8 +294,8 @@ namespace MySql.Data.MySqlClient
 		/// <param name="value">A MySqlRowUpdatingEventArgs that contains the event data.</param>
 		override protected void OnRowUpdating(RowUpdatingEventArgs value)
 		{
-            if (RowUpdating != null)
-                RowUpdating(this, (value as MySqlRowUpdatingEventArgs));
+			if (RowUpdating != null)
+				RowUpdating(this, (value as MySqlRowUpdatingEventArgs));
 		}
 
 		/// <summary>
@@ -304,8 +304,8 @@ namespace MySql.Data.MySqlClient
 		/// <param name="value">A MySqlRowUpdatedEventArgs that contains the event data. </param>
 		override protected void OnRowUpdated(RowUpdatedEventArgs value)
 		{
-            if (RowUpdated != null)
-                RowUpdated(this, (value as MySqlRowUpdatedEventArgs));
+			if (RowUpdated != null)
+				RowUpdated(this, (value as MySqlRowUpdatedEventArgs));
 		}
 	}
 
@@ -328,7 +328,7 @@ namespace MySql.Data.MySqlClient
 		/// Initializes a new instance of the MySqlRowUpdatingEventArgs class.
 		/// </summary>
 		/// <param name="row">The <see cref="DataRow"/> to 
-        /// <see cref="DbDataAdapter.Update(DataSet)"/>.</param>
+		/// <see cref="DbDataAdapter.Update(DataSet)"/>.</param>
 		/// <param name="command">The <see cref="IDbCommand"/> to execute during <see cref="DbDataAdapter.Update(DataSet)"/>.</param>
 		/// <param name="statementType">One of the <see cref="StatementType"/> values that specifies the type of query executed.</param>
 		/// <param name="tableMapping">The <see cref="DataTableMapping"/> sent through an <see cref="DbDataAdapter.Update(DataSet)"/>.</param>
