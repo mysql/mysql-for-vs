@@ -1,0 +1,33 @@
+﻿<NUnitProject>
+  <Settings activeconfig="Debug_Server55" />
+  <Config name="Debug_Server51" configfile="Server51.config" binpathtype="Auto">
+    <assembly path="VS2008\Tests\MySql.Data.Tests\bin\Debug\MySql.Data.Tests.dll" />
+    <assembly path="VS2008\Tests\MySql.Data.Entity.Tests\bin\Debug\MySql.Data.Entity.Tests.dll" />
+    <assembly path="VS2008\Tests\MySql.Web.Tests\bin\Debug\MySql.Web.Tests.dll" />
+  </Config>
+  <Config name="Release_Server51" configfile="Server51.config" binpathtype="Auto">
+    <assembly path="VS2008\Tests\MySql.Data.Tests\bin\Release\MySql.Data.Tests.dll" />
+    <assembly path="VS2008\Tests\MySql.Data.Entity.Tests\bin\Release\MySql.Data.Entity.Tests.dll" />
+    <assembly path="VS2008\Tests\MySql.Web.Tests\bin\Release\MySql.Web.Tests.dll" />
+  </Config>
+  <Config name="Debug_Server50" configfile="Server50.config" binpathtype="Auto">
+    <assembly path="VS2008\Tests\MySql.Data.Tests\bin\Debug\MySql.Data.Tests.dll" />
+    <assembly path="VS2008\Tests\MySql.Data.Entity.Tests\bin\Debug\MySql.Data.Entity.Tests.dll" />
+    <assembly path="VS2008\Tests\MySql.Web.Tests\bin\Debug\MySql.Web.Tests.dll" />
+  </Config>
+  <Config name="Release_Server50" configfile="Server50.config" binpathtype="Auto">
+    <assembly path="VS2008\Tests\MySql.Data.Tests\bin\Release\MySql.Data.Tests.dll" />
+    <assembly path="VS2008\Tests\MySql.Data.Entity.Tests\bin\Release\MySql.Data.Entity.Tests.dll" />
+    <assembly path="VS2008\Tests\MySql.Web.Tests\bin\Release\MySql.Web.Tests.dll" />
+  </Config>
+  <Config name="Release_Server55" configfile="Server55.config" binpathtype="Auto">
+    <assembly path="VS2008\Tests\MySql.Data.Tests\bin\Release\MySql.Data.Tests.dll" />
+    <assembly path="VS2008\Tests\MySql.Data.Entity.Tests\bin\Release\MySql.Data.Entity.Tests.dll" />
+    <assembly path="VS2008\Tests\MySql.Web.Tests\bin\Release\MySql.Web.Tests.dll" />
+  </Config>
+  <Config name="Debug_Server55" configfile="Server55.config" binpathtype="Auto">
+    <assembly path="VS2008\Tests\MySql.Data.Tests\bin\Debug\MySql.Data.Tests.dll" />
+    <assembly path="VS2008\Tests\MySql.Data.Entity.Tests\bin\Debug\MySql.Data.Entity.Tests.dll" />
+    <assembly path="VS2008\Tests\MySql.Web.Tests\bin\Debug\MySql.Web.Tests.dll" />
+  </Config>
+</NUnitProject>
