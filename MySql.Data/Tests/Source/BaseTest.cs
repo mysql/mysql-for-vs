@@ -64,31 +64,35 @@ namespace MySql.Data.MySqlClient.Tests
             Initialize();
         }
 
-		protected void LoadBaseConfiguration()
-		{
-			user = "test";
-			password = "test";
-			port = 3306;
-			rootUser = "root";
-			rootPassword = "";
-            string strPort = null;
+        protected void LoadBaseConfiguration()
+        {
+            user = "test";
+            password = "test";
+            string portString = null;
 
 #if !CF
-			host = ConfigurationManager.AppSettings["host"];
-			strPort = ConfigurationManager.AppSettings["port"];
-			pipeName = ConfigurationManager.AppSettings["pipename"];
-			memoryName = ConfigurationManager.AppSettings["memory_name"];
+            rootUser = ConfigurationManager.AppSettings["rootuser"];
+            rootPassword = ConfigurationManager.AppSettings["rootpassword"];
+            host = ConfigurationManager.AppSettings["host"];
+            portString = ConfigurationManager.AppSettings["port"];
+            pipeName = ConfigurationManager.AppSettings["pipename"];
+            memoryName = ConfigurationManager.AppSettings["memory_name"];
 #endif
-
-			if (strPort != null)
-				port = Int32.Parse(strPort);
-			if (host == null)
-				host = "localhost";
-			if (pipeName == null)
-				pipeName = "MYSQL";
-			if (memoryName == null)
-				memoryName = "MYSQL";
-		}
+            if (string.IsNullOrEmpty(rootUser))
+                rootUser = "root";
+            if (string.IsNullOrEmpty(rootPassword))
+                rootPassword = string.Empty;
+            if (string.IsNullOrEmpty(host))
+                host = "localhost";
+            if (string.IsNullOrEmpty(portString))
+                port = 3306;
+            else
+                port = int.Parse(portString);
+            if (string.IsNullOrEmpty(pipeName))
+                pipeName = "MYSQL";
+            if (string.IsNullOrEmpty(memoryName))
+                memoryName = "MYSQL";
+        }
 
         protected virtual void Initialize()
         {
