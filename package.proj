@@ -40,7 +40,7 @@
           Exclude="**/tmp/**;**/bin/**;**/obj/**;**/packages/**;**/.svn/**;**/output/**;
           **/user;**/debug/**;**/release/**;**/*.suo;**/cnet.snk;**/*.wixobj;
           **/*.msi;**/*.msm;*.Design.*;*-banner.txt;Design/**;**/doc.xml;
-          **/installer/**;**/documentation/**;**/PackageLoadKey.txt;**/*.cache;
+          **/installer/**;**/PackageLoadKey.txt;**/*.cache;
           **/*.proj;**/COPYING;**/*.bak;**/*.user;**/*.SourceAnalysis;
 	  **/MySql.Data.xml;**/*.InstallLog;**/*.bat;**/*.reg;**/thumbs.db;**/.bzr/**;
 	  **/.bzr-mysql/**;**/UpgradeLog*.*;**/*.bzrignore;**/*.~??"/>
@@ -91,7 +91,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <BinaryFiles Include="Documentation\Output\MySql.Data.chm"/>
       <BinaryFiles Include="COPYING" Condition=" '$(Configuration)' == 'GPL' "/>
       <BinaryFiles Include="README" Condition=" '$(Configuration)' == 'GPL' "/>
       <BinaryFiles Include="README-Commercial" Condition=" '$(Configuration)' == 'Commercial' "/>
@@ -100,11 +99,23 @@
       <BinaryFiles Include="CHANGES"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <DocFiles Include="Documentation\Output\MySql.Data.chm"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <LicenseFiles Include="Documentation\Licenses for Third-Party Connectors\license-us-secure-hash.html"/>
+      <LicenseFiles Include="Documentation\Licenses for Third-Party Connectors\license-zlib.html"/>
+      <LicenseFiles Include="Documentation\Licenses for Third-Party Connectors\license-zlib-net.html"/>
+    </ItemGroup>
+
     <RemoveDir Directories="tmp" ContinueOnError="true"/>
     <MakeDir Directories ="tmp"/>
     <Copy SourceFiles ="@(BinaryFiles)" DestinationFolder="tmp"/>
     <Copy SourceFiles ="@(V2Assemblies)" DestinationFolder="tmp\v2"/>
     <Copy SourceFiles ="@(V4Assemblies)" DestinationFolder="tmp\v4"/>
+    <Copy SourceFiles="@(DocFiles)" DestinationFolder="tmp/Documentation"/>
+    <Copy SourceFiles="@(LicenseFiles)" DestinationFolder="tmp/Documentation/Licenses for Third-Party Connectors"/>
     <Move SourceFiles="tmp/README-Commercial" DestinationFiles="tmp/README" Condition=" '$(Configuration)' == 'Commercial' "/>
     <ItemGroup>
       <ZipFiles Include="tmp/**"/>
