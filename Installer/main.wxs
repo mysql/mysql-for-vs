@@ -39,7 +39,9 @@
           <Directory Id='INSTALLDIR' Name='$(var.ProductName)'>
             <Directory Id='AssembliesDir' Name='Assemblies'/>
             <Directory Id='IntegrationDir' Name='Integration'/>
-            <Directory Id='DocsDir' Name='Documentation'/>
+            <Directory Id='DocsDir' Name='Documentation'>
+              <Directory Id='LicensesDir' Name='Licenses for Third-Party Components'/>
+            </Directory>
             <Directory Id='SampleDir' Name='Samples'/>
           </Directory>
         </Directory>
@@ -66,8 +68,17 @@
       </Component>
     </DirectoryRef>
 
+    <DirectoryRef Id="LicensesDir">
+      <Component Id="Licenses" Guid="F1314965-1B59-4c0f-B168-5DFAA4EB35BC">
+        <File Id="SecureHash" Name="license-us-secure-hash.html" Source="..\Documentation\Licenses for Third-Party Connectors\license-us-secure-hash.html" DiskId="1"/>
+        <File Id="Zlib" Name="license-zlib.html" Source="..\Documentation\Licenses for Third-Party Connectors\license-zlib.html" DiskId="1"/>
+        <File Id="Zlib.net" Name="license-zlib-net.html" Source="..\Documentation\Licenses for Third-Party Connectors\license-zlib-net.html" DiskId="1"/>
+      </Component>
+    </DirectoryRef>
+    
     <Feature Id='DocsFeature' Display='4' Level='1' Title='Documentation' Description='Documentation'>
       <ComponentRef Id='Docs'/>
+      <ComponentRef Id='Licenses'/>
     </Feature>
 
     <FeatureRef Id='Core.Feature'/>
