@@ -3,7 +3,11 @@
   <Fragment Id='CFFragment'>
     <DirectoryRef Id='assemblies_v2'>
       <Component Id="CFBinaries" Guid="5a9c32ad-62f5-4b24-a225-96acf42d88a1">
-        <File Id="cf1" Name="MySql.Data.CF.dll"
+        <File Id="MySql.Data.CF" Name="MySql.Data.CF.dll"
+              Source="..\VS2008\Source\mysql.data.cf\bin\release\mysql.data.CF.dll" DiskId="1"/>
+      </Component>
+      <Component Id="CFBinariesGAC" Guid="ADA23A51-4198-470f-B114-D95A5F9E46D0">
+        <File Id="MySql.Data.CF.GAC" Name="MySql.Data.CF.dll"
               Source="..\VS2008\Source\mysql.data.cf\bin\release\mysql.data.CF.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
       </Component>
     </DirectoryRef>
@@ -11,6 +15,7 @@
     <Feature Id='CompactFramework' Display='9' Level='1' Title='Compact Framework Support'
              Description='Support for .NET Compact Framework 2.0'>
       <ComponentRef Id='CFBinaries'/>
+      <ComponentRef Id='CFBinariesGAC'/>
     </Feature>
 
   </Fragment>
