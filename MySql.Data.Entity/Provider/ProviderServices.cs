@@ -30,6 +30,7 @@ using MySql.Data.Entity;
 using System.Reflection;
 using System.Diagnostics;
 using MySql.Data.Entity.Properties;
+using System.Globalization;
 
 namespace MySql.Data.MySqlClient
 {
@@ -183,7 +184,7 @@ namespace MySql.Data.MySqlClient
                 connection.Open();
                 shouldClose = true;
             }
-            double version = double.Parse(connection.ServerVersion.Substring(0, 3));
+            double version = double.Parse(connection.ServerVersion.Substring(0, 3), CultureInfo.InvariantCulture);
             
             if (shouldClose)
                 connection.Close();

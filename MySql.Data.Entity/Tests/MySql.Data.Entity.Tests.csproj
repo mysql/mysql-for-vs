@@ -74,6 +74,7 @@
     </Compile>
     <Compile Include="ProceduresAndFunctions.cs" />
     <Compile Include="JoinTests.cs" />
+    <Compile Include="ProviderServicesTests.cs" />
     <Compile Include="SchemaInformation.cs" />
     <Compile Include="Properties\SQLSyntax.Designer.cs">
       <AutoGen>True</AutoGen>
