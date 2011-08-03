@@ -3,7 +3,8 @@
 - Modified MySqlScript to enable correct processing of the DELIMITER command when not followed by 
   a new line (MySQL bug #61680, Oracle bug #12732279).
 - On Model First changed column types generated in sql script to produce more suitable MySql types (MySql bug #59244, Oracle bug #12707104).
-
+- Modified MySqlProviderServices.GetDbProviderManifestToken to use InvariantCulture when parsing the
+  server version (MySQL bug #61901, Oracle bug #12831581)
 
 6.4.3 (ga)
 - Modified SqlFragment.QuoteIdentifier to add MySQL quotes around identifiers (MySQL bug #61635, Oracle bug #12707285).
