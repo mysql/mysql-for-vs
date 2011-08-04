@@ -30,6 +30,7 @@ using System.Data.Common;
 using System.Data.Metadata.Edm;
 using System.Diagnostics;
 using MySql.Data.Entity.Properties;
+using System.Globalization;
 
 namespace MySql.Data.MySqlClient
 {
@@ -70,7 +71,7 @@ namespace MySql.Data.MySqlClient
 
         private XmlReader GetStoreSchemaDescription()
         {
-            double version = double.Parse(manifestToken);
+            double version = double.Parse(manifestToken, CultureInfo.InvariantCulture);
 
             if (version < 5.0) throw new NotSupportedException("Your version of MySQL is not currently supported");
             if (version < 5.1) return GetMappingResource("SchemaDefinition-5.0.ssdl");
