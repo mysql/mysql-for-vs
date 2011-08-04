@@ -1,4 +1,5 @@
-﻿// Copyright © 2008, 2011, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2008 MySQL AB, 2008-2009 Sun Microsystems, Inc., 
+// Copyright (c) 2011 Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -180,21 +181,17 @@ namespace MySql.Data.MySqlClient
         {
             // we need the connection option to determine what version of the server
             // we are connected to
-            bool shouldClose = false;
-            if (connection.State == ConnectionState.Closed)
+            MySqlConnectionStringBuilder msb = new MySqlConnectionStringBuilder(connection.ConnectionString);
+            msb.Database = null;
+            using (MySqlConnection c = new MySqlConnection(msb.ConnectionString))
             {
-                connection.Open();
-                shouldClose = true;
+                c.Open();                
+		        double version = double.Parse(c.ServerVersion.Substring(0, 3), CultureInfo.InvariantCulture);
+                if (version < 5.0) throw new NotSupportedException("Versions of MySQL prior to 5.0 are not currently supported");
+                if (version < 5.1) return "5.0";
+                if (version < 5.5) return "5.1";
+                return "5.5";
             }
-            double version = double.Parse(connection.ServerVersion.Substring(0, 3), CultureInfo.InvariantCulture);
-            
-            if (shouldClose)
-                connection.Close();
-
-            if (version < 5.0) throw new NotSupportedException("Versions of MySQL prior to 5.0 are not currently supported");
-            if (version < 5.1) return "5.0";
-            if (version < 5.5) return "5.1";
-            return "5.5";            
         }
 
         protected override DbProviderManifest GetDbProviderManifest(string manifestToken)
@@ -345,10 +342,12 @@ namespace MySql.Data.MySqlClient
 
         private string GetTableCreateScript(EntitySet entitySet)
         {
-            EntityType e = entitySet.ElementType;
-
+            EntityType e = entitySet.ElementType;            
+                
             StringBuilder sql = new StringBuilder("CREATE TABLE ");
-            sql.AppendFormat("`{0}`(", e.Name);
+            sql.AppendFormat("`{0}`(", 
+                (string)entitySet.MetadataProperties["Table"].Value == null ? 
+                e.Name : (string)entitySet.MetadataProperties["Table"].Value);
             string delimiter = "";
             bool hasPK = false;
             foreach (EdmProperty c in e.Properties)
