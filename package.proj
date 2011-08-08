@@ -104,9 +104,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <LicenseFiles Include="Documentation\Licenses for Third-Party Connectors\license-us-secure-hash.html"/>
-      <LicenseFiles Include="Documentation\Licenses for Third-Party Connectors\license-zlib.html"/>
-      <LicenseFiles Include="Documentation\Licenses for Third-Party Connectors\license-zlib-net.html"/>
+      <LicenseFiles Include="Documentation\Licenses for Third-Party Components\license-us-secure-hash.html"/>
+      <LicenseFiles Include="Documentation\Licenses for Third-Party Components\license-zlib.html"/>
+      <LicenseFiles Include="Documentation\Licenses for Third-Party Components\license-zlib-net.html"/>
     </ItemGroup>
 
     <RemoveDir Directories="tmp" ContinueOnError="true"/>
@@ -115,7 +115,7 @@
     <Copy SourceFiles ="@(V2Assemblies)" DestinationFolder="tmp\v2"/>
     <Copy SourceFiles ="@(V4Assemblies)" DestinationFolder="tmp\v4"/>
     <Copy SourceFiles="@(DocFiles)" DestinationFolder="tmp/Documentation"/>
-    <Copy SourceFiles="@(LicenseFiles)" DestinationFolder="tmp/Documentation/Licenses for Third-Party Connectors"/>
+    <Copy SourceFiles="@(LicenseFiles)" DestinationFolder="tmp/Documentation/Licenses for Third-Party Components"/>
     <Move SourceFiles="tmp/README-Commercial" DestinationFiles="tmp/README" Condition=" '$(Configuration)' == 'Commercial' "/>
     <ItemGroup>
       <ZipFiles Include="tmp/**"/>
