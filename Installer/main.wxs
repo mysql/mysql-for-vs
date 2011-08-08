@@ -96,9 +96,9 @@
 
     <DirectoryRef Id="LicensesDir">
       <Component Id="Licenses" Guid="F1314965-1B59-4c0f-B168-5DFAA4EB35BC">
-        <File Id="SecureHash" Name="license-us-secure-hash.html" Source="..\Documentation\Licenses for Third-Party Connectors\license-us-secure-hash.html" DiskId="1"/>
-        <File Id="Zlib" Name="license-zlib.html" Source="..\Documentation\Licenses for Third-Party Connectors\license-zlib.html" DiskId="1"/>
-        <File Id="Zlib.net" Name="license-zlib-net.html" Source="..\Documentation\Licenses for Third-Party Connectors\license-zlib-net.html" DiskId="1"/>
+        <File Id="SecureHash" Name="license-us-secure-hash.html" Source="..\Documentation\Licenses for Third-Party Components\license-us-secure-hash.html" DiskId="1"/>
+        <File Id="Zlib" Name="license-zlib.html" Source="..\Documentation\Licenses for Third-Party Components\license-zlib.html" DiskId="1"/>
+        <File Id="Zlib.net" Name="license-zlib-net.html" Source="..\Documentation\Licenses for Third-Party Components\license-zlib-net.html" DiskId="1"/>
       </Component>
     </DirectoryRef>
     
