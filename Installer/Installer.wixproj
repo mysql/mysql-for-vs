@@ -142,8 +142,6 @@
     </WixExtension>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="VS2005_Data.wxi" />
-    <Content Include="VS2005_Registry.wxi" />
     <Content Include="VS2008_Data.wxi" />
     <Content Include="VS2008_Registry.wxi" />
     <Content Include="VS2010_Data.wxi" />
@@ -153,8 +151,7 @@
   <PropertyGroup>
     <BuildDependsOn>RetrieveIdentities;$(BuildDependsOn)</BuildDependsOn>
   </PropertyGroup>
-
   <Target Name="BeforeBuild">
-    <MSBuild Projects="..\Documentation\help.shfbproj"/>
+    <MSBuild Projects="..\Documentation\help.shfbproj" />
   </Target>
 </Project>

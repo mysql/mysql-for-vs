@@ -48,7 +48,7 @@
             </Directory>
             <Directory Id='VSIntegrationDir' Name='Visual Studio Integration'>
               <Directory Id='VSTemplatesDir' Name='Templates'/>
-              <Directory Id='VS2008Integration' Name='2005 and 2008'/>
+              <Directory Id='VS2008Integration' Name='2008'/>
               <Directory Id='VS2010Integration' Name='2010'/>
             </Directory>
             <Directory Id='DocsDir' Name='Documentation'>
@@ -113,7 +113,6 @@
     <FeatureRef Id="EntityFramework"/>
     <Feature Id='VSIntegration' Level='1' Display='10'
              Title='Visual Studio Integration' Description='DDEX and Server Explorer Integration'>
-      <FeatureRef Id='VS2005Int'/>
       <FeatureRef Id='VS2008Int'/>
       <FeatureRef Id='VS2010Int'/>
     </Feature>
@@ -139,7 +138,7 @@
       <Custom Action="UnRegister2010Help" After="RemoveFiles">HLM_LOCATION AND (&amp;DocsFeature=2) AND (!DocsFeature=3)</Custom>-->
     </InstallExecuteSequence>
 
-    <!-- Custom actions for VS2005/VS2008 help -->
+    <!-- Custom actions for VS2008 help -->
     <CustomAction Id="RegisterHelp" ExeCommand='-r -q CmdFile="[#H2Reg.ini]"' BinaryKey="H2Reg" Execute="deferred" Return="check" Impersonate="no"/>
     <CustomAction Id="UnRegisterHelp" ExeCommand='-u -q CmdFile="[#H2Reg.ini]"' BinaryKey="H2Reg" Execute="deferred" Return="check" Impersonate="no"/>
 

@@ -46,7 +46,6 @@
       <ProgressText Action="ManagedWebInstall">Registering web providers in machine.config</ProgressText>
       <ProgressText Action="ManagedWebUnInstall">Unregistering web providers from machine.config</ProgressText>
 
-      <ProgressText Action="VS_2005_SETUP_EXEC">Reconfiguring Visual Studio 2005.  Please wait...</ProgressText>
       <ProgressText Action="VS_2008_SETUP_EXEC">Reconfiguring Visual Studio 2008.  Please wait...</ProgressText>
       <ProgressText Action="VS_2010_SETUP_EXEC">Reconfiguring Visual Studio 2010.  Please wait...</ProgressText>
 
@@ -58,8 +57,6 @@
       <ProgressText Action="Register2010Help">Registering help collection with Visual Studio 2010</ProgressText>
       <ProgressText Action="UnRegister2010Help">Unregistering help collection from Visual Studio 2010</ProgressText>
 
-      <ProgressText Action='VS_2005_INSTALL_EXEC'>Installing Visual Studio 2005 Integration</ProgressText>
-      <ProgressText Action='VS_2005_REMOVE_EXEC'>Removing Visual Studio 2005 Integration</ProgressText>
       <ProgressText Action='VS_2008_INSTALL_EXEC'>Installing Visual Studio 2008 Integration</ProgressText>
       <ProgressText Action='VS_2008_REMOVE_EXEC'>Removing Visual Studio 2008 Integration</ProgressText>
       <ProgressText Action='VS_2010_INSTALL_EXEC'>Installing Visual Studio 2010 Integration</ProgressText>
