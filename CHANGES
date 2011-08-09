@@ -10,6 +10,8 @@
 - Added changes to correctly generate database on code first and test case, project MySql.Data.Entity.ModelFirst.Tests. While testing the fix corrected 
   another issue of mysql generation sql scripts using "Name" instead of "Table" property to
   get the name of MySQL table to issue (MySQL bug #61230, Oracle bug #12728085).
+- Modified NativeDriver.AuthenticateNew to only execute ReadOK once, having the parameter depend on
+  the value of packet.IsLastPacket (MySQL bug #61806, Oracle bug #12853286).
 
 
 6.4.3 (ga)
