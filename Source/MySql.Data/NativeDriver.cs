@@ -549,7 +549,8 @@ namespace MySql.Data.MySqlClient
 				stream.SendPacket(packet);
 				ReadOk(true);
 			}
-			ReadOk(false);
+            else
+			    ReadOk(false);
 		}
 
 		private void AuthenticateOld()
