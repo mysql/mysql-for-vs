@@ -754,5 +754,36 @@ namespace MySql.Data.MySqlClient.Tests
 
             connection.Close();
         }
+
+        /// <summary>
+        /// A client can authenticate to a server that requires using old passwords.
+        /// <remarks>
+        /// This test requires starting the server with the old-passwords option.
+        /// </remarks>
+        /// </summary>
+        [Test]
+        public void CanAuthenticateUsingOldPasswords()
+        {
+            suExecSQL(String.Format("GRANT USAGE ON `{0}`.* TO 'oldpassworduser'@'%' IDENTIFIED BY '123456'", database0));
+            suExecSQL(String.Format("GRANT SELECT ON `{0}`.* TO 'oldpassworduser'@'%'", database0));
+
+            MySqlConnection connection = null;
+
+            Assert.DoesNotThrow(delegate()
+            {
+                try
+                {
+                    connection = new MySqlConnection(GetConnectionString("oldpassworduser", "123456", true));
+                    connection.Open();
+
+                    Assert.IsTrue(connection.State == ConnectionState.Open);
+                    connection.Close();
+                }
+                finally
+                {                    
+                    suExecSQL("drop user oldpassworduser");
+                }                
+            });            
+        }
     }
 }
