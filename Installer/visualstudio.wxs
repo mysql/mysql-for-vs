@@ -11,21 +11,12 @@
       </Component>  
     </DirectoryRef>
     
-    <!-- integration of VS2005 and VS2008 -->
+    <!-- integration of VS2008 -->
     <DirectoryRef Id='VS2008Integration'>
-      <!-- common DDEX component to be installed if VS2005 or VS2008 is selected -->
+      <!-- common DDEX component to be installed if VS2008 is selected -->
       <Component Id='VS2008_Common' Guid='75F9BFA2-4D6E-4cb3-97E6-B27C478CDE44'>
         <File Id='MySQL.VisualStudio' Name='MySQL.VisualStudio.dll' DiskId='1'
               Source='..\VS2008\Source\MySql.VisualStudio\bin\release\MySQL.VisualStudio.dll' />
-      </Component>
-
-      <Component Id='VS_2005_Registry' Guid='B99FF3E3-F742-47af-B1FE-BBF2CDC4B95D'>
-        <RegistryKey Id="VS_2005_RegistryKey" Root="HKLM" Action="createAndRemoveOnUninstall"
-                     Key="SOFTWARE\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\MySQL Connector Net $(var.Version)">
-          <RegistryValue Id="VS_2005_RegistryValue" Value="[assemblies_v2]" Type="string" Action="write"/>
-        </RegistryKey>
-        <?include VS2005_Registry.wxi?>
-        <?include VS2005_Data.wxi ?>
       </Component>
 
       <Component Id='VS_2008_Registry' Guid='84AE8C43-294D-4e48-B75D-D9172396C2FD'>
@@ -58,13 +49,6 @@
       </Component>
     </DirectoryRef>
 
-    <Feature Id='VS2005Int' Level='1' Title='Visual Studio 2005'>
-      <Condition Level='0'>Not VS_2005_PATH</Condition>
-      <ComponentRef Id='VS2008_Common'/>
-      <ComponentRef Id='VSTemplates'/>
-      <ComponentRef Id='VS_2005_Registry'/>
-    </Feature>
-
     <Feature Id='VS2008Int' Level='1' Title='Visual Studio 2008'>
       <Condition Level='0'>Not VS_2008_PATH</Condition>
       <ComponentRef Id='VS2008_Common'/>
@@ -78,14 +62,6 @@
       <ComponentRef Id='VSTemplates'/>
       <ComponentRef Id='VS_2010_Registry'/>
     </Feature>
-
-    <!-- Visual Studio 2005 integration actions -->
-    <Property Id='VS_2005_PATH'>
-      <RegistrySearch Id='Find_VS2005_Path' Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\8.0\Setup\VS'
-          Name='EnvironmentDirectory' Type='raw'/>
-    </Property>
-    <CustomAction Id="VS_2005_SETUP" Property="VS_2005_SETUP_EXEC" Value='"[VS_2005_PATH]\devenv.com" /setup'/>
-    <CustomAction Id="VS_2005_SETUP_EXEC" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="ignore" Execute='deferred' Impersonate='no'/>
 
     <!-- Visual Studio 2008 integration actions -->
     <Property Id='VS_2008_PATH'>
@@ -104,10 +80,6 @@
     <CustomAction Id="VS_2010_SETUP_EXEC" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="ignore" Execute='deferred' Impersonate='no'/>
 
     <InstallExecuteSequence>
-      <!-- vs2005 scheduling -->
-      <Custom Action='VS_2005_SETUP' Before='InstallFinalize'>(&amp;VS2005Int=2) OR (&amp;VS2005Int=3)</Custom>
-      <Custom Action='VS_2005_SETUP_EXEC' After='VS_2005_SETUP'>(&amp;VS2005Int=2) OR (&amp;VS2005Int=3)</Custom>
-
       <!-- now vs2008 scheduling -->
       <Custom Action='VS_2008_SETUP' Before='InstallFinalize'>(&amp;VS2008Int=2) OR (&amp;VS2008Int=3)</Custom>
       <Custom Action='VS_2008_SETUP_EXEC' After='VS_2008_SETUP'>(&amp;VS2008Int=2) OR (&amp;VS2008Int=3)</Custom>
