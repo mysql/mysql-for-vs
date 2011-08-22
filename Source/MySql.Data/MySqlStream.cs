@@ -135,7 +135,13 @@ namespace MySql.Data.MySqlClient
 				packet.ReadByte();  // read off the 0xff
 
 				int code = packet.ReadInteger(2);
-				string msg = packet.ReadString();
+                string msg = String.Empty;
+
+				if (packet.Version.isAtLeast(5, 5, 0))
+					msg = packet.ReadString(Encoding.UTF8);
+				else
+					msg = packet.ReadString();
+
                 if (msg.StartsWith("#"))
                 {
                     msg.Substring(1, 5);  /* state code */
