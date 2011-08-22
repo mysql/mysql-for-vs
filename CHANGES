@@ -15,6 +15,7 @@
 - Added changes to correctly generate database on code first and test case, project MySql.Data.Entity.ModelFirst.Tests. While testing the fix corrected 
   another issue of mysql generation sql scripts using "Name" instead of "Table" property to
   get the name of MySQL table to issue (MySQL bug #61230, Oracle bug #12728085).
+- Modified MySqlStream and MySqlPacket to always use UTF8 to read packages when MySQL Server is version 5.5+ (MySQL Bug #61687, Oracle Bug #12889085).
 
 
 Version 6.3.7

@@ -338,20 +338,25 @@ namespace MySql.Data.MySqlClient
             return encoding.GetString(tempBuffer, 0, (int)length);
         }
 
-        public string ReadString()
-        {
-            byte[] bits = buffer.GetBuffer();
-            int end = (int)buffer.Position;
+		public string ReadString()
+		{
+			return ReadString(encoding);
+		}
 
-            while (end < (int)buffer.Length &&
-                bits[end] != 0 && (int)bits[end] != -1)
-                end++;
+		public string ReadString(Encoding theEncoding)
+		{
+			byte[] bits = buffer.GetBuffer();
+			int end = (int)buffer.Position;
 
-            string s = encoding.GetString(bits, 
-                (int)buffer.Position, end - (int)buffer.Position);
-            buffer.Position = end + 1;
-            return s;
-        }
+			while (end < (int)buffer.Length &&
+				bits[end] != 0 && (int)bits[end] != -1)
+				end++;
+
+			string s = theEncoding.GetString(bits,
+				(int)buffer.Position, end - (int)buffer.Position);
+			buffer.Position = end + 1;
+			return s;
+		}
 
         #endregion        
     }
