@@ -12,6 +12,7 @@
   get the name of MySQL table to issue (MySQL bug #61230, Oracle bug #12728085).
 - Modified NativeDriver.AuthenticateNew to only execute ReadOK once, having the parameter depend on
   the value of packet.IsLastPacket (MySQL bug #61806, Oracle bug #12853286).
+- Modified MySqlStream and MySqlPacket to always use UTF8 to read packages when MySQL Server is version 5.5+ (MySQL Bug #61687, Oracle Bug #12889085).
 
 
 6.4.3 (ga)
