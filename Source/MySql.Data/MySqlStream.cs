@@ -122,35 +122,41 @@ namespace MySql.Data.MySqlClient
 
 		#region Packet methods
 
-		/// <summary>
-		/// ReadPacket is called by NativeDriver to start reading the next
-		/// packet on the stream.
-		/// </summary>
-		public MySqlPacket ReadPacket()
-		{
-			//Debug.Assert(packet.Position == packet.Length);
+        /// <summary>
+        /// ReadPacket is called by NativeDriver to start reading the next
+        /// packet on the stream.
+        /// </summary>
+        public MySqlPacket ReadPacket()
+        {
+            //Debug.Assert(packet.Position == packet.Length);
 
-			// make sure we have read all the data from the previous packet
-			//Debug.Assert(HasMoreData == false, "HasMoreData is true in OpenPacket");
+            // make sure we have read all the data from the previous packet
+            //Debug.Assert(HasMoreData == false, "HasMoreData is true in OpenPacket");
 
-			LoadPacket();
+            LoadPacket();
 
-			// now we check if this packet is a server error
-			if (packet.Buffer[0] == 0xff)
-			{
-				packet.ReadByte();  // read off the 0xff
+            // now we check if this packet is a server error
+            if (packet.Buffer[0] == 0xff)
+            {
+                packet.ReadByte();  // read off the 0xff
 
-				int code = packet.ReadInteger(2);
-				string msg = packet.ReadString();
-				if (msg.StartsWith("#"))
-				{
-					msg.Substring(1, 5);  /* state code */
-					msg = msg.Substring(6);
-				}
-				throw new MySqlException(msg, code);
-			}
-			return packet;
-		}
+                int code = packet.ReadInteger(2);
+                string msg = String.Empty;
+
+                if (packet.Version.isAtLeast(5, 5, 0))
+                    msg = packet.ReadString(Encoding.UTF8);
+                else
+                    msg = packet.ReadString();
+
+                if (msg.StartsWith("#"))
+                {
+                    msg.Substring(1, 5);  /* state code */
+                    msg = msg.Substring(6);
+                }
+                throw new MySqlException(msg, code);
+            }
+            return packet;
+        }
 
 		 /// <summary>
 		 /// Reads the specified number of bytes from the stream and stores them at given 
