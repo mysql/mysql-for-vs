@@ -16,6 +16,8 @@
   another issue of mysql generation sql scripts using "Name" instead of "Table" property to
   get the name of MySQL table to issue (MySQL bug #61230, Oracle bug #12728085).
 - Modified MySqlStream and MySqlPacket to always use UTF8 to read packages when MySQL Server is version 5.5+ (MySQL Bug #61687, Oracle Bug #12889085).
+- Included type String (for MySQL char) on Field.IsTextField so it can apply logic to correct 
+  DataColumn.MaxLength (MySQL bug #62094, Oracle bug #12860224).
 
 
 Version 6.3.7
