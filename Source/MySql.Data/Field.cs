@@ -178,7 +178,7 @@ namespace MySql.Data.MySqlClient
 			get
 			{
 				return Type == MySqlDbType.VarString || Type == MySqlDbType.VarChar ||
-					 (IsBlob && !IsBinary);
+                    Type == MySqlDbType.String || (IsBlob && !IsBinary);
 			}
 		}
 
