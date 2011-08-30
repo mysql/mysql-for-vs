@@ -13,6 +13,8 @@
 - Modified NativeDriver.AuthenticateNew to only execute ReadOK once, having the parameter depend on
   the value of packet.IsLastPacket (MySQL bug #61806, Oracle bug #12853286).
 - Modified MySqlStream and MySqlPacket to always use UTF8 to read packages when MySQL Server is version 5.5+ (MySQL Bug #61687, Oracle Bug #12889085).
+- Included type String (for MySQL char) on Field.IsTextField so it can apply logic to correct 
+  DataColumn.MaxLength (MySQL bug #62094, Oracle bug #12860224).
 
 
 6.4.3 (ga)
