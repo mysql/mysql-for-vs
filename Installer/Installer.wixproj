@@ -154,7 +154,7 @@
     <BuildDependsOn>RetrieveIdentities;$(BuildDependsOn)</BuildDependsOn>
   </PropertyGroup>
 
-  <Target Name="BeforeBuild">
-    <MSBuild Projects="..\Documentation\help.shfbproj"/>
-  </Target>
+  <!--<Target Name="BeforeBuild">
+
+  </Target>-->
 </Project>
