@@ -1,21 +1,21 @@
 ﻿<NUnitProject>
-  <Settings activeconfig="Release_Server51" />
-  <Config name="Debug_Server51" configfile="Server51.config" binpathtype="Auto">
+  <Settings activeconfig="Debug_CLR2_Server51" />
+  <Config name="Debug_CLR2_Server51" configfile="Server51.config" binpathtype="Auto" runtimeFramework="v2.0">
     <assembly path="MySql.Data\Tests\bin\Debug\MySql.Data.Tests.dll" />
     <assembly path="MySql.Data.Entity\Tests\bin\Debug\MySql.Data.Entity.Tests.dll" />
     <assembly path="MySql.Web\Tests\bin\Debug\MySql.Web.Tests.dll" />
   </Config>
-  <Config name="Release_Server51" configfile="Server51.config" binpathtype="Auto">
+  <Config name="Release_CLR2_Server51" configfile="Server51.config" binpathtype="Auto" runtimeFramework="v2.0">
     <assembly path="MySql.Data\Tests\bin\Release\MySql.Data.Tests.dll" />
     <assembly path="MySql.Data.Entity\Tests\bin\Release\MySql.Data.Entity.Tests.dll" />
     <assembly path="MySql.Web\Tests\bin\Release\MySql.Web.Tests.dll" />
   </Config>
-  <Config name="Debug_Server50" configfile="Server50.config" binpathtype="Auto">
+  <Config name="Debug_CLR2_Server50" configfile="Server50.config" binpathtype="Auto" runtimeFramework="v2.0">
     <assembly path="MySql.Data\Tests\bin\Debug\MySql.Data.Tests.dll" />
     <assembly path="MySql.Data.Entity\Tests\bin\Debug\MySql.Data.Entity.Tests.dll" />
     <assembly path="MySql.Web\Tests\bin\Debug\MySql.Web.Tests.dll" />
   </Config>
-  <Config name="Release_Server50" configfile="Server50.config" binpathtype="Auto">
+  <Config name="Release_CLR2_Server50" configfile="Server50.config" binpathtype="Auto" runtimeFramework="v2.0">
     <assembly path="MySql.Data\Tests\bin\Release\MySql.Data.Tests.dll" />
     <assembly path="MySql.Data.Entity\Tests\bin\Release\MySql.Data.Entity.Tests.dll" />
     <assembly path="MySql.Web\Tests\bin\Release\MySql.Web.Tests.dll" />
