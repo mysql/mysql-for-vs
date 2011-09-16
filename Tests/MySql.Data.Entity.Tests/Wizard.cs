@@ -45,7 +45,7 @@ namespace MySql.Data.Entity.Tests
         private EntityConnection GetConnection()
         {
             return EntityStoreSchemaGenerator.CreateStoreSchemaConnection(
-                "MySql.Data.MySqlClient", @"server=localhost;uid=root;database=test;pooling=false");
+                "MySql.Data.MySqlClient", string.Format(@"server=localhost;uid=root;database=test;pooling=false; port={0}", this.port));
         }
 
         [Test]
