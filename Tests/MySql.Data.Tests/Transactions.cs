@@ -186,8 +186,8 @@ namespace MySql.Data.MySqlClient.Tests
         {
             string connStr = GetConnectionString(true);
 
-            connStr = String.Format(@"Use Affected Rows=true;allow user variables=yes;Server=localhost;Port=3306;
-            Database={0};Uid=root;Connect Timeout=35;default command timeout=90;charset=utf8", database0);
+            connStr = String.Format(@"Use Affected Rows=true;allow user variables=yes;Server=localhost;Port={0};
+            Database={1};Uid=root;Connect Timeout=35;default command timeout=90;charset=utf8", this.port, database0);
 
 
             execSQL(@"CREATE TABLE `t1` (
