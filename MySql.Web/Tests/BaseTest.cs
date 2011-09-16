@@ -106,8 +106,8 @@ namespace MySql.Web.Tests
 
             ConnectionStringSettings css = new ConnectionStringSettings();
             css.ConnectionString = String.Format(
-                "server={0};uid={1};password={2};database={3};pooling=false",
-                this.host, this.user, this.password, this.database0);
+                "server={0};uid={1};password={2};database={3};pooling=false;port={4}",
+                this.host, this.user, this.password, this.database0, this.port);
             css.Name = "LocalMySqlServer";
             config.ConnectionStrings.ConnectionStrings.Add(css);
             config.Save();
