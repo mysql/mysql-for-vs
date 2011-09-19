@@ -144,8 +144,8 @@ namespace MySql.Data.MySqlClient.Tests
                 {
                     // extend mapping string for current user
                     suExecSQL(
-                        "UPDATE mysql.user SET authentication_string='" + userMapping +
-                        "," + authenticationString + "'");
+                        "UPDATE mysql.user SET authentication_string='" + userMapping +						
+                        "," + authenticationString + "' where user='auth_windows'");
                 }
                 suExecSQL("create user foo_user identified by 'pass'");
                 suExecSQL("grant all privileges on *.* to 'foo_user'@'%'");
@@ -206,7 +206,7 @@ namespace MySql.Data.MySqlClient.Tests
                 {
                     // revert changes in the mapping string
                     suExecSQL("UPDATE mysql.user SET authentication_string='" +
-                        authenticationString + "'");
+						authenticationString + "' where user='auth_windows'");
                 }
             }
         }
