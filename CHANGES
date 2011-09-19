@@ -15,7 +15,7 @@
 - Modified MySqlStream and MySqlPacket to always use UTF8 to read packages when MySQL Server is version 5.5+ (MySQL Bug #61687, Oracle Bug #12889085).
 - Included type String (for MySQL char) on Field.IsTextField so it can apply logic to correct 
   DataColumn.MaxLength (MySQL bug #62094, Oracle bug #12860224).
-
+- Fix for Windows Authentication server side fix (Oracle bug#12944747).
 
 6.4.3 (ga)
 - Modified SqlFragment.QuoteIdentifier to add MySQL quotes around identifiers (MySQL bug #61635, Oracle bug #12707285).

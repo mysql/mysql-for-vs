@@ -491,7 +491,7 @@ namespace MySql.Data.MySqlClient
 			}
 
 			// Do SSPI authentication handshake
-			SSPI sspi = new SSPI(targetName, stream.BaseStream, stream.SequenceByte);
+			SSPI sspi = new SSPI(targetName, stream.BaseStream, stream.SequenceByte, version);
 			sspi.AuthenticateClient();
 
 			// read ok packet.
