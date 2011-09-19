@@ -24,6 +24,7 @@ using System.Collections;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Net.Sockets;
+using MySql.Data.Common;
 
 using HANDLE = System.IntPtr;
 using System;
@@ -53,7 +54,7 @@ namespace MySql.Data.MySqlClient
         String targetName;
         byte[] packetHeader;
         int seq = 3;
-
+		private DBVersion version;
 
         [DllImport("secur32", CharSet = CharSet.Auto)]
         static extern int AcquireCredentialsHandle(
@@ -116,13 +117,14 @@ namespace MySql.Data.MySqlClient
 
 
 
-        public SSPI(string targetName, Stream stream, int seqNo)
+        public SSPI(string targetName, Stream stream, int seqNo, DBVersion version)        
         {
             this.targetName = null;
             this.stream = stream;
             packetHeader = new byte[4];
-            seq = seqNo;
-        }
+			seq = seqNo; 
+			this.version = version;
+		}
 
 
         // Read MySQL packet
@@ -182,6 +184,19 @@ namespace MySql.Data.MySqlClient
                         WriteData(clientBlob);
                         if (continueProcessing)
                             serverBlob = ReadData();
+						if (version.isAtLeast(5, 5, 16))
+						{
+							// Treat properly prefix byte as per 
+							// https://bug.oraclecorp.com/pls/bug/webbug_print.show?c_rptno=12944747
+							// - 0x00 to acknowledge auth 
+							// - 0xff to deny auth
+							// - 0xfe to switch auth 
+							// - 0x01 to return more auth data 
+							byte prefix = serverBlob[0];
+							byte[] buf = new byte[serverBlob.Length - 1];
+							Array.Copy(serverBlob, 1, buf, 0, buf.Length);
+							serverBlob = buf;
+						}
                     }
                 }
             }
@@ -406,11 +421,11 @@ namespace MySql.Data.MySqlClient
     [StructLayout(LayoutKind.Sequential)]
     public struct SECURITY_HANDLE
     {
-        public uint LowPart;
-        public uint HighPart;
+        public IntPtr LowPart;
+        public IntPtr HighPart;
         public SECURITY_HANDLE(int dummy)
         {
-            LowPart = HighPart = 0;
+            LowPart = HighPart = new IntPtr( 0 );
         }
     };
 
