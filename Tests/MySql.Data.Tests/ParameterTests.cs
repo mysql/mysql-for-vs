@@ -315,233 +315,275 @@ namespace MySql.Data.MySqlClient.Tests
 			Assert.AreEqual(2, dt.Rows[1]["foo"]);
 		}
 
-		/// <summary>
-		/// Bug #24565 Inferring DbType fails when reusing commands and the first time the value is nul 
-		/// </summary>
-		[Test]
-		public void UnTypedParameterBeingReused()
-		{
-			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id, dt) VALUES (?id, ?dt)", conn);
-			cmd.Parameters.AddWithValue("?id", 1);
-			MySqlParameter p = cmd.CreateParameter();
-			p.ParameterName = "?dt";
-			p.Value = DBNull.Value;
-			cmd.Parameters.Add(p);
-			cmd.ExecuteNonQuery();
+        /// <summary>
+        /// Bug #24565 Inferring DbType fails when reusing commands and the first time the value is nul 
+        /// </summary>
+        [Test]
+        public void UnTypedParameterBeingReused()
+        {
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id, dt) VALUES (?id, ?dt)", conn);
+            cmd.Parameters.AddWithValue("?id", 1);
+            MySqlParameter p = cmd.CreateParameter();
+            p.ParameterName = "?dt";
+            p.Value = DBNull.Value;
+            cmd.Parameters.Add(p);
+            cmd.ExecuteNonQuery();
 
-			cmd.Parameters[0].Value = 2;
-			p.Value = DateTime.Now;
-			cmd.ExecuteNonQuery();
+            cmd.Parameters[0].Value = 2;
+            p.Value = DateTime.Now;
+            cmd.ExecuteNonQuery();
 
-			cmd.CommandText = "SELECT * FROM Test";
-			cmd.Parameters.Clear();
-			using (MySqlDataReader reader = cmd.ExecuteReader())
-			{
-				reader.Read();
-				Assert.IsTrue(reader.IsDBNull(2));
-				reader.Read();
-				Assert.IsFalse(reader.IsDBNull(2));
-				Assert.IsFalse(reader.Read());
-			}
-		}
+            cmd.CommandText = "SELECT * FROM Test";
+            cmd.Parameters.Clear();
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                reader.Read();
+                Assert.IsTrue(reader.IsDBNull(2));
+                reader.Read();
+                Assert.IsFalse(reader.IsDBNull(2));
+                Assert.IsFalse(reader.Read());
+            }
+        }
 
-		[Test]
-		public void ParameterCacheNotClearing()
-		{
-			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id, name) VALUES (?id, ?name)", conn);
-			cmd.Parameters.AddWithValue("?id", 1);
-			cmd.Parameters.AddWithValue("?name", "test");
-			cmd.ExecuteNonQuery();
+        [Test]
+        public void ParameterCacheNotClearing()
+        {
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id, name) VALUES (?id, ?name)", conn);
+            cmd.Parameters.AddWithValue("?id", 1);
+            cmd.Parameters.AddWithValue("?name", "test");
+            cmd.ExecuteNonQuery();
 
-			cmd.CommandText = "INSERT INTO Test (id, name, dt) VALUES (?id1, ?name1, ?id)";
-			cmd.Parameters[0].ParameterName = "?id1";
-			cmd.Parameters[0].Value = 2;
-			cmd.Parameters[1].ParameterName = "?name1";
-			cmd.Parameters.AddWithValue("?id", DateTime.Now);
-			cmd.ExecuteNonQuery();
-		}
+            cmd.CommandText = "INSERT INTO Test (id, name, dt) VALUES (?id1, ?name1, ?id)";
+            cmd.Parameters[0].ParameterName = "?id1";
+            cmd.Parameters[0].Value = 2;
+            cmd.Parameters[1].ParameterName = "?name1";
+            cmd.Parameters.AddWithValue("?id", DateTime.Now);
+            cmd.ExecuteNonQuery();
+        }
 
-		[Test]
-		public void WithAndWithoutMarker()
-		{
-			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id, name) VALUES (?id, ?name)", conn);
-			cmd.Parameters.AddWithValue("id", 1);
-			Assert.AreEqual(-1, cmd.Parameters.IndexOf("?id"));
-			cmd.Parameters.AddWithValue("name", "test");
-			cmd.ExecuteNonQuery();
+        [Test]
+        public void WithAndWithoutMarker()
+        {
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id, name) VALUES (?id, ?name)", conn);
+            cmd.Parameters.AddWithValue("id", 1);
+            Assert.AreEqual(-1, cmd.Parameters.IndexOf("?id"));
+            cmd.Parameters.AddWithValue("name", "test");
+            cmd.ExecuteNonQuery();
 
-			cmd.Parameters.Clear();
-			cmd.Parameters.AddWithValue("?id", 2);
-			Assert.AreEqual(-1, cmd.Parameters.IndexOf("id"));
-			cmd.Parameters.AddWithValue("?name", "test2");
-			cmd.ExecuteNonQuery();
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("?id", 2);
+            Assert.AreEqual(-1, cmd.Parameters.IndexOf("id"));
+            cmd.Parameters.AddWithValue("?name", "test2");
+            cmd.ExecuteNonQuery();
 
-			cmd.CommandText = "SELECT COUNT(*) FROM Test";
-			object count = cmd.ExecuteScalar();
-			Assert.AreEqual(2, count);
-		}
+            cmd.CommandText = "SELECT COUNT(*) FROM Test";
+            object count = cmd.ExecuteScalar();
+            Assert.AreEqual(2, count);
+        }
 
-		[Test]
-		public void DoubleAddingParameters()
-		{
-			try
-			{
-				MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id, name) VALUES (?id, ?name)", conn);
-				cmd.Parameters.AddWithValue("id", 1);
-				Assert.AreEqual(-1, cmd.Parameters.IndexOf("?id"));
-				Assert.AreEqual(-1, cmd.Parameters.IndexOf("@id"));
-				cmd.Parameters.AddWithValue("name", "test");
-				cmd.Parameters.AddWithValue("?id", 2);
-				Assert.Fail("Should not get here");
-			}
-			catch (Exception)
-			{
-			}
-		}
+        [Test]
+        public void DoubleAddingParameters()
+        {
+            try
+            {
+                MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id, name) VALUES (?id, ?name)", conn);
+                cmd.Parameters.AddWithValue("id", 1);
+                Assert.AreEqual(-1, cmd.Parameters.IndexOf("?id"));
+                Assert.AreEqual(-1, cmd.Parameters.IndexOf("@id"));
+                cmd.Parameters.AddWithValue("name", "test");
+                cmd.Parameters.AddWithValue("?id", 2);
+                Assert.Fail("Should not get here");
+            }
+            catch (Exception)
+            {
+            }
+        }
 
-		/// <summary>
-		/// Bug #26904 MySqlParameterCollection fails to add MySqlParameter that previously removed 
-		/// </summary>
-		[Test]
-		public void AddingParameterPreviouslyRemoved()
-		{
-			MySqlCommand cmd = new
-			MySqlCommand("Insert into sometable(s1, s2) values(?p1, ?p2)");
+        /// <summary>
+        /// Bug #26904 MySqlParameterCollection fails to add MySqlParameter that previously removed 
+        /// </summary>
+        [Test]
+        public void AddingParameterPreviouslyRemoved()
+        {
+            MySqlCommand cmd = new
+            MySqlCommand("Insert into sometable(s1, s2) values(?p1, ?p2)");
 
-			MySqlParameter param1 = cmd.CreateParameter();
-			param1.ParameterName = "?p1";
-			param1.DbType = DbType.String;
-			param1.Value = "Ali Gel";
+            MySqlParameter param1 = cmd.CreateParameter();
+            param1.ParameterName = "?p1";
+            param1.DbType = DbType.String;
+            param1.Value = "Ali Gel";
 
-			cmd.Parameters.Add(param1);
-			cmd.Parameters.RemoveAt(0);
-			cmd.Parameters.Add(param1);
-		}
+            cmd.Parameters.Add(param1);
+            cmd.Parameters.RemoveAt(0);
+            cmd.Parameters.Add(param1);
+        }
 
-		/// <summary>
-		/// Bug #27135 MySqlParameterCollection and parameters added with Insert Method 
-		/// </summary>
-		[Test]
-		public void AddingParametersUsingInsert()
-		{
-			MySqlCommand cmd = new MySqlCommand();
-			cmd.Parameters.Insert(0, new MySqlParameter("?id", MySqlDbType.Int32));
-			MySqlParameter p = cmd.Parameters["?id"];
-			Assert.AreEqual("?id", p.ParameterName);
-		}
+        /// <summary>
+        /// Bug #27135 MySqlParameterCollection and parameters added with Insert Method 
+        /// </summary>
+        [Test]
+        public void AddingParametersUsingInsert()
+        {
+            MySqlCommand cmd = new MySqlCommand();
+            cmd.Parameters.Insert(0, new MySqlParameter("?id", MySqlDbType.Int32));
+            MySqlParameter p = cmd.Parameters["?id"];
+            Assert.AreEqual("?id", p.ParameterName);
+        }
 
-		/// <summary>
-		/// Bug #27187 cmd.Parameters.RemoveAt("Id") will cause an error if the last item is requested 
-		/// </summary>
-		[Test]
-		public void FindParameterAfterRemoval()
-		{
-			MySqlCommand cmd = new MySqlCommand();
+        /// <summary>
+        /// Bug #27187 cmd.Parameters.RemoveAt("Id") will cause an error if the last item is requested 
+        /// </summary>
+        [Test]
+        public void FindParameterAfterRemoval()
+        {
+            MySqlCommand cmd = new MySqlCommand();
 
-			cmd.Parameters.Add("?id1", MySqlDbType.Int32);
-			cmd.Parameters.Add("?id2", MySqlDbType.Int32);
-			cmd.Parameters.Add("?id3", MySqlDbType.Int32);
-			cmd.Parameters.Add("?id4", MySqlDbType.Int32);
-			cmd.Parameters.Add("?id5", MySqlDbType.Int32);
-			cmd.Parameters.Add("?id6", MySqlDbType.Int32);
-			cmd.Parameters.RemoveAt("?id1");
-			MySqlParameter p = cmd.Parameters["?id6"];
-			Assert.AreEqual("?id6", p.ParameterName);
-		}
+            cmd.Parameters.Add("?id1", MySqlDbType.Int32);
+            cmd.Parameters.Add("?id2", MySqlDbType.Int32);
+            cmd.Parameters.Add("?id3", MySqlDbType.Int32);
+            cmd.Parameters.Add("?id4", MySqlDbType.Int32);
+            cmd.Parameters.Add("?id5", MySqlDbType.Int32);
+            cmd.Parameters.Add("?id6", MySqlDbType.Int32);
+            cmd.Parameters.RemoveAt("?id1");
+            MySqlParameter p = cmd.Parameters["?id6"];
+            Assert.AreEqual("?id6", p.ParameterName);
+        }
 
-		/// <summary>
-		/// Bug #29312  	System.FormatException if parameter not found
-		/// </summary>
-		[Test]
-		public void MissingParameter()
-		{
-			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test(id) VALUES (?id)", conn);
-			try
-			{
-				cmd.ExecuteNonQuery();
-			}
-			catch (MySqlException)
-			{
-			}
-		}
+        /// <summary>
+        /// Bug #29312  	System.FormatException if parameter not found
+        /// </summary>
+        [Test]
+        public void MissingParameter()
+        {
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test(id) VALUES (?id)", conn);
+            try
+            {
+                cmd.ExecuteNonQuery();
+            }
+            catch (MySqlException)
+            {
+            }
+        }
 
-		/// <summary>
-		/// Bug #32094 Size property on string parameter throws an exception 
-		/// </summary>
-		[Test]
-		public void StringParameterSizeSetAfterValue()
-		{
-			execSQL("DROP TABLE Test");
-			execSQL("CREATE TABLE Test (v VARCHAR(10))");
+        /// <summary>
+        /// Bug #32094 Size property on string parameter throws an exception 
+        /// </summary>
+        [Test]
+        public void StringParameterSizeSetAfterValue()
+        {
+            execSQL("DROP TABLE Test");
+            execSQL("CREATE TABLE Test (v VARCHAR(10))");
 
-			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (?p1)", conn);
-			cmd.Parameters.Add("?p1", MySqlDbType.VarChar);
-			cmd.Parameters[0].Value = "123";
-			cmd.Parameters[0].Size = 10;
-			cmd.ExecuteNonQuery();
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (?p1)", conn);
+            cmd.Parameters.Add("?p1", MySqlDbType.VarChar);
+            cmd.Parameters[0].Value = "123";
+            cmd.Parameters[0].Size = 10;
+            cmd.ExecuteNonQuery();
 
-			MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
-			DataTable dt = new DataTable();
-			da.Fill(dt);
-			Assert.AreEqual("123", dt.Rows[0][0]);
+            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            Assert.AreEqual("123", dt.Rows[0][0]);
 
-			cmd.Parameters.Clear();
-			cmd.Parameters.Add("?p1", MySqlDbType.VarChar);
-			cmd.Parameters[0].Value = "123456789012345";
-			cmd.Parameters[0].Size = 10;
-			cmd.ExecuteNonQuery();
+            cmd.Parameters.Clear();
+            cmd.Parameters.Add("?p1", MySqlDbType.VarChar);
+            cmd.Parameters[0].Value = "123456789012345";
+            cmd.Parameters[0].Size = 10;
+            cmd.ExecuteNonQuery();
 
-			dt.Clear();
-			da.Fill(dt);
-			Assert.AreEqual("1234567890", dt.Rows[1][0]);
-		}
+            dt.Clear();
+            da.Fill(dt);
+            Assert.AreEqual("1234567890", dt.Rows[1][0]);
+        }
 
-		/// <summary>
-		/// Bug #32093 MySqlParameter Constructor does not allow Direction of anything other than Input 
-		/// </summary>
-		[Test]
-		public void NonInputParametersToCtor()
-		{
-			MySqlParameter p = new MySqlParameter("?p1", MySqlDbType.VarChar, 20,
-				ParameterDirection.InputOutput, true, 0, 0, "id", DataRowVersion.Current, 0);
-			Assert.AreEqual(ParameterDirection.InputOutput, p.Direction);
+        /// <summary>
+        /// Bug #32093 MySqlParameter Constructor does not allow Direction of anything other than Input 
+        /// </summary>
+        [Test]
+        public void NonInputParametersToCtor()
+        {
+            MySqlParameter p = new MySqlParameter("?p1", MySqlDbType.VarChar, 20,
+                ParameterDirection.InputOutput, true, 0, 0, "id", DataRowVersion.Current, 0);
+            Assert.AreEqual(ParameterDirection.InputOutput, p.Direction);
 
-			MySqlParameter p1 = new MySqlParameter("?p1", MySqlDbType.VarChar, 20,
-				ParameterDirection.Output, true, 0, 0, "id", DataRowVersion.Current, 0);
-			Assert.AreEqual(ParameterDirection.Output, p1.Direction);
-		}
+            MySqlParameter p1 = new MySqlParameter("?p1", MySqlDbType.VarChar, 20,
+                ParameterDirection.Output, true, 0, 0, "id", DataRowVersion.Current, 0);
+            Assert.AreEqual(ParameterDirection.Output, p1.Direction);
+        }
 
-		/// <summary>
-		/// Bug #13991 oldsyntax configuration and ParameterMarker value bug 
-		/// </summary>
-		[Test]
-		public void SetOldSyntaxAfterCommandCreation()
-		{
-			string connStr = this.GetConnectionString(true);
-			MySqlConnection c = new MySqlConnection(connStr);
-			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id) VALUES (@id)", c);
-			c.ConnectionString = connStr += ";old syntax=yes";
-			cmd.Parameters.AddWithValue("@id", 2);
-			c.Open();
-			cmd.ExecuteNonQuery();
-			c.Close();
-		}
+        /// <summary>
+        /// Bug #13991 oldsyntax configuration and ParameterMarker value bug 
+        /// </summary>
+        [Test]
+        public void SetOldSyntaxAfterCommandCreation()
+        {
+            string connStr = this.GetConnectionString(true);
+            MySqlConnection c = new MySqlConnection(connStr);
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id) VALUES (@id)", c);
+            c.ConnectionString = connStr += ";old syntax=yes";
+            cmd.Parameters.AddWithValue("@id", 2);
+            c.Open();
+            cmd.ExecuteNonQuery();
+            c.Close();
+        }
 
-		[Test]
-		public void UseAtSignForParameters()
-		{
-			MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id, name) VALUES (@id, @name)", conn);
-			cmd.Parameters.AddWithValue("@id", 33);
-			cmd.Parameters.AddWithValue("@name", "Test");
-			cmd.ExecuteNonQuery();
+        [Test]
+        public void UseAtSignForParameters()
+        {
+            MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id, name) VALUES (@id, @name)", conn);
+            cmd.Parameters.AddWithValue("@id", 33);
+            cmd.Parameters.AddWithValue("@name", "Test");
+            cmd.ExecuteNonQuery();
 
-			cmd.CommandText = "SELECT * FROM Test";
-			using (MySqlDataReader reader = cmd.ExecuteReader())
-			{
-				reader.Read();
-				Assert.AreEqual(33, reader.GetInt32(0));
-				Assert.AreEqual("Test", reader.GetString(1));
-			}
-		}
-	}
+            cmd.CommandText = "SELECT * FROM Test";
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                reader.Read();
+                Assert.AreEqual(33, reader.GetInt32(0));
+                Assert.AreEqual("Test", reader.GetString(1));
+            }
+        }
+
+        /// <summary>
+        /// Bug #62194	MySQL Parameter constructor doesn't set
+        /// all properties: IsNullable, Precision and Scale
+        /// </summary>
+        [Test]
+        public void CanCreateMySQLParameterWithNullability()
+        {   
+
+            MySqlParameter p = new MySqlParameter("?id", MySqlDbType.Decimal, 2,
+                                                ParameterDirection.Input, true, 1, 1, "sourceColumn", DataRowVersion.Default, 1);
+            
+            Assert.AreEqual(p.IsNullable, true);
+        }
+
+        /// <summary>
+        /// Bug #62194	MySQL Parameter constructor doesn't set
+        /// all properties: IsNullable, Precision and Scale
+        /// </summary>
+        [Test]
+        public void CanCreateMySQLParameterWithPrecision()
+        {    
+            MySqlParameter p = new MySqlParameter("?id", MySqlDbType.Decimal, 2,
+                                                ParameterDirection.Input, true, Byte.MaxValue, 1, "sourceColumn", DataRowVersion.Default, 1);
+            
+            Assert.AreEqual(p.Precision, Byte.MaxValue);
+        }
+
+
+        /// <summary>
+        /// Bug #62194	MySQL Parameter constructor doesn't set
+        /// all properties: IsNullable, Precision and Scale
+        /// </summary>
+        [Test]
+        public void CanCreateMySQLParameterWithScale()
+        {   
+
+            MySqlParameter p = new MySqlParameter("?id", MySqlDbType.Decimal, 2,
+                                                ParameterDirection.Input, true, 1, Byte.MaxValue, "sourceColumn", DataRowVersion.Default, 1);
+            
+            Assert.AreEqual(p.Scale, Byte.MaxValue);
+        }
+    }
 }

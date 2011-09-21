@@ -156,6 +156,9 @@ namespace MySql.Data.MySqlClient
         {
             this.direction = direction;
             this.sourceVersion = sourceVersion;
+            this.isNullable = isNullable;
+            this.precision = precision;
+            this.scale = scale;
             Value = value;
         }
 
