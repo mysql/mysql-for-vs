@@ -543,5 +543,47 @@ namespace MySql.Data.MySqlClient.Tests
                 Assert.AreEqual("Test", reader.GetString(1));
             }
         }
+
+        /// <summary>
+        /// Bug #62194	MySQL Parameter constructor doesn't set
+        /// all properties: IsNullable, Precision and Scale
+        /// </summary>
+        [Test]
+        public void CanCreateMySQLParameterWithNullability()
+        {   
+
+            MySqlParameter p = new MySqlParameter("?id", MySqlDbType.Decimal, 2,
+                                                ParameterDirection.Input, true, 1, 1, "sourceColumn", DataRowVersion.Default, 1);
+            
+            Assert.AreEqual(p.IsNullable, true);
+        }
+
+        /// <summary>
+        /// Bug #62194	MySQL Parameter constructor doesn't set
+        /// all properties: IsNullable, Precision and Scale
+        /// </summary>
+        [Test]
+        public void CanCreateMySQLParameterWithPrecision()
+        {    
+            MySqlParameter p = new MySqlParameter("?id", MySqlDbType.Decimal, 2,
+                                                ParameterDirection.Input, true, Byte.MaxValue, 1, "sourceColumn", DataRowVersion.Default, 1);
+            
+            Assert.AreEqual(p.Precision, Byte.MaxValue);
+        }
+
+
+        /// <summary>
+        /// Bug #62194	MySQL Parameter constructor doesn't set
+        /// all properties: IsNullable, Precision and Scale
+        /// </summary>
+        [Test]
+        public void CanCreateMySQLParameterWithScale()
+        {   
+
+            MySqlParameter p = new MySqlParameter("?id", MySqlDbType.Decimal, 2,
+                                                ParameterDirection.Input, true, 1, Byte.MaxValue, "sourceColumn", DataRowVersion.Default, 1);
+            
+            Assert.AreEqual(p.Scale, Byte.MaxValue);
+        }
     }
 }
