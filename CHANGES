@@ -16,6 +16,8 @@
 - Included type String (for MySQL char) on Field.IsTextField so it can apply logic to correct 
   DataColumn.MaxLength (MySQL bug #62094, Oracle bug #12860224).
 - Fix for Windows Authentication server side fix (Oracle bug #12944747).
+- Modified MySQLParameter constructor to correctly assign IsNullable, Precision and Scale properties
+  (MySQL bug #62194, Oracle bug #12999162).
 
 6.4.3 (ga)
 - Modified SqlFragment.QuoteIdentifier to add MySQL quotes around identifiers (MySQL bug #61635, Oracle bug #12707285).
