@@ -146,6 +146,41 @@ namespace MySql.Data.Entity.Tests
         }
 
         [Test]
+        public void t()
+        {
+            using (testEntities context = new testEntities())
+            {
+                var q = from d in context.Computers
+                        join l in context.Computers on d.Id equals l.Id
+                        where (d is DesktopComputer)
+                        select new { d.Id, d.Brand };
+                foreach( var o in q ) 
+                {
+                }
+            }
+        }
+
+        /// <summary>
+        /// Tests for bug http://bugs.mysql.com/bug.php?id=61729 
+        /// (Skip/Take Clauses Causes Null Reference Exception in 6.3.7 and 6.4.1 Only).
+        /// </summary>
+        [Test]
+        public void JoinOfNestedUnionsWithLimit()
+        {
+            using (testEntities context = new testEntities())
+            {
+                var q = context.Books.Include("Author");
+                q = q.Include("Publisher");
+                q = q.Include("Publisher.Books");
+                string sql = q.ToTraceString();
+                CheckSql(sql, SQLSyntax.JoinOfNestedUnionsWithLimit);
+                foreach (var o in q.Where(p => p.Id > 0).OrderBy(p => p.Name).ThenByDescending(p => p.Id).Skip(0).Take(32).ToList())
+                {
+                }
+            }
+        }
+
+        [Test]
         public void JoinOnRightSideNameClash()
         {
             using (testEntities context = new testEntities())
