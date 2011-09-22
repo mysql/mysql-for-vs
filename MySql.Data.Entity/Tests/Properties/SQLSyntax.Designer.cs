@@ -234,6 +234,39 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
+        ///`Project2`.`Id`, 
+        ///`Project2`.`Name`, 
+        ///`Project2`.`Pages`, 
+        ///`Project2`.`Id1`, 
+        ///`Project2`.`Name1`, 
+        ///`Project2`.`Age`, 
+        ///`Project2`.`Id2`, 
+        ///`Project2`.`Name2`, 
+        ///`Project2`.`C1`, 
+        ///`Project2`.`C2`, 
+        ///`Project2`.`C3`, 
+        ///`Project2`.`Id3`, 
+        ///`Project2`.`Name3`, 
+        ///`Project2`.`Pages1`, 
+        ///`Project2`.`Author_id`, 
+        ///`Project2`.`Publisher_id`
+        ///FROM (SELECT
+        ///`Extent1`.`Id`, 
+        ///`Extent1`.`Name`, 
+        ///`Extent1`.`Pages`, 
+        ///`Extent2`.`Id` AS `Id1`, 
+        ///`Extent2`.`Name` AS `Name1`, 
+        ///`Extent2`.`Age`, 
+        ///`Extent3`.`id [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string JoinOfNestedUnionsWithLimit {
+            get {
+                return ResourceManager.GetString("JoinOfNestedUnionsWithLimit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT
         ///1 AS `C1`, 
         ///`Extent1`.`Id`, 
         ///`Extent1`.`Name`, 
