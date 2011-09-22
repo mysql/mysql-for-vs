@@ -47,7 +47,7 @@ namespace MySql.Data.MySqlClient.Tests
 
         protected override string GetConnectionInfo()
         {
-            return "allow batch=true; ignore prepare = false";
+            return string.Format("allow batch=true; ignore prepare = false; port={0}", this.port);
         }
 
         /// <summary>
@@ -556,7 +556,7 @@ namespace MySql.Data.MySqlClient.Tests
     {
         protected override string GetConnectionInfo()
         {
-            return "allow batch=false";
+            return string.Format("allow batch=false; port={0}", this.port);
         }
     }
 
@@ -565,7 +565,7 @@ namespace MySql.Data.MySqlClient.Tests
         protected override string GetConnectionInfo()
         {
             prepare = true;
-            return "allow batch=true; ignore prepare=false";
+            return string.Format("allow batch=true; ignore prepare=false; port={0}", this.port);
         }
     }
 
@@ -574,7 +574,7 @@ namespace MySql.Data.MySqlClient.Tests
         protected override string GetConnectionInfo()
         {
             prepare = true;
-            return "allow batch=false; ignore prepare=false";
+            return string.Format("allow batch=false; ignore prepare=false; port={0}", this.port);
         }
     }
 
