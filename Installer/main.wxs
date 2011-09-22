@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?define ProductName="MySQL Connector Net $(var.Version)"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="5FD88490-011C-4df1-B886-F298D955171B" Name="$(var.ProductName)" Manufacturer="Oracle"
-           Version="$(var.Version)" Language="1033">
+  <Product Id="*" Name="$(var.ProductName)" Manufacturer="Oracle" Version="$(var.Version)"
+           UpgradeCode="7454FE1E-BB5B-49DF-BBC7-27B15FB13B7E" Language="1033">
     <Package Compressed="yes" InstallerVersion="200"/>
 
+    <Upgrade Id="7454FE1E-BB5B-49DF-BBC7-27B15FB13B7E">
+      <UpgradeVersion OnlyDetect="yes" Minimum="$(var.Version)" Property="NEWERVERSIONDETECTED" IncludeMinimum="no" />
+      <UpgradeVersion OnlyDetect="no" Maximum="$(var.Version)" Property="OLDERVERSIONBEINGUPGRADED" IncludeMaximum="yes" />
+    </Upgrade>
+    
     <Property Id="ARPURLINFOABOUT" Value="http://www.mysql.com" />
     <Property Id="ARPURLUPDATEINFO" Value="http://dev.mysql.com"/>
 
@@ -33,6 +38,15 @@
     </Property>
     <Condition Message="A previous version of Connector/Net 5.0 or higher is already installed.  Please uninstall that version first.">Not OLDVERSION</Condition>
 
+    <!-- now make sure that we don't have an old version that doesn't support upgrades -->
+    <Property Id="PREUPGRADEVERSION">
+      <RegistrySearch Id="Pre638" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\{5FD88490-011C-4df1-B886-F298D955171B}" Name="DisplayVersion" Root="HKLM" Type="raw"/>
+    </Property>
+    <Condition Message="A previous version of Connector/Net 6.3 or higher is already installed.  Please uninstall that version first.">Not PREUPGRADEVERSION</Condition>
+    
+    <!-- Setup should not continue is a newer version is installed. -->
+    <Condition Message="A later version of [ProductName] is already installed. Setup will now exit.">NEWERVERSIONDETECTED</Condition>
+    
     <Property Id="HLM_LOCATION">
       <RegistrySearch Id="HLMRegSearch" Root="HKLM" Key="Software\Microsoft\Help\v1.0" Name="AppRoot" Type="raw"/>
     </Property>
@@ -138,6 +152,8 @@
     <Icon Id="ChangeLogIcon" SourceFile="Bitmaps\document.ico"/>
 
     <InstallExecuteSequence>
+      <RemoveExistingProducts After="InstallInitialize" />
+      
       <Custom Action='RegisterHelp' After="InstallFiles">(&amp;DocsFeature=3) AND NOT(!DocsFeature=3)</Custom>
       <Custom Action="UnRegisterHelp" Before="RemoveFiles">(&amp;DocsFeature=2) AND (!DocsFeature=3)</Custom>
 
