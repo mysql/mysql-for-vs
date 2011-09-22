@@ -73,6 +73,13 @@
               <Directory Id="Entity.T4.DBGenDir" Name="DBGen"/>
             </Directory>
           </Directory>
+          <Directory Id="OracleVSExtensionsDir" Name="Oracle">
+            <Directory Id="CNetVSExtensionDir" Name="MySQL Connector Net ">
+              <Directory Id="CNetVerVSExtensionDir" Name="$(var.Version)">
+                <Directory Id='VS2010TemplatesDir' Name='Templates'/>
+	            </Directory>
+            </Directory>
+          </Directory>
         </Directory>
       </Directory>
 
