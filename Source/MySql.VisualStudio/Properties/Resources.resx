@@ -1072,13 +1072,13 @@ Would you like to create it?</value>
     <value>MySQL</value>
   </data>
   <data name="106" xml:space="preserve">
-    <value>MySQL SQL Script</value>
+    <value>MySQL Script</value>
   </data>
   <data name="107" xml:space="preserve">
     <value>MySQL Script</value>
   </data>
   <data name="109" xml:space="preserve">
-    <value>MySQL SQL Script File (.mysql)</value>
+    <value>A blank mysql file.</value>
   </data>
   <data name="401" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\401.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
