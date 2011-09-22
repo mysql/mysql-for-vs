@@ -4,9 +4,9 @@
     <Name>MySQL Tools for Visual Studio</Name>
     <Author>Oracle, Inc.</Author>
     <Version>6.3</Version>
-    <Description xml:space="preserve">boo</Description>
+    <Description xml:space="preserve">Database design tools for MySQL</Description>
     <Locale>1033</Locale>
-    <InstalledByMsi>false</InstalledByMsi>
+    <InstalledByMsi>true</InstalledByMsi>
     <SupportedProducts>
       <VisualStudio Version="10.0">
         <Edition>Ultimate</Edition>
@@ -25,5 +25,6 @@
   </References>
   <Content>
     <VsPackage>|%CurrentProject%;PkgdefProjectOutputGroup|</VsPackage>
+    <VsPackage>MySql.VisualStudio.pkgdef</VsPackage>
   </Content>
 </Vsix>

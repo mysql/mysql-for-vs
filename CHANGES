@@ -20,8 +20,7 @@
   DataColumn.MaxLength (MySQL bug #62094, Oracle bug #12860224).
 - Modified MySQLParameter constructor to correctly assign IsNullable, Precision and Scale properties
   (MySQL bug #62194, Oracle bug #12999162).
-
-
+- Moved Visual Studio 2010 integration registry entries from WiX installer to a pkgdef file.
 
 Version 6.3.7
 - IPv6 connections are now supported 

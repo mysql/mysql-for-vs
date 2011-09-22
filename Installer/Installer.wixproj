@@ -116,7 +116,7 @@
     <Compile Include="webproviders.wxs" />
   </ItemGroup>
   <Target Name="RetrieveIdentities">
-    <GetVersion Assembly="..\VS2008\Source\MySql.Data\bin\release\mysql.data.dll" Format="{0}.{1}.{2}">
+    <GetVersion Assembly="..\Source\MySql.Data\bin\release\mysql.data.dll" Format="{0}.{1}.{2}">
       <Output TaskParameter="AsString" PropertyName="CurrentVersion" />
     </GetVersion>
     <CreateProperty Value="Version=$(CurrentVersion);$(DefineConstants)">
@@ -146,14 +146,11 @@
     <Content Include="VS2005_Registry.wxi" />
     <Content Include="VS2008_Data.wxi" />
     <Content Include="VS2008_Registry.wxi" />
-    <Content Include="VS2010_Data.wxi" />
-    <Content Include="VS2010_Registry.wxi" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets" />
   <PropertyGroup>
     <BuildDependsOn>RetrieveIdentities;$(BuildDependsOn)</BuildDependsOn>
   </PropertyGroup>
-
   <!--<Target Name="BeforeBuild">
 
   </Target>-->
