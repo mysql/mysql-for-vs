@@ -136,6 +136,10 @@ namespace MySql.Data.Entity
                 columnHash = new Dictionary<string, ColumnFragment>();
 
             List<ColumnFragment> columns = GetDefaultColumnsForFragment(From);
+            if (From is TableFragment)
+            {
+                scope.Add((From as TableFragment).Table, From);
+            }
 
             foreach (ColumnFragment column in columns)
             {
@@ -152,6 +156,10 @@ namespace MySql.Data.Entity
                 else
                     columnHash.Add(column.ColumnName, column);
                 Columns.Add(column);
+            }
+            if (From is TableFragment)
+            {
+                scope.Remove(From);
             }
         }
 
@@ -179,7 +187,12 @@ namespace MySql.Data.Entity
                 foreach (ColumnFragment cf in select.Columns)
                 {
                     ColumnFragment newColumn = new ColumnFragment(cf.TableName, cf.ActualColumnName);
-                    newColumn.PushInput(cf.ActualColumnName);
+                    newColumn.ColumnAlias = cf.ColumnAlias;
+                    newColumn.PushInput( cf.ActualColumnName );                    
+                    if (select.Name != null)
+                    {
+                        newColumn.PushInput(select.Name);      // add the scope 
+                    }
                     columns.Add(newColumn);
                 }
             }
@@ -199,7 +212,7 @@ namespace MySql.Data.Entity
             {
                 ColumnFragment col = new ColumnFragment(table.Name, property.Name);
                 col.PushInput(property.Name);
-                col.PushInput(table.Name);
+                col.PushInput((table.Name != null) ? table.Name : table.Table);                
                 columns.Add(col);
             }
             return columns;
