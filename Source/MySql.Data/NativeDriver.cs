@@ -569,7 +569,10 @@ namespace MySql.Data.MySqlClient
 		{
 			if (Settings.IntegratedSecurity)
 			{
-				packet.WriteString(AuthenticationWindowsUser);
+				if (String.IsNullOrEmpty(Settings.UserID))
+					packet.WriteString(AuthenticationWindowsUser);
+				else
+					packet.WriteString(Settings.UserID); 
 			}
 			else
 			{
