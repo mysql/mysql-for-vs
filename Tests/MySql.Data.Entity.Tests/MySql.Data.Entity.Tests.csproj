@@ -89,6 +89,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SQLSyntax.resx</DependentUpon>
     </Compile>
+    <Compile Include="ProviderManifestTests.cs" />
     <Compile Include="ProviderServicesTests.cs" />
     <Compile Include="ProceduresAndFunctions.cs" />
     <Compile Include="JoinTests.cs" />
