@@ -29,6 +29,8 @@ using System.Collections;
 using System.Diagnostics;
 using System.Text;
 using System.Collections.Specialized;
+using System.Security.Permissions;
+using System.Reflection;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -122,6 +124,9 @@ namespace MySql.Data.MySqlClient.Tests
 				x++;
 			}
 		}
+
+        private Exception lastException;
+
         /// <summary>
         /// Bug #54012  	MySql Connector/NET is not hardened to deal with 
         /// ThreadAbortException
@@ -132,7 +137,6 @@ namespace MySql.Data.MySqlClient.Tests
             {
                 using (MySqlConnection c = new MySqlConnection(GetConnectionString(true)))
                 {
-
                     c.Open();
                     MySqlCommand cmd = new MySqlCommand(
                         "SELECT BENCHMARK(10000000000,ENCODE('hello','goodbye'))",
@@ -147,12 +151,10 @@ namespace MySql.Data.MySqlClient.Tests
                     cmd.ExecuteNonQuery();
                 }
             }
-            catch (ThreadAbortException)
+            catch (Exception e)
             {
-                Thread.ResetAbort();
-                return;
+                lastException = e;
             }
-            Assert.Fail("expected ThreadAbortException");
         }
 
         [Test]
@@ -164,6 +166,16 @@ namespace MySql.Data.MySqlClient.Tests
             Thread.Sleep(500);
             t.Abort();
             t.Join();
+
+            Assert.IsNotNull(lastException);
+
+            if (lastException is MySqlException)
+            {
+                // In some runs the ThreadAbortException comes as an inner exception
+                lastException = lastException.InnerException;
+            }
+
+            Assert.IsInstanceOf(typeof(ThreadAbortException), lastException);
         }
     }
 }
