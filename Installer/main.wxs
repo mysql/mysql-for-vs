@@ -43,10 +43,7 @@
       <RegistrySearch Id="Pre638" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\{5FD88490-011C-4df1-B886-F298D955171B}" Name="DisplayVersion" Root="HKLM" Type="raw"/>
     </Property>
     <Condition Message="A previous version of Connector/Net 6.3 or higher is already installed.  Please uninstall that version first.">Not PREUPGRADEVERSION</Condition>
-    
-    <!-- Setup should not continue is a newer version is installed. -->
-    <Condition Message="A later version of [ProductName] is already installed. Setup will now exit.">NEWERVERSIONDETECTED</Condition>
-    
+        
     <Property Id="HLM_LOCATION">
       <RegistrySearch Id="HLMRegSearch" Root="HKLM" Key="Software\Microsoft\Help\v1.0" Name="AppRoot" Type="raw"/>
     </Property>
@@ -160,6 +157,8 @@
       <Custom Action="SetHLMPath" After="AppSearch"></Custom>
       <!--<Custom Action="Register2010Help" After="PublishProduct">HLM_LOCATION AND (&amp;DocsFeature=3) AND NOT(!DocsFeature=3)</Custom>
       <Custom Action="UnRegister2010Help" After="RemoveFiles">HLM_LOCATION AND (&amp;DocsFeature=2) AND (!DocsFeature=3)</Custom>-->
+      
+      <Custom Action='NoDowngrade' After='FindRelatedProducts'>NEWERVERSIONDETECTED</Custom>
     </InstallExecuteSequence>
 
     <!-- Custom actions for VS2005/VS2008 help -->
@@ -174,6 +173,9 @@
     <CustomAction Id="UnRegister2010Help"
                   ExeCommand ='/product VS /version 100 /locale en-us /uninstall /silent /vendor "Oracle" /mediaBookList "MySQL Connector/Net" /productName "MySQL Connector/Net" > NUL'
                   Property='HelpLibManager' Return='check'/>
+    
+    <!-- Setup should not continue is a newer version is installed. -->
+    <CustomAction Id='NoDowngrade' Error='A later version of [ProductName] is already installed. Setup will now exit.' />
   </Product>
 </Wix>
 
