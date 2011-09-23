@@ -667,4 +667,54 @@ FROM `Toys` AS `Extent1` LEFT OUTER JOIN `Companies` AS `Extent2` ON `Extent1`.`
  WHERE `Extent2`.`State` != @gp1) AS `Filter1` LEFT OUTER JOIN `Companies` AS `Extent3` ON `Filter1`.`SupplierId` = `Extent3`.`Id`
  WHERE `Extent3`.`State` != @gp2</value>
   </data>
+  <data name="JoinOfNestedUnionsWithLimit" xml:space="preserve">
+    <value>SELECT
+`Project2`.`Id`, 
+`Project2`.`Name`, 
+`Project2`.`Pages`, 
+`Project2`.`Id1`, 
+`Project2`.`Name1`, 
+`Project2`.`Age`, 
+`Project2`.`Id2`, 
+`Project2`.`Name2`, 
+`Project2`.`C1`, 
+`Project2`.`C2`, 
+`Project2`.`C3`, 
+`Project2`.`Id3`, 
+`Project2`.`Name3`, 
+`Project2`.`Pages1`, 
+`Project2`.`Author_id`, 
+`Project2`.`Publisher_id`
+FROM (SELECT
+`Extent1`.`Id`, 
+`Extent1`.`Name`, 
+`Extent1`.`Pages`, 
+`Extent2`.`Id` AS `Id1`, 
+`Extent2`.`Name` AS `Name1`, 
+`Extent2`.`Age`, 
+`Extent3`.`id` AS `Id2`, 
+`Extent3`.`name` AS `Name2`, 
+1 AS `C1`, 
+1 AS `C2`, 
+`Project1`.`Id` AS `Id3`, 
+`Project1`.`Name` AS `Name3`, 
+`Project1`.`Pages` AS `Pages1`, 
+`Project1`.`Author_id`, 
+`Project1`.`Publisher_id`, 
+`Project1`.`C1` AS `C3`
+FROM `Books` AS `Extent1` LEFT OUTER JOIN `Authors` AS `Extent2` ON `Extent1`.`Author_id` = `Extent2`.`Id` LEFT OUTER JOIN `Publishers` AS `Extent3` ON `Extent1`.`Publisher_id` = `Extent3`.`id` LEFT OUTER JOIN (SELECT
+`Extent4`.`Id`, 
+`Extent4`.`Name`, 
+`Extent4`.`Pages`, 
+`Extent4`.`Author_id`, 
+`Extent4`.`Publisher_id`, 
+1 AS `C1`
+FROM `Books` AS `Extent4`) AS `Project1` ON `Extent1`.`Publisher_id` = `Project1`.`Publisher_id`) AS `Project2`
+ ORDER BY 
+`Project2`.`Id` ASC, 
+`Project2`.`Id1` ASC, 
+`Project2`.`Id2` ASC, 
+`Project2`.`C3` ASC</value>
+  </data>
+
 </root>
