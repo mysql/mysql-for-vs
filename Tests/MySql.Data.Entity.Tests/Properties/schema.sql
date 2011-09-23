@@ -16,6 +16,9 @@ DROP TABLE IF EXISTS DesktopComputers;
 DROP TABLE IF EXISTS LaptopComputers;
 DROP TABLE IF EXISTS TabletComputers;
 DROP TABLE IF EXISTS Computers;
+drop table if exists VideoGamePlatform;
+drop table if exists GamingPlatform;
+drop table if exists VideoGameTitle;
 
 CREATE TABLE Employees(
 	Id INT NOT NULL PRIMARY KEY,
@@ -223,3 +226,39 @@ CREATE TABLE `Order` (
 insert  into `Order`(Id,Order_Date,Customer_Id) 
         values (1,'2011-06-24 00:00:00',1),(2,'2011-06-25 00:00:00',1),(3,'2011-06-26 00:00:00',1),
                (4,'2011-06-01 00:00:00',2),(5,'2011-06-02 00:00:00',2),(6,'2011-06-03 00:00:00',3);  
+               
+create table `GamingPlatform` ( 
+	Id int( 11 ) not null auto_increment,
+	Name varchar( 50 ) default null,
+	Developer varchar( 50 ) default null,
+	primary key ( Id )
+) ENGINE=InnoDB;
+
+insert into `GamingPlatform`( Id, Name, Developer )
+	values ( 1, 'Playstation 3', 'Sony' ), ( 2, 'Xbox 360', 'Microsoft' ), ( 3, 'Wii', 'Nintendo' ), ( 4, 'PC', NULL );
+
+create table `VideoGameTitle` (
+    Id int ( 11 ),
+    Name varchar( 50 ),
+    Developer varchar( 50 ),
+    primary key ( Id )
+) ENGINE=InnoDB;
+
+insert into `VideoGameTitle` ( Id, Name, Developer )
+	values ( 1, 'Halo 3', 'Bungie' ), ( 2, 'Gears of War', 'Epyx' ), ( 3, 'Call of Duty: Black Ops', 'Treyarch' ),
+	( 4, 'Resistance', 'Insomniac' ), ( 5, 'FIFA 11', 'EA' ), ( 6, 'Fallout 3', 'Bethesda' ), 
+	( 7, '3D Dot Game Heroes', 'From' ), ( 8, 'Mario Galaxy', 'Nintendo' );
+
+create table `VideoGamePlatform` ( 
+	IdGamingPlatform int( 11 ) not null,
+	IdVideoGameTitle int( 11 ) not null,
+	Category varchar( 50 ),
+	primary key ( IdGamingPlatform, IdVideoGameTitle ),
+	CONSTRAINT fk_VideoGamePlatform_Platform FOREIGN KEY (IdGamingPlatform) REFERENCES GamingPlatform ( Id ),
+	constraint fk_VideoGamePlatform_VideoGameTitle FOREIGN KEY ( IdVideoGameTitle ) REFERENCES VideoGameTitle ( Id )
+) ENGINE=InnoDB;
+
+insert into `VideoGamePlatform` ( IdGamingPlatform, IdVideoGameTitle, Category )
+	values ( 1, 3, 'FPS' ), ( 1, 4, 'FPS' ), ( 1, 5, 'Soccer' ), ( 1, 6, 'RPG' ), ( 1, 7, 'RPG-Action' ), ( 2, 1, 'FPS' ), ( 2, 2, '3PS' ), ( 2, 3, 'FPS' ), 
+    ( 2, 5, 'Soccer' ), ( 2, 6, 'RPG' ),	( 3, 5, 'Soccer' ), ( 3, 8, 'Platformer' );
+               

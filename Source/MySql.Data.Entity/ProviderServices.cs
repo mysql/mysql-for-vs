@@ -398,8 +398,12 @@ namespace MySql.Data.MySqlClient
 
             if (column.TypeUsage.EdmType.BaseType.Name == "String")
             {
-                if (facets.TryGetValue("MaxLength", true, out facet))
-                    sql.AppendFormat(" ({0})", facet.Value);
+                // types tinytext, mediumtext, text & longtext don't have a length.
+                if (!column.TypeUsage.EdmType.Name.EndsWith("text"))
+                {
+                    if (facets.TryGetValue("MaxLength", true, out facet))
+                        sql.AppendFormat(" ({0})", facet.Value);
+                }
             }
             if (facets.TryGetValue("Nullable", true, out facet) && (bool)facet.Value == false)
                 sql.Append(" NOT NULL");

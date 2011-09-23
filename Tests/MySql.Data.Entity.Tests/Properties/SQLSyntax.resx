@@ -220,6 +220,44 @@ FROM `Companies` AS `Extent1`
 FROM `Toys` AS `Extent2`
  WHERE (`Extent1`.`Id` = `Extent2`.`SupplierId`) AND (`Extent2`.`MinAge` &lt; 4))</value>
   </data>
+  <data name="JoinOfNestedUnionsWithLimit" xml:space="preserve">
+    <value>SELECT
+`Project1`.`Id`, 
+`Project1`.`Name`, 
+`Project1`.`Pages`, 
+`Project1`.`Id1`, 
+`Project1`.`Name1`, 
+`Project1`.`Age`, 
+`Project1`.`Id2`, 
+`Project1`.`Name2`, 
+`Project1`.`C1`, 
+`Project1`.`Id3`, 
+`Project1`.`Name3`, 
+`Project1`.`Pages1`, 
+`Project1`.`Author_id`, 
+`Project1`.`Publisher_id`
+FROM (SELECT
+`Extent1`.`Id`, 
+`Extent1`.`Name`, 
+`Extent1`.`Pages`, 
+`Extent2`.`Id` AS `Id1`, 
+`Extent2`.`Name` AS `Name1`, 
+`Extent2`.`Age`, 
+`Extent3`.`id` AS `Id2`, 
+`Extent3`.`name` AS `Name2`, 
+`Extent4`.`Id` AS `Id3`, 
+`Extent4`.`Name` AS `Name3`, 
+`Extent4`.`Pages` AS `Pages1`, 
+`Extent4`.`Author_id`, 
+`Extent4`.`Publisher_id`, 
+CASE WHEN (`Extent4`.`Id` IS  NULL) THEN (NULL)  ELSE (1) END AS `C1`
+FROM `Books` AS `Extent1` INNER JOIN `Authors` AS `Extent2` ON `Extent1`.`Author_id` = `Extent2`.`Id` LEFT OUTER JOIN `Publishers` AS `Extent3` ON `Extent1`.`Publisher_id` = `Extent3`.`id` LEFT OUTER JOIN `Books` AS `Extent4` ON `Extent4`.`Publisher_id` = `Extent1`.`Publisher_id`) AS `Project1`
+ ORDER BY 
+`Project1`.`Id` ASC, 
+`Project1`.`Id1` ASC, 
+`Project1`.`Id2` ASC, 
+`Project1`.`C1` ASC</value>
+  </data>
   <data name="JoinOfUnionsOnRightSideOfJoin" xml:space="preserve">
     <value>SELECT
 `Extent1`.`Id`, 
