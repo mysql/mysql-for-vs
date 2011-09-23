@@ -72,6 +72,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Model2.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Model3.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model3.edmx</DependentUpon>
+    </Compile>
     <Compile Include="ProceduresAndFunctions.cs" />
     <Compile Include="JoinTests.cs" />
     <Compile Include="ProviderServicesTests.cs" />
@@ -112,7 +117,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.Config" />
+    <None Include="App.Config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <EntityDeploy Include="Model3.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Model3.Designer.cs</LastGenOutput>
+    </EntityDeploy>
     <EntityDeploy Include="Model2.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>Model2.Designer.cs</LastGenOutput>
