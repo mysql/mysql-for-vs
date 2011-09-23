@@ -8,7 +8,7 @@
 - Modified MySQLParameter constructor to correctly assign IsNullable, Precision and Scale properties
   (MySQL bug #62194, Oracle bug #12999162).
 - Added changes to support some corner cases with nested TableFragments with limit clause (Take Linq operator) (MySQL bug #61729, Oracle bug #12776598).
-
+- Fix for customer issue: bad management of alias in SelectStatement (bug #12807366).
 
 Version 6.2.5
 - Modified SqlFragment.QuoteIdentifier to add MySQL quotes around identifiers (MySQL bug #61635, Oracle bug #12707285).

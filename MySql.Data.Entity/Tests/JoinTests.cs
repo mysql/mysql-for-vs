@@ -197,5 +197,30 @@ namespace MySql.Data.Entity.Tests
                 }
             }
        }
+
+        /// <summary>
+        /// Test for fix of Oracle bug 12807366.
+        /// </summary>
+        [Test]
+        public void JoinsAndConcatsWithComposedKeys()
+        {
+            using (testEntities1 ctx = new testEntities1())
+            {
+                IQueryable<gamingplatform> l2 = ctx.gamingplatform.Where(p => string.IsNullOrEmpty(p.Name)).Take(10);
+                IQueryable<gamingplatform> l = ctx.gamingplatform.Where(p => string.IsNullOrEmpty(p.Name)).Take(10);
+                var l4 = ctx.gamingplatform.Where(p => string.IsNullOrEmpty(p.Name)).Take(10);
+                l = l.Concat(l4);
+                l = l.Concat(ctx.gamingplatform.Where(p => string.IsNullOrEmpty(p.Name)).Take(10).Distinct());
+
+                IQueryable<gamingplatform> q = (from i in l join i2 in l2 on i.Id equals i2.Id select i);
+                IQueryable<videogameplatform> l3 = from t1 in q
+                                                   join t2 in q.SelectMany(p => p.videogameplatform)
+                                                       on t1.Id equals t2.IdGamingPlatform
+                                                   select t2;
+                videogameplatform pu = null;
+
+                pu = l3.FirstOrDefault();
+            }
+        }
     }
 }
