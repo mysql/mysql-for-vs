@@ -148,13 +148,13 @@ namespace MySql.Data.Entity
                 column.TableName = input.Name;
 
                 // then we rename the column if necessary
-                if (columnHash.ContainsKey(column.ColumnName))
+                if (columnHash.ContainsKey(column.ColumnName.ToUpper()))
                 {
                     column.ColumnAlias = MakeColumnNameUnique(column.ColumnName);
                     columnHash.Add(column.ColumnAlias, column);
                 }
                 else
-                    columnHash.Add(column.ColumnName, column);
+                    columnHash.Add(column.ColumnName.ToUpper(), column);
                 Columns.Add(column);
             }
             if (From is TableFragment)
@@ -186,8 +186,11 @@ namespace MySql.Data.Entity
                 SelectStatement select = input as SelectStatement;
                 foreach (ColumnFragment cf in select.Columns)
                 {
-                    ColumnFragment newColumn = new ColumnFragment(cf.TableName, cf.ActualColumnName);
-                    newColumn.ColumnAlias = cf.ColumnAlias;
+					//ColumnFragment newColumn = new ColumnFragment(cf.TableName, cf.ActualColumnName);
+					ColumnFragment newColumn = new ColumnFragment(cf.TableName,
+						string.IsNullOrEmpty(cf.ColumnAlias) ? cf.ActualColumnName : cf.ColumnAlias
+						);
+					//newColumn.ColumnAlias = cf.ColumnAlias;
                     newColumn.PushInput( cf.ActualColumnName );                    
                     if (select.Name != null)
                     {
@@ -221,6 +224,7 @@ namespace MySql.Data.Entity
         private string MakeColumnNameUnique(string baseName)
         {
             int i = 1;
+			baseName = baseName.ToUpper();
             hasRenamedColumns = true;
             while (true)
             {
