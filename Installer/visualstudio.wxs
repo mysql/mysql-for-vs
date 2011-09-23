@@ -89,17 +89,11 @@
       <RegistrySearch Id='Find_VS2010_Path' Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\10.0\Setup\VS'
           Name='EnvironmentDirectory' Type='raw'/>
     </Property>
-    <CustomAction Id="VS_2010_SETUP" Property="VS_2010_SETUP_EXEC" Value='"[VS_2010_PATH]\devenv.com" /setup'/>
-    <CustomAction Id="VS_2010_SETUP_EXEC" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="ignore" Execute='deferred' Impersonate='no'/>
 
     <InstallExecuteSequence>
       <!-- now vs2008 scheduling -->
       <Custom Action='VS_2008_SETUP' Before='InstallFinalize'>(&amp;VS2008Int=2) OR (&amp;VS2008Int=3)</Custom>
       <Custom Action='VS_2008_SETUP_EXEC' After='VS_2008_SETUP'>(&amp;VS2008Int=2) OR (&amp;VS2008Int=3)</Custom>
-      
-      <!-- now vs2010 scheduling -->
-      <Custom Action='VS_2010_SETUP' Before='InstallFinalize'>(&amp;VS2010Int=2) OR (&amp;VS2010Int=3)</Custom>
-      <Custom Action='VS_2010_SETUP_EXEC' After='VS_2010_SETUP'>(&amp;VS2010Int=2) OR (&amp;VS2010Int=3)</Custom>
     </InstallExecuteSequence>
   </Fragment>
 </Wix>
