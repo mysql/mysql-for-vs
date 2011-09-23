@@ -434,6 +434,9 @@ namespace MySql.Data.Entity
             if (inputFragment is TableFragment && type != null)
                 (inputFragment as TableFragment).Type = type;
 
+            if ((inputFragment is SelectStatement) && ((inputFragment as SelectStatement).From is TableFragment))
+                ((inputFragment as SelectStatement).From as TableFragment).Type = type;
+
             if (name != null)
                 scope.Add(name, inputFragment);
 
