@@ -41,8 +41,9 @@ namespace MySql.Data.Common
         string pipeName;
         uint timeOut;
         uint keepalive;
+        DBVersion driverVersion;
 
-        public StreamCreator(string hosts, uint port, string pipeName, uint keepalive)
+        public StreamCreator(string hosts, uint port, string pipeName, uint keepalive, DBVersion driverVersion)
         {
             hostList = hosts;
             if (hostList == null || hostList.Length == 0)
@@ -50,6 +51,7 @@ namespace MySql.Data.Common
             this.port = port;
             this.pipeName = pipeName;
             this.keepalive = keepalive;
+            this.driverVersion = driverVersion;
         }
 
         private Stream GetStreamFromHost(string pipeName, string hostName, uint timeout)
@@ -66,6 +68,9 @@ namespace MySql.Data.Common
                 IPHostEntry ipHE = GetHostEntry(hostName);
                 foreach (IPAddress address in ipHE.AddressList)
                 {
+                    if (address.AddressFamily == AddressFamily.InterNetworkV6 && !this.driverVersion.isAtLeast(5, 5, 3))
+                        continue;
+
                     try
                     {
                         stream = CreateSocketStream(address, false);
