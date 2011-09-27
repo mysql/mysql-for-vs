@@ -177,7 +177,7 @@ namespace MySql.Data.MySqlClient
                     if (Settings.ConnectionProtocol != MySqlConnectionProtocol.NamedPipe)
                         pipeName = null;
                     StreamCreator sc = new StreamCreator(Settings.Server, Settings.Port, pipeName,
-                        Settings.Keepalive);
+                        Settings.Keepalive, this.Version);
                     baseStream = sc.GetStream(Settings.ConnectionTimeout);
 #if !CF
                 }
