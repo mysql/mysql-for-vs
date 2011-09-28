@@ -41,8 +41,9 @@ namespace MySql.Data.Common
         string pipeName;
         uint timeOut;
         uint keepalive;
+        DBVersion driverVersion;
 
-        public StreamCreator(string hosts, uint port, string pipeName, uint keepalive)
+        public StreamCreator(string hosts, uint port, string pipeName, uint keepalive, DBVersion driverVersion)
         {
             hostList = hosts;
             if (hostList == null || hostList.Length == 0)
@@ -50,6 +51,7 @@ namespace MySql.Data.Common
             this.port = port;
             this.pipeName = pipeName;
             this.keepalive = keepalive;
+            this.driverVersion = driverVersion;
         }
 
         private Stream GetStreamFromHost(string pipeName, string hostName, uint timeout)
@@ -66,6 +68,9 @@ namespace MySql.Data.Common
                 IPHostEntry ipHE = GetHostEntry(hostName);
                 foreach (IPAddress address in ipHE.AddressList)
                 {
+                    if (address.AddressFamily == AddressFamily.InterNetworkV6 && !this.driverVersion.isAtLeast(5, 5, 3))
+                        continue;
+
                     try
                     {
                         stream = CreateSocketStream(address, false);
@@ -162,57 +167,57 @@ namespace MySql.Data.Common
 
 #if !CF
 
-		private static EndPoint CreateUnixEndPoint(string host)
-		{
-			// first we need to load the Mono.posix assembly			
+        private static EndPoint CreateUnixEndPoint(string host)
+        {
+            // first we need to load the Mono.posix assembly			
             Assembly a = Assembly.Load(@"Mono.Posix, Version=2.0.0.0, 				
                 Culture=neutral, PublicKeyToken=0738eb9f132ed756");
 
-			// then we need to construct a UnixEndPoint object
-			EndPoint ep = (EndPoint)a.CreateInstance("Mono.Posix.UnixEndPoint",
-				false, BindingFlags.CreateInstance, null,
-				new object[1] { host }, null, null);
-			return ep;
-		}
+            // then we need to construct a UnixEndPoint object
+            EndPoint ep = (EndPoint)a.CreateInstance("Mono.Posix.UnixEndPoint",
+                false, BindingFlags.CreateInstance, null,
+                new object[1] { host }, null, null);
+            return ep;
+        }
 #endif
 
         private Stream CreateSocketStream(IPAddress ip, bool unix)
         {
             EndPoint endPoint;
 #if !CF
-			if (!Platform.IsWindows() && unix)
-				endPoint = CreateUnixEndPoint(hostList);
-			else
+            if (!Platform.IsWindows() && unix)
+                endPoint = CreateUnixEndPoint(hostList);
+            else
 #endif
-            endPoint = new IPEndPoint(ip, (int)port);
+                endPoint = new IPEndPoint(ip, (int)port);
 
-			Socket socket = unix ?
-				new Socket(AddressFamily.Unix, SocketType.Stream, ProtocolType.IP) :
-				new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            Socket socket = unix ?
+                new Socket(AddressFamily.Unix, SocketType.Stream, ProtocolType.IP) :
+                new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             if (keepalive > 0)
             {
                 SetKeepAlive(socket, keepalive);
             }
-			IAsyncResult ias = socket.BeginConnect(endPoint, null, null);
-			if (!ias.AsyncWaitHandle.WaitOne((int)timeOut * 1000, false))
-			{
-				socket.Close();
-				return null;
-			}
-			try
-			{
-				socket.EndConnect(ias);
-			}
-			catch (Exception)
-			{
-				socket.Close();
+            IAsyncResult ias = socket.BeginConnect(endPoint, null, null);
+            if (!ias.AsyncWaitHandle.WaitOne((int)timeOut * 1000, false))
+            {
+                socket.Close();
+                return null;
+            }
+            try
+            {
+                socket.EndConnect(ias);
+            }
+            catch (Exception)
+            {
+                socket.Close();
                 throw;
-			}
+            }
             MyNetworkStream stream = new MyNetworkStream(socket, true);
             GC.SuppressFinalize(socket);
             GC.SuppressFinalize(stream);
             return stream;
-		}
+        }
 
 
 
