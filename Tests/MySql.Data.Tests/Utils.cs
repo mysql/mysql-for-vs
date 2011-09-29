@@ -24,19 +24,19 @@ using System;
 
 namespace MySql.Data.MySqlClient.Tests
 {
-	/// <summary>
-	/// Summary description for Utils.
-	/// </summary>
-	public class Utils
-	{
+  /// <summary>
+  /// Summary description for Utils.
+  /// </summary>
+  public class Utils
+  {
 
-		public static byte[] CreateBlob( int size )
-		{
-			byte[] buf = new byte[size];
+    public static byte[] CreateBlob(int size)
+    {
+      byte[] buf = new byte[size];
 
-			Random r = new Random();
-			r.NextBytes( buf );
-			return buf;
-		}
-	}
+      Random r = new Random();
+      r.NextBytes(buf);
+      return buf;
+    }
+  }
 }

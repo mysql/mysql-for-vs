@@ -24,45 +24,45 @@ using System.Text;
 using System.Collections.Generic;
 namespace MySql.Data.Entity
 {
-    class UpdateStatement : SqlFragment 
+  class UpdateStatement : SqlFragment
+  {
+    public UpdateStatement()
     {
-        public UpdateStatement()
-        {
-            Properties = new List<SqlFragment>();
-            Values = new List<SqlFragment>();
-        }
-
-        public SqlFragment Target { get; set; }
-        public List<SqlFragment> Properties { get; private set; }
-        public List<SqlFragment> Values { get; private set; }
-        public SqlFragment Where { get; set; }
-        public SelectStatement ReturningSelect;
-
-        public override void WriteSql(StringBuilder sql)
-        {
-            sql.Append("UPDATE ");
-            Target.WriteSql(sql);
-            sql.Append(" SET ");
-
-            string seperator = "";
-            for (int i = 0; i < Properties.Count; i++)
-            {
-                sql.Append(seperator);
-                Properties[i].WriteSql(sql);
-                sql.Append("=");
-                Values[i].WriteSql(sql);
-                seperator = ", ";
-            }
-            if (Where != null)
-            {
-                sql.Append(" WHERE ");
-                Where.WriteSql(sql);
-            }
-            if (ReturningSelect != null)
-            {
-                sql.Append(";\r\n");
-                ReturningSelect.WriteSql(sql);
-            }
-        }
+      Properties = new List<SqlFragment>();
+      Values = new List<SqlFragment>();
     }
+
+    public SqlFragment Target { get; set; }
+    public List<SqlFragment> Properties { get; private set; }
+    public List<SqlFragment> Values { get; private set; }
+    public SqlFragment Where { get; set; }
+    public SelectStatement ReturningSelect;
+
+    public override void WriteSql(StringBuilder sql)
+    {
+      sql.Append("UPDATE ");
+      Target.WriteSql(sql);
+      sql.Append(" SET ");
+
+      string seperator = "";
+      for (int i = 0; i < Properties.Count; i++)
+      {
+        sql.Append(seperator);
+        Properties[i].WriteSql(sql);
+        sql.Append("=");
+        Values[i].WriteSql(sql);
+        seperator = ", ";
+      }
+      if (Where != null)
+      {
+        sql.Append(" WHERE ");
+        Where.WriteSql(sql);
+      }
+      if (ReturningSelect != null)
+      {
+        sql.Append(";\r\n");
+        ReturningSelect.WriteSql(sql);
+      }
+    }
+  }
 }

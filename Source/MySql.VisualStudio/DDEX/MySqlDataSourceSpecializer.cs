@@ -29,28 +29,28 @@ using System.Reflection;
 
 namespace MySql.Data.VisualStudio
 {
-    /// <summary>
-    /// This class needed only as a stub to get prompt dialog to work. Its methods
-    /// are never called.
-    /// </summary>
-    class MySqlDataSourceSpecializer: DataSourceSpecializer
+  /// <summary>
+  /// This class needed only as a stub to get prompt dialog to work. Its methods
+  /// are never called.
+  /// </summary>
+  class MySqlDataSourceSpecializer : DataSourceSpecializer
+  {
+    public override object CreateObject(Guid dataSource, Type objType)
     {
-        public override object CreateObject(Guid dataSource, Type objType)
-        {
-            object result = base.CreateObject(dataSource, objType);
-            return result;
-        }
-
-        public override Guid DeriveDataSource(string connectionString)
-        {
-            Guid result = base.DeriveDataSource(connectionString);
-            return result;
-        }
-
-        public override Assembly GetAssembly(Guid dataSource, string assemblyString)
-        {
-            Assembly result = base.GetAssembly(dataSource, assemblyString);
-            return result;
-        }
+      object result = base.CreateObject(dataSource, objType);
+      return result;
     }
+
+    public override Guid DeriveDataSource(string connectionString)
+    {
+      Guid result = base.DeriveDataSource(connectionString);
+      return result;
+    }
+
+    public override Assembly GetAssembly(Guid dataSource, string assemblyString)
+    {
+      Assembly result = base.GetAssembly(dataSource, assemblyString);
+      return result;
+    }
+  }
 }

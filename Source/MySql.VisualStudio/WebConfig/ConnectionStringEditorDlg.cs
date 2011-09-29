@@ -27,28 +27,28 @@ using System.Reflection;
 
 namespace MySql.Data.VisualStudio.WebConfig
 {
-    public partial class ConnectionStringEditorDlg : Form
+  public partial class ConnectionStringEditorDlg : Form
+  {
+    private DbConnectionStringBuilder builder;
+
+    public ConnectionStringEditorDlg()
     {
-        private DbConnectionStringBuilder builder;
+      InitializeComponent();
 
-        public ConnectionStringEditorDlg()
-        {
-            InitializeComponent();
-
-            DbProviderFactory factory = DbProviderFactories.GetFactory("MySql.Data.MySqlClient");
-            builder = factory.CreateConnectionStringBuilder ();
-            connStrProps.SelectedObject = builder;
-        }
-
-        public string ConnectionString
-        {
-            get { return builder.ConnectionString; }
-            set { builder.ConnectionString = value; connectionString.Text = value;  }
-        }
-
-        private void connStrProps_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
-        {
-            connectionString.Text = builder.ConnectionString;
-        }
+      DbProviderFactory factory = DbProviderFactories.GetFactory("MySql.Data.MySqlClient");
+      builder = factory.CreateConnectionStringBuilder();
+      connStrProps.SelectedObject = builder;
     }
+
+    public string ConnectionString
+    {
+      get { return builder.ConnectionString; }
+      set { builder.ConnectionString = value; connectionString.Text = value; }
+    }
+
+    private void connStrProps_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+    {
+      connectionString.Text = builder.ConnectionString;
+    }
+  }
 }
