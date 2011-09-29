@@ -29,44 +29,44 @@ using System.Web.Security;
 
 namespace MySql.Data.VisualStudio.WebConfig
 {
-    public partial class MembershipOptionsDlg : Form
+  public partial class MembershipOptionsDlg : Form
+  {
+    public MembershipOptionsDlg()
     {
-        public MembershipOptionsDlg()
-        {
-            InitializeComponent();
-            passwordFormat.DataSource = Enum.GetValues(typeof(MembershipPasswordFormat));
-        }
-
-        internal MembershipOptions Options
-        {
-            get 
-            {
-                MembershipOptions options = new MembershipOptions();
-                options.EnablePasswordReset = enablePasswordReset.Checked;
-                options.EnablePasswordRetrieval = enablePasswordRetrieval.Checked;
-                options.MaxInvalidPasswordAttempts = (int)maxInvalidPassAttempts.Value;
-                options.MinRequiredNonAlphaNumericCharacters = (int)minRequiredNonAlpha.Value;
-                options.MinRequiredPasswordLength = (int)minPassLength.Value;
-                options.PasswordAttemptWindow = (int)passwordAttemptWindow.Value;
-                options.PasswordFormat = (MembershipPasswordFormat)passwordFormat.SelectedItem;
-                options.PasswordStrengthRegEx = passwordRegex.Text.Trim();
-                options.RequiresQA = requireQA.Checked;
-                options.RequiresUniqueEmail = requireUniqueEmail.Checked;
-                return options;
-            }
-            set 
-            {
-                enablePasswordReset.Checked = value.EnablePasswordReset;
-                enablePasswordRetrieval.Checked = value.EnablePasswordRetrieval;
-                maxInvalidPassAttempts.Value = value.MaxInvalidPasswordAttempts;
-                minRequiredNonAlpha.Value = value.MinRequiredNonAlphaNumericCharacters;
-                minPassLength.Value = value.MinRequiredPasswordLength;
-                passwordAttemptWindow.Value = value.PasswordAttemptWindow;
-                passwordFormat.SelectedItem = value.PasswordFormat;
-                passwordRegex.Text = value.PasswordStrengthRegEx;
-                requireQA.Checked = value.RequiresQA;
-                requireUniqueEmail.Checked = value.RequiresUniqueEmail;
-            }
-        }
+      InitializeComponent();
+      passwordFormat.DataSource = Enum.GetValues(typeof(MembershipPasswordFormat));
     }
+
+    internal MembershipOptions Options
+    {
+      get
+      {
+        MembershipOptions options = new MembershipOptions();
+        options.EnablePasswordReset = enablePasswordReset.Checked;
+        options.EnablePasswordRetrieval = enablePasswordRetrieval.Checked;
+        options.MaxInvalidPasswordAttempts = (int)maxInvalidPassAttempts.Value;
+        options.MinRequiredNonAlphaNumericCharacters = (int)minRequiredNonAlpha.Value;
+        options.MinRequiredPasswordLength = (int)minPassLength.Value;
+        options.PasswordAttemptWindow = (int)passwordAttemptWindow.Value;
+        options.PasswordFormat = (MembershipPasswordFormat)passwordFormat.SelectedItem;
+        options.PasswordStrengthRegEx = passwordRegex.Text.Trim();
+        options.RequiresQA = requireQA.Checked;
+        options.RequiresUniqueEmail = requireUniqueEmail.Checked;
+        return options;
+      }
+      set
+      {
+        enablePasswordReset.Checked = value.EnablePasswordReset;
+        enablePasswordRetrieval.Checked = value.EnablePasswordRetrieval;
+        maxInvalidPassAttempts.Value = value.MaxInvalidPasswordAttempts;
+        minRequiredNonAlpha.Value = value.MinRequiredNonAlphaNumericCharacters;
+        minPassLength.Value = value.MinRequiredPasswordLength;
+        passwordAttemptWindow.Value = value.PasswordAttemptWindow;
+        passwordFormat.SelectedItem = value.PasswordFormat;
+        passwordRegex.Text = value.PasswordStrengthRegEx;
+        requireQA.Checked = value.RequiresQA;
+        requireUniqueEmail.Checked = value.RequiresUniqueEmail;
+      }
+    }
+  }
 }

@@ -26,22 +26,22 @@ using System.Web.Configuration;
 
 namespace MySql.Data.VisualStudio.WebConfig
 {
-    internal class ProfileConfig : GenericConfig
+  internal class ProfileConfig : GenericConfig
+  {
+    public ProfileConfig()
+      : base()
     {
-        public ProfileConfig()
-            : base()
-        {
-            typeName = "MySQLProfileProvider";
-            sectionName = "profile";
-        }
-
-        protected override ProviderSettings GetMachineSettings()
-        {
-            Configuration machineConfig = ConfigurationManager.OpenMachineConfiguration();
-            ProfileSection section = (ProfileSection)machineConfig.SectionGroups["system.web"].Sections[sectionName];
-            foreach (ProviderSettings p in section.Providers)
-                if (p.Type.Contains(typeName)) return p;
-            return null;
-        }
+      typeName = "MySQLProfileProvider";
+      sectionName = "profile";
     }
+
+    protected override ProviderSettings GetMachineSettings()
+    {
+      Configuration machineConfig = ConfigurationManager.OpenMachineConfiguration();
+      ProfileSection section = (ProfileSection)machineConfig.SectionGroups["system.web"].Sections[sectionName];
+      foreach (ProviderSettings p in section.Providers)
+        if (p.Type.Contains(typeName)) return p;
+      return null;
+    }
+  }
 }

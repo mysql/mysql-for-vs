@@ -33,31 +33,31 @@ using System.Data.Metadata.Edm;
 
 namespace MySql.Data.Entity.Tests
 {
-	[TestFixture]
-	public class ProviderManifestTests : BaseEdmTest
-	{
-		[Test]
-		public void TestingMaxLengthFacet()
-		{
-			using (MySqlConnection connection = new MySqlConnection(GetConnectionString(true)))
-			{
-				MySqlProviderManifest pm = new MySqlProviderManifest(Version.ToString());
-				TypeUsage tu = TypeUsage.CreateStringTypeUsage(
-					PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String), false, false);
-				TypeUsage result = pm.GetStoreType(tu);
-				Assert.AreEqual("longtext", result.EdmType.Name);
+  [TestFixture]
+  public class ProviderManifestTests : BaseEdmTest
+  {
+    [Test]
+    public void TestingMaxLengthFacet()
+    {
+      using (MySqlConnection connection = new MySqlConnection(GetConnectionString(true)))
+      {
+        MySqlProviderManifest pm = new MySqlProviderManifest(Version.ToString());
+        TypeUsage tu = TypeUsage.CreateStringTypeUsage(
+          PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String), false, false);
+        TypeUsage result = pm.GetStoreType(tu);
+        Assert.AreEqual("longtext", result.EdmType.Name);
 
-				tu = TypeUsage.CreateStringTypeUsage(
-					PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String), false, false, Int32.MaxValue);
-				result = pm.GetStoreType(tu);
-				Assert.AreEqual("longtext", result.EdmType.Name);
+        tu = TypeUsage.CreateStringTypeUsage(
+          PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String), false, false, Int32.MaxValue);
+        result = pm.GetStoreType(tu);
+        Assert.AreEqual("longtext", result.EdmType.Name);
 
-				tu = TypeUsage.CreateStringTypeUsage(
-					PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String), false, false, 70000);
-				result = pm.GetStoreType(tu);
-				Assert.AreEqual("mediumtext", result.EdmType.Name);
+        tu = TypeUsage.CreateStringTypeUsage(
+          PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String), false, false, 70000);
+        result = pm.GetStoreType(tu);
+        Assert.AreEqual("mediumtext", result.EdmType.Name);
 
-			}
-		}
-	}
+      }
+    }
+  }
 }

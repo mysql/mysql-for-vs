@@ -29,49 +29,49 @@ using NUnit.Framework;
 
 namespace MySql.Data.MySqlClient.Tests
 {
-	[TestFixture]
-	public class EventTests : BaseTest
-	{
-		[Test]
-		public void Warnings()
-		{
-			if (Version < new Version(4, 1)) return;
+  [TestFixture]
+  public class EventTests : BaseTest
+  {
+    [Test]
+    public void Warnings()
+    {
+      if (Version < new Version(4, 1)) return;
 
-			execSQL("CREATE TABLE Test (name VARCHAR(10))");
+      execSQL("CREATE TABLE Test (name VARCHAR(10))");
 
-			string connStr = GetConnectionString(true);
-			using (MySqlConnection c = new MySqlConnection(connStr))
-			{
-				c.Open();
+      string connStr = GetConnectionString(true);
+      using (MySqlConnection c = new MySqlConnection(connStr))
+      {
+        c.Open();
 
-				MySqlCommand cmd = new MySqlCommand("SET SQL_MODE=''", c);
-				cmd.ExecuteNonQuery();
+        MySqlCommand cmd = new MySqlCommand("SET SQL_MODE=''", c);
+        cmd.ExecuteNonQuery();
 
-				c.InfoMessage += new MySqlInfoMessageEventHandler(WarningsInfoMessage);
+        c.InfoMessage += new MySqlInfoMessageEventHandler(WarningsInfoMessage);
 
-				cmd.CommandText = "INSERT INTO Test VALUES ('12345678901')";
-				using (MySqlDataReader reader = cmd.ExecuteReader())
-				{
-				}
-			}
-		}
+        cmd.CommandText = "INSERT INTO Test VALUES ('12345678901')";
+        using (MySqlDataReader reader = cmd.ExecuteReader())
+        {
+        }
+      }
+    }
 
-		private void WarningsInfoMessage(object sender, MySqlInfoMessageEventArgs args)
-		{
-			Assert.AreEqual(1, args.errors.Length);
-		}
-		
-		[Test]
-		public void StateChange() 
-		{
-			MySqlConnection c = new MySqlConnection(GetConnectionString(true));
-			c.StateChange += new StateChangeEventHandler(StateChangeHandler);
-			c.Open();
-			c.Close();
-		}
+    private void WarningsInfoMessage(object sender, MySqlInfoMessageEventArgs args)
+    {
+      Assert.AreEqual(1, args.errors.Length);
+    }
 
-		private void StateChangeHandler(object sender, StateChangeEventArgs e)
-		{
-		}		
-	}
+    [Test]
+    public void StateChange()
+    {
+      MySqlConnection c = new MySqlConnection(GetConnectionString(true));
+      c.StateChange += new StateChangeEventHandler(StateChangeHandler);
+      c.Open();
+      c.Close();
+    }
+
+    private void StateChangeHandler(object sender, StateChangeEventArgs e)
+    {
+    }
+  }
 }

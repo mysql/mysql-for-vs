@@ -84,9 +84,9 @@
         <Property name="Comment" type="System.String" itemName="TABLE_COMMENT"/>
       </Properties>
       <Actions>
-          <Action name="Enumerate" guid="61CC0372-384D-42e5-9707-6D7C8DC5287A" handler="MySql.Data.VisualStudio.MySqlDataObjectEnumerator">
-            <Parameter value="Tables"/>
-          </Action>
+        <Action name="Enumerate" guid="61CC0372-384D-42e5-9707-6D7C8DC5287A" handler="MySql.Data.VisualStudio.MySqlDataObjectEnumerator">
+          <Parameter value="Tables"/>
+        </Action>
         <Action name="BuildDSRef" guid="7C030900-E8DD-471b-8F18-D83DA7036144"
                 handler="Microsoft.VisualStudio.Data.DSRefBuilder">
           <Parameter>
@@ -909,12 +909,12 @@
     </Type>
 
     <!--
-			Defines a type that represents an index.
-		-->
+      Defines a type that represents an index.
+    -->
     <Type name="Index" defaultSort="Schema,Table,Name">
       <Concepts>
         <Concept name="TableIndex" restrictions="null,{Schema},{Table},{Name}"/>
-        <Concept name="TableUniqueKey" restrictions="null,{Schema},{Table},{Name}" 
+        <Concept name="TableUniqueKey" restrictions="null,{Schema},{Table},{Name}"
                  filter="IsUnique = true"/>
       </Concepts>
       <Identifier>

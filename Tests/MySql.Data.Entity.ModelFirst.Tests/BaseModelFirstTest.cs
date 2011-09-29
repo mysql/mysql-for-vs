@@ -38,74 +38,74 @@ using MySql.Data.MySqlClient.Tests;
 
 namespace MySql.Data.Entity.ModelFirst.Tests
 {
-    public class BaseModelFirstTest : BaseTest
+  public class BaseModelFirstTest : BaseTest
+  {
+    // A trace listener to use during testing.
+    private AssertFailTraceListener asertFailListener = new AssertFailTraceListener();
+
+    protected override void Initialize()
     {
-        // A trace listener to use during testing.
-        private AssertFailTraceListener asertFailListener = new AssertFailTraceListener();
-
-        protected override void Initialize()
-        {
-            database0 = database1 = "test";
-            MySqlConnection.ClearAllPools();
-        }
-
-        [SetUp]
-        public override void Setup()
-        {
-            base.Setup();
-
-            // Override sql_mode so it converts automatically from varchar(65535) to text
-            MySqlCommand cmd = new MySqlCommand("SET GLOBAL SQL_MODE=``", rootConn);
-            cmd.ExecuteNonQuery();
-
-            // Replace existing listeners with listener for testing.
-            Trace.Listeners.Clear();
-            Trace.Listeners.Add(this.asertFailListener);
-
-            var dataSet = ConfigurationManager.GetSection("system.data") as System.Data.DataSet;
-                dataSet.Tables[0].Rows.Add("MySql"
-                , "MySql.Data.MySqlClient"
-                , "MySql.Data.MySqlClient"
-                ,
-                typeof( MySql.Data.MySqlClient.MySqlClientFactory ).AssemblyQualifiedName );
-        }
-
-        [TearDown]
-        public override void Teardown()
-        {
-            base.Teardown();
-        }
-
-        private EntityConnection GetEntityConnection()
-        {            
-            return null;            
-        }
-
-        protected void CheckSql(string sql, string refSql)
-        {
-            StringBuilder str1 = new StringBuilder();
-            StringBuilder str2 = new StringBuilder();
-            foreach (char c in sql)
-                if (!Char.IsWhiteSpace(c))
-                    str1.Append(c);
-            foreach (char c in refSql)
-                if (!Char.IsWhiteSpace(c))
-                    str2.Append(c);
-            Assert.AreEqual(0, String.Compare(str1.ToString(), str2.ToString(), true));
-        }
-
-        private class AssertFailTraceListener : DefaultTraceListener
-        {
-            public override void Fail(string message)
-            {
-                Assert.Fail("Assertion failure: " + message);
-            }
-
-            public override void Fail(string message, string detailMessage)
-            {
-                Assert.Fail("Assertion failure: " + detailMessage);
-            }
-        }
-
+      database0 = database1 = "test";
+      MySqlConnection.ClearAllPools();
     }
+
+    [SetUp]
+    public override void Setup()
+    {
+      base.Setup();
+
+      // Override sql_mode so it converts automatically from varchar(65535) to text
+      MySqlCommand cmd = new MySqlCommand("SET GLOBAL SQL_MODE=``", rootConn);
+      cmd.ExecuteNonQuery();
+
+      // Replace existing listeners with listener for testing.
+      Trace.Listeners.Clear();
+      Trace.Listeners.Add(this.asertFailListener);
+
+      var dataSet = ConfigurationManager.GetSection("system.data") as System.Data.DataSet;
+      dataSet.Tables[0].Rows.Add("MySql"
+      , "MySql.Data.MySqlClient"
+      , "MySql.Data.MySqlClient"
+      ,
+      typeof(MySql.Data.MySqlClient.MySqlClientFactory).AssemblyQualifiedName);
+    }
+
+    [TearDown]
+    public override void Teardown()
+    {
+      base.Teardown();
+    }
+
+    private EntityConnection GetEntityConnection()
+    {
+      return null;
+    }
+
+    protected void CheckSql(string sql, string refSql)
+    {
+      StringBuilder str1 = new StringBuilder();
+      StringBuilder str2 = new StringBuilder();
+      foreach (char c in sql)
+        if (!Char.IsWhiteSpace(c))
+          str1.Append(c);
+      foreach (char c in refSql)
+        if (!Char.IsWhiteSpace(c))
+          str2.Append(c);
+      Assert.AreEqual(0, String.Compare(str1.ToString(), str2.ToString(), true));
+    }
+
+    private class AssertFailTraceListener : DefaultTraceListener
+    {
+      public override void Fail(string message)
+      {
+        Assert.Fail("Assertion failure: " + message);
+      }
+
+      public override void Fail(string message, string detailMessage)
+      {
+        Assert.Fail("Assertion failure: " + detailMessage);
+      }
+    }
+
+  }
 }

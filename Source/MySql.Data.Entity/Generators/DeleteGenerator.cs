@@ -27,20 +27,20 @@ using MySql.Data.MySqlClient;
 
 namespace MySql.Data.Entity
 {
-    class DeleteGenerator : SqlGenerator 
+  class DeleteGenerator : SqlGenerator
+  {
+    public override string GenerateSQL(DbCommandTree tree)
     {
-        public override string GenerateSQL(DbCommandTree tree)
-        {
-            DbDeleteCommandTree commandTree = tree as DbDeleteCommandTree;
+      DbDeleteCommandTree commandTree = tree as DbDeleteCommandTree;
 
-            DeleteStatement statement = new DeleteStatement();
-            
-            statement.Target = commandTree.Target.Expression.Accept(this);
-            scope.Add("target", statement.Target as InputFragment);
+      DeleteStatement statement = new DeleteStatement();
 
-            statement.Where = commandTree.Predicate.Accept(this);
+      statement.Target = commandTree.Target.Expression.Accept(this);
+      scope.Add("target", statement.Target as InputFragment);
 
-            return statement.ToString();
-        }
+      statement.Where = commandTree.Predicate.Accept(this);
+
+      return statement.ToString();
     }
+  }
 }

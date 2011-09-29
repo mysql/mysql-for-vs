@@ -24,43 +24,43 @@ using System;
 
 namespace MySql.Data.Common
 {
-	internal class Platform
-	{
-		private static bool inited;
-		private static bool isMono;
+  internal class Platform
+  {
+    private static bool inited;
+    private static bool isMono;
 
-		/// <summary>
-		/// By creating a private ctor, we keep the compiler from creating a default ctor
-		/// </summary>
-		private Platform()
-		{
-		}
+    /// <summary>
+    /// By creating a private ctor, we keep the compiler from creating a default ctor
+    /// </summary>
+    private Platform()
+    {
+    }
 
-		public static bool IsWindows() 
-		{
-			OperatingSystem os = Environment.OSVersion;
-			switch (os.Platform)
-			{
-				case PlatformID.Win32NT:
-				case PlatformID.Win32S:
-				case PlatformID.Win32Windows:
-					return true;
-			}
-				return false;
-		}
+    public static bool IsWindows()
+    {
+      OperatingSystem os = Environment.OSVersion;
+      switch (os.Platform)
+      {
+        case PlatformID.Win32NT:
+        case PlatformID.Win32S:
+        case PlatformID.Win32Windows:
+          return true;
+      }
+      return false;
+    }
 
-		public static bool IsMono()
-		{
-			if (!inited)
-				Init();
-			return isMono;
-		}
+    public static bool IsMono()
+    {
+      if (!inited)
+        Init();
+      return isMono;
+    }
 
-		private static void Init()
-		{
-			inited = true;
-			Type t = Type.GetType("Mono.Runtime");
-			isMono = t != null;
-		}
-	}
+    private static void Init()
+    {
+      inited = true;
+      Type t = Type.GetType("Mono.Runtime");
+      isMono = t != null;
+    }
+  }
 }

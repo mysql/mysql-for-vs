@@ -28,26 +28,26 @@ using System;
 
 namespace MySql.Web.Security
 {
-    internal static class Runtime
+  internal static class Runtime
+  {
+    private static bool inited;
+    private static bool isMono;
+
+    public static bool IsMono
     {
-        private static bool inited;
-        private static bool isMono;
-
-        public static bool IsMono
-        {
-            get
-            {
-                if (!inited)
-                    Init();
-                return isMono;
-            }
-        }
-
-        private static void Init()
-        {
-            inited = true;
-            Type t = Type.GetType("Mono.Runtime");
-            isMono = t != null;
-        }
+      get
+      {
+        if (!inited)
+          Init();
+        return isMono;
+      }
     }
+
+    private static void Init()
+    {
+      inited = true;
+      Type t = Type.GetType("Mono.Runtime");
+      isMono = t != null;
+    }
+  }
 }
