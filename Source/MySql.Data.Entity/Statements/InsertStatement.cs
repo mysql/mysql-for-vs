@@ -23,41 +23,41 @@
 using System.Text;
 using System.Collections.Generic;
 
-namespace MySql.Data.Entity 
+namespace MySql.Data.Entity
 {
-    class InsertStatement : SqlFragment 
+  class InsertStatement : SqlFragment
+  {
+    public InsertStatement()
     {
-        public InsertStatement()
-        {
-            Sets = new List<SqlFragment>();
-            Values = new List<SqlFragment>();
-        }
-
-        public InputFragment Target { get; set; }
-        public List<SqlFragment> Sets { get; private set; }
-        public List<SqlFragment> Values { get; private set; }
-        public SelectStatement ReturningSelect;
-
-        public override void WriteSql(StringBuilder sql)
-        {
-            sql.Append("INSERT INTO ");
-            Target.WriteSql(sql);
-            if (Sets.Count > 0)
-            {
-                sql.Append("(");
-                WriteList(Sets, sql);
-                sql.Append(")");
-            }
-            sql.Append(" VALUES ");
-            sql.Append("(");
-            WriteList(Values, sql);
-            sql.Append(")");
-
-            if (ReturningSelect != null)
-            {
-                sql.Append(";\r\n");
-                ReturningSelect.WriteSql(sql);
-            }
-        }
+      Sets = new List<SqlFragment>();
+      Values = new List<SqlFragment>();
     }
+
+    public InputFragment Target { get; set; }
+    public List<SqlFragment> Sets { get; private set; }
+    public List<SqlFragment> Values { get; private set; }
+    public SelectStatement ReturningSelect;
+
+    public override void WriteSql(StringBuilder sql)
+    {
+      sql.Append("INSERT INTO ");
+      Target.WriteSql(sql);
+      if (Sets.Count > 0)
+      {
+        sql.Append("(");
+        WriteList(Sets, sql);
+        sql.Append(")");
+      }
+      sql.Append(" VALUES ");
+      sql.Append("(");
+      WriteList(Values, sql);
+      sql.Append(")");
+
+      if (ReturningSelect != null)
+      {
+        sql.Append(";\r\n");
+        ReturningSelect.WriteSql(sql);
+      }
+    }
+  }
 }

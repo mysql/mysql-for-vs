@@ -39,146 +39,146 @@ using Microsoft.VisualStudio.Shell;
 
 namespace MySql.Data.VisualStudio
 {
-	abstract class DocumentNode : BaseNode, IVsPersistDocData
-	{
-        public DocumentNode(DataViewHierarchyAccessor hierarchyAccessor, int id) :
-            base(hierarchyAccessor, id)
-        {
-        }
+  abstract class DocumentNode : BaseNode, IVsPersistDocData
+  {
+    public DocumentNode(DataViewHierarchyAccessor hierarchyAccessor, int id) :
+      base(hierarchyAccessor, id)
+    {
+    }
 
-        private uint DocumentCookie;
+    private uint DocumentCookie;
 
-        protected abstract void Load();
-        public abstract string GetSaveSql();
-        protected abstract string GetCurrentName();
+    protected abstract void Load();
+    public abstract string GetSaveSql();
+    protected abstract string GetCurrentName();
 
-        protected virtual bool Save()
-        {
-            ExecuteSQL(GetSaveSql());
-            return true;
-        }
+    protected virtual bool Save()
+    {
+      ExecuteSQL(GetSaveSql());
+      return true;
+    }
 
-        #region IVsPersistDocData Members
+    #region IVsPersistDocData Members
 
-        public int Close()
-        {
-            //throw new Exception("The method or operation is not implemented.");
-            return VSConstants.S_OK;
-        }
+    public int Close()
+    {
+      //throw new Exception("The method or operation is not implemented.");
+      return VSConstants.S_OK;
+    }
 
-        public int GetGuidEditorType(out Guid pClassID)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
+    public int GetGuidEditorType(out Guid pClassID)
+    {
+      throw new Exception("The method or operation is not implemented.");
+    }
 
-        public int IsDocDataDirty(out int pfDirty)
-        {
-            pfDirty = Dirty ? 1 : 0;
-            return VSConstants.S_OK;
-        }
+    public int IsDocDataDirty(out int pfDirty)
+    {
+      pfDirty = Dirty ? 1 : 0;
+      return VSConstants.S_OK;
+    }
 
-        public int IsDocDataReloadable(out int pfReloadable)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
+    public int IsDocDataReloadable(out int pfReloadable)
+    {
+      throw new Exception("The method or operation is not implemented.");
+    }
 
-        public int LoadDocData(string pszMkDocument)
-        {
-            Debug.Assert(pszMkDocument == Moniker);
-            Load();
-            OnDataLoaded();
-            return VSConstants.S_OK;
-        }
+    public int LoadDocData(string pszMkDocument)
+    {
+      Debug.Assert(pszMkDocument == Moniker);
+      Load();
+      OnDataLoaded();
+      return VSConstants.S_OK;
+    }
 
-        public int OnRegisterDocData(uint docCookie, IVsHierarchy pHierNew, uint itemidNew)
-        {
-            DocumentCookie = docCookie;
-            Debug.Assert(HierarchyAccessor.Hierarchy == pHierNew, "Registration in wrong hierarchy");
-            return VSConstants.S_OK;
-        }
+    public int OnRegisterDocData(uint docCookie, IVsHierarchy pHierNew, uint itemidNew)
+    {
+      DocumentCookie = docCookie;
+      Debug.Assert(HierarchyAccessor.Hierarchy == pHierNew, "Registration in wrong hierarchy");
+      return VSConstants.S_OK;
+    }
 
-        public int ReloadDocData(uint grfFlags)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
+    public int ReloadDocData(uint grfFlags)
+    {
+      throw new Exception("The method or operation is not implemented.");
+    }
 
-        public int RenameDocData(uint grfAttribs, IVsHierarchy pHierNew, uint itemidNew, string pszMkDocumentNew)
-        {
-            return VSConstants.S_OK;
-        }
+    public int RenameDocData(uint grfAttribs, IVsHierarchy pHierNew, uint itemidNew, string pszMkDocumentNew)
+    {
+      return VSConstants.S_OK;
+    }
 
 
-        public int SaveDocData(VSSAVEFLAGS dwSave, out string pbstrMkDocumentNew, out int pfSaveCanceled)
-        {
-            string oldMoniker = Moniker;
-            pfSaveCanceled = 1;
-            pbstrMkDocumentNew = null;
+    public int SaveDocData(VSSAVEFLAGS dwSave, out string pbstrMkDocumentNew, out int pfSaveCanceled)
+    {
+      string oldMoniker = Moniker;
+      pfSaveCanceled = 1;
+      pbstrMkDocumentNew = null;
 
-            try
-            {
-                // Call out to the derived nodes to do the save work
-                if (Save())
-                    pfSaveCanceled = 0;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Unable to save object with error: " + ex.Message);
-                return VSConstants.S_OK;
-            }
+      try
+      {
+        // Call out to the derived nodes to do the save work
+        if (Save())
+          pfSaveCanceled = 0;
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show("Unable to save object with error: " + ex.Message);
+        return VSConstants.S_OK;
+      }
 
-            if (pfSaveCanceled == 0)
-            {
-                // then mark the document has clean and unchanged
-                Dirty = false;
-                IsNew = false;
+      if (pfSaveCanceled == 0)
+      {
+        // then mark the document has clean and unchanged
+        Dirty = false;
+        IsNew = false;
 
-                //notify any listeners that our save is done
-                OnDataSaved();
+        //notify any listeners that our save is done
+        OnDataSaved();
 
-                Name = GetCurrentName();
-                pbstrMkDocumentNew = String.Format("/Connection/{0}s/{1}", NodeId, Name);
-                VsShellUtilities.RenameDocument(MySqlDataProviderPackage.Instance, oldMoniker, Moniker);
-                 
-                // update server explorer
-                Refresh();
+        Name = GetCurrentName();
+        pbstrMkDocumentNew = String.Format("/Connection/{0}s/{1}", NodeId, Name);
+        VsShellUtilities.RenameDocument(MySqlDataProviderPackage.Instance, oldMoniker, Moniker);
 
-                Load();
-            }
-            return VSConstants.S_OK;
-        }
+        // update server explorer
+        Refresh();
 
-        public int SetUntitledDocPath(string pszDocDataPath)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
+        Load();
+      }
+      return VSConstants.S_OK;
+    }
 
-        #endregion
+    public int SetUntitledDocPath(string pszDocDataPath)
+    {
+      throw new Exception("The method or operation is not implemented.");
+    }
 
-        #region Events
+    #endregion
 
-        public event EventHandler DataLoaded;
-        public event EventHandler DataChanged;
-        public event EventHandler DataSaved;
+    #region Events
 
-        private void OnDataLoaded()
-        {
-            if (DataLoaded != null)
-                DataLoaded(this, null);
-        }
+    public event EventHandler DataLoaded;
+    public event EventHandler DataChanged;
+    public event EventHandler DataSaved;
 
-        private void OnDataChanged()
-        {
-            if (DataChanged != null)
-                DataChanged(this, null);
-        }
+    private void OnDataLoaded()
+    {
+      if (DataLoaded != null)
+        DataLoaded(this, null);
+    }
 
-        private void OnDataSaved()
-        {
-            if (DataSaved != null)
-                DataSaved(this, null);
-        }
+    private void OnDataChanged()
+    {
+      if (DataChanged != null)
+        DataChanged(this, null);
+    }
 
-        #endregion
+    private void OnDataSaved()
+    {
+      if (DataSaved != null)
+        DataSaved(this, null);
+    }
 
-	}
+    #endregion
+
+  }
 }

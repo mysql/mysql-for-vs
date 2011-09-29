@@ -74,7 +74,6 @@
     <Compile Include="common\NativeMethods.cs" />
     <Compile Include="common\Platform.cs" />
     <Compile Include="common\QueryNormalizer.cs" />
-    <Compile Include="common\SHA1.cs" />
     <Compile Include="common\SharedMemoryStream.cs" />
     <Compile Include="common\StreamCreator.cs" />
     <Compile Include="common\Version.cs" />

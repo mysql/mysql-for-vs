@@ -42,85 +42,85 @@ using MySql.Data.Entity.Tests.Properties;
 
 namespace MySql.Data.Entity.Tests
 {
-    public class BaseEdmTest : BaseTest
+  public class BaseEdmTest : BaseTest
+  {
+    // A trace listener to use during testing.
+    private AssertFailTraceListener asertFailListener = new AssertFailTraceListener();
+
+    protected override void Initialize()
     {
-        // A trace listener to use during testing.
-        private AssertFailTraceListener asertFailListener = new AssertFailTraceListener();
-
-        protected override void Initialize()
-        {
-            database0 = database1 = "test";
-            MySqlConnection.ClearAllPools();
-        }
-
-        [SetUp]
-        public override void Setup()
-        {
-            base.Setup();
-
-            // Replace existing listeners with listener for testing.
-            Trace.Listeners.Clear();
-            Trace.Listeners.Add(this.asertFailListener);
-
-            ResourceManager r = new ResourceManager("MySql.Data.Entity.Tests.Properties.Resources", typeof(BaseEdmTest).Assembly);
-            string schema = r.GetString("schema");
-            MySqlScript script = new MySqlScript(conn);
-            script.Query = schema;
-            script.Execute();
-
-            // now create our procs
-            schema = r.GetString("procs");
-            script = new MySqlScript(conn);
-            script.Delimiter = "$$";
-            script.Query = schema;
-            script.Execute();
-
-            MySqlCommand cmd = new MySqlCommand("DROP DATABASE IF EXISTS `modeldb`", rootConn);
-            cmd.ExecuteNonQuery();
-        }
-
-        [TearDown]
-        public override void Teardown()
-        {
-            MySqlCommand cmd = new MySqlCommand("DROP DATABASE IF EXISTS `modeldb`", rootConn);
-            cmd.ExecuteNonQuery();
-
-            base.Teardown();            
-        }
-
-        private EntityConnection GetEntityConnection()
-        {
-            string connectionString = String.Format(
-                "metadata=TestDB.csdl|TestDB.msl|TestDB.ssdl;provider=MySql.Data.MySqlClient; provider connection string=\"{0}\"", GetConnectionString(true));
-            EntityConnection connection = new EntityConnection(connectionString);
-            return connection;
-        }
-
-        protected void CheckSql(string sql, string refSql)
-        {
-            StringBuilder str1 = new StringBuilder();
-            StringBuilder str2 = new StringBuilder();
-            foreach (char c in sql)
-                if (!Char.IsWhiteSpace(c))
-                    str1.Append(c);
-            foreach (char c in refSql)
-                if (!Char.IsWhiteSpace(c))
-                    str2.Append(c);
-            Assert.AreEqual(0, String.Compare(str1.ToString(), str2.ToString(), true));
-        }
-
-        private class AssertFailTraceListener : DefaultTraceListener
-        {
-            public override void Fail(string message)
-            {
-                Assert.Fail("Assertion failure: " + message);
-            }
-
-            public override void Fail(string message, string detailMessage)
-            {
-                Assert.Fail("Assertion failure: " + detailMessage);
-            }
-        }
-
+      database0 = database1 = "test";
+      MySqlConnection.ClearAllPools();
     }
+
+    [SetUp]
+    public override void Setup()
+    {
+      base.Setup();
+
+      // Replace existing listeners with listener for testing.
+      Trace.Listeners.Clear();
+      Trace.Listeners.Add(this.asertFailListener);
+
+      ResourceManager r = new ResourceManager("MySql.Data.Entity.Tests.Properties.Resources", typeof(BaseEdmTest).Assembly);
+      string schema = r.GetString("schema");
+      MySqlScript script = new MySqlScript(conn);
+      script.Query = schema;
+      script.Execute();
+
+      // now create our procs
+      schema = r.GetString("procs");
+      script = new MySqlScript(conn);
+      script.Delimiter = "$$";
+      script.Query = schema;
+      script.Execute();
+
+      MySqlCommand cmd = new MySqlCommand("DROP DATABASE IF EXISTS `modeldb`", rootConn);
+      cmd.ExecuteNonQuery();
+    }
+
+    [TearDown]
+    public override void Teardown()
+    {
+      MySqlCommand cmd = new MySqlCommand("DROP DATABASE IF EXISTS `modeldb`", rootConn);
+      cmd.ExecuteNonQuery();
+
+      base.Teardown();
+    }
+
+    private EntityConnection GetEntityConnection()
+    {
+      string connectionString = String.Format(
+          "metadata=TestDB.csdl|TestDB.msl|TestDB.ssdl;provider=MySql.Data.MySqlClient; provider connection string=\"{0}\"", GetConnectionString(true));
+      EntityConnection connection = new EntityConnection(connectionString);
+      return connection;
+    }
+
+    protected void CheckSql(string sql, string refSql)
+    {
+      StringBuilder str1 = new StringBuilder();
+      StringBuilder str2 = new StringBuilder();
+      foreach (char c in sql)
+        if (!Char.IsWhiteSpace(c))
+          str1.Append(c);
+      foreach (char c in refSql)
+        if (!Char.IsWhiteSpace(c))
+          str2.Append(c);
+      Assert.AreEqual(0, String.Compare(str1.ToString(), str2.ToString(), true));
+    }
+
+    private class AssertFailTraceListener : DefaultTraceListener
+    {
+      public override void Fail(string message)
+      {
+        Assert.Fail("Assertion failure: " + message);
+      }
+
+      public override void Fail(string message, string detailMessage)
+      {
+        Assert.Fail("Assertion failure: " + detailMessage);
+      }
+    }
+
+  }
 }

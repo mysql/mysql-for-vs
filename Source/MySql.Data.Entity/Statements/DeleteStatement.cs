@@ -23,20 +23,20 @@
 using System.Text;
 namespace MySql.Data.Entity
 {
-    class DeleteStatement : SqlFragment
-    {
-        public SqlFragment Target { get; set; }
-        public SqlFragment Where { get; set; }
+  class DeleteStatement : SqlFragment
+  {
+    public SqlFragment Target { get; set; }
+    public SqlFragment Where { get; set; }
 
-        public override void WriteSql(StringBuilder sql)
-        {
-            sql.Append("DELETE FROM ");
-            Target.WriteSql(sql);
-            if (Where != null)
-            {
-                sql.Append(" WHERE ");
-                Where.WriteSql(sql);
-            }
-        }
+    public override void WriteSql(StringBuilder sql)
+    {
+      sql.Append("DELETE FROM ");
+      Target.WriteSql(sql);
+      if (Where != null)
+      {
+        sql.Append(" WHERE ");
+        Where.WriteSql(sql);
+      }
     }
+  }
 }

@@ -34,185 +34,185 @@ using MySql.Data.Entity.Tests.Properties;
 
 namespace MySql.Data.Entity.Tests
 {
-    [TestFixture]
-    public class RestrictionOperators : BaseEdmTest
+  [TestFixture]
+  public class RestrictionOperators : BaseEdmTest
+  {
+    [Test]
+    public void SimpleSelect()
     {
-        [Test]
-        public void SimpleSelect()
+      MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Toys", conn);
+      DataTable toys = new DataTable();
+      da.Fill(toys);
+      int i = 0;
+
+      using (testEntities context = new testEntities())
+      {
+        var query = context.CreateQuery<Toy>("SELECT VALUE c FROM Toys AS c");
+        string sql = query.ToTraceString();
+        CheckSql(sql, SQLSyntax.SimpleSelect);
+
+        foreach (Toy t in query)
         {
-            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Toys", conn);
-            DataTable toys = new DataTable();
-            da.Fill(toys);
-            int i = 0;
-
-            using (testEntities context = new testEntities())
-            {
-                var query = context.CreateQuery<Toy>("SELECT VALUE c FROM Toys AS c");
-                string sql = query.ToTraceString();
-                CheckSql(sql, SQLSyntax.SimpleSelect);
-
-                foreach (Toy t in query)
-                {
-                    Assert.AreEqual(toys.Rows[i++]["name"], t.Name);
-                }
-            }
+          Assert.AreEqual(toys.Rows[i++]["name"], t.Name);
         }
-
-        [Test]
-        public void SimpleSelectWithFilter()
-        {
-            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Toys WHERE minage=4", conn);
-            DataTable toys = new DataTable();
-            da.Fill(toys);
-            int i = 0;
-
-            using (testEntities context = new testEntities())
-            {
-                var query = context.CreateQuery<Toy>("SELECT VALUE t FROM Toys AS t WHERE t.MinAge=4");
-                string sql = query.ToTraceString();
-                CheckSql(sql, SQLSyntax.SimpleSelectWithFilter);
-
-                foreach (Toy t in query)
-                    Assert.AreEqual(toys.Rows[i++]["name"], t.Name);
-            }
-        }
-
-        [Test]
-        public void SimpleSelectWithParam()
-        {
-            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Toys WHERE minage>3", conn);
-            DataTable toys = new DataTable();
-            da.Fill(toys);
-            int i = 0;
-
-            using (testEntities context = new testEntities())
-            {
-                var query = context.CreateQuery<Toy>("SELECT VALUE t FROM Toys AS t WHERE t.MinAge>@age");
-                query.Parameters.Add(new ObjectParameter("age", 3));
-                string sql = query.ToTraceString();
-                CheckSql(sql, SQLSyntax.SimpleSelectWithParam);
-
-                foreach (Toy t in query)
-                {
-                    Assert.AreEqual(toys.Rows[i++]["name"], t.Name);
-                }
-            }
-        }
-
-        [Test]
-        public void WhereLiteralOnRelation()
-        {
-            MySqlDataAdapter da = new MySqlDataAdapter("SELECT id FROM Companies WHERE city = 'Dallas'", conn);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-
-            using (testEntities context = new testEntities())
-            {
-                string eSql = "SELECT VALUE c FROM Companies AS c WHERE c.Address.City = 'Dallas'";
-                ObjectQuery<Company> query = context.CreateQuery<Company>(eSql);
-
-                string sql = query.ToTraceString();
-                CheckSql(sql, SQLSyntax.WhereLiteralOnRelation);
-
-                int i = 0;
-                foreach (Company c in query)
-                    Assert.AreEqual(dt.Rows[i++]["id"], c.Id);
-            }
-        }
-
-        [Test]
-        public void SelectWithComplexType()
-        {
-            MySqlDataAdapter da = new MySqlDataAdapter("SELECT c.LastName FROM Employees AS c WHERE c.Age > 20", conn);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-
-            using (testEntities context = new testEntities())
-            {
-                string eSql = @"SELECT c.LastName FROM Employees AS c WHERE c.Age > 20";
-                ObjectQuery<DbDataRecord> query = context.CreateQuery<DbDataRecord>(eSql);
-
-                string sql = query.ToTraceString();
-                CheckSql(sql, SQLSyntax.SelectWithComplexType);
-
-                int i = 0;
-                foreach (DbDataRecord s in query)
-                    Assert.AreEqual(dt.Rows[i++][0], s.GetString(0));
-            }
-        }
-
-        [Test]
-        public void WhereWithRelatedEntities1()
-        {
-            MySqlDataAdapter da = new MySqlDataAdapter(
-                "SELECT c.* FROM Toys t LEFT JOIN Companies c ON c.id=t.SupplierId WHERE c.State='TX'", conn);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-
-            using (testEntities context = new testEntities())
-            {
-                string eSql = "SELECT VALUE t FROM Toys AS t WHERE t.Supplier.Address.State = 'TX'";
-                ObjectQuery<Toy> query = context.CreateQuery<Toy>(eSql);
-
-                string sql = query.ToTraceString();
-                CheckSql(sql, SQLSyntax.WhereWithRelatedEntities1);
-
-                int i = 0;
-                foreach (Toy t in query)
-                {
-                    Assert.AreEqual(dt.Rows[i++]["id"], t.Id);
-                }
-            }
-        }
-
-        [Test]
-        public void WhereWithRelatedEntities2()
-        {
-            MySqlDataAdapter da = new MySqlDataAdapter(
-                @"SELECT c.* FROM Toys t LEFT JOIN Companies c ON c.Id=t.SupplierId 
-                    WHERE c.State<>'TX' AND c.State<>'AZ'", conn);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-
-            using (testEntities context = new testEntities())
-            {
-                string eSql = @"SELECT VALUE t FROM Toys AS t 
-                    WHERE t.Supplier.Address.State<>'TX' AND t.Supplier.Address.State <> 'AZ'";
-                ObjectQuery<Toy> query = context.CreateQuery<Toy>(eSql);
-
-                string sql = query.ToTraceString();
-                CheckSql(sql, SQLSyntax.WhereWithRelatedEntities2);
-
-                int i = 0;
-                foreach (Toy t in query)
-                {
-                    Assert.AreEqual(dt.Rows[i++]["id"], t.Id);
-                }
-            }
-        }
-
-        [Test]
-        public void Exists()
-        {
-            MySqlDataAdapter da = new MySqlDataAdapter(
-                @"SELECT c.* FROM Companies c WHERE EXISTS 
-                    (SELECT * FROM Toys t WHERE t.SupplierId=c.Id && t.MinAge < 4)", conn);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-
-            using (testEntities context = new testEntities())
-            {
-                string eSql = @"SELECT VALUE c FROM Companies AS c WHERE EXISTS(
-                    SELECT p FROM c.Toys AS p WHERE p.MinAge < 4)";
-                ObjectQuery<Company> query = context.CreateQuery<Company>(eSql);
-
-                string sql = query.ToTraceString();
-                CheckSql(sql, SQLSyntax.Exists);
-
-                int i = 0;
-                foreach(Company c in query)
-                    Assert.AreEqual(dt.Rows[i++]["id"], c.Id);
-            }
-        }
+      }
     }
+
+    [Test]
+    public void SimpleSelectWithFilter()
+    {
+      MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Toys WHERE minage=4", conn);
+      DataTable toys = new DataTable();
+      da.Fill(toys);
+      int i = 0;
+
+      using (testEntities context = new testEntities())
+      {
+        var query = context.CreateQuery<Toy>("SELECT VALUE t FROM Toys AS t WHERE t.MinAge=4");
+        string sql = query.ToTraceString();
+        CheckSql(sql, SQLSyntax.SimpleSelectWithFilter);
+
+        foreach (Toy t in query)
+          Assert.AreEqual(toys.Rows[i++]["name"], t.Name);
+      }
+    }
+
+    [Test]
+    public void SimpleSelectWithParam()
+    {
+      MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Toys WHERE minage>3", conn);
+      DataTable toys = new DataTable();
+      da.Fill(toys);
+      int i = 0;
+
+      using (testEntities context = new testEntities())
+      {
+        var query = context.CreateQuery<Toy>("SELECT VALUE t FROM Toys AS t WHERE t.MinAge>@age");
+        query.Parameters.Add(new ObjectParameter("age", 3));
+        string sql = query.ToTraceString();
+        CheckSql(sql, SQLSyntax.SimpleSelectWithParam);
+
+        foreach (Toy t in query)
+        {
+          Assert.AreEqual(toys.Rows[i++]["name"], t.Name);
+        }
+      }
+    }
+
+    [Test]
+    public void WhereLiteralOnRelation()
+    {
+      MySqlDataAdapter da = new MySqlDataAdapter("SELECT id FROM Companies WHERE city = 'Dallas'", conn);
+      DataTable dt = new DataTable();
+      da.Fill(dt);
+
+      using (testEntities context = new testEntities())
+      {
+        string eSql = "SELECT VALUE c FROM Companies AS c WHERE c.Address.City = 'Dallas'";
+        ObjectQuery<Company> query = context.CreateQuery<Company>(eSql);
+
+        string sql = query.ToTraceString();
+        CheckSql(sql, SQLSyntax.WhereLiteralOnRelation);
+
+        int i = 0;
+        foreach (Company c in query)
+          Assert.AreEqual(dt.Rows[i++]["id"], c.Id);
+      }
+    }
+
+    [Test]
+    public void SelectWithComplexType()
+    {
+      MySqlDataAdapter da = new MySqlDataAdapter("SELECT c.LastName FROM Employees AS c WHERE c.Age > 20", conn);
+      DataTable dt = new DataTable();
+      da.Fill(dt);
+
+      using (testEntities context = new testEntities())
+      {
+        string eSql = @"SELECT c.LastName FROM Employees AS c WHERE c.Age > 20";
+        ObjectQuery<DbDataRecord> query = context.CreateQuery<DbDataRecord>(eSql);
+
+        string sql = query.ToTraceString();
+        CheckSql(sql, SQLSyntax.SelectWithComplexType);
+
+        int i = 0;
+        foreach (DbDataRecord s in query)
+          Assert.AreEqual(dt.Rows[i++][0], s.GetString(0));
+      }
+    }
+
+    [Test]
+    public void WhereWithRelatedEntities1()
+    {
+      MySqlDataAdapter da = new MySqlDataAdapter(
+          "SELECT c.* FROM Toys t LEFT JOIN Companies c ON c.id=t.SupplierId WHERE c.State='TX'", conn);
+      DataTable dt = new DataTable();
+      da.Fill(dt);
+
+      using (testEntities context = new testEntities())
+      {
+        string eSql = "SELECT VALUE t FROM Toys AS t WHERE t.Supplier.Address.State = 'TX'";
+        ObjectQuery<Toy> query = context.CreateQuery<Toy>(eSql);
+
+        string sql = query.ToTraceString();
+        CheckSql(sql, SQLSyntax.WhereWithRelatedEntities1);
+
+        int i = 0;
+        foreach (Toy t in query)
+        {
+          Assert.AreEqual(dt.Rows[i++]["id"], t.Id);
+        }
+      }
+    }
+
+    [Test]
+    public void WhereWithRelatedEntities2()
+    {
+      MySqlDataAdapter da = new MySqlDataAdapter(
+          @"SELECT c.* FROM Toys t LEFT JOIN Companies c ON c.Id=t.SupplierId 
+                    WHERE c.State<>'TX' AND c.State<>'AZ'", conn);
+      DataTable dt = new DataTable();
+      da.Fill(dt);
+
+      using (testEntities context = new testEntities())
+      {
+        string eSql = @"SELECT VALUE t FROM Toys AS t 
+                    WHERE t.Supplier.Address.State<>'TX' AND t.Supplier.Address.State <> 'AZ'";
+        ObjectQuery<Toy> query = context.CreateQuery<Toy>(eSql);
+
+        string sql = query.ToTraceString();
+        CheckSql(sql, SQLSyntax.WhereWithRelatedEntities2);
+
+        int i = 0;
+        foreach (Toy t in query)
+        {
+          Assert.AreEqual(dt.Rows[i++]["id"], t.Id);
+        }
+      }
+    }
+
+    [Test]
+    public void Exists()
+    {
+      MySqlDataAdapter da = new MySqlDataAdapter(
+          @"SELECT c.* FROM Companies c WHERE EXISTS 
+                    (SELECT * FROM Toys t WHERE t.SupplierId=c.Id && t.MinAge < 4)", conn);
+      DataTable dt = new DataTable();
+      da.Fill(dt);
+
+      using (testEntities context = new testEntities())
+      {
+        string eSql = @"SELECT VALUE c FROM Companies AS c WHERE EXISTS(
+                    SELECT p FROM c.Toys AS p WHERE p.MinAge < 4)";
+        ObjectQuery<Company> query = context.CreateQuery<Company>(eSql);
+
+        string sql = query.ToTraceString();
+        CheckSql(sql, SQLSyntax.Exists);
+
+        int i = 0;
+        foreach (Company c in query)
+          Assert.AreEqual(dt.Rows[i++]["id"], c.Id);
+      }
+    }
+  }
 }

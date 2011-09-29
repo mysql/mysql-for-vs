@@ -26,22 +26,22 @@ using System.Web.Configuration;
 
 namespace MySql.Data.VisualStudio.WebConfig
 {
-    internal class RoleConfig : GenericConfig
+  internal class RoleConfig : GenericConfig
+  {
+    public RoleConfig()
+      : base()
     {
-        public RoleConfig()
-            : base()
-        {
-            typeName = "MySQLRoleProvider";
-            sectionName = "roleManager";
-        }
-
-        protected override ProviderSettings GetMachineSettings()
-        {
-            Configuration machineConfig = ConfigurationManager.OpenMachineConfiguration();
-            RoleManagerSection section = (RoleManagerSection)machineConfig.SectionGroups["system.web"].Sections[sectionName];
-            foreach (ProviderSettings p in section.Providers)
-                if (p.Type.Contains(typeName)) return p;
-            return null;
-        }
+      typeName = "MySQLRoleProvider";
+      sectionName = "roleManager";
     }
+
+    protected override ProviderSettings GetMachineSettings()
+    {
+      Configuration machineConfig = ConfigurationManager.OpenMachineConfiguration();
+      RoleManagerSection section = (RoleManagerSection)machineConfig.SectionGroups["system.web"].Sections[sectionName];
+      foreach (ProviderSettings p in section.Providers)
+        if (p.Type.Contains(typeName)) return p;
+      return null;
+    }
+  }
 }

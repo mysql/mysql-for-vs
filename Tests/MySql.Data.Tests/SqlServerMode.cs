@@ -28,30 +28,30 @@ using NUnit.Framework;
 
 namespace MySql.Data.MySqlClient.Tests
 {
-	/// <summary>
-	/// Summary description for BlobTests.
-	/// </summary>
-	[TestFixture]
-	public class SqlServerMode : BaseTest
-	{
-        public SqlServerMode()
-        {
-            csAdditions += ";sqlservermode=yes;";
-        }
+  /// <summary>
+  /// Summary description for BlobTests.
+  /// </summary>
+  [TestFixture]
+  public class SqlServerMode : BaseTest
+  {
+    public SqlServerMode()
+    {
+      csAdditions += ";sqlservermode=yes;";
+    }
 
-        [Test]
-        public void Simple()
-        {
-            execSQL("CREATE TABLE Test (id INT, name VARCHAR(20))");
-            execSQL("INSERT INTO Test VALUES (1, 'A')");
+    [Test]
+    public void Simple()
+    {
+      execSQL("CREATE TABLE Test (id INT, name VARCHAR(20))");
+      execSQL("INSERT INTO Test VALUES (1, 'A')");
 
-            MySqlCommand cmd = new MySqlCommand("SELECT [id], [name] FROM [Test]", conn);
-            using (MySqlDataReader reader = cmd.ExecuteReader())
-            {
-                reader.Read();
-                Assert.AreEqual(1, reader.GetInt32(0));
-                Assert.AreEqual("A", reader.GetString(1));
-            }
-        }
-	}
+      MySqlCommand cmd = new MySqlCommand("SELECT [id], [name] FROM [Test]", conn);
+      using (MySqlDataReader reader = cmd.ExecuteReader())
+      {
+        reader.Read();
+        Assert.AreEqual(1, reader.GetInt32(0));
+        Assert.AreEqual("A", reader.GetString(1));
+      }
+    }
+  }
 }

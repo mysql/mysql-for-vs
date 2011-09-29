@@ -28,31 +28,31 @@ using System.Data.Common;
 
 namespace MySql.Data.MySqlClient.Tests
 {
-	[TestFixture]
-	public class InterfaceTests : BaseTest
-	{
+  [TestFixture]
+  public class InterfaceTests : BaseTest
+  {
 #if !CF
-        [Test]
-        public void ClientFactory()
-        {
-            DbProviderFactory f = new MySqlClientFactory();
-            using (DbConnection c = f.CreateConnection())
-            {
-                DbConnectionStringBuilder cb = f.CreateConnectionStringBuilder();
-                cb.ConnectionString = GetConnectionString(true);
-                c.ConnectionString = cb.ConnectionString;
-                c.Open();
+    [Test]
+    public void ClientFactory()
+    {
+      DbProviderFactory f = new MySqlClientFactory();
+      using (DbConnection c = f.CreateConnection())
+      {
+        DbConnectionStringBuilder cb = f.CreateConnectionStringBuilder();
+        cb.ConnectionString = GetConnectionString(true);
+        c.ConnectionString = cb.ConnectionString;
+        c.Open();
 
-                DbCommand cmd = f.CreateCommand();
-                cmd.Connection = c;
-                cmd.CommandText = "SELECT 1";
-                cmd.CommandType = CommandType.Text;
-                using (DbDataReader reader = cmd.ExecuteReader())
-                {
-                    reader.Read();
-                }
-            }
+        DbCommand cmd = f.CreateCommand();
+        cmd.Connection = c;
+        cmd.CommandText = "SELECT 1";
+        cmd.CommandType = CommandType.Text;
+        using (DbDataReader reader = cmd.ExecuteReader())
+        {
+          reader.Read();
         }
+      }
+    }
 #endif
-	}
+  }
 }

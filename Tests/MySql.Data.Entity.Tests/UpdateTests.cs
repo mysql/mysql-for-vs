@@ -32,25 +32,25 @@ using System.Data.Objects;
 
 namespace MySql.Data.Entity.Tests
 {
-    [TestFixture]
-    public class UpdateTests : BaseEdmTest
+  [TestFixture]
+  public class UpdateTests : BaseEdmTest
+  {
+    [Test]
+    public void UpdateAllRows()
     {
-       [Test]
-       public void UpdateAllRows()
-       {
-           MySqlCommand cmd = new MySqlCommand("SELECT COUNT(*) FROM toys", conn);
-           object count = cmd.ExecuteScalar();
+      MySqlCommand cmd = new MySqlCommand("SELECT COUNT(*) FROM toys", conn);
+      object count = cmd.ExecuteScalar();
 
-           using (testEntities context = new testEntities())
-           {
-               foreach (Toy t in context.Toys)
-                   t.Name = "Top";
-               context.SaveChanges();
-           }
+      using (testEntities context = new testEntities())
+      {
+        foreach (Toy t in context.Toys)
+          t.Name = "Top";
+        context.SaveChanges();
+      }
 
-           cmd.CommandText = "SELECT COUNT(*) FROM Toys WHERE name='Top'";
-           object newCount = cmd.ExecuteScalar();
-           Assert.AreEqual(count, newCount);
-       }
+      cmd.CommandText = "SELECT COUNT(*) FROM Toys WHERE name='Top'";
+      object newCount = cmd.ExecuteScalar();
+      Assert.AreEqual(count, newCount);
     }
+  }
 }

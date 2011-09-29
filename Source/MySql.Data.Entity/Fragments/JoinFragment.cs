@@ -25,30 +25,30 @@ using System.Diagnostics;
 
 namespace MySql.Data.Entity
 {
-    class JoinFragment : InputFragment
+  class JoinFragment : InputFragment
+  {
+    public SqlFragment Condition;
+    public string JoinType;
+
+    public override void WriteInnerSql(StringBuilder sql)
     {
-        public SqlFragment Condition;
-        public string JoinType;
-
-        public override void WriteInnerSql(StringBuilder sql)
-        {
-            Left.WriteSql(sql);
-            sql.AppendFormat(" {0} ", JoinType);
-            Right.WriteSql(sql);
-            if (Condition != null)
-            {
-                sql.Append(" ON ");
-                Condition.WriteSql(sql);
-            }
-        }
-
-        //public override void WriteSql(StringBuilder sql)
-        //{
-        //    // we don't want our join to write out its name
-        //    string name = Name;
-        //    Name = null;
-        //    base.WriteSql(sql);
-        //    Name = name;
-        //}
+      Left.WriteSql(sql);
+      sql.AppendFormat(" {0} ", JoinType);
+      Right.WriteSql(sql);
+      if (Condition != null)
+      {
+        sql.Append(" ON ");
+        Condition.WriteSql(sql);
+      }
     }
+
+    //public override void WriteSql(StringBuilder sql)
+    //{
+    //    // we don't want our join to write out its name
+    //    string name = Name;
+    //    Name = null;
+    //    base.WriteSql(sql);
+    //    Name = name;
+    //}
+  }
 }

@@ -27,62 +27,62 @@ using System.Text;
 
 namespace MySql.Data.Entity
 {
-    abstract class InputFragment : SqlFragment
+  abstract class InputFragment : SqlFragment
+  {
+    // not all input classes will support two inputs but union and join do
+    // in cases where only one input is used, Left is it
+    public InputFragment Left;
+    public InputFragment Right;
+
+    public InputFragment()
     {
-        // not all input classes will support two inputs but union and join do
-        // in cases where only one input is used, Left is it
-        public InputFragment Left;
-        public InputFragment Right;
-
-        public InputFragment()
-        {
-        }
-
-        public InputFragment(string name)
-        {
-            Name = name;
-        }
-
-        public string Name { get; set; }
-        public bool IsWrapped { get; private set; }
-        public bool Scoped { get; set; }
-
-        public virtual void Wrap(Scope scope)
-        {
-            IsWrapped = true;
-            Scoped = true;
-
-            if (scope == null) return;
-            if (Left != null)
-                scope.Remove(Left);
-            if (Right != null)
-                scope.Remove(Right);
-        }
-
-        public virtual void WriteInnerSql(StringBuilder sql)
-        {
-        }
-
-        public override void WriteSql(StringBuilder sql)
-        {
-            if (IsWrapped)
-                sql.Append("(");
-            WriteInnerSql(sql);
-            if (IsWrapped)
-                sql.Append(")");
-            if (Name == null) return;
-            if (this is TableFragment ||
-                (IsWrapped && !(this is JoinFragment)))
-                sql.AppendFormat(" AS {0}", QuoteIdentifier(Name));
-        }
-
-        public ColumnFragment GetColumnFromProperties(PropertyFragment properties)
-        {
-            ColumnFragment col = Left.GetColumnFromProperties(properties);
-            if (col == null)
-                col = Right.GetColumnFromProperties(properties);
-            return col;
-        }
     }
+
+    public InputFragment(string name)
+    {
+      Name = name;
+    }
+
+    public string Name { get; set; }
+    public bool IsWrapped { get; private set; }
+    public bool Scoped { get; set; }
+
+    public virtual void Wrap(Scope scope)
+    {
+      IsWrapped = true;
+      Scoped = true;
+
+      if (scope == null) return;
+      if (Left != null)
+        scope.Remove(Left);
+      if (Right != null)
+        scope.Remove(Right);
+    }
+
+    public virtual void WriteInnerSql(StringBuilder sql)
+    {
+    }
+
+    public override void WriteSql(StringBuilder sql)
+    {
+      if (IsWrapped)
+        sql.Append("(");
+      WriteInnerSql(sql);
+      if (IsWrapped)
+        sql.Append(")");
+      if (Name == null) return;
+      if (this is TableFragment ||
+          (IsWrapped && !(this is JoinFragment)))
+        sql.AppendFormat(" AS {0}", QuoteIdentifier(Name));
+    }
+
+    public ColumnFragment GetColumnFromProperties(PropertyFragment properties)
+    {
+      ColumnFragment col = Left.GetColumnFromProperties(properties);
+      if (col == null)
+        col = Right.GetColumnFromProperties(properties);
+      return col;
+    }
+  }
 }
 

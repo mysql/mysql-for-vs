@@ -34,92 +34,92 @@ using MySql.Data.Entity.Tests.Properties;
 
 namespace MySql.Data.Entity.Tests
 {
-    [TestFixture]
-    public class Paging : BaseEdmTest
+  [TestFixture]
+  public class Paging : BaseEdmTest
+  {
+    [Test]
+    public void Top()
     {
-        [Test]
-        public void Top()
+      using (testEntities context = new testEntities())
+      {
+        MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Companies LIMIT 2", conn);
+        DataTable dt = new DataTable();
+        da.Fill(dt);
+
+        int i = 0;
+        var query = context.Companies.Top("2");
+        string sql = query.ToTraceString();
+        CheckSql(sql, SQLSyntax.Top);
+
+        foreach (Company c in query)
         {
-            using (testEntities context = new testEntities())
-            {
-                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Companies LIMIT 2", conn);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-
-                int i = 0;
-                var query = context.Companies.Top("2");
-                string sql = query.ToTraceString();
-                CheckSql(sql, SQLSyntax.Top);
-
-                foreach (Company c in query)
-                {
-                    Assert.AreEqual(dt.Rows[i++]["id"], c.Id);
-                }
-            }
+          Assert.AreEqual(dt.Rows[i++]["id"], c.Id);
         }
-
-        [Test]
-        public void Skip()
-        {
-            using (testEntities context = new testEntities())
-            {
-                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Companies LIMIT 3,20", conn);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-
-                int i = 0;
-                var query = context.Companies.Skip("it.Id", "3");
-                string sql = query.ToTraceString();
-                CheckSql(sql, SQLSyntax.Skip);
-
-                foreach (Company c in query)
-                {
-                    Assert.AreEqual(dt.Rows[i++]["id"], c.Id);
-                }
-            }
-        }
-
-        [Test]
-        public void SkipAndTakeSimple()
-        {
-            using (testEntities context = new testEntities())
-            {
-                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Companies LIMIT 2,2", conn);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-
-                int i = 0;
-                var query = context.Companies.Skip("it.Id", "2").Top("2");
-                string sql = query.ToTraceString();
-                CheckSql(sql, SQLSyntax.SkipAndTakeSimple);
-
-                foreach (Company c in query)
-                {
-                    Assert.AreEqual(dt.Rows[i++]["id"], c.Id);
-                }
-                Assert.AreEqual(2, i);
-            }
-        }
-
-        /// <summary>
-        /// Bug #45723 Entity Framework DbSortExpression not processed when using Skip & Take  
-        /// </summary>
-        [Test]
-        public void SkipAndTakeWithOrdering()
-        {
-            using (testEntities context = new testEntities())
-            {
-                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Companies ORDER BY Name DESC LIMIT 2,2", conn);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-
-                int i = 0;
-                var query = context.Companies.OrderByDescending(q => q.Name).Skip(2).Take(2);
-                string sql = query.ToTraceString();
-                CheckSql(sql, SQLSyntax.SkipAndTakeWithOrdering);
-                foreach (Company c in query)
-                    Assert.AreEqual(dt.Rows[i++]["Name"], c.Name);
-            }
-        }
+      }
     }
+
+    [Test]
+    public void Skip()
+    {
+      using (testEntities context = new testEntities())
+      {
+        MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Companies LIMIT 3,20", conn);
+        DataTable dt = new DataTable();
+        da.Fill(dt);
+
+        int i = 0;
+        var query = context.Companies.Skip("it.Id", "3");
+        string sql = query.ToTraceString();
+        CheckSql(sql, SQLSyntax.Skip);
+
+        foreach (Company c in query)
+        {
+          Assert.AreEqual(dt.Rows[i++]["id"], c.Id);
+        }
+      }
+    }
+
+    [Test]
+    public void SkipAndTakeSimple()
+    {
+      using (testEntities context = new testEntities())
+      {
+        MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Companies LIMIT 2,2", conn);
+        DataTable dt = new DataTable();
+        da.Fill(dt);
+
+        int i = 0;
+        var query = context.Companies.Skip("it.Id", "2").Top("2");
+        string sql = query.ToTraceString();
+        CheckSql(sql, SQLSyntax.SkipAndTakeSimple);
+
+        foreach (Company c in query)
+        {
+          Assert.AreEqual(dt.Rows[i++]["id"], c.Id);
+        }
+        Assert.AreEqual(2, i);
+      }
+    }
+
+    /// <summary>
+    /// Bug #45723 Entity Framework DbSortExpression not processed when using Skip & Take  
+    /// </summary>
+    [Test]
+    public void SkipAndTakeWithOrdering()
+    {
+      using (testEntities context = new testEntities())
+      {
+        MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Companies ORDER BY Name DESC LIMIT 2,2", conn);
+        DataTable dt = new DataTable();
+        da.Fill(dt);
+
+        int i = 0;
+        var query = context.Companies.OrderByDescending(q => q.Name).Skip(2).Take(2);
+        string sql = query.ToTraceString();
+        CheckSql(sql, SQLSyntax.SkipAndTakeWithOrdering);
+        foreach (Company c in query)
+          Assert.AreEqual(dt.Rows[i++]["Name"], c.Name);
+      }
+    }
+  }
 }

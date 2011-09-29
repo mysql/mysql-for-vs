@@ -36,30 +36,30 @@ using NUnit.Framework;
 
 
 namespace MySql.Data.Entity.ModelFirst.Tests
-{    
-    [TestFixture]
-    public class CodeFirstTests : BaseModelFirstTest
+{
+  [TestFixture]
+  public class CodeFirstTests : BaseModelFirstTest
+  {
+    /// <summary>
+    /// Tests for fix of http://bugs.mysql.com/bug.php?id=61230
+    /// ("The provider did not return a ProviderManifestToken string.").
+    /// </summary>
+    [Test]
+    public void SimpleCodeFirstSelect()
     {
-        /// <summary>
-        /// Tests for fix of http://bugs.mysql.com/bug.php?id=61230
-        /// ("The provider did not return a ProviderManifestToken string.").
-        /// </summary>
-        [Test]
-        public void SimpleCodeFirstSelect() 
-        {   
-            try
-            {
-                MovieDBContext db = new MovieDBContext();
-                var l = db.Movies.ToList();
-                foreach (var i in l)
-                {
-                }
-            }
-            finally
-            {
-                suExecSQL("DROP DATABASE IF EXISTS test3");
-            }
-        }        
+      try
+      {
+        MovieDBContext db = new MovieDBContext();
+        var l = db.Movies.ToList();
+        foreach (var i in l)
+        {
+        }
+      }
+      finally
+      {
+        suExecSQL("DROP DATABASE IF EXISTS test3");
+      }
     }
+  }
 }
 

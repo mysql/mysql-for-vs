@@ -28,26 +28,26 @@ using System.Diagnostics;
 
 namespace MySql.Data.Entity
 {
-    class TableFragment : InputFragment
+  class TableFragment : InputFragment
+  {
+    public string Schema;
+    public string Table;
+    public SqlFragment DefiningQuery;
+    public TypeUsage Type;
+    public List<ColumnFragment> Columns;
+
+    public TableFragment()
     {
-        public string Schema;
-        public string Table;
-        public SqlFragment DefiningQuery;
-        public TypeUsage Type;
-        public List<ColumnFragment> Columns;
-
-        public TableFragment()
-        {
-            Scoped = true;
-        }
-
-        public override void WriteSql(StringBuilder sql)
-        {
-            if (DefiningQuery != null)
-                sql.AppendFormat("({0})", DefiningQuery);
-            else
-                sql.AppendFormat("{0}", QuoteIdentifier(Table));
-            base.WriteSql(sql);
-        }
+      Scoped = true;
     }
+
+    public override void WriteSql(StringBuilder sql)
+    {
+      if (DefiningQuery != null)
+        sql.AppendFormat("({0})", DefiningQuery);
+      else
+        sql.AppendFormat("{0}", QuoteIdentifier(Table));
+      base.WriteSql(sql);
+    }
+  }
 }
