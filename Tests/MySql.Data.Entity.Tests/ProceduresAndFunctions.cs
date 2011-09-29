@@ -33,127 +33,127 @@ using System.Linq;
 
 namespace MySql.Data.Entity.Tests
 {
-    [TestFixture]
-    public class ProceduresAndFunctions : BaseEdmTest
+  [TestFixture]
+  public class ProceduresAndFunctions : BaseEdmTest
+  {
+    public ProceduresAndFunctions()
+      : base()
     {
-        public ProceduresAndFunctions()
-            : base()
-        {
-        }
-
-        [Test]
-        public void Insert()
-        {
-            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Authors", conn);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-            int count = dt.Rows.Count;
-
-            using (testEntities context = new testEntities())
-            {
-                Author a = new Author();
-                a.Id = 23;
-                a.Name = "Test name";
-                a.Age = 44;
-                context.AddToAuthors(a);
-                context.SaveChanges();
-            }
-
-            dt.Clear();
-            da.Fill(dt);
-            Assert.AreEqual(count + 1, dt.Rows.Count);
-            Assert.AreEqual(23, dt.Rows[count]["id"]);
-        }
-
-        [Test]
-        public void Update()
-        {
-            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Authors", conn);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-            int count = dt.Rows.Count;
-
-            using (testEntities context = new testEntities())
-            {
-                var q = from a in context.Authors
-                        where a.Name == "Don Box"
-                        select a;
-               foreach (Author a in q)
-                   a.Name = "Dummy";
-               context.SaveChanges();
-            }
-
-            da.SelectCommand.CommandText = "SELECT * FROM Authors WHERE name='Dummy'";
-            dt.Clear();
-            da.Fill(dt);
-            Assert.AreEqual(1, dt.Rows.Count);
-        }
-
-        [Test]
-        public void Delete()
-        {
-            using (testEntities context = new testEntities())
-            {
-                foreach (Book b in context.Books)
-                    context.DeleteObject(b);
-                context.SaveChanges();
-            }
-
-            MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Books", conn);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-            Assert.AreEqual(0, dt.Rows.Count);
-        }
-
-        /// <summary>
-        /// Bug #45277	Calling User Defined Function using eSql causes NullReferenceException
-        /// </summary>
-        [Test]
-        public void UserDefinedFunction()
-        {
-            using (EntityConnection conn = new EntityConnection("name=testEntities"))
-            {
-                conn.Open();
-
-                string query = @"SELECT e.FirstName AS Name FROM testEntities.Employees AS e 
-                    WHERE testModel.Store.spFunc(e.Id, '') = 6";
-                using (EntityCommand cmd = new EntityCommand(query, conn))
-                {
-                    EntityDataReader reader = cmd.ExecuteReader(CommandBehavior.SequentialAccess);
-                    Assert.IsTrue(reader.Read());
-                    Assert.AreEqual("Scooby", reader[0]);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Bug #56806	Default Command Timeout has no effect in connection string
-        /// </summary>
-        [Test]
-        public void CommandTimeout()
-        {
-            string connectionString = String.Format(
-                "metadata=res://*/TestModel.csdl|res://*/TestModel.ssdl|res://*/TestModel.msl;provider=MySql.Data.MySqlClient; provider connection string=\"{0};default command timeout=5\"", GetConnectionString(true));
-            EntityConnection connection = new EntityConnection(connectionString);
-
-            using (testEntities context = new testEntities(connection))
-            {
-                Author a = new Author();
-                a.Id = 66;  // special value to indicate the routine should take 30 seconds
-                a.Name = "Test name";
-                a.Age = 44;
-                context.AddToAuthors(a);
-                try
-                {
-                    context.SaveChanges();
-                    Assert.Fail("This should have timed out");
-                }
-                catch (Exception ex)
-                {
-                    string s = ex.Message;
-                }
-            }
-        }
-
     }
+
+    [Test]
+    public void Insert()
+    {
+      MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Authors", conn);
+      DataTable dt = new DataTable();
+      da.Fill(dt);
+      int count = dt.Rows.Count;
+
+      using (testEntities context = new testEntities())
+      {
+        Author a = new Author();
+        a.Id = 23;
+        a.Name = "Test name";
+        a.Age = 44;
+        context.AddToAuthors(a);
+        context.SaveChanges();
+      }
+
+      dt.Clear();
+      da.Fill(dt);
+      Assert.AreEqual(count + 1, dt.Rows.Count);
+      Assert.AreEqual(23, dt.Rows[count]["id"]);
+    }
+
+    [Test]
+    public void Update()
+    {
+      MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Authors", conn);
+      DataTable dt = new DataTable();
+      da.Fill(dt);
+      int count = dt.Rows.Count;
+
+      using (testEntities context = new testEntities())
+      {
+        var q = from a in context.Authors
+                where a.Name == "Don Box"
+                select a;
+        foreach (Author a in q)
+          a.Name = "Dummy";
+        context.SaveChanges();
+      }
+
+      da.SelectCommand.CommandText = "SELECT * FROM Authors WHERE name='Dummy'";
+      dt.Clear();
+      da.Fill(dt);
+      Assert.AreEqual(1, dt.Rows.Count);
+    }
+
+    [Test]
+    public void Delete()
+    {
+      using (testEntities context = new testEntities())
+      {
+        foreach (Book b in context.Books)
+          context.DeleteObject(b);
+        context.SaveChanges();
+      }
+
+      MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Books", conn);
+      DataTable dt = new DataTable();
+      da.Fill(dt);
+      Assert.AreEqual(0, dt.Rows.Count);
+    }
+
+    /// <summary>
+    /// Bug #45277	Calling User Defined Function using eSql causes NullReferenceException
+    /// </summary>
+    [Test]
+    public void UserDefinedFunction()
+    {
+      using (EntityConnection conn = new EntityConnection("name=testEntities"))
+      {
+        conn.Open();
+
+        string query = @"SELECT e.FirstName AS Name FROM testEntities.Employees AS e 
+                    WHERE testModel.Store.spFunc(e.Id, '') = 6";
+        using (EntityCommand cmd = new EntityCommand(query, conn))
+        {
+          EntityDataReader reader = cmd.ExecuteReader(CommandBehavior.SequentialAccess);
+          Assert.IsTrue(reader.Read());
+          Assert.AreEqual("Scooby", reader[0]);
+        }
+      }
+    }
+
+    /// <summary>
+    /// Bug #56806	Default Command Timeout has no effect in connection string
+    /// </summary>
+    [Test]
+    public void CommandTimeout()
+    {
+      string connectionString = String.Format(
+          "metadata=res://*/TestModel.csdl|res://*/TestModel.ssdl|res://*/TestModel.msl;provider=MySql.Data.MySqlClient; provider connection string=\"{0};default command timeout=5\"", GetConnectionString(true));
+      EntityConnection connection = new EntityConnection(connectionString);
+
+      using (testEntities context = new testEntities(connection))
+      {
+        Author a = new Author();
+        a.Id = 66;  // special value to indicate the routine should take 30 seconds
+        a.Name = "Test name";
+        a.Age = 44;
+        context.AddToAuthors(a);
+        try
+        {
+          context.SaveChanges();
+          Assert.Fail("This should have timed out");
+        }
+        catch (Exception ex)
+        {
+          string s = ex.Message;
+        }
+      }
+    }
+
+  }
 }

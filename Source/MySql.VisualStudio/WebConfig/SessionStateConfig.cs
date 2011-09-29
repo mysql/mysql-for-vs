@@ -27,102 +27,102 @@ using System.Xml;
 
 namespace MySql.Data.VisualStudio.WebConfig
 {
-    internal class SessionStateConfig : GenericConfig
+  internal class SessionStateConfig : GenericConfig
+  {
+    public SessionStateConfig()
+      : base()
     {
-        public SessionStateConfig()
-            : base()
-        {
-            typeName = "MySqlSessionStateStoreProvider";
-            sectionName = "sessionState";
+      typeName = "MySqlSessionStateStoreProvider";
+      sectionName = "sessionState";
 
-            Configuration machineConfig = ConfigurationManager.OpenMachineConfiguration();
-            MembershipSection section = (MembershipSection)machineConfig.SectionGroups["system.web"].Sections["membership"];
-            foreach (ProviderSettings p in section.Providers)
-                if (p.Type.Contains("MySql"))
-                    ProviderType = p.Type;
-            ProviderType = ProviderType.Replace("MySql.Web.Security.MySQLMembershipProvider",
-                "MySql.Web.SessionState.MySqlSessionStateStore");
-        }
-
-        public override void GetDefaults()
-        {
-            defaults.ProviderName = "MySqlSessionStateProvider";
-            defaults.WriteExceptionToLog = false;
-            defaults.ConnectionStringName = "LocalMySqlServer";
-            defaults.AutoGenSchema = false;
-            defaults.AppName = "/";
-        }
-
-        protected override ProviderSettings GetMachineSettings()
-        {
-            Configuration machineConfig = ConfigurationManager.OpenMachineConfiguration();
-            SessionStateSection section = (SessionStateSection)machineConfig.SectionGroups["system.web"].Sections[sectionName];
-            foreach (ProviderSettings p in section.Providers)
-                if (p.Type.Contains(typeName)) return p;
-            return null;
-        }
-
-        public override void Initialize(WebConfig wc)
-        {
-            GetDefaults();
-            values = defaults;
-
-            // get the default provider
-            XmlElement e = wc.GetProviderSection(sectionName);
-            if (e != null)
-            {
-                string mode = e.GetAttribute("mode");
-                if (String.Compare(mode, "custom", true) == 0)
-                    DefaultProvider = e.GetAttribute("customProvider");
-            }
-
-            e = wc.GetProviderElement(sectionName);
-            if (e != null)
-            {
-                values.ProviderName = e.GetAttribute("name");
-                if (e.HasAttribute("connectionStringName"))
-                    values.ConnectionStringName = e.GetAttribute("connectionStringName");
-                if (e.HasAttribute("description"))
-                    values.AppDescription = e.GetAttribute("description");
-                if (e.HasAttribute("applicationName"))
-                    values.AppName = e.GetAttribute("applicationName");
-                if (e.HasAttribute("writeExceptionsToEventLog"))
-                    values.WriteExceptionToLog = GetBoolValue(e.GetAttribute("writeExceptionsToEventLog"), false);
-                if (e.HasAttribute("autogenerateschema"))
-                    values.AutoGenSchema = GetBoolValue(e.GetAttribute("autogenerateschema"), false);
-            }
-            values.ConnectionString = wc.GetConnectionString(values.ConnectionStringName);
-            Enabled = OriginallyEnabled = DefaultProvider != null && 
-                (DefaultProvider == values.ProviderName ||
-                DefaultProvider == defaults.ProviderName);
-        }
-
-        public override void Save(WebConfig wc)
-        {
-            if (OriginallyEnabled)
-            {
-                XmlElement e = wc.GetProviderSection(sectionName);
-                e.ParentNode.RemoveChild(e);
-            }
-
-            if (!Enabled) return;
-
-            // we need to save our connection strings even if we are using the default
-            // provider definition
-            wc.SaveConnectionString(defaults.ConnectionStringName, values.ConnectionStringName,
-                values.ConnectionString);
-            // we do this so our equality comparison that follows can work
-            defaults.ConnectionString = values.ConnectionString;
-
-            XmlElement provider = wc.AddProvider(sectionName, null, values.ProviderName);
-            SaveProvider(provider);
-
-            // we are enabled so we want to set our defaultProvider attribute
-            XmlElement sessionNode = (XmlElement)provider.ParentNode.ParentNode;
-            sessionNode.SetAttribute("mode", "Custom");
-            sessionNode.SetAttribute("cookieless", "true");
-            sessionNode.SetAttribute("regenerateExpiredSessionId", "true");
-            sessionNode.SetAttribute("customProvider", values.ProviderName);
-        }
+      Configuration machineConfig = ConfigurationManager.OpenMachineConfiguration();
+      MembershipSection section = (MembershipSection)machineConfig.SectionGroups["system.web"].Sections["membership"];
+      foreach (ProviderSettings p in section.Providers)
+        if (p.Type.Contains("MySql"))
+          ProviderType = p.Type;
+      ProviderType = ProviderType.Replace("MySql.Web.Security.MySQLMembershipProvider",
+          "MySql.Web.SessionState.MySqlSessionStateStore");
     }
+
+    public override void GetDefaults()
+    {
+      defaults.ProviderName = "MySqlSessionStateProvider";
+      defaults.WriteExceptionToLog = false;
+      defaults.ConnectionStringName = "LocalMySqlServer";
+      defaults.AutoGenSchema = false;
+      defaults.AppName = "/";
+    }
+
+    protected override ProviderSettings GetMachineSettings()
+    {
+      Configuration machineConfig = ConfigurationManager.OpenMachineConfiguration();
+      SessionStateSection section = (SessionStateSection)machineConfig.SectionGroups["system.web"].Sections[sectionName];
+      foreach (ProviderSettings p in section.Providers)
+        if (p.Type.Contains(typeName)) return p;
+      return null;
+    }
+
+    public override void Initialize(WebConfig wc)
+    {
+      GetDefaults();
+      values = defaults;
+
+      // get the default provider
+      XmlElement e = wc.GetProviderSection(sectionName);
+      if (e != null)
+      {
+        string mode = e.GetAttribute("mode");
+        if (String.Compare(mode, "custom", true) == 0)
+          DefaultProvider = e.GetAttribute("customProvider");
+      }
+
+      e = wc.GetProviderElement(sectionName);
+      if (e != null)
+      {
+        values.ProviderName = e.GetAttribute("name");
+        if (e.HasAttribute("connectionStringName"))
+          values.ConnectionStringName = e.GetAttribute("connectionStringName");
+        if (e.HasAttribute("description"))
+          values.AppDescription = e.GetAttribute("description");
+        if (e.HasAttribute("applicationName"))
+          values.AppName = e.GetAttribute("applicationName");
+        if (e.HasAttribute("writeExceptionsToEventLog"))
+          values.WriteExceptionToLog = GetBoolValue(e.GetAttribute("writeExceptionsToEventLog"), false);
+        if (e.HasAttribute("autogenerateschema"))
+          values.AutoGenSchema = GetBoolValue(e.GetAttribute("autogenerateschema"), false);
+      }
+      values.ConnectionString = wc.GetConnectionString(values.ConnectionStringName);
+      Enabled = OriginallyEnabled = DefaultProvider != null &&
+          (DefaultProvider == values.ProviderName ||
+          DefaultProvider == defaults.ProviderName);
+    }
+
+    public override void Save(WebConfig wc)
+    {
+      if (OriginallyEnabled)
+      {
+        XmlElement e = wc.GetProviderSection(sectionName);
+        e.ParentNode.RemoveChild(e);
+      }
+
+      if (!Enabled) return;
+
+      // we need to save our connection strings even if we are using the default
+      // provider definition
+      wc.SaveConnectionString(defaults.ConnectionStringName, values.ConnectionStringName,
+          values.ConnectionString);
+      // we do this so our equality comparison that follows can work
+      defaults.ConnectionString = values.ConnectionString;
+
+      XmlElement provider = wc.AddProvider(sectionName, null, values.ProviderName);
+      SaveProvider(provider);
+
+      // we are enabled so we want to set our defaultProvider attribute
+      XmlElement sessionNode = (XmlElement)provider.ParentNode.ParentNode;
+      sessionNode.SetAttribute("mode", "Custom");
+      sessionNode.SetAttribute("cookieless", "true");
+      sessionNode.SetAttribute("regenerateExpiredSessionId", "true");
+      sessionNode.SetAttribute("customProvider", values.ProviderName);
+    }
+  }
 }

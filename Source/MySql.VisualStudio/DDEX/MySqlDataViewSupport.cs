@@ -34,41 +34,42 @@ using EnvDTE;
 
 namespace MySql.Data.VisualStudio
 {
-	/// <summary>
-	/// Represents an implementation of data view support that returns
-	/// the stream of XML containing the data view support elements.
-	/// </summary>
-	internal class MySqlDataViewSupport : DataViewSupport
-	{
-        /// <summary>
-        /// Constructor does nothing.  All the work happens in GetDataViews
-        /// </summary>
-        public MySqlDataViewSupport() : base()
-		{
-		}
+  /// <summary>
+  /// Represents an implementation of data view support that returns
+  /// the stream of XML containing the data view support elements.
+  /// </summary>
+  internal class MySqlDataViewSupport : DataViewSupport
+  {
+    /// <summary>
+    /// Constructor does nothing.  All the work happens in GetDataViews
+    /// </summary>
+    public MySqlDataViewSupport()
+      : base()
+    {
+    }
 
-        public override Stream GetDataViews()
-        {
-            string xmlName = "MySql.Data.VisualStudio.DDEX.MySqlDataViewSupport.xml";
-            Assembly executingAssembly = Assembly.GetExecutingAssembly();
-            Stream stream = executingAssembly.GetManifestResourceStream(xmlName);
-            StreamReader reader = new StreamReader(stream);
-            string xml = reader.ReadToEnd();
-            reader.Close();
+    public override Stream GetDataViews()
+    {
+      string xmlName = "MySql.Data.VisualStudio.DDEX.MySqlDataViewSupport.xml";
+      Assembly executingAssembly = Assembly.GetExecutingAssembly();
+      Stream stream = executingAssembly.GetManifestResourceStream(xmlName);
+      StreamReader reader = new StreamReader(stream);
+      string xml = reader.ReadToEnd();
+      reader.Close();
 
-            // if we are running under VS 2008 then we need to switch out a couple
-            // of command handlers
-            DTE dte = Package.GetGlobalService(typeof(DTE)) as DTE;
-            if (dte != null && dte.Version.StartsWith("9"))
-                xml = xml.Replace("Microsoft.VisualStudio.DataTools.DBPackage.VDT_OLEDB_CommandHandler_TableTools",
-                    "884DD964-5327-461f-9F06-6484DD540F8F");
-            
-            MemoryStream ms = new MemoryStream(xml.Length);
-            StreamWriter writer = new StreamWriter(ms);
-            writer.Write(xml);
-            writer.Flush();
-            ms.Position = 0;
-            return ms;
-        }
-	}
+      // if we are running under VS 2008 then we need to switch out a couple
+      // of command handlers
+      DTE dte = Package.GetGlobalService(typeof(DTE)) as DTE;
+      if (dte != null && dte.Version.StartsWith("9"))
+        xml = xml.Replace("Microsoft.VisualStudio.DataTools.DBPackage.VDT_OLEDB_CommandHandler_TableTools",
+            "884DD964-5327-461f-9F06-6484DD540F8F");
+
+      MemoryStream ms = new MemoryStream(xml.Length);
+      StreamWriter writer = new StreamWriter(ms);
+      writer.Write(xml);
+      writer.Flush();
+      ms.Position = 0;
+      return ms;
+    }
+  }
 }

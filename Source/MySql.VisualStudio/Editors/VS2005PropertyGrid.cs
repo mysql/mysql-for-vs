@@ -28,14 +28,14 @@ using System.Windows.Forms.Design;
 
 namespace MySql.Data.VisualStudio.Editors
 {
-    public class VS2005PropertyGrid : PropertyGrid
+  public class VS2005PropertyGrid : PropertyGrid
+  {
+    public VS2005PropertyGrid()
     {
-        public VS2005PropertyGrid()
-        {
-            
-            this.ToolStripRenderer = new ToolStripProfessionalRenderer(new VS2005ColorTable());
-        }
-       
-        
+
+      this.ToolStripRenderer = new ToolStripProfessionalRenderer(new VS2005ColorTable());
     }
+
+
+  }
 }

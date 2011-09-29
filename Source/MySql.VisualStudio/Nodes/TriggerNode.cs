@@ -42,239 +42,239 @@ using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
 namespace MySql.Data.VisualStudio
 {
-	class TriggerNode : DocumentNode, IVsTextBufferProvider
-	{
-		private string sql_mode;
-        private VSCodeEditor editor;
-        string table;
+  class TriggerNode : DocumentNode, IVsTextBufferProvider
+  {
+    private string sql_mode;
+    private VSCodeEditor editor;
+    string table;
 
-		public TriggerNode(DataViewHierarchyAccessor hierarchyAccessor, int id) : 
-			base(hierarchyAccessor, id)
-		{
-            NodeId = "Trigger";
-            NameIndex = 2;
-            editor = new VSCodeEditor((IOleServiceProvider)hierarchyAccessor.ServiceProvider);
-        }
-
-        #region Properties
-
-        public TableNode ParentTable;
-
-        public override string SchemaCollection
-        {
-            get { return "triggers"; }
-        }
-
-        public override bool Dirty
-        {
-            get { return editor.Dirty; }
-            protected set { editor.Dirty = value; }
-        }
-
-        #endregion
-
-        public static void CreateNew(DataViewHierarchyAccessor HierarchyAccessor, TableNode parent)
-        {
-            TriggerNode node = new TriggerNode(HierarchyAccessor, 0);
-            node.ParentTable = parent;
-            node.Edit();
-        }
-
-        public override object GetEditor()
-        {
-            return editor;
-        }
-
-        public override string GetDropSQL()
-        {
-            return GetDropSQL(Name);
-        }
-
-        public override string GetSaveSql()
-        {
-            return editor.Text;
-        }
-
-        private string GetDropSQL(string triggerName)
-        {
-            triggerName = triggerName.Trim('`');
-            return String.Format("DROP TRIGGER `{0}`.`{1}`", Database, triggerName);
-        }
-
-        private string GetNewTriggerText()
-        {
-            StringBuilder sb = new StringBuilder("CREATE TRIGGER ");
-            sb.AppendFormat("{0}\r\n", Name);
-            sb.AppendFormat("/* [BEFORE|AFTER] [INSERT|UPDATE|DELETE] */\r\n");
-            sb.AppendFormat("ON {0}\r\n", ParentTable.Name);
-            sb.Append("FOR EACH ROW\r\n");
-            sb.Append("BEGIN\r\n");
-            sb.Append("/* sql commands go here */\r\n");
-            sb.Append("END");
-            return sb.ToString();
-        }
-
-        protected override void  Load()
-        {
-            if (IsNew)
-                editor.Text = GetNewTriggerText(); 
-            else
-            {
-                try
-                {
-                    DataTable dt = GetDataTable(String.Format("SHOW CREATE TRIGGER `{0}`.`{1}`",
-                            Database, Name));
-
-                    sql_mode = dt.Rows[0][1] as string;
-                    string sql = dt.Rows[0][2] as string;
-                    byte[] bytes = UTF8Encoding.UTF8.GetBytes(sql);
-                    editor.Text = ChangeSqlTypeTo(sql, "ALTER");
-                    Dirty = false;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Unable to load object with error: " + ex.Message);
-                }
-            }
-            table = GetTargetedTable(editor.Text);
-		}
-
-        /// <summary>
-        /// We override save here so we can change the sql from create to alter on
-        /// first save
-        /// </summary>
-        /// <returns></returns>
-        protected override bool Save()
-        {
-            try
-            {
-                string sql = editor.Text.Trim();
-                if (!IsNew)
-                {
-                    MakeSureWeAreNotChangingTables(sql);
-
-                    // first we need to check the syntax of our changes.  THis will throw
-                    // an exception if the syntax is bad
-                    CheckSyntax();
-
-                    sql = ChangeSqlTypeTo(editor.Text.Trim(), "CREATE");
-                    ExecuteSQL(GetDropSQL(Name));
-                }
-                ExecuteSQL(sql);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "MySQL", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-        }
-
-        /// <summary>
-        ///  This method will attempt to extract the table this trigger script is targeting 
-        ///  and make sure it matches the table the trigger was originally created for.  We do 
-        ///  this because we don't want the user using an 'ALTER' script to move a trigger to a 
-        ///  different table
-        /// </summary>
-        private void MakeSureWeAreNotChangingTables(string sql)
-        {
-            string newTable = GetTargetedTable(sql);
-            if (table != null && newTable != null && 
-                newTable.ToLowerInvariant() != table.ToLowerInvariant())
-                throw new InvalidOperationException(
-                    String.Format(Resources.AlterTriggerOnWrongTable, Name, newTable));
-        }
-
-        private string GetTargetedTable(string sql)
-        {
-            MySqlTokenizer tokenizer = new MySqlTokenizer(sql);
-            tokenizer.ReturnComments = false;
-            tokenizer.AnsiQuotes = sql_mode.ToLowerInvariant().Contains("ansi_quotes");
-            tokenizer.BackslashEscapes = !sql_mode.ToLowerInvariant().Contains("no_backslash_escapes");
-
-            string token = null;
-            while (token != "ON" || tokenizer.Quoted)
-                token = tokenizer.NextToken();
-
-            string tableName = tokenizer.NextToken();
-            if (tokenizer.NextToken() == ".")
-                tableName = tokenizer.NextToken();
-            if (tableName.StartsWith("`"))
-                return tableName.Trim('`');
-            if (tableName.StartsWith("\"") && tokenizer.AnsiQuotes)
-                return tableName.Trim('"');
-            return tableName;
-        }
-
-        private void CheckSyntax()
-        {
-            string sql = editor.Text.Trim();
-            sql = ChangeSqlTypeTo(sql, "CREATE");
-            try
-            {
-                ExecuteSQL(sql);
-                sql = GetDropSQL(GetCurrentName());
-                ExecuteSQL(sql);
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("syntax"))
-                    throw;
-            }
-        }
-
-        private string ChangeSqlTypeTo(string sql, string type)
-        {
-            int index = sql.IndexOf(' ');
-            string startingCommand = sql.Substring(0, index).ToUpperInvariant();
-            if (startingCommand != "CREATE" && startingCommand != "ALTER")
-                throw new Exception(Resources.UnableToExecuteProcScript);
-            return type + sql.Substring(index);
-        }
-
-        protected override string GetCurrentName()
-        {
-            string sql = editor.Text.Trim();
-            string lowerSql = sql.ToLowerInvariant();
-            int pos = lowerSql.IndexOf("trigger") + 7;
-            int end = pos;
-            while (++end < sql.Length)
-            {
-                if (lowerSql[end] == '(') break;
-                if (Char.IsWhiteSpace(lowerSql[end])) break;
-            }
-            string triggerName = sql.Substring(pos, end - pos).Trim();
-            return triggerName.Trim('`');
-        }
-
-        #region IVsTextBufferProvider Members
-
-        private IVsTextLines buffer;
-
-        int IVsTextBufferProvider.GetTextBuffer(out IVsTextLines ppTextBuffer)
-        {
-            if (buffer == null)
-            {
-                Type bufferType = typeof(IVsTextLines);
-                Guid riid = bufferType.GUID;
-                Guid clsid = typeof(VsTextBufferClass).GUID;
-                buffer = (IVsTextLines)MySqlDataProviderPackage.Instance.CreateInstance(
-                                     ref clsid, ref riid, typeof(object));
-            }
-            ppTextBuffer = buffer;
-            return VSConstants.S_OK;
-        }
-
-        int IVsTextBufferProvider.LockTextBuffer(int fLock)
-        {
-            return VSConstants.S_OK;
-        }
-
-        int IVsTextBufferProvider.SetTextBuffer(IVsTextLines pTextBuffer)
-        {
-            return VSConstants.S_OK;
-        }
-
-        #endregion
+    public TriggerNode(DataViewHierarchyAccessor hierarchyAccessor, int id) :
+      base(hierarchyAccessor, id)
+    {
+      NodeId = "Trigger";
+      NameIndex = 2;
+      editor = new VSCodeEditor((IOleServiceProvider)hierarchyAccessor.ServiceProvider);
     }
+
+    #region Properties
+
+    public TableNode ParentTable;
+
+    public override string SchemaCollection
+    {
+      get { return "triggers"; }
+    }
+
+    public override bool Dirty
+    {
+      get { return editor.Dirty; }
+      protected set { editor.Dirty = value; }
+    }
+
+    #endregion
+
+    public static void CreateNew(DataViewHierarchyAccessor HierarchyAccessor, TableNode parent)
+    {
+      TriggerNode node = new TriggerNode(HierarchyAccessor, 0);
+      node.ParentTable = parent;
+      node.Edit();
+    }
+
+    public override object GetEditor()
+    {
+      return editor;
+    }
+
+    public override string GetDropSQL()
+    {
+      return GetDropSQL(Name);
+    }
+
+    public override string GetSaveSql()
+    {
+      return editor.Text;
+    }
+
+    private string GetDropSQL(string triggerName)
+    {
+      triggerName = triggerName.Trim('`');
+      return String.Format("DROP TRIGGER `{0}`.`{1}`", Database, triggerName);
+    }
+
+    private string GetNewTriggerText()
+    {
+      StringBuilder sb = new StringBuilder("CREATE TRIGGER ");
+      sb.AppendFormat("{0}\r\n", Name);
+      sb.AppendFormat("/* [BEFORE|AFTER] [INSERT|UPDATE|DELETE] */\r\n");
+      sb.AppendFormat("ON {0}\r\n", ParentTable.Name);
+      sb.Append("FOR EACH ROW\r\n");
+      sb.Append("BEGIN\r\n");
+      sb.Append("/* sql commands go here */\r\n");
+      sb.Append("END");
+      return sb.ToString();
+    }
+
+    protected override void Load()
+    {
+      if (IsNew)
+        editor.Text = GetNewTriggerText();
+      else
+      {
+        try
+        {
+          DataTable dt = GetDataTable(String.Format("SHOW CREATE TRIGGER `{0}`.`{1}`",
+                  Database, Name));
+
+          sql_mode = dt.Rows[0][1] as string;
+          string sql = dt.Rows[0][2] as string;
+          byte[] bytes = UTF8Encoding.UTF8.GetBytes(sql);
+          editor.Text = ChangeSqlTypeTo(sql, "ALTER");
+          Dirty = false;
+        }
+        catch (Exception ex)
+        {
+          MessageBox.Show("Unable to load object with error: " + ex.Message);
+        }
+      }
+      table = GetTargetedTable(editor.Text);
+    }
+
+    /// <summary>
+    /// We override save here so we can change the sql from create to alter on
+    /// first save
+    /// </summary>
+    /// <returns></returns>
+    protected override bool Save()
+    {
+      try
+      {
+        string sql = editor.Text.Trim();
+        if (!IsNew)
+        {
+          MakeSureWeAreNotChangingTables(sql);
+
+          // first we need to check the syntax of our changes.  THis will throw
+          // an exception if the syntax is bad
+          CheckSyntax();
+
+          sql = ChangeSqlTypeTo(editor.Text.Trim(), "CREATE");
+          ExecuteSQL(GetDropSQL(Name));
+        }
+        ExecuteSQL(sql);
+        return true;
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.Message, "MySQL", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        return false;
+      }
+    }
+
+    /// <summary>
+    ///  This method will attempt to extract the table this trigger script is targeting 
+    ///  and make sure it matches the table the trigger was originally created for.  We do 
+    ///  this because we don't want the user using an 'ALTER' script to move a trigger to a 
+    ///  different table
+    /// </summary>
+    private void MakeSureWeAreNotChangingTables(string sql)
+    {
+      string newTable = GetTargetedTable(sql);
+      if (table != null && newTable != null &&
+          newTable.ToLowerInvariant() != table.ToLowerInvariant())
+        throw new InvalidOperationException(
+            String.Format(Resources.AlterTriggerOnWrongTable, Name, newTable));
+    }
+
+    private string GetTargetedTable(string sql)
+    {
+      MySqlTokenizer tokenizer = new MySqlTokenizer(sql);
+      tokenizer.ReturnComments = false;
+      tokenizer.AnsiQuotes = sql_mode.ToLowerInvariant().Contains("ansi_quotes");
+      tokenizer.BackslashEscapes = !sql_mode.ToLowerInvariant().Contains("no_backslash_escapes");
+
+      string token = null;
+      while (token != "ON" || tokenizer.Quoted)
+        token = tokenizer.NextToken();
+
+      string tableName = tokenizer.NextToken();
+      if (tokenizer.NextToken() == ".")
+        tableName = tokenizer.NextToken();
+      if (tableName.StartsWith("`"))
+        return tableName.Trim('`');
+      if (tableName.StartsWith("\"") && tokenizer.AnsiQuotes)
+        return tableName.Trim('"');
+      return tableName;
+    }
+
+    private void CheckSyntax()
+    {
+      string sql = editor.Text.Trim();
+      sql = ChangeSqlTypeTo(sql, "CREATE");
+      try
+      {
+        ExecuteSQL(sql);
+        sql = GetDropSQL(GetCurrentName());
+        ExecuteSQL(sql);
+      }
+      catch (Exception ex)
+      {
+        if (ex.Message.Contains("syntax"))
+          throw;
+      }
+    }
+
+    private string ChangeSqlTypeTo(string sql, string type)
+    {
+      int index = sql.IndexOf(' ');
+      string startingCommand = sql.Substring(0, index).ToUpperInvariant();
+      if (startingCommand != "CREATE" && startingCommand != "ALTER")
+        throw new Exception(Resources.UnableToExecuteProcScript);
+      return type + sql.Substring(index);
+    }
+
+    protected override string GetCurrentName()
+    {
+      string sql = editor.Text.Trim();
+      string lowerSql = sql.ToLowerInvariant();
+      int pos = lowerSql.IndexOf("trigger") + 7;
+      int end = pos;
+      while (++end < sql.Length)
+      {
+        if (lowerSql[end] == '(') break;
+        if (Char.IsWhiteSpace(lowerSql[end])) break;
+      }
+      string triggerName = sql.Substring(pos, end - pos).Trim();
+      return triggerName.Trim('`');
+    }
+
+    #region IVsTextBufferProvider Members
+
+    private IVsTextLines buffer;
+
+    int IVsTextBufferProvider.GetTextBuffer(out IVsTextLines ppTextBuffer)
+    {
+      if (buffer == null)
+      {
+        Type bufferType = typeof(IVsTextLines);
+        Guid riid = bufferType.GUID;
+        Guid clsid = typeof(VsTextBufferClass).GUID;
+        buffer = (IVsTextLines)MySqlDataProviderPackage.Instance.CreateInstance(
+                             ref clsid, ref riid, typeof(object));
+      }
+      ppTextBuffer = buffer;
+      return VSConstants.S_OK;
+    }
+
+    int IVsTextBufferProvider.LockTextBuffer(int fLock)
+    {
+      return VSConstants.S_OK;
+    }
+
+    int IVsTextBufferProvider.SetTextBuffer(IVsTextLines pTextBuffer)
+    {
+      return VSConstants.S_OK;
+    }
+
+    #endregion
+  }
 }

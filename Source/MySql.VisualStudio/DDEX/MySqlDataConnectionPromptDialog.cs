@@ -30,84 +30,84 @@ using Microsoft.VisualStudio.Data;
 
 namespace MySql.Data.VisualStudio
 {
+  /// <summary>
+  /// Prompt dialog for user information retrieving in case of connection failure.
+  /// </summary>
+  public partial class MySqlDataConnectionPromptDialog : DataConnectionPromptDialog
+  {
     /// <summary>
-    /// Prompt dialog for user information retrieving in case of connection failure.
+    /// Simple constructor to calls InitializeComponent
     /// </summary>
-    public partial class MySqlDataConnectionPromptDialog : DataConnectionPromptDialog
+    public MySqlDataConnectionPromptDialog()
     {
-        /// <summary>
-        /// Simple constructor to calls InitializeComponent
-        /// </summary>
-        public MySqlDataConnectionPromptDialog()
-        {
-            InitializeComponent();
-        }
-
-        /// <summary>
-        /// Extract connection options in this handler.
-        /// </summary>
-        /// <param name="e">Not used</param>
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-
-            // Check connection support
-            if (ConnectionSupport == null)
-            {
-                Debug.Fail("No connection support!");
-                return;
-            }
-
-            // Create connection properties to parse connection string
-            MySqlConnectionProperties prop = new MySqlConnectionProperties();
-            prop.ConnectionStringBuilder.ConnectionString = ConnectionSupport.ConnectionString;
-
-            // Extract server name and port to build connection string
-            string server = prop["Server"] as string;
-            if (String.IsNullOrEmpty(server))
-                server = "localhost"; // Empty server name means local host
-            Int64 port = 3306; // By default port is 3306
-            object givenPort = prop["Port"];
-            if (givenPort != null && typeof(Int64).IsAssignableFrom(givenPort.GetType()))
-                port = (Int64)givenPort;
-
-            // Format caption
-            Text = String.Format(CultureInfo.CurrentCulture, Text, server, port);
-
-            // Extract options
-            login.Text = prop["User Id"] as string;
-            password.Text = prop["Password"] as string;
-            if (prop["Persist Security Info"] is bool)
-                savePassword.Checked = (bool) prop["Persist Security Info"];
-            else
-                savePassword.Checked = false;
-        }
-
-        /// <summary>
-        /// Creates new connection string depending on user inpur.
-        /// </summary>
-        /// <param name="sender">Not used.</param>
-        /// <param name="e">Not used.</param>
-        private void OkClick(object sender, EventArgs e)
-        {
-            // Check connection support
-            if (ConnectionSupport == null)
-            {
-                Debug.Fail("No connection support!");
-                return;
-            }
-
-            // Create connection properties to parse connection string
-            MySqlConnectionProperties prop = new MySqlConnectionProperties();
-            prop.ConnectionStringBuilder.ConnectionString = ConnectionSupport.ConnectionString;
-
-            // Apply changed options
-            prop["User Id"] = login.Text;
-            prop["Password"] = password.Text;
-            prop["Persist Security Info"] = savePassword.Checked;
-
-            // Change connection string for connection support
-            ConnectionSupport.ConnectionString = prop.ToFullString();
-        }
+      InitializeComponent();
     }
+
+    /// <summary>
+    /// Extract connection options in this handler.
+    /// </summary>
+    /// <param name="e">Not used</param>
+    protected override void OnLoad(EventArgs e)
+    {
+      base.OnLoad(e);
+
+      // Check connection support
+      if (ConnectionSupport == null)
+      {
+        Debug.Fail("No connection support!");
+        return;
+      }
+
+      // Create connection properties to parse connection string
+      MySqlConnectionProperties prop = new MySqlConnectionProperties();
+      prop.ConnectionStringBuilder.ConnectionString = ConnectionSupport.ConnectionString;
+
+      // Extract server name and port to build connection string
+      string server = prop["Server"] as string;
+      if (String.IsNullOrEmpty(server))
+        server = "localhost"; // Empty server name means local host
+      Int64 port = 3306; // By default port is 3306
+      object givenPort = prop["Port"];
+      if (givenPort != null && typeof(Int64).IsAssignableFrom(givenPort.GetType()))
+        port = (Int64)givenPort;
+
+      // Format caption
+      Text = String.Format(CultureInfo.CurrentCulture, Text, server, port);
+
+      // Extract options
+      login.Text = prop["User Id"] as string;
+      password.Text = prop["Password"] as string;
+      if (prop["Persist Security Info"] is bool)
+        savePassword.Checked = (bool)prop["Persist Security Info"];
+      else
+        savePassword.Checked = false;
+    }
+
+    /// <summary>
+    /// Creates new connection string depending on user inpur.
+    /// </summary>
+    /// <param name="sender">Not used.</param>
+    /// <param name="e">Not used.</param>
+    private void OkClick(object sender, EventArgs e)
+    {
+      // Check connection support
+      if (ConnectionSupport == null)
+      {
+        Debug.Fail("No connection support!");
+        return;
+      }
+
+      // Create connection properties to parse connection string
+      MySqlConnectionProperties prop = new MySqlConnectionProperties();
+      prop.ConnectionStringBuilder.ConnectionString = ConnectionSupport.ConnectionString;
+
+      // Apply changed options
+      prop["User Id"] = login.Text;
+      prop["Password"] = password.Text;
+      prop["Persist Security Info"] = savePassword.Checked;
+
+      // Change connection string for connection support
+      ConnectionSupport.ConnectionString = prop.ToFullString();
+    }
+  }
 }

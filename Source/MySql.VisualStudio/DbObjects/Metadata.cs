@@ -26,47 +26,47 @@ using System.Text;
 
 namespace MySql.Data.VisualStudio.DbObjects
 {
-    internal class Metadata
+  internal class Metadata
+  {
+    private static List<string> DataTypes;
+
+    public static bool IsStringType(string dataType)
     {
-        private static List<string> DataTypes;
+      dataType = dataType.ToLowerInvariant();
+      int index = dataType.IndexOf('(');
+      if (index != -1)
+        dataType = dataType.Substring(0, index);
 
-        public static bool IsStringType(string dataType)
-        {
-            dataType = dataType.ToLowerInvariant();
-            int index = dataType.IndexOf('(');
-            if (index != -1)
-                dataType = dataType.Substring(0, index);
+      return dataType.IndexOf("char") != -1 ||
+             dataType.IndexOf("text") != -1;
+    }
 
-            return dataType.IndexOf("char") != -1 ||
-                   dataType.IndexOf("text") != -1;
-        }
+    public static string[] GetDataTypes(bool includeParens)
+    {
+      if (DataTypes == null)
+        PopulateArray();
+      string[] dataTypes = DataTypes.ToArray();
+      if (!includeParens)
+      {
+        for (int i = 0; i < dataTypes.Length; i++)
+          dataTypes[i] = RemoveParens(dataTypes[i]);
+      }
+      return dataTypes;
+    }
 
-        public static string[] GetDataTypes(bool includeParens)
-        {
-            if (DataTypes == null)
-                PopulateArray();
-            string[] dataTypes = DataTypes.ToArray();
-            if (!includeParens)
-            {
-                for (int i = 0; i < dataTypes.Length; i++)
-                    dataTypes[i] = RemoveParens(dataTypes[i]);
-            }
-            return dataTypes;
-        }
+    private static string RemoveParens(string dataType)
+    {
+      int index = dataType.IndexOf('(');
+      if (index != -1)
+        dataType = dataType.Substring(0, index);
+      return dataType;
+    }
 
-        private static string RemoveParens(string dataType)
-        {
-            int index = dataType.IndexOf('(');
-            if (index != -1)
-                dataType = dataType.Substring(0, index);
-            return dataType;
-        }
+    private static void PopulateArray()
+    {
+      DataTypes = new List<string>();
 
-        private static void PopulateArray()
-        {
-            DataTypes = new List<string>();
-
-            DataTypes.AddRange(new string[] {
+      DataTypes.AddRange(new string[] {
             "bit(10)",
             "tinyint",
             "boolean",
@@ -96,6 +96,6 @@ namespace MySql.Data.VisualStudio.DbObjects
             "longtext",
             "enum(x,y,z)",
             "set(x,y,z)"});
-        }
     }
+  }
 }

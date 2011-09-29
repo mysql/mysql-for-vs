@@ -29,40 +29,40 @@ using System.Collections.Generic;
 
 namespace MySql.Data.Entity
 {
-    class UpdateGenerator : SqlGenerator 
+  class UpdateGenerator : SqlGenerator
+  {
+    public override string GenerateSQL(DbCommandTree tree)
     {
-        public override string GenerateSQL(DbCommandTree tree)
+      DbUpdateCommandTree commandTree = tree as DbUpdateCommandTree;
+
+      UpdateStatement statement = new UpdateStatement();
+
+      statement.Target = commandTree.Target.Expression.Accept(this);
+      scope.Add("target", statement.Target as InputFragment);
+
+      foreach (DbSetClause setClause in commandTree.SetClauses)
+      {
+        statement.Properties.Add(setClause.Property.Accept(this));
+        DbExpression value = setClause.Value;
+        SqlFragment valueFragment = value.Accept(this);
+        statement.Values.Add(valueFragment);
+
+        if (values == null)
+          values = new Dictionary<EdmMember, SqlFragment>();
+
+        if (value.ExpressionKind != DbExpressionKind.Null)
         {
-            DbUpdateCommandTree commandTree = tree as DbUpdateCommandTree;
-
-            UpdateStatement statement = new UpdateStatement();
-
-            statement.Target = commandTree.Target.Expression.Accept(this);
-            scope.Add("target", statement.Target as InputFragment);
-
-            foreach (DbSetClause setClause in commandTree.SetClauses)
-            {
-                statement.Properties.Add(setClause.Property.Accept(this));
-                DbExpression value = setClause.Value;
-                SqlFragment valueFragment = value.Accept(this);
-                statement.Values.Add(valueFragment);
-
-                if (values == null)
-                    values = new Dictionary<EdmMember, SqlFragment>();
-
-                if (value.ExpressionKind != DbExpressionKind.Null)
-                {
-                    EdmMember property = ((DbPropertyExpression)setClause.Property).Property;
-                    values.Add(property, valueFragment);
-                }
-            }
-
-            statement.Where = commandTree.Predicate.Accept(this);
-
-            if (commandTree.Returning != null)
-                statement.ReturningSelect = GenerateReturningSql(commandTree, commandTree.Returning);
-
-            return statement.ToString();
+          EdmMember property = ((DbPropertyExpression)setClause.Property).Property;
+          values.Add(property, valueFragment);
         }
+      }
+
+      statement.Where = commandTree.Predicate.Accept(this);
+
+      if (commandTree.Returning != null)
+        statement.ReturningSelect = GenerateReturningSql(commandTree, commandTree.Returning);
+
+      return statement.ToString();
     }
+  }
 }

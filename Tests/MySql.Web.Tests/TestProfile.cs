@@ -32,37 +32,37 @@ using System.Web.Security;
 
 namespace MySql.Web.Tests
 {
-    public class TestProfile : ProfileBase
+  public class TestProfile : ProfileBase
+  {
+    public static TestProfile GetUserProfile(string username, bool auth)
     {
-        public static TestProfile GetUserProfile(string username, bool auth)
-        {
-            return Create(username, auth) as TestProfile;
-        }
+      return Create(username, auth) as TestProfile;
+    }
 
-        public static TestProfile GetUserProfile(bool auth) 
-        {
-            return Create(Membership.GetUser().UserName, auth) as TestProfile; 
-        }
+    public static TestProfile GetUserProfile(bool auth)
+    {
+      return Create(Membership.GetUser().UserName, auth) as TestProfile;
+    }
 
-        [SettingsAllowAnonymous(false)]
-        public string Description 
-        { 
-            get { return base["Description"] as string; } 
-            set { base["Description"] = value; } 
-        }
+    [SettingsAllowAnonymous(false)]
+    public string Description
+    {
+      get { return base["Description"] as string; }
+      set { base["Description"] = value; }
+    }
 
-        [SettingsAllowAnonymous(false)]
-        public string Location 
-        { 
-            get { return base["Location"] as string; } 
-            set { base["Location"] = value; } 
-        }
+    [SettingsAllowAnonymous(false)]
+    public string Location
+    {
+      get { return base["Location"] as string; }
+      set { base["Location"] = value; }
+    }
 
-        [SettingsAllowAnonymous(false)]
-        public string FavoriteMovie 
-        { 
-            get { return base["FavoriteMovie"] as string; } 
-            set { base["FavoriteMovie"] = value; } 
-        }
-    } 
+    [SettingsAllowAnonymous(false)]
+    public string FavoriteMovie
+    {
+      get { return base["FavoriteMovie"] as string; }
+      set { base["FavoriteMovie"] = value; }
+    }
+  }
 }

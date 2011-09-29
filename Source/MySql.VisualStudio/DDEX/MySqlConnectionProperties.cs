@@ -29,59 +29,60 @@ using System.Data.Common;
 
 namespace MySql.Data.VisualStudio
 {
+  /// <summary>
+  /// This class customize standard connection properties for 
+  /// MySql data base connection.
+  /// </summary>
+  public class MySqlConnectionProperties : AdoDotNetConnectionProperties
+  {
+    public static string InvariantName = "MySql.Data.MySqlClient";
+
     /// <summary>
-    /// This class customize standard connection properties for 
-    /// MySql data base connection.
+    /// Constructor fills base object with list of custom options and their description.
     /// </summary>
-    public class MySqlConnectionProperties : AdoDotNetConnectionProperties
+    public MySqlConnectionProperties()
+      : base(InvariantName)
     {
-		public static string InvariantName = "MySql.Data.MySqlClient";
-
-        /// <summary>
-        /// Constructor fills base object with list of custom options and their description.
-        /// </summary>
-        public MySqlConnectionProperties() : base(InvariantName)
-        {
-        }
-
-        /// <summary>
-        /// Test connection for these properties. Uses MySqlConnection support for version validation.
-        /// </summary>
-        public override void Test()
-        {
-            // Create connection support
-            MySqlConnectionSupport conn = new MySqlConnectionSupport();
-            try
-            {
-                // Initializes it with empty provider
-                conn.Initialize(null);
-                // Set connection string
-                conn.ConnectionString = ToTestString();
-                // Try to open
-                conn.Open(false);
-                // Close after open
-                conn.Close();
-            }
-            finally
-            {
-                // In any case dispose connection support
-                if (conn != null)
-                    conn.Dispose();
-            }
-        }
-
-        /// <summary>
-        /// Connection properties are complete if server and database specified.
-        /// </summary>
-        public override bool IsComplete
-        {
-            get
-            {
-                DbConnectionStringBuilder cb = this.ConnectionStringBuilder;
-                return !String.IsNullOrEmpty((string)cb["Server"])
-                       && !String.IsNullOrEmpty((string)cb["Database"]);
-            }
-        }
-
     }
+
+    /// <summary>
+    /// Test connection for these properties. Uses MySqlConnection support for version validation.
+    /// </summary>
+    public override void Test()
+    {
+      // Create connection support
+      MySqlConnectionSupport conn = new MySqlConnectionSupport();
+      try
+      {
+        // Initializes it with empty provider
+        conn.Initialize(null);
+        // Set connection string
+        conn.ConnectionString = ToTestString();
+        // Try to open
+        conn.Open(false);
+        // Close after open
+        conn.Close();
+      }
+      finally
+      {
+        // In any case dispose connection support
+        if (conn != null)
+          conn.Dispose();
+      }
+    }
+
+    /// <summary>
+    /// Connection properties are complete if server and database specified.
+    /// </summary>
+    public override bool IsComplete
+    {
+      get
+      {
+        DbConnectionStringBuilder cb = this.ConnectionStringBuilder;
+        return !String.IsNullOrEmpty((string)cb["Server"])
+               && !String.IsNullOrEmpty((string)cb["Database"]);
+      }
+    }
+
+  }
 }

@@ -34,128 +34,128 @@ using System.Linq;
 
 namespace MySql.Data.Entity.Tests
 {
-    [TestFixture]
-    public class OrderingAndGrouping : BaseEdmTest
+  [TestFixture]
+  public class OrderingAndGrouping : BaseEdmTest
+  {
+    [Test]
+    public void OrderBySimple()
     {
-        [Test]
-        public void OrderBySimple()
-        {
-            MySqlDataAdapter da = new MySqlDataAdapter(
-                "SELECT id FROM Companies c ORDER BY c.Name", conn);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
+      MySqlDataAdapter da = new MySqlDataAdapter(
+          "SELECT id FROM Companies c ORDER BY c.Name", conn);
+      DataTable dt = new DataTable();
+      da.Fill(dt);
 
-            using (testEntities context = new testEntities())
-            {
-                string eSql = "SELECT VALUE c FROM Companies AS c ORDER BY c.Name";
-                ObjectQuery<Company> query = context.CreateQuery<Company>(eSql);
+      using (testEntities context = new testEntities())
+      {
+        string eSql = "SELECT VALUE c FROM Companies AS c ORDER BY c.Name";
+        ObjectQuery<Company> query = context.CreateQuery<Company>(eSql);
 
-                string sql = query.ToTraceString();
-                CheckSql(sql, SQLSyntax.OrderBySimple);
+        string sql = query.ToTraceString();
+        CheckSql(sql, SQLSyntax.OrderBySimple);
 
-                int i = 0;
-                foreach (Company c in query)
-                    Assert.AreEqual(dt.Rows[i++][0], c.Id);
-            }
-        }
-
-        [Test]
-        public void OrderByWithPredicate()
-        {
-            using (testEntities context = new testEntities())
-            {
-                using (EntityConnection ec = context.Connection as EntityConnection)
-                {
-                    ec.Open();
-                    MySqlDataAdapter da = new MySqlDataAdapter(
-                        "SELECT id FROM Companies c WHERE c.NumEmployees > 100 ORDER BY c.Name", conn);
-                    DataTable dt = new DataTable();
-                    da.Fill(dt);
-
-                    string eSql = "SELECT VALUE c FROM Companies AS c WHERE c.NumEmployees > 100 ORDER BY c.Name";
-                    ObjectQuery<Company> query = context.CreateQuery<Company>(eSql);
-
-                    string sql = query.ToTraceString();
-                    CheckSql(sql, SQLSyntax.OrderByWithPredicate);
-
-                    int i = 0;
-                    foreach (Company c in query)
-                        Assert.AreEqual(dt.Rows[i++][0], c.Id);
-                }
-            }
-        }
-
-        [Test]
-        public void CanGroupBySingleColumn()
-        {
-            MySqlDataAdapter adapter = new MySqlDataAdapter(
-                "SELECT Name, COUNT(Id) as Count FROM Companies GROUP BY Name", conn);
-            DataTable table = new DataTable();
-            adapter.Fill(table);
-
-            using (testEntities context = new testEntities())
-            {
-                var companies = from c in context.Companies
-                                group c by c.Name into cgroup
-                                select new 
-                                { 
-                                    Name = cgroup.Key, 
-                                    Count = cgroup.Count() 
-                                };
-                string sql = companies.ToTraceString();
-                CheckSql(sql, SQLSyntax.CanGroupBySingleColumn);
-
-                int i = 0;
-                foreach (var company in companies)
-                {
-                    Assert.AreEqual(table.Rows[i][0], company.Name);
-                    Assert.AreEqual(table.Rows[i][1], company.Count);
-                    i++;
-                }
-            }
-        }
-
-        [Test]
-        public void CanGroupByMultipleColumns()
-        {
-            MySqlDataAdapter adapter = new MySqlDataAdapter(
-                "SELECT Name, COUNT(Id) as Count FROM Companies GROUP BY Name, NumEmployees, DateBegan", conn);
-            DataTable table = new DataTable();
-            adapter.Fill(table);
-
-            using (testEntities context = new testEntities())
-            {
-                var companies = from c in context.Companies
-                                group c by new { c.Name, c.NumEmployees, c.DateBegan } into cgroup
-                                select new
-                                {
-                                    Name = cgroup.Key.Name,
-                                    Count = cgroup.Count()
-                                };
-
-                string sql = companies.ToTraceString();
-                CheckSql(sql, SQLSyntax.CanGroupByMultipleColumns);
-
-                int i = 0;
-                foreach (var company in companies)
-                {
-                    Assert.AreEqual(table.Rows[i][0], company.Name);
-                    Assert.AreEqual(table.Rows[i][1], company.Count);
-                    i++;
-                }
-            }
-        }
-
-        [Test]
-        public void OrdersTableDoesNotProvokeSyntaxError()
-        {
-            using (model2Entities context = new model2Entities())
-            {
-                var customers = from c in context.customer
-                                select c;
-
-                Assert.DoesNotThrow(delegate { customers.ToList().ForEach(c => c.order.Load()); });
-            }
-        }
+        int i = 0;
+        foreach (Company c in query)
+          Assert.AreEqual(dt.Rows[i++][0], c.Id);
+      }
     }
+
+    [Test]
+    public void OrderByWithPredicate()
+    {
+      using (testEntities context = new testEntities())
+      {
+        using (EntityConnection ec = context.Connection as EntityConnection)
+        {
+          ec.Open();
+          MySqlDataAdapter da = new MySqlDataAdapter(
+              "SELECT id FROM Companies c WHERE c.NumEmployees > 100 ORDER BY c.Name", conn);
+          DataTable dt = new DataTable();
+          da.Fill(dt);
+
+          string eSql = "SELECT VALUE c FROM Companies AS c WHERE c.NumEmployees > 100 ORDER BY c.Name";
+          ObjectQuery<Company> query = context.CreateQuery<Company>(eSql);
+
+          string sql = query.ToTraceString();
+          CheckSql(sql, SQLSyntax.OrderByWithPredicate);
+
+          int i = 0;
+          foreach (Company c in query)
+            Assert.AreEqual(dt.Rows[i++][0], c.Id);
+        }
+      }
+    }
+
+    [Test]
+    public void CanGroupBySingleColumn()
+    {
+      MySqlDataAdapter adapter = new MySqlDataAdapter(
+          "SELECT Name, COUNT(Id) as Count FROM Companies GROUP BY Name", conn);
+      DataTable table = new DataTable();
+      adapter.Fill(table);
+
+      using (testEntities context = new testEntities())
+      {
+        var companies = from c in context.Companies
+                        group c by c.Name into cgroup
+                        select new
+                        {
+                          Name = cgroup.Key,
+                          Count = cgroup.Count()
+                        };
+        string sql = companies.ToTraceString();
+        CheckSql(sql, SQLSyntax.CanGroupBySingleColumn);
+
+        int i = 0;
+        foreach (var company in companies)
+        {
+          Assert.AreEqual(table.Rows[i][0], company.Name);
+          Assert.AreEqual(table.Rows[i][1], company.Count);
+          i++;
+        }
+      }
+    }
+
+    [Test]
+    public void CanGroupByMultipleColumns()
+    {
+      MySqlDataAdapter adapter = new MySqlDataAdapter(
+          "SELECT Name, COUNT(Id) as Count FROM Companies GROUP BY Name, NumEmployees, DateBegan", conn);
+      DataTable table = new DataTable();
+      adapter.Fill(table);
+
+      using (testEntities context = new testEntities())
+      {
+        var companies = from c in context.Companies
+                        group c by new { c.Name, c.NumEmployees, c.DateBegan } into cgroup
+                        select new
+                        {
+                          Name = cgroup.Key.Name,
+                          Count = cgroup.Count()
+                        };
+
+        string sql = companies.ToTraceString();
+        CheckSql(sql, SQLSyntax.CanGroupByMultipleColumns);
+
+        int i = 0;
+        foreach (var company in companies)
+        {
+          Assert.AreEqual(table.Rows[i][0], company.Name);
+          Assert.AreEqual(table.Rows[i][1], company.Count);
+          i++;
+        }
+      }
+    }
+
+    [Test]
+    public void OrdersTableDoesNotProvokeSyntaxError()
+    {
+      using (model2Entities context = new model2Entities())
+      {
+        var customers = from c in context.customer
+                        select c;
+
+        Assert.DoesNotThrow(delegate { customers.ToList().ForEach(c => c.order.Load()); });
+      }
+    }
+  }
 }

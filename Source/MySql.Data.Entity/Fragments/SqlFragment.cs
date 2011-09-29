@@ -28,379 +28,379 @@ using System.Diagnostics;
 
 namespace MySql.Data.Entity
 {
-    internal abstract class SqlFragment
+  internal abstract class SqlFragment
+  {
+    static char[] quoteChars = new char[3] { '\'', '"', '`' };
+
+    protected string QuoteIdentifier(string id)
     {
-        static char[] quoteChars = new char[3] { '\'', '"', '`' };
-
-        protected string QuoteIdentifier(string id)
-        {
-            if (id.IndexOfAny(quoteChars) < 0)
-                return String.Format("`{0}`", id);
-            else return id;
-        }
-
-        public abstract void WriteSql(StringBuilder sql);
-
-        public override string ToString()
-        {
-            StringBuilder sqlText = new StringBuilder();
-            WriteSql(sqlText);
-            return sqlText.ToString();
-        }
-
-        protected void WriteList(IEnumerable list, StringBuilder sql)
-        {
-            string sep = "";
-            foreach (SqlFragment s in list)
-            {
-                sql.Append(sep);
-                sql.Append("\r\n");
-                s.WriteSql(sql);
-                sep = ", ";
-            }
-        }
+      if (id.IndexOfAny(quoteChars) < 0)
+        return String.Format("`{0}`", id);
+      else return id;
     }
 
-    internal class BinaryFragment : NegatableFragment
+    public abstract void WriteSql(StringBuilder sql);
+
+    public override string ToString()
     {
-        public SqlFragment Left;
-        public SqlFragment Right;
-        public string Operator;
-        public bool WrapLeft;
-        public bool WrapRight;
-
-        public override void WriteSql(StringBuilder sql)
-        {
-            if (IsNegated && Operator != "=")
-                sql.Append("NOT (");
-
-            // do left arg
-            if (WrapLeft)
-                sql.Append("(");
-            Left.WriteSql(sql);
-            if (WrapLeft)
-                sql.Append(")");
-
-            if (IsNegated && Operator == "=")
-                sql.Append(" != ");
-            else
-                sql.AppendFormat(" {0} ", Operator);
-
-            // now right arg
-            if (WrapRight)
-                sql.Append("(");
-            Right.WriteSql(sql);
-            if (WrapRight)
-                sql.Append(")");
-            if (IsNegated && Operator != "=")
-                sql.Append(")");
-        }
+      StringBuilder sqlText = new StringBuilder();
+      WriteSql(sqlText);
+      return sqlText.ToString();
     }
 
-    internal class CaseFragment : SqlFragment
+    protected void WriteList(IEnumerable list, StringBuilder sql)
     {
-        public List<SqlFragment> When = new List<SqlFragment>();
-        public List<SqlFragment> Then = new List<SqlFragment>();
-        public SqlFragment Else = null;
+      string sep = "";
+      foreach (SqlFragment s in list)
+      {
+        sql.Append(sep);
+        sql.Append("\r\n");
+        s.WriteSql(sql);
+        sep = ", ";
+      }
+    }
+  }
 
-        public override void WriteSql(StringBuilder sql)
-        {
-            sql.Append("CASE");
-            for (int i = 0; i < When.Count; i++)
-            {
-                sql.Append(" WHEN (");
-                When[i].WriteSql(sql);
-                sql.Append(") THEN (");
-                Then[i].WriteSql(sql);
-                sql.Append(") ");
-            }
-            if (Else != null)
-            {
-                sql.Append(" ELSE (");
-                Else.WriteSql(sql);
-                sql.Append(") ");
-            }
-            sql.Append("END");
-        }
+  internal class BinaryFragment : NegatableFragment
+  {
+    public SqlFragment Left;
+    public SqlFragment Right;
+    public string Operator;
+    public bool WrapLeft;
+    public bool WrapRight;
+
+    public override void WriteSql(StringBuilder sql)
+    {
+      if (IsNegated && Operator != "=")
+        sql.Append("NOT (");
+
+      // do left arg
+      if (WrapLeft)
+        sql.Append("(");
+      Left.WriteSql(sql);
+      if (WrapLeft)
+        sql.Append(")");
+
+      if (IsNegated && Operator == "=")
+        sql.Append(" != ");
+      else
+        sql.AppendFormat(" {0} ", Operator);
+
+      // now right arg
+      if (WrapRight)
+        sql.Append("(");
+      Right.WriteSql(sql);
+      if (WrapRight)
+        sql.Append(")");
+      if (IsNegated && Operator != "=")
+        sql.Append(")");
+    }
+  }
+
+  internal class CaseFragment : SqlFragment
+  {
+    public List<SqlFragment> When = new List<SqlFragment>();
+    public List<SqlFragment> Then = new List<SqlFragment>();
+    public SqlFragment Else = null;
+
+    public override void WriteSql(StringBuilder sql)
+    {
+      sql.Append("CASE");
+      for (int i = 0; i < When.Count; i++)
+      {
+        sql.Append(" WHEN (");
+        When[i].WriteSql(sql);
+        sql.Append(") THEN (");
+        Then[i].WriteSql(sql);
+        sql.Append(") ");
+      }
+      if (Else != null)
+      {
+        sql.Append(" ELSE (");
+        Else.WriteSql(sql);
+        sql.Append(") ");
+      }
+      sql.Append("END");
+    }
+  }
+
+  internal class ColumnFragment : SqlFragment
+  {
+    public ColumnFragment(string tableName, string columnName)
+    {
+      TableName = tableName;
+      ColumnName = columnName;
     }
 
-    internal class ColumnFragment : SqlFragment
+    public SqlFragment Literal { get; set; }
+    public string TableName { get; set; }
+    public string ColumnName { get; set; }
+    public string ColumnAlias { get; set; }
+    public string ActualColumnName
     {
-        public ColumnFragment(string tableName, string columnName)
-        {
-            TableName = tableName;
-            ColumnName = columnName;
-        }
+      get { return String.IsNullOrEmpty(ColumnName) ? ColumnAlias : ColumnName; }
+    }
+    public PropertyFragment PropertyFragment { get; set; }
 
-        public SqlFragment Literal { get; set; }
-        public string TableName { get; set; }
-        public string ColumnName { get; set; }
-        public string ColumnAlias { get; set; }
-        public string ActualColumnName
-        {
-            get { return String.IsNullOrEmpty(ColumnName) ? ColumnAlias : ColumnName; }
-        }
-        public PropertyFragment PropertyFragment { get; set; }
+    public override void WriteSql(StringBuilder sql)
+    {
+      if (Literal != null)
+      {
+        Debug.Assert(ColumnAlias != null);
+        Literal.WriteSql(sql);
+      }
+      else
+      {
+        if (TableName != null)
+          sql.AppendFormat("{0}.", QuoteIdentifier(TableName));
+        sql.AppendFormat("{0}", QuoteIdentifier(ColumnName));
+      }
 
-        public override void WriteSql(StringBuilder sql)
-        {
-            if (Literal != null)
-            {
-                Debug.Assert(ColumnAlias != null);
-                Literal.WriteSql(sql);
-            }
-            else 
-            {
-                if (TableName != null)
-                    sql.AppendFormat("{0}.", QuoteIdentifier(TableName));
-                sql.AppendFormat("{0}", QuoteIdentifier(ColumnName));
-            }
-
-            if (ColumnAlias != null && ColumnAlias != ColumnName)
-                sql.AppendFormat(" AS {0}", QuoteIdentifier(ColumnAlias));
-        }
-
-        public ColumnFragment Clone()
-        {
-            ColumnFragment cf = new ColumnFragment(TableName, ColumnName);
-            cf.ColumnAlias = ColumnAlias;
-            cf.Literal = Literal;
-            return cf;
-        }
-
-        public void PushInput(string inputName)
-        {
-            if (PropertyFragment == null)
-                PropertyFragment = new PropertyFragment();
-            PropertyFragment.PushProperty(inputName);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (!(obj is ColumnFragment)) return false;
-            ColumnFragment column = obj as ColumnFragment;
-            if (column.PropertyFragment != null && PropertyFragment != null)
-                return column.PropertyFragment.Equals(PropertyFragment);
-            if (column.TableName != TableName) return false;
-            if (column.ColumnName != ColumnName) return false;
-            if (column.ColumnAlias != ColumnAlias) return false;
-            return true;
-        }
+      if (ColumnAlias != null && ColumnAlias != ColumnName)
+        sql.AppendFormat(" AS {0}", QuoteIdentifier(ColumnAlias));
     }
 
-    internal class ExistsFragment : NegatableFragment
+    public ColumnFragment Clone()
     {
-        public SqlFragment Argument;
-
-        public ExistsFragment(SqlFragment f)
-        {
-            Argument = f;
-        }
-
-        public override void WriteSql(StringBuilder sql)
-        {
-            sql.Append(IsNegated ? "NOT " : "");
-            sql.Append("EXISTS(");
-            Argument.WriteSql(sql);
-            sql.Append(")");
-        }
+      ColumnFragment cf = new ColumnFragment(TableName, ColumnName);
+      cf.ColumnAlias = ColumnAlias;
+      cf.Literal = Literal;
+      return cf;
     }
 
-    internal class FunctionFragment : SqlFragment
+    public void PushInput(string inputName)
     {
-        public bool Distinct;
-        public SqlFragment Argmument;
-        public string Name;
-        public bool Quoted;
-
-        public override void WriteSql(StringBuilder sql)
-        {
-            string name = Quoted ? QuoteIdentifier(Name) : Name;
-            sql.AppendFormat("{0}({1}", name, Distinct ? "DISTINCT " : "");
-            Argmument.WriteSql(sql);
-            sql.Append(")");
-        }
+      if (PropertyFragment == null)
+        PropertyFragment = new PropertyFragment();
+      PropertyFragment.PushProperty(inputName);
     }
 
-    internal class IsNullFragment : NegatableFragment
+    public override bool Equals(object obj)
     {
-        public SqlFragment Argument;
+      if (!(obj is ColumnFragment)) return false;
+      ColumnFragment column = obj as ColumnFragment;
+      if (column.PropertyFragment != null && PropertyFragment != null)
+        return column.PropertyFragment.Equals(PropertyFragment);
+      if (column.TableName != TableName) return false;
+      if (column.ColumnName != ColumnName) return false;
+      if (column.ColumnAlias != ColumnAlias) return false;
+      return true;
+    }
+  }
 
-        public override void WriteSql(StringBuilder sql)
-        {
-            Argument.WriteSql(sql);
-            sql.AppendFormat(" IS {0} NULL", IsNegated ? "NOT" : "");
-        }
+  internal class ExistsFragment : NegatableFragment
+  {
+    public SqlFragment Argument;
+
+    public ExistsFragment(SqlFragment f)
+    {
+      Argument = f;
     }
 
-    internal class LikeFragment : NegatableFragment
+    public override void WriteSql(StringBuilder sql)
     {
-        public SqlFragment Argument;
-        public SqlFragment Pattern;
-        public SqlFragment Escape;
+      sql.Append(IsNegated ? "NOT " : "");
+      sql.Append("EXISTS(");
+      Argument.WriteSql(sql);
+      sql.Append(")");
+    }
+  }
 
-        public override void WriteSql(StringBuilder sql)
-        {
-            Argument.WriteSql(sql);
-            if (IsNegated)
-                sql.Append(" NOT ");
-            sql.Append(" LIKE ");
-            Pattern.WriteSql(sql);
-            if (Escape != null)
-            {
-                sql.Append(" ESCAPE ");
-                Escape.WriteSql(sql);
-            }
-        }
+  internal class FunctionFragment : SqlFragment
+  {
+    public bool Distinct;
+    public SqlFragment Argmument;
+    public string Name;
+    public bool Quoted;
+
+    public override void WriteSql(StringBuilder sql)
+    {
+      string name = Quoted ? QuoteIdentifier(Name) : Name;
+      sql.AppendFormat("{0}({1}", name, Distinct ? "DISTINCT " : "");
+      Argmument.WriteSql(sql);
+      sql.Append(")");
+    }
+  }
+
+  internal class IsNullFragment : NegatableFragment
+  {
+    public SqlFragment Argument;
+
+    public override void WriteSql(StringBuilder sql)
+    {
+      Argument.WriteSql(sql);
+      sql.AppendFormat(" IS {0} NULL", IsNegated ? "NOT" : "");
+    }
+  }
+
+  internal class LikeFragment : NegatableFragment
+  {
+    public SqlFragment Argument;
+    public SqlFragment Pattern;
+    public SqlFragment Escape;
+
+    public override void WriteSql(StringBuilder sql)
+    {
+      Argument.WriteSql(sql);
+      if (IsNegated)
+        sql.Append(" NOT ");
+      sql.Append(" LIKE ");
+      Pattern.WriteSql(sql);
+      if (Escape != null)
+      {
+        sql.Append(" ESCAPE ");
+        Escape.WriteSql(sql);
+      }
+    }
+  }
+
+  internal class ListFragment : SqlFragment
+  {
+    public List<SqlFragment> Fragments = new List<SqlFragment>();
+
+    public void Append(string s)
+    {
+      Fragments.Add(new LiteralFragment(s));
     }
 
-    internal class ListFragment : SqlFragment
+    public void Append(SqlFragment s)
     {
-        public List<SqlFragment> Fragments = new List<SqlFragment>();
-
-        public void Append(string s)
-        {
-            Fragments.Add(new LiteralFragment(s));
-        }
-
-        public void Append(SqlFragment s)
-        {
-            Fragments.Add(s);
-        }
-
-        public override void WriteSql(StringBuilder sql)
-        {
-            foreach (SqlFragment f in Fragments)
-                f.WriteSql(sql);
-        }
+      Fragments.Add(s);
     }
 
-    internal class NegatableFragment : SqlFragment
+    public override void WriteSql(StringBuilder sql)
     {
-        public bool IsNegated;
+      foreach (SqlFragment f in Fragments)
+        f.WriteSql(sql);
+    }
+  }
 
-        public void Negate()
-        {
-            IsNegated = !IsNegated;
-        }
+  internal class NegatableFragment : SqlFragment
+  {
+    public bool IsNegated;
 
-        public override void  WriteSql(StringBuilder sql)
-        {
-            Debug.Fail("This method should be overridden");
-        }   
+    public void Negate()
+    {
+      IsNegated = !IsNegated;
     }
 
-    internal class LiteralFragment : SqlFragment
+    public override void WriteSql(StringBuilder sql)
     {
-        public string Literal;
+      Debug.Fail("This method should be overridden");
+    }
+  }
 
-        public LiteralFragment(string literal)
-        {
-            Literal = literal;
-        }
+  internal class LiteralFragment : SqlFragment
+  {
+    public string Literal;
 
-        public override void WriteSql(StringBuilder sql)
-        {
-            sql.Append(Literal);
-        }
+    public LiteralFragment(string literal)
+    {
+      Literal = literal;
     }
 
-    internal class PropertyFragment : SqlFragment
+    public override void WriteSql(StringBuilder sql)
     {
-        public PropertyFragment()
-        {
-            Properties = new List<string>();
-        }
+      sql.Append(Literal);
+    }
+  }
 
-        public List<string> Properties { get; private set; }
-
-        public override void WriteSql(StringBuilder sql)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string LastProperty
-        {
-            get { return Properties.Count == 0 ? null : Properties[Properties.Count - 1]; }
-        }
-
-        public void Trim(string name)
-        {
-            int index = Properties.LastIndexOf(name);
-            Properties.RemoveRange(index + 1, Properties.Count - index - 1);
-        }
-
-        public void PushProperty(string property)
-        {
-            Properties.Insert(0, property);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (!(obj is PropertyFragment)) return false;
-            PropertyFragment prop = obj as PropertyFragment;
-            Debug.Assert(Properties != null &&  prop.Properties != null);
-
-            int aIndex = Properties.Count - 1;
-            int bIndex = prop.Properties.Count - 1;
-            while (aIndex >= 0 && bIndex >= 0)
-                if (String.Compare(Properties[aIndex--], prop.Properties[bIndex--], true) != 0) return false;
-            return true;
-        }
-
-        public PropertyFragment Clone()
-        {
-            PropertyFragment newPF = new PropertyFragment();
-            foreach (string prop in Properties)
-                newPF.Properties.Add(prop);
-            return newPF;
-        }
+  internal class PropertyFragment : SqlFragment
+  {
+    public PropertyFragment()
+    {
+      Properties = new List<string>();
     }
 
-    internal class SortFragment : SqlFragment
+    public List<string> Properties { get; private set; }
+
+    public override void WriteSql(StringBuilder sql)
     {
-        public SortFragment(SqlFragment column, bool ascending)
-        {
-            Column = column;
-            Ascending = ascending;
-        }
-
-        public SqlFragment Column 
-        { 
-            get; 
-            set; 
-        }
-        public bool Ascending { get; set; }
-
-        public override void WriteSql(StringBuilder sql)
-        {
-            ColumnFragment columnFragment = Column as ColumnFragment;
-            Debug.Assert(columnFragment != null);
-            columnFragment.WriteSql(sql);
-            sql.AppendFormat(" {0}", Ascending ? "ASC" : "DESC");
-        }
+      throw new NotImplementedException();
     }
 
-    internal class UnionFragment : InputFragment
+    public string LastProperty
     {
-        public bool Distinct = false;
-
-        public override void WriteInnerSql(StringBuilder sql)
-        {
-            Left.WriteSql(sql);
-            sql.Append(Distinct ? " UNION DISTINCT " : " UNION ALL ");
-            Right.WriteSql(sql);
-        }
-
-        public bool HasDifferentNameForColumn(ColumnFragment column)
-        {
-            Debug.Assert(Left is SelectStatement);
-            Debug.Assert(Right is SelectStatement);
-            if ((Left as SelectStatement).HasDifferentNameForColumn(column))
-                return true;
-            return (Right as SelectStatement).HasDifferentNameForColumn(column);
-        }
+      get { return Properties.Count == 0 ? null : Properties[Properties.Count - 1]; }
     }
+
+    public void Trim(string name)
+    {
+      int index = Properties.LastIndexOf(name);
+      Properties.RemoveRange(index + 1, Properties.Count - index - 1);
+    }
+
+    public void PushProperty(string property)
+    {
+      Properties.Insert(0, property);
+    }
+
+    public override bool Equals(object obj)
+    {
+      if (!(obj is PropertyFragment)) return false;
+      PropertyFragment prop = obj as PropertyFragment;
+      Debug.Assert(Properties != null && prop.Properties != null);
+
+      int aIndex = Properties.Count - 1;
+      int bIndex = prop.Properties.Count - 1;
+      while (aIndex >= 0 && bIndex >= 0)
+        if (String.Compare(Properties[aIndex--], prop.Properties[bIndex--], true) != 0) return false;
+      return true;
+    }
+
+    public PropertyFragment Clone()
+    {
+      PropertyFragment newPF = new PropertyFragment();
+      foreach (string prop in Properties)
+        newPF.Properties.Add(prop);
+      return newPF;
+    }
+  }
+
+  internal class SortFragment : SqlFragment
+  {
+    public SortFragment(SqlFragment column, bool ascending)
+    {
+      Column = column;
+      Ascending = ascending;
+    }
+
+    public SqlFragment Column
+    {
+      get;
+      set;
+    }
+    public bool Ascending { get; set; }
+
+    public override void WriteSql(StringBuilder sql)
+    {
+      ColumnFragment columnFragment = Column as ColumnFragment;
+      Debug.Assert(columnFragment != null);
+      columnFragment.WriteSql(sql);
+      sql.AppendFormat(" {0}", Ascending ? "ASC" : "DESC");
+    }
+  }
+
+  internal class UnionFragment : InputFragment
+  {
+    public bool Distinct = false;
+
+    public override void WriteInnerSql(StringBuilder sql)
+    {
+      Left.WriteSql(sql);
+      sql.Append(Distinct ? " UNION DISTINCT " : " UNION ALL ");
+      Right.WriteSql(sql);
+    }
+
+    public bool HasDifferentNameForColumn(ColumnFragment column)
+    {
+      Debug.Assert(Left is SelectStatement);
+      Debug.Assert(Right is SelectStatement);
+      if ((Left as SelectStatement).HasDifferentNameForColumn(column))
+        return true;
+      return (Right as SelectStatement).HasDifferentNameForColumn(column);
+    }
+  }
 
 
 }
