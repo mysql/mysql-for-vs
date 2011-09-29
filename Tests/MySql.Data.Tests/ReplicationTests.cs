@@ -28,25 +28,25 @@ using NUnit.Framework;
 
 namespace MySql.Data.MySqlClient.Tests
 {
-    [TestFixture]
-    public class ReplicationTests : BaseTest
+  [TestFixture]
+  public class ReplicationTests : BaseTest
+  {
+    [Test]
+    public void Simple()
     {
-        [Test]
-        public void Simple()
+      using (MySqlConnection connection = new MySqlConnection(GetConnectionString(true) + ";replication=yes"))
+      {
+        MySqlCommand cmd = new MySqlCommand("SET @v=1", connection);
+        try
         {
-            using (MySqlConnection connection = new MySqlConnection(GetConnectionString(true) + ";replication=yes"))
-            {
-                MySqlCommand cmd = new MySqlCommand("SET @v=1", connection);
-                try
-                {
-                    connection.Open();
-                    cmd.ExecuteNonQuery();
-                }
-                catch (MySqlException ex)
-                {
-                    Assert.IsTrue(ex.Message.Contains("Replicated"));
-                }
-            }            
+          connection.Open();
+          cmd.ExecuteNonQuery();
         }
+        catch (MySqlException ex)
+        {
+          Assert.IsTrue(ex.Message.Contains("Replicated"));
+        }
+      }
     }
+  }
 }
