@@ -32,93 +32,93 @@ using System.Globalization;
 
 namespace MySql.Data.Entity.Tests
 {
-    [TestFixture]
-    public class ProviderServicesTests : BaseEdmTest
-    {
-        private CultureInfo originalCulture;
+  [TestFixture]
+  public class ProviderServicesTests : BaseEdmTest
+  {
+    private CultureInfo originalCulture;
 
-        public override void Setup()
-        {
-            originalCulture = Thread.CurrentThread.CurrentCulture;
-            base.Setup();
-        }
+    public override void Setup()
+    {
+      originalCulture = Thread.CurrentThread.CurrentCulture;
+      base.Setup();
+    }
 
 #if CLR4
-        [Test]
-        public void CreateDatabase()
-        {
-            suExecSQL("GRANT ALL ON `modeldb`.* to 'test'@'localhost'");
-            suExecSQL("FLUSH PRIVILEGES");
+    [Test]
+    public void CreateDatabase()
+    {
+      suExecSQL("GRANT ALL ON `modeldb`.* to 'test'@'localhost'");
+      suExecSQL("FLUSH PRIVILEGES");
 
-            using (Model1Container ctx = new Model1Container())
-            {
-                Assert.IsFalse(ctx.DatabaseExists());
-                ctx.CreateDatabase();
-                Assert.IsTrue(ctx.DatabaseExists());
-            }
-        }
+      using (Model1Container ctx = new Model1Container())
+      {
+        Assert.IsFalse(ctx.DatabaseExists());
+        ctx.CreateDatabase();
+        Assert.IsTrue(ctx.DatabaseExists());
+      }
+    }
 
-        [Test]
-        public void CreateDatabaseScript()
-        {
-            using (testEntities ctx = new testEntities())
-            {
-                string s = ctx.CreateDatabaseScript();
-            }
-        }
+    [Test]
+    public void CreateDatabaseScript()
+    {
+      using (testEntities ctx = new testEntities())
+      {
+        string s = ctx.CreateDatabaseScript();
+      }
+    }
 
-        [Test]
-        public void DeleteDatabase()
-        {
-            suExecSQL("GRANT ALL ON `modeldb`.* to 'test'@'localhost'");
-            suExecSQL("FLUSH PRIVILEGES");
+    [Test]
+    public void DeleteDatabase()
+    {
+      suExecSQL("GRANT ALL ON `modeldb`.* to 'test'@'localhost'");
+      suExecSQL("FLUSH PRIVILEGES");
 
-            using (Model1Container ctx = new Model1Container())
-            {
-                Assert.IsFalse(ctx.DatabaseExists());
-                ctx.CreateDatabase();
-                Assert.IsTrue(ctx.DatabaseExists());
-                ctx.DeleteDatabase();
-                Assert.IsFalse(ctx.DatabaseExists());
-            }
-        }
+      using (Model1Container ctx = new Model1Container())
+      {
+        Assert.IsFalse(ctx.DatabaseExists());
+        ctx.CreateDatabase();
+        Assert.IsTrue(ctx.DatabaseExists());
+        ctx.DeleteDatabase();
+        Assert.IsFalse(ctx.DatabaseExists());
+      }
+    }
 
-        [Test]
-        public void DatabaseExists()
-        {
-            suExecSQL("GRANT ALL ON `modeldb`.* to 'test'@'localhost'");
-            suExecSQL("FLUSH PRIVILEGES");
+    [Test]
+    public void DatabaseExists()
+    {
+      suExecSQL("GRANT ALL ON `modeldb`.* to 'test'@'localhost'");
+      suExecSQL("FLUSH PRIVILEGES");
 
-            using (Model1Container ctx = new Model1Container())
-            {
-                Assert.IsFalse(ctx.DatabaseExists());
-                ctx.CreateDatabase();
-                Assert.IsTrue(ctx.DatabaseExists());
-                ctx.DeleteDatabase();
-                Assert.IsFalse(ctx.DatabaseExists());
-            }
-        }
+      using (Model1Container ctx = new Model1Container())
+      {
+        Assert.IsFalse(ctx.DatabaseExists());
+        ctx.CreateDatabase();
+        Assert.IsTrue(ctx.DatabaseExists());
+        ctx.DeleteDatabase();
+        Assert.IsFalse(ctx.DatabaseExists());
+      }
+    }
 #endif
 
-        [Test]
-        public void GetDbProviderManifestTokenDoesNotThrowWhenLocalized()
-        {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-CA");
+    [Test]
+    public void GetDbProviderManifestTokenDoesNotThrowWhenLocalized()
+    {
+      Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-CA");
 
-            using (MySqlConnection connection = new MySqlConnection(GetConnectionString(true)))
-            {
-                MySqlProviderServices providerServices = new MySqlProviderServices();
-                string token = null;
+      using (MySqlConnection connection = new MySqlConnection(GetConnectionString(true)))
+      {
+        MySqlProviderServices providerServices = new MySqlProviderServices();
+        string token = null;
 
-                Assert.DoesNotThrow(delegate() { token = providerServices.GetProviderManifestToken(connection); });
-                Assert.IsNotNull(token);
-            }
-        }
-
-        public override void Teardown()
-        {
-            Thread.CurrentThread.CurrentCulture = originalCulture;
-            base.Teardown();
-        }
+        Assert.DoesNotThrow(delegate() { token = providerServices.GetProviderManifestToken(connection); });
+        Assert.IsNotNull(token);
+      }
     }
+
+    public override void Teardown()
+    {
+      Thread.CurrentThread.CurrentCulture = originalCulture;
+      base.Teardown();
+    }
+  }
 }

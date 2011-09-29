@@ -28,12 +28,12 @@ using System.ComponentModel;
 
 namespace MySql.Data.VisualStudio.DbObjects
 {
-    internal enum RowFormat
-    {
-        Default,
-        Dynamic,
-        Fixed,
-        Compact,
-        Compressed
-    }
+  internal enum RowFormat
+  {
+    Default,
+    Dynamic,
+    Fixed,
+    Compact,
+    Compressed
+  }
 }

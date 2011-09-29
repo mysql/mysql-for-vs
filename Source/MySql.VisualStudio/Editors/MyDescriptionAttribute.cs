@@ -25,21 +25,21 @@ using MySql.Data.VisualStudio.Properties;
 
 namespace MySql.Data.VisualStudio.Editors
 {
-    class MyDescriptionAttribute : DescriptionAttribute
+  class MyDescriptionAttribute : DescriptionAttribute
+  {
+    private string rezName;
+
+    public MyDescriptionAttribute(string resourceName)
     {
-        private string rezName;
-
-        public MyDescriptionAttribute(string resourceName)
-        {
-            rezName = resourceName;
-        }
-
-        public override string Description
-        {
-            get
-            {
-                return Resources.ResourceManager.GetString(rezName);
-            }
-        }
+      rezName = resourceName;
     }
+
+    public override string Description
+    {
+      get
+      {
+        return Resources.ResourceManager.GetString(rezName);
+      }
+    }
+  }
 }

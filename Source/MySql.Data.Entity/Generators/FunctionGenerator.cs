@@ -30,34 +30,34 @@ using System.Data;
 
 namespace MySql.Data.Entity
 {
-    class FunctionGenerator : SqlGenerator 
+  class FunctionGenerator : SqlGenerator
+  {
+    public CommandType CommandType { get; private set; }
+
+    public override string GenerateSQL(DbCommandTree commandTree)
     {
-        public CommandType CommandType { get; private set; }
+      DbFunctionCommandTree tree = (commandTree as DbFunctionCommandTree);
+      EdmFunction function = tree.EdmFunction;
+      CommandType = CommandType.StoredProcedure;
 
-        public override string GenerateSQL(DbCommandTree commandTree)
-        {
-            DbFunctionCommandTree tree = (commandTree as DbFunctionCommandTree);
-            EdmFunction function = tree.EdmFunction;
-            CommandType = CommandType.StoredProcedure;
+      string cmdText = (string)function.MetadataProperties["CommandTextAttribute"].Value;
+      if (String.IsNullOrEmpty(cmdText))
+      {
+        string schema = (string)function.MetadataProperties["Schema"].Value;
+        if (String.IsNullOrEmpty(schema))
+          schema = function.NamespaceName;
 
-            string cmdText = (string)function.MetadataProperties["CommandTextAttribute"].Value;
-            if (String.IsNullOrEmpty(cmdText))
-            {
-                string schema = (string)function.MetadataProperties["Schema"].Value;
-                if (String.IsNullOrEmpty(schema))
-                    schema = function.NamespaceName;
+        string functionName = (string)function.MetadataProperties["StoreFunctionNameAttribute"].Value;
+        if (String.IsNullOrEmpty(functionName))
+          functionName = function.Name;
 
-                string functionName = (string)function.MetadataProperties["StoreFunctionNameAttribute"].Value;
-                if (String.IsNullOrEmpty(functionName))
-                    functionName = function.Name;
-
-                return String.Format("`{0}`", functionName);
-            }
-            else
-            {
-                CommandType = CommandType.Text;
-                return cmdText;
-            }
-        }
+        return String.Format("`{0}`", functionName);
+      }
+      else
+      {
+        CommandType = CommandType.Text;
+        return cmdText;
+      }
     }
+  }
 }

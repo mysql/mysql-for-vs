@@ -31,231 +31,231 @@ using System.Text;
 
 namespace MySql.Data.Entity
 {
-	class EFMySqlDataReader : DbDataReader
-	{
-		private EFMySqlCommand command;
-		private MySqlDataReader reader;
-		private PrimitiveType[] types;
+  class EFMySqlDataReader : DbDataReader
+  {
+    private EFMySqlCommand command;
+    private MySqlDataReader reader;
+    private PrimitiveType[] types;
 
-		public EFMySqlDataReader(EFMySqlCommand cmd, MySqlDataReader wrappedReader)
-		{
-			command = cmd;
-			reader = wrappedReader;
-			types = command.ColumnTypes;
-		}
+    public EFMySqlDataReader(EFMySqlCommand cmd, MySqlDataReader wrappedReader)
+    {
+      command = cmd;
+      reader = wrappedReader;
+      types = command.ColumnTypes;
+    }
 
-		#region Properties
+    #region Properties
 
-		public override int Depth
-		{
-			get { return reader.Depth; }
-		}
+    public override int Depth
+    {
+      get { return reader.Depth; }
+    }
 
-		public override int FieldCount
-		{
-			get { return reader.FieldCount; }
-		}
+    public override int FieldCount
+    {
+      get { return reader.FieldCount; }
+    }
 
-		public override bool HasRows
-		{
-			get { return reader.HasRows; }
-		}
+    public override bool HasRows
+    {
+      get { return reader.HasRows; }
+    }
 
-		public override bool IsClosed
-		{
-			get { return reader.IsClosed; }
-		}
+    public override bool IsClosed
+    {
+      get { return reader.IsClosed; }
+    }
 
-		public override int RecordsAffected
-		{
-			get { return reader.RecordsAffected; }
-		}
+    public override int RecordsAffected
+    {
+      get { return reader.RecordsAffected; }
+    }
 
-		public override object this[string name]
-		{
-			get { return GetValue(GetOrdinal(name)); }
-		}
+    public override object this[string name]
+    {
+      get { return GetValue(GetOrdinal(name)); }
+    }
 
-		public override object this[int ordinal]
-		{
-			get { return GetValue(ordinal); }
-		}
+    public override object this[int ordinal]
+    {
+      get { return GetValue(ordinal); }
+    }
 
-		#endregion
+    #endregion
 
-		public override void Close()
-		{
-			GC.SuppressFinalize(this);
-			reader.Close();
-		}
+    public override void Close()
+    {
+      GC.SuppressFinalize(this);
+      reader.Close();
+    }
 
-		public override bool GetBoolean(int ordinal)
-		{
-			return (bool)GetValue(ordinal);
-		}
+    public override bool GetBoolean(int ordinal)
+    {
+      return (bool)GetValue(ordinal);
+    }
 
-		public override byte GetByte(int ordinal)
-		{
-			return reader.GetByte(ordinal);
-		}
+    public override byte GetByte(int ordinal)
+    {
+      return reader.GetByte(ordinal);
+    }
 
-		public override long GetBytes(int ordinal, long dataOffset, byte[] buffer, int bufferOffset, int length)
-		{
-			return reader.GetBytes(ordinal, dataOffset, buffer, bufferOffset, length);
-		}
+    public override long GetBytes(int ordinal, long dataOffset, byte[] buffer, int bufferOffset, int length)
+    {
+      return reader.GetBytes(ordinal, dataOffset, buffer, bufferOffset, length);
+    }
 
-		public override char GetChar(int ordinal)
-		{
-			return reader.GetChar(ordinal);
-		}
+    public override char GetChar(int ordinal)
+    {
+      return reader.GetChar(ordinal);
+    }
 
-		public override long GetChars(int ordinal, long dataOffset, char[] buffer, int bufferOffset, int length)
-		{
-			return reader.GetChars(ordinal, dataOffset, buffer, bufferOffset, length);
-		}
+    public override long GetChars(int ordinal, long dataOffset, char[] buffer, int bufferOffset, int length)
+    {
+      return reader.GetChars(ordinal, dataOffset, buffer, bufferOffset, length);
+    }
 
-		public override string GetDataTypeName(int ordinal)
-		{
-			if (types != null)
-				return types[ordinal].Name;
-			return reader.GetDataTypeName(ordinal);
-		}
+    public override string GetDataTypeName(int ordinal)
+    {
+      if (types != null)
+        return types[ordinal].Name;
+      return reader.GetDataTypeName(ordinal);
+    }
 
-		public override DateTime GetDateTime(int ordinal)
-		{
-			return reader.GetDateTime(ordinal);
-		}
+    public override DateTime GetDateTime(int ordinal)
+    {
+      return reader.GetDateTime(ordinal);
+    }
 
-		public override decimal GetDecimal(int ordinal)
-		{
-			return reader.GetDecimal(ordinal);
-		}
+    public override decimal GetDecimal(int ordinal)
+    {
+      return reader.GetDecimal(ordinal);
+    }
 
-		public override double GetDouble(int ordinal)
-		{
-			return reader.GetDouble(ordinal);
-		}
+    public override double GetDouble(int ordinal)
+    {
+      return reader.GetDouble(ordinal);
+    }
 
-		public override IEnumerator GetEnumerator()
-		{
-			return reader.GetEnumerator();
-		}
+    public override IEnumerator GetEnumerator()
+    {
+      return reader.GetEnumerator();
+    }
 
-		public override Type GetFieldType(int ordinal)
-		{
-			if (types != null)
-				return types[ordinal].ClrEquivalentType;
-			return reader.GetFieldType(ordinal);
-		}
+    public override Type GetFieldType(int ordinal)
+    {
+      if (types != null)
+        return types[ordinal].ClrEquivalentType;
+      return reader.GetFieldType(ordinal);
+    }
 
-		public override float GetFloat(int ordinal)
-		{
-			return reader.GetFloat(ordinal);
-		}
+    public override float GetFloat(int ordinal)
+    {
+      return reader.GetFloat(ordinal);
+    }
 
-		public override Guid GetGuid(int ordinal)
-		{
-			return reader.GetGuid(ordinal);
-		}
+    public override Guid GetGuid(int ordinal)
+    {
+      return reader.GetGuid(ordinal);
+    }
 
-		public override short GetInt16(int ordinal)
-		{
-			return reader.GetInt16(ordinal);
-		}
+    public override short GetInt16(int ordinal)
+    {
+      return reader.GetInt16(ordinal);
+    }
 
-		public override int GetInt32(int ordinal)
-		{
-			return reader.GetInt32(ordinal);
-		}
+    public override int GetInt32(int ordinal)
+    {
+      return reader.GetInt32(ordinal);
+    }
 
-		public override long GetInt64(int ordinal)
-		{
-			return reader.GetInt64(ordinal);
-		}
+    public override long GetInt64(int ordinal)
+    {
+      return reader.GetInt64(ordinal);
+    }
 
-		public override string GetName(int ordinal)
-		{
-			return reader.GetName(ordinal);
-		}
+    public override string GetName(int ordinal)
+    {
+      return reader.GetName(ordinal);
+    }
 
-		public override int GetOrdinal(string name)
-		{
-			return reader.GetOrdinal(name);
-		}
+    public override int GetOrdinal(string name)
+    {
+      return reader.GetOrdinal(name);
+    }
 
-		public override DataTable GetSchemaTable()
-		{
-			return reader.GetSchemaTable();
-		}
+    public override DataTable GetSchemaTable()
+    {
+      return reader.GetSchemaTable();
+    }
 
-		public override string GetString(int ordinal)
-		{
-			return reader.GetString(ordinal);
-		}
+    public override string GetString(int ordinal)
+    {
+      return reader.GetString(ordinal);
+    }
 
-		public override object GetValue(int ordinal)
-		{
-			object value = reader.GetValue(ordinal);
+    public override object GetValue(int ordinal)
+    {
+      object value = reader.GetValue(ordinal);
 
-			if (types != null)
-			{
-				if (!(value is DBNull) && value.GetType()
-					!= types[ordinal].ClrEquivalentType)
-					value = ChangeType(value, types[ordinal].ClrEquivalentType);
-			}
-			return value;
-		}
+      if (types != null)
+      {
+        if (!(value is DBNull) && value.GetType()
+          != types[ordinal].ClrEquivalentType)
+          value = ChangeType(value, types[ordinal].ClrEquivalentType);
+      }
+      return value;
+    }
 
-		private object ChangeType(object sourceValue, Type targetType)
-		{
-			if (sourceValue is byte[])
-			{
-				if (targetType == typeof(Guid))
-					return new Guid((byte[])sourceValue);
-				else if (targetType == typeof(bool))
-				{
-					byte[] bytes = (byte[])sourceValue;
-					return bytes[0] == '1';
-				}
-			}
+    private object ChangeType(object sourceValue, Type targetType)
+    {
+      if (sourceValue is byte[])
+      {
+        if (targetType == typeof(Guid))
+          return new Guid((byte[])sourceValue);
+        else if (targetType == typeof(bool))
+        {
+          byte[] bytes = (byte[])sourceValue;
+          return bytes[0] == '1';
+        }
+      }
 
-			if (sourceValue is DateTime && targetType == typeof(DateTimeOffset))
-			{
-				return new DateTimeOffset((DateTime)sourceValue);
-			}
+      if (sourceValue is DateTime && targetType == typeof(DateTimeOffset))
+      {
+        return new DateTimeOffset((DateTime)sourceValue);
+      }
 
-			return Convert.ChangeType(sourceValue, targetType, CultureInfo.InvariantCulture);
-		} 
+      return Convert.ChangeType(sourceValue, targetType, CultureInfo.InvariantCulture);
+    }
 
-		public override int GetValues(object[] values)
-		{
-			for (int i = 0; i < values.Length; ++i)
-				values[i] = GetValue(i);
-			return values.Length;
-		}
+    public override int GetValues(object[] values)
+    {
+      for (int i = 0; i < values.Length; ++i)
+        values[i] = GetValue(i);
+      return values.Length;
+    }
 
-		public override bool IsDBNull(int ordinal)
-		{
-			return reader.IsDBNull(ordinal);
-		}
+    public override bool IsDBNull(int ordinal)
+    {
+      return reader.IsDBNull(ordinal);
+    }
 
-		public override bool NextResult()
-		{
-			return reader.NextResult();
-		}
+    public override bool NextResult()
+    {
+      return reader.NextResult();
+    }
 
-		public override bool Read()
-		{
-			return reader.Read();
-		}
+    public override bool Read()
+    {
+      return reader.Read();
+    }
 
-		protected override void Dispose(bool disposing)
-		{
-			GC.SuppressFinalize(this);
-			if (disposing)
-				reader.Dispose();
-			base.Dispose(disposing);
-		}
+    protected override void Dispose(bool disposing)
+    {
+      GC.SuppressFinalize(this);
+      if (disposing)
+        reader.Dispose();
+      base.Dispose(disposing);
+    }
 
-	}
+  }
 }

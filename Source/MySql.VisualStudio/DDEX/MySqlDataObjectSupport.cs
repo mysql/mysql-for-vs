@@ -28,18 +28,18 @@ using Microsoft.VisualStudio.Data;
 
 namespace MySql.Data.VisualStudio
 {
-	/// <summary>
-	/// Represents an implementation of data object support that returns
-	/// the stream of XML containing the data object support elements.
-	/// </summary>
-	internal class MySqlDataObjectSupport : DataObjectSupport
-	{
-		/// <summary>
-        /// Constructor just passes reference to XML to base constructor.
-		/// </summary>
-        public MySqlDataObjectSupport()
-			: base("MySql.Data.VisualStudio.DDEX.MySqlDataObjectSupport", typeof(MySqlDataObjectSupport).Assembly)
-		{
-		}
-	}
+  /// <summary>
+  /// Represents an implementation of data object support that returns
+  /// the stream of XML containing the data object support elements.
+  /// </summary>
+  internal class MySqlDataObjectSupport : DataObjectSupport
+  {
+    /// <summary>
+    /// Constructor just passes reference to XML to base constructor.
+    /// </summary>
+    public MySqlDataObjectSupport()
+      : base("MySql.Data.VisualStudio.DDEX.MySqlDataObjectSupport", typeof(MySqlDataObjectSupport).Assembly)
+    {
+    }
+  }
 }

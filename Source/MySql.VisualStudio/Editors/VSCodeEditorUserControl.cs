@@ -33,58 +33,58 @@ using Microsoft.VisualStudio.Shell;
 
 namespace MySql.Data.VisualStudio.Editors
 {
-    internal class VSCodeEditorUserControl : UserControl
+  internal class VSCodeEditorUserControl : UserControl
+  {
+    private VSCodeEditorWindow nativeWindow;
+
+    public void Init(ServiceProvider serviceProvider)
     {
-        private VSCodeEditorWindow nativeWindow;
-
-        public void Init(ServiceProvider serviceProvider)
-        {
-            ServiceBroker sb = new ServiceBroker(serviceProvider);
-            nativeWindow = new VSCodeEditorWindow(sb, this);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            try
-            {
-                if (!disposing) return;
-                if (nativeWindow == null) return;
-                nativeWindow.Dispose();
-            }
-            finally
-            {
-                base.Dispose(disposing);
-            }
-        }
-
-        public string Text
-        {
-            get { return nativeWindow.CoreEditor.Text; }
-            set { nativeWindow.CoreEditor.Text = value; }
-        }
-
-        public bool IsDirty
-        {
-            get { return nativeWindow.CoreEditor.Dirty; }
-            set { nativeWindow.CoreEditor.Dirty = value; }
-        }
-
-        protected override bool IsInputKey(Keys keyData)
-        {
-            // Since we process each pressed keystroke, the return value is always true.
-            return true;
-        }
-
-        protected override void OnGotFocus(EventArgs e)
-        {
-            if (nativeWindow == null) return;
-            nativeWindow.SetFocus();
-        }
-
-        protected override void OnSizeChanged(EventArgs e)
-        {
-            if (nativeWindow == null) return;
-            nativeWindow.SetWindowPos(ClientRectangle);
-        }
+      ServiceBroker sb = new ServiceBroker(serviceProvider);
+      nativeWindow = new VSCodeEditorWindow(sb, this);
     }
+
+    protected override void Dispose(bool disposing)
+    {
+      try
+      {
+        if (!disposing) return;
+        if (nativeWindow == null) return;
+        nativeWindow.Dispose();
+      }
+      finally
+      {
+        base.Dispose(disposing);
+      }
+    }
+
+    public string Text
+    {
+      get { return nativeWindow.CoreEditor.Text; }
+      set { nativeWindow.CoreEditor.Text = value; }
+    }
+
+    public bool IsDirty
+    {
+      get { return nativeWindow.CoreEditor.Dirty; }
+      set { nativeWindow.CoreEditor.Dirty = value; }
+    }
+
+    protected override bool IsInputKey(Keys keyData)
+    {
+      // Since we process each pressed keystroke, the return value is always true.
+      return true;
+    }
+
+    protected override void OnGotFocus(EventArgs e)
+    {
+      if (nativeWindow == null) return;
+      nativeWindow.SetFocus();
+    }
+
+    protected override void OnSizeChanged(EventArgs e)
+    {
+      if (nativeWindow == null) return;
+      nativeWindow.SetWindowPos(ClientRectangle);
+    }
+  }
 }

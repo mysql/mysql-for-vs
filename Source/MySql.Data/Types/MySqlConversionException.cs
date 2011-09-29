@@ -24,18 +24,18 @@ using System;
 
 namespace MySql.Data.Types
 {
-	/// <summary>
-	/// Summary description for MySqlConversionException.
-	/// </summary>
+  /// <summary>
+  /// Summary description for MySqlConversionException.
+  /// </summary>
 #if !CF
-	[Serializable]
+  [Serializable]
 #endif
-	public class MySqlConversionException : Exception
-	{
-		/// <summary>Ctor</summary>
-		public MySqlConversionException(string msg)
-			: base(msg)
-		{
-		}
-	}
+  public class MySqlConversionException : Exception
+  {
+    /// <summary>Ctor</summary>
+    public MySqlConversionException(string msg)
+      : base(msg)
+    {
+    }
+  }
 }

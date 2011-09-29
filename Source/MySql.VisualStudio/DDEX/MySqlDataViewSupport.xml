@@ -46,7 +46,7 @@
             <Parameter value="HighLevel"/>
           </CommandBinding>
         </CommandBindings>
-          <Children>
+        <Children>
           <SubHierarchyParamRef index="0"/>
         </Children>
       </StaticConnectionNode>
@@ -93,7 +93,7 @@
             <SelectionNode nid="Table">
               <Icon name="Table"/>
               <Children>
-                <Selection type="Column" restrictions="null,{Table.Schema},{Table.Name}" 
+                <Selection type="Column" restrictions="null,{Table.Schema},{Table.Name}"
                            hideWhen="False AND False">
                   <SelectionNode>
                     <Icon name="Column"/>
@@ -169,35 +169,35 @@
       <!-- Stored procedures -->
       <StaticNode nid="StoredProcedures" minSourceVersion="5.0.0">
         <DisplayName resource="Node_StoredProcedures" />
-          <CommandBindings>
-            <CommandBinding name="NewQuery" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="13608" handler="884DD964-5327-461f-9F06-6484DD540F8F">
-              <Parameter value="NewQuery"/>
-              <Parameter value="Query"/>
-            </CommandBinding>
-            <CommandBinding name="CreateStoredProcedure"
-                            guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                            cmdid="288"
-                            handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
-            <CommandBinding name="AddNewTable" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                            cmdid="500" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
-              <Parameter value="HighLevel"/>
-            </CommandBinding>
-            <CommandBinding name="AddNewView" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                            cmdid="501" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
-              <Parameter value="HighLevel"/>
-            </CommandBinding>
-            <CommandBinding name="AddNewProcedure" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                            cmdid="502" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
-              <Parameter value="HighLevel"/>
-            </CommandBinding>
-            <CommandBinding name="AddNewFunction" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                            cmdid="503" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
-              <Parameter value="HighLevel"/>
-            </CommandBinding>
-            <CommandBinding name="AddNewUDF" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
-                            cmdid="504" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
-              <Parameter value="HighLevel"/>
-            </CommandBinding>
+        <CommandBindings>
+          <CommandBinding name="NewQuery" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="13608" handler="884DD964-5327-461f-9F06-6484DD540F8F">
+            <Parameter value="NewQuery"/>
+            <Parameter value="Query"/>
+          </CommandBinding>
+          <CommandBinding name="CreateStoredProcedure"
+                          guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
+                          cmdid="288"
+                          handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
+          <CommandBinding name="AddNewTable" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
+                          cmdid="500" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+            <Parameter value="HighLevel"/>
+          </CommandBinding>
+          <CommandBinding name="AddNewView" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
+                          cmdid="501" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+            <Parameter value="HighLevel"/>
+          </CommandBinding>
+          <CommandBinding name="AddNewProcedure" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
+                          cmdid="502" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+            <Parameter value="HighLevel"/>
+          </CommandBinding>
+          <CommandBinding name="AddNewFunction" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
+                          cmdid="503" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+            <Parameter value="HighLevel"/>
+          </CommandBinding>
+          <CommandBinding name="AddNewUDF" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
+                          cmdid="504" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
+            <Parameter value="HighLevel"/>
+          </CommandBinding>
         </CommandBindings>
         <Children>
           <Selection type="StoredProcedure"
@@ -206,7 +206,7 @@
               <Icon name="StoredProcedure" />
               <Children>
                 <Selection type="StoredProcedureParameter"
-                           restrictions="null,{StoredProcedure.Database},{StoredProcedure.Name},PROCEDURE" 
+                           restrictions="null,{StoredProcedure.Database},{StoredProcedure.Name},PROCEDURE"
                            hideWhen="False AND False">
                   <SelectionNode>
                     <Icon when="{Mode} = 'IN'" name="InputParameter" />
@@ -251,13 +251,13 @@
           </CommandBinding>
         </CommandBindings>
         <Children>
-          <Selection type="StoredProcedure" 
+          <Selection type="StoredProcedure"
                      restrictions="{Root.Database},{Root.Schema},null,FUNCTION"
                      minSourceVersion="5.0.0" hideWhen="False AND False">
             <SelectionNode nid="StoredFunction">
               <Icon name="ScalarValuedFunction" />
               <Children>
-                <Selection type="StoredProcedureParameter" 
+                <Selection type="StoredProcedureParameter"
                            restrictions="null,{StoredFunction.Database},{StoredFunction.Name},FUNCTION"
                            filter="Ordinal > 0" hideWhen="False AND False">
                   <SelectionNode>
@@ -436,16 +436,16 @@
           <Parameter value="Table"/>
         </CommandBinding>
         <CommandBinding name="CreateTrigger" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="320" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
-        <CommandBinding name="Browse_Data" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="12384" 
+        <CommandBinding name="Browse_Data" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="12384"
                         handler="884DD964-5327-461f-9F06-6484DD540F8F">
           <Parameter value="Open"/>
         </CommandBinding>
-        <CommandBinding name="NewQuery" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="13608" 
+        <CommandBinding name="NewQuery" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="13608"
                         handler="884DD964-5327-461f-9F06-6484DD540F8F">
           <Parameter value="NewQuery"/>
           <Parameter value="Query"/>
         </CommandBinding>
-        
+
         <!-- global data menus -->
         <CommandBinding name="AddNewTable" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D"
                         cmdid="500" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
@@ -469,7 +469,7 @@
         </CommandBinding>
       </CommandBindings>
     </TypeExtension>
-    
+
     <TypeExtension name="View">
       <DisplayName resource="Type_View" />
       <Identifier>
@@ -537,12 +537,12 @@
           <Parameter value="View"/>
         </CommandBinding>
 
-        <CommandBinding name="Browse_Data" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="12384" 
+        <CommandBinding name="Browse_Data" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="12384"
                         handler="884DD964-5327-461f-9F06-6484DD540F8F">
           <Parameter value="Open"/>
         </CommandBinding>
         <!-- global data menus -->
-        <CommandBinding name="NewQuery" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="13608" 
+        <CommandBinding name="NewQuery" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="13608"
                         handler="884DD964-5327-461f-9F06-6484DD540F8F">
           <Parameter value="NewQuery"/>
           <Parameter value="Query"/>
@@ -567,8 +567,8 @@
                         cmdid="504" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
           <Parameter value="HighLevel"/>
         </CommandBinding>
-       </CommandBindings>
-      </TypeExtension>
+      </CommandBindings>
+    </TypeExtension>
     <!--
       Extension to Column type
     -->
@@ -992,7 +992,7 @@
         <CommandBinding name="AlterStoredProcedure" guid="B87CB51F-8A01-4c5e-BF3E-5D0565D5397D" cmdid="289" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler" />
         <CommandBinding name="DropProcedure" guid="5efc7975-14bc-11cf-9b2b-00aa00573819" cmdid="17" handler="MySql.Data.VisualStudio.MySqlDataViewCommandHandler">
           <Parameter value="StoredProcedure"/>
-        </CommandBinding>        
+        </CommandBinding>
         <!-- global data menus -->
         <CommandBinding name="NewQuery" guid="501822E1-B5AF-11d0-B4DC-00A0C91506EF" cmdid="13608" handler="884DD964-5327-461f-9F06-6484DD540F8F">
           <Parameter value="NewQuery"/>

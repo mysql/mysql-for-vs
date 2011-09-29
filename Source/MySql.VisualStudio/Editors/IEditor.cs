@@ -26,8 +26,8 @@ using System.Text;
 
 namespace MySql.Data.VisualStudio.Editors
 {
-    interface IEditor
-    {
-        object GetObject();
-    }
+  interface IEditor
+  {
+    object GetObject();
+  }
 }

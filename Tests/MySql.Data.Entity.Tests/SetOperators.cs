@@ -34,79 +34,79 @@ using MySql.Data.Entity.Tests.Properties;
 
 namespace MySql.Data.Entity.Tests
 {
-    [TestFixture]
-    public class SetOperators : BaseEdmTest
+  [TestFixture]
+  public class SetOperators : BaseEdmTest
+  {
+    [Test]
+    public void Any()
     {
-        [Test]
-        public void Any()
-        {
-            MySqlDataAdapter da = new MySqlDataAdapter(
-                @"SELECT a.id FROM authors a WHERE NOT EXISTS(SELECT * FROM books b WHERE b.author_id=a.id)", conn);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
+      MySqlDataAdapter da = new MySqlDataAdapter(
+          @"SELECT a.id FROM authors a WHERE NOT EXISTS(SELECT * FROM books b WHERE b.author_id=a.id)", conn);
+      DataTable dt = new DataTable();
+      da.Fill(dt);
 
-            int i = 0;
-            // find all authors that are in our db with no books
-            using (testEntities context = new testEntities())
-            {
-                var authors = from a in context.Authors where !a.Books.Any() select a;
+      int i = 0;
+      // find all authors that are in our db with no books
+      using (testEntities context = new testEntities())
+      {
+        var authors = from a in context.Authors where !a.Books.Any() select a;
 
-                string sql = authors.ToTraceString();
-                CheckSql(sql, SQLSyntax.Any);
-                
-                foreach (Author a in authors)
-                    Assert.AreEqual(dt.Rows[i++]["id"], a.Id);
-            }
-        }
+        string sql = authors.ToTraceString();
+        CheckSql(sql, SQLSyntax.Any);
 
-        [Test]
-        public void FirstSimple()
-        {
-            MySqlCommand cmd = new MySqlCommand("SELECT id FROM orders", conn);
-            int id = (int)cmd.ExecuteScalar();
-
-            using (testEntities context = new testEntities())
-            {
-                var q = from o in context.Orders 
-                            select o;
-                Order order = q.First() as Order;
-
-                Assert.AreEqual(id, order.Id);
-            }
-        }
-
-        [Test]
-        public void FirstPredicate()
-        {
-            MySqlCommand cmd = new MySqlCommand("SELECT id FROM orders WHERE freight > 100", conn);
-            int id = (int)cmd.ExecuteScalar();
-
-            using (testEntities context = new testEntities())
-            {
-                var q = from o in context.Orders
-                        where o.Freight > 100
-                        select o;
-                Order order = q.First() as Order;
-                Assert.AreEqual(id, order.Id);
-            }
-        }
-
-        [Test]
-        public void Distinct()
-        {
-            using (testEntities context = new testEntities())
-            {
-                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Companies LIMIT 2", conn);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-
-                int i = 0;
-                var query = context.Companies.Top("2");
-                foreach (Company c in query)
-                {
-                    Assert.AreEqual(dt.Rows[i++]["id"], c.Id);
-                }
-            }
-        }
+        foreach (Author a in authors)
+          Assert.AreEqual(dt.Rows[i++]["id"], a.Id);
+      }
     }
+
+    [Test]
+    public void FirstSimple()
+    {
+      MySqlCommand cmd = new MySqlCommand("SELECT id FROM orders", conn);
+      int id = (int)cmd.ExecuteScalar();
+
+      using (testEntities context = new testEntities())
+      {
+        var q = from o in context.Orders
+                select o;
+        Order order = q.First() as Order;
+
+        Assert.AreEqual(id, order.Id);
+      }
+    }
+
+    [Test]
+    public void FirstPredicate()
+    {
+      MySqlCommand cmd = new MySqlCommand("SELECT id FROM orders WHERE freight > 100", conn);
+      int id = (int)cmd.ExecuteScalar();
+
+      using (testEntities context = new testEntities())
+      {
+        var q = from o in context.Orders
+                where o.Freight > 100
+                select o;
+        Order order = q.First() as Order;
+        Assert.AreEqual(id, order.Id);
+      }
+    }
+
+    [Test]
+    public void Distinct()
+    {
+      using (testEntities context = new testEntities())
+      {
+        MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Companies LIMIT 2", conn);
+        DataTable dt = new DataTable();
+        da.Fill(dt);
+
+        int i = 0;
+        var query = context.Companies.Top("2");
+        foreach (Company c in query)
+        {
+          Assert.AreEqual(dt.Rows[i++]["id"], c.Id);
+        }
+      }
+    }
+  }
 }
