@@ -148,5 +148,24 @@ namespace MySql.Data.Entity.Tests
         Assert.AreEqual(0, String.Compare(guidAsChar, dtt.id2.ToString(), true));
       }
     }
+
+    /// <summary>
+    /// Bug #62246	Connector/Net Incorrectly Maps Decimal To AnsiString
+    /// </summary>
+    [Test]
+    public void CanSetDbTypeDecimalFromNewDecimalParameter()
+    {
+      MySqlParameter newDecimalParameter = new MySqlParameter
+      {
+        ParameterName = "TestNewDecimal",
+        Size = 10,
+        Scale = 2,
+        MySqlDbType = MySqlDbType.NewDecimal,
+        Value = 1111111.12,
+        IsNullable = true
+      };
+
+      Assert.AreEqual(DbType.Decimal, newDecimalParameter.DbType);
+    }
   }
 }
