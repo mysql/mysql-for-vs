@@ -420,6 +420,8 @@ namespace MySql.Data.MySqlClient
 
       switch (mySqlDbType)
       {
+
+        case MySqlDbType.NewDecimal:
         case MySqlDbType.Decimal:
           dbType = DbType.Decimal;
           break;
