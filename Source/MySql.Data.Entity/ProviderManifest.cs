@@ -125,6 +125,9 @@ namespace MySql.Data.MySqlClient
           return TypeUsage.CreateDefaultTypeUsage(StoreTypeNameToStorePrimitiveType["bool"]);
 
         case PrimitiveTypeKind.Byte:
+          return TypeUsage.CreateDefaultTypeUsage(StoreTypeNameToStorePrimitiveType["utinyint"]);
+
+        case PrimitiveTypeKind.SByte:
           return TypeUsage.CreateDefaultTypeUsage(StoreTypeNameToStorePrimitiveType["tinyint"]);
 
         case PrimitiveTypeKind.Int16:
