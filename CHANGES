@@ -27,6 +27,7 @@
 - Modified ProviderServices classes to generate text types when using variable length string types (MySQL bug #54915, Oracle bug #12848277).
 - Fix for customer issue: bad management of alias in SelectStatement (bug #12807366).
 - Modified StreamCreator.GetStreamFromHost to bypass IPV6 addresses when connecting to any MySQL Server below 5.5.3.
+- Modified MySQLParameter setter to correctly map MySqlDbType.NewDecimal to DbType.Decimal type. (MySQL bug #62246 Oracle Bug #13050570).
 
 6.4.3 (ga)
 - Modified SqlFragment.QuoteIdentifier to add MySQL quotes around identifiers (MySQL bug #61635, Oracle bug #12707285).
