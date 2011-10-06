@@ -29,6 +29,9 @@
 - Fix for customer issue: bad management of alias in SelectStatement (bug #12807366).
 - Modified StreamCreator.GetStreamFromHost to bypass IPV6 addresses when connecting to any MySQL Server below 5.5.3.
 - Modified MySQLParameter setter to correctly map MySqlDbType.NewDecimal to DbType.Decimal type. (MySQL bug #62246 Oracle Bug #13050570).
+- Fix to correctly Map Entity Primitive Type Byte to utinyint when using Code First. (MySQL bug  #62135 , Oracle bug #13061713).
+- Added Map Entity Primitive Type SByte missed on ProviderManifest.
+ 
 
 Version 6.3.7
 - IPv6 connections are now supported 
