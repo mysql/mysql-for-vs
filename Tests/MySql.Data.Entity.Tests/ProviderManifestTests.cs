@@ -59,5 +59,24 @@ namespace MySql.Data.Entity.Tests
 
       }
     }
+
+    /// <summary>
+    /// Bug #62135 Connector/Net Incorrectly Maps PrimitiveTypeKind.Byte to "tinyint"
+    /// 
+    /// </summary
+    [Test]
+    public void CanMapByteTypeToUTinyInt()
+    {
+      using (MySqlConnection connection = new MySqlConnection(GetConnectionString(true)))
+      {
+        MySqlProviderManifest pm = new MySqlProviderManifest(Version.ToString());
+        TypeUsage tu = TypeUsage.CreateDefaultTypeUsage(
+                PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Byte));
+        TypeUsage result = pm.GetStoreType(tu);
+        Assert.AreEqual("utinyint", result.EdmType.Name);
+
+      }
+    }
+
   }
 }
