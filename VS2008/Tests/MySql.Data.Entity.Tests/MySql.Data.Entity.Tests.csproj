@@ -108,6 +108,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Model2.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Model3.Designer.cs">
+      <DependentUpon>Model3.edmx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
     <Compile Include="Properties\SQLSyntax.Designer.cs" />
     <Compile Include="TestModel.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -124,6 +129,10 @@
     <EntityDeploy Include="Model1.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>Model1.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <EntityDeploy Include="Model3.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Model3.Designer.cs</LastGenOutput>
     </EntityDeploy>
     <EntityDeploy Include="TestModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
