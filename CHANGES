@@ -31,6 +31,7 @@
 - Modified MySQLParameter setter to correctly map MySqlDbType.NewDecimal to DbType.Decimal type. (MySQL bug #62246 Oracle Bug #13050570).
 - Fix to correctly Map Entity Primitive Type Byte to utinyint when using Code First. (MySQL bug  #62135 , Oracle bug #13061713).
 - Added Map Entity Primitive Type SByte missed on ProviderManifest.
+- Added quotation mark to Escape Character on MySQLHelper class (MySQLbug #62585, Oracle bug #13092886).
  
 
 Version 6.3.7
