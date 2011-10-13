@@ -87,6 +87,7 @@
     <Compile Include="InterfaceTests.cs" />
     <Compile Include="LanguageTests.cs" />
     <Compile Include="Logging.cs" />
+    <Compile Include="MySQLHelperTests.cs" />
     <Compile Include="OutputParameters.cs" />
     <Compile Include="ParameterTests.cs" />
     <Compile Include="PartialTrustSandbox.cs" />
