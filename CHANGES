@@ -31,7 +31,7 @@
 - Fix to correctly Map Entity Primitive Type Byte to utinyint when using Code First. (MySQL bug  #62135 , Oracle bug #13061713).
 - Added Map Entity Primitive Type SByte missed on ProviderManifest.
 - Added quotation mark to Escape Character on MySQLHelper class (MySQLbug #62585, Oracle bug #13092886).
- 
+- Removed check for hashed passwords when run on Mono.  It supports it now (MySQL bug #62203, Oracle bug #13041618)
 
 6.4.3 (ga)
 - Modified SqlFragment.QuoteIdentifier to add MySQL quotes around identifiers (MySQL bug #61635, Oracle bug #12707285).
