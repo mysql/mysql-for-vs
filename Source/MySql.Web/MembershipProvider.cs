@@ -141,8 +141,6 @@ namespace MySql.Web.Security
       {
         if (EnablePasswordRetrieval)
           throw new ProviderException(Resources.CannotRetrieveHashedPasswords);
-        if (Runtime.IsMono)
-          throw new ProviderException(Resources.MonoDoesNotSupportHash);
       }
 
       ConnectionStringSettings ConnectionStringSettings = ConfigurationManager.ConnectionStrings[
