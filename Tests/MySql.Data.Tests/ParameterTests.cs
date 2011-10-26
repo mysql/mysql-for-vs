@@ -212,14 +212,14 @@ namespace MySql.Data.MySqlClient.Tests
       MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id,name) VALUES (?id, ?name)", conn);
 
       MySqlParameter p = new MySqlParameter();
-      p.ParameterName = "?id";
       p.Value = 1;
       cmd.Parameters.Add(p);
+      cmd.Parameters[0].ParameterName = "?id";
 
       p = new MySqlParameter();
-      p.ParameterName = "?name";
       p.Value = "test";
       cmd.Parameters.Add(p);
+      p.ParameterName = "?name";
 
       cmd.ExecuteNonQuery();
 
