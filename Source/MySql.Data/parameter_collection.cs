@@ -40,7 +40,6 @@ namespace MySql.Data.MySqlClient
   public sealed class MySqlParameterCollection : DbParameterCollection
   {
     List<DbParameter> items = new List<DbParameter>();
-    //private ArrayList items = new ArrayList();
     private Hashtable indexHashCS;
     private Hashtable indexHashCI;
 
@@ -221,9 +220,6 @@ namespace MySql.Data.MySqlClient
       MySqlParameter parameter = value as MySqlParameter;
       if (parameter == null)
         throw new MySqlException("Only MySqlParameter objects may be stored");
-
-      if (parameter.ParameterName == null || parameter.ParameterName == String.Empty)
-        throw new MySqlException("Parameters must be named");
 
       parameter = Add(parameter);
       return IndexOf(parameter);
@@ -424,6 +420,10 @@ namespace MySql.Data.MySqlClient
       if (value == null)
         throw new ArgumentException("The MySqlParameterCollection only accepts non-null MySqlParameter type objects.", "value");
 
+      // if the parameter is unnamed, then assign a default name
+      if (String.IsNullOrEmpty(value.ParameterName))
+        value.ParameterName = String.Format("Parameter{0}", GetNextIndex());
+
       // make sure we don't already have a parameter with this name
       if (IndexOf(value.ParameterName) >= 0)
       {
@@ -456,6 +456,19 @@ namespace MySql.Data.MySqlClient
 
       value.Collection = this;
       return value;
+    }
+
+    private int GetNextIndex()
+    {
+      int index = Count+1;
+
+      while (true)
+      {
+        string name = "Parameter" + index.ToString();
+        if (!indexHashCI.Contains(name)) break;
+        index++;
+      }
+      return index;
     }
 
     private static void AdjustHash(Hashtable hash, string parameterName, int keyIndex, bool addEntry)
