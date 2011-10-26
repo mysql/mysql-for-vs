@@ -33,6 +33,8 @@
 - Added Map Entity Primitive Type SByte missed on ProviderManifest.
 - Added quotation mark to Escape Character on MySQLHelper class (MySQLbug #62585, Oracle bug #13092886).
 - Removed check for hashed passwords when run on Mono.  It supports it now (MySQL bug #62203, Oracle bug #13041618)
+- Modified MySqlParameterCollection to autoassing parameter names if you try to add a parameter with a null
+  or empty name (MySQL bug #62416, Oracle bug #13006969).
 
 Version 6.3.7
 - IPv6 connections are now supported 

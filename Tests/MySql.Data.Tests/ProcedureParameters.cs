@@ -363,5 +363,23 @@ namespace MySql.Data.MySqlClient.Tests
       Assert.AreEqual("2", t3.PossibleValues[1]);
       Assert.AreEqual("3", t3.PossibleValues[2]);
     }
+
+    /// <summary>
+    /// Bug #62416	IndexOutOfRangeException when using return parameter with no name
+    /// </summary>
+    [Test]
+    public void UnnamedReturnValue()
+    {
+      if (Version < new Version(5, 0)) return;
+
+      execSQL("CREATE FUNCTION spTest() RETURNS DATETIME BEGIN RETURN NOW(); END");
+
+      MySqlCommand cmd = new MySqlCommand("spTest", conn);
+      cmd.CommandType = CommandType.StoredProcedure;
+      MySqlParameter p1 = new MySqlParameter("", MySqlDbType.Datetime);
+      p1.Direction = ParameterDirection.ReturnValue;
+      cmd.Parameters.Add(p1);
+      cmd.ExecuteNonQuery();
+    }
   }
 }
