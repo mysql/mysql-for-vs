@@ -25,12 +25,15 @@
 using System.Data.Common;
 using System;
 using System.Reflection;
+using System.Security.Permissions;
+using System.Security;
 
 namespace MySql.Data.MySqlClient
 {
   /// <summary>
   /// DBProviderFactory implementation for MysqlClient.
   /// </summary>
+  [SuppressUnmanagedCodeSecurityAttribute()]
   public sealed class MySqlClientFactory : DbProviderFactory, IServiceProvider
   {
     /// <summary>
@@ -132,6 +135,7 @@ namespace MySql.Data.MySqlClient
       {
         if (mySqlDbProviderServicesInstance == null)
         {
+
           string fullName = Assembly.GetExecutingAssembly().FullName;
           fullName = fullName.Replace("MySql.Data", "MySql.Data.Entity");
           fullName = String.Format("MySql.Data.MySqlClient.MySqlProviderServices, {0}", fullName);
@@ -150,6 +154,8 @@ namespace MySql.Data.MySqlClient
       if (serviceType != DbServicesType) return null;
 
       if (MySqlDbProviderServicesInstance == null) return null;
+
+      MySqlSecurityPermission.CreatePermissionSet().Assert();
 
       return MySqlDbProviderServicesInstance.GetValue(null);
     }

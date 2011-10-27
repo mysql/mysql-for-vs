@@ -107,7 +107,7 @@ namespace MySql.Data.Common
     private int writeTimeout = System.Threading.Timeout.Infinite;
 
     public SharedMemoryStream(string memName)
-    {
+    {      
       memoryName = memName;
     }
 
@@ -117,6 +117,9 @@ namespace MySql.Data.Common
       {
         Debug.Assert(false, "Connection is already open");
       }
+      
+      MySqlSecurityPermission.CreatePermissionSet().Assert(); 
+
       GetConnectNumber(timeOut);
       SetupEvents();
     }
