@@ -35,6 +35,7 @@
 - Removed check for hashed passwords when run on Mono.  It supports it now (MySQL bug #62203, Oracle bug #13041618)
 - Modified MySqlParameterCollection to autoassing parameter names if you try to add a parameter with a null
   or empty name (MySQL bug #62416, Oracle bug #13006969).
+- Sped up MySqlParameterCollection.AddWithValue for cases where large number of parameters are involved (MySQL bug #62563, Oracle bug #13331475)
 
 Version 6.3.7
 - IPv6 connections are now supported 

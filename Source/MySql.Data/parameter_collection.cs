@@ -443,7 +443,7 @@ namespace MySql.Data.MySqlClient
       if (index == -1)
       {
         items.Add(value);
-        index = items.IndexOf(value);
+        index = items.Count - 1;
       }
       else
       {
