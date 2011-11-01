@@ -1,4 +1,4 @@
-﻿// Copyright © 2011, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2004, 2011, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -22,31 +22,41 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using MySql.Data.MySqlClient;
+using NUnit.Framework;
 using System.Security;
 using System.Security.Permissions;
-using System.Net;
+using System.Data;
 
-
-namespace MySql.Data.MySqlClient
+namespace MySql.Data.MySqlClient.Tests
 {
-  public sealed class MySqlSecurityPermission : MarshalByRefObject
+  [TestFixture]
+  class MySqlClientPermissionTests : BaseTest
   {
-    private MySqlSecurityPermission()
+   
+    [Test]
+    public void CanChangeConnectionSettingsOnClientPermission()
     {
-    }
-
-    public static PermissionSet CreatePermissionSet(bool includeReflectionPermission = false)
-    {
+      MySqlConnection dummyconn = new MySqlConnection();
       PermissionSet permissionsSet = new PermissionSet(null);
-      permissionsSet.AddPermission(new SecurityPermission(SecurityPermissionFlag.Execution));
-      permissionsSet.AddPermission(new SocketPermission(PermissionState.Unrestricted));
-      permissionsSet.AddPermission(new SecurityPermission(SecurityPermissionFlag.UnmanagedCode));
-      permissionsSet.AddPermission(new DnsPermission(PermissionState.Unrestricted));
+      MySqlClientPermission permission = new MySqlClientPermission(PermissionState.None); 
 
-      if (includeReflectionPermission) permissionsSet.AddPermission(new ReflectionPermission(PermissionState.Unrestricted));
+      // Allow only server localhost, any database, only with root user     
+      permission.Add("server=localhost;", "database=; user id=root;", KeyRestrictionBehavior.PreventUsage);    
+      permissionsSet.AddPermission(permission);
+      permission.PermitOnly();
 
-      return permissionsSet;
+      try
+      {
+        dummyconn.ConnectionString = "server=localhost; user id=test;";
+        Assert.Fail("This line should not been executed");
+      }
+      catch(Exception)
+      {
+        Assert.True(1==1);
+      }
     }
   }
 }
