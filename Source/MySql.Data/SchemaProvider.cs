@@ -664,22 +664,22 @@ namespace MySql.Data.MySqlClient
     protected virtual DataTable GetCollections()
     {
       object[][] collections = new object[][]
-				{
-					new object[] {"MetaDataCollections", 0, 0},
-					new object[] {"DataSourceInformation", 0, 0},
-					new object[] {"DataTypes", 0, 0},
-					new object[] {"Restrictions", 0, 0},
-					new object[] {"ReservedWords", 0, 0},
-					new object[] {"Databases", 1, 1},
-					new object[] {"Tables", 4, 2},
-					new object[] {"Columns", 4, 4},
-					new object[] {"Users", 1, 1},
-					new object[] {"Foreign Keys", 4, 3},
-					new object[] {"IndexColumns", 5, 4},
-					new object[] {"Indexes", 4, 3},
-					new object[] {"Foreign Key Columns", 4, 3},
-					new object[] {"UDF", 1, 1}
-				};
+        {
+          new object[] {"MetaDataCollections", 0, 0},
+          new object[] {"DataSourceInformation", 0, 0},
+          new object[] {"DataTypes", 0, 0},
+          new object[] {"Restrictions", 0, 0},
+          new object[] {"ReservedWords", 0, 0},
+          new object[] {"Databases", 1, 1},
+          new object[] {"Tables", 4, 2},
+          new object[] {"Columns", 4, 4},
+          new object[] {"Users", 1, 1},
+          new object[] {"Foreign Keys", 4, 3},
+          new object[] {"IndexColumns", 5, 4},
+          new object[] {"Indexes", 4, 3},
+          new object[] {"Foreign Key Columns", 4, 3},
+          new object[] {"UDF", 1, 1}
+        };
 
       DataTable dt = new DataTable("MetaDataCollections");
       dt.Columns.Add(new DataColumn("CollectionName", typeof(string)));
@@ -694,7 +694,7 @@ namespace MySql.Data.MySqlClient
     private DataTable GetDataSourceInformation()
     {
 #if CF
-			throw new NotSupportedException();
+      throw new NotSupportedException();
 #else
       DataTable dt = new DataTable("DataSourceInformation");
       dt.Columns.Add("CompositeIdentifierSeparatorPattern", typeof(string));
@@ -796,36 +796,36 @@ namespace MySql.Data.MySqlClient
     protected virtual DataTable GetRestrictions()
     {
       object[][] restrictions = new object[][]
-				{
-					new object[] {"Users", "Name", "", 0},
-					new object[] {"Databases", "Name", "", 0},
-					new object[] {"Tables", "Database", "", 0},
-					new object[] {"Tables", "Schema", "", 1},
-					new object[] {"Tables", "Table", "", 2},
-					new object[] {"Tables", "TableType", "", 3},
-					new object[] {"Columns", "Database", "", 0},
-					new object[] {"Columns", "Schema", "", 1},
-					new object[] {"Columns", "Table", "", 2},
-					new object[] {"Columns", "Column", "", 3},
-					new object[] {"Indexes", "Database", "", 0},
-					new object[] {"Indexes", "Schema", "", 1},
-					new object[] {"Indexes", "Table", "", 2},
-					new object[] {"Indexes", "Name", "", 3},
-					new object[] {"IndexColumns", "Database", "", 0},
-					new object[] {"IndexColumns", "Schema", "", 1},
-					new object[] {"IndexColumns", "Table", "", 2},
-					new object[] {"IndexColumns", "ConstraintName", "", 3},
-					new object[] {"IndexColumns", "Column", "", 4},
-					new object[] {"Foreign Keys", "Database", "", 0},
-					new object[] {"Foreign Keys", "Schema", "", 1},
-					new object[] {"Foreign Keys", "Table", "", 2},
-					new object[] {"Foreign Keys", "Constraint Name", "", 3},
-					new object[] {"Foreign Key Columns", "Catalog", "", 0},
-					new object[] {"Foreign Key Columns", "Schema", "", 1},
-					new object[] {"Foreign Key Columns", "Table", "", 2},
-					new object[] {"Foreign Key Columns", "Constraint Name", "", 3},
-					new object[] {"UDF", "Name", "", 0}
-				};
+        {
+          new object[] {"Users", "Name", "", 0},
+          new object[] {"Databases", "Name", "", 0},
+          new object[] {"Tables", "Database", "", 0},
+          new object[] {"Tables", "Schema", "", 1},
+          new object[] {"Tables", "Table", "", 2},
+          new object[] {"Tables", "TableType", "", 3},
+          new object[] {"Columns", "Database", "", 0},
+          new object[] {"Columns", "Schema", "", 1},
+          new object[] {"Columns", "Table", "", 2},
+          new object[] {"Columns", "Column", "", 3},
+          new object[] {"Indexes", "Database", "", 0},
+          new object[] {"Indexes", "Schema", "", 1},
+          new object[] {"Indexes", "Table", "", 2},
+          new object[] {"Indexes", "Name", "", 3},
+          new object[] {"IndexColumns", "Database", "", 0},
+          new object[] {"IndexColumns", "Schema", "", 1},
+          new object[] {"IndexColumns", "Table", "", 2},
+          new object[] {"IndexColumns", "ConstraintName", "", 3},
+          new object[] {"IndexColumns", "Column", "", 4},
+          new object[] {"Foreign Keys", "Database", "", 0},
+          new object[] {"Foreign Keys", "Schema", "", 1},
+          new object[] {"Foreign Keys", "Table", "", 2},
+          new object[] {"Foreign Keys", "Constraint Name", "", 3},
+          new object[] {"Foreign Key Columns", "Catalog", "", 0},
+          new object[] {"Foreign Key Columns", "Schema", "", 1},
+          new object[] {"Foreign Key Columns", "Table", "", 2},
+          new object[] {"Foreign Key Columns", "Constraint Name", "", 3},
+          new object[] {"UDF", "Name", "", 0}
+        };
 
       DataTable dt = new DataTable("Restrictions");
       dt.Columns.Add(new DataColumn("CollectionName", typeof(string)));

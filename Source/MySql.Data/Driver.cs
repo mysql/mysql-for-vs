@@ -242,10 +242,10 @@ namespace MySql.Data.MySqlClient
       }
 
 #if AUTHENTICATED
-			string licenseType = serverProps["license"];
-			if (licenseType == null || licenseType.Length == 0 || 
-				licenseType != "commercial") 
-				throw new MySqlException( "This client library licensed only for use with commercially-licensed MySQL servers." );
+      string licenseType = serverProps["license"];
+      if (licenseType == null || licenseType.Length == 0 || 
+        licenseType != "commercial") 
+        throw new MySqlException( "This client library licensed only for use with commercially-licensed MySQL servers." );
 #endif
       // if the user has indicated that we are not to reset
       // the connection and this is not our first time through,
