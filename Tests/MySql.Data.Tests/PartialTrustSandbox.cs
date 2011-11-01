@@ -34,13 +34,10 @@ namespace MySql.Data.MySqlClient.Tests
     public static AppDomain CreatePartialTrustDomain()
     {
       AppDomainSetup setup = new AppDomainSetup() { ApplicationBase = AppDomain.CurrentDomain.BaseDirectory, PrivateBinPath = AppDomain.CurrentDomain.RelativeSearchPath };
-      PermissionSet permissions = new PermissionSet(null);
-      permissions.AddPermission(new SecurityPermission(SecurityPermissionFlag.Execution));
-      permissions.AddPermission(new DnsPermission(PermissionState.Unrestricted));
-      permissions.AddPermission(new SocketPermission(PermissionState.Unrestricted));
-
+      PermissionSet permissions = new PermissionSet(PermissionState.Unrestricted);
       return AppDomain.CreateDomain("Partial Trust Sandbox", AppDomain.CurrentDomain.Evidence, setup, permissions);
     }
+
 
     public MySqlConnection TryOpenConnection(string connectionString)
     {

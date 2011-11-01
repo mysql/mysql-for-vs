@@ -92,11 +92,13 @@
     </Compile>
     <Compile Include="ISSchemaProvider.cs" />
     <Compile Include="MySqlClientFactory.cs" />
+    <Compile Include="MySqlClientPermission.cs" />
     <Compile Include="MySqlConnectionStringBuilder.cs" />
     <Compile Include="MysqlDefs.cs" />
     <Compile Include="MySqlError.cs" />
     <Compile Include="MySqlHelper.cs" />
     <Compile Include="MySqlPacket.cs" />
+    <Compile Include="MySqlClientPermissionAttribute.cs" />
     <Compile Include="MySqlPool.cs" />
     <Compile Include="MySqlPoolManager.cs" />
     <Compile Include="MySqlPromotableTransaction.cs" />

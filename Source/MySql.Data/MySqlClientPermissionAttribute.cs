@@ -1,4 +1,4 @@
-﻿// Copyright © 2011, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2004, 2010, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -22,31 +22,25 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Data.Common;
 using System.Security;
 using System.Security.Permissions;
-using System.Net;
-
 
 namespace MySql.Data.MySqlClient
 {
-  public sealed class MySqlSecurityPermission : MarshalByRefObject
+  [Serializable, AttributeUsage(AttributeTargets.Method | AttributeTargets.Constructor | AttributeTargets.Struct | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = true, Inherited = false)]
+  public sealed class MySqlClientPermissionAttribute : DBDataPermissionAttribute
   {
-    private MySqlSecurityPermission()
-    {
+      // Methods
+      public MySqlClientPermissionAttribute(SecurityAction action) : base(action)
+      {
+      }
+
+      public override IPermission CreatePermission()
+      {
+        return new MySqlClientPermission(this);
+      }
     }
-
-    public static PermissionSet CreatePermissionSet(bool includeReflectionPermission = false)
-    {
-      PermissionSet permissionsSet = new PermissionSet(null);
-      permissionsSet.AddPermission(new SecurityPermission(SecurityPermissionFlag.Execution));
-      permissionsSet.AddPermission(new SocketPermission(PermissionState.Unrestricted));
-      permissionsSet.AddPermission(new SecurityPermission(SecurityPermissionFlag.UnmanagedCode));
-      permissionsSet.AddPermission(new DnsPermission(PermissionState.Unrestricted));
-
-      if (includeReflectionPermission) permissionsSet.AddPermission(new ReflectionPermission(PermissionState.Unrestricted));
-
-      return permissionsSet;
-    }
-  }
 }
