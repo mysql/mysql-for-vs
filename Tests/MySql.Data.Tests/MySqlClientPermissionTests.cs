@@ -35,28 +35,22 @@ namespace MySql.Data.MySqlClient.Tests
   [TestFixture]
   class MySqlClientPermissionTests : BaseTest
   {
-   
+
     [Test]
+    [ExpectedException(typeof(System.Security.SecurityException))]
     public void CanChangeConnectionSettingsOnClientPermission()
     {
       MySqlConnection dummyconn = new MySqlConnection();
-      PermissionSet permissionsSet = new PermissionSet(null);
-      MySqlClientPermission permission = new MySqlClientPermission(PermissionState.None); 
+      PermissionSet permissionsSet = new PermissionSet(PermissionState.None);
+      MySqlClientPermission permission = new MySqlClientPermission(PermissionState.None);
 
       // Allow only server localhost, any database, only with root user     
-      permission.Add("server=localhost;", "database=; user id=root;", KeyRestrictionBehavior.PreventUsage);    
+      permission.Add("server=localhost;", "database=; user id=root;", KeyRestrictionBehavior.PreventUsage);
       permissionsSet.AddPermission(permission);
-      permission.PermitOnly();
-
-      try
-      {
-        dummyconn.ConnectionString = "server=localhost; user id=test;";
-        Assert.Fail("This line should not been executed");
-      }
-      catch(Exception)
-      {
-        Assert.True(1==1);
-      }
-    }
+      permissionsSet.PermitOnly();
+      dummyconn.ConnectionString = "server=localhost; user id=test;";
+      dummyconn.Open();
+      if (dummyconn.State == ConnectionState.Open) dummyconn.Close();
+    }    
   }
 }
