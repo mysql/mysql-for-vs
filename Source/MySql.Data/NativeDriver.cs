@@ -191,12 +191,15 @@ namespace MySql.Data.MySqlClient
         }
 #endif
       }
+      catch (System.Security.SecurityException)
+      {
+        throw;
+      }
       catch (Exception ex)
       {
         throw new MySqlException(Resources.UnableToConnectToHost,
             (int)MySqlErrorCode.UnableToConnectToHost, ex);
       }
-
       if (baseStream == null)
         throw new MySqlException(Resources.UnableToConnectToHost,
             (int)MySqlErrorCode.UnableToConnectToHost);
