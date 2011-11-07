@@ -27,23 +27,26 @@ using System.Security;
 using System.Security.Permissions;
 using System.Net;
 
-namespace MySql.Data.MySqlClient.Tests
+
+namespace MySql.Data.MySqlClient
 {
-  public class PartialTrustSandbox : MarshalByRefObject
+  public sealed class MySqlSecurityPermission : MarshalByRefObject
   {
-    public static AppDomain CreatePartialTrustDomain()
+    private MySqlSecurityPermission()
     {
-      AppDomainSetup setup = new AppDomainSetup() { ApplicationBase = AppDomain.CurrentDomain.BaseDirectory, PrivateBinPath = AppDomain.CurrentDomain.RelativeSearchPath };
-      PermissionSet permissions = new PermissionSet(PermissionState.Unrestricted);
-      return AppDomain.CreateDomain("Partial Trust Sandbox", AppDomain.CurrentDomain.Evidence, setup, permissions);
     }
 
-
-    public MySqlConnection TryOpenConnection(string connectionString)
+    public static PermissionSet CreatePermissionSet(bool includeReflectionPermission = false)
     {
-      MySqlConnection connection = new MySqlConnection(connectionString);
-      connection.Open();
-      return connection;
+      PermissionSet permissionsSet = new PermissionSet(null);
+      permissionsSet.AddPermission(new SecurityPermission(SecurityPermissionFlag.Execution));
+      permissionsSet.AddPermission(new SocketPermission(PermissionState.Unrestricted));
+      permissionsSet.AddPermission(new SecurityPermission(SecurityPermissionFlag.UnmanagedCode));
+      permissionsSet.AddPermission(new DnsPermission(PermissionState.Unrestricted));
+
+      if (includeReflectionPermission) permissionsSet.AddPermission(new ReflectionPermission(PermissionState.Unrestricted));
+
+      return permissionsSet;
     }
   }
 }

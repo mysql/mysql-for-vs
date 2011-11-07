@@ -1,4 +1,4 @@
-﻿// Copyright © 2011, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2004, 2010, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -22,28 +22,25 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Data.Common;
 using System.Security;
 using System.Security.Permissions;
-using System.Net;
 
-namespace MySql.Data.MySqlClient.Tests
+namespace MySql.Data.MySqlClient
 {
-  public class PartialTrustSandbox : MarshalByRefObject
+  [Serializable, AttributeUsage(AttributeTargets.Method | AttributeTargets.Constructor | AttributeTargets.Struct | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = true, Inherited = false)]
+  public sealed class MySqlClientPermissionAttribute : DBDataPermissionAttribute
   {
-    public static AppDomain CreatePartialTrustDomain()
-    {
-      AppDomainSetup setup = new AppDomainSetup() { ApplicationBase = AppDomain.CurrentDomain.BaseDirectory, PrivateBinPath = AppDomain.CurrentDomain.RelativeSearchPath };
-      PermissionSet permissions = new PermissionSet(PermissionState.Unrestricted);
-      return AppDomain.CreateDomain("Partial Trust Sandbox", AppDomain.CurrentDomain.Evidence, setup, permissions);
-    }
+      // Methods
+      public MySqlClientPermissionAttribute(SecurityAction action) : base(action)
+      {
+      }
 
-
-    public MySqlConnection TryOpenConnection(string connectionString)
-    {
-      MySqlConnection connection = new MySqlConnection(connectionString);
-      connection.Open();
-      return connection;
+      public override IPermission CreatePermission()
+      {
+        return new MySqlClientPermission(this);
+      }
     }
-  }
 }

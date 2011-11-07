@@ -29,6 +29,8 @@ using System.Threading;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
+using System.Security.Permissions;
+using System.Security;
 
 
 
@@ -37,6 +39,7 @@ namespace MySql.Data.Common
   /// <summary>
   /// Summary description for API.
   /// </summary>
+  [SuppressUnmanagedCodeSecurity()]
   internal class NamedPipeStream : Stream
   {
     SafeFileHandle handle;
@@ -57,13 +60,22 @@ namespace MySql.Data.Common
       if (!ok)
         throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error());
     }
+
     public void Open(string path, FileAccess mode, uint timeout)
     {
       IntPtr nativeHandle;
+
       for (; ; )
       {
+        NativeMethods.SecurityAttributes security = new NativeMethods.SecurityAttributes();
+        security.inheritHandle = true;
+        security.Length = Marshal.SizeOf(security);
+
+        MySqlSecurityPermission.CreatePermissionSet().Assert(); 
+
         nativeHandle = NativeMethods.CreateFile(path, NativeMethods.GENERIC_READ | NativeMethods.GENERIC_WRITE,
-                     0, null, NativeMethods.OPEN_EXISTING, NativeMethods.FILE_FLAG_OVERLAPPED, 0);
+                     0, security, NativeMethods.OPEN_EXISTING, NativeMethods.FILE_FLAG_OVERLAPPED, 0);
+
         if (nativeHandle != IntPtr.Zero)
           break;
 

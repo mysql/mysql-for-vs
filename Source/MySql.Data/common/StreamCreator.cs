@@ -28,6 +28,8 @@ using System.Reflection;
 using System.Diagnostics;
 using MySql.Data.MySqlClient.Properties;
 using System.Runtime.InteropServices;
+using MySql.Data.MySqlClient;
+
 
 namespace MySql.Data.Common
 {
@@ -189,8 +191,11 @@ namespace MySql.Data.Common
         endPoint = CreateUnixEndPoint(hostList);
       else
 #endif
-        endPoint = new IPEndPoint(ip, (int)port);
+      
+      endPoint = new IPEndPoint(ip, (int)port);
 
+      MySqlSecurityPermission.CreatePermissionSet().Assert();
+      
       Socket socket = unix ?
           new Socket(AddressFamily.Unix, SocketType.Stream, ProtocolType.IP) :
           new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
@@ -198,6 +203,8 @@ namespace MySql.Data.Common
       {
         SetKeepAlive(socket, keepalive);
       }
+
+
       IAsyncResult ias = socket.BeginConnect(endPoint, null, null);
       if (!ias.AsyncWaitHandle.WaitOne((int)timeOut * 1000, false))
       {
