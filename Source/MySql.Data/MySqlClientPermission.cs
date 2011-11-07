@@ -37,46 +37,46 @@ namespace MySql.Data.MySqlClient
 
   #region Contructors
 
-    public MySqlClientPermission(PermissionState permissionState)
-      : base(permissionState)
-    {
-    }
+  public MySqlClientPermission(PermissionState permissionState)
+    : base(permissionState)
+  {
+  }
 
-    private MySqlClientPermission(MySqlClientPermission permission):base(permission)
-    { 
-    }
-   
-    internal MySqlClientPermission(MySqlClientPermissionAttribute permissionAttribute):base(permissionAttribute)
-    { 
-    }
+  private MySqlClientPermission(MySqlClientPermission permission):base(permission)
+  { 
+  }
 
-		internal MySqlClientPermission (DBDataPermission permission)
-			: base (permission)
-		{
-		}
+  internal MySqlClientPermission(MySqlClientPermissionAttribute permissionAttribute):base(permissionAttribute)
+  { 
+  }
+
+	internal MySqlClientPermission (DBDataPermission permission)
+		: base (permission)
+	{
+	}
 
   #endregion
    
   #region Methods
-
+  
   /// <summary>
   /// Adds a new connection string with set of restricted keywords to the MySqlClientPermission object 
   /// </summary>
   ///<param name="connectionString">Settings to be used for the connection</param>
   ///<param name="restrictions">Keywords to define the restrictions</param>
-    ///<param name="behavior">KeyRestrictionBehavior to be used</param>
-    public override void Add(string connectionString, string restrictions, KeyRestrictionBehavior behavior)
+  ///<param name="behavior">KeyRestrictionBehavior to be used</param>
+  public override void Add(string connectionString, string restrictions, KeyRestrictionBehavior behavior)
   {
-      base.Add(connectionString, restrictions, behavior);    
+    base.Add(connectionString, restrictions, behavior);
   }
-
+  
   /// <summary>
   /// Returns MySqlClientPermission as an IPermission
   /// </summary>
   /// <returns></returns>
   public override IPermission Copy()
   {
-      return new MySqlClientPermission(this);
+    return new MySqlClientPermission(this);
   }
 
   #endregion
