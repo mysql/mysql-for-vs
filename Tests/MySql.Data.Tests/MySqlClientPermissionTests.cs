@@ -1,4 +1,4 @@
-﻿// Copyright © 2011, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2004, 2011, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -22,28 +22,35 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using MySql.Data.MySqlClient;
+using NUnit.Framework;
 using System.Security;
 using System.Security.Permissions;
-using System.Net;
+using System.Data;
 
 namespace MySql.Data.MySqlClient.Tests
 {
-  public class PartialTrustSandbox : MarshalByRefObject
+  [TestFixture]
+  class MySqlClientPermissionTests : BaseTest
   {
-    public static AppDomain CreatePartialTrustDomain()
-    {
-      AppDomainSetup setup = new AppDomainSetup() { ApplicationBase = AppDomain.CurrentDomain.BaseDirectory, PrivateBinPath = AppDomain.CurrentDomain.RelativeSearchPath };
-      PermissionSet permissions = new PermissionSet(PermissionState.Unrestricted);
-      return AppDomain.CreateDomain("Partial Trust Sandbox", AppDomain.CurrentDomain.Evidence, setup, permissions);
-    }
 
-
-    public MySqlConnection TryOpenConnection(string connectionString)
+    [Test]
+    [ExpectedException(typeof(System.Security.SecurityException))]
+    public void CanChangeConnectionSettingsOnClientPermission()
     {
-      MySqlConnection connection = new MySqlConnection(connectionString);
-      connection.Open();
-      return connection;
-    }
+      MySqlConnection dummyconn = new MySqlConnection();
+      PermissionSet permissionsSet = new PermissionSet(PermissionState.None);
+      MySqlClientPermission permission = new MySqlClientPermission(PermissionState.None);
+
+      // Allow only server localhost, any database, only with root user     
+      permission.Add("server=localhost;", "database=; user id=root;", KeyRestrictionBehavior.PreventUsage);
+      permissionsSet.AddPermission(permission);
+      permissionsSet.PermitOnly();
+      dummyconn.ConnectionString = "server=localhost; user id=test;";
+      dummyconn.Open();
+      if (dummyconn.State == ConnectionState.Open) dummyconn.Close();
+    }    
   }
 }

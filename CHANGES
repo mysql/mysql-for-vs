@@ -35,6 +35,7 @@
 - Modified MySqlParameterCollection to autoassing parameter names if you try to add a parameter with a null
   or empty name (MySQL bug #62416, Oracle bug #13006969).
 - Sped up MySqlParameterCollection.AddWithValue for cases where large number of parameters are involved (MySQL bug #62563, Oracle bug #13331475)
+- Improve CAS to enable medium/partial trust scenarios (Added MySqlClientPermissions and MySqlSecurityPermission classes).
 
 6.4.3 (ga)
 - Modified SqlFragment.QuoteIdentifier to add MySQL quotes around identifiers (MySQL bug #61635, Oracle bug #12707285).
