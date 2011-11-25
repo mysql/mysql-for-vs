@@ -35,7 +35,9 @@ using System.Security.Permissions;
 
 namespace MySql.Data.MySqlClient
 {
- [SuppressUnmanagedCodeSecurityAttribute()]
+#if !CF 
+  [SuppressUnmanagedCodeSecurityAttribute()]
+#endif
   internal class SSPI
   {
     const int SEC_E_OK = 0;
@@ -167,8 +169,9 @@ namespace MySql.Data.MySqlClient
       byte[] serverBlob = null;
       SECURITY_INTEGER lifetime = new SECURITY_INTEGER(0);
       int ss;
-
-      MySqlSecurityPermission.CreatePermissionSet().Assert(); 
+#if !CF 
+      MySqlSecurityPermission.CreatePermissionSet(false).Assert(); 
+#endif
 
       ss = AcquireCredentialsHandle(null, "Negotiate", SECPKG_CRED_OUTBOUND,
             IntPtr.Zero, IntPtr.Zero, 0, IntPtr.Zero, ref outboundCredentials,

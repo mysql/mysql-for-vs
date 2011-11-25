@@ -104,15 +104,18 @@
     </Compile>
     <Compile Include="..\..\..\Source\MySql.Data\ISSchemaProvider.cs" />
     <Compile Include="..\..\..\Source\MySql.Data\MySqlClientFactory.cs" />
+    <Compile Include="..\..\..\Source\MySql.Data\MySqlClientPermission.cs" />
+    <Compile Include="..\..\..\Source\MySql.Data\MySqlClientPermissionAttribute.cs" />
     <Compile Include="..\..\..\Source\MySql.Data\MySqlConnectionStringBuilder.cs" />
     <Compile Include="..\..\..\Source\MySql.Data\MysqlDefs.cs" />
     <Compile Include="..\..\..\Source\MySql.Data\MySqlError.cs" />
     <Compile Include="..\..\..\Source\MySql.Data\MySqlHelper.cs" />
     <Compile Include="..\..\..\Source\MySql.Data\MySqlPool.cs" />
     <Compile Include="..\..\..\Source\MySql.Data\MySqlPoolManager.cs" />
+    <Compile Include="..\..\..\Source\MySql.Data\MySqlSecurityPermission.cs" />
     <Compile Include="..\..\..\Source\MySql.Data\MySqlPromotableTransaction.cs" />
     <Compile Include="..\..\..\Source\MySql.Data\MySqlStream.cs" />
-    <Compile Include="..\..\..\Source\MySql.Data\NativeDriver.cs" />
+    <Compile Include="..\..\..\Source\MySql.Data\NativeDriver.cs" />	
     <Compile Include="..\..\..\Source\MySql.Data\parameter.cs" />
     <Compile Include="..\..\..\Source\MySql.Data\parameter_collection.cs" />
     <Compile Include="..\..\..\Source\MySql.Data\PerformanceMonitor.cs" />

@@ -33,7 +33,9 @@ namespace MySql.Data.MySqlClient
   /// <summary>
   /// DBProviderFactory implementation for MysqlClient.
   /// </summary>
+#if !CF  
   [SuppressUnmanagedCodeSecurity()]
+#endif
   public sealed class MySqlClientFactory : DbProviderFactory, IServiceProvider
   {
     /// <summary>
@@ -155,7 +157,7 @@ namespace MySql.Data.MySqlClient
 
       if (MySqlDbProviderServicesInstance == null) return null;
 
-      MySqlSecurityPermission.CreatePermissionSet().Assert();
+      MySqlSecurityPermission.CreatePermissionSet(false).Assert();
 
       return MySqlDbProviderServicesInstance.GetValue(null);
     }

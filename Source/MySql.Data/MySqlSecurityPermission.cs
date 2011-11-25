@@ -36,7 +36,7 @@ namespace MySql.Data.MySqlClient
     {
     }
 
-    public static PermissionSet CreatePermissionSet(bool includeReflectionPermission = false)
+    public static PermissionSet CreatePermissionSet(bool includeReflectionPermission)
     {
       PermissionSet permissionsSet = new PermissionSet(null);
       permissionsSet.AddPermission(new SecurityPermission(SecurityPermissionFlag.Execution));

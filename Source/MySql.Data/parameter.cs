@@ -585,8 +585,9 @@ namespace MySql.Data.MySqlClient
         DbType = DbType.Byte;
       else
       {        
-        
-        MySqlSecurityPermission.CreatePermissionSet(includeReflectionPermission: true).Assert(); 
+#if !CF        
+        MySqlSecurityPermission.CreatePermissionSet(true).Assert(); 
+#endif
         TypeCode tc = Type.GetTypeCode(paramValue.GetType());
         switch (tc)
         {

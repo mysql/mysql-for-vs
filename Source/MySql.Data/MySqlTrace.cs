@@ -40,7 +40,7 @@ namespace MySql.Data.MySqlClient
     static MySqlTrace()
     {
 
-      MySqlSecurityPermission.CreatePermissionSet(includeReflectionPermission: true).Assert();
+      MySqlSecurityPermission.CreatePermissionSet(true).Assert();
 
       foreach (TraceListener listener in source.Listeners)
       {
