@@ -118,7 +118,7 @@ namespace MySql.Data.Common
         Debug.Assert(false, "Connection is already open");
       }
       
-      MySqlSecurityPermission.CreatePermissionSet().Assert(); 
+      MySqlSecurityPermission.CreatePermissionSet(false).Assert(); 
 
       GetConnectNumber(timeOut);
       SetupEvents();

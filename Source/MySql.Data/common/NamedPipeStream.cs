@@ -39,7 +39,9 @@ namespace MySql.Data.Common
   /// <summary>
   /// Summary description for API.
   /// </summary>
+#if !CF
   [SuppressUnmanagedCodeSecurity()]
+#endif
   internal class NamedPipeStream : Stream
   {
     SafeFileHandle handle;
@@ -71,7 +73,7 @@ namespace MySql.Data.Common
         security.inheritHandle = true;
         security.Length = Marshal.SizeOf(security);
 
-        MySqlSecurityPermission.CreatePermissionSet().Assert(); 
+        MySqlSecurityPermission.CreatePermissionSet(false).Assert(); 
 
         nativeHandle = NativeMethods.CreateFile(path, NativeMethods.GENERIC_READ | NativeMethods.GENERIC_WRITE,
                      0, security, NativeMethods.OPEN_EXISTING, NativeMethods.FILE_FLAG_OVERLAPPED, 0);
