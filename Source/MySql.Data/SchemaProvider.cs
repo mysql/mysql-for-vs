@@ -151,7 +151,7 @@ namespace MySql.Data.MySqlClient
       {
         object defaultValue = row["COLUMN_DEFAULT"];
         if (MetaData.IsTextType(row["DATA_TYPE"].ToString()))
-          row["COLUMN_DEFAULT"] = String.Format("'{0}'", defaultValue);
+          row["COLUMN_DEFAULT"] = String.Format("{0}", defaultValue);
       }
     }
 
