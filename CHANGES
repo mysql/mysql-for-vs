@@ -37,6 +37,7 @@
 - Sped up MySqlParameterCollection.AddWithValue for cases where large number of parameters are involved (MySQL bug #62563, Oracle bug #13331475
 - Improve CAS to enable medium/partial trust scenarios (Added MySqlClientPermissions and MySqlSecurityPermission classes).
 - Fix on Bug Default Value CURRENT_TIMESTAMP throws err msg but still is saved (Oracle bug #13429150).
+- Fix on Bug Varchar and char type fields have quotation marks in default value when editing definition in VS designer (Oracle bug #13442506).
 
 6.4.3 (ga)
 - Modified SqlFragment.QuoteIdentifier to add MySQL quotes around identifiers (MySQL bug #61635, Oracle bug #12707285).
