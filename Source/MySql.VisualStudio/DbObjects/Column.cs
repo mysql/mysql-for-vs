@@ -273,8 +273,16 @@ namespace MySql.Data.VisualStudio.DbObjects
         props.AppendFormat(" CHARACTER SET '{0}'", CharacterSet);
       if (!String.IsNullOrEmpty(Collation))
         props.AppendFormat(" COLLATE '{0}'", Collation);
-      if (!String.IsNullOrEmpty(DefaultValue))
+      
+      if (!String.IsNullOrEmpty(DefaultValue) && DataType.IndexOf("char") >= 0)
+      {
         props.AppendFormat(" DEFAULT '{0}'", DefaultValue);
+      }
+      else
+      {
+        props.AppendFormat(" DEFAULT {0}", DefaultValue);
+      }
+      
       if (!String.IsNullOrEmpty(Comment))
         props.AppendFormat(" COMMENT '{0}'", Comment);
 
