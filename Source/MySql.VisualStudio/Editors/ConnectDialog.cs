@@ -141,5 +141,14 @@ namespace MySql.Data.VisualStudio
       connectionStringBuilder["database"] = database.Text.Trim();
     }
 
+    private void connectButton_Click(object sender, EventArgs e)
+    {
+      // Ensure all data is populated into the connection string builder
+      serverName_Leave(serverName, EventArgs.Empty);
+      userId_Leave(serverName, EventArgs.Empty);
+      password_Leave(serverName, EventArgs.Empty);
+      database_Leave(serverName, EventArgs.Empty);
+    }
+
   }
 }
