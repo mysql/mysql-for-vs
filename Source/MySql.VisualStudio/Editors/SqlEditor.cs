@@ -30,6 +30,7 @@ using System.Windows.Forms;
 using Microsoft.VisualStudio.Shell;
 using System.Data.Common;
 using MySql.Data.MySqlClient;
+using MySql.Data.VisualStudio.Properties;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 using System.Globalization;
 using System.IO;
@@ -97,8 +98,15 @@ namespace MySql.Data.VisualStudio.Editors
       d.Connection = connection;
       DialogResult r = d.ShowDialog();
       if (r == DialogResult.Cancel) return;
-      connection = d.Connection;
-      UpdateButtons();
+      try
+      {
+        connection = d.Connection;
+        UpdateButtons();
+      }
+      catch (MySqlException)
+      {
+        MessageBox.Show( Resources.ErrorOnConnection, Resources.ErrorCaption, MessageBoxButtons.OK);
+      }
     }
 
     private void runSqlButton_Click(object sender, EventArgs e)
