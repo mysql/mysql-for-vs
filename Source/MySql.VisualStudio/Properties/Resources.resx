@@ -1101,4 +1101,11 @@ Would you like to create it?</value>
   <data name="sql_editor_executionplan" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\sql_editor_executionplan.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="ErrorCaption" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="ErrorOnConnection" xml:space="preserve">
+    <value>Error establishing the database connection.
+Check that the server is running, the database exists and the user Error establishing the database connection. Check that the server is running, the database exists and the user credentials are valid.</value>
+  </data>
 </root>
