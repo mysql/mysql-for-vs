@@ -38,6 +38,7 @@
 - Sped up MySqlParameterCollection.AddWithValue for cases where large number of parameters are involved (MySQL bug #62563, Oracle bug #13331475)
 - Fix on Bug Default Value CURRENT_TIMESTAMP throws err msg but still is saved (Oracle bug #13429150).
 - Fix on Bug Varchar and char type fields have quotation marks in default value when editing definition in VS designer (Oracle bug #13442506).
+- Fix for bug on Create Table via Server Explorer. The columns properties are now added in the correct order.(Oracle db Bug # 13475830).
 
 Version 6.3.7
 - IPv6 connections are now supported 
