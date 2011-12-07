@@ -272,24 +272,23 @@ namespace MySql.Data.VisualStudio.DbObjects
       if (!String.IsNullOrEmpty(CharacterSet))
         props.AppendFormat(" CHARACTER SET '{0}'", CharacterSet);
       if (!String.IsNullOrEmpty(Collation))
-        props.AppendFormat(" COLLATE '{0}'", Collation);
-      
-      if (!String.IsNullOrEmpty(DefaultValue) && DataType.IndexOf("char") >= 0)
-      {
-        props.AppendFormat(" DEFAULT '{0}'", DefaultValue);
-      }
-      else
-      {
-        props.AppendFormat(" DEFAULT {0}", DefaultValue);
-      }
-      
+        props.AppendFormat(" COLLATE '{0}'", Collation);         
+        
       if (!String.IsNullOrEmpty(Comment))
         props.AppendFormat(" COMMENT '{0}'", Comment);
 
-      if (!AllowNull) props.Append(" NOT NULL");
-      if (IsUnsigned) props.Append(" UNSIGNED");
       if (IsZerofill) props.Append(" ZEROFILL");
+      if (IsUnsigned) props.Append(" UNSIGNED");
+      if (!AllowNull) props.Append(" NOT NULL");      
       if (AutoIncrement) props.Append(" AUTO_INCREMENT");
+
+      if (!String.IsNullOrEmpty(DefaultValue))
+      {
+        if (DataType.IndexOf("char") >= 0)
+          props.AppendFormat(" DEFAULT '{0}'", DefaultValue);
+        else
+          props.AppendFormat(" DEFAULT {0}", DefaultValue);
+      }
 
       if (newTable)
         return String.Format("`{0}`{1}", ColumnName, props.ToString());

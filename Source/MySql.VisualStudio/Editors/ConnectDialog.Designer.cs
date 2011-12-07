@@ -72,8 +72,8 @@
       this.database.Name = "database";
       this.database.Size = new System.Drawing.Size(282, 21);
       this.database.TabIndex = 9;
-      this.database.Leave += new System.EventHandler(this.database_Leave);
       this.database.DropDown += new System.EventHandler(this.database_DropDown);
+      this.database.Leave += new System.EventHandler(this.database_Leave);
       // 
       // label5
       // 
@@ -88,6 +88,7 @@
       // 
       this.password.Location = new System.Drawing.Point(145, 68);
       this.password.Name = "password";
+      this.password.PasswordChar = '*';
       this.password.Size = new System.Drawing.Size(282, 20);
       this.password.TabIndex = 5;
       this.password.Leave += new System.EventHandler(this.password_Leave);
@@ -139,6 +140,7 @@
       this.connectButton.TabIndex = 4;
       this.connectButton.Text = "Connect";
       this.connectButton.UseVisualStyleBackColor = true;
+      this.connectButton.Click += new System.EventHandler(this.connectButton_Click);
       // 
       // pictureBox1
       // 
@@ -163,8 +165,8 @@
       // 
       // label4
       // 
-      this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                  | System.Windows.Forms.AnchorStyles.Right)));
+      this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.label4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
       this.label4.Location = new System.Drawing.Point(17, 233);
       this.label4.Name = "label4";
