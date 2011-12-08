@@ -52,8 +52,17 @@ namespace MySql.Data.VisualStudio
     public abstract string GetSaveSql();
     protected abstract string GetCurrentName();
 
+    public event EventHandler Saving;
+
+    protected void OnSaving()
+    {
+      if (Saving != null)
+        Saving(this, EventArgs.Empty);
+    }
+
     protected virtual bool Save()
     {
+      OnSaving();
       ExecuteSQL(GetSaveSql());
       return true;
     }
