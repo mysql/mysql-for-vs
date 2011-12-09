@@ -43,6 +43,8 @@
 - Fix for Cannot create a foreign key that references the same table (Oracle bug #13481340).
 - Fixed installer to install for all users (per machine installation) (Oracle bug #13447941) 
 - Fix for cannot delete a foreign key (Oracle bug #13481362).
+- Fix for Non default options for On update & on cascade for foreign keys, don't work (Oracle bug #13481348).
+
 
 Version 6.3.7
 - IPv6 connections are now supported 
