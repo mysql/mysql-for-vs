@@ -3,7 +3,7 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Product Id="*" Name="$(var.ProductName)" Manufacturer="Oracle" Version="$(var.Version)"
            UpgradeCode="7454FE1E-BB5B-49DF-BBC7-27B15FB13B7E" Language="1033">
-    <Package Compressed="yes" InstallerVersion="200"/>
+    <Package Compressed="yes" InstallerVersion="200" InstallScope="perMachine"/>
 
     <Upgrade Id="7454FE1E-BB5B-49DF-BBC7-27B15FB13B7E">
       <UpgradeVersion OnlyDetect="yes" Minimum="$(var.Version)" Property="NEWERVERSIONDETECTED" IncludeMinimum="no" />
