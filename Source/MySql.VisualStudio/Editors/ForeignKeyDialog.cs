@@ -87,7 +87,8 @@ namespace MySql.Data.VisualStudio.Editors
 
     private void deleteButton_Click(object sender, EventArgs e)
     {
-      foreignKeyBindingSource.RemoveCurrent();
+      int index = fkList.SelectedIndex;      
+      tableNode.Table.ForeignKeys.Delete(index);
     }
 
     private void refTable_SelectedIndexChanged(object sender, EventArgs e)

@@ -42,6 +42,7 @@
 - Fix for error when creating a table in table designer (Oracle bug #13477805).
 - Fix for Cannot create a foreign key that references the same table (Oracle bug #13481340).
 - Fixed installer to install for all users (per machine installation) (Oracle bug #13447941) 
+- Fix for cannot delete a foreign key (Oracle bug #13481362).
 
 Version 6.3.7
 - IPv6 connections are now supported 
