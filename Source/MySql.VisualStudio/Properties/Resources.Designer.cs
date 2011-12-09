@@ -2546,6 +2546,15 @@ namespace MySql.Data.VisualStudio.Properties {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot use the same column when the referenced table is the same as the source table..
+        /// </summary>
+        public static string FKSameColumn {
+            get {
+                return ResourceManager.GetString("FKSameColumn", resourceCulture);
+            }
+        }
+        
         public static System.Drawing.Bitmap Key {
             get {
                 object obj = ResourceManager.GetObject("Key", resourceCulture);
