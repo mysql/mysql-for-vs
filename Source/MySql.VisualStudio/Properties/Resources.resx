@@ -1108,4 +1108,7 @@ Would you like to create it?</value>
     <value>Error establishing the database connection.
 Check that the server is running, the database exists and the user Error establishing the database connection. Check that the server is running, the database exists and the user credentials are valid.</value>
   </data>
+  <data name="FKSameColumn" xml:space="preserve">
+    <value>Cannot use the same column when the referenced table is the same as the source table.</value>
+  </data>
 </root>

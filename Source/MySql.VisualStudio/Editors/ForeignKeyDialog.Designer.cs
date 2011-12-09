@@ -146,11 +146,11 @@ namespace MySql.Data.VisualStudio.Editors
       this.columnGrid.Size = new System.Drawing.Size(425, 177);
       this.columnGrid.TabIndex = 10;
       this.columnGrid.VirtualMode = true;
-      this.columnGrid.RowValidating += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.columnGrid_RowValidating);
-      this.columnGrid.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.columnGrid_CellValueNeeded);
       this.columnGrid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.columnGrid_CellValidating);
+      this.columnGrid.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.columnGrid_CellValueNeeded);
       this.columnGrid.CellValuePushed += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.columnGrid_CellValuePushed);
       this.columnGrid.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.columnGrid_EditingControlShowing);
+      this.columnGrid.RowValidating += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.columnGrid_RowValidating);
       // 
       // colGridColumn
       // 
