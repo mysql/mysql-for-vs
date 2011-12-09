@@ -48,9 +48,8 @@ namespace MySql.Data.VisualStudio.Editors
 
       // create a list of all tables in this database
       DataTable dt = tableNode.GetDataTable(
-          String.Format(@"SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES 
-                  WHERE TABLE_SCHEMA = '{0}' AND TABLE_NAME <> '{1}'",
-            tableNode.Database, tableNode.Table.Name));
+        String.Format(@"SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES 
+          WHERE TABLE_SCHEMA = '{0}'", tableNode.Database ));
       List<string> tables = new List<string>();
       foreach (DataRow row in dt.Rows)
         tables.Add(row[0].ToString());
@@ -228,6 +227,14 @@ namespace MySql.Data.VisualStudio.Editors
         e.Cancel = true;
         return;
       }
+      else if( 
+        ( refTable.SelectedValue == tableNode.Table.Name ) &&
+        ( parent == child ) )
+      {
+        MessageBox.Show(Resources.FKSameColumn, null, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        e.Cancel = true;
+        return;
+      }
       FKColumnPair pair = fkColumnsBindingSource.Current as FKColumnPair;
       pair.Column = parent;
       pair.ReferencedColumn = child;
@@ -269,6 +276,6 @@ namespace MySql.Data.VisualStudio.Editors
           fk.ReferencedColumn = (string)e.Value;
           break;
       }
-    }
+    }    
   }
 }
