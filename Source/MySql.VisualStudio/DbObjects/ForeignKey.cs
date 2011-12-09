@@ -58,11 +58,9 @@ namespace MySql.Data.VisualStudio.DbObjects
       if (keyData["MATCH_OPTION"] != DBNull.Value)
         Match = (MatchOption)Enum.Parse(typeof(MatchOption), keyData["MATCH_OPTION"].ToString(), true);
       if (keyData["UPDATE_RULE"] != DBNull.Value)
-        UpdateAction = (ReferenceOption)Enum.Parse(typeof(ReferenceOption),
-            keyData["UPDATE_RULE"].ToString(), true);
+        UpdateAction = GetActionForSql(keyData["UPDATE_RULE"].ToString());
       if (keyData["DELETE_RULE"] != DBNull.Value)
-        DeleteAction = (ReferenceOption)Enum.Parse(typeof(ReferenceOption),
-            keyData["DELETE_RULE"].ToString(), true);
+        DeleteAction = GetActionForSql(keyData["DELETE_RULE"].ToString());
 
       string[] restrictions = new string[4] { null, Table.OwningNode.Database, Table.Name, Name };
       DataTable cols = Table.OwningNode.GetSchema("Foreign Key Columns", restrictions);
@@ -73,7 +71,7 @@ namespace MySql.Data.VisualStudio.DbObjects
         colPair.ReferencedColumn = row["REFERENCED_COLUMN_NAME"].ToString();
         Columns.Add(colPair);
       }
-    }
+    }    
 
     private string _name;
     public string Name
@@ -226,8 +224,52 @@ namespace MySql.Data.VisualStudio.DbObjects
         delimiter = ", ";
       }
       sql.Append(")");
+      sql.AppendFormat(" ON DELETE {0}", GetSqlForAction( DeleteAction ));
+      sql.AppendFormat(" ON UPDATE {0}", GetSqlForAction(UpdateAction));
 
       return sql.ToString();
+    }
+
+    private ReferenceOption GetActionForSql(string sqlAction)
+    {
+      ReferenceOption result = ReferenceOption.Restrict;
+      switch (sqlAction.ToUpper())
+      {
+        case "CASCADE":
+          result = ReferenceOption.Cascade;
+          break;
+        case "RESTRICT":
+          result = ReferenceOption.Restrict;
+          break;
+        case "NO ACTION":
+          result = ReferenceOption.NoAction;
+          break;
+        case "SET NULL":
+          result = ReferenceOption.SetNull;
+          break;
+      }
+      return result;
+    }
+
+    private string GetSqlForAction( ReferenceOption opt )
+    {
+      string result = "";
+      switch (opt)
+      {
+        case ReferenceOption.Cascade:
+          result = "CASCADE";
+          break;
+        case ReferenceOption.Restrict:
+          result = "RESTRICT";
+          break;
+        case ReferenceOption.NoAction:
+          result = "NO ACTION";
+          break;
+        case ReferenceOption.SetNull:
+          result = "SET NULL";
+          break;
+      }
+      return result;
     }
 
     bool ITablePart.IsNew()
