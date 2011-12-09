@@ -4,6 +4,7 @@
 - Fix for error when creating a table in table designer (Oracle bug #13477805).
 - Fixed installer to install for all users (per machine installation) (Oracle bug #13447941) 
 - Fix for cannot delete a foreign key (Oracle bug #13481362).
+- Fix for Non default options for On update & on cascade for foreign keys, don't work (Oracle bug #13481348).
 
 6.4.4
 - Configured DataGridView to use VirtualMode and added some required events, so it can save back 
