@@ -242,7 +242,7 @@ namespace MySql.Data.MySqlClient.Tests
       Assert.AreEqual("YES", dt.Rows[4]["IS_NULLABLE"]);
       Assert.AreEqual("VARCHAR", dt.Rows[4]["DATA_TYPE"].ToString().ToUpper());
       Assert.AreEqual("VARCHAR(20)", dt.Rows[4]["COLUMN_TYPE"].ToString().ToUpper());
-      Assert.AreEqual("'BOO'", dt.Rows[4]["COLUMN_DEFAULT"].ToString().ToUpper());
+      Assert.AreEqual("BOO", dt.Rows[4]["COLUMN_DEFAULT"].ToString().ToUpper());
     }
 
     /// <summary> 
