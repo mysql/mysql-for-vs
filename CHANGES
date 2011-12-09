@@ -41,6 +41,7 @@
 - Fix for bug on Create Table via Server Explorer. The columns properties are now added in the correct order.(Oracle db Bug # 13475830).
 - Fix for error when creating a table in table designer (Oracle bug #13477805).
 - Fix for Cannot create a foreign key that references the same table (Oracle bug #13481340).
+- Fixed installer to install for all users (per machine installation) (Oracle bug #13447941) 
 
 Version 6.3.7
 - IPv6 connections are now supported 
