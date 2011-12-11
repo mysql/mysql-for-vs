@@ -82,7 +82,7 @@ namespace MySql.Data.VisualStudio.Editors
     private void deleteButton_Click(object sender, EventArgs e)
     {
       int index = indexList.SelectedIndex;
-      table.Indexes.RemoveAt(index);
+      table.Indexes.Delete(index);
       indexList.Items.RemoveAt(index);
       index--;
       if (index == -1 && indexList.Items.Count > 0)
