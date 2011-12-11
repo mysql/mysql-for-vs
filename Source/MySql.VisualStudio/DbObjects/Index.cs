@@ -407,6 +407,11 @@ namespace MySql.Data.VisualStudio.DbObjects
       foreach (IndexColumn c in Columns)
       {
         sql.AppendFormat("{0}{1}", delimiter, c.ColumnName);
+        if (c.SortOrder == IndexSortOrder.Ascending)
+          sql.Append(" ASC ");
+        else
+          sql.Append(" DESC ");
+
         delimiter = ", ";
       }
       sql.Append(")");
