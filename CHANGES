@@ -10,6 +10,8 @@
   An index_col_name specification can end with ASC or DESC. These keywords are permitted for future extensions for specifying ascending or descending 
   index value storage. Currently, they are parsed but ignored; index values are always stored in ascending order.  (Oracle db Bug # 13481709).
 - Fix for bug on Create Index via Server Explorer. Comment property and Index type were not added in the definition of the Index. (Oracle db bug # 13481314).  
+- Fix bug on Delete Index via VS Table Designer. Removed method was not affecting the Indexes List of the Table object. (Oracle db bug # 13481313 ).
+  This fix updates the Delete method on TableIndexDialog Class to correctly update the list of Indexes of the table object.
 
 
 6.4.4
