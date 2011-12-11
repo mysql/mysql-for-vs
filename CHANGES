@@ -44,6 +44,10 @@
 - Fixed installer to install for all users (per machine installation) (Oracle bug #13447941) 
 - Fix for cannot delete a foreign key (Oracle bug #13481362).
 - Fix for Non default options for On update & on cascade for foreign keys, don't work (Oracle bug #13481348).
+- Fix for bug on Create Index via Server Explorer. The columns added in descending sort order were not included in the index. This atribute
+  is parse by the server but ommited until the moment of the implementation. (Reference http://dev.mysql.com/doc/refman/5.0/en/create-index.html)
+  An index_col_name specification can end with ASC or DESC. These keywords are permitted for future extensions for specifying ascending or descending 
+  index value storage. Currently, they are parsed but ignored; index values are always stored in ascending order.  (Oracle db Bug # 13481709).
 
 
 Version 6.3.7
