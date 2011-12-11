@@ -416,6 +416,11 @@ namespace MySql.Data.VisualStudio.DbObjects
       }
       sql.Append(")");
 
+      sql.AppendFormat(" USING {0} ", IndexUsing);
+
+      if (!String.IsNullOrEmpty(Comment))
+        sql.AppendFormat(" COMMENT '{0}' ", Comment);              
+      
       return sql.ToString();
     }
 
