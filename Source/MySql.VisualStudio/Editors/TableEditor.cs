@@ -112,7 +112,7 @@ namespace MySql.Data.VisualStudio
       ColumnWithTypeDescriptor c = new ColumnWithTypeDescriptor();
       c.OwningTable = tableNode.Table;
       e.NewObject = c;
-
+      c.DataType = "varchar(10)";
     }
 
     private void InitializeComponent()
