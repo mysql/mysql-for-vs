@@ -51,7 +51,7 @@
 - Fix for bug on Create Index via Server Explorer. Comment property and Index type were not added in the definition of the Index. (Oracle db bug # 13481314).
 - Fix bug on Delete Index via VS Table Designer. Removed method was not affecting the Indexes List of the Table object. (Oracle db bug # 13481313 ).
   This fix updates the Delete method on TableIndexDialog Class to correctly update the list of Indexes on the table object.
-
+- Fix for no default type for new columns in table designer (Oracle bug #13481298).
 
 
 Version 6.3.7
