@@ -16,7 +16,7 @@ namespace MySql.Data.MySqlClient
       get { return settings; }
     }
 
-    [ConfigurationProperty("ExceptionInterceptors", IsRequired = true)]
+    [ConfigurationProperty("ExceptionInterceptors", IsRequired = false)]
     [ConfigurationCollection(typeof(InterceptorConfigurationElement), AddItemName = "add", ClearItemsName = "clear", RemoveItemName = "remove")]
     public GenericConfigurationElementCollection<InterceptorConfigurationElement> ExceptionInterceptors
     {
