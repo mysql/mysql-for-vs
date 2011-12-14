@@ -475,4 +475,7 @@
   <data name="SnapshotNotSupported" xml:space="preserve">
     <value>Snapshot isolation level is not supported.</value>
   </data>
+  <data name="TypeIsNotExceptionInterceptor" xml:space="preserve">
+    <value>Type '{0}' is not derived from ExceptionInterceptor</value>
+  </data>
 </root>

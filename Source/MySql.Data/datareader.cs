@@ -339,12 +339,12 @@ namespace MySql.Data.MySqlClient
     public override long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferoffset, int length)
     {
       if (i >= FieldCount)
-        throw new IndexOutOfRangeException();
+        Throw(new IndexOutOfRangeException());
 
       IMySqlValue val = GetFieldValue(i, false);
 
       if (!(val is MySqlBinary) && !(val is MySqlGuid))
-        throw new MySqlException("GetBytes can only be called on binary or guid columns");
+        Throw(new MySqlException("GetBytes can only be called on binary or guid columns"));
 
       byte[] bytes = null;
       if (val is MySqlBinary)
@@ -356,12 +356,12 @@ namespace MySql.Data.MySqlClient
         return bytes.Length;
 
       if (bufferoffset >= buffer.Length || bufferoffset < 0)
-        throw new IndexOutOfRangeException("Buffer index must be a valid index in buffer");
+        Throw(new IndexOutOfRangeException("Buffer index must be a valid index in buffer"));
       if (buffer.Length < (bufferoffset + length))
-        throw new ArgumentException("Buffer is not large enough to hold the requested data");
+        Throw(new ArgumentException("Buffer is not large enough to hold the requested data"));
       if (fieldOffset < 0 ||
         ((ulong)fieldOffset >= (ulong)bytes.Length && (ulong)bytes.Length > 0))
-        throw new IndexOutOfRangeException("Data index must be a valid index in the field");
+        Throw(new IndexOutOfRangeException("Data index must be a valid index in the field"));
 
       // adjust the length so we don't run off the end
       if ((ulong)bytes.Length < (ulong)(fieldOffset + length))
@@ -415,18 +415,18 @@ namespace MySql.Data.MySqlClient
     public override long GetChars(int i, long fieldoffset, char[] buffer, int bufferoffset, int length)
     {
       if (i >= FieldCount)
-        throw new IndexOutOfRangeException();
+        Throw(new IndexOutOfRangeException());
 
       string valAsString = GetString(i);
 
       if (buffer == null) return valAsString.Length;
 
       if (bufferoffset >= buffer.Length || bufferoffset < 0)
-        throw new IndexOutOfRangeException("Buffer index must be a valid index in buffer");
+        Throw(new IndexOutOfRangeException("Buffer index must be a valid index in buffer"));
       if (buffer.Length < (bufferoffset + length))
-        throw new ArgumentException("Buffer is not large enough to hold the requested data");
+        Throw(new ArgumentException("Buffer is not large enough to hold the requested data"));
       if (fieldoffset < 0 || fieldoffset >= valAsString.Length)
-        throw new IndexOutOfRangeException("Field offset must be a valid index in the field");
+        Throw(new IndexOutOfRangeException("Field offset must be a valid index in the field"));
 
       if (valAsString.Length < length)
         length = valAsString.Length;
@@ -441,8 +441,10 @@ namespace MySql.Data.MySqlClient
     /// <returns></returns>
     public override String GetDataTypeName(int i)
     {
-      if (!isOpen) throw new Exception("No current query in data reader");
-      if (i >= FieldCount) throw new IndexOutOfRangeException();
+      if (!isOpen)
+        Throw(new Exception("No current query in data reader"));
+      if (i >= FieldCount)
+        Throw(new IndexOutOfRangeException());
 
       // return the name of the type used on the backend
       IMySqlValue v = resultSet.Values[i];
@@ -540,8 +542,10 @@ namespace MySql.Data.MySqlClient
     /// <returns></returns>
     public override Type GetFieldType(int i)
     {
-      if (!isOpen) throw new Exception("No current query in data reader");
-      if (i >= FieldCount) throw new IndexOutOfRangeException();
+      if (!isOpen)
+        Throw(new Exception("No current query in data reader"));
+      if (i >= FieldCount)
+        Throw(new IndexOutOfRangeException());
 
       // we have to use the values array directly because we can't go through
       // GetValue
@@ -590,7 +594,8 @@ namespace MySql.Data.MySqlClient
         if (bytes.Length == 16)
           return new Guid(bytes);
       }
-      throw new MySqlException(Resources.ValueNotSupportedForGuid);
+      Throw(new MySqlException(Resources.ValueNotSupportedForGuid));
+      return Guid.Empty; // just to silence compiler
     }
 
     /// <include file='docs/MySqlDataReader.xml' path='docs/GetInt16S/*'/>
@@ -648,8 +653,10 @@ namespace MySql.Data.MySqlClient
     /// <returns></returns>
     public override String GetName(int i)
     {
-      if (!isOpen) throw new Exception("No current query in data reader");
-      if (i >= FieldCount) throw new IndexOutOfRangeException();
+      if (!isOpen)
+        Throw(new Exception("No current query in data reader"));
+      if (i >= FieldCount)
+        Throw(new IndexOutOfRangeException());
 
       return resultSet.Fields[i].ColumnName;
     }
@@ -662,7 +669,7 @@ namespace MySql.Data.MySqlClient
     public override int GetOrdinal(string name)
     {
       if (!isOpen || resultSet == null)
-        throw new Exception("No current query in data reader");
+        Throw(new Exception("No current query in data reader"));
 
       return resultSet.GetOrdinal(name);
     }
@@ -781,8 +788,10 @@ namespace MySql.Data.MySqlClient
     /// <returns></returns>
     public override object GetValue(int i)
     {
-      if (!isOpen) throw new Exception("No current query in data reader");
-      if (i >= FieldCount) throw new IndexOutOfRangeException();
+      if (!isOpen)
+        Throw(new Exception("No current query in data reader"));
+      if (i >= FieldCount)
+        Throw(new IndexOutOfRangeException());
 
       IMySqlValue val = GetFieldValue(i, false);
       if (val.IsNull)
@@ -890,7 +899,7 @@ namespace MySql.Data.MySqlClient
     public override bool NextResult()
     {
       if (!isOpen)
-        throw new MySqlException(Resources.NextResultIsClosed);
+        Throw(new MySqlException(Resources.NextResultIsClosed));
 
       bool isCaching = command.CommandType == CommandType.TableDirect && command.EnableCaching &&
         (commandBehavior & CommandBehavior.SequentialAccess) == 0;
@@ -970,7 +979,7 @@ namespace MySql.Data.MySqlClient
     public override bool Read()
     {
       if (!isOpen)
-        throw new MySqlException("Invalid attempt to Read when reader is closed.");
+        Throw(new MySqlException("Invalid attempt to Read when reader is closed."));
       if (resultSet == null)
         return false;
 
@@ -1006,7 +1015,7 @@ namespace MySql.Data.MySqlClient
     private IMySqlValue GetFieldValue(int index, bool checkNull)
     {
       if (index < 0 || index >= FieldCount)
-        throw new ArgumentException(Resources.InvalidColumnOrdinal);
+        Throw(new ArgumentException(Resources.InvalidColumnOrdinal));
 
       IMySqlValue v = resultSet[index];
 
@@ -1081,6 +1090,12 @@ namespace MySql.Data.MySqlClient
       }
     }
 
+    private void Throw(Exception ex)
+    {
+      if (connection != null)
+        connection.Throw(ex);
+      throw ex;
+    }
 
     #region IEnumerator
 

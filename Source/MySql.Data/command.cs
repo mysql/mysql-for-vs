@@ -148,7 +148,7 @@ namespace MySql.Data.MySqlClient
       set
       {
         if (commandTimeout < 0)
-          throw new ArgumentException("Command timeout must not be negative");
+          Throw(new ArgumentException("Command timeout must not be negative"));
 
         // Timeout in milliseconds should not exceed maximum for 32 bit
         // signed integer (~24 days), because underlying driver (and streams)
@@ -326,14 +326,14 @@ namespace MySql.Data.MySqlClient
     {
       // There must be a valid and open connection.
       if (connection == null)
-        throw new InvalidOperationException("Connection must be valid and open.");
+        Throw(new InvalidOperationException("Connection must be valid and open."));
 
       if (connection.State != ConnectionState.Open && !connection.SoftClosed)
-        throw new InvalidOperationException("Connection must be valid and open.");
+        Throw(new InvalidOperationException("Connection must be valid and open."));
 
       // Data readers have to be closed first
       if (connection.IsInUse && !this.internallyCreated)
-        throw new MySqlException("There is already an open DataReader associated with this Connection which must be closed first.");
+        Throw(new MySqlException("There is already an open DataReader associated with this Connection which must be closed first."));
     }
 
     /// <include file='docs/mysqlcommand.xml' path='docs/ExecuteNonQuery/*'/>
@@ -412,7 +412,7 @@ namespace MySql.Data.MySqlClient
         // We have to recheck that there is no reader, after we got the lock
         if (connection.Reader != null)
         {
-          throw new MySqlException(Resources.DataReaderOpen);
+          Throw(new MySqlException(Resources.DataReaderOpen));
         }
 #if !CF
         System.Transactions.Transaction curTrans = System.Transactions.Transaction.Current;
@@ -436,7 +436,7 @@ namespace MySql.Data.MySqlClient
             {
             }
             if (status == TransactionStatus.Aborted)
-              throw new TransactionAbortedException();
+              Throw(new TransactionAbortedException());
           }
         }
 #endif
@@ -445,7 +445,7 @@ namespace MySql.Data.MySqlClient
         lastInsertedId = -1;
         cmdText = cmdText.Trim();
         if (String.IsNullOrEmpty(cmdText))
-          throw new InvalidOperationException(Resources.CommandTextNotInitialized);
+          Throw(new InvalidOperationException(Resources.CommandTextNotInitialized));
 
         string sql = cmdText.Trim(';');
 
@@ -552,9 +552,9 @@ namespace MySql.Data.MySqlClient
     {
       sql = sql.ToLower(CultureInfo.InvariantCulture);
       if (!sql.StartsWith("select") && !sql.StartsWith("show"))
-        throw new MySqlException(Resources.ReplicatedConnectionsAllowOnlyReadonlyStatements);
+        Throw(new MySqlException(Resources.ReplicatedConnectionsAllowOnlyReadonlyStatements));
       if (sql.EndsWith("for update") || sql.EndsWith("lock in share mode"))
-        throw new MySqlException(Resources.ReplicatedConnectionsAllowOnlyReadonlyStatements);
+        Throw(new MySqlException(Resources.ReplicatedConnectionsAllowOnlyReadonlyStatements));
     }
 
 
@@ -612,9 +612,9 @@ namespace MySql.Data.MySqlClient
     public override void Prepare()
     {
       if (connection == null)
-        throw new InvalidOperationException("The connection property has not been set.");
+        Throw(new InvalidOperationException("The connection property has not been set."));
       if (connection.State != ConnectionState.Open)
-        throw new InvalidOperationException("The connection is not open.");
+        Throw(new InvalidOperationException("The connection is not open."));
       if (connection.Settings.IgnorePrepare)
         return;
 
@@ -672,7 +672,7 @@ namespace MySql.Data.MySqlClient
     public IAsyncResult BeginExecuteReader(CommandBehavior behavior)
     {
       if (caller != null)
-        throw new MySqlException(Resources.UnableToStartSecondAsyncOp);
+        Throw(new MySqlException(Resources.UnableToStartSecondAsyncOp));
 
       caller = new AsyncDelegate(AsyncExecuteWrapper);
       asyncResult = caller.BeginInvoke(1, behavior, null, null);
@@ -713,7 +713,7 @@ namespace MySql.Data.MySqlClient
     public IAsyncResult BeginExecuteNonQuery(AsyncCallback callback, object stateObject)
     {
       if (caller != null)
-        throw new MySqlException(Resources.UnableToStartSecondAsyncOp);
+        Throw(new MySqlException(Resources.UnableToStartSecondAsyncOp));
 
       caller = new AsyncDelegate(AsyncExecuteWrapper);
       asyncResult = caller.BeginInvoke(2, CommandBehavior.Default,
@@ -731,7 +731,7 @@ namespace MySql.Data.MySqlClient
     public IAsyncResult BeginExecuteNonQuery()
     {
       if (caller != null)
-        throw new MySqlException(Resources.UnableToStartSecondAsyncOp);
+        Throw(new MySqlException(Resources.UnableToStartSecondAsyncOp));
 
       caller = new AsyncDelegate(AsyncExecuteWrapper);
       asyncResult = caller.BeginInvoke(2, CommandBehavior.Default, null, null);
@@ -988,6 +988,14 @@ namespace MySql.Data.MySqlClient
     protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior)
     {
       return ExecuteReader(behavior);
+    }
+
+    // This method is used to throw all exceptions from this class.  
+    private void Throw(Exception ex)
+    {
+      if (connection != null)
+        connection.Throw(ex);
+      throw ex;
     }
   }
 }
