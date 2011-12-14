@@ -657,6 +657,15 @@ namespace MySql.Data.MySqlClient
       set { SetValue("Replication", value); }
     }
 
+    [Category("Advanced")]
+    [DisplayName("Exception Interceptors")]
+    [Description("The list of interceptors that can triage thrown MySqlExceptions.")]
+    [DefaultValue("")]
+    public string ExceptionInterceptors
+    {
+      get { return (string)values["Exception Interceptors"]; }
+      set { SetValue("Exception Interceptors", value); }
+    }
 
     #endregion
 
