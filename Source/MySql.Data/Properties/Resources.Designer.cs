@@ -1089,7 +1089,16 @@ namespace MySql.Data.MySqlClient.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Type &apos;{0}&apos; is not derived from ExceptionInterceptor.
+        ///   Looks up a localized string similar to Type &apos;{0}&apos; is not derived from BaseCommandInterceptor.
+        /// </summary>
+        public static string TypeIsNotCommandInterceptor {
+            get {
+                return ResourceManager.GetString("TypeIsNotCommandInterceptor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type &apos;{0}&apos; is not derived from BaseExceptionInterceptor.
         /// </summary>
         public static string TypeIsNotExceptionInterceptor {
             get {

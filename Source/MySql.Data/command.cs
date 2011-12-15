@@ -339,6 +339,13 @@ namespace MySql.Data.MySqlClient
     /// <include file='docs/mysqlcommand.xml' path='docs/ExecuteNonQuery/*'/>
     public override int ExecuteNonQuery()
     {
+      int records = -1;
+
+      // give our interceptors a shot at it first
+      if (connection.commandInterceptor.ExecuteNonQuery(CommandText, ref records))
+        return records;
+
+      // ok, none of our interceptors handled this so we default
       using (MySqlDataReader reader = ExecuteReader())
       {
         reader.Close();
@@ -403,6 +410,12 @@ namespace MySql.Data.MySqlClient
     /// <include file='docs/mysqlcommand.xml' path='docs/ExecuteReader1/*'/>
     public new MySqlDataReader ExecuteReader(CommandBehavior behavior)
     {
+      // give our interceptors a shot at it first
+      MySqlDataReader interceptedReader = null;
+      if (connection.commandInterceptor.ExecuteReader(CommandText, behavior, ref interceptedReader))
+        return interceptedReader;
+      
+      // interceptors didn't handle this so we fall through
       bool success = false;
       CheckState();
       Driver driver = connection.driver;
@@ -563,6 +576,10 @@ namespace MySql.Data.MySqlClient
     {
       lastInsertedId = -1;
       object val = null;
+
+      // give our interceptors a shot at it first
+      if (connection.commandInterceptor.ExecuteScalar(CommandText, ref val))
+        return val;
 
       using (MySqlDataReader reader = ExecuteReader())
       {

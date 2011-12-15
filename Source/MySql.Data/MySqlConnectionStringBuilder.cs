@@ -667,6 +667,16 @@ namespace MySql.Data.MySqlClient
       set { SetValue("Exception Interceptors", value); }
     }
 
+    [Category("Advanced")]
+    [DisplayName("Command Interceptors")]
+    [Description("The list of interceptors that can intercept command operations.")]
+    [DefaultValue("")]
+    public string CommandInterceptors
+    {
+      get { return (string)values["Command Interceptors"]; }
+      set { SetValue("Command Interceptors", value); }
+    }
+
     #endregion
 
     #region Pooling Properties
