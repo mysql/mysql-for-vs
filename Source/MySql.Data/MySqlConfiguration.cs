@@ -22,6 +22,13 @@ namespace MySql.Data.MySqlClient
     {
       get { return (GenericConfigurationElementCollection<InterceptorConfigurationElement>)this["ExceptionInterceptors"]; }
     }
+
+    [ConfigurationProperty("CommandInterceptors", IsRequired = false)]
+    [ConfigurationCollection(typeof(InterceptorConfigurationElement), AddItemName = "add", ClearItemsName = "clear", RemoveItemName = "remove")]
+    public GenericConfigurationElementCollection<InterceptorConfigurationElement> CommandInterceptors
+    {
+      get { return (GenericConfigurationElementCollection<InterceptorConfigurationElement>)this["CommandInterceptors"]; }
+    }
   }
 
   /// <summary>

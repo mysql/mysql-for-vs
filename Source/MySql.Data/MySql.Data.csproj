@@ -91,6 +91,8 @@
     <Compile Include="Installer.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Interceptors\CommandInterceptor.cs" />
+    <Compile Include="Interceptors\Interceptor.cs" />
     <Compile Include="Interceptors\ExceptionInterceptor.cs" />
     <Compile Include="ISSchemaProvider.cs" />
     <Compile Include="MySqlClientFactory.cs" />

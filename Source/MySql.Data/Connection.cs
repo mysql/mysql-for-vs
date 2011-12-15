@@ -59,6 +59,7 @@ namespace MySql.Data.MySqlClient
     private string database;
     private int commandTimeout;
     private ExceptionInterceptor exceptionInterceptor;
+    internal CommandInterceptor commandInterceptor;
 
     /// <include file='docs/MySqlConnection.xml' path='docs/InfoMessage/*'/>
     public event MySqlInfoMessageEventHandler InfoMessage;
@@ -453,8 +454,9 @@ namespace MySql.Data.MySqlClient
       if (State == ConnectionState.Open)
         Throw(new InvalidOperationException(Resources.ConnectionAlreadyOpen));
 
-      // start up our exception interceptor
+      // start up our interceptors
       exceptionInterceptor = new ExceptionInterceptor(this);
+      commandInterceptor = new CommandInterceptor(this);
 
       SetState(ConnectionState.Connecting, true);
 

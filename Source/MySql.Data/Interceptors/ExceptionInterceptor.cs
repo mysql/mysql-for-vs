@@ -35,10 +35,13 @@ namespace MySql.Data.MySqlClient
   /// </summary>
   public abstract class BaseExceptionInterceptor
   {
-    public abstract Exception InterceptException(Exception exception, MySqlConnection connection);
+    public abstract Exception InterceptException(Exception exception);
+
+    protected MySqlConnection ActiveConnection { get; private set; }
 
     public virtual void Init(MySqlConnection connection)
     {
+      ActiveConnection = connection;
     }
   }
 
@@ -48,7 +51,7 @@ namespace MySql.Data.MySqlClient
   /// </summary>
   internal sealed class StandardExceptionInterceptor : BaseExceptionInterceptor
   {
-    public override Exception InterceptException(Exception exception, MySqlConnection connection)
+    public override Exception InterceptException(Exception exception)
     {
       return exception;
     }
@@ -62,7 +65,7 @@ namespace MySql.Data.MySqlClient
   {
     List<BaseExceptionInterceptor> interceptors = new List<BaseExceptionInterceptor>();
 
-    public ExceptionInterceptor(MySqlConnection connection)
+    public ExceptionInterceptor(MySqlConnection connection) 
     {
       this.connection = connection;
 
@@ -76,7 +79,7 @@ namespace MySql.Data.MySqlClient
     protected override void AddInterceptor(object o)
     {
       if (o == null)
-        throw new ArgumentException(String.Format("Unable to instantiate IExceptionInterceptor"));
+        throw new ArgumentException(String.Format("Unable to instantiate ExceptionInterceptor"));
 
       if (!(o is BaseExceptionInterceptor))
         throw new InvalidOperationException(String.Format(Resources.TypeIsNotExceptionInterceptor,
@@ -91,46 +94,20 @@ namespace MySql.Data.MySqlClient
       Exception e = exception;
       foreach (BaseExceptionInterceptor ie in interceptors)
       {
-        e = ie.InterceptException(e, connection);
+        e = ie.InterceptException(e);
       }
       throw e;
     }
-  }
 
-  /// <summary>
-  /// Interceptor is the base class for the "manager" classes such as ExceptionInterceptor,
-  /// CommandInterceptor, etc
-  /// </summary>
-  internal abstract class Interceptor
-  {
-    protected MySqlConnection connection;
-
-    protected void LoadInterceptors(string interceptorList)
-    {
-      if (String.IsNullOrEmpty(interceptorList)) return;
-
-      string[] interceptors = interceptorList.Split('|');
-      foreach (string interceptorType in interceptors)
-      {
-        if (String.IsNullOrEmpty(interceptorType)) continue;
-
-        object interceptorObject = GetInterceptor(interceptorType);
-        AddInterceptor(interceptorObject);
-      }
-    }
-
-    protected abstract void AddInterceptor(object o);
-
-    protected object GetInterceptor(string nameOrType)
+    protected override string ResolveType(string nameOrType)
     {
       if (MySqlConfiguration.Settings != null && MySqlConfiguration.Settings.ExceptionInterceptors != null)
       {
         foreach (InterceptorConfigurationElement e in MySqlConfiguration.Settings.ExceptionInterceptors)
           if (String.Compare(e.Name, nameOrType, true) == 0)
-            return Activator.CreateInstance(Type.GetType(e.Type));
+            return e.Type;
       }
-      Type t = Type.GetType(nameOrType);
-      return Activator.CreateInstance(t);
+      return base.ResolveType(nameOrType);
     }
   }
 }
