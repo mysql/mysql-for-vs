@@ -52,6 +52,7 @@
 - Fix bug on Delete Index via VS Table Designer. Removed method was not affecting the Indexes List of the Table object. (Oracle db bug # 13481313 ).
   This fix updates the Delete method on TableIndexDialog Class to correctly update the list of Indexes on the table object.
 - Fix for no default type for new columns in table designer (Oracle bug #13481298).
+- Added support the new millseconds format from 5.6 (WL http://wl.no.oracle.com/worklog/.NET-Sprint/index.pl?tid=6078).
 
 
 Version 6.3.7
