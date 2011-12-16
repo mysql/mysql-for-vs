@@ -1,4 +1,4 @@
-// Copyright © 2004, 2011, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2004-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -40,14 +40,14 @@ namespace MySql.Data.MySqlClient.Tests
     {
       base.Setup();
       execSQL("CREATE TABLE Test (id INT NOT NULL, dt DATETIME, d DATE, " +
-        "t TIME, ts TIMESTAMP, PRIMARY KEY(id))");
+          "t TIME, ts TIMESTAMP, PRIMARY KEY(id))");
     }
 
     [Test]
     public void ConvertZeroDateTime()
     {
       execSQL("INSERT INTO Test VALUES(1, '0000-00-00', '0000-00-00', " +
-        "'00:00:00', NULL)");
+          "'00:00:00', NULL)");
 
       string connStr = this.GetConnectionString(true);
       connStr += ";convert zero datetime=yes";
@@ -100,7 +100,7 @@ namespace MySql.Data.MySqlClient.Tests
     public void DateAdd()
     {
       MySqlCommand cmd = new MySqlCommand("select date_add(?someday, interval 1 hour)",
-        conn);
+          conn);
       DateTime now = DateTime.Now;
       DateTime later = now.AddHours(1);
       later = later.AddMilliseconds(later.Millisecond * -1);
@@ -179,7 +179,7 @@ namespace MySql.Data.MySqlClient.Tests
     public void InsertDateTimeValue()
     {
       using (MySqlConnection c = new MySqlConnection(conn.ConnectionString +
-        ";allow zero datetime=yes"))
+          ";allow zero datetime=yes"))
       {
         c.Open();
         MySqlDataAdapter da = new MySqlDataAdapter("SELECT id, dt FROM Test", c);
@@ -317,32 +317,32 @@ namespace MySql.Data.MySqlClient.Tests
     {
       execSQL("DROP TABLE Test");
       execSQL("CREATE TABLE Test(ID INT NOT NULL AUTO_INCREMENT, " +
-        "SATELLITEID VARCHAR(3) NOT NULL, ANTENNAID INT, AOS_TIMESTAMP DATETIME NOT NULL, " +
-        "TEL_TIMESTAMP DATETIME, LOS_TIMESTAMP DATETIME, PRIMARY KEY (ID))");
+          "SATELLITEID VARCHAR(3) NOT NULL, ANTENNAID INT, AOS_TIMESTAMP DATETIME NOT NULL, " +
+          "TEL_TIMESTAMP DATETIME, LOS_TIMESTAMP DATETIME, PRIMARY KEY (ID))");
       execSQL("INSERT INTO Test VALUES (NULL,'224','0','2005-07-24 00:00:00'," +
-        "'2005-07-24 00:02:00','2005-07-24 00:22:00')");
+          "'2005-07-24 00:02:00','2005-07-24 00:22:00')");
       execSQL("INSERT INTO Test VALUES (NULL,'155','24','2005-07-24 03:00:00'," +
-        "'2005-07-24 03:02:30','2005-07-24 03:20:00')");
+          "'2005-07-24 03:02:30','2005-07-24 03:20:00')");
       execSQL("INSERT INTO Test VALUES (NULL,'094','34','2005-07-24 09:00:00'," +
-        "'2005-07-24 09:00:30','2005-07-24 09:15:00')");
+          "'2005-07-24 09:00:30','2005-07-24 09:15:00')");
       execSQL("INSERT INTO Test VALUES (NULL,'224','54','2005-07-24 12:00:00'," +
-        "'2005-07-24 12:01:00','2005-07-24 12:33:00')");
+          "'2005-07-24 12:01:00','2005-07-24 12:33:00')");
       execSQL("INSERT INTO Test VALUES (NULL,'155','25','2005-07-24 15:00:00'," +
-        "'2005-07-24 15:02:00','2005-07-24 15:22:00')");
+          "'2005-07-24 15:02:00','2005-07-24 15:22:00')");
       execSQL("INSERT INTO Test VALUES (NULL,'094','0','2005-07-24 17:00:00'," +
-        "'2005-07-24 17:02:12','2005-07-24 17:20:00')");
+          "'2005-07-24 17:02:12','2005-07-24 17:20:00')");
       execSQL("INSERT INTO Test VALUES (NULL,'224','24','2005-07-24 19:00:00'," +
-        "'2005-07-24 19:02:00','2005-07-24 19:27:00')");
+          "'2005-07-24 19:02:00','2005-07-24 19:27:00')");
       execSQL("INSERT INTO Test VALUES (NULL,'155','34','2005-07-24 21:00:00'," +
-        "'2005-07-24 21:02:33','2005-07-24 21:22:55')");
+          "'2005-07-24 21:02:33','2005-07-24 21:22:55')");
       execSQL("INSERT INTO Test VALUES (NULL,'094','55','2005-07-24 23:00:00'," +
-        "'2005-07-24 23:00:45','2005-07-24 23:22:23')");
+          "'2005-07-24 23:00:45','2005-07-24 23:22:23')");
 
       DateTime date = DateTime.Parse("7/24/2005", CultureInfo.GetCultureInfo("en-us"));
       StringBuilder sql = new StringBuilder();
       sql.AppendFormat(CultureInfo.InvariantCulture,
-        @"SELECT ID, ANTENNAID, TEL_TIMESTAMP, LOS_TIMESTAMP FROM Test 
-				WHERE TEL_TIMESTAMP >= '{0}'", date.ToString("u"));
+          @"SELECT ID, ANTENNAID, TEL_TIMESTAMP, LOS_TIMESTAMP FROM Test 
+                WHERE TEL_TIMESTAMP >= '{0}'", date.ToString("u"));
       MySqlDataAdapter da = new MySqlDataAdapter(sql.ToString(), conn);
       DataSet dataSet = new DataSet();
       da.Fill(dataSet);
@@ -372,7 +372,7 @@ namespace MySql.Data.MySqlClient.Tests
       execSQL("INSERT INTO Test VALUES(1, Now(), '0000-00-00', NULL, NULL)");
 
       using (MySqlConnection c = new MySqlConnection(
-        conn.ConnectionString + ";pooling=false;AllowZeroDatetime=true"))
+          conn.ConnectionString + ";pooling=false;AllowZeroDatetime=true"))
       {
         c.Open();
 
@@ -427,96 +427,6 @@ namespace MySql.Data.MySqlClient.Tests
         Assert.IsTrue(reader.Read());
       }
     }
-
-    [Test]
-    public void CanUpdateMilliseconds()
-    {
-      if (Version < new Version(5, 6)) return;
-      DateTime dt = DateTime.Now;
-      MySqlCommand cmd = new MySqlCommand();
-
-      execSQL("DROP TABLE Test");
-      execSQL("CREATE TABLE Test (id INT NOT NULL, dt DATETIME(6), d DATE, " +
-        "t TIME, ts TIMESTAMP, PRIMARY KEY(id))");
-
-      cmd.Connection = conn;
-      cmd.CommandText = "INSERT INTO Test VALUES(1, ?dt, NULL, NULL, NULL)";
-      cmd.Parameters.AddWithValue("?dt", dt);
-      cmd.ExecuteNonQuery();
-      
-      //Update value
-      cmd.Parameters.Clear();
-      cmd.Connection = conn;
-      cmd.CommandText = "UPDATE Test SET dt=?dt";
-      cmd.Parameters.Add(new MySqlParameter("?dt", "2011-01-01 12:34:56.123456"));
-      cmd.ExecuteNonQuery();
-      
-      cmd.CommandText = "SELECT dt FROM Test";
-      cmd.Parameters.Clear();
-      cmd.Connection = conn;
-
-      MySqlDataReader rdr = cmd.ExecuteReader();
-
-      while (rdr.Read())
-      {
-        Assert.AreEqual("12:34:56.1230", rdr.GetDateTime(0).ToString("hh:mm:ss.ffff"));      
-      }
-      rdr.Close();
-    }
-
-    [Test]
-    public void CanUpdateMillisecondsWithIgnorePrepareOnFalse()
-    {
-      if (Version < new Version(5, 6)) return;      
-      MySqlCommand cmd = new MySqlCommand();
-
-      using (MySqlConnection c = new MySqlConnection(conn.ConnectionString + ";ignore prepare=False;"))
-      {
-        c.Open();
-
-        execSQL("DROP TABLE Test");
-        execSQL("CREATE TABLE Test (id INT NOT NULL, dt DATETIME(6), d DATE, " +
-          "t TIME, ts TIMESTAMP, PRIMARY KEY(id))");
-
-        cmd.Connection = c;
-        cmd.CommandText = "INSERT INTO Test VALUES(?id, ?dt, NULL, NULL, NULL)";
-        cmd.Parameters.Add(new MySqlParameter("?id", 1));
-
-        MySqlParameter datetimeinsert = new MySqlParameter();
-        datetimeinsert.ParameterName = "?dt";
-        datetimeinsert.MySqlDbType = MySqlDbType.DateTime;
-        datetimeinsert.Value = "2011-01-01 12:34:59.123456";
-        cmd.Parameters.Add(datetimeinsert);
-
-        cmd.Prepare();    
-      
-        cmd.ExecuteNonQuery();
-
-        cmd.Parameters.Clear();
-
-        MySqlParameter datetimepar = new MySqlParameter();
-        datetimepar.ParameterName = "?dt";
-        datetimepar.MySqlDbType = MySqlDbType.DateTime;
-        datetimepar.Value = "1999-01-01 12:34:59.999999";
-
-        cmd.Connection = c;
-        cmd.CommandText = "UPDATE Test SET dt=?dt WHERE id =1";
-        cmd.Parameters.Add(datetimepar);
-        cmd.Prepare();
-        cmd.ExecuteNonQuery();
-
-        cmd.CommandText = "SELECT dt FROM Test WHERE id = 1";
-        cmd.Parameters.Clear();
-        cmd.Connection = c;
-        cmd.Prepare();
-        MySqlDataReader rdr = cmd.ExecuteReader();
-
-        while (rdr.Read())
-        {
-          Assert.AreEqual("12:34:59.9990", rdr.GetDateTime(0).ToString("hh:mm:ss.ffff"));      
-        }
-        rdr.Close();
-      }
-    }
   }
+
 }

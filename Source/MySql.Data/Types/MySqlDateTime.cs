@@ -26,7 +26,6 @@ using System.IO;
 using MySql.Data.MySqlClient;
 using System.Globalization;
 
-
 namespace MySql.Data.Types
 {
 
@@ -50,9 +49,8 @@ namespace MySql.Data.Types
     /// <param name="hour">The hour to use.</param>
     /// <param name="minute">The minute to use.</param>
     /// <param name="second">The second to use.</param>
-    /// <param name="millisecond">The millisecond to use.</param>
-    public MySqlDateTime(int year, int month, int day, int hour, int minute, int second, int millisecond)
-      : this(MySqlDbType.DateTime, year, month, day, hour, minute, second, millisecond)
+    public MySqlDateTime(int year, int month, int day, int hour, int minute, int second)
+      : this(MySqlDbType.DateTime, year, month, day, hour, minute, second)
     {
     }
 
@@ -91,7 +89,7 @@ namespace MySql.Data.Types
     }
 
     internal MySqlDateTime(MySqlDbType type, int year, int month, int day, int hour, int minute,
-      int second, int millisecond)
+      int second)
     {
       this.isNull = false;
       this.type = type;
@@ -101,17 +99,17 @@ namespace MySql.Data.Types
       this.hour = hour;
       this.minute = minute;
       this.second = second;
-      this.millisecond = millisecond > 0 ? millisecond : 0;
+      this.millisecond = 0;
     }
 
     internal MySqlDateTime(MySqlDbType type, bool isNull)
-      : this(type, 0, 0, 0, 0, 0, 0, 0)
+      : this(type, 0, 0, 0, 0, 0, 0)
     {
       this.isNull = isNull;
     }
 
     internal MySqlDateTime(MySqlDbType type, DateTime val)
-      : this(type, 0, 0, 0, 0, 0, 0, 0)
+      : this(type, 0, 0, 0, 0, 0, 0)
     {
       this.isNull = false;
       year = val.Year;
@@ -261,14 +259,14 @@ namespace MySql.Data.Types
 
     void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object value, int length)
     {
-      MySqlDateTime dtValue;      
+      MySqlDateTime dtValue;
 
       string valueAsString = value as string;
 
       if (value is DateTime)
         dtValue = new MySqlDateTime(type, (DateTime)value);
       else if (valueAsString != null)
-        dtValue = MySqlDateTime.Parse(valueAsString);
+        dtValue = new MySqlDateTime(type, DateTime.Parse(valueAsString, CultureInfo.CurrentCulture));
       else if (value is MySqlDateTime)
         dtValue = (MySqlDateTime)value;
       else
@@ -280,7 +278,7 @@ namespace MySql.Data.Types
         return;
       }
 
-      if (dtValue.Millisecond > 0)
+      if (type == MySqlDbType.Timestamp)
         packet.WriteByte(11);
       else
         packet.WriteByte(7);
@@ -301,15 +299,8 @@ namespace MySql.Data.Types
         packet.WriteByte((byte)dtValue.Second);
       }
 
-      if (dtValue.Millisecond > 0)
-      {
-        long val = dtValue.Millisecond;       
-        for (int x = 0; x < 4; x++)
-        {
-          packet.WriteByte((byte)(val & 0xff));          
-          val >>= 8;          
-        }      
-      }      
+      if (type == MySqlDbType.Timestamp)
+        packet.WriteInteger(dtValue.Millisecond, 4);
     }
 
     static internal MySqlDateTime Parse(string s)
@@ -326,13 +317,13 @@ namespace MySql.Data.Types
 
     private MySqlDateTime ParseMySql(string s)
     {
-      string[] parts = s.Split('-', ' ', ':', '/', '.');
+      string[] parts = s.Split('-', ' ', ':', '/');
 
       int year = int.Parse(parts[0]);
       int month = int.Parse(parts[1]);
       int day = int.Parse(parts[2]);
 
-      int hour = 0, minute = 0, second = 0, millisecond = 0;
+      int hour = 0, minute = 0, second = 0;
       if (parts.Length > 3)
       {
         hour = int.Parse(parts[3]);
@@ -340,17 +331,11 @@ namespace MySql.Data.Types
         second = int.Parse(parts[5]);
       }
 
-      if (parts.Length > 6)
-      {
-        millisecond = int.Parse(parts[6]);        
-      }
-
-      return new MySqlDateTime(type, year, month, day, hour, minute, second, millisecond);
+      return new MySqlDateTime(type, year, month, day, hour, minute, second);
     }
 
     IMySqlValue IMySqlValue.ReadValue(MySqlPacket packet, long length, bool nullVal)
-    {      
-      
+    {
       if (nullVal) return new MySqlDateTime(type, true);
 
       if (length >= 0)
@@ -361,7 +346,8 @@ namespace MySql.Data.Types
 
       long bufLength = packet.ReadByte();
       int year = 0, month = 0, day = 0;
-      int hour = 0, minute = 0, second = 0, millisecond = 0;
+      int hour = 0, minute = 0, second = 0;
+
       if (bufLength >= 4)
       {
         year = packet.ReadInteger(2);
@@ -373,16 +359,13 @@ namespace MySql.Data.Types
       {
         hour = packet.ReadByte();
         minute = packet.ReadByte();
-        second = packet.ReadByte();       
+        second = packet.ReadByte();
       }
 
       if (bufLength > 7)
-      {
-        millisecond = packet.Read3ByteInt();
-        packet.ReadByte();
-      }
-      
-      return new MySqlDateTime(type, year, month, day, hour, minute, second, millisecond);
+        packet.ReadInteger(4);
+
+      return new MySqlDateTime(type, year, month, day, hour, minute, second);
     }
 
     void IMySqlValue.SkipValue(MySqlPacket packet)
@@ -398,9 +381,8 @@ namespace MySql.Data.Types
     {
       if (!IsValidDateTime)
         throw new MySqlConversionException("Unable to convert MySQL date/time value to System.DateTime");
-      if ((millisecond < 0) || (millisecond >= 0x3e8)) millisecond = (int)(millisecond / 0x3e8);
-      
-      return new DateTime(year, month, day, hour, minute, second, millisecond);
+
+      return new DateTime(year, month, day, hour, minute, second);
     }
 
     private static string FormatDateCustom(string format, int monthVal, int dayVal, int yearVal)
@@ -425,7 +407,7 @@ namespace MySql.Data.Types
     {
       if (this.IsValidDateTime)
       {
-        DateTime d = new DateTime(year, month, day, hour, minute, second, millisecond);
+        DateTime d = new DateTime(year, month, day, hour, minute, second);
         return (type == MySqlDbType.Date) ? d.ToString("d") : d.ToString();
       }
 
@@ -434,7 +416,7 @@ namespace MySql.Data.Types
       if (type == MySqlDbType.Date)
         return dateString;
 
-      DateTime dt = new DateTime(1, 2, 3, hour, minute, second, millisecond);
+      DateTime dt = new DateTime(1, 2, 3, hour, minute, second);
       dateString = String.Format("{0} {1}", dateString, dt.ToLongTimeString());
       return dateString;
     }
