@@ -26,5 +26,6 @@
   <Content>
     <VsPackage>|%CurrentProject%;PkgdefProjectOutputGroup|</VsPackage>
     <VsPackage>MySql.VisualStudio.pkgdef</VsPackage>
+	<MefComponent>|%CurrentProject%|</MefComponent>
   </Content>
 </Vsix>
