@@ -35,8 +35,8 @@
               Source='..\Source\MySql.VisualStudio\bin\release\MySQL.VisualStudio.dll'/>
         <File Id='MySqlParser.2010' Name='MySqlParser.dll' DiskId='1'
           Source='..\Source\MySql.VisualStudio\bin\release\MySqlParser.dll'/>
-        <File Id='Antlr3.Runtime' Name='Antlr3.Runtime' DiskId='1'
-              Source='..\Parser\MySqlParser\bin\Release\Antlr3.Runtime.dll'/>
+        <File Id='Antlr3.Runtime' Name='Antlr3.Runtime.dll' DiskId='1'
+              Source='..\Source\MySqlParser\bin\Release\Antlr3.Runtime.dll'/>
         <File Id='VsixManifest' Name='extension.vsixmanifest' DiskId='1'
               Source='..\Source\MySql.VisualStudio\bin\release\extension.vsixmanifest'/>
         <File Id='VSPkgdef' Name='MySql.VisualStudio.pkgdef' DiskId='1'
