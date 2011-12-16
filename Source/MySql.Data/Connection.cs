@@ -54,12 +54,12 @@ namespace MySql.Data.MySqlClient
     private bool isInUse;
 #if !CF
     private PerformanceMonitor perfMonitor;
+    private ExceptionInterceptor exceptionInterceptor;
+    internal CommandInterceptor commandInterceptor;
 #endif
     private bool isKillQueryConnection;
     private string database;
     private int commandTimeout;
-    private ExceptionInterceptor exceptionInterceptor;
-    internal CommandInterceptor commandInterceptor;
 
     /// <include file='docs/MySqlConnection.xml' path='docs/InfoMessage/*'/>
     public event MySqlInfoMessageEventHandler InfoMessage;
@@ -454,9 +454,11 @@ namespace MySql.Data.MySqlClient
       if (State == ConnectionState.Open)
         Throw(new InvalidOperationException(Resources.ConnectionAlreadyOpen));
 
+#if !CF
       // start up our interceptors
       exceptionInterceptor = new ExceptionInterceptor(this);
       commandInterceptor = new CommandInterceptor(this);
+#endif
 
       SetState(ConnectionState.Connecting, true);
 
@@ -843,9 +845,13 @@ namespace MySql.Data.MySqlClient
 
     internal void Throw(Exception ex)
     {
+#if !CF
       if (exceptionInterceptor == null)
         throw ex;
       exceptionInterceptor.Throw(ex);
+#else
+      throw ex;
+#endif
     }
   }
 
