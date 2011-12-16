@@ -7,7 +7,7 @@ using Antlr.Runtime;
 using Antlr.Runtime.Tree;
 
 
-namespace MySqlParser.Tests.DDL.Other
+namespace MySql.Parser.Tests.DDL.Other
 {
 	[TestFixture]
 	public class RenameDatabase
@@ -15,7 +15,7 @@ namespace MySqlParser.Tests.DDL.Other
 		[Test]
 		public void Simple()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("RENAME DATABASE `db1` TO `db2`");
+			MySQL51Parser.program_return r = Utility.ParseSql("RENAME DATABASE `db1` TO `db2`");
 			/*
 			Assert.AreEqual(1, statements.Count);
 			Assert.IsTrue(statements[0] is RenameDatabaseStatement);
@@ -29,13 +29,13 @@ namespace MySqlParser.Tests.DDL.Other
 		[Test]
 		public void MissingFromDbName()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("RENAME DATABASE ", true);
+			MySQL51Parser.program_return r = Utility.ParseSql("RENAME DATABASE ", true);
 		}
 
 		[Test]
 		public void MissingToDbName()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("RENAME DATABASE db1 TO", true);
+			MySQL51Parser.program_return r = Utility.ParseSql("RENAME DATABASE db1 TO", true);
 		}
 	}
 }

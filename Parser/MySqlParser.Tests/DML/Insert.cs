@@ -7,7 +7,7 @@ using Antlr.Runtime;
 using Antlr.Runtime.Tree;
 //using MySQLParser;
 
-namespace MySqlParser.Tests
+namespace MySql.Parser.Tests
 {
 	[TestFixture]
 	public class Insert
@@ -16,14 +16,14 @@ namespace MySqlParser.Tests
 		public void Simple()
 		{			
 			
-			MySQL51Parser.statement_list_return r = Utility.ParseSql(
+			MySQL51Parser.program_return r = Utility.ParseSql(
 				"insert into tableA ( col1, col2, col3 ) values ( 'a', tableB.colx, 4.55 )");
 		}
 
 		[Test]
 		public void WithSelect()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql(
+			MySQL51Parser.program_return r = Utility.ParseSql(
 				"insert into tableA ( col1, col2, col3 ) select 'a', tableB.colx, 4.55 from tableB");
 		}
 	}

@@ -7,7 +7,7 @@ using Antlr.Runtime;
 using Antlr.Runtime.Tree;
 
 
-namespace MySqlParser.Tests.Other
+namespace MySql.Parser.Tests.Other
 {
 	[TestFixture]
 	public class Expression
@@ -15,41 +15,41 @@ namespace MySqlParser.Tests.Other
 		[Test]
 		public void Sum()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("select ( a + b )");
+			MySQL51Parser.program_return r = Utility.ParseSql("select ( a + b )");
 		}
 
 		[Test]
 		public void CaseSimple()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql(
+			MySQL51Parser.program_return r = Utility.ParseSql(
 				"select CASE WHEN 1 THEN 'one' WHEN 2 THEN 'two' END;");
 		}
 
 		[Test]
 		public void CaseSimpleWithElse()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql(
+			MySQL51Parser.program_return r = Utility.ParseSql(
 				"select CASE WHEN 1 THEN 'one' WHEN 2 THEN 'two' ELSE 'more' END;");			
 		}
 
 		[Test]
 		public void IfSimple()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql(
+			MySQL51Parser.program_return r = Utility.ParseSql(
 				"SELECT IF(1<2,'yes','no');");
 		}
 
 		[Test]
 		public void IfNull()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql(
+			MySQL51Parser.program_return r = Utility.ParseSql(
 				"SELECT IFNULL(1/0,10);");
 		}
 
 		[Test]
 		public void NullIf()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql(
+			MySQL51Parser.program_return r = Utility.ParseSql(
 				"SELECT NULLIF(1,2);");
 		}
 
@@ -57,8 +57,9 @@ namespace MySqlParser.Tests.Other
 		public void ParameterMarker()
 		{
 			// SET @myvar = 5;
-			MySQL51Parser.statement_list_return r = Utility.ParseSql(@"				
-				SELECT @myvar, id FROM MyTable WHERE id >= ?maxId");
+			MySQL51Parser.program_return r = Utility.ParseSql(@"				
+				SELECT @myvar, id FROM MyTable WHERE id >= @maxId");
+          //SELECT @myvar, id FROM MyTable WHERE id >= ?maxId");
 		}
 	}
 }

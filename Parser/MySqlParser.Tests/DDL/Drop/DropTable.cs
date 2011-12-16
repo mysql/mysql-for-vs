@@ -6,7 +6,7 @@ using NUnit.Framework;
 using Antlr.Runtime;
 using Antlr.Runtime.Tree;
 
-namespace MySqlParser.Tests.DDL.Drop
+namespace MySql.Parser.Tests.DDL.Drop
 {
 	[TestFixture]
 	public class DropTable
@@ -14,7 +14,7 @@ namespace MySqlParser.Tests.DDL.Drop
 		[Test]
 		public void SimpleNoSchema()
 		{			
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("DROP TABLE `tablename`");
+			MySQL51Parser.program_return r = Utility.ParseSql("DROP TABLE `tablename`");
 			/*
 			Assert.AreEqual(1, statements.Count);
 			Assert.IsTrue(statements[0] is DropTableStatement);
@@ -27,7 +27,7 @@ namespace MySqlParser.Tests.DDL.Drop
 		[Test]
 		public void SimpleWithSchema()
 		{			
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("DROP TABLE `schema1`.`tablename`");
+			MySQL51Parser.program_return r = Utility.ParseSql("DROP TABLE `schema1`.`tablename`");
 			/*
 			Assert.AreEqual(1, statements.Count);
 			Assert.IsTrue(statements[0] is DropTableStatement);
@@ -41,13 +41,13 @@ namespace MySqlParser.Tests.DDL.Drop
 		[Test]
 		public void MissingTableName()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("DROP TABLE", true);			
+			MySQL51Parser.program_return r = Utility.ParseSql("DROP TABLE", true);			
 		}
 
 		[Test]
 		public void MultipleTables()
 		{			
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("DROP TABLE `table1`, schema2.table2, `schema3`.`table3`, table4");
+			MySQL51Parser.program_return r = Utility.ParseSql("DROP TABLE `table1`, schema2.table2, `schema3`.`table3`, table4");
 			/*
 			Assert.AreEqual(1, statements.Count);
 			Assert.IsTrue(statements[0] is DropTableStatement);
@@ -71,7 +71,7 @@ namespace MySqlParser.Tests.DDL.Drop
 		[Test]
 		public void IfExists()
 		{			
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("DROP TABLE IF EXISTS `tablename`");
+			MySQL51Parser.program_return r = Utility.ParseSql("DROP TABLE IF EXISTS `tablename`");
 			/*
 			Assert.AreEqual(1, statements.Count);
 			Assert.IsTrue(statements[0] is DropTableStatement);
@@ -85,7 +85,7 @@ namespace MySqlParser.Tests.DDL.Drop
 		[Test]
 		public void Temporary()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("DROP TEMPORARY TABLE IF EXISTS `tablename`");
+			MySQL51Parser.program_return r = Utility.ParseSql("DROP TEMPORARY TABLE IF EXISTS `tablename`");
 			/*
 			Assert.AreEqual(1, statements.Count);
 			Assert.IsTrue(statements[0] is DropTableStatement);
@@ -99,7 +99,7 @@ namespace MySqlParser.Tests.DDL.Drop
 		[Test]
 		public void CascadeOrRestrict()
 		{			
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("DROP TABLE IF EXISTS `tablename` CASCADE");
+			MySQL51Parser.program_return r = Utility.ParseSql("DROP TABLE IF EXISTS `tablename` CASCADE");
 			/*
 			DropTableStatement ds = statements[0] as DropTableStatement;
 			Assert.IsTrue(ds.Cascade);
@@ -117,7 +117,7 @@ namespace MySqlParser.Tests.DDL.Drop
 		[Test]
 		public void CascadeAndRestrict()
 		{
-			MySQL51Parser.statement_list_return r = 
+			MySQL51Parser.program_return r = 
 				Utility.ParseSql("DROP TABLE IF EXISTS `tablename` RESTRICT CASCADE", true);
 		}
 	}

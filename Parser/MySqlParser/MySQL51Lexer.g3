@@ -7,7 +7,7 @@ options {
     TokenLabelType=CommonToken;
 }
 
-@namespace{MySqlParser}
+@namespace{MySql.Parser}
 
 // $<Keywords 
 
@@ -23,6 +23,8 @@ AND	:	'AND';
 AS	:	'AS';
 ASC	:	'ASC';
 ASENSITIVE	:	'ASENSITIVE';
+AT1 :	'@';
+AUTOCOMMIT	:	'AUTOCOMMIT';
 BEFORE	:	'BEFORE';
 BETWEEN	:	'BETWEEN';
 // BIGINT	:	'BIGINT';		// datatype defined below 
@@ -810,7 +812,7 @@ HEXA_VALUE
  *
  * Binary and hexadecimal are syntactically equivalent to strings but have a different meaning and should not be tokenized as STRING. See below.
  */
-fragment
+//fragment
 STRING
 	:	'N'?			// "introducer" for the national character set (UTF8 for MySQL 4.1 and up). must immediately precede the first quote character.
 		(	'"' 
@@ -840,20 +842,23 @@ STRING
 	;
 */
 /* user@host, ID and SESSION_VARIABLES are ambiguous */
+/*
 USER_HOST_or_ID_or_STRING
   : ID  {$type=ID;}
     ( USER_HOST {$type=USER_HOST;} )?
   | STRING {$type=STRING;} (USER_HOST {$type=USER_HOST;})?
   ;
-
+*/
+  /*
 fragment
 USER_HOST
   : '@' (ID | STRING)
   ;
+  */
 
-fragment
-ID  : '`' (options{greedy=false;}: (~('`'))+) '`'
-  | REAL_ID
+
+ID  : '`' (options{greedy=false;}: (~('`'))+) '`' 
+  | REAL_ID 
   ;
 
 fragment
@@ -887,10 +892,11 @@ fragment
 DIGIT
 	:	'0'..'9' 
 	;
-
+/*
 ZERO
 	:	'0'
 	;
+	*/
 /*
 ONE_NUMBER
 	:	'1'
@@ -925,6 +931,7 @@ INT_NUMBER
 COMMENT_RULE
 	:	(	C_COMMENT 
 		|	POUND_COMMENT
+		|	MINUS_MINUS_COMMENT
 		|	{input.LA(3)==' ' || input.LA(3) == '\t' || input.LA(3) == '\n' || input.LA(3) == '\r'}?=> DASHDASH_COMMENT
 		)
 		{$channel=98;}
@@ -941,17 +948,22 @@ POUND_COMMENT
 	;
 
 fragment
+MINUS_MINUS_COMMENT
+	:	'-''-' ~('\n'|'\r')* '\r'? '\n'
+	;
+
+fragment
 DASHDASH_COMMENT
 	:	'--' (' ' | '\t' | '\n' | '\r') ~('\n'|'\r')* '\r'? '\n'
 	;
 // $> Comments
-GLOBAL_VARIABLE
-	:	'@@' ID
-	;
-/* todo: user variables can be quoted, thus ID is wrong here */
-SESSION_VARIABLE
-	:	'@' ID
-	;
+//GLOBAL_VARIABLE
+//	:	'@@' ID
+//	;
+///* todo: user variables can be quoted, thus ID is wrong here */
+//SESSION_VARIABLE
+//	:	'@' ID
+//	;
 
 WS	:	(' ' | '\t' | '\n' | '\r')+ { $channel=TokenChannels.Hidden; }
 	;

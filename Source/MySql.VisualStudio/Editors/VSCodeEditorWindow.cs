@@ -22,7 +22,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Text;
+using System.Threading;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio;
@@ -31,8 +33,90 @@ using Microsoft.VisualStudio.TextManager.Interop;
 using System.Windows.Forms;
 using System.Drawing;
 
-namespace MySql.Data.VisualStudio.Editors
+namespace MySql.Data.VisualStudio.Editors 
 {
+
+  /// <summary>
+  /// This class serves as 
+  /// a) Command broker (subscribing once to the mappable keys of Visual Studio, instead of many times
+  /// Solving a bug of backspace affecting the wrong mysql editor window when more than one is open).
+  /// b) A repository to serve the connections of each SqlEditor for the Intellisense classifiers.
+  /// </summary>
+  internal class EditorBroker : IOleCommandTarget 
+  {
+    private Dictionary<string, VSCodeEditorWindow> dic = new Dictionary<string, VSCodeEditorWindow>();
+    private EnvDTE.DTE Dte;
+    private uint CmdTargetCookie;
+    internal static EditorBroker Broker { get; private set; }        
+
+    private EditorBroker(ServiceBroker sb)
+    {
+      // Register priority command target, this dispatches mappable keys like Enter, Backspace, Arrows, etc.
+      int hr = sb.VsRegisterPriorityCommandTarget.RegisterPriorityCommandTarget(
+        0, (IOleCommandTarget)this, out this.CmdTargetCookie);
+
+      if (hr != VSConstants.S_OK)
+        Marshal.ThrowExceptionForHR(hr);
+      this.Dte = (EnvDTE.DTE)sb.Site.GetService(typeof(EnvDTE.DTE));
+    }
+
+    // this method must be externally synchronized
+    internal static void CreateSingleton(ServiceBroker sb)
+    {
+      if (Broker != null)
+        throw new InvalidOperationException( "The singleton broker has alreaby been created." );
+      Broker = new EditorBroker(sb);
+    }
+
+    internal static void RegisterEditor( VSCodeEditorWindow editor )
+    {
+      Broker.dic.Add(editor.Parent.SqlEditor.Pane.DocumentPath, editor);
+    }
+
+    internal static void UnregisterEditor(VSCodeEditorWindow editor)
+    {
+      Broker.dic.Remove( editor.Parent.SqlEditor.Pane.DocumentPath );
+    }
+
+    /// <summary>
+    /// Returns the DbConnection associated with the current mysql editor.
+    /// </summary>
+    /// <returns></returns>
+    internal DbConnection GetCurrentConnection()
+    {
+      VSCodeEditorWindow editor;
+      dic.TryGetValue(Dte.ActiveDocument.FullName, out editor);
+      // Null here means No connection opened for the current mysql editor, or current active window not a mysql editor.
+      if (editor == null) return null;
+      else
+      {
+        return editor.Parent.SqlEditor.Connection;
+      }
+    }
+
+    public int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
+    {
+      VSCodeEditorWindow editor;
+      if (Dte.ActiveDocument == null) 
+        return (int)Microsoft.VisualStudio.OLE.Interop.Constants.OLECMDERR_E_NOTSUPPORTED;
+      if (dic.TryGetValue(Dte.ActiveDocument.FullName, out editor))
+        return ((IOleCommandTarget)editor).Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
+      else
+        return ( int )Microsoft.VisualStudio.OLE.Interop.Constants.OLECMDERR_E_NOTSUPPORTED;
+    }
+
+    public int QueryStatus(ref Guid pguidCmdGroup, uint cCmds, OLECMD[] prgCmds, IntPtr pCmdText)
+    {
+      VSCodeEditorWindow editor;
+      if (Dte.ActiveDocument == null)
+        return (int)Microsoft.VisualStudio.OLE.Interop.Constants.OLECMDERR_E_NOTSUPPORTED;
+      if (dic.TryGetValue(Dte.ActiveDocument.FullName, out editor))
+        return ((IOleCommandTarget)editor).QueryStatus(ref pguidCmdGroup, cCmds, prgCmds, pCmdText);
+      else
+        return (int)Microsoft.VisualStudio.OLE.Interop.Constants.OLECMDERR_E_NOTSUPPORTED;
+    }
+  }
+
   internal class VSCodeEditorWindow : NativeWindow,
       System.Windows.Forms.IMessageFilter, IOleCommandTarget, IDisposable
   {
@@ -40,9 +124,11 @@ namespace MySql.Data.VisualStudio.Editors
     VSCodeEditor coreEditor;
     private IOleCommandTarget cmdTarget;
     private uint cmdTargetCookie;
+    internal VSCodeEditorUserControl Parent { get; set; }
 
     public VSCodeEditorWindow(ServiceBroker sb, UserControl parent)
     {
+      Parent = (VSCodeEditorUserControl)parent;
       services = sb;
       coreEditor = new VSCodeEditor(parent.Handle, services);
 
@@ -59,15 +145,23 @@ namespace MySql.Data.VisualStudio.Editors
       IntPtr commandHwnd = textView.GetWindowHandle();
       AssignHandle(commandHwnd);
 
-      //Register priority command target
-      hr = services.VsRegisterPriorityCommandTarget.RegisterPriorityCommandTarget(
-          0, (IOleCommandTarget)this, out cmdTargetCookie);
+      //// Register priority command target, this dispatches mappable keys like Enter, Backspace, Arrows, etc.
+      //hr = services.VsRegisterPriorityCommandTarget.RegisterPriorityCommandTarget(
+      //    0, (IOleCommandTarget)CommandBroker.Broker, out cmdTargetCookie);
 
-      if (hr != VSConstants.S_OK)
-        Marshal.ThrowExceptionForHR(hr);
+      //if (hr != VSConstants.S_OK)
+      //  Marshal.ThrowExceptionForHR(hr);
 
+      lock (typeof(EditorBroker))
+      {
+        if (EditorBroker.Broker == null) 
+        {
+          EditorBroker.CreateSingleton(services);
+        }
+        EditorBroker.RegisterEditor(this);
+      }
       //Add message filter
-      Application.AddMessageFilter((System.Windows.Forms.IMessageFilter)this);
+      //Application.AddMessageFilter((System.Windows.Forms.IMessageFilter)this);
     }
 
     public VSCodeEditor CoreEditor
@@ -97,8 +191,8 @@ namespace MySql.Data.VisualStudio.Editors
     public void Dispose()
     {
       //Remove message filter
-      Application.RemoveMessageFilter((System.Windows.Forms.IMessageFilter)this);
-
+      //Application.RemoveMessageFilter((System.Windows.Forms.IMessageFilter)this);
+      EditorBroker.UnregisterEditor(this);
       if (services != null)
       {
         // Remove this object from the list of the priority command targets.
@@ -179,7 +273,7 @@ namespace MySql.Data.VisualStudio.Editors
     /// <param name="pvaOut">Pointer to command output</param>
     /// <returns></returns>
     public int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
-    {
+    {      
       return cmdTarget.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
     }
 

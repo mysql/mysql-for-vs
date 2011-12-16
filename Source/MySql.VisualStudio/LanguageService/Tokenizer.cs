@@ -1,4 +1,4 @@
-﻿// Copyright © 2008, 2010, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2008, 2011, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -35,11 +35,19 @@ namespace MySql.Data.VisualStudio
     private int _stopIndex;
     private bool _lineComment;
     private bool _quoted;
+    private bool enableTaggingSupport;
 
     public bool AnsiQuotes = false;
     public bool BackslashEscapes = true;
     public bool ReturnComments;
     public bool BlockComment;
+
+    internal Tokenizer() { }
+
+    internal Tokenizer(bool enableTaggingSupport)
+    {
+      this.enableTaggingSupport = enableTaggingSupport;
+    }
 
     #region Properties
 
@@ -198,12 +206,13 @@ namespace MySql.Data.VisualStudio
     private string ExtractToken(bool preserveLast)
     {
       StopIndex = Math.Min(Text.Length - 1, Pos - 1);
-      if (preserveLast) Pos--;
+
+      if (preserveLast && !enableTaggingSupport)
+      {
+        Pos--;
+      }
+
       return Text.Substring(StartIndex, StopIndex - StartIndex + 1);
-      //if (Pos < Text.Length)
-      //    return Text.Substring(StartIndex, StopIndex - StartIndex + 1);
-      //StopIndex = Pos;
-      //return Text.Substring(StartIndex, StopIndex - StartIndex);
     }
 
     #endregion

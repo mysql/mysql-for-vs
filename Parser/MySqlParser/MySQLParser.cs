@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Antlr.Runtime;
 
-namespace MySqlParser
+namespace MySql.Parser
 {
 	public partial class MySQLParser : Parser
 	{

@@ -7,7 +7,7 @@ using Antlr.Runtime;
 using Antlr.Runtime.Tree;
 
 
-namespace MySqlParser.Tests
+namespace MySql.Parser.Tests
 {
 	[TestFixture]
 	public class Delete
@@ -15,13 +15,13 @@ namespace MySqlParser.Tests
 		[Test]
 		public void MissingTableDeleteTest()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("delete from", true);			
+			MySQL51Parser.program_return r = Utility.ParseSql("delete from ", true);			
 		}
 
 		[Test]
 		public void DangerousDeleteTest()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("delete quick from a");
+			MySQL51Parser.program_return r = Utility.ParseSql("delete quick from a");
 			/*
 			Assert.AreEqual(1, statements.Count);
 			Assert.IsTrue(statements[0] is DeleteStatement);
@@ -36,7 +36,7 @@ namespace MySqlParser.Tests
 		[Test]
 		public void DeleteSimpleTest()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("delete ignore from Table1 where ( Flag is null );");
+			MySQL51Parser.program_return r = Utility.ParseSql("delete ignore from Table1 where ( Flag is null );");
 			/*
 			Assert.AreEqual(1, statements.Count);
 			Assert.IsTrue(statements[0] is DeleteStatement);
@@ -56,7 +56,7 @@ namespace MySqlParser.Tests
 		[Test]
 		public void DeleteWithClausules()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql(
+			MySQL51Parser.program_return r = Utility.ParseSql(
 				"delete ignore quick low_priority from Table2 where ( Id <> 1 ) order by Id desc limit 100");
 			/*
 			Assert.AreEqual(1, statements.Count);
@@ -85,7 +85,7 @@ namespace MySqlParser.Tests
 		[Test]
 		public void DeleteMultiTableTest()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql(
+			MySQL51Parser.program_return r = Utility.ParseSql(
 				@"delete from Table1, Table2.*, Table3.* using Table1, Table4 inner join Table5
 				on Table4.KeyGuid = Table5.ForeignKeyGuid where ( IdKey <> 1 )");
 			/*
@@ -123,7 +123,7 @@ namespace MySqlParser.Tests
 		[Test]
 		public void DeleteMultiTableTest2()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql(
+			MySQL51Parser.program_return r = Utility.ParseSql(
 				@"delete Table1.*, Table2, Table3 from Table1, Table2 inner join Table3 
 				on Table2.KeyId = Table3.ForeignKeyId where ( IdKey = 2 )");
 			/*
@@ -163,7 +163,7 @@ namespace MySqlParser.Tests
 		public void DeleteMultiTableWrongTest()
 		{
 			// TODO: Check if effectively is the multitable syntax disallowed in combination with order by.
-			MySQL51Parser.statement_list_return r = Utility.ParseSql(
+			MySQL51Parser.program_return r = Utility.ParseSql(
 				@"delete Table1.*, Table2, Table3 from Table1, Table2 inner join Table3 
 				on Table2.KeyId = Table3.ForeignKeyId where ( Id <> 1 ) order by Id desc", true);
 			/*
@@ -200,7 +200,7 @@ namespace MySqlParser.Tests
 		[Test]
 		public void DeleteMultiTableWrongTest2()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql(
+			MySQL51Parser.program_return r = Utility.ParseSql(
 				@"delete Table1.*, Table2, Table3 from Table1, Table2 inner join Table3 
 				on Table2.KeyId = Table3.ForeignKeyId where ( Id <> 1 ) limit 1000", true);
 			/*

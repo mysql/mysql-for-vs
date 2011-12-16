@@ -6,7 +6,7 @@ using NUnit.Framework;
 using Antlr.Runtime;
 using Antlr.Runtime.Tree;
 
-namespace MySqlParser.Tests
+namespace MySql.Parser.Tests
 {
 	[TestFixture]
 	public class Update
@@ -14,7 +14,7 @@ namespace MySqlParser.Tests
 		[Test]
 		public void UpdateSimpleTest()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql(
+			MySQL51Parser.program_return r = Utility.ParseSql(
 				@"update Table1 
 					set col1 = 20, col2 = a and b, col3 = col4, col4 = true, col5 = null, col6 = 'string' 
 					where Id = 30");
@@ -55,7 +55,7 @@ namespace MySqlParser.Tests
 		[Test]
 		public void UpdateMoreComplexText()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql(
+			MySQL51Parser.program_return r = Utility.ParseSql(
 				@"update low_priority ignore T set deleted = 1, ToArchive = false, DateStamp = '10-10-2000' 
 				where DateCreated < '09-10-2000' order by Id asc limit 1000");
 			/*
@@ -94,7 +94,7 @@ namespace MySqlParser.Tests
 		[Test]
 		public void UpdateMultiTable()
 		{			
-			MySQL51Parser.statement_list_return r = Utility.ParseSql(
+			MySQL51Parser.program_return r = Utility.ParseSql(
 				@"update T1, T2 inner join T3 on T2.KeyId = T3.ForeignKeyId 
 					set Col1 = 3.1416, T1.Col3 = T2.Col3, T1.Col2 = T3.Col2  
 					where ( T1.Id = T2.Id ) ");

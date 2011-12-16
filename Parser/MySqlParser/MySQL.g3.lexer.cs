@@ -1,4 +1,4 @@
-﻿namespace MySqlParser
+﻿namespace MySql.Parser
 {
 	partial class MySQLLexer
 	{

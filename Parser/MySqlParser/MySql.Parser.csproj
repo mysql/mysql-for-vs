@@ -44,13 +44,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MySQL.g3.lexer.cs" />
-    <Compile Include="MySQL.g3.parser.cs" />
+    <Compile Include="CaseInsensitiveInputStream.cs" />
     <Compile Include="MySQL51Lexer.g3.cs" />
     <Compile Include="MySQL51Parser.g3.cs" />
-    <Compile Include="MySQLLexer.cs" />
-    <Compile Include="MySQLParser.cs" />
+    <Compile Include="MySQLLexer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ParserUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TokenStreamRemovable.cs" />
   </ItemGroup>
   <ItemGroup>
     <Antlr3 Include="MySQL.g3">

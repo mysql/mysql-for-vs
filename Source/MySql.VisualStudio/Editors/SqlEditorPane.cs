@@ -33,11 +33,15 @@ namespace MySql.Data.VisualStudio.Editors
   class SqlEditorPane : WindowPane//, IOleCommandTarget
   {
     private SqlEditor editor;
+    internal SqlEditorFactory Factory { get; private set; }
+    internal string DocumentPath { get; private set; }
 
-    public SqlEditorPane(ServiceProvider sp)
+    public SqlEditorPane(ServiceProvider sp, SqlEditorFactory factory)
       : base(sp)
     {
-      editor = new SqlEditor(sp);
+      Factory = factory;
+      DocumentPath = factory.LastDocumentPath;
+      editor = new SqlEditor(sp, this);
     }
 
     public override IWin32Window Window

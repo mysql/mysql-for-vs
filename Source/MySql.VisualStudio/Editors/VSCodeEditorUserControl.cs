@@ -36,9 +36,11 @@ namespace MySql.Data.VisualStudio.Editors
   internal class VSCodeEditorUserControl : UserControl
   {
     private VSCodeEditorWindow nativeWindow;
+    internal SqlEditor SqlEditor { get; private set; }
 
-    public void Init(ServiceProvider serviceProvider)
+    public void Init(ServiceProvider serviceProvider, SqlEditor Editor)
     {
+      SqlEditor = Editor;
       ServiceBroker sb = new ServiceBroker(serviceProvider);
       nativeWindow = new VSCodeEditorWindow(sb, this);
     }

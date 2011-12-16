@@ -6,7 +6,7 @@ using NUnit.Framework;
 using Antlr.Runtime;
 using Antlr.Runtime.Tree;
 
-namespace MySqlParser.Tests.DDL.Other
+namespace MySql.Parser.Tests.DDL.Other
 {
 	[TestFixture]
 	public class RenameTable
@@ -14,7 +14,7 @@ namespace MySqlParser.Tests.DDL.Other
 		[Test]
 		public void SimpleNoSchema()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("RENAME TABLE `table1` TO `table2`");
+			MySQL51Parser.program_return r = Utility.ParseSql("RENAME TABLE `table1` TO `table2`");
 			/*
 			Assert.AreEqual(1, statements.Count);
 			Assert.IsTrue(statements[0] is RenameTableStatement);
@@ -32,7 +32,7 @@ namespace MySqlParser.Tests.DDL.Other
 		[Test]
 		public void SimpleWithSchema()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql(
+			MySQL51Parser.program_return r = Utility.ParseSql(
 				"RENAME TABLE `schema1`.`table1` TO `schema2`.`table2`");
 			/*
 			Assert.AreEqual(1, statements.Count);
@@ -51,19 +51,19 @@ namespace MySqlParser.Tests.DDL.Other
 		[Test]
 		public void MissingFromTableName()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("RENAME TABLE", true);
+			MySQL51Parser.program_return r = Utility.ParseSql("RENAME TABLE", true);
 		}
 
 		[Test]
 		public void MissingToTableName()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("RENAME TABLE table1 TO", true);
+			MySQL51Parser.program_return r = Utility.ParseSql("RENAME TABLE table1 TO", true);
 		}
 
 		[Test]
 		public void MultipleRenames()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql(
+			MySQL51Parser.program_return r = Utility.ParseSql(
 				@"RENAME TABLE table1 TO table2, schema1.table4 TO table5, 
 				`schema3`.table6 TO `schema7`.table8");
 			/*

@@ -51,6 +51,8 @@ namespace MySql.Data.VisualStudio.Editors
 
     #region Common Interfaces
 
+    internal ServiceProvider Site { get { return site; } }
+
     public IOleServiceProvider IOleServiceProvider
     {
       get { return psp; }
