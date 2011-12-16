@@ -23,6 +23,7 @@
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Package;
 using Microsoft.VisualStudio.TextManager.Interop;
+using Microsoft.VisualStudio.Shell;
 using System;
 
 namespace MySql.Data.VisualStudio
@@ -32,6 +33,17 @@ namespace MySql.Data.VisualStudio
   /// </summary>
   [ComVisible(true)]
   [Guid("FA498A2D-116A-4f25-9B55-7938E8E6DDA7")]
+  [ProvideLanguageService(typeof(MySqlLanguageService),
+                            MySqlLanguageService.LanguageName,
+                            -1,
+        // Optional language service properties
+        CodeSense             = true,  // General IntelliSense support
+        RequestStockColors    = false, // Custom colorable items        
+        MatchBraces           = true,  // Match braces on command
+        QuickInfo             = true,
+        ShowCompletion        = true,
+        MatchBracesAtCaret    = true   // Match braces while typing 
+        )]
   class MySqlLanguageService : LanguageService
   {
     private LanguagePreferences preferences;
@@ -55,7 +67,8 @@ namespace MySql.Data.VisualStudio
 
     public override IScanner GetScanner(IVsTextLines buffer)
     {
-      return new MySqlScanner();
+      return null;
+      //return new MySqlScanner();
     }
 
     public override LanguagePreferences GetLanguagePreferences()

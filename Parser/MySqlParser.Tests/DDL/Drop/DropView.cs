@@ -7,7 +7,7 @@ using Antlr.Runtime;
 using Antlr.Runtime.Tree;
 
 
-namespace MySqlParser.Tests.DDL.Drop
+namespace MySql.Parser.Tests.DDL.Drop
 {
 	[TestFixture]
 	public class DropView
@@ -15,7 +15,7 @@ namespace MySqlParser.Tests.DDL.Drop
 		[Test]
 		public void SimpleNoSchema()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("DROP VIEW `viewname`");
+			MySQL51Parser.program_return r = Utility.ParseSql("DROP VIEW `viewname`");
 			/*
 			Assert.AreEqual(1, statements.Count);
 			Assert.IsTrue(statements[0] is DropViewStatement);
@@ -28,7 +28,7 @@ namespace MySqlParser.Tests.DDL.Drop
 		[Test]
 		public void SimpleWithSchema()
 		{			
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("DROP VIEW `schema1`.`viewname`");
+			MySQL51Parser.program_return r = Utility.ParseSql("DROP VIEW `schema1`.`viewname`");
 			/*
 			Assert.AreEqual(1, statements.Count);
 			Assert.IsTrue(statements[0] is DropViewStatement);
@@ -42,13 +42,19 @@ namespace MySqlParser.Tests.DDL.Drop
 		[Test]
 		public void MissingViewName()
 		{
-			Utility.ParseSql("DROP VIEW", true);
+          try
+          {
+            Utility.ParseSql("DROP VIEW", true);
+          }
+          catch (Exception e)
+          {
+          }
 		}
 
 		[Test]
 		public void MultipleViews()
 		{			
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("DROP VIEW `view1`, schema2.view2, `schema3`.`view3`, view4");
+			MySQL51Parser.program_return r = Utility.ParseSql("DROP VIEW `view1`, schema2.view2, `schema3`.`view3`, view4");
 			/*
 			Assert.AreEqual(1, statements.Count);
 			Assert.IsTrue(statements[0] is DropViewStatement);
@@ -72,7 +78,7 @@ namespace MySqlParser.Tests.DDL.Drop
 		[Test]
 		public void IfExists()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("DROP VIEW IF EXISTS `viewname`");
+			MySQL51Parser.program_return r = Utility.ParseSql("DROP VIEW IF EXISTS `viewname`");
 			/*
 			Assert.AreEqual(1, statements.Count);
 			Assert.IsTrue(statements[0] is DropViewStatement);
@@ -86,7 +92,7 @@ namespace MySqlParser.Tests.DDL.Drop
 		[Test]
 		public void CascadeOrRestrict()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("DROP VIEW IF EXISTS `viewname` CASCADE");
+			MySQL51Parser.program_return r = Utility.ParseSql("DROP VIEW IF EXISTS `viewname` CASCADE");
 			/*
 			DropViewStatement ds = statements[0] as DropViewStatement;
 			Assert.IsTrue(ds.Cascade);

@@ -7,7 +7,7 @@ using Antlr.Runtime;
 using Antlr.Runtime.Tree;
 
 
-namespace MySqlParser.Tests.DDL.Drop
+namespace MySql.Parser.Tests.DDL.Drop
 {
 	[TestFixture]
 	public class DropEvent
@@ -16,7 +16,7 @@ namespace MySqlParser.Tests.DDL.Drop
 		public void Simple()
 		{
 			
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("DROP EVENT eventName");
+			MySQL51Parser.program_return r = Utility.ParseSql("DROP EVENT eventName");
 			/*
 			Assert.AreEqual(1, statements.Count);
 			Assert.IsTrue(statements[0] is DropEventStatement);
@@ -35,7 +35,7 @@ namespace MySqlParser.Tests.DDL.Drop
 		[Test]
 		public void MissingEventName()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("DROP EVENT", true);
+			MySQL51Parser.program_return r = Utility.ParseSql("DROP EVENT", true);
 			/*
 			try
 			{
@@ -53,7 +53,7 @@ namespace MySqlParser.Tests.DDL.Drop
 		[Test]
 		public void IfExists()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("DROP EVENT IF EXISTS `eventName`");
+			MySQL51Parser.program_return r = Utility.ParseSql("DROP EVENT IF EXISTS `eventName`");
 			/*
 			Assert.AreEqual(1, statements.Count);
 			Assert.IsTrue(statements[0] is DropEventStatement);

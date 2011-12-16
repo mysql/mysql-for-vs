@@ -30,7 +30,6 @@ using System.Windows.Forms;
 using Microsoft.VisualStudio.Shell;
 using System.Data.Common;
 using MySql.Data.MySqlClient;
-using MySql.Data.VisualStudio.Properties;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 using System.Globalization;
 using System.IO;
@@ -40,7 +39,9 @@ namespace MySql.Data.VisualStudio.Editors
   public partial class SqlEditor : BaseEditorControl
   {
     private DbConnection connection;
+    internal DbConnection Connection { get { return connection; } }
     private DbProviderFactory factory;
+    internal SqlEditorPane Pane { get; set; }
 
     public SqlEditor()
     {
@@ -51,12 +52,20 @@ namespace MySql.Data.VisualStudio.Editors
       tabControl1.TabPages.Remove(resultsPage);
     }
 
-    public SqlEditor(ServiceProvider sp)
+    internal SqlEditor(ServiceProvider sp, SqlEditorPane pane )
       : this()
     {
+      Pane = pane;
       serviceProvider = sp;
-      codeEditor.Init(sp);
+      codeEditor.Init(sp, this);
     }
+
+    //public SqlEditor(ServiceProvider sp)
+    //  : this()
+    //{
+    //  serviceProvider = sp;
+    //  codeEditor.Init(sp, this);      
+    //}
 
     #region Overrides
 
@@ -89,10 +98,10 @@ namespace MySql.Data.VisualStudio.Editors
       set { codeEditor.IsDirty = value; }
     }
 
-    #endregion
+    #endregion    
 
     private void connectButton_Click(object sender, EventArgs e)
-    {
+    {      
       resultsPage.Hide();
       ConnectDialog d = new ConnectDialog();
       d.Connection = connection;
@@ -101,11 +110,14 @@ namespace MySql.Data.VisualStudio.Editors
       try
       {
         connection = d.Connection;
+        //LanguageServiceConnection.Current.Connection = this.connection;
         UpdateButtons();
       }
       catch (MySqlException)
       {
-        MessageBox.Show( Resources.ErrorOnConnection, Resources.ErrorCaption, MessageBoxButtons.OK);
+        MessageBox.Show(
+@"Error establishing the database connection.
+Check that the server is running, the database exist and the user credentials are valid.", "Error", MessageBoxButtons.OK);          
       }
     }
 

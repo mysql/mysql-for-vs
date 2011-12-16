@@ -7,7 +7,7 @@ using Antlr.Runtime;
 using Antlr.Runtime.Tree;
 
 
-namespace MySqlParser.Tests.DDL.Drop
+namespace MySql.Parser.Tests.DDL.Drop
 {
 	[TestFixture]
 	public class DropTrigger
@@ -15,7 +15,7 @@ namespace MySqlParser.Tests.DDL.Drop
 		[Test]
 		public void SimpleNoSchema()
 		{			
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("DROP TRIGGER trigger1");
+			MySQL51Parser.program_return r = Utility.ParseSql("DROP TRIGGER trigger1");
 			/*
 			Assert.AreEqual(1, statements.Count);
 			Assert.IsTrue(statements[0] is DropTriggerStatement);
@@ -28,7 +28,7 @@ namespace MySqlParser.Tests.DDL.Drop
 		[Test]
 		public void SimpleSchema()
 		{			
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("DROP TRIGGER schema1.trigger1");
+			MySQL51Parser.program_return r = Utility.ParseSql("DROP TRIGGER schema1.trigger1");
 			/*
 			Assert.AreEqual(1, statements.Count);
 			Assert.IsTrue(statements[0] is DropTriggerStatement);
@@ -50,13 +50,13 @@ namespace MySqlParser.Tests.DDL.Drop
 		[Test]
 		public void MissingDbName()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("DROP TRIGGER", true);
+			MySQL51Parser.program_return r = Utility.ParseSql("DROP TRIGGER", true);
 		}
 
 		[Test]
 		public void IfExists()
 		{			
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("DROP TRIGGER IF EXISTS `trigger1`");
+			MySQL51Parser.program_return r = Utility.ParseSql("DROP TRIGGER IF EXISTS `trigger1`");
 			/*
 			Assert.AreEqual(1, statements.Count);
 			Assert.IsTrue(statements[0] is DropTriggerStatement);

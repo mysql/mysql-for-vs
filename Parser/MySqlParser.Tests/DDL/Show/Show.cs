@@ -7,7 +7,7 @@ using Antlr.Runtime;
 using Antlr.Runtime.Tree;
 
 
-namespace MySqlParser.Tests.DDL.Show
+namespace MySql.Parser.Tests.DDL.Show
 {
 	[TestFixture]
 	public class Show
@@ -30,10 +30,10 @@ namespace MySqlParser.Tests.DDL.Show
 			/* Illegal or deprecated */
 			//TestShow("SHOW FULL ENGINES", ShowStatementType.ShowEngines);
 			TestShow("SHOW BINARY LOGS", ShowStatementType.ShowLogs);
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("SHOW MASTER LOGS");
-			Assert.AreEqual( "SHOW", (( CommonTree )r.Tree ).Text );
-			Assert.AreEqual( "MASTER", (( CommonTree )r.Tree ).Children[ 0 ].Text );
-			Assert.AreEqual("LOGS", ((CommonTree)r.Tree).Children[0].GetChild(0).Text);
+			MySQL51Parser.program_return r = Utility.ParseSql("SHOW MASTER LOGS");
+			Assert.AreEqual( "SHOW", (( CommonTree )r.Tree ).GetChild( 0 ).Text );
+			Assert.AreEqual( "MASTER", (( CommonTree )r.Tree ).GetChild( 0 ).GetChild( 0 ).Text );
+            Assert.AreEqual("LOGS", ((CommonTree)r.Tree).GetChild(0).GetChild(0).GetChild(0).Text);
 		}
 
 		[Test]
@@ -59,7 +59,7 @@ namespace MySqlParser.Tests.DDL.Show
 			/*
 			Assert.AreEqual("'userx'", ss.Id);
 			 * */
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("show grants for current_user");
+			MySQL51Parser.program_return r = Utility.ParseSql("show grants for current_user");
 			r = Utility.ParseSql("show grants for current_user()");
 		}
 
@@ -124,7 +124,7 @@ namespace MySqlParser.Tests.DDL.Show
 
 		private void TestShow(string sql, ShowStatementType type)
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql( sql );
+			MySQL51Parser.program_return r = Utility.ParseSql( sql );
 			/*
 			Assert.AreEqual(1, statements.Count);
 			Assert.IsTrue(statements[0] is ShowStatement);
@@ -137,31 +137,31 @@ namespace MySqlParser.Tests.DDL.Show
 		[Test]
 		public void BadShow()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("SHOW BAD", true);
+			MySQL51Parser.program_return r = Utility.ParseSql("SHOW BAD", true);
 		}
 
 		[Test]
 		public void Profile1()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("show profiles", false);
+			MySQL51Parser.program_return r = Utility.ParseSql("show profiles", false);
 		}
 
 		[Test]
 		public void Profile2()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("show profile", false);
+			MySQL51Parser.program_return r = Utility.ParseSql("show profile", false);
 		}
 
 		[Test]
 		public void Profile3()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("show profile for query 1", false);
+			MySQL51Parser.program_return r = Utility.ParseSql("show profile for query 1", false);
 		}
 
 		[Test]
 		public void Profile4()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("show profiles cpu for query 2", false);
+			MySQL51Parser.program_return r = Utility.ParseSql("show profiles cpu for query 2", false);
 		}
 
 

@@ -69,9 +69,6 @@ namespace MySql.Data.VisualStudio
       DefaultName = "MySQL SQL Editor")]
   [ProvideEditorLogicalView(typeof(SqlEditorFactory), "{7651a703-06e5-11d1-8ebd-00a0c90f26ea}")]
   [ProvideService(typeof(MySqlProviderObjectFactory), ServiceName = "MySQL Provider Object Factory")]
-  [ProvideService(typeof(MySqlLanguageService))]
-  [ProvideLanguageService(typeof(MySqlLanguageService), MySqlLanguageService.LanguageName, 101,
-      RequestStockColors = true)]
   // In order be loaded inside Visual Studio in a machine that has not the VS SDK installed, 
   // package needs to have a valid load key (it can be requested at 
   // http://msdn.microsoft.com/vstudio/extend/). This attributes tells the shell that this 
@@ -83,7 +80,6 @@ namespace MySql.Data.VisualStudio
   [Guid(GuidStrings.Package)]
   public sealed class MySqlDataProviderPackage : Package, IVsInstalledProduct
   {
-    private MySqlLanguageService languageService;
     public static MySqlDataProviderPackage Instance;
 
     /// <summary>
@@ -133,12 +129,6 @@ namespace MySql.Data.VisualStudio
         menuItem.BeforeQueryStatus += new EventHandler(configWizard_BeforeQueryStatus);
         mcs.AddCommand(menuItem);
       }
-
-      languageService = new MySqlLanguageService();
-      languageService.SetSite(this);
-
-      IServiceContainer serviceContainer = (IServiceContainer)this;
-      serviceContainer.AddService(typeof(MySqlLanguageService), languageService, true);
     }
 
     #endregion

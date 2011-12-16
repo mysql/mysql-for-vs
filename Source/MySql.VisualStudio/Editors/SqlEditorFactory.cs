@@ -39,6 +39,8 @@ namespace MySql.Data.VisualStudio.Editors
 
     #region IVsEditorFactory Members
 
+    internal string LastDocumentPath { get; private set; }
+
     int IVsEditorFactory.Close()
     {
       return VSConstants.S_OK;
@@ -49,13 +51,16 @@ namespace MySql.Data.VisualStudio.Editors
         IntPtr punkDocDataExisting, out IntPtr ppunkDocView, out IntPtr ppunkDocData,
         out string pbstrEditorCaption, out Guid pguidCmdUI, out int pgrfCDW)
     {
+      string s;
+      pvHier.GetCanonicalName(itemid, out s);
       pgrfCDW = 0;
+      LastDocumentPath = pszMkDocument;
       pguidCmdUI = VSConstants.GUID_TextEditorFactory;
-      SqlEditorPane editor = new SqlEditorPane(serviceProvider);
+      SqlEditorPane editor = new SqlEditorPane(serviceProvider, this);
       ppunkDocData = Marshal.GetIUnknownForObject(editor.Window);
       ppunkDocView = Marshal.GetIUnknownForObject(editor);
       pbstrEditorCaption = "";
-      return VSConstants.S_OK;
+      return VSConstants.S_OK; 
     }
 
     int IVsEditorFactory.MapLogicalView(ref Guid logicalView, out string physicalView)

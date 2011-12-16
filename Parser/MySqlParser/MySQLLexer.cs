@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using Antlr.Runtime;
 
-namespace MySqlParser
+namespace MySql.Parser
 {	
 	/// <summary>
 	/// Abstract superclass for MySQL Lexers, for now containing some common code, so it's not in the grammar.
 	/// Author: kroepke
 	/// </summary>	
-	public partial class MySQLLexer : Lexer
+	public abstract class MySQLLexer : Lexer
 	{
 		bool nextTokenIsID = false;
     
@@ -28,17 +28,19 @@ namespace MySqlParser
 			return (input.LA(1) != '(') ? MySQL51Lexer.ID : proposedType;
 		}
 
-		//public MySQLLexer() {} 
+        public MySQLLexer() { } 
 
 		//public MySQLLexer(ICharStream input) {
 		//    this(input, new RecognizerSharedState());
 		//    //errorListener = new BaseErrorListener(this);
 		//}
 
-		//public MySQLLexer(ICharStream input, RecognizerSharedState state) : base(input, state) {
-			
-		//    //errorListener = new BaseErrorListener(this);
-		//}
+        public MySQLLexer(ICharStream input, RecognizerSharedState state)
+          : base(input, state)
+        {
+
+          //errorListener = new BaseErrorListener(this);
+        }
 
 		/*
 		public void setErrorListener(ErrorListener listener) {

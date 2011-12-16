@@ -6,7 +6,7 @@ using NUnit.Framework;
 using Antlr.Runtime;
 using Antlr.Runtime.Tree;
 
-namespace MySqlParser.Tests.DDL.Drop
+namespace MySql.Parser.Tests.DDL.Drop
 {
 	[TestFixture]
 	public class DropRoutine
@@ -14,7 +14,7 @@ namespace MySqlParser.Tests.DDL.Drop
 		[Test]
 		public void SimpleNoSchema()
 		{			
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("DROP PROCEDURE procname");
+			MySQL51Parser.program_return r = Utility.ParseSql("DROP PROCEDURE procname");
 			/*
 			Assert.AreEqual(1, statements.Count);
 			Assert.IsTrue(statements[0] is DropRoutineStatement);
@@ -36,7 +36,7 @@ namespace MySqlParser.Tests.DDL.Drop
 		[Test]
 		public void Simple()
 		{			
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("DROP PROCEDURE schema1.procname");
+			MySQL51Parser.program_return r = Utility.ParseSql("DROP PROCEDURE schema1.procname");
 			/*
 			Assert.AreEqual(1, statements.Count);
 			Assert.IsTrue(statements[0] is DropRoutineStatement);
@@ -58,13 +58,13 @@ namespace MySqlParser.Tests.DDL.Drop
 		[Test]
 		public void MissingRoutineName()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("DROP PROCEDURE", true);
+			MySQL51Parser.program_return r = Utility.ParseSql("DROP PROCEDURE", true);
 		}
 
 		[Test]
 		public void IfExists()
 		{			
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("DROP PROCEDURE IF EXISTS `procname`");
+			MySQL51Parser.program_return r = Utility.ParseSql("DROP PROCEDURE IF EXISTS `procname`");
 			/*
 			Assert.AreEqual(1, statements.Count);
 			Assert.IsTrue(statements[0] is DropRoutineStatement);

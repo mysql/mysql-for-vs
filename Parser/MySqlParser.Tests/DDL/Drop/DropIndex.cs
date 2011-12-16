@@ -7,7 +7,7 @@ using Antlr.Runtime;
 using Antlr.Runtime.Tree;
 
 
-namespace MySqlParser.Tests.DDL.Drop
+namespace MySql.Parser.Tests.DDL.Drop
 {
 	[TestFixture]
 	public class DropIndex
@@ -15,7 +15,7 @@ namespace MySqlParser.Tests.DDL.Drop
 		[Test]
 		public void Simple()
 		{			
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("DROP INDEX indexName ON table1");
+			MySQL51Parser.program_return r = Utility.ParseSql("DROP INDEX indexName ON table1");
 			/*
 			Assert.AreEqual(1, statements.Count);
 			Assert.IsTrue(statements[0] is DropIndexStatement);
@@ -38,13 +38,13 @@ namespace MySqlParser.Tests.DDL.Drop
 		[Test]
 		public void MissingIndexName()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("DROP INDEX", true);
+			MySQL51Parser.program_return r = Utility.ParseSql("DROP INDEX", true);
 		}
 
 		[Test]
 		public void MissingTableName()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("DROP INDEX indexName ON", true);
+			MySQL51Parser.program_return r = Utility.ParseSql("DROP INDEX indexName ON", true);
 		}
 	}
 }

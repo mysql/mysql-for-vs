@@ -7,7 +7,7 @@ using Antlr.Runtime;
 using Antlr.Runtime.Tree;
 
 
-namespace MySqlParser.Tests.DDL.Other
+namespace MySql.Parser.Tests.DDL.Other
 {
 	[TestFixture]
 	public class TruncateTable
@@ -15,7 +15,7 @@ namespace MySqlParser.Tests.DDL.Other
 		[Test]
 		public void Simple()
 		{			
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("TRUNCATE TABLE table1");
+			MySQL51Parser.program_return r = Utility.ParseSql("TRUNCATE TABLE table1");
 			/*
 			Assert.AreEqual(1, statements.Count);
 			Assert.IsTrue(statements[0] is TruncateTableStatement);
@@ -29,7 +29,7 @@ namespace MySqlParser.Tests.DDL.Other
 		[Test]
 		public void SimpleWithShortSyntax()
 		{			
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("TRUNCATE `schema1`.`table1`");
+			MySQL51Parser.program_return r = Utility.ParseSql("TRUNCATE `schema1`.`table1`");
 			/*
 			Assert.AreEqual(1, statements.Count);
 			Assert.IsTrue(statements[0] is TruncateTableStatement);
@@ -43,7 +43,7 @@ namespace MySqlParser.Tests.DDL.Other
 		[Test]
 		public void MissingTableName()
 		{
-			MySQL51Parser.statement_list_return r = Utility.ParseSql("TRUNCATE TABLE ", true);
+			MySQL51Parser.program_return r = Utility.ParseSql("TRUNCATE TABLE ", true);
 		}
 	}
 }
