@@ -341,9 +341,11 @@ namespace MySql.Data.MySqlClient
     {
       int records = -1;
 
+#if !CF
       // give our interceptors a shot at it first
       if (connection.commandInterceptor.ExecuteNonQuery(CommandText, ref records))
         return records;
+#endif
 
       // ok, none of our interceptors handled this so we default
       using (MySqlDataReader reader = ExecuteReader())
@@ -410,10 +412,12 @@ namespace MySql.Data.MySqlClient
     /// <include file='docs/mysqlcommand.xml' path='docs/ExecuteReader1/*'/>
     public new MySqlDataReader ExecuteReader(CommandBehavior behavior)
     {
+#if !CF
       // give our interceptors a shot at it first
       MySqlDataReader interceptedReader = null;
       if (connection.commandInterceptor.ExecuteReader(CommandText, behavior, ref interceptedReader))
         return interceptedReader;
+#endif
       
       // interceptors didn't handle this so we fall through
       bool success = false;
@@ -577,9 +581,11 @@ namespace MySql.Data.MySqlClient
       lastInsertedId = -1;
       object val = null;
 
+#if !CF
       // give our interceptors a shot at it first
       if (connection.commandInterceptor.ExecuteScalar(CommandText, ref val))
         return val;
+#endif
 
       using (MySqlDataReader reader = ExecuteReader())
       {
