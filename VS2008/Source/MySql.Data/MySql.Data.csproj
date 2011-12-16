@@ -49,6 +49,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
@@ -115,7 +116,7 @@
     <Compile Include="..\..\..\Source\MySql.Data\MySqlSecurityPermission.cs" />
     <Compile Include="..\..\..\Source\MySql.Data\MySqlPromotableTransaction.cs" />
     <Compile Include="..\..\..\Source\MySql.Data\MySqlStream.cs" />
-    <Compile Include="..\..\..\Source\MySql.Data\NativeDriver.cs" />	
+    <Compile Include="..\..\..\Source\MySql.Data\NativeDriver.cs" />
     <Compile Include="..\..\..\Source\MySql.Data\parameter.cs" />
     <Compile Include="..\..\..\Source\MySql.Data\parameter_collection.cs" />
     <Compile Include="..\..\..\Source\MySql.Data\PerformanceMonitor.cs" />
@@ -295,6 +296,18 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\Source\MySql.Data\Interceptors\CommandInterceptor.cs">
+      <Link>Interceptors\CommandInterceptor.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Source\MySql.Data\Interceptors\ExceptionInterceptor.cs">
+      <Link>Interceptors\ExceptionInterceptor.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Source\MySql.Data\Interceptors\Interceptor.cs">
+      <Link>Interceptors\Interceptor.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Source\MySql.Data\MySqlConfiguration.cs">
+      <Link>MySqlConfiguration.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\Source\MySql.Data\Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
