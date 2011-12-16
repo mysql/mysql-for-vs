@@ -100,7 +100,6 @@ namespace MySql.Data.Types
       }
       else
       {
-
         String s = String.Format("'{0}{1} {2:00}:{3:00}:{4:00}.{5}'",
           negative ? "-" : "", ts.Days, ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds);
 
@@ -185,23 +184,16 @@ namespace MySql.Data.Types
 
     public override string ToString()
     {
-      return String.Format("{0} {1:00}:{2:00}:{3:00}",
-        mValue.Days, mValue.Hours, mValue.Minutes, mValue.Seconds);
+      return String.Format("{0} {1:00}:{2:00}:{3:00}.{4}",
+        mValue.Days, mValue.Hours, mValue.Minutes, mValue.Seconds, mValue.Milliseconds);
     }
 
     private void ParseMySql(string s)
     {
-  
-      string[] parts = s.Split(':', '.');
+      string[] parts = s.Split(':');
       int hours = Int32.Parse(parts[0]);
       int mins = Int32.Parse(parts[1]);
       int secs = Int32.Parse(parts[2]);
-      int msecs = 0;
-
-      if (parts.Length > 3)
-          msecs = Int32.Parse(parts[3]);
-        
-        
       if (hours < 0 || parts[0].StartsWith("-"))
       {
         mins *= -1;
@@ -209,7 +201,7 @@ namespace MySql.Data.Types
       }
       int days = hours / 24;
       hours = hours - (days * 24);
-      mValue = new TimeSpan(days, hours, mins, secs, msecs);
+      mValue = new TimeSpan(days, hours, mins, secs, 0);
       isNull = false;
     }
   }
