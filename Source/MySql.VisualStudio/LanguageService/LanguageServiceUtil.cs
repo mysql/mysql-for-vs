@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.IO;
 using System.Text;
@@ -67,6 +68,20 @@ namespace MySql.Data.VisualStudio
       StringBuilder sb;
       CommonTokenStream ts;
       return ParseSql(sql, expectErrors, out sb, out ts);
+    }
+
+    public static DbConnection GetConnection()
+    {
+      DbConnection connection = StoredProcedureNode.GetCurrentConnection();
+      if (connection == null)
+      {
+        Editors.EditorBroker broker = MySql.Data.VisualStudio.Editors.EditorBroker.Broker;
+        if (broker != null)
+        {
+          connection = broker.GetCurrentConnection();
+        }
+      }
+      return connection;
     }
   }
 }

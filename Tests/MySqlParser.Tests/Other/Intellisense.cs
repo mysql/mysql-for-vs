@@ -44,6 +44,32 @@ namespace MySql.Parser.Tests
     }
 
     [Test]
+    public void SelectSimpleTableCompletionWitBeginEnd2()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql("begin select * from  ", true, out sb);
+      string expectedToken =
+          new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
+      Assert.True(
+        expectedToken == "table_factor" ||
+        expectedToken == "simple_table_ref_no_alias_existing");
+    }
+
+    [Test]
+    public void SelectSimpleTableCompletionWitBeginEnd3()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql("begin select * from end", true, out sb);
+      string expectedToken =
+          new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
+      Assert.True(
+        expectedToken == "table_factor" ||
+        expectedToken == "simple_table_ref_no_alias_existing");
+    }
+
+    [Test]
     public void SelectJoinTableCompletion()
     {
       StringBuilder sb;

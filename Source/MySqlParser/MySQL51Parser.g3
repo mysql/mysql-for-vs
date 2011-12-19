@@ -739,7 +739,7 @@ ident
 	|	tok=CONTAINS
 	|	tok=DEALLOCATE
 	|	tok=DO
-	|	tok=END
+	//|	tok=END
 	|	tok=EXECUTE
 	|	tok=FLUSH
 	//|	tok=GROUP

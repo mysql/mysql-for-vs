@@ -58,8 +58,7 @@ namespace MySql.Data.VisualStudio.LanguageService
       applicableToSpan = null;
       if (m_dictionary == null)
       {
-        DbConnection connection =
-          MySql.Data.VisualStudio.Editors.EditorBroker.Broker.GetCurrentConnection();
+        DbConnection connection = LanguageServiceUtil.GetConnection();
         if (connection == null || string.IsNullOrEmpty( connection.Database )) return;
         LoadDictionary(connection);
       }
