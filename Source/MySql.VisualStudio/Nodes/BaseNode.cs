@@ -124,7 +124,7 @@ namespace MySql.Data.VisualStudio
       protected set { _dirty = value; }
     }
 
-    protected string Moniker
+    protected internal string Moniker
     {
       get { return String.Format("mysql://{0}/{1}/{2}", Server, Database, Name); }
     }

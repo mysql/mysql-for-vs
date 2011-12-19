@@ -79,8 +79,41 @@ namespace MySql.Data.VisualStudio
     public static void CreateNew(DataViewHierarchyAccessor HierarchyAccessor, bool isFunc)
     {
       StoredProcedureNode node = new StoredProcedureNode(HierarchyAccessor, 0, isFunc);
+      RegisterNode( node );
       node.Edit();
     }
+
+    private static void RegisterNode( BaseNode node )
+    {
+      lock( typeof( StoredProcedureNode ) )
+      {
+        if (Dte == null)
+        {
+          Dte = (EnvDTE.DTE)node.HierarchyAccessor.ServiceProvider.GetService(typeof(EnvDTE.DTE));
+        }
+        string name = node.Moniker;
+        dic.Remove(name);
+        dic.Add(name, node);
+      }
+    }
+
+    /// <summary>
+    /// Gets the connection of the currently edited document.
+    /// </summary>
+    public static DbConnection GetCurrentConnection()
+    {
+      if (Dte == null) return null;
+      string curDoc = Dte.ActiveDocument.FullName;
+      BaseNode node = null;
+      if (dic.TryGetValue(curDoc, out node))
+      {
+        return ( DbConnection )node.HierarchyAccessor.Connection.GetLockedProviderObject();
+      }
+      return null;
+    }
+
+    private static EnvDTE.DTE Dte = null;
+    private static Dictionary<string, BaseNode> dic = new Dictionary<string, BaseNode>();
 
     public override object GetEditor()
     {
@@ -107,7 +140,7 @@ namespace MySql.Data.VisualStudio
     private string GetNewRoutineText()
     {
       StringBuilder sb = new StringBuilder("CREATE ");
-      sb.AppendFormat("{0} {1}\r\n", isFunction ? "FUNCTION" : "PROCEDURE", Name);
+      sb.AppendFormat("{0} {1}()\r\n", isFunction ? "FUNCTION" : "PROCEDURE", Name);
       sb.Append("/*\r\n(\r\n");
       sb.Append("parameter1 INT\r\nOUT parameter2 datatype\r\n");
       sb.Append(")\r\n*/\r\n");

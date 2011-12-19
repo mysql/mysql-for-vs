@@ -288,11 +288,11 @@ namespace MySql.Data.VisualStudio
     }
     */
 
+
+
     void ICompletionSource.AugmentCompletionSession(ICompletionSession session, IList<CompletionSet> completionSets)
-     {
-      //string s = MySql.Data.VisualStudio.Editors.CommandBroker.Dte.ActiveDocument.FullName;
-      DbConnection connection =
-        MySql.Data.VisualStudio.Editors.EditorBroker.Broker.GetCurrentConnection();
+    {
+      DbConnection connection = LanguageServiceUtil.GetConnection();
       if( connection != null && !string.IsNullOrEmpty( connection.Database ) )
       //if (LanguageServiceConnection.Current.Connection != null)
       {
