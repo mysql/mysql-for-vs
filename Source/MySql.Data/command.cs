@@ -343,7 +343,9 @@ namespace MySql.Data.MySqlClient
 
 #if !CF
       // give our interceptors a shot at it first
-      if (connection.commandInterceptor.ExecuteNonQuery(CommandText, ref records))
+      if ( connection != null && 
+           connection.commandInterceptor != null &&
+           connection.commandInterceptor.ExecuteNonQuery(CommandText, ref records))
         return records;
 #endif
 
@@ -415,7 +417,9 @@ namespace MySql.Data.MySqlClient
 #if !CF
       // give our interceptors a shot at it first
       MySqlDataReader interceptedReader = null;
-      if (connection.commandInterceptor.ExecuteReader(CommandText, behavior, ref interceptedReader))
+      if ( connection != null &&
+           connection.commandInterceptor != null && 
+           connection.commandInterceptor.ExecuteReader(CommandText, behavior, ref interceptedReader))
         return interceptedReader;
 #endif
       
@@ -583,7 +587,8 @@ namespace MySql.Data.MySqlClient
 
 #if !CF
       // give our interceptors a shot at it first
-      if (connection.commandInterceptor.ExecuteScalar(CommandText, ref val))
+      if (connection != null &&
+          connection.commandInterceptor.ExecuteScalar(CommandText, ref val))
         return val;
 #endif
 
