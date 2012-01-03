@@ -460,9 +460,10 @@ namespace MySql.Data.MySqlClient
       commandInterceptor = new CommandInterceptor(this);
 #endif
 
-      SetState(ConnectionState.Connecting, true);
+      SetState(ConnectionState.Connecting, true);      
 
 #if !CF
+      PermissionDemand();
       // if we are auto enlisting in a current transaction, then we will be
       // treating the connection as pooled
       if (settings.AutoEnlist && Transaction.Current != null)
@@ -532,6 +533,18 @@ namespace MySql.Data.MySqlClient
       MySqlCommand c = new MySqlCommand();
       c.Connection = this;
       return c;
+    }
+
+    internal void PermissionDemand()
+    {
+      MySqlConnectionStringBuilder connectionSettings = this.Settings;
+
+      if ((connectionSettings == null) || connectionSettings.ConnectionString.Length == 0)
+      {
+        Throw(new MySqlException(Resources.ConnectionNotSet));
+      }
+
+      this.Settings.DemandPermissions();
     }
 
     #region ICloneable
