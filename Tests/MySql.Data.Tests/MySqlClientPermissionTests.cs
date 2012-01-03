@@ -51,6 +51,49 @@ namespace MySql.Data.MySqlClient.Tests
       dummyconn.ConnectionString = "server=localhost; user id=test;";
       dummyconn.Open();
       if (dummyconn.State == ConnectionState.Open) dummyconn.Close();
-    }    
+    }
+
+    [Test]
+    public void CanAllowConnectionAfterPermitOnlyPermission()
+    {
+      PermissionSet permissionset = new PermissionSet(PermissionState.None);
+
+      MySqlClientPermission permission = new MySqlClientPermission(PermissionState.None);
+
+      //// Allow connections only to database=test no additional optional parameters     
+      permission.Add("server=localhost;User Id=root;database=db656-a;", "", KeyRestrictionBehavior.PreventUsage);
+      permission.PermitOnly();
+      permissionset.AddPermission(permission);
+      permissionset.Demand();
+
+      // this conection should be allowed
+      MySqlConnection dummyconn = new MySqlConnection();
+      dummyconn.ConnectionString = "server=localhost;User Id=root;database=db656-a;";
+      dummyconn.Open();    
+      if (dummyconn.State == ConnectionState.Open) dummyconn.Close();        
+    }
+
+    [Test]
+    [ExpectedException(typeof(System.Security.SecurityException))]
+    public void CanDenyConnectionAfterPermitOnlyPermission()
+    {
+      PermissionSet permissionset = new PermissionSet(PermissionState.None);
+
+      MySqlClientPermission permission = new MySqlClientPermission(PermissionState.None);
+
+      //// Allow connections only to specified database no additional optional parameters     
+      permission.Add("server=localhost;User Id=root; database=db656-a;", "", KeyRestrictionBehavior.PreventUsage);
+      permission.PermitOnly();
+      permissionset.AddPermission(permission);
+      permissionset.Demand();
+
+      // this connection should NOT be allowed
+      MySqlConnection dummyconn = new MySqlConnection();
+      dummyconn.ConnectionString = "server=localhost;User Id=root;database=db656-b;";
+      dummyconn.Open();      
+      if (dummyconn.State == ConnectionState.Open) dummyconn.Close();        
+    
+    }
+
   }
 }

@@ -30,6 +30,8 @@ using System.Text;
 using MySql.Data.MySqlClient.Properties;
 using System.Collections;
 using System.Globalization;
+using System.Security;
+using System.Security.Permissions;
 
 namespace MySql.Data.MySqlClient
 {
@@ -42,6 +44,7 @@ namespace MySql.Data.MySqlClient
     private Dictionary<string, object> values =
         new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
     private bool hasProcAccess = true;
+    private PermissionSet _permissionset;
 
     static MySqlConnectionStringBuilder()
     {
@@ -1072,6 +1075,22 @@ namespace MySql.Data.MySqlClient
                   Convert.ChangeType((a as DefaultValueAttribute).Value, pi.PropertyType, CultureInfo.CurrentCulture));
         }
       }
+    }
+
+    protected internal PermissionSet CreatePermissionSet()
+    {
+      PermissionSet set = new PermissionSet(PermissionState.None);
+      set.AddPermission(new MySqlClientPermission(this.ConnectionString));
+      return set;
+    }
+
+    internal void DemandPermissions()
+    {
+      if (this._permissionset == null)
+      {
+        this._permissionset = this.CreatePermissionSet();
+      }
+      this._permissionset.Demand();
     }
   }
 
