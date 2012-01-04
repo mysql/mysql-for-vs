@@ -543,8 +543,9 @@ namespace MySql.Data.MySqlClient
       {
         Throw(new MySqlException(Resources.ConnectionNotSet));
       }
-
+#if !CF
       this.Settings.DemandPermissions();
+#endif
     }
 
     #region ICloneable

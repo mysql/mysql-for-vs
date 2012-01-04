@@ -44,8 +44,9 @@ namespace MySql.Data.MySqlClient
     private Dictionary<string, object> values =
         new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
     private bool hasProcAccess = true;
+#if !CF
     private PermissionSet _permissionset;
-
+#endif
     static MySqlConnectionStringBuilder()
     {
       // load up our valid keywords and default values only once
@@ -1076,7 +1077,7 @@ namespace MySql.Data.MySqlClient
         }
       }
     }
-
+#if !CF
     protected internal PermissionSet CreatePermissionSet()
     {
       PermissionSet set = new PermissionSet(PermissionState.None);
@@ -1092,6 +1093,7 @@ namespace MySql.Data.MySqlClient
       }
       this._permissionset.Demand();
     }
+#endif
   }
 
   internal struct PropertyDefaultValue
