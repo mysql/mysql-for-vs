@@ -254,14 +254,18 @@ namespace MySql.Data.Types
       val = String.Format("{0:0000}-{1:00}-{2:00}",
                 value.Year, value.Month, value.Day);
       if (type != MySqlDbType.Date)
-        val = String.Format("{0} {1:00}:{2:00}:{3:00}", val,
-            value.Hour, value.Minute, value.Second);
+      {
+        val = value.Millisecond > 0 ? String.Format("{0} {1:00}:{2:00}:{3:00}.{4}", val,
+          value.Hour, value.Minute, value.Second, value.Millisecond) : String.Format("{0} {1:00}:{2:00}:{3:00} ", val,
+          value.Hour, value.Minute, value.Second);
+      }
+      
       packet.WriteStringNoNull("'" + val + "'");
     }
 
     void IMySqlValue.WriteValue(MySqlPacket packet, bool binary, object value, int length)
     {
-      MySqlDateTime dtValue;      
+      MySqlDateTime dtValue;
 
       string valueAsString = value as string;
 
@@ -303,13 +307,13 @@ namespace MySql.Data.Types
 
       if (dtValue.Millisecond > 0)
       {
-        long val = dtValue.Millisecond;       
+        long val = dtValue.Millisecond;
         for (int x = 0; x < 4; x++)
         {
-          packet.WriteByte((byte)(val & 0xff));          
-          val >>= 8;          
-        }      
-      }      
+          packet.WriteByte((byte)(val & 0xff));
+          val >>= 8;
+        }
+      }
     }
 
     static internal MySqlDateTime Parse(string s)
@@ -342,15 +346,15 @@ namespace MySql.Data.Types
 
       if (parts.Length > 6)
       {
-        millisecond = int.Parse(parts[6]);        
+        millisecond = int.Parse(parts[6]);
       }
 
       return new MySqlDateTime(type, year, month, day, hour, minute, second, millisecond);
     }
 
     IMySqlValue IMySqlValue.ReadValue(MySqlPacket packet, long length, bool nullVal)
-    {      
-      
+    {
+
       if (nullVal) return new MySqlDateTime(type, true);
 
       if (length >= 0)
@@ -373,7 +377,7 @@ namespace MySql.Data.Types
       {
         hour = packet.ReadByte();
         minute = packet.ReadByte();
-        second = packet.ReadByte();       
+        second = packet.ReadByte();
       }
 
       if (bufLength > 7)
@@ -381,7 +385,7 @@ namespace MySql.Data.Types
         millisecond = packet.Read3ByteInt();
         packet.ReadByte();
       }
-      
+
       return new MySqlDateTime(type, year, month, day, hour, minute, second, millisecond);
     }
 
@@ -399,7 +403,7 @@ namespace MySql.Data.Types
       if (!IsValidDateTime)
         throw new MySqlConversionException("Unable to convert MySQL date/time value to System.DateTime");
       if ((millisecond < 0) || (millisecond >= 0x3e8)) millisecond = (int)(millisecond / 0x3e8);
-      
+
       return new DateTime(year, month, day, hour, minute, second, millisecond);
     }
 
