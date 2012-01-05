@@ -91,19 +91,25 @@ namespace MySql.Data.Types
 
       if (binary)
       {
-        packet.WriteByte(8);
-        packet.WriteByte((byte)(negative ? 1 : 0));
+        if (ts.Milliseconds > 0)
+          packet.WriteByte(12);
+        else
+          packet.WriteByte(8);
+
+        packet.WriteByte((byte)(negative ? 1 : 0));        
         packet.WriteInteger(ts.Days, 4);
         packet.WriteByte((byte)ts.Hours);
         packet.WriteByte((byte)ts.Minutes);
         packet.WriteByte((byte)ts.Seconds);
+        if (ts.Milliseconds > 0)
+        {
+          long mval = ts.Milliseconds*1000;
+          packet.WriteInteger(mval, 4);          
+        }
       }
       else
       {
-
-        String s = String.Format("'{0}{1} {2:00}:{3:00}:{4:00}.{5}'",
-            negative ? "-" : "", ts.Days, ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds);
-
+        String s = String.Format("'{0}{1} {2}'", negative ? "-" : "", ts.Days, ts.ToString("c"));               
         packet.WriteStringNoNull(s);
       }
     }
@@ -191,7 +197,7 @@ namespace MySql.Data.Types
 
     private void ParseMySql(string s)
     {
-  
+
       string[] parts = s.Split(':', '.');
       int hours = Int32.Parse(parts[0]);
       int mins = Int32.Parse(parts[1]);
@@ -199,9 +205,9 @@ namespace MySql.Data.Types
       int msecs = 0;
 
       if (parts.Length > 3)
-          msecs = Int32.Parse(parts[3]);
-        
-        
+        msecs = Int32.Parse(parts[3])/1000;
+
+
       if (hours < 0 || parts[0].StartsWith("-"))
       {
         mins *= -1;
