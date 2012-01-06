@@ -60,15 +60,18 @@ namespace MySql.Data.MySqlClient.Tests
 
       MySqlClientPermission permission = new MySqlClientPermission(PermissionState.None);
 
+      //database used to test mysqlclientpermissions
+      suExecSQL(String.Format("CREATE DATABASE `Perm`"));
+
       //// Allow connections only to database=test no additional optional parameters     
-      permission.Add("server=localhost;User Id=root;database=db656-a;", "", KeyRestrictionBehavior.PreventUsage);
+      permission.Add("server=localhost;User Id=root;database=Perm;", "", KeyRestrictionBehavior.PreventUsage);
       permission.PermitOnly();
       permissionset.AddPermission(permission);
       permissionset.Demand();
 
       // this conection should be allowed
       MySqlConnection dummyconn = new MySqlConnection();
-      dummyconn.ConnectionString = "server=localhost;User Id=root;database=db656-a;";
+      dummyconn.ConnectionString = "server=localhost;User Id=root;database=Perm;";
       dummyconn.Open();    
       if (dummyconn.State == ConnectionState.Open) dummyconn.Close();        
     }
@@ -76,20 +79,20 @@ namespace MySql.Data.MySqlClient.Tests
     [Test]
     [ExpectedException(typeof(System.Security.SecurityException))]
     public void CanDenyConnectionAfterPermitOnlyPermission()
-    {
+    {      
       PermissionSet permissionset = new PermissionSet(PermissionState.None);
 
       MySqlClientPermission permission = new MySqlClientPermission(PermissionState.None);
 
       //// Allow connections only to specified database no additional optional parameters     
-      permission.Add("server=localhost;User Id=root; database=db656-a;", "", KeyRestrictionBehavior.PreventUsage);
+      permission.Add("server=localhost;User Id=root; database=Perm;", "", KeyRestrictionBehavior.PreventUsage);
       permission.PermitOnly();
       permissionset.AddPermission(permission);
       permissionset.Demand();
 
       // this connection should NOT be allowed
       MySqlConnection dummyconn = new MySqlConnection();
-      dummyconn.ConnectionString = "server=localhost;User Id=root;database=db656-b;";
+      dummyconn.ConnectionString = "server=localhost;User Id=root;database=test;";
       dummyconn.Open();      
       if (dummyconn.State == ConnectionState.Open) dummyconn.Close();        
     
