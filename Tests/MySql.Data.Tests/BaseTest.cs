@@ -102,7 +102,6 @@ namespace MySql.Data.MySqlClient.Tests
       string[] versionParts = parts[1].Split(new char[] { '.' });
       database0 = String.Format("db{0}{1}{2}-a", versionParts[0], versionParts[1], port - 3300);
       database1 = String.Format("db{0}{1}{2}-b", versionParts[0], versionParts[1], port - 3300);
-
       MySqlConnection.ClearAllPools();
     }
 
@@ -271,6 +270,8 @@ namespace MySql.Data.MySqlClient.Tests
 
       DropDatabase(database0);
       DropDatabase(database1);
+      
+      DropDatabase("Perm");
 
       if (rootConn.State == ConnectionState.Open)
         rootConn.Close();
