@@ -108,8 +108,9 @@ namespace MySql.Data.Types
         }
       }
       else
-      {
-        String s = String.Format("'{0}{1} {2}'", negative ? "-" : "", ts.Days, ts.ToString());               
+      {         
+        String s = String.Format("'{0}{1} {2:00}:{3:00}:{4:00}.{5}'",
+            negative ? "-" : "", ts.Days, ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds);
         packet.WriteStringNoNull(s);
       }
     }
