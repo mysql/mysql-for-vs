@@ -109,7 +109,7 @@ namespace MySql.Data.Types
       }
       else
       {
-        String s = String.Format("'{0}{1} {2}'", negative ? "-" : "", ts.Days, ts.ToString("c"));               
+        String s = String.Format("'{0}{1} {2}'", negative ? "-" : "", ts.Days, ts.ToString());               
         packet.WriteStringNoNull(s);
       }
     }
