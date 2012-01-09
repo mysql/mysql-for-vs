@@ -109,6 +109,7 @@
     <Compile Include="TimeoutAndCancel.cs" />
     <Compile Include="Tokenizer.cs" />
     <Compile Include="Transactions.cs" />
+    <Compile Include="TypesTests.cs" />
     <Compile Include="UsageAdvisor.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
