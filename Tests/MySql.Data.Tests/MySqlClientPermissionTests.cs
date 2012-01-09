@@ -60,20 +60,20 @@ namespace MySql.Data.MySqlClient.Tests
 
       MySqlClientPermission permission = new MySqlClientPermission(PermissionState.None);
 
-      //database used to test mysqlclientpermissions
-      suExecSQL(String.Format("CREATE DATABASE `Perm`"));
-
-      //// Allow connections only to database=test no additional optional parameters     
-      permission.Add("server=localhost;User Id=root;database=Perm;", "", KeyRestrictionBehavior.PreventUsage);
+      MySqlConnectionStringBuilder strConn = new MySqlConnectionStringBuilder(conn.ConnectionString);
+      
+      //// Allow connections only to specified database no additional optional parameters     
+      permission.Add("server=localhost;User Id=root;database=" + strConn.Database + ";port=" + strConn.Port + ";", "", KeyRestrictionBehavior.PreventUsage);
       permission.PermitOnly();
       permissionset.AddPermission(permission);
       permissionset.Demand();
 
       // this conection should be allowed
       MySqlConnection dummyconn = new MySqlConnection();
-      dummyconn.ConnectionString = "server=localhost;User Id=root;database=Perm;";
+      dummyconn.ConnectionString = "server=localhost;User Id=root;database=" + strConn.Database + ";port=" + strConn.Port + ";";
       dummyconn.Open();    
-      if (dummyconn.State == ConnectionState.Open) dummyconn.Close();        
+      if (dummyconn.State == ConnectionState.Open) dummyconn.Close();
+
     }
 
     [Test]
@@ -84,8 +84,10 @@ namespace MySql.Data.MySqlClient.Tests
 
       MySqlClientPermission permission = new MySqlClientPermission(PermissionState.None);
 
+      MySqlConnectionStringBuilder strConn = new MySqlConnectionStringBuilder(conn.ConnectionString);
+
       //// Allow connections only to specified database no additional optional parameters     
-      permission.Add("server=localhost;User Id=root; database=Perm;", "", KeyRestrictionBehavior.PreventUsage);
+      permission.Add("server=localhost;User Id=root; database=" + strConn.Database + ";", "", KeyRestrictionBehavior.PreventUsage);
       permission.PermitOnly();
       permissionset.AddPermission(permission);
       permissionset.Demand();
