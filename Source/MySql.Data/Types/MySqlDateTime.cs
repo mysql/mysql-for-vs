@@ -33,6 +33,7 @@ namespace MySql.Data.Types
   /// <summary>
   /// 
   /// </summary>
+  [Serializable]
   public struct MySqlDateTime : IMySqlValue, IConvertible, IComparable
   {
     private bool isNull;
