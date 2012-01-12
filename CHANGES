@@ -5,3 +5,5 @@
 - Integrated new parser and enhanced intellisense support
 - Milliseconds are now supported when using MySQL 5.6 or later
 - Made MySqlDateTime serializable (MySQL bug #40555, Oracle bug #11750161).
+- Fix for Error on intellisense when typing "-" (Orable Bug #13522344).
+- Made parser fully compliang with MySql 5.1.

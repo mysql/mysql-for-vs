@@ -1,4 +1,26 @@
-﻿using System;
+﻿// Copyright © 2012, Oracle and/or its affiliates. All rights reserved.
+//
+// MySQL Connector/NET is licensed under the terms of the GPLv2
+// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
+// MySQL Connectors. There are special exceptions to the terms and 
+// conditions of the GPLv2 as it is applied to this software, see the 
+// FLOSS License Exception
+// <http://www.mysql.com/about/legal/licensing/foss-exception.html>.
+//
+// This program is free software; you can redistribute it and/or modify 
+// it under the terms of the GNU General Public License as published 
+// by the Free Software Foundation; version 2 of the License.
+//
+// This program is distributed in the hope that it will be useful, but 
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+// for more details.
+//
+// You should have received a copy of the GNU General Public License along 
+// with this program; if not, write to the Free Software Foundation, Inc., 
+// 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -321,6 +343,22 @@ select `computer`.`Brand`  from `facility` as a;
 ",
             false, out sb);
         }
+
+[Test]
+      public void Subquery()
+      {
+        StringBuilder sb;
+        MySQL51Parser.program_return r =
+          Utility.ParseSql("SELECT * FROM t1 WHERE column1 = (SELECT column1 FROM t2);", false, out sb);
+      }
+      
+      [Test]
+      public void Subquery2()
+      {
+        StringBuilder sb;
+        MySQL51Parser.program_return r =
+          Utility.ParseSql("SELECT *,(SELECT COUNT(*) FROM table2 WHERE table2.field1 = table1.id) AS count FROM table1 WHERE table1.field1 = 'value';", false, out sb);
+      }
 		/*
 		 * TODO:
 		 * Since it is legal ( select * from t ) limit 10, but illegal
