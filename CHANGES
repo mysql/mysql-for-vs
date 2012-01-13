@@ -1,7 +1,5 @@
-
-
-
 - Made MySqlDateTime serializable (MySQL bug #40555, Oracle bug #11750161).
+- Return datetime values for timestamp fields as DateTimeKind.Local (MySQL bug #63812, Oracle bug #13591554)
 
 
 6.4.5
