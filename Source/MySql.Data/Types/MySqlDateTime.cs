@@ -382,8 +382,10 @@ namespace MySql.Data.Types
     {
       if (!IsValidDateTime)
         throw new MySqlConversionException("Unable to convert MySQL date/time value to System.DateTime");
-
-      return new DateTime(year, month, day, hour, minute, second);
+      DateTimeKind kind = DateTimeKind.Unspecified;
+      if (type == MySqlDbType.Timestamp)
+        kind = DateTimeKind.Local;
+      return new DateTime(year, month, day, hour, minute, second, kind);
     }
 
     private static string FormatDateCustom(string format, int monthVal, int dayVal, int yearVal)
