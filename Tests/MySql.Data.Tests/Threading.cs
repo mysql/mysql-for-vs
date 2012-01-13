@@ -34,7 +34,7 @@ using System.Reflection;
 
 namespace MySql.Data.MySqlClient.Tests
 {
-  class GenericListener : TraceListener
+  public class GenericListener : TraceListener
   {
     StringCollection strings;
     StringBuilder partial;

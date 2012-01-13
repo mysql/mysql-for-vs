@@ -68,5 +68,31 @@ namespace MySql.Data.Entity
 
       return statement.ToString();
     }
+
+    protected virtual SelectStatement GenerateReturningSql(DbModificationCommandTree tree, DbExpression returning)
+    {      
+      SelectStatement select = base.GenerateReturningSql(tree, returning);      
+
+      ListFragment where = new ListFragment();
+
+      EntitySetBase table = ((DbScanExpression)tree.Target.Expression).Target;
+      bool foundIdentity = false;
+      where.Append(" row_count() > 0");
+      foreach (EdmMember keyMember in table.ElementType.KeyMembers)
+      {
+        SqlFragment value;
+        if (!values.TryGetValue(keyMember, out value))
+        {
+          if (foundIdentity)
+            throw new NotSupportedException();
+          foundIdentity = true;
+          value = new LiteralFragment("last_insert_id()");
+        }
+        where.Append(String.Format(" AND `{0}`=", keyMember));
+        where.Append(value);
+      }
+      select.Where = where;      
+      return select;
+    }
   }
 }
