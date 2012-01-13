@@ -427,6 +427,28 @@ namespace MySql.Data.MySqlClient.Tests
         Assert.IsTrue(reader.Read());
       }
     }
+
+    /// <summary>
+    /// Bug #63812	MySqlDateTime.GetDateTime() does not specify Timezone for TIMESTAMP fields
+    /// </summary>
+    [Test]
+    public void TimestampValuesAreLocal()
+    {
+      DateTime dt = DateTime.Now;
+      MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES(1, ?dt, NULL, NULL, NULL)", conn);
+      cmd.Parameters.AddWithValue("@dt", dt);
+      cmd.ExecuteNonQuery();
+
+      cmd.CommandText = "SELECT dt,ts FROM Test";
+      using (MySqlDataReader reader = cmd.ExecuteReader())
+      {
+        reader.Read();
+        DateTime dt1 = reader.GetDateTime(0);
+        DateTime ts = reader.GetDateTime(1);
+        Assert.AreEqual(dt1.Kind, DateTimeKind.Unspecified);
+        Assert.AreEqual(ts.Kind, DateTimeKind.Local);
+      }
+    }
   }
 
 }
