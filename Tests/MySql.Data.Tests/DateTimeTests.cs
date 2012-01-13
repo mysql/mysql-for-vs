@@ -428,6 +428,8 @@ namespace MySql.Data.MySqlClient.Tests
       }
     }
 
+    #region DateTimeTypeTests
+
     [Test]
     public void CanUpdateMilliseconds()
     {
@@ -443,14 +445,14 @@ namespace MySql.Data.MySqlClient.Tests
       cmd.CommandText = "INSERT INTO Test VALUES(1, ?dt, NULL, NULL, NULL)";
       cmd.Parameters.AddWithValue("?dt", dt);
       cmd.ExecuteNonQuery();
-      
+
       //Update value
       cmd.Parameters.Clear();
       cmd.Connection = conn;
       cmd.CommandText = "UPDATE Test SET dt=?dt";
       cmd.Parameters.Add(new MySqlParameter("?dt", "2011-01-01 12:34:56.123456"));
       cmd.ExecuteNonQuery();
-      
+
       cmd.CommandText = "SELECT dt FROM Test";
       cmd.Parameters.Clear();
       cmd.Connection = conn;
@@ -459,15 +461,17 @@ namespace MySql.Data.MySqlClient.Tests
 
       while (rdr.Read())
       {
-        Assert.AreEqual("12:34:56.1230", rdr.GetDateTime(0).ToString("hh:mm:ss.ffff"));      
+        Assert.AreEqual("12:34:56.1230", rdr.GetDateTime(0).ToString("hh:mm:ss.ffff"));
       }
       rdr.Close();
     }
+    
+    #endregion
 
     [Test]
     public void CanUpdateMillisecondsWithIgnorePrepareOnFalse()
     {
-      if (Version < new Version(5, 6)) return;      
+      if (Version < new Version(5, 6)) return;
       MySqlCommand cmd = new MySqlCommand();
 
       using (MySqlConnection c = new MySqlConnection(conn.ConnectionString + ";ignore prepare=False;"))
@@ -488,8 +492,8 @@ namespace MySql.Data.MySqlClient.Tests
         datetimeinsert.Value = "2011-01-01 12:34:59.123456";
         cmd.Parameters.Add(datetimeinsert);
 
-        cmd.Prepare();    
-      
+        cmd.Prepare();
+
         cmd.ExecuteNonQuery();
 
         cmd.Parameters.Clear();
@@ -505,6 +509,8 @@ namespace MySql.Data.MySqlClient.Tests
         cmd.Prepare();
         cmd.ExecuteNonQuery();
 
+
+
         cmd.CommandText = "SELECT dt FROM Test WHERE id = 1";
         cmd.Parameters.Clear();
         cmd.Connection = c;
@@ -513,9 +519,202 @@ namespace MySql.Data.MySqlClient.Tests
 
         while (rdr.Read())
         {
-          Assert.AreEqual("12:34:59.9990", rdr.GetDateTime(0).ToString("hh:mm:ss.ffff"));      
+          Assert.AreEqual("12:34:59.9990", rdr.GetDateTime(0).ToString("hh:mm:ss.ffff"));
         }
         rdr.Close();
+      }
+    }
+
+    #region TimeTypeTests
+
+    [Test]
+    // reference http://msdn.microsoft.com/en-us/library/system.timespan.frommilliseconds.aspx
+    public void CanUpdateMillisecondsUsingTimeType()
+    {
+      if (Version < new Version(5, 6)) return;
+      DateTime dt = DateTime.Now;
+      MySqlCommand cmd = new MySqlCommand();
+
+      execSQL("DROP TABLE Test");
+      execSQL("CREATE TABLE Test (id INT NOT NULL, dt DATETIME(6), d DATE, " +
+        "t TIME(6), ts TIMESTAMP(6), PRIMARY KEY(id))");
+
+      cmd.Connection = conn;
+      cmd.CommandText = "INSERT INTO Test VALUES(1, NULL, NULL, ?t, NULL)";
+
+      MySqlParameter timeinsert = new MySqlParameter();
+      timeinsert.ParameterName = "?t";
+      timeinsert.MySqlDbType = MySqlDbType.Time;
+      timeinsert.Value = TimeSpan.FromMilliseconds(12345.6);      
+      cmd.Parameters.Add(timeinsert);
+      cmd.ExecuteNonQuery();
+
+
+      cmd.CommandText = "SELECT Time(t) FROM Test";
+      cmd.Parameters.Clear();
+      cmd.Connection = conn;
+
+      MySqlDataReader rdr = cmd.ExecuteReader();
+
+      while (rdr.Read())
+      {
+        Assert.AreEqual(346, rdr.GetTimeSpan(0).Milliseconds);
+      }
+      rdr.Close();
+    }
+
+    [Test]
+    // reference http://msdn.microsoft.com/en-us/library/system.timespan.frommilliseconds.aspx
+    public void CanUpdateMillisecondsUsingTimeTypeOnPrepareStatements()
+    {
+      if (Version < new Version(5, 6)) return;
+      DateTime dt = DateTime.Now;
+      MySqlCommand cmd = new MySqlCommand();
+
+      execSQL("DROP TABLE Test");
+      execSQL("CREATE TABLE Test (id INT NOT NULL, dt DATETIME(6), d DATE, " +
+        "t TIME(6), ts TIMESTAMP(6), PRIMARY KEY(id))");
+
+
+      using (MySqlConnection c = new MySqlConnection(conn.ConnectionString + ";ignore prepare=False;"))
+      {
+        c.Open();
+        cmd.Connection = c;
+        cmd.CommandText = "INSERT INTO Test VALUES(1, NULL, NULL, ?t, NULL)";
+
+        MySqlParameter timeinsert = new MySqlParameter();
+        timeinsert.ParameterName = "?t";
+        timeinsert.MySqlDbType = MySqlDbType.Time;
+        timeinsert.Value = TimeSpan.FromMilliseconds(1.5);
+        cmd.Parameters.Add(timeinsert);
+        
+        cmd.Prepare();
+
+        cmd.ExecuteNonQuery();
+
+
+        cmd.CommandText = "SELECT Time(t) FROM Test";
+        cmd.Parameters.Clear();
+        cmd.Connection = conn;
+        cmd.Prepare();
+
+        MySqlDataReader rdr = cmd.ExecuteReader();
+
+        while (rdr.Read())
+        {
+          Assert.AreEqual(2, rdr.GetTimeSpan(0).Milliseconds);
+        }
+        rdr.Close();
+      }
+    }
+
+    #endregion
+
+    #region TimeStampTests
+    [Test]
+    public void CanUpdateMillisecondsUsingTimeStampType()
+    {
+      if (Version < new Version(5, 6)) return;
+      DateTime dt = DateTime.Now;
+      MySqlCommand cmd = new MySqlCommand();
+
+      using (MySqlConnection c = new MySqlConnection(conn.ConnectionString))
+      {
+        c.Open();
+
+        execSQL("DROP TABLE Test");
+        execSQL("CREATE TABLE Test (id INT NOT NULL, dt DATETIME(6), d DATE, " +
+          "t TIME(6), ts TIMESTAMP(6), PRIMARY KEY(id))");
+
+        cmd.Connection = c;
+        cmd.CommandText = "INSERT INTO Test VALUES(1, NULL, NULL, NULL, ?ts)";
+
+        MySqlParameter timeinsert = new MySqlParameter();
+        timeinsert.ParameterName = "?ts";
+        timeinsert.MySqlDbType = MySqlDbType.Timestamp;
+        timeinsert.Value = "2011-01-01 12:34:56.123456";
+        cmd.Parameters.Add(timeinsert);
+
+        cmd.ExecuteNonQuery();
+
+        cmd.CommandText = "SELECT ts FROM Test";
+        cmd.Parameters.Clear();
+        cmd.Connection = conn;
+
+        MySqlDataReader rdr = cmd.ExecuteReader();
+
+        while (rdr.Read())
+        {
+          Assert.AreEqual(123456, rdr.GetMySqlDateTime(0).Millisecond);
+        }
+        rdr.Close();
+      }
+
+    }
+
+
+    [Test]
+    public void CanUpdateMillisecondsUsingTimeStampTypeWithPrepare()
+    {
+      if (Version < new Version(5, 6)) return;
+      DateTime dt = DateTime.Now;
+      MySqlCommand cmd = new MySqlCommand();
+
+      using (MySqlConnection c = new MySqlConnection(conn.ConnectionString + ";ignore prepare=False;"))
+      {
+        c.Open();
+
+        execSQL("DROP TABLE Test");
+        execSQL("CREATE TABLE Test (id INT NOT NULL, dt DATETIME(6), d DATE, " +
+          "t TIME(6), ts TIMESTAMP(6), PRIMARY KEY(id))");
+
+        cmd.Connection = c;
+        cmd.CommandText = "INSERT INTO Test VALUES(1, NULL, NULL, NULL, ?ts)";
+
+        MySqlParameter timeinsert = new MySqlParameter();
+        timeinsert.ParameterName = "?ts";
+        timeinsert.MySqlDbType = MySqlDbType.Timestamp;
+        timeinsert.Value = "2011-01-01 12:34:56.123456";
+        cmd.Parameters.Add(timeinsert);
+
+        cmd.Prepare();
+
+        cmd.ExecuteNonQuery();
+
+        cmd.CommandText = "SELECT ts FROM Test";
+        cmd.Parameters.Clear();
+        cmd.Connection = conn;
+
+        MySqlDataReader rdr = cmd.ExecuteReader();
+
+        while (rdr.Read())
+        {
+          Assert.AreEqual(123456, rdr.GetMySqlDateTime(0).Millisecond);
+        }
+        rdr.Close();
+      }
+    }
+    #endregion
+
+    /// <summary>
+    /// Bug #63812	MySqlDateTime.GetDateTime() does not specify Timezone for TIMESTAMP fields
+    /// </summary>
+    [Test]
+    public void TimestampValuesAreLocal()
+    {
+      DateTime dt = DateTime.Now;
+      MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES(1, ?dt, NULL, NULL, NULL)", conn);
+      cmd.Parameters.AddWithValue("@dt", dt);
+      cmd.ExecuteNonQuery();
+
+      cmd.CommandText = "SELECT dt,ts FROM Test";
+      using (MySqlDataReader reader = cmd.ExecuteReader())
+      {
+        reader.Read();
+        DateTime dt1 = reader.GetDateTime(0);
+        DateTime ts = reader.GetDateTime(1);
+        Assert.AreEqual(dt1.Kind, DateTimeKind.Unspecified);
+        Assert.AreEqual(ts.Kind, DateTimeKind.Local);
       }
     }
   }
