@@ -1,6 +1,6 @@
 - Made MySqlDateTime serializable (MySQL bug #40555, Oracle bug #11750161).
 - Return datetime values for timestamp fields as DateTimeKind.Local (MySQL bug #63812, Oracle bug #13591554)
-
+- Fix for EF4.1, Code First, CreateDatabaseScript() generates an invalid MySQL script (MySQL bug #62150, Oracle bug #13582837).  
 
 6.4.5
 - Fix for bug on Create Table via Server Explorer. The columns properties are now added in the correct order.(Oracle db Bug # 13475830).

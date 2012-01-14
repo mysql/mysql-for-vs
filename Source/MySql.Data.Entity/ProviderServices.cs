@@ -365,7 +365,9 @@ namespace MySql.Data.MySqlClient
       if (!hasPK && e.KeyMembers.Count > 0)
       {
         sql.Append(String.Format(
-            "ALTER TABLE `{0}` ADD PRIMARY KEY (", e.Name));
+            "ALTER TABLE `{0}` ADD PRIMARY KEY (",
+            (string)entitySet.MetadataProperties["Table"].Value == null ?
+            e.Name : (string)entitySet.MetadataProperties["Table"].Value ));
         delimiter = "";
         foreach (EdmMember m in e.KeyMembers)
         {
