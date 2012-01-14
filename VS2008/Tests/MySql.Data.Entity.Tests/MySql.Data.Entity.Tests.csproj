@@ -113,7 +113,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
-    <Compile Include="Properties\SQLSyntax.Designer.cs" />
+    <Compile Include="Properties\SQLSyntax.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SQLSyntax.resx</DependentUpon>
+    </Compile>
     <Compile Include="TestModel.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -148,7 +152,10 @@
       <SubType>Designer</SubType>
       <Link>Properties\Resources.resx</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\SQLSyntax.resx" />
+    <EmbeddedResource Include="Properties\SQLSyntax.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SQLSyntax.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Source\MySql.Data.Entity\MySql.Data.Entity.csproj">

@@ -80,7 +80,9 @@ namespace MySql.Data.Entity.Tests
         }
         finally
         {
+#if CLR4
           context.Products.DeleteObject(pc);
+#endif
         }
         // Check sql        
         Regex rx = new Regex(@"Query Opened: (?<item>UPDATE .*)", RegexOptions.Compiled | RegexOptions.Singleline);

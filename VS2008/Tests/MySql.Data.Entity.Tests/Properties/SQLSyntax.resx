@@ -667,7 +667,7 @@ FROM `Toys` AS `Extent1` LEFT OUTER JOIN `Companies` AS `Extent2` ON `Extent1`.`
  WHERE `Extent2`.`State` != @gp1) AS `Filter1` LEFT OUTER JOIN `Companies` AS `Extent3` ON `Filter1`.`SupplierId` = `Extent3`.`Id`
  WHERE `Extent3`.`State` != @gp2</value>
   </data>
-<data name="JoinOfNestedUnionsWithLimit" xml:space="preserve">
+  <data name="JoinOfNestedUnionsWithLimit" xml:space="preserve">
     <value>SELECT
 `Project2`.`Id`, 
 `Project2`.`Name`, 
@@ -715,5 +715,8 @@ FROM `Books` AS `Extent4`) AS `Project1` ON `Extent1`.`Publisher_id` = `Project1
 `Project2`.`Id1` ASC, 
 `Project2`.`Id2` ASC, 
 `Project2`.`C3` ASC</value>
+  </data>
+  <data name="UpdateWithSelect" xml:space="preserve">
+    <value>UPDATE `Products` SET `Name`='Acme 2' WHERE `Id` = 1; SELECT `CreatedDate` FROM `Products` WHERE row_count() &gt; 0 and `Id` = 1</value>
   </data>
 </root>
