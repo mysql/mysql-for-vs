@@ -573,6 +573,9 @@ FROM `Toys` AS `Extent1` UNION ALL SELECT
 `Extent2`.`Name`
 FROM `Companies` AS `Extent2`) AS `UnionAll1`</value>
   </data>
+  <data name="UpdateWithSelect" xml:space="preserve">
+    <value>UPDATE `Products` SET `Name`='Acme 2' WHERE `Id` = 1; SELECT `CreatedDate` FROM `Products` WHERE row_count() &gt; 0 and `Id` = 1</value>
+  </data>
   <data name="WhereLiteralOnRelation" xml:space="preserve">
     <value>SELECT
 `Extent1`.`Id`, 
