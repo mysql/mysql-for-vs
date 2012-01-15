@@ -24,6 +24,7 @@ using System;
 using System.Text;
 using System.Data.Common.CommandTrees;
 using System.Data.Metadata.Edm;
+using System.Diagnostics;
 using MySql.Data.MySqlClient;
 using System.Collections.Generic;
 
@@ -63,6 +64,17 @@ namespace MySql.Data.Entity
         statement.ReturningSelect = GenerateReturningSql(commandTree, commandTree.Returning);
 
       return statement.ToString();
+    }
+
+    protected override SelectStatement GenerateReturningSql(DbModificationCommandTree tree, DbExpression returning)
+    {
+      SelectStatement select = base.GenerateReturningSql(tree, returning);
+      ListFragment where = new ListFragment();
+      where.Append(" row_count() > 0 and ");
+      where.Append( ((System.Data.Common.CommandTrees.DbUpdateCommandTree)tree).Predicate.Accept(this) );
+      select.Where = where;
+      
+      return select;
     }
   }
 }
