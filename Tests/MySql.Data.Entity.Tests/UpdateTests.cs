@@ -1,4 +1,4 @@
-// Copyright © 2008, 2010, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -22,6 +22,8 @@
 
 using System;
 using System.Data;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
 using System.Threading;
 using MySql.Data.MySqlClient;
 using NUnit.Framework;
@@ -29,6 +31,7 @@ using MySql.Data.MySqlClient.Tests;
 using System.Data.EntityClient;
 using System.Data.Common;
 using System.Data.Objects;
+using MySql.Data.Entity.Tests.Properties;
 
 namespace MySql.Data.Entity.Tests
 {
@@ -51,6 +54,49 @@ namespace MySql.Data.Entity.Tests
       cmd.CommandText = "SELECT COUNT(*) FROM Toys WHERE name='Top'";
       object newCount = cmd.ExecuteScalar();
       Assert.AreEqual(count, newCount);
+    }
+
+    /// <summary>
+    /// Fix for "Connector/Net Generates Incorrect SELECT Clause after UPDATE" (MySql bug #62134, Oracle bug #13491689).
+    /// </summary>
+    [Test]
+    public void UpdateSimple()
+    {      
+      using (testEntities context = new testEntities())
+      {        
+        MySqlTrace.Listeners.Clear();
+        MySqlTrace.Switch.Level = SourceLevels.All;
+        GenericListener listener = new GenericListener();
+        MySqlTrace.Listeners.Add(listener);
+        Product pc = null;
+        try
+        {
+          pc = new Product();
+          pc.Name= "Acme";
+          context.AddToProducts(pc);
+          context.SaveChanges();
+          pc.Name = "Acme 2";
+          context.SaveChanges();
+        }
+        finally
+        {
+#if CLR4
+          context.Products.DeleteObject(pc);
+#endif
+        }
+        // Check sql        
+        Regex rx = new Regex(@"Query Opened: (?<item>UPDATE .*)", RegexOptions.Compiled | RegexOptions.Singleline);
+        foreach( string s in listener.Strings )
+        {
+          Match m = rx.Match(s);
+          if (m.Success)
+          {
+            CheckSql(m.Groups["item"].Value, SQLSyntax.UpdateWithSelect);
+            Assert.Pass();
+          }
+        }
+        Assert.Fail();
+      }
     }
   }
 }
