@@ -112,8 +112,12 @@ namespace MySql.Data.VisualStudio
 
         if (IsQuoteCharacter(c) && !BlockComment)
           return ExtractQuotedToken(c);
-
-        string comment = ReadComment(c);
+        
+        string comment = null;
+        if (Pos != Text.Length)
+        {
+          comment = ReadComment(c);
+        }
         if (comment != null && ReturnComments) return comment;
 
         return ExtractUnquotedToken();

@@ -44,21 +44,32 @@ namespace MySql.Data.Entity.ModelFirst.Tests
     /// Tests for fix of http://bugs.mysql.com/bug.php?id=61230
     /// ("The provider did not return a ProviderManifestToken string.").
     /// </summary>
-    [Test]
+    [Test,]
     public void SimpleCodeFirstSelect()
     {
-      try
+      MovieDBContext db = new MovieDBContext();
+      var l = db.Movies.ToList();
+      foreach (var i in l)
       {
-        MovieDBContext db = new MovieDBContext();
-        var l = db.Movies.ToList();
-        foreach (var i in l)
-        {
-        }
       }
-      finally
+    }
+
+    /// <summary>
+    /// Tests for fix of http://bugs.mysql.com/bug.php?id=62150
+    /// ("EF4.1, Code First, CreateDatabaseScript() generates an invalid MySQL script.").
+    /// </summary>
+    [Test]
+    public void AlterTableTest()
+    {
+      MovieDBContext db = new MovieDBContext();
+      var l = db.MovieFormats.ToList();
+      foreach (var i in l)
       {
-        suExecSQL("DROP DATABASE IF EXISTS test3");
       }
+      MovieFormat m = new MovieFormat();
+      m.Format = 8.0f;
+      db.MovieFormats.Add(m);
+      db.SaveChanges();
     }
   }
 }

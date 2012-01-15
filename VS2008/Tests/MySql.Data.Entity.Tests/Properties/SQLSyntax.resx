@@ -716,5 +716,7 @@ FROM `Books` AS `Extent4`) AS `Project1` ON `Extent1`.`Publisher_id` = `Project1
 `Project2`.`Id2` ASC, 
 `Project2`.`C3` ASC</value>
   </data>
-
+  <data name="UpdateWithSelect" xml:space="preserve">
+    <value>UPDATE `Products` SET `Name`='Acme 2' WHERE `Id` = 1; SELECT `CreatedDate` FROM `Products` WHERE row_count() &gt; 0 and `Id` = 1</value>
+  </data>
 </root>
