@@ -32,7 +32,7 @@ using System.Collections.Specialized;
 
 namespace MySql.Data.MySqlClient.Tests
 {
-  class GenericListener : TraceListener
+  public class GenericListener : TraceListener
   {
     StringCollection strings;
     StringBuilder partial;
