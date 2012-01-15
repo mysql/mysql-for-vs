@@ -443,7 +443,7 @@ namespace MySql.Data.Entity
       return inputFragment;
     }
 
-    protected SelectStatement GenerateReturningSql(DbModificationCommandTree tree, DbExpression returning)
+    protected virtual SelectStatement GenerateReturningSql(DbModificationCommandTree tree, DbExpression returning)
     {
       SelectStatement select = new SelectStatement();
 
@@ -452,24 +452,7 @@ namespace MySql.Data.Entity
 
       select.From = (InputFragment)tree.Target.Expression.Accept(this);
 
-      ListFragment where = new ListFragment();
-      where.Append(" row_count() > 0");
-
-      EntitySetBase table = ((DbScanExpression)tree.Target.Expression).Target;
-      bool foundIdentity = false;
-      foreach (EdmMember keyMember in table.ElementType.KeyMembers)
-      {
-        SqlFragment value;
-        if (!values.TryGetValue(keyMember, out value))
-        {
-          if (foundIdentity)
-            throw new NotSupportedException();
-          foundIdentity = true;
-          value = new LiteralFragment("last_insert_id()");
-        }
-        where.Append(String.Format(" AND `{0}`=", keyMember));
-        where.Append(value);
-      }
+      ListFragment where = new ListFragment();      
       select.Where = where;
       return select;
     }
