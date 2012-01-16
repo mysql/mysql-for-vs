@@ -63,18 +63,40 @@ namespace MySql.Data.VisualStudio.Editors
         columnNames.Add(c.ColumnName);
         colGridColumn.Items.Add(c.ColumnName);
       }
-
+     
       foreignKeyBindingSource.DataSource = tableNode.Table.ForeignKeys;
       fkList.DataSource = foreignKeyBindingSource;
+      if (!InEditMode) ShowEditControls(false);
+    }
+
+    private bool ValidGridData()
+    {
+      if (!InEditMode) return true;
+      for( int i = 0; i < columnGrid.Rows.Count; i++ )
+      {
+        string str1 = ( string )((DataGridViewComboBoxCell)columnGrid.Rows[i].Cells[0]).FormattedValue;
+        string str2 = (string)((DataGridViewComboBoxCell)columnGrid.Rows[i].Cells[1]).FormattedValue;
+        if ((string.IsNullOrEmpty(str1) && string.IsNullOrEmpty(str2) && i == 0 ) ||
+          (str1.Equals("<None>", StringComparison.InvariantCultureIgnoreCase)) ||
+          (str2.Equals("<None>", StringComparison.InvariantCultureIgnoreCase)))
+        {
+          MessageBox.Show( Resources.FkDlgBeforeClose );
+          return false;
+        }
+      }      
+      return true;
     }
 
     private void closeButton_Click(object sender, EventArgs e)
     {
-      Close();
+      if (ValidGridData())
+      {
+        Close();
+      }
     }
 
     private void addButton_Click(object sender, EventArgs e)
-    {
+    {      
       ForeignKey key = new ForeignKey(tableNode.Table, null);
       if (refTable.SelectedValue != null)
       {
@@ -92,7 +114,7 @@ namespace MySql.Data.VisualStudio.Editors
     }
 
     private void refTable_SelectedIndexChanged(object sender, EventArgs e)
-    {
+    {      
       string refTableName = refTable.Items[refTable.SelectedIndex].ToString();
       fkGridColumn.HeaderText = refTableName;
 
@@ -166,8 +188,15 @@ namespace MySql.Data.VisualStudio.Editors
       MyComboBox.DrawComboBox(sender as ComboBox, e);
     }
 
+    private bool InEditMode { 
+      get {
+        return foreignKeyBindingSource.Current != null && fkColumnsBindingSource.DataSource == ((ForeignKey)foreignKeyBindingSource.Current).Columns;
+      }
+    }
+
     private void foreignKeyBindingSource_CurrentChanged(object sender, EventArgs e)
     {
+      ShowEditControls(foreignKeyBindingSource.Current != null);
       if (foreignKeyBindingSource.Current == null)
       {
         columnGrid.Rows.Clear();
@@ -175,6 +204,22 @@ namespace MySql.Data.VisualStudio.Editors
       }
       ForeignKey key = foreignKeyBindingSource.Current as ForeignKey;
       fkColumnsBindingSource.DataSource = key.Columns;
+    }
+
+    private void ShowEditControls(bool Show)
+    {
+      columnGrid.Visible = Show;
+      matchType.Visible = Show;
+      label6.Visible = Show;
+      deleteAction.Visible = Show;
+      label5.Visible = Show;
+      updateAction.Visible = Show;
+      label3.Visible = Show;
+      refTable.Visible = Show;
+      label2.Visible = Show;
+      fkName.Visible = Show;
+      label4.Visible = Show;
+      label7.Visible = Show;
     }
 
     private void columnGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
@@ -277,6 +322,16 @@ namespace MySql.Data.VisualStudio.Editors
           fk.ReferencedColumn = (string)e.Value;
           break;
       }
-    }    
+    }
+
+    private void columnGrid_DataError(object sender, DataGridViewDataErrorEventArgs e)
+    {
+      e.ThrowException = false;
+      if (e.Context != DataGridViewDataErrorContexts.Display &&
+        e.Context != DataGridViewDataErrorContexts.Formatting)
+      {
+        return;
+      }
+    }
   }
 }
