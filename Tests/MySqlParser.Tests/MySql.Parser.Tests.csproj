@@ -46,9 +46,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DDL\Alter\AlterDatabase.cs" />
+    <Compile Include="DDL\Alter\AlterEvent.cs" />
+    <Compile Include="DDL\Alter\AlterFunction.cs" />
+    <Compile Include="DDL\Alter\AlterLog.cs" />
+    <Compile Include="DDL\Alter\AlterProcedure.cs" />
+    <Compile Include="DDL\Alter\AlterServer.cs" />
+    <Compile Include="DDL\Alter\AlterTable.cs" />
+    <Compile Include="DDL\Alter\AlterTablespace.cs" />
+    <Compile Include="DDL\Alter\AlterView.cs" />
     <Compile Include="DDL\Create\CreateDatabase.cs" />
+    <Compile Include="DDL\Create\CreateEvent.cs" />
+    <Compile Include="DDL\Create\CreateIndex.cs" />
+    <Compile Include="DDL\Create\CreateLog.cs" />
     <Compile Include="DDL\Create\CreateRoutine.cs" />
+    <Compile Include="DDL\Create\CreateServer.cs" />
     <Compile Include="DDL\Create\CreateTable.cs" />
+    <Compile Include="DDL\Create\CreateTablespace.cs" />
+    <Compile Include="DDL\Create\CreateTrigger.cs" />
+    <Compile Include="DDL\Create\CreateView.cs" />
     <Compile Include="Other\AccountManagement.cs" />
     <Compile Include="DDL\Drop\DropDatabase.cs" />
     <Compile Include="DDL\Drop\DropEvent.cs" />
@@ -60,10 +76,14 @@
     <Compile Include="Other\Call.cs" />
     <Compile Include="Other\CompoundStatements.cs" />
     <Compile Include="Other\Expression.cs" />
+    <Compile Include="Other\Handler.cs" />
     <Compile Include="Other\Intellisense.cs" />
     <Compile Include="Infrastructure\TokenStreamRemovable.cs" />
+    <Compile Include="Other\LoadDataInfile.cs" />
+    <Compile Include="Other\Other.cs" />
     <Compile Include="Other\RenameDatabase.cs" />
     <Compile Include="Other\RenameTable.cs" />
+    <Compile Include="Other\Replace.cs" />
     <Compile Include="Other\Transaction.cs" />
     <Compile Include="Other\TruncateTable.cs" />
     <Compile Include="DDL\Show\Show.cs" />
