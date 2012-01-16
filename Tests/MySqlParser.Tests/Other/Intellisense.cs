@@ -1,4 +1,26 @@
-﻿using System;
+﻿// Copyright © 2012, Oracle and/or its affiliates. All rights reserved.
+//
+// MySQL Connector/NET is licensed under the terms of the GPLv2
+// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
+// MySQL Connectors. There are special exceptions to the terms and 
+// conditions of the GPLv2 as it is applied to this software, see the 
+// FLOSS License Exception
+// <http://www.mysql.com/about/legal/licensing/foss-exception.html>.
+//
+// This program is free software; you can redistribute it and/or modify 
+// it under the terms of the GNU General Public License as published 
+// by the Free Software Foundation; version 2 of the License.
+//
+// This program is distributed in the hope that it will be useful, but 
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+// for more details.
+//
+// You should have received a copy of the GNU General Public License along 
+// with this program; if not, write to the Free Software Foundation, Inc., 
+// 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -318,7 +340,6 @@ namespace MySql.Parser.Tests
     [Test]
     public void ColumnCompletionAtSelectWhere()
     {
-      // "select a from t where "
       StringBuilder sb;
       MySQL51Parser.program_return r =
         Utility.ParseSql("select a from t where ", true, out sb);
@@ -333,7 +354,6 @@ namespace MySql.Parser.Tests
     [Test]
     public void ColumnCompletionAtUpdateWhere()
     {
-      // "update t set c = 5 where  "
       StringBuilder sb;
       MySQL51Parser.program_return r =
         Utility.ParseSql("update t set c = 5 where  ", true, out sb);
@@ -348,7 +368,6 @@ namespace MySql.Parser.Tests
     [Test]
     public void ColumnCompletionAtUpdateWhereWithMinus()
     {
-      // "update t set c = 5 where  "
       StringBuilder sb;
       MySQL51Parser.program_return r =
         Utility.ParseSql("update t set c = 5 where - ", true, out sb);
@@ -358,6 +377,326 @@ namespace MySql.Parser.Tests
       List<TableWithAlias> tables = new List<TableWithAlias>();
       ParserUtils.GetTables((ITree)r.Tree, tables);
       Assert.True(tables.Count != 0);
+    }
+
+    [Test]
+    public void ColumnCompletionAtUpdateWhereWithMinus2()
+    {      
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql("update t set c = 5 where a = ", true, out sb);
+      string expectedToken =
+          new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
+      Assert.True(expectedToken == "column_name");
+      List<TableWithAlias> tables = new List<TableWithAlias>();
+      ParserUtils.GetTables((ITree)r.Tree, tables);
+      Assert.True(tables.Count != 0);
+    }    
+    
+    [Test]
+    public void ColumnCompletionOnExpression()
+    {      
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` = ", true, out sb);
+      string expectedToken =
+          new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
+      Assert.True(expectedToken == "column_name");
+      List<TableWithAlias> tables = new List<TableWithAlias>();
+      ParserUtils.GetTables((ITree)r.Tree, tables);
+      Assert.True(tables.Count != 0);
+    }
+
+    [Test]
+    public void ColumnCompletionOnExpression2()
+    {      
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` between ", true, out sb);
+      string expectedToken =
+          new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
+      Assert.True(expectedToken == "column_name");
+      List<TableWithAlias> tables = new List<TableWithAlias>();
+      ParserUtils.GetTables((ITree)r.Tree, tables);
+      Assert.True(tables.Count != 0);
+    }
+
+    [Test]
+    public void ColumnCompletionOnExpression3()
+    {      
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` between c and ", true, out sb);
+      string expectedToken =
+          new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
+      Assert.True(expectedToken == "column_name");
+      List<TableWithAlias> tables = new List<TableWithAlias>();
+      ParserUtils.GetTables((ITree)r.Tree, tables);
+      Assert.True(tables.Count != 0);
+    }
+
+    [Test]
+    public void ColumnCompletionOnExpression4()
+    {      
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` & ", true, out sb);
+      string expectedToken =
+          new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
+      Assert.True(expectedToken == "column_name");
+      List<TableWithAlias> tables = new List<TableWithAlias>();
+      ParserUtils.GetTables((ITree)r.Tree, tables);
+      Assert.True(tables.Count != 0);
+    }
+
+    [Test]
+    public void ColumnCompletionOnExpression5()
+    {      
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` >> ", true, out sb);
+      string expectedToken =
+          new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
+      Assert.True(expectedToken == "column_name");
+      List<TableWithAlias> tables = new List<TableWithAlias>();
+      ParserUtils.GetTables((ITree)r.Tree, tables);
+      Assert.True(tables.Count != 0);
+    }
+
+    [Test]
+    public void ColumnCompletionOnExpression6()
+    {      
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` * ", true, out sb);
+      string expectedToken =
+          new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
+      Assert.True(expectedToken == "column_name");
+      List<TableWithAlias> tables = new List<TableWithAlias>();
+      ParserUtils.GetTables((ITree)r.Tree, tables);
+      Assert.True(tables.Count != 0);
+    }
+
+    [Test]
+    public void ColumnCompletionOnExpression7()
+    {      
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` ^ ", true, out sb);
+      string expectedToken =
+          new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
+      Assert.True(expectedToken == "column_name");
+      List<TableWithAlias> tables = new List<TableWithAlias>();
+      ParserUtils.GetTables((ITree)r.Tree, tables);
+      Assert.True(tables.Count != 0);
+    }
+
+    [Test]
+    public void ColumnCompletionOnExpression8()
+    {      
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` = 1 and binary ", true, out sb);
+      string expectedToken =
+          new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
+      Assert.True(expectedToken == "column_name");
+      List<TableWithAlias> tables = new List<TableWithAlias>();
+      ParserUtils.GetTables((ITree)r.Tree, tables);
+      Assert.True(tables.Count != 0);
+    }
+
+    [Test]
+    public void ColumnCompletionOnExpression9()
+    {      
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` = 1 and interval ", true, out sb);
+      string expectedToken =
+          new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
+      Assert.True(expectedToken == "column_name");
+      List<TableWithAlias> tables = new List<TableWithAlias>();
+      ParserUtils.GetTables((ITree)r.Tree, tables);
+      Assert.True(tables.Count != 0);
+    }
+
+    [Test]
+    public void ColumnCompletionOnExpression10()
+    {      
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` = 1 and ( ", true, out sb);
+      string expectedToken =
+          new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
+      Assert.True(expectedToken == "column_name");
+      List<TableWithAlias> tables = new List<TableWithAlias>();
+      ParserUtils.GetTables((ITree)r.Tree, tables);
+      Assert.True(tables.Count != 0);
+    }
+
+    [Test]
+    public void ColumnCompletionOnExpression11()
+    {      
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` = 1 and { id ", true, out sb);
+      string expectedToken =
+          new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
+      Assert.True(expectedToken == "column_name");
+      List<TableWithAlias> tables = new List<TableWithAlias>();
+      ParserUtils.GetTables((ITree)r.Tree, tables);
+      Assert.True(tables.Count != 0);
+    }
+
+    [Test]
+    public void ColumnCompletionOnExpression12()
+    {      
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` = 1 and match ( ", true, out sb);
+      string expectedToken =
+          new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
+      Assert.True(expectedToken == "column_name");
+      List<TableWithAlias> tables = new List<TableWithAlias>();
+      ParserUtils.GetTables((ITree)r.Tree, tables);
+      Assert.True(tables.Count != 0);
+    }
+
+    [Test]
+    public void NonColumnCompletionOnExpression12()
+    {      
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` = 1 and match ", true, out sb);
+      string expectedToken =
+          new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
+      Assert.True(expectedToken != "column_name");
+      List<TableWithAlias> tables = new List<TableWithAlias>();
+      ParserUtils.GetTables((ITree)r.Tree, tables);
+      Assert.True(tables.Count == 1);
+    }
+
+    [Test]
+    public void ColumnCompletionOnExpression13()
+    {      
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` = 1 and match ( a, b, c ) against ( ", true, out sb);
+      string expectedToken =
+          new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
+      Assert.True(expectedToken == "column_name");
+      List<TableWithAlias> tables = new List<TableWithAlias>();
+      ParserUtils.GetTables((ITree)r.Tree, tables);
+      Assert.True(tables.Count != 0);
+    }
+
+    [Test]
+    public void NonColumnCompletionOnExpression13()
+    {      
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` = 1 and match ( a, b, c ) against ", true, out sb);
+      string expectedToken =
+          new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
+      Assert.True(expectedToken != "column_name");
+      List<TableWithAlias> tables = new List<TableWithAlias>();
+      ParserUtils.GetTables((ITree)r.Tree, tables);
+      Assert.True(tables.Count != 0);
+    }
+
+    [Test]
+    public void ColumnCompletionOnExpression14()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` = 1 and match ( a, b, ", true, out sb);
+      string expectedToken =
+          new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
+      Assert.True(expectedToken == "column_name");
+      List<TableWithAlias> tables = new List<TableWithAlias>();
+      ParserUtils.GetTables((ITree)r.Tree, tables);
+      Assert.True(tables.Count != 0);
+    }
+
+    [Test]
+    public void ColumnCompletionOnExpression15()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` = 1 and case when ", true, out sb);
+      string expectedToken =
+          new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
+      Assert.True(expectedToken == "column_name");
+      List<TableWithAlias> tables = new List<TableWithAlias>();
+      ParserUtils.GetTables((ITree)r.Tree, tables);
+      Assert.True(tables.Count != 0);
+    }
+
+    [Test]
+    public void ColumnCompletionOnExpression16()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` = 1 and case when true then ", true, out sb);
+      string expectedToken =
+          new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
+      Assert.True(expectedToken == "column_name");
+      List<TableWithAlias> tables = new List<TableWithAlias>();
+      ParserUtils.GetTables((ITree)r.Tree, tables);
+      Assert.True(tables.Count != 0);
+    }
+
+    [Test]
+    public void ColumnCompletionOnExpression17()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql("select * from `fromtable` where `fromtable`.`Id` = 1 and case when ( a = b ) then x + 1 else ", 
+        true, out sb);
+      string expectedToken =
+          new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
+      Assert.True(expectedToken == "column_name");
+      List<TableWithAlias> tables = new List<TableWithAlias>();
+      ParserUtils.GetTables((ITree)r.Tree, tables);
+      Assert.True(tables.Count != 0);
+    }
+
+    [Test]
+    public void ColumnCompletionOnExpression18()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql("case ",
+        true, out sb);
+      string expectedToken =
+          new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
+      Assert.True(expectedToken == "column_name");
+      List<TableWithAlias> tables = new List<TableWithAlias>();
+      ParserUtils.GetTables((ITree)r.Tree, tables);
+      Assert.True(tables.Count == 0);
+    }
+
+    [Test]
+    public void ColumnCompletionOnExpression19()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql("case when ",
+        true, out sb);
+      string expectedToken =
+          new Regex(@"Expected (?<item>.*)\.").Match(sb.ToString()).Groups["item"].Value;
+      Assert.True(expectedToken == "column_name");
+      List<TableWithAlias> tables = new List<TableWithAlias>();
+      ParserUtils.GetTables((ITree)r.Tree, tables);
+      Assert.True(tables.Count == 0);
+    }
+    
+    [Test]
+    public void RegressionTest2()
+    {      
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql("-", true, out sb);
+      Assert.True( sb.ToString().EndsWith( "no viable alternative at input '-'\r\n" ));
     }
 
     [Test]

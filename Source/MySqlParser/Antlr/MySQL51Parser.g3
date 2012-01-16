@@ -13,8 +13,16 @@ tokens {
 BEGIN_END;
 CASE_STMT;
 CHARACTERISTIC;
+CREATE_SERVER_OPTION;
+CREATE_SERVER_OPTIONS;
+DECLARE_HANDLER;
+ENABLING;
 EXPR;
+FOREIGNKEY_DATA_WRAPPER;
+GLOBAL;
+INTO_FROM;
 SELECT_EXPR;
+SESSION;
 UNARY_MINUS;
 UNARY_PLUS;
 OPTIONS;
@@ -35,13 +43,18 @@ NOT_NULL;
 DEFINITION;
 DEFINITIONS;
 COUNT_STAR;
+OBJ_LIST;
 OBJECT_TYPE;
+ON_COMPLETION;
+ON_SCHEDULE;
 PARAM;
 PRIVILEGE_LEVEL;
 SET_PASSWORD;
 SSL_OPTION;
+TABLE_REF;
 USER_HOST;
 USER_HOST_OR_ID_OR_STRING;
+VAR;
 WITH_OPTION;
 XID;
 }
@@ -55,7 +68,7 @@ public program
 	: statement_list EOF
 	;
 
-public statement_list options { backtrack=true; memoize=true; }
+public statement_list 
 	:	stmts+=statement (SEMI stmts+=statement)* SEMI*
 		-> $stmts+
 	;
@@ -65,6 +78,8 @@ statement options { backtrack=true; memoize=true; }
 		|	do_stmt
 		|	show_stmt
 		|	deallocate
+		|	declare_condition
+		|	declare_handler
 		|	describe
 		|	execute
 		|	explain
@@ -73,11 +88,22 @@ statement options { backtrack=true; memoize=true; }
 		|	update
 		|	declare_stmt 
 		|	delete		
+		|   alter_function
+		|   alter_logfile
+		|   alter_procedure
+		|   alter_table
+		|	alter_tablespace		
+		|   alter_server
+		|	alter_view
 		|	COMMENT_RULE
 		|	create_database
+		|	create_event
 		|	create_function
+		|   create_logfile
 		|	create_table
+		|   create_tablespace
 		|	create_procedure
+		|   create_server
 		|	create_user
 		|	cursor_declare
 		|	cursor_open
@@ -105,25 +131,37 @@ statement options { backtrack=true; memoize=true; }
 		|	repeat
 		|	return_stmt
 		|	revoke_user
+		|	rollback
+		|	savepoint_ident
 		|	set_stmt
 		|	set_password
-		|	transaction
-		|	truncate_table
 		|	begin_end_stmt
+		|	transaction
+		|	truncate_table		
 		|	sp_call
 		|	while
 		|	use
+		|	case_stmt
+		|	alter_database
+		|	alter_event
 		)
 	;
 
 // $< DML
 
-begin_end_stmt
-	:	( ( beginlabel=ID COLON ) BEGIN declare_stmt* statement_list END ( endlabel=ID )?
-		-> ^( BEGIN_END $beginlabel $endlabel? declare_stmt* statement_list ) )
-		|
-		( BEGIN declare_stmt* statement_list END 
-		-> ^( BEGIN_END declare_stmt* statement_list ) )
+begin_end_stmt options { backtrack=true; memoize=true; }
+	:	(( ( beginlabel=ID COLON ) BEGIN declare_stmt* statement_list END ( endlabel=ID )?
+		-> ^( BEGIN_END $beginlabel $endlabel? declare_stmt* statement_list ) ) )		
+		| ( ( BEGIN WORK ) | ( BEGIN SEMI ) | ( BEGIN EOF ) )  => begin_transaction 
+		| (
+		( BEGIN declare_stmt* statement_list? END 
+		-> ^( BEGIN_END declare_stmt* statement_list? ) ) )
+	;
+
+begin_transaction options { backtrack=true; memoize=true; }
+	: 
+		{ ( ( input.LA( 2 ) == WORK || input.LA( 2 ) == SEMI || input.LA( 2 ) == EOF ) && input.LA( 2 ) != END ) }?
+			  BEGIN  WORK? 										-> ^(BEGIN WORK?)
 	;
 
 loop
@@ -152,20 +190,20 @@ while
 
 create_procedure
 	: CREATE ( DEFINER EQUALS ( user_specification | CURRENT_USER ))? 
-		PROCEDURE ident LPAREN ( parm+=proc_parameter ( COMMA parm+=proc_parameter )* )? RPAREN 
-		( characteristic )* routine_body
+		PROCEDURE simple_obj_ref_no_alias LPAREN ( parm+=proc_parameter ( COMMA parm+=proc_parameter )* )? RPAREN 
+		( routine_characteristic )* routine_body
 		-> ^( CREATE PROCEDURE ( DEFINER user_specification? CURRENT_USER? )? 
-			ident $parm? ^( CHARACTERISTIC characteristic* )? routine_body
+			simple_obj_ref_no_alias $parm? ^( CHARACTERISTIC routine_characteristic* )? routine_body
 			) 
 	;
 
 create_function
 	: CREATE ( DEFINER EQUALS ( user_specification | CURRENT_USER ))? 
-		FUNCTION ident LPAREN ( parm+=func_parameter ( COMMA parm+=func_parameter )* )? RPAREN 
+		FUNCTION simple_obj_ref_no_alias LPAREN ( parm+=func_parameter ( COMMA parm+=func_parameter )* )? RPAREN 
 		RETURNS data_type
-		( characteristic )* routine_body
+		( routine_characteristic )* routine_body
 		-> ^( CREATE FUNCTION ( DEFINER user_specification? CURRENT_USER? )? 
-			ident $parm? RETURNS data_type ^( CHARACTERISTIC characteristic* )? routine_body
+			simple_obj_ref_no_alias $parm? RETURNS data_type ^( CHARACTERISTIC routine_characteristic* )? routine_body
 			) 
 	;
 
@@ -178,7 +216,7 @@ func_parameter
 	:	ident data_type	-> ^( PARAM ident data_type )
 	;
 
-characteristic
+routine_characteristic
 	:	COMMENT STRING	-> ^( COMMENT STRING )
 	|	LANGUAGE SQL	-> ^( LANGUAGE )
 	|	NOT? DETERMINISTIC	-> ^( DETERMINISTIC NOT? )
@@ -213,7 +251,7 @@ leave
 	;
 
 declare_stmt 
-	:	DECLARE ident ( COMMA ident )* data_type	-> ^( DECLARE ident* data_type )
+	:	DECLARE ident ( COMMA ident )* data_type SEMI+	-> ^( DECLARE ident* data_type )
 	;
 
 set_stmt
@@ -224,10 +262,19 @@ set_stmt
 	;
 
 variable_assignment
-	:	ID EQUALS expr	-> ^( ID expr )
+	:	| ID EQUALS expr	-> ^( ID expr )
+	|	session_variable EQUALS expr	-> ^( session_variable expr )
 	/* TODO validate vs. the list of system variables */
 	|	( GLOBAL | SESSION ) ID EQUALS expr		-> ^( ID expr GLOBAL? SESSION? )
 	|	(( AT1 AT1 GLOBAL DOT ) | ( AT1 AT1 SESSION DOT )) ID EQUALS expr	-> ^( ID expr GLOBAL? SESSION? )
+	;
+
+session_variable
+	:	AT1 ID	->	^( SESSION ID )
+	;
+
+global_variable
+	:	AT1 AT1 ID -> ^( GLOBAL ID )
 	;
 
 create_database
@@ -344,11 +391,11 @@ use
 
 describe
 	:	( DESCRIBE | DESC ) tblname=ID ( col=ID | wild=STRING )
-			-> ^( { new CommonTree( new CommonToken( TABLE, "TABLE" ) ) } $tblname $col? $wild? )
+			-> ^( { new CommonTree( new CommonToken( DESCRIBE, "DESCRIBE" ) ) } $tblname $col? $wild? )
 	;
 
 prepare
-	:	PREPARE stmtname=ID FROM prepstmt=SESSION_VARIABLE
+	:	PREPARE stmtname=ID FROM prepstmt=session_variable
 			-> ^( PREPARE $stmtname $prepstmt )
 	;
 
@@ -376,7 +423,7 @@ cursor_open
 	;
 
 execute
-	:	EXECUTE ID ( USING vars+=SESSION_VARIABLE ( COMMA vars+=SESSION_VARIABLE )* )?	
+	:	EXECUTE ID ( USING vars+=session_variable ( COMMA vars+=session_variable )* )?	
 			->	^( EXECUTE ID $vars? ) 
 	;
 
@@ -396,11 +443,11 @@ select_paren
 	;
 	catch[ NoViableAltException nvae ] 
 	{
-		if( nvae.DecisionNumber == 65 )
+		if( nvae.DecisionNumber == 109 )
 		{
 			nvae = new NoViableAltException( 
 					"column_name", 
-					65 /* re.DecisionNumber */, 
+					nvae.DecisionNumber, 
 					0 /* re.StateNumber*/, 
 					nvae.Input );
 		}
@@ -415,51 +462,32 @@ select_paren
 		retval.Tree = (object)adaptor.ErrorNode(input, retval.Start, input.LT(-1), re);
 	}
 
-select_inner
-	:	SELECT (options{k=1;}:select_options)*
+select_inner 
+	:	( 
+		SELECT ( /*options{ backtrack=true; }:*/select_options)*
 		exprs+=select_expr (COMMA exprs+=select_expr)*
-		( { input.LT(1).Text.ToLower() == "from" }?
-            (FROM table_references)
-            (WHERE where=where_condition)?
-            group_by?
-            (HAVING having=where_condition)?
-            order_by?
-            limit?
-            // these procedures are not "SQL-SPs" but C++ ones. very unlikely that we'll see them.
-            (PROCEDURE procId=ident procArgs=parenOptExprList)?
-            /* TODO: what is allowed in the "STRING" below? probably not N'foobar' etc. */
-            ((	INTO OUTFILE file=STRING opts=infile_options_helper
-                |	INTO DUMPFILE file=STRING
-                |	INTO vars+=variable (COMMA vars+=variable)*
-                )	
-            )?
-            (forUpdate=FOR UPDATE | clock=LOCK IN SHARE MODE)?
-        |   order_by
-            limit?
-        |   limit
-		)?
+		//( 
+			select_into_from
+            (forUpdate=FOR UPDATE | clock=LOCK IN SHARE MODE)?         
+		//)?
+		)
 		-> ^(SELECT 
 				^(OPTIONS select_options*)?
 				^(COLUMNS $exprs+)
-				^(FROM table_references)?
-				^(WHERE $where)?
-				group_by?
-				^(HAVING $having)?
-				order_by?
-				limit?
-				FOR?
-				LOCK?
+				select_into_from	
+				$forUpdate?
+				$clock?
 			)
 	;
 	catch[ NoViableAltException nvae ] 
 	{
-		if( nvae.Token.Text == "<EOF>" ) {
+		//if( nvae.Token.Text == "<EOF>" ) {
 			nvae = new NoViableAltException( 
 				"column_name", 
 				0/* re.DecisionNumber */, 
 				0 /* re.StateNumber*/, 
 				nvae.Input );
-		}
+		//}
 		ReportError(nvae);
 		Recover(input,nvae);
 		retval.Tree = (object)adaptor.ErrorNode(input, retval.Start, input.LT(-1), nvae);
@@ -470,6 +498,37 @@ select_inner
 		Recover(input,re);
 		retval.Tree = (object)adaptor.ErrorNode(input, retval.Start, input.LT(-1), re);
 	}	
+
+select_into_from options { backtrack=true; }
+	:	( order_by? limit?			-> ^( INTO_FROM order_by? limit? ) )
+	/*|	select_into					-> ^( INTO_FROM select_into )
+	|	select_from					-> ^( INTO_FROM select_from ) */
+	|	( select_into select_from? /*( { input.LA( 1 ) == FROM }? select_from )?	*/
+			-> ^( INTO_FROM select_into select_from? ) )
+	|	( select_from select_into?	-> ^( INTO_FROM select_from select_into? ) )
+	;
+
+select_into
+	:	INTO 
+			(
+				OUTFILE file=STRING opts=infile_options_helper
+            |	DUMPFILE file=STRING
+            |	vars+=variable (COMMA vars+=variable)*
+            )
+		-> ^( INTO $file? $opts? $vars? )?
+	;
+
+select_from
+	:	FROM table_references
+            (WHERE where=where_condition)?
+            ( group_by )?
+            (HAVING having=where_condition)?
+            order_by?
+            limit?
+            // these procedures are not "SQL-SPs" but C++ ones. very unlikely that we'll see them.
+            (PROCEDURE procId=ident procArgs=parenOptExprList)?
+		-> ^(FROM table_references ^(WHERE $where)? group_by? ^(HAVING $having)? )?
+	;
 
 infile_options_helper
 	:	(	(COLUMNS|FIELDS)
@@ -484,8 +543,9 @@ infile_options_helper
 	;
 	
 variable
-	:	SESSION_VARIABLE
-	|	GLOBAL_VARIABLE
+	:	session_variable	-> ^( VAR session_variable )
+	|	global_variable		-> ^( VAR global_variable )
+	|	ID					-> ^( VAR ID )
 	;
 
 limit
@@ -548,8 +608,14 @@ select_options
 	;
 	
 select_expr
-	:	star=MULT				-> ^(SELECT_EXPR $star)
-	|	expr (AS? ident)?		-> ^(SELECT_EXPR expr ^(ALIAS ident)?)
+	:	( star=MULT				-> ^(SELECT_EXPR $star) )
+	|	expr 
+	(
+		( { input.LA(1) == AS }? => (AS ID) )
+	|	( { input.LA(1) == ID }? => (ID)
+								-> ^(SELECT_EXPR expr ^(ALIAS ID)?) )
+	|	( -> ^( SELECT_EXPR expr ))
+	)
 	;
 	catch[ NoViableAltException nvae ] 
 	{
@@ -649,24 +715,25 @@ join_condition_both
 	;
 
 simple_obj_ref_no_alias
-	:	first=ident (DOT second=ident)?		-> $first $second?	
+	:	first=ident (DOT second=ident)?		-> ^( $first $second? )
 	/*|	DOT ident					/* TODO: No AST for this subrule? */
 	;
 
 simple_table_ref_no_alias
-	:	first=ident (DOT second=ident)?		-> $first $second?
+	:	first=ident (DOT second=ident)?		-> ^( TABLE_REF $first? $second? )
 	;
 
 simple_table_ref_no_alias_existing
-	:	simple_table_ref_no_alias
+	:	simple_table_ref_no_alias	-> simple_table_ref_no_alias
 	;
 
 simple_table_ref_alias
-	:	first=ident (DOT second=ident)? table_alias?		-> $first $second? table_alias?
+	:	first=ident (DOT second=ident)? table_alias?		-> ^( TABLE_REF $first? ( DOT $second )? table_alias? )
 	;
 
 table_alias
-	:	AS? alias=ident	-> ^(ALIAS $alias)
+	:	{ input.LT(1).Text.ToLower() == "as" }? AS alias=ident	-> ^(ALIAS $alias)
+	|	alias=ident	-> ^(ALIAS $alias)
 	;
 
 field_name
@@ -688,7 +755,7 @@ bool seenStar = false;
 */
 
 ident
-	:	
+	:
 	(	tok=ASCII
 	|	tok=BACKUP
 	|	tok=BEGIN
@@ -702,10 +769,10 @@ ident
 	|	tok=CONTAINS
 	|	tok=DEALLOCATE
 	|	tok=DO
-	|	tok=END
+	//|	tok=END
 	|	tok=EXECUTE
 	|	tok=FLUSH
-	|	tok=GROUP
+	//|	tok=GROUP
 	|	tok=HANDLER
 	|	tok=HELP
 	|	tok=HOST
@@ -740,7 +807,7 @@ ident
 	|	tok=WRAPPER
 	|	tok=XA
 	|	tok=UPGRADE
-	)	-> ID[$tok]
+	)	-> ID[$tok] 
 	|	ident_sp_label	-> {$ident_sp_label.tree}
 	;
 	catch[ NoViableAltException nvae ] 
@@ -773,265 +840,265 @@ ident
 ident_sp_label
 	:		
 	(	tok=ID!
-	|	tok=ACTION!
-	|	tok=ADDDATE!
-	|	tok=AFTER!
-	|	tok=AGAINST!
-	|	tok=AGGREGATE!
-	|	tok=ALGORITHM!
-	|	tok=ANY!
-	|	tok=AT!
-	|	tok=AUTHORS!
-	|	tok=AUTO_INCREMENT!
-	|	tok=AUTOEXTEND_SIZE!
-	|	tok=AVG_ROW_LENGTH!
-	|	tok=AVG!
-	|	tok=BINLOG!
-	|	tok=BIT!
-	|	tok=BLOCK!
-	|	tok=BOOL!
-	|	tok=BOOLEAN!
-	|	tok=BTREE!
-	|	tok=CASCADED!
-	|	tok=CHAIN!
-	|	tok=CHANGED!
-	|	tok=CIPHER!
-	|	tok=CLIENT!
-	|	tok=COALESCE!
-	|	tok=CODE!
-	|	tok=COLLATION!
-	|	tok=COLUMNS!
-	|	tok=FIELDS!
-	|	tok=COMMITTED!
-	|	tok=COMPACT!
-	|	tok=COMPLETION!
-	|	tok=COMPRESSED!
-	|	tok=CONCURRENT!
-	|	tok=CONNECTION!
-	|	tok=CONSISTENT!
-	|	tok=CONTEXT!
-	|	tok=CONTRIBUTORS!
-	|	tok=CPU!
-	|	tok=CUBE!
-	|	tok=DATA!
-	|	tok=DATAFILE!
-	|	tok=DATETIME!
-	|	tok=DATE!
-	|	tok=DAY!
-	|	tok=DEFINER!
-	|	tok=DELAY_KEY_WRITE!
-	|	tok=DES_KEY_FILE!
-	|	tok=DIRECTORY!
-	|	tok=DISABLE!
-	|	tok=DISCARD!
-	|	tok=DISK!
-	|	tok=DUMPFILE!
-	|	tok=DUPLICATE!
-	|	tok=DYNAMIC!
-	|	tok=ENDS!
-	|	tok=ENUM!
-	|	tok=ENGINE!
-	|	tok=ENGINES!
-	|	tok=ERRORS!
-	|	tok=ESCAPE!
-	|	tok=EVENT!
-	|	tok=EVENTS!
-	|	tok=EVERY!
-	|	tok=EXPANSION!
-	|	tok=EXTENDED!
-	|	tok=EXTENT_SIZE!
-	|	tok=FAULTS!
-	|	tok=FAST!
-	|	tok=FOUND!
-	|	tok=ENABLE!
-	|	tok=FULL!
-	|	tok=FILE!
-	|	tok=FIRST!
-	|	tok=FIXED!
-	|	tok=FRAC_SECOND!
-	|	tok=GEOMETRY!
-	|	tok=GEOMETRYCOLLECTION!
-	|	tok=GET_FORMAT!
-	|	tok=GRANTS!
-	|	tok=GLOBAL!
-	|	tok=HASH!
-	|	tok=HOSTS!
-	|	tok=HOUR!
-	|	tok=IDENTIFIED!
-	|	tok=INVOKER!
-	|	tok=IMPORT!
-	|	tok=INDEXES!
-	|	tok=INITIAL_SIZE!
-	|	tok=IO!
-	|	tok=IPC!
-	|	tok=ISOLATION!
-	|	tok=ISSUER!
-	|	tok=INNOBASE!
-	|	tok=INSERT_METHOD!
-	|	tok=KEY_BLOCK_SIZE!
-	|	tok=LAST!
-	|	tok=LEAVES!
-	|	tok=LESS!
-	|	tok=LEVEL!
-	|	tok=LINESTRING!
-	|	tok=LIST!
-	|	tok=LOCAL!
-	|	tok=LOCKS!
-	|	tok=LOGFILE!
-	|	tok=LOGS!
-	|	tok=MAX_ROWS!
-	|	tok=MASTER!
-	|	tok=MASTER_HOST!
-	|	tok=MASTER_PORT!
-	|	tok=MASTER_LOG_FILE!
-	|	tok=MASTER_LOG_POS!
-	|	tok=MASTER_USER!
-	|	tok=MASTER_PASSWORD!
-	|	tok=MASTER_SERVER_ID!
-	|	tok=MASTER_CONNECT_RETRY!
-	|	tok=MASTER_SSL!
-	|	tok=MASTER_SSL_CA!
-	|	tok=MASTER_SSL_CAPATH!
-	|	tok=MASTER_SSL_CERT!
-	|	tok=MASTER_SSL_CIPHER!
-	|	tok=MASTER_SSL_KEY!
-	|	tok=MAX_CONNECTIONS_PER_HOUR!
-	|	tok=MAX_QUERIES_PER_HOUR!
-	|	tok=MAX_SIZE!
-	|	tok=MAX_UPDATES_PER_HOUR!
-	|	tok=MAX_USER_CONNECTIONS!
-	|	tok=MAX_VALUE!
-	|	tok=MEDIUM!
-	|	tok=MEMORY!
-	|	tok=MERGE!
-	|	tok=MICROSECOND!
-	|	tok=MIGRATE!
-	|	tok=MINUTE!
-	|	tok=MIN_ROWS!
-	|	tok=MODIFY!
-	|	tok=MODE!
-	|	tok=MONTH!
-	|	tok=MULTILINESTRING!
-	|	tok=MULTIPOINT!
-	|	tok=MULTIPOLYGON!
-	|	tok=MUTEX!
-	|	tok=NAME!
-	|	tok=NAMES!
-	|	tok=NATIONAL!
-	|	tok=NCHAR!
-	|	tok=NDBCLUSTER!
-	|	tok=NEXT!
-	|	tok=NEW!
-	|	tok=NO_WAIT!
-	|	tok=NODEGROUP!
-	|	tok=NONE!
-	|	tok=NVARCHAR!
-	|	tok=OFFSET!
-	|	tok=OLD_PASSWORD!
-	|	tok=ONE_SHOT!
-	|	tok=ONE!
-	|	tok=PACK_KEYS!
-	|	tok=PAGE!
-	|	tok=PARTIAL!
-	|	tok=PARTITIONING!
-	|	tok=PARTITIONS!
-	|	tok=PASSWORD!
-	|	tok=PHASE!
-	|	tok=PLUGIN!
-	|	tok=PLUGINS!
-	|	tok=POINT!
-	|	tok=POLYGON!
-	|	tok=PRESERVE!
-	|	tok=PREV!
-	|	tok=PRIVILEGES!
-	|	tok=PROCESS!
-	|	tok=PROCESSLIST!
-	|	tok=PROFILE!
-	|	tok=PROFILES!
-	|	tok=QUARTER!
-	|	tok=QUERY!
-	|	tok=QUICK!
-	|	tok=REBUILD!
-	|	tok=RECOVER!
-	|	tok=REDO_BUFFER_SIZE!
-	|	tok=REDOFILE!
-	|	tok=REDUNDANT!
-	|	tok=RELAY_LOG_FILE!
-	|	tok=RELAY_LOG_POS!
-	|	tok=RELAY_THREAD!
-	|	tok=RELOAD!
-	|	tok=REORGANIZE!
-	|	tok=REPEATABLE!
-	|	tok=REPLICATION!
-	|	tok=RESOURCES!
-	|	tok=RESUME!
-	|	tok=RETURNS!
-	|	tok=ROLLUP!
-	|	tok=ROUTINE!
-	|	tok=ROWS!
-	|	tok=ROW_FORMAT!
-	|	tok=ROW!
-	|	tok=RTREE!
-	|	tok=SCHEDULE!
-	|	tok=SECOND!
-	|	tok=SERIAL!
-	|	tok=SERIALIZABLE!
-	|	tok=SESSION!
-	|	tok=SIMPLE!
-	|	tok=SHARE!
-	|	tok=SHUTDOWN!
-	|	tok=SNAPSHOT!
-	|	tok=SOUNDS!
-	|	tok=SOURCE!
-	|	tok=SQL_CACHE!
-	|	tok=SQL_BUFFER_RESULT!
-	|	tok=SQL_NO_CACHE!
-	|	tok=SQL_THREAD!
-	|	tok=STARTS!
-	|	tok=STATUS!
-	|	tok=STORAGE!
-	|	tok=STRING_KEYWORD!
-	|	tok=SUBDATE!
-	|	tok=SUBJECT!
-	|	tok=SUBPARTITION!
-	|	tok=SUBPARTITIONS!
-	|	tok=SUPER!
-	|	tok=SUSPEND!
-	|	tok=SWAPS!
-	|	tok=SWITCHES!
-	|	tok=TABLES!
-	|	tok=TABLESPACE!
-	|	tok=TEMPORARY!
-	|	tok=TEMPTABLE!
-	|	tok=TEXT!
-	|	tok=THAN!
-	|	tok=TRANSACTION!
-	|	tok=TRANSACTIONAL!
-	|	tok=TRIGGERS!
-	|	tok=TIMESTAMP!
-	|	tok=TIMESTAMP_ADD!
-	|	tok=TIMESTAMP_DIFF!
-	|	tok=TIME!
-	|	tok=TYPES!
-	|	tok=TYPE!
-	|	tok=UDF_RETURNS!
-	|	tok=FUNCTION!
-	|	tok=UNCOMMITTED!
-	|	tok=UNDEFINED!
-	|	tok=UNDO_BUFFER_SIZE!
-	|	tok=UNDOFILE!
-	|	tok=UNKNOWN!
-	|	tok=UNTIL!
-	|	tok=USER!
-	|	tok=USE_FRM!
-	|	tok=VARIABLES!
-	|	tok=VIEW!
-	|	tok=VALUE!
-	|	tok=WARNINGS!
-	|	tok=WAIT!
-	|	tok=WEEK!
-	|	tok=WORK!
-	|	tok=X509!
+//    |	tok=ACTION!
+//    |	tok=ADDDATE!
+//    |	tok=AFTER!
+//    |	tok=AGAINST!
+//    |	tok=AGGREGATE!
+//    |	tok=ALGORITHM!
+//    |	tok=ANY!
+//    |	tok=AT!
+//    |	tok=AUTHORS!
+//    |	tok=AUTO_INCREMENT!
+//    |	tok=AUTOEXTEND_SIZE!
+//    |	tok=AVG_ROW_LENGTH!
+//    |	tok=AVG!
+//    |	tok=BINLOG!
+//    |	tok=BIT!
+//    |	tok=BLOCK!
+//    |	tok=BOOL!
+//    |	tok=BOOLEAN!
+//    |	tok=BTREE!
+//    |	tok=CASCADED!
+//    |	tok=CHAIN!
+//    |	tok=CHANGED!
+//    |	tok=CIPHER!
+//    |	tok=CLIENT!
+//    |	tok=COALESCE!
+//    |	tok=CODE!
+//    |	tok=COLLATION!
+//    |	tok=COLUMNS!
+//    |	tok=FIELDS!
+//    |	tok=COMMITTED!
+//    |	tok=COMPACT!
+//    |	tok=COMPLETION!
+//    |	tok=COMPRESSED!
+//    |	tok=CONCURRENT!
+//    |	tok=CONNECTION!
+//    |	tok=CONSISTENT!
+//    |	tok=CONTEXT!
+//    |	tok=CONTRIBUTORS!
+//    |	tok=CPU!
+//    |	tok=CUBE!
+//    |	tok=DATA!
+//    |	tok=DATAFILE!
+//    |	tok=DATETIME!
+//    |	tok=DATE!
+//    |	tok=DAY!
+//    |	tok=DEFINER!
+//    |	tok=DELAY_KEY_WRITE!
+//    |	tok=DES_KEY_FILE!
+//    |	tok=DIRECTORY!
+//    |	tok=DISABLE!
+//    |	tok=DISCARD!
+//    |	tok=DISK!
+//    |	tok=DUMPFILE!
+//    |	tok=DUPLICATE!
+//    |	tok=DYNAMIC!
+//    |	tok=ENDS!
+//    |	tok=ENUM!
+//    |	tok=ENGINE!
+//    |	tok=ENGINES!
+//    |	tok=ERRORS!
+//    |	tok=ESCAPE!
+//    |	tok=EVENT!
+//    |	tok=EVENTS!
+//    |	tok=EVERY!
+//    |	tok=EXPANSION!
+//    |	tok=EXTENDED!
+//    |	tok=EXTENT_SIZE!
+//    |	tok=FAULTS!
+//    |	tok=FAST!
+//    |	tok=FOUND!
+//    |	tok=ENABLE!
+//    |	tok=FULL!
+//    |	tok=FILE!
+//    |	tok=FIRST!
+//    |	tok=FIXED!
+//    |	tok=FRAC_SECOND!
+//    |	tok=FUNCTION!
+//    |	tok=GEOMETRY!
+//    |	tok=GEOMETRYCOLLECTION!
+//    |	tok=GET_FORMAT!
+//    |	tok=GRANTS!
+//    |	tok=GLOBAL!
+//    |	tok=HASH!
+//    |	tok=HOSTS!
+//    |	tok=HOUR!
+//    |	tok=IDENTIFIED!
+//    |	tok=INVOKER!
+//    |	tok=IMPORT!
+//    |	tok=INDEXES!
+//    |	tok=INITIAL_SIZE!
+//    |	tok=IO!
+//    |	tok=IPC!
+//    |	tok=ISOLATION!
+//    |	tok=ISSUER!
+//    |	tok=INNOBASE!
+//    |	tok=INSERT_METHOD!
+//    |	tok=KEY_BLOCK_SIZE!
+//    |	tok=LAST!
+//    |	tok=LEAVES!
+//    |	tok=LESS!
+//    |	tok=LEVEL!
+//    |	tok=LINESTRING!
+//    |	tok=LIST!
+//    |	tok=LOCAL!
+//    |	tok=LOCKS!
+//    |	tok=LOGFILE!
+//    |	tok=LOGS!
+//    |	tok=MAX_ROWS!
+//    |	tok=MASTER!
+//    |	tok=MASTER_HOST!
+//    |	tok=MASTER_PORT!
+//    |	tok=MASTER_LOG_FILE!
+//    |	tok=MASTER_LOG_POS!
+//    |	tok=MASTER_USER!
+//    |	tok=MASTER_PASSWORD!
+//    |	tok=MASTER_SERVER_ID!
+//    |	tok=MASTER_CONNECT_RETRY!
+//    |	tok=MASTER_SSL!
+//    |	tok=MASTER_SSL_CA!
+//    |	tok=MASTER_SSL_CAPATH!
+//    |	tok=MASTER_SSL_CERT!
+//    |	tok=MASTER_SSL_CIPHER!
+//    |	tok=MASTER_SSL_KEY!
+//    |	tok=MAX_CONNECTIONS_PER_HOUR!
+//    |	tok=MAX_QUERIES_PER_HOUR!
+//    |	tok=MAX_SIZE!
+//    |	tok=MAX_UPDATES_PER_HOUR!
+//    |	tok=MAX_USER_CONNECTIONS!
+//    |	tok=MAX_VALUE!
+//    |	tok=MEDIUM!
+//    |	tok=MEMORY!
+//    |	tok=MERGE!
+//    |	tok=MICROSECOND!
+//    |	tok=MIGRATE!
+//    |	tok=MINUTE!
+//    |	tok=MIN_ROWS!
+//    |	tok=MODIFY!
+//    |	tok=MODE!
+//    |	tok=MONTH!
+//    |	tok=MULTILINESTRING!
+//    |	tok=MULTIPOINT!
+//    |	tok=MULTIPOLYGON!
+//    |	tok=MUTEX!
+//    |	tok=NAME!
+//    |	tok=NAMES!
+//    |	tok=NATIONAL!
+//    |	tok=NCHAR!
+//    |	tok=NDBCLUSTER!
+//    |	tok=NEXT!
+//    |	tok=NEW!
+//    |	tok=NO_WAIT!
+//    |	tok=NODEGROUP!
+//    |	tok=NONE!
+//    |	tok=NVARCHAR!
+//    |	tok=OFFSET!
+//    |	tok=OLD_PASSWORD!
+//    |	tok=ONE_SHOT!
+//    |	tok=ONE!
+//    |	tok=PACK_KEYS!
+//    |	tok=PAGE!
+//    |	tok=PARTIAL!
+//    |	tok=PARTITIONING!
+////	|	tok=PARTITIONS!
+//    |	tok=PASSWORD!
+//    |	tok=PHASE!
+//    |	tok=PLUGIN!
+//    |	tok=PLUGINS!
+//    |	tok=POINT!
+//    |	tok=POLYGON!
+//    |	tok=PRESERVE!
+//    |	tok=PREV!
+//    |	tok=PRIVILEGES!
+//    |	tok=PROCESS!
+//    |	tok=PROCESSLIST!
+//    |	tok=PROFILE!
+//    |	tok=PROFILES!
+//    |	tok=QUARTER!
+//    |	tok=QUERY!
+//    |	tok=QUICK!
+//    |	tok=REBUILD!
+    //|	tok=RECOVER!
+    //|	tok=REDO_BUFFER_SIZE!
+    //|	tok=REDOFILE!
+    //|	tok=REDUNDANT!
+    //|	tok=RELAY_LOG_FILE!
+    //|	tok=RELAY_LOG_POS!
+    //|	tok=RELAY_THREAD!
+    //|	tok=RELOAD!
+    //|	tok=REORGANIZE!
+    //|	tok=REPEATABLE!
+    //|	tok=REPLICATION!
+    //|	tok=RESOURCES!
+    //|	tok=RESUME!
+    //|	tok=RETURNS!
+    //|	tok=ROLLUP!
+    //|	tok=ROUTINE!
+    //|	tok=ROWS!
+    //|	tok=ROW_FORMAT!
+    //|	tok=ROW!
+    //|	tok=RTREE!
+    //|	tok=SCHEDULE!
+    //|	tok=SECOND!
+    //|	tok=SERIAL!
+    //|	tok=SERIALIZABLE!
+    //|	tok=SESSION!
+    //|	tok=SIMPLE!
+    //|	tok=SHARE!
+    //|	tok=SHUTDOWN!
+    //|	tok=SNAPSHOT!
+    //|	tok=SOUNDS!
+    //|	tok=SOURCE!
+    //|	tok=SQL_CACHE!
+    //|	tok=SQL_BUFFER_RESULT!
+    //|	tok=SQL_NO_CACHE!
+    //|	tok=SQL_THREAD!
+    //|	tok=STARTS!
+    //|	tok=STATUS!
+    //|	tok=STORAGE!
+    //|	tok=STRING_KEYWORD!
+    //|	tok=SUBDATE!
+    //|	tok=SUBJECT!
+    //|	tok=SUBPARTITION!
+    //|	tok=SUBPARTITIONS!
+    //|	tok=SUPER!
+    //|	tok=SUSPEND!
+    //|	tok=SWAPS!
+    //|	tok=SWITCHES!
+    //|	tok=TABLES!
+    //|	tok=TABLESPACE!
+    //|	tok=TEMPORARY!
+    //|	tok=TEMPTABLE!
+    //|	tok=TEXT!
+    //|	tok=THAN!
+    //|	tok=TRANSACTION!
+    //|	tok=TRANSACTIONAL!
+    //|	tok=TRIGGERS!
+    //|	tok=TIMESTAMP!
+    //|	tok=TIMESTAMP_ADD!
+    //|	tok=TIMESTAMP_DIFF!
+    //|	tok=TIME!
+    //|	tok=TYPES!
+    //|	tok=TYPE!
+    //|	tok=UDF_RETURNS!	
+    //|	tok=UNCOMMITTED!
+    //|	tok=UNDEFINED!
+    //|	tok=UNDO_BUFFER_SIZE!
+    //|	tok=UNDOFILE!
+    //|	tok=UNKNOWN!
+    //|	tok=UNTIL!
+    //|	tok=USER!
+    //|	tok=USE_FRM!
+    //|	tok=VARIABLES!
+    //|	tok=VIEW!
+    //|	tok=VALUE!
+    //|	tok=WARNINGS!
+    //|	tok=WAIT!
+    //|	tok=WEEK!
+    //|	tok=WORK!
+    //|	tok=X509!
 	|	tok=YEAR!
 	)	
 	{
@@ -1126,6 +1193,26 @@ equalityExpr
 	:	bitwiseOrExpr
 		(op+=equalityOperator^ ((subselect_in_expr_rhs)=> subselect_in_expr_rhs | bitwiseOrExpr))*
 	;
+	catch[ NoViableAltException nvae ] 
+	{
+		if( ( nvae.DecisionNumber == 187 ) && ( Scope.Peek() == "expr" ))
+		{		
+			nvae = new NoViableAltException( 
+				"column_name", 
+				nvae.DecisionNumber, 
+				0 /* re.StateNumber*/, 
+				nvae.Input );
+		}
+		ReportError(nvae);
+		Recover(input,nvae);
+		retval.Tree = (object)adaptor.ErrorNode(input, retval.Start, input.LT(-1), nvae);
+	}
+	catch[ RecognitionException re ]
+	{
+		ReportError(re);
+		Recover(input,re);
+		retval.Tree = (object)adaptor.ErrorNode(input, retval.Start, input.LT(-1), re);
+	}
 
 subselect_in_expr_rhs
 	:	(mod=ANY | mod=SOME | mod=ALL) LPAREN select RPAREN	-> ^(SUBSELECT $mod select)
@@ -1207,6 +1294,26 @@ unaryExpr
 	|	op=BITWISE_INVERSION lhs=unaryExpr -> ^(BITWISE_INVERSION $lhs)
 	|	lhsUnaryNot=unaryNotExpr	-> unaryNotExpr
 	;
+	catch[ NoViableAltException nvae ] 
+	{
+		if( ( nvae.DecisionNumber == 206 ) && ( Scope.Peek() == "expr" ))
+		{		
+			nvae = new NoViableAltException( 
+				"column_name", 
+				nvae.DecisionNumber, 
+				0 /* re.StateNumber*/, 
+				nvae.Input );
+		}
+		ReportError(nvae);
+		Recover(input,nvae);
+		retval.Tree = (object)adaptor.ErrorNode(input, retval.Start, input.LT(-1), nvae);
+	}
+	catch[ RecognitionException re ]
+	{
+		ReportError(re);
+		Recover(input,re);
+		retval.Tree = (object)adaptor.ErrorNode(input, retval.Start, input.LT(-1), re);
+	}
 	
 unaryNotExpr
 	:	op=NOT_OP lhs=unaryNotExpr	-> ^(NOT_OP $lhs)
@@ -1218,13 +1325,33 @@ binaryCollateExpr
 	|	op=COLLATE lhs=binaryCollateExpr	-> ^(COLLATE $lhs)
 	|	intervalExpr
 	;
+	catch[ NoViableAltException nvae ] 
+	{
+		if( ( nvae.DecisionNumber == 208 ) && ( Scope.Peek() == "expr" ))
+		{		
+			nvae = new NoViableAltException( 
+				"column_name", 
+				nvae.DecisionNumber, 
+				0 /* re.StateNumber*/, 
+				nvae.Input );
+		}
+		ReportError(nvae);
+		Recover(input,nvae);
+		retval.Tree = (object)adaptor.ErrorNode(input, retval.Start, input.LT(-1), nvae);
+	}
+	catch[ RecognitionException re ]
+	{
+		ReportError(re);
+		Recover(input,re);
+		retval.Tree = (object)adaptor.ErrorNode(input, retval.Start, input.LT(-1), re);
+	}
 
 /* INTERVAL can bind extremely closely, if used as the rightmost subexpr of an expression, otherwise it is in additiveExpr 
    the validating predicate disallows its usage all by itself (can't select just an interval, it must be used in an additive expr)
    defer checking that to a semantic tree phase.
 */
 intervalExpr
-	:	(INTERVAL ~(LPAREN))=> INTERVAL expr timeUnit {input.LA(1) == PLUS || input.LA(1) == MINUS}? -> ^(INTERVAL expr timeUnit)
+	:	(INTERVAL ~(LPAREN))=> INTERVAL expr timeUnit /*{input.LA(1) == PLUS || input.LA(1) == MINUS}? */ -> ^(INTERVAL expr timeUnit)
 	|	lhsPrim=primary	-> primary
 	;
 	
@@ -1246,6 +1373,26 @@ primary
 	| case_expr		-> case_expr
 	// TODO: add missing primary expressions, like ROW, DEFAULT etc.
 	;
+	catch[ NoViableAltException nvae ] 
+	{
+		if( ( nvae.DecisionNumber == 210 ) && ( Scope.Peek() == "expr" ))
+		{		
+			nvae = new NoViableAltException( 
+				"column_name", 
+				nvae.DecisionNumber, 
+				0 /* re.StateNumber*/, 
+				nvae.Input );
+		}
+		ReportError(nvae);
+		Recover(input,nvae);
+		retval.Tree = (object)adaptor.ErrorNode(input, retval.Start, input.LT(-1), nvae);
+	}
+	catch[ RecognitionException re ]
+	{
+		ReportError(re);
+		Recover(input,re);
+		retval.Tree = (object)adaptor.ErrorNode(input, retval.Start, input.LT(-1), re);
+	}
 
 param_marker
 	: VALUE_PLACEHOLDER ident -> ^( VALUE_PLACEHOLDER ident )
@@ -1274,21 +1421,41 @@ case_expr
 
 case_stmt
 	:	CASE 
-		( ( WHEN whenExpr+=expr THEN thenStmt+=statement_list )+ 
-		  ( ELSE elseStmt+=statement_list )? END ) 
+		(( ( WHEN ( expr ) => whenExpr+=expr THEN thenStmt+=statement_list )+ 
+		  ( { input.LA(1) == ELSE }? ELSE elseStmt+=statement_list )? END ) 
 		-> ^( WHEN $whenExpr $thenStmt $elseStmt? )
 	|	( firstPri=primary 
 			( WHEN whenPri+=primary THEN thenStmt+=statement_list )+ 
-			( ELSE elseStmt+=statement_list )? END CASE )
+			( ELSE elseStmt+=statement_list )? END CASE ))
 		-> ^( CASE_STMT $firstPri ^( WHEN $whenPri $thenStmt ) ^( ELSE $elseStmt )? )
 	;
+	catch[ NoViableAltException nvae ] 
+	{
+		if( nvae.DecisionNumber == 218 )
+		{		
+			nvae = new NoViableAltException( 
+				"column_name", 
+				nvae.DecisionNumber, 
+				0 /* re.StateNumber*/, 
+				nvae.Input );
+		}
+		ReportError(nvae);
+		Recover(input,nvae);
+		retval.Tree = (object)adaptor.ErrorNode(input, retval.Start, input.LT(-1), nvae);
+	}
+	catch[ RecognitionException re ]
+	{
+		ReportError(re);
+		Recover(input,re);
+		retval.Tree = (object)adaptor.ErrorNode(input, retval.Start, input.LT(-1), re);
+	}
 
 literal
 	:	STRING^
 	|	NUMBER^
 	|	INT_NUMBER^
-	|	GLOBAL_VARIABLE^
-	|	SESSION_VARIABLE^
+	|	session_variable^
+	|	{ input.LA( 1 ) == AT1 && input.LA( 2 ) == AT1 }? => global_variable^
 	|	VALUE_PLACEHOLDER^
 	|	BINARY_VALUE^
 	|	HEXA_VALUE^
@@ -1357,16 +1524,13 @@ where_condition
 // $< Transactions
 
 /* generates bogus warning about RELEASE */
-transaction
+transaction options { backtrack=true; memoize=true; }
 	// general trx statements
-	:	(	BEGIN  WORK?										-> ^(BEGIN WORK?)
-		|	START TRANSACTION (WITH CONSISTENT SNAPSHOT)?		-> ^(START SNAPSHOT?)
-		)		
-	|	commit
-	|	rollback
+	:		
+	( START TRANSACTION (WITH CONSISTENT SNAPSHOT)?		-> ^(START SNAPSHOT?) )
+	| ( commit	-> commit )
 	// NUMBER must be (0 | 1), no grammar checks done at this point, TODO check AUTOCOMMIT vs keywords/identifiers
-	|	SET AUTOCOMMIT EQUALS 
-		( { input.LT( 1 ).Text == "1" || input.LT( 1 ).Text == "0" }? => INT_NUMBER)
+	|	SET AUTOCOMMIT EQUALS one_or_zero		
 	|	SET 
 		(	txnScope=GLOBAL 
 		|	txnScope=SESSION 
@@ -1377,9 +1541,9 @@ transaction
 		|	REPEATABLE READ				-> ^(ISOLATION REPEATABLE $txnScope? )
 		|	SERIALIZABLE				-> ^(ISOLATION SERIALIZABLE $txnScope? )	
 		)
-	|	savepoint
-	|	lockTables	
-	| xa
+	|	release_savepoint				-> ^( release_savepoint )	
+	|	lockTables						-> ^( lockTables )
+	| xa								-> ^( xa )
 	;
 
 commit
@@ -1400,20 +1564,34 @@ commit
 		)
 	;
 
-rollback
+rollback options { backtrack = true; }
 	:	ROLLBACK WORK?
 		(
-			(AND NO? CHAIN) (NO? RELEASE)?				-> ^(ROLLBACK ^(CHAIN NO?) ^(RELEASE NO?)?)
-		|	(NO? RELEASE)								-> ^(ROLLBACK ^(RELEASE NO?))
-		|	TO SAVEPOINT? ident							-> ^(ROLLBACK_POINT ident)
+			((AND NO? CHAIN) (NO? RELEASE)?				-> ^(ROLLBACK ^(CHAIN NO?) ^(RELEASE NO?)?) )
+		|	((NO? RELEASE)								-> ^(ROLLBACK ^(RELEASE NO?))				)
 		/* savepoint syntax */
-		|												-> ^(ROLLBACK)
+		|	( TO 
+				savepoint? ident 
+				/*|															
+				( { input.LT(1).Text.ToLower() != "savepoint" }? ident ) */
+			) -> ^(ROLLBACK_POINT ident? savepoint? )
+		|	(											-> ^(ROLLBACK)								)
 		)
 	;
 
+savepoint_ident options { backtrack = true; }
+	:	 { input.LT(1).Text.ToLower() == "savepoint" }? savepoint ident	
+			-> ^(SAVEPOINT ident )
+	;
+
+savepoint options { backtrack = true; }
+	: { input.LT(1).Text.ToLower() == "savepoint" }? ( ID | SAVEPOINT )
+	;
+
 // savepoint handling
-savepoint
-	:	RELEASE? SAVEPOINT ident				-> ^(SAVEPOINT ident RELEASE?)	
+release_savepoint
+	:	( RELEASE savepoint ident				-> ^(SAVEPOINT ident )	 )
+//	|	( savepoint ident						-> ^(SAVEPOINT ident )	 ) 
 	;
 
 xa
@@ -1463,9 +1641,9 @@ insert
 		 * This tweak fixes the case when there is a syntax error, and the subtree with the table info 
 		 * is not included in the tree result (necessary for intellisense).
 		 */
-		if( table != null )
+		if( table != null && table.Tree != null )
 		{
-			object root_1 = (object)adaptor.Nil();			
+			object root_1 = (object)adaptor.Nil();
 			root_1 = (object)adaptor.BecomeRoot(table.Tree, root_1);
 			object root_2 = (object)adaptor.Nil();
 			root_2 = (object)adaptor.BecomeRoot((object)adaptor.Create(TABLE, "TABLE"), root_2);
@@ -1510,14 +1688,14 @@ column_name_list
 // $> Insert
 
 // $< Update
-
 update
 	:	UPDATE LOW_PRIORITY? IGNORE?
 		table=table_references			// this must be table_references because the mysql parser allows an alias here, even for single table updates (unlike DELETE)
+		{ cntUpdateTables = $table.table_count; }
 		set=set_columns
 		(WHERE where_condition)?
 		/* these options are only valid if we update one table */
-		({$table.table_count==1}?=> 
+		({ cntUpdateTables == 1 }? => 
 			order_by?
 			(LIMIT INT_NUMBER)?	
 		)?
@@ -1534,24 +1712,25 @@ update
 */
 delete
 @init {
-bool multiTableDelete = false;
+multiTableDelete = false;
 }
 	:	DELETE
 		(options{k=1;}: opts+=LOW_PRIORITY | opts+=QUICK | opts+=IGNORE)*		// the yacc parser accepts any combination and any number of these modifiers, so we do, too.
 		(	FROM 
-			t+=simple_table_ref_no_alias_existing (DOT MULT {multiTableDelete = true;} )? (COMMA t+=simple_table_ref_no_alias_existing (DOT MULT)? {multiTableDelete = true;} )*
+			t+=simple_table_ref_no_alias_existing (DOT MULT {multiTableDelete = true;} )? 
+			(COMMA t+=simple_table_ref_no_alias_existing (DOT MULT)? {multiTableDelete = true;} )*
 			(USING tr=table_references {multiTableDelete = true;})?
 			(WHERE where_condition)?
 			({multiTableDelete == false}?=>
 				order_by?
 				(LIMIT INT_NUMBER)?
 			)?
-								-> {multiTableDelete}? ^(DELETE ^(OPTIONS $opts+)? ^(TABLE $t)+ ^(USING $tr) ^(WHERE where_condition)?)
-								 				 	-> ^(DELETE ^(OPTIONS $opts+)? ^(TABLE $t) ^(WHERE where_condition)? order_by? ^(LIMIT INT_NUMBER)?)
-								 
+			-> {multiTableDelete}? ^(DELETE ^(OPTIONS $opts+)? ^(TABLE $t)+ ^(USING $tr) ^(WHERE where_condition)?)
+			-> ^(DELETE ^(OPTIONS $opts+)? ^(TABLE $t) ^(WHERE where_condition)? order_by? ^(LIMIT INT_NUMBER)?)								 
 		|	t+=simple_table_ref_no_alias_existing (DOT MULT)? (COMMA t+=simple_table_ref_no_alias_existing (DOT MULT)?)*
 			FROM tr=table_references
-			(WHERE where_condition)?			-> ^(DELETE ^(OPTIONS $opts+)? ^(TABLE $t)+ ^(FROM $tr) ^(WHERE where_condition)?)
+			(WHERE where_condition)?			
+			-> ^(DELETE ^(OPTIONS $opts+)? ^(TABLE $t)+ ^(FROM $tr) ^(WHERE where_condition)?)
 		)
 	;
 
@@ -1584,7 +1763,7 @@ create_table
 		(IF NOT EXISTS )?
 		tableName=simple_table_ref_no_alias
 		LPAREN create+=create_definition (COMMA create+=create_definition)* RPAREN
-		create_table_options? ( ( IGNORE | REPLACE )? AS? select )?
+		create_table_options? partition_options? ( ( IGNORE | REPLACE )? AS? select )?
 		-> ^(CREATE_TABLE
 				TEMPORARY?
 				EXISTS?
@@ -1593,26 +1772,77 @@ create_table
 			)
 	;
 
+partition_options
+  : PARTITION BY (
+      ( LINEAR? HASH LPAREN expr RPAREN )
+	| ( LINEAR? KEY LPAREN column_name_list RPAREN )
+	| ( RANGE LPAREN expr RPAREN )
+	| ( LIST LPAREN expr RPAREN )	
+    )
+	( PARTITIONS INT_NUM )?
+	(
+	  SUBPARTITION BY
+	  (
+	     ( LINEAR? HASH LPAREN expr RPAREN )
+	   | ( LINEAR? KEY LPAREN column_name_list RPAREN )
+	  )
+	  ( SUBPARTITIONS INT_NUM )?
+	)?
+	( partition_definition ( COMMA partition_definition )* )?
+  ;
+
+partition_definition
+  : PARTITION ident
+    ( VALUES 
+		( LESS THAN LPAREN expr RPAREN ) | MAXVALUE | ( IN LPAREN exprList RPAREN )
+	)?
+	( STORAGE? ENGINE EQUALS? enginename=ident )?
+	( COMMENT EQUALS? commenttext=STRING )?
+	( DATA DIRECTORY EQUALS? datadir=STRING )?
+	( INDEX DIRECTORY EQUALS? indexdir=STRING )?
+	( MAX_ROWS EQUALS? maxrows=INT_NUMBER )?
+	( MIN_ROWS EQUALS? minrows=INT_NUMBER )?
+	( TABLESPACE EQUALS? tablespacename=ident )?
+	( NODEGROUP EQUALS? nodegroupid=ident )?
+	( subpartition_definition ( COMMA subpartition_definition )* )?
+  ;
+
+subpartition_definition
+  : SUBPARTITION logicalname=ident
+    ( STORAGE? ENGINE EQUALS? enginename=ident )?
+	( COMMENT EQUALS? commenttext=STRING )?
+	( DATA DIRECTORY EQUALS? datadir=STRING )?
+	( INDEX DIRECTORY EQUALS? indexdir=STRING )?
+	( MAX_ROWS EQUALS? maxrows=INT_NUMBER )?
+	( MIN_ROWS EQUALS? minrows=INT_NUMBER )?
+	( TABLESPACE EQUALS? tablespacename=ident )?
+	( NODEGROUP EQUALS? nodegroupid=ident )?
+  ;
+
 create_table_options
-	:	create_table_option ( COMMA? create_table_option )*
-	;
+  :	create_table_option ( COMMA create_table_option )*
+  ;
+
+one_or_zero
+ : ( { input.LT( 1 ).Text == "1" || input.LT( 1 ).Text == "0" }? => INT_NUMBER )
+ ;
 
 create_table_option
 	:	(( ENGINE | TYPE ) EQUALS? engine_name )
 	|	( AUTO_INCREMENT EQUALS? INT_NUMBER )
 	|	( AVG_ROW_LENGTH EQUALS? INT_NUMBER )
 	|	( DEFAULT? CHARACTER SET EQUALS? ( ID | STRING ) )
-	|	( CHECKSUM EQUALS? ( { input.LT( 1 ).Text == "1" || input.LT( 1 ).Text == "0" }? => INT_NUMBER) )
+	|	( CHECKSUM EQUALS? one_or_zero )
 	|	( DEFAULT? COLLATE EQUALS? ( ID | STRING ) )
 	|	( COMMENT EQUALS? STRING )
 	|	( CONNECTION EQUALS? STRING )
 	|	( DATA DIRECTORY EQUALS? STRING )
-	|	( DELAY_KEY_WRITE EQUALS? ( { input.LT( 1 ).Text == "1" || input.LT( 1 ).Text == "0" }? INT_NUMBER ) )
+	|	( DELAY_KEY_WRITE EQUALS? one_or_zero )
 	|	( INDEX DIRECTORY EQUALS? STRING )
 	|	( INSERT_METHOD	EQUALS? ( NO | FIRST | LAST ) )
 	|	( MAX_ROWS EQUALS? INT_NUMBER )
 	|	( MIN_ROWS EQUALS? INT_NUMBER )
-	|	( PACK_KEYS EQUALS? ( ( { input.LT( 1 ).Text == "1" || input.LT( 1 ).Text == "0" }? INT_NUMBER ) | DEFAULT ) )
+	|	( PACK_KEYS EQUALS? ( one_or_zero | DEFAULT ) )
 	|	( PASSWORD EQUALS? STRING )
 	|	( ROW_FORMAT EQUALS? ( DEFAULT | DYNAMIC | FIXED | COMPRESSED | REDUNDANT | COMPACT ) )
 	|	( UNION EQUALS? LPAREN simple_table_ref_no_alias ( COMMA simple_table_ref_no_alias )* RPAREN )
@@ -1625,19 +1855,19 @@ engine_name
 
 create_definition
 	: { input.LA( 1 ) == CONSTRAINT }? ((CONSTRAINT ident? ) 
-			(( PRIMARY KEY index_type? LPAREN index_col_name ( COMMA index_col_name )* RPAREN index_type? )
+			(( PRIMARY KEY index_type? LPAREN index_col_name ( COMMA index_col_name )* RPAREN index_option* )
 			|	( FOREIGN KEY ( index_name=ident? ) LPAREN index_col_name 
 				( COMMA index_col_name )* RPAREN reference_definition )
 			|	( UNIQUE ( INDEX | KEY ) index_name=ident? index_type? 
-			  	  LPAREN index_col_name ( COMMA index_col_name )* RPAREN index_type? )))
-	| { input.LA( 1 ) == PRIMARY }? ( PRIMARY KEY index_type? LPAREN index_col_name ( COMMA index_col_name )* RPAREN index_type? )
+			  	  LPAREN index_col_name ( COMMA index_col_name )* RPAREN index_option* )))
+	| { input.LA( 1 ) == PRIMARY }? ( PRIMARY KEY index_type? LPAREN index_col_name ( COMMA index_col_name )* RPAREN index_option* )
 	|	( FOREIGN KEY ( index_name=ident? ) LPAREN index_col_name 
 				( COMMA index_col_name )* RPAREN reference_definition )
 	|	( UNIQUE ( INDEX | KEY ) index_name=ident? index_type? 
-			  	  LPAREN index_col_name ( COMMA index_col_name )* RPAREN index_type? )
-	|	( ( INDEX | KEY ) ident? index_type? LPAREN index_col_name ( COMMA index_col_name )* RPAREN index_type?	)
+			  	  LPAREN index_col_name ( COMMA index_col_name )* RPAREN index_option* )
+	|	( ( INDEX | KEY ) ident? index_type? LPAREN index_col_name ( COMMA index_col_name )* RPAREN index_option* )
 	|	( ( FULLTEXT | SPATIAL ) ( INDEX | KEY ) index_name=ident? LPAREN index_col_name ( COMMA index_col_name )* RPAREN
-		index_type?	)
+		index_option* )
 	|	( CHECK LPAREN expr RPAREN )?
 	|	colName=ident column_definition	-> ^(DEFINITION $colName column_definition)
 	;
@@ -1734,6 +1964,20 @@ collate
 		|	STRING 
 		)
 	;
+
+charset_equals
+  : CHARACTER SET EQUALS?
+	(	ID 
+	|	STRING 
+	)
+  ;
+
+collate_equals
+  : COLLATE EQUALS?
+	(	ID 
+	|	STRING 
+	)
+  ;
 	
 reference_definition
 	:	REFERENCES simple_table_ref_no_alias LPAREN index_col_name ( COMMA index_col_name )* RPAREN
@@ -1758,6 +2002,11 @@ index_type
 	;
 // $> DDL
 
+index_option
+  : KEY_BLOCK_SIZE EQUALS? INT_NUMBER
+  | index_type
+  | WITH PARSER ident
+  ;
 
 ifnull_expr
 	:	IFNULL LPAREN expr COMMA expr RPAREN
@@ -1787,6 +2036,8 @@ functionCall
 			order_by?
 			(SEPARATOR text_string)?
 		RPAREN									-> ^(FUNC ^(GROUP_CONCAT exprList DISTINCT? order_by? text_string?))
+    |   MASTER_POS_WAIT LPAREN masterlogfile=expr COMMA masterlogpos=expr ( COMMA timeout=expr )? RPAREN
+	                                            -> ^( FUNC ^( MASTER_POS_WAIT $masterlogfile $masterlogpos $timeout? ))
 	|	MAX LPAREN DISTINCT? expr RPAREN		-> ^(FUNC ^(MAX expr DISTINCT? ))
 	// MID is an alias for SUBSTR(str, pos, len)
 	|	MID LPAREN expr COMMA expr COMMA expr RPAREN		-> ^(FUNC ^(MID expr+))
@@ -1918,7 +2169,7 @@ functionCall_reserved
 
 /* TODO: Add ASTs for all drops */
 drop_database
-	:	DROP database_or_schema ( IF EXISTS )? ident -> ^( DROP ^( DATABASE ident ))
+	:	DROP database_or_schema ( IF EXISTS )? ident -> ^( DROP ^( DATABASE ident? ))
 	;
 
 database_or_schema
@@ -1926,27 +2177,27 @@ database_or_schema
 	;
 
 drop_event
-	:	DROP EVENT ( IF EXISTS )? ident -> ^( DROP ^( EVENT ident ))
+	:	DROP EVENT ( IF EXISTS )? ident -> ^( DROP ^( EVENT ident? ))
 	;
 
 drop_routine
 	:	DROP ( functype=PROCEDURE | functype=FUNCTION ) ( IF EXISTS )? simple_table_ref_no_alias
-		-> ^( DROP $functype simple_table_ref_no_alias )
+		-> ^( DROP $functype simple_table_ref_no_alias? )
 	;
 
 drop_index
 	:	DROP ( ONLINE | OFFLINE )? INDEX ident ON simple_table_ref_no_alias
-		-> ^( DROP ^( INDEX ident simple_table_ref_no_alias ))
+		-> ^( DROP ^( INDEX ident? ON simple_table_ref_no_alias? ))
 	;
 
 drop_logfile
 	:	DROP LOGILE GROUP ident ENGINE ( EQUALS )? ( NDB | NDBCLUSTER )
-		->	^( DROP ^( LOGFILE ident ))
+		->	^( DROP ^( LOGFILE ident? ))
 	; 
 
 drop_server
 	:	DROP SERVER ( IF EXISTS )? ident
-		->	^( DROP ^( SERVER ident ) )
+		->	^( DROP ^( SERVER ident? ) )
 	;
 
 drop_table
@@ -1958,12 +2209,12 @@ drop_table
 
 drop_user
 	:	DROP user user_specification_list
-		-> ^( DROP ^( user user_specification_list ))
+		-> ^( DROP ^( user user_specification_list? ))
 	;
 
 drop_trigger
 	:	DROP TRIGGER ( IF EXISTS )? simple_obj_ref_no_alias
-		-> ^( DROP ^( TRIGGER simple_obj_ref_no_alias ))
+		-> ^( DROP ^( TRIGGER simple_obj_ref_no_alias? ))
 	;
 
 drop_view
@@ -1973,7 +2224,7 @@ drop_view
 
 simple_obj_ref_no_alias_existing_list
 	:	simple_table_ref_no_alias_existing ( COMMA simple_table_ref_no_alias_existing )* 
-		-> ^( simple_table_ref_no_alias_existing )+
+		-> ^( OBJ_LIST simple_table_ref_no_alias_existing* )
 	;
 
 simple_obj_ref_no_alias_list
@@ -2011,7 +2262,7 @@ truncate_table
 	:	TRUNCATE ( t=TABLE )? simple_table_ref_no_alias_existing
 		/* This rewrite rule forces a creation of the "optional" TABLE token in the AST. */
 		-> ^( TRUNCATE ^( { new CommonTree( new CommonToken( TABLE, "TABLE" ) ) } 
-			simple_table_ref_no_alias_existing ))
+			simple_table_ref_no_alias_existing? ))
 	;
 
 set_password
@@ -2129,7 +2380,7 @@ privilege_type
 
 /* Special treatment for user keyword due to conflict with checkFunctionAsID function */
 user
-	:	{ input.LT( 1 ).Text.ToUpper() == "USER" }? => ID	-> ID
+	:	USER -> USER //{ input.LT( 1 ).Text.ToUpper() == "USER" }? => ID	-> ID
 	;
 
 create_user
@@ -2161,3 +2412,409 @@ sp_call
 	|	CALL ident LPAREN RPAREN	-> ^( CALL ident )
 	|	CALL ident LPAREN exprList RPAREN	-> ^( CALL ident ^( exprList ))
 	;
+	catch[ NoViableAltException nvae ] 
+	{
+		if( nvae.DecisionNumber == 467 )
+		{
+			nvae = new NoViableAltException( 
+					"proc_name", 
+					467 /* re.DecisionNumber */, 
+					0 /* re.StateNumber*/, 
+					nvae.Input );
+		}
+		ReportError(nvae);
+		Recover(input,nvae);
+		retval.Tree = (object)adaptor.ErrorNode(input, retval.Start, input.LT(-1), nvae);
+	}
+	catch [RecognitionException re]
+	{
+		ReportError(re);
+		Recover(input,re);
+		retval.Tree = (object)adaptor.ErrorNode(input, retval.Start, input.LT(-1), re);
+	}
+
+create_event 
+  :	CREATE ( DEFINER EQUALS ( user_specification | CURRENT_USER ))? 
+	EVENT
+	( IF NOT EXISTS )?
+	eventname=simple_obj_ref_no_alias
+	ON SCHEDULE schedule
+	( ON COMPLETION NOT? PRESERVE )?
+	( ENABLE | DISABLE | ( DISABLE ON SLAVE ) )?
+	( COMMENT STRING )?
+	DO statement
+	-> ^( CREATE EVENT ^( DEFINER user_specification? )? $eventname? ^( ON_SCHEDULE schedule? )? ^( ON_COMPLETION NOT? PRESERVE )?
+		^( ENABLING ENABLE? DISABLE? SLAVE? )? ^( COMMENT STRING? )? statement? )
+  ;
+
+schedule
+  : AT timestamp=expr ( PLUS intervals+=intervalExpr )*	-> ^( AT $timestamp $intervals? )
+  |	EVERY everyExpr=expr timeUnit
+  	( STARTS timestampStarts=expr ( PLUS intervalsStarts+=intervalExpr )* )?
+	( ENDS timestampEnds=expr ( PLUS intervalsEnds+=intervalExpr )* )?
+	-> ^( EVERY $everyExpr timeUnit ^( STARTS $timestampStarts $intervalsStarts? )? 
+		^( ENDS $timestampEnds $intervalsEnds? )? )
+  ;
+
+alter_database
+  :	ALTER ( name=DATABASE | name=SCHEMA ) ident 
+	(( alter_database_specification* -> ^(ALTER $name ident? alter_database_specification*) ) |
+	 ( UPGRADE DATA DIRECTORY NAME -> ^(ALTER $name ident? UPGRADE? ) ) )
+  ;
+
+alter_database_specification
+  : ( ( DEFAULT )? CHARACTER SET EQUALS? ( ID | STRING ) ) -> ^( CHARACTER ID? STRING? )
+  | ( ( DEFAULT )? COLLATE EQUALS? ( ID | STRING ) ) -> ^( COLLATE ID? STRING? )
+  ;
+
+alter_event
+  :	ALTER ( DEFINER EQUALS ( user_specification | CURRENT_USER ))? 
+	EVENT eventname=simple_obj_ref_no_alias
+	( ON SCHEDULE schedule )?
+	( ON COMPLETION NOT? PRESERVE )?
+	( RENAME TO neweventname=simple_obj_ref_no_alias )?
+	( ENABLE | DISABLE | ( DISABLE ON SLAVE ) )?
+	( COMMENT STRING )?
+	( DO statement )?
+	-> ^( ALTER EVENT ^( DEFINER user_specification? )? $eventname? ^( ON_SCHEDULE schedule? )?
+	    ^( ON_COMPLETION NOT? PRESERVE )?
+		^( RENAME $neweventname )? ^( ENABLING ENABLE? DISABLE? SLAVE? )? ^( COMMENT STRING? )? 
+		statement? )
+  ;
+
+declare_condition
+  : DECLARE ident CONDITION FOR ( INT | SQLSTATE VALUE? STRING )
+	-> ^( DECLARE CONDITION ident INT? STRING? )
+  ;
+
+declare_handler
+  : DECLARE ( type=CONTINUE | type=EXIT | type=UNDO ) 
+	HANDLER FOR conds+=condition_value ( COMMA conds+=condition_value )*
+	statement
+	-> ^( DECLARE_HANDLER $type? ^( HANDLER $conds? )? statement? )
+  ;
+
+condition_value
+  : INT_NUMBER
+  |	SQLSTATE VALUE? STRING
+  | ident
+  | SQLWARNING
+  | ( NOT FOUND )
+  | SQLEXCEPTION
+  ;
+
+create_logfile
+  : CREATE LOGFILE GROUP logfilename=ident
+	ADD UNDOFILE undofile=STRING
+	( INITIAL_SIZE EQUALS? initial_size=INT_NUMBER )?
+	( UNDO_BUFFER_SIZE EQUALS? undo_buffer_size=INT_NUMBER )?
+	( REDO_BUFFER_SIZE EQUALS? redo_buffer_size=INT_NUMBER )?
+	( NODEGROUP EQUALS? nodegroupid=ident )?
+	( WAIT )?
+	( COMMENT EQUALS? commenttext=STRING )?
+	ENGINE EQUALS? enginename=ident
+	-> ^( CREATE LOGFILE $logfilename? ^( UNDOFILE $undofile? )? ^( INITIAL_SIZE $initial_size? )?
+		^( UNDO_BUFFER_SIZE $undo_buffer_size? )? ^( REDO_BUFFER_SIZE $redo_buffer_size? )? 
+		^( NODEGROUP $nodegroupid? )? WAIT? ^( COMMENT $commenttext? )? ^( ENGINE $enginename? )?)
+  ;
+
+alter_logfile
+  : ALTER LOGFILE GROUP logfilename=ident
+	ADD UNDOFILE undofile=STRING
+	( WAIT )?	
+	( ENGINE EQUALS? enginename=ident )?
+	-> ^( ALTER LOGFILE $logfilename? ^( UNDOFILE $undofile? )? WAIT? ^( ENGINE $enginename? )?)
+  ;
+
+create_server
+  : CREATE SERVER servername=ident
+	FOREIGN DATA WRAPPER wrappername=ident
+	OPTIONS opts+=create_server_option ( COMMA opts+=create_server_option )?
+	-> ^( CREATE SERVER $servername ^( FOREIGNKEY_DATA_WRAPPER $wrappername )? ^( CREATE_SERVER_OPTIONS $opts? )? )
+  ;
+
+alter_server
+  : ALTER SERVER servername=ident
+    OPTIONS opts+=create_server_option ( COMMA opts+=create_server_option )?
+	-> ^( ALTER SERVER $servername ^( CREATE_SERVER_OPTIONS $opts? )? )
+  ;
+
+create_server_option
+  : ( HOST STRING )			-> ^( CREATE_SERVER_OPTION HOST STRING )
+  | ( DATABASE STRING )	-> ^( CREATE_SERVER_OPTION DATABASE STRING )
+  | ( USER STRING )		-> ^( CREATE_SERVER_OPTION USER STRING )
+  | ( PASSWORD STRING )	-> ^( CREATE_SERVER_OPTION PASSWORD STRING  )
+  | ( SOCKET STRING )		-> ^( CREATE_SERVER_OPTION SOCKET STRING )
+  | ( OWNER STRING )		-> ^( CREATE_SERVER_OPTION OWNER STRING )
+  | ( PORT INT_NUMBER )	-> ^( CREATE_SERVER_OPTION PORT INT_NUMBER )
+  ;
+
+create_tablespace
+  : CREATE TABLESPACE tablespacename=ident
+	ADD DATAFILE datafile=STRING
+	USE LOGFILE GROUP logfilegroup=ident
+	( EXTENT_SIZE EQUALS? extsize=INT_NUMBER )?
+	( INITIAL_SIZE EQUALS? initsize=INT_NUMBER )?
+	( AUTOEXTEND_SIZE EQUALS? autosize=INT_NUMBER )?
+	( MAX_SIZE EQUALS? maxsize=INT_NUMBER )?
+	( NODEGROUP EQUALS? nodegroupid=ident )?
+	( WAIT )?
+	( COMMENT EQUALS? commenttext=STRING )?
+	ENGINE EQUALS? enginename=ident
+	-> ^( CREATE TABLESPACE $tablespacename ^( DATAFILE $datafile? )? ^( LOGFILE $logfilegroup )? 
+		^( EXTENT_SIZE $extsize? )? ^( INITIAL_SIZE $initsize? )? ^( AUTOEXTEND_SIZE $autosize? )? 
+		^( MAX_SIZE $maxsize )? ^( NODEGROUP $nodegroupid? )? WAIT? ^( COMMENT $enginename? )? )
+  ;
+
+alter_function
+  : ALTER FUNCTION simple_obj_ref_no_alias routine_characteristic*
+	-> ^( ALTER FUNCTION simple_obj_ref_no_alias? routine_characteristic* )
+  ;
+
+alter_procedure
+  : ALTER PROCEDURE simple_obj_ref_no_alias routine_characteristic*
+  -> ^( ALTER PROCEDURE simple_obj_ref_no_alias? routine_characteristic* )
+  ;
+
+alter_table
+  : ALTER ( ONLINE | OFFLINE )? IGNORE? TABLE tblname=simple_obj_ref_no_alias
+    ( alter_specification_table ( COMMA alter_specification_table )* )?
+	partition_options?
+  ;
+
+alter_specification_table options { backtrack=true; memoize=true; }
+  : create_table_option
+  | ( ADD COLUMN? colname=ident ) => 
+		( ADD COLUMN? colname=ident column_definition (( FIRST | AFTER ) colnameafter=ident )? )
+  | ( ADD COLUMN? LPAREN ) => 
+		( ADD COLUMN? LPAREN colnamelist+=ident coldef+=column_definition 
+		( COMMA colnamelist+=ident coldef+=column_definition )* RPAREN )
+  | ( ADD ( INDEX | KEY ) ) => 
+		( ADD ( INDEX | KEY ) indexname=ident index_type 
+		LPAREN indexcolname+=index_col_name ( COMMA indexcolname+=index_col_name )* RPAREN index_option* )
+  | ( ADD CONSTRAINT? symbol=ident? PRIMARY ) => 
+		( ADD CONSTRAINT? symbol=ident? PRIMARY KEY index_type 
+		LPAREN indexcolname+=index_col_name ( COMMA indexcolname+=index_col_name )* RPAREN index_option* )
+  | ( ADD CONSTRAINT? symbol=ident? UNIQUE ) => 
+		( ADD CONSTRAINT? symbol=ident? UNIQUE ( INDEX | KEY )? index_type 
+		LPAREN indexcolname+=index_col_name ( COMMA indexcolname+=index_col_name )* RPAREN index_option* )
+  | ( ADD FULLTEXT ( INDEX | KEY )? indexname=ident 
+		LPAREN indexcolname+=index_col_name ( COMMA indexcolname+=index_col_name )* RPAREN index_option* )
+  | ( ADD SPATIAL ( INDEX | KEY )? indexname=ident 
+      LPAREN indexcolname+=index_col_name ( COMMA indexcolname+=index_col_name )* RPAREN index_option* )
+  | ( ADD ( CONSTRAINT symbol=ident? )? FOREIGN KEY indexname=ident? 
+	  LPAREN indexcolname+=index_col_name ( COMMA indexcolname+=index_col_name )* RPAREN reference_definition )
+  | ( ALTER COLUMN? colname=ident ( ( SET DEFAULT literal ) | ( DROP DEFAULT ) ) )
+  | ( CHANGE COLUMN? oldcolname=ident newcolname=ident column_definition (( FIRST | AFTER ) aftercolname=ident )? )
+  | ( MODIFY COLUMN? colname=ident column_definition (( FIRST | AFTER ) aftercolname=ident )? )
+  | ( DROP COLUMN? colname=ident )
+  | ( DROP PRIMARY KEY )
+  | ( DROP ( INDEX | KEY ) indexname=ident )
+  | ( DROP FOREIGN KEY fksymbol=ident )
+  | ( DISABLE KEYS )
+  | ( ENABLE KEYS )
+  | ( RENAME TO? newtablename=ident )
+  | ( ORDER BY ordercolname+=ident ( COMMA ordercolname+=ident )* )
+  | ( CONVERT TO charset collate? )
+  | ( DEFAULT? charset_equals collate_equals? )
+  | ( DISCARD TABLESPACE )
+  | ( IMPORT TABLESPACE )
+  | ( ADD PARTITION LPAREN partition_definition RPAREN )
+  | ( DROP PARTITION parititionname=ident )
+  | ( COALESCE PARTITION INT_NUMBER )
+  | ( REORGANIZE PARTITION ( paritionname=ident INTO LPAREN partition_definition RPAREN )? )
+  | ( ANALYZE PARTITION ( parititionname=ident | ALL ) )
+  | ( CHECK PARTITION ( partitionname=ident | ALL ) )
+  | ( OPTIMIZE PARTITION ( partitionname=ident | ALL ) )
+  | ( REBUILD PARTITION ( partitionname=ident | ALL ) )
+  | ( REPAIR PARTITION ( partitionname=ident | ALL ) )
+  | ( PARTITION BY partitioningexpr=expr )
+  | ( REMOVE PARTITIONING )
+  ;
+
+alter_tablespace
+  : ALTER TABLESPACE tablespacename=ident
+    ( ADD | DROP ) DATAFILE STRING
+	( INITIAL_SIZE EQUALS? INT_NUMBER )?
+	( WAIT )?
+	( ENGINE EQUALS? enginename=ident )?
+  ;
+
+alter_view
+  : ALTER 
+    ( ALGORITHM EQUALS ( UNDEFINED | MERGE | TEMPTABLE ) )?
+	( DEFINER EQUALS ( user_specification | CURRENT_USER ))?
+	( SQL SECURITY ( DEFINER | INVOKER ) )?
+    VIEW viewname=ident ( LPAREN colname=ident ( COMMA colname=ident )* RPAREN )?
+	AS select
+	( WITH ( CASCADE | LOCAL ) CHECK OPTION )?
+  ;
+////////////////
+create_index
+  : CREATE ( ONLINE | OFFLINE ) ( UNIQUE | FULLTEXT | SPATIAL )? INDEX indexname=simple_obj_ref_no_alias
+    index_type?
+	ON tblname=simple_obj_ref_no_alias 
+	LPAREN indexcols+=index_col_name ( COMMA indexcols+=index_col_name )* RPAREN 
+	index_option*
+  ;
+
+create_trigger
+  : CREATE 
+    ( DEFINER EQUALS ( user_specification | CURRENT_USER ))?
+    TRIGGER triggername=simple_obj_ref_no_alias ( triggertime=BEFORE | triggertime=AFTER )
+	 ( triggerevent=INSERT | triggerevent=UPDATE | triggerevent=DELETE )
+	ON tblname=simple_obj_ref_no_alias FOR EACH ROW 
+	statement
+  ;
+
+create_view
+  : CREATE
+    ( OR REPLACE )?
+	( ALGORITHM EQUALS ( UNDEFINED | MERGE | TEMPTABLE ) )?
+	( DEFINER EQUALS ( user_specification | CURRENT_USER ))?
+	( SQL SECURITY ( DEFINER | INVOKER ) )?
+	VIEW viewname=simple_obj_ref_no_alias
+	AS select
+	( WITH ( CASCADED | LOCAL ) CHECK OPTION )?
+  ;
+
+handler
+  : HANDLER tblname=simple_obj_ref_no_alias OPEN ( AS? alias=ident )?
+  | HANDLER tblname=simple_obj_ref_no_alias READ indexname=simple_obj_ref_no_alias
+    ( EQUALS | NOT ) LPAREN exprList RPAREN 
+	( WHERE expr )? limit?
+  | HANDLER tblname=simple_obj_ref_no_alias READ indexname=simple_obj_ref_no_alias
+    ( FIRST | NEXT | PREV | LAST )
+	( WHERE expr )? limit?
+  | HANDLER tblname=simple_obj_ref_no_alias READ ( FIRST | NEXT )
+    ( WHERE expr )? limit?
+  | HANDLER tblname=simple_obj_ref_no_alias CLOSE
+  ;
+
+load_data_infile
+  : LOAD DATA ( ( LOW PRIORITY ) | ( CONCURRENT ) )? LOCAL? infile=STRING
+    ( REPLACE | IGNORE )?
+	INTO TABLE tblname=simple_obj_ref_no_alias
+	charset?
+	( ( FIELDS | COLUMNS )
+	  ( TERMINATED BY terminatedbystr=STRING )?
+	  ( OPTIONALLY? ENCLOSED BY enclosedbystr=STRING )?
+	  ( ESCAPED BY escapedbystr=STRING )?
+	)
+	(
+		LINES
+		( STARTING BY linesstartingbystr=STRING )?
+		( TERMINATED BY linesterminatedbystr=STRING)?
+	)?
+	( IGNORE INT_NUMBER LINES )?
+	( LPAREN exprList RPAREN )?
+	( SET setcolname+=ident EQUALS setexpr+=expr ( COMMA setcolname+=ident EQUALS setexpr+=expr )* )?
+  ;
+
+replace
+scope 
+{
+  bool replaceV1;
+}
+@init { $replace::replaceV1 = false; }
+  : REPLACE ( LOW_PRIORITY | DELAYED )?
+    INTO? tblname=simple_obj_ref_no_alias 
+		( LPAREN colname+=ident ( COMMA colname+=ident )* RPAREN  { replaceV1 = true; })?
+	( ( ( VALUES | VALUE ) LPAREN ( expr | DEFAULT ) ( COMMA ( expr | DEFAULT ) )* RPAREN ) | select )
+	{ replaceV1 == false }? 
+	( SET colname+=ident EQUALS ( expr | DEFAULT ) ( COMMA colname+=ident EQUALS ( expr | DEFAULT ) )* )
+  ;
+
+purge
+  : PURGE ( BINARY | MASTER ) LOGS
+    ( TO logname=STRING ) | ( BEFORE datetime=expr )
+  ;
+
+reset_master
+  : RESET MASTER
+  ;
+
+change_master
+  : CHANGE MASTER TO change_master_option ( COMMA change_master_option )*
+  ;
+
+change_master_option
+  : ( MASTER_BIND EQUALS cm_interfacename=STRING )
+  | ( MASTER_HOST EQUALS cm_hostname=STRING )
+  | ( MASTER_USER EQUALS cm_username=STRING )
+  | ( MASTER_PASSWORD EQUALS cm_password=STRING )
+  | ( MASTER_PORT EQUALS cm_portnum=INT_NUMBER )
+  | ( MASTER_CONNECT_RETRY EQUALS cm_interval=INT_NUMBER )
+  | ( MASTER_HEARTBEAT_PERIOD EQUALS cm_interval=INT_NUMBER )
+  | ( MASTER_LOG_FILE EQUALS cm_masterlogfile=STRING )
+  | ( MASTER_LOG_POS EQUALS cm_masterlogpos=INT_NUMBER )
+  | ( RELAY_LOG_FILE EQUALS cm_relayfile=STRING )
+  | ( RELAY_LOG_POS EQUALS cm_relaypos=INT_NUMBER )
+  | ( MASTER_SSL EQUALS cm_masterssl=one_or_zero )
+  | ( MASTER_SSL_CA EQUALS cm_cafilename=STRING )
+  | ( MASTER_SSL_CAPATH EQUALS cm_capath=STRING )
+  | ( MASTER_SSL_CERT EQUALS cm_cert=STRING )
+  | ( MASTER_SSL_KEY EQUALS cm_key=STRING )
+  | ( MASTER_SSL_CIPHER EQUALS cm_cipher=STRING )
+  | ( MASTER_SSL_VERIFY_SERVER_CERT EQUALS cm_ssl_verify=one_or_zero )
+  | ( IGNORE_SERVER_IDS EQUALS LPAREN server_id_list RPAREN )
+  ;
+
+server_id_list
+  : ( serverid+=INT_NUMBER ( COMMA serverid+=INT_NUMBER )* )?
+  ;
+
+/* this is due to deprecation in later version, but still available in 5.1 */
+load_data_from_master
+  : LOAD DATA FROM MASTER
+  ;
+
+/* this is due to deprecation in later version, but still available in 5.1 */
+load_table_from_master
+  : LOAD TABLE tbl_name=simple_obj_ref_no_alias FROM MASTER
+  ;
+
+reset_slave
+  : RESET SLAVE
+  ;
+
+start_slave
+  : ( START SLAVE ( thread_type ) ( COMMA ( thread_type ) )* )
+  | ( START SLAVE SQL_THREAD? UNTIL
+      MASTER_LOG_FILE EQUALS logname=STRING COMMA MASTER_LOG_POS EQUALS logpos=INT_NUMBER )
+  | ( START SLAVE SQL_THREAD? UNTIL RELAY_LOG_FILE EQUALS 
+      logname=STRING COMMA RELAY_LOG_POS logpos=INT_NUMBER )
+  ;
+
+thread_type
+  : IO_THREAD | SQL_THREAD
+  ;
+
+stop_slave
+  : STOP SLAVE thread_type ( COMMA thread_type )*
+  ;
+
+analyze_table
+  : ANALYZE ( NO_WRITE_TO_BINLOG | LOCAL )? TABLE simple_obj_ref_no_alias_list
+  ;
+
+backup_table
+  : BACKUP TABLE simple_obj_ref_no_alias_list TO STRING
+  ;
+
+check_table
+  : CHECK TABLE simple_obj_ref_no_alias_list check_table_option*
+  ;
+
+check_table_option
+  : ( FOR UPGRADE ) | QUICK | FAST | MEDIUM | EXTENDED | CHANGED
+  ;
+
+checksum_table
+  : CHECKSUM TABLE simple_obj_ref_no_alias_list ( QUICK | EXTENDED )
+  ;
+
+optimize_table
+  : OPTIMIZE ( NO_WRITE_TO_BINLOG | LOCAL )? TABLE simple_obj_ref_no_alias_list
+  ;
+

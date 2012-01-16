@@ -2,6 +2,8 @@
 - Fix for EF4.1, Code First, CreateDatabaseScript() generates an invalid MySQL script (MySQL bug #62150, Oracle bug #13582837).  
 - Fix for "Connector/Net Generates Incorrect SELECT Clause after UPDATE" (MySql bug #62134, Oracle bug #13491689). 
 - Fix for Error on intellisense when typing "-" (Orable Bug #13522344). 
+- Fix for VS IS SHOWING AN ERROR WHEN TRYING TO CREATE A FOREIGN KEY (Oracle bug #13511776).
+- Made parser fully compliant with MySql 5.1.
 
 6.5.0
 - Added exception interception
@@ -10,3 +12,4 @@
 - Integrated new parser and enhanced intellisense support
 - Milliseconds are now supported when using MySQL 5.6 or later
 - Made MySqlDateTime serializable (MySQL bug #40555, Oracle bug #11750161).
+- Fix for Error on intellisense when typing "-" (Orable Bug #13522344).
