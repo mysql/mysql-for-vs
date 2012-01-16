@@ -149,6 +149,7 @@ namespace MySql.Data.VisualStudio.Editors
       this.columnGrid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.columnGrid_CellValidating);
       this.columnGrid.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.columnGrid_CellValueNeeded);
       this.columnGrid.CellValuePushed += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.columnGrid_CellValuePushed);
+      this.columnGrid.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.columnGrid_DataError);
       this.columnGrid.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.columnGrid_EditingControlShowing);
       this.columnGrid.RowValidating += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.columnGrid_RowValidating);
       // 
