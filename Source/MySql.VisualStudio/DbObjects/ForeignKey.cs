@@ -191,7 +191,7 @@ namespace MySql.Data.VisualStudio.DbObjects
 
     string ITablePart.GetDropSql()
     {
-      return String.Format("DROP FOREIGN KEY `{0}`", Name);
+      return String.Format("DROP FOREIGN KEY `{0}`", this.oldFk.Name);
     }
 
     string ITablePart.GetSql(bool newTable)
