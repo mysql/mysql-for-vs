@@ -687,21 +687,21 @@ UTC_TIME	:	'UTC_TIME' {$type = checkFunctionAsID($type);};
 /* keywords that can also be function names */
 CHAR	:	'CHAR'; // reserved
 CURRENT_USER	:	'CURRENT_USER';// reserved
-DATE	:	'DATE' {$type = checkFunctionAsID($type);};
+DATE	:	'DATE' {$type = checkFunctionAsID($type, MySQL51Lexer.DATE);};
 DAY	:	'DAY'; // {$type = checkFunctionAsID($type);}; // not affected by IGNORE_SPACE since 5.1.13
-HOUR	:	'HOUR' {$type = checkFunctionAsID($type);};
+HOUR	:	'HOUR' {$type = checkFunctionAsID($type, MySQL51Lexer.HOUR );};
 INSERT	:	'INSERT'; // reserved
 INTERVAL	:	'INTERVAL'; // reserved
 LEFT	:	'LEFT'; // reserved
-MINUTE	:	'MINUTE' {$type = checkFunctionAsID($type);};
-MONTH	:	'MONTH' {$type = checkFunctionAsID($type);};
+MINUTE	:	'MINUTE' {$type = checkFunctionAsID($type, MySQL51Lexer.MINUTE);};
+MONTH	:	'MONTH' {$type = checkFunctionAsID($type, MySQL51Lexer.MONTH);};
 RIGHT	:	'RIGHT'; // reserved
-SECOND	:	'SECOND' {$type = checkFunctionAsID($type);};
-TIME	:	'TIME' {$type = checkFunctionAsID($type);};
-TIMESTAMP	:	'TIMESTAMP' {$type = checkFunctionAsID($type);};
+SECOND	:	'SECOND' {$type = checkFunctionAsID($type, MySQL51Lexer.SECOND);};
+TIME	:	'TIME' {$type = checkFunctionAsID($type, MySQL51Lexer.TIME);};
+TIMESTAMP	:	'TIMESTAMP' {$type = checkFunctionAsID($type, MySQL51Lexer.TIMESTAMP);};
 TRIM	:	'TRIM' {$type = checkFunctionAsID($type);};
-USER	:	'USER' {$type = checkFunctionAsID($type);};
-YEAR	:	'YEAR' {$type = checkFunctionAsID($type);};
+USER	:	'USER' {$type = checkFunctionAsID($type, MySQL51Lexer.USER);};
+YEAR	:	'YEAR' {$type = checkFunctionAsID($type, MySQL51Lexer.YEAR);};
 
 
 // $> Builtin SQL Functions
@@ -957,13 +957,13 @@ DASHDASH_COMMENT
 	:	'--' (' ' | '\t' | '\n' | '\r') ~('\n'|'\r')* '\r'? '\n'
 	;
 // $> Comments
-GLOBAL_VARIABLE
-	:	'@@' ID
-	;
-/* todo: user variables can be quoted, thus ID is wrong here */
-SESSION_VARIABLE
-	:	'@' ID
-	;
+//GLOBAL_VARIABLE
+//	:	'@@' ID
+//	;
+///* todo: user variables can be quoted, thus ID is wrong here */
+//SESSION_VARIABLE
+//	:	'@' ID
+//	;
 
 WS	:	(' ' | '\t' | '\n' | '\r')+ { $channel=TokenChannels.Hidden; }
 	;
