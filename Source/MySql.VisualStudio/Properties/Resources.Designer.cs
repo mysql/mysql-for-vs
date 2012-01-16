@@ -2538,6 +2538,15 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Before closing you must set valid values for all grid cells..
+        /// </summary>
+        public static string FkDlgBeforeClose {
+            get {
+                return ResourceManager.GetString("FkDlgBeforeClose", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Expected column name..
         /// </summary>
         public static string FKNeedColumn {
