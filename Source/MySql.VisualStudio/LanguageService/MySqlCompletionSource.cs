@@ -1,4 +1,26 @@
-﻿using System;
+﻿// Copyright © 2012, Oracle and/or its affiliates. All rights reserved.
+//
+// MySQL Connector/NET is licensed under the terms of the GPLv2
+// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
+// MySQL Connectors. There are special exceptions to the terms and 
+// conditions of the GPLv2 as it is applied to this software, see the 
+// FLOSS License Exception
+// <http://www.mysql.com/about/legal/licensing/foss-exception.html>.
+//
+// This program is free software; you can redistribute it and/or modify 
+// it under the terms of the GNU General Public License as published 
+// by the Free Software Foundation; version 2 of the License.
+//
+// This program is distributed in the hope that it will be useful, but 
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+// for more details.
+//
+// You should have received a copy of the GNU General Public License along 
+// with this program; if not, write to the Free Software Foundation, Inc., 
+// 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
@@ -21,24 +43,12 @@ namespace MySql.Data.VisualStudio
   {
     private MySqlCompletionSourceProvider m_sourceProvider;
     private ITextBuffer m_textBuffer;
-    private List<Completion> m_compList;
-    private Dictionary<string, string> dicStartTokens = new Dictionary<string, string>();
+    private List<Completion> m_compList;    
 
     public MySqlCompletionSource(MySqlCompletionSourceProvider sourceProvider, ITextBuffer textBuffer)
     {
       m_sourceProvider = sourceProvider;
-      m_textBuffer = textBuffer;
-      dicStartTokens.Add("drop", "");
-      dicStartTokens.Add("select", "");
-      dicStartTokens.Add("update", "");
-      dicStartTokens.Add("delete", "");
-      dicStartTokens.Add("insert", "");
-      dicStartTokens.Add("truncate", "");
-      dicStartTokens.Add("rename", "");
-      dicStartTokens.Add("call", "");
-      dicStartTokens.Add("show", "");
-      dicStartTokens.Add("create", "");
-      //dicStartTokens.Add("", "");
+      m_textBuffer = textBuffer;      
     }
 
     /// <summary>
@@ -53,12 +63,10 @@ namespace MySql.Data.VisualStudio
       CaseInsensitiveInputStream input = new CaseInsensitiveInputStream(ms);
       //ANTLRInputStream input = new ANTLRInputStream(ms);
       MySQL51Lexer lexer = new MySQL51Lexer(input);
-      TokenStreamRemovable tokens = new TokenStreamRemovable(lexer);
-      //CommonTokenStream tokens = new CommonTokenStream(lexer);
+      TokenStreamRemovable tokens = new TokenStreamRemovable(lexer);      
       IToken tr = null;
       int position = snapPos.Position;
-      tokens.Fill();
-      //position--;   // we want a zero-based index.
+      tokens.Fill();      
       if (!char.IsWhiteSpace(snapPos.GetChar()))
       {
         foreach (IToken t in tokens.GetTokens())
@@ -72,37 +80,7 @@ namespace MySql.Data.VisualStudio
         tokens.Remove(tr);
       }
       return tokens;
-    }
-
-    //private ITree FindStmtRecursive(ITree t)
-    //{
-    //  ITree treeStmt = null;
-    //  ITree child = null;
-    //  for (int idx = 0; idx < t.ChildCount; idx++)
-    //  {
-    //    child = t.GetChild(idx);
-    //    if ((child.Text.Equals("create", StringComparison.OrdinalIgnoreCase)) &&
-    //          (child.GetChild(child.ChildCount - 1).Text.Equals("begin_stmt", StringComparison.OrdinalIgnoreCase)))
-    //    {
-    //      treeStmt = FindStmtRecursive(child);
-    //      if (treeStmt != null)
-    //      {
-    //        break;
-    //      }
-    //    }
-    //    else
-    //    {
-    //      if (child.TokenStartIndex == -1 || child.TokenStopIndex == -1) return null;
-    //      if ((position >= tokens.Get(child.TokenStartIndex).StartIndex) &&
-    //          (position <= tokens.Get(child.TokenStopIndex).StopIndex))
-    //      {
-    //        treeStmt = child;
-    //        break;
-    //      }
-    //    }
-    //  }
-    //  return treeStmt;
-    //}
+    }    
 
     private ITree FindStmt(ITree t)
     {
@@ -158,148 +136,12 @@ namespace MySql.Data.VisualStudio
       }
     }
 
-    private string GetCompleteStatement2(
-      ITextSnapshot snapshot, SnapshotPoint snapPos, out StringBuilder sbErrors, out ITree treeStmt)
-    {
-      int position = snapPos.Position;
-      StringBuilder sb = new StringBuilder();
-      CommonTokenStream tokens;
-      string sql = snapshot.GetText();
-      MySQL51Parser.program_return r = 
-        LanguageServiceUtil.ParseSql( sql, false, out sb, out tokens);
-      sbErrors = sb;
-      if (sbErrors.Length != 0)
-        position--;
-      StringBuilder sbTokens = new StringBuilder();
-      ITree t = r.Tree as ITree;
-      treeStmt = t;
-      if (t.IsNil)
-      {
-        ITree child = null;
-        for (int idx = 0; idx < t.ChildCount; idx++)
-        {
-          child = t.GetChild(idx);
-          if (child.TokenStartIndex == -1 || child.TokenStopIndex == -1) return null;
-          if ((position >= tokens.Get(child.TokenStartIndex).StartIndex) &&
-              (position <= tokens.Get(child.TokenStopIndex).StopIndex))
-          {
-            break;
-          }
-        }
-        treeStmt = child;
-      }
-      else
-      {
-        treeStmt = t;        
-      }
-      //int upperToken = (sb.Length == 0) ? treeStmt.TokenStopIndex - 1 : treeStmt.TokenStopIndex;
-      string sqlOutput;
-      int lastToken = treeStmt.TokenStopIndex;
-      // Get last not EOF token
-      while (tokens.Get(lastToken).Text == "<EOF>" && lastToken > 0)
-        lastToken--;
-      int len = 
-        tokens.Get( treeStmt.TokenStopIndex ).StopIndex - 
-        tokens.Get( treeStmt.TokenStartIndex ).StartIndex + 1;
-      if (char.IsWhiteSpace(snapPos.GetChar()))
-      {
-        sqlOutput = sql.Substring(tokens.Get(treeStmt.TokenStartIndex).StartIndex,
-          Math.Min(len, sql.Length - tokens.Get(treeStmt.TokenStartIndex).StartIndex));
-      }
-      else
-      {
-        // remove last token
-        // sometimes the parser itself removes the last token.
-        if ((sbErrors.Length == 0) || (tokens.Get(lastToken).StopIndex - 1 == position))
-        {
-          if (tokens.Get(lastToken).StopIndex - 1 == position && 
-            lastToken != treeStmt.TokenStartIndex && lastToken > 0  ) lastToken--;
-          int start = tokens.Get(treeStmt.TokenStartIndex).StartIndex,
-            stop = tokens.Get( lastToken ).StartIndex;
-          sqlOutput = sql.Substring(start, Math.Min(stop - start, sql.Length - start));
-        }
-        else
-        {
-          sqlOutput = sql.Substring(tokens.Get(treeStmt.TokenStartIndex).StartIndex, 
-            Math.Min(len, sql.Length - tokens.Get(treeStmt.TokenStartIndex).StartIndex));
-        }
-      }
-      //if ( /*treeStmt.TokenStartIndex < treeStmt.TokenStopIndex && */
-      //    char.IsWhiteSpace(snapPos.GetChar()))
-      //{
-      //  stop = tokens.Get(treeStmt.TokenStopIndex - 1).StopIndex;
-      //}
-      //else
-      //{
-      //  stop = tokens.Get(treeStmt.TokenStopIndex).StartIndex;
-      //}
-      //int start = tokens.Get(treeStmt.TokenStartIndex).StartIndex;
-      //  //stop = tokens.Get(upperToken).StopIndex;
-      ////string sqlOutput = sql.Substring(start, Math.Min(stop - start + 1, sql.Length - start));
-      
-      //if (treeStmt is CommonErrorNode || sbErrors.Length != 0)
-      //{
-      //  sqlOutput = sql.Substring(start, sql.Length - start);
-      //}
-      //else
-      //{
-      //  sqlOutput = sql.Substring(start, Math.Min(stop - start + 1, sql.Length - start));
-      //}
-      treeStmt = LanguageServiceUtil.ParseSql(sqlOutput, false, out sbErrors).Tree as ITree;
-      return sqlOutput;      
-    }
-
-    /*
-    private string GetCompleteStatement3(
-      ITextSnapshot snapshot, ITextSnapshotLine line, ref int position )
-    {
-      string sql;
-      int lineNo = line.LineNumber;
-      do
-      {
-        sql = snapshot.GetLineFromLineNumber(lineNo).GetTextIncludingLineBreak();
-        string[] arr = sql.Split( ' ', '\r', '\n' );
-        if (arr.Length < 1) continue;
-        string firstWord = arr[0];
-        if (dicStartTokens.ContainsKey(firstWord))
-        {
-          break;
-        }
-        lineNo--;
-      } while (lineNo >= 0);
-      StringBuilder sb = new StringBuilder();
-      if (lineNo == -1)
-      {
-        sql = line.GetText();
-      }
-      else
-      {
-        int idx = lineNo;
-        do
-        {
-          string s = snapshot.GetLineFromLineNumber(idx++).GetText();
-          if( idx != line.LineNumber ) position += s.Length + 1;
-          sb.Append( s );
-          sb.Append(' ');
-        } while ( idx <= line.LineNumber );
-        sql = sb.ToString();
-      }
-      return sql;
-    }
-    */
-
-
-
     void ICompletionSource.AugmentCompletionSession(ICompletionSession session, IList<CompletionSet> completionSets)
     {
       DbConnection connection = LanguageServiceUtil.GetConnection();
-      if( connection != null && !string.IsNullOrEmpty( connection.Database ) )
-      //if (LanguageServiceConnection.Current.Connection != null)
+      if( connection != null && !string.IsNullOrEmpty( connection.Database ) )      
       {
-        //*
-        //MySqlConnection connection = LanguageServiceConnection.Current.Connection as MySqlConnection;
-
-        //ITrackingSpan span = FindTokenSpanAtPosition(session.GetTriggerPoint(m_textBuffer), session);
+        if (session.TextView.Caret.Position.BufferPosition.Position == 0) return;
         SnapshotPoint currentPoint = (session.TextView.Caret.Position.BufferPosition) - 1;
         ITextStructureNavigator navigator = m_sourceProvider.NavigatorService.GetTextStructureNavigator(m_textBuffer);
         TextExtent extent = navigator.GetExtentOfWord(currentPoint);
@@ -311,29 +153,9 @@ namespace MySql.Data.VisualStudio
         int position = currentPoint.Position;
         // Get starting token
         ITree t;
-        GetCompleteStatement(snapshot, currentPoint, out sbErrors, out t);
-        //string sql = line.GetText();
+        GetCompleteStatement(snapshot, currentPoint, out sbErrors, out t);        
         if( snapshot.Length == 0 ) return;        
-        /*
-        //int idx = sql.LastIndexOf(' ');
-        //if (idx != -1)
-        //{
-        //  sql = sql.Substring(0, idx);
-        //}
-        int lidx = -1;
-        // The current position normalized
-        int curPosNorm = Math.Min( position - line.Start, sql.Length - 1);
-        if (!char.IsWhiteSpace(currentPoint.GetChar()))
-        {
-          lidx = sql.LastIndexOf(' ', Math.Max( curPosNorm - 1, 0 ));
-        }
-        if (lidx != -1)
-        {
-          sql = sql.Substring(0, lidx) + sql.Substring( curPosNorm + 1 );
-        }
-        MySQL51Parser.statement_list_return parsedSql = LanguageServiceUtil.ParseSql(sql, false, out sbErrors );
-        ITree t = ( parsedSql.Tree as ITree );
-        */
+        
         string s = sbErrors.ToString();
         Match m = new Regex(@"Expected (?<item>.*)\.").Match( s );
         string expectedToken = "";
@@ -363,41 +185,32 @@ namespace MySql.Data.VisualStudio
             m_compList,
             null));
         }
-        if (expectedToken == "proc_name")
-        //else if (s.EndsWith("no viable alternative at input '<EOF>'\r\n", 
-        //  StringComparison.CurrentCultureIgnoreCase))
-        {
-          //if( t is CommonErrorNode )
-          //{
-          //  if (((CommonErrorNode)t).Text.Equals( "CALL", StringComparison.CurrentCultureIgnoreCase ) )
-          //  {
-              // Get a list of stored procedures
-              m_compList = new List<Completion>();
-              DataTable schema = connection.GetSchema("PROCEDURES WITH PARAMETERS");
-              DataView vi = schema.DefaultView;
-              vi.Sort = "specific_name asc";
-              string completionItem = null;
-              string description = null;
-              foreach (DataRowView row in vi)
-              {
-                if ("procedure".CompareTo(row["routine_type"].ToString().ToLower()) == 0)
-                {
-                  completionItem = row["specific_name"].ToString();
-                  description = string.Format("procedure {0}.{1}({2})",
-                    row["routine_schema"], row["specific_name"], row["ParameterList"]);
-                  m_compList.Add(new Completion(completionItem, completionItem,
-                    description, null, null));
-                }
-              }
+        if (expectedToken == "proc_name")        
+        {          
+          m_compList = new List<Completion>();
+          DataTable schema = connection.GetSchema("PROCEDURES WITH PARAMETERS");
+          DataView vi = schema.DefaultView;
+          vi.Sort = "specific_name asc";
+          string completionItem = null;
+          string description = null;
+          foreach (DataRowView row in vi)
+          {
+            if ("procedure".CompareTo(row["routine_type"].ToString().ToLower()) == 0)
+            {
+              completionItem = row["specific_name"].ToString();
+              description = string.Format("procedure {0}.{1}({2})",
+                row["routine_schema"], row["specific_name"], row["ParameterList"]);
+              m_compList.Add(new Completion(completionItem, completionItem,
+                description, null, null));
+            }
+          }
 
-              completionSets.Add(new CompletionSet(
-                "MySqlTokens",    //the non-localized title of the tab
-                "MySQL Tokens",    //the display title of the tab
-                FindTokenSpanAtPosition(session.GetTriggerPoint(m_textBuffer), session),
-                m_compList,
-                null));
-          //  }
-          //}
+          completionSets.Add(new CompletionSet(
+            "MySqlTokens",    //the non-localized title of the tab
+            "MySQL Tokens",    //the display title of the tab
+            FindTokenSpanAtPosition(session.GetTriggerPoint(m_textBuffer), session),
+            m_compList,
+            null));
         }
         else if (expectedToken == "column_name")
         {
@@ -412,32 +225,6 @@ namespace MySql.Data.VisualStudio
             CreateCompletionList(cols, session, completionSets);
           }
         }
-        //else if (s.EndsWith("no viable alternative at input 'FROM'\r\n", 
-        //  StringComparison.CurrentCultureIgnoreCase))
-        //{
-        //  // if there are only syntax error in columns, we still try to extract the table info.
-        //  List<TableWithAlias> tables = new List<TableWithAlias>();
-        //  sql = currentPoint.GetContainingLine().GetText();
-        //  Match m = new Regex(@"select (?<columns>.*) (?<from>from .*$)").Match(sql);
-        //  if (m.Success)
-        //  {
-        //    sql = string.Format("select c {0}", m.Groups["from"].Value);
-        //    parsedSql = LanguageServiceUtil.ParseSql(sql, false, out sbErrors);
-        //    // if there were more syntax errors we cannot do more, so abort
-        //    if (sbErrors.Length != 0) return;
-        //    // Get table names
-        //    ParserUtils.GetTables((ITree)parsedSql.Tree, tables);
-        //    List<string> cols = GetColumns(connection, tables);
-        //    CreateCompletionList(cols, session, completionSets);
-        //  }
-        //  else
-        //  {
-        //    // if not match we can still try other constructs like insert, update, etc.
-        //    // (provided that they generate the same error: no viable input at 'from'... 
-        //    // which won't be always the case).
-        //  }
-        //}
-        //*/
       }
     }
 
@@ -584,10 +371,6 @@ namespace MySql.Data.VisualStudio
       ITextSnapshot snapshot = m_textBuffer.CurrentSnapshot;
       ITrackingSpan applicableTo = snapshot.CreateTrackingSpan( new SnapshotSpan(start, triggerPoint.Value), SpanTrackingMode.EdgeInclusive);
       return applicableTo;
-      //SnapshotPoint currentPoint = (session.TextView.Caret.Position.BufferPosition) - 1;
-      //ITextStructureNavigator navigator = m_sourceProvider.NavigatorService.GetTextStructureNavigator(m_textBuffer);      
-      //TextExtent extent = navigator.GetExtentOfWord(currentPoint);
-      //return currentPoint.Snapshot.CreateTrackingSpan(extent.Span, SpanTrackingMode.EdgeInclusive);      
     }
 
     private bool m_isDisposed;

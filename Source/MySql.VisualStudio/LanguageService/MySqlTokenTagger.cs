@@ -32,8 +32,8 @@ namespace MySql.Data.VisualStudio
   /// </summary>
   internal sealed class MySqlTokenTagger : ITagger<MySqlTokenTag>
   {
-    private List<string> keywords;
-    private List<string> operators;
+    private Dictionary<string, object> keywords;
+    private Dictionary<string, object> operators;
     private Tokenizer tokenizer = new Tokenizer(true);
 
     /// <summary>
@@ -106,42 +106,171 @@ namespace MySql.Data.VisualStudio
     private void InitializeKeywords()
     {
       if (keywords != null) return;
-      keywords = new List<string>();
+      keywords = new Dictionary<string, object>();
 
-      keywords.Add("ACCESSIBLE");
-      keywords.Add("ADD");
-      keywords.Add("ALL");
-      keywords.Add("ALTER");
-      keywords.Add("ANALYZE");
-      keywords.Add("AND");
-      keywords.Add("AS");
-      keywords.Add("ASC");
-      keywords.Add("ASENSITIVE");
-      keywords.Add("BEFORE");
-      keywords.Add("BETWEEN");
-      keywords.Add("BINARY");
-      keywords.Add("BOTH");
-      keywords.Add("BY");
-      keywords.Add("CALL");
-      keywords.Add("CASCADE");
-      keywords.Add("CASE");
-      keywords.Add("CHANGE");
-      keywords.Add("CHARACTER");
-      keywords.Add("CHECK");
-      keywords.Add("COLLATE");
-      keywords.Add(":");
-      keywords.Add("COLUMN");
-      keywords.Add("CONDITION");
-      keywords.Add("CONSTRAINT");
-      keywords.Add("CONTINUE");
-      keywords.Add("CONVERT");
-      keywords.Add("CREATE");
-      keywords.Add("CROSS");
-      keywords.Add("CURRENT_DATE");
-      keywords.Add("CURRENT_TIME");
-      keywords.Add("CURRENT_TIMESTAMP");
-      keywords.Add("CURSOR");
-      keywords.Add("");
+      keywords.Add(":", null);
+      keywords.Add("ACCESSIBLE", null);
+      keywords.Add("ADD", null);
+      keywords.Add("AFTER", null);
+      keywords.Add("ALL", null);
+      keywords.Add("ALTER", null);
+      keywords.Add("ANALYZE", null);
+      keywords.Add("AND", null);
+      keywords.Add("AS", null);
+      keywords.Add("ASC", null);
+      keywords.Add("ASENSITIVE", null);
+      keywords.Add("BEFORE", null);
+      keywords.Add("BEGIN", null);
+      keywords.Add("BETWEEN", null);
+      keywords.Add("BIGINT", null);
+      keywords.Add("BINARY", null);
+      keywords.Add("BIT", null);
+      keywords.Add("BLOB", null);
+      keywords.Add("BOTH", null);
+      keywords.Add("BY", null);
+      keywords.Add("CALL", null);
+      keywords.Add("CASCADE", null);
+      keywords.Add("CASE", null);
+      keywords.Add("CHANGE", null);
+      keywords.Add("CHAR", null);
+      keywords.Add("CHARACTER", null);
+      keywords.Add("CHECK", null);
+      keywords.Add("COLLATE", null);      
+      keywords.Add("COLUMN", null);
+      keywords.Add("CONDITION", null);
+      keywords.Add("CONSTRAINT", null);
+      keywords.Add("CONTINUE", null);
+      keywords.Add("CONVERT", null);
+      keywords.Add("COUNT", null);
+      keywords.Add("CREATE", null);
+      keywords.Add("CROSS", null);
+      keywords.Add("CURRENT_DATE", null);
+      keywords.Add("CURRENT_TIME", null);
+      keywords.Add("CURRENT_TIMESTAMP", null);
+      keywords.Add("CURRENT_USER", null);
+      keywords.Add("CURSOR", null);
+      keywords.Add("DATE", null);
+      keywords.Add("DATETIME", null);
+      keywords.Add("DECIMAL", null);
+      keywords.Add("DECLARE", null);
+      keywords.Add("DEFINER", null);
+      keywords.Add("DESC", null);
+      keywords.Add("DELETE", null);
+      keywords.Add("DISTINCT", null);
+      keywords.Add("DISTINCTROW", null);
+      keywords.Add("DOUBLE", null);
+      keywords.Add("DROP", null);
+      keywords.Add("DUMPFILE", null);
+      keywords.Add("EACH", null);
+      keywords.Add("ELSE", null);
+      keywords.Add("END", null);
+      keywords.Add("ENUM", null);
+      keywords.Add("FLOAT", null);
+      keywords.Add("FOR", null);
+      keywords.Add("FROM", null);
+      keywords.Add("FUNCTION", null);
+      keywords.Add("GROUP", null);
+      keywords.Add("HAVING", null);
+      keywords.Add("HIGH_PRIORITY", null);
+      keywords.Add("KILL", null);
+      keywords.Add("IF", null);
+      keywords.Add("IN", null);
+      keywords.Add("INNER", null);
+      keywords.Add("INSERT", null);
+      keywords.Add("INT", null);
+      keywords.Add("INTEGER", null);
+      keywords.Add("INTO", null);      
+      keywords.Add("JOIN", null);
+      keywords.Add("LEFT", null);
+      keywords.Add("LIMIT", null);      
+      keywords.Add("LOCK", null);
+      keywords.Add("LONGBLOB", null);
+      keywords.Add("LONGTEXT", null);
+      keywords.Add("MEDIUMBLOB", null);
+      keywords.Add("MEDIUMINT", null);
+      keywords.Add("MEDIUMTEXT", null);
+      keywords.Add("MODE", null);
+      keywords.Add("NUMERIC", null);
+      keywords.Add("OFFSET", null);
+      keywords.Add("ON", null);
+      keywords.Add("ORDER", null);
+      keywords.Add("OUT", null);
+      keywords.Add("OUTFILE", null);
+      keywords.Add("PROCEDURE", null);
+      keywords.Add("PROCESSLIST", null);
+      keywords.Add("REAL", null);
+      keywords.Add("RENAME", null);
+      keywords.Add("REPLACE", null);
+      keywords.Add("RETURN", null);
+      keywords.Add("RETURNS", null);
+      keywords.Add("RIGHT", null);
+      keywords.Add("ROLLUP", null);
+      keywords.Add("ROW", null);
+      keywords.Add("SELECT", null);
+      keywords.Add("SET", null);
+      keywords.Add("SHARE", null);
+      keywords.Add("SHOW", null);
+      keywords.Add("SMALLINT", null);
+      keywords.Add("SQL_BIG_RESULT", null);
+      keywords.Add("SQL_BUFFER_RESULT", null);
+      keywords.Add("SQL_CACHE", null);
+      keywords.Add("SQL_CALC_FOUND_ROWS", null);
+      keywords.Add("SQL_NO_CACHE", null);
+      keywords.Add("SQL_SMALL_RESULT", null);
+      keywords.Add("STATUS", null);
+      keywords.Add("STRAIGHT_JOIN", null);
+      keywords.Add("TABLE", null);
+      keywords.Add("TEXT", null);
+      keywords.Add("THEN", null);
+      keywords.Add("TIME", null);
+      keywords.Add("TIMESTAMP", null);
+      keywords.Add("TINYBLOB", null);
+      keywords.Add("TINYINT", null);
+      keywords.Add("TINYTEXT", null);
+      keywords.Add("TRIGGER", null);
+      keywords.Add("TRUNCATE", null);
+      keywords.Add("UPDATE", null);
+      keywords.Add("VARBINARY", null);
+      keywords.Add("VARCHAR", null);
+      keywords.Add("VIEW", null);
+      keywords.Add("WHEN", null);
+      keywords.Add("WHERE", null);
+      keywords.Add("WITH", null);
+
+      // functions
+      
+      
+
+      // trigger keywords
+      
+      
+      
+      
+      
+      
+      
+
+      // Other
+      
+      
+      
+      
+      
+      
+
+      keywords.Add("", null);
+      
+      
+      
+      
+      
+
+      // update
+      
+      
+
+      // delete
+      
       
       /*
       DATABASE	:	'DATABASE';
@@ -341,182 +470,65 @@ YEAR_MONTH	:	'YEAR_MONTH';
 ZEROFILL	:	'ZEROFILL';
       */
 
-      // procedures and functions
-      keywords.Add("CREATE");
-      keywords.Add("ALTER");
-      keywords.Add("PROCEDURE");
-      keywords.Add("CALL");
-      keywords.Add("RETURN");
-      keywords.Add("FUNCTION");
-      keywords.Add("RETURNS");
-      keywords.Add("DECLARE");
-      keywords.Add("DEFINER");
-      keywords.Add("CURRENT_USER");
-      keywords.Add("OUT");
-      keywords.Add("INOUT");
-      keywords.Add("IN");
-      keywords.Add("BEGIN");
-      keywords.Add("END");
-      keywords.Add("VIEW");
-      keywords.Add("AS");
-      keywords.Add("TRIGGER");
+      // procedures and functions    
 
-      // update
-      keywords.Add("UPDATE");
-      keywords.Add("TABLE");
+      
 
-      // delete
-      keywords.Add("DELETE");
-
-      // select 
-      keywords.Add("SELECT");
-      keywords.Add("FROM");
-      keywords.Add("WHERE");
-      keywords.Add("GROUP");
-      keywords.Add("BY");
-      keywords.Add("ASC");
-      keywords.Add("DESC");
-      keywords.Add("WITH");
-      keywords.Add("ROLLUP");
-      keywords.Add("HAVING");
-      keywords.Add("ORDER");
-      keywords.Add("LEFT");
-      keywords.Add("LIMIT");
-      keywords.Add("OFFSET");
-      keywords.Add("INNER");
-      keywords.Add("INTO");
-      keywords.Add("JOIN");
-      keywords.Add("OUTFILE");
-      keywords.Add("DUMPFILE");
-      keywords.Add("FOR");
-      keywords.Add("LOCK");
-      keywords.Add("SHARE");
-      keywords.Add("MODE");
-      keywords.Add("ALL");
-      keywords.Add("DISTINCT");
-      keywords.Add("DISTINCTROW");
-      keywords.Add("HIGH_PRIORITY");
-      keywords.Add("RIGHT");
-      keywords.Add("STRAIGHT_JOIN");
-      keywords.Add("SQL_SMALL_RESULT");
-      keywords.Add("SQL_BIG_RESULT");
-      keywords.Add("SQL_BUFFER_RESULT");
-      keywords.Add("SQL_CACHE");
-      keywords.Add("SQL_NO_CACHE");
-      keywords.Add("SQL_CALC_FOUND_ROWS");
-
-      // misc
-      keywords.Add("DROP");
-      keywords.Add("SHOW");
-      keywords.Add("PROCESSLIST");
-      keywords.Add("KILL");
-      keywords.Add("STATUS");
-      keywords.Add("RENAME");
-      keywords.Add("TRUNCATE");
-
-      // data types
-      keywords.Add("BIGINT");
-      keywords.Add("BIT");
-      keywords.Add("BLOB");
-      keywords.Add("CHAR");
-      keywords.Add("DATE");
-      keywords.Add("DATETIME");
-      keywords.Add("DECIMAL");
-      keywords.Add("DOUBLE");
-      keywords.Add("ENUM");
-      keywords.Add("FLOAT");
-      keywords.Add("INT");
-      keywords.Add("INTEGER");
-      keywords.Add("LONGBLOB");
-      keywords.Add("LONGTEXT");
-      keywords.Add("MEDIUMBLOB");
-      keywords.Add("MEDIUMINT");
-      keywords.Add("MEDIUMTEXT");
-      keywords.Add("NUMERIC");
-      keywords.Add("REAL");
-      keywords.Add("SMALLINT");
-      keywords.Add("TEXT");
-      keywords.Add("TIME");
-      keywords.Add("TIMESTAMP");
-      keywords.Add("TINYBLOB");
-      keywords.Add("TINYINT");
-      keywords.Add("TINYTEXT");
-      keywords.Add("VARBINARY");
-      keywords.Add("VARCHAR");
-
-      // functions
-      keywords.Add("COUNT");
-      keywords.Add("REPLACE");
-
-      // trigger keywords
-      keywords.Add("BEFORE");
-      keywords.Add("AFTER");
-      keywords.Add("INSERT");
-      keywords.Add("ON");
-      keywords.Add("EACH");
-      keywords.Add("ROW");
-      keywords.Add("SET");
-
-      // Other
-      keywords.Add("IF");
-      keywords.Add("CASE");
-      keywords.Add("WHEN");
-      keywords.Add("THEN");
-      keywords.Add("ELSE");
+      
     }
 
     private void InitializeOperators()
     {
       if (operators != null) return;
-      operators = new List<string>();
+      operators = new Dictionary<string, object>();
 
       // Logical
-      operators.Add("AND");
-      operators.Add("&&");
-      operators.Add("&");
-      operators.Add("NOT");
-      operators.Add("!");
-      operators.Add("||");
-      operators.Add("|");
-      operators.Add("OR");
-      operators.Add("XOR");
-      operators.Add("^");
+      operators.Add("AND", null);
+      operators.Add("&&", null);
+      operators.Add("&", null);
+      operators.Add("NOT", null);
+      operators.Add("!", null);
+      operators.Add("||", null);
+      operators.Add("|", null);
+      operators.Add("OR", null);
+      operators.Add("XOR", null);
+      operators.Add("^", null);
 
       // Assignment
-      operators.Add("=");
-      operators.Add(":=");
+      operators.Add("=", null);
+      operators.Add(":=", null);
 
       // Arithmetic
-      operators.Add("+");
-      operators.Add("-");
-      operators.Add("*");
-      operators.Add("/");
-      operators.Add("DIV");
-      operators.Add("%");
+      operators.Add("+", null);
+      operators.Add("-", null);
+      operators.Add("*", null);
+      operators.Add("/", null);
+      operators.Add("DIV", null);
+      operators.Add("%", null);
 
       // Comparison
-      operators.Add("BETWEEN");
-      operators.Add("<=>");
-      operators.Add(">=");
-      operators.Add(">");
-      operators.Add("IS");
-      operators.Add("IS NOT NULL");
-      operators.Add("IS NULL");
-      operators.Add("<=");
-      operators.Add("<");
-      operators.Add("LIKE");
-      operators.Add("!=");
-      operators.Add("<>");
-      operators.Add("%");
-      operators.Add("SOUNDS LIKE");
+      operators.Add("BETWEEN", null);
+      operators.Add("<=>", null);
+      operators.Add(">=", null);
+      operators.Add(">", null);
+      operators.Add("IS", null);
+      operators.Add("IS NOT NULL", null);
+      operators.Add("IS NULL", null);
+      operators.Add("<=", null);
+      operators.Add("<", null);
+      operators.Add("LIKE", null);
+      operators.Add("!=", null);
+      operators.Add("<>", null);
+      //operators.Add("%", null);
+      operators.Add("SOUNDS LIKE", null);
 
       // Others
-      operators.Add("BINARY");
-      operators.Add("~");
-      operators.Add("<<");
-      operators.Add(">>");
-      operators.Add("REGEXP");
-      operators.Add("RLIKE");
+      operators.Add("BINARY", null);
+      operators.Add("~", null);
+      operators.Add("<<", null);
+      operators.Add(">>", null);
+      operators.Add("REGEXP", null);
+      operators.Add("RLIKE", null);
     }
 
     private MySqlTokenType GetTokenType(string token)
@@ -531,12 +543,12 @@ ZEROFILL	:	'ZEROFILL';
 
     private bool IsKeyword(string token)
     {
-      return keywords.Contains(token.ToUpperInvariant());
+      return keywords.ContainsKey(token.ToUpperInvariant());
     }
 
     private bool IsOperator(string token)
     {
-      return operators.Contains(token.ToUpper());
+      return operators.ContainsKey(token.ToUpper());
     }
   }
 }

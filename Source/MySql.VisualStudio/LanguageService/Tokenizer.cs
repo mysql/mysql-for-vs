@@ -112,7 +112,7 @@ namespace MySql.Data.VisualStudio
 
         if (IsQuoteCharacter(c) && !BlockComment)
           return ExtractQuotedToken(c);
-        
+
         string comment = null;
         if (Pos != Text.Length)
         {
