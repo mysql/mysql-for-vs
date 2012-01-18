@@ -117,7 +117,10 @@ namespace MySql.Data.VisualStudio
     protected override void Load()
     {
       if (IsNew)
+      {
         editor.Text = GetNewTriggerText();
+        sql_mode = string.Empty;
+      }
       else
       {
         try
