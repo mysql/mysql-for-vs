@@ -4,6 +4,7 @@
 - Fix for Error on intellisense when typing "-" (Orable Bug #13522344). 
 - Fix for VS IS SHOWING AN ERROR WHEN TRYING TO CREATE A FOREIGN KEY (Oracle bug #13511776).
 - Made parser fully compliant with MySql 5.1.
+- Fixed creation Trigger dialog bug (Oracle bug #13511801)
 
 6.5.0
 - Added exception interception
