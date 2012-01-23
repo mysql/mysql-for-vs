@@ -4,6 +4,7 @@
 - Fix for Error on intellisense when typing "-" (Orable Bug #13522344). 
 - Fixed creation Trigger dialog bug (Oracle bug #13511801)
 - Fix for VS IS SHOWING AN ERROR WHEN TRYING TO CREATE A FOREIGN KEY (Oracle bug #13511776).
+- Fix for Error when changing data length in table designer in varchar columns. (Oracle bug #13611677).
 
 Version 6.3.8
 - Modified ProviderManifest.xml to map TIMESTAMP db fields to the DateTime .NET type (MySQL bug #55351, Oracle bug #12652602).
