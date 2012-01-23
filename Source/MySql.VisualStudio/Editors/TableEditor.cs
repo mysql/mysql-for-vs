@@ -230,6 +230,7 @@ namespace MySql.Data.VisualStudio
       this.columnGrid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.columnGrid_CellValidating);
       this.columnGrid.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.columnGrid_EditingControlShowing);
       this.columnGrid.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.columnGrid_UserDeletingRow);
+      this.columnGrid.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.columnGrid_DataError);
       // 
       // NameColumn
       // 
@@ -459,7 +460,25 @@ namespace MySql.Data.VisualStudio
       string type = e.FormattedValue as string;
       if (String.IsNullOrEmpty(type)) return;
       if (!TypeColumn.Items.Contains(type))
-        TypeColumn.Items.Add(type);
+      {
+        var typeToAdd = type.IndexOf('(') >= 0 ? type.Substring(0, type.IndexOf('(')) : type;
+        List<string> types = new List<string>(dataTypes.Length);
+        types.AddRange(Metadata.GetDataTypes(false));
+        if (types.Contains(typeToAdd.ToLowerInvariant()))
+        {
+          TypeColumn.Items.Add(type);
+        }
+        else
+        {
+          MessageBox.Show(Resources.InvalidDataType, Resources.ErrorCaption, MessageBoxButtons.OK, MessageBoxIcon.Information);
+          columnGrid.CurrentCell.Value = dataTypes[0];
+          columnGrid.CurrentCell = columnGrid.Rows[e.RowIndex].Cells[e.ColumnIndex];
+          columnGrid.CurrentCell.Selected = true;
+          columnGrid.BeginEdit(true);
+          return;
+        }
+      }
+
       columnGrid.CurrentCell.Value = e.FormattedValue;
     }
 
@@ -512,5 +531,16 @@ namespace MySql.Data.VisualStudio
         columnGrid.CommitEdit(DataGridViewDataErrorContexts.Commit);
       }
     }
+
+    private void columnGrid_DataError(object sender, DataGridViewDataErrorEventArgs e)
+    {
+      e.ThrowException = false;
+      if (e.Context != DataGridViewDataErrorContexts.Display &&
+        e.Context != DataGridViewDataErrorContexts.Formatting)
+      {
+        return;
+      }
+    }
+
   }
 }
