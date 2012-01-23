@@ -1114,4 +1114,7 @@ Check that the server is running, the database exists and the user Error establi
   <data name="FkDlgBeforeClose" xml:space="preserve">
     <value>Before closing you must set valid values for all grid cells.</value>
   </data>
+  <data name="InvalidDataType" xml:space="preserve">
+    <value>Data type is not valid.</value>
+  </data>
 </root>
