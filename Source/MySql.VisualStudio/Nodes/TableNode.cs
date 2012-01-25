@@ -62,6 +62,8 @@ namespace MySql.Data.VisualStudio
         return table.HasChanges();
       }
     }
+    
+    internal bool TextValueChanged { get; set; }
 
     #endregion
 
@@ -84,6 +86,8 @@ namespace MySql.Data.VisualStudio
         if (DialogResult.Cancel == dlg.ShowDialog()) return false;
         table.Name = dlg.TableName;
       }
+      
+      table.OwningNode.TextValueChanged = false;
       return base.Save();
     }
 
