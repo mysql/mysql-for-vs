@@ -38,9 +38,10 @@ namespace MySql.Data.VisualStudio.Editors
 
     public IndexColumnEditorDialog(List<IndexColumn> ic)
     {
+      
+      InitializeComponent();
       table = ic[0].OwningIndex.Table;
       indexColumns = ic;
-      InitializeComponent();
 
       foreach (Column c in table.Columns)
       {
@@ -112,6 +113,7 @@ namespace MySql.Data.VisualStudio.Editors
         if (String.IsNullOrEmpty(row.ColumnName)) continue;
         IndexColumn ic = new IndexColumn();
         ic.ColumnName = row.ColumnName;
+        ic.OwningIndex = new Index(table, null);
         ic.SortOrder = (IndexSortOrder)Enum.Parse(typeof(IndexSortOrder), row.SortOrder);
         indexColumns.Add(ic);
       }

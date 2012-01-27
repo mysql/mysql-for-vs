@@ -7,6 +7,7 @@
 - Fix for Error when changing data length in table designer in varchar columns. (Oracle bug #13611677).
 - Fix for Bug in Visual Studio Table Designer on editing column name the changes were not visually detected until focus is switched (Oracle bug #13613755).
 - Fix for VS let you close the FK dialog even when the created FK do not have any data (Oracle bug #13613839).
+- Fix for error when creating index through VS table designer. (Oracle bug # 13613765 - INDEX/KEYS ERROR MODIFYING COLUMNS FIELD).
 
 Version 6.3.8
 - Modified ProviderManifest.xml to map TIMESTAMP db fields to the DateTime .NET type (MySQL bug #55351, Oracle bug #12652602).
