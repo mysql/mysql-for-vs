@@ -444,7 +444,7 @@ namespace MySql.Data.VisualStudio.DbObjects
 
   public enum IndexSortOrder
   {
-    Ascending
+    Ascending, Descending
   }
 
   class IndexColumn
