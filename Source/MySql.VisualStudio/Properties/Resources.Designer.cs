@@ -2556,6 +2556,15 @@ namespace MySql.Data.VisualStudio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You need to define at least a pair of columns for Foreign Key {0}..
+        /// </summary>
+        public static string FkNoColumnsForForeignKey {
+            get {
+                return ResourceManager.GetString("FkNoColumnsForForeignKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot use the same column when the referenced table is the same as the source table..
         /// </summary>
         public static string FKSameColumn {
