@@ -337,6 +337,7 @@ namespace MySql.Data.VisualStudio.Editors
       this.Name = "ForeignKeyDialog";
       this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
       this.Text = "Foreign Key Relationships";
+      this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ForeignKeyDialog_FormClosing);
       ((System.ComponentModel.ISupportInitialize)(this.foreignKeyBindingSource)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.columnGrid)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.fkColumnsBindingSource)).EndInit();
