@@ -6,6 +6,7 @@
 - Fix for VS IS SHOWING AN ERROR WHEN TRYING TO CREATE A FOREIGN KEY (Oracle bug #13511776).
 - Fixed creation Trigger dialog bug (Oracle bug #13511801)
 - Fix for Error when changing data length in table designer in varchar columns. (Oracle bug #13611677).
+- Fix for Bug in Visual Studio Table Designer on editing column name the changes were not visually detected until focus is switched (Oracle bug #13613755).
 
 6.4.5
 - Fix for bug on Create Table via Server Explorer. The columns properties are now added in the correct order.(Oracle db Bug # 13475830).
