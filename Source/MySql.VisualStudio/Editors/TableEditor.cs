@@ -422,8 +422,18 @@ namespace MySql.Data.VisualStudio
         DataGridViewTextBoxEditingControl tec = e.Control as DataGridViewTextBoxEditingControl;
         tec.Multiline = true;
         tec.Dock = DockStyle.Fill;
-        tec.BorderStyle = BorderStyle.Fixed3D;
+        tec.BorderStyle = BorderStyle.Fixed3D;        
+        tec.TextChanged += new EventHandler(tbColumnName_TextChanged);
       }
+    }
+    
+
+    private void tbColumnName_TextChanged(object sender, EventArgs e)
+    {
+      if ((string)columnGrid.CurrentCell.Value != ((DataGridViewTextBoxEditingControl)sender).Text)
+      {
+        tableNode.TextValueChanged = true;
+      }            
     }
 
     private void columnBindingSource_CurrentChanged(object sender, EventArgs e)
