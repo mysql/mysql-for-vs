@@ -6,6 +6,7 @@
 - Made parser fully compliant with MySql 5.1.
 - Fixed creation Trigger dialog bug (Oracle bug #13511801)
 - Fix for Error when changing data length in table designer in varchar columns. (Oracle bug #13611677).
+- Fix for Bug in Visual Studio Table Designer on editing column name the changes were not visually detected until focus is switched (Oracle bug #13613755).
 
 6.5.0
 - Added exception interception
