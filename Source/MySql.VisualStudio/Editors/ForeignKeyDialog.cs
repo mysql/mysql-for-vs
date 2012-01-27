@@ -83,7 +83,16 @@ namespace MySql.Data.VisualStudio.Editors
           MessageBox.Show( Resources.FkDlgBeforeClose );
           return false;
         }
-      }      
+      }
+      foreach( object o in foreignKeyBindingSource )
+      {
+        ForeignKey fk = ( ForeignKey )o;
+        if( fk.Columns.Count == 0 )
+        {
+          MessageBox.Show( string.Format( Resources.FkNoColumnsForForeignKey, fk.Name ), Resources.ErrorCaption );
+          return false;
+        }
+      }
       return true;
     }
 
@@ -331,6 +340,16 @@ namespace MySql.Data.VisualStudio.Editors
         e.Context != DataGridViewDataErrorContexts.Formatting)
       {
         return;
+      }
+    }
+
+    private void ForeignKeyDialog_FormClosing(object sender, FormClosingEventArgs e)
+    {
+      if ((e.CloseReason != CloseReason.TaskManagerClosing) &&
+        (e.CloseReason != CloseReason.WindowsShutDown ) &&
+        (e.CloseReason != CloseReason.ApplicationExitCall ))
+      {
+        if (!ValidGridData()) e.Cancel = true;
       }
     }
   }
