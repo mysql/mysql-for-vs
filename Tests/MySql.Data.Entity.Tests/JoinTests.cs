@@ -31,6 +31,7 @@ using System.Data.Common;
 using System.Data.Objects;
 using System.Linq;
 using MySql.Data.Entity.Tests.Properties;
+using System.Collections;
 
 namespace MySql.Data.Entity.Tests
 {
@@ -220,6 +221,34 @@ namespace MySql.Data.Entity.Tests
         videogameplatform pu = null;
 
         pu = l3.FirstOrDefault();
+      }
+    }
+    
+    /// <summary>
+    /// Test to fix Oracle bug 13491698
+    /// </summary>
+    [Test]
+    public void CanIncludeWithEagerLoading()
+    {
+      var myarray = new ArrayList();
+      using (var db = new mybooksEntities())
+      {
+        var author = db.myauthors.Include("mybooks.myeditions").AsEnumerable().First();
+        var strquery = ((ObjectQuery)db.myauthors.Include("mybooks.myeditions").AsEnumerable()).ToTraceString();
+        CheckSql(strquery, SQLSyntax.JoinUsingInclude);
+        foreach (var book in author.mybooks.ToList())
+        {
+          foreach (var edition in book.myeditions.ToList())
+          {
+            myarray.Add(edition.Title);
+          }
+        }
+        myarray.Sort();
+        Assert.AreEqual(0, myarray.IndexOf("Another Book First Edition"));
+        Assert.AreEqual(1, myarray.IndexOf("Another Book Second Edition"));
+        Assert.AreEqual(2, myarray.IndexOf("Another Book Third Edition"));
+        Assert.AreEqual(3, myarray.IndexOf("Some Book First Edition"));
+        Assert.AreEqual(myarray.Count, 4);
       }
     }
   }
