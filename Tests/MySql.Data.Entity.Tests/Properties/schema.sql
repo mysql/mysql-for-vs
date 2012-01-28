@@ -19,6 +19,10 @@ DROP TABLE IF EXISTS Computers;
 drop table if exists VideoGamePlatform;
 drop table if exists GamingPlatform;
 drop table if exists VideoGameTitle;
+drop table if exists myeditionsinmybooks;
+drop table if exists myeditions;
+drop table if exists mybooks;
+drop table if exists myauthors;
 
 CREATE TABLE Employees(
 	Id INT NOT NULL PRIMARY KEY,
@@ -261,4 +265,16 @@ create table `VideoGamePlatform` (
 insert into `VideoGamePlatform` ( IdGamingPlatform, IdVideoGameTitle, Category )
 	values ( 1, 3, 'FPS' ), ( 1, 4, 'FPS' ), ( 1, 5, 'Soccer' ), ( 1, 6, 'RPG' ), ( 1, 7, 'RPG-Action' ), ( 2, 1, 'FPS' ), ( 2, 2, '3PS' ), ( 2, 3, 'FPS' ), 
     ( 2, 5, 'Soccer' ), ( 2, 6, 'RPG' ),	( 3, 5, 'Soccer' ), ( 3, 8, 'Platformer' );
+
+create table myeditions ( id int(11) not null, title varchar(45) not null, primary key (id)) engine=innodb default charset=latin1;
+create table myauthors (id int(11) not null, name varchar(45) not null, primary key (id))  engine=innodb default charset=latin1;
+create table mybooks ( id int(11) not null, authorid int(11) not null, primary key (id),  key fk_authors_mybooks (authorid), constraint fk_authors_mybooks foreign key (authorid) references myauthors (id) on delete no action on update no action) engine=innodb default charset=latin1;
+create table myeditionsinmybooks ( bookid int(11) not null, editionid int(11) not null, primary key (bookid,editionid), key fk1 (bookid), key fk2 (editionid), constraint fk1 foreign key (bookid) references mybooks (id) on delete no action on update no action,
+  constraint fk2 foreign key (editionid) references myeditions (id) on delete no action on update no action
+) engine=innodb default charset=latin1;
+
+insert into `myEditions` values (1,'Some Book First Edition'),(2,'Another Book First Edition'),(3,'Another Book Second Edition'),(4,'Another Book Third Edition');
+insert into `myAuthors` values (1,'Some Author'),(2,'Another Author');
+insert into `myBooks` values (8,1),(9,1);
+insert into `myEditionsinmyBooks` values (8,1),(9,2),(9,3),(9,4);
                

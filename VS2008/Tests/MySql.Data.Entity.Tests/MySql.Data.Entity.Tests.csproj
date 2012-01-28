@@ -98,6 +98,11 @@
     <Compile Include="..\..\..\Tests\MySql.Data.Entity.Tests\Properties\AssemblyInfo.cs">
       <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="booksModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>booksModel.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Model1.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -122,6 +127,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\Tests\MySql.Data.Entity.Tests\App.Config" />
+    <EntityDeploy Include="booksModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>booksModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
     <EntityDeploy Include="Model3.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>Model3.Designer.cs</LastGenOutput>
