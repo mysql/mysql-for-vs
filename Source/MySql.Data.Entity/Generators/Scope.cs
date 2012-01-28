@@ -77,6 +77,7 @@ namespace MySql.Data.Entity
         for (int x = propertyFragment.Properties.Count - 2; x >= 0; x--)
         {
           string reference = propertyFragment.Properties[x];
+          if (reference == null) continue;
           InputFragment input = GetFragment(reference);
           if (input == null) continue;
           if (input.Scoped) return input;
