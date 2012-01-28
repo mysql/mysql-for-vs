@@ -273,8 +273,8 @@ namespace MySql.Data.Entity.Tests.Properties {
         ///`Extent1`.`Name`, 
         ///`Join1`.`Id` AS `C2`, 
         ///`Join1`.`Name` AS `C3`, 
-        ///`Join1`.`Id1` AS `C4`, 
-        ///`Join1`.`Name1` AS `C5`
+        ///`Join1`.`Id` AS `C4`, 
+        ///`Join1`.`Name` AS `C5`
         ///FROM `Companies` AS `Extent1` INNER JOIN (SELECT
         ///`UnionAll1`.`Id`, 
         ///`UnionAll1`.`Name`, 
@@ -287,7 +287,7 @@ namespace MySql.Data.Entity.Tests.Properties {
         ///`Extent3`.`Id`, 
         ///`Extent3`.`Name`
         ///FROM `Shops` AS `Extent3`) AS `UnionAll1` INNER JOIN (SELECT
-        ///`Extent4`. [rest of string was truncated]&quot;;.
+        ///`Extent4`.`I [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string JoinOfUnionsOnRightSideOfJoin {
             get {
@@ -342,6 +342,42 @@ namespace MySql.Data.Entity.Tests.Properties {
         internal static string JoinOnRightSideNameClash {
             get {
                 return ResourceManager.GetString("JoinOnRightSideNameClash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT
+        ///`Project3`.`Id`,
+        ///`Project3`.`Name`,
+        ///`Project3`.`C1`,
+        ///`Project3`.`C3` AS `C2`,
+        ///`Project3`.`Id1`,
+        ///`Project3`.`AuthorId`,
+        ///`Project3`.`C2` AS `C3`,
+        ///`Project3`.`Id2`,
+        ///`Project3`.`Title`
+        ///FROM
+        ///(SELECT
+        ///`Extent1`.`Id`,
+        ///`Extent1`.`Name`,
+        ///1 AS `C1`,
+        ///`Project2`.`Id` AS `Id1`,
+        ///`Project2`.`AuthorId`,
+        ///`Project2`.`Id1` AS `Id2`,
+        ///`Project2`.`Title`,
+        ///`Project2`.`C1` AS `C2`,
+        ///`Project2`.`C2` AS `C3`
+        ///FROM
+        ///`myauthors` AS `Extent1` 
+        ///LEFT OUTER JOIN 
+        ///(SELECT
+        ///`Extent2`.`Id`,
+        ///`Extent2`.`AuthorId`,
+        /// [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string JoinUsingInclude {
+            get {
+                return ResourceManager.GetString("JoinUsingInclude", resourceCulture);
             }
         }
         
