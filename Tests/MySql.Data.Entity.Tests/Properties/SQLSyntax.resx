@@ -264,8 +264,8 @@ FROM `Books` AS `Extent1` INNER JOIN `Authors` AS `Extent2` ON `Extent1`.`Author
 `Extent1`.`Name`, 
 `Join1`.`Id` AS `C1`, 
 `Join1`.`Name` AS `C2`, 
-`Join1`.`Id1` AS `C3`, 
-`Join1`.`Name1` AS `C4`
+`Join1`.`Id` AS `C3`, 
+`Join1`.`Name` AS `C4`
 FROM `Companies` AS `Extent1` INNER JOIN (SELECT
 `UnionAll1`.`Id`, 
 `UnionAll1`.`Name`, 
@@ -322,6 +322,59 @@ FROM `Companies` AS `Extent1` INNER JOIN (SELECT
 `Extent3`.`Author_id`, 
 `Extent3`.`Publisher_id`
 FROM `Authors` AS `Extent2` INNER JOIN `Books` AS `Extent3` ON `Extent2`.`Id` = `Extent3`.`Id`) AS `Join1` ON `Extent1`.`Id` = `Join1`.`Id`</value>
+  </data>
+  <data name="JoinUsingInclude" xml:space="preserve">
+    <value>SELECT `Project1`.`Id`,
+       `Project1`.`Name`,
+       `Project1`.`C2` AS `C1`,
+       `Project1`.`Id1`,
+       `Project1`.`AuthorId`,
+       `Project1`.`C1` AS `C2`,
+       `Project1`.`Id2`,
+       `Project1`.`Title`
+FROM   (SELECT `Extent1`.`Id`,
+               `Extent1`.`Name`,
+               `Join2`.`Id`  AS `Id1`,
+               `Join2`.`AuthorId`,
+               `Join2`.`Id1` AS `Id2`,
+               `Join2`.`Title`,
+               CASE
+                 WHEN ( `Join2`.`Id` IS NULL ) THEN ( NULL )
+                 WHEN ( `Join2`.`BookId` IS NULL ) THEN ( NULL )
+                 ELSE ( 1 )
+               END           AS `C1`,
+               CASE
+                 WHEN ( `Join2`.`Id` IS NULL ) THEN ( NULL )
+                 ELSE ( 1 )
+               END           AS `C2`
+        FROM   `myauthors` AS `Extent1`
+               LEFT OUTER JOIN (SELECT `Extent2`.`Id`,
+                                       `Extent2`.`AuthorId`,
+                                       `Join1`.`BookId`,
+                                       `Join1`.`EditionId`,
+                                       `Join1`.`Id` AS `Id1`,
+                                       `Join1`.`Title`
+                                FROM   `mybooks` AS `Extent2`
+                                       LEFT OUTER JOIN (SELECT
+                                       `Extent3`.`BookId`,
+                                       `Extent3`.`EditionId`,
+                                       `Extent4`.`Id`,
+                                       `Extent4`.`Title`
+                                                        FROM
+                                       `myeditionsinmybooks` AS
+                                       `Extent3`
+                                       INNER JOIN `myeditions`
+                                                  AS
+                                                  `Extent4`
+                                         ON `Extent4`.`Id` =
+       `Extent3`.`EditionId`) AS
+       `Join1`
+       ON `Extent2`.`Id` = `Join1`.`BookId`) AS `Join2`
+       ON `Extent1`.`Id` = `Join2`.`AuthorId`) AS `Project1`
+ORDER  BY `Project1`.`Id` ASC,
+          `Project1`.`C2` ASC,
+          `Project1`.`Id1` ASC,
+          `Project1`.`C1` ASC</value>
   </data>
   <data name="MaxInSubQuery1" xml:space="preserve">
     <value>SELECT

@@ -193,6 +193,7 @@ namespace MySql.Data.Entity
               string.IsNullOrEmpty(cf.ColumnAlias) ? cf.ActualColumnName : cf.ColumnAlias
               );
           newColumn.PushInput(cf.ActualColumnName);
+          newColumn.PushInput(cf.TableName);
           if (select.Name != null)
           {
             newColumn.PushInput(select.Name);      // add the scope 
@@ -204,7 +205,10 @@ namespace MySql.Data.Entity
         throw new NotImplementedException();
       if (!String.IsNullOrEmpty(input.Name) && input.Name != From.Name)
         foreach (ColumnFragment c in columns)
-          c.PushInput(input.Name);
+        {
+          if (c.PropertyFragment.Properties[0].ToString() != input.Name)
+            c.PushInput(input.Name);
+        }
       return columns;
     }
 

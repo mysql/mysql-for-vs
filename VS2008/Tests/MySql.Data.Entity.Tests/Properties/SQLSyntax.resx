@@ -238,8 +238,8 @@ FROM `Toys` AS `Extent2`
 `Extent1`.`Name`, 
 `Join1`.`Id` AS `C2`, 
 `Join1`.`Name` AS `C3`, 
-`Join1`.`Id1` AS `C4`, 
-`Join1`.`Name1` AS `C5`
+`Join1`.`Id` AS `C4`, 
+`Join1`.`Name` AS `C5`
 FROM `Companies` AS `Extent1` INNER JOIN (SELECT
 `UnionAll1`.`Id`, 
 `UnionAll1`.`Name`, 
@@ -718,5 +718,56 @@ FROM `Books` AS `Extent4`) AS `Project1` ON `Extent1`.`Publisher_id` = `Project1
   </data>
   <data name="UpdateWithSelect" xml:space="preserve">
     <value>UPDATE `Products` SET `Name`='Acme 2' WHERE `Id` = 1; SELECT `CreatedDate` FROM `Products` WHERE row_count() &gt; 0 and `Id` = 1</value>
+  </data>
+  <data name="JoinUsingInclude" xml:space="preserve">
+    <value>SELECT
+`Project3`.`Id`,
+`Project3`.`Name`,
+`Project3`.`C1`,
+`Project3`.`C3` AS `C2`,
+`Project3`.`Id1`,
+`Project3`.`AuthorId`,
+`Project3`.`C2` AS `C3`,
+`Project3`.`Id2`,
+`Project3`.`Title`
+FROM
+(SELECT
+`Extent1`.`Id`,
+`Extent1`.`Name`,
+1 AS `C1`,
+`Project2`.`Id` AS `Id1`,
+`Project2`.`AuthorId`,
+`Project2`.`Id1` AS `Id2`,
+`Project2`.`Title`,
+`Project2`.`C1` AS `C2`,
+`Project2`.`C2` AS `C3`
+FROM
+`myauthors` AS `Extent1` 
+LEFT OUTER JOIN 
+(SELECT
+`Extent2`.`Id`,
+`Extent2`.`AuthorId`,
+`Project1`.`Id` AS `Id1`,
+`Project1`.`Title`,
+`Project1`.`C1`,
+1 AS `C2`
+FROM `mybooks` AS `Extent2`
+LEFT OUTER JOIN 
+(SELECT
+`Extent3`.`BookId`,
+`Extent4`.`Id`,
+`Extent4`.`Title`,
+1 AS `C1`
+FROM
+`myeditionsinmybooks` AS `Extent3`
+INNER JOIN `myeditions` AS `Extent4`
+ON `Extent4`.`Id` = `Extent3`.`EditionId`)
+AS `Project1` ON `Extent2`.`Id` = `Project1`.`BookId`) 
+AS `Project2` ON `Extent1`.`Id` = `Project2`.`AuthorId`) 
+AS `Project3`
+ORDER BY `Project3`.`Id` ASC,
+`Project3`.`C3` ASC,
+`Project3`.`Id1` ASC,
+`Project3`.`C2` ASC</value>
   </data>
 </root>

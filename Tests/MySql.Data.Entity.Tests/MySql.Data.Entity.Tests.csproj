@@ -72,6 +72,11 @@
     </Compile>
     <Compile Include="BaseEdmTest.cs" />
     <Compile Include="AggregateOperators.cs" />
+    <Compile Include="BooksModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BooksModel.edmx</DependentUpon>
+    </Compile>
     <Compile Include="CanonicalFunctions.cs" />
     <Compile Include="DataTypeTests.cs" />
     <Compile Include="Model1.Designer.cs">
@@ -152,6 +157,10 @@
     <EntityDeploy Include="Model1.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>Model1.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <EntityDeploy Include="BooksModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>BooksModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
   </ItemGroup>
   <ItemGroup>
