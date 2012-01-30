@@ -1,5 +1,4 @@
 - Return datetime values for timestamp fields as DateTimeKind.Local (MySQL bug #63812, Oracle bug #13591554)
-- Fix for EF4.1, Code First, CreateDatabaseScript() generates an invalid MySQL script (MySQL bug #62150, Oracle bug #13582837).  
 - Fix for "Connector/Net Generates Incorrect SELECT Clause after UPDATE" (MySql bug #62134, Oracle bug #13491689). 
 - Fix for Error on intellisense when typing "-" (Orable Bug #13522344). 
 - Fix for VS IS SHOWING AN ERROR WHEN TRYING TO CREATE A FOREIGN KEY (Oracle bug #13511776).
@@ -10,6 +9,7 @@
 - Fix for VS let you close the FK dialog even when the created FK do not have any data (Oracle bug #13613839).
 - Fix for error when creating index through VS table designer. (Oracle bug # 13613765 - INDEX/KEYS ERROR MODIFYING COLUMNS FIELD).
 - Fix on Bug #62801 (mysql.dev) #13491698 Orabug DB Strange behaviour with Include in LINQ-to-Entities. Changes on SelectStatement class on method GetDefaultColumnsForFragment to asign the table name when adding a new column. Added UT VS2010 and VS2008.
+- Fix for EF4.1, Code First, CreateDatabaseScript() generates an invalid MySQL script (MySQL bug #62150, Oracle bug #13582837).
 
 6.5.0
 - Added exception interception
