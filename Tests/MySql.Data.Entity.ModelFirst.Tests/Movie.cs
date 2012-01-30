@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Data.Entity;
@@ -40,8 +41,28 @@ namespace MySql.Data.Entity.ModelFirst.Tests
     public decimal Price { get; set; }
   }
 
+  public class MovieFormat
+  {
+    [Key]
+    public float Format { get; set; }
+
+    public MovieFormat()
+    {
+      Movies = new List<Movie>();
+    }
+
+    public ICollection<Movie> Movies { get; set; }
+  }
+
   public class MovieDBContext : DbContext
   {
     public DbSet<Movie> Movies { get; set; }
+    public DbSet<MovieFormat> MovieFormats { get; set; }
+
+    public MovieDBContext()
+    {
+      Database.SetInitializer<MovieDBContext>(new
+        DropCreateDatabaseAlways<MovieDBContext>());
+    }
   }
 }

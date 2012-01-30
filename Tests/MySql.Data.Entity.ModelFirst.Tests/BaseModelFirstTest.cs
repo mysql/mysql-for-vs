@@ -62,18 +62,23 @@ namespace MySql.Data.Entity.ModelFirst.Tests
       Trace.Listeners.Clear();
       Trace.Listeners.Add(this.asertFailListener);
 
-      var dataSet = ConfigurationManager.GetSection("system.data") as System.Data.DataSet;
-      dataSet.Tables[0].Rows.Add("MySql"
-      , "MySql.Data.MySqlClient"
-      , "MySql.Data.MySqlClient"
-      ,
-      typeof(MySql.Data.MySqlClient.MySqlClientFactory).AssemblyQualifiedName);
+      DataSet dataSet = ConfigurationManager.GetSection("system.data") as System.Data.DataSet;
+      DataView vi = dataSet.Tables[0].DefaultView;
+      vi.Sort = "Name";
+      if (vi.Find("MySql") == -1)
+      {
+        dataSet.Tables[0].Rows.Add("MySql"
+          , "MySql.Data.MySqlClient"
+          , "MySql.Data.MySqlClient"
+          ,
+          typeof(MySql.Data.MySqlClient.MySqlClientFactory).AssemblyQualifiedName);
+      }
     }
 
     [TearDown]
     public override void Teardown()
-    {
-      base.Teardown();
+    {      
+      base.Teardown();      
     }
 
     private EntityConnection GetEntityConnection()
