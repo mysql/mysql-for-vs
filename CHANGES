@@ -10,6 +10,7 @@
 - Fix for error when creating index through VS table designer. (Oracle bug # 13613765 - INDEX/KEYS ERROR MODIFYING COLUMNS FIELD).
 - Fix on Bug #62801 (mysql.dev) #13491698 Orabug DB Strange behaviour with Include in LINQ-to-Entities. Changes on SelectStatement class on method GetDefaultColumnsForFragment to asign the table name when adding a new column. Added UT VS2010 and VS2008.
 - Fix for EF4.1, Code First, CreateDatabaseScript() generates an invalid MySQL script (MySQL bug #62150, Oracle bug #13582837).
+- Fix for Connections not closed properly when using pooling (MySql bug #63942, Oracle bug #13629471).
 
 6.5.0
 - Added exception interception
