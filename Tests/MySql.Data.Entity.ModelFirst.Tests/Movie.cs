@@ -45,6 +45,13 @@ namespace MySql.Data.Entity.ModelFirst.Tests
   {
     [Key]
     public float Format { get; set; }
+
+    public MovieFormat()
+    {
+      Movies = new List<Movie>();
+    }
+
+    public ICollection<Movie> Movies { get; set; }
   }
 
   public class MovieDBContext : DbContext
