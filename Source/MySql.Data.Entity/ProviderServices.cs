@@ -306,7 +306,7 @@ namespace MySql.Data.MySqlClient
         EntityType parentType = (EntityType)a.ReferentialConstraints[0].FromProperties[0].DeclaringType;
 
         sql.AppendLine(String.Format(
-            "ALTER TABLE `{0}` ADD CONSTRAINT {1}", childType.Name, a.Name));
+            "ALTER TABLE `{0}` ADD CONSTRAINT {1}", _pluralizedNames[ childType.Name ], a.Name));
         sql.Append("\t FOREIGN KEY (");
         string delimiter = "";
         foreach (EdmProperty p in a.ReferentialConstraints[0].ToProperties)
@@ -314,19 +314,19 @@ namespace MySql.Data.MySqlClient
           EdmMember member;
           if (!childType.KeyMembers.TryGetValue(p.Name, false, out member))
             keySql.AppendLine(String.Format(
-                "ALTER TABLE `{0}` ADD KEY (`{1}`);", childType.Name, p.Name));
+                "ALTER TABLE `{0}` ADD KEY (`{1}`);", _pluralizedNames[childType.Name], p.Name));
           sql.AppendFormat("{0}{1}", delimiter, p.Name);
           delimiter = ", ";
         }
         sql.AppendLine(")");
         delimiter = "";
-        sql.Append(String.Format("\tREFERENCES {0} (", parentType.Name));
+        sql.Append(String.Format("\tREFERENCES {0} (", _pluralizedNames[parentType.Name]));
         foreach (EdmProperty p in a.ReferentialConstraints[0].FromProperties)
         {
           EdmMember member;
           if (!parentType.KeyMembers.TryGetValue(p.Name, false, out member))
             keySql.AppendLine(String.Format(
-                "ALTER TABLE `{0}` ADD KEY (`{1}`);", parentType.Name, p.Name));
+                "ALTER TABLE `{0}` ADD KEY (`{1}`);", _pluralizedNames[parentType.Name], p.Name));
           sql.AppendFormat("{0}{1}", delimiter, p.Name);
           delimiter = ", ";
         }
@@ -340,14 +340,27 @@ namespace MySql.Data.MySqlClient
 
 #endif
 
+    private Dictionary<string, string> _pluralizedNames = new Dictionary<string, string>();
+
     private string GetTableCreateScript(EntitySet entitySet)
     {
       EntityType e = entitySet.ElementType;
 
-      StringBuilder sql = new StringBuilder("CREATE TABLE ");
-      sql.AppendFormat("`{0}`(",
-          (string)entitySet.MetadataProperties["Table"].Value == null ?
+      string typeName = null;
+      if (_pluralizedNames.ContainsKey(e.Name))
+      {
+        typeName = _pluralizedNames[e.Name];
+      }
+      else
+      {
+        _pluralizedNames.Add(e.Name, 
+          (string)entitySet.MetadataProperties["Table"].Value == null ? 
           e.Name : (string)entitySet.MetadataProperties["Table"].Value);
+        typeName = _pluralizedNames[e.Name];
+      }
+
+      StringBuilder sql = new StringBuilder("CREATE TABLE ");
+      sql.AppendFormat("`{0}`(", typeName );
       string delimiter = "";
       bool hasPK = false;
       foreach (EdmProperty c in e.Properties)
@@ -365,9 +378,7 @@ namespace MySql.Data.MySqlClient
       if (!hasPK && e.KeyMembers.Count > 0)
       {
         sql.Append(String.Format(
-            "ALTER TABLE `{0}` ADD PRIMARY KEY (",
-            (string)entitySet.MetadataProperties["Table"].Value == null ?
-            e.Name : (string)entitySet.MetadataProperties["Table"].Value ));
+            "ALTER TABLE `{0}` ADD PRIMARY KEY (", typeName ));
         delimiter = "";
         foreach (EdmMember m in e.KeyMembers)
         {
