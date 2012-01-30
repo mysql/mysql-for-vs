@@ -20,6 +20,7 @@
 // with this program; if not, write to the Free Software Foundation, Inc., 
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
+using System;
 using System.Collections;
 using System.Diagnostics;
 using System.Collections.Generic;
@@ -39,6 +40,17 @@ namespace MySql.Data.MySqlClient
     // should be closed.
     static internal int maxConnectionIdleTime = 180;
 
+
+    static MySqlPoolManager()
+    {
+      AppDomain.CurrentDomain.ProcessExit += new EventHandler(EnsureClearingPools);
+      AppDomain.CurrentDomain.DomainUnload += new EventHandler(EnsureClearingPools);
+    }
+
+    private static void EnsureClearingPools( object sender, EventArgs e )
+    {
+      MySqlPoolManager.ClearAllPools();
+    }
 
     private static Timer timer = new Timer(new TimerCallback(CleanIdleConnections),
         null, maxConnectionIdleTime * 1000, maxConnectionIdleTime * 1000);

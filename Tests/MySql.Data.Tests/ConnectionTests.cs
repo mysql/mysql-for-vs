@@ -616,5 +616,48 @@ namespace MySql.Data.MySqlClient.Tests
 
       connection.Close();
     }
+
+    /// <summary>
+    /// Fix for bug http://bugs.mysql.com/bug.php?id=63942 (Connections not closed properly when using pooling)
+    /// </summary>
+    [Test]
+    public void ReleasePooledConnectionsProperly()
+    {
+      MySqlConnection con = new MySqlConnection(GetConnectionString(true));
+      MySqlCommand cmd = new MySqlCommand( "show global status like 'aborted_clients'", con );
+      con.Open();
+      MySqlDataReader r = cmd.ExecuteReader();
+      r.Read();
+      int numClientsAborted = r.GetInt32( 1 );
+      r.Close();
+
+      AppDomain appDomain = PartialTrustSandbox.CreatePartialTrustDomain();
+
+      PartialTrustSandbox sandbox = (PartialTrustSandbox)appDomain.CreateInstanceAndUnwrap(
+          typeof(PartialTrustSandbox).Assembly.FullName,
+          typeof(PartialTrustSandbox).FullName);
+      
+      try
+      {
+        for (int i = 0; i < 200; i++)
+        {
+          MySqlConnection connection = sandbox.TryOpenConnection(GetPoolingConnectionString());
+          Assert.IsNotNull(connection);
+          Assert.IsTrue(connection.State == ConnectionState.Open);
+          connection.Close();
+        }
+      }
+      finally
+      {
+        AppDomain.Unload(appDomain);
+      }
+      r = cmd.ExecuteReader();
+      r.Read();
+      int numClientsAborted2 = r.GetInt32( 1 );
+      r.Close();
+      Assert.AreEqual( numClientsAborted, numClientsAborted2 );
+      con.Close();
+    }
+
   }
 }
