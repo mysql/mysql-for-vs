@@ -72,6 +72,21 @@ namespace MySql.Data.VisualStudio.Editors
     private bool ValidGridData()
     {
       if (!InEditMode) return true;
+
+      // Removes empty rows
+      columnGrid.CurrentCell = null;
+      for (int i = 0; i < fkColumnsBindingSource.Count; i++)
+      {
+        FKColumnPair pair = fkColumnsBindingSource[i] as FKColumnPair;
+        if ((string.IsNullOrWhiteSpace(pair.Column) || pair.Column.Equals(None))
+          && (string.IsNullOrWhiteSpace(pair.ReferencedColumn) || pair.ReferencedColumn.Equals(None)))
+        {
+          fkColumnsBindingSource.RemoveAt(i);
+          columnGrid.CurrentCell = null;
+          i--;
+        }
+      }
+
       for( int i = 0; i < columnGrid.Rows.Count; i++ )
       {
         string str1 = ( string )((DataGridViewComboBoxCell)columnGrid.Rows[i].Cells[0]).FormattedValue;
