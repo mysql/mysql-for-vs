@@ -125,7 +125,7 @@ namespace MySql.Data.MySqlClient
       get { return cmdText; }
       set
       {
-        cmdText = value;
+        cmdText = value ?? string.Empty;
         statement = null;
         batchableCommandText = null;
         if (cmdText != null && cmdText.EndsWith("DEFAULT VALUES"))
