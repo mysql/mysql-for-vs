@@ -13,6 +13,7 @@
 - Fix for Connections not closed properly when using pooling (MySql bug #63942, Oracle bug #13629471).
 - Changed behavior when MySqlCommand.CommandText is null, now it throws an InvalidOperationException instead of 
   NullReferenceException on ExecuteReader (MySql bug #64092, Oracle bug #13624659)
+- Fixed Foreign Key Relationship list refresh when deleting a relationship (Oracle bug #13610283)
 
 6.4.5
 - Fix for bug on Create Table via Server Explorer. The columns properties are now added in the correct order.(Oracle db Bug # 13475830).
