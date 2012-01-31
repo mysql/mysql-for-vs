@@ -194,8 +194,8 @@ namespace MySql.Data.VisualStudio.Editors
         bool alreadyUsed = false;
         if (s != (string)columnGrid.CurrentCell.Value)
           foreach (FKColumnPair pair in key.Columns)
-            if ((index == 0 && pair.ReferencedColumn == s) ||
-                (index == 1 && pair.Column == s))
+            if ((index == 0 && pair.Column == s) ||
+                (index == 1 && pair.ReferencedColumn == s))
             {
               alreadyUsed = true;
               break;
@@ -260,9 +260,9 @@ namespace MySql.Data.VisualStudio.Editors
       {
         cell.Value = null;
         if (index == 0)
-          pair.ReferencedColumn = null;
-        else
           pair.Column = null;
+        else
+          pair.ReferencedColumn = null;
       }
       else
         cell.Value = e.FormattedValue as string;
@@ -341,10 +341,10 @@ namespace MySql.Data.VisualStudio.Editors
       switch (e.ColumnIndex)
       {
         case 0:
-          fk.Column = (string)e.Value;
+          fk.Column = (string)e.Value == None ? null : (string)e.Value;
           break;
         case 1:
-          fk.ReferencedColumn = (string)e.Value;
+          fk.ReferencedColumn = (string)e.Value == None ? null : (string)e.Value;
           break;
       }
     }
