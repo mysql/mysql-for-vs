@@ -14,6 +14,7 @@
 - Changed behavior when MySqlCommand.CommandText is null, now it throws an InvalidOperationException instead of 
   NullReferenceException on ExecuteReader (MySql bug #64092, Oracle bug #13624659)
 - Fixed Foreign Key Relationship list refresh when deleting a relationship (Oracle bug #13610283)
+- Fixed unable to delete rows on Foreign Key Relationship screen (Oracle bug #13610235)
 
 Version 6.3.8
 - Modified ProviderManifest.xml to map TIMESTAMP db fields to the DateTime .NET type (MySQL bug #55351, Oracle bug #12652602).
