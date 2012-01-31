@@ -811,6 +811,7 @@ namespace MySql.Data.MySqlClient.Tests
     }
 
 
+#if !CF
     /// <summary>
     /// Fix for bug http://bugs.mysql.com/bug.php?id=63942 (Connections not closed properly when using pooling)
     /// </summary>
@@ -852,5 +853,6 @@ namespace MySql.Data.MySqlClient.Tests
       Assert.AreEqual( numClientsAborted, numClientsAborted2 );
       con.Close();
     }  
+#endif
   }
 }
