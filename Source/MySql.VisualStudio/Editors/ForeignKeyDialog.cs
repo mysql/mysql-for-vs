@@ -78,8 +78,8 @@ namespace MySql.Data.VisualStudio.Editors
       for (int i = 0; i < fkColumnsBindingSource.Count; i++)
       {
         FKColumnPair pair = fkColumnsBindingSource[i] as FKColumnPair;
-        if ((string.IsNullOrWhiteSpace(pair.Column) || pair.Column.Equals(None))
-          && (string.IsNullOrWhiteSpace(pair.ReferencedColumn) || pair.ReferencedColumn.Equals(None)))
+        if ((string.IsNullOrEmpty(pair.Column) || pair.Column.Equals(None))
+          && (string.IsNullOrEmpty(pair.ReferencedColumn) || pair.ReferencedColumn.Equals(None)))
         {
           fkColumnsBindingSource.RemoveAt(i);
           columnGrid.CurrentCell = null;
