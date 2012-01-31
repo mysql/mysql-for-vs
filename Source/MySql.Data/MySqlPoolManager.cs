@@ -43,8 +43,10 @@ namespace MySql.Data.MySqlClient
 
     static MySqlPoolManager()
     {
+#if !CF
       AppDomain.CurrentDomain.ProcessExit += new EventHandler(EnsureClearingPools);
       AppDomain.CurrentDomain.DomainUnload += new EventHandler(EnsureClearingPools);
+#endif
     }
 
     private static void EnsureClearingPools( object sender, EventArgs e )
