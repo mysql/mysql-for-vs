@@ -120,6 +120,7 @@ namespace MySql.Data.VisualStudio.Editors
     {
       int index = fkList.SelectedIndex;      
       tableNode.Table.ForeignKeys.Delete(index);
+      (fkList.DataSource as BindingSource).ResetBindings(false);
     }
 
     private void refTable_SelectedIndexChanged(object sender, EventArgs e)
