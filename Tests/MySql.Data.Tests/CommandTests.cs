@@ -581,6 +581,34 @@ namespace MySql.Data.MySqlClient.Tests
         reader.Close();
       }
     }
+
+    /// <summary>
+    /// MySql Bug #64092, Oracle bug #13624659 
+    /// If MySqlCommand.CommandText equal to null, then MySqlCommand.ExecuteReader() 
+    /// throw NullReferenceException instead of InvalidOperationException.
+    /// </summary>
+    [Test]
+    public void CommandTextIsNull()
+    {
+      using (MySqlConnection conn = new MySqlConnection(GetConnectionString(true)))
+      {
+        try
+        {
+          conn.Open();
+          MySqlCommand cmd = new MySqlCommand(null, conn);
+          cmd.ExecuteReader();
+          Assert.Fail();
+        }
+        catch (InvalidOperationException)
+        {
+        }
+        catch (Exception ex)
+        {
+          Assert.Fail(ex.ToString());
+        }
+      }
+    }
+  
   }
 
 
