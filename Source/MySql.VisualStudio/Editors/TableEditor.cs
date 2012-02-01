@@ -432,10 +432,8 @@ namespace MySql.Data.VisualStudio
 
     private void tbColumnName_TextChanged(object sender, EventArgs e)
     {
-      if ((string)columnGrid.CurrentCell.Value != ((DataGridViewTextBoxEditingControl)sender).Text)
-      {
-        tableNode.TextValueChanged = true;
-      }            
+      if ((string)columnGrid.CurrentCell.Value != ((DataGridViewTextBoxEditingControl)sender).Text)      
+        tableNode.Table.Columns[columnGrid.CurrentRow.Index].ColumnName = ((DataGridViewTextBoxEditingControl)sender).Text;               
     }
 
     private void columnBindingSource_CurrentChanged(object sender, EventArgs e)
