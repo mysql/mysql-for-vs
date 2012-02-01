@@ -1,4 +1,4 @@
-// Copyright © 2004, 2011, Oracle and/or its affiliates. All rights reserved.
+// Copyright (c) 2004-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -87,7 +87,7 @@ namespace MySql.Data.MySqlClient
     }
 
     private void GetParameters(string procName, out DataTable proceduresTable,
-      out DataTable parametersTable)
+        out DataTable parametersTable)
     {
       string procCacheKey = GetCacheKey(procName);
       DataSet ds = Connection.ProcedureCache.GetProcedure(Connection, procName, procCacheKey);
@@ -125,7 +125,7 @@ namespace MySql.Data.MySqlClient
       {
         if (returnParameter == null)
           throw new InvalidOperationException(
-            String.Format(Resources.RoutineRequiresReturnParameter, spName));
+              String.Format(Resources.RoutineRequiresReturnParameter, spName));
         pName = returnParameter.ParameterName;
       }
 
@@ -174,7 +174,7 @@ namespace MySql.Data.MySqlClient
       MySqlParameter returnParameter = GetReturnParameter();
 
       MySqlParameterCollection parms = command.Connection.Settings.CheckParameters ?
-        CheckParameters(spName) : Parameters;
+          CheckParameters(spName) : Parameters;
 
       string setSql = SetUserVariables(parms, preparing);
       string callSql = CreateCallStatement(spName, returnParameter, parms);
@@ -246,8 +246,8 @@ namespace MySql.Data.MySqlClient
       {
         if (p.Direction == ParameterDirection.Input) continue;
         if ((p.Direction == ParameterDirection.InputOutput ||
-          p.Direction == ParameterDirection.Output) &&
-          serverProvidingOutputParameters) continue;
+            p.Direction == ParameterDirection.Output) &&
+            serverProvidingOutputParameters) continue;
         string pName = "@" + p.BaseName;
         string uName = "@" + ParameterPrefix + p.BaseName;
 
@@ -266,15 +266,15 @@ namespace MySql.Data.MySqlClient
 
     internal void ProcessOutputParameters(MySqlDataReader reader)
     {
+      if ((reader.CommandBehavior & CommandBehavior.SchemaOnly) != 0)
+        return;
+
       // We apparently need to always adjust our output types since the server
       // provided data types are not always right
       AdjustOutputTypes(reader);
 
       // now read the output parameters data row
-      CommandBehavior behavior = reader.CommandBehavior;
-      if ((behavior & CommandBehavior.SchemaOnly) != 0) return;
-      if (!reader.Read()) return;
-      //reader.ResultSet.NextRow(behavior);
+      reader.Read();
 
       string prefix = "@" + StoredProcedure.ParameterPrefix;
 
