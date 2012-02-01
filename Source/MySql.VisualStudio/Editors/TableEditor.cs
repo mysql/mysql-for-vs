@@ -96,6 +96,8 @@ namespace MySql.Data.VisualStudio
         if (!TypeColumn.Items.Contains(c.DataType))
           TypeColumn.Items.Add(c.DataType);
 
+      columnBindingSource.AddingNew -= new AddingNewEventHandler(columnBindingSource_AddingNew);
+      tableNode.Table.DataUpdated -= new EventHandler(Table_DataUpdated);
       columnBindingSource.AddingNew += new AddingNewEventHandler(columnBindingSource_AddingNew);
       pane.SelectObject(tableNode.Table);
       tableNode.Table.DataUpdated += new EventHandler(Table_DataUpdated);
