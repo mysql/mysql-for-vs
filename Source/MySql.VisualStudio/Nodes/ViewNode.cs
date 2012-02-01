@@ -112,6 +112,7 @@ namespace MySql.Data.VisualStudio
           editor.Text = String.Format("ALTER VIEW `{0}` AS \r\n{1}",
               Name, views.Rows[0]["VIEW_DEFINITION"].ToString());
           Dirty = false;
+          OnDataLoaded();
         }
         catch (Exception ex)
         {
