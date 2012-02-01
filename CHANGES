@@ -16,6 +16,7 @@
 - Fixed Foreign Key Relationship list refresh when deleting a relationship (Oracle bug #13610283)
 - Fixed unable to delete rows on Foreign Key Relationship screen (Oracle bug #13610235)
 - Hides selected columns on Foreign Key Relationship screen (Oracle bug #13615258)
+- Fix for unexpected closing of Add Function Import window when pressing Get Column Information (Oracle bug #13511736).
 
 6.5.0
 - Added exception interception
