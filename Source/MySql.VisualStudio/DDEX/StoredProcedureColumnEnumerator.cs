@@ -58,6 +58,18 @@ namespace MySql.Data.VisualStudio
           DbParameter p = cmd.CreateParameter();
           p.ParameterName = row["PARAMETER_NAME"].ToString();
           p.Value = GetDefaultValue(row["DATA_TYPE"].ToString());
+          switch (row["PARAMETER_MODE"].ToString())
+          {
+            case "IN":
+              p.Direction = ParameterDirection.Input;
+              break;
+            case "OUT":
+              p.Direction = ParameterDirection.Output;
+              break;
+            case "INOUT":
+              p.Direction = ParameterDirection.InputOutput;
+              break;
+          }
           cmd.Parameters.Add(p);
         }
 
