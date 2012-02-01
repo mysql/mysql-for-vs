@@ -426,8 +426,7 @@ namespace MySql.Data.VisualStudio.DbObjects
     {
       // first compare our top level properties
       if (!ObjectHelper.AreEqual(this, OldTable))
-        return true;
-      if (owningNode.TextValueChanged) return true;	
+        return true;      
       if (Columns.HasChanges()) return true;
       if (Indexes.HasChanges()) return true;
       if (ForeignKeys.HasChanges()) return true;
