@@ -63,8 +63,6 @@ namespace MySql.Data.VisualStudio
       }
     }
 
-    internal bool TextValueChanged { get; set; }
-
     #endregion
 
     protected override string GetCurrentName()
@@ -85,8 +83,7 @@ namespace MySql.Data.VisualStudio
         dlg.TableName = table.Name;
         if (DialogResult.Cancel == dlg.ShowDialog()) return false;
         table.Name = dlg.TableName;
-      }
-      table.OwningNode.TextValueChanged = false;
+      }                  
       return base.Save();
     }
 
