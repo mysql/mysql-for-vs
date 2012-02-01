@@ -95,7 +95,6 @@ namespace MySql.Data.VisualStudio
     {
       Debug.Assert(pszMkDocument == Moniker);
       Load();
-      OnDataLoaded();
       return VSConstants.S_OK;
     }
 
@@ -115,7 +114,6 @@ namespace MySql.Data.VisualStudio
     {
       return VSConstants.S_OK;
     }
-
 
     public int SaveDocData(VSSAVEFLAGS dwSave, out string pbstrMkDocumentNew, out int pfSaveCanceled)
     {
@@ -169,7 +167,7 @@ namespace MySql.Data.VisualStudio
     public event EventHandler DataChanged;
     public event EventHandler DataSaved;
 
-    private void OnDataLoaded()
+    protected void OnDataLoaded()
     {
       if (DataLoaded != null)
         DataLoaded(this, null);
