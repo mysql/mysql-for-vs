@@ -194,7 +194,8 @@ namespace MySql.Data.MySqlClient
       try
       {
         // Temporarily change to Default behavior to allow NextResult to finish properly.
-        commandBehavior = CommandBehavior.Default;
+        if (!originalBehavior.Equals(CommandBehavior.SchemaOnly))
+          commandBehavior = CommandBehavior.Default;
         while (NextResult()) { }
       }
       catch (MySqlException ex)
