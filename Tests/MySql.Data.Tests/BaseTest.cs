@@ -132,12 +132,12 @@ namespace MySql.Data.MySqlClient.Tests
       return String.Format("protocol=sockets;port={0};", port);
     }
 
-    protected string GetConnectionString(string userId, string pw, bool includedb)
+    protected string GetConnectionString(string userId, string pw, bool persistSecurityInfo, bool includedb)
     {
       Debug.Assert(userId != null);
       string connStr = String.Format("server={0};user id={1};pooling=false;" +
-           "persist security info=true;connection reset=true;allow user variables=true;",
-           host, userId);
+           "persist security info={2};connection reset=true;allow user variables=true;",
+           host, userId, persistSecurityInfo.ToString().ToLower());
       if (pw != null)
         connStr += String.Format(";password={0};", pw);
       if (includedb)
@@ -145,6 +145,11 @@ namespace MySql.Data.MySqlClient.Tests
       connStr += GetConnectionInfo();
       connStr += csAdditions;
       return connStr;
+    }
+
+    protected string GetConnectionString(string userId, string pw, bool includedb)
+    {
+      return GetConnectionString(userId, pw, true, includedb);
     }
 
     protected string GetConnectionString(bool includedb)

@@ -20,6 +20,7 @@
 - Hides selected columns on Foreign Key Relationship screen (Oracle bug #13615258)
 - Fix for unexpected closing of Add Function Import window when pressing Get Column Information (Oracle bug #13511736).
 - Fix for bug where an attempt to save table data after the first save has occurred would fail (Oracle bug #13613714).
+- Fix for ENTITY FRAMEWORK MODEL FAILS WHEN IS CREATED FROM DATABASE (Oracle bug #13610452).
 
 Version 6.3.8
 - Modified ProviderManifest.xml to map TIMESTAMP db fields to the DateTime .NET type (MySQL bug #55351, Oracle bug #12652602).
