@@ -133,6 +133,7 @@ namespace MySql.Data.VisualStudio
           byte[] bytes = UTF8Encoding.UTF8.GetBytes(sql);
           editor.Text = ChangeSqlTypeTo(sql, "ALTER");
           Dirty = false;
+          OnDataLoaded();
         }
         catch (Exception ex)
         {

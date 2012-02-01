@@ -17,6 +17,7 @@
 - Fixed unable to delete rows on Foreign Key Relationship screen (Oracle bug #13610235)
 - Hides selected columns on Foreign Key Relationship screen (Oracle bug #13615258)
 - Fix for unexpected closing of Add Function Import window when pressing Get Column Information (Oracle bug #13511736).
+- Fix for bug where an attempt to save table data after the first save has occurred would fail (Oracle bug #13613714).
 
 6.5.0
 - Added exception interception
