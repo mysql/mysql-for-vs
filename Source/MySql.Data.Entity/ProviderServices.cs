@@ -181,7 +181,7 @@ namespace MySql.Data.MySqlClient
     {
       // we need the connection option to determine what version of the server
       // we are connected to
-      MySqlConnectionStringBuilder msb = new MySqlConnectionStringBuilder(connection.ConnectionString);
+      MySqlConnectionStringBuilder msb = new MySqlConnectionStringBuilder((connection as MySqlConnection).Settings.ConnectionString);
       msb.Database = null;
       using (MySqlConnection c = new MySqlConnection(msb.ConnectionString))
       {

@@ -115,6 +115,20 @@ namespace MySql.Data.Entity.Tests
       }
     }
 
+    [Test]
+    public void GetDbProviderManifestTokenDoesNotThrowWhenMissingPersistSecurityInfo()
+    {
+      using (MySqlConnection connection = new MySqlConnection(GetConnectionString(this.user, this.password, false, true)))
+      {
+        MySqlProviderServices providerServices = new MySqlProviderServices();
+        string token = null;
+        connection.Open();
+        Assert.DoesNotThrow(delegate() { token = providerServices.GetProviderManifestToken(connection); });
+        Assert.IsNotNull(token);
+        connection.Close();
+      }
+    }
+
     public override void Teardown()
     {
       Thread.CurrentThread.CurrentCulture = originalCulture;
