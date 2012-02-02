@@ -43,7 +43,13 @@
       <RegistrySearch Id="Pre638" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\{5FD88490-011C-4df1-B886-F298D955171B}" Name="DisplayVersion" Root="HKLM" Type="raw"/>
     </Property>
     <Condition Message="A previous version of Connector/Net 6.3 or higher is already installed.  Please uninstall that version first.">Not PREUPGRADEVERSION</Condition>
-        
+
+    <!-- handle 6.3.8 that allowed upgraded but was per-user and we are now per-machine -->
+    <Property Id="PERUSERINSTALL">
+      <RegistrySearch Id="Reg638" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\{E720BB76-38AA-43EF-A638-508DDE124FE0}" Name="DisplayVersion" Root="HKLM" Type="raw"/>
+    </Property>
+    <Condition Message="A previous version of Connector/Net is installed that cannot be automatically uninstalled.  You will need to remove it manually first.">Not PERUSERINSTALL</Condition>
+
     <Property Id="HLM_LOCATION">
       <RegistrySearch Id="HLMRegSearch" Root="HKLM" Key="Software\Microsoft\Help\v1.0" Name="AppRoot" Type="raw"/>
     </Property>
