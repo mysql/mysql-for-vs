@@ -45,24 +45,30 @@ namespace MySql.Data.Entity.ModelFirst.Tests
   {
     [Key]
     public float Format { get; set; }
-
-    public MovieFormat()
-    {
-      Movies = new List<Movie>();
-    }
-
-    public ICollection<Movie> Movies { get; set; }
   }
 
   public class MovieDBContext : DbContext
   {
     public DbSet<Movie> Movies { get; set; }
     public DbSet<MovieFormat> MovieFormats { get; set; }
+    public DbSet<MovieRelease> MovieReleases { get; set; }
 
     public MovieDBContext()
     {
       Database.SetInitializer<MovieDBContext>(new
         DropCreateDatabaseAlways<MovieDBContext>());
     }
+  }
+
+  public class MovieRelease
+  {
+    [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
+    public virtual int Id { get; set; }
+
+    [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+    public virtual DateTime Timestamp { get; set; }
+
+    [ConcurrencyCheck, Required, MaxLength(45)]
+    public virtual string Name { get; set; }
   }
 }

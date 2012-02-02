@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+﻿// Copyright © 2008, 2011, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -32,15 +32,18 @@ namespace MySql.Data.Entity
 {
   class UpdateGenerator : SqlGenerator
   {
+    private bool _onReturningSelect;
+
     public override string GenerateSQL(DbCommandTree tree)
     {
       DbUpdateCommandTree commandTree = tree as DbUpdateCommandTree;
 
       UpdateStatement statement = new UpdateStatement();
 
+      _onReturningSelect = false;
       statement.Target = commandTree.Target.Expression.Accept(this);
       scope.Add("target", statement.Target as InputFragment);
-
+      
       foreach (DbSetClause setClause in commandTree.SetClauses)
       {
         statement.Properties.Add(setClause.Property.Accept(this));
@@ -57,9 +60,10 @@ namespace MySql.Data.Entity
           values.Add(property, valueFragment);
         }
       }
-
+      
       statement.Where = commandTree.Predicate.Accept(this);
 
+      _onReturningSelect = true;
       if (commandTree.Returning != null)
         statement.ReturningSelect = GenerateReturningSql(commandTree, commandTree.Returning);
 
@@ -73,8 +77,44 @@ namespace MySql.Data.Entity
       where.Append(" row_count() > 0 and ");
       where.Append( ((System.Data.Common.CommandTrees.DbUpdateCommandTree)tree).Predicate.Accept(this) );
       select.Where = where;
-      
+
       return select;
+    }
+
+    private Stack<EdmMember> _columnsVisited = new Stack<EdmMember>();
+
+    protected override SqlFragment VisitBinaryExpression(DbExpression left, DbExpression right, string op)
+    {
+      BinaryFragment f = new BinaryFragment();
+      f.Operator = op;
+      f.Left = left.Accept(this);
+      f.WrapLeft = ShouldWrapExpression(left);
+      if (f.Left is ColumnFragment)
+      {
+        _columnsVisited.Push( (( DbPropertyExpression )left ).Property );
+      }
+      f.Right = right.Accept(this);
+      if (f.Left is ColumnFragment)
+      {
+        _columnsVisited.Pop();
+      }
+      f.WrapRight = ShouldWrapExpression(right);
+      return f;
+    }
+
+    public override SqlFragment Visit(DbConstantExpression expression)
+    {
+      SqlFragment value = null;
+      if ( _onReturningSelect && values.TryGetValue(_columnsVisited.Peek(), out value))
+      {
+        if (value is LiteralFragment)
+        {
+          MySqlParameter par = Parameters.Find(p => p.ParameterName == ( value as LiteralFragment ).Literal );
+          if (par != null)
+            return new LiteralFragment(par.ParameterName);
+        }
+      }
+      return base.Visit(expression);
     }
   }
 }
