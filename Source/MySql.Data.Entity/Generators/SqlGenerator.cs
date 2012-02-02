@@ -459,7 +459,7 @@ namespace MySql.Data.Entity
 
     #region Private Methods
 
-    SqlFragment VisitBinaryExpression(DbExpression left, DbExpression right, string op)
+    protected virtual SqlFragment VisitBinaryExpression(DbExpression left, DbExpression right, string op)
     {
       BinaryFragment f = new BinaryFragment();
       f.Operator = op;
@@ -470,7 +470,7 @@ namespace MySql.Data.Entity
       return f;
     }
 
-    private bool ShouldWrapExpression(DbExpression e)
+    protected bool ShouldWrapExpression(DbExpression e)
     {
       switch (e.ExpressionKind)
       {

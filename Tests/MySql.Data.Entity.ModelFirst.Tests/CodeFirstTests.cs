@@ -24,6 +24,8 @@ using System;
 using System.Configuration;
 using System.Data;
 using System.Data.Entity;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
 using System.Threading;
 using MySql.Data.MySqlClient;
 using NUnit.Framework;
@@ -32,8 +34,7 @@ using System.Data.EntityClient;
 using System.Data.Common;
 using System.Data.Objects;
 using System.Linq;
-using NUnit.Framework;
-
+using MySql.Data.Entity.ModelFirst.Tests.Properties;
 
 namespace MySql.Data.Entity.ModelFirst.Tests
 {
@@ -44,7 +45,7 @@ namespace MySql.Data.Entity.ModelFirst.Tests
     /// Tests for fix of http://bugs.mysql.com/bug.php?id=61230
     /// ("The provider did not return a ProviderManifestToken string.").
     /// </summary>
-    [Test,]
+    [Test]
     public void SimpleCodeFirstSelect()
     {
       MovieDBContext db = new MovieDBContext();
@@ -70,6 +71,57 @@ namespace MySql.Data.Entity.ModelFirst.Tests
       m.Format = 8.0f;
       db.MovieFormats.Add(m);
       db.SaveChanges();
+    }
+
+    /// <summary>
+    /// Fix for "Connector/Net Generates Incorrect SELECT Clause after UPDATE" (MySql bug #62134, Oracle bug #13491689).
+    /// </summary>
+    [Test]
+    public void ConcurrencyCheck()
+    {
+      using (MovieDBContext db = new MovieDBContext())
+      {
+        db.Database.ExecuteSqlCommand(
+@"DROP TABLE IF EXISTS `test3`.`MovieReleases`");
+
+        db.Database.ExecuteSqlCommand(
+@"CREATE TABLE `MovieReleases` (
+  `Id` int(11) NOT NULL,
+  `Name` varbinary(45) NOT NULL,
+  `Timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=binary");
+        MySqlTrace.Listeners.Clear();
+        MySqlTrace.Switch.Level = SourceLevels.All;
+        GenericListener listener = new GenericListener();
+        MySqlTrace.Listeners.Add(listener);
+        try
+        {
+          MovieRelease mr = db.MovieReleases.Create();
+          mr.Id = 1;
+          mr.Name = "Commercial";
+          db.MovieReleases.Add(mr);
+          db.SaveChanges();
+          mr.Name = "Director's Cut";
+          db.SaveChanges();
+        }
+        finally
+        {
+          db.Database.ExecuteSqlCommand(@"DROP TABLE IF EXISTS `MovieReleases`");
+        }
+        // Check sql        
+        Regex rx = new Regex(@"Query Opened: (?<item>UPDATE .*)", RegexOptions.Compiled | RegexOptions.Singleline);
+        foreach (string s in listener.Strings)
+        {
+          Match m = rx.Match(s);
+          if (m.Success)
+          {
+            CheckSql(m.Groups["item"].Value, SQLSyntax.UpdateWithSelect);
+            Assert.Pass();
+          }
+        }
+        Assert.Fail();
+      }
     }
   }
 }
