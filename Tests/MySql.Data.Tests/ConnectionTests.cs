@@ -632,11 +632,12 @@ namespace MySql.Data.MySqlClient.Tests
       int numClientsAborted = r.GetInt32( 1 );
       r.Close();
 
-      AppDomain appDomain = PartialTrustSandbox.CreatePartialTrustDomain();
+      AppDomain appDomain = FullTrustSandbox.CreateFullTrustDomain();
+      
 
-      PartialTrustSandbox sandbox = (PartialTrustSandbox)appDomain.CreateInstanceAndUnwrap(
-          typeof(PartialTrustSandbox).Assembly.FullName,
-          typeof(PartialTrustSandbox).FullName);
+      FullTrustSandbox sandbox = (FullTrustSandbox)appDomain.CreateInstanceAndUnwrap(
+          typeof(FullTrustSandbox).Assembly.FullName,
+          typeof(FullTrustSandbox).FullName);
       
       try
       {
