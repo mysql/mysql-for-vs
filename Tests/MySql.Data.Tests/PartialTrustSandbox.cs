@@ -49,4 +49,20 @@ namespace MySql.Data.MySqlClient.Tests
       return connection;
     }
   }
+
+  public class FullTrustSandbox : MarshalByRefObject
+  {
+    public static AppDomain CreateFullTrustDomain()
+    {
+      AppDomainSetup setup = new AppDomainSetup() { ApplicationBase = AppDomain.CurrentDomain.BaseDirectory, PrivateBinPath = AppDomain.CurrentDomain.RelativeSearchPath };
+      return AppDomain.CreateDomain("Partial Trust Sandbox", AppDomain.CurrentDomain.Evidence, setup );
+    }
+
+    public MySqlConnection TryOpenConnection(string connectionString)
+    {
+      MySqlConnection connection = new MySqlConnection(connectionString);
+      connection.Open();
+      return connection;
+    }
+  }
 }
