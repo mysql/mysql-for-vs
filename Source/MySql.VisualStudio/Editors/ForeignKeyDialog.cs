@@ -270,6 +270,9 @@ namespace MySql.Data.VisualStudio.Editors
 
     private void columnGrid_RowValidating(object sender, DataGridViewCellCancelEventArgs e)
     {
+      if (columnGrid.Rows[e.RowIndex].IsNewRow)
+        return;
+
       int index = e.RowIndex;
 
       DataGridViewCell parentCell = columnGrid.Rows[e.RowIndex].Cells[0];
@@ -314,6 +317,9 @@ namespace MySql.Data.VisualStudio.Editors
 
     private void columnGrid_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
     {
+      if (columnGrid.Rows[e.RowIndex].IsNewRow)
+        return;
+
       FKColumnPair pair = fkColumnsBindingSource[e.RowIndex] as FKColumnPair;
       switch (e.ColumnIndex)
       {
@@ -328,6 +334,9 @@ namespace MySql.Data.VisualStudio.Editors
 
     private void columnGrid_CellValuePushed(object sender, DataGridViewCellValueEventArgs e)
     {
+      if (columnGrid.Rows[e.RowIndex].IsNewRow)
+        return;
+
       FKColumnPair fk;
       if ((e.RowIndex == columnGrid.Rows.Count - 1) && (columnGrid.Rows.Count > fkColumnsBindingSource.Count))
       {
