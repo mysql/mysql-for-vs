@@ -206,7 +206,7 @@ namespace MySql.Data.Entity
       if (!String.IsNullOrEmpty(input.Name) && input.Name != From.Name)
         foreach (ColumnFragment c in columns)
         {
-          if (c.PropertyFragment.Properties[0].ToString() != input.Name)
+          if (c.PropertyFragment.Properties[0] != input.Name)
             c.PushInput(input.Name);
         }
       return columns;
