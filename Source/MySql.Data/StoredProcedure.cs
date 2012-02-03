@@ -266,18 +266,14 @@ namespace MySql.Data.MySqlClient
 
     internal void ProcessOutputParameters(MySqlDataReader reader)
     {
-      if( this.Driver.Version.isAtLeast( 5, 1, 0 ) )
-      {
-        if ((reader.CommandBehavior & CommandBehavior.SchemaOnly) != 0)
-          return;
-      }
       // We apparently need to always adjust our output types since the server
       // provided data types are not always right
       AdjustOutputTypes(reader);
+
+      if ((reader.CommandBehavior & CommandBehavior.SchemaOnly) != 0)
+        return;
       
       // now read the output parameters data row
-      CommandBehavior behavior = reader.CommandBehavior;
-      if ((behavior & CommandBehavior.SchemaOnly) != 0) return;
       reader.Read();
 
       string prefix = "@" + StoredProcedure.ParameterPrefix;
