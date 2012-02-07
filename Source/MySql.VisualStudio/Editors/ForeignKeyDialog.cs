@@ -49,7 +49,7 @@ namespace MySql.Data.VisualStudio.Editors
       // create a list of all tables in this database
       DataTable dt = tableNode.GetDataTable(
         String.Format(@"SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES 
-          WHERE TABLE_SCHEMA = '{0}'", tableNode.Database ));
+          WHERE TABLE_SCHEMA = '{0}' AND ENGINE = 'InnoDB'", tableNode.Database));
       List<string> tables = new List<string>();
       foreach (DataRow row in dt.Rows)
         tables.Add(row[0].ToString());
