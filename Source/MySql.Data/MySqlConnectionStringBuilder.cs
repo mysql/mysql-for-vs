@@ -130,7 +130,7 @@ namespace MySql.Data.MySqlClient
     /// </summary>
     [Category("Connection")]
     [DisplayName("Use Compression")]
-    [Description("Should the connection ues compression")]
+    [Description("Should the connection use compression")]
     [DefaultValue(false)]
     [ValidKeywords("compress")]
     [RefreshProperties(RefreshProperties.All)]
