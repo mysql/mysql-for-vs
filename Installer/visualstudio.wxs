@@ -67,14 +67,14 @@
     </DirectoryRef>
 
     <Feature Id='VS2008Int' Level='1' Title='Visual Studio 2008'>
-      <Condition Level='0'>Not VS_2008_PATH</Condition>
+      <Condition Level='0'>Not VS_2008_PATH AND Not Installed</Condition>
       <ComponentRef Id='VS2008_Common'/>
       <ComponentRef Id='VSTemplates'/>
       <ComponentRef Id='VS_2008_Registry'/>
     </Feature>
 
     <Feature Id='VS2010Int' Level='1' Title='Visual Studio 2010'>
-      <Condition Level='0'>Not VS_2010_PATH</Condition>
+      <Condition Level='0'>Not VS_2010_PATH AND Not Installed</Condition>
       <ComponentRef Id='VS2010_Extensions'/>
       <ComponentRef Id='VS2010Templates'/>
       <ComponentRef Id='VS_2010_Registry'/>
