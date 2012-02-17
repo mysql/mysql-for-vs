@@ -25,6 +25,8 @@ Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Installer", "Installer\Inst
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Data.Entity.ModelFirst.Tests", "Tests\MySql.Data.Entity.ModelFirst.Tests\MySql.Data.Entity.ModelFirst.Tests.csproj", "{EF3B193C-EFAE-458C-8077-CB8602365E10}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Web.Tests2", "Tests\MySql.Web.Tests2\MySql.Web.Tests2.csproj", "{F6AFE833-9A1D-4264-89F4-D610F0F4127B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Commercial|Any CPU = Commercial|Any CPU
@@ -261,6 +263,30 @@ Global
 		{EF3B193C-EFAE-458C-8077-CB8602365E10}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{EF3B193C-EFAE-458C-8077-CB8602365E10}.Release|x64.ActiveCfg = Release|Any CPU
 		{EF3B193C-EFAE-458C-8077-CB8602365E10}.Release|x86.ActiveCfg = Release|Any CPU
+		{F6AFE833-9A1D-4264-89F4-D610F0F4127B}.Commercial|Any CPU.ActiveCfg = Release|Any CPU
+		{F6AFE833-9A1D-4264-89F4-D610F0F4127B}.Commercial|Any CPU.Build.0 = Release|Any CPU
+		{F6AFE833-9A1D-4264-89F4-D610F0F4127B}.Commercial|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{F6AFE833-9A1D-4264-89F4-D610F0F4127B}.Commercial|Mixed Platforms.Build.0 = Release|Any CPU
+		{F6AFE833-9A1D-4264-89F4-D610F0F4127B}.Commercial|x64.ActiveCfg = Release|Any CPU
+		{F6AFE833-9A1D-4264-89F4-D610F0F4127B}.Commercial|x86.ActiveCfg = Release|Any CPU
+		{F6AFE833-9A1D-4264-89F4-D610F0F4127B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6AFE833-9A1D-4264-89F4-D610F0F4127B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6AFE833-9A1D-4264-89F4-D610F0F4127B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{F6AFE833-9A1D-4264-89F4-D610F0F4127B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{F6AFE833-9A1D-4264-89F4-D610F0F4127B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F6AFE833-9A1D-4264-89F4-D610F0F4127B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F6AFE833-9A1D-4264-89F4-D610F0F4127B}.GPL|Any CPU.ActiveCfg = Release|Any CPU
+		{F6AFE833-9A1D-4264-89F4-D610F0F4127B}.GPL|Any CPU.Build.0 = Release|Any CPU
+		{F6AFE833-9A1D-4264-89F4-D610F0F4127B}.GPL|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{F6AFE833-9A1D-4264-89F4-D610F0F4127B}.GPL|Mixed Platforms.Build.0 = Release|Any CPU
+		{F6AFE833-9A1D-4264-89F4-D610F0F4127B}.GPL|x64.ActiveCfg = Release|Any CPU
+		{F6AFE833-9A1D-4264-89F4-D610F0F4127B}.GPL|x86.ActiveCfg = Release|Any CPU
+		{F6AFE833-9A1D-4264-89F4-D610F0F4127B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6AFE833-9A1D-4264-89F4-D610F0F4127B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6AFE833-9A1D-4264-89F4-D610F0F4127B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{F6AFE833-9A1D-4264-89F4-D610F0F4127B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{F6AFE833-9A1D-4264-89F4-D610F0F4127B}.Release|x64.ActiveCfg = Release|Any CPU
+		{F6AFE833-9A1D-4264-89F4-D610F0F4127B}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
