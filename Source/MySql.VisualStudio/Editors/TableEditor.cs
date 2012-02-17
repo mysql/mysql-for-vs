@@ -418,6 +418,7 @@ namespace MySql.Data.VisualStudio
           Column c = tableNode.Table.Columns[columnGrid.CurrentRow.Index];
           AdjustComboBox(ec, c.DataType);
         }
+        ec.TextChanged += new EventHandler(tbDataType_TextChanged);
       }
       else if (t == typeof(DataGridViewTextBoxEditingControl))
       {
@@ -434,6 +435,11 @@ namespace MySql.Data.VisualStudio
     {
       if ((string)columnGrid.CurrentCell.Value != ((DataGridViewTextBoxEditingControl)sender).Text)      
         tableNode.Table.Columns[columnGrid.CurrentRow.Index].ColumnName = ((DataGridViewTextBoxEditingControl)sender).Text;               
+    }
+
+    private void tbDataType_TextChanged(object sender, EventArgs e)
+    {
+      tableNode.Table.Columns[columnGrid.CurrentRow.Index].DataType = ((DataGridViewComboBoxEditingControl)sender).Text;
     }
 
     private void columnBindingSource_CurrentChanged(object sender, EventArgs e)
