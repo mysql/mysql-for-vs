@@ -214,6 +214,7 @@ namespace MySql.Data.Types
       {
         mins *= -1;
         secs *= -1;
+        msecs *= -1;
       }
       int days = hours / 24;
       hours = hours - (days * 24);
