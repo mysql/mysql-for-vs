@@ -126,9 +126,11 @@ namespace MySql.Data.VisualStudio.Editors
       {
         key.SetName(String.Format("FK_{0}_{1}", tableNode.Table.Name,
             refTable.SelectedValue), true);
+        key.NameSet = false;
         key.ReferencedTable = refTable.SelectedValue.ToString();
       }
       foreignKeyBindingSource.Add(key);
+      fkList.SelectedIndex = fkList.Items.Count - 1;
     }
 
     private void deleteButton_Click(object sender, EventArgs e)
@@ -160,17 +162,11 @@ namespace MySql.Data.VisualStudio.Editors
 
       // update the key name if it is not already finalized
       ForeignKey key = foreignKeyBindingSource.Current as ForeignKey;
-      if (!key.NameSet)
+      if (key.IsNew && !key.NameSet)
       {
         string name = String.Format("FK_{0}_{1}", tableNode.Table.Name, refTableName);
         key.SetName(name, true);
       }
-    }
-
-    private void fkName_KeyPress(object sender, KeyPressEventArgs e)
-    {
-      ForeignKey key = foreignKeyBindingSource.Current as ForeignKey;
-      key.NameSet = true;
     }
 
     private void columnGrid_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
@@ -302,7 +298,7 @@ namespace MySql.Data.VisualStudio.Editors
         return;
       }
       else if( 
-        ( refTable.SelectedValue == tableNode.Table.Name ) &&
+        ( refTable.SelectedValue.ToString() == tableNode.Table.Name ) &&
         ( parent == child ) )
       {
         MessageBox.Show(Resources.FKSameColumn, null, MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -377,5 +373,15 @@ namespace MySql.Data.VisualStudio.Editors
         if (!ValidGridData()) e.Cancel = true;
       }
     }
+
+    private void fkName_TextChanged(object sender, EventArgs e)
+    {
+      if (fkName.Modified)
+      {
+        ForeignKey key = foreignKeyBindingSource.Current as ForeignKey;
+        key.NameSet = true;
+      }
+    }
+
   }
 }
