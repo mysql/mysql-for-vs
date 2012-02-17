@@ -65,7 +65,7 @@
           <RegistryValue Id="VS_2010_RegistryValue_v4" Value="[assemblies_v4]" Type="string" Action="write"/>
         </RegistryKey>
         <RegistryKey Id="VS_2010_RegistryKey_v2" Root="HKLM" Action="createAndRemoveOnUninstall"
-                     Key="SOFTWARE\Microsoft\.NETFramework\v4.0.30319\AssemblyFoldersEx\MySQL Connector Net $(var.Version) v2.0">
+                     Key="SOFTWARE\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\MySQL Connector Net $(var.Version) v2.0">
           <RegistryValue Id="VS_2010_RegistryValue_v2" Value="[assemblies_v2]" Type="string" Action="write"/>
         </RegistryKey>
       </Component>
