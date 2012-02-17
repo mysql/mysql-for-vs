@@ -40,6 +40,8 @@ namespace MySql.Data.VisualStudio.Editors
       this.label2 = new System.Windows.Forms.Label();
       this.label3 = new System.Windows.Forms.Label();
       this.columnGrid = new System.Windows.Forms.DataGridView();
+      this.colGridColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
+      this.fkGridColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
       this.fkColumnsBindingSource = new System.Windows.Forms.BindingSource(this.components);
       this.closeButton = new System.Windows.Forms.Button();
       this.label5 = new System.Windows.Forms.Label();
@@ -53,8 +55,6 @@ namespace MySql.Data.VisualStudio.Editors
       this.deleteAction = new MySql.Data.VisualStudio.Editors.MyComboBox();
       this.updateAction = new MySql.Data.VisualStudio.Editors.MyComboBox();
       this.refTable = new MySql.Data.VisualStudio.Editors.MyComboBox();
-      this.colGridColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
-      this.fkGridColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
       ((System.ComponentModel.ISupportInitialize)(this.foreignKeyBindingSource)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.columnGrid)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.fkColumnsBindingSource)).BeginInit();
@@ -153,6 +153,22 @@ namespace MySql.Data.VisualStudio.Editors
       this.columnGrid.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.columnGrid_EditingControlShowing);
       this.columnGrid.RowValidating += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.columnGrid_RowValidating);
       // 
+      // colGridColumn
+      // 
+      this.colGridColumn.DataPropertyName = "Column";
+      this.colGridColumn.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
+      this.colGridColumn.DisplayStyleForCurrentCellOnly = true;
+      this.colGridColumn.HeaderText = "Column";
+      this.colGridColumn.Name = "colGridColumn";
+      // 
+      // fkGridColumn
+      // 
+      this.fkGridColumn.DataPropertyName = "ReferencedColumn";
+      this.fkGridColumn.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
+      this.fkGridColumn.DisplayStyleForCurrentCellOnly = true;
+      this.fkGridColumn.HeaderText = "Foreign Column";
+      this.fkGridColumn.Name = "fkGridColumn";
+      // 
       // fkColumnsBindingSource
       // 
       this.fkColumnsBindingSource.AllowNew = true;
@@ -185,7 +201,7 @@ namespace MySql.Data.VisualStudio.Editors
       this.fkName.Name = "fkName";
       this.fkName.Size = new System.Drawing.Size(301, 23);
       this.fkName.TabIndex = 14;
-      this.fkName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.fkName_KeyPress);
+      this.fkName.TextChanged += new System.EventHandler(this.fkName_TextChanged);
       // 
       // label4
       // 
@@ -291,22 +307,6 @@ namespace MySql.Data.VisualStudio.Editors
       this.refTable.Size = new System.Drawing.Size(301, 24);
       this.refTable.TabIndex = 4;
       this.refTable.SelectedIndexChanged += new System.EventHandler(this.refTable_SelectedIndexChanged);
-      // 
-      // colGridColumn
-      // 
-      this.colGridColumn.DataPropertyName = "Column";
-      this.colGridColumn.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
-      this.colGridColumn.DisplayStyleForCurrentCellOnly = true;
-      this.colGridColumn.HeaderText = "Column";
-      this.colGridColumn.Name = "colGridColumn";
-      // 
-      // fkGridColumn
-      // 
-      this.fkGridColumn.DataPropertyName = "ReferencedColumn";
-      this.fkGridColumn.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
-      this.fkGridColumn.DisplayStyleForCurrentCellOnly = true;
-      this.fkGridColumn.HeaderText = "Foreign Column";
-      this.fkGridColumn.Name = "fkGridColumn";
       // 
       // ForeignKeyDialog
       // 

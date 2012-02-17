@@ -115,7 +115,12 @@ namespace MySql.Data.VisualStudio.DbObjects
       set { _columns = value; }
     }
 
-    public bool NameSet;
+    public bool IsNew
+    {
+      get { return this.isNew; }
+    }
+
+    public bool NameSet = true;
 
     public override string ToString()
     {
