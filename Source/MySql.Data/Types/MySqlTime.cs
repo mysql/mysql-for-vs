@@ -190,18 +190,24 @@ namespace MySql.Data.Types
 
     private void ParseMySql(string s)
     {
-      string[] parts = s.Split(':');
+      string[] parts = s.Split(':', '.');
       int hours = Int32.Parse(parts[0]);
       int mins = Int32.Parse(parts[1]);
       int secs = Int32.Parse(parts[2]);
+      int msecs = 0;
+
+      if (parts.Length > 3)
+        msecs = Int32.Parse(parts[3]) / 1000;
+
       if (hours < 0 || parts[0].StartsWith("-"))
       {
         mins *= -1;
         secs *= -1;
+        msecs *= -1;
       }
       int days = hours / 24;
       hours = hours - (days * 24);
-      mValue = new TimeSpan(days, hours, mins, secs, 0);
+      mValue = new TimeSpan(days, hours, mins, secs, msecs);
       isNull = false;
     }
   }
