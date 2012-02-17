@@ -1107,5 +1107,18 @@ namespace MySql.Data.MySqlClient.Tests
       cmd.CommandText = "INSERT INTO test (name) VALUES ('boo2')";
       cmd.ExecuteNonQuery();
     }
+
+    /// <summary>
+    /// Bug # 13708884 timediff function
+    /// Executing a simple query that generates a time difference that has a 
+    /// fractional second value throws an exception
+    /// </summary>
+    [Test]
+    public void Timediff()
+    {
+      MySqlCommand cmd = new MySqlCommand("select timediff('2 0:1:1.0', '4 1:2:3.123456789')", conn);
+      var result = cmd.ExecuteScalar();
+      Assert.AreEqual(new TimeSpan(-2, -1, -1, -2, -123), result);
+    }
   }
 }
