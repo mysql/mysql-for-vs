@@ -1,5 +1,5 @@
 
-- Fix for Error when using Intellisense Quick Info (Oracle Bug #13739891).
+
 
 6.5.3
 - Return datetime values for timestamp fields as DateTimeKind.Local (MySQL bug #63812, Oracle bug #13591554)
@@ -28,6 +28,7 @@
 - Fix for Bug on Installer failing to add registry entry causing that when creating a Project targeting .net framework different than 4.0v library was not listed. (Mysql bug #60462 Oracle bug #13491678).
 - Fixed MySqlTime parsing to handle milliseconds (Oracle bug #13708884)
 - Fix for SEXP-1ST FK RENAMED WHEN ADDING A NEW ONE (Oracle bug #13613824)
+- Fix for Error when using Intellisense Quick Info (Oracle Bug #13739891).
 
 6.5.0
 - Added exception interception
