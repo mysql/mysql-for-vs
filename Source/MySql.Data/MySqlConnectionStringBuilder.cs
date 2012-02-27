@@ -505,8 +505,8 @@ namespace MySql.Data.MySqlClient
     [Obsolete("Use CheckParameters instead")]
     public bool UseProcedureBodies
     {
-      get { return (bool)values["Check Parameters"]; }
-      set { SetValue("Check Parameters", value); }
+      get { return (bool)values["Use Procedure Bodies"]; }
+      set { SetValue("Use Procedure Bodies", value); }
     }
 
     [Category("Advanced")]
