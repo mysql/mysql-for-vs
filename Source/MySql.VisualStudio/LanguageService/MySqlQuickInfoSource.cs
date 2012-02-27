@@ -45,13 +45,6 @@ namespace MySql.Data.VisualStudio.LanguageService
     {
       m_provider = provider;
       m_subjectBuffer = subjectBuffer;
-
-      //these are the method names and their descriptions
-      //m_dictionary = new Dictionary<string, string>();
-      //m_dictionary.Add("add", "int add(int firstInt, int secondInt)\nAdds one integer to another.");
-      //m_dictionary.Add("subtract", "int subtract(int firstInt, int secondInt)\nSubtracts one integer from another.");
-      //m_dictionary.Add("multiply", "int multiply(int firstInt, int secondInt)\nMultiplies one integer by another.");
-      //m_dictionary.Add("divide", "int divide(int firstInt, int secondInt)\nDivides one integer by another.");
     }
 
     private void LoadDictionary( DbConnection con )
@@ -67,11 +60,30 @@ namespace MySql.Data.VisualStudio.LanguageService
       cmd.CommandText = string.Format(sql, con.Database);
       m_dictionary = new Dictionary<string, string>();
       DbDataReader r = cmd.ExecuteReader();
-      while (r.Read())
+      try
       {
-        m_dictionary.Add( r.GetString( 0 ), r.GetString( 1 ).ToLower() + " " + r.GetString( 0 ));
+        while (r.Read())
+        {
+          string objectName = r.GetString(0);
+          string type = r.GetString( 1 ).ToLower();
+          string description = type + " " + objectName;
+          if (m_dictionary.ContainsKey(objectName))
+          {
+            if (string.Compare(type, "view", StringComparison.OrdinalIgnoreCase) == 0)
+            {
+              m_dictionary[objectName] = description;
+            }
+          }
+          else
+          {
+            m_dictionary.Add(objectName, description);
+          }
+        }
       }
-      r.Close();
+      finally
+      {
+        r.Close();
+      }
     }
 
     public void AugmentQuickInfoSession(IQuickInfoSession session, IList<object> qiContent, out ITrackingSpan applicableToSpan)
@@ -102,9 +114,7 @@ namespace MySql.Data.VisualStudio.LanguageService
       string searchText = extent.Span.GetText();
 
       foreach (string key in m_dictionary.Keys)
-      {
-        //int foundIndex = searchText.IndexOf(key, StringComparison.CurrentCultureIgnoreCase);
-        //if (foundIndex > -1)
+      {        
         if( key == searchText )
         {
           int foundIndex = 0;
@@ -115,7 +125,7 @@ namespace MySql.Data.VisualStudio.LanguageService
               Math.Min( 
                 span + currentSnapshot.Length - subjectTriggerPoint.Value.Position,
                 currentSnapshot.Length - span ),
-              /*currentSnapshot.Length - subjectTriggerPoint.Value.Position,*/ SpanTrackingMode.EdgeInclusive
+                SpanTrackingMode.EdgeInclusive
               );
 
           string value;
