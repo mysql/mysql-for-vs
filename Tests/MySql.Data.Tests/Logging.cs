@@ -107,7 +107,7 @@ namespace MySql.Data.MySqlClient.Tests
       cmd.ExecuteNonQuery();
 
       Assert.AreEqual(5, listener.Strings.Count);
-      Assert.IsTrue(listener.Strings[1].EndsWith("SELECT ?"));
+      Assert.IsTrue(listener.Strings[1].EndsWith("SELECT ?", StringComparison.OrdinalIgnoreCase));
     }
 
     /// <summary>

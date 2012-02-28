@@ -204,7 +204,7 @@ namespace MySql.Data.VisualStudio
       catch (DbException ex)
       {
         string msg = ex.Message.ToLowerInvariant();
-        if (msg.StartsWith("unknown database")) return false;
+        if (msg.StartsWith("unknown database", StringComparison.OrdinalIgnoreCase)) return false;
         throw;
       }
     }

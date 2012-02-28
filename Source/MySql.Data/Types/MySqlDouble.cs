@@ -114,7 +114,7 @@ namespace MySql.Data.Types
         // MySQL server < 5.5 can return values not compatible with
         // Double.Parse(), i.e out of range for double.
 
-        if (s.StartsWith("-"))
+        if (s.StartsWith("-", StringComparison.Ordinal))
           d = double.MinValue;
         else
           d = double.MaxValue;

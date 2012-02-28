@@ -199,7 +199,7 @@ namespace MySql.Data.Types
       if (parts.Length > 3)
         msecs = Int32.Parse(parts[3]) / 1000;
 
-      if (hours < 0 || parts[0].StartsWith("-"))
+      if (hours < 0 || parts[0].StartsWith("-", StringComparison.Ordinal))
       {
         mins *= -1;
         secs *= -1;
