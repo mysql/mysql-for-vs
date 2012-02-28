@@ -60,7 +60,7 @@ namespace MySql.Data.VisualStudio
       // if we are running under VS 2008 then we need to switch out a couple
       // of command handlers
       DTE dte = Package.GetGlobalService(typeof(DTE)) as DTE;
-      if (dte != null && dte.Version.StartsWith("9"))
+      if (dte != null && dte.Version.StartsWith("9", StringComparison.Ordinal))
         xml = xml.Replace("Microsoft.VisualStudio.DataTools.DBPackage.VDT_OLEDB_CommandHandler_TableTools",
             "884DD964-5327-461f-9F06-6484DD540F8F");
 

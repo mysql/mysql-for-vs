@@ -461,7 +461,7 @@ namespace MySql.Data.VisualStudio
         for (int i = 0; i < cb.Items.Count; i++)
         {
           string item = cb.Items[i] as string;
-          if (item.StartsWith(baseType))
+          if (item.StartsWith(baseType, StringComparison.OrdinalIgnoreCase))
           {
             cb.Items[i] = type;
             break;
