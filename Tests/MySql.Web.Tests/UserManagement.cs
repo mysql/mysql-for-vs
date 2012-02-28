@@ -540,7 +540,7 @@ namespace MySql.Web.Tests
       }
       catch (Exception ex)
       {
-        Assert.IsTrue(ex.Message.StartsWith("Password answer supplied is invalid"));
+        Assert.IsTrue(ex.Message.StartsWith("Password answer supplied is invalid", StringComparison.OrdinalIgnoreCase));
       }
       try
       {
@@ -549,7 +549,7 @@ namespace MySql.Web.Tests
       }
       catch (Exception ex)
       {
-        Assert.IsTrue(ex.Message.StartsWith("Password question supplied is invalid"));
+        Assert.IsTrue(ex.Message.StartsWith("Password question supplied is invalid", StringComparison.OrdinalIgnoreCase));
       }
     }
 

@@ -127,7 +127,7 @@ namespace MySql.Data.MySqlClient
 
       int index = 0;
       for (; index < 2; index++)
-        if (dtdIdentifier.StartsWith(types[index], StringComparison.InvariantCultureIgnoreCase))
+        if (dtdIdentifier.StartsWith(types[index], StringComparison.OrdinalIgnoreCase ))
           break;
       if (index == 2) return null;
       dtdIdentifier = dtdIdentifier.Substring(types[index].Length).Trim();
