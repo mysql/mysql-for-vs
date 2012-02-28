@@ -196,7 +196,7 @@ namespace MySql.Data.MySqlClient.Tests
     {
       SetupRootConnection();
 
-      if (rootConn.ServerVersion.StartsWith("5"))
+      if (rootConn.ServerVersion.StartsWith("5", StringComparison.Ordinal))
       {
         // run all tests in strict mode
         MySqlCommand cmd = new MySqlCommand("SET GLOBAL SQL_MODE=STRICT_ALL_TABLES", rootConn);

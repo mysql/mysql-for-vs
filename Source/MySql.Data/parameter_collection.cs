@@ -168,8 +168,8 @@ namespace MySql.Data.MySqlClient
       {
         // check to see if the user has added the parameter without a
         // parameter marker.  If so, kindly tell them what they did.
-        if (parameterName.StartsWith("@") ||
-                    parameterName.StartsWith("?"))
+        if (parameterName.StartsWith("@", StringComparison.Ordinal) ||
+                    parameterName.StartsWith("?", StringComparison.Ordinal))
         {
           string newParameterName = parameterName.Substring(1);
           index = IndexOf(newParameterName);
@@ -513,7 +513,7 @@ namespace MySql.Data.MySqlClient
       MySqlParameter p = GetParameterFlexibleInternal(baseName);
       if (p != null) return p;
 
-      if (parameterName.StartsWith("@") || parameterName.StartsWith("?"))
+      if (parameterName.StartsWith("@", StringComparison.Ordinal) || parameterName.StartsWith("?", StringComparison.Ordinal))
         baseName = parameterName.Substring(1);
       p = GetParameterFlexibleInternal(baseName);
       if (p != null) return p;

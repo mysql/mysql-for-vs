@@ -132,7 +132,7 @@ namespace MySql.Data.MySqlClient
 
           // and attempt to stream the next command
           string text = ResolvedCommandText;
-          if (text.StartsWith("("))
+          if (text.StartsWith("(", StringComparison.Ordinal))
             packet.WriteStringNoNull(", ");
           else
             packet.WriteStringNoNull("; ");
@@ -180,7 +180,7 @@ namespace MySql.Data.MySqlClient
         }
         if (token != null)
         {
-          if (sqlServerMode && tokenizer.Quoted && token.StartsWith("["))
+          if (sqlServerMode && tokenizer.Quoted && token.StartsWith("[", StringComparison.Ordinal))
             token = String.Format("`{0}`", token.Substring(1, token.Length - 2));
           packet.WriteStringNoNull(token);
         }
@@ -193,7 +193,7 @@ namespace MySql.Data.MySqlClient
     {
       if (Connection.Settings.AllowUserVariables)
         return true;
-      if (parameterName.StartsWith("@" + StoredProcedure.ParameterPrefix))
+      if (parameterName.StartsWith("@" + StoredProcedure.ParameterPrefix, StringComparison.OrdinalIgnoreCase))
         return true;
       if (parameterName.Length > 1 &&
           (parameterName[1] == '`' || parameterName[1] == '\''))
@@ -218,7 +218,7 @@ namespace MySql.Data.MySqlClient
       {
         // if we are allowing user variables and the parameter name starts with @
         // then we can't throw an exception
-        if (parmName.StartsWith("@") && ShouldIgnoreMissingParameter(parmName))
+        if (parmName.StartsWith("@", StringComparison.Ordinal) && ShouldIgnoreMissingParameter(parmName))
           return false;
         throw new MySqlException(
             String.Format(Resources.ParameterMustBeDefined, parmName));

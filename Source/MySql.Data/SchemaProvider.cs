@@ -522,7 +522,7 @@ namespace MySql.Data.MySqlClient
         token = tokenizer.NextToken();
       string target1 = tokenizer.NextToken();
       string target2 = tokenizer.NextToken();
-      if (target2.StartsWith("."))
+      if (target2.StartsWith(".", StringComparison.Ordinal))
       {
         row["REFERENCED_TABLE_SCHEMA"] = target1;
         row["REFERENCED_TABLE_NAME"] = target2.Substring(1).Trim(new char[] { '\'', '`' });

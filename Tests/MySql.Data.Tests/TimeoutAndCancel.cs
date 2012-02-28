@@ -103,7 +103,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
         catch (Exception ex)
         {
-          Assert.IsTrue(ex.Message.StartsWith("Fatal"));
+          Assert.IsTrue(ex.Message.StartsWith("Fatal", StringComparison.OrdinalIgnoreCase));
         }
 
         Assert.AreEqual(1, stateChangeCount);
@@ -143,7 +143,7 @@ namespace MySql.Data.MySqlClient.Tests
       {
         TimeSpan ts = DateTime.Now.Subtract(start);
         Assert.IsTrue(ts.TotalSeconds <= 3);
-        Assert.IsTrue(ex.Message.StartsWith("Timeout expired"), "Message is wrong " + ex.Message);
+        Assert.IsTrue(ex.Message.StartsWith("Timeout expired", StringComparison.OrdinalIgnoreCase), "Message is wrong " + ex.Message);
       }
 
       long x = (long)(new MySqlCommand("select 10", conn).ExecuteScalar());
@@ -193,7 +193,7 @@ namespace MySql.Data.MySqlClient.Tests
       }
       catch (MySqlException ex)
       {
-        Assert.IsTrue(ex.Message.StartsWith("Timeout expired"), "Message is wrong" + ex);
+        Assert.IsTrue(ex.Message.StartsWith("Timeout expired", StringComparison.OrdinalIgnoreCase), "Message is wrong" + ex);
       }
 
       // Check that connection is still usable

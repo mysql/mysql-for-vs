@@ -112,7 +112,7 @@ namespace MySql.Data.VisualStudio.Editors
     private void runSqlButton_Click(object sender, EventArgs e)
     {
       string sql = codeEditor.Text.Trim();
-      if (sql.StartsWith("SELECT", StringComparison.InvariantCultureIgnoreCase))
+      if (sql.StartsWith("SELECT", StringComparison.OrdinalIgnoreCase))
         ExecuteSelect(sql);
       else
         ExecuteScript(sql);

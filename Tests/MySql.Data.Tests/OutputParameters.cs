@@ -331,7 +331,7 @@ namespace MySql.Data.MySqlClient.Tests
       }
       catch (InvalidOperationException iex)
       {
-        Assert.IsTrue(iex.Message.StartsWith("Unable to retrieve"));
+        Assert.IsTrue(iex.Message.StartsWith("Unable to retrieve", StringComparison.Ordinal));
       }
       finally
       {

@@ -280,7 +280,7 @@ namespace MySql.Data.MySqlClient
           {
             // this handles the case where our tokenizer reads part of the
             // delimiter
-            if (currentDelimiter.StartsWith(token))
+            if (currentDelimiter.StartsWith(token, StringComparison.OrdinalIgnoreCase))
             {
               if ((tokenizer.StartIndex + currentDelimiter.Length) <= query.Length)
               {

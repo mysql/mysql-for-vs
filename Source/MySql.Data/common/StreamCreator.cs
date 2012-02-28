@@ -95,7 +95,7 @@ namespace MySql.Data.Common
     {
       timeOut = timeout;
 
-      if (hostList.StartsWith("/", StringComparison.OrdinalIgnoreCase))
+      if (hostList.StartsWith("/", StringComparison.Ordinal))
         return CreateSocketStream(null, true);
 
       string[] dnsHosts = hostList.Split('&');

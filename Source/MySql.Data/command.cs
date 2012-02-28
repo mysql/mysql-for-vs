@@ -128,7 +128,7 @@ namespace MySql.Data.MySqlClient
         cmdText = value ?? string.Empty;
         statement = null;
         batchableCommandText = null;
-        if (cmdText != null && cmdText.EndsWith("DEFAULT VALUES"))
+        if (cmdText != null && cmdText.EndsWith("DEFAULT VALUES", StringComparison.OrdinalIgnoreCase))
         {
           cmdText = cmdText.Substring(0, cmdText.Length - 14);
           cmdText = cmdText + "() VALUES ()";
