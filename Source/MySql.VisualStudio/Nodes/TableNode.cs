@@ -83,8 +83,17 @@ namespace MySql.Data.VisualStudio
         dlg.TableName = table.Name;
         if (DialogResult.Cancel == dlg.ShowDialog()) return false;
         table.Name = dlg.TableName;
-      }                  
-      return base.Save();
+      }
+      try
+      {
+        return base.Save();
+      }
+      catch ( MySql.Data.MySqlClient.MySqlException ex)
+      {
+        // Undo name edited
+        table.Name = Name;
+        throw;
+      }
     }
 
     public static void CreateNew(DataViewHierarchyAccessor HierarchyAccessor)
