@@ -142,7 +142,7 @@ namespace MySql.Data.MySqlClient
         else
           msg = packet.ReadString();
 
-        if (msg.StartsWith("#"))
+        if (msg.StartsWith("#", StringComparison.Ordinal))
         {
           msg.Substring(1, 5);  /* state code */
           msg = msg.Substring(6);

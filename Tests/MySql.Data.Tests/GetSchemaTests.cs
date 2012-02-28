@@ -96,28 +96,28 @@ namespace MySql.Data.MySqlClient.Tests
           Assert.AreEqual(typeof(System.Single), systemType);
         else if (type == "TINYINT")
         {
-          if (row["CREATEFORMAT"].ToString().EndsWith("UNSIGNED"))
+          if (row["CREATEFORMAT"].ToString().EndsWith("UNSIGNED", StringComparison.OrdinalIgnoreCase))
             Assert.AreEqual(typeof(System.Byte), systemType);
           else
             Assert.AreEqual(typeof(System.SByte), systemType);
         }
         else if (type == "SMALLINT")
         {
-          if (row["CREATEFORMAT"].ToString().EndsWith("UNSIGNED"))
+          if (row["CREATEFORMAT"].ToString().EndsWith("UNSIGNED", StringComparison.OrdinalIgnoreCase))
             Assert.AreEqual(typeof(System.UInt16), systemType);
           else
             Assert.AreEqual(typeof(System.Int16), systemType);
         }
         else if (type == "MEDIUMINT" || type == "INT")
         {
-          if (row["CREATEFORMAT"].ToString().EndsWith("UNSIGNED"))
+          if (row["CREATEFORMAT"].ToString().EndsWith("UNSIGNED", StringComparison.OrdinalIgnoreCase))
             Assert.AreEqual(typeof(System.UInt32), systemType);
           else
             Assert.AreEqual(typeof(System.Int32), systemType);
         }
         else if (type == "BIGINT")
         {
-          if (row["CREATEFORMAT"].ToString().EndsWith("UNSIGNED"))
+          if (row["CREATEFORMAT"].ToString().EndsWith("UNSIGNED", StringComparison.OrdinalIgnoreCase))
             Assert.AreEqual(typeof(System.UInt64), systemType);
           else
             Assert.AreEqual(typeof(System.Int64), systemType);

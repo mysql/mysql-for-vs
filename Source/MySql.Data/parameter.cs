@@ -187,7 +187,7 @@ namespace MySql.Data.MySqlClient
     {
       get
       {
-        if (ParameterName.StartsWith("@") || ParameterName.StartsWith("?"))
+        if (ParameterName.StartsWith("@", StringComparison.Ordinal) || ParameterName.StartsWith("?", StringComparison.Ordinal))
           return ParameterName.Substring(1);
         return ParameterName;
       }

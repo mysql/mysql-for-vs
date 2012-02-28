@@ -205,7 +205,7 @@ namespace MySql.Data.VisualStudio
           Environment.GetEnvironmentVariable("windir")));
       packageKey.SetValue("Class", typeof(MySqlDataProviderPackage).ToString());
       string codeBase = Assembly.GetExecutingAssembly().CodeBase;
-      if (codeBase.StartsWith("file:///"))
+      if (codeBase.StartsWith("file:///", StringComparison.OrdinalIgnoreCase))
         codeBase = codeBase.Substring(8);
       packageKey.SetValue("CodeBase", codeBase);
       packageKey.SetValue("ProductName", "MySQL Tools for Visual Studio");

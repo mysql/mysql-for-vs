@@ -195,7 +195,7 @@ namespace MySql.Web.Security
       foreach (XmlNode node in providerList.ChildNodes)
       {
         string typeValue = node.Attributes["type"].Value;
-        if (typeValue.StartsWith("MySql.Web.Security.MySQLMembershipProvider"))
+        if (typeValue.StartsWith("MySql.Web.Security.MySQLMembershipProvider", StringComparison.OrdinalIgnoreCase))
         {
           providerList.RemoveChild(node);
           break;
@@ -228,7 +228,7 @@ namespace MySql.Web.Security
       foreach (XmlNode node in providerList.ChildNodes)
       {
         string typeValue = node.Attributes["type"].Value;
-        if (typeValue.StartsWith("MySql.Web.Security.MySQLRoleProvider"))
+        if (typeValue.StartsWith("MySql.Web.Security.MySQLRoleProvider", StringComparison.OrdinalIgnoreCase))
         {
           providerList.RemoveChild(node);
           break;
@@ -261,7 +261,7 @@ namespace MySql.Web.Security
       foreach (XmlNode node in providerList.ChildNodes)
       {
         string typeValue = node.Attributes["type"].Value;
-        if (typeValue.StartsWith("MySql.Web.Profile.MySQLProfileProvider"))
+        if (typeValue.StartsWith("MySql.Web.Profile.MySQLProfileProvider", StringComparison.OrdinalIgnoreCase))
         {
           providerList.RemoveChild(node);
           break;

@@ -265,7 +265,7 @@ namespace MySql.Data.MySqlClient
       if (fields.Length == 0) return false;
 
       for (int x = 0; x < fields.Length; x++)
-        if (!fields[x].ColumnName.StartsWith("@" + StoredProcedure.ParameterPrefix)) return false;
+        if (!fields[x].ColumnName.StartsWith("@" + StoredProcedure.ParameterPrefix, StringComparison.OrdinalIgnoreCase)) return false;
       return true;
     }
 

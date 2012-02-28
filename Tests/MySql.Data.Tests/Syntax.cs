@@ -307,7 +307,7 @@ namespace MySql.Data.MySqlClient.Tests
       catch (MySqlException ex)
       {
         string s = ex.Message;
-        Assert.IsFalse(s.StartsWith("#"));
+        Assert.IsFalse(s.StartsWith("#", StringComparison.Ordinal));
       }
     }
 

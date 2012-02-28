@@ -156,7 +156,7 @@ namespace MySql.Data.VisualStudio
       configButton.Visible = false;
       foreach (Property prop in p.Properties)
       {
-        if (prop.Name == "WebSiteType" || prop.Name.StartsWith("WebApplication"))
+        if (prop.Name == "WebSiteType" || prop.Name.StartsWith("WebApplication", StringComparison.OrdinalIgnoreCase))
         {
           configButton.Visible = true;
           break;
