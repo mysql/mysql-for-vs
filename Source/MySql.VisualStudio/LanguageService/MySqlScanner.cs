@@ -20,6 +20,7 @@
 // with this program; if not, write to the Free Software Foundation, Inc., 
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
+using System;
 using Microsoft.VisualStudio.Package;
 using System.Collections.Generic;
 
@@ -56,7 +57,7 @@ namespace MySql.Data.VisualStudio
       tokenInfo.EndIndex = tokenizer.StopIndex;
       tokenInfo.Type = GetTokenType(token);
       tokenInfo.Color = GetTokenColor(tokenInfo);
-      state = (tokenizer.BlockComment && !token.EndsWith("*/")) ? 1 : 0;
+      state = (tokenizer.BlockComment && !token.EndsWith("*/", StringComparison.Ordinal)) ? 1 : 0;
       return true;
     }
 

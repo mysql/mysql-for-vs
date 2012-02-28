@@ -394,7 +394,7 @@ namespace MySql.Data.MySqlClient
     private string GetColumnType(TypeUsage type)
     {
       string t = type.EdmType.Name;
-      if (t.StartsWith("u"))
+      if (t.StartsWith("u", StringComparison.OrdinalIgnoreCase))
       {
         t = t.Substring(1).ToUpperInvariant() + " UNSIGNED";
       }
@@ -412,7 +412,7 @@ namespace MySql.Data.MySqlClient
       if (column.TypeUsage.EdmType.BaseType.Name == "String")
       {
         // types tinytext, mediumtext, text & longtext don't have a length.
-        if (!column.TypeUsage.EdmType.Name.EndsWith("text"))
+        if (!column.TypeUsage.EdmType.Name.EndsWith("text", StringComparison.OrdinalIgnoreCase))
         {
           if (facets.TryGetValue("MaxLength", true, out facet))
             sql.AppendFormat(" ({0})", facet.Value);
