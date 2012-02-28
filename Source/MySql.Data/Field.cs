@@ -304,7 +304,7 @@ namespace MySql.Data.MySqlClient
       string colName = String.Empty;
       if (OriginalColumnName != null)
         colName = OriginalColumnName.ToUpper(CultureInfo.InvariantCulture);
-      if (colName.StartsWith("CHAR("))
+      if (colName.StartsWith("CHAR(", StringComparison.Ordinal))
         binaryOk = false;
     }
 

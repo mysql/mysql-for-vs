@@ -217,7 +217,7 @@ namespace MySql.Data.MySqlClient
               else typeName = "longtext";
             }
 
-            if (typeName.EndsWith("char") && isUnicode)
+            if (typeName.EndsWith("char", StringComparison.OrdinalIgnoreCase) && isUnicode)
               typeName = "n" + typeName;
 
             return TypeUsage.CreateStringTypeUsage(StoreTypeNameToStorePrimitiveType[typeName], isUnicode, isFixedLength, maxLength);

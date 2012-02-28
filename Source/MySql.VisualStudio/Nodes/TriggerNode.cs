@@ -203,9 +203,9 @@ namespace MySql.Data.VisualStudio
       string tableName = tokenizer.NextToken();
       if (tokenizer.NextToken() == ".")
         tableName = tokenizer.NextToken();
-      if (tableName.StartsWith("`"))
+      if (tableName.StartsWith("`", StringComparison.Ordinal))
         return tableName.Trim('`');
-      if (tableName.StartsWith("\"") && tokenizer.AnsiQuotes)
+      if (tableName.StartsWith("\"", StringComparison.Ordinal) && tokenizer.AnsiQuotes)
         return tableName.Trim('"');
       return tableName;
     }

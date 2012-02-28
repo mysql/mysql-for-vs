@@ -142,7 +142,7 @@ namespace MySql.Data.Common
       {
         Token t = tok[pos];
         if (t.Type != TokenType.Keyword) continue;
-        if (!t.Text.StartsWith("VALUE")) continue;
+        if (!t.Text.StartsWith("VALUE", StringComparison.OrdinalIgnoreCase)) continue;
         CollapseValueList(tok, ref pos);
       }
     }
@@ -292,7 +292,7 @@ namespace MySql.Data.Common
       else
         index += endingPattern.Length;
       string comment = fullSql.Substring(pos, index - pos);
-      if (comment.StartsWith("/*!"))
+      if (comment.StartsWith("/*!", StringComparison.Ordinal))
         tokens.Add(new Token(TokenType.CommandComment, comment));
       pos = index;
       return true;
