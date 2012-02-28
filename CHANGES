@@ -1,7 +1,7 @@
 
 
 - Fix for Duplicate table name don't allow you to change table name (Oracle bug #13785918).
-
+- Fix for Comment turns green the whole line (Oracle bug #13613856).
 
 6.5.3
 - Return datetime values for timestamp fields as DateTimeKind.Local (MySQL bug #63812, Oracle bug #13591554)
