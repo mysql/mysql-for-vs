@@ -69,6 +69,7 @@ namespace MySql.Data.VisualStudio
 
       // Not efficient, but we need to make sure every single line is re-tagged
       // specially because of scrolling in the VS editor.
+      tokenizer.BlockComment = false;
       foreach (SnapshotSpan span in spans)
       {
         foreach (var line in span.Snapshot.Lines)
