@@ -1,23 +1,86 @@
 <topic id="069908d6-c522-49cc-a854-32494f1de72b" revisionNumber="1">
   <developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
     <section address="connector-net-versions">
-      <title>Connector/NET Versions</title>
+      <title>Connector/Net Versions</title>
       <content>
         <para>
-    There are several versions of Connector/NET available:
+    There are several versions of Connector/Net available:
   </para>
         <list class="bullet">
           <listItem>
             <para>
-        Connector/NET 1.0 includes support for MySQL Server 4.0, 4.1,
-        and 5.0 features, and full compatibility with the ADO.NET driver
-        interface.
+        Connector/Net 6.5 includes support for MySQL Server 5.6, 5.5, 5.1,
+        and 5.0. Important new features include 
+        interceptor classes for exceptions and commands,
+        support for the MySQL 5.6 fractional seconds feature,
+        better partial-trust support, and
+        better IntelliSense, including auto-completion when editing stored procedures or .mysql files.
+        </para>
+          </listItem>
+          <listItem>
+            <para>
+        Connector/Net 6.4 includes support for MySQL Server 5.5, 5.1,
+        and 5.0. Important new features include support for Windows
+        authentication (when connecting to MySQL Server 5.5+), table
+        caching on the client side, simple connection fail-over support,
+        and improved SQL generation from the Entity Framework provider.
       </para>
           </listItem>
           <listItem>
             <para>
-        Connector/NET 5.0 includes support for MySQL Server 4.0, 4.1,
-        5.0 and 5.1 features. Connector/NET 5.0 also includes full
+        Connector/Net 6.3 includes support for MySQL Server 5.5, 5.1,
+        and 5.0. Important new features include integration with Visual
+        Studio 2010, such as availability of DDL T4 template for Entity
+        Framework, and a custom MySQL SQL Editor. Other features include
+        refactored transaction scope: Connector/Net now supports nested
+        transactions in a scope where they use the same connection
+        string.
+      </para>
+          </listItem>
+          <listItem>
+            <para>
+        Connector/Net 6.2 includes support for MySQL Server 5.5, 5.1,
+        5.0, and 4.1. Important new features include a new logging
+        system and client SSL certificates.
+      </para>
+          </listItem>
+          <listItem>
+            <para>
+        Connector/Net 6.1 includes support for MySQL Server 5.5, 5.1,
+        5.0, and 4.1. Important new features include the MySQL Website
+        Configuration Tool and a Session State Provider.
+      </para>
+          </listItem>
+          <listItem>
+            <para>
+        Connector/Net 6.0 includes support for MySQL Server 5.5, 5.1,
+        5.0, and 4.1.
+      </para>
+          </listItem>
+          <listItem>
+            <para>
+        Connector/Net 5.2 includes support for MySQL Server 5.5, 5.1,
+        5.0, and 4.1 features. Connector/Net 5.2 also includes support
+        for a new membership/role provider, Compact Framework 2.0, a new
+        stored procedure parser and improvements to
+        <literal>GetSchema</literal>. Connector/Net 5.2 also includes
+        the Visual Studio Plugin as a standard installable component.
+      </para>
+          </listItem>
+          <listItem>
+            <para>
+        Connector/Net 5.1 includes support for MySQL Server 5.5, 5.1,
+        5.0, 4.1, and 4.0 features. Connector/Net 5.1 also includes
+        support for a new membership/role provider, Compact Framework
+        2.0, a new stored procedure parser and improvements to
+        <literal>GetSchema</literal>. Connector/Net 5.1 also includes
+        the Visual Studio Plugin as a standard installable component.
+      </para>
+          </listItem>
+          <listItem>
+            <para>
+        Connector/Net 5.0 includes support for MySQL Server 5.1, 5.0,
+        4.1 and 4.0 features. Connector/Net 5.0 also includes full
         support for the ADO.Net 2.0 interfaces and subclasses, includes
         support for the usage advisor and performance monitor (PerfMon)
         hooks.
@@ -25,203 +88,21 @@
           </listItem>
           <listItem>
             <para>
-        Connector/NET 5.1 includes support for MySQL Server 4.0, 4.1,
-        5.0, 5.1, 5.4 and 5.5 features. Connector/NET 5.1 also includes
-        support for a new membership/role provider, Compact Framework
-        2.0, a new stored procedure parser and improvements to
-        <literal>GetSchema</literal>. Connector/NET 5.1 also includes
-        the Visual Studio Plugin as a standard installable component.
-      </para>
-          </listItem>
-          <listItem>
-            <para>
-        Connector/NET 5.2 includes support for MySQL Server 4.1, 5.0,
-        5.1, 5.4, and 5.5 features. Connector/NET 5.2 also includes
-        support for a new membership/role provider, Compact Framework
-        2.0, a new stored procedure parser and improvements to
-        <literal>GetSchema</literal>. Connector/NET 5.2 also includes
-        the Visual Studio Plugin as a standard installable component.
-      </para>
-          </listItem>
-          <listItem>
-            <para>
-        Connector/NET 6.0 includes support for MySQL Server 4.1, 5.0,
-        5.1, 5.4 and 5.5.
-      </para>
-          </listItem>
-          <listItem>
-            <para>
-        Connector/NET 6.1 includes support for MySQL Server 4.1, 5.0,
-        5.1, 5.4, and 5.5. Important new features include the MySQL
-        Website Configuration Tool and a Session State Provider.
-      </para>
-          </listItem>
-          <listItem>
-            <para>
-        Connector/NET 6.2 includes support for MySQL Server 4.1, 5.0,
-        5.1, 5.4, and 5.5. Important new features include a new logging
-        system and client SSL certificates. Connector/NET 6.2 is
-        currently available as a Beta release.
-      </para>
-          </listItem>
-          <listItem>
-            <para>
-        Connector/NET 6.3 includes support for MySQL Server 5.0, 5.1,
-        5.4, and 5.5. Important new features include integration with
-        Visual Studio 2010, such as availability of DDL T4 template for
-        Entity Framework, and a custom MySQL SQL Editor. Other features
-        include refactored transaction scope: Connector/NET now supports
-        nested transactions in a scope where they use the same
-        connection string. Connector/NET 6.3 is available as a Beta
-        release.
+        Connector/Net 1.0 includes support for MySQL Server 5.0, 4.1,
+        and 4.0 features, and full compatibility with the ADO.NET driver
+        interface.
       </para>
           </listItem>
         </list>
         <para>
-    The latest source code for Connector/NET can be downloaded from the
-    MySQL public Subversion server. For further details see
-    <link xlink:href="733e518a-a16a-4bc2-b767-831875f277b6#connector-net-installation-source">Installing Connector/NET from the source code</link>.
+    The latest source code for Connector/Net can be downloaded from the
+    MySQL public Subversion server. For further details, see
+    <link xlink:href="733e518a-a16a-4bc2-b767-831875f277b6#connector-net-installation-source">Installing Connector/Net from the source code</link>.
   </para>
         <para>
-    The following table shows the .NET Framework version required, and
-    MySQL Server version supported by Connector/NET:
+    The following tables shows the .NET Framework version required, and
+    the MySQL Server version supported by Connector/Net:
   </para>
-        <table>
-          <row>
-            <entry>
-              <para>
-                <legacyBold>Connector/NET version</legacyBold>
-              </para>
-            </entry>
-            <entry>
-              <para>
-                <legacyBold>ADO.NET version supported</legacyBold>
-              </para>
-            </entry>
-            <entry>
-              <para>
-                <legacyBold>.NET Framework version required</legacyBold>
-              </para>
-            </entry>
-            <entry>
-              <para>
-                <legacyBold>MySQL Server version supported</legacyBold>
-              </para>
-            </entry>
-          </row>
-          <row>
-            <entry>
-              <para>1.0</para>
-            </entry>
-            <entry>
-              <para>1.x</para>
-            </entry>
-            <entry>
-              <para>1.x</para>
-            </entry>
-            <entry>
-              <para>4.0, 4.1, 5.0</para>
-            </entry>
-          </row>
-          <row>
-            <entry>
-              <para>5.0</para>
-            </entry>
-            <entry>
-              <para>2.x+</para>
-            </entry>
-            <entry>
-              <para>2.x+</para>
-            </entry>
-            <entry>
-              <para>4.0, 4.1, 5.0</para>
-            </entry>
-          </row>
-          <row>
-            <entry>
-              <para>5.1</para>
-            </entry>
-            <entry>
-              <para>2.x+</para>
-            </entry>
-            <entry>
-              <para>2.x+</para>
-            </entry>
-            <entry>
-              <para>4.0, 4.1, 5.0, 5.1, 5.4, 5.5</para>
-            </entry>
-          </row>
-          <row>
-            <entry>
-              <para>5.2</para>
-            </entry>
-            <entry>
-              <para>2.x+</para>
-            </entry>
-            <entry>
-              <para>2.x+</para>
-            </entry>
-            <entry>
-              <para>4.1, 5.0, 5.1, 5.4, 5.5</para>
-            </entry>
-          </row>
-          <row>
-            <entry>
-              <para>6.0</para>
-            </entry>
-            <entry>
-              <para>2.x+</para>
-            </entry>
-            <entry>
-              <para>2.x+</para>
-            </entry>
-            <entry>
-              <para>4.1, 5.0, 5.1, 5.4, 5.5</para>
-            </entry>
-          </row>
-          <row>
-            <entry>
-              <para>6.1</para>
-            </entry>
-            <entry>
-              <para>2.x+</para>
-            </entry>
-            <entry>
-              <para>2.x+</para>
-            </entry>
-            <entry>
-              <para>4.1, 5.0, 5.1, 5.4, 5.5</para>
-            </entry>
-          </row>
-          <row>
-            <entry>
-              <para>6.2</para>
-            </entry>
-            <entry>
-              <para>2.x+</para>
-            </entry>
-            <entry>
-              <para>2.x+</para>
-            </entry>
-            <entry>
-              <para>4.1, 5.0, 5.1, 5.4, 5.5</para>
-            </entry>
-          </row>
-          <row>
-            <entry>
-              <para>6.3</para>
-            </entry>
-            <entry>
-              <para>2.x+</para>
-            </entry>
-            <entry>
-              <para>2.x+, 4.x+ for VS 2010 support</para>
-            </entry>
-            <entry>
-              <para>5.0, 5.1, 5.4, 5.5</para>
-            </entry>
-          </row>
-        </table>
         <alert class="note">
           <para>
       Version numbers for MySQL products are formatted as X.Y.Z, where

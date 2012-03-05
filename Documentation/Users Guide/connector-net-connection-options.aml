@@ -1,42 +1,37 @@
 <topic id="c26b6c1a-1652-4d9d-ac74-96cee9531a3b" revisionNumber="1">
   <developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
     <section address="connector-net-connection-options">
-      <title>Connector/NET Connection String Options Reference</title>
+      <title>Connector/Net Connection String Options Reference</title>
       <content>
+        <para>
+    For usage information about connection strings, see
+    <link xlink:href="8b7d06e8-0177-4dd0-acca-f9c9caaa1072#connector-net-programming-connecting-connection-string">Creating a Connector/Net Connection String</link>.
+    The first table list options that apply generally to all server
+    configurations. The options related to systems using a connection
+    pool are split into a separate table.
+  </para>
         <table>
           <row>
             <entry>
-              <para>Name</para>
-            </entry>
-            <entry>
-              <para>Default</para>
-            </entry>
-            <entry>
-              <para>Description</para>
-            </entry>
-          </row>
-          <row>
-            <entry>
               <para>
-                <literal>Allow Batch</literal>
-              </para>
+                <literal>Allow Batch</literal>, <literal>AllowBatch</literal></para>
             </entry>
             <entry>
               <para>true</para>
             </entry>
             <entry>
               <para>When true, multiple SQL statements can be sent with one command
-            execution. -Note- Starting with MySQL 4.1.1, batch
-            statements should be separated by the server-defined
-            separator character. Commands sent to earlier versions of
-            MySQL should be separated with ';'.</para>
+            execution. Note: starting with MySQL 4.1.1, batch statements
+            should be separated by the server-defined separator
+            character. Commands sent to earlier versions of MySQL should
+            be separated with ';'.</para>
             </entry>
           </row>
           <row>
             <entry>
               <para>
-                <literal>Allow User Variables</literal>
-              </para>
+                <literal>Allow User Variables</literal>,
+            <literal>AllowUserVariables</literal></para>
             </entry>
             <entry>
               <para>false</para>
@@ -44,36 +39,35 @@
             <entry>
               <para>Setting this to <literal>true</literal> indicates that the provider
             expects user variables in the SQL. This option was added in
-            Connector/NET version 5.2.2.</para>
+            Connector/Net version 5.2.2.</para>
             </entry>
           </row>
           <row>
             <entry>
               <para>
-                <literal>Allow Zero Datetime</literal>
-              </para>
+                <literal>Allow Zero Datetime</literal>,
+            <literal>AllowZeroDateTime</literal></para>
             </entry>
             <entry>
               <para>false</para>
             </entry>
             <entry>
               <para>If set to <literal>True</literal>,
-            <literal>MySqlDataReader.GetValue()</literal> will return a
+            <literal>MySqlDataReader.GetValue()</literal> returns a
             <literal>MySqlDateTime</literal> object for date or datetime
-            columns that have illegal values, such as zero datetime
+            columns that have disallowed values, such as zero datetime
             values, and a <literal>System.DateTime</literal> object for
-            legal values. If set to <literal>False</literal> (the
+            valid values. If set to <literal>False</literal> (the
             default setting) it will cause a
             <literal>System.DateTime</literal> object to be returned for
-            all legal values and an exception to be thrown for illegal
-            values, such as zero datetime values.</para>
+            all legal values and an exception to be thrown for
+            disallowed values, such as zero datetime values.</para>
             </entry>
           </row>
           <row>
             <entry>
               <para>
-                <literal>AutoEnlist</literal>
-              </para>
+                <literal>Auto Enlist</literal>, <literal>AutoEnlist</literal></para>
             </entry>
             <entry>
               <para>true</para>
@@ -98,8 +92,10 @@
               <para>null</para>
             </entry>
             <entry>
-              <para>
-              </para>
+              <para>A POSIX-style regular expression that matches the names of BLOB columns
+            that do not contain UTF-8 character data. See
+            <link xlink:href="8b7d06e8-0177-4dd0-acca-f9c9caaa1072#connector-net-using-character-sets">Character Set Considerations for Connector/Net</link> for
+            usage details.</para>
             </entry>
           </row>
           <row>
@@ -112,22 +108,23 @@
               <para>null</para>
             </entry>
             <entry>
-              <para>
-              </para>
+              <para>A POSIX-style regular expression that matches the names of BLOB columns
+            containing UTF-8 character data. See
+            <link xlink:href="8b7d06e8-0177-4dd0-acca-f9c9caaa1072#connector-net-using-character-sets">Character Set Considerations for Connector/Net</link> for
+            usage details.</para>
             </entry>
           </row>
           <row>
             <entry>
               <para>
-                <literal>CertificateFile</literal>
-              </para>
+                <literal>Certificate File</literal>, <literal>CertificateFile</literal></para>
             </entry>
             <entry>
               <para>null</para>
             </entry>
             <entry>
-              <para>This option specifies the path to a certificate file in PFX format. For
-            an example of usage see
+              <para>This option specifies the path to a certificate file in PKCS #12 format
+            (<literal>.pfx</literal>). For an example of usage, see
             <link xlink:href="34e3033f-b986-4073-95c8-945f73aa79b0#connector-net-tutorials-ssl">Tutorial: Using SSL with </link>. Was
             introduced with 6.2.1.</para>
             </entry>
@@ -135,16 +132,16 @@
           <row>
             <entry>
               <para>
-                <literal>CertificatePassword</literal>
-              </para>
+                <literal>Certificate Password</literal>,
+            <literal>CertificatePassword</literal></para>
             </entry>
             <entry>
               <para>null</para>
             </entry>
             <entry>
-              <para>This option enables you to specify a password which is used in
-            conjunction with a certificate specified using the option
-            <literal>CertificateFile</literal>. For an example of usage
+              <para>Specifies a password that is used in conjunction with a certificate
+            specified using the option
+            <literal>CertificateFile</literal>. For an example of usage,
             see <link xlink:href="34e3033f-b986-4073-95c8-945f73aa79b0#connector-net-tutorials-ssl">Tutorial: Using SSL with </link>. Was
             introduced with 6.2.1.</para>
             </entry>
@@ -152,16 +149,16 @@
           <row>
             <entry>
               <para>
-                <literal>Certificate Store Location</literal>
-              </para>
+                <literal>Certificate Store Location</literal>,
+            <literal>CertificateStoreLocation</literal></para>
             </entry>
             <entry>
               <para>null</para>
             </entry>
             <entry>
-              <para>This option enables you to access a certificate held in a personal
-            store, rather than use a certificate file and password
-            combination. For an example of usage see
+              <para>Enables you to access a certificate held in a personal store, rather
+            than use a certificate file and password combination. For an
+            example of usage, see
             <link xlink:href="34e3033f-b986-4073-95c8-945f73aa79b0#connector-net-tutorials-ssl">Tutorial: Using SSL with </link>. Was
             introduced with 6.2.1.</para>
             </entry>
@@ -169,16 +166,16 @@
           <row>
             <entry>
               <para>
-                <literal>Certificate Thumbprint</literal>
-              </para>
+                <literal>Certificate Thumbprint</literal>,
+            <literal>CertificateThumbprint</literal></para>
             </entry>
             <entry>
               <para>null</para>
             </entry>
             <entry>
-              <para>This option enables you to specify a certificate thumbprint to ensure
-            correct identifcation of a certificate contained within a
-            personal store. For an example of usage see
+              <para>Specifies a certificate thumbprint to ensure correct identification of a
+            certificate contained within a personal store. For an
+            example of usage, see
             <link xlink:href="34e3033f-b986-4073-95c8-945f73aa79b0#connector-net-tutorials-ssl">Tutorial: Using SSL with </link>. Was
             introduced with 6.2.1.</para>
             </entry>
@@ -186,7 +183,8 @@
           <row>
             <entry>
               <para>
-                <literal>CharSet</literal>, <literal>Character Set</literal></para>
+                <literal>CharSet</literal>, <literal>Character Set</literal>,
+            <literal>CharacterSet</literal></para>
             </entry>
             <entry>
               <para>
@@ -195,14 +193,41 @@
             <entry>
               <para>Specifies the character set that should be used to encode all queries
             sent to the server. Resultsets are still returned in the
-            character set of the data returned.</para>
+            character set of the result data.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Check Parameters</literal>, <literal>CheckParameters</literal></para>
+            </entry>
+            <entry>
+              <para>true</para>
+            </entry>
+            <entry>
+              <para>Indicates if stored routine parameters should be checked against the
+            server.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Command Interceptors</literal>,
+            <literal>CommandInterceptors</literal></para>
+            </entry>
+            <entry>
+              <para>
+              </para>
+            </entry>
+            <entry>
+              <para>The list of interceptors that can intercept SQL command operations.</para>
             </entry>
           </row>
           <row>
             <entry>
               <para>
                 <literal>Connect Timeout</literal>, <literal>Connection
-            Timeout</literal></para>
+            Timeout</literal>, <literal>ConnectionTimeout</literal></para>
             </entry>
             <entry>
               <para>15</para>
@@ -215,22 +240,8 @@
           <row>
             <entry>
               <para>
-                <literal>Connection Reset</literal>
-              </para>
-            </entry>
-            <entry>
-              <para>false</para>
-            </entry>
-            <entry>
-              <para>
-              </para>
-            </entry>
-          </row>
-          <row>
-            <entry>
-              <para>
-                <literal>Convert Zero Datetime</literal>
-              </para>
+                <literal>Convert Zero Datetime</literal>,
+            <literal>ConvertZeroDateTime</literal></para>
             </entry>
             <entry>
               <para>false</para>
@@ -238,15 +249,15 @@
             <entry>
               <para>True to have <literal>MySqlDataReader.GetValue()</literal> and
             <literal>MySqlDataReader.GetDateTime()</literal> return
-            DateTime.MinValue for date or datetime columns that have
-            illegal values.</para>
+            <literal>DateTime.MinValue</literal> for date or datetime
+            columns that have disallowed values.</para>
             </entry>
           </row>
           <row>
             <entry>
               <para>
-                <literal>Default Command Timeout</literal>
-              </para>
+                <literal>Default Command Timeout</literal>,
+            <literal>DefaultCommandTimeout</literal></para>
             </entry>
             <entry>
               <para>30</para>
@@ -256,7 +267,24 @@
             supercede the individual command timeout property on an
             individual command object. If you set the command timeout
             property, that will be used. This option was added in
-            Connector/NET 5.1.4</para>
+            Connector/Net 5.1.4</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Default Table Cache Age</literal>,
+            <literal>DefaultTableCacheAge</literal></para>
+            </entry>
+            <entry>
+              <para>60</para>
+            </entry>
+            <entry>
+              <para>Specifies how long a <literal>TableDirect</literal> result should be
+            cached, in seconds. For usage information about table
+            caching, see
+            <link xlink:href="8b7d06e8-0177-4dd0-acca-f9c9caaa1072#connector-net-programming-tablecaching">Using Connector/Net with Table Caching</link>.
+            This option was added in Connector/Net 6.4.</para>
             </entry>
           </row>
           <row>
@@ -268,31 +296,45 @@
               <para>false</para>
             </entry>
             <entry>
-              <para>For Connector/NET 5.0.3 and later, when <literal>true</literal>, SSL
+              <para>For Connector/Net 5.0.3 and later, when <literal>true</literal>, SSL
             encryption is used for all data sent between the client and
             server if the server has a certificate installed. Recognized
             values are <literal>true</literal>,
             <literal>false</literal>, <literal>yes</literal>, and
             <literal>no</literal>. In versions before 5.0.3, this option
-            had no effect. From version 6.2.1 this option is deprecated
-            and is replaced by <literal>SSL Mode</literal>. However, the
-            option is still supported if used. If this option is set to
-            true it is equivalent to <literal>SSL Mode =
-            Preferred</literal>.</para>
+            had no effect. From version 6.2.1, this option is deprecated
+            and is replaced by <literal>SSL Mode</literal>. The option
+            still works if used. If this option is set to true, it is
+            equivalent to <literal>SSL Mode = Preferred</literal>.</para>
             </entry>
           </row>
           <row>
             <entry>
               <para>
-                <literal>FunctionsReturnString</literal>
+                <literal>Exception Interceptors</literal>,
+            <literal>ExceptionInterceptors</literal></para>
+            </entry>
+            <entry>
+              <para>
               </para>
+            </entry>
+            <entry>
+              <para>The list of interceptors that can triage thrown
+            <literal>MySqlException</literal> exceptions.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Functions Return String</literal>,
+            <literal>FunctionsReturnString</literal></para>
             </entry>
             <entry>
               <para>false</para>
             </entry>
             <entry>
-              <para>This will cause the connector to return binary/varbinary values as
-            strings, if they do not have a tablename in the metadata.</para>
+              <para>Causes the connector to return binary/varbinary values as strings, if
+            they do not have a tablename in the metadata.</para>
             </entry>
           </row>
           <row>
@@ -308,25 +350,23 @@
             </entry>
             <entry>
               <para>The name or network address of the instance of MySQL to which to
-            connect. Multiple hosts can be specified separated by &amp;.
-            This can be useful where multiple MySQL servers are
+            connect. Multiple hosts can be specified separated by
+            commas. This can be useful where multiple MySQL servers are
             configured for replication and you are not concerned about
             the precise server you are connecting to. No attempt is made
-            by the provider to synchronize writes to the database so
-            care should be taken when using this option. In Unix
-            environment with Mono, this can be a fully qualified path to
-            MySQL socket file name. With this configuration, the Unix
-            socket will be used instead of TCP/IP socket. Currently only
-            a single socket name can be given so accessing MySQL in a
-            replicated environment using Unix sockets is not currently
-            supported.</para>
+            by the provider to synchronize writes to the database, so
+            take care when using this option. In Unix environment with
+            Mono, this can be a fully qualified path to a MySQL socket
+            file. With this configuration, the Unix socket will be used
+            instead of the TCP/IP socket. Currently, only a single
+            socket name can be given, so accessing MySQL in a replicated
+            environment using Unix sockets is not currently supported.</para>
             </entry>
           </row>
           <row>
             <entry>
               <para>
-                <literal>Ignore Prepare</literal>
-              </para>
+                <literal>Ignore Prepare</literal>, <literal>IgnorePrepare</literal></para>
             </entry>
             <entry>
               <para>true</para>
@@ -335,10 +375,10 @@
               <para>When true, instructs the provider to ignore any calls to
             <literal>MySqlCommand.Prepare()</literal>. This option is
             provided to prevent issues with corruption of the statements
-            when use with server side prepared statements. If you want
-            to use server-side prepare statements, set this option to
-            false. This option was added in Connector/NET 5.0.3 and
-            Connector/NET 1.0.9.</para>
+            when used with server-side prepared statements. If you use
+            server-side prepare statements, set this option to false.
+            This option was added in Connector/Net 5.0.3 and
+            Connector/Net 1.0.9.</para>
             </entry>
           </row>
           <row>
@@ -350,20 +390,20 @@
               <para>mysql</para>
             </entry>
             <entry>
-              <para>The name of the database to use intially</para>
+              <para>The case-sensitive name of the database to use initially.</para>
             </entry>
           </row>
           <row>
             <entry>
               <para>
-                <literal>Interactive, InteractiveSession</literal>
-              </para>
+                <literal>Interactive</literal>, <literal>Interactive Session</literal>,
+            <literal>InteractiveSession</literal></para>
             </entry>
             <entry>
               <para>false</para>
             </entry>
             <entry>
-              <para>If set to true the client is interactive. An interactive client is one
+              <para>If set to true, the client is interactive. An interactive client is one
             where the server variable
             <literal>CLIENT_INTERACTIVE</literal> is set. If an
             interactive client is set, the
@@ -372,6 +412,39 @@
             then timeout after this period of inactivity. More details
             can be found in the server manual
             <link xlink:href="server-system-variables"></link>.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Integrated Security</literal>,
+            <literal>IntegratedSecurity</literal></para>
+            </entry>
+            <entry>
+              <para>no</para>
+            </entry>
+            <entry>
+              <para>Use Windows authentication when connecting to server. By default, it is
+            turned off. To enable, specify a value of
+            <literal>yes</literal>. (You can also use the value
+            <literal>sspi</literal> as an alternative to
+            <literal>yes</literal>.) For details, see
+            <link xlink:href="8b7d06e8-0177-4dd0-acca-f9c9caaa1072#connector-net-programming-authentication-windows-native">Using the Windows Native Authentication Plugin</link>.
+            This option was introduced in Connector/Net 6.4.4.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Keep Alive</literal>, <literal>Keepalive</literal></para>
+            </entry>
+            <entry>
+              <para>0</para>
+            </entry>
+            <entry>
+              <para>For TCP connections, idle connection time measured in seconds, before
+            the first keepalive packet is sent. A value of 0 indicates
+            that keepalive is not used.</para>
             </entry>
           </row>
           <row>
@@ -393,35 +466,37 @@
           <row>
             <entry>
               <para>
-                <literal>Old Guids</literal>
-              </para>
+                <literal>Old Guids</literal>, <literal>OldGuids</literal></para>
             </entry>
             <entry>
               <para>false</para>
             </entry>
             <entry>
-              <para>This option was introduced in Connector/NET 6.1.1. The backend
+              <para>This option was introduced in Connector/Net 6.1.1. The backend
             representation of a GUID type was changed from
             <literal>BINARY(16)</literal> to
             <literal>CHAR(36)</literal>. This was done to allow
             developers to use the server function
-            <literal>UUID()</literal> to populate a GUID table -
-            <literal>UUID()</literal> generates a 36-character string.
-            Developers of older applications can add 'Old Guids=true' to
-            the connection string in order to use a GUID of data type
+            <literal>UUID()</literal> to populate a GUID
+            table - <literal>UUID()</literal> generates a 36-character
+            string. Developers of older applications can add
+            <literal>'Old Guids=true'</literal> to the connection string
+            to use a GUID of data type
             <literal>BINARY(16)</literal>.</para>
             </entry>
           </row>
           <row>
             <entry>
               <para>
-                <literal>Old Syntax</literal>, <literal>OldSyntax</literal></para>
+                <literal>Old Syntax</literal>, <literal>OldSyntax</literal>,
+            <literal>Use Old Syntax</literal>,
+            <literal>UseOldSyntax</literal></para>
             </entry>
             <entry>
               <para>false</para>
             </entry>
             <entry>
-              <para>This option was deprecated in Connector/NET 5.2.2. All code should now
+              <para>This option was deprecated in Connector/Net 5.2.2. All code should now
             be written using the '@' symbol as the parameter marker.</para>
             </entry>
           </row>
@@ -441,8 +516,8 @@
           <row>
             <entry>
               <para>
-                <literal>Persist Security Info</literal>
-              </para>
+                <literal>Persist Security Info</literal>,
+            <literal>PersistSecurityInfo</literal></para>
             </entry>
             <entry>
               <para>false</para>
@@ -453,7 +528,7 @@
             password, is not returned as part of the connection if the
             connection is open or has ever been in an open state.
             Resetting the connection string resets all connection string
-            values including the password. Recognized values are
+            values, including the password. Recognized values are
             <literal>true</literal>, <literal>false</literal>,
             <literal>yes</literal>, and <literal>no</literal>.</para>
             </entry>
@@ -461,7 +536,8 @@
           <row>
             <entry>
               <para>
-                <literal>Pipe Name</literal>, <literal>Pipe</literal></para>
+                <literal>Pipe Name</literal>, <literal>Pipe</literal>,
+            <literal>PipeName</literal></para>
             </entry>
             <entry>
               <para>mysql</para>
@@ -469,7 +545,7 @@
             <entry>
               <para>When set to the name of a named pipe, the
             <literal>MySqlConnection</literal> will attempt to connect
-            to MySQL on that named pipe.This settings only applies to
+            to MySQL on that named pipe. This setting only applies to
             the Windows platform.</para>
             </entry>
           </row>
@@ -490,25 +566,26 @@
           <row>
             <entry>
               <para>
-                <literal>Procedure Cache Size</literal>
-              </para>
+                <literal>Procedure Cache Size</literal>,
+            <literal>ProcedureCacheSize</literal>, <literal>procedure
+            cache</literal>, <literal>procedurecache</literal></para>
             </entry>
             <entry>
               <para>25</para>
             </entry>
             <entry>
-              <para>Sets the size of the stored procedure cache. By default, Connector/NET
-            will store the metadata (input/output datatypes) about the
-            last 25 stored procedures used. To disable the stored
-            procedure cache, set the value to zero (0). This option was
-            added in Connector/NET 5.0.2 and Connector/NET 1.0.9.</para>
+              <para>Sets the size of the stored procedure cache. By default, Connector/Net
+            stores the metadata (input/output data types) about the last
+            25 stored procedures used. To disable the stored procedure
+            cache, set the value to zero (0). This option was added in
+            Connector/Net 5.0.2 and Connector/Net 1.0.9.</para>
             </entry>
           </row>
           <row>
             <entry>
               <para>
-                <literal>Protocol</literal>
-              </para>
+                <literal>Protocol</literal>, <literal>Connection Protocol</literal>,
+            <literal>ConnectionProtocol</literal></para>
             </entry>
             <entry>
               <para>socket</para>
@@ -525,46 +602,58 @@
           <row>
             <entry>
               <para>
-                <literal>Respect Binary Flags</literal>
-              </para>
-            </entry>
-            <entry>
-              <para>true</para>
-            </entry>
-            <entry>
-              <para>Setting this option to <literal>false</literal> means that Connector/NET
-            will ignore a column's binary flags as set by the server.
-            This option was added in Connector/NET version 5.1.3.</para>
-            </entry>
-          </row>
-          <row>
-            <entry>
-              <para>
-                <literal>Shared Memory Name</literal>
-              </para>
-            </entry>
-            <entry>
-              <para>MYSQL</para>
-            </entry>
-            <entry>
-              <para>The name of the shared memory object to use for communication if the
-            connection protocol is set to memory.</para>
-            </entry>
-          </row>
-          <row>
-            <entry>
-              <para>
-                <literal>Sql Server Mode</literal>
+                <literal>Replication</literal>
               </para>
             </entry>
             <entry>
               <para>false</para>
             </entry>
             <entry>
-              <para>Allow SQL Server syntax. When set to <literal>true</literal> enables
-            Connector/NET to support square brackets around symbols
+              <para>Indicates if this connection is to use replicated servers.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Respect Binary Flags</literal>,
+            <literal>RespectBinaryFlags</literal></para>
+            </entry>
+            <entry>
+              <para>true</para>
+            </entry>
+            <entry>
+              <para>Setting this option to <literal>false</literal> means that Connector/Net
+            ignores a column's binary flags as set by the server. This
+            option was added in Connector/Net version 5.1.3.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Shared Memory Name</literal>,
+            <literal>SharedMemoryName</literal></para>
+            </entry>
+            <entry>
+              <para>MYSQL</para>
+            </entry>
+            <entry>
+              <para>The name of the shared memory object to use for communication if the
+            connection protocol is set to <literal>memory</literal>.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Sql Server Mode</literal>, <literal>sqlservermode</literal></para>
+            </entry>
+            <entry>
+              <para>false</para>
+            </entry>
+            <entry>
+              <para>Allow SQL Server syntax. When set to <literal>true</literal>, enables
+            Connector/Net to support square brackets around symbols
             instead of backticks. This enables Visual Studio wizards
-            that bracket symbols with [] to work with Connector/NET.
+            that bracket symbols with [] to work with Connector/Net.
             This option incurs a performance hit, so should only be used
             if necessary. This option was added in version 6.3.1.</para>
             </entry>
@@ -572,8 +661,7 @@
           <row>
             <entry>
               <para>
-                <literal>SSL Mode</literal>
-              </para>
+                <literal>SSL Mode</literal>, <literal>SslMode</literal></para>
             </entry>
             <entry>
               <para>None</para>
@@ -600,8 +688,26 @@
           <row>
             <entry>
               <para>
-                <literal>TreatBlobsAsUTF8</literal>
-              </para>
+                <literal>Table Cache</literal>, <literal>tablecache</literal>,
+            <literal>tablecaching</literal></para>
+            </entry>
+            <entry>
+              <para>false</para>
+            </entry>
+            <entry>
+              <para>Enables or disables caching of <literal>TableDirect</literal> commands.
+            A value of <literal>true</literal> enables the cache while
+            <literal>false</literal> disables it. For usage information
+            about table caching, see
+            <link xlink:href="8b7d06e8-0177-4dd0-acca-f9c9caaa1072#connector-net-programming-tablecaching">Using Connector/Net with Table Caching</link>.
+            This option was added in Connector/Net 6.4.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Treat BLOBs as UTF8</literal>,
+            <literal>TreatBlobsAsUTF8</literal></para>
             </entry>
             <entry>
               <para>false</para>
@@ -614,8 +720,8 @@
           <row>
             <entry>
               <para>
-                <literal>Treat Tiny As Boolean</literal>
-              </para>
+                <literal>Treat Tiny As Boolean</literal>,
+            <literal>TreatTinyAsBoolean</literal></para>
             </entry>
             <entry>
               <para>true</para>
@@ -623,7 +729,7 @@
             <entry>
               <para>Setting this value to <literal>false</literal> indicates that
             <literal>TINYINT(1)</literal> will be treated as an
-            <literal>INT</literal>. See also
+            <literal>INT</literal>. See
             <link xlink:href="numeric-type-overview"></link> for a further
             explanation of the <literal>TINYINT</literal>
             and <literal>BOOL</literal> data types.</para>
@@ -632,8 +738,7 @@
           <row>
             <entry>
               <para>
-                <literal>Use Affected Rows</literal>
-              </para>
+                <literal>Use Affected Rows</literal>, <literal>UseAffectedRows</literal></para>
             </entry>
             <entry>
               <para>false</para>
@@ -641,14 +746,15 @@
             <entry>
               <para>When <literal>true</literal> the connection will report changed rows
             instead of found rows. This option was added in
-            Connector/NET version 5.2.6.</para>
+            Connector/Net version 5.2.6.</para>
             </entry>
           </row>
           <row>
             <entry>
               <para>
-                <literal>Use Procedure Bodies</literal>
-              </para>
+                <literal>Use Procedure Bodies</literal>,
+            <literal>UseProcedureBodies</literal>, <literal>procedure
+            bodies</literal></para>
             </entry>
             <entry>
               <para>true</para>
@@ -656,30 +762,31 @@
             <entry>
               <para>When set to <literal>true</literal>, the default value,  expects
             the body of the procedure to be viewable. This enables it to
-            determine the parameter types and order. The option should
-            be set to <literal>false</literal> when the user connecting
-            to the database does not have the
+            determine the parameter types and order. Set the option to
+            <literal>false</literal> when the user connecting to the
+            database does not have the
             <literal>SELECT</literal> privileges for the
             <literal>mysql.proc</literal> (stored procedures) table, or
-            cannot view <literal>I_S.ROUTINES</literal>. In this case,
-             will not be able to determine the types and order of
+            cannot view
+            <literal>INFORMATION_SCHEMA.ROUTINES</literal>. In
+            this case,  cannot determine the types and order of
             the parameters, and must be alerted to this fact by setting
             this option to <literal>false</literal>. When set to
-            <literal>false</literal>,  will not rely on this
+            <literal>false</literal>,  does not rely on this
             information being available when the procedure is called.
             Because  will not be able to determine this
-            information, you should explicitly set the types of all the
-            parameters before the call and the parameters should be
-            added to the command in the same order as they appear in the
-            procedure definition. This option was added in  5.0.4
-            and  1.0.10.</para>
+            information, explicitly set the types of all the parameters
+            before the call and add the parameters to the command in the
+            same order as they appear in the procedure definition. This
+            option was added in  5.0.4 and  1.0.10.</para>
             </entry>
           </row>
           <row>
             <entry>
               <para>
-                <literal>User Id</literal>, <literal>Username</literal>,
-            <literal>Uid</literal>, <literal>User name</literal></para>
+                <literal>User Id</literal>, <literal>UserID</literal>,
+            <literal>Username</literal>, <literal>Uid</literal>,
+            <literal>User name</literal>, <literal>User</literal></para>
             </entry>
             <entry>
               <para>
@@ -692,8 +799,8 @@
           <row>
             <entry>
               <para>
-                <literal>Use Compression</literal>
-              </para>
+                <literal>Compress</literal>, <literal>Use Compression</literal>,
+            <literal>UseCompression</literal></para>
             </entry>
             <entry>
               <para>false</para>
@@ -704,7 +811,7 @@
               Setting this option to <literal>true</literal> enables
               compression of packets exchanged between the client and
               the server. This exchange is defined by the MySQL
-              client-server protocol.
+              client/server protocol.
             </para>
                 <para>
               Compression is used if both client and server support ZLIB
@@ -716,7 +823,7 @@
               packet number (1 byte), and Uncompressed Packet Length (3
               bytes). The Uncompressed Packet Length is the number of
               bytes in the original, uncompressed packet. If this is
-              zero then the data in this packet has not been compressed.
+              zero, the data in this packet has not been compressed.
               When the compression protocol is in use, either the client
               or the server may compress packets. However, compression
               will not occur if the compressed length is greater than
@@ -729,72 +836,62 @@
           <row>
             <entry>
               <para>
-                <literal>Use Usage Advisor</literal>
-              </para>
+                <literal>Use Usage Advisor</literal>, <literal>Usage Advisor</literal>,
+            <literal>UseUsageAdvisor</literal></para>
             </entry>
             <entry>
               <para>false</para>
             </entry>
             <entry>
-              <para>
-              </para>
+              <para>Logs inefficient database operations.</para>
             </entry>
           </row>
           <row>
             <entry>
               <para>
-                <literal>Use Performance Monitor</literal>
-              </para>
+                <literal>Use Performance Monitor</literal>,
+            <literal>UsePerformanceMonitor</literal>,
+            <literal>userperfmon</literal>, <literal>perfmon</literal></para>
             </entry>
             <entry>
               <para>false</para>
             </entry>
             <entry>
-              <para>
-              </para>
+              <para>Indicates that performance counters should be updated during execution.</para>
             </entry>
           </row>
         </table>
         <para>
-    The following table lists the valid names for connection pooling
-    values within the <literal>ConnectionString</literal>. For more
-    information about connection pooling, see Connection Pooling for the
-    MySQL Data Provider.
+    The following table lists the valid names for options related to
+    connection pooling within the <literal>ConnectionString</literal>.
+    For more information about connection pooling, see
+    <link xlink:href="8b7d06e8-0177-4dd0-acca-f9c9caaa1072#connector-net-programming-connection-pooling">Using Connector/Net with Connection Pooling</link>.
   </para>
         <table>
           <row>
             <entry>
-              <para>Name</para>
-            </entry>
-            <entry>
-              <para>Default</para>
-            </entry>
-            <entry>
-              <para>Description</para>
-            </entry>
-          </row>
-          <row>
-            <entry>
               <para>
-                <literal>Cache Server Configuration</literal>,
-            <literal>CacheServerConfiguration</literal>,
-            <literal>CacheServerConfig</literal></para>
+                <literal>Cache Server Properties</literal>,
+            <literal>CacheServerProperties</literal></para>
             </entry>
             <entry>
               <para>false</para>
             </entry>
             <entry>
-              <para>Specifies whether server variables should be updated when a pooled
-            connection is returned. Turning this on will yield faster
-            opens but will also not catch any server changes made by
-            other connections.</para>
+              <para>Specifies whether server variable settings are updated by a
+            <literal>SHOW VARIABLES</literal> command each time a pooled
+            connection is returned. Enabling this setting speeds up
+            connections in a connection pool environment. Your
+            application will not be informed of any changes to
+            configuration variables made by other connections. This
+            option was added in Connector/Net 6.3.</para>
             </entry>
           </row>
           <row>
             <entry>
               <para>
-                <literal>Connection Lifetime</literal>
-              </para>
+                <literal>Connection Lifetime</literal>,
+            <literal>ConnectionLifeTime</literal></para>
             </entry>
             <entry>
               <para>0</para>
@@ -813,8 +910,23 @@
           <row>
             <entry>
               <para>
-                <literal>Max Pool Size</literal>
-              </para>
+                <literal>Connection Reset</literal>, <literal>ConnectionReset</literal></para>
+            </entry>
+            <entry>
+              <para>false</para>
+            </entry>
+            <entry>
+              <para>If true, the connection state will be reset when it is retrieved from
+            the pool. The default value of false avoids making an
+            additional server round trip when obtaining a connection,
+            but the connection state is not reset.</para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                <literal>Maximum Pool Size</literal>, <literal>Max Pool Size</literal>,
+            <literal>maximumpoolsize</literal></para>
             </entry>
             <entry>
               <para>100</para>
@@ -826,8 +938,8 @@
           <row>
             <entry>
               <para>
-                <literal>Min Pool Size</literal>
-              </para>
+                <literal>Minimum Pool Size</literal>, <literal>Min Pool Size</literal>,
+            <literal>MinimumPoolSize</literal></para>
             </entry>
             <entry>
               <para>0</para>
@@ -852,23 +964,6 @@
             values are <literal>true</literal>,
             <literal>false</literal>, <literal>yes</literal>, and
             <literal>no</literal>.</para>
-            </entry>
-          </row>
-          <row>
-            <entry>
-              <para>
-                <literal>Reset Pooled Connections</literal>,
-            <literal>ResetConnections</literal>,
-            <literal>ResetPooledConnections</literal></para>
-            </entry>
-            <entry>
-              <para>true</para>
-            </entry>
-            <entry>
-              <para>Specifies whether a ping and a reset should be sent to the server before
-            a pooled connection is returned. Not resetting will yield
-            faster connection opens but also will not clear out session
-            items such as temp tables.</para>
             </entry>
           </row>
         </table>

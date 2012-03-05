@@ -75,6 +75,18 @@
     <Image Include="Users Guide\media\connector-net-website-config-tool-tables.png">
       <ImageId>connector-net-website-config-tool-tables</ImageId>
     </Image>
+    <Image Include="Users Guide\media\connector-net-sql-editor-new-file-dialog.png">
+      <ImageId>connector-net-sql-editor-new-file-dialog</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-sql-editor-query.png">
+      <ImageId>connector-net-sql-editor-query</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-ddl-properties.png">
+      <ImageId>connector-net-ddl-t4-ef-properties</ImageId>
+    </Image>
+    <Image Include="Users Guide\media\connector-net-ddl-generate.png">
+      <ImageId>connector-net-ddl-t4-ef-generate</ImageId>
+    </Image>
     <Image Include="Users Guide\media\connector-net-tutorials-1.png">
       <ImageId>connector-net-tutorials-1</ImageId>
     </Image>
