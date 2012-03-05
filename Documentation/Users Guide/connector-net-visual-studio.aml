@@ -1,7 +1,7 @@
 <topic id="9f3f194e-ad35-4379-b04d-5dce4b34ce6a" revisionNumber="1">
   <developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
     <section address="connector-net-visual-studio">
-      <title>Connector/NET Visual Studio Integration</title>
+      <title>Connector/Net Visual Studio Integration</title>
       <content>
         <autoOutline />
         <para>
@@ -13,18 +13,18 @@
   </para>
         <para>
      supports Visual Studio versions 2005, 2008, and 2010.
-    However, only  version 6.3 fully integrates with Visual Studio
-    2010, although applications using earlier versions of the connector
-    can be built with the Visual Studio 2010 environment using .NET 2.x
-    frameworks.
+    However, only  version 6.3 and higher fully integrate with
+    Visual Studio 2010, although applications using earlier versions of
+    the connector can be built with the Visual Studio 2010 environment
+    using .NET 2.x frameworks.
   </para>
         <para>
     Visual Studio 2010 support was introduced with  6.3.2. From
     version 6.3.2 the connector ships with both .NET 2.x and .NET 4.x
     versions of the entity framework support files,
-    <legacyBold>mysql.data.ef.dll</legacyBold> and <legacyBold>
-    mysql.visualstudio.dll</legacyBold>. The .NET 4.x versions need to be
-    shipped to enable new integration features supported in Visual
+    <legacyBold>mysql.data.ef.dll</legacyBold> and
+    <legacyBold>mysql.visualstudio.dll</legacyBold>. The .NET 4.x versions
+    are required to enable new integration features supported in Visual
     Studio 2010, including:
   </para>
         <list class="bullet">
@@ -55,7 +55,7 @@
       </content>
     </section>
     <section address="connector-net-visual-studio-making-a-connection">
-      <title>Making a connection</title>
+      <title>Making a Connection</title>
       <content>
         <para>
       Once the connector is installed, you can use it to create, modify,
@@ -68,8 +68,8 @@
           Start Visual Studio, and open the Server Explorer window
           (<ui>View</ui>, <ui>Server Explorer</ui>
           option in the main Visual Studio menu, or
-          +, 
-          hot keys).
+          ,  keyboard
+          shortcuts).
         </para>
           </listItem>
           <listItem>
@@ -87,12 +87,11 @@
           <mediaLink><para /><caption>Add Connection Context Menu</caption><image xlink:href="connector-net-visual-studio-add-connection" /></mediaLink><para /></para>
           </listItem>
           <listItem>
-            <para>
-          Change Data Source dialog opens. Choose MySQL Database in the
-          list of data sources (or the 
-          option, if MySQL Database is absent), and then choose .NET
-          Framework Data Provider for MySQL in the combo box of data
-          providers.
+            <para> dialog opens. Choose
+           in the list of data
+          sources (or the  option, if
+          MySQL Database is absent), and then choose  in the combo box
+          of data providers.
 
           <mediaLink><para /><caption>Choose Data Source</caption><image xlink:href="connector-net-visual-studio-choose-data-source" /></mediaLink><para /></para>
           </listItem>
@@ -129,16 +128,33 @@
         <para>
       After the connection is successfully established, all settings are
       saved for future use. When you start Visual Studio for the next
-      time, just open the connection node in Server Explorer to
-      establish a connection to the MySQL server again.
+      time, open the connection node in Server Explorer to establish a
+      connection to the MySQL server again.
     </para>
         <para>
       To modify and delete a connection, use the Server Explorer context
       menu for the corresponding node. You can modify any of the
-      settings just by overwriting the existing values with new ones.
-      Note that the connection may be modified or deleted only if no
-      active editor for its objects is opened: otherwise you may loose
-      your data.
+      settings by overwriting the existing values with new ones. Note
+      that the connection may be modified or deleted only if no active
+      editor for its objects is opened: otherwise, you may lose your
+      data.
+    </para>
+      </content>
+    </section>
+    <section address="connector-net-visual-studio-intellisense">
+      <title>Using IntelliSense in the SQL Editor</title>
+      <content>
+        <para>
+      IntelliSense support is available starting in Connector/Net 6.5.
+      Once you have established a connection, for example, using the
+      <math>Connect to MySql</math> toolbar button, you can
+      get autocompletion as you type, or by pressing
+      . Depending on the context, the
+      autocompletion dialog can show the list of available tables, table
+      columns, or stored procedures (with the routine's signature as a
+      tooltip). Typing some characters before pressing
+       filters the choices to those items
+      starting with that prefix.
     </para>
       </content>
     </section>
@@ -158,8 +174,8 @@
       command from the context menu.
     </para>
         <para>
-      To modify an existing table, double-click the node of the table
-      you wish to modify, or right-click this node and choose the
+      To modify an existing table, double-click the node of the table to
+      modify, or right-click this node and choose the
       <ui>Design</ui> item from the context menu. Either of
       the commands opens the Table Designer.
     </para>
@@ -218,9 +234,9 @@
         <para>
       To save changes you have made in the Table Designer, use either
       <math>Save</math> or <math>Save All</math>
-      button of the Visual Studio main toolbar, or just press
-      +. If you have not already
-      named the table you will be prompted to do so.
+      button of the Visual Studio main toolbar, or press
+      . If you have not already named the
+      table, you will be prompted to do so.
     </para>
         <mediaLink>
           <para />
@@ -229,7 +245,7 @@
         </mediaLink>
         <para />
         <para>
-      Once created you can view the table in the Server Explorer.
+      Once the table is created, you can view it in the Server Explorer.
     </para>
         <mediaLink>
           <para />
@@ -273,12 +289,11 @@
       </para>
         <para>
         To reorder columns, index columns or foreign key columns in the
-        Column Editor, select the whole column you wish to reorder by
-        clicking the selector column on the left of the column grid.
-        Then move the column by using
-        + (to move the column
-        up) or + (to move the
-        column down) keys.
+        Column Editor, select the whole column to reorder by clicking
+        the selector column on the left of the column grid. Then move
+        the column by using  (to move the
+        column up) or  (to move the column
+        down) keys.
       </para>
         <para>
         To delete a column, select it by clicking the selector column on
@@ -291,7 +306,7 @@
       <title>Editing Indexes</title>
       <content>
         <para>
-        Indexes management is performed via the
+        Indexes management is performed using the
          dialog.
       </para>
         <para>
@@ -322,7 +337,7 @@
       <title>Editing Foreign Keys</title>
       <content>
         <para>
-        Foreign Keys management is performed via the  dialog.
+        Foreign Keys management is performed using the  dialog.
       </para>
         <para>
         To add a foreign key, select <ui>Table Designer</ui>,
@@ -447,7 +462,7 @@
           </listItem>
         </list>
         <para>
-        The property <literal>Schema</literal> is read only.
+        The property <literal>Schema</literal> is read-only.
       </para>
         <mediaLink>
           <para />
@@ -482,10 +497,10 @@
         </mediaLink>
         <para />
         <para>
-      To modify an existing view, double-click a node of the view you
-      wish to modify, or right-click this node and choose the
-      <ui>Alter View</ui> command from a context menu. Either
-      of the commands opens the SQL Editor.
+      To modify an existing view, double-click a node of the view to
+      modify, or right-click this node and choose the <ui>Alter
+      View</ui> command from a context menu. Either of the commands
+      opens the SQL Editor.
     </para>
         <para>
       All other view properties can be set in the Properties window.
@@ -540,8 +555,8 @@
         </list>
         <para>
       Some of these properties can have arbitrary text values, others
-      accept values from a predefined set. In the latter case you set
-      the desired value with an embedded combobox.
+      accept values from a predefined set. In the latter case, set the
+      desired value with an embedded combobox.
     </para>
         <para>
       The properties <literal>Is Updatable</literal> and
@@ -550,8 +565,8 @@
         <para>
       To save changes you have made, use either
       <math>Save</math> or <math>Save All</math>
-      buttons of the Visual Studio main toolbar, or just press
-      +.
+      buttons of the Visual Studio main toolbar, or press
+      .
     </para>
         <mediaLink>
           <para />
@@ -584,9 +599,10 @@
     </para>
         <para>
       To modify an existing stored routine (procedure or function),
-      double-click the node of the routine you wish to modify, or
-      right-click this node and choose the  command from the context menu. Either of the
-      commands opens the SQL Editor.
+      double-click the node of the routine to modify, or right-click
+      this node and choose the 
+      command from the context menu. Either of the commands opens the
+      SQL Editor.
     </para>
         <para>
       To create or alter the routine definition using SQL Editor, type
@@ -698,20 +714,20 @@
         </list>
         <para>
       Some of these properties can have arbitrary text values, others
-      accept values from a predefined set. In the latter case set the
+      accept values from a predefined set. In the latter case, set the
       desired value using the embedded combo box.
     </para>
         <para>
       You can also set all the options directly in the SQL Editor, using
       the standard <literal>CREATE PROCEDURE</literal> or
-      <literal>CREATE FUNCTION</literal> statement. However, it is
-      recommended to use the Properties window instead.
+      <literal>CREATE FUNCTION</literal> statement. However,
+      it is recommended to use the Properties window instead.
     </para>
         <para>
       To save changes you have made, use either
        or  buttons
-      of the Visual Studio main toolbar, or just press
-      +.
+      of the Visual Studio main toolbar, or press
+      .
     </para>
         <mediaLink>
           <para />
@@ -725,16 +741,16 @@
       <title>Editing Triggers</title>
       <content>
         <para>
-      To create a new trigger, right-click the node of the table, for
-      which you wish to add a trigger. From the node's context menu,
-      choose the  command. This
-      command opens the SQL Editor.
+      To create a new trigger, right-click the node of the table in
+      which to add the trigger. From the node's context menu, choose the
+       command. This command opens
+      the SQL Editor.
     </para>
         <para>
       To modify an existing trigger, double-click the node of the
-      trigger you wish to modify, or right-click this node and choose
-      the  command from the context
-      menu. Either of the commands opens the SQL Editor.
+      trigger to modify, or right-click this node and choose the
+       command from the context menu.
+      Either of the commands opens the SQL Editor.
     </para>
         <para>
       To create or alter the trigger definition using SQL Editor, type
@@ -742,9 +758,9 @@
     </para>
         <alert class="note">
           <para>
-        You should enter only the trigger statement, that is, the part
-        of the <literal>CREATE TRIGGER</literal> query that is placed
-        after the <literal>FOR EACH ROW</literal> clause.
+        Enter only the trigger statement, that is, the part of the
+        <literal>CREATE TRIGGER</literal> query that is
+        placed after the <literal>FOR EACH ROW</literal> clause.
       </para>
         </alert>
         <para>
@@ -775,21 +791,21 @@
         </list>
         <para>
       Some of these properties can have arbitrary text values, others
-      accept values from a predefined set. In the latter case set the
+      accept values from a predefined set. In the latter case, set the
       desired value using the embedded combo box.
     </para>
         <para>
       The properties <literal>Event Table</literal>,
       <literal>Schema</literal>, and <literal>Server</literal> in the
-      Properties window are read only.
+      Properties window are read-only.
     </para>
         <para>
       To save changes you have made, use either
       <math>Save</math> or <math>Save All</math>
-      buttons of the Visual Studio main toolbar, or just press
-      +. Before changes are
-      saved, you will be asked to confirm the execution of the
-      corresponding SQL query in a confirmation dialog.
+      buttons of the Visual Studio main toolbar, or press
+      . Before changes are saved, you will be
+      asked to confirm the execution of the corresponding SQL query in a
+      confirmation dialog.
     </para>
       </content>
     </section>
@@ -803,10 +819,10 @@
       UDF</ui> command. This command opens the UDF Editor.
     </para>
         <para>
-      To modify an existing UDF, double-click the node of the UDF you
-      wish to modify, or right-click this node and choose the
-      <ui>Alter UDF</ui> command from the context menu. Either
-      of the commands opens the UDF Editor.
+      To modify an existing UDF, double-click the node of the UDF to
+      modify, or right-click this node and choose the <ui>Alter
+      UDF</ui> command from the context menu. Either of these
+      commands opens the UDF Editor.
     </para>
         <para>
       The UDF editor enables you to set the following properties:
@@ -836,19 +852,19 @@
         <para>
       There are text fields for both names, a combo box for the return
       type, and a check box to indicate if the UDF is aggregate. All
-      these options are also accessible via the Properties window.
+      these options are also accessible using the Properties window.
     </para>
         <para>
       The property <literal>Server</literal> in the Properties window is
-      read only.
+      read-only.
     </para>
         <para>
       To save changes you have made, use either
       <math>Save</math> or <math>Save All</math>
-      buttons of the Visual Studio main toolbar, or just press
-      +. Before changes are
-      saved, you will be asked to confirm the execution of the
-      corresponding SQL query in a confirmation dialog.
+      buttons of the Visual Studio main toolbar, or press
+      . Before changes are saved, you will be
+      asked to confirm the execution of the corresponding SQL query in a
+      confirmation dialog.
     </para>
       </content>
     </section>
@@ -868,10 +884,10 @@
     </para>
         <para>
       To save the cloned object, use either Save or Save All buttons of
-      the Visual Studio main toolbar, or just press
-      +. Before changes are
-      saved, you will be asked to confirm the execution of the
-      corresponding SQL query in a confirmation dialog.
+      the Visual Studio main toolbar, or press
+      . Before changes are saved, you will be
+      asked to confirm the execution of the corresponding SQL query in a
+      confirmation dialog.
     </para>
       </content>
     </section>
@@ -898,7 +914,7 @@
       <title>Using the ADO.NET Entity Framework</title>
       <content>
         <para>
-      Connector/NET 6.0 introduced support for the ADO.NET Entity
+      Connector/Net 6.0 introduced support for the ADO.NET Entity
       Framework. ADO.NET Entity Framework was included with .NET
       Framework 3.5 Service Pack 1, and Visual Studio 2008 Service Pack
       1. ADO.NET Entity Framework was released on 11th August 2008.
@@ -934,12 +950,12 @@
           </listItem>
         </list>
         <para>
-      Connector/NET integrates with Visual Studio 2008 to provide a
+      Connector/Net integrates with Visual Studio 2008 to provide a
       range of helpful tools to assist the developer.
     </para>
         <para>
       A full treatment of ADO.NET Entity Framework is beyond the scope
-      of this manual. You are encouraged to review the
+      of this manual. If you are unfamiliar with ADO.NET, review the
       <externalLink><linkText>Microsoft
       ADO.NET Entity Framework documentation</linkText><linkUri>http://msdn.microsoft.com/en-us/library/aa697427(VS.80).aspx</linkUri></externalLink>.
     </para>
@@ -961,9 +977,8 @@
       is a facility available in Visual Studio that enables you to
       configure the Membership, Role, Session State and Profile
       Provider, without having to resort to editing configuration files.
-      You simply run the tool, set your configuration options, and the
-      tool will modify your <legacyBold>web.config</legacyBold> file
-      accordingly.
+      You set your configuration options within the tool, and the tool
+      modifies your <legacyBold>web.config</legacyBold> file accordingly.
     </para>
         <para>
       The MySQL Website Configuration Tool appears as a small icon on
@@ -988,9 +1003,9 @@
         <para />
         <para>
       This allows you to enable use of the MySQL Membership Provider.
-      Simply click the checkbox to enable this. You can now enter the
-      name of the application that you are creating the configuration
-      for. You can also enter a description for the application.
+      Click the check box to enable this. You can now enter the name of
+      the application that you are creating the configuration for. You
+      can also enter a description for the application.
     </para>
         <para>
       You can then click the <math>Edit...</math> button to
@@ -1009,15 +1024,15 @@
       displayed, and can then be modified in this dialog.
     </para>
         <para>
-      You can also ensure that the necessary schema are created
-      automatically for you by selecting the Autogenerate Schema
-      checkbox. These schema are used to store membership information.
-      The database used to storage is the one specified in the
-      connection string.
+      You can also ensure that the necessary schemas are created
+      automatically for you by selecting the Autogenerate Schema check
+      box. These schemas are used to store membership information. The
+      database used to storage is the one specified in the connection
+      string.
     </para>
         <para>
       You can also ensure that exceptions generated by the application
-      will be written to the event log by selecting the  checkbox.
+      will be written to the event log by selecting the  check box.
     </para>
         <para>
       Clicking the <math>Advanced...</math> button launches a
@@ -1034,8 +1049,8 @@
         <para />
         <para>
       Once information has been set up as required for configuration of
-      the Membership Provider the <math>Next</math> button can
-      be clicked to display the Roles Provider screen:
+      the Membership Provider, the <math>Next</math> button
+      can be clicked to display the Roles Provider screen:
     </para>
         <mediaLink>
           <para />
@@ -1072,12 +1087,10 @@
       <math>Finish</math> to exit the wizard.
     </para>
         <para>
-      At this point it is necessary to select the Authentication Type to
-      From Internet. This can be done by launching the ASP.NET
-      Configuration Tool, and selecting the Security tab. Click the
-      Select authentication type link and ensure that the From the
-      internet radio button is selected. You can now examine the
-      database you created to store membership information. All the
+      At this point, it is necessary to select the
+       to . Launch the ASP.NET Configuration Tool and
+      select the Security tab. Click the  link and ensure that the  radio button is selected. You can now examine
+      the database you created to store membership information. All the
       necessary tables will have been created for you:
     </para>
         <mediaLink>
@@ -1104,7 +1117,7 @@
         </mediaLink>
         <para />
         <para>
-      From the  dialog select the MySQL
+      From the  dialog, select the MySQL
       template, and then double-click the  document, or click the
       <math>Open</math> button.
     </para>
@@ -1114,13 +1127,12 @@
       <math>Connect to MySQL</math> button in the MySQL SQL
       Editor toolbar. You can enter the connection details into the
        dialog that is displayed.
-      You can enter the server name, user id, password and database to
+      You can enter the server name, user ID, password and database to
       connect to, or click the <math>Advanced</math> button to
       select other connection string options. Click the
       <math>Connect</math> button to connect to the MySQL
-      server. It is now possible to execute your SQL code against the
-      server by clicking the <math>Run SQL</math> button on
-      the toolbar.
+      server. To execute your SQL code against the server, click the
+      <math>Run SQL</math> button on the toolbar.
     </para>
         <mediaLink>
           <para />
@@ -1140,13 +1152,13 @@
       <content>
         <para>
        6.3 introduced the ability to convert an Entity Framework
-      model to MySQL DDL code. Starting with a blank model, an entity
-      model can be developed in Visual Studio's designer. Once the model
-      has been created, the model's properties can be selected, and in
-      the Database Script Generation category of the model's properties,
-      the property  can be found. The
-      value  can then be selected
-      from the drop-down listbox.
+      model to MySQL  code. Starting
+      with a blank model, an entity model can be developed in Visual
+      Studio's designer. Once the model has been created, the model's
+      properties can be selected, and in the Database Script Generation
+      category of the model's properties, the property  can be found. The value
+       can then be selected from
+      the drop-down listbox.
     </para>
         <mediaLink>
           <para />
