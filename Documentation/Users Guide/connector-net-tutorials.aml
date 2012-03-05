@@ -1,39 +1,39 @@
 <topic id="34e3033f-b986-4073-95c8-945f73aa79b0" revisionNumber="1">
   <developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
     <section address="connector-net-tutorials">
-      <title>Connector/NET Tutorials</title>
+      <title>Connector/Net Tutorials</title>
       <content>
         <autoOutline />
       </content>
     </section>
     <section address="connector-net-tutorials-intro">
-      <title>Tutorial: An Introduction to Connector/NET Programming</title>
+      <title>Tutorial: An Introduction to Connector/Net Programming</title>
       <content>
         <autoOutline />
         <para>
     This section provides a gentle introduction to programming with
-    Connector/NET. The example code is written in C#, and is designed to
+    Connector/Net. The example code is written in C#, and is designed to
     work on both Microsoft .NET Framework and Mono.
   </para>
         <para>
     This tutorial is designed to get you up and running with
-    Connector/NET as quickly as possible, it does not go into detail on
+    Connector/Net as quickly as possible, it does not go into detail on
     any particular topic. However, the following sections of this manual
     describe each of the topics introduced in this tutorial in more
     detail. In this tutorial you are encouraged to type in and run the
     code, modifying it as required for your setup.
   </para>
         <para>
-    This tutorial assumes you have MySQL and Connector/NET already
+    This tutorial assumes you have MySQL and Connector/Net already
     installed. It also assumes that you have installed the World example
     database, which can be downloaded from the
     <externalLink><linkText>MySQL Documentation
-    page</linkText><linkUri>http://dev.mysql.com/doc/</linkUri></externalLink>. You can also find details on how to install the
+    page</linkText><linkUri>http://dev.mysql.com/doc/;index-other.html</linkUri></externalLink>. You can also find details on how to install the
     database on the same page.
   </para>
         <alert class="note">
           <para>
-      Before compiling the example code make sure that you have added
+      Before compiling the example code, make sure that you have added
       References to your project as required. The References required
       are <literal>System</literal>, <literal>System.Data</literal> and
       <literal>MySql.Data</literal>.
@@ -45,24 +45,24 @@
       <title>The MySqlConnection Object</title>
       <content>
         <para>
-      For your Connector/NET application to connect to a MySQL database
-      it needs to establish a connection. This is achieved through the
-      use of a <literal>MySqlConnection</literal> object.
+      For your Connector/Net application to connect to a MySQL database,
+      it must establish a connection by using a
+      <literal>MySqlConnection</literal> object.
     </para>
         <para>
-      The MySqlConnection constructor takes a connection string as one
-      of its parameters. The connection string provides necessary
-      information to make the connection to the MySQL database. The
-      connection string is discussed more fully in
-      <link xlink:href="8b7d06e8-0177-4dd0-acca-f9c9caaa1072#connector-net-programming-connecting">Connecting to MySQL Using Connector/NET</link>. A
-      reference containing a list of supported connection string options
-      can also be found in
+      The <literal>MySqlConnection</literal> constructor takes a
+      connection string as one of its parameters. The connection string
+      provides necessary information to make the connection to the MySQL
+      database. The connection string is discussed more fully in
+      <link xlink:href="8b7d06e8-0177-4dd0-acca-f9c9caaa1072#connector-net-programming-connecting">Connecting to MySQL Using Connector/Net</link>. For a list
+      of supported connection string options, see
       <link xlink:href="c26b6c1a-1652-4d9d-ac74-96cee9531a3b"></link>.
     </para>
         <para>
-      The following code shows how to create a connection object.
+      The following code shows how to create a connection object:
     </para>
-        <code>using System;
+        <code>
+using System;
 using System.Data;
 
 using MySql.Data;
@@ -78,7 +78,7 @@ public class Tutorial1
         {
             Console.WriteLine("Connecting to MySQL...");
             conn.Open();
-            // Perform databse operations
+            // Perform database operations
         }
         catch (Exception ex)
         {
@@ -87,20 +87,20 @@ public class Tutorial1
         conn.Close();
         Console.WriteLine("Done.");
     }
-}</code>
+}
+</code>
         <para>
-      When the <literal>MySqlConnection</literal> constructor is invoked
-      it returns a connection object, which is used for subsequent
-      database operations. The first operation in this example is to
-      open the connection. This needs to be done before further
-      operations take place. Before the application exits the connection
-      to the database needs to be closed by calling
-      <literal>Close</literal> on the connection object.
+      When the <literal>MySqlConnection</literal> constructor is
+      invoked, it returns a connection object, which is used for
+      subsequent database operations. Open the connection before any
+      other operations take place. Before the application exits, close
+      the connection to the database by calling <literal>Close</literal>
+      on the connection object.
     </para>
         <para>
       Sometimes an attempt to perform an <literal>Open</literal> on a
-      connection object can fail, this will generate an exception that
-      can be handled via standard exception handling code.
+      connection object can fail, generating an exception that can be
+      handled using standard exception handling code.
     </para>
         <para>
       In this section you have learned how to create a connection to a
@@ -120,7 +120,7 @@ public class Tutorial1
     </para>
         <para>
       You will see how to create a <literal>MySqlCommand</literal>
-      object. Once it has been created there are three main methods of
+      object. Once it has been created, there are three main methods of
       interest that you can call:
     </para>
         <list class="bullet">
@@ -153,7 +153,8 @@ public class Tutorial1
       and then processed, for example the results might be displayed.
       The following code demonstrates how this could be done.
     </para>
-        <code>using System;
+        <code>
+using System;
 using System.Data;
 
 using MySql.Data;
@@ -188,7 +189,8 @@ public class Tutorial2
         conn.Close();
         Console.WriteLine("Done.");
     }
-}</code>
+}
+</code>
         <para>
       When a connection has been created and opened, the code then
       creates a <literal>MySqlCommand</literal> object. Note that the
@@ -199,13 +201,13 @@ public class Tutorial2
       <literal>MySqlReader</literal> object contains the results
       generated by the SQL executed on the command object. Once the
       results have been obtained in a <literal>MySqlReader</literal>
-      object, the results can be processed. In this case the information
-      is simply printed out as part of a <literal>while</literal> loop.
-      Finally, the <literal>MySqlReader</literal> object is displosed of
+      object, the results can be processed. In this case, the
+      information is printed out by a <literal>while</literal> loop.
+      Finally, the <literal>MySqlReader</literal> object is disposed of
       by running its <literal>Close</literal> method on it.
     </para>
         <para>
-      In the next example you will see how to use the
+      In the next example, you will see how to use the
       <literal>ExecuteNonQuery</literal> method.
     </para>
         <para>
@@ -213,10 +215,11 @@ public class Tutorial2
       method call is simpler, as there is no need to create an object to
       store results. This is because <literal>ExecuteNonQuery</literal>
       is only used for inserting, updating and deleting data. The
-      following example illustrates a simple update to the Country
-      table:
+      following example illustrates a simple update to the
+      <literal>Country</literal> table:
     </para>
-        <code>using System;
+        <code>
+using System;
 using System.Data;
 
 using MySql.Data;
@@ -245,12 +248,14 @@ public class Tutorial3
         conn.Close();
         Console.WriteLine("Done.");
     }
-}</code>
+}
+</code>
         <para>
       The query is constructed, the command object created and the
       <literal>ExecuteNonQuery</literal> method called on the command
-      object. You can access your MySQL database with the MySQL Client
-      program and verify that the update was carried out correctly.
+      object. You can access your MySQL database with the
+       command interpreter and verify that the
+      update was carried out correctly.
     </para>
         <para>
       Finally, you will see how the <literal>ExecuteScalar</literal>
@@ -260,7 +265,8 @@ public class Tutorial3
       following code illustrates how to use
       <literal>ExecuteScalar</literal>:
     </para>
-        <code>using System;
+        <code>
+using System;
 using System.Data;
 
 using MySql.Data;
@@ -295,11 +301,12 @@ public class Tutorial4
         conn.Close();
         Console.WriteLine("Done.");
     }
-}</code>
+}
+</code>
         <para>
-      This example uses a simple query to count the rows in the Country
-      table. The result is obtained by calling
-      <literal>ExecuteScaler</literal> on the command object.
+      This example uses a simple query to count the rows in the
+      <literal>Country</literal> table. The result is obtained by
+      calling <literal>ExecuteScalar</literal> on the command object.
     </para>
       </content>
     </section>
@@ -307,28 +314,28 @@ public class Tutorial4
       <title>Working with Decoupled Data</title>
       <content>
         <para>
-      Previously, when using MySqlDataReader, the connection to the
-      database was continually maintained, unless explicitly closed. It
-      is also possible to work in a manner where a connection is only
-      established when needed. For example, in this mode, a connection
-      could be established in order to read a chunk of data, the data
-      could then be modified by the application as required. A
+      Previously, when using <literal>MySqlDataReader</literal>, the
+      connection to the database was continually maintained, unless
+      explicitly closed. It is also possible to work in a manner where a
+      connection is only established when needed. For example, in this
+      mode, a connection could be established to read a chunk of data,
+      the data could then be modified by the application as required. A
       connection could then be reestablished only if and when the
-      application needs to write data back to the database. This
-      decouples the working data set from the database.
+      application writes data back to the database. This decouples the
+      working data set from the database.
     </para>
         <para>
-      This decouple mode of working with data is supported by
-      Connector/NET. There are several parts involved in allowing this
+      This decoupled mode of working with data is supported by
+      Connector/Net. There are several parts involved in allowing this
       method to work:
     </para>
         <list class="bullet">
           <listItem>
             <para>
               <legacyBold>Data Set</legacyBold> - The Data Set is
-          the area in which data is loaded in order to read or modify
-          it. A <literal>DataSet</literal> object is instantiated, which
-          can store multiple tables of data.
+          the area in which data is loaded to read or modify it. A
+          <literal>DataSet</literal> object is instantiated, which can
+          store multiple tables of data.
         </para>
           </listItem>
           <listItem>
@@ -350,12 +357,15 @@ public class Tutorial4
               <legacyBold>Command Builder</legacyBold> - The Command
           Builder is a support object. The Command Builder works in
           conjunction with the Data Adapter. When a
-          <literal>MySqlDataAdapter</literal> object is created it is
-          typically given an initial SELECT statement. From this SELECT
-          statement the Command Builder can work out the corresponding
-          INSERT, UPDATE and DELETE statements that would be required
-          should the database need to be updated. To create the Command
-          Builder an object of the class
+          <literal>MySqlDataAdapter</literal> object is created, it is
+          typically given an initial SELECT statement. From this
+          <literal>SELECT</literal> statement the Command
+          Builder can work out the corresponding
+          <literal>INSERT</literal>,
+          <literal>UPDATE</literal> and
+          <literal>DELETE</literal> statements that would be
+          required to update the database. To create the Command
+          Builder, an object of the class
           <literal>MySqlCommandBuilder</literal> is created.
         </para>
           </listItem>
@@ -370,12 +380,15 @@ public class Tutorial4
       A <literal>DataSet</literal> object can be created simply, as
       shown in the following example code snippet:
     </para>
-        <code>DataSet dsCountry;
+        <code>
+DataSet dsCountry;
 ...
-dsCountry = new DataSet();</code>
+dsCountry = new DataSet();
+</code>
         <para>
-      Although this creates the <literal>DataSet</literal> object it has
-      not yet filled it with data. For that a Data Adapter is required.
+      Although this creates the <literal>DataSet</literal> object, it
+      has not yet filled it with data. For that, a Data Adapter is
+      required.
     </para>
         <para>
           <legacyBold>Instantiating a MySqlDataAdapter
@@ -385,13 +398,15 @@ dsCountry = new DataSet();</code>
       The <literal>MySqlDataAdapter</literal> can be created as
       illustrated by the following example:
     </para>
-        <code>MySqlDataAdapter daCountry;
+        <code>
+MySqlDataAdapter daCountry;
 ...
 string sql = "SELECT Code, Name, HeadOfState FROM Country WHERE Continent='North America'";
-daCountry = new MySqlDataAdapter (sql, conn);</code>
+daCountry = new MySqlDataAdapter (sql, conn);
+</code>
         <para>
       Note, the <literal>MySqlDataAdapter</literal> is given the SQL
-      specifying the data you wish to work with.
+      specifying the data to work with.
     </para>
         <para>
           <legacyBold>Instantiating a MySqlCommandBuilder
@@ -403,9 +418,11 @@ daCountry = new MySqlDataAdapter (sql, conn);</code>
       inserting, updating and deleting data. There are several ways to
       do this, but in this tutorial you will see how this can most
       easily be done with <literal>MySqlCommandBuilder</literal>. The
-      following code snippet ilustrates how this is done:
+      following code snippet illustrates how this is done:
     </para>
-        <codeInline>MySqlCommandBuilder cb = new MySqlCommandBuilder(daCountry);</codeInline>
+        <code>
+MySqlCommandBuilder cb = new MySqlCommandBuilder(daCountry);
+</code>
         <para>
       Note that the <literal>MySqlDataAdapter</literal> object is passed
       as a parameter to the command builder.
@@ -414,9 +431,9 @@ daCountry = new MySqlDataAdapter (sql, conn);</code>
           <legacyBold>Filling the Data Set</legacyBold>
         </para>
         <para>
-      In order to do anything useful with the data from your datbase,
-      you need to load it into a Data Set. This is one of the jobs of
-      the <literal>MySqlDataAdapter</literal> object, and is carried out
+      To do anything useful with the data from your database, you need
+      to load it into a Data Set. This is one of the jobs of the
+      <literal>MySqlDataAdapter</literal> object, and is carried out
       with its <literal>Fill</literal> method. The following example
       code illustrates this:
     </para>
@@ -425,7 +442,8 @@ DataSet dsCountry;
 ...
 dsCountry = new DataSet();
 ...
-daCountry.Fill(dsCountry, "Country");</code>
+daCountry.Fill(dsCountry, "Country");
+</code>
         <para>
       Note the <literal>Fill</literal> method is a
       <literal>MySqlDataAdapter</literal> method, the Data Adapter knows
@@ -467,9 +485,9 @@ daCountry.Update(dsCountry, "Country");
       clicking an update button. The update button then activates code
       to write changes back to the database. The code uses the
       principles explained above. The application was built using the
-      Microsoft Visual Studio in order to place and create the user
-      interface controls, but the main code that uses the key classes
-      descibed above is shown below, and is portable.
+      Microsoft Visual Studio to place and create the user interface
+      controls, but the main code that uses the key classes described
+      above is shown below, and is portable.
     </para>
         <code>
 using System;
@@ -527,7 +545,8 @@ namespace WindowsFormsApplication5
         }
 
     }
-}</code>
+}
+</code>
         <para>
       The application running is shown below:
     </para>
@@ -544,17 +563,19 @@ namespace WindowsFormsApplication5
       <content>
         <para>
       This part of the tutorial shows you how to use parameters in your
-      Connector/NET application.
+      Connector/Net application.
     </para>
         <para>
       Although it is possible to build SQL query strings directly from
       user input, this is not advisable as it does not prevent erroneous
       or malicious information being entered. It is safer to use
       parameters as they will be processed as field data only. For
-      example, imagine the following query was contructed from user
+      example, imagine the following query was constructed from user
       input:
     </para>
-        <codeInline>string sql = "SELECT Name, HeadOfState FROM Country WHERE Continent = "+user_continent;</codeInline>
+        <code>
+string sql = "SELECT Name, HeadOfState FROM Country WHERE Continent = "+user_continent;
+</code>
         <para>
       If the string <literal>user_continent</literal> came from a Text
       Box control, there would potentially be no control over the string
@@ -567,7 +588,9 @@ namespace WindowsFormsApplication5
         <para>
       The same query written user a parameter for user input would be:
     </para>
-        <codeInline>string sql = "SELECT Name, HeadOfState FROM Country WHERE Continent = @Continent";</codeInline>
+        <code>
+string sql = "SELECT Name, HeadOfState FROM Country WHERE Continent = @Continent";
+</code>
         <para>
       Note that the parameter is preceded by an '@' symbol to indicate
       it is to be treated as a parameter.
@@ -630,7 +653,8 @@ public class Tutorial5
         conn.Close();
         Console.WriteLine("Done.");
     }
-}</code>
+}
+</code>
         <para>
       In this part of the tutorial you have see how to use parameters to
       make your code more secure.
@@ -641,15 +665,15 @@ public class Tutorial5
       <title>Working with Stored Procedures</title>
       <content>
         <para>
-      In this section you will see how to work with Stored Procedures.
+      In this section, you will see how to work with stored procedures.
       This section assumes you have a basic understanding of what a
-      Stored Procedure is, and how to create one.
+      stored procedure is, and how to create one.
     </para>
         <para>
       For the purposes of this tutorial, you will create a simple Stored
-      Procedure to see how it can be called from Connector/NET. In the
+      Procedure to see how it can be called from Connector/Net. In the
       MySQL Client program, connect to the World database and enter the
-      following Stored Procedure:
+      following stored procedure:
     </para>
         <code>
 DELIMITER //
@@ -659,40 +683,43 @@ BEGIN
   SELECT Name, HeadOfState FROM Country
   WHERE Continent = con;
 END //
-DELIMITER ;</code>
+DELIMITER ;
+</code>
         <para>
-      Test the Stored Procedure works as expected by typing the
-      following into the MySQL Client program:
+      Test that the stored procedure works as expected by typing the
+      following into the  command interpreter:
     </para>
-        <codeInline>CALL country_hos('Europe');</codeInline>
+        <code>
+CALL country_hos('Europe');
+</code>
         <para>
-      Note that The Stored Routine takes a single parameter, which is
-      the continent you wish to restrict your search to.
-    </para>
-        <para>
-      Having confirmed that the Stored Procedure is present and correct
-      you can now move on to seeing how it can be accessed from
-      Connector/NET.
+      Note that The stored routine takes a single parameter, which is
+      the continent to restrict your search to.
     </para>
         <para>
-      Calling a Stored Procedure from your Connector/NET application is
+      Having confirmed that the stored procedure is present and correct,
+      you can see how to access it from Connector/Net.
+    </para>
+        <para>
+      Calling a stored procedure from your Connector/Net application is
       similar to techniques you have seen earlier in this tutorial. A
       <literal>MySqlCommand</literal> object is created, but rather than
-      taking a SQL query as a parameter it takes the name of the Stored
-      Procedure to call. The <literal>MySqlCommand</literal> object also
-      needs to be set to the type of Stored Procedure. This is
-      illustrated by the following code snippet:
+      taking an SQL query as a parameter, it takes the name of the
+      stored procedure to call. Set the <literal>MySqlCommand</literal>
+      object to the type of stored procedure, as shown by the following
+      code snippet:
     </para>
         <code>
 string rtn = "country_hos";
 MySqlCommand cmd = new MySqlCommand(rtn, conn);
-cmd.CommandType = CommandType.StoredProcedure;</code>
+cmd.CommandType = CommandType.StoredProcedure;
+</code>
         <para>
-      In this case you also need to pass a parameter to the Stored
-      Procedure. This can be achieved using the techniques seen in the
+      In this case, the stored procedure requires you to pass a
+      parameter. This can be achieved using the techniques seen in the
       previous section on parameters,
-      <link xlink:href="34e3033f-b986-4073-95c8-945f73aa79b0#connector-net-tutorials-parameters">Working with Parameters</link>. This is
-      shown in the following code snippet:
+      <link xlink:href="34e3033f-b986-4073-95c8-945f73aa79b0#connector-net-tutorials-parameters">Working with Parameters</link>, as shown in
+      the following code snippet:
     </para>
         <code>
 cmd.Parameters.AddWithValue("@con", "Europe");
@@ -703,14 +730,13 @@ cmd.Parameters.AddWithValue("@con", "Europe");
       simplicity it is set as a static string in this example.
     </para>
         <para>
-      At this point everything is set up and all that now needs to be
-      done is to call the routine. This can be achieved using techniques
-      also learned in earlier sections, but in this case the
-      <literal>ExecuteReader</literal> method of the
+      At this point, everything is set up and you can call the routine
+      using techniques also learned in earlier sections. In this case,
+      the <literal>ExecuteReader</literal> method of the
       <literal>MySqlCommand</literal> object is used.
     </para>
         <para>
-      Complete working code for the Stored Procedure example is shown
+      Complete working code for the stored procedure example is shown
       below:
     </para>
         <code>
@@ -752,11 +778,12 @@ public class Tutorial6
         conn.Close();
         Console.WriteLine("Done.");
     }
-}</code>
+}
+</code>
         <para>
-      In this section you have seen how to call a Stored Procedure from
-      Connector/NET. For the moment, this concludes our introductory
-      tutorial on programming with Connector/NET.
+      In this section, you have seen how to call a stored procedure from
+      Connector/Net. For the moment, this concludes our introductory
+      tutorial on programming with Connector/Net.
     </para>
       </content>
     </section>
@@ -786,7 +813,7 @@ public class Tutorial6
       you have MySQL Server installed, along with  and Microsoft
       Visual Studio. This tutorial was tested with  6.0.4 and
       Microsoft Visual Studio 2008 Professional Edition. It is
-      recommmended you use 6.0.4 or above for this tutorial.
+      recommended you use 6.0.4 or above for this tutorial.
     </para>
         <list class="ordered">
           <listItem>
@@ -794,17 +821,16 @@ public class Tutorial6
           Create a new database in the MySQL Server using the MySQL
           Command Line Client program (<literal>mysql</literal>), or
           other suitable tool. It does not matter what name is used for
-          the database, but it should be noted down so that it can be
-          specified in the connection string constructed later in this
-          tutorial. This database will contain the tables, automatically
-          created for you later, used to store data about users and
-          roles.
+          the database, but record it. You specify it in the connection
+          string constructed later in this tutorial. This database
+          contains the tables, automatically created for you later, used
+          to store data about users and roles.
         </para>
           </listItem>
           <listItem>
             <para>
           Create a new ASP.NET Web Site in Visual Studio. If you are not
-          sure how to do this, refer to the following tutorial:
+          sure how to do this, refer to
           <link xlink:href="34e3033f-b986-4073-95c8-945f73aa79b0#connector-net-tutorials-entity-framework-databinding-linq-entities">Tutorial: Databinding in ASP.NET using LINQ on Entities</link>,
           which demonstrates how to create a simple ASP.NET web site.
         </para>
@@ -836,7 +862,8 @@ public class Tutorial6
           section should now resemble the following (note: for the sake
           of brevity some information has been excluded):
         </para>
-            <code>&lt;membership&gt;
+            <code>
+&lt;membership&gt;
  &lt;providers&gt;
    &lt;add name="AspNetSqlMembershipProvider" 
      type="System.Web.Security.SqlMembershipProvider" 
@@ -849,7 +876,8 @@ public class Tutorial6
      connectionStringName="LocalMySqlServer" 
      ... /&gt;
  &lt;/providers&gt;
-&lt;/membership&gt;</code>
+&lt;/membership&gt;
+</code>
             <para>
           Note that the name for the connection string to be used to
           connect to the server that contains the membership database is
@@ -875,12 +903,14 @@ public class Tutorial6
           <literal>&lt;connectionStrings&gt;</literal>. Add the
           following connection string information:
         </para>
-            <code>&lt;connectionStrings&gt;
+            <code>
+&lt;connectionStrings&gt;
   &lt;remove name="LocalMySqlServer"/&gt;
   &lt;add name="LocalMySqlServer"
        connectionString="Datasource=localhost;Database=users;uid=root;pwd=password;"
        providerName="MySql.Data.MySqlClient"/&gt;
-&lt;/connectionStrings&gt;</code>
+&lt;/connectionStrings&gt;
+</code>
             <para>
           The database specified is the one created in the first step.
           You could alternatively have used an existing database.
@@ -900,9 +930,9 @@ public class Tutorial6
           authenticated users. With local authentication the user is
           validated using their Windows credentials when they attempt to
           access the web site. This can be useful in an Intranet
-          environment. With remote authentication a user is prompted for
-          their login details when accessing the web site, and these
-          credentials are checked aganst the membership information
+          environment. With remote authentication, a user is prompted
+          for their login details when accessing the web site, and these
+          credentials are checked against the membership information
           stored in a database server such as MySQL Server. You will now
           see how to choose this form of authentication.
         </para>
@@ -965,7 +995,7 @@ public class Tutorial6
           </listItem>
           <listItem>
             <para>
-          In Visual Studio rebuild the solution by selecting
+          In Visual Studio, rebuild the solution by selecting
           <ui>Build</ui>, <ui>Rebuild Solution</ui>
           from the main menu.
         </para>
@@ -973,7 +1003,8 @@ public class Tutorial6
           <listItem>
             <para>
           Check that the necessary schema has been created. This can be
-          achieved using the MySQL Command Line Client program.
+          achieved using the  command
+          interpreter.
         </para>
             <mediaLink>
               <para />
@@ -984,11 +1015,11 @@ public class Tutorial6
           </listItem>
           <listItem>
             <para>
-          Assuming all is present and correct you can now create users
+          Assuming all is present and correct, you can now create users
           and roles for your web application. The easiest way to do this
           is with the ASP.NET Web Site Administration Tool. However,
           many web applications contain their own modules for creating
-          roles and users. For simplicity the ASP.NET Web Site
+          roles and users. For simplicity, the ASP.NET Web Site
           Administration Tool will be used in this tutorial.
         </para>
           </listItem>
@@ -996,7 +1027,7 @@ public class Tutorial6
             <para>
           In the ASP.NET Web Site Administration Tool, click the
            tab. Now that both the
-          Membership and Role Provider are enabled you will see links
+          Membership and Role Provider are enabled, you will see links
           for creating roles and users. Click the  link.
         </para>
             <mediaLink>
@@ -1033,9 +1064,9 @@ public class Tutorial6
           </listItem>
           <listItem>
             <para>
-          Using the MySQL Command Line Client program you can check that
-          your database has been correctly populated with the Membership
-          and Role data.
+          Using the  command interpreter, you
+          can check that your database has been correctly populated with
+          the Membership and Role data.
         </para>
             <mediaLink>
               <para />
@@ -1046,8 +1077,9 @@ public class Tutorial6
           </listItem>
         </list>
         <para>
-      In this tutorial you have seen how to set up the  Membership
-      and Role Providers for use in your ASP.NET web application.
+      In this tutorial, you have seen how to set up the 
+      Membership and Role Providers for use in your ASP.NET web
+      application.
     </para>
       </content>
     </section>
@@ -1063,45 +1095,45 @@ public class Tutorial6
       Studio 2008 Professional Edition,  6.1.1 and MySQL Server
       5.1. This tutorial also assumes you have created an empty
       database, for example <literal>test</literal>, where you will
-      store session data. You could do this using the MySQL Command Line
-      Client tool.
+      store session data. You could do this using the
+       command interpreter.
     </para>
         <list class="ordered">
           <listItem>
             <para>
-          In Visual Studio create a new ASP.NET web site. If you are not
-          sure how to do this refer to the tutorial
-          <link xlink:href="34e3033f-b986-4073-95c8-945f73aa79b0#connector-net-tutorials-entity-framework-databinding-linq-entities">Tutorial: Databinding in ASP.NET using LINQ on Entities</link>
+          In Visual Studio, create a new ASP.NET web site. If you are
+          not sure how to do this, refer to the tutorial
+          <link xlink:href="34e3033f-b986-4073-95c8-945f73aa79b0#connector-net-tutorials-entity-framework-databinding-linq-entities">Tutorial: Databinding in ASP.NET using LINQ on Entities</link>,
           which demonstrates how to do this.
         </para>
           </listItem>
           <listItem>
             <para>
           Launch the MySQL MySQL Website Configuration tool. Due to a
-          bug in 6.1.1 this may not appear unless you are connected to a
-          server in the Server Explorer. If you are unfamiliar with the
-          MySQL Website Configuration tool it is suggested that you
-          first work through the following tutorial
+          bug in 6.1.1, this may not appear unless you are connected to
+          a server in the Server Explorer. If you are unfamiliar with
+          the MySQL Website Configuration tool, consider first working
+          through the tutorial in
           <link xlink:href="9f3f194e-ad35-4379-b04d-5dce4b34ce6a#connector-net-website-config">MySQL Website Configuration Tool</link>.
         </para>
           </listItem>
           <listItem>
             <para>
           Navigate through the wizard to the Session State page. Make
-          sure the checkbox  is seected.
+          sure the check box  is selected.
         </para>
           </listItem>
           <listItem>
             <para>
-          On the same page configure the connection string to the
-          database that will contain your session data. This database
-          can be empty as  will create the schema required to
-          store session data.
+          On the same page, configure the connection string to the
+          database that will contain your session data. If this database
+          is empty,  will create the schema required to store
+          session data.
         </para>
           </listItem>
           <listItem>
             <para>
-          Ensure that the checkbox  is selected so that  will create the
+          Ensure that the check box  is selected so that  will create the
           schema in your database to store the session data correctly.
         </para>
           </listItem>
@@ -1116,22 +1148,24 @@ public class Tutorial6
           Configuration tool will now update your application's
           <legacyBold>web.config</legacyBold> file with information about
           the connection string and default providers to be used. In
-          this case we have selected the MySQL Session State Provider.
+          this case, we have selected the MySQL Session State Provider.
         </para>
           </listItem>
         </list>
         <para>
-      At this point you are ready to use the MySQL database to store
-      session data. To test that the set up has worked you can write a
+      At this point, you are ready to use the MySQL database to store
+      session data. To test that the set up has worked, you can write a
       simple program that uses session variables.
     </para>
         <list class="ordered">
           <listItem>
             <para>
-          Open <legacyBold>Default.aspx.cs</legacyBold>. In the Page_Load
-          method add the following code:
+          Open <legacyBold>Default.aspx.cs</legacyBold>. In the
+          <literal>Page_Load</literal> method, add the following code:
         </para>
-            <codeInline>Session["SessionVariable1"] = "Test string";</codeInline>
+            <code>
+Session["SessionVariable1"] = "Test string";
+</code>
           </listItem>
           <listItem>
             <para>
@@ -1158,19 +1192,20 @@ public class Tutorial6
             <para>
           Now view the contents of these tables by typing
           <literal>SELECT * FROM my_aspnet_sessions;</literal> in the
-          MySQL Command Line Client. This will display the session data
-          our application used. Note that this is stored in binary
-          format so some data may not display as expected.
+           command interpreter. This will
+          display the session data our application used. Note that this
+          is stored in binary format so some data may not display as
+          expected.
         </para>
           </listItem>
         </list>
         <para>
-      At this point you have installed the Session State Provider and
+      At this point, you have installed the Session State Provider and
       carried out a preliminary test of the installation. You will now
       work a bit more with the Session State Provider.
     </para>
         <para>
-      In this part of the tutorial you will set and retrieve a session
+      In this part of the tutorial, you will set and retrieve a session
       variable. You can work with your existing project.
     </para>
         <list class="ordered">
@@ -1207,7 +1242,7 @@ protected void Button1_Click(object sender, EventArgs e)
           </listItem>
           <listItem>
             <para>
-          In Design View double-click <literal>Button2</literal> to add
+          In Design View, double-click <literal>Button2</literal> to add
           its click event handler. This button needs to clear text from
           the text box. The code to do this is as follows:
         </para>
@@ -1354,12 +1389,12 @@ protected void Page_Load(object sender, EventArgs e)
           </listItem>
           <listItem>
             <para>
-          Select the  checkbox.
+          Select the  check box.
         </para>
           </listItem>
           <listItem>
             <para>
-          Select the  checkbox.
+          Select the  check box.
         </para>
           </listItem>
           <listItem>
@@ -1546,11 +1581,11 @@ protected void DropDownList1_SelectedIndexChanged(object sender, EventArgs e)
       assumes that you have installed the World example database, which
       can be downloaded from the
       <externalLink><linkText>MySQL Documentation
-      page</linkText><linkUri>http://dev.mysql.com/doc/</linkUri></externalLink>. You can also find details on how to install the
+      page</linkText><linkUri>http://dev.mysql.com/doc/;index-other.html</linkUri></externalLink>. You can also find details on how to install the
       database on the same page. It will also be convenient for you to
       create a connection to the World database after it is installed.
       For instructions on how to do this see
-      <link xlink:href="9f3f194e-ad35-4379-b04d-5dce4b34ce6a#connector-net-visual-studio-making-a-connection">Making a connection</link>.
+      <link xlink:href="9f3f194e-ad35-4379-b04d-5dce4b34ce6a#connector-net-visual-studio-making-a-connection">Making a Connection</link>.
     </para>
         <para>
           <legacyBold>Creating a new Windows Forms
@@ -1617,7 +1652,7 @@ protected void DropDownList1_SelectedIndexChanged(object sender, EventArgs e)
           create the new connection at this time by clicking
           <math>New Connection...</math>. For further
           instructions on creating a connection to a database see
-          <link xlink:href="9f3f194e-ad35-4379-b04d-5dce4b34ce6a#connector-net-visual-studio-making-a-connection">Making a connection</link>.
+          <link xlink:href="9f3f194e-ad35-4379-b04d-5dce4b34ce6a#connector-net-visual-studio-making-a-connection">Making a Connection</link>.
         </para>
             <mediaLink>
               <para />
@@ -1705,10 +1740,9 @@ protected void DropDownList1_SelectedIndexChanged(object sender, EventArgs e)
           </listItem>
           <listItem>
             <para>
-          You will now select the Object you wish to bind to. Expand the
-          tree. In this tutorial you will select the city table. Once
-          the city table has been selected click
-          <math>Next</math>.
+          You will now select the Object to bind to. Expand the tree. In
+          this tutorial, you will select the city table. Once the city
+          table has been selected click <math>Next</math>.
         </para>
             <mediaLink>
               <para />
@@ -1884,18 +1918,17 @@ protected void DropDownList1_SelectedIndexChanged(object sender, EventArgs e)
       queries to entities using the Entity Framework mapping.
     </para>
         <para>
-      If you have not already done so, you should install the World
-      example database prior to attempting this tutorial. Instructions
-      on where to obtain the database and instructions on how to install
-      it where given in the tutorial
+      If you have not already done so, install the World example
+      database prior to attempting this tutorial. See the tutorial
       <link xlink:href="34e3033f-b986-4073-95c8-945f73aa79b0#connector-net-tutorials-entity-framework-winform-data-source">Tutorial: Using an Entity Framework Entity as a Windows Forms Data
-      Source</link>.
+      Source</link>
+      for instructions on downloading and installing this database.
     </para>
         <para>
           <legacyBold>Creating an ASP.NET web site</legacyBold>
         </para>
         <para>
-      In this part of the tutorial you will create an ASP.NET web site.
+      In this part of the tutorial, you will create an ASP.NET web site.
       The web site will use the World database. The main web page will
       feature a drop down list from which you can select a country, data
       about that country's cities will then be displayed in a grid view
@@ -2075,7 +2108,7 @@ public partial class _Default : System.Web.UI.Page
             <para>
           Save the solution, build it and run it. You should see the
           list control has been populated. You can select an item, but
-          as yet the grid view control does not apear.
+          as yet the grid view control does not appear.
         </para>
           </listItem>
         </list>
@@ -2151,7 +2184,7 @@ public partial class _Default : System.Web.UI.Page
         </list>
         <para>
       In this tutorial you have seen how to create an ASP.NET web site,
-      you have also seen how you can access a MySQL database via LINQ
+      you have also seen how you can access a MySQL database using LINQ
       queries on an entity data model.
     </para>
       </content>
@@ -2174,9 +2207,9 @@ public partial class _Default : System.Web.UI.Page
     <legacyBold>./mysql-test/std_data</legacyBold>.
   </para>
         <para>
-    To carry out the steps in this tutorial you will also need to have
-    Open SSL installed. This can be downloaded for Microsoft Windows at
-    no charge from
+    To carry out the steps in this tutorial, you must have Open SSL
+    installed. This can be downloaded for Microsoft Windows at no charge
+    from
     <externalLink><linkText>Shining
     Light Productions</linkText><linkUri>http://www.slproweb.com/products/Win32OpenSSL.html</linkUri></externalLink>.
   </para>
@@ -2231,9 +2264,9 @@ ssl-key=path/to/repo/mysql-test/std_data/server-key.pem
         The .NET client does not use the PEM file format, as .NET does
         not support this format natively. You will be using test client
         certificates from the same server repository, for the purposes
-        of this example. You will need to convert these to PFX format
-        first. This format is also known as PKCS#12. An article
-        describing this procedure can be found at the
+        of this example. Convert these to PFX format first. This format
+        is also known as PKCS#12. An article describing this procedure
+        can be found at the
         <externalLink><linkText>Citrix
         website</linkText><linkUri>http://support.citrix.com/article/CTX106630</linkUri></externalLink>. From the directory
         <legacyBold>server-repository-root/mysql-test/std_data</legacyBold>,
@@ -2404,7 +2437,7 @@ ssl-key=path/to/repo/mysql-test/std_data/server-key.pem
       <content>
         <autoOutline />
         <para>
-    In this tutorial you will learn how to use the
+    This tutorial teaches you how to use the
      class. This class enables you to
     execute a series of statements. Depending on the circumstances, this
     can be more convenient than using the
@@ -2415,10 +2448,10 @@ ssl-key=path/to/repo/mysql-test/std_data/server-key.pem
     be found in the reference documentation supplied with .
   </para>
         <para>
-    If you wish to run the example programs in this tutorial, you will
-    need to set up a simple test database and table. This can be achived
-    using the MySQL Command Line Client or MySql Workbench. Commands for
-    the MySQL Command Line Client are given here:
+    To run the example programs in this tutorial, set up a simple test
+    database and table using the  Command Line
+    Client or MySQL Workbench. Commands for the 
+    Command Line Client are given here:
   </para>
         <list class="ordered">
           <listItem>
@@ -2444,17 +2477,17 @@ ssl-key=path/to/repo/mysql-test/std_data/server-key.pem
     script (sequence of statements) assigned to the
      property of the MySqlScript object to be
     executed. Note the  property can be set
-    through the  constructor or via
+    through the  constructor or using
     the  property.
      returns the number of statements
     executed.
   </para>
         <para>
     The  object will execute the
-    specified script on the connection set via the
+    specified script on the connection set using the
      property. Again, this property can
     be set directly or through the 
-    constructor. The following code snipets illustrate this:
+    constructor. The following code snippets illustrate this:
   </para>
         <code>
 string sql = "SELECT * FROM TestTable";
@@ -2474,7 +2507,7 @@ script.Execute();
         <list class="ordered">
           <listItem>
             <para>
-        Error - generated in an error occurs.
+        Error - generated if an error occurs.
       </para>
           </listItem>
           <listItem>
@@ -2491,9 +2524,9 @@ script.Execute();
         </list>
         <para>
     It is possible to assign event handlers to each of these events.
-    These user-provided routies will be called back should the connected
-    event occur. The following code shows how the event handlers are set
-    up.
+    These user-provided routines are called back when the connected
+    event occurs. The following code shows how the event handlers are
+    set up.
   </para>
         <code>
 script.Error += new MySqlScriptErrorEventHandler(script_Error);
@@ -2501,12 +2534,10 @@ script.ScriptCompleted += new EventHandler(script_ScriptCompleted);
 script.StatementExecuted += new MySqlStatementExecutedEventHandler(script_StatementExecuted);
 </code>
         <para>
-    In VisualStudio you can use tab completion to fill out stub routines
-    for you, to save typing. To do this start by typing, for example,
-    . Then press , and
-    then press  again. The assignment will be
-    completed, and a stub event handler created. A complete working
-    example is shown below:
+    In VisualStudio, you can save typing by using tab completion to fill
+    out stub routines. Start by typing, for example, . Then press , and then press
+     again. The assignment is completed, and a stub
+    event handler created. A complete working example is shown below:
   </para>
         <code>
 using System;
@@ -2589,8 +2620,8 @@ namespace MySqlScriptTest
       <title>Using Delimiters with MySqlScript</title>
       <content>
         <para>
-      Depending on the nature of the script, you made need control of
-      the delimiter used to separate the statements that will make up a
+      Depending on the nature of the script, you may need control of the
+      delimiter used to separate the statements that will make up a
       script. The most common example of this is where you have a
       multi-statement stored routine as part of your script. In this
       case if the default delimiter of  is used you will
@@ -2697,9 +2728,9 @@ namespace ConsoleApplication8
       <title>Tutorial: Generating MySQL DDL from an Entity Framework Model</title>
       <content>
         <para>
-    In this tutorial you will learn how to create MySQL DDL from an
-    Entity Framework model. You will need to use Visual Studio 2010 and
-     6.3 to carry out this tutorial.
+    In this tutorial, you will learn how to create MySQL
+     from an Entity Framework model.
+    Use Visual Studio 2010 and  6.3 to carry out this tutorial.
   </para>
         <list class="ordered">
           <listItem>
@@ -2709,8 +2740,8 @@ namespace ConsoleApplication8
           </listItem>
           <listItem>
             <para>
-        Using the  add a reference
-        to <legacyBold>MySql.Data.Entity</legacyBold>.
+        Using the , add a
+        reference to <legacyBold>MySql.Data.Entity</legacyBold>.
       </para>
           </listItem>
           <listItem>
@@ -2778,8 +2809,8 @@ namespace ConsoleApplication8
         select an existing connection, or create a new connection to a
         server. Select an appropriate radio button to show or hide
         sensitive data. For the purposes of this tutorial you can select
-         (although you may not want to do this
-        for commercial applications).
+         (although you might skip this for
+        commercial applications).
       </para>
           </listItem>
           <listItem>
