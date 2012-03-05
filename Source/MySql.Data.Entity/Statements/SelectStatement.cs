@@ -193,20 +193,21 @@ namespace MySql.Data.Entity
               string.IsNullOrEmpty(cf.ColumnAlias) ? cf.ActualColumnName : cf.ColumnAlias
               );
           newColumn.PushInput(cf.ActualColumnName);
-          newColumn.PushInput(cf.TableName);
+          if (cf.TableName != null && cf.ColumnAlias == null)
+            newColumn.PushInput(cf.TableName);
           if (select.Name != null)
           {
             newColumn.PushInput(select.Name);      // add the scope 
           }
           columns.Add(newColumn);
         }
+        return columns;
       }
       else
         throw new NotImplementedException();
       if (!String.IsNullOrEmpty(input.Name) && input.Name != From.Name)
         foreach (ColumnFragment c in columns)
         {
-          if (c.PropertyFragment.Properties[0] != input.Name)
             c.PushInput(input.Name);
         }
       return columns;
@@ -241,7 +242,7 @@ namespace MySql.Data.Entity
 
     public bool HasDifferentNameForColumn(ColumnFragment column)
     {
-      if (!hasRenamedColumns) return false;
+      if (!hasRenamedColumns) return false;      
       foreach (ColumnFragment c in Columns)
       {
         if (!c.Equals(column)) continue;

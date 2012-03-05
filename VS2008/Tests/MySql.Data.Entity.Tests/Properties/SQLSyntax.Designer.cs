@@ -273,13 +273,13 @@ namespace MySql.Data.Entity.Tests.Properties {
         ///`Extent1`.`Name`, 
         ///`Join1`.`Id` AS `C2`, 
         ///`Join1`.`Name` AS `C3`, 
-        ///`Join1`.`Id` AS `C4`, 
-        ///`Join1`.`Name` AS `C5`
+        ///`Join1`.`ID1` AS `C4`, 
+        ///`Join1`.`NAME1` AS `C5`
         ///FROM `Companies` AS `Extent1` INNER JOIN (SELECT
         ///`UnionAll1`.`Id`, 
         ///`UnionAll1`.`Name`, 
-        ///`UnionAll2`.`Id` AS `Id1`, 
-        ///`UnionAll2`.`Name` AS `Name1`
+        ///`UnionAll2`.`Id` AS `ID1`, 
+        ///`UnionAll2`.`Name` AS `NAME1`
         ///FROM (SELECT
         ///`Extent2`.`Id`, 
         ///`Extent2`.`Name`
@@ -287,7 +287,7 @@ namespace MySql.Data.Entity.Tests.Properties {
         ///`Extent3`.`Id`, 
         ///`Extent3`.`Name`
         ///FROM `Shops` AS `Extent3`) AS `UnionAll1` INNER JOIN (SELECT
-        ///`Extent4`.`I [rest of string was truncated]&quot;;.
+        ///`Extent4`. [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string JoinOfUnionsOnRightSideOfJoin {
             get {
