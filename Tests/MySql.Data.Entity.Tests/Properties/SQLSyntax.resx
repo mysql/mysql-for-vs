@@ -264,13 +264,13 @@ FROM `Books` AS `Extent1` INNER JOIN `Authors` AS `Extent2` ON `Extent1`.`Author
 `Extent1`.`Name`, 
 `Join1`.`Id` AS `C1`, 
 `Join1`.`Name` AS `C2`, 
-`Join1`.`Id` AS `C3`, 
-`Join1`.`Name` AS `C4`
+`Join1`.`ID1` AS `C3`, 
+`Join1`.`NAME1` AS `C4`
 FROM `Companies` AS `Extent1` INNER JOIN (SELECT
 `UnionAll1`.`Id`, 
 `UnionAll1`.`Name`, 
-`UnionAll2`.`Id` AS `Id1`, 
-`UnionAll2`.`Name` AS `Name1`
+`UnionAll2`.`Id` AS `ID1`, 
+`UnionAll2`.`Name` AS `NAME1`
 FROM (SELECT
 `Extent2`.`Id`, 
 `Extent2`.`Name`
