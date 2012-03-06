@@ -1,72 +1,9 @@
-Connector/Net 6.4  Release Notes
+Connector/Net 6.6  Release Notes
 ------------------------------------
 
-Welcome to the release notes for Connector/Net 6.4
+Welcome to the release notes for Connector/Net 6.6
 
-What's new in 6.4
+What's new in 6.6
 --------------------
 
-- Support for Windows authentication in the driver
-- Support for table caching (see below)
-- Improved SQL generation from the Entity Framework provider
-- Connection failover support
-
-What we know is broken
-----------------------
-- Documentation has not been updated yet.
-- The Generated Database Wizard will save the file with the extension .sql.  You will need to
-  manually change the extension to .mysql to use the new editor.
-
-What we changed in 6.3.7 that came over to 6.4
-------------------------
-We introduced a slight change in behavior with 6.3.7.  We did this as part of a larger change to address a performance
-issue.  It's a relatively minor change in behavior however we encourage you to read this section carefully and review your 
-application for areas that might be affected.
-
-We have made the Use Procedure Bodies flag obsolete and introduced the Check Parameters option.  They server mainly the
-same purpose.  The Check Parameters option is true by default.  Setting to false tells
-Connector/Net to not fetch any routine or parameter metadata and to simply trust what the user has specified.  This can greatly 
-increase performance but it also puts significant pressure on the application developer to give the parameters in the right
-order.
-
-The next change in behavior is that Connector/Net no longer allows you to call a stored function without specifying a return value.
-We are now using the presence of a return value parameter as a signal that we should execute the routine as a stored function.  If
-you don't care about the return value, then give a place holder value.
-
-The next change is that if you user has insufficient permissions to retrieve parameter metadata, 
-you are not connecting to server 5.5 or later, and you have specified Check Parameters then the connector will throw an 
-InvalidOperationException indicating that you have insufficient privileges to retrieve routine parameter metadata. In the past the
-connector would silently use the parameters you gave on the command.
-
-We apologize for introducing these changes in a GA product but we felt it was important as these changes greatly increase the
-speed that we execute stored routines.
-
-
-
-Table Caching
--------------
-We have not yet updated the documentation so we write a few words on table caching here.
-
-Table Caching is a new feature that users can use to cache slow-changing datasets on the client side.  This is useful for apps
-that are designed to use readers but you still want to minimize trips to the server for slow-changing tables.
-
-It is transparent to the user.  It is not enabled by default.
-
-To enable caching, add 'table cache=true' to your connection string.  You can also use the 'Default Table Cache Age'
-connection string option to specify the number of seconds a table is cached before being discarded.  You can also
-set caching and cache age options on a per command basis.  Please note that the cache age property is in "seconds".
-
-In the future we may extend this feature to allow the end user to provide their own implementation or we may provide
-an implementation of table caching that can take advantage of services such as memcached or velocity.
-
-Connection Failover
--------------------
-We are introducing a new connection string keyword called 'Replication'. By setting this to yes or true you
-are indicating that this connection will use a set of replicated servers.  With this release replicated servers
-are only supported on TCP/IP connections and it supports connection failover on the initial connection.
-
-The servers are specified comma-separated.  An example would be 'server=server1,server2,server3; replication=yes'
-
-
-
-
+Be sure and check the documenation for more information on these new features.
