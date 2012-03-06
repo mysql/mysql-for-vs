@@ -92,7 +92,12 @@ namespace MySql.Data.MySqlClient.Tests
     [Test]
     public void DateAndTimes()
     {
-      execSQL("CREATE TABLE Test (id INT NOT NULL, d DATE, dt DATETIME, tm TIME, ts TIMESTAMP, PRIMARY KEY(id))");
+
+      if (Version < new Version(5, 6))
+        execSQL("CREATE TABLE Test (id INT NOT NULL, d DATE, dt DATETIME, tm TIME, ts TIMESTAMP, PRIMARY KEY(id))");
+      else
+        execSQL("CREATE TABLE Test (id INT NOT NULL, d DATE, dt DATETIME, tm TIME(6), ts TIMESTAMP, PRIMARY KEY(id))");
+      
 
       string sql = "INSERT INTO Test VALUES(?id, ?d, ?dt, ?tm, NULL)";
       MySqlCommand cmd = new MySqlCommand(sql, conn);
