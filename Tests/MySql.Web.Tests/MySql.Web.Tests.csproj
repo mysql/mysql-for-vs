@@ -70,6 +70,7 @@
     <Compile Include="RoleManagement.cs" />
     <Compile Include="SchemaTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SessionTests.cs" />
     <Compile Include="TestProfile.cs" />
     <Compile Include="UserManagement.cs" />
   </ItemGroup>

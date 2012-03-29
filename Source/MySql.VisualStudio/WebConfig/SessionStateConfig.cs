@@ -90,6 +90,8 @@ namespace MySql.Data.VisualStudio.WebConfig
           values.WriteExceptionToLog = GetBoolValue(e.GetAttribute("writeExceptionsToEventLog"), false);
         if (e.HasAttribute("autogenerateschema"))
           values.AutoGenSchema = GetBoolValue(e.GetAttribute("autogenerateschema"), false);
+        if (e.HasAttribute("enableExpireCallback"))
+          values.EnableExpireCallback = GetBoolValue(e.GetAttribute("enableExpireCallback"), false);  
       }
       values.ConnectionString = wc.GetConnectionString(values.ConnectionStringName);
       Enabled = OriginallyEnabled = DefaultProvider != null &&

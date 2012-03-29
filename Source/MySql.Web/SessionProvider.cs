@@ -37,6 +37,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Security;
 
+
 namespace MySql.Web.SessionState
 {
   /// <summary>
@@ -62,6 +63,19 @@ namespace MySql.Web.SessionState
 
 
     bool writeExceptionsToEventLog = false;
+
+    SessionStateItemExpireCallback expireCallback = null;
+    bool enableExpireCallback = false;
+
+
+    /// <summary>
+    /// Indicates whether if expire callback is on or off
+    /// </summary>
+    public bool EnableExpireCallback
+    {
+      get { return enableExpireCallback; }
+      set { enableExpireCallback = value; }
+    }
 
     /// <summary>
     /// Indicates whether to write exceptions to event log
@@ -151,6 +165,12 @@ namespace MySql.Web.SessionState
         writeExceptionsToEventLog = (config["writeExceptionsToEventLog"].ToUpper() == "TRUE");
       }
 
+      enableExpireCallback = false;
+
+      if (config["enableExpireCallback"] != null)
+      {
+        enableExpireCallback = (config["enableExpireCallback"].ToUpper() == "TRUE");
+      }
 
       // Make sure we have the correct schema.
       SchemaManager.CheckSchema(connectionString, config);
@@ -209,6 +229,7 @@ namespace MySql.Web.SessionState
     /// </param>
     public override void CreateUninitializedItem(System.Web.HttpContext context, string id, int timeout)
     {
+      MySqlTransaction mySqlTransaction = null;
       try
       {
         using (MySqlConnection conn = new MySqlConnection(connectionString))
@@ -229,12 +250,31 @@ namespace MySql.Web.SessionState
           cmd.Parameters.AddWithValue("@SessionItems", null);
           cmd.Parameters.AddWithValue("@Flags", 1);
           conn.Open();
+          mySqlTransaction = conn.BeginTransaction();
           cmd.ExecuteNonQuery();
+          mySqlTransaction.Commit();
         }
       }
       catch (MySqlException e)
       {
+        if (mySqlTransaction != null)
+        {
+          try
+          {
+            Trace.WriteLine("CreateUninitializedItem: Attempt to rollback");
+            mySqlTransaction.Rollback();
+          }
+          catch (MySqlException ex)
+          {
+            HandleMySqlException(ex, "CreateUninitializedItem: Rollback Failed");
+          }
+        }
         HandleMySqlException(e, "CreateUninitializedItem");
+      }
+      finally
+      {
+        if (mySqlTransaction != null)
+          mySqlTransaction.Dispose();         
       }
     }
 
@@ -306,7 +346,7 @@ namespace MySql.Web.SessionState
     /// <param name="lockId">The lock identifier for the current request.</param>
     public override void ReleaseItemExclusive(System.Web.HttpContext context, string id, object lockId)
     {
-
+      MySqlTransaction mySqlTransaction = null;
       try
       {
         using (MySqlConnection conn = new MySqlConnection(connectionString))
@@ -321,12 +361,31 @@ namespace MySql.Web.SessionState
           cmd.Parameters.AddWithValue("@ApplicationId", ApplicationId);
           cmd.Parameters.AddWithValue("@LockId", lockId);
           conn.Open();
+          mySqlTransaction = conn.BeginTransaction();
           cmd.ExecuteNonQuery();
+          mySqlTransaction.Commit();
         }
       }
       catch (MySqlException e)
       {
+        if (mySqlTransaction != null)
+        {
+          try
+          {
+            Trace.WriteLine("ReleaseItemExclusive: Attempt to rollback");
+            mySqlTransaction.Rollback();
+          }
+          catch (MySqlException ex)
+          {
+            HandleMySqlException(ex, "ReleaseItemExclusive: Rollback Failed");
+          }
+        }
         HandleMySqlException(e, "ReleaseItemExclusive");
+      }
+      finally 
+      {
+        if (mySqlTransaction != null)
+          mySqlTransaction.Dispose();    
       }
     }
 
@@ -339,6 +398,8 @@ namespace MySql.Web.SessionState
     /// <param name="item">The session item to remove from the database.</param>
     public override void RemoveItem(System.Web.HttpContext context, string id, object lockId, SessionStateStoreData item)
     {
+      bool sessionDeleted;
+      MySqlTransaction mySqlTransaction = null;
       try
       {
         using (MySqlConnection conn = new MySqlConnection(connectionString))
@@ -350,15 +411,36 @@ namespace MySql.Web.SessionState
           cmd.Parameters.AddWithValue("@SessionId", id);
           cmd.Parameters.AddWithValue("@ApplicationId", ApplicationId);
           cmd.Parameters.AddWithValue("@LockId", lockId);
-
           conn.Open();
-          cmd.ExecuteNonQuery();
+          mySqlTransaction = conn.BeginTransaction();
+          sessionDeleted = cmd.ExecuteNonQuery() > 0;
+          mySqlTransaction.Commit();
         }
-
+        if (sessionDeleted && this.enableExpireCallback)
+        {
+          this.expireCallback.Invoke(id, item);
+        }
       }
       catch (MySqlException e)
       {
+        if (mySqlTransaction != null)
+        {
+          try
+          {
+            Trace.WriteLine("RemoveItem: Attempt to rollback");
+            mySqlTransaction.Rollback();
+          }
+          catch (MySqlException ex)
+          {
+            HandleMySqlException(ex, "RemoveItem: Rollback Failed");
+          }
+        }
         HandleMySqlException(e, "RemoveItem");
+      }
+      finally
+      {
+        if (mySqlTransaction != null)
+          mySqlTransaction.Dispose();            
       }
     }
 
@@ -370,6 +452,7 @@ namespace MySql.Web.SessionState
     /// <param name="id">The session ID for the current request</param>
     public override void ResetItemTimeout(System.Web.HttpContext context, string id)
     {
+      MySqlTransaction mySqlTransaction = null;
       try
       {
         using (MySqlConnection conn = new MySqlConnection(connectionString))
@@ -382,12 +465,31 @@ namespace MySql.Web.SessionState
           cmd.Parameters.AddWithValue("@SessionId", id);
           cmd.Parameters.AddWithValue("@ApplicationId", ApplicationId);
           conn.Open();
+          mySqlTransaction = conn.BeginTransaction();
           cmd.ExecuteNonQuery();
+          mySqlTransaction.Commit();
         }
       }
       catch (MySqlException e)
       {
+        if (mySqlTransaction != null)
+        {
+          try
+          {
+            Trace.WriteLine("ResetItemTimeout: Attempt to rollback");
+            mySqlTransaction.Rollback();
+          }
+          catch (MySqlException ex)
+          {
+            HandleMySqlException(ex, "ResetItemTimeout: Rollback Failed");
+          }
+        }
         HandleMySqlException(e, "ResetItemTimeout");
+      }
+      finally
+      {
+        if (mySqlTransaction != null)
+          mySqlTransaction.Dispose();      
       }
     }
 
@@ -405,6 +507,8 @@ namespace MySql.Web.SessionState
     /// </param>
     public override void SetAndReleaseItemExclusive(System.Web.HttpContext context, string id, SessionStateStoreData item, object lockId, bool newItem)
     {
+      
+      MySqlTransaction mySqlTransaction = null;
       try
       {
         using (MySqlConnection conn = new MySqlConnection(connectionString))
@@ -448,12 +552,31 @@ namespace MySql.Web.SessionState
           }
 
           conn.Open();
+          mySqlTransaction = conn.BeginTransaction();
           cmd.ExecuteNonQuery();
+          mySqlTransaction.Commit();
         }
       }
       catch (MySqlException e)
       {
+        if (mySqlTransaction != null)
+        {
+          try
+          {
+            Trace.WriteLine("SetAndReleaseItemExclusive: Attempt to rollback");
+            mySqlTransaction.Rollback();
+          }
+          catch (MySqlException ex)
+          {
+            HandleMySqlException(ex, "SetAndReleaseItemExclusive: Rollback Failed");
+          }
+        }
         HandleMySqlException(e, "SetAndReleaseItemExclusive");
+      }
+      finally
+      {
+        if (mySqlTransaction != null)
+          mySqlTransaction.Dispose();
       }
     }
 
@@ -490,12 +613,13 @@ namespace MySql.Web.SessionState
       // Timeout value from the data store.
       int timeout = 0;
 
+      MySqlTransaction mySqlTransaction = null;
+
       try
       {
         using (MySqlConnection conn = new MySqlConnection(connectionString))
         {
-          conn.Open();
-
+          conn.Open();         
           // lockRecord is True when called from GetItemExclusive and
           // False when called from GetItem.
           // Obtain a lock if possible. Ignore the record if it is expired.
@@ -509,7 +633,8 @@ namespace MySql.Web.SessionState
 
             cmd.Parameters.AddWithValue("@SessionId", id);
             cmd.Parameters.AddWithValue("@ApplicationId", ApplicationId);
-
+            
+            mySqlTransaction = conn.BeginTransaction();
             if (cmd.ExecuteNonQuery() == 0)
             {
               // No record was updated because the record was locked or not found.
@@ -520,6 +645,7 @@ namespace MySql.Web.SessionState
               // The record was updated.
               locked = false;
             }
+            mySqlTransaction.Commit();
           }
 
           // Retrieve the current session item information.
@@ -564,17 +690,6 @@ namespace MySql.Web.SessionState
             }
           }
 
-          //If the returned session item is expired,
-          // delete the record from the data source.
-          if (deleteData)
-          {
-            cmd = new MySqlCommand("DELETE FROM my_aspnet_sessions" +
-            " WHERE SessionId = @SessionId AND ApplicationId = @ApplicationId", conn);
-            cmd.Parameters.AddWithValue("@SessionId", id);
-            cmd.Parameters.AddWithValue("@ApplicationId", ApplicationId);
-            cmd.ExecuteNonQuery();
-          }
-
           // The record was not found. Ensure that locked is false.
           if (!foundRecord)
             locked = false;
@@ -594,7 +709,9 @@ namespace MySql.Web.SessionState
             cmd.Parameters.AddWithValue("@SessionId", id);
             cmd.Parameters.AddWithValue("@ApplicationId", ApplicationId);
 
+            mySqlTransaction = conn.BeginTransaction();
             cmd.ExecuteNonQuery();
+            mySqlTransaction.Commit();
 
             // If the actionFlags parameter is not InitializeItem, 
             // deserialize the stored SessionStateItemCollection.
@@ -612,17 +729,39 @@ namespace MySql.Web.SessionState
       catch (MySqlException e)
       {
         HandleMySqlException(e, "GetSessionStoreItem");
+        if (mySqlTransaction != null)
+        {
+          try
+          {
+            Trace.WriteLine("GetSessionStoreItem: Attempt to rollback ");
+            mySqlTransaction.Rollback();
+          }
+          catch (MySqlException ex)
+          {
+            HandleMySqlException(ex, "GetSessionStoreItem: Rollback Failed");
+          }
+        }
+      }
+      finally
+      {
+        if (mySqlTransaction != null)
+          mySqlTransaction.Dispose();      
       }
       return item;
     }
 
     /// <summary>
-    /// This method returns a false value to indicate that callbacks for expired sessions are not supported.
+    /// This method sets the reference for the ExpireCallback delegate if setting is enabled.
     /// </summary>
     /// <param name="expireCallback"></param>
     /// <returns>false </returns>
     public override bool SetItemExpireCallback(SessionStateItemExpireCallback expireCallback)
     {
+      if (this.enableExpireCallback)
+      {
+        this.expireCallback = expireCallback;
+        return true;
+      }
       return false;
     }
 
@@ -668,37 +807,73 @@ namespace MySql.Web.SessionState
           timeout);
     }
 
+    
+    private SessionStateItemCollection DeserializeSessionItems(byte[] serializedItems)
+    {
+      SessionStateItemCollection sessionItems = new SessionStateItemCollection();
+      if (serializedItems != null)
+      {
+        MemoryStream ms = new MemoryStream(serializedItems);
+        if (ms.Length > 0)
+        {
+          BinaryReader reader = new BinaryReader(ms);
+          sessionItems = SessionStateItemCollection.Deserialize(reader);
+        }
+      }
+      return sessionItems;
+    }
+
+
     private void CleanupOldSessions(object o)
     {
-      if (cleanupRunning)
-        return;
+      MySqlTransaction mySqlTransaction = null;
+     
+      lock(this)
+      {
+        if (cleanupRunning)
+          return;
 
-      cleanupRunning = true;
+        cleanupRunning = true;
+      }    
       try
       {
         using (MySqlConnection con = new MySqlConnection(connectionString))
         {
           con.Open();
+          mySqlTransaction = con.BeginTransaction();
           MySqlCommand cmd = new MySqlCommand(
               "UPDATE my_aspnet_sessioncleanup SET LastRun=NOW() where" +
               " LastRun + INTERVAL IntervalMinutes MINUTE < NOW()", con);
-
-          if (cmd.ExecuteNonQuery() > 0)
-          {
-            cmd = new MySqlCommand(
-               "DELETE FROM my_aspnet_sessions WHERE Expires < NOW()",
-               con);
-            cmd.ExecuteNonQuery();
-          }
+          int updatedSessions = cmd.ExecuteNonQuery();
+          mySqlTransaction.Commit();
+          if (updatedSessions > 0)                     
+            DeleteTimedOutSessions();          
         }
       }
       catch (MySqlException e)
       {
         HandleMySqlException(e, "CleanupOldSessions");
+        if (mySqlTransaction != null)
+        {
+          try
+          {
+            Trace.WriteLine("CleanupOldSessions: Attempt to rollback ");
+            mySqlTransaction.Rollback();
+          }
+          catch (MySqlException ex)
+          {
+            HandleMySqlException(ex, "CleanupOldSessions: Rollback Failed");
+          }
+        }
       }
       finally
       {
-        cleanupRunning = false;
+        lock (this)
+        {
+          cleanupRunning = false;
+        }
+        if (mySqlTransaction != null)
+          mySqlTransaction.Dispose();       
       }
     }
 
@@ -756,6 +931,123 @@ namespace MySql.Web.SessionState
       {
         Trace.Write("got exception while checking for engine" + e);
       }
+    }
+
+    private void DeleteTimedOutSessions()
+    {
+      if (this.enableExpireCallback)
+      {
+        DeleteTimedOutSessionsWithCallback();
+      }
+      else
+      {
+        DeleteTimedOutSessionsWithoutCallback();
+      }
+    }
+
+    private void DeleteTimedOutSessionsWithoutCallback()
+    {
+      MySqlTransaction mySqlTransaction = null;
+      try
+      {
+        using (MySqlConnection con = new MySqlConnection(connectionString))
+        {
+          con.Open();
+          mySqlTransaction = con.BeginTransaction();
+          MySqlCommand cmd = new MySqlCommand("DELETE FROM my_aspnet_Sessions WHERE Expires < NOW()", con);
+          cmd.ExecuteNonQuery();
+          mySqlTransaction.Commit();
+        }
+      }
+      catch (Exception e)
+      {
+        Trace.WriteLine(e.ToString());
+        if (mySqlTransaction != null)
+        {
+          try
+          {
+            Trace.WriteLine("DeleteTimedOutSessionsWithoutCallback: Attempt to rollback ");
+            mySqlTransaction.Rollback();
+          }
+          catch (MySqlException ex)
+          {
+            HandleMySqlException(ex, "DeleteTimedOutSessionsWithoutCallback: Rollback Failed");
+          }
+        }
+        Trace.Write("Got exception in Delete Timed Out Sessions With Out Callback " + e);
+        throw;
+      }
+      finally
+      {
+        if (mySqlTransaction != null)
+          mySqlTransaction.Dispose();            
+      }
+    }
+
+    private void DeleteTimedOutSessionsWithCallback()
+    {
+     
+      MySqlTransaction mySqlTransaction = null;
+     
+        using (MySqlConnection con = new MySqlConnection(connectionString))
+        {
+          con.Open();
+          MySqlCommand cmd = new MySqlCommand("SELECT SessionID, SessionItems FROM my_aspnet_Sessions WHERE Expires < NOW()", con);          
+
+          using (MySqlDataReader reader = cmd.ExecuteReader())
+          {
+            while (reader.Read())
+            {
+              string sid = reader.GetString(0);
+              byte[] rawSessionItems = (byte[])reader.GetValue(1);
+
+              SessionStateItemCollection sessionItems = this.DeserializeSessionItems(rawSessionItems);
+              SessionStateStoreData ssd = new SessionStateStoreData(sessionItems, new HttpStaticObjectsCollection(), 0);
+              
+              try
+              {
+                if (this.expireCallback != null)  this.expireCallback.Invoke(sid, ssd);
+
+                using (MySqlConnection con2 = new MySqlConnection(connectionString))
+                {                 
+                  MySqlCommand cmd2 = new MySqlCommand("DELETE FROM my_aspnet_Sessions" +
+                      " WHERE SessionId = @SessionId" +
+                      " AND ApplicationId = @ApplicationId", con2);
+                  cmd2.Parameters.AddWithValue("@SessionId", sid);
+                  cmd2.Parameters.AddWithValue("@ApplicationId", ApplicationId);
+                  con2.Open();
+                  mySqlTransaction = con2.BeginTransaction();
+                  cmd2.ExecuteNonQuery();
+                  mySqlTransaction.Commit();
+                }
+               
+              }
+              catch(Exception e)
+              {
+                Trace.WriteLine(e.ToString());
+                if (mySqlTransaction != null)
+                {
+                  try
+                  {
+                    Trace.WriteLine("DeleteTimedOutSessionsWithCallback: Attempt to rollback ");                    
+                    mySqlTransaction.Rollback();
+                  }
+                  catch (MySqlException ex)
+                  {                                        
+                    HandleMySqlException(ex, "DeleteTimedOutSessionsWithCallback: Rollback Failed");
+                  }
+                }
+                Trace.Write("Got exception in Delete Timed Out Sessions With Callback " + e);
+                throw;
+              }              
+              finally
+              {
+                if (mySqlTransaction != null)
+                  mySqlTransaction.Dispose();              
+              }
+            }
+          }
+       }     
     }
   }
 }
