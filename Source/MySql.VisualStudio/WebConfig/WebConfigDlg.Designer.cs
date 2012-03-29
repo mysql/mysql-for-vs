@@ -41,6 +41,7 @@
       this.nextButton = new System.Windows.Forms.Button();
       this.configPanel = new System.Windows.Forms.Panel();
       this.controlPanel = new System.Windows.Forms.Panel();
+      this.enableExpCallback = new System.Windows.Forms.CheckBox();
       this.advancedBtn = new System.Windows.Forms.Button();
       this.useProvider = new System.Windows.Forms.CheckBox();
       this.pageLabel = new System.Windows.Forms.Label();
@@ -134,7 +135,7 @@
       // cancelButton
       // 
       this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-      this.cancelButton.Location = new System.Drawing.Point(400, 291);
+      this.cancelButton.Location = new System.Drawing.Point(400, 293);
       this.cancelButton.Name = "cancelButton";
       this.cancelButton.Size = new System.Drawing.Size(81, 25);
       this.cancelButton.TabIndex = 2;
@@ -143,7 +144,7 @@
       // 
       // nextButton
       // 
-      this.nextButton.Location = new System.Drawing.Point(313, 291);
+      this.nextButton.Location = new System.Drawing.Point(313, 293);
       this.nextButton.Name = "nextButton";
       this.nextButton.Size = new System.Drawing.Size(81, 25);
       this.nextButton.TabIndex = 1;
@@ -157,12 +158,13 @@
       this.configPanel.Controls.Add(this.useProvider);
       this.configPanel.Location = new System.Drawing.Point(2, 58);
       this.configPanel.Name = "configPanel";
-      this.configPanel.Size = new System.Drawing.Size(492, 223);
+      this.configPanel.Size = new System.Drawing.Size(492, 225);
       this.configPanel.TabIndex = 8;
       this.configPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.configPanel_Paint);
       // 
       // controlPanel
       // 
+      this.controlPanel.Controls.Add(this.enableExpCallback);
       this.controlPanel.Controls.Add(this.label1);
       this.controlPanel.Controls.Add(this.advancedBtn);
       this.controlPanel.Controls.Add(this.connectionString);
@@ -175,12 +177,22 @@
       this.controlPanel.Controls.Add(this.label3);
       this.controlPanel.Location = new System.Drawing.Point(3, 31);
       this.controlPanel.Name = "controlPanel";
-      this.controlPanel.Size = new System.Drawing.Size(486, 169);
+      this.controlPanel.Size = new System.Drawing.Size(486, 186);
       this.controlPanel.TabIndex = 11;
+      // 
+      // enableExpCallback
+      // 
+      this.enableExpCallback.AutoSize = true;
+      this.enableExpCallback.Location = new System.Drawing.Point(114, 157);
+      this.enableExpCallback.Name = "enableExpCallback";
+      this.enableExpCallback.Size = new System.Drawing.Size(171, 17);
+      this.enableExpCallback.TabIndex = 7;
+      this.enableExpCallback.Text = "Callback for session end event";
+      this.enableExpCallback.UseVisualStyleBackColor = true;
       // 
       // advancedBtn
       // 
-      this.advancedBtn.Location = new System.Drawing.Point(309, 129);
+      this.advancedBtn.Location = new System.Drawing.Point(395, 153);
       this.advancedBtn.Name = "advancedBtn";
       this.advancedBtn.Size = new System.Drawing.Size(81, 25);
       this.advancedBtn.TabIndex = 6;
@@ -216,7 +228,7 @@
       this.pictureBox1.Image = global::MySql.Data.VisualStudio.Properties.Resources.bannrbmp;
       this.pictureBox1.Location = new System.Drawing.Point(0, 0);
       this.pictureBox1.Name = "pictureBox1";
-      this.pictureBox1.Size = new System.Drawing.Size(493, 58);
+      this.pictureBox1.Size = new System.Drawing.Size(495, 58);
       this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
       this.pictureBox1.TabIndex = 10;
       this.pictureBox1.TabStop = false;
@@ -234,7 +246,7 @@
       // 
       // backButton
       // 
-      this.backButton.Location = new System.Drawing.Point(226, 291);
+      this.backButton.Location = new System.Drawing.Point(226, 293);
       this.backButton.Name = "backButton";
       this.backButton.Size = new System.Drawing.Size(81, 25);
       this.backButton.TabIndex = 0;
@@ -247,7 +259,7 @@
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.CancelButton = this.cancelButton;
-      this.ClientSize = new System.Drawing.Size(493, 331);
+      this.ClientSize = new System.Drawing.Size(495, 329);
       this.Controls.Add(this.backButton);
       this.Controls.Add(this.pageDesc);
       this.Controls.Add(this.pageLabel);
@@ -292,5 +304,6 @@
     private System.Windows.Forms.CheckBox useProvider;
     private System.Windows.Forms.Button backButton;
     private System.Windows.Forms.Panel controlPanel;
+    private System.Windows.Forms.CheckBox enableExpCallback;
   }
 }
