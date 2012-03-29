@@ -37,6 +37,7 @@ namespace MySql.Data.VisualStudio.WebConfig
     public bool AutoGenSchema;
     public string ConnectionStringName;
     public string ConnectionString;
+    public bool EnableExpireCallback;
   }
 
   internal abstract class GenericConfig
@@ -71,6 +72,7 @@ namespace MySql.Data.VisualStudio.WebConfig
       defaults.AppDescription = GetStringValue(p.Parameters["description"]);
       defaults.AutoGenSchema = GetBoolValue(p.Parameters["autogenerateschema"], false);
       defaults.WriteExceptionToLog = GetBoolValue(p.Parameters["writeExceptionsToEventLog"], false);
+      defaults.EnableExpireCallback = GetBoolValue(p.Parameters["enableExpireCallback"], false);
     }
 
     protected string GetStringValue(string s)
@@ -115,6 +117,8 @@ namespace MySql.Data.VisualStudio.WebConfig
           values.WriteExceptionToLog = GetBoolValue(e.GetAttribute("writeExceptionsToEventLog"), false);
         if (e.HasAttribute("autogenerateschema"))
           values.AutoGenSchema = GetBoolValue(e.GetAttribute("autogenerateschema"), false);
+        if (e.HasAttribute("enableExpireCallback"))
+          values.EnableExpireCallback = GetBoolValue(e.GetAttribute("enableExpireCallback"), false);
       }
       values.ConnectionString = wc.GetConnectionString(values.ConnectionStringName);
       Enabled = OriginallyEnabled = DefaultProvider != null &&
@@ -130,6 +134,7 @@ namespace MySql.Data.VisualStudio.WebConfig
       provider.SetAttribute("connectionStringName", values.ConnectionStringName);
       provider.SetAttribute("writeExceptionsToEventLog", values.WriteExceptionToLog.ToString());
       provider.SetAttribute("autogenerateschema", values.AutoGenSchema.ToString());
+      provider.SetAttribute("enableExpireCallback", values.EnableExpireCallback.ToString());
     }
 
     public virtual void Save(WebConfig wc)
