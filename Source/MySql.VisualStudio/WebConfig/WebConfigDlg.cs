@@ -124,7 +124,7 @@ namespace MySql.Data.VisualStudio.WebConfig
       pages[3].Title = "Session State";
       pages[3].Description = "Set options for use with the session state provider";
       pages[3].EnabledString = "Use MySQL to manage my ASP.Net session state";
-      pages[3].ProviderConfig = new SessionStateConfig();
+      pages[3].ProviderConfig = new SessionStateConfig();      
     }
 
     private void advancedBtn_Click(object sender, EventArgs e)
@@ -186,6 +186,7 @@ namespace MySql.Data.VisualStudio.WebConfig
       o.AppDescription = appDescription.Text.Trim();
       o.WriteExceptionToLog = writeExToLog.Checked;
       o.AutoGenSchema = autogenSchema.Checked;
+      o.EnableExpireCallback = enableExpCallback.Checked;
       o.ConnectionString = connectionString.Text.Trim();
       config.GenericOptions = o;
       return true;
@@ -204,11 +205,13 @@ namespace MySql.Data.VisualStudio.WebConfig
       appDescription.Text = o.AppDescription;
       writeExToLog.Checked = o.WriteExceptionToLog;
       autogenSchema.Checked = o.AutoGenSchema;
+      enableExpCallback.Checked = o.EnableExpireCallback;
       controlPanel.Enabled = config.Enabled;
       connectionString.Text = o.ConnectionString;
 
       advancedBtn.Visible = page == 0;
       writeExToLog.Visible = page != 2;
+      enableExpCallback.Visible = page == 3;
       nextButton.Text = (page == pages.Length - 1) ? "Finish" : "Next";
       backButton.Enabled = page > 0;
     }
@@ -244,6 +247,7 @@ namespace MySql.Data.VisualStudio.WebConfig
       config.Enabled = useProvider.Checked;
       controlPanel.Enabled = config.Enabled;
     }
+
   }
 
   internal struct WizardPage
