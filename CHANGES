@@ -1,3 +1,4 @@
+
 - Made MySqlDateTime serializable (MySQL bug #40555, Oracle bug #11750161).
 - Return datetime values for timestamp fields as DateTimeKind.Local (MySQL bug #63812, Oracle bug #13591554)
 - Fix for "Connector/Net Generates Incorrect SELECT Clause after UPDATE" (MySql bug #62134, Oracle bug #13491689). 
@@ -27,6 +28,7 @@
 - Fix for Duplicate table name don't allow you to change table name (Oracle bug #13785918).
 - Fix for CommandText property set method performance improvement (MySql bug #64012, Oracle bug #13739383).
 - Fix for Foreign Keys not imported in Entity Model Wizard (Oracle bug #13800109).
+- Fix for ArgumentNull exception when using Take().Count() in a LINQ to Entities query (bug MySql #64749, Oracle bug #13913047).
 
 Version 6.3.8
 - Modified ProviderManifest.xml to map TIMESTAMP db fields to the DateTime .NET type (MySQL bug #55351, Oracle bug #12652602).
