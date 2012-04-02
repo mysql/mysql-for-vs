@@ -138,9 +138,9 @@ namespace MySql.Data.Entity
 
       List<ColumnFragment> columns = GetDefaultColumnsForFragment(From);
       bool Exists = false;
-      if (From is TableFragment && scope.GetFragment((From as TableFragment).Name) == null)
+      if (From is TableFragment && scope.GetFragment((From as TableFragment).Table) == null)
       {
-        scope.Add((From as TableFragment).Name, From);
+        scope.Add((From as TableFragment).Table, From);
         Exists = true;
       }
 
