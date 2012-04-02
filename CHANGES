@@ -1,3 +1,6 @@
+
+- Fix for ArgumentNull exception when using Take().Count() in a LINQ to Entities query (bug MySql #64749, Oracle bug #13913047).
+
 6.5.4
 - Fix for Duplicate table name don't allow you to change table name (Oracle bug #13785918).
 - Fix for Comment turns green the whole line (Oracle bug #13613856).
