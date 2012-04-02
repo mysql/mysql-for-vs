@@ -121,5 +121,18 @@ namespace MySql.Data.Entity.Tests
           Assert.AreEqual(dt.Rows[i++]["Name"], c.Name);
       }
     }
+
+    /// <summary>
+    /// Tests fix for bug #64749 - Entity Framework - Take().Count() fails with EntityCommandCompilationException.
+    /// </summary>
+    [Test]
+    public void TakeWithCount()
+    {
+      using (testEntities context = new testEntities())
+      {
+        int cnt = context.Companies.Take(2).Count();
+        Assert.AreEqual(2, cnt);
+      }
+    }
   }
 }
