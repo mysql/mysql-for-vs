@@ -1,1 +1,2 @@
 6.6.0
+- Fix for ArgumentNull exception when using Take().Count() in a LINQ to Entities query (bug MySql #64749, Oracle bug #13913047).
