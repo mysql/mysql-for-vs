@@ -299,5 +299,17 @@ namespace MySql.Data.VisualStudio.DbObjects
     }
 
     #endregion
+
+    internal void ResetProperties()
+    {
+      Collation = "";
+      CharacterSet = "";
+      AutoIncrement = false;
+      DefaultValue = "";
+      IsUnsigned = false;
+      IsZerofill = false;
+      Precision = 0;
+      Scale = 0;
+    }
   }
 }

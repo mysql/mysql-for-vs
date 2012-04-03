@@ -29,6 +29,7 @@
 - Fix for CommandText property set method performance improvement (MySql bug #64012, Oracle bug #13739383).
 - Fix for Foreign Keys not imported in Entity Model Wizard (Oracle bug #13800109).
 - Fix for ArgumentNull exception when using Take().Count() in a LINQ to Entities query (bug MySql #64749, Oracle bug #13913047).
+- Fix for type varchar changed to bit when saving in Table Designer (Oracle bug #13916560).
 
 Version 6.3.8
 - Modified ProviderManifest.xml to map TIMESTAMP db fields to the DateTime .NET type (MySQL bug #55351, Oracle bug #12652602).
