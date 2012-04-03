@@ -32,6 +32,7 @@ using System.ComponentModel;
 using Microsoft.VisualStudio.OLE.Interop;
 using MySql.Data.VisualStudio.DbObjects;
 using System.Runtime.InteropServices;
+using System.Reflection;
 using System.ComponentModel.Design;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio;
@@ -439,7 +440,18 @@ namespace MySql.Data.VisualStudio
 
     private void tbDataType_TextChanged(object sender, EventArgs e)
     {
-      tableNode.Table.Columns[columnGrid.CurrentRow.Index].DataType = ((DataGridViewComboBoxEditingControl)sender).Text;
+      Column c = tableNode.Table.Columns[columnGrid.CurrentRow.Index];
+      string oldType = c.DataType;
+      string newType = ((DataGridViewComboBoxEditingControl)sender).Text;
+      if (!string.IsNullOrEmpty(newType))
+      {
+        c.DataType = newType;
+        if (oldType != c.DataType)
+        {
+          // Reset properties, since some may not make sense after change of type.
+          c.ResetProperties();
+        }
+      }
     }
 
     private void columnBindingSource_CurrentChanged(object sender, EventArgs e)
@@ -482,7 +494,7 @@ namespace MySql.Data.VisualStudio
         types.AddRange(Metadata.GetDataTypes(false));
         if (types.Contains(typeToAdd.ToLowerInvariant()))
         {
-          TypeColumn.Items.Add(type);
+          TypeColumn.Items.Add(type);          
         }
         else
         {
@@ -493,8 +505,7 @@ namespace MySql.Data.VisualStudio
           columnGrid.BeginEdit(true);
           return;
         }
-      }
-
+      }      
       columnGrid.CurrentCell.Value = e.FormattedValue;
     }
 
@@ -544,7 +555,16 @@ namespace MySql.Data.VisualStudio
     {
       if (columnGrid.IsCurrentCellDirty)
       {
-        columnGrid.CommitEdit(DataGridViewDataErrorContexts.Commit);
+        DataGridViewCell c = columnGrid.CurrentCell;
+        DataGridViewCellValidatingEventArgs args = 
+          (DataGridViewCellValidatingEventArgs) typeof(DataGridViewCellValidatingEventArgs).GetConstructor(
+          BindingFlags.NonPublic | BindingFlags.Instance,
+          null, new Type[] { typeof(int), typeof(int), typeof(object) }, null).Invoke(new object[] { c.ColumnIndex, c.RowIndex, c.Value });
+        columnGrid_CellValidating(columnGrid, args);
+        if (!args.Cancel)
+        {
+          columnGrid.CommitEdit(DataGridViewDataErrorContexts.Commit);
+        }
       }
     }
 

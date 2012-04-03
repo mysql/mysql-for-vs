@@ -1,2 +1,3 @@
 6.6.0
 - Fix for ArgumentNull exception when using Take().Count() in a LINQ to Entities query (bug MySql #64749, Oracle bug #13913047).
+- Fix for type varchar changed to bit when saving in Table Designer (Oracle bug #13916560).
