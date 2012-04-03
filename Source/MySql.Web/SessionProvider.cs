@@ -183,8 +183,7 @@ namespace MySql.Web.SessionState
         {
           conn.Open();
           app.EnsureId(conn);
-          CheckStorageEngine(conn);
-          cleanupInterval = GetCleanupInterval(conn);
+          CheckStorageEngine(conn);         
         }
       }
       catch (MySqlException e)
@@ -192,6 +191,49 @@ namespace MySql.Web.SessionState
         HandleMySqlException(e, "Initialize");
       }
 
+      // Add  cleanup interval
+      MySqlTransaction mySqlTransaction = null;
+      try
+      {
+        using (MySqlConnection conn = new MySqlConnection(connectionString))
+        {
+          MySqlCommand cmd = new MySqlCommand(
+              "INSERT IGNORE INTO my_aspnet_sessioncleanup SET" +
+              " ApplicationId = @ApplicationId, " +
+              " LastRun = NOW(), " +
+              " IntervalMinutes = 10",
+             conn);
+          cmd.Parameters.AddWithValue("@ApplicationId", ApplicationId);
+          conn.Open();
+          mySqlTransaction = conn.BeginTransaction();
+          cmd.ExecuteNonQuery();
+          mySqlTransaction.Commit();
+          cleanupInterval = GetCleanupInterval(conn, ApplicationId);
+        }
+      }
+      catch (MySqlException e)
+      {
+        if (mySqlTransaction != null)
+        {
+          try
+          {
+            Trace.WriteLine("Initialize: Attempt to rollback");
+            mySqlTransaction.Rollback();
+          }
+          catch (MySqlException ex)
+          {
+            HandleMySqlException(ex, "Initialize: Rollback Failed");
+          }
+        }
+        HandleMySqlException(e, "Initialize");
+      }
+      finally
+      {
+        if (mySqlTransaction != null)
+          mySqlTransaction.Dispose();
+      }
+
+   
       // Setup the cleanup timer
       if (cleanupInterval <= 0)
         cleanupInterval = 1;
@@ -842,8 +884,9 @@ namespace MySql.Web.SessionState
           con.Open();
           mySqlTransaction = con.BeginTransaction();
           MySqlCommand cmd = new MySqlCommand(
-              "UPDATE my_aspnet_sessioncleanup SET LastRun=NOW() where" +
-              " LastRun + INTERVAL IntervalMinutes MINUTE < NOW()", con);
+              "UPDATE my_aspnet_sessioncleanup SET LastRun=NOW() WHERE" +
+              " LastRun + INTERVAL IntervalMinutes MINUTE < NOW() AND ApplicationId = @ApplicationId", con);
+          cmd.Parameters.AddWithValue("@ApplicationId", ApplicationId);
           int updatedSessions = cmd.ExecuteNonQuery();
           mySqlTransaction.Commit();
           if (updatedSessions > 0)                     
@@ -877,9 +920,10 @@ namespace MySql.Web.SessionState
       }
     }
 
-    int GetCleanupInterval(MySqlConnection con)
+    int GetCleanupInterval(MySqlConnection con, int ApplicationId)
     {
-      MySqlCommand cmd = new MySqlCommand("SELECT IntervalMinutes from my_aspnet_sessioncleanup", con);
+      MySqlCommand cmd = new MySqlCommand("SELECT IntervalMinutes from my_aspnet_sessioncleanup where ApplicationId = @ApplicationId", con);
+      cmd.Parameters.AddWithValue("@ApplicationId", ApplicationId);
       return (int)cmd.ExecuteScalar();
     }
 
@@ -954,7 +998,8 @@ namespace MySql.Web.SessionState
         {
           con.Open();
           mySqlTransaction = con.BeginTransaction();
-          MySqlCommand cmd = new MySqlCommand("DELETE FROM my_aspnet_Sessions WHERE Expires < NOW()", con);
+          MySqlCommand cmd = new MySqlCommand("DELETE FROM my_aspnet_Sessions WHERE Expires < NOW() AND ApplicationId = @ApplicationId", con);          
+          cmd.Parameters.AddWithValue("@ApplicationId", ApplicationId);
           cmd.ExecuteNonQuery();
           mySqlTransaction.Commit();
         }
@@ -992,7 +1037,8 @@ namespace MySql.Web.SessionState
         using (MySqlConnection con = new MySqlConnection(connectionString))
         {
           con.Open();
-          MySqlCommand cmd = new MySqlCommand("SELECT SessionID, SessionItems FROM my_aspnet_Sessions WHERE Expires < NOW()", con);          
+          MySqlCommand cmd = new MySqlCommand("SELECT SessionID, SessionItems FROM my_aspnet_Sessions WHERE Expires < NOW() AND ApplicationId = @ApplicationId", con);          
+          cmd.Parameters.AddWithValue("@ApplicationId", ApplicationId);
 
           using (MySqlDataReader reader = cmd.ExecuteReader())
           {
