@@ -1,4 +1,5 @@
 
+
 - Made MySqlDateTime serializable (MySQL bug #40555, Oracle bug #11750161).
 - Return datetime values for timestamp fields as DateTimeKind.Local (MySQL bug #63812, Oracle bug #13591554)
 - Fix for "Connector/Net Generates Incorrect SELECT Clause after UPDATE" (MySql bug #62134, Oracle bug #13491689). 
@@ -29,6 +30,7 @@
 - Fix for CommandText property set method performance improvement (MySql bug #64012, Oracle bug #13739383).
 - Fix for Foreign Keys not imported in Entity Model Wizard (Oracle bug #13800109).
 - Fix for ArgumentNull exception when using Take().Count() in a LINQ to Entities query (bug MySql #64749, Oracle bug #13913047).
+- Fix for type varchar changed to bit when saving in Table Designer (Oracle bug #13916560).
 
 6.4.5
 - Fix for bug on Create Table via Server Explorer. The columns properties are now added in the correct order.(Oracle db Bug # 13475830).
