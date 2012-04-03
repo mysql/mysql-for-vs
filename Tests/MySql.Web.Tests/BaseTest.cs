@@ -77,7 +77,7 @@ namespace MySql.Web.Tests
         if (ex.Number == 1050 && version == 7)
         {
           // Schema7 performs several renames of tables to their lowercase representation. 
-          // If the current server OS does not support renaming to lowercase, then let's just continue.
+          // If the current server OS does not support renaming to lowercase, then let's just continue.          
           script.Query = "UPDATE my_aspnet_schemaversion SET version=7";
           script.Execute();
         }

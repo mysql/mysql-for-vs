@@ -34,13 +34,13 @@ namespace MySql.Web.Tests
     }
 
 
-    private void CreateSessionData()
+    private void CreateSessionData(int AppId, DateTime timeCreated)
     {
       MySqlCommand cmd = new MySqlCommand();        
       strSessionID = System.Guid.NewGuid().ToString();
      
-      DateTime now = DateTime.Now;
-      DateTime lastHour = now.Subtract(new TimeSpan(1, 0, 0));
+      //DateTime now = DateTime.Now;
+      //DateTime lastHour = now.Subtract(new TimeSpan(1, 0, 0));
            
       SessionStateItemCollection collection = new SessionStateItemCollection();
       collection["FirstName"] = "Some";
@@ -53,10 +53,10 @@ namespace MySql.Web.Tests
  
       cmd = new MySqlCommand(sql, conn);
       cmd.Parameters.AddWithValue("@sessionId", strSessionID);
-      cmd.Parameters.AddWithValue("@appId", 1);
-      cmd.Parameters.AddWithValue("@created", lastHour);
-      cmd.Parameters.AddWithValue("@expires", lastHour);
-      cmd.Parameters.AddWithValue("@lockdate", lastHour);
+      cmd.Parameters.AddWithValue("@appId", AppId);
+      cmd.Parameters.AddWithValue("@created", timeCreated);
+      cmd.Parameters.AddWithValue("@expires", timeCreated);
+      cmd.Parameters.AddWithValue("@lockdate", timeCreated);
       cmd.Parameters.AddWithValue("@lockid", 1);
       cmd.Parameters.AddWithValue("@timeout", 1);
       cmd.Parameters.AddWithValue("@locked", 0);
@@ -64,19 +64,29 @@ namespace MySql.Web.Tests
       cmd.Parameters.AddWithValue("@flags", 0);
       cmd.ExecuteNonQuery();
 
-      // set our last run table to 1 hour ago
-      cmd.CommandText = "UPDATE my_aspnet_sessioncleanup SET LastRun=@lastHour";
+      //create new row on sessioncleanup table
+      cmd.CommandText = "INSERT IGNORE INTO my_aspnet_sessioncleanup SET" +
+              " ApplicationId = @ApplicationId, " +
+              " LastRun = NOW(), " +
+              " IntervalMinutes = 10";
       cmd.Parameters.Clear();
-      cmd.Parameters.AddWithValue("@lastHour", lastHour);
+      cmd.Parameters.AddWithValue("@ApplicationId", AppId);
+      cmd.ExecuteNonQuery();
+
+      // set our last run table to 1 hour ago
+      cmd.CommandText = "UPDATE my_aspnet_sessioncleanup SET LastRun=@lastHour WHERE ApplicationId = @ApplicationId";
+      cmd.Parameters.Clear();
+      cmd.Parameters.AddWithValue("@lastHour", timeCreated);
+      cmd.Parameters.AddWithValue("@ApplicationId", AppId);
       cmd.ExecuteNonQuery();
     }
 
 
     private void SetSessionItemExpiredCallback(bool includeCallback)
     {
-
       calledId = null;
-      CreateSessionData();
+            
+      CreateSessionData(1, DateTime.Now.Subtract(new TimeSpan(1, 0, 0)));
 
       MySqlSessionStateStore session = new MySqlSessionStateStore();
 
@@ -117,6 +127,27 @@ namespace MySql.Web.Tests
       Assert.AreNotEqual(strSessionID, calledId);
       Assert.AreEqual(0, CountSessions());
     }
-  
+
+    [Test]
+    public void DeleteSessionAppSpecific()
+    {
+      // create two sessions of different appId
+      // it should delete only 1
+      CreateSessionData(1, DateTime.Now.Subtract(new TimeSpan(1, 0, 0)));      
+      CreateSessionData(2, DateTime.Now.Subtract(new TimeSpan(1, 0, 0)));      
+
+      MySqlSessionStateStore session = new MySqlSessionStateStore();
+
+      NameValueCollection config = new NameValueCollection();
+      config.Add("connectionStringName", "LocalMySqlServer");
+      config.Add("applicationName", "/");
+      config.Add("enableExpireCallback", "false" );
+      session.Initialize("SessionTests", config);
+      Thread.Sleep(1000);
+      session.Dispose();
+
+      Assert.AreEqual(1, (long)MySqlHelper.ExecuteScalar(conn, "SELECT Count(*) FROM my_aspnet_sessions;"));
+
+    }
   }
 }
