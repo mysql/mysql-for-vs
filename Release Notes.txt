@@ -19,9 +19,9 @@ What we know is broken
 - The Generated Database Wizard will save the file with the extension .sql.  You will need to
   manually change the extension to .mysql to use the new editor.
 
-What we changed in 6.3.7
+What we changed in 6.3
 ------------------------
-We introduced a slight change in behavior with 6.3.7.  We did this as part of a larger change to address a performance
+We introduced a slight change in behavior starting with 6.3.7.  We did this as part of a larger change to address a performance
 issue.  It's a relatively minor change in behavior however we encourage you to read this section carefully and review your 
 application for areas that might be affected.
 
