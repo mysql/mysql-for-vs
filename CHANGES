@@ -1,5 +1,20 @@
 
 
+6.4.5
+- Fix for bug on Create Table via Server Explorer. The columns properties are now added in the correct order.(Oracle db Bug # 13475830).
+- Fix for error when creating a table in table designer (Oracle bug #13477805).
+- Fixed installer to install for all users (per machine installation) (Oracle bug #13447941) 
+- Fix for cannot delete a foreign key (Oracle bug #13481362).
+- Fix for Non default options for On update & on cascade for foreign keys, don't work (Oracle bug #13481348).
+- Fix for bug on Create Index via Server Explorer. The columns added in descending sort order were not included in the index. This atribute
+  is parse by the server but ommited until the moment of the implementation. (Reference http://dev.mysql.com/doc/refman/5.0/en/create-index.html)
+  An index_col_name specification can end with ASC or DESC. These keywords are permitted for future extensions for specifying ascending or descending 
+  index value storage. Currently, they are parsed but ignored; index values are always stored in ascending order.  (Oracle db Bug # 13481709).
+- Fix for bug on Create Index via Server Explorer. Comment property and Index type were not added in the definition of the Index. (Oracle db bug # 13481314).  
+- Fix bug on Delete Index via VS Table Designer. Removed method was not affecting the Indexes List of the Table object. (Oracle db bug # 13481313 ).
+  This fix updates the Delete method on TableIndexDialog Class to correctly update the list of Indexes of the table object.
+- Fix for no default type for new columns in table designer (Oracle bug #13481298).
+- Added support the new millseconds format from 5.6 (WL http://wl.no.oracle.com/worklog/.NET-Sprint/index.pl?tid=6078).
 - Made MySqlDateTime serializable (MySQL bug #40555, Oracle bug #11750161).
 - Return datetime values for timestamp fields as DateTimeKind.Local (MySQL bug #63812, Oracle bug #13591554)
 - Fix for "Connector/Net Generates Incorrect SELECT Clause after UPDATE" (MySql bug #62134, Oracle bug #13491689). 
@@ -31,22 +46,6 @@
 - Fix for Foreign Keys not imported in Entity Model Wizard (Oracle bug #13800109).
 - Fix for ArgumentNull exception when using Take().Count() in a LINQ to Entities query (bug MySql #64749, Oracle bug #13913047).
 - Fix for type varchar changed to bit when saving in Table Designer (Oracle bug #13916560).
-
-6.4.5
-- Fix for bug on Create Table via Server Explorer. The columns properties are now added in the correct order.(Oracle db Bug # 13475830).
-- Fix for error when creating a table in table designer (Oracle bug #13477805).
-- Fixed installer to install for all users (per machine installation) (Oracle bug #13447941) 
-- Fix for cannot delete a foreign key (Oracle bug #13481362).
-- Fix for Non default options for On update & on cascade for foreign keys, don't work (Oracle bug #13481348).
-- Fix for bug on Create Index via Server Explorer. The columns added in descending sort order were not included in the index. This atribute
-  is parse by the server but ommited until the moment of the implementation. (Reference http://dev.mysql.com/doc/refman/5.0/en/create-index.html)
-  An index_col_name specification can end with ASC or DESC. These keywords are permitted for future extensions for specifying ascending or descending 
-  index value storage. Currently, they are parsed but ignored; index values are always stored in ascending order.  (Oracle db Bug # 13481709).
-- Fix for bug on Create Index via Server Explorer. Comment property and Index type were not added in the definition of the Index. (Oracle db bug # 13481314).  
-- Fix bug on Delete Index via VS Table Designer. Removed method was not affecting the Indexes List of the Table object. (Oracle db bug # 13481313 ).
-  This fix updates the Delete method on TableIndexDialog Class to correctly update the list of Indexes of the table object.
-- Fix for no default type for new columns in table designer (Oracle bug #13481298).
-- Added support the new millseconds format from 5.6 (WL http://wl.no.oracle.com/worklog/.NET-Sprint/index.pl?tid=6078).
 
 6.4.4
 - Configured DataGridView to use VirtualMode and added some required events, so it can save back 
