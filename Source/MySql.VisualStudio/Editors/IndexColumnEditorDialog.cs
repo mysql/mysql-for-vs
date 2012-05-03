@@ -166,7 +166,8 @@ namespace MySql.Data.VisualStudio.Editors
       Table t = index.Table;
       IndexColumnEditorDialog dlg = new IndexColumnEditorDialog(ic);
       DialogResult result = dlg.ShowDialog();
-      if (index.Type != IndexType.Primary) return value;
+      if (index.Type != IndexType.Primary)
+        return value;
       foreach (Column c in t.Columns)
         c.PrimaryKey = false;
       foreach (IndexColumn i in ic)
