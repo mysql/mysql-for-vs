@@ -89,5 +89,11 @@ namespace MySql.Data.VisualStudio.Editors
         index = 0;
       indexList.SelectedIndex = index;
     }
+
+    private void indexProps_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+    {
+      if (e.ChangedItem.PropertyDescriptor.Name == "Name")
+        indexList.Items[indexList.SelectedIndex] = e.ChangedItem.Value;
+    }
   }
 }

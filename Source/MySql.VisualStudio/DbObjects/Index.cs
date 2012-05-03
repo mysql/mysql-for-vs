@@ -35,6 +35,7 @@ namespace MySql.Data.VisualStudio.DbObjects
     List<IndexColumn> indexColumns = new List<IndexColumn>();
     bool isNew;
     Index oldIndex;
+    private enum PropertyDescriptorStyles { Add, AddReadOnly, Skip };
 
     private Index(Table t)
     {
@@ -70,8 +71,7 @@ namespace MySql.Data.VisualStudio.DbObjects
       FullText = type == "FULLTEXT";
       Spatial = type == "SPATIAL";
 
-      string[] restrictions =
-          new string[5] { null, table.OwningNode.Database, table.Name, Name, null };
+      string[] restrictions = new string[5] { null, table.OwningNode.Database, table.Name, Name, null };
       DataTable dt = table.OwningNode.GetSchema("IndexColumns", restrictions);
       foreach (DataRow row in dt.Rows)
       {
@@ -89,7 +89,7 @@ namespace MySql.Data.VisualStudio.DbObjects
       }
 
       if (IsPrimary)
-        Type = IndexType.Key;
+        Type = IndexType.Primary;
 
       //KeyBlockSize
       //Parser
@@ -133,11 +133,15 @@ namespace MySql.Data.VisualStudio.DbObjects
 
     private IndexType _indexType;
     [Category("(General)")]
-    [Description("Specifies if this object is an index or key")]
+    [Description("Specifies if this object is an index or primary key")]
     public IndexType Type
     {
       get { return _indexType; }
-      set { _indexType = value; }
+      set
+      { 
+        _indexType = value;
+        _isPrimary = (_indexType == IndexType.Primary);
+      }
     }
 
     private bool _isUnique;
@@ -260,40 +264,52 @@ namespace MySql.Data.VisualStudio.DbObjects
 
     public PropertyDescriptorCollection GetProperties(Attribute[] attributes)
     {
-      PropertyDescriptorCollection coll =
-          TypeDescriptor.GetProperties(this, attributes, true);
-
+      PropertyDescriptorCollection coll = TypeDescriptor.GetProperties(this, attributes, true);
       List<PropertyDescriptor> props = new List<PropertyDescriptor>();
+      PropertyDescriptorStyles setStyle;
 
       foreach (PropertyDescriptor pd in coll)
       {
-        if (!pd.IsBrowsable) continue;
+        if (!pd.IsBrowsable)
+          continue;
 
-        if (pd.Name == "IsUnique" || pd.Name == "Name" || pd.Name == "Type")
+        if (this.isNew)
+          setStyle = PropertyDescriptorStyles.Add;
+        else
         {
-          if (IsPrimary)
+          switch (pd.Name)
           {
+            case "Type":
+              setStyle = PropertyDescriptorStyles.AddReadOnly;
+              break;
+            case "IsUnique":
+            case "Name":
+              setStyle = (IsPrimary ? PropertyDescriptorStyles.AddReadOnly : PropertyDescriptorStyles.Add);
+              break;
+            case "FullText":
+              setStyle = (Spatial || String.Compare(table.Engine, "myisam", true) != 0 ? PropertyDescriptorStyles.AddReadOnly : PropertyDescriptorStyles.Skip);
+              break;
+            case "Spatial":
+              setStyle = (FullText || String.Compare(table.Engine, "myisam", true) != 0 ? PropertyDescriptorStyles.AddReadOnly : PropertyDescriptorStyles.Skip);
+              break;
+            default:
+              setStyle = PropertyDescriptorStyles.Add;
+              break;
+          }
+        }
+
+        switch (setStyle)
+        {
+          case PropertyDescriptorStyles.Add:
+            props.Add(pd);
+            break;
+          case PropertyDescriptorStyles.AddReadOnly:
             CustomPropertyDescriptor newPd = new CustomPropertyDescriptor(pd);
             newPd.SetReadOnly(true);
             props.Add(newPd);
-          }
+            break;
+          // when PropertyDescriptorStyles.Skip nothing is added to the props list.
         }
-        else if (pd.Name == "FullText" && (Spatial ||
-                 String.Compare(table.Engine, "myisam", true) != 0))
-        {
-          CustomPropertyDescriptor newPd = new CustomPropertyDescriptor(pd);
-          newPd.SetReadOnly(true);
-          props.Add(newPd);
-        }
-        else if (pd.Name == "Spatial" && (FullText ||
-                 String.Compare(table.Engine, "myisam", true) != 0))
-        {
-          CustomPropertyDescriptor newPd = new CustomPropertyDescriptor(pd);
-          newPd.SetReadOnly(true);
-          props.Add(newPd);
-        }
-        else
-          props.Add(pd);
       }
       return new PropertyDescriptorCollection(props.ToArray());
     }
@@ -434,7 +450,7 @@ namespace MySql.Data.VisualStudio.DbObjects
 
   enum IndexType
   {
-    Index, Key, Primary
+    Index, Primary
   }
 
   enum IndexUsingType

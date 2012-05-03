@@ -92,6 +92,7 @@
       this.indexProps.Size = new System.Drawing.Size(317, 304);
       this.indexProps.TabIndex = 10;
       this.indexProps.ToolbarVisible = false;
+      this.indexProps.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.indexProps_PropertyValueChanged);
       // 
       // TableIndexDialog
       // 
