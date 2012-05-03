@@ -1,6 +1,8 @@
 
 - Fix for ArgumentNull exception when using Take().Count() in a LINQ to Entities query (bug MySql #64749, Oracle bug #13913047).
 - Fix for type varchar changed to bit when saving in Table Designer (Oracle bug #13916560).
+- Fix for error when trying to change the name of an Index on the Indexes/Keys editor; along with this fix now users can change the Index type of a new Index which could not be done
+  in previous versions, and when changing the Index name the change is reflected on the list view at the left side of the Index/Keys editor (Oracle bug #13613801).
 
 6.5.4
 - Fix for Duplicate table name don't allow you to change table name (Oracle bug #13785918).
