@@ -97,6 +97,31 @@ namespace MySql.Data.Entity
     }
   }
 
+  internal class InFragment : NegatableFragment
+  {
+    public List<LiteralFragment> InList;
+    public ColumnFragment Argument;
+
+    internal InFragment()
+    {
+      InList = new List<LiteralFragment>();
+    }
+
+    public override void WriteSql(StringBuilder sql)
+    {
+      Argument.WriteSql(sql);
+      if (IsNegated)
+        sql.Append(" NOT ");
+      sql.Append(" IN ( ");
+      foreach (LiteralFragment lit in InList)
+      {
+        sql.Append(lit).Append(",");
+      }
+      sql.Length = sql.Length - 1;
+      sql.Append(" )");
+    }
+  }
+
   internal class CaseFragment : SqlFragment
   {
     public List<SqlFragment> When = new List<SqlFragment>();
