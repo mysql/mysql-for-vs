@@ -21,10 +21,12 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Threading;
 using MySql.Data.MySqlClient;
 using MySql.Data.MySqlClient.Tests;
+using MySql.Data.Entity.Tests.Properties;
 using System.Data.EntityClient;
 using System.Data.Common;
 using NUnit.Framework;
@@ -259,5 +261,84 @@ namespace MySql.Data.Entity.Tests
       }
     }
 #endif
+
+
+    /// <summary>
+    /// Fix for bug "Using List.Contains in Linq to EF generates many ORs instead of more efficient IN"
+    /// (http://bugs.mysql.com/bug.php?id=64934 / http://www.google.com ).
+    /// </summary>
+    [Test]
+    public void ListContains2In()
+    {
+      using (testEntities context = new testEntities())
+      {
+        int i = 0;
+        
+        // 1st test, only ORs
+        List<int> Ages = new List<int>();
+        Ages.AddRange(new int[] { 37, 38, 39, 40, 41, 42, 43 });
+        var q = from e in context.Employees where Ages.Contains(e.Age.Value)
+                orderby e.LastName, e.FirstName
+                select e;
+        string[,] data1 = new string[,] { { "Flintstone", "Fred" }, { "Flintstone", "Wilma" },
+          { "Rubble", "Barney" } };
+        string query;
+        #if CLR4
+        query = q.ToTraceString();
+        CheckSql(query, SQLSyntax.InExpressionSimple );
+        Assert.AreEqual(3, q.Count());        
+        foreach (var e in q)
+        {
+          Assert.AreEqual(data1[i, 0], e.LastName);
+          Assert.AreEqual(data1[i, 1], e.FirstName);
+          i++;
+        }
+
+        // 2nd test, mix of ORs & ANDs
+        Ages.Clear();
+        Ages.AddRange(new int[] { 37, 38, 39 });
+        List<int> Ages2 = new List<int>();
+        Ages2.AddRange(new int[] { 40, 41, 42, 43 });
+        q = from e in context.Employees
+            where (Ages2.Contains(e.Age.Value) && (e.FirstName == "Flintstones")) ||
+            (!Ages.Contains(e.Age.Value))
+            orderby e.LastName, e.FirstName
+            select e;
+        query = q.ToTraceString();
+        CheckSql( SQLSyntax.InExpressionComplex, query);
+        Assert.AreEqual(6, q.Count());
+        string[,] data2 = new string[,] { { "Doo", "Scooby" }, { "Flintstone", "Fred" }, 
+          { "Rubble", "Barney" }, { "Rubble", "Betty" }, { "Slate", "S" }, 
+          { "Underdog", "J" }
+        };
+        i = 0;
+        foreach (var e in q)
+        {
+          Assert.AreEqual(data2[i, 0], e.LastName);
+          Assert.AreEqual(data2[i, 1], e.FirstName);
+          i++;
+        }
+#endif
+        
+        // 3rd test, using only ||'s
+        q = from e in context.Employees
+                where (e.Age.Value == 37 ) || (e.Age.Value == 38 ) || (e.Age.Value == 39 ) ||
+                (e.Age.Value == 40 ) || (e.Age.Value == 41 ) || (e.Age.Value == 42 ) ||
+                (e.Age.Value == 43 )
+                orderby e.LastName, e.FirstName
+                select e;
+        query = q.ToTraceString();
+        CheckSql(query, SQLSyntax.InExpressionSimple);
+        Assert.AreEqual(3, q.Count());
+        i = 0;
+        foreach (var e in q)
+        {
+          Assert.AreEqual(data1[i, 0], e.LastName);
+          Assert.AreEqual(data1[i, 1], e.FirstName);
+          i++;
+        }
+      }
+    }
+
   }
 }
