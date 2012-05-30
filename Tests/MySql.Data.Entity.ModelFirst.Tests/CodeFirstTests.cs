@@ -137,6 +137,64 @@ namespace MySql.Data.Entity.ModelFirst.Tests
         Assert.AreEqual(5, count);
       }
     }
+
+    /// <summary>
+    /// Tests for fix of http://bugs.mysql.com/bug.php?id=63920
+    /// Maxlength error when it's used code-first and inheritance (discriminator generated column)
+    /// </summary>
+    [Test]
+    public void Bug63920_Test1()
+    {
+      using (VehicleDbContext context = new VehicleDbContext())
+      {
+        context.Database.Delete();
+        
+        context.Vehicles.Add(new Car { Id = 1, Name = "Mustang", Year = 2012, CarProperty = "Car" });
+        context.Vehicles.Add(new Bike { Id = 101, Name = "Mountain", Year = 2011, BikeProperty = "Bike" });
+        context.SaveChanges();
+
+        var list = context.Vehicles.ToList();
+
+        int records = -1;
+        using (MySqlConnection conn = new MySqlConnection(context.Database.Connection.ConnectionString))
+        {
+          conn.Open();
+          MySqlCommand cmd = new MySqlCommand("SELECT COUNT(*) FROM Vehicles", conn);
+          records = Convert.ToInt32(cmd.ExecuteScalar());
+        }
+
+        Assert.AreEqual(context.Vehicles.Count(), records);
+      }
+    }
+
+    /// <summary>
+    /// Tests for fix of http://bugs.mysql.com/bug.php?id=63920
+    /// Key reference generation script error when it's used code-first and a single table for the inherited models
+    /// </summary>
+    [Test]
+    public void Bug63920_Test2()
+    {
+      using (VehicleDbContext2 context = new VehicleDbContext2())
+      {
+        context.Database.Delete();
+
+        context.Vehicles.Add(new Car { Id = 1, Name = "Mustang", Year = 2012, CarProperty = "Car" });
+        context.Vehicles.Add(new Bike { Id = 101, Name = "Mountain", Year = 2011, BikeProperty = "Bike" });
+        context.SaveChanges();
+
+        var list = context.Vehicles.ToList();
+
+        int records = -1;
+        using (MySqlConnection conn = new MySqlConnection(context.Database.Connection.ConnectionString))
+        {
+          conn.Open();
+          MySqlCommand cmd = new MySqlCommand("SELECT COUNT(*) FROM Vehicles", conn);
+          records = Convert.ToInt32(cmd.ExecuteScalar());
+        }
+
+        Assert.AreEqual(context.Vehicles.Count(), records);
+      }
+    }
   }
 }
 
