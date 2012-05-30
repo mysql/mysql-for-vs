@@ -178,7 +178,7 @@ namespace MySql.Data.Entity
     {
       return VisitBinaryExpression(expression.Left, expression.Right,
           Metadata.GetOperator(expression.ExpressionKind));
-    }
+    }    
 
     public override SqlFragment Visit(DbAndExpression expression)
     {
@@ -467,7 +467,131 @@ namespace MySql.Data.Entity
       f.WrapLeft = ShouldWrapExpression(left);
       f.Right = right.Accept(this);
       f.WrapRight = ShouldWrapExpression(right);
-      return f;
+      // Optimization, try to promote to In expression
+      return TryToPromoteToIn(f);
+    }
+
+    protected virtual SqlFragment TryToPromoteToIn(BinaryFragment bf)
+    {
+      // TODO: Remember Morgan's theorem
+      // Only try to merge if they are OR'ed.
+      if ((bf.Operator == "OR") )
+      {
+        InFragment inf = bf.Left as InFragment;
+        InFragment inf2 = bf.Right as InFragment;
+        if (inf == null)
+        {
+          BinaryFragment bfLeft = bf.Left as BinaryFragment;
+          if( bfLeft == null ) 
+            return bf;
+          if (inf2 == null)
+          {
+            // try to create a new infragment
+            BinaryFragment bfRight = bf.Right as BinaryFragment;
+            if (bfRight == null)
+              return bf;
+            InFragment inff = TryMergeTwoBinaryFragments(bfLeft, bfRight);
+            if (inff != null)
+              return inff;
+          }
+          else
+          {
+            // try to merge an existing infragment & a binaryfragment.
+            SqlFragment sf = TryMergeBinaryFragmentAndInFragment(bfLeft, inf2);
+            if (sf != null)
+              return sf;
+          }
+        }
+        else if (inf2 == null)
+        {
+          BinaryFragment bfRight = bf.Right as BinaryFragment;
+          if (bfRight == null)
+            return bf;
+          else
+          {
+            // try to merge an existing infragment & a binaryfragment.
+            SqlFragment sf = TryMergeBinaryFragmentAndInFragment(bfRight, inf);
+            if (sf != null)
+              return sf;
+          }
+        }
+        else
+        {
+          // try to merge both InFragments
+          SqlFragment sf = TryMergeTwoInFragments( inf, inf2 );
+          if (sf != null)
+            return sf;
+        }
+      }
+      return bf;
+    }
+
+    protected InFragment TryMergeTwoInFragments(InFragment infLeft, InFragment infRight)
+    {
+      if (infLeft.Argument.Equals(infRight.Argument) && 
+        ( infLeft.IsNegated == infRight.IsNegated ) && ( !infLeft.IsNegated ) )
+      {
+        infLeft.InList.AddRange(infRight.InList);
+        return infLeft;
+      }
+      return null;
+    }
+
+    protected InFragment TryMergeTwoBinaryFragments(BinaryFragment left, BinaryFragment right)
+    {
+      if( ( left.IsNegated == right.IsNegated ) && ( ! left.IsNegated ) &&
+        ( left.Operator == "=" ) && ( right.Operator == "=" ) )
+      {
+        ColumnFragment cf;
+        LiteralFragment lf;
+        GetBinaryFragmentPartsForIn(left, out lf, out cf);
+        if ((lf != null) && (cf != null))
+        {
+          ColumnFragment cf2;
+          LiteralFragment lf2;
+          GetBinaryFragmentPartsForIn(right, out lf2, out cf2);          
+          if ( (lf2 != null) && (cf2 != null) && cf.Equals(cf2))
+          {
+            InFragment inf = new InFragment();
+            inf.Argument = cf;
+            inf.InList.Add(lf);
+            inf.InList.Add(lf2);
+            return inf;
+          }
+        }
+      }
+      return null;
+    }    
+
+    protected InFragment TryMergeBinaryFragmentAndInFragment(BinaryFragment bf, InFragment inf)
+    {
+      if( !bf.IsNegated && ( bf.Operator == "=" ))
+      {
+        ColumnFragment cf;
+        LiteralFragment lf;
+        GetBinaryFragmentPartsForIn(bf, out lf, out cf);
+        if ((lf != null) && (cf != null))
+        {
+          if (inf.Argument.Equals(cf))
+          {
+            if (!inf.InList.Contains(lf))
+              inf.InList.Add(lf);
+            return inf;
+          }
+        }
+      }
+      return null;
+    }
+
+    protected void GetBinaryFragmentPartsForIn(BinaryFragment bf, out LiteralFragment lf, out ColumnFragment cf)
+    {
+      cf = bf.Right as ColumnFragment;
+      lf = bf.Left as LiteralFragment;
+      if (lf == null)
+      {
+        lf = bf.Right as LiteralFragment;
+        cf = bf.Left as ColumnFragment;
+      }
     }
 
     protected bool ShouldWrapExpression(DbExpression e)
