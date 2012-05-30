@@ -4,6 +4,8 @@
 - Fix for error when trying to change the name of an Index on the Indexes/Keys editor; along with this fix now users can change the Index type of a new Index which could not be done
   in previous versions, and when changing the Index name the change is reflected on the list view at the left side of the Index/Keys editor (Oracle bug #13613801).
 - Fix for stored procedure call using only its name with EF code first (MySql bug #64999, Oracle bug #14008699). 
+- Fix for List.Contains generates a bunch of ORs instead of more efficient IN clause in 
+  LINQ to Entities (Oracle bug #14016344, MySql bug #64934).
 
 6.5.4
 - Fix for Duplicate table name don't allow you to change table name (Oracle bug #13785918).
