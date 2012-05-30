@@ -235,6 +235,29 @@ namespace MySql.Data.Entity.Tests.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
+        ///`Project2`.`C1`, 
+        ///`Project2`.`Id`, 
+        ///`Project2`.`LastName`, 
+        ///`Project2`.`FirstName`, 
+        ///`Project2`.`Age`, 
+        ///`Project2`.`C2`
+        ///FROM (SELECT
+        ///`Extent1`.`Id`, 
+        ///`Extent1`.`LastName`, 
+        ///`Extent1`.`FirstName`, 
+        ///`Extent1`.`Age`, 
+        ///CASE WHEN (NOT ((`Project1`.`C1` = 1) AND (`Project1`.`C1` IS NOT NULL))) THEN (@gp1)  ELSE (@gp2) END AS `C1`, 
+        ///CASE WHEN (NOT ((`Project1`.`C1` = 1) AND (`Project1`.`C1` IS NOT NULL))) THEN (NULL)  ELSE (`Project1`.`Salary`) END AS `C2`
+        ///FROM `Employees` AS `Extent1` LEFT OU [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string InExpressionSimple {
+            get {
+                return ResourceManager.GetString("InExpressionSimple", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT
         ///`Project2`.`Id`, 
         ///`Project2`.`Name`, 
         ///`Project2`.`Pages`, 
