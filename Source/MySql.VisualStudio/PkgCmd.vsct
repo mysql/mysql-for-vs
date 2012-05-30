@@ -211,6 +211,15 @@
           <ButtonText>MySQL Website Configuration</ButtonText>
         </Strings>
       </Button>
+      <Button guid="guidMySqlProviderCmdSet" id="cmdidDebugRoutine" type="Button" priority ="0x100">
+        <Parent guid="guidVSData" id="IDG_DV_OBJECT_NODE"/>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
+        <Strings>
+          <ButtonText>Debug Routine</ButtonText>
+        </Strings>
+      </Button>
     </Buttons>
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
     <Bitmaps>
@@ -269,6 +278,7 @@
       <IDSymbol name="cmdidCreateUDF" value="0x150" />
       <IDSymbol name="cmdidAlterView" value="0x111" />
       <IDSymbol name="cmdidAlterRoutine" value="0x121" />
+      <IDSymbol name="cmdidDebugRoutine" value="0x122" />
       <IDSymbol name="cmdidAlterTrigger" value="0x141" />
       <IDSymbol name="cmdidDelete" value="0x160"/>
       <IDSymbol name="cmdidConfig" value="0x800"/>

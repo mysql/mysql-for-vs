@@ -38,6 +38,7 @@ using System.Data;
 using MySql.Data.VisualStudio.Editors;
 using MySql.Data.VisualStudio.Properties;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
+using Microsoft.Win32;
 
 namespace MySql.Data.VisualStudio
 {
@@ -54,6 +55,7 @@ namespace MySql.Data.VisualStudio
       isFunction = isFunc;
       NameIndex = 3;
       editor = new VSCodeEditor((IOleServiceProvider)hierarchyAccessor.ServiceProvider);
+      Dte = (EnvDTE.DTE)hierarchyAccessor.ServiceProvider.GetService(typeof(EnvDTE.DTE));
     }
 
     #region Properties
@@ -172,6 +174,11 @@ namespace MySql.Data.VisualStudio
           MessageBox.Show("Unable to load the stored procedure for editing");
         }
       }
+    }
+
+    public override void LaunchDebugger()
+    {
+      LaunchDebugTarget();
     }
 
     private string GetStoredProcedureBody(string sql, out string sql_mode)
@@ -303,5 +310,44 @@ namespace MySql.Data.VisualStudio
     }
 
     #endregion
+
+    protected void LaunchDebugTarget()
+    {
+      Microsoft.VisualStudio.Shell.ServiceProvider sp =
+           new Microsoft.VisualStudio.Shell.ServiceProvider((Microsoft.VisualStudio.OLE.Interop.IServiceProvider)Dte);
+
+      IVsDebugger dbg = (IVsDebugger)sp.GetService(typeof(SVsShellDebugger));
+
+      VsDebugTargetInfo info = new VsDebugTargetInfo();
+      
+      info.cbSize = (uint)System.Runtime.InteropServices.Marshal.SizeOf(info);
+      info.dlo = Microsoft.VisualStudio.Shell.Interop.DEBUG_LAUNCH_OPERATION.DLO_CreateProcess;
+      info.bstrExe = Moniker;
+      info.bstrCurDir = @"C:\";
+      info.bstrArg = HierarchyAccessor.Connection.ConnectionSupport.ConnectionString + ";Allow User Variables=true;";
+      info.bstrRemoteMachine = null; // Environment.MachineName; // debug locally
+      info.fSendStdoutToOutputWindow = 0; // Let stdout stay with the application.
+      info.clsidCustom = new Guid("{EEEE0740-10F7-4e5f-8BC4-1CC0AC9ED5B0}"); // Set the launching engine the sample engine guid
+      info.grfLaunch = 0;
+
+      IntPtr pInfo = System.Runtime.InteropServices.Marshal.AllocCoTaskMem((int)info.cbSize);
+      System.Runtime.InteropServices.Marshal.StructureToPtr(info, pInfo, false);
+
+      try
+      {
+        int result = dbg.LaunchDebugTargets(1, pInfo);
+      }
+      catch (Exception ex)
+      {
+        throw;
+      }
+      finally
+      {
+        if (pInfo != IntPtr.Zero)
+        {
+          System.Runtime.InteropServices.Marshal.FreeCoTaskMem(pInfo);
+        }
+      }
+    }
   }
 }

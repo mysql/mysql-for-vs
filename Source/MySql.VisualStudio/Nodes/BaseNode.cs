@@ -183,6 +183,10 @@ namespace MySql.Data.VisualStudio
         case (uint)VSConstants.VSStd97CmdID.Delete:
           Drop();
           break;
+
+        case PkgCmdIDList.cmdDebugProcedure:
+          LaunchDebugger();
+          break;
       }
     }
 
@@ -201,6 +205,11 @@ namespace MySql.Data.VisualStudio
     public virtual void Alter()
     {
       Edit();
+    }
+
+    public virtual void LaunchDebugger()
+    {
+      throw new NotImplementedException();
     }
 
     public virtual string GetDropSQL()
