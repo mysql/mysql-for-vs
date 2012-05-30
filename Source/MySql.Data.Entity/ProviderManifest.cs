@@ -204,16 +204,14 @@ namespace MySql.Data.MySqlClient
             int maxLength = !isMaxLength ? (int)f.Value : LONGTEXT_MAXLEN;
 
             string typeName = String.Empty;
-            if (isFixedLength)
+            if (isFixedLength && maxLength <= CHAR_MAXLEN)
             {
-              typeName = isMaxLength || maxLength > CHAR_MAXLEN ? "varchar" : "char";
-              maxLength = isMaxLength ? VARCHAR_MAXLEN : maxLength;
+              typeName = "char";
             }
             else
             {
-              if (maxLength < CHAR_MAXLEN) typeName = "tinytext";
-              if (maxLength < VARCHAR_MAXLEN) typeName = "text";
-              if (maxLength < MEDIUMTEXT_MAXLEN) typeName = "mediumtext";
+              if (maxLength <= VARCHAR_MAXLEN) typeName = "varchar";
+              else if (maxLength <= MEDIUMTEXT_MAXLEN) typeName = "mediumtext";
               else typeName = "longtext";
             }
 

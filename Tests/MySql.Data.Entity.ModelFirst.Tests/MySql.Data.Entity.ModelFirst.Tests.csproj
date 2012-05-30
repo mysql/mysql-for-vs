@@ -60,6 +60,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SQLSyntax.resx</DependentUpon>
     </Compile>
+    <Compile Include="Vehicle.cs" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
