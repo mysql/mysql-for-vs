@@ -55,8 +55,7 @@ namespace MySql.Data.Entity.ModelFirst.Tests
 
     public MovieDBContext()
     {
-      Database.SetInitializer<MovieDBContext>(new
-        DropCreateDatabaseAlways<MovieDBContext>());
+      Database.SetInitializer<MovieDBContext>(new MovieDBInitialize());
     }
   }
 
@@ -70,5 +69,16 @@ namespace MySql.Data.Entity.ModelFirst.Tests
 
     [ConcurrencyCheck, Required, MaxLength(45)]
     public virtual string Name { get; set; }
+  }
+
+  public class MovieDBInitialize : DropCreateDatabaseAlways<MovieDBContext>
+  {
+    protected override void Seed(MovieDBContext context)
+    {
+      base.Seed(context);
+
+      context.Database.ExecuteSqlCommand("CREATE PROCEDURE GetCount() BEGIN SELECT 5; END");
+      context.SaveChanges();
+    }
   }
 }
