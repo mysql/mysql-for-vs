@@ -68,6 +68,8 @@ namespace MySql.Data.MySqlClient
     private int cacheAge;
     private bool internallyCreated;
 
+    private static List<string> SingleWordKeywords = new List<string>(new string[] { "COMMIT", "ROLLBACK", "USE", "BEGIN", "END" });
+
     /// <include file='docs/mysqlcommand.xml' path='docs/ctor1/*'/>
     public MySqlCommand()
     {
@@ -472,6 +474,14 @@ namespace MySql.Data.MySqlClient
 
         if (CommandType == CommandType.TableDirect)
           sql = "SELECT * FROM " + sql;
+        else if (CommandType == CommandType.Text)
+        {
+          // validates single word statetment (maybe is a stored procedure call)
+          if (sql.IndexOf(" ") == -1 && !SingleWordKeywords.Contains(sql.ToUpper()))
+          {
+            sql = "call " + sql;
+          }
+        }
 
         // if we are on a replicated connection, we are only allow readonly statements
         if (connection.Settings.Replication && !InternallyCreated)
