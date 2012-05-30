@@ -38,6 +38,7 @@ namespace MySql.Data.VisualStudio
 
     public const uint cmdCreateProcedure = 0x120;
     public const uint cmdAlterProcedure = 0x121;
+    public const uint cmdDebugProcedure = 0x122;
 
     public const uint cmdCreateFunction = 0x130;
 
