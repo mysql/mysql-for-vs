@@ -123,6 +123,20 @@ namespace MySql.Data.Entity.ModelFirst.Tests
         Assert.Fail();
       }
     }
+
+    /// <summary>
+    /// Validates a stored procedure call using Code First
+    /// Bug #14008699
+    [Test]
+    public void CallStoredProcedure()
+    {
+      using (MovieDBContext context = new MovieDBContext())
+      {
+        int count = context.Database.SqlQuery<int>("GetCount").First();
+
+        Assert.AreEqual(5, count);
+      }
+    }
   }
 }
 

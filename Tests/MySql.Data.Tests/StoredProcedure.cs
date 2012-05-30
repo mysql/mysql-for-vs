@@ -892,5 +892,20 @@ namespace MySql.Data.MySqlClient.Tests
         Assert.IsNotNull(parametersTable);
       }
     }
+
+    /// <summary>
+    /// Validates a stored procedure call without the "call" statement
+    /// Bug #14008699
+    /// </summary>
+    [Test]
+    public void CallStoredProcedure()
+    {
+      execSQL("CREATE PROCEDURE GetCount() BEGIN SELECT 5; END");
+
+      MySqlCommand cmd = new MySqlCommand("GetCount", conn);
+      cmd.CommandType = CommandType.Text;
+
+      Assert.AreEqual(5, cmd.ExecuteScalar());
+    }
   }
 }
