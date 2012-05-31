@@ -631,7 +631,7 @@ namespace MySql.Data.MySqlClient.Tests
 
         MySqlParameter timeinsert = new MySqlParameter();
         timeinsert.ParameterName = "?ts";
-        timeinsert.MySqlDbType = MySqlDbType.Timestamp;
+        timeinsert.MySqlDbType = MySqlDbType.Timestamp;        
         timeinsert.Value = "2011-01-01 12:34:56.123456";
         cmd.Parameters.Add(timeinsert);
 
@@ -716,6 +716,110 @@ namespace MySql.Data.MySqlClient.Tests
         Assert.AreEqual(dt1.Kind, DateTimeKind.Unspecified);
         Assert.AreEqual(ts.Kind, DateTimeKind.Local);
       }
+    }
+
+    ///<summary>
+    /// Bug #13881444 DateTime(3) column definition on 
+    /// 5.6.x server is not processing Milliseconds value
+    /// correctly
+    /// </summary>
+    [Test]
+    public void CanSaveMillisecondsPrecision3WithPrepare()
+    {
+
+      if (Version < new Version(5, 6)) return;
+      DateTime dt = new DateTime(2012, 3, 18, 23, 9, 7, 6);
+      MySqlCommand cmd = new MySqlCommand();
+
+      execSQL("DROP TABLE Test");
+      execSQL("CREATE TABLE Test (id INT NOT NULL, dt DATETIME(3), PRIMARY KEY(id))");
+
+      using (MySqlConnection c = new MySqlConnection(conn.ConnectionString + ";ignore prepare=False;"))
+      {
+        c.Open();
+        cmd.Connection = c;
+        cmd.CommandText = "INSERT INTO Test VALUES(1, ?dt)";
+        cmd.Parameters.AddWithValue("?dt", dt);
+        cmd.Prepare();
+        cmd.ExecuteNonQuery();
+
+        cmd.CommandText = "SELECT dt FROM Test";
+        cmd.Parameters.Clear();
+        cmd.Connection = conn;
+        MySqlDataReader rdr = cmd.ExecuteReader();
+
+        while (rdr.Read())
+        {
+          Assert.AreEqual("11:09:07.0060", rdr.GetDateTime(0).ToString("hh:mm:ss.ffff"));
+        }
+        rdr.Close();
+      }
+    }
+
+    [Test]
+    public void CanSaveMillisecondsPrecision3()
+    {
+
+      if (Version < new Version(5, 6)) return;
+      DateTime dt = new DateTime(2012, 3, 18, 23, 9, 7, 6);
+      MySqlCommand cmd = new MySqlCommand();
+
+      execSQL("DROP TABLE Test");
+      execSQL("CREATE TABLE Test (id INT NOT NULL, dt DATETIME(3), PRIMARY KEY(id))");
+      cmd.Connection = conn;
+      cmd.CommandText = "INSERT INTO Test VALUES(1, ?dt)";
+      cmd.Parameters.AddWithValue("?dt", dt);      
+      cmd.ExecuteNonQuery();
+
+      cmd.CommandText = "SELECT dt FROM Test";
+      cmd.Parameters.Clear();
+      cmd.Connection = conn;
+      MySqlDataReader rdr = cmd.ExecuteReader();
+
+      while (rdr.Read())
+      {
+        Assert.AreEqual("11:09:07.0060", rdr.GetDateTime(0).ToString("hh:mm:ss.ffff"));
+      }
+      rdr.Close();      
+    }
+
+    [Test]
+    public void CanSaveMillisecondsPrecision4()
+    {
+
+      if (Version < new Version(5, 6)) return;
+      DateTime dt = new DateTime(2012, 3, 18, 23, 9, 7, 6);
+      MySqlCommand cmd = new MySqlCommand();
+
+      execSQL("DROP TABLE Test");
+      execSQL("CREATE TABLE Test (id INT NOT NULL, dt DATETIME(4), PRIMARY KEY(id))");
+      cmd.Connection = conn;
+      cmd.CommandText = "INSERT INTO Test VALUES(1, ?dt)";
+      cmd.Parameters.AddWithValue("?dt", dt);
+      cmd.ExecuteNonQuery();
+
+      cmd.CommandText = "SELECT dt FROM Test";
+      cmd.Parameters.Clear();
+      cmd.Connection = conn;
+      MySqlDataReader rdr = cmd.ExecuteReader();
+
+      while (rdr.Read())
+      {
+        Assert.AreEqual("11:09:07.0600", rdr.GetDateTime(0).ToString("hh:mm:ss.ffff"));
+      }
+      rdr.Close();
+    }
+
+    [Test]
+    public void ShowMicrosecondError()
+    {               
+      MySqlCommand cmd = new MySqlCommand();
+      cmd.CommandText = "SELECT NOW() + INTERVAL 123456 MICROSECOND";
+      cmd.Parameters.Clear();
+      cmd.Connection = conn;
+      string date = cmd.ExecuteScalar().ToString();
+      DateTime temp;
+      Assert.IsTrue(DateTime.TryParse(date, out temp));
     }
   }
 }

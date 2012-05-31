@@ -43,6 +43,7 @@
 - Fixed MySqlTime parsing to handle milliseconds (Oracle bug #13708884)
 - Fix for SEXP-1ST FK RENAMED WHEN ADDING A NEW ONE (Oracle bug #13613824)
 - Fix for Error when using Intellisense Quick Info (Oracle Bug #13739891).
+- Fix for bug MySqlDateTime when using milliseconds precision minor than 6 in the column definition. (MySql #64867 Oracle bug #13881444 ).
 
 6.5.0
 - Added exception interception
