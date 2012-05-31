@@ -33,6 +33,7 @@ using MySql.Data.MySqlClient.Tests;
 using System.Data.EntityClient;
 using System.Data.Common;
 using System.Data.Objects;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using MySql.Data.Entity.ModelFirst.Tests.Properties;
 
@@ -125,6 +126,21 @@ namespace MySql.Data.Entity.ModelFirst.Tests
     }
 
     /// <summary>
+    /// This tests fix for http://bugs.mysql.com/bug.php?id=64216.
+    /// </summary>
+    [Test]
+    public void CheckByteArray()
+    {
+      MovieDBContext db = new MovieDBContext();
+      
+      string dbCreationScript =
+        ((IObjectContextAdapter)db).ObjectContext.CreateDatabaseScript();
+      Regex rx = new Regex(@"`Data` (?<type>[^\)]*)", RegexOptions.Compiled | RegexOptions.Singleline);
+      Match m = rx.Match(dbCreationScript);
+      Assert.AreEqual(m.Groups["type"].Value, "longblob");
+    }
+
+/// <summary>
     /// Validates a stored procedure call using Code First
     /// Bug #14008699
     [Test]
