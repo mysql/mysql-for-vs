@@ -177,18 +177,12 @@ namespace MySql.Data.MySqlClient
             int maxLength = !isMaxLength ? (int)f.Value : LONGBLOB_MAXLEN;
 
             string typeName = String.Empty;
-            if (isFixedLength)
-            {
-              if (maxLength < CHAR_MAXLEN) typeName = "tinyblob";
-              else if (maxLength < MEDIUMBLOB_MAXLEN) typeName = "blob";
-              else if (maxLength < LONGTEXT_MAXLEN) typeName = "mediumblob";
-              else typeName = "longblob";
-            }
-            else
-            {
-              typeName = isMaxLength || maxLength > BINARY_MAXLEN ? "varbinary" : "binary";
-              maxLength = isMaxLength ? VARBINARY_MAXLEN : maxLength;
-            }
+
+            // now this applies for both isFixedLength and !isFixedLength
+            if (maxLength < CHAR_MAXLEN) typeName = "tinyblob";
+            else if (maxLength < MEDIUMBLOB_MAXLEN) typeName = "blob";
+            else if (maxLength < LONGTEXT_MAXLEN) typeName = "mediumblob";
+            else typeName = "longblob";
 
             return TypeUsage.CreateBinaryTypeUsage(StoreTypeNameToStorePrimitiveType[typeName], isFixedLength, maxLength);
           }
