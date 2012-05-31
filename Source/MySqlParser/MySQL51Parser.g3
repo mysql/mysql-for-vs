@@ -43,14 +43,23 @@ CT_AUTOEXTEND_SIZE;
 CT_MAX_SIZE;
 CT_NODEGROUP;
 CT_COMMENT;
+CREATE_PART_OPTS;
 CREATE_SERVER_OPTION;
 CREATE_SERVER_OPTIONS;
+CREATE_TBL_OPT;
+CREATE_TBL_OPTS;
+DATA_TYPE;
 DECLARE_HANDLER;
 ENABLING;
 EXPR;
+EXPR_LIST;
 FOREIGNKEY_DATA_WRAPPER;
 GLOBAL;
+IF_COND;
+ELSEIFS;
+INSERT_DEFAULT_EXPR;
 INTO_FROM;
+LABEL;
 SELECT_EXPR;
 SESSION;
 UNARY_MINUS;
@@ -81,12 +90,15 @@ PARAM;
 PRIVILEGE_LEVEL;
 SET_PASSWORD;
 SSL_OPTION;
+SUBPART_DEF;
 TABLE_REF;
 USER_HOST;
 USER_HOST_OR_ID_OR_STRING;
 VAR;
+VAR_ASSIGN;
 WITH_OPTION;
 XID;
+COLUMN_LIST;
 }
 
 
@@ -116,7 +128,7 @@ statement options { backtrack=true; memoize=true; }
 		|	grant
 		|	insert
 		|	update
-		|	declare_stmt 
+		//|	declare_stmt 
 		|	delete		
 		|   alter_function
 		|   alter_logfile
@@ -208,8 +220,8 @@ statement options { backtrack=true; memoize=true; }
 // $< DML
 
 begin_end_stmt options { backtrack=true; memoize=true; }
-	:	(( ( beginlabel=ID COLON ) BEGIN declare_stmt* statement_list END ( endlabel=ID )?
-		-> ^( BEGIN_END $beginlabel $endlabel? declare_stmt* statement_list ) ) )		
+	:	(( ( beginlabel=ID COLON ) BEGIN declare_stmt* statement_list? END ( endlabel=ID )?
+		-> ^( BEGIN_END ^( LABEL $beginlabel $endlabel? ) declare_stmt* statement_list? ) ) )		
 		| ( ( BEGIN WORK ) | ( BEGIN SEMI ) | ( BEGIN EOF ) )  => begin_transaction 
 		| (
 		( BEGIN declare_stmt* statement_list? END 
@@ -223,27 +235,27 @@ begin_transaction options { backtrack=true; memoize=true; }
 	;
 
 loop
-	:	( ( beginlabel=ID COLON ) LOOP statement_list END LOOP ( endlabel=ID )?
-		-> ^( LOOP $beginlabel $endlabel? statement_list ) )
+	:	( ( beginlabel=ID COLON ) LOOP statement_list? END LOOP ( endlabel=ID )?
+		-> ^( LOOP ^( LABEL $beginlabel $endlabel? ) statement_list? ) )
 		|
-		( LOOP statement_list END LOOP 
-		-> ^( LOOP statement_list ) )
+		( LOOP statement_list? END LOOP 
+		-> ^( LOOP statement_list? ) )
 	;
 
 repeat
-	:	( ( beginlabel=ID COLON ) REPEAT statement_list UNTIL where_condition END REPEAT ( endlabel=ID )?
-		-> ^( LOOP $beginlabel $endlabel? statement_list UNTIL where_condition ) )
+	:	( ( beginlabel=ID COLON ) REPEAT statement_list? UNTIL where_condition END REPEAT ( endlabel=ID )?
+		-> ^( REPEAT ^( LABEL $beginlabel $endlabel? ) statement_list? UNTIL where_condition ) )
 		|
-		( REPEAT statement_list UNTIL where_condition END REPEAT
-		-> ^( LOOP statement_list UNTIL where_condition  ) )
+		( REPEAT statement_list? UNTIL where_condition END REPEAT
+		-> ^( REPEAT statement_list? UNTIL where_condition  ) )
 	;
 
 while
-	:	( ( beginlabel=ID COLON ) WHILE where_condition DO statement_list END WHILE ( endlabel=ID )?
-		-> ^( WHILE where_condition $beginlabel $endlabel? statement_list  ) )
+	:	( ( beginlabel=ID COLON ) WHILE where_condition DO statement_list? END WHILE ( endlabel=ID )?
+		-> ^( WHILE where_condition ^( LABEL $beginlabel $endlabel? ) statement_list?  ) )
 		|
-		( WHILE where_condition DO statement_list END WHILE
-		-> ^( WHILE where_condition statement_list  ) )
+		( WHILE where_condition DO statement_list? END WHILE
+		-> ^( WHILE where_condition statement_list?  ) )
 	;
 
 create_procedure
@@ -251,7 +263,7 @@ create_procedure
 		PROCEDURE simple_obj_ref_no_alias LPAREN ( parm+=proc_parameter ( COMMA parm+=proc_parameter )* )? RPAREN 
 		( routine_characteristic )* routine_body
 		-> ^( CREATE PROCEDURE ( DEFINER user_specification? CURRENT_USER? )? 
-			simple_obj_ref_no_alias $parm? ^( CHARACTERISTIC routine_characteristic* )? routine_body
+			simple_obj_ref_no_alias $parm* ^( CHARACTERISTIC routine_characteristic* )? routine_body
 			) 
 	;
 
@@ -261,7 +273,7 @@ create_function
 		RETURNS data_type
 		( routine_characteristic )* routine_body
 		-> ^( CREATE FUNCTION ( DEFINER user_specification? CURRENT_USER? )? 
-			simple_obj_ref_no_alias $parm? RETURNS data_type ^( CHARACTERISTIC routine_characteristic* )? routine_body
+			simple_obj_ref_no_alias $parm* RETURNS data_type ^( CHARACTERISTIC routine_characteristic* )? routine_body
 			) 
 	;
 
@@ -292,10 +304,16 @@ routine_body
 
 if_stmt
 	:	IF cond+=where_condition THEN condstmt+=statement_list
-		( ELSEIF cond+=where_condition THEN condstmt+=statement_list )*
+		elseif_stmt*
 		( ELSE elsestmt=statement_list )?
 		END IF
-		->	^( IF $cond $condstmt ^( ELSE $elsestmt)? )
+		->	^( IF ^( IF_COND $cond? ^( THEN $condstmt* ) ) elseif_stmt*
+			^( ELSE $elsestmt)? )
+	;
+
+elseif_stmt
+	: ELSEIF elifcond=where_condition THEN elifcondstmt=statement_list
+		-> ^( ELSEIF $elifcond? ^( THEN $elifcondstmt? ))
 	;
 
 /* has to be within a loop, repeat or while statements */
@@ -308,8 +326,9 @@ leave
 	:	LEAVE ident		-> ^( LEAVE ident )
 	;
 
-declare_stmt 
-	:	DECLARE ident ( COMMA ident )* data_type SEMI+	-> ^( DECLARE ident* data_type )
+declare_stmt options { backtrack=true; memoize=true; }
+	:	DECLARE ids+=ident ( COMMA ids+=ident )* data_type ( DEFAULT defaultexpr=expr )? SEMI+	
+		-> ^( DECLARE $ids* data_type? $defaultexpr? )
 	;
 
 set_stmt
@@ -320,19 +339,24 @@ set_stmt
 	;
 
 variable_assignment
-	:	| simple_obj_ref_no_alias EQUALS expr	-> ^( simple_obj_ref_no_alias expr )
-	|	session_variable EQUALS expr	-> ^( session_variable expr )
+	:	| simple_obj_ref_no_alias EQUALS expr	-> ^( VAR_ASSIGN simple_obj_ref_no_alias expr )
+	|	session_variable EQUALS expr	-> 
+		^( VAR_ASSIGN /* creating a synthetic root (VAR_ASSIGN) to make antlr generate 
+						NextTree() call instead of NextNode() when adding 'session_variable' 
+						to the AST */ session_variable expr )
 	/* TODO validate vs. the list of system variables */
-	|	( GLOBAL | SESSION ) ID EQUALS expr		-> ^( ID expr GLOBAL? SESSION? )
-	|	(( AT1 AT1 GLOBAL DOT ) | ( AT1 AT1 SESSION DOT )) ID EQUALS expr	-> ^( ID expr GLOBAL? SESSION? )
+	|	GLOBAL ID EQUALS expr  -> ^( VAR_ASSIGN GLOBAL { new CommonTree( new CommonToken( ID ) { Text = "@@" + $ID.Text } ) } expr  )
+	|	SESSION ID EQUALS expr -> ^( VAR_ASSIGN SESSION { new CommonTree( new CommonToken( ID ) { Text = "@" + $ID.Text } ) } expr )
+	|	AT1 AT1 GLOBAL DOT ID EQUALS expr -> ^( VAR_ASSIGN GLOBAL { new CommonTree( new CommonToken( ID ) { Text = "@@" + $ID.Text } ) } expr )
+	|   AT1 AT1 SESSION DOT ID EQUALS expr	-> ^( VAR_ASSIGN SESSION { new CommonTree( new CommonToken( ID ) { Text = "@" + $ID.Text } ) } expr )
 	;
 
 session_variable
-	:	AT1 ID	->	^( SESSION ID )
+	:	AT1 ID	->	^( SESSION { new CommonTree( new CommonToken( ID ) { Text = "@" + $ID.Text } ) } )
 	;
 
 global_variable
-	:	AT1 AT1 ID -> ^( GLOBAL ID )
+	:	AT1 AT1 ID -> ^( GLOBAL { new CommonTree( new CommonToken( ID ) { Text = "@@" + $ID.Text } ) } )
 	;
 
 create_database
@@ -468,14 +492,14 @@ cursor_close
 	;
 
 cursor_declare
-	:	DECLARE ID CURSOR FOR select	-> ^( DECLARE ID CURSOR select )
+	:	DECLARE ID CURSOR FOR select	-> ^( DECLARE CURSOR ID select )
 	;
 
 cursor_fetch
-	:	FETCH curname=ID INTO var+=ID ( COMMA var+=ID )*	
-			-> ^( FETCH $curname $var )
+	:	FETCH curname=ID INTO vars+=ID ( COMMA vars+=ID )*
+			-> ^( FETCH $curname INTO $vars*  )
 	;
-
+	 
 cursor_open
 	:	OPEN ID	-> ^( OPEN ID )
 	;
@@ -736,8 +760,8 @@ table_ref
 	
 table_factor
 	:	simple_table_ref_alias index_hint_list? {$table_references::count++;} -> ^(TABLE simple_table_ref_alias index_hint_list?)
-	|	LPAREN select_inner RPAREN AS? ident		{$table_references::count++;} -> ^(SUBSELECT select_inner ^(ALIAS ident))
-    |   LPAREN table_ref {$table_references::count++;} (COMMA table_ref {$table_references::count++;} )* RPAREN   -> ^(TABLE table_ref+)
+	|	LPAREN select RPAREN AS? ident		{$table_references::count++;} -> ^(SUBSELECT select ^(ALIAS ident))
+    //|   LPAREN table_ref {$table_references::count++;} (COMMA table_ref {$table_references::count++;} )* RPAREN   -> ^(TABLE table_ref+)
 	/* ident in the following should really by 'OJ', but the parser accepts any identifier in its place 
 	|	LCURLY ident t1=table_ref LEFT OUTER JOIN t2=table_ref join_condition_on RCURLY 
 			-> ^(ident $t1 $t2 join_condition_on) */
@@ -812,7 +836,7 @@ bool seenStar = false;
    This list is taken from the 5.1 YACC grammar 
 */
 
-ident
+ident options { backtrack=true; memoize=true; }
 	:
 	(	tok=ASCII
 	|	tok=BACKUP
@@ -1152,7 +1176,7 @@ ident_sp_label
     //|	tok=USE_FRM!
     //|	tok=VARIABLES!
     //|	tok=VIEW!
-    |	tok=VALUE!
+    //|	tok=VALUE!
     //|	tok=WARNINGS!
     //|	tok=WAIT!
     //|	tok=WEEK!
@@ -1193,7 +1217,7 @@ index_hint_rest
 // $<Expressions
 
 exprList
-	:	e+=expr (COMMA e+=expr)*	-> ^( EXPR $e+ )
+	:	e+=expr (COMMA e+=expr)*	-> ^( EXPR_LIST $e+ )
 	;
 
 parenExpr
@@ -1201,32 +1225,36 @@ parenExpr
 	;
 	
 parenExprList
-	:	LPAREN exprList RPAREN	-> ^(LPAREN exprList)
+	:	LPAREN exprList RPAREN	-> exprList
 	;
 	
 parenOptExprList
-	:	LPAREN e+=exprList? RPAREN	-> ^(LPAREN $e*)
+	:	LPAREN e+=exprList? RPAREN	->  $e
 	;
 
 expr
-	:	lhs=assignOrExpr (op=ASSIGN^ rhs=expr)?
+	:	lhs=assignOrExpr (op=ASSIGN^ rhs=expr)?	
+	//-> ^( EXPR ^( $op $lhs $rhs ) )
 	;
 
 assignOrExpr
 	:	lhs=assignXORExpr ((op+=LOGICAL_OR^ | op+=OR^) rhs+=assignXORExpr)*
+		//-> ^( ASSIGN_OR_EXPR ^( $op $lhs $rhs ) )
 	;
 
 assignXORExpr
 	:	lhs=assignAndExpr (op+=XOR^ rhs+=assignAndExpr)*
+		//-> ^( ASSIGN_XOR_EXPR ^( $op $lhs $rhs ) )
 	;
 
 assignAndExpr
 	:	lhs=assignNotExpr (( op+=LOGICAL_AND^ | op+=AND^ ) rhs+=assignNotExpr)*
+		//-> ^( ASSIGN_AND_EXPR ^(  $op $lhs $rhs ) )
 	;
 
 assignNotExpr
-	:	lhs=equalityExpr
-	|	op+=NOT^ rhs+=equalityExpr
+	:	lhs=equalityExpr			/*-> ^( ASSIGN_NOT_EXPR $lhs ) */
+	|	op+=NOT^ rhs+=equalityExpr  /*-> ^( ASSIGN_NOT_EXPR ^( $op $rhs ))  */
 	;
 	catch[ NoViableAltException nvae ] 
 	{
@@ -1250,7 +1278,7 @@ assignNotExpr
 
 equalityExpr
 	:	bitwiseOrExpr
-		(op+=equalityOperator^ ((subselect_in_expr_rhs)=> subselect_in_expr_rhs | bitwiseOrExpr))*
+		(op+=equalityOperator^ ((subselect_in_expr_rhs)=> subselect_in_expr_rhs | bitwiseOrExpr))*		
 	;
 	catch[ NoViableAltException nvae ] 
 	{
@@ -1306,13 +1334,13 @@ equalityOperator
 
 bitwiseOrExpr
   : lhs=bitwiseAndExpr 
-    ( (op+=BITWISE_OR^ rhs+=bitwiseAndExpr)+
-    | ((NOT^)? IN^ (parenExprList | subselect))
-    | LIKE^ unaryExpr (ESCAPE STRING)?  // STRING must be empty or one character long (or be "\\" if not in sql_mode NO_BACKSLASH_ESCAPES)
+    ( (op+=BITWISE_OR^ rhs+=bitwiseAndExpr)+ 
+    | ((NOT^)? IN^ (parenExprList | subselect)) 
+    | LIKE^ unaryExpr (ESCAPE STRING)?  // STRING must be empty or one character long (or be "\\" if not in sql_mode NO_BACKSLASH_ESCAPES)		
 	| BETWEEN^ bitwiseAndExpr AND! bitwiseOrExpr
 	| SOUNDS^ LIKE bitwiseAndExpr
     | isOperator^
-    )?
+    )? 
   ;
 
 bitwiseAndExpr
@@ -1351,7 +1379,7 @@ unaryExpr
 	:	op=MINUS lhs=unaryExpr	-> ^(UNARY_MINUS[$op] $lhs)
 	|	op=PLUS lhs=unaryExpr	-> ^(UNARY_PLUS[$op] $lhs)
 	|	op=BITWISE_INVERSION lhs=unaryExpr -> ^(BITWISE_INVERSION $lhs)
-	|	lhsUnaryNot=unaryNotExpr	-> unaryNotExpr
+	|	lhsUnaryNot=unaryNotExpr	-> $lhsUnaryNot
 	;
 	catch[ NoViableAltException nvae ] 
 	{
@@ -1382,7 +1410,7 @@ unaryNotExpr
 binaryCollateExpr
 	:	op=BINARY lhs=binaryCollateExpr		-> ^(BINARY $lhs)
 	|	op=COLLATE lhs=binaryCollateExpr	-> ^(COLLATE $lhs)
-	|	intervalExpr
+	|	intervalExpr						-> intervalExpr
 	;
 	catch[ NoViableAltException nvae ] 
 	{
@@ -1410,14 +1438,15 @@ binaryCollateExpr
    defer checking that to a semantic tree phase.
 */
 intervalExpr
-	:	(INTERVAL ~(LPAREN))=> INTERVAL expr timeUnit /*{input.LA(1) == PLUS || input.LA(1) == MINUS}? */ -> ^(INTERVAL expr timeUnit)
+	:	(INTERVAL ~(LPAREN))=> INTERVAL expr timeUnit /*{input.LA(1) == PLUS || input.LA(1) == MINUS}? */ 
+		-> ^(INTERVAL expr timeUnit)
 	|	lhsPrim=primary	-> primary
 	;
 	
 primary 
 	:	/*lhsParen=parenExpr -> parenExpr */
 		( lhsLit=literal )	=> literal	-> literal
-	|	( subselect )	=> subselect
+	|	( subselect )	=> subselect	-> subselect
 	|	EXISTS subselect -> ^(EXISTS subselect)
 /*	|	functionCall */
 /*	|	primary COLLATE ident*/
@@ -1466,27 +1495,32 @@ match_expr
 case_expr
 	: CASE 	 
 		( ( WHEN ( expr ) => whenExpr+=expr THEN thenExpr+=expr )+ 
-		( { input.LA(1) == ELSE }? ELSE elseExpr=expr )? END )
+		( { input.LA(1) == ELSE }? ELSE elseExpr=expr )? END CASE)
 		-> ^( CASE ^( WHEN $whenExpr $thenExpr ) ( ELSE $elseExpr )? )
 	;
 
-/*
-case_expr
-	: CASE 	 
-		( ( WHEN ( expr ) => expr THEN ( expr ) => expr )+ ( ELSE expr END ))
-	|	( expr ( WHEN expr THEN expr )+ ( ELSE expr )? END )
-	;
-*/
-
+	/*
+case_stmt
+	:	CASE (
+		( WHEN ) => (( ( WHEN ( expr ) => whenExpr+=expr THEN thenStmt+=statement_list )+ 
+		  ( { input.LA(1) == ELSE }? ELSE elseStmt+=statement_list )? END CASE) 
+		-> ^( CASE_STMT ^(WHEN $whenExpr $thenStmt)* ^( ELSE $elseStmt )? ))
+	|	(( firstPri=primary 
+			( WHEN whenPri+=primary THEN thenStmt+=statement_list )+ 
+			( ELSE elseStmt+=statement_list )? END CASE )
+		-> ^( CASE_STMT $firstPri ^( WHEN $whenPri $thenStmt ) ^( ELSE $elseStmt )? ))
+		)
+	; */
 case_stmt
 	:	CASE 
-		(( ( WHEN ( expr ) => whenExpr+=expr THEN thenStmt+=statement_list )+ 
-		  ( { input.LA(1) == ELSE }? ELSE elseStmt+=statement_list )? END ) 
-		-> ^( WHEN $whenExpr $thenStmt $elseStmt? )
+		(( when_expr+
+		// ( WHEN ( expr ) => whenExpr+=expr THEN thenStmt+=statement_list )+ 
+		  ( { input.LA(1) == ELSE }? ELSE elseStmt=statement_list )? END CASE) 
+		-> ^( CASE_STMT when_expr+ /*^(WHEN $whenExpr* $thenStmt*)* */^( ELSE $elseStmt )? )
 	|	( firstPri=primary 
-			( WHEN whenPri+=primary THEN thenStmt+=statement_list )+ 
-			( ELSE elseStmt+=statement_list )? END CASE ))
-		-> ^( CASE_STMT $firstPri ^( WHEN $whenPri $thenStmt ) ^( ELSE $elseStmt )? )
+			when_expr+
+			( ELSE elseStmt=statement_list )? END CASE )
+		-> ^( CASE_STMT $firstPri when_expr+ ^( ELSE $elseStmt )? ))
 	;
 	catch[ NoViableAltException nvae ] 
 	{
@@ -1509,6 +1543,10 @@ case_stmt
 		retval.Tree = (object)adaptor.ErrorNode(input, retval.Start, input.LT(-1), re);
 	}
 
+when_expr 
+  : WHEN whenPri=primary THEN thenStmt=statement_list -> ^( WHEN $whenPri $thenStmt )
+  ;
+
 literal
 	:	STRING^
 	|	NUMBER^
@@ -1522,7 +1560,7 @@ literal
 	|	TRUE^
 	|	FALSE^
 	|	(functionCall)=>functionCall	
-		-> ^( { new CommonTree( new CommonToken( FUNCTION, "FUNCTION" ) ) } functionCall )
+		-> functionCall
 	|	field_name^
 	;
 // $>
@@ -1650,7 +1688,6 @@ savepoint options { backtrack = true; }
 // savepoint handling
 release_savepoint
 	:	( RELEASE savepoint ident				-> ^(SAVEPOINT ident )	 )
-//	|	( savepoint ident						-> ^(SAVEPOINT ident )	 ) 
 	;
 
 xa
@@ -1675,13 +1712,14 @@ xid
 
 // $> Transactions
 
-// $< Insert
+// $< Insert   ( SELECT 
 
-insert
+insert 
 	:	INSERT (opt=LOW_PRIORITY | opt=DELAYED | opt=HIGH_PRIORITY)?
 		IGNORE? INTO?
 		table=simple_table_ref_no_alias_existing
-		(	insert_columns ( select | insert_values )
+		( ( LPAREN ident ) => insert_columns ( select | insert_values )
+		| ( select | insert_values )
 		|	set_columns
 		)
 		on_dup_key?
@@ -1689,6 +1727,7 @@ insert
 			insert_columns?
 			set_columns?
 			select?
+			insert_values?
 			on_dup_key?)
 	;
 	catch[ RecognitionException re ]
@@ -1712,7 +1751,7 @@ insert
 	}
 
 insert_columns
-	:	(LPAREN column_name_list? RPAREN)?
+	:	(LPAREN column_name_list RPAREN)?	-> ^(COLUMN_LIST column_name_list?)
 	;
 
 insert_values
@@ -1721,8 +1760,8 @@ insert_values
 	;
 
 insert_default_or_expression
-	:	DEFAULT
-	|	expr
+	:	DEFAULT		-> ^( INSERT_DEFAULT_EXPR DEFAULT )
+	|	expr		-> ^( INSERT_DEFAULT_EXPR expr )
 	;
 	
 set_columns
@@ -1785,10 +1824,10 @@ multiTableDelete = false;
 				(LIMIT INT_NUMBER)?
 			)?
 			-> {multiTableDelete}? ^(DELETE ^(OPTIONS $opts+)? ^(TABLE $t)+ ^(USING $tr) ^(WHERE where_condition)?)
-			-> ^(DELETE ^(OPTIONS $opts+)? ^(TABLE $t) ^(WHERE where_condition)? order_by? ^(LIMIT INT_NUMBER)?)								 
+			-> ^(DELETE ^(OPTIONS $opts+)? ^(TABLE $t) ^(WHERE where_condition)? order_by? ^(LIMIT INT_NUMBER)?)
 		|	t+=simple_table_ref_no_alias_existing (DOT MULT)? (COMMA t+=simple_table_ref_no_alias_existing (DOT MULT)?)*
 			FROM tr=table_references
-			(WHERE where_condition)?			
+			(WHERE where_condition)?
 			-> ^(DELETE ^(OPTIONS $opts+)? ^(TABLE $t)+ ^(FROM $tr) ^(WHERE where_condition)?)
 		)
 	;
@@ -1844,33 +1883,38 @@ scope
 				$tableName
 				^( LIKE $oldtblname? )?
 				^(DEFINITIONS $create+)?
+				select?
+				create_table_options?
+				^( CREATE_PART_OPTS partition_options? )?
 			)
 	;
 
 partition_options
   : PARTITION BY (
-      ( LINEAR? HASH LPAREN expr RPAREN )
-	| ( LINEAR? KEY LPAREN column_name_list? RPAREN )
-	| ( RANGE LPAREN expr RPAREN )
-	| ( LIST LPAREN expr RPAREN )	
+      ( LINEAR? HASH LPAREN partexpr=expr RPAREN )
+	| ( LINEAR? KEY LPAREN partcollist=column_name_list? RPAREN )
+	| ( RANGE LPAREN partexpr=expr RPAREN )
+	| ( LIST LPAREN partexpr=expr RPAREN )	
     )
-	( PARTITIONS INT_NUMBER )?
+	( PARTITIONS numpartitions=INT_NUMBER )?
 	(
 	  SUBPARTITION BY
 	  (
-	     ( LINEAR? HASH LPAREN expr RPAREN )
-	   | ( LINEAR? KEY LPAREN column_name_list? RPAREN )
+	     ( LINEAR? HASH LPAREN subpartexpr=expr RPAREN )
+	   | ( LINEAR? KEY LPAREN subpartcollist=column_name_list? RPAREN )
 	  )
-	  ( SUBPARTITIONS INT_NUMBER )?
+	  ( SUBPARTITIONS numsubpartitions=INT_NUMBER )?
 	)?
 	( LPAREN partition_definition ( COMMA partition_definition )* RPAREN )?
+	-> ^( PARTITION BY $partexpr? ^( KEY $partcollist? )? ^( PARTITIONS $numpartitions? )? 
+		^( SUBPARTITION ^( HASH $subpartexpr? )? ^( KEY $subpartcollist? )? $numsubpartitions? ))
   ;
 
 partition_definition
-  : PARTITION ident
+  : PARTITION partid=ident
     ( VALUES 
 	  (
-		( LESS THAN (( LPAREN ( MAXVALUE | expr ) RPAREN ) | MAXVALUE )) 
+		( LESS THAN (( LPAREN ( MAXVALUE | valuesexpr=expr ) RPAREN ) | MAXVALUE )) 
 	  | ( IN LPAREN exprList RPAREN )
 	  )
 	)?
@@ -1882,7 +1926,12 @@ partition_definition
 	( MIN_ROWS EQUALS? minrows=INT_NUMBER )?
 	( TABLESPACE EQUALS? tablespacename=ident )?
 	( NODEGROUP EQUALS? nodegroupid=ident )?
-	( subpartition_definition ( COMMA subpartition_definition )* )?
+	( subpartdef+=subpartition_definition ( COMMA subpartdef+=subpartition_definition )* )?
+	-> ^( PARTITION $partid ^( VALUES MAXVALUE? $valuesexpr? ^( IN exprList? )?  )
+		^( ENGINE $enginename? )? ^( COMMENT $commenttext? )? ^( DATA $datadir? )? ^( INDEX $indexdir? )?
+		^( MAX_ROWS $maxrows? )? ^( MIN_ROWS $minrows? )? ^( TABLESPACE $tablespacename? )?
+		^( NODEGROUP $nodegroupid? )? ^( SUBPART_DEF $subpartdef? )?
+		 )
   ;
 
 subpartition_definition
@@ -1895,40 +1944,47 @@ subpartition_definition
 	( MIN_ROWS EQUALS? minrows=INT_NUMBER )?
 	( TABLESPACE EQUALS? tablespacename=ident )?
 	( NODEGROUP EQUALS? nodegroupid=ident )?
+	-> ^( SUBPARTITION $logicalname ^( ENGINE $enginename? )?
+		^( COMMENT $commenttext? )? ^( DATA $datadir? )? ^( INDEX $indexdir? )? ^( MAX_ROWS $maxrows? )?
+		^( MIN_ROWS $minrows? )? ^( TABLESPACE $tablespacename? )? ^( NODEGROUP $nodegroupid? )? )
   ;
 
 create_table_options
-  :	create_table_option ( COMMA? create_table_option )*
+  :	create_tbl_opt+=create_table_option ( COMMA? create_tbl_opt+=create_table_option )* // -> create_table_option*
+	-> ^( CREATE_TBL_OPTS $create_tbl_opt )
   ;
 
 one_or_zero
- : ( { input.LT( 1 ).Text == "1" || input.LT( 1 ).Text == "0" }? => INT_NUMBER )
+ : ( { input.LT( 1 ).Text == "1" || input.LT( 1 ).Text == "0" }? => INT_NUMBER ) -> INT_NUMBER
  ;
 
 create_table_option
-	:	(( ENGINE | TYPE ) EQUALS? engine_name )
-	|	( AUTO_INCREMENT EQUALS? INT_NUMBER )
-	|	( AVG_ROW_LENGTH EQUALS? INT_NUMBER )
-	|	( DEFAULT? CHARACTER SET EQUALS? ( ID | STRING ) )
-	|	( CHECKSUM EQUALS? one_or_zero )
-	|	( DEFAULT? COLLATE EQUALS? ( ID | STRING ) )
-	|	( COMMENT EQUALS? STRING )
-	|	( CONNECTION EQUALS? STRING )
-	|	( DATA DIRECTORY EQUALS? STRING )
-	|	( DELAY_KEY_WRITE EQUALS? one_or_zero )
-	|	( INDEX DIRECTORY EQUALS? STRING )
-	|	( INSERT_METHOD	EQUALS? ( NO | FIRST | LAST ) )
-	|	( MAX_ROWS EQUALS? INT_NUMBER )
-	|	( MIN_ROWS EQUALS? INT_NUMBER )
-	|	( PACK_KEYS EQUALS? ( one_or_zero | DEFAULT ) )
-	|	( PASSWORD EQUALS? STRING )
+	:	(( ENGINE | TYPE ) EQUALS? engine_name )			-> ^( CREATE_TBL_OPT ENGINE? TYPE? engine_name )
+	|	( AUTO_INCREMENT EQUALS? INT_NUMBER )				-> ^( CREATE_TBL_OPT AUTO_INCREMENT INT_NUMBER )
+	|	( AVG_ROW_LENGTH EQUALS? INT_NUMBER )				-> ^( CREATE_TBL_OPT AVG_ROW_LENGTH INT_NUMBER )
+	|	( DEFAULT? CHARACTER SET EQUALS? ( ID | STRING ) )	-> ^( CREATE_TBL_OPT CHARACTER ID? STRING? )
+	|	( CHECKSUM EQUALS? one_or_zero )					-> ^( CREATE_TBL_OPT CHECKSUM one_or_zero )
+	|	( DEFAULT? COLLATE EQUALS? ( ID | STRING ) )		-> ^( CREATE_TBL_OPT COLLATE ID? STRING? )
+	|	( COMMENT EQUALS? STRING )							-> ^( CREATE_TBL_OPT COMMENT STRING )
+	|	( CONNECTION EQUALS? STRING )						-> ^( CREATE_TBL_OPT CONNECTION STRING )
+	|	( DATA DIRECTORY EQUALS? STRING )					-> ^( CREATE_TBL_OPT DATA STRING )
+	|	( DELAY_KEY_WRITE EQUALS? one_or_zero )				-> ^( CREATE_TBL_OPT DELAY_KEY_WRITE one_or_zero )
+	|	( INDEX DIRECTORY EQUALS? STRING )					-> ^( CREATE_TBL_OPT INDEX STRING )
+	|	( INSERT_METHOD	EQUALS? ( NO | FIRST | LAST ) )		-> ^( CREATE_TBL_OPT INSERT_METHOD )
+	|	( MAX_ROWS EQUALS? INT_NUMBER )						-> ^( CREATE_TBL_OPT MAX_ROWS INT_NUMBER )
+	|	( MIN_ROWS EQUALS? INT_NUMBER )						-> ^( CREATE_TBL_OPT MIN_ROWS INT_NUMBER )
+	|	( PACK_KEYS EQUALS? ( one_or_zero | DEFAULT ) )		-> ^( CREATE_TBL_OPT PACK_KEYS one_or_zero? DEFAULT? )
+	|	( PASSWORD EQUALS? STRING )							-> ^( CREATE_TBL_OPT PASSWORD STRING )
 	|	( ROW_FORMAT EQUALS? ( DEFAULT | DYNAMIC | FIXED | COMPRESSED | REDUNDANT | COMPACT ) )
-	|	( UNION EQUALS? LPAREN simple_table_ref_no_alias ( COMMA simple_table_ref_no_alias )* RPAREN )
+			-> ^( CREATE_TBL_OPT ROW_FORMAT DEFAULT? DYNAMIC? FIXED? COMPRESSED? REDUNDANT? COMPACT? )
+	|	( UNION EQUALS? LPAREN tabref+=simple_table_ref_no_alias ( COMMA tabref+=simple_table_ref_no_alias )* RPAREN )
+			-> ^( CREATE_TBL_OPT UNION $tabref? )
 	/*|	()*/
 	;
 
 engine_name
-	:	( MYISAM | INNODB | MERGE | MEMORY | HEAP | NDB | NDBCLUSTER | BERKELEYDB | EXAMPLE | FEDERATED | ARCHIVE | CSV | BLACKHOLE ) 
+	:	( MYISAM^ | INNODB^ | MERGE^ | MEMORY^ | HEAP^ | NDB^ | NDBCLUSTER^ | BERKELEYDB^ | EXAMPLE^ | FEDERATED^ |
+		 ARCHIVE^ | CSV^ | BLACKHOLE^ ) 
 	;
 
 create_definition
@@ -1974,90 +2030,93 @@ column_definition
 	;
 
 data_type
-	:	BIT 
-		( LPAREN INT_NUMBER  RPAREN )?
-	|	(	TINYINT		
-		|	SMALLINT	
-		|	MEDIUMINT	
-		|	INT			
-		|	INTEGER		
-		|	BIGINT		
+	:	type=BIT 
+		( LPAREN INT_NUMBER  RPAREN )?	-> ^( DATA_TYPE $type INT_NUMBER? )
+	|	(	type=TINYINT
+		|	type=SMALLINT
+		|	type=MEDIUMINT
+		|	type=INT
+		|	type=INTEGER
+		|	type=BIGINT
 		)
 		(LPAREN INT_NUMBER  RPAREN)?
 		(SIGNED | UNSIGNED )?
-		(ZEROFILL )?
-	|	(	REAL 		
-		|	DOUBLE		
-		|	FLOAT		
-		|	DECIMAL		
-		|	NUMERIC		
+		(ZEROFILL )?					
+			-> ^( DATA_TYPE $type INT_NUMBER? SIGNED? UNSIGNED? ZEROFILL? )
+	|	(	type=REAL
+		|	type=DOUBLE
+		|	type=FLOAT
+		|	type=DECIMAL
+		|	type=NUMERIC
 		)
 		(LPAREN num1=INT_NUMBER COMMA num2=INT_NUMBER RPAREN )?
 		(SIGNED | UNSIGNED )?
 		(ZEROFILL )?
-	|	DATE		
-	|	TIME		
-	|	TIMESTAMP	
-	|	DATETIME	
-	|	YEAR		
-	|	TINYBLOB	
-	|	BLOB		
-	|	MEDIUMBLOB	
-	|	LONGBLOB	
-	|	CHAR
+		-> ^( DATA_TYPE $type ^( LPAREN $num1 $num2 )? SIGNED? UNSIGNED? ZEROFILL? )
+	|	DATE		-> ^( DATA_TYPE DATE )
+	|	TIME		-> ^( DATA_TYPE TIME )
+	|	TIMESTAMP	-> ^( DATA_TYPE TIMESTAMP )
+	|	DATETIME	-> ^( DATA_TYPE DATETIME )
+	|	YEAR		-> ^( DATA_TYPE YEAR )
+	|	TINYBLOB	-> ^( DATA_TYPE TINYBLOB )
+	|	BLOB		-> ^( DATA_TYPE BLOB )
+	|	MEDIUMBLOB	-> ^( DATA_TYPE MEDIUMBLOB )
+	|	LONGBLOB	-> ^( DATA_TYPE LONGBLOB )
+	|	CHAR		
 		( LPAREN INT_NUMBER RPAREN )?
 		(charset )?
-		(collate )?
-	|   VARCHAR			
+		(collate )?	-> ^( DATA_TYPE CHAR INT_NUMBER? charset? collate? )
+	|   VARCHAR
 		LPAREN INT_NUMBER RPAREN
 		(charset )?
-		(collate )?
-	|	(	BINARY		
-		|	VARBINARY	
+		(collate )? -> ^( DATA_TYPE VARCHAR INT_NUMBER? charset? collate? )
+	|	(	type=BINARY
+		|	type=VARBINARY
 		)
 		LPAREN INT_NUMBER RPAREN
-	|	(	TINYTEXT	
-		|	TEXT		
-		|	MEDIUMTEXT	
-		|	LONGTEXT	
+					-> ^( DATA_TYPE $type INT_NUMBER? )
+	|	(	type=TINYTEXT
+		|	type=TEXT	
+		|	type=MEDIUMTEXT
+		|	type=LONGTEXT
 		)
 		(BINARY )?
 		(charset )?
-		(collate )?
-	|	(	ENUM	
-		|	SET		
+		(collate )? -> ^( DATA_TYPE $type BINARY? charset? collate? )
+	|	(	type=ENUM
+		|	type=SET
 		)
-		LPAREN values+=STRING (COMMA values+=STRING)* RPAREN 
+		LPAREN values+=STRING (COMMA values+=STRING)* RPAREN
 		(charset )?
-		(collate )?
+		(collate )? -> ^( DATA_TYPE $type ^( LPAREN $values+ ) charset? collate? )
 	;
 
 charset
 	:	CHARACTER SET
 		(	ident
 		|	STRING 
-		)
+		) -> ^( CHARACTER SET ident? STRING? )
 	;
 
 collate
 	:	COLLATE 
 		(	ident 
 		|	STRING 
-		)
+		) -> ^( COLLATE ident? STRING? )
 	;
 
 charset_equals
   : CHARACTER SET EQUALS?
-	(	ID 
+	(	ident
 	|	STRING 
-	)
+	) -> ^( CHARACTER SET ident? STRING? )
   ;
 
 collate_equals
   : COLLATE EQUALS?
-	(	ID 
+	(	ident
 	|	STRING 
-	)
+	) -> ^( COLLATE ident? STRING? )
   ;
 	
 reference_definition
@@ -2282,8 +2341,10 @@ drop_server
 	;
 
 drop_table
-	:	DROP ( TEMPORARY )? ( TABLE | TABLES ) ( IF EXISTS )? 
-		simple_obj_ref_no_alias_existing_list ( cascade_or_restrict )?
+	:	DROP ( TEMPORARY )? ( TABLE | TABLES ) 
+	(
+		( IF ) => (( IF EXISTS )	simple_obj_ref_no_alias_existing_list ( cascade_or_restrict )? )
+	|	( simple_obj_ref_no_alias_existing_list ( cascade_or_restrict )? ) )
 		-> ^( DROP { new CommonTree( new CommonToken( TABLE, "TABLE" ) ) } 
 			simple_obj_ref_no_alias_existing_list? )
 	;
@@ -2491,7 +2552,7 @@ user_host_or_id_or_string
 sp_call
 	:	CALL ident	-> ^( CALL ident )
 	|	CALL ident LPAREN RPAREN	-> ^( CALL ident )
-	|	CALL ident LPAREN exprList RPAREN	-> ^( CALL ident ^( exprList ))
+	|	CALL ident LPAREN exprList RPAREN	-> ^( CALL ident exprList )
 	;
 	catch[ NoViableAltException nvae ] 
 	{
@@ -2563,12 +2624,12 @@ alter_event
 		statement? )
   ;
 
-declare_condition
+declare_condition options { backtrack=true; memoize=true; }
   : DECLARE ident CONDITION FOR ( INT | SQLSTATE VALUE? STRING )
 	-> ^( DECLARE CONDITION ident INT? STRING? )
   ;
 
-declare_handler
+declare_handler options { backtrack=true; memoize=true; }
   : DECLARE ( type=CONTINUE | type=EXIT | type=UNDO ) 
 	HANDLER FOR conds+=condition_value ( COMMA conds+=condition_value )*
 	statement

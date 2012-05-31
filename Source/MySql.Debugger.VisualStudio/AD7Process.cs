@@ -1,0 +1,151 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Microsoft.VisualStudio.Debugger.Interop;
+using Microsoft.VisualStudio;
+using System.Diagnostics;
+
+namespace MySql.Debugger.VisualStudio
+{
+  public class AD7Process : IDebugProcess3
+  {
+    private IDebugPort2 _port;
+
+    public Guid Id { get; set; }
+    public AD7ProgramNode Node { get; set; }
+
+    public AD7Process(IDebugPort2 debugPort)
+    {
+      Id = Guid.NewGuid();
+      _port = debugPort;
+      Node = new AD7ProgramNode(this);
+    }
+
+
+    #region IDebugProcess3 Members
+
+    public int Attach(IDebugEventCallback2 pCallback, Guid[] rgguidSpecificEngines, uint celtSpecificEngines, int[] rghrEngineAttach)
+    {
+      throw new NotImplementedException();
+    }
+
+    public int CanDetach()
+    {
+      throw new NotImplementedException();
+    }
+
+    public int CauseBreak()
+    {
+      throw new NotImplementedException();
+    }
+
+    public int Continue(IDebugThread2 pThread)
+    {
+      throw new NotImplementedException();
+    }
+
+    public int Detach()
+    {
+      throw new NotImplementedException();
+    }
+
+    public int DisableENC(EncUnavailableReason reason)
+    {
+      throw new NotImplementedException();
+    }
+
+    public int EnumPrograms(out IEnumDebugPrograms2 ppEnum)
+    {
+      throw new NotImplementedException();
+    }
+
+    public int EnumThreads(out IEnumDebugThreads2 ppEnum)
+    {
+      throw new NotImplementedException();
+    }
+
+    public int Execute(IDebugThread2 pThread)
+    {
+      throw new NotImplementedException();
+    }
+
+    public int GetAttachedSessionName(out string pbstrSessionName)
+    {
+      throw new NotImplementedException();
+    }
+
+    public int GetDebugReason(enum_DEBUG_REASON[] pReason)
+    {
+      throw new NotImplementedException();
+    }
+
+    public int GetENCAvailableState(EncUnavailableReason[] pReason)
+    {
+      throw new NotImplementedException();
+    }
+
+    public int GetEngineFilter(GUID_ARRAY[] pEngineArray)
+    {
+      throw new NotImplementedException();
+    }
+
+    public int GetHostingProcessLanguage(out Guid pguidLang)
+    {
+      throw new NotImplementedException();
+    }
+
+    public int GetInfo(enum_PROCESS_INFO_FIELDS Fields, PROCESS_INFO[] pProcessInfo)
+    {
+      throw new NotImplementedException();
+    }
+
+    public int GetName(enum_GETNAME_TYPE gnType, out string pbstrName)
+    {
+      throw new NotImplementedException();
+    }
+
+    public int GetPhysicalProcessId(AD_PROCESS_ID[] pProcessId)
+    {
+      pProcessId[0].ProcessIdType = (uint)enum_AD_PROCESS_ID.AD_PROCESS_ID_GUID;
+      pProcessId[0].guidProcessId = Id;
+      return VSConstants.S_OK;
+    }
+
+    public int GetPort(out IDebugPort2 ppPort)
+    {
+      ppPort = _port;
+      return VSConstants.S_OK;
+    }
+
+    public int GetProcessId(out Guid pguidProcessId)
+    {
+      pguidProcessId = Id;
+      return VSConstants.S_OK;
+    }
+
+    public int GetServer(out IDebugCoreServer2 ppServer)
+    {
+      throw new NotImplementedException();
+    }
+
+    public int SetHostingProcessLanguage(ref Guid guidLang)
+    {
+      throw new NotImplementedException();
+    }
+
+    public int Step(IDebugThread2 pThread, enum_STEPKIND sk, enum_STEPUNIT Step)
+    {
+      Debug.WriteLine("AD7Process: Step");
+      
+      return VSConstants.S_OK;
+    }
+
+    public int Terminate()
+    {
+      throw new NotImplementedException();
+    }
+
+    #endregion
+  }
+}
