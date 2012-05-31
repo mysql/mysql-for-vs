@@ -256,7 +256,7 @@ namespace MySql.Data.Types
                 value.Year, value.Month, value.Day);
       if (type != MySqlDbType.Date)
       {
-        val = value.Millisecond > 0 ? String.Format("{0} {1:00}:{2:00}:{3:00}.{4}", val,
+        val = value.Millisecond > 0 ? String.Format("{0} {1:00}:{2:00}:{3:00}.{4:000}", val,
           value.Hour, value.Minute, value.Second, value.Millisecond) : String.Format("{0} {1:00}:{2:00}:{3:00} ", val,
           value.Hour, value.Minute, value.Second);
       }
@@ -308,7 +308,7 @@ namespace MySql.Data.Types
 
       if (dtValue.Millisecond > 0)
       {
-        long val = dtValue.Millisecond;
+        long val = dtValue.Millisecond < 1000 ?  dtValue.Millisecond * 1000 : dtValue.Millisecond;
         for (int x = 0; x < 4; x++)
         {
           packet.WriteByte((byte)(val & 0xff));
