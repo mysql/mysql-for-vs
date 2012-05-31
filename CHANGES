@@ -5,6 +5,7 @@
 - Fix for error when trying to change the name of an Index on the Indexes/Keys editor; along with this fix now users can change the Index type of a new Index which could not be done
   in previous versions, and when changing the Index name the change is reflected on the list view at the left side of the Index/Keys editor (Oracle bug #13613801).
 - Fix for stored procedure call using only its name with EF code first (MySql bug #64999, Oracle bug #14008699). 
+- Fix for performance issue in generated EF query: .NET StartsWith/Contains/EndsWith produces MySql's locate instead of Like (MySql bug #64935, Oracle bug #14009363).
 
 6.4.5
 - Fix for bug on Create Table via Server Explorer. The columns properties are now added in the correct order.(Oracle db Bug # 13475830).

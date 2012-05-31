@@ -459,8 +459,90 @@ namespace MySql.Data.Entity
 
     #region Private Methods
 
+    /// <summary>
+    /// Examines a binary expression to see if it is an special case suitable to conversion 
+    /// to a more efficient and equivalent LIKE sql expression.
+    /// </summary>
+    /// <param name="left"></param>
+    /// <param name="right"></param>
+    /// <param name="op"></param>
+    /// <returns></returns>
+    protected LikeFragment TryPromoteToLike(DbExpression left, DbExpression right, string op)
+    {
+      DbFunctionExpression fl = left as DbFunctionExpression;
+      if ((fl != null) && (right is DbConstantExpression))
+      {
+        LikeFragment like = new LikeFragment();
+        if (fl.Function.FullName == "Edm.IndexOf")
+        {
+          int value = Convert.ToInt32(((DbConstantExpression)right).Value);
+          like.Argument = fl.Arguments[1].Accept(this);
+          if ((value == 1) && (op == "="))
+          {
+            DbFunctionExpression fr1;
+            DbFunctionExpression fr2;
+            if ((fl.Arguments[0] is DbConstantExpression))
+            {
+              // Case LIKE 'pattern%'
+              DbConstantExpression c = (DbConstantExpression)fl.Arguments[0];
+              like.Pattern = new LiteralFragment(string.Format("'{0}%'", c.Value));
+              return like;
+            }
+            else if ((fl.Arguments.Count == 2) &&
+              ((fr1 = fl.Arguments[0] as DbFunctionExpression) != null) &&
+              ((fr2 = fl.Arguments[1] as DbFunctionExpression) != null) &&
+              (fr1.Function.FullName == "Edm.Reverse") &&
+              (fr2.Function.FullName == "Edm.Reverse"))
+            {
+              // Case LIKE '%pattern' in EF .NET 4.0
+              if (fr1.Arguments[0] is DbConstantExpression)
+              {
+                DbConstantExpression c = (DbConstantExpression)fr1.Arguments[0];
+                like.Pattern = new LiteralFragment(string.Format("'%{0}'", c.Value));
+                like.Argument = fr2.Arguments[0].Accept(this);
+                return like;
+              }
+            }
+          }
+          else if (value == 0)
+          {
+            if ((op == ">") && (fl.Arguments[0] is DbConstantExpression))
+            {
+              // Case LIKE '%pattern%'
+              DbConstantExpression c = (DbConstantExpression)fl.Arguments[0];
+              like.Pattern = new LiteralFragment(string.Format("'%{0}%'", c.Value));
+              return like;
+            }
+          }
+        }
+        // Like '%pattern' in EF .NET 3.5 (yes, is different than in .NET 4.0)
+        else if (fl.Function.FullName == "Edm.Right")
+        {
+          DbFunctionExpression fLength = fl.Arguments[1] as DbFunctionExpression;
+          if ((fLength != null) && (fLength.Function.FullName == "Edm.Length") && (fLength.Arguments[0] is DbConstantExpression))
+          {
+            DbConstantExpression c2 = fLength.Arguments[0] as DbConstantExpression;
+            DbConstantExpression c1 = (DbConstantExpression)right;
+            if (c1.Value == c2.Value)
+            {
+              like.Argument = fl.Arguments[0].Accept(this);
+              like.Pattern = new LiteralFragment(string.Format("'%{0}'", c1.Value));
+              return like;
+            }
+          }
+        }
+      }
+      return null;
+    }
+
     protected virtual SqlFragment VisitBinaryExpression(DbExpression left, DbExpression right, string op)
     {
+      // Optimization: try to use 'like' instead of 'locate' (Edm.IndexOf) for these
+      // cases: (like 'word%'), (like '%word') & (like '%word%').
+      LikeFragment like = TryPromoteToLike(left, right, op);
+      if (like != null)
+        return like;
+      // normal flow
       BinaryFragment f = new BinaryFragment();
       f.Operator = op;
       f.Left = left.Accept(this);
