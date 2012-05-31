@@ -273,20 +273,21 @@ namespace MySql.Data.Entity.Tests
       using (testEntities context = new testEntities())
       {
         int i = 0;
-        
+
         // 1st test, only ORs
         List<int> Ages = new List<int>();
         Ages.AddRange(new int[] { 37, 38, 39, 40, 41, 42, 43 });
-        var q = from e in context.Employees where Ages.Contains(e.Age.Value)
+        var q = from e in context.Employees
+                where Ages.Contains(e.Age.Value)
                 orderby e.LastName, e.FirstName
                 select e;
         string[,] data1 = new string[,] { { "Flintstone", "Fred" }, { "Flintstone", "Wilma" },
           { "Rubble", "Barney" } };
         string query;
-        #if CLR4
+#if CLR4
         query = q.ToTraceString();
-        CheckSql(query, SQLSyntax.InExpressionSimple );
-        Assert.AreEqual(3, q.Count());        
+        CheckSql(query, SQLSyntax.InExpressionSimple);
+        Assert.AreEqual(3, q.Count());
         foreach (var e in q)
         {
           Assert.AreEqual(data1[i, 0], e.LastName);
@@ -305,7 +306,7 @@ namespace MySql.Data.Entity.Tests
             orderby e.LastName, e.FirstName
             select e;
         query = q.ToTraceString();
-        CheckSql( SQLSyntax.InExpressionComplex, query);
+        CheckSql(SQLSyntax.InExpressionComplex, query);
         Assert.AreEqual(6, q.Count());
         string[,] data2 = new string[,] { { "Doo", "Scooby" }, { "Flintstone", "Fred" }, 
           { "Rubble", "Barney" }, { "Rubble", "Betty" }, { "Slate", "S" }, 
@@ -319,14 +320,14 @@ namespace MySql.Data.Entity.Tests
           i++;
         }
 #endif
-        
+
         // 3rd test, using only ||'s
         q = from e in context.Employees
-                where (e.Age.Value == 37 ) || (e.Age.Value == 38 ) || (e.Age.Value == 39 ) ||
-                (e.Age.Value == 40 ) || (e.Age.Value == 41 ) || (e.Age.Value == 42 ) ||
-                (e.Age.Value == 43 )
-                orderby e.LastName, e.FirstName
-                select e;
+            where (e.Age.Value == 37) || (e.Age.Value == 38) || (e.Age.Value == 39) ||
+            (e.Age.Value == 40) || (e.Age.Value == 41) || (e.Age.Value == 42) ||
+            (e.Age.Value == 43)
+            orderby e.LastName, e.FirstName
+            select e;
         query = q.ToTraceString();
         CheckSql(query, SQLSyntax.InExpressionSimple);
         Assert.AreEqual(3, q.Count());
@@ -340,5 +341,44 @@ namespace MySql.Data.Entity.Tests
       }
     }
 
+    /// <summary>
+    /// Fix for bug LINQ to SQL's StartsWith() and Contains() generate slow LOCATE() 
+    /// instead of LIKE (bug http://bugs.mysql.com/bug.php?id=64935 / http://clustra.no.oracle.com/orabugs/14009363).
+    /// </summary>
+    [Test]
+    public void ConversionToLike()
+    {
+      // Generates queries for each LIKE + wildcards case and checks SQL generated.
+      using (testEntities ctx = new testEntities())
+      {
+        // Like 'pattern%'
+        var q = from c in ctx.Employees where c.FirstName.StartsWith( "B" ) 
+                orderby c.FirstName select c;
+        string query = q.ToTraceString();
+        CheckSql(query, SQLSyntax.StartsWithTranslatedToLike);
+        Assert.AreEqual(2, q.Count());
+        Assert.AreEqual("Barney", q.First().FirstName);
+        Assert.AreEqual("Betty", q.Skip(1).First().FirstName);
+        // Like '%pattern%'
+        q = from c in ctx.Employees where c.FirstName.Contains("r") 
+            orderby c.FirstName select c;
+        query = q.ToTraceString();
+        CheckSql(query, SQLSyntax.ContainsTranslatedToLike);
+        Assert.AreEqual(2, q.Count());
+        Assert.AreEqual("Barney", q.First().FirstName);
+        Assert.AreEqual("Fred", q.Skip(1).First().FirstName);
+        // Like '%pattern'
+        q = from c in ctx.Employees
+                where c.FirstName.EndsWith("y")
+                orderby c.FirstName
+                select c;
+        query = q.ToTraceString();
+        CheckSql(query, SQLSyntax.EndsWithTranslatedToLike);
+        Assert.AreEqual(3, q.Count());
+        Assert.AreEqual("Barney", q.First().FirstName);
+        Assert.AreEqual("Betty", q.Skip(1).First().FirstName);
+        Assert.AreEqual("Scooby", q.Skip(2).First().FirstName);
+      }
+    }
   }
 }
