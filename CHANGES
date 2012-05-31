@@ -8,3 +8,4 @@
   LINQ to Entities (Oracle bug #14016344, MySql bug #64934).
 - Fix for performance issue in generated EF query: .NET StartsWith/Contains/EndsWith produces MySql's locate instead of Like (MySql bug #64935, Oracle bug #14009363).
 - Fix for script generated for code first contains wrong alter table and wrong declaration for byte[] (MySql bug #64216, Oracle bug #13900091).
+- Fix for bug MySqlDateTime when using milliseconds precision minor than 6 in the column definition. (MySql #64867 Oracle bug #13881444 ).
