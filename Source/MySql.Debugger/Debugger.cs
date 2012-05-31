@@ -5,6 +5,7 @@ using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -121,6 +122,35 @@ namespace MySql.Debugger
       }
     }
 
+    private void ExecuteSetupScripts()
+    {
+      MySqlConnection con = new MySqlConnection(_connection.ConnectionString);      
+      Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MySql.Debugger.MySql_Scripts.Schema.sql");
+      StreamReader sr = new StreamReader(stream);
+      string sql = sr.ReadToEnd();
+      sr.Close();
+
+      con.Open();
+      try
+      {
+        MySqlScript script = new MySqlScript(con);
+        script.Query = sql;
+        script.Delimiter = "//";
+        script.Execute();
+
+        stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MySql.Debugger.MySql_Scripts.Logic.sql");
+        sr = new StreamReader(stream);
+        sql = sr.ReadToEnd();
+        sr.Close();
+        script.Query = sql;
+        script.Execute();
+      }
+      finally
+      {
+        con.Close();
+      }
+    }
+
     public void Run(string[] values)
     { 
       /*
@@ -143,6 +173,7 @@ namespace MySql.Debugger
         _lockingCon.Open();
       try
       {
+        ExecuteSetupScripts();
         // for now hardcoded
         DebugSessionId = 1;
         // Clean debugscope table.
