@@ -810,7 +810,7 @@ namespace MySql.Data.MySqlClient.Tests
       rdr.Close();
     }
 
-#if CLR4
+#if !CF
     [Test]
     public void ShowMicrosecondError()
     {               
@@ -823,5 +823,6 @@ namespace MySql.Data.MySqlClient.Tests
       Assert.IsTrue(DateTime.TryParse(date, out temp));
     }
 #endif
+
   }
 }
