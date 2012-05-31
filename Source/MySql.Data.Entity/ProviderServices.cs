@@ -391,7 +391,7 @@ namespace MySql.Data.MySqlClient
       return sql.ToString();
     }
 
-    private string GetColumnType(TypeUsage type)
+    internal string GetColumnType(TypeUsage type)
     {
       string t = type.EdmType.Name;
       if (t.StartsWith("u", StringComparison.OrdinalIgnoreCase))

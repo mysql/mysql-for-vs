@@ -9,3 +9,9 @@
 - Fix for performance issue in generated EF query: .NET StartsWith/Contains/EndsWith produces MySql's locate instead of Like (MySql bug #64935, Oracle bug #14009363).
 - Fix for script generated for code first contains wrong alter table and wrong declaration for byte[] (MySql bug #64216, Oracle bug #13900091).
 - Fix for bug MySqlDateTime when using milliseconds precision minor than 6 in the column definition. (MySql #64867 Oracle bug #13881444 ).
+- Entity Framework Code First Enable-Migrations new feature in version 4.3.1. First commit that includes:
+	- New Class MySqlMigrationSqlGenerator that generates mysql statements for Migration Operations. Still has some improvements to be done. (Check TODO Notes included).
+	- New Class MySqlConnectionFactory.cs used in configuration for Enable Migrations
+	- Changes in ProviderManifest.cs: Added validation in public override TypeUsage GetEdmType(TypeUsage storeType) to use a different constructor for CreateTypeUsage when Primitive type    is String.
+	- Changes in ProviderServices.cs: Changed visibility in method GetColumnType(TypeUsage type) from private to internal.
+	- Added reference in MySql.Data.Entity.csproj to include new namespace for Migrations.

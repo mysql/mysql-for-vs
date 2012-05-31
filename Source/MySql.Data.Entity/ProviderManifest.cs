@@ -93,6 +93,12 @@ namespace MySql.Data.MySqlClient
       }
 
       PrimitiveType edmPrimitiveType = base.StoreTypeNameToEdmPrimitiveType[storeTypeName];
+
+      if (edmPrimitiveType.PrimitiveTypeKind == PrimitiveTypeKind.String)
+      {
+        return TypeUsage.CreateStringTypeUsage(edmPrimitiveType, false, false, LONGTEXT_MAXLEN);
+      }
+
       return TypeUsage.CreateDefaultTypeUsage(edmPrimitiveType);
     }
 
