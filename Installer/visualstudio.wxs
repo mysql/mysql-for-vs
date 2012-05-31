@@ -41,6 +41,10 @@
               Source='..\Source\MySql.VisualStudio\bin\release\extension.vsixmanifest'/>
         <File Id='VSPkgdef' Name='MySql.VisualStudio.pkgdef' DiskId='1'
               Source='..\Source\MySql.VisualStudio\bin\release\MySql.VisualStudio.pkgdef'/>
+        <File Id='MySql.Debugger' Name='MySql.Debugger.dll' DiskId='1'
+              Source='..\Source\MySql.Debugger\bin\release\MySql.Debugger.dll'/>
+        <File Id='MySql.Debugger.VisualStudio' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
+              Source='..\Source\MySql.Debugger.VisualStudio\bin\release\MySql.Debugger.VisualStudio.dll'/>
       </Component>
     </DirectoryRef>
 
@@ -62,6 +66,61 @@
         <RegistryKey Id="VS_2010_RegistryKey_v2" Root="HKLM" Action="createAndRemoveOnUninstall"
                      Key="SOFTWARE\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\MySQL Connector Net $(var.Version) v2.0">
           <RegistryValue Id="VS_2010_RegistryValue_v2" Value="[assemblies_v2]" Type="string" Action="write"/>
+        </RegistryKey>
+        <!-- Debugger -->
+        <!--
+[HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\10.0\AD7Metrics\Engine\{EEEE0740-10F7-4E5F-8BC4-1CC0AC9ED5B0}]
+@="guidMySqlStoredProcedureDebugEngine"
+"CLSID"="{EEEE066A-1103-451F-BC7A-6AEF76558AE2}"
+"ProgramProvider"="{EEEE9AB0-511C-4BF0-BBE8-F763A73DA5EF}"
+"Attach"=dword:00000001
+"AddressBP"=dword:00000000
+"AutoSelectPriority"=dword:00000004
+"CallstackBP"=dword:00000001
+"Name"="MySql Stored Procedure Debug Engine"
+"PortSupplier"="{EEEE9AB0-511C-4BF0-BBE8-F763A73DA5EF}"
+"AlwaysLoadLocal"=dword:00000000
+        -->
+        <RegistryKey Id="VS_2010_Debugger_Engine" Root="HKLM" Action="createAndRemoveOnUninstall"
+                     Key="SOFTWARE\Microsoft\VisualStudio\10.0\AD7Metrics\Engine\{EEEE0740-10F7-4E5F-8BC4-1CC0AC9ED5B0}">
+          <RegistryValue Name="CLSID" Value="{EEEE066A-1103-451F-BC7A-6AEF76558AE2}" Type="string" Action="write"/>
+          <RegistryValue Name="ProgramProvider" Value="{EEEE9AB0-511C-4BF0-BBE8-F763A73DA5EF}" Type="string" Action="write"/>
+          <RegistryValue Name="Attach" Value="1" Type="integer" Action="write"/>
+          <RegistryValue Name="AddressBP" Value="0" Type="integer" Action="write"/>
+          <RegistryValue Name="AutoSelectPriority" Value="4" Type="integer" Action="write"/>
+          <RegistryValue Name="CallstackBP" Value="1" Type="integer" Action="write"/>
+          <RegistryValue Name="Name" Value="MySql Stored Procedure Debug Engine" Type="string" Action="write"/>
+          <RegistryValue Name="PortSupplier" Value="{EEEE9AB0-511C-4BF0-BBE8-F763A73DA5EF}" Type="string" Action="write"/>
+          <RegistryValue Name="AlwaysLoadLocal" Value="1" Type="integer" Action="write"/>
+        </RegistryKey>
+        <!--
+        [HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\10.0\CLSID\{EEEE066A-1103-451F-BC7A-6AEF76558AE2}]
+"Assembly"="MySql.Debugger.VisualStudio"
+"Class"="MySql.Debugger.VisualStudio.AD7Engine"
+"InprocServer32"="c:\\windows\\system32\\mscoree.dll"
+"CodeBase"="file:///C:\\src\\MainSource\\features\\spdebugger-serverside2\\Source\\MySql.Debugger.VisualStudio\\bin\\Debug\\MySql.Debugger.VisualStudio.dll"
+        -->
+        <RegistryKey Id="VS_2010_Debugger_CLSID_Engine" Root="HKLM" Action="createAndRemoveOnUninstall"
+                     Key="SOFTWARE\Microsoft\VisualStudio\10.0\CLSID\{EEEE066A-1103-451F-BC7A-6AEF76558AE2}">
+          <RegistryValue Name="Assembly" Value="MySql.Debugger.VisualStudio" Type="string" Action="write"/>
+          <RegistryValue Name="Class" Value="MySql.Debugger.VisualStudio.AD7Engine" Type="string" Action="write"/>
+          <RegistryValue Name="InprocServer32" Value="c:\\windows\\system32\\mscoree.dll" Type="string" Action="write"/>
+          <RegistryValue Name="CodeBase" Value="[#MySql.Debugger.VisualStudio]" Type="string" Action="write"/>
+        </RegistryKey>
+<!-- 
+[HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\10.0\CLSID\{EEEE9AB0-511C-4BF0-BBE8-F763A73DA5EF}]
+"Assembly"="MySql.Debugger.VisualStudio"
+"Class"="MySql.Debugger.VisualStudio.AD7ProgramProvider"
+"InprocServer32"="c:\\windows\\system32\\mscoree.dll"
+"CodeBase"="file:///C:\\src\\MainSource\\features\\spdebugger-serverside2\\Source\\MySql.Debugger.VisualStudio\\bin\\Debug\\MySql.Debugger.VisualStudio.dll"
+-->
+        <RegistryKey Id="VS_2010_Debugger_CLSID_Provider" Root="HKLM" Action="createAndRemoveOnUninstall"
+                     Key="SOFTWARE\Microsoft\VisualStudio\10.0\CLSID\{EEEE9AB0-511C-4BF0-BBE8-F763A73DA5EF}">
+
+          <RegistryValue Name="Assembly" Value="MySql.Debugger.VisualStudio" Type="string" Action="write"/>
+          <RegistryValue Name="Class" Value="MySql.Debugger.VisualStudio.AD7ProgramProvide" Type="string" Action="write"/>
+          <RegistryValue Name="InprocServer32" Value="c:\\windows\\system32\\mscoree.dll" Type="string" Action="write"/>
+          <RegistryValue Name="CodeBase" Value="[#MySql.Debugger.VisualStudio]" Type="string" Action="write"/>
         </RegistryKey>
       </Component>
     </DirectoryRef>
