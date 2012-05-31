@@ -71,8 +71,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="MySql Scripts\Logic.sql" />
-    <Content Include="MySql Scripts\Schema.sql" />
+    <EmbeddedResource Include="MySql Scripts\Logic.sql" />
+    <EmbeddedResource Include="MySql Scripts\Schema.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
