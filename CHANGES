@@ -9,6 +9,7 @@
 - Fix for performance issue in generated EF query: .NET StartsWith/Contains/EndsWith produces MySql's locate instead of Like (MySql bug #64935, Oracle bug #14009363).
 - Fix for script generated for code first contains wrong alter table and wrong declaration for byte[] (MySql bug #64216, Oracle bug #13900091).
 - Fix for bug MySqlDateTime when using milliseconds precision minor than 6 in the column definition. (MySql #64867 Oracle bug #13881444 ).
+- Fix and code contribution for bug Timed out sessions are removed without notification which allow to enable the Expired CallBack when Session Provider times out any session (bug MySql #62266 Oracle bug # 13354935)
 - Entity Framework Code First Enable-Migrations new feature in version 4.3.1. First commit that includes:
 	- New Class MySqlMigrationSqlGenerator that generates mysql statements for Migration Operations. Still has some improvements to be done. (Check TODO Notes included).
 	- New Class MySqlConnectionFactory.cs used in configuration for Enable Migrations
