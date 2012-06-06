@@ -142,6 +142,7 @@ namespace MySql.Debugger.VisualStudio
         File.WriteAllText(s, _debugger.CurrentScope.OwningRoutine.SourceCode );
         _debugger.CurrentScope.FileName = s;
       }
+      _node.FileName = _debugger.CurrentScope.FileName;
       return _debugger.CurrentScope.FileName;
     }
 
@@ -323,11 +324,7 @@ namespace MySql.Debugger.VisualStudio
             body = "CREATE " + body.Substring(truncPos);
           }
 
-          tempFileName = Path.GetTempFileName();
-          File.WriteAllText(tempFileName, body );
-          _node.FileName = tempFileName;
           _node.ProgramContents = MySql.Debugger.Debugger.NormalizeTag(body);
-          //_node.ProgramContents = body;
           return body;
         }
         finally
