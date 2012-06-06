@@ -125,7 +125,8 @@ namespace MySql.Debugger.VisualStudio
       _endPosition = endPosition[0];
       string fileName;
       docPosition.GetFileName(out fileName);
-      _node.FileName = fileName;
+      if (fileName != _node.FileName)
+        return VSConstants.E_FAIL;
 
       //MySqlBreakpoint mysqlBreakpoint = new MySqlBreakpoint(fileName, (int)_lineNumber, 0, this);
 
