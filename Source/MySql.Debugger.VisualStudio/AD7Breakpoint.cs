@@ -59,6 +59,8 @@ namespace MySql.Debugger.VisualStudio
       set { _coreBreakpoint = value; } 
     }
 
+    private IEnumDebugErrorBreakpoints2 enumError;
+
     internal AD7Breakpoint(AD7ProgramNode node, AD7Events callback)
     {
       Debug.WriteLine("AD7Breakpoint: ctor");
@@ -89,7 +91,7 @@ namespace MySql.Debugger.VisualStudio
     {
       Debug.WriteLine("AD7Breakpoint: Enable");
       if( CoreBreakpoint == null )
-        // defer real enabling for alter
+        // defer real enabling for later
         _disabled = (fEnable == 0);
       else
         CoreBreakpoint.Disabled = (fEnable == 0);
@@ -113,7 +115,8 @@ namespace MySql.Debugger.VisualStudio
     int IDebugPendingBreakpoint2.Bind()
     {
       Debug.WriteLine("AD7Breakpoint: Bind");
-
+      enumError = null;
+      
       //TOOD set breakpoint line
       IDebugDocumentPosition2 docPosition = (IDebugDocumentPosition2)(Marshal.GetObjectForIUnknown(_bpRequestInfo.bpLocation.unionmember2));
 
@@ -128,17 +131,23 @@ namespace MySql.Debugger.VisualStudio
       if (fileName != _node.FileName)
         return VSConstants.E_FAIL;
 
-      //MySqlBreakpoint mysqlBreakpoint = new MySqlBreakpoint(fileName, (int)_lineNumber, 0, this);
-
-      
-
-      ////TODO bind breakpoint
-      DebuggerManager.Instance.BindBreakpoint(this);
-      //_node.Debugger.Breakpoint = this;
-      //_node.Debugger.BindBreakpoint(mysqlBreakpoint);
-
-      _callback.Breakpoint(_node, this);
-      return VSConstants.S_OK;
+      if (((IDebugPendingBreakpoint2)this).CanBind(out enumError) == VSConstants.S_OK)
+      {
+        ////TODO bind breakpoint
+        DebuggerManager.Instance.BindBreakpoint(this);
+        _callback.Breakpoint(_node, this);
+        return VSConstants.S_OK;
+      }
+      else
+      {
+        IDebugErrorBreakpoint2[] err = new IDebugErrorBreakpoint2[ 1 ];
+        uint cnt = 0;
+        enumError.Reset();
+        enumError.Next(1, err, ref cnt);
+        enumError.Reset();
+        _callback.BreakpointError(_node, err[0]);
+        return VSConstants.S_OK;
+      }
     }
 
     int IDebugPendingBreakpoint2.CanBind(out IEnumDebugErrorBreakpoints2 ppErrorEnum)
@@ -152,23 +161,40 @@ namespace MySql.Debugger.VisualStudio
       else
       {
         // TODO: Can also return deleted breakpoint, see constant E_BP_DELETED
-        // TODO: Set ppErrorEnum to a real reference.
-        ppErrorEnum = null;
-        return VSConstants.S_FALSE;
+        Ad7EnumDebugErrorBreakpoints enumBp = new Ad7EnumDebugErrorBreakpoints();
+        enumBp.Add(new AD7DebugErrorBreakpoint(this));
+        ppErrorEnum = enumBp;
+        return VSConstants.E_FAIL;
       }
     }
 
     int IDebugPendingBreakpoint2.EnumBoundBreakpoints(out IEnumDebugBoundBreakpoints2 ppEnum)
     {
       Debug.WriteLine("AD7Breakpoint: EnumBoundBreakpoints");
-      ppEnum = this;
-      return VSConstants.S_OK;
+      if (enumError == null)
+      {
+        ppEnum = this;
+        return VSConstants.S_OK;
+      }
+      else
+      {
+        ppEnum = null;
+        return VSConstants.E_FAIL;
+      }
     }
 
     int IDebugPendingBreakpoint2.EnumErrorBreakpoints(enum_BP_ERROR_TYPE bpErrorType, out IEnumDebugErrorBreakpoints2 ppEnum)
     {
       Debug.WriteLine("AD7Breakpoint: EnumErrorBreakpoints");
-      ppEnum = null;
+      if ( ((bpErrorType & enum_BP_ERROR_TYPE.BPET_GENERAL_WARNING) != 0) ||
+        (( bpErrorType & enum_BP_ERROR_TYPE.BPET_TYPE_ERROR ) != 0 ))
+      {
+        ppEnum = enumError;
+      }
+      else
+      {
+        ppEnum = null;
+      }
       return VSConstants.S_OK;
     }
 
@@ -209,15 +235,25 @@ namespace MySql.Debugger.VisualStudio
     int IEnumDebugBoundBreakpoints2.GetCount(out uint pcelt)
     {
       Debug.WriteLine("AD7Breakpoint: GetCount");
-      pcelt = 1;
+      if (enumError == null)
+        pcelt = 1;
+      else
+        pcelt = 0;
       return VSConstants.S_OK;
     }
 
     int IEnumDebugBoundBreakpoints2.Next(uint celt, IDebugBoundBreakpoint2[] rgelt, ref uint pceltFetched)
     {
       Debug.WriteLine("AD7Breakpoint: Next");
-      rgelt[0] = this;
-      pceltFetched = 1;
+      if (enumError == null)
+      {
+        rgelt[0] = this;
+        pceltFetched = 1;
+      }
+      else
+      {
+        pceltFetched = 0;
+      }
       return VSConstants.S_OK;
     }
 

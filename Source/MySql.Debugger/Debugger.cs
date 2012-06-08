@@ -609,6 +609,34 @@ namespace MySql.Debugger
           Variables = new Dictionary<string, StoreType>() });
     }
 
+    public static string GetRoutineName(string sql)
+    {
+      MySQL51Parser.program_return r;
+      StringBuilder sb;
+      bool expectErrors = false;
+      CommonTokenStream cts;
+      // The grammar supports upper case only
+      MemoryStream ms = new MemoryStream(ASCIIEncoding.ASCII.GetBytes(sql));
+      CaseInsensitiveInputStream input = new CaseInsensitiveInputStream(ms);
+      MySQL51Lexer lexer = new MySQL51Lexer(input);
+      CommonTokenStream tokens = new CommonTokenStream(lexer);
+      MySQL51Parser parser = new MySQL51Parser(tokens);
+      sb = new StringBuilder();
+      TextWriter tw = new StringWriter(sb);
+      parser.TraceDestination = tw;
+      r = parser.program();
+      cts = tokens;
+      if (!expectErrors && sb.Length != 0)
+      {
+        throw new DebugSyntaxException(sb.ToString());
+      }
+      //RoutineInfo ri = GetRoutineFromDb("", true);
+      CommonTree t = (CommonTree)r.Tree;
+      if (t.IsNil)
+        t = (CommonTree)t.GetChild(0);
+      return t.GetChild(1).Text;
+    }
+
     private RoutineInfo MakeRoutineInfo(CommonTree t, CommonTokenStream cts, string sql)
     {
       //StringBuilder sb = new StringBuilder();
@@ -1223,7 +1251,6 @@ namespace MySql.Debugger
       // begin_end, if, while, repeat, loop, declare condition, declare handler, 
       // case's when, then, else.
       if (children == null) return;
-      _isMainBeginEnd = true;
       foreach (ITree ic in children)
       {
         CommonTree tc = (CommonTree)ic;
@@ -1244,12 +1271,8 @@ namespace MySql.Debugger
               }
               sql.AppendLine("begin");
               GenerateInstrumentedCodeRecursive(tc.Children, routine, sql);
-              if (!_isMainBeginEnd)
-              {
-                EmitInstrumentationCode(sql, routine, tokenStream.GetTokens(tc.TokenStopIndex, tc.TokenStopIndex).Last().Line);
-              }
-              sql.AppendLine("end;");
-              _isMainBeginEnd = false;
+              EmitInstrumentationCode(sql, routine, tokenStream.GetTokens(tc.TokenStopIndex, tc.TokenStopIndex).Last().Line);              
+              sql.AppendLine("end;");              
             }
             break;
           case "if":

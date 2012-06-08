@@ -92,7 +92,7 @@ namespace MySql.Debugger.VisualStudio
       Debug.WriteLine("AD7Engine CreatePendingBreakpoint");
       _breakpoint = new AD7Breakpoint(_node, _events, pBPRequest);
       ppPendingBP = _breakpoint;
-      _events.Breakpoint(_node, _breakpoint);
+      //_events.Breakpoint(_node, _breakpoint);
 
       return VSConstants.S_OK;
     }

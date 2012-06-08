@@ -26,21 +26,25 @@ using System.Linq;
 using System.Text;
 using Microsoft.VisualStudio.Debugger.Interop;
 using Microsoft.VisualStudio;
-
+using System.Diagnostics;
 
 namespace MySql.Debugger.VisualStudio
 {
   public class Ad7EnumDebugErrorBreakpoints : IEnumDebugErrorBreakpoints2
   {
     private List<IDebugErrorBreakpoint2> _errors;
+    private int _next = -1;
 
     public Ad7EnumDebugErrorBreakpoints()
     {
+      Debug.WriteLine("Ad7EnumDebugErrorBreakpoints: ctor");
       _errors = new List<IDebugErrorBreakpoint2>();
+      _next = 0;
     }
 
     protected Ad7EnumDebugErrorBreakpoints(Ad7EnumDebugErrorBreakpoints enumerator)
     {
+      Debug.WriteLine("Ad7EnumDebugErrorBreakpoints: ctor clone");
       IEnumDebugErrorBreakpoints2 e = (IEnumDebugErrorBreakpoints2)enumerator;
       e.Reset();
       _errors = new List<IDebugErrorBreakpoint2>();
@@ -51,36 +55,60 @@ namespace MySql.Debugger.VisualStudio
         IDebugErrorBreakpoint2[] err = new IDebugErrorBreakpoint2[ 1 ];
         uint fetched = 1;
         e.Next(1, err, ref fetched);
-        _errors.Add(err[1]);
+        _errors.Add(err[0]);
       }
+    }
+
+    internal void Add(IDebugErrorBreakpoint2 error)
+    {
+      Debug.WriteLine("Ad7EnumDebugErrorBreakpoints: Add");
+      _errors.Add(error);
     }
 
     int IEnumDebugErrorBreakpoints2.Clone(out IEnumDebugErrorBreakpoints2 ppEnum)
     {
-      ppEnum = null;
-      return VSConstants.E_NOTIMPL;
+      Debug.WriteLine("Ad7EnumDebugErrorBreakpoints: Clone");
+      ppEnum = new Ad7EnumDebugErrorBreakpoints( this );
+      return VSConstants.S_OK;
     }
 
     int IEnumDebugErrorBreakpoints2.GetCount(out uint pcelt)
     {
-      pcelt = 0;
-      return VSConstants.E_NOTIMPL;
+      Debug.WriteLine("Ad7EnumDebugErrorBreakpoints: Count");
+      pcelt = ( uint )_errors.Count;
+      return VSConstants.S_OK;
     }
 
-    int IEnumDebugErrorBreakpoints2.Next(uint celt, IDebugErrorBreakpoint2[] rgelt, ref uint pceltFetched)
+    int IEnumDebugErrorBreakpoints2.Next(
+      uint celt, IDebugErrorBreakpoint2[] rgelt, ref uint pceltFetched)
     {
-      pceltFetched = 0;
-      return VSConstants.E_NOTIMPL;
+      Debug.WriteLine("Ad7EnumDebugErrorBreakpoints: Next");
+      if (celt == 0) return VSConstants.E_UNEXPECTED;
+
+      int inext = 0;
+      int max = Math.Min((int)celt + _next, this._errors.Count);
+      while (inext + _next < max)
+      {
+        rgelt[inext] = _errors[ ( int )inext];
+        inext++;
+      }
+      pceltFetched = (uint)(max - _next);
+      _next += inext;
+      return VSConstants.S_OK;
     }
 
     int IEnumDebugErrorBreakpoints2.Reset()
     {
-      return VSConstants.E_NOTIMPL;
+      Debug.WriteLine("Ad7EnumDebugErrorBreakpoints: Reset");
+      _next = 0;
+      return VSConstants.S_OK;
     }
 
     int IEnumDebugErrorBreakpoints2.Skip(uint celt)
     {
-      return VSConstants.E_NOTIMPL;
+      Debug.WriteLine("Ad7EnumDebugErrorBreakpoints: Skip");
+      _next += (int)celt;
+      return VSConstants.S_OK;
     }
   }
 }

@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 
 namespace MySql.Debugger
 {
@@ -41,7 +42,21 @@ namespace MySql.Debugger
     /// A reference to a filename, in case the routine belongs to one.
     /// </summary>
     /// <remarks>This is of utility to debugger's clients, not for the core debugger itself.</remarks>
-    public string FileName { get; set; }
+    private string _fileName;
+    public string FileName { 
+      get { return _fileName; }
+      set { _fileName = value; }
+    }
+
+    public string GetFileName()
+    {
+      if (string.IsNullOrEmpty(_fileName))
+      {
+        _fileName = Path.GetTempFileName();
+        File.WriteAllText(_fileName, OwningRoutine.SourceCode);
+      }
+      return _fileName;
+    }
 
     /// <summary>
     /// The dictionary of variables for the given scope (stack frame).
