@@ -118,7 +118,7 @@
                      Key="SOFTWARE\Microsoft\VisualStudio\10.0\CLSID\{EEEE9AB0-511C-4BF0-BBE8-F763A73DA5EF}">
 
           <RegistryValue Name="Assembly" Value="MySql.Debugger.VisualStudio" Type="string" Action="write"/>
-          <RegistryValue Name="Class" Value="MySql.Debugger.VisualStudio.AD7ProgramProvide" Type="string" Action="write"/>
+          <RegistryValue Name="Class" Value="MySql.Debugger.VisualStudio.AD7ProgramProvider" Type="string" Action="write"/>
           <RegistryValue Name="InprocServer32" Value="c:\\windows\\system32\\mscoree.dll" Type="string" Action="write"/>
           <RegistryValue Name="CodeBase" Value="[#MySql.Debugger.VisualStudio]" Type="string" Action="write"/>
         </RegistryKey>

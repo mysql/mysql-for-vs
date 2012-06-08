@@ -51,7 +51,7 @@ namespace MySql.Parser.Tests
 		public void CaseSimpleWithElse()
 		{
 			MySQL51Parser.program_return r = Utility.ParseSql(
-				"select CASE WHEN 1 THEN 'one' WHEN 2 THEN 'two' ELSE 'more' END;");			
+				"select CASE WHEN 1 THEN 'one' WHEN 2 THEN 'two' ELSE 'more' END;");
 		}
 
 		[Test]
