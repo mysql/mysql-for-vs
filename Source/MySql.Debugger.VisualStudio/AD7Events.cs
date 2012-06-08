@@ -92,6 +92,13 @@ namespace MySql.Debugger.VisualStudio
       _callback.Event(_engine, null, null, null, new BreakPointEvent(breakpoint), ref iid, BreakPointEvent.Attributes);
     }
 
+    public void BreakpointError(AD7ProgramNode program, IDebugErrorBreakpoint2 bpError)
+    {
+      Debug.WriteLine("Event BreakpointError");
+      Guid iid = new Guid(DebugBreakpointErrorEvent.IID);
+      _callback.Event(_engine, null, null, null, new DebugBreakpointErrorEvent(bpError), ref iid, DebugBreakpointErrorEvent.Attributes);
+    }    
+
     public void Break(AD7ProgramNode program)
     {
       Debug.WriteLine("Event Break");
@@ -252,6 +259,24 @@ namespace MySql.Debugger.VisualStudio
     }
 
     #endregion
+  }
+
+  sealed class DebugBreakpointErrorEvent : AsynchronousEvent, IDebugBreakpointErrorEvent2
+  {
+    public const string IID = "ABB0CA42-F82B-4622-84E4-6903AE90F210";
+
+    private IDebugErrorBreakpoint2 _error;
+
+    public DebugBreakpointErrorEvent(IDebugErrorBreakpoint2 error)
+    {
+      _error = error;
+    }
+
+    int IDebugBreakpointErrorEvent2.GetErrorBreakpoint(out IDebugErrorBreakpoint2 ppErrorBP)
+    {
+      ppErrorBP = _error;
+      return VSConstants.S_OK;
+    }
   }
 
   sealed class BreakEvent : StoppingEvent, IDebugBreakEvent2

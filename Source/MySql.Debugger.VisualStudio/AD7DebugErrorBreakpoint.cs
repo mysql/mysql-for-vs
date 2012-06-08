@@ -26,24 +26,33 @@ using System.Linq;
 using System.Text;
 using Microsoft.VisualStudio.Debugger.Interop;
 using Microsoft.VisualStudio;
+using System.Diagnostics;
 
 
 namespace MySql.Debugger.VisualStudio
 {
   public class AD7DebugErrorBreakpoint : IDebugErrorBreakpoint2
   {
-    public AD7DebugErrorBreakpoint()
+    public AD7Breakpoint bp { get; private set; }
+
+    public AD7DebugErrorBreakpoint( AD7Breakpoint BP )
     {
+      Debug.WriteLine("AD7DebugErrorBreakpoint: ctor");
+      bp = BP;
     }
 
     int IDebugErrorBreakpoint2.GetBreakpointResolution(out IDebugErrorBreakpointResolution2 ppErrorResolution)
     {
-      throw new NotImplementedException();
+      Debug.WriteLine("AD7DebugErrorBreakpoint: GetBreakpointResolution");
+      ppErrorResolution = ( IDebugErrorBreakpointResolution2 )new AD7DebugErrorBreakpointResolution(bp);
+      return VSConstants.S_OK;
     }
 
     int IDebugErrorBreakpoint2.GetPendingBreakpoint(out IDebugPendingBreakpoint2 ppPendingBreakpoint)
     {
-      throw new NotImplementedException();
+      Debug.WriteLine("AD7DebugErrorBreakpoint: GetPendingBreakpoint");
+      ppPendingBreakpoint = ( IDebugPendingBreakpoint2 )bp;
+      return VSConstants.S_OK;
     }
   }
 }

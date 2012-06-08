@@ -31,14 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.VisualStudio.Debugger.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\Windows\assembly\GAC_MSIL\Microsoft.VisualStudio.Debugger.Interop.10.0\10.0.0.0__b03f5f7f11d50a3a\Microsoft.VisualStudio.Debugger.Interop.10.0.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.Debugger.InteropA, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\Windows\assembly\GAC\Microsoft.VisualStudio.Debugger.InteropA\9.0.0.0__b03f5f7f11d50a3a\Microsoft.VisualStudio.Debugger.InteropA.dll</HintPath>
-    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Debugger.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.Debugger.InteropA, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.Shell.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Configuration.Install" />
@@ -53,6 +47,7 @@
   <ItemGroup>
     <Compile Include="AD7Breakpoint.cs" />
     <Compile Include="AD7DebugErrorBreakpoint.cs" />
+    <Compile Include="AD7DebugErrorBreakpointResolution.cs" />
     <Compile Include="AD7DebugExpression.cs" />
     <Compile Include="AD7DebugExpressionContext.cs" />
     <Compile Include="AD7DocumentContext.cs" />

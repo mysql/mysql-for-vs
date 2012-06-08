@@ -47,7 +47,7 @@ namespace MySql.Debugger.VisualStudio
       TEXT_POSITION endPos = new TEXT_POSITION();
       endPos.dwLine = pos.dwLine;
       endPos.dwColumn = UInt16.MaxValue;
-      _docContext = new AD7DocumentContext( DebuggerManager.Instance.GetCurrentScopeFileName(), -1, pos, endPos);
+      _docContext = new AD7DocumentContext( _rs.GetFileName(), -1, pos, endPos);
       //_docContext = new AD7DocumentContext(_node.FileName, -1, pos, endPos);
     }
 
@@ -209,21 +209,25 @@ namespace MySql.Debugger.VisualStudio
         pceltFetched = 0;
         return VSConstants.S_OK;
       }
-      rgelt[0].m_dwValidFields = (enum_FRAMEINFO_FLAGS.FIF_LANGUAGE
-        | enum_FRAMEINFO_FLAGS.FIF_DEBUGINFO | enum_FRAMEINFO_FLAGS.FIF_STALECODE
-        | enum_FRAMEINFO_FLAGS.FIF_FRAME | enum_FRAMEINFO_FLAGS.FIF_FUNCNAME
-        | enum_FRAMEINFO_FLAGS.FIF_MODULE);
-      rgelt[0].m_fHasDebugInfo = 1;
-      rgelt[0].m_fStaleCode = 0;
-      rgelt[0].m_bstrLanguage = AD7Guids.LanguageName;
-      rgelt[0].m_bstrFuncName = this[_nextElement]._rs.OwningRoutine.Name;
-      //rgelt[0].m_bstrFuncName = "Stack Frame 1";
-      //rgelt[0].m_pFrame = new AD7StackFrame(_node);
-      rgelt[0].m_pFrame = this[_nextElement];
-      _nextElement++;
+      int _inext = 0;
+      int max = Math.Min( ( int )celt + _nextElement, this.Count);
+      while (_inext + _nextElement < max)
+      {
+        rgelt[ _inext ].m_dwValidFields = (enum_FRAMEINFO_FLAGS.FIF_LANGUAGE
+          | enum_FRAMEINFO_FLAGS.FIF_DEBUGINFO | enum_FRAMEINFO_FLAGS.FIF_STALECODE
+          | enum_FRAMEINFO_FLAGS.FIF_FRAME | enum_FRAMEINFO_FLAGS.FIF_FUNCNAME
+          | enum_FRAMEINFO_FLAGS.FIF_MODULE);
+        rgelt[ _inext ].m_fHasDebugInfo = 1;
+        rgelt[ _inext ].m_fStaleCode = 0;
+        rgelt[ _inext ].m_bstrLanguage = AD7Guids.LanguageName;
+        rgelt[ _inext ].m_bstrFuncName = this[ _inext ]._rs.OwningRoutine.Name;
+        rgelt[ _inext ].m_pFrame = this[ _inext ];
+        _inext++;
+      }
+      
       //TODO implement??? rgelt[0].m_pModule = _node;
-      pceltFetched = 1;
-
+      pceltFetched = ( uint )( max - _nextElement );
+      _nextElement += _inext;
       return VSConstants.S_OK;
     }
 
