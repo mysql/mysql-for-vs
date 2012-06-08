@@ -35,8 +35,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Debugger.Tests", "Tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Debugger", "Source\MySql.Debugger\MySql.Debugger.csproj", "{1969DE06-EC8C-41CE-AAEE-F54B27D309BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyAddin1", "Source\MyAddin1\MyAddin1.csproj", "{84B2FC82-677F-4414-B33B-5A3ECD9F3B92}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Commercial|Any CPU = Commercial|Any CPU
