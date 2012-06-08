@@ -96,6 +96,16 @@ namespace MySql.Parser
         Scope.Pop();
       }
 
+      partial void EnterRule_when_expr()
+      {
+        Scope.Push("expr");
+      }
+
+      partial void LeaveRule_when_expr()
+      {
+        Scope.Pop();
+      }
+
       partial void EnterRule_field_name()
       {
         Scope.Push("field_name");

@@ -87,6 +87,7 @@ OBJECT_TYPE;
 ON_COMPLETION;
 ON_SCHEDULE;
 PARAM;
+PARENT_OPT_EXPR_LIST;
 PRIVILEGE_LEVEL;
 SET_PASSWORD;
 SSL_OPTION;
@@ -525,7 +526,7 @@ select_paren
 	;
 	catch[ NoViableAltException nvae ] 
 	{
-		if( nvae.DecisionNumber == 109 )
+		if( nvae.DecisionNumber == 115 )
 		{
 			nvae = new NoViableAltException( 
 					"column_name", 
@@ -1229,7 +1230,7 @@ parenExprList
 	;
 	
 parenOptExprList
-	:	LPAREN e+=exprList? RPAREN	->  $e
+	:	LPAREN ( e=exprList )? RPAREN	->  ^( PARENT_OPT_EXPR_LIST $e? )
 	;
 
 expr
@@ -1282,7 +1283,7 @@ equalityExpr
 	;
 	catch[ NoViableAltException nvae ] 
 	{
-		if( ( nvae.DecisionNumber == 187 ) && ( Scope.Peek() == "expr" ))
+		if( ( nvae.DecisionNumber == 192 ) && ( Scope.Peek() == "expr" ))
 		{		
 			nvae = new NoViableAltException( 
 				"column_name", 
@@ -1383,7 +1384,7 @@ unaryExpr
 	;
 	catch[ NoViableAltException nvae ] 
 	{
-		if( ( nvae.DecisionNumber == 206 ) && ( Scope.Peek() == "expr" ))
+		if( ( nvae.DecisionNumber == 211 ) && ( Scope.Peek() == "expr" ))
 		{		
 			nvae = new NoViableAltException( 
 				"column_name", 
@@ -1414,7 +1415,7 @@ binaryCollateExpr
 	;
 	catch[ NoViableAltException nvae ] 
 	{
-		if( ( nvae.DecisionNumber == 208 ) && ( Scope.Peek() == "expr" ))
+		if( ( nvae.DecisionNumber == 213 ) && ( Scope.Peek() == "expr" ))
 		{		
 			nvae = new NoViableAltException( 
 				"column_name", 
@@ -1463,7 +1464,7 @@ primary
 	;
 	catch[ NoViableAltException nvae ] 
 	{
-		if( ( nvae.DecisionNumber == 210 ) && ( Scope.Peek() == "expr" ))
+		if( ( nvae.DecisionNumber == 215 ) && ( Scope.Peek() == "expr" ))
 		{		
 			nvae = new NoViableAltException( 
 				"column_name", 
@@ -1495,7 +1496,7 @@ match_expr
 case_expr
 	: CASE 	 
 		( ( WHEN ( expr ) => whenExpr+=expr THEN thenExpr+=expr )+ 
-		( { input.LA(1) == ELSE }? ELSE elseExpr=expr )? END CASE)
+		( { input.LA(1) == ELSE }? ELSE elseExpr=expr )? END CASE? /* CASE after END is optional in CASE-operator but no in CASE-expression */)
 		-> ^( CASE ^( WHEN $whenExpr $thenExpr ) ( ELSE $elseExpr )? )
 	;
 
@@ -1524,7 +1525,7 @@ case_stmt
 	;
 	catch[ NoViableAltException nvae ] 
 	{
-		if( nvae.DecisionNumber == 218 )
+		if( nvae.DecisionNumber == 224 )
 		{		
 			nvae = new NoViableAltException( 
 				"column_name", 
@@ -1891,23 +1892,23 @@ scope
 
 partition_options
   : PARTITION BY (
-      ( LINEAR? HASH LPAREN partexpr=expr RPAREN )
-	| ( LINEAR? KEY LPAREN partcollist=column_name_list? RPAREN )
-	| ( RANGE LPAREN partexpr=expr RPAREN )
-	| ( LIST LPAREN partexpr=expr RPAREN )	
+      ( LINEAR? typepart=HASH LPAREN partexpr=expr RPAREN )
+	| ( LINEAR? typepart=KEY LPAREN partcollist=column_name_list? RPAREN )
+	| ( typepart=RANGE LPAREN partexpr=expr RPAREN )
+	| ( typepart=LIST LPAREN partexpr=expr RPAREN )	
     )
 	( PARTITIONS numpartitions=INT_NUMBER )?
 	(
 	  SUBPARTITION BY
 	  (
-	     ( LINEAR? HASH LPAREN subpartexpr=expr RPAREN )
-	   | ( LINEAR? KEY LPAREN subpartcollist=column_name_list? RPAREN )
+	     ( LINEAR? typesubpart=HASH LPAREN subpartexpr=expr RPAREN )
+	   | ( LINEAR? typesubpart=KEY LPAREN subpartcollist=column_name_list? RPAREN )
 	  )
 	  ( SUBPARTITIONS numsubpartitions=INT_NUMBER )?
 	)?
 	( LPAREN partition_definition ( COMMA partition_definition )* RPAREN )?
-	-> ^( PARTITION BY $partexpr? ^( KEY $partcollist? )? ^( PARTITIONS $numpartitions? )? 
-		^( SUBPARTITION ^( HASH $subpartexpr? )? ^( KEY $subpartcollist? )? $numsubpartitions? ))
+	-> ^( PARTITION BY $typepart $partexpr? ^( KEY $partcollist? )? ^( PARTITIONS $numpartitions? )? 
+		^( SUBPARTITION ^( $typesubpart $subpartexpr? $subpartcollist? )? $numsubpartitions? )?)
   ;
 
 partition_definition
@@ -2348,6 +2349,26 @@ drop_table
 		-> ^( DROP { new CommonTree( new CommonToken( TABLE, "TABLE" ) ) } 
 			simple_obj_ref_no_alias_existing_list? )
 	;
+	catch[ NoViableAltException nvae ] 
+	{
+		if( nvae.DecisionNumber == 521 )
+		{
+			nvae = new NoViableAltException( 
+				"simple_table_ref_no_alias_existing", 
+				nvae.DecisionNumber, 
+				0 /* re.StateNumber*/, 
+				nvae.Input );
+		}
+		ReportError(nvae);
+		Recover(input,nvae);
+		retval.Tree = (object)adaptor.ErrorNode(input, retval.Start, input.LT(-1), nvae);
+	}
+	catch [RecognitionException re]
+	{
+		ReportError(re);
+		Recover(input,re);
+		retval.Tree = (object)adaptor.ErrorNode(input, retval.Start, input.LT(-1), re);
+	}	
 
 drop_user
 	:	DROP user user_specification_list
@@ -2556,7 +2577,7 @@ sp_call
 	;
 	catch[ NoViableAltException nvae ] 
 	{
-		if( nvae.DecisionNumber == 541 )
+		if( nvae.DecisionNumber == 561 )
 		{
 			nvae = new NoViableAltException( 
 					"proc_name", 

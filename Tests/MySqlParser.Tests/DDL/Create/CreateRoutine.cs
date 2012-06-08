@@ -127,7 +127,7 @@ set xmlTagBegin = concat('<', xmlTag, '>');
 set xmlTagEnd = concat('</', xmlTag, '>');
 set lenField = length(xmlTag) + 2;
 set fieldresult = case when locate(xmlTagBegin,message) = 0 then ''
-else substring(message,locate(xmlTagBegin,message) + lenField,locate(xmlTagEnd,message) - (locate(xmlTagBegin,message) + lenField)) end;
+else substring(message,locate(xmlTagBegin,message) + lenField,locate(xmlTagEnd,message) - (locate(xmlTagBegin,message) + lenField)) end case;
 return fieldresult;
 end";
       StringBuilder sb;

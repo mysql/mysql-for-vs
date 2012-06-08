@@ -213,7 +213,7 @@ end;
 ";
         dbg.SqlInput = sql;
         dbg.SteppingType = SteppingTypeEnum.StepInto;
-        //dbg.Run(new string[0]);
+        dbg.Run(new string[0]);
       }
       finally
       {
