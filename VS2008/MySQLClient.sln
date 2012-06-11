@@ -1,4 +1,3 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Data", "Source\MySql.Data\MySql.Data.csproj", "{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}"
@@ -18,6 +17,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Data.CF", "Source\MySql.Data.CF\MySql.Data.CF.csproj", "{587A47FB-C1CC-459D-93B6-179D95E41EFB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Data.CF.Tests", "Tests\MySql.Data.CF.Tests\MySql.Data.CF.Tests.csproj", "{710D9251-17A3-4429-9A91-63F03267F310}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Debugger.VisualStudio", "Source\MySql.Debugger.VisualStudio\MySql.Debugger.VisualStudio.csproj", "{0004FB3B-F647-424E-8B2B-85CB000E3CC8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Debugger", "Source\MySql.Debugger\MySql.Debugger.csproj", "{428C8471-6FA9-4873-9D99-DECCA001A81E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySqlParser", "Source\MySqlParser\MySqlParser.csproj", "{16BF50CE-1D1E-4255-AE09-C46E11B684B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,6 +66,18 @@ Global
 		{710D9251-17A3-4429-9A91-63F03267F310}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{710D9251-17A3-4429-9A91-63F03267F310}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{710D9251-17A3-4429-9A91-63F03267F310}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0004FB3B-F647-424E-8B2B-85CB000E3CC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0004FB3B-F647-424E-8B2B-85CB000E3CC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0004FB3B-F647-424E-8B2B-85CB000E3CC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0004FB3B-F647-424E-8B2B-85CB000E3CC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{428C8471-6FA9-4873-9D99-DECCA001A81E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{428C8471-6FA9-4873-9D99-DECCA001A81E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{428C8471-6FA9-4873-9D99-DECCA001A81E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{428C8471-6FA9-4873-9D99-DECCA001A81E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16BF50CE-1D1E-4255-AE09-C46E11B684B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16BF50CE-1D1E-4255-AE09-C46E11B684B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16BF50CE-1D1E-4255-AE09-C46E11B684B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16BF50CE-1D1E-4255-AE09-C46E11B684B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

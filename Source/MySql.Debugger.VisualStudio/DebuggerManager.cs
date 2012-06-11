@@ -76,7 +76,7 @@ namespace MySql.Debugger.VisualStudio
 
     public void BindBreakpoint(AD7Breakpoint ad7bp)
     { 
-      Breakpoint bp = this.Debugger.SetBreakpoint( ad7bp.Node.ProgramContents, ad7bp.LineNumber );
+      Breakpoint bp = this.Debugger.SetBreakpoint(_debugger.CurrentScope.OwningRoutine.SourceCode, ad7bp.LineNumber );
       ad7bp.CoreBreakpoint = bp;
       bp.Disabled = ad7bp.Disabled;
       _breakpoints.Add(ad7bp.CoreBreakpoint, ad7bp);
@@ -118,7 +118,7 @@ namespace MySql.Debugger.VisualStudio
       _autoRE = new AutoResetEvent(false);
       _debugger.OnEndDebugger += RaiseEndProgram;
 
-      if (string.IsNullOrWhiteSpace(_node.ConnectionString))
+      if (string.IsNullOrEmpty(_node.ConnectionString))
       {
         throw new Exception( "Debugger expected a non-null connection string" );
       }

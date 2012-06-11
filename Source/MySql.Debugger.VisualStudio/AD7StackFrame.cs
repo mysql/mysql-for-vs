@@ -48,7 +48,7 @@ namespace MySql.Debugger.VisualStudio
       endPos.dwLine = pos.dwLine;
       endPos.dwColumn = UInt16.MaxValue;
       _docContext = new AD7DocumentContext( _rs.GetFileName(), -1, pos, endPos);
-      //_docContext = new AD7DocumentContext(_node.FileName, -1, pos, endPos);
+      _node.FileName = _node.Debugger.Debugger.CurrentScope.FileName;
     }
 
     #region IDebugStackFrame2 Members

@@ -151,7 +151,7 @@ namespace MySql.Data.VisualStudio.Editors
           typeof(IVsTextBuffer).GUID) as IVsTextBuffer;
       textBuffer.InitializeContent("ed", 2);
 
-      Guid langSvc = new Guid("{fa498a2d-116a-4f25-9b55-7938e8e6dda7}");
+      Guid langSvc = new Guid(MySqlLanguageService.IID);
 
       int hr = textBuffer.SetLanguageServiceID(ref langSvc);
       if (hr != VSConstants.S_OK)

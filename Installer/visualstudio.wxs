@@ -17,6 +17,14 @@
       <Component Id='VS2008_Common' Guid='75F9BFA2-4D6E-4cb3-97E6-B27C478CDE44'>
         <File Id='MySQL.VisualStudio' Name='MySQL.VisualStudio.dll' DiskId='1'
               Source='..\VS2008\Source\MySql.VisualStudio\bin\release\MySQL.VisualStudio.dll' />
+        <File Id='MySql.Debugger_2008' Name='MySql.Debugger.dll' DiskId='1'
+              Source='..\VS2008\Source\MySql.Debugger\bin\release\MySql.Debugger.dll'/>
+        <File Id='MySql.Debugger.VisualStudio_2008' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
+              Source='..\VS2008\Source\MySql.Debugger.VisualStudio\bin\release\MySql.Debugger.VisualStudio.dll'/>
+        <File Id='MySqlParser.2008' Name='MySqlParser.dll' DiskId='1'
+          Source='..\VS2008\Source\MySql.Debugger.VisualStudio\bin\release\MySqlParser.dll'/>
+        <File Id='Antlr3.Runtime_2008' Name='Antlr3.Runtime.dll' DiskId='1'
+              Source='..\VS2008\Source\MySql.Debugger.VisualStudio\bin\release\Antlr3.Runtime.dll'/>
       </Component>
 
       <Component Id='VS_2008_Registry' Guid='84AE8C43-294D-4e48-B75D-D9172396C2FD'>
@@ -26,6 +34,33 @@
         </RegistryKey>
         <?include VS2008_Registry.wxi?>
         <?include VS2008_Data.wxi?>
+        <!-- Debugger -->
+        <RegistryKey Id="VS_2008_Debugger_Engine" Root="HKLM" Action="createAndRemoveOnUninstall"
+                     Key="SOFTWARE\Microsoft\VisualStudio\9.0\AD7Metrics\Engine\{EEEE0740-10F7-4E5F-8BC4-1CC0AC9ED5B0}">
+          <RegistryValue Name="CLSID" Value="{EEEE066A-1103-451F-BC7A-6AEF76558AE2}" Type="string" Action="write"/>
+          <RegistryValue Name="ProgramProvider" Value="{EEEE9AB0-511C-4BF0-BBE8-F763A73DA5EF}" Type="string" Action="write"/>
+          <RegistryValue Name="Attach" Value="1" Type="integer" Action="write"/>
+          <RegistryValue Name="AddressBP" Value="0" Type="integer" Action="write"/>
+          <RegistryValue Name="AutoSelectPriority" Value="4" Type="integer" Action="write"/>
+          <RegistryValue Name="CallstackBP" Value="1" Type="integer" Action="write"/>
+          <RegistryValue Name="Name" Value="MySql Stored Procedure Debug Engine" Type="string" Action="write"/>
+          <RegistryValue Name="PortSupplier" Value="{EEEE9AB0-511C-4BF0-BBE8-F763A73DA5EF}" Type="string" Action="write"/>
+          <RegistryValue Name="AlwaysLoadLocal" Value="0" Type="integer" Action="write"/>
+        </RegistryKey>
+        <RegistryKey Id="VS_2008_Debugger_CLSID_Engine" Root="HKLM" Action="createAndRemoveOnUninstall"
+                     Key="SOFTWARE\Microsoft\VisualStudio\9.0\CLSID\{EEEE066A-1103-451F-BC7A-6AEF76558AE2}">
+          <RegistryValue Name="Assembly" Value="MySql.Debugger.VisualStudio" Type="string" Action="write"/>
+          <RegistryValue Name="Class" Value="MySql.Debugger.VisualStudio.AD7Engine" Type="string" Action="write"/>
+          <RegistryValue Name="InprocServer32" Value="c:\\windows\\system32\\mscoree.dll" Type="string" Action="write"/>
+          <RegistryValue Name="CodeBase" Value="[#MySql.Debugger.VisualStudio_2008]" Type="string" Action="write"/>
+        </RegistryKey>
+        <RegistryKey Id="VS_2008_Debugger_CLSID_Provider" Root="HKLM" Action="createAndRemoveOnUninstall"
+                     Key="SOFTWARE\Microsoft\VisualStudio\9.0\CLSID\{EEEE9AB0-511C-4BF0-BBE8-F763A73DA5EF}">
+          <RegistryValue Name="Assembly" Value="MySql.Debugger.VisualStudio" Type="string" Action="write"/>
+          <RegistryValue Name="Class" Value="MySql.Debugger.VisualStudio.AD7ProgramProvide" Type="string" Action="write"/>
+          <RegistryValue Name="InprocServer32" Value="c:\\windows\\system32\\mscoree.dll" Type="string" Action="write"/>
+          <RegistryValue Name="CodeBase" Value="[#MySql.Debugger.VisualStudio_2008]" Type="string" Action="write"/>
+        </RegistryKey>
       </Component>
     </DirectoryRef>
 
@@ -91,7 +126,7 @@
           <RegistryValue Name="CallstackBP" Value="1" Type="integer" Action="write"/>
           <RegistryValue Name="Name" Value="MySql Stored Procedure Debug Engine" Type="string" Action="write"/>
           <RegistryValue Name="PortSupplier" Value="{EEEE9AB0-511C-4BF0-BBE8-F763A73DA5EF}" Type="string" Action="write"/>
-          <RegistryValue Name="AlwaysLoadLocal" Value="1" Type="integer" Action="write"/>
+          <RegistryValue Name="AlwaysLoadLocal" Value="0" Type="integer" Action="write"/>
         </RegistryKey>
         <!--
         [HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\10.0\CLSID\{EEEE066A-1103-451F-BC7A-6AEF76558AE2}]

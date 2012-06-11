@@ -45,6 +45,8 @@ namespace MySql.Debugger
     
     private MySqlConnection _utilCon;
 
+    private const string _backupDirGuid = "5F9C6611-B03F-4323-82E1-D50FB3BC7271";
+
     /// <summary>
     /// Main connection for communication between debugger & debuggee.
     /// </summary>
@@ -205,7 +207,7 @@ namespace MySql.Debugger
         //  Path.Combine(@"..\..\backup", DebugSessionId.ToString()));
 
         DirectoryInfo di = Directory.CreateDirectory(
-          Path.Combine(@"d:\backup", DebugSessionId.ToString()));
+          Path.Combine(Path.Combine(Path.GetTempPath(), _backupDirGuid), DebugSessionId.ToString()));
 
         BackupPath = di.FullName;
         StringBuilder sb = new StringBuilder();

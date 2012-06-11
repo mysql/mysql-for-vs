@@ -60,17 +60,16 @@ namespace MySql.Debugger.VisualStudio
       _events.DebugEntryPoint();
 
       DebuggerManager.Init(_events, _node, _breakpoint);
-      System.Threading.Tasks.Task.Factory.StartNew(() =>
-        {
-          DebuggerManager debugger = DebuggerManager.Instance;
-          _node.Debugger = debugger;
-          System.Threading.Thread.Sleep(1000);
-          debugger.SteppingType = SteppingTypeEnum.StepInto;
-          debugger.Breakpoint = new AD7Breakpoint(_node, _events);
-          debugger.OnEndProgram += () => { _events.ProgramDestroyed(_node); };
-          debugger.Run();
-          //debugger.BreakpointHit();
-        });
+      System.Threading.Thread thread = new System.Threading.Thread(() =>
+      {
+        DebuggerManager debugger = DebuggerManager.Instance;
+        _node.Debugger = debugger;
+        debugger.SteppingType = SteppingTypeEnum.StepInto;
+        debugger.Breakpoint = new AD7Breakpoint(_node, _events);
+        debugger.OnEndProgram += () => { _events.ProgramDestroyed(_node); };
+        debugger.Run();
+      });
+      thread.Start();
 
       return VSConstants.S_OK;
     }

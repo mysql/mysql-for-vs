@@ -234,6 +234,7 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Guids.cs" />
+    <Compile Include="LanguageService\MySqlLanguageService.cs" />
     <Compile Include="LanguageService\MySqlScanner.cs" />
     <Compile Include="LanguageService\LanguageServiceConnection.cs" />
     <Compile Include="LanguageService\MySqlClassifier.cs" />
