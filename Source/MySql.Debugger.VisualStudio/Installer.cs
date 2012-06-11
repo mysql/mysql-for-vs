@@ -35,8 +35,21 @@ namespace MySql.Debugger.VisualStudio
   [RunInstaller(true)]
   public partial class Installer : System.Configuration.Install.Installer
   {
-    private string enginePath = @"SOFTWARE\Microsoft\VisualStudio\10.0\AD7Metrics\Engine\";
-    private string clsidPath = @"SOFTWARE\Microsoft\VisualStudio\10.0\CLSID\";
+    private string enginePath = string.Format(@"SOFTWARE\Microsoft\VisualStudio\{0}.0\AD7Metrics\Engine\", GetVsVersion());
+    private string clsidPath = string.Format(@"SOFTWARE\Microsoft\VisualStudio\{0}.0\CLSID\", GetVsVersion());
+
+    protected static int GetVsVersion()
+    {
+      switch (Environment.Version.Major)
+      {
+        case 2:
+          return 9;
+        case 4:
+          return 10;
+        default:
+          return 10;
+      }
+    }
 
     public Installer()
     {

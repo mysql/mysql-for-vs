@@ -32,7 +32,7 @@ namespace MySql.Data.VisualStudio
   /// This language service will provide language
   /// </summary>
   [ComVisible(true)]
-  [Guid("FA498A2D-116A-4f25-9B55-7938E8E6DDA7")]
+  [Guid(MySqlLanguageService.IID)]
   [ProvideLanguageService(typeof(MySqlLanguageService),
                             MySqlLanguageService.LanguageName,
                             -1,
@@ -44,11 +44,12 @@ namespace MySql.Data.VisualStudio
         ShowCompletion        = true,
         MatchBracesAtCaret    = true   // Match braces while typing 
         )]
-  class MySqlLanguageService : LanguageService
+  class MySqlLanguageService : Microsoft.VisualStudio.Package.LanguageService
   {
     private LanguagePreferences preferences;
 
     public const string LanguageName = "MySQL";
+    public const string IID = "FA498A2D-116A-4f25-9B55-7938E8E6DDA7";
 
     public override AuthoringScope ParseSource(ParseRequest req)
     {
@@ -67,8 +68,7 @@ namespace MySql.Data.VisualStudio
 
     public override IScanner GetScanner(IVsTextLines buffer)
     {
-      return null;
-      //return new MySqlScanner();
+      return new MySqlScanner();
     }
 
     public override LanguagePreferences GetLanguagePreferences()
@@ -80,6 +80,11 @@ namespace MySql.Data.VisualStudio
         preferences.Init();
       }
       return preferences;
+    }
+
+    public override int ValidateBreakpointLocation(IVsTextBuffer buffer, int line, int col, TextSpan[] pCodeSpan)
+    {
+      return base.ValidateBreakpointLocation(buffer, line, col, pCodeSpan);
     }
   }
 }

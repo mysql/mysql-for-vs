@@ -129,6 +129,11 @@ namespace MySql.Data.VisualStudio
         menuItem.BeforeQueryStatus += new EventHandler(configWizard_BeforeQueryStatus);
         mcs.AddCommand(menuItem);
       }
+
+      // Register and initialize language service
+      MySqlLanguageService languageService = new MySqlLanguageService();
+      languageService.SetSite(this);
+      ((IServiceContainer)this).AddService(typeof(MySqlLanguageService), languageService, true);
     }
 
     #endregion
