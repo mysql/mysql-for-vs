@@ -101,9 +101,9 @@
       <Name>MySql.Data</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\MySqlParser\MySqlParser.csproj">
-      <Project>{16BF50CE-1D1E-4255-AE09-C46E11B684B0}</Project>
-      <Name>MySqlParser</Name>
+    <ProjectReference Include="..\MySql.Parser\MySql.Parser.csproj">
+      <Project>{C1A80300-B0B3-4DAD-990E-B04BF2D18B56}</Project>
+      <Name>MySql.Parser</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

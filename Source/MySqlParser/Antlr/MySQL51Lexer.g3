@@ -1,9 +1,30 @@
-﻿/* Copyright (c) Oracle 2010, All rights reserved. */
+﻿// Copyright © 2012, Oracle and/or its affiliates. All rights reserved.
+//
+// MySQL Connector/NET is licensed under the terms of the GPLv2
+// <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
+// MySQL Connectors. There are special exceptions to the terms and 
+// conditions of the GPLv2 as it is applied to this software, see the 
+// FLOSS License Exception
+// <http://www.mysql.com/about/legal/licensing/foss-exception.html>.
+//
+// This program is free software; you can redistribute it and/or modify 
+// it under the terms of the GNU General Public License as published 
+// by the Free Software Foundation; version 2 of the License.
+//
+// This program is distributed in the hope that it will be useful, but 
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+// or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License 
+// for more details.
+//
+// You should have received a copy of the GNU General Public License along 
+// with this program; if not, write to the Free Software Foundation, Inc., 
+// 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+
 lexer grammar MySQL51Lexer; 
 
 options {	
-	superClass=MySQLLexer;
-    language=CSharp3;
+	  superClass=MySQLLexerBase;
+    language=CSharp2;
     TokenLabelType=CommonToken;
 }
 
@@ -42,6 +63,7 @@ CHECK	:	'CHECK';
 COLLATE	:	'COLLATE';
 COLON	:	':';
 COLUMN	:	'COLUMN';
+COLUMN_FORMAT : 'COLUMN_FORMAT';
 CONDITION	:	'CONDITION';
 CONSTRAINT	:	'CONSTRAINT';
 CONTINUE	:	'CONTINUE';
@@ -103,6 +125,7 @@ HOUR_SECOND	:	'HOUR_SECOND';
 IF	:	'IF';
 IFNULL	:	'IFNULL';
 IGNORE	:	'IGNORE';
+IGNORE_SERVER_IDS : 'IGNORE_SERVER_IDS';
 IN	:	'IN';
 INDEX	:	'INDEX';
 INFILE	:	'INFILE';
@@ -120,6 +143,7 @@ INT8	:	'INT8';
 //INTEGER	:	'INTEGER';		// datatype defined below 
 //INTERVAL	:	'INTERVAL';		// reserved keyword and function below
 INTO	:	'INTO';
+IO_THREAD : 'IO_THREAD';
 IS	:	'IS';
 ITERATE	:	'ITERATE';
 JOIN	:	'JOIN';
@@ -145,6 +169,7 @@ LOOP	:	'LOOP';
 LOW_PRIORITY	:	'LOW_PRIORITY';
 MASTER_SSL_VERIFY_SERVER_CERT	:	'MASTER_SSL_VERIFY_SERVER_CERT';
 MATCH	:	'MATCH';
+MAXVALUE : 'MAXVALUE';
 //MEDIUMBLOB	:	'MEDIUMBLOB';		// datatype defined below 
 //MEDIUMINT	:	'MEDIUMINT';		// datatype defined below 
 //MEDIUMTEXT	:	'MEDIUMTEXT';		// datatype defined below 
@@ -155,12 +180,15 @@ MOD	:	'MOD';
 MYISAM : 'MYISAM';
 MODIFIES	:	'MODIFIES';
 NATURAL	:	'NATURAL';
+NDB  : 'NDB';
 NOT	:	'NOT';
 NO_WRITE_TO_BINLOG	:	'NO_WRITE_TO_BINLOG';
 NULL	:	'NULL';
 NULLIF	:	'NULLIF';
 //NUMERIC	:	'NUMERIC';		// datatype defined below 
+OFFLINE : 'OFFLINE';
 ON	:	'ON';
+ONLINE : 'ONLINE';
 OPTIMIZE	:	'OPTIMIZE';
 OPTION	:	'OPTION';
 OPTIONALLY	:	'OPTIONALLY';
@@ -925,6 +953,10 @@ NUMBER
 INT_NUMBER
 	:	DIGIT+					// 1434
 	;
+
+SIZE
+  : DIGIT+ ( 'M' | 'G' )
+  ;
 
 // $< Comments
 // DASHDASH_COMMENTS are special in the sense that they require the '--' to be followed by whitespace. If there's no whitespace '--' should be lexed as MINUS MINUS

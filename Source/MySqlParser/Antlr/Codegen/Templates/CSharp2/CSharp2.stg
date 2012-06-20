@@ -407,7 +407,7 @@ protected virtual void Leave_<ruleName>_fragment() {}
 public <!final !>void <ruleName>_fragment(<ruleDescriptor.parameterScope:parameterScope(scope=it)>)
 {
 	<ruleLabelDefs()>
-<if(trace)>
+
 	Enter_<ruleName>_fragment();
 	EnterRule("<ruleName>_fragment", <ruleDescriptor.index>);
 	TraceIn("<ruleName>_fragment", <ruleDescriptor.index>);
@@ -421,9 +421,6 @@ public <!final !>void <ruleName>_fragment(<ruleDescriptor.parameterScope:paramet
 		LeaveRule("<ruleName>_fragment", <ruleDescriptor.index>);
 		Leave_<ruleName>_fragment();
 	}
-<else>
-	<block>
-<endif>
 }
 // $ANTLR end <ruleName>
 >>
@@ -493,11 +490,11 @@ protected virtual void Leave_<ruleName>() {}
 [GrammarRule("<ruleName>")]
 <csharpVisibilityMap.(ruleDescriptor.modifier); null="private"> <returnType()> <ruleName>(<ruleDescriptor.parameterScope:parameterScope(scope=it)>)
 {
-<if(trace)>
+
 	Enter_<ruleName>();
 	EnterRule("<ruleName>", <ruleDescriptor.index>);
 	TraceIn("<ruleName>", <ruleDescriptor.index>);
-<endif>
+
     <ruleScopeSetUp()>
     <ruleDeclarations()>
     <ruleLabelDefs()>
@@ -530,11 +527,11 @@ protected virtual void Leave_<ruleName>() {}
 <endif>
 	finally
 	{
-    <if(trace)>
+    
 		TraceOut("<ruleName>", <ruleDescriptor.index>);
 		LeaveRule("<ruleName>", <ruleDescriptor.index>);
 		Leave_<ruleName>();
-	<endif>
+	
         <memoize()>
         <ruleScopeCleanUp()>
         <finally>
@@ -643,11 +640,11 @@ protected virtual void Leave_<ruleName>() {}
 [GrammarRule("<ruleName>")]
 <csharpVisibilityMap.(ruleDescriptor.modifier); null="private"> void m<ruleName>(<ruleDescriptor.parameterScope:parameterScope(scope=it)>)
 {
-<if(trace)>
+
 	Enter_<ruleName>();
 	EnterRule("<ruleName>", <ruleDescriptor.index>);
 	TraceIn("<ruleName>", <ruleDescriptor.index>);
-<endif>
+
     <ruleScopeSetUp()>
     <ruleDeclarations()>
 		try
@@ -672,11 +669,11 @@ protected virtual void Leave_<ruleName>() {}
 	}
 	finally
 	{
-    <if(trace)>
+    
 		TraceOut("<ruleName>", <ruleDescriptor.index>);
 		LeaveRule("<ruleName>", <ruleDescriptor.index>);
 		Leave_<ruleName>();
-	<endif>
+	
         <ruleScopeCleanUp()>
         <memoize()>
     }
@@ -866,12 +863,12 @@ DebugLocation(<it.line>, <it.pos>);
 >>
 
 /** match a token optionally with a label in front */
-tokenRef(token,label,elementIndex,hetero) ::= <<
+tokenRef(token,label,elementIndex,terminalOptions) ::= <<
 <if(label)><label>=(<labelType>)<endif>Match(input,<token>,Follow._<token>_in_<ruleName><elementIndex>); <checkRuleBacktrackFailure()>
 >>
 
 /** ids+=ID */
-tokenRefAndListLabel(token,label,elementIndex,hetero) ::= <<
+tokenRefAndListLabel(token,label,elementIndex,terminalOptions) ::= <<
 <tokenRef(...)>
 <listLabel(elem=label,...)>
 >>
@@ -1566,7 +1563,7 @@ ruleLabelPropertyRef_text(scope,attr) ::= <<
 <endif>
 >>
 
-ruleLabelPropertyRef_st(scope,attr) ::= "(<scope>!=null?<scope>.ST:null)"
+ruleLabelPropertyRef_st(scope,attr) ::= "(<scope>!=null?<scope>.Template:null)"
 
 /** Isolated $RULE ref ok in lexer as it's a Token */
 lexerRuleLabel(label) ::= "<label>"
@@ -1605,7 +1602,7 @@ input.TokenStream.ToString(
 input.ToString(retval.Start,input.LT(-1))
 <endif>
 >>
-rulePropertyRef_st(scope,attr) ::= "retval.ST"
+rulePropertyRef_st(scope,attr) ::= "retval.Template"
 
 lexerRulePropertyRef_text(scope,attr) ::= "Text"
 lexerRulePropertyRef_type(scope,attr) ::= "_type"
@@ -1620,7 +1617,7 @@ lexerRulePropertyRef_int(scope,attr) ::= "int.Parse(<scope>.Text)"
 // setting $st and $tree is allowed in local rule. everything else
 // is flagged as error
 ruleSetPropertyRef_tree(scope,attr,expr) ::= "retval.Tree = <expr>;"
-ruleSetPropertyRef_st(scope,attr,expr) ::= "retval.ST =<expr>;"
+ruleSetPropertyRef_st(scope,attr,expr) ::= "retval.Template =<expr>;"
 
 /** How to execute an action (only when not backtracking) */
 execAction(action) ::= <<

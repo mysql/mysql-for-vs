@@ -41,7 +41,7 @@ namespace MySql.Parser.Tests
       MemoryStream ms = new MemoryStream(ASCIIEncoding.ASCII.GetBytes(sql));
       CaseInsensitiveInputStream input = new CaseInsensitiveInputStream(ms);
       //ANTLRInputStream input = new ANTLRInputStream(ms);
-      MySQL51Lexer lexer = new MySQL51Lexer(input);
+      MySQLLexer lexer = new MySQLLexer(input);
       MySql.Parser.TokenStreamRemovable tsr = new MySql.Parser.TokenStreamRemovable(lexer);
       tsr.Fill();
       List<IToken> tokens = tsr.GetTokens();
