@@ -28,6 +28,7 @@ using Antlr.Runtime;
 using Antlr.Runtime.Tree;
 using NUnit.Framework;
 using System.IO;
+using MySql.Parser;
 
 namespace MySql.Parser.Tests
 {
@@ -39,9 +40,9 @@ namespace MySql.Parser.Tests
       MemoryStream ms = new MemoryStream(ASCIIEncoding.ASCII.GetBytes(sql/*.ToUpper() */));
       CaseInsensitiveInputStream input = new CaseInsensitiveInputStream(ms);
       //ANTLRInputStream input = new ANTLRInputStream(ms);
-      MySQL51Lexer lexer = new MySQL51Lexer(input);
+      MySQLLexer lexer = new MySQLLexer(input);
       CommonTokenStream tokens = new CommonTokenStream(lexer);
-      MySQL51Parser parser = new MySQL51Parser(tokens);
+      MySQLParser parser = new MySQLParser(tokens);
       sb = new StringBuilder();
       TextWriter tw = new StringWriter(sb);
       parser.TraceDestination = tw;

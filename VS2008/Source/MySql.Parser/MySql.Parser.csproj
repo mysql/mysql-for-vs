@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{16BF50CE-1D1E-4255-AE09-C46E11B684B0}</ProjectGuid>
+    <ProjectGuid>{C1A80300-B0B3-4DAD-990E-B04BF2D18B56}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MySqlParser</RootNamespace>
-    <AssemblyName>MySqlParser</AssemblyName>
+    <RootNamespace>MySql.Parser</RootNamespace>
+    <AssemblyName>MySql.Parser</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -39,6 +39,8 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -64,40 +66,40 @@
     <Compile Include="..\..\..\Source\MySqlParser\ParserUtils.cs">
       <Link>ParserUtils.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Source\MySqlParser\Properties\AssemblyInfo.cs">
-      <Link>Properties\AssemblyInfo.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\Source\MySqlParser\TokenStreamRemovable.cs">
       <Link>TokenStreamRemovable.cs</Link>
     </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <!--
   <ItemGroup>
-    <Antlr3 Include="..\..\..\Source\MySqlParser\MySQL.g3">
-      <Link>MySQL.g3</Link>
+    <Compile Include="..\..\..\Source\MySqlParser\MySQL51Lexer.g3">
+      <Link>MySQL51Lexer.g3</Link>
+    </Compile>
+    <Compile Include="..\..\..\Source\MySqlParser\MySQL51Parser.g3">
+      <Link>MySQL51Parser.g3</Link>
+    </Compile>
+  </ItemGroup>
+  -->
+  <ItemGroup>
+    <Antlr3 Include="..\..\..\Source\MySqlParser\MySQL51Parser.g3">
       <Generator>MSBuild:Compile</Generator>
     </Antlr3>
+  </ItemGroup>
+  <ItemGroup>
     <Antlr3 Include="..\..\..\Source\MySqlParser\MySQL51Lexer.g3">
       <Link>MySQL51Lexer.g3</Link>
       <Generator>MSBuild:Compile</Generator>
     </Antlr3>
-    <Antlr3 Include="..\..\..\Source\MySqlParser\MySQL51Parser.g3">
-      <Link>MySQL51Parser.g3</Link>
-      <Generator>MSBuild:Compile</Generator>
-    </Antlr3>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="..\..\..\Source\MySqlParser\README.txt">
-      <Link>README.txt</Link>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <!-- Folder containing AntlrBuildTask.dll -->
-    <AntlrBuildTaskPath>..\..\..\Source\MySqlParser\Antlr</AntlrBuildTaskPath>
+    <AntlrBuildTaskPath>$(ProjectDir)..\..\..\Source\MySqlParser\Antlr</AntlrBuildTaskPath>
     <!-- Path to the ANTLR Tool itself. -->
-    <AntlrToolPath>..\..\..\Source\MySqlParser\Antlr\Antlr3.exe</AntlrToolPath>
+    <AntlrToolPath>$(ProjectDir)..\..\..\Source\MySqlParser\Antlr\Antlr3.exe</AntlrToolPath>
   </PropertyGroup>
-  <Import Project="..\..\..\Source\MySqlParser\Antlr\Antlr3.targets" />
+  <Import Project="$(ProjectDir)..\..\..\Source\MySqlParser\Antlr\Antlr3.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

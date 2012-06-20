@@ -23,11 +23,11 @@
 parser grammar MySQL51Parser; 
 
 options {
-	language=CSharp3;
+	language=CSharp2;
 	output=AST;
 	tokenVocab=MySQL51Lexer;
 	/*k=*;*/
-	/*superClass=MySQLParser;*/
+	superClass=MySQLParserBase;
 }
 
 tokens {
@@ -209,7 +209,7 @@ statement options { backtrack=true; memoize=true; }
 		|	transaction
 		|	truncate_table		
 		|	sp_call
-		|	while
+		|	while_loop
 		|   uninstall_plugin
 		|	use
 		|	case_stmt
@@ -251,7 +251,7 @@ repeat
 		-> ^( REPEAT statement_list? UNTIL where_condition  ) )
 	;
 
-while
+while_loop
 	:	( ( beginlabel=ID COLON ) WHILE where_condition DO statement_list? END WHILE ( endlabel=ID )?
 		-> ^( WHILE where_condition ^( LABEL $beginlabel $endlabel? ) statement_list?  ) )
 		|

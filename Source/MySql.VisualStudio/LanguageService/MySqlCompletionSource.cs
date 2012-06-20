@@ -62,7 +62,7 @@ namespace MySql.Data.VisualStudio
       MemoryStream ms = new MemoryStream(ASCIIEncoding.ASCII.GetBytes(sql));
       CaseInsensitiveInputStream input = new CaseInsensitiveInputStream(ms);
       //ANTLRInputStream input = new ANTLRInputStream(ms);
-      MySQL51Lexer lexer = new MySQL51Lexer(input);
+      MySQLLexer lexer = new MySQLLexer(input);
       TokenStreamRemovable tokens = new TokenStreamRemovable(lexer);      
       IToken tr = null;
       int position = snapPos.Position;
