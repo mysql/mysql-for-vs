@@ -229,7 +229,6 @@ namespace MySql.Debugger
         // TODO: Make call statement.
         MakeScopeCreateProc(ri, values);
         _sqlToRun = CurrentScope.OwningRoutine.SourceCode;
-        //_scope.Push(rs);
         // run in background worker
         ExecuteScalar("set net_write_timeout=999999;");
         ExecuteScalar("set net_read_timeout=999999;");
@@ -329,7 +328,6 @@ namespace MySql.Debugger
       if( OnEndDebugger != null )
         OnEndDebugger();
     }
-
 
     private RoutineScope GetRoutineScopeFromRoutineInfo(RoutineInfo ri)
     {
@@ -522,9 +520,6 @@ namespace MySql.Debugger
         }
       }
       return GetStmtForToken(CurrentScope.OwningRoutine.ParsedTree, tokenStartIndex);
-      //CommonTree root = CurrentScope.OwningRoutine.ParsedTree;
-      //if (root.Line == lineNumber) return root;
-      //return GetStmtFromLineRecursive(root, lineNumber);
     }
 
     private CommonTree GetStmtForToken( CommonTree t, int TokenStartIndex)
@@ -548,32 +543,6 @@ namespace MySql.Debugger
       return result;
     }
 
-    ///// <summary>
-    ///// Get statement tree from line number recursively.
-    ///// </summary>
-    ///// <param name="t"></param>
-    ///// <param name="lineNumber"></param>
-    //private CommonTree GetStmtFromLineRecursive(CommonTree t, int lineNumber)
-    //{
-    //  CommonTree result = null;
-    //  // TODO: Optimize, ie. not necessary to run over every single node, just 
-    //  // the ones representing new statements.
-    //  if (t.Children == null) return result;
-    //  foreach (ITree ct in t.Children)
-    //  {
-    //    if (ct.Line == lineNumber)
-    //    {
-    //      return ( CommonTree )ct;
-    //    }
-    //    else
-    //    {
-    //      result = GetStmtFromLineRecursive(( CommonTree )ct, lineNumber);
-    //      if (result != null) return result;
-    //    }
-    //  }
-    //  return result;
-    //}
-
     /// <summary>
     /// Generates a call statement for a given routine.
     /// The routine has already been instrumented.
@@ -584,7 +553,7 @@ namespace MySql.Debugger
     {
       CommonTree t = ri.ParsedTree;
       StringBuilder sb = new StringBuilder();
-      string spName = t.GetChild(1).Text;
+      string spName = ri.Name;
       // build call
       StringBuilder sbCall = new StringBuilder(string.Format("call {0}( ", spName));
       if (ArgsValues != null)
@@ -620,9 +589,9 @@ namespace MySql.Debugger
       // The grammar supports upper case only
       MemoryStream ms = new MemoryStream(ASCIIEncoding.ASCII.GetBytes(sql));
       CaseInsensitiveInputStream input = new CaseInsensitiveInputStream(ms);
-      MySQL51Lexer lexer = new MySQL51Lexer(input);
+      MySQLLexer lexer = new MySQLLexer(input);
       CommonTokenStream tokens = new CommonTokenStream(lexer);
-      MySQL51Parser parser = new MySQL51Parser(tokens);
+      MySQLParser parser = new MySQLParser(tokens);
       sb = new StringBuilder();
       TextWriter tw = new StringWriter(sb);
       parser.TraceDestination = tw;
@@ -632,20 +601,28 @@ namespace MySql.Debugger
       {
         throw new DebugSyntaxException(sb.ToString());
       }
-      //RoutineInfo ri = GetRoutineFromDb("", true);
       CommonTree t = (CommonTree)r.Tree;
       if (t.IsNil)
         t = (CommonTree)t.GetChild(0);
-      return t.GetChild(1).Text;
+      return GetRoutineName(t);
+    }
+
+    private static string GetRoutineName(CommonTree t)
+    {
+      string name = null;
+      if (Cmp(t.GetChild(1).Text, "definer") == 0)
+        name = t.GetChild(3).Text;
+      else
+        name = t.GetChild(1).Text;
+      return name;
     }
 
     private RoutineInfo MakeRoutineInfo(CommonTree t, CommonTokenStream cts, string sql)
     {
-      //StringBuilder sb = new StringBuilder();
-      //ConcatTokens(sb, cts, t.TokenStartIndex, t.TokenStopIndex);
+      string name = Debugger.GetRoutineName(t);
       RoutineInfo ri = new RoutineInfo() {
-        Name = t.GetChild( 1 ).Text,
-        SourceCode = sql,   //sb.ToString(),
+        Name = name,
+        SourceCode = sql,
         ParsedTree = t,
         Type = RoutineInfoType.Procedure,
         TokenStream = cts
@@ -659,8 +636,8 @@ namespace MySql.Debugger
     }
 
     // Scope of variables
-    internal Stack<RoutineScope> _scope = new Stack<RoutineScope>();    
-    //internal Dictionary<string,StoreType> Scope { get { return _scope; } }
+    internal Stack<RoutineScope> _scope = new Stack<RoutineScope>();
+    
     internal Stack<RoutineScope> Scope { get { return _scope; } }
 
     public IEnumerable<RoutineScope> GetScopes()
@@ -695,60 +672,6 @@ namespace MySql.Debugger
       }
       return vars;
     }
-
-    ///// <summary>
-    /////  TODO: This has to be changed.
-    ///// </summary>
-    ///// <param name="ScopeDeepness"></param>
-    //private void LoadScopeVars2( int ScopeDeepness )
-    //{
-    //  string input = "";
-    //  string sql = string.Format(
-    //    @"select vars from ServerSideDebugger.DebugScope where DebugSessionId = {0} and CallstackDeepness = {1}",
-    //    DebugSessionId, ScopeDeepness);
-    //  MySqlCommand cmd = new MySqlCommand(sql, _utilCon);
-    //  MySqlDataReader r = cmd.ExecuteReader();
-    //  try
-    //  {
-    //    // Just get first row
-    //    r.Read();
-    //    input = r.GetString(0);
-    //  }
-    //  finally
-    //  {
-    //    r.Close();
-    //  }
-    //  // Parse new values.
-    //  Dictionary<string,StoreType> vars = ParseVars(input);
-    //  CurrentScope.Variables = vars;
-    //}
-
-    //private Dictionary<string, StoreType> ParseVars(string input)
-    //{
-    //  // input sample:
-    //  // "call DumpScope( 1, 1, \"( 'Number', 24 ),( 'Title', '' ),( 'IsPartner', true )\" );";
-    //  //Regex rx = new Regex("[^\"]*\"(?<data>[^\"]*)\" [)];$");
-    //  //string data = rx.Match(input).Groups["data"].Value;
-    //  string data = input;
-    //  Dictionary<string, StoreType> ls = new Dictionary<string, StoreType>();
-    //  // TODO: This scanner will have to be replaced with a real parser that takes 
-    //  // into account )'s & commas in data values.
-    //  int idx = -1;
-    //  while ((idx = data.IndexOf('(', idx + 1)) != -1)
-    //  {
-    //    int idxRight = data.IndexOf(')', idx + 1);
-    //    string chunk = data.Substring(idx + 1, idxRight - idx - 1);
-    //    string[] dat = chunk.Split(',');
-    //    StoreType st = new StoreType()
-    //    {
-    //      Name = dat[0].Replace("'", "").Trim(),
-    //      Value = dat[1].Trim(),
-    //      VarKind = VarKindEnum.Local
-    //    };
-    //    ls.Add(st.Name, st);
-    //  }
-    //  return ls;
-    //}
 
     /// <summary>
     /// Writes locals values back to the routine scope.
@@ -835,7 +758,8 @@ namespace MySql.Debugger
     internal void CheckBreakpoints(int line)
     {
       int hash = GetTagHashCode( CurrentScope.OwningRoutine.SourceCode );
-      // TODO: How to treat breakpoints on the same line but different files?
+      // Breakpoints on the same line but different files are treated by making a breakpoint uniquely identified
+      // by line number and hash of current routine source code.
       if (OnBreakpoint == null) return;
       if (SteppingType == SteppingTypeEnum.StepInto || SteppingType == SteppingTypeEnum.StepOver)
       {
@@ -1480,14 +1404,17 @@ namespace MySql.Debugger
       if ( ( Cmp(node.Text, "declare") == 0) &&
           ( Cmp( node.GetChild( 0 ).Text, "cursor") != 0 ))
       {
-        // Register var..
-        StoreType st = ParseDeclare(node);
+        // Register vars...
+        StoreType[] stVars = ParseDeclare(node);
         StoreType st2;
-        // variables with same name, are hidden by already declared ones.
-        if (!vars.TryGetValue(st.Name, out st2))
+        foreach (StoreType st in stVars)
         {
-          vars.Add(st.Name, st);
-        }
+          // variables with same name, are hidden by already declared ones.
+          if (!vars.TryGetValue(st.Name, out st2))
+          {
+            vars.Add(st.Name, st);
+          }
+        }        
       }
       else
       {
@@ -1499,20 +1426,47 @@ namespace MySql.Debugger
       }
     }
 
-    internal StoreType ParseDeclare( CommonTree Tree )
+    /// <summary>
+    /// Returns a description of the variable (or variables) declared within a single DECLARE statement.
+    /// </summary>
+    /// <param name="Tree"></param>
+    /// <returns>Array with one or more variables.</returns>
+    internal StoreType[] ParseDeclare( CommonTree Tree )
     {
       StoreType st = new StoreType();
-      st.Name = Tree.GetChild(0).Text;
-      ParseDataType(st, ( CommonTree )Tree.GetChild( 1 ));
-      if (Tree.ChildCount > 2)
+      StoreType[] stVars = null;
+      int idx = 0, i, idxDataType;
+      while( ( idx < Tree.ChildCount ) && ( Cmp( Tree.GetChild( idx ).Text, "data_type") != 0) )
+        idx++;
+      if (idx >= Tree.ChildCount)
+        throw new InvalidDataException("Argument node");
+      stVars = new StoreType[ idx ];
+      idxDataType = idx;
+      ParseDataType(st, (CommonTree)Tree.GetChild(idx));
+      while ((idx < Tree.ChildCount) && (Cmp(Tree.GetChild(idx).Text, "default") != 0))
+        idx++;
+      if (idx < Tree.ChildCount)
       {
-        st.Value = Tree.GetChild(2).Text;
+        st.Value = Tree.GetChild(idx).GetChild(0).Text;
       }
       else
       {
         st.Value = DBNull.Value;
       }
-      return st;
+      i = 0;
+      while ((i < Tree.ChildCount) && (i < idxDataType))
+      {
+        stVars[ i ] = new StoreType();
+        stVars[ i ].Name = Tree.GetChild(i).Text;
+        stVars[ i ].Type = st.Type;
+        stVars[ i ].Length = st.Length;
+        stVars[ i ].Values = st.Values;
+        stVars[ i ].Precision = st.Precision;
+        stVars[ i ].Unsigned = st.Unsigned;
+        stVars[ i ].Value = st.Value;
+        i++;
+      }
+      return stVars;
     }
 
     // Cache of instrumented code.
@@ -1622,14 +1576,6 @@ namespace MySql.Debugger
       }
       return routines;
     }
-
-    //public void Run()
-    //{
-    //  throw new NotImplementedException();
-    //}
-
-    // select trigger_schema, trigger_name, event_manipulation, event_object_schema, event_object_table, action_statement, action_timing from information_schema.triggers
-    // select routine_schema, routine_name, routine_type, data_type, routine_definition from information_schema.routines
 
     //// cache of metadata for routines & triggers
     //private List<MetaRoutine> routines = new List<MetaRoutine>();
@@ -1762,37 +1708,6 @@ namespace MySql.Debugger
             mr2.RoutineDefinition = mr.RoutineDefinition;
           }
         }
-        ///////////////////////
-        /*
-        // build query
-        string sql = 
-          @"select routine_schema, routine_name, routine_type, data_type, routine_definition 
-            from information_schema.routines where {0}";
-        StringBuilder sb = new StringBuilder();
-        foreach (MetaRoutine mr in routines.Values)
-        {
-          sb.Append("( ");
-          if (!string.IsNullOrEmpty(mr.Schema))
-            sb.Append(" routine_schema = '").Append(mr.Schema).Append("' and ");
-          sb.Append(" routine_name = '").Append(mr.Name).Append("' ) or ");
-        }
-        sb.Length = sb.Length - 4;
-        // execute query
-        MySqlCommand cmd = new MySqlCommand(string.Format(sql, sb.ToString()), _utilCon);
-        MySqlDataReader r = cmd.ExecuteReader();
-        while (r.Read())
-        {
-          string schema = r.GetString(0);
-          string name = r.GetString(1);
-          MetaRoutine mr = routines[ name ];
-          mr.Schema = schema;
-          //mr.Name = r.GetString( 1 );
-          mr.Type = ( RoutineType )Enum.Parse( typeof( RoutineType ), r.GetString( 2 ), true );
-          mr.DataType = r.GetString( 3 );
-          mr.RoutineDefinition = r.GetString( 4 );
-          routines.Add(mr.Name, mr);
-        }
-        */
       }
       return routines.Values.ToList();
     }
@@ -1926,42 +1841,6 @@ namespace MySql.Debugger
             break;
         }
       }
-      //for (int i = 0; i < dtNode.ChildCount; i++)
-      //{
-      //  if (Cmp(dtNode.GetChild(i).Text, "data_type") == 0)
-      //  {
-      //    st.Type = dtNode.GetChild(i).GetChild(0).Text;
-      //    if (Cmp(st.Type, "set") == 0 || Cmp(st.Type, "enum") == 0)
-      //      isEnum = true;
-      //    continue;
-      //  }
-      //  int v;
-      //  if (Int32.TryParse(dtNode.GetChild(i).Text, out v))
-      //    st.Length = v;
-      //  else if (Cmp(dtNode.GetChild(i).Text, "(") == 0)
-      //  {
-      //    if (isEnum)
-      //    {
-      //      CommonTree parent = (CommonTree)dtNode.GetChild(i);
-      //      st.Values = new List<string>();
-      //      for (int j = 0; j < parent.ChildCount; j++)
-      //      {
-      //        st.Values.Add(parent.GetChild(j).Text);
-      //      }
-      //    }
-      //    else
-      //    {
-      //      st.Length = Int32.Parse(dtNode.GetChild(i).GetChild(0).Text);
-      //      st.Precision = Int32.Parse(dtNode.GetChild(i).GetChild(1).Text);
-      //    }
-      //  }
-      //  continue;
-      //  //default:
-      //  //  // For now, just ignore signed, unsigned, zerofill, collate & character
-      //  //  // ...
-      //  //  break;
-      //}
-      //st.Value = DBNull.Value;
     }
 
     /// <summary>
@@ -1982,11 +1861,6 @@ namespace MySql.Debugger
 
     public object Eval(string expression)
     {
-      // Hack, for line number to work 
-      // TODO: find a more elegant way.
-      //int lineno = Convert.ToInt32(CurrentScope.Variables["@@@lineno"].Value);
-      //expression = expression.Replace("@@@lineno", lineno.ToString());
-
       CommonTokenStream cts;
       StringBuilder sb = new StringBuilder();
       MySQL51Parser.program_return pr = this.ParseSql(
@@ -1999,12 +1873,6 @@ namespace MySql.Debugger
       string expr = ReplaceVarsWithValues(t, cts);
       return ExecuteScalar(expr);
     }
-
-    //internal string ReplaceVarsWithValues(CommonTree t)
-    //{
-    //  RoutineScope rs = varsScope.Peek();
-    //  return ReplaceVarsWithValues(t, rs.OwningRoutine.TokenStream);
-    //}
 
     /// <summary>
     /// Replaces in the current statement, any references to local variables/arguments 

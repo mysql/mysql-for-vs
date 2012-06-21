@@ -345,6 +345,76 @@ end;
       }
     }
 
+    [Test]
+    public void CommaSeparatedDeclare()
+    {
+      string sql =
+        @"delimiter //
+drop procedure if exists spTest2 //
+
+create DEFINER=`root`@`localhost` PROCEDURE `spTest2`()
+begin
+    declare n,x,y,z int;
+	declare str varchar(1100);
+    set n = 1;
+	set str = 'Armando';
+
+    while n < 1000 do
+    begin
+    
+        set n = n + 1;
+		set x = n * 2;
+		set y = n * 5;
+		set z = n * 10;
+		set str = CONCAT(str, 'o');
+    
+    end;
+    end while;
+
+end
+//
+";
+      Debugger dbg = new Debugger();
+      try
+      {
+        dbg.Connection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.UtilityConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.LockingConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        DumpConnectionThreads(dbg);
+        MySqlScript script = new MySqlScript(dbg.Connection, sql);
+        script.Execute();
+        sql =
+@"create DEFINER=`root`@`localhost` PROCEDURE `spTest2`()
+begin
+    declare n,x,y,z int;
+	declare str varchar(1100);
+    set n = 1;
+	set str = 'Armando';
+
+    while n < 10 do
+    begin
+    
+        set n = n + 1;
+		set x = n * 2;
+		set y = n * 5;
+		set z = n * 10;
+		set str = CONCAT(str, 'o');
+    
+    end;
+    end while;
+
+end;
+";
+        dbg.SqlInput = sql;
+        dbg.SteppingType = SteppingTypeEnum.None;
+        dbg.Run(new string[0]);
+      }
+      finally
+      {
+        dbg.RestoreRoutinesBackup();
+      }
+    }
+
     private void DumpConnectionThreads(Debugger dbg)
     {
       dbg.Connection.Open();
