@@ -161,19 +161,26 @@ namespace MySql.Data.VisualStudio
         editor.Text = GetNewRoutineText();
       else
       {
-        try
-        {
-          string sql = GetStoredProcedureBody(String.Format(
-              "SHOW CREATE {0} `{1}`.`{2}`",
-              IsFunction ? "FUNCTION" : "PROCEDURE", Database, Name), out sql_mode);
-          editor.Text = ChangeSqlTypeTo(sql, "ALTER");
-          Dirty = false;
-        }
-        catch (Exception ex)
-        {
-          MessageBox.Show("Unable to load the stored procedure for editing");
-        }
+        editor.Text = GetRoutineBody();
+        Dirty = false;
       }
+    }
+
+    private string GetRoutineBody()
+    {
+      string sql = "";
+      try
+      {
+        sql = GetStoredProcedureBody(String.Format(
+            "SHOW CREATE {0} `{1}`.`{2}`",
+            IsFunction ? "FUNCTION" : "PROCEDURE", Database, Name), out sql_mode);
+        sql = ChangeSqlTypeTo(sql, "ALTER");
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show("Unable to load the stored procedure for editing");
+      }
+      return sql;
     }
 
     public override void LaunchDebugger()
@@ -188,7 +195,6 @@ namespace MySql.Data.VisualStudio
       DbConnection conn = (DbConnection)HierarchyAccessor.Connection.GetLockedProviderObject();
       try
       {
-
         DbCommand cmd = MySqlProviderObjectFactory.Factory.CreateCommand();
         cmd.Connection = conn;
         cmd.CommandText = sql;
@@ -318,8 +324,9 @@ namespace MySql.Data.VisualStudio
 
       IVsDebugger dbg = (IVsDebugger)sp.GetService(typeof(SVsShellDebugger));
 
-      VsDebugTargetInfo info = new VsDebugTargetInfo();
+      VsDebugTargetInfo info = new VsDebugTargetInfo();     
       
+
       info.cbSize = (uint)System.Runtime.InteropServices.Marshal.SizeOf(info);
       info.dlo = Microsoft.VisualStudio.Shell.Interop.DEBUG_LAUNCH_OPERATION.DLO_CreateProcess;
       info.bstrExe = Moniker;

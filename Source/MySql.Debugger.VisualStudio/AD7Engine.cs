@@ -45,6 +45,13 @@ namespace MySql.Debugger.VisualStudio
     {
       Debug.WriteLine("AD7Engine Attach");
       Guid id;
+
+      if (( DebuggerManager.Instance != null ) && ( DebuggerManager.Instance.Debugger.IsRunning))
+      {
+        // If already running, abort.
+        return HRESULT.E_ATTACH_DEBUGGER_ALREADY_ATTACHED;
+      }
+
       rgpPrograms[0].GetProgramId(out id);
       if (id == Guid.Empty)
       {

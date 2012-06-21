@@ -37,7 +37,9 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -61,6 +63,12 @@
     <Compile Include="AD7Property.cs" />
     <Compile Include="AD7StackFrame.cs" />
     <Compile Include="DebuggerManager.cs" />
+    <Compile Include="Dialogs\StoredRoutineArgumentsDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\StoredRoutineArgumentsDlg.designer.cs">
+      <DependentUpon>StoredRoutineArgumentsDlg.cs</DependentUpon>
+    </Compile>
     <Compile Include="HRESULT.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Installer.cs">
@@ -82,6 +90,11 @@
       <Project>{1969DE06-EC8C-41CE-AAEE-F54B27D309BA}</Project>
       <Name>MySql.Debugger</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Dialogs\StoredRoutineArgumentsDlg.resx">
+      <DependentUpon>StoredRoutineArgumentsDlg.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
