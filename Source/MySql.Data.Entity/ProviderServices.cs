@@ -315,10 +315,10 @@ namespace MySql.Data.MySqlClient
           if (!childType.KeyMembers.TryGetValue(p.Name, false, out member))
             keySql.AppendLine(String.Format(
                 "ALTER TABLE `{0}` ADD KEY (`{1}`);", _pluralizedNames[childType.Name], p.Name));
-          sql.AppendFormat("{0}{1}", delimiter, p.Name);
+          sql.AppendFormat("{0}{1}", delimiter, p.Name);          
           delimiter = ", ";
         }
-        sql.AppendLine(")");
+        sql.AppendLine(")");        
         delimiter = "";
         sql.Append(String.Format("\tREFERENCES {0} (", _pluralizedNames[parentType.Name]));
         foreach (EdmProperty p in a.ReferentialConstraints[0].FromProperties)
@@ -330,7 +330,10 @@ namespace MySql.Data.MySqlClient
           sql.AppendFormat("{0}{1}", delimiter, p.Name);
           delimiter = ", ";
         }
-        sql.AppendLine(");");
+        sql.AppendLine(")");
+        OperationAction oa = a.AssociationEndMembers[0].DeleteBehavior;
+        sql.AppendLine(String.Format(" ON DELETE {0} ON UPDATE {1};",
+          oa == OperationAction.None ? "NO ACTION" : oa.ToString(), "NO ACTION"));
         sql.AppendLine();
       }
 

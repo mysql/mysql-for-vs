@@ -17,3 +17,4 @@
 	- Changes in ProviderServices.cs: Changed visibility in method GetColumnType(TypeUsage type) from private to internal.
 	- Added reference in MySql.Data.Entity.csproj to include new namespace for Migrations.
 - Initial version of Debugger of MySql stored routines & its Visual Studio integration (worklogs #6270 and #6245).
+- Fix for Exception thrown when using cascade delete in an EDM Model-First in Entity Framework (Oracle bug #14008752, MySql bug #64779).
