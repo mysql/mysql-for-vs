@@ -89,6 +89,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Model2.edmx</DependentUpon>
     </Compile>
+    <Compile Include="ModelFirstModel1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ModelFirstModel1.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\SQLSyntax.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -119,6 +124,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Source\MySql.Data.Entity\MySql.Data.Entity.csproj">
+      <Project>{EDED3135-95D2-4BCE-A810-F3F2AD7935B7}</Project>
+      <Name>MySql.Data.Entity</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Source\MySql.Data\MySql.Data.csproj">
       <Project>{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}</Project>
       <Name>MySql.Data</Name>
@@ -126,10 +135,6 @@
     <ProjectReference Include="..\MySql.Data.Tests\MySql.Data.Tests.csproj">
       <Project>{F29E5B3D-7F76-4CF9-BF5E-8E3A1377B1E4}</Project>
       <Name>MySql.Data.Tests</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Provider\MySql.Data.Entity.csproj">
-      <Project>{A8E799B1-D6AC-42BD-907E-B213D7E9B3C5}</Project>
-      <Name>MySql.Data.Entity</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -163,6 +168,10 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>BooksModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
+    <EntityDeploy Include="ModelFirstModel1.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>ModelFirstModel1.Designer.cs</LastGenOutput>
+    </EntityDeploy>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References" />
@@ -186,6 +195,9 @@
       <Project>{F29E5B3D-7F76-4CF9-BF5E-8E3A1377B1E4}</Project>
       <Name>MySql.Data.Tests</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ModelFirstModel1.edmx.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
