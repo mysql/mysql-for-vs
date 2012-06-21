@@ -29,6 +29,7 @@ using MySql.Data.MySqlClient.Tests;
 using System.Data.EntityClient;
 using System.Data.Common;
 using System.Data.Objects;
+using System.Linq;
 
 namespace MySql.Data.Entity.Tests
 {
@@ -71,6 +72,50 @@ namespace MySql.Data.Entity.Tests
         dt.Clear();
         da.Fill(dt);
         Assert.AreEqual(0, dt.Rows.Count);
+      }
+    }
+
+    /// <summary>
+    /// Fix for bug Cascading delete using CreateDatabase in Entity Framework
+    /// (http://bugs.mysql.com/bug.php?id=64779) using ModelFirst.
+    /// </summary>
+    [Test]
+    public void OnDeleteCascade()
+    {
+      using (ModelFirstModel1Container ctx = new ModelFirstModel1Container())
+      {
+        if (ctx.DatabaseExists())
+          ctx.DeleteDatabase();
+        ctx.CreateDatabase();
+        ctx.SaveChanges();
+      }
+
+      using (ModelFirstModel1Container ctx = new ModelFirstModel1Container())
+      {
+        Student s = new Student();
+        s.Name = "Einstein, Albert";
+        s.Kardexes.Add(new Kardex() { Score = 9.0 });
+        ctx.Students.AddObject(s);
+        ctx.SaveChanges();
+      }
+
+      using (ModelFirstModel1Container ctx = new ModelFirstModel1Container())
+      {
+        var a = from st in ctx.Students select st;
+        Student s = a.First();
+        Assert.AreEqual( "Einstein, Albert", s.Name );
+        Kardex k = s.Kardexes.First();
+        Assert.AreEqual(9.0, k.Score);
+        ctx.DeleteObject( s );
+        ctx.SaveChanges();
+      }
+
+      using (ModelFirstModel1Container ctx = new ModelFirstModel1Container())
+      {
+        var q = from st in ctx.Students select st;
+        Assert.AreEqual(0, q.Count());
+        var q2 = from k in ctx.Kardexes select k;
+        Assert.AreEqual(0, q2.Count());
       }
     }
   }

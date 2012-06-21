@@ -9,6 +9,8 @@
 - Fix for performance issue in generated EF query: .NET StartsWith/Contains/EndsWith produces MySql's locate instead of Like (MySql bug #64935, Oracle bug #14009363).
 - Fix for script generated for code first contains wrong alter table and wrong declaration for byte[] (MySql bug #64216, Oracle bug #13900091).
 - Fix and code contribution for bug Timed out sessions are removed without notification which allow to enable the Expired CallBack when Session Provider times out any session (bug MySql #62266 Oracle bug # 13354935)
+- Fix for Exception thrown when using cascade delete in an EDM Model-First in Entity Framework (Oracle bug #14008752, MySql bug #64779).
+
 
 6.5.4
 - Fix for Duplicate table name don't allow you to change table name (Oracle bug #13785918).
