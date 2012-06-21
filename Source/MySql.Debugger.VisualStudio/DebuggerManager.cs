@@ -29,6 +29,7 @@ using MySql.Data.MySqlClient;
 using System.Threading;
 using System.Diagnostics;
 using System.IO;
+using System.Windows.Forms;
 
 namespace MySql.Debugger.VisualStudio
 {
@@ -134,17 +135,42 @@ namespace MySql.Debugger.VisualStudio
       _debugger.SqlInput = _SpBody;
     }
 
-    internal string GetCurrentScopeFileName()
+    private bool? RequestArguments( out Dictionary<string, StoreType> args )
     {
-      if (string.IsNullOrEmpty(_debugger.CurrentScope.FileName))
+      // Set initial arguments values.
+      string sql = _SpBody;
+      args = this._debugger.ParseArgs(sql);
+
+      if (args.Count == 0) return null;
+      StoredRoutineArgumentsDlg dlg = new StoredRoutineArgumentsDlg();
+      foreach (StoreType st in args.Values)
       {
-        string s = Path.GetTempFileName(); 
-        File.WriteAllText(s, _debugger.CurrentScope.OwningRoutine.SourceCode );
-        _debugger.CurrentScope.FileName = s;
+        dlg.AddNameValue(st.Name, "");
       }
-      _node.FileName = _debugger.CurrentScope.FileName;
-      return _debugger.CurrentScope.FileName;
+      dlg.DataBind();
+      DialogResult res = dlg.ShowDialog();
+      if (res == DialogResult.Cancel)
+      {
+        return false;
+      }
+      foreach (NameValue nv in dlg.GetNameValues())
+      {
+        args[nv.Name].Value = nv.Value;
+      }
+      return true;
     }
+
+    //internal string GetCurrentScopeFileName()
+    //{
+    //  if (string.IsNullOrEmpty(_debugger.CurrentScope.FileName))
+    //  {
+    //    string s = Path.GetTempFileName(); 
+    //    File.WriteAllText(s, _debugger.CurrentScope.OwningRoutine.SourceCode );
+    //    _debugger.CurrentScope.FileName = s;
+    //  }
+    //  _node.FileName = _debugger.CurrentScope.FileName;
+    //  return _debugger.CurrentScope.FileName;
+    //}
 
     public void BreakpointHit()
     {
@@ -189,35 +215,19 @@ namespace MySql.Debugger.VisualStudio
       // Parse formal arguments
       try
       {
-        // TODO: do not hardcode SQL.
-        //Dictionary<string, StoreType> dic = _dbg.ParseArguments( sql );
-        //// Pass those arguments into StartingArguments
-        //// Get results back
-        Nullable<bool> result = true;
-        //if (dic.Count != 0)
-        //{
-        //  StartingArguments dlg = new StartingArguments();
-        //  DataTable t = _arguments;
-        //  t.Rows.Clear();
-        //  foreach (string parName in dic.Keys)
-        //  {
-        //    t.Rows.Add(new object[] { parName, "" });
-        //  }
-        //  dlg.Arguments = t;
-        //  dlg.Bind();
-        //  result = dlg.ShowDialog();
-        //}
-        if (result ?? false)
+        Dictionary<string, StoreType> args;
+        Nullable<bool> result = RequestArguments( out args );
+        if (result ?? true)
         {
           if (_autoRE != null)
             _autoRE.Close();
           _autoRE = new AutoResetEvent(false);
           _debugger.SqlInput = _SpBody;
-          //_scope.Peek().Content = _debugger.SqlInput;
-          //firstScope = true;
-          //richTextBox1.IsReadOnly = true;
-          //_worker.RunWorkerAsync();
-          DoRun();
+          DoRun( args );
+        }
+        else
+        {
+          _debugger.RaiseEndDebugger();
         }
       }
       catch (DebugSyntaxException dse)
@@ -228,7 +238,7 @@ namespace MySql.Debugger.VisualStudio
       }
     }
 
-    private void DoRun()
+    private void DoRun(Dictionary<string, StoreType> args)
     {
       Debugger.BreakpointHandler bph = (bp) =>
       {
@@ -255,17 +265,17 @@ namespace MySql.Debugger.VisualStudio
       _debugger.OnBreakpoint -= bph;
       _debugger.OnBreakpoint += bph;
       
-      // TODO: Setup args
-      string[] values = new string[0];
-      //string[] values = new string[_arguments.Rows.Count];
-      //for (int i = 0; i < _arguments.Rows.Count; i++)
-      //{
-      //  DataRow dr = _arguments.Rows[i];
-      //  values[i] = (string)dr[1];
-      //}
+      // Setup args
+      string[] values = new string[ args.Count ];
+      int i = 0;
+      foreach (StoreType st in args.Values)
+      {
+        values[i] = st.Value.ToString();
+        i++;
+      }
       try
       {
-        _debugger.Run(/*true,*/ values);
+        _debugger.Run( values );
       }
       catch (MySqlException mysqlex)
       {

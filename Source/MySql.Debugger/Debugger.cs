@@ -323,7 +323,7 @@ namespace MySql.Debugger
 
     public delegate void EndDebugger();
     public event EndDebugger OnEndDebugger;
-    private void RaiseEndDebugger()
+    public void RaiseEndDebugger()
     {
       if( OnEndDebugger != null )
         OnEndDebugger();
@@ -1733,6 +1733,26 @@ namespace MySql.Debugger
           GetFunctionsRecursive((CommonTree)t, routines);
         }
       }
+    }
+
+    /// <summary>
+    /// Parses a comma separated list of arguments.
+    /// </summary>
+    /// <param name="node"></param>
+    /// <returns></returns>
+    public Dictionary<string, StoreType> ParseArgs(string sql)
+    {
+      StringBuilder sb = new StringBuilder();
+      CommonTokenStream tokenStream;
+      MySQL51Parser.program_return treeParsed =
+        ParseSql(sql, false, out sb, out tokenStream);
+      CommonTree tree = (CommonTree)treeParsed.Tree;
+      if (tree.IsNil)
+      {
+        tree = (CommonTree)tree.GetChild(0);
+      }
+      Dictionary<string, StoreType> args = ParseArgs(tree);
+      return args;
     }
 
     /// <summary>
