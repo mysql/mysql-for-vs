@@ -329,7 +329,7 @@ leave
 
 declare_stmt options { backtrack=true; memoize=true; }
 	:	DECLARE ids+=ident ( COMMA ids+=ident )* data_type ( DEFAULT defaultexpr=expr )? SEMI+	
-		-> ^( DECLARE $ids* data_type? $defaultexpr? )
+		-> ^( DECLARE $ids* data_type? ^( DEFAULT $defaultexpr )? )
 	;
 
 set_stmt
