@@ -7,8 +7,8 @@
 - Fix for stored procedure call using only its name with EF code first (MySql bug #64999, Oracle bug #14008699). 
 - Fix for performance issue in generated EF query: .NET StartsWith/Contains/EndsWith produces MySql's locate instead of Like (MySql bug #64935, Oracle bug #14009363).
 - Fix for script generated for code first contains wrong alter table and wrong declaration for byte[] (MySql bug #64216, Oracle bug #13900091).
-
 - Fix for Exception thrown when using cascade delete in an EDM Model-First in Entity Framework (Oracle bug #14008752, MySql bug #64779).
+- Fix for Session locking issue with MySqlSessionStateStore (MySql bug #63997, Oracble bug #13733054).
 
 6.4.5
 - Fix for bug on Create Table via Server Explorer. The columns properties are now added in the correct order.(Oracle db Bug # 13475830).
