@@ -693,7 +693,7 @@ namespace MySql.Web.SessionState
           // Retrieve the current session item information.
           cmd = new MySqlCommand(
             "SELECT NOW(), Expires , SessionItems, LockId,  Flags, Timeout, " +
-            "  LockDate " +
+	    "  LockDate, Locked " +
             "  FROM my_aspnet_sessions" +
             "  WHERE SessionId = @SessionId AND ApplicationId = @ApplicationId", conn);
 
@@ -729,6 +729,10 @@ namespace MySql.Web.SessionState
               timeout = reader.GetInt32(5);
               DateTime lockDate = reader.GetDateTime(6);
               lockAge = now.Subtract(lockDate);
+	      // If it's a read-only session set locked to the current lock
+              // status (writable sessions have already done this)
+              if (!lockRecord)
+                locked = reader.GetBoolean(7);
             }
           }
 
