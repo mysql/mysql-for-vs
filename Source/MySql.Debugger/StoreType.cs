@@ -42,7 +42,7 @@ namespace MySql.Debugger
       get { return _type; }
       set
       {
-        _type = value;
+        _type = value.ToLower();
         int[] values;
         if (PrecisionAndScale.TryGetValue(_type, out values))
         {
@@ -64,7 +64,7 @@ namespace MySql.Debugger
     /// </summary>
     private static string[,] MappingCastsData = {
       // boolean
-      { "bit", "bit" },
+      { "bit", "unsigned" },
       // int
       { "tinyint", "unsigned" },
       { "smallint", "unsigned" },
@@ -118,8 +118,8 @@ namespace MySql.Debugger
       PrecisionAndScale.Add("real", new int[] { 60, 40 });
       PrecisionAndScale.Add("double", new int[] { 53, 30 });
       PrecisionAndScale.Add("float", new int[] { 23, 10 });
-      PrecisionAndScale.Add("decimal", new int[] { 60, 30 });
-      PrecisionAndScale.Add("numeric", new int[] { 60, 30 });
+      PrecisionAndScale.Add("decimal", new int[] { 65, 0 });
+      PrecisionAndScale.Add("numeric", new int[] { 60, 0 });
     }
 
     /// <summary>
@@ -185,7 +185,7 @@ namespace MySql.Debugger
 
     public StoreType()
     {
-      Unsigned = true;
+      Unsigned = false;
     }
 
     internal StoreType(StoreType st)
@@ -209,7 +209,8 @@ namespace MySql.Debugger
     internal static bool IsString(string type)
     {
       return (Debugger.Cmp(type, "char") == 0) || (Debugger.Cmp(type, "varchar") == 0) ||
-          type.EndsWith("text", StringComparison.OrdinalIgnoreCase);
+          type.EndsWith("text", StringComparison.OrdinalIgnoreCase) ||
+          (Debugger.Cmp(type, "binary") == 0) || (Debugger.Cmp(type, "varbinary") == 0);
     }
 
     internal static bool IsDateTime(string type)

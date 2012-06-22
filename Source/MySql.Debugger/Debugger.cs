@@ -1848,6 +1848,8 @@ namespace MySql.Debugger
                   st.Precision = Int32.Parse(dtNode.GetChild(i).GetChild(1).Text);
                 }
               }
+              if (Debugger.Cmp(dtNode.GetChild(i).Text, "unsigned") == 0)
+                st.Unsigned = true;
             }
             break;
           default:

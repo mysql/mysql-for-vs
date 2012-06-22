@@ -33,14 +33,56 @@ namespace MySql.Debugger.VisualStudio
   public class AD7Property : IDebugProperty2
   {
     private AD7ProgramNode _node;
+    private static Dictionary<string, decimal> numberTypeMax = new Dictionary<string, decimal>()
+    {
+      { "tinyint", sbyte.MaxValue },
+      { "utinyint", byte.MaxValue },
+      { "smallint", Int16.MaxValue },
+      { "usmallint", UInt16.MaxValue },
+      { "mediumint", 8388607 },
+      { "umediumint", 16777215 },
+      { "int", Int32.MaxValue },
+      { "uint", UInt32.MaxValue },
+      { "integer", Int32.MaxValue },
+      { "uinteger", UInt32.MaxValue },
+      { "bigint", Int64.MaxValue },
+      { "ubigint", UInt64.MaxValue },
+      { "decimal", decimal.MaxValue },
+      { "bool", sbyte.MaxValue },
+    };
+    private static Dictionary<string, decimal> numberTypeMin = new Dictionary<string, decimal>()
+    {
+      { "tinyint", sbyte.MinValue },
+      { "utinyint", byte.MinValue },
+      { "smallint", Int16.MinValue },
+      { "usmallint", UInt16.MinValue },
+      { "mediumint", -8388608 },
+      { "umediumint", 0 },
+      { "int", Int32.MinValue },
+      { "uint", UInt32.MinValue },
+      { "integer", Int32.MinValue },
+      { "uinteger", UInt32.MinValue },
+      { "bigint", Int64.MinValue },
+      { "ubigint", UInt64.MinValue },
+      { "bool", sbyte.MinValue },
+    };
 
     public string Name { get; set; }
-    public object Value { get; set; }
+    public string Value { get; set; }
+    public string TypeName { get; set; }
 
-    public AD7Property(string name, object value, AD7ProgramNode node)
+    public AD7Property(string name, AD7ProgramNode node)
     {
       Name = name;
-      Value = value;
+      _node = node;
+      TypeName = _node.Debugger.Debugger.ScopeVariables[name].Type;
+      if (numberTypeMax.ContainsKey(TypeName) && _node.Debugger.Debugger.ScopeVariables[name].Unsigned)
+        TypeName += " unsigned";
+      Value = GetValue(name);
+    }
+
+    public AD7Property(AD7ProgramNode node)
+    {
       _node = node;
     }
 
@@ -48,15 +90,8 @@ namespace MySql.Debugger.VisualStudio
 
     int IDebugProperty2.EnumChildren(enum_DEBUGPROP_INFO_FLAGS dwFields, uint dwRadix, ref Guid guidFilter, enum_DBG_ATTRIB_FLAGS dwAttribFilter, string pszNameFilter, uint dwTimeout, out IEnumDebugPropertyInfo2 ppEnum)
     {
-      if (Value != null)
-      {
-        var props = GetProperties();
-        ppEnum = new AD7PropertyCollection(props.ToArray());
-        return VSConstants.S_OK;
-      }
-
-      ppEnum = null;
-      return VSConstants.S_FALSE;
+      ppEnum = new AD7PropertyCollection(_node);
+      return VSConstants.S_OK;
     }
 
     int IDebugProperty2.GetDerivedMostProperty(out IDebugProperty2 ppDerivedMost)
@@ -89,19 +124,19 @@ namespace MySql.Debugger.VisualStudio
       if ((dwFields & enum_DEBUGPROP_INFO_FLAGS.DEBUGPROP_INFO_NAME) != 0)
       {
         pPropertyInfo[0].bstrName = Name;
-        pPropertyInfo[0].dwFields = enum_DEBUGPROP_INFO_FLAGS.DEBUGPROP_INFO_NAME;
+        pPropertyInfo[0].dwFields |= enum_DEBUGPROP_INFO_FLAGS.DEBUGPROP_INFO_NAME;
       }
 
       if ((dwFields & enum_DEBUGPROP_INFO_FLAGS.DEBUGPROP_INFO_VALUE) != 0)
       {
-        pPropertyInfo[0].bstrValue = Value.ToString();
-        pPropertyInfo[0].dwFields = enum_DEBUGPROP_INFO_FLAGS.DEBUGPROP_INFO_VALUE;
+        pPropertyInfo[0].bstrValue = Value;
+        pPropertyInfo[0].dwFields |= enum_DEBUGPROP_INFO_FLAGS.DEBUGPROP_INFO_VALUE;
       }
 
       if ((dwFields & enum_DEBUGPROP_INFO_FLAGS.DEBUGPROP_INFO_TYPE) != 0)
       {
-        pPropertyInfo[0].bstrType = Value.GetType().FullName;
-        pPropertyInfo[0].dwFields = enum_DEBUGPROP_INFO_FLAGS.DEBUGPROP_INFO_TYPE;
+        pPropertyInfo[0].bstrType = TypeName;
+        pPropertyInfo[0].dwFields |= enum_DEBUGPROP_INFO_FLAGS.DEBUGPROP_INFO_TYPE;
       }
 
       return VSConstants.S_OK;
@@ -124,16 +159,96 @@ namespace MySql.Debugger.VisualStudio
 
     int IDebugProperty2.SetValueAsString(string pszValue, uint dwRadix, uint dwTimeout)
     {
-      _node.Debugger.SetLocalNewValue(Name, pszValue);
+      if (!ValidateNewValue(ref pszValue))
+        return VSConstants.E_FAIL;
+      _node.Debugger.SetLocalNewValue(Name, pszValue.Trim('\'').Trim('"'));
       return VSConstants.S_OK;
     }
 
     #endregion
 
-    private IEnumerable<AD7Property> GetProperties()
+    private string GetValue(string variableName)
     {
-      var props = Value.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
-      return props.Select(propertyInfo => new AD7Property(propertyInfo.Name, propertyInfo.GetValue(Value, null), _node));
+      string value = _node.Debugger.Debugger.FormatValue(_node.Debugger.Debugger.Eval(variableName));
+      value = value.Trim('\'');
+
+      return value;
+    }
+
+    private bool ValidateNewValue(ref string value)
+    {
+      StoreType type = _node.Debugger.Debugger.ScopeVariables[Name];
+      string typeName = type.Type.ToLower();
+      bool isValid;
+      switch (typeName)
+      {
+          //TODO case "bit":
+        case "tinyint":
+        case "smallint":
+        case "mediumint":
+        case "int":
+        case "integer":
+        case "bigint":
+        case "bool":
+          if (type.Unsigned)
+            typeName = "u" + typeName;
+          isValid = ParseToNumber(ref value, numberTypeMin[typeName], numberTypeMax[typeName]);
+          break;
+
+        case "decimal":
+        case "dec":
+        case "numeric":
+        case "fixed":
+        case "float":
+        case "double":
+        case "real":
+          double doubleValue;
+          isValid = double.TryParse(value, out doubleValue);
+          if (isValid)
+          {
+            double maxValue = (Math.Pow(10, type.Length - type.Precision) - Math.Pow(10, type.Precision * -1));
+            if (doubleValue > maxValue)
+              doubleValue = maxValue;
+            else if (type.Precision < 29)
+              doubleValue = (double)decimal.Round((decimal)doubleValue, type.Precision, MidpointRounding.AwayFromZero);
+            value = doubleValue.ToString();
+            if (type.Unsigned && doubleValue < 0)
+              value = "0";
+          }
+          break;
+
+        case "varchar":
+        case "char":
+        case "binary":
+        case "varbinary":
+          isValid = true;
+          if (value.Length > type.Length)
+            value = value.Substring(0, type.Length);
+          break;
+
+        default:
+          return true;
+      }
+      return isValid;
+    }
+
+    private bool ParseToNumber(ref string value, Decimal minValue, Decimal maxValue)
+    {
+      bool isValid;
+      Decimal decValue;
+
+      isValid = Decimal.TryParse(value, out decValue);
+      if (isValid)
+      {
+        decValue = Decimal.Truncate(decValue);
+        value = decValue.ToString();
+        if (decValue > maxValue)
+          value = maxValue.ToString();
+        else if (decValue < minValue)
+          value = minValue.ToString();
+      }
+
+      return isValid;
     }
   }
 
@@ -145,22 +260,11 @@ namespace MySql.Debugger.VisualStudio
     public AD7PropertyCollection(AD7ProgramNode node)
     {
       _node = node;
-      //TODO define auto variables
       Debugger dbg = DebuggerManager.Instance.Debugger;
-      Dictionary<string, StoreType> debugVars = DebuggerManager.Instance.ScopeVariables;
-      Dictionary<string, object> autoVariables = new Dictionary<string, object>();
-      foreach (StoreType st in debugVars.Values)
+      foreach (StoreType st in DebuggerManager.Instance.ScopeVariables.Values)
       {
         if (st.VarKind == VarKindEnum.Internal) continue;
-        autoVariables.Add(st.Name, dbg.FormatValue( dbg.Eval(st.Name)));
-      }
-
-      //autoVariables.Add("k1", "v1");
-      //autoVariables.Add("k2", "v2");
-      foreach (var keyVal in autoVariables)
-      {
-        object val = keyVal.Value != null ? keyVal.Value : null;
-        this.Add(new AD7Property(keyVal.Key, val, _node));
+        this.Add(new AD7Property(st.Name, node));
       }
     }
 
@@ -191,7 +295,7 @@ namespace MySql.Debugger.VisualStudio
       {
         rgelt[i].bstrName = this[(int)(i + count)].Name;
         rgelt[i].bstrValue = this[(int)(i + count)].Value != null ? this[(int)(i + count)].Value.ToString() : "$null";
-        rgelt[i].bstrType = this[(int)(i + count)].Value != null ? this[(int)(i + count)].Value.GetType().ToString() : String.Empty;
+        rgelt[i].bstrType = this[(int)(i + count)].TypeName;
         rgelt[i].pProperty = this[(int)(i + count)];
         rgelt[i].dwAttrib = GetAttributes(this[(int)(i + count)].Value);
         rgelt[i].dwFields = enum_DEBUGPROP_INFO_FLAGS.DEBUGPROP_INFO_NAME |
