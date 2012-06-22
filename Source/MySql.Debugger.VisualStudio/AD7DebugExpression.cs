@@ -67,9 +67,7 @@ namespace MySql.Debugger.VisualStudio
         ppResult = null;
         return VSConstants.E_NOTIMPL;
       }
-      MySql.Debugger.Debugger _dbg = DebuggerManager.Instance.Debugger;
-      object value = _dbg.Eval(_expr);
-      AD7Property prop = new AD7Property( _expr, _dbg.FormatValue(value), _stackFrame.Node );
+      AD7Property prop = new AD7Property( _expr,_stackFrame.Node );
       ppResult = prop;
       // Send evaluation complete event
       DebuggerManager.Instance._events.ExpressionEvalCompleted( 

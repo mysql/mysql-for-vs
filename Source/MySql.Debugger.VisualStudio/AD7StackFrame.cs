@@ -71,7 +71,8 @@ namespace MySql.Debugger.VisualStudio
     int IDebugStackFrame2.GetDebugProperty(out IDebugProperty2 ppProperty)
     {
       Debug.WriteLine("AD7StackFrame: GetDebugProperty");
-      throw new NotImplementedException();
+      ppProperty = new AD7Property(_node);
+      return VSConstants.S_OK;
     }
 
     int IDebugStackFrame2.GetDocumentContext(out IDebugDocumentContext2 ppCxt)

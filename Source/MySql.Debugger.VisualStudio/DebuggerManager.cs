@@ -301,7 +301,6 @@ namespace MySql.Debugger.VisualStudio
 
     public void SetLocalNewValue(string name, string value)
     {
-      //TODO validate and cast value
       _debugger.ScopeVariables[name].Value = value;
       _debugger.CommitLocals();
     }

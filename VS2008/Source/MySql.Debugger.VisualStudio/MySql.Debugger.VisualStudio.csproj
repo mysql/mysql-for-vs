@@ -41,6 +41,8 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -99,6 +101,14 @@
     <Compile Include="..\..\..\Source\MySql.Debugger.VisualStudio\DebuggerManager.cs">
       <Link>DebuggerManager.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\Source\MySql.Debugger.VisualStudio\Dialogs\StoredRoutineArgumentsDlg.cs">
+      <Link>Dialogs\StoredRoutineArgumentsDlg.cs</Link>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="..\..\..\Source\MySql.Debugger.VisualStudio\Dialogs\StoredRoutineArgumentsDlg.designer.cs">
+      <Link>Dialogs\StoredRoutineArgumentsDlg.designer.cs</Link>
+      <DependentUpon>StoredRoutineArgumentsDlg.cs</DependentUpon>
+    </Compile>
     <Compile Include="..\..\..\Source\MySql.Debugger.VisualStudio\HRESULT.cs">
       <Link>HRESULT.cs</Link>
     </Compile>
@@ -123,6 +133,12 @@
       <Project>{428C8471-6FA9-4873-9D99-DECCA001A81E}</Project>
       <Name>MySql.Debugger</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\..\Source\MySql.Debugger.VisualStudio\Dialogs\StoredRoutineArgumentsDlg.resx">
+      <Link>Dialogs\StoredRoutineArgumentsDlg.resx</Link>
+      <DependentUpon>StoredRoutineArgumentsDlg.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
