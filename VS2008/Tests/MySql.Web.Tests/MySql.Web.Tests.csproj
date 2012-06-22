@@ -71,57 +71,47 @@
     <Compile Include="..\..\..\Tests\MySql.Web.Tests\Properties\AssemblyInfo.cs">
       <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySql.Web.Tests\SessionLocking\Global.asax.cs">
-      <Link>SessionLocking\Global.asax.cs</Link>
-      <DependentUpon>Global.asax</DependentUpon>
-    </Compile>
-    <Compile Include="..\..\..\Tests\MySql.Web.Tests\SessionLocking\InitSessionLocking.aspx.cs">
-      <Link>SessionLocking\InitSessionLocking.aspx.cs</Link>
-      <DependentUpon>InitSessionLocking.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="..\..\..\Tests\MySql.Web.Tests\SessionLocking\InitSessionLocking.aspx.designer.cs">
-      <Link>SessionLocking\InitSessionLocking.aspx.designer.cs</Link>
-      <DependentUpon>InitSessionLocking.aspx.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\..\..\Tests\MySql.Web.Tests\SessionLocking\read.aspx.cs">
-      <Link>SessionLocking\read.aspx.cs</Link>
-      <DependentUpon>read.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="..\..\..\Tests\MySql.Web.Tests\SessionLocking\read.aspx.designer.cs">
-      <Link>SessionLocking\read.aspx.designer.cs</Link>
-      <DependentUpon>read.aspx.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\..\..\Tests\MySql.Web.Tests\SessionLocking\write.aspx.cs">
-      <Link>SessionLocking\write.aspx.cs</Link>
-      <DependentUpon>write.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="..\..\..\Tests\MySql.Web.Tests\SessionLocking\write.aspx.designer.cs">
-      <Link>SessionLocking\write.aspx.designer.cs</Link>
-      <DependentUpon>write.aspx.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\..\..\Tests\MySql.Web.Tests\SessionLocking\write2.aspx.cs">
-      <Link>SessionLocking\write2.aspx.cs</Link>
-      <DependentUpon>write2.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="..\..\..\Tests\MySql.Web.Tests\SessionLocking\write2.aspx.designer.cs">
-      <Link>SessionLocking\write2.aspx.designer.cs</Link>
-      <DependentUpon>write2.aspx.cs</DependentUpon>
-    </Compile>
     <Compile Include="..\..\..\Tests\MySql.Web.Tests\SessionTests.cs">
       <Link>SessionTests.cs</Link>
     </Compile>
     <Compile Include="..\..\..\Tests\MySql.Web.Tests\TestProfile.cs" />
     <Compile Include="..\..\..\Tests\MySql.Web.Tests\UserManagement.cs" />
+    <Compile Include="SessionLocking\Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="SessionLocking\InitSessionLocking.aspx.cs">
+      <DependentUpon>InitSessionLocking.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SessionLocking\InitSessionLocking.aspx.designer.cs">
+      <DependentUpon>InitSessionLocking.aspx.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SessionLocking\read.aspx.cs">
+      <DependentUpon>read.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SessionLocking\read.aspx.designer.cs">
+      <DependentUpon>read.aspx.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SessionLocking\write.aspx.cs">
+      <DependentUpon>write.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SessionLocking\write.aspx.designer.cs">
+      <DependentUpon>write.aspx.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SessionLocking\write2.aspx.cs">
+      <DependentUpon>write2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SessionLocking\write2.aspx.designer.cs">
+      <DependentUpon>write2.aspx.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\Tests\MySql.Web.Tests\App.config" />
-    <None Include="..\..\..\Tests\MySql.Web.Tests\SessionLocking\Web.config">
-      <Link>SessionLocking\Web.config</Link>
-    </None>
+    <None Include="SessionLockingBuild.bat" />
+    <None Include="SessionLocking\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Source\MySql.Data\MySql.Data.csproj">
@@ -138,24 +128,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\..\Tests\MySql.Web.Tests\SessionLocking\Global.asax">
-      <Link>SessionLocking\Global.asax</Link>
-    </Content>
-    <Content Include="..\..\..\Tests\MySql.Web.Tests\SessionLocking\InitSessionLocking.aspx">
-      <Link>SessionLocking\InitSessionLocking.aspx</Link>
-    </Content>
-    <Content Include="..\..\..\Tests\MySql.Web.Tests\SessionLocking\read.aspx">
-      <Link>SessionLocking\read.aspx</Link>
-    </Content>
-    <Content Include="..\..\..\Tests\MySql.Web.Tests\SessionLocking\web_config_data.txt">
-      <Link>SessionLocking\web_config_data.txt</Link>
-    </Content>
-    <Content Include="..\..\..\Tests\MySql.Web.Tests\SessionLocking\write.aspx">
-      <Link>SessionLocking\write.aspx</Link>
-    </Content>
-    <Content Include="..\..\..\Tests\MySql.Web.Tests\SessionLocking\write2.aspx">
-      <Link>SessionLocking\write2.aspx</Link>
-    </Content>
+    <Content Include="SessionLocking\Global.asax" />
+    <Content Include="SessionLocking\InitSessionLocking.aspx" />
+    <Content Include="SessionLocking\read.aspx" />
+    <Content Include="SessionLocking\web_config_src.txt" />
+    <Content Include="SessionLocking\write.aspx" />
+    <Content Include="SessionLocking\write2.aspx" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -165,4 +143,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PreBuildEvent>call "$(ProjectDir)SessionLockingBuild.bat" "$(ProjectDir)SessionLocking" "$(ProjectDir)$(OutDir)SessionLocking"</PreBuildEvent>
+  </PropertyGroup>
 </Project>
