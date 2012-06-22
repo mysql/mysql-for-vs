@@ -75,6 +75,12 @@ namespace MySql.Data.Entity.Tests
       script.Query = schema;
       script.Execute();
 
+      //ModelFirstModel1
+      schema = r.GetString("ModelFirstModel1");
+      script = new MySqlScript(conn);
+      script.Query = schema;
+      script.Execute();
+
       MySqlCommand cmd = new MySqlCommand("DROP DATABASE IF EXISTS `modeldb`", rootConn);
       cmd.ExecuteNonQuery();
     }
