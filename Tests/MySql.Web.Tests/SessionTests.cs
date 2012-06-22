@@ -202,20 +202,28 @@ public class ThreadRequestData
 
       string text = File.ReadAllText(webconfigPathSrc);
       text = text.Replace("connection_string_here", css.ConnectionString);
-#if CLR2
-      text = text.Replace("<compilation debug=\"true\" targetFramework=\"4.0\" />", "");
-#endif
+      Version ver = System.Environment.Version;      
+      if (ver.Major != 4)
+      {
+        text = text.Replace("<compilation targetFramework=\"4.0\" />", "");
+      }
+
       File.WriteAllText(webconfigPath, text);
 
       int port = 12224;
-#if CLR4
-      string webserverPath = @"C:\Program Files (x86)\Common Files\microsoft shared\DevServer\10.0\WebDev.WebServer40.exe";
-#else
-      string webserverPath = @"C:\Program Files (x86)\Common Files\microsoft shared\DevServer\9.0\WebDev.WebServer.exe";
-#endif
+      
+      string webserverPath ;
+      if (ver.Major == 4)
+      {
+        webserverPath = @"C:\Program Files (x86)\Common Files\microsoft shared\DevServer\10.0\WebDev.WebServer40.exe";
+      }
+      else
+      {
+        webserverPath = @"C:\Program Files (x86)\Common Files\microsoft shared\DevServer\9.0\WebDev.WebServer.exe";
+      }
       string webserverArgs = string.Format(" /port:{0} /path:{1}\\SessionLocking", port,
         Path.GetFullPath(@"."));
-      
+
       DirectoryInfo di = new DirectoryInfo(Path.GetFullPath(curDir));            
       Directory.CreateDirectory(Path.GetFullPath(@".\SessionLocking\bin"));
       foreach (FileInfo fi in di.GetFiles("*.dll"))
