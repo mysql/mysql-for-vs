@@ -22,7 +22,7 @@
         <File Id='MySql.Debugger.VisualStudio_2008' Name='MySql.Debugger.VisualStudio.dll' DiskId='1'
               Source='..\VS2008\Source\MySql.Debugger.VisualStudio\bin\release\MySql.Debugger.VisualStudio.dll'/>
         <File Id='MySqlParser.2008' Name='MySqlParser.dll' DiskId='1'
-          Source='..\VS2008\Source\MySql.Debugger.VisualStudio\bin\release\MySqlParser.dll'/>
+          Source='..\VS2008\Source\MySql.Debugger.VisualStudio\bin\release\MySql.Parser.dll'/>
         <File Id='Antlr3.Runtime_2008' Name='Antlr3.Runtime.dll' DiskId='1'
               Source='..\VS2008\Source\MySql.Debugger.VisualStudio\bin\release\Antlr3.Runtime.dll'/>
       </Component>
