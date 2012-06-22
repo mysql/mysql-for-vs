@@ -82,6 +82,7 @@ namespace MySql.Data.Entity.Tests
     [Test]
     public void OnDeleteCascade()
     {
+#if CLR4
       using (ModelFirstModel1Container ctx = new ModelFirstModel1Container())
       {
         if (ctx.DatabaseExists())
@@ -89,13 +90,13 @@ namespace MySql.Data.Entity.Tests
         ctx.CreateDatabase();
         ctx.SaveChanges();
       }
-
+#endif
       using (ModelFirstModel1Container ctx = new ModelFirstModel1Container())
       {
         Student s = new Student();
         s.Name = "Einstein, Albert";
         s.Kardexes.Add(new Kardex() { Score = 9.0 });
-        ctx.Students.AddObject(s);
+        ctx.AddToStudents(s);
         ctx.SaveChanges();
       }
 
@@ -103,6 +104,7 @@ namespace MySql.Data.Entity.Tests
       {
         var a = from st in ctx.Students select st;
         Student s = a.First();
+        s.Kardexes.Load();
         Assert.AreEqual( "Einstein, Albert", s.Name );
         Kardex k = s.Kardexes.First();
         Assert.AreEqual(9.0, k.Score);
