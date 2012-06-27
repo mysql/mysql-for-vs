@@ -188,7 +188,7 @@ namespace MySql.Data.VisualStudio
         if (expectedToken == "proc_name")        
         {          
           m_compList = new List<Completion>();
-          DataTable schema = connection.GetSchema("PROCEDURES WITH PARAMETERS");
+          DataTable schema = connection.GetSchema("PROCEDURES WITH PARAMETERS", new string[] { null, connection.Database });
           DataView vi = schema.DefaultView;
           vi.Sort = "specific_name asc";
           string completionItem = null;
