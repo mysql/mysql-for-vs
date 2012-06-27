@@ -277,15 +277,10 @@ namespace MySql.Debugger.VisualStudio
       {
         _debugger.Run( values );
       }
-      catch (MySqlException mysqlex)
-      {
-        throw;
-        //MessageBox.Show(string.Format("Error while debugging: ", mysqlex.Message));
-      }
-      catch (DebugSyntaxException dse)
-      {
-        throw;
-        //MessageBox.Show(string.Format("Syntax error: {0}", dse.Message));
+      catch (Exception ex)
+      {        
+        MessageBox.Show(string.Format("Error while debugging: {0}", ex.Message));
+        _events.ProgramDestroyed(_node);
       }
     }
 
