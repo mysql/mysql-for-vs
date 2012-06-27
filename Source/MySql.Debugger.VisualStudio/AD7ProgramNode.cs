@@ -266,6 +266,7 @@ namespace MySql.Debugger.VisualStudio
     int IDebugProgram2.Terminate()
     {
       Debug.WriteLine("AD7ProgramNode: Entering Terminate");
+      DebuggerManager.Instance.Debugger.RestoreRoutinesBackup();
       return VSConstants.S_OK;
     }
 

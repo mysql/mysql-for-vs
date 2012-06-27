@@ -415,6 +415,125 @@ end;
       }
     }
 
+    [Test]
+    public void LoopWithIfs()
+    {
+      string sql =
+        @"delimiter //
+drop procedure if exists doloopif //
+
+DELIMITER //
+CREATE PROCEDURE doloopif (p1 INT)
+BEGIN
+	DECLARE var_x INT;
+	SET var_x=0;
+	loop_test: LOOP
+		IF var_x < p1 THEN
+			SET var_x = var_x+1;
+		ELSE
+			LEAVE loop_test;
+		END IF;
+	END LOOP loop_test;
+	SELECT CONCAT ('The final LOOP and IF number is: ', var_x) AS Results;
+END
+//
+";
+      Debugger dbg = new Debugger();
+      try
+      {
+        dbg.Connection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.UtilityConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.LockingConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        DumpConnectionThreads(dbg);
+        MySqlScript script = new MySqlScript(dbg.Connection, sql);
+        script.Execute();
+        sql =
+@"CREATE PROCEDURE doloopif (p1 INT)
+BEGIN
+	DECLARE var_x INT;
+	SET var_x=0;
+	loop_test: LOOP
+		IF var_x < p1 THEN
+			SET var_x = var_x+1;
+		ELSE
+			LEAVE loop_test;
+		END IF;
+	END LOOP loop_test;
+	SELECT CONCAT ('The final LOOP and IF number is: ', var_x) AS Results;
+END;
+";
+        dbg.SqlInput = sql;
+        dbg.SteppingType = SteppingTypeEnum.None;
+        dbg.Run(new string[1] { "3" } );
+      }
+      finally
+      {
+        dbg.RestoreRoutinesBackup();
+      }
+    }
+
+    [Test]
+    public void DoHandler()
+    {
+      string sql =
+        @"
+delimiter //
+
+drop table if exists d_table //
+
+CREATE TABLE d_table (s1 int, primary key (s1)) //
+
+drop procedure if exists dohandler //
+
+DELIMITER //
+CREATE PROCEDURE dohandler()
+BEGIN
+	DECLARE dup_keys CONDITION FOR  SQLSTATE '23000';
+	DECLARE CONTINUE HANDLER FOR dup_keys SET @GARBAGE = 1;
+	SET @x = 1;
+	INSERT INTO world.d_table VALUES (1);
+	SET @x = 2;
+	INSERT INTO world.d_table VALUES (1);
+	set @x = 3;
+
+END //
+";
+      Debugger dbg = new Debugger();
+      try
+      {
+        dbg.Connection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.UtilityConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.LockingConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        DumpConnectionThreads(dbg);
+        MySqlScript script = new MySqlScript(dbg.Connection, sql);
+        script.Execute();
+        sql =
+@"CREATE PROCEDURE dohandler()
+BEGIN
+	DECLARE dup_keys CONDITION FOR  SQLSTATE '23000';
+	DECLARE CONTINUE HANDLER FOR dup_keys SET @GARBAGE = 1;
+	SET @x = 1;
+	INSERT INTO test6.d_table VALUES (1);
+	SET @x = 2;
+	INSERT INTO test6.d_table VALUES (1);
+	set @x = 3;
+
+END;
+";
+        dbg.SqlInput = sql;
+        dbg.SteppingType = SteppingTypeEnum.StepInto;
+        dbg.OnBreakpoint += (bp) =>
+        {
+          Debug.WriteLine(string.Format( "Breakpoint at {0}", bp.Line ));
+        };
+        dbg.Run(new string[0]);
+      }
+      finally
+      {
+        dbg.RestoreRoutinesBackup();
+      }
+    }
+
     private void DumpConnectionThreads(Debugger dbg)
     {
       dbg.Connection.Open();

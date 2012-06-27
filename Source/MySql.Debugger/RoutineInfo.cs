@@ -71,6 +71,7 @@ namespace MySql.Debugger
     internal bool _endOfDeclare { get; set; }
     internal string _leaveLabel { get; set; }
     internal Dictionary<string, StoreType> Locals { get; set; }
+    internal CommonTree BeginEnd { get; set; }
     private Dictionary<int, ITree> _statementsPerLine = new Dictionary<int, ITree>();
 
     internal void RegisterStatement(ITree tree)
