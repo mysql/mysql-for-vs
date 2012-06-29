@@ -44,32 +44,36 @@ namespace MySql.Debugger.VisualStudio
       Node = new AD7ProgramNode(this);
     }
 
-
     #region IDebugProcess3 Members
 
     public int Attach(IDebugEventCallback2 pCallback, Guid[] rgguidSpecificEngines, uint celtSpecificEngines, int[] rghrEngineAttach)
     {
-      throw new NotImplementedException();
+      Debug.WriteLine("AD7Process: Attach");
+      return VSConstants.E_NOTIMPL;
     }
 
     public int CanDetach()
     {
-      throw new NotImplementedException();
+      Debug.WriteLine("AD7Process: CanDetach");
+      return VSConstants.E_NOTIMPL;
     }
 
     public int CauseBreak()
     {
-      throw new NotImplementedException();
+      Debug.WriteLine("AD7Process: CauseBreak");
+      return VSConstants.E_NOTIMPL;
     }
 
     public int Continue(IDebugThread2 pThread)
     {
-      throw new NotImplementedException();
+      Debug.WriteLine("AD7Process: Continue");
+      return VSConstants.E_NOTIMPL;
     }
 
     public int Detach()
     {
-      throw new NotImplementedException();
+      Debug.WriteLine("AD7Process: Detach");
+      return VSConstants.E_NOTIMPL;
     }
 
     public int DisableENC(EncUnavailableReason reason)
@@ -79,17 +83,22 @@ namespace MySql.Debugger.VisualStudio
 
     public int EnumPrograms(out IEnumDebugPrograms2 ppEnum)
     {
-      throw new NotImplementedException();
+      Debug.WriteLine("AD7Process: EnumPrograms");
+      ppEnum = null;
+      return VSConstants.E_NOTIMPL;
     }
 
     public int EnumThreads(out IEnumDebugThreads2 ppEnum)
     {
-      throw new NotImplementedException();
+      Debug.WriteLine("AD7Process: EnumThreads");
+      ppEnum = null;
+      return VSConstants.E_NOTIMPL;
     }
 
     public int Execute(IDebugThread2 pThread)
     {
-      throw new NotImplementedException();
+      Debug.WriteLine("AD7Process: Execute");
+      return VSConstants.E_NOTIMPL;
     }
 
     public int GetAttachedSessionName(out string pbstrSessionName)
@@ -165,7 +174,8 @@ namespace MySql.Debugger.VisualStudio
 
     public int Terminate()
     {
-      throw new NotImplementedException();
+      Debug.WriteLine("AD7Process: Terminate");
+      return VSConstants.E_NOTIMPL;
     }
 
     #endregion

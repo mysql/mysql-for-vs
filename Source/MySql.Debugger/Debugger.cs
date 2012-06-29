@@ -243,8 +243,7 @@ namespace MySql.Debugger
           do
           {
             // Wait for lock with debuggee code.
-            ExecuteScalarLongWait("select get_lock( 'lock1', 999999 );");
-            if (_completed) break;
+            ExecuteScalarLongWait("select get_lock( 'lock1', 999999 );");            
             ReleaseDebuggerLock();
             GetCurrentScopeLevel();
             if (_prevScopeLevel > _scopeLevel)
@@ -305,13 +304,20 @@ namespace MySql.Debugger
       }
       finally
       {
-        _connection.Close();
+        try { _connection.Close(); }
+        catch { }
         _utilCon.Close();
         _lockingCon.Close();
         IsRunning = false;
+        if (RestoreAtExit)
+        {
+          RestoreRoutinesBackup();
+        }
         RaiseEndDebugger();
       }
     }
+
+    public bool RestoreAtExit { get; set; }
 
     public delegate void StartDebugger();
     public event StartDebugger OnStartDebugger;
@@ -476,6 +482,7 @@ namespace MySql.Debugger
     public void Stop()
     {
       _completed = true;
+      this._worker.CancelAsync();
     }
 
     private void AddToPreinstrumentedRoutines(RoutineInfo ri)
@@ -1269,7 +1276,7 @@ namespace MySql.Debugger
               sql.Append(" while ");
               ConcatTokens(sql, tokenStream, tc.GetChild( 0 ).TokenStartIndex, tc.GetChild(0).TokenStopIndex, false);
               sql.Append(" do ");
-              if (hasLabel)
+              if (!hasLabel)
               {
                 GenerateInstrumentedCodeRecursive(
                   // skip while condition
@@ -1294,7 +1301,7 @@ namespace MySql.Debugger
               }
               IList<ITree> childColl = tc.Children;
               sql.AppendLine("repeat");
-              if (hasLabel)
+              if (!hasLabel)
               {
                 GenerateInstrumentedCodeRecursive(
                   // skip until & until-condition
@@ -1324,10 +1331,15 @@ namespace MySql.Debugger
                 hasLabel = true;
               }
               sql.AppendLine("loop");
-              if( hasLabel )
-                GenerateInstrumentedCodeRecursive( tc.Children.Skip( 1 ).ToList(), routine, sql );
+              if (hasLabel)
+              {
+                // skip label children
+                GenerateInstrumentedCodeRecursive(tc.Children.Skip(1).ToList(), routine, sql);
+              }
               else
-                GenerateInstrumentedCodeRecursive( tc.Children, routine, sql );
+              {
+                GenerateInstrumentedCodeRecursive(tc.Children, routine, sql);
+              }
               sql.AppendLine("end loop;");
             }
             break;

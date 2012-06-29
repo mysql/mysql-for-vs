@@ -130,6 +130,15 @@ namespace MySql.Debugger.VisualStudio
         ref iid, ExpressionEvalCompleteEvent.Attributes);
     }
 
+    public void ThreadDestroyed(AD7ProgramNode node)
+    {
+      Debug.WriteLine("Event ThreadDestroyed");
+      Guid iid = new Guid(ThreadDestroyedEvent.IID);
+      _callback.Event(
+        _engine, null, node, node, new ThreadDestroyedEvent(),
+        ref iid, ThreadDestroyedEvent.Attributes);
+    }
+
     #endregion
   }
 
@@ -199,9 +208,8 @@ namespace MySql.Debugger.VisualStudio
   }
 
   sealed class ProcessDestroyEvent : AsynchronousEvent, IDebugProcessDestroyEvent2
-  {
+  {                     
     public const string IID = "3E2A0832-17E1-4886-8C0E-204DA242995F";
-
   }
 
   sealed class ProgramDestroyedEvent : AsynchronousEvent, IDebugProgramDestroyEvent2
@@ -223,7 +231,7 @@ namespace MySql.Debugger.VisualStudio
   {
     public const string IID = "2C3B7532-A36F-4A6E-9072-49BE649B8541";
 
-    #region IDebugProgramDestroyEvent2 Members
+    #region IDebugThreadDestroyEvent2 Members
 
     int IDebugThreadDestroyEvent2.GetExitCode(out uint pdwExit)
     {
