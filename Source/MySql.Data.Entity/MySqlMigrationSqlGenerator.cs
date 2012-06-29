@@ -37,18 +37,18 @@ namespace MySql.Data.Entity
   /// </summary>
   public class MySqlMigrationSqlGenerator : MigrationSqlGenerator
   {
-    private DbProviderManifest providerManifest;    
+    private DbProviderManifest providerManifest;
     private Dictionary<string, OpDispatcher> dispatcher = new Dictionary<string, OpDispatcher>();
 
-    private List<string> generatedTables { get; set; }              
+    private List<string> generatedTables { get; set; }
 
-    delegate MigrationStatement OpDispatcher( MigrationOperation op );
-    
+    delegate MigrationStatement OpDispatcher(MigrationOperation op);
+
 
     public MySqlMigrationSqlGenerator()
     {
 
-      dispatcher.Add("AddColumnOperation", (OpDispatcher)((op) => { return Generate(op as AddColumnOperation);  }));
+      dispatcher.Add("AddColumnOperation", (OpDispatcher)((op) => { return Generate(op as AddColumnOperation); }));
       dispatcher.Add("AddForeignKeyOperation", (OpDispatcher)((op) => { return Generate(op as AddForeignKeyOperation); }));
       dispatcher.Add("AddPrimaryKeyOperation", (OpDispatcher)((op) => { return Generate(op as AddPrimaryKeyOperation); }));
       dispatcher.Add("AlterColumnOperation", (OpDispatcher)((op) => { return Generate(op as AlterColumnOperation); }));
@@ -76,7 +76,7 @@ namespace MySql.Data.Entity
       foreach (MigrationOperation op in migrationOperations)
       {
         OpDispatcher opdis = dispatcher[op.GetType().Name];
-        stmts.Add( opdis( op ) );
+        stmts.Add(opdis(op));
       }
       return stmts;
     }
@@ -104,14 +104,14 @@ namespace MySql.Data.Entity
 
     protected virtual MigrationStatement Generate(AlterColumnOperation op)
     {
-      if (op == null) return null; 
-      
+      if (op == null) return null;
+
       ColumnModel column = op.Column;
       StringBuilder sb = new StringBuilder();
-      
+
       // for existing columns
       sb.Append("alter table `" + op.Table + "` modify `" + column.Name + "` ");
-     
+
       // add definition
       sb.Append(Generate(column));
 
@@ -119,42 +119,43 @@ namespace MySql.Data.Entity
     }
 
     protected virtual MigrationStatement Generate(RenameColumnOperation op)
-    {            
+    {
       if (op == null) return null;
 
-      StringBuilder sb = new StringBuilder();      
-      sb.Append("alter table " + op.Table + " change `" + op.Name + "`");
-    
-      // TODO
-      // check if we can query the 
-      // column properties or
-      // we'l have to use anonymous arguments   
-            
-      object objType;
-      if (op.AnonymousArguments != null)
-        op.AnonymousArguments.TryGetValue("Type", out objType);
+      StringBuilder sb = new StringBuilder();
 
+      sb.Append("set @columnType := (select case lower(IS_NULLABLE) when `no` then CONCAT(column_type, ` ` , `not null `)  when `yes` then column_type end from information_schema.columns where table_name = `" + op.Table + "` and column_name = `" + op.Name + "` );");
+      sb.AppendLine();
+      sb.Append("set @sqlstmt := (select concat(`alter table " + op.Table + " change `" + op.Name + "` " + op.NewName + "` , @columnType));");
+      sb.AppendLine();
+      sb.Append("prepare stmt @sqlstmt;");
+      sb.AppendLine();
+      sb.Append("execute stmt;");
+      sb.AppendLine();
+      sb.Append("deallocate prepare stmt");
       return new MigrationStatement { Sql = sb.ToString() };
+
     }
 
-        
+
     protected virtual MigrationStatement Generate(AddForeignKeyOperation op)
     {
+
       StringBuilder sb = new StringBuilder();
       sb.Append("alter table `" + op.DependentTable + "` add constraint `" + op.Name + "` " +
-                 " foreign key "   );
+                 " foreign key ");
 
       sb.Append("(" + string.Join(",", op.DependentColumns.Select(c => "`" + c + "`")) + ") ");
       sb.Append("references `" + op.PrincipalTable + "` ( " + string.Join(",", op.PrincipalColumns.Select(c => "`" + c + "`")) + ") ");
-           
+
       if (op.CascadeDelete)
       {
-          sb.Append("on update cascade on delete restrict" );
+        sb.Append("on update cascade on delete restrict");
       }
 
       return new MigrationStatement { Sql = sb.ToString() };
     }
-  
+
     protected virtual string Generate(ColumnModel op)
     {
       TypeUsage typeUsage = providerManifest.GetStoreType(op.TypeUsage);
@@ -180,8 +181,8 @@ namespace MySql.Data.Entity
           }
         }
       }
-      
-      if (!( op.IsNullable ?? true) )
+
+      if (!(op.IsNullable ?? true))
       {
         sb.Append(" not null ");
       }
@@ -197,21 +198,21 @@ namespace MySql.Data.Entity
     }
 
     protected virtual MigrationStatement Generate(DropForeignKeyOperation op)
-    {      
+    {
       StringBuilder sb = new StringBuilder();
-      sb = sb.AppendFormat("alter table `{0}` drop foreign key `{1}`", op.DependentTable, op.Name);                   
+      sb = sb.AppendFormat("alter table `{0}` drop foreign key `{1}`", op.DependentTable, op.Name);
       return new MigrationStatement { Sql = sb.ToString() };
     }
 
     protected virtual MigrationStatement Generate(CreateIndexOperation op)
     {
       StringBuilder sb = new StringBuilder();
-      
+
       sb = sb.Append("CREATE ");
 
       if (op.IsUnique)
-      { 
-        sb.Append("UNIQUE ");      
+      {
+        sb.Append("UNIQUE ");
       }
 
       //index_col_name specification can end with ASC or DESC.
@@ -237,9 +238,12 @@ namespace MySql.Data.Entity
     }
 
     protected virtual MigrationStatement Generate(DropIndexOperation op)
-    {      
-      return new MigrationStatement() { Sql = string.Format("alter table `{0}` drop index `{1}`",
-        op.Table, op.Name) };
+    {
+      return new MigrationStatement()
+      {
+        Sql = string.Format("alter table `{0}` drop index `{1}`",
+          op.Table, op.Name)
+      };
     }
 
 
@@ -247,27 +251,27 @@ namespace MySql.Data.Entity
     {
       StringBuilder sb = new StringBuilder();
 
-      if (generatedTables == null) 
+      if (generatedTables == null)
         generatedTables = new List<string>();
 
       if (!generatedTables.Contains(op.Name))
-      {          
-         generatedTables.Add(op.Name);
+      {
+        generatedTables.Add(op.Name);
       }
-      sb.Append("create table " + "`" + op.Name + "`" +  " (");
-      
+      sb.Append("create table " + "`" + op.Name + "`" + " (");
+
       //columns
       sb.Append(string.Join(",", op.Columns.Select(c => "`" + c.Name + "` " + Generate(c))));
 
       if (op.PrimaryKey != null && !sb.ToString().Contains("primary key"))
       {
-          sb.Append(",");
-          sb.Append("primary key ( " + string.Join(",", op.PrimaryKey.Columns.Select(c => "`" + c + "`")) + ") ");
-       }
+        sb.Append(",");
+        sb.Append("primary key ( " + string.Join(",", op.PrimaryKey.Columns.Select(c => "`" + c + "`")) + ") ");
+      }
 
       sb.Append(") engine=InnoDb auto_increment=0");
 
-      return new MigrationStatement() {Sql  = sb.ToString()};
+      return new MigrationStatement() { Sql = sb.ToString() };
     }
 
     protected virtual MigrationStatement Generate(DropTableOperation op)
@@ -285,48 +289,50 @@ namespace MySql.Data.Entity
       StringBuilder sb = new StringBuilder();
       sb.Append("alter table `" + op.Table + "` add primary key ");
       sb.Append(" `" + op.Name + "` ");
-     
+
       if (op.Columns.Count > 0)
         sb.Append("( " + string.Join(",", op.Columns.Select(c => "`" + c + "`")) + ") ");
 
-      return new MigrationStatement { Sql = sb.ToString() };      
+      return new MigrationStatement { Sql = sb.ToString() };
     }
-    
+
 
     protected virtual MigrationStatement Generate(DropPrimaryKeyOperation op)
     {
       object obj2;
+      bool deleteAutoIncrement = false;
       StringBuilder sb = new StringBuilder();
 
 
       op.AnonymousArguments.TryGetValue("DeleteAutoIncrement", out obj2);
-      bool deleteAutoIncrement = obj2.ToString() == "true" ? true : false;
+      if (obj2 != null)
+        bool.TryParse(obj2.ToString(), out deleteAutoIncrement);
 
-      if (deleteAutoIncrement)
+      if (deleteAutoIncrement && op.Columns.Count == 1)
       {
         var newColumn = new ColumnModel(PrimitiveTypeKind.Int32, null);
-        newColumn.Name = op.Name;
-        var alterColumn = new AlterColumnOperation(op.Table, newColumn, false, inverse: new AlterColumnOperation(op.Table, new ColumnModel(PrimitiveTypeKind.Int32), false));
+        newColumn.Name = op.Columns[0];
+        var alterColumn = new AlterColumnOperation(op.Table, newColumn, false);
         var ms = Generate(alterColumn);
-        sb.Append(ms.Sql);
+        sb.Append(ms.Sql + "; ");
       }
- 
-      return new MigrationStatement { Sql = sb.ToString() + ";" + " alter table `" + op.Table + "` drop primary key " };      
+
+      return new MigrationStatement { Sql = sb.ToString() + " alter table `" + op.Table + "` drop primary key " };
     }
 
-    
+
     protected virtual MigrationStatement Generate(InsertHistoryOperation op)
     {
       if (op == null) return null;
-      
-      StringBuilder sb = new StringBuilder();      
+
+      StringBuilder sb = new StringBuilder();
       StringBuilder model = new StringBuilder();
-      
-      foreach (byte item in op.Model)      
-         model.Append(item.ToString("X2"));
+
+      foreach (byte item in op.Model)
+        model.Append(item.ToString("X2"));
 
       sb.Append("insert into `" + op.Table + "` (`migrationId`, `createdOn`, `model`, `productVersion`) ");
-      sb.AppendFormat(" values ( '{0}', '{1}', {2}, '{3}' ) ", 
+      sb.AppendFormat(" values ( '{0}', '{1}', {2}, '{3}' ) ",
                       op.MigrationId,
                       op.CreatedOn.ToString("yyyy-MM-dd hh:mm:ss"),
                       "0x" + model.ToString(),
@@ -337,17 +343,17 @@ namespace MySql.Data.Entity
 
     protected virtual MigrationStatement Generate(RenameTableOperation op)
     {
-      if (op == null ) return null;
+      if (op == null) return null;
 
       StringBuilder sb = new StringBuilder();
       sb.AppendFormat("rename table `{0}` to `{1}`", op.Name, op.NewName);
       return new MigrationStatement { Sql = sb.ToString() };
     }
-    
-    
+
+
     protected virtual MigrationStatement Generate(MoveTableOperation op)
     {
-       return null; // TODO :check if we'll suppport this operation
+      return null; // TODO :check if we'll suppport this operation
     }
 
     protected virtual MigrationStatement Generate(SqlOperation op)
