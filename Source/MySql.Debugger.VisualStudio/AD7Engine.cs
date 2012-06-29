@@ -73,7 +73,8 @@ namespace MySql.Debugger.VisualStudio
         _node.Debugger = debugger;
         debugger.SteppingType = SteppingTypeEnum.StepInto;
         debugger.Breakpoint = new AD7Breakpoint(_node, _events);
-        debugger.OnEndProgram += () => { _events.ProgramDestroyed(_node); };
+        debugger.OnEndDebugger += () => { _events.ProgramDestroyed(_node); };
+        debugger.Debugger.RestoreAtExit = true;
         debugger.Run();
       });
       thread.Start();
@@ -204,9 +205,8 @@ namespace MySql.Debugger.VisualStudio
 
     int IDebugEngineLaunch2.TerminateProcess(IDebugProcess2 pProcess)
     {
-      _node.Debugger.RaiseEndProgram();
+      _node.Debugger.DoEndProgram();
       Debug.WriteLine("AD7Engine TerminateProcess");
-      _events.ProgramDestroyed(_node);
 
       IDebugPort2 port;
       pProcess.GetPort(out port);
@@ -217,10 +217,7 @@ namespace MySql.Debugger.VisualStudio
       defaultPort.GetPortNotify(out notify);
 
       notify.RemoveProgramNode(_node);
-
-      //TODO stop debugger
-      DebuggerManager.Instance.Debugger.Stop();
-
+      
       return VSConstants.S_OK;
     }
 

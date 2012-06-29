@@ -47,7 +47,6 @@ namespace MySql.Debugger.VisualStudio
 
     internal AD7Events _events;
     private AD7ProgramNode _node;
-    //private AD7Breakpoint _breakpoint;
     private Debugger _debugger;
     private AutoResetEvent _autoRE;
     private MySqlConnection _connection;
@@ -83,30 +82,22 @@ namespace MySql.Debugger.VisualStudio
       _breakpoints.Add(ad7bp.CoreBreakpoint, ad7bp);
     }
 
-    public delegate void EndProgram();
-    public event EndProgram OnEndProgram;
-    public void RaiseEndProgram()
+    public event MySql.Debugger.Debugger.EndDebugger OnEndDebugger { 
+      add { _debugger.OnEndDebugger += value; }
+      remove { _debugger.OnEndDebugger -= value; } 
+    }
+    
+    public void DoEndProgram()
     {
       try
-      {
-        //if (!string.IsNullOrWhiteSpace(_SpBody))
-        //{
-        //  using (MySqlConnection conn = new MySqlConnection(_connection.ConnectionString))
-        //  {
-        //    conn.Open();
-        //    MySqlScript script = new MySqlScript(conn, string.Format("delimiter // drop procedure if exists {0}; {1} //", _SpName, _SpBody));
-        //    script.Execute();
-        //  }
-        //}
-        // Restores all routines instrumented as per last debug session.
-        this._debugger.RestoreRoutinesBackup();
+      {        
+        this._debugger.Stop();
+        ReleaseCoreDebugger();        
       }
       catch (Exception ex)
       {
         Trace.WriteLine(ex.ToString());
       }
-      if (OnEndProgram != null)
-        OnEndProgram();
     }
 
     private DebuggerManager(AD7Events events, AD7ProgramNode node, AD7Breakpoint breakpoint)
@@ -117,7 +108,6 @@ namespace MySql.Debugger.VisualStudio
       _breakpoint = breakpoint;
       _debugger = new Debugger();
       _autoRE = new AutoResetEvent(false);
-      _debugger.OnEndDebugger += RaiseEndProgram;
 
       if (string.IsNullOrEmpty(_node.ConnectionString))
       {
@@ -160,18 +150,6 @@ namespace MySql.Debugger.VisualStudio
       return true;
     }
 
-    //internal string GetCurrentScopeFileName()
-    //{
-    //  if (string.IsNullOrEmpty(_debugger.CurrentScope.FileName))
-    //  {
-    //    string s = Path.GetTempFileName(); 
-    //    File.WriteAllText(s, _debugger.CurrentScope.OwningRoutine.SourceCode );
-    //    _debugger.CurrentScope.FileName = s;
-    //  }
-    //  _node.FileName = _debugger.CurrentScope.FileName;
-    //  return _debugger.CurrentScope.FileName;
-    //}
-
     public void BreakpointHit()
     {
       _events.BreakpointHit(_breakpoint, _node);
@@ -196,6 +174,11 @@ namespace MySql.Debugger.VisualStudio
     {
       // TODO: 
       _debugger.CommitLocals();
+    }
+
+    private void ReleaseCoreDebugger()
+    {
+      _autoRE.Set();
     }
 
     internal void Run()
@@ -242,12 +225,6 @@ namespace MySql.Debugger.VisualStudio
     {
       Debugger.BreakpointHandler bph = (bp) =>
       {
-        //if (_worker.CancellationPending)
-        //{
-        //  _debugger.Stop();
-        //}
-        //// Make UI update.
-        //DoGuiUpdate(bp);
         if (bp.IsFake)
         {
           this.Breakpoint.CoreBreakpoint = bp;
@@ -275,10 +252,11 @@ namespace MySql.Debugger.VisualStudio
       }
       try
       {
-        _debugger.Run( values );
+        _debugger.Run(values);
       }
+      catch (ThreadAbortException ) { }
       catch (Exception ex)
-      {        
+      {
         MessageBox.Show(string.Format("Error while debugging: {0}", ex.Message));
         _events.ProgramDestroyed(_node);
       }
