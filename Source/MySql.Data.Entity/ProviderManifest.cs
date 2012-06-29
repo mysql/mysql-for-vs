@@ -94,9 +94,18 @@ namespace MySql.Data.MySqlClient
 
       PrimitiveType edmPrimitiveType = base.StoreTypeNameToEdmPrimitiveType[storeTypeName];
 
+      if (edmPrimitiveType.PrimitiveTypeKind == PrimitiveTypeKind.Binary)
+      {
+        return TypeUsage.CreateBinaryTypeUsage(edmPrimitiveType, false);
+      }
+
       if (edmPrimitiveType.PrimitiveTypeKind == PrimitiveTypeKind.String)
       {
-        return TypeUsage.CreateStringTypeUsage(edmPrimitiveType, false, false, LONGTEXT_MAXLEN);
+        Facet facet;
+        if (storeType.Facets.TryGetValue("MaxLength", false, out facet) && !facet.IsUnbounded && facet.Value != null)
+          return TypeUsage.CreateStringTypeUsage(edmPrimitiveType, false, false, (int)facet.Value);
+        else
+          return TypeUsage.CreateStringTypeUsage(edmPrimitiveType, false, false);
       }
 
       return TypeUsage.CreateDefaultTypeUsage(edmPrimitiveType);
