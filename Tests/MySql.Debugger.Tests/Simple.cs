@@ -534,6 +534,79 @@ END;
       }
     }
 
+    [Test]
+    public void DoRepeat()
+    {
+      string sql =
+        @"
+delimiter //
+
+drop procedure if exists DoRepeat //
+
+DELIMITER //
+CREATE PROCEDURE DoRepeat()
+BEGIN
+  DECLARE i INT default 3;
+  DECLARE done1 INT default 0;  
+  
+  retry: REPEAT
+  begin
+  DECLARE CONTINUE HANDLER FOR SQLWARNING
+          BEGIN
+            SET done1 = TRUE;
+          END;  
+        IF done1 OR i < 0 THEN
+          LEAVE retry;
+        END IF;
+        SET i = i - 1;      
+        end;
+    UNTIL FALSE END REPEAT;
+END  //
+";
+      Debugger dbg = new Debugger();
+      try
+      {
+        dbg.Connection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.UtilityConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.LockingConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        DumpConnectionThreads(dbg);
+        MySqlScript script = new MySqlScript(dbg.Connection, sql);
+        script.Execute();
+        sql =
+@"CREATE PROCEDURE DoRepeat()
+BEGIN
+  DECLARE i INT default 3;
+  DECLARE done1 INT default 0;  
+  
+  retry: REPEAT
+  begin
+  DECLARE CONTINUE HANDLER FOR SQLWARNING
+          BEGIN
+            SET done1 = TRUE;
+          END;  
+        IF done1 OR i < 0 THEN
+          LEAVE retry;
+        END IF;
+        SET i = i - 1;      
+        end;
+    UNTIL FALSE END REPEAT;
+END;
+";
+        dbg.SqlInput = sql;
+        dbg.SteppingType = SteppingTypeEnum.StepInto;
+        dbg.OnBreakpoint += (bp) =>
+        {
+          Debug.WriteLine(string.Format("Breakpoint at {0}", bp.Line));
+        };
+        dbg.Run(new string[0]);
+      }
+      finally
+      {
+        dbg.RestoreRoutinesBackup();
+      }
+    }
+
+
     private void DumpConnectionThreads(Debugger dbg)
     {
       dbg.Connection.Open();

@@ -224,6 +224,17 @@ namespace MySql.Debugger
       return StoreType.WrapValue(Type, Value);
     }
 
+    public static string InferTypeExpression(object expr)
+    {
+      long v;
+      double d;
+      if ((expr is string) && long.TryParse( ( string )expr, out v)) return "int";
+      if ((expr is string) && double.TryParse((string)expr, out d)) return "decimal";
+      else if (expr is string) return "varchar";
+      else if( (expr is decimal ) || ( expr is double ) || ( expr is float )) return "decimal";
+      else return "int";
+    }
+
     /// <summary>
     /// Generates a value suitable to be concat in a SQL query with mysql concat function.
     /// Doesn't take into account the actual value, just the type.

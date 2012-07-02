@@ -75,10 +75,20 @@ namespace MySql.Debugger.VisualStudio
     {
       Name = name;
       _node = node;
-      TypeName = _node.Debugger.Debugger.ScopeVariables[name].Type;
-      if (numberTypeMax.ContainsKey(TypeName) && _node.Debugger.Debugger.ScopeVariables[name].Unsigned)
-        TypeName += " unsigned";
+      TypeName = null;
+      StoreType st;
+      if (_node.Debugger.Debugger.ScopeVariables.TryGetValue(name, out st))
+      {
+        TypeName = _node.Debugger.Debugger.ScopeVariables[name].Type;
+        if (numberTypeMax.ContainsKey(TypeName) && st.Unsigned)
+          TypeName += " unsigned";
+      }
       Value = GetValue(name);
+      if (TypeName == null)
+      {
+        // an heuristic to find out an expression type.
+        TypeName = StoreType.InferTypeExpression(Value);
+      }
     }
 
     public AD7Property(AD7ProgramNode node)
