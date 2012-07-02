@@ -22,6 +22,7 @@ namespace MySql.Debugger.VisualStudio
       Arguments = new DataTable();
       Arguments.Columns.Add("Name", typeof(string));
       Arguments.Columns.Add("Value", typeof(string));
+      Arguments.Columns.Add("IsNull", typeof(bool));
     }
 
     private void btnOK_Click(object sender, EventArgs e)
@@ -45,21 +46,37 @@ namespace MySql.Debugger.VisualStudio
 
     internal void AddNameValue( string Name, string Value )
     {
-      Arguments.Rows.Add(Name, Value);
+      Arguments.Rows.Add(Name, Value, false);
     }
 
     internal void DataBind()
     {
       gridArguments.DataSource = Arguments;
-      gridArguments.Columns["Name"].ReadOnly = true;
     }
 
     internal IEnumerable<NameValue> GetNameValues()
     {
       foreach (DataRow dr in Arguments.Rows)
       {
-        yield return new NameValue() { Name = ( string )dr[ 0 ], Value = ( string )dr[ 1 ] }; 
+        yield return new NameValue() { Name = ( string )dr[ 0 ], Value = ( string )dr[ 1 ], IsNull = (bool)dr[2] };
       }
+    }
+
+    private void gridArguments_CellContentClick(object sender, DataGridViewCellEventArgs e)
+    {
+      // checkbox change event
+      if (e.ColumnIndex == gridArguments.Columns["colNull"].Index)
+      {
+        bool isChecked = (bool)gridArguments[e.ColumnIndex, e.RowIndex].EditedFormattedValue;
+        int valueColumnIndex = gridArguments.Columns["colValue"].Index;
+        gridArguments[valueColumnIndex, e.RowIndex].ReadOnly = isChecked;
+        gridArguments[valueColumnIndex, e.RowIndex].Style.ForeColor = isChecked ? SystemColors.GrayText : SystemColors.ControlText;
+      }
+    }
+
+    private void gridArguments_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
+    {
+      gridArguments_CellContentClick(sender, e);
     }
   }
 
@@ -67,5 +84,6 @@ namespace MySql.Debugger.VisualStudio
   {
     internal string Name { get; set; }
     internal string Value { get; set; }
+    internal bool IsNull { get; set; }
   }
 }

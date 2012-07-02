@@ -39,6 +39,9 @@ namespace MySql.Debugger.VisualStudio
     private AD7Events _events;
     private AD7Breakpoint _breakpoint;
 
+    [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+    private static extern IntPtr GetForegroundWindow();
+
     #region IDebugEngine2 Members
 
     int IDebugEngine2.Attach(IDebugProgram2[] rgpPrograms, IDebugProgramNode2[] rgpProgramNodes, uint celtPrograms, IDebugEventCallback2 pCallback, enum_ATTACH_REASON dwReason)
@@ -67,6 +70,7 @@ namespace MySql.Debugger.VisualStudio
       _events.DebugEntryPoint();
 
       DebuggerManager.Init(_events, _node, _breakpoint);
+
       System.Threading.Thread thread = new System.Threading.Thread(() =>
       {
         DebuggerManager debugger = DebuggerManager.Instance;
@@ -77,6 +81,7 @@ namespace MySql.Debugger.VisualStudio
         debugger.Debugger.RestoreAtExit = true;
         debugger.Run();
       });
+      thread.SetApartmentState(System.Threading.ApartmentState.STA);
       thread.Start();
 
       return VSConstants.S_OK;
@@ -178,6 +183,11 @@ namespace MySql.Debugger.VisualStudio
       _node.FileName = pszExe;
       _node.ConnectionString = pszArgs;
       _events = new AD7Events(this, pCallback);
+
+      // Gets active window handler to use in modals
+      IntPtr handler = GetForegroundWindow();
+      _node.ParentWindow = new System.Windows.Forms.NativeWindow();
+      _node.ParentWindow.AssignHandle(handler);
 
       return VSConstants.S_OK;
     }

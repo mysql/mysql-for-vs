@@ -30,6 +30,7 @@ using System.Threading;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
 
 namespace MySql.Debugger.VisualStudio
 {
@@ -131,20 +132,24 @@ namespace MySql.Debugger.VisualStudio
       string sql = _SpBody;
       args = this._debugger.ParseArgs(sql);
 
-      if (args.Count == 0) return null;
+      if (args.Count(i => i.Value.ArgType != ArgTypeEnum.Out) == 0) return null;
       StoredRoutineArgumentsDlg dlg = new StoredRoutineArgumentsDlg();
       foreach (StoreType st in args.Values)
       {
-        dlg.AddNameValue(st.Name, "");
+        if (st.ArgType != ArgTypeEnum.Out)
+          dlg.AddNameValue(st.Name, "");
       }
       dlg.DataBind();
-      DialogResult res = dlg.ShowDialog();
+
+      DialogResult res = dlg.ShowDialog(_node.ParentWindow);
       if (res == DialogResult.Cancel)
       {
         return false;
       }
       foreach (NameValue nv in dlg.GetNameValues())
       {
+        if (nv.IsNull)
+          nv.Value = "NULL";
         args[nv.Name].Value = nv.Value;
       }
       return true;
@@ -199,14 +204,14 @@ namespace MySql.Debugger.VisualStudio
       try
       {
         Dictionary<string, StoreType> args;
-        Nullable<bool> result = RequestArguments( out args );
+        Nullable<bool> result = RequestArguments(out args);
         if (result ?? true)
         {
           if (_autoRE != null)
             _autoRE.Close();
           _autoRE = new AutoResetEvent(false);
           _debugger.SqlInput = _SpBody;
-          DoRun( args );
+          DoRun(args);
         }
         else
         {
@@ -215,8 +220,13 @@ namespace MySql.Debugger.VisualStudio
       }
       catch (DebugSyntaxException dse)
       {
-        throw;
-        //MessageBox.Show(dse.Message, "Syntax Error in arguments.");
+        //throw;
+        MessageBox.Show(_node.ParentWindow, dse.GetBaseException().Message, "Debugger Error");
+        return;
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(_node.ParentWindow, ex.GetBaseException().Message, "Debugger Error");
         return;
       }
     }
@@ -247,17 +257,25 @@ namespace MySql.Debugger.VisualStudio
       int i = 0;
       foreach (StoreType st in args.Values)
       {
-        values[i] = st.Value.ToString();
+        if (st.ArgType != ArgTypeEnum.Out)
+        {
+          if (st.Value.ToString().Equals("NULL", StringComparison.OrdinalIgnoreCase))
+            values[i] = "NULL";
+          else
+            values[i] = "'" + st.Value.ToString().Trim('\'') + "'";
+        }
+        else
+          values[i] = "@" + st.Name;
         i++;
       }
       try
       {
-        _debugger.Run(values);
+      _debugger.Run(values);
       }
       catch (ThreadAbortException ) { }
       catch (Exception ex)
       {
-        MessageBox.Show(string.Format("Error while debugging: {0}", ex.Message));
+        MessageBox.Show(_node.ParentWindow, string.Format("Error while debugging: {0}", ex.GetBaseException().Message), "Debugger Error");
         _events.ProgramDestroyed(_node);
       }
     }
