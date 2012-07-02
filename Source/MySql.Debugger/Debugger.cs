@@ -245,6 +245,10 @@ namespace MySql.Debugger
             // Wait for lock with debuggee code.
             ExecuteScalarLongWait("select get_lock( 'lock1', 999999 );");            
             ReleaseDebuggerLock();
+            if (_errorOnAsync)
+            {
+              throw new DebuggerException("ErrorOnAsync", _asyncError);
+            }
             GetCurrentScopeLevel();
             if (_prevScopeLevel > _scopeLevel)
             {
@@ -296,10 +300,6 @@ namespace MySql.Debugger
         finally
         {
           ReleaseDebuggerLock();
-        }
-        if (_errorOnAsync)
-        {
-          // TODO:
         }
       }
       finally
@@ -639,7 +639,7 @@ namespace MySql.Debugger
 
     private int GetCurrentLineNumber()
     {
-      return Convert.ToInt32(CurrentScope.Variables["@@@lineno"].Value);
+        return Convert.ToInt32(CurrentScope.Variables["@@@lineno"].Value);
     }
 
     // Scope of variables

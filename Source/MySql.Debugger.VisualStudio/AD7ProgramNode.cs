@@ -29,6 +29,7 @@ using Microsoft.VisualStudio.Debugger.Interop;
 using Microsoft.VisualStudio;
 using System.Diagnostics;
 using System.Threading;
+using System.Windows.Forms;
 
 
 namespace MySql.Debugger.VisualStudio
@@ -45,6 +46,7 @@ namespace MySql.Debugger.VisualStudio
     internal string ProgramContents { get; set; }
     public DebuggerManager Debugger { get; set; }
     internal string ConnectionString { get; set; }
+    internal NativeWindow ParentWindow { get; set; }
 
     public AD7ProgramNode(AD7Process process)
     {

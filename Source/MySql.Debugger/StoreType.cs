@@ -151,7 +151,7 @@ namespace MySql.Debugger
         OnValueChanged(st);
     }
 
-    private object _value;
+    private object _value = "NULL";
     public object Value
     {
       get { return _value; }
