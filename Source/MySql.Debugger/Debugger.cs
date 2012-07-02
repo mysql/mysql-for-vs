@@ -1311,7 +1311,7 @@ namespace MySql.Debugger
               {
                 GenerateInstrumentedCodeRecursive(
                   // skip label, until & until-condition
-                   childColl.Skip( 1 ).Take(childColl.Count - 2).ToList(), routine, sql);
+                   childColl.Take(childColl.Count - 2).Skip(1).ToList(), routine, sql);
               }
               EmitInstrumentationCode(sql, routine, tc.GetChild(tc.ChildCount - 1).Line);
               sql.Append("until ");
@@ -1319,7 +1319,7 @@ namespace MySql.Debugger
               ConcatTokens(sql, tokenStream, 
                 childColl[childColl.Count - 1].TokenStartIndex, 
                 childColl[childColl.Count - 1].TokenStopIndex, true );
-              sql.AppendLine();
+              sql.AppendLine( " end repeat; " );
             }
             break;
           case "loop":
@@ -1361,7 +1361,7 @@ namespace MySql.Debugger
               else
               {
                 GenerateInstrumentedCodeRecursive( tc.Children.Skip( 2 ).ToList(), routine, sql );
-                sql.AppendLine(" end;");
+                //sql.AppendLine(" end;");
               }
             }
             break;

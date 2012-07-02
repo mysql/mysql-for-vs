@@ -263,5 +263,27 @@ START SLAVE; -- if you want to restart replication
     {
       MySQL51Parser.program_return r = Utility.ParseSql("uninstall plugin myplugin;", false);
     }
+
+    [Test]
+    public void t()
+    {
+      string sql = @"CREATE PROCEDURE DoRepeat()
+BEGIN
+  DECLARE i INT;
+  DECLARE done1 INT;
+  DECLARE CONTINUE HANDLER FOR SQLWARNING
+          BEGIN
+            SET done1 = TRUE;
+          END;
+  
+  retry: REPEAT      
+        IF done1 OR i < 0 THEN
+          LEAVE retry;
+        END IF;
+        SET i = i - 1;      
+    UNTIL FALSE END REPEAT;
+END";
+      MySQL51Parser.program_return r = Utility.ParseSql(sql, false);
+    }
   }
 }
