@@ -11,7 +11,7 @@
         <?if $(var.IsGPL) = 1 ?>
         <File Id="COPYING" Name="COPYING" Source="..\COPYING" DiskId="1" />
         <File Id="README1" Name="README" Source="..\README" DiskId="1"/>
-	      <?else?>
+        <?else?>
         <File Id="README2" Name="README" Source="..\README-Commercial" DiskId="1"/>
         <File Id="License.MYSQL" Name="License.MYSQL" Source="..\License.MYSQL" DiskId="1"/>
         <?endif?>
@@ -30,7 +30,10 @@
               Source="..\VS2008\Source\MySql.Data\bin\release\mysql.data.dll" DiskId="1"/>
 
         <RemoveFile Id="RemoveStateFile.v2" Name="*.InstallState" On="uninstall"/>
-
+        <RegistryKey Id="VS_2010_RegistryKey_v2" Root="HKLM" Action="createAndRemoveOnUninstall"
+                     Key="SOFTWARE\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\MySQL Connector Net $(var.Version) v2.0">
+          <RegistryValue Id="VS_2010_RegistryValue_v2" Value="[assemblies_v2]" Type="string" Action="write"/>
+        </RegistryKey>
       </Component>
       <Directory Id="MySql.Data.DummyDir.2" Name="GAC">
         <Component Id="C.v2.GAC" Guid="58f70e4a-96f7-4b67-bdab-9b77a60f9c09">
@@ -48,7 +51,10 @@
               Source="..\Source\MySql.Data\bin\release\mysql.data.dll" DiskId="1"/>
 
         <RemoveFile Id="RemoveStateFile.v4" Name="*.InstallState" On="uninstall"/>
-
+        <RegistryKey Id="AssemblyFolderExV4" Root="HKLM" Action="createAndRemoveOnUninstall"
+                     Key="SOFTWARE\Microsoft\.NETFramework\v4.0.30319\AssemblyFoldersEx\MySQL Connector Net $(var.Version) v4.0">
+          <RegistryValue Id="VS_2010_RegistryValue_v4" Value="[assemblies_v4]" Type="string" Action="write"/>
+        </RegistryKey>
       </Component>
       <Directory Id="MySql.Data.DummyDir.4" Name="GAC">
         <Component Id="C.v4.GAC" Guid="34B6C828-355D-405F-82BC-F18BBC13871D">

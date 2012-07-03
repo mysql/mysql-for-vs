@@ -2,15 +2,15 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment Id='VSFragment'>
 
-    <DirectoryRef Id='VSTemplatesDir'>
-      <Component Id='VSTemplates' Guid='CB74DD46-A5D0-402f-9413-63A8DEFB3A26'>
-        <File Id='ScriptTemplate' Name='MySQL Script.mysql' DiskId='1'
+    <DirectoryRef Id='PFTemplatesDir'>
+      <Component Id='PFTemplates' Guid='CB74DD46-A5D0-402f-9413-63A8DEFB3A26'>
+        <File Id='PFScriptTemplate' Name='MySQL Script.mysql' DiskId='1'
               Source='..\Source\MySql.VisualStudio\Templates\MySQL Script.mysql'/>
-        <File Id='ScriptTemplate.vsdir' Name='MySqlDataProviderPackage.vsdir' DiskId='1'
+        <File Id='PFScriptTemplate.vsdir' Name='MySqlDataProviderPackage.vsdir' DiskId='1'
               Source='..\Source\MySql.VisualStudio\Templates\MySqlDataProviderPackage.vsdir'/>
-      </Component>  
+      </Component>
     </DirectoryRef>
-    
+
     <!-- integration of VS2008 -->
     <DirectoryRef Id='VS2008Integration'>
       <!-- common DDEX component to be installed if VS2008 is selected -->
@@ -20,17 +20,18 @@
       </Component>
 
       <Component Id='VS_2008_Registry' Guid='84AE8C43-294D-4e48-B75D-D9172396C2FD'>
-        <RegistryKey Id="VS_2008_RegistryKey" Root="HKLM" Action="createAndRemoveOnUninstall"
+        <!--<RegistryKey Id="VS_2008_RegistryKey" Root="HKLM" Action="createAndRemoveOnUninstall"
                      Key="SOFTWARE\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\MySQL Connector Net $(var.Version)">
           <RegistryValue Id="VS_2008_RegistryValue" Value="[assemblies_v2]" Type="string" Action="write"/>
-        </RegistryKey>
+        </RegistryKey>-->
         <?include VS2008_Registry.wxi?>
         <?include VS2008_Data.wxi?>
       </Component>
     </DirectoryRef>
 
-    <DirectoryRef Id='CNetVerVSExtensionDir'>
-      <Component Id='VS2010_Extensions' Guid='F5BE338A-8D95-4826-8ADE-1C5F310E336C'>
+    <!-- Visual Studio 2010 -->
+    <DirectoryRef Id='VS10_ExtVersionDir'>
+      <Component Id='VS2010_Extension' Guid='F5BE338A-8D95-4826-8ADE-1C5F310E336C'>
         <File Id='MySQL.VisualStudio.2010' Name='MySQL.VisualStudio.dll' DiskId='1'
               Source='..\Source\MySql.VisualStudio\bin\release\MySQL.VisualStudio.dll'/>
         <File Id='MySqlParser.2010' Name='MySqlParser.dll' DiskId='1'
@@ -44,40 +45,74 @@
       </Component>
     </DirectoryRef>
 
-    <DirectoryRef Id='VS2010TemplatesDir'>
-      <Component Id='VS2010Templates' Guid='BA082C85-9D64-4B79-8910-C6C25655250B'>
-        <File Id='ScriptTemplate2010' Name='MySQL Script.mysql' DiskId='1'
+    <DirectoryRef Id='VS10_TemplatesDir'>
+      <Component Id='VS2010_Templates' Guid='BA082C85-9D64-4B79-8910-C6C25655250B'>
+        <File Id='VS2010_ScriptTemplate' Name='MySQL Script.mysql' DiskId='1'
               Source='..\Source\MySql.VisualStudio\Templates\MySQL Script.mysql'/>
-        <File Id='ScriptTemplate2010.vsdir' Name='MySqlDataProviderPackage.vsdir' DiskId='1'
+        <File Id='VS2010_ScriptTemplate.vsdir' Name='MySqlDataProviderPackage.vsdir' DiskId='1'
               Source='..\Source\MySql.VisualStudio\Templates\MySqlDataProviderPackage.vsdir'/>
       </Component>
     </DirectoryRef>
 
-    <DirectoryRef Id='VS2010Integration'>
-      <Component Id='VS_2010_Registry' Guid='E602F4FD-4D11-4632-8204-C0CFE22F8C7C'>
-        <RegistryKey Id="VS_2010_RegistryKey_v4" Root="HKLM" Action="createAndRemoveOnUninstall"
-                     Key="SOFTWARE\Microsoft\.NETFramework\v4.0.30319\AssemblyFoldersEx\MySQL Connector Net $(var.Version) v4.0">
-          <RegistryValue Id="VS_2010_RegistryValue_v4" Value="[assemblies_v4]" Type="string" Action="write"/>
-        </RegistryKey>
-        <RegistryKey Id="VS_2010_RegistryKey_v2" Root="HKLM" Action="createAndRemoveOnUninstall"
-                     Key="SOFTWARE\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\MySQL Connector Net $(var.Version) v2.0">
-          <RegistryValue Id="VS_2010_RegistryValue_v2" Value="[assemblies_v2]" Type="string" Action="write"/>
-        </RegistryKey>
+    <!-- Visual Studio 2012 -->
+    <DirectoryRef Id='VS11_ExtVersionDir'>
+      <Component Id='VS2012_Extension' Guid='BC4A2841-C8B6-4C7D-8B11-2889AAA02B68'>
+        <File Id='MySQL.VisualStudio.2012' Name='MySQL.VisualStudio.dll' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\bin\release\MySQL.VisualStudio.dll'/>
+        <File Id='MySqlParser.2012' Name='MySqlParser.dll' DiskId='1'
+          Source='..\Source\MySql.VisualStudio\bin\release\MySqlParser.dll'/>
+        <File Id='Antlr3.Runtime.2012' Name='Antlr3.Runtime.dll' DiskId='1'
+              Source='..\Source\MySqlParser\bin\Release\Antlr3.Runtime.dll'/>
+        <File Id='VsixManifest.2012' Name='extension.vsixmanifest' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\bin\release\extension.vsixmanifest'/>
+        <File Id='VSPkgdef.2012' Name='MySql.VisualStudio.pkgdef' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\bin\release\MySql.VisualStudio.pkgdef'/>
       </Component>
     </DirectoryRef>
+
+    <DirectoryRef Id='VS11_TemplatesDir'>
+      <Component Id='VS2012_Templates' Guid='BA082C85-9D64-4B79-8910-C6C25655250B'>
+        <File Id='VS2012_ScriptTemplate' Name='MySQL Script.mysql' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\Templates\MySQL Script.mysql'/>
+        <File Id='VS2012_ScriptTemplate.vsdir' Name='MySqlDataProviderPackage.vsdir' DiskId='1'
+              Source='..\Source\MySql.VisualStudio\Templates\MySqlDataProviderPackage.vsdir'/>
+      </Component>
+    </DirectoryRef>
+
+    <!--<DirectoryRef Id='VS2010Integration'>
+      <Component Id='VS_2010_Registry' Guid='E602F4FD-4D11-4632-8204-C0CFE22F8C7C'>
+        -->
+    <!--<RegistryKey Id="VS_2010_RegistryKey_v4" Root="HKLM" Action="createAndRemoveOnUninstall"
+                     Key="SOFTWARE\Microsoft\.NETFramework\v4.0.30319\AssemblyFoldersEx\MySQL Connector Net $(var.Version) v4.0">
+          <RegistryValue Id="VS_2010_RegistryValue_v4" Value="[assemblies_v4]" Type="string" Action="write"/>
+        </RegistryKey>-->
+    <!--
+        -->
+    <!--<RegistryKey Id="VS_2010_RegistryKey_v2" Root="HKLM" Action="createAndRemoveOnUninstall"
+                     Key="SOFTWARE\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\MySQL Connector Net $(var.Version) v2.0">
+          <RegistryValue Id="VS_2010_RegistryValue_v2" Value="[assemblies_v2]" Type="string" Action="write"/>
+        </RegistryKey>-->
+    <!--
+      </Component>
+    </DirectoryRef>-->
 
     <Feature Id='VS2008Int' Level='1' Title='Visual Studio 2008'>
       <Condition Level='0'>Not VS_2008_PATH AND Not Installed</Condition>
       <ComponentRef Id='VS2008_Common'/>
-      <ComponentRef Id='VSTemplates'/>
+      <ComponentRef Id='PFTemplates'/>
       <ComponentRef Id='VS_2008_Registry'/>
     </Feature>
 
     <Feature Id='VS2010Int' Level='1' Title='Visual Studio 2010'>
       <Condition Level='0'>Not VS_2010_PATH AND Not Installed</Condition>
-      <ComponentRef Id='VS2010_Extensions'/>
-      <ComponentRef Id='VS2010Templates'/>
-      <ComponentRef Id='VS_2010_Registry'/>
+      <ComponentRef Id='VS2010_Extension'/>
+      <ComponentRef Id='VS2010_Templates'/>
+    </Feature>
+
+    <Feature Id='VS2012Int' Level='1' Title='Visual Studio 2012'>
+      <Condition Level='0'>Not VS_2012_PATH AND Not Installed</Condition>
+      <ComponentRef Id='VS2012_Extension'/>
+      <ComponentRef Id='VS2012_Templates'/>
     </Feature>
 
     <!-- Visual Studio 2008 integration actions -->
@@ -88,9 +123,15 @@
     <CustomAction Id="VS_2008_SETUP" Property="VS_2008_SETUP_EXEC" Value='"[VS_2008_PATH]\devenv.com" /setup'/>
     <CustomAction Id="VS_2008_SETUP_EXEC" BinaryKey="WixCA" DllEntry="CAQuietExec" Return="ignore" Execute='deferred' Impersonate='no'/>
 
-    <!-- Visual Studio 2010 integration actions -->
+    <!-- Visual Studio 2010 installation location -->
     <Property Id='VS_2010_PATH'>
       <RegistrySearch Id='Find_VS2010_Path' Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\10.0\Setup\VS'
+          Name='EnvironmentDirectory' Type='raw'/>
+    </Property>
+
+    <!-- Visual Studio 2012 installation location -->
+    <Property Id='VS_2012_PATH'>
+      <RegistrySearch Id='Find_VS2012_Path' Root='HKLM' Key='SOFTWARE\Microsoft\VisualStudio\11.0\Setup\VS'
           Name='EnvironmentDirectory' Type='raw'/>
     </Property>
 
