@@ -137,7 +137,7 @@ namespace MySql.Debugger.VisualStudio
       foreach (StoreType st in args.Values)
       {
         if (st.ArgType != ArgTypeEnum.Out)
-          dlg.AddNameValue(st.Name, "");
+          dlg.AddNameValue(st.Name, "", st.Type + (st.Unsigned ? " unsigned" : string.Empty));
       }
       dlg.DataBind();
 
@@ -257,7 +257,7 @@ namespace MySql.Debugger.VisualStudio
       int i = 0;
       foreach (StoreType st in args.Values)
       {
-        if (st.ArgType != ArgTypeEnum.Out)
+        if (st.ArgType == ArgTypeEnum.In)
         {
           if (st.Value.ToString().Equals("NULL", StringComparison.OrdinalIgnoreCase))
             values[i] = "NULL";
