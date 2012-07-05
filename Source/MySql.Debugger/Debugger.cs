@@ -245,6 +245,11 @@ namespace MySql.Debugger
             // Wait for lock with debuggee code.
             ExecuteScalarLongWait("select get_lock( 'lock1', 999999 );");            
             ReleaseDebuggerLock();
+            // checking the flags inside the critical section avoids a very unlikely race condition.
+            if (_completed)
+            {
+              break;
+            }
             if (_errorOnAsync)
             {
               throw new DebuggerException("ErrorOnAsync", _asyncError);
@@ -256,6 +261,9 @@ namespace MySql.Debugger
               _scope.Pop();
               if (_scopeLevel != 0)
                 LoadScopeVars(_scopeLevel);
+              if (_scopeLevel <= 0)
+              {
+              }
               RaiseEndScope( _scope.Peek().OwningRoutine );
             }
             else if (_prevScopeLevel < _scopeLevel)
@@ -295,11 +303,12 @@ namespace MySql.Debugger
             // Hint mysql thread scheduler to give debuggee a chance to execute
             ExecuteScalar("select sleep( 0.010 );");
 
-          } while (!_errorOnAsync && !_completed);
+          } while (true);
         }
         finally
         {
           ReleaseDebuggerLock();
+          ExecuteScalar("select release_lock( 'lock1' );");
         }
       }
       finally
@@ -639,7 +648,7 @@ namespace MySql.Debugger
 
     private int GetCurrentLineNumber()
     {
-        return Convert.ToInt32(CurrentScope.Variables["@@@lineno"].Value);
+      return Convert.ToInt32(CurrentScope.Variables["@@@lineno"].Value);
     }
 
     // Scope of variables
@@ -834,7 +843,7 @@ namespace MySql.Debugger
 
     private BackgroundWorker _worker = new BackgroundWorker();
 
-    private bool _errorOnAsync = false;
+    private volatile bool _errorOnAsync = false;
     private Exception _asyncError = null;
     private string _sqlToRun = "";
 
@@ -874,7 +883,7 @@ namespace MySql.Debugger
       }
     }
 
-    private bool _completed = false;
+    private volatile bool _completed = false;
 
     private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
     {
@@ -1355,7 +1364,6 @@ namespace MySql.Debugger
                 nodes.Add(beginEnd);
                 sql.AppendLine(" begin ");
                 GenerateInstrumentedCodeRecursive(nodes, routine, sql);
-                EmitInstrumentationCode(sql, routine, beginEnd.GetChild( beginEnd.ChildCount - 1 ).Line );
                 sql.AppendLine(" end; ");
               }
               else
