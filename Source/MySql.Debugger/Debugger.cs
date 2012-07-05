@@ -252,6 +252,9 @@ namespace MySql.Debugger
             }
             if (_errorOnAsync)
             {
+              SetDebuggerLock();
+              ExecuteScalar("select release_lock( 'lock1' );");
+              ExecuteScalar("select sleep( 0.010 );");
               throw new DebuggerException("ErrorOnAsync", _asyncError);
             }
             GetCurrentScopeLevel();

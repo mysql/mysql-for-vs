@@ -331,7 +331,14 @@ namespace MySql.Data.VisualStudio
       info.dlo = Microsoft.VisualStudio.Shell.Interop.DEBUG_LAUNCH_OPERATION.DLO_CreateProcess;
       info.bstrExe = Moniker;
       info.bstrCurDir = @"C:\";
-      info.bstrArg = HierarchyAccessor.Connection.ConnectionSupport.ConnectionString + ";Allow User Variables=true;";
+      string connectionString = HierarchyAccessor.Connection.ConnectionSupport.ConnectionString + ";Allow User Variables=true;";
+      if (connectionString.IndexOf("password", StringComparison.OrdinalIgnoreCase) == -1)
+      {
+        MySql.Data.MySqlClient.MySqlConnection connection = ((MySql.Data.MySqlClient.MySqlConnection)HierarchyAccessor.Connection.GetLockedProviderObject());
+        MySql.Data.MySqlClient.MySqlConnectionStringBuilder settings = (MySql.Data.MySqlClient.MySqlConnectionStringBuilder)connection.GetType().GetProperty("Settings", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(connection, null);
+        connectionString += "password=" + settings.Password + ";Persist Security Info=true;";
+      }
+      info.bstrArg = connectionString;
       info.bstrRemoteMachine = null; // Environment.MachineName; // debug locally
       info.fSendStdoutToOutputWindow = 0; // Let stdout stay with the application.
       info.clsidCustom = new Guid("{EEEE0740-10F7-4e5f-8BC4-1CC0AC9ED5B0}"); // Set the launching engine the sample engine guid
