@@ -28,6 +28,7 @@ using Microsoft.VisualStudio.Debugger.Interop;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using Microsoft.VisualStudio;
+using System.Windows.Forms;
 
 namespace MySql.Debugger.VisualStudio
 {
@@ -61,15 +62,17 @@ namespace MySql.Debugger.VisualStudio
         return VSConstants.E_NOTIMPL;
       }
 
-      _node.Id = id;
-
       _events = new AD7Events(this, pCallback);
-      _events.EngineCreated();
-      _events.ProgramCreated(_node);
-      _events.EngineLoaded();
-      _events.DebugEntryPoint();
 
-      DebuggerManager.Init(_events, _node, _breakpoint);
+      try
+      {
+        DebuggerManager.Init(_events, _node, _breakpoint);
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(_node.ParentWindow, ex.GetBaseException().Message, "Debugger Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        return HRESULT.E_ATTACH_FAILED_ABORT_SILENTLY;
+      }
 
       System.Threading.Thread thread = new System.Threading.Thread(() =>
       {
@@ -83,6 +86,12 @@ namespace MySql.Debugger.VisualStudio
       });
       thread.SetApartmentState(System.Threading.ApartmentState.STA);
       thread.Start();
+
+      _node.Id = id;
+      _events.EngineCreated();
+      _events.ProgramCreated(_node);
+      _events.EngineLoaded();
+      _events.DebugEntryPoint();
 
       return VSConstants.S_OK;
     }
@@ -205,7 +214,10 @@ namespace MySql.Debugger.VisualStudio
 
         defaultPort.GetPortNotify(out notify);
 
-        notify.AddProgramNode((pProcess as AD7Process).Node);
+        AD7ProgramNode node = (pProcess as AD7Process).Node;
+        int result = notify.AddProgramNode(node);
+        if (node.Debugger == null)
+          return VSConstants.E_FAIL;
 
         return VSConstants.S_OK;
       }

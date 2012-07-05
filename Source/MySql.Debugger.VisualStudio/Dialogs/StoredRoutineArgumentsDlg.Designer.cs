@@ -34,6 +34,7 @@
       this.gridArguments = new System.Windows.Forms.DataGridView();
       this.btnOK = new System.Windows.Forms.Button();
       this.btnCancel = new System.Windows.Forms.Button();
+      this.colType = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.colName = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.colNull = new System.Windows.Forms.DataGridViewCheckBoxColumn();
       this.colValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -57,6 +58,7 @@
       this.gridArguments.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
       this.gridArguments.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
       this.gridArguments.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colType,
             this.colName,
             this.colNull,
             this.colValue});
@@ -69,6 +71,7 @@
       dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
       this.gridArguments.DefaultCellStyle = dataGridViewCellStyle2;
       this.gridArguments.Location = new System.Drawing.Point(0, 0);
+      this.gridArguments.MultiSelect = false;
       this.gridArguments.Name = "gridArguments";
       dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
       dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
@@ -107,6 +110,16 @@
       this.btnCancel.UseVisualStyleBackColor = true;
       this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
       // 
+      // colType
+      // 
+      this.colType.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+      this.colType.DataPropertyName = "Type";
+      this.colType.HeaderText = "Type";
+      this.colType.Name = "colType";
+      this.colType.ReadOnly = true;
+      this.colType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.colType.Width = 37;
+      // 
       // colName
       // 
       this.colName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
@@ -114,14 +127,16 @@
       this.colName.HeaderText = "Name";
       this.colName.Name = "colName";
       this.colName.ReadOnly = true;
-      this.colName.Width = 60;
+      this.colName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+      this.colName.Width = 41;
       // 
       // colNull
       // 
+      this.colNull.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
       this.colNull.DataPropertyName = "IsNull";
       this.colNull.HeaderText = "Null";
       this.colNull.Name = "colNull";
-      this.colNull.Width = 30;
+      this.colNull.Width = 31;
       // 
       // colValue
       // 
@@ -129,6 +144,7 @@
       this.colValue.DataPropertyName = "Value";
       this.colValue.HeaderText = "Value";
       this.colValue.Name = "colValue";
+      this.colValue.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
       // 
       // StoredRoutineArgumentsDlg
       // 
@@ -156,6 +172,7 @@
     private System.Windows.Forms.DataGridView gridArguments;
     private System.Windows.Forms.Button btnOK;
     private System.Windows.Forms.Button btnCancel;
+    private System.Windows.Forms.DataGridViewTextBoxColumn colType;
     private System.Windows.Forms.DataGridViewTextBoxColumn colName;
     private System.Windows.Forms.DataGridViewCheckBoxColumn colNull;
     private System.Windows.Forms.DataGridViewTextBoxColumn colValue;
