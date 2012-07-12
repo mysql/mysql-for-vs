@@ -37,7 +37,7 @@ namespace MySql.Parser.Tests
     [Test]
     public void Simple()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql("CREATE VIEW v AS SELECT qty, price, qty*price AS value FROM t;");
+      MySQL51Parser.program_return r = Utility.ParseSql("CREATE VIEW v AS SELECT qty, price, qty*price AS `value` FROM t;");
     }
 
     [Test]

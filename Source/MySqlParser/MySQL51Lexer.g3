@@ -23,8 +23,8 @@
 lexer grammar MySQL51Lexer; 
 
 options {	
-	superClass=MySQLLexer;
-    language=CSharp3;
+	superClass=MySQLLexerBase;
+    language=CSharp2;
     TokenLabelType=CommonToken;
 }
 

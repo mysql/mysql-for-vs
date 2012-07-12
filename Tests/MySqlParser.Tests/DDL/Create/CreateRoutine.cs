@@ -100,6 +100,34 @@ END;";
         Utility.ParseSql(sql, false, out sb);
     }
 
+    [Test]
+    public void CreateProcWithSec2()
+    {
+      string sql = @"create DEFINER=`root`@`localhost` PROCEDURE `spTest2`()
+begin
+    declare n,x,y,z int;
+	declare str varchar(1100);
+    set n = 1;
+	set str = 'Armando';
+
+    while n < 10 do
+    begin
+    
+        set n = n + 1;
+		set x = n * 2;
+		set y = n * 5;
+		set z = n * 10;
+		set str = CONCAT(str, 'o');
+    
+    end;
+    end while;
+
+end;";
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql(sql, false, out sb);
+    }
+    
 
     [Test]
     public void SimpleFunc()
@@ -127,7 +155,7 @@ set xmlTagBegin = concat('<', xmlTag, '>');
 set xmlTagEnd = concat('</', xmlTag, '>');
 set lenField = length(xmlTag) + 2;
 set fieldresult = case when locate(xmlTagBegin,message) = 0 then ''
-else substring(message,locate(xmlTagBegin,message) + lenField,locate(xmlTagEnd,message) - (locate(xmlTagBegin,message) + lenField)) end;
+else substring(message,locate(xmlTagBegin,message) + lenField,locate(xmlTagEnd,message) - (locate(xmlTagBegin,message) + lenField)) end case;
 return fieldresult;
 end";
       StringBuilder sb;
@@ -202,6 +230,20 @@ END;
       StringBuilder sb;
       MySQL51Parser.program_return r =
         Utility.ParseSql(sql, false, out sb);
+    }
+
+    [Test]
+    public void WithoutName()
+    {
+      string sql = @"create procedure ( id int, name varchar( 10 ))
+begin
+	create table test3( id2 int );
+	insert into test3 (1), (2), (3);
+	# insert into test3 values (1), (2), (3);
+end";
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql(sql, true, out sb);
     }
   }
 }
