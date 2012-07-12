@@ -606,6 +606,53 @@ END;
       }
     }
 
+    [Test]
+    public void MutipleInsert()
+    {
+      string sql =
+        @"
+delimiter //
+
+drop procedure if exists MultipleInsert //
+
+drop table if exists test3 //
+
+DELIMITER //
+create procedure MultipleInsert( id int, name varchar( 10 ))
+begin
+	create table test3( id2 int );
+	insert into test3 values (1);
+end //
+";
+      Debugger dbg = new Debugger();
+      try
+      {
+        dbg.Connection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.UtilityConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.LockingConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        DumpConnectionThreads(dbg);
+        MySqlScript script = new MySqlScript(dbg.Connection, sql);
+        script.Execute();
+        sql =
+@"create procedure MultipleInsert( id int, name varchar( 10 ))
+begin
+	create table test3( id2 int );
+	insert into test3 values (1);
+end;
+";
+        dbg.SqlInput = sql;
+        dbg.SteppingType = SteppingTypeEnum.StepInto;
+        dbg.OnBreakpoint += (bp) =>
+        {
+          Debug.WriteLine(string.Format("Breakpoint at {0}", bp.Line));
+        };
+        dbg.Run(new string[] { "3", "'a'" });
+      }
+      finally
+      {
+        dbg.RestoreRoutinesBackup();
+      }
+    }
 
     private void DumpConnectionThreads(Debugger dbg)
     {
