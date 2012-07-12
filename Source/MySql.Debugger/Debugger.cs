@@ -252,9 +252,6 @@ namespace MySql.Debugger
             }
             if (_errorOnAsync)
             {
-              SetDebuggerLock();
-              ExecuteScalar("select release_lock( 'lock1' );");
-              ExecuteScalar("select sleep( 0.010 );");
               throw new DebuggerException("ErrorOnAsync", _asyncError);
             }
             GetCurrentScopeLevel();
@@ -482,19 +479,30 @@ namespace MySql.Debugger
 
     private void GetCurrentScopeLevel()
     {
-      _scopeLevel = Convert.ToInt32(ExecuteScalar("select Val from `ServerSideDebugger`.`DebugData` where Id = 1"));
+      _scopeLevel = Convert.ToInt32(ExecuteScalar("select `ServerSideDebugger`.`DebugData`.`Val` from `ServerSideDebugger`.`DebugData` where `ServerSideDebugger`.`DebugData`.`Id` = 1"));
     }
 
     private void SetCurrentScopeLevel(int newScope)
     {
       _scopeLevel = newScope;
-      ExecuteRaw(string.Format("update `ServerSideDebugger`.`DebugData` set Val = {0} where Id = 1;", newScope));
+      ExecuteRaw(string.Format("update `ServerSideDebugger`.`DebugData` set `ServerSideDebugger`.`DebugData`.`Val` = {0} where `ServerSideDebugger`.`DebugData`.`Id` = 1;", newScope));
     }
 
     public void Stop()
     {
       _completed = true;
-      this._worker.CancelAsync();
+      try {
+        MySqlConnection con = new MySqlConnection(_connection.ConnectionString);
+        con.Open();
+        MySqlCommand cmd = new MySqlCommand(string.Format("kill {0}", _connection.ServerThread), con);
+        cmd.ExecuteNonQuery();
+        con.Close();
+        //_connection.CancelQuery(0); 
+      }
+      catch { }
+      try { _connection.Close(); }
+      catch { }
+      //this._worker.CancelAsync();
     }
 
     private void AddToPreinstrumentedRoutines(RoutineInfo ri)
@@ -519,6 +527,12 @@ namespace MySql.Debugger
     private void ReleaseDebuggerLock()
     {
       MySqlCommand cmd = new MySqlCommand("unlock tables;", _lockingCon);
+      cmd.ExecuteNonQuery();
+    }
+
+    private void ReleaseDebuggeeLock()
+    {
+      MySqlCommand cmd = new MySqlCommand("do release_lock( 'lock1' );", _connection);
       cmd.ExecuteNonQuery();
     }
 
@@ -601,11 +615,11 @@ namespace MySql.Debugger
 
     public static string GetRoutineName(string sql)
     {
-      MySQL51Parser.program_return r;
+      MySQL51Parser.program_return r = new MySQL51Parser.program_return();
       StringBuilder sb;
       bool expectErrors = false;
       CommonTokenStream cts;
-      // The grammar supports upper case only
+      
       MemoryStream ms = new MemoryStream(ASCIIEncoding.ASCII.GetBytes(sql));
       CaseInsensitiveInputStream input = new CaseInsensitiveInputStream(ms);
       MySQLLexer lexer = new MySQLLexer(input);
@@ -614,7 +628,15 @@ namespace MySql.Debugger
       sb = new StringBuilder();
       TextWriter tw = new StringWriter(sb);
       parser.TraceDestination = tw;
-      r = parser.program();
+      try
+      {
+        r = parser.program();
+      }
+      catch (RewriteEmptyStreamException e)
+      {
+        sb.AppendLine();
+        sb.Append(e.Message);
+      }
       cts = tokens;
       if (!expectErrors && sb.Length != 0)
       {
@@ -871,7 +893,6 @@ namespace MySql.Debugger
         // run the command
         cmd.CommandText = _sqlToRun;
         cmd.ExecuteNonQuery();
-        _completed = true;
       }
       catch (Exception ex)
       {
@@ -881,8 +902,11 @@ namespace MySql.Debugger
       finally
       {
         // Release debuggee lock
-        cmd.CommandText = "do release_lock( 'lock1' );";
-        cmd.ExecuteNonQuery();
+        if (!_completed)
+        {
+          ReleaseDebuggeeLock();
+        }
+        _completed = true;
       }
     }
 
@@ -1158,7 +1182,7 @@ namespace MySql.Debugger
       sql.AppendLine();
       sql.AppendFormat("set {0} = {0} + 1;", VAR_DBG_SCOPE_LEVEL );
       sql.AppendLine();
-      sql.AppendFormat("update `ServerSideDebugger`.`DebugData` set Val = {0} where Id = 1;", VAR_DBG_SCOPE_LEVEL);
+      sql.AppendFormat("update `ServerSideDebugger`.`DebugData` set `ServerSideDebugger`.`DebugData`.`Val` = {0} where `ServerSideDebugger`.`DebugData`.`Id` = 1;", VAR_DBG_SCOPE_LEVEL);
       sql.AppendLine();
       sql.AppendFormat("call `ServerSideDebugger`.`Push`( {0}, '{1}' );", DebugSessionId, ri.FullName );
       sql.AppendLine();
@@ -1172,7 +1196,7 @@ namespace MySql.Debugger
       sql.AppendLine();
       sql.AppendFormat("set {0} = {0} - 1;", VAR_DBG_SCOPE_LEVEL);
       sql.AppendLine();
-      sql.AppendFormat("update `ServerSideDebugger`.`DebugData` set Val = {0} where Id = 1;", VAR_DBG_SCOPE_LEVEL);
+      sql.AppendFormat("update `ServerSideDebugger`.`DebugData` set `ServerSideDebugger`.`DebugData`.`Val` = {0} where `ServerSideDebugger`.`DebugData`.`Id` = 1;", VAR_DBG_SCOPE_LEVEL);
       sql.AppendLine();
       sql.AppendFormat("call `ServerSideDebugger`.`CleanupScope`( {0} );", VAR_DBG_SCOPE_LEVEL);
       sql.AppendLine();
@@ -2023,7 +2047,17 @@ namespace MySql.Debugger
       sb = new StringBuilder();
       TextWriter tw = new StringWriter(sb);
       parser.TraceDestination = tw;
-      MySQL51Parser.program_return r = parser.program();
+      MySQL51Parser.program_return r = new MySQL51Parser.program_return();
+      r.Tree = null;
+      try
+      {
+        r = parser.program();
+      }
+      catch (RewriteEmptyStreamException e)
+      {
+        sb.AppendLine();
+        sb.Append(e.Message);
+      }
       cts = tokens;
       if (!expectErrors && sb.Length != 0)
       {
