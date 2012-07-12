@@ -122,10 +122,12 @@ namespace MySql.Data.VisualStudio
       ITextSnapshot snapshot, SnapshotPoint snapPos, out StringBuilder sbErrors, out ITree treeStmt)
     {
       string sql = snapshot.GetText();
+      treeStmt = null;
       position = snapPos.Position;
       tokens = RemoveToken(sql, snapPos);
       MySQL51Parser.program_return r =
         LanguageServiceUtil.ParseSql(sql, false, out sbErrors, tokens);
+      if (r == null) return;
       ITree t = r.Tree as ITree;
       treeStmt = t;
       // locate current statement's AST    
@@ -214,15 +216,18 @@ namespace MySql.Data.VisualStudio
         }
         else if (expectedToken == "column_name")
         {
-          if( ( t.ChildCount != 0 ) || 
-              (( t is CommonErrorNode ) && 
-               ( ( t as CommonErrorNode ).Text.Equals("SELECT", 
-                StringComparison.CurrentCultureIgnoreCase) )))
+          if (t != null)
           {
-            List<TableWithAlias> tables = new List<TableWithAlias>();
-            ParserUtils.GetTables(t, tables);
-            List<string> cols = GetColumns(connection, tables);
-            CreateCompletionList(cols, session, completionSets);
+            if ((t.ChildCount != 0) ||
+                ((t is CommonErrorNode) &&
+                 ((t as CommonErrorNode).Text.Equals("SELECT",
+                  StringComparison.CurrentCultureIgnoreCase))))
+            {
+              List<TableWithAlias> tables = new List<TableWithAlias>();
+              ParserUtils.GetTables(t, tables);
+              List<string> cols = GetColumns(connection, tables);
+              CreateCompletionList(cols, session, completionSets);
+            }
           }
         }
       }
