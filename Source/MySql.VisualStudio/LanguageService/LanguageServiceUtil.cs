@@ -58,7 +58,7 @@ namespace MySql.Data.VisualStudio
       MemoryStream ms = new MemoryStream(ASCIIEncoding.ASCII.GetBytes(sql));
       CaseInsensitiveInputStream input = new CaseInsensitiveInputStream(ms);
       //ANTLRInputStream input = new ANTLRInputStream(ms);
-      MySQL51Lexer lexer = new MySQL51Lexer(input);
+      MySQLLexer lexer = new MySQLLexer(input);
       CommonTokenStream tokens = new CommonTokenStream(lexer);
       tokensOutput = tokens;
       return DoParse(tokens, expectErrors, out sb);
@@ -67,20 +67,22 @@ namespace MySql.Data.VisualStudio
     private static MySQL51Parser.program_return DoParse( 
       CommonTokenStream tokens, bool expectErrors, out StringBuilder sb )
     {
-      MySQL51Parser parser = new MySQL51Parser(tokens);
+      MySQLParser parser = new MySQLParser(tokens);
       sb = new StringBuilder();
       TextWriter tw = new StringWriter(sb);
       parser.TraceDestination = tw;
-      MySQL51Parser.program_return r = parser.program();
-      if (!expectErrors)
+      MySQL51Parser.program_return r = null;
+      try
       {
-        //if (0 != parser.NumberOfSyntaxErrors)
-        //  Assert.AreEqual("", sb.ToString());
-        //Assert.AreEqual( 0, parser.NumberOfSyntaxErrors);
+        r = parser.program();
       }
-      else
+      catch (RewriteEmptyStreamException e)
       {
-        //Assert.AreNotEqual(0, parser.NumberOfSyntaxErrors);
+        if (!expectErrors)
+        {
+          sb.AppendLine();
+          sb.Append(e.Message);
+        }
       }
       return r;
     }

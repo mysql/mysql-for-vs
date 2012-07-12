@@ -62,7 +62,7 @@ namespace MySql.Data.VisualStudio
       MemoryStream ms = new MemoryStream(ASCIIEncoding.ASCII.GetBytes(sql));
       CaseInsensitiveInputStream input = new CaseInsensitiveInputStream(ms);
       //ANTLRInputStream input = new ANTLRInputStream(ms);
-      MySQL51Lexer lexer = new MySQL51Lexer(input);
+      MySQLLexer lexer = new MySQLLexer(input);
       TokenStreamRemovable tokens = new TokenStreamRemovable(lexer);      
       IToken tr = null;
       int position = snapPos.Position;
@@ -122,10 +122,12 @@ namespace MySql.Data.VisualStudio
       ITextSnapshot snapshot, SnapshotPoint snapPos, out StringBuilder sbErrors, out ITree treeStmt)
     {
       string sql = snapshot.GetText();
+      treeStmt = null;
       position = snapPos.Position;
       tokens = RemoveToken(sql, snapPos);
       MySQL51Parser.program_return r =
         LanguageServiceUtil.ParseSql(sql, false, out sbErrors, tokens);
+      if (r == null) return;
       ITree t = r.Tree as ITree;
       treeStmt = t;
       // locate current statement's AST    
@@ -188,7 +190,7 @@ namespace MySql.Data.VisualStudio
         if (expectedToken == "proc_name")        
         {          
           m_compList = new List<Completion>();
-          DataTable schema = connection.GetSchema("PROCEDURES WITH PARAMETERS");
+          DataTable schema = connection.GetSchema("PROCEDURES WITH PARAMETERS", new string[] { null, connection.Database });
           DataView vi = schema.DefaultView;
           vi.Sort = "specific_name asc";
           string completionItem = null;
@@ -214,15 +216,18 @@ namespace MySql.Data.VisualStudio
         }
         else if (expectedToken == "column_name")
         {
-          if( ( t.ChildCount != 0 ) || 
-              (( t is CommonErrorNode ) && 
-               ( ( t as CommonErrorNode ).Text.Equals("SELECT", 
-                StringComparison.CurrentCultureIgnoreCase) )))
+          if (t != null)
           {
-            List<TableWithAlias> tables = new List<TableWithAlias>();
-            ParserUtils.GetTables(t, tables);
-            List<string> cols = GetColumns(connection, tables);
-            CreateCompletionList(cols, session, completionSets);
+            if ((t.ChildCount != 0) ||
+                ((t is CommonErrorNode) &&
+                 ((t as CommonErrorNode).Text.Equals("SELECT",
+                  StringComparison.CurrentCultureIgnoreCase))))
+            {
+              List<TableWithAlias> tables = new List<TableWithAlias>();
+              ParserUtils.GetTables(t, tables);
+              List<string> cols = GetColumns(connection, tables);
+              CreateCompletionList(cols, session, completionSets);
+            }
           }
         }
       }

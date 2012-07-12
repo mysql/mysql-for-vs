@@ -34,8 +34,8 @@
       <Component Id='VS2010_Extension' Guid='F5BE338A-8D95-4826-8ADE-1C5F310E336C'>
         <File Id='MySQL.VisualStudio.2010' Name='MySQL.VisualStudio.dll' DiskId='1'
               Source='..\Source\MySql.VisualStudio\bin\release\MySQL.VisualStudio.dll'/>
-        <File Id='MySqlParser.2010' Name='MySqlParser.dll' DiskId='1'
-          Source='..\Source\MySql.VisualStudio\bin\release\MySqlParser.dll'/>
+        <File Id='MySqlParser.2010' Name='MySql.Parser.dll' DiskId='1'
+          Source='..\Source\MySql.VisualStudio\bin\release\MySql.Parser.dll'/>
         <File Id='Antlr3.Runtime' Name='Antlr3.Runtime.dll' DiskId='1'
               Source='..\Source\MySqlParser\bin\Release\Antlr3.Runtime.dll'/>
         <File Id='VsixManifest' Name='extension.vsixmanifest' DiskId='1'
@@ -59,8 +59,8 @@
       <Component Id='VS2012_Extension' Guid='BC4A2841-C8B6-4C7D-8B11-2889AAA02B68'>
         <File Id='MySQL.VisualStudio.2012' Name='MySQL.VisualStudio.dll' DiskId='1'
               Source='..\Source\MySql.VisualStudio\bin\release\MySQL.VisualStudio.dll'/>
-        <File Id='MySqlParser.2012' Name='MySqlParser.dll' DiskId='1'
-          Source='..\Source\MySql.VisualStudio\bin\release\MySqlParser.dll'/>
+        <File Id='MySqlParser.2012' Name='MySql.Parser.dll' DiskId='1'
+          Source='..\Source\MySql.VisualStudio\bin\release\MySql.Parser.dll'/>
         <File Id='Antlr3.Runtime.2012' Name='Antlr3.Runtime.dll' DiskId='1'
               Source='..\Source\MySqlParser\bin\Release\Antlr3.Runtime.dll'/>
         <File Id='VsixManifest.2012' Name='extension.vsixmanifest' DiskId='1'
