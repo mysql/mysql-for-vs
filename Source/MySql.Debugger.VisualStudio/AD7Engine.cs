@@ -53,7 +53,8 @@ namespace MySql.Debugger.VisualStudio
       if (( DebuggerManager.Instance != null ) && ( DebuggerManager.Instance.Debugger.IsRunning))
       {
         // If already running, abort.
-        return HRESULT.E_ATTACH_DEBUGGER_ALREADY_ATTACHED;
+        MessageBox.Show("Cannot start MySql Debugger. A MySql Debug session is already running", "Error");
+        return HRESULT.E_ATTACH_FAILED_ABORT_SILENTLY;
       }
 
       rgpPrograms[0].GetProgramId(out id);
