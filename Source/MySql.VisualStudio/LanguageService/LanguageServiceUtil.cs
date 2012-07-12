@@ -71,16 +71,18 @@ namespace MySql.Data.VisualStudio
       sb = new StringBuilder();
       TextWriter tw = new StringWriter(sb);
       parser.TraceDestination = tw;
-      MySQL51Parser.program_return r = parser.program();
-      if (!expectErrors)
+      MySQL51Parser.program_return r = null;
+      try
       {
-        //if (0 != parser.NumberOfSyntaxErrors)
-        //  Assert.AreEqual("", sb.ToString());
-        //Assert.AreEqual( 0, parser.NumberOfSyntaxErrors);
+        r = parser.program();
       }
-      else
+      catch (RewriteEmptyStreamException e)
       {
-        //Assert.AreNotEqual(0, parser.NumberOfSyntaxErrors);
+        if (!expectErrors)
+        {
+          sb.AppendLine();
+          sb.Append(e.Message);
+        }
       }
       return r;
     }
