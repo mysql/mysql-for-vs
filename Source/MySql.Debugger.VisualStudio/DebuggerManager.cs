@@ -93,7 +93,7 @@ namespace MySql.Debugger.VisualStudio
       try
       {        
         this._debugger.Stop();
-        ReleaseCoreDebugger();        
+        ReleaseCoreDebugger();
       }
       catch (Exception ex)
       {
@@ -220,13 +220,14 @@ namespace MySql.Debugger.VisualStudio
       }
       catch (DebugSyntaxException dse)
       {
-        //throw;
         MessageBox.Show(_node.ParentWindow, dse.GetBaseException().Message, "Debugger Error");
+        _debugger.RaiseEndDebugger();
         return;
       }
       catch (Exception ex)
       {
         MessageBox.Show(_node.ParentWindow, ex.GetBaseException().Message, "Debugger Error");
+        _debugger.RaiseEndDebugger();
         return;
       }
     }
