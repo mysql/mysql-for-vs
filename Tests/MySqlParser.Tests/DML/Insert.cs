@@ -75,11 +75,18 @@ USING
 		}
 
       [Test]
-		public void WithSelect3()
-		{
-			MySQL51Parser.program_return r = Utility.ParseSql(
-                "INSERT INTO table2 (field1, field2, field3, field4) (SELECT 'value1 from user input', field1, field2, field3 from table1)");
-		}
+	  public void WithSelect3()
+	  {
+		  MySQL51Parser.program_return r = Utility.ParseSql(
+              "INSERT INTO table2 (field1, field2, field3, field4) (SELECT 'value1 from user input', field1, field2, field3 from table1)");
+	  }
 
+      [Test]
+	  public void WithoutColumns()
+	  {
+		  MySQL51Parser.program_return r = Utility.ParseSql(
+              "insert into test3 values (1), (2), (3)");
+	  }
+      
 	}
 }

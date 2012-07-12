@@ -264,8 +264,8 @@ create_procedure
 		PROCEDURE simple_obj_ref_no_alias LPAREN ( parm+=proc_parameter ( COMMA parm+=proc_parameter )* )? RPAREN 
 		( routine_characteristic )* routine_body
 		-> ^( CREATE PROCEDURE ( DEFINER user_specification? CURRENT_USER? )? 
-			simple_obj_ref_no_alias $parm* ^( CHARACTERISTIC routine_characteristic* )? routine_body
-			) 
+			simple_obj_ref_no_alias? $parm* ^( CHARACTERISTIC routine_characteristic* )? routine_body
+			)
 	;
 
 create_function
@@ -274,7 +274,7 @@ create_function
 		RETURNS data_type
 		( routine_characteristic )* routine_body
 		-> ^( CREATE FUNCTION ( DEFINER user_specification? CURRENT_USER? )? 
-			simple_obj_ref_no_alias $parm* RETURNS data_type ^( CHARACTERISTIC routine_characteristic* )? routine_body
+			simple_obj_ref_no_alias? $parm* RETURNS data_type ^( CHARACTERISTIC routine_characteristic* )? routine_body
 			) 
 	;
 
@@ -1756,7 +1756,8 @@ insert_columns
 	;
 
 insert_values
-	:	(VALUE|VALUES) LPAREN val+=insert_default_or_expression (COMMA val+=insert_default_or_expression)* RPAREN
+	:	(VALUE|VALUES) LPAREN val+=insert_default_or_expression (COMMA val+=insert_default_or_expression)* RPAREN 
+		( COMMA LPAREN val+=insert_default_or_expression (COMMA val+=insert_default_or_expression)* RPAREN )*
 			-> ^(INSERT_VALUES VALUES[] $val+)
 	;
 
@@ -2351,7 +2352,7 @@ drop_table
 	;
 	catch[ NoViableAltException nvae ] 
 	{
-		if( nvae.DecisionNumber == 521 )
+		if( nvae.DecisionNumber == 523 )
 		{
 			nvae = new NoViableAltException( 
 				"simple_table_ref_no_alias_existing", 
@@ -2577,7 +2578,7 @@ sp_call
 	;
 	catch[ NoViableAltException nvae ] 
 	{
-		if( nvae.DecisionNumber == 561 )
+		if( nvae.DecisionNumber == 563 )
 		{
 			nvae = new NoViableAltException( 
 					"proc_name", 
