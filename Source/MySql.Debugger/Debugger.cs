@@ -20,6 +20,8 @@
 // with this program; if not, write to the Free Software Foundation, Inc., 
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
+#define PREINSTRUMENT_FUNCTIONS_AND_TRIGGERS
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -176,7 +178,8 @@ namespace MySql.Debugger
     }
 
     public void Run(string[] values)
-    { 
+    {
+      _stopping = false;
       /*
        * - Start stepping in code.
        * - Always get sp code. 
@@ -226,13 +229,16 @@ namespace MySql.Debugger
         RoutineScope rs = GetRoutineScopeFromRoutineInfo(ri);
         // Start sp execution in async call, but keep track of result (like failure 
         // to execute due to permissions, or no longer reachable code).
-        // TODO: Make call statement.
+        // Make call statement.
         MakeScopeCreateProc(ri, values);
         _sqlToRun = CurrentScope.OwningRoutine.SourceCode;
         // run in background worker
         ExecuteScalar("set net_write_timeout=999999;");
         ExecuteScalar("set net_read_timeout=999999;");
-        ExecuteScalar( string.Format("set {0} = 1;", VAR_DBG_NO_DEBUGGING) );
+        // this way debugger can see table updates by debuggee instrumented code when debuggee is within a transaction 
+        // (ie. when a function is being invoked).
+        ExecuteScalar("set session transaction isolation level read uncommitted;");
+        SetNoDebuggingFlag(1, _utilCon);
         SetDebuggeeLock();
         SetDebuggerLock();
         _completed = false;
@@ -243,8 +249,15 @@ namespace MySql.Debugger
           do
           {
             // Wait for lock with debuggee code.
-            ExecuteScalarLongWait("select get_lock( 'lock1', 999999 );");            
-            ReleaseDebuggerLock();
+            while (true)
+            {
+              /* busy wait */
+              int netWriteTimeout = Convert.ToInt32(ExecuteScalar("select  @@global.net_write_timeout"));
+              if (netWriteTimeout != (NET_WRITE_TIMEOUT_BASE_VALUE + 1)) break;
+              Thread.Sleep(100);
+            }
+            ExecuteScalarLongWait("select get_lock( 'lock1', 999999 );");
+            SetDebuggerLock();
             // checking the flags inside the critical section avoids a very unlikely race condition.
             if (_completed)
             {
@@ -269,8 +282,8 @@ namespace MySql.Debugger
             else if (_prevScopeLevel < _scopeLevel)
             {
               // current scope is callee, create new scope
-              // Get new routine source code
               string routineName = GetCurrentRoutine();
+              // Get new routine source code
               RoutineInfo newRi = GetRoutineInfo(routineName);
               //MakeRoutineInfo((CommonTree)null, (CommonTokenStream)null, "");
               if (string.IsNullOrEmpty(newRi.InstrumentedSourceCode))
@@ -289,6 +302,7 @@ namespace MySql.Debugger
             }
             int lineNumber = GetCurrentLineNumber();
             CheckBreakpoints(lineNumber);
+            if (_completed) break;
             // Locate next statement to debug & preinstrument current statement dependencies
             CommonTree nextCt = GetStatementFromLine(lineNumber);
             // Preinstrument it
@@ -298,7 +312,6 @@ namespace MySql.Debugger
               PreinstrumentStatement(nextCt);
             }
             // Release locks for further execution of debuggee.
-            SetDebuggerLock();
             ExecuteScalar("select release_lock( 'lock1' );");
             // Hint mysql thread scheduler to give debuggee a chance to execute
             ExecuteScalar("select sleep( 0.010 );");
@@ -307,14 +320,16 @@ namespace MySql.Debugger
         }
         finally
         {
-          ReleaseDebuggerLock();
           ExecuteScalar("select release_lock( 'lock1' );");
         }
       }
       finally
       {
-        try { _connection.Close(); }
-        catch { }
+        if (!_stopping)
+        {
+          try { this.Stop(); }
+          catch { }
+        }
         _utilCon.Close();
         _lockingCon.Close();
         IsRunning = false;
@@ -361,11 +376,7 @@ namespace MySql.Debugger
     /// <returns></returns>
     internal RoutineInfo GetRoutineInfo(string Name)
     {
-      string[] fullName = null;
-      if (Name.IndexOf('.') != -1)
-        fullName = Name.Split('.');
-      else
-        fullName = new string[] { _utilCon.Database, Name };
+      string[] fullName = RoutineInfo.GetFullName(_utilCon.Database, Name);
       RoutineInfoType type = RoutineInfoType.Trigger;
       MySqlCommand cmd = new MySqlCommand( string.Format( 
         "select routine_type from information_schema.routines where ( routine_name = '{0}' ) and ( routine_schema = '{1}' )", 
@@ -384,7 +395,7 @@ namespace MySql.Debugger
       {
         r.Close();
       }
-      return LookupRoutine(Name, type);
+      return LookupRoutine(string.Join(".", fullName), type);
     }
 
     internal RoutineInfo LookupRoutine(string Name, RoutineInfoType type)
@@ -434,7 +445,7 @@ namespace MySql.Debugger
       }
       return new RoutineInfo()
       {
-        Name = sName,
+        Name = RoutineInfo.GetRoutineName( sName ),
         ParsedTree = t,
         TokenStream = cts,
         SourceCode = sql,
@@ -450,12 +461,12 @@ namespace MySql.Debugger
     /// <returns></returns>
     private string GetCreateTriggerFor(string TriggerSchema, string TriggerName)
     {
-      // TODO: The "definer user" is lost (no way to retrieve it from informationschema.triggers
-      string eventManipulation;
-      string actionStmt;
-      string actionTiming;
-      string eventObjectTable;
-      string eventObjectSchema;
+      // TODO: The "definer user" is lost (no way to retrieve it from information_schema.triggers
+      string eventManipulation = string.Empty;
+      string actionStmt = string.Empty;
+      string actionTiming = string.Empty;
+      string eventObjectTable = string.Empty;
+      string eventObjectSchema = string.Empty;
 
       MySqlCommand cmd = new MySqlCommand( string.Format(
         @"select event_manipulation, event_object_schema, event_object_table, action_statement, action_timing 
@@ -464,11 +475,14 @@ namespace MySql.Debugger
       MySqlDataReader r = cmd.ExecuteReader();
       try {
         r.Read();
-        eventManipulation = r.GetString( 0 );
-        eventObjectSchema = r.GetString( 1 );
-        eventObjectTable = r.GetString( 2 );
-        actionStmt = r.GetString( 3 );
-        actionTiming = r.GetString( 4 );
+        if (r.HasRows)
+        {
+          eventManipulation = r.GetString(0);
+          eventObjectSchema = r.GetString(1);
+          eventObjectTable = r.GetString(2);
+          actionStmt = r.GetString(3);
+          actionTiming = r.GetString(4);
+        }
       } finally {
         r.Close();
       }
@@ -479,35 +493,37 @@ namespace MySql.Debugger
 
     private void GetCurrentScopeLevel()
     {
-      _scopeLevel = Convert.ToInt32(ExecuteScalar("select `ServerSideDebugger`.`DebugData`.`Val` from `ServerSideDebugger`.`DebugData` where `ServerSideDebugger`.`DebugData`.`Id` = 1"));
+      _scopeLevel = Convert.ToInt32(ExecuteScalar("select `serversidedebugger`.`DebugData`.`Val` from `serversidedebugger`.`DebugData` where `serversidedebugger`.`DebugData`.`Id` = 1"));
     }
 
     private void SetCurrentScopeLevel(int newScope)
     {
       _scopeLevel = newScope;
-      ExecuteRaw(string.Format("update `ServerSideDebugger`.`DebugData` set `ServerSideDebugger`.`DebugData`.`Val` = {0} where `ServerSideDebugger`.`DebugData`.`Id` = 1;", newScope));
+      ExecuteRaw(string.Format("update `serversidedebugger`.`DebugData` set `serversidedebugger`.`DebugData`.`Val` = {0} where `serversidedebugger`.`DebugData`.`Id` = 1;", newScope));
+      //ExecuteScalar(string.Format("set {0} = {1};", VAR_DBG_SCOPE_LEVEL, newScope));
     }
 
+    private bool _stopping = false;
     public void Stop()
     {
+      _stopping = true;
+      this._worker.CancelAsync();
       _completed = true;
       try {
         MySqlConnection con = new MySqlConnection(_connection.ConnectionString);
         con.Open();
         MySqlCommand cmd = new MySqlCommand(string.Format("kill {0}", _connection.ServerThread), con);
         cmd.ExecuteNonQuery();
-        con.Close();
-        //_connection.CancelQuery(0); 
+        con.Close();        
       }
       catch { }
       try { _connection.Close(); }
       catch { }
-      //this._worker.CancelAsync();
     }
 
     private void AddToPreinstrumentedRoutines(RoutineInfo ri)
     {
-      _preinstrumentedRoutines.Add(string.Format("{0}", ri.FullName ), ri);
+      _preinstrumentedRoutines.Add(string.Format("{0}", ri.GetFullName(_connection.Database)), ri);
     }
 
     private void SetDebuggeeLock()
@@ -518,9 +534,11 @@ namespace MySql.Debugger
         throw new InvalidOperationException( "Cannot take lock1." );
     }
 
+    private const int NET_WRITE_TIMEOUT_BASE_VALUE = 999998;
+
     private void SetDebuggerLock()
     {
-      MySqlCommand cmd = new MySqlCommand("lock tables `ServerSideDebugger`.`debugtbl` write;", _lockingCon);
+      MySqlCommand cmd = new MySqlCommand(string.Format("set @@global.net_write_timeout = {0} + 1;", NET_WRITE_TIMEOUT_BASE_VALUE), _lockingCon);
       cmd.ExecuteNonQuery();
     }
 
@@ -691,7 +709,7 @@ namespace MySql.Debugger
     private Dictionary<string, StoreType> LoadScopeVars(int DebugScopeLevel)
     {
       string sql = 
-        @"select cast( VarValue as {3} ) from ServerSideDebugger.DebugScope where DebugSessionId = {0} and DebugScopeLevel = {1} and VarName = '{2}'";
+        @"select cast( VarValue as {3} ) from serversidedebugger.DebugScope where DebugSessionId = {0} and DebugScopeLevel = {1} and VarName = '{2}'";
       Dictionary<string, StoreType> vars = CurrentScope.Variables;
       MySqlCommand cmd = new MySqlCommand(sql, _utilCon);
       foreach (StoreType st in vars.Values)
@@ -725,7 +743,7 @@ namespace MySql.Debugger
         if (st.VarKind == VarKindEnum.Internal) continue;
         if (st.ValueChanged)
         {
-          sql.Append("replace `ServerSideDebugger`.`DebugScope`( DebugSessionId, DebugScopeLevel, VarName, VarValue ) ").
+          sql.Append("replace `serversidedebugger`.`DebugScope`( DebugSessionId, DebugScopeLevel, VarName, VarValue ) ").
             AppendFormat("values ( {0}, {1}, '{2}', cast( {3} as binary ) );", DebugSessionId, _scopeLevel, st.Name, st.WrapValue()).AppendLine();
           st.ValueChanged = false;
         }
@@ -798,13 +816,15 @@ namespace MySql.Debugger
     
     internal void CheckBreakpoints(int line)
     {
-      int hash = GetTagHashCode( CurrentScope.OwningRoutine.SourceCode );
+      RoutineInfo ri = CurrentScope.OwningRoutine;
+      int hash = GetTagHashCode( ri.SourceCode );
+      string routineName = ri.GetFullName(_utilCon.Database);
       // Breakpoints on the same line but different files are treated by making a breakpoint uniquely identified
       // by line number and hash of current routine source code.
       if (OnBreakpoint == null) return;
       if (SteppingType == SteppingTypeEnum.StepInto || SteppingType == SteppingTypeEnum.StepOver)
       {
-        RaiseBreakpoint(new Breakpoint() { Line = line, IsFake = true, Hash = hash });
+        RaiseBreakpoint(new Breakpoint() { Line = line, IsFake = true, Hash = hash, RoutineName = routineName });
         return;
       }
       else if (SteppingType == SteppingTypeEnum.StepOut)
@@ -817,7 +837,7 @@ namespace MySql.Debugger
         if (_scopeLevel == nextStepOut)
         {
           nextStepOut = -1;
-          RaiseBreakpoint(new Breakpoint() { Line = line, IsFake = true, Hash = hash });
+          RaiseBreakpoint(new Breakpoint() { Line = line, IsFake = true, Hash = hash, RoutineName = routineName });
           return;
         }
       }
@@ -872,6 +892,14 @@ namespace MySql.Debugger
     private Exception _asyncError = null;
     private string _sqlToRun = "";
 
+    private void SetNoDebuggingFlag(int newValue, MySqlConnection con )
+    {
+      MySqlCommand cmd = new MySqlCommand();
+      cmd.Connection = con;
+      cmd.CommandText = string.Format("set {0} = {1};", VAR_DBG_NO_DEBUGGING, newValue);
+      cmd.ExecuteNonQuery();
+    }
+
     private void worker_DoWork(object sender, DoWorkEventArgs e)
     {
       MySqlCommand cmd = new MySqlCommand("", _connection);
@@ -881,29 +909,39 @@ namespace MySql.Debugger
         cmd.CommandTimeout = Int32.MaxValue / 1000;
 
         // net_xxx are set to avoid EndOfStreamException
-        cmd.CommandText = "set net_write_timeout=999999;";
+        cmd.CommandText = "set net_write_timeout=999998;";
         cmd.ExecuteNonQuery();
-        cmd.CommandText = "set net_read_timeout=999999;";
+        cmd.CommandText = "set net_read_timeout=999998;";
         cmd.ExecuteNonQuery();
-        cmd.CommandText = string.Format("set {0} = 0;", VAR_DBG_NO_DEBUGGING);
+        cmd.CommandText = "set session transaction isolation level read uncommitted;";
         cmd.ExecuteNonQuery();
-        cmd.CommandText = string.Format("set {0} = 0;", VAR_DBG_SCOPE_LEVEL);
-        cmd.ExecuteNonQuery();
+        SetNoDebuggingFlag(0, _connection);
+        //cmd.CommandText = string.Format("set {0} = 0;", VAR_DBG_SCOPE_LEVEL);
+        //cmd.ExecuteNonQuery();
 
         // run the command
         cmd.CommandText = _sqlToRun;
         cmd.ExecuteNonQuery();
       }
+      catch (ThreadAbortException tae) 
+      {
+        // nothing
+      }
       catch (Exception ex)
       {
-        _asyncError = ex;
-        _errorOnAsync = true;
+        if (!_stopping)
+        {
+          _asyncError = ex;
+          _errorOnAsync = true;
+        }
       }
       finally
       {
         // Release debuggee lock
-        if (!_completed)
+        if (!_completed && !_stopping)
         {
+          cmd.CommandText = string.Format("set @@global.net_write_timeout = {0};", NET_WRITE_TIMEOUT_BASE_VALUE);
+          cmd.ExecuteNonQuery();
           ReleaseDebuggeeLock();
         }
         _completed = true;
@@ -984,13 +1022,13 @@ namespace MySql.Debugger
       // generate instrumentation code
       StringBuilder preInscode = new StringBuilder();
       // track internal variables...
-      preInscode.Append("replace `ServerSideDebugger`.`DebugScope`( DebugSessionId, DebugScopeLevel, VarName, VarValue ) values " ).
+      preInscode.Append("replace `serversidedebugger`.`DebugScope`( DebugSessionId, DebugScopeLevel, VarName, VarValue ) values " ).
         AppendLine( "( {3}, {0}, '@@@lineno', {1} ); ");
       // ...and user variables
       foreach (StoreType st in args.Values)
       {
         if (st.VarKind == VarKindEnum.Internal) continue;
-        preInscode.Append("replace `ServerSideDebugger`.`DebugScope`( DebugSessionId, DebugScopeLevel, VarName, VarValue ) ").
+        preInscode.Append("replace `serversidedebugger`.`DebugScope`( DebugSessionId, DebugScopeLevel, VarName, VarValue ) ").
           Append("values ( {3}, {0}, ").
           AppendFormat("'{0}', cast( {0} as binary ) );", st.Name ).AppendLine();
       }
@@ -999,7 +1037,7 @@ namespace MySql.Debugger
       {
         if (st.VarKind == VarKindEnum.Internal) continue;
         postInscode.AppendFormat(
-          "set {0} = ( select cast( VarValue as {1} ) from `ServerSideDebugger`.`debugscope` where ( DebugSessionId = {2} ) ",
+          "set {0} = ( select cast( VarValue as {1} ) from `serversidedebugger`.`debugscope` where ( DebugSessionId = {2} ) ",
           st.Name, st.GetCastExpressionFromBinary(), "{1}").
           Append(" and ( DebugScopeLevel = {0} ) ").AppendFormat(" and ( VarName = '{0}' ) limit 1 );", st.Name).AppendLine();
       }
@@ -1084,12 +1122,7 @@ namespace MySql.Debugger
       {
         routine._leaveLabel = beginEnd.GetChild(0).GetChild(0).Text;
       }
-      // TODO: How to add begin/end scope calls before declare's? that would render declare's illegal.
-      // Solution: push them to an stack & pop them from stack at GenerateInstrumentedCodeRecursive.
-      // Or better yet, put them before and after the call in the caller code (although that will work only for 
-      // procedures not for functions/triggers.
-      // (sort of Pascal vs C calling conventions).
-      //_scopeLevel++;
+      
       // Generate scope entry:
       if (!string.IsNullOrEmpty(routine._leaveLabel))
       {
@@ -1106,10 +1139,12 @@ namespace MySql.Debugger
         EmitInstrumentationCode(sql, routine, routine.TokenStream.Get(beginEnd.TokenStopIndex).Line);
       }
       sql.AppendLine("#end scope");
-      // Generate code to cleanup scope.
-      EmitEndScopeCode(sql);
+      if (routine.Type != RoutineInfoType.Function)
+      {
+        // Generate code to cleanup scope.
+        EmitEndScopeCode(sql);
+      }
       sql.AppendLine("end;");
-      //_scopeLevel--;
     }
 
     private void EmitInstrumentationCode(StringBuilder sql, RoutineInfo routine, int lineno)
@@ -1117,15 +1152,15 @@ namespace MySql.Debugger
       sql.AppendFormat("if {0} = 0 then ", VAR_DBG_NO_DEBUGGING);
       sql.AppendLine();
       sql.AppendFormat(routine.PreInstrumentationCode, VAR_DBG_SCOPE_LEVEL, lineno, routine.FullName, DebugSessionId);
-      sql.AppendLine("call `ServerSideDebugger`.`ExitEnterCriticalSection`();");
+      sql.AppendLine(string.Format("call `serversidedebugger`.`ExitEnterCriticalSection`( '{0}', {1} );", routine.Name, lineno ));
       sql.AppendFormat(routine.PostInstrumentationCode, VAR_DBG_SCOPE_LEVEL, DebugSessionId);
       sql.AppendLine(" end if;");
     }
 
     private void CleanupScopeAll()
     {
-      ExecuteRaw(string.Format("delete from `ServerSideDebugger`.`DebugScope` where DebugSessionId = {0}", DebugSessionId));
-      ExecuteRaw(string.Format("delete from `ServerSideDebugger`.`DebugCallStack` where DebugSessionId = {0}", DebugSessionId));
+      ExecuteRaw(string.Format("delete from `serversidedebugger`.`DebugScope` where DebugSessionId = {0}", DebugSessionId));
+      ExecuteRaw(string.Format("delete from `serversidedebugger`.`DebugCallStack` where DebugSessionId = {0}", DebugSessionId));
     }
 
     /// <summary>
@@ -1145,7 +1180,7 @@ namespace MySql.Debugger
     {
       ConcatTokens(sb, cts, StartTokenIndex, EndTokenIndex);
       // TODO: disabled for now, because is a half-baked solution (ie. how to edit locals values after the breakpoint?)
-      //sb.AppendFormat("( `ServerSideDebugger`.`ExitEnterCriticalSectionFunction`( {0} ) ", ShortCircuitResult ? "1" : "0" );
+      //sb.AppendFormat("( `serversidedebugger`.`ExitEnterCriticalSectionFunction`( {0} ) ", ShortCircuitResult ? "1" : "0" );
       //if (ShortCircuitResult)
       //  sb.Append(" and ( ");
       //else
@@ -1173,18 +1208,21 @@ namespace MySql.Debugger
     }
 
     // Session variables
-    private const string VAR_DBG_SCOPE_LEVEL = "@dbg_ScopeLevel";
+    //private const string VAR_DBG_SCOPE_LEVEL = "@dbg_ScopeLevel";
+    private const string VAR_DBG_SCOPE_LEVEL = "(select `serversidedebugger`.`debugdata`.`Val` from `serversidedebugger`.`debugdata` where `serversidedebugger`.`debugdata`.`id` = 1 limit 1 )";
     private const string VAR_DBG_NO_DEBUGGING = "@dbg_NoDebugging";
 
     private void EmitBeginScopeCode( StringBuilder sql, RoutineInfo ri )
     {
       sql.AppendFormat("if {0} = 0 then ", VAR_DBG_NO_DEBUGGING);
       sql.AppendLine();
-      sql.AppendFormat("set {0} = {0} + 1;", VAR_DBG_SCOPE_LEVEL );
+      //sql.AppendFormat("set {0} = {0} + 1;", VAR_DBG_SCOPE_LEVEL );
+      //sql.AppendLine();
+      //sql.AppendFormat("update `serversidedebugger`.`DebugData` set `serversidedebugger`.`DebugData`.`Val` = {0} where `serversidedebugger`.`DebugData`.`Id` = 1;", VAR_DBG_SCOPE_LEVEL);
+      //sql.AppendLine();
+      sql.Append("update `serversidedebugger`.`DebugData` set `serversidedebugger`.`DebugData`.`Val` = `serversidedebugger`.`DebugData`.`Val` + 1 where `serversidedebugger`.`DebugData`.`Id` = 1;");
       sql.AppendLine();
-      sql.AppendFormat("update `ServerSideDebugger`.`DebugData` set `ServerSideDebugger`.`DebugData`.`Val` = {0} where `ServerSideDebugger`.`DebugData`.`Id` = 1;", VAR_DBG_SCOPE_LEVEL);
-      sql.AppendLine();
-      sql.AppendFormat("call `ServerSideDebugger`.`Push`( {0}, '{1}' );", DebugSessionId, ri.FullName );
+      sql.AppendFormat("call `serversidedebugger`.`Push`( {0}, '{1}' );", DebugSessionId, ri.FullName );
       sql.AppendLine();
       sql.Append("end if;");
       sql.AppendLine();
@@ -1194,13 +1232,15 @@ namespace MySql.Debugger
     {
       sql.AppendFormat("if {0} = 0 then ", VAR_DBG_NO_DEBUGGING);
       sql.AppendLine();
-      sql.AppendFormat("set {0} = {0} - 1;", VAR_DBG_SCOPE_LEVEL);
+      //sql.AppendFormat("set {0} = {0} - 1;", VAR_DBG_SCOPE_LEVEL);
+      //sql.AppendLine();
+      //sql.AppendFormat("update `serversidedebugger`.`DebugData` set `serversidedebugger`.`DebugData`.`Val` = {0} where `serversidedebugger`.`DebugData`.`Id` = 1;", VAR_DBG_SCOPE_LEVEL);
+      //sql.AppendLine();
+      //sql.Append("update `serversidedebugger`.`DebugData` set `serversidedebugger`.`DebugData`.`Val` = `serversidedebugger`.`DebugData`.`Val` - 1 where `serversidedebugger`.`DebugData`.`Id` = 1;" );
+      //sql.AppendLine();
+      sql.Append("call `serversidedebugger`.`CleanupScope`( 1 );");
       sql.AppendLine();
-      sql.AppendFormat("update `ServerSideDebugger`.`DebugData` set `ServerSideDebugger`.`DebugData`.`Val` = {0} where `ServerSideDebugger`.`DebugData`.`Id` = 1;", VAR_DBG_SCOPE_LEVEL);
-      sql.AppendLine();
-      sql.AppendFormat("call `ServerSideDebugger`.`CleanupScope`( {0} );", VAR_DBG_SCOPE_LEVEL);
-      sql.AppendLine();
-      sql.AppendFormat("call `ServerSideDebugger`.`Pop`( {0} );", DebugSessionId );
+      sql.AppendFormat("call `serversidedebugger`.`Pop`( {0} );", DebugSessionId );
       sql.AppendLine();
       sql.Append("end if;");
       sql.AppendLine();
@@ -1209,11 +1249,17 @@ namespace MySql.Debugger
     private string GetCurrentRoutine()
     {
       object o = ExecuteScalar( string.Format( 
-        "select `ServerSideDebugger`.`Peek`( {0} );", DebugSessionId ) );
+        "select `serversidedebugger`.`Peek`( {0} );", DebugSessionId ) );
       if (o == DBNull.Value)
         return null;
       else
-        return (string)o;
+      {
+        string name = (string)o;
+        if( name.IndexOf( '.' ) == -1 )
+          return string.Format( "{0}.{1}", _utilCon.Database, name );
+        else
+          return name;
+      }
     }
 
     private void GenerateInstrumentedCodeRecursive(
@@ -1396,7 +1442,6 @@ namespace MySql.Debugger
               else
               {
                 GenerateInstrumentedCodeRecursive( tc.Children.Skip( 2 ).ToList(), routine, sql );
-                //sql.AppendLine(" end;");
               }
             }
             break;
@@ -1608,15 +1653,18 @@ namespace MySql.Debugger
 
     private void DoPreinstrumentStatement(CommonTree stmt)
     {
-      //List<RoutineInfo> _routines = GetDependenciesToInstrument(stmt);
+#if PREINSTRUMENT_FUNCTIONS_AND_TRIGGERS
+      List<RoutineInfo> _routines = GetDependenciesToInstrument(stmt);
+#else
       // TODO: Not generating any dependency instrumentations for now.
       List<RoutineInfo> _routines = new List<RoutineInfo>();
+#endif
       // Eliminate already repeated ones:
       List<RoutineInfo> routines = new List<RoutineInfo>();
       foreach (RoutineInfo r in _routines)
       {
         RoutineInfo ri;
-        string routineKey = string.Format("{0}.{1}", r.Schema, r.Name);
+        string routineKey = r.GetFullName(_utilCon.Database);
         if (!_preinstrumentedRoutines.TryGetValue(routineKey, out ri))
         {
           routines.Add(r);
@@ -1627,11 +1675,12 @@ namespace MySql.Debugger
       foreach (RoutineInfo ri in routines)
       {
         RoutineInfo rip = null;
-        if (!_cacheInstrumented.TryGetValue(ri.Name, out rip))
+        string routineKey = ri.GetFullName(_utilCon.Database);
+        if (!_cacheInstrumented.TryGetValue(routineKey, out rip))
         {
-          Debug.WriteLine(string.Format("Debugger: Instrumenting {0}.{1}", ri.Schema, ri.Name));
+          Debug.WriteLine(string.Format("Debugger: Instrumenting {0}", routineKey ));
           InstrumentRoutine(ri);
-          _cacheInstrumented.Add(ri.Name, ri);
+          _cacheInstrumented.Add(routineKey, ri);
         }
       }
     }
@@ -1654,10 +1703,10 @@ namespace MySql.Debugger
       List<MetaTrigger> lt = GetAllTriggersFromStmt(stmt);
       foreach (MetaTrigger tr in lt)
       {
-        routines.Add(new RoutineInfo() {
+        routines.Add( new RoutineInfo() {
           Schema = tr.TriggerSchema,
           Name = tr.Name,
-          SourceCode = tr.Source,
+          SourceCode = GetCreateTriggerFor( tr.TriggerSchema, tr.Name ),
           Type = RoutineInfoType.Trigger
         });
       }
@@ -1666,14 +1715,18 @@ namespace MySql.Debugger
       List<MetaRoutine> lr = GetFunctions(stmt);
       foreach (MetaRoutine mr in lr)
       {
-        routines.Add(new RoutineInfo()
+        // skip built-in functions
+        if (!string.IsNullOrEmpty(mr.RoutineDefinition))
         {
-          Schema = mr.Schema,
-          Name = mr.Name,
-          SourceCode = mr.RoutineDefinition,
-          Type = ( mr.Type == RoutineType.Function )? 
-            RoutineInfoType.Function : RoutineInfoType.Procedure
-        });
+          routines.Add(new RoutineInfo()
+          {
+            Schema = mr.Schema,
+            Name = mr.Name,
+            SourceCode = mr.RoutineDefinition,
+            Type = (mr.Type == RoutineType.Function) ?
+              RoutineInfoType.Function : RoutineInfoType.Procedure
+          });
+        }
       }
       return routines;
     }
@@ -1733,7 +1786,6 @@ namespace MySql.Debugger
         }
         else
         {
-          GetAllTriggers( ( CommonTree )ct, triggers);
           if (((CommonTree)ct).Children != null)
           {
             GetAllTriggers((CommonTree)ct, triggers);
@@ -1749,6 +1801,7 @@ namespace MySql.Debugger
     private List<MetaTrigger> GetTriggersFrom( string Schema, string Table )
     {
       List<MetaTrigger> triggers = new List<MetaTrigger>();
+      if (string.IsNullOrEmpty(Schema)) Schema = _utilCon.Database;
       MySqlCommand cmd = new MySqlCommand( string.Format( 
         @"select trigger_schema, trigger_name, event_manipulation, event_object_schema, event_object_table, 
           action_statement, action_timing from information_schema.triggers 
@@ -1794,6 +1847,10 @@ namespace MySql.Debugger
         foreach (MetaRoutine mr in routines.Values)
         {
           string sql;
+          int cnt = Convert.ToInt32( ExecuteScalar(string.Format(
+            "select count( * ) from information_schema.routines where routine_name like '{0}' and routine_schema like '{1}'", mr.Name, 
+            string.IsNullOrEmpty( mr.Schema )? _utilCon.Database : mr.Schema )) );
+          if (cnt == 0) continue;
           if (string.IsNullOrEmpty(mr.Schema))
             sql = string.Format("show create function `{1}`", mr.Schema, mr.Name);
           else
@@ -1887,7 +1944,6 @@ namespace MySql.Debugger
       if (Cmp(node.GetChild(i).Text, "data_type") == 0)
       {
         ParseDataType(st, (CommonTree)node.GetChild(i));
-        //ParseDataType(st, node);
         i++;
       }
       if (i < node.ChildCount)
@@ -2011,7 +2067,7 @@ namespace MySql.Debugger
       foreach (IToken tok in cts.GetTokens(t.TokenStartIndex, t.TokenStopIndex))
       {
         StoreType st = null;
-        // TODO: What about qualified names line a.b? There's no way to add variables like that.
+        // TODO: What about qualified names line a.b? There's no way to add variables like that (until we support triggers and new.col).
         if (vars.TryGetValue(tok.Text, out st))
         {
           sb.Append(StoreType.WrapValue(st.Value));

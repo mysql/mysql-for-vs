@@ -40,6 +40,7 @@ namespace MySql.Debugger
     public CommonTree Condition { get; set; }
     public bool IsFake { get; set; }
     public int Hash { get; set; }
+    public string RoutineName { get; set; }
 
     public bool EvalCondition()
     {
