@@ -21,17 +21,21 @@ namespace MySql.Parser
           table = child.GetChild(0).Text;
           break;
         case 2:
-          table = child.GetChild(0).Text;
-          alias = child.GetChild(1).GetChild(0).Text;
+          if (string.Compare(child.GetChild(1).Text, "alias", true) == 0)
+          {
+            table = child.GetChild(0).Text;
+            alias = child.GetChild(1).GetChild(0).Text;
+          }
+          else
+          {
+            db = child.GetChild(0).Text;
+            table = child.GetChild(1).Text;
+          }
           break;
         case 3:
           db = child.GetChild(0).Text;
-          table = child.GetChild(2).Text;
-          break;
-        case 4:
-          db = child.GetChild(0).Text;
-          table = child.GetChild(2).Text;
-          alias = child.GetChild(3).GetChild(0).Text;
+          table = child.GetChild(1).Text;
+          alias = child.GetChild(2).GetChild(0).Text;
           break;
       }
       return new TableWithAlias(db, table, alias);
