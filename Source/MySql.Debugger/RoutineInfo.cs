@@ -101,6 +101,37 @@ namespace MySql.Debugger
       }
     }
 
+    public string GetFullName(string database)
+    {
+      if (string.IsNullOrEmpty(Schema))
+        return string.Format("{0}.{1}", database, Name);
+      else
+        return string.Format("{0}.{1}", Schema, Name);
+    }
+
+    public static string[] GetFullName(string database, string routineName)
+    { 
+      string[] fullName = null;
+      if (routineName.IndexOf('.') != -1)
+        fullName = routineName.Split('.');
+      else
+        fullName = new string[] { database, routineName };
+      //return string.Join(".", fullName);
+      return fullName;
+    }
+
+    public static string GetRoutineName(string Name)
+    {
+      if (Name.IndexOf('.') == -1)
+      {
+        return Name;
+      }
+      else
+      {
+        return Name.Split('.')[1];
+      }
+    }
+
     internal RoutineInfo()
     {
     }
