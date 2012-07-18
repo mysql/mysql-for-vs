@@ -93,6 +93,7 @@ SET_PASSWORD;
 SSL_OPTION;
 SUBPART_DEF;
 TABLE_REF;
+TRIGGERTIME;
 USER_HOST;
 USER_HOST_OR_ID_OR_STRING;
 VAR;
@@ -811,7 +812,7 @@ simple_table_ref_no_alias_existing
 	;
 
 simple_table_ref_alias
-	:	first=ident (DOT second=ident)? table_alias?		-> ^( TABLE_REF $first? ( DOT $second )? table_alias? )
+	:	first=ident (DOT second=ident)? table_alias?		-> ^( TABLE_REF $first? $second? table_alias? )
 	;
 
 table_alias
@@ -2838,6 +2839,8 @@ create_trigger
 	 ( triggerevent=INSERT | triggerevent=UPDATE | triggerevent=DELETE )
 	ON tblname=simple_obj_ref_no_alias FOR EACH ROW 
 	statement
+	-> ^( CREATE TRIGGER ( DEFINER user_specification? CURRENT_USER? )? 
+			$triggername? ^( TRIGGERTIME $triggertime? )? $triggerevent? ^( ON $tblname )? statement )
   ;
 
 create_view

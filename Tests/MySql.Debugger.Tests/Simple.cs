@@ -153,8 +153,79 @@ begin
 end;
 ";
         dbg.SqlInput = sql;
-        dbg.SteppingType = SteppingTypeEnum.None;
-        //dbg.Run(new string[0]);
+        dbg.SteppingType = SteppingTypeEnum.StepInto;
+        dbg.OnBreakpoint += (bp) =>
+        {
+          Debug.WriteLine(string.Format("NonScalarFunction breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
+        };
+        dbg.Run(new string[0]);
+      }
+      finally
+      {
+        dbg.RestoreRoutinesBackup();
+      }
+    }
+
+    [Test]
+    public void ScalarFunctionCall2()
+    {
+      string sql =
+        @"delimiter //
+drop procedure if exists `SimpleScalar` //
+CREATE PROCEDURE `SimpleScalar`()
+begin
+ 
+    update CalcData set z = DoSum( x, y ) where x = 5;
+
+end //
+drop function if exists `DoSum`
+//
+CREATE FUNCTION `DoSum`( a int, b int ) RETURNS int(11)
+begin
+
+    declare a1 int;
+    declare b1 int;
+    
+    set a1 = a;
+    set b1 = b;
+    return a1 + b1;
+
+end
+//
+drop table if exists `calcdata`;
+//
+CREATE TABLE `calcdata` (
+  `x` int(11) DEFAULT NULL,
+  `y` int(11) DEFAULT NULL,
+  `z` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 //
+insert into `calcdata`( x, y, z ) values ( 5, 10, 0 ) //
+insert into `calcdata`( x, y, z ) values ( 8, 4, 0 ) //
+insert into `calcdata`( x, y, z ) values ( 6, 7, 0 ) //
+";
+      Debugger dbg = new Debugger();
+      try
+      {
+        dbg.Connection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.UtilityConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.LockingConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        DumpConnectionThreads(dbg);
+        MySqlScript script = new MySqlScript(dbg.Connection, sql);
+        script.Execute();
+        sql =
+@"CREATE PROCEDURE `SimpleScalar`()
+begin
+ 
+    update CalcData set z = DoSum( x, y ) where x = 5;
+
+end;
+";
+        dbg.SqlInput = sql;
+        dbg.SteppingType = SteppingTypeEnum.StepInto;
+        dbg.OnBreakpoint += (bp) => {
+          Debug.WriteLine(string.Format("NonScalarFunction breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
+        };
+        dbg.Run(new string[0]);
       }
       finally
       {
@@ -213,6 +284,9 @@ end;
 ";
         dbg.SqlInput = sql;
         dbg.SteppingType = SteppingTypeEnum.StepInto;
+        dbg.OnBreakpoint += (bp) => {
+          Debug.WriteLine(string.Format("NonScalarFunction breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
+        };
         dbg.Run(new string[0]);
       }
       finally
@@ -220,7 +294,6 @@ end;
         dbg.RestoreRoutinesBackup();
       }
     }
-
 
     [Test]
     public void NestedCallWithVars()
@@ -274,7 +347,11 @@ end;
 ";
         dbg.SqlInput = sql;
         dbg.SteppingType = SteppingTypeEnum.StepInto;
-        //dbg.Run(new string[0]);
+        dbg.OnBreakpoint += (bp) =>
+        {
+          Debug.WriteLine(string.Format("NonScalarFunction breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
+        };
+        dbg.Run(new string[0]);
       }
       finally
       {
@@ -329,14 +406,18 @@ end
 @"create procedure NestedFunction()
 begin
 
-    declare val int;
-    set val = DoSum( 1, 2 );
-    set val = val + 2;
+    declare val1 int;
+    set val1 = DoSum( 1, 2 );
+    set val1 = val1 + 2;
 
 end;
 ";
         dbg.SqlInput = sql;
-        dbg.SteppingType = SteppingTypeEnum.None;
+        dbg.SteppingType = SteppingTypeEnum.StepInto;
+        dbg.OnBreakpoint += (bp) =>
+        {
+          Debug.WriteLine(string.Format("NonScalarFunction breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
+        };
         dbg.Run(new string[0]);
       }
       finally
@@ -406,7 +487,10 @@ begin
 end;
 ";
         dbg.SqlInput = sql;
-        dbg.SteppingType = SteppingTypeEnum.None;
+        dbg.SteppingType = SteppingTypeEnum.StepInto;
+        dbg.OnBreakpoint += (bp) => {
+          Debug.WriteLine(string.Format("NonScalarFunction breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
+        };
         dbg.Run(new string[0]);
       }
       finally
@@ -463,7 +547,11 @@ BEGIN
 END;
 ";
         dbg.SqlInput = sql;
-        dbg.SteppingType = SteppingTypeEnum.None;
+        dbg.SteppingType = SteppingTypeEnum.StepInto;
+        dbg.OnBreakpoint += (bp) =>
+        {
+          Debug.WriteLine(string.Format("NonScalarFunction breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
+        };
         dbg.Run(new string[1] { "3" } );
       }
       finally
@@ -524,7 +612,7 @@ END;
         dbg.SteppingType = SteppingTypeEnum.StepInto;
         dbg.OnBreakpoint += (bp) =>
         {
-          Debug.WriteLine(string.Format( "Breakpoint at {0}", bp.Line ));
+          Debug.WriteLine(string.Format("NonScalarFunction breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
         };
         dbg.Run(new string[0]);
       }
@@ -596,12 +684,12 @@ END;
         dbg.SteppingType = SteppingTypeEnum.StepInto;
         dbg.OnBreakpoint += (bp) =>
         {
-          Debug.WriteLine(string.Format("Breakpoint at {0}", bp.Line));
+          Debug.WriteLine(string.Format("NonScalarFunction breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
         };
         dbg.Run(new string[0]);
       }
       finally
-      {
+      {        
         dbg.RestoreRoutinesBackup();
       }
     }
@@ -644,9 +732,70 @@ end;
         dbg.SteppingType = SteppingTypeEnum.StepInto;
         dbg.OnBreakpoint += (bp) =>
         {
-          Debug.WriteLine(string.Format("Breakpoint at {0}", bp.Line));
+          Debug.WriteLine(string.Format("NonScalarFunction breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
         };
         dbg.Run(new string[] { "3", "'a'" });
+      }
+      finally
+      {
+        dbg.RestoreRoutinesBackup();
+      }
+    }
+
+    [Test]
+    public void SteppingIntoTriggers()
+    {
+      string sql =
+        @"
+delimiter //
+
+drop table if exists TriggerTable //
+
+create table TriggerTable ( 
+  myid int,
+  myname varchar( 30 )
+) //
+
+create trigger trTriggerTable before insert on TriggerTable for each row
+begin
+
+    set new.myid = new.myid + 1;
+
+end //
+
+drop procedure if exists DoInsertTriggerTable //
+
+create procedure DoInsertTriggerTable()
+begin
+
+  insert into TriggerTable( myid, myname ) values ( 1, 'val' );
+
+end //
+";
+      Debugger dbg = new Debugger();
+      try
+      {
+        dbg.Connection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.UtilityConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.LockingConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        DumpConnectionThreads(dbg);
+        MySqlScript script = new MySqlScript(dbg.Connection, sql);
+        script.Execute();
+        sql =
+@"create procedure DoInsertTriggerTable()
+begin
+
+  insert into TriggerTable( myid, myname ) values ( 1, 'val' );
+
+end;
+";
+        dbg.SqlInput = sql;
+        dbg.SteppingType = SteppingTypeEnum.StepInto;
+        dbg.OnBreakpoint += (bp) =>
+        {
+          Debug.WriteLine(string.Format("NonScalarFunction breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
+        };
+        dbg.Run( new string[0] );
       }
       finally
       {

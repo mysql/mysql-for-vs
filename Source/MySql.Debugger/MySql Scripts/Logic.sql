@@ -10,9 +10,9 @@ begin
     declare nextId int;
     declare returnValue varchar( 50 );
     
-    set nextId = ( select max( Id ) from `ServerSideDebugger`.`DebugCallStack` where DebugSessionId = pDebugSessionId );
-    set returnValue = ( select RoutineName from `ServerSideDebugger`.`DebugCallStack` 
-        where ( DebugSessionId = pDebugSessionId ) and ( Id = nextId ));
+    set nextId = ( select max( `serversidedebugger`.`DebugCallStack`.`Id` ) from `serversidedebugger`.`DebugCallStack` where `serversidedebugger`.`DebugCallStack`.`DebugSessionId` = pDebugSessionId );
+    set returnValue = ( select RoutineName from `serversidedebugger`.`DebugCallStack` 
+        where ( `serversidedebugger`.`DebugCallStack`.`DebugSessionId` = pDebugSessionId ) and ( `serversidedebugger`.`DebugCallStack`.`Id` = nextId ));
     return returnValue;
 
 end //
@@ -20,8 +20,11 @@ end //
 CREATE PROCEDURE `CleanupScope`( pDebugSessionId int )
 begin
   
-  delete from `ServerSideDebugger`.`DebugScope` where ( DebugSessionId = pDebugSessionId ) and ( DebugScopeLevel = @dbg_scopeLevel );
-  update `ServerSideDebugger`.`DebugData` set Val = Val - 1 where Id = 1;
+  delete from `serversidedebugger`.`DebugScope` 
+	where ( `serversidedebugger`.`DebugScope`.`DebugSessionId` = pDebugSessionId ) and 
+		( `serversidedebugger`.`DebugScope`.`DebugScopeLevel` = (select `serversidedebugger`.`debugdata`.`Val` from `serversidedebugger`.`debugdata` where `serversidedebugger`.`debugdata`.`id` = 1 limit 1 ) );
+  update `serversidedebugger`.`DebugData` set `serversidedebugger`.`DebugData`.`Val` = `serversidedebugger`.`DebugData`.`Val` - 1 
+	where `serversidedebugger`.`DebugData`.`Id` = 1;
 
 end //
 
@@ -29,17 +32,23 @@ end //
 CREATE PROCEDURE `DumpScopeVar`( pDebugSessionId int, pDebugScopeLevel int, pVarName varchar( 30 ), pVarValue binary )
 begin
   
-  replace DebugScope( DebugSessionId, DebugScopeLevel, VarName, VarValue ) values ( pDebugSessionId, pDebugScopeLevel, pVarName, pVarValue );
+  replace `serversidedebugger`.`DebugScope`( DebugSessionId, DebugScopeLevel, VarName, VarValue ) values ( pDebugSessionId, pDebugScopeLevel, pVarName, pVarValue );
   
 end //
 
 
-CREATE PROCEDURE `ExitEnterCriticalSection`()
+CREATE PROCEDURE `ExitEnterCriticalSection`( spName varchar( 30 ), lineNumber int )
 begin
+    
+  declare gblNetWriteTimeout int;
+  declare garbage int;
 
-  do release_lock( 'lock1' );
-  do exists( select * from debugtbl limit 0 );
-  do get_lock( 'lock1', 999999 );
+  set @@global.net_write_timeout = 999998;
+  set garbage = ( select release_lock( 'lock1' ) );
+  repeat 
+	set gblNetWriteTimeout = @@global.net_write_timeout;
+  until gblNetWriteTimeout <> 999998 end repeat;
+  set garbage = (select get_lock( 'lock1', 999999 ) );
 
 end //
 
@@ -48,8 +57,10 @@ CREATE PROCEDURE `Pop`( pDebugSessionId int )
 begin
 
     declare nextId int;
-    set nextId = ( select max( Id ) from `ServerSideDebugger`.`DebugCallStack` where DebugSessionId = pDebugSessionId );
-    delete from `ServerSideDebugger`.`DebugCallStack` where ( DebugSessionId = pDebugSessionId ) and ( Id = nextId );
+    set nextId = ( select max( `serversidedebugger`.`DebugCallStack`.`Id` ) from `serversidedebugger`.`DebugCallStack` 
+		where `serversidedebugger`.`DebugCallStack`.`DebugSessionId` = pDebugSessionId );
+    delete from `serversidedebugger`.`DebugCallStack` where ( `serversidedebugger`.`DebugCallStack`.`DebugSessionId` = pDebugSessionId ) 
+		and ( `serversidedebugger`.`DebugCallStack`.`Id` = nextId );
 
 end //
 
@@ -57,7 +68,7 @@ end //
 CREATE PROCEDURE `Push`( pDebugSessionId int, pRoutineName varchar( 50 ) )
 begin
 
-    insert into `ServerSideDebugger`.`DebugCallStack`( DebugSessionId, RoutineName ) values ( pDebugSessionId, pRoutineName );
+    insert into `serversidedebugger`.`DebugCallStack`( DebugSessionId, RoutineName ) values ( pDebugSessionId, pRoutineName );
 
 end //
 

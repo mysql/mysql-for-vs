@@ -87,6 +87,5 @@ USING
 		  MySQL51Parser.program_return r = Utility.ParseSql(
               "insert into test3 values (1), (2), (3)");
 	  }
-      
 	}
 }
