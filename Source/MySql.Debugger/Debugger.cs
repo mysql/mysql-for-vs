@@ -259,13 +259,13 @@ namespace MySql.Debugger
             ExecuteScalarLongWait("select get_lock( 'lock1', 999999 );");
             SetDebuggerLock();
             // checking the flags inside the critical section avoids a very unlikely race condition.
-            if (_completed)
-            {
-              break;
-            }
             if (_errorOnAsync)
             {
               throw new DebuggerException("ErrorOnAsync", _asyncError);
+            }
+            if (_completed)
+            {
+              break;
             }
             GetCurrentScopeLevel();
             if (_prevScopeLevel > _scopeLevel)
@@ -274,9 +274,6 @@ namespace MySql.Debugger
               _scope.Pop();
               if (_scopeLevel != 0)
                 LoadScopeVars(_scopeLevel);
-              if (_scopeLevel <= 0)
-              {
-              }
               RaiseEndScope( _scope.Peek().OwningRoutine );
             }
             else if (_prevScopeLevel < _scopeLevel)
@@ -745,6 +742,7 @@ namespace MySql.Debugger
         {
           sql.Append("replace `serversidedebugger`.`DebugScope`( DebugSessionId, DebugScopeLevel, VarName, VarValue ) ").
             AppendFormat("values ( {0}, {1}, '{2}', cast( {3} as binary ) );", DebugSessionId, _scopeLevel, st.Name, st.WrapValue()).AppendLine();
+          //sql.AppendFormat(" call `serversidedebugger`.`UpdateScope`( {0}, {1}, '{2}', cast( {3} as binary ) );", DebugSessionId, _scopeLevel, st.Name, st.WrapValue()).AppendLine();
           st.ValueChanged = false;
         }
       }
@@ -889,7 +887,7 @@ namespace MySql.Debugger
     private BackgroundWorker _worker = new BackgroundWorker();
 
     private volatile bool _errorOnAsync = false;
-    private Exception _asyncError = null;
+    private volatile Exception _asyncError = null;
     private string _sqlToRun = "";
 
     private void SetNoDebuggingFlag(int newValue, MySqlConnection con )
@@ -914,6 +912,12 @@ namespace MySql.Debugger
         cmd.CommandText = "set net_read_timeout=999998;";
         cmd.ExecuteNonQuery();
         cmd.CommandText = "set session transaction isolation level read uncommitted;";
+        cmd.ExecuteNonQuery();
+        cmd.CommandText = string.Format( "set {0} = last_insert_id();", VAR_DBG_LAST_INSERT_ID);
+        cmd.ExecuteNonQuery();
+        cmd.CommandText = string.Format("set {0} = found_rows();", VAR_DBG_FOUND_ROWS);
+        cmd.ExecuteNonQuery();
+        cmd.CommandText = string.Format("set {0} = row_count();", VAR_DBG_ROW_COUNT);
         cmd.ExecuteNonQuery();
         SetNoDebuggingFlag(0, _connection);
         //cmd.CommandText = string.Format("set {0} = 0;", VAR_DBG_SCOPE_LEVEL);
@@ -1011,35 +1015,81 @@ namespace MySql.Debugger
       routine.TokenStream = tokenStream;
       Dictionary<string, StoreType> args = ParseArgs( routine.ParsedTree );
       
-      // TODO: There won't be always a begin/end block.
+      
       // Parse Begin block
       CommonTree beginEnd = GetBeginEnd(routine.ParsedTree);
-      // Get declare variables
+      // There won't be always a begin/end block.
+      if (beginEnd == null)
+      {
+        // begin/end block
+        StringBuilder sbNewRoutineSql = new StringBuilder();
+        ITree lastChild = routine.ParsedTree.GetChild(routine.ParsedTree.ChildCount - 1);
+        ConcatTokens(sbNewRoutineSql, routine.TokenStream, 0, lastChild.TokenStartIndex - 1);
+        sbNewRoutineSql.AppendLine();
+        sbNewRoutineSql.AppendLine("begin");
+        ConcatTokens(sbNewRoutineSql, routine.TokenStream, lastChild.TokenStartIndex, lastChild.TokenStopIndex);
+        if ( Cmp( routine.TokenStream.Get( lastChild.TokenStopIndex ).Text, ";" ) != 0 )
+        {
+          sbNewRoutineSql.Append(';');
+        }
+        sbNewRoutineSql.AppendLine();
+        sbNewRoutineSql.AppendLine( "end" );
+        StringBuilder sbErrors;
+        tokenStream = null;
+        string sSql = sbNewRoutineSql.ToString();
+        tree = ParseSql(sSql, false, out sbErrors, out tokenStream);
+        routine.TokenStream = tokenStream;
+        routine.SourceCode = sSql;
+        routine.ParsedTree = (CommonTree)(tree.Tree);
+        if (routine.ParsedTree.IsNil)
+        {
+          routine.ParsedTree = (CommonTree)routine.ParsedTree.GetChild(0);
+        }
+        // No need to reparse args, just begin/end
+        beginEnd = GetBeginEnd(routine.ParsedTree);
+      }
+      // Get declare variables, sessions, new & old
       ParseDeclares(beginEnd, args);
+      ParseSessions(tokenStream, args);
       RegisterInternalVars(args);
+      if (routine.Type == RoutineInfoType.Trigger)
+      {
+        RegisterNewOldVars(routine, args);
+      }
       // Make backup
       File.WriteAllText(Path.Combine(BackupPath, routine.Name), routine.SourceCode);
       // generate instrumentation code
       StringBuilder preInscode = new StringBuilder();
       // track internal variables...
-      preInscode.Append("replace `serversidedebugger`.`DebugScope`( DebugSessionId, DebugScopeLevel, VarName, VarValue ) values " ).
-        AppendLine( "( {3}, {0}, '@@@lineno', {1} ); ");
+      // Workaround: row_count() is affected by any precious SET statement, so must be first
+      preInscode.AppendFormat("set {0} = row_count();", VAR_DBG_ROW_COUNT);
+      preInscode.AppendLine();
+      preInscode.AppendFormat("set {0} = last_insert_id();", VAR_DBG_LAST_INSERT_ID);
+      preInscode.AppendLine();
+      preInscode.AppendFormat("set {0} = found_rows();", VAR_DBG_FOUND_ROWS);
+      preInscode.AppendLine();      
+      preInscode.Append("replace `serversidedebugger`.`DebugScope`( DebugSessionId, DebugScopeLevel, VarName, VarValue ) values ").
+        AppendLine("( {3}, {0}, '@@@lineno', {1} ); ");
+      //preInscode.AppendLine("call `serversidedebugger`.`UpdateScope`( {3}, {0}, '@@@lineno', {1} );");
       // ...and user variables
       foreach (StoreType st in args.Values)
       {
         if (st.VarKind == VarKindEnum.Internal) continue;
         preInscode.Append("replace `serversidedebugger`.`DebugScope`( DebugSessionId, DebugScopeLevel, VarName, VarValue ) ").
           Append("values ( {3}, {0}, ").
-          AppendFormat("'{0}', cast( {0} as binary ) );", st.Name ).AppendLine();
+          AppendFormat("'{0}', cast( {0} as binary ) );", st.Name).AppendLine();
+        //preInscode.AppendLine("call `serversidedebugger`.`UpdateScope`( {3}, {0}, ").
+        //  AppendFormat("'{0}', cast( {0} as binary ) );", st.Name).AppendLine();
       }
       StringBuilder postInscode = new StringBuilder();
       foreach (StoreType st in args.Values)
       {
         if (st.VarKind == VarKindEnum.Internal) continue;
         postInscode.AppendFormat(
-          "set {0} = ( select cast( VarValue as {1} ) from `serversidedebugger`.`debugscope` where ( DebugSessionId = {2} ) ",
+          //"set {0} = ( select if( `serversidedebugger`.`debugscope`.`IsValueNull` = 1, NULL, cast( `serversidedebugger`.`debugscope`.`VarValue` as {1} ) ) from `serversidedebugger`.`debugscope` where ( `serversidedebugger`.`debugscope`.`DebugSessionId` = {2} ) ",
+          "set {0} = ( select cast( `serversidedebugger`.`debugscope`.`VarValue` as {1} ) from `serversidedebugger`.`debugscope` where ( `serversidedebugger`.`debugscope`.`DebugSessionId` = {2} ) ",
           st.Name, st.GetCastExpressionFromBinary(), "{1}").
-          Append(" and ( DebugScopeLevel = {0} ) ").AppendFormat(" and ( VarName = '{0}' ) limit 1 );", st.Name).AppendLine();
+          Append(" and ( `serversidedebugger`.`debugscope`.`DebugScopeLevel` = {0} ) ").AppendFormat(" and ( `serversidedebugger`.`debugscope`.`VarName` = '{0}' ) limit 1 );", st.Name).AppendLine();
       }
       routine.PreInstrumentationCode = preInscode.ToString();
       routine.PostInstrumentationCode = postInscode.ToString();
@@ -1201,13 +1251,43 @@ namespace MySql.Debugger
     /// <param name="EndTokenIndex"></param>
     private void ConcatTokens(StringBuilder sb, CommonTokenStream cts, int StartTokenIndex, int EndTokenIndex)
     {
-      foreach (IToken tok in cts.GetTokens( StartTokenIndex, EndTokenIndex ))
+      for (int i = StartTokenIndex; i <= EndTokenIndex; i++)
       {
+        IToken tok = cts.Get(i);
+        if (((i + 1) <= EndTokenIndex) && (cts.Get(i + 1).Type == MySQL51Parser.LPAREN) &&
+          ((i + 2) <= EndTokenIndex) && (cts.Get(i + 2).Type == MySQL51Parser.RPAREN))
+        {
+          if (Cmp(tok.Text, "last_insert_id") == 0)
+          {
+            sb.Append(VAR_DBG_LAST_INSERT_ID);
+            i += 2;
+            continue;
+          }
+          else if (Cmp(tok.Text, "row_count") == 0) 
+          {
+            sb.Append(VAR_DBG_ROW_COUNT);
+            i += 2;
+            continue;
+          }
+          else if (Cmp(tok.Text, "found_rows") == 0)
+          {
+            sb.Append(VAR_DBG_FOUND_ROWS);
+            i += 2;
+            continue;
+          }
+        }
         sb.Append(tok.Text);
       }
+      //foreach (IToken tok in cts.GetTokens( StartTokenIndex, EndTokenIndex ))
+      //{
+      //  sb.Append(tok.Text);
+      //}
     }
 
     // Session variables
+    private const string VAR_DBG_ROW_COUNT = "@dbg_row_count";
+    private const string VAR_DBG_LAST_INSERT_ID = "@dbg_last_insert_id";
+    private const string VAR_DBG_FOUND_ROWS = "@dbg_found_rows";
     //private const string VAR_DBG_SCOPE_LEVEL = "@dbg_ScopeLevel";
     private const string VAR_DBG_SCOPE_LEVEL = "(select `serversidedebugger`.`debugdata`.`Val` from `serversidedebugger`.`debugdata` where `serversidedebugger`.`debugdata`.`id` = 1 limit 1 )";
     private const string VAR_DBG_NO_DEBUGGING = "@dbg_NoDebugging";
@@ -1286,7 +1366,6 @@ namespace MySql.Debugger
             EmitBeginScopeCode(sql, routine);
           }
         }
-        // TODO: rewrite references to last_insert_id & row_count functions.
         switch (tc.Text.ToLowerInvariant())
         {
           case "begin_end":
@@ -1538,6 +1617,77 @@ namespace MySql.Debugger
       }
     }
 
+    private StoreType GetStoreType(MySqlDataReader r, string prefix)
+    {
+      StoreType st;
+      st = new StoreType();
+      st.Name = string.Format( "{0}.{1}",prefix, r.GetString(0) );
+      st.Type = r.GetString(1);
+      st.Length = StoreType.IsString(st.Type) ? r.GetInt32(4) : r.GetInt32(2);
+      st.Values = null;   // TODO: For now, no supporting enum types
+      st.Precision = StoreType.IsNumeric(st.Type) ? r.GetInt32(3) : 0;
+      st.Unsigned = false;
+      st.Value = DBNull.Value;
+      return st;
+    }
+
+    private void RegisterNewOldVars(RoutineInfo ri, Dictionary<string, StoreType> vars)
+    {
+      string sql = string.Format(
+@"select column_name, data_type, numeric_precision, numeric_scale, character_maximum_length, column_type 
+  from information_schema.columns where table_name = '{0}' and table_schema = '{1}'",
+ri.TriggerInfo.Table, ri.TriggerInfo.ObjectSchema);
+      MySqlCommand cmd = new MySqlCommand(sql, _utilCon);
+      MySqlDataReader r = cmd.ExecuteReader();
+      try
+      {
+        while (r.Read())
+        {
+          StoreType st;
+          if( ( ri.TriggerInfo.Event == TriggerEvent.Insert ) ||
+            ( ri.TriggerInfo.Event == TriggerEvent.Update ))
+          {
+            st = GetStoreType(r, "new");
+            vars.Add(st.Name, st);
+          }
+          if ((ri.TriggerInfo.Event == TriggerEvent.Delete) ||
+            (ri.TriggerInfo.Event == TriggerEvent.Update))
+          {
+            st = GetStoreType(r, "old");
+            vars.Add(st.Name, st);
+          }
+        }
+      }
+      finally
+      {
+        r.Close();
+      }
+    }
+
+    /// <summary>
+    /// Registers in the current scope all the session variables, so they can be properly emulated.
+    /// </summary>
+    /// <param name="cts"></param>
+    /// <param name="vars"></param>
+    private void ParseSessions(CommonTokenStream cts, Dictionary<string, StoreType> vars)
+    {
+      for( int i = 0; i < cts.Count; i++ )
+      {
+        IToken tok = cts.Get(i);
+        if ((tok.Type == MySQL51Parser.AT1) && ((i + 1) < cts.Count) &&
+          (cts.Get(i + 1).Type == MySQL51Parser.ID))
+        {
+          string id = string.Format( "@{0}", cts.Get( i + 1 ).Text );
+          StoreType st;
+          if( !vars.TryGetValue( id, out st ) )
+          {
+            st = new StoreType() { Name = id, Type = "varchar", Value = DBNull.Value, VarKind = VarKindEnum.Session };
+            vars.Add(id, st );
+          }
+        }
+      }
+    }
+
     /// <summary>
     /// Parses begin/end block gathering info in all declared local variables.
     /// TODO: how to take care of session & globals? same as in emulation: by providing a watches facility.
@@ -1707,7 +1857,8 @@ namespace MySql.Debugger
           Schema = tr.TriggerSchema,
           Name = tr.Name,
           SourceCode = GetCreateTriggerFor( tr.TriggerSchema, tr.Name ),
-          Type = RoutineInfoType.Trigger
+          Type = RoutineInfoType.Trigger,
+          TriggerInfo = tr
         });
       }
       /* For functions need to parse all expressions.
@@ -1749,9 +1900,10 @@ namespace MySql.Debugger
       if( 
         ( Cmp( t.Text, "insert" ) == 0 ) ||
         ( Cmp( t.Text, "delete" ) == 0 ) ||
-        ( Cmp( t.Text, "update" ) == 0 ) //||
-//        ( Cmp(t.Text, "replace" ) == 0 ) || TODO: No replace support in this version.
-//        ( Cmp( t.Text, "load" ) == 0 ) // TODO: there are many loads
+        ( Cmp( t.Text, "update" ) == 0 ) ||
+        ( Cmp(t.Text, "replace" ) == 0 ) //||
+        // "load data" is not available in stored procedures, see http://bugs.mysql.com/bug.php?id=14977
+        //( ( Cmp( t.Text, "load" ) == 0 ) && ( Cmp( t.GetChild( 0 ).Text, "data" ) == 0 ) )
         )
       {
         GetAllTriggers(t, triggers);
@@ -2064,11 +2216,40 @@ namespace MySql.Debugger
       Dictionary<string, StoreType> vars = CurrentScope.Variables;
       StringBuilder sb = new StringBuilder();
 
-      foreach (IToken tok in cts.GetTokens(t.TokenStartIndex, t.TokenStopIndex))
+      //foreach (IToken tok in cts.GetTokens(t.TokenStartIndex, t.TokenStopIndex))
+      for (int i = t.TokenStartIndex; i <= t.TokenStopIndex; i++)
       {
+        IToken tok = cts.Get(i);
+        IToken tok2 = null;
         StoreType st = null;
-        // TODO: What about qualified names line a.b? There's no way to add variables like that (until we support triggers and new.col).
-        if (vars.TryGetValue(tok.Text, out st))
+        if ((tok.Type == MySQL51Parser.AT1) && ((i + 1) <= t.TokenStopIndex) &&
+           ((tok2 = cts.Get(i + 1)).Type == MySQL51Parser.ID))
+        {
+          string id = string.Format("@{0}", tok2.Text );
+          // TODO: What about qualified names line a.b? There's no way to add variables like that (until we support triggers and new.col).
+          if (vars.TryGetValue(id, out st))
+          {
+            i++;
+            sb.Append(StoreType.WrapValue(st.Value));
+          }
+        }
+        else if (((tok.Type == MySQL51Parser.NEW) || ( Cmp( tok.Text, "old" ) == 0 )) &&
+          ((i + 1) <= t.TokenStopIndex) &&
+          ( cts.Get( i + 1 ).Type == MySQL51Parser.DOT ) && ( ( i + 2 ) <= t.TokenStopIndex ) &&
+          ( ( tok2 = cts.Get( i + 2 ) ).Type == MySQL51Parser.ID ))
+        {
+          string id = string.Format("{0}.{1}", tok.Text, tok2.Text );
+          if (vars.TryGetValue(id, out st))
+          {
+            i += 2;
+            sb.Append(StoreType.WrapValue(st.Value));
+          }
+          else
+          {
+            sb.Append(tok.Text);
+          }
+        }
+        else if (vars.TryGetValue(tok.Text, out st))
         {
           sb.Append(StoreType.WrapValue(st.Value));
         }

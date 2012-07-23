@@ -107,6 +107,22 @@ namespace MySql.Debugger
 
     public static Dictionary<string, string> Binary2Type = new Dictionary<string, string>();
 
+    private static string[ , ] NumericTypesInput = {
+      { "tinyint", "tinyint" },
+      { "smallint", "smallint" },
+      { "mediumint", "mediumint" },
+      { "integer", "integer" },
+      { "int", "int" },
+      { "bigint", "bigint" },
+      { "real", "real" },
+      { "double", "double" },
+      { "float", "float" },
+      { "decimal", "decimal" },
+      { "numeric", "numeric" },
+    };
+
+    private static Dictionary<string, string> NumericTypes = new Dictionary<string, string>();
+
     static StoreType()
     {
       // First entry native type
@@ -120,6 +136,11 @@ namespace MySql.Debugger
       PrecisionAndScale.Add("float", new int[] { 23, 10 });
       PrecisionAndScale.Add("decimal", new int[] { 65, 0 });
       PrecisionAndScale.Add("numeric", new int[] { 60, 0 });
+
+      for( int i = 0; i < NumericTypesInput.GetLength( 0 ); i++ )
+      {
+        NumericTypes.Add(NumericTypesInput[i, 0], NumericTypesInput[i, 1]);
+      }
     }
 
     /// <summary>
@@ -202,8 +223,17 @@ namespace MySql.Debugger
 
     internal static bool IsNumeric(string type)
     {
-      if (Debugger.Cmp(type, "int") == 0 || Debugger.Cmp(type, "real") == 0) return true;
-      return false;
+      string s;
+      if ( NumericTypes.TryGetValue(type, out s) )
+      {
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+      //if (Debugger.Cmp(type, "int") == 0 || Debugger.Cmp(type, "real") == 0) return true;
+      //return false;
     }
 
     internal static bool IsString(string type)

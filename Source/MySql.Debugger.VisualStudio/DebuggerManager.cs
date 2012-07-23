@@ -218,7 +218,7 @@ namespace MySql.Debugger.VisualStudio
           _debugger.RaiseEndDebugger();
         }
       }
-      catch (DebugSyntaxException dse)
+      catch (DebuggerException dse)
       {
         MessageBox.Show(_node.ParentWindow, dse.GetBaseException().Message, "Debugger Error");
         _debugger.RaiseEndDebugger();
@@ -247,7 +247,7 @@ namespace MySql.Debugger.VisualStudio
           this.Breakpoint.CoreBreakpoint = bp;
           this.BreakpointHit();
         }
-        // Sync primitives
+        // Sync primitives, wait for user input (like Setp Into, Step Out, etc.)
         _autoRE.WaitOne();
       };
       _debugger.OnBreakpoint -= bph;
@@ -266,7 +266,7 @@ namespace MySql.Debugger.VisualStudio
             values[i] = "'" + st.Value.ToString().Trim('\'') + "'";
         }
         else
-          values[i] = "@" + st.Name;
+          values[i] = string.Format("@dbg_var{0}", i );
         i++;
       }
       try
