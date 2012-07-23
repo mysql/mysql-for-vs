@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -802,6 +803,372 @@ end;
         dbg.RestoreRoutinesBackup();
       }
     }
+
+    [Test]
+    public void SteppingIntoTriggers2()
+    {
+      string sql =
+        @"
+delimiter //
+
+drop table if exists TriggerTable //
+
+create table TriggerTable ( 
+  myid int,
+  myname varchar( 30 )
+) //
+
+create trigger trTriggerTable before insert on TriggerTable for each row
+begin
+
+    set new.myid = new.myid + 1;
+
+end //
+
+drop procedure if exists DoInsertTriggerTable //
+
+create procedure DoInsertTriggerTable()
+begin
+
+  replace into TriggerTable( myid, myname ) values ( 1, 'val' );
+
+end //
+";
+      Debugger dbg = new Debugger();
+      try
+      {
+        dbg.Connection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.UtilityConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.LockingConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        DumpConnectionThreads(dbg);
+        MySqlScript script = new MySqlScript(dbg.Connection, sql);
+        script.Execute();
+        sql =
+@"create procedure DoInsertTriggerTable()
+begin
+
+  replace into TriggerTable( myid, myname ) values ( 1, 'val' );
+
+end;
+";
+        dbg.SqlInput = sql;
+        dbg.SteppingType = SteppingTypeEnum.StepInto;
+        dbg.OnBreakpoint += (bp) =>
+        {
+          Debug.WriteLine(string.Format("NonScalarFunction breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
+        };
+        dbg.Run(new string[0]);
+      }
+      finally
+      {
+        dbg.RestoreRoutinesBackup();
+      }
+    }
+
+    [Test]
+    public void RoutineWithoutBeginEndBlock()
+    {
+      string sql =
+        @"
+delimiter //
+
+drop table if exists TriggerTable //
+
+create table TriggerTable ( 
+  myid int,
+  myname varchar( 30 )
+) //
+
+create trigger trTriggerTable before insert on TriggerTable for each row
+    set new.myid = new.myid + 1;
+//
+
+drop procedure if exists DoInsertTriggerTable //
+
+create procedure DoInsertTriggerTable()
+  replace into TriggerTable( myid, myname ) values ( 1, 'val' );
+//
+";
+      Debugger dbg = new Debugger();
+      try
+      {
+        dbg.Connection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.UtilityConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.LockingConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        DumpConnectionThreads(dbg);
+        MySqlScript script = new MySqlScript(dbg.Connection, sql);
+        script.Execute();
+        sql =
+@"create procedure DoInsertTriggerTable()
+  replace into TriggerTable( myid, myname ) values ( 1, 'val' );
+";
+        dbg.SqlInput = sql;
+        dbg.SteppingType = SteppingTypeEnum.StepInto;
+        Watch w = dbg.SetWatch("new.myid");
+        Watch w2 = dbg.SetWatch("new.myname");
+        //Watch w3 = dbg.SetWatch("old.myid");
+        //Watch w4 = dbg.SetWatch("old.myname");
+        dbg.OnBreakpoint += (bp) =>
+        {
+          Debug.WriteLine(string.Format("breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
+          if ( bp.RoutineName == "test6.trTriggerTable")
+          {
+            if (bp.Line == 3)
+            {
+              Debug.WriteLine("Checking new & old object in trigger scope");
+              Assert.AreEqual(1, Convert.ToInt32(w.Eval()));
+              //Assert.AreEqual(1, Convert.ToInt32(w3.Eval()));
+              Assert.AreEqual("val", w2.Eval());
+              //Assert.AreEqual("Val", w4.Eval());
+            }
+          }
+        };
+        dbg.Run(new string[0]);
+      }
+      finally
+      {
+        dbg.RestoreRoutinesBackup();
+        dbg.Stop();
+      }
+    }
+
+    [Test]
+    public void InformationFunctions()
+    {
+      string sql =
+        @"
+delimiter //
+
+drop table if exists InformationTable //
+
+create table InformationTable ( 
+  myid int auto_increment,
+  myname varchar( 30 ),
+  primary key ( myid )
+) //
+
+drop procedure if exists DoTestInformationFunctions //
+
+create procedure DoTestInformationFunctions()
+begin
+
+  declare my_found_rows int;
+  declare my_last_insert_id int;
+  declare my_row_count int;
+  declare flag int;
+
+  insert into InformationTable( myname ) values ( 'val' );
+  insert into InformationTable( myname ) values ( 'val2' );
+  insert into InformationTable( myname ) values ( 'val3' );
+  set my_last_insert_id = last_insert_id();
+  select * from InformationTable limit 10;  
+  set my_found_rows = found_rows();
+  update InformationTable set myname = concat( myname, 'x' );
+  set my_row_count = row_count();
+ 
+  if ( my_last_insert_id = 3 ) and ( my_row_count = 3 ) and ( my_found_rows = 3 ) then
+    set flag = 1;
+  else
+    set flag = 0;
+  end if;
+  select flag;
+
+end //
+";
+      Debugger dbg = new Debugger();
+      try
+      {
+        dbg.Connection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.UtilityConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.LockingConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        DumpConnectionThreads(dbg);
+        MySqlScript script = new MySqlScript(dbg.Connection, sql);
+        script.Execute();
+        sql =
+@"create procedure DoTestInformationFunctions()
+begin
+
+  declare my_found_rows int;
+  declare my_last_insert_id int;
+  declare my_row_count int;
+  declare flag int;
+
+  insert into InformationTable( myname ) values ( 'val' );
+  insert into InformationTable( myname ) values ( 'val2' );
+  insert into InformationTable( myname ) values ( 'val3' );
+  set my_last_insert_id = last_insert_id();
+  select * from InformationTable limit 10;  
+  set my_found_rows = found_rows();
+  update InformationTable set myname = concat( myname, 'x' );
+  set my_row_count = row_count();
+ 
+  if ( my_last_insert_id = 3 ) and ( my_row_count = 3 ) and ( my_found_rows = 3 ) then
+    set flag = 1;
+  else
+    set flag = 0;
+  end if;
+  select flag;
+
+end;
+";
+        dbg.SqlInput = sql;
+        dbg.SteppingType = SteppingTypeEnum.StepInto;
+        Watch w = dbg.SetWatch( "flag" );
+        Watch w2 = dbg.SetWatch( "my_last_insert_id" );
+        Watch w3 = dbg.SetWatch( "my_row_count" );
+        Watch w4 = dbg.SetWatch( "my_found_rows" );
+        dbg.OnBreakpoint += (bp) =>
+        {
+          Debug.WriteLine(string.Format("breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
+          if (bp.Line == 23)
+          {
+            Debug.WriteLine("At line 23, checking locals values");
+            Assert.AreEqual(1, Convert.ToInt32( w.Eval() ) );
+            Assert.AreEqual(3, Convert.ToInt32(w2.Eval()));
+            Assert.AreEqual(3, Convert.ToInt32(w3.Eval()));
+            Assert.AreEqual(3, Convert.ToInt32(w4.Eval()));
+            Debug.WriteLine("Locals values just right");
+          }
+        };
+        dbg.Run(new string[0]);
+      }
+      finally
+      {
+        dbg.RestoreRoutinesBackup();
+      }
+    }
+
+    /// <summary>
+    /// These test checks that debugger fix works for evaluating & changing session variables
+    /// in the debugger.
+    /// </summary>
+    [Test]
+    public void EvaluatingAndChangingSessionVariables()
+    {
+      string sql =
+        @"
+delimiter //
+
+drop procedure if exists PlayWithSessionVars //
+
+create procedure PlayWithSessionVars()
+begin
+
+  set @x = 1;
+  set @y = 2;
+  set @y = @y + @x;
+  select @y;
+
+end //
+";
+      Debugger dbg = new Debugger();
+      try
+      {
+        dbg.Connection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.UtilityConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.LockingConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        DumpConnectionThreads(dbg);
+        MySqlScript script = new MySqlScript(dbg.Connection, sql);
+        script.Execute();
+        sql =
+@"create procedure PlayWithSessionVars()
+begin
+
+  set @x1 = 1;
+  set @y = 2;
+  set @y = @y + @x1;
+  select @y;
+
+end ;
+";
+        dbg.SqlInput = sql;
+        dbg.SteppingType = SteppingTypeEnum.StepInto;
+        Watch w = dbg.SetWatch("@x1");
+        dbg.OnBreakpoint += (bp) =>
+        {
+          Debug.WriteLine(string.Format("breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
+          if (bp.Line == 6)
+          { 
+            Assert.AreEqual(1, Convert.ToInt32(w.Eval()));
+            dbg.CurrentScope.Variables["@x1"].Value = 5;
+            dbg.CommitLocals();
+          }
+          else if (bp.Line == 7)
+          {
+            Assert.AreEqual(5, Convert.ToInt32(w.Eval()));
+          }
+        };
+        dbg.Run(new string[0]);
+      }
+      finally
+      {        
+        dbg.RestoreRoutinesBackup();
+      }
+    }
+
+//    //"load data" is not available in stored procedures, see http://bugs.mysql.com/bug.php?id=14977
+//    [Test]
+//    public void SteppingIntoTriggers3()
+//    {
+//      string path = Path.Combine(Environment.CurrentDirectory, "data.txt");
+//      File.WriteAllText( path, "1\tval1");
+//      string sql = string.Format(
+//        @"
+//delimiter //
+//
+//drop table if exists TriggerTable //
+//
+//create table TriggerTable ( 
+//  myid int,
+//  myname varchar( 30 )
+//) //
+//
+//create trigger trTriggerTable before insert on TriggerTable for each row
+//begin
+//
+//    set new.myid = new.myid + 1;
+//
+//end //
+//
+//drop procedure if exists DoInsertTriggerTable //
+//
+//create procedure DoInsertTriggerTable()
+//begin
+//
+//  LOAD DATA INFILE '{0}' INTO TABLE test6.TriggerTable;
+//
+//end //
+//", path);
+//      Debugger dbg = new Debugger();
+//      try
+//      {
+//        dbg.Connection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+//        dbg.UtilityConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+//        dbg.LockingConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+//        DumpConnectionThreads(dbg);
+//        MySqlScript script = new MySqlScript(dbg.Connection, sql);
+//        script.Execute();
+//        sql = string.Format(
+//@"create procedure DoInsertTriggerTable()
+//begin
+//
+//  LOAD DATA INFILE '{0}' INTO TABLE test6.TriggerTable;
+//
+//end;
+//", path);
+//        dbg.SqlInput = sql;
+//        dbg.SteppingType = SteppingTypeEnum.StepInto;
+//        dbg.OnBreakpoint += (bp) =>
+//        {
+//          Debug.WriteLine(string.Format("NonScalarFunction breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
+//        };
+//        dbg.Run(new string[0]);
+//      }
+//      finally
+//      {
+//        dbg.RestoreRoutinesBackup();
+//      }
+//    }
 
     private void DumpConnectionThreads(Debugger dbg)
     {

@@ -2,7 +2,7 @@
 
 drop database if exists `serversidedebugger` //
 
-CREATE DATABASE  IF NOT EXISTS `serversidedebugger` /*!40100 DEFAULT CHARACTER SET latin1 */ //
+CREATE DATABASE `serversidedebugger` //
 
 USE `serversidedebugger` //
 
