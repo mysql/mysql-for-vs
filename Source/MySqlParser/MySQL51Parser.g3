@@ -89,6 +89,7 @@ ON_SCHEDULE;
 PARAM;
 PARENT_OPT_EXPR_LIST;
 PRIVILEGE_LEVEL;
+REPLACE_SET;
 SET_PASSWORD;
 SSL_OPTION;
 SUBPART_DEF;
@@ -2870,7 +2871,7 @@ handler
 load_data_infile
   : LOAD DATA ( ( LOW PRIORITY ) | ( CONCURRENT ) )? LOCAL? INFILE infile=STRING
     ( REPLACE | IGNORE )?
-	INTO TABLE tblname=simple_obj_ref_no_alias
+	INTO TABLE tblname=simple_table_ref_no_alias
 	charset?
 	( ( FIELDS | COLUMNS )
 	  ( TERMINATED BY terminatedbystr=STRING )?
@@ -2891,6 +2892,7 @@ load_data_infile
 	( IGNORE INT_NUMBER LINES )?
 	( LPAREN exprList RPAREN )?
 	( SET setcolname+=ident EQUALS setexpr+=expr ( COMMA setcolname+=ident EQUALS setexpr+=expr )* )?
+	-> ^( LOAD DATA $infile? $tblname? )
   ;
 
 replace
@@ -2900,19 +2902,21 @@ scope
 }
 @init { $replace::replaceV1 = false; }
   : REPLACE ( LOW_PRIORITY | DELAYED )?
-    INTO? tblname=simple_obj_ref_no_alias 
+    INTO? tblname=simple_table_ref_no_alias
 		( LPAREN colname+=ident ( COMMA colname+=ident )* RPAREN 
 		  { $replace::replaceV1 = true; })?
-	(( ( ( VALUES | VALUE ) LPAREN ( expr | DEFAULT ) 
-	( COMMA ( expr | DEFAULT ) )* RPAREN ) | select )
+	(( ( ( VALUES | VALUE ) LPAREN ( repexpr+=expr | DEFAULT ) 
+	( COMMA ( repexpr+=expr | DEFAULT ) )* RPAREN ) | select )
 	{ $replace::replaceV1 = true; })?
 	replace_set
+	->	^( REPLACE $tblname? $colname* $repexpr* select? replace_set? ) 
   ;
 
 replace_set
   : { $replace::replaceV1 == false }? =>
-    ( SET colname+=ident EQUALS ( expr | DEFAULT ) ( COMMA colname+=ident EQUALS ( expr | DEFAULT ) )* )
+    ( SET colname+=ident EQUALS ( repsetexpr+=expr | DEFAULT ) ( COMMA colname+=ident EQUALS ( repsetexpr+=expr | DEFAULT ) )* )
 	|
+	-> ^( REPLACE_SET $colname* $repsetexpr* )
   ;
 
 purge

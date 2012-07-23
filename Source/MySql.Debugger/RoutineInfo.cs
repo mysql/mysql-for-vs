@@ -73,6 +73,7 @@ namespace MySql.Debugger
     internal Dictionary<string, StoreType> Locals { get; set; }
     internal CommonTree BeginEnd { get; set; }
     private Dictionary<int, ITree> _statementsPerLine = new Dictionary<int, ITree>();
+    internal MetaTrigger TriggerInfo { get; set; }
 
     internal void RegisterStatement(ITree tree)
     {
