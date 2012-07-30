@@ -11,6 +11,7 @@
 - Fix and code contribution for bug Timed out sessions are removed without notification which allow to enable the Expired CallBack when Session Provider times out any session (bug MySql #62266 Oracle bug # 13354935)
 - Fix for Exception thrown when using cascade delete in an EDM Model-First in Entity Framework (Oracle bug #14008752, MySql bug #64779).
 - Fix for Session locking issue with MySqlSessionStateStore (MySql bug #63997, Oracble bug #13733054).
+- Fixed deleting a user profile using Profile provider (MySQL bug #64409, Oracle bug #13790123)
 
 6.5.4
 - Fix for Duplicate table name don't allow you to change table name (Oracle bug #13785918).
