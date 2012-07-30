@@ -248,5 +248,22 @@ namespace MySql.Web.Tests
           ProfileAuthenticationOption.All, 0, 10, out total);
       Assert.AreEqual(1, total);
     }
+
+    /// <summary>
+    /// Tests deleting a user profile
+    /// </summary>
+    [Test]
+    public void DeleteProfiles()
+    {
+      ProfileBase profile = ProfileBase.Create("foo", true);
+      profile.SetPropertyValue("Name", "this is my name");
+      profile.Save();
+      profile = ProfileBase.Create("foo", true); // refresh profile from database
+      Assert.AreEqual("this is my name", profile.GetPropertyValue("Name"));
+
+      Assert.AreEqual(1, ProfileManager.DeleteProfiles(new string[] { "foo" }));
+      profile = ProfileBase.Create("foo", true); // refresh profile from database
+      Assert.AreEqual(string.Empty, profile.GetPropertyValue("Name"));
+    }
   }
 }
