@@ -234,6 +234,153 @@ namespace MySql.Data.MySqlClient.Tests
     {
       TestIntegratedSecurityWithUser("myuser1", true);
     }
+
+    public void TestIntegratedSecurityWithoutProxy(string user, bool pooling)
+    {
+      if (Version < new Version(5, 5)) return;
+
+      const string PluginName = "authentication_windows";
+      string UserName = "auth_windows";
+      if (user != null)
+        UserName = user;
+
+      // Check if server has windows authentication plugin is installed			
+      MySqlCommand cmd = new MySqlCommand("show plugins", rootConn);
+
+      bool haveWindowsAuthentication = false;
+      using (MySqlDataReader r = cmd.ExecuteReader())
+      {
+        while (r.Read())
+        {
+          string name = (string)r["Name"];
+          if (name == PluginName)
+          {
+            haveWindowsAuthentication = true;
+            break;
+          }
+        }
+      }
+      if (!haveWindowsAuthentication)
+        return;
+
+      bool haveAuthWindowsUser = false;
+      string pluginName = null;
+      string authenticationString = "";
+
+      // Check if predefined proxy user exists
+      cmd.CommandText = string.Format(
+        "select plugin, authentication_string from mysql.user where user='{0}'",
+        UserName);
+      using (MySqlDataReader r = cmd.ExecuteReader())
+      {
+        if (r.Read())
+        {
+          haveAuthWindowsUser = true;
+          pluginName = (string)r["plugin"];
+          authenticationString =
+            (string)((r["authentication_string"] == DBNull.Value) ?
+            "" : r["authentication_string"]);
+        }
+      }
+
+      // Create mapping for current Windows user=>foo_user
+      String windowsUser = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+      windowsUser = windowsUser.Replace("\\", "\\\\");
+      string userMapping = "fergs, Administrators";
+
+      try
+      {
+        if (!haveAuthWindowsUser)
+        {
+          suExecSQL(
+            "CREATE USER " + UserName + " IDENTIFIED WITH " + PluginName + " as '" +
+             userMapping + "'");
+        }
+        else
+        {
+          // extend mapping string for current user
+          suExecSQL(
+            "UPDATE mysql.user SET authentication_string='" + userMapping +
+            "," + authenticationString + "' where user='" + UserName + "'");
+        }
+        suExecSQL(string.Format("grant all privileges on *.* to '{0}'@'%'", UserName));
+
+        // Finally, use IntegratedSecurity=true for the newly created user
+        string connStr = GetConnectionString(true) + ";Integrated Security=SSPI";
+
+        MySqlConnectionStringBuilder sb =
+            new MySqlConnectionStringBuilder(connStr);
+        sb.UserID = user;
+        connStr = sb.ConnectionString;
+
+        /* If pooling is requested, we'll  run test twice, with connection reset in between */
+        if (pooling)
+        {
+          connStr += ";Connection Reset=true;Pooling=true";
+        }
+        int testIterations = pooling ? 2 : 1;
+
+        int threadId = -1;
+        for (int i = 0; i < testIterations; i++)
+        {
+          using (MySqlConnection c = new MySqlConnection(connStr))
+          {
+            c.Open();
+            threadId = c.ServerThread;
+            MySqlCommand command = new MySqlCommand("SELECT 1", c);
+            long ret = (long)command.ExecuteScalar();
+            Assert.AreEqual(ret, 1);
+
+            command.CommandText = "select user()";
+            string myUser = (string)command.ExecuteScalar();
+            // Check if proxy user is correct
+            Assert.IsTrue(myUser.StartsWith(UserName + "@"));
+
+            // check if mysql user is correct 
+            // (foo_user is mapped to current  OS user)
+            command.CommandText = "select current_user()";
+            string currentUser = (string)command.ExecuteScalar();
+            Assert.IsTrue(currentUser.StartsWith(UserName));
+          }
+        }
+
+        if (pooling)
+        {
+          suExecSQL("KILL " + threadId);
+        }
+      }
+      finally
+      {
+        // Cleanup
+
+        // Drop test user
+        suExecSQL(string.Format("drop user {0}", UserName));
+      }
+    }
+
+    [Test]
+    public void TestWinAuthWithoutProxyNoUserNoPooling()
+    {
+      TestIntegratedSecurityWithoutProxy(null, false);
+    }
+
+    [Test]
+    public void TestWinAuthWithoutProxyNoUserPooling()
+    {
+      TestIntegratedSecurityWithoutProxy("myuser1", true);
+    }
+
+    [Test]
+    public void TestWinAuthWithoutProxyAndUser()
+    {
+      TestIntegratedSecurityWithoutProxy("myuser1", false);
+    }
+
+    [Test]
+    public void TestWinAuthWithoutProxyAndUserPooling()
+    {
+      TestIntegratedSecurityWithoutProxy("myuser1", true);
+    }
 #endif
 
     [Test]
