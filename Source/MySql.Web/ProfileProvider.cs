@@ -181,13 +181,13 @@ namespace MySql.Web.Profile
 
         MySqlCommand deleteCmd = new MySqlCommand(
             "DELETE FROM my_aspnet_profiles WHERE userId = @userId", c);
-        deleteCmd.Parameters.Add("@userId", MySqlDbType.UInt64);
+        deleteCmd.Parameters.Add("@userId", MySqlDbType.Int32);
 
         int count = 0;
         foreach (string name in usernames)
         {
           queryCmd.Parameters[1].Value = name;
-          ulong uid = (ulong)queryCmd.ExecuteScalar();
+          int uid = (int)queryCmd.ExecuteScalar();
 
           deleteCmd.Parameters[0].Value = uid;
           count += deleteCmd.ExecuteNonQuery();
