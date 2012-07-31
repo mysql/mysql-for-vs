@@ -54,6 +54,7 @@ namespace MySql.Data.VisualStudio
       isFunction = isFunc;
       NameIndex = 3;
       editor = new VSCodeEditor((IOleServiceProvider)hierarchyAccessor.ServiceProvider);
+      RegisterNode(this);
     }
 
     #region Properties
@@ -79,7 +80,6 @@ namespace MySql.Data.VisualStudio
     public static void CreateNew(DataViewHierarchyAccessor HierarchyAccessor, bool isFunc)
     {
       StoredProcedureNode node = new StoredProcedureNode(HierarchyAccessor, 0, isFunc);
-      RegisterNode( node );
       node.Edit();
     }
 

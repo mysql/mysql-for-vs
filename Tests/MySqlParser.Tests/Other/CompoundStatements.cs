@@ -126,5 +126,32 @@ END;
         @"DECLARE CONTINUE HANDLER FOR SQLWARNING BEGIN END;",
         false, out sb);
     }
+
+    [Test]
+    public void Timestamp50()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql(
+        @"create procedure sp() 
+begin 
+  DECLARE mystamp timestamp( 20 );
+END;",
+        true, out sb, new Version( 5, 0 ));
+      Assert.IsTrue(sb.Length != 0);
+    }
+
+    [Test]
+    public void Timestamp51()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql(
+        @"create procedure sp() 
+begin 
+  DECLARE mystamp timestamp( 20 );
+END;",
+        false, out sb, new Version(5, 1));
+    }
   }
 }
