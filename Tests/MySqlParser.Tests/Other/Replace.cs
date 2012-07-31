@@ -49,5 +49,22 @@ namespace MySql.Parser.Tests
 SET `session_id`='3580cc4e61117c0785372c426eddd11c', 
 `user_id` = 'XXX', `page` = '/', `lastview` = NOW();");
     }
+
+    [Test]
+    public void WithPartition_55()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(
+        @"replace into employees PARTITION (p3) VALUES (20, 'Jan', 'Jones', 1, 3);", true, out sb, new Version(5, 5));
+      Assert.IsTrue(sb.ToString().IndexOf("partition", StringComparison.OrdinalIgnoreCase ) != -1);
+    }
+
+    [Test]
+    public void WithPartition_56()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(
+        @"replace into employees PARTITION (p3) VALUES (20, 'Jan', 'Jones', 1, 3);", false, out sb, new Version(5, 6));
+    }
   }
 }

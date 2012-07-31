@@ -115,15 +115,31 @@ START SLAVE; -- if you want to restart replication
     }
 
     [Test]
-    public void LoadData()
+    public void LoadData51()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql("LOAD DATA FROM MASTER", false);
+      MySQL51Parser.program_return r = Utility.ParseSql("LOAD DATA FROM MASTER", false, new Version( 5, 1 ));
     }
 
     [Test]
-    public void LoadTable()
+    public void LoadData55()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql("LOAD TABLE tbl_name FROM MASTER", false);
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql("LOAD DATA FROM MASTER", true, out sb, new Version( 5, 5 ));
+      Assert.IsTrue(sb.ToString().IndexOf("no viable alternative at input 'FROM'") != -1);
+    }
+
+    [Test]
+    public void LoadTable51()
+    {
+      MySQL51Parser.program_return r = Utility.ParseSql("LOAD TABLE tbl_name FROM MASTER", false, new Version( 5, 1 ));
+    }
+
+    [Test]
+    public void LoadTable55()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql("LOAD TABLE tbl_name FROM MASTER", true, out sb, new Version( 5, 5 ));
+      Assert.IsTrue(sb.ToString().IndexOf("no viable alternative at input 'TABLE'") != -1);
     }
 
     [Test]
@@ -169,9 +185,33 @@ START SLAVE; -- if you want to restart replication
     }
 
     [Test]
-    public void BackupTable()
+    public void BackupTable51()
     {
-      MySQL51Parser.program_return r = Utility.ParseSql("BACKUP TABLE tbl_name, tbl_name TO '/path/to/backup/directory';", false);
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql("BACKUP TABLE tbl_name, tbl_name TO '/path/to/backup/directory';", false, out sb, new Version( 5, 1 ));
+    }
+
+    [Test]
+    public void BackupTable55()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql("BACKUP TABLE tbl_name, tbl_name TO '/path/to/backup/directory';", true, out sb, new Version( 5, 5 ));
+      Assert.IsTrue(sb.ToString().IndexOf("no viable alternative at input 'BACKUP'") != -1);
+    }
+
+    [Test]
+    public void RestoreTable51()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql("RESTORE TABLE tbl_name, tbl_name FROM '/path/to/backup/directory';", false, out sb, new Version( 5, 1 ));
+    }
+
+    [Test]
+    public void RestoreTable55()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql("RESTORE TABLE tbl_name, tbl_name FROM '/path/to/backup/directory';", true, out sb, new Version( 5, 5 ));
+      Assert.IsTrue(sb.ToString().IndexOf("no viable alternative at input 'RESTORE'") != -1);
     }
 
     [Test]
@@ -217,6 +257,35 @@ START SLAVE; -- if you want to restart replication
     }
 
     [Test]
+    public void CacheIndexPartition51_1()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql("CACHE INDEX pt PARTITION (p0) IN kc_fast;", true, out sb, new Version( 5, 1 ));
+      Assert.IsTrue( sb.ToString().IndexOf( "'partition'", StringComparison.OrdinalIgnoreCase ) != -1 );
+    }
+
+    [Test]
+    public void CacheIndexPartition55_1()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql("CACHE INDEX pt PARTITION (p0) IN kc_fast;", false, out sb, new Version( 5, 5 ));
+    }
+
+    [Test]
+    public void CacheIndexPartition55_2()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql("CACHE INDEX pt PARTITION (p1, p3) IN kc_slow;", false, out sb, new Version(5, 5));
+    }
+
+    [Test]
+    public void CacheIndexPartition55_3()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql("CACHE INDEX pt PARTITION (ALL) IN kc_all;", false, out sb, new Version(5, 5));
+    }
+
+    [Test]
     public void Flush()
     {
       MySQL51Parser.program_return r = Utility.ParseSql("flush logs;", false);
@@ -241,6 +310,35 @@ START SLAVE; -- if you want to restart replication
     }
 
     [Test]
+    public void LoadPartition_1_51()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql("LOAD INDEX INTO CACHE pt PARTITION (p0);", true, out sb, new Version(5, 1));
+      Assert.IsTrue(sb.ToString().IndexOf("partition", StringComparison.OrdinalIgnoreCase) != -1);
+    }
+
+    [Test]
+    public void LoadPartition_1_55()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql("LOAD INDEX INTO CACHE pt PARTITION (p0);", false, out sb, new Version(5, 5));
+    }
+
+    [Test]
+    public void LoadPartition_2_55()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql("LOAD INDEX INTO CACHE pt PARTITION (p1, p3);", false, out sb, new Version(5, 5));
+    }
+
+    [Test]
+    public void LoadPartition_3_55()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql("LOAD INDEX INTO CACHE pt PARTITION (ALL);", false, out sb, new Version(5, 5));
+    }
+
+    [Test]
     public void Reset()
     {
       MySQL51Parser.program_return r = Utility.ParseSql("RESET QUERY CACHE;", false);
@@ -262,6 +360,39 @@ START SLAVE; -- if you want to restart replication
     public void UninstallPlugin()
     {
       MySQL51Parser.program_return r = Utility.ParseSql("uninstall plugin myplugin;", false);
+    }
+
+    [Test]
+    public void LoadXml_51()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(
+        @"
+LOAD XML LOCAL INFILE 'person.xml'
+       INTO TABLE person
+       ROWS IDENTIFIED BY '<person>';", true, out sb, new Version(5, 1));
+      Assert.IsTrue(sb.ToString().IndexOf("xml", StringComparison.OrdinalIgnoreCase) != -1);
+    }
+
+    [Test]
+    public void LoadXml_1_55()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(
+        @"
+LOAD XML LOCAL INFILE 'person.xml'
+       INTO TABLE person
+       ROWS IDENTIFIED BY '<person>';", false, out sb, new Version(5, 5));
+    }
+
+    [Test]
+    public void LoadXml_2_55()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(
+        @"
+LOAD XML LOCAL INFILE 'person-dump.xml'
+    INTO TABLE person2;", false, out sb, new Version(5, 5));
     }
   }
 }

@@ -270,5 +270,21 @@ WHERE s11 > ANY
       (SELECT * FROM t5) AS t5)));", true);
 		}
 
+        [Test]
+        public void WithPartition_55()
+        {
+          StringBuilder sb;
+          MySQL51Parser.program_return r = Utility.ParseSql(
+            @"DELETE FROM employees PARTITION (p0, p1) WHERE fname LIKE 'j%';", true, out sb, new Version(5, 5));
+          Assert.IsTrue(sb.ToString().IndexOf("partition", StringComparison.OrdinalIgnoreCase) != -1);
+        }
+
+        [Test]
+        public void WithPartition_56()
+        {
+          StringBuilder sb;
+          MySQL51Parser.program_return r = Utility.ParseSql(
+            @"DELETE FROM employees PARTITION (p0, p1) WHERE fname LIKE 'j%';", false, out sb, new Version(5, 6));
+        }
 	}
 }
