@@ -9,99 +9,46 @@ namespace MySql.Parser
 {
   public static class ParserUtils
   {
+    public static TableWithAlias ExtractTableName(ITree child)
+    {
+      string alias = "";
+      string table = "";
+      string db = "";
+
+      switch (child.ChildCount)
+      {
+        case 1:
+          table = child.GetChild(0).Text;
+          break;
+        case 2:
+          if (string.Compare(child.GetChild(1).Text, "alias", true) == 0)
+          {
+            table = child.GetChild(0).Text;
+            alias = child.GetChild(1).GetChild(0).Text;
+          }
+          else
+          {
+            db = child.GetChild(0).Text;
+            table = child.GetChild(1).Text;
+          }
+          break;
+        case 3:
+          db = child.GetChild(0).Text;
+          table = child.GetChild(1).Text;
+          alias = child.GetChild(2).GetChild(0).Text;
+          break;
+      }
+      return new TableWithAlias(db, table, alias);
+    }
+
     public static void GetTables(ITree ct, List<TableWithAlias> tables)
-    {      
+    {
       for (int i = 0; i < ct.ChildCount; i++)
       {
         ITree child = ct.GetChild(i);
         if (child.Text.Equals( "table_ref", StringComparison.OrdinalIgnoreCase ))
         {
-          string alias = "";
-          string table = "";
-          string db = "";
-
-          switch (child.ChildCount)
-          {
-            case 1:
-              table = child.GetChild(0).Text;
-              break;
-            case 2:
-              table = child.GetChild(0).Text;
-              alias = child.GetChild(1).GetChild(0).Text;
-              break;
-            case 3:
-              db = child.GetChild(0).Text;
-              table = child.GetChild(2).Text;
-              break;
-            case 4:
-              db = child.GetChild(0).Text;              
-              table = child.GetChild(2).Text;
-              alias = child.GetChild(3).GetChild(0).Text;
-              break;
-          }
-          tables.Add(new TableWithAlias(db, table, alias));
-          //ITree objName = child.GetChild( 0 );
-          //table = objName.Text;
-          //if (objName.ChildCount != 0)
-          //{
-          //  int j = 0;
-          //  while (j < objName.ChildCount)
-          //  {
-          //    if (objName.GetChild(j).Text == ".")
-          //    {
-          //      db = table;
-          //      table = objName.GetChild(j + 1).Text;
-          //      j += 2;
-          //    }
-          //    else if (objName.GetChild(j).Text.Equals( 
-          //      "alias", StringComparison.OrdinalIgnoreCase ))
-          //    {
-          //      alias = objName.GetChild(j).GetChild(0).Text;
-          //      break;
-          //    }
-          //    else
-          //    {
-          //      j++;
-          //    }
-          //  }
-          //}
-          //tables.Add(new TableWithAlias(db, table, alias));
-          //switch (child.GetChild( 0 ).ChildCount)
-          //{
-          //  case 1: // only table    
-          //    if (child.GetChild(0).GetChild(0).Text.Equals(
-          //      "alias", StringComparison.CurrentCultureIgnoreCase))
-          //          alias = child.GetChild(0).GetChild(0).GetChild(0).Text;
-          //    table = child.GetChild(0).Text;
-          //    tables.Add(new TableWithAlias(table, alias));
-          //    break;
-          //  case 3:
-          //    if (child.GetChild(0).GetChild(2).Text.Equals(
-          //      "alias", StringComparison.CurrentCultureIgnoreCase))
-          //          alias = child.GetChild(0).GetChild(2).GetChild(0).Text;
-          //    db = child.GetChild(0).Text;
-          //    table = child.GetChild(0).GetChild(1).Text;
-          //    tables.Add(new TableWithAlias(db, table, alias));
-          //    break;
-          //  //case 2:
-          //    //if (child.GetChild(1).Text.Equals(
-          //    //  "alias", StringComparison.CurrentCultureIgnoreCase))
-          //    //{ // table & alias
-          //    //  tables.Add(new TableWithAlias(
-          //    //    child.GetChild(0).Text, child.GetChild(1).GetChild(0).Text));
-          //    //}
-          //    //else
-          //    //{
-          //      // table & database
-          //      //tables.Add(new TableWithAlias(
-          //      //  child.GetChild(0).Text, child.GetChild(1).Text, alias));
-          //    //}
-          //    //break;
-          //  //case 3: // database, table & alias
-          //  //  tables.Add(new TableWithAlias(
-          //  //    child.GetChild(0).Text, child.GetChild(1).Text, child.GetChild(2).GetChild(0).Text));
-          //  //  break;
-          //}
+          tables.Add( ExtractTableName( child ) );
         }
         else GetTables(child, tables);
       }
@@ -133,7 +80,7 @@ namespace MySql.Parser
 
     public bool Equals(TableWithAlias other)
     {
-      if (other == null) return false;
+      if (other == null) return false;      
       return
         (other.TableName.Equals(this.TableName, StringComparison.CurrentCultureIgnoreCase)) &&
         (other.Alias.Equals(this.Alias, StringComparison.CurrentCultureIgnoreCase)) &&
