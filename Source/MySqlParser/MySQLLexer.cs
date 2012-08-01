@@ -57,6 +57,27 @@ namespace MySql.Parser
       return (input.LA(1) != '(') ? alternativeProposedType : proposedType;
     }
 
+    /// <summary>
+    /// This functions allows certain keywords to be used as identifiers in a version before they were recognized as keywords.
+    /// </summary>
+    /// <param name="version"></param>
+    /// <param name="proposedType"></param>
+    /// <param name="alternativeProposedType"></param>
+    /// <returns></returns>
+    public int checkIDperVersion(double version, int proposedType, int alternativeProposedType)
+    {
+      return (mysqlVersion >= version) ? proposedType : alternativeProposedType;
+    }
+
+    // holds values like 5.0, 5.1, 5.5, 5.6, etc.
+    protected double mysqlVersion;
+
+    public Version MySqlVersion
+    {
+      get { return Version.Parse(mysqlVersion.ToString()); }
+      set { mysqlVersion = (double)value.Major + (double)value.Minor / 10; }
+    }
+
     public MySQLLexerBase() { }
 
     public MySQLLexerBase(ICharStream input, RecognizerSharedState state)

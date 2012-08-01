@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
@@ -40,7 +41,7 @@ namespace MySql.Parser.Tests.DDL.Show
 			TestShow("SHOW AUTHORS", ShowStatementType.ShowAuthors);
 			TestShow("SHOW CONTRIBUTORS", ShowStatementType.ShowContributors);
 			TestShow("SHOW EVENTS", ShowStatementType.ShowEvents);
-			TestShow("SHOW PLUGINS", ShowStatementType.ShowPlugins);
+            //TestShow("SHOW PLUGINS", ShowStatementType.ShowPlugins);
 			TestShow("SHOW PROFILES", ShowStatementType.ShowProfiles);
 			TestShow("SHOW PRIVILEGES", ShowStatementType.ShowPrivileges);
 			TestShow("SHOW SLAVE HOSTS", ShowStatementType.ShowSlaveHosts);
@@ -186,7 +187,35 @@ namespace MySql.Parser.Tests.DDL.Show
 			MySQL51Parser.program_return r = Utility.ParseSql("show profiles cpu for query 2", false);
 		}
 
+        [Test]
+        public void ShowInnodbStatus()
+        {
+          StringBuilder sb;
+          MySQL51Parser.program_return r = Utility.ParseSql("show innodb status", true, out sb, new Version(5, 5));
+          Assert.IsTrue(sb.ToString().IndexOf("no viable alternative at input 'innodb'") != -1 );
+        }
 
+        [Test]
+        public void ShowInnodbStatus2()
+        {
+          StringBuilder sb;
+          MySQL51Parser.program_return r = Utility.ParseSql("show innodb status", false, out sb, new Version(5, 0));
+        }
+
+        [Test]
+        public void ShowPlugins50()
+        {
+          StringBuilder sb;
+          MySQL51Parser.program_return r = Utility.ParseSql("show plugins", true, out sb, new Version(5, 0));
+          Assert.IsTrue(sb.ToString().IndexOf("no viable alternative at input 'PLUGINS'", StringComparison.OrdinalIgnoreCase) != -1);
+        }
+
+        [Test]
+        public void ShowPlugins()
+        {
+          StringBuilder sb;
+          MySQL51Parser.program_return r = Utility.ParseSql("show plugins", false, out sb, new Version(5, 1));
+        }
 
 		public enum ShowStatementType
 		{

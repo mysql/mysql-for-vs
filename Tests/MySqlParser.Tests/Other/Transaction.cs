@@ -394,5 +394,39 @@ COMMIT;";
       MySQL51Parser.program_return r =
         Utility.ParseSql(sql, false, out sb);
     }
+
+    [Test]
+    public void StartTransactionReadOnly_55()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(
+        @"start transaction read only;", true, out sb, new Version(5, 5));
+      Assert.IsTrue(sb.ToString().IndexOf("read") != -1);
+    }
+
+    [Test]
+    public void StartTransactionReadOnly_56()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(
+        @"start transaction read only;", false, out sb, new Version(5, 6));
+    }
+
+    [Test]
+    public void StartTransactionReaWrite_55()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(
+        @"start transaction read write;", true, out sb, new Version(5, 5));
+      Assert.IsTrue(sb.ToString().IndexOf("read") != -1);
+    }
+
+    [Test]
+    public void StartTransactionReadWrite_56()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(
+        @"start transaction read write;", false, out sb, new Version(5, 6));
+    }
   }
 }

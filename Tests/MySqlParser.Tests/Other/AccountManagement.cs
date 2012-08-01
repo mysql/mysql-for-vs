@@ -286,6 +286,25 @@ IDENTIFIED BY PASSWORD '*90E462C37378CED12064BB3388827D2BA3A9B689';";
     }
 
     [Test]
+    public void GrantProxy51()
+    {
+      string sql = @"GRANT PROXY ON 'localuser'@'localhost' TO 'externaluser'@'somehost';";
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql(sql, true, out sb, new Version( 5, 1 ));
+      Assert.IsTrue(sb.ToString().IndexOf("no viable alternative at input 'GRANT'") != -1);
+    }
+
+    [Test]
+    public void GrantProxy55()
+    {
+      string sql = @"GRANT PROXY ON 'localuser'@'localhost' TO 'externaluser'@'somehost';";
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql(sql, false, out sb, new Version( 5, 5 ));
+    }
+
+    [Test]
     public void Rename()
     {
       string sql = "RENAME USER 'jeffrey'@'localhost' TO 'jeff'@'127.0.0.1';";
@@ -310,6 +329,25 @@ IDENTIFIED BY PASSWORD '*90E462C37378CED12064BB3388827D2BA3A9B689';";
       StringBuilder sb;
       MySQL51Parser.program_return r =
         Utility.ParseSql(sql, false, out sb);
+    }
+
+    [Test]
+    public void RevokeProxy51()
+    {
+      string sql = "REVOKE PROXY ON 'jeffrey'@'localhost' FROM 'jeff'@'127.0.0.1', 'me'@'localhost'";
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql(sql, true, out sb, new Version( 5, 1 ));
+      Assert.IsTrue(sb.ToString().IndexOf("no viable alternative at input 'REVOKE'") != -1);
+    }
+
+    [Test]
+    public void RevokeProxy55()
+    {
+      string sql = "REVOKE PROXY ON 'jeffrey'@'localhost' FROM 'jeff'@'127.0.0.1', 'me'@'localhost'";
+      StringBuilder sb;
+      MySQL51Parser.program_return r =
+        Utility.ParseSql(sql, false, out sb, new Version( 5, 5 ));
     }
 
     [Test]

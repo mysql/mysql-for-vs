@@ -48,26 +48,30 @@ namespace MySql.Data.VisualStudio
     internal static MySQL51Parser.program_return ParseSql(
       string sql, bool expectErrors, out StringBuilder sb, CommonTokenStream tokens)
     {
-      return DoParse( tokens, expectErrors, out sb);
+      DbConnection con = GetConnection();
+      return DoParse( tokens, expectErrors, out sb, GetVersion( con.ServerVersion ));
     }
 
     internal static MySQL51Parser.program_return ParseSql(
       string sql, bool expectErrors, out StringBuilder sb, out CommonTokenStream tokensOutput)
     {
+      DbConnection con = GetConnection();
       // The grammar supports upper case only
       MemoryStream ms = new MemoryStream(ASCIIEncoding.ASCII.GetBytes(sql));
       CaseInsensitiveInputStream input = new CaseInsensitiveInputStream(ms);
       //ANTLRInputStream input = new ANTLRInputStream(ms);
       MySQLLexer lexer = new MySQLLexer(input);
+      lexer.MySqlVersion = GetVersion( con.ServerVersion );
       CommonTokenStream tokens = new CommonTokenStream(lexer);
       tokensOutput = tokens;
-      return DoParse(tokens, expectErrors, out sb);
+      return DoParse(tokens, expectErrors, out sb, lexer.MySqlVersion);
     }
 
     private static MySQL51Parser.program_return DoParse( 
-      CommonTokenStream tokens, bool expectErrors, out StringBuilder sb )
+      CommonTokenStream tokens, bool expectErrors, out StringBuilder sb, Version version )
     {
       MySQLParser parser = new MySQLParser(tokens);
+      parser.MySqlVersion = version;
       sb = new StringBuilder();
       TextWriter tw = new StringWriter(sb);
       parser.TraceDestination = tw;
@@ -92,6 +96,17 @@ namespace MySql.Data.VisualStudio
       StringBuilder sb;
       CommonTokenStream ts;
       return ParseSql(sql, expectErrors, out sb, out ts);
+    }
+
+    internal static Version GetVersion( string versionString )
+    {
+      Version version;
+      int i = 0;
+      while (i < versionString.Length &&
+          (Char.IsDigit(versionString[i]) || versionString[i] == '.'))
+        i++;
+      version = new Version(versionString.Substring(0, i));
+      return version;
     }
 
     public static DbConnection GetConnection()
