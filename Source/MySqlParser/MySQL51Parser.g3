@@ -89,10 +89,12 @@ ON_SCHEDULE;
 PARAM;
 PARENT_OPT_EXPR_LIST;
 PRIVILEGE_LEVEL;
+REPLACE_SET;
 SET_PASSWORD;
 SSL_OPTION;
 SUBPART_DEF;
 TABLE_REF;
+TRIGGERTIME;
 USER_HOST;
 USER_HOST_OR_ID_OR_STRING;
 VAR;
@@ -838,11 +840,11 @@ simple_table_ref_no_alias_existing
 	;
 
 simple_table_ref_alias_with_partition
-	:	first=ident (DOT second=ident)? partition_ref? table_alias?		-> ^( TABLE_REF $first? ( DOT $second )? table_alias? )
+	:	first=ident (DOT second=ident)? partition_ref? table_alias?		-> ^( TABLE_REF $first? $second? table_alias? )
 	;
 
 simple_table_ref_alias
-	:	first=ident (DOT second=ident)? table_alias?		-> ^( TABLE_REF $first? ( DOT $second )? table_alias? )
+	:	first=ident (DOT second=ident)? table_alias?		-> ^( TABLE_REF $first? $second? table_alias? )
 	;
 
 table_alias
@@ -2927,6 +2929,8 @@ create_trigger
 	 ( triggerevent=INSERT | triggerevent=UPDATE | triggerevent=DELETE )
 	ON tblname=simple_obj_ref_no_alias FOR EACH ROW 
 	statement
+	-> ^( CREATE TRIGGER ( DEFINER user_specification? CURRENT_USER? )? 
+			$triggername? ^( TRIGGERTIME $triggertime? )? $triggerevent? ^( ON $tblname )? statement )
   ;
 
 create_view
@@ -2978,6 +2982,7 @@ load_data_infile
 	( IGNORE INT_NUMBER LINES )?
 	( LPAREN exprList RPAREN )?
 	( SET setcolname+=ident EQUALS setexpr+=expr ( COMMA setcolname+=ident EQUALS setexpr+=expr )* )?
+	-> ^( LOAD DATA $infile? $tblname? )
   ;
 
 replace
@@ -2990,16 +2995,18 @@ scope
     INTO? tblname=simple_obj_ref_no_alias partition_ref?
 		( LPAREN colname+=ident ( COMMA colname+=ident )* RPAREN 
 		  { $replace::replaceV1 = true; })?
-	(( ( ( VALUES | VALUE ) LPAREN ( expr | DEFAULT ) 
-	( COMMA ( expr | DEFAULT ) )* RPAREN ) | select )
+	(( ( ( VALUES | VALUE ) LPAREN ( repexpr+=expr | DEFAULT ) 
+	( COMMA ( repexpr+=expr | DEFAULT ) )* RPAREN ) | select )
 	{ $replace::replaceV1 = true; })?
 	replace_set
+	->	^( REPLACE $tblname? $colname* $repexpr* select? replace_set? ) 
   ;
 
 replace_set
   : { $replace::replaceV1 == false }? =>
-    ( SET colname+=ident EQUALS ( expr | DEFAULT ) ( COMMA colname+=ident EQUALS ( expr | DEFAULT ) )* )
+    ( SET colname+=ident EQUALS ( repsetexpr+=expr | DEFAULT ) ( COMMA colname+=ident EQUALS ( repsetexpr+=expr | DEFAULT ) )* )
 	|
+	-> ^( REPLACE_SET $colname* $repsetexpr* )
   ;
 
 purge
