@@ -780,12 +780,25 @@ namespace MySql.Debugger
     {
       if (OnBreakpoint != null)
         OnBreakpoint(bp);
+    }    
+
+    public static int GetTagHashCode(string tag)
+    {
+      // Normalize string
+      tag = tag.Replace(" ", "").Replace("\n", "").Replace("\r", "");
+      return tag.GetHashCode();
+    }
+
+    public static string NormalizeTag(string tag)
+    {
+      return tag.Replace(" ", "").Replace("\n", "").Replace("\r", "");
     }
 
     // Scope nesting level
     private int _prevScopeLevel;
     private int __scopeLevel;
-    private int _scopeLevel {
+    private int _scopeLevel
+    {
       get
       {
         return __scopeLevel;
@@ -800,27 +813,37 @@ namespace MySql.Debugger
     // Scope level to jump in the next step out.
     private int nextStepOut = -1;
 
-    public static int GetTagHashCode(string tag)
-    {
-      // Normalize string
-      tag = tag.Replace(" ", "").Replace("\n", "").Replace("\r", "");
-      return tag.GetHashCode();
-    }
+    private int stepOverScope = -1;
 
-    public static string NormalizeTag(string tag)
-    {
-      return tag.Replace(" ", "").Replace("\n", "").Replace("\r", "");
-    }
-    
     internal void CheckBreakpoints(int line)
     {
       RoutineInfo ri = CurrentScope.OwningRoutine;
-      int hash = GetTagHashCode( ri.SourceCode );
+      int hash = GetTagHashCode(ri.SourceCode);
       string routineName = ri.GetFullName(_utilCon.Database);
       // Breakpoints on the same line but different files are treated by making a breakpoint uniquely identified
       // by line number and hash of current routine source code.
       if (OnBreakpoint == null) return;
-      if (SteppingType == SteppingTypeEnum.StepInto || SteppingType == SteppingTypeEnum.StepOver)
+      if (SteppingType != SteppingTypeEnum.StepOver)
+      {
+        stepOverScope = __scopeLevel;
+      }
+      if (SteppingType == SteppingTypeEnum.StepOver)
+      {
+        bool fireBp = false;
+        if (stepOverScope != -1)
+        {
+          if (__scopeLevel == stepOverScope)
+          {
+            fireBp = true;
+          }
+        }
+        else
+          fireBp = true;
+        if (fireBp)
+          RaiseBreakpoint(new Breakpoint() { Line = line, IsFake = true, Hash = hash, RoutineName = routineName });
+        return;
+      }
+      else if (SteppingType == SteppingTypeEnum.StepInto)
       {
         RaiseBreakpoint(new Breakpoint() { Line = line, IsFake = true, Hash = hash, RoutineName = routineName });
         return;
@@ -843,6 +866,7 @@ namespace MySql.Debugger
       Breakpoint bp = null;
       if (_breakpoints.TryGetValue(bpKey, out bp) && !bp.Disabled)
       {
+        stepOverScope = __scopeLevel;
         RaiseBreakpoint(bp);
       }
     }
@@ -2275,12 +2299,15 @@ ri.TriggerInfo.Table, ri.TriggerInfo.ObjectSchema);
 
     public MySQL51Parser.program_return ParseSql(string sql, bool expectErrors, out StringBuilder sb, out CommonTokenStream cts)
     {
+      Version ver = ParserUtils.GetVersion( _connection.ServerVersion );
       // The grammar supports upper case only
       MemoryStream ms = new MemoryStream(ASCIIEncoding.ASCII.GetBytes(sql));
       CaseInsensitiveInputStream input = new CaseInsensitiveInputStream(ms);
       MySQLLexer lexer = new MySQLLexer(input);
+      lexer.MySqlVersion = ver;
       CommonTokenStream tokens = new CommonTokenStream(lexer);
       MySQLParser parser = new MySQLParser(tokens);
+      parser.MySqlVersion = ver;
       sb = new StringBuilder();
       TextWriter tw = new StringWriter(sb);
       parser.TraceDestination = tw;

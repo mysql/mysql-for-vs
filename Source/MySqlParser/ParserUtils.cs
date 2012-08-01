@@ -53,6 +53,17 @@ namespace MySql.Parser
         else GetTables(child, tables);
       }
     }
+
+    public static Version GetVersion(string versionString)
+    {
+      Version version;
+      int i = 0;
+      while (i < versionString.Length &&
+          (Char.IsDigit(versionString[i]) || versionString[i] == '.'))
+        i++;
+      version = new Version(versionString.Substring(0, i));
+      return version;
+    }
   }
 
   public class TableWithAlias : IEquatable<TableWithAlias>
