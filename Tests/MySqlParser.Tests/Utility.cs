@@ -36,13 +36,20 @@ namespace MySql.Parser.Tests
   {
     public static MySQL51Parser.program_return ParseSql(string sql, bool expectErrors, out StringBuilder sb)
     {
+      return ParseSql(sql, expectErrors, out sb, new Version(5, 1));
+    }
+
+    public static MySQL51Parser.program_return ParseSql(string sql, bool expectErrors, out StringBuilder sb, Version version )
+    {
       // The grammar supports upper case only
       MemoryStream ms = new MemoryStream(ASCIIEncoding.ASCII.GetBytes(sql/*.ToUpper() */));
       CaseInsensitiveInputStream input = new CaseInsensitiveInputStream(ms);
       //ANTLRInputStream input = new ANTLRInputStream(ms);
       MySQLLexer lexer = new MySQLLexer(input);
+      lexer.MySqlVersion = version;
       CommonTokenStream tokens = new CommonTokenStream(lexer);
       MySQLParser parser = new MySQLParser(tokens);
+      parser.MySqlVersion = version;
       sb = new StringBuilder();
       TextWriter tw = new StringWriter(sb);
       parser.TraceDestination = tw;
@@ -58,6 +65,12 @@ namespace MySql.Parser.Tests
         Assert.AreNotEqual(0, parser.NumberOfSyntaxErrors);
       }
       return r;
+    }
+
+    public static MySQL51Parser.program_return ParseSql(string sql, bool expectErrors, Version version)
+    {
+      StringBuilder sb;
+      return ParseSql(sql, expectErrors, out sb, version);
     }
 
     public static MySQL51Parser.program_return ParseSql(string sql, bool expectErrors)

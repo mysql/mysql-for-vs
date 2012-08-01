@@ -375,5 +375,121 @@ PARTITIONS 6;
     {
       MySQL51Parser.program_return r = Utility.ParseSql(@"ALTER ONLINE TABLE t2 ADD COLUMN c2 INT;");
     }
+
+    [Test]
+    public void TableType50()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(
+          @"alter TABLE t type=innodb;", false, out sb, new Version(5, 0));
+    }
+
+    [Test]
+    public void TableType51()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(
+          @"alter TABLE t type=innodb;", true, out sb, new Version(5, 1));
+      Assert.IsTrue(sb.ToString().IndexOf(" no viable alternative at input 'type'") != -1);
+    }
+
+    [Test]
+    public void TruncatePartition51()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(
+          @"alter table t1 truncate partition ( p1, p2 );", true, out sb, new Version(5, 1));
+      Assert.IsTrue(sb.ToString().IndexOf("no viable alternative at input 'truncate'", StringComparison.OrdinalIgnoreCase) != -1);
+    }
+
+    [Test]
+    public void TruncatePartition55()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(
+          @"alter table t1 truncate partition ( p1, p2 );", false, out sb, new Version(5, 5));      
+    }
+
+    [Test]
+    public void Algorithm_55()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(
+        @"alter table t1 add column myname varchar( 20 ), algorithm = copy;", true, out sb, new Version(5, 5));
+      Assert.IsTrue(sb.ToString().IndexOf("algorithm") != -1);
+    }
+
+    [Test]
+    public void Lock_55()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(
+        @"alter table t1 add column myname varchar( 20 ), lock = none;", true, out sb, new Version(5, 5));
+      Assert.IsTrue(sb.ToString().IndexOf("lock") != -1);
+    }
+
+    [Test]
+    public void Algorithm_56_1()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(
+          @"alter table t1 	algorithm = default;", false, out sb, new Version(5, 6));
+    }
+
+    [Test]
+    public void Algorithm_56_2()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(
+          @"alter table t1 	add column myname varchar( 20 ), algorithm = copy;", false, out sb, new Version(5, 6));
+    }
+
+    [Test]
+    public void Algorithm_56_3()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(
+          @"alter table t1 	drop column myname, algorithm = inplace;", false, out sb, new Version(5, 6));
+    }
+
+    [Test]
+    public void Lock_56_1()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(
+          @"alter table t1 	lock = default;", false, out sb, new Version(5, 6));
+    }
+
+    [Test]
+    public void Lock_56_2()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(
+          @"alter table t1 	add column myname varchar( 20 ), lock = none;", false, out sb, new Version(5, 6));
+    }
+
+    [Test]
+    public void Lock_56_3()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(
+          @"alter table t1 	add column myname varchar( 20 ), lock = shared;", false, out sb, new Version(5, 6));
+    }
+
+    [Test]
+    public void Lock_56_4()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(
+          @"alter table t1 	drop column myname, lock = exclusive;", false, out sb, new Version(5, 6));
+    }
+
+    [Test]
+    public void Lock_56_5()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(
+          @"alter table t1 	drop column myname, lock = exclusive, exchange partition p1 with table t2;", false, out sb, new Version(5, 6));
+    }
   }
 }

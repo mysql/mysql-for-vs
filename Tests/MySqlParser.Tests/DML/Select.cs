@@ -344,7 +344,7 @@ select `computer`.`Brand`  from `facility` as a;
             false, out sb);
         }
 
-[Test]
+      [Test]
       public void Subquery()
       {
         StringBuilder sb;
@@ -372,5 +372,73 @@ select `computer`.`Brand`  from `facility` as a;
 			Utility.ParseSql("(SELECT * from T LIMIT 1) LIMIT 2;");
 		}
 		 * */
-	}
+
+      [Test]
+      public void WithPartition_55()
+      {
+        StringBuilder sb;
+        MySQL51Parser.program_return r = Utility.ParseSql(
+          @"SELECT * FROM employees PARTITION (p1);", true, out sb, new Version(5, 5));
+        Assert.IsTrue(sb.ToString().IndexOf("missing EndOfFile at '('", StringComparison.OrdinalIgnoreCase) != -1);
+      }
+
+      [Test]
+      public void WithPartition_56()
+      {
+        StringBuilder sb;
+        MySQL51Parser.program_return r = Utility.ParseSql(
+          @"SELECT * FROM employees PARTITION (p1);", false, out sb, new Version(5, 6));
+      }
+
+      [Test]
+      public void WithPartition_2_56()
+      {
+        StringBuilder sb;
+        MySQL51Parser.program_return r = Utility.ParseSql(
+          @"SELECT * FROM employees PARTITION (p0, p2)
+WHERE lname LIKE 'S%';", false, out sb, new Version(5, 6));
+      }
+
+      [Test]
+      public void WithPartition_3_56()
+      {
+        StringBuilder sb;
+        MySQL51Parser.program_return r = Utility.ParseSql(
+          @"SELECT id, CONCAT(fname, ' ', lname) AS name 
+    FROM employees PARTITION (p0) ORDER BY lname;", false, out sb, new Version(5, 6));
+      }
+
+      [Test]
+      public void WithPartition_4_56()
+      {
+        StringBuilder sb;
+        MySQL51Parser.program_return r = Utility.ParseSql(
+          @"SELECT store_id, COUNT(department_id) AS c 
+    FROM employees PARTITION (p1,p2,p3) 
+    GROUP BY store_id HAVING c > 4;", false, out sb, new Version(5, 6));
+      }
+
+      [Test]
+      public void WithPartition_5_56()
+      {
+        StringBuilder sb;
+        MySQL51Parser.program_return r = Utility.ParseSql(
+          @"SELECT id, CONCAT(fname, ' ', lname) AS name
+    FROM employees_sub PARTITION (p2sp1);", false, out sb, new Version(5, 6));
+      }
+
+      [Test]
+      public void WithPartition_6_56()
+      {
+        StringBuilder sb;
+        MySQL51Parser.program_return r = Utility.ParseSql(
+          @"SELECT
+         e.id AS 'Employee ID', CONCAT(e.fname, ' ', e.lname) AS Name,
+         s.city AS City, d.name AS department
+     FROM employees AS e
+         JOIN stores PARTITION (p1) AS s ON e.store_id=s.id
+         JOIN departments PARTITION (p0) AS d ON e.department_id=d.id
+     ORDER BY e.lname;", false, out sb, new Version(5, 6));
+      }
+  }
 }

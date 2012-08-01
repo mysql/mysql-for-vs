@@ -56,25 +56,34 @@ BY	:	'BY';
 CALL	:	'CALL';
 CASCADE	:	'CASCADE';
 CASE	:	'CASE';
+CATALOG_NAME : 'CATALOG_NAME' { $type = checkIDperVersion( 5.5, $type, MySQL51Lexer.ID ); };
 CHANGE	:	'CHANGE';
 //CHAR	:	'CHAR';		// datatype defined below 
 CHARACTER	:	'CHARACTER';
 CHECK	:	'CHECK';
+CLASS_ORIGIN : 'CLASS_ORIGIN' { $type = checkIDperVersion( 5.5, $type, MySQL51Lexer.ID ); };
 COLLATE	:	'COLLATE';
 COLON	:	':';
 COLUMN	:	'COLUMN';
 COLUMN_FORMAT : 'COLUMN_FORMAT';
+COLUMN_NAME : 'COLUMN_NAME' { $type = checkIDperVersion( 5.5, $type, MySQL51Lexer.ID ); };
 CONDITION	:	'CONDITION';
 CONSTRAINT	:	'CONSTRAINT';
+CONSTRAINT_CATALOG : 'CONSTRAINT_CATALOG' { $type = checkIDperVersion( 5.5, $type, MySQL51Lexer.ID ); };
+CONSTRAINT_NAME    : 'CONSTRAINT_NAME' { $type = checkIDperVersion( 5.5, $type, MySQL51Lexer.ID ); };
+CONSTRAINT_SCHEMA  : 'CONSTRAINT_SCHEMA' { $type = checkIDperVersion( 5.5, $type, MySQL51Lexer.ID ); };
 CONTINUE	:	'CONTINUE';
 CONVERT	:	'CONVERT';
+COPY    :   'COPY' { $type = checkIDperVersion( 5.6, $type, MySQL51Lexer.ID ); };
 CREATE	:	'CREATE';
 CROSS	:	'CROSS';
+CURRENT :   'CURRENT' { $type = checkIDperVersion( 5.6, $type, MySQL51Lexer.ID ); };
 CURRENT_DATE	:	'CURRENT_DATE';
 CURRENT_TIME	:	'CURRENT_TIME';
 CURRENT_TIMESTAMP	:	'CURRENT_TIMESTAMP';
 //CURRENT_USER	:	'CURRENT_USER';	//reserved, function below
 CURSOR	:	'CURSOR';
+CURSOR_NAME : 'CURSOR_NAME' { $type = checkIDperVersion( 5.5, $type, MySQL51Lexer.ID ); };
 DATABASE	:	'DATABASE';
 DATABASES	:	'DATABASES';
 DAY_HOUR	:	'DAY_HOUR';
@@ -90,6 +99,7 @@ DELETE	:	'DELETE';
 DESC	:	'DESC';
 DESCRIBE	:	'DESCRIBE';
 DETERMINISTIC	:	'DETERMINISTIC';
+DIAGNOSTICS :   'DIAGNOSTICS' { $type = checkIDperVersion( 5.6, $type, MySQL51Lexer.ID ); };
 DISTINCT	:	'DISTINCT';
 DISTINCTROW	:	'DISTINCTROW';
 DIV	:	'DIV';
@@ -101,6 +111,7 @@ ELSE	:	'ELSE';
 ELSEIF	:	'ELSEIF';
 ENCLOSED	:	'ENCLOSED';
 ESCAPED	:	'ESCAPED';
+EXCHANGE :  'EXCHANGE' { $type = checkIDperVersion( 5.6, $type, MySQL51Lexer.ID ); };
 EXISTS	:	'EXISTS';
 EXIT	:	'EXIT';
 EXPLAIN	:	'EXPLAIN';
@@ -111,9 +122,11 @@ FLOAT4	:	'FLOAT4';
 FLOAT8	:	'FLOAT8';
 FOR	:	'FOR';
 FORCE	:	'FORCE';
+FORMAT  :   'FORMAT' { $type = checkIDperVersion( 5.6, $type, MySQL51Lexer.ID ); };
 FOREIGN	:	'FOREIGN';
 FROM	:	'FROM';
 FULLTEXT	:	'FULLTEXT';
+GET     :   'GET' { $type = checkIDperVersion( 5.6, $type, MySQL51Lexer.ID ); };
 GOTO	:	'GOTO';
 GRANT	:	'GRANT';
 GROUP	:	'GROUP';
@@ -132,6 +145,7 @@ INFILE	:	'INFILE';
 INNER	:	'INNER';
 INNODB  : 'INNODB';
 INOUT	:	'INOUT';
+INPLACE :  'INPLACE' { $type = checkIDperVersion( 5.6, $type, MySQL51Lexer.ID ); };
 INSENSITIVE	:	'INSENSITIVE';
 //INSERT	:	'INSERT';	// reserved keyword and function below
 //INT	:	'INT';		// datatype defined below 
@@ -147,6 +161,7 @@ IO_THREAD : 'IO_THREAD';
 IS	:	'IS';
 ITERATE	:	'ITERATE';
 JOIN	:	'JOIN';
+JSON    :   'JSON' { $type = checkIDperVersion( 5.6, $type, MySQL51Lexer.ID ); };
 KEY	:	'KEY';
 KEYS	:	'KEYS';
 KILL	:	'KILL';
@@ -173,22 +188,26 @@ MAXVALUE : 'MAXVALUE';
 //MEDIUMBLOB	:	'MEDIUMBLOB';		// datatype defined below 
 //MEDIUMINT	:	'MEDIUMINT';		// datatype defined below 
 //MEDIUMTEXT	:	'MEDIUMTEXT';		// datatype defined below 
+MESSAGE_TEXT : 'MESSAGE_TEXT' { $type = checkIDperVersion( 5.5, $type, MySQL51Lexer.ID ); };
 MIDDLEINT	:	'MIDDLEINT';		// datatype defined below 
 MINUTE_MICROSECOND	:	'MINUTE_MICROSECOND';
 MINUTE_SECOND	:	'MINUTE_SECOND';
 MOD	:	'MOD';
-MYISAM : 'MYISAM';
 MODIFIES	:	'MODIFIES';
+MYISAM : 'MYISAM';
+MYSQL_ERRNO : 'MYSQL_ERRNO' { $type = checkIDperVersion( 5.5, $type, MySQL51Lexer.ID ); };
 NATURAL	:	'NATURAL';
 NDB  : 'NDB';
 NOT	:	'NOT';
 NO_WRITE_TO_BINLOG	:	'NO_WRITE_TO_BINLOG';
+NNUMBER :   'NUMBER' { $type = checkIDperVersion( 5.6, $type, MySQL51Lexer.ID ); };
 NULL	:	'NULL';
 NULLIF	:	'NULLIF';
 //NUMERIC	:	'NUMERIC';		// datatype defined below 
 OFFLINE : 'OFFLINE';
 ON	:	'ON';
 ONLINE : 'ONLINE';
+ONLY   : 'ONLY' { $type = checkIDperVersion( 5.6, $type, MySQL51Lexer.ID ); };
 OPTIMIZE	:	'OPTIMIZE';
 OPTION	:	'OPTION';
 OPTIONALLY	:	'OPTIONALLY';
@@ -200,6 +219,7 @@ OUTFILE	:	'OUTFILE';
 PRECISION	:	'PRECISION';
 PRIMARY	:	'PRIMARY';
 PROCEDURE	:	'PROCEDURE';
+PROXY   :   'PROXY' { $type = checkIDperVersion( 5.5, $type, MySQL51Lexer.ID ); };
 PURGE	:	'PURGE';
 RANGE	:	'RANGE';
 READ	:	'READ';
@@ -214,11 +234,14 @@ RENAME	:	'RENAME';
 REPEAT	:	'REPEAT';
 REPLACE	:	'REPLACE';
 REQUIRE	:	'REQUIRE';
+RESIGNAL : 'RESIGNAL' { $type = checkIDperVersion( 5.5, $type, MySQL51Lexer.ID ); };
 RESTRICT	:	'RESTRICT';
 RETURN	:	'RETURN';
+RETURNED_SQLSTATE : 'RETURNED_SQLSTATE';
 REVOKE	:	'REVOKE';
 //RIGHT	:	'RIGHT';	// reserved keyword and function below
 RLIKE	:	'RLIKE';
+ROW_COUNT : 'ROW_COUNT' { $type = checkIDperVersion( 5.6, $type, MySQL51Lexer.ID ); };
 SCHEDULER : 'SCHEDULER';
 SCHEMA	:	'SCHEMA';
 SCHEMAS	:	'SCHEMAS';
@@ -227,8 +250,10 @@ SELECT	:	'SELECT';
 SENSITIVE	:	'SENSITIVE';
 SEPARATOR	:	'SEPARATOR';
 SET	:	'SET';
+SCHEMA_NAME : 'SCHEMA_NAME' { $type = checkIDperVersion( 5.5, $type, MySQL51Lexer.ID ); };
 SHOW	:	'SHOW';
 //SMALLINT	:	'SMALLINT';		// datatype defined below 
+SIGNAL  : 'SIGNAL' { $type = checkIDperVersion( 5.5, $type, MySQL51Lexer.ID ); };
 SPATIAL	:	'SPATIAL';
 SPECIFIC	:	'SPECIFIC';
 SQL	:	'SQL';
@@ -241,13 +266,16 @@ SQL_SMALL_RESULT	:	'SQL_SMALL_RESULT';
 SSL	:	'SSL';
 STARTING	:	'STARTING';
 STRAIGHT_JOIN	:	'STRAIGHT_JOIN';
+SUBCLASS_ORIGIN : 'SUBCLASS_ORIGIN' { $type = checkIDperVersion( 5.5, $type, MySQL51Lexer.ID ); };
 TABLE	:	'TABLE';
+TABLE_NAME : 'TABLE_NAME' { $type = checkIDperVersion( 5.5, $type, MySQL51Lexer.ID ); };
 TERMINATED	:	'TERMINATED';
 THEN	:	'THEN';
 //TINYBLOB	:	'TINYBLOB';		// datatype defined below 
 //TINYINT	:	'TINYINT';		// datatype defined below 
 //TINYTEXT	:	'TINYTEXT';		// datatype defined below 
 TO	:	'TO';
+TRADITIONAL :   'TRADITIONAL' { $type = checkIDperVersion( 5.6, $type, MySQL51Lexer.ID ); };
 TRAILING	:	'TRAILING';
 TRIGGER	:	'TRIGGER';
 TRUE	:	'TRUE';
@@ -348,7 +376,7 @@ ACTION	:	'ACTION';
 AFTER	:	'AFTER';                
 AGAINST	:	'AGAINST';                  
 AGGREGATE	:	'AGGREGATE';            
-ALGORITHM	:	'ALGORITHM';            
+ALGORITHM	:	'ALGORITHM' { $type = checkIDperVersion( 5.6, $type, MySQL51Lexer.ID ); };
 ANY	:	'ANY';          
 ARCHIVE	:	'ARCHIVE';        
 AT	:	'AT';                   
@@ -414,6 +442,7 @@ EVENT	:	'EVENT';
 EVENTS	:	'EVENTS';               
 EVERY	:	'EVERY';
 EXAMPLE	:	'EXAMPLE';
+EXCLUSIVE : 'EXCLUSIVE' { $type = checkIDperVersion( 5.6, $type, MySQL51Lexer.ID ); };
 EXPANSION	:	'EXPANSION';            
 EXTENDED	:	'EXTENDED';             
 EXTENT_SIZE	:	'EXTENT_SIZE';          
@@ -559,6 +588,7 @@ SERIALIZABLE	:	'SERIALIZABLE';
 SESSION	:	'SESSION';              
 SIMPLE	:	'SIMPLE';               
 SHARE	:	'SHARE';                
+SHARED	:	'SHARED' { $type = checkIDperVersion( 5.6, $type, MySQL51Lexer.ID ); };
 SHUTDOWN	:	'SHUTDOWN';                 
 SNAPSHOT	:	'SNAPSHOT';
 SOME:	'SOME';		// alias for ANY             
@@ -612,7 +642,8 @@ WARNINGS	:	'WARNINGS';
 WAIT	:	'WAIT';                 
 WEEK	:	'WEEK';                 // also function
 WORK	:	'WORK';                 
-X509	:	'X509';                 
+X509	:	'X509';                
+XML		:   'XML' { $type = checkIDperVersion( 5.5, $type, MySQL51Lexer.ID ); };
 //YEAR	:	'YEAR';                 // datatype defined below
 
 // $> Keywords in SP labels

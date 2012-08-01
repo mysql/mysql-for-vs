@@ -207,5 +207,38 @@ Gender=SUBSTR(@var,1,1);");
         "LINES TERMINATED BY '\\n' (city, state_code, @zip, area_code, county_fips, county_name, @preferred, timezone, dst, lat, " +
         "lon, msa, pmsa, @city_abbreviation, ma, zip_type) SET allow_registrations = 1, zip = IF(@preferred='P', @zip, NULL);");
     }
+
+    [Test]
+    public void WithPartition_55()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(
+        @"LOAD DATA INFILE '#{DATA_FILE_NAME}' IGNORE
+INTO TABLE zipcodes partition ( p1 )
+FIELDS TERMINATED BY ','
+ENCLOSED BY '""'
+LINES TERMINATED BY '\n'
+(city, state_code, @zip, area_code, county_fips, county_name, @preferred, timezone, dst, lat,
+lon, msa, pmsa, @city_abbreviation, ma, zip_type)
+SET allow_registrations = 1, zip = IF(@preferred='P', @zip, NULL)	 
+;", true, out sb, new Version(5, 5));
+      Assert.IsTrue(sb.ToString().IndexOf("partition") != -1);
+    }
+
+    [Test]
+    public void WithPartition_56()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(
+        @"LOAD DATA INFILE '#{DATA_FILE_NAME}' IGNORE
+INTO TABLE zipcodes partition ( p1 )
+FIELDS TERMINATED BY ','
+ENCLOSED BY '""'
+LINES TERMINATED BY '\n'
+(city, state_code, @zip, area_code, county_fips, county_name, @preferred, timezone, dst, lat,
+lon, msa, pmsa, @city_abbreviation, ma, zip_type)
+SET allow_registrations = 1, zip = IF(@preferred='P', @zip, NULL)	 
+;", false, out sb, new Version(5, 6));
+    }
   }
 }
