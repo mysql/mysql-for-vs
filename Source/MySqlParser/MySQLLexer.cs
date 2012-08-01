@@ -74,7 +74,7 @@ namespace MySql.Parser
 
     public Version MySqlVersion
     {
-      get { return Version.Parse(mysqlVersion.ToString()); }
+      get { return new Version((int)mysqlVersion, (int)(mysqlVersion * 10 - (int)mysqlVersion * 10)); }
       set { mysqlVersion = (double)value.Major + (double)value.Minor / 10; }
     }
 
