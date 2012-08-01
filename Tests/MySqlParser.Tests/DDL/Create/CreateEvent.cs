@@ -107,5 +107,16 @@ namespace MySql.Parser.Tests
       AT CURRENT_TIMESTAMP + INTERVAL 1 DAY
     DO CALL myproc(5, 27);", false);
     }
+
+    [Test]
+    public void Simple5In50()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(@"CREATE EVENT e_call_myproc
+    ON SCHEDULE
+      AT CURRENT_TIMESTAMP + INTERVAL 1 DAY
+    DO CALL myproc(5, 27);", true, out sb, new Version( 5, 0 ));
+      Assert.IsTrue(sb.ToString().IndexOf( "no viable alternative at input 'EVENT'" ) != -1 );
+    }
   }
 }

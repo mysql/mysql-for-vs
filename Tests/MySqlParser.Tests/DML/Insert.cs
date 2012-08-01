@@ -87,5 +87,39 @@ USING
 		  MySQL51Parser.program_return r = Utility.ParseSql(
               "insert into test3 values (1), (2), (3)");
 	  }
+
+      [Test]
+      public void WithPartition_55()
+      {
+        StringBuilder sb;
+        MySQL51Parser.program_return r = Utility.ParseSql(
+          @"INSERT INTO employees_copy SELECT * FROM employees PARTITION (p2);	", true, out sb, new Version(5, 5));
+        Assert.IsTrue(sb.ToString().IndexOf("missing endoffile", StringComparison.OrdinalIgnoreCase) != -1);
+      }
+
+      [Test]
+      public void WithPartition_56()
+      {
+        StringBuilder sb;
+        MySQL51Parser.program_return r = Utility.ParseSql(
+          @"INSERT INTO employees_copy SELECT * FROM employees PARTITION (p2);	", false, out sb, new Version(5, 6));
+      }
+
+      [Test]
+      public void WithPartition_2_55()
+      {
+        StringBuilder sb;
+        MySQL51Parser.program_return r = Utility.ParseSql(
+          @"INSERT INTO employees PARTITION (p3) VALUES (20, 'Jan', 'Jones', 1, 3);	", true, out sb, new Version(5, 5));
+        Assert.IsTrue(sb.ToString().IndexOf("no viable alternative at input 'PARTITION'", StringComparison.OrdinalIgnoreCase) != -1);
+      }
+
+      [Test]
+      public void WithPartition_2_56()
+      {
+        StringBuilder sb;
+        MySQL51Parser.program_return r = Utility.ParseSql(
+          @"INSERT INTO employees PARTITION (p3) VALUES (20, 'Jan', 'Jones', 1, 3);	", false, out sb, new Version(5, 6));
+      }
 	}
 }

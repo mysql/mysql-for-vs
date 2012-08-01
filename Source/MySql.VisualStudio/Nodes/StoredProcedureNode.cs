@@ -56,6 +56,7 @@ namespace MySql.Data.VisualStudio
       NameIndex = 3;
       editor = new VSCodeEditor((IOleServiceProvider)hierarchyAccessor.ServiceProvider);
       Dte = (EnvDTE.DTE)hierarchyAccessor.ServiceProvider.GetService(typeof(EnvDTE.DTE));
+      RegisterNode(this);
     }
 
     #region Properties

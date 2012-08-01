@@ -139,5 +139,22 @@ FROM votes GROUP BY person_id) as tally
 SET people.votecount = tally.votecount 
 WHERE people.person_id = tally.person_id;");
         }
+
+        [Test]
+        public void WithPartition_55()
+        {
+          StringBuilder sb;
+          MySQL51Parser.program_return r = Utility.ParseSql(
+            @"UPDATE employees PARTITION (p0) SET store_id = 2 WHERE fname = 'Jill';", true, out sb, new Version(5, 5));
+          Assert.IsTrue(sb.ToString().IndexOf("mismatched input", StringComparison.OrdinalIgnoreCase) != -1);
+        }
+
+        [Test]
+        public void WithPartition_56()
+        {
+          StringBuilder sb;
+          MySQL51Parser.program_return r = Utility.ParseSql(
+            @"UPDATE employees PARTITION (p0) SET store_id = 2 WHERE fname = 'Jill';", false, out sb, new Version(5, 6));
+        }
 	}
 }
