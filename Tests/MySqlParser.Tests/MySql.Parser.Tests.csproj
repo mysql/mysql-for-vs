@@ -77,8 +77,10 @@
     <Compile Include="DDL\Drop\DropView.cs" />
     <Compile Include="Other\Call.cs" />
     <Compile Include="Other\CompoundStatements.cs" />
+    <Compile Include="Other\Explain.cs" />
     <Compile Include="Other\Expression.cs" />
     <Compile Include="Other\GatheringTables.cs" />
+    <Compile Include="Other\GetDiagnostics.cs" />
     <Compile Include="Other\Handler.cs" />
     <Compile Include="Other\Intellisense.cs" />
     <Compile Include="Infrastructure\TokenStreamRemovable.cs" />
@@ -87,6 +89,7 @@
     <Compile Include="Other\RenameDatabase.cs" />
     <Compile Include="Other\RenameTable.cs" />
     <Compile Include="Other\Replace.cs" />
+    <Compile Include="Other\Signal.cs" />
     <Compile Include="Other\Transaction.cs" />
     <Compile Include="Other\TruncateTable.cs" />
     <Compile Include="DDL\Show\Show.cs" />

@@ -22,6 +22,7 @@
 
 //#define CSharp3Target
 
+using System;
 using Antlr.Runtime;
 using System.Collections.Generic;
 
@@ -43,6 +44,16 @@ namespace MySql.Parser
 	{
     public MySQLParserBase( ITokenStream input, RecognizerSharedState state ) : base( input, state )
     {
+      // default value
+      mysqlVersion = 5.1;
+    }
+
+    // holds values like 5.0, 5.1, 5.5, 5.6, etc.
+    protected double mysqlVersion;
+
+    public Version MySqlVersion {
+      get { return Version.Parse(mysqlVersion.ToString()); }
+      set { mysqlVersion = (double)value.Major + (double)value.Minor / 10; }
     }
 
     protected int simple_table_ref_no_alias_existing_cnt;

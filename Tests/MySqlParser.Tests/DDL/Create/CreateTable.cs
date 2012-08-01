@@ -31,29 +31,29 @@ using NUnit.Framework;
 
 namespace MySql.Parser.Tests.Create
 {
-	[TestFixture]
-	public class CreateTable
-	{
-		[Test]
-		public void Simple()
-		{
-			MySQL51Parser.program_return r = Utility.ParseSql("CREATE TABLE T1 ( id int, name varchar( 20 ) )");
-		}
+  [TestFixture]
+  public class CreateTable
+  {
+    [Test]
+    public void Simple()
+    {
+      MySQL51Parser.program_return r = Utility.ParseSql("CREATE TABLE T1 ( id int, name varchar( 20 ) )");
+    }
 
-		[Test]
-		public void CreateSelect()
-		{
-			MySQL51Parser.program_return r = Utility.ParseSql(
-				@"CREATE TABLE test (a INT NOT NULL AUTO_INCREMENT,
+    [Test]
+    public void CreateSelect()
+    {
+      MySQL51Parser.program_return r = Utility.ParseSql(
+          @"CREATE TABLE test (a INT NOT NULL AUTO_INCREMENT,
 				PRIMARY KEY (a) )
-				ENGINE=MyISAM SELECT b,c FROM test2;" );
-		}
+				ENGINE=MyISAM SELECT b,c FROM test2;");
+    }
 
-		[Test]
-		public void Complex1()
-		{
-			MySQL51Parser.program_return r = Utility.ParseSql(
-				@"CREATE TABLE IF NOT EXISTS `schema`.`Employee` (
+    [Test]
+    public void Complex1()
+    {
+      MySQL51Parser.program_return r = Utility.ParseSql(
+          @"CREATE TABLE IF NOT EXISTS `schema`.`Employee` (
 				`idEmployee` VARCHAR(45) NOT NULL ,
 				`Name` VARCHAR(255) NULL ,
 				`idAddresses` VARCHAR(45) NULL ,
@@ -66,19 +66,19 @@ namespace MySql.Parser.Tests.Create
 				ENGINE = InnoDB,
 				DEFAULT CHARACTER SET = utf8,
 				COLLATE = utf8_bin");
-		}
+    }
 
-		[Test]
-		public void MergeUnion()
-		{
-			MySQL51Parser.program_return r = Utility.ParseSql(
-				"create temporary table tmp2 ( Id int primary key, Name varchar( 50 ) ) engine merge union (tmp1);");
-		}
+    [Test]
+    public void MergeUnion()
+    {
+      MySQL51Parser.program_return r = Utility.ParseSql(
+          "create temporary table tmp2 ( Id int primary key, Name varchar( 50 ) ) engine merge union (tmp1);");
+    }
 
-		[Test]
-		public void AllOptions()
-		{
-			MySQL51Parser.program_return r = Utility.ParseSql(
+    [Test]
+    public void AllOptions()
+    {
+      MySQL51Parser.program_return r = Utility.ParseSql(
 @"
 create temporary table if not exists Table1 ( id int ) 
 engine = innodb, auto_increment = 7, avg_row_length = 100,
@@ -87,9 +87,9 @@ connection = 'unknown', data directory = '/home/user/data', delay_key_write = 0,
 insert_method = last, max_rows = 65536, min_rows = 1, pack_keys = default, password = 'ndn789w4^%$tf', 
 row_format = dynamic, union = ( `db1`.`table2` );
 ");
-		}
+    }
 
-[Test]
+    [Test]
     public void Partition()
     {
       MySQL51Parser.program_return r = Utility.ParseSql(
@@ -253,6 +253,101 @@ PARTITION BY HASH ( YEAR(col3) );");
     }
 
     [Test]
+    public void PartitionColumns_51()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(
+          @"CREATE TABLE members (
+    firstname VARCHAR(25) NOT NULL,
+    lastname VARCHAR(25) NOT NULL,
+    username VARCHAR(16) NOT NULL,
+    email VARCHAR(35),
+    joined DATE NOT NULL
+)
+PARTITION BY RANGE COLUMNS(joined) (
+    PARTITION p0 VALUES LESS THAN ('1960-01-01'),
+    PARTITION p1 VALUES LESS THAN ('1970-01-01'),
+    PARTITION p2 VALUES LESS THAN ('1980-01-01'),
+    PARTITION p3 VALUES LESS THAN ('1990-01-01'),
+    PARTITION p4 VALUES LESS THAN MAXVALUE;", true, out sb, new Version(5, 1));
+      Assert.IsTrue(sb.ToString().IndexOf(" no viable alternative at input 'COLUMNS'") != -1);
+    }
+
+    [Test]
+    public void PartitionColumns_55()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(
+          @"CREATE TABLE members (
+    firstname VARCHAR(25) NOT NULL,
+    lastname VARCHAR(25) NOT NULL,
+    username VARCHAR(16) NOT NULL,
+    email VARCHAR(35),
+    joined DATE NOT NULL
+)
+PARTITION BY RANGE COLUMNS(joined) (
+    PARTITION p0 VALUES LESS THAN ('1960-01-01'),
+    PARTITION p1 VALUES LESS THAN ('1970-01-01'),
+    PARTITION p2 VALUES LESS THAN ('1980-01-01'),
+    PARTITION p3 VALUES LESS THAN ('1990-01-01'),
+    PARTITION p4 VALUES LESS THAN MAXVALUE );", false, out sb, new Version(5, 5));
+    }
+
+    [Test]
+    public void PartitionColumns_2_55()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(
+          @"CREATE TABLE members (
+    firstname VARCHAR(25) NOT NULL,
+    lastname VARCHAR(25) NOT NULL,
+    username VARCHAR(16) NOT NULL,
+    email VARCHAR(35),
+    joined DATE NOT NULL
+)
+PARTITION BY LIST COLUMNS(joined) (
+    PARTITION p0 VALUES LESS THAN ('1960-01-01'),
+    PARTITION p1 VALUES LESS THAN ('1970-01-01'),
+    PARTITION p2 VALUES LESS THAN ('1980-01-01'),
+    PARTITION p3 VALUES LESS THAN ('1990-01-01'),
+    PARTITION p4 VALUES LESS THAN MAXVALUE );", false, out sb, new Version(5, 5));
+    }
+
+    [Test]
+    public void PartitionColumns_3_55()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(
+          @"CREATE TABLE t1 (
+year_col  INT,
+some_data INT
+)
+PARTITION BY RANGE (year_col) (
+PARTITION p0 VALUES LESS THAN (1991, 1995, 1999, 2002, 2006));", false, out sb, new Version(5, 5));
+    }
+
+    [Test]
+    public void PartitionColumns_2_51()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(
+          @"CREATE TABLE members (
+    firstname VARCHAR(25) NOT NULL,
+    lastname VARCHAR(25) NOT NULL,
+    username VARCHAR(16) NOT NULL,
+    email VARCHAR(35),
+    joined DATE NOT NULL
+)
+PARTITION BY LIST COLUMNS(joined) (
+    PARTITION p0 VALUES LESS THAN ('1960-01-01'),
+    PARTITION p1 VALUES LESS THAN ('1970-01-01'),
+    PARTITION p2 VALUES LESS THAN ('1980-01-01'),
+    PARTITION p3 VALUES LESS THAN ('1990-01-01'),
+    PARTITION p4 VALUES LESS THAN MAXVALUE;", true, out sb, new Version(5, 1));
+      Assert.IsTrue(sb.ToString().IndexOf("'columns'", StringComparison.OrdinalIgnoreCase ) != -1);
+    }
+
+    [Test]
     public void Select()
     {
       MySQL51Parser.program_return r = Utility.ParseSql(
@@ -322,10 +417,37 @@ PARTITION BY HASH ( YEAR(col3) );");
 );");
     }
 
-		//[Test]
-		//public void f1()
-		//{
-		//    MySQL51Parser.program_return r = Utility.ParseSql("");
-		//}
-	}
+    //[Test]
+    //public void f1()
+    //{
+    //    MySQL51Parser.program_return r = Utility.ParseSql("");
+    //}
+
+    [Test]
+    public void TableType50()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(
+          @"CREATE TABLE t
+(
+  c1 VARBINARY(10),
+  c2 BLOB,
+  c3 ENUM('a','b','c') CHARACTER SET binary
+) type=innodb;", false, out sb, new Version(5, 0));
+    }
+
+    [Test]
+    public void TableType51()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(
+          @"CREATE TABLE t
+(
+  c1 VARBINARY(10),
+  c2 BLOB,
+  c3 ENUM('a','b','c') CHARACTER SET binary
+) type=innodb;", true, out sb, new Version(5, 1));
+      Assert.IsTrue(sb.ToString().IndexOf("missing EndOfFile at 'type'") != -1);
+    }
+  }
 }
