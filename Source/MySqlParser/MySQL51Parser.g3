@@ -34,6 +34,7 @@ tokens {
 BEGIN_END;
 CASE_STMT;
 CHARACTERISTIC;
+CHARACTER_SET;
 CT_DATAFILE;
 CT_COMMENT;
 CT_LOGFILE;
@@ -123,8 +124,8 @@ statement options { backtrack=true; memoize=true; }
 		|	do_stmt
 		|	show_stmt
 		|	deallocate
-		|	declare_condition
-		|	declare_handler
+		//|	declare_condition
+		//|	declare_handler
 		|	describe
 		|	execute
 		|	explain
@@ -161,7 +162,7 @@ statement options { backtrack=true; memoize=true; }
 		|   create_udf
 		|	create_user
 		|   create_view
-		|	cursor_declare
+		//|	cursor_declare
 		|	cursor_open
 		|	cursor_fetch
 		|	cursor_close
@@ -228,13 +229,21 @@ statement options { backtrack=true; memoize=true; }
 // $< DML
 
 begin_end_stmt options { backtrack=true; memoize=true; }
-	:	(( ( beginlabel=ID COLON ) BEGIN declare_stmt* statement_list? END ( endlabel=ID )?
-		-> ^( BEGIN_END ^( LABEL $beginlabel $endlabel? ) declare_stmt* statement_list? ) ) )		
+	:	(( ( beginlabel=ID COLON ) BEGIN declare_set* statement_list? END ( endlabel=ID )?
+		-> ^( BEGIN_END ^( LABEL $beginlabel $endlabel? ) declare_set* statement_list? ) ) )		
 		| ( ( BEGIN WORK ) | ( BEGIN SEMI ) | ( BEGIN EOF ) )  => begin_transaction 
 		| (
-		( BEGIN declare_stmt* statement_list? END 
-		-> ^( BEGIN_END declare_stmt* statement_list? ) ) )
+		( BEGIN declare_set* statement_list? END 
+		-> ^( BEGIN_END declare_set* statement_list? ) ) )
 	;
+
+declare_set options { backtrack=true; memoize=true; }
+  : 
+  ( declare_stmt -> declare_stmt 
+  | declare_handler -> declare_handler 
+  | cursor_declare -> cursor_declare 
+  | declare_condition -> declare_condition ) SEMI+
+  ;
 
 begin_transaction options { backtrack=true; memoize=true; }
 	: 
@@ -335,13 +344,13 @@ leave
 	;
 
 declare_stmt options { backtrack=true; memoize=true; }
-	:	DECLARE ids+=ident ( COMMA ids+=ident )* data_type ( DEFAULT defaultexpr=expr )? SEMI+	
+	:	DECLARE ids+=ident ( COMMA ids+=ident )* data_type ( DEFAULT defaultexpr=expr )?
 		-> ^( DECLARE $ids* data_type? ^( DEFAULT $defaultexpr )? )
 	;
 
 set_stmt
 	:	SET variable_assignment ( COMMA variable_assignment )*	-> ^( SET variable_assignment+ )
-	|	SET ( charset | DEFAULT ) -> ^( SET CHARACTER charset? DEFAULT? )
+	|	SET ( charset_def | DEFAULT ) -> ^( SET CHARACTER charset_def? DEFAULT? )
 	|	SET NAMES ( ( ( val=ID | val=STRING ) collate?	) | DEFAULT )
 		-> ^( SET NAMES $val? COLLATE collate? DEFAULT? )
 	;
@@ -555,7 +564,7 @@ select_paren
 	;
 	catch[ NoViableAltException nvae ] 
 	{
-		if( nvae.DecisionNumber == 118 )
+		if( nvae.DecisionNumber == 119 )
 		{
 			nvae = new NoViableAltException( 
 					"column_name", 
@@ -1316,7 +1325,7 @@ equalityExpr
 	;
 	catch[ NoViableAltException nvae ] 
 	{
-		if( ( nvae.DecisionNumber == 199 ) && ( Scope.Peek() == "expr" ))
+		if( ( nvae.DecisionNumber == 200 ) && ( Scope.Peek() == "expr" ))
 		{		
 			nvae = new NoViableAltException( 
 				"column_name", 
@@ -1417,7 +1426,7 @@ unaryExpr
 	;
 	catch[ NoViableAltException nvae ] 
 	{
-		if( ( nvae.DecisionNumber == 218 ) && ( Scope.Peek() == "expr" ))
+		if( ( nvae.DecisionNumber == 219 ) && ( Scope.Peek() == "expr" ))
 		{		
 			nvae = new NoViableAltException( 
 				"column_name", 
@@ -1448,7 +1457,7 @@ binaryCollateExpr
 	;
 	catch[ NoViableAltException nvae ] 
 	{
-		if( ( nvae.DecisionNumber == 220 ) && ( Scope.Peek() == "expr" ))
+		if( ( nvae.DecisionNumber == 221 ) && ( Scope.Peek() == "expr" ))
 		{		
 			nvae = new NoViableAltException( 
 				"column_name", 
@@ -1497,7 +1506,7 @@ primary
 	;
 	catch[ NoViableAltException nvae ] 
 	{
-		if( ( nvae.DecisionNumber == 222 ) && ( Scope.Peek() == "expr" ))
+		if( ( nvae.DecisionNumber == 223 ) && ( Scope.Peek() == "expr" ))
 		{		
 			nvae = new NoViableAltException( 
 				"column_name", 
@@ -1558,7 +1567,7 @@ case_stmt
 	;
 	catch[ NoViableAltException nvae ] 
 	{
-		if( nvae.DecisionNumber == 231 )
+		if( nvae.DecisionNumber == 232 )
 		{		
 			nvae = new NoViableAltException( 
 				"column_name", 
@@ -2013,7 +2022,7 @@ create_table_option
 	:	(( ENGINE | create_table_top_type ) EQUALS? engine_name )			-> ^( CREATE_TBL_OPT ENGINE? create_table_top_type? engine_name )
 	|	( AUTO_INCREMENT EQUALS? INT_NUMBER )				-> ^( CREATE_TBL_OPT AUTO_INCREMENT INT_NUMBER )
 	|	( AVG_ROW_LENGTH EQUALS? INT_NUMBER )				-> ^( CREATE_TBL_OPT AVG_ROW_LENGTH INT_NUMBER )
-	|	( DEFAULT? CHARACTER SET EQUALS? ( ID | STRING ) )	-> ^( CREATE_TBL_OPT CHARACTER ID? STRING? )
+	|	( DEFAULT? charset EQUALS? ( ID | STRING ) )	-> ^( CREATE_TBL_OPT charset ID? STRING? )
 	|	( CHECKSUM EQUALS? one_or_zero )					-> ^( CREATE_TBL_OPT CHECKSUM one_or_zero )
 	|	( DEFAULT? COLLATE EQUALS? ( ID | STRING ) )		-> ^( CREATE_TBL_OPT COLLATE ID? STRING? )
 	|	( COMMENT EQUALS? STRING )							-> ^( CREATE_TBL_OPT COMMENT STRING )
@@ -2119,12 +2128,12 @@ data_type
 	|	LONGBLOB	-> ^( DATA_TYPE LONGBLOB )
 	|	CHAR		
 		( LPAREN INT_NUMBER RPAREN )?
-		(charset )?
-		(collate )?	-> ^( DATA_TYPE CHAR INT_NUMBER? charset? collate? )
+		(charset_def )?
+		(collate )?	-> ^( DATA_TYPE CHAR INT_NUMBER? charset_def? collate? )
 	|   VARCHAR
 		LPAREN INT_NUMBER RPAREN
-		(charset )?
-		(collate )? -> ^( DATA_TYPE VARCHAR INT_NUMBER? charset? collate? )
+		(charset_def )?
+		(collate )? -> ^( DATA_TYPE VARCHAR INT_NUMBER? charset_def? collate? )
 	|	(	type=BINARY
 		|	type=VARBINARY
 		)
@@ -2136,21 +2145,21 @@ data_type
 		|	type=LONGTEXT
 		)
 		(BINARY )?
-		(charset )?
-		(collate )? -> ^( DATA_TYPE $type BINARY? charset? collate? )
+		(charset_def )?
+		(collate )? -> ^( DATA_TYPE $type BINARY? charset_def? collate? )
 	|	(	type=ENUM
 		|	type=SET
 		)
 		LPAREN values+=STRING (COMMA values+=STRING)* RPAREN
-		(charset )?
-		(collate )? -> ^( DATA_TYPE $type ^( LPAREN $values+ ) charset? collate? )
+		(charset_def )?
+		(collate )? -> ^( DATA_TYPE $type ^( LPAREN $values+ ) charset_def? collate? )
 	;
 
 timestamp
   : { this.mysqlVersion >= 5.1 }? => TIMESTAMP ( LPAREN INT_NUMBER RPAREN )? -> ^( TIMESTAMP INT_NUMBER? )
   ;
 
-charset
+charset_def
 	:	CHARACTER SET
 		(	ident
 		|	STRING 
@@ -2165,10 +2174,14 @@ collate
 	;
 
 charset_equals
-  : CHARACTER SET EQUALS?
+  : charset EQUALS?
 	(	ident
 	|	STRING 
-	) -> ^( CHARACTER SET ident? STRING? )
+	) -> ^( charset ident? STRING? )
+  ;
+
+charset
+  : ( ( CHARACTER SET ) | CHARSET ) -> ^( CHARACTER_SET )
   ;
 
 collate_equals
@@ -2410,7 +2423,7 @@ drop_table
 	;
 	catch[ NoViableAltException nvae ] 
 	{
-		if( nvae.DecisionNumber == 539 )
+		if( nvae.DecisionNumber == 541 )
 		{
 			nvae = new NoViableAltException( 
 				"simple_table_ref_no_alias_existing", 
@@ -2645,14 +2658,14 @@ user_host_or_id_or_string
 		| STRING ( user_host )?	-> ^( USER_HOST_OR_ID_OR_STRING STRING user_host? )
 	;
 
-sp_call
+sp_call options { backtrack=true; memoize=true; }
 	:	CALL ident	-> ^( CALL ident )
 	|	CALL ident LPAREN RPAREN	-> ^( CALL ident )
 	|	CALL ident LPAREN exprList RPAREN	-> ^( CALL ident exprList )
 	;
 	catch[ NoViableAltException nvae ] 
 	{
-		if( nvae.DecisionNumber == 582 )
+		if( nvae.DecisionNumber == 584 )
 		{
 			nvae = new NoViableAltException( 
 					"proc_name", 
@@ -2701,7 +2714,7 @@ alter_database
   ;
 
 alter_database_specification
-  : ( ( DEFAULT )? CHARACTER SET EQUALS? ( ID | STRING ) ) -> ^( CHARACTER ID? STRING? )
+  : ( ( DEFAULT )? charset EQUALS? ( ID | STRING ) ) -> ^( charset ID? STRING? )
   | ( ( DEFAULT )? COLLATE EQUALS? ( ID | STRING ) ) -> ^( COLLATE ID? STRING? )
   ;
 
@@ -2862,7 +2875,7 @@ alter_specification_table options { backtrack=true; memoize=true; }
   | ( ENABLE KEYS )
   | ( RENAME TO? newtablename=ident )
   | ( ORDER BY ordercolname+=ident ( COMMA ordercolname+=ident )* )
-  | ( CONVERT TO charset collate? )
+  | ( CONVERT TO charset_def collate? )
   | ( DEFAULT? charset_equals collate_equals? )
   | ( DISCARD TABLESPACE )
   | ( IMPORT TABLESPACE )
@@ -3172,7 +3185,7 @@ load_xml
   ( REPLACE | IGNORE )?
   INTO TABLE simple_table_ref_no_alias
   partition_ref?
-  ( CHARACTER SET ID )?
+  ( charset ID )?
   ( ROWS IDENTIFIED BY STRING )?
   ( IGNORE INT_NUMBER ( LINES | ROWS )? )?
   ( LPAREN column_name_list RPAREN )?
