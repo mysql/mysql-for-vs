@@ -113,7 +113,10 @@ END;
       StringBuilder sb;
       MySQL51Parser.program_return r =
         Utility.ParseSql(
-        @"DECLARE CONTINUE HANDLER FOR SQLWARNING BEGIN END;",
+        @"
+begin 
+  DECLARE CONTINUE HANDLER FOR SQLWARNING BEGIN END;
+end;",
         false, out sb);
     }
 
@@ -123,7 +126,10 @@ END;
       StringBuilder sb;
       MySQL51Parser.program_return r =
         Utility.ParseSql(
-        @"DECLARE CONTINUE HANDLER FOR SQLWARNING BEGIN END;",
+        @"
+begin
+  DECLARE CONTINUE HANDLER FOR SQLWARNING BEGIN END;
+end;",
         false, out sb);
     }
 
