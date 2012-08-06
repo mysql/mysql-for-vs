@@ -449,5 +449,25 @@ PARTITION BY LIST COLUMNS(joined) (
 ) type=innodb;", true, out sb, new Version(5, 1));
       Assert.IsTrue(sb.ToString().IndexOf("missing EndOfFile at 'type'") != -1);
     }
+
+    [Test]
+    public void Charset()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(
+          @"CREATE TABLE `city` ( `Name` char(35) NOT NULL DEFAULT '', `CountryCode` char(3) NOT NULL DEFAULT '', 
+  `District` char(20) NOT NULL DEFAULT '', `Population` int(11) NOT NULL DEFAULT '0', `ID` int(11) NOT NULL AUTO_INCREMENT, 
+  PRIMARY KEY (`ID`) ) ENGINE=MyISAM AUTO_INCREMENT=4080 DEFAULT CHARSET=latin1;", false, out sb );
+    }
+
+    [Test]
+    public void Charset2()
+    {
+      StringBuilder sb;      
+      MySQL51Parser.program_return r = Utility.ParseSql(
+        @"CREATE TABLE `city` ( `Name` char(35) NOT NULL DEFAULT '', `CountryCode` char(3) NOT NULL DEFAULT '', 
+  `District` char(20) NOT NULL DEFAULT '', `Population` int(11) NOT NULL DEFAULT '0', `ID` int(11) NOT NULL AUTO_INCREMENT, 
+  PRIMARY KEY (`ID`) ) ENGINE=MyISAM AUTO_INCREMENT=4080 DEFAULT CHARACTER SET=latin1;", false, out sb );
+    }
   }
 }
