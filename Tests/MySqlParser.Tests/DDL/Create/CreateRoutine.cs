@@ -245,5 +245,44 @@ end";
       MySQL51Parser.program_return r =
         Utility.ParseSql(sql, true, out sb);
     }
+
+    [Test]
+    public void NameIsKeyword()
+    {
+      string sql = @"
+CREATE DEFINER=`root`@`localhost` PROCEDURE `count`() 
+BEGIN 
+  DECLARE y varchar(50); 
+  INSERT INTO world.d_table (`name`) VALUES (""Armando""); 
+  INSERT INTO world.d_table (`name`) VALUES (""Elisa""); 
+  select row_count() into y; 
+  select found_rows() into y; 
+  select last_insert_id() into y; 
+END";
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(sql, false, out sb);
+    }
+
+    [Test]
+    public void DifferentDeclareOrders()
+    {
+      string sql = @"
+CREATE DEFINER=`root`@`localhost` PROCEDURE `dohandler`() 
+BEGIN 
+  DECLARE dup_keys CONDITION FOR SQLSTATE '23000'; 
+  DECLARE y varchar(50); 
+  DECLARE CONTINUE HANDLER FOR dup_keys SET @GARBAGE = 1; 
+  SET @x = 1; 
+  INSERT INTO world.d_table (`name`) VALUES (""Armando""); 
+  SET @x = 2; 
+  INSERT INTO world.d_table (`name`) VALUES (""Elisa""); 
+  set @x = 3; 
+  select row_count() into y; 
+  select found_rows() into y; 
+  select last_insert_id() into y; 
+END";
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(sql, false, out sb);
+    }
   }
 }
