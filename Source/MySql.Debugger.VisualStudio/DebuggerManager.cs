@@ -271,9 +271,9 @@ namespace MySql.Debugger.VisualStudio
       }
       try
       {
-      _debugger.Run(values);
+        _debugger.Run(values);
       }
-      catch (ThreadAbortException ) { }
+      catch (ThreadAbortException) { }
       catch (Exception ex)
       {
         MessageBox.Show(_node.ParentWindow, string.Format("Error while debugging: {0}", ex.GetBaseException().Message), "Debugger Error");
