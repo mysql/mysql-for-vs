@@ -22,6 +22,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
@@ -44,10 +46,22 @@ namespace MySql.Data.Entity.Migrations.Tests
     public DbMigrator Migrator;
         
     [SetUp]
-    public void Setup()
+    public override void Setup()
     {
+      base.Setup();
       configuration = new Configuration();
-      Migrator = new DbMigrator(configuration);  
+      DataSet dataSet = ConfigurationManager.GetSection("system.data") as System.Data.DataSet;
+      DataView vi = dataSet.Tables[0].DefaultView;
+      vi.Sort = "Name";
+      if (vi.Find("MySql") == -1)
+      {
+        dataSet.Tables[0].Rows.Add("MySql"
+          , "MySql.Data.MySqlClient"
+          , "MySql.Data.MySqlClient"
+          ,
+          typeof(MySql.Data.MySqlClient.MySqlClientFactory).AssemblyQualifiedName);
+      }
+      Migrator = new DbMigrator(configuration);
     }
 
     [TearDown]
