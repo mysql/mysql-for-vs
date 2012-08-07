@@ -1,3 +1,27 @@
+6.6.1
+- Debugger: Added Support for row_count() (together with found_rows() & last_insert_id() ).
+- Debugger: Old & new objects are now available to debugger in trigger scope.
+- Debugger: Fixed In case of debugger error (like an already existing table when executing a create table) there was no error reported.
+- Debugger: Implemented Having a better way to generate session variable names for OUT & INOUT args to reduce changes of name collision
+  (Now they are named @dbg_var1, @dbg_var12, etc.).
+- Debugger: Fixed Replace & load dont have triggers instrumented (replace's triggers are now instrumented, load data is not supported in stored routines by server anyway).
+- Debugger: Fixed Routines without main begin/end block in their definition won't be instrumented correctly.
+- Debugger: Added support for Stepping into triggers & functions.
+- Debugger: Added a more friendly message when debugger is already attached.
+- Debugger: Added code to properly finish the debugger in case of syntax not supported by parser.
+- Debugger: Added fully qualified columns of debug table queries (to avoid conflicts like user routine declaring an arg named 'id').
+- Debugger: Fixed to start debug routine when the database password is not saved.
+- Debugger: Added Type column to routine arguments dialog.
+- Debugger: Fixed "Cannot take lock1" error when an invalid routine argument is sent.
+- Debugger: Fixed "No source available" error when debugging a routine with a handler defined in a single line.
+- Debugger: Fixed "The given key is not present in the dictionary error." an unlikely race condition solved by moving code to check flags to inside the debugger critical section and making volatile both flags.
+- Debugger: Fixed Sometimes debugger hanged when Shift+F5 was used to stop a debug session.
+- Debugger: Fixed cannot evaluate or change session variables in the debugger.
+- Debugger: Added support for othe steppings, Step Over (F10) & Step Out (Shift + F11) now work correctly. 
+- Debugger & Intellisense: Parser is now fully compliant with MySql syntax 5.0, 5.1, 5.5 & 5.6.
+- Intellisense: Fixed an issue with Intellisense, such that in server explorer was only working for new routines, not for existing ones. 
+- Fixed deleting a user profile using Profile provider (MySQL bug #64409, Oracle bug #13790123)
+
 6.6.0
 - Fix for ArgumentNull exception when using Take().Count() in a LINQ to Entities query (bug MySql #64749, Oracle bug #13913047).
 - Fix for type varchar changed to bit when saving in Table Designer (Oracle bug #13916560).
