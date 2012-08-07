@@ -71,12 +71,17 @@ end;
         Watch w = dbg.SetWatch("n");
         dbg.SetBreakpoint( sql, 8);
         dbg.SetBreakpoint( sql, 13);
+        dbg.SteppingType = SteppingTypeEnum.StepInto;
         bool bpHit = false;
         int i = 0;
         dbg.OnBreakpoint += (bp) =>
         {
           bpHit = true;
-          int val = Convert.ToInt32(w.Eval());
+          int val = 0;
+          if (bp.Line == 8 || bp.Line == 13)
+          {
+            val = Convert.ToInt32(w.Eval());
+          }
           if (bp.Line == 8)
           {
             Assert.AreEqual(++i, val);
@@ -570,7 +575,7 @@ delimiter //
 
 drop table if exists d_table //
 
-CREATE TABLE d_table (s1 int, primary key (s1)) //
+CREATE TABLE d_table2 (s1 int, primary key (s1)) //
 
 drop procedure if exists dohandler //
 
@@ -580,9 +585,9 @@ BEGIN
 	DECLARE dup_keys CONDITION FOR  SQLSTATE '23000';
 	DECLARE CONTINUE HANDLER FOR dup_keys SET @GARBAGE = 1;
 	SET @x = 1;
-	INSERT INTO world.d_table VALUES (1);
+	INSERT INTO d_table2 VALUES (1);
 	SET @x = 2;
-	INSERT INTO world.d_table VALUES (1);
+	INSERT INTO d_table2 VALUES (1);
 	set @x = 3;
 
 END //
@@ -602,9 +607,9 @@ BEGIN
 	DECLARE dup_keys CONDITION FOR  SQLSTATE '23000';
 	DECLARE CONTINUE HANDLER FOR dup_keys SET @GARBAGE = 1;
 	SET @x = 1;
-	INSERT INTO test6.d_table VALUES (1);
+	INSERT INTO d_table2 VALUES (1);
 	SET @x = 2;
-	INSERT INTO test6.d_table VALUES (1);
+	INSERT INTO d_table2 VALUES (1);
 	set @x = 3;
 
 END;
@@ -1106,69 +1111,228 @@ end ;
       }
     }
 
-//    //"load data" is not available in stored procedures, see http://bugs.mysql.com/bug.php?id=14977
-//    [Test]
-//    public void SteppingIntoTriggers3()
-//    {
-//      string path = Path.Combine(Environment.CurrentDirectory, "data.txt");
-//      File.WriteAllText( path, "1\tval1");
-//      string sql = string.Format(
-//        @"
-//delimiter //
+    /// <summary>
+    /// This test assumes existence of sakila db.
+    /// </summary>
+    [Test]
+    public void DataIsNull()
+    {
+      string sql =
+        @"
+delimiter //
+
+drop procedure if exists `new_customer` //
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `new_customer`() 
+BEGIN 
+  INSERT INTO `sakila`.`customer` (`store_id`, `first_name`, `last_name`, `email`, `address_id`, `create_date` ) 
+  VALUES ( 1, ""Armando"", ""Lopez"", ""armand2099@gmail.com"", 1, NOW() ); 
+END
 //
-//drop table if exists TriggerTable //
-//
-//create table TriggerTable ( 
-//  myid int,
-//  myname varchar( 30 )
-//) //
-//
-//create trigger trTriggerTable before insert on TriggerTable for each row
-//begin
-//
-//    set new.myid = new.myid + 1;
-//
-//end //
-//
-//drop procedure if exists DoInsertTriggerTable //
-//
-//create procedure DoInsertTriggerTable()
-//begin
-//
-//  LOAD DATA INFILE '{0}' INTO TABLE test6.TriggerTable;
-//
-//end //
-//", path);
-//      Debugger dbg = new Debugger();
-//      try
-//      {
-//        dbg.Connection = new MySqlConnection(TestUtils.CONNECTION_STRING);
-//        dbg.UtilityConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
-//        dbg.LockingConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
-//        DumpConnectionThreads(dbg);
-//        MySqlScript script = new MySqlScript(dbg.Connection, sql);
-//        script.Execute();
-//        sql = string.Format(
-//@"create procedure DoInsertTriggerTable()
-//begin
-//
-//  LOAD DATA INFILE '{0}' INTO TABLE test6.TriggerTable;
-//
-//end;
-//", path);
-//        dbg.SqlInput = sql;
-//        dbg.SteppingType = SteppingTypeEnum.StepInto;
-//        dbg.OnBreakpoint += (bp) =>
-//        {
-//          Debug.WriteLine(string.Format("NonScalarFunction breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
-//        };
-//        dbg.Run(new string[0]);
-//      }
-//      finally
-//      {
-//        dbg.RestoreRoutinesBackup();
-//      }
-//    }
+";
+      Debugger dbg = new Debugger();
+      try
+      {
+        dbg.Connection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.UtilityConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.LockingConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        DumpConnectionThreads(dbg);
+        MySqlScript script = new MySqlScript(dbg.Connection, sql);
+        script.Execute();
+        sql =
+@"CREATE DEFINER=`root`@`localhost` PROCEDURE `new_customer`() 
+BEGIN 
+  INSERT INTO `sakila`.`customer` (`store_id`, `first_name`, `last_name`, `email`, `address_id`, `create_date` ) 
+  VALUES ( 1, ""Armando"", ""Lopez"", ""armand2099@gmail.com"", 1, NOW() ); 
+END;
+";
+        dbg.SqlInput = sql;
+        dbg.SteppingType = SteppingTypeEnum.StepInto;
+        dbg.OnBreakpoint += (bp) =>
+        {
+          Debug.WriteLine(string.Format("breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
+        };
+        dbg.Run(new string[0]);
+      }
+      finally
+      {
+        dbg.RestoreRoutinesBackup();
+      }
+    }
+
+
+    [Test]
+    public void CharsetIssue()
+    {
+      string sql =
+        @"
+delimiter //
+
+drop table if exists `city` //
+
+drop procedure if exists `create_proc` //
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_proc`() 
+BEGIN 
+  CREATE TABLE `city` ( `Name` char(35) NOT NULL DEFAULT '', `CountryCode` char(3) NOT NULL DEFAULT '', 
+  `District` char(20) NOT NULL DEFAULT '', `Population` int(11) NOT NULL DEFAULT '0', `ID` int(11) NOT NULL AUTO_INCREMENT, 
+  PRIMARY KEY (`ID`) ) ENGINE=MyISAM AUTO_INCREMENT=4080 DEFAULT CHARSET=latin1; 
+END //
+";
+      Debugger dbg = new Debugger();
+      try
+      {
+        dbg.Connection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.UtilityConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.LockingConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        DumpConnectionThreads(dbg);
+        MySqlScript script = new MySqlScript(dbg.Connection, sql);
+        script.Execute();
+        sql =
+@"CREATE DEFINER=`root`@`localhost` PROCEDURE `create_proc`() 
+BEGIN 
+  CREATE TABLE `city` ( `Name` char(35) NOT NULL DEFAULT '', `CountryCode` char(3) NOT NULL DEFAULT '', 
+  `District` char(20) NOT NULL DEFAULT '', `Population` int(11) NOT NULL DEFAULT '0', `ID` int(11) NOT NULL AUTO_INCREMENT, 
+  PRIMARY KEY (`ID`) ) ENGINE=MyISAM AUTO_INCREMENT=4080 DEFAULT CHARSET=latin1; 
+END ;
+";
+        dbg.SqlInput = sql;
+        dbg.SteppingType = SteppingTypeEnum.StepInto;
+        dbg.OnBreakpoint += (bp) =>
+        {
+          Debug.WriteLine(string.Format("breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
+        };
+        dbg.Run(new string[0]);
+      }
+      finally
+      {
+        dbg.RestoreRoutinesBackup();
+      }
+    }
+
+    [Test]
+    public void ColumnNumber()
+    {
+      string sql =
+        @"
+delimiter //
+
+drop procedure if exists `sp_testMultiline` //
+
+CREATE PROCEDURE `sp_testMultiline`()
+BEGIN
+ declare n,x,y,z int;
+ declare str varchar(1100);
+ set n = 1;
+ set str = 'Rafa';
+ while
+ n < 10
+ do
+ begin
+ set n = n + 1; set x = n * 2;
+ set y = n * 5;
+ set z = n * 10;
+	 set str = CONCAT(str, 'o'); end;
+ end while;
+END //
+";
+      Debugger dbg = new Debugger();
+      try
+      {
+        dbg.Connection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.UtilityConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.LockingConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        DumpConnectionThreads(dbg);
+        MySqlScript script = new MySqlScript(dbg.Connection, sql);
+        script.Execute();
+        sql =
+@"CREATE PROCEDURE `sp_testMultiline`()
+BEGIN
+ declare n,x,y,z int;
+ declare str varchar(1100);
+ set n = 1;
+ set str = 'Rafa';
+ while
+ n < 10
+ do
+ begin
+ set n = n + 1; set x = n * 2;
+ set y = n * 5;
+ set z = n * 10;
+	 set str = CONCAT(str, 'o'); end;
+ end while;
+END ;
+";
+        dbg.SqlInput = sql;
+        dbg.SteppingType = SteppingTypeEnum.StepInto;
+        dbg.OnBreakpoint += (bp) =>
+        {
+          Debug.WriteLine(string.Format("breakpoint at line {0}:{1},{2}", bp.RoutineName, bp.Line, bp.StartColumn));
+        };
+        dbg.Run(new string[0]);
+      }
+      finally
+      {
+        dbg.RestoreRoutinesBackup();
+      }
+    }
+
+    [Test]
+    public void NameIsKeyword()
+    {
+      string sql =
+        @"
+delimiter //
+
+drop table if exists d_table //
+
+create table d_table( id int auto_increment PRIMARY KEY, `name` varchar( 20 ) ) //
+
+drop procedure if exists `count` //
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `count`() 
+BEGIN 
+  DECLARE y varchar(50); 
+  INSERT INTO d_table (`name`) VALUES (""Armando""); 
+  INSERT INTO d_table (`name`) VALUES (""Elisa""); 
+  select row_count() into y; 
+  select found_rows() into y; 
+  select last_insert_id() into y; 
+END //
+";
+      Debugger dbg = new Debugger();
+      try
+      {
+        dbg.Connection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.UtilityConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.LockingConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        DumpConnectionThreads(dbg);
+        MySqlScript script = new MySqlScript(dbg.Connection, sql);
+        script.Execute();
+        sql =
+@"CREATE DEFINER=`root`@`localhost` PROCEDURE `count`() 
+BEGIN 
+  DECLARE y varchar(50); 
+  INSERT INTO d_table (`name`) VALUES (""Armando""); 
+  INSERT INTO d_table (`name`) VALUES (""Elisa""); 
+  select row_count() into y; 
+  select found_rows() into y; 
+  select last_insert_id() into y; 
+END;
+";
+        dbg.SqlInput = sql;
+        dbg.SteppingType = SteppingTypeEnum.StepInto;
+        dbg.OnBreakpoint += (bp) =>
+        {
+          Debug.WriteLine(string.Format("breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
+        };
+        dbg.Run(new string[0]);
+      }
+      finally
+      {
+        dbg.RestoreRoutinesBackup();
+      }
+    }
 
     private void DumpConnectionThreads(Debugger dbg)
     {

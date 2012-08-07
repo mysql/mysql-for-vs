@@ -43,10 +43,11 @@ namespace MySql.Debugger.VisualStudio
       Debug.WriteLine("AD7StackFrame: ctor");
       _rs = rs;
       _node = node;
-      TEXT_POSITION pos = new TEXT_POSITION() { dwLine = (uint)( DebuggerManager.Instance.CurrentBreakpoint.CoreBreakpoint.Line - 1) };
+      Breakpoint bp = DebuggerManager.Instance.CurrentBreakpoint.CoreBreakpoint;
+      TEXT_POSITION pos = new TEXT_POSITION() { dwLine = (uint)( bp.StartLine - 1), dwColumn = ( uint )( bp.StartColumn ) };
       TEXT_POSITION endPos = new TEXT_POSITION();
-      endPos.dwLine = pos.dwLine;
-      endPos.dwColumn = UInt16.MaxValue;
+      endPos.dwLine = ( uint )( bp.EndLine - 1 );
+      endPos.dwColumn = ( uint )( bp.EndColumn );
       _docContext = new AD7DocumentContext( _rs.GetFileName(), -1, pos, endPos);
       _node.FileName = _node.Debugger.Debugger.CurrentScope.FileName;
     }
