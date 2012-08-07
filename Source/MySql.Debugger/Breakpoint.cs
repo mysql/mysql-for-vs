@@ -35,12 +35,15 @@ namespace MySql.Debugger
   public class Breakpoint
   {
     public bool Disabled { get; set; }
-    public int Line { get; set; }
-    public int Column { get; set; }
+    public int StartLine { get; set; }
+    public int EndLine { get; set; }
+    public int StartColumn { get; set; }
+    public int EndColumn { get; set; }
+    public int Line { get { return StartLine; } }
     public CommonTree Condition { get; set; }
     public bool IsFake { get; set; }
     public int Hash { get; set; }
-    public string RoutineName { get; set; }
+    public string RoutineName { get; set; }    
 
     public bool EvalCondition()
     {
@@ -52,6 +55,8 @@ namespace MySql.Debugger
     {
       IsFake = false;
       Disabled = false;
+      StartColumn = 0;
+      EndColumn = UInt16.MaxValue;
     }
   }
 }

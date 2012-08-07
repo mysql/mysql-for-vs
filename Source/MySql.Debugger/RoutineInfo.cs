@@ -72,23 +72,42 @@ namespace MySql.Debugger
     internal string _leaveLabel { get; set; }
     internal Dictionary<string, StoreType> Locals { get; set; }
     internal CommonTree BeginEnd { get; set; }
-    private Dictionary<int, ITree> _statementsPerLine = new Dictionary<int, ITree>();
+    private Dictionary<int, List<ITree>> _statementsPerLine = new Dictionary<int, List<ITree>>();
     internal MetaTrigger TriggerInfo { get; set; }
 
     internal void RegisterStatement(ITree tree)
     {
-      ITree t;
+      List<ITree> l;
       int line = TokenStream.Get(tree.TokenStartIndex).Line;
-      if (!_statementsPerLine.TryGetValue(line, out t))
+      if (!_statementsPerLine.TryGetValue(line, out l))
       {
-        _statementsPerLine.Add(line, tree);
+        l = new List<ITree>();
+        l.Add(tree);
+        _statementsPerLine.Add(line, l);
       }
+      else
+      {
+        l.Add(tree);
+      }
+    }
+
+    internal CommonTree GetStatementFromPos(int line, int col)
+    {
+      List<ITree> l;
+      if (_statementsPerLine.TryGetValue(line, out l))
+      {
+        foreach (ITree t in l)
+        {
+          if (t.CharPositionInLine == col) return ( CommonTree )t;
+        }
+      }
+      return null;
     }
 
     internal bool HasLineValidStatement(int line)
     {
-      ITree t;
-      return _statementsPerLine.TryGetValue(line, out t);
+      List<ITree> l;
+      return _statementsPerLine.TryGetValue(line, out l);
     }
 
     public string FullName
