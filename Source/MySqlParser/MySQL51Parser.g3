@@ -3005,7 +3005,7 @@ scope
 }
 @init { $replace::replaceV1 = false; }
   : REPLACE ( LOW_PRIORITY | DELAYED )?
-    INTO? tblname=simple_obj_ref_no_alias partition_ref?
+    INTO? tblname=simple_table_ref_no_alias partition_ref?
 		( LPAREN colname+=ident ( COMMA colname+=ident )* RPAREN 
 		  { $replace::replaceV1 = true; })?
 	(( ( ( VALUES | VALUE ) LPAREN ( repexpr+=expr | DEFAULT ) 
