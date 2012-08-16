@@ -1,3 +1,15 @@
+6.6.2
+- Parser: Fix for Problems when declaring variables in certain places (wasn't accepting declare var after declare handler in a begin/end block).
+- Parser: Fix for Problems with CHARSET (previously only CHARACTER SET was recognized).
+- Parser: Fix for Parser was not returning table_ref for "replace" parsed statements.
+- Debugger: Fix for "Data is Null" error when debugging a Procedure that reference a trigger that is in a different db than current one
+- Debugger: Added better support for datetime columns, including zeroed columns, Appended "Allow Zero DateTime=true" to the debugger connection string dynamically/
+- Debugger: Fix error when debugging a routine which name was a MySql keyword.
+- Debugger: Fix colorizing the whole line when stepping into a line with several statements defined (only the current statement is colorized now, not the whole line).
+- Debugger: Enabled colorizing (Intellisense) into debugger editor.
+- Debugger: Enabled changing values of locals in a function scope (previously caused deadlock since functions are executed in a transaction in MySql).
+- Debugger: Fix a small issue such that when in a multiple stack frame debug session, clicking in a stack frame other than the current one, was not colorizing correctly.
+
 6.6.1
 - Debugger: Added Support for row_count() (together with found_rows() & last_insert_id() ).
 - Debugger: Old & new objects are now available to debugger in trigger scope.
