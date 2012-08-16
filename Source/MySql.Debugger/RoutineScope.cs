@@ -52,7 +52,18 @@ namespace MySql.Debugger
     {
       if (string.IsNullOrEmpty(_fileName))
       {
-        _fileName = Path.GetTempFileName();
+        string routineName = OwningRoutine.FullName;
+        string path = Path.Combine( Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MySqlDebuggerCache" );
+        if (!Directory.Exists(path))
+        {
+          Directory.CreateDirectory(path);
+        }
+        path = Path.Combine( path, routineName );
+        _fileName = string.Format( "{0}.mysql", path );
+        if (File.Exists(_fileName))
+        {
+          File.Delete(_fileName);
+        }
         File.WriteAllText(_fileName, OwningRoutine.SourceCode);
       }
       return _fileName;
@@ -62,5 +73,7 @@ namespace MySql.Debugger
     /// The dictionary of variables for the given scope (stack frame).
     /// </summary>
     public Dictionary<string, StoreType> Variables;
+
+    public Breakpoint CurrentPosition { get; set; }
   }
 }
