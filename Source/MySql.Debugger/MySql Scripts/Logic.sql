@@ -72,3 +72,21 @@ begin
 
 end //
 
+create procedure SetDebugScopeVar( pDebugSessionId int, pDebugScopeLevel int, pVarName varchar( 30 ), pVarValue varbinary( 50000 ) )
+begin
+
+	insert into `serversidedebugger`.`DebugScope`( DebugSessionId, DebugScopeLevel, VarName, VarValue ) values ( pDebugSessionId, pDebugScopeLevel, pVarName, pVarValue );
+
+end //
+
+create procedure GetDebugScopeVar( pDebugSessionId int, pDebugScopeLevel int, pVarName varchar( 30 ), out pVarValue varbinary( 50000 ))
+begin
+	
+	declare pId int;
+	
+	set pId = ( select max( Id ) from `serversidedebugger`.`DebugScope` 
+		where ( DebugSessionId = pDebugSessionId ) and ( DebugScopeLevel = pDebugScopeLevel ) and ( VarName = pVarName ) );
+	select pVarValue = VarValue from `serversidedebugger`.`DebugScope` 
+		where ( DebugSessionId = pDebugSessionId ) and ( DebugScopeLevel = pDebugScopeLevel ) and ( VarName = pVarName ) and ( Id = pId );
+	
+end //

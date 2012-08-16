@@ -43,12 +43,13 @@ namespace MySql.Debugger.VisualStudio
       Debug.WriteLine("AD7StackFrame: ctor");
       _rs = rs;
       _node = node;
-      Breakpoint bp = DebuggerManager.Instance.CurrentBreakpoint.CoreBreakpoint;
+      //Breakpoint bp = DebuggerManager.Instance.CurrentBreakpoint.CoreBreakpoint;
+      Breakpoint bp = rs.CurrentPosition;
       TEXT_POSITION pos = new TEXT_POSITION() { dwLine = (uint)( bp.StartLine - 1), dwColumn = ( uint )( bp.StartColumn ) };
       TEXT_POSITION endPos = new TEXT_POSITION();
       endPos.dwLine = ( uint )( bp.EndLine - 1 );
       endPos.dwColumn = ( uint )( bp.EndColumn );
-      _docContext = new AD7DocumentContext( _rs.GetFileName(), -1, pos, endPos);
+      _docContext = new AD7DocumentContext( _rs.GetFileName(), -1, pos, endPos, rs);
       _node.FileName = _node.Debugger.Debugger.CurrentScope.FileName;
     }
 
@@ -222,8 +223,8 @@ namespace MySql.Debugger.VisualStudio
         rgelt[ _inext ].m_fHasDebugInfo = 1;
         rgelt[ _inext ].m_fStaleCode = 0;
         rgelt[ _inext ].m_bstrLanguage = AD7Guids.LanguageName;
-        rgelt[ _inext ].m_bstrFuncName = this[ _inext ]._rs.OwningRoutine.Name;
-        rgelt[ _inext ].m_pFrame = this[ _inext ];
+        rgelt[_inext].m_bstrFuncName = this[_inext + _nextElement]._rs.OwningRoutine.Name;
+        rgelt[_inext].m_pFrame = this[_inext + _nextElement];
         _inext++;
       }
       

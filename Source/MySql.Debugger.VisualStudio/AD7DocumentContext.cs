@@ -36,16 +36,18 @@ namespace MySql.Debugger.VisualStudio
     private TEXT_POSITION _beginPosition;
     private TEXT_POSITION _endPosition;
     private int _lineNumber;
+    private RoutineScope _rs;
 
     public int LineNumber { get; set; }
 
-    public AD7DocumentContext(string fileName, int lineNumber, TEXT_POSITION beginPosition, TEXT_POSITION endPosition)
+    public AD7DocumentContext(string fileName, int lineNumber, TEXT_POSITION beginPosition, TEXT_POSITION endPosition, RoutineScope rs)
     {
       Debug.WriteLine("AD7DocumentContext: ctor");
       _fileName = fileName;
       _beginPosition = beginPosition;
       _endPosition = endPosition;
       _lineNumber = lineNumber;
+      _rs = rs;
     }
 
     #region IDebugDocumentContext2 Members
@@ -136,7 +138,7 @@ namespace MySql.Debugger.VisualStudio
 
       if ((dwFields & enum_CONTEXT_INFO_FIELDS.CIF_FUNCTION) != 0)
       {
-        pinfo[0].bstrFunction = "TestFunc";
+        pinfo[0].bstrFunction = _rs.OwningRoutine.Name;
         pinfo[0].dwFields |= enum_CONTEXT_INFO_FIELDS.CIF_FUNCTION;
       }
 
