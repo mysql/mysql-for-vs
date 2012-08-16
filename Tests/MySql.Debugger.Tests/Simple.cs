@@ -230,6 +230,11 @@ end;
         dbg.SteppingType = SteppingTypeEnum.StepInto;
         dbg.OnBreakpoint += (bp) => {
           Debug.WriteLine(string.Format("NonScalarFunction breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
+          if ( (bp.RoutineName == "test6.DoSum") && ( bp.Line == 9 ) )
+          {
+            dbg.CurrentScope.Variables["a1"].Value = 100;
+            dbg.CommitLocals(); 
+          }
         };
         dbg.Run(new string[0]);
       }
@@ -573,7 +578,7 @@ END;
         @"
 delimiter //
 
-drop table if exists d_table //
+drop table if exists d_table2 //
 
 CREATE TABLE d_table2 (s1 int, primary key (s1)) //
 

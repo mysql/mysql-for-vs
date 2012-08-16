@@ -321,7 +321,7 @@ namespace MySql.Debugger.VisualStudio
     int IDebugBreakpointResolution2.GetResolutionInfo(enum_BPRESI_FIELDS dwFields, BP_RESOLUTION_INFO[] pBPResolutionInfo)
     {
       Debug.WriteLine("AD7Breakpoint: GetResolutionInfo");
-      AD7DocumentContext documentContext = new AD7DocumentContext(_node.FileName, ( int )_lineNumber, _beginPosition, _endPosition);
+      AD7DocumentContext documentContext = new AD7DocumentContext(_node.FileName, ( int )_lineNumber, _beginPosition, _endPosition, this._node.Debugger.Debugger.CurrentScope );
       if (dwFields == enum_BPRESI_FIELDS.BPRESI_ALLFIELDS)
       {
         var loc = new BP_RESOLUTION_LOCATION

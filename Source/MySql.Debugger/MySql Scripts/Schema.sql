@@ -65,12 +65,13 @@ CREATE TABLE `debuglocker` (
 DROP TABLE IF EXISTS `debugscope` //
 
 CREATE TABLE `debugscope` (
+  `Id` int auto_increment primary key,
   `DebugSessionId` int(11) NOT NULL DEFAULT '0',
   `DebugScopeLevel` int(11) NOT NULL DEFAULT '0',
   `VarName` varchar(30) NOT NULL DEFAULT '',
   `VarValue` varbinary(50000) DEFAULT NULL,
   `Stamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`DebugSessionId`,`DebugScopeLevel`,`VarName`)
+  index `DebugScope2ndIndex` (`DebugSessionId`,`DebugScopeLevel`,`VarName`, `Id` )
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 //
 
 
