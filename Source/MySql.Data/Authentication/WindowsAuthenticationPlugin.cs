@@ -1,4 +1,4 @@
-﻿// Copyright © 2010, 2011, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2012, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -20,26 +20,194 @@
 // with this program; if not, write to the Free Software Foundation, Inc., 
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-using System.Collections;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using System.Net.Sockets;
-using MySql.Data.Common;
-
-using HANDLE = System.IntPtr;
-using System;
 using System.IO;
+using System;
+using MySql.Data.MySqlClient.Properties;
+using MySql.Data.Common;
+using System.Runtime.InteropServices;
+using System.Diagnostics;
 using System.Security;
-using System.Security.Permissions;
 
-
-namespace MySql.Data.MySqlClient
+namespace MySql.Data.MySqlClient.Authentication
 {
-#if !CF 
+  /// <summary>
+  /// 
+  /// </summary>
+#if !CF
   [SuppressUnmanagedCodeSecurityAttribute()]
 #endif
-  internal class SSPI
+  internal class MySqlWindowsAuthenticationPlugin : MySqlAuthenticationPlugin
   {
+    SECURITY_HANDLE outboundCredentials = new SECURITY_HANDLE(0);
+    SECURITY_HANDLE clientContext = new SECURITY_HANDLE(0);
+    SECURITY_INTEGER lifetime = new SECURITY_INTEGER(0);
+    bool continueProcessing;
+    string targetName = null;
+
+    protected override void CheckConstraints()
+    {
+      string platform = String.Empty;
+
+      int p = (int)Environment.OSVersion.Platform;
+      if ((p == 4) || (p == 128))
+        platform = "Unix";
+      else if (Environment.OSVersion.Platform == PlatformID.MacOSX) 
+        platform = "Mac OS/X";
+
+      if (!String.IsNullOrEmpty(platform))
+        throw new MySqlException(String.Format(Resources.WinAuthNotSupportOnPlatform, platform));
+      base.CheckConstraints();
+    }
+
+    public override string GetUsername()
+    {
+      string username = base.GetUsername();
+      if (String.IsNullOrEmpty(username)) 
+        return "auth_windows";
+      return username;
+    }
+
+    public override string PluginName
+    {
+      get { return "authentication_windows_client"; }
+    }
+
+    protected override byte[] MoreData(byte[] moreData)
+    {
+      if (moreData == null)
+        AcquireCredentials();
+
+      byte[] clientBlob = null;
+
+      if (continueProcessing)
+        InitializeClient(out clientBlob, moreData, out continueProcessing);
+
+      if (!continueProcessing || clientBlob == null || clientBlob.Length == 0)
+      {
+        FreeCredentialsHandle(ref outboundCredentials);
+        DeleteSecurityContext(ref clientContext);
+        return null;
+      }
+      return clientBlob;
+    }
+
+    void InitializeClient(out byte[] clientBlob, byte[] serverBlob, out bool continueProcessing)
+    {
+      clientBlob = null;
+      continueProcessing = true;
+      SecBufferDesc clientBufferDesc = new SecBufferDesc(MAX_TOKEN_SIZE);
+      SECURITY_INTEGER initLifetime = new SECURITY_INTEGER(0);
+      int ss = -1;
+      try
+      {
+        uint ContextAttributes = 0;
+
+        if (serverBlob == null)
+        {
+          ss = InitializeSecurityContext(
+              ref outboundCredentials,
+              IntPtr.Zero,
+              targetName,
+              STANDARD_CONTEXT_ATTRIBUTES,
+              0,
+              SECURITY_NETWORK_DREP,
+              IntPtr.Zero, /* always zero first time around */
+              0,
+              out clientContext,
+              out clientBufferDesc,
+              out ContextAttributes,
+              out initLifetime);
+
+        }
+        else
+        {
+          SecBufferDesc serverBufferDesc = new SecBufferDesc(serverBlob);
+
+          try
+          {
+            ss = InitializeSecurityContext(ref outboundCredentials,
+                ref clientContext,
+                targetName,
+                STANDARD_CONTEXT_ATTRIBUTES,
+                0,
+                SECURITY_NETWORK_DREP,
+                ref serverBufferDesc,
+                0,
+                out clientContext,
+                out clientBufferDesc,
+                out ContextAttributes,
+                out initLifetime);
+          }
+          finally
+          {
+            serverBufferDesc.Dispose();
+          }
+        }
+
+
+        if ((SEC_I_COMPLETE_NEEDED == ss)
+            || (SEC_I_COMPLETE_AND_CONTINUE == ss))
+        {
+          CompleteAuthToken(ref clientContext, ref clientBufferDesc);
+        }
+
+        if (ss != SEC_E_OK &&
+            ss != SEC_I_CONTINUE_NEEDED &&
+            ss != SEC_I_COMPLETE_NEEDED &&
+            ss != SEC_I_COMPLETE_AND_CONTINUE)
+        {
+          throw new MySqlException(
+              "InitializeSecurityContext() failed  with errorcode " + ss);
+        }
+
+        clientBlob = clientBufferDesc.GetSecBufferByteArray();
+      }
+      finally
+      {
+        clientBufferDesc.Dispose();
+      }
+      continueProcessing = (ss != SEC_E_OK && ss != SEC_I_COMPLETE_NEEDED);
+    }
+
+    /// <summary>
+    /// Currently this method is unused
+    /// </summary>
+    /// <returns></returns>
+    private string GetTargetName()
+    {
+      return null;
+      if (AuthData == null) return String.Empty;
+
+      int index = -1;
+      for (int i = 0; i < AuthData.Length; i++)
+      {
+        if (AuthData[i] != 0) continue;
+        index = i;
+        break;
+      }
+      if (index == -1)
+        targetName = System.Text.Encoding.UTF8.GetString(AuthData);
+      else
+        targetName = System.Text.Encoding.UTF8.GetString(AuthData, 0, index);
+      return targetName;
+    }
+
+    private void AcquireCredentials()
+    {
+#if !CF
+      MySqlSecurityPermission.CreatePermissionSet(false).Assert();
+#endif
+      continueProcessing = true;
+
+      int ss = AcquireCredentialsHandle(null, "Negotiate", SECPKG_CRED_OUTBOUND,
+              IntPtr.Zero, IntPtr.Zero, 0, IntPtr.Zero, ref outboundCredentials,
+              ref lifetime);
+      if (ss != SEC_E_OK)
+        throw new MySqlException("AcquireCredentialsHandle failed with errorcode" + ss);
+    }
+
+    #region SSPI Constants and Imports
+
     const int SEC_E_OK = 0;
     const int SEC_I_CONTINUE_NEEDED = 0x90312;
     const int SEC_I_COMPLETE_NEEDED = 0x1013;
@@ -52,14 +220,6 @@ namespace MySql.Data.MySqlClient
     const int MAX_TOKEN_SIZE = 12288;
     const int SECPKG_ATTR_SIZES = 0;
     const int STANDARD_CONTEXT_ATTRIBUTES = 0;
-
-    SECURITY_HANDLE outboundCredentials = new SECURITY_HANDLE(0);
-    SECURITY_HANDLE clientContext = new SECURITY_HANDLE(0);
-    Stream stream;
-    String targetName;
-    byte[] packetHeader;
-    int seq = 3;
-    private DBVersion version;
 
     [DllImport("secur32", CharSet = CharSet.Auto)]
     static extern int AcquireCredentialsHandle(
@@ -120,184 +280,8 @@ namespace MySql.Data.MySqlClient
     [DllImport("secur32.Dll", CharSet = CharSet.Auto, SetLastError = false)]
     public static extern int DeleteSecurityContext(ref SECURITY_HANDLE pCred);
 
-
-
-    public SSPI(string targetName, Stream stream, int seqNo, DBVersion version)
-    {
-      this.targetName = null;
-      this.stream = stream;
-      packetHeader = new byte[4];
-      seq = seqNo;
-      this.version = version;
-    }
-
-
-    // Read MySQL packet
-    // since SSPI blobs data cannot be larger than ~12K,
-    // handling just single packet is sufficient
-    private byte[] ReadData()
-    {
-      byte[] buffer;
-      MySqlStream.ReadFully(stream, packetHeader, 0, 4);
-      int length = (int)(packetHeader[0] + (packetHeader[1] << 8) +
-          (packetHeader[2] << 16));
-      seq = packetHeader[3] + 1;
-      buffer = new byte[length];
-      MySqlStream.ReadFully(stream, buffer, 0, length);
-
-      return buffer;
-    }
-
-    // Write MySQL packet
-    private void WriteData(byte[] buffer)
-    {
-      int count = buffer.Length;
-
-      packetHeader[0] = (byte)(count & 0xff);
-      packetHeader[1] = (byte)((count >> 8) & 0xff);
-      packetHeader[2] = (byte)((count >> 16) & 0xff);
-      packetHeader[3] = (byte)(seq);
-      stream.Write(packetHeader, 0, 4);
-      stream.Write(buffer, 0, count);
-      stream.Flush();
-    }
-
-    public void AuthenticateClient()
-    {
-      bool continueProcessing = true;
-      byte[] clientBlob = null;
-      byte[] serverBlob = null;
-      SECURITY_INTEGER lifetime = new SECURITY_INTEGER(0);
-      int ss;
-#if !CF 
-      MySqlSecurityPermission.CreatePermissionSet(false).Assert(); 
-#endif
-
-      ss = AcquireCredentialsHandle(null, "Negotiate", SECPKG_CRED_OUTBOUND,
-            IntPtr.Zero, IntPtr.Zero, 0, IntPtr.Zero, ref outboundCredentials,
-            ref lifetime);
-      if (ss != SEC_E_OK)
-      {
-        throw new MySqlException(
-            "AcquireCredentialsHandle failed with errorcode" + ss);
-      }
-      try
-      {
-        while (continueProcessing)
-        {
-          InitializeClient(out clientBlob, serverBlob,
-              out continueProcessing);
-          if (clientBlob != null && clientBlob.Length > 0)
-          {
-            WriteData(clientBlob);
-            if (continueProcessing)
-              serverBlob = ReadData();
-            if (version.isAtLeast(5, 5, 16))
-            {
-              // Treat properly prefix byte as per 
-              // https://bug.oraclecorp.com/pls/bug/webbug_print.show?c_rptno=12944747
-              // - 0x00 to acknowledge auth 
-              // - 0xff to deny auth
-              // - 0xfe to switch auth 
-              // - 0x01 to return more auth data 
-              byte prefix = serverBlob[0];
-              byte[] buf = new byte[serverBlob.Length - 1];
-              Array.Copy(serverBlob, 1, buf, 0, buf.Length);
-              serverBlob = buf;
-            }
-          }
-        }
-      }
-      finally
-      {
-        FreeCredentialsHandle(ref outboundCredentials);
-        DeleteSecurityContext(ref clientContext);
-      }
-    }
-
-
-    void InitializeClient(out byte[] clientBlob, byte[] serverBlob,
-        out bool continueProcessing)
-    {
-      clientBlob = null;
-      continueProcessing = true;
-      SecBufferDesc clientBufferDesc = new SecBufferDesc(MAX_TOKEN_SIZE);
-      SECURITY_INTEGER lifetime = new SECURITY_INTEGER(0);
-      int ss = -1;
-      try
-      {
-        uint ContextAttributes = 0;
-
-        if (serverBlob == null)
-        {
-          ss = InitializeSecurityContext(
-              ref outboundCredentials,
-              IntPtr.Zero,
-              targetName,
-              STANDARD_CONTEXT_ATTRIBUTES,
-              0,
-              SECURITY_NETWORK_DREP,
-              IntPtr.Zero, /* always zero first time around */
-              0,
-              out clientContext,
-              out clientBufferDesc,
-              out ContextAttributes,
-              out lifetime);
-
-        }
-        else
-        {
-          String s = System.Text.Encoding.UTF8.GetString(serverBlob, 0,
-              serverBlob.Length);
-          SecBufferDesc serverBufferDesc = new SecBufferDesc(serverBlob);
-
-          try
-          {
-            ss = InitializeSecurityContext(ref outboundCredentials,
-                ref clientContext,
-                targetName,
-                STANDARD_CONTEXT_ATTRIBUTES,
-                0,
-                SECURITY_NETWORK_DREP,
-                ref serverBufferDesc,
-                0,
-                out clientContext,
-                out clientBufferDesc,
-                out ContextAttributes,
-                out lifetime);
-          }
-          finally
-          {
-            serverBufferDesc.Dispose();
-          }
-        }
-
-
-        if ((SEC_I_COMPLETE_NEEDED == ss)
-            || (SEC_I_COMPLETE_AND_CONTINUE == ss))
-        {
-          CompleteAuthToken(ref clientContext, ref clientBufferDesc);
-        }
-
-        if (ss != SEC_E_OK &&
-            ss != SEC_I_CONTINUE_NEEDED &&
-            ss != SEC_I_COMPLETE_NEEDED &&
-            ss != SEC_I_COMPLETE_AND_CONTINUE)
-        {
-          throw new MySqlException(
-              "InitializeSecurityContext() failed  with errorcode " + ss);
-        }
-
-        clientBlob = clientBufferDesc.GetSecBufferByteArray();
-      }
-      finally
-      {
-        clientBufferDesc.Dispose();
-      }
-      continueProcessing = (ss != SEC_E_OK && ss != SEC_I_COMPLETE_NEEDED);
-    }
+    #endregion
   }
-
 
   [StructLayout(LayoutKind.Sequential)]
   struct SecBufferDesc : IDisposable
@@ -414,6 +398,7 @@ namespace MySql.Data.MySqlClient
       }
     }
   }
+
   [StructLayout(LayoutKind.Sequential)]
   public struct SECURITY_INTEGER
   {
@@ -447,4 +432,3 @@ namespace MySql.Data.MySqlClient
   };
 
 }
-
