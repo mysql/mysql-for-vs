@@ -28,6 +28,45 @@ namespace MySql.Data.MySqlClient
     {
       get { return (GenericConfigurationElementCollection<InterceptorConfigurationElement>)this["CommandInterceptors"]; }
     }
+
+    [ConfigurationProperty("AuthenticationPlugins", IsRequired = false)]
+    [ConfigurationCollection(typeof(AuthenticationPluginConfigurationElement), AddItemName = "add", ClearItemsName = "clear", RemoveItemName = "remove")]
+    public GenericConfigurationElementCollection<AuthenticationPluginConfigurationElement> AuthenticationPlugins
+    {
+      get { return (GenericConfigurationElementCollection<AuthenticationPluginConfigurationElement>)this["AuthenticationPlugins"]; }
+    }
+  }
+
+  /// <summary>
+  /// 
+  /// </summary>
+  public sealed class AuthenticationPluginConfigurationElement : ConfigurationElement
+  {
+    [ConfigurationProperty("name", IsRequired = true)]
+    public string Name
+    {
+      get
+      {
+        return (string)this["name"];
+      }
+      set
+      {
+        this["name"] = value;
+      }
+    }
+
+    [ConfigurationProperty("type", IsRequired = true)]
+    public string Type
+    {
+      get
+      {
+        return (string)this["type"];
+      }
+      set
+      {
+        this["type"] = value;
+      }
+    }
   }
 
   /// <summary>

@@ -62,6 +62,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authentication\AuthenticationManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Authentication\MySQLAuthenticationPlugin.cs" />
+    <Compile Include="Authentication\NativePasswordPlugins.cs" />
+    <Compile Include="Authentication\WindowsAuthenticationPlugin.cs" />
     <Compile Include="BulkLoader.cs" />
     <Compile Include="CharSetMap.cs" />
     <Compile Include="command.cs" />
@@ -121,7 +127,6 @@
     <Compile Include="Properties\VersionInfo.cs" />
     <Compile Include="ResultSet.cs" />
     <Compile Include="SchemaProvider.cs" />
-    <Compile Include="SSPI.cs" />
     <Compile Include="Statement.cs" />
     <Compile Include="StoredProcedure.cs" />
     <Compile Include="TableCache.cs" />
@@ -197,6 +202,7 @@
     <Content Include="docs\MySqlParameterCollection.xml" />
     <Content Include="docs\MySqlTransaction.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
