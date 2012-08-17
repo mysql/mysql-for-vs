@@ -296,6 +296,18 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\Source\MySql.Data\Authentication\AuthenticationManager.cs">
+      <Link>Authentication\AuthenticationManager.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Source\MySql.Data\Authentication\MySQLAuthenticationPlugin.cs">
+      <Link>Authentication\MySQLAuthenticationPlugin.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Source\MySql.Data\Authentication\NativePasswordPlugins.cs">
+      <Link>Authentication\NativePasswordPlugins.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Source\MySql.Data\Authentication\WindowsAuthenticationPlugin.cs">
+      <Link>Authentication\WindowsAuthenticationPlugin.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\Source\MySql.Data\Interceptors\CommandInterceptor.cs">
       <Link>Interceptors\CommandInterceptor.cs</Link>
     </Compile>
@@ -321,9 +333,6 @@
       <Link>common\QueryNormalizer.cs</Link>
     </Compile>
     <Compile Include="..\..\..\Source\MySql.Data\MySqlTrace.cs" />
-    <Compile Include="..\..\..\Source\MySql.Data\SSPI.cs">
-      <Link>SSPI.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\Source\MySql.Data\TableCache.cs">
       <Link>TableCache.cs</Link>
     </Compile>

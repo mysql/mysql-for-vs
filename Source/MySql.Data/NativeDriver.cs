@@ -29,11 +29,11 @@ using MySql.Data.Types;
 using System.Security.Cryptography.X509Certificates;
 using MySql.Data.MySqlClient.Properties;
 using System.Text;
+using MySql.Data.MySqlClient.Authentication;
 #if !CF
 using System.Net.Security;
 using System.Security.Authentication;
 using System.Globalization;
-using MySql.Data.MySqlClient.Authentication;
 #endif
 
 namespace MySql.Data.MySqlClient

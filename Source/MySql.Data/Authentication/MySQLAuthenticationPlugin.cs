@@ -46,17 +46,6 @@ namespace MySql.Data.MySqlClient.Authentication
       if (plugin == null)
         throw new MySqlException(String.Format(Resources.UnknownAuthenticationMethod, method));
 
-      //if (String.Compare(method, "mysql_native_password", true) == 0)
-      //{
-      //  if ((driver.Flags & ClientFlags.SECURE_CONNECTION) != 0)
-      //    plugin = new MySqlSecureAuthenticationPlugin();
-      //  else
-      //    plugin = new MySqlOldAuthenticationPlugin();
-      //}
-      //else if (String.Compare(method, "authentication_windows_client", true) == 0)
-      //  plugin = new MySqlWindowsAuthenticationPlugin();
-      //if (plugin == null)
-
       plugin.driver = driver;
       plugin.AuthData = authData;
       return plugin;

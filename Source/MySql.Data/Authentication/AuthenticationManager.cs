@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using MySql.Data.MySqlClient.Properties;
@@ -36,12 +35,14 @@ namespace MySql.Data.MySqlClient.Authentication
       static AuthenticationPluginManager()
       {
         plugins["mysql_native_password"] = new PluginInfo("MySql.Data.MySqlClient.Authentication.MySqlNativePasswordPlugin");
+#if !CF
         plugins["authentication_windows_client"] = new PluginInfo("MySql.Data.MySqlClient.Authentication.MySqlWindowsAuthenticationPlugin");
         if (MySqlConfiguration.Settings != null && MySqlConfiguration.Settings.AuthenticationPlugins != null)
         {
           foreach (AuthenticationPluginConfigurationElement e in MySqlConfiguration.Settings.AuthenticationPlugins)
             plugins[e.Name] = new PluginInfo(e.Type);
         }
+#endif
       }
 
       public static MySqlAuthenticationPlugin GetPlugin(string method)
