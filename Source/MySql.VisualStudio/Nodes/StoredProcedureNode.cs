@@ -351,10 +351,12 @@ namespace MySql.Data.VisualStudio
       try
       {
         int result = dbg.LaunchDebugTargets(1, pInfo);
+        if (result != 0)
+          throw new ApplicationException("COM error " + result);
       }
       catch (Exception ex)
       {
-        throw;
+        MessageBox.Show(ex.GetBaseException().Message, "Debugger Error");
       }
       finally
       {
