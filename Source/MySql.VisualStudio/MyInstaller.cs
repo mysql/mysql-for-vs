@@ -52,13 +52,15 @@ namespace MySql.Data.VisualStudio
         root = "9.0";
       else if (Context.Parameters["version"] == "VS2010")
         root = "10.0";
+      else if (Context.Parameters["version"] == "VS2012")
+        root = "11.0";
       else
         throw new NotSupportedException();
 
       if (Context.Parameters["debug"] == "true")
         root += "Exp";
       if (ranu)
-        root += @"\Configuration";
+        root += @"_Config";
       return root;
     }
 
