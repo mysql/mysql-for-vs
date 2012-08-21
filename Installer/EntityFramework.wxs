@@ -31,12 +31,22 @@
       </Component>
     </DirectoryRef>
 
-    <DirectoryRef Id="Entity.T4.DBGenDir">
-      <Component Id="EF.T4" Guid="6555D339-120C-4D62-B60C-08764D8CA739">
+    <DirectoryRef Id="VS10_DBGenDir">
+      <Component Id="EF.T4.VS10" Guid="6555D339-120C-4D62-B60C-08764D8CA739">
         <Condition>VS_2010_PATH</Condition>
-        <File Id="SSDLToMySQL" Name="SSDLToMySQL.tt" DiskId="1"
+        <File Id="VS10.SSDLToMySQL" Name="SSDLToMySQL.tt" DiskId="1"
               Source="..\Source\MySql.Data.Entity\T4Templates\SSDLToMySQL.tt"/>
-        <File Id="GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
+        <File Id="VS10.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
+              Source="..\Source\MySql.Data.Entity\T4Templates\GenerateMySQL.Utility.ttinclude"/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="VS11_DBGenDir">
+      <Component Id="EF.T4.VS11" Guid="6555D339-120C-4D62-B60C-08764D8CA740">
+        <Condition>VS_2012_PATH</Condition>
+        <File Id="VS11.SSDLToMySQL" Name="SSDLToMySQL.tt" DiskId="1"
+              Source="..\Source\MySql.Data.Entity\T4Templates\SSDLToMySQL.tt"/>
+        <File Id="VS11.GenerateMySQL.Utility" Name="GenerateMySQL.Utility.ttinclude" DiskId="1"
               Source="..\Source\MySql.Data.Entity\T4Templates\GenerateMySQL.Utility.ttinclude"/>
       </Component>
     </DirectoryRef>
@@ -48,7 +58,8 @@
       <ComponentRef Id="EF.v2.GAC"/>
       <ComponentRef Id="EF.v4"/>
       <ComponentRef Id="EF.v4.GAC"/>
-      <ComponentRef Id="EF.T4"/>
+      <ComponentRef Id="EF.T4.VS10"/>
+      <ComponentRef Id="EF.T4.VS11"/>
     </Feature>
 
   </Fragment>
