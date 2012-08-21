@@ -9,7 +9,7 @@
       <UpgradeVersion OnlyDetect="yes" Minimum="$(var.Version)" Property="NEWERVERSIONDETECTED" IncludeMinimum="no" />
       <UpgradeVersion OnlyDetect="no" Maximum="$(var.Version)" Property="OLDERVERSIONBEINGUPGRADED" IncludeMaximum="yes" />
     </Upgrade>
-    
+
     <Property Id="ARPURLINFOABOUT" Value="http://www.mysql.com" />
     <Property Id="ARPURLUPDATEINFO" Value="http://dev.mysql.com"/>
 
@@ -54,7 +54,7 @@
     <Property Id="HLM_LOCATION">
       <RegistrySearch Id="HLMRegSearch" Root="HKLM" Key="Software\Microsoft\Help\v1.0" Name="AppRoot" Type="raw"/>
     </Property>
-    
+
     <!-- Our directory structure -->
     <Directory Id='TARGETDIR' Name='SourceDir'>
       <Directory Id='ProgramFilesFolder' Name='PFiles'>
@@ -65,9 +65,8 @@
               <Directory Id='assemblies_v4' Name='v4.0'/>
             </Directory>
             <Directory Id='VSIntegrationDir' Name='Visual Studio Integration'>
-              <Directory Id='VSTemplatesDir' Name='Templates'/>
+              <Directory Id='PFTemplatesDir' Name='Templates'/>
               <Directory Id='VS2008Integration' Name='2008'/>
-              <Directory Id='VS2010Integration' Name='2010'/>
             </Directory>
             <Directory Id='DocsDir' Name='Documentation'>
               <Directory Id='LicensesDir' Name='Licenses for Third-Party Components'/>
@@ -83,24 +82,71 @@
         </Directory>
       </Directory>
 
-      <!-- Install the T4 DDL creation templates -->
+      <!-- VS2010 Extension folders -->
       <Directory Id="VS_2010_PATH" Name="VSPath">
-        <Directory Id="Entity.T4.ExtensionDir" Name="Extensions">
-          <Directory Id="Entity.T4.OracleDir" Name="Microsoft">
-            <Directory Id="Entity.T4.EFToolsDir" Name="Entity Framework Tools">
-              <Directory Id="Entity.T4.DBGenDir" Name="DBGen"/>
+        <Directory Id="VS10.T4.ExtensionDir" Name="Extensions">
+          <Directory Id="VS10.T4.MicrosoftDir" Name="Microsoft">
+            <Directory Id="VS10.T4.EFToolsDir" Name="Entity Framework Tools">
+              <Directory Id="VS10_DBGenDir" Name="DBGen"/>
             </Directory>
           </Directory>
-          <Directory Id="OracleVSExtensionsDir" Name="Oracle">
-            <Directory Id="CNetVSExtensionDir" Name="MySQL Connector Net ">
-              <Directory Id="CNetVerVSExtensionDir" Name="$(var.Version)">
-                <Directory Id='VS2010TemplatesDir' Name='Templates'/>
-	            </Directory>
+          <Directory Id="VS10_OracleDir" Name="Oracle">
+            <Directory Id="VS10_ExtensionDir" Name="MySQL Connector Net ">
+              <Directory Id="VS10_ExtVersionDir" Name="$(var.Version)">
+                <Directory Id='VS10_TemplatesDir' Name='Templates'/>
+              </Directory>
             </Directory>
           </Directory>
         </Directory>
       </Directory>
 
+      <!-- VS2012 Extension folders -->
+      <Directory Id="VS_2012_PATH">
+        <Directory Id="VS11.T4.ExtensionDir" Name="Extensions">
+          <Directory Id="VS11.T4.MicrosoftDir" Name="Microsoft">
+            <Directory Id="VS11.T4.EFToolsDir" Name="Entity Framework Tools">
+              <Directory Id="VS11_DBGenDir" Name="DBGen"/>
+            </Directory>
+          </Directory>
+          <Directory Id="VS11_OracleDir" Name="Oracle">
+            <Directory Id="VS11_ExtensionDir" Name="MySQL Connector Net ">
+              <Directory Id="VS11_ExtVersionDir" Name="$(var.Version)">
+                <Directory Id='VS11_TemplatesDir' Name='Templates'/>
+              </Directory>
+            </Directory>
+          </Directory>
+        </Directory>
+      </Directory>
+
+      <!-- Visual Studio 2010 Extension and template folder --><!--
+      <Directory Id="LocalAppDataFolder" Name="LocalAppDataFolder">
+        <Directory Id="LADF.Microsoft" Name="Microsoft">
+          <Directory Id="LADFM.VisualStudio" Name="VisualStudio">
+            <Directory Id="LADF.12" Name="11.0">
+              <Directory Id="LADF.VS12.Ext" Name="Extensions">
+                <Directory Id="LADF.VS12.Oracle" Name="Oracle">
+                  <Directory Id="LADF.VS12.CNet" Name="MySQL Connector Net ">
+                    <Directory Id="VS2012_ExtensionDir" Name="$(var.Version)">
+                      <Directory Id='VS2012_TemplatesDir' Name='Templates'/>
+                    </Directory>
+                  </Directory>
+                </Directory>
+              </Directory>
+            </Directory>
+            <Directory Id="LADFMVS.10.0" Name="10.0">
+              <Directory Id="LADF.VS10.Ext" Name="Extensions">
+                <Directory Id="LADF.VS10.Oracle" Name="Oracle">
+                  <Directory Id="LADF.VS10.CNet" Name="MySQL Connector Net ">
+                    <Directory Id="VS2010_ExtensionDir" Name="$(var.Version)">
+                      <Directory Id='VS2010_TemplatesDir' Name='Templates'/>
+                    </Directory>
+                  </Directory>
+                </Directory>
+              </Directory>
+            </Directory>
+          </Directory>
+        </Directory>
+      </Directory>-->
     </Directory>
 
     <DirectoryRef Id='DocsDir'>
@@ -126,7 +172,7 @@
         <File Id="Zlib.net" Name="license-zlib-net.html" Source="..\Documentation\Licenses for Third-Party Components\license-zlib-net.html" DiskId="1"/>
       </Component>
     </DirectoryRef>
-    
+
     <Feature Id='DocsFeature' Display='4' Level='1' Title='Documentation' Description='Documentation'>
       <ComponentRef Id='Docs'/>
       <ComponentRef Id='Licenses'/>
@@ -140,12 +186,13 @@
              Title='Visual Studio Integration' Description='DDEX and Server Explorer Integration'>
       <FeatureRef Id='VS2008Int'/>
       <FeatureRef Id='VS2010Int'/>
+      <FeatureRef Id='VS2012Int'/>
     </Feature>
     <FeatureRef Id="Samples"/>
 
     <Binary Id="H2Reg" SourceFile="Binary\H2Reg.exe"/>
     <Property Id="WIXUI_INSTALLDIR" Value='INSTALLDIR'/>
-    
+
     <!-- Remove the license agreement dialog -->
     <UIRef Id='WixUI_MySQL'/>
     <WixVariable Id="WixUIBannerBmp" Value="Bitmaps/BannrBmp.bmp"/>
@@ -156,14 +203,14 @@
 
     <InstallExecuteSequence>
       <RemoveExistingProducts After="InstallInitialize" />
-      
+
       <Custom Action='RegisterHelp' After="InstallFiles">(&amp;DocsFeature=3) AND NOT(!DocsFeature=3)</Custom>
       <Custom Action="UnRegisterHelp" Before="RemoveFiles">(&amp;DocsFeature=2) AND (!DocsFeature=3)</Custom>
 
       <Custom Action="SetHLMPath" After="AppSearch"></Custom>
       <!--<Custom Action="Register2010Help" After="PublishProduct">HLM_LOCATION AND (&amp;DocsFeature=3) AND NOT(!DocsFeature=3)</Custom>
       <Custom Action="UnRegister2010Help" After="RemoveFiles">HLM_LOCATION AND (&amp;DocsFeature=2) AND (!DocsFeature=3)</Custom>-->
-      
+
       <Custom Action='NoDowngrade' After='FindRelatedProducts'>NEWERVERSIONDETECTED</Custom>
     </InstallExecuteSequence>
 
@@ -179,7 +226,7 @@
     <CustomAction Id="UnRegister2010Help"
                   ExeCommand ='/product VS /version 100 /locale en-us /uninstall /silent /vendor "Oracle" /mediaBookList "MySQL Connector/Net" /productName "MySQL Connector/Net" > NUL'
                   Property='HelpLibManager' Return='check'/>
-    
+
     <!-- Setup should not continue is a newer version is installed. -->
     <CustomAction Id='NoDowngrade' Error='A later version of [ProductName] is already installed. Setup will now exit.' />
   </Product>
