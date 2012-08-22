@@ -34,29 +34,99 @@ namespace MySql.Debugger
   /// </summary>
   public class Breakpoint
   {
+    protected Debugger _debugger { get; set; }
     public bool Disabled { get; set; }
     public int StartLine { get; set; }
     public int EndLine { get; set; }
     public int StartColumn { get; set; }
     public int EndColumn { get; set; }
     public int Line { get { return StartLine; } }
-    public CommonTree Condition { get; set; }
+    public string Condition { get; protected set; }
+    private object _previousConditionValue;
     public bool IsFake { get; set; }
     public int Hash { get; set; }
-    public string RoutineName { get; set; }    
+    public string RoutineName { get; set; }
+    public EnumBreakpointConditionStyle ConditionStyle { get; protected set; }
+    public uint HitCount { get; set; }
+    public uint PassCount { get; protected set; }
+    public EnumBreakpointPassCountStyle PassCountStyle { get; protected set; }
 
-    public bool EvalCondition()
+    public void SetCondition(string condition, EnumBreakpointConditionStyle style)
     {
-      // TODO: Eval Condition
-      throw new NotImplementedException();
+      ConditionStyle = style;
+      Condition = condition;
+      _previousConditionValue = _debugger.Eval(condition);
     }
 
-    public Breakpoint()
+    public void SetPassCount(uint passCount, EnumBreakpointPassCountStyle style)
+    {
+      PassCount = passCount;
+      PassCountStyle = style;
+      HitCount = 0;
+    }
+
+    /// <summary>
+    /// Returns true of the breakpoint is triggered either becuase pass count has been reached, or the condition has been evaluated to true.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsTriggered()
+    {
+      if (ConditionStyle != EnumBreakpointConditionStyle.None)
+      {
+        object newValue = _debugger.Eval(Condition);
+        try
+        {
+          if ((ConditionStyle == EnumBreakpointConditionStyle.WhenTrue) && (Convert.ToInt32(newValue) == 1))
+            return true;
+          else if ((ConditionStyle == EnumBreakpointConditionStyle.WhenChanged) && (_previousConditionValue != newValue))
+            return true;
+        }
+        finally
+        {
+          _previousConditionValue = newValue;
+        }
+      }
+      else if (PassCountStyle != EnumBreakpointPassCountStyle.None)
+      {
+        HitCount++;
+        if ((PassCountStyle == EnumBreakpointPassCountStyle.Equal) && (HitCount == PassCount))
+          return true;
+        else if ((PassCountStyle == EnumBreakpointPassCountStyle.EqualOrGreater) && (HitCount >= PassCount))
+          return true;
+        else if ((PassCountStyle == EnumBreakpointPassCountStyle.Mod) && ((PassCount % HitCount) == 0))
+          return true;
+      }
+      else
+      {
+        return true;
+      }
+      return false;
+    }
+
+    public Breakpoint( Debugger debugger )
     {
       IsFake = false;
       Disabled = false;
       StartColumn = 0;
       EndColumn = UInt16.MaxValue;
+      _debugger = debugger;
+      ConditionStyle = EnumBreakpointConditionStyle.None;
+      PassCountStyle = EnumBreakpointPassCountStyle.None;
     }
+  }
+
+  public enum EnumBreakpointConditionStyle : int
+  {
+    None = 0,
+    WhenTrue = 1,
+    WhenChanged = 2
+  }
+
+  public enum EnumBreakpointPassCountStyle : int
+  {
+    None = 0,
+    Equal = 1,
+    EqualOrGreater = 2,
+    Mod = 3
   }
 }

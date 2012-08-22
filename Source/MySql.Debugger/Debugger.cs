@@ -760,7 +760,13 @@ namespace MySql.Debugger
     {
       if (OnBreakpoint != null)
         OnBreakpoint(bp);
-    }    
+    }
+
+    internal void HitBreakpoint(Breakpoint bp)
+    {
+      if (bp.IsTriggered())
+        RaiseBreakpoint(bp);
+    }
 
     public static int GetTagHashCode(string tag)
     {
@@ -823,7 +829,7 @@ namespace MySql.Debugger
       }
       int hash = GetTagHashCode(ri.SourceCode);
       string routineName = ri.GetFullName(_utilCon.Database);
-      Breakpoint fakeBreakpoint = new Breakpoint() { StartLine = startLine, EndLine = endLine, IsFake = true, Hash = hash, 
+      Breakpoint fakeBreakpoint = new Breakpoint( this ) { StartLine = startLine, EndLine = endLine, IsFake = true, Hash = hash, 
         RoutineName = routineName, StartColumn = startColumn, EndColumn = endColumn };
       CurrentScope.CurrentPosition = fakeBreakpoint;
       // Breakpoints on the same line but different files are treated by making a breakpoint uniquely identified
@@ -846,12 +852,12 @@ namespace MySql.Debugger
         else
           fireBp = true;
         if (fireBp)
-          RaiseBreakpoint( fakeBreakpoint );
+          RaiseBreakpoint(fakeBreakpoint);
         return;
       }
       else if (SteppingType == SteppingTypeEnum.StepInto)
       {
-        RaiseBreakpoint( fakeBreakpoint );
+        RaiseBreakpoint(fakeBreakpoint);
         return;
       }
       else if (SteppingType == SteppingTypeEnum.StepOut)
@@ -864,7 +870,7 @@ namespace MySql.Debugger
         if (_scopeLevel == nextStepOut)
         {
           nextStepOut = -1;
-          RaiseBreakpoint( fakeBreakpoint );
+          RaiseBreakpoint(fakeBreakpoint);
           return;
         }
       }
@@ -873,7 +879,7 @@ namespace MySql.Debugger
       if (_breakpoints.TryGetValue(bpKey, out bp) && !bp.Disabled)
       {
         stepOverScope = __scopeLevel;
-        RaiseBreakpoint(bp);
+        HitBreakpoint(bp);
       }
     }
 
@@ -890,7 +896,7 @@ namespace MySql.Debugger
       }
       else
       {
-        bp = new Breakpoint() { Hash = bpKey.Hash, StartLine = line };
+        bp = new Breakpoint( this ) { Hash = bpKey.Hash, StartLine = line };
         _breakpoints.Add( bpKey, bp );
         return bp;
       }
@@ -2224,16 +2230,21 @@ ri.TriggerInfo.Table, ri.TriggerInfo.ObjectSchema);
 
     public object Eval(string expression)
     {
+      return Eval(expression, CurrentScope);
+    }
+
+    public object Eval(string expression, RoutineScope rs)
+    {
       CommonTokenStream cts;
       StringBuilder sb = new StringBuilder();
       MySQL51Parser.program_return pr = this.ParseSql(
         string.Format("select {0}", expression), false, out sb, out cts);
-      return Eval((CommonTree)((CommonTree)pr.Tree).GetChild(0), cts);
+      return Eval((CommonTree)((CommonTree)pr.Tree).GetChild(0), cts, rs);
     }
 
-    private object Eval(CommonTree t, CommonTokenStream cts)
+    private object Eval(CommonTree t, CommonTokenStream cts, RoutineScope rs)
     {
-      string expr = ReplaceVarsWithValues(t, cts);
+      string expr = ReplaceVarsWithValues(t, cts, rs);
       return ExecuteScalar(expr);
     }
 
@@ -2243,9 +2254,9 @@ ri.TriggerInfo.Table, ri.TriggerInfo.ObjectSchema);
     /// </summary>
     /// <param name="t"></param>
     /// <returns>A string with the expression after replacing the values.</returns>
-    internal string ReplaceVarsWithValues(CommonTree t, CommonTokenStream cts)
+    internal string ReplaceVarsWithValues(CommonTree t, CommonTokenStream cts, RoutineScope rs )
     {
-      Dictionary<string, StoreType> vars = CurrentScope.Variables;
+      Dictionary<string, StoreType> vars = rs.Variables;
       StringBuilder sb = new StringBuilder();
 
       //foreach (IToken tok in cts.GetTokens(t.TokenStartIndex, t.TokenStopIndex))

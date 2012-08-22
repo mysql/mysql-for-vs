@@ -59,7 +59,7 @@ namespace MySql.Debugger.VisualStudio
     {
       Debug.WriteLine("AD7StackFrame: EnumProperties");
       pcelt = 0;
-      ppEnum = new AD7PropertyCollection(_node);
+      ppEnum = new AD7PropertyCollection(_node, _rs);
       return VSConstants.S_OK;
     }
 
@@ -100,7 +100,7 @@ namespace MySql.Debugger.VisualStudio
 
       if ((dwFieldSpec & enum_FRAMEINFO_FLAGS.FIF_FUNCNAME) != 0)
       {
-        frameInfo.m_bstrFuncName = "Stack Frame 1";
+        frameInfo.m_bstrFuncName = _rs.OwningRoutine.Name;
         frameInfo.m_dwValidFields |= enum_FRAMEINFO_FLAGS.FIF_FUNCNAME;
       }
 
