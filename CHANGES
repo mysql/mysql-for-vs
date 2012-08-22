@@ -9,6 +9,10 @@
 - Debugger: Enabled colorizing (Intellisense) into debugger editor.
 - Debugger: Enabled changing values of locals in a function scope (previously caused deadlock since functions are executed in a transaction in MySql).
 - Debugger: Fix a small issue such that when in a multiple stack frame debug session, clicking in a stack frame other than the current one, was not colorizing correctly.
+- Debugger: Added support for conditional breakpoints
+- Debugger: Added support for pass count breakpoints
+- Debugger: Fixed a bug such that in a multiple callstack scenario, cliking in a stack frame other than the last one, was not updating locals grid.
+- Debugger: Fixed a bug such that when modifying a local variable in a nested scope debug session, the value appear temporarily as "Not implemented interface".
 - Added support for Visual Studio 2012
 - Added Authentication Plugin.
 
