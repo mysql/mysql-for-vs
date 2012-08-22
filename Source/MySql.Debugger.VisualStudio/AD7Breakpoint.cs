@@ -28,6 +28,7 @@ using Microsoft.VisualStudio.Debugger.Interop;
 using Microsoft.VisualStudio;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 using MySql.Debugger;
 
 namespace MySql.Debugger.VisualStudio
@@ -101,13 +102,46 @@ namespace MySql.Debugger.VisualStudio
     public int SetCondition(BP_CONDITION bpCondition)
     {
       Debug.WriteLine("AD7Breakpoint: SetCondition");
-      throw new NotImplementedException();
+      EnumBreakpointConditionStyle style = EnumBreakpointConditionStyle.None;
+      switch (bpCondition.styleCondition)
+      {
+        case enum_BP_COND_STYLE.BP_COND_WHEN_CHANGED:
+          style = EnumBreakpointConditionStyle.WhenChanged;
+          break;
+        case enum_BP_COND_STYLE.BP_COND_WHEN_TRUE:
+          style = EnumBreakpointConditionStyle.WhenTrue;
+          break;
+      }
+      try
+      {
+        CoreBreakpoint.SetCondition(bpCondition.bstrCondition, style);
+      }
+      catch (DebuggerException e)
+      {
+        MessageBox.Show(e.Message, "Error when setting condition breakpoint", MessageBoxButtons.OK);
+        return VSConstants.E_FAIL;
+      }
+      return VSConstants.S_OK;
     }
 
     public int SetPassCount(BP_PASSCOUNT bpPassCount)
     {
       Debug.WriteLine("AD7Breakpoint: SetPassCount");
-      throw new NotImplementedException();
+      EnumBreakpointPassCountStyle style = EnumBreakpointPassCountStyle.None;
+      switch (bpPassCount.stylePassCount)
+      {
+        case enum_BP_PASSCOUNT_STYLE.BP_PASSCOUNT_EQUAL:
+          style = EnumBreakpointPassCountStyle.Equal;
+          break;
+        case enum_BP_PASSCOUNT_STYLE.BP_PASSCOUNT_EQUAL_OR_GREATER:
+          style = EnumBreakpointPassCountStyle.EqualOrGreater;
+          break;
+        case enum_BP_PASSCOUNT_STYLE.BP_PASSCOUNT_MOD:
+          style = EnumBreakpointPassCountStyle.Mod;
+          break;
+      }
+      CoreBreakpoint.SetPassCount(bpPassCount.dwPassCount, style);
+      return VSConstants.S_OK;
     }
 
     #region IDebugPendingBreakpoint2 Members
@@ -117,23 +151,14 @@ namespace MySql.Debugger.VisualStudio
       Debug.WriteLine("AD7Breakpoint: Bind");
       enumError = null;
       
-      //TOOD set breakpoint line
-      IDebugDocumentPosition2 docPosition = (IDebugDocumentPosition2)(Marshal.GetObjectForIUnknown(_bpRequestInfo.bpLocation.unionmember2));
-
-      TEXT_POSITION[] startPosition = new TEXT_POSITION[1];
-      TEXT_POSITION[] endPosition = new TEXT_POSITION[1];
-      docPosition.GetRange(startPosition, endPosition);
-      _lineNumber = startPosition[0].dwLine + 1;
-      _beginPosition = startPosition[0];
-      _endPosition = endPosition[0];
-      string fileName;
-      docPosition.GetFileName(out fileName);
-      if (fileName != _node.FileName)
-        return VSConstants.E_FAIL;
+      // set breakpoint line
+      int result = FindBreakpointLine();
+      if (result != VSConstants.S_OK)
+        return result;
 
       if (((IDebugPendingBreakpoint2)this).CanBind(out enumError) == VSConstants.S_OK)
       {
-        ////TODO bind breakpoint
+        // bind breakpoint
         DebuggerManager.Instance.BindBreakpoint(this);
         _callback.Breakpoint(_node, this);
         return VSConstants.S_OK;
@@ -150,9 +175,33 @@ namespace MySql.Debugger.VisualStudio
       }
     }
 
+    private int FindBreakpointLine()
+    {
+      IDebugDocumentPosition2 docPosition = (IDebugDocumentPosition2)(Marshal.GetObjectForIUnknown(_bpRequestInfo.bpLocation.unionmember2));
+
+      TEXT_POSITION[] startPosition = new TEXT_POSITION[1];
+      TEXT_POSITION[] endPosition = new TEXT_POSITION[1];
+      docPosition.GetRange(startPosition, endPosition);
+      _lineNumber = startPosition[0].dwLine + 1;
+      _beginPosition = startPosition[0];
+      _endPosition = endPosition[0];
+      string fileName;
+      docPosition.GetFileName(out fileName);
+      if (fileName != _node.FileName)
+        return VSConstants.E_FAIL;
+      else
+        return VSConstants.S_OK;
+    }
+
     int IDebugPendingBreakpoint2.CanBind(out IEnumDebugErrorBreakpoints2 ppErrorEnum)
     {
       Debug.WriteLine("AD7Breakpoint: CanBind");
+      int result = VSConstants.S_OK;
+      ppErrorEnum = null;
+      if (_lineNumber == 0)
+        result = FindBreakpointLine();
+      if (result != VSConstants.S_OK)
+        return result;
       if (DebuggerManager.Instance.Debugger.CanBindBreakpoint( ( int )this._lineNumber))
       {
         ppErrorEnum = null;
@@ -283,8 +332,8 @@ namespace MySql.Debugger.VisualStudio
     int IDebugBoundBreakpoint2.GetHitCount(out uint pdwHitCount)
     {
       Debug.WriteLine("AD7Breakpoint: GetHitCount");
-      pdwHitCount = 0;
-      return VSConstants.E_NOTIMPL;
+      pdwHitCount = CoreBreakpoint.HitCount;
+      return VSConstants.S_OK;
     }
 
     int IDebugBoundBreakpoint2.GetPendingBreakpoint(out IDebugPendingBreakpoint2 ppPendingBreakpoint)
@@ -304,7 +353,8 @@ namespace MySql.Debugger.VisualStudio
     int IDebugBoundBreakpoint2.SetHitCount(uint dwHitCount)
     {
       Debug.WriteLine("AD7Breakpoint: SetHitCount");
-      throw new NotImplementedException();
+      CoreBreakpoint.HitCount = dwHitCount;
+      return VSConstants.S_OK;
     }
 
     #endregion

@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Microsoft.VisualStudio.Debugger.Interop;
@@ -33,6 +34,7 @@ namespace MySql.Debugger.VisualStudio
   public class AD7Property : IDebugProperty2
   {
     private AD7ProgramNode _node;
+    private RoutineScope _rs;
     private static Dictionary<string, decimal> numberTypeMax = new Dictionary<string, decimal>()
     {
       { "tinyint", sbyte.MaxValue },
@@ -71,10 +73,12 @@ namespace MySql.Debugger.VisualStudio
     public string Value { get; set; }
     public string TypeName { get; set; }
 
-    public AD7Property(string name, AD7ProgramNode node)
+    public AD7Property(string name, AD7ProgramNode node, RoutineScope rs)
     {
+      Debug.WriteLine("AD7Property ctor (string,AD7ProgramNode,RoutineScope)");
       Name = name;
       _node = node;
+      _rs = rs;
       TypeName = null;
       StoreType st;
       if (_node.Debugger.Debugger.ScopeVariables.TryGetValue(name, out st))
@@ -93,6 +97,7 @@ namespace MySql.Debugger.VisualStudio
 
     public AD7Property(AD7ProgramNode node)
     {
+      Debug.WriteLine("AD7Property ctor (node)");
       _node = node;
     }
 
@@ -100,37 +105,44 @@ namespace MySql.Debugger.VisualStudio
 
     int IDebugProperty2.EnumChildren(enum_DEBUGPROP_INFO_FLAGS dwFields, uint dwRadix, ref Guid guidFilter, enum_DBG_ATTRIB_FLAGS dwAttribFilter, string pszNameFilter, uint dwTimeout, out IEnumDebugPropertyInfo2 ppEnum)
     {
-      ppEnum = new AD7PropertyCollection(_node);
+      Debug.WriteLine( "AD7Property - IDebugProperty2::EnumChildren" );
+      ppEnum = new AD7PropertyCollection(_node, _rs);
       return VSConstants.S_OK;
     }
 
     int IDebugProperty2.GetDerivedMostProperty(out IDebugProperty2 ppDerivedMost)
     {
+      Debug.WriteLine("AD7Property - IDebugProperty2::GetDerivedMostProperty");
       throw new NotImplementedException();
     }
 
     int IDebugProperty2.GetExtendedInfo(ref Guid guidExtendedInfo, out object pExtendedInfo)
     {
+      Debug.WriteLine("AD7Property - IDebugProperty::GetExtendedInfo");
       throw new NotImplementedException();
     }
 
     int IDebugProperty2.GetMemoryBytes(out IDebugMemoryBytes2 ppMemoryBytes)
     {
+      Debug.WriteLine("AD7Property - IDebugProperty2::GetMemoryBytes");
       throw new NotImplementedException();
     }
 
     int IDebugProperty2.GetMemoryContext(out IDebugMemoryContext2 ppMemory)
     {
+      Debug.WriteLine("AD7Property - IDebugProperty2::GetMemoryContext");
       throw new NotImplementedException();
     }
 
     int IDebugProperty2.GetParent(out IDebugProperty2 ppParent)
     {
+      Debug.WriteLine("AD7Property - IDebugProperty2::GetParent");
       throw new NotImplementedException();
     }
 
     int IDebugProperty2.GetPropertyInfo(enum_DEBUGPROP_INFO_FLAGS dwFields, uint dwRadix, uint dwTimeout, IDebugReference2[] rgpArgs, uint dwArgCount, DEBUG_PROPERTY_INFO[] pPropertyInfo)
     {
+      Debug.WriteLine("AD7Property - IDebugProperty2::GetPropertyInfo");
       if ((dwFields & enum_DEBUGPROP_INFO_FLAGS.DEBUGPROP_INFO_NAME) != 0)
       {
         pPropertyInfo[0].bstrName = Name;
@@ -154,21 +166,25 @@ namespace MySql.Debugger.VisualStudio
 
     int IDebugProperty2.GetReference(out IDebugReference2 ppReference)
     {
+      Debug.WriteLine("AD7Property - IDebugProperty2::GetReference");
       throw new NotImplementedException();
     }
 
     int IDebugProperty2.GetSize(out uint pdwSize)
     {
+      Debug.WriteLine("AD7Property - IDebugProperty2::GetSize");
       throw new NotImplementedException();
     }
 
     int IDebugProperty2.SetValueAsReference(IDebugReference2[] rgpArgs, uint dwArgCount, IDebugReference2 pValue, uint dwTimeout)
     {
+      Debug.WriteLine("AD7Property - IDebugProperty2::SetValueAsReference");
       throw new NotImplementedException();
     }
 
     int IDebugProperty2.SetValueAsString(string pszValue, uint dwRadix, uint dwTimeout)
     {
+      Debug.WriteLine("AD7Property - IDebugProperty2::SetValuAsString");
       if (!ValidateNewValue(ref pszValue))
         return VSConstants.E_FAIL;
       _node.Debugger.SetLocalNewValue(Name, pszValue.Trim('\'').Trim('"'));
@@ -179,7 +195,7 @@ namespace MySql.Debugger.VisualStudio
 
     private string GetValue(string variableName)
     {
-      string value = _node.Debugger.Debugger.FormatValue(_node.Debugger.Debugger.Eval(variableName));
+      string value = _node.Debugger.Debugger.FormatValue(_node.Debugger.Debugger.Eval(variableName, _rs));
       value = value.Trim('\'');
 
       return value;
@@ -266,20 +282,24 @@ namespace MySql.Debugger.VisualStudio
   {
     private uint count;
     private AD7ProgramNode _node;
+    private RoutineScope _rs;
 
-    public AD7PropertyCollection(AD7ProgramNode node)
+    public AD7PropertyCollection(AD7ProgramNode node, RoutineScope rs)
     {
+      Debug.WriteLine("AD7PropertyCollection ctor( AD7ProgramNode, RoutineScope )");
       _node = node;
+      _rs = rs;
       Debugger dbg = DebuggerManager.Instance.Debugger;
-      foreach (StoreType st in DebuggerManager.Instance.ScopeVariables.Values)
+      foreach (StoreType st in _rs.Variables.Values)
       {
         if (st.VarKind == VarKindEnum.Internal) continue;
-        this.Add(new AD7Property(st.Name, node));
+        this.Add(new AD7Property(st.Name, node, _rs));
       }
     }
 
     public AD7PropertyCollection(params AD7Property[] properties)
     {
+      Debug.WriteLine("AD7PropertyCollection ctor( AD7Property[] )");
       foreach (var property in properties)
       {
         this.Add(property);
@@ -290,18 +310,21 @@ namespace MySql.Debugger.VisualStudio
 
     int IEnumDebugPropertyInfo2.Clone(out IEnumDebugPropertyInfo2 ppEnum)
     {
+      Debug.WriteLine("AD7PropertyCollection - IEnumDebugPropertyInfo2::Clone");
       throw new NotImplementedException();
     }
 
     int IEnumDebugPropertyInfo2.GetCount(out uint pcelt)
     {
+      Debug.WriteLine("AD7PropertyCollection - IEnumDebugPropertyInfo2::GetCount");
       pcelt = (uint)this.Count;
       return VSConstants.S_OK;
     }
 
     int IEnumDebugPropertyInfo2.Next(uint celt, DEBUG_PROPERTY_INFO[] rgelt, out uint pceltFetched)
     {
-      for (var i = 0; i < celt; i++)
+      Debug.WriteLine("AD7PropertyCollection - IEnumDebugPropertyInfo2::Next");
+      for (int i = 0; i < celt; i++)
       {
         rgelt[i].bstrName = this[(int)(i + count)].Name;
         rgelt[i].bstrValue = this[(int)(i + count)].Value != null ? this[(int)(i + count)].Value.ToString() : "$null";
@@ -315,17 +338,20 @@ namespace MySql.Debugger.VisualStudio
                             enum_DEBUGPROP_INFO_FLAGS.DEBUGPROP_INFO_ATTRIB;
       }
       pceltFetched = celt;
+      count += celt;
       return VSConstants.S_OK;
     }
 
     int IEnumDebugPropertyInfo2.Reset()
     {
+      Debug.WriteLine( "AD7PropertyCollection - IEnumDebugPropertyInfo2::Reset" );
       count = 0;
       return VSConstants.S_OK;
     }
 
     int IEnumDebugPropertyInfo2.Skip(uint celt)
     {
+      Debug.WriteLine("AD7PropertyCollection - IEnumDebugPropertyInfo2::Skip");
       count += celt;
       return VSConstants.S_OK;
     }
