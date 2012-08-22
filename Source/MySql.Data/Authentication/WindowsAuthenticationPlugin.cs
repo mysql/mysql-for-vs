@@ -91,6 +91,30 @@ namespace MySql.Data.MySqlClient.Authentication
       return clientBlob;
     }
 
+    protected override void AuthenticationChange()
+    {
+      MySqlPacket packet = Packet;
+      packet.Clear();
+      byte[] moreData = MoreData(null);
+      while (moreData != null && moreData.Length > 0)
+      {
+        packet.Clear();
+        packet.Write(moreData);
+        SendPacket(packet);
+
+        packet = ReadPacket();
+        byte prefixByte = packet.Buffer[0];
+        if (prefixByte != 1) break;
+
+        // a prefix of 0x01 means need more auth data
+        byte[] responseData = new byte[packet.Length - 1];
+        Array.Copy(packet.Buffer, 1, responseData, 0, responseData.Length);
+        moreData = MoreData(responseData);
+      }
+      // our caller will call driver.ReadOk(false) which means we have to read the next packet
+      //packet = ReadPacket();
+    }
+
     void InitializeClient(out byte[] clientBlob, byte[] serverBlob, out bool continueProcessing)
     {
       clientBlob = null;
