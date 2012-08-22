@@ -261,6 +261,11 @@ namespace MySql.Data.MySqlClient
       {
         authenticationMethod = packet.ReadString();
       }
+      else
+      {
+        // Some MySql versions like 5.1, don't give name of plugin, default to native password.
+        authenticationMethod = "mysql_native_password";
+      }
 
       // based on our settings, set our connection flags
       SetConnectionFlags(serverCaps);
