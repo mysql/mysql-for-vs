@@ -33,6 +33,13 @@ namespace MySql.Data.MySqlClient.Authentication
   {
     private NativeDriver driver;
 
+    protected MySqlPacket Packet { get { return driver.Packet; } }
+
+    protected void SendPacket(MySqlPacket p)
+    {
+      driver.SendPacket(p);
+    }
+
     /// <summary>
     /// This is a factory method that is used only internally.  It creates an auth plugin based on the method type
     /// </summary>
@@ -114,22 +121,31 @@ namespace MySql.Data.MySqlClient.Authentication
         packet.WriteString(Settings.Database);
       else
         packet.WriteString("");
-      if (reset)
-        packet.WriteInteger(8, 2);
-      if ((Flags & ClientFlags.PLUGIN_AUTH) != 0)
-        packet.WriteString(PluginName);
-      driver.SendPacket(packet);
+      if (Settings.IntegratedSecurity)
+      {
+        if (reset)
+          packet.WriteInteger(8, 2);
 
+        if ((Flags & ClientFlags.PLUGIN_AUTH) != 0)
+          packet.WriteString(PluginName);
+      }
+      driver.SendPacket(packet);
       //read server response
       packet = ReadPacket();
       byte[] b = packet.Buffer;
       if (b[0] == 0xfe)
+      {
         HandleAuthChange(packet);
-      driver.ReadOk(false);
+        driver.ReadOk(true);
+      }
+      else
+      {
+        driver.ReadOk(false);
+      }
       AuthenticationSuccessful();
     }
 
-    private MySqlPacket ReadPacket()
+    protected MySqlPacket ReadPacket()
     {
       try
       {
@@ -157,28 +173,12 @@ namespace MySql.Data.MySqlClient.Authentication
       plugin.AuthenticationChange();
     }
 
-    private void AuthenticationChange()
+    protected virtual void AuthenticationChange()
     {
-      MySqlPacket packet = driver.Packet;
-      packet.Clear();
-      byte[] moreData = MoreData(null);
-      while (moreData !=null && moreData.Length > 0)
-      {
-        packet.Clear();
-        packet.Write(moreData);
-        driver.SendPacket(packet);
-
-        packet = ReadPacket();
-        byte prefixByte = packet.Buffer[0];
-        if (prefixByte != 1) break;
-
-        // a prefix of 0x01 means need more auth data
-        byte[] responseData = new byte[packet.Length - 1];
-        Array.Copy(packet.Buffer, 1, responseData, 0, responseData.Length);
-        moreData = MoreData(responseData);
-      }
-      // our caller will call driver.ReadOk(false) which means we have to read the next packet
-      packet = ReadPacket();
+      driver.Packet.Clear();
+      driver.Packet.WriteString(Crypt.EncryptPassword(
+                               Settings.Password, Encoding.GetString( AuthData ).Substring(0, 8), true));
+      driver.SendPacket( driver.Packet );
     }
 
     public abstract string PluginName { get; }

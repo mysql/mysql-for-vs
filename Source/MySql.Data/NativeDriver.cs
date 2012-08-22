@@ -122,7 +122,7 @@ namespace MySql.Data.MySqlClient
 
     internal MySqlPacket ReadPacket()
     {
-      return stream.ReadPacket();
+      return packet = stream.ReadPacket();
     }
 
     internal void ReadOk(bool read)
@@ -462,9 +462,11 @@ namespace MySql.Data.MySqlClient
       if ((serverCaps & ClientFlags.PS_MULTI_RESULTS) != 0)
         flags |= ClientFlags.PS_MULTI_RESULTS;
 
-      if ((serverCaps & ClientFlags.PLUGIN_AUTH) != 0)
-        flags |= ClientFlags.PLUGIN_AUTH;
-
+      if (Settings.IntegratedSecurity)
+      {
+        if ((serverCaps & ClientFlags.PLUGIN_AUTH) != 0)
+          flags |= ClientFlags.PLUGIN_AUTH;
+      }
       connectionFlags = flags;
     }
 
