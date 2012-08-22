@@ -60,14 +60,14 @@ namespace MySql.Debugger.VisualStudio
       IDebugEventCallback2 pExprCallback, 
       out IDebugProperty2 ppResult)
     {
-      if (MySql.Debugger.Debugger.GetTagHashCode(_stackFrame.Node.ProgramContents) !=
+      if (MySql.Debugger.Debugger.GetTagHashCode(_stackFrame._rs.OwningRoutine.SourceCode) !=
         DebuggerManager.Instance.Debugger.CurrentScope.OwningRoutine.Hash)
       {
-        // Not implemented when the selected stackframe is different than current one.
+        // This should never happen.
         ppResult = null;
         return VSConstants.E_NOTIMPL;
       }
-      AD7Property prop = new AD7Property( _expr,_stackFrame.Node );
+      AD7Property prop = new AD7Property( _expr,_stackFrame.Node, _stackFrame._rs );
       ppResult = prop;
       // Send evaluation complete event
       DebuggerManager.Instance._events.ExpressionEvalCompleted( 
