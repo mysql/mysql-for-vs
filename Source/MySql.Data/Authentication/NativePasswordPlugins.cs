@@ -36,6 +36,14 @@ namespace MySql.Data.MySqlClient.Authentication
       get { return "mysql_native_password"; }
     }
 
+    protected override void AuthenticationChange()
+    {
+      base.ClearPacket();
+      base.WritePacketData( Crypt.EncryptPassword(
+        Settings.Password, base.EncryptionSeed.Substring(0, 8), true) );
+      base.SendPacket();
+    }
+
     public override object GetPassword()
     {
       return Get411Password(Settings.Password, AuthData);

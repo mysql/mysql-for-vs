@@ -10,6 +10,7 @@
 - Debugger: Enabled changing values of locals in a function scope (previously caused deadlock since functions are executed in a transaction in MySql).
 - Debugger: Fix a small issue such that when in a multiple stack frame debug session, clicking in a stack frame other than the current one, was not colorizing correctly.
 - Added support for Visual Studio 2012
+- Added Authentication Plugin.
 
 6.6.1
 - Debugger: Added Support for row_count() (together with found_rows() & last_insert_id() ).

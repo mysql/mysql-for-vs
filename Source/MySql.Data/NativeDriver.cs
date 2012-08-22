@@ -46,6 +46,7 @@ namespace MySql.Data.MySqlClient
     private DBVersion version;
     private int threadId;
     protected String encryptionSeed;
+    internal string EncryptionSeed { get { return encryptionSeed; } }
     protected ServerStatusFlags serverStatus;
     protected MySqlStream stream;
     protected Stream baseStream;

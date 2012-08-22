@@ -33,11 +33,28 @@ namespace MySql.Data.MySqlClient.Authentication
   {
     private NativeDriver driver;
 
-    protected MySqlPacket Packet { get { return driver.Packet; } }
+    private MySqlPacket Packet { get { return driver.Packet; } }
 
-    protected void SendPacket(MySqlPacket p)
+    protected string EncryptionSeed { get { return driver.EncryptionSeed; } }
+
+    private void SendPacket(MySqlPacket p)
     {
       driver.SendPacket(p);
+    }
+
+    protected void ClearPacket()
+    {
+      driver.Packet.Clear();
+    }
+
+    protected void SendPacket()
+    {
+      driver.SendPacket( driver.Packet );
+    }
+
+    protected void WritePacketData(string data)
+    {
+      driver.Packet.WriteString(data);
     }
 
     /// <summary>
@@ -175,10 +192,24 @@ namespace MySql.Data.MySqlClient.Authentication
 
     protected virtual void AuthenticationChange()
     {
-      driver.Packet.Clear();
-      driver.Packet.WriteString(Crypt.EncryptPassword(
-                               Settings.Password, Encoding.GetString( AuthData ).Substring(0, 8), true));
-      driver.SendPacket( driver.Packet );
+      MySqlPacket packet = Packet;
+      packet.Clear();
+      byte[] moreData = MoreData(null);
+      while (moreData != null && moreData.Length > 0)
+      {
+        packet.Clear();
+        packet.Write(moreData);
+        SendPacket(packet);
+
+        packet = ReadPacket();
+        byte prefixByte = packet.Buffer[0];
+        if (prefixByte != 1) break;
+
+        // a prefix of 0x01 means need more auth data
+        byte[] responseData = new byte[packet.Length - 1];
+        Array.Copy(packet.Buffer, 1, responseData, 0, responseData.Length);
+        moreData = MoreData(responseData);
+      }
     }
 
     public abstract string PluginName { get; }
@@ -192,6 +223,5 @@ namespace MySql.Data.MySqlClient.Authentication
     {
       return null;
     }
-
   }
 }
