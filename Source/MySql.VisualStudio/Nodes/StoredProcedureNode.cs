@@ -336,8 +336,15 @@ namespace MySql.Data.VisualStudio
       if (connectionString.IndexOf("password", StringComparison.OrdinalIgnoreCase) == -1)
       {
         MySql.Data.MySqlClient.MySqlConnection connection = ((MySql.Data.MySqlClient.MySqlConnection)HierarchyAccessor.Connection.GetLockedProviderObject());
-        MySql.Data.MySqlClient.MySqlConnectionStringBuilder settings = (MySql.Data.MySqlClient.MySqlConnectionStringBuilder)connection.GetType().GetProperty("Settings", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(connection, null);
-        connectionString += "password=" + settings.Password + ";Persist Security Info=true;";
+        try
+        {
+          MySql.Data.MySqlClient.MySqlConnectionStringBuilder settings = (MySql.Data.MySqlClient.MySqlConnectionStringBuilder)connection.GetType().GetProperty("Settings", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(connection, null);
+          connectionString += "password=" + settings.Password + ";Persist Security Info=true;";
+        }
+        finally
+        {
+          HierarchyAccessor.Connection.UnlockProviderObject();
+        }
       }
       info.bstrArg = connectionString;
       info.bstrRemoteMachine = null; // Environment.MachineName; // debug locally
@@ -351,7 +358,7 @@ namespace MySql.Data.VisualStudio
       try
       {
         int result = dbg.LaunchDebugTargets(1, pInfo);
-        if (result != 0)
+        if (result != 0 && result != VSConstants.E_ABORT)
           throw new ApplicationException("COM error " + result);
       }
       catch (Exception ex)
