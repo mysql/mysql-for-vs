@@ -218,7 +218,7 @@ namespace MySql.Debugger.VisualStudio
         AD7ProgramNode node = (pProcess as AD7Process).Node;
         int result = notify.AddProgramNode(node);
         if (node.Debugger == null)
-          return VSConstants.E_FAIL;
+          return VSConstants.E_ABORT;
 
         return VSConstants.S_OK;
       }
