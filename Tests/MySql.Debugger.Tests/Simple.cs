@@ -95,7 +95,7 @@ end;
             Debug.WriteLine(" within simpleproc");
           }
         };
-        dbg.Run(new string[0]);
+        dbg.Run(new string[0], null);
         Assert.IsTrue(bpHit);
       }
       finally
@@ -164,7 +164,7 @@ end;
         {
           Debug.WriteLine(string.Format("NonScalarFunction breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
         };
-        dbg.Run(new string[0]);
+        dbg.Run(new string[0], null);
       }
       finally
       {
@@ -236,7 +236,7 @@ end;
             dbg.CommitLocals(); 
           }
         };
-        dbg.Run(new string[0]);
+        dbg.Run(new string[0], null);
       }
       finally
       {
@@ -298,7 +298,7 @@ end;
         dbg.OnBreakpoint += (bp) => {
           Debug.WriteLine(string.Format("NonScalarFunction breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
         };
-        dbg.Run(new string[0]);
+        dbg.Run(new string[0], null);
       }
       finally
       {
@@ -362,7 +362,7 @@ end;
         {
           Debug.WriteLine(string.Format("NonScalarFunction breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
         };
-        dbg.Run(new string[0]);
+        dbg.Run(new string[0], null);
       }
       finally
       {
@@ -429,7 +429,7 @@ end;
         {
           Debug.WriteLine(string.Format("NonScalarFunction breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
         };
-        dbg.Run(new string[0]);
+        dbg.Run(new string[0], null);
       }
       finally
       {
@@ -502,7 +502,7 @@ end;
         dbg.OnBreakpoint += (bp) => {
           Debug.WriteLine(string.Format("NonScalarFunction breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
         };
-        dbg.Run(new string[0]);
+        dbg.Run(new string[0], null);
       }
       finally
       {
@@ -563,7 +563,7 @@ END;
         {
           Debug.WriteLine(string.Format("NonScalarFunction breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
         };
-        dbg.Run(new string[1] { "3" } );
+        dbg.Run(new string[1] { "3" }, null);
       }
       finally
       {
@@ -625,7 +625,7 @@ END;
         {
           Debug.WriteLine(string.Format("NonScalarFunction breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
         };
-        dbg.Run(new string[0]);
+        dbg.Run(new string[0], null);
       }
       finally
       {
@@ -697,10 +697,10 @@ END;
         {
           Debug.WriteLine(string.Format("NonScalarFunction breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
         };
-        dbg.Run(new string[0]);
+        dbg.Run(new string[0], null);
       }
       finally
-      {        
+      {
         dbg.RestoreRoutinesBackup();
       }
     }
@@ -745,7 +745,7 @@ end;
         {
           Debug.WriteLine(string.Format("NonScalarFunction breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
         };
-        dbg.Run(new string[] { "3", "'a'" });
+        dbg.Run(new string[] { "3", "'a'" }, null);
       }
       finally
       {
@@ -806,7 +806,7 @@ end;
         {
           Debug.WriteLine(string.Format("NonScalarFunction breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
         };
-        dbg.Run( new string[0] );
+        dbg.Run(new string[0], null);
       }
       finally
       {
@@ -867,7 +867,7 @@ end;
         {
           Debug.WriteLine(string.Format("NonScalarFunction breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
         };
-        dbg.Run(new string[0]);
+        dbg.Run(new string[0], null);
       }
       finally
       {
@@ -933,7 +933,7 @@ create procedure DoInsertTriggerTable()
             }
           }
         };
-        dbg.Run(new string[0]);
+        dbg.Run(new string[0], null);
       }
       finally
       {
@@ -1040,7 +1040,7 @@ end;
             Debug.WriteLine("Locals values just right");
           }
         };
-        dbg.Run(new string[0]);
+        dbg.Run(new string[0], null);
       }
       finally
       {
@@ -1108,7 +1108,7 @@ end ;
             Assert.AreEqual(5, Convert.ToInt32(w.Eval()));
           }
         };
-        dbg.Run(new string[0]);
+        dbg.Run(new string[0], null);
       }
       finally
       {        
@@ -1157,7 +1157,7 @@ END;
         {
           Debug.WriteLine(string.Format("breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
         };
-        dbg.Run(new string[0]);
+        dbg.Run(new string[0], null);
       }
       finally
       {
@@ -1207,7 +1207,7 @@ END ;
         {
           Debug.WriteLine(string.Format("breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
         };
-        dbg.Run(new string[0]);
+        dbg.Run(new string[0], null);
       }
       finally
       {
@@ -1274,7 +1274,7 @@ END ;
         {
           Debug.WriteLine(string.Format("breakpoint at line {0}:{1},{2}", bp.RoutineName, bp.Line, bp.StartColumn));
         };
-        dbg.Run(new string[0]);
+        dbg.Run(new string[0], null);
       }
       finally
       {
@@ -1331,7 +1331,7 @@ END;
         {
           Debug.WriteLine(string.Format("breakpoint at line {0}:{1}", bp.RoutineName, bp.Line));
         };
-        dbg.Run(new string[0]);
+        dbg.Run(new string[0], null);
       }
       finally
       {
@@ -1349,6 +1349,59 @@ END;
       Debug.WriteLine(string.Format("Debuggee thread id: {0}", dbg.Connection.ServerThread));
       Debug.WriteLine(string.Format("Locking thread id: {0}", dbg.LockingConnection.ServerThread));
       //Debug.WriteLine(string.Format("Locking2 thread id: {0}", dbg.LockingConnection2.ServerThread));
+    }
+
+    /// <summary>
+    /// Test for In, Out and InOut Parameters
+    /// </summary>
+    [Test]
+    public void ArgumentsTest()
+    {
+      string fullSql = @"DELIMITER //
+DROP PROCEDURE IF EXISTS pr_ArgumentsTest //
+";
+      string procedureSql = @"
+CREATE PROCEDURE pr_ArgumentsTest(param1 tinyint unsigned, out param2 varchar(5), inout param3 int, inout param4 varchar(5))
+BEGIN
+  SET param2 = param1;
+  SET param3 = param3 + param1;
+  IF param4 = 'abc' THEN
+    SET param4 = 'xyz';
+  ELSE
+    SET param4 = NULL;
+  END IF;
+END
+";
+
+      Debugger dbg = new Debugger();
+      try
+      {
+        dbg.Connection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.UtilityConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.LockingConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        DumpConnectionThreads(dbg);
+        MySqlScript script = new MySqlScript(dbg.Connection, fullSql + procedureSql + @"//");
+        script.Execute();
+
+        dbg.SqlInput = procedureSql;
+        dbg.Run(new string[] { "1", "@dbg_var1", "@dbg_var2", "@dbg_var3" }, new string[] { "@dbg_var2 = '3'", "@dbg_var3 = 'abc'" });
+        Assert.AreEqual("1", dbg.ScopeVariables["param1"].Value);
+        Assert.AreEqual("1", dbg.ScopeVariables["param2"].Value);
+        Assert.AreEqual("4", dbg.ScopeVariables["param3"].Value);
+        Assert.AreEqual("xyz", dbg.ScopeVariables["param4"].Value);
+        dbg.RestoreRoutinesBackup();
+
+        dbg.Run(new string[] { "1", "@dbg_var1", "@dbg_var2", "@dbg_var3" }, new string[] { "@dbg_var2 = '3'", "@dbg_var3 = 'mysql'" });
+        Assert.AreEqual("1", dbg.ScopeVariables["param1"].Value);
+        Assert.AreEqual("1", dbg.ScopeVariables["param2"].Value);
+        Assert.AreEqual("4", dbg.ScopeVariables["param3"].Value);
+        Assert.AreEqual(DBNull.Value, dbg.ScopeVariables["param4"].Value);
+      }
+      finally
+      {
+        dbg.RestoreRoutinesBackup();
+        dbg.Stop();
+      }
     }
   }
 }

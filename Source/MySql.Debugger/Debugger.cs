@@ -183,8 +183,8 @@ namespace MySql.Debugger
       }
     }
 
-    public void Run(string[] values)
-    {
+    public void Run(string[] values, string[] InOutValues)
+    { 
       _stopping = false;
       /*
        * - Start stepping in code.
@@ -236,7 +236,7 @@ namespace MySql.Debugger
         // Start sp execution in async call, but keep track of result (like failure 
         // to execute due to permissions, or no longer reachable code).
         // Make call statement.
-        MakeScopeCreateProc(ri, values);
+        MakeScopeCreateProc(ri, values, InOutValues);
         _sqlToRun = CurrentScope.OwningRoutine.SourceCode;
         // run in background worker
         ExecuteScalar("set net_write_timeout=999999;");
@@ -571,13 +571,16 @@ namespace MySql.Debugger
     /// </summary>
     /// <param name="t"></param>
     /// <param name="ArgsValues"></param>
-    private void MakeScopeCreateProc(RoutineInfo ri, string[] ArgsValues)
+    private void MakeScopeCreateProc(RoutineInfo ri, string[] ArgsValues, string[] InOutArgsValues)
     {
       CommonTree t = ri.ParsedTree;
       StringBuilder sb = new StringBuilder();
       string spName = ri.Name;
       // build call
       StringBuilder sbCall = new StringBuilder(string.Format("call `{0}`( ", spName));
+      // adds inout arguments definition before the call statement
+      if (InOutArgsValues != null && InOutArgsValues.Length > 0)
+        sbCall.Insert(0, "SET " + string.Join(";SET ", InOutArgsValues) + ";");
       if (ArgsValues != null)
       {
         foreach (string val in ArgsValues)
