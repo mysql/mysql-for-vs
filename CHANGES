@@ -1,3 +1,5 @@
+- Added feature to define initial values for InOut stored procedure arguments.
+
 6.6.2
 - Parser: Fix for Problems when declaring variables in certain places (wasn't accepting declare var after declare handler in a begin/end block).
 - Parser: Fix for Problems with CHARSET (previously only CHARACTER SET was recognized).
