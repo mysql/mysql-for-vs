@@ -255,6 +255,7 @@ namespace MySql.Debugger.VisualStudio
       
       // Setup args
       string[] values = new string[ args.Count ];
+      List<string> inOutValues = new List<string>();
       int i = 0;
       foreach (StoreType st in args.Values)
       {
@@ -266,12 +267,16 @@ namespace MySql.Debugger.VisualStudio
             values[i] = "'" + st.Value.ToString().Trim('\'') + "'";
         }
         else
+        {
           values[i] = string.Format("@dbg_var{0}", i );
+          if (st.ArgType == ArgTypeEnum.InOut)
+            inOutValues.Add(string.Format("{0} = '{1}'", values[i], st.Value.ToString()));
+        }
         i++;
       }
       try
       {
-        _debugger.Run(values);
+      _debugger.Run(values, inOutValues.ToArray());
       }
       catch (ThreadAbortException) { }
       catch (Exception ex)
