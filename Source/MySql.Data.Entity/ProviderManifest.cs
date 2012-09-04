@@ -204,30 +204,36 @@ namespace MySql.Data.MySqlClient
 
         case PrimitiveTypeKind.String:
           {
-            bool isUnicode = null == facets["Unicode"].Value || (bool)facets["Unicode"].Value;
-            bool isFixedLength = null != facets["FixedLength"].Value && (bool)facets["FixedLength"].Value;
-            Facet f = facets["MaxLength"];
-            // maxlen is true if facet value is unbounded, the value is bigger than the limited string sizes *or* the facet
-            // value is null. this is needed since functions still have maxlength facet value as null
-            bool isMaxLength = f.IsUnbounded || null == f.Value || (int)f.Value > MEDIUMTEXT_MAXLEN;
-            int maxLength = !isMaxLength ? (int)f.Value : LONGTEXT_MAXLEN;
-
             string typeName = String.Empty;
-            if (isFixedLength && maxLength <= CHAR_MAXLEN)
+            bool isUnicode = null != facets["Unicode"].Value && (bool)facets["Unicode"].Value;
+            bool isFixedLength = null != facets["FixedLength"].Value && (bool)facets["FixedLength"].Value;
+            int maxLenghtValue;
+
+            Facet maxLengthFacet = facets["MaxLength"];
+            if (isFixedLength)
             {
-              typeName = "char";
+              typeName = isUnicode ? "nchar" : "char";
+              if (maxLengthFacet.Value != null && Int32.TryParse(maxLengthFacet.Value.ToString(), out maxLenghtValue) && maxLenghtValue <= CHAR_MAXLEN)
+                return TypeUsage.CreateStringTypeUsage(StoreTypeNameToStorePrimitiveType[typeName], isUnicode, isFixedLength, (int)maxLengthFacet.Value);
+              else if (maxLengthFacet.Value != null && maxLengthFacet.Value.ToString() == "Max")
+                return TypeUsage.CreateStringTypeUsage(StoreTypeNameToStorePrimitiveType[typeName], isUnicode, isFixedLength, CHAR_MAXLEN);
+              else
+                return TypeUsage.CreateStringTypeUsage(StoreTypeNameToStorePrimitiveType[typeName], isUnicode, isFixedLength);
             }
             else
             {
-              if (maxLength <= VARCHAR_MAXLEN) typeName = "varchar";
-              else if (maxLength <= MEDIUMTEXT_MAXLEN) typeName = "mediumtext";
-              else typeName = "longtext";
+              typeName = isUnicode ? "nvarchar" : "varchar";
+              if (maxLengthFacet.Value != null && Int32.TryParse(maxLengthFacet.Value.ToString(), out maxLenghtValue))
+              {
+                if (maxLenghtValue > VARCHAR_MAXLEN && maxLenghtValue <= MEDIUMTEXT_MAXLEN) typeName = "mediumtext";
+                else if ((int)maxLengthFacet.Value > MEDIUMTEXT_MAXLEN) typeName = "longtext";
+                return TypeUsage.CreateStringTypeUsage(StoreTypeNameToStorePrimitiveType[typeName], isUnicode, isFixedLength, (int)maxLengthFacet.Value);
+              }
+              else if (maxLengthFacet.Value != null && (maxLengthFacet.Value.ToString() == "Max"))
+                return TypeUsage.CreateStringTypeUsage(StoreTypeNameToStorePrimitiveType["longtext"], isUnicode, isFixedLength);
+              else
+                return TypeUsage.CreateStringTypeUsage(StoreTypeNameToStorePrimitiveType[typeName], isUnicode, isFixedLength);
             }
-
-            if (typeName.EndsWith("char", StringComparison.OrdinalIgnoreCase) && isUnicode)
-              typeName = "n" + typeName;
-
-            return TypeUsage.CreateStringTypeUsage(StoreTypeNameToStorePrimitiveType[typeName], isUnicode, isFixedLength, maxLength);
           }
 
         case PrimitiveTypeKind.DateTimeOffset:
