@@ -56,6 +56,27 @@ namespace MySql.Data.Entity.ModelFirst.Tests
     public string Name { get; set; }
   }
 
+  public class VehicleDbContext3 : DbContext
+  {
+    public DbSet<Accessory> Accessories { get; set; }
+
+  }
+
+  public class Accessory
+  {
+    [Key]
+    [MaxLength(255)]
+    public string Name { get; set; }
+
+    [Required]
+    [MaxLength(80000)]
+    public string Description { get; set; }
+
+    [Required]
+    [MaxLength(16777216)]
+    public string LongDescription { get; set; }
+  }
+
   public partial class Car : Vehicle
   {
     public string CarProperty { get; set; }

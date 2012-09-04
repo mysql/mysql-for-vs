@@ -78,5 +78,29 @@ namespace MySql.Data.Entity.Tests
       }
     }
 
+    [Test]
+    public void TestingMaxLengthWithFixedLenghtTrueFacets()
+    {
+      using (MySqlConnection connection = new MySqlConnection(GetConnectionString(true)))
+      {
+        MySqlProviderManifest pm = new MySqlProviderManifest(Version.ToString());
+        TypeUsage tu = TypeUsage.CreateStringTypeUsage(
+          PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String), false, true);
+        TypeUsage result = pm.GetStoreType(tu);
+        Assert.AreEqual("char", result.EdmType.Name);
+
+        tu = TypeUsage.CreateStringTypeUsage(
+          PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String), false, true, Int32.MaxValue);
+        result = pm.GetStoreType(tu);
+        Assert.AreEqual("char", result.EdmType.Name);
+
+        tu = TypeUsage.CreateStringTypeUsage(
+          PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String), false, true, 70000);
+        result = pm.GetStoreType(tu);
+        Assert.AreEqual("char", result.EdmType.Name);
+
+      }
+    }
+
   }
 }
