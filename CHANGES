@@ -12,6 +12,7 @@
 - Fix for Exception thrown when using cascade delete in an EDM Model-First in Entity Framework (Oracle bug #14008752, MySql bug #64779).
 - Fix for Session locking issue with MySqlSessionStateStore (MySql bug #63997, Oracble bug #13733054).
 - Fixed deleting a user profile using Profile provider (MySQL bug #64409, Oracle bug #13790123)
+- Fix for bug Cannot Create an Entity with a Key of Type String (MySQL bug #65289, Oracle bug #14540202). This fix checks if the type has a FixedLength facet set in order to create a char otherwise should create varchar, mediumtext or longtext types when using a String CLR type in Code First or Model First also tested in Database First. Unit tests added for Code First and ProviderManifest.
 
 6.5.4
 - Fix for Duplicate table name don't allow you to change table name (Oracle bug #13785918).
