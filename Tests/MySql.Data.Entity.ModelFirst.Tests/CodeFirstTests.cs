@@ -211,6 +211,63 @@ namespace MySql.Data.Entity.ModelFirst.Tests
         Assert.AreEqual(context.Vehicles.Count(), records);
       }
     }
+
+    /// <summary>
+    /// Test String types to StoreType for String
+    /// A string with FixedLength=true will become a char 
+    /// Max Length left empty will be char(max)
+    /// Max Length(100) will be char(100) 
+    /// while FixedLength=false will result in nvarchar. 
+    /// Max Length left empty will be nvarchar(max)
+    /// Max Length(100) will be nvarchar(100)                
+    /// </summary>
+    [Test]
+    public void TestStringTypeToStoreType()
+    {
+      using (VehicleDbContext3 context = new VehicleDbContext3())
+      {
+        if (context.Database.Exists()) context.Database.Delete();
+        context.Database.CreateIfNotExists();
+        context.Accessories.Add(new Accessory { Name = "Accesory One", Description = "Accesories descriptions", LongDescription = "Some long description" });
+        context.SaveChanges();
+
+        using (MySqlConnection conn = new MySqlConnection(context.Database.Connection.ConnectionString))
+        {
+          conn.Open();
+          MySqlCommand query = new MySqlCommand("Select Column_name, Is_Nullable, Data_Type from information_schema.Columns where table_schema ='" + conn.Database + "' and table_name = 'Accessories' and column_name ='Description'", conn);
+          query.Connection = conn;
+          MySqlDataReader reader = query.ExecuteReader();
+          while (reader.Read())
+          {
+            Assert.AreEqual("Description", reader[0].ToString());
+            Assert.AreEqual("NO", reader[1].ToString());
+            Assert.AreEqual("mediumtext", reader[2].ToString());
+          }
+          reader.Close();
+
+          query = new MySqlCommand("Select Column_name, Is_Nullable, Data_Type, character_maximum_length from information_schema.Columns where table_schema ='" + conn.Database + "' and table_name = 'Accessories' and column_name ='Name'", conn);
+          reader = query.ExecuteReader();
+          while (reader.Read())
+          {
+            Assert.AreEqual("Name", reader[0].ToString());
+            Assert.AreEqual("NO", reader[1].ToString());
+            Assert.AreEqual("varchar", reader[2].ToString());
+            Assert.AreEqual("255", reader[3].ToString());
+          }
+          reader.Close();
+
+          query = new MySqlCommand("Select Column_name, Is_Nullable, Data_Type, character_maximum_length from information_schema.Columns where table_schema ='" + conn.Database + "' and table_name = 'Accessories' and column_name ='LongDescription'", conn);
+          reader = query.ExecuteReader();
+          while (reader.Read())
+          {
+            Assert.AreEqual("LongDescription", reader[0].ToString());
+            Assert.AreEqual("NO", reader[1].ToString());
+            Assert.AreEqual("longtext", reader[2].ToString());
+            Assert.AreEqual("4294967295", reader[3].ToString());
+          }
+        }
+      }
+    }
   }
 }
 
