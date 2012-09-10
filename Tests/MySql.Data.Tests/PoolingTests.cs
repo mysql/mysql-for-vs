@@ -27,6 +27,9 @@ using NUnit.Framework;
 using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
+#if CLR4
+using System.Threading.Tasks;
+#endif
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -579,6 +582,65 @@ namespace MySql.Data.MySqlClient.Tests
       CacheServerPropertiesInternal(true);
       CacheServerPropertiesInternal(false);
     }
+
+
+
+    /// <summary>
+    /// Bug #66578
+    /// CacheServerProperties can cause 'Packet too large' error
+    /// when query exceeds 1024 bytes
+    /// </summary>
+    [Test]
+    public void CacheServerPropertiesCausePacketTooLarge()
+    {
+     
+      execSQL("CREATE TABLE test (id INT(10), image BLOB)");
+      
+      #if CLR4
+     
+      Parallel.Invoke(
+        () =>  { InsertSmallBlobInTestTableUsingPoolingConnection(); },
+        () =>  { InsertSmallBlobInTestTableUsingPoolingConnection(); },
+        () =>  { InsertSmallBlobInTestTableUsingPoolingConnection(); } );
+      
+      #else
+
+      InsertSmallBlobInTestTableUsingPoolingConnection();
+      InsertSmallBlobInTestTableUsingPoolingConnection();
+      InsertSmallBlobInTestTableUsingPoolingConnection();         
+
+      #endif      
+
+      using (MySqlConnection c1 = new MySqlConnection(GetPoolingConnectionString() + ";logging=true;cache server properties=true"))
+      {
+        c1.Open();
+        MySqlCommand cmd = new MySqlCommand("SELECT Count(*) from test", c1);
+        var count = cmd.ExecuteScalar();
+        Assert.AreEqual(3, count);
+      }
+
+      execSQL("DROP TABLE test ");
+    }
+
+
+    /// <summary>
+    /// Util method for CacheServerPropertiesCausePacketTooLarge Test Method
+    /// </summary>
+    void InsertSmallBlobInTestTableUsingPoolingConnection()
+    {
+      string connStr = GetPoolingConnectionString() +
+      String.Format(";logging=true;cache server properties=true;");
+
+      using (MySqlConnection c1 = new MySqlConnection(connStr))
+      {
+        c1.Open();
+        byte[] image = Utils.CreateBlob(7152);
+        MySqlCommand cmd = new MySqlCommand("INSERT INTO test VALUES(NULL, ?image)", c1);
+        cmd.Parameters.AddWithValue("?image", image);
+        cmd.ExecuteNonQuery();
+      }    
+    }
+
 #endif
   }
 }

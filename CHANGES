@@ -11,6 +11,8 @@
 - Fix for Session locking issue with MySqlSessionStateStore (MySql bug #63997, Oracble bug #13733054).
 - Fixed deleting a user profile using Profile provider (MySQL bug #64409, Oracle bug #13790123)
 - Fix for bug Cannot Create an Entity with a Key of Type String (MySQL bug #65289, Oracle bug #14540202). This fix checks if the type has a FixedLength facet set in order to create a char otherwise should create varchar, mediumtext or longtext types when using a String CLR type in Code First or Model First also tested in Database First. Unit tests added for Code First and ProviderManifest.
+- Fix for bug "CacheServerProperties can cause 'Packet too large' error". The issue was due to a missing reading of Max_allowed_packet server property when CacheServerProperties is in true, since the value was read only in the first connection but the following pooled connections had a wrong value causing a Packet too large error. Including also a unit test for this scenario. All unit test passed. MySQL Bug #66578 Orabug #14593547.
+
 
 6.4.5
 - Fix for bug on Create Table via Server Explorer. The columns properties are now added in the correct order.(Oracle db Bug # 13475830).
