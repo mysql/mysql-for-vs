@@ -475,4 +475,10 @@
   <data name="SnapshotNotSupported" xml:space="preserve">
     <value>Snapshot isolation level is not supported.</value>
   </data>
+  <data name="MixedParameterNamingNotAllowed" xml:space="preserve">
+    <value>Mixing named and unnamed parameters is not allowed.</value>
+  </data>
+  <data name="ParameterIndexNotFound" xml:space="preserve">
+    <value>Parameter index was not found in Parameter Collection.</value>
+  </data>
 </root>
