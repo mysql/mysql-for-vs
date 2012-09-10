@@ -42,11 +42,14 @@ namespace MySql.Data.MySqlClient
     List<DbParameter> items = new List<DbParameter>();
     private Hashtable indexHashCS;
     private Hashtable indexHashCI;
+    //turns to true if any parameter is unnamed
+    internal bool containsUnnamedParameters;
 
     internal MySqlParameterCollection(MySqlCommand cmd)
     {
       indexHashCS = new Hashtable();
       indexHashCI = new Hashtable(StringComparer.CurrentCultureIgnoreCase);
+      containsUnnamedParameters = false;
       Clear();
     }
 
