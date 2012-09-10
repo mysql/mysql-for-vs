@@ -43,6 +43,7 @@
 - Debugger & Intellisense: Parser is now fully compliant with MySql syntax 5.0, 5.1, 5.5 & 5.6.
 - Intellisense: Fixed an issue with Intellisense, such that in server explorer was only working for new routines, not for existing ones. 
 - Fixed deleting a user profile using Profile provider (MySQL bug #64409, Oracle bug #13790123)
+- Fix for bug "CacheServerProperties can cause 'Packet too large' error". The issue was due to a missing reading of Max_allowed_packet server property when CacheServerProperties is in true, since the value was read only in the first connection but the following pooled connections had a wrong value causing a Packet too large error. Including also a unit test for this scenario. All unit test passed. MySQL Bug #66578 Orabug #14593547.
 
 6.6.0
 - Fix for ArgumentNull exception when using Take().Count() in a LINQ to Entities query (bug MySql #64749, Oracle bug #13913047).

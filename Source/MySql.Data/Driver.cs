@@ -237,9 +237,10 @@ namespace MySql.Data.MySqlClient
         }
         else
           serverProps = LoadServerProperties(connection);
-
+        
         LoadCharacterSets(connection);
       }
+
 
 #if AUTHENTICATED
       string licenseType = serverProps["license"];
@@ -260,6 +261,9 @@ namespace MySql.Data.MySqlClient
         else
           charSet = serverCharSet;
       }
+
+      if (serverProps.Contains("max_allowed_packet"))
+        maxPacketSize = Convert.ToInt64(serverProps["max_allowed_packet"]);
 
       // now tell the server which character set we will send queries in and which charset we
       // want results in
@@ -314,8 +318,6 @@ namespace MySql.Data.MySqlClient
         }
       }
 
-      if (hash.Contains("max_allowed_packet"))
-        maxPacketSize = Convert.ToInt64(hash["max_allowed_packet"]);
       return hash;
     }
 
