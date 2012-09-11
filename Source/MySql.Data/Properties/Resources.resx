@@ -481,4 +481,10 @@
   <data name="TypeIsNotCommandInterceptor" xml:space="preserve">
     <value>Type '{0}' is not derived from BaseCommandInterceptor</value>
   </data>
+  <data name="MixedParameterNamingNotAllowed" xml:space="preserve">
+    <value>Mixing named and unnamed parameters is not allowed.</value>
+  </data>
+  <data name="ParameterIndexNotFound" xml:space="preserve">
+    <value>Parameter index was not found in Parameter Collection.</value>
+  </data>
 </root>
