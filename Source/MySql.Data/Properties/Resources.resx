@@ -495,6 +495,7 @@
   </data>
   <data name="UnableToCreateAuthPlugin" xml:space="preserve">
     <value>Unable to create plugin for authentication method '{0}'. Please see inner exception for details.</value>
+  </data>
   <data name="MixedParameterNamingNotAllowed" xml:space="preserve">
     <value>Mixing named and unnamed parameters is not allowed.</value>
   </data>
