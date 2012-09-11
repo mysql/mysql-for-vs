@@ -24,7 +24,6 @@ namespace MySql.Data.MySqlClient.Properties {
 #if !CF
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
 #endif
-    
     public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
