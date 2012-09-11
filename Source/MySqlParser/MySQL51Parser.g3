@@ -366,7 +366,7 @@ variable_assignment
 	|	GLOBAL ID EQUALS expr  -> ^( VAR_ASSIGN GLOBAL { new CommonTree( new CommonToken( ID ) { Text = "@@" + $ID.Text } ) } expr  )
 	|	SESSION ID EQUALS expr -> ^( VAR_ASSIGN SESSION { new CommonTree( new CommonToken( ID ) { Text = "@" + $ID.Text } ) } expr )
 	|	AT1 AT1 GLOBAL DOT ID EQUALS expr -> ^( VAR_ASSIGN GLOBAL { new CommonTree( new CommonToken( ID ) { Text = "@@" + $ID.Text } ) } expr )
-	|   AT1 SESSION DOT ID EQUALS expr	-> ^( VAR_ASSIGN SESSION { new CommonTree( new CommonToken( ID ) { Text = "@" + $ID.Text } ) } expr )
+	|   AT1 AT1 SESSION DOT ID EQUALS expr	-> ^( VAR_ASSIGN SESSION { new CommonTree( new CommonToken( ID ) { Text = "@" + $ID.Text } ) } expr )
 	;
 
 session_variable
