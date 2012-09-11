@@ -284,5 +284,33 @@ END";
       StringBuilder sb;
       MySQL51Parser.program_return r = Utility.ParseSql(sql, false, out sb);
     }
+
+    [Test]
+    public void SetSession()
+    {
+      string sql = @"
+create procedure spClientFiboGen( nMax int )
+begin
+
+    declare i int;
+    declare myresult int;
+    
+    SET @@GLOBAL.max_sp_recursion_depth = 20;
+    SET @@session.max_sp_recursion_depth = 20; 
+    set i = 0;
+    
+    drop table if exists tblFibo;
+    create table tblFibo( n int, fibo int );
+    
+    while i < nMax do    
+        call spFiboGen( i, myresult );
+        insert into tblFibo( n, fibo ) values ( i, myresult );
+        set i = i + 1;
+    end while;
+
+end;";
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(sql, false, out sb);
+    }
   }
 }
