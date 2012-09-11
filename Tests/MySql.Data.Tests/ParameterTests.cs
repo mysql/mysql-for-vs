@@ -585,5 +585,39 @@ namespace MySql.Data.MySqlClient.Tests
 
       Assert.AreEqual(p.Scale, Byte.MaxValue);
     }
+
+    /// <summary>
+    /// Bug #66060 #14499549 "Parameter '?' must be defined" error, when using unnamed parameters
+    /// </summary>
+    [Test]
+    public void CanIdentifyParameterWithOutName()
+    {
+      MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id,name) VALUES (?, ?)", conn);
+
+      cmd.Parameters.AddWithValue("", 1);
+      cmd.Parameters.AddWithValue("", "test");
+
+      cmd.ExecuteNonQuery();
+
+      cmd.CommandText = "SELECT id FROM Test";
+      Assert.AreEqual(1, cmd.ExecuteScalar());
+
+      cmd.CommandText = "SELECT name FROM Test";
+      Assert.AreEqual("test", cmd.ExecuteScalar());
+    }
+
+    /// <summary>
+    /// Bug #66060  #14499549  "Parameter '?' must be defined" error, when using unnamed parameters
+    /// </summary>
+    [Test]
+    [ExpectedException(typeof(MySqlException))]
+    public void CanThrowAnExceptionWhenMixingParameterNaming()
+    {
+      MySqlCommand cmd = new MySqlCommand("INSERT INTO Test (id,name) VALUES (?Id, ?name, ?)", conn);
+      cmd.Parameters.AddWithValue("?Id", 1);
+      cmd.Parameters.AddWithValue("?name", "test");
+      cmd.ExecuteNonQuery();
+    }
+
   }
 }
