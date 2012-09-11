@@ -168,6 +168,7 @@ namespace MySql.Data.MySqlClient
 
       int pos = 0;
       string token = tokenizer.NextToken();
+      int parameterCount = 0;
       while (token != null)
       {
         // serialize everything that came before the token (i.e. whitespace)
@@ -175,8 +176,13 @@ namespace MySql.Data.MySqlClient
         pos = tokenizer.StopIndex;
         if (MySqlTokenizer.IsParameter(token))
         {
-          if (SerializeParameter(parameters, packet, token))
+          if ((!parameters.containsUnnamedParameters && token.Length == 1 && parameterCount > 0) || parameters.containsUnnamedParameters && token.Length > 1)
+            throw new MySqlException(Resources.MixedParameterNamingNotAllowed);
+
+          parameters.containsUnnamedParameters = token.Length == 1;
+          if (SerializeParameter(parameters, packet, token, parameterCount))
             token = null;
+          parameterCount++;
         }
         if (token != null)
         {
@@ -211,9 +217,20 @@ namespace MySql.Data.MySqlClient
     /// </remarks>
     /// <returns>True if the parameter was successfully serialized, false otherwise.</returns>
     private bool SerializeParameter(MySqlParameterCollection parameters,
-                                    MySqlPacket packet, string parmName)
+                                    MySqlPacket packet, string parmName, int parameterIndex)
     {
-      MySqlParameter parameter = parameters.GetParameterFlexible(parmName, false);
+      MySqlParameter parameter = null;
+
+      if (!parameters.containsUnnamedParameters)
+        parameter = parameters.GetParameterFlexible(parmName, false);
+      else
+      {
+        if (parameterIndex <= parameters.Count)
+          parameter = parameters[parameterIndex];
+        else
+          throw new MySqlException(Resources.ParameterIndexNotFound);
+      }
+
       if (parameter == null)
       {
         // if we are allowing user variables and the parameter name starts with @

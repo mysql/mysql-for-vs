@@ -24,6 +24,7 @@ namespace MySql.Data.MySqlClient.Properties {
 #if !CF
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
 #endif
+    
     public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
@@ -551,6 +552,15 @@ namespace MySql.Data.MySqlClient.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mixing named and unnamed parameters is not allowed..
+        /// </summary>
+        public static string MixedParameterNamingNotAllowed {
+            get {
+                return ResourceManager.GetString("MixedParameterNamingNotAllowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to INTERNAL ERROR:  More than one output parameter row detected..
         /// </summary>
         public static string MoreThanOneOPRow {
@@ -682,6 +692,15 @@ namespace MySql.Data.MySqlClient.Properties {
         public static string ParameterCannotBeNull {
             get {
                 return ResourceManager.GetString("ParameterCannotBeNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parameter index was not found in Parameter Collection..
+        /// </summary>
+        public static string ParameterIndexNotFound {
+            get {
+                return ResourceManager.GetString("ParameterIndexNotFound", resourceCulture);
             }
         }
         
