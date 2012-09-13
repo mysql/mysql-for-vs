@@ -325,6 +325,7 @@ namespace MySql.Debugger.VisualStudio
             if (reader.IsDBNull(2))
               throw new ApplicationException("You do not have sufficient database privileges to debug this routine.");
             body = reader.GetString(2);
+            body = body.Replace("\r", string.Empty).Replace("\n", Environment.NewLine);
           }
           int truncPos = body.IndexOf("PROCEDURE", StringComparison.OrdinalIgnoreCase);
           if (truncPos != -1)
