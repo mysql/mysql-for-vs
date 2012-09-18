@@ -60,11 +60,12 @@ namespace MySql.Debugger
         }
         path = Path.Combine( path, routineName );
         _fileName = string.Format( "{0}.mysql", path );
+        string fileContent = null;
         if (File.Exists(_fileName))
-        {
-          File.Delete(_fileName);
-        }
-        File.WriteAllText(_fileName, OwningRoutine.SourceCode);
+          fileContent = File.ReadAllText(_fileName);
+        if (fileContent == null 
+          || !fileContent.Equals(OwningRoutine.SourceCode))
+          File.WriteAllText(_fileName, OwningRoutine.SourceCode);
       }
       return _fileName;
     }

@@ -440,6 +440,7 @@ namespace MySql.Debugger
       else
       {
         sql = GetFieldAsString( string.Format("show create {0} {1}", type.ToString(), sName), 2);
+        sql = sql.Replace("\r", string.Empty).Replace("\n", Environment.NewLine);
       }
       StringBuilder sb;
       CommonTokenStream cts;
@@ -1095,8 +1096,17 @@ namespace MySql.Debugger
       {
         RegisterNewOldVars(routine, args);
       }
-      // Make backup
-      File.WriteAllText(Path.Combine(BackupPath, routine.Name), routine.SourceCode);
+
+      // forces to backup the routine
+      if (Scope.Count == 0)
+      {
+        RoutineScope tempScope = new RoutineScope();
+        tempScope.OwningRoutine = routine;
+        tempScope.GetFileName();
+      }
+      else
+        CurrentScope.GetFileName();
+
       // generate instrumentation code
       StringBuilder preInscode = new StringBuilder();
       // track internal variables...
