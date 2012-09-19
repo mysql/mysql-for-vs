@@ -5,6 +5,7 @@
 - Fix for handling unnamed parameter in MySQLCommand. This fix allows the mysqlcommand to handle parameters without requiring naming (e.g. INSERT INTO Test (id,name) VALUES (?, ?) ) (MySQL Bug #66060, Oracle bug #14499549).
 - Fixed end of line issue when debugging a routine.
 - Added validation to avoid overwriting a routine backup file when it hasn't changed.
+- Fixed inheritance on Entity Framework Code First scenarios. Discriminator column is created using its correct type as varchar(128) (MySql bug #63920 and Oracle bug #13582335).
 
 6.6.2
 - Parser: Fix for Problems when declaring variables in certain places (wasn't accepting declare var after declare handler in a begin/end block).
@@ -69,4 +70,4 @@
 - Initial version of Debugger of MySql stored routines & its Visual Studio integration (worklogs #6270 and #6245).
 - Fix for Exception thrown when using cascade delete in an EDM Model-First in Entity Framework (Oracle bug #14008752, MySql bug #64779).
 - Fix for Session locking issue with MySqlSessionStateStore (MySql bug #63997, Oracble bug #13733054).
-- Fixed deleting a user profile using Profile provider (MySQL bug #64409, Oracle bug #13790123)
+- Fixed deleting a user profile using Profile provider (MySQL bug #64470, Oracle bug #13790123)
