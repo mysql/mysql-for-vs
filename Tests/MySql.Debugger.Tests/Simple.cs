@@ -1339,6 +1339,104 @@ END;
       }
     }
 
+    [Test]
+    public void FibonacciGeneration()
+    {
+      string sql =
+        @"
+delimiter //
+
+drop procedure if exists spFiboGen //
+
+delimiter //
+create procedure spFiboGen( n int, out myresult int )
+begin
+
+    declare result1 int;
+    declare result2 int;
+    
+    if ( n = 1 ) or ( n = 2 ) then
+        set myresult = 1;
+    elseif ( n = 0 ) then
+        set myresult = 0;
+    else    
+        call spFiboGen( n - 1, result1 );
+        call spFiboGen( n - 2, result2 );
+        set myresult = result1 + result2;
+    end if;
+
+end
+//
+drop procedure if exists spClientFiboGen //
+
+delimiter //
+create procedure spClientFiboGen( nMax int )
+begin
+
+    declare i int;
+    declare myresult int;
+    
+    SET @@GLOBAL.max_sp_recursion_depth = 20;
+    SET @@session.max_sp_recursion_depth = 20; 
+    set i = 0;
+    
+    drop table if exists tblFibo;
+    create table tblFibo( n int, fibo int );
+    
+    while i < nMax do    
+        call spFiboGen( i, myresult );
+        insert into tblFibo( n, fibo ) values ( i, myresult );
+        set i = i + 1;
+    end while;
+
+end
+//
+";
+      Debugger dbg = new Debugger();
+      try
+      {
+        dbg.Connection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.UtilityConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        dbg.LockingConnection = new MySqlConnection(TestUtils.CONNECTION_STRING);
+        DumpConnectionThreads(dbg);
+        MySqlScript script = new MySqlScript(dbg.Connection, sql);
+        script.Execute();
+        sql =
+@"create procedure spClientFiboGen( nMax int )
+begin
+
+    declare i int;
+    declare myresult int;
+    
+    SET @@GLOBAL.max_sp_recursion_depth = 20;
+    SET @@session.max_sp_recursion_depth = 20; 
+    set i = 0;
+    
+    drop table if exists tblFibo;
+    create table tblFibo( n int, fibo int );
+    
+    while i < nMax do    
+        call spFiboGen( i, myresult );
+        insert into tblFibo( n, fibo ) values ( i, myresult );
+        set i = i + 1;
+    end while;
+
+end;
+";
+        dbg.SqlInput = sql;
+        dbg.SteppingType = SteppingTypeEnum.StepInto;
+        dbg.OnBreakpoint += (bp) =>
+        {
+          Debug.WriteLine(string.Format("breakpoint at line {0}:{1},{2}", bp.RoutineName, bp.Line, bp.StartColumn));
+        };
+        dbg.Run( new string[] { "3" }, new string[ 0 ] );
+      }
+      finally
+      {
+        dbg.RestoreRoutinesBackup();
+      }
+    }
+
     private void DumpConnectionThreads(Debugger dbg)
     {
       dbg.Connection.Open();
