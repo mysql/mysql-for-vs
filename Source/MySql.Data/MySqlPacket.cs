@@ -29,7 +29,7 @@ using MySql.Data.MySqlClient.Properties;
 
 namespace MySql.Data.MySqlClient
 {
-  public class MySqlPacket
+  class MySqlPacket
   {
     private byte[] tempBuffer = new byte[256];
     private Encoding encoding;

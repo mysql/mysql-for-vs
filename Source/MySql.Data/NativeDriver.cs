@@ -46,7 +46,6 @@ namespace MySql.Data.MySqlClient
     private DBVersion version;
     private int threadId;
     protected String encryptionSeed;
-    internal string EncryptionSeed { get { return encryptionSeed; } }
     protected ServerStatusFlags serverStatus;
     protected MySqlStream stream;
     protected Stream baseStream;
@@ -119,6 +118,12 @@ namespace MySql.Data.MySqlClient
     internal void SendPacket(MySqlPacket p)
     {
       stream.SendPacket(p);
+    }
+
+    internal void SendEmptyPacket()
+    {
+      byte[] buffer = new byte[4];
+      stream.SendEntirePacketDirectly(buffer, 0);
     }
 
     internal MySqlPacket ReadPacket()
@@ -468,11 +473,9 @@ namespace MySql.Data.MySqlClient
       if ((serverCaps & ClientFlags.PS_MULTI_RESULTS) != 0)
         flags |= ClientFlags.PS_MULTI_RESULTS;
 
-      if (Settings.IntegratedSecurity)
-      {
-        if ((serverCaps & ClientFlags.PLUGIN_AUTH) != 0)
-          flags |= ClientFlags.PLUGIN_AUTH;
-      }
+      if ((serverCaps & ClientFlags.PLUGIN_AUTH) != 0)
+        flags |= ClientFlags.PLUGIN_AUTH;
+
       connectionFlags = flags;
     }
 
