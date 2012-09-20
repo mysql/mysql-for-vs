@@ -18,6 +18,8 @@
 - Fixed inheritance on Entity Framework Code First scenarios. Discriminator column is created using its correct type as varchar(128) (MySql bug #63920 and Oracle bug #13582335).
 - Fixed "Trying to customize column precision in Code First does not work" (MySql bug #65001, Oracle bug #14469048).
 - Fixed bug ASP.NET Membership database fails on MySql database UTF32 (MySQL bug #65144, Oracle bug #14495292).
+- Fix for MySqlCommand.LastInsertedId holding only 32 bit values (MySql bug #65452, Oracle bug #14171960) by changing
+  several internal declaration of lastinsertid from int to long.
 
 6.5.4
 - Fix for Duplicate table name don't allow you to change table name (Oracle bug #13785918).
