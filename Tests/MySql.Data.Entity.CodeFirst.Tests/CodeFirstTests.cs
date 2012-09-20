@@ -306,6 +306,26 @@ where table_schema = '{0}' and table_name = 'movies' and column_name = 'Price'",
         }
       }
     }
+
+    /// <summary>
+    /// Test fix for http://bugs.mysql.com/bug.php?id=66066 / http://clustra.no.oracle.com/orabugs/bug.php?id=14479715
+    /// (Using EF, crash when generating insert with no values.).
+    /// </summary>
+    [Test]
+    public void AddingEmptyRow()
+    {
+      using (MovieDBContext ctx = new MovieDBContext())
+      {
+        ctx.EntitySingleColumns.Add(new EntitySingleColumn());
+        ctx.SaveChanges();
+      }
+
+      using (MovieDBContext ctx2 = new MovieDBContext())
+      {
+        var q = from esc in ctx2.EntitySingleColumns where esc.Id == 1 select esc;
+        Assert.AreEqual(1, q.Count());
+      }
+    }
   }
 }
 
