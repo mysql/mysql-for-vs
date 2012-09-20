@@ -183,7 +183,7 @@ namespace MySql.Web.Security
           foreach (string username in usernames)
           {
             // either create a new user or fetch the existing user id
-            int userId = SchemaManager.CreateOrFetchUserId(connection,
+            long userId = SchemaManager.CreateOrFetchUserId(connection,
                 username, app.FetchId(connection), true);
             foreach (string rolename in rolenames)
             {

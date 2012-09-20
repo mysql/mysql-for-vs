@@ -45,14 +45,14 @@ namespace MySql.Data.MySqlClient
     private int seqIndex;
     private bool isOutputParameters;
     private int affectedRows;
-    private int insertedId;
+    private long insertedId;
     private int statementId;
     private int totalRows;
     private int skippedRows;
     private bool cached;
     private List<IMySqlValue[]> cachedValues;
 
-    public ResultSet(int affectedRows, int insertedId)
+    public ResultSet(int affectedRows, long insertedId)
     {
       this.affectedRows = affectedRows;
       this.insertedId = insertedId;
@@ -105,7 +105,7 @@ namespace MySql.Data.MySqlClient
       get { return affectedRows; }
     }
 
-    public int InsertedId
+    public long InsertedId
     {
       get { return insertedId; }
     }

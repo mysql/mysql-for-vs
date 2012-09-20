@@ -470,7 +470,7 @@ namespace MySql.Web.Profile
           txn = connection.BeginTransaction();
 
           // either create a new user or fetch the existing user id
-          int userId = SchemaManager.CreateOrFetchUserId(connection, username,
+          long userId = SchemaManager.CreateOrFetchUserId(connection, username,
               app.EnsureId(connection), isAuthenticated);
 
           MySqlCommand cmd = new MySqlCommand(

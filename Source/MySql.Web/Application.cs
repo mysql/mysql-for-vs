@@ -31,7 +31,7 @@ namespace MySql.Web.General
 {
   internal class Application
   {
-    private int _id;
+    private long _id;
     private string _desc;
 
     public Application(string name, string desc)
@@ -40,7 +40,7 @@ namespace MySql.Web.General
       Name = name;
       Description = desc;
     }
-    public int Id
+    public long Id
     {
       get { return _id; }
       private set { _id = value; }
@@ -53,7 +53,7 @@ namespace MySql.Web.General
       private set { _desc = value; }
     }
 
-    public int FetchId(MySqlConnection connection)
+    public long FetchId(MySqlConnection connection)
     {
       if (Id == -1)
       {
@@ -61,7 +61,7 @@ namespace MySql.Web.General
             @"SELECT id FROM my_aspnet_applications WHERE name=@name", connection);
         cmd.Parameters.AddWithValue("@name", Name);
         object id = cmd.ExecuteScalar();
-        Id = id == null ? -1 : Convert.ToInt32(id);
+        Id = id == null ? -1 : Convert.ToInt64(id);
       }
       return Id;
     }
@@ -73,7 +73,7 @@ namespace MySql.Web.General
     /// <param name="applicationId">The application id.</param>
     /// <param name="applicationDesc">The application desc.</param>
     /// <param name="connection">The connection.</param>
-    public int EnsureId(MySqlConnection connection)
+    public long EnsureId(MySqlConnection connection)
     {
       // first try and retrieve the existing id
       if (FetchId(connection) <= 0)
@@ -86,7 +86,7 @@ namespace MySql.Web.General
         if (recordsAffected != 1)
           throw new ProviderException(Resources.UnableToCreateApplication);
 
-        Id = Convert.ToInt32(cmd.LastInsertedId);
+        Id = cmd.LastInsertedId;
       }
       return Id;
     }

@@ -608,6 +608,31 @@ namespace MySql.Data.MySqlClient.Tests
         }
       }
     }
+
+    /// <summary>
+    /// Tests fix for http://bugs.mysql.com/bug.php?id=65452 / http://clustra.no.oracle.com/orabugs/14171960 
+    /// (MySqlCommand.LastInsertedId can only have 32 bit values but has type long).
+    /// </summary>
+    [Test]
+    public void LongLastInsertId()
+    {
+      using (MySqlConnection conn = new MySqlConnection(GetConnectionString(true)))
+      {
+        conn.Open();
+        string sql = @"CREATE TABLE longids (id BIGINT NOT NULL AUTO_INCREMENT, PRIMARY KEY (id));
+alter table longids AUTO_INCREMENT = 2147483640;";
+        MySqlCommand cmd = new MySqlCommand( sql, conn );
+        cmd.ExecuteNonQuery();
+        long seed = 2147483640;
+        for (int i = 1; i < 10; ++i)
+        {
+          cmd.CommandText = "INSERT INTO longids VALUES ();";
+          cmd.ExecuteNonQuery();
+          Assert.AreEqual(seed++, cmd.LastInsertedId);
+        }
+        conn.Close();
+      }
+    }
   
   }
 
