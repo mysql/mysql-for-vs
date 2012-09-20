@@ -92,7 +92,7 @@ namespace MySql.Web.SessionState
       set { app.Name = value; }
     }
 
-    private int ApplicationId
+    private long ApplicationId
     {
       get { return app.Id; }
     }
@@ -924,7 +924,7 @@ namespace MySql.Web.SessionState
       }
     }
 
-    int GetCleanupInterval(MySqlConnection con, int ApplicationId)
+    int GetCleanupInterval(MySqlConnection con, long ApplicationId)
     {
       MySqlCommand cmd = new MySqlCommand("SELECT IntervalMinutes from my_aspnet_sessioncleanup where ApplicationId = @ApplicationId", con);
       cmd.Parameters.AddWithValue("@ApplicationId", ApplicationId);
