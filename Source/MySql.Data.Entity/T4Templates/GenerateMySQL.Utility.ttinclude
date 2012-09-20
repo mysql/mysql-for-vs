@@ -84,6 +84,16 @@ private static string WriteMySqlType(EdmProperty property)
 		} else if( ( len >= 16777216 ) && ( len < 4294967296 ) ) {
 			return "LONGBLOB";
 		}
+	} else if( property.TypeUsage.EdmType.Name == "decimal" ) {
+		int precision = 0;
+		int scale = 0;
+		if( property.TypeUsage.Facets.Contains( "Precision" ) )
+			precision = Convert.ToInt32( property.TypeUsage.Facets[ "Precision" ].Value );
+		if( property.TypeUsage.Facets.Contains( "Scale" ) )
+			scale = Convert.ToInt32( property.TypeUsage.Facets[ "Scale" ].Value );
+		if( precision == 0 ) precision = 10;
+		if( scale == 0 ) scale = 2;
+		return string.Format( "decimal( {0}, {1} )", precision, scale );
 	}
 	return property.ToStoreType();
 }
