@@ -30,7 +30,7 @@ using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 
 
-namespace MySql.Data.Entity.ModelFirst.Tests
+namespace MySql.Data.Entity.CodeFirst.Tests
 {
   public class Movie
   {
@@ -58,6 +58,12 @@ namespace MySql.Data.Entity.ModelFirst.Tests
     {
       Database.SetInitializer<MovieDBContext>(new MovieDBInitialize());
     }
+
+    protected override void OnModelCreating(DbModelBuilder modelBuilder)
+    {
+      base.OnModelCreating(modelBuilder);
+      modelBuilder.Entity<Movie>().Property(x => x.Price).HasPrecision(16, 2);
+    }
   }
 
   public class MovieRelease
@@ -72,7 +78,7 @@ namespace MySql.Data.Entity.ModelFirst.Tests
     public virtual string Name { get; set; }
   }
 
-  public class MovieDBInitialize : DropCreateDatabaseAlways<MovieDBContext>
+  public class MovieDBInitialize : DropCreateDatabaseReallyAlways<MovieDBContext>
   {
     protected override void Seed(MovieDBContext context)
     {
