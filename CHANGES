@@ -13,6 +13,7 @@
 - Fixed "Decimal type should have digits at right of decimal point", now default is 2, but user's changes in 
   EDM designer are recognized (MySql bug #65127, Oracle bug #14474342).
 - Fix for NullReferenceException when saving an uninitialized row in Entity Framework (MySql bug #66066, Oracle bug #14479715).
+- Fix for error when calling RoleProvider.RemoveUserFromRole(): causes an exception due to a wrong table being used (MySql bug #65805, Oracle bug #14405338).
 
 6.6.2
 - Parser: Fix for Problems when declaring variables in certain places (wasn't accepting declare var after declare handler in a begin/end block).
