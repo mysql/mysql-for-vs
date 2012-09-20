@@ -1430,7 +1430,7 @@ namespace MySql.Debugger
             break;
           case "if":
             {
-              int i = 0;
+              int i = 0, j = 0;
               int idxThen = -1;
               EmitInstrumentationCode(sql, routine, tc.Line, tc.CharPositionInLine);
               routine.RegisterStatement(tc);
@@ -1442,9 +1442,10 @@ namespace MySql.Debugger
                   i++;
                 if (i == tc.ChildCount) break;
                 CommonTree child = (CommonTree)tc.GetChild(i);
-                while (i < tc.ChildCount && Debugger.Cmp(child.GetChild(i).Text, "then") != 0)
-                  i++;
-                idxThen = i;
+                j = 0;
+                while (j < tc.ChildCount && Debugger.Cmp(child.GetChild(j).Text, "then") != 0)
+                  j++;
+                idxThen = j;
                 CommonTree thenTree = (CommonTree)child.GetChild(idxThen);
                 CommonTree exprTree = (CommonTree)child.GetChild(idxThen - 1);
                 // Concat "elseif/if ... then"
@@ -1455,6 +1456,7 @@ namespace MySql.Debugger
                 ConcatTokens(sql, tokenStream, exprTree.TokenStartIndex, exprTree.TokenStopIndex, true );
                 sql.AppendLine(" then ");
                 GenerateInstrumentedCodeRecursive(thenTree.Children, routine, sql);
+                i++;
               } while (true);
               // look for else
               i = 0;
@@ -1608,6 +1610,12 @@ namespace MySql.Debugger
               routine.RegisterStatement(tc);
               EmitInstrumentationCode(sql, routine, tc.Line, tc.CharPositionInLine);
               ConcatTokens(sql, tokenStream, tc.TokenStartIndex, tc.TokenStopIndex);
+              // Workaround: sometimes last token of declare statement is not the expected semicolon, if so, add it.
+              if (Cmp(tokenStream.Get(tc.TokenStopIndex).Text, ";") != 0)
+              {
+                sql.Append(';');
+              }
+              // end workaround
             }
             break;
           case "label":
