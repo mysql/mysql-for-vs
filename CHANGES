@@ -15,6 +15,7 @@
 - Fix for handling unnamed parameter in MySQLCommand. This fix allows the mysqlcommand to handle parameters without requiring naming (e.g. INSERT INTO Test (id,name) VALUES (?, ?) ) (MySQL Bug #66060, Oracle bug #14499549).
 - Fixed inheritance on Entity Framework Code First scenarios. Discriminator column is created using its correct type as varchar(128) (MySql bug #63920 and Oracle bug #13582335).
 - Fixed "Trying to customize column precision in Code First does not work" (MySql bug #65001, Oracle bug #14469048).
+- Fixed bug ASP.NET Membership database fails on MySql database UTF32 (MySQL bug #65144, Oracle bug #14495292).
 
 6.4.5
 - Fix for bug on Create Table via Server Explorer. The columns properties are now added in the correct order.(Oracle db Bug # 13475830).
