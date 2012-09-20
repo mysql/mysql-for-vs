@@ -90,6 +90,7 @@ namespace MySql.Data.MySqlClient
     {
       baseStream.Close();
       base.Close();
+      cache.Dispose();
     }
 
     public override void SetLength(long value)
@@ -278,6 +279,7 @@ namespace MySql.Data.MySqlClient
       baseStream.Write(buffer, 0, bytesToWrite);
       baseStream.Flush();
       cache.SetLength(0);
+      if( compressedBuffer != null ) compressedBuffer.Dispose();
     }
 
     public override void Flush()
