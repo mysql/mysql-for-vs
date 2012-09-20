@@ -326,5 +326,25 @@ namespace MySql.Web.Tests
         ConfigurationManager.RefreshSection("connectionStrings");
       }
     }
+
+    /// <summary>
+    /// Checking fix for http://bugs.mysql.com/bug.php?id=65144 / http://clustra.no.oracle.com/orabugs/14495292
+    /// (Net Connector 6.4.4 Asp.Net Membership Database fails on MySql Db of UTF32).
+    /// </summary>
+    [Test]
+    public void AttemptLatestSchemaVersion()
+    {
+      execSQL(string.Format("alter database `{0}` character set = 'utf32' collate = 'utf32_general_ci'", database0));
+      for (int i = 1; i <= 4; i++)
+      {
+        LoadSchema(i);
+      }
+      MySQLRoleProvider roleProvider = new MySQLRoleProvider();
+      NameValueCollection config = new NameValueCollection();
+      config.Add("connectionStringName", "LocalMySqlServer");
+      config.Add("applicationName", "/");
+      config.Add("autogenerateschema", "true");
+      roleProvider.Initialize(null, config);
+    }
   }
 }
