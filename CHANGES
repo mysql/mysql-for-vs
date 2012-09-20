@@ -16,6 +16,7 @@
 - Fix for bug "CacheServerProperties can cause 'Packet too large' error". The issue was due to a missing reading of Max_allowed_packet server property when CacheServerProperties is in true, since the value was read only in the first connection but the following pooled connections had a wrong value causing a Packet too large error. Including also a unit test for this scenario. All unit test passed. MySQL Bug #66578 Orabug #14593547.
 - Fix for handling unnamed parameter in MySQLCommand. This fix allows the mysqlcommand to handle parameters without requiring naming (e.g. INSERT INTO Test (id,name) VALUES (?, ?) ) (MySQL Bug #66060, Oracle bug #14499549).
 - Fixed inheritance on Entity Framework Code First scenarios. Discriminator column is created using its correct type as varchar(128) (MySql bug #63920 and Oracle bug #13582335).
+- Fixed "Trying to customize column precision in Code First does not work" (MySql bug #65001, Oracle bug #14469048).
 
 6.5.4
 - Fix for Duplicate table name don't allow you to change table name (Oracle bug #13785918).
