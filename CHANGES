@@ -10,6 +10,8 @@
 - Fixed bug ASP.NET Membership database fails on MySql database UTF32 (MySQL bug #65144, Oracle bug #14495292).
 - Fix for MySqlCommand.LastInsertedId holding only 32 bit values (MySql bug #65452, Oracle bug #14171960) by changing
   several internal declaration of lastinsertid from int to long.
+- Fixed "Decimal type should have digits at right of decimal point", now default is 2, but user's changes in 
+  EDM designer are recognized (MySql bug #65127, Oracle bug #14474342).
 
 6.6.2
 - Parser: Fix for Problems when declaring variables in certain places (wasn't accepting declare var after declare handler in a begin/end block).
