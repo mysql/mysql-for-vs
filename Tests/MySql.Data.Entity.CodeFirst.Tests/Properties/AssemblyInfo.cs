@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MySql.Data.Entity.Tests.ModelFirst")]
+[assembly: AssemblyTitle("MySql.Data.Entity.CodeFirst.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Oracle")]
-[assembly: AssemblyProduct("MySql.Data.Entity.Tests.ModelFirst")]
+[assembly: AssemblyProduct("MySql.Data.Entity.CodeFirst.Tests")]
 [assembly: AssemblyCopyright("Copyright © 2011, Oracle and/or its affiliates. All rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

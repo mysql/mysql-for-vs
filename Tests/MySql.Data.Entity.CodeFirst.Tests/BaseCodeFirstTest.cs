@@ -36,9 +36,9 @@ using System.Text;
 using System.Data.EntityClient;
 using MySql.Data.MySqlClient.Tests;
 
-namespace MySql.Data.Entity.ModelFirst.Tests
+namespace MySql.Data.Entity.CodeFirst.Tests
 {
-  public class BaseModelFirstTest : BaseTest
+  public class BaseCodeFirstTest : BaseTest
   {
     // A trace listener to use during testing.
     private AssertFailTraceListener asertFailListener = new AssertFailTraceListener();
