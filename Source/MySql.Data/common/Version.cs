@@ -29,7 +29,7 @@ namespace MySql.Data.Common
   /// <summary>
   /// Summary description for Version.
   /// </summary>
-  public struct DBVersion
+  internal struct DBVersion
   {
     private int major;
     private int minor;

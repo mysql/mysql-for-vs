@@ -32,30 +32,7 @@ namespace MySql.Data.MySqlClient.Authentication
   public abstract class MySqlAuthenticationPlugin
   {
     private NativeDriver driver;
-
-    private MySqlPacket Packet { get { return driver.Packet; } }
-
-    protected string EncryptionSeed { get { return driver.EncryptionSeed; } }
-
-    private void SendPacket(MySqlPacket p)
-    {
-      driver.SendPacket(p);
-    }
-
-    protected void ClearPacket()
-    {
-      driver.Packet.Clear();
-    }
-
-    protected void SendPacket()
-    {
-      driver.SendPacket( driver.Packet );
-    }
-
-    protected void WritePacketData(string data)
-    {
-      driver.Packet.WriteString(data);
-    }
+    protected byte[] AuthenticationData;
 
     /// <summary>
     /// This is a factory method that is used only internally.  It creates an auth plugin based on the method type
@@ -71,7 +48,7 @@ namespace MySql.Data.MySqlClient.Authentication
         throw new MySqlException(String.Format(Resources.UnknownAuthenticationMethod, method));
 
       plugin.driver = driver;
-      plugin.AuthData = authData;
+      plugin.SetAuthData(authData);
       return plugin;
     }
 
@@ -95,7 +72,10 @@ namespace MySql.Data.MySqlClient.Authentication
       get { return driver.Encoding; } 
     }
 
-    protected byte[] AuthData;
+    protected virtual void SetAuthData(byte[] data)
+    {
+      AuthenticationData = data;
+    }
 
     protected virtual void CheckConstraints()
     {
@@ -126,43 +106,51 @@ namespace MySql.Data.MySqlClient.Authentication
       packet.WriteString(GetUsername());
 
       // now write the password
-      object password = GetPassword();
-      if (password is string)
-        packet.WriteString((string)password);
-      else if (password == null)
-        packet.WriteString("");
-      else
-        packet.Write((byte[])password);
+      WritePassword(packet);
 
-      if ((Flags & ClientFlags.CONNECT_WITH_DB) != 0 && !String.IsNullOrEmpty(Settings.Database))
-        packet.WriteString(Settings.Database);
-      else
-        packet.WriteString("");
-      if (Settings.IntegratedSecurity)
+      if ((Flags & ClientFlags.CONNECT_WITH_DB) != 0 || reset)
       {
-        if (reset)
-          packet.WriteInteger(8, 2);
-
-        if ((Flags & ClientFlags.PLUGIN_AUTH) != 0)
-          packet.WriteString(PluginName);
+        if (!String.IsNullOrEmpty(Settings.Database))
+          packet.WriteString(Settings.Database);
+        else
+          packet.WriteString("");
       }
+
+      if (reset)
+        packet.WriteInteger(8, 2);
+
+      if ((Flags & ClientFlags.PLUGIN_AUTH) != 0)
+        packet.WriteString(PluginName);
+
       driver.SendPacket(packet);
       //read server response
       packet = ReadPacket();
       byte[] b = packet.Buffer;
       if (b[0] == 0xfe)
-      {
         HandleAuthChange(packet);
-        driver.ReadOk(true);
-      }
-      else
-      {
-        driver.ReadOk(false);
-      }
+      driver.ReadOk(false);
       AuthenticationSuccessful();
     }
 
-    protected MySqlPacket ReadPacket()
+    private void WritePassword(MySqlPacket packet)
+    {
+      bool secure = (Flags & ClientFlags.SECURE_CONNECTION) != 0;
+      object password = GetPassword();
+      if (password is string)
+      {
+        if (secure)
+          packet.WriteLenString((string)password);
+        else
+          packet.WriteString((string)password);
+      }
+      else if (password == null)
+        packet.WriteByte(0);
+      else if (password is byte[])
+        packet.Write(password as byte[]);
+      else throw new MySqlException("Unexpected password format: " + password.GetType());
+    }
+
+    private MySqlPacket ReadPacket()
     {
       try
       {
@@ -190,16 +178,21 @@ namespace MySql.Data.MySqlClient.Authentication
       plugin.AuthenticationChange();
     }
 
-    protected virtual void AuthenticationChange()
+    private void AuthenticationChange()
     {
-      MySqlPacket packet = Packet;
+      MySqlPacket packet = driver.Packet;
       packet.Clear();
       byte[] moreData = MoreData(null);
-      while (moreData != null && moreData.Length > 0)
+      while (true) 
       {
         packet.Clear();
-        packet.Write(moreData);
-        SendPacket(packet);
+        if (moreData != null && moreData.Length > 0)
+        {
+          packet.Write(moreData);
+          driver.SendPacket(packet);
+        }
+        else
+          driver.SendEmptyPacket();
 
         packet = ReadPacket();
         byte prefixByte = packet.Buffer[0];
