@@ -80,7 +80,7 @@ namespace MySql.Data.MySqlClient
             Resources.TraceQueryNormalized, driverId, ThreadID, normalized_query);
     }
 
-    protected override int GetResult(int statementId, ref int affectedRows, ref int insertedId)
+    protected override int GetResult(int statementId, ref int affectedRows, ref long insertedId)
     {
       try
       {
