@@ -1,6 +1,6 @@
 CREATE TABLE my_aspnet_sessions
 (
-  SessionId       varchar(255)  NOT NULL,
+  SessionId       varchar(191)  NOT NULL,
   ApplicationId   int       NOT NULL,
   Created         datetime  NOT NULL,
   Expires         datetime  NOT NULL,
