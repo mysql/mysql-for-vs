@@ -511,7 +511,7 @@ namespace MySql.Web.Security
         {
           connection.Open();
 
-          string sql = @"SELECT u.name FROM my_aspnet_usersInRole uir
+          string sql = @"SELECT u.name FROM my_aspnet_usersinroles uir
                         JOIN my_aspnet_users u ON uir.userId=u.id
                         JOIN my_aspnet_roles r ON uir.roleId=r.id
                         WHERE r.name LIKE @rolename AND
