@@ -7,6 +7,7 @@
 - Added validation to avoid overwriting a routine backup file when it hasn't changed.
 - Fixed inheritance on Entity Framework Code First scenarios. Discriminator column is created using its correct type as varchar(128) (MySql bug #63920 and Oracle bug #13582335).
 - Fixed "Trying to customize column precision in Code First does not work" (MySql bug #65001, Oracle bug #14469048).
+- Fixed bug ASP.NET Membership database fails on MySql database UTF32 (MySQL bug #65144, Oracle bug #14495292).
 
 6.6.2
 - Parser: Fix for Problems when declaring variables in certain places (wasn't accepting declare var after declare handler in a begin/end block).
