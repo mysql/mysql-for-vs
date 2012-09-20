@@ -144,8 +144,8 @@ namespace MySql.Web.Common
     /// <param name="applicationId">The application id.</param>
     /// <param name="authenticated">if set to <c>true</c> [authenticated].</param>
     /// <returns></returns>
-    internal static int CreateOrFetchUserId(MySqlConnection connection, string username,
-        int applicationId, bool authenticated)
+    internal static long CreateOrFetchUserId(MySqlConnection connection, string username,
+        long applicationId, bool authenticated)
     {
       Debug.Assert(applicationId > 0);
 
@@ -165,7 +165,7 @@ namespace MySql.Web.Common
         throw new ProviderException(Resources.UnableToCreateUser);
 
       cmd.CommandText = "SELECT LAST_INSERT_ID()";
-      return Convert.ToInt32(cmd.ExecuteScalar());
+      return Convert.ToInt64(cmd.ExecuteScalar());
     }
   }
 }
