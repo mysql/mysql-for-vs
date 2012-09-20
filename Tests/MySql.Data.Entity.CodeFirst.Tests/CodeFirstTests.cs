@@ -35,12 +35,12 @@ using System.Data.Common;
 using System.Data.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
-using MySql.Data.Entity.ModelFirst.Tests.Properties;
+using MySql.Data.Entity.CodeFirst.Tests.Properties;
 
-namespace MySql.Data.Entity.ModelFirst.Tests
+namespace MySql.Data.Entity.CodeFirst.Tests
 {
   [TestFixture]
-  public class CodeFirstTests : BaseModelFirstTest
+  public class CodeFirstTests : BaseCodeFirstTest
   {
     /// <summary>
     /// Tests for fix of http://bugs.mysql.com/bug.php?id=61230
@@ -50,6 +50,7 @@ namespace MySql.Data.Entity.ModelFirst.Tests
     public void SimpleCodeFirstSelect()
     {
       MovieDBContext db = new MovieDBContext();
+      db.Database.Initialize(true);
       var l = db.Movies.ToList();
       foreach (var i in l)
       {
@@ -63,7 +64,9 @@ namespace MySql.Data.Entity.ModelFirst.Tests
     [Test]
     public void AlterTableTest()
     {
-      MovieDBContext db = new MovieDBContext();
+      ReInitDb();
+      MovieDBContext db = new MovieDBContext();      
+      db.Database.Initialize(true);
       var l = db.MovieFormats.ToList();
       foreach (var i in l)
       {
@@ -132,7 +135,7 @@ namespace MySql.Data.Entity.ModelFirst.Tests
     public void CheckByteArray()
     {
       MovieDBContext db = new MovieDBContext();
-      
+      db.Database.Initialize(true);
       string dbCreationScript =
         ((IObjectContextAdapter)db).ObjectContext.CreateDatabaseScript();
       Regex rx = new Regex(@"`Data` (?<type>[^\)]*)", RegexOptions.Compiled | RegexOptions.Singleline);
@@ -148,6 +151,7 @@ namespace MySql.Data.Entity.ModelFirst.Tests
     {
       using (MovieDBContext context = new MovieDBContext())
       {
+        context.Database.Initialize(true);
         int count = context.Database.SqlQuery<int>("GetCount").First();
 
         Assert.AreEqual(5, count);
@@ -161,9 +165,11 @@ namespace MySql.Data.Entity.ModelFirst.Tests
     [Test]
     public void Bug63920_Test1()
     {
+      ReInitDb();
       using (VehicleDbContext context = new VehicleDbContext())
       {
         context.Database.Delete();
+        context.Database.Initialize(true);
         
         context.Vehicles.Add(new Car { Id = 1, Name = "Mustang", Year = 2012, CarProperty = "Car" });
         context.Vehicles.Add(new Bike { Id = 101, Name = "Mountain", Year = 2011, BikeProperty = "Bike" });
@@ -190,12 +196,14 @@ namespace MySql.Data.Entity.ModelFirst.Tests
     [Test]
     public void Bug63920_Test2()
     {
+      ReInitDb();
       using (VehicleDbContext2 context = new VehicleDbContext2())
       {
         context.Database.Delete();
+        context.Database.Initialize(true);
 
-        context.Vehicles.Add(new Car { Id = 1, Name = "Mustang", Year = 2012, CarProperty = "Car" });
-        context.Vehicles.Add(new Bike { Id = 101, Name = "Mountain", Year = 2011, BikeProperty = "Bike" });
+        context.Vehicles.Add(new Car2 { Id = 1, Name = "Mustang", Year = 2012, CarProperty = "Car" });
+        context.Vehicles.Add(new Bike2 { Id = 101, Name = "Mountain", Year = 2011, BikeProperty = "Bike" });
         context.SaveChanges();
 
         var list = context.Vehicles.ToList();
@@ -204,12 +212,42 @@ namespace MySql.Data.Entity.ModelFirst.Tests
         using (MySqlConnection conn = new MySqlConnection(context.Database.Connection.ConnectionString))
         {
           conn.Open();
-          MySqlCommand cmd = new MySqlCommand("SELECT COUNT(*) FROM Vehicles", conn);
+          MySqlCommand cmd = new MySqlCommand("SELECT COUNT(*) FROM Vehicle2", conn);
           records = Convert.ToInt32(cmd.ExecuteScalar());
         }
 
         Assert.AreEqual(context.Vehicles.Count(), records);
-      }
+      }     
+    }
+
+    /// <summary>
+    /// This test fix for precision customization for columns bug (http://bugs.mysql.com/bug.php?id=65001), 
+    /// Trying to customize column precision in Code First does not work).
+    /// </summary>
+    [Test]
+    public void TestPrecisionNscale()
+    {
+      MovieDBContext db = new MovieDBContext();
+      db.Database.Initialize(true);
+      var l = db.Movies.ToList();
+      IDataReader r = execReader( string.Format( 
+@"select numeric_precision, numeric_scale from information_schema.columns 
+where table_schema = '{0}' and table_name = 'movies' and column_name = 'Price'", conn.Database ));
+      r.Read();
+      Assert.AreEqual( 16, r.GetInt32( 0 ) );
+      Assert.AreEqual( 2, r.GetInt32( 1 ) );
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+      ReInitDb();
+    }
+
+    private void ReInitDb()
+    {
+      this.suExecSQL( string.Format( "drop database if exists `{0}`", conn.Database ));
+      this.suExecSQL(string.Format("create database `{0}`", conn.Database));
     }
 
     /// <summary>

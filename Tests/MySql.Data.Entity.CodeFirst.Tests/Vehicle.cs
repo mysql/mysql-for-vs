@@ -28,27 +28,66 @@ using System.Text;
 using System.Data.Entity;
 using System.ComponentModel.DataAnnotations;
 
-namespace MySql.Data.Entity.ModelFirst.Tests
+
+namespace MySql.Data.Entity.CodeFirst.Tests
 {
   public class VehicleDbContext : DbContext
   {
     public DbSet<Vehicle> Vehicles { get; set; }
+
+    public VehicleDbContext()
+    {
+      Database.SetInitializer<VehicleDbContext>( new VehicleDBInitializer() );
+    }
+
+    protected override void OnModelCreating(DbModelBuilder modelBuilder)
+    {
+      //modelBuilder.Entity<Vehicle>()
+      //    .Map<Car>(o => o.ToTable("Cars"))
+      //    .Map<Bike>(o => o.ToTable("Bikes"));
+      modelBuilder.Entity<Car>().ToTable("Cars");
+      modelBuilder.Entity<Bike>().ToTable("Bikes");
+    }
+  }
+
+  public class VehicleDBInitializer : DropCreateDatabaseReallyAlways<VehicleDbContext>
+  { 
   }
 
   public class VehicleDbContext2 : DbContext
   {
-    public DbSet<Vehicle> Vehicles { get; set; }
+    public DbSet<Vehicle2> Vehicles { get; set; }
 
-    protected override void OnModelCreating(DbModelBuilder modelBuilder)
+    public VehicleDbContext2()
     {
-      modelBuilder.Entity<Vehicle>()
-          .Map<Car>(o => o.ToTable("Cars"))
-          .Map<Bike>(o => o.ToTable("Bikes"));
+      Database.SetInitializer<VehicleDbContext2>( new VehicleDBInitializer2() );
     }
   }
 
+  public class VehicleDBInitializer2 : DropCreateDatabaseReallyAlways<VehicleDbContext2>
+  { 
+  }
 
-  public partial class Vehicle
+  /// <summary>
+  /// This initializer really drops the database, not just once per AppDomain (like the DropCreateDatabaseAlways).
+  /// </summary>
+  /// <typeparam name="TContext"></typeparam>
+  public class DropCreateDatabaseReallyAlways<TContext> : IDatabaseInitializer<TContext> where TContext : DbContext
+  { 
+    public void InitializeDatabase(TContext context)
+    {
+      context.Database.Delete();
+      context.Database.CreateIfNotExists();
+      this.Seed(context);
+      context.SaveChanges();
+    }
+
+    protected virtual void Seed(TContext context)
+    {      
+    }
+  }
+
+  public class Vehicle
   {
     public int Id { get; set; }
     public int Year { get; set; }
@@ -77,12 +116,29 @@ namespace MySql.Data.Entity.ModelFirst.Tests
     public string LongDescription { get; set; }
   }
 
-  public partial class Car : Vehicle
+  public class Car : Vehicle
   {
     public string CarProperty { get; set; }
   }
 
-  public partial class Bike : Vehicle
+  public class Bike : Vehicle
+  {
+    public string BikeProperty { get; set; }
+  }
+  public class Vehicle2
+  {
+    public int Id { get; set; }
+    public int Year { get; set; }
+    [MaxLength(1024)]
+    public string Name { get; set; }
+  }
+
+  public class Car2 : Vehicle2
+  {
+    public string CarProperty { get; set; }
+  }
+
+  public class Bike2 : Vehicle2
   {
     public string BikeProperty { get; set; }
   }

@@ -23,7 +23,7 @@ Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Installer", "Installer\Inst
 		{DC3517FF-AC26-4755-9B7A-EF658FF69593} = {DC3517FF-AC26-4755-9B7A-EF658FF69593}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Data.Entity.ModelFirst.Tests", "Tests\MySql.Data.Entity.ModelFirst.Tests\MySql.Data.Entity.ModelFirst.Tests.csproj", "{EF3B193C-EFAE-458C-8077-CB8602365E10}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Data.Entity.CodeFirst.Tests", "Tests\MySql.Data.Entity.CodeFirst.Tests\MySql.Data.Entity.CodeFirst.Tests.csproj", "{EF3B193C-EFAE-458C-8077-CB8602365E10}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
