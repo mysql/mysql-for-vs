@@ -166,7 +166,7 @@ namespace MySql.Data.MySqlClient
         case PrimitiveTypeKind.Decimal:
           {
             byte precision = 10;
-            byte scale = 0;
+            byte scale = 2;
             Facet facet;
 
             if (edmType.Facets.TryGetValue("Precision", false, out facet))
@@ -177,7 +177,7 @@ namespace MySql.Data.MySqlClient
 
             if (edmType.Facets.TryGetValue("Scale", false, out facet))
             {
-              if (!facet.IsUnbounded && facet.Value != null)
+              if (!facet.IsUnbounded && facet.Value != null )
                 scale = (byte)facet.Value;
             }
 
