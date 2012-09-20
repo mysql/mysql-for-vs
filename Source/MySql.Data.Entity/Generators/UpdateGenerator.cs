@@ -43,16 +43,16 @@ namespace MySql.Data.Entity
       _onReturningSelect = false;
       statement.Target = commandTree.Target.Expression.Accept(this);
       scope.Add("target", statement.Target as InputFragment);
-      
+
+      if (values == null)
+        values = new Dictionary<EdmMember, SqlFragment>();
+
       foreach (DbSetClause setClause in commandTree.SetClauses)
       {
         statement.Properties.Add(setClause.Property.Accept(this));
         DbExpression value = setClause.Value;
         SqlFragment valueFragment = value.Accept(this);
         statement.Values.Add(valueFragment);
-
-        if (values == null)
-          values = new Dictionary<EdmMember, SqlFragment>();
 
         if (value.ExpressionKind != DbExpressionKind.Null)
         {
