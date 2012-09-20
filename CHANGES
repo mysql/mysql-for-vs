@@ -22,6 +22,7 @@
   EDM designer are recognized (MySql bug #65127, Oracle bug #14474342).
 - Fix for NullReferenceException when saving an uninitialized row in Entity Framework (MySql bug #66066, Oracle bug #14479715).
 - Fix for error when calling RoleProvider.RemoveUserFromRole(): causes an exception due to a wrong table being used (MySql bug #65805, Oracle bug #14405338).
+- Fix for "Memory Leak on MySql.Data.MySqlClient.MySqlCommand", too many MemoryStream's instances created (MySql bug #65696, Oracle bug #14468204).
 
 6.4.5
 - Fix for bug on Create Table via Server Explorer. The columns properties are now added in the correct order.(Oracle db Bug # 13475830).
