@@ -36,17 +36,32 @@ namespace MySql.Data.MySqlClient.Authentication
       get { return "mysql_native_password"; }
     }
 
-    protected override void AuthenticationChange()
+    protected override void SetAuthData(byte[] data)
     {
-      base.ClearPacket();
-      base.WritePacketData( Crypt.EncryptPassword(
-        Settings.Password, base.EncryptionSeed.Substring(0, 8), true) );
-      base.SendPacket();
+      // if the data given to us is a null terminated string, we need to trim off the trailing zero
+      if (data[data.Length - 1] == 0)
+      {
+        byte[] b = new byte[data.Length - 1];
+        Buffer.BlockCopy(data, 0, b, 0, data.Length - 1);
+        base.SetAuthData(b);
+      }
+      else
+        base.SetAuthData(data);
+    }
+
+    protected override byte[] MoreData(byte[] data)
+    {
+      byte[] passBytes = GetPassword() as byte[];
+      byte[] buffer = new byte[passBytes.Length - 1];
+      Array.Copy(passBytes, 1, buffer, 0, passBytes.Length - 1);
+      return buffer;
     }
 
     public override object GetPassword()
     {
-      return Get411Password(Settings.Password, AuthData);
+      byte[] bytes = Get411Password(Settings.Password, AuthenticationData);
+      if (bytes != null && bytes.Length == 1 && bytes[0] == 0) return null;
+      return bytes;
     }
 
     /// <summary>
