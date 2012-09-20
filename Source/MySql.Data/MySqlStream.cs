@@ -35,7 +35,6 @@ namespace MySql.Data.MySqlClient
   internal class MySqlStream
   {
     private byte sequenceByte;
-    private MemoryStream bufferStream;
     private int maxBlockSize;
     private ulong maxPacketSize;
     private byte[] packetHeader = new byte[4];
@@ -63,7 +62,6 @@ namespace MySql.Data.MySqlClient
       maxBlockSize = Int32.MaxValue;
 
       packet = new MySqlPacket(encoding);
-      bufferStream = new MemoryStream();
     }
 
     public MySqlStream(Stream baseStream, Encoding encoding, bool compress)
