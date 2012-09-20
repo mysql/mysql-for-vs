@@ -383,7 +383,8 @@ namespace MySql.Data.MySqlClient
         return null;
       firstResult = false;
 
-      int affectedRows = -1, insertedId = -1, warnings = 0;
+      int affectedRows = -1, warnings = 0;
+      long insertedId = -1;
       int fieldCount = GetResult(statementId, ref affectedRows, ref insertedId);
       if (fieldCount == -1)
         return null;
@@ -393,7 +394,7 @@ namespace MySql.Data.MySqlClient
         return new ResultSet(affectedRows, insertedId);
     }
 
-    protected virtual int GetResult(int statementId, ref int affectedRows, ref int insertedId)
+    protected virtual int GetResult(int statementId, ref int affectedRows, ref long insertedId)
     {
       return handler.GetResult(ref affectedRows, ref insertedId);
     }
@@ -530,7 +531,7 @@ namespace MySql.Data.MySqlClient
     void SendQuery(MySqlPacket packet);
     void Close(bool isOpen);
     bool Ping();
-    int GetResult(ref int affectedRows, ref int insertedId);
+    int GetResult(ref int affectedRows, ref long insertedId);
     bool FetchDataRow(int statementId, int columns);
     int PrepareStatement(string sql, ref MySqlField[] parameters);
     void ExecuteStatement(MySqlPacket packet);
