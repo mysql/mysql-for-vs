@@ -53,6 +53,7 @@ namespace MySql.Data.Entity.CodeFirst.Tests
     public DbSet<Movie> Movies { get; set; }
     public DbSet<MovieFormat> MovieFormats { get; set; }
     public DbSet<MovieRelease> MovieReleases { get; set; }
+    public DbSet<EntitySingleColumn> EntitySingleColumns { get; set; }
 
     public MovieDBContext()
     {
@@ -64,6 +65,11 @@ namespace MySql.Data.Entity.CodeFirst.Tests
       base.OnModelCreating(modelBuilder);
       modelBuilder.Entity<Movie>().Property(x => x.Price).HasPrecision(16, 2);
     }
+  }
+
+  public class EntitySingleColumn
+  {
+    public int Id { get; set; }
   }
 
   public class MovieRelease

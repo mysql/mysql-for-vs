@@ -47,14 +47,14 @@ namespace MySql.Data.Entity
       foreach (DbSetClause setClause in commandTree.SetClauses)
         statement.Sets.Add(setClause.Property.Accept(this));
 
+      if (values == null)
+        values = new Dictionary<EdmMember, SqlFragment>();
+
       foreach (DbSetClause setClause in commandTree.SetClauses)
       {
         DbExpression value = setClause.Value;
         SqlFragment valueFragment = value.Accept(this);
         statement.Values.Add(valueFragment);
-
-        if (values == null)
-          values = new Dictionary<EdmMember, SqlFragment>();
 
         if (value.ExpressionKind != DbExpressionKind.Null)
         {
