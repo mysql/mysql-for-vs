@@ -421,6 +421,15 @@ namespace MySql.Data.MySqlClient
             sql.AppendFormat(" ({0})", facet.Value);
         }
       }
+      else if (column.TypeUsage.EdmType.BaseType.Name == "Decimal")
+      {
+        Facet fcScale;
+        Facet fcPrecision;
+        if (facets.TryGetValue("Scale", true, out fcScale) && facets.TryGetValue("Precision", true, out fcPrecision))
+        {
+          sql.AppendFormat("( {0}, {1} ) ", fcPrecision.Value, fcScale.Value);
+        }
+      }
       if (facets.TryGetValue("Nullable", true, out facet) && (bool)facet.Value == false)
         sql.Append(" NOT NULL");
       if (facets.TryGetValue("StoreGeneratedPattern", true, out facet) && facet.Value.Equals(StoreGeneratedPattern.Identity))

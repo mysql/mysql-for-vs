@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MySql.Data.Entity.ModelFirst.Tests.Properties {
+namespace MySql.Data.Entity.CodeFirst.Tests.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace MySql.Data.Entity.ModelFirst.Tests.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MySql.Data.Entity.ModelFirst.Tests.Properties.SQLSyntax", typeof(SQLSyntax).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MySql.Data.Entity.CodeFirst.Tests.Properties.SQLSyntax", typeof(SQLSyntax).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
