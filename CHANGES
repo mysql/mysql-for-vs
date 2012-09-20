@@ -22,6 +22,7 @@
   several internal declaration of lastinsertid from int to long.
 - Fixed "Decimal type should have digits at right of decimal point", now default is 2, but user's changes in 
   EDM designer are recognized (MySql bug #65127, Oracle bug #14474342).
+- Fix for NullReferenceException when saving an uninitialized row in Entity Framework (MySql bug #66066, Oracle bug #14479715).
 
 6.5.4
 - Fix for Duplicate table name don't allow you to change table name (Oracle bug #13785918).
