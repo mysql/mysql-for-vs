@@ -183,26 +183,23 @@ namespace MySql.Data.MySqlClient.Authentication
       MySqlPacket packet = driver.Packet;
       packet.Clear();
       byte[] moreData = MoreData(null);
-      while (true) 
+      while (moreData != null && moreData.Length > 0)
       {
         packet.Clear();
-        if (moreData != null && moreData.Length > 0)
-        {
-          packet.Write(moreData);
-          driver.SendPacket(packet);
-        }
-        else
-          driver.SendEmptyPacket();
+        packet.Write(moreData);
+        driver.SendPacket(packet);
 
         packet = ReadPacket();
         byte prefixByte = packet.Buffer[0];
-        if (prefixByte != 1) break;
+        if (prefixByte != 1) return;
 
         // a prefix of 0x01 means need more auth data
         byte[] responseData = new byte[packet.Length - 1];
         Array.Copy(packet.Buffer, 1, responseData, 0, responseData.Length);
         moreData = MoreData(responseData);
       }
+      // we get here if MoreData returned null but the last packet read was a more data packet
+      ReadPacket();
     }
 
     public abstract string PluginName { get; }
