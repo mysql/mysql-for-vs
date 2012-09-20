@@ -201,5 +201,30 @@ namespace MySql.Web.Tests
         new string[] { "Administrator" });
       Assert.IsFalse(r2.IsUserInRole("foo", "Administrator"));
     }
+
+    /// <summary>
+    /// Testing fix for Calling RoleProvider.RemoveUserFromRole() causes an exception due to a wrong table being used.
+    /// http://clustra.no.oracle.com/orabugs/bug.php?id=14405338 / http://bugs.mysql.com/bug.php?id=65805.
+    /// </summary>
+    [Test]
+    public void TestUserRemoveFindFromRole()
+    {
+      roleProvider = new MySQLRoleProvider();
+      NameValueCollection config = new NameValueCollection();
+      config.Add("connectionStringName", "LocalMySqlServer");
+      config.Add("applicationName", "/");
+      roleProvider.Initialize(null, config);
+
+      AddUser("eve", "eveeve!");
+      roleProvider.CreateRole("Administrator");
+      roleProvider.AddUsersToRoles(new string[] { "eve" },
+        new string[] { "Administrator" });
+      Assert.IsTrue(roleProvider.IsUserInRole("eve", "Administrator"));
+      string[] users = roleProvider.FindUsersInRole("Administrator", "eve");
+      Assert.AreEqual( 1, users.Length );
+      Assert.AreEqual("eve", users[0]);
+      roleProvider.RemoveUsersFromRoles(new string[] { "eve" }, new string[] { "Administrator" } );
+      Assert.IsFalse(roleProvider.IsUserInRole("eve", "Administrator"));
+    }
   }
 }
