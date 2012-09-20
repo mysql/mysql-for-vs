@@ -569,7 +569,7 @@ namespace MySql.Data.MySqlClient
       }
     }
 
-    public int GetResult(ref int affectedRow, ref int insertedId)
+    public int GetResult(ref int affectedRow, ref long insertedId)
     {
       try
       {
@@ -602,7 +602,7 @@ namespace MySql.Data.MySqlClient
         serverStatus &= ~(ServerStatusFlags.AnotherQuery |
                           ServerStatusFlags.MoreResults);
         affectedRow = (int)packet.ReadFieldLength();
-        insertedId = (int)packet.ReadFieldLength();
+        insertedId = (long)packet.ReadFieldLength();
 
         serverStatus = (ServerStatusFlags)packet.ReadInteger(2);
         warnings += packet.ReadInteger(2);

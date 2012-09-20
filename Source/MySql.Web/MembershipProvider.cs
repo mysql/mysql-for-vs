@@ -541,7 +541,7 @@ namespace MySql.Web.Security
           transaction = connection.BeginTransaction();
 
           // either create a new user or fetch the existing user id
-          int userId = SchemaManager.CreateOrFetchUserId(connection, username,
+          long userId = SchemaManager.CreateOrFetchUserId(connection, username,
               app.EnsureId(connection), true);
 
           MySqlCommand cmd = new MySqlCommand(
