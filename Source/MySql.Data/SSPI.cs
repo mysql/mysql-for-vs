@@ -169,9 +169,6 @@ namespace MySql.Data.MySqlClient
       byte[] serverBlob = null;
       SECURITY_INTEGER lifetime = new SECURITY_INTEGER(0);
       int ss;
-#if !CF 
-      MySqlSecurityPermission.CreatePermissionSet(false).Assert(); 
-#endif
 
       ss = AcquireCredentialsHandle(null, "Negotiate", SECPKG_CRED_OUTBOUND,
             IntPtr.Zero, IntPtr.Zero, 0, IntPtr.Zero, ref outboundCredentials,
