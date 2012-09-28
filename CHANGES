@@ -26,6 +26,7 @@
 - Fix for error when calling RoleProvider.RemoveUserFromRole(): causes an exception due to a wrong table being used (MySql bug #65805, Oracle bug #14405338).
 - Fix for "Memory Leak on MySql.Data.MySqlClient.MySqlCommand", too many MemoryStream's instances created (MySql bug #65696, Oracle bug #14468204).
 - Added ANTLR attribution notice (Oracle bug #14379162).
+- Fixed Entity Framework + mysql connector/net in partial trust throws exceptions (MySql bug #65036, Oracle bug #14668820).
 
 6.5.4
 - Fix for Duplicate table name don't allow you to change table name (Oracle bug #13785918).

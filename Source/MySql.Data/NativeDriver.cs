@@ -187,7 +187,8 @@ namespace MySql.Data.MySqlClient
           StreamCreator sc = new StreamCreator(Settings.Server, Settings.Port, pipeName,
               Settings.Keepalive, this.Version);
 #if !CF
-          MySqlSecurityPermission.CreatePermissionSet(false).Assert();
+         if (Settings.IncludeSecurityAsserts)
+            MySqlSecurityPermission.CreatePermissionSet(false).Assert();
 #endif
           baseStream = sc.GetStream(Settings.ConnectionTimeout);
 #if !CF
