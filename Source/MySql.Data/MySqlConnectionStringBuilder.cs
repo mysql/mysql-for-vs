@@ -681,6 +681,17 @@ namespace MySql.Data.MySqlClient
       set { SetValue("Command Interceptors", value); }
     }
 
+    [Category("Advanced")]
+    [DisplayName("Include Security Asserts")]
+    [Description("Include security asserts to support Medium Trust")]
+    [DefaultValue(false)]
+    [ValidKeywords("includesecurityasserts, include security asserts")]
+    public bool IncludeSecurityAsserts
+    {
+      get { return (bool)values["Include Security Asserts"]; }
+      set { SetValue("Include Security Asserts", value); }
+    }
+
     #endregion
 
     #region Pooling Properties

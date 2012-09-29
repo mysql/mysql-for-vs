@@ -194,9 +194,7 @@ namespace MySql.Data.MySqlClient.Authentication
 
     private void AcquireCredentials()
     {
-#if !CF
-      MySqlSecurityPermission.CreatePermissionSet(false).Assert();
-#endif
+
       continueProcessing = true;
 
       int ss = AcquireCredentialsHandle(null, "Negotiate", SECPKG_CRED_OUTBOUND,

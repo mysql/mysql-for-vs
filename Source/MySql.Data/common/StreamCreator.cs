@@ -194,10 +194,6 @@ namespace MySql.Data.Common
       
       endPoint = new IPEndPoint(ip, (int)port);
 
-#if !CF 
-      MySqlSecurityPermission.CreatePermissionSet(false).Assert();
-#endif
-
       Socket socket = unix ?
           new Socket(AddressFamily.Unix, SocketType.Stream, ProtocolType.IP) :
           new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
