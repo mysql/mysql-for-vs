@@ -40,8 +40,6 @@ namespace MySql.Data.MySqlClient
     static MySqlTrace()
     {
 
-      MySqlSecurityPermission.CreatePermissionSet(true).Assert();
-
       foreach (TraceListener listener in source.Listeners)
       {
         if (listener.GetType().ToString().Contains("MySql.EMTrace.EMTraceListener"))
