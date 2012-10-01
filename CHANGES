@@ -17,6 +17,7 @@
 - Fix for "Memory Leak on MySql.Data.MySqlClient.MySqlCommand", too many MemoryStream's instances created (MySql bug #65696, Oracle bug #14468204).
 - Added ANTLR attribution notice (Oracle bug #14379162).
 - Fix for debugger failing when having a routine with an if-elseif-else.
+- Fixed Entity Framework + mysql connector/net in partial trust throws exceptions (MySql bug #65036, Oracle bug #14668820).
 
 6.6.2
 - Parser: Fix for Problems when declaring variables in certain places (wasn't accepting declare var after declare handler in a begin/end block).

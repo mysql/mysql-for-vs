@@ -48,7 +48,7 @@ namespace MySql.Data.MySqlClient.Tests
       permission.Add("server=localhost;", "database=; user id=root;", KeyRestrictionBehavior.PreventUsage);
       permissionsSet.AddPermission(permission);
       permissionsSet.PermitOnly();
-      dummyconn.ConnectionString = "server=localhost; user id=test;";
+      dummyconn.ConnectionString = "server=localhost; user id=test;includesecurityasserts=true;";
       dummyconn.Open();
       if (dummyconn.State == ConnectionState.Open) dummyconn.Close();
     }
@@ -70,7 +70,7 @@ namespace MySql.Data.MySqlClient.Tests
 
       // this conection should be allowed
       MySqlConnection dummyconn = new MySqlConnection();
-      dummyconn.ConnectionString = "server=localhost;User Id=root;database=" + strConn.Database + ";port=" + strConn.Port + ";";
+      dummyconn.ConnectionString = "server=localhost;User Id=root;database=" + strConn.Database + ";port=" + strConn.Port + ";includesecurityasserts=true;";
       dummyconn.Open();    
       if (dummyconn.State == ConnectionState.Open) dummyconn.Close();
 
@@ -94,7 +94,7 @@ namespace MySql.Data.MySqlClient.Tests
 
       // this connection should NOT be allowed
       MySqlConnection dummyconn = new MySqlConnection();
-      dummyconn.ConnectionString = "server=localhost;User Id=root;database=test;";
+      dummyconn.ConnectionString = "server=localhost;User Id=root;database=test;includesecurityasserts=true;";
       dummyconn.Open();      
       if (dummyconn.State == ConnectionState.Open) dummyconn.Close();        
     
