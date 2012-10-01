@@ -73,8 +73,6 @@ namespace MySql.Data.Common
         security.inheritHandle = true;
         security.Length = Marshal.SizeOf(security);
 
-        MySqlSecurityPermission.CreatePermissionSet(false).Assert(); 
-
         nativeHandle = NativeMethods.CreateFile(path, NativeMethods.GENERIC_READ | NativeMethods.GENERIC_WRITE,
                      0, security, NativeMethods.OPEN_EXISTING, NativeMethods.FILE_FLAG_OVERLAPPED, 0);
 

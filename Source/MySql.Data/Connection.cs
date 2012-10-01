@@ -463,7 +463,14 @@ namespace MySql.Data.MySqlClient
       SetState(ConnectionState.Connecting, true);      
 
 #if !CF
-      PermissionDemand();
+      // Security Asserts can only be done when the assemblies 
+      // are put in the GAC as documented in 
+      // http://msdn.microsoft.com/en-us/library/ff648665.aspx
+      if (this.Settings.IncludeSecurityAsserts)
+      {
+        PermissionDemand();
+        MySqlSecurityPermission.CreatePermissionSet(true).Assert(); 
+      }
       // if we are auto enlisting in a current transaction, then we will be
       // treating the connection as pooled
       if (settings.AutoEnlist && Transaction.Current != null)

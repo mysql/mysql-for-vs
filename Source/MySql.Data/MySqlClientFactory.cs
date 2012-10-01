@@ -157,8 +157,6 @@ namespace MySql.Data.MySqlClient
 
       if (MySqlDbProviderServicesInstance == null) return null;
 
-      MySqlSecurityPermission.CreatePermissionSet(false).Assert();
-
       return MySqlDbProviderServicesInstance.GetValue(null);
     }
 
