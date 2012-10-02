@@ -50,6 +50,7 @@ CREATE_SERVER_OPTIONS;
 CREATE_TBL_OPT;
 CREATE_TBL_OPTS;
 DATA_TYPE;
+DATETIME_PRECISION;
 DECLARE_HANDLER;
 ENABLING;
 EXPR;
@@ -2116,11 +2117,11 @@ data_type
 		(LPAREN num1=INT_NUMBER COMMA num2=INT_NUMBER RPAREN )?
 		(SIGNED | UNSIGNED )?
 		(ZEROFILL )?
-		-> ^( DATA_TYPE $type ^( LPAREN $num1 $num2 )? SIGNED? UNSIGNED? ZEROFILL? )
+		-> ^( DATA_TYPE $type ^( LPAREN $num1 $num2 )? SIGNED? UNSIGNED? ZEROFILL? )	
+	|	DATETIME datetime_precision? -> ^( DATA_TYPE DATETIME datetime_precision?)			
 	|	DATE		-> ^( DATA_TYPE DATE )
-	|	TIME		-> ^( DATA_TYPE TIME )
-	|	( TIMESTAMP | timestamp )	-> ^( DATA_TYPE TIMESTAMP? timestamp? )
-	|	DATETIME	-> ^( DATA_TYPE DATETIME )
+	|	TIME datetime_precision? -> ^( DATA_TYPE TIME datetime_precision?)
+	|	( TIMESTAMP | timestamp )	-> ^( DATA_TYPE TIMESTAMP? timestamp? )	
 	|	YEAR		-> ^( DATA_TYPE YEAR )
 	|	TINYBLOB	-> ^( DATA_TYPE TINYBLOB )
 	|	BLOB		-> ^( DATA_TYPE BLOB )
@@ -2154,6 +2155,10 @@ data_type
 		(charset_def )?
 		(collate )? -> ^( DATA_TYPE $type ^( LPAREN $values+ ) charset_def? collate? )
 	;
+
+datetime_precision
+:  { this.mysqlVersion >= 5.6 }? => (LPAREN num1=INT_NUMBER RPAREN {(Convert.ToInt32($num1.Text) <= 6 && Convert.ToInt32($num1.Text) >= 1)}?)  -> ^( DATETIME_PRECISION INT_NUMBER? )
+;
 
 timestamp
   : { this.mysqlVersion >= 5.1 }? => TIMESTAMP ( LPAREN INT_NUMBER RPAREN )? -> ^( TIMESTAMP INT_NUMBER? )
@@ -2423,7 +2428,7 @@ drop_table
 	;
 	catch[ NoViableAltException nvae ] 
 	{
-		if( nvae.DecisionNumber == 541 )
+		if( nvae.DecisionNumber == 543 )
 		{
 			nvae = new NoViableAltException( 
 				"simple_table_ref_no_alias_existing", 
@@ -2665,7 +2670,7 @@ sp_call options { backtrack=true; memoize=true; }
 	;
 	catch[ NoViableAltException nvae ] 
 	{
-		if( nvae.DecisionNumber == 584 )
+		if( nvae.DecisionNumber == 586 )
 		{
 			nvae = new NoViableAltException( 
 					"proc_name", 

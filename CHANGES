@@ -18,6 +18,7 @@
 - Added ANTLR attribution notice (Oracle bug #14379162).
 - Fix for debugger failing when having a routine with an if-elseif-else.
 - Fixed Entity Framework + mysql connector/net in partial trust throws exceptions (MySql bug #65036, Oracle bug #14668820).
+- Added support in Parser for Datetime and Time types with precision when using Server 5.6 (No bug Number).
 
 6.6.2
 - Parser: Fix for Problems when declaring variables in certain places (wasn't accepting declare var after declare handler in a begin/end block).
