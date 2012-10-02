@@ -491,5 +491,50 @@ PARTITIONS 6;
       MySQL51Parser.program_return r = Utility.ParseSql(
           @"alter table t1 	drop column myname, lock = exclusive, exchange partition p1 with table t2;", false, out sb, new Version(5, 6));
     }
+
+    [Test]
+    public void AddColumnDateTime()
+    {      
+      MySQL51Parser.program_return r = Utility.ParseSql(@"ALTER TABLE mytable ADD COLUMN dummydatetime DATETIME AFTER id;");
+    }
+
+    [Test]    
+    public void AddColumnDateTimeWithPrecisionFailAtNotSupportedVersion()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(@"ALTER TABLE mytable ADD COLUMN dummydatetime DATETIME(1) AFTER id;", true, out sb, new Version(5, 5));
+      Assert.IsTrue(sb.ToString().IndexOf("no viable alternative at input '1'") != -1);
+    }
+
+
+    [Test]
+    public void AddColumnDateTimeWithPrecision()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(@"ALTER TABLE mytable ADD COLUMN dummydatetime DATETIME(1) AFTER id;", false, out sb, new Version(5, 6));
+    }
+
+    [Test]
+    public void AddColumnTimeWithPrecision()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(@"ALTER TABLE mytable ADD COLUMN dummydatetime TIME(1) AFTER id;", false, out sb, new Version(5, 6));
+    }
+
+    [Test]
+    public void AddColumnTimeWithPrecisionFailAtNotSupportedVersion()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(@"ALTER TABLE mytable ADD COLUMN dummydatetime TIME(1) AFTER id;", true, out sb, new Version(5, 5));
+      Assert.IsTrue(sb.ToString().IndexOf("no viable alternative at input '1'") != -1);
+    }
+
+    [Test]
+    public void AddColumnTimeStamptWithPrecision()
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(@"ALTER TABLE mytable ADD COLUMN dummydatetime TIMESTAMP(1) AFTER id;", false, out sb, new Version(5, 6));
+    }
+
   }
 }
