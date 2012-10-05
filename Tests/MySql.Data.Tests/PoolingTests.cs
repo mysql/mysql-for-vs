@@ -28,6 +28,7 @@ using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
 #if CLR4
+using System.Timers;
 using System.Threading.Tasks;
 #endif
 
@@ -39,6 +40,13 @@ namespace MySql.Data.MySqlClient.Tests
   [TestFixture]
   public class PoolingTests : BaseTest
   {
+#if CLR4
+    private System.Timers.Timer timer; 
+    private int callbacksCount { get; set; }
+    private int threadId { get; set; }
+    private bool isConnectionAlive { get; set; }
+#endif
+
     [Test]
     public void Connection()
     {
@@ -337,7 +345,8 @@ namespace MySql.Data.MySqlClient.Tests
       return false;
     }
 
-    [Test]
+#if CLR4
+    [Test] 
     public void CleanIdleConnections()
     {
       string assemblyName = typeof(MySqlConnection).Assembly.FullName;
@@ -350,7 +359,7 @@ namespace MySql.Data.MySqlClient.Tests
         poolManager.GetField("maxConnectionIdleTime",
         BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
 
-      Timer poolManagerTimer = (Timer)poolManagerTimerField.GetValue(null);
+      System.Threading.Timer poolManagerTimer = (System.Threading.Timer)poolManagerTimerField.GetValue(null);
       int origMaxConnectionIdleTime = (int)poolManagerMaxConnectionIdleTime.GetValue(null);
 
 
@@ -363,25 +372,41 @@ namespace MySql.Data.MySqlClient.Tests
         // - temporarily  reduce max.idle time for connections down to 1
         // second
         // - temporarily change cleanup timer to run each second.
-        int threadId = -1;
+        isConnectionAlive = true;
+        threadId = -1;
         string connStr = GetPoolingConnectionString();
         using (MySqlConnection c = new MySqlConnection(connStr))
         {
-          c.Open();
+          c.Open();          
+          callbacksCount = 0;
           threadId = c.ServerThread;
         }
 
         // Pooled connection should be still alive
         Assert.IsTrue(IsConnectionAlive(threadId));
-
+        
         poolManagerMaxConnectionIdleTime.SetValue(null, 1);
-        poolManagerTimer.Change(1000, 1000);
 
+        int testIdleTime = (int)poolManagerMaxConnectionIdleTime.GetValue(null);        
+
+        poolManagerTimer.Change((testIdleTime * 1000) + 500, (testIdleTime * 1000));
+
+        
+        //create a second timer to check just right after the first interval is completed        
+        timer = new System.Timers.Timer((testIdleTime * 1000) + 500);
+
+        timer.Elapsed += new ElapsedEventHandler(_timer_Elapsed);
+        timer.Enabled = true; 
+        
         // Let the idle connection expire and let cleanup timer run.
-        Thread.Sleep(2500);
+        Thread.Sleep((testIdleTime * 1000) + 550);
 
-        // The connection that was pooled must be dead now
-        Assert.IsFalse(IsConnectionAlive(threadId));
+        // The removed of the iddle connections should be done in the first callback
+        Assert.IsTrue(callbacksCount == 1, "Callbacks value was not 1"); 
+
+        //Check the connection was removed
+        Assert.IsFalse(isConnectionAlive, "IsConnectionAlive failed");
+                
       }
       finally
       {
@@ -389,8 +414,11 @@ namespace MySql.Data.MySqlClient.Tests
         poolManagerMaxConnectionIdleTime.SetValue(null, origMaxConnectionIdleTime);
         poolManagerTimer.Change(origMaxConnectionIdleTime * 1000,
           origMaxConnectionIdleTime * 1000);
+        
+        timer = null;
       }
     }
+#endif
 
     [Test]
     public void ClearPool()
@@ -640,6 +668,15 @@ namespace MySql.Data.MySqlClient.Tests
         cmd.ExecuteNonQuery();
       }    
     }
+
+#if CLR4
+    private void _timer_Elapsed(object sender, ElapsedEventArgs e)
+    {
+      callbacksCount++;
+      if (callbacksCount == 1)
+         isConnectionAlive = IsConnectionAlive(threadId);
+    }
+#endif
 
 #endif
   }
