@@ -55,9 +55,11 @@ namespace MySql.Data.MySqlClient
       MySqlPoolManager.ClearAllPools();
     }
 
+    // we add a small amount to the due time to let the cleanup detect
+    //expired connections in the first cleanup.
     private static Timer timer = new Timer(new TimerCallback(CleanIdleConnections),
-      null, maxConnectionIdleTime * 1000, maxConnectionIdleTime * 1000);
-
+      null, (maxConnectionIdleTime * 1000) + 500, maxConnectionIdleTime * 1000);
+ 
     private static string GetKey(MySqlConnectionStringBuilder settings)
     {
       string key = settings.ConnectionString;
