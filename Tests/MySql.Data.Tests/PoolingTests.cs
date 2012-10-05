@@ -27,8 +27,8 @@ using NUnit.Framework;
 using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
-using System.Timers;
 #if CLR4
+using System.Timers;
 using System.Threading.Tasks;
 #endif
 
@@ -40,11 +40,12 @@ namespace MySql.Data.MySqlClient.Tests
   [TestFixture]
   public class PoolingTests : BaseTest
   {
-
+#if CLR4
     private System.Timers.Timer timer; 
     private int callbacksCount { get; set; }
     private int threadId { get; set; }
     private bool isConnectionAlive { get; set; }
+#endif
 
     [Test]
     public void Connection()
@@ -344,6 +345,7 @@ namespace MySql.Data.MySqlClient.Tests
       return false;
     }
 
+#if CLR4
     [Test] 
     public void CleanIdleConnections()
     {
@@ -416,6 +418,7 @@ namespace MySql.Data.MySqlClient.Tests
         timer = null;
       }
     }
+#endif
 
     [Test]
     public void ClearPool()
@@ -666,13 +669,14 @@ namespace MySql.Data.MySqlClient.Tests
       }    
     }
 
-
+#if CLR4
     private void _timer_Elapsed(object sender, ElapsedEventArgs e)
     {
       callbacksCount++;
       if (callbacksCount == 1)
          isConnectionAlive = IsConnectionAlive(threadId);
     }
+#endif
 
 #endif
   }
