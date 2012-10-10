@@ -47,7 +47,8 @@ namespace MySql.Data.MySqlClient
     protected Hashtable serverProps;
     protected Hashtable charSets;
     protected long maxPacketSize;
-    private DateTime idleSince;
+    internal int timeZoneOffset;
+    private DateTime idleSince;    
 
 #if !CF
     protected MySqlPromotableTransaction currentTransaction;
@@ -317,8 +318,16 @@ namespace MySql.Data.MySqlClient
           throw;
         }
       }
-
+      // Get time zone offset as numerical value
+      timeZoneOffset = GetTimeZoneOffset( connection );
       return hash;
+    }
+
+    private int GetTimeZoneOffset( MySqlConnection con )
+    {
+      MySqlCommand cmd = new MySqlCommand("select timediff( curtime(), utc_time() )", con);
+      string s = cmd.ExecuteScalar().ToString();
+      return int.Parse(s.Substring(0, s.IndexOf(':') - 1));
     }
 
     /// <summary>

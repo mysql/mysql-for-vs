@@ -449,6 +449,65 @@ namespace MySql.Data.MySqlClient.Tests
         Assert.AreEqual(ts.Kind, DateTimeKind.Local);
       }
     }
-  }
 
+    /// <summary>
+    /// Bug #66964	TIMESTAMP values are mistakenly represented as DateTime with Kind = Local
+    /// </summary>
+    [Test]
+    public void TimestampCorrectTimezone()
+    {
+      DateTime dt = DateTime.Now;
+      MySqlCommand cmd = new MySqlCommand("select timediff( curtime(), utc_time() )", rootConn);
+      string s = cmd.ExecuteScalar().ToString();
+      int curroffset = int.Parse(s.Substring(0, s.IndexOf(':') - 1));
+      string prevTimeZone = "";
+      // Ensure timezone is UTC
+      if (curroffset != 0)
+      {
+        cmd.CommandText = "SELECT @@global.time_zone";
+        prevTimeZone = cmd.ExecuteScalar().ToString();
+        cmd.CommandText = "set @@global.time_zone = '+0:00'";
+        cmd.ExecuteNonQuery();
+        // Refresh time_zone value
+        rootConn.Close();
+        rootConn.Open();
+      }
+      try
+      {
+        cmd.CommandText = string.Format("INSERT INTO `{0}`.Test VALUES(1, curdate(), NULL, NULL, current_timestamp())", conn.Database); ;
+        cmd.ExecuteNonQuery();
+        cmd.CommandText = string.Format( "SELECT dt,ts FROM `{0}`.Test", conn.Database );
+        using (MySqlDataReader reader = cmd.ExecuteReader())
+        {
+          reader.Read();
+          DateTime ts = reader.GetDateTime(1);
+          Assert.AreEqual(ts.Kind, DateTimeKind.Utc);
+        }
+        // Now set it to non-UTC
+        cmd.CommandText = "set @@global.time_zone = '+5:00'";
+        cmd.ExecuteNonQuery();
+        // Refresh time_zone value
+        rootConn.Close();
+        rootConn.Open();
+        cmd.CommandText = string.Format("SELECT dt,ts FROM `{0}`.Test", conn.Database);
+        using (MySqlDataReader reader = cmd.ExecuteReader())
+        {
+          reader.Read();
+          DateTime ts = reader.GetDateTime(1);
+          Assert.AreEqual(ts.Kind, DateTimeKind.Local);
+        }
+      }
+      finally
+      {
+        if (!string.IsNullOrEmpty(prevTimeZone))
+        {
+          // restore modified time zone if any
+          cmd.CommandText = string.Format( "set @@global.time_zone = '{0}'", prevTimeZone );
+          cmd.ExecuteNonQuery();
+          rootConn.Close();
+          rootConn.Open();
+        }
+      }
+    }
+  }
 }
