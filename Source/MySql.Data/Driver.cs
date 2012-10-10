@@ -327,7 +327,7 @@ namespace MySql.Data.MySqlClient
     {
       MySqlCommand cmd = new MySqlCommand("select timediff( curtime(), utc_time() )", con);
       string s = cmd.ExecuteScalar().ToString();
-      return int.Parse(s.Substring(0, s.IndexOf(':') - 1));
+      return int.Parse(s.Substring(0, s.IndexOf(':') ));
     }
 
     /// <summary>

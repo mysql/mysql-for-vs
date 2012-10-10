@@ -445,8 +445,8 @@ namespace MySql.Data.MySqlClient.Tests
         reader.Read();
         DateTime dt1 = reader.GetDateTime(0);
         DateTime ts = reader.GetDateTime(1);
-        Assert.AreEqual(dt1.Kind, DateTimeKind.Unspecified);
-        Assert.AreEqual(ts.Kind, DateTimeKind.Local);
+        Assert.AreEqual( DateTimeKind.Unspecified, dt1.Kind);
+        Assert.AreEqual( DateTimeKind.Local, ts.Kind);
       }
     }
 
@@ -459,7 +459,7 @@ namespace MySql.Data.MySqlClient.Tests
       DateTime dt = DateTime.Now;
       MySqlCommand cmd = new MySqlCommand("select timediff( curtime(), utc_time() )", rootConn);
       string s = cmd.ExecuteScalar().ToString();
-      int curroffset = int.Parse(s.Substring(0, s.IndexOf(':') - 1));
+      int curroffset = int.Parse(s.Substring(0, s.IndexOf(':') ));
       string prevTimeZone = "";
       // Ensure timezone is UTC
       if (curroffset != 0)
