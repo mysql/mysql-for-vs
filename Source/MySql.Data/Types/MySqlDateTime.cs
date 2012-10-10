@@ -39,6 +39,7 @@ namespace MySql.Data.Types
     private MySqlDbType type;
     private int year, month, day, hour, minute, second;
     private int millisecond;
+    public int TimezoneOffset;
 
     /// <summary>
     /// Constructs a new <b>MySqlDateTime</b> object by setting the individual time properties to
@@ -79,6 +80,7 @@ namespace MySql.Data.Types
       millisecond = 0;
       type = MySqlDbType.DateTime;
       isNull = false;
+      TimezoneOffset = 0;
     }
 
     /// <summary>
@@ -101,6 +103,7 @@ namespace MySql.Data.Types
       this.minute = minute;
       this.second = second;
       this.millisecond = 0;
+      this.TimezoneOffset = 0;
     }
 
     internal MySqlDateTime(MySqlDbType type, bool isNull)
@@ -384,7 +387,13 @@ namespace MySql.Data.Types
         throw new MySqlConversionException("Unable to convert MySQL date/time value to System.DateTime");
       DateTimeKind kind = DateTimeKind.Unspecified;
       if (type == MySqlDbType.Timestamp)
-        kind = DateTimeKind.Local;
+      {
+        if (TimezoneOffset == 0)
+          kind = DateTimeKind.Utc;
+        else 
+          kind = DateTimeKind.Local;
+      }
+        
       return new DateTime(year, month, day, hour, minute, second, kind);
     }
 
