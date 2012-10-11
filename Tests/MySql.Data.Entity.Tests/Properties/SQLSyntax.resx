@@ -349,7 +349,7 @@ FROM (SELECT
 `Extent4`.`Author_id`, 
 `Extent4`.`Publisher_id`, 
 CASE WHEN (`Extent4`.`Id` IS  NULL) THEN (NULL)  ELSE (1) END AS `C1`
-FROM `Books` AS `Extent1` INNER JOIN `Authors` AS `Extent2` ON `Extent1`.`Author_id` = `Extent2`.`Id` LEFT OUTER JOIN `Publishers` AS `Extent3` ON `Extent1`.`Publisher_id` = `Extent3`.`id` LEFT OUTER JOIN `Books` AS `Extent4` ON `Extent4`.`Publisher_id` = `Extent1`.`Publisher_id`) AS `Project1`
+FROM `Books` AS `Extent1` INNER JOIN `Authors` AS `Extent2` ON `Extent1`.`Author_id` = `Extent2`.`Id` INNER JOIN `Publishers` AS `Extent3` ON `Extent1`.`Publisher_id` = `Extent3`.`id` LEFT OUTER JOIN `Books` AS `Extent4` ON `Extent4`.`Publisher_id` = `Extent1`.`Publisher_id`) AS `Project1`
  ORDER BY 
 `Project1`.`Id` ASC, 
 `Project1`.`Id1` ASC, 

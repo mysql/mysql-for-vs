@@ -485,6 +485,7 @@ namespace MySql.Data.MySqlClient
         dt = MySqlDateTime.Parse(s);
       }
 
+      dt.TimezoneOffset = driver.timeZoneOffset;
       if (connection.Settings.ConvertZeroDateTime && !dt.IsValidDateTime)
         return DateTime.MinValue;
       else
