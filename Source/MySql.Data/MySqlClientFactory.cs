@@ -33,9 +33,7 @@ namespace MySql.Data.MySqlClient
   /// <summary>
   /// DBProviderFactory implementation for MysqlClient.
   /// </summary>
-#if !CF  
-  [SuppressUnmanagedCodeSecurity()]
-#endif
+  [ReflectionPermission(SecurityAction.Assert, MemberAccess = true)]  
   public sealed class MySqlClientFactory : DbProviderFactory, IServiceProvider
   {
     /// <summary>
