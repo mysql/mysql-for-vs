@@ -930,8 +930,13 @@ namespace MySql.Data.MySqlClient
 
     public override bool TryGetValue(string keyword, out object value)
     {
-      ValidateKeyword(keyword);
-      return values.TryGetValue(validKeywords[keyword], out value);
+      if (validKeywords.ContainsKey(keyword))
+      {
+        if (values.TryGetValue(validKeywords[keyword], out value))
+          return true;
+      }
+      value = null;
+      return false;
     }
 
 #endif
