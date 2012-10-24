@@ -159,5 +159,18 @@ namespace MySql.Data.MySqlClient.Tests
       MySqlConnectionStringBuilder s = new MySqlConnectionStringBuilder();
       s["foo keyword"] = "foo";
     }
+
+    /// <summary>
+    /// Bug #66880	Keyword not supported. Parameter name: AttachDbFilename.
+    /// </summary>
+    [Test]
+    public void SafeTryGetValue()
+    {
+      object obj;
+      MySqlConnectionStringBuilder s = new MySqlConnectionStringBuilder("server=localhost;");
+      s.TryGetValue("unknownproperty", out obj);
+      Assert.AreEqual(null, obj);
+    }
+
   }
 }

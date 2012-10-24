@@ -1,9 +1,12 @@
+6.6.5
+- Fix for bug Keyword not supported. Parameter name: AttachDbFilename (Mysql bug #66880, Oracle bug #14733472).
 
 6.6.4
 - Fixed Entity Framework + mysql connector/net in partial trust throws exceptions (MySql bug #65036, Oracle bug #14668820).
 - Added support in Parser for Datetime and Time types with precision when using Server 5.6 (No bug Number).
 - Small improvement on MySqlPoolManager CleanIdleConnections for better mysqlpoolmanager idlecleanuptimer at startup (MySql bug #66472 and Oracle bug #14652624).
 - Fix for bug TIMESTAMP values are mistakenly represented as DateTime with Kind = Local (Mysql bug #66964, Oracle bug #14740705).
+
 
 6.6.3
 - Added feature to define initial values for InOut stored procedure arguments.
