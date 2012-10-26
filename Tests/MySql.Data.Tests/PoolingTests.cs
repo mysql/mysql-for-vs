@@ -385,21 +385,21 @@ namespace MySql.Data.MySqlClient.Tests
         // Pooled connection should be still alive
         Assert.IsTrue(IsConnectionAlive(threadId));
         
-        poolManagerMaxConnectionIdleTime.SetValue(null, 1);
+        poolManagerMaxConnectionIdleTime.SetValue(null, 3);
 
         int testIdleTime = (int)poolManagerMaxConnectionIdleTime.GetValue(null);        
 
-        poolManagerTimer.Change((testIdleTime * 1000) + 500, (testIdleTime * 1000));
+        poolManagerTimer.Change((testIdleTime * 1000) + 1000, (testIdleTime * 1000));
 
         
         //create a second timer to check just right after the first interval is completed        
-        timer = new System.Timers.Timer((testIdleTime * 1000) + 500);
+        timer = new System.Timers.Timer((testIdleTime * 1000) + 1500);
 
         timer.Elapsed += new ElapsedEventHandler(_timer_Elapsed);
         timer.Enabled = true; 
         
         // Let the idle connection expire and let cleanup timer run.
-        Thread.Sleep((testIdleTime * 1000) + 550);
+        Thread.Sleep((testIdleTime * 1000) + 2000);
 
         // The removed of the iddle connections should be done in the first callback
         Assert.IsTrue(callbacksCount == 1, "Callbacks value was not 1"); 
