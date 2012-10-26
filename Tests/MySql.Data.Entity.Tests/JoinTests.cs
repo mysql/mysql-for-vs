@@ -32,6 +32,7 @@ using System.Data.Objects;
 using System.Linq;
 using MySql.Data.Entity.Tests.Properties;
 using System.Collections;
+using System.Diagnostics;
 
 namespace MySql.Data.Entity.Tests
 {
@@ -175,8 +176,25 @@ namespace MySql.Data.Entity.Tests
         q = q.Include("Publisher.Books");
         string sql = q.ToTraceString();
         CheckSql(sql, SQLSyntax.JoinOfNestedUnionsWithLimit);
+        var  i = 0;
         foreach (var o in q.Where(p => p.Id > 0).OrderBy(p => p.Name).ThenByDescending(p => p.Id).Skip(0).Take(32).ToList())
         {
+           switch (i)
+	          {
+             case 0:
+               Assert.AreEqual(5, o.Id);
+               Assert.AreEqual("Debt of Honor", o.Name);
+             break;
+             case 1:
+               Assert.AreEqual(1, o.Id);
+               Assert.AreEqual("Debt of Honor", o.Name);
+             break;
+             case 4:
+               Assert.AreEqual(3, o.Id);
+               Assert.AreEqual("Rainmaker", o.Name);
+             break;             
+	          }
+           i++;
         }
       }
     }
