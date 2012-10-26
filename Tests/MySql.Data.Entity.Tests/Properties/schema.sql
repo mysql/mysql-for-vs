@@ -194,6 +194,8 @@ CREATE TABLE Books (
 INSERT INTO Books VALUES (1, 'Debt of Honor', 200, 1, 1);
 INSERT INTO Books VALUES (2, 'Insomnia', 350, 2, 1);
 INSERT INTO Books VALUES (3, 'Rainmaker', 475, 3, 1);
+INSERT INTO Books VALUES (4, 'Hallo', 175, 3, 1);
+INSERT INTO Books VALUES (5, 'Debt of Honor', 200, 1, 1);
 
 SET @guid=UUID();
 CREATE TABLE DataTypeTests(
