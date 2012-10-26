@@ -175,7 +175,7 @@ namespace MySql.Data.Entity.Tests
         q = q.Include("Publisher");
         q = q.Include("Publisher.Books");
         string sql = q.ToTraceString();
-        CheckSql(sql, SQLSyntax.JoinOfNestedUnionsWithLimit);
+        
         var  i = 0;
         foreach (var o in q.Where(p => p.Id > 0).OrderBy(p => p.Name).ThenByDescending(p => p.Id).Skip(0).Take(32).ToList())
         {
