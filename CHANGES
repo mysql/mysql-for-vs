@@ -1,5 +1,6 @@
 6.6.5
 - Fix for bug Keyword not supported. Parameter name: AttachDbFilename (Mysql bug #66880, Oracle bug #14733472).
+- Added support to MySql script file to retrieve data when using "SHOW" statements.
 
 6.6.4
 - Fixed Entity Framework + mysql connector/net in partial trust throws exceptions (MySql bug #65036, Oracle bug #14668820).
