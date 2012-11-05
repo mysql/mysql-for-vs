@@ -1,3 +1,6 @@
+6.6.6
+- Fix for Package Load Failure in Visual Studio 2005 (MySql bug #63073, Oracle bug #13491674).
+
 6.6.5
 - Fix for bug Keyword not supported. Parameter name: AttachDbFilename (Mysql bug #66880, Oracle bug #14733472).
 - Added support to MySql script file to retrieve data when using "SHOW" statements.
