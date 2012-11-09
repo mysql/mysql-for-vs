@@ -1,11 +1,10 @@
-6.6.6
-- Fix for Package Load Failure in Visual Studio 2005 (MySql bug #63073, Oracle bug #13491674).
-- Fix for bug "Unable to connect using IPv6 connections" (MySQL bug #67253, Oracle bug #14835718).
-- Added auto-generated values for Guid identity columns (MySql bug #67450, Oracle bug #15834176).
-
 6.6.5
 - Fix for bug Keyword not supported. Parameter name: AttachDbFilename (Mysql bug #66880, Oracle bug #14733472).
 - Added support to MySql script file to retrieve data when using "SHOW" statements.
+- Fix for Package Load Failure in Visual Studio 2005 (MySql bug #63073, Oracle bug #13491674).
+- Fix for bug "Unable to connect using IPv6 connections" (MySQL bug #67253, Oracle bug #14835718).
+- Added auto-generated values for Guid identity columns (MySql bug #67450, Oracle bug #15834176).
+- Fix for method FirstOrDefault not supported in some LINQ to Entities queries (MySql bug #67377, Oracle bug #15856964). 
 
 6.6.4
 - Fixed Entity Framework + mysql connector/net in partial trust throws exceptions (MySql bug #65036, Oracle bug #14668820).

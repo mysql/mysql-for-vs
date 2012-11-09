@@ -30,6 +30,7 @@ using System.Data.Common;
 using NUnit.Framework;
 using System.Data.Objects;
 using MySql.Data.Entity.Tests.Properties;
+using System.Linq;
 
 namespace MySql.Data.Entity.Tests
 {
@@ -384,6 +385,28 @@ namespace MySql.Data.Entity.Tests
         int i = 0;
         foreach (Shop s in q)
           Assert.AreEqual(dt.Rows[i++]["id"], s.Id);
+      }
+    }
+
+    /// <summary>
+    /// This test the fix for bug 67377.
+    /// </summary>
+    [Test]
+    public void FirstOrDefaultNested()
+    { 
+      using (testEntities ctx = new testEntities())
+      {
+        var q = ctx.Authors.Where( p => p.Id == p.Id ).Select(p => new { AuthorId = p.Id, FirstBook = (int?)p.Books.FirstOrDefault().Id });
+        
+        string sql = q.ToTraceString();
+        int?[,] input = { { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, null }, { 5, null } };
+        int i = 0;
+        foreach (var r in q)
+        {
+          Assert.AreEqual( input[ i, 0 ], r.AuthorId );
+          Assert.AreEqual( input[ i, 1 ], r.FirstBook);
+          i++;
+        }
       }
     }
   }
