@@ -326,6 +326,99 @@ where table_schema = '{0}' and table_name = 'movies' and column_name = 'Price'",
         Assert.AreEqual(1, q.Count());
       }
     }
+
+    /// <summary>
+    /// Test for identity columns when type is Integer or Guid (auto-generate
+    /// values)
+    /// </summary>
+    [Test]
+    public void IdentityTest()
+    {
+      using (VehicleDbContext context = new VehicleDbContext())
+      {
+        if (context.Database.Exists()) context.Database.Delete();
+        context.Database.CreateIfNotExists();
+
+        // Identity as Guid
+        Manufacturer nissan = new Manufacturer
+        {
+          Name = "Nissan"
+        };
+        Manufacturer ford = new Manufacturer
+        {
+          Name = "Ford"
+        };
+        context.Manufacturers.Add(nissan);
+        context.Manufacturers.Add(ford);
+
+        // Identity as Integer
+        Distributor dis1 = new Distributor
+        {
+          Name = "Distributor1"
+        };
+        Distributor dis2 = new Distributor
+        {
+          Name = "Distributor2"
+        };
+        context.Distributors.Add(dis1);
+        context.Distributors.Add(dis2);
+
+        context.SaveChanges();
+
+        using (MySqlConnection conn = new MySqlConnection(context.Database.Connection.ConnectionString))
+        {
+          conn.Open();
+
+          // Validates Guid
+          MySqlCommand cmd = new MySqlCommand("SELECT * FROM Manufacturers", conn);
+          MySqlDataReader dr = cmd.ExecuteReader();
+          if (!dr.HasRows)
+            Assert.Fail("No records found");
+          while (dr.Read())
+          {
+            string name = dr.GetString(1);
+            switch (name)
+            {
+              case "Nissan":
+                Assert.AreEqual(dr.GetGuid(0), nissan.ManufacturerId);
+                Assert.AreEqual(dr.GetGuid(2), nissan.GroupIdentifier);
+                break;
+              case "Ford":
+                Assert.AreEqual(dr.GetGuid(0), ford.ManufacturerId);
+                Assert.AreEqual(dr.GetGuid(2), ford.GroupIdentifier);
+                break;
+              default:
+                Assert.Fail();
+                break;
+            }
+          }
+          dr.Close();
+
+          // Validates Integer
+          cmd = new MySqlCommand("SELECT * FROM Distributors", conn);
+          dr = cmd.ExecuteReader();
+          if (!dr.HasRows)
+            Assert.Fail("No records found");
+          while (dr.Read())
+          {
+            string name = dr.GetString(1);
+            switch (name)
+            {
+              case "Distributor1":
+                Assert.AreEqual(dr.GetInt32(0), dis1.DistributorId);
+                break;
+              case "Distributor2":
+                Assert.AreEqual(dr.GetInt32(0), dis2.DistributorId);
+                break;
+              default:
+                Assert.Fail();
+                break;
+            }
+          }
+          dr.Close();
+        }
+      }
+    }
   }
 }
 
