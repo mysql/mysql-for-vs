@@ -37,11 +37,11 @@ namespace MySql.Data.Entity
       scopeTable.Add(name, fragment);
     }
 
-    public void Remove(InputFragment fragment)
+    public void Remove( string Name, InputFragment fragment)
     {
       if (fragment == null) return;
-      if (fragment.Name != null)
-        scopeTable.Remove(fragment.Name);
+      if (Name != null)
+        scopeTable.Remove(Name);
 
       if (fragment is SelectStatement)
         Remove((fragment as SelectStatement).From);
@@ -57,6 +57,12 @@ namespace MySql.Data.Entity
         Remove(u.Left);
         Remove(u.Right);
       }
+    }
+
+    public void Remove(InputFragment fragment)
+    {
+      if( fragment == null ) return;
+      Remove(fragment.Name, fragment);
     }
 
     public InputFragment GetFragment(string name)

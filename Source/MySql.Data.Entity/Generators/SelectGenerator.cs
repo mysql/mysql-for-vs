@@ -151,6 +151,73 @@ namespace MySql.Data.Entity
           expression.ExpressionKind, null);
     }
 
+    public override SqlFragment Visit(DbApplyExpression expression)
+    {
+      DbExpressionBinding inputBinding = expression.Input;
+      InputFragment input = VisitInputExpression(inputBinding.Expression, inputBinding.VariableName, inputBinding.VariableType);
+      DbExpressionBinding applyBinding = expression.Apply;
+      InputFragment apply = VisitInputExpression(applyBinding.Expression, applyBinding.VariableName, applyBinding.VariableType);
+      SelectStatement select = new SelectStatement();
+      bool isInputSelect = false;
+      if (!(input is TableFragment))
+      {
+        input.Wrap(scope);
+        isInputSelect = true;
+      }
+      apply.Wrap(scope);
+      select.From = input;
+      select.Wrap(scope);
+      if (apply is SelectStatement)
+      {        
+        SelectStatement applySel = apply as SelectStatement;
+        foreach (ColumnFragment f in applySel.Columns)
+        {
+          SelectStatement newColSelect = new SelectStatement();
+          newColSelect.From = applySel.From;
+		  newColSelect.Where = applySel.Where;
+          if (isInputSelect)
+          {
+            VisitAndReplaceTableName(newColSelect.Where, (input as SelectStatement).From.Name, input.Name);
+          }
+          newColSelect.Limit = applySel.Limit;
+          newColSelect.Columns.Add( f );
+
+          newColSelect.Wrap(scope);
+          scope.Add(applySel.From.Name, applySel.From);
+          
+          ColumnFragment newCol = new ColumnFragment(apply.Name, f.ColumnName);
+          newCol.Literal = newColSelect;
+          newCol.PushInput(newCol.ColumnName);
+          newCol.PushInput(apply.Name);
+          select.AddColumn( newCol, scope);
+          if (string.IsNullOrEmpty(newCol.ColumnAlias))
+          {
+            newColSelect.Name = newCol.ColumnName;
+            newCol.ColumnAlias = newCol.ColumnName;
+          }
+          scope.Remove(newColSelect);
+        }
+        scope.Remove(applySel.From);
+        scope.Remove(apply);
+      }
+      return select;
+    }
+
+    private void VisitAndReplaceTableName(SqlFragment sf, string oldTable, string newTable)
+    {
+      BinaryFragment bf = sf as BinaryFragment;
+      ColumnFragment cf = sf as ColumnFragment;
+      if (bf != null)
+      {
+        VisitAndReplaceTableName(bf.Left, oldTable, newTable);
+        VisitAndReplaceTableName(bf.Right, oldTable, newTable);
+      }
+      else if ( (cf != null) && (cf.TableName == oldTable))
+      {
+        cf.TableName = newTable;
+      }
+    }
+
     public override SqlFragment Visit(DbJoinExpression expression)
     {
       return HandleJoinExpression(expression.Left, expression.Right,

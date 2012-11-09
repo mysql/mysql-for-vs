@@ -35,6 +35,7 @@
 - Fix for Package Load Failure in Visual Studio 2005 (MySql bug #63073, Oracle bug #13491674).
 - Fix for bug "Unable to connect using IPv6 connections" (MySQL bug #67253, Oracle bug #14835718).
 - Added auto-generated values for Guid identity columns (MySql bug #67450, Oracle bug #15834176).
+- Fix for method FirstOrDefault not supported in some LINQ to Entities queries (MySql bug #67377, Oracle bug #15856964). 
 
 6.5.4
 - Fix for Duplicate table name don't allow you to change table name (Oracle bug #13785918).
