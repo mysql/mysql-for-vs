@@ -68,9 +68,6 @@ namespace MySql.Data.Common
         IPHostEntry ipHE = GetHostEntry(hostName);
         foreach (IPAddress address in ipHE.AddressList)
         {
-          if (address.AddressFamily == AddressFamily.InterNetworkV6 && !this.driverVersion.isAtLeast(5, 5, 3))
-            continue;
-
           try
           {
             stream = CreateSocketStream(address, false);
