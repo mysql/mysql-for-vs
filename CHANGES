@@ -33,6 +33,7 @@
 - Fix for bug Keyword not supported. Parameter name: AttachDbFilename (Mysql bug #66880, Oracle bug #14733472).
 - Added support to MySql script file to retrieve data when using "SHOW" statements.
 - Fix for Package Load Failure in Visual Studio 2005 (MySql bug #63073, Oracle bug #13491674).
+- Fix for bug "Unable to connect using IPv6 connections" (MySQL bug #67253, Oracle bug #14835718).
 
 6.5.4
 - Fix for Duplicate table name don't allow you to change table name (Oracle bug #13785918).
