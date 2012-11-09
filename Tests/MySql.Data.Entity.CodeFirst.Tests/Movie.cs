@@ -38,8 +38,17 @@ namespace MySql.Data.Entity.CodeFirst.Tests
     public string Title { get; set; }
     public DateTime ReleaseDate { get; set; }
     public string Genre { get; set; }
-    public decimal Price { get; set; }
+    public decimal Price { get; set; }    
+    public Director Director { get; set; }
+    public List<MovieFormat> Formats { get; set; }
     public byte[] Data { get; set; }
+  }
+
+  public class Director
+  {
+    public int ID { get; set; }
+    public string Name { get; set; }
+    public int YearBorn { get; set; }
   }
 
   public class MovieFormat

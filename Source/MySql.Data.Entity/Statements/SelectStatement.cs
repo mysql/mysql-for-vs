@@ -162,8 +162,29 @@ namespace MySql.Data.Entity
       }
       if (From is TableFragment && Exists)
       {
-        scope.Remove(From);
+        scope.Remove((From as TableFragment).Table, From);
       }
+    }
+
+    internal void AddColumn(ColumnFragment column, Scope scope)
+    {
+      InputFragment input = scope.FindInputFromProperties(column.PropertyFragment);
+      column.TableName = input.Name;
+
+      // then we rename the column if necessary
+      if (columnHash.ContainsKey(column.ColumnName.ToUpper()))
+      {
+        column.ColumnAlias = MakeColumnNameUnique(column.ColumnName);
+        columnHash.Add(column.ColumnAlias, column);
+      }
+      else
+      {
+        if( !string.IsNullOrEmpty(column.ColumnAlias) )
+          columnHash.Add(column.ColumnAlias.ToUpper(), column);
+        else
+          columnHash.Add(column.ColumnName.ToUpper(), column);
+      }
+      Columns.Add(column);
     }
 
     List<ColumnFragment> GetDefaultColumnsForFragment(InputFragment input)
