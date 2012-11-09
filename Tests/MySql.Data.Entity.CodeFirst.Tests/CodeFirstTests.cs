@@ -23,19 +23,19 @@
 using System;
 using System.Configuration;
 using System.Data;
+using System.Data.Common;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.Data.EntityClient;
+using System.Data.Objects;
 using System.Diagnostics;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
-using MySql.Data.MySqlClient;
-using NUnit.Framework;
-using MySql.Data.MySqlClient.Tests;
-using System.Data.EntityClient;
-using System.Data.Common;
-using System.Data.Objects;
-using System.Data.Entity.Infrastructure;
-using System.Linq;
 using MySql.Data.Entity.CodeFirst.Tests.Properties;
+using MySql.Data.MySqlClient;
+using MySql.Data.MySqlClient.Tests;
+using NUnit.Framework;
 
 namespace MySql.Data.Entity.CodeFirst.Tests
 {
@@ -138,9 +138,9 @@ namespace MySql.Data.Entity.CodeFirst.Tests
       db.Database.Initialize(true);
       string dbCreationScript =
         ((IObjectContextAdapter)db).ObjectContext.CreateDatabaseScript();
-      Regex rx = new Regex(@"`Data` (?<type>[^\)]*)", RegexOptions.Compiled | RegexOptions.Singleline);
+      Regex rx = new Regex(@"`Data` (?<type>[^\),]*)", RegexOptions.Compiled | RegexOptions.Singleline);
       Match m = rx.Match(dbCreationScript);
-      Assert.AreEqual(m.Groups["type"].Value, "longblob");
+      Assert.AreEqual("longblob", m.Groups["type"].Value);
     }
 
 /// <summary>
@@ -316,6 +316,7 @@ where table_schema = '{0}' and table_name = 'movies' and column_name = 'Price'",
     {
       using (MovieDBContext ctx = new MovieDBContext())
       {
+        ctx.Database.Initialize(true);
         ctx.EntitySingleColumns.Add(new EntitySingleColumn());
         ctx.SaveChanges();
       }
@@ -327,7 +328,7 @@ where table_schema = '{0}' and table_name = 'movies' and column_name = 'Price'",
       }
     }
 
-    /// <summary>
+/// <summary>
     /// Test for identity columns when type is Integer or Guid (auto-generate
     /// values)
     /// </summary>
@@ -416,6 +417,29 @@ where table_schema = '{0}' and table_name = 'movies' and column_name = 'Price'",
             }
           }
           dr.Close();
+        }
+      }
+    }
+
+    /// <summary>
+    /// This test the fix for bug 67377.
+    /// </summary>
+    [Test]
+    public void FirstOrDefaultNested()
+    {
+      using (MovieDBContext ctx = new MovieDBContext())
+      {
+        ctx.Database.Initialize(true);
+        int DirectorId = 1;
+        var q = ctx.Movies.Where(p => p.Director.ID == DirectorId).Select(p => 
+          new
+          {
+            Id = p.ID,
+            FirstMovieFormat = p.Formats.Count == 0 ? 0.0 : p.Formats.FirstOrDefault().Format
+          });
+        string sql = q.ToString();
+        foreach (var r in q)
+        {
         }
       }
     }
