@@ -34,6 +34,8 @@ namespace MySql.Data.Entity.CodeFirst.Tests
   public class VehicleDbContext : DbContext
   {
     public DbSet<Vehicle> Vehicles { get; set; }
+    public DbSet<Manufacturer> Manufacturers { get; set; }
+    public DbSet<Distributor> Distributors { get; set; }
 
     public VehicleDbContext()
     {
@@ -141,5 +143,20 @@ namespace MySql.Data.Entity.CodeFirst.Tests
   public class Bike2 : Vehicle2
   {
     public string BikeProperty { get; set; }
+  }
+
+  public class Manufacturer
+  {
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public Guid ManufacturerId { get; set; }
+    public string Name { get; set; }
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public Guid GroupIdentifier { get; set; }
+  }
+
+  public class Distributor
+  {
+    public int DistributorId { get; set; }
+    public string Name { get; set; }
   }
 }
