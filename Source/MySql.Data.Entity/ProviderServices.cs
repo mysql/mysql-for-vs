@@ -37,6 +37,15 @@ using System.Globalization;
 
 namespace MySql.Data.MySqlClient
 {
+  public class MySqlScriptServices
+  {
+    public string GetTableCreateScript(EntitySet entitySet)
+    {
+      MySqlProviderServices service = new MySqlProviderServices();
+      return service.GetTableCreateScript(entitySet);
+    }
+  }
+
   internal partial class MySqlProviderServices : DbProviderServices
   {
     internal static readonly MySqlProviderServices Instance;
@@ -344,10 +353,12 @@ namespace MySql.Data.MySqlClient
 #endif
 
     private Dictionary<string, string> _pluralizedNames = new Dictionary<string, string>();
+    private List<string> _guidIdentityColumns;
 
-    private string GetTableCreateScript(EntitySet entitySet)
+    internal string GetTableCreateScript(EntitySet entitySet)
     {
       EntityType e = entitySet.ElementType;
+      _guidIdentityColumns = new List<string>();
 
       string typeName = null;
       if (_pluralizedNames.ContainsKey(e.Name))
@@ -365,20 +376,15 @@ namespace MySql.Data.MySqlClient
       StringBuilder sql = new StringBuilder("CREATE TABLE ");
       sql.AppendFormat("`{0}`(", typeName );
       string delimiter = "";
-      bool hasPK = false;
       foreach (EdmProperty c in e.Properties)
       {
-        Facet facet;
-        hasPK = hasPK ||
-            (c.TypeUsage.Facets.TryGetValue("StoreGeneratedPattern", false, out facet) &&
-            facet.Value.Equals(StoreGeneratedPattern.Identity));
         sql.AppendFormat("{0}{1}\t`{2}` {3}{4}", delimiter, Environment.NewLine, c.Name,
             GetColumnType(c.TypeUsage), GetFacetString(c));
         delimiter = ", ";
       }
       sql.AppendLine(");");
       sql.AppendLine();
-      if (!hasPK && e.KeyMembers.Count > 0)
+      if (e.KeyMembers.Count > 0)
       {
         sql.Append(String.Format(
             "ALTER TABLE `{0}` ADD PRIMARY KEY (", typeName ));
@@ -391,6 +397,28 @@ namespace MySql.Data.MySqlClient
         sql.AppendLine(");");
         sql.AppendLine();
       }
+      if (_guidIdentityColumns.Count > 0)
+      {
+        sql.AppendLine("DELIMITER ||");
+        sql.AppendLine(string.Format("CREATE TRIGGER `{0}` BEFORE INSERT ON `{1}`", typeName + "_IdentityTgr", typeName));
+        sql.AppendLine("\tFOR EACH ROW BEGIN");
+        foreach (string guidColumn in _guidIdentityColumns)
+        {
+          if (e.KeyMembers.Contains(guidColumn))
+          {
+            sql.AppendLine(string.Format("\t\tDROP TEMPORARY TABLE IF EXISTS tmpIdentity_{0};", typeName));
+            sql.AppendLine(string.Format("\t\tCREATE TEMPORARY TABLE tmpIdentity_{0} (guid CHAR(36))ENGINE=MEMORY;", typeName));
+            sql.AppendLine(string.Format("\t\tSET @var_{0} = UUID();", guidColumn));
+            sql.AppendLine(string.Format("\t\tINSERT INTO tmpIdentity_{0} VALUES(@var_{1});", typeName, guidColumn));
+            sql.AppendLine(string.Format("\t\tSET new.{0} = @var_{0};", guidColumn));
+          }
+          else
+            sql.AppendLine(string.Format("\t\tSET new.{0} = UUID();", guidColumn));
+        }
+        sql.AppendLine("\tEND ||");
+        sql.AppendLine("DELIMITER ;");
+      }
+      sql.AppendLine();
       return sql.ToString();
     }
 
@@ -432,8 +460,16 @@ namespace MySql.Data.MySqlClient
       }
       if (facets.TryGetValue("Nullable", true, out facet) && (bool)facet.Value == false)
         sql.Append(" NOT NULL");
-      if (facets.TryGetValue("StoreGeneratedPattern", true, out facet) && facet.Value.Equals(StoreGeneratedPattern.Identity))
-        sql.Append(" AUTO_INCREMENT PRIMARY KEY");
+      if (facets.TryGetValue("StoreGeneratedPattern", true, out facet)
+        && facet.Value.Equals(StoreGeneratedPattern.Identity))
+      {
+        if (column.TypeUsage.EdmType.BaseType.Name.StartsWith("Int"))
+          sql.Append(" AUTO_INCREMENT UNIQUE");
+        else if (column.TypeUsage.EdmType.BaseType.Name == "Guid")
+          _guidIdentityColumns.Add(column.Name);
+        else
+          throw new MySqlException("Invalid identity column type.");
+      }
       return sql.ToString();
     }
 
