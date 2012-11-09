@@ -86,7 +86,10 @@ namespace MySql.Data.Entity
           if (foundIdentity)
             throw new NotSupportedException();
           foundIdentity = true;
-          value = new LiteralFragment("last_insert_id()");
+          if (keyMember.TypeUsage.EdmType.BaseType.Name.StartsWith("Int"))
+            value = new LiteralFragment("last_insert_id()");
+          else if (keyMember.TypeUsage.EdmType.BaseType.Name == "Guid")
+            value = new LiteralFragment(string.Format("ANY(SELECT guid FROM tmpIdentity_{0})", (table as MetadataItem).MetadataProperties["Table"].Value));
         }
         where.Append(String.Format(" AND `{0}`=", keyMember));
         where.Append(value);
