@@ -71,7 +71,7 @@
     </DirectoryRef>
 
     <DirectoryRef Id='VS11_TemplatesDir'>
-      <Component Id='VS2012_Templates' Guid='BA082C85-9D64-4B79-8910-C6C25655250B'>
+      <Component Id='VS2012_Templates' Guid='260283FF-817E-408E-8D87-7A4BF99BA818'>
         <File Id='VS2012_ScriptTemplate' Name='MySQL Script.mysql' DiskId='1'
               Source='..\Source\MySql.VisualStudio\Templates\MySQL Script.mysql'/>
         <File Id='VS2012_ScriptTemplate.vsdir' Name='MySqlDataProviderPackage.vsdir' DiskId='1'
