@@ -106,6 +106,9 @@ namespace MySql.Data.MySqlClient
     private const int MEDIUMBLOB_MAXLEN = 16777215;
     private const int LONGBLOB_MAXLEN = 2147483647;
 
+    internal const int DEFAULT_DECIMAL_PRECISION = 10;
+    internal const int DEFAULT_DECIMAL_SCALE = 2;
+
     public override TypeUsage GetStoreType(TypeUsage edmType)
     {
       if (edmType == null)
@@ -150,8 +153,8 @@ namespace MySql.Data.MySqlClient
 
         case PrimitiveTypeKind.Decimal:
           {
-            byte precision = 10;
-            byte scale = 2;
+            byte precision = DEFAULT_DECIMAL_PRECISION;
+            byte scale = DEFAULT_DECIMAL_SCALE;
             Facet facet;
 
             if (edmType.Facets.TryGetValue("Precision", false, out facet))
