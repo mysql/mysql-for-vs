@@ -143,8 +143,17 @@ namespace MySql.Web.Tests
     [Test]
     public void SessionItemWithExpireCallback()
     {
-      SetSessionItemExpiredCallback(true);
+      SetSessionItemExpiredCallback(true);      
+      
       Assert.AreEqual(strSessionID, calledId);
+      
+      int i = 0;
+      while (((long)MySqlHelper.ExecuteScalar(conn, "SELECT Count(*) FROM my_aspnet_sessions;") != 0) && (i < 10))
+      {
+        Thread.Sleep(500);
+        i++;
+      }
+
       Assert.AreEqual(0, CountSessions());
     }
 
@@ -154,6 +163,14 @@ namespace MySql.Web.Tests
     {
       SetSessionItemExpiredCallback(false);
       Assert.AreNotEqual(strSessionID, calledId);
+      
+      int i = 0;
+      while (((long)MySqlHelper.ExecuteScalar(conn, "SELECT Count(*) FROM my_aspnet_sessions;") != 0) && (i < 10))
+      {
+        Thread.Sleep(500);
+        i++;
+      }
+
       Assert.AreEqual(0, CountSessions());
     }
 
@@ -172,10 +189,17 @@ namespace MySql.Web.Tests
       config.Add("applicationName", "/");
       config.Add("enableExpireCallback", "false" );
       session.Initialize("SessionTests", config);
-      Thread.Sleep(1000);
+      
       session.Dispose();
 
-      Assert.AreEqual(1, (long)MySqlHelper.ExecuteScalar(conn, "SELECT Count(*) FROM my_aspnet_sessions;"));
+      int i = 0;
+      while (((long)MySqlHelper.ExecuteScalar(conn, "SELECT Count(*) FROM my_aspnet_sessions;") != 0) && (i < 10))
+      {
+        Thread.Sleep(500);
+        i++;
+      }
+
+      Assert.AreEqual(1, CountSessions());
 
     }
 
