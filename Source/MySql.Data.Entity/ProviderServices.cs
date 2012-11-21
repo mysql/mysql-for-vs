@@ -455,7 +455,11 @@ namespace MySql.Data.MySqlClient
         Facet fcPrecision;
         if (facets.TryGetValue("Scale", true, out fcScale) && facets.TryGetValue("Precision", true, out fcPrecision))
         {
-          sql.AppendFormat("( {0}, {1} ) ", fcPrecision.Value, fcScale.Value);
+          // Enforce scale to a reasonable value.
+          int scale = fcScale.Value == null ? 0 : ( int )( byte )fcScale.Value;
+          if (scale == 0)
+            scale = MySqlProviderManifest.DEFAULT_DECIMAL_SCALE;
+          sql.AppendFormat("( {0}, {1} ) ", fcPrecision.Value, scale);
         }
       }
       if (facets.TryGetValue("Nullable", true, out facet) && (bool)facet.Value == false)
