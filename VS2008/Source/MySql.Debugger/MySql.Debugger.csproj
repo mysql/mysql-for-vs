@@ -100,18 +100,18 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MySql.Parser\MySql.Parser.csproj">
-      <Project>{C1A80300-B0B3-4DAD-990E-B04BF2D18B56}</Project>
-      <Name>MySql.Parser</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="..\..\..\Source\MySql.Debugger\MySql Scripts\Logic.sql">
       <Link>MySql Scripts\Logic.sql</Link>
     </EmbeddedResource>
     <EmbeddedResource Include="..\..\..\Source\MySql.Debugger\MySql Scripts\Schema.sql">
       <Link>MySql Scripts\Schema.sql</Link>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MySql.Parser\MySql.Parser.csproj">
+      <Project>{C1A80300-B0B3-4DAD-990E-B04BF2D18B56}</Project>
+      <Name>MySql.Parser</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
