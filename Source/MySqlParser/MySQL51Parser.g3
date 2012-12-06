@@ -927,13 +927,16 @@ ident options { backtrack=true; memoize=true; }
 	|	tok=SLAVE
 	|	tok=SONAME
 	|	tok=START
+	|	tok=STATUS
 	|	tok=STOP
 	|	tok=TRUNCATE
 	|	tok=UNICODE
 	|	tok=UNINSTALL
+	|	tok=UNKNOWN
 	|	tok=WRAPPER
 	|	tok=XA
 	|	tok=UPGRADE
+	|	tok=VALUE
 	)	-> ID[$tok] 
 	|	ident_sp_label	-> {$ident_sp_label.tree}
 	;
