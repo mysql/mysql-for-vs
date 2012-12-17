@@ -2314,6 +2314,7 @@ functionCall
 			|	FROM position=expr (FOR len=expr)? 		-> ^(FUNC ^($funcName $str $position $len? FROM?))
 			)
 			RPAREN
+	|   ROW_COUNT LPAREN RPAREN				-> ^( FUNC ^( ROW_COUNT ))
 	|	SYSDATE LPAREN RPAREN				-> ^(FUNC ^(SYSDATE LPAREN))
 	|	TIMESTAMP_ADD LPAREN
 			timestampUnit
