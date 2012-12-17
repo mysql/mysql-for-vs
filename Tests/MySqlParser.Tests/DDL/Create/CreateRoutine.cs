@@ -312,5 +312,39 @@ end;";
       StringBuilder sb;
       MySQL51Parser.program_return r = Utility.ParseSql(sql, false, out sb);
     }
+
+    [Test]
+    public void RoutineWithRowcount51()
+    {
+      string sql = @"CREATE DEFINER=`root`@`localhost` PROCEDURE `count`() 
+BEGIN 
+  DECLARE y varchar(50); 
+  INSERT INTO d_table (`name`) VALUES (""y""); 
+  INSERT INTO d_table (`name`) VALUES (""x""); 
+  select row_count() into y; 
+  select found_rows() into y; 
+  select last_insert_id() into y; 
+END;
+";
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(sql, false, out sb, new Version(5, 1));
+    }
+
+    [Test]
+    public void RoutineWithRowcount56()
+    {
+      string sql = @"CREATE DEFINER=`root`@`localhost` PROCEDURE `count`() 
+BEGIN 
+  DECLARE y varchar(50); 
+  INSERT INTO d_table (`name`) VALUES (""y""); 
+  INSERT INTO d_table (`name`) VALUES (""x""); 
+  select row_count() into y; 
+  select found_rows() into y; 
+  select last_insert_id() into y; 
+END;
+";
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(sql, false, out sb, new Version( 5, 6 ));
+    }
   }
 }
