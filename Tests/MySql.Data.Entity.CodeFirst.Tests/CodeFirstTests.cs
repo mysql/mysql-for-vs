@@ -36,6 +36,8 @@ using MySql.Data.Entity.CodeFirst.Tests.Properties;
 using MySql.Data.MySqlClient;
 using MySql.Data.MySqlClient.Tests;
 using NUnit.Framework;
+using System.Xml.Linq;
+using System.Collections.Generic;
 
 namespace MySql.Data.Entity.CodeFirst.Tests
 {
@@ -441,6 +443,49 @@ where table_schema = '{0}' and table_name = 'movies' and column_name = 'Price'",
         foreach (var r in q)
         {
         }
+      }
+    }
+   
+
+     /// <summary>
+    /// SUPPORT FOR DATE TYPES WITH PRECISION
+    /// </summary>
+    [Test]
+    public void CanDefineDatesWithPrecisionFor56()
+    {
+      if (Version < new Version(5, 6)) return;
+
+      using (var db = new ProductsDbContext())
+      {
+        db.Database.CreateIfNotExists();
+        using (MySqlConnection conn = new MySqlConnection(db.Database.Connection.ConnectionString))
+        {
+          conn.Open();
+          MySqlCommand query = new MySqlCommand("Select Column_name, Is_Nullable, Data_Type, DateTime_Precision from information_schema.Columns where table_schema ='" + conn.Database + "' and table_name = 'Products' and column_name ='DateTimeWithPrecision'", conn);
+          query.Connection = conn;
+          MySqlDataReader reader = query.ExecuteReader();
+          while (reader.Read())
+          {
+            Assert.AreEqual("DateTimeWithPrecision", reader[0].ToString());
+            Assert.AreEqual("NO", reader[1].ToString());
+            Assert.AreEqual("datetime", reader[2].ToString());
+            Assert.AreEqual("3", reader[3].ToString());
+          }
+          reader.Close();
+
+          query = new MySqlCommand("Select Column_name, Is_Nullable, Data_Type, DateTime_Precision from information_schema.Columns where table_schema ='" + conn.Database + "' and table_name = 'Products' and column_name ='TimeStampWithPrecision'", conn);
+          query.Connection = conn;
+          reader = query.ExecuteReader();
+          while (reader.Read())
+          {
+            Assert.AreEqual("TimeStampWithPrecision", reader[0].ToString());
+            Assert.AreEqual("NO", reader[1].ToString());
+            Assert.AreEqual("timestamp", reader[2].ToString());
+            Assert.AreEqual("3", reader[3].ToString());
+          }
+          reader.Close();
+        }
+        db.Database.Delete();
       }
     }
   }

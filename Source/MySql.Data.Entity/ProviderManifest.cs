@@ -75,7 +75,8 @@ namespace MySql.Data.MySqlClient
       if (version < 5.0) throw new NotSupportedException("Your version of MySQL is not currently supported");
       if (version < 5.1) return GetMappingResource("SchemaDefinition-5.0.ssdl");
       if (version < 5.5) return GetMappingResource("SchemaDefinition-5.1.ssdl");
-      return GetMappingResource("SchemaDefinition-5.5.ssdl");
+      if (version < 5.6) return GetMappingResource("SchemaDefinition-5.5.ssdl");
+      return GetMappingResource("SchemaDefinition-5.6.ssdl");
     }
 
     public override TypeUsage GetEdmType(TypeUsage storeType)

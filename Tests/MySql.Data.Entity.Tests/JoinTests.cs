@@ -268,6 +268,6 @@ namespace MySql.Data.Entity.Tests
         Assert.AreEqual(3, myarray.IndexOf("Some Book First Edition"));
         Assert.AreEqual(myarray.Count, 4);
       }
-    }
+    }   
   }
 }
