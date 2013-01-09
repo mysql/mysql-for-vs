@@ -115,7 +115,8 @@ namespace MySql.Data.Entity.CodeFirst.Tests
 
     [Required]
     [MaxLength(16777216)]
-    public string LongDescription { get; set; }
+    public string LongDescription { get; set; }       
+    
   }
 
   public class Car : Vehicle
@@ -159,4 +160,57 @@ namespace MySql.Data.Entity.CodeFirst.Tests
     public int DistributorId { get; set; }
     public string Name { get; set; }
   }
+
+
+  public class Product
+  {
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }    
+    
+    public DateTime DateTimeWithPrecision { get; set; }
+
+    [Column(TypeName = "timestamp")]
+    public DateTime TimeStampWithPrecision { get; set; }      
+
+  }
+
+  public class ProductsDbContext : DbContext
+  {
+    public DbSet<Product> Products { get; set; }
+
+    protected override void OnModelCreating(DbModelBuilder modelBuilder)
+    {
+      modelBuilder.Entity<Product>()
+    .Property(f => f.DateTimeWithPrecision)
+    .HasColumnType("DateTime")
+    .HasPrecision(3);
+
+      modelBuilder.Entity<Product>()
+    .Property(f => f.TimeStampWithPrecision)
+    .HasColumnType("Timestamp")
+    .HasPrecision(3);
+    }
+  }
+
+  public class Names
+  {
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }   
+    
+    public DateTime DateCreated { get; set; }
+  }
+
+  public class ShortDbContext : DbContext
+  {
+    public DbSet<Names> Names { get; set; }
+
+    protected override void OnModelCreating(DbModelBuilder modelBuilder)
+    {
+      modelBuilder.Entity<Names>()
+    .Property(f => f.DateCreated)
+    .HasColumnType("DateTime")
+    .HasPrecision(9);   
+    }
+  }
+
 }

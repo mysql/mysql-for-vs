@@ -79,6 +79,14 @@
     </Compile>
     <Compile Include="CanonicalFunctions.cs" />
     <Compile Include="DataTypeTests.cs" />
+    <Compile Include="DatesTypesModel.Designer.cs">
+      <DependentUpon>DatesTypesModel.edmx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="DatesTypesTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Model1.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -142,6 +150,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </None>
+    <EntityDeploy Include="DatesTypesModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>DatesTypesModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
     <EntityDeploy Include="Model3.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>Model3.Designer.cs</LastGenOutput>
