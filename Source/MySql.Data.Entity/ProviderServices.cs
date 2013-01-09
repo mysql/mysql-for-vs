@@ -34,21 +34,36 @@ using MySql.Data.Entity.Properties;
 using System.Text;
 using System.Linq;
 using System.Globalization;
+using MySql.Data.Common;
 
 namespace MySql.Data.MySqlClient
 {
   public class MySqlScriptServices
   {
-    public string GetTableCreateScript(EntitySet entitySet)
+    public string GetTableCreateScript(EntitySet entitySet, string connectionString, string version)
     {
       MySqlProviderServices service = new MySqlProviderServices();
-      return service.GetTableCreateScript(entitySet);
+
+      if (!String.IsNullOrEmpty(version))
+        service.serverVersion = new Version(version);
+      else
+      {
+        using (var conn = new MySqlConnection(connectionString.Replace(@"""", "")))
+        {
+          conn.Open();                  
+          var v = DBVersion.Parse(conn.ServerVersion.ToString());        
+          service.serverVersion = new Version(v.Major + "." + v.Minor);
+        }
+      }
+      if (service.serverVersion == null) service.serverVersion = new Version("5.5");
+      return service.GetTableCreateScript(entitySet); 
     }
   }
 
   internal partial class MySqlProviderServices : DbProviderServices
   {
     internal static readonly MySqlProviderServices Instance;
+    internal Version serverVersion { get; set; }
 
     static MySqlProviderServices()
     {
@@ -195,11 +210,17 @@ namespace MySql.Data.MySqlClient
       using (MySqlConnection c = new MySqlConnection(msb.ConnectionString))
       {
         c.Open();
+        
+        var v = DBVersion.Parse(c.ServerVersion);
+        serverVersion = new Version(v.Major + "." + v.Minor);        
+        
         double version = double.Parse(c.ServerVersion.Substring(0, 3), CultureInfo.InvariantCulture);
         if (version < 5.0) throw new NotSupportedException("Versions of MySQL prior to 5.0 are not currently supported");
         if (version < 5.1) return "5.0";
         if (version < 5.5) return "5.1";
-        return "5.5";
+        if (version < 5.6) return "5.5";
+        return "5.6";
+        
       }
     }
 
@@ -285,6 +306,9 @@ namespace MySql.Data.MySqlClient
 
       sql.AppendLine("-- MySql script");
       sql.AppendLine("-- Created on " + DateTime.Now);
+
+      if (serverVersion == null)
+        serverVersion = new Version(providerManifestToken);
 
       foreach (EntityContainer container in storeItemCollection.GetItems<EntityContainer>())
       {
@@ -430,7 +454,7 @@ namespace MySql.Data.MySqlClient
         t = t.Substring(1).ToUpperInvariant() + " UNSIGNED";
       }
       else if (String.Compare(t, "guid", true) == 0)
-        return "CHAR(36) BINARY";
+        return "CHAR(36) BINARY";      
       return t;
     }
 
@@ -438,6 +462,8 @@ namespace MySql.Data.MySqlClient
     {
       StringBuilder sql = new StringBuilder();
       Facet facet;
+      Facet fcDateTimePrecision = null;
+
       ReadOnlyMetadataCollection<Facet> facets = column.TypeUsage.Facets;
 
       if (column.TypeUsage.EdmType.BaseType.Name == "String")
@@ -462,17 +488,31 @@ namespace MySql.Data.MySqlClient
           sql.AppendFormat("( {0}, {1} ) ", fcPrecision.Value, scale);
         }
       }
+      else if (column.TypeUsage.EdmType.BaseType.Name == "DateTime")
+      {
+        if (serverVersion >= new Version(5, 6) && facets.TryGetValue("Precision", true, out fcDateTimePrecision))
+        {        
+           if (Convert.ToByte(fcDateTimePrecision.Value) >= 1)
+              sql.AppendFormat("( {0} ) ", fcDateTimePrecision.Value);            
+        }
+      }
+      
+
       if (facets.TryGetValue("Nullable", true, out facet) && (bool)facet.Value == false)
         sql.Append(" NOT NULL");
-      if (facets.TryGetValue("StoreGeneratedPattern", true, out facet)
-        && facet.Value.Equals(StoreGeneratedPattern.Identity))
+
+      if (facets.TryGetValue("StoreGeneratedPattern", true, out facet))
       {
-        if (column.TypeUsage.EdmType.BaseType.Name.StartsWith("Int"))
-          sql.Append(" AUTO_INCREMENT UNIQUE");
-        else if (column.TypeUsage.EdmType.BaseType.Name == "Guid")
-          _guidIdentityColumns.Add(column.Name);
-        else
-          throw new MySqlException("Invalid identity column type.");
+        if (facet.Value.Equals(StoreGeneratedPattern.Identity))
+        {
+
+          if (column.TypeUsage.EdmType.BaseType.Name.StartsWith("Int"))
+            sql.Append(" AUTO_INCREMENT UNIQUE");
+          else if (column.TypeUsage.EdmType.BaseType.Name == "Guid")
+            _guidIdentityColumns.Add(column.Name);          
+          else
+            throw new MySqlException("Invalid identity column type.");
+        }      
       }
       return sql.ToString();
     }
