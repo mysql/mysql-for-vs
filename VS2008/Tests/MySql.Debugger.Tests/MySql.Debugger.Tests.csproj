@@ -39,6 +39,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Dependencies\v2.0\Debug\MySql.Data.dll</HintPath>
     </Reference>
+    <Reference Include="nunit.framework, Version=2.5.10.11092, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -53,6 +54,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\Tests\MySql.Debugger.Tests\BaseTest.cs">
+      <Link>BaseTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Tests\MySql.Debugger.Tests\Simple.cs">
+      <Link>Simple.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Tests\MySql.Debugger.Tests\TestUtils.cs">
+      <Link>TestUtils.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
