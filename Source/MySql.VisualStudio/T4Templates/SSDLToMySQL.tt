@@ -16,6 +16,8 @@
 <#@ assembly name="System.Data.Entity.Design" #>
 <#@ assembly name="$(DevEnvDir)Microsoft.Data.Entity.Design.DatabaseGeneration.dll"#>
 <#@ assembly name="MySql.Data.Entity" #>
+<#@ assembly name="EnvDTE" #>
+<#@ assembly name="System.Configuration.dll" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
@@ -25,6 +27,7 @@
 <#@ import namespace="System.Runtime.Remoting.Messaging" #>
 <#@ import namespace="System.Text.RegularExpressions" #>
 <#@ import namespace="MySql.Data.MySqlClient" #>
+<#@ import namespace="System.Configuration" #>
 <#@ template language="C#" debug="true" hostspecific="true" #>
 <#@ include file="GenerateTSQL.Utility.ttinclude"#>
 <#@ include file="GenerateMySQL.Utility.ttinclude"#>
@@ -37,9 +40,9 @@
 
     MySqlScriptServices service = new MySqlScriptServices();
     string databaseName = this.GetInput<string>(EdmParameterBag.ParameterName.DatabaseName.ToString());
-    string edmxPath = this.GetInput<string>(EdmParameterBag.ParameterName.EdmxPath.ToString());
+    string edmxPath = this.GetInput<string>(EdmParameterBag.ParameterName.EdmxPath.ToString());    
     Version targetVersion = this.GetInput<Version>(EdmParameterBag.ParameterName.TargetVersion.ToString());
-    
+
     if (false == InitializeAndValidateExistingStore()) 
     {
 #>
@@ -114,10 +117,20 @@ SET foreign_key_checks = 1;
 
 <#
 
+    EnvDTE.DTE env = (EnvDTE.DTE)((IServiceProvider)this.Host).GetService(typeof(EnvDTE.DTE));      
+    string serverVersion = GetProviderManifestToken(edmxPath);
+    string connection = String.Empty;
+    
+    if (String.IsNullOrEmpty(serverVersion))
+     {
+        connection = GetConnectionString(edmxPath, (EnvDTE.Project)((Array)env.ActiveSolutionProjects).GetValue(0));	
+        connection = !String.IsNullOrEmpty(connection) ? connection.Substring(connection.IndexOf(";provider connection string=", StringComparison.OrdinalIgnoreCase) + ";provider connection string=".Length): connection;
+     }
+
     foreach (EntitySet entitySet in Store.GetAllEntitySets())
     {
-        string tableName = MyId(entitySet.GetTableName());
-        string tableScript = service.GetTableCreateScript(entitySet);
+        string tableName = MyId(entitySet.GetTableName());		
+        string tableScript = service.GetTableCreateScript(entitySet, connection, serverVersion);
 #>
 <#=tableScript#>
 
