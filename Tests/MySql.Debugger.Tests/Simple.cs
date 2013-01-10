@@ -1124,13 +1124,27 @@ end ;
     {
       string sql =
         @"
+CREATE TABLE Customer
+(
+  `customer_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,  
+  `store_id` int(11) DEFAULT NULL,  
+  `first_name` varchar(45) NOT NULL,
+  `last_name` varchar(45) NOT NULL,
+  `email` varchar(50) DEFAULT NULL,
+  `address_id` smallint(5) unsigned NOT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT '1',
+  `create_date` datetime NOT NULL,
+  `last_update` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`customer_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 delimiter //
 
 drop procedure if exists `new_customer` //
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `new_customer`() 
 BEGIN 
-  INSERT INTO `sakila`.`customer` (`store_id`, `first_name`, `last_name`, `email`, `address_id`, `create_date` ) 
+  INSERT INTO `test6`.`customer` (`store_id`, `first_name`, `last_name`, `email`, `address_id`, `create_date` ) 
   VALUES ( 1, ""Armando"", ""Lopez"", ""armand2099@gmail.com"", 1, NOW() ); 
 END
 //
@@ -1147,7 +1161,7 @@ END
         sql =
 @"CREATE DEFINER=`root`@`localhost` PROCEDURE `new_customer`() 
 BEGIN 
-  INSERT INTO `sakila`.`customer` (`store_id`, `first_name`, `last_name`, `email`, `address_id`, `create_date` ) 
+  INSERT INTO `test6`.`customer` (`store_id`, `first_name`, `last_name`, `email`, `address_id`, `create_date` ) 
   VALUES ( 1, ""Armando"", ""Lopez"", ""armand2099@gmail.com"", 1, NOW() ); 
 END;
 ";
