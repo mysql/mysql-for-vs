@@ -52,142 +52,154 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\DDL\Alter\AlterDatabase.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\DDL\Alter\AlterDatabase.cs">
       <Link>DDL\Alter\AlterDatabase.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\DDL\Alter\AlterEvent.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\DDL\Alter\AlterEvent.cs">
       <Link>DDL\Alter\AlterEvent.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\DDL\Alter\AlterFunction.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\DDL\Alter\AlterFunction.cs">
       <Link>DDL\Alter\AlterFunction.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\DDL\Alter\AlterLog.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\DDL\Alter\AlterLog.cs">
       <Link>DDL\Alter\AlterLog.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\DDL\Alter\AlterProcedure.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\DDL\Alter\AlterProcedure.cs">
       <Link>DDL\Alter\AlterProcedure.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\DDL\Alter\AlterServer.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\DDL\Alter\AlterServer.cs">
       <Link>DDL\Alter\AlterServer.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\DDL\Alter\AlterTable.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\DDL\Alter\AlterTable.cs">
       <Link>DDL\Alter\AlterTable.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\DDL\Alter\AlterTablespace.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\DDL\Alter\AlterTablespace.cs">
       <Link>DDL\Alter\AlterTablespace.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\DDL\Alter\AlterView.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\DDL\Alter\AlterView.cs">
       <Link>DDL\Alter\AlterView.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\DDL\Create\CreateDatabase.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\DDL\Create\CreateDatabase.cs">
       <Link>DDL\Create\CreateDatabase.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\DDL\Create\CreateEvent.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\DDL\Create\CreateEvent.cs">
       <Link>DDL\Create\CreateEvent.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\DDL\Create\CreateIndex.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\DDL\Create\CreateIndex.cs">
       <Link>DDL\Create\CreateIndex.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\DDL\Create\CreateLog.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\DDL\Create\CreateLog.cs">
       <Link>DDL\Create\CreateLog.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\DDL\Create\CreateRoutine.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\DDL\Create\CreateRoutine.cs">
       <Link>DDL\Create\CreateRoutine.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\DDL\Create\CreateServer.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\DDL\Create\CreateServer.cs">
       <Link>DDL\Create\CreateServer.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\DDL\Create\CreateTable.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\DDL\Create\CreateTable.cs">
       <Link>DDL\Create\CreateTable.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\DDL\Create\CreateTablespace.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\DDL\Create\CreateTablespace.cs">
       <Link>DDL\Create\CreateTablespace.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\DDL\Create\CreateTrigger.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\DDL\Create\CreateTrigger.cs">
       <Link>DDL\Create\CreateTrigger.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\DDL\Create\CreateView.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\DDL\Create\CreateView.cs">
       <Link>DDL\Create\CreateView.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\DDL\Drop\DropDatabase.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\DDL\Drop\DropDatabase.cs">
       <Link>DDL\Drop\DropDatabase.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\DDL\Drop\DropEvent.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\DDL\Drop\DropEvent.cs">
       <Link>DDL\Drop\DropEvent.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\DDL\Drop\DropIndex.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\DDL\Drop\DropIndex.cs">
       <Link>DDL\Drop\DropIndex.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\DDL\Drop\DropRoutine.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\DDL\Drop\DropRoutine.cs">
       <Link>DDL\Drop\DropRoutine.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\DDL\Drop\DropTable.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\DDL\Drop\DropTable.cs">
       <Link>DDL\Drop\DropTable.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\DDL\Drop\DropTrigger.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\DDL\Drop\DropTrigger.cs">
       <Link>DDL\Drop\DropTrigger.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\DDL\Drop\DropView.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\DDL\Drop\DropView.cs">
       <Link>DDL\Drop\DropView.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\DDL\Show\Show.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\DDL\Show\Show.cs">
       <Link>DDL\Show\Show.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\DML\Delete.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\DML\Delete.cs">
       <Link>DML\Delete.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\DML\Insert.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\DML\Insert.cs">
       <Link>DML\Insert.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\DML\Select.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\DML\Select.cs">
       <Link>DML\Select.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\DML\Update.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\DML\Update.cs">
       <Link>DML\Update.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\Infrastructure\TokenStreamRemovable.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\Infrastructure\TokenStreamRemovable.cs">
       <Link>Infrastructure\TokenStreamRemovable.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\Other\AccountManagement.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\Other\AccountManagement.cs">
       <Link>Other\AccountManagement.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\Other\Call.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\Other\Call.cs">
       <Link>Other\Call.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\Other\CompoundStatements.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\Other\CompoundStatements.cs">
       <Link>Other\CompoundStatements.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\Other\Expression.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\Other\Explain.cs">
+      <Link>Other\Explain.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\Other\Expression.cs">
       <Link>Other\Expression.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\Other\Handler.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\Other\GatheringTables.cs">
+      <Link>Other\GatheringTables.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\Other\GetDiagnostics.cs">
+      <Link>Other\GetDiagnostics.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\Other\Handler.cs">
       <Link>Other\Handler.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\Other\Intellisense.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\Other\Intellisense.cs">
       <Link>Other\Intellisense.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\Other\LoadDataInfile.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\Other\LoadDataInfile.cs">
       <Link>Other\LoadDataInfile.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\Other\Other.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\Other\Other.cs">
       <Link>Other\Other.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\Other\RenameDatabase.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\Other\RenameDatabase.cs">
       <Link>Other\RenameDatabase.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\Other\RenameTable.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\Other\RenameTable.cs">
       <Link>Other\RenameTable.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\Other\Replace.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\Other\Replace.cs">
       <Link>Other\Replace.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\Other\Transaction.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\Other\Signal.cs">
+      <Link>Other\Signal.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\Other\Transaction.cs">
       <Link>Other\Transaction.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\Other\TruncateTable.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\Other\TruncateTable.cs">
       <Link>Other\TruncateTable.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Tests\MySqlParser.Tests\Utility.cs">
+    <Compile Include="..\..\..\Tests\MySql.Parser.Tests\Utility.cs">
       <Link>Utility.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

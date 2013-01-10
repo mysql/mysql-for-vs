@@ -7,7 +7,7 @@ Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Installer", "Installer\Inst
 		{DC3517FF-AC26-4755-9B7A-EF658FF69593} = {DC3517FF-AC26-4755-9B7A-EF658FF69593}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Parser.Tests", "Tests\MySqlParser.Tests\MySql.Parser.Tests.csproj", "{247973E1-8535-4930-8940-83B06097D5DA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Parser.Tests", "Tests\MySql.Parser.Tests\MySql.Parser.Tests.csproj", "{247973E1-8535-4930-8940-83B06097D5DA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Debugger.VisualStudio", "Source\MySql.Debugger.VisualStudio\MySql.Debugger.VisualStudio.csproj", "{A746219A-78F3-4D53-8308-68DB3D13EF78}"
 EndProject
