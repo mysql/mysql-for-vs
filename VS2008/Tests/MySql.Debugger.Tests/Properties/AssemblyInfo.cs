@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("MySql.Debugger.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Oracle")]
+[assembly: AssemblyCompany("Oracle Corporation")]
 [assembly: AssemblyProduct("MySql.Debugger.Tests")]
-[assembly: AssemblyCopyright("Copyright © 2004, 2012, Oracle and/or its affiliates. All rights reserved.")]
+[assembly: AssemblyCopyright("Copyright © Oracle Corporation 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("6faac58c-6a6e-4a32-bded-272bef72b5db")]
+[assembly: Guid("9da9478d-e56d-4efa-a787-9325c4223a0a")]
 
 // Version information for an assembly consists of the following four values:
 //
