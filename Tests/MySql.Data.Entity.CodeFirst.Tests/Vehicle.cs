@@ -165,12 +165,19 @@ namespace MySql.Data.Entity.CodeFirst.Tests
   public class Product
   {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }    
-    
+    public int Id { get; set; }
+
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public DateTime DateCreated { get; set; }
+
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    [Column(TypeName = "timestamp")]
+    public DateTime Timestamp { get; set; }
+
     public DateTime DateTimeWithPrecision { get; set; }
 
     [Column(TypeName = "timestamp")]
-    public DateTime TimeStampWithPrecision { get; set; }      
+    public DateTime TimeStampWithPrecision { get; set; }
 
   }
 
@@ -195,8 +202,8 @@ namespace MySql.Data.Entity.CodeFirst.Tests
   public class Names
   {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }   
-    
+    public int Id { get; set; }
+
     public DateTime DateCreated { get; set; }
   }
 
@@ -209,8 +216,9 @@ namespace MySql.Data.Entity.CodeFirst.Tests
       modelBuilder.Entity<Names>()
     .Property(f => f.DateCreated)
     .HasColumnType("DateTime")
-    .HasPrecision(9);   
+    .HasPrecision(9);
     }
   }
+
 
 }

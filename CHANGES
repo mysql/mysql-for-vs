@@ -3,6 +3,8 @@
 - Fix internal bug "Parser cannot recognize row_count in grammar version 5.6" (id task 326).
 - Fixed missing keywords not working as ids (wihout quoting) in parser: value, status, unknown & some unit tests from Arnaud feedback.
 - Fix for Datetime precision doesn't work with code first or model first. (Oracle bug #15972773).
+- Fix for Support for current_timestamp as default for datetime with ef for server 5.6 (Oracle bug #15935094).
+
 
 6.5.5
 - Fix for ArgumentNull exception when using Take().Count() in a LINQ to Entities query (bug MySql #64749, Oracle bug #13913047).
@@ -42,6 +44,7 @@
 - Fix for bug "Unable to connect using IPv6 connections" (MySQL bug #67253, Oracle bug #14835718).
 - Added auto-generated values for Guid identity columns (MySql bug #67450, Oracle bug #15834176).
 - Fix for method FirstOrDefault not supported in some LINQ to Entities queries (MySql bug #67377, Oracle bug #15856964). 
+
 
 6.5.4
 - Fix for Duplicate table name don't allow you to change table name (Oracle bug #13785918).
