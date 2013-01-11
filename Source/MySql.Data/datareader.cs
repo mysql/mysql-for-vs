@@ -1,4 +1,4 @@
-// Copyright © 2004, 2011, Oracle and/or its affiliates. All rights reserved.
+// Copyright © 2004, 2013 Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -531,6 +531,27 @@ namespace MySql.Data.MySqlClient
         return ((MySqlDouble)v).Value;
       return Convert.ToDouble(v.Value);
     }
+#if !CF
+    public MySqlGeometry GetMySqlGeometry(int i)
+    {
+      try
+      {
+        IMySqlValue v = GetFieldValue(i, false);
+        if (v is MySqlGeometry || v is MySqlBinary)
+          return new MySqlGeometry(MySqlDbType.Geometry, (Byte[])v.Value);
+      }
+      catch
+      {
+        Throw(new Exception("Can't get MySqlGeometry from value"));
+      }
+      return new MySqlGeometry(true);
+    }
+
+    public MySqlGeometry GetMySqlGeometry(string column)
+    {
+      return GetMySqlGeometry(GetOrdinal(column));
+    }
+#endif
 
     public Type GetFieldType(string column)
     {

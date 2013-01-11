@@ -4,6 +4,7 @@
 - Fixed missing keywords not working as ids (wihout quoting) in parser: value, status, unknown & some unit tests from Arnaud feedback.
 - Fix for Datetime precision doesn't work with code first or model first. (Oracle bug #15972773).
 - Fix for Support for current_timestamp as default for datetime with ef for server 5.6 (Oracle bug #15935094).
+- Adding support for Geometry type. Unit Tests included. Supporting server 5.1 and further.
 
 
 6.5.5
