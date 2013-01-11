@@ -884,5 +884,36 @@ namespace MySql.Data.MySqlClient.Tests
     }
 #endif
 
+
+#if CLR4
+    /// <summary>
+    /// Testing new functionality for Server 5.6 
+    /// On WL 5874
+    /// </summary>
+    [Test]
+    public void CanDefineCurrentTimeStampAsDefaultOnDateTime()
+    {
+      if (Version < new Version(5, 6)) return;
+      MySqlCommand cmd = new MySqlCommand();
+      cmd.CommandText = " CREATE TABLE t1 (id int, a DATETIME DEFAULT CURRENT_TIMESTAMP );";
+      cmd.Parameters.Clear();
+
+      cmd.Connection = conn;
+      var result = cmd.ExecuteNonQuery();
+
+      cmd.CommandText = " INSERT INTO t1 (id) values(1);";
+      cmd.ExecuteNonQuery();
+
+      cmd.CommandText = " SELECT a from t1";
+      var reader = cmd.ExecuteReader();
+
+      DateTime tempDate = new DateTime();
+
+      while (reader.Read())
+      {
+        Assert.IsTrue(DateTime.TryParse(reader.GetDateTime(0).ToString(), out tempDate));
+      }
+    }
+#endif
   }
 }
