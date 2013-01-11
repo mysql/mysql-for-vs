@@ -329,6 +329,9 @@
     </Compile>
     <Compile Include="..\..\..\Source\MySql.Data\TimedStream.cs" />
     <Compile Include="..\..\..\Source\MySql.Data\TracingDriver.cs" />
+    <Compile Include="..\..\..\Source\MySql.Data\Types\MySqlGeometry.cs">
+      <Link>Types\MySqlGeometry.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
