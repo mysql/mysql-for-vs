@@ -1,4 +1,4 @@
-// Copyright © 2004, 2011, Oracle and/or its affiliates. All rights reserved.
+// Copyright © 2004, 2013, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -26,6 +26,7 @@ using MySql.Data.Types;
 using System.Data;
 using NUnit.Framework;
 using System.Data.Common;
+using System.Globalization;
 
 namespace MySql.Data.MySqlClient.Tests
 {
@@ -610,7 +611,7 @@ namespace MySql.Data.MySqlClient.Tests
     public void BinaryTypes()
     {
       execSQL(@"CREATE TABLE Test (c1 VARCHAR(20), c2 VARBINARY(20),
-				c3 TEXT, c4 BLOB, c6 VARCHAR(20) CHARACTER SET BINARY)");
+        c3 TEXT, c4 BLOB, c6 VARCHAR(20) CHARACTER SET BINARY)");
 
       MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM Test", conn);
       DataTable dt = new DataTable();
@@ -629,11 +630,11 @@ namespace MySql.Data.MySqlClient.Tests
 
       MySqlDataAdapter da = new MySqlDataAdapter(
         @"SELECT TRIM(TRAILING ' unsigned' FROM 
-				  TRIM(TRAILING ' zerofill' FROM COLUMN_TYPE)) AS MYSQL_TYPE, 
-				  IF(COLUMN_DEFAULT IS NULL, NULL, 
-				  IF(ASCII(COLUMN_DEFAULT) = 1 OR COLUMN_DEFAULT = '1', 1, 0))
-				  AS TRUE_DEFAULT FROM INFORMATION_SCHEMA.COLUMNS
-				  WHERE TABLE_SCHEMA='test' AND TABLE_NAME='test'", conn);
+          TRIM(TRAILING ' zerofill' FROM COLUMN_TYPE)) AS MYSQL_TYPE, 
+          IF(COLUMN_DEFAULT IS NULL, NULL, 
+          IF(ASCII(COLUMN_DEFAULT) = 1 OR COLUMN_DEFAULT = '1', 1, 0))
+          AS TRUE_DEFAULT FROM INFORMATION_SCHEMA.COLUMNS
+          WHERE TABLE_SCHEMA='test' AND TABLE_NAME='test'", conn);
       DataTable dt = new DataTable();
       da.Fill(dt);
 
@@ -735,7 +736,7 @@ namespace MySql.Data.MySqlClient.Tests
     public void Binary16AsGuidWithNull()
     {
       execSQL(@"CREATE TABLE Test (id int(10) NOT NULL AUTO_INCREMENT,
-						AGUID binary(16), PRIMARY KEY (id))");
+            AGUID binary(16), PRIMARY KEY (id))");
       Guid g = new Guid();
       byte[] guid = g.ToByteArray();
       MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (NULL, @g)", conn);
@@ -758,19 +759,19 @@ namespace MySql.Data.MySqlClient.Tests
       if (Version < new Version(5, 0)) return;
 
       execSQL(@"CREATE TABLE Main (Id int(10) unsigned NOT NULL AUTO_INCREMENT,
-				Descr varchar(45) NOT NULL, PRIMARY KEY (`Id`)) 
-				ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1");
+        Descr varchar(45) NOT NULL, PRIMARY KEY (`Id`)) 
+        ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1");
       execSQL(@"INSERT INTO Main (Id,Descr) VALUES (1,'AAA'), (2,'BBB'), (3, 'CCC')");
 
       execSQL(@"CREATE TABLE Child (Id int(10) unsigned NOT NULL AUTO_INCREMENT,
-				MainId int(10) unsigned NOT NULL, Value int(10) unsigned NOT NULL,
-				Enabled bit(1) NOT NULL, PRIMARY KEY (`Id`)) 
-				ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1");
+        MainId int(10) unsigned NOT NULL, Value int(10) unsigned NOT NULL,
+        Enabled bit(1) NOT NULL, PRIMARY KEY (`Id`)) 
+        ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1");
       execSQL(@"INSERT INTO Child (Id, MainId, Value, Enabled) VALUES (1,2,12345,0x01)");
 
       MySqlDataAdapter da = new MySqlDataAdapter(
         @"SELECT m.Descr, c.Value, c.Enabled FROM Main m 
-				LEFT OUTER JOIN Child c ON m.Id=c.MainId ORDER BY m.Descr", conn);
+        LEFT OUTER JOIN Child c ON m.Id=c.MainId ORDER BY m.Descr", conn);
       DataTable dt = new DataTable();
       da.Fill(dt);
       Assert.AreEqual(3, dt.Rows.Count);
@@ -796,9 +797,9 @@ namespace MySql.Data.MySqlClient.Tests
       if (Version < new Version(5, 0)) return;
 
       execSQL(@"CREATE TABLE Test (ID int(11) NOT NULL, ogc_geom geometry NOT NULL,
-				PRIMARY KEY  (`ID`))");
+        PRIMARY KEY  (`ID`))");
       execSQL(@"INSERT INTO Test VALUES (1, 
-				GeomFromText('GeometryCollection(Point(1 1), LineString(2 2, 3 3))'))");
+        GeomFromText('GeometryCollection(Point(1 1), LineString(2 2, 3 3))'))");
 
       MySqlCommand cmd = new MySqlCommand("SELECT * FROM Test", conn);
       using (MySqlDataReader reader = cmd.ExecuteReader())
@@ -807,6 +808,184 @@ namespace MySql.Data.MySqlClient.Tests
       }
     }
 
+#if !CF
+    #region MySqlGeometry Tests
+
+    [Test]
+    public void CanParseGeometryValueString()
+    {
+      var v = MySqlGeometry.Parse("POINT (47.37 -122.21)");
+      Assert.AreEqual("POINT(47.37 -122.21)", v.ToString());
+    }
+
+    [Test]
+    public void CanTryParseGeometryValueString()
+    {
+      MySqlGeometry v = new MySqlGeometry(0, 0);
+      MySqlGeometry.TryParse("POINT (47.37 -122.21)", out v);
+      Assert.AreEqual("POINT(47.37 -122.21)", v.ToString());
+    }
+
+    [Test]
+    public void CanTryParseGeometryValueStringWithSRIDValue()
+    {
+      var mysqlGeometryResult = new MySqlGeometry(0, 0);
+      MySqlGeometry.TryParse("SRID=101;POINT (47.37 -122.21)", out mysqlGeometryResult);
+      Assert.AreEqual("SRID=101;POINT(47.37 -122.21)", mysqlGeometryResult.ToString());
+    }
+
+
+    [Test]
+    public void StoringAndRetrievingGeometry()
+    {
+      if (version.Major < 5) return;
+
+      execSQL("DROP TABLE IF EXISTS Test");
+      execSQL("CREATE TABLE Test (v Geometry NOT NULL)");
+
+      MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (GeomFromText(?v))", conn);
+      cmd.Parameters.Add("?v", MySqlDbType.String);
+      cmd.Parameters[0].Value = "POINT(47.37 -122.21)";
+      cmd.ExecuteNonQuery();
+
+      cmd.CommandText = "SELECT AsText(v) FROM Test";
+      using (MySqlDataReader reader = cmd.ExecuteReader())
+      {
+        reader.Read();
+        var val = reader.GetValue(0);
+      }
+    }
+
+    [Test]
+    public void CanFetchGeometryAsBinary()
+    {
+      if (version.Major < 5) return;
+
+      execSQL("DROP TABLE IF EXISTS Test");
+      execSQL("CREATE TABLE Test (v Geometry NOT NULL)");
+
+      MySqlGeometry v = new MySqlGeometry(47.37, -122.21);
+
+      var par = new MySqlParameter("?v", MySqlDbType.Geometry);
+      par.Value = v;
+
+      MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (?v)", conn);
+      cmd.Parameters.Add(par);
+      cmd.ExecuteNonQuery();
+
+      cmd.CommandText = "SELECT AsBinary(v) FROM Test";
+      using (MySqlDataReader reader = cmd.ExecuteReader())
+      {
+        reader.Read();
+        var val = reader.GetValue(0) as Byte[];
+        var MyGeometry = new MySqlGeometry(MySqlDbType.Geometry, val);
+        Assert.AreEqual("POINT(47.37 -122.21)", MyGeometry.ToString());
+      }
+    }
+
+
+    [Test]
+    public void CanSaveSridValueOnGeometry()
+    {
+      if (version.Major < 5) return;
+
+      execSQL("DROP TABLE IF EXISTS Test");
+      execSQL("CREATE TABLE Test (v Geometry NOT NULL)");
+
+      MySqlGeometry v = new MySqlGeometry(47.37, -122.21, 101);
+      var par = new MySqlParameter("?v", MySqlDbType.Geometry);
+      par.Value = v;
+
+      MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (?v)", conn);
+      cmd.Parameters.Add(par);
+      cmd.ExecuteNonQuery();
+
+      cmd.CommandText = "SELECT SRID(v) FROM Test";
+
+      using (MySqlDataReader reader = cmd.ExecuteReader())
+      {
+        reader.Read();
+        var val = reader.GetString(0);
+        Assert.AreEqual("101", val);
+      }
+    }
+
+
+    [Test]
+    public void CanFetchGeometryAsText()
+    {
+      if (version.Major < 5) return;
+
+      execSQL("DROP TABLE IF EXISTS Test");
+      execSQL("CREATE TABLE Test (v Geometry NOT NULL)");
+
+      MySqlGeometry v = new MySqlGeometry(47.37, -122.21);
+      var par = new MySqlParameter("?v", MySqlDbType.Geometry);
+      par.Value = v;
+
+      MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (?v)", conn);
+      cmd.Parameters.Add(par);
+      cmd.ExecuteNonQuery();
+
+      cmd.CommandText = "SELECT AsText(v) FROM Test";
+
+      using (MySqlDataReader reader = cmd.ExecuteReader())
+      {
+        reader.Read();
+        var val = reader.GetString(0);
+        Assert.AreEqual("POINT(47.37 -122.21)", val);
+      }
+    }
+
+    [Test]
+    public void CanUseReaderGetMySqlGeometry()
+    {
+      if (version.Major < 5) return;
+
+      execSQL("DROP TABLE IF EXISTS Test");
+      execSQL("CREATE TABLE Test (v Geometry NOT NULL)");
+
+      MySqlGeometry v = new MySqlGeometry(47.37, -122.21);
+      var par = new MySqlParameter("?v", MySqlDbType.Geometry);
+      par.Value = v;
+
+      MySqlCommand cmd = new MySqlCommand("INSERT INTO Test VALUES (?v)", conn);
+      cmd.Parameters.Add(par);
+      cmd.ExecuteNonQuery();
+
+      // reading as binary
+      cmd.CommandText = "SELECT AsBinary(v) as v FROM Test";     
+      using (MySqlDataReader reader = cmd.ExecuteReader())
+      {
+        reader.Read();
+        var val = reader.GetMySqlGeometry(0);
+        var valWithName = reader.GetMySqlGeometry("v");
+        Assert.AreEqual("POINT(47.37 -122.21)", val.ToString());
+        Assert.AreEqual("POINT(47.37 -122.21)", valWithName.ToString());
+      }
+
+      // reading as geometry
+      cmd.CommandText = "SELECT v as v FROM Test";
+      using (MySqlDataReader reader = cmd.ExecuteReader())
+      {
+        reader.Read();
+        var val = reader.GetMySqlGeometry(0);
+        var valWithName = reader.GetMySqlGeometry("v");
+        Assert.AreEqual("POINT(47.37 -122.21)", val.ToString());
+        Assert.AreEqual("POINT(47.37 -122.21)", valWithName.ToString());
+      }
+
+    }
+
+    public void CanGetToStringFromMySqlGeometry()
+    {
+      MySqlGeometry v = new MySqlGeometry(47.37, -122.21);
+      var valToString = v.ToString();
+      Assert.AreEqual("POINT(47.37 -122.21)", valToString);
+    }
+
+    #endregion
+#endif
     /// <summary>
     /// Bug #33322 Incorrect Double/Single value saved to MySQL database using MySQL Connector for  
     /// </summary>

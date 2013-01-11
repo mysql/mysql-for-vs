@@ -1,4 +1,4 @@
-// Copyright © 2004, 2011, Oracle and/or its affiliates. All rights reserved.
+// Copyright © 2004, 2013, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -61,6 +61,7 @@ namespace MySql.Data.MySqlClient
     IMySqlValue valueObject;
     private Encoding encoding;
     private IList possibleValues;
+    private const int GEOMETRY_LENGTH = 25;
 
     #region Constructors
 
@@ -409,6 +410,13 @@ namespace MySql.Data.MySqlClient
           g.OldGuids = settings.OldGuids;
           valueObject = g;
         }
+#if !CF
+        if (ValueObject.MySqlDbType == MySqlDbType.Geometry)
+        {
+          MySqlGeometry v = (MySqlGeometry)ValueObject;
+          valueObject = v;
+        }
+#endif
         ValueObject.WriteValue(packet, binary, paramValue, size);
       }
     }
@@ -570,6 +578,14 @@ namespace MySql.Data.MySqlClient
           mySqlDbType = MySqlDbType.Blob;
           break;
       }
+
+      if (dbType == DbType.Object)
+      {
+        var value = this.paramValue as byte[];
+        if (value != null && value.Length == GEOMETRY_LENGTH)
+          mySqlDbType = MySqlDbType.Geometry;
+      }
+
       valueObject = MySqlField.GetIMySqlValue(mySqlDbType);
     }
 

@@ -141,6 +141,7 @@
     <Compile Include="Types\MySqlDateTime.cs" />
     <Compile Include="Types\MySqlDecimal.cs" />
     <Compile Include="Types\MySqlDouble.cs" />
+    <Compile Include="Types\MySqlGeometry.cs" />
     <Compile Include="Types\MySqlGuid.cs" />
     <Compile Include="Types\MySqlInt16.cs" />
     <Compile Include="Types\MySqlInt32.cs" />
