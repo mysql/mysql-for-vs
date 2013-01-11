@@ -509,7 +509,9 @@ namespace MySql.Data.MySqlClient
           if (column.TypeUsage.EdmType.BaseType.Name.StartsWith("Int"))
             sql.Append(" AUTO_INCREMENT UNIQUE");
           else if (column.TypeUsage.EdmType.BaseType.Name == "Guid")
-            _guidIdentityColumns.Add(column.Name);          
+            _guidIdentityColumns.Add(column.Name);
+          else if (serverVersion >= new Version(5, 6) && column.TypeUsage.EdmType.BaseType.Name == "DateTime")
+            sql.AppendFormat(" DEFAULT CURRENT_TIMESTAMP{0}", fcDateTimePrecision != null && Convert.ToByte(fcDateTimePrecision.Value) >= 1 ? "( " + fcDateTimePrecision.Value.ToString() + " )" : "");                              
           else
             throw new MySqlException("Invalid identity column type.");
         }      
