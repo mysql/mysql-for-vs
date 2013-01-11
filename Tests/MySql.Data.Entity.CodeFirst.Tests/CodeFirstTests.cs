@@ -445,8 +445,7 @@ where table_schema = '{0}' and table_name = 'movies' and column_name = 'Price'",
         }
       }
     }
-   
-
+  
      /// <summary>
     /// SUPPORT FOR DATE TYPES WITH PRECISION
     /// </summary>
@@ -488,6 +487,42 @@ where table_schema = '{0}' and table_name = 'movies' and column_name = 'Price'",
         db.Database.Delete();
       }
     }
+
+    /// <summary>
+    /// Orabug #15935094 SUPPORT FOR CURRENT_TIMESTAMP AS DEFAULT FOR DATETIME WITH EF
+    /// </summary>
+    [Test]
+    public void CanDefineDateTimeAndTimestampWithIdentity()
+    {
+
+      if (Version < new Version(5, 6)) return;
+
+      using (var db = new ProductsDbContext())
+      {
+        db.Database.CreateIfNotExists();
+        Product product = new Product
+        {
+          //Omitting Identity Columns
+          DateTimeWithPrecision = DateTime.Now,
+          TimeStampWithPrecision = DateTime.Now
+        };
+
+        db.Products.Add(product);
+        db.SaveChanges();
+
+        var updateProduct = db.Products.First();
+        updateProduct.DateTimeWithPrecision = new DateTime(2012, 3, 18, 23, 9, 7, 6);
+        db.SaveChanges();
+
+        Assert.AreNotEqual(null, db.Products.First().Timestamp);
+        Assert.AreNotEqual(null, db.Products.First().DateCreated);
+        Assert.AreEqual(new DateTime(2012, 3, 18, 23, 9, 7, 6), db.Products.First().DateTimeWithPrecision);
+        Assert.AreEqual(1, db.Products.Count());
+
+        db.Database.Delete();
+      }
+    } 
+
   }
 }
 
