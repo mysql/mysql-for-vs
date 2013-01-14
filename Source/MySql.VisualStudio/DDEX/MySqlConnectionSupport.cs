@@ -1,4 +1,4 @@
-// Copyright © 2008, 2010, Oracle and/or its affiliates. All rights reserved.
+// Copyright © 2008, 2013, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -87,6 +87,14 @@ namespace MySql.Data.VisualStudio
         // Call base method first
         if (!base.Open(doPromptCheck))
           return false;
+
+        // Validates expired password
+        MySqlClient.MySqlConnection connection = base.Connection as MySqlClient.MySqlConnection;
+        if (connection.IsPasswordExpired)
+        {
+          MySqlNewPasswordDialog newPasswordDialog = new MySqlNewPasswordDialog(connection);
+          newPasswordDialog.ShowDialog();
+        }
       }
       catch (DbException)
       {

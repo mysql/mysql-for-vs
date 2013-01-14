@@ -483,6 +483,9 @@ namespace MySql.Data.MySqlClient
       if ((serverCaps & ClientFlags.CONNECT_ATTRS) != 0)
         flags |= ClientFlags.CONNECT_ATTRS;
 
+      if ((serverCaps & ClientFlags.CAN_HANDLE_EXPIRED_PASSWORD) != 0)
+        flags |= ClientFlags.CAN_HANDLE_EXPIRED_PASSWORD;
+
       connectionFlags = flags;
     }
 
