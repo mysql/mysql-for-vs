@@ -166,6 +166,13 @@ namespace MySql.Data.MySqlClient
       get { return (handler.Flags & ClientFlags.CONNECT_ATTRS) != 0; }
     }
 
+    public bool SupportsPasswordExpiration
+    {
+      get { return (handler.Flags & ClientFlags.CAN_HANDLE_EXPIRED_PASSWORD) != 0; }
+    }
+
+    public bool IsPasswordExpired { get; internal set; }
+
     #endregion
 
     public string Property(string key)
@@ -235,16 +242,29 @@ namespace MySql.Data.MySqlClient
 
         // if we are in a pool and the user has said it's ok to cache the
         // properties, then grab it from the pool
-        if (Pool != null && Settings.CacheServerProperties)
+        try
         {
-          if (Pool.ServerProperties == null)
-            Pool.ServerProperties = LoadServerProperties(connection);
-          serverProps = Pool.ServerProperties;
+          if (Pool != null && Settings.CacheServerProperties)
+          {
+            if (Pool.ServerProperties == null)
+              Pool.ServerProperties = LoadServerProperties(connection);
+            serverProps = Pool.ServerProperties;
+          }
+          else
+            serverProps = LoadServerProperties(connection);
+
+          LoadCharacterSets(connection);
         }
-        else
-          serverProps = LoadServerProperties(connection);
-        
-        LoadCharacterSets(connection);
+        catch (MySqlException ex)
+        {
+          // expired password capability
+          if (ex.Number == 1820)
+          {
+            IsPasswordExpired = true;
+            return;
+          }
+          throw;
+        }
       }
 
 
