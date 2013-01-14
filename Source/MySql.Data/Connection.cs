@@ -1,4 +1,4 @@
-// Copyright © 2004, 2011, Oracle and/or its affiliates. All rights reserved.
+// Copyright © 2004, 2013, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -277,6 +277,8 @@ namespace MySql.Data.MySqlClient
     }
 
 #endif
+
+    public bool IsPasswordExpired { get { return driver.IsPasswordExpired; } }
 
     #endregion
 
@@ -638,6 +640,9 @@ namespace MySql.Data.MySqlClient
     /// <include file='docs/MySqlConnection.xml' path='docs/Close/*'/>
     public override void Close()
     {
+      if (driver != null)
+        driver.IsPasswordExpired = false;
+
       if (State == ConnectionState.Closed) return;
 
       if (Reader != null)

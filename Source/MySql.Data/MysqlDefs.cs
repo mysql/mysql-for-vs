@@ -56,6 +56,7 @@ namespace MySql.Data.MySqlClient
     PS_MULTI_RESULTS = 1UL << 18,    // allow multi results using PS protocol
     PLUGIN_AUTH = (1UL << 19), //Client supports plugin authentication
     CONNECT_ATTRS = (1UL << 20),    // Allows client connection attributes
+    CAN_HANDLE_EXPIRED_PASSWORD  = (1UL << 22),   // Support for password expiration > 5.6.6
     CLIENT_SSL_VERIFY_SERVER_CERT = (1UL << 30),
     CLIENT_REMEMBER_OPTIONS = (1UL << 31)
   }

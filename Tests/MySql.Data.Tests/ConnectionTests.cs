@@ -1034,5 +1034,58 @@ namespace MySql.Data.MySqlClient.Tests
         }
       }
     }
+
+    /// <summary>
+    /// Test for password expiration feature in MySql Server 5.6 or higher
+    /// </summary>
+    [Test]
+    public void PasswordExpiration()
+    {
+      const string expireduser = "expireduser";
+      const string expiredhost = "localhost";
+      string expiredfull = string.Format("'{0}'@'{1}'", expireduser, expiredhost);
+
+      using (MySqlConnection conn = new MySqlConnection(GetConnectionString(rootUser, rootPassword, false)))
+      {
+        conn.Open();
+        if (Version >= new Version(5, 6, 0))
+        {
+          MySqlCommand cmd = new MySqlCommand("", conn);
+
+          // creates expired user
+          cmd.CommandText = string.Format("SELECT COUNT(*) FROM mysql.user WHERE user='{0}' AND host='{1}'", expireduser, expiredhost);
+          long count = (long)cmd.ExecuteScalar();
+          if (count > 0)
+            suExecSQL(string.Format("DROP USER " + expiredfull));
+
+          suExecSQL(string.Format("CREATE USER {0} IDENTIFIED BY '{1}1'", expiredfull, expireduser));
+          suExecSQL(string.Format("ALTER USER {0} PASSWORD EXPIRE", expiredfull));
+          conn.Close();
+
+          // validates expired user
+          conn.ConnectionString = GetConnectionString(expireduser, expireduser + "1", false);
+          conn.Open();
+          try
+          {
+            cmd.CommandText = "SELECT 1";
+            cmd.ExecuteScalar();
+            Assert.Fail();
+          }
+          catch (MySqlException ex)
+          {
+            Assert.AreEqual(1820, ex.Number);
+          }
+          cmd.CommandText = string.Format("SET PASSWORD = PASSWORD('{0}1')", expireduser);
+          cmd.ExecuteNonQuery();
+          conn.Close();
+
+          conn.Open();
+          cmd.CommandText = "SELECT 1";
+          cmd.ExecuteScalar();
+
+          suExecSQL(string.Format("DROP USER " + expiredfull));
+        }
+      }
+    }
   }
 }
