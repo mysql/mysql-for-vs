@@ -1,4 +1,5 @@
-// Copyright (c) 2004-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+// Copyright (c) 2004-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.,
+// 2013 Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -81,8 +82,8 @@ namespace MySql.Data.MySqlClient
     /// <returns></returns>
     public static byte[] Get411Password(string password, string seed)
     {
-      // if we have no password, then we just return 1 zero byte
-      if (password.Length == 0) return new byte[1];
+      // if we have no password, then we just return 2 zero bytes
+      if (password.Length == 0) return new byte[2];
 
       SHA1 sha = new SHA1CryptoServiceProvider(); 
 

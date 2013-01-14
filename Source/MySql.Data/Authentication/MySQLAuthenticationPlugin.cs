@@ -1,4 +1,4 @@
-﻿// Copyright © 2012, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2012, 2013, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -112,8 +112,6 @@ namespace MySql.Data.MySqlClient.Authentication
       {
         if (!String.IsNullOrEmpty(Settings.Database))
           packet.WriteString(Settings.Database);
-        else
-          packet.WriteString("");
       }
 
       if (reset)
@@ -122,6 +120,7 @@ namespace MySql.Data.MySqlClient.Authentication
       if ((Flags & ClientFlags.PLUGIN_AUTH) != 0)
         packet.WriteString(PluginName);
 
+      driver.SetConnectAttrs();
       driver.SendPacket(packet);
       //read server response
       packet = ReadPacket();

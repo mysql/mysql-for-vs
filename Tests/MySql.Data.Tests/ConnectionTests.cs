@@ -1,4 +1,4 @@
-// Copyright © 2004, 2011, Oracle and/or its affiliates. All rights reserved.
+// Copyright © 2004, 2011, 2013, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -286,7 +286,7 @@ namespace MySql.Data.MySqlClient.Tests
       // Create mapping for current Windows user=>foo_user
       String windowsUser = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
       windowsUser = windowsUser.Replace("\\", "\\\\");
-      string userMapping = "fergs, Administrators";
+      string userMapping = windowsUser + ", Administrators";
 
       try
       {
@@ -1002,5 +1002,37 @@ namespace MySql.Data.MySqlClient.Tests
       con.Close();
     }  
 #endif
+
+    /// <summary>
+    /// Test for Connect attributes feature used in MySql Server > 5.6.6
+    /// (Stores client connection data on server)
+    /// </summary>
+    [Test]
+    public void ConnectAttributes()
+    {
+      if (Version < new Version(5, 6, 6)) return;
+      using (MySqlConnection connection = new MySqlConnection(GetConnectionString(rootUser, rootPassword, false)))
+      {
+        connection.Open();
+        if (connection.driver.SupportsConnectAttrs)
+        {
+          MySqlCommand cmd = new MySqlCommand("SELECT * FROM performance_schema.session_connect_attrs WHERE PROCESSLIST_ID = connection_id()", connection);
+          MySqlDataReader dr = cmd.ExecuteReader();
+          Assert.True(dr.HasRows, "No session_connect_attrs found");
+          MySqlConnectAttrs connectAttrs = new MySqlConnectAttrs();
+          bool isValidated = false;
+          while (dr.Read())
+          {
+            if (dr.GetString(1) == "_client_name")
+            {
+              Assert.AreEqual(connectAttrs.ClientName, dr.GetString(2));
+              isValidated = true;
+              break;
+            }
+          }
+          Assert.True(isValidated, "Missing _client_version attribute");
+        }
+      }
+    }
   }
 }

@@ -1,4 +1,4 @@
-// Copyright © 2004, 2011, Oracle and/or its affiliates. All rights reserved.
+// Copyright © 2004, 2011, 2013, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -30,6 +30,8 @@ using System.Security.Cryptography.X509Certificates;
 using MySql.Data.MySqlClient.Properties;
 using System.Text;
 using MySql.Data.MySqlClient.Authentication;
+using System.Reflection;
+using System.ComponentModel;
 #if !CF
 using System.Net.Security;
 using System.Security.Authentication;
@@ -477,6 +479,10 @@ namespace MySql.Data.MySqlClient
       if ((serverCaps & ClientFlags.PLUGIN_AUTH) != 0)
         flags |= ClientFlags.PLUGIN_AUTH;
 
+      // if the server supports connection attributes
+      if ((serverCaps & ClientFlags.CONNECT_ATTRS) != 0)
+        flags |= ClientFlags.CONNECT_ATTRS;
+
       connectionFlags = flags;
     }
 
@@ -904,6 +910,27 @@ namespace MySql.Data.MySqlClient
         stream.ResetTimeout(timeout);
     }
 
+    internal void SetConnectAttrs()
+    {
+      // Sets connect attributes
+      if ((connectionFlags & ClientFlags.CONNECT_ATTRS) != 0)
+      {
+        string connectAttrs = string.Empty;
+        MySqlConnectAttrs attrs = new MySqlConnectAttrs();
+        foreach (PropertyInfo property in attrs.GetType().GetProperties())
+        {
+          string name = property.Name;
+          object[] customAttrs = property.GetCustomAttributes(typeof(DisplayNameAttribute), false);
+          if (customAttrs.Length > 0)
+            name = (customAttrs[0] as DisplayNameAttribute).DisplayName;
+
+          string value = (string)property.GetValue(attrs, null);
+          connectAttrs += string.Format("{0}{1}", (char)name.Length, name);
+          connectAttrs += string.Format("{0}{1}", (char)value.Length, value);
+        }
+        packet.WriteLenString(connectAttrs);
+      }
+    }
   }
 
 }

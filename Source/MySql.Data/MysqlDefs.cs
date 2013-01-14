@@ -1,4 +1,4 @@
-// Copyright © 2004, 2011, Oracle and/or its affiliates. All rights reserved.
+// Copyright © 2004, 2011, 2013, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -21,6 +21,9 @@
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 using System;
+using System.Reflection;
+using System.ComponentModel;
+using System.Security.Permissions;
 
 namespace MySql.Data.MySqlClient
 {
@@ -52,6 +55,7 @@ namespace MySql.Data.MySqlClient
     MULTI_RESULTS = 131072,         // Allow multiple resultsets
     PS_MULTI_RESULTS = 1UL << 18,    // allow multi results using PS protocol
     PLUGIN_AUTH = (1UL << 19), //Client supports plugin authentication
+    CONNECT_ATTRS = (1UL << 20),    // Allows client connection attributes
     CLIENT_SSL_VERIFY_SERVER_CERT = (1UL << 30),
     CLIENT_REMEMBER_OPTIONS = (1UL << 31)
   }
@@ -413,5 +417,115 @@ namespace MySql.Data.MySqlClient
     /// User certificate store for the machine
     /// </summary>
     LocalMachine
+  }
+
+  internal class MySqlConnectAttrs
+  {
+    [DisplayName("_client_name")]
+    public string ClientName
+    {
+      get { return "MySql Connector/NET"; }
+    }
+
+    [DisplayName("_pid")]
+    public string PID
+    {
+      get
+      {
+        string pid = string.Empty;
+        try
+        {
+          pid = System.Diagnostics.Process.GetCurrentProcess().Id.ToString();
+        }
+        catch (Exception ex) { System.Diagnostics.Debug.WriteLine(ex.ToString()); }
+
+        return pid;
+      }
+    }
+
+#if !CF
+
+    [DisplayName("_client_version")]
+    public string ClientVersion
+    {
+      get
+      {
+        string version = string.Empty;
+        try
+        {
+          version = Assembly.GetAssembly(typeof(MySqlConnectAttrs)).GetName().Version.ToString();
+        }
+        catch (Exception ex) { System.Diagnostics.Debug.WriteLine(ex.ToString()); }
+        return version;
+      }
+    }
+
+    [DisplayName("_platform")]
+    public string Platform
+    {
+#if CLR4
+      get { return Environment.Is64BitOperatingSystem ? "x64" : "x32"; }
+#else
+      get { return Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE") == "AMD64" ? "x64" : "x32"; }
+#endif
+    }
+
+    [DisplayName("program_name")]
+    public string ProgramName
+    {
+      get
+      {
+        string name = string.Empty;
+        name = Environment.CommandLine;
+        try
+        {
+          string path = Environment.CommandLine.Substring(0, Environment.CommandLine.IndexOf("\" ")).Trim('"');
+          name = System.IO.Path.GetFileName(path);
+          if (Assembly.GetEntryAssembly() != null)
+            name = Assembly.GetEntryAssembly().ManifestModule.Name;
+        }
+        catch (Exception ex) { System.Diagnostics.Debug.WriteLine(ex.ToString()); }
+        return name;
+      }
+    }
+
+    [DisplayName("_os")]
+    public string OS
+    {
+      get
+      {
+        string os = Environment.OSVersion.VersionString;
+        try
+        {
+          var searcher = new System.Management.ManagementObjectSearcher("SELECT * FROM Win32_OperatingSystem");
+          var collection = searcher.Get();
+          foreach (var mgtObj in collection)
+          {
+            os = mgtObj.GetPropertyValue("Caption").ToString();
+            break;
+          }
+        }
+        catch (Exception ex) { System.Diagnostics.Debug.WriteLine(ex.ToString()); }
+
+        return os;
+      }
+    }
+
+    [DisplayName("_thread")]
+    public string Thread
+    {
+      get
+      {
+        string thread = string.Empty;
+        try
+        {
+          thread = System.Diagnostics.Process.GetCurrentProcess().Threads[0].Id.ToString();
+        }
+        catch (Exception ex) { System.Diagnostics.Debug.WriteLine(ex.ToString()); }
+
+        return thread;
+      }
+    }
+#endif
   }
 }
