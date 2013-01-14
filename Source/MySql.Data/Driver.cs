@@ -1,4 +1,4 @@
-// Copyright © 2004, 2011, Oracle and/or its affiliates. All rights reserved.
+// Copyright © 2004, 2011, 2013, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -159,6 +159,11 @@ namespace MySql.Data.MySqlClient
     public bool SupportsBatch
     {
       get { return (handler.Flags & ClientFlags.MULTI_STATEMENTS) != 0; }
+    }
+
+    public bool SupportsConnectAttrs
+    {
+      get { return (handler.Flags & ClientFlags.CONNECT_ATTRS) != 0; }
     }
 
     #endregion
