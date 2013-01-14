@@ -86,6 +86,14 @@
     <Compile Include="..\..\..\Source\MySql.Data\Properties\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\Source\MySql.VisualStudio\DDEX\MySqlNewPasswordDialog.cs">
+      <Link>DDEX\MySqlNewPasswordDialog.cs</Link>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="..\..\..\Source\MySql.VisualStudio\DDEX\MySqlNewPasswordDialog.designer.cs">
+      <Link>DDEX\MySqlNewPasswordDialog.designer.cs</Link>
+      <DependentUpon>MySqlNewPasswordDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="..\..\..\Source\MySql.VisualStudio\Editors\BaseEditorControl.cs">
       <SubType>UserControl</SubType>
       <Link>Editors\BaseEditorControl.cs</Link>
@@ -417,6 +425,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="..\..\..\Source\MySql.VisualStudio\DDEX\MySqlDataViewSupport.xml">
       <Link>DDEX\MySqlDataViewSupport.xml</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\Source\MySql.VisualStudio\DDEX\MySqlNewPasswordDialog.resx">
+      <Link>DDEX\MySqlNewPasswordDialog.resx</Link>
+      <DependentUpon>MySqlNewPasswordDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="..\..\..\Source\MySql.VisualStudio\Editors\ConnectDialog.resx">
       <DependentUpon>ConnectDialog.cs</DependentUpon>
