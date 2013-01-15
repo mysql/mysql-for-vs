@@ -82,6 +82,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\Source\MySql.VisualStudio\DDEX\MySqlNewPasswordDialog.cs">
+      <Link>DDEX\MySqlNewPasswordDialog.cs</Link>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="..\..\..\Source\MySql.VisualStudio\DDEX\MySqlNewPasswordDialog.designer.cs">
+      <Link>DDEX\MySqlNewPasswordDialog.designer.cs</Link>
+      <DependentUpon>MySqlNewPasswordDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="..\..\..\Source\MySql.VisualStudio\Editors\BaseEditorControl.cs">
       <SubType>UserControl</SubType>
       <Link>Editors\BaseEditorControl.cs</Link>
@@ -136,6 +144,7 @@
     </Compile>
     <Compile Include="..\..\..\Source\MySql.VisualStudio\DDEX\MySqlConnectionUIControl.cs">
       <Link>DDEX\MySqlConnectionUIControl.cs</Link>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="..\..\..\Source\MySql.VisualStudio\DDEX\MySqlConnectionUIControl.designer.cs">
       <DependentUpon>MySqlConnectionUIControl.cs</DependentUpon>
@@ -143,6 +152,7 @@
     </Compile>
     <Compile Include="..\..\..\Source\MySql.VisualStudio\DDEX\MySqlDataConnectionPromptDialog.cs">
       <Link>DDEX\MySqlDataConnectionPromptDialog.cs</Link>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="..\..\..\Source\MySql.VisualStudio\DDEX\MySqlDataConnectionPromptDialog.Designer.cs">
       <DependentUpon>MySqlDataConnectionPromptDialog.cs</DependentUpon>
@@ -417,6 +427,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="..\..\..\Source\MySql.VisualStudio\DDEX\MySqlDataViewSupport.xml">
       <Link>DDEX\MySqlDataViewSupport.xml</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\Source\MySql.VisualStudio\DDEX\MySqlNewPasswordDialog.resx">
+      <Link>DDEX\MySqlNewPasswordDialog.resx</Link>
+      <DependentUpon>MySqlNewPasswordDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="..\..\..\Source\MySql.VisualStudio\Editors\ConnectDialog.resx">
       <DependentUpon>ConnectDialog.cs</DependentUpon>
