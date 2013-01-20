@@ -56,6 +56,7 @@
     <Compile Include="DDL\Alter\AlterServer.cs" />
     <Compile Include="DDL\Alter\AlterTable.cs" />
     <Compile Include="DDL\Alter\AlterTablespace.cs" />
+    <Compile Include="DDL\Alter\AlterUser.cs" />
     <Compile Include="DDL\Alter\AlterView.cs" />
     <Compile Include="DDL\Create\CreateDatabase.cs" />
     <Compile Include="DDL\Create\CreateEvent.cs" />
