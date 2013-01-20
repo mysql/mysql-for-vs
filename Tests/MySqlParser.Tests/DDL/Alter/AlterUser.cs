@@ -1,4 +1,4 @@
-﻿// Copyright © 2012, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2013, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -20,33 +20,36 @@
 // with this program; if not, write to the Free Software Foundation, Inc., 
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Antlr.Runtime;
-using Antlr.Runtime.Tree;
-using NUnit.Framework;
-using MySql.Parser;
-
 namespace MySql.Parser.Tests
 {
+  using System;
+  using System.Collections.Generic;
+  using System.Linq;
+  using System.Text;
+  using NUnit.Framework;
+  using Antlr.Runtime;
+  using Antlr.Runtime.Tree;
+  using MySql.Parser;
+
   [TestFixture]
-  public class AlterView
+  public class AlterUser
   {
-	[Test]
-	public void Simple()
-	{
+    [Test]
+    public void Simple()
+    {
+      StringBuilder sb;
       MySQL51Parser.program_return r = Utility.ParseSql(
-        @"ALTER VIEW `view1` AS 
-select `test2`.`t`.`Title` AS `title2`, * from `test2`.`t`");
-	}
+        @"ALTER USER 'jeffrey'@'localhost' PASSWORD EXPIRE;", false, out sb, new Version( 5, 6 ) );
+    }
 
     [Test]
-	public void Simple2()
-	{
+    public void Simple55()
+    {
+      StringBuilder sb;
       MySQL51Parser.program_return r = Utility.ParseSql(
-        @"ALTER VIEW v AS SELECT * FROM t;");
-	}
+        @"ALTER USER 'jeffrey'@'localhost' PASSWORD EXPIRE;", true, out sb, new Version(5, 5));
+      Assert.IsTrue( sb.ToString().IndexOf( "user", StringComparison.InvariantCultureIgnoreCase ) 
+        != -1 );
+    }
   }
 }
