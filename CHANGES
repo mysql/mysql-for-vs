@@ -7,6 +7,7 @@
 - Adding support for Geometry type. Unit Tests included. Supporting server 5.1 and further.
 - Added support for new connect attributes feature in server 5.6 (Oracle bug #15935112).
 - Added protocol support for password expiration (Oracle bug #15935104).
+- Added support for password hashing with appropriate strength for server 5.6 (Oracle bug #15935128).
 
 6.5.5
 - Fix for ArgumentNull exception when using Take().Count() in a LINQ to Entities query (bug MySql #64749, Oracle bug #13913047).

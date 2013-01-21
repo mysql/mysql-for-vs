@@ -50,6 +50,9 @@
     <DocumentationFile>bin\Release\MySql.Data.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="crypto">
+      <HintPath>lib\crypto.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Configuration.Install" />
