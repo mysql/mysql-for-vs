@@ -541,6 +541,7 @@ namespace MySql.Data.MySqlClient
 
     public byte[] GetSha256Password()
     {
+#if !CF
       if (Settings.SslMode != MySqlSslMode.None)
       {
         // send as clear text, since the channel is already encrypted
@@ -548,12 +549,15 @@ namespace MySql.Data.MySqlClient
       }
       else
       {
+#endif
         // send RSA encrypted, since the channel is not protected
         RequestSha256PublicKey();
         byte[] bytes = GetRsaPassword(Settings.Password, packet.Encoding.GetBytes( encryptionSeed ) );
         if (bytes != null && bytes.Length == 1 && bytes[0] == 0) return null;
         return bytes;
+#if !CF
       }
+#endif
     }
 
     private void RequestSha256PublicKey()
