@@ -50,6 +50,9 @@
     <DocumentationFile>bin\Release\MySql.Data.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="crypto">
+      <HintPath>lib\crypto.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Configuration.Install" />
@@ -67,6 +70,7 @@
     </Compile>
     <Compile Include="Authentication\MySQLAuthenticationPlugin.cs" />
     <Compile Include="Authentication\NativePasswordPlugins.cs" />
+    <Compile Include="Authentication\Sha256AuthenticationPlugin.cs" />
     <Compile Include="Authentication\WindowsAuthenticationPlugin.cs" />
     <Compile Include="BulkLoader.cs" />
     <Compile Include="CharSetMap.cs" />

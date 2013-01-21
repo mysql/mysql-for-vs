@@ -893,7 +893,7 @@ namespace MySql.Data.MySqlClient.Tests
     [Test]
     public void CanDefineCurrentTimeStampAsDefaultOnDateTime()
     {
-      if (Version < new Version(5, 6)) return;
+      if (Version < new Version(5, 6, 5)) return;
       MySqlCommand cmd = new MySqlCommand();
       cmd.CommandText = " CREATE TABLE t1 (id int, a DATETIME DEFAULT CURRENT_TIMESTAMP );";
       cmd.Parameters.Clear();

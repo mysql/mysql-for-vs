@@ -346,5 +346,39 @@ END;
       StringBuilder sb;
       MySQL51Parser.program_return r = Utility.ParseSql(sql, false, out sb, new Version( 5, 6 ));
     }
+
+    [Test]
+    public void WithBunchOfDeclares()
+    {
+      string sql = @"create procedure sp()
+  begin
+     DECLARE temp_timestamp datetime DEFAULT CURRENT_TIMESTAMP;     
+     DECLARE temp_news_type varchar(3);
+     DECLARE temp_news_id decimal(3);        
+     DECLARE temp_news_line varchar(80) character set big5; 
+     
+     DECLARE temp_start_time ,temp_end_time varchar(19);     
+          
+     DECLARE turnover_str varchar(30) character set big5 DEFAULT 'Short Sell Turnover';      
+     DECLARE shortsellz INT;
+     
+     DECLARE stock_code varchar(8);
+     DECLARE stock_code_is_num decimal(1);     
+     DECLARE stock_code_int decimal(5) DEFAULT 0;      
+     DECLARE shortsell_share_char,shortsell_turnover_char  varchar(15); 
+       
+     DECLARE shortsell_share_pre,shortsell_turnover_pre decimal(15);         
+     DECLARE temp_timestamp_out varchar(10);       
+     DECLARE temp_sub_line1 ,temp_sub_line2 varchar(70);      
+     DECLARE turnover_char_length,temp_sub_line1_length,temp_sub_length_a ,stock_code_include_x INT;         
+     DECLARE stock_code_include_v varchar(5); 
+     DECLARE non_designated_char varchar(1) DEFAULT 'N';
+     DECLARE stock_code_include_y INT;     
+     DECLARE stock_code_include_yv varchar(5); 
+     DECLARE non_HKD_char varchar(1) DEFAULT 'N';
+  end;";
+      StringBuilder sb;
+      MySQL51Parser.program_return r = Utility.ParseSql(sql, false, out sb);
+    }
   }
 }

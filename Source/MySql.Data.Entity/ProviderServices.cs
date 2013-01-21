@@ -237,8 +237,9 @@ namespace MySql.Data.MySqlClient
       MySqlConnection conn = connection as MySqlConnection;
       if (conn == null)
         throw new ArgumentException(Resources.ConnectionMustBeOfTypeMySqlConnection, "connection");
-
-      string query = DbCreateDatabaseScript(null, storeItemCollection);
+      // Ensure a valid provider manifest token.
+      string providerManifestToken = this.GetDbProviderManifestToken(connection);
+      string query = DbCreateDatabaseScript(providerManifestToken, storeItemCollection);
 
       using (MySqlConnection c = new MySqlConnection())
       {
