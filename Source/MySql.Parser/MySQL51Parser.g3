@@ -1,4 +1,4 @@
-﻿// Copyright © 2012, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2013, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -142,6 +142,7 @@ statement options { backtrack=true; memoize=true; }
 		|	alter_tablespace		
 		|   alter_server
 		|	alter_view
+		|	alter_user
 		|   analyze_table
 		|   backup_table
 		|   binlog
@@ -3260,4 +3261,9 @@ get_diagnostics_target
 get_diagnostics_condition_info_item
   : get_diagnostics_target EQUALS ( CLASS_ORIGIN | SUBCLASS_ORIGIN | RETURNED_SQLSTATE | MESSAGE_TEXT | MYSQL_ERRNO | CONSTRAINT_CATALOG |
   CONSTRAINT_SCHEMA | CONSTRAINT_NAME | CATALOG_NAME | SCHEMA_NAME | TABLE_NAME | COLUMN_NAME | CURSOR_NAME )
+  ;
+
+alter_user
+  : { this.mysqlVersion >= 5.6 }? /* actually available since ver 5.6.6 */ =>  
+  ALTER USER user_specification PASSWORD EXPIRE ( COMMA user_specification PASSWORD EXPIRE )*
   ;
