@@ -1048,7 +1048,7 @@ namespace MySql.Data.MySqlClient.Tests
       using (MySqlConnection conn = new MySqlConnection(GetConnectionString(rootUser, rootPassword, false)))
       {
         conn.Open();
-        if (Version >= new Version(5, 6, 0))
+        if (Version >= new Version(5, 6, 6))
         {
           MySqlCommand cmd = new MySqlCommand("", conn);
 
@@ -1084,6 +1084,10 @@ namespace MySql.Data.MySqlClient.Tests
           cmd.ExecuteScalar();
 
           suExecSQL(string.Format("DROP USER " + expiredfull));
+        }
+        else
+        {
+          System.Diagnostics.Debug.Write("Password expire not supported in this server version.");
         }
       }
     }
