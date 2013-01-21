@@ -53,6 +53,10 @@
     <NoWarn>1699</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="crypto, Version=1.7.4757.20023, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\MySql.Data\lib\crypto.dll</HintPath>
+    </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -67,6 +71,9 @@
     </Compile>
     <Compile Include="..\..\..\Source\MySql.Data\Authentication\NativePasswordPlugins.cs">
       <Link>Authentication\NativePasswordPlugins.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Source\MySql.Data\Authentication\Sha256AuthenticationPlugin.cs">
+      <Link>Authentication\Sha256AuthenticationPlugin.cs</Link>
     </Compile>
     <Compile Include="..\..\..\Source\MySql.Data\Properties\AssemblyInfo.cs">
       <Link>Properties\AssemblyInfo.cs</Link>

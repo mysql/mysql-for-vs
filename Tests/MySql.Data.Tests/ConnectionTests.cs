@@ -22,6 +22,7 @@
 
 using System;
 using System.Data;
+using System.Diagnostics;
 using MySql.Data.MySqlClient;
 using MySql.Data.MySqlClient.Properties;
 using NUnit.Framework;
@@ -71,6 +72,186 @@ namespace MySql.Data.MySqlClient.Tests
       Assert.AreEqual(true, c.UseCompression, "Use Compression");
       Assert.AreEqual(System.Data.ConnectionState.Closed, c.State, "State");
     }
+
+/*
+    [Test]
+    public void TestSha256SecurityWithoutSSL()
+    {
+      if (Version < new Version(5, 6, 6))
+      {
+        Debug.WriteLine("No Sha256 authentication, server version does not support it.");
+        return;
+      }
+
+      const string PluginName = "sha256_password";
+
+      // Check if server has windows authentication plugin is installed			
+      MySqlCommand cmd = new MySqlCommand("show plugins", rootConn);
+
+      bool haveSha256Auth = false;
+      using (MySqlDataReader r = cmd.ExecuteReader())
+      {
+        while (r.Read())
+        {
+          string name = (string)r["Name"];
+          if (name == PluginName)
+          {
+            haveSha256Auth = true;
+            break;
+          }
+        }
+      }
+
+      if (!haveSha256Auth)
+      {
+        Debug.WriteLine("No Sha256 authentication, server version does not support it.");
+        return;
+      }
+
+      // setup account
+      string user = "mytester256";
+      bool userExists = false;
+      cmd.CommandText = string.Format(
+        "select count( * ) from mysql.user where user = '{0}' and host = 'localhost'", user);
+      using (MySqlDataReader r = cmd.ExecuteReader())
+      {
+        r.Read();
+        if (Convert.ToInt32(r.GetValue(0)) != 0)
+        {
+          userExists = true;
+        }
+      }
+
+      if (userExists)
+      {
+        ExecuteSQLAsRoot(string.Format("drop user '{0}'@'localhost';", user));
+      }
+
+      ExecuteSQLAsRoot(string.Format("create user '{0}'@'localhost' identified by 'sha256_password';", user));
+      try
+      {
+        cmd.CommandText = "show variables like 'old_passwords'";
+        int oldValOldPasswords = 0;
+        using (MySqlDataReader r = cmd.ExecuteReader())
+        {
+          r.Read();
+          oldValOldPasswords = Convert.ToInt32(r.GetValue(1));
+        }
+        ExecuteSQLAsRoot("set old_passwords = 2;");
+        ExecuteSQLAsRoot(string.Format("set password for '{0}'@'localhost' = password( '123' );", user));
+        ExecuteSQLAsRoot(string.Format("set old_passwords = {0};", oldValOldPasswords));
+
+        string connstr = GetConnectionString(true);
+        using (MySqlConnection c = new MySqlConnection(connstr))
+        {
+          ExecuteSQLAsRoot(string.Format("grant all on `{0}`.* to '{1}'@'localhost';",
+            c.Settings.Database, user));
+          c.Settings.UserID = user;
+          c.Settings.Password = "123";
+          c.Open();
+          Assert.AreEqual(ConnectionState.Open, c.State);
+        }
+      }
+      finally
+      {
+        // cleanup
+        ExecuteSQLAsRoot(string.Format("drop user '{0}'@'localhost'", user));
+      }
+    }
+
+    [Test]
+    public void TestSha256SecurityWithSSL()
+    {
+      if (Version < new Version(5, 6, 6))
+      {
+        Debug.WriteLine("No Sha256 authentication, server version does not support it.");
+        return;
+      }
+
+      const string PluginName = "sha256_password";
+
+      // Check if server has windows authentication plugin is installed			
+      MySqlCommand cmd = new MySqlCommand("show plugins", rootConn);
+
+      bool haveSha256Auth = false;
+      using (MySqlDataReader r = cmd.ExecuteReader())
+      {
+        while (r.Read())
+        {
+          string name = (string)r["Name"];
+          if (name == PluginName)
+          {
+            haveSha256Auth = true;
+            break;
+          }
+        }
+      }
+
+      if (!haveSha256Auth)
+      {
+        Debug.WriteLine("No Sha256 authentication, server version does not support it.");
+        return;
+      }
+
+      // setup account
+      string user = "mytester256";
+      bool userExists = false;
+      cmd.CommandText = string.Format(
+        "select count( * ) from mysql.user where user = '{0}' and host = 'localhost'", user);
+      using (MySqlDataReader r = cmd.ExecuteReader())
+      {
+        r.Read();
+        if (Convert.ToInt32(r.GetValue(0)) != 0)
+        {
+          userExists = true;
+        }
+      }
+
+      if (userExists)
+      {
+        ExecuteSQLAsRoot(string.Format("drop user '{0}'@'localhost';", user));
+      }
+
+      ExecuteSQLAsRoot(string.Format("create user '{0}'@'localhost' identified by 'sha256_password';", user));
+      try
+      {
+        cmd.CommandText = "show variables like 'old_passwords'";
+        int newValOldPasswords, oldValOldPasswords = 0;
+        using (MySqlDataReader r = cmd.ExecuteReader())
+        {
+          r.Read();
+          oldValOldPasswords = Convert.ToInt32(r.GetValue(1));
+        }
+
+        // 
+        ExecuteSQLAsRoot("set old_passwords = 2;");
+        using (MySqlDataReader r = cmd.ExecuteReader())
+        {
+          r.Read();
+          newValOldPasswords = Convert.ToInt32(r.GetValue(1));
+        }
+
+        ExecuteSQLAsRoot(string.Format("set password for '{0}'@'localhost' = password( '123' );", user));
+        ExecuteSQLAsRoot(string.Format("set old_passwords = {0};", oldValOldPasswords));
+
+        string connstr = GetConnectionString(true);
+        connstr += ";CertificateFile=client.pfx;CertificatePassword=pass;SSL Mode=Required;";
+        using (MySqlConnection c = new MySqlConnection(connstr))
+        {
+          ExecuteSQLAsRoot(string.Format("grant all on `{0}`.* to '{1}'@'localhost';",
+            c.Settings.Database, user));
+          c.Settings.UserID = user;
+          c.Settings.Password = "123";
+          c.Open();
+          Assert.AreEqual(ConnectionState.Open, c.State);
+        }
+      }
+      finally
+      {
+        // cleanup
+        ExecuteSQLAsRoot(string.Format("drop user '{0}'@'localhost'", user));
+      }
+    } //*/   
 
 #if !CF  //No Security.Principal on CF
 
@@ -1048,7 +1229,7 @@ namespace MySql.Data.MySqlClient.Tests
       using (MySqlConnection conn = new MySqlConnection(GetConnectionString(rootUser, rootPassword, false)))
       {
         conn.Open();
-        if (Version >= new Version(5, 6, 0))
+        if (Version >= new Version(5, 6, 6))
         {
           MySqlCommand cmd = new MySqlCommand("", conn);
 
@@ -1084,6 +1265,10 @@ namespace MySql.Data.MySqlClient.Tests
           cmd.ExecuteScalar();
 
           suExecSQL(string.Format("DROP USER " + expiredfull));
+        }
+        else
+        {
+          System.Diagnostics.Debug.Write("Password expire not supported in this server version.");
         }
       }
     }
