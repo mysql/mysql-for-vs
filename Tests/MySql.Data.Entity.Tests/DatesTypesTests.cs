@@ -38,7 +38,7 @@ namespace MySql.Data.Entity.Tests
    [Test] 
    public void CanCreateDBScriptWithDateTimePrecision()
    {
-     if (Version < new Version(5, 6)) return;
+     if (Version < new Version(5, 6, 5)) return;
 
      MySqlConnection c = new MySqlConnection(conn.ConnectionString);
      c.Open();     
