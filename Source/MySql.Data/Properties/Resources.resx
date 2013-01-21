@@ -502,4 +502,7 @@
   <data name="ParameterIndexNotFound" xml:space="preserve">
     <value>Parameter index was not found in Parameter Collection.</value>
   </data>
+  <data name="OldPasswordsNotSupported" xml:space="preserve">
+    <value>Authentication with old password no longer supported, use 4.1 style passwords.</value>
+  </data>
 </root>

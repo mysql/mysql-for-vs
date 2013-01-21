@@ -1272,5 +1272,78 @@ namespace MySql.Data.MySqlClient.Tests
         }
       }
     }
+
+    /// <summary>
+    /// As part of feedback from bug http://bugs.mysql.com/bug.php?id=66647 (Arithmetic operation resulted in an overflow).
+    /// </summary>
+    [Test]
+    public void OldPasswordNotSupported()
+    {
+      //get value of flag 'old_passwords'
+      MySqlConnection con = new MySqlConnection(GetConnectionString(true));
+      MySqlCommand cmd = new MySqlCommand("show variables like 'old_passwords'", con);
+      string db = con.Settings.Database;
+      con.Open();
+      MySqlDataReader r = cmd.ExecuteReader();
+      r.Read();
+      object o = r.GetValue(1);
+      if (o.ToString() == "OFF")
+        o = "0";
+      int old_passwords = Convert.ToInt32( o );
+      r.Close();
+      con.Close();
+      if (old_passwords == 0)
+      {
+        //System.Diagnostics.Debug.Write("This test must be ran with old_passwords=0");
+        ExecuteSQLAsRoot("set old_passwords=1;");
+        //return;
+      }
+      // create user
+      cmd.CommandText = "select count( * ) from mysql.user where user = 'myoldpassuser' and host = 'localhost'";
+      cmd.Connection = rootConn;
+      int n = Convert.ToInt32(cmd.ExecuteScalar());
+      if (n != 0)
+      {
+        ExecuteSQLAsRoot("drop user 'myoldpassuser'@'localhost'");
+      }
+      // user with old password is different depending upon the version.
+      if (Version.Minor >= 6 )
+      {
+        ExecuteSQLAsRoot("create user 'myoldpassuser'@'localhost' IDENTIFIED with 'mysql_old_password'");
+      }
+      else
+      {
+        ExecuteSQLAsRoot("create user 'myoldpassuser'@'localhost' ");
+      }
+      bool bExceptionThrown = false;
+      try
+      {
+        // setup user with old password, attempt to open connection with it, must fail
+        ExecuteSQLAsRoot(string.Format("grant all on `{0}`.* to 'myoldpassuser'@'localhost'", db));
+        ExecuteSQLAsRoot("set password for 'myoldpassuser'@'localhost' = old_password( '123' )");
+        con.Settings.UserID = "myoldpassuser";
+        con.Settings.Password = "123";
+        con.Open();
+        con.Close();
+      }
+      catch (MySqlException e )
+      {
+        Assert.AreEqual( Resources.OldPasswordsNotSupported, e.Message);
+        bExceptionThrown = true;
+      }
+      catch (Exception)
+      {
+        Assert.Fail();
+      }
+      finally
+      {
+        if (old_passwords == 0)
+        {
+          ExecuteSQLAsRoot("set old_passwords=0;");
+        }
+        ExecuteSQLAsRoot("drop user 'myoldpassuser'@'localhost'");
+        Assert.AreEqual(true, bExceptionThrown);
+      }
+    }
   }
 }

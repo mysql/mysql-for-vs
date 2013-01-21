@@ -43,6 +43,11 @@ namespace MySql.Data.MySqlClient.Authentication
     /// <returns></returns>
     internal static MySqlAuthenticationPlugin GetPlugin(string method, NativeDriver driver, byte[] authData)
     {
+      if (method == "mysql_old_password")
+      {
+        driver.Close(true);
+        throw new MySqlException(Resources.OldPasswordsNotSupported);
+      }
       MySqlAuthenticationPlugin plugin = AuthenticationPluginManager.GetPlugin(method);
       if (plugin == null)
         throw new MySqlException(String.Format(Resources.UnknownAuthenticationMethod, method));
@@ -127,7 +132,17 @@ namespace MySql.Data.MySqlClient.Authentication
       packet = ReadPacket();
       byte[] b = packet.Buffer;
       if (b[0] == 0xfe)
-        HandleAuthChange(packet);
+      {
+        if (packet.IsLastPacket)
+        {
+          driver.Close(true);
+          throw new MySqlException( Resources.OldPasswordsNotSupported );
+        }
+        else
+        {
+          HandleAuthChange(packet);
+        }
+      }
       driver.ReadOk(false);
       AuthenticationSuccessful();
     }
