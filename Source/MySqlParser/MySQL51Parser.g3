@@ -2118,10 +2118,10 @@ data_type
 		|	type=DECIMAL
 		|	type=NUMERIC
 		)
-		(LPAREN num1=INT_NUMBER COMMA num2=INT_NUMBER RPAREN )?
+		(LPAREN num1=INT_NUMBER ( COMMA num2=INT_NUMBER )? RPAREN )?
 		(SIGNED | UNSIGNED )?
 		(ZEROFILL )?
-		-> ^( DATA_TYPE $type ^( LPAREN $num1 $num2 )? SIGNED? UNSIGNED? ZEROFILL? )	
+		-> ^( DATA_TYPE $type ^( LPAREN $num1 $num2? )? SIGNED? UNSIGNED? ZEROFILL? )	
 	|	DATETIME datetime_precision? -> ^( DATA_TYPE DATETIME datetime_precision?)			
 	|	DATE		-> ^( DATA_TYPE DATE )
 	|	TIME datetime_precision? -> ^( DATA_TYPE TIME datetime_precision?)
