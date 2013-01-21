@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using MySql.Data.Common;
@@ -36,6 +37,9 @@ using System.Net.Security;
 using System.Security.Authentication;
 using System.Globalization;
 #endif
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Engines;
+using Org.BouncyCastle.OpenSsl;
 
 namespace MySql.Data.MySqlClient
 {
@@ -62,6 +66,8 @@ namespace MySql.Data.MySqlClient
 
     // Predefined username for IntegratedSecurity
     const string AuthenticationWindowsUser = "auth_windows";
+
+    private string _authPluginMethod;
 
     public NativeDriver(Driver owner)
     {
@@ -249,7 +255,7 @@ namespace MySql.Data.MySqlClient
       string authenticationMethod = "";
       if ((serverCaps & ClientFlags.PLUGIN_AUTH) != 0)
       {
-        authenticationMethod = packet.ReadString();
+        _authPluginMethod = authenticationMethod = packet.ReadString();
       }
 
       // based on our settings, set our connection flags
@@ -515,6 +521,96 @@ namespace MySql.Data.MySqlClient
       ReadOk(false);
     }
 
+    #region SHA256 implementation
+
+    private AsymmetricCipherKeyPair publicKey;
+
+    private void AuthenticateSha256()
+    {
+      // Do SHA256 authentication
+      byte[] passBytes = GetSha256Password();
+      byte[] buffer = new byte[passBytes.Length + 1];
+      Array.Copy(passBytes, 0, buffer, 0, passBytes.Length);
+      buffer[passBytes.Length] = 0;
+      packet.Clear();
+      packet.Write(buffer);
+      stream.SendPacket(packet);
+      packet = stream.ReadPacket();
+      ReadOk(false);
+    }
+
+    public byte[] GetSha256Password()
+    {
+      if (Settings.SslMode != MySqlSslMode.None)
+      {
+        // send as clear text, since the channel is already encrypted
+        return Encoding.Default.GetBytes(Settings.Password);
+      }
+      else
+      {
+        // send RSA encrypted, since the channel is not protected
+        RequestSha256PublicKey();
+        byte[] bytes = GetRsaPassword(Settings.Password, packet.Encoding.GetBytes( encryptionSeed ) );
+        if (bytes != null && bytes.Length == 1 && bytes[0] == 0) return null;
+        return bytes;
+      }
+    }
+
+    private void RequestSha256PublicKey()
+    {
+      // send 0x01 packet, get the public key in PEM format (which is not the same than salted seed).
+      packet.Clear();
+      byte[] data = new byte[] { 0x01 };
+      Array.Copy(data, 0, packet.Buffer, 0, data.Length);
+      stream.SendPacket(packet);
+      packet = stream.ReadPacket();
+      byte[] rawPubkey = packet.Buffer;
+      AsymmetricCipherKeyPair keys = GenerateKeysFromPem(rawPubkey);
+      publicKey = keys;
+    }
+
+    private AsymmetricCipherKeyPair GenerateKeysFromPem(byte[] rawData)
+    {
+      PemReader pem = new PemReader(new StreamReader(new MemoryStream(rawData)));
+      AsymmetricCipherKeyPair keyPair = (AsymmetricCipherKeyPair)pem.ReadObject();
+      return keyPair;
+    }
+
+    private byte[] GetRsaPassword(string password, byte[] seedBytes)
+    {
+      // Obfuscate the plain text password with the session scramble
+      byte[] ofuscated = GetSha256Xor(Encoding.Default.GetBytes(password), seedBytes);
+      // Encrypt the password and send it to the server
+      byte[] result = RsaEncrypt(ofuscated, publicKey.Public);
+      return result;
+    }
+
+    private byte[] GetSha256Xor(byte[] src, byte[] pattern)
+    {
+      byte[] result = new byte[src.Length];
+      for (int i = 0; i < src.Length; i++)
+      {
+        result[i] = (byte)(src[i] ^ (pattern[i % pattern.Length]));
+      }
+      return result;
+    }
+
+    private byte[] RsaEncrypt(byte[] data, AsymmetricKeyParameter key)
+    {
+      RsaEngine e = new RsaEngine();
+      e.Init(true, key);
+      int bsize = e.GetInputBlockSize();
+      List<byte> output = new List<byte>();
+      for (int i = 0; i < data.Length; i += bsize)
+      {
+        int chunkSize = Math.Min(bsize, data.Length - (i * bsize));
+        output.AddRange(e.ProcessBlock(data, i, chunkSize));
+      }
+      return output.ToArray();
+    }
+
+    #endregion
+
     /// <summary>
     /// Perform an authentication against a 4.1.1 server
     /// <param name="reset">
@@ -525,13 +621,17 @@ namespace MySql.Data.MySqlClient
     /// </summary>
     private void AuthenticateNew(bool reset)
     {
+      if (_authPluginMethod == "sha256_password")
+      {
+        AuthenticateSha256();
+        return;
+      }
       if ((connectionFlags & ClientFlags.SECURE_CONNECTION) == 0)
         AuthenticateOld();
 
       packet.Write(Crypt.Get411Password(Settings.Password, encryptionSeed));
       if ((connectionFlags & ClientFlags.CONNECT_WITH_DB) != 0 && Settings.Database != null)
         packet.WriteString(Settings.Database);
-
 
       if (Settings.IntegratedSecurity)
       {
