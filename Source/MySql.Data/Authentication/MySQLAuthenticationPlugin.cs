@@ -117,8 +117,6 @@ namespace MySql.Data.MySqlClient.Authentication
       {
         if (!String.IsNullOrEmpty(Settings.Database))
           packet.WriteString(Settings.Database);
-        else
-          packet.WriteString("");
       }
 
       if (reset)
@@ -127,6 +125,7 @@ namespace MySql.Data.MySqlClient.Authentication
       if ((Flags & ClientFlags.PLUGIN_AUTH) != 0)
         packet.WriteString(PluginName);
 
+      driver.SetConnectAttrs();
       driver.SendPacket(packet);
       //read server response
       packet = ReadPacket();
