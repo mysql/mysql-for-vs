@@ -2433,7 +2433,7 @@ drop_table
 	;
 	catch[ NoViableAltException nvae ] 
 	{
-		if( nvae.DecisionNumber == 543 )
+		if( nvae.DecisionNumber == 544 )
 		{
 			nvae = new NoViableAltException( 
 				"simple_table_ref_no_alias_existing", 
@@ -2675,7 +2675,7 @@ sp_call options { backtrack=true; memoize=true; }
 	;
 	catch[ NoViableAltException nvae ] 
 	{
-		if( nvae.DecisionNumber == 586 )
+		if( nvae.DecisionNumber == 587 )
 		{
 			nvae = new NoViableAltException( 
 					"proc_name", 
