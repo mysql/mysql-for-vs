@@ -1280,7 +1280,8 @@ namespace MySql.Data.MySqlClient.Tests
     public void OldPasswordNotSupported()
     {
       //get value of flag 'old_passwords'
-      MySqlConnection con = new MySqlConnection(GetConnectionString(true));
+      MySqlConnectionStringBuilder csb = new MySqlConnectionStringBuilder(GetConnectionString(true));
+      MySqlConnection con = new MySqlConnection( csb.ToString() );
       MySqlCommand cmd = new MySqlCommand("show variables like 'old_passwords'", con);
       string db = con.Settings.Database;
       con.Open();
@@ -1321,8 +1322,11 @@ namespace MySql.Data.MySqlClient.Tests
         // setup user with old password, attempt to open connection with it, must fail
         ExecuteSQLAsRoot(string.Format("grant all on `{0}`.* to 'myoldpassuser'@'localhost'", db));
         ExecuteSQLAsRoot("set password for 'myoldpassuser'@'localhost' = old_password( '123' )");
-        con.Settings.UserID = "myoldpassuser";
-        con.Settings.Password = "123";
+        //con.Settings.UserID = "myoldpassuser";
+        //con.Settings.Password = "123";
+        csb.UserID = "myoldpassuser";
+        csb.Password = "123";
+        con.ConnectionString = csb.ToString();
         con.Open();
         con.Close();
       }
