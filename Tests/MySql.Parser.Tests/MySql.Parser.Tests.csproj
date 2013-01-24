@@ -8,8 +8,8 @@
     <ProjectGuid>{247973E1-8535-4930-8940-83B06097D5DA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MySqlParser.Tests</RootNamespace>
-    <AssemblyName>MySqlParser.Tests</AssemblyName>
+    <RootNamespace>MySql.Parser.Tests</RootNamespace>
+    <AssemblyName>MySql.Parser.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
