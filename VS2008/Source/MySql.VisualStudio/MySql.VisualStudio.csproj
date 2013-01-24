@@ -59,9 +59,7 @@
     <Reference Include="EnvDTE80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.Data.ConnectionUI, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.CommandBars, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <Reference Include="Microsoft.VisualStudio.Data, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio 8\Common7\IDE\Microsoft.VisualStudio.Data.dll</HintPath>
-    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Data, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.Package.LanguageService, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Shell, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
@@ -91,15 +89,7 @@
     <Compile Include="..\..\..\Source\MySql.VisualStudio\DDEX\MySqlNewPasswordDialog.designer.cs">
       <Link>DDEX\MySqlNewPasswordDialog.designer.cs</Link>
       <DependentUpon>MySqlNewPasswordDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\..\..\Source\MySql.VisualStudio\DDEX\MySqlNewPasswordDialog.cs">
-      <Link>DDEX\MySqlNewPasswordDialog.cs</Link>
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="..\..\..\Source\MySql.VisualStudio\DDEX\MySqlNewPasswordDialog.designer.cs">
-      <Link>DDEX\MySqlNewPasswordDialog.designer.cs</Link>
-      <DependentUpon>MySqlNewPasswordDialog.cs</DependentUpon>
-    </Compile>
+    </Compile>  
     <Compile Include="..\..\..\Source\MySql.VisualStudio\Editors\BaseEditorControl.cs">
       <SubType>UserControl</SubType>
       <Link>Editors\BaseEditorControl.cs</Link>
@@ -503,24 +493,21 @@
     <None Include="..\..\..\Source\MySql.VisualStudio\Resources\bannrbmp.bmp">
       <Link>Resources\bannrbmp.bmp</Link>
     </None>
-    <None Include="..\..\..\Source\MySql.VisualStudio\Resources\sql_editor_connect.bmp">
-      <Link>Resources\sql_editor_connect.bmp</Link>
-    </None>
-    <None Include="..\..\..\Source\MySql.VisualStudio\Resources\sql_editor_runsql.bmp">
-      <Link>Resources\sql_editor_runsql.bmp</Link>
-    </None>
-    <None Include="..\..\..\Source\MySql.VisualStudio\Resources\sql_editor_validatesql.bmp">
-      <Link>Resources\sql_editor_validatesql.bmp</Link>
-    </None>
-    <None Include="..\..\..\Source\MySql.VisualStudio\Resources\sql_editor_executionplan.bmp">
-      <Link>Resources\sql_editor_executionplan.bmp</Link>
-    </None>
     <None Include="..\..\..\Source\MySql.VisualStudio\Resources\sql_editor_banner.bmp">
       <Link>Resources\sql_editor_banner.bmp</Link>
     </None>
-    <None Include="..\..\..\Source\MySql.VisualStudio\Resources\sql_editor_disconnect.bmp">
-      <Link>Resources\sql_editor_disconnect.bmp</Link>
-    </None>
+    <Content Include="..\..\..\Source\MySql.VisualStudio\Resources\sql_editor_disconnect.png">
+      <Link>Resources\sql_editor_disconnect.png</Link>
+    </Content>
+    <Content Include="..\..\..\Source\MySql.VisualStudio\Resources\sql_editor_executionplan.png">
+      <Link>Resources\sql_editor_executionplan.png</Link>
+    </Content>
+    <Content Include="..\..\..\Source\MySql.VisualStudio\Resources\sql_editor_runsql.png">
+      <Link>Resources\sql_editor_runsql.png</Link>
+    </Content>
+    <Content Include="..\..\..\Source\MySql.VisualStudio\Resources\sql_editor_validatesql.png">
+      <Link>Resources\sql_editor_validatesql.png</Link>
+    </Content>
     <Content Include="..\..\..\Source\MySql.VisualStudio\Templates\MySQL Script.mysql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Link>Templates\MySQL Script.mysql</Link>
