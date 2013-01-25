@@ -73,7 +73,7 @@ namespace MySql.Data.MySqlClient.Tests
       Assert.AreEqual(System.Data.ConnectionState.Closed, c.State, "State");
     }
 
-/*
+    //*
     [Test]
     public void TestSha256SecurityWithoutSSL()
     {
@@ -127,7 +127,7 @@ namespace MySql.Data.MySqlClient.Tests
         ExecuteSQLAsRoot(string.Format("drop user '{0}'@'localhost';", user));
       }
 
-      ExecuteSQLAsRoot(string.Format("create user '{0}'@'localhost' identified by 'sha256_password';", user));
+      ExecuteSQLAsRoot(string.Format("create user '{0}'@'localhost' identified with sha256_password;", user));
       try
       {
         cmd.CommandText = "show variables like 'old_passwords'";
@@ -212,7 +212,7 @@ namespace MySql.Data.MySqlClient.Tests
         ExecuteSQLAsRoot(string.Format("drop user '{0}'@'localhost';", user));
       }
 
-      ExecuteSQLAsRoot(string.Format("create user '{0}'@'localhost' identified by 'sha256_password';", user));
+      ExecuteSQLAsRoot(string.Format("create user '{0}'@'localhost' identified with sha256_password;", user));
       try
       {
         cmd.CommandText = "show variables like 'old_passwords'";
