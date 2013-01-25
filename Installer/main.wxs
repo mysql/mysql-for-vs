@@ -171,6 +171,8 @@
         <File Id="SecureHash" Name="license-us-secure-hash.html" Source="..\Documentation\Licenses for Third-Party Components\license-us-secure-hash.html" DiskId="1"/>
         <File Id="Zlib" Name="license-zlib.html" Source="..\Documentation\Licenses for Third-Party Components\license-zlib.html" DiskId="1"/>
         <File Id="Zlib.net" Name="license-zlib-net.html" Source="..\Documentation\Licenses for Third-Party Components\license-zlib-net.html" DiskId="1"/>
+		<File Id="Antlr" Name="license-antlr.html" Source="..\Documentation\Licenses for Third-Party Components\license-antlr.html" DiskId="1"/>
+        <File Id="BouncyCastle" Name="license-bouncy-castle.html" Source="..\Documentation\Licenses for Third-Party Components\license-bouncy-castle.html" DiskId="1"/>
       </Component>
     </DirectoryRef>
 
