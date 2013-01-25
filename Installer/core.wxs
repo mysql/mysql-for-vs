@@ -35,11 +35,20 @@
           <RegistryValue Id="VS_2010_RegistryValue_v2" Value="[assemblies_v2]" Type="string" Action="write"/>
         </RegistryKey>
       </Component>
+      <Component Id="BC.v2" Guid="BB69BDC9-1761-45CD-92A6-A3AC38716A72" >
+        <File Id="BouncyCastle.v2" Name="crypto.dll"
+              Source="..\VS2008\Source\MySql.Data\bin\release\crypto.dll" DiskId="1"/>
+      </Component>
       <Directory Id="MySql.Data.DummyDir.2" Name="GAC">
         <Component Id="C.v2.GAC" Guid="58f70e4a-96f7-4b67-bdab-9b77a60f9c09">
           <Condition>NETFRAMEWORK20</Condition>
           <File Id="MySql.Data.v2.GAC" Name="MySql.Data.dll"
                 Source="..\VS2008\Source\MySql.Data\bin\release\mysql.data.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
+        </Component>
+        <Component Id="BC.v2.GAC" Guid="FD96E503-A9BB-4B28-A5A9-3E14B53EE4A5">
+          <Condition>NETFRAMEWORK20</Condition>
+          <File Id="BouncyCastle.v2.GAC" Name="crypto.dll"
+                Source="..\VS2008\Source\MySql.Data\bin\release\crypto.dll" DiskId="1" Assembly=".net" KeyPath="yes" />
         </Component>
       </Directory>
     </DirectoryRef>
@@ -56,11 +65,20 @@
           <RegistryValue Id="VS_2010_RegistryValue_v4" Value="[assemblies_v4]" Type="string" Action="write"/>
         </RegistryKey>
       </Component>
+      <Component Id="BC.v4" Guid="8CDC6070-6336-41A8-94D6-43A9D5838E19" >
+        <File Id="BouncyCastle.v4" Name="crypto.dll"
+              Source="..\Source\MySql.Data\bin\release\crypto.dll" DiskId="1"/>
+      </Component>
       <Directory Id="MySql.Data.DummyDir.4" Name="GAC">
         <Component Id="C.v4.GAC" Guid="34B6C828-355D-405F-82BC-F18BBC13871D">
           <Condition>NETFRAMEWORK40FULL</Condition>
           <File Id="MySql.Data.v4.GAC" Name="MySql.Data.dll"
                 Source="..\Source\MySql.Data\bin\release\mysql.data.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
+        </Component>
+        <Component Id="BC.v4.GAC" Guid="271A67B7-7D83-4122-9EFC-484D8A39AF6D" >
+          <Condition>NETFRAMEWORK40FULL</Condition>
+          <File Id="BouncyCastle.v4.GAC" Name="crypto.dll"
+                Source="..\Source\MySql.Data\bin\release\crypto.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
         </Component>
       </Directory>
     </DirectoryRef>
@@ -93,6 +111,10 @@
       <ComponentRef Id="C.v2.GAC"/>
       <ComponentRef Id="C.v4"/>
       <ComponentRef Id="C.v4.GAC"/>
+      <ComponentRef Id="BC.v2.GAC"/>
+      <ComponentRef Id="BC.v2"/>
+      <ComponentRef Id="BC.v4.GAC"/>
+      <ComponentRef Id="BC.v4"/>
       <ComponentRef Id="PerfMon"/>
       <ComponentRef Id="StartMenuComponent"/>
     </Feature>
