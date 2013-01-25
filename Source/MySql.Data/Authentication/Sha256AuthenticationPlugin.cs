@@ -1,4 +1,4 @@
-﻿// Copyright © 2012, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2013, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -28,8 +28,10 @@ using System.Text;
 using MySql.Data.Common;
 using MySql.Data.MySqlClient.Properties;
 using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Crypto.Engines;
+using Org.BouncyCastle.Security;
 using Org.BouncyCastle.OpenSsl;
+using Org.BouncyCastle.Crypto.Parameters;
+
 
 namespace MySql.Data.MySqlClient.Authentication
 {
@@ -38,9 +40,8 @@ namespace MySql.Data.MySqlClient.Authentication
   /// </summary>
   public class Sha256AuthenticationPlugin : MySqlAuthenticationPlugin
   {
-    private bool hasPublicKey = false;
-
-    private AsymmetricCipherKeyPair publicKey;
+    private RsaKeyParameters publicKey;
+    private byte[] rawPubkey;
 
     public override string PluginName
     {
@@ -49,10 +50,8 @@ namespace MySql.Data.MySqlClient.Authentication
 
     protected override byte[] MoreData(byte[] data)
     {
-      byte[] passBytes = GetPassword() as byte[];
-      byte[] buffer = new byte[ passBytes.Length + 1];
-      Array.Copy(passBytes, 0, buffer, 0, passBytes.Length );
-      buffer[passBytes.Length] = 0;
+      rawPubkey = data;
+      byte[] buffer = GetPassword() as byte[];
       return buffer;
     }
 
@@ -62,16 +61,27 @@ namespace MySql.Data.MySqlClient.Authentication
       if (Settings.SslMode != MySqlSslMode.None)
       {
         // send as clear text, since the channel is already encrypted
-        return Encoding.Default.GetBytes(Settings.Password);
+        byte[] passBytes = this.Encoding.GetBytes(Settings.Password);
+        byte[] buffer = new byte[passBytes.Length + 1];
+        Array.Copy(passBytes, 0, buffer, 0, passBytes.Length);
+        buffer[passBytes.Length] = 0;
+        return buffer;
       }
       else
       {
 #endif
         // send RSA encrypted, since the channel is not protected
-        if (!hasPublicKey) RequestPublicKey();
-        byte[] bytes = GetRsaPassword(Settings.Password, AuthenticationData);
-        if (bytes != null && bytes.Length == 1 && bytes[0] == 0) return null;
-        return bytes;
+        if (rawPubkey != null)
+        {
+          publicKey = GenerateKeysFromPem(rawPubkey);
+        }
+        if (publicKey == null) return new byte[] { 0x01 }; //RequestPublicKey();
+        else
+        {
+          byte[] bytes = GetRsaPassword(Settings.Password, AuthenticationData);
+          if (bytes != null && bytes.Length == 1 && bytes[0] == 0) return null;
+          return bytes;
+        }
 #if !CF
       }
 #endif
@@ -79,52 +89,45 @@ namespace MySql.Data.MySqlClient.Authentication
 
     private void RequestPublicKey()
     {
-      // send 0x01 packet, get the public key in PEM format (which is not the same than salted seed).
-      SendData(new byte[] { 0x01 });
-      byte[] rawPubkey = ReadData();
-      AsymmetricCipherKeyPair keys = GenerateKeysFromPem( rawPubkey );
+      RsaKeyParameters keys = GenerateKeysFromPem(rawPubkey);
       publicKey = keys;
-      hasPublicKey = true;
     }
 
-    private AsymmetricCipherKeyPair GenerateKeysFromPem( byte[] rawData )
+    private RsaKeyParameters GenerateKeysFromPem(byte[] rawData)
     {
       PemReader pem = new PemReader(new StreamReader(new MemoryStream( rawData )));
-      AsymmetricCipherKeyPair keyPair = (AsymmetricCipherKeyPair)pem.ReadObject();
+      RsaKeyParameters keyPair = (RsaKeyParameters)pem.ReadObject();
       return keyPair;
     }
 
     private byte[] GetRsaPassword(string password, byte[] seedBytes)
     {
       // Obfuscate the plain text password with the session scramble
-      byte[] ofuscated = GetXor(Encoding.Default.GetBytes(password), seedBytes);
+      byte[] ofuscated = GetXor(this.Encoding.GetBytes(password), seedBytes);
       // Encrypt the password and send it to the server
-      byte[] result = Encrypt(ofuscated, publicKey.Public);
+      byte[] result = Encrypt(ofuscated, publicKey );
       return result;
     }
 
     private byte[] GetXor( byte[] src, byte[] pattern )
     {
-      byte[] result = new byte[src.Length];
-      for (int i = 0; i < src.Length; i++)
+      byte[] src2 = new byte[src.Length + 1];
+      Array.Copy(src, 0, src2, 0, src.Length);
+      src2[src.Length] = 0;
+      byte[] result = new byte[src2.Length];
+      for (int i = 0; i < src2.Length; i++)
       {
-        result[ i ] = ( byte )( src[ i ] ^ ( pattern[ i % pattern.Length ] ));
+        result[ i ] = ( byte )( src2[ i ] ^ ( pattern[ i % pattern.Length ] ));
       }
       return result;
     }
 
-    private byte[] Encrypt(byte[] data, AsymmetricKeyParameter key)
-    {
-      RsaEngine e = new RsaEngine();
-      e.Init(true, key);
-      int bsize = e.GetInputBlockSize();
-      List<byte> output = new List<byte>();
-      for (int i = 0; i < data.Length; i += bsize)
-      {
-        int chunkSize = Math.Min(bsize, data.Length - (i * bsize));
-        output.AddRange(e.ProcessBlock(data, i, chunkSize));
-      }
-      return output.ToArray();
+    private byte[] Encrypt(byte[] data, RsaKeyParameters key)
+    { 
+      IBufferedCipher c = CipherUtilities.GetCipher("RSA/NONE/OAEPPadding");
+      c.Init(true, key);
+      byte[] result = c.DoFinal(data);
+      return result;
     }
   }
 }

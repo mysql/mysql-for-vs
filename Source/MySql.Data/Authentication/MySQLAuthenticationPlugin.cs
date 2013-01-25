@@ -179,19 +179,6 @@ namespace MySql.Data.MySqlClient.Authentication
       }
     }
 
-    protected void SendData(byte[] data)
-    {
-      driver.Packet.Clear();
-      Array.Copy( data, 0, driver.Packet.Buffer, 0, data.Length );
-      driver.SendPacket(driver.Packet);
-    }
-
-    protected byte[] ReadData()
-    {
-      MySqlPacket p = ReadPacket();
-      return p.Buffer;
-    }
-
     private void HandleAuthChange(MySqlPacket packet)
     {
       byte b = packet.ReadByte();
