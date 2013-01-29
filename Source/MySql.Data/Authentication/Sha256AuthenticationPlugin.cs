@@ -20,6 +20,8 @@
 // with this program; if not, write to the Free Software Foundation, Inc., 
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
+//#define BOUNCY_CASTLE_INCLUDED
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,11 +29,12 @@ using System.Security.Cryptography;
 using System.Text;
 using MySql.Data.Common;
 using MySql.Data.MySqlClient.Properties;
+#if BOUNCY_CASTLE_INCLUDED
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Crypto.Parameters;
-
+#endif
 
 namespace MySql.Data.MySqlClient.Authentication
 {
@@ -40,7 +43,9 @@ namespace MySql.Data.MySqlClient.Authentication
   /// </summary>
   public class Sha256AuthenticationPlugin : MySqlAuthenticationPlugin
   {
+#if BOUNCY_CASTLE_INCLUDED
     private RsaKeyParameters publicKey;
+#endif
     private byte[] rawPubkey;
 
     public override string PluginName
@@ -70,6 +75,7 @@ namespace MySql.Data.MySqlClient.Authentication
       else
       {
 #endif
+#if BOUNCY_CASTLE_INCLUDED
         // send RSA encrypted, since the channel is not protected
         if (rawPubkey != null)
         {
@@ -82,11 +88,15 @@ namespace MySql.Data.MySqlClient.Authentication
           if (bytes != null && bytes.Length == 1 && bytes[0] == 0) return null;
           return bytes;
         }
+#else
+        throw new NotImplementedException( "You can use sha256 plugin only in SSL connections in this implementation." );
+#endif 
 #if !CF
       }
 #endif
     }
 
+#if BOUNCY_CASTLE_INCLUDED
     private void RequestPublicKey()
     {
       RsaKeyParameters keys = GenerateKeysFromPem(rawPubkey);
@@ -129,5 +139,6 @@ namespace MySql.Data.MySqlClient.Authentication
       byte[] result = c.DoFinal(data);
       return result;
     }
+#endif
   }
 }
