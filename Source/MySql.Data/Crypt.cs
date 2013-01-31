@@ -83,7 +83,7 @@ namespace MySql.Data.MySqlClient
     public static byte[] Get411Password(string password, string seed)
     {
       // if we have no password, then we just return 2 zero bytes
-      if (password.Length == 0) return new byte[2];
+      if (password.Length == 0) return new byte[1];
 
       SHA1 sha = new SHA1CryptoServiceProvider(); 
 
@@ -103,6 +103,9 @@ namespace MySql.Data.MySqlClient
       for (int i = 1; i < finalHash.Length; i++)
         finalHash[i] = (byte)(finalHash[i] ^ firstHash[i - 1]);
       return finalHash;
+      //byte[] buffer = new byte[finalHash.Length - 1];
+      //Array.Copy(finalHash, 1, buffer, 0, finalHash.Length - 1);
+      //return buffer;
     }
 
     private static double rand(ref long seed1, ref long seed2, long max)
