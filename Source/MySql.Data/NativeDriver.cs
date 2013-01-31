@@ -20,6 +20,8 @@
 // with this program; if not, write to the Free Software Foundation, Inc., 
 // 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
+#define BOUNCY_CASTLE_INCLUDED
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -37,9 +39,12 @@ using System.Net.Security;
 using System.Security.Authentication;
 using System.Globalization;
 #endif
+#if BOUNCY_CASTLE_INCLUDED
 using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Crypto.Engines;
+using Org.BouncyCastle.Security;
 using Org.BouncyCastle.OpenSsl;
+using Org.BouncyCastle.Crypto.Parameters;
+#endif
 
 namespace MySql.Data.MySqlClient
 {
@@ -459,11 +464,11 @@ namespace MySql.Data.MySqlClient
       if ((serverCaps & ClientFlags.PS_MULTI_RESULTS) != 0)
         flags |= ClientFlags.PS_MULTI_RESULTS;
 
-      if (Settings.IntegratedSecurity)
-      {
+      //if (Settings.IntegratedSecurity)
+      //{
         if ((serverCaps & ClientFlags.PLUGIN_AUTH) != 0)
           flags |= ClientFlags.PLUGIN_AUTH;
-      }
+      //}
 
       if ((serverCaps & ClientFlags.CONNECT_ATTRS) != 0)
         flags |= ClientFlags.CONNECT_ATTRS;
@@ -491,26 +496,26 @@ namespace MySql.Data.MySqlClient
       // authentication is not supported by sérver, we throw an exception
       // if this happens.
 
-      packet = stream.ReadPacket();
-      byte b = packet.ReadByte();
-      if (b == 0xfe)
-      {
-        string authMethod = packet.ReadString();
-        if (authMethod.Equals(AuthenticationWindowsPlugin))
-        {
+      //packet = stream.ReadPacket();
+      //byte b = packet.ReadByte();
+      //if (b == 0xfe)
+      //{
+        //string authMethod = packet.ReadString();
+        //if (authMethod.Equals(AuthenticationWindowsPlugin))
+        //{
           targetName = packet.ReadString(Encoding.UTF8);
-        }
-        else
-        {
-          // User has requested Windows authentication,  bail out.
-          throw new MySqlException("unexpected authentication method " +
-              authMethod);
-        }
-      }
-      else
-      {
-        targetName = Encoding.UTF8.GetString(packet.Buffer, 0, packet.Buffer.Length);
-      }
+        //}
+        //else
+        //{
+        //  // User has requested Windows authentication,  bail out.
+        //  throw new MySqlException("unexpected authentication method " +
+        //      authMethod);
+        //}
+      //}
+      //else
+      //{
+      //  targetName = Encoding.UTF8.GetString(packet.Buffer, 0, packet.Buffer.Length);
+      //}
 
       // Do SSPI authentication handshake
       SSPI sspi = new SSPI(targetName, stream.BaseStream, stream.SequenceByte, version);
@@ -521,99 +526,109 @@ namespace MySql.Data.MySqlClient
       ReadOk(false);
     }
 
+
     #region SHA256 implementation
 
-    private AsymmetricCipherKeyPair publicKey;
-
-    private void AuthenticateSha256()
+    private void AuthenticateSha256( byte[] authData )
     {
       // Do SHA256 authentication
-      byte[] passBytes = GetSha256Password();
-      byte[] buffer = new byte[passBytes.Length + 1];
-      Array.Copy(passBytes, 0, buffer, 0, passBytes.Length);
-      buffer[passBytes.Length] = 0;
+      byte[] passBytes = GetSha256Password( authData );
       packet.Clear();
-      packet.Write(buffer);
+      //WriteNormalizedPassword(passBytes);
+      packet.Write(passBytes);
       stream.SendPacket(packet);
       packet = stream.ReadPacket();
       ReadOk(false);
     }
+    
+    private byte[] rawPubkey;
 
-    public byte[] GetSha256Password()
+    public byte[] GetSha256Password( byte[] authData )
     {
 #if !CF
       if (Settings.SslMode != MySqlSslMode.None)
       {
         // send as clear text, since the channel is already encrypted
-        return Encoding.Default.GetBytes(Settings.Password);
+        byte[] passBytes = this.Encoding.GetBytes(Settings.Password);
+        byte[] buffer = new byte[passBytes.Length + 1];
+        Array.Copy(passBytes, 0, buffer, 0, passBytes.Length);
+        buffer[passBytes.Length] = 0;
+        return buffer;
       }
       else
       {
 #endif
+
+#if BOUNCY_CASTLE_INCLUDED
         // send RSA encrypted, since the channel is not protected
-        RequestSha256PublicKey();
-        byte[] bytes = GetRsaPassword(Settings.Password, packet.Encoding.GetBytes( encryptionSeed ) );
+        if (publicKey == null)
+        {
+          // we have no public key, ask for it
+          packet.Clear();
+          packet.WriteByte(0x01);
+          stream.SendPacket(packet);
+          packet = stream.ReadPacket();
+          byte prefixByte = packet.Buffer[0];
+          if (prefixByte != 1) throw new MySqlException("Server did not return public key");
+          byte[] responseData = new byte[packet.Length - 1];
+          Array.Copy(packet.Buffer, 1, responseData, 0, responseData.Length);
+          publicKey = GenerateKeysFromPem(responseData);
+        }
+        // we have the key, we can proceed.
+        byte[] bytes = GetRsaPassword(Settings.Password, authData /*packet.Encoding.GetBytes(encryptionSeed)*/);
         if (bytes != null && bytes.Length == 1 && bytes[0] == 0) return null;
         return bytes;
+#else
+        throw new NotImplementedException( "You can use sha256 plugin only in SSL connections in this implementation." );
+#endif
 #if !CF
       }
 #endif
     }
 
-    private void RequestSha256PublicKey()
-    {
-      // send 0x01 packet, get the public key in PEM format (which is not the same than salted seed).
-      packet.Clear();
-      byte[] data = new byte[] { 0x01 };
-      Array.Copy(data, 0, packet.Buffer, 0, data.Length);
-      stream.SendPacket(packet);
-      packet = stream.ReadPacket();
-      byte[] rawPubkey = packet.Buffer;
-      AsymmetricCipherKeyPair keys = GenerateKeysFromPem(rawPubkey);
-      publicKey = keys;
-    }
+#if BOUNCY_CASTLE_INCLUDED
+    
+    private RsaKeyParameters publicKey;
 
-    private AsymmetricCipherKeyPair GenerateKeysFromPem(byte[] rawData)
+    private RsaKeyParameters GenerateKeysFromPem(byte[] rawData)
     {
       PemReader pem = new PemReader(new StreamReader(new MemoryStream(rawData)));
-      AsymmetricCipherKeyPair keyPair = (AsymmetricCipherKeyPair)pem.ReadObject();
+      RsaKeyParameters keyPair = (RsaKeyParameters)pem.ReadObject();
       return keyPair;
     }
 
     private byte[] GetRsaPassword(string password, byte[] seedBytes)
     {
       // Obfuscate the plain text password with the session scramble
-      byte[] ofuscated = GetSha256Xor(Encoding.Default.GetBytes(password), seedBytes);
+      byte[] ofuscated = GetSha256Xor(packet.Encoding.GetBytes(password), seedBytes);
       // Encrypt the password and send it to the server
-      byte[] result = RsaEncrypt(ofuscated, publicKey.Public);
+      byte[] result = RsaEncrypt(ofuscated, publicKey);
       return result;
     }
 
     private byte[] GetSha256Xor(byte[] src, byte[] pattern)
     {
-      byte[] result = new byte[src.Length];
-      for (int i = 0; i < src.Length; i++)
+      byte[] src2 = new byte[src.Length + 1];
+      Array.Copy(src, 0, src2, 0, src.Length);
+      src2[src.Length] = 0;
+      byte[] result = new byte[src2.Length];
+      for (int i = 0; i < src2.Length; i++)
       {
-        result[i] = (byte)(src[i] ^ (pattern[i % pattern.Length]));
+        result[i] = (byte)(src2[i] ^ (pattern[i % pattern.Length]));
       }
       return result;
     }
 
     private byte[] RsaEncrypt(byte[] data, AsymmetricKeyParameter key)
     {
-      RsaEngine e = new RsaEngine();
-      e.Init(true, key);
-      int bsize = e.GetInputBlockSize();
-      List<byte> output = new List<byte>();
-      for (int i = 0; i < data.Length; i += bsize)
-      {
-        int chunkSize = Math.Min(bsize, data.Length - (i * bsize));
-        output.AddRange(e.ProcessBlock(data, i, chunkSize));
-      }
-      return output.ToArray();
+      IBufferedCipher c = CipherUtilities.GetCipher("RSA/NONE/OAEPPadding");
+      c.Init(true, key);
+      byte[] result = c.DoFinal(data);
+      return result;
     }
-
+#endif
     #endregion
+
 
     /// <summary>
     /// Perform an authentication against a 4.1.1 server
@@ -625,52 +640,169 @@ namespace MySql.Data.MySqlClient
     /// </summary>
     private void AuthenticateNew(bool reset)
     {
-      if (_authPluginMethod == "sha256_password")
-      {
-        AuthenticateSha256();
-        return;
-      }
+      //if (_authPluginMethod == "sha256_password")
+      //{
+      //  AuthenticateSha256();
+      //  return;
+      //}
+
       if ((connectionFlags & ClientFlags.SECURE_CONNECTION) == 0)
         AuthenticateOld();
-
+      
+      //WriteNormalizedPassword(Crypt.Get411Password(Settings.Password, encryptionSeed));
       packet.Write(Crypt.Get411Password(Settings.Password, encryptionSeed));
-      if ((connectionFlags & ClientFlags.CONNECT_WITH_DB) != 0 && Settings.Database != null)
-        packet.WriteString(Settings.Database);
-
-      if (Settings.IntegratedSecurity)
+      //if ((connectionFlags & ClientFlags.CONNECT_WITH_DB) != 0 && Settings.Database != null)
+      //  packet.WriteString(Settings.Database);
+      if ((Flags & ClientFlags.CONNECT_WITH_DB) != 0 || reset)
       {
-        // Append authentication method after the database name in the 
-        // handshake authentication packet.If we're sending CHANGE_USER
-        // also write charset number after database name prior to plugin name
-        if (reset)
-        {
-          packet.WriteInteger(8, 2); // Charset number
-        }
-        packet.WriteString(AuthenticationWindowsPlugin);
+        if (!String.IsNullOrEmpty(Settings.Database))
+          packet.WriteString(Settings.Database);
+      }
+
+      if (reset)
+      {
+        packet.WriteInteger(8, 2); // Charset number
+      }
+      //if (Settings.IntegratedSecurity)
+      //{
+      
+        if ((Flags & ClientFlags.PLUGIN_AUTH) != 0)
+          //packet.WriteString(AuthenticationWindowsPlugin);
+          packet.WriteString(_authPluginMethod);
+      
         SetConnectAttrs();
         stream.SendPacket(packet);
-        AuthenticateSSPI();
-        return;
+      //}
+      //else
+      //{
+      //  SetConnectAttrs();
+      //  stream.SendPacket(packet);
+      //}
+      packet = stream.ReadPacket();
+      // An authentication request switch?
+      if (packet.Buffer[0] == 0xfe)
+      {
+        if (packet.IsLastPacket)
+        {
+          // this result means the server wants us to send the password using
+          // old encryption
+          packet.Clear();
+          packet.WriteString(Crypt.EncryptPassword(
+                                 Settings.Password, encryptionSeed.Substring(0, 8), true));
+          stream.SendPacket(packet);
+          ReadOk(true);
+        }
+        else
+        {
+          // TODO: use the correct plugin
+          packet.ReadByte();
+          string method = packet.ReadString(); // packet.Encoding.GetString(packet.Buffer, 1, packet.Buffer.Length - 1);
+          byte[] authData = new byte[packet.Length - packet.Position];
+          Array.Copy(packet.Buffer, packet.Position, authData, 0, authData.Length);
+          switch (method)
+          {
+            case "authentication_windows_client":
+              // TODO: send auth data here.
+              AuthenticateSSPI();
+              return;
+              break;
+            case "sha256_password":
+              AuthenticateSha256( authData );
+              return;
+              break;
+            case "mysql_native_password":
+              packet.Clear();
+              byte[] passBytes = null;
+              if( authData[ authData.Length - 1 ] == 0 )
+                passBytes = Crypt.Get411Password(Settings.Password, packet.Encoding.GetString(authData, 0, 20) /*encryptionSeed*/);
+              else
+                passBytes = Crypt.Get411Password(Settings.Password, packet.Encoding.GetString(authData) /*encryptionSeed*/);
+              //WriteNormalizedPassword(passBytes);
+              //packet.Write(passBytes);
+              byte[] buffer = new byte[passBytes.Length - 1];
+              Array.Copy(passBytes, 1, buffer, 0, passBytes.Length - 1);
+              packet.Write(buffer);
+              /*
+              if (!reset)
+              {
+                //byte[] buffer = new byte[passBytes.Length - 1];
+                //Array.Copy(passBytes, 1, buffer, 0, passBytes.Length - 1);
+                //packet.Write(passBytes);
+                //packet.WriteByte((byte)0);
+                packet.Write(passBytes);
+              }
+              else
+              {
+                packet.WriteByte( (byte)passBytes.Length);
+                packet.Write(passBytes);
+              }*/
+              //packet.Write(passBytes);
+              //packet.WriteString(Crypt.EncryptPassword(
+              //    Settings.Password, encryptionSeed.Substring(0, 8), true));
+              stream.SendPacket(packet);
+              ReadOk(true);
+              break;
+          }
+          //ReadOk(false);
+        }
       }
       else
       {
-        SetConnectAttrs();
-        stream.SendPacket(packet);
+        if (packet.IsLastPacket)
+        {
+          packet.Clear();
+          packet.WriteString(Crypt.EncryptPassword(
+                                 Settings.Password, encryptionSeed.Substring(0, 8), true));
+          stream.SendPacket(packet);
+          ReadOk(true);
+        }
+        else
+          ReadOk(false);
       }
+      //if (Settings.IntegratedSecurity)
+      //{
+      //  // Append authentication method after the database name in the 
+      //  // handshake authentication packet.If we're sending CHANGE_USER
+      //  // also write charset number after database name prior to plugin name
+      //  if (reset)
+      //  {
+      //    packet.WriteInteger(8, 2); // Charset number
+      //  }
+      //  packet.WriteString(AuthenticationWindowsPlugin);
+      //  SetConnectAttrs();
+      //  stream.SendPacket(packet);
+      //  AuthenticateSSPI();
+      //  return;
+      //}
+      //else
+      //{
+      //  SetConnectAttrs();
+      //  stream.SendPacket(packet);
+      //}
 
       // this result means the server wants us to send the password using
       // old encryption
-      packet = stream.ReadPacket();
-      if (packet.IsLastPacket)
-      {
-        packet.Clear();
-        packet.WriteString(Crypt.EncryptPassword(
-                               Settings.Password, encryptionSeed.Substring(0, 8), true));
-        stream.SendPacket(packet);
-        ReadOk(true);
-      }
-      else
-        ReadOk(false);
+      //packet = stream.ReadPacket();
+      //if (packet.IsLastPacket)
+      //{
+      //  packet.Clear();
+      //  packet.WriteString(Crypt.EncryptPassword(
+      //                         Settings.Password, encryptionSeed.Substring(0, 8), true));
+      //  stream.SendPacket(packet);
+      //  ReadOk(true);
+      //}
+      //else
+      //  ReadOk(false);
+    }
+
+    private void WriteNormalizedPassword(byte[] password)
+    {
+      if (password == null)
+        packet.WriteByte(0);
+      //if ((connectionFlags & ClientFlags.SECURE_CONNECTION) != 0)
+      //  packet.WriteLenString(packet.Encoding.GetString(password));
+      else //if (password is byte[])
+        packet.Write(password /*as byte[]*/);
     }
 
     private void AuthenticateOld()

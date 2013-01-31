@@ -1272,5 +1272,22 @@ namespace MySql.Data.MySqlClient.Tests
         }
       }
     }
+    //*
+    [Test]
+    public void Dummy()
+    {
+      string connstr = GetConnectionString(true);
+      //connstr += ";CertificateFile=client.pfx;CertificatePassword=pass;SSL Mode=Required;";
+      using (MySqlConnection c = new MySqlConnection(connstr))
+      {
+        c.Settings.Database = "test";
+        c.Settings.Server = "192.168.56.99";
+        c.Settings.UserID = "sha256ext";
+        c.Settings.Password = "123";
+        c.Open();
+        c.Close();
+      }
+    }
+     //*/
   }
 }
