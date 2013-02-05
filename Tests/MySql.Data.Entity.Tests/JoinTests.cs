@@ -269,15 +269,5 @@ namespace MySql.Data.Entity.Tests
         Assert.AreEqual(myarray.Count, 4);
       }
     }
-
-    [Test]
-    public void Temp()
-    {
-      using (var db = new testEntities1())
-      {
-      var r = new MySqlScriptServices();
-      r.GetTableCreateScript(null, "server=localhost;userid=root;database=mysql", "");
-      }    
-    }
   }
 }
