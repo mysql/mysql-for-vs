@@ -1272,7 +1272,7 @@ namespace MySql.Data.MySqlClient.Tests
         }
       }
     }
-    //*
+    /*
     [Test]
     public void Dummy()
     {
