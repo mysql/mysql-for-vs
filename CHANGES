@@ -10,6 +10,8 @@
 - Added to parser missing "alter user ... password expire".
 - Fix for "Debugger error on stored procedure", which is actually a parser bug (parser was expecting decimal both precision & scale), (bug MySql #67975, Oracle bug #16079735).
 - Added support for password hashing with appropriate strength for server 5.6 (Oracle bug #15935128).
+- Fix for race condition on ConnectionStringBuilder when using multiple threads 
+  (MySql bug #68217, Oracle bug #16310698).
 
 
 6.5.5

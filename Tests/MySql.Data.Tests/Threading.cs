@@ -183,5 +183,65 @@ namespace MySql.Data.MySqlClient.Tests
 
       Assert.IsInstanceOf(typeof(ThreadAbortException), lastException);
     }
+
+
+    /// <summary>
+    /// Test fix for bug Connection String Cache corrupted when using Multithreading + MySqlScript
+    /// (http://bugs.mysql.com/bug.php?id=68217).
+    /// </summary>
+    [Test]
+    public void MultipleThreadsMysqlScript()
+    {
+      //GenericListener myListener = new GenericListener();
+      ManualResetEvent ev = new ManualResetEvent(false);
+      ArrayList threads = new ArrayList();
+      //System.Diagnostics.Trace.Listeners.Add(myListener);
+
+      for (int i = 0; i < 20; i++)
+      {
+        ParameterizedThreadStart ts = new ParameterizedThreadStart(MultipleThreadsWorkerScript);
+        Thread t = new Thread(ts);
+        threads.Add(t);
+        t.Start(ev);
+      }
+      // now let the threads go
+      ev.Set();
+
+      // wait for the threads to end
+      int x = 0;
+      while (x < threads.Count)
+      {
+        while ((threads[x] as Thread).IsAlive)
+          Thread.Sleep(50);
+        x++;
+      }
+    }
+
+    private void MultipleThreadsWorkerScript(object ev)
+    {
+      MySqlScript script = new MySqlScript();
+      script.Query = "show variables like '%ssl%'";
+      (ev as ManualResetEvent).WaitOne();
+      string strConn = GetConnectionString(true) + ";Pooling=true;";
+      MySqlConnection c = new MySqlConnection(strConn);
+      
+      int result;
+      script.Connection = c;
+      try
+      {
+        for (int i = 0; i < 10; i++)
+        {
+          c.Open();
+          result = script.Execute();
+          c.Close();
+        }
+      }
+      catch (InvalidOperationException ioe)
+      {
+        //Assert.AreEqual("Collection was modified; enumeration operation may not execute.", ioe.Message );
+        Debugger.Break();
+        Assert.Fail();
+      }
+    }
   }
 }

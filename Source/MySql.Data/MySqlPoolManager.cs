@@ -62,7 +62,11 @@ namespace MySql.Data.MySqlClient
  
     private static string GetKey(MySqlConnectionStringBuilder settings)
     {
-      string key = settings.ConnectionString;
+      string key = "";
+      lock (settings)
+      {
+        key = settings.ConnectionString;
+      }
 #if !CF
       if (settings.IntegratedSecurity && !settings.ConnectionReset)
       {

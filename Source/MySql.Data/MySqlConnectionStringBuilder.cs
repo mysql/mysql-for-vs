@@ -41,8 +41,14 @@ namespace MySql.Data.MySqlClient
         new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
     private static Dictionary<string, PropertyDefaultValue> defaultValues =
         new Dictionary<string, PropertyDefaultValue>(StringComparer.OrdinalIgnoreCase);
-    private Dictionary<string, object> values =
+    private Dictionary<string, object> _values =
         new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+
+    private Dictionary<string, object> values
+    {
+      get { lock (this) { return _values; } }
+    }
+
     private bool hasProcAccess = true;
 #if !CF
     private PermissionSet _permissionset;
@@ -963,20 +969,23 @@ namespace MySql.Data.MySqlClient
       ValidateKeyword(keyword);
       keyword = validKeywords[keyword];
 
-      Remove(keyword);
+      lock (this)
+      {
+        Remove(keyword);
 
-      NormalizeValue(keyword, ref value);
+        NormalizeValue(keyword, ref value);
 
-      object val = null;
-      if (value is string && defaultValues[keyword].DefaultValue is Enum)
-        val = ParseEnum(defaultValues[keyword].Type, (string)value, keyword);
-      else if (value is string && string.IsNullOrEmpty(value.ToString()))
-        val = defaultValues[keyword].DefaultValue;
-      else
-        val = ChangeType(value, defaultValues[keyword].Type);
-      HandleObsolete(keyword, val);
-      values[keyword] = val;
-      base[keyword] = val;
+        object val = null;
+        if (value is string && defaultValues[keyword].DefaultValue is Enum)
+          val = ParseEnum(defaultValues[keyword].Type, (string)value, keyword);
+        else if (value is string && string.IsNullOrEmpty(value.ToString()))
+          val = defaultValues[keyword].DefaultValue;
+        else
+          val = ChangeType(value, defaultValues[keyword].Type);
+        HandleObsolete(keyword, val);
+        values[keyword] = val;
+        base[keyword] = val;
+      }
     }
 
     private static void NormalizeValue(string keyword, ref object value)
