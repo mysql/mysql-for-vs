@@ -13,6 +13,8 @@
 - Fix for GetSchema returning MySqlException instead of ArgumentException when passing an invalid collection name
   (Oracle bug #16271425, MySql bug #67901).
 - Fix for EF 4.3 failing when FK identifiers are too long (MySql bug #67285, Oracle bug #16286397).
+- Fix for race condition on ConnectionStringBuilder when using multiple threads 
+  (MySql bug #68217, Oracle bug #16310698).
 
 
 6.5.5
