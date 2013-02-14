@@ -495,12 +495,13 @@ where table_schema = '{0}' and table_name = 'movies' and column_name = 'Price'",
     [Test]
     public void CanDefineDateTimeAndTimestampWithIdentity()
     {
-
+      ReInitDb();
       if (Version < new Version(5, 6)) return;
 
       using (var db = new ProductsDbContext())
       {
-        db.Database.CreateIfNotExists();
+        //db.Database.CreateIfNotExists();
+        db.Database.Initialize(true);
         Product product = new Product
         {
           //Omitting Identity Columns
