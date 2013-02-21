@@ -1,4 +1,4 @@
-// Copyright © 2008, 2010, Oracle and/or its affiliates. All rights reserved.
+// Copyright © 2008, 2013, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -175,7 +175,6 @@ namespace MySql.Data.VisualStudio
         sql = GetStoredProcedureBody(String.Format(
             "SHOW CREATE {0} `{1}`.`{2}`",
             IsFunction ? "FUNCTION" : "PROCEDURE", Database, Name), out sql_mode);
-        sql = ChangeSqlTypeTo(sql, "ALTER");
       }
       catch (Exception ex)
       {
