@@ -1,5 +1,5 @@
 ﻿<NUnitProject>
-  <Settings activeconfig="Release_CLR4_Server55" />
+  <Settings activeconfig="Debug_CLR4_Server56" />
   <Config name="Debug_CLR2_Server51" configfile="Server51.config" binpathtype="Auto" runtimeFramework="v2.0">
     <assembly path="VS2008\Tests\MySql.Debugger.Tests\bin\Debug\MySql.Debugger.Tests.dll" />    
     <assembly path="VS2008\Tests\MySql.Parser.Tests\bin\Debug\MySql.Parser.Tests.dll" />
