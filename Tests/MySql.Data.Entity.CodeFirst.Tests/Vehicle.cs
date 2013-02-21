@@ -1,4 +1,4 @@
-﻿// Copyright © 2012, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2013, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -188,15 +188,24 @@ namespace MySql.Data.Entity.CodeFirst.Tests
     protected override void OnModelCreating(DbModelBuilder modelBuilder)
     {
       modelBuilder.Entity<Product>()
-    .Property(f => f.DateTimeWithPrecision)
-    .HasColumnType("DateTime")
-    .HasPrecision(3);
+        .Property(f => f.DateTimeWithPrecision)
+        .HasColumnType("DateTime")
+        .HasPrecision(3);
 
       modelBuilder.Entity<Product>()
-    .Property(f => f.TimeStampWithPrecision)
-    .HasColumnType("Timestamp")
-    .HasPrecision(3);
+        .Property(f => f.TimeStampWithPrecision)
+        .HasColumnType("Timestamp")
+        .HasPrecision(3);
     }
+
+    public ProductsDbContext()
+    {
+      Database.SetInitializer<ProductsDbContext>(new ProductsDbInitializer());
+    }
+  }
+
+  public class ProductsDbInitializer : DropCreateDatabaseReallyAlways<ProductsDbContext>
+  {
   }
 
   public class Names

@@ -1,4 +1,4 @@
-// Copyright © 2004, 2010, Oracle and/or its affiliates. All rights reserved.
+// Copyright © 2004, 2013, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -557,6 +557,28 @@ namespace MySql.Data.MySqlClient.Tests
       DataTable dt = conn.GetSchema("ReservedWords");
       foreach (DataRow row in dt.Rows)
         Assert.IsFalse(String.IsNullOrEmpty(row[0] as string));
+    }
+
+    /// <summary>
+    /// Test fix for bug http://bugs.mysql.com/bug.php?id=67901.
+    /// GetSchema was not returning ArgumentException in case of invalid collection name.
+    /// This also makes the method compliant with the standard API convetions from System.Data.Common.DbConnection.GetSchema.
+    /// </summary>
+    [Test]
+    public void ArgumentExceptionTest()
+    {
+      try
+      {
+        DataTable dt = conn.GetSchema("Table");
+        Assert.Fail();
+      }
+      catch (ArgumentException)
+      { 
+      }
+      catch (Exception)
+      {
+        Assert.Fail();
+      }
     }
   }
 }

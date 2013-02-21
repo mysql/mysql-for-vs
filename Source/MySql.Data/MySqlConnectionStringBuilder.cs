@@ -1,4 +1,4 @@
-// Copyright © 2004, 2011, Oracle and/or its affiliates. All rights reserved.
+// Copyright © 2004, 2013, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -41,8 +41,14 @@ namespace MySql.Data.MySqlClient
         new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
     private static Dictionary<string, PropertyDefaultValue> defaultValues =
         new Dictionary<string, PropertyDefaultValue>(StringComparer.OrdinalIgnoreCase);
-    private Dictionary<string, object> values =
+    private Dictionary<string, object> _values =
         new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+
+    private Dictionary<string, object> values
+    {
+      get { lock (this) { return _values; } }
+    }
+
     private bool hasProcAccess = true;
 #if !CF
     private PermissionSet _permissionset;
@@ -963,20 +969,23 @@ namespace MySql.Data.MySqlClient
       ValidateKeyword(keyword);
       keyword = validKeywords[keyword];
 
-      Remove(keyword);
+      lock (this)
+      {
+        Remove(keyword);
 
-      NormalizeValue(keyword, ref value);
+        NormalizeValue(keyword, ref value);
 
-      object val = null;
-      if (value is string && defaultValues[keyword].DefaultValue is Enum)
-        val = ParseEnum(defaultValues[keyword].Type, (string)value, keyword);
-      else if (value is string && string.IsNullOrEmpty(value.ToString()))
-        val = defaultValues[keyword].DefaultValue;
-      else
-        val = ChangeType(value, defaultValues[keyword].Type);
-      HandleObsolete(keyword, val);
-      values[keyword] = val;
-      base[keyword] = val;
+        object val = null;
+        if (value is string && defaultValues[keyword].DefaultValue is Enum)
+          val = ParseEnum(defaultValues[keyword].Type, (string)value, keyword);
+        else if (value is string && string.IsNullOrEmpty(value.ToString()))
+          val = defaultValues[keyword].DefaultValue;
+        else
+          val = ChangeType(value, defaultValues[keyword].Type);
+        HandleObsolete(keyword, val);
+        values[keyword] = val;
+        base[keyword] = val;
+      }
     }
 
     private static void NormalizeValue(string keyword, ref object value)

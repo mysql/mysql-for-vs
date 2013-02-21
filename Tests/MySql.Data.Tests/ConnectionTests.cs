@@ -73,13 +73,15 @@ namespace MySql.Data.MySqlClient.Tests
       Assert.AreEqual(System.Data.ConnectionState.Closed, c.State, "State");
     }
 
-/*
+    //*
     [Test]
     public void TestSha256SecurityWithoutSSL()
     {
       if (Version < new Version(5, 6, 6))
       {
-        Debug.WriteLine("No Sha256 authentication, server version does not support it.");
+#if !CF
+        Trace.WriteLine("No Sha256 authentication, server version does not support it.");
+#endif
         return;
       }
 
@@ -104,8 +106,36 @@ namespace MySql.Data.MySqlClient.Tests
 
       if (!haveSha256Auth)
       {
-        Debug.WriteLine("No Sha256 authentication, server version does not support it.");
+#if !CF
+        Trace.WriteLine("No Sha256 authentication, server version does not support it.");
+#endif
         return;
+      }
+
+      cmd.CommandText = "show variables like 'have_openssl'";
+      using (MySqlDataReader r = cmd.ExecuteReader())
+      {
+        r.Read();
+        string name = (string)r.GetValue(1);
+        if (name.ToUpper() != "YES")
+        {
+#if !CF
+          Trace.WriteLine("No Sha256 without SSL tested, server must be compiled against OpenSsl");
+#endif
+          return;
+        }
+      }
+
+      cmd.CommandText = "SHOW STATUS LIKE 'Rsa_public_key'";
+      using (MySqlDataReader r = cmd.ExecuteReader())
+      {
+        if (!r.Read())
+        {
+#if !CF
+          Trace.WriteLine("No Sha256 without SSL tested, server must have a public rsa key configured.");
+#endif
+          return;
+        }
       }
 
       // setup account
@@ -127,7 +157,7 @@ namespace MySql.Data.MySqlClient.Tests
         ExecuteSQLAsRoot(string.Format("drop user '{0}'@'localhost';", user));
       }
 
-      ExecuteSQLAsRoot(string.Format("create user '{0}'@'localhost' identified by 'sha256_password';", user));
+      ExecuteSQLAsRoot(string.Format("create user '{0}'@'localhost' identified with sha256_password;", user));
       try
       {
         cmd.CommandText = "show variables like 'old_passwords'";
@@ -142,12 +172,13 @@ namespace MySql.Data.MySqlClient.Tests
         ExecuteSQLAsRoot(string.Format("set old_passwords = {0};", oldValOldPasswords));
 
         string connstr = GetConnectionString(true);
-        using (MySqlConnection c = new MySqlConnection(connstr))
+        MySqlConnectionStringBuilder csb = new MySqlConnectionStringBuilder(connstr);
+        csb.UserID = user;
+        csb.Password = "123";
+        using (MySqlConnection c = new MySqlConnection(csb.ConnectionString))
         {
           ExecuteSQLAsRoot(string.Format("grant all on `{0}`.* to '{1}'@'localhost';",
             c.Settings.Database, user));
-          c.Settings.UserID = user;
-          c.Settings.Password = "123";
           c.Open();
           Assert.AreEqual(ConnectionState.Open, c.State);
         }
@@ -164,7 +195,9 @@ namespace MySql.Data.MySqlClient.Tests
     {
       if (Version < new Version(5, 6, 6))
       {
-        Debug.WriteLine("No Sha256 authentication, server version does not support it.");
+#if !CF
+        Trace.WriteLine("No Sha256 authentication, server version does not support it.");
+#endif
         return;
       }
 
@@ -189,7 +222,9 @@ namespace MySql.Data.MySqlClient.Tests
 
       if (!haveSha256Auth)
       {
-        Debug.WriteLine("No Sha256 authentication, server version does not support it.");
+#if !CF
+        Trace.WriteLine("No Sha256 authentication, server version does not support it.");
+#endif
         return;
       }
 
@@ -212,7 +247,7 @@ namespace MySql.Data.MySqlClient.Tests
         ExecuteSQLAsRoot(string.Format("drop user '{0}'@'localhost';", user));
       }
 
-      ExecuteSQLAsRoot(string.Format("create user '{0}'@'localhost' identified by 'sha256_password';", user));
+      ExecuteSQLAsRoot(string.Format("create user '{0}'@'localhost' identified with sha256_password;", user));
       try
       {
         cmd.CommandText = "show variables like 'old_passwords'";
@@ -236,12 +271,13 @@ namespace MySql.Data.MySqlClient.Tests
 
         string connstr = GetConnectionString(true);
         connstr += ";CertificateFile=client.pfx;CertificatePassword=pass;SSL Mode=Required;";
-        using (MySqlConnection c = new MySqlConnection(connstr))
+        MySqlConnectionStringBuilder csb = new MySqlConnectionStringBuilder(connstr);
+        csb.UserID = user;
+        csb.Password = "123";
+        using (MySqlConnection c = new MySqlConnection( csb.ConnectionString ))
         {
           ExecuteSQLAsRoot(string.Format("grant all on `{0}`.* to '{1}'@'localhost';",
             c.Settings.Database, user));
-          c.Settings.UserID = user;
-          c.Settings.Password = "123";
           c.Open();
           Assert.AreEqual(ConnectionState.Open, c.State);
         }

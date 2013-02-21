@@ -1,4 +1,4 @@
-// Copyright © 2004, 2010, Oracle and/or its affiliates. All rights reserved.
+// Copyright © 2004, 2013, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -56,7 +56,7 @@ namespace MySql.Data.MySqlClient
       DataTable dt = GetSchemaInternal(collection, restrictions);
 
       if (dt == null)
-        throw new MySqlException("Invalid collection name");
+        throw new ArgumentException("Invalid collection name");
       return dt;
     }
 
