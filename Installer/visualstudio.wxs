@@ -170,8 +170,8 @@
       <!-- now vs2008 scheduling -->
       <Custom Action='VS_2008_SETUP' Before='InstallFinalize'>(&amp;VS2008Int=2) OR (&amp;VS2008Int=3)</Custom>
       <Custom Action='VS_2008_SETUP_EXEC' After='VS_2008_SETUP'>(&amp;VS2008Int=2) OR (&amp;VS2008Int=3)</Custom>
-      <Custom Action='VS2012_SetPathProp' Before='VS11_UpdatePackageFile'>VS_2012_PATH</Custom>
-      <Custom Action="VS11_UpdatePackageFile" Before='InstallFinalize'>VS_2012_PATH</Custom>
+      <Custom Action='VS2012_SetPathProp' Before='VS11_UpdatePackageFile'>(&amp;VS2012Int=2) OR (&amp;VS2012Int=3)</Custom>
+      <Custom Action="VS11_UpdatePackageFile" Before='InstallFinalize'>(&amp;VS2012Int=2) OR (&amp;VS2012Int=3)</Custom>
     </InstallExecuteSequence>
   </Fragment>
 </Wix>
