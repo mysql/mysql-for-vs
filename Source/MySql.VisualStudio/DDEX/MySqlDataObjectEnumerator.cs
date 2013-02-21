@@ -1,4 +1,4 @@
-// Copyright © 2008, 2010, Oracle and/or its affiliates. All rights reserved.
+// Copyright © 2008, 2013, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -114,7 +114,12 @@ namespace MySql.Data.VisualStudio
           int i = 0;
           rest = new string[restrictions.Length];
           foreach (object o in restrictions)
-            rest[i++] = (string)o;
+          {
+            if (o is DBNull)
+              rest[i++] = "";
+            else
+              rest[i++] = (string)o;
+          }
           tables = conn.GetSchema(typeName, rest);
         }
         else
