@@ -1,4 +1,4 @@
-﻿// Copyright © 2012, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2013, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -92,18 +92,19 @@ namespace MySql.Data.VisualStudio
       {
         if (t.GetChild(idx).Text == "<EOF>") continue;
         child = t.GetChild(idx);
-        if ( (child.Text.Equals("create", StringComparison.OrdinalIgnoreCase)) && 
-              (child.GetChild( child.ChildCount - 1 ).Text.Equals( "begin_stmt", StringComparison.OrdinalIgnoreCase ) ))
+        if ( (child.Text.Equals("create", StringComparison.OrdinalIgnoreCase)) ||
+              (child.Text.Equals( "begin_end", StringComparison.OrdinalIgnoreCase ) ) )
         {
           treeStmt = FindStmt( child );
           if( treeStmt != null )
           {
-            break;
+            return treeStmt;
           }
         } else {
-          if (child.TokenStartIndex == -1 || child.TokenStopIndex == -1) return null;
+          if (child.TokenStartIndex == -1 || child.TokenStopIndex == -1) continue;
           if ((position >= tokens.Get(child.TokenStartIndex).StartIndex) &&
-              (position <= tokens.Get(child.TokenStopIndex).StopIndex))
+              ((position <= tokens.Get(child.TokenStopIndex).StopIndex) || 
+               (( position - 1 ) <= tokens.Get(child.TokenStopIndex).StopIndex) ) )
           {
             treeStmt = child;
             break;
