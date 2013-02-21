@@ -1,4 +1,4 @@
-// Copyright © 2004, 2011, 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright © 2004, 2013, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -325,27 +325,34 @@ namespace MySql.Data.MySqlClient
       // load server properties
       Hashtable hash = new Hashtable();
       MySqlCommand cmd = new MySqlCommand("SHOW VARIABLES", connection);
-
-      using (MySqlDataReader reader = cmd.ExecuteReader())
+      try
       {
-        try
-        {
-          while (reader.Read())
-          {
-            string key = reader.GetString(0);
-            string value = reader.GetString(1);
-            hash[key] = value;
-          }
+        using (MySqlDataReader reader = cmd.ExecuteReader())
+        {         
+            while (reader.Read())
+            {
+              string key = reader.GetString(0);
+              string value = reader.GetString(1);
+              hash[key] = value;
+            }         
         }
-        catch (Exception ex)
+        // Get time zone offset as numerical value
+        timeZoneOffset = GetTimeZoneOffset(connection);
+        return hash;
+      }
+      catch (Exception ex)  // expecting the must set password exception
+      {
+        if (((MySqlException)ex).Number == 1820)
+        {
+          this.IsPasswordExpired = true;
+          return null;
+        }
+        else
         {
           MySqlTrace.LogError(ThreadID, ex.Message);
           throw;
         }
       }
-      // Get time zone offset as numerical value
-      timeZoneOffset = GetTimeZoneOffset( connection );
-      return hash;
     }
 
     private int GetTimeZoneOffset( MySqlConnection con )
