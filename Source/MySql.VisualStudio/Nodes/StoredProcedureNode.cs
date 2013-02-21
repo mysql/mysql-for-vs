@@ -164,7 +164,7 @@ namespace MySql.Data.VisualStudio
           string sql = GetStoredProcedureBody(String.Format(
               "SHOW CREATE {0} `{1}`.`{2}`",
               IsFunction ? "FUNCTION" : "PROCEDURE", Database, Name), out sql_mode);
-          editor.Text = ChangeSqlTypeTo(sql, "ALTER");
+          editor.Text = sql;
           Dirty = false;
         }
         catch (Exception ex)
