@@ -28,7 +28,8 @@
       <Component Id="C.v2" Guid="0e8af006-273c-49bb-b7c1-ec1737260a5a">
         <File Id="MySql.Data.v2" Name="MySql.Data.dll"
               Source="..\VS2008\Source\MySql.Data\bin\release\mysql.data.dll" DiskId="1"/>
-
+		<!-- <File Id="BouncyCastle.v2" Name="crypto.dll"
+              Source="..\VS2008\Source\MySql.Data\bin\release\crypto.dll" DiskId="1"/> -->
         <RemoveFile Id="RemoveStateFile.v2" Name="*.InstallState" On="uninstall"/>
         <RegistryKey Id="VS_2010_RegistryKey_v2" Root="HKLM" Action="createAndRemoveOnUninstall"
                      Key="SOFTWARE\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\MySQL Connector Net $(var.Version) v2.0">
@@ -46,6 +47,8 @@
           <Condition>NETFRAMEWORK20</Condition>
           <File Id="MySql.Data.v2.GAC" Name="MySql.Data.dll"
                 Source="..\VS2008\Source\MySql.Data\bin\release\mysql.data.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
+		<!--<File Id="BouncyCastle.v2.GAC" Name="crypto.dll"
+                Source="..\VS2008\Source\MySql.Data\bin\release\crypto.dll" DiskId="1" /> -->
         </Component>
         <!--
         <Component Id="BC.v2.GAC" Guid="FD96E503-A9BB-4B28-A5A9-3E14B53EE4A5">
@@ -61,7 +64,8 @@
       <Component Id="C.v4" Guid="C66D3DF6-A151-4F29-B388-A9803C89131A">
         <File Id="MySql.Data.v4" Name="MySql.Data.dll"
               Source="..\Source\MySql.Data\bin\release\mysql.data.dll" DiskId="1"/>
-
+		<!-- <File Id="BouncyCastle.v4" Name="crypto.dll"
+              Source="..\Source\MySql.Data\bin\release\crypto.dll" DiskId="1"/> -->
         <RemoveFile Id="RemoveStateFile.v4" Name="*.InstallState" On="uninstall"/>
         <RegistryKey Id="AssemblyFolderExV4" Root="HKLM" Action="createAndRemoveOnUninstall"
                      Key="SOFTWARE\Microsoft\.NETFramework\v4.0.30319\AssemblyFoldersEx\MySQL Connector Net $(var.Version) v4.0">
@@ -78,6 +82,8 @@
           <Condition>NETFRAMEWORK40FULL</Condition>
           <File Id="MySql.Data.v4.GAC" Name="MySql.Data.dll"
                 Source="..\Source\MySql.Data\bin\release\mysql.data.dll" DiskId="1" Assembly=".net" KeyPath="yes"/>
+<!--<File Id="BouncyCastle.v4.GAC" Name="crypto.dll"
+                Source="..\Source\MySql.Data\bin\release\crypto.dll" DiskId="1" />-->
         </Component>
         <!--
         <Component Id="BC.v4.GAC" Guid="271A67B7-7D83-4122-9EFC-484D8A39AF6D" >

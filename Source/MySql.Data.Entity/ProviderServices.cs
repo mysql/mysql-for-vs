@@ -1,5 +1,4 @@
-﻿// Copyright (c) 2008 MySQL AB, 2008-2009 Sun Microsystems, Inc., 
-// Copyright (c) 2011 Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright (c) 2013 Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -338,9 +337,13 @@ namespace MySql.Data.MySqlClient
       {
         EntityType childType = (EntityType)a.ReferentialConstraints[0].ToProperties[0].DeclaringType;
         EntityType parentType = (EntityType)a.ReferentialConstraints[0].FromProperties[0].DeclaringType;
-
+        string fkName = a.Name;
+        if (fkName.Length > 64)
+        {
+          fkName = "FK_" + Guid.NewGuid().ToString().Replace("-", "");
+        }
         sql.AppendLine(String.Format(
-            "ALTER TABLE `{0}` ADD CONSTRAINT {1}", _pluralizedNames[ childType.Name ], a.Name));
+            "ALTER TABLE `{0}` ADD CONSTRAINT {1}", _pluralizedNames[ childType.Name ], fkName));
         sql.Append("\t FOREIGN KEY (");
         string delimiter = "";
         foreach (EdmProperty p in a.ReferentialConstraints[0].ToProperties)
