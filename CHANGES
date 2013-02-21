@@ -17,6 +17,7 @@
   (MySql bug #68217, Oracle bug #16310698).
 - Fix for stored routines being edited from Server explorer appear as ALTER, which may led
   to syntax errors, which may led to Intellisense to stop working (Oracle bug #16357595).
+- Fix for Error in Server Explorer when refreshing a table or view (Oracle bug #16363908).
 
 
 6.5.5
