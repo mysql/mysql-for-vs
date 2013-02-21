@@ -92,18 +92,19 @@ namespace MySql.Data.VisualStudio
       {
         if (t.GetChild(idx).Text == "<EOF>") continue;
         child = t.GetChild(idx);
-        if ( (child.Text.Equals("create", StringComparison.OrdinalIgnoreCase)) && 
-              (child.GetChild( child.ChildCount - 1 ).Text.Equals( "begin_stmt", StringComparison.OrdinalIgnoreCase ) ))
+        if ( (child.Text.Equals("create", StringComparison.OrdinalIgnoreCase)) ||
+              (child.Text.Equals( "begin_end", StringComparison.OrdinalIgnoreCase ) ) )
         {
           treeStmt = FindStmt( child );
           if( treeStmt != null )
           {
-            break;
+            return treeStmt;
           }
         } else {
-          if (child.TokenStartIndex == -1 || child.TokenStopIndex == -1) return null;
+          if (child.TokenStartIndex == -1 || child.TokenStopIndex == -1) continue;
           if ((position >= tokens.Get(child.TokenStartIndex).StartIndex) &&
-              (position <= tokens.Get(child.TokenStopIndex).StopIndex))
+              ((position <= tokens.Get(child.TokenStopIndex).StopIndex) || 
+               (( position - 1 ) <= tokens.Get(child.TokenStopIndex).StopIndex) ) )
           {
             treeStmt = child;
             break;
