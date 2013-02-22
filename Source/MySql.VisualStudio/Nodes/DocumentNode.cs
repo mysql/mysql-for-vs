@@ -1,4 +1,4 @@
-// Copyright © 2008, 2010, Oracle and/or its affiliates. All rights reserved.
+// Copyright © 2008, 2013, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -53,6 +53,49 @@ namespace MySql.Data.VisualStudio
     protected abstract string GetCurrentName();
 
     public event EventHandler Saving;
+
+    #region "Gathering Connection Logic"
+
+    private static EnvDTE.DTE Dte = null;
+    private static Dictionary<string, BaseNode> dic = new Dictionary<string, BaseNode>();
+
+    internal static void RegisterNode(BaseNode node)
+    {
+      lock (typeof(DocumentNode))
+      {
+        if (Dte == null)
+        {
+          Dte = (EnvDTE.DTE)node.HierarchyAccessor.ServiceProvider.GetService(typeof(EnvDTE.DTE));
+        }
+        string name = node.Moniker;
+        dic.Remove(name);
+        dic.Add(name, node);
+      }
+    }
+
+    internal static void UpdateRegisteredNode(string oldMoniker, string newMoniker)
+    {
+      BaseNode node = dic[oldMoniker];
+      dic.Remove(oldMoniker);
+      dic.Add(newMoniker, node);
+    }
+
+    /// <summary>
+    /// Gets the connection of the currently edited document.
+    /// </summary>
+    public static DbConnection GetCurrentConnection()
+    {
+      if (Dte == null) return null;
+      string curDoc = Dte.ActiveDocument.FullName;
+      BaseNode node = null;
+      if (dic.TryGetValue(curDoc, out node))
+      {
+        return (DbConnection)node.HierarchyAccessor.Connection.GetLockedProviderObject();
+      }
+      return null;
+    }
+
+    #endregion
 
     protected void OnSaving()
     {
