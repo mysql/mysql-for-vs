@@ -239,17 +239,7 @@ namespace MySql.Data.VisualStudio
 
     protected override string GetCurrentName()
     {
-      string sql = editor.Text.Trim();
-      string lowerSql = sql.ToLowerInvariant();
-      int pos = lowerSql.IndexOf("trigger") + 7;
-      int end = pos;
-      while (++end < sql.Length)
-      {
-        if (lowerSql[end] == '(') break;
-        if (Char.IsWhiteSpace(lowerSql[end])) break;
-      }
-      string triggerName = sql.Substring(pos, end - pos).Trim();
-      return triggerName.Trim('`');
+      return LanguageServiceUtil.GetRoutineName(editor.Text);
     }
 
     #region IVsTextBufferProvider Members
