@@ -111,7 +111,7 @@ namespace MySql.Data.VisualStudio
 
     public static DbConnection GetConnection()
     {
-      DbConnection connection = StoredProcedureNode.GetCurrentConnection();
+      DbConnection connection = DocumentNode.GetCurrentConnection();
       if (connection == null)
       {
         Editors.EditorBroker broker = MySql.Data.VisualStudio.Editors.EditorBroker.Broker;
