@@ -2964,7 +2964,8 @@ create_view
 	( SQL SECURITY ( DEFINER | INVOKER ) )?
 	VIEW viewname=simple_obj_ref_no_alias ( LPAREN column_name_list  RPAREN )?
 	AS select
-	( WITH ( CASCADED | LOCAL ) CHECK OPTION )?
+	( WITH ( CASCADED | LOCAL ) CHECK OPTION )? ->
+	^( CREATE VIEW $viewname? column_name_list? select? )
   ;
 
 handler

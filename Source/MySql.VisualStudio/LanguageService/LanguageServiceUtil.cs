@@ -1,4 +1,4 @@
-﻿// Copyright © 2012, Oracle and/or its affiliates. All rights reserved.
+﻿// Copyright © 2013, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -121,6 +121,28 @@ namespace MySql.Data.VisualStudio
         }
       }
       return connection;
+    }
+
+    public static string GetRoutineName(string sql)
+    {
+      StringBuilder sb;
+      MySQL51Parser.program_return pr = LanguageServiceUtil.ParseSql(sql, false, out sb);
+      if (sb.Length != 0)
+      {
+        throw new ApplicationException(string.Format("Syntactic error in stored routine: {0}", sb.ToString()));
+      }
+      else
+      {
+        CommonTree t = (CommonTree)pr.Tree;
+        if (t.IsNil)
+          t = (CommonTree)t.GetChild(0);
+        string name;
+        if (string.Equals(t.GetChild(1).Text, "definer", StringComparison.OrdinalIgnoreCase))
+          name = t.GetChild(3).Text;
+        else
+          name = t.GetChild(1).Text;
+        return name;
+      }
     }
   }
 }

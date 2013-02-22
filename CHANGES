@@ -8,6 +8,8 @@
   to syntax errors, which may led to Intellisense to stop working (Oracle bug #16357595).
 - Fix for Error in Server Explorer when refreshing a table or view (Oracle bug #16363908).
 - Fix for Intellisense not available for Views (Oracle bug #16384218).
+- Fix for "When saving a new stored procedure, it raises a windows error message", due to 
+  using definer (Oracle bug #16363828).
 
 
 6.6.5
