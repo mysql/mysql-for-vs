@@ -228,19 +228,7 @@ namespace MySql.Data.VisualStudio
 
     protected override string GetCurrentName()
     {
-      string sql = editor.Text.Trim();
-      string lowerSql = sql.ToLowerInvariant();
-      int pos = lowerSql.IndexOf("procedure") + 9;
-      if (IsFunction)
-        pos = lowerSql.IndexOf("function") + 8;
-      int end = pos;
-      while (++end < sql.Length)
-      {
-        if (lowerSql[end] == '(') break;
-        if (Char.IsWhiteSpace(lowerSql[end])) break;
-      }
-      string procName = sql.Substring(pos, end - pos).Trim();
-      return procName.Trim('`');
+      return LanguageServiceUtil.GetRoutineName(editor.Text);
     }
 
     #region IVsTextBufferProvider Members
