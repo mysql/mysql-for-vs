@@ -40,6 +40,7 @@ using MySql.Data.VisualStudio.Properties;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 using Microsoft.Win32;
 
+
 namespace MySql.Data.VisualStudio
 {
   class StoredProcedureNode : DocumentNode, IVsTextBufferProvider
@@ -55,8 +56,9 @@ namespace MySql.Data.VisualStudio
       isFunction = isFunc;
       NameIndex = 3;
       editor = new VSCodeEditor((IOleServiceProvider)hierarchyAccessor.ServiceProvider);
-      Dte = (EnvDTE.DTE)hierarchyAccessor.ServiceProvider.GetService(typeof(EnvDTE.DTE));
-      RegisterNode(this);
+      if( Dte == null )
+        Dte = (EnvDTE.DTE)hierarchyAccessor.ServiceProvider.GetService(typeof(EnvDTE.DTE));
+      DocumentNode.RegisterNode(this);
     }
 
     #region Properties
@@ -85,38 +87,6 @@ namespace MySql.Data.VisualStudio
       RegisterNode( node );
       node.Edit();
     }
-
-    private static void RegisterNode( BaseNode node )
-    {
-      lock( typeof( StoredProcedureNode ) )
-      {
-        if (Dte == null)
-        {
-          Dte = (EnvDTE.DTE)node.HierarchyAccessor.ServiceProvider.GetService(typeof(EnvDTE.DTE));
-        }
-        string name = node.Moniker;
-        dic.Remove(name);
-        dic.Add(name, node);
-      }
-    }
-
-    /// <summary>
-    /// Gets the connection of the currently edited document.
-    /// </summary>
-    public static DbConnection GetCurrentConnection()
-    {
-      if (Dte == null) return null;
-      string curDoc = Dte.ActiveDocument.FullName;
-      BaseNode node = null;
-      if (dic.TryGetValue(curDoc, out node))
-      {
-        return ( DbConnection )node.HierarchyAccessor.Connection.GetLockedProviderObject();
-      }
-      return null;
-    }
-
-    private static EnvDTE.DTE Dte = null;
-    private static Dictionary<string, BaseNode> dic = new Dictionary<string, BaseNode>();
 
     public override object GetEditor()
     {

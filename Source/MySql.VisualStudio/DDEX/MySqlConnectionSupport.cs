@@ -35,6 +35,7 @@ using System.Globalization;
 using MySql.Data.VisualStudio.Properties;
 using System.Text;
 using System.Windows.Forms;
+using MySql.Data.MySqlClient;
 
 
 namespace MySql.Data.VisualStudio
@@ -96,14 +97,14 @@ namespace MySql.Data.VisualStudio
           newPasswordDialog.ShowDialog();
         }
       }
-      catch (DbException)
+      catch (MySqlException ex)
       {
-        // If can't prompt user for new authentication data, re-throw exception
-        if (!doPromptCheck)
-          throw;
+        // If can prompt user data and is error 1045: Access denied for user
+        if (doPromptCheck && ex.Number == 1045)
+          return false;       
 
-        // Else return false to display prompt dialog
-        return false;
+        // If can't prompt user for new authentication data, re-throw exception
+        throw;
       }
 
       // TODO: check server version compatibility
