@@ -1,4 +1,4 @@
-// Copyright © 2004, 2011, 2013, Oracle and/or its affiliates. All rights reserved.
+// Copyright © 2004, 2013, Oracle and/or its affiliates. All rights reserved.
 //
 // MySQL Connector/NET is licensed under the terms of the GPLv2
 // <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most 
@@ -1262,7 +1262,7 @@ namespace MySql.Data.MySqlClient.Tests
       const string expiredhost = "localhost";
       string expiredfull = string.Format("'{0}'@'{1}'", expireduser, expiredhost);
 
-      using (MySqlConnection conn = new MySqlConnection(GetConnectionString(rootUser, rootPassword, false)))
+      using (MySqlConnection conn = new MySqlConnection(GetConnectionString(rootUser, rootPassword, true)))
       {
         conn.Open();
         if (Version >= new Version(5, 6, 6))
@@ -1276,11 +1276,12 @@ namespace MySql.Data.MySqlClient.Tests
             suExecSQL(string.Format("DROP USER " + expiredfull));
 
           suExecSQL(string.Format("CREATE USER {0} IDENTIFIED BY '{1}1'", expiredfull, expireduser));
+          suExecSQL(string.Format("GRANT SELECT ON `{0}`.* TO {1}", conn.Database, expiredfull));
           suExecSQL(string.Format("ALTER USER {0} PASSWORD EXPIRE", expiredfull));
           conn.Close();
 
           // validates expired user
-          conn.ConnectionString = GetConnectionString(expireduser, expireduser + "1", false);
+          conn.ConnectionString = GetConnectionString(expireduser, expireduser + "1", true);
           conn.Open();
           try
           {
@@ -1384,6 +1385,6 @@ namespace MySql.Data.MySqlClient.Tests
         ExecuteSQLAsRoot("drop user 'myoldpassuser'@'localhost'");
         Assert.AreEqual(true, bExceptionThrown);
       }
-    }
+    }	
   }
 }
