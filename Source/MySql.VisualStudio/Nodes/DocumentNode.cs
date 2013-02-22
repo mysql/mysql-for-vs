@@ -186,6 +186,7 @@ namespace MySql.Data.VisualStudio
         OnDataSaved();
 
         Name = GetCurrentName();
+        DocumentNode.UpdateRegisteredNode(oldMoniker, Moniker);
         pbstrMkDocumentNew = String.Format("/Connection/{0}s/{1}", NodeId, Name);
         VsShellUtilities.RenameDocument(MySqlDataProviderPackage.Instance, oldMoniker, Moniker);
 
