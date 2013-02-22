@@ -515,8 +515,12 @@ namespace MySql.Data.MySqlClient
 
       SetState(ConnectionState.Open, false);
       driver.Configure(this);
-      if (settings.Database != null && settings.Database != String.Empty)
-        ChangeDatabase(settings.Database);
+
+      if (!(driver.SupportsPasswordExpiration && driver.IsPasswordExpired))
+      {
+        if (settings.Database != null && settings.Database != String.Empty)
+          ChangeDatabase(settings.Database);
+      }
 
       // setup our schema provider
       schemaProvider = new ISSchemaProvider(this);
