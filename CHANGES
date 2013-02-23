@@ -22,6 +22,7 @@
 - Fix for "When saving a new stored procedure, it raises a windows error message", due to 
   using definer (Oracle bug #16363828).
 - Fix for "The first time a new stored routine is saved, after save, Intellisense doesn't work (Oracle bug #16384238).
+- Fix for "Error when saving after changing an existing stored routine name in SQL in the editor" (Oracle bug #16390757).
 
 
 6.5.5
