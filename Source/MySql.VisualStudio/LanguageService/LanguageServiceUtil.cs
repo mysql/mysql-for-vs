@@ -141,7 +141,7 @@ namespace MySql.Data.VisualStudio
           name = t.GetChild(3).Text;
         else
           name = t.GetChild(1).Text;
-        return name;
+        return name.Replace("`", "");
       }
     }
   }
