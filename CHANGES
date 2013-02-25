@@ -23,6 +23,8 @@
   using definer (Oracle bug #16363828).
 - Fix for "The first time a new stored routine is saved, after save, Intellisense doesn't work (Oracle bug #16384238).
 - Fix for "Error when saving after changing an existing stored routine name in SQL in the editor" (Oracle bug #16390757).
+- Fix for server explorer error opening a remote connection (Oracle bug #16357786).
+- Fix for password expiration, new password dialog failed (Oracle bug #16357752).
 
 
 6.5.5
