@@ -23,7 +23,9 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+#if CLR4
 using System.Linq;
+#endif
 using System.IO;
 using System.Text;
 using MySql.Parser;
