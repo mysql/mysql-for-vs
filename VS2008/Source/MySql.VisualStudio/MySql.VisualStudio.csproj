@@ -55,6 +55,10 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Antlr3.Runtime, Version=3.3.1.7705, Culture=neutral, PublicKeyToken=4186e2f4d936d3c2, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Source\MySqlParser\Antlr\Antlr3.Runtime.dll</HintPath>
+    </Reference>
     <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="EnvDTE80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.Data.ConnectionUI, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
@@ -303,6 +307,9 @@
     <Compile Include="..\..\..\Source\MySql.VisualStudio\Editors\YesNoTypeConverter.cs">
       <Link>Editors\YesNoTypeConverter.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\Source\MySql.VisualStudio\LanguageService\LanguageServiceUtil.cs">
+      <Link>LanguageService\LanguageServiceUtil.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\Source\MySql.VisualStudio\LanguageService\MySqlLanguageService.cs">
       <Link>LanguageService\MySqlLanguageService.cs</Link>
     </Compile>
@@ -534,6 +541,10 @@
     <ProjectReference Include="..\MySql.Data\MySql.Data.csproj">
       <Project>{E9DF5ED1-4CBD-4226-B931-9A51610AC14D}</Project>
       <Name>MySql.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MySql.Parser\MySql.Parser.csproj">
+      <Project>{C1A80300-B0B3-4DAD-990E-B04BF2D18B56}</Project>
+      <Name>MySql.Parser</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
