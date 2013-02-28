@@ -66,10 +66,12 @@
     <Compile Include="..\..\..\Source\MySqlParser\ParserUtils.cs">
       <Link>ParserUtils.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\Source\MySqlParser\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\Source\MySqlParser\TokenStreamRemovable.cs">
       <Link>TokenStreamRemovable.cs</Link>
     </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <!--
   <ItemGroup>
