@@ -66,21 +66,13 @@
     <Compile Include="..\..\..\Source\MySql.Parser\ParserUtils.cs">
       <Link>ParserUtils.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Source\MySql.Parser\TokenStreamRemovable.cs">
+    <Compile Include="..\..\..\Source\MySqlParser\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Source\MySqlParser\TokenStreamRemovable.cs">
       <Link>TokenStreamRemovable.cs</Link>
     </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <!--
-  <ItemGroup>
-    <Compile Include="..\..\..\Source\MySql.Parser\MySQL51Lexer.g3">
-      <Link>MySQL51Lexer.g3</Link>
-    </Compile>
-    <Compile Include="..\..\..\Source\MySql.Parser\MySQL51Parser.g3">
-      <Link>MySQL51Parser.g3</Link>
-    </Compile>
-  </ItemGroup>
-  -->
+  </ItemGroup>  
   <ItemGroup>
     <Antlr3 Include="..\..\..\Source\MySql.Parser\MySQL51Parser.g3">
       <Generator>MSBuild:Compile</Generator>
