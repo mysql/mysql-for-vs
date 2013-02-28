@@ -57,7 +57,7 @@
   <ItemGroup>
     <Reference Include="Antlr3.Runtime, Version=3.3.1.7705, Culture=neutral, PublicKeyToken=4186e2f4d936d3c2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Source\MySqlParser\Antlr\Antlr3.Runtime.dll</HintPath>
+      <HintPath>..\..\..\Source\MySql.Parser\Antlr\Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="EnvDTE80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
@@ -93,7 +93,7 @@
     <Compile Include="..\..\..\Source\MySql.VisualStudio\DDEX\MySqlNewPasswordDialog.designer.cs">
       <Link>DDEX\MySqlNewPasswordDialog.designer.cs</Link>
       <DependentUpon>MySqlNewPasswordDialog.cs</DependentUpon>
-    </Compile>  
+    </Compile>
     <Compile Include="..\..\..\Source\MySql.VisualStudio\Editors\BaseEditorControl.cs">
       <SubType>UserControl</SubType>
       <Link>Editors\BaseEditorControl.cs</Link>
@@ -568,4 +568,5 @@
   </Target>
   <Target Name="AfterBuild">
   </Target>
+    -->
 </Project>
