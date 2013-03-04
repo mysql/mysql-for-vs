@@ -49,6 +49,18 @@ namespace MySql.Data.MySqlClient
       get { lock (this) { return _values; } }
     }
 
+    #region Backwards compatibility properties
+    [DisplayName("Use Default Command Timeout For EF")]
+    [Category("Backwards Compatibility")]
+    [Description("Enforces the command timeout of EFMySqlCommand to the value provided in 'DefaultCommandTimeout' property")]
+    [DefaultValue(false)]
+    public bool UseDefaultCommandTimeoutForEF
+    {
+      get { return (bool)values["Use Default Command Timeout For EF"]; }
+      set { SetValue("Use Default Command Timeout For EF", value); }
+    }
+    #endregion
+
     private bool hasProcAccess = true;
 #if !CF
     private PermissionSet _permissionset;
