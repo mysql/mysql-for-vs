@@ -155,5 +155,39 @@ namespace MySql.Data.Entity.Tests
       }
     }
 
+    /// <summary>    
+
+    /// MySql Bug 67171 - Default Command Timeout not applying for EFMySqlCommand
+
+    /// </summary>
+
+    [Test]
+
+    public void DefaultCommandTimeOutNotWorking()
+    {
+
+      string connectionString = String.Format(
+          "metadata=res://*/TestModel.csdl|res://*/TestModel.ssdl|res://*/TestModel.msl;provider=MySql.Data.MySqlClient; provider connection string=\"{0};Use Default Command Timeout For EF=true; Default Command Timeout=5;\"", GetConnectionString(true));
+      //EntityConnection connection = new EntityConnection(connectionString);
+      
+      using (testEntities context = new testEntities(connectionString))
+      {
+        Author a = new Author();
+        a.Id = 66;  // special value to indicate the routine should take 30 seconds
+        a.Name = "Test name";
+        a.Age = 44;
+        context.AddToAuthors(a);
+        try
+        {
+          context.SaveChanges();
+          Assert.Fail("This should have timed out");
+        }
+        catch (Exception ex)
+        {
+          Exception innerException = ex.InnerException;
+          Assert.AreEqual("Timeout expired.  The timeout period elapsed prior to completion of the operation or the server is not responding.", innerException.Message);
+        }
+      }
+    }
   }
 }
