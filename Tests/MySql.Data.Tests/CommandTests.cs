@@ -32,6 +32,65 @@ namespace MySql.Data.MySqlClient.Tests
   [TestFixture]
   public class CommandTests : BaseTest
   {
+    /// <summary>
+    /// Tests for MySql bug #64633 - System.InvalidCastException when executing a stored function.
+    /// </summary>
+    [Test]
+    public void InvalidCast()
+    {
+      MySqlConnection con = rootConn;
+      string sql = @"drop function if exists MyTwice; create function MyTwice( val int ) returns int begin return val * 2; end;";
+      MySqlCommand cmd = new MySqlCommand(sql, con);
+      cmd.ExecuteNonQuery();
+      cmd.CommandText = "drop procedure if exists spMyTwice; create procedure spMyTwice( out result int, val int ) begin set result = val * 2; end;";
+      cmd.ExecuteNonQuery();
+      try
+      {
+        cmd.CommandText = "drop user 'tester2'@'localhost'";
+        cmd.ExecuteNonQuery();
+      }
+      catch (Exception)
+      {
+      }
+      cmd.CommandText = "CREATE USER 'tester2'@'localhost' IDENTIFIED BY '123';";
+      cmd.ExecuteNonQuery();
+      cmd.CommandText = "grant execute on function `MyTwice` to 'tester2'@'localhost';";
+      cmd.ExecuteNonQuery();
+      cmd.CommandText = "grant execute on procedure `spMyTwice` to 'tester2'@'localhost'";
+      cmd.ExecuteNonQuery();
+      cmd.CommandText = "flush privileges";
+      cmd.ExecuteNonQuery();
+      MySqlConnection con2 = new MySqlConnection(
+        rootConn.ConnectionString);
+      con2.Settings.UserID = "tester2";
+      con2.Settings.Password = "123";
+
+      // Invoke the function
+      cmd.Connection = con2;
+      con2.Open();
+      cmd.CommandText = "MyTwice";
+      cmd.CommandType = CommandType.StoredProcedure;
+      cmd.Parameters.Add(new MySqlParameter("val", System.DBNull.Value));
+      cmd.Parameters.Add("@p", MySqlDbType.Int32);
+      cmd.Parameters[1].Direction = ParameterDirection.ReturnValue;
+      cmd.Parameters[0].Value = 20;
+      cmd.ExecuteNonQuery();
+      con2.Close();
+      Assert.AreEqual(cmd.Parameters[1].Value, 40);
+
+      con2.Open();
+      cmd.CommandText = "spMyTwice";
+      cmd.CommandType = CommandType.StoredProcedure;
+      cmd.Parameters.Clear();
+      cmd.Parameters.Add(new MySqlParameter("result", System.DBNull.Value));
+      cmd.Parameters.Add("val", MySqlDbType.Int32);
+      cmd.Parameters[0].Direction = ParameterDirection.Output;
+      cmd.Parameters[1].Value = 20;
+      cmd.ExecuteNonQuery();
+      con2.Close();
+      Assert.AreEqual(cmd.Parameters[0].Value, 40);
+    }
+
     [Test]
     public void InsertTest()
     {
