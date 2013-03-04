@@ -288,6 +288,14 @@ namespace MySql.Data.MySqlClient
 
       MySqlDataAdapter da = new MySqlDataAdapter(sql.ToString(), connection);
       da.Fill(dt);
+
+      if ((dt.Rows.Count != 0) && ((string)dt.Rows[0]["routine_type"] == "FUNCTION"))
+      {
+        // update missing data for the first row (function return value).
+        // (using sames valus than GetParametersFromShowCreate).
+        dt.Rows[0]["parameter_mode"] = "IN";
+        dt.Rows[0]["parameter_name"] = "return_value"; // "FUNCTION";
+      }
     }
 
     private DataTable GetParametersFromIS(string[] restrictions, DataTable routines)
